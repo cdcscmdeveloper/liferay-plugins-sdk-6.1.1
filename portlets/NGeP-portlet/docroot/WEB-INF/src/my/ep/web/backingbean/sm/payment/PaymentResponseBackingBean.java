@@ -19,6 +19,8 @@ import javax.servlet.http.HttpSession;
 
 import my.ep.biz.service.sm.payment.IPaymentSO;
 import my.ep.constant.MessageConst;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sm.payment.PaymentReqDTO;
 import my.ep.dto.sm.payment.PaymentResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
@@ -45,6 +47,14 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.liferay.portal.util.PortalUtil;
+//#26307 start 
+import my.ep.constant.pm.ParameterConst; 
+import my.ep.constant.pm.ParameterTypeConst; 
+import my.ep.persistence.entity.pm.common.PmParameter; 
+import my.ep.web.util.pm.helper.ParameterHelper; 
+import org.primefaces.json.JSONException;
+import org.primefaces.json.JSONObject;
+//#26307 start 
 
 @ManagedBean(name = "paymentResponseBB")
 @RequestScoped
@@ -164,6 +174,34 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		String channel = httpServletRequest.getParameter("channel") != null ? httpServletRequest.getParameter("channel") : null;
 		String errorCode = httpServletRequest.getParameter("error_code") != null ? httpServletRequest.getParameter("error_code") : null;
 		String errorDesc = httpServletRequest.getParameter("error_desc") != null ? httpServletRequest.getParameter("error_desc") : null;
+		// #26307 start
+		String cardType = null; 
+		String extraP = httpServletRequest.getParameter("extraP");
+		
+		log.info("orderId: " + orderId); 
+		log.info("tranID: " + tranID); 
+		log.info("status:" + status); 
+		log.info("domain:" + domain); 
+		log.info("amount :" + amount); 
+		log.info("currency:" + currency); 
+		log.info("appcode: " + appcode); 
+		log.info("paydate:" + paydate); 
+		log.info("skey:" + skey); 
+		log.info("error_code:" + errorCode); 
+		log.info("error_desc:" + errorDesc); 
+		log.info("channel:" + channel); 
+		log.info("extraP:" + extraP); 
+		if(extraP!=null){
+			JSONObject obj; 
+			try { 
+				obj = new JSONObject(extraP); 
+				cardType = obj.getString("cctype") != null ? obj.getString("cctype") : null; 
+			} catch (JSONException e) { 
+				e.printStackTrace(); 
+			} 
+		}
+		
+		// #26307 end
 
 
 		log.info("orderId: " + orderId);
@@ -178,8 +216,13 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		log.info("error_code:" + errorCode);
 		log.info("error_desc:" + errorDesc);
 		log.info("channel:" + channel);
+		// #26307
+		log.info("extraP:" + extraP);
 
-		Long ordId = Long.valueOf(orderId);
+		Long ordId = null;
+		if(orderId!= null){
+			ordId = Long.valueOf(orderId);
+		}	
 		IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
 		PaymentReqDTO reqDTO = new PaymentReqDTO();
 		reqDTO.setPaymentId(ordId);
@@ -256,6 +299,41 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				} else if (status.equals(SupplierManagementConst.MOL_FAIL)) {
 					statusCode = SupplierManagementConst.PM_STAT_FAILED_PAYMENT;
 				}
+				// #26307 start 
+				PaymentReqDTO pymtReqDTO = new PaymentReqDTO();
+				if (cardType != null) { 
+					if (cardType.equalsIgnoreCase("Credit")) {
+						cardType = "CC";
+					} else if (cardType.equalsIgnoreCase("Debit")) {
+						cardType = "DC";
+					} 
+					ParameterReqDTO reqPmDTO = new ParameterReqDTO();
+					log.info("cardType===="+cardType);
+					if (cardType.equals(ParameterConst.CARD_TYPES_CREDIT)) { 
+						log.info("cardType====enter CC"+cardType);
+						reqPmDTO.setParameterType(ParameterTypeConst.CARD_TYPES);
+						reqPmDTO.setParameterCode(ParameterConst.CARD_TYPES_CREDIT);
+						ParameterResDTO resPmDTO = SmServiceLookup.getParameterSO().retrieveParameterByTypeAndCode(reqPmDTO);
+						log.info("cardType====enter CC result "+resPmDTO.getPmParameter());
+						PmParameter cards = resPmDTO.getPmParameter();
+						pymtReqDTO.setCardType(cards);
+						pymtReqDTO.setCardTypeS(cardType);
+						pyPayment.setCardType(cards);	
+						channel = "credit";
+					} else if (cardType.equals(ParameterConst.CARD_TYPES_DEBIT)) {
+						log.info("cardType====enter DC"+cardType);
+						reqPmDTO.setParameterType(ParameterTypeConst.CARD_TYPES);
+						reqPmDTO.setParameterCode(ParameterConst.CARD_TYPES_DEBIT);
+						ParameterResDTO resPmDTO = SmServiceLookup.getParameterSO().retrieveParameterByTypeAndCode(reqPmDTO);
+						log.info("cardType====enter CC result "+resPmDTO.getPmParameter());
+						PmParameter cards = resPmDTO.getPmParameter();
+						pymtReqDTO.setCardType(cards);
+						pymtReqDTO.setCardTypeS(cardType);
+						pyPayment.setCardType(cards);	
+						channel = "debit";
+					} 
+				} 
+				// #26307 end 
 
 				Date txDate;
 				try {
@@ -265,6 +343,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 					txDate = new Date();
 					e.printStackTrace();
 				}
+				log.info("channel--------------------26307"+channel);
 				paymentOrder.setChannelName(channel);
 				smPaymentRes.setTransactionId(tranID);
 				smPaymentRes.setErrorCode(errorCode);
@@ -274,13 +353,17 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				smPaymentRes.setPaymentStatus(status);
 				smPaymentRes.setPaidAmt(txAmount);
 				paymentOrder.getPyPaymentResponses().add(smPaymentRes);
-
-				PmStatus paymentStatus = SmCommonUtil.getInstance().retrievePmStatusById(statusCode);
-				pyPayment.setPmStatus(paymentStatus);
+				//26307
+				log.info("Status Code : "+statusCode);
+				if(statusCode!= null){
+					PmStatus paymentStatus = SmCommonUtil.getInstance().retrievePmStatusById(statusCode);
+					pyPayment.setPmStatus(paymentStatus);
+				}
+				
 
 				// updatePayment(smPayment,validPayment);
 				Object token = getFacesScopes().getBPMAuthenticationCtxToken();
-				PaymentReqDTO pymtReqDTO = new PaymentReqDTO();
+				
 
 				//pymtReqDTO.setPaidPersonnels(getPaidPersonnelBeforeProceed());
 
@@ -308,7 +391,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				pymtReqDTO.setPaymentType(paymentType);
 				pymtReqDTO.setMethodName("responsePreRender-PaymentResponseBackingBean");
 				PaymentResDTO pymtResDTO = null;
-
+				
 				log.info(">>>>>counter equal to 1<<<<<<");
 				pymtResDTO = reqSO.updatePayment(pymtReqDTO);
 
@@ -330,6 +413,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 						log.error("curlIPN: " + ex.getMessage());
 					}
 				}
+				
 			} else {
 				status = SupplierManagementConst.PAYMENT_INVALID_RES;
 			}
