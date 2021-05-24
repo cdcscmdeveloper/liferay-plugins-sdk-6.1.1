@@ -199,17 +199,7 @@
 				</p:column>
 						
 				<p:column>
-					<ui:remove> Enhancement 19287 19336 25201 - start</ui:remove>
-					<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
-						rendered="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-						action="#{viewSuppProfileBackingBean.onViewDisciplinaryAction(shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" 
-						process="@this" partialSubmit="true" update=":form">
-							<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
-					</p:commandLink><p:spacer width="2"/>
-					
-					<h:outputText rendered="#{!shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-					 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
-					<ui:remove> Enhancement 19287 19336 25201 - end</ui:remove>
+					<h:outputText value="" />
 				</p:column>
 				
 				<p:column rendered="#{false}">
@@ -280,14 +270,7 @@
 		               			  rendered="#{showSelectionColumn}" />
 		           	</p:row>
 		           	<p:row>
-					<ui:remove> Enhancement 19287 19336 25201 - start</ui:remove>
-		              <p:column colspan="1" style="width:7%; white-space:normal;">
-							<f:facet name="header">
-								<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
-								<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
-							</f:facet>
-						</p:column>
-						<ui:remove> Enhancement 19287 19336 25201 - end</ui:remove>
+		               <p:column colspan="1" headerText="#{lbl['lbl.sc.discipline.action.taken']}" style="width:7%; white-space:normal;"/>
 		               <p:column colspan="1" headerText="#{lbl['lbl.sc.performance']}" rendered="#{false}" style="width:7%; white-space:normal;"/>
 		               <p:column colspan="1" headerText="#{lbl['lbl.sc.bod']}" style="width:7%; white-space:normal;" />
 		           	</p:row>
@@ -380,17 +363,7 @@
 				</p:column>
 						
 				<p:column>
-					<ui:remove> Enhancement 19287 19336 25201 - start</ui:remove>
-					<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
-						rendered="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-						action="#{viewSuppProfileBackingBean.onViewDisciplinaryAction(shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" 
-						process="@this" partialSubmit="true" update=":form">
-							<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
-					</p:commandLink><p:spacer width="2"/>
-					
-					<h:outputText rendered="#{!shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-					 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
-					 <ui:remove> Enhancement 19287 19336 25201 - end</ui:remove>
+					<h:outputText value="" />
 				</p:column>
 				
 				<p:column  rendered="#{false}">
