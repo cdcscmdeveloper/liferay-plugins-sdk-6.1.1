@@ -404,6 +404,7 @@
 						<p:outputLabel value="#{lbl['lbl.sm.state']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
+					<!--#30936-START-->
 					<td class="tdContent"><p:selectOneMenu id="cmbPermState" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.state']}"
 							value="#{registrationBackingBean.managedBean.smPermenantAdd.pmState.stateId}" style="width:80%">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -412,9 +413,10 @@
 								itemValue="#{state.stateId}" itemLabel="#{state.stateName}" />
 							<p:ajax event="change"
 								listener="#{registrationBackingBean.populateDistrictByAddType('permenant',false)}"
-								update="pnlUsrInfo,divisionRegLabelPanelId,divisionRegDropdownPanelId,cmbPermDistrict,cmbPermCity" />
+								update="divisionRegLabelPanelId,divisionRegDropdownPanelId,cmbPermDistrict,cmbPermCity" />
 						</p:selectOneMenu>
 						<p:message id="cmbPermStateMsg" for="cmbPermState" display="icon" /></td>
+					<!--#30936-END-->
 				</tr>
 				<!-- 13320 -->
          <tr id="">
