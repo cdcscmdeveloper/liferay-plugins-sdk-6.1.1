@@ -1606,7 +1606,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			 		"GST Caj Perkhidmatan (RM)", "Amaun Bersih (RM)", "Jumlah Keseluruhan (RM)", "Status" };
 			// #26307 end
 			long startTimePopulateFPX = System.currentTimeMillis();
-			SXSSFSheet sheetFPX = (SXSSFSheet) wb.createSheet(sheetName[0]); //BUG:#29454
+			Sheet sheetFPX = wb.createSheet(sheetName[0]);
 			//Setting Report Title
 			Row titleRowSheetFpx = sheetFPX.createRow(0);
 			Cell cellTitleRow = titleRowSheetFpx.createCell(1);
@@ -1701,7 +1701,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			// #26307 end
 			//log.info("CREDIT LIST IS NOT NULL !!!");
 			long startTimePopulateCC = System.currentTimeMillis();
-			SXSSFSheet sheetCC = (SXSSFSheet) wb.createSheet(sheetName[1]); //BUG:#29454
+			Sheet sheetCC = wb.createSheet(sheetName[1]); 
 			//Setting Report Title
 			Row titleRowSheetCC = sheetCC.createRow(0);
 			Cell cellTitleRowCC = titleRowSheetCC.createCell(1);
@@ -2144,7 +2144,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			if("Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE)))columnHeaderList.remove(1);
 			// #26307 end
 			long startTimePopulateFPX = System.currentTimeMillis();
-			SXSSFSheet sheetFPX = (SXSSFSheet) wb.createSheet(sheetName[0]); //BUG:#29454
+			Sheet sheetFPX = wb.createSheet(sheetName[0]); 
 			//Setting Report Title
 			Row titleRowSheetFpx = sheetFPX.createRow(0);
 			Cell cellTitleRow = titleRowSheetFpx.createCell(1);
@@ -2324,7 +2324,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			if("Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE)))columnHeaderList.remove(1);
 			// #26307 end
 			long startTimePopulateCC = System.currentTimeMillis();
-			SXSSFSheet sheetCC = (SXSSFSheet) wb.createSheet(sheetName[1]);//BUG:#29454 
+			Sheet sheetCC = wb.createSheet(sheetName[1]);
 	        //Setting Report Title
 			Row titleRowSheetCC = sheetCC.createRow(0);
 			Cell cellTitleRowCC = titleRowSheetCC.createCell(1);
