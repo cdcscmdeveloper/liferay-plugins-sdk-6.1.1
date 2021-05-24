@@ -603,7 +603,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setAckBy(
 								getFacesScopes().getUserSessionBean());
 					}
-				}					
+				}	
+				//Start Fix- #29368 / #30856
+				//Amendment with supplement
+				
+				if(ctBackingBean.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT)){
+					log.info("contract param from amendmentbackingbean :: "+ctBackingBean.getManagedBean().getContractVer().getDocType());
+				    CheckandResetBondExempted();
+				  }
+				//End Fix- #29368 / #30856
 				return;
 			}
 			
@@ -7307,5 +7315,24 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	 
 	 //End Fix - #30022
+	 
+	 // Start Fix - #29368 / #30856
+	 /**
+		 * The method used to check the bond exempted condition,
+		 * set bondExempted false if no attachment/letter for bond_exemption
+		 * otherwise true
+		 */
+		public void CheckandResetBondExempted(){
+			
+			if(ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq() && ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()){
+				if(ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getBondExemptedFileName() == null && ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getBondExemptedFilePath() == null){
+					
+					ctBackingBean.getManagedBean().getCtContractAmount().setBondExempted(false);
+				  }
+			   }
+
+		}
+		
+	// End Fix - #29368 / #30856
 
 	}
