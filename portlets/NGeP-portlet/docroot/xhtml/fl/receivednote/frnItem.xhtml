@@ -245,6 +245,7 @@
 		</div>
 		 </p:dialog>
 		 
+		 <!-- 28855 Start -->
 		 <p:dialog id="frnItemInfoDialog" header="#{lbl['lbl.fl.do.item']}"
 		widgetVar="frnItemInfo" showEffect="fade" hideEffect="fade"
 		modal="true" width="900" height="400" resizable="false" style="overflow:scroll">
@@ -268,6 +269,7 @@
 						value="#{receivedNoteBackingBean.managedBean.newOfferedSpec == null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.managedBean.newOfferedSpec}"
 						size="85" /></td>
 			</tr>
+			</table> 
 			
 			<p:dataTable id="specificationDt" var="specificationList"
 			value="#{receivedNoteBackingBean.managedBean.itemSpecList}"  >
@@ -308,6 +310,7 @@
 			</p:column>
 			</p:dataTable>
 			
-		</table> 
 		</p:dialog>
+		<!-- 28855 End -->
+		
 </ui:composition>

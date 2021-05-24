@@ -719,7 +719,7 @@
 				<td><p:inputText disabled="true" rendered="#{contractRequestBackingBean.managedBean.priceType != null}"
 						value="#{contractRequestBackingBean.getParameterDesc(contractRequestBackingBean.managedBean.priceType)}" 
 						size="60" /></td>					
-			</tr>
+			</tr>   
 			<tr>			
 				<td><p:outputLabel value="#{lbl['lbl.fl.standard.price']}" rendered="#{contractRequestBackingBean.managedBean.standardPrice}"/></td>
 				<td><p:inputText disabled="true" style="text-align:right;" rendered="#{contractRequestBackingBean.managedBean.standardPrice}"
@@ -779,11 +779,12 @@
 						size="35" /></td>					
 			</tr>
 		</table> 
-		
-		<h:panelGroup>
-			<p:panel id="specificationPanel" header="#{lbl['lbl.fl.spec.panel']}" toggleable="false" >
+	
+	<!-- 28855 start -->
+	<h:panelGroup>   
+		<p:panel id="specificationPanel" header="#{lbl['lbl.fl.spec.panel']}" toggleable="false" >
 			
-			<table style="width: 100%">
+		  <table style="width: 100%">	
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.offer']}" rendered="#{contractRequestBackingBean.managedBean.dpFlag}"/></td>
 				<td><p:inputText disabled="true" rendered="#{contractRequestBackingBean.managedBean.dpFlag}"
@@ -797,7 +798,7 @@
 						value="#{contractRequestBackingBean.managedBean.newOfferedSpec == null ? lbl['lbl.fl.supp.na'] : contractRequestBackingBean.managedBean.newOfferedSpec}"
 						size="85" /></td>
 			</tr>
-			
+			</table> 
 			<p:dataTable id="specificationDt" var="specificationList"
 			value="#{contractRequestBackingBean.managedBean.itemSpecList}"  >
 			<ac:paginator for="specificationDt" />
@@ -835,13 +836,14 @@
 						disabled="true"
 						value="#{contractRequestBackingBean.managedBean.newOfferedSpec == null ? lbl['lbl.fl.supp.na'] : contractRequestBackingBean.managedBean.newOfferedSpec}" /> 
 			</p:column>
-			</p:dataTable>
-			</table> 
-			</p:panel>
-		</h:panelGroup>
-			
-		<h:panelGroup rendered="#{!contractRequestBackingBean.managedBean.standardPrice}">
-			<p:panel id="reqItemInfoPanel" header="#{lbl['lbl.fl.zone.tier.price.detail']}" toggleable="false" >
+			</p:dataTable>	
+		</p:panel>
+	 	</h:panelGroup>  
+	 	<!-- 28855 End -->
+		
+ 	  <h:panelGroup rendered="#{!contractRequestBackingBean.managedBean.standardPrice}">   	
+			<p:panel id="reqItemInfoPanel" header="#{lbl['lbl.fl.zone.tier.price.detail']}" toggleable="false"> 
+				
 				<p:dataTable id="reqItemInfoDt" var="reqItemInfoList" liveScroll="true"
 					value="#{contractRequestBackingBean.managedBean.supplierItemPriceList}"
 					rowKey="#{purchasedItem}">
@@ -892,15 +894,16 @@
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>					
-				</p:dataTable>
+				</p:dataTable>		
 			</p:panel>
-		</h:panelGroup>
-		<p:spacer height="2px"></p:spacer>
+ 	</h:panelGroup> 
+	
+	 	<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
 			<p:commandButton value="#{lbl['lbl.btn.close']}" process="@this"
 				oncomplete="reqItemInfo.hide()" partialSubmit="true">
 			</p:commandButton>
-		</div>
+		</div> 		
 	</p:dialog>
 	
 	<p:dialog id="addContractedItemDialog" header="#{lbl['lbl.fl.item.list']}" 

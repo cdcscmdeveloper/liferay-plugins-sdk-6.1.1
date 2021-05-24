@@ -114,6 +114,7 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	private SmDisciplinaryAction smDisciplinaryAction;
 	//26279 - end
 	
+	// 28855 - Start
 	private String supplierOffer;
 	private String newOfferedSpec;
 	private String itemSpecification;
@@ -122,6 +123,7 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	private boolean contractFlag;
 	private List<ScRequestItemSpecOffer> specificationList;
 	private List<ScRequestItemSpecOffer> itemSpecList;
+	// 28855 - End
 
 	/**
 	 * Gets the fl remark.
@@ -980,6 +982,7 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	}
 	//26279 - end
 	
+	// 28855 - Start
 	public String getSupplierOffer() {
 		return supplierOffer;
 	}
@@ -1043,4 +1046,5 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	public void setItemSpecList(List<ScRequestItemSpecOffer> itemSpecList) {
 		this.itemSpecList = itemSpecList;
 	}
+	// 28855 - End
 }
