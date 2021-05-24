@@ -1934,8 +1934,12 @@ public class SmApplicationBackingBean extends
 						}
 						//END #27256
 						this.getManagedBean().getSmAppl().setApplValidWithSsm(true);
-						//set establish date
-						this.getManagedBean().getSmAppl().getSmCompanyBasic().setEstablishDate(ssmResDTO.getSmCompanyBasic().getEstablishDate());
+						//start #29956
+						if(ssmResDTO.getSmCompanyBasic()!=null){
+							//set establish date
+							this.getManagedBean().getSmAppl().getSmCompanyBasic().setEstablishDate(ssmResDTO.getSmCompanyBasic().getEstablishDate());
+						}
+						//end #29956
 						//START #27239
 						//POPUP USER NOT SSM OWNER #26734 //ANY CHANGES HERE PLEASE CHANGES IN ViewApplHistoryBackingBean.redirectToReapplyNewAppl & viewOnlineAccount.RegistrationBackingBean & SmApplicationBackingBean.proceedToApplication
 						FacesScopes facesScope = new FacesScopes();
@@ -1947,43 +1951,66 @@ public class SmApplicationBackingBean extends
 							if(personnelsRole != null && personnelsRole.size() <=0){
 								for(SmPersonnel personnel :  this.getManagedBean().getSmAppl().getSmPersonnels()){
 									if (personnel.isEquityOwner() || personnel.isDirector()) {
-										if(personnel.getEpRole() != null){
+//										if(personnel.getEpRole() != null){ //#29956
 											SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
 											SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelDirector(),"identificationNo");
 											if(personnelDirectorSSM == null && personnelSSM == null){
 												personnelsRole.add(personnel);
 											}
-										}
+//										}
 									}
 								}
 							// start #29956 smOwnerSsmPopup
-							String[] params = { "" };
+							String[] params = new String[50];
+							StringBuilder sb = new StringBuilder();
 							int x = 0;
+							Boolean noEp = false;
 							if (!personnelsRole.isEmpty()) {
 								for (SmPersonnel smPersonnel : personnelsRole) {
 									if (x != 0) {
 										for (String roles : params) {
-											if (!roles.equals(getEpRoleDescByRoleCode(smPersonnel.getEpRole()))) {
-												params[x] = "/ ";
-												x++;
-												params[x] = getEpRoleDescByRoleCode(smPersonnel.getEpRole());
-												x++;
+											if(roles!=null){
+												if (smPersonnel.getEpRole() == null && !roles.equals("no EP Role") && !roles.equals("/ ")
+														&& !noEp) {
+													params[x] = "/ ";
+													sb.append("/ ");
+													x++;
+													params[x] = "no EP Role";
+													sb.append("no EP Role");
+													x++;
+													noEp = true;
+												} else if (smPersonnel.getEpRole() != null&& !roles.equals(getEpRoleDescByRoleCode(smPersonnel.getEpRole())) && !roles.equals("/ ")) {
+													params[x] = "/ ";
+													sb.append("/ ");
+													x++;
+													params[x] = getEpRoleDescByRoleCode(smPersonnel.getEpRole());
+													sb.append(getEpRoleDescByRoleCode(smPersonnel.getEpRole()));
+													x++;
+												}
 											}
 										}
 									} else {
-										params[x] = getEpRoleDescByRoleCode(smPersonnel.getEpRole());
-										x++;
+										if(smPersonnel.getEpRole() == null){
+											params[x] = "no EP Role";
+											sb.append("no EP Role");
+											x++;
+											noEp = true;
+										}else{
+											params[x] = getEpRoleDescByRoleCode(smPersonnel.getEpRole());
+											sb.append(getEpRoleDescByRoleCode(smPersonnel.getEpRole()));
+											x++;
+										}
 									}
 								}
 							}
 							this.getManagedBean().setTermAndConditionCheckOwner(
-									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner", params));
+									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner", new String[] { sb.toString() }));
 							this.getManagedBean().setTermAndConditionCheckOwnerA(
-									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.a", params));
+									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.a", new String[] { sb.toString() }));
 							this.getManagedBean().setTermAndConditionCheckOwnerC(
-									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.c", params));
+									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.c", new String[] { sb.toString() }));
 							this.getManagedBean().setTermAndConditionCheckOwnerChangeRole(
-									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole", params));
+									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole", new String[] { sb.toString() }));
 							// end #29956
 
 								if(personnelsRole != null && personnelsRole.size() > 0) {
