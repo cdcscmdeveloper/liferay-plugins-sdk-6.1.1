@@ -113,7 +113,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 	//26307
 	public String getPaymentGatewayUrl() {
 		paymentGatewayUrl = getPaymentGateUrlByMerchantId(merchantId,billType);
-		
+		log.info("paymentGatewayUrl>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+paymentGatewayUrl);
 		return paymentGatewayUrl;
 	}
 
