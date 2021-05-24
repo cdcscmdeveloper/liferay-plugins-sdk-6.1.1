@@ -574,16 +574,14 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			}
 		}
 		
+		// 28855 - Start
 		String DocType =  getManagedBean().getFulfilmentNote().getFlRequest().getFlFulfilmentOrder().getDocType();
-		
 		if(DocType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)) {
-			
 			getManagedBean().setContractFlag(true);
 		} else {
-			
 			getManagedBean().setContractFlag(false);
 		}
-		
+		// 28855 - End
 	}
 
 	/**
@@ -1823,24 +1821,9 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				getManagedBean().setDpFlag(false);
 			}
 		}
-		
-	//	IPurchaseRequestSO purchaseRequestSO = (IPurchaseRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseRequestSO.class);
-	//	PurchaseRequestReqDTO doReqDTO = new PurchaseRequestReqDTO();
-	//	PurchaseRequestResDTO doResDTO = null;
-	//	doReqDTO.setPurchaseRequestId(getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getPurchaseRequestId());
-	//	doReqDTO.setSupplierId(getManagedBean().getSpecificationList().get(0).getSupplierId().getSupplierId());
-	//	doResDTO = purchaseRequestSO.retrieveLoaDtlByDocTypeNId(doReqDTO);
-
-	//	if (doResDTO.getScLoa().getProcurementMode()
-	//			.getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO) ||
-	//			doResDTO.getScLoa().getProcurementMode()
-	//			.getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
-	//		getManagedBean().setDpFlag(true);
-	//	} else {
-	//		getManagedBean().setDpFlag(false);
-	//	}
+	
 	}
-		//29955 - end
+	//28855 - end
 	
 	//30468-start
 	/**
