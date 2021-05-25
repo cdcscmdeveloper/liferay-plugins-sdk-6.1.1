@@ -160,9 +160,9 @@
 							pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
 							<p:ajax event="change" process="@this" listener="#{resendAccountActivationEmailBackingBean.onChangeEmail()}" update="g2gAdminEmail"/> 
 							</p:inputText>
-							<p:graphicImage id="toolTipIcon" value="/css/images/design/tooltips.png" /> 
-						  	<p:tooltip id="sourceTooltip" for="toolTipIcon">
-								<h:outputText id="sourceLabel" escape="false" value="#{lbl['lbl.sm.email.change.tooltip']}" />
+							<p:graphicImage id="govtToolTipIcon" value="/css/images/design/tooltips.png" /> 
+						  	<p:tooltip id="govtSourceTooltip" for="govtToolTipIcon">
+								<h:outputText id="govtSourceLabel" escape="false" value="#{lbl['lbl.sm.email.change.tooltip']}" />
 							</p:tooltip> 
 					</td>
 				</tr>
