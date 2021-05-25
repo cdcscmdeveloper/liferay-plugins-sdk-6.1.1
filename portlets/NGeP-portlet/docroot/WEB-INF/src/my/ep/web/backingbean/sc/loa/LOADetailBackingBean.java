@@ -3402,7 +3402,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				}
 				
 				//#25725 start
-				Boolean isPK7 = scLoa.getScQuote().getProcurementType().getParameterCode().equals(ParameterConst.PROC_TYPE_PK7);
+				Boolean isPK7 = null!=scLoa.getScQuote() && null!=scLoa.getScQuote().getProcurementType() && scLoa.getScQuote().getProcurementType().getParameterCode().equals(ParameterConst.PROC_TYPE_PK7);
 				Boolean isNonPeriodic = (scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)) || (scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN));
 				if((!scLoa.isAgreementReq())&&(isNonPeriodic && !isPK7 && over500K(scLoa))){
 					if(scLoa.getScLoaAttachment() != null){
