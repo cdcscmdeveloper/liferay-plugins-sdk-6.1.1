@@ -557,6 +557,9 @@ public class SmBulkApplicationBackingBean extends
 					catNoApprove = false;
 				} //21937 - end
 			}
+			//21937
+			if(vo.getPendingApproveCategories() == null || vo.getPendingApproveCategories().isEmpty())
+				catNoApprove = false;
 			
 			//21937 - start
 			if(vo.getAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
