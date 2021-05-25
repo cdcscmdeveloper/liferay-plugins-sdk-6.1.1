@@ -293,15 +293,23 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				ctBB.getManagedBean().setServiceTaxAlertFlg(false);				
 			}
 			
-			//Start - Fix 29368
-			//from maintenance
-			if(ctBB.getManagedBean().getContractVer().getCtContractAmount().isBondReq() && ctBB.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()){
-				if(ctBB.getManagedBean().getContractVer().getCtContractAmount().getBondExemptedFileName() == null && ctBB.getManagedBean().getContractVer().getCtContractAmount().getBondExemptedFilePath() == null){
-					ctBB.getManagedBean().getCtContractAmount().setBondExempted(false);
+			// Start Fix - #30856
+			if(ctBB.getManagedBean().getCtContractAmount().isBondExempted()){
+				
+				if(!ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds().isEmpty()){
+					
+					removePerformanceDatatableRow();
+ 
+				}
+				
+				// Start - Fix #29368
+				if(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)){
+				    CheckandResetBondExempted();
 				  }
-			   }
-			//End - Fix 29368
-
+				// End - Fix #29368
+				}
+			// End Fix - #30856
+					
 			return;
 		}
 
@@ -3661,4 +3669,48 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 	}
 	//#25406 - End
+	
+	// Start Fix - #30856
+	/**
+	 * The method used to delete Datatable row
+	 * for ctPerformanceBond Datatable,
+	 * No index selection required 
+	 */
+	public void removePerformanceDatatableRow() {
+		try {
+			if (ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds() != null) {
+				Iterator<CtPerformanceBond> performanceBond = ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds().iterator();
+				while (performanceBond.hasNext()) {
+					CtPerformanceBond  bond = performanceBond.next();
+				      if (bond != null){
+						performanceBond.remove();
+				    }
+				}
+			}
+	
+			ctBB.getManagedBean().setButtonHideActive(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		} finally {
+
+		}
+	}
+	//Start - Fix #29368
+	/**
+	 * The method used to check the bond exempted condition,
+	 * set bondExempted false if no attachment/letter for bond_exemption
+	 * otherwise true
+	 */
+	public void CheckandResetBondExempted(){
+				
+		if(ctBB.getManagedBean().getContractVer().getCtContractAmount().isBondReq() && ctBB.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()){
+			if(ctBB.getManagedBean().getContractVer().getCtContractAmount().getBondExemptedFileName() == null && ctBB.getManagedBean().getContractVer().getCtContractAmount().getBondExemptedFilePath() == null){
+				ctBB.getManagedBean().getCtContractAmount().setBondExempted(false);
+			  }
+		   }
+	//End - Fix #29368
+
+	}
+	// End Fix - #30856
 }
