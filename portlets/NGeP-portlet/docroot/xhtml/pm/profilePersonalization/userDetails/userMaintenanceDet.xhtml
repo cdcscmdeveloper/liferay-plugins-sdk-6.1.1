@@ -32,11 +32,11 @@
 					<!-- Authorization personnel -->
 					<!--  28838 - start -->
 					<p:menuitem value="#{lbl['lbl.pm.profiles.tab.name.ap']}" update="@form" rendered="#{profilePersonalizationBackingBean.checkFactUser}">
-					<!--  28838 - end -->
 						<f:param name="disableValidation" value="true" />     
 						<f:setPropertyActionListener target="#{profilePersonalizationBackingBean.managedBean.selectedTabIndex}" 
 							value="#{profilePersonalizationBackingBean.tabAuthPersonnel}" />
 					</p:menuitem>
+					<!--  28838 - end --><!-- 30781 : move end comment -->
 					<ui:remove>
 					<!-- Change Challenge Question -->
 					<p:menuitem value="#{lbl['lbl.pm.profiles.tab.name.ccq']}" update="@form">
