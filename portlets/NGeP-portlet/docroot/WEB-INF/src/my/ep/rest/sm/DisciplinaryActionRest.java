@@ -34,8 +34,10 @@ public class DisciplinaryActionRest {
 
 	@GET
 	@Path("smdisciplinaryaction") 
-	public Response retrieveDisciplinaryAction() {		
+	public Response retrieveDisciplinaryAction() {	
+		
 		log.info("Before success calling retrieve rest api....");
+		boolean enter  = false;
 		try {
 			//27426 : Disciplinary Action - start
 			//find data with end date less than current date
@@ -50,7 +52,7 @@ public class DisciplinaryActionRest {
 			//26238 - Disciplinary Action - 28798 - end
 			
 			if(releaseDAList.getSmDisciplinaryActions() != null
-					&& releaseDAList.getSmDisciplinaryActions().size() > 0 ){
+					&& releaseDAList.getSmDisciplinaryActions().size() > 0 && enter){
 				log.info("releaseDAList.getSmDisciplinaryActions()=============="+releaseDAList.getSmDisciplinaryActions().size());
 				int i = 0;
 				for (SmDisciplinaryAction disc : releaseDAList.getSmDisciplinaryActions()) {
@@ -98,7 +100,7 @@ public class DisciplinaryActionRest {
 			
 			if(updateDAList != null
 					&& updateDAList.getSmDisciplinaryActions() != null
-					&& updateDAList.getSmDisciplinaryActions().size() > 0){
+					&& updateDAList.getSmDisciplinaryActions().size() > 0 && enter){
 				for (SmDisciplinaryAction pendingDisc : updateDAList.getSmDisciplinaryActions()) {
 					log.info("updateDAList. supplier id=============="+pendingDisc.getSmSupplier().getSupplierId());
 					 
@@ -117,7 +119,7 @@ public class DisciplinaryActionRest {
 			}
 			
 			//28798: Disciplinary Action - start - 26238 - reopen
-			if(updateBCDAList != null && updateBCDAList.getSmDisciplinaryActions() != null && updateBCDAList.getSmDisciplinaryActions().size() > 0){
+			if(updateBCDAList != null && updateBCDAList.getSmDisciplinaryActions() != null && updateBCDAList.getSmDisciplinaryActions().size() > 0 && enter){
 				Date today = new Date(); 
 				for(SmDisciplinaryAction cancelRegBlacklist: updateBCDAList.getSmDisciplinaryActions()){
 					log.info("updateBCDAList. supplier id=============="+cancelRegBlacklist.getSmSupplier().getSupplierId()); 
