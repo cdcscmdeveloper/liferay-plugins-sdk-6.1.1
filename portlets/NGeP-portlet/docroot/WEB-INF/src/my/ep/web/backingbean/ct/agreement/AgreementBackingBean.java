@@ -555,8 +555,8 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 					&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 				System.out.println("------------ Bug #30924 : APPROVE -----------------");
 				generateAgreementFile();
-				System.out.println("------------ Bug #30924 : agreementZipFilePath = "+agreementZipFilePath);
-				System.out.println("------------ Bug #30924 :  agreementZipFileName= "+ agreementZipFileName);
+				log.info("------------ Bug #30924 : agreementZipFilePath = "+agreementZipFilePath);
+				log.info("------------ Bug #30924 :  agreementZipFileName= "+ agreementZipFileName);
 				getManagedBean().getCtAgreement().setFilePath(DocumentRepositoryUtils.getDBFilePath(agreementZipFilePath.replace("\\", "/")));
 				getManagedBean().getCtAgreement().setFileName(agreementZipFileName);
 			}
@@ -1656,18 +1656,19 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	private void generateAgreementFile() {
 		List<File> fileList = new ArrayList<File>();
 
+		log.info( "Bug #30924 getManagedBean().getCtAgreement().getContractDocumentAttachments() :"+getManagedBean().getCtAgreement().getContractDocumentAttachments());
 		for (CtAttachment ctAttachment : getManagedBean().getCtAgreement().getContractDocumentAttachments()) {
 			if (StringUtils.isNotBlank(ctAttachment.getFilePath())) {
 				fileList.add(new File(DocumentRepositoryUtils.getBaseDir() + ctAttachment.getFilePath()));
 			}
 		}	
-		System.out.println("------------ Bug #30924 -  in generateAgreementFile : fileList.size() = "+fileList.size());
+		log.info("------------ Bug #30924 -  in generateAgreementFile : fileList.size() = "+fileList.size());
 		try {
 			if (fileList.size() == 1) {
 				agreementZipFilePath = fileList.get(0).getPath();
 				agreementZipFileName = fileList.get(0).getName();
-				System.out.println("------------ Bug #30924 -  in generateAgreementFile : fileList.get(0).getPath() = "+fileList.get(0).getPath());
-				System.out.println("------------ Bug #30924 -  in generateAgreementFile :  fileList.get(0).getName() = "+ fileList.get(0).getName());
+				log.info("------------ Bug #30924 -  in generateAgreementFile : fileList.get(0).getPath() = "+fileList.get(0).getPath());
+				log.info("------------ Bug #30924 -  in generateAgreementFile :  fileList.get(0).getName() = "+ fileList.get(0).getName());
 			} else {	// Generate agreement zip file
 				String zipFileName = "agreement.zip";
 				if (getManagedBean().getAgreementType().equalsIgnoreCase(ContractConst.SUPPLEMENTAL_AGREEMENT)) {
@@ -1700,8 +1701,8 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 				zos.close();
 				agreementZipFilePath = zipFile.getPath();
 				agreementZipFileName = zipFile.getName();
-				System.out.println("------------ Bug #30924 - in generateAgreementFile : zipFile.getPath(); = "+zipFile.getPath());
-				System.out.println("------------ Bug #30924 - in generateAgreementFile :  zipFile.getName() = "+ zipFile.getName());
+				log.info("------------ Bug #30924 - in generateAgreementFile : zipFile.getPath(); = "+zipFile.getPath());
+				log.info("------------ Bug #30924 - in generateAgreementFile :  zipFile.getName() = "+ zipFile.getName());
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
