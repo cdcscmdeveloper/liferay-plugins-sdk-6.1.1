@@ -59,7 +59,7 @@ public class DisciplinaryActionRest {
 					log.info("releaseDAList. supplier id=============="+disc.getSmSupplier().getSupplierId()); 
 					 
 					if(disc != null
-							&& disc.getSmSupplier() != null){
+							&& disc.getSmSupplier() != null && disc.getSmSupplier().getSupplierId() == 1010670){
 						disc.getSmSupplier();
 						log.info("-----------Bilangan------------------"+i);
 						
@@ -71,7 +71,8 @@ public class DisciplinaryActionRest {
 							PersonnelReqDTO reqPersonnelDTO = new PersonnelReqDTO();
 							reqPersonnelDTO.setSmSupplierId(disc.getSmSupplier().getSupplierId());
 
-							PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelBySupplierId(reqPersonnelDTO);
+							//PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelBySupplierId(reqPersonnelDTO);
+							PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelBySupplierIdForDA(reqPersonnelDTO);
 							 
 							reqDTO.setSmSupp(disc.getSmSupplier());  
 							reqDTO.getSmSupp().getSmAppl().setSmPersonnels(personnelResDTO.getSmPersonnelList());  
