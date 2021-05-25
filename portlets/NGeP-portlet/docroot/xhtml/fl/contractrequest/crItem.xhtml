@@ -784,7 +784,7 @@
 	<h:panelGroup>   
 		<p:panel id="specificationPanel" header="#{lbl['lbl.fl.spec.panel']}" toggleable="false" >
 			
-		  <table style="width: 67%">	
+		  <table style="width: 68%">	
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.offer']}" rendered="#{contractRequestBackingBean.managedBean.dpFlag}"/></td>
 				<td><p:inputText disabled="true" rendered="#{contractRequestBackingBean.managedBean.dpFlag}"
@@ -806,7 +806,7 @@
 			<p:column headerText="#{lbl['lbl.fl.spec']}" style="text-align:center" width="750"
 			rendered="#{contractRequestBackingBean.managedBean.dpFlag}">
 			<p:inputTextarea disabled="true" rendered="#{contractRequestBackingBean.managedBean.dpFlag}" styleClass="colFloatLeft"
-						value="#{specificationList.itemSpec}" cols="130" rows="2"/>
+						value="#{specificationList.itemSpec}" cols="140" rows="2"/>
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.fl.spec']}" style="text-align:center"

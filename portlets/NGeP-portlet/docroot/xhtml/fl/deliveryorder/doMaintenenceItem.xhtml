@@ -83,25 +83,25 @@
 	<p:dialog id="doItemInfoDialog" header="#{lbl['lbl.fl.do.item']}"
 		widgetVar="doItemInfo" showEffect="fade" hideEffect="fade"
 		modal="true" width="900" height="400" resizable="false" style="overflow:scroll">
-		<table style="width: 100%">
+		<table style="width: 68%">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.item.name']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{createDOBackingBean.managedBean.itemName}"
-						size="85" /></td>
+						size="35" /></td>
 						
 			</tr>		
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.offer']}" rendered="#{createDOBackingBean.managedBean.dpFlag}"/></td>
 				<td><p:inputText disabled="true" rendered="#{createDOBackingBean.managedBean.dpFlag}"
 						value="#{createDOBackingBean.managedBean.supplierOffer == null ? lbl['lbl.fl.supp.na'] : createDOBackingBean.managedBean.supplierOffer}"
-						size="85" /></td>
+						size="35" /></td>
 			</tr>			
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.new.supp.offer']}" rendered="#{createDOBackingBean.managedBean.dpFlag}"/></td>
 				<td><p:inputText disabled="true" rendered="#{createDOBackingBean.managedBean.dpFlag}"
 						value="#{createDOBackingBean.managedBean.newOfferedSpec == null ? lbl['lbl.fl.supp.na'] : createDOBackingBean.managedBean.newOfferedSpec}"
-						size="85" /></td>
+						size="35" /></td>
 			</tr>
 			</table> 
 			<p:dataTable id="specificationDt" var="specificationList"
@@ -111,12 +111,12 @@
 			<p:column headerText="#{lbl['lbl.fl.spec']}" style="text-align:center" width="750"
 			rendered="#{createDOBackingBean.managedBean.dpFlag}">
 			<p:inputTextarea disabled="true" rendered="#{createDOBackingBean.managedBean.dpFlag}" styleClass="colFloatLeft"
-						value="#{specificationList.itemSpec}" cols="120" rows="2"/>
+						value="#{specificationList.itemSpec}" cols="140" rows="2"/>
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.fl.spec']}" style="text-align:center"
 			rendered="#{!createDOBackingBean.managedBean.dpFlag}">			
-			<p:inputTextarea cols="35" rows="10" id="itemSpecification"
+			<p:inputTextarea cols="44" rows="10" id="itemSpecification"
 						rendered="#{!createDOBackingBean.managedBean.dpFlag}"
 						autoResize="false"
 						style=" margin-bottom:5px;" 
@@ -125,7 +125,7 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.supp.offer']}" style="text-align:center"
 						rendered="#{!createDOBackingBean.managedBean.dpFlag}">
-			<p:inputTextarea cols="35" rows="10" id="supplierOffer"
+			<p:inputTextarea cols="44" rows="10" id="supplierOffer"
 						rendered="#{!createDOBackingBean.managedBean.dpFlag}"
 						autoResize="false"
 						style=" margin-bottom:5px;" 
@@ -134,7 +134,7 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.new.offer.spec']}" style="text-align:center"
 						rendered="#{!createDOBackingBean.managedBean.dpFlag}">
-			<p:inputTextarea cols="35" rows="10" id="newOfferedSpec"
+			<p:inputTextarea cols="44" rows="10" id="newOfferedSpec"
 						rendered="#{!createDOBackingBean.managedBean.dpFlag}"
 						autoResize="false"
 						style=" margin-bottom:5px;" 

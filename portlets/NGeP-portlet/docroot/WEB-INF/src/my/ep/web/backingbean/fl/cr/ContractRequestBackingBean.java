@@ -4261,16 +4261,22 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		if (!getManagedBean().getSpecificationList().isEmpty()) {
 			getManagedBean().setItemSpecList(new ArrayList<ScRequestItemSpecOffer>());
 			for (ScRequestItemSpecOffer specification : getManagedBean().getSpecificationList()) {
-				if (specification.getSupplierOffer()!= null) {
+				if (specification.getSupplierOffer()!= null && specification.getSupplierId().getSupplierId()
+						.equals(getManagedBean().getFlRequest().getSmSupplier().getSupplierId())) {
 					getManagedBean().setSupplierOffer(specification.getSupplierOffer());
 				}
-				if (specification.getNewOfferSpec()!= null) {
+				if (specification.getNewOfferSpec()!= null && specification.getSupplierId().getSupplierId()
+						.equals(getManagedBean().getFlRequest().getSmSupplier().getSupplierId())) {
 					getManagedBean().setNewOfferedSpec(specification.getNewOfferSpec());
 				}
-				if (specification.getItemSpec()!= null) {
+				if (specification.getItemSpec()!= null && specification.getSupplierId().getSupplierId()
+						.equals(getManagedBean().getFlRequest().getSmSupplier().getSupplierId())) {
 					getManagedBean().setItemSpecification(specification.getItemSpec());	
 					getManagedBean().getItemSpecList().add(specification);
-				}			
+				}					
+			}
+			if (getManagedBean().getItemSpecList().isEmpty()) {
+				getManagedBean().getItemSpecList().add(getManagedBean().getSpecificationList().get(0));
 			}
 		} else {
 		getManagedBean().setSupplierOffer(null);
