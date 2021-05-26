@@ -419,17 +419,21 @@
 					<!--#30936-END-->
 				</tr>
 				<!-- 13320 -->
-         <tr id="">
+				<!--#30936-START-->
+            <tr id="divTrId">
 				<td></td>
 				<td></td>
 				<td class="tdTitle">
-					<h:panelGroup id="divisionRegLabelPanelId" rendered="#{registrationBackingBean.managedBean.smPermenantAdd.pmState.adoptDivision}">
+				<p:outputPanel id="divisionRegLabelPanelId">	
+					<ui:fragment rendered="#{registrationBackingBean.managedBean.smPermenantAdd.pmState.adoptDivision}">
 						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
-					</h:panelGroup>
+					</ui:fragment>
+				</p:outputPanel>
 				</td>
 				<td class="tdContent">
-					<h:panelGroup id="divisionRegDropdownPanelId" rendered="#{registrationBackingBean.managedBean.smPermenantAdd.pmState.adoptDivision}">
+				<p:outputPanel id="divisionRegDropdownPanelId">
+					<ui:fragment rendered="#{registrationBackingBean.managedBean.smPermenantAdd.pmState.adoptDivision}">
 						<p:selectOneMenu id="cmbPermDivision"
 						label="#{lbl['lbl.sm.division']}"
 						value="#{registrationBackingBean.managedBean.smPermenantAdd.pmDivision.divisionId}"
@@ -443,10 +447,11 @@
 							listener="#{registrationBackingBean.populateDivisionByAddType('permenant', true)}"
 							update="cmbPermDistrict,cmbPermCity" />
 					</p:selectOneMenu>
-					</h:panelGroup>
+					</ui:fragment>
+				</p:outputPanel>
 				</td>
             </tr>
-
+				<!--#30936-END-->
 				<tr>
 					<td class="tdTitle"></td>
 					<td class="tdContent"><p:inputText size="40" value="#{registrationBackingBean.managedBean.smPermenantAdd.address3}"
