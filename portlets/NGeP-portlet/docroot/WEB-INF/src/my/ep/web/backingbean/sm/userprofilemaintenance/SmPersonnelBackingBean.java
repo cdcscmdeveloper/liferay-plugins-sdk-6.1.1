@@ -3103,6 +3103,10 @@ public class SmPersonnelBackingBean extends
 	}
 	//9569 - Start
 	public void saveUserMOFUpdate(){
+		//Bug 9569
+		if(getManagedBean().getEpRoleTrans().equalsIgnoreCase(SupplierManagementConst.EPROLE_DELETED)){
+			getManagedBean().setEpRoleTrans("");
+		}
 		  try{
 			SmPersonnel personnel = getManagedBean().getBasicSmPersonnel();
 		    //This is to save all the address
@@ -3368,7 +3372,15 @@ public class SmPersonnelBackingBean extends
 		return disableRadio;
 	}
 	//END 30053
-	
+	//Bug 9569
+	public static boolean personnelToDeleteRole(SmPersonnel basicSmPersonnel) {
+		boolean retVal = false;
+		if(basicSmPersonnel.getEpRole()!=null && basicSmPersonnel.getAuthorizedFlg()==1 &&
+				!basicSmPersonnel.getEpRole().equalsIgnoreCase(SupplierManagementConst.MOF_SUPPLIER_ADMIN)){
+			retVal = true;
+		}
+		return retVal;
+	}
 	// #28720 Start
 	public void onChangeEmail()
 	{
