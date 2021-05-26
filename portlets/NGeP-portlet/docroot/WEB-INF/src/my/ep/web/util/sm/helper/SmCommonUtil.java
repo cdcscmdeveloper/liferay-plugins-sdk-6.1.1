@@ -4404,9 +4404,9 @@ public class SmCommonUtil {
 				
 				return resDTO;
 			}
-//			if (!resDTO.getStatusCode().equalsIgnoreCase("") && !"70060".equalsIgnoreCase(resDTO.getStatusCode())){				
-//				ssmError(resDTO);
-//			}else{//START 27329
+			if (!resDTO.getStatusCode().equalsIgnoreCase("") && !"70060".equalsIgnoreCase(resDTO.getStatusCode())){				
+				ssmError(resDTO);
+			}else{//START 27329
 				if(!ssmReqDTO.isFromRegistration() && resDTO.getPersonnelIcIssues()!= null && resDTO.getPersonnelIcIssues().size()>0){
 					
 					sb.append("<br/>");
@@ -4419,7 +4419,7 @@ public class SmCommonUtil {
 					}
 					throw new EpException(MessageConst.ERROR_721085,new String[] {sb.toString() });
 				}
-//			}//END 27329
+			}//END 27329
 			//#29582- Start
 			log.info("ssm status: "+ resDTO.getStatusCode());
 			if (resDTO.getSmPersonnelAll() != null && resDTO.getSmPersonnelAll().size()>0 ) {
