@@ -130,7 +130,18 @@
 						<h:outputText value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
 					</p:commandLink>
 				</p:column>
-	
+				
+				<ui:remove> Enhancement 25201 - start</ui:remove>
+				<c:if test="#{canShowSupplierProposal}">
+					<p:column style="text-align:center;">
+						<p:commandLink  process="@this" partialSubmit="true"
+							action="#{ViewSPBackingBean.navigatetoViewSupplierProposal(view.viewId, shortlistedSupp.qtEvaluationResult.scQtProposal.qtProposalId)}">
+					       <p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" title="#{lbl['lbl.sc.qt.proposal.url.view']}"/>
+						</p:commandLink>
+					</p:column>
+				</c:if>
+				<ui:remove> Enhancement 25201 - end</ui:remove>
+
 				<p:column>
 					<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
 											fn:toUpperCase(shortlistedSupp.qtEvaluationResult.scQtProposal.bumi))}" />
