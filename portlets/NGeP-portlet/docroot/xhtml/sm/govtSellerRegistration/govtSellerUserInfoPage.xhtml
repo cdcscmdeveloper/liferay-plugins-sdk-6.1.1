@@ -477,11 +477,12 @@
 						value="#{bb.managedBean.smPersonnel.email}" validatorMessage="#{lbl['lbl.sm.invalidEmail']}">
 						<f:validateRegex disabled="#{empty param['disableValidation']}"
 							pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+							<p:ajax event="change" process="@this" listener="#{bb.onChangeEmail()}" update="usrEmail"/> 
 							<p:ajax event="blur" partialSubmit="true"></p:ajax>
 					</p:inputText> &#160;
-					<p:graphicImage id="emailti" value="/css/images/design/tooltips.png" />
-					<p:tooltip id="emailtt" for="emailti">
-						<p:outputLabel escape="false" value="#{lbl['tt.sm.user.email']}"  />
+					<p:graphicImage id="toolTipIcon" value="/css/images/design/tooltips.png" /> 
+				  	<p:tooltip id="sourceTooltip" for="toolTipIcon">
+						<h:outputText id="sourceLabel" escape="false" value="#{lbl['lbl.sm.email.change.tooltip']}" />
 					</p:tooltip>
 					<p:message id="usrEmailMsg" for="usrEmail" display="icon" />
 				</td>
@@ -495,6 +496,7 @@
 				<td class="tdContent">
 				<p:inputText size="40" id="conEmail" value="#{bb.managedBean.confirmEmail}" 
 				required="#{!empty param['disableValidation']}"  label="#{lbl['lbl.sm.confirmemail']}" maxlength="80">
+				<p:ajax event="change" process="@this" listener="#{bb.onChangeConfirmEmail()}" update="conEmail"/>
 				<p:ajax event="blur" partialSubmit="true"></p:ajax></p:inputText>
 				<p:message id="conEmailMsg" for="conEmail" display="icon" /></td>
 			</tr>
@@ -661,5 +663,6 @@
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form" 
 				action="#{bb.navigateToPage(SupplierManagementConst.GOVT_SELLER_ACCOUNT_INFO_PAGE)}" />	
 		</div>
-
+<ac:smEmailAlertPopup bBean="#{backingBean}" title="#{lbl['lbl.sm.email.change.header']}" dialogId="emailPopUp" 
+				btnOkLabel="#{lbl['lbl.btn.ok']}" />
 </ui:composition>
