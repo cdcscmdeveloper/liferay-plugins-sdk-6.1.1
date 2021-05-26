@@ -37,7 +37,7 @@ public class DisciplinaryActionRest {
 	public Response retrieveDisciplinaryAction() {	
 		
 		log.info("Before success calling retrieve rest api....");
-		boolean enter  = false;
+		boolean enter  = true;
 		try {
 			//27426 : Disciplinary Action - start
 			//find data with end date less than current date
@@ -59,7 +59,7 @@ public class DisciplinaryActionRest {
 					log.info("releaseDAList. supplier id=============="+disc.getSmSupplier().getSupplierId()); 
 					 
 					if(disc != null
-							&& disc.getSmSupplier() != null && disc.getSmSupplier().getSupplierId() == 1010670){
+							&& disc.getSmSupplier() != null ){
 						disc.getSmSupplier();
 						log.info("-----------Bilangan------------------"+i);
 						
