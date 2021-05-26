@@ -694,6 +694,8 @@ public class SupplierManagementConst {
 	public static final String CATEGORY_CODE_L3_01 = "01";
 	public static final String CATEGORY_CODE_L3_99 = "99";
 	public static final String CATEGORY_CODE_L1_L2_L3_220701 = "220701";
+	//9569
+	public static final String EPROLE_DELETED = "Delete";
 
 	public String getCATEGORY_CODE_L3_99() {
 		return CATEGORY_CODE_L3_99;
@@ -1313,5 +1315,9 @@ public class SupplierManagementConst {
 
 	public String getSM_APPL_PAGE_TYPE_ANNUALINFO() {
 		return SM_APPL_PAGE_TYPE_ANNUALINFO;
+	}
+	//9569
+	public String getEPROLE_DELETED() {
+		return EPROLE_DELETED;
 	}
 }
