@@ -188,7 +188,12 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 			getManagedBean().setTextBeforeSign(sb.toString());	
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
-			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			//21387 start
+			if(BpmOutcomeConst.BPM_APPROVE.equals(outcome)){
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			}else{
+				return saveRequestCtAdmin(outcome);
+			}//21387 end
 			return null;
 		}else if (BpmOutcomeConst.BPM_CANCEL.equals(outcome)) {
 			RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
