@@ -1485,11 +1485,7 @@ public class SmCommonUtil {
 						.setScale(2, RoundingMode.HALF_UP));
 			} else{
 				//start #30900
-				if(compBasic.getPaidUpCapitalSSM()!=null){
-					compBasic.setPaidUpCapital(compBasic.getPaidUpCapitalSSM().setScale(2, RoundingMode.HALF_UP));
-				}else{
-					compBasic.getPaidUpCapital().setScale(2, RoundingMode.HALF_UP);
-				}
+				compBasic.setPaidUpCapital(compBasic.getPaidUpCapital().setScale(2, RoundingMode.HALF_UP));
 				//end #30900
 			}
 		} catch (Exception e) {
@@ -1498,6 +1494,7 @@ public class SmCommonUtil {
 		}
 		log.info("**** Paid up capital ****** " + compBasic.getPaidUpCapital());
 	}
+
 
 	/**
 	 * Calculate sm application paid up capital percent.
