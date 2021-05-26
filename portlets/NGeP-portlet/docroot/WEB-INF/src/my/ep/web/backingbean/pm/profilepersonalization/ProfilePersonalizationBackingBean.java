@@ -81,6 +81,7 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
@@ -1799,5 +1800,16 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		return checkFactUser;
 	}
 	//28838 - end
-
+	
+	// #28720 - Start
+	public void onChangeEmail()
+	{
+		String email = this.getManagedBean().getSelectedUser().getEmail().toLowerCase();
+		if(email.contains("@yahoo.com") || email.contains("@ymail.com") || email.contains("@rocketmail.com"))
+		{
+			this.getManagedBean().getSelectedUser().setEmail("");
+			RequestContext.getCurrentInstance().execute(
+					"emailPopUpWidgetVar.show()");
+		}
+	} // #28720 - End
 }
