@@ -1386,7 +1386,7 @@ public class SmCommonUtil {
 	 *            - String
 	 */
 	public static void calculateSmApplicationPaidUpCapitalSum(
-			SmCompanyBasic compBasic, List<SmEquityCompany> smEquityCompany, String businessTypeVal, SmSupplier smSupplier) { //#30900
+			SmCompanyBasic compBasic, List<SmEquityCompany> smEquityCompany, String businessTypeVal) { //#30900
 		boolean llpOrRoc = false;
 		if (compBasic.getBumiEquity() != null) {
 			compBasic.setBumiEquity(compBasic.getBumiEquity().setScale(2,
