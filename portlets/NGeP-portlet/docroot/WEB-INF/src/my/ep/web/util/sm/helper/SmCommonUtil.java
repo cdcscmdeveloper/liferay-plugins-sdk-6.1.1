@@ -1386,7 +1386,7 @@ public class SmCommonUtil {
 	 *            - String
 	 */
 	public static void calculateSmApplicationPaidUpCapitalSum(
-			SmCompanyBasic compBasic, List<SmEquityCompany> smEquityCompany, String businessTypeVal) { //#30900
+			SmCompanyBasic compBasic, List<SmEquityCompany> smEquityCompany, String businessTypeVal, SmSupplier smSupplier) { //#30900
 		boolean llpOrRoc = false;
 		if (compBasic.getBumiEquity() != null) {
 			compBasic.setBumiEquity(compBasic.getBumiEquity().setScale(2,
@@ -1486,11 +1486,7 @@ public class SmCommonUtil {
 						.setScale(2, RoundingMode.HALF_UP));
 			} else{
 				//start #30900
-				if(compBasic.getPaidUpCapitalSSM()!=null){
-					compBasic.setPaidUpCapital(compBasic.getPaidUpCapitalSSM().setScale(2, RoundingMode.HALF_UP));
-				}else{
-					compBasic.getPaidUpCapital().setScale(2, RoundingMode.HALF_UP);
-				}
+				compBasic.setPaidUpCapital(compBasic.getPaidUpCapital().setScale(2, RoundingMode.HALF_UP));
 				//end #30900
 			}
 		} catch (Exception e) {
@@ -1499,6 +1495,7 @@ public class SmCommonUtil {
 		}
 		log.info("**** Paid up capital ****** " + compBasic.getPaidUpCapital());
 	}
+
 
 	/**
 	 * Calculate sm application paid up capital percent.
@@ -4407,9 +4404,9 @@ public class SmCommonUtil {
 				
 				return resDTO;
 			}
-			if (!resDTO.getStatusCode().equalsIgnoreCase("") && !"70060".equalsIgnoreCase(resDTO.getStatusCode())){				
-				ssmError(resDTO);
-			}else{//START 27329
+//			if (!resDTO.getStatusCode().equalsIgnoreCase("") && !"70060".equalsIgnoreCase(resDTO.getStatusCode())){				
+//				ssmError(resDTO);
+//			}else{//START 27329
 				if(!ssmReqDTO.isFromRegistration() && resDTO.getPersonnelIcIssues()!= null && resDTO.getPersonnelIcIssues().size()>0){
 					
 					sb.append("<br/>");
@@ -4422,7 +4419,7 @@ public class SmCommonUtil {
 					}
 					throw new EpException(MessageConst.ERROR_721085,new String[] {sb.toString() });
 				}
-			}//END 27329
+//			}//END 27329
 			//#29582- Start
 			log.info("ssm status: "+ resDTO.getStatusCode());
 			if (resDTO.getSmPersonnelAll() != null && resDTO.getSmPersonnelAll().size()>0 ) {
