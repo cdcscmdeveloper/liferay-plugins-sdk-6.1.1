@@ -8650,9 +8650,12 @@ public class SmApplicationBackingBean extends
 	 * Cancel po escalation to approver.
 	 */
 	public void cancelPOEscalationToApprover() {
+		assignValReqdToFalse();
+		resetSearchRejectedReason();
+		getManagedBean().setReasonId(null);
+		getManagedBean().setRejectReasonReqd(false);
 		getManagedBean().getPoSecReview().setRecommendation("");
-		RequestContext.getCurrentInstance()
-				.execute("submitApprvrDialog.hide()");
+		RequestContext.getCurrentInstance().execute("submitApprvrDialog.hide()");
 	}
 
 	/**
@@ -9373,6 +9376,14 @@ public class SmApplicationBackingBean extends
 						if (getManagedBean().getPoSecReview() != null
 								&& getManagedBean().getPoSecReview()
 										.getRecommendation().equals("REJECT")) {
+							//21937 - start
+							PmStatus status = PmCommonUtil
+									.getPmStatusById(getManagedBean()
+											.getPoRecommendStatusId());
+							getManagedBean().getPoSecReview().setPmRegStatus(
+									status.getPmRegStatus());
+							//21937 - end
+							
 							if (getManagedBean().isPoUser()
 									&& getManagedBean().getPoSecReview()
 											.getApplSectionReviewId() != null) {
