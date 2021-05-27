@@ -4570,7 +4570,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			//if(getManagedBean().getCurrentStatusId() != null){
 				if(getManagedBean().getCurrentStatusId() != null && QTStatusConst.LOA_PENDING_VERIFICATION.equals(getManagedBean().getCurrentStatusId())){
 					getManagedBean().setSelectedTabIndex(1);
-					getManagedBean().setIconForDL(true);
+					//getManagedBean().setIconForDL(true);//29007
 				}
 			//}
 			//#29164 CR 26474: Static Code Analysis End
