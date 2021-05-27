@@ -22,6 +22,7 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
 import my.ep.dto.sm.bulkApplication.SmBulkApplicationVO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
@@ -114,7 +115,6 @@ public class SmBulkApplicationBackingBean extends
 		for (SmBulkApplicationVO bulkAppl : getManagedBean().getSelectedTasks()) {
 
 			try {
-
 				SmApplicationUtil.setApplicationApproveStatus(
 						bulkAppl.getAppl(), bulkAppl.getApprovedStatusId());
 
@@ -171,10 +171,15 @@ public class SmBulkApplicationBackingBean extends
 
 	public void rejectBulkApplication() {
 		setSelectedRejectedResonsToVO();
+		//#21937 - start
+		if(getManagedBean().getApplStatus().equals(getManagedBean().getRECOMMEND_APPROVE())){
+			RequestContext.getCurrentInstance().execute("rejectDialog.show();");
+		} else {
 		// #15629 -- start - 20/1/2020
 		//		RequestContext.getCurrentInstance().execute("rejectDialog.show();");
-		submitReject();
-		// #15629 -- end - 20/1/2020
+			submitReject();
+		}
+		// #15629 -- end - 20/1/2020, #21937 - end
 	}
 
 	public void submitReject() {
@@ -187,6 +192,13 @@ public class SmBulkApplicationBackingBean extends
 		for (SmBulkApplicationVO bulkAppl : getManagedBean().getSelectedTasks()) {
 
 			try {
+				//21937 - start
+				if(bulkAppl.getSelectedReasonDescs() == null
+						|| bulkAppl.getSelectedReasonDescs().size() == 0){
+					throw new EpException(
+							SmCommonUtil.getMessage("lbl.sm.mandatory.rejection.remark", null));
+				}
+				//21937 - end
 				setApplPmStatus(
 						SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER,
 						bulkAppl.getAppl());
@@ -224,6 +236,7 @@ public class SmBulkApplicationBackingBean extends
 			} catch (Exception ex) {
 				getManagedBean().getFailedSubmittedList().add(
 						bulkAppl.getAppl());
+				throw new EpException(ex.getMessage()); //21937
 			}
 		}
 		// #15629 -- start - 20/1/2020
@@ -367,8 +380,9 @@ public class SmBulkApplicationBackingBean extends
 	}
 
 	public void onViewOverlapCategory(SmBulkApplicationVO vo) {
-		if (EntityHelper.isCollectionEmpty(getManagedBean()
-				.getSelectedOverlapCategoryVOList())) {
+		//#21937 - start
+		//if (EntityHelper.isCollectionEmpty(getManagedBean()
+		//		.getSelectedOverlapCategoryVOList())) {
 			List<String> overlap = Arrays.asList(
 					ParameterConst.NEW_SM_APPLN_FOR_RENEW,
 					ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES,
@@ -390,7 +404,8 @@ public class SmBulkApplicationBackingBean extends
 			}
 			getManagedBean().setSelectedOverlapCategoryVOList(
 					vo.getOverlapCategoryVOList());
-		}
+		//}
+		//#21937 - end
 		RequestContext.getCurrentInstance().execute(
 				"overlapCategoryDialog.show();");
 	}
@@ -508,48 +523,99 @@ public class SmBulkApplicationBackingBean extends
 	}
 
 	private void validateApproveCategories() {
+		StringBuilder sbNoAction = new StringBuilder();
+		StringBuilder sbNoRemarks = new StringBuilder();
+		StringBuilder sbNoApprove = new StringBuilder();
+		StringBuilder sbFullMessage = new StringBuilder();
+		String catNoAction = "";
+		String catNoRemarks = "";
+		int countNoAction = 0;
+		int countNoRemarks = 0;
+		boolean catNoApprove = true; //21937
+
+		sbNoAction.append("<table>");
+		sbNoRemarks.append("<table>");
+		sbNoApprove.append("<table>");
+
 		for (SmBulkApplicationVO vo : getManagedBean().getSelectedTasks()) {
+			catNoAction = "";
+			catNoRemarks = "";
+
 			for (SmSupplierCategory cat : vo.getPendingApproveCategories()) {
 				if (cat.getApprvrDecFlg() == null) {
-					throw new EpException(
-							SmCommonUtil
-									.getMessage(
-											"lbl.sm.required.msg",
-											new String[] { SmCommonUtil
-													.getMessage(
-															"lbl.sm.catCodes.appAct",
-															null)
-													+ " "
-													+ SmCommonUtil
-															.getMessage(
-																	"lbl.sm.catCodes.forCatCode",
-																	null)
-													+ " "
-													+ cat.getPmCategoryL1()
-															.getCategoryL1Code()
-													+ cat.getPmCategoryL2()
-															.getCategoryL2Code()
-													+ cat.getPmCategoryL3()
-															.getCategoryL3Code() }));
+					catNoAction = catNoAction + cat.getPmCategoryL1().getCategoryL1Code()
+							+ cat.getPmCategoryL2().getCategoryL2Code() + cat.getPmCategoryL3().getCategoryL3Code()
+							+ ",";
 				}
-				if (StringUtils.isBlank(cat.getApproverRemarks())
-						&& cat.getApprvrDecFlg() == 0) {
-					throw new EpException(
-							SmCommonUtil.getMessage(
-									"lbl.sm.required.msg",
-									new String[] { SmCommonUtil.getMessage(
-											"lbl.sm.catCodes.rejRemarks", null)
-											+ " "
-											+ cat.getPmCategoryL1()
-													.getCategoryL1Code()
-											+ cat.getPmCategoryL2()
-													.getCategoryL2Code()
-											+ cat.getPmCategoryL3()
-													.getCategoryL3Code() }));
+				if (cat.getApprvrDecFlg() == 0 && StringUtils.isBlank(cat.getApproverRemarks())) {
+					catNoRemarks = catNoRemarks + cat.getPmCategoryL1().getCategoryL1Code()
+							+ cat.getPmCategoryL2().getCategoryL2Code() + cat.getPmCategoryL3().getCategoryL3Code()
+							+ ",";
 				}
+				//21937 - start
+				if (cat.getApprvrDecFlg() != 0) {
+					catNoApprove = false;
+				} //21937 - end
+			}
+			//21937
+			if(vo.getPendingApproveCategories() == null || vo.getPendingApproveCategories().isEmpty())
+				catNoApprove = false;
+			
+			//21937 - start
+			if(vo.getAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
+				for (SmSupplierCategory cat : vo.getApprovedCategories()){
+					if (cat.getApprvrDecFlg() == 0 && StringUtils.isBlank(cat.getApproverRemarks())) {
+						catNoRemarks = catNoRemarks + cat.getPmCategoryL1().getCategoryL1Code()
+								+ cat.getPmCategoryL2().getCategoryL2Code() + cat.getPmCategoryL3().getCategoryL3Code()
+								+ ",";
+					}
+				}
+			}
+			//21937 - end
+
+			if (!catNoAction.equals("")) {
+				sbNoAction.append("<tr>").append("<td>").append(++countNoAction).append(") ").append("</td><td>");
+				sbNoAction.append(vo.getAppl().getApplNo()).append(" : ")
+						.append(catNoAction.substring(0, catNoAction.length() - 1));
+				sbNoAction.append("</td>").append("</tr>");
+			}
+
+			if (!catNoRemarks.equals("")) {
+				sbNoRemarks.append("<tr>").append("<td>").append(++countNoRemarks).append(") ").append("</td><td>");
+				sbNoRemarks.append(vo.getAppl().getApplNo()).append(" : ")
+						.append(catNoRemarks.substring(0, catNoRemarks.length() - 1));
+				sbNoRemarks.append("</td>").append("</tr>");
+			}
+
+			if (catNoApprove) {
+				sbNoApprove.append("<tr>").append("<td>").append(++countNoAction).append(") ").append("</td><td>");
+				sbNoApprove.append(vo.getAppl().getApplNo());
+				sbNoApprove.append("</td>").append("</tr>");
 			}
 		}
 
+		sbNoAction.append("</table>");
+		sbNoRemarks.append("</table>");
+		sbNoApprove.append("</table>");
+
+		if (!sbNoAction.toString().equals("<table></table>")) {
+			sbFullMessage.append(SmCommonUtil.getMessage("lbl.sm.bulk.approval.failed.noActionCat.msg",
+					new String[] { sbNoAction.toString() }) + "<br />");
+		}
+		//21937 - start
+		if (!sbNoRemarks.toString().equals("<table></table>")) {
+			sbFullMessage.append(SmCommonUtil.getMessage("lbl.sm.bulk.rejected.failed.noRemarks.msg",
+					new String[] { sbNoRemarks.toString() }) + "<br />");			
+		}
+
+		if (!sbNoApprove.toString().equals("<table></table>")) {
+			sbFullMessage.append(SmCommonUtil.getMessage("lbl.sm.bulk.approval.failed.noApprovedCat.msg",
+					new String[] { sbNoApprove.toString() }) + "<br />");
+		} //21937 - end
+
+		if (sbFullMessage.length() != 0) {
+			throw new EpException(sbFullMessage.toString());
+		}
 	}
 
 	/**
@@ -730,6 +796,10 @@ public class SmBulkApplicationBackingBean extends
 				bulkApplicationVO.setRejectReasons(StringUtils.isNotBlank(getApplicationRejectionReason(appl)) ?
 						getApplicationRejectionReason(appl) : "N/A");
 			    //#15629 - End
+				bulkApplicationVO.setPoRemarks(StringUtils.isNotBlank(poRev.getRemarkToApprover()) ? 
+						poRev.getRemarkToApprover() : "N/A");
+				bulkApplicationVO.setCurrentRegStatus("N/A"); //21937
+
 				if (poRev.getRecommendation().equalsIgnoreCase("Approve")
 						|| poRev.getRecommendation().equalsIgnoreCase("Lulus")) {
 					poRecommend = "APPROVE";
@@ -758,6 +828,39 @@ public class SmBulkApplicationBackingBean extends
 								.getPmStatus().getStatusId());
 					}
 				}
+				
+				if (appl.getPmRegStatus() != null
+						&& appl.getPmRegStatus().getPmStatus() != null) {
+					StatusReqDTO statusReqDTO = new StatusReqDTO();
+					statusReqDTO.setStatusId(appl.getPmRegStatus()
+							.getPmStatus().getStatusId());
+					statusReqDTO.setLanguageCode(new FacesScopes()
+							.getUserLocale().getLanguage());
+					PmStatusDesc statusDesc = SmServiceLookup.getStatusSO()
+							.retrieveStatusDescById(statusReqDTO)
+							.getPmStatusDesc();
+					if (statusDesc != null) {
+						bulkApplicationVO.setCurrentRegStatus(statusDesc
+								.getStatusName());
+						bulkApplicationVO.setCurrentRegStatusId(statusDesc
+								.getPmStatus().getStatusId());
+					}
+				//21937 - start
+				}else{
+					// init current registration status description
+					PmStatusDesc currentStatusDesc = SmApplicationUtil
+							.getCurrRegStatusDesc(appl);
+					if (currentStatusDesc != null
+							&& !appl.getApplType()
+									.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+						bulkApplicationVO.setCurrentRegStatus(currentStatusDesc
+								.getStatusName());
+						bulkApplicationVO.setCurrentRegStatusId(currentStatusDesc
+								.getPmStatus().getStatusId());
+					}
+					
+				}
+				//21937 - END
 				bulkApplicationVO.setRegStatusDescList(SmApplicationUtil
 						.getInstance().retrieveRegistrationStatusList(
 								appl.getSupplierType(), appl.getApplType()));
@@ -785,36 +888,39 @@ public class SmBulkApplicationBackingBean extends
 						ParameterConst.NEW_SM_APPLN_FOR_MOF);
 
 				if (appl != null && overlap.contains(appl.getApplType())) {
+					//#21937 - start					
+					SmOverlapCategoryVO overlapCategoryVO = SmApplicationUtil.getOverlapCategoryVO
+									(bulkApplicationVO.getAppl());
+					if (overlapCategoryVO != null) {
+						bulkApplicationVO.setOverlappedCategory(overlapCategoryVO
+										.isOverLappedCategoryExist());
+						bulkApplicationVO.setOverlapMsg(overlapCategoryVO
+										.getOverLappedCategoryMsg());
+						bulkApplicationVO.setOverlapCategoryVOList(overlapCategoryVO
+										.getOverlapCategoryVOList());
+					}
 					for (SmSupplierCategory cat : appl
 							.getSmSupplierCategories()) {
 						if (getManagedBean().getApplStatus().equals(
 								getManagedBean().getRECOMMEND_REJECT())) {
 							cat.setApprvrDecFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
 						}
-						if (cat.isOverLapCategory()
-								&& (cat.getRecordStatusFlg()
-										.compareTo(
-												SupplierManagementConst.APPROVED_RECORD_STATUS) == 0 || cat
-										.getRecordStatusFlg()
-										.compareTo(
-												SupplierManagementConst.PENDING_ACT_STATUS) == 0)
-								|| cat.getRecordStatusFlg() == SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) {
-							SmOverlapCategoryVO overlapCategoryVO = SmApplicationUtil
-									.getOverlapCategoryVO(bulkApplicationVO
-											.getAppl());
-							if (overlapCategoryVO != null) {
-								bulkApplicationVO
-										.setOverlappedCategory(overlapCategoryVO
-												.isOverLappedCategoryExist());
-								bulkApplicationVO
-										.setOverlapMsg(overlapCategoryVO
-												.getOverLappedCategoryMsg());
-								bulkApplicationVO
-										.setOverlapCategoryVOList(overlapCategoryVO
-												.getOverlapCategoryVOList());
+						
+						if(bulkApplicationVO.isOverlappedCategory() &&
+							(cat.getRecordStatusFlg().intValue() == SupplierManagementConst.APPROVED_RECORD_STATUS
+								|| cat.getRecordStatusFlg().intValue() == SupplierManagementConst.PENDING_ACT_STATUS
+								|| cat.getRecordStatusFlg().intValue() == SupplierManagementConst.PENDING_RE_APPROVAL_STATUS)){
+							String catcode = cat.getPmCategoryL1().getCategoryL1Code()
+									+ cat.getPmCategoryL2().getCategoryL2Code()
+									+ cat.getPmCategoryL3().getCategoryL3Code();
+							for(SmBulkApplOverlapCatVO bulkVO : bulkApplicationVO.getOverlapCategoryVOList()){
+								if(bulkVO.getCategoryCode().equals(catcode)){
+									cat.setOverLapCategory(true);
+									break;
+								}
 							}
-							break;
-						}
+						} 
+						//#21937 - end
 					}
 				}
 
@@ -833,27 +939,75 @@ public class SmBulkApplicationBackingBean extends
 					bulkApplicationVO.setOnlineDoc(false);
 				}
 				bulkApplicationVO.setPaymentReqd(getPaymentMode(appl));
+				bulkApplicationVO.setApplType(appl.getApplType());
+				//21937 - start
+				bulkApplicationVO
+						.setPendingApproveCategoriesApprovedByPO(new ArrayList<SmSupplierCategory>());
+				bulkApplicationVO
+						.setPendingApproveCategoriesRejectedByPO(new ArrayList<SmSupplierCategory>());
+				bulkApplicationVO
+						.setApprovedCategoriesByPO(new ArrayList<SmSupplierCategory>());
+				bulkApplicationVO
+						.setRejectedCategoriesByPO(new ArrayList<SmSupplierCategory>());
+				//21937 - end
 				bulkApplicationVO
 						.setPendingApproveCategories(new ArrayList<SmSupplierCategory>());
 				bulkApplicationVO
 						.setApprovedCategories(new ArrayList<SmSupplierCategory>());
+				
+				List<SmSupplierCategory> pendingRejectedCategories = new ArrayList<>();
+				List<SmSupplierCategory> pendingApprovedCategories = new ArrayList<>();				
 				for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
-					if (cat.getRecordStatusFlg().compareTo(
-							SupplierManagementConst.PENDING_ACT_STATUS) == 0
-							|| cat.getRecordStatusFlg()
-									.compareTo(
-											SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0) {
-						bulkApplicationVO.getPendingApproveCategories()
-								.add(cat);
-					} else {
+					if (cat.getRecordStatusFlg().compareTo(SupplierManagementConst.PENDING_ACT_STATUS) == 0
+							|| cat.getRecordStatusFlg().compareTo(SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0) {
+						cat.setApprvrDecFlg(cat.getPoDecFlg());
+						if (cat.getRecordStatusFlg().compareTo(SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0
+								&& SupplierManagementConst.ACC_BASIC_REACTIVATE.equals(appl.getApplType())) {
+							bulkApplicationVO.getApprovedCategories().add(cat);
+							//21937 - start
+							if(cat.isApprovedByPo()){
+								bulkApplicationVO.getApprovedCategoriesByPO().add(cat);
+							} else {
+								bulkApplicationVO.getRejectedCategoriesByPO().add(cat);
+							}
+							//21937 - end
+						} else if (cat.isApprovedByPo()) {
+							pendingApprovedCategories.add(cat);
+						} else {
+							pendingRejectedCategories.add(cat);
+						}
+						//21937 - start
+					} else if(cat.getRecordStatusFlg().compareTo(SupplierManagementConst.DELETED_RECORD_STATUS) != 0) {
 						bulkApplicationVO.getApprovedCategories().add(cat);
+						//21937 - start
+						if(cat.isApprovedByPo()){
+							bulkApplicationVO.getApprovedCategoriesByPO().add(cat); 
+						} else {
+							bulkApplicationVO.getRejectedCategoriesByPO().add(cat); 
+						}					
+						//21937 - end
 					}
 				}
 
-				bulkApplicationVO.setAppliedPaginator(new Paginator(
-						bulkApplicationVO.getPendingApproveCategories()));
-				bulkApplicationVO.setApprovedPaginator(new Paginator(
-						bulkApplicationVO.getApprovedCategories()));
+				sortListByCategoryCodes(pendingApprovedCategories);
+				sortListByCategoryCodes(pendingRejectedCategories);
+				bulkApplicationVO.getPendingApproveCategories().addAll(pendingApprovedCategories);
+				bulkApplicationVO.getPendingApproveCategories().addAll(pendingRejectedCategories);
+				//21937 - start
+				bulkApplicationVO.getPendingApproveCategoriesApprovedByPO().addAll(pendingApprovedCategories);
+				bulkApplicationVO.getPendingApproveCategoriesRejectedByPO().addAll(pendingRejectedCategories);
+				
+				bulkApplicationVO.setAppliedPaginatorApprovedByPO(new Paginator(bulkApplicationVO.getPendingApproveCategoriesApprovedByPO()));
+				bulkApplicationVO.setAppliedPaginatorRejectedByPO(new Paginator(bulkApplicationVO.getPendingApproveCategoriesRejectedByPO()));
+				
+				bulkApplicationVO.setApprovedPaginatorApprovedByPO(new Paginator(bulkApplicationVO.getApprovedCategoriesByPO()));
+				bulkApplicationVO.setApprovedPaginatorRejectedByPO(new Paginator(bulkApplicationVO.getRejectedCategoriesByPO()));
+				//21937 - end
+				
+				bulkApplicationVO.setAppliedPaginator(new Paginator(bulkApplicationVO.getPendingApproveCategories()));
+
+				sortListByCategoryCodes(bulkApplicationVO.getApprovedCategories());
+				bulkApplicationVO.setApprovedPaginator(new Paginator(bulkApplicationVO.getApprovedCategories()));
 
 				// return by applStatus
 				if (!StringUtils.isBlank(getManagedBean().getApplStatus())
@@ -865,6 +1019,25 @@ public class SmBulkApplicationBackingBean extends
 		}
 
 		return bulkApplicationVO;
+	}
+
+	private void sortListByCategoryCodes(List<SmSupplierCategory> list) {
+		Collections.sort(list, new Comparator<SmSupplierCategory>() {
+			@Override
+			public int compare(SmSupplierCategory o1, SmSupplierCategory o2) {
+				if (o1.getPmCategoryL1().getCategoryL1Code().equals(o2.getPmCategoryL1().getCategoryL1Code())) {
+					if (o1.getPmCategoryL2().getCategoryL2Code().equals(o2.getPmCategoryL2().getCategoryL2Code())) {
+						return o1.getPmCategoryL3().getCategoryL3Code()
+								.compareTo(o2.getPmCategoryL3().getCategoryL3Code());
+					} else {
+						return o1.getPmCategoryL2().getCategoryL2Code()
+								.compareTo(o2.getPmCategoryL2().getCategoryL2Code());
+					}
+				} else {
+					return o1.getPmCategoryL1().getCategoryL1Code().compareTo(o2.getPmCategoryL1().getCategoryL1Code());
+				}
+			}
+		});
 	}
 
 	private boolean getPaymentMode(SmAppl smAppl) {
