@@ -5777,8 +5777,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 						reqDTO = new OrgProfileReqDTO();
 						reqDTO.setOrgProfileId(ctAgency.getOrgProfile().getOrgProfileId());
 						resDTO = orgProfileSO.retrieveMinistryByOrgProfileId(reqDTO);
-						selectItem = new SelectItem(resDTO.getPmOrgProfile().getOrgProfileId(), resDTO.getPmOrgProfile().getOrgName());
-						if(!itemList.contains(selectItem)) {
+						if(!resDTO.getPmOrgProfile().getOrgProfileId().equals(itemList.get(itemList.size()-1).getValue())) {
+							selectItem = new SelectItem(resDTO.getPmOrgProfile().getOrgProfileId(), resDTO.getPmOrgProfile().getOrgName());
 							itemList.add(selectItem);
 						}					    				    
 					}					
