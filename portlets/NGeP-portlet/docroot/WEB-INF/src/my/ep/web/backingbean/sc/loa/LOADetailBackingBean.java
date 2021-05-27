@@ -1498,7 +1498,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	public void downloadReport(ScLoaReport scLoaReport) throws IOException {
 		debugLogger("downloadReport");
 		// #29006 - start
-		if (scLoaReport.getTitle().contains(lampiranA3SubStr)) {
+		if (scLoaReport.getTitle().contains(lampiranA3SubStr) && !ParameterConst.DOCTYPE_QUOTATION.equals(this.getManagedBean().getScLoa().getScLoiLoa().getDocType())){//29007&30963
 			try {
 				generateUpdatedLampiranA3FromVelocity((ScAttachment) scLoaReport.getScLoaReportAttachment(),
 						getManagedBean().getScLoa(), this.getManagedBean().getScQt());
@@ -1785,7 +1785,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				} //#19336
 			}
 			// #29006 - start
-			if (scLoaReport.getTitle().contains(lampiranA3SubStr)) {
+			if (scLoaReport.getTitle().contains(lampiranA3SubStr) && !ParameterConst.DOCTYPE_QUOTATION.equals(this.getManagedBean().getScLoa().getScLoiLoa().getDocType())) {//29007&30963
 				try {
 					generateUpdatedLampiranA3FromVelocity((ScAttachment) scLoaReport.getScLoaReportAttachment(),
 							getManagedBean().getScLoa(), this.getManagedBean().getScQt());
