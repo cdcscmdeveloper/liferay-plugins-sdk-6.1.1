@@ -21,6 +21,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
+import my.ep.factory.activity.EpLoginLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -219,6 +220,8 @@ public class FacesScopes implements Serializable {
 						UserResDTO resDTO = userSO.retrieveUserByLoginId(reqDTO);
 						user = resDTO.getPmUser();
 						setApplicationScope(SESS_USER_SESSION_BEAN, user);
+						
+						EpLoginLogger.getInstance().log(loginId, portletRequest.getRequestedSessionId());
 						
 						// update user last login
 						if(user != null) {
