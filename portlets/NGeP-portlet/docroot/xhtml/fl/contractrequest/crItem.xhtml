@@ -806,12 +806,12 @@
 			<p:column headerText="#{lbl['lbl.fl.spec']}" style="text-align:center" width="750"
 			rendered="#{contractRequestBackingBean.managedBean.dpFlag}">
 			<p:inputTextarea disabled="true" rendered="#{contractRequestBackingBean.managedBean.dpFlag}" styleClass="colFloatLeft"
-						value="#{specificationList.itemSpec}" cols="140" rows="2"/>
+						value="#{specificationList.itemSpec}" cols="130" rows="2"/>
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.fl.spec']}" style="text-align:center"
 			rendered="#{!contractRequestBackingBean.managedBean.dpFlag}">			
-			<p:inputTextarea cols="44" rows="6" id="itemSpecification"
+			<p:inputTextarea cols="42" rows="6" id="itemSpecification"
 						rendered="#{!contractRequestBackingBean.managedBean.dpFlag}"
 						autoResize="false"
 						style=" margin-bottom:5px;" 
@@ -820,7 +820,7 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.supp.offer']}" style="text-align:center"
 						rendered="#{!contractRequestBackingBean.managedBean.dpFlag}">
-			<p:inputTextarea cols="44" rows="6" id="supplierOffer"
+			<p:inputTextarea cols="42" rows="6" id="supplierOffer"
 						rendered="#{!contractRequestBackingBean.managedBean.dpFlag}"
 						autoResize="false"
 						style=" margin-bottom:5px;" 
@@ -829,7 +829,7 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.new.offer.spec']}" style="text-align:center"
 						rendered="#{!contractRequestBackingBean.managedBean.dpFlag}">
-			<p:inputTextarea cols="44" rows="6" id="newOfferedSpec"
+			<p:inputTextarea cols="42" rows="6" id="newOfferedSpec"
 						rendered="#{!contractRequestBackingBean.managedBean.dpFlag}"
 						autoResize="false"
 						style=" margin-bottom:5px;" 
