@@ -94,23 +94,21 @@
 				<td width="15%"><p:outputLabel
 						value="#{lbl['lbl.rpt.dtFrm']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td width="35%"><p:calendar showOn="button" navigator="true"
-						readonlyInput="true" size="9"
-						value="#{cmReportsBackingBean.managedBean.dateFrom}"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-					</p:calendar>
+				<td width="65%"><div style="float: left;">
+						<p:calendar showOn="button" navigator="true" readonlyInput="true"
+							size="9" value="#{cmReportsBackingBean.managedBean.dateFrom}"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							style="float: left">
+						</p:calendar>
 
-					<div style="float: left;">
-						<p:outputLabel value="#{lbl['lbl.rpt.dtTo']}"
-							style="margin-top: 6px;" />
 						<p:outputLabel value="*" styleClass="mandatory"
-							style="margin-top: 6px; margin-left: 30px;" />
-						<div style="float: right;">
-							<p:calendar showOn="button" navigator="true" readonlyInput="true"
-								size="9" value="#{cmReportsBackingBean.managedBean.dateTo}"
-								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-							</p:calendar>
-						</div>
+							style="margin-top: 6px; margin-left: 10px; float: left;" />
+						<p:outputLabel value="#{lbl['lbl.rpt.dtTo']}"
+							style="margin-top: 6px; float: left;" />
+						<p:calendar showOn="button" navigator="true" readonlyInput="true"
+							size="9" value="#{cmReportsBackingBean.managedBean.dateTo}"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+						</p:calendar>
 					</div></td>
 			</tr>
 			
