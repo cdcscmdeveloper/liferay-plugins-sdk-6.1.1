@@ -1662,7 +1662,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 				fileList.add(new File(DocumentRepositoryUtils.getBaseDir() + ctAttachment.getFilePath()));
 			}
 		}	
-		log.info("------------ Bug #30924 -  in generateAgreementFile : fileList.size() = "+fileList.size());
+		log.info("------------ Bug #30924 -  in generateAgreementFile : fileList.size() = "+fileList.size());					
 		try {
 			if (fileList.size() == 1) {
 				agreementZipFilePath = fileList.get(0).getPath();
@@ -1671,10 +1671,12 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 				log.info("------------ Bug #30924 -  in generateAgreementFile :  fileList.get(0).getName() = "+ fileList.get(0).getName());
 			} else {	// Generate agreement zip file
 				String zipFileName = "agreement.zip";
+				log.info("Bug #30924 getManagedBean().getAgreementType() "+getManagedBean().getAgreementType());
 				if (getManagedBean().getAgreementType().equalsIgnoreCase(ContractConst.SUPPLEMENTAL_AGREEMENT)) {
 					zipFileName = "supplemental_agreement.zip";
+					log.info("Bug #30924 zipFileName :"+zipFileName);
 				}
-				File zipFile = new File(getManagedBean().getFileDirectory()+ zipFileName);		
+				File zipFile = new File(getManagedBean().getFileDirectory()+ zipFileName);
 				zipFile.createNewFile();
 				ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipFile));
 				for (File file : fileList) {
