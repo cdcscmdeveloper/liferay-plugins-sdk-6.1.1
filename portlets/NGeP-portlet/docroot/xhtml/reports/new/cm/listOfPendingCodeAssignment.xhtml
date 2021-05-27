@@ -62,7 +62,7 @@
 			
 			<tr>
 				<td width="15%"><p:outputLabel value="#{lbl['lbl.cm.doc.no']}" /></td>
-				<td colspan="3" width="35%"><p:inputText id="docNoSearchInput" size="40"
+				<td colspan="3" width="35%"><p:inputText id="docNoSearchInput" size="50"
 						value="#{cmReportsBackingBean.managedBean.docNoSearchInput}"
 						 /> <ac:iconTooltip
 						value="#{lbl['lbl.cm.report.doc.no.search.field.tooltip']}" /></td>
@@ -74,7 +74,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.cm.item.table.type']}" /></td>
 				<td><p:selectOneMenu
 						value="#{cmReportsBackingBean.managedBean.itemType}"
-						style="width:36.4%">
+						style="width:44.3%">
 						<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue=""></f:selectItem>
 						<f:selectItem itemValue="Product"
 							itemLabel="#{lbl['lbl.txt.product']}" />
@@ -99,16 +99,18 @@
 						value="#{cmReportsBackingBean.managedBean.dateFrom}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					</p:calendar>
-					
+
 					<div style="float: left;">
 						<p:outputLabel value="#{lbl['lbl.rpt.dtTo']}"
 							style="margin-top: 6px;" />
 						<p:outputLabel value="*" styleClass="mandatory"
-							style="margin-left: 100px; margin-top: 6px;" />
-						<p:calendar showOn="button" navigator="true" readonlyInput="true"
-							size="9" value="#{cmReportsBackingBean.managedBean.dateTo}"
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-						</p:calendar>
+							style="margin-top: 6px; margin-left: 30px;" />
+						<div style="float: right;">
+							<p:calendar showOn="button" navigator="true" readonlyInput="true"
+								size="9" value="#{cmReportsBackingBean.managedBean.dateTo}"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+							</p:calendar>
+						</div>
 					</div></td>
 			</tr>
 			
