@@ -660,15 +660,18 @@ public class TemplateSpecBackingBean extends
 		List<String> filteredList = new ArrayList<String>();
 		
 		// For Pid SQ ,No periodic schedule
-		if(!(getManagedBean().isPidSQ() || getManagedBean().isG2G())){
+		if(!(getManagedBean().isPidSQ() || getManagedBean().isG2G())){			
+			filteredList.add(ParameterConst.FULFILMENT_TYPE_SCHEDULED);
+			filteredList.add(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
+			//#25725 start
+			filteredList.add(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN);
+			filteredList.add(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED);		
+		}else{
 			filteredList.add(ParameterConst.FULFILMENT_TYPE_SCHEDULED);
 			filteredList.add(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
 		}
-		filteredList.add(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
-		//#25725 start
-		filteredList.add(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN);
-		filteredList.add(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED);
 		//#25725 end
+		filteredList.add(ParameterConst.FULFILMENT_TYPE_ONE_OFF);		
 
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("pmParameter.parameterCode",
