@@ -1675,13 +1675,12 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 						getManagedBean().getItemSpecList().add(specification);
 					}					
 				}
-				if (getManagedBean().getItemSpecList().isEmpty()) {
-					getManagedBean().getItemSpecList().add(getManagedBean().getSpecificationList().get(0));
-				}
+			
 			} else {
 			getManagedBean().setSupplierOffer(null);
 			getManagedBean().setNewOfferedSpec(null);
 			getManagedBean().setItemSpecification(null);
+			getManagedBean().setItemSpecList(new ArrayList<ScRequestItemSpecOffer>());
 			}
 			
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IContractSO.class);
@@ -1706,6 +1705,9 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				getManagedBean().setDpFlag(true);
 			} else {
 				getManagedBean().setDpFlag(false);
+				if (getManagedBean().getItemSpecList().isEmpty() && !getManagedBean().getSpecificationList().isEmpty()) {
+					getManagedBean().getItemSpecList().add(getManagedBean().getSpecificationList().get(0));
+				}
 			}
 		}
 

@@ -4275,14 +4275,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					getManagedBean().getItemSpecList().add(specification);
 				}					
 			}
-			if (getManagedBean().getItemSpecList().isEmpty()) {
-				getManagedBean().getItemSpecList().add(getManagedBean().getSpecificationList().get(0));
-			}
+
 		} else {
 		getManagedBean().setSupplierOffer(null);
 		getManagedBean().setNewOfferedSpec(null);
 		getManagedBean().setItemSpecification(null);
-		getManagedBean().setItemSpecList(null);
+		getManagedBean().setItemSpecList(new ArrayList<ScRequestItemSpecOffer>());
 		}
 		// 28855 - End
 		
@@ -4395,6 +4393,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				getManagedBean().setDpFlag(true);
 			} else {
 				getManagedBean().setDpFlag(false);
+				if (getManagedBean().getItemSpecList().isEmpty() && !getManagedBean().getSpecificationList().isEmpty()) {
+					getManagedBean().getItemSpecList().add(getManagedBean().getSpecificationList().get(0));
+				}
 			}
 		}
 		// 28855 - End
