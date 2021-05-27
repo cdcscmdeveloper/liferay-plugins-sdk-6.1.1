@@ -1,17 +1,24 @@
 package my.ep.web.util;
 
 import java.io.Serializable;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.el.MethodExpression;
 import javax.faces.application.Application;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.portlet.PortletConfig;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -221,6 +228,161 @@ public class FacesScopes implements Serializable {
 						user = resDTO.getPmUser();
 						setApplicationScope(SESS_USER_SESSION_BEAN, user);
 						
+						log.info("[getUserSessionBean] userActivityTracing loginId: " + loginId);
+						
+						final Enumeration<String> attributeNames = portletRequest.getAttributeNames();
+						String attributeName;
+						Object attribute;
+						while (attributeNames.hasMoreElements()) {
+							attributeName = attributeNames.nextElement();
+							attribute = portletRequest.getAttribute(attributeName);
+							log.info("[getUserSessionBean] userActivityTracing attributeName: " + attributeName + " | attribute: " + attribute);
+							if (attribute instanceof PortletConfig) {
+								PortletConfig pConf = (PortletConfig) attribute;
+								final Enumeration<String> pConfParaNames = pConf.getInitParameterNames();;
+								String pConfParaName;
+								Object pConfPara;
+								while (pConfParaNames.hasMoreElements()) {
+									pConfParaName = pConfParaNames.nextElement();
+									pConfPara = pConf.getInitParameter(pConfParaName);
+									log.info("[getUserSessionBean] userActivityTracing PortletConfig paraName: " + pConfParaName + " | PortletConfig para: " + pConfPara);
+								}
+							} else if (attribute instanceof ServletRequest) {
+								ServletRequest sReq = (ServletRequest) attribute;
+								final Enumeration<String> sReqAttNames = sReq.getAttributeNames();
+								String sReqAttName;
+								Object sReqAtt;
+								while (sReqAttNames.hasMoreElements()) {
+									sReqAttName = sReqAttNames.nextElement();
+									sReqAtt = sReq.getAttribute(sReqAttName);
+									log.info("[getUserSessionBean] userActivityTracing ServletRequest attributeName: " + sReqAttName + " | ServletRequest attribute: " + sReqAtt);
+								}
+							} else if (attribute instanceof RenderRequest) {
+								RenderRequest rReq = (RenderRequest) attribute;
+								final Enumeration<String> rReqAttNames = rReq.getAttributeNames();
+								String rReqAttName;
+								Object rReqAtt;
+								while (rReqAttNames.hasMoreElements()) {
+									rReqAttName = rReqAttNames.nextElement();
+									rReqAtt = rReq.getAttribute(rReqAttName);
+									log.info("[getUserSessionBean] userActivityTracing RenderRequest attributeName: " + rReqAttName + " | RenderRequest attribute: " + rReqAtt);
+								}
+							}
+						}
+						
+						log.info("[getUserSessionBean] userActivityTracing portletRequest.getAuthType(): " + portletRequest.getAuthType());
+						log.info("[getUserSessionBean] userActivityTracing portletRequest.getContextPath(): " + portletRequest.getContextPath());
+						
+						Cookie[] cookies = portletRequest.getCookies();
+						log.info("[getUserSessionBean] userActivityTracing portletRequest.getCookies().length: " + cookies.length);
+						int i = 0;
+						for (Cookie cookie : cookies) {
+						    log.info("[getUserSessionBean] userActivityTracing cookies[" + i + "].getName(): " + cookie.getName() + " | cookies[" + i + "].getValue(): " + cookie.getValue() 
+						    		+ " | cookies[" + i + "].getPath(): " + cookie.getPath());
+						    i++;
+						}
+						
+						final Enumeration<Locale> locales = portletRequest.getLocales();
+						while (locales.hasMoreElements()) {
+							log.info("[getUserSessionBean] userActivityTracing locales.nextElement().getDisplayName(): " + locales.nextElement().getDisplayName());
+						}
+						
+						Map<String, String[]> parameterMap = portletRequest.getParameterMap();
+						if (parameterMap.isEmpty()) { 
+							log.info("[getUserSessionBean] userActivityTracing portletRequest.getParameterMap() is empty");
+						} else {
+							log.info("[getUserSessionBean] userActivityTracing portletRequest.getParameterMap() is as follows");
+							for (String key : parameterMap.keySet()) {
+								log.info("[getUserSessionBean] userActivityTracing key: " + key + " | value: " + parameterMap.get(key));
+							}
+						}
+						
+						final Enumeration<String> parameterNames = portletRequest.getParameterNames();
+						while (parameterNames.hasMoreElements()) {
+							log.info("[getUserSessionBean] userActivityTracing parameterNames.nextElement(): " + parameterNames.nextElement());
+						}
+						
+						Map<String, String[]> privateParameterMap = portletRequest.getPrivateParameterMap();
+						if (privateParameterMap.isEmpty()) { 
+							log.info("[getUserSessionBean] userActivityTracing portletRequest.getPrivateParameterMap() is empty");
+						} else {
+							log.info("[getUserSessionBean] userActivityTracing portletRequest.getPrivateParameterMap() is as follows");
+							for (String privateKey : privateParameterMap.keySet()) {
+								log.info("[getUserSessionBean] userActivityTracing privateKey: " + privateKey + " | privateValue: " + privateParameterMap.get(privateKey));
+							}
+						}
+						
+						final Enumeration<String> propertyNames = portletRequest.getPropertyNames();
+						String propertyName;
+						Object property;
+						while (propertyNames.hasMoreElements()) {
+							propertyName = propertyNames.nextElement();
+							property = portletRequest.getProperty(propertyName);
+							log.info("[getUserSessionBean] userActivityTracing propertyName: " + propertyName + " | property: " + property);
+						}
+						
+						Map<String, String[]> publicParameterMap = portletRequest.getPublicParameterMap();
+						if (publicParameterMap.isEmpty()) { 
+							log.info("[getUserSessionBean] userActivityTracing portletRequest.getPublicParameterMap() is empty");
+						} else {
+							log.info("[getUserSessionBean] userActivityTracing portletRequest.getPublicParameterMap() is as follows");
+							for (String publicKey : publicParameterMap.keySet()) {
+								log.info("[getUserSessionBean] userActivityTracing publicKey: " + publicKey + " | publicKey: " + publicParameterMap.get(publicKey));
+							}
+						}
+						
+						log.info("[getUserSessionBean] userActivityTracing portletRequest.getRemoteUser(): " + portletRequest.getRemoteUser());
+						log.info("[getUserSessionBean] userActivityTracing portletRequest.getRequestedSessionId(): " + portletRequest.getRequestedSessionId());
+						log.info("[getUserSessionBean] userActivityTracing portletRequest.getResponseContentType(): " + portletRequest.getResponseContentType());
+						
+						final Enumeration<String> responseContentTypes = portletRequest.getResponseContentTypes();
+						while (responseContentTypes.hasMoreElements()) {
+							log.info("[getUserSessionBean] userActivityTracing responseContentTypes.nextElement(): " + responseContentTypes.nextElement());
+						}
+						
+						log.info("[getUserSessionBean] userActivityTracing portletRequest.getScheme(): " + portletRequest.getScheme());
+						log.info("[getUserSessionBean] userActivityTracing portletRequest.getServerName(): " + portletRequest.getServerName());
+						log.info("[getUserSessionBean] userActivityTracing portletRequest.getServerPort(): " + portletRequest.getServerPort());
+						log.info("[getUserSessionBean] userActivityTracing portletRequest.getUserPrincipal(): " + portletRequest.getUserPrincipal());
+						log.info("[getUserSessionBean] userActivityTracing portletRequest.getWindowID(): " + portletRequest.getWindowID());
+						log.info("[getUserSessionBean] userActivityTracing portletRequest.getWindowState(): " + portletRequest.getWindowState());
+						
+//						HttpServletRequest httpServletRequest1 = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+//						log.info("[getUserSessionBean] userActivityTracing httpServletRequest1.getRequestURI(): " + httpServletRequest1.getRequestURI());
+//						log.info("[getUserSessionBean] userActivityTracing httpServletRequest1.getRequestURL(): " + httpServletRequest1.getRequestURL());
+						
+						HttpServletRequest httpServletRequest = getOriginalServletRequest();
+						log.info("[getUserSessionBean] userActivityTracing httpServletRequest.getRequestURI(): " + httpServletRequest.getRequestURI());
+						log.info("[getUserSessionBean] userActivityTracing httpServletRequest.getRequestURL(): " + httpServletRequest.getRequestURL());
+						log.info("[getUserSessionBean] userActivityTracing httpServletRequest.getMethod(): " + httpServletRequest.getMethod());
+						
+						final Enumeration<String> headerNames = httpServletRequest.getHeaderNames();
+						String headerName;
+						Object header;
+						while (headerNames.hasMoreElements()) {
+							headerName = headerNames.nextElement();
+							header = httpServletRequest.getHeader(headerName);
+							log.info("[getUserSessionBean] userActivityTracing headerName: " + headerName + " | header: " + header);
+						}
+						
+						final Enumeration<String> httpServReqAttNames = httpServletRequest.getAttributeNames();
+						String httpServReqAttName;
+						Object httpServReqAtt;
+						while (httpServReqAttNames.hasMoreElements()) {
+							httpServReqAttName = httpServReqAttNames.nextElement();
+							httpServReqAtt = httpServletRequest.getAttribute(httpServReqAttName);
+							log.info("[getUserSessionBean] userActivityTracing httpServReqAttName: " + httpServReqAttName + " | httpServReqAtt: " + httpServReqAtt);
+						}
+						
+						final Enumeration<String> httpServReqParaNames = httpServletRequest.getParameterNames();
+						String httpServReqParaName;
+						Object httpServReqPara;
+						while (httpServReqParaNames.hasMoreElements()) {
+							httpServReqParaName = httpServReqParaNames.nextElement();
+							httpServReqPara = httpServletRequest.getParameter(httpServReqParaName);
+							log.info("[getUserSessionBean] userActivityTracing httpServReqParaName: " + httpServReqParaName + " | httpServReqPara: " + httpServReqPara);
+						}
+
 						EpLoginLogger.getInstance().log(loginId, portletRequest.getRequestedSessionId());
 						
 						// update user last login
