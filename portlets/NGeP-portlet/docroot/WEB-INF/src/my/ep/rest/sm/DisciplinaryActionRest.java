@@ -37,7 +37,7 @@ public class DisciplinaryActionRest {
 	public Response retrieveDisciplinaryAction() {	
 		
 		log.info("Before success calling retrieve rest api....");
-		boolean enter  = true;
+		boolean enter  = false;
 		try {
 			//27426 : Disciplinary Action - start
 			//find data with end date less than current date
