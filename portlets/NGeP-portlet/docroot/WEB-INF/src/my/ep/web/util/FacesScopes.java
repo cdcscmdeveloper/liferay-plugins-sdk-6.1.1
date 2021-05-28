@@ -14,12 +14,13 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
 import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.bpm.service.IBpmSO;
@@ -347,22 +348,22 @@ public class FacesScopes implements Serializable {
 						log.info("[getUserSessionBean] userActivityTracing portletRequest.getWindowID(): " + portletRequest.getWindowID());
 						log.info("[getUserSessionBean] userActivityTracing portletRequest.getWindowState(): " + portletRequest.getWindowState());
 						
-//						HttpServletRequest httpServletRequest1 = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
-//						log.info("[getUserSessionBean] userActivityTracing httpServletRequest1.getRequestURI(): " + httpServletRequest1.getRequestURI());
-//						log.info("[getUserSessionBean] userActivityTracing httpServletRequest1.getRequestURL(): " + httpServletRequest1.getRequestURL());
+//						HttpServletRequest httpServletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+//						HttpServletRequest httpServletRequest = getOriginalServletRequest();
+						HttpServletRequest httpServletRequest = PortalUtil.getHttpServletRequest((PortletRequest) FacesContext
+								  .getCurrentInstance().getExternalContext().getRequest());
 						
-						HttpServletRequest httpServletRequest = getOriginalServletRequest();
 						log.info("[getUserSessionBean] userActivityTracing httpServletRequest.getRequestURI(): " + httpServletRequest.getRequestURI());
 						log.info("[getUserSessionBean] userActivityTracing httpServletRequest.getRequestURL(): " + httpServletRequest.getRequestURL());
 						log.info("[getUserSessionBean] userActivityTracing httpServletRequest.getMethod(): " + httpServletRequest.getMethod());
 						
-						final Enumeration<String> headerNames = httpServletRequest.getHeaderNames();
-						String headerName;
-						Object header;
-						while (headerNames.hasMoreElements()) {
-							headerName = headerNames.nextElement();
-							header = httpServletRequest.getHeader(headerName);
-							log.info("[getUserSessionBean] userActivityTracing headerName: " + headerName + " | header: " + header);
+						final Enumeration<String> requestHeaderNames = httpServletRequest.getHeaderNames();
+						String requestHeaderName;
+						Object requestHeader;
+						while (requestHeaderNames.hasMoreElements()) {
+							requestHeaderName = requestHeaderNames.nextElement();
+							requestHeader = httpServletRequest.getHeader(requestHeaderName);
+							log.info("[getUserSessionBean] userActivityTracing requestHeaderName: " + requestHeaderName + " | requestHeader: " + requestHeader);
 						}
 						
 						final Enumeration<String> httpServReqAttNames = httpServletRequest.getAttributeNames();
@@ -382,8 +383,25 @@ public class FacesScopes implements Serializable {
 							httpServReqPara = httpServletRequest.getParameter(httpServReqParaName);
 							log.info("[getUserSessionBean] userActivityTracing httpServReqParaName: " + httpServReqParaName + " | httpServReqPara: " + httpServReqPara);
 						}
+						
+						HttpServletResponse httpServletResponse = PortalUtil.getHttpServletResponse((PortletResponse) FacesContext
+								  .getCurrentInstance().getExternalContext().getResponse());
+						log.info("[getUserSessionBean] userActivityTracing httpServletResponse.getContentType(): " + httpServletResponse.getContentType());
+						log.info("[getUserSessionBean] userActivityTracing httpServletResponse.getStatus(): " + httpServletResponse.getStatus());
+						for (String responseHeaderName : httpServletResponse.getHeaderNames()) {
+							log.info("[getUserSessionBean] userActivityTracing responseHeaderName: " + responseHeaderName 
+									+ " | responseHeader: " + httpServletResponse.getHeader(responseHeaderName));
+						}
+						
+						String portlet = StringUtils.EMPTY;
+						Object attributeObject = portletRequest.getAttribute("javax.portlet.config");
+						if (attributeObject instanceof PortletConfig) {
+							portlet = ((PortletConfig) attributeObject).getInitParameter("javax.portlet.faces.defaultViewId.view");
+						}
 
-						EpLoginLogger.getInstance().log(loginId, portletRequest.getRequestedSessionId());
+						EpLoginLogger.getInstance().log(loginId, portletRequest.getRequestedSessionId(), portlet,
+								httpServletRequest.getMethod(), httpServletRequest.getAttribute("CURRENT_COMPLETE_URL").toString(),
+								httpServletResponse.getStatus());
 						
 						// update user last login
 						if(user != null) {
