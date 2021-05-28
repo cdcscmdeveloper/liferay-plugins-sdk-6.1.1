@@ -809,11 +809,13 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			getManagedBean().setGstAmtChanged(false);
 		}
 		
+		//28855 - Start
 		if(getManagedBean().getFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)) {
 			getManagedBean().setContractFlag(true);
 		} else {
 			getManagedBean().setContractFlag(false);
 		}
+		//28855 - End
 	}
 
 	/**
@@ -1613,21 +1615,26 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		if (!getManagedBean().getSpecificationList().isEmpty()) {
 			getManagedBean().setItemSpecList(new ArrayList<ScRequestItemSpecOffer>());
 				for (ScRequestItemSpecOffer specification : getManagedBean().getSpecificationList()) {
-					if (specification.getSupplierOffer()!= null) {
+					if (specification.getSupplierOffer()!= null && specification.getSupplierId().getSupplierId()
+							.equals(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId())) {
 						getManagedBean().setSupplierOffer(specification.getSupplierOffer());
 					}
-					if (specification.getNewOfferSpec()!= null) {
+					if (specification.getNewOfferSpec()!= null && specification.getSupplierId().getSupplierId()
+							.equals(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId())) {
 						getManagedBean().setNewOfferedSpec(specification.getNewOfferSpec());
 					}
-					if (specification.getItemSpec()!= null) {
+					if (specification.getItemSpec()!= null && specification.getSupplierId().getSupplierId()
+							.equals(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId())) {
 						getManagedBean().setItemSpecification(specification.getItemSpec());	
 						getManagedBean().getItemSpecList().add(specification);
-					}
+					}					
 				}
+			
 			} else {
 			getManagedBean().setSupplierOffer(null);
 			getManagedBean().setNewOfferedSpec(null);
 			getManagedBean().setItemSpecification(null);
+			getManagedBean().setItemSpecList(new ArrayList<ScRequestItemSpecOffer>());
 			}
 			
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IContractSO.class);
@@ -1652,23 +1659,12 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				getManagedBean().setDpFlag(true);
 			} else {
 				getManagedBean().setDpFlag(false);
+				if (getManagedBean().getItemSpecList().isEmpty() && !getManagedBean().getSpecificationList().isEmpty()) {
+					getManagedBean().getItemSpecList().add(getManagedBean().getSpecificationList().get(0));
+				}
 			}
 		}
-//		IPurchaseRequestSO purchaseRequestSO = (IPurchaseRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseRequestSO.class);
-//		PurchaseRequestReqDTO doReqDTO = new PurchaseRequestReqDTO();
-//		PurchaseRequestResDTO doResDTO = null;
-//		doReqDTO.setPurchaseRequestId(getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getPurchaseRequestId());
-//		doReqDTO.setSupplierId(getManagedBean().getSpecificationList().get(0).getSupplierId().getSupplierId());
-//		doResDTO = purchaseRequestSO.retrieveLoaDtlByDocTypeNId(doReqDTO);
 
-//		if (doResDTO.getScLoa().getProcurementMode()
-//				.getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO) ||
-//				doResDTO.getScLoa().getProcurementMode()
-//				.getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
-//			getManagedBean().setDpFlag(true);
-//		} else {
-//			getManagedBean().setDpFlag(false);
-//		}
 	}
-	//29955 - end
+	//28855 - end
 }

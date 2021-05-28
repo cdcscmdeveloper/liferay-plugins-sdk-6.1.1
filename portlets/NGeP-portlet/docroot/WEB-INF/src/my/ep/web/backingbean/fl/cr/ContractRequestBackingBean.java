@@ -4112,27 +4112,33 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().setItemName(flItemAddr.getScRequestItem().getItemName());
 		getManagedBean().setItemDesc(flItemAddr.getScRequestItem().getItemDesc());
 		
+		// 28855 - Start
 		getManagedBean().setSpecificationList(requestItemSO.retrieveNewOfferSpec(flItemAddr.getScRequestItem().getRequestNoteItemId()));
 		if (!getManagedBean().getSpecificationList().isEmpty()) {
 			getManagedBean().setItemSpecList(new ArrayList<ScRequestItemSpecOffer>());
 			for (ScRequestItemSpecOffer specification : getManagedBean().getSpecificationList()) {
-				if (specification.getSupplierOffer()!= null) {
+				if (specification.getSupplierOffer()!= null && specification.getSupplierId().getSupplierId()
+						.equals(getManagedBean().getFlRequest().getSmSupplier().getSupplierId())) {
 					getManagedBean().setSupplierOffer(specification.getSupplierOffer());
 				}
-				if (specification.getNewOfferSpec()!= null) {
+				if (specification.getNewOfferSpec()!= null && specification.getSupplierId().getSupplierId()
+						.equals(getManagedBean().getFlRequest().getSmSupplier().getSupplierId())) {
 					getManagedBean().setNewOfferedSpec(specification.getNewOfferSpec());
 				}
-				if (specification.getItemSpec()!= null) {
+				if (specification.getItemSpec()!= null && specification.getSupplierId().getSupplierId()
+						.equals(getManagedBean().getFlRequest().getSmSupplier().getSupplierId())) {
 					getManagedBean().setItemSpecification(specification.getItemSpec());	
 					getManagedBean().getItemSpecList().add(specification);
-				}			
+				}					
 			}
+
 		} else {
 		getManagedBean().setSupplierOffer(null);
 		getManagedBean().setNewOfferedSpec(null);
 		getManagedBean().setItemSpecification(null);
-		getManagedBean().setItemSpecList(null);
+		getManagedBean().setItemSpecList(new ArrayList<ScRequestItemSpecOffer>());
 		}
+		// 28855 - End
 		
 		flItemAddr.setPriceType(flItemAddr.getPriceType());
 		getManagedBean().setPriceType(flItemAddr.getPriceType());
@@ -4219,6 +4225,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			getManagedBean().setSupplierItemPriceList(supplierItems);
 		}	
 		
+		// 28855 - Start
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IContractSO.class);
 		ContractReqDTO cireqDTO = new ContractReqDTO();
 		ContractResDTO ciResDTO = null;
@@ -4241,8 +4248,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				getManagedBean().setDpFlag(true);
 			} else {
 				getManagedBean().setDpFlag(false);
+				if (getManagedBean().getItemSpecList().isEmpty() && !getManagedBean().getSpecificationList().isEmpty()) {
+					getManagedBean().getItemSpecList().add(getManagedBean().getSpecificationList().get(0));
+				}
 			}
 		}
+		// 28855 - End
 	}
 
 	/**

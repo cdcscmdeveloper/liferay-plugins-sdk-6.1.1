@@ -124,8 +124,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private List<FlFulfilmentItemAddr> itemAddrList;
 	private List<FlFulfilmentItemAddr> showItemAddrList;
 	private List <FlFulfilmentItemAddr>  selectedItemsRows;
-	private List<ScRequestItemSpecOffer> specificationList;
-	private List<ScRequestItemSpecOffer> itemSpecList;
+	
 	private List<FlDeliveryAddress> selectedAddressRows;
 	private List<VAddressTypeDeliveryAddress> selectedDeliveryFullAddr;
 	private List<VAgencyDeliveryAddress> selectedAgencyAddressList;
@@ -234,9 +233,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private String approver;
 	private String orgProfileIds;
 	private String fulfilmentRequisitioner;
-	private String supplierOffer;
-	private String newOfferedSpec;
-	private String itemSpecification;
 	
 	private Long ministryProfileId;
 	private Long jabatanProfileId;
@@ -308,7 +304,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private boolean espkb;
 	private boolean showCommitmentNo;
 	private boolean oldGstRateFlg = false;
-	private boolean dpFlag;
+	
 	//17087 -- radio button
 	private boolean radioCheckDeliveryDate;
 	/*13984 Current schedule number Information*/
@@ -332,9 +328,21 @@ public class ContractRequestManagedBean extends BaseManagedBean {
     private static String catalogueFlag;
     //13984-end
     
+ // 28855 - Start
+ 	private boolean dpFlag;
+	private String supplierOffer;
+	private String newOfferedSpec;
+	private String itemSpecification;
+	private List<ScRequestItemSpecOffer> specificationList;
+	private List<ScRequestItemSpecOffer> itemSpecList;
+
+
+ // 28855 - End
+ 	
     //24956 start
     private boolean CtTypeMinistry;
     //24956 end
+    
 	private class ActiveContractPagingDataModel extends PagingDataModel<VCtActiveContract> {
 		
 		/** The Constant serialVersionUID. */
@@ -3186,7 +3194,8 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.catalogueFlag = catalogueFlag;
 	}
 	//end-13984 - CrList - Back Button
-
+	
+	// 28855 - start
 	public boolean isDpFlag() {
 		return dpFlag;
 	}
@@ -3234,6 +3243,8 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	public void setItemSpecification(String itemSpecification) {
 		this.itemSpecification = itemSpecification;
 	}
+	// 28855 - End
+	
 	//29728 - start
 	/**
 	 * @return the isBranchNeedToChange
