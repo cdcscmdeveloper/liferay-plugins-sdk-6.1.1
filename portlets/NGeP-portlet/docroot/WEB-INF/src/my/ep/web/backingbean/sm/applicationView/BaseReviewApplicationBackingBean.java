@@ -3878,7 +3878,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 								reqDTO.setDirectorIdNo(personnel.getIdentificationNo());
 								resDTO = SmServiceLookup.getBlacklistDirectorSO().retrieveAllPersonBlacklistByIdentificationNO(reqDTO);//29078 : Disciplinary Action - <26238>
 								if(resDTO != null && resDTO.getPersonBlacklist() != null){
-									blacklistOwner.setIcNo(personnel.getIdentificationNo());
+									if (personnel.isDirector() || personnel.isEquityOwner()){
+										blacklistOwner.setIcNo(personnel.getIdentificationNo());
+									}
 									blacklistownerDirectorList.add(blacklistOwner);
 								}
 								//29078 : Disciplinary Action - 26238 - end
@@ -3899,7 +3901,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 								reqDTO.setDirectorIdNo(personnel.getIdentificationNo());
 								resDTO = SmServiceLookup.getBlacklistDirectorSO().retrieveAllPersonBlacklistByIdentificationNO(reqDTO);//29078 : Disciplinary Action - <26238>
 								if(resDTO != null && resDTO.getPersonBlacklist() != null){
-									blacklistOwner.setIcNo(personnel.getIdentificationNo());
+									if (personnel.isDirector() || personnel.isEquityOwner()){
+										blacklistOwner.setIcNo(personnel.getIdentificationNo());
+									}
 									blacklistownerDirectorList.add(blacklistOwner);
 								}
 								//29078 : Disciplinary Action - 26238 - end
@@ -3919,9 +3923,10 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 								// Get blacklist by identification no
 								resDTO = SmServiceLookup.getBlacklistDirectorSO()
 										.retrieveAllPersonBlacklistByIdentificationNO(reqDTO);//29078 : Disciplinary Action - <26238>
-								if(resDTO != null && 
-										resDTO.getPersonBlacklist() != null){
-									blacklistOwner.setIcNo(personnel.getIdentificationNo());
+								if(resDTO != null && resDTO.getPersonBlacklist() != null){
+									if (personnel.isDirector() || personnel.isEquityOwner()){
+										blacklistOwner.setIcNo(personnel.getIdentificationNo());
+									}
 									blacklistownerDirectorList.add(blacklistOwner);
 								}
 								//26238 -  Disciplonary action - 28146 - end
@@ -3980,7 +3985,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 								if(personnel.isCancelRegistration()
 										|| personnel.isSuspendRegistration()
 											|| personnel.isBlacklisted()){
-									blacklistOwner.setIcNo(personnel.getIdentificationNo());
+									if (personnel.isDirector() || personnel.isEquityOwner()){
+										blacklistOwner.setIcNo(personnel.getIdentificationNo());
+									}
 									blacklistownerDirectorList.add(blacklistOwner);
 								}
 							}
