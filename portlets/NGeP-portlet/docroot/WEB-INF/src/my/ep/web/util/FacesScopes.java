@@ -75,13 +75,29 @@ public class FacesScopes implements Serializable {
 	 * FacesScopes constructor.
 	 */
 	public FacesScopes() {
-
 		portletSession = (PortletSession) FacesContext.getCurrentInstance()
 				.getExternalContext().getSession(false);
 		portletRequest = (PortletRequest) FacesContext.getCurrentInstance()
 				.getExternalContext().getRequest();
 		facesContext = FacesContext.getCurrentInstance();
 		application = FacesContext.getCurrentInstance().getApplication();
+		
+		HttpServletRequest httpServletRequest = PortalUtil.getHttpServletRequest((PortletRequest) FacesContext
+				  .getCurrentInstance().getExternalContext().getRequest());
+		
+		String portlet = StringUtils.EMPTY;
+		Object attributeObject = portletRequest.getAttribute("javax.portlet.config");
+		if (attributeObject instanceof PortletConfig) {
+			portlet = ((PortletConfig) attributeObject).getInitParameter("javax.portlet.faces.defaultViewId.view");
+		}
+		
+		HttpServletResponse httpServletResponse = PortalUtil.getHttpServletResponse((PortletResponse) FacesContext
+				  .getCurrentInstance().getExternalContext().getResponse());
+		
+		EpLoginLogger.getInstance().log(getUserScreenName(), portletRequest.getRequestedSessionId(), portlet, 
+				httpServletRequest.getAttribute("PORTLET_ID"),
+				httpServletRequest.getMethod(), httpServletRequest.getAttribute("CURRENT_COMPLETE_URL").toString(),
+				httpServletResponse.getStatus());
 	}
 
 	/**
@@ -399,7 +415,8 @@ public class FacesScopes implements Serializable {
 							portlet = ((PortletConfig) attributeObject).getInitParameter("javax.portlet.faces.defaultViewId.view");
 						}
 
-						EpLoginLogger.getInstance().log(loginId, portletRequest.getRequestedSessionId(), portlet,
+						EpLoginLogger.getInstance().log(loginId, portletRequest.getRequestedSessionId(), portlet, 
+								httpServletRequest.getAttribute("PORTLET_ID"),
 								httpServletRequest.getMethod(), httpServletRequest.getAttribute("CURRENT_COMPLETE_URL").toString(),
 								httpServletResponse.getStatus());
 						
