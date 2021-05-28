@@ -53,18 +53,18 @@
 				<c:otherwise><td class="header-info-text" style="vertical-align: top;">#{lbl['lbl.sm.no.available']}</td></c:otherwise>
 				</c:choose>
 			</tr>
-			<!-- #15629 start -->
-<!-- 			<c:if test="#{not empty viewSmApplBackingBean.managedBean.rejectReason}"> -->
-<!-- 				<tr height="20"><td>&#160;</td></tr> -->
-<!-- 				<tr> -->
-<!-- 					<td style="vertical-align: baseline;"><h:outputLabel value="#{lbl['lbl.sm.rejection.reasons']}" /></td> -->
-<!-- 					<td class="header-info-text" style="word-wrap: break-word; vertical-align: top;" colspan="5"> -->
-<!-- 						<h:outputText value="#{viewSmApplBackingBean.managedBean.rejectReason}"  -->
-<!-- 						escape="false" style="font-family: Arial;font-size: 12px;text-align: left !important;font-weight: normal !important;"/> -->
-<!-- 					</td> -->
-<!-- 				</tr> -->
-<!-- 			</c:if> -->
-			<!-- #15629 end -->
+			<!-- #15629 start 23/2/2021 -->
+			<c:if test="#{not empty viewSmApplBackingBean.managedBean.rejectReason}">
+				<tr height="20"><td>&#160;</td></tr>
+				<tr>
+					<td style="vertical-align: baseline;"><h:outputLabel value="#{lbl['lbl.sm.rejection.reasons']}" /></td>
+					<td class="header-info-text" style="word-wrap: break-word; vertical-align: top;" colspan="5">
+						<h:outputText value="#{viewSmApplBackingBean.managedBean.rejectReason}" 
+						escape="false" style="font-family: Arial;font-size: 12px;text-align: left !important;font-weight: normal !important;"/>
+					</td>
+				</tr>
+			</c:if>
+			<!-- #15629 end 23/2/2021 -->
 		</table>
 	</div>
 	
