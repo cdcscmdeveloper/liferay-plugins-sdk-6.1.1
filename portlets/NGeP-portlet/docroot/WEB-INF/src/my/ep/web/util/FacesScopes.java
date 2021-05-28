@@ -95,7 +95,7 @@ public class FacesScopes implements Serializable {
 				  .getCurrentInstance().getExternalContext().getResponse());
 		
 		EpLoginLogger.getInstance().log(getUserScreenName(), portletRequest.getRequestedSessionId(), portlet, 
-				httpServletRequest.getAttribute("PORTLET_ID"),
+				httpServletRequest.getAttribute("PORTLET_ID").toString(),
 				httpServletRequest.getMethod(), httpServletRequest.getAttribute("CURRENT_COMPLETE_URL").toString(),
 				httpServletResponse.getStatus());
 	}
@@ -416,7 +416,7 @@ public class FacesScopes implements Serializable {
 						}
 
 						EpLoginLogger.getInstance().log(loginId, portletRequest.getRequestedSessionId(), portlet, 
-								httpServletRequest.getAttribute("PORTLET_ID"),
+								httpServletRequest.getAttribute("PORTLET_ID").toString(),
 								httpServletRequest.getMethod(), httpServletRequest.getAttribute("CURRENT_COMPLETE_URL").toString(),
 								httpServletResponse.getStatus());
 						
