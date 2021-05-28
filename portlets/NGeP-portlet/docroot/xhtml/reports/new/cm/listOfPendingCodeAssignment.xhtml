@@ -74,7 +74,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.cm.item.table.type']}" /></td>
 				<td><p:selectOneMenu
 						value="#{cmReportsBackingBean.managedBean.itemType}"
-						style="width:44.2%">
+						style="width:44.3%">
 						<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue=""></f:selectItem>
 						<f:selectItem itemValue="Product"
 							itemLabel="#{lbl['lbl.txt.product']}" />
@@ -103,9 +103,9 @@
 
 						<p:outputLabel
 							value="#{lbl['lbl.cm.report.date.to.underscore.padding']}"
-							style="margin-top: 6px; float: left; color: #ffffff;" />
+							style="margin-top: 6px; float: left; color: #ffffff !important;" />
 						<p:outputLabel value="*" styleClass="mandatory"
-							style="margin-top: 6px; margin-left: 2px; float: left;" />
+							style="margin-top: 6px; float: left;" />
 						<p:outputLabel value="#{lbl['lbl.rpt.dtTo']}"
 							style="margin-top: 6px; float: left;" />
 						<p:calendar showOn="button" navigator="true" readonlyInput="true"
