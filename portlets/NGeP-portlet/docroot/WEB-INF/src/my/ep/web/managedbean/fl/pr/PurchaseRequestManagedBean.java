@@ -335,6 +335,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
     private IPagingDataModel<PmOrgProfile> preparedForPtjDataModel = new PreparedForPtjPagingDataModel();
     private List<Object[]> approverPTJOrgList;
     private Long selectedApproverPTJ;
+    private Long selectedPmoPTJ;
     //13291 - end
 
 /**
@@ -3555,6 +3556,20 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedApproverPTJ(Long selectedApproverPTJ) {
 		this.selectedApproverPTJ = selectedApproverPTJ;
+	}
+
+	/**
+	 * @return the selectedPmoPTJ
+	 */
+	public Long getSelectedPmoPTJ() {
+		return selectedPmoPTJ;
+	}
+
+	/**
+	 * @param selectedPmoPTJ the selectedPmoPTJ to set
+	 */
+	public void setSelectedPmoPTJ(Long selectedPmoPTJ) {
+		this.selectedPmoPTJ = selectedPmoPTJ;
 	}
 	//13291 - end
 }
