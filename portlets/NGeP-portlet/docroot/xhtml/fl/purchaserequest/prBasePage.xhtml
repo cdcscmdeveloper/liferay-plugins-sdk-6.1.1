@@ -199,7 +199,7 @@
 									<h:outputLabel value="#{lbl['lbl.fl.pmo.ptj.name']}" style="text-align: top" />
 									<p:selectOneMenu style="width:450px; margin-bottom:5px;"
 										disabled="#{purchaseRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
-										value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.pmoOrgProfile.orgProfileId}" >
+										value="#{purchaseRequestBackingBean.managedBean.selectedPmoPTJ}" >
 										<f:selectItems value="#{purchaseRequestBackingBean.getPmoPTJNameDropdown()}" />
 									</p:selectOneMenu>
 								</h:panelGrid>

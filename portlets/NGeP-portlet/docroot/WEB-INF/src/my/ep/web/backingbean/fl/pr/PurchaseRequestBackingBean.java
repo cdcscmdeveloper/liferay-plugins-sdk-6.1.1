@@ -315,12 +315,19 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			//Bug #20701 Problem to generate DO - to monitor
 			log.info(":::fulfillmentRequestAction() "+ action +". Doc no.: "+ flFulfilmentRequest.getDocNo() +". Deliv adrs size: "+ flFulfilmentRequest.getFlDeliveryAddresses().size());
 			//end Bug #20701
-			//13291 - start
+			//13291 - start			
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-				flFulfilmentRequest.setApproverId(getManagedBean().getSelectedApprover());
-				PmOrgProfile pmOrgProfile = new PmOrgProfile();
-				pmOrgProfile.setOrgProfileId(getManagedBean().getSelectedApproverPTJ());
-				flFulfilmentRequest.setApproverOrgProfile(pmOrgProfile);
+				if(getManagedBean().getSelectedApprover() != null) {
+					flFulfilmentRequest.setApproverId(getManagedBean().getSelectedApprover());
+					PmOrgProfile pmOrgProfile = new PmOrgProfile();
+					pmOrgProfile.setOrgProfileId(getManagedBean().getSelectedApproverPTJ());
+					flFulfilmentRequest.setApproverOrgProfile(pmOrgProfile);
+				}				
+				if(getManagedBean().getSelectedPmoPTJ() != null) {
+					PmOrgProfile pmoOrgProfile = new PmOrgProfile();
+					pmoOrgProfile.setOrgProfileId(getManagedBean().getSelectedPmoPTJ());
+					flFulfilmentRequest.setPmoOrgProfile(pmoOrgProfile);
+				}				
 			}			
 			if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action) && !flFulfilmentRequest.getApproverId().equals(getFacesScopes().getUserSessionBean().getUserId())) {
 				List<Long> orgProfileIdList = new ArrayList<>();
@@ -494,6 +501,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		//13291 - start
 		if(resDTO.getFlFulfilmentRequest().getApproverOrgProfile() != null && resDTO.getFlFulfilmentRequest().getApproverOrgProfile().getOrgProfileId() != null){
 			getManagedBean().setSelectedApproverPTJ(resDTO.getFlFulfilmentRequest().getApproverOrgProfile().getOrgProfileId());
+		}
+		if(resDTO.getFlFulfilmentRequest().getPmoOrgProfile() != null && resDTO.getFlFulfilmentRequest().getPmoOrgProfile().getOrgProfileId() != null){
+			getManagedBean().setSelectedPmoPTJ(resDTO.getFlFulfilmentRequest().getPmoOrgProfile().getOrgProfileId());
 		}
 		//13291 - end
 		if(isFlFulfilmentRequisitioner()){
@@ -1609,11 +1619,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		log.info("start - initializePRBeans");
 		initializePRBeans();
 		log.info("end - initializePRBeans");
-		//13291 - start
-		if(getManagedBean().getFulfilmentRequest().getPmoOrgProfile() == null) {
-			getManagedBean().getFulfilmentRequest().setPmoOrgProfile(new PmOrgProfile());
-		}
-		//13291 - end
 		log.info("start - updateDeliveryDate");
 		updateDeliveryDate();
 		log.info("end - updateDeliveryDate");
@@ -3580,7 +3585,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					throw new EpException(MessageConst.ERROR_750010);
 				}
 				//13291 - start
-				if(getManagedBean().getFulfilmentRequest().getPmoOrgProfile().getOrgProfileId() == null){
+				if(getManagedBean().getSelectedPmoPTJ() == null){	
 					getManagedBean().setSelectedTabIndex(4);
 					throw new EpException(MessageConst.ERROR_745080);					
 				}
@@ -3658,7 +3663,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			reqDTO.setApproverLimit(calculatesTotalOrderedAmt());
 			reqDTO.setPmOrgProfile(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile());
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
-			fulfilmentRequestSO.validateFulfilmentRequest(reqDTO);			
+			fulfilmentRequestSO.validateFulfilmentRequest(reqDTO);
 			
 		}
 		//CR-25147: Static Code Analysis - shaqimi start
