@@ -7,7 +7,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
-import my.ep.constant.MessageConst;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
@@ -45,12 +44,12 @@ public class DisciplinaryActionRest {
 			//26238 - Disciplinary Action - 28798 - end
 			
 			if(releaseDAList.getSmDisciplinaryActions() != null
-					&& releaseDAList.getSmDisciplinaryActions().size() > 0){
+					&& releaseDAList.getSmDisciplinaryActions().size() > 0 ){
 				log.info("releaseDAList.getSmDisciplinaryActions()=============="+releaseDAList.getSmDisciplinaryActions().size());
 				int i = 0;
 				for (SmDisciplinaryAction disc : releaseDAList.getSmDisciplinaryActions()) {
 					if(disc != null
-							&& disc.getSmSupplier() != null){
+							&& disc.getSmSupplier() != null ){
 						disc.getSmSupplier();
 						log.info("-----------Bilangan------------------"+i);
 						
@@ -62,7 +61,8 @@ public class DisciplinaryActionRest {
 							PersonnelReqDTO reqPersonnelDTO = new PersonnelReqDTO();
 							reqPersonnelDTO.setSmSupplierId(disc.getSmSupplier().getSupplierId());
 
-							PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelBySupplierId(reqPersonnelDTO);
+							//PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelBySupplierId(reqPersonnelDTO);
+							PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelBySupplierIdForDA(reqPersonnelDTO);
 							 
 							reqDTO.setSmSupp(disc.getSmSupplier());  
 							reqDTO.getSmSupp().getSmAppl().setSmPersonnels(personnelResDTO.getSmPersonnelList());  
@@ -93,13 +93,19 @@ public class DisciplinaryActionRest {
 					&& updateDAList.getSmDisciplinaryActions() != null
 					&& updateDAList.getSmDisciplinaryActions().size() > 0){
 				for (SmDisciplinaryAction pendingDisc : updateDAList.getSmDisciplinaryActions()) {
-					pendingDisc.getSmSupplier();
-					pendingDisc.getSmSupplier().getSmAppl(); 
-					//27426 : Disciplinary Action - end
-					PmUser user = SmCommonUtil.getUserByUserId(pendingDisc.getChangedBy());
-					List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(user
-							.getUserId());
-					SmServiceLookup.getSupplierDataMaintenanceSO().updatePendingDisciplinaryAction(pendingDisc, user, userRoles);
+					log.info("updateDAList. supplier id=============="+pendingDisc.getSmSupplier().getSupplierId());
+					 
+					if(pendingDisc != null
+							&& pendingDisc.getSmSupplier() != null ){
+
+						pendingDisc.getSmSupplier();
+						pendingDisc.getSmSupplier().getSmAppl(); 
+						//27426 : Disciplinary Action - end
+						PmUser user = SmCommonUtil.getUserByUserId(pendingDisc.getChangedBy());
+						List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(user
+								.getUserId());
+						SmServiceLookup.getSupplierDataMaintenanceSO().updatePendingDisciplinaryAction(pendingDisc, user, userRoles);
+					}	
 				}
 			}
 			
@@ -107,17 +113,22 @@ public class DisciplinaryActionRest {
 			if(updateBCDAList != null && updateBCDAList.getSmDisciplinaryActions() != null && updateBCDAList.getSmDisciplinaryActions().size() > 0){
 				Date today = new Date(); 
 				for(SmDisciplinaryAction cancelRegBlacklist: updateBCDAList.getSmDisciplinaryActions()){
-					if(cancelRegBlacklist.getStartDate().compareTo(today) <= 0){
-						if(cancelRegBlacklist.isPendingBlacklist() || cancelRegBlacklist.isPendingCancel()){
-							cancelRegBlacklist.getSmSupplier();
-							cancelRegBlacklist.getSmSupplier().getSmAppl(); 
-							PmUser user = SmCommonUtil.getUserByUserId(cancelRegBlacklist.getChangedBy());
-							List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(user.getUserId());
-							SmServiceLookup.getSupplierDataMaintenanceSO().updatePendingDisciplinaryAction(cancelRegBlacklist, user, userRoles);
-						}
-						if( (cancelRegBlacklist.isBlacklistOwner() || cancelRegBlacklist.isCancelRegistration()) && (!cancelRegBlacklist.isPendingCancel() && !cancelRegBlacklist.isPendingBlacklist() )){//29597 : Disciplinary Action - 26238
-							cancelRegBlacklist.getSmSupplier();
-							SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(cancelRegBlacklist);	
+					log.info("updateBCDAList. supplier id=============="+cancelRegBlacklist.getSmSupplier().getSupplierId()); 
+					if(cancelRegBlacklist != null
+							&& cancelRegBlacklist.getSmSupplier() != null){
+
+						if(cancelRegBlacklist.getStartDate().compareTo(today) <= 0){
+							if(cancelRegBlacklist.isPendingBlacklist() || cancelRegBlacklist.isPendingCancel()){
+								cancelRegBlacklist.getSmSupplier();
+								cancelRegBlacklist.getSmSupplier().getSmAppl(); 
+								PmUser user = SmCommonUtil.getUserByUserId(cancelRegBlacklist.getChangedBy());
+								List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(user.getUserId());
+								SmServiceLookup.getSupplierDataMaintenanceSO().updatePendingDisciplinaryAction(cancelRegBlacklist, user, userRoles);
+							}
+							if( (cancelRegBlacklist.isBlacklistOwner() || cancelRegBlacklist.isCancelRegistration()) && (!cancelRegBlacklist.isPendingCancel() && !cancelRegBlacklist.isPendingBlacklist() )){//29597 : Disciplinary Action - 26238
+								cancelRegBlacklist.getSmSupplier();
+								SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(cancelRegBlacklist);	
+							}
 						}
 					}
 				}
