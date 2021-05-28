@@ -2383,8 +2383,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setDistrictId((long) 0);
 
 							this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPmDistrict(new PmDistrict());
-														
-							this.getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
+											
+							//start #30964
+							if(ssmResDTO.getSmAddress().getPmDistrict()!=null){
+								this.getManagedBean().setBusinessCityLs(SmCommonUtil.getCityList(ssmResDTO.getSmAddress().getPmDistrict().getDistrictId()));
+							}
+							//end #30964
 							this.getManagedBean().setBusinessDistrictLs(SmCommonUtil.getDistrictList(ssmResDTO.getSmAddress().getPmState().getStateId()));
 						}
 						//END 27488
