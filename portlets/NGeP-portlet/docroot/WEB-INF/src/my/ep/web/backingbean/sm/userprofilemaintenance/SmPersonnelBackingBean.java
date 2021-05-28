@@ -3103,7 +3103,7 @@ public class SmPersonnelBackingBean extends
 	}
 	//9569 - Start
 	public void saveUserMOFUpdate(){
-		//Bug 9569
+		//9569
 		if(getManagedBean().getEpRoleTrans().equalsIgnoreCase(SupplierManagementConst.EPROLE_DELETED)){
 			getManagedBean().setEpRoleTrans("");
 		}
@@ -3372,7 +3372,7 @@ public class SmPersonnelBackingBean extends
 		return disableRadio;
 	}
 	//END 30053
-	//Bug 9569
+	//9569
 	public static boolean personnelToDeleteRole(SmPersonnel basicSmPersonnel) {
 		boolean retVal = false;
 		if(basicSmPersonnel.getEpRole()!=null && basicSmPersonnel.getAuthorizedFlg()==1 &&

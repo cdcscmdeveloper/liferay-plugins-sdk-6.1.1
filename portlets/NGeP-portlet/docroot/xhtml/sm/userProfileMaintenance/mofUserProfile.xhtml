@@ -295,7 +295,7 @@
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems
 									value="#{smPersonnelBackingBean.managedBean.roleList}" />
-								<!-- Bug 9569 -->	
+								<!-- 9569 -->	
 								<c:if test="#{smPersonnelBackingBean.personnelToDeleteRole(smPersonnelBackingBean.managedBean.basicSmPersonnel)}">
 									<f:selectItem itemLabel="#{lbl['lbl.sm.maintenance.delete.role']}" itemValue="SupplierManagementConst.EPROLE_DELETED" />
 								</c:if>
