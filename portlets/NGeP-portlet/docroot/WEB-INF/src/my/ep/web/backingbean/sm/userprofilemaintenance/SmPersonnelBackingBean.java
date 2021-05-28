@@ -3103,10 +3103,6 @@ public class SmPersonnelBackingBean extends
 	}
 	//9569 - Start
 	public void saveUserMOFUpdate(){
-		//9569
-		if(getManagedBean().getEpRoleTrans().equalsIgnoreCase(SupplierManagementConst.EPROLE_DELETED)){
-			getManagedBean().setEpRoleTrans("");
-		}
 		  try{
 			SmPersonnel personnel = getManagedBean().getBasicSmPersonnel();
 		    //This is to save all the address
@@ -3142,6 +3138,16 @@ public class SmPersonnelBackingBean extends
 		   // SmPersonnel personnel1 = getManagedBean().getBasicSmPersonnel();
 		    if(personnel.getEpRole() == null){
 		    	personnel.setEpRole("");
+		    }
+		    //9569
+		    //terminate user 
+		    if(getManagedBean().getEpRoleTrans().equalsIgnoreCase(SupplierManagementConst.EPROLE_DELETED)){
+		    	PersonnelReqDTO personnelToTerminateReqDto = new PersonnelReqDTO();
+		    	personnelToTerminateReqDto.setSmPersonnel(personnel);
+		    	personnelToTerminateReqDto.setNewEpRole("");
+		    	personnelToTerminateReqDto.setToTerminate(true);
+				getManagedBean().setEpRoleTrans("");
+				SmServiceLookup.getPersonnelSO().updateMofPersonnelAndPmRole(personnelToTerminateReqDto);
 		    }
 
 		    if (getManagedBean().getEpRoleTrans() != null && !personnel.getEpRole().equalsIgnoreCase(getManagedBean().getEpRoleTrans())) {
