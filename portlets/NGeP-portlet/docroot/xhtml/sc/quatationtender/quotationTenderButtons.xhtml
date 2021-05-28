@@ -139,7 +139,7 @@
 								styleClass="ui-button"
 								actionListener ="#{qTDetailBB.assertSpecificationUpdateInProgress(true)}"  
 								update="@([id$=#{submitConfirmId2}])" 
-								rendered="#{isClone2}" />
+								rendered="#{isClone2 and !qTDetailBB.managedBean.showPopUpBPKApprovalNeeded}" />
 							<!-- #25077 Start -->
 							<c:if test="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION}">
 								<p:commandButton value="#{lbl[buttonLabel]}"
