@@ -3158,7 +3158,9 @@ public class SmPersonnelBackingBean extends
 		    	  }
 		        reqDTO1.setSmPersonnel(personnel);
 		        reqDTO1.setNewEpRole(getManagedBean().getEpRoleTrans());
+		        log.info("temporary log try1");
 		        resDTO1 = SmServiceLookup.getPersonnelSO().updateMofPersonnelAndPmRole(reqDTO1);
+		        log.info("temporary log try2");
 		      }else{
 		    	  personnel.setEpRole(getManagedBean().getEpRoleTrans());
 		    	  personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
@@ -3186,34 +3188,51 @@ public class SmPersonnelBackingBean extends
 		    }else{
 	    	  	PersonnelResDTO resDTO2 = SmServiceLookup.getPersonnelSO().updatePersonnelRecord(reqDTO2);
 			    if (!resDTO2.isSuccessful()) {
+			    	log.info("THROW 1");
 			      throw new EpException(MessageConst.ERROR_722632);
 			    }
 		    }
 		    //9569
 		    //terminate user 
 		    if(getManagedBean().getEpRoleTrans() == null){
+		    	log.info("temporary log 1");
 		    	PersonnelAuthorizationReqDTO reqPersonnelAuthDTO = new PersonnelAuthorizationReqDTO();
+		    	log.info("temporary log 2");
 		    	personnel.getPmUser().setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+		    	log.info("temporary log 3");
 		    	reqPersonnelAuthDTO.setPersonnel(personnel);
+		    	log.info("temporary log 4");
 		    	PersonnelAuthorizationResDTO resPersonnelAuthDTO = SmServiceLookup.getPersonnelAuthorizationSO().
 		    			deactivateAuthorizedPersonnelMOFUser(reqPersonnelAuthDTO);
+		    	log.info("temporary log 5");
 		    	if(!resPersonnelAuthDTO.isSuccessful()){
+		    		log.info("THROW 2");
 		    		throw new EpException(MessageConst.ERROR_722632);
 		    	}
 		    }
 		    //Make sure table is updated
 			PersonnelReqDTO reqDTO3 = new PersonnelReqDTO();
+			log.info("temporary log 6");
 			reqDTO3.setApplId(getManagedBean().getSmAppl().getApplId());
+			log.info("temporary log 7");
 			List<SmPersonnel> smPersonnelList2 = SmServiceLookup.getPersonnelSO().retrieveMOFPersonnelListByApplId(reqDTO3)
 					.getSmPersonnelList();
+			log.info("temporary log 8");
 			sortPersonnelByEpRole(smPersonnelList2);
+			log.info("temporary log 9");
 			getManagedBean().setSmPersonnelList(smPersonnelList2);
+			log.info("temporary log 10");
 			countAuthUserWithRole(smPersonnelList2);
+			log.info("temporary log 11");
 			countContractSigner(smPersonnelList2);
+			log.info("temporary log 12");
 			epRoleList(null,2);
+			log.info("temporary log 13");
 		    SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml", MessageConst.INFO_100002, null, null);
+		    log.info("temporary log 14");
 
 		  }catch (Exception ex){
+			  log.info("THROW 3");
 		      throw new EpException(MessageConst.ERROR_722632);
 		  }
 		}
