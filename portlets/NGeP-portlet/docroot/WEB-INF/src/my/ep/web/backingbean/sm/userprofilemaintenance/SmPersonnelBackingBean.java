@@ -33,6 +33,8 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
+import my.ep.dto.sm.personnelauthorization.PersonnelAuthorizationReqDTO;
+import my.ep.dto.sm.personnelauthorization.PersonnelAuthorizationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
@@ -3139,7 +3141,10 @@ public class SmPersonnelBackingBean extends
 		    if(personnel.getEpRole() == null){
 		    	personnel.setEpRole("");
 		    }
-
+		    
+		    if(getManagedBean().getEpRoleTrans().equalsIgnoreCase(SupplierManagementConst.EPROLE_DELETED)){
+				getManagedBean().setEpRoleTrans(null);
+		    }
 		    if (getManagedBean().getEpRoleTrans() != null && !personnel.getEpRole().equalsIgnoreCase(getManagedBean().getEpRoleTrans())) {
 		      PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
 		      PersonnelResDTO resDTO1 = new PersonnelResDTO();
@@ -3179,18 +3184,22 @@ public class SmPersonnelBackingBean extends
 		          throw new EpException(MessageConst.ERROR_722632);
 		        }
 		    }else{
-		    	//9569
-			    //terminate user 
-			    if(getManagedBean().getEpRoleTrans().equalsIgnoreCase(SupplierManagementConst.EPROLE_DELETED)){
-			    	personnel.getPmUser().setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
-			    	reqDTO2.setSmPersonnel(personnel);
-			    	reqDTO2.setNewEpRole(null);
-					getManagedBean().setEpRoleTrans(null);
-			    }
 	    	  	PersonnelResDTO resDTO2 = SmServiceLookup.getPersonnelSO().updatePersonnelRecord(reqDTO2);
 			    if (!resDTO2.isSuccessful()) {
 			      throw new EpException(MessageConst.ERROR_722632);
 			    }
+		    }
+		    //9569
+		    //terminate user 
+		    if(getManagedBean().getEpRoleTrans() == null){
+		    	PersonnelAuthorizationReqDTO reqPersonnelAuthDTO = new PersonnelAuthorizationReqDTO();
+		    	personnel.getPmUser().setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+		    	reqPersonnelAuthDTO.setPersonnel(personnel);
+		    	PersonnelAuthorizationResDTO resPersonnelAuthDTO = SmServiceLookup.getPersonnelAuthorizationSO().
+		    			deactivateAuthorizedPersonnelMOFUser(reqPersonnelAuthDTO);
+		    	if(!resPersonnelAuthDTO.isSuccessful()){
+		    		throw new EpException(MessageConst.ERROR_722632);
+		    	}
 		    }
 		    //Make sure table is updated
 			PersonnelReqDTO reqDTO3 = new PersonnelReqDTO();
