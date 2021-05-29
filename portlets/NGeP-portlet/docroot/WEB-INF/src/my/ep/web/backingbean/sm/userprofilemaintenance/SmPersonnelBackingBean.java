@@ -3144,9 +3144,14 @@ public class SmPersonnelBackingBean extends
 		    
 		    if(getManagedBean().getEpRoleTrans().equalsIgnoreCase(SupplierManagementConst.EPROLE_DELETED)){
 				getManagedBean().setEpRoleTrans(null);
+				log.info("roletrans1 ==" +getManagedBean().getEpRoleTrans());
+				log.info("temporary log null 1");
 		    }
+		    log.info("roletrans2 ==" +getManagedBean().getEpRoleTrans());
+		    log.info("temporary log null 2");
 		    if (getManagedBean().getEpRoleTrans() != null && !personnel.getEpRole().equalsIgnoreCase(getManagedBean().getEpRoleTrans())) {
-		      PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
+		    	log.info("temporary log null 3");
+		    	PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
 		      PersonnelResDTO resDTO1 = new PersonnelResDTO();
 		      if (personnel.getPmUser() != null) {
 		    	  int softcert = checkSoftCert();
