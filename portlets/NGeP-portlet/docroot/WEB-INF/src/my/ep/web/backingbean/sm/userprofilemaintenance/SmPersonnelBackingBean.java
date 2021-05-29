@@ -3204,6 +3204,7 @@ public class SmPersonnelBackingBean extends
 		    	PersonnelAuthorizationReqDTO reqPersonnelAuthDTO = new PersonnelAuthorizationReqDTO();
 		    	log.info("temporary log 2");
 		    	personnel.getPmUser().setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+		    	personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 		    	log.info("temporary log 3");
 		    	reqPersonnelAuthDTO.setPersonnel(personnel);
 		    	log.info("temporary log 4");
