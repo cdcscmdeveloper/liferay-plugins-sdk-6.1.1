@@ -627,6 +627,22 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setEpTotalBudgetH(null);
 		this.getManagedBean().setEpTotalPlanH(null);
 		this.getManagedBean().setEpTotalNonEpAllocH(null);
+		
+		//27624 - start
+		this.getManagedBean().getvPmGolist().clear();
+		this.getManagedBean().getvPmGomap().clear();
+		this.getManagedBean().getPlanSearchBean().setProcurementType(null);
+		this.getManagedBean().getPlanSearchBean().setCategoryType(null);
+		this.getManagedBean().getPlanSearchBean().setTitleOrDesc(null);
+		this.getManagedBean().getPlanSearchBean().setInvitationDateFrom(null);
+		this.getManagedBean().getPlanSearchBean().setInvitationDateTo(null);
+		this.getManagedBean().getPlanSearchBean().setUpdatedDateFrom(null);
+		this.getManagedBean().getPlanSearchBean().setUpdatedDateTo(null);
+		this.getManagedBean().getPlanSearchBean().setStatus(null);
+		this.getManagedBean().setSelectedCatSearch(null);
+		this.getManagedBean().setPlanDetailReset(true);
+		//27624 - end
+
 
 		
 		//this.getManagedBean().setDisable(false);
