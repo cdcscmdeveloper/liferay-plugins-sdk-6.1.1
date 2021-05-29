@@ -297,7 +297,7 @@
 									value="#{smPersonnelBackingBean.managedBean.roleList}" />
 								<!-- 9569 -->	
 								<c:if test="#{smPersonnelBackingBean.personnelToDeleteRole(smPersonnelBackingBean.managedBean.basicSmPersonnel)}">
-									<f:selectItem itemLabel="#{lbl['lbl.sm.maintenance.delete.role']}" itemValue="SupplierManagementConst.EPROLE_DELETED" />
+									<f:selectItem itemLabel="#{lbl['lbl.sm.maintenance.delete.role']}" itemValue="#{SupplierManagementConst.EPROLE_DELETED}" />
 								</c:if>
 								<p:ajax event="change" partialSubmit="true" process="@this"
 									update="perPrivPanel" onstart="blockWidget.show()"
