@@ -1556,24 +1556,55 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		if (tenderResDTO.isSuccessful()) {
 			ScQt qt = tenderResDTO.getQtDetail();
 			if (ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT.equalsIgnoreCase(this.getManagedBean().getApprovalType())) {
-				String committeeType = "";
-				String committeeNames = "";
-				if(CollectionUtils.isNotEmpty(qt.getScQtCommittees())){
-					int count = 0;
-					for(ScQtCommittee c: qt.getScQtCommittees()){
-						count++;
-						String code = c.getScCommittee().getCommitteeType().getParameterCode();
-						committeeType = committeeType.concat(code);
-						committeeNames = committeeNames.concat(this.getParameterDesc(ParameterConst.COMMITTE_TYPE, code));
-						if(count<qt.getScQtCommittees().size()){
-							committeeType = committeeType.concat("/");
-							committeeNames = committeeNames.concat("/");
-						}
+				
+				// #14398 - Start.
+				IScWorkFlowStatusSO workFlowStatusSO;
+				boolean isPendingReScheduleInvolved = false;
+				try {
+					workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+					
+					ScWorkFlowStatusReqDTO qtReqDTO = new ScWorkFlowStatusReqDTO();
+					qtReqDTO.setDocId(qt.getQtId());	
+					List<Long> statusIds = new ArrayList<Long>();
+					statusIds.add(QTStatusConst.QT_PENDING_SCHEDULE_REVISION);
+					qtReqDTO.setStatusIds(statusIds);
+					
+					List<ScWorkFlowStatus> statusList = workFlowStatusSO.retrieveWorkFlowStatus(qtReqDTO)
+							.getWorkFlowStatusList();
+					if (CollectionUtils.isNotEmpty(statusList) && statusList.size() > 0) {
+						isPendingReScheduleInvolved = true;
+						log.info("ApprovalBackingBean.updateReviceBpmTask(): isPendingReScheduleInvolved is: " + isPendingReScheduleInvolved);
 					}
 				}
-				String procurementMode = this.getParameterDesc(qt.getProcurementMode());
-				String qtNo = qt.getQtNo();
-				successMessage(MessageConst.INFO_760510, new String[]{committeeNames, procurementMode, qtNo}, true);
+				finally {
+					workFlowStatusSO = null;
+				}
+				
+				if (isPendingReScheduleInvolved) {
+					successMessage(MessageConst.INFO_60119, new String[]{qt.getQtNo()}, true);
+				} else {
+					String committeeType = "";
+					String committeeNames = "";
+					if(CollectionUtils.isNotEmpty(qt.getScQtCommittees())){
+						int count = 0;
+						for(ScQtCommittee c: qt.getScQtCommittees()){
+							count++;
+							String code = c.getScCommittee().getCommitteeType().getParameterCode();
+							committeeType = committeeType.concat(code);
+							committeeNames = committeeNames.concat(this.getParameterDesc(ParameterConst.COMMITTE_TYPE, code));
+							if(count<qt.getScQtCommittees().size()){
+								committeeType = committeeType.concat("/");
+								committeeNames = committeeNames.concat("/");
+							}
+						}
+					}
+					String procurementMode = this.getParameterDesc(qt.getProcurementMode());
+					String qtNo = qt.getQtNo();
+					successMessage(MessageConst.INFO_760510, new String[]{committeeNames, procurementMode, qtNo}, true);
+				}
+				
+				// #14398 - End.
 			}else{
 			successMessage(getMessgeConstant(this.getManagedBean().getAction()),
 					getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION),
