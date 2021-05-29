@@ -3432,6 +3432,15 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		debugLogger("updateBpmTask");
 
 		updateApprovalDetails(scQt);
+		
+		// #14398 - Start.
+		if (null != getManagedBean().getPublicationApproval()) {
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			reqDTO.setApproval(getManagedBean().getPublicationApproval());
+			getQTDetailSO().updateScQtApproval(reqDTO );
+		}
+		// #14398 - End.
+		
 		if (null!= this.getManagedBean().getTaskName() &&!SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(this.getManagedBean().getTaskName())){	//#28644-start	
 			retrieveApprovalTabDtl();
 			} //#28644-End
