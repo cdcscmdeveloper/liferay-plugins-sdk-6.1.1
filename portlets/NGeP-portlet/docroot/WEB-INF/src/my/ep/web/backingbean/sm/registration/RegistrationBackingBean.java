@@ -291,13 +291,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 		//29114
 		//CR 27382: Static Code Analysis Start
-		/* Asal
-		if(this.getManagedBean().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF)){
-		if (this.getManagedBean().getSmAppl().getSupplierType() == null || "".equalsIgnoreCase(this.getManagedBean().getSmAppl().getSupplierType())) {
-			throw new EpException(MessageConst.ERROR_100022,
-					new String[] {ResourceBundleUtils.getMessage("lbl.sm.mofsuppliertype", 
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-		}}*/
 		if (this.getManagedBean().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF) && (this.getManagedBean().getSmAppl().getSupplierType() == null || "".equalsIgnoreCase(this .getManagedBean().getSmAppl().getSupplierType()))) {
 			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage( "lbl.sm.mofsuppliertype", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
 		}
@@ -2361,8 +2354,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setDistrictId((long) 0);
 
 							this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPmDistrict(new PmDistrict());
-														
-							this.getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
+											
+							//start #30964
+							if(ssmResDTO.getSmAddress().getPmDistrict()!=null){
+								this.getManagedBean().setBusinessCityLs(SmCommonUtil.getCityList(ssmResDTO.getSmAddress().getPmDistrict().getDistrictId()));
+							}
+							//end #30964
 							this.getManagedBean().setBusinessDistrictLs(SmCommonUtil.getDistrictList(ssmResDTO.getSmAddress().getPmState().getStateId()));
 						}
 						//END 27488
