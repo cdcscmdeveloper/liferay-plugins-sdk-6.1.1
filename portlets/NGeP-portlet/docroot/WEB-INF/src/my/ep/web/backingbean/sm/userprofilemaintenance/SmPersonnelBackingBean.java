@@ -3200,7 +3200,7 @@ public class SmPersonnelBackingBean extends
 		    	reqUserDTO.setPmUser(personnel.getPmUser());
 		    	PersonnelAuthorizationResDTO resPersonnelAuthDTO = SmServiceLookup.getPersonnelAuthorizationSO().
 		    			deleteRoleAuthorizedPersonnel(reqPersonnelAuthDTO);
-		    	UserResDTO userResDTO = SmServiceLookup.getUserSO().updateUser(reqUserDTO);
+		    	UserResDTO userResDTO = SmServiceLookup.getUserSO().updatePmUserRecord(reqUserDTO);
 		    	if (!resPersonnelAuthDTO.isSuccessful() && !userResDTO.isSuccessful()) {
 				      throw new EpException(MessageConst.ERROR_722632);
 				    }
