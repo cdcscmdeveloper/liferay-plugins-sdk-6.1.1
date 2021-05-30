@@ -6,11 +6,9 @@ package my.ep.web.backingbean.sc.consolidation;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -671,15 +669,15 @@ public class ConsolidationReportBackingBean extends
 	public void submitAction() {
 		// Validate Desk officer ranking
 		// #30874 - Start.
-		//28834 starts
-		ScQtFinalization scQtFinalization = this.getManagedBean().getScQtFinalization();
-		String decisionTypeCode = scQtFinalization.getDecision().getParameterCode();
-		if (ParameterConst.DECISION_RBP.equals(decisionTypeCode)) {
-			log.info("decisionTypeCode " + decisionTypeCode);
+		//28834 start
+		if (null != getManagedBean().getCurrentStatusId() 
+				&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER.longValue())) {
+			
 		} else {
-			validateConsolidationReport();
+		         validateConsolidationReport();
+			
 		}
-		//28834 ends
+		//28834 end
 	   
 	    // #30874 - End.
 		RequestContext.getCurrentInstance().execute("submissionPopup.show()");
