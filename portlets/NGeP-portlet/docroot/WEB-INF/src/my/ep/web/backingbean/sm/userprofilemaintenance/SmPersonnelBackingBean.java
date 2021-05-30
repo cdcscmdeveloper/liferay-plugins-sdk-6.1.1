@@ -3211,10 +3211,6 @@ public class SmPersonnelBackingBean extends
 		    	PersonnelAuthorizationResDTO resPersonnelAuthDTO = SmServiceLookup.getPersonnelAuthorizationSO().
 		    			deactivateAuthorizedPersonnelMOFUser(reqPersonnelAuthDTO);
 		    	log.info("temporary log 5");
-		    	if(!resPersonnelAuthDTO.isSuccessful()){
-		    		log.info("THROW 2");
-		    		throw new EpException(MessageConst.ERROR_722632);
-		    	}
 		    }
 		    //Make sure table is updated
 			PersonnelReqDTO reqDTO3 = new PersonnelReqDTO();
