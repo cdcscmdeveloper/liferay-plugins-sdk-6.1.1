@@ -2323,22 +2323,38 @@ public class SupplierFinalizationBackingBean extends
 		// #25638 - Start.
 		if (QTStatusConst.SF_PENDING_SIGN_OFF.equals(currentStatusId) || QTStatusConst.SF_PENDING_ENDORSEMENT.equals(currentStatusId)) {
 		// #25638 - End.
-  			 // #28834 - Start
+  			 // #28834 - Start.
 			 if (QTStatusConst.SF_PENDING_SIGN_OFF.equals(currentStatusId) && CollectionUtils.isNotEmpty(scQtFinalization.getScQtFinalizationReports())) {
-				  ScQtFinalizationReport scQtFinalizationReport = getManagedBean().getDocumentList().get(getManagedBean().getDocumentList().size() -1); 
-				  ScQtFinalizationReport report = new ScQtFinalizationReport();
-				  report.setScQtFinalization(scQtFinalization);
-				  report.setDocCategory(scQtFinalizationReport.getPmDocument().getDocCategoryCode().getParameterCode());
-				  report.setPmDocument(scQtFinalizationReport.getPmDocument());
-				  String reportTitle = ResourceBundleUtils.getMessage("lbl.sc.kertas.taklimat", 
-						  ResourceBundleUtils.BUNDLE_COMMON_LABELS, SourcingConstants.MY_LOCALE) 
-						  + SPACE + "(" + getManagedBean().getDocumentList().size() + ")";
-				  report.setTitle(reportTitle);
-				  report.setDefinationType(scQtFinalizationReport.getPmDocument().getDocDefinitionTypeCode());
-				  report.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-				  scQtFinalization.getScQtFinalizationReports().add(report);
+				 String decisionTypeCode = scQtFinalization.getDecision()
+						  .getParameterCode();
+				  if (ParameterConst.DECISION_RBP.equals(decisionTypeCode) && CollectionUtils.isNotEmpty(getManagedBean().getDocumentList()) && getManagedBean().getDocumentList().size() > 0) {
+		              ScQtFinalizationReport scQtFinalizationReport = getManagedBean().getDocumentList().get(getManagedBean().getDocumentList().size() -1);
+		              ScQtFinalizationReportAttachment reportAttachment = null;
+		              if (null != scQtFinalizationReport) {
+		                try {
+		                  reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
+		                } catch (Exception e) {
+		                  log.error("SupplierFinalizationBackingBean.submitBrief(): Error while genarate briefing paper: " + e.getMessage());
+		                }
+		                scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
+		              }
+		              
+		              ScQtFinalizationReport report = new ScQtFinalizationReport();
+		              report.setScQtFinalization(scQtFinalization);
+		              report.setDocCategory(scQtFinalizationReport.getPmDocument().getDocCategoryCode().getParameterCode());
+		              report.setPmDocument(scQtFinalizationReport.getPmDocument());
+		              String reportTitle = ResourceBundleUtils.getMessage("lbl.sc.kertas.taklimat", 
+		            		  ResourceBundleUtils.BUNDLE_COMMON_LABELS, SourcingConstants.MY_LOCALE) 
+		            		  + SPACE + "(" + getManagedBean().getDocumentList().size() + ")";
+		              report.setTitle(reportTitle);
+		              report.setDefinationType(scQtFinalizationReport.getPmDocument().getDocDefinitionTypeCode());
+		              report.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		              scQtFinalization.getScQtFinalizationReports().add(report);
+		              
+		          }
+				 
 			  }
-			  // #28834 - End
+			  // #28834 - End.
 			if (CollectionUtils.isNotEmpty(
 					this.getManagedBean().getCommitteeList())
 					// #25638 - Start
@@ -2434,21 +2450,6 @@ public class SupplierFinalizationBackingBean extends
 				}
 			}
 			// #29921 - End.
-			
-			 // #28834 - Start.
-            if (ParameterConst.DECISION_RBP.equals(decisionTypeCode) && CollectionUtils.isNotEmpty(getManagedBean().getDocumentList()) && getManagedBean().getDocumentList().size() > 0) {
-              ScQtFinalizationReport scQtFinalizationReport = getManagedBean().getDocumentList().get(getManagedBean().getDocumentList().size() -1);
-              ScQtFinalizationReportAttachment reportAttachment = null;
-              if (null != scQtFinalizationReport) {
-                try {
-                  reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
-                } catch (Exception e) {
-                  log.error("SupplierFinalizationBackingBean.submitBrief(): Error while genarate briefing paper: " + e.getMessage());
-                }
-                scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
-              }
-            }
-            // #28834 - End.
             
 			signOff();
 			updateBPMTask(outcome, null, reqDTO);
