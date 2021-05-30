@@ -2741,6 +2741,7 @@ public class QtSpecCloneBackingBean extends
 	 */
 	public void cloneSearchQtAction() {
 		getManagedBean().setCloneCommitteeSelectQt(null);
+		this.getManagedBean().setSelectedCloneTender(null);//25635
 
 		getManagedBean().getCloneSearchQTDataModel().reloadData();
 	}
@@ -2770,4 +2771,13 @@ public class QtSpecCloneBackingBean extends
 		.setToClosingDate(null);
 		getManagedBean().setCloneCommitteeSelectQt(null);
 	}
+	
+	/*25635-start
+	 * datatable page loading
+	 * 
+	 */
+	public void searchActionPageChange(){
+		this.getManagedBean().setSelectedCloneTender(null);
+	}
+	//25635-End
 }

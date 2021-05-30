@@ -247,6 +247,7 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 		List<ScQtApproval> requiredApproval = resDTO.getApproval();
 		List<ScQtApproval> approvals=new ArrayList<ScQtApproval>();
 		List<ScQtApproval> newApprovals=new ArrayList<ScQtApproval>();
+		if(null!=requiredApproval && CollectionUtils.isNotEmpty(requiredApproval)){//25635-start
 		for(ScQtApproval approval:requiredApproval){
 			if (ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT
 					.equalsIgnoreCase(approval.getApprovalCategory()
@@ -256,6 +257,7 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 				
 			}
 		}
+		}//25635-End
 		
 		for(ScQtApproval copyApproval:approvals){
 			ScQtApproval newApproval= new ScQtApproval();

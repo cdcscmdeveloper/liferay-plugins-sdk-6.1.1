@@ -143,6 +143,8 @@
 
 					<p:ajax event="rowSelect" update=":form:pnlid2"
 						listener="#{qtSpecCloneBackingBean.onRowCloneAction}" />
+						
+				<p:ajax event="page"  listener="#{qtSpecCloneBackingBean.searchActionPageChange}"  update="@([id$=cloneCommitteeTreeBtnOnId3])"></p:ajax>
 
 					<p:column headerText="#{lbl['lbl.sc.qtn.no']}">
 						<h:outputText value="#{rscQt.qtNo}" style="white-space: normal;" />
