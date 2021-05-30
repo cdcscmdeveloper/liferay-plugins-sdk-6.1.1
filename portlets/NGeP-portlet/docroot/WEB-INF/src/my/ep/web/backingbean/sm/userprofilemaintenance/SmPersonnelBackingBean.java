@@ -3191,13 +3191,14 @@ public class SmPersonnelBackingBean extends
 			    }
 		    }
 		    //9569
-		    //terminate user 
+		    //delete role authorized personnel 
 		    if(getManagedBean().getEpRoleTrans() == null){
 		    	PersonnelAuthorizationReqDTO reqPersonnelAuthDTO = new PersonnelAuthorizationReqDTO();
+		    	personnel.getPmUser().setUserId(null);
 		    	personnel.getPmUser().setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 		    	reqPersonnelAuthDTO.setPersonnel(personnel);
 		    	PersonnelAuthorizationResDTO resPersonnelAuthDTO = SmServiceLookup.getPersonnelAuthorizationSO().
-		    			deactivateAuthorizedPersonnelMOFUser(reqPersonnelAuthDTO);
+		    			deleteRoleAuthorizedPersonnel(reqPersonnelAuthDTO);
 		    	if (!resPersonnelAuthDTO.isSuccessful()) {
 				      throw new EpException(MessageConst.ERROR_722632);
 				    }
