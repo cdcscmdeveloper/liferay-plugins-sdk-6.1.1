@@ -5265,7 +5265,13 @@ public class SmApplicationBackingBean extends
 									new String[] { "regNo" }, null, null));
 		}
 		assignValReqdToTrue();
-		RequestContext.getCurrentInstance().execute("eqiCompDialog.show()");
+		// #30660 start - fix reopen
+		if (getManagedBean().isDisAllowOwnerEdit()) {
+			RequestContext.getCurrentInstance().execute("viewEqiCompDialog.show()");
+		} else {
+			RequestContext.getCurrentInstance().execute("eqiCompDialog.show()");
+		}
+		// #30660 end
 		
 		//#27308 - 13/03/2020 START
 		// #28466 start - remove #27308 showstopper
