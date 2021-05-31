@@ -172,8 +172,10 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		try{
 			fulfilementOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 			
 			reqDTO.setOutcome(BpmOutcomeConst.BPM_CLOSE_MANUAL);
+			reqDTO.setToken(token);
 			reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			reqDTO.setUserRole(getUserRole());
@@ -182,12 +184,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			}
 			
-			
-			
-			
-			
-			resDTO = fulfilementOrderSO.closeManualPayment(reqDTO);
-			
+			resDTO = fulfilementOrderSO.closeManualPayment(reqDTO);			
 			
 			if(resDTO.isSuccessful()) {
 				successMessage(MessageConst.INFO_700072, ParameterTypeConst.DOCUMENT_TYPES,
