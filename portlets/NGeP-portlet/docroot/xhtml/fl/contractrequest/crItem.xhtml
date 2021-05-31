@@ -803,7 +803,7 @@
 			value="#{contractRequestBackingBean.managedBean.itemSpecList}">
 			<ac:paginator for="specificationDt" />
 			
-			<p:column headerText="#{lbl['lbl.fl.spec']}" style="text-align:center" width="750"
+			<p:column headerText="#{lbl['lbl.fl.spec']}" style="text-align:center" width="100%"
 			rendered="#{contractRequestBackingBean.managedBean.dpFlag}">
 			<p:inputTextarea disabled="true" rendered="#{contractRequestBackingBean.managedBean.dpFlag}" styleClass="colFloatLeft"
 						value="#{specificationList.itemSpec}" cols="135" rows="2"/>
