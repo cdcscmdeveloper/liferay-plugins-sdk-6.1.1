@@ -681,43 +681,41 @@
 				<!-- #25725 start -->
 								
 				<tr>
-				<td>
-				<table>
-					<tr>
-					<p:outputPanel id="uploadApprovalLetterPg"> 
-							<ui:fragment rendered="#{((lOADetailBackingBean.managedBean.agreementReqChange) and (!lOADetailBackingBean.managedBean.scLoa.agreementReq) and (isNonPeriodic and !isPK7) and (lOADetailBackingBean.managedBean.above500K))}" 
+					<td colspan="3">
+						<p:outputPanel id="uploadApprovalLetterPg"> 													
+							<h:panelGroup  rendered="#{((lOADetailBackingBean.managedBean.agreementReqChange) and (!lOADetailBackingBean.managedBean.scLoa.agreementReq) and (isNonPeriodic and !isPK7) and (lOADetailBackingBean.managedBean.above500K))}" 
 							required="true">							
-								
-								<td>
-									<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.approval.letter']}" /> 
-									<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
-								</td>
-								<td>						
-									<p:commandButton 
-									oncomplete="uploadApprovalLetterDlg.show();return false;"
-					 				icon="ui-icon-upload" immediate="true" update="uploadApprovalLetterDlg" 
-					 				rendered="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment eq null}"/>
-									<h:commandLink
-									title="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.fileName}"
-									value="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.fileName}"						
-									action="#{lOADetailBackingBean.fileDownload}"
-									styleClass="blue_font"
-									rendered="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.filePath != null}"/>
-									<p:commandLink oncomplete="deleteApprovalLetterDlg.show();return false;"
-									rendered="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment ne null and !lOADetailBackingBean.disabledButton()}" process="@this" partialSubmit="true"
-									disabled="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment eq null}">
-			   						<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
-			 	 					</p:commandLink>
-			 	 										 	 					 	 				
-			 	 				</td>
-			 	 								 	 									
-							</ui:fragment>
-					</p:outputPanel>
-					</tr>
-			 	 				</table>	
+								<table>
+									<tr>
+										<td>
+											<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.approval.letter']}" /> 
+											<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
+										</td>
+										<td>
+											<p:outputPanel id="uploadedPage">						
+												<p:commandButton 
+												oncomplete="uploadApprovalLetterDlg.show();return false;"
+					 							icon="ui-icon-upload" immediate="true" update="uploadApprovalLetterDlg" 
+					 							rendered="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment eq null}"/>								
+												<p:commandLink
+												title="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.fileName}"
+												value="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.fileName}"						
+												action="#{lOADetailBackingBean.fileDownload}"
+												styleClass="blue_font"
+												rendered="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.filePath != null}"/>
+												<p:commandLink oncomplete="deleteApprovalLetterDlg.show();return false;"
+												rendered="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment ne null and !lOADetailBackingBean.disabledButton()}" process="@this" partialSubmit="true"
+												disabled="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment eq null}">
+			   										<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
+			 	 								</p:commandLink>
+			 	 							</p:outputPanel> 
+			 	 						</td>
+			 	 					</tr>
+			 	 				</table>					 	 				
+			 	 			</h:panelGroup>		 							
+						</p:outputPanel>			 	 								
 					</td>		
-			</tr>
-			
+				</tr>						
 		</table>
 	</p:panel>
 	<p:outputPanel id="suppRemarksPanel">
@@ -731,8 +729,8 @@
 	<ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" />
 	<!-- Bug #30600 End -->
 	
-	<p:dialog id="uploadApprovalLetterDlg" widgetVar="uploadApprovalLetterDlg"
-		modal="true" width="400px" height="200px" resizable="false"
+	<!--p:dialog id="uploadApprovalLetterDlg" widgetVar="uploadApprovalLetterDlg"
+		resizable="false" modal="true" width="550px"
 		styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}"
 		onShow="singleUploadListener(approvalLetterUploadWV);">
 		<p:ajax event="close" />
@@ -742,20 +740,27 @@
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" widgetVar="approvalLetterUploadWV"
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
 			invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}" 
-			update=":form:uploadApprovalLetterPg" label="#{lbl['lbl.btn.choose']}" oncomplete="uploadApprovalLetterDlg.hide();" >
+			update=":form:uploadedPage" label="#{lbl['lbl.btn.choose']}" oncomplete="uploadApprovalLetterDlg.hide();" >
 		</p:fileUpload>
 		<f:facet name="footer">
 		<div class="ppRightBtn">
 	    	<p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadApprovalLetterDlg.hide();" />
   		</div>
   		</f:facet>
-	</p:dialog>
+	</p:dialog-->
+	
+	<ac:scSingleFileUploadPopup id="uploadApprovalLetterDlg" widgetVar="uploadApprovalLetterDlg"
+			fileUploadListener="lOADetailBackingBean.fileUpload"			
+			update=":form:uploadedPage" 
+			fileType="#{lOADetailBackingBean.managedBean.fileTypePdf}"
+			invalidFileMessage="#{lbl['lbl.txt.upload.pdf.file']}"
+			label="#{lbl['lbl.btn.choose']}" oncomplete="uploadApprovalLetterDlg.hide();"/>
 	
 	<p:confirmDialog id="deleteApprovalLetterDlg" widgetVar="deleteApprovalLetterDlg"  appendToBody="true" 
 		message="#{lbl['lbl.msg.confirm.delete']}" 	severity="alert"  closable="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"
-			partialSubmit="true"  update=":form:uploadApprovalLetterPg"
+			partialSubmit="true"  update=":form:uploadedPage"
 			action="#{lOADetailBackingBean.fileDelete}"
 			oncomplete="deleteApprovalLetterDlg.hide();" />
 			<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteApprovalLetterDlg.hide();" />	
