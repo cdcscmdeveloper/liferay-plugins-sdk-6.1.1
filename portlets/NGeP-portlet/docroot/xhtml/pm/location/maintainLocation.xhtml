@@ -51,9 +51,9 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.pm.state.code']}" /> <p:outputLabel value="*"
 							styleClass="mandatory" /></td>
-
+					<!-- 12852 Start -->
 					<td><p:inputText id="statecode"
-							label="#{lbl['lbl.pm.state.code']}" styleClass="ppDisplayTextM"
+							label="#{lbl['lbl.pm.state.code']}" styleClass="ppDisplayTextS"
 							style="text-transform: uppercase"
 							value="#{locationBackingBean.managedBean.state.stateCode}"
 							disabled="#{!locationBackingBean.managedBean.state.brandNew}"
@@ -62,6 +62,7 @@
 							maxlength="10">
 							<f:validateLength minimum="2" />
 						</p:inputText></td>
+					<!-- 12852 End -->
 				</tr>
 				<tr>
 					<td><h:outputLabel
@@ -141,9 +142,9 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.pm.division.code']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-
+					<!-- 12852 Start -->
 					<td><p:inputText id="divisioncode"
-							styleClass="ppDisplayTextM" style="text-transform: uppercase"
+							styleClass="ppDisplayTextS" style="text-transform: uppercase"
 							label="#{lbl['lbl.pm.division.code']}" size="40"
 							disabled="#{!locationBackingBean.managedBean.division.brandNew}"
 							value="#{locationBackingBean.managedBean.division.divisionCode}"
@@ -152,6 +153,7 @@
 							required="true" maxlength="10">
 							<f:validateLength minimum="2" />
 						</p:inputText></td>
+					<!-- 12852 End -->
 				</tr>
 
 				<tr>
@@ -247,9 +249,9 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.pm.district.code']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-
+					<!-- 12852 Start -->
 					<td><p:inputText id="districtcode"
-							styleClass="ppDisplayTextM" style="text-transform: uppercase"
+							styleClass="ppDisplayTextS" style="text-transform: uppercase"
 							label="#{lbl['lbl.pm.district.code']}"
 							disabled="#{!locationBackingBean.managedBean.district.brandNew}"
 							value="#{locationBackingBean.managedBean.district.districtCode}"
@@ -257,6 +259,7 @@
 							validatorMessage="#{lbl['lbl.pm.district.code']}#{lbl['lbl.pm.location.4len.validate']}">
 							<f:validateLength minimum="4" />
 						</p:inputText></td>
+					<!-- 12852 End -->
 				</tr>
 
 				<tr>
@@ -350,9 +353,9 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.pm.city.code']}" /> <p:outputLabel value="*"
 							styleClass="mandatory" /></td>
-
+					<!-- 12852 Start -->
 					<td><p:inputText id="citycode"
-							styleClass="ppDisplayTextM" label="#{lbl['lbl.pm.city.code']}"
+							styleClass="ppDisplayTextS" label="#{lbl['lbl.pm.city.code']}"
 							style="text-transform: uppercase"
 							disabled="#{!locationBackingBean.managedBean.city.brandNew}"
 							value="#{locationBackingBean.managedBean.city.cityCode}"
@@ -362,6 +365,7 @@
 						</p:inputText>
 						<ac:iconTooltip value="#{lbl['lbl.pm.city.code.tt']}" />	
 						</td>
+					<!-- 12852 End -->
 				</tr>
 
 				<tr>
