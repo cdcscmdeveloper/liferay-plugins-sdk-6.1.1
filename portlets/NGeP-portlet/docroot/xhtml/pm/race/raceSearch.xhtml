@@ -8,14 +8,16 @@
 
 	<p:panel id="racePanel" header="#{lbl['lbl.pm.race.search']}" toggleable="true" >  
 		<table class="ppTwoTable">
+			<!-- 12852 Start -->
 			<tr>
 				<th width="20%"><h:outputLabel value="#{lbl['lbl.pm.race.code']}"></h:outputLabel></th>
-				<td><p:inputText maxlength="4"
+				<td><p:inputText maxlength="4" style="width: 4%"
 						value="#{raceBackingBean.managedBean.raceCode}"
 						id="raceCode" size="30" /></td>
 				<th>&#160;</th>
 				<td>&#160;</td>
 			</tr>
+			<!-- 12852 End -->
 			<tr>
 				<th width="20%"><h:outputLabel value="#{lbl['lbl.pm.race.name']}"></h:outputLabel></th>
 				<td><p:inputText maxlength="100" id="raceName"

@@ -96,16 +96,17 @@
 								update="catSearch,searchCategory"/>
 						</p:selectOneMenu></td>
 				</tr>
-
+				<!-- 12852 Start -->
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.main.category.code']}" /></td>
 					<td><p:inputText 
 							value="#{categoryBackingBean.managedBean.mainCatCode}"
-							maxlength="2" size="27" /></td>
+							maxlength="2" size="27" style="width:10%"/></td>
 					<td><p:outputLabel value="#{lbl['lbl.pm.main.category.desc']}" /></td>
 					<td><p:inputText
 							value="#{categoryBackingBean.managedBean.mainCatDesc}" size="50" maxlength="255" /></td>
 				</tr>
+				<!-- 12852 End -->
 				<tr>
 					<h:panelGroup  
 						rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==null || categoryBackingBean.managedBean.pmCategoryLevel==0 ||
@@ -119,12 +120,13 @@
 							</p:selectOneMenu></td>
 					</h:panelGroup>
 				</tr>
+				<!-- 12852 Start -->
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.sub.category.code']}"
 							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==2 || categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
 					<td><p:inputText
 							value="#{categoryBackingBean.managedBean.subCatCode}" size="27"
-							maxlength="2"
+							maxlength="2" style="width:10%"
 							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==2 || categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
 					<td><p:outputLabel style="float: right:width: 15%"
 							value="#{lbl['lbl.pm.sub.category.desc']}"
@@ -134,6 +136,7 @@
 							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==2 || categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
 						
 				</tr>
+				<!-- 12852 End -->
 				<tr>
 					<h:panelGroup
 						rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==2}">
@@ -146,12 +149,13 @@
 							</p:selectOneMenu></td>
 					</h:panelGroup>
 				</tr>
+				<!-- 12852 Start -->
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.sub.div.code']}"
 							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
 					<td><p:inputText
 							value="#{categoryBackingBean.managedBean.subDivCode}" size="27"
-							maxlength="2"
+							maxlength="2" style="width:10%"
 							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.pm.sub.div.desc']}"
 							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
@@ -159,6 +163,7 @@
 							value="#{categoryBackingBean.managedBean.subDivDesc}" size="50" maxlength="255"
 							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
 				</tr>
+				<!-- 12852 End -->
 				<tr>
 					<h:panelGroup
 						rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==3}">
