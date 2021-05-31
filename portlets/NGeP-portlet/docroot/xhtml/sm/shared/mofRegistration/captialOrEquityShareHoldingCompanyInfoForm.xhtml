@@ -113,31 +113,34 @@
 					</h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
-					<p:commandLink update=":form:tt:eqiCompDialog" partialSubmit="true"
-						process="@this" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-						action="#{backingBean.assignSelEquiCompany(equiBean)}">
-						<!-- #30660 start - fix reopen -->
-						<p:outputPanel rendered="#{backingBean.managedBean.disAllowOwnerEdit}"> 
-							<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" /> 
-						</p:outputPanel> 
-						<p:outputPanel rendered="#{!backingBean.managedBean.disAllowOwnerEdit}"> 
-							<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" /> 
-						</p:outputPanel> 
-						<!-- #30660 end -->
-					</p:commandLink>
+					<!-- #30660 start - fix reopen -->
+					<p:commandLink update=":form:tt:eqiCompDialog :form:tt:viewEqiCompDialog" partialSubmit="true"
+						process="@this" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" action="#{backingBean.assignSelEquiCompany(equiBean)}">
+						<p:outputPanel rendered="#{backingBean.managedBean.disAllowOwnerEdit}">
+							<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
+						</p:outputPanel>
+						<p:outputPanel rendered="#{!backingBean.managedBean.disAllowOwnerEdit}">
+							<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
+						</p:outputPanel>
+					</p:commandLink> 
+					<!-- #30660 end -->
 					<ac:smFieldChangeTableAlert object="#{equiBean}" />
 				</p:column>
 			</p:dataTable>
 			<p:spacer height="2px;" />
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
-					action="#{backingBean.assignNewEquiCompBean}" partialSubmit="true"
-					process="@this" update=":form:tt:eqiCompDialog" />
-				<p:commandButton value="#{lbl['lbl.sm.button.delete']}" id="equiCompDelBtnId"
-					disabled="#{empty backingBean.managedBean.smAppl.smEquityCompanies}"
-					oncomplete="equiCompDeletePopUp.show()"
-					process="equiInfPan" partialSubmit="true"
-					update=":form:tt:eqiComDt" />
+				<!-- #30660 start - fix reopen -->
+				<p:commandButton
+					disabled="#{backingBean.managedBean.disAllowOwnerEdit}"
+					value="#{lbl['lbl.sm.button.add']}"
+					action="#{backingBean.assignNewEquiCompBean}" partialSubmit="true" 
+					process="@this" update=":form:tt:eqiCompDialog" /> 
+				<p:commandButton
+					value="#{lbl['lbl.sm.button.delete']}" id="equiCompDelBtnId"
+					disabled="#{empty backingBean.managedBean.smAppl.smEquityCompanies or backingBean.managedBean.disAllowOwnerEdit}"
+					oncomplete="equiCompDeletePopUp.show()" process="equiInfPan"
+					partialSubmit="true" update=":form:tt:eqiComDt" />
+				<!-- #30660 end -->
 
 			</div>
 			<br />
