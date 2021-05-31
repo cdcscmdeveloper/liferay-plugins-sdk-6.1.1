@@ -2205,6 +2205,9 @@ public class SupplierFinalizationBackingBean extends
 		                scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
 		              }
 		              
+		              // #28834 - Start.
+		              scQtFinalizationReport = getManagedBean().getDocumentList().get(0);
+		              // #28834 - End.
 		              ScQtFinalizationReport report = new ScQtFinalizationReport();
 		              report.setScQtFinalization(scQtFinalization);
 		              report.setDocCategory(scQtFinalizationReport.getPmDocument().getDocCategoryCode().getParameterCode());
@@ -3497,9 +3500,21 @@ return	remarksNotFound;
 			// #28834 - Strat.
 			if (isBpkCentralContract || !getManagedBean().isInitialDecisionFwdToBPK()) {
 				int totalFinalizationRounds = findFinalizationCount();
+				// #28834 - Strat.
 				
-				finalizationReports.removeAll(endorsementReports);
-				if (endorsementReportCount < totalFinalizationRounds) {
+				int meetingStatusOtherThanDonecount = 0;
+	            List<ScQtMeeting> meetingListList = getManagedBean().getMeetingList();
+	            if (CollectionUtils.isNotEmpty(meetingListList)) {
+	              for (ScQtMeeting meeting : meetingListList) {
+	                if (null != meeting.getMeetingStatus() && null != meeting.getMeetingStatus().getStatusId()
+	                    && !QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus().getStatusId())) {
+	                  meetingStatusOtherThanDonecount++;
+	                } 
+	              }
+	              totalFinalizationRounds = totalFinalizationRounds - meetingStatusOtherThanDonecount;
+	            }
+	            
+	            if (endorsementReportCount < totalFinalizationRounds) {
 					// No need to generate Kertas Keputusan under Briefing Paper Preparation tab.
 					String reportTitle = ResourceBundleUtils.getMessage("lbl.sc.committee.endorsement.report", 
 				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, SourcingConstants.MY_LOCALE) 
@@ -3515,6 +3530,9 @@ return	remarksNotFound;
 						this.getManagedBean().setEndorsementReport(endorsementReports.get(0));
 					}
 				}
+				
+				// 28834 - end.
+
 				this.getManagedBean().setEndorsementReports(endorsementReports);
 			}
 			// #28834 - End.
@@ -9621,14 +9639,14 @@ return	remarksNotFound;
 			List<ScQtFinalizationReport> finalizationReports = new ArrayList<ScQtFinalizationReport>();
 			finalizationReports.addAll(this.getManagedBean().getDocumentList());
 			finalizationReports.addAll(this.getManagedBean().getEndorsementReports());
-			// #28834 - Start
-			/*for(ScQtFinalizationReport  report: finalizationReports){
+			// #28834 - Start.
+			for(ScQtFinalizationReport  report: finalizationReports){
 				if(report.isBrandNew()){//find the correct additional condition
 					finalizationReports.remove(report);
 					break;
 				}
-			}*/
-			// #28834 - End
+			}
+			// #28834 - End.
 			scQtFinalization.setScQtFinalizationReports(finalizationReports);
 			Long currentStatusId = getManagedBean().getCurrentStatusId();
 			log.info("currentStatusId === "+currentStatusId);
