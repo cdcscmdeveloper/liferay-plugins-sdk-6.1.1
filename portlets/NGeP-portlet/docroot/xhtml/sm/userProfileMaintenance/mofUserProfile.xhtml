@@ -191,11 +191,17 @@
 							label="#{lbl['lbl.sm.userprofile.email']}"
 							value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.email}"
 							validatorMessage="#{lbl['lbl.sm.userprofile.email']} - #{lbl['lbl.sm.invalidEmail']}"
-							size="40" required="true"
-							disabled="#{smPersonnelBackingBean.managedBean.editMode}">
+							size="40" required="true">
 							<f:validateRegex
 								pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
-						</p:inputText> <p:message id="basicBUEmailMsg" for="basicBUEmail"
+							<p:ajax event="change" process="@this" listener="#{smPersonnelBackingBean.onChangeEmail()}" update="basicBUEmail"/> 
+						</p:inputText>
+						<p:graphicImage id="toolTipIcon" value="/css/images/design/tooltips.png" /> 
+					  	<p:tooltip id="sourceTooltip" for="toolTipIcon">
+							<h:outputText id="sourceLabel" escape="false" value="#{lbl['lbl.sm.email.change.tooltip']}" />
+						</p:tooltip> 
+						
+						 <p:message id="basicBUEmailMsg" for="basicBUEmail"
 							showSummary="true" showDetail="false" display="icon" /></td>
 
 
@@ -289,6 +295,10 @@
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems
 									value="#{smPersonnelBackingBean.managedBean.roleList}" />
+								<!-- 9569 -->	
+								<c:if test="#{smPersonnelBackingBean.personnelToDeleteRole(smPersonnelBackingBean.managedBean.basicSmPersonnel)}">
+									<f:selectItem itemLabel="#{lbl['lbl.sm.maintenance.delete.role']}" itemValue="#{SupplierManagementConst.EPROLE_DELETED}" />
+								</c:if>
 								<p:ajax event="change" partialSubmit="true" process="@this"
 									update="perPrivPanel" onstart="blockWidget.show()"
 									oncomplete="blockWidget.hide()" />
@@ -1196,6 +1206,7 @@
 				</tr>
 			</table>
 		</p:panel>
-
+		<ac:smEmailAlertPopup bBean="#{backingBean}" title="#{lbl['lbl.sm.email.change.header']}" dialogId="emailPopUp" 
+			btnOkLabel="#{lbl['lbl.btn.ok']}" />
 	</ui:define>
 </ui:composition>
