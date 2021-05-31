@@ -478,10 +478,11 @@ public class QTCloneBackingbean extends
 					stats=getStatuses(QTStatusConst.QT_PENDING_QT_SUBMISSION,QTStatusConst.QT_PENDING_QT_SUBMISSION);
 					s=new ArrayList<Long>(Arrays.asList(stats));
 				}
-				if(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId)){
+				if(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId) || QTStatusConst.QT_REVISION_PUBLICATION.equals(statusId)){//25635
 					stats=getStatuses(QTStatusConst.QT_PENDING_QT_SUBMISSION,QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT);
 					s=new ArrayList<Long>(Arrays.asList(stats));
 					s.add(QTStatusConst.QT_PENDING_BPK_APPROVAL);
+					s.add(QTStatusConst.QT_REVISION_PUBLICATION);//25635
 				}
 				
 				
@@ -611,10 +612,12 @@ public class QTCloneBackingbean extends
 		ScQt scQt = (ScQt) event.getObject();
 		Long qtId = scQt.getQtId();
 		String evaluationType = scQt.getEvaluationType();
+		if(QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this.getManagedBean().getQt().getQtStatus().getStatusId())){//25635-start
 		this.getManagedBean().setCloneCommitteeSelectQt(scQt);
+		}//25635-End
 		
 		Long statusId=this.getManagedBean().getQt().getQtStatus().getStatusId();
-		if(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId)){
+		if(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId) || QTStatusConst.QT_REVISION_PUBLICATION.equals(statusId) ){//25635
 			this.showTree = false;
 		}else{
 			this.showTree = true;
@@ -1894,6 +1897,7 @@ public class QTCloneBackingbean extends
 		List<ScQtApproval> requiredApproval = resDTO.getApproval();
 		List<ScQtApproval> approvals=new ArrayList<ScQtApproval>();
 		List<ScQtApproval> newApprovals=new ArrayList<ScQtApproval>();
+		if(null!=requiredApproval && CollectionUtils.isNotEmpty(requiredApproval)){//25635-start
 		for(ScQtApproval approval:requiredApproval){
 			if (ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT
 					.equalsIgnoreCase(approval.getApprovalCategory()
@@ -1903,6 +1907,7 @@ public class QTCloneBackingbean extends
 				
 			}
 		}
+		}//25635-End
 		
 		for(ScQtApproval copyApproval:approvals){
 			ScQtApproval newApproval= new ScQtApproval();
@@ -4143,6 +4148,7 @@ public class QTCloneBackingbean extends
 	 */
 	public void cloneSearchQtAction() {
 		getManagedBean().setCloneCommitteeSelectQt(null);
+		this.getManagedBean().setSelectedCloneTender(null);//25635
 
 		getManagedBean().getCloneSearchQTDataModel().reloadData();
 	}
@@ -4172,5 +4178,13 @@ public class QTCloneBackingbean extends
 		.setToClosingDate(null);
 		getManagedBean().setCloneCommitteeSelectQt(null);
 	}
-
+	
+	/*25635-start
+	 * datatable page loading
+	 * 
+	 */
+	public void searchActionPageChange(){
+		this.getManagedBean().setSelectedCloneTender(null);
+	}
+	//25635-end
 }

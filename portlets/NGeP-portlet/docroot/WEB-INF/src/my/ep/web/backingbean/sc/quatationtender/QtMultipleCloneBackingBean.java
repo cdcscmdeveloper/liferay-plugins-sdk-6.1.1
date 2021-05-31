@@ -46,7 +46,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproverSettings;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
-import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtStatus;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
@@ -244,6 +243,7 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 		List<ScQtApproval> requiredApproval = resDTO.getApproval();
 		List<ScQtApproval> approvals=new ArrayList<ScQtApproval>();
 		List<ScQtApproval> newApprovals=new ArrayList<ScQtApproval>();
+		if(null!=requiredApproval && CollectionUtils.isNotEmpty(requiredApproval)){//25635-start
 		for(ScQtApproval approval:requiredApproval){
 			if (ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT
 					.equalsIgnoreCase(approval.getApprovalCategory()
@@ -253,6 +253,7 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 				
 			}
 		}
+		}//25635-End
 		
 		for(ScQtApproval copyApproval:approvals){
 			ScQtApproval newApproval= new ScQtApproval();
