@@ -249,10 +249,10 @@
 		</p:panel>
 
 
-
+		<!-- #14118 - Start -->
 		<p:dialog id="imageDialog" widgetVar="imageDialog" modal="true"
 			width="700px" resizable="false" styleClass="pop_up_top"
-			onShow="uploadListener(importDevicesWidget)">
+			onShow="uploadImageListener(importDevicesWidget)">
 
 			<h:outputText styleClass="instruction" escape="false"
 				style="float:left;margin-left:5px;"
@@ -272,7 +272,7 @@
 				multiple="true">
 			</p:fileUpload>
 		</p:dialog>
-
+		<!-- #14118 - End -->
 
 
 		<p:tabView id="pricingTabID" orientation="left"

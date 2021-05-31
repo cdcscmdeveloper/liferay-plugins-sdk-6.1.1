@@ -66,6 +66,7 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
+import my.ep.persistence.entity.pp.procurementplan.PpProcurementItem;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.type.aut.SearchCondition;
@@ -535,6 +536,12 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private List<TreeNode> zoneTrees;
 	
 	private boolean dupplicatedInd = false;
+	
+	//14118 - Start
+	private boolean disableDeleteBtn = true;
+	private CmSupplierItem selectedImage;
+	//14118 - End
+	
 	private FlFulfilmentRequest flRequest;
 	
 	private Paginator detachedPaginator;
@@ -4295,6 +4302,26 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.dupplicatedInd = dupplicatedInd;
 	}
 
+	//14118 - Start	
+	public boolean isDisableDeleteBtn() {
+		return disableDeleteBtn;
+	}
+	
+	public void setDisableDeleteBtn(boolean disableDeleteBtn) {
+		this.disableDeleteBtn = disableDeleteBtn;
+	}
+	
+	public CmSupplierItem getSelectedImage() {
+		if (selectedImage == null)
+			selectedImage = new CmSupplierItem();
+		return selectedImage;
+	}
+
+	public void setSelectedImage(CmSupplierItem selectedImage) {
+		this.selectedImage = selectedImage;
+	}
+	//14118 - End
+	
 	public Paginator getDetachedPaginator() {
 		return detachedPaginator;
 	}
