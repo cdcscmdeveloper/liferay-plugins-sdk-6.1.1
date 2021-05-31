@@ -9844,14 +9844,14 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			List<ScQtFinalizationReport> finalizationReports = new ArrayList<ScQtFinalizationReport>();
 			finalizationReports.addAll(this.getManagedBean().getDocumentList());
 			finalizationReports.addAll(this.getManagedBean().getEndorsementReports());
-			// #28834 - Start
-			/*for(ScQtFinalizationReport  report: finalizationReports){
+			// #28834 - Start.
+			for(ScQtFinalizationReport  report: finalizationReports){
 				if(report.isBrandNew()){//find the correct additional condition
 					finalizationReports.remove(report);
 					break;
 				}
-			}*/
-			// #28834 - End
+			}
+			// #28834 - End.
 			scQtFinalization.setScQtFinalizationReports(finalizationReports);
 			Long currentStatusId = getManagedBean().getCurrentStatusId();
 			log.info("currentStatusId === "+currentStatusId);
