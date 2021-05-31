@@ -3646,9 +3646,21 @@ return	remarksNotFound;
 			// #28834 - Strat.
 			if (isBpkCentralContract || !getManagedBean().isInitialDecisionFwdToBPK()) {
 				int totalFinalizationRounds = findFinalizationCount();
+				// #28834 - Strat.
 				
-				finalizationReports.removeAll(endorsementReports);
-				if (endorsementReportCount < totalFinalizationRounds) {
+				int meetingStatusOtherThanDonecount = 0;
+	            List<ScQtMeeting> meetingListList = getManagedBean().getMeetingList();
+	            if (CollectionUtils.isNotEmpty(meetingListList)) {
+	              for (ScQtMeeting meeting : meetingListList) {
+	                if (null != meeting.getMeetingStatus() && null != meeting.getMeetingStatus().getStatusId()
+	                    && !QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus().getStatusId())) {
+	                  meetingStatusOtherThanDonecount++;
+	                } 
+	              }
+	              totalFinalizationRounds = totalFinalizationRounds - meetingStatusOtherThanDonecount;
+	            }
+	            
+	            if (endorsementReportCount < totalFinalizationRounds) {
 					// No need to generate Kertas Keputusan under Briefing Paper Preparation tab.
 					String reportTitle = ResourceBundleUtils.getMessage("lbl.sc.committee.endorsement.report", 
 				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, SourcingConstants.MY_LOCALE) 
@@ -3664,6 +3676,9 @@ return	remarksNotFound;
 						this.getManagedBean().setEndorsementReport(endorsementReports.get(0));
 					}
 				}
+				
+				// 28834 - end.
+
 				this.getManagedBean().setEndorsementReports(endorsementReports);
 			}
 			// #28834 - End.
