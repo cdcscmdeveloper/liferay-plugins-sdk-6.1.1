@@ -3197,7 +3197,6 @@ public class SmPersonnelBackingBean extends
 		    	UserReqDTO reqUserDTO = new UserReqDTO();
 		    	reqPersonnelAuthDTO.setPersonnel(personnel);
 		    	reqUserDTO.setPmUser(personnel.getPmUser());
-		    	reqUserDTO.getPmUser().setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 		    	PersonnelAuthorizationResDTO resPersonnelAuthDTO = SmServiceLookup.getPersonnelAuthorizationSO().
 		    			deleteRoleAuthorizedPersonnel(reqPersonnelAuthDTO);
 		    	UserResDTO userResDTO = SmServiceLookup.getUserSO().updatePmUserRecord(reqUserDTO);
