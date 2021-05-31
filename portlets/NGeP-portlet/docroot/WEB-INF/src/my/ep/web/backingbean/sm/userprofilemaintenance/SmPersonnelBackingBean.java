@@ -2,9 +2,11 @@ package my.ep.web.backingbean.sm.userprofilemaintenance;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+
 // 9569 start
 import java.util.Collections;
 import java.util.Comparator;
+
 //9569 end
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +33,8 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
+import my.ep.dto.sm.personnelauthorization.PersonnelAuthorizationReqDTO;
+import my.ep.dto.sm.personnelauthorization.PersonnelAuthorizationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
@@ -3136,9 +3140,13 @@ public class SmPersonnelBackingBean extends
 		    if(personnel.getEpRole() == null){
 		    	personnel.setEpRole("");
 		    }
-
+		    //9569
+		    if(getManagedBean().getEpRoleTrans().equalsIgnoreCase(SupplierManagementConst.EPROLE_DELETED)){
+				getManagedBean().setEpRoleTrans(null);
+		    }
+		    
 		    if (getManagedBean().getEpRoleTrans() != null && !personnel.getEpRole().equalsIgnoreCase(getManagedBean().getEpRoleTrans())) {
-		      PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
+		    	PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
 		      PersonnelResDTO resDTO1 = new PersonnelResDTO();
 		      if (personnel.getPmUser() != null) {
 		    	  int softcert = checkSoftCert();
@@ -3176,8 +3184,22 @@ public class SmPersonnelBackingBean extends
 		          throw new EpException(MessageConst.ERROR_722632);
 		        }
 		    }else{
-		    	  PersonnelResDTO resDTO2 = SmServiceLookup.getPersonnelSO().updatePersonnelRecord(reqDTO2);
-				    if (!resDTO2.isSuccessful()) {
+	    	  	PersonnelResDTO resDTO2 = SmServiceLookup.getPersonnelSO().updatePersonnelRecord(reqDTO2);
+			    if (!resDTO2.isSuccessful()) {
+			      throw new EpException(MessageConst.ERROR_722632);
+			    }
+		    }
+		    //9569
+		    //delete role authorized personnel 
+		    if(getManagedBean().getEpRoleTrans() == null){
+		    	PersonnelAuthorizationReqDTO reqPersonnelAuthDTO = new PersonnelAuthorizationReqDTO();
+		    	UserReqDTO reqUserDTO = new UserReqDTO();
+		    	reqPersonnelAuthDTO.setPersonnel(personnel);
+		    	reqUserDTO.setPmUser(personnel.getPmUser());
+		    	PersonnelAuthorizationResDTO resPersonnelAuthDTO = SmServiceLookup.getPersonnelAuthorizationSO().
+		    			deleteRoleAuthorizedPersonnel(reqPersonnelAuthDTO);
+		    	UserResDTO userResDTO = SmServiceLookup.getUserSO().updatePmUserRecord(reqUserDTO);
+		    	if (!resPersonnelAuthDTO.isSuccessful() && !userResDTO.isSuccessful()) {
 				      throw new EpException(MessageConst.ERROR_722632);
 				    }
 		    }
@@ -3365,6 +3387,14 @@ public class SmPersonnelBackingBean extends
 		return disableRadio;
 	}
 	//END 30053
-	
+	//9569
+	public static boolean personnelToDeleteRole(SmPersonnel basicSmPersonnel) {
+		boolean retVal = false;
+		if(basicSmPersonnel.getEpRole()!=null && basicSmPersonnel.getAuthorizedFlg()==1 &&
+				!basicSmPersonnel.getEpRole().equalsIgnoreCase(SupplierManagementConst.MOF_SUPPLIER_ADMIN)){
+			retVal = true;
+		}
+		return retVal;
+	}
 
 }
