@@ -765,7 +765,9 @@ public class TemplateSpecHelper {
 					}
 				}
 				if (!specQuestion.getClFulfilmentTypeCode().getParameterCode()
-						.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)) {
+						.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN) || 
+						!specQuestion.getClFulfilmentTypeCode().getParameterCode()
+						.equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN)) {
 					if (itemDurationMonth != null) {
 						totalPrice = totalPrice.multiply(itemDurationMonth);
 					} else {
