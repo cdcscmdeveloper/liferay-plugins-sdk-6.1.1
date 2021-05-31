@@ -54,7 +54,7 @@
 					<!-- 12852 Start -->
 					<td><p:inputText id="statecode"
 							label="#{lbl['lbl.pm.state.code']}" styleClass="ppDisplayTextS"
-							style="text-transform: uppercase"
+							style="text-transform: uppercase;width:20%"
 							value="#{locationBackingBean.managedBean.state.stateCode}"
 							disabled="#{!locationBackingBean.managedBean.state.brandNew}"
 							size="40" required="true" onchange="this.value = this.value.trim()"
@@ -144,7 +144,7 @@
 							value="*" styleClass="mandatory" /></td>
 					<!-- 12852 Start -->
 					<td><p:inputText id="divisioncode"
-							styleClass="ppDisplayTextS" style="text-transform: uppercase;width:10%"
+							styleClass="ppDisplayTextS" style="text-transform: uppercase;width:20%"
 							label="#{lbl['lbl.pm.division.code']}" size="40"
 							disabled="#{!locationBackingBean.managedBean.division.brandNew}"
 							value="#{locationBackingBean.managedBean.division.divisionCode}"
@@ -251,7 +251,7 @@
 							value="*" styleClass="mandatory" /></td>
 					<!-- 12852 Start -->
 					<td><p:inputText id="districtcode"
-							styleClass="ppDisplayTextS" style="text-transform: uppercase"
+							styleClass="ppDisplayTextS" style="text-transform: uppercase;width:20%"
 							label="#{lbl['lbl.pm.district.code']}"
 							disabled="#{!locationBackingBean.managedBean.district.brandNew}"
 							value="#{locationBackingBean.managedBean.district.districtCode}"
@@ -356,7 +356,7 @@
 					<!-- 12852 Start -->
 					<td><p:inputText id="citycode"
 							styleClass="ppDisplayTextS" label="#{lbl['lbl.pm.city.code']}"
-							style="text-transform: uppercase"
+							style="text-transform: uppercase;width:20%"
 							disabled="#{!locationBackingBean.managedBean.city.brandNew}"
 							value="#{locationBackingBean.managedBean.city.cityCode}"
 							size="40" required="true" maxlength="10" onchange="this.value = this.value.trim()"
