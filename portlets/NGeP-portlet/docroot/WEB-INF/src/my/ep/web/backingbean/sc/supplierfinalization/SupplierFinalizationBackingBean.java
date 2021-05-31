@@ -2339,6 +2339,9 @@ public class SupplierFinalizationBackingBean extends
 		                scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
 		              }
 		              
+		              // #28834 - Start.
+		              scQtFinalizationReport = getManagedBean().getDocumentList().get(0);
+		              // #28834 - End.
 		              ScQtFinalizationReport report = new ScQtFinalizationReport();
 		              report.setScQtFinalization(scQtFinalization);
 		              report.setDocCategory(scQtFinalizationReport.getPmDocument().getDocCategoryCode().getParameterCode());
