@@ -1676,11 +1676,16 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 					zipFileName = "supplemental_agreement.zip";
 					log.info("Bug #30924 zipFileName :"+zipFileName);
 				}
+				log.info("Bug #30924 zipFileName :"+zipFileName);
 				File zipFile = new File(getManagedBean().getFileDirectory()+ zipFileName);
+				log.info("Bug #30924 zipFile :"+zipFile.toString());
 				zipFile.createNewFile();
 				ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipFile));
+				log.info("Bug #30924 filelist"+fileList.size());
 				for (File file : fileList) {
+					log.info("Bug #30924 "+file.getName());
 					zos.putNextEntry(new ZipEntry(file.getName()));	
+					
 					// Get the file
 					FileInputStream fis = null;
 					try {
