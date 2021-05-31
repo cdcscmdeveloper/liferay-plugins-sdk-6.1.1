@@ -65,8 +65,32 @@
 				if (files.length == 1) {
 					upload_widget.buttonBar.find('input[type=file]').get(0).disabled=false;
 				}
-			}		
+			}
 		}
+		
+		// 14118 - Start
+		function uploadImageListener(upload_widget) {
+			upload_widget.uploadContent.find('tr.ui-state-error').remove();
+			addChooseOnchange(upload_widget);
+			onChangeDisableUploadBtn(upload_widget);
+		}
+		
+		function onChangeDisableUploadBtn(upload_widget) {
+			if(upload_widget.buttonBar.find('input[type=file]').get(0).type == 'file') {		
+				upload_widget.buttonBar.find('.start').get(0).disabled=true;
+				upload_widget.buttonBar.find('.start').get(0).title = '#{lbl['lbl.cm.tooltip.btn.upload']}';			
+				upload_widget.buttonBar.find('input[type=file]').change(function() {
+					var sizes = "#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages.size()}";
+					if (sizes >= 5) {
+						upload_widget.buttonBar.find('.start').get(0).disabled=true;
+						$("td.start").css( "pointer-events", "none" );	
+					} else {
+						upload_widget.buttonBar.find('.start').get(0).disabled=false;
+					}
+				});
+			}
+		}
+		// 14118 - End 
 		
 	    function clearInvalidFiles(upload_widget) {
 	    	/*if(upload_widget.uploadContent.find('.files .template-upload').length > 1) {
