@@ -789,6 +789,32 @@ public class CMReportsBackingBean extends ReportBaseBackingBean<CMReportManagedB
 		if(this.getManagedBean().getDateTo()!=null ){
 			params.put(CmReportConst.DATE_TO, df.format(this.getManagedBean().getDateTo()));
 		}
+		// #29592 - start
+		if (this.getManagedBean().getSelectedMinistryOrgProfile() != null
+				&& this.getManagedBean().getSelectedMinistryOrgProfile().getPmOrgValidity() != null
+				&& StringUtils.isNotBlank(this.getManagedBean().getSelectedMinistryOrgProfile().getPmOrgValidity()
+						.getOrgName())) {
+			params.put(CmReportConst.MINISTRY, this.getManagedBean().getSelectedMinistryOrgProfile().getPmOrgValidity()
+					.getOrgName());
+		}
+		if (this.getManagedBean().getSelectedKumpulanPTJOrgProfile() != null
+				&& this.getManagedBean().getSelectedKumpulanPTJOrgProfile().getPmOrgValidity() != null
+				&& StringUtils.isNotBlank(this.getManagedBean().getSelectedKumpulanPTJOrgProfile().getPmOrgValidity()
+						.getOrgName())) {
+			params.put(CmReportConst.KUMPULAN_PTJ, this.getManagedBean().getSelectedKumpulanPTJOrgProfile()
+					.getPmOrgValidity().getOrgName());
+		}
+		if (this.getManagedBean().getSelectedPTJOrgProfile() != null
+				&& this.getManagedBean().getSelectedPTJOrgProfile().getPmOrgValidity() != null
+				&& StringUtils.isNotBlank(this.getManagedBean().getSelectedPTJOrgProfile().getPmOrgValidity()
+						.getOrgName())) {
+			params.put(CmReportConst.PTJ, this.getManagedBean().getSelectedPTJOrgProfile().getPmOrgValidity()
+					.getOrgName());
+		}
+		if (StringUtils.isNotBlank(this.getManagedBean().getDocNoSearchInput())) {
+			params.put(CmReportConst.DOCUMENT_NO, this.getManagedBean().getDocNoSearchInput());
+		}
+		// #29592 - end
 
 		FacesScopes facesScopes =new FacesScopes();
 		Long userId = facesScopes.getUserSessionBean().getUserId();
