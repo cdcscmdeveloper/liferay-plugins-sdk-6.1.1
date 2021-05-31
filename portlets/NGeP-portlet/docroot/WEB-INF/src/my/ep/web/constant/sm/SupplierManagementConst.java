@@ -679,6 +679,9 @@ public class SupplierManagementConst {
 	public static String SUSPENDED = my.ep.constant.sm.SupplierManagementConst.SUSPENDED;
 	public static String TERMINATED = my.ep.constant.sm.SupplierManagementConst.TERMINATED;
 
+	//9569
+	public static final String EPROLE_DELETED = "Delete";
+		
 	// Getters for panel info
 	public String getSUPP_TYPE_CONTRACTOR() {
 		return SUPP_TYPE_CONTRACTOR;
@@ -1272,4 +1275,9 @@ public class SupplierManagementConst {
 	}
 
 	// #12483 - END
+	
+	//9569
+	public String getEPROLE_DELETED() {
+		return EPROLE_DELETED;
+	}
 }
