@@ -193,7 +193,7 @@
 									<h:outputLabel value="#{lbl['lbl.fl.pmo.ptj.name']}" style="text-align: top" />
 									<p:selectOneMenu style="width:450px; margin-bottom:5px;"
 										disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
-										value="#{contractRequestBackingBean.managedBean.flRequest.pmoOrgProfile.orgProfileId}" >
+										value="#{contractRequestBackingBean.managedBean.selectedPmoPTJ}" >
 										<f:selectItems value="#{contractRequestBackingBean.getPmoPTJNameDropdown()}" />
 									</p:selectOneMenu>
 								</h:panelGrid>
