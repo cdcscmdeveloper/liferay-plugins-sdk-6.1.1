@@ -3589,7 +3589,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT)){
 						for(ScQtApproval approval : this.getManagedBean().getQt().getScQtApprovals()){
 							for(ScQtApproverSettings approverSetting : approval.getApproverSettings()){
-								if(isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId())){ //#30477#23
+								if(isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId(),1)){
 									throw new EpException(MessageConst.ERROR_775171);
 								}
 							}
@@ -3602,7 +3602,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						|| currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION))
 						&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT))	{
 							for(ScQtApproverSettings approverSetting : this.getManagedBean().getPublicationApproval().getApproverSettings()){
-								if(isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId())){ //#30477#23
+								if(isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId(),2)){
 									throw new EpException(MessageConst.ERROR_775172);
 								}
 							}
@@ -10317,8 +10317,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
   	}
   	//#28784 - End
   	
-    //#30477#23 - Start
-  	public boolean isInactiveCommiteeApproverRole(Long userId) {
+    //#30477 - Start
+  	public boolean isInactiveCommiteeApproverRole(Long userId,int role) {
 		IQTDetailSO detailSO = null;
 		try {
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
@@ -10335,10 +10335,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			boolean inactive = false;
 			for (PmUserRole roles : pmUserOrg.getPmUserRoles()) {	
 				if(RoleCode.COMMITTEE_APPROVER.value().equals(roles.getPmRole().getRoleCode()) && 
-						roles.getRecordStatusFlg().equals(0) && roles.isRecordStatus() == false){
+						roles.getRecordStatusFlg().equals(0) && roles.isRecordStatus() == false && role == 1){
 					inactive = true;	
 				}else if(RoleCode.PUBLICATION_APPROVER.value().equals(roles.getPmRole().getRoleCode()) && 
-						roles.getRecordStatusFlg().equals(0) && roles.isRecordStatus() == false ){
+						roles.getRecordStatusFlg().equals(0) && roles.isRecordStatus() == false && role == 2){
 				    inactive = true;	
 				}
 			}
@@ -10348,6 +10348,22 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			detailSO = null;
 		}
 	}
-    //#30477#23 - End
+  	
+  	public boolean isInactiveCurrentCommitteeApprovarUser(){
+  		boolean inactive = false;
+		ScQt scQt = this.getManagedBean().getQt();
+		Long statusId = scQt.getQtStatus().getStatusId();	
+		if(this.getManagedBean().isMaintanceFlow() && statusId.equals(QTStatusConst.QT_EVALUATION_PROPOSAL)){
+			for(ScQtApproval approval : this.getManagedBean().getQt().getScQtApprovals()){
+				for(ScQtApproverSettings approverSetting : approval.getApproverSettings()){
+					if(isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId(),1)){ 
+						inactive = true;
+					}
+				}
+			}
+		}
+		return inactive;
+  	}
+    //#30477 - End
   	
 }
