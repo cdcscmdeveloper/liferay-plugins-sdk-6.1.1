@@ -26,6 +26,7 @@ import java.net.URLConnection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -2523,8 +2524,11 @@ public void saveComplianceSample() {
 				resultStg.add(QTConstants.TECHNICAL_EVALUATION);
 				resultStg.add(QTConstants.TECHNICAL_SUMMARY_ITEM);
 				evalReqDTO.setResultStages(resultStg);
-				if (this.getManagedBean().getCurrentStatusId()
-						.equals(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL)
+				
+				Long[] technicalEvaluationStatus = new Long[]{QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL, 
+						QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_REVISION};//29021
+				
+				if (Arrays.asList(technicalEvaluationStatus).contains(this.getManagedBean().getCurrentStatusId())//29021
 						&& !this.getManagedBean().isReadOnly()) {
 					ScQtFinalization finalization = retriveScQtFinalizationForReEvaluate();
 					if (null != finalization) {
@@ -2539,8 +2543,8 @@ public void saveComplianceSample() {
 						}
 					}
 				}
-				if (this.getManagedBean().getCurrentStatusId()
-						.equals(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL)
+				
+				if (Arrays.asList(technicalEvaluationStatus).contains(this.getManagedBean().getCurrentStatusId())//29021
 						&& !this.getManagedBean().isReadOnly()
 						&& !getManagedBean().isTechnicalSummaryGenerated()) {
 					evaluationStageStatusCheck();
@@ -2607,8 +2611,11 @@ public void saveComplianceSample() {
 				resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE);
 				resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_ITEM);
 				summaryReqDTO.setResultStages(resultStg2);
-				if (this.getManagedBean().getCurrentStatusId()
-						.equals(QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL)
+				
+				Long[] financialEvaluationStatus = new Long[]{QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL, 
+						QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL_REVISION};//29021
+				
+				if (Arrays.asList(financialEvaluationStatus).contains(this.getManagedBean().getCurrentStatusId())//29021
 						&& !this.getManagedBean().isReadOnly()
 						&& !getManagedBean().isFinancialSummaryGenerated()) {
 					/*
@@ -2642,6 +2649,9 @@ public void saveComplianceSample() {
 			else if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 					.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
 
+				Long[] evaluationStatus = new Long[]{QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL, 
+						QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION};//29021
+				
 				if (this.getManagedBean().getScQt().getEvaluationType()
 						.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER)
 						&& !this.getManagedBean().getScQt()
@@ -2656,9 +2666,8 @@ public void saveComplianceSample() {
 					resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE);
 					resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_ITEM);
 					summaryReqDTO.setResultStages(resultStg2);
-					if (this.getManagedBean()
-							.getCurrentStatusId()
-							.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
+					
+					if (Arrays.asList(evaluationStatus).contains(this.getManagedBean().getCurrentStatusId())//29021
 							&& !this.getManagedBean().isReadOnly()
 							&& !getManagedBean().isFinancialSummaryGenerated()) {
 						evaluationStageStatusCheck();
@@ -2693,9 +2702,7 @@ public void saveComplianceSample() {
 					resultStg.add(QTConstants.TECHNICAL_EVALUATION);
 					resultStg.add(QTConstants.TECHNICAL_SUMMARY_ITEM);
 					evalReqDTO.setResultStages(resultStg);
-					if (this.getManagedBean()
-							.getCurrentStatusId()
-							.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
+					if (Arrays.asList(evaluationStatus).contains(this.getManagedBean().getCurrentStatusId())//29021
 							&& !this.getManagedBean().isReadOnly()) {
 						ScQtFinalization finalization = retriveScQtFinalizationForReEvaluate();
 						if (null != finalization) {
