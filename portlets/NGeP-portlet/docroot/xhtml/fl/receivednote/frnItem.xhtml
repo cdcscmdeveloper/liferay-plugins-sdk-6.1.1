@@ -46,7 +46,7 @@
             	<h:outputText value="#{item.flDelOrderItem.flFulfilmentItemAddr.itemCode}" />
         	</p:column>
         	<p:column style="white-space:normal;">
-				<h:outputText value="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemName}" style="text-align:left; float:left;"
+				<h:outputText value="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemName}" 
 				id="itemDesc" title="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemDesc}"/>
 				<p:commandLink oncomplete="frnItemInfo.show();" process="@this"  
 					rendered="#{receivedNoteBackingBean.managedBean.contractFlag}"
@@ -272,39 +272,42 @@
 			</table> 
 			
 			<p:dataTable id="specificationDt" var="specificationList"
-			value="#{receivedNoteBackingBean.managedBean.itemSpecList}"  >
+			value="#{receivedNoteBackingBean.managedBean.itemSpecList}" width="100%" >
 			<ac:paginator for="specificationDt" />
 			
-			<p:column headerText="#{lbl['lbl.fl.spec']}" style="text-align:center" width="750"
+			<p:column headerText="#{lbl['lbl.fl.spec']}" style="text-align:center"
 			rendered="#{receivedNoteBackingBean.managedBean.dpFlag}">
 			<p:inputTextarea disabled="true" rendered="#{receivedNoteBackingBean.managedBean.dpFlag}" styleClass="colFloatLeft"
-						value="#{specificationList.itemSpec}" cols="135" rows="2"/>
+						value="#{specificationList.itemSpec}" cols="135" rows="2" autoResize="false" style="width: 100% !important;"/>
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.fl.spec']}" style="text-align:center"
 			rendered="#{!receivedNoteBackingBean.managedBean.dpFlag}">			
-			<p:inputTextarea cols="40" rows="10" id="itemSpecification"
+			<p:inputTextarea cols="41" rows="10" id="itemSpecification"
 						rendered="#{!receivedNoteBackingBean.managedBean.dpFlag}"
+						styleClass="colFloatLeft"
 						autoResize="false"
-						style=" margin-bottom:5px;" 
+						style="width: 96% !important; margin-left:0px;" 
 						disabled="true"
 						value="#{receivedNoteBackingBean.managedBean.itemSpecification == null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.managedBean.itemSpecification}" /> 
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.supp.offer']}" style="text-align:center"
 						rendered="#{!receivedNoteBackingBean.managedBean.dpFlag}">
-			<p:inputTextarea cols="40" rows="10" id="supplierOffer"
+			<p:inputTextarea cols="41" rows="10" id="supplierOffer"
 						rendered="#{!receivedNoteBackingBean.managedBean.dpFlag}"
+						styleClass="colFloatLeft"
 						autoResize="false"
-						style=" margin-bottom:5px;" 
+						style="width: 96% !important; margin-left:0px;" 
 						disabled="true"
 						value="#{receivedNoteBackingBean.managedBean.supplierOffer == null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.managedBean.supplierOffer}" /> 
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.new.offer.spec']}" style="text-align:center"
 						rendered="#{!receivedNoteBackingBean.managedBean.dpFlag}">
-			<p:inputTextarea cols="40" rows="10" id="newOfferedSpec"
+			<p:inputTextarea cols="41" rows="10" id="newOfferedSpec"
 						rendered="#{!receivedNoteBackingBean.managedBean.dpFlag}"
+						styleClass="colFloatLeft"
 						autoResize="false"
-						style=" margin-bottom:5px;" 
+						style="width: 96% !important; margin-left:0px;" 
 						disabled="true"
 						value="#{receivedNoteBackingBean.managedBean.newOfferedSpec == null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.managedBean.newOfferedSpec}" /> 
 			</p:column>
