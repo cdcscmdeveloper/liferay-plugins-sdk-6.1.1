@@ -434,10 +434,20 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			//end Bug #20701            
 			//13291 - start
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-				flRequest.setApproverId(getManagedBean().getSelectedApprover());
-				PmOrgProfile pmOrgProfile = new PmOrgProfile();
-				pmOrgProfile.setOrgProfileId(getManagedBean().getSelectedApproverPTJ());
+				PmOrgProfile pmOrgProfile = null;
+				if(getManagedBean().getSelectedApproverPTJ() != null) {
+					pmOrgProfile = new PmOrgProfile();
+					pmOrgProfile.setOrgProfileId(getManagedBean().getSelectedApproverPTJ());
+				}
 				flRequest.setApproverOrgProfile(pmOrgProfile);
+				flRequest.setApproverId(getManagedBean().getSelectedApprover());
+				
+				PmOrgProfile pmoOrgProfile = null;
+				if(getManagedBean().getSelectedPmoPTJ() != null) {
+					pmoOrgProfile = new PmOrgProfile();					
+					pmoOrgProfile.setOrgProfileId(getManagedBean().getSelectedPmoPTJ());					
+				}
+				flRequest.setPmoOrgProfile(pmoOrgProfile);
 			}
 			if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action) && !flRequest.getApproverId().equals(getFacesScopes().getUserSessionBean().getUserId())) {
 				List<Long> orgProfileIdList = new ArrayList<>();
@@ -573,6 +583,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		//13291 - start
 		if(resDTO.getFlFulfilmentRequest().getApproverOrgProfile() != null && resDTO.getFlFulfilmentRequest().getApproverOrgProfile().getOrgProfileId() != null){
 			getManagedBean().setSelectedApproverPTJ(resDTO.getFlFulfilmentRequest().getApproverOrgProfile().getOrgProfileId());
+		}
+		if(resDTO.getFlFulfilmentRequest().getPmoOrgProfile() != null && resDTO.getFlFulfilmentRequest().getPmoOrgProfile().getOrgProfileId() != null){
+			getManagedBean().setSelectedPmoPTJ(resDTO.getFlFulfilmentRequest().getPmoOrgProfile().getOrgProfileId());
 		}
 		//13291 - end
 		if(isFlFulfilmentRequisitioner()){
@@ -1599,11 +1612,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			checkAP59();
 			//#14650 - End
 		}
-		//13291 - start
-		if(getManagedBean().getFlRequest().getPmoOrgProfile() == null) {
-			getManagedBean().getFlRequest().setPmoOrgProfile(new PmOrgProfile());
-		}
-		//13291 - end
 		//26279 - start
 		if(getManagedBean().getFlRequest().getStatus().getStatusId().longValue() == FulfilmentStatusConst.CR_PENDING_SUBMISSION.longValue() 
 				|| getManagedBean().getFlRequest().getStatus().getStatusId().longValue() == FulfilmentStatusConst.CR_PENDING_APPROVAL.longValue() 
@@ -5126,7 +5134,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 						throw new EpException(MessageConst.ERROR_750010);
 					}
 					//13291 - start
-					if(getManagedBean().getFlRequest().getPmoOrgProfile().getOrgProfileId() == null){
+					if(getManagedBean().getSelectedPmoPTJ() == null){
 						getManagedBean().setSelectedTabIndex(4);
 						throw new EpException(MessageConst.ERROR_745080);					
 					}
