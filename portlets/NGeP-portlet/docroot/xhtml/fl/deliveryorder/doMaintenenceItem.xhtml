@@ -103,40 +103,43 @@
 						size="35" /></td>
 			</tr>
 			</table> 
-			<p:dataTable id="specificationDt" var="specificationList"
-			value="#{createDOBackingBean.managedBean.itemSpecList}"  >
+			<p:dataTable id="specificationDt" var="specificationList" 
+			value="#{createDOBackingBean.managedBean.itemSpecList}" width="100%">
 			<ac:paginator for="specificationDt" />
 			
-			<p:column headerText="#{lbl['lbl.fl.spec']}" style="text-align:center" width="100%"
+			<p:column headerText="#{lbl['lbl.fl.spec']}" style="text-align:center" 
 			rendered="#{createDOBackingBean.managedBean.dpFlag}">
 			<p:inputTextarea disabled="true" rendered="#{createDOBackingBean.managedBean.dpFlag}" styleClass="colFloatLeft"
-						value="#{specificationList.itemSpec}" cols="135" rows="2"/>
+						value="#{specificationList.itemSpec}" cols="135" rows="2" style="width: 100% !important;"/>
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.fl.spec']}" style="text-align:center"
 			rendered="#{!createDOBackingBean.managedBean.dpFlag}">			
-			<p:inputTextarea cols="40" rows="10" id="itemSpecification"
+			<p:inputTextarea cols="41" rows="10" id="itemSpecification"
 						rendered="#{!createDOBackingBean.managedBean.dpFlag}"
+						styleClass="colFloatLeft"
 						autoResize="false"
-						style=" margin-bottom:5px;" 
+						style="width: 96% !important; margin-left:0px;" 
 						disabled="true"
 						value="#{createDOBackingBean.managedBean.itemSpecification == null ? lbl['lbl.fl.supp.na'] : createDOBackingBean.managedBean.itemSpecification}" /> 
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.supp.offer']}" style="text-align:center"
 						rendered="#{!createDOBackingBean.managedBean.dpFlag}">
-			<p:inputTextarea cols="40" rows="10" id="supplierOffer"
+			<p:inputTextarea cols="41" rows="10" id="supplierOffer"
 						rendered="#{!createDOBackingBean.managedBean.dpFlag}"
+						styleClass="colFloatLeft"
 						autoResize="false"
-						style=" margin-bottom:5px;" 
+						style="width: 96% !important; margin-left:0px;" 
 						disabled="true"
 						value="#{createDOBackingBean.managedBean.supplierOffer == null ? lbl['lbl.fl.supp.na'] : createDOBackingBean.managedBean.supplierOffer}" /> 
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.new.offer.spec']}" style="text-align:center"
 						rendered="#{!createDOBackingBean.managedBean.dpFlag}">
-			<p:inputTextarea cols="40" rows="10" id="newOfferedSpec"
+			<p:inputTextarea cols="41" rows="10" id="newOfferedSpec"
 						rendered="#{!createDOBackingBean.managedBean.dpFlag}"
+						styleClass="colFloatLeft"
 						autoResize="false"
-						style=" margin-bottom:5px;" 
+						style="width: 96% !important; margin-left:0px;" 
 						disabled="true"
 						value="#{createDOBackingBean.managedBean.newOfferedSpec == null ? lbl['lbl.fl.supp.na'] : createDOBackingBean.managedBean.newOfferedSpec}" /> 
 			</p:column>
