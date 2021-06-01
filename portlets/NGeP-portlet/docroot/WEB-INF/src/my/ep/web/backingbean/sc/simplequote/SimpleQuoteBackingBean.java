@@ -4006,6 +4006,7 @@ public class SimpleQuoteBackingBean extends
 			}else if(tplSpecQuestion.getClFulfilmentTypeCode() != null && 
 					(tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
 					.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED) && (result>0 || result == 0))){
+				validateDuration();
 				return;			
 			}else if(tplSpecQuestion.getClFulfilmentTypeCode() != null && 
 					(tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
