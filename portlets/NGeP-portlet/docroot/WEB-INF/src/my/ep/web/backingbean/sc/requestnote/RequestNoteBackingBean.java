@@ -904,6 +904,27 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}	
 		}
 		
+		// #27545 - start
+		if (outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || outcome.equals(BpmOutcomeConst.BPM_APPROVE)
+				|| outcome.equals(BpmOutcomeConst.BPM_REVISE)) {
+			PmUser pmUser = requestNoteDtls.get(0).getAssignedUser();
+			PmOrgProfile pmOrgProfile = scRequestNote.getPmOrgProfile();
+			List<PmUser> userList = null;
+
+			UserReqDTO req = new UserReqDTO();
+			req.setIncludeUserIds(new ArrayList<Long>());
+			req.getIncludeUserIds().add(pmUser.getUserId());
+			req.setRoleCodes(Arrays.asList(RoleCode.REQUISITIONER.value(), RoleCode.DESK_OFFICER.value()));
+			req.setOrgProfileId(pmOrgProfile.getOrgProfileId());
+			UserResDTO res = getUserSO().retrieveUserListByRole(req);
+			userList = res.getUserList();
+
+			if (CollectionUtils.isEmpty(userList)) {
+				throw new EpException(MessageConst.ERROR_770242);
+			}
+		}
+		// #27545 - end
+
 		if(outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || 
 				outcome.isEmpty() || 
 				outcome.equals(BpmOutcomeConst.BPM_APPROVE)){
