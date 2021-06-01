@@ -319,7 +319,7 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	
 	//#25725 start
 	private boolean disabledButton = true;
-	public BigDecimal limit = new BigDecimal(500000);
+	public BigDecimal limit = new BigDecimal(3000);
 	public boolean above500K = true;
 	public boolean AgreementReqChange = false;
 	public String docStatus;
