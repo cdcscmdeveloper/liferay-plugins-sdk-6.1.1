@@ -24,6 +24,9 @@
 	<ui:param name="iscloseQTIfValidityPeriodExpiredAndStatusRelated" value="#{qTDetailBB.closeQTIfValidityPeriodExpiredAndStatusRelated()}" />
 	<ui:param name="isQTStatusPendingScoringEndorsement" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT}" />
 	<!-- 26095@hatta - end -->
+	<!-- 30477 Start -->
+	<ui:param name="isInactiveCurrentCommitteeApprovarUser" value="#{qTDetailBB.isInactiveCurrentCommitteeApprovarUser()}" /> 
+	<!-- 30477 End -->
 		<table width="100%">
 		<tr>
 		<td style="vertical-align: bottom;" align="right"><p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
@@ -126,7 +129,7 @@
 								styleClass="ui-button"
 								actionListener ="#{qTDetailBB.assertSpecificationUpdateInProgress(true)}"  
 								update="@([id$=#{submitConfirmId2}])" 
-								rendered="#{isClone2}" />
+								rendered="#{isClone2 and !qTDetailBB.managedBean.showPopUpBPKApprovalNeeded}" />
 							<!-- #25077 Start -->
 							<c:if test="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION}">
 								<p:commandButton value="#{lbl[buttonLabel]}"
@@ -161,7 +164,17 @@
 						
 					</c:when>
 					<c:otherwise>
-							
+					 <!-- 30477 Start -->
+					    <c:if test="#{isInactiveCurrentCommitteeApprovarUser}">
+					        <p:commandButton value="#{lbl['lbl.btn.submit']}"
+								styleClass="amendButton"
+								action="#{qTDetailBB.submitQtDetailsFormMaintanace(isQTStatusPendingScoringEndorsement)}"
+								process="@form" update="@all" onclick="blockWidget.show();"
+								oncomplete="blockWidget.hide();"
+								rendered="#{(qTDetailBB.isQTStatusInBetween(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING, QTStatusConst.QT_PENDING_LOA))}" />
+					    </c:if>
+					    <c:if test="#{!isInactiveCurrentCommitteeApprovarUser}">
+					 <!-- 30477 End -->
 							<p:commandButton value="#{lbl['lbl.btn.submit']}"
 								styleClass="amendButton"
 								action="#{qTDetailBB.submitQtDetailsFormMaintanace(isQTStatusPendingScoringEndorsement)}"
@@ -170,6 +183,9 @@
 								rendered="#{(qTDetailBB.isQTStatusInBetween(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING, QTStatusConst.QT_PENDING_LOA))}"
 								disabled="#{qTDetailBB.isQTStatusEvaluation(qTDetailBB.managedBean.qt.qtStatus.statusId) and 
 								(empty qTDetailBB.managedBean.amendMentBean or !qTDetailBB.managedBean.amendMentBean.brandNew) and !qTDetailBB.managedBean.changesOnQTMaintenance}" />
+					 <!-- 30477 Start -->
+						</c:if>
+					 <!-- 30477 End -->
 						</c:otherwise>
 				</c:choose> 
 				<!-- 26095@hatta - start -->
