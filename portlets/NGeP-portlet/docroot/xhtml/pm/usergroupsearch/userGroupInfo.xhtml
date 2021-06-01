@@ -50,11 +50,13 @@
 				<td><p:outputLabel value="#{lbl['lbl.pm.ug.info.orgunit']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:columnGroup>
+						<!-- 12852 Start --> 
 						<p:inputText
 							value="#{usergroupBackingBean.managedBean.userGroup.pmOrgProfile.pmOrgValidity.orgCode}"
 							id="orgCodeUpdate"
 							disabled="#{!usergroupBackingBean.managedBean.userGroup.brandNew}"
-							size="10" readonly="true" />&#160;
+							size="8" readonly="true" />
+							<!-- 12852 End --> &#160;
 							<p:inputText 
 						size="80"
 						id="itSelectedPtj" 
