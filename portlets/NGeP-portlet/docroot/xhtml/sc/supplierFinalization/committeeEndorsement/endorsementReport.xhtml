@@ -68,7 +68,7 @@
 										<td style="float: right; margin-left: 55px;"><p:inputTextarea
 												id="withConditionTxtId" value="#{finalization.termsText}"
 												cols="80" rows="3" onkeydown="limitTextArea(this,1000);" onmouseout="limitTextArea(this,1000);"
-												required="#{readOnly}" disabled="#{readOnly}"
+												required="#{!readOnly}" disabled="#{readOnly}"
 												label="#{lbl['lbl.sc.sf.with.conditions.as.below']}" /> <p:message
 												id="withConditionTxtMsgId" for="withConditionTxtId"
 												display="icon" /></td>
@@ -128,7 +128,7 @@
 						<tr>
 							<ui:remove> #19287 - start </ui:remove>
 							<td style="float: right; margin-left: 55px;"><p:inputTextarea
-									id="justificationTxtId" required="#{readOnly}"
+									id="justificationTxtId" required="#{!readOnly}"
 									value="#{finalization.justificationText}" cols="80" rows="3"
 									onkeydown="limitTextArea(this,1000);" onmouseout="limitTextArea(this,1000);"
 									disabled="#{readOnly}"
@@ -143,8 +143,10 @@
 			</h:panelGroup>
 		</p:panel>
 
+		<ui:remove> #19287 - start </ui:remove>	
 		<p:panel header="#{lbl['lbl.sc.committee.endorsement.report']}"
-			toggleable="true" rendered="#{readOnly}">
+			toggleable="true" rendered="#{!readOnly}">
+		<ui:remove> #19287 - end </ui:remove>
 
 			<table border="0" cellspacing="0" cellpadding="0" width="100%">
 				<tr>
@@ -158,7 +160,7 @@
 							update="@([id$=endorseReportUploadBtnId],[id$=endorseReportTbl])"
 							attachment="#{suppFinalizationBackingBean.managedBean.endorsementReport.scQtFinalizationReportAttachment}"
 							readonly="#{readOnly}" /></td>
-					<ui:remove> #19287 - start </ui:remove>						
+					<ui:remove> #19287 - end </ui:remove>						
 			</tr>
 			</table>
 		</p:panel>
