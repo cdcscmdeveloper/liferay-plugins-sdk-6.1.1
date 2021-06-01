@@ -317,17 +317,20 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			//end Bug #20701
 			//13291 - start			
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-				if(getManagedBean().getSelectedApprover() != null) {
-					flFulfilmentRequest.setApproverId(getManagedBean().getSelectedApprover());
-					PmOrgProfile pmOrgProfile = new PmOrgProfile();
-					pmOrgProfile.setOrgProfileId(getManagedBean().getSelectedApproverPTJ());
-					flFulfilmentRequest.setApproverOrgProfile(pmOrgProfile);
-				}				
+				PmOrgProfile pmOrgProfile = null;
+				if(getManagedBean().getSelectedApproverPTJ() != null) {
+					pmOrgProfile = new PmOrgProfile();
+					pmOrgProfile.setOrgProfileId(getManagedBean().getSelectedApproverPTJ());	
+				}
+				flFulfilmentRequest.setApproverOrgProfile(pmOrgProfile);
+				flFulfilmentRequest.setApproverId(getManagedBean().getSelectedApprover());
+				
+				PmOrgProfile pmoOrgProfile = null;
 				if(getManagedBean().getSelectedPmoPTJ() != null) {
-					PmOrgProfile pmoOrgProfile = new PmOrgProfile();
-					pmoOrgProfile.setOrgProfileId(getManagedBean().getSelectedPmoPTJ());
-					flFulfilmentRequest.setPmoOrgProfile(pmoOrgProfile);
-				}				
+					pmoOrgProfile = new PmOrgProfile();
+					pmoOrgProfile.setOrgProfileId(getManagedBean().getSelectedPmoPTJ());	
+				}
+				flFulfilmentRequest.setPmoOrgProfile(pmoOrgProfile);
 			}			
 			if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action) && !flFulfilmentRequest.getApproverId().equals(getFacesScopes().getUserSessionBean().getUserId())) {
 				List<Long> orgProfileIdList = new ArrayList<>();
