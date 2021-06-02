@@ -13,10 +13,11 @@
 
 			<!-- Document Detail -->
 			<table class="ppTwoTable">
+				<!-- 12852 Start -->
 				<tr>
 					<th><p:outputLabel value="#{lbl['lbl.pm.display.priority']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></th>
-					<td><p:inputText id="itaDisplayPiror"
+					<td><p:inputText id="itaDisplayPiror" style="width:10%"
 							value="#{supportDocBackingBean.managedBean.selectedDocument.displaySeq}"
 							required="#{!empty param['disableValidation']}" label="#{lbl['lbl.pm.display.priority']}"
 							maxlength="5" /> <ac:iconTooltip
@@ -30,6 +31,7 @@
 					<th></th>
 					<td></td>
 				</tr>
+				<!-- 12852 End -->
 				<tr>
 					<th><p:outputLabel value="#{lbl['lbl.pm.document.name']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></th>
