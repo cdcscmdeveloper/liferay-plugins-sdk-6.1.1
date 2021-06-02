@@ -2307,6 +2307,10 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	//#25037-end
 
 	// #11134 -start-
+	public boolean isHaveSupplierRejection() {
+		return haveSupplierRejection;
+	}
+	
 	public void setHaveSupplierRejection(boolean haveSupplierRejection) {
 		this.haveSupplierRejection = haveSupplierRejection;
 	}
