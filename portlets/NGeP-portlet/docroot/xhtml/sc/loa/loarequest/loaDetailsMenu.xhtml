@@ -679,15 +679,14 @@
 				</h:panelGroup>					
 				</tr>				
 				<!-- #25725 start -->
-								
-				<tr>
-					<td colspan="3">
+				<tr>				
+					<td colspan="2">
 						<p:outputPanel id="uploadApprovalLetterPg"> 													
 							<h:panelGroup  rendered="#{((lOADetailBackingBean.managedBean.agreementReqChange) and (!lOADetailBackingBean.managedBean.scLoa.agreementReq) and (isNonPeriodic and !isPK7) and (lOADetailBackingBean.managedBean.above500K))}" 
 							required="true">							
 								<table>
 									<tr>
-										<td>
+										<td width="200">
 											<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.approval.letter']}" /> 
 											<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 										</td>
@@ -714,10 +713,12 @@
 											<ac:iconTooltip value="#{lbl['lbl.sc.tooltip.approval.letter']}" />
 										</td>
 			 	 					</tr>
-			 	 				</table>					 	 				
+			 	 				</table>			 	 				
 			 	 			</h:panelGroup>		 							
-						</p:outputPanel>			 	 								
-					</td>		
+						</p:outputPanel>		 	 								
+					</td>
+					<td>
+					</td>
 				</tr>						
 		</table>
 	</p:panel>
@@ -733,7 +734,7 @@
 	<!-- Bug #30600 End -->
 	
 	<p:dialog id="uploadApprovalLetterDlg" widgetVar="uploadApprovalLetterDlg"
-		resizable="true" modal="true" 
+		resizable="false" width="700px" height="350px" modal="true" 
 		styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}"
 		onShow="singleUploadListener(approvalLetterUploadWV);">
 		<p:ajax event="close" />
@@ -765,7 +766,7 @@
 			<p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"
 			partialSubmit="true" 
 			action="#{lOADetailBackingBean.fileDelete}"
-			oncomplete="deleteApprovalLetterDlg.hide();"  update="uploadApprovalLetterPg"/>
+			oncomplete="deleteApprovalLetterDlg.hide();"  update="uploadedPage"/>
 			<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteApprovalLetterDlg.hide();" />	
 		</div>
 	</p:confirmDialog>
