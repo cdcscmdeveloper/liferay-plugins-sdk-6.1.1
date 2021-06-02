@@ -22,7 +22,6 @@
 							update="businessNatureSearch,businessNatureDataModel" />
 					</p:selectOneMenu></td>
 			</tr>
-			<!-- 12852 Start-->
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.pm.bn.seccode']}"/></td>
 				<td><p:inputText
@@ -33,14 +32,13 @@
 						value="#{businessNatureBackingBean.managedBean.secLevelName}"
 						size="50" maxlength="500"/></td>
 			</tr>
-			<!-- 12852 End -->
 			<c:if test="#{businessNatureBackingBean.managedBean.categoryLvl &gt; 10}">
-				<!-- 12852 Start -->
+
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.pm.bn.divcode']}" /></td>
 					<td><p:inputText
 						value="#{businessNatureBackingBean.managedBean.divLevelCode}"
-						size="10" maxlength="10"/></td>
+						size="15" maxlength="10"/></td>
 					<td><h:outputLabel value="#{lbl['lbl.pm.bn.divname']}"/>
 					</td>
 					<td><p:inputText
@@ -48,15 +46,13 @@
 						size="50" maxlength="500"/>
 					</td>
 				</tr>
-				<!-- 12852 End -->
 			</c:if> 
 			<c:if test="#{businessNatureBackingBean.managedBean.categoryLvl &gt; 20}">
-				<!-- 12852 Start -->
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.pm.bn.groupcode']}"/></td>
 					<td><p:inputText maxlength="10"
 							value="#{businessNatureBackingBean.managedBean.groupLevelCode}"
-							size="10"/></td>
+							size="15"/></td>
 					<td><h:outputLabel value="#{lbl['lbl.pm.bn.groupname']}" />
 					</td>
 					<td><p:inputText maxlength="500"
@@ -64,37 +60,32 @@
 							size="50"/>
 					</td>
 				</tr>
-				<!-- 12852 End -->
 			</c:if>
 			<c:if test="#{businessNatureBackingBean.managedBean.categoryLvl &gt; 30}">
-				<!-- 12852 Start -->
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.pm.bn.classcode']}"/></td>
 					<td><p:inputText maxlength="10"
 							value="#{businessNatureBackingBean.managedBean.classLevelCode}"
-							size="10"/></td>
+							size="15"/></td>
 					<td><h:outputLabel value="#{lbl['lbl.pm.bn.classname']}"/>
 					</td>
 					<td><p:inputText maxlength="500"
 							value="#{businessNatureBackingBean.managedBean.classLevelName}"
 							size="50" /></td>
 				</tr>
-				<!-- 12852 End -->
 			</c:if>
 			
 			<c:if test="#{businessNatureBackingBean.managedBean.categoryLvl &gt; 40}">
-				<!-- 12852 Start -->
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.pm.bn.itemcode']}"/></td>
 					<td><p:inputText maxlength="10"
 							value="#{businessNatureBackingBean.managedBean.itemLevelCode}"
-							size="10"/></td>
+							size="15"/></td>
 					<td><h:outputLabel value="#{lbl['lbl.pm.bn.itemname']}"/></td>
 					<td><p:inputText maxlength="500"
 							value="#{businessNatureBackingBean.managedBean.itemLevelName}"
 							size="50"/></td>
 				</tr>
-				<!-- 12852 End -->
 			</c:if>
 			
 			<tr>
