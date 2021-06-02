@@ -2065,6 +2065,20 @@
 				pmRejectionreason-portlet
 			</css-class-wrapper>
 		</portlet>
+		<!-- #29644-Start -->
+		<portlet>
+			<portlet-name>pmSpecialService</portlet-name>
+			<icon>/icon.png</icon>
+			<requires-namespaced-parameters>false</requires-namespaced-parameters>
+			<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+			<footer-portlet-javascript>
+				/js/main.js
+			</footer-portlet-javascript>
+			<css-class-wrapper>
+				pmSpecialservice-portlet
+			</css-class-wrapper>
+		</portlet>
+		<!-- #29644-End -->
 		<portlet>
 			<portlet-name>pmSupportingDocument</portlet-name>
 			<icon>/icon.png</icon>
