@@ -9,15 +9,17 @@
 
 	<p:panel id="groupInfo" header="#{lbl['lbl.pm.ug.result.title1']}"
 		toggleable="true">
-		<table> 
+		<table>
+			<!-- 12852 Start -->
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.pm.ug.result.groupcode']}" />
 				</td>
-				<td><p:inputText style="width:220px;text-transform:uppercase"
+				<td><p:inputText style="width:14%;text-transform:uppercase"
 						value="#{usergroupBackingBean.managedBean.userGroup.groupCode}"
 						disabled="#{!usergroupBackingBean.managedBean.userGroup.brandNew or usergroupBackingBean.managedBean.userGroup.brandNew}"
-						size="30" maxlength="10" /></td>
+						size="8" maxlength="10" /></td>
 			</tr>
+			<!-- 12852 End -->
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.pm.ug.result.groupname']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
