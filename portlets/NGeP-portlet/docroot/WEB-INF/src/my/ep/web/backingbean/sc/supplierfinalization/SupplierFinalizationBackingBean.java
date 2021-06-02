@@ -1384,7 +1384,9 @@ public class SupplierFinalizationBackingBean extends
 			
 			saveAndReloadFinalizationDetails(qtSuppFinalizationSO, reqDTO);
 			prepareUpdateCommitteeMember();
-
+			// #28834 - Start.
+			checkDisableBfButtonAfterValidation();
+			// #28834 - End.
 			if(!skipValidation){
 				String qtNo = getManagedBean().getScQt().getQtNo().toString();
 				String desc = ResourceBundleUtils.getMessage(
@@ -2194,7 +2196,16 @@ public class SupplierFinalizationBackingBean extends
 				 String decisionTypeCode = scQtFinalization.getDecision()
 						  .getParameterCode();
 				  if (ParameterConst.DECISION_RBP.equals(decisionTypeCode) && CollectionUtils.isNotEmpty(getManagedBean().getDocumentList()) && getManagedBean().getDocumentList().size() > 0) {
-		              ScQtFinalizationReport scQtFinalizationReport = getManagedBean().getDocumentList().get(getManagedBean().getDocumentList().size() -1);
+					  // #28834 - Start.
+					  int count = 0;
+					  ScQtFinalizationReport scQtFinalizationReport = null;
+					  for (ScQtFinalizationReport report: getManagedBean().getDocumentList()) {
+						  if (report.getTitle().contains("Kertas Taklimat")) {
+							  scQtFinalizationReport = report;
+							  count++;
+						  }
+					  }
+					 
 		              ScQtFinalizationReportAttachment reportAttachment = null;
 		              if (null != scQtFinalizationReport) {
 		                try {
@@ -2214,12 +2225,12 @@ public class SupplierFinalizationBackingBean extends
 		              report.setPmDocument(scQtFinalizationReport.getPmDocument());
 		              String reportTitle = ResourceBundleUtils.getMessage("lbl.sc.kertas.taklimat", 
 		            		  ResourceBundleUtils.BUNDLE_COMMON_LABELS, SourcingConstants.MY_LOCALE) 
-		            		  + SPACE + "(" + getManagedBean().getDocumentList().size() + ")";
+		            		  + SPACE + "(" + count + ")";
 		              report.setTitle(reportTitle);
 		              report.setDefinationType(scQtFinalizationReport.getPmDocument().getDocDefinitionTypeCode());
 		              report.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		              scQtFinalization.getScQtFinalizationReports().add(report);
-		              
+		              // #28834 - End.
 		          }
 				 
 			  }
@@ -3506,10 +3517,13 @@ return	remarksNotFound;
 	            List<ScQtMeeting> meetingListList = getManagedBean().getMeetingList();
 	            if (CollectionUtils.isNotEmpty(meetingListList)) {
 	              for (ScQtMeeting meeting : meetingListList) {
-	                if (null != meeting.getMeetingStatus() && null != meeting.getMeetingStatus().getStatusId()
-	                    && !QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus().getStatusId())) {
-	                  meetingStatusOtherThanDonecount++;
-	                } 
+	            	  // #28834 - Start.
+	            	  if (null != meeting.getMeetingStatus() && null != meeting.getMeetingStatus().getStatusId()
+	                    && !QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus().getStatusId())
+	                    && !meeting.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
+	            		  meetingStatusOtherThanDonecount++;
+	            	  } 
+	            	  // #28834 - End.
 	              }
 	              totalFinalizationRounds = totalFinalizationRounds - meetingStatusOtherThanDonecount;
 	            }
