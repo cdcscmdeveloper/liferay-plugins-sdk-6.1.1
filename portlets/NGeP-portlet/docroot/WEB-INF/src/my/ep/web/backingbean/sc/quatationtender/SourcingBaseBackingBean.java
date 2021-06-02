@@ -4985,4 +4985,67 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 	//11104-End
 	
+    // #11134 - Start
+	protected <A extends ScRemark> List<A> filterSupplierRemarks(List<A> scRemarksIn, boolean includedBrandNew) {
+		List<A> supplierRemarks = new ArrayList<>();
+		
+		if (CollectionUtils.isNotEmpty(scRemarksIn)) {
+			List<Long> userIds = new ArrayList<>();
+			
+			for (ScRemark remark : scRemarksIn) {
+				if (remark != null && remark.getCreatedBy() != null && (includedBrandNew || !remark.isBrandNew())) {
+					userIds.add(remark.getCreatedBy());
+				}
+			}
+
+			// user id of supplier
+			if (CollectionUtils.isNotEmpty(userIds)) {
+				userIds = getUserSupplierListByUserIds(userIds);
+			}
+
+			for (A remark : scRemarksIn) {
+				if (remark != null && remark.getCreatedBy() != null && userIds.contains(remark.getCreatedBy())
+						&& (includedBrandNew || !remark.isBrandNew())) {
+					supplierRemarks.add(remark);
+				}
+			}
+		}
+		return supplierRemarks;
+	}
+
+	protected List<Long> getUserSupplierListByUserIds(List<Long> userIds) {
+		List<Long> result = new ArrayList<>();
+		IUserSO userSO = null;
+		
+		try {
+			userSO = BusinessDelegate.getInstance().getServiceObject(IUserSO.class);
+
+			UserReqDTO reqDTO = new UserReqDTO();
+			reqDTO.setUserIds(userIds);
+			reqDTO.setRoleCodes(Arrays.asList(RoleCode.BASIC_SUPPLIER_ADMIN.value(),
+					RoleCode.BASIC_SUPPLIER_USER.value(), RoleCode.BASIC_SUPPLIER_ADMIN.value(),
+					RoleCode.MOF_SUPPLIER_USER.value(), RoleCode.MOF_SUPPLIER_ADMIN.value()));
+
+			UserResDTO resDTO = userSO.retrieveUserRoleListByUserIds(reqDTO);
+
+			if (resDTO != null && resDTO.isSuccessful()) {
+				List<PmUserRole> pmUserRoleList = resDTO.getUserRoleList();
+
+				if (CollectionUtils.isNotEmpty(pmUserRoleList)) {
+					for (PmUserRole each : pmUserRoleList) {
+						if (each.getPmUserOrg() != null && each.getPmUserOrg().getPmUser() != null) {
+							result.add(each.getPmUserOrg().getPmUser().getUserId());
+						}
+					}
+				}
+			}
+
+		} finally {
+			userSO = null;
+		}
+
+		return result;
+	}
+    // #11134 - end	
+	
 }

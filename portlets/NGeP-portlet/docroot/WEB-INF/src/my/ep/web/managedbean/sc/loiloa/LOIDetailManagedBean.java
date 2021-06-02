@@ -27,6 +27,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoiApproval;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoiNegoLocation;
+import my.ep.persistence.entity.sc.loaloi.ScLoiRemark;
 import my.ep.persistence.entity.sc.loaloi.ScLoiReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoiSupportingDoc;
 import my.ep.persistence.entity.sc.loaloi.ScLoiTerm;
@@ -399,6 +400,10 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private String suppConfirmMsgAccept;
 	private String suppConfirmMsgReject;
 	
+	// #11134 -start-
+	private List<ScLoiRemark> supplierRemarks;
+	// #11134 -end
+
     /**
      * Gets the spki backing bean.
      *
@@ -2302,7 +2307,15 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	public void setSuppConfirmMsgReject(String suppConfirmMsgReject) {
 		this.suppConfirmMsgReject = suppConfirmMsgReject;
 	}
-	
-	
-	
+
+	// #11134 -start-
+	public List<ScLoiRemark> getSupplierRemarks() {
+		return supplierRemarks;
+	}
+
+	public void setSupplierRemarks(List<ScLoiRemark> supplierRemarks) {
+		this.supplierRemarks = supplierRemarks;
+	}
+	// #11134 -end-
+
 }

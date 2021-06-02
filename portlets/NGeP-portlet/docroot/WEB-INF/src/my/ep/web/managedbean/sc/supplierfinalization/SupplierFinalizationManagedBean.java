@@ -266,6 +266,10 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private List<ScRemark> newSfRemarks;
     // #25638 - End.
 	
+	// #11134 - Start
+	private boolean haveSupplierRejection;
+	// #11134 - End
+	
 	/**
 	 * @return the activeIndex
 	 */
@@ -2283,9 +2287,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
       this.newSfRemarks = newSfRemarks;
     }
     // #25638 - End.
-	//#25037-start
-	
 
+	//#25037-start
 	public List<ScCommitteeMember> getDeletedMemberList() {
 		return deletedMemberList;
 	}
@@ -2303,6 +2306,10 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 	//#25037-end
 
-}
+	// #11134 -start-
+	public void setHaveSupplierRejection(boolean haveSupplierRejection) {
+		this.haveSupplierRejection = haveSupplierRejection;
+	}
+	// #11134 -end-
 
-// ***25201
+}
