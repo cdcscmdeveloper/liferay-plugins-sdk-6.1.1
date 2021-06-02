@@ -904,4 +904,14 @@
 			</tr>
 		</table>
 	</p:panel>
+	
+	<!-- 11134 -start- -->
+	<p:outputPanel id="remarksPanel">
+		<ac:scRemarkAndAttachment
+			rendered="#{not empty directLOABackingBean.managedBean.scLoa.scLoaRemarks}"
+			remarkList="#{directLOABackingBean.managedBean.scLoa.scLoaRemarks}"
+			showAttachment="false" readonly="true" />
+	</p:outputPanel>
+	<!-- 11134 -end- -->
+
 </ui:composition>

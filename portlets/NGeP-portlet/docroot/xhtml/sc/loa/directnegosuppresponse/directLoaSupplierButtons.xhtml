@@ -114,9 +114,13 @@
 						
 									<p:spacer height="1px" />
 									<div align="right">
-										<p:commandButton id="yesBtnConfmR" value="#{lbl['lbl.btn.yes']}"
-											onclick="confmRejectDlg.hide()" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
-											action="#{directLOABackingBean.confirmSupplierReject}"/>
+										<!-- 11134 -start- -->
+										<p:commandButton id="yesBtnConfmR"
+											value="#{lbl['lbl.btn.yes']}" onclick="confmRejectDlg.hide()"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											update="@form"
+											action="#{directLOABackingBean.confirmSupplierReject}" />
+										<!-- 11134 -end- -->
 										<p:commandButton id="noBtnConfmR" value="#{lbl['lbl.btn.no']}"
 											onclick="confmRejectDlg.hide()" type="button" />
 									</div>

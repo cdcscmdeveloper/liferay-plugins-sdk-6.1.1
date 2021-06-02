@@ -615,4 +615,12 @@
 			</tr>
 		</table>
 	</p:panel>
+	<!-- 11134 -start- -->
+	<p:outputPanel id="suppRemarksPanel">
+		<ac:scRemarkAndAttachment
+			remarkList="#{lOADetailBackingBean.managedBean.supplierRemarks}"
+			showAttachment="false" readonly="true"
+			rendered="#{not empty lOADetailBackingBean.managedBean.supplierRemarks}" />
+	</p:outputPanel>
+	<!-- 11134 -end- -->
 </ui:composition>

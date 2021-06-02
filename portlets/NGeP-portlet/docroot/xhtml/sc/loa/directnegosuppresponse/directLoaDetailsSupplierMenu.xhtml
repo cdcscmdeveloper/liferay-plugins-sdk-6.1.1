@@ -274,6 +274,14 @@
 			</tr>
 		</table>
 	</p:panel>
+	
+	<!-- 11134 -start- -->
+	<p:outputPanel id="remarksPanel" rendered="#{isSupplierAckStatus}">
+		<ac:scRemarkAndAttachment
+			remarkList="#{directLOABackingBean.managedBean.scLoa.scLoaRemarks}"
+			showAttachment="false" readonly="false" />
+	</p:outputPanel>
+	<!-- 11134 -end- -->
 
 	<ui:include src="/xhtml/sc/common/supplierDetailsPopup.xhtml" />
 
