@@ -732,8 +732,8 @@
 	<ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" />
 	<!-- Bug #30600 End -->
 	
-	<!--p:dialog id="uploadApprovalLetterDlg" widgetVar="uploadApprovalLetterDlg"
-		resizable="false" modal="true" width="550px"
+	<p:dialog id="uploadApprovalLetterDlg" widgetVar="uploadApprovalLetterDlg"
+		resizable="true" modal="true" 
 		styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}"
 		onShow="singleUploadListener(approvalLetterUploadWV);">
 		<p:ajax event="close" />
@@ -750,22 +750,22 @@
 	    	<p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadApprovalLetterDlg.hide();" />
   		</div>
   		</f:facet>
-	</p:dialog-->
+	</p:dialog>
 	
-	<ac:scSingleFileUploadPopup id="uploadApprovalLetterDlg" widgetVar="uploadApprovalLetterDlg"
+	<!--ac:scSingleFileUploadPopup id="uploadApprovalLetterDlg" widgetVar="uploadApprovalLetterDlg"
 			fileUploadListener="lOADetailBackingBean.fileUpload"			
 			update=":form:uploadedPage" 
 			fileType="#{lOADetailBackingBean.managedBean.fileTypePdf}"
 			invalidFileMessage="#{lbl['lbl.txt.upload.pdf.file']}"
-			label="#{lbl['lbl.btn.choose']}" oncomplete="uploadApprovalLetterDlg.hide();"/>
+			label="#{lbl['lbl.btn.choose']}" oncomplete="uploadApprovalLetterDlg.hide();"/-->
 	
 	<p:confirmDialog id="deleteApprovalLetterDlg" widgetVar="deleteApprovalLetterDlg"  appendToBody="true" 
 		message="#{lbl['lbl.msg.confirm.delete']}" 	severity="alert"  closable="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"
-			partialSubmit="true"  update=":form:uploadedPage"
+			partialSubmit="true" 
 			action="#{lOADetailBackingBean.fileDelete}"
-			oncomplete="deleteApprovalLetterDlg.hide();" />
+			oncomplete="deleteApprovalLetterDlg.hide();"  update="uploadApprovalLetterPg"/>
 			<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteApprovalLetterDlg.hide();" />	
 		</div>
 	</p:confirmDialog>
