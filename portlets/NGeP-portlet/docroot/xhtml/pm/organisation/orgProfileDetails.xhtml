@@ -89,12 +89,14 @@
 					<p:outputLabel value="#{lbl['lbl.pm.organisation.orgCode']}"/> 
 					<p:outputLabel value="*" styleClass="mandatory" rendered="#{organisationBackingBean.managedBean.orgCategory ne organisationBackingBean.others}" />
 				</td>
+				<!-- 12852 Start -->
 				<td>
-					<p:inputText id="orgCode" label="#{lbl['lbl.pm.organisation.orgCode']}" size="35"
+					<p:inputText id="orgCode" label="#{lbl['lbl.pm.organisation.orgCode']}" size="22"
 						disabled="#{!organisationBackingBean.managedBean.orgProfile.brandNew or organisationBackingBean.managedBean.orgCategory eq organisationBackingBean.others}"
-						styleClass="ppDisplayTextL"
+						style="width:22%"
 						value="#{organisationBackingBean.managedBean.orgProfile.pmOrgValidity.orgCode}"
 						maxlength="20" required="#{!empty param['disableValidation'] or organisationBackingBean.managedBean.orgCategory ne organisationBackingBean.others}" /></td>
+				<!-- 12852 End -->
 				<td>
 				<p:message id="orgCodeMsg" for="orgCode" display="icon" /></td>
 				<!-- end #3790 -->
