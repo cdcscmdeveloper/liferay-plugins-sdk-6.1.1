@@ -83,14 +83,12 @@
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" style="width:10%; text-align:right;"/>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" style="width:5%; text-align:right;"/>
-						<ui:remove>#29021 - start </ui:remove>
 		               	<p:column rowspan="2" style="width:5%; text-align:center;">
 		               		<f:facet name="header">
 								<h:outputText value="#{lbl['lbl.sc.rating']}" />
 								<ac:iconTooltip value="#{lbl['lbl.sc.tec.rating.tooltip']}" />
 							</f:facet>
 		               	</p:column>
-						<ui:remove>#29021 - end </ui:remove>
 		               	<p:column rowspan="2" style="width:5%; text-align:center; white-space:normal;">
 		               		<f:facet name="header">
 								<p:outputLabel value="#{lbl['lbl.sc.eval.ranking']}" /><br/>
@@ -188,11 +186,10 @@
 													CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 					</h:outputText>
 				</p:column>
-				<ui:remove>#29021 - start </ui:remove>				
 				<p:column style="text-align:center;">
 					<h:outputText value="#{empty shortlistedSupp.totalRating? 0: shortlistedSupp.totalRating}"/>
 				</p:column>
-				<ui:remove>#29021 - end </ui:remove>	
+	
 				<p:column style="text-align:center;">
 					<c:choose>
 						<c:when test="#{isRefinalizedAndBiddingAward}">
@@ -267,7 +264,7 @@
 														suppFinalizationBackingBean.managedBean.disableSupplierSelection or isBidding 
 														or (shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions
 														and !shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.warningDA)}" />
-			</p:dataTable>							 	    
+			</p:dataTable>		 	    
 
 			<p:dataTable id="supplierListTblMultiple" var="shortlistedSupp" 
 						 value="#{suppFinalizationBackingBean.managedBean.shortlistedSuppliersByRecommendType}"
@@ -283,6 +280,12 @@
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" style="width:10%; text-align:right;"/>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" style="width:5%; text-align:right;"/>
+		               	<p:column rowspan="2" style="width:5%; text-align:center;">
+		               		<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.sc.rating']}" />
+								<ac:iconTooltip value="#{lbl['lbl.sc.tec.rating.tooltip']}" />
+							</f:facet>
+		               	</p:column>
 		               	<p:column rowspan="2" style="width:5%; text-align:center; white-space:normal;">
 		               		<f:facet name="header">
 								<p:outputLabel value="#{lbl['lbl.sc.eval.ranking']}" /><br/>
@@ -376,6 +379,9 @@
 					</h:outputText>
 				</p:column>
 	
+				<p:column style="text-align:center;">
+					<h:outputText value="#{empty shortlistedSupp.totalRating? 0: shortlistedSupp.totalRating}"/>
+				</p:column>
 				<p:column style="text-align:center;">
 					<c:choose>
 						<c:when test="#{isRefinalizedAndBiddingAward}">
