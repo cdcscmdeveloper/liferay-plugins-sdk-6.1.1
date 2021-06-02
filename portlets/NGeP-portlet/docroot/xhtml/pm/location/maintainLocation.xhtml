@@ -54,10 +54,10 @@
 					<!-- 12852 Start -->
 					<td><p:inputText id="statecode"
 							label="#{lbl['lbl.pm.state.code']}" styleClass="ppDisplayTextS"
-							style="text-transform: uppercase;width:17%"
+							style="text-transform: uppercase"
 							value="#{locationBackingBean.managedBean.state.stateCode}"
 							disabled="#{!locationBackingBean.managedBean.state.brandNew}"
-							size="40" required="true" onchange="this.value = this.value.trim()"
+							size="10" required="true" onchange="this.value = this.value.trim()"
 							validatorMessage="#{lbl['lbl.pm.state.code']}#{lbl['lbl.pm.location.len.validate']}"
 							maxlength="10">
 							<f:validateLength minimum="2" />
