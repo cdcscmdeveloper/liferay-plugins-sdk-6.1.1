@@ -30,10 +30,11 @@
 		<p:panel id="pRejectReasonDet"
 			header="#{lbl['lbl.pm.rejection.reason.details']}" toggleable="true">
 			<table class="ppOneTable">
+				<!-- 12852 Start -->
 				<tr>
 					<th><p:outputLabel value="#{lbl['lbl.pm.reason.code']}" /></th>
-					<td><p:inputText id="itReasonCode" styleClass="ppDisplayTextM"
-							style="text-transform:uppercase" required="true" maxlength="10"
+					<td><p:inputText id="itReasonCode" styleClass="ppDisplayTextS"
+							style="text-transform:uppercase;width:19%" required="true" maxlength="10"
 							disabled="true"
 							value="#{rejectionReasonBackingBean.managedBean.selectedReason.reasonCode}"
 							validatorMessage="#{lbl['lbl.pm.reason.code']} - #{lbl['lbl.pm.uppercase']}"
@@ -42,6 +43,7 @@
 						</p:inputText> <p:message id="itReasonCodeMsg" for="itReasonCode" display="icon" />
 					</td>
 				</tr>
+				<!-- 12852 End -->
 				<tr>
 					<!-- List of languages with description -->
 					<th><p:outputLabel value="#{lbl['lbl.pm.reason.desc']}" /> <p:outputLabel
