@@ -9,14 +9,16 @@
 	<p:panel id="salPanel" header="#{lbl['lbl.pm.search.location']}" toggleable="true" >
   
 		<table class="ppTwoTable">
+			<!-- 12852 Start -->
 			<tr>
 				<th width="20%"><h:outputLabel value="#{lbl['lbl.pm.sa.code']}"></h:outputLabel></th>
 				<td><p:inputText maxlength="10"
 						value="#{salutationBackingBean.managedBean.salutationCodes}"
-						id="salutationCode" size="30" /></td>
+						id="salutationCode" size="30" style="width:9%" /></td>
 				<th>&#160;</th>
 				<td>&#160;</td>
 			</tr>
+			<!-- 12852 End -->
 			<tr>
 				<th width="20%"><h:outputLabel value="#{lbl['lbl.pm.sa.name']}"></h:outputLabel></th>
 				<td><p:inputText maxlength="100"
