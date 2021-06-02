@@ -89,8 +89,9 @@
            	<portlet id="pmPoJobTypeRatio"></portlet>
            	<portlet id="poRoleTaskWeightage"></portlet>
 			<portlet id="softCertProvider"></portlet>
-			<portlet  id="pmSystemConfiguration"></portlet>
-			
+			<portlet id="pmSystemConfiguration"></portlet>
+			<!-- #29644 -->	
+			<portlet id="pmSpecialService"></portlet>
 		</category>
 		<!-- Profile Management - END -->		
 
