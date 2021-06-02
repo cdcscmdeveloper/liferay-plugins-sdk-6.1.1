@@ -1681,7 +1681,9 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 				log.info("Bug #30924 zipFile :"+zipFile.toString());
 				zipFile.createNewFile();
 				ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipFile));
-				log.info("Bug #30924 filelist"+fileList.size());
+				log.info("Bug #30924 filelist "+fileList.size());
+				log.info("------------ Bug #30924 - in generateAgreementFile : zipFile.getPath(); = "+zipFile.getPath());
+				log.info("------------ Bug #30924 - in generateAgreementFile :  zipFile.getName() = "+ zipFile.getName());
 				for (File file : fileList) {
 					log.info("Bug #30924 "+file.getName());
 					zos.putNextEntry(new ZipEntry(file.getName()));	
@@ -1708,8 +1710,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 				zos.close();
 				agreementZipFilePath = zipFile.getPath();
 				agreementZipFileName = zipFile.getName();
-				log.info("------------ Bug #30924 - in generateAgreementFile : zipFile.getPath(); = "+zipFile.getPath());
-				log.info("------------ Bug #30924 - in generateAgreementFile :  zipFile.getName() = "+ zipFile.getName());
+				
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
