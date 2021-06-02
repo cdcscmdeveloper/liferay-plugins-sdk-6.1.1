@@ -11,16 +11,18 @@
 		id="eduFieldId">
 		<p:spacer height="10"></p:spacer>
 		<table>
+			<!-- 12852 Start -->
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.pm.ef.code']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText style="text-transform:uppercase" required="true" label="#{lbl['lbl.pm.ef.code']}"
+				<td><p:inputText style="text-transform:uppercase;width:40%" required="true" label="#{lbl['lbl.pm.ef.code']}"
 						value="#{educationBackingBean.managedBean.pmEduField.fieldCode}"
 						disabled="#{!educationBackingBean.managedBean.pmEduField.brandNew}"
 						size="30" maxlength="10">
 						<f:validateLength minimum="3" />
 					</p:inputText></td>
 			</tr>
+			<!-- 12852 End -->
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.pm.ef.fname']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
