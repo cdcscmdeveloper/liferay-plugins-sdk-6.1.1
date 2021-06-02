@@ -680,13 +680,13 @@
 				</tr>				
 				<!-- #25725 start -->
 				<tr>				
-					<td colspan="2">
+					<td colspan="3">
 						<p:outputPanel id="uploadApprovalLetterPg"> 													
 							<h:panelGroup  rendered="#{((lOADetailBackingBean.managedBean.agreementReqChange) and (!lOADetailBackingBean.managedBean.scLoa.agreementReq) and (isNonPeriodic and !isPK7) and (lOADetailBackingBean.managedBean.above500K))}" 
 							required="true">							
 								<table>
 									<tr>
-										<td width="200">
+										<td width="300">
 											<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.approval.letter']}" /> 
 											<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 										</td>
