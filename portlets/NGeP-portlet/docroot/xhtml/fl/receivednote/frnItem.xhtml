@@ -289,7 +289,7 @@
 						autoResize="false"
 						style="width: 96% !important; margin-left:0px;" 
 						disabled="true"
-						value="#{receivedNoteBackingBean.managedBean.itemSpecification == null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.managedBean.itemSpecification}" /> 
+						value="#{specificationList.itemSpec == null ? lbl['lbl.fl.supp.na'] : specificationList.itemSpec}" /> 
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.supp.offer']}" style="text-align:center"
 						rendered="#{!receivedNoteBackingBean.managedBean.dpFlag}">
@@ -299,7 +299,7 @@
 						autoResize="false"
 						style="width: 96% !important; margin-left:0px;" 
 						disabled="true"
-						value="#{receivedNoteBackingBean.managedBean.supplierOffer == null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.managedBean.supplierOffer}" /> 
+						value="#{specificationList.supplierOffer == null ? lbl['lbl.fl.supp.na'] : specificationList.supplierOffer}" /> 
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.new.offer.spec']}" style="text-align:center"
 						rendered="#{!receivedNoteBackingBean.managedBean.dpFlag}">
@@ -309,9 +309,17 @@
 						autoResize="false"
 						style="width: 96% !important; margin-left:0px;" 
 						disabled="true"
-						value="#{receivedNoteBackingBean.managedBean.newOfferedSpec == null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.managedBean.newOfferedSpec}" /> 
+						value="#{specificationList.newOfferSpec == null ? lbl['lbl.fl.supp.na'] : specificationList.newOfferSpec}" /> 
 			</p:column>
+				
 			</p:dataTable>
+			
+			<p:spacer height="2px"></p:spacer>
+			<div style="width: 100%; text-align: right">
+				<p:commandButton value="#{lbl['lbl.btn.close']}" process="@this"
+					oncomplete="frnItemInfo.hide()" partialSubmit="true">
+				</p:commandButton>
+			</div> 		
 			
 		</p:dialog>
 		<!-- 28855 End -->
