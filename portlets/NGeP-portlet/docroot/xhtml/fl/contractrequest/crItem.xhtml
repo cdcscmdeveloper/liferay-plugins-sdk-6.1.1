@@ -679,7 +679,7 @@
 	
 	<p:dialog id="reqItemInfoDialog" header="#{lbl['lbl.fl.requested.item']}"
 		widgetVar="reqItemInfo" showEffect="fade" hideEffect="fade" style="overflow:scroll"
-		modal="true" width="900" height="600" resizable="false">
+		modal="true" width="900" height="550" resizable="false">
 		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.item.name']}" /></td>
@@ -817,7 +817,7 @@
 						autoResize="false"
 						style="width: 96% !important; margin-left:0px;" 
 						disabled="true"
-						value="#{contractRequestBackingBean.managedBean.itemSpecification == null ? lbl['lbl.fl.supp.na'] : contractRequestBackingBean.managedBean.itemSpecification}" /> 
+						value="#{specificationList.itemSpec == null ? lbl['lbl.fl.supp.na'] : specificationList.itemSpec}" /> 
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.supp.offer']}" style="text-align:center"
 						rendered="#{!contractRequestBackingBean.managedBean.dpFlag}">
@@ -827,7 +827,7 @@
 						autoResize="false"
 						style="width: 96% !important; margin-left:0px;" 
 						disabled="true"
-						value="#{contractRequestBackingBean.managedBean.supplierOffer == null ? lbl['lbl.fl.supp.na'] : contractRequestBackingBean.managedBean.supplierOffer}" /> 
+						value="#{specificationList.supplierOffer == null ? lbl['lbl.fl.supp.na'] : specificationList.supplierOffer}" /> 
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.new.offer.spec']}" style="text-align:center"
 						rendered="#{!contractRequestBackingBean.managedBean.dpFlag}">
@@ -837,14 +837,14 @@
 						autoResize="false"
 						style="width: 96% !important; margin-left:0px;" 
 						disabled="true"
-						value="#{contractRequestBackingBean.managedBean.newOfferedSpec == null ? lbl['lbl.fl.supp.na'] : contractRequestBackingBean.managedBean.newOfferedSpec}" /> 
+						value="#{specificationList.newOfferSpec == null ? lbl['lbl.fl.supp.na'] : specificationList.newOfferSpec}" /> 
 			</p:column>
 			</p:dataTable>	
 		</p:panel>
 	 	</h:panelGroup>  
 	 	<!-- 28855 End -->
 		
- 	  <h:panelGroup rendered="#{!contractRequestBackingBean.managedBean.standardPrice}">   	
+ 	  <h:panelGroup>   	
 			<p:panel id="reqItemInfoPanel" header="#{lbl['lbl.fl.zone.tier.price.detail']}" toggleable="false"> 
 				
 				<p:dataTable id="reqItemInfoDt" var="reqItemInfoList" liveScroll="true"
