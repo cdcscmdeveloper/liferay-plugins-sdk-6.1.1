@@ -4011,15 +4011,18 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 		
 		if(getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_QUOTATION) || getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_TENDER) || getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO)){
-			List<ScRequestItemSpecOffer> scRequestItemSpecOffer = requestItemSO.retrieveNewOfferSpec(requestItemId);			
-			for(ScRequestItemSpecOffer i: scRequestItemSpecOffer){
-				if(i.getItemSpec()==null || i.getItemSpec().isEmpty() )
-				scRequestItemSpecOffer.remove(i);
-			}
+			List<ScRequestItemSpecOffer> scRequestItemSpecOffer = requestItemSO.retrieveNewOfferSpec(requestItemId);
+			
+			Iterator<ScRequestItemSpecOffer> itr = scRequestItemSpecOffer.iterator();
+			while (itr.hasNext()){
+				ScRequestItemSpecOffer scRequestItemSpecOfferTemp = itr.next();
+				if(scRequestItemSpecOfferTemp.getItemSpec() == null || scRequestItemSpecOfferTemp.getItemSpec().isEmpty())
+					itr.remove();
+			}			
 			getManagedBean().setScRequestItemSpecOfferList(scRequestItemSpecOffer);		
 		}		
 		/*#28854 end*/
-		log.info("HHHHHHH");
+		//log.info("HHHHHHH");
 		RequestContext.getCurrentInstance().execute("itemSpecDlg.show()");
 	}
 
