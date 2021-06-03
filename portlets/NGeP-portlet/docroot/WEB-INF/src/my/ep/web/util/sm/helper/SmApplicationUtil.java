@@ -6695,6 +6695,16 @@ public class SmApplicationUtil {
 		managedBean.setFactoryFacilitiesVOList(SmApplicationUtil
 				.getCategoryFacilityVO(managedBean.getSmAppl(),
 						SupplierManagementConst.SM_FACILITY_TYPE_FACTORY));
+		
+		// start #30043
+		if (managedBean.isShowStorePanel()) {
+			managedBean.getStoreFacilitiesVOList().addAll((SmApplicationUtil.getCategoryFacilityVO(managedBean.getSmAppl(),
+					SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)));
+			if (managedBean.getStoreFacilitiesVOList().isEmpty()) {
+				managedBean.setShowStorePanel(false);
+			}
+		}
+		// end #30043
 
 		// set PO assign site visit popup VO value
 		if (managedBean.isPoUser()

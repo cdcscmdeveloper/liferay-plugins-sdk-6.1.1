@@ -6144,6 +6144,17 @@ public class SmApplicationBackingBean extends
 				SmApplicationUtil.getCategoryFacilityVO(getManagedBean()
 						.getSmAppl(),
 						SupplierManagementConst.SM_FACILITY_TYPE_STORE));
+		//start #30043
+		if(getManagedBean().getStoreFacilitiesVOList().isEmpty()){
+			getManagedBean().setStoreFacilitiesVOList((SmApplicationUtil.getCategoryFacilityVO(getManagedBean()
+					.getSmAppl(),
+					SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)));
+		}else{
+			getManagedBean().getStoreFacilitiesVOList().addAll((SmApplicationUtil.getCategoryFacilityVO(getManagedBean()
+					.getSmAppl(),
+					SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)));
+		}
+		//end #30043
 		RequestContext.getCurrentInstance().execute("storeDialog.hide()");
 	}
 
@@ -6230,6 +6241,17 @@ public class SmApplicationBackingBean extends
 				SmApplicationUtil.getCategoryFacilityVO(getManagedBean()
 						.getSmAppl(),
 						SupplierManagementConst.SM_FACILITY_TYPE_STORE));
+		//start #30043
+				if(getManagedBean().getStoreFacilitiesVOList().isEmpty()){
+					getManagedBean().setStoreFacilitiesVOList((SmApplicationUtil.getCategoryFacilityVO(getManagedBean()
+							.getSmAppl(),
+							SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)));
+				}else{
+					getManagedBean().getStoreFacilitiesVOList().addAll((SmApplicationUtil.getCategoryFacilityVO(getManagedBean()
+							.getSmAppl(),
+							SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)));
+				}
+				//end #30043
 	}
 
 	// Store end
@@ -13052,6 +13074,12 @@ public class SmApplicationBackingBean extends
 		List<SmSupplierCategory> applCategories = null;
 		List<SelectItem> retVal = new ArrayList<SelectItem>();
 		SelectItem item = null;
+		//start #30043
+		Boolean businessType = false;
+		if (facType.equals("S")) {
+			businessType = true;
+		}
+		//end #30043
 		if (EntityHelper.isCollectionEmpty(getManagedBean()
 				.getActiveCategoryList())) {
 			applCategories = getManagedBean().getSmAppl()
@@ -13064,11 +13092,9 @@ public class SmApplicationBackingBean extends
 					SupplierManagementConst.PENDING_ACT_STATUS) == 0 || cat
 					.getRecordStatusFlg().compareTo(
 							SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0)
-					&& (cat.getPmCategoryL3() != null
-							&& !StringUtils.isBlank(cat.getPmCategoryL3()
-									.getFacilityType()) && cat
-							.getPmCategoryL3().getFacilityType()
-							.equalsIgnoreCase(facType))) {
+					&& (cat.getPmCategoryL3() != null && !StringUtils.isBlank(cat.getPmCategoryL3().getFacilityType()) && (cat
+							.getPmCategoryL3().getFacilityType().equalsIgnoreCase(facType) || (businessType &&cat.getPmCategoryL3()
+							.getFacilityType().equalsIgnoreCase("B") && cat.isSpecialCategory())))) { //#30043
 
 				item = new SelectItem();
 				item.setValue(cat.getPmCategoryL3().getCategoryL3Id());
