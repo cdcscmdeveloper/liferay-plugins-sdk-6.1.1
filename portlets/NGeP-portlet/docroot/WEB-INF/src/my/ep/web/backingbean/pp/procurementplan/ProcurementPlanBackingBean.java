@@ -319,7 +319,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 
 		// Procurement Plan
 		PPPlanDataType planObj = (PPPlanDataType) obj;
-		this.getManagedBean().setPlanDetailSearchReset(true);//27624
+		//27624 - start
+		this.getManagedBean().setPlanDetailSearchReset(true);
+		//27624 - end
 		this.loadPlanDetails(planObj.getPlanId().longValue(), false);
 		setScreenVariables();
 		this.getManagedBean().setPlanId(planObj.getPlanId().longValue());
@@ -367,7 +369,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setTrackingDiary(isTrackingDiary);
 		this.retrievePlanTypeMapper();
 		this.retrieveVotTypeMapper();
-		this.getManagedBean().setPlanDetailSearchReset(true);//27624
+		//27624 - start
+		this.getManagedBean().setPlanDetailSearchReset(true);
+		//27624 - end
 		if(id!=null && id>0){
 			//201229@akmal - Enhancement27624 - Start
 			if(this.getManagedBean().isFromTaskList()){ //24975@06112020@azza - Start
@@ -804,7 +808,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		        	for (PpProcurementItem clone : clones) {
 	        			if (clone.getFromPpItem().equals(reorderedList.get(i).getProcurementItemId())) {
 	        				log.info("cloned is= "+clone.getProcurementTitle());
-	        				this.getManagedBean().setGetProcurementItemList(true); //27624        				reorderedList.add(i+1,clone);
+	        				//27624 - start
+	        				this.getManagedBean().setGetProcurementItemList(true);   
+	        				//27624 - end
+	        				reorderedList.add(i+1,clone);
 	        			}
 	        		}
 		        }
@@ -817,8 +824,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	        }*/
 	        
 	        newPpItems = new ArrayList<PpProcurementItem>(reorderedList);
-	        
-	      if(this.getManagedBean().isGetProcurementItemList() == true){//27624 - start
+	      //27624 - start
+	      if(this.getManagedBean().isGetProcurementItemList() == true){
 	        if (!ppItems.isEmpty() && ppItems.size() > 0) {
 	        	ppItems.clear();
 	        	this.getManagedBean().getSelectedPlan().setPpProcurementItems(null);
@@ -828,7 +835,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	        }else{
 	        	log.info("isGetProcurementItemList false " + ppItems.size());
 	          this.getManagedBean().getSelectedPlan().setPpProcurementItems(ppItems);
-	        }//27624 - end
+	        }
+	        //27624 - end
 	        log.info("Displaying ppItems for Plan No=  "+
 	        		this.getManagedBean().getSelectedPlan().getPlanNo());
 	               
@@ -838,7 +846,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	        	 /* Check predecessors of each node, change Pencil to Note icon for update reason field
 		          * and make its textarea disabled
 		         * */
-	        	this.getManagedBean().setGetProcurementItemList(false);//27624
+	        	//27624 - start
+	        	this.getManagedBean().setGetProcurementItemList(false);
+	        	//27624 - end
         		this.checkItemPredecessor(pItem);
 	        }
 	        
@@ -994,7 +1004,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				reqDTO.setPlanDetReset(true);
 				reqDTO = parseSearchBean(this.getManagedBean().getPlanSearchBean(), reqDTO);
 			}
-			else if(this.getManagedBean().isPlanDetailSearchReset()){//27624 - start
+			//200911@akmal - Enhancement27624 - End
+			//27624 - start
+			else if(this.getManagedBean().isPlanDetailSearchReset()){
 				reqDTO.setPlanDetSearchReset(true);
 				reqDTO.setTitleOrDesc(null);
 				reqDTO.setCategoryType(null);
@@ -1005,8 +1017,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				reqDTO.setUpdatedDateTo(null);
 				reqDTO.setStatus(null);
 				reqDTO.getvPmGolist().clear();
-			}//27624 - end
-			//200911@akmal - Enhancement27624 - End
+			}
+			//27624 - end
 			resDTO = reqSO.retrievePlanDetById(reqDTO);
 			
 			if (resDTO.isSuccessful()) {
