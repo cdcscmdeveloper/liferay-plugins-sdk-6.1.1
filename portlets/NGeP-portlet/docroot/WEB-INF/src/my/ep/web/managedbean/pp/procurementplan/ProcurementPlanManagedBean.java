@@ -175,6 +175,9 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private boolean flagCancelButton = false;
 	//28760 - end
 	
+	private boolean planDetailSearchReset; //27624 - start
+	private boolean getProcurementItemList; // 27624 - end
+	
 	public ProcurementPlanManagedBean(){}
 
 	/**
@@ -1509,4 +1512,20 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 		this.flagCancelButton = flagCancelButton;
 	}
 	//12112020@azza - 28760 - End
+	
+	public boolean isPlanDetailSearchReset() {//27624 - start
+		return planDetailSearchReset;
+	}
+
+	public void setPlanDetailSearchReset(boolean planDetailSearchReset) {
+		this.planDetailSearchReset = planDetailSearchReset;
+	}
+	
+	public boolean isGetProcurementItemList() {
+		return getProcurementItemList;
+	}
+
+	public void setGetProcurementItemList(boolean getProcurementItemList) {
+		this.getProcurementItemList = getProcurementItemList;
+	}//27624 - end
 }
