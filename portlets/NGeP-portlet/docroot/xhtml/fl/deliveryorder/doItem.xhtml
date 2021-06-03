@@ -109,8 +109,8 @@
 							<p:commandLink oncomplete="doItemInfo.show();" process="@this"
 							rendered="#{createDOBackingBean.managedBean.contractFlag}"  
 							action="#{createDOBackingBean.doItemInfoList(doItems)}"
-							update=":form:doItemInfoDialog2,@(.orderSummaryChange)">
-							<ac:iconTooltip value="#{lbl['lbl.fl.request.item.info.contract']}"  escape="false"/>
+							update=":form:doItemInfoDialog2">
+							<ac:iconTooltip value="#{lbl['lbl.fl.request.item.info.contract']}" escape="false"/>
 							</p:commandLink>
 					</p:column>
 					<p:column style="white-space:normal;text-align:center">
@@ -527,7 +527,7 @@
 						autoResize="false"
 						style="width: 96% !important; margin-left:0px;" 
 						disabled="true"
-						value="#{createDOBackingBean.managedBean.itemSpecification == null ? lbl['lbl.fl.supp.na'] : createDOBackingBean.managedBean.itemSpecification}" /> 
+						value="#{specificationList.itemSpec == null ? lbl['lbl.fl.supp.na'] : specificationList.itemSpec}" /> 
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.supp.offer']}" style="text-align:center"
 						rendered="#{!createDOBackingBean.managedBean.dpFlag}">
@@ -537,7 +537,7 @@
 						autoResize="false"
 						style="width: 96% !important; margin-left:0px;" 
 						disabled="true"
-						value="#{createDOBackingBean.managedBean.supplierOffer == null ? lbl['lbl.fl.supp.na'] : createDOBackingBean.managedBean.supplierOffer}" /> 
+						value="#{specificationList.supplierOffer == null ? lbl['lbl.fl.supp.na'] : specificationList.supplierOffer}" /> 
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.new.offer.spec']}" style="text-align:center"
 						rendered="#{!createDOBackingBean.managedBean.dpFlag}">
@@ -547,9 +547,17 @@
 						autoResize="false"
 						style="width: 96% !important; margin-left:0px;" 
 						disabled="true"
-						value="#{createDOBackingBean.managedBean.newOfferedSpec == null ? lbl['lbl.fl.supp.na'] : createDOBackingBean.managedBean.newOfferedSpec}" /> 
+						value="#{specificationList.newOfferSpec == null ? lbl['lbl.fl.supp.na'] : specificationList.newOfferSpec}" /> 
 			</p:column>
+			
 			</p:dataTable>
+			
+			<p:spacer height="2px"></p:spacer>
+			<div style="width: 100%; text-align: right">
+				<p:commandButton value="#{lbl['lbl.btn.close']}" process="@this"
+					oncomplete="doItemInfo.hide()" partialSubmit="true">
+				</p:commandButton>
+			</div> 
 			
 		</p:dialog>
 		<!-- 28855 End -->
