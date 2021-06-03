@@ -171,15 +171,7 @@ public class SmBulkApplicationBackingBean extends
 
 	public void rejectBulkApplication() {
 		setSelectedRejectedResonsToVO();
-		//#21937 - start
-		if(getManagedBean().getApplStatus().equals(getManagedBean().getRECOMMEND_APPROVE())){
-			RequestContext.getCurrentInstance().execute("rejectDialog.show();");
-		} else {
-		// #15629 -- start - 20/1/2020
-		//		RequestContext.getCurrentInstance().execute("rejectDialog.show();");
-			submitReject();
-		}
-		// #15629 -- end - 20/1/2020, #21937 - end
+		RequestContext.getCurrentInstance().execute("rejectDialog.show();");
 	}
 
 	public void submitReject() {
@@ -239,9 +231,7 @@ public class SmBulkApplicationBackingBean extends
 				throw new EpException(ex.getMessage()); //21937
 			}
 		}
-		// #15629 -- start - 20/1/2020
-		//		RequestContext.getCurrentInstance().execute("rejectDialog.hide();");
-		// #15629 -- end - 20/1/2020
+		RequestContext.getCurrentInstance().execute("rejectDialog.hide();");
 		showSuccessApplicationMsg(successSubmittedList, "REJECT");
 	}
 
@@ -475,11 +465,7 @@ public class SmBulkApplicationBackingBean extends
 	public void searchRejectedReason(SmBulkApplicationVO vo) {
 
 		// reset selected reject reason during search
-		//		#15629 -- start - 19/1/2020
-		if(EntityHelper.isCollectionEmpty(vo.getSelectedReasonDescs())){
-			vo.setSelectedReasonDescs(new ArrayList<PmReasonDesc>());
-		} 
-		//		#15629 -- end - 19/1/2020
+		vo.setSelectedReasonDescs(new ArrayList<PmReasonDesc>());
 
 		// reset selected reject reason remarks during search
 		verifySelectedRejectReasons(vo);
@@ -664,18 +650,6 @@ public class SmBulkApplicationBackingBean extends
 	private void setSelectedRejectedResonsToVO() {
 		for (SmBulkApplicationVO vo : getManagedBean().getSelectedTasks()) {
 			vo.setSelectedReasonDescs(new ArrayList<PmReasonDesc>());
-			//			#15629 -- start - 19/1/2020
-			if(!EntityHelper.isCollectionEmpty(vo.getAppl().getSmApplRejectReasons())) {
-				
-				for(SmApplRejectReason smApplRejectReason : vo.getAppl().getSmApplRejectReasons()){
-						for(PmReasonDesc pmReasonDesc : getManagedBean().getReasonDescList()){
-							if(smApplRejectReason.getPmReason().getReasonId().equals(pmReasonDesc.getPmReason().getReasonId())){
-								vo.getSelectedReasonDescs().add(pmReasonDesc);
-							}
-						}			
-				}
-			}
-			//			#15629 -- end - 19/1/2020
 			vo.setReasonDescList(getManagedBean().getReasonDescList());
 		}
 	}
@@ -792,10 +766,6 @@ public class SmBulkApplicationBackingBean extends
 				bulkApplicationVO.setPo(SmCommonUtil.getUserByUserId(poRev
 						.getChangedBy()));
 				bulkApplicationVO.setReceivedDate(poRev.getChangedDate());
-			    //#15629 - Start
-				bulkApplicationVO.setRejectReasons(StringUtils.isNotBlank(getApplicationRejectionReason(appl)) ?
-						getApplicationRejectionReason(appl) : "N/A");
-			    //#15629 - End
 				bulkApplicationVO.setPoRemarks(StringUtils.isNotBlank(poRev.getRemarkToApprover()) ? 
 						poRev.getRemarkToApprover() : "N/A");
 				bulkApplicationVO.setCurrentRegStatus("N/A"); //21937

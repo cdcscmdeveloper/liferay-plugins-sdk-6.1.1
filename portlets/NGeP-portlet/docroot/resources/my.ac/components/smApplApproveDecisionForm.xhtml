@@ -20,18 +20,9 @@
 		<cc:attribute name="overLappedCategoryExists" default="false" />
 		<cc:attribute name="poRecommend" default="false" />
 		<cc:attribute name="bean" required="true" />
-		<cc:attribute name="backingBean" required="true" />
 	</cc:interface>
 	
 	<cc:implementation>
-		<style>
-			.selectRecRejectReasonTable .ui-chkbox-box{
-      	 	   pointer-events: all;
-			}
-			.selectRecRejectReasonTable .ui-widget-content{
-    			pointer-events: none;
-			}
-		</style>
 		<p:outputPanel id="#{cc.attrs.changeRegStatusUpdateId}">
 			<table style="width: 100%" border="#{cc.attrs.border ? 1 : 0}">
 				<c:if test="#{cc.attrs.smAppl.applType ne 'C'}">
@@ -110,115 +101,6 @@
 						</tr>
 					</p:outputPanel>
 				</c:if>
-				
-                <!-- #15629 start -->
-				<c:if test="#{cc.attrs.bean.poSecReview.recommendation eq 'REJECT' and !cc.attrs.bean.approverUser}">
-				<p:outputPanel layout="block" id="recRejectBlockPanel">
-				
-<!-- 					<p:messages id="recSearchRejectMsgId" showDetail="true" autoUpdate="true" closable="true" showSummary="false"/> -->
-					
-						<table style="width: 100%">
-							<tr>
-								<td><p:outputLabel value="#{lbl['lbl.sm.rejection.reasons']}" /></td>
-								<td>
-									<p:inputText id="recRejectReasonSearchId"
-										label="#{lbl['lbl.sm.rejection.reasons']}"
-										value="#{cc.attrs.bean.searchRecommendRejectReason}"
-										size="35" >
-										<p:ajax event="blur" process="@this" update="@this"/>
-									</p:inputText>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2">
-									<div style="text-align: right;">
-										<p:commandButton value="#{lbl['lbl.btn.search']}" 
-											action="#{cc.attrs.backingBean.searchRecommendRejectedReason()}"
-											onstart="recRejectBlockPanelWidget.show()" oncomplete="recRejectBlockPanelWidget.hide()"
-											update=":#{p:component(cc.attrs.changeRegStatusUpdateId)}" process="@this">
-										</p:commandButton>
-										<p:commandButton value="#{lbl['lbl.btn.reset']}" process="@this"
-											action="#{cc.attrs.backingBean.resetSearchRecommendRejectedReason}"
-											update=":#{p:component(cc.attrs.changeRegStatusUpdateId)}" 
-											onstart="recRejectBlockPanelWidget.show()" oncomplete="recRejectBlockPanelWidget.hide()">
-										</p:commandButton>
-									</div>
-								</td>
-							</tr>
-						</table>
-					
-					  		<p:panel header="#{lbl['lbl.sm.result']}" toggleable="true" id="recResultRejectedReasonPanelId">
-								<p:dataTable var="recReason" widgetVar="recReasonWidgetVar"
-									editable="false" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-									value="#{cc.attrs.bean.recommendReasonDescList}"
-									selection="#{cc.attrs.bean.selectedRecommendReasonDescs}"
-									rowKey="#{recReason}" rowIndexVar="index" id="recReasonDtId"
-									styleClass="selectRecRejectReasonTable">
-							
-									<ac:paginator for="recReasonDtId" />
-									<p:ajax event="rowSelect" listener="#{cc.attrs.backingBean.onTickOrUnTickRecommendReason}"
-										update=":#{p:component(cc.attrs.changeRegStatusUpdateId)}"></p:ajax>
-									<p:ajax event="rowUnselect"
-										listener="#{cc.attrs.backingBean.onTickOrUnTickRecommendReason}"
-										update=":#{p:component(cc.attrs.changeRegStatusUpdateId)}"></p:ajax>
-									<p:ajax event="rowSelectCheckbox"
-										listener="#{cc.attrs.backingBean.onTickOrUnTickRecommendReason}"
-										update=":#{p:component(cc.attrs.changeRegStatusUpdateId)}"></p:ajax>
-									<p:ajax event="rowUnselectCheckbox"
-										listener="#{cc.attrs.backingBean.onTickOrUnTickRecommendReason}"
-										update=":#{p:component(cc.attrs.changeRegStatusUpdateId)}"></p:ajax>
-									<p:ajax event="rowDblselect"
-										listener="#{cc.attrs.backingBean.onTickOrUnTickRecommendReason}"
-										update=":#{p:component(cc.attrs.changeRegStatusUpdateId)}"></p:ajax>
-									<p:ajax event="toggleSelect"
-										listener="#{cc.attrs.backingBean.onTickOrUnTickRecommendReason}"
-										update=":#{p:component(cc.attrs.changeRegStatusUpdateId)}"></p:ajax>
-							
-									<p:column selectionMode="multiple" width="1%" />
-							
-									<p:column headerText="#{lbl['lbl.sm.rejection.reasons']}">
-										<h:outputText value="#{recReason.reasonDesc}" />
-									</p:column>
-							
-								</p:dataTable>
-							</p:panel>
-
-					<p:outputPanel id="recRejRemarksPanel">
-						<table style="width: 100%">
-							<tr>
-								<td style="vertical-align: top; width: 15%"><p:outputLabel
-										value="#{lbl['lbl.sm.remarks.rejection']}" id="recRejReasonLbl"/> 
-										<p:outputLabel
-										value="*" styleClass="mandatory" id="recRejReasonLblMndty"
-										rendered="#{cc.attrs.bean.recommendRejectReasonReqd}" /></td>
-								<td style="padding-top: 5px;"><p:inputTextarea cols="100"
-										style="width : auto;"
-										value="#{cc.attrs.approvalRemarks}"
-										id="recRmrksForRejectTxtArea" rows="5"
-										validatorMessage="#{lbl['lbl.sm.remarks.rejection']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit.po']}"
-										label="#{lbl['lbl.sm.remarks.rejection']}"
-										required="#{cc.attrs.bean.valueReqd and cc.attrs.bean.recommendRejectReasonReqd}"
-										maxlength="4000">
-										<f:validateLength maximum="4000" />
-									</p:inputTextarea> <p:message id="recRmrksForRejectTxtAreaMsg"
-										for="recRmrksForRejectTxtArea" showSummary="true" showDetail="false"
-										display="icon" /></td>
-							</tr>
-						</table>
-					</p:outputPanel>
-				
-					<div align="right">
-						<cc:insertChildren />
-					</div>
-					<p:blockUI block="recRejectBlockPanel" widgetVar="recRejectBlockPanelWidget">
-						<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
-					</p:blockUI>
-				
-					</p:outputPanel>
-				</c:if>
-				
-				<c:if test="#{(cc.attrs.bean.poUser and cc.attrs.bean.poSecReview.recommendation ne 'REJECT') or 
-				cc.attrs.bean.approverUser}">
 				<tr>
 					<td style="vertical-align: top"><p:outputLabel
 							value="#{lbl['lbl.sm.remarks.approval']}" /></td>
@@ -232,10 +114,6 @@
 						</p:inputTextarea> <p:message id="rmrksForApprTxtAreaMsg" for="rmrksForApprTxtArea"
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
-				</c:if>
-				
-                <!-- #15629 end -->
-												
 				<c:if test="#{cc.attrs.overLappedCategoryExists}">
 					<tr>
 						<td colspan="2"><p:outputLabel
