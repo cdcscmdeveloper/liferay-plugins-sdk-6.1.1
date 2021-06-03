@@ -319,6 +319,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 
 		// Procurement Plan
 		PPPlanDataType planObj = (PPPlanDataType) obj;
+		this.getManagedBean().setPlanDetailSearchReset(true);//27624
 		this.loadPlanDetails(planObj.getPlanId().longValue(), false);
 		setScreenVariables();
 		this.getManagedBean().setPlanId(planObj.getPlanId().longValue());
@@ -366,6 +367,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setTrackingDiary(isTrackingDiary);
 		this.retrievePlanTypeMapper();
 		this.retrieveVotTypeMapper();
+		this.getManagedBean().setPlanDetailSearchReset(true);//27624
 		if(id!=null && id>0){
 			//201229@akmal - Enhancement27624 - Start
 			if(this.getManagedBean().isFromTaskList()){ //24975@06112020@azza - Start
@@ -628,24 +630,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setEpTotalPlanH(null);
 		this.getManagedBean().setEpTotalNonEpAllocH(null);
 		
-		//27624 - start
-		this.getManagedBean().getvPmGolist().clear();
-		this.getManagedBean().getvPmGomap().clear();
-		this.getManagedBean().getPlanSearchBean().setProcurementType(null);
-		this.getManagedBean().getPlanSearchBean().setCategoryType(null);
-		this.getManagedBean().getPlanSearchBean().setTitleOrDesc(null);
-		this.getManagedBean().getPlanSearchBean().setInvitationDateFrom(null);
-		this.getManagedBean().getPlanSearchBean().setInvitationDateTo(null);
-		this.getManagedBean().getPlanSearchBean().setUpdatedDateFrom(null);
-		this.getManagedBean().getPlanSearchBean().setUpdatedDateTo(null);
-		this.getManagedBean().getPlanSearchBean().setStatus(null);
-		this.getManagedBean().setSelectedCatSearch(null);
-		this.getManagedBean().setPlanDetailReset(true);
-		//27624 - end
-
-
-		
-		//this.getManagedBean().setDisable(false);
 	}
 	
 	private void resetPpProcurementItems(List<PpProcurementItem> ppItems) {
@@ -820,7 +804,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		        	for (PpProcurementItem clone : clones) {
 	        			if (clone.getFromPpItem().equals(reorderedList.get(i).getProcurementItemId())) {
 	        				log.info("cloned is= "+clone.getProcurementTitle());
-	        				reorderedList.add(i+1,clone);
+	        				this.getManagedBean().setGetProcurementItemList(true); //27624        				reorderedList.add(i+1,clone);
 	        			}
 	        		}
 		        }
@@ -834,20 +818,27 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	        
 	        newPpItems = new ArrayList<PpProcurementItem>(reorderedList);
 	        
+	      if(this.getManagedBean().isGetProcurementItemList() == true){//27624 - start
 	        if (!ppItems.isEmpty() && ppItems.size() > 0) {
 	        	ppItems.clear();
 	        	this.getManagedBean().getSelectedPlan().setPpProcurementItems(null);
-	        }
-	        this.getManagedBean().getSelectedPlan().setPpProcurementItems(newPpItems);
+	        }	        	
+	         log.info("isGetProcurementItemList " + this.getManagedBean().isGetProcurementItemList());
+	         this.getManagedBean().getSelectedPlan().setPpProcurementItems(newPpItems);
+	        }else{
+	        	log.info("isGetProcurementItemList false " + ppItems.size());
+	          this.getManagedBean().getSelectedPlan().setPpProcurementItems(ppItems);
+	        }//27624 - end
 	        log.info("Displaying ppItems for Plan No=  "+
 	        		this.getManagedBean().getSelectedPlan().getPlanNo());
-	        
+	               
 	       
 	        for (PpProcurementItem pItem : this.getManagedBean().getSelectedPlan().getPpProcurementItems()) {
 	        	
 	        	 /* Check predecessors of each node, change Pencil to Note icon for update reason field
 		          * and make its textarea disabled
 		         * */
+	        	this.getManagedBean().setGetProcurementItemList(false);//27624
         		this.checkItemPredecessor(pItem);
 	        }
 	        
@@ -1003,6 +994,18 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				reqDTO.setPlanDetReset(true);
 				reqDTO = parseSearchBean(this.getManagedBean().getPlanSearchBean(), reqDTO);
 			}
+			else if(this.getManagedBean().isPlanDetailSearchReset()){//27624 - start
+				reqDTO.setPlanDetSearchReset(true);
+				reqDTO.setTitleOrDesc(null);
+				reqDTO.setCategoryType(null);
+				reqDTO.setProcurementType(null);
+				reqDTO.setInvitationDateFrom(null);
+				reqDTO.setInvitationDateTo(null);
+				reqDTO.setUpdatedDateFrom(null);
+				reqDTO.setUpdatedDateTo(null);
+				reqDTO.setStatus(null);
+				reqDTO.getvPmGolist().clear();
+			}//27624 - end
 			//200911@akmal - Enhancement27624 - End
 			resDTO = reqSO.retrievePlanDetById(reqDTO);
 			
@@ -1150,10 +1153,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			throw e;
 		}finally{
 			reqSO = null;
-			//210111@akmal - Enhancement27624 - Start
+			//27624 - start
 			this.getManagedBean().setPlanDetailSearch(false);
 			this.getManagedBean().setPlanDetailReset(false);
-			//210111@akmal - Enhancement27624 - End
+			this.getManagedBean().setPlanDetailSearchReset(false);
+			//27624 - end
 		}
 		
 		log.info("loadPlanDetails - End");
@@ -2966,7 +2970,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			
 			this.getManagedBean().getDeletePpItems().clear();
 			log.info("After save, getDeletePpItems= "+this.getManagedBean().getDeletePpItems().size()); 
-				
+			
 			if (resDTO.isSuccessful()) {
 				//LOG : 26549 : SLA Monitoring
 				SLAUtils.getInstance().logSLAInfo("PM","PS",
