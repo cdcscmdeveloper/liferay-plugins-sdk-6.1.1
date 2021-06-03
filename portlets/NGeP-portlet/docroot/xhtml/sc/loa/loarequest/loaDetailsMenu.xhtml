@@ -782,15 +782,16 @@
 	</p:confirmDialog>
 	
 	<p:dialog id="approvalLetterAlert" widgetVar="approvalLetterAlertDlg"
-		header="#{lbl['lbl.txt.alert']}" resizable="false" width="600"
+		header="#{lbl['lbl.txt.alert']}" resizable="false" width="500"
 		modal="true">
 			<p:panel>				
 				<table>
 					<tr>
 						<td>
-							<h:graphicImage value="/css/images/design/exclamation.png" />
+							<h:graphicImage value="/css/images/design/exclamation.png" style="margin-top: 3px" />
+							<p:spacer width="10"></p:spacer>
 							<ui:fragment>
-								<h:outputText value="#{lbl['lbl.sc.approval.letter.alert']}" />
+								<h:outputText value="#{lbl['lbl.sc.approval.letter.alert']}" style="margin-top: 3px"/>
 								<br />
 								<br />
 							</ui:fragment> 							
