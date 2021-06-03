@@ -309,14 +309,15 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.shrAmt']} " />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<!-- #28466 start - remove #27308 showstopper #30660 - disable edit -->
-					<td><p:inputText id="equiCompShrAmt" 
-							disabled="#{backingBean.managedBean.disAllowOwnerEdit or !backingBean.managedBean.valueReqd}"
-							required="#{backingBean.managedBean.valueReqd}"
-							label="#{lbl['lbl.sm.equiComp.shrAmt']}"
-							validatorMessage="#{lbl['lbl.sm.equiComp.shrAmt']} - #{lbl['lbl.sm.minAmt.validMsg']}"
-							value="#{backingBean.managedBean.selectedEquityCompany.shareAmt}"
-							size="35">
+					<!-- #28466 start - remove #27308 showstopper #30660 start - fix reopen -->
+					<td><p:inputText id="equiCompShrAmt"
+							disabled="#{backingBean.managedBean.disAllowOwnerEdit or !backingBean.managedBean.valueReqd}" 
+							required="#{backingBean.managedBean.valueReqd and not backingBean.managedBean.disAllowOwnerEdit}"
+							label="#{lbl['lbl.sm.equiComp.shrAmt']}" 
+							validatorMessage="#{lbl['lbl.sm.equiComp.shrAmt']} - #{lbl['lbl.sm.minAmt.validMsg']}" 
+							value="#{backingBean.managedBean.selectedEquityCompany.shareAmt}" 
+							size="35"> 
+					<!-- #30660 end -->
 					<!-- #28466 start - remove #27308 showstopper -->
 							<f:validateDoubleRange for="contractorContractVal"
 								minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
@@ -353,12 +354,14 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.addr']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText maxlength="100"
-							required="#{backingBean.managedBean.valueReqd}"
-							label="#{lbl['lbl.sm.equiComp.addr']}" id="suppEquiCompAddr"
-							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.address1}"
-							disabled ="#{backingBean.managedBean.selectedEquityCompany.smAddress.ssmData and not empty backingBean.managedBean.selectedEquityCompany.smAddress.address1}"
-							size="35" /> 
+					<!-- #30660 start - fix reopen -->
+					<td><p:inputText maxlength="100" 
+							required="#{backingBean.managedBean.valueReqd and not backingBean.managedBean.disAllowOwnerEdit}"
+							label="#{lbl['lbl.sm.equiComp.addr']}" id="suppEquiCompAddr" 
+							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.address1}" 
+							disabled ="#{backingBean.managedBean.selectedEquityCompany.smAddress.ssmData and not empty backingBean.managedBean.selectedEquityCompany.smAddress.address1}" 
+							size="35" />
+					<!-- #30660 end -->
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges}"
 								oriValue="#{backingBean.managedBean.latestEquityCompany.smAddress.address1}" 
@@ -398,12 +401,14 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu
-							required="#{backingBean.managedBean.valueReqd}"
-							label="#{lbl['lbl.sm.country']}" id="suppEquiCompCntry"
-							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.countryId}"
-							disabled ="#{backingBean.managedBean.selectedEquityCompany.smAddress.ssmData and not empty backingBean.managedBean.selectedEquityCompany.smAddress.countryId}"	
-							style="width: 207px;margin-bottom: 5px;background-color:white;">
+					<!-- #30660 start - fix reopen -->
+					<td><p:selectOneMenu 
+							required="#{backingBean.managedBean.valueReqd and not backingBean.managedBean.disAllowOwnerEdit}"
+							label="#{lbl['lbl.sm.country']}" id="suppEquiCompCntry" 
+							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.countryId}" 
+							disabled ="#{backingBean.managedBean.selectedEquityCompany.smAddress.ssmData and not empty backingBean.managedBean.selectedEquityCompany.smAddress.countryId}"
+							style="width: 207px;margin-bottom: 5px;background-color:white;"> 
+					<!-- #30660 end -->
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="equiCountry"
 								value="#{backingBean.managedBean.countryItems}" />
@@ -427,12 +432,13 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-	
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
-							required="#{backingBean.managedBean.valueReqd}"
-							label="#{lbl['lbl.sm.state']}"
-							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.stateId}"
-							id="equiState">
+					<!-- #30660 start - fix reopen -->
+					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;" 
+							required="#{backingBean.managedBean.valueReqd and not backingBean.managedBean.disAllowOwnerEdit}"
+							label="#{lbl['lbl.sm.state']}" 
+							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.stateId}" 
+							id="equiState"> 
+					<!-- #30660 end -->
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="equiState"
 								value="#{backingBean.managedBean.equiCompanyStates}" />
@@ -493,10 +499,12 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
-							id="equiDist" required="#{backingBean.managedBean.valueReqd}"
-							label="#{lbl['lbl.sm.district']}"
-							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.districtId}">
+					<!-- #30660 start - fix reopen -->
+					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;" 
+							id="equiDist" required="#{backingBean.managedBean.valueReqd and not backingBean.managedBean.disAllowOwnerEdit}"
+							label="#{lbl['lbl.sm.district']}" 
+							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.districtId}"> 
+					<!-- #30660 end -->
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="equiDist"
 								value="#{backingBean.managedBean.equiCompanyDistricts}" />
@@ -518,10 +526,12 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
-							id="equiCity" required="#{backingBean.managedBean.valueReqd}"
-							label="#{lbl['lbl.sm.towncity']}"
-							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.cityId}">
+					<!-- #30660 start - fix reopen -->
+					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;" 
+							id="equiCity" required="#{backingBean.managedBean.valueReqd and not backingBean.managedBean.disAllowOwnerEdit}"
+							label="#{lbl['lbl.sm.towncity']}" 
+							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.cityId}"> 
+					<!-- #30660 end -->
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="equiCity"
 								value="#{backingBean.managedBean.equiCompanyCities}" />
@@ -546,12 +556,14 @@
 					<td><p:outputPanel id="postCodeSuppEquiPanelId">
 							<p:outputPanel
 								rendered="#{backingBean.managedBean.selectedEquityCompany.smAddress.countryId==backingBean.managedBean.myCountryId}">
-								<p:inputText maxlength="5"
-									required="#{backingBean.managedBean.valueReqd}"
-									label="#{lbl['lbl.sm.postcode']}" id="suppEquiCompPostCodeMy"
-									value="#{backingBean.managedBean.selectedEquityCompany.smAddress.postcode}"
-									validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
-									size="35">
+								<!-- #30660 start - fix reopen -->
+								<p:inputText maxlength="5" 
+									required="#{backingBean.managedBean.valueReqd and not backingBean.managedBean.disAllowOwnerEdit}"
+									label="#{lbl['lbl.sm.postcode']}" id="suppEquiCompPostCodeMy" 
+									value="#{backingBean.managedBean.selectedEquityCompany.smAddress.postcode}" 
+									validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}" 
+									size="35"> 
+								<!-- #30660 end -->
 									<f:validator validatorId="postcodeValidator" />
 								</p:inputText>
 								<ac:smFieldChangeAlert 
@@ -565,12 +577,14 @@
 							</p:outputPanel>
 							<p:outputPanel
 								rendered="#{backingBean.managedBean.selectedEquityCompany.smAddress.countryId!=backingBean.managedBean.myCountryId}">
-								<p:inputText maxlength="10"
-									required="#{backingBean.managedBean.valueReqd}"
-									label="#{lbl['lbl.sm.postcode']}"
-									id="suppEquiCompPostCodeForeign"
-									value="#{backingBean.managedBean.selectedEquityCompany.smAddress.postcode}"
-									size="35">
+								<!-- #30660 start - fix reopen -->
+								<p:inputText maxlength="10" 
+									required="#{backingBean.managedBean.valueReqd and not backingBean.managedBean.disAllowOwnerEdit}"
+									label="#{lbl['lbl.sm.postcode']}" 
+									id="suppEquiCompPostCodeForeign" 
+									value="#{backingBean.managedBean.selectedEquityCompany.smAddress.postcode}" 
+									size="35"> 
+								<!-- #30660 end -->
 								</p:inputText>
 								<ac:smFieldChangeAlert 
 									isShow="#{backingBean.managedBean.showFieldChanges}"
