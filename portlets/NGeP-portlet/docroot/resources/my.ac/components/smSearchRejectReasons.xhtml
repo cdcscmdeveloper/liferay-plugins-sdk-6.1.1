@@ -55,7 +55,7 @@
 						</tr>
 					</table>
 					
-					<p:panel header="#{lbl['lbl.sm.result']}" toggleable="true" id="resultRejectedReasonPanelId">
+					<p:panel header="#{lbl['lbl.sm.results']}" toggleable="true" id="resultRejectedReasonPanelId">
 						<p:dataTable var="reason" widgetVar="reasonWidgetVar"
 							editable="false" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 							value="#{backingBean.managedBean.reasonDescList}"
@@ -94,8 +94,6 @@
 				
 				</c:if>
 				
-				<!-- #15629 start 23/2/2021 -->
-				<c:if test="#{backingBean.managedBean.poUser and backingBean.managedBean.rejectReasonReqd}">
 				<p:outputPanel id="rejRemarksPanelTst">
 					<table style="width: 100%">
 						<tr>
@@ -120,39 +118,6 @@
 						</tr>
 					</table>
 				</p:outputPanel>
-				</c:if>
-				
-				<!-- #15629 start -->
-				<c:if test="#{backingBean.managedBean.approverUser}">
-					<table style="width: 100%">
-						<tr>
-							<td colspan="2"><p:outputLabel value="#{lbl['lbl.sm.po.remarks']}" /></td>
-							<td><h:outputText value="#{backingBean.managedBean.poSecReview.remarkToApprover}"/></td>
-						</tr>
-						<tr>
-							<td colspan="2"><p:outputLabel
-									value="#{lbl['lbl.sm.approvremark.new.remarknotes']}" id="recApprvRejReasonLbl"/>
-									<p:outputLabel
-										value="*" styleClass="mandatory" id="recApprvRejReasonLblMndty"
-										rendered="#{backingBean.managedBean.rejectReasonReqd}" /></td>
-							<!-- #15629 start 25/2/2021 -->
-							<td style="padding-top: 5px;"><p:inputTextarea cols="90"
-									style="width : auto;" rows="10"
-									value="#{backingBean.managedBean.applnRejectionRemarks}"
-									id="rmrksForApprovTxtArea" label="#{lbl['lbl.sm.remarks.approval']}"
-									validatorMessage="#{lbl['lbl.sm.approvremark.new.remarknotes']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit.po']}"
-									required="#{backingBean.managedBean.valueReqd and backingBean.managedBean.rejectReasonReqd}"
-									maxlength="4000">
-									<f:validateLength maximum="4000" />
-							<!-- #15629 end 25/2/2021 -->
-							</p:inputTextarea> <p:message id="rmrksForApprovTxtAreaMsg" for="rmrksForApprovTxtArea"
-								showSummary="true" showDetail="false" display="icon" /></td>
-						</tr>
-					</table>
-				</c:if>
-                <!-- #15629 end -->
-                <!-- #15629 end 23/2/2021 -->
-							
 				<div align="right">
 					<cc:insertChildren />
 				</div>

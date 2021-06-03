@@ -2327,16 +2327,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					.getRejectReasons();
 			rejectReasons = SmCommonUtil
 					.getHtmlApplicationRejectReasons(rejectReasonList);
-
-			//			Refs #15629 - Start - 5/2/2021
-			//			if (StringUtils.isBlank(rejectReasons)) {
-			//				rejectReasons = SmApplicationUtil.getSmRemarksByDocTypeAndId(
-			//						ParameterConst.SM_APPLN_RMRK_DECISION_REJECT,
-			//						getManagedBean().getSmAppl().getOriginalAppl()
-			//								.getApplId());
-			//			}
-			//			Refs #15629 - End - 5/2/2021
-
 		} else {
 			if (getManagedBean().getSmAppl().getApplType()
 					.equals(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
@@ -2352,22 +2342,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 							.getRemark();
 				}
 			} else {
-				
-				//	Refs #15629 - Start - 21/1/2021
-				if(!EntityHelper.isCollectionEmpty(getManagedBean()
-						.getSmAppl().getSmApplRejectReasons())){
-
-					Iterator<SmApplRejectReason> smApplRejectReasonIter = getManagedBean()
-							.getSmAppl().getSmApplRejectReasons().iterator();
-				    while(smApplRejectReasonIter.hasNext()){
-				    	SmApplRejectReason smApplRejectReason = smApplRejectReasonIter.next();
-				        if(!smApplRejectReason.isReasonByPo()){
-				        	smApplRejectReasonIter.remove();
-				          }
-				      }
-				}
-				// Refs #15629 - End - 21/1/2021
-				
 				rejectReasons = SmCommonUtil
 						.getHtmlApplicationRejectReasons(getManagedBean()
 								.getSmAppl().getSmApplRejectReasons());

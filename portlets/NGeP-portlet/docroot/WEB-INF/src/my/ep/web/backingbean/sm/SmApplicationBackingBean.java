@@ -1085,15 +1085,11 @@ public class SmApplicationBackingBean extends
 		}
 		retrieveBusinessTypeList();
 		assignSupplierBusinessType(getManagedBean().getSmSupplier());
-		//#15629 - START	
-		String suppType = getManagedBean().getSmAppl().getSupplierType();
-		if((suppType == null || "".equalsIgnoreCase(suppType)) && appl!= null){
-			suppType = appl.getSupplierType();
-		}
+
 		getManagedBean().setReasonDescInitList(
-				SmApplicationUtil.retrieveMofRejectReason(suppType, getManagedBean()
+				SmApplicationUtil.retrieveMofRejectReason(getManagedBean()
+						.getSmAppl().getSupplierType(), getManagedBean()
 						.getSmSupplier().getBusinessType(), applicationType));
-		//#15629 - END	
 		getManagedBean().setReasonDescList(
 				getManagedBean().getReasonDescInitList());
 		getManagedBean().setRejectionOtherReasonId(
@@ -1102,39 +1098,6 @@ public class SmApplicationBackingBean extends
 								ReasonCategory.SUPPLIER_REJECTION_REASON
 										.value(),
 								SupplierManagementConst.SM_REASON_CODE_OTHERS));
-		
-		//#15629 - START		
-		if(getManagedBean().isApproverUser()){
-			if(!EntityHelper.isCollectionEmpty(appl.getSmApplRejectReasons())) {
-				
-				getManagedBean().setSelectedReasonDescs(new ArrayList<PmReasonDesc>());
-				List<Long> reasonIdList = new ArrayList<Long>();
-				for(SmApplRejectReason smApplRejectReason : appl.getSmApplRejectReasons()){
-						for(PmReasonDesc pmReasonDesc : getManagedBean().getReasonDescList()){
-							if(smApplRejectReason.getPmReason().getReasonId().equals(pmReasonDesc.getPmReason().getReasonId())){
-								getManagedBean().getSelectedReasonDescs().add(pmReasonDesc);
-								reasonIdList.add(pmReasonDesc.getPmReason().getReasonId());
-							}
-						}			
-				}
-				getManagedBean().setReasonId(
-						reasonIdList.toArray(new Long[reasonIdList.size()]));
-				verifySelectedRejectReasons();
-			}
-		}
-		
-		if(getManagedBean().isPoUser()){
-		String suppTypePo = getManagedBean().getSmAppl().getSupplierType();
-		if((suppTypePo == null || "".equalsIgnoreCase(suppTypePo)) && appl != null){
-			suppTypePo = appl.getSupplierType();
-		}
-		getManagedBean().setRecommendReasonDescInitList(
-				SmApplicationUtil.retrieveMofRejectReason(suppTypePo, getManagedBean()
-						.getSmSupplier().getBusinessType(), applicationType));
-		getManagedBean().setRecommendReasonDescList(
-				getManagedBean().getRecommendReasonDescInitList());
-		}
-		//#15629 - END
 
 		if (getManagedBean().isApproverUser() || getManagedBean().isPoUser()) {
 			if (smAppl.getSmCompanyBasic() == null) {
@@ -1553,20 +1516,6 @@ public class SmApplicationBackingBean extends
 			SmAppl latestRejectedAppl = SmServiceLookup.getMofRegistrationSO()
 					.retrieveLatestRejectedApplication(mofReqDTO).getSmAppl();
 			if (latestRejectedAppl != null) {
-				//	Refs #15629 - Start - 21/1/2021
-				if(!EntityHelper.isCollectionEmpty(latestRejectedAppl
-						.getSmApplRejectReasons())){
-
-					Iterator<SmApplRejectReason> smApplRejectReasonIter = latestRejectedAppl
-							.getSmApplRejectReasons().iterator();
-				    while(smApplRejectReasonIter.hasNext()){
-				    	SmApplRejectReason smApplRejectReason = smApplRejectReasonIter.next();
-				        if(smApplRejectReason.isReasonByPo()){
-				        	smApplRejectReasonIter.remove();
-				          }
-				      }
-				}
-				// Refs #15629 - End - 21/1/2021
 				getManagedBean()
 						.setRejectReasonsMsg(
 								SmCommonUtil
@@ -3237,21 +3186,15 @@ public class SmApplicationBackingBean extends
 						if(resId.equals(new Long(345L))){//safe check, not necessarily needed, just in case, reason(others) must be accompanied by a remark
 							if (StringUtils.isBlank(getManagedBean()
 									.getApplnRejectionRemarks())) {
-								//15629 - Start
-								throw new EpException(SmCommonUtil.getMessage("lbl.sm.error.rejection.reasons",
-										null));
-								//15629 - End
+								throw new EpException("Rejection Remarks is mandatory.");
 							}
 						}
 						
 						SmApplRejectReason rej = new SmApplRejectReason();
 						rej.setPmReason(desc.getPmReason());
 						rej.setSmAppl(getManagedBean().getSmAppl());
-						//	Refs #15629 - Start - 8/1/2021
-						rej.setReasonByPo(getManagedBean().isPoUser() ? true : false);
-						//	Refs #15629 - End - 8/1/2021
 						resList.add(rej);
-						//log.info("Reason Id === " + resId);
+						log.info("Reason Id === " + resId);
 						// sb.append(++count).append(". ");
 						// sb.append(desc.getReasonDesc());
 						// sb.append("\n");
@@ -3262,26 +3205,21 @@ public class SmApplicationBackingBean extends
 			}
 		}else{
 			//Just in case
-			//15629 - Start
-			throw new EpException(SmCommonUtil.getMessage("lbl.sm.error.rejection.reasons",
-					null)); 
-			//15629 - End
-			//21937		
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, "Reject reason in mandatory."));		
 		}
 
-		//		Refs #15629 - Start - 8/1/2021 - comment out
-		//		if (getManagedBean().getSmAppl().getSmApplRejectReasons() != null
-		//				&& !getManagedBean().getSmAppl().getSmApplRejectReasons()
-		//						.isEmpty()) {
-		//			log.info(" ***** Already exisiting records ******* "
-		//					+ getManagedBean().getSmAppl().getSmApplRejectReasons()
-		//							.size());
-		//			getManagedBean().getSmAppl().getSmApplRejectReasons().clear();
-		//			log.info(" *****Size after reset******* "
-		//					+ getManagedBean().getSmAppl().getSmApplRejectReasons()
-		//							.size());
-		//		}
-		//		Refs #15629 - End - 8/1/2021 - comment out
+		if (getManagedBean().getSmAppl().getSmApplRejectReasons() != null
+				&& !getManagedBean().getSmAppl().getSmApplRejectReasons()
+						.isEmpty()) {
+			log.info(" ***** Already exisiting records ******* "
+					+ getManagedBean().getSmAppl().getSmApplRejectReasons()
+							.size());
+			getManagedBean().getSmAppl().getSmApplRejectReasons().clear();
+			log.info(" *****Size after reset******* "
+					+ getManagedBean().getSmAppl().getSmApplRejectReasons()
+							.size());
+		}
 		getManagedBean().getSmAppl().getSmApplRejectReasons().addAll(resList);
 		getManagedBean().setReasonDesc(sb.toString());
 	}
@@ -8965,23 +8903,8 @@ public class SmApplicationBackingBean extends
 	 */
 	public void cancelFinalApproveOrReject(String dialog) {
 		assignValReqdToFalse();
-
-		//		#15629 -- start - 27/1/2020
-		if(!SmCommonUtil.isCollectionEmpty(getManagedBean().getSelectedReasonDescs())){
-				List<Long> reasonIdList = new ArrayList<Long>();
-				for(PmReasonDesc pmReasonDesc : getManagedBean().getSelectedReasonDescs()){
-						reasonIdList.add(pmReasonDesc.getPmReason().getReasonId());
-				}			
-
-			getManagedBean().setReasonId(reasonIdList.toArray(new Long[reasonIdList.size()]));
-			verifySelectedRejectReasons();
-			
-		} else {
-			resetSearchRejectedReason();
-			getManagedBean().setReasonId(null);
-		}
-		//		#15629 -- end - 27/1/2020
-		
+		resetSearchRejectedReason();
+		getManagedBean().setReasonId(null);
 		getManagedBean().setRejectReasonReqd(false);
 		//#12483 - START
 		if(dialog.equalsIgnoreCase("approverRevDialog")){
@@ -9583,22 +9506,6 @@ public class SmApplicationBackingBean extends
 								}
 
 							}
-							
-							// #15629 -- start
-							if (getManagedBean().isPoUser() && !getManagedBean().getSmAppl().getApplType()
-									.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
-								setSmApplRecommendRejectionReasons();
-								reqDTO.setRejectionReasons(getManagedBean().getReasonDesc());
-							}
-							
-							if (StringUtils.isNotBlank(getManagedBean()
-									.getApplnRejectionRemarks())) {
-								SmApplicationUtil.manageAndSaveNewSmRemarks(getManagedBean()
-										.getSmAppl().getApplId(),
-										ParameterConst.SM_APPLN_RMRK_DECISION_REJECT,
-										getManagedBean().getApplnRejectionRemarks());
-							}
-							// #15629 -- end
 						}
 					}
 
@@ -11696,14 +11603,8 @@ public class SmApplicationBackingBean extends
 	 * Search rejected reason
 	 */
 	public void searchRejectedReason() {
-		
-		// reset selected recommend reject reason during search
-		//		#15629 -- start - 25/1/2020
-		if(SmCommonUtil.isCollectionEmpty(getManagedBean().getSelectedReasonDescs())) {
-			getManagedBean().setSelectedReasonDescs(new ArrayList<PmReasonDesc>());
-		} 
-		//		#15629 -- end - 25/1/2020
-
+		// reset selected reject reason during search
+		getManagedBean().setSelectedReasonDescs(new ArrayList<PmReasonDesc>());
 		// reset remark for other and remove remark required flag during search
 		getManagedBean().setReasonId(null);
 		// reset selected reject reason remarks during search
@@ -11725,12 +11626,7 @@ public class SmApplicationBackingBean extends
 						.getSmAppl().getSupplierType(), getManagedBean()
 						.getSmSupplier().getBusinessType(), getManagedBean()
 						.getSmAppl().getApplType()));
-		//	#15629 -- start - 26/1/2020
-		if(SmCommonUtil.isCollectionEmpty(getManagedBean().getSelectedReasonDescs())) {
-			getManagedBean().setSelectedReasonDescs(new ArrayList<PmReasonDesc>());
-		} 
-		// #15629 -- end - 26/1/2020
-
+		getManagedBean().setSelectedReasonDescs(new ArrayList<PmReasonDesc>());
 	}
 
 	/**
@@ -13991,168 +13887,7 @@ public class SmApplicationBackingBean extends
 		return retVal;
 	}
 // BUG #28173 & #28315 -END
- // #15629 -- start
-	/**
-	 * Search recommend rejected reason
-	 */
-	public void searchRecommendRejectedReason() {
-		
-		// reset selected recommend reject reason during search
-		//		#15629 -- start - 19/1/2020
-		if(SmCommonUtil.isCollectionEmpty(getManagedBean().getSelectedRecommendReasonDescs())) {
-			getManagedBean().setSelectedRecommendReasonDescs(new ArrayList<PmReasonDesc>());
-		} 
-		//		#15629 -- end - 19/1/2020
-		// reset remark for other and remove remark required flag during search
-		getManagedBean().setRecommendReasonId(null);
-		// reset selected recommend reject reason remarks during search
-		verifySelectedRecommendRejectReasons();
-
-		getManagedBean().setRecommendReasonDescList(
-				SmApplicationUtil.getWildCardSearchRejectReason(
-						getManagedBean().getSearchRecommendRejectReason(),
-						getManagedBean().getRecommendReasonDescInitList()));
-	}
-
-	/**
-	 * Reset search recommend rejected reason
-	 */
-	public void resetSearchRecommendRejectedReason() {
-		getManagedBean().setSearchRecommendRejectReason(StringUtils.EMPTY);
-		getManagedBean().setRecommendReasonDescList(
-				SmApplicationUtil.retrieveMofRejectReason(getManagedBean()
-						.getSmAppl().getSupplierType(), getManagedBean()
-						.getSmSupplier().getBusinessType(), getManagedBean()
-						.getSmAppl().getApplType()));
-		//		#15629 -- start - 26/1/2020
-		if(SmCommonUtil.isCollectionEmpty(getManagedBean().getSelectedRecommendReasonDescs())) {
-			getManagedBean().setSelectedRecommendReasonDescs(new ArrayList<PmReasonDesc>());
-		} 
-		//		#15629 -- end - 26/1/2020
-
-	}
-	
-	/**
-	 * Verify selected recommend rejection reason
-	 */
-	public void verifySelectedRecommendRejectReasons() {
-		getManagedBean().setRecommendRejectReasonReqd(isRecommendDpaOthersSelected());
-		if (!getManagedBean().isRecommendRejectReasonReqd()) {
-			getManagedBean().setApplnRejectionRemarks(StringUtils.EMPTY);
-		}
-	}
-		
-	/**
-	 * Return true or false whether there is Others selected in Delete Pending
-	 * Application Reason
-	 * 
-	 * @return boolean
-	 */
-	private boolean isRecommendDpaOthersSelected() {
-		boolean retVal = false;
-		if (getManagedBean().getRecommendReasonId() != null
-				&& getManagedBean().getRecommendReasonId().length > 0) {
-			for (Long reasonId : getManagedBean().getRecommendReasonId()) {
-				ReasonReqDTO reqDTO = new ReasonReqDTO();
-				reqDTO.setReasonId(reasonId);
-				PmReason reason = SmServiceLookup.getReasonSO()
-						.retrieveReasonById(reqDTO).getPmReason();
-				if (reason != null
-						&& !StringUtils.isBlank(reason.getReasonCode())
-						&& SupplierManagementConst.DPA_REASON_OTHERS_LIST
-								.contains(reason.getReasonCode())) {
-					retVal = true;
-					break;
-				}
-			}
-		}
-		return retVal;
-	}
-
-	/**
-	 * On tick checkbox during search recommend rejection reason
-	 * 
-	 * @param AjaxBehaviorEvent
-	 *            e
-	 */
-	public void onTickOrUnTickRecommendReason(AjaxBehaviorEvent e) {
-		getManagedBean().setRecommendRejectReasonReqd(false);
-		if (!EntityHelper.isCollectionEmpty(getManagedBean()
-				.getSelectedRecommendReasonDescs())) {
-			List<Long> reasonIdList = new ArrayList<Long>();
-			for (PmReasonDesc reason : getManagedBean()
-					.getSelectedRecommendReasonDescs()) {
-				reasonIdList.add(reason.getPmReason().getReasonId());
-			}
-			getManagedBean().setRecommendReasonId(
-					reasonIdList.toArray(new Long[reasonIdList.size()]));
-		}else{
-			getManagedBean().setRecommendReasonId(null);
-		}
-		verifySelectedRecommendRejectReasons();
-	}
-	
-	/**
-	 * Sets the SM application recommend rejection reasons selected.
-	 */
-	private void setSmApplRecommendRejectionReasons() {
-		StringBuilder sb = new StringBuilder();
-		// int count = 0;
-		List<SmApplRejectReason> resList = new ArrayList<SmApplRejectReason>();
-		if(getManagedBean().getRecommendReasonId()!=null && getManagedBean().getRecommendReasonId().length>0){
-			for (Long resId : getManagedBean().getRecommendReasonId()) {
-				for (PmReasonDesc desc : getManagedBean().getRecommendReasonDescList()) {
-					if (desc.getPmReason().getReasonId().equals(resId)) {				
-						if(resId.equals(new Long(345L))){//safe check, not necessarily needed, just in case, reason(others) must be accompanied by a remark
-							//#15629 - Start - Add comment to merge sit 20/1/2021
-							if (StringUtils.isBlank(getManagedBean().getApplnRejectionRemarks()) &&
-									(getManagedBean().getPoSecReview()!= null && getManagedBean().getPoSecReview().getRemarkToApprover()!= null && StringUtils.isBlank(getManagedBean().getPoSecReview().getRemarkToApprover()))) {						
-								throw new EpException(SmCommonUtil.getMessage("lbl.sm.error.rejection.reasons",
-										null));
-								//#15629 - End - Add comment to merge sit 20/1/2021
-							}
-						}
-						
-						SmApplRejectReason rej = new SmApplRejectReason();
-						rej.setPmReason(desc.getPmReason());
-						rej.setSmAppl(getManagedBean().getSmAppl());
-						//	Refs #15629 - Start - 8/1/2021
-						rej.setReasonByPo(getManagedBean().isPoUser() ? true : false);
-						//	Refs #15629 - End - 8/1/2021
-						resList.add(rej);
-						//log.info("Reason Id === " + resId);
-						// sb.append(++count).append(". ");
-						// sb.append(desc.getReasonDesc());
-						// sb.append("\n");
-						sb.append(desc.getPmReason().getReasonId());
-						sb.append("|");
-					}
-				}
-			}
-		}else{
-			//Just in case
-			//#15629 - Start - Add comment to merge sit 20/1/2021
-			throw new EpException(SmCommonUtil.getMessage("lbl.sm.error.rejection.reasons",
-					null));
-			//#15629 - End - Add comment to merge sit 20/1/2021
-			//21937		
-		}
-
-		if (getManagedBean().getSmAppl().getSmApplRejectReasons() != null
-				&& !getManagedBean().getSmAppl().getSmApplRejectReasons()
-						.isEmpty()) {
-			//log.info(" ***** Already exisiting records ******* "
-					//+ getManagedBean().getSmAppl().getSmApplRejectReasons()
-							//.size());
-			getManagedBean().getSmAppl().getSmApplRejectReasons().clear();
-			//log.info(" *****Size after reset******* "
-					//+ getManagedBean().getSmAppl().getSmApplRejectReasons()
-							//.size());
-		}
-		getManagedBean().getSmAppl().getSmApplRejectReasons().addAll(resList);
-		getManagedBean().setReasonDesc(sb.toString());
-	}
-// #15629 -- end
+ 
 	
 	//#12483 - START
 	public String currentReviseReason(){
