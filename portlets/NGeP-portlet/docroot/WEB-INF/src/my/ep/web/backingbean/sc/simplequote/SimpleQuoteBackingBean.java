@@ -7817,7 +7817,11 @@ public class SimpleQuoteBackingBean extends
 										blackListResDTO = SmServiceLookup.getBlacklistDirectorSO().retrieveAllPersonBlacklistByIdentificationNO(blackListReqDTO);
 										
 										if(blackListResDTO != null && blackListResDTO.getPersonBlacklist() != null){
-											blacklistOwner.setIcNo(personnel.getIdentificationNo());
+											//#31017 - start
+											if (personnel.isDirector() || personnel.isEquityOwner()){
+												blacklistOwner.setIcNo(personnel.getIdentificationNo());
+											}
+											//#31017 - end
 											blacklistownerDirectorList.add(blacklistOwner);
 										}
 									}
@@ -7835,7 +7839,11 @@ public class SimpleQuoteBackingBean extends
 										blackListResDTO = SmServiceLookup.getBlacklistDirectorSO().retrieveAllPersonBlacklistByIdentificationNO(blackListReqDTO);
 										
 										if(blackListResDTO != null && blackListResDTO.getPersonBlacklist() != null){
-											blacklistOwner.setIcNo(personnel.getIdentificationNo());
+											//#31017 - start
+											if (personnel.isDirector() || personnel.isEquityOwner()){
+												blacklistOwner.setIcNo(personnel.getIdentificationNo());
+											}
+											//#31017 - end
 											blacklistownerDirectorList.add(blacklistOwner);
 										}
 									}
@@ -7852,7 +7860,11 @@ public class SimpleQuoteBackingBean extends
 										blackListResDTO = SmServiceLookup.getBlacklistDirectorSO().retrieveAllPersonBlacklistByIdentificationNO(blackListReqDTO);
 										
 										if(blackListResDTO != null && blackListResDTO.getPersonBlacklist() != null){
-											blacklistOwner.setIcNo(personnel.getIdentificationNo());
+											//#31017 - start
+											if (personnel.isDirector() || personnel.isEquityOwner()){
+												blacklistOwner.setIcNo(personnel.getIdentificationNo());
+											}
+											//#31017 - end
 											blacklistownerDirectorList.add(blacklistOwner);
 										}
 									}
