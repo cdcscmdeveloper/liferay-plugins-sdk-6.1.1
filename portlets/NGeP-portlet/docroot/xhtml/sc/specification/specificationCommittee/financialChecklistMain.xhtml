@@ -218,14 +218,11 @@
 							listener="#{specificationBackingBean.financialCheckListScoreReqChange(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
 					</p:selectBooleanCheckbox>
 
-  <ui:remove>
-						<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
+					<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
 						disabled="true"
 						rendered="#{((stageTwofunctional.definationType.parameterCode eq 'TS' and stageTwofunctional.action.parameterCode eq 'I') or (stageTwofunctional.definationType.parameterCode eq 'UP' and stageTwofunctional.action.parameterCode eq 'V'))}">
 
 					</p:selectBooleanCheckbox>
- 		 </ui:remove>							
-					
 <!-- #13955 start comment
 					<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
 						disabled="true"
