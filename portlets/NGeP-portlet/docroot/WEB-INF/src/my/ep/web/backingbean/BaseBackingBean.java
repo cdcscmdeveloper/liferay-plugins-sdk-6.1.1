@@ -2137,8 +2137,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		String skipValidator = FacesContext.getCurrentInstance()
 				.getExternalContext().getRequestParameterMap()
 				.get("skipValidator");
-		//Temp Disable captcha
-		skipValidator = "true";
 		if (skipValidator == null) {
 			String captchaAnswer = (String) value;
 			if (captchaAnswer == null || captchaAnswer.length() == 0) {
