@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.el.MethodExpression;
 import javax.faces.application.Application;
@@ -22,7 +23,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import my.ep.bean.tracing.UserActivityBean;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.MessageConst;
@@ -30,11 +30,12 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
-import my.ep.factory.activity.EpLoginLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.epx.bean.UserActivityBean;
+import my.epx.monitor.UserActivityLogger;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -42,6 +43,7 @@ import org.portletfaces.bridge.GenericFacesPortlet;
 import org.primefaces.context.RequestContext;
 
 import com.liferay.faces.bridge.context.BridgeContextImpl;
+import com.liferay.faces.bridge.scope.BridgeRequestScope;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
@@ -119,7 +121,7 @@ public class FacesScopes implements Serializable {
 		userActivityBean.setUserAgent(httpServletRequest.getHeader("user-agent"));
 		userActivityBean.setResponseStatus(httpServletResponse.getStatus());
 		
-		EpLoginLogger.getInstance().log(userActivityBean);
+		UserActivityLogger.getInstance().log(userActivityBean);
 	}
 
 	/**
@@ -350,13 +352,13 @@ public class FacesScopes implements Serializable {
 		}
 		
 		Map<String, String[]> parameterMap = portletRequest.getParameterMap();
-		if (parameterMap.isEmpty()) { 
-			log.info("[showAdditionalInformation] userActivityTracing portletRequest.getParameterMap() is empty");
-		} else {
+		if (null != parameterMap && !parameterMap.isEmpty()) {
 			log.info("[showAdditionalInformation] userActivityTracing portletRequest.getParameterMap() is as follows");
 			for (String key : parameterMap.keySet()) {
 				log.info("[showAdditionalInformation] userActivityTracing key: " + key + " | value: " + parameterMap.get(key));
 			}
+		} else {
+			log.info("[showAdditionalInformation] userActivityTracing portletRequest.getParameterMap() is null/empty");
 		}
 		
 		final Enumeration<String> parameterNames = portletRequest.getParameterNames();
@@ -365,13 +367,13 @@ public class FacesScopes implements Serializable {
 		}
 		
 		Map<String, String[]> privateParameterMap = portletRequest.getPrivateParameterMap();
-		if (privateParameterMap.isEmpty()) { 
-			log.info("[showAdditionalInformation] userActivityTracing portletRequest.getPrivateParameterMap() is empty");
-		} else {
+		if (null != privateParameterMap && !privateParameterMap.isEmpty()) {
 			log.info("[showAdditionalInformation] userActivityTracing portletRequest.getPrivateParameterMap() is as follows");
 			for (String privateKey : privateParameterMap.keySet()) {
-				log.info("[showAdditionalInformation] userActivityTracing privateKey: " + privateKey + " | privateValue: " + privateParameterMap.get(privateKey));
+				log.info("[showAdditionalInformation] userActivityTracing key: " + privateKey + " | value: " + privateParameterMap.get(privateKey));
 			}
+		} else {
+			log.info("[showAdditionalInformation] userActivityTracing portletRequest.getPrivateParameterMap() is null/empty");
 		}
 		
 		final Enumeration<String> propertyNames = portletRequest.getPropertyNames();
@@ -384,13 +386,13 @@ public class FacesScopes implements Serializable {
 		}
 		
 		Map<String, String[]> publicParameterMap = portletRequest.getPublicParameterMap();
-		if (publicParameterMap.isEmpty()) { 
-			log.info("[showAdditionalInformation] userActivityTracing portletRequest.getPublicParameterMap() is empty");
-		} else {
+		if (null != publicParameterMap && !publicParameterMap.isEmpty()) { 
 			log.info("[showAdditionalInformation] userActivityTracing portletRequest.getPublicParameterMap() is as follows");
 			for (String publicKey : publicParameterMap.keySet()) {
-				log.info("[showAdditionalInformation] userActivityTracing publicKey: " + publicKey + " | publicKey: " + publicParameterMap.get(publicKey));
+				log.info("[showAdditionalInformation] userActivityTracing key: " + publicKey + " | value: " + publicParameterMap.get(publicKey));
 			}
+		} else {
+			log.info("[showAdditionalInformation] userActivityTracing portletRequest.getPublicParameterMap() is null/empty");
 		}
 		
 		log.info("[showAdditionalInformation] userActivityTracing portletRequest.getRemoteUser(): " + portletRequest.getRemoteUser());
@@ -443,55 +445,104 @@ public class FacesScopes implements Serializable {
 			} else if (httpServReqAtt instanceof BridgeContextImpl) {
 				BridgeContextImpl bridgeContextImpl = (BridgeContextImpl) httpServReqAtt;
 				
-				Map<String, Object> bcAttributeMap = bridgeContextImpl.getAttributes();
-				if (bcAttributeMap.isEmpty()) { 
-					log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getAttributes() is empty");
+				BridgeRequestScope brs = bridgeContextImpl.getBridgeRequestScope();
+				log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getBeganInPhase(): " + brs.getBeganInPhase());
+				log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getClass(): " + brs.getClass());
+				log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getId(): " + brs.getId());
+				log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getPortletMode(): " + brs.getPortletMode());
+				log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getPreservedViewStateParam(): " + brs.getPreservedViewStateParam());
+				
+				Map<String, String> brsPreservedActionParameterMap = brs.getPreservedActionParameterMap();
+				if (null != brsPreservedActionParameterMap && !brsPreservedActionParameterMap.isEmpty()) { 
+					log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getBridgeRequestScope().getPreservedActionParameterMap() is as follows");
+					for (String key : brsPreservedActionParameterMap.keySet()) {
+						log.info("[showAdditionalInformation] userActivityTracing key: " + key + " | value: " + brsPreservedActionParameterMap.get(key));
+					}
 				} else {
+					log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getBridgeRequestScope().getPreservedActionParameterMap() is null/empty");
+				}
+				
+				log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getRenderRedirectURL(): " + bridgeContextImpl.getRenderRedirectURL());
+				log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getRequestPathInfo(): " + bridgeContextImpl.getRequestPathInfo());
+				log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getRequestServletPath(): " + bridgeContextImpl.getRequestServletPath());
+				log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getResponseNamespace(): " + bridgeContextImpl.getResponseNamespace());
+				log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getSavedViewState(): " + bridgeContextImpl.getSavedViewState());
+				
+				Map<String, Object> bcAttributeMap = bridgeContextImpl.getAttributes();
+				if (null != bcAttributeMap && !bcAttributeMap.isEmpty()) { 
 					log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getAttributes() is as follows");
 					for (String key : bcAttributeMap.keySet()) {
 						log.info("[showAdditionalInformation] userActivityTracing key: " + key + " | value: " + bcAttributeMap.get(key));
 					}
+				} else {
+					log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getAttributes() is null/empty");
 				}
 				
-				Map<String, String[]> bcPublicParameterMap = bridgeContextImpl.getBridgeConfig().getPublicParameterMappings();
-				if (bcPublicParameterMap.isEmpty()) { 
-					log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getBridgeConfig().getPublicParameterMappings() is empty");
-				} else {
-					log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getBridgeConfig().getPublicParameterMappings() is as follows");
-					for (String key : bcPublicParameterMap.keySet()) {
-						log.info("[showAdditionalInformation] userActivityTracing key: " + key + " | value: " + bcPublicParameterMap.get(key));
+				if (null != bridgeContextImpl.getBridgeConfig()) {
+					Map<String, String[]> bcPublicParameterMap = bridgeContextImpl.getBridgeConfig().getPublicParameterMappings();
+					if (null != bcPublicParameterMap && !bcPublicParameterMap.isEmpty()) { 
+						log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getBridgeConfig().getPublicParameterMappings() is as follows");
+						for (String key : bcPublicParameterMap.keySet()) {
+							log.info("[showAdditionalInformation] userActivityTracing key: " + key + " | value: " + bcPublicParameterMap.get(key));
+						}
+					} else {
+						log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getBridgeConfig().getPublicParameterMappings() is null/empty");
 					}
 				}
 				
-				log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getBridgeRequestScope(): " + bridgeContextImpl.getBridgeRequestScope());
-				log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getRenderRedirectURL(): " + bridgeContextImpl.getRenderRedirectURL());
+				Map<String, String[]> bcPreservedActionParams = bridgeContextImpl.getPreservedActionParams();
+				if (null != bcPreservedActionParams && !bcPreservedActionParams.isEmpty()) { 
+					log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getPreservedActionParams() is as follows");
+					for (String key : bcPreservedActionParams.keySet()) {
+						log.info("[showAdditionalInformation] userActivityTracing key: " + key + " | value: " + bcPreservedActionParams.get(key));
+					}
+				} else {
+					log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getPreservedActionParams() is null/empty");
+				}
+				
+				List<String> preFacesRequestAttrNames = bridgeContextImpl.getPreFacesRequestAttrNames();
+				if (null != preFacesRequestAttrNames && !preFacesRequestAttrNames.isEmpty()) {
+					log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getPreFacesRequestAttrNames() is as follows");
+					for (String name : preFacesRequestAttrNames) {
+						log.info("[showAdditionalInformation] userActivityTracing name: " + name);
+					}
+				} else {
+					log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getPreFacesRequestAttrNames() is null/empty");
+				}
 				
 				Map<String, String> bcRequestHeaderMap = bridgeContextImpl.getRequestHeaderMap();
-				if (bcRequestHeaderMap.isEmpty()) { 
-					log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getRequestHeaderMap() is empty");
-				} else {
+				if (null != bcRequestHeaderMap && !bcRequestHeaderMap.isEmpty()) { 
 					log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getRequestHeaderMap() is as follows");
 					for (String key : bcRequestHeaderMap.keySet()) {
 						log.info("[showAdditionalInformation] userActivityTracing key: " + key + " | value: " + bcRequestHeaderMap.get(key));
 					}
+				} else {
+					log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getRequestHeaderMap() is null/empty");
 				}
 				
-//				Set<String> renderRedirectParaNames = bridgeContextImpl.getRenderRedirectURL().getParameterNames();
-//				if (renderRedirectParaNames.isEmpty()) {
-//					log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getRenderRedirectURL().getParameterNames() is empty");
-//				} else {
-//					log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getRenderRedirectURL().getParameterNames() is as follows");
-//					for (String rrParaName : renderRedirectParaNames) {
-//						bridgeContextImpl.getRenderRedirectURL().getParameter(rrParaName);
-//						log.info("[showAdditionalInformation] userActivityTracing paraName: " + rrParaName + " | para: " 
-//								+ bridgeContextImpl.getRenderRedirectURL().getParameter(rrParaName));
-//					}
-//				}
-				
-				log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getRequestPathInfo(): " + bridgeContextImpl.getRequestPathInfo());
-				log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getRequestServletPath(): " + bridgeContextImpl.getRequestServletPath());
-				log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getResponseNamespace(): " + bridgeContextImpl.getResponseNamespace());
-				log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getResponseNamespace(): " + bridgeContextImpl.getSavedViewState());
+				if (null != bridgeContextImpl.getRenderRedirectURL()) {
+					Set<String> bcRruParameterNames = bridgeContextImpl.getRenderRedirectURL().getParameterNames();
+					if (null != bcRruParameterNames && !bcRruParameterNames.isEmpty()) {
+						log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getRenderRedirectURL().getParameterNames() is as follows");
+						for (String name : bcRruParameterNames) {
+							String para = bridgeContextImpl.getRenderRedirectURL().getParameter(name);
+							log.info("[showAdditionalInformation] userActivityTracing name: " + name + " | para: " 
+									+ para);
+						}
+					} else {
+						log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getRenderRedirectURL().getParameterNames() is null/empty");
+					}
+					
+					Map<String, String[]> bcRruParameterMap = bridgeContextImpl.getRenderRedirectURL().getParameterMap();
+					if (null != bcRruParameterMap && !bcRruParameterMap.isEmpty()) { 
+						log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getRenderRedirectURL().getParameterMap() is as follows");
+						for (String key : bcRruParameterMap.keySet()) {
+							log.info("[showAdditionalInformation] userActivityTracing key: " + key + " | value: " + bcRruParameterMap.get(key));
+						}
+					} else {
+						log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getRenderRedirectURL().getParameterMap() is empty");
+					}
+				}
 			}
 		}
 		
