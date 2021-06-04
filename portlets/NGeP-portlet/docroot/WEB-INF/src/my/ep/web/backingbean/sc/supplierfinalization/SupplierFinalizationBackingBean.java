@@ -3559,7 +3559,14 @@ return	remarksNotFound;
 				
 				if (CollectionUtils.isEmpty(getManagedBean().getNewBriefingPaperReportList())) {
 					saveNewBriefingPaperReportList(reportTitleList, _scQtFinalization, qtId);
-			}
+				}
+				
+				// #18685 - Start.
+				if (CollectionUtils.isNotEmpty(getManagedBean().getNewBriefingPaperReportList()) && getManagedBean().getNewBriefingPaperReportList().size() > 0
+				    && getManagedBean().isSecretaryUser()) {
+				  getManagedBean().getNewBriefingPaperReportList().get(0).setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
+				}
+				// #18685 - End.
 			}
 			//retrieveReportTabDtl(getManagedBean().getScQt(), "KT", SourcingConstants.SUPPLIER_FINALIZATION_TASK);
 		} finally {
@@ -3699,10 +3706,30 @@ return	remarksNotFound;
 	 * @throws Exception
 	 */
 	public void downloadAllBriefingPaperReports() throws Exception {
-		List<ScQtFinalizationReport> finalizationReports = getManagedBean().getDocumentList();
-		if (CollectionUtils.isNotEmpty(finalizationReports)) {
-			this.downloadBriefingPaperReport(finalizationReports.get(0));
+		// #18685 - Start.
+		debugLogger("downloadAllReports");
+
+		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean()
+				.getScQtFinalization().getScQtFinalizationReports();
+		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<ScQtFinalizationReportAttachment>();
+
+		for (int i = 0; i < scQtFinalizationReports.size(); i++) {
+			ScQtFinalizationReportAttachment attachment = scQtFinalizationReports
+					.get(i).getScQtFinalizationReportAttachment();
+			if (attachment == null) {
+				attachment = generateDocumentAttachment(scQtFinalizationReports
+						.get(i));
+				scQtFinalizationReports.get(i)
+						.setScQtFinalizationReportAttachment(attachment);
+			}
+			scAttachments.add(attachment);
 		}
+
+		// Generate all the reports before submission
+		if (!getManagedBean().isSubmit()) {
+			downloadAllFiles("NGeP-Finalization-Report", scAttachments);
+		}
+		// #18685 - End.
 	}
 	
 	/**
