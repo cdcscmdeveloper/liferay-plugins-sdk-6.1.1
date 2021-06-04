@@ -475,7 +475,9 @@
 				<p:column style="text-align:center;" rendered="#{showSelectionColumn}">
 					<p:selectBooleanCheckbox id="selectShortlistSupplier" value="#{shortlistedSupp.shortListed}" 
 						disabled="#{suppFinalizationBackingBean.isQTMaintenanceScreen() or !(isSecretaryUser or isBPKTaskAndClaimed) or shortlistedSupp.suppSelectionDisabled or 
-											suppFinalizationBackingBean.managedBean.disableSupplierSelection or isBidding}">
+											suppFinalizationBackingBean.managedBean.disableSupplierSelection or isBidding
+											or (shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions
+														and !shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.warningDA)}">
 						<p:ajax partialSubmit="true" process="@this" update="@([id$=itemListTbl],[id$=supplierListTblMultiple])" 
 								listener="#{suppFinalizationBackingBean.selectSupplierEvent(shortlistedSupp, false)}" />
 					</p:selectBooleanCheckbox>	
