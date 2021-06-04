@@ -316,6 +316,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 
 		// Procurement Plan
 		PPPlanDataType planObj = (PPPlanDataType) obj;
+		//27624 - start
+		this.getManagedBean().setPlanDetailSearchReset(true);
+		//27624 - end
 		this.loadPlanDetails(planObj.getPlanId().longValue(), false);
 		setScreenVariables();
 		this.getManagedBean().setPlanId(planObj.getPlanId().longValue());
@@ -363,6 +366,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setTrackingDiary(isTrackingDiary);
 		this.retrievePlanTypeMapper();
 		this.retrieveVotTypeMapper();
+		//27624 - start
+		this.getManagedBean().setPlanDetailSearchReset(true);
+		//27624 - end
 		if(id!=null && id>0){
 			//201229@akmal - Enhancement27624 - Start
 			if(this.getManagedBean().isFromTaskList()){ //24975@06112020@azza - Start
@@ -801,6 +807,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		        	for (PpProcurementItem clone : clones) {
 	        			if (clone.getFromPpItem().equals(reorderedList.get(i).getProcurementItemId())) {
 	        				log.info("cloned is= "+clone.getProcurementTitle());
+	        				//27624 - start
+	        				this.getManagedBean().setGetProcurementItemList(true);   
+	        				//27624 - end
 	        				reorderedList.add(i+1,clone);
 	        			}
 	        		}
@@ -814,12 +823,19 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	        }*/
 	        
 	        newPpItems = new ArrayList<PpProcurementItem>(reorderedList);
-	        
+	      //27624 - start
+	      if(this.getManagedBean().isGetProcurementItemList() == true){
 	        if (!ppItems.isEmpty() && ppItems.size() > 0) {
 	        	ppItems.clear();
 	        	this.getManagedBean().getSelectedPlan().setPpProcurementItems(null);
+	        }	        	
+	         //log.info("isGetProcurementItemList " + this.getManagedBean().isGetProcurementItemList());
+	         this.getManagedBean().getSelectedPlan().setPpProcurementItems(newPpItems);
+	        }else{
+	        	//log.info("isGetProcurementItemList false " + ppItems.size());
+	          this.getManagedBean().getSelectedPlan().setPpProcurementItems(ppItems);
 	        }
-	        this.getManagedBean().getSelectedPlan().setPpProcurementItems(newPpItems);
+	        //27624 - end
 	        log.info("Displaying ppItems for Plan No=  "+
 	        		this.getManagedBean().getSelectedPlan().getPlanNo());
 	        
@@ -829,6 +845,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	        	 /* Check predecessors of each node, change Pencil to Note icon for update reason field
 		          * and make its textarea disabled
 		         * */
+	        	//27624 - start
+	        	this.getManagedBean().setGetProcurementItemList(false);
+	        	//27624 - end
         		this.checkItemPredecessor(pItem);
 	        }
 	        
@@ -985,6 +1004,20 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				reqDTO = parseSearchBean(this.getManagedBean().getPlanSearchBean(), reqDTO);
 			}
 			//200911@akmal - Enhancement27624 - End
+			//27624 - start
+			else if(this.getManagedBean().isPlanDetailSearchReset()){
+				reqDTO.setPlanDetSearchReset(true);
+				reqDTO.setTitleOrDesc(null);
+				reqDTO.setCategoryType(null);
+				reqDTO.setProcurementType(null);
+				reqDTO.setInvitationDateFrom(null);
+				reqDTO.setInvitationDateTo(null);
+				reqDTO.setUpdatedDateFrom(null);
+				reqDTO.setUpdatedDateTo(null);
+				reqDTO.setStatus(null);
+				reqDTO.getvPmGolist().clear();
+			}
+			//27624 - end
 			resDTO = reqSO.retrievePlanDetById(reqDTO);
 			
 			if (resDTO.isSuccessful()) {
@@ -1131,10 +1164,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			throw e;
 		}finally{
 			reqSO = null;
-			//210111@akmal - Enhancement27624 - Start
+			//27624 - start
 			this.getManagedBean().setPlanDetailSearch(false);
 			this.getManagedBean().setPlanDetailReset(false);
-			//210111@akmal - Enhancement27624 - End
+			this.getManagedBean().setPlanDetailSearchReset(false);
+			//27624 - end
 		}
 		
 		log.info("loadPlanDetails - End");
