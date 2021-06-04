@@ -13956,6 +13956,22 @@ public class SmApplicationBackingBean extends
 			if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
 				for(SmPersonnel personnel:ssmResDTO.getSmPersonnelAll()){
 					personnel = setDesignationSSM(personnel);
+					
+					//#30944 START
+					if(!this.getManagedBean().getSmAppl().getApplType()
+							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+							&& !this.getManagedBean().getSmAppl().getApplType()
+									.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)
+							&& !this.getManagedBean().getSmAppl().getApplType()
+									.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
+						for(SmPersonnel per : this.getManagedBean().getSmAppl().getSmPersonnels()){
+							if(per.getName().equals(personnel.getName())){
+								personnel.setShareAmt(per.getShareAmt());
+							}
+						}
+					}
+					//#30944 END
+					
 					if(personnel.isEquityOwner()){
 						this.getManagedBean().getPersonnelsOwner().add(personnel);
 					}
