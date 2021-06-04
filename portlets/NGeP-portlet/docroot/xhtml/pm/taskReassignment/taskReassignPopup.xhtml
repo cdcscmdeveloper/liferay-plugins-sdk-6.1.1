@@ -31,10 +31,12 @@
 						rendered="#{taskReassignmentBackingBean.managedBean.bulkReassign}" />
 										
 					<p:outputLabel value="#{lbl['lbl.pm.ta.doc.no']}" />
+					<!-- 12852 Start -->
 					<p:inputText label="#{lbl['lbl.pm.ta.doc.no']}" disabled="true"
-						size="60"
+						size="20"
 						value="#{taskReassignmentBackingBean.managedBean.selectedTask.docNumber}" 
 						rendered="#{taskReassignmentBackingBean.managedBean.singleReassign}" />
+					<!-- 12852 End -->
 					<p:inputTextarea label="#{lbl['lbl.pm.ta.doc.no']}" rows="3" cols="60" disabled="true" 
 						value="#{taskReassignmentBackingBean.managedBean.selectedTasksTA}" 
 						rendered="#{taskReassignmentBackingBean.managedBean.bulkReassign}" />
