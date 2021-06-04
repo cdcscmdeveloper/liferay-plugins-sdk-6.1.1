@@ -114,16 +114,16 @@ public class FacesScopes implements Serializable {
 		userActivityBean.setLoginId(getUserScreenName());
 		userActivityBean.setSessionId(portletRequest.getRequestedSessionId());
 		userActivityBean.setPortletPage(getPortletPage());
-		userActivityBean.setPortletId(httpServletRequest.getAttribute("PORTLET_ID").toString());
+		userActivityBean.setPortletId(getObjectToString(httpServletRequest.getAttribute("PORTLET_ID")));
 		userActivityBean.setRequestMethod(httpServletRequest.getMethod());
-		userActivityBean.setRequestedUrl(httpServletRequest.getAttribute("CURRENT_COMPLETE_URL").toString());
-		userActivityBean.setFriendlyUrl(httpServletRequest.getAttribute("FRIENDLY_URL").toString());
+		userActivityBean.setRequestedUrl(getObjectToString(httpServletRequest.getAttribute("CURRENT_COMPLETE_URL")));
+		userActivityBean.setFriendlyUrl(getObjectToString(httpServletRequest.getAttribute("FRIENDLY_URL")));
 		userActivityBean.setUserAgent(httpServletRequest.getHeader("user-agent"));
 		userActivityBean.setResponseStatus(httpServletResponse.getStatus());
 		
 		UserActivityLogger.getInstance().log(userActivityBean);
 	}
-
+	
 	/**
 	 * Returns the object bound with the specified name in this session, or null
 	 * if no object is bound under the name.
@@ -584,16 +584,24 @@ public class FacesScopes implements Serializable {
 		return screenName;
 	}
 	
-	public String getPortletPage() {
+	private String getObjectToString(Object object) {
+		String string = StringUtils.EMPTY;
+		if (null != object) {
+			string = object.toString();
+		}
+		return string;
+	}
+	
+	private String getPortletPage() {
 		String portletPage = StringUtils.EMPTY;
 		Object attributeObject = portletRequest.getAttribute("javax.portlet.config");
-		if (attributeObject instanceof PortletConfig) {
+		if (null != attributeObject && attributeObject instanceof PortletConfig) {
 			portletPage = ((PortletConfig) attributeObject).getInitParameter("javax.portlet.faces.defaultViewId.view");
 		}
 		
 		return portletPage;
 	}
-
+	
 	public List<Role> getUserRoleList() {
 		List<Role> userRoleList = null;
 		try {
