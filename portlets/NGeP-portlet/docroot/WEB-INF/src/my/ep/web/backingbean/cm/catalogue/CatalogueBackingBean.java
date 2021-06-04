@@ -32,7 +32,6 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -58,7 +57,6 @@ import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.circular.ICircularDetailSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
-import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -99,8 +97,6 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
-import my.ep.dto.pm.common.state.StateReqDTO;
-import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
@@ -146,11 +142,8 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelItemSpec;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
-import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
-import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDistrict;
-import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
@@ -180,12 +173,13 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.cm.helper.CmApplicationUtil;
 import my.ep.web.util.cm.helper.CmSupplierZoneSingleton;
-import my.ep.web.util.cm.helper.CmSupplierZoneStateDistrictDTO;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.AdvanceSearchVO;
+import my.ep.web.vo.BlacklistOwnerDirectorVO;
+import my.ep.web.vo.DisciplinaryActionCategoryVO;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.ExtensionCodeVO;
 import my.ep.web.vo.PricingVO;
@@ -216,10 +210,6 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
-
-import my.ep.web.vo.BlacklistOwnerDirectorVO;
-import my.ep.web.vo.DisciplinaryActionCategoryVO;
-import my.ep.persistence.entity.sc.directpurchase.ScQuoteSupplier;
 
 
 /**
@@ -11312,10 +11302,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 								for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
 									BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
 									blackListReqDTO.setDirectorIdNo(personnel.getIdentificationNo());
-									blackListResDTO = SmServiceLookup.getBlacklistDirectorSO().retrieveAllPersonBlacklistByIdentificationNO(blackListReqDTO);
-									
-									if(blackListResDTO != null && blackListResDTO.getPersonBlacklist() != null){
-										blacklistOwner.setIcNo(personnel.getIdentificationNo());
+									blackListResDTO = SmServiceLookup.getBlacklistDirectorSO()
+											.retrieveAllPersonBlacklistByIdentificationNO(blackListReqDTO);
+
+									if (blackListResDTO != null && blackListResDTO.getPersonBlacklist() != null) {
+										//#31017 - start
+										if (personnel.isDirector() || personnel.isEquityOwner()){
+											blacklistOwner.setIcNo(personnel.getIdentificationNo());
+										}
+										//#31017 - end
 										blacklistownerDirectorList.add(blacklistOwner);
 									}
 								}
@@ -11330,10 +11325,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 								for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
 									BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
 									blackListReqDTO.setDirectorIdNo(personnel.getIdentificationNo());
-									blackListResDTO = SmServiceLookup.getBlacklistDirectorSO().retrieveAllPersonBlacklistByIdentificationNO(blackListReqDTO);
-									
-									if(blackListResDTO != null && blackListResDTO.getPersonBlacklist() != null){
-										blacklistOwner.setIcNo(personnel.getIdentificationNo());
+									blackListResDTO = SmServiceLookup.getBlacklistDirectorSO()
+											.retrieveAllPersonBlacklistByIdentificationNO(blackListReqDTO);
+
+									if (blackListResDTO != null && blackListResDTO.getPersonBlacklist() != null) {
+										//#31017 - start
+										if (personnel.isDirector() || personnel.isEquityOwner()){
+											blacklistOwner.setIcNo(personnel.getIdentificationNo());
+										}
+										//#31017 - end
 										blacklistownerDirectorList.add(blacklistOwner);
 									}
 								}
@@ -11347,10 +11347,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 								for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
 									BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
 									blackListReqDTO.setDirectorIdNo(personnel.getIdentificationNo());
-									blackListResDTO = SmServiceLookup.getBlacklistDirectorSO().retrieveAllPersonBlacklistByIdentificationNO(blackListReqDTO);
-									
-									if(blackListResDTO != null && blackListResDTO.getPersonBlacklist() != null){
-										blacklistOwner.setIcNo(personnel.getIdentificationNo());
+									blackListResDTO = SmServiceLookup.getBlacklistDirectorSO()
+											.retrieveAllPersonBlacklistByIdentificationNO(blackListReqDTO);
+
+									if (blackListResDTO != null && blackListResDTO.getPersonBlacklist() != null) {
+										//#31017 - start
+										if (personnel.isDirector() || personnel.isEquityOwner()){
+											blacklistOwner.setIcNo(personnel.getIdentificationNo());
+										}
+										//#31017 - end
 										blacklistownerDirectorList.add(blacklistOwner);
 									}
 								}
