@@ -473,6 +473,7 @@
 					Enhancement #19336 START #142
 				</ui:remove>				
 				<p:column style="text-align:center;" rendered="#{showSelectionColumn}">
+					<!-- #30999 Start -->
 					<p:selectBooleanCheckbox id="selectShortlistSupplier" value="#{shortlistedSupp.shortListed}" 
 						disabled="#{suppFinalizationBackingBean.isQTMaintenanceScreen() or !(isSecretaryUser or isBPKTaskAndClaimed) or shortlistedSupp.suppSelectionDisabled or 
 											suppFinalizationBackingBean.managedBean.disableSupplierSelection or isBidding
@@ -481,6 +482,7 @@
 						<p:ajax partialSubmit="true" process="@this" update="@([id$=itemListTbl],[id$=supplierListTblMultiple])" 
 								listener="#{suppFinalizationBackingBean.selectSupplierEvent(shortlistedSupp, false)}" />
 					</p:selectBooleanCheckbox>	
+					<!-- #30999 Start -->
 				</p:column>
 				
 			</p:dataTable>
