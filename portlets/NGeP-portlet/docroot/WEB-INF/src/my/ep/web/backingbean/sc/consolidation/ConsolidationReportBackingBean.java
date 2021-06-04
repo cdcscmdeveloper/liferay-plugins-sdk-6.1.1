@@ -537,10 +537,31 @@ public class ConsolidationReportBackingBean extends
 	 * @throws Exception
 	 */
 	public void downloadAllBriefingPaperReports() throws Exception {
-		List<ScQtFinalizationReport> finalizationReports = getManagedBean().getFinalizationReports();
-		if (CollectionUtils.isNotEmpty(finalizationReports)) {
-			this.downloadBriefingPaperReport(finalizationReports.get(0));
+		
+		// #18685 - Start.
+		debugLogger("downloadAllReports");
+
+		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean()
+				.getScQtFinalization().getScQtFinalizationReports();
+		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<ScQtFinalizationReportAttachment>();
+
+		for (int i = 0; i < scQtFinalizationReports.size(); i++) {
+			ScQtFinalizationReportAttachment attachment = scQtFinalizationReports
+					.get(i).getScQtFinalizationReportAttachment();
+			if (attachment == null) {
+				attachment = generateDocumentAttachment(scQtFinalizationReports
+						.get(i));
+				scQtFinalizationReports.get(i)
+						.setScQtFinalizationReportAttachment(attachment);
+			}
+			scAttachments.add(attachment);
 		}
+
+		// Generate all the reports before submission
+		if (!getManagedBean().isSubmit()) {
+			downloadAllFiles("NGeP-Finalization-Report", scAttachments);
+		}
+		// #18685 - End.
 	}
 	
 	/**
