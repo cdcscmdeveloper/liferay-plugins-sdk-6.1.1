@@ -1388,7 +1388,7 @@ public class SmCommonUtil {
 	 *            - String
 	 */
 	public static void calculateSmApplicationPaidUpCapitalSum(
-			SmCompanyBasic compBasic, String businessTypeVal) {
+			SmCompanyBasic compBasic, List<SmEquityCompany> smEquityCompany, String businessTypeVal) { //#30900
 		boolean llpOrRoc = false;
 		if (compBasic.getBumiEquity() != null) {
 			compBasic.setBumiEquity(compBasic.getBumiEquity().setScale(2,
@@ -1461,7 +1461,8 @@ public class SmCommonUtil {
 			compBasic.setTotalShare(compBasic.getBumiEquity().add(compBasic.getNonBumiEquity())
 					.add(compBasic.getLocalCompanyEquity()).add(compBasic.getForeignCompanyEquity())
 					.add(compBasic.getForeignerEquity()).add(compBasic.getGovtEquity())
-					.add(compBasic.getGovtUnitrustEquity()).setScale(2, RoundingMode.HALF_UP));
+					.add(compBasic.getGovtUnitrustEquity())
+					.setScale(2, RoundingMode.HALF_UP));
 		} else {
 			compBasic.setTotalShare(new BigDecimal(0));
 		}
@@ -1485,6 +1486,10 @@ public class SmCommonUtil {
 						.add(compBasic.getGovtEquity())
 						.add(compBasic.getGovtUnitrustEquity())
 						.setScale(2, RoundingMode.HALF_UP));
+			} else{
+				//start #30900
+				compBasic.setPaidUpCapital(compBasic.getPaidUpCapital().setScale(2, RoundingMode.HALF_UP));
+				//end #30900
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -1492,6 +1497,7 @@ public class SmCommonUtil {
 		}
 		log.info("**** Paid up capital ****** " + compBasic.getPaidUpCapital());
 	}
+
 
 	/**
 	 * Calculate sm application paid up capital percent.
