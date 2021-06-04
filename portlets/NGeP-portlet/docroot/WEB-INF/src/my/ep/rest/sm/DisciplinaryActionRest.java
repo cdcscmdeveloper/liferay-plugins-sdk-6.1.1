@@ -59,7 +59,7 @@ public class DisciplinaryActionRest {
 					log.info("releaseDAList. supplier id=============="+disc.getSmSupplier().getSupplierId()); 
 					 
 					if(disc != null
-							&& disc.getSmSupplier() != null){
+							&& disc.getSmSupplier() != null && disc.getDisciplinaryActionId() == 1957){
 						disc.getSmSupplier();
 						log.info("-----------Bilangan------------------"+i);
 						
@@ -106,7 +106,7 @@ public class DisciplinaryActionRest {
 					log.info("updateDAList. supplier id=============="+pendingDisc.getSmSupplier().getSupplierId());
 					 
 					if(pendingDisc != null
-							&& pendingDisc.getSmSupplier() != null){
+							&& pendingDisc.getSmSupplier() != null && pendingDisc.getDisciplinaryActionId() == 1957){
 
 						pendingDisc.getSmSupplier();
 						pendingDisc.getSmSupplier().getSmAppl(); 
@@ -125,7 +125,7 @@ public class DisciplinaryActionRest {
 				for(SmDisciplinaryAction cancelRegBlacklist: updateBCDAList.getSmDisciplinaryActions()){
 					log.info("updateBCDAList. supplier id=============="+cancelRegBlacklist.getSmSupplier().getSupplierId()); 
 					if(cancelRegBlacklist != null
-							&& cancelRegBlacklist.getSmSupplier() != null){
+							&& cancelRegBlacklist.getSmSupplier() != null && cancelRegBlacklist.getDisciplinaryActionId() == 1957){
 
 						if(cancelRegBlacklist.getStartDate().compareTo(today) <= 0){
 							if(cancelRegBlacklist.isPendingBlacklist() || cancelRegBlacklist.isPendingCancel()){
@@ -136,13 +136,9 @@ public class DisciplinaryActionRest {
 								SmServiceLookup.getSupplierDataMaintenanceSO().updatePendingDisciplinaryAction(cancelRegBlacklist, user, userRoles);
 							}
 							
-							//30878 start
-							SmDisciplinaryAction cancelRegBlacklistUpdated = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionByDisciplinaryId(cancelRegBlacklist.getDisciplinaryActionId());
-							//30878 end
-							
-							if( (cancelRegBlacklistUpdated.isBlacklistOwner() || cancelRegBlacklistUpdated.isCancelRegistration()) && (!cancelRegBlacklistUpdated.isPendingCancel() && !cancelRegBlacklistUpdated.isPendingBlacklist() )){//29597 : Disciplinary Action - 26238
-								cancelRegBlacklistUpdated.getSmSupplier();
-								SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(cancelRegBlacklistUpdated);	
+							if( (cancelRegBlacklist.isBlacklistOwner() || cancelRegBlacklist.isCancelRegistration()) && (!cancelRegBlacklist.isPendingCancel() && !cancelRegBlacklist.isPendingBlacklist() )){//29597 : Disciplinary Action - 26238
+								cancelRegBlacklist.getSmSupplier();
+								SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(cancelRegBlacklist);	
 							}
 						}
 					}
