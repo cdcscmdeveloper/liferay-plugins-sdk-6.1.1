@@ -446,22 +446,23 @@ public class FacesScopes implements Serializable {
 				BridgeContextImpl bridgeContextImpl = (BridgeContextImpl) httpServReqAtt;
 				
 				BridgeRequestScope brs = bridgeContextImpl.getBridgeRequestScope();
-				log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getBeganInPhase(): " + brs.getBeganInPhase());
-				log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getClass(): " + brs.getClass());
-				log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getId(): " + brs.getId());
-				log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getPortletMode(): " + brs.getPortletMode());
-				log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getPreservedViewStateParam(): " + brs.getPreservedViewStateParam());
-				
-				Map<String, String> brsPreservedActionParameterMap = brs.getPreservedActionParameterMap();
-				if (null != brsPreservedActionParameterMap && !brsPreservedActionParameterMap.isEmpty()) { 
-					log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getBridgeRequestScope().getPreservedActionParameterMap() is as follows");
-					for (String key : brsPreservedActionParameterMap.keySet()) {
-						log.info("[showAdditionalInformation] userActivityTracing key: " + key + " | value: " + brsPreservedActionParameterMap.get(key));
+				if(brs!=null){
+					log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getBeganInPhase(): " + brs.getBeganInPhase());
+					log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getClass(): " + brs.getClass());
+					log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getId(): " + brs.getId());
+					log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getPortletMode(): " + brs.getPortletMode());
+					log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getPreservedViewStateParam(): " + brs.getPreservedViewStateParam());
+					
+					Map<String, String> brsPreservedActionParameterMap = brs.getPreservedActionParameterMap();
+					if (null != brsPreservedActionParameterMap && !brsPreservedActionParameterMap.isEmpty()) { 
+						log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getBridgeRequestScope().getPreservedActionParameterMap() is as follows");
+						for (String key : brsPreservedActionParameterMap.keySet()) {
+							log.info("[showAdditionalInformation] userActivityTracing key: " + key + " | value: " + brsPreservedActionParameterMap.get(key));
+						}
+					} else {
+						log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getBridgeRequestScope().getPreservedActionParameterMap() is null/empty");
 					}
-				} else {
-					log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getBridgeRequestScope().getPreservedActionParameterMap() is null/empty");
 				}
-				
 				log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getRenderRedirectURL(): " + bridgeContextImpl.getRenderRedirectURL());
 				log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getRequestPathInfo(): " + bridgeContextImpl.getRequestPathInfo());
 				log.info("[showAdditionalInformation] userActivityTracing bridgeContextImpl.getRequestServletPath(): " + bridgeContextImpl.getRequestServletPath());
