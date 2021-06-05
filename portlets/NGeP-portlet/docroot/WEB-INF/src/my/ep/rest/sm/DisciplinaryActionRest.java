@@ -37,7 +37,7 @@ public class DisciplinaryActionRest {
 	public Response retrieveDisciplinaryAction() {	
 		
 		log.info("Before success calling retrieve rest api....");
-		boolean enter  = true;
+		boolean enter  = false;
 		try {
 			//27426 : Disciplinary Action - start
 			//find data with end date less than current date
@@ -59,7 +59,7 @@ public class DisciplinaryActionRest {
 					log.info("releaseDAList. supplier id=============="+disc.getSmSupplier().getSupplierId()); 
 					 
 					if(disc != null
-							&& disc.getSmSupplier() != null && disc.getDisciplinaryActionId() == 1966){
+							&& disc.getSmSupplier() != null){
 						disc.getSmSupplier();
 						log.info("-----------Bilangan------------------"+i);
 						
@@ -106,7 +106,7 @@ public class DisciplinaryActionRest {
 					log.info("updateDAList. supplier id=============="+pendingDisc.getSmSupplier().getSupplierId());
 					 
 					if(pendingDisc != null
-							&& pendingDisc.getSmSupplier() != null && pendingDisc.getDisciplinaryActionId() == 1966){
+							&& pendingDisc.getSmSupplier() != null){
 
 						pendingDisc.getSmSupplier();
 						pendingDisc.getSmSupplier().getSmAppl(); 
@@ -125,7 +125,7 @@ public class DisciplinaryActionRest {
 				for(SmDisciplinaryAction cancelRegBlacklist: updateBCDAList.getSmDisciplinaryActions()){
 					log.info("updateBCDAList. supplier id=============="+cancelRegBlacklist.getSmSupplier().getSupplierId()); 
 					if(cancelRegBlacklist != null
-							&& cancelRegBlacklist.getSmSupplier() != null && cancelRegBlacklist.getDisciplinaryActionId() == 1966){
+							&& cancelRegBlacklist.getSmSupplier() != null){
 
 						if(cancelRegBlacklist.getStartDate().compareTo(today) <= 0){
 							//30878 start
