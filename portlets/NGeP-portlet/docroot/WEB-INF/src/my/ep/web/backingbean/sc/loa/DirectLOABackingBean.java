@@ -4570,7 +4570,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			//if(getManagedBean().getCurrentStatusId() != null){
 				if(getManagedBean().getCurrentStatusId() != null && QTStatusConst.LOA_PENDING_VERIFICATION.equals(getManagedBean().getCurrentStatusId())){
 					getManagedBean().setSelectedTabIndex(1);
-					//getManagedBean().setIconForDL(true);//29007
+					getManagedBean().setIconForDL(true);//29007
 				}
 			//}
 			//#29164 CR 26474: Static Code Analysis End
@@ -9558,7 +9558,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			boolean isService = false;
 			
 			for(ScLoiLoaItem scloilaitem : this.getManagedBean().getScLoa().getScLoiLoaItems()){
-				if(this.getItemNameSearchCriteria().equals(scloilaitem.getScRequestItem().getItemName())){
+				if(this.getItemNameSearchCriteria().equalsIgnoreCase(scloilaitem.getScRequestItem().getItemName())){//29007
 					tplSpecMaster = scloilaitem.getScRequestItem().getTplSpecQuestion().getTplSpecMaster();
 					if(ParameterConst.ITEM_TYPE_PRODUCT.equals(tplSpecMaster.getItemTypeCode().getParameterCode())){
 						isProduct = true;
@@ -9741,10 +9741,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			if(resDTO.isSuccessful()){
 				createLampiranA3forQT(isComplete);
 				if(isComplete){
-					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+				/*29007	FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 											 							  MessageUtils.getMessage(MessageConst.INFO_100002,
 											 							  null, MessageUtils.BUNDLE_COMMON_MESSAGES,
-											 							  new FacesScopes().getUserLocale())));
+											 							  new FacesScopes().getUserLocale())));29007*/
 					onBackToZoneItemDetailsTab();
 				}else{
 				TemplateSpecReqDTO specReqDto=new TemplateSpecReqDTO();
@@ -9869,7 +9869,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		
 		populateAttachmentDetails(attachment);
 		VelocityContext context = new VelocityContext();
-		StringBuilder finalMsg = new StringBuilder();
 		List<ScLoiLoaItem> scLoiLoaItemsList = null; 
 		String dafaltValue = "T/B";
 		if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
@@ -9880,12 +9879,16 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			for(ScLoiLoaItem scLoiLoaItem : scLoa.getScLoiLoaItems()){
 				FacesScopes facesScopes = new FacesScopes();
 				PmUser pmUser = facesScopes.getUserSessionBean();
-				DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+				DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");//29007
 				String date = df.format(scLoiLoaItem.getChangedDate());
+				StringBuilder finalMsg = new StringBuilder();//29007
 				if(scLoiLoaItem.getLoaSpecJustification() != null){
-					finalMsg.append("Dikemas kini atas sebab ");
-					finalMsg.append(scLoiLoaItem.getLoaSpecJustification());
-					finalMsg.append(" "+populateLabelLampiranA3(date,pmUser.getUserName()));
+					finalMsg.append("Dikemas kini atas sebab           ");
+					finalMsg.append(    scLoiLoaItem.getLoaSpecJustification());
+					String labelLampiranA3 = StringUtils.EMPTY;//29007-start
+					labelLampiranA3=pmUser.getUserName()+"        ".concat(date);
+					log.info("=======labelLampiranA3======"+labelLampiranA3);
+					finalMsg.append("          "+labelLampiranA3);//29007-End
 				}
 				
 				if(scLoiLoaItem.getLoaSpecJustification() != null){
