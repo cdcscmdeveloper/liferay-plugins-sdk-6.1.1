@@ -1194,6 +1194,7 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 					reqDTO.setNewDO(entry.getValue());
 					reqDTO.setOriginalDO(originalDO);
 					reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+					reqDTO.setCAApprover(getFacesScopes().getUserSessionBean());//25627 - update 233
 					resDTO = detailSO.reassignDeskOfficer(reqDTO);
 				}
 
