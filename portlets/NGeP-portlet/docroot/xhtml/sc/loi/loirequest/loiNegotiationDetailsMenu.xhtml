@@ -105,7 +105,7 @@
 		
 	   <ui:param name="delBtnClientId" value="delNegoTermBtn" />
        <ui:param name="isTermRequired" value="#{param[p:component(delBtnClientId)]==null}" />
-       	
+      	<p:remoteCommand name="lovPopulateSelection"  partialSubmit="true" update="@([id$=negoTermstbl])" actionListener="#{lOIDetailBackingBean.populateNegoTerms()}" /> 	
 		<p:dataTable id="negoTermstbl" var="negoTerm"
 			value="#{lOIDetailBackingBean.managedBean.scLoi.scNegoTerms}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -189,10 +189,10 @@
 
 		<div align="right" class="BtnSpacing">
 			<!-- #29007	Vinod Start -->
-			<p:commandButton value="#{lbl['lbl.btn.suppliers.proposal.specification.update']}"
+			<p:commandButton value="#{lbl['lbl.sc.loi.btn.suppliers.proposal.specification.update']}"
 				process="@this" partialSubmit="true"
 				action="#{lOIDetailBackingBean.addSuppliersProposalSpecificationUpdate}"
-				update="negoTermstbl"
+				 oncomplete="lovPopulateSelection()"
 				rendered="#{lOIDetailBackingBean.managedBean.buttonFlag and isPendingNegotiation}" />
 			<!-- #29007	Vinod End -->
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
