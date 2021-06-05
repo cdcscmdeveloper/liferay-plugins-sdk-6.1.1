@@ -7,7 +7,7 @@
 	xmlns:p="http://primefaces.org/ui">
 	
 	<ui:param name="answerlbl" value="#{isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer'}" />
-	<ui:param name="remarklbl" value="#{isSqSpec ? 'lbl.sc.supplier.offer' : 'lbl.sc.supplier.offer'}" /><!-- #29007 Vinod changed lbl.tpl.spec.content.note to lbl.sc.supplier.offer -->
+	<ui:param name="remarklbl" value="#{isSqSpec or isSpecTypeTechnical ? 'lbl.sc.supplier.offer' : 'lbl.tpl.spec.content.note'}" /><!-- #29007 Vinod changed lbl.tpl.spec.content.note to lbl.sc.supplier.offer -->
 	<ui:decorate template="specColumnQuestionViewHeader.xhtml">
 	<ui:define name="otherHeaderSection">
 	<ui:param name="specificationRequired" value="#{isSpecTypeTechnical or isSqSpec or (isSpecTypeFinancial and !isSpecificationReq)}"></ui:param>
