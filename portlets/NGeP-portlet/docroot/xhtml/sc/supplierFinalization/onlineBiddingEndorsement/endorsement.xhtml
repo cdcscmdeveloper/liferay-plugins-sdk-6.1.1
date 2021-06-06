@@ -23,7 +23,11 @@
 		     				suppFinalBiddingBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
 		     				
 		<ui:param name="isSecretaryUser"
-				  value="#{suppFinalBiddingBackingBean.managedBean.secretaryUser}" />		     				
+				  value="#{suppFinalBiddingBackingBean.managedBean.secretaryUser}" />
+
+		<!-- 18685 start -->
+		<ui:include src="/xhtml/sc/supplierFinalization/upload.xhtml" />
+		<!-- 18685 end -->
 
 		<ac:gpkiPopup textBeforeSign="#{suppFinalBiddingBackingBean.textBeforeSign}"
 			postSignAction="#{suppFinalBiddingBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}"
@@ -129,7 +133,6 @@
 
 		<ui:include
 			src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/signOff.xhtml" />
-		<ui:include src="/xhtml/sc/supplierFinalization/upload.xhtml" />
 		
 		<!-- 25638 start -->
 		<p:dialog id="reviseBiddingDlgs" widgetVar="reviseBiddingDlgs"
@@ -153,6 +156,7 @@
 			</div>
 		</p:dialog>
 		<!-- 25638 end -->
+
 		<!-- 25037 start -->
 		<p:dialog id="submissionPopupId" widgetVar="submissionPopup"
 			header="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit.header']}"
@@ -175,10 +179,10 @@
 
 				<p:commandButton value="#{lbl['lbl.btn.no']}" immediate="true"
 					process="@this" onclick="submissionPopup.hide();" type="button" />
-
 			</div>
 		</p:dialog>
 		<!-- 25037 end -->
+
 	</ui:define>
 
 </ui:composition>
