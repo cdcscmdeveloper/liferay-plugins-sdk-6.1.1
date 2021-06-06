@@ -41,20 +41,6 @@
 			</p:column>
 		</p:dataTable>
 		
-		<!-- <ui:fragment
-					rendered="#{report.pmDocument ne null and 'KT' eq report.pmDocument.docDefinitionKey and report.kertasTaklimatUpload}">
-					<ac:scSingleFileUploadButton id="kertasTakliUploadBtn"
-						popupWidgetVar="kertasTaklimUploadAttWidget"
-						attachment="#{report.tempReportAttachment}" rowIndex="#{rowIndex}"
-						readonly="#{!(isSecretaryUser)}"
-						deleteFileUploadListener="consolidationReportBackingBean.deleteKertasAttachment">
-						<f:setPropertyActionListener for="actionEvent" value="#{report}"
-							target="#{consolidationReportBackingBean.managedBean.selectedFinalizationReport}" />
-						<f:setPropertyActionListener for="actionEvent" value="KTR"
-							target="#{consolidationReportBackingBean.managedBean.attachmentDocType}" />
-					</ac:scSingleFileUploadButton>
-				</ui:fragment> -->
-
 		<div class="ppRightBtn BtnSpacing">
 			<p:commandButton value="#{lbl['lbl.btn.download.all']}"
 				action="#{consolidationReportBackingBean.downloadAllEvaluationReports}"
