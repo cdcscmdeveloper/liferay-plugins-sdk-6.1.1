@@ -8672,9 +8672,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				&& !qtMaint) {
 				getManagedBean().setSupPropSpecDisable(false);
 			}else if(((QTStatusConst.LOA_PENDING_SUBMISSION.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())
-					&& !qtMaint) ||(QTStatusConst.LOA_PENDING_APPROVAL.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())
-					&& !qtMaint)||(QTStatusConst.LOA_PENDING_REVISION.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())
-					&& !qtMaint)||(QTStatusConst.LOA_PENDING_REVISION_APPROVAL.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())
+					&& !qtMaint) ||(QTStatusConst.LOA_PENDING_REVISION.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())
 					&& !qtMaint))) {//29007
 				getManagedBean().setSupPropSpecDisable(false);
 			}
