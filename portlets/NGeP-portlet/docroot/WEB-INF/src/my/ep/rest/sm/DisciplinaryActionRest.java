@@ -28,8 +28,10 @@ public class DisciplinaryActionRest {
 
 	@GET
 	@Path("smdisciplinaryaction") 
-	public Response retrieveDisciplinaryAction() {		
+	public Response retrieveDisciplinaryAction() {	
+		
 		log.info("Before success calling retrieve rest api....");
+		boolean enter  = false;
 		try {
 			//27426 : Disciplinary Action - start
 			//find data with end date less than current date
@@ -49,7 +51,7 @@ public class DisciplinaryActionRest {
 				int i = 0;
 				for (SmDisciplinaryAction disc : releaseDAList.getSmDisciplinaryActions()) {
 					if(disc != null
-							&& disc.getSmSupplier() != null ){
+							&& disc.getSmSupplier() != null){
 						disc.getSmSupplier();
 						log.info("-----------Bilangan------------------"+i);
 						
@@ -96,7 +98,7 @@ public class DisciplinaryActionRest {
 					log.info("updateDAList. supplier id=============="+pendingDisc.getSmSupplier().getSupplierId());
 					 
 					if(pendingDisc != null
-							&& pendingDisc.getSmSupplier() != null ){
+							&& pendingDisc.getSmSupplier() != null){
 
 						pendingDisc.getSmSupplier();
 						pendingDisc.getSmSupplier().getSmAppl(); 
@@ -118,17 +120,40 @@ public class DisciplinaryActionRest {
 							&& cancelRegBlacklist.getSmSupplier() != null){
 
 						if(cancelRegBlacklist.getStartDate().compareTo(today) <= 0){
+							//30878 start
+							Long disciplinaryActionId = null;
+							//30878 end
+							
 							if(cancelRegBlacklist.isPendingBlacklist() || cancelRegBlacklist.isPendingCancel()){
 								cancelRegBlacklist.getSmSupplier();
 								cancelRegBlacklist.getSmSupplier().getSmAppl(); 
 								PmUser user = SmCommonUtil.getUserByUserId(cancelRegBlacklist.getChangedBy());
 								List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(user.getUserId());
+								//30878 to check isPendingCanel / isPendingBlack list is updated
 								SmServiceLookup.getSupplierDataMaintenanceSO().updatePendingDisciplinaryAction(cancelRegBlacklist, user, userRoles);
+								
+								//30878 start
+								disciplinaryActionId = cancelRegBlacklist.getDisciplinaryActionId();
+								//30878 end
 							}
+							
 							if( (cancelRegBlacklist.isBlacklistOwner() || cancelRegBlacklist.isCancelRegistration()) && (!cancelRegBlacklist.isPendingCancel() && !cancelRegBlacklist.isPendingBlacklist() )){//29597 : Disciplinary Action - 26238
 								cancelRegBlacklist.getSmSupplier();
 								SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(cancelRegBlacklist);	
 							}
+							
+							//30878 start
+							if(disciplinaryActionId != null){
+								
+								SmDisciplinaryAction smDA = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionByDisciplinaryId(disciplinaryActionId);
+								if( (smDA.isBlacklistOwner() || smDA.isCancelRegistration()) && (!smDA.isPendingCancel() && !smDA.isPendingBlacklist() )){
+									smDA.getSmSupplier();
+									SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(smDA);	
+								}
+								
+							}
+							//30878 end
+							
 						}
 					}
 				}
