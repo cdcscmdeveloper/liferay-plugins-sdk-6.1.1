@@ -115,7 +115,7 @@
 		</p:commandButton>
 	</div>
 
-		<p:panel header="#{lbl['lbl.sm.userinfo']}" toggleable="true" id="pnlUsrInfo">
+		<p:panel header="#{lbl['lbl.sm.userinfo']}" toggleable="true" >
 			<table class="customTbl">
 				<tr>
 					<td class="tdTitle">
@@ -248,7 +248,10 @@
 						<p:message id="txtIdNumberMsg" for="txtIdNumber" display="icon" />
 					</td>
 				</tr>
-
+			</table>
+		
+		<p:outputPanel id="pnlUsrInfo"> 
+			<table class="customTbl">
 				<tr>
 					<td class="tdTitle">
 						<c:choose>
@@ -502,7 +505,7 @@
 			</tr>
 
 			</table>
-			
+			</p:outputPanel>
 			<p:outputPanel id="pnlContactInfo">
 				<table class="customTbl">
 					<tr>
