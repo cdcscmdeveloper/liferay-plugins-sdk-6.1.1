@@ -25,12 +25,12 @@
 					<td align="right"><p:commandButton
 							value="#{lbl['lbl.btn.back']}" style="float:left;"
 							immediate="true"
-							action="#{evaluationBackingBean.evaluationBackaction}" /> <p:commandButton
-							value="#{lbl['lbl.btn.save']}"
-							disabled="#{evaluationBackingBean.managedBean.statusOnly or evaluationBackingBean.managedBean.complianceReEvaluateRequired}"
-							style="float:right;" update="@all" onstart="blockWidget.show();"
-							oncomplete="blockWidget.hide();"
-							action="#{evaluationBackingBean.saveComplianceUploadCheckList}" />
+							action="#{evaluationBackingBean.evaluationBackaction}" /> <ui:remove> p:commandButton #28786 - start
+ 							value="#{lbl['lbl.btn.save']}"
+ 							disabled="#{evaluationBackingBean.managedBean.statusOnly or evaluationBackingBean.managedBean.complianceReEvaluateRequired}"
+ 							style="float:right;" update="@all" onstart="blockWidget.show();"
+ 							oncomplete="blockWidget.hide();"
+ 							action="#{evaluationBackingBean.saveComplianceUploadCheckList}" /> </ui:remove>
 					</td>
 				</tr>
 			</table>
@@ -38,13 +38,13 @@
 
 			<p:panel id="financialComplianceSupplierHeaderIds" header="#{lbl['lbl.sc.eva.financial.proposal.compliance']}"
 				toggleable="true">
-				<ui:include src="/xhtml/sc/evaluation/checklistHeader.xhtml" />
+				<ui:include src="/xhtml/sc/evaluation/complianceChecklistHeader.xhtml" />
 			</p:panel>
 
 			<h:panelGroup>
-				<ui:include src="financialComplianceSupplierList.xhtml" />
+				<ui:include src="financialComplianceSupplierListing.xhtml" />
 			</h:panelGroup>
-
+			<ui:remove> #28786 - end </ui:remove>
 
 
 		</h:panelGroup>
