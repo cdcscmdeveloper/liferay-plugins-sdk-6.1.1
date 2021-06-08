@@ -844,7 +844,7 @@
 	 	</h:panelGroup>  
 	 	<!-- 28855 End -->
 		
- 	  <h:panelGroup>   	
+ 	  <h:panelGroup rendered="#{!contractRequestBackingBean.managedBean.standardPrice}">   	
 			<p:panel id="reqItemInfoPanel" header="#{lbl['lbl.fl.zone.tier.price.detail']}" toggleable="false"> 
 				
 				<p:dataTable id="reqItemInfoDt" var="reqItemInfoList" liveScroll="true"
