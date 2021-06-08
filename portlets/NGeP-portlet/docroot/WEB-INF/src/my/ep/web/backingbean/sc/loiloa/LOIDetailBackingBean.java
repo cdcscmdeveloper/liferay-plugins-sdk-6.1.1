@@ -6343,7 +6343,7 @@ public class LOIDetailBackingBean extends
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale());
 		boolean alredyAdded = false;
 		for(ScLoiTerm scLoiTerm : scNegoTerms){
-			if(scLoiTerm.getTermDesc().equals(message)){
+			if(null!=scLoiTerm.getTermDesc() && scLoiTerm.getTermDesc().equals(message)){//29007
 				alredyAdded = true;
 				break;
 			}
@@ -6356,14 +6356,29 @@ public class LOIDetailBackingBean extends
 				negoTerm.setSelected(true);
 			}
 			negoTerm.setTermDesc(message);
-			
+			negoTerm.setSelectTerm(Boolean.TRUE);//29007
 			negoTerm.setScLoi(scLoi);
 			negoTerm.setModified(true);
-			
 			scNegoTerms.add(negoTerm);
 			scLoi.setScNegoTerms(scNegoTerms);
 		}
 			
 	}
 	// #29007	Vinod End
+	
+	/**
+	 * 29007-start
+	* Method to Reset NegotiationTerms
+	**/
+	public void populateNegoTerms(){
+		
+		ScLoi scLoi =this. getManagedBean().getScLoi();
+
+		if (scLoi.getScNegoTerms() != null && scLoi.getScNegoTerms().size() > 0) {
+			for (ScLoiTerm term : scLoi.getScNegoTerms()) {
+				term.setSelectTerm(Boolean.FALSE);	
+			}
+	}
+	}
+	//29007-End
 }
