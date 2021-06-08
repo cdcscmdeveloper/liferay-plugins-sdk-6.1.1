@@ -4151,13 +4151,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}else if((j.getNewOfferSpec() != null && !j.getNewOfferSpec().isEmpty()) && (j.getSupplierOffer() == null || j.getSupplierOffer().isEmpty())){
 					getManagedBean().setSupplierOffer(null);	
 					getManagedBean().setNewOfferSpec(j.getNewOfferSpec());					
-				}else{
+				}else if((j.getSupplierOffer() == null || j.getSupplierOffer().isEmpty()) && (j.getNewOfferSpec() == null || j.getNewOfferSpec().isEmpty()) && (j.getItemSpec() != null || !j.getItemSpec().isEmpty())){
+					continue;		
+				}else if((j.getSupplierOffer() == null || j.getSupplierOffer().isEmpty()) && (j.getNewOfferSpec() == null || j.getNewOfferSpec().isEmpty()) && (j.getItemSpec() == null || j.getItemSpec().isEmpty())){
 					getManagedBean().setSupplierOffer(null);
-					getManagedBean().setNewOfferSpec(null);
-					continue;
-					}						
-				}
+					getManagedBean().setNewOfferSpec(null);	
+					break;
+				}						
 			}
+		}
 		
 		if(getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_QUOTATION) || getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_TENDER) || getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO)){
 			List<ScRequestItemSpecOffer> scRequestItemSpecOffer = requestItemSO.retrieveNewOfferSpec(requestItemId);
