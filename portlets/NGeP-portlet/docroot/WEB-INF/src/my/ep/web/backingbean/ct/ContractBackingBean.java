@@ -4141,23 +4141,20 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 			getManagedBean().setItemSpecification(itemSpecList);
 			
-			for(ScRequestItemSpecOffer j: itemSpecOfferList){
-				if((j.getSupplierOffer() != null && !j.getSupplierOffer().isEmpty()) && (j.getNewOfferSpec() != null && !j.getNewOfferSpec().isEmpty())){
-					getManagedBean().setSupplierOffer(j.getSupplierOffer());	
-					getManagedBean().setNewOfferSpec(j.getNewOfferSpec());					
-				}else if((j.getSupplierOffer() != null && !j.getSupplierOffer().isEmpty()) && (j.getNewOfferSpec() == null || j.getNewOfferSpec().isEmpty())){
-					getManagedBean().setSupplierOffer(j.getSupplierOffer());	
-					getManagedBean().setNewOfferSpec(null);										
-				}else if((j.getNewOfferSpec() != null && !j.getNewOfferSpec().isEmpty()) && (j.getSupplierOffer() == null || j.getSupplierOffer().isEmpty())){
-					getManagedBean().setSupplierOffer(null);	
-					getManagedBean().setNewOfferSpec(j.getNewOfferSpec());					
-				}else if((j.getSupplierOffer() == null || j.getSupplierOffer().isEmpty()) && (j.getNewOfferSpec() == null || j.getNewOfferSpec().isEmpty()) && (j.getItemSpec() != null || !j.getItemSpec().isEmpty())){
-					continue;		
-				}else if((j.getSupplierOffer() == null || j.getSupplierOffer().isEmpty()) && (j.getNewOfferSpec() == null || j.getNewOfferSpec().isEmpty()) && (j.getItemSpec() == null || j.getItemSpec().isEmpty())){
-					getManagedBean().setSupplierOffer(null);
-					getManagedBean().setNewOfferSpec(null);	
-					break;
-				}						
+			for(ScRequestItemSpecOffer itemSpecOffer: itemSpecOfferList){
+				if((itemSpecOffer.getItemSpec() == null || itemSpecOffer.getItemSpec().isEmpty())){
+					if(itemSpecOffer.getSupplierOffer() != null && !itemSpecOffer.getSupplierOffer().isEmpty()){
+						getManagedBean().setSupplierOffer(itemSpecOffer.getSupplierOffer());
+					}else{
+						getManagedBean().setSupplierOffer(null);
+					}	
+											
+					if(itemSpecOffer.getNewOfferSpec() != null && !itemSpecOffer.getNewOfferSpec().isEmpty()){	
+						getManagedBean().setNewOfferSpec(itemSpecOffer.getNewOfferSpec());
+					}else{
+						getManagedBean().setNewOfferSpec(null);
+					}
+				}
 			}
 		}
 		
