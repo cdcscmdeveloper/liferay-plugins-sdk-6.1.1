@@ -24,8 +24,8 @@
 				<p:selectBooleanCheckbox value="#{specOffer.tplSpecZoneOffer.offer}"
 				rendered ="#{(specOffer.qty ne 0)}"
 				disabled="#{specOffer.qty eq 0}">
-				<p:ajax event="change" partialSubmit="true" process="@this" 
-							update="@form"
+				<p:ajax event="change" partialSubmit="true" process="@all" 
+							update="@all"
 					 			listener="#{templateSpecBackingBean.offerCheckboxChange(question)}"/>
 				</p:selectBooleanCheckbox>
 	        </p:column>
