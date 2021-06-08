@@ -5186,7 +5186,7 @@ public class TemplateSpecBackingBean extends
 	}
 	// FARID #21695 END
  
-//#21695 Farid start 1/4/2021
+//#21695 Farid start 8/6/2021
 	/**
 	 * Item type change.Change Item Type(product/Service) Checkbox in Template
 	 * 
@@ -5196,30 +5196,32 @@ public class TemplateSpecBackingBean extends
 	 */
 	public void offerCheckboxChange(TplSpecQuestion specQuestion) {
 		boolean flag = true;
+		int count = 0;
 		for(TplSpecZoneQty specQty : specQuestion.getTplSpecZoneQties()){
 			if(specQty!=null){
 				if(!specQty.getTplSpecZoneOffer().isOffer()){
 					flag = false;
-					break;
+					count ++;
 				}
 			}
 		}
-		
-		for(TplSpecAnswer specAns : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
-			
-			if (specAns != null && specAns.getTplSpecQuestion().getParentSpecQuestion()!=null){
-				if(specAns.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId().equals(specQuestion.getSpecQuestionId())){
-					
-					specAns.setAnswerText("");
-					specAns.setAnswerNumeric(null);
-					specAns.setAnswerRemark(null);
-					specAns.setAnswerCompliance(null);
+		if(count == 0){
+			for(TplSpecAnswer specAns : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
+				
+				if (specAns != null && specAns.getTplSpecQuestion().getParentSpecQuestion()!=null){
+					if(specAns.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId().equals(specQuestion.getSpecQuestionId())){
+						
+						specAns.setAnswerText("");
+						specAns.setAnswerNumeric(null);
+						specAns.setAnswerRemark(null);
+						specAns.setAnswerCompliance(null);
+					}
 				}
 			}
 		}
 		
 	}
-//#21695 Farid end 1/4/2021
+//#21695 Farid end 8/6/2021
 
 //#21695 Farid start 2/4/2021	
 	public boolean evaluateSpecDisable(TplSpecAnswer specAnswer) {
