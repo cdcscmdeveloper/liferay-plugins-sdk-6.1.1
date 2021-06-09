@@ -337,10 +337,15 @@ public class ForceReplaceSuppAdminBackingBean extends
 			if (getManagedBean().getSmSupplier().getRecordStatusFlg()
 						.equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)) {
 				//#27300
+				//28765
 				if (activeAppl != null) {
 					throw new EpException(MessageConst.ERROR_722669, new String[] { activeAppl.getApplNo() });
 				}else if (latestRejectedAppl != null) {
 					throw new EpException(MessageConst.ERROR_722669, new String[] { latestRejectedAppl.getApplNo() });
+				}else if(SmApplicationUtil.isMofAccEffDatePassedCurrDate(getManagedBean().getSmSupplier())){
+					if (!getManagedBean().isExistingUser()) {
+						throw new EpException(MessageConst.ERROR_721087);
+					}
 				}else {
 					throw new EpException(MessageConst.ERROR_722676);
 				}
@@ -648,6 +653,10 @@ public class ForceReplaceSuppAdminBackingBean extends
 	public void redirectToNonExistNewAdminPage() {
 
 		initDefaultNewAdmin();
+		//28765
+		if(getManagedBean().getAccType().equals(SupplierManagementConst.ACC_BASIC)){
+			getManagedBean().setDisableNationality(disableNationalityDropDown(getManagedBean().getSmSupplier().getSmAppl().getSmPersonnels()));
+		}
 		SmCommonUtil.redirectToPage(
 				"/xhtml/sm/forcereplaceadmin/addNewAdminInfo.xhtml", "", null,
 				null);
@@ -1359,7 +1368,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		SmPersonnel admin = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(
 				RoleCode.SUPPLIER_TEMP.value(), getManagedBean().getSmSupplier().getSmAppl().getSmPersonnels(),
 				"epRole");
-		
+		//28765
 		if (	admin!=null && 
 				getManagedBean().getAccType().equals(SupplierManagementConst.ACC_MOF) && activeAppl!=null && 
 				activeAppl.getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_REGISTERED) && 
@@ -1370,7 +1379,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 					checkPendingSoftCertRequest(getManagedBean().getSmSupplier().getSupplierId())
 				)) {
 			getManagedBean().setBypassFlag1(1);
-		} else if (	admin!=null && 
+		} else if (	admin!=null && getManagedBean().getSmSupplier().getSmAppl().getSmCompanyBasic().isWithFederal() &&
 				getManagedBean().getAccType().equals(SupplierManagementConst.ACC_MOF) && getManagedBean().getOldAdmin().getPmUser().getUserId()!=null && 
 				activeAppl==null && appl==null && (
 						checkCatalogueUpload(getManagedBean().getSmSupplier().getSupplierId())==null 
@@ -1380,6 +1389,15 @@ public class ForceReplaceSuppAdminBackingBean extends
 			) {
 				log.info("MOF ACCOUNT DOES NOT HAVE ACTIVEAPPL VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV");
 				getManagedBean().setBypassFlag1(1);
+		} else if (	admin!=null && !getManagedBean().getSmSupplier().getSmAppl().getSmCompanyBasic().isWithFederal() &&
+				getManagedBean().getAccType().equals(SupplierManagementConst.ACC_MOF) && getManagedBean().getOldAdmin().getPmUser().getUserId()!=null && 
+				activeAppl==null && appl==null) {
+			if(getManagedBean().getNewAdmin() != null && getManagedBean().isExistingUser()
+					&& getManagedBean().getNewAdmin().getIdentificationNo().equalsIgnoreCase(getManagedBean().getReactivateBasic().getNewIdentificationNo())){
+				getManagedBean().setBypassFlag1(1);
+			}else{
+				getManagedBean().setBypassFlag1(2);
+			}
 		} else if (activeAppl==null && admin!=null && getManagedBean().getAccType().equals(SupplierManagementConst.ACC_MOF) && appl!=null) {
 			getManagedBean().setBypassFlag2(1);
 		} else if ((   admin!=null &&
@@ -1493,4 +1511,17 @@ public class ForceReplaceSuppAdminBackingBean extends
 					"emailPopUpWidgetVar.show()");
 		}
 	} // #28720 - End
+    //28765
+    public static boolean disableNationalityDropDown(List<SmPersonnel> smPersonnelList) {
+		boolean retVal = false;
+
+		// disabled nationality for Basic
+		for(SmPersonnel smPersonnel : smPersonnelList){
+			if (!StringUtils.isBlank(smPersonnel.getPmCountry().getCountryCode())
+					&& (smPersonnel.getPmCountry().getCountryCode().equalsIgnoreCase("MY"))) {
+				retVal = true;
+			}
+		}
+		return retVal;
+	}
 }

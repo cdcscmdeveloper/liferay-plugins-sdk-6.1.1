@@ -39,7 +39,7 @@
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 					<ac:confirmationPopup id="declareDeletePopUpId"
 		widget="declareDeletePopUp"
-		okAction="forceReplaceSuppAdminBackingBean.declare()"
+		okAction="#{forceReplaceSuppAdminBackingBean.declare()}"
 		width="400" height="150"
 		title="#{lbl['lbl.msg.confirm.declare.header']}"
 		content="#{forceReplaceSuppAdminBackingBean.managedBean.displayMessageReplaceTrans}" 
@@ -144,10 +144,12 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.sm.userprofile.nationality']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
+					<!-- 28765 -->
 					<td><p:selectOneMenu id="newAdminNationality"
 							label="#{lbl['lbl.sm.userprofile.nationality']}"
 							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.pmCountry.countryId}"
-							style="width: 207px;margin-bottom: 5px;" required="true">
+							style="width: 207px;margin-bottom: 5px;" required="true"
+							disabled="#{forceReplaceSuppAdminBackingBean.managedBean.accType eq SupplierManagementConst.ACC_BASIC}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems
 								value="#{forceReplaceSuppAdminBackingBean.managedBean.nationalities}" />
