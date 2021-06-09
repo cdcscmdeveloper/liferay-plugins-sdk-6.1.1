@@ -924,7 +924,18 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		for(SmSupplierOwner smSupplierOwner:this.getManagedBean().getSmSuppOwners()){
 			if(smSupplierOwner!=null && smSupplierOwner.getIdentificationNo().equals(smPersonnel.getIdentificationNo())){
 				smPersonnel.setClerical(false);
-				smPersonnel.setEquityOwner(true);
+				//#30829 START
+				SmSupplier sup = this.getManagedBean().getSmSupp();
+				log.info("----Supplier Buss Type: "+sup.getBusinessType());
+				if(sup.getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN) ||
+						sup.getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI) ||
+						sup.getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERSATUAN) ||
+						sup.getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2) ||
+						sup.getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI_LAIN2))
+					smPersonnel.setEquityOwner(false);
+				else
+					smPersonnel.setEquityOwner(true);
+				//#30829 END
 				validateNewIC(smPersonnel,true);
 				break;
 			}
