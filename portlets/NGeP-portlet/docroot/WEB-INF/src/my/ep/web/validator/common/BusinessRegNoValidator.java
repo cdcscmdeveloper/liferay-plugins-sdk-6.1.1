@@ -42,9 +42,17 @@ public class BusinessRegNoValidator implements Validator {
 				businessType = dropdown.getValue().toString();
 
 				if (robList.contains(businessType)) {
-					validateRob(value.toString());
+				//30987 - start
+					String rob = value.toString();
+					rob=rob.trim();
+					validateRob(rob);
+					value = rob.replace(value.toString(), rob);
 				} else if (rocList.contains(businessType)) {
-					validateRoc(value.toString());
+					String roc = value.toString();
+					roc = roc.trim();	
+					validateRoc(roc);
+					value = roc.replace(value.toString(),roc);
+				//30987 - end
 				} else if (llpList.contains(businessType)) {
 					validateLlp(value.toString());
 				} else {
@@ -78,6 +86,8 @@ public class BusinessRegNoValidator implements Validator {
 	 *            rocNo
 	 */
 	private void validateRoc(String rocNo) {
+		//30987 
+		rocNo = rocNo.trim();
 		String[] splitRoc = rocNo.split("-");
 		String splitRoc1 = "";
 		String splitRoc2 = "";
@@ -104,6 +114,8 @@ public class BusinessRegNoValidator implements Validator {
 	 */
 	private void validateRob(String robNo) {
 		String[] splitRob = robNo.split("-");
+		//30987 
+		robNo = robNo.trim();
 		String splitRob1 = "";
 		String splitRob2 = "";
 		if (splitRob != null && splitRob.length > 1) {
@@ -281,6 +293,8 @@ public class BusinessRegNoValidator implements Validator {
 		
 	}
 	private void validateRobFc(String robNo,boolean useFC) {
+		//30987
+		robNo = robNo.trim();
 		String[] splitRob = robNo.split("-");
 		String splitRob1 = "";
 		String splitRob2 = "";
@@ -299,6 +313,8 @@ public class BusinessRegNoValidator implements Validator {
 		}
 	}
 	private void validateRocFc(String rocNo,boolean useFC) {
+		//30987
+		rocNo = rocNo.trim();
 		String[] splitRoc = rocNo.split("-");
 		String splitRoc1 = "";
 		String splitRoc2 = "";
@@ -319,10 +335,16 @@ public class BusinessRegNoValidator implements Validator {
 	public void validateRegNo(String businessType,String regNo,boolean useFc){
 		if (businessType != null && StringUtils.isNotBlank(businessType.toString()))
 				if (robList.contains(businessType)) {
-					validateRobFc(regNo.toString(),useFc);
+				//30987 - start
+					regNo = regNo.toString();
+					regNo = regNo.trim();
+					validateRobFc(regNo,useFc);
 				} else if (rocList.contains(businessType)) {
-					validateRocFc(regNo.toString(),useFc);
+					regNo = regNo.toString();
+					regNo = regNo.trim();					
+					validateRocFc(regNo,useFc);
 				} 
+				//30987 - end
 			
 		}
 	//END SSM INTEGRATION CHANGES
