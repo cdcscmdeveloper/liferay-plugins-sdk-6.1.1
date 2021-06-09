@@ -1058,7 +1058,6 @@ public class TemplateSpecBackingBean extends
 		
 	}
 	//20210419@asyrafhaziq - Bug #30061 - end
-	
 	public void deleteConfirmationAction(TemplateSpecBean templateSpecBean, TplSpecQuestion question) {
 		debugLogger("deleteConfirmationAction");
 		
@@ -1151,7 +1150,6 @@ public class TemplateSpecBackingBean extends
 		}
 
 
-		
 		TplSpecMaster tplSpecMaster = templateSpecBean
 				.getSpecMaster();
 		TplSpecQuestion tplSpecQuestion = templateSpecBean
@@ -1230,11 +1228,9 @@ public class TemplateSpecBackingBean extends
 		}
 
 		templateSpecBean.setOriSpecQuestion(oriSpecQuestion);
-		//#21695 - Start Farid
 		this.getManagedBean().setTemplateSpecBean(templateSpecBean);
-		// #21695 -END Farid		
 	}
-
+	// #21695 -END Farid
 	/**
 	 * Zone Quantity Popup Action
 	 * 
@@ -1272,7 +1268,7 @@ public class TemplateSpecBackingBean extends
 			}
 		}
 		// #21695 - END Farid
-		
+
 		TplSpecMaster tplSpecMaster = templateSpecBean
 				.getSpecMaster();
 		TplSpecQuestion tplSpecQuestion = templateSpecBean
@@ -1920,7 +1916,7 @@ public class TemplateSpecBackingBean extends
 
 		templateSpecBean.setSelectedSpecQuestion(null);
 		getManagedBean().setTemplateSpecBean(templateSpecBean);
-		// #21695 - Farid
+		// #21695 - Farid - End
 		RequestContext.getCurrentInstance().execute(
 				templateSpecBean.getSpecComponentId()
 						+ "scoringSetPopup.hide()");
@@ -2929,7 +2925,7 @@ public class TemplateSpecBackingBean extends
 		}
 		return uomDropDownList;
 	}
-
+	
 	/** #21695 FARID START */
 	public boolean checkValueGreaterThanZero(TplSpecQuestion selectedQ,int i){
 		List<TplSpecZoneQty> tplSpecZoneQties= selectedQ.getTplSpecZoneQties();//zoneqty
@@ -3013,7 +3009,7 @@ public class TemplateSpecBackingBean extends
 						if (questionId == specEstimation.getTplSpecQuestion().getSpecQuestionId()){
 							specEstimation.setEstimatedCost(totalIndicativePrice); ///update value  Item Total Indicative Price (RM)
 						}
-					} else{ //#25039-start
+					}else{ //#25039-start
 						if (null== specEstimation.getTplSpecZoneDtl() && questionId == specEstimation.getTplSpecQuestion().getSpecQuestionId()){
 							specEstimation.setEstimatedCost(totalIndicativePrice); ///update value  Item Total Indicative Price (RM)
 						}
@@ -3025,6 +3021,7 @@ public class TemplateSpecBackingBean extends
 					} // bugs #26234 
 				}
 		};
+
 		specMaster.setTotalEstAmount(totalEstAmount);
 	}
 	// #25039 end
@@ -3283,7 +3280,7 @@ public class TemplateSpecBackingBean extends
 		return this.getManagedBean().getOffer();
 		
 	}
-/** #21695 FARID END */
+/** #21695 FARID END */	
 	
 	/**
 	 * Calculate the total amount and amount per year for all spec answer for each item.
@@ -3342,7 +3339,7 @@ public class TemplateSpecBackingBean extends
 	}
 	// FARID #21695 END
  
-//#21695 Farid start 1/4/2021
+//#21695 Farid start 8/6/2021
 	/**
 	 * Item type change.Change Item Type(product/Service) Checkbox in Template
 	 * 
@@ -3352,30 +3349,32 @@ public class TemplateSpecBackingBean extends
 	 */
 	public void offerCheckboxChange(TplSpecQuestion specQuestion) {
 		boolean flag = true;
+		int count = 0;
 		for(TplSpecZoneQty specQty : specQuestion.getTplSpecZoneQties()){
 			if(specQty!=null){
 				if(!specQty.getTplSpecZoneOffer().isOffer()){
 					flag = false;
-					break;
+					count ++;
 				}
 			}
 		}
-		
-		for(TplSpecAnswer specAns : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
-			
-			if (specAns != null && specAns.getTplSpecQuestion().getParentSpecQuestion()!=null){
-				if(specAns.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId().equals(specQuestion.getSpecQuestionId())){
-					
-					specAns.setAnswerText("");
-					specAns.setAnswerNumeric(null);
-					specAns.setAnswerRemark(null);
-					specAns.setAnswerCompliance(null);
+		if(count == 0){
+			for(TplSpecAnswer specAns : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
+				
+				if (specAns != null && specAns.getTplSpecQuestion().getParentSpecQuestion()!=null){
+					if(specAns.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId().equals(specQuestion.getSpecQuestionId())){
+						
+						specAns.setAnswerText("");
+						specAns.setAnswerNumeric(null);
+						specAns.setAnswerRemark(null);
+						specAns.setAnswerCompliance(null);
+					}
 				}
 			}
 		}
 		
 	}
-//#21695 Farid end 1/4/2021
+//#21695 Farid end 8/6/2021
 
 //#21695 Farid start 2/4/2021	
 	public boolean evaluateSpecDisable(TplSpecAnswer specAnswer) {
