@@ -66,6 +66,8 @@ public class ForceReplaceSuppAdminManagedBean extends BaseManagedBean {
 	
 	private boolean disableEquity=false;
 	private boolean disableStaff=false;
+	//28765
+	private boolean disableNationality;
 
 	public ForceReplaceSuppAdminManagedBean() {
 		
@@ -352,6 +354,14 @@ public class ForceReplaceSuppAdminManagedBean extends BaseManagedBean {
 	}
 	public void setDisplayMessageReplaceTrans(String displayMessageReplaceTrans) {
 		this.displayMessageReplaceTrans = displayMessageReplaceTrans;
+	}
+	
+	public boolean isDisableNationality() {
+		return disableNationality;
+	}
+
+	public void setDisableNationality(boolean disableNationality) {
+		this.disableNationality = disableNationality;
 	}
 	//#28765 - End
 }
