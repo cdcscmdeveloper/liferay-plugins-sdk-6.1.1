@@ -138,7 +138,7 @@
    		<h:panelGroup rendered="#{(suspensionBackingBean.managedBean.contractVer.ctContract.loa.procurementMode.parameterCode eq ParameterConst.procurementModeDirectPurchase)}">
    			<h:panelGrid column="1" style="margin-bottom: 20px;margin-top: 10px;">
     		
-    			<p:outputLabel value="#{lbl['lbl.ct.item.desc']}" style="font-weight:bold;">: #{suspensionBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemName} </p:outputLabel>  	    	  			
+    			<p:outputLabel value="#{lbl['lbl.ct.item.desc']}" style="float:left;font-weight:bold;">: #{suspensionBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemName} </p:outputLabel>  	    	  			
      		 		
      			<c:if test="#{suspensionBackingBean.managedBean.supplierOffer ne null}">
      		 		<p:outputLabel value="#{lbl['lbl.ct.supp.offer']}" style="float:left;font-weight:bold;">: #{suspensionBackingBean.managedBean.supplierOffer}</p:outputLabel>     		 				  				
