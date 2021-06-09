@@ -1,7 +1,6 @@
 package my.ep.web.managedbean.sc.loa;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -330,12 +329,6 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private ScLoiLoaItem scLoiLoaItem;
 	private List<TplSpecAnswer> tplSpecAnswerList;
 	/*#29007 End Vinod*/
-	
-	//#27797 - start
-	private ScLoiLoaItem highestZoneScLoiLoaItem;
-	private List<ScLoiLoaItem> highestZoneScLoiLoaItemList;
-	public BigDecimal highestZonePrice = new BigDecimal(0);
-	//#27797 - end
     /**
      * Gets the spki backing bean.
      *
@@ -1882,34 +1875,6 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	}
 	/*#29007 End Vinod*/
 
-	//#27797 - start
-	public ScLoiLoaItem getHighestZoneScLoiLoaItem() {
-		return highestZoneScLoiLoaItem;
-	}
-
-	public void setHighestZoneScLoiLoaItem(ScLoiLoaItem highestZoneScLoiLoaItem) {
-		this.highestZoneScLoiLoaItem = highestZoneScLoiLoaItem;
-	}
-	
-	public List<ScLoiLoaItem> getHighestZoneScLoiLoaItemList() {
-		if(highestZoneScLoiLoaItemList ==null) {
-			highestZoneScLoiLoaItemList = new ArrayList<ScLoiLoaItem>();
-		}
-		return highestZoneScLoiLoaItemList;
-	}
-
-	public void setHighestZoneScLoiLoaItemList(List<ScLoiLoaItem> highestZoneScLoiLoaItemList) {
-		this.highestZoneScLoiLoaItemList = highestZoneScLoiLoaItemList;
-	}
-	
-	public BigDecimal getHighestZonePrice() {
-		return highestZonePrice;
-	}
-
-	public void setHighestZonePrice(BigDecimal highestZonePrice) {
-		this.highestZonePrice = highestZonePrice;
-	}
-	//#27797 - end
 }
 
 
