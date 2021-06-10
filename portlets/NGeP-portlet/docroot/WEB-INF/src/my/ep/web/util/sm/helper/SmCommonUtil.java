@@ -1385,7 +1385,7 @@ public class SmCommonUtil {
 	 *            - String
 	 */
 	public static void calculateSmApplicationPaidUpCapitalSum(
-			SmCompanyBasic compBasic, String businessTypeVal) {
+			SmCompanyBasic compBasic, List<SmEquityCompany> smEquityCompany, String businessTypeVal) { //#30900
 		boolean llpOrRoc = false;
 		if (compBasic.getBumiEquity() != null) {
 			compBasic.setBumiEquity(compBasic.getBumiEquity().setScale(2,
@@ -1482,6 +1482,10 @@ public class SmCommonUtil {
 						.add(compBasic.getGovtEquity())
 						.add(compBasic.getGovtUnitrustEquity())
 						.setScale(2, RoundingMode.HALF_UP));
+			} else{
+				//start #30900
+				compBasic.setPaidUpCapital(compBasic.getPaidUpCapital().setScale(2, RoundingMode.HALF_UP));
+				//end #30900
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -3762,7 +3766,7 @@ public class SmCommonUtil {
 				ArrayList<String> res = new ArrayList<String>();
 
 				if (attr != null) {
-					NamingEnumeration en = attr.getAll();
+					NamingEnumeration<?> en = attr.getAll();
 					while (en.hasMore()) {
 						String x = (String) en.next();
 						if (x.endsWith("."))

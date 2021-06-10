@@ -1684,7 +1684,7 @@ public class SmApplicationBackingBean extends
 						this.getManagedBean().getSmAppl().getSmCompanyBasic().setEstablishDate(ssmResDTO.getSmCompanyBasic().getEstablishDate());
 						//START #27239
 						//POPUP USER NOT SSM OWNER #26734 //ANY CHANGES HERE PLEASE CHANGES IN ViewApplHistoryBackingBean.redirectToReapplyNewAppl & viewOnlineAccount.RegistrationBackingBean & SmApplicationBackingBean.proceedToApplication
-						FacesScopes facesScope = new FacesScopes();
+						//FacesScopes facesScope = new FacesScopes();
 						//START 28454
 						//if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) || applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW) || applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
 							
@@ -9044,6 +9044,7 @@ public class SmApplicationBackingBean extends
 	 *            - the PO or Approver resposne
 	 * @return the redirect page.
 	 */
+	@SuppressWarnings("unused")
 	public String submitPOorApproverReviewToBPM(String res) {
 		IReviewApplicationSO reqSO = null;
 		String retMsg = null;
@@ -11024,9 +11025,16 @@ public class SmApplicationBackingBean extends
 	 */
 	public void calculateCapital() {
 		try {
-			SmCommonUtil.calculateSmApplicationPaidUpCapitalSum(
-					getManagedBean().getSmAppl().getSmCompanyBasic(),
-					getManagedBean().getBusinessTypeVal());
+			// start #30900
+			if (businessTypeIsROC(this.getManagedBean().getSmSupplier().getBusinessType())
+					&& !this.getManagedBean().getSmAppl().getApplType()
+							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+				calcPersonnelShareAmt(getManagedBean().getSmAppl().getSmPersonnels(), getManagedBean().getSmAppl()
+						.getSmCompanyBasic());
+			}
+			//end #30900
+			SmCommonUtil.calculateSmApplicationPaidUpCapitalSum(getManagedBean().getSmAppl().getSmCompanyBasic(),
+					getManagedBean().getSmAppl().getSmEquityCompanies(), getManagedBean().getBusinessTypeVal());
 			// #28466 start - fix reopen
 			SmCommonUtil
 					.calculateSmApplicationPaidUpCapitalPercent(getManagedBean()
@@ -12300,7 +12308,7 @@ public class SmApplicationBackingBean extends
 
 		getManagedBean().setNewSupplierType(
 				smSupplier.getSmAppl().getSupplierType());
-		String prerenderUrl = proceedToApplication("N");
+		proceedToApplication("N");
 		//log.info("prerenderUrl: " + prerenderUrl);
 
 		FacesContext fc = FacesContext.getCurrentInstance();
