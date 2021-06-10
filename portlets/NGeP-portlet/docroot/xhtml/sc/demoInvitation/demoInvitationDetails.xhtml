@@ -1,0 +1,63 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<h:panelGroup id="demoDetails" width="150px">
+		<p:panel header="#{lbl['lbl.sc.demo.details']}"
+			text-transform="uppercase" toggleable="true"
+			rendered="#{demoInvBB.managedBean.qualifiedSupplier}">
+			<table>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.invitation.by']}" /><br />
+						<p:selectOneRadio id="invById"
+							required="#{empty param['skipvalidation']}"
+							label="#{lbl['lbl.invitation.by']}"
+							value="#{demoInvBB.managedBean.demoInvBy}">
+							<f:selectItems value="#{demoInvBB.getAllByItemDropDown()}" />
+							<p:ajax event="change"
+								listener="#{demoInvBB.onchangeInvBy(demoInvBy)}" process="@this"
+								partialSubmit="true" update="@form"></p:ajax>
+						</p:selectOneRadio> <p:message id="invByMsgId" for="invById" display="icon" /></td>
+					<td><ac:iconTooltip
+							value="#{lbl['lbl.invitation.by.tooltip']}" /></td>
+				</tr>
+				<tr>
+					<td id="demoInstruction"><c:choose>
+							<c:when test="#{demoInvBB.managedBean.demoInvBy eq 'AI'}">
+								<p:outputLabel value="#{lbl['lbl.demo.instruction.all']}" />
+								<ui:include src="demoSubTableAllItemList.xhtml" />
+								<ui:include src="demoRemarkAndContactPerson.xhtml" />
+							</c:when>
+							<c:when test="#{demoInvBB.managedBean.demoInvBy eq 'BI'}">
+								<p:outputLabel value="#{lbl['lbl.demo.instruction.item']}" />
+								<ui:include src="demoSubTableItemList.xhtml" />
+								<ui:include src="demoRemarkAndContactPerson.xhtml" />
+							</c:when>
+							<c:otherwise>
+								<p:outputLabel value="#{lbl['lbl.demo.instruction']}" />
+							</c:otherwise>
+						</c:choose></td>
+				</tr>
+			</table>
+		</p:panel>
+
+		<p:confirmDialog id="demoCancelId" widgetVar="democancel"
+			header="#{lbl['lbl.sc.confirmation']}"
+			message="#{lbl['lbl.demo.cancel']}" resizable="false"
+			closable="false">
+			<div align="right">
+				<p:commandButton id="demoCancelDialogId"
+					value="#{lbl['lbl.btn.ok']}" action="#{demoInvBB.demoCancel()}"
+					update="@form" process="@this" onclick="demoCancelId.hide()" />
+			</div>
+		</p:confirmDialog>
+	</h:panelGroup>
+
+
+
+
+</ui:composition>
