@@ -267,9 +267,9 @@
 				invalidSizeMessage="#{catalogueBackingBean.getInvalidFileSize()}"
 				label="#{lbl['lbl.btn.choose']}" mode="advanced" id="upload"
 				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp)$/"
-				update=":form:deleteImage, :form:refereshImageId"
+				update=":form:deleteImage, :form:refereshImageId, :form:imageDialog"
 				invalidFileMessage="Only JPG, GIF, PNG, BMP files are accepted"
-				multiple="true">
+				multiple="true" oncomplete="imageDialog.show()">
 			</p:fileUpload>
 		</p:dialog>
 		<!-- #14118 - End -->
