@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -123,7 +124,7 @@ public class FacesScopes implements Serializable {
 		userActivityBean.setUserAgent(httpServletRequest.getHeader("user-agent"));
 		userActivityBean.setResponseStatus(httpServletResponse.getStatus());
 		log.info("[logUserActivity] userActivityLoggingEnabled: " 
-				+ EpPropertiesUtils.getInstance().getProperty("portal.monitoring.activity.enabled"));
+				+ EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTLET_USER_ACTIVITY_LOGGING));
 		
 		UserActivityLogger.getInstance().log(userActivityBean);
 	}
