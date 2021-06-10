@@ -1,0 +1,45 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		<tr>
+			<td width="20%" valign="top" class="sidemenutd"><p:tabMenu
+					styleClass="sidemenu"
+					activeIndex="#{demoInvBB.managedBean.activeIndex}">
+					<p:menuitem value="#{lbl['lbl.sc.qt.qtn.details']}"
+						action="#{demoInvBB.demoTabChange(0)}" update="@form"
+						process="@form"
+						rendered="#{demoInvBB.displayMenuItem(demoInvBB.menuGeneralInfo)}" />
+					<p:menuitem value="#{lbl['lbl.sc.item.list']}"
+						action="#{demoInvBB.demoTabChange(1)}" update="@form"
+						process="@form"
+						rendered="#{demoInvBB.displayMenuItem(demoInvBB.menuItemList)}" />
+					<p:menuitem value="#{lbl['lbl.sc.demo.details']}"
+						action="#{demoInvBB.demoTabChange(2)}" update="@form"
+						process="@form"
+						rendered="#{demoInvBB.displayMenuItem(demoInvBB.menuDemoDetails)}" />
+				</p:tabMenu></td>
+			<td width="80%" valign="top"><h:panelGroup id="menuQTContent">
+					<c:if test="#{demoInvBB.managedBean.activeIndex eq '0'}">
+						<ui:include
+							src="/xhtml/sc/demoInvitation/demoInvitationGeneralInfo.xhtml" />
+					</c:if>
+					<c:if test="#{demoInvBB.managedBean.activeIndex eq '1'}">
+						<ui:include
+							src="/xhtml/sc/demoInvitation/demoInvitationItemList.xhtml" />
+					</c:if>
+					<c:if test="#{demoInvBB.managedBean.activeIndex eq '2'}">
+						<ui:include
+							src="/xhtml/sc/demoInvitation/demoInvitationDetails.xhtml" />
+					</c:if>
+				</h:panelGroup></td>
+		</tr>
+	</table>
+
+</ui:composition>
+
