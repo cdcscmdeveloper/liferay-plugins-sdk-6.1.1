@@ -9943,22 +9943,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			detailSO = null;
 		}
 	}
-  	
-  	public boolean isInactiveCurrentCommitteeApprovarUser(){
-  		boolean inactive = false;
-		ScQt scQt = this.getManagedBean().getQt();
-		Long statusId = scQt.getQtStatus().getStatusId();	
-		if(this.getManagedBean().isMaintanceFlow() && statusId.equals(QTStatusConst.QT_EVALUATION_PROPOSAL)){
-			for(ScQtApproval approval : this.getManagedBean().getQt().getScQtApprovals()){
-				for(ScQtApproverSettings approverSetting : approval.getApproverSettings()){
-					if(isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId(),1)){ 
-						inactive = true;
-					}
-				}
-			}
-		}
-		return inactive;
-  	}
     //#30477 - End
   	
 }

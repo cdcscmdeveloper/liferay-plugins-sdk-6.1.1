@@ -24,9 +24,6 @@
 	<ui:param name="iscloseQTIfValidityPeriodExpiredAndStatusRelated" value="#{qTDetailBB.closeQTIfValidityPeriodExpiredAndStatusRelated()}" />
 	<ui:param name="isQTStatusPendingScoringEndorsement" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT}" />
 	<!-- 26095@hatta - end -->
-	<!-- 30477 Start -->
-	<ui:param name="isInactiveCurrentCommitteeApprovarUser" value="#{qTDetailBB.isInactiveCurrentCommitteeApprovarUser()}" /> 
-	<!-- 30477 End -->
 		<table width="100%">
 		<tr>
 		<td style="vertical-align: bottom;" align="right"><p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
@@ -164,28 +161,14 @@
 						
 					</c:when>
 					<c:otherwise>
-					 <!-- 30477 Start -->
-					    <c:if test="#{isInactiveCurrentCommitteeApprovarUser}">
-					        <p:commandButton value="#{lbl['lbl.btn.submit']}"
-								styleClass="amendButton"
-								action="#{qTDetailBB.submitQtDetailsFormMaintanace(isQTStatusPendingScoringEndorsement)}"
-								process="@form" update="@all" onclick="blockWidget.show();"
-								oncomplete="blockWidget.hide();"
-								rendered="#{(qTDetailBB.isQTStatusInBetween(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING, QTStatusConst.QT_PENDING_LOA))}" />
-					    </c:if>
-					    <c:if test="#{!isInactiveCurrentCommitteeApprovarUser}">
-					 <!-- 30477 End -->
 							<p:commandButton value="#{lbl['lbl.btn.submit']}"
 								styleClass="amendButton"
 								action="#{qTDetailBB.submitQtDetailsFormMaintanace(isQTStatusPendingScoringEndorsement)}"
 								process="@form" update="@all" onclick="blockWidget.show();"
 								oncomplete="blockWidget.hide();"
 								rendered="#{(qTDetailBB.isQTStatusInBetween(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING, QTStatusConst.QT_PENDING_LOA))}"
-								disabled="#{qTDetailBB.isQTStatusEvaluation(qTDetailBB.managedBean.qt.qtStatus.statusId) and 
+								disabled="#{qTDetailBB.isQTStatusEvaluation(qTDetailBB.managedBean.qt.qtStatus.statusId) and !(qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_RE_FINALIZATION) and
 								(empty qTDetailBB.managedBean.amendMentBean or !qTDetailBB.managedBean.amendMentBean.brandNew) and !qTDetailBB.managedBean.changesOnQTMaintenance}" />
-					 <!-- 30477 Start -->
-						</c:if>
-					 <!-- 30477 End -->
 						</c:otherwise>
 				</c:choose> 
 				<!-- 26095@hatta - start -->
@@ -221,7 +204,7 @@
 				    onclick="submitConfirmPopUp.hide(); blockWidget.show();"
 					oncomplete="blockWidget.hide();"
 					 partialSubmit="true" process="@form" update="@form" 
-					action="#{qTDetailBB.updateBpmTask(bpAction)}" />
+					action="#{qTDetailBB.updateBpmTask(bpAction)}"/>
 				<p:commandButton value="#{lbl['lbl.btn.no']}" 
 					onclick="submitConfirmPopUp2.hide();" type="button" partialSubmit="true"  process="@this"/>
 			</div>
@@ -262,7 +245,7 @@
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
 					oncomplete="cancelQTDlg.hide();" partialSubmit="true" process="@this"
-					action="#{qTDetailBB.cancelQtDetails}" />
+					action="#{qTDetailBB.cancelQtDetails}"/>
 				<p:commandButton value="#{lbl['lbl.btn.no']}" 
 					onclick="cancelQTDlg.hide();" type="button" partialSubmit="true"  process="@this"/>
 			</div>
