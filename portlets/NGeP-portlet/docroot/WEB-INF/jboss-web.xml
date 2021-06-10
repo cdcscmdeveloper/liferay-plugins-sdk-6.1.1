@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-web>
+	<valve>
+		<class-name>org.apache.catalina.valves.AccessLogValve</class-name>
+		<param>
+			<param-name>prefix</param-name>
+			<param-value>portlet-activity.</param-value>
+		</param>
+		<param>
+			<param-name>suffix</param-name>
+			<param-value>.log</param-value>
+		</param>
+		<param>
+			<param-name>fileDateFormat</param-name>
+			<param-value>yyyy-MM-dd</param-value>
+		</param>
+		<param>
+			<param-name>pattern</param-name>
+			<param-value>%t RemoteIp: %a | LocalIp: %A | RemoteHostName: %h | SessionId: %S | RequestedUrlPath: %U | FirstLineRequest: %r | IncomingRequestHeader: %m %{Referer}i %{User-Agent}i | TimeTaken: %T | Response Status: %s | Byte Sent: %b</param-value>
+		</param>
+		<param>
+			<param-name>directory</param-name>
+			<param-value>${jboss.server.log.dir}</param-value> 
+		</param>
+		<param>
+			<param-name>resolveHosts</param-name>
+			<param-value>false</param-value>
+		</param>
+	</valve>
+</jboss-web>
