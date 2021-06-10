@@ -19044,13 +19044,10 @@ public class ReportBackingBean extends
 			res.setContentType(ReportConst.APPLICATIONEIFONPDF);
 		}
 		res.flushBuffer();
-		log.info("@@@@ HttpServletResponse getContentType = "
-				+ res.getContentType() + " @@@@ Time stamp =" + time);
-		log.info("@@@@ HttpServletResponse getStatus = " + res.getStatus()
-				+ " @@@@ Time stamp =" + time);
+		log.info("@@@@ HttpServletResponse getContentType = " + res.getContentType() + " @@@@ Time stamp =" + time);
+		log.info("@@@@ HttpServletResponse getStatus = " + res.getStatus() + " @@@@ Time stamp =" + time);
 		for (String headrName : res.getHeaderNames()) {
-			log.info("@@@@ HttpServletResponse getHeaderNames = " + headrName
-					+ " @@@@ Time stamp =" + time);
+			log.info("@@@@ HttpServletResponse getHeaderNames = " + headrName + " @@@@ Time stamp =" + time);
 		}
 		OutputStream out = res.getOutputStream();
 
