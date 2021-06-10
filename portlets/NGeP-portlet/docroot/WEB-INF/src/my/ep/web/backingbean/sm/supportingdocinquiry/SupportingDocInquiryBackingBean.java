@@ -3,6 +3,8 @@ package my.ep.web.backingbean.sm.supportingdocinquiry;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -172,7 +174,20 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 		
 		SupportingDocInquiryResDTO resDTO = reqSO.retrieveInquiryByAppId(reqDTO);
 		this.getManagedBean().setSmApplInquiry(resDTO.getSmApplInquiry());
-		
+		//#11641 - START
+		Collections.sort(this.getManagedBean().getSmApplInquiry().getSmAppl().getSmApplSupportDocs(), new Comparator<SmApplSupportDoc>(){
+			@Override
+			public int compare(SmApplSupportDoc doc1, SmApplSupportDoc doc2) {
+				if(doc1.getPmDocument().getDisplaySeq() == null){
+					return (doc2.getPmDocument().getDisplaySeq() == null) ?  0 : 1;
+				}
+				if(doc2.getPmDocument().getDisplaySeq() == null){
+					return -1;
+				}
+				return Integer.valueOf(doc1.getPmDocument().getDisplaySeq().compareTo(doc2.getPmDocument().getDisplaySeq()));
+			}
+		});
+		//#11641 - END
 	}
 	
 	public String submitInquiryResponse(){
