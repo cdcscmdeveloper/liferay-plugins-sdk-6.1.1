@@ -7762,6 +7762,14 @@ public class SmApplicationBackingBean extends
 	 * @return the redirect page
 	 */
 	public String submitSmApplToBpm(String applType) {
+		
+		//30953 & 30945 - Start		
+		//add checking to make sure, supporting doc mode is not null
+		log.info("This is the Supporting Document Mode === " +getManagedBean().getSmAppl().getSupportingDocMode());
+		if(getManagedBean().getSmAppl().getSupportingDocMode() == null){
+			throw new EpException(MessageConst.ERROR_722648);		
+		}
+		//30953 & 30945 - End
 
 		// validateDontHavePersonnelWithLogin();
 		validateNoChangesBeenMadeToApplication();
