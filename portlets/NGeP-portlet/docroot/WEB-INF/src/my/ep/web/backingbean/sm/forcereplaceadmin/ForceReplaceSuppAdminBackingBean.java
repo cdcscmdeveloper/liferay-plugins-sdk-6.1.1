@@ -1387,8 +1387,13 @@ public class ForceReplaceSuppAdminBackingBean extends
 						checkPendingSoftCertRequest(getManagedBean().getSmSupplier().getSupplierId())	
 				)
 			) {
+			if(getManagedBean().getNewAdmin() != null && getManagedBean().isExistingUser()
+					&& getManagedBean().getNewAdmin().getIdentificationNo().equalsIgnoreCase(getManagedBean().getReactivateBasic().getNewIdentificationNo())){
 				log.info("MOF ACCOUNT DOES NOT HAVE ACTIVEAPPL VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV");
 				getManagedBean().setBypassFlag1(1);
+			}else{
+				getManagedBean().setBypassFlag1(2);
+			}
 		} else if (	admin!=null && !getManagedBean().getSmSupplier().getSmAppl().getSmCompanyBasic().isWithFederal() &&
 				getManagedBean().getAccType().equals(SupplierManagementConst.ACC_MOF) && getManagedBean().getOldAdmin().getPmUser().getUserId()!=null && 
 				activeAppl==null && appl==null) {
