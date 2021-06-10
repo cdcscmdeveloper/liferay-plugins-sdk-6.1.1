@@ -104,6 +104,7 @@ public class FacesScopes implements Serializable {
 		application = FacesContext.getCurrentInstance().getApplication();
 	}
 
+	//20210610@fadhli - Added user activity logging - Start
 	public void logUserActivity() {
 		HttpServletRequest httpServletRequest = PortalUtil.getHttpServletRequest((PortletRequest) FacesContext
 				.getCurrentInstance().getExternalContext().getRequest());
@@ -126,6 +127,7 @@ public class FacesScopes implements Serializable {
 		
 		UserActivityLogger.getInstance().log(userActivityBean);
 	}
+	//20210610@fadhli - Added user activity logging - End
 	
 	/**
 	 * Returns the object bound with the specified name in this session, or null
@@ -257,9 +259,11 @@ public class FacesScopes implements Serializable {
 						user = resDTO.getPmUser();
 						setApplicationScope(SESS_USER_SESSION_BEAN, user);
 						
+						//20210610@fadhli - Added user activity logging - Start
 						log.info("[getUserSessionBean] userActivityTracing");
 						showAdditionalInformation();
 						logUserActivity();
+						//20210610@fadhli - Added user activity logging - End
 
 						// update user last login
 						if(user != null) {
@@ -294,6 +298,8 @@ public class FacesScopes implements Serializable {
 		return user;
 	}
 	
+	//20210610@fadhli - Added user activity logging - Start
+	// Display values that might be used for user activity logging. Will remove once requirements are confirmed with eP
 	public void showAdditionalInformation() {
 		log.info("[showAdditionalInformation] userActivityTracing loginId: " + getUserScreenName());
 		
@@ -568,6 +574,7 @@ public class FacesScopes implements Serializable {
 					+ " | responseHeader: " + httpServletResponse.getHeader(responseHeaderName));
 		}
 	}
+	//20210610@fadhli - Added user activity logging - End
 
 	public String getUserScreenName() {
 //		log.info("#25061 getUserScreenName");
@@ -588,6 +595,7 @@ public class FacesScopes implements Serializable {
 		return screenName;
 	}
 	
+	//20210610@fadhli - Added user activity logging - Start
 	private String getObjectToString(Object object) {
 		String string = StringUtils.EMPTY;
 		if (null != object) {
@@ -605,6 +613,7 @@ public class FacesScopes implements Serializable {
 		
 		return portletPage;
 	}
+	//20210610@fadhli - Added user activity logging - End
 	
 	public List<Role> getUserRoleList() {
 		List<Role> userRoleList = null;
@@ -714,9 +723,11 @@ public class FacesScopes implements Serializable {
 			}
 		}
 		
+		//20210610@fadhli - Added user activity logging - Start
 		log.info("[getBPMAuthenticationCtxToken] userActivityTracing");
 		showAdditionalInformation();
 		logUserActivity();
+		//20210610@fadhli - Added user activity logging - End
 		
 		return ctxToken;
 	}
