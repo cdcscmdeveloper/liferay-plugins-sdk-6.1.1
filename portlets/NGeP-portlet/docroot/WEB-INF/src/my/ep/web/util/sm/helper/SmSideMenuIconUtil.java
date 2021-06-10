@@ -709,12 +709,12 @@ public class SmSideMenuIconUtil {
 				}
 			} else if (sectionType
 					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)) {
-				//24964 - start
+				//24964 & 31043 - start
 				retVal = ICON_UNTICK; 
 				boolean mandatoryDocVerified = false; 
 				boolean nonMandatoryDocVerified = false; 
 				boolean licenseMandatoryDocVerified = false; 
-				//24964 - end
+				//24964 & 31043 - end
 				List<SmApplSupportDoc> licenseMandatoryDocs = new ArrayList<SmApplSupportDoc>();
 				if (!EntityHelper.isCollectionEmpty(bean
 						.getMandatoryLicenseDocs())) {
@@ -722,7 +722,7 @@ public class SmSideMenuIconUtil {
 						licenseMandatoryDocs.addAll(docVO.getLicenseSuppDocs());
 					}
 				}
-				//24964 - start
+				//24964 & 31043 - start
 				if(!EntityHelper.isCollectionEmpty(bean.getMandatoryDocs())){
 					if (SmApplicationUtil.isAllSuppDocAlreadyVerified(bean
 							.getMandatoryDocs(), bean.getSmAppl()
@@ -754,7 +754,7 @@ public class SmSideMenuIconUtil {
 				
 				if(mandatoryDocVerified && nonMandatoryDocVerified && licenseMandatoryDocVerified){
 					retVal = ICON_TICK;
-				} //24964 - end
+				} //24964 & 31043 - end
 
 			} else if (sectionType
 					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)
