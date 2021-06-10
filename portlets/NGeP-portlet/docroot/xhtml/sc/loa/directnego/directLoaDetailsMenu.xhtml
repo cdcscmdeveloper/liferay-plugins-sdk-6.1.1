@@ -8,7 +8,9 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 	<ac:lovPopup />	
 	<ui:include src="../shared/loaInstructionHeader.xhtml" />
-	
+	<!-- #31033 starts -->
+	<ui:param name="isHiddenDownloadButtonDAHistory" value="#{directLOABackingBean.isHiddenDownloadButtonDAHistory()}" />
+	<!-- #31033 ends -->
 	<ui:param name="isContractTypeAsMinistry"
 		value="#{directLOABackingBean.managedBean.scLoa.contractType.parameterCode == ParameterConst.contractTypeMinistry}" />
 	<ui:param name="isContractTypeAsCentral"
@@ -967,5 +969,8 @@
 			showAttachment="false" 
 			readonly="true" />
 	</p:outputPanel>
-	<ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" />
+	<!-- #31033 starts -->
+	 <ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" btnView="true" rendered="#{isHiddenDownloadButtonDAHistory}"  />
+	      <ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" rendered="#{!isHiddenDownloadButtonDAHistory}" />
+	      <!-- #31033 Ends -->
 </ui:composition>
