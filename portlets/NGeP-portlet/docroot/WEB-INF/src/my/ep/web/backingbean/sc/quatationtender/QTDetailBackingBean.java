@@ -5220,7 +5220,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						}
 						
 						//#28784
-						if (StringUtils.isNotEmpty(scQt.getEvaluationType()) && scQt.getEvaluationType().equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER)) {
+						if (scQt.getEvaluationType() != null && scQt.getEvaluationType().equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER)) {
 							Long status = this.getManagedBean().getQt().getQtStatus() !=null? 
 									this.getManagedBean().getQt().getQtStatus().getStatusId(): null;
 							if(null != status && (!status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION))) {
