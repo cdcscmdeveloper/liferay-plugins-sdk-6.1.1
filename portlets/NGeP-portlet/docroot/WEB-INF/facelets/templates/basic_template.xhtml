@@ -12,7 +12,7 @@
 	
 	<!-- #14118 - Start -->
 	<style>
-	.disabled { 
+	.fileupload-buttonbar .start .ui-state-disabled { 
     	background: #c1c1c1 none repeat scroll 0 0 !important;
     	color: #f8f8f8 !important;
     	cursor: default !important;
@@ -92,16 +92,16 @@
 			if(upload_widget.buttonBar.find('input[type=file]').get(0).type == 'file') {		
 				upload_widget.buttonBar.find('.start').get(0).disabled=true;
 				upload_widget.buttonBar.find('.start').get(0).title = '#{lbl['lbl.cm.tooltip.btn.upload']}';			
-				$("button.start").toggleClass('disabled');
+				$("button.start").toggleClass('ui-state-disabled');
 				upload_widget.buttonBar.find('input[type=file]').change(function() {
 					var sizes = "#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages.size()}";
 					if (sizes >= 5) {
 						upload_widget.buttonBar.find('.start').get(0).disabled=true;
-						$("button.start").toggleClass('disabled');
+						$("button.start").toggleClass('ui-state-disabled');
 						$("td.start").css("pointer-events", "none");	
 					} else {
 						upload_widget.buttonBar.find('.start').get(0).disabled=false;
-						$(".start").removeClass('disabled');
+						$(".start").removeClass('ui-state-disabled');
 					}
 				});
 			}
