@@ -9942,6 +9942,22 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 	}
 	/*#29007 End Vinod*/
+	/*#31003 STARTS*/
+	public boolean isHiddenDownloadButtonDAHistory(){
+		boolean hidden = false;
+		Long statusId = this.getManagedBean().getScLoa().getPmStatus().getStatusId();
+		if(statusId.equals(QTStatusConst.LOA_PENDING_SUBMISSION) || 
+		   statusId.equals(QTStatusConst.LOA_PENDING_APPROVAL) ||
+		   statusId.equals(QTStatusConst.LOA_PENDING_REVISION) || 
+		   statusId.equals(QTStatusConst.LOA_PENDING_VERIFICATION) ||
+		   statusId.equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL) ){
+			hidden = true;
+		}
+		
+		return hidden;
+	}
+	
+	/*#31003 End */
 
 
 }
