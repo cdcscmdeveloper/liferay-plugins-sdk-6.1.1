@@ -8,23 +8,25 @@
 	
 	<p:panel header="#{lbl['lbl.pm.ss.detail']}" toggleable="true" id="specialServiceId">
 		<p:spacer height="10"></p:spacer>
-		<table>
+		<table class="ppTwoTable">
 			<tr>
-				<td>
+				<th>
 					<p:outputLabel value="#{lbl['lbl.pm.ss.name']}"/>
 					<p:outputLabel value="*" styleClass="mandatory"/>
-				</td>
+				</th>
 				<td>
 					<p:inputText required="true" label="#{lbl['lbl.pm.ss.name']}" size="30" maxlength="100"
 						value="#{SpecialServiceBackingBean.managedBean.pmSpecialService.codeName}"
 						disabled="#{!SpecialServiceBackingBean.managedBean.pmSpecialService.brandNew}"/>
 				</td>
+				<th></th>
+				<td></td>
 			</tr>
 			<tr>
-				<td>
+				<th width="20%">
 					<p:outputLabel value="#{lbl['lbl.pm.search.status']}"/>
 					<p:outputLabel value="*" styleClass="mandatory"/>
-				</td>
+				</th>
 				<td>
 					<p:selectOneMenu style="width:178px;margin-bottom:5px;"
 						required="true" label="#{lbl['lbl.pm.search.status']}"
@@ -34,6 +36,8 @@
 						<p:ajax event="change" process="@form" partialSubmit="true" update="@form"/>
 					</p:selectOneMenu>
 				</td>
+				<th></th>
+				<td></td>
 			</tr>
 		</table>
 	</p:panel>
