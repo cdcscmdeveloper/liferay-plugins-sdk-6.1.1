@@ -525,7 +525,10 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			// Generate agreement File
 			if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FINALIST_AGREEMENT_HT_NAME)
 					&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+				log.info("------------ Bug #30924 : APPROVE -----------------");
 				generateAgreementFile();
+				log.info("------------ Bug #30924 : agreementZipFilePath = "+agreementZipFilePath);
+				log.info("------------ Bug #30924 :  agreementZipFileName= "+ agreementZipFileName);
 				getManagedBean().getCtAgreement().setFilePath(DocumentRepositoryUtils.getDBFilePath(agreementZipFilePath.replace("\\", "/")));
 				getManagedBean().getCtAgreement().setFileName(agreementZipFileName);
 			}
@@ -1567,29 +1570,42 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	private void generateAgreementFile() {
 		List<File> fileList = new ArrayList<File>();
 
+		log.info( "Bug #30924 getManagedBean().getCtAgreement().getContractDocumentAttachments() :"+getManagedBean().getCtAgreement().getContractDocumentAttachments());
 		for (CtAttachment ctAttachment : getManagedBean().getCtAgreement().getContractDocumentAttachments()) {
 			if (StringUtils.isNotBlank(ctAttachment.getFilePath())) {
 				fileList.add(new File(DocumentRepositoryUtils.getBaseDir() + ctAttachment.getFilePath()));
 			}
-		}		
+		}	
+		log.info("------------ Bug #30924 -  in generateAgreementFile : fileList.size() = "+fileList.size());					
 		try {
 			if (fileList.size() == 1) {
 				agreementZipFilePath = fileList.get(0).getPath();
 				agreementZipFileName = fileList.get(0).getName();
+				log.info("------------ Bug #30924 -  in generateAgreementFile : fileList.get(0).getPath() = "+fileList.get(0).getPath());
+				log.info("------------ Bug #30924 -  in generateAgreementFile :  fileList.get(0).getName() = "+ fileList.get(0).getName());
 			} else {	// Generate agreement zip file
 				String zipFileName = "agreement.zip";
+				log.info("Bug #30924 - getManagedBean().getAgreementType() = "+getManagedBean().getAgreementType());
 				if (getManagedBean().getAgreementType().equalsIgnoreCase(ContractConst.SUPPLEMENTAL_AGREEMENT)) {
 					zipFileName = "supplemental_agreement.zip";
+					log.info("Bug #30924 - zipFileName 11 :"+zipFileName);
 				}
-				File zipFile = new File(getManagedBean().getFileDirectory()+ zipFileName);		
+				log.info("Bug #30924 - zipFileName 22 :"+zipFileName);
+				File zipFile = new File(getManagedBean().getFileDirectory()+ zipFileName);
+				log.info("Bug #30924 - zipFile :"+zipFile.toString());
 				zipFile.createNewFile();
 				ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipFile));
+				log.info("Bug #30924 - filelist = "+fileList.size());
+				log.info("------------ Bug #30924 - in generateAgreementFile : zipFile.getPath() Before = "+zipFile.getPath());
+				log.info("------------ Bug #30924 - in generateAgreementFile :  zipFile.getName() Before = "+ zipFile.getName());
 				for (File file : fileList) {
+					log.info("Bug #30924 - file.getName() = "+file.getName());
 					zos.putNextEntry(new ZipEntry(file.getName()));	
 					// Get the file
 					FileInputStream fis = null;
 					try {
 						fis = new FileInputStream(file);
+						log.info("------------ Bug #30924 -  in generateAgreementFile 33 ");
 					} catch (FileNotFoundException fnfe) {
 						zos.write(("ERROR: Could not find file " + file
 								.getName()).getBytes());
@@ -1597,15 +1613,19 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 						continue;
 					}
 					BufferedInputStream fif = new BufferedInputStream(fis);
+					log.info("------------ Bug #30924 -  in generateAgreementFile 44 ");
 					// Write the contents of the file
 					int data = 0;
 					while ((data = fif.read()) != -1) {
 						zos.write(data);
 					}
+					log.info("------------ Bug #30924 -  in generateAgreementFile 55 ");
 					fif.close();
 					zos.closeEntry();
 				}
 				zos.close();
+				log.info("------------ Bug #30924 - in generateAgreementFile : zipFile.getPath() After = "+zipFile.getPath());
+				log.info("------------ Bug #30924 - in generateAgreementFile :  zipFile.getName() After = "+ zipFile.getName());
 				agreementZipFilePath = zipFile.getPath();
 				agreementZipFileName = zipFile.getName();
 			}
