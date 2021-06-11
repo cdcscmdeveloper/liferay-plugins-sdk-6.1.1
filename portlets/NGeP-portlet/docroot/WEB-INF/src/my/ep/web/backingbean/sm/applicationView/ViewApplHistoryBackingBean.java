@@ -295,8 +295,7 @@ public class ViewApplHistoryBackingBean extends
 			if (SmApplicationUtil
 					.isRejectedApplValidForResubmission(getManagedBean()
 							.getSmAppl())) {
-				SmCommonUtil.redirectToExternalUrl(getManagedBean()
-						.getResubmitUrl());
+				redirectToReapplyNewAppl(true); //#29956
 			} else {
 				//START 27951
 				if(!this.getManagedBean().isCheckRoleSSM()){
@@ -344,15 +343,12 @@ public class ViewApplHistoryBackingBean extends
 		log.info("-------------------------------------------------------------------"+SmCommonUtil.getInstance().ssmActive());
 		if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(getManagedBean().getSmAppl().getSmSupplier().getRegNo(),getManagedBean().getSmAppl().getSmSupplier().getBusinessType()) && this.getManagedBean().getSsmResDTO() != null && !this.getManagedBean().isCheckRoleSSM()){			
 			List<SmPersonnel> personnelsRole = this.getManagedBean().getPersonnelsRole();
-			personnelsRole.clear();
 			for(SmPersonnel personnel :  this.getManagedBean().getSmAppl().getSmPersonnels()){
 				if (personnel.isEquityOwner() || personnel.isDirector()) {
-					if(personnel.getEpRole() != null){
 						SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),this.getManagedBean().getSsmResDTO().getSmPersonnelOwners(),"identificationNo");
 						SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),this.getManagedBean().getSsmResDTO().getSmPersonnelDirector(),"identificationNo");
 						if(personnelDirectorSSM == null && personnelSSM == null){
 							personnelsRole.add(personnel);
-						}
 					}
 				}
 			}
@@ -431,7 +427,7 @@ public class ViewApplHistoryBackingBean extends
 			SmCommonUtil.redirectToPage(page, null, null, null);
 		}		
 		//END 27951
-		else{
+		if(resubmission){
 			SmCommonUtil.redirectToExternalUrl(getManagedBean()
 					.getResubmitUrl());
 		}
