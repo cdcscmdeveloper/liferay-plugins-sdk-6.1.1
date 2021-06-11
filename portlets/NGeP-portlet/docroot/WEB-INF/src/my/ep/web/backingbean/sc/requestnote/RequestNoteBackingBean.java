@@ -924,6 +924,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}	
 		}
 		
+		// #27545 - start
+		if (outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || outcome.equals(BpmOutcomeConst.BPM_APPROVE)
+				|| outcome.equals(BpmOutcomeConst.BPM_REVISE)) {
+			validateAssigneduser(requestNoteDtls);
+		}
+		// #27545 - end
+
 		if(outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || 
 				outcome.isEmpty() || 
 				outcome.equals(BpmOutcomeConst.BPM_APPROVE)){
@@ -978,6 +985,40 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 		}
 	}
+	
+	// #27545 - start
+	public void validateAssigneduser(List<ScRequestNoteDtl>	requestNoteDtls) {
+		log.info("--validateAssigneduser--");
+		Boolean throwError = false;
+		for (ScRequestNoteDtl requestNoteDtl : requestNoteDtls) {
+			PmUser pmUser = requestNoteDtl.getAssignedUser();
+			PmOrgProfile pmOrgProfile = getManagedBean().getRequestNote().getPmOrgProfile();
+			String procTypeCategory = requestNoteDtl.getProcurementTypeCategory().getParameterCode();
+			List<PmUser> userList = null;
+
+			UserReqDTO req = new UserReqDTO();
+			req.setIncludeUserIds(new ArrayList<Long>());
+			req.getIncludeUserIds().add(pmUser.getUserId());
+
+			if (ParameterConst.PROCUREMENT_TYPE_CODE_SERVICE.equals(procTypeCategory)) {
+				req.setRoleCodes(Arrays.asList(RoleCode.DESK_OFFICER.value()));
+			} else if (ParameterConst.PROCUREMENT_TYPE_CODE_SUPPLY.equals(procTypeCategory)) {
+				req.setRoleCodes(Arrays.asList(RoleCode.REQUISITIONER.value()));
+			}
+			
+			req.setOrgProfileId(pmOrgProfile.getOrgProfileId());
+			UserResDTO res = getUserSO().retrieveUserListByRole(req);
+			userList = res.getUserList();
+
+			if (CollectionUtils.isEmpty(userList)) {
+				throwError = true;
+				break;
+			}
+		}
+		if (throwError)
+			throw new EpException(MessageConst.ERROR_770242);
+	}
+	// #27545 - End
 	
 	/**
 	 * submit codification task Action. 
