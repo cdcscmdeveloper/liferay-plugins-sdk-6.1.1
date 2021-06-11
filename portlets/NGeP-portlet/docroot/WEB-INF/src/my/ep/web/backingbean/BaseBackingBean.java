@@ -2996,7 +2996,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 										&& postRegBean.getSmSupplier().getSmAppl().getSmPersonnels() != null) {
 									for (SmPersonnel personnel : postRegBean.getSmSupplier().getSmAppl().getSmPersonnels()) {
 										if (personnel.isEquityOwner() || personnel.isDirector()) {
-											if (personnel.getEpRole() != null) {
 												SmPersonnel personnelSSM = (SmPersonnel) EntityHelper
 														.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),
 																ssmResDTO.getSmPersonnelOwners(), "identificationNo");
@@ -3006,20 +3005,66 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 												if (personnelDirectorSSM == null && personnelSSM == null) {
 													personnelsRole.add(personnel);
 												}
-											}
 										}
 									}
 								}
 							}
+							String[] params = new String[50];
+							StringBuilder stb = new StringBuilder();
+							int x = 0;
+							Boolean noEp = false;
+							if (!personnelsRole.isEmpty()) {
+								for (SmPersonnel smPersonnel : personnelsRole) {
+									if (x != 0) {
+										for (String roles : params) {
+											if(roles!=null){
+												if (smPersonnel.getEpRole() == null && !roles.equals("no EP Role") && !roles.equals("/ ")
+														&& !noEp) {
+													params[x] = "/ ";
+													stb.append("/ ");
+													x++;
+													params[x] = "no EP Role";
+													stb.append("no EP Role");
+													x++;
+													noEp = true;
+												} else if (smPersonnel.getEpRole() != null&& !roles.equals(getEpRoleDescByRoleCode(smPersonnel.getEpRole())) && !roles.equals("/ ")) {
+													params[x] = "/ ";
+													stb.append("/ ");
+													x++;
+													params[x] = getEpRoleDescByRoleCode(smPersonnel.getEpRole());
+													stb.append(getEpRoleDescByRoleCode(smPersonnel.getEpRole()));
+													x++;
+												}
+											}
+										}
+									} else {
+										if(smPersonnel.getEpRole() == null){
+											params[x] = "no EP Role";
+											stb.append("no EP Role");
+											x++;
+											noEp = true;
+										}else{
+											params[x] = getEpRoleDescByRoleCode(smPersonnel.getEpRole());
+											stb.append(getEpRoleDescByRoleCode(smPersonnel.getEpRole()));
+											x++;
+										}
+									}
+								}
+							}
+							this.getManagedBean().setTermAndConditionCheckOwner(
+									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner", new String[] { stb.toString() }));
+							this.getManagedBean().setTermAndConditionCheckOwnerA(
+									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.a", new String[] { stb.toString() }));
+							this.getManagedBean().setTermAndConditionCheckOwnerC(
+									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.c", new String[] { stb.toString() }));
+							this.getManagedBean().setTermAndConditionCheckOwnerChangeRole(
+									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole", new String[] { stb.toString() }));
 
 							if (personnelsRole != null && personnelsRole.size() > 0) {
 								postRegBean.setDontGetSsmData(false);
 								postRegBean.setSmSupplierSsm(postRegBean.getSmSupplier());
 								postRegBean.setShowPopup(true);
 								postRegBean.setPersonnelsRole(personnelsRole);
-								String[] params = { "Temporary Supplier Administrator" };
-								postRegBean.setTermAndConditionCheckOwnerChangeRole(
-										SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole", params));
 							}
 						}
 						// end #29956
