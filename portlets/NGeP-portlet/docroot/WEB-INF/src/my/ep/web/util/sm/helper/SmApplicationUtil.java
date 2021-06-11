@@ -3148,6 +3148,8 @@ public class SmApplicationUtil {
 		managedBean.setOverLappedCategoryExists(false);
 		managedBean.setOverLappedCategoryMsg(StringUtils.EMPTY);
 		managedBean.setOverLappedCategoryRemarks(StringUtils.EMPTY);
+		//13362
+		managedBean.setApplnOverLapRemarks(StringUtils.EMPTY);
 
 		if (overlapCategoryVO != null) {
 			managedBean.setOverLappedCategoryExists(overlapCategoryVO
@@ -3158,6 +3160,9 @@ public class SmApplicationUtil {
 					.getOverLappedCategoryRemarks());
 			managedBean.setOverlapCategoryVOList(overlapCategoryVO
 					.getOverlapCategoryVOList());
+			//13362
+			managedBean.setApplnOverLapRemarks(overlapCategoryVO.getApplnOverLapRemarks());
+			
 		}
 		resetAddedCategoryOverlapStatus(managedBean.getSmAppl(),
 				overlapCategoryVO);
@@ -3265,6 +3270,15 @@ public class SmApplicationUtil {
 					+ getOverlappedCategoryRemarks(resultList));
 			retVal.setOverlapCategoryVOList(getOverlapCategoryVOList(
 					resultList, smAppl.getSupplierType()));
+			
+			//13362 - START setApplnOverlapRemarks
+			String msg = "";
+				for (Object[] arr : resultList){
+						msg += arr[4] + "," + " " + arr[5] + "," + " " + "(" + arr[0] + arr[1] + arr[2] + ")" + "," + " ";
+				}	
+					
+			retVal.setApplnOverLapRemarks(msg);
+			//13362 - END
 		}
 		return retVal;
 	}
