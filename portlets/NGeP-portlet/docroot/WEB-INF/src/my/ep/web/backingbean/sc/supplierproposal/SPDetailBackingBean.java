@@ -5477,6 +5477,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 
 			reqDTO.setYear(scQtProposalChecklist.getScQtCheckList().getScQtCheckListValue().getYear().intValue());
 			reqDTO.setScQt(this.getManagedBean().getQt());
+			reqDTO.setApplId(scQtProposalChecklist.getScQtProposal().getSupplierApplId()); //Bug #30980
 
 			ProposalResDTO sdto = proposalSO.getCompanyExperience(reqDTO);
 			List<SmCompanyExperience> suppExpList = sdto.getCompExperienceList();
