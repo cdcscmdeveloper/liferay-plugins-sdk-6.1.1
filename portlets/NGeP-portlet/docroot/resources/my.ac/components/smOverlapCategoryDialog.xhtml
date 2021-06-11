@@ -84,10 +84,12 @@
 			</p:column>
 		</p:dataTable>
 		<!--  Start 13362 -->
+		<div style="width: 100%" align="right">
 		<p:commandButton  value="#{lbl['lbl.btn.download']}" ajax="false" immediate="true" rendered="#{not empty cc.attrs.showButton}">
 				<p:fileDownload value="#{cc.attrs.bBean.generateAndDownloadOverlapCategoryDetailsExcel()}"/>
 				<f:ajax execute="@this" render="@form"  />
 		</p:commandButton>
+		</div>
 		<!--  End 13362 -->
 	</p:dialog>
 			
