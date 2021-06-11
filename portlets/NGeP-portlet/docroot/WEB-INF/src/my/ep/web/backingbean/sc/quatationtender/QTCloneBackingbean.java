@@ -773,7 +773,7 @@ public class QTCloneBackingbean extends
 		
 		ScQt selected=this.getManagedBean().getSelectedCloneTender();
 		TreeNode[] nodes=this.selectedNodes;
-		if(!QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId)){
+		if(!QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId) && !QTStatusConst.QT_REVISION_PUBLICATION.equals(statusId)){//25635
 			if(nodes.length==0){
 				throw new EpException(MessageConst.ERROR_760495);
 			}
@@ -830,7 +830,7 @@ public class QTCloneBackingbean extends
 					}
 					
 				}
-				if(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId)){
+				if(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId) || QTStatusConst.QT_REVISION_PUBLICATION.equals(statusId)){//25635
 					retrieveComittee1And2Tier(scQt,copyScqt);
 					retrieveBrief(copyScqt);
 					retrievePublishing(copyScqt);
@@ -1459,6 +1459,7 @@ public class QTCloneBackingbean extends
 			   this.getManagedBean().setScQtContactPersons(persons);
 			}
 			List<ScQtContactPerson> desks=resDTO.getDeskOfficers().getResultList();
+			this.getManagedBean().setPmuserContactpersonList(new ArrayList<ScQtContactPerson>());//25635
 			if(!CollectionUtils.isEmpty(desks)){
 				List<ScQtContactPerson> persons=new ArrayList<ScQtContactPerson>();
 				for(ScQtContactPerson origin:desks){
@@ -1527,7 +1528,7 @@ public class QTCloneBackingbean extends
 			}
 			
 			
-
+           this.getManagedBean().setDoaRequestEditable(Boolean.TRUE);//25635
 			backingBean.getDeskOfficerAdminAssistant();	
 			//
 		}finally{
@@ -1725,6 +1726,18 @@ public class QTCloneBackingbean extends
 						briefingZoneBean=mapBrief(qt,qtBsv);
 					}
 					this.getManagedBean().setBsvDtlBean(briefingZoneBean);
+					BriefingZoneBean bsvDtlBean = getManagedBean().getBsvDtlBean();//25635-start
+					Date latestBsvDate = null;
+					if (bsvDtlBean != null) {
+						latestBsvDate = updateProposalStartDate(latestBsvDate, bsvDtlBean.getBriefingList());
+						latestBsvDate = updateProposalStartDate(latestBsvDate, bsvDtlBean.getSitevisitList());
+					} 
+					// if no briefing / site visit.
+					if (!qt.isBsvRequired()) {
+						latestBsvDate = qt.getPublishDate();
+					} 
+					
+					qt.setProposalStartDate(latestBsvDate);//25635-End
 				}else{
 					
 //					List<TplSpecZoneDtl> zones = resDTO.getZonesList();
@@ -4193,5 +4206,34 @@ public class QTCloneBackingbean extends
 	public void searchActionPageChange(){
 		this.getManagedBean().setSelectedCloneTender(null);
 	}
+	//25635-end
+	
+
+	/*25635-start
+	 * Briefingsitevisitdataset
+	 * 
+	 */
+	private Date updateProposalStartDate(Date latestBsvDate, List<ScQtBsvDtl> scQtBsvDtls) {
+		ScQt scQt = getManagedBean().getQt();
+		
+		if (CollectionUtils.isNotEmpty(scQtBsvDtls)) {
+			for (ScQtBsvDtl scQtBsvDtl : scQtBsvDtls) {
+				Date bsvDate = scQtBsvDtl.getBsvDate();
+				
+				if (bsvDate != null &&
+						(scQtBsvDtl.getBsvStatus() == null || !QTStatusConst.BSV_CANCELLED.equals(scQtBsvDtl.getBsvStatus().getStatusId())) && 
+						(latestBsvDate == null || (latestBsvDate != null && bsvDate.after(latestBsvDate)))) {
+					latestBsvDate = bsvDate;
+					//20190718@asyrafhaziq - Bug #26137 - Start
+					scQt.setBsvRequired(true);
+					//20190718@asyrafhaziq - Bug #26137 - End
+				}
+			}
+		}
+		
+		return latestBsvDate;
+	}
+	
+	
 	//25635-end
 }
