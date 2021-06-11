@@ -3045,8 +3045,7 @@ public class SmPersonnelBackingBean extends
 	 * @param personnelId
 	 * @return
 	 */
-	//9569 Start
-	public void navigateToUpdateMOFUserPage(String personnelId) {
+	public String navigateToUpdateMOFUserPage(String personnelId) {
 		FacesScopes sc = new FacesScopes();
 		getManagedBean().setEditMode(true);
 		CountryReqDTO reqDTO = new CountryReqDTO();
@@ -3074,11 +3073,9 @@ public class SmPersonnelBackingBean extends
 		}*/
 		getManagedBean().setDisableRoleSelection(disableEpRoleDropDown(getManagedBean()
 				.getBasicSmPersonnel()));
-		
-		SmCommonUtil.redirectToPage("mofUserProfile.xhtml", "", null, null);;
-		//return "mofUserProfile.xhtml";
+		return "mofUserProfile.xhtml";
 	}
-	//9569 end
+	
 	//9569 - Start
 	public void resetAll(){
 		this.getManagedBean().setBasicSmPersonnelPermanentAddress(new SmPersonnelAddress());
