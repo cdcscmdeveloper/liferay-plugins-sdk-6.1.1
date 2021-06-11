@@ -193,8 +193,7 @@
 							validatorMessage="#{lbl['lbl.sm.userprofile.email']} - #{lbl['lbl.sm.invalidEmail']}"
 							size="40" required="true">
 							<f:validateRegex
-								pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
-							<p:ajax event="change" process="@this" listener="#{smPersonnelBackingBean.onChangeEmail()}" update="basicBUEmail"/> 
+								pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />						
 						</p:inputText>
 						<p:graphicImage id="toolTipIcon" value="/css/images/design/tooltips.png" /> 
 					  	<p:tooltip id="sourceTooltip" for="toolTipIcon">
@@ -1206,7 +1205,6 @@
 				</tr>
 			</table>
 		</p:panel>
-		<ac:smEmailAlertPopup bBean="#{backingBean}" title="#{lbl['lbl.sm.email.change.header']}" dialogId="emailPopUp" 
-			btnOkLabel="#{lbl['lbl.btn.ok']}" />
+		
 	</ui:define>
 </ui:composition>
