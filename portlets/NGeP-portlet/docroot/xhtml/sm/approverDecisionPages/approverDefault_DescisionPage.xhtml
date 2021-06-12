@@ -167,7 +167,7 @@
 		</tr>
 	</table>
 	<!-- 30615 : Increase dialog box size from 350px to 400px -->
-	<p:dialog width="1000px" header="#{lbl['lbl.sm.approve.application']}" height="400px"
+	<p:dialog width="1000px" header="#{lbl['lbl.sm.approve.application']}" height="480px"
 		closable="false" id="approverAppDialog" widgetVar="approverAppDialog"
 		resizable="false" showEffect="fade" hideEffect="fade" modal="true">
 		
@@ -255,4 +255,7 @@
 		content="#{backingBean.managedBean.deleteBranchMsg}" 
 		update=":form:tt:approverAppDialog"/>
 	<!-- END #29727 -->
+	<!-- 13362 START -->
+	<ac:smOverlapCategoryDialog voList="#{backingBean.managedBean.overlapCategoryVOList}" bBean="#{backingBean}" showButton="true"/>
+	<!-- 13362 END -->
 </ui:composition>
