@@ -7159,8 +7159,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			sumOrderedAmt = calculatesTotalOrderedAmt();
 			reqDTO.setAmount(sumOrderedAmt);
 			resDTO=fulfilmentRequestSO.validateAP59(reqDTO);
-		
-			if(!resDTO.isCrComplete()) {
+			
+			//28719-start
+			if(resDTO.isSuppContract() && !resDTO.isCrComplete()) {
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+						MessageUtils.getMessage(MessageConst.INFO_745090, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+				
+			}else//28719-end
+			 if(!resDTO.isCrComplete()) {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 				
