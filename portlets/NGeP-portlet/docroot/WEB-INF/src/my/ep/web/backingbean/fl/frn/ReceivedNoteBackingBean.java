@@ -568,6 +568,12 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				reqDTO.setAmount(sumReceivedAmt);
 				resDTOInvoice=fulfilmentRequestSO.validateAP59(reqDTO);
 				
+				//28719-start
+				if(resDTOInvoice.isSuppContract() && !resDTOInvoice.isCrComplete()) {
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(MessageConst.INFO_745090, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+					
+				}else//28719-end
 				if(!resDTOInvoice.isCrComplete()){
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 					MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));					
