@@ -2829,6 +2829,30 @@ public class QTDetailBackingBean extends
 		debugLogger("updateBpmTask");
 
 		updateApprovalDetails(scQt);
+		
+		// #14398 - Start
+		if (null != getManagedBean().getPublicationApproval()
+				&& CollectionUtils.isNotEmpty(getManagedBean().getPublicationApproval().getScQtApprovalRemarks())
+				&& getManagedBean().getPublicationApproval().getScQtApprovalRemarks().size() > 0) {
+			boolean remarkNotEmpty = true;
+			
+			for (ScQtApprovalRemark approvalRemark : getManagedBean().getPublicationApproval().getScQtApprovalRemarks()) {
+				if (StringUtils.isEmpty(approvalRemark.getRemark())) {
+					remarkNotEmpty = false;
+			
+					break;
+				}
+			}
+
+			if (remarkNotEmpty) {
+				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+				reqDTO.setApproval(getManagedBean().getPublicationApproval());
+				
+				getQTDetailSO().updateScQtApproval(reqDTO);
+			}
+		}
+		// #14398 - End
+
 		if (null!= this.getManagedBean().getTaskName() &&!SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(this.getManagedBean().getTaskName())){	//#28644-start	
 			retrieveApprovalTabDtl();
 			} //#28644-End

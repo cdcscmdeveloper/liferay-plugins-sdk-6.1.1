@@ -1943,9 +1943,14 @@ public class QTCommitteBackingBean extends
 					&& !SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
 				return false;
 			}
-			//25037-start
-			else if(SCProcessNameConst.PREPARE_QT_SCHEDULE.equalsIgnoreCase(taskName)
-					&& ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equalsIgnoreCase(commType)){
+			// 25037-start
+			else if (
+			// #14398 - Start.
+			(SCProcessNameConst.PREPARE_QT_SCHEDULE.equalsIgnoreCase(taskName) || SCProcessNameConst.REVISE_QT_SCHEDULE
+					.equalsIgnoreCase(taskName)
+			// #14398 - End.
+					)
+					&& ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equalsIgnoreCase(commType)) {
 				return false;
 			}
 			//25037-end
