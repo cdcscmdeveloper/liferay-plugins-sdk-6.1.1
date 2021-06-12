@@ -9,8 +9,8 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-		<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true"
-			closable="true" severity="info,error" showSummary="false"></p:messages>
+		<p:messages id="messages" showDetail="true" autoUpdate="true"
+			closable="true" severity="error,info" showSummary="false"></p:messages>
 		<ui:remove>
 			<p:blockUI block=":form" widgetVar="blockWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
@@ -35,12 +35,12 @@
 						oncomplete="if(args &amp;&amp; !args.validationFailed) updateCategDialog.show();"
 						rendered="#{!categoryBackingBean.managedBean.newCategory}"
 						style="float:right;width: auto;" /> 
-					<p:commandButton
-						value="#{lbl['lbl.btn.save']}" ajax="false"
+					<p:commandButton partialSubmit="true" 
+						value="#{lbl['lbl.btn.save']}"
 						action="#{categoryBackingBean.saveSubCategory}"
 						rendered="#{categoryBackingBean.managedBean.newCategory}"
-						update=":form" style="float:right;" /></td> 
-					<!-- End #29665 -->
+						update="@([id$=Msg])" style="float:right;" /></td> 
+				<!-- End #29665 remove save button, replace by update and save, change update button behaviour -->
 								
 			</tr>
 			
@@ -103,14 +103,14 @@
 							value="#{categoryBackingBean.managedBean.updatedCategoryDesc}"							
 							/>
 							&#160; 
-							<p:commandLink action="#{categoryBackingBean.enableDiscription}"
+							<p:commandLink action="#{categoryBackingBean.enableDiscription}" style="vertical-align: top;"
 								update="catLevel" disabled="#{!categoryBackingBean.descriptionEditDisable}">
 								<p:graphicImage library="ep/images/design" 
 									title="#{lbl['lbl.pm.edit.description']}"
 									value="/css/images/design/edit.png" />
 							</p:commandLink>
 						</c:if>
-						<!-- End #29665 -->
+						<!-- End #29665 Add action -->
 					</td>
 				</tr>
 				<!-- Start #29665: Add History Field -->
@@ -133,7 +133,7 @@
 					</td>
 				</tr>
 				</c:if>
-				<!-- End #29665 -->
+				<!-- End #29665: Add History Field -->
 				<tr>
 					<td>
 						<p:outputLabel value="#{lbl['lbl.pm.status']}"  />
@@ -157,7 +157,7 @@
 					</td>
 					<td>
 						<p:inputTextarea id="remarkFieldId" cols="50" style="width:auto;" maxlength="1000" 
-						value="#{categoryBackingBean.managedBean.remarkCategory}"
+						value="#{categoryBackingBean.managedBean.remarkCategory}" autoResize="false"
 						disabled="#{categoryBackingBean.remarkDisable}" required="#{!categoryBackingBean.remarkDisable}"
 						requiredMessage="#{lbl['lbl.pm.categ.remark.sub.required']}"
 						validatorMessage="#{lbl['lbl.pm.categ.remark.sub.required']}"/>
@@ -171,7 +171,7 @@
 					</td>
 				</tr>
 				</c:if>
-				<!-- End #29665 -->
+				<!-- End #29665: Add Remark Field -->
 			</table>
 		</p:panel>
 
@@ -216,10 +216,11 @@
 						<h:outputText value="#{pmCategoryL3.categoryL3Code}" />
 					</p:column>
 					<p:column>
-						<!-- #29665 rename column header -->
+				<!-- start #29665 rename column header -->
 						<f:facet name="header">
 					#{lbl['lbl.pm.ctrl.description']}
 				</f:facet>
+				<!-- End #29665 rename column header -->
 						<h:outputText value="#{pmCategoryL3.categoryName}" />
 					</p:column>
 					<p:column>
@@ -245,7 +246,7 @@
 							value="/css/images/design/edit.png" />
 					</p:commandLink>
 				</p:column>
-				<!-- End #29665 -->
+				<!-- End #29665 Add action column -->
 
 				</p:dataTable>
 
@@ -274,7 +275,7 @@
 			<ac:pmCategoryHistoryPopup catCode="#{categoryBackingBean.managedBean.pmCategoryL2.categoryL2Code}" 
 			historyList="#{categoryBackingBean.managedBean.remarkHistoryList}" widget="remarkHisCatCodePopup"/>
 		</c:if>
-		<!-- End #29665 -->
+		<!-- End #29665 Add confirmation dialog -->
 
 	</ui:define>
 </ui:composition>

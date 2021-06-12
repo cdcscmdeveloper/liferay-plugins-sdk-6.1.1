@@ -28,12 +28,12 @@
 						oncomplete="if(args &amp;&amp; !args.validationFailed) updateCategDialog.show();"
 						rendered="#{!categoryBackingBean.managedBean.newCategory}"
 						style="float:right;width: auto;" />
-					<!-- End #29665 -->
-					<p:commandButton
-						value="#{lbl['lbl.btn.save']}" ajax="false"
+					<p:commandButton partialSubmit="true"
+						value="#{lbl['lbl.btn.save']}"		
 						action="#{categoryBackingBean.saveCategory}"
 						rendered="#{categoryBackingBean.managedBean.newCategory}"
 						update="@([id$=Msg])" style="float:right;width: auto;" /></td>				
+					<!-- End #29665 change update button behaviour -->
 			</tr>
             
 		</table>
@@ -93,14 +93,14 @@
 							value="#{categoryBackingBean.managedBean.updatedCategoryDesc}" 
 							/>
 							&#160; 
-							<p:commandLink action="#{categoryBackingBean.enableDiscription}"
+							<p:commandLink action="#{categoryBackingBean.enableDiscription}" style="vertical-align: top;"
 								update="catLevel" disabled="#{!categoryBackingBean.descriptionEditDisable}">
 								<p:graphicImage library="ep/images/design" 
 									title="#{lbl['lbl.pm.edit.description']}"
 									value="/css/images/design/edit.png" />
 							</p:commandLink>
 						</c:if>
-						<!-- End #29665 -->
+						<!-- End #29665 Add action -->
 						
 					</td>
 				</tr>
@@ -124,7 +124,7 @@
 					</td>
 				</tr>
 				</c:if>
-				<!-- End #29665 -->
+				<!-- End #29665: Add History Field -->
 				<tr>
 					<td>
 						<p:outputLabel value="#{lbl['lbl.pm.status']}" />
@@ -149,7 +149,7 @@
 					<td>
 						<p:inputTextarea id="remarkFieldId" cols="50" maxlength="1000" value="#{categoryBackingBean.managedBean.remarkCategory}"
 						disabled="#{categoryBackingBean.remarkDisable}" required="#{!categoryBackingBean.remarkDisable}"
-						requiredMessage="#{lbl['lbl.pm.categ.remark.main.required']}"
+						requiredMessage="#{lbl['lbl.pm.categ.remark.main.required']}" autoResize="false"
 						validatorMessage="#{lbl['lbl.pm.categ.remark.main.required']}"/>
 						&#160; 
 						<p:graphicImage id="tipImage" value="/css/images/design/tooltips.png" /> 
@@ -161,7 +161,7 @@
 					</td>
 				</tr>
 				</c:if>
-				<!-- End #29665 -->
+				<!-- End #29665: Add Remark Field -->
 			</table>
 		</p:panel>
 
@@ -187,10 +187,11 @@
 						<h:outputText value="#{pmCategoryL2.categoryL2Code}" />
 					</p:column>
 					<p:column>
-						<!-- 29665 rename column header -->
+				<!-- Start #29665 rename column header -->
 						<f:facet name="header">
 					#{lbl['lbl.pm.ctrl.description']}
 				</f:facet>
+				<!-- End #29665 rename column header -->
 						<h:outputText value="#{pmCategoryL2.categoryName}" />
 					</p:column>
 					<p:column>
@@ -216,7 +217,7 @@
 							value="/css/images/design/edit.png" />
 					</p:commandLink>
 				</p:column>
-				<!-- End #29665 -->
+				<!-- End #29665 Add action column -->
 
 				</p:dataTable>
 
@@ -247,7 +248,7 @@
 			<ac:pmCategoryHistoryPopup catCode="#{categoryBackingBean.managedBean.pmCategoryL1.categoryL1Code}" 
 			historyList="#{categoryBackingBean.managedBean.remarkHistoryList}" widget="remarkHisCatCodePopup"/>
 		</c:if>
-		<!-- End #29665 -->
+		<!-- End #29665 Add confirmation dialog -->
 
 	</ui:define>
 </ui:composition>

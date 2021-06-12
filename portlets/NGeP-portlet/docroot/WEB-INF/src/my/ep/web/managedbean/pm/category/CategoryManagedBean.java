@@ -226,6 +226,7 @@ public class CategoryManagedBean extends BaseManagedBean {
 	private String remarkCategory;
 	private String updatedCategoryDesc;
 	private List<PmRemarkCategory> remarkHistoryList;
+	private Integer disableSection = 0;
 	//ENd #29665
 	
 	
@@ -1375,6 +1376,15 @@ public class CategoryManagedBean extends BaseManagedBean {
 	public void setUpdatedCategoryDesc(String updatedCategoryDesc) {
 		this.updatedCategoryDesc = updatedCategoryDesc;
 	}
-	//end #29665
 	
+	public Integer getDisableSection() {
+		return disableSection;
+	}
+
+	public void setDisableSection(Integer disableSection) {
+		this.disableSection = disableSection;
+	}
+	
+	//end #29665
+
 }
