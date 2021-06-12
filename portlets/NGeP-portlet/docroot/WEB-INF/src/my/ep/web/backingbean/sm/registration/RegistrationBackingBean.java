@@ -2228,7 +2228,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						if(personnelsRole != null && personnelsRole.isEmpty()){
 							for(SmPersonnel personnel :  this.getManagedBean().getSmAppl().getSmPersonnels()){
 								//#29114, CR 27382: Static Code Analysis Start
-								if ((personnel.isEquityOwner() || personnel.isDirector()) && personnel.getEpRole() != null) {
+								if (personnel.isEquityOwner() || personnel.isDirector()) { //29956
 									//if(personnel.getEpRole() != null){
 										SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
 										SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelDirector(),"identificationNo");

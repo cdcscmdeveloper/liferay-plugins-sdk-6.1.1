@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
@@ -97,7 +98,7 @@ import com.liferay.portal.util.PortalUtil;
 @ManagedBean(name = "viewApplHistoryBackingBean")
 @RequestScoped
 public class ViewApplHistoryBackingBean extends
-		BaseReviewApplicationBackingBean<ViewApplHistoryManagedBean> {
+		BaseReviewApplicationBackingBean<ViewApplHistoryManagedBean> implements Serializable{
 
 	/**
 	 * 
@@ -184,6 +185,7 @@ public class ViewApplHistoryBackingBean extends
 	/**
 	 * Pre-render for View Application History
 	 */
+	@SuppressWarnings("deprecation")
 	public void preRenderViewApplicationHistory() {
 		renewSesionObject();
 		initLogin();
@@ -195,37 +197,21 @@ public class ViewApplHistoryBackingBean extends
 		if (!getManagedBean().isSupplierUser()) {
 			initLoginUserZone();
 			String supplierIdParam = getSupplierIdParam();
-			getManagedBean().setRegStatusDescList(
-					retrieveRegistrationStatusList());
-			getManagedBean().setZoneList(
-					SmServiceLookup.getZoneSO().retrieveActiveZoneList()
-							.getZoneList());
+			getManagedBean().setRegStatusDescList(retrieveRegistrationStatusList());
+			getManagedBean().setZoneList(SmServiceLookup.getZoneSO().retrieveActiveZoneList().getZoneList());
 			if (StringUtils.isNotBlank(supplierIdParam)) {
 				SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
 				reqDTO.setSupplierId(Long.parseLong(supplierIdParam));
-				SmSupplier paramSupplier = SmServiceLookup
-						.getSupplierSearchSO().retriveSupplierById(reqDTO)
-						.getSmSupplier();
+				SmSupplier paramSupplier = SmServiceLookup.getSupplierSearchSO().retriveSupplierById(reqDTO).getSmSupplier();
 				getManagedBean().setSearchSupplier(new SmSupplier());
-				getManagedBean().getSearchSupplier().setRegNo(
-						paramSupplier.getRegNo());
-				if (paramSupplier.getSmAppl() != null) {
-					getManagedBean().setSearchSuppType(
-							paramSupplier.getSmAppl().getSupplierType());
-					if (paramSupplier.getSmAppl().getSmCompanyBasic() != null
-							&& !EntityHelper.isCollectionEmpty(paramSupplier
-									.getSmAppl().getSmCompanyBasic()
-									.getSmCompanyAddresses())) {
-						SmAddress address = paramSupplier.getSmAppl()
-								.getSmCompanyBasic().getSmCompanyAddresses()
-								.get(0).getSmAddress();
+				getManagedBean().getSearchSupplier().setRegNo(paramSupplier.getRegNo());
+				if (paramSupplier.getSmAppl() != null) {getManagedBean().setSearchSuppType(paramSupplier.getSmAppl().getSupplierType());
+					if (paramSupplier.getSmAppl().getSmCompanyBasic() != null && !EntityHelper.isCollectionEmpty(paramSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses())) {
+						SmAddress address = paramSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress();
 						if (address != null && address.getPmState() != null) {
-							PmZone zone = SmApplicationUtil
-									.retrieveZoneByStateId(address.getPmState()
-											.getStateId());
+							PmZone zone = SmApplicationUtil.retrieveZoneByStateId(address.getPmState().getStateId());
 							if (zone != null) {
-								getManagedBean().setSearchPmZoneId(
-										zone.getZoneId());
+								getManagedBean().setSearchPmZoneId(zone.getZoneId());
 							}
 						}
 					}
@@ -239,18 +225,14 @@ public class ViewApplHistoryBackingBean extends
 		else {			
 			SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
 			List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
-			if(!EntityHelper.isCollectionEmpty(resultList)
-					&& resultList.size() > 0){
+			if(!EntityHelper.isCollectionEmpty(resultList) && resultList.size() > 0){
 				getManagedBean().setDisciplinaryAction(true);
 			} else {
 				getManagedBean().setDisciplinaryAction(false);
 			}			
 		} //26238 - end
 
-		SmCommonUtil
-				.redirectToPage(
-						"/xhtml/sm/revisionSmApplView/viewApplicationHistory/searchSupplierApplicationHistoryPage.xhtml",
-						"", null);
+		SmCommonUtil.redirectToPage("/xhtml/sm/revisionSmApplView/viewApplicationHistory/searchSupplierApplicationHistoryPage.xhtml","", null);
 	}
 
 	/**
@@ -304,8 +286,7 @@ public class ViewApplHistoryBackingBean extends
 			if (SmApplicationUtil
 					.isRejectedApplValidForResubmission(getManagedBean()
 							.getSmAppl())) {
-				SmCommonUtil.redirectToExternalUrl(getManagedBean()
-						.getResubmitUrl());
+				redirectToReapplyNewAppl(true); //#29956
 			} else {
 				//START 27951
 				if(!this.getManagedBean().isCheckRoleSSM()){
@@ -323,7 +304,7 @@ public class ViewApplHistoryBackingBean extends
 					RequestContext.getCurrentInstance().execute(
 							"confirmDialog.show()");
 				}else{
-					redirectToReapplyNewAppl();
+					redirectToReapplyNewAppl(false); //#29956
 				}
 				//END 27951
 			}
@@ -331,8 +312,7 @@ public class ViewApplHistoryBackingBean extends
 			if (SmApplicationUtil
 					.isRejectedApplValidForResubmission(getManagedBean()
 							.getSmAppl())) {
-				SmCommonUtil.redirectToExternalUrl(getManagedBean()
-						.getResubmitUrl());
+				redirectToReapplyNewAppl(true); //29956
 			} else {
 				throw new EpException(SmCommonUtil.getMessage(
 						"lbl.sm.resubmitExpired", null));
@@ -343,7 +323,7 @@ public class ViewApplHistoryBackingBean extends
 	/**
 	 * Cloning new application and redirect to New MOF application page
 	 */
-	public void redirectToReapplyNewAppl() {
+	public void redirectToReapplyNewAppl(Boolean resubmission) {
 		SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
 		//START 27951
 		//ANY CHANGES HERE PLEASE CHANGES IN ViewApplHistoryBackingBean.redirectToReapplyNewAppl & viewOnlineAccount.RegistrationBackingBean & SmApplicationBackingBean.proceedToApplication
@@ -354,18 +334,67 @@ public class ViewApplHistoryBackingBean extends
 		log.info("-------------------------------------------------------------------"+SmCommonUtil.getInstance().ssmActive());
 		if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(getManagedBean().getSmAppl().getSmSupplier().getRegNo(),getManagedBean().getSmAppl().getSmSupplier().getBusinessType()) && this.getManagedBean().getSsmResDTO() != null && !this.getManagedBean().isCheckRoleSSM()){			
 			List<SmPersonnel> personnelsRole = this.getManagedBean().getPersonnelsRole();
-			personnelsRole.clear();
 			for(SmPersonnel personnel :  this.getManagedBean().getSmAppl().getSmPersonnels()){
 				if (personnel.isEquityOwner() || personnel.isDirector()) {
-					if(personnel.getEpRole() != null){
 						SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),this.getManagedBean().getSsmResDTO().getSmPersonnelOwners(),"identificationNo");
 						SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),this.getManagedBean().getSsmResDTO().getSmPersonnelDirector(),"identificationNo");
 						if(personnelDirectorSSM == null && personnelSSM == null){
 							personnelsRole.add(personnel);
+					}
+				}
+			}
+			// start #29956 smOwnerSsmPopup
+			String[] params = new String[50];
+			StringBuilder sb = new StringBuilder();
+			int x = 0;
+			Boolean noEp = false;
+			if (!personnelsRole.isEmpty()) {
+				for (SmPersonnel smPersonnel : personnelsRole) {
+					if (x != 0) {
+						for (String roles : params) {
+							if(roles!=null){
+								if (smPersonnel.getEpRole() == null && !roles.equals("no EP Role") && !roles.equals("/ ")
+										&& !noEp) {
+									params[x] = "/ ";
+									sb.append("/ ");
+									x++;
+									params[x] = "no EP Role";
+									sb.append("no EP Role");
+									x++;
+									noEp = true;
+								} else if (smPersonnel.getEpRole() != null&& !roles.equals(getEpRoleDescByRoleCode(smPersonnel.getEpRole())) && !roles.equals("/ ")) {
+									params[x] = "/ ";
+									sb.append("/ ");
+									x++;
+									params[x] = getEpRoleDescByRoleCode(smPersonnel.getEpRole());
+									sb.append(getEpRoleDescByRoleCode(smPersonnel.getEpRole()));
+									x++;
+								}
+							}
+						}
+					} else {
+						if(smPersonnel.getEpRole() == null){
+							params[x] = "no EP Role";
+							sb.append("no EP Role");
+							x++;
+							noEp = true;
+						}else{
+							params[x] = getEpRoleDescByRoleCode(smPersonnel.getEpRole());
+							sb.append(getEpRoleDescByRoleCode(smPersonnel.getEpRole()));
+							x++;
 						}
 					}
 				}
 			}
+			this.getManagedBean().setTermAndConditionCheckOwner(
+					SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner", new String[] { sb.toString() }));
+			this.getManagedBean().setTermAndConditionCheckOwnerA(
+					SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.a", new String[] { sb.toString() }));
+			this.getManagedBean().setTermAndConditionCheckOwnerC(
+					SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.c", new String[] { sb.toString() }));
+			this.getManagedBean().setTermAndConditionCheckOwnerChangeRole(
+					SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole", new String[] { sb.toString() }));
+			// end #29956
 			log.info("--------------------------------personnelsRole.size()-----------------------------------"+personnelsRole.size());
 			if(personnelsRole != null && personnelsRole.size() > 0) {
 					proceed = false;
@@ -378,17 +407,23 @@ public class ViewApplHistoryBackingBean extends
 			
 		}
 		if(proceed){
-			// #24923
-			smApplBB.getManagedBean().setNewSupplierType(
-					getManagedBean().getSmAppl().getSupplierType());
-			smApplBB.proceedToApplication(ParameterConst.NEW_SM_APPLN_FOR_MOF);
-	
-			// Enhancement #20467 - point to new appl page with bullet
-			String page = my.ep.web.constant.sm.SupplierManagementConst.APPLICATION_BASE_PAGE_BY_TYPE
-					.get("RE");
-			SmCommonUtil.redirectToPage(page, null, null, null);
+			if(resubmission){
+				SmCommonUtil.redirectToExternalUrl(getManagedBean()
+						.getResubmitUrl());
+			}else{
+				// #24923
+				smApplBB.getManagedBean().setNewSupplierType(
+						getManagedBean().getSmAppl().getSupplierType());
+				smApplBB.proceedToApplication(ParameterConst.NEW_SM_APPLN_FOR_MOF);
+		
+				// Enhancement #20467 - point to new appl page with bullet
+				String page = my.ep.web.constant.sm.SupplierManagementConst.APPLICATION_BASE_PAGE_BY_TYPE
+						.get("RE");
+				SmCommonUtil.redirectToPage(page, null, null, null);
+			}			
 		}		
 		//END 27951
+		
 	}
 
 	/**
