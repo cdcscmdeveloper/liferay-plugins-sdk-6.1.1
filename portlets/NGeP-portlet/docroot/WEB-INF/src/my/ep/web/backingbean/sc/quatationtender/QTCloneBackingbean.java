@@ -1738,6 +1738,7 @@ public class QTCloneBackingbean extends
 					} 
 					
 					qt.setProposalStartDate(latestBsvDate);//25635-End
+					updatePublishClosingDate(qt);//25635
 				}else{
 					
 //					List<TplSpecZoneDtl> zones = resDTO.getZonesList();
