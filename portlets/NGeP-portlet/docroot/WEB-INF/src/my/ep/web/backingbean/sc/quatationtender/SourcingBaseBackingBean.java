@@ -4694,7 +4694,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 	// #28215 for #18685 - End
-	// ----------------------------------- group of #18685 - start ----------------------------------------
+	// ----------------------------------- group of #18685 - end ----------------------------------------
 	
 	//Enhancement #26130 -start-
 	/**
