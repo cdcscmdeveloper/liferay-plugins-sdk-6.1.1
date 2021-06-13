@@ -3891,7 +3891,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	// end of 25396
 
-	// #18685 - start
+	// ----------------------------------- group of #18685 - start ----------------------------------------
 	/**
 	 * Retrieve report tab dtl.Event handle set attachment for Reports tab.
 	 */
@@ -4249,7 +4249,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								getManagedBean().getEvaluationReportList().add(report);
 								iterator.remove();
 							}
-							
+
 						}
 					}
 				}
@@ -4346,8 +4346,132 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
+	}	
+	
+	/**
+	 * this method is used to save the userInput type popup window content in reports tab.
+	 * @param brefingPaperRepor
+	 *                 (ScQtEvaluationReport evaluationReport).
+	 *                 
+	 */
+	public void saveEditTemplateDocContent(ScQtFinalizationReport brefingPaperRepor) {
+		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+		
+		try {
+			List<ScQtFinalizationReport> brefingPaperReportList = this.getManagedBean().getNewBriefingPaperReportList();
+			
+			if (null != brefingPaperRepor && !this.getManagedBean().isReadOnly()
+					&& CollectionUtils.isNotEmpty(brefingPaperReportList)) {
+				int index = brefingPaperReportList.indexOf(brefingPaperRepor);
+				SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+				ScQtFinalizationReport updatedReport = getManagedBean().getNewBriefingPaperReportList().get(index);
+				
+				List<ScQtFinalizationReport> updatedReportList = new ArrayList<>();
+				updatedReportList.add(updatedReport);
+				
+				reqDTO.setAddNewBriefingPaperReportList(updatedReportList);
+
+				qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+				qtSuppFinalizationSO.saveFinalizationReports(reqDTO);
+			}
+		} finally {
+			qtSuppFinalizationSO = null;
+		}
+
 	}
-	// #18685 - End.
+	
+	/**
+	 *reports file upload.to upload files for manual added reports.
+	 * 
+	 * @param event
+	 *            (Mandatory)
+	 * @throws FileNotFoundException
+	 *             the file not found exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	public void reportsUploadAttachment(FileUploadEvent event) throws FileNotFoundException, IOException {
+		if (event.getFile() != null) {
+			ScAttachment scAttachment = null;
+			ScQtFinalizationReport briefingReport = getManagedBean().getSelectedBriefingReport();
+			ScQtFinalizationReportAttachment reportAttachment = briefingReport.getScQtFinalizationReportAttachment();
+			
+			if (null == reportAttachment) {
+				reportAttachment = new ScQtFinalizationReportAttachment();
+				reportAttachment.setScQtFinalizationReport(briefingReport);
+				briefingReport.setScQtFinalizationReportAttachment(reportAttachment);
+			} else {
+				reportAttachment.setScQtFinalizationReport(briefingReport);
+				briefingReport.setScQtFinalizationReportAttachment(reportAttachment);
+			}
+			
+			List<ScQtFinalizationReport> briefingReports = getManagedBean().getNewBriefingPaperReportList();
+			int indexOfReport = briefingReports.indexOf(briefingReport);
+			
+			reportAttachment.setDocNo(briefingReport.getScQtFinalization().getScQt().getQtNo());
+			
+			scAttachment = reportAttachment;
+			uploadAttachment(event.getFile(), scAttachment);
+			
+			String fileName = scAttachment.getFileName();
+			
+			if (indexOfReport >= 0 && fileName != null) {
+				reportAttachment.setFileName(indexOfReport + SourcingConstants.UNDER_SCORE + fileName);
+			}
+			
+			briefingReport.setScQtFinalizationReportAttachment(reportAttachment);
+
+		}
+	}
+	
+	
+	/**
+	 * @param reportTitle
+	 * @param scQtFinalization
+	 * @param qtId 
+	 */
+	public void saveNewBriefingPaperReportList(List<String> reportTitleList, ScQtFinalization scQtFinalization,
+			Long qtId) {
+
+		if (scQtFinalization == null) {
+			scQtFinalization = new ScQtFinalization();
+		}
+
+		for (String reportName : reportTitleList) {
+			createReportForSF(reportName, scQtFinalization, qtId);
+		}
+
+		if (CollectionUtils.isNotEmpty(getManagedBean().getNewBriefingPaperReportList())) {
+			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+			reqDTO.setPayLoad(getManagedBean().getPayLoad());
+			
+			IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+			reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
+			qtSuppFinalizationSO.saveFinalizationReports(reqDTO);
+		}
+
+	}
+	
+	/**
+	 * delete existing report details records from database.
+	 *  
+	 */
+	public void deleteReportsTabDtls() {
+		List<ScQtFinalizationReport> removeFinalizationReports = getManagedBean().getRemoveFinalizationReports();
+		
+		if (null == removeFinalizationReports) {
+			removeFinalizationReports = new ArrayList<ScQtFinalizationReport>();
+			getManagedBean().setRemoveFinalizationReports(removeFinalizationReports);
+		}
+		
+		markDeleteSelectedRowsAction(getManagedBean().getNewBriefingPaperReportList(), removeFinalizationReports);
+		
+		if (CollectionUtils.isNotEmpty(removeFinalizationReports)) {
+			getManagedBean().setRemoveFinalizationReports(removeFinalizationReports);
+		}
+	}
 
 	/**
 	 * checkKertasTaklimat Uploaded report
@@ -4357,111 +4481,220 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param reportTitleList 
 	 * 
 	 */
-	protected void checkKertasTaklimatReports(List<ScQtFinalizationReport> finalizationReports, List<String> reportTitleList, String taskType){
-		if(CollectionUtils.isNotEmpty(finalizationReports)){
-			int count=0;
+	protected void checkKertasTaklimatReports(List<ScQtFinalizationReport> finalizationReports,
+			List<String> reportTitleList, String taskType) {
+		if (CollectionUtils.isNotEmpty(finalizationReports)) {
+			int count = 0;
 			Iterator<ScQtFinalizationReport> iterator = finalizationReports.iterator();
-			while(iterator.hasNext()){
+			
+			while (iterator.hasNext()) {
 				ScQtFinalizationReport finalizationReport = iterator.next();
-				if(null!=finalizationReport.getPmDocument()){
-					if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equalsIgnoreCase(finalizationReport.getPmDocument().getDocDefinitionKey())) {
+				
+				if (null != finalizationReport.getPmDocument()) {
+					if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equalsIgnoreCase(finalizationReport
+							.getPmDocument().getDocDefinitionKey())) {
 						++count;
-						
-						// #18685 - Start
+
 						if (null == getManagedBean().getNewBriefingPaperReportList()) {
 							List<ScQtFinalizationReport> newBriefingPaperReportList = new LinkedList<>();
 							getManagedBean().setNewBriefingPaperReportList(newBriefingPaperReportList);
 						}
-						// #18685 - End
-						
+
 						if (reportTitleList.contains(finalizationReport.getPmDocument().getDocName())) {
 							getManagedBean().getNewBriefingPaperReportList().add(finalizationReport);
+							
 							iterator.remove();
+							
 							continue;
-						} 
-					} 
-					
-					if (taskType.equals(SourcingConstants.CONSOLIDATION_TASK) &&
-							finalizationReport.getPmDocument().getDocName().equals(SourcingConstants.UDPUPBM_REPORT)) {
-						// #18685 - Start
+						}
+					}
+
+					if (taskType.equals(SourcingConstants.CONSOLIDATION_TASK)
+							&& finalizationReport.getPmDocument().getDocName().equals(SourcingConstants.UDPUPBM_REPORT)) {
+
 						if (null == getManagedBean().getSfBriefingPaperReportList()) {
 							List<ScQtFinalizationReport> sFBriefingPaperReportList = new ArrayList<>();
 							getManagedBean().setSfBriefingPaperReportList(sFBriefingPaperReportList);
 						}
-						
+
 						getManagedBean().getSfBriefingPaperReportList().add(finalizationReport);
-						// #18685 - End
-						
+
 						iterator.remove();
+						
 						continue;
 					}
-					
-					if (taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK) && 
-							(finalizationReport.getPmDocument().getDocName().equals(SourcingConstants.LATAR_BELAKANG_REPORT)
-									|| finalizationReport.getPmDocument().getDocName().equals(SourcingConstants.TUJUAN_REPORT)
-									|| finalizationReport.getPmDocument().getDocName().equals(SourcingConstants.METODOLOGI_PENILAIAN_REPORT)
-									|| finalizationReport.getPmDocument().getDocName().equals(SourcingConstants.UDPUP_REPORT))) {
-						// #18685 - Start
+
+					if (taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK)
+							&& (finalizationReport.getPmDocument().getDocName()
+									.equals(SourcingConstants.LATAR_BELAKANG_REPORT)
+									|| finalizationReport.getPmDocument().getDocName()
+											.equals(SourcingConstants.TUJUAN_REPORT)
+									|| finalizationReport.getPmDocument().getDocName()
+											.equals(SourcingConstants.METODOLOGI_PENILAIAN_REPORT) || finalizationReport
+									.getPmDocument().getDocName().equals(SourcingConstants.UDPUP_REPORT))) {
+
 						if (null == getManagedBean().getConsolidationBriefingPaperReportList()) {
 							List<ScQtFinalizationReport> consolidationBriefingPaperReportList = new ArrayList<>();
-							getManagedBean().setConsolidationBriefingPaperReportList(consolidationBriefingPaperReportList );
+							getManagedBean().setConsolidationBriefingPaperReportList(
+									consolidationBriefingPaperReportList);
 						}
-						
+
 						getManagedBean().getConsolidationBriefingPaperReportList().add(finalizationReport);
-						// #18685 - End
+
+						iterator.remove();
 						
-						iterator.remove(); 
 						continue;
-						
-												
+
 					}
-					
-				} 
+
+				}
 			}
-			
-			// #18685 - Start
-			if (taskType.equals(SourcingConstants.CONSOLIDATION_TASK) && CollectionUtils.isNotEmpty(getManagedBean().getNewBriefingPaperReportList())) {
-				List<ScQtFinalizationReport>  tempList = new ArrayList<>();
+
+			if (taskType.equals(SourcingConstants.CONSOLIDATION_TASK)
+					&& CollectionUtils.isNotEmpty(getManagedBean().getNewBriefingPaperReportList())) {
+				List<ScQtFinalizationReport> tempList = new ArrayList<>();
+				
 				for (String reportName : reportTitleList) {
 					for (ScQtFinalizationReport report : getManagedBean().getNewBriefingPaperReportList()) {
+						
 						if (reportName.equals(report.getPmDocument().getDocName())) {
 							tempList.add(report);
+							
 							break;
 						}
 					}
 				}
+				
 				getManagedBean().getNewBriefingPaperReportList().clear();
 				getManagedBean().getNewBriefingPaperReportList().addAll(tempList);
 			}
-			// #18685 - End
-			
-			log.info("checkKertasTaklimatReports count"+count);
-			if(count==1){
-				log.info("enter count1"+count);
-				for(ScQtFinalizationReport finalizationReport:finalizationReports){
-					if(null!=finalizationReport.getPmDocument() && SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equalsIgnoreCase(finalizationReport.getPmDocument().getDocDefinitionKey())){
-						finalizationReport.setKertasTaklimatUpload(Boolean.TRUE);	
-					}
+
+			log.info("checkKertasTaklimatReports count" + count);
+			if (count == 1) {
+				log.info("enter count1" + count);
+				for (ScQtFinalizationReport finalizationReport : finalizationReports) {
 					
-				}	
-			}else if(count>1){
-				log.info("enter countGreaterThan1"+count);
-				 String SPACE = " ";
-				  String reportTitle = ResourceBundleUtils.getMessage("lbl.sc.kertas.taklimat", 
-				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, SourcingConstants.MY_LOCALE) 
-				 			+ SPACE + "(" + (count-1) + ")";
-				  log.info("reportTitle"+reportTitle);
-				for(ScQtFinalizationReport finalizationReport:finalizationReports){
-					if(null!=finalizationReport.getPmDocument() && SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equalsIgnoreCase(finalizationReport.getPmDocument().getDocDefinitionKey()) && reportTitle.equalsIgnoreCase(finalizationReport.getTitle()) ){
-						finalizationReport.setKertasTaklimatUpload(Boolean.TRUE);	
+					if (null != finalizationReport.getPmDocument()
+							&& SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equalsIgnoreCase(finalizationReport
+									.getPmDocument().getDocDefinitionKey())) {
+						finalizationReport.setKertasTaklimatUpload(Boolean.TRUE);
+					}
+
+				}
+			} else if (count > 1) {
+				log.info("enter countGreaterThan1" + count);
+				String SPACE = " ";
+				String reportTitle = ResourceBundleUtils.getMessage("lbl.sc.kertas.taklimat",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, SourcingConstants.MY_LOCALE)
+						+ SPACE
+						+ "("
+						+ (count - 1) + ")";
+				log.info("reportTitle" + reportTitle);
+				
+				for (ScQtFinalizationReport finalizationReport : finalizationReports) {
+					if (null != finalizationReport.getPmDocument()
+							&& SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equalsIgnoreCase(finalizationReport
+									.getPmDocument().getDocDefinitionKey())
+							&& reportTitle.equalsIgnoreCase(finalizationReport.getTitle())) {
+						finalizationReport.setKertasTaklimatUpload(Boolean.TRUE);
+						
 						break;
 					}
-					
-				}	
+
+				}
 			}
 		}
 	}
-	// #26226 - End
+	
+    /**
+     * @param finalizationReport
+     */
+	public void closeScQtFinalizationReport(ScQtFinalizationReport finalizationReport) {
+		IQTSuppFinalizationSO qtSuppFinalizationSO;
+		boolean reportFound = false;
+
+		try {
+			qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTSuppFinalizationSO.class);
+
+			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+			ScQtFinalization scQtFinalization = finalizationReport.getScQtFinalization();
+			if (scQtFinalization == null) {
+				scQtFinalization = new ScQtFinalization();
+			}
+			
+			reqDTO.setScQtFinalization(scQtFinalization);
+			List<Long> qtReportIds = new ArrayList<Long>();
+			qtReportIds.add(finalizationReport.getQtReportId());
+			reqDTO.setQtReportIdList(qtReportIds);
+			reqDTO.setDocumentCategory(finalizationReport.getDocCategory());
+
+			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.retrieveFinalizationReport(reqDTO);
+
+			if (null != resDTO && null != resDTO.getScQtFinalizationReports()
+					&& resDTO.getScQtFinalizationReports().size() > 0) {
+				ScQtFinalizationReport scQtFinalizationReport = resDTO.getScQtFinalizationReports().get(0);
+				int index = 0;
+				for (ScQtFinalizationReport report : getManagedBean().getNewBriefingPaperReportList()) {
+					if (report.getTitle().equalsIgnoreCase(finalizationReport.getTitle())) {
+						getManagedBean().getNewBriefingPaperReportList().get(index)
+								.setReportContent(scQtFinalizationReport.getReportContent());
+						reportFound = true;
+						break;
+					}
+					index++;
+				}
+			}
+			
+		} finally {
+			if (!reportFound) {
+				finalizationReport.setReportContent("");
+			}
+			qtSuppFinalizationSO = null;
+		}
+	}  
+	
+	// #28215 for #18685 - Start
+	/**
+	 * @param finalizationReport
+	 */
+	public void saveScQtFinalizationReport(ScQtFinalizationReport finalizationReport) {
+		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+		
+		try {
+			qtSuppFinalizationSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTSuppFinalizationSO.class);
+			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+			
+			List<ScQtFinalizationReport> briefingPaperReportList = new ArrayList<>();
+
+			finalizationReport.setCreatedBy(new FacesScopes().getUserSessionBean().getUserId());
+			finalizationReport.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
+			
+			briefingPaperReportList.add(finalizationReport);
+			
+			reqDTO.setAddNewBriefingPaperReportList(briefingPaperReportList );
+			finalizationReport = qtSuppFinalizationSO.saveFinalizationReports(reqDTO);
+			int index = 0;
+			
+			for (ScQtFinalizationReport report : getManagedBean().getNewBriefingPaperReportList()) {
+				if (report.getTitle().equalsIgnoreCase(finalizationReport.getTitle())) {
+					getManagedBean().getNewBriefingPaperReportList().set(index, finalizationReport);
+					getManagedBean().setSelectedBriefingReport(finalizationReport);
+
+					break;
+				}
+				
+				index++;
+			}
+			
+		} finally {
+			qtSuppFinalizationSO = null;
+		}
+	}
+	// #28215 for #18685 - End
+	// ----------------------------------- group of #18685 - start ----------------------------------------
 	
 	//Enhancement #26130 -start-
 	/**
@@ -4564,162 +4797,87 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 	//Enhancement #26130 -end-
 		
-		// #18685-Start.
-        /**
-         * @param finalizationReport
-         */
-        public void closeScQtFinalizationReport(ScQtFinalizationReport finalizationReport) {
-          IQTSuppFinalizationSO qtSuppFinalizationSO;
-          // 18685 - Start.
-          boolean reportFound = false;
-          try {
-            qtSuppFinalizationSO = BusinessDelegate.getInstance()
-                .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-                        IQTSuppFinalizationSO.class);
-  
-            SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
-            ScQtFinalization scQtFinalization = finalizationReport.getScQtFinalization();
-            if (scQtFinalization == null) {
-              scQtFinalization = new ScQtFinalization();
-            }
-            // 18685 - Start.
-            reqDTO.setScQtFinalization(scQtFinalization);
-            List<Long> qtReportIds = new ArrayList<Long>();
-            qtReportIds.add(finalizationReport.getQtReportId());
-            reqDTO.setQtReportIdList(qtReportIds);
-            reqDTO.setDocumentCategory(finalizationReport.getDocCategory());
-        
-            SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.retrieveFinalizationReport(reqDTO);
-            
-            if (null != resDTO && null != resDTO.getScQtFinalizationReports()
-            		&& resDTO.getScQtFinalizationReports().size() > 0) {
-            	ScQtFinalizationReport scQtFinalizationReport = resDTO.getScQtFinalizationReports().get(0);
-            	int index = 0;
-                for (ScQtFinalizationReport report : getManagedBean().getNewBriefingPaperReportList()) {
-                  if (report.getTitle().equalsIgnoreCase(finalizationReport.getTitle())) {
-                    getManagedBean().getNewBriefingPaperReportList().get(index).setReportContent(scQtFinalizationReport.getReportContent());
-                    reportFound = true;
-                    break;
-                  }
-                  index++;
-                }
-            }
-            // 18685 - End.
-          } finally {
-	    	  if (!reportFound) {
-	          	finalizationReport.setReportContent("");
-	          }
-              qtSuppFinalizationSO = null;
-          }
-     }
-     // #18685-End.   
+    //Enhancement #25729 Allow create QT below threshold RM20k - start -
+    //#25729 #142 start - checking total indicative price <= 20k
+    /**
+     * Get Total Indicative Price threshold amount
+     * 
+     * @return	the panel Total Indicative Price amount
+     */
+	protected BigDecimal getTotalIndPriceThresholdAmount() {
+		IRuleSO ruleSO = null;
+		BigDecimal indPriceThreshold = new BigDecimal(0);
 
-    	//Enhancement #25729 Allow create QT below threshold RM20k - start -
-    	//#25729 #142 start - checking total indicative price <= 20k
-    	/**
-    	 * Get Total Indicative Price threshold amount
-    	 * 
-    	 * @return	the panel Total Indicative Price amount
-    	 */
-    	protected BigDecimal getTotalIndPriceThresholdAmount() {
-    		IRuleSO ruleSO = null;
-    		BigDecimal indPriceThreshold = new BigDecimal(0);
+		try {
+			ruleSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IRuleSO.class);
 
-    		try {
-    			ruleSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-    				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+			RuleReqDTO ruleReqDTO = new RuleReqDTO();
+			ruleReqDTO.setRuleType(RuleTypeConst.QTOTAL_INDI_PRICE_THRESHOLD);
 
-    			RuleReqDTO ruleReqDTO = new RuleReqDTO();
-    			ruleReqDTO.setRuleType(RuleTypeConst.QTOTAL_INDI_PRICE_THRESHOLD);
-    			
-    			RuleResDTO ruleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
-    				
-    			if (ruleResDTO.isSuccessful()) {
-    				if(ruleResDTO.getRuleValueList()!=null && ruleResDTO.getRuleValueList().size()>0) {
-    					indPriceThreshold = new BigDecimal(ruleResDTO.getRuleValueList().get(0).getRuleValue());
-    				} else {
-    					throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
-    				}	
-    			}
-    				
-    		} finally {
-    			ruleSO = null;
-    		}
+			RuleResDTO ruleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
 
-    		return indPriceThreshold;
-    	}
- 
-    	/**
-    	 * @param reportTitle
-    	 * @param scQtFinalization
-    	 * @param qtId 
-    	 */
-    	public void saveNewBriefingPaperReportList(List<String> reportTitleList, ScQtFinalization scQtFinalization, Long qtId){
-    		
-    		if (scQtFinalization == null) {
-    			scQtFinalization = new ScQtFinalization();
-    		}
-    		
-    		for (String reportName : reportTitleList) {
-    			createReportForSF(reportName, scQtFinalization, qtId);
-    		}
-    			
-    		if (CollectionUtils.isNotEmpty(getManagedBean().getNewBriefingPaperReportList())) {
-    			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
-    			reqDTO.setPayLoad(getManagedBean().getPayLoad());
-    			IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance()
-    					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-    							IQTSuppFinalizationSO.class);
-    			reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
-    			qtSuppFinalizationSO.saveFinalizationReports(reqDTO);
-    		}
-    		
-    	}
+			if (ruleResDTO.isSuccessful()) {
+				if (ruleResDTO.getRuleValueList() != null && ruleResDTO.getRuleValueList().size() > 0) {
+					indPriceThreshold = new BigDecimal(ruleResDTO.getRuleValueList().get(0).getRuleValue());
+				} else {
+					throw new EpException(MessageConst.ERROR_770222,
+							new String[] { getRuleTypeDesc(ruleReqDTO.getRuleType()) });
+				}
+			}
 
-    	
-    	//QT threshold RM20k - 50k
-    	public boolean expectTotalIndPriceBetweenThreshold(ScQt scQt) {
-    		BigDecimal tmpExpectedIntendedPrice = scQt.getTmpExpectedIntendedPrice();
-    				
-    		if (!scQt.isPanel() && tmpExpectedIntendedPrice != null) {
-    			log.info(":::expectTotalIndPriceBetweenThreshold() scQt.isPanel(): "+ scQt.isPanel() +" :::");
-    			log.info(":::expectTotalIndPriceBetweenThreshold() tmpExpectedIntendedPrice: "+ tmpExpectedIntendedPrice +" :::");
-    			log.info(":::expectTotalIndPriceBetweenThreshold() tmpExpectedIntendedPrice.doubleValue: "+ tmpExpectedIntendedPrice.doubleValue() +" :::");
+		} finally {
+			ruleSO = null;
+		}
 
-    			if (SourcingConstants.QT_BELOW_20K <= tmpExpectedIntendedPrice.doubleValue() &&
-    				SourcingConstants.QT_BELOW_50K >= tmpExpectedIntendedPrice.doubleValue()) {
+		return indPriceThreshold;
+	}
+	
+    //QT threshold RM20k - 50k
+	public boolean expectTotalIndPriceBetweenThreshold(ScQt scQt) {
+		BigDecimal tmpExpectedIntendedPrice = scQt.getTmpExpectedIntendedPrice();
 
-    				return Boolean.TRUE;
-    			}
-    		}
-    				
-    		return Boolean.FALSE;
-    	}
+		if (!scQt.isPanel() && tmpExpectedIntendedPrice != null) {
+			log.info(":::expectTotalIndPriceBetweenThreshold() scQt.isPanel(): " + scQt.isPanel() + " :::");
+			log.info(":::expectTotalIndPriceBetweenThreshold() tmpExpectedIntendedPrice: " + tmpExpectedIntendedPrice
+					+ " :::");
+			log.info(":::expectTotalIndPriceBetweenThreshold() tmpExpectedIntendedPrice.doubleValue: "
+					+ tmpExpectedIntendedPrice.doubleValue() + " :::");
 
-    	// #25729 #142 Start - Allow create QT below threshold RM20k
-    	public boolean expectTotalIndPriceBelowThreshold(ScQt scQt, String ScreenType) {
-    		BigDecimal actualIntendedPrice = new BigDecimal(0);
-    	
-    		if ("createQt".equals(ScreenType)) {
-    			actualIntendedPrice = scQt.getTmpExpectedIntendedPrice();
-    		} else {
-    			actualIntendedPrice = scQt.getEstimatedAmount();
-    		}
-    				
-    		if (!scQt.isPanel() && actualIntendedPrice != null) {
-    			log.info(":::expectTotalIndPriceBelowThreshold() scQt.isPanel(): "+ scQt.isPanel() +" :::");
-    			log.info(":::expectTotalIndPriceBelowThreshold() ExpectedIntendedPrice: "+ actualIntendedPrice +" :::");
+			if (SourcingConstants.QT_BELOW_20K <= tmpExpectedIntendedPrice.doubleValue()
+					&& SourcingConstants.QT_BELOW_50K >= tmpExpectedIntendedPrice.doubleValue()) {
 
-    			// #25729 #174			 
-    			if ((actualIntendedPrice.compareTo(BigDecimal.valueOf(SourcingConstants.QT_BELOW_20K)) <= 0)) {
-    				return Boolean.TRUE;
-    			}
-    		}
-    				
-    		return Boolean.FALSE;
-    	}
-    	//#25729 #142 end
-    	//Enhancement #25729 Allow create QT below threshold RM20k - end - 
+				return Boolean.TRUE;
+			}
+		}
+
+		return Boolean.FALSE;
+	}
+
+    // #25729 #142 Start - Allow create QT below threshold RM20k
+	public boolean expectTotalIndPriceBelowThreshold(ScQt scQt, String ScreenType) {
+		BigDecimal actualIntendedPrice = new BigDecimal(0);
+
+		if ("createQt".equals(ScreenType)) {
+			actualIntendedPrice = scQt.getTmpExpectedIntendedPrice();
+		} else {
+			actualIntendedPrice = scQt.getEstimatedAmount();
+		}
+
+		if (!scQt.isPanel() && actualIntendedPrice != null) {
+			log.info(":::expectTotalIndPriceBelowThreshold() scQt.isPanel(): " + scQt.isPanel() + " :::");
+			log.info(":::expectTotalIndPriceBelowThreshold() ExpectedIntendedPrice: " + actualIntendedPrice + " :::");
+
+			// #25729 #174
+			if ((actualIntendedPrice.compareTo(BigDecimal.valueOf(SourcingConstants.QT_BELOW_20K)) <= 0)) {
+				return Boolean.TRUE;
+			}
+		}
+
+		return Boolean.FALSE;
+	}
+	//#25729 #142 end
+	//Enhancement #25729 Allow create QT below threshold RM20k - end - 
 	
 	// #25638 - Start
 	public void displayReviseInstrn(List<ScQtCommitteeActivity> committeeList) {
@@ -4746,47 +4904,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 	// #25638 - End
-	
-	// #28215 for #18685 - Start
-	/**
-	 * @param finalizationReport
-	 */
-	public void saveScQtFinalizationReport(ScQtFinalizationReport finalizationReport) {
-		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
-		
-		try {
-			qtSuppFinalizationSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTSuppFinalizationSO.class);
-			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
-			
-			List<ScQtFinalizationReport> briefingPaperReportList = new ArrayList<>();
-
-			finalizationReport.setCreatedBy(new FacesScopes().getUserSessionBean().getUserId());
-			finalizationReport.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
-			
-			briefingPaperReportList.add(finalizationReport);
-			
-			reqDTO.setAddNewBriefingPaperReportList(briefingPaperReportList );
-			finalizationReport = qtSuppFinalizationSO.saveFinalizationReports(reqDTO);
-			int index = 0;
-			
-			for (ScQtFinalizationReport report : getManagedBean().getNewBriefingPaperReportList()) {
-				if (report.getTitle().equalsIgnoreCase(finalizationReport.getTitle())) {
-					getManagedBean().getNewBriefingPaperReportList().set(index, finalizationReport);
-					getManagedBean().setSelectedBriefingReport(finalizationReport);
-
-					break;
-				}
-				
-				index++;
-			}
-			
-		} finally {
-			qtSuppFinalizationSO = null;
-		}
-	}
-	// #28215 for #18685 - End
 	
 	//29194 - Start
 	/**
