@@ -106,7 +106,9 @@
 				<td class="txtBold">Remarks:</td>
 				
 				##29645 start - display remark data
-				<td><p style="width: 200px;height: 50px;background: white;border:solid thin black;">$!bank.remark</p></td>
+				##28774 - Start - Large the border of the bank remark
+				<td><p style="width: 350px;height: 100px;background: white;border:solid thin black;">$!bank.remark</p></td>
+				##28774 - End
 				##29645 end
 				
 			</tr>
