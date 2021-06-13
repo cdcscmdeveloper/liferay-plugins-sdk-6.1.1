@@ -793,14 +793,14 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			List<String> itemSpecList = new ArrayList<>();
 			List<ScRequestItemSpecOffer> itemSpecOfferList = requestItemSO.retrieveNewOfferSpec(requestItemId);
 			for(ScRequestItemSpecOffer i: itemSpecOfferList){				
-				if((i.getItemSpec()) != null && !i.getItemSpec().isEmpty()){
+				if(i.getQuestionType().equals("S")){
 					itemSpecList.add(i.getItemSpec());				
 				}				
 			}
 			getManagedBean().setItemSpecification(itemSpecList);
 			
 			for(ScRequestItemSpecOffer itemSpecOffer: itemSpecOfferList){
-				if((itemSpecOffer.getItemSpec() == null || itemSpecOffer.getItemSpec().isEmpty())){
+				if(itemSpecOffer.getQuestionType().equals("I")){
 					if(itemSpecOffer.getSupplierOffer() != null && !itemSpecOffer.getSupplierOffer().isEmpty()){
 						getManagedBean().setSupplierOffer(itemSpecOffer.getSupplierOffer());
 					}else{
@@ -822,7 +822,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			Iterator<ScRequestItemSpecOffer> itr = scRequestItemSpecOffer.iterator();
 			while (itr.hasNext()){
 				ScRequestItemSpecOffer scRequestItemSpecOfferTemp = itr.next();
-				if(scRequestItemSpecOfferTemp.getItemSpec() == null || scRequestItemSpecOfferTemp.getItemSpec().isEmpty())
+				if(scRequestItemSpecOfferTemp.getQuestionType().equals("I"))
 					itr.remove();
 			}			
 			getManagedBean().setScRequestItemSpecOfferList(scRequestItemSpecOffer);		
