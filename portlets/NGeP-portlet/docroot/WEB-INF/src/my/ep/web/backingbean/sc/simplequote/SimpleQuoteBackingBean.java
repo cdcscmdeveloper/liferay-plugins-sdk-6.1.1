@@ -8221,7 +8221,7 @@ public class SimpleQuoteBackingBean extends
 			         if (getManagedBean().getRemainingDay() > 0){
 				        	message = getMessage(
 									"lbl.sc.sq.remaining.time.day", new String[] {String.valueOf(addingZeroInfront(getManagedBean().getRemainingDay())), String.valueOf(addingZeroInfront(getManagedBean().getRemainingHour())),String.valueOf(addingZeroInfront(getManagedBean().getRemainingMinute())) });
-				        }else if (getManagedBean().getRemainingDay() > 0 && getManagedBean().getRemainingHour() > 0){
+				        }else if (getManagedBean().getRemainingDay() == 0 && getManagedBean().getRemainingHour() > 0){
 				        	message = getMessage(
 									"lbl.sc.sq.remaining.time.hour", new String[] { String.valueOf(addingZeroInfront(getManagedBean().getRemainingHour())),String.valueOf(addingZeroInfront(getManagedBean().getRemainingMinute())) });
 				        }else if (getManagedBean().getRemainingInterval() > 0){
