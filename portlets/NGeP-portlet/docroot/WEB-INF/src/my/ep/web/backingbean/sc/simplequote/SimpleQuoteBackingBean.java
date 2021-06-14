@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -19,6 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import javax.faces.application.FacesMessage;
@@ -3970,6 +3973,14 @@ public class SimpleQuoteBackingBean extends
 		double time = (double)diffHours + (double)diffMinutes / 60;
         getManagedBean().setDays(diffDays);
         getManagedBean().setHours(time);
+        
+        //#5426 - start
+        getManagedBean().setRemainingInterval(diff);
+        getManagedBean().setRemainingDay(diffDays);
+        getManagedBean().setRemainingHour(diffHours);
+        getManagedBean().setRemainingMinute(diffMinutes);
+        //#5426 - end
+        
 	}
 
 	
@@ -5018,6 +5029,8 @@ public class SimpleQuoteBackingBean extends
 			scQuote.setRemarks(cloneScQuote.getRemarks());
 		}
 		// #29800 - end
+		//#5426
+		initCountdown();
 
 		// page navigation to simple quote
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -8182,4 +8195,77 @@ public class SimpleQuoteBackingBean extends
 			
 		}
 		//#25725 end
+		
+		//#5426 - start
+
+		public String addingZeroInfront(Long number){
+			String newnumber ="";
+			if (number < 10 && number >=0){
+				newnumber = "0"+String.valueOf(number);
+			}else if (number >= 10 ) {
+				return String.valueOf(number);
+			}
+			return newnumber;
+		}
+		
+		public String displayRemainingTime(){
+			String message="";
+			
+			try {
+				
+				getDaysAndHours(new Date(), getManagedBean().getScQuote().getEndDate());
+	
+				boolean isStarted = new Date().after(getManagedBean().getScQuote().getStartDate());
+				
+				if (isStarted){
+			         if (getManagedBean().getRemainingDay() > 0){
+				        	message = getMessage(
+									"lbl.sc.sq.remaining.time.day", new String[] {String.valueOf(addingZeroInfront(getManagedBean().getRemainingDay())), String.valueOf(addingZeroInfront(getManagedBean().getRemainingHour())),String.valueOf(addingZeroInfront(getManagedBean().getRemainingMinute())) });
+				        }else if (getManagedBean().getRemainingDay() > 0 && getManagedBean().getRemainingHour() > 0){
+				        	message = getMessage(
+									"lbl.sc.sq.remaining.time.hour", new String[] { String.valueOf(addingZeroInfront(getManagedBean().getRemainingHour())),String.valueOf(addingZeroInfront(getManagedBean().getRemainingMinute())) });
+				        }else if (getManagedBean().getRemainingInterval() > 0){
+				        	message = getMessage(
+									"lbl.sc.sq.remaining.time.minute", new String[] {String.valueOf(addingZeroInfront(getManagedBean().getRemainingMinute()))});
+				        }
+				}
+
+				
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+            return message;
+		}
+		 
+	    public void initCountdown(){
+			try {
+				
+		    	getDaysAndHours(new Date(), getManagedBean().getScQuote().getEndDate());
+
+				if (getManagedBean().getRemainingInterval() == 0){
+					RequestContext reqCtx = RequestContext.getCurrentInstance();
+			        reqCtx.execute("poll.stop();");
+				}
+				
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+	    }
+	    
+	    public String displayRemainingTimeMsg(){
+	    	
+	    	String remainingMsg ="";
+	    	
+	    	boolean isStarted = new Date().after(getManagedBean().getScQuote().getStartDate());
+	    	getDaysAndHours(new Date(), getManagedBean().getScQuote().getEndDate());
+	    	
+	    	if (isStarted){
+	    		if (getManagedBean().getRemainingInterval() > 0){
+		    		remainingMsg = getMessageCommon("lbl.sc.sq.remaining.time");
+				}
+	    	}
+	    	
+	    	return remainingMsg;
+	    }
+		//#5426 - end
 }
