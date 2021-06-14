@@ -9,8 +9,8 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-		<p:messages id="messages" showDetail="true" autoUpdate="true"
-			closable="true" severity="error,info" showSummary="false"></p:messages>
+		<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true"
+			closable="true" severity="info,error" showSummary="false"></p:messages>
 		<ui:remove>
 			<p:blockUI block=":form" widgetVar="blockWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
@@ -123,13 +123,7 @@
 						<p:commandLink onclick="remarkHisCatCodePopup.show()" immediate="true">
 							<p:graphicImage id="hisImage" value="/css/images/design/document.png" /> 
 						</p:commandLink> 
-						
-						<p:graphicImage id="hisTipImage" value="/css/images/design/tooltips.png" /> 
-						<p:tooltip
-							id="historyTip" for="hisTipImage">
-							<p:outputLabel escape="false"  dir="rtl" 
-								value="#{lbl['lbl.pm.categ.history.sub.tooltips']}" />
-						</p:tooltip>
+						<ac:iconTooltip value="#{lbl['lbl.pm.categ.history.sub.tooltips']}"/>
 					</td>
 				</tr>
 				</c:if>
@@ -161,13 +155,7 @@
 						disabled="#{categoryBackingBean.remarkDisable}" required="#{!categoryBackingBean.remarkDisable}"
 						requiredMessage="#{lbl['lbl.pm.categ.remark.sub.required']}"
 						validatorMessage="#{lbl['lbl.pm.categ.remark.sub.required']}"/>
-						&#160; 
-						<p:graphicImage id="tipImage" value="/css/images/design/tooltips.png" /> 
-						<p:tooltip
-							id="remarkTip" for="tipImage">
-							<p:outputLabel escape="false"  dir="rtl" 
-								value="#{lbl['lbl.pm.categ.remark.main.tooltips']}" />
-						</p:tooltip>
+						<ac:iconTooltip value="#{lbl['lbl.pm.categ.remark.main.tooltips']}"/>
 					</td>
 				</tr>
 				</c:if>
@@ -203,13 +191,13 @@
 					width="100%" var="pmCategoryL3">
 
 					<ac:paginator for="catdetailsId"></ac:paginator>
-					<p:column>
+					<p:column style="width:15%"> <!-- #29665: add width style -->
 						<f:facet name="header">
 					#{lbl['lbl.pm.bn.level']}
 				</f:facet>
 						<h:outputText value="#{lbl['lbl.pm.sub.div']}" />
 					</p:column>
-					<p:column>
+					<p:column style="width:6%"> <!-- #29665: add width style -->
 						<f:facet name="header">
 					#{lbl['lbl.pm.bn.code']}
 				</f:facet>
@@ -223,7 +211,7 @@
 				<!-- End #29665 rename column header -->
 						<h:outputText value="#{pmCategoryL3.categoryName}" />
 					</p:column>
-					<p:column>
+					<p:column style="width:6%"> <!-- #29665: add width style -->
 						<f:facet name="header">
 					#{lbl['lbl.pm.status']}
 				</f:facet>
@@ -234,7 +222,7 @@
 					</p:column>
 					
 				<!-- Start #29665 Add action column -->
-				<p:column  style="text-align: center" rendered="#{!categoryBackingBean.managedBean.newCategory}">
+				<p:column  style="text-align: center; width:6%" rendered="#{!categoryBackingBean.managedBean.newCategory}">
 					<f:facet name="header">
 					#{lbl['lbl.pm.organisation.action']}
 					</f:facet>
