@@ -258,13 +258,7 @@
 						<p:commandLink onclick="remarkHisCatCodePopup.show()" immediate="true">
 							<p:graphicImage id="hisImage" value="/css/images/design/document.png" /> 
 						</p:commandLink> 
-						
-						<p:graphicImage id="hisTipImage" value="/css/images/design/tooltips.png" /> 
-						<p:tooltip
-							id="historyTip" for="hisTipImage">
-							<p:outputLabel escape="false"  dir="rtl" 
-								value="#{lbl['lbl.pm.categ.history.division.tooltips']}" />
-						</p:tooltip>
+						<ac:iconTooltip value="#{lbl['lbl.pm.categ.history.division.tooltips']}"/>
 					</td>
 					<td><p:outputLabel
 							value="#{lbl['lbl.pm.category.company.restriction']}" /></td>
@@ -416,13 +410,7 @@
 						tabCatId:tabpanel1,tabCatId:tabpanel2" 
 						process="@this"/>
 						</p:inputTextarea>
-						&#160; 
-						<p:graphicImage id="tipImage" value="/css/images/design/tooltips.png" /> 
-						<p:tooltip
-							id="remarkTip" for="tipImage">
-							<p:outputLabel escape="false"  dir="rtl" 
-								value="#{lbl['lbl.pm.categ.remark.main.tooltips']}" />
-						</p:tooltip>
+						<ac:iconTooltip value="#{lbl['lbl.pm.categ.remark.main.tooltips']}"/>
 					</td>
 					<td colspan="2"></td>
 				</tr>
