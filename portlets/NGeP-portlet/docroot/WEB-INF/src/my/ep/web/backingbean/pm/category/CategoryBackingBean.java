@@ -4308,11 +4308,11 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		this.remarkDisable = true;
 		this.getManagedBean().setRemarkCategory(null);
 		if(level == 1){
-			this.getManagedBean().setUpdatedCategoryDesc(this.getManagedBean().getPmCategoryL1().getCategoryName());
+			editCategory(this.getManagedBean().getPmCategoryL1().getCategoryL1Id());
 		}else if(level == 2){
-			this.getManagedBean().setUpdatedCategoryDesc(this.getManagedBean().getPmCategoryL2().getCategoryName());
+			editSubCategory(this.getManagedBean().getPmCategoryL2().getCategoryL2Id(), level, false);
 		}else if(level == 3){
-			this.getManagedBean().setUpdatedCategoryDesc(this.getManagedBean().getPmCategoryL3().getCategoryName());
+			editSubDivision(this.getManagedBean().getPmCategoryL3().getCategoryL3Id(), level);
 		}
 	}
 	
