@@ -6585,8 +6585,8 @@ public class SmApplicationUtil {
 					if (facType
 							.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_FACTORY)) {
 						managedBean.setShowFactoryPanel(true);
-					} else if (facType
-							.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_STORE)) {
+					} else if (facType.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_STORE)
+							|| facType.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) { //#30043
 						managedBean.setShowStorePanel(true);
 					} else if (facType
 							.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP)) {
@@ -6611,6 +6611,16 @@ public class SmApplicationUtil {
 		managedBean.setFactoryFacilitiesVOList(SmApplicationUtil
 				.getCategoryFacilityVO(managedBean.getSmAppl(),
 						SupplierManagementConst.SM_FACILITY_TYPE_FACTORY));
+		
+		// start #30043
+		if (managedBean.isShowStorePanel()) {
+			managedBean.getStoreFacilitiesVOList().addAll((SmApplicationUtil.getCategoryFacilityVO(managedBean.getSmAppl(),
+					SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)));
+			if (managedBean.getStoreFacilitiesVOList().isEmpty()) {
+				managedBean.setShowStorePanel(false);
+			}
+		}
+		// end #30043
 
 		// set PO assign site visit popup VO value
 		if (managedBean.isPoUser()
