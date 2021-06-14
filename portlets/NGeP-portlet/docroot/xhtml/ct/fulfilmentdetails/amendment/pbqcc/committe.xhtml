@@ -76,8 +76,8 @@
 						     style="width: 110px;margin-bottom: 5px;" required="true" label="#{lbl['lbl.ct.role']}" >
 							<f:selectItems value="#{amendmentBackingBean.getRoleTypeDropdown(ctCommitteeVar)}" />
 							<p:ajax event="change" process="@this" partialSubmit="true"  
-							   update=":form:panelHeaderException, committeRepresentId"
-							   listener="#{amendmentBackingBean.validateDuplicateChairperson(ctCommitteeVar.memberRoleId)}"></p:ajax>
+							   update=":form:panelHeaderException, committeRepresentId, committeTable"
+							   listener="#{amendmentBackingBean.validateDuplicateChairperson(ctCommitteeVar,ctCommitteeVar.memberRoleId)}"></p:ajax>
 							</p:selectOneMenu>
 						 </ui:fragment>
 				 </p:column>

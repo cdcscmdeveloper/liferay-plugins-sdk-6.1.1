@@ -264,9 +264,7 @@
 				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.decision'] 
 					and !amendmentBackingBean.managedBean.signOffDecision}">
 					<ui:include src="pbqcc/signOffpbqcc.xhtml"/>
-					<p:outputPanel rendered="#{!amendmentBackingBean.managedBean.disableDecisionDetails}">
-						<ui:include src="pbqcc/attachment.xhtml"/>
-					</p:outputPanel>
+					<ui:include src="pbqcc/attachment.xhtml"/>
 				</p:outputPanel>
 				
 				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.decision']
