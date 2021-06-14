@@ -451,6 +451,13 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	private boolean qtyNonEditable = Boolean.FALSE;
 	// #28865 - start
 	
+	//#5426 - start
+	private Long remainingMinute;
+	private Long remainingHour;
+	private Long remainingDay;
+	private Long remainingInterval;
+	private String remainingTimeMsg;
+	//#5426 - end
 	/**
 	 * Gets the spki backing bean.
 	 * 
@@ -2820,5 +2827,75 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 		this.qtyNonEditable = qtyNonEditable;
 	}
 	// #28865 - end
+
+	/**
+	 * @return the remainingMinute
+	 */
+	public Long getRemainingMinute() {
+		return remainingMinute;
+	}
+
+	/**
+	 * @param remainingMinute the remainingMinute to set
+	 */
+	public void setRemainingMinute(Long remainingMinute) {
+		this.remainingMinute = remainingMinute;
+	}
+
+	/**
+	 * @return the remainingHour
+	 */
+	public Long getRemainingHour() {
+		return remainingHour;
+	}
+
+	/**
+	 * @param remainingHour the remainingHour to set
+	 */
+	public void setRemainingHour(Long remainingHour) {
+		this.remainingHour = remainingHour;
+	}
+
+	/**
+	 * @return the remainingDay
+	 */
+	public Long getRemainingDay() {
+		return remainingDay;
+	}
+
+	/**
+	 * @param remainingDay the remainingDay to set
+	 */
+	public void setRemainingDay(Long remainingDay) {
+		this.remainingDay = remainingDay;
+	}
+
+	/**
+	 * @return the remainingInterval
+	 */
+	public Long getRemainingInterval() {
+		return remainingInterval;
+	}
+
+	/**
+	 * @param remainingInterval the remainingInterval to set
+	 */
+	public void setRemainingInterval(Long remainingInterval) {
+		this.remainingInterval = remainingInterval;
+	}
+
+	/**
+	 * @return the remainingTimeMsg
+	 */
+	public String getRemainingTimeMsg() {
+		return remainingTimeMsg;
+	}
+
+	/**
+	 * @param remainingTimeMsg the remainingTimeMsg to set
+	 */
+	public void setRemainingTimeMsg(String remainingTimeMsg) {
+		this.remainingTimeMsg = remainingTimeMsg;
+	}
 	
 }
