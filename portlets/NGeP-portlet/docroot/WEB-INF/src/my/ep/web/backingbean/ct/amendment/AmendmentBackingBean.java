@@ -4529,7 +4529,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @throws Exception  if an exception occurred
 	 * @see    Exception
 	 */
-	public void validateDuplicateChairperson(Long parameterId) throws Exception {
+	public void validateDuplicateChairperson(CtCommitteeMember curCommitteeMember, Long parameterId) throws Exception { //#29549
 		if (parameterId == null || parameterId.intValue() == 0) {
 			return;
 		}
@@ -4550,14 +4550,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					}
 				}else{
 					if (parametercode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON) || parametercode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_MEMBER))
-						if(committeMember.getRepresentativeType() != null)
+						if(committeMember.getRepresentativeType() != null && committeMember.equals(curCommitteeMember)) //#29549
 							committeMember.getRepresentativeType().setParameterId(null);
 				}
 			}
 		}
-		//#29549 start
-		sortCTCommitteeMemberRole(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers());
-		//#29549 end
+		
+		sortCTCommitteeMemberRoleMeeting(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()); //#29549
 	}
 
 	/**
@@ -6807,7 +6806,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			
 			if (parameterId != null) {
 				if(curCommitteeMember.getMemberRoleId()!=null && !curCommitteeMember.getMemberRoleId().equals(parameterId)){
-					curCommitteeMember.getRepresentativeType().setParameterId(null);
+					//curCommitteeMember.getRepresentativeType().setParameterId(null); //#29549
 					curCommitteeMember.setRepresentativeType(null);
 				}
 				if (curCommitteeMember.getRepresentativeType()==null){
@@ -6949,8 +6948,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							&& !ContractConst.REMOVE_FROM_ATTENDANCE_LIST.equalsIgnoreCase(ctUpdatedMember.getUpdateType()) 
 							&& !ContractConst.REMOVE_NEW_MEMBER_FROM_ATTENDANCE_LIST.equalsIgnoreCase(ctUpdatedMember.getUpdateType())) {
 						if(ctUpdatedMember.getRepresentativeType() != null && ctUpdatedMember.getRepresentativeType().getParameterId() != null) {
-							if(originalCtMember.getRepresentativeType()!= null && !originalCtMember.getRepresentativeType().getParameterId().equals
-									(ctUpdatedMember.getRepresentativeType().getParameterId())) { //#29403
+							if(originalCtMember.getRepresentativeType()!= null && originalCtMember.getRepresentativeType().getParameterId() != null && !originalCtMember.getRepresentativeType().getParameterId().equals
+									(ctUpdatedMember.getRepresentativeType().getParameterId())) { //#29403, #29549
 								ctUpdatedMember.setNewRepresentativeType(ctUpdatedMember.getRepresentativeType());
 							} else {
 								if(!ContractConst.ADD_NEW_MEMBER.equalsIgnoreCase(ctUpdatedMember.getUpdateType())) {
@@ -7051,8 +7050,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							if (!getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B) 
 									&& !getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) {
 								if(ctUpdatedMember.getRepresentativeType()!=null && ctUpdatedMember.getRepresentativeType().getParameterId() != null) { //#29403
-									if(!originalCtMember.getRepresentativeType().getParameterId().equals
-											(ctUpdatedMember.getRepresentativeType().getParameterId())) {
+									if(originalCtMember.getRepresentativeType()!=null && originalCtMember.getRepresentativeType().getParameterId() != null
+										&& !originalCtMember.getRepresentativeType().getParameterId().equals(ctUpdatedMember.getRepresentativeType().getParameterId())) { //#29549
 										isUpdateNeeded = true;
 									}
 								}
@@ -7273,10 +7272,33 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				Collections.sort(list, new Comparator<CtCommitteeMember>() {
 					List<String> sortOrder = Arrays.asList(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON, ParameterConst.COMMITTEE_ROLE_SECRETARY, ParameterConst.COMMITTEE_ROLE_MEMBER);
 					public int compare(CtCommitteeMember o1, CtCommitteeMember o2) {
-						return Integer.valueOf(sortOrder.indexOf(o1.getMemberRole().getParameterCode())).compareTo(Integer.valueOf(sortOrder.indexOf(o2.getMemberRole().getParameterCode())));
+						if(o1.getMemberRole()!=null && o2.getMemberRole()!=null && o1.getMemberRole().getParameterCode()!=null && o2.getMemberRole().getParameterCode()!=null){
+							return Integer.valueOf(sortOrder.indexOf(o1.getMemberRole().getParameterCode())).compareTo(Integer.valueOf(sortOrder.indexOf(o2.getMemberRole().getParameterCode())));
+						}else{
+						return Integer.valueOf(
+								sortOrder.indexOf(ParameterHelper.getInstance()
+										.getPmParameterById(o1.getMemberRoleId()).getParameterCode())).compareTo(
+								Integer.valueOf(sortOrder.indexOf(ParameterHelper.getInstance()
+										.getPmParameterById(o2.getMemberRoleId()).getParameterCode())));
+						}
 					}
 				});
-			}	
+			}
+		}
+		
+		public void sortCTCommitteeMemberRoleMeeting (List<CtCommitteeMember> list){
+			if(list!=null){
+				Collections.sort(list, new Comparator<CtCommitteeMember>() {
+					List<String> sortOrder = Arrays.asList(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON, ParameterConst.COMMITTEE_ROLE_SECRETARY, ParameterConst.COMMITTEE_ROLE_MEMBER);
+					public int compare(CtCommitteeMember o1, CtCommitteeMember o2) {
+						return Integer.valueOf(
+								sortOrder.indexOf(ParameterHelper.getInstance().getPmParameterById(o1.getMemberRoleId())
+										.getParameterCode())).compareTo(
+								Integer.valueOf(sortOrder.indexOf(ParameterHelper.getInstance()
+										.getPmParameterById(o2.getMemberRoleId()).getParameterCode())));
+					}
+				});
+			}
 		}
 		//#25949 end
 		
