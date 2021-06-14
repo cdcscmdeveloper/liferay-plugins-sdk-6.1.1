@@ -3272,12 +3272,40 @@ public class SmApplicationUtil {
 					resultList, smAppl.getSupplierType()));
 			
 			//13362 - START setApplnOverlapRemarks
-			String msg = "";
-				for (Object[] arr : resultList){
-						msg += arr[4] + "," + " " + arr[5] + "," + " " + "(" + arr[0] + arr[1] + arr[2] + ")" + "," + " ";
-				}	
-					
-			retVal.setApplnOverLapRemarks(msg);
+			String companyName = "";
+			String mofNo = "";
+			String catCode = "";
+			String catCodeCombine = "";
+			int index = 0;
+			
+			if(resultList != null){
+				for (Object[] arrI : resultList){
+					catCode = arrI[0].toString() + arrI[1] + arrI[2];
+					if("".equalsIgnoreCase(companyName)){
+						companyName = arrI[4].toString();
+						mofNo = arrI[5].toString();
+						catCodeCombine += companyName + ", " +  mofNo + " (";
+						index ++;
+					}
+					if (index == 1){
+						catCodeCombine = catCodeCombine + catCode;
+					}
+					if(arrI[4].toString().equalsIgnoreCase(companyName) && index != 1){
+						catCodeCombine = catCodeCombine + ", " + catCode;
+					}else{
+						companyName = arrI[4].toString();
+						mofNo = arrI[5].toString();
+						if (index == 1){
+							catCodeCombine = catCodeCombine + "";
+							index++;
+						}else{
+							catCodeCombine = catCodeCombine + ")," + " " + companyName + ", " +  mofNo + " (" + catCode;
+						}
+					}	
+				}
+				catCodeCombine = catCodeCombine + "" + ")";
+				retVal.setApplnOverLapRemarks(catCodeCombine);
+			}
 			//13362 - END
 		}
 		return retVal;
