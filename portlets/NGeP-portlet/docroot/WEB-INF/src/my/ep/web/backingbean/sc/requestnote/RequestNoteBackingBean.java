@@ -957,17 +957,17 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		for (ScRequestNoteDtl requestNoteDtl : requestNoteDtls) {
 			PmUser pmUser = requestNoteDtl.getAssignedUser();
 			PmOrgProfile pmOrgProfile = getManagedBean().getRequestNote().getPmOrgProfile();
-			String procTypeCategory = requestNoteDtl.getProcurementTypeCategory().getParameterCode();
+			String fulfilmentType = requestNoteDtl.getFulfilmentType().getParameterCode();
 			List<PmUser> userList = null;
 
 			UserReqDTO req = new UserReqDTO();
 			req.setIncludeUserIds(new ArrayList<Long>());
 			req.getIncludeUserIds().add(pmUser.getUserId());
 
-			if (ParameterConst.PROCUREMENT_TYPE_CODE_SERVICE.equals(procTypeCategory)) {
+			if (fulfilmentType.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
+				req.setRoleCodes(Arrays.asList(RoleCode.REQUISITIONER.value()));				
+			} else {
 				req.setRoleCodes(Arrays.asList(RoleCode.DESK_OFFICER.value()));
-			} else if (ParameterConst.PROCUREMENT_TYPE_CODE_SUPPLY.equals(procTypeCategory)) {
-				req.setRoleCodes(Arrays.asList(RoleCode.REQUISITIONER.value()));
 			}
 			
 			req.setOrgProfileId(pmOrgProfile.getOrgProfileId());
