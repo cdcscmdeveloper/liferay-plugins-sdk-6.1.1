@@ -12761,6 +12761,9 @@ public class SmApplicationBackingBean extends
 	 */
 	public void resetSearchRejectedReason() {
 		getManagedBean().setSearchRejectReason(StringUtils.EMPTY);
+		//	#30974 -- start - 15/6/2020
+		getManagedBean().setSearchRecommendRejectReason(StringUtils.EMPTY);
+		//	#30974 -- end - 15/6/2020
 		getManagedBean().setReasonDescList(
 				SmApplicationUtil.retrieveMofRejectReason(getManagedBean()
 						.getSmAppl().getSupplierType(), getManagedBean()
