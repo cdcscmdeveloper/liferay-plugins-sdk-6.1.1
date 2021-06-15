@@ -2396,7 +2396,17 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						//SET ADDRESS
 						String[] copyPropAddress = {"address1","address2","address3","addressSsmNull","postcodeSsmNull","stateSsmNull","countrySsmNull","ssmData","postcode"};
 
+						
+						ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance() //#30964
+								.getServiceObject("sm", ISupplierSearchSO.class);
 						EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmAddress(),this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress(),copyPropAddress);
+						
+						// start #30964
+						ssmResDTO.setSmAddress(supplierSearchSO.retrieveSmAddressByAddressId(this.getManagedBean()
+								.getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0)
+								.getSmAddress().getAddressId()));
+						// end #30964
+						
 						this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPostcode(ssmResDTO.getSmAddress().getPostcode());
 						this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPmState(ssmResDTO.getSmAddress().getPmState());
 						//START 27488 
@@ -2406,11 +2416,26 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 							this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPmDistrict(new PmDistrict());
 											
-							//start #30964
-							if(ssmResDTO.getSmAddress().getPmDistrict()!=null){
-								this.getManagedBean().setBusinessCityLs(SmCommonUtil.getCityList(ssmResDTO.getSmAddress().getPmDistrict().getDistrictId()));
+							// start #30964
+							if (ssmResDTO.getSmAddress().getPmDistrict() != null) {
+								this.getManagedBean().setBusinessCityLs(
+										SmCommonUtil.getCityList(ssmResDTO.getSmAddress().getPmDistrict()
+												.getDistrictId()));
+							}else{
+								this.getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
 							}
-							//end #30964
+							
+							if (ssmResDTO.getSmAddress().getPmState() != null
+									&& ssmResDTO.getSmAddress().getPmState().getStateCode()
+											.equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
+								this.getManagedBean().setBusinessDivisionLs(
+										SmCommonUtil.getDivisionList(ssmResDTO.getSmAddress().getPmState().getStateId()));
+							}else if (ssmResDTO.getSmAddress().getPmState() != null
+									&& ssmResDTO.getSmAddress().getPmState().getStateCode()
+									.equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)){
+								this.getManagedBean().setBusinessDivisionLs(new ArrayList<SelectItem>());
+							}
+							// end #30964
 							this.getManagedBean().setBusinessDistrictLs(SmCommonUtil.getDistrictList(ssmResDTO.getSmAddress().getPmState().getStateId()));
 						}
 						//END 27488
@@ -2563,6 +2588,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							.getServiceObject("sm", ISupplierSearchSO.class);
 					SmAddress smAddress = supplierSearchSO.retrieveSmAddressByAddressId(resDTO.getSmSupp().getSmAppl()
 							.getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getAddressId());
+					
+					// start #30964
+					if (smAddress.getPmDivision() == null) {
+						smAddress.setPmDivision(new PmDivision());
+					}
+					// end #30964
 					this.getManagedBean().setSmBusinessAdd(smAddress);
 				}
 				// end - #30483
