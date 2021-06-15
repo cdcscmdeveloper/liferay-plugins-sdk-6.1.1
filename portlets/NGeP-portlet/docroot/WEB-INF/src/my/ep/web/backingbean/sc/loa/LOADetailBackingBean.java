@@ -391,6 +391,27 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			getManagedBean().setSupPropSpecUpdate(true);	
 		}//29007-End
 		//#29007 End Vinod
+		
+		// #27797 - start
+		if (scLoiLoa.getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)
+				|| scLoiLoa.getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+			if(scLoiLoa.isZonal()){
+				BigDecimal highestZonePrice = BigDecimal.ZERO;
+				for (ScLoiLoaItem item : scLoa.getScLoiLoaItems()) {
+					BigDecimal subPrice = calcSubTotalPrice(item);
+					int result = subPrice.compareTo(highestZonePrice);					
+					if (result == 1) {
+						highestZonePrice = subPrice;
+						getManagedBean().setHighestZoneScLoiLoaItem(item);
+						getManagedBean().setHighestZonePrice(highestZonePrice);
+						getManagedBean().getHighestZoneScLoiLoaItemList().clear();
+						getManagedBean().getHighestZoneScLoiLoaItemList().add(item);
+					}
+			
+				}
+			}
+		}
+		// #27797 - end
 					
 		return QTConstants.LOA_PAGE;
 	}
@@ -811,6 +832,28 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				}
 			}
 		}
+		
+		// #27797 - start
+		if (scLoiLoa.getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)
+				|| scLoiLoa.getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+			if (scLoiLoa.isZonal()) {
+				BigDecimal highestZonePrice = BigDecimal.ZERO;
+				for (ScLoiLoaItem item : this.getManagedBean().getScLoa().getScLoiLoaItems()) {
+					BigDecimal subPrice = calcSubTotalPrice(item);
+					int result = subPrice.compareTo(highestZonePrice);
+					if (result == 1) {
+						highestZonePrice = subPrice;
+						getManagedBean().setHighestZoneScLoiLoaItem(item);
+						getManagedBean().setHighestZonePrice(highestZonePrice);
+						getManagedBean().getHighestZoneScLoiLoaItemList().clear();
+						getManagedBean().getHighestZoneScLoiLoaItemList().add(item);
+					}
+
+				}
+			}
+		}
+		// #27797 - end
+
 		if(getManagedBean().getScLoa().getScLoaReports() != null){
 			List<ScLoaReport> loaReports = getManagedBean().getScLoa().getScLoaReports();
 			for(ScLoaReport scLoaReport : loaReports){
@@ -3841,6 +3884,23 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 
 	// #22211 - end
+	
+	// #27797 - start
+	public boolean isZonalWithPaOrPs() {
+
+		Boolean isZonalWithPaOrPs = false;
+		Boolean isZonal = getManagedBean().getScLoa().getScLoiLoa().isZonal();
+		String fulfilmentType = getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode();
+
+		if (fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
+				|| fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)) {
+			if (isZonal)
+				isZonalWithPaOrPs = true;
+		}
+		return isZonalWithPaOrPs;
+	}
+
+	// #27797 - end
 	
 	/**
 	 * Update bpm task action.
