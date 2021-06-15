@@ -853,6 +853,28 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				}
 			}
 		}
+		
+		// #27797 - start
+		if (scLoiLoa.getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)
+				|| scLoiLoa.getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+			if (scLoiLoa.isZonal()) {
+				BigDecimal highestZonePrice = BigDecimal.ZERO;
+				for (ScLoiLoaItem item : this.getManagedBean().getScLoa().getScLoiLoaItems()) {
+					BigDecimal subPrice = calcSubTotalPrice(item);
+					int result = subPrice.compareTo(highestZonePrice);
+					if (result == 1) {
+						highestZonePrice = subPrice;
+						getManagedBean().setHighestZoneScLoiLoaItem(item);
+						getManagedBean().setHighestZonePrice(highestZonePrice);
+						getManagedBean().getHighestZoneScLoiLoaItemList().clear();
+						getManagedBean().getHighestZoneScLoiLoaItemList().add(item);
+					}
+
+				}
+			}
+		}
+		// #27797 - end
+
 		if(getManagedBean().getScLoa().getScLoaReports() != null){
 			List<ScLoaReport> loaReports = getManagedBean().getScLoa().getScLoaReports();
 			for(ScLoaReport scLoaReport : loaReports){
