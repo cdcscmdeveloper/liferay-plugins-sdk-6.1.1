@@ -3360,6 +3360,16 @@ return	remarksNotFound;
 				reqDTO = validateInfo(activeIndex);
 			}			
 			
+			// #28834 - Start.
+			if (QTStatusConst.QT_SF_MOF_COMMIEEE.longValue() == getManagedBean().getCurrentStatusId().longValue()
+					&& ParameterConst.DECISION_RBP.equals(getManagedBean().getScQtFinalization().getDecision().getParameterCode())
+					&& getManagedBean().isBpkCentralContract()
+					&& BpmOutcomeConst.BPM_SUBMIT.equals(outcome)) {
+				log.info("SupplierFinalizationBackingBean.updateBPMTask(): setting REVISEBP as outcome");
+				outcome = BpmOutcomeConst.BPM_REVISEBP;
+			}
+			// #28834 - End.
+			
 			/* Enhancement #21694 START */
 			reqDTO.setScQtReverse(getManagedBean().getScQtReverse());
 			/* Enhancement #21694 END */
@@ -5518,13 +5528,16 @@ return	remarksNotFound;
 		
 		//28834 starts
 		
-		if (getManagedBean().isBpkCentralContract()) {
+		// #28834 - Start.
+		/*if (getManagedBean().isBpkCentralContract()) {
 			if (excludedDecisionList == null) {
 				excludedDecisionList = new ArrayList<String>();
 			}
 			excludedDecisionList.add(
 					ParameterConst.DECISION_RBP);
-		}
+		}*/
+		// #28834 - End.
+		
 		if (getManagedBean().getQtRefinalized()) {
 			if (excludedDecisionList == null) {
 				excludedDecisionList = new ArrayList<String>();
