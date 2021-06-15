@@ -1714,6 +1714,8 @@ public class QTCloneBackingbean extends
 			
 			if(!qt.isZonal()){
 				if (!copyScqt.isZonal()) {
+					qt.setBsvRequired(copyScqt.isBsvRequired());//25635-start
+					qt.setPublishDate(null);//25635-End
 					ScQtBsv qtBsv = resDTO.getScQtBsv();
 					BriefingZoneBean briefingZoneBean=null;
 					if(qt.isBsvRequired()){
