@@ -7066,6 +7066,11 @@ public class SmApplicationUtil {
 						canDelete = false;
 						break;
 					}
+					//30508-start
+					if (currMac !=null){
+						canDelete = false;
+						break;//30508-end
+					}
 				}
 				if (canDelete) {
 					appl.setSmMachineDtls(new ArrayList<SmMachineDtl>());
@@ -7074,10 +7079,12 @@ public class SmApplicationUtil {
 
 		} else {
 			List<String> pendingApproveCatTypeList = new ArrayList<String>();
-			if (appl.getApplCategoryType() != null
-					&& appl.getApplCategoryType().equals("N")) {
-				appl.setSmManufacturingDtls(new ArrayList<SmManufacturingDtl>());
-				appl.setSmMachineDtls(new ArrayList<SmMachineDtl>());
+			if (appl.getApplCategoryType() != null && appl.getApplCategoryType().equals("N")) {
+				//30508-start
+				if (EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
+					appl.setSmManufacturingDtls(new ArrayList<SmManufacturingDtl>());
+					appl.setSmMachineDtls(new ArrayList<SmMachineDtl>());
+				}//30508-end
 			}
 			if (!EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
 				for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
