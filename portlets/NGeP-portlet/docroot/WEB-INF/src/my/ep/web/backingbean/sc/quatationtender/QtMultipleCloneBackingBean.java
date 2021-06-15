@@ -310,6 +310,7 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 			if(copyApproval.getScQtApprovalDtls()!=null && !copyApproval.getScQtApprovalDtls().isEmpty()){
 				List<ScQtApprovalRequest> approverRequest=new ArrayList<ScQtApprovalRequest>();
 				for(ScQtApprovalRequest request:copyApproval.getScQtApprovalDtls()){
+				if(null!=request.getApprovalType() && null!=request.getApprovalType().getParameterId() && ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equalsIgnoreCase(request.getApprovalType().getParameterCode())){//25635-start
 					ScQtApprovalRequest req=new ScQtApprovalRequest();
 					req.setBrandNew(true);
 					setUserDetails(req);
@@ -320,6 +321,7 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 					req.setSelectable(request.isSelectable());
 					req.setSelected(request.isSelected());
 					approverRequest.add(req);
+					}//25635-End
 				}
 				newApproval.setScQtApprovalDtls(approverRequest);
 			}
