@@ -82,6 +82,11 @@ public class PmReportConst implements Serializable {
 	public static final int ORG_TYPE_PEROLEHAN_KERAJAAN = 6;
 	//shafie - #28833 -end
 	
+	//Org Type Values and Org Cat eq Others
+	public static final int ORG_TYPE_SUPPLIER = 15; //Harun #29991
+		
+	
+	
 	public PmReportConst() {
 	}
 
@@ -235,5 +240,15 @@ public class PmReportConst implements Serializable {
 	public static int getOrgCatCpMr() {
 		return ORG_CAT_CP_MR;
 	}
+
+	/**
+	 * @return the orgTypeSupplier
+	 */
+	public int getOrgTypeSupplier() {
+		return ORG_TYPE_SUPPLIER;
+	}
+	
+	
+	
 
 }
