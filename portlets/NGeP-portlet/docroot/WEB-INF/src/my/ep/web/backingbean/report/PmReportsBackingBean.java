@@ -279,7 +279,7 @@ public class PmReportsBackingBean extends
 
 	// Organization list
 	private void constructPm002Map(LinkedHashMap<String, String> map) {
-
+	
 		map.put(PmReportConst.PARAM_PM_ORG_CATEGORY,
 				String.valueOf(getManagedBean().getSearchOrgCategory()));
 
@@ -305,7 +305,7 @@ public class PmReportsBackingBean extends
 		getManagedBean().getSelectedOrgType().getParameterId() == PmReportConst.ORG_TYPE_KUMPULAN_PTJ ||
 		getManagedBean().getSelectedOrgType().getParameterId() == PmReportConst.ORG_TYPE_PTJ) {
 			if (getManagedBean().isGovtSeller()){
-				String PG2G = "1";
+				String PG2G = "1"; 
 				map.put(PmReportConst.PARAM_PM_G2G, PG2G);
 			}
 		} 
@@ -700,6 +700,9 @@ public class PmReportsBackingBean extends
 		getManagedBean().setSelectedKumpulanPTJ(null);
 		getManagedBean().setSelectedPTJ(null);
 		//shafie - #28833 - end
+		//29991 start
+		getManagedBean().setSelectedSupplier(null);
+		//29991 end
 	}
 
 	public void autoSelectOrgType() {
@@ -737,6 +740,7 @@ public class PmReportsBackingBean extends
 			searchBean.getSortColumns();
 			items = getDropdownValuesBySearchBean(
 					ParameterTypeConst.ORGANISATION_TYPES, searchBean);
+			
 			
 			if(getManagedBean().getSearchOrgCategory() == PmReportConst.ORG_CAT_CP_MR) {
 				int index = 1;
@@ -778,6 +782,15 @@ public class PmReportsBackingBean extends
 					.getManagedBean().getSelectedOrgType().getParameterId());
 			this.getManagedBean().getSelectedOrgType()
 					.setParameterCode(pmParameter.getParameterCode());
+			//#29991 start--
+			if(pmParameter.getParameterId() == PmReportConst.ORG_TYPE_SUPPLIER){
+				hideOrgCodeName();
+				
+			}else{
+				this.getManagedBean().setSelectedSupplier(null);
+				showOrgCodeName();
+			}
+			//#29991 end--
 		} else {
 			this.getManagedBean().getSelectedOrgType().setParameterCode(null);
 		}
@@ -1418,4 +1431,45 @@ public class PmReportsBackingBean extends
 		}
 		return items;
 	}
+	
+	//#29991 start---
+	public void hideOrgCodeName() {
+		RequestContext.getCurrentInstance().execute("hideOrgCodeName();");
+	}
+	
+	public void showOrgCodeName() {
+		RequestContext.getCurrentInstance().execute("showOrgCodeName();");
+	}
+	
+	/**
+	 * On company name change for lov.
+	 */
+	public void onCompanyNameChangeForLOVPMReport() {
+		if (this.getManagedBean().getSelectedSupplier() != null
+				&& this.getManagedBean().getSelectedSupplier()
+						.getSmSupplier() != null) {
+			this.getManagedBean().setCmCompanyName(this.getManagedBean().getSelectedSupplier()
+					.getSmSupplier().getCompanyName());
+			this.getManagedBean().setPmCompanyName(this.getManagedBean().getSelectedSupplier()
+					.getSmSupplier().getCompanyName());
+			this.getManagedBean().setSmCompanyName(this.getManagedBean().getSelectedSupplier()
+					.getSmSupplier().getCompanyName());
+			this.getManagedBean().setSmSupplierName(this.getManagedBean()
+					.getSelectedSupplier().getSmSupplier().getCompanyName());
+		}
+		/*
+		 * if (this.getReportValue().equalsIgnoreCase(
+		 * ReportConst.SM_SITE_VISIT_APPL_OFFICER_RPT_VAL)) { if
+		 * (StringUtils.isNotEmpty(this.getSmCompanyName()) &&
+		 * StringUtils.isNotEmpty(this.getSmApplicationNo()) &&
+		 * StringUtils.isNotEmpty(this.getSmSVOUser()) &&
+		 * StringUtils.isNotEmpty(this.getSmState()) &&
+		 * StringUtils.isNotEmpty(this.getSmDistrict()) && (this.getFromDate()
+		 * != null && this.getToDate() != null)) { this.setValuesEmpty(false); }
+		 * else { this.setValuesEmpty(true); } }
+		 */
+		hideOrgCodeName();
+	}
+	//#29991 end---
+
 }
