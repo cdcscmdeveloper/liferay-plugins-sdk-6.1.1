@@ -3141,10 +3141,15 @@ public class SmPersonnelBackingBean extends
 		    if(personnel.getEpRole() == null){
 		    	personnel.setEpRole("");
 		    }
+		    
 		    //9569
-		    if(getManagedBean().getEpRoleTrans().equalsIgnoreCase(SupplierManagementConst.EPROLE_DELETED)){
-				getManagedBean().setEpRoleTrans(null);
+		    if (getManagedBean().getEpRoleTrans() != null)
+		    {
+	    		if(getManagedBean().getEpRoleTrans().equalsIgnoreCase(SupplierManagementConst.EPROLE_DELETED)){
+					getManagedBean().setEpRoleTrans(null);
+			    }
 		    }
+		   
 		    
 		    if (getManagedBean().getEpRoleTrans() != null && !personnel.getEpRole().equalsIgnoreCase(getManagedBean().getEpRoleTrans())) {
 		    	PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
