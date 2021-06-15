@@ -369,24 +369,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setTypeofgoods(null);
 			ccBB.getManagedBean().setSelectedItem(null);
 			ccBB.getManagedBean().setSelectedServiceItem(null);
-			
-
-			if(getManagedBean().isReadOnly()) {
-				getManagedBean().getContractListingPagingDataModel().resetData();
-				getManagedBean().getServiceListingPagingDataModel().resetData();
-				
-	      		getManagedBean().setResetval(false);
-				getManagedBean().setReadOnly(true);
-				//getManagedBean().allValue(true);
-				
-			} else {
-				getManagedBean().getContractListingPagingDataModel().resetData();
-				getManagedBean().getServiceListingPagingDataModel().resetData();
-	      		getManagedBean().setResetval(false);
-				getManagedBean().setReadOnly(true);
-				//getManagedBean().allValue(true);
-			}
-			
+			// Start Fix - #31042
+			getManagedBean().getContractListingPagingDataModel().reloadData();
+			getManagedBean().getServiceListingPagingDataModel().reloadData();
+			// End Fix - #31042
 			
 		}
 
