@@ -37,7 +37,7 @@ public class DisciplinaryActionRest {
 	public Response retrieveDisciplinaryAction() {	
 		
 		log.info("Before success calling retrieve rest api....");
-		boolean enter  = false;
+		boolean enter  = true;
 		try {
 			//27426 : Disciplinary Action - start
 			//find data with end date less than current date
@@ -79,8 +79,10 @@ public class DisciplinaryActionRest {
 							try {
 								RegistrationResDTO resDTO = SmServiceLookup.getRegistrationSO().reactivateBasicAccount(
 										reqDTO); 
-
-								SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(disc);
+								
+//#31100
+//								SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(disc);
+//#31100 end		
 								/*SmCommonUtil.redirectToPage(
 										SmApplicationUtil.getApplicationErrorPage(),
 										MessageConst.INFO_721029, new String[] {resDTO.getBasicSupplierAdmin().getPmUser().getLoginId() },
