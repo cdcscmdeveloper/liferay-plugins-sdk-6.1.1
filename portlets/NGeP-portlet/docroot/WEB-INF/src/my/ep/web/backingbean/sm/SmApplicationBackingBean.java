@@ -3624,8 +3624,12 @@ public class SmApplicationBackingBean extends
 				validSave = SmApplicationUtil.validatePersonnelAcademics(
 						validSave, getManagedBean(), currentTab);
 			}
+			//#30762 --START
+			if(!getManagedBean().isDisAllowOwnerEdit()){			
 			validSave = SmApplicationUtil.validatePersonnelBeforeSave(
 					validSave, currentTab, getManagedBean());
+			}
+			//#30762 --END
 			calculateBumiPercentageTotals();
 			break;
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK:
