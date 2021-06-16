@@ -1709,6 +1709,8 @@ public class QTCloneBackingbean extends
 			
 			if(!qt.isZonal()){
 				if (!copyScqt.isZonal()) {
+					qt.setBsvRequired(copyScqt.isBsvRequired());//25635-start
+					qt.setPublishDate(null);//25635-End
 					ScQtBsv qtBsv = resDTO.getScQtBsv();
 					BriefingZoneBean briefingZoneBean=null;
 					if(qt.isBsvRequired()){
@@ -1733,6 +1735,7 @@ public class QTCloneBackingbean extends
 					} 
 					
 					qt.setProposalStartDate(latestBsvDate);//25635-End
+					updatePublishClosingDate(qt);//25635
 				}else{
 					
 //					List<TplSpecZoneDtl> zones = resDTO.getZonesList();
