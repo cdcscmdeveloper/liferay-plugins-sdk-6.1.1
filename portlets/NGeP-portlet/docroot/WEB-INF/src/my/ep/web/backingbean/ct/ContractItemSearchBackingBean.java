@@ -66,28 +66,10 @@ public class ContractItemSearchBackingBean extends BaseBackingBean<ContractItemS
 		//ccBB.getManagedBean().setServiceselectedItem(null);
 		ccBB.getManagedBean().setSelectedItem(null);
 		ccBB.getManagedBean().setServiceselectedItem(null);
-		
-
-		if(getManagedBean().isReadOnly()) {
-			getManagedBean().getContractListingPagingDataModel().resetData();
-			getManagedBean().getServiceListingPagingDataModel().resetData();
-			//getManagedBean().getCircularListingPagingDataModel().reloadData();
-			//getManagedBean().getServiceListingPagingDataModel().reloadData();
-			//getManagedBean().resetServiceListingPagingDataModel();
-			//getManagedBean().resetCircularListingPagingDataModel();
-      		getManagedBean().setResetval(false);
-			    getManagedBean().setReadOnly(true);
-			//getManagedBean().allValue(true);
-			
-		} else {
-			getManagedBean().getContractListingPagingDataModel().resetData();
-			getManagedBean().getServiceListingPagingDataModel().resetData();
-			//getManagedBean().resetServiceListingPagingDataModel();
-			//getManagedBean().resetCircularListingPagingDataModel();
-      		getManagedBean().setResetval(false);
-			getManagedBean().setReadOnly(true);
-			//getManagedBean().allValue(true);
-		}		
+		// Start Fix - #31042
+		getManagedBean().getContractListingPagingDataModel().reloadData();
+		getManagedBean().getServiceListingPagingDataModel().reloadData();
+		// End Fix - #31042
 	}
 
 	
