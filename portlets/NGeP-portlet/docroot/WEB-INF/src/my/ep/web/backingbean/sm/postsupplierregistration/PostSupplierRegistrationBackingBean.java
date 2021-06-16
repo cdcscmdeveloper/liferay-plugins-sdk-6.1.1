@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sm.postsupplierregistration;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -66,6 +67,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.log4j.Logger;
@@ -138,6 +140,22 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 
 			SmWorkflowStatus rejectedWf = rejectedApplExist(supplier.getSupplierId());
 			boolean isRejectedApplExist = (rejectedWf == null) ? false : true;
+			//30713 - Start
+			//Add checking check expired for KN
+			if (rejectedWf != null && my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF.equalsIgnoreCase(supplier.getSmAppl().getApplType())) {
+				Timestamp currentDate = new Timestamp(System.currentTimeMillis());
+				long diff = currentDate.getTime()
+						- rejectedWf.getCreatedDate().getTime();
+				long diffDays = diff / (24 * 60 * 60 * 1000);
+				//if expired
+				if (diffDays >= SmRuleHelper.getInstance()
+						.getApplicationResubmissionDays()) {
+					getManagedBean().setRejectedApplExist(false);
+					isRejectedApplExist = false;
+					rejectedWf = null;
+				}
+			}
+			//30713 - End
 			boolean successPayment = checkSuccessPaymentBySupplierId(supplier.getSupplierId());
 			
 			//Self Request Supplier Admin
