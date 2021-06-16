@@ -46,7 +46,7 @@ public class DisciplinaryActionRest {
 			SupplierDataMaintenanceResDTO updateDAList = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryAction(); //28798: Disciplinary Action - remove blacklist and cancel registration
 			
 			//26238 - Disciplinary Action - 28798 - end
-			//find data pending Cancel Registration or Blacklist Owner / Director of Company
+			//find data pending Cancel Registration or Blacklist Owner / Director of Company or Suspend register
 			SupplierDataMaintenanceResDTO updateBCDAList = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveBlacklistCancelDisciplinaryAction();//28798: Disciplinary Action - get all active for cancel registration and blacklist
 			
 			//26238 - Disciplinary Action - 28798 - end
@@ -126,7 +126,7 @@ public class DisciplinaryActionRest {
 					log.info("updateBCDAList. supplier id=============="+cancelRegBlacklist.getSmSupplier().getSupplierId()); 
 					if(cancelRegBlacklist != null
 							&& cancelRegBlacklist.getSmSupplier() != null){
-
+												
 						if(cancelRegBlacklist.getStartDate().compareTo(today) <= 0){
 							//30878 start
 							Long disciplinaryActionId = null;
@@ -145,7 +145,9 @@ public class DisciplinaryActionRest {
 								//30878 end
 							}
 							
-							if( (cancelRegBlacklist.isBlacklistOwner() || cancelRegBlacklist.isCancelRegistration()) && (!cancelRegBlacklist.isPendingCancel() && !cancelRegBlacklist.isPendingBlacklist() )){//29597 : Disciplinary Action - 26238
+							//31100 start
+							if( (cancelRegBlacklist.isBlacklistOwner() || cancelRegBlacklist.isCancelRegistration() || cancelRegBlacklist.isSuspendRegistration()) 
+									&& (!cancelRegBlacklist.isPendingCancel() && !cancelRegBlacklist.isPendingBlacklist() && !cancelRegBlacklist.isPendingSuspend())){//29597 : Disciplinary Action - 26238
 								cancelRegBlacklist.getSmSupplier();
 								SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(cancelRegBlacklist);	
 							}
@@ -154,12 +156,15 @@ public class DisciplinaryActionRest {
 							if(disciplinaryActionId != null){
 								
 								SmDisciplinaryAction smDA = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionByDisciplinaryId(disciplinaryActionId);
-								if( (smDA.isBlacklistOwner() || smDA.isCancelRegistration()) && (!smDA.isPendingCancel() && !smDA.isPendingBlacklist() )){
+								if( (smDA.isBlacklistOwner() || smDA.isCancelRegistration() || smDA.isSuspendRegistration()) 
+										&& (!smDA.isPendingCancel() && !smDA.isPendingBlacklist() && !smDA.isPendingSuspend() )){
 									smDA.getSmSupplier();
 									SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(smDA);	
 								}
 								
 							}
+							//31100 end
+							
 							//30878 end
 							
 						}
