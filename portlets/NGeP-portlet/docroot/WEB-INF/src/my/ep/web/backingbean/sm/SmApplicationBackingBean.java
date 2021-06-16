@@ -9195,6 +9195,9 @@ public class SmApplicationBackingBean extends
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
 		if(!recommendation.equalsIgnoreCase("REJECT")){
 			SmApplicationUtil.validateCategoriesDecision(getManagedBean());
+			// #31043 - start
+			SmApplicationUtil.validateSupportingDocsDecision(getManagedBean());
+			// #31043 - end
 		}
 		
 		getManagedBean().getPoSecReview().setRecommendation(recommendation);
@@ -12261,6 +12264,9 @@ public class SmApplicationBackingBean extends
 	 */
 	public void resetSearchRejectedReason() {
 		getManagedBean().setSearchRejectReason(StringUtils.EMPTY);
+		//	#30974 -- start - 15/6/2020
+		getManagedBean().setSearchRecommendRejectReason(StringUtils.EMPTY);
+		//	#30974 -- end - 15/6/2020
 		getManagedBean().setReasonDescList(
 				SmApplicationUtil.retrieveMofRejectReason(getManagedBean()
 						.getSmAppl().getSupplierType(), getManagedBean()
