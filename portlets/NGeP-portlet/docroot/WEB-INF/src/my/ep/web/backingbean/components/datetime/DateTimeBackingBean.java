@@ -34,18 +34,42 @@ public class DateTimeBackingBean {
 			log.debug(message);
 		}log.info(message);
 	}
+	//#29549 start
+	/**
+	 * Gets the hours dropdown values.
+	 *
+	 * @return the hours dropdown values without s(hour)
+	 */
+	public SelectItem[] getHoursDropdownValues() {
+		return getHoursDropdownValues(false);
+	}
 	
+	/**
+	 * Gets the minutes dropdown values.
+	 *
+	 * @param modVal the mod val
+	 * @return the minutes dropdown values without s (minute)
+	 */
+	public SelectItem[] getMinutesDropdownValues(String modVal) {
+		return getMinutesDropdownValues(modVal, false);
+	}
 	/**
 	 * Gets the hours dropdown values.
 	 *
 	 * @return the hours dropdown values
 	 */
-	public SelectItem[] getHoursDropdownValues() {
+	public SelectItem[] getHoursDropdownValues(boolean withs) {
 		SelectItem[] selectItems = new SelectItem[25];
 		
-		selectItems[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
-				"lbl.txt.hour", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-				new FacesScopes().getUserLocale()));
+		if(withs){
+			selectItems[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.hours", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
+		}else{
+			selectItems[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.hour", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
+		}
 		
 		for (int i = 0; i < selectItems.length-1; i++) {
 			selectItems[i+1] = new SelectItem(i, String.format("%1$02d", i));
@@ -60,15 +84,21 @@ public class DateTimeBackingBean {
 	 * @param modVal the mod val
 	 * @return the minutes dropdown values
 	 */
-	public SelectItem[] getMinutesDropdownValues(String modVal) {
+	public SelectItem[] getMinutesDropdownValues(String modVal,boolean withs) {
 		if ((StringUtils.isNotEmpty(modVal))){
 			int modValue = Integer.valueOf(modVal);
 			SelectItem[] selectItems = new SelectItem[((60/modValue)+1)];
-
-			selectItems[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
-					"lbl.txt.minute", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale()));
-
+			
+			if(withs){
+				selectItems[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+						"lbl.txt.minutes", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
+			}else{
+				selectItems[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+						"lbl.txt.minute", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
+			}
+			
 			int j = 1;
 			for (int i = 0; i < 60; i++) {
 
@@ -82,7 +112,7 @@ public class DateTimeBackingBean {
 		}
 		return null;
 	}
-	
+	//#29549 end
 	/**
 	 * Time changed action.
 	 *
