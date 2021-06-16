@@ -3,11 +3,15 @@
  */
 package my.ep.web.managedbean.pp.procurementplan;
 
+//210801@akmal - Enhancement27624 - Start
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+//210801@akmal - Enhancement27624 - End
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -15,6 +19,8 @@ import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.VPmGo;
 import my.ep.persistence.entity.pp.procurementplan.PpExpenditureItem;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.persistence.entity.pp.procurementplan.PpProcurementItem;
@@ -50,6 +56,23 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private boolean isSearch;
 	private boolean backAllow;
 	private boolean approvedPlan;
+	//210801@akmal - Enhancement27624 - Start
+	private boolean isPlanDetailSearch = false;
+	private boolean isPlanDetailReset = false;
+	private Long planId;
+	private List<VPmGo> vPmGolist;
+	private Map<String, VPmGo> vPmGomap;
+	private boolean disablePlanSearchDet = false;
+	private String maxYear = "31/12/2050";
+	private String minYear = "01/01/2010";
+	private String minInvitationYear = "01/01/2010";
+	private String maxInvitationYear = "01/01/2050";
+	private boolean fromTaskList = false;
+	private PmParameter selectedCatSearch;
+	private String pageStyle;
+	private String prevAction;
+	private boolean fromAudit=false;
+	//210801@akmal - Enhancement27624 - End
 	private String btnValue;
 	
 	private PpWorkflowStatus ppWorkflowStatus;
@@ -151,7 +174,10 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	//28760 - start
 	private boolean flagCancelButton = false;
 	//28760 - end
-	
+	//27624 - start
+	private boolean planDetailSearchReset;
+	private boolean getProcurementItemList;
+	// 27624 - end
 	public ProcurementPlanManagedBean(){}
 
 	/**
@@ -1353,6 +1379,130 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	}
 	//25549@18092020 - end
 	
+	//210801@akmal - Enhancement27624 - Start
+	public boolean isPlanDetailSearch() {
+		return isPlanDetailSearch;
+	}
+
+	public void setPlanDetailSearch(boolean isPlanDetailSearch) {
+		this.isPlanDetailSearch = isPlanDetailSearch;
+	}
+
+	public boolean isPlanDetailReset() {
+		return isPlanDetailReset;
+	}
+
+	public void setPlanDetailReset(boolean isPlanDetailReset) {
+		this.isPlanDetailReset = isPlanDetailReset;
+	}
+
+	public Long getPlanId() {
+		return planId;
+	}
+
+	public void setPlanId(Long planId) {
+		this.planId = planId;
+	}
+
+	public List<VPmGo> getvPmGolist() {
+		if(vPmGolist==null) vPmGolist=new ArrayList<VPmGo>();
+		return vPmGolist;
+	}
+
+	public void setvPmGolist(List<VPmGo> vPmGolist) {
+		this.vPmGolist = vPmGolist;
+	}
+
+	public Map<String,VPmGo> getvPmGomap() {
+		if(vPmGomap==null) vPmGomap=new HashMap<String,VPmGo>();
+		return vPmGomap;
+	}
+
+	public void setvPmGomap(Map<String,VPmGo> vPmGomap) {
+		this.vPmGomap = vPmGomap;
+	}
+
+	public boolean isDisablePlanSearchDet() {
+		return disablePlanSearchDet;
+	}
+
+	public void setDisablePlanSearchDet(boolean disablePlanSearchDet) {
+		this.disablePlanSearchDet = disablePlanSearchDet;
+	}
+    
+	public String getMaxYear() {
+		return maxYear;
+	}
+
+	public void setMaxYear(String maxYear) {
+		this.maxYear = maxYear;
+	}
+
+	public String getMinYear() {
+		return minYear;
+	}
+
+	public void setMinYear(String minYear) {
+		this.minYear = minYear;
+	}
+
+	public String getMinInvitationYear() {
+		return minInvitationYear;
+	}
+
+	public void setMinInvitationYear(String minInvitationYear) {
+		this.minInvitationYear = minInvitationYear;
+	}
+
+	public String getMaxInvitationYear() {
+		return maxInvitationYear;
+	}
+
+	public void setMaxInvitationYear(String maxInvitationYear) {
+		this.maxInvitationYear = maxInvitationYear;
+	}
+
+	public PmParameter getSelectedCatSearch() {
+		return selectedCatSearch;
+	}
+
+	public void setSelectedCatSearch(PmParameter selectedCatSearch) {
+		this.selectedCatSearch = selectedCatSearch;
+	}
+
+	public String getPageStyle() {
+		return pageStyle;
+	}
+
+	public void setPageStyle(String pageStyle) {
+		this.pageStyle = pageStyle;
+	}
+
+	public String getPrevAction() {
+		return prevAction;
+	}
+
+	public void setPrevAction(String prevAction) {
+		this.prevAction = prevAction;
+	}
+
+	public boolean isAudit() {
+		return fromAudit;
+	}
+
+	public void setAudit(boolean isAudit) {
+		this.fromAudit = isAudit;
+	}
+
+	public boolean isFromTaskList() {
+		return fromTaskList;
+	}
+
+	public void setFromTaskList(boolean fromTaskList) {
+		this.fromTaskList = fromTaskList;
+	}
+	//210801@akmal - Enhancement27624 - End
+
 	//12112020@azza - 28760 - Start
 	public boolean isFlagCancelButton() {
 		return flagCancelButton;
@@ -1362,5 +1512,21 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 		this.flagCancelButton = flagCancelButton;
 	}
 	//12112020@azza - 28760 - End
+	//27624 - start
+	public boolean isPlanDetailSearchReset() {
+		return planDetailSearchReset;
+	}
 
+	public void setPlanDetailSearchReset(boolean planDetailSearchReset) {
+		this.planDetailSearchReset = planDetailSearchReset;
+	}
+	
+	public boolean isGetProcurementItemList() {
+		return getProcurementItemList;
+	}
+
+	public void setGetProcurementItemList(boolean getProcurementItemList) {
+		this.getProcurementItemList = getProcurementItemList;
+	}
+	//27624 - end
 }
