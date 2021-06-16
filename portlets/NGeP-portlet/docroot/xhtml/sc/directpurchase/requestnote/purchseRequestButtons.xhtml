@@ -24,7 +24,8 @@
 					<div class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.btn.yes']}"
 							actionListener="#{requestNoteBackingBean.cancelPendingItemCodificationDPM}"
-							oncomplete="cd.hide();" id="cancelPendingItemCodification"
+							onstart="cd.hide(); blockWidget.show()"
+							oncomplete="blockWidget.hide()" id="cancelPendingItemCodification"
 							partialSubmit="true" process="@this" immediate="true" />
 						<p:commandButton value="#{lbl['lbl.btn.no']}"
 							oncomplete="cd.hide();" />
