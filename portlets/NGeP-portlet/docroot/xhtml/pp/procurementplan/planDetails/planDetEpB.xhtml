@@ -36,10 +36,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		<div id="bGlAccErrMsgDiv" style="display:none;">
 			<p:messages id="bGlAccMsg" showDetail="true" autoUpdate="false" closable="true" showSummary="false" escape="false"/>
 		</div>
-	
+	<!-- 200911@akmal - Enhancement27624 - Start -->
 		<p:dataTable id="dtExpenditurePlanB" styleClass="dtProcurementPlan" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
 		     var="epItem" value="#{pPlanBackingBean.managedBean.epItemsB}" rendered="#{epItem.recordStatusFlg != 2}"
-		     rowIndexVar="index" rowKey="#{epItem}">
+		     rowIndexVar="index" rowKey="#{epItem}" rows="10">
+     <!-- 200911@akmal - Enhancement27624 - End -->
 			<ac:paginator for="dtExpenditurePlanB" />
 	    	<p:columnGroup type="header">
 				<p:row>
@@ -345,7 +346,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	       <p:commandButton id="btnClone" value="#{lbl['lbl.btn.clone']}"
 	            action="#{pPlanBackingBean.parameterExpenditure(ParameterConst.votMengurus)}"      
 	            update="dtExpenditurePlanB, ppExpenditureBCloneid, dtclonepitemsBsearchresults"
-	            disabled="#{!pPlanBackingBean.managedBean.modeEditable}"          
+	            disabled="#{!pPlanBackingBean.managedBean.modeEditable or (pPlanBackingBean.managedBean.isAudit())}"          
 	            onclick="cloneExpenditureBPopUp.show();"
 	            rendered="#{pPlanBackingBean.isRolePlanner()}"/>
 			    <p:tooltip id="toolTipB" for="btnClone" value="#{lbl['lbl.pp.clone.year.tooltip']}"
@@ -353,11 +354,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		 <!-- end -->
 		     &#160;
 		 	<p:commandButton value="#{lbl['lbl.btn.add']}" immediate="true" update="dtExpenditurePlanB" 
-		 		disabled="#{!pPlanBackingBean.managedBean.modeEditable}" 
+		 		disabled="#{!pPlanBackingBean.managedBean.modeEditable or (pPlanBackingBean.managedBean.isAudit())}" 
 		 		partialSubmit="true" process="@this" action="#{pPlanBackingBean.addEpItemDet(ParameterConst.votMengurus)}"/>
          	&#160;
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" update="dtExpenditurePlanB" 
-				disabled="#{!pPlanBackingBean.managedBean.modeEditable}" 
+				disabled="#{!pPlanBackingBean.managedBean.modeEditable or (pPlanBackingBean.managedBean.isAudit())}" 
 				action="#{pPlanBackingBean.deleteEpItemDet(ParameterConst.votMengurus)}"/> 
 				<!-- 02022021@#27624 - end --> 
 		</div>
