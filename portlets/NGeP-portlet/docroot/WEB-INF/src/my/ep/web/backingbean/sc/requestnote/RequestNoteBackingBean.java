@@ -3407,7 +3407,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		requestNoteReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 		
 		RequestNoteResDTO requestNoteResDTO = null;
-		if (prSize == 1) {
+		//28878 - Start
+		if(prSize > 1){
+			requestNoteReqDTO.setPurchaseRequestId(getManagedBean().getPurchaseRequestId());
+			getManagedBean().setLoginIdAssignees(getRequestNoteSO().getloginIdAssigneeSuppByPrId(requestNoteReqDTO));
+			requestNoteResDTO = getRequestNoteSO().cancelPendingItemCodificationMulti(requestNoteReqDTO, getManagedBean().getSelectedPrDtls(), getManagedBean().getLoginIdAssignees());
+		}else if (prSize == 1) { // 28878 - End
 			requestNoteResDTO = getRequestNoteSO().cancelPendingItemCodification(requestNoteReqDTO, getManagedBean().getSelectedPrDtls());
 		} else {
 			requestNoteResDTO = getRequestNoteSO().prepareTrackingDiaryDPM(requestNoteReqDTO, getManagedBean().getSelectedPrDtls());

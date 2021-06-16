@@ -604,6 +604,9 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 				rnBackingBean.getManagedBean().setCancel(true);
 				rnBackingBean.getManagedBean().setViewOnly(true);
 				rnBackingBean.getManagedBean().setReadOnly(true);
+				//28878 - Start
+				rnBackingBean.getManagedBean().setPurchaseRequestId(purchaseRequestId);
+				//28878 - End
 				if (null != requestNote.getCreatedBy()) {
 					rnBackingBean.getManagedBean().setCreatedBy(rnBackingBean.getUserById(requestNote.getCreatedBy()).getUserName());
 				}
