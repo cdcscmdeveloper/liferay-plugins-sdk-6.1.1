@@ -27,23 +27,27 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        </p:column>  
 			<p:column headerText="#{lbl['lbl.pp.plan.number']}">  
 		    	#{plan.planNo}
-	        </p:column> 
+	        </p:column>
+	        <!-- 200911@akmal - Enhancement27624 - Start --> 
+	        <!-- 
 	        <p:column headerText="#{lbl['lbl.pp.procurement.title']}" style="white-space:normal;  width:15%;"> 
 	        	#{not empty plan.title ? plan.title : ' '}
 			</p:column>
-	        <p:column headerText="#{lbl['lbl.pm.status']}">  
+			 -->
+	        <p:column headerText="#{lbl['lbl.pp.plan.status']}">  
 	             #{plan.status !=null ? pPlanBackingBean.getStatusDescById(plan.status.statusId) : pPlanBackingBean.getDefaultStatusDesc(plan.planType)}
-	        </p:column>  
+	        </p:column>
+	        <!-- 200911@akmal - Enhancement27624 - End -->  
 	        <p:column headerText="#{lbl['lbl.pm.action']}" style="text-align:center;">  
 	        	<p:menuButton value="#{lbl['lbl.btn.option']}">
 						<p:menuitem value="#{lbl['lbl.btn.view']}"  
 							     icon="ui-icon-view"
 							     action="#{pPlanBackingBean.redirectToMaintainPlan(plan.planId,ProcurementPlanConst.actionViewBtn,pPlanBackingBean.managedBean.trackingDiary)}"/>
-					   <!-- 200912@azza - Enhancement28760 - Start --> 
+					   <!-- 301220@azza - Enhancement27624 - Start --> 
 						<p:menuitem value="#{lbl['lbl.btn.update']}"  
 							     icon="ui-icon-view" rendered="#{plan.updatable and not pPlanBackingBean.managedBean.trackingDiary}"
 							     action="#{pPlanBackingBean.redirectToMaintainPlan(plan.planId,ProcurementPlanConst.actionUpdateBtn,false)}"/>
-					  <!-- 200912@azza - Enhancement28760 - End --> 						
+					  <!-- 301220@azza - Enhancement27624 - End --> 						
 			    		<p:menuitem value="#{lbl['lbl.btn.print']}" ajax="false"								 
 								 icon="ui-icon-print" rendered="#{pPlanBackingBean.isApprovedMode(plan)}"
 								 action="#{pPlanBackingBean.generateReport(plan)}" />	
