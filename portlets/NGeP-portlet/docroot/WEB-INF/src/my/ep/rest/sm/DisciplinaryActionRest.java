@@ -132,7 +132,8 @@ public class DisciplinaryActionRest {
 							Long disciplinaryActionId = null;
 							//30878 end
 							
-							if(cancelRegBlacklist.isPendingBlacklist() || cancelRegBlacklist.isPendingCancel()){
+							//31100 start
+							if(cancelRegBlacklist.isPendingBlacklist() || cancelRegBlacklist.isPendingCancel() || cancelRegBlacklist.isSuspendRegistration()){
 								cancelRegBlacklist.getSmSupplier();
 								cancelRegBlacklist.getSmSupplier().getSmAppl(); 
 								PmUser user = SmCommonUtil.getUserByUserId(cancelRegBlacklist.getChangedBy());
@@ -145,7 +146,6 @@ public class DisciplinaryActionRest {
 								//30878 end
 							}
 							
-							//31100 start
 							if( (cancelRegBlacklist.isBlacklistOwner() || cancelRegBlacklist.isCancelRegistration() || cancelRegBlacklist.isSuspendRegistration()) 
 									&& (!cancelRegBlacklist.isPendingCancel() && !cancelRegBlacklist.isPendingBlacklist() && !cancelRegBlacklist.isPendingSuspend())){//29597 : Disciplinary Action - 26238
 								cancelRegBlacklist.getSmSupplier();
@@ -163,10 +163,7 @@ public class DisciplinaryActionRest {
 								}
 								
 							}
-							//31100 end
-							
-							//30878 end
-							
+							//31100,30878 end
 						}
 					}
 				}
