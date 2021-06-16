@@ -2385,7 +2385,7 @@
 					<property name="columnName" value="smSupplier.regNo" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
-					<property name="bundleKey" value="lbl.rpt.businessregnoscreen" />
+					<property name="bundleKey" value="lbl.rpt.businessregistrationnoscreen" />
 					<!-- <property name="columnWidth" value="150" /> -->
 				</bean>				
 				<bean class="my.ep.web.bean.LovColumnBean">
