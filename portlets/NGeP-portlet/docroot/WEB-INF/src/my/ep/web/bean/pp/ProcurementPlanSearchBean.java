@@ -32,8 +32,14 @@ public class ProcurementPlanSearchBean implements Serializable{
 	private Date invitationDateTo;		//[#25550]
 	private PmParameter categoryType;	//[#25550]
 	private String titleOrDesc;			//[#25550]
+	//200911@akmal - Enhancement27624 - Start
+	private Date updatedDateFrom; //[#27624]
+	private Date updatedDateTo; //[#27624]
+	private Long planDetstatus;
+	private PmParameter procurementType;
+	//200911@akmal - Enhancement27624 - End
 	
-	private PmParameter procurementType;  //[#25549] 
+	
 	private String paramforexpenditure; //[#25549]
 	private String yearB; //[#25549]
 	private String yearT; //[#25549]
@@ -218,6 +224,32 @@ public class ProcurementPlanSearchBean implements Serializable{
 	public void setInvitationDateTo(Date invitationDateTo) {
 		this.invitationDateTo = invitationDateTo;
 	}
+
+	//200911@akmal - Enhancement27624 - Start
+	public Date getUpdatedDateFrom() {
+		return updatedDateFrom;
+	}
+
+	public void setUpdatedDateFrom(Date updatedDateFrom) {
+		this.updatedDateFrom = updatedDateFrom;
+	}
+
+	public Date getUpdatedDateTo() {
+		return updatedDateTo;
+	}
+
+	public void setUpdatedDateTo(Date updatedDateTo) {
+		this.updatedDateTo = updatedDateTo;
+	}
+
+	public Long getPlanDetstatus() {
+		return planDetstatus;
+	}
+
+	public void setPlanDetstatus(Long planDetstatus) {
+		this.planDetstatus = planDetstatus;
+	}
+	//200911@akmal - Enhancement27624 - End
 
 	public PmParameter getCategoryType() {
 		if (categoryType == null)
