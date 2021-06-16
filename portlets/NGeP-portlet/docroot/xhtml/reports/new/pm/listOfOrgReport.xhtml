@@ -133,13 +133,13 @@
 	        <!-- #29991 start -->
 			<c:if test="#{pmReportsBackingBean.managedBean.selectedOrgType.parameterId eq PmReportConst.orgTypeSupplier}">
 			<TR>
-				<TD class="pmColumn1Width"><p:outputLabel
-							value="#{lbl['lbl.rpt.businessregnoscreen']}" /></TD>
+				<TD><p:outputLabel
+							value="#{lbl['lbl.rpt.businessregistrationnoscreen']}" /></TD>
 				<TD><h:panelGroup id="BusRegnoPG">
 					    <ac:lov id="pmBusinessRegNo" readonly="true"
 							style="width:289px;" lovId="PM_ORG_PROFILE_WITH_ORGANISATION_REPORT"
 							size="100" update="@this,:form:compNameIt"
-							headerText="#{lbl['lbl.rpt.businessregnoscreen']}"
+							headerText="#{lbl['lbl.rpt.businessregistrationnoscreen']}"
 							value="#{pmReportsBackingBean.managedBean.selectedSupplier.smSupplier.regNo}"
 							postUpdateListener="#{pmReportsBackingBean.onCompanyNameChangeForLOVPMReport()}"
 							saveObject="pmReportsBackingBean.managedBean.selectedSupplier" />
@@ -149,7 +149,7 @@
 				<TD><p:outputLabel
 							value="#{lbl['lbl.rpt.companyName']}" /></TD>
 				<TD><p:inputText id="compNameIt" maxlength="150" readonly="true" size="100"
-							value="#{pmReportsBackingBean.managedBean.selectedSupplier.smSupplier.companyName}" style="width:290px;">
+							value="#{pmReportsBackingBean.managedBean.selectedSupplier.smSupplier.companyName}">
 					</p:inputText></TD>
 			</TR>
 			</c:if>
