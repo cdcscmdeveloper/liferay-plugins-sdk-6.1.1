@@ -787,7 +787,7 @@ public class PmReportsBackingBean extends
 				hideOrgCodeName();
 				
 			}else{
-				this.getManagedBean().setSelectedSupplier(null);
+				//this.getManagedBean().setSelectedSupplier(null); disable temp by harun 16/06/2021
 				showOrgCodeName();
 			}
 			//#29991 end--
