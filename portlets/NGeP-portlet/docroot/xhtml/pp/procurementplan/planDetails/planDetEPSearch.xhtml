@@ -1,0 +1,163 @@
+<ui:composition
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:p="http://primefaces.org/ui"
+xmlns:c="http://java.sun.com/jsp/jstl/core"
+xmlns:ac="http://ac.my/jsf/composite/cc"
+>
+	<!-- #27624 - NEW SEARCH CRITERIA   -->
+	<p:panel id="pPlanDetSearch">
+		<table class="ppTwoTable" style="width: 88%; padding-top: 10px;">
+			<!-- rendered on procurement plan screen -->
+			
+			
+			<tr>
+				<td style="#{pPlanBackingBean.managedBean.pageStyle eq 'create' ? 'width: 12%;':'width: 20%;'}"></td>
+				<td style="width: 30%;">
+				<table class="ppTwoTable">
+					
+						<!-- rendered on expenditure plan screen -->
+					 <tr>
+						 <td>
+							 	<h:panelGroup id="ppEPGLACCSearchId">
+							 	<!-- 201105@akmal - 27624 - Start -->
+								<h:outputText  
+									value="#{lbl['lbl.fl.gosodo']}" 
+									/>
+								<!-- 201105@akmal - 27624 - End -->
+								&#160;
+								
+								<!-- 201111@akmal - Enhancement27624 - Start -->
+								<p:commandLink id="ppEPGLACCSearchCL"
+									action="#{pmGoSearchBackingBean.initPmGoPopup}"
+									oncomplete="pmGoPopup.show();"
+									update="pPlanDetSearch, :form:glAccountCcId:goDoPanelId" 
+									disabled="#{pPlanBackingBean.managedBean.disablePlanSearchDet}">
+									<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
+									<f:param name="index" 	value="99" />
+									<f:param name="type" 	value="ePsearch" />
+									<f:param name="selectionMode" 	value="multiple" />
+									<f:param name="kptjId" 	value="#{pPlanBackingBean.retrieveKptjId()}" />
+									<f:param name="saveObject" 	value="pPlanBackingBean.managedBean.vPmGolist" />
+									<f:param name="update" 	value=":form:accCodeResult" />
+									<p:resetInput target=":form"></p:resetInput>
+								</p:commandLink>
+							  	<!-- 201111@akmal - Enhancement27624 - End -->
+								</h:panelGroup>
+						 </td>
+					 </tr>
+					 <tr>
+					 	<td>
+					 	<!-- 210118@akmal - 27624 - Start -->
+						 	<p:dataTable id="accCodeResult" 
+						 		emptyMessage="#{lbl['lbl.pp.no.record.found']}" 
+						 		styleClass="ppTablePlanItem" rows="0"
+						 		style="width: 400px;" 
+						 		var="pmGo" value="#{pPlanBackingBean.managedBean.vPmGolist}"
+								rendered="#{pPlanBackingBean.managedBean.selectedPlan.planType.parameterCode eq ParameterConst.planTypeExpenditure}">	
+								<p:column headerText="#{lbl['lbl.fl.gosodo']}" style="width: 30%;">
+									<h:outputText value="#{pmGo.glAccCode}" />
+								</p:column>
+								<p:column headerText="#{lbl['lbl.pp.type.of.expenses']}" style="width: 70%;">
+									<h:outputText value="#{pmGo.desc}" />
+								</p:column>
+							</p:dataTable>
+						 <!-- 210118@akmal - 27624 - End -->
+						</td>
+					 </tr>
+				</table>		
+				</td>
+				<td style="width: 50%;">		
+					<table class="ppTwoTable">
+					<tr>
+						<td>
+							<p:outputLabel value="#{lbl['lbl.pp.annual.plan.last.updated']}"></p:outputLabel>
+						</td>
+						<td>
+							<table>
+							<tr>
+								<td style="width:44px; text-align:center;">
+									<h:outputText value="#{lbl['lbl.pp.annual.plan.searchCriteria.fromdate']}"/>
+								</td>
+								<td>
+								<!-- 201111@akmal - Enhancement27624 - Start -->
+									<p:calendar rendered="true"
+									value="#{pPlanBackingBean.managedBean.planSearchBean.updatedDateFrom}" readonlyInput="true"
+									showOn="button" navigator="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+									mindate="#{pPlanBackingBean.managedBean.minYear}"
+									maxdate="#{pPlanBackingBean.managedBean.maxYear}"
+									disabled="#{pPlanBackingBean.managedBean.disablePlanSearchDet}"/>
+								<!-- 201111@akmal - Enhancement27624 - End -->
+								</td>
+								<td>
+									<h:outputText value="#{lbl['lbl.pp.annual.plan.searchCriteria.todate']}"/>
+								</td>
+								<td>
+								<!-- 201111@akmal - Enhancement27624 - Start -->
+									<p:calendar rendered="true"
+									value="#{pPlanBackingBean.managedBean.planSearchBean.updatedDateTo}" readonlyInput="true"
+									showOn="button" navigator="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+									mindate="#{pPlanBackingBean.managedBean.minYear}"
+									maxdate="#{pPlanBackingBean.managedBean.maxYear}"
+									disabled="#{pPlanBackingBean.managedBean.disablePlanSearchDet}"/>
+								<!-- 201111@akmal - Enhancement27624 - End -->
+								</td>
+							</tr>
+							</table>
+						</td>
+					</tr>	
+					<tr>
+						<td>
+						
+						</td>
+						<td>
+							<table>
+							<tr>
+								<td>
+									<p:outputLabel value="#{lbl['lbl.pp.status']}"></p:outputLabel>
+								</td>
+								<td>
+								<!-- 201111@akmal - Enhancement27624 - Start -->
+									<p:selectOneMenu id="pDetStatusSearch" label="#{lbl['lbl.pp.status']}" 
+									styleClass="ppDropDownWidthM"  value="#{pPlanBackingBean.managedBean.planSearchBean.planDetstatus}"
+									disabled="#{pPlanBackingBean.managedBean.disablePlanSearchDet}">
+									<f:selectItems value="#{pPlanBackingBean.getRecordStatusDropdownValues()}"/>
+									</p:selectOneMenu>
+								<!-- 201111@akmal - Enhancement27624 - End -->
+								</td>
+								<td></td>
+								<td></td>
+							</tr>
+							</table>
+						</td>
+					</tr>	
+					</table>	
+				</td>
+				
+			</tr>
+			
+		</table>
+		<div style="text-align: right;">
+		<!-- 201111@akmal - Enhancement27624 - Start -->
+			<p:commandButton value="#{lbl['lbl.btn.search']}"
+				disabled="#{pPlanBackingBean.managedBean.disablePlanSearchDet}"
+				action="#{pPlanBackingBean.searchPlanDetails()}"
+				update="@form"
+				process="@form" 
+				id="searchButtonId">
+			</p:commandButton>
+			<!-- 17022021 - 30071 & 24975 - remove oncomplete -->
+			<p:commandButton value="#{lbl['lbl.btn.reset']}"
+				disabled="#{pPlanBackingBean.managedBean.disablePlanSearchDet}"
+				action="#{pPlanBackingBean.resetPlanDetailSearch()}"
+				update="@form"> 
+			</p:commandButton>
+		<!-- 201111@akmal - Enhancement27624 - End -->
+		</div>
+		
+	</p:panel>			
+		
+
+</ui:composition>
