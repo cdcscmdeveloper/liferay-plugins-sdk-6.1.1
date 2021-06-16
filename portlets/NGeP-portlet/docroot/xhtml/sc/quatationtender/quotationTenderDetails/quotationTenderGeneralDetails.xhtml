@@ -686,7 +686,8 @@
 								value="#{scQt.contractDuration}"
 								style="text-align:right;margin-bottom:5px; width:200px;"
 								required="#{qtStatusChecklistScoring or qtStatusAfterChecklistScoring}">
-								<p:ajax event="change" process="@this" partialSubmit="true" update="@this" />
+								<p:ajax event="change" process="@this" partialSubmit="true" update="@this" 
+								listener="#{createQtBB.ContractPeriodChange()}"/>
 							</p:inputText>
 							<p:message id="completionBo" for="contractBo" display="icon"></p:message>
 						</c:when>
@@ -703,7 +704,7 @@
 								style="text-align:right;margin-bottom:5px; width:200px;"
 								required="#{qtStatusChecklistScoring or qtStatusAfterChecklistScoring}">
 								<p:ajax event="change" process="@this" partialSubmit="true"
-									update="@this" />
+									update="@this" listener="#{createQtBB.ContractPeriodChange()}" />
 							</p:inputText>
 						</c:otherwise>
 					</c:choose> 
