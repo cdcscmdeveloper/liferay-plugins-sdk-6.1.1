@@ -3883,30 +3883,42 @@ return	remarksNotFound;
 	 * @throws Exception
 	 */
 	public void downloadAllBriefingPaperReports() throws Exception {
-		// #18685 - Start.
+		// #18685 - Start. 
 		debugLogger("downloadAllReports");
 
-		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean()
-				.getScQtFinalization().getScQtFinalizationReports();
+		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean().getDocumentList();
 		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<ScQtFinalizationReportAttachment>();
 
-		for (int i = 0; i < scQtFinalizationReports.size(); i++) {
-			ScQtFinalizationReportAttachment attachment = scQtFinalizationReports
-					.get(i).getScQtFinalizationReportAttachment();
-			if (attachment == null) {
-				attachment = generateDocumentAttachment(scQtFinalizationReports
-						.get(i));
-				scQtFinalizationReports.get(i)
-						.setScQtFinalizationReportAttachment(attachment);
+		if (CollectionUtils.isNotEmpty(scQtFinalizationReports)
+				&& scQtFinalizationReports.size() > 0) {
+			for (int i = 0; i < scQtFinalizationReports.size(); i++) {
+				ScQtFinalizationReportAttachment attachment = scQtFinalizationReports
+						.get(i).getScQtFinalizationReportAttachment();
+				if (attachment == null) {
+					attachment = generateDocumentAttachment(scQtFinalizationReports
+							.get(i));
+					scQtFinalizationReports.get(i)
+					.setScQtFinalizationReportAttachment(attachment);
+				}
+				scAttachments.add(attachment);
 			}
-			scAttachments.add(attachment);
+		}
+		
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getNewBriefingPaperReportList())
+				&& this.getManagedBean().getNewBriefingPaperReportList().size() > 0) {
+			for (ScQtFinalizationReport uploadedSfReport : this.getManagedBean().getNewBriefingPaperReportList()) {
+				if (uploadedSfReport.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)
+						&& null != uploadedSfReport.getScQtFinalizationReportAttachment()) {
+					scAttachments.add(uploadedSfReport.getScQtFinalizationReportAttachment());
+				}
+			}
 		}
 
 		// Generate all the reports before submission
 		if (!getManagedBean().isSubmit()) {
 			downloadAllFiles("NGeP-Finalization-Report", scAttachments);
 		}
-		// #18685 - End.
+		// #18685 - End. 
 	}
 	
 	/**
