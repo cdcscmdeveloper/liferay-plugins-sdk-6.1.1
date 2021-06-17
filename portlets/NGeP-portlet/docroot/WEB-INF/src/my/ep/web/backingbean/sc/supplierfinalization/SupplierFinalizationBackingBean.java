@@ -3942,6 +3942,10 @@ return	remarksNotFound;
 						|| getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_BIDDING_FINALIZATION_REVISION.longValue()
 						|| getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION_REVISION.longValue()
 						// 25638 - End.
+						
+						// 28834- Start.
+						|| QTStatusConst.QT_SF_MOF_COMMIEEE.longValue() == getManagedBean().getCurrentStatusId().longValue()
+						// 28834- End.
 						)) {
 			reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
 			scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
