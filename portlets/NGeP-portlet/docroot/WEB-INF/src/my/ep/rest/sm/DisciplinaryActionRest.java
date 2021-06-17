@@ -151,7 +151,7 @@ public class DisciplinaryActionRest {
 					if (suspendList != null && suspendList.getSmSupplier() != null) {
 
 						// reactive account if DA suspend register is expired
-						if (suspendList.getEndDate().compareTo(today) <= 0 && !suspendList.isPendingSuspend()) {
+						if (suspendList.getEndDate().compareTo(today) < 0 && !suspendList.isPendingSuspend()) {
 							RegistrationReqDTO reqDTO = new RegistrationReqDTO();
 
 							log.info("-----------suspend registration-----------------"+ suspendList.isSuspendRegistration());
