@@ -279,7 +279,6 @@ public class PmReportsBackingBean extends
 
 	// Organization list
 	private void constructPm002Map(LinkedHashMap<String, String> map) {
-	
 		map.put(PmReportConst.PARAM_PM_ORG_CATEGORY,
 				String.valueOf(getManagedBean().getSearchOrgCategory()));
 
@@ -294,6 +293,13 @@ public class PmReportsBackingBean extends
 			map.put(PmReportConst.PARAM_PM_ORG_CODE, getManagedBean()
 					.getSelectedOrgProfile().getPmOrgValidity().getOrgCode());
 		}
+		//29991--start
+		if (getManagedBean().getSelectedSupplier() != null) {
+			map.put(PmReportConst.PARAM_PM_BUSINESS_REGNO, getManagedBean()
+					.getSelectedSupplier().getSmSupplier().getRegNo());
+		
+		}
+		//29991--end 
 		
 		if (getManagedBean().getStatus() != null) {
 			map.put(PmReportConst.PARAM_PM_STATUS, getManagedBean().getStatus()
