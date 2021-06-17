@@ -2330,41 +2330,9 @@ public class SupplierFinalizationBackingBean extends
 				 String decisionTypeCode = scQtFinalization.getDecision()
 						  .getParameterCode();
 				  if (ParameterConst.DECISION_RBP.equals(decisionTypeCode) && CollectionUtils.isNotEmpty(getManagedBean().getDocumentList()) && getManagedBean().getDocumentList().size() > 0) {
-					  // #28834 - Start.
-					  int count = 0;
-					  ScQtFinalizationReport scQtFinalizationReport = null;
-					  for (ScQtFinalizationReport report: getManagedBean().getDocumentList()) {
-						  if (report.getTitle().contains("Kertas Taklimat")) {
-							  scQtFinalizationReport = report;
-							  count++;
-						  }
-					  }
-					 
-		              ScQtFinalizationReportAttachment reportAttachment = null;
-		              if (null != scQtFinalizationReport) {
-		                try {
-		                  reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
-		                } catch (Exception e) {
-		                  log.error("SupplierFinalizationBackingBean.submitBrief(): Error while genarate briefing paper: " + e.getMessage());
-		                }
-		                scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
-		              }
-		              
-		              // #28834 - Start.
-		              scQtFinalizationReport = getManagedBean().getDocumentList().get(0);
-		              // #28834 - End.
-		              ScQtFinalizationReport report = new ScQtFinalizationReport();
-		              report.setScQtFinalization(scQtFinalization);
-		              report.setDocCategory(scQtFinalizationReport.getPmDocument().getDocCategoryCode().getParameterCode());
-		              report.setPmDocument(scQtFinalizationReport.getPmDocument());
-		              String reportTitle = ResourceBundleUtils.getMessage("lbl.sc.kertas.taklimat", 
-		            		  ResourceBundleUtils.BUNDLE_COMMON_LABELS, SourcingConstants.MY_LOCALE) 
-		            		  + SPACE + "(" + count + ")";
-		              report.setTitle(reportTitle);
-		              report.setDefinationType(scQtFinalizationReport.getPmDocument().getDocDefinitionTypeCode());
-		              report.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		              scQtFinalization.getScQtFinalizationReports().add(report);
-		              // #28834 - End.
+					  // #28834 - Start. 
+					  addBriefingPaper(scQtFinalization);
+		              // #28834 - End. 
 		          }
 				 
 			  }
@@ -2464,7 +2432,16 @@ public class SupplierFinalizationBackingBean extends
 				}
 			}
 			// #29921 - End.
-            
+			
+			// #28834 - Start.
+			if (QTStatusConst.QT_SF_MOF_COMMIEEE.longValue() == getManagedBean().getCurrentStatusId().longValue()
+					&& ParameterConst.DECISION_RBP.equals(getManagedBean().getScQtFinalization().getDecision().getParameterCode())
+					&& getManagedBean().isBpkCentralContract()
+					&& BpmOutcomeConst.BPM_SUBMIT.equals(outcome)) {
+				addBriefingPaper(scQtFinalization);
+				reqDTO.setCurrentStatusId(getManagedBean().getCurrentStatusId());
+			}
+			// #28834 - End.
 			signOff();
 			updateBPMTask(outcome, null, reqDTO);
 		}
@@ -2473,6 +2450,47 @@ public class SupplierFinalizationBackingBean extends
 		//25638 - End
 	}
 
+	// #28834 - Start. 
+	/**
+	 * @param scQtFinalization
+	 */
+	private void addBriefingPaper(ScQtFinalization scQtFinalization) {
+		int count = 0;
+		  ScQtFinalizationReport scQtFinalizationReport = null;
+		  for (ScQtFinalizationReport report: getManagedBean().getDocumentList()) {
+			  if (report.getTitle().contains("Kertas Taklimat")) {
+				  scQtFinalizationReport = report;
+				  count++;
+			  }
+		  }
+		 
+		  ScQtFinalizationReportAttachment reportAttachment = null;
+		  if (null != scQtFinalizationReport) {
+		    try {
+		      reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
+		    } catch (Exception e) {
+		      log.error("SupplierFinalizationBackingBean.submitBrief(): Error while genarate briefing paper: " + e.getMessage());
+		    }
+		    scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
+		  }
+		  
+		  // #28834 - Start.
+		  scQtFinalizationReport = getManagedBean().getDocumentList().get(0);
+		  // #28834 - End.
+		  ScQtFinalizationReport report = new ScQtFinalizationReport();
+		  report.setScQtFinalization(scQtFinalization);
+		  report.setDocCategory(scQtFinalizationReport.getPmDocument().getDocCategoryCode().getParameterCode());
+		  report.setPmDocument(scQtFinalizationReport.getPmDocument());
+		  String reportTitle = ResourceBundleUtils.getMessage("lbl.sc.kertas.taklimat", 
+				  ResourceBundleUtils.BUNDLE_COMMON_LABELS, SourcingConstants.MY_LOCALE) 
+				  + SPACE + "(" + count + ")";
+		  report.setTitle(reportTitle);
+		  report.setDefinationType(scQtFinalizationReport.getPmDocument().getDocDefinitionTypeCode());
+		  report.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		  scQtFinalization.getScQtFinalizationReports().add(report);
+	}
+	// #28834 - End. 
+	
 	// #25638 - Start 
 	/**
 	 * 
