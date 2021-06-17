@@ -1,5 +1,7 @@
 package my.ep.rest.sm;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -37,7 +39,7 @@ public class DisciplinaryActionRest {
 	public Response retrieveDisciplinaryAction() {	
 		
 		log.info("Before success calling retrieve rest api....");
-		boolean enter  = true;
+		boolean enter  = false;
 		try {
 			//27426 : Disciplinary Action - start
 			//find data with end date less than current date
@@ -67,8 +69,11 @@ public class DisciplinaryActionRest {
 						disc.getSmSupplier();
 						log.info("-----------Bilangan------------------"+i);
 						
+						//30784 : Release Disciplinary Action 
+						//31100 start
 						SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(disc);
-						 
+						//31100 end 
+						
 						log.info("-----------After------------------"+i);
 						i++;
 					}										
@@ -142,7 +147,9 @@ public class DisciplinaryActionRest {
 			if (updateSuspendList != null && updateSuspendList.getSmDisciplinaryActions() != null
 					&& updateSuspendList.getSmDisciplinaryActions().size() > 0) {
 
+				DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 				Date today = new Date();
+				Date todayWithZeroTime = formatter.parse(formatter.format(today));
 
 				for (SmDisciplinaryAction suspendList : updateSuspendList.getSmDisciplinaryActions()) {
 
@@ -151,7 +158,8 @@ public class DisciplinaryActionRest {
 					if (suspendList != null && suspendList.getSmSupplier() != null) {
 
 						// reactive account if DA suspend register is expired
-						if (suspendList.getEndDate().compareTo(today) < 0 && !suspendList.isPendingSuspend()) {
+						//30784 : Release Disciplinary Action 
+						if (suspendList.getEndDate().compareTo(todayWithZeroTime) < 0 && !suspendList.isPendingSuspend()) {
 							RegistrationReqDTO reqDTO = new RegistrationReqDTO();
 
 							log.info("-----------suspend registration-----------------"+ suspendList.isSuspendRegistration());
@@ -204,11 +212,6 @@ public class DisciplinaryActionRest {
 									SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(completedPendingSmDa);
 								}
 							}
-						}
-
-						if (suspendList.isSuspendRegistration() && !suspendList.isPendingSuspend()) {
-							suspendList.getSmSupplier();
-							SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(suspendList);
 						}
 					}
 				}
