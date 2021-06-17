@@ -94,6 +94,8 @@
 				upload_widget.buttonBar.find('.start').get(0).title = '#{lbl['lbl.cm.tooltip.btn.upload']}';			
 				$("button.start").toggleClass('disabled');
 				upload_widget.buttonBar.find('input[type=file]').change(function() {
+					upload_widget.buttonBar.find('.start').get(0).disabled=true;
+					$(".start").toggleClass('disabled');
 					var sizes = "#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages.size()}";
 					if (sizes >= 5) {
 						upload_widget.buttonBar.find('.start').get(0).disabled=true;
