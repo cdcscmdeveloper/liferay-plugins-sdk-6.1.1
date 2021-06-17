@@ -43,6 +43,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.ct.ContractReqDTO;
@@ -293,7 +294,6 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				userGroupSO = (IUserGroupSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserGroupSO.class);
 			
 				if(null == getManagedBean().getSupplierDoRef()){
-					//TODO
 					// do valudation
 				}else{
 					getManagedBean().getFlDeliveryOrder().setSupplierDoRef(getManagedBean().getSupplierDoRef());
@@ -1127,7 +1127,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				reqDTO.setAddressId(addressId);
 				reqDTO.setAddressType(AddressType.RECEIVING_OFFICER_ADDRESS.value());
 				AddressResDTO resDTO = addressSO.retrieveReceivingOfficerList(reqDTO);
-				if(resDTO.getAddressTypeList().isEmpty()){//TODO others as well needed to throw if list is empty
+				if(resDTO.getAddressTypeList().isEmpty()){
 					throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.receivingOfficer",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}
 			}
@@ -1616,15 +1616,18 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			getManagedBean().setItemSpecList(new ArrayList<ScRequestItemSpecOffer>());
 				for (ScRequestItemSpecOffer specification : getManagedBean().getSpecificationList()) {
 					if (specification.getSupplierOffer()!= null && specification.getSupplierId().getSupplierId()
-							.equals(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId())) {
+							.equals(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId()) &&
+							specification.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
 						getManagedBean().setSupplierOffer(specification.getSupplierOffer());
 					}
 					if (specification.getNewOfferSpec()!= null && specification.getSupplierId().getSupplierId()
-							.equals(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId())) {
+							.equals(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId()) &&
+							specification.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
 						getManagedBean().setNewOfferedSpec(specification.getNewOfferSpec());
 					}
 					if (specification.getItemSpec()!= null && specification.getSupplierId().getSupplierId()
-							.equals(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId())) {
+							.equals(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId()) &&
+							specification.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)) {
 						getManagedBean().setItemSpecification(specification.getItemSpec());	
 						getManagedBean().getItemSpecList().add(specification);
 					}					

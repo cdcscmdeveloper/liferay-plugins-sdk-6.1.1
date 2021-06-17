@@ -116,7 +116,7 @@ import org.primefaces.context.RequestContext;
 
 import com.liferay.portal.util.PortalUtil;
 
-/**
+/**  
  * Backing Bean for Create Received Note .
  *
  * @author Giribabu

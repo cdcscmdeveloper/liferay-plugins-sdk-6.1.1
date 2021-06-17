@@ -75,6 +75,7 @@ import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.ct.ContractIntegrationReqDTO;
@@ -405,9 +406,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 			
 			//24893 - start
-			
+
 			//24893 - end
-			
+
 			iFulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 			//26646-start
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
@@ -450,7 +451,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			} else {
 				throw new EpException(MessageConst.ERROR_700020);
 			} 
-
+			
 		}  finally {
 			iFulfilmentRequestSO = null;
 			userSO = null;
@@ -4118,18 +4119,21 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			getManagedBean().setItemSpecList(new ArrayList<ScRequestItemSpecOffer>());
 			for (ScRequestItemSpecOffer specification : getManagedBean().getSpecificationList()) {
 				if (specification.getSupplierOffer()!= null && specification.getSupplierId().getSupplierId()
-						.equals(getManagedBean().getFlRequest().getSmSupplier().getSupplierId())) {
+						.equals(getManagedBean().getFlRequest().getSmSupplier().getSupplierId()) &&
+						specification.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
 					getManagedBean().setSupplierOffer(specification.getSupplierOffer());
 				}
 				if (specification.getNewOfferSpec()!= null && specification.getSupplierId().getSupplierId()
-						.equals(getManagedBean().getFlRequest().getSmSupplier().getSupplierId())) {
+						.equals(getManagedBean().getFlRequest().getSmSupplier().getSupplierId()) &&
+						specification.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
 					getManagedBean().setNewOfferedSpec(specification.getNewOfferSpec());
 				}
 				if (specification.getItemSpec()!= null && specification.getSupplierId().getSupplierId()
-						.equals(getManagedBean().getFlRequest().getSmSupplier().getSupplierId())) {
+						.equals(getManagedBean().getFlRequest().getSmSupplier().getSupplierId())&&
+						specification.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)) {
 					getManagedBean().setItemSpecification(specification.getItemSpec());	
 					getManagedBean().getItemSpecList().add(specification);
-				}					
+				}				
 			}
 
 		} else {
@@ -4448,7 +4452,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			FlFulfilmentItemAddr flItemAddr = null;
 			List<FlFulfilmentItemAddr> itemAddrList = new ArrayList<FlFulfilmentItemAddr>();
 			ContractItemReqDTO reqDTO = new ContractItemReqDTO();
-			ContractItemResDTO resDTO = new ContractItemResDTO();
+			ContractItemResDTO resDTO = new ContractItemResDTO();		
 			reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
 			
 			List<FlTempItem> suspendedItem = new ArrayList<FlTempItem>();
@@ -4458,6 +4462,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				contractItemReqDTO.setContractVerId(flRequest.getCtContract().getLatestContractVer().getContractVerId());
 				contractItemReqDTO.setRequestItemId(flTempItem.getScRequestItem().getRequestNoteItemId());
 				ContractItemResDTO contractItemResDTO = contractItemSO.getContractItemByRequestItem(contractItemReqDTO);
+				
 				//#29171, CR 14650: Static Code Analysis Start
 				//if(getManagedBean().getTaskName() != null){
 					if(getManagedBean().getTaskName() != null && ((getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_CR_HT) ||
