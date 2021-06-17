@@ -44,9 +44,7 @@
 					<tr>
 						<td>
 							<p:outputLabel value="#{lbl['lbl.sm.gstNo']}" />
-							<p:outputLabel value="*" styleClass="mandatory" 
-							rendered="#{not empty backingBean.managedBean.selectedBranch.gst.gstEffDate 
-							or not empty backingBean.managedBean.selectedBranch.gst.gstEndDate}"/>
+							<p:outputLabel value="*" styleClass="mandatory"/>
 						</td>
 						<td><c:choose>
 								<c:when test="#{backingBean.managedBean.supplierUser}">
@@ -73,10 +71,7 @@
 					<tr>
 						<td>
 							<p:outputLabel value="#{lbl['lbl.sm.gst.effdate']}" />
-							<p:outputLabel value="*" styleClass="mandatory" 
-							rendered="#{not empty backingBean.managedBean.selectedBranch.gst.gstRegNo 
-							or not empty backingBean.managedBean.selectedBranch.gst.gstEndDate 
-							and backingBean.managedBean.supplierUser}"/>
+							<p:outputLabel value="*" styleClass="mandatory"/>
 						</td>
 						<td><c:choose>
 								<c:when test="#{backingBean.managedBean.supplierUser}">
@@ -202,6 +197,7 @@
 					<tr>
 						<td style="border-style: none !important;">
 							<p:outputLabel value="#{lbl['lbl.sm.gst.regno']}" />
+							<p:outputLabel value="*" styleClass="mandatory" />
 						</td>
 						<td style="border-style: none !important;">
 							<c:choose>
@@ -221,6 +217,7 @@
 					<tr>
 						<td style="border-style: none !important;">
 							<p:outputLabel value="#{lbl['lbl.sm.gst.effdate']}" />
+							<p:outputLabel value="*" styleClass="mandatory" />
 						</td>
 						<td style="border-style: none !important;">
 							<c:choose>
