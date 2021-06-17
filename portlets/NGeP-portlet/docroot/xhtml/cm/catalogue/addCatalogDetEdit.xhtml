@@ -165,7 +165,8 @@
 							action="#{catalogueBackingBean.indForImage}"
 							title="#{lbl['lbl.cm.upload']}"
 							rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' and catalogueBackingBean.managedBean.displayCatalogue and !unspscCodeBackingBean.supplierTemp}"
-							oncomplete="imageDialog.show();">
+							oncomplete="imageDialog.show();"
+							update=":form:imageDialog"> <!-- #14118 --> 
 							<p:graphicImage value="/css/images/design/upload.png"
 								style="margin-top:10px;"></p:graphicImage>
 						</p:commandLink> <p:commandLink
