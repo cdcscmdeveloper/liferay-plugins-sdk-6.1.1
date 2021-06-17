@@ -11149,6 +11149,7 @@ public class SpecificationBackingBean extends
 				specReqDTO.setScoreOfferPriceList(this.getManagedBean().getOfferPricePackageList());
 				specReqDTO.setSingleItem(this.getManagedBean().isSingleItem());
 				//#25138 Reendorsed - end
+				specReqDTO.setZonesQt(this.getManagedBean().getQt().isZonal());//#25138 - update validation
 				specReqDTO.setAllowZeroVariance(true);
 				validateFinancialPackageItemPassingScoring(this
 						.getManagedBean().getFinancialScoreSetting(), this
