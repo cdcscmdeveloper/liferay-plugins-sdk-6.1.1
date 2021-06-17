@@ -8776,7 +8776,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					finalMsg.append("Dikemas kini atas sebab      ");
 					finalMsg.append(scLoiLoaItem.getLoaSpecJustification());
 					String labelLampiranA3 = StringUtils.EMPTY;//29007-start
-					labelLampiranA3=pmUser.getUserName()+"           ".concat(date);
+					labelLampiranA3=date;//29007
 					log.info("=======labelLampiranA3======"+labelLampiranA3);
 					finalMsg.append("          "+labelLampiranA3);//29007-End
 					scLoiLoaItem.setLoaSpecJustificationForVelocity(finalMsg.toString());//29007
