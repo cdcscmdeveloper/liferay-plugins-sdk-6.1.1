@@ -3891,10 +3891,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		Boolean isZonalWithPaOrPs = false;
 		Boolean isZonal = getManagedBean().getScLoa().getScLoiLoa().isZonal();
 		String fulfilmentType = getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode();
-
+		String docType = getManagedBean().getScLoa().getScLoiLoa().getDocType();
+		
 		if (fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
 				|| fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)) {
-			if (isZonal)
+			if (isZonal && (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(docType)))
 				isZonalWithPaOrPs = true;
 		}
 		return isZonalWithPaOrPs;
