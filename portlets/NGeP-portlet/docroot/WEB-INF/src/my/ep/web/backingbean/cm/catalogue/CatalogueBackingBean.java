@@ -32,7 +32,6 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -58,7 +57,6 @@ import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.circular.ICircularDetailSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
-import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -66,6 +64,9 @@ import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
+// 29961 - start
+import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+//29961 - end
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
@@ -78,6 +79,9 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.cm.CmConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+//29961 - start
+import my.ep.constant.pm.RuleTypeConst;
+//29961 - end
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.cm.catalogue.CmTrackingDairyVO;
@@ -99,11 +103,13 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
-import my.ep.dto.pm.common.state.StateReqDTO;
-import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
+//29961 - start
+import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
+import my.ep.dto.pm.general.settings.rule.RuleResDTO;
+//29961 - end
 import my.ep.dto.sm.blacklistDirector.BlacklistDirectorReqDTO;
 import my.ep.dto.sm.blacklistDirector.BlacklistDirectorResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
@@ -146,11 +152,8 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelItemSpec;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
-import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
-import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDistrict;
-import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
@@ -180,12 +183,13 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.cm.helper.CmApplicationUtil;
 import my.ep.web.util.cm.helper.CmSupplierZoneSingleton;
-import my.ep.web.util.cm.helper.CmSupplierZoneStateDistrictDTO;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.AdvanceSearchVO;
+import my.ep.web.vo.BlacklistOwnerDirectorVO;
+import my.ep.web.vo.DisciplinaryActionCategoryVO;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.ExtensionCodeVO;
 import my.ep.web.vo.PricingVO;
@@ -207,7 +211,6 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
-import org.primefaces.event.data.PageEvent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
@@ -217,10 +220,6 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
-
-import my.ep.web.vo.BlacklistOwnerDirectorVO;
-import my.ep.web.vo.DisciplinaryActionCategoryVO;
-import my.ep.persistence.entity.sc.directpurchase.ScQuoteSupplier;
 
 /**
  * 
@@ -10481,15 +10480,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	// 14921 - End
 
+	//29961 - start
 	public Date getNextTwoYear(Date startDate) {
 		Calendar cal = Calendar.getInstance();
 		if (startDate != null) {
 			cal.setTime(startDate);
-			cal.add(Calendar.YEAR, CmHelper.getInstance().getStandardPricingYear());
+			cal.add(Calendar.YEAR, getEndYearByRulesValue(RuleTypeConst.CATLOGUE_ITEM_VALIDITY));
 		}
 		return cal.getTime();
 	}
-
+	//29961 - end
+	
 	public void onDateSelectListener(Integer index) {
 		Date startDate = index < 0 ? this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing()
 				.getStartDate() : this.getManagedBean().getDraftSearchDataModel().getList().get(index)
@@ -11023,4 +11024,25 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				.isDisciplinaryActionActiveDp();
 	}
 	// 26284 - End
+	
+	// 29961 - start
+	private Integer getEndYearByRulesValue(String RuleType) {
+		log.info("getEndYearByRulesValue");
+
+		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject("pm", IRuleSO.class);
+
+		Integer ruleValue = 0;
+
+		RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		RuleResDTO ruleResDTO = null;
+
+		ruleReqDTO.setRuleType(RuleType);
+		RuleResDTO rules = ruleSO.getRuleValueByRuleType(ruleReqDTO);
+
+		if (rules.getRulevalue() != null) {
+			ruleValue = Integer.parseInt(rules.getRulevalue());
+		}
+		return ruleValue;
+	}
+	// 29961 - end
 }
