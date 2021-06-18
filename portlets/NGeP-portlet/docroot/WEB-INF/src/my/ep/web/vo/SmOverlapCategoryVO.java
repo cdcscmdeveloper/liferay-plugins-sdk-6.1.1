@@ -16,6 +16,7 @@ public class SmOverlapCategoryVO extends BaseVO {
 	private List<SmBulkApplOverlapCatVO> overlapCategoryVOList;
 	//13362
 	private String applnOverLapRemarks;
+	private List<SmBulkApplOverlapCatVO> overlapCategoryMalayList;
 
 	public String getOverLappedCategoryMsg() {
 		return overLappedCategoryMsg;
@@ -57,6 +58,14 @@ public class SmOverlapCategoryVO extends BaseVO {
 
 	public void setApplnOverLapRemarks(String applnOverLapRemarks) {
 		this.applnOverLapRemarks = applnOverLapRemarks;
+	}
+
+	public List<SmBulkApplOverlapCatVO> getOverlapCategoryMalayList() {
+		return overlapCategoryMalayList;
+	}
+
+	public void setOverlapCategoryMalayList(List<SmBulkApplOverlapCatVO> overlapCategoryMalayList) {
+		this.overlapCategoryMalayList = overlapCategoryMalayList;
 	}
 	//13362 - END
 }

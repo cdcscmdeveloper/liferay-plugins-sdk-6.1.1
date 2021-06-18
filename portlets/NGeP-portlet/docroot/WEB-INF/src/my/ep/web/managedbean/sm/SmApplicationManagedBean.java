@@ -615,6 +615,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	// 26671 - Site Visit Grouping Enhancement -28775 START
 	private boolean showFacilityMachine;
 	// 26671 - Site Visit Grouping Enhancement -28775 END
+	
+	//13362
+	private List<SmBulkApplOverlapCatVO> overlapCategoryListMalay;
 
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
@@ -4405,4 +4408,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.showFacilityMachine = showFacilityMachine;
 	}
 	// 26671 - Site Visit Grouping Enhancement -28775 END
+
+	//13362 START
+	public List<SmBulkApplOverlapCatVO> getOverlapCategoryListMalay() {
+		return overlapCategoryListMalay;
+	}
+
+	public void setOverlapCategoryListMalay(List<SmBulkApplOverlapCatVO> overlapCategoryListMalay) {
+		this.overlapCategoryListMalay = overlapCategoryListMalay;
+	}
+	//13362 END
 }
