@@ -59,9 +59,11 @@
 		</h:outputText>
 		<br />
 		<!-- #22211 Start -->
-		<h:outputText styleClass="instruction" rendered="#{isPendingVerification and isSqStillValid and !isTrackingDairyView}"
+		<!-- Bug_30923 Start -->
+		<h:outputText styleClass="instruction" rendered="#{isPendingVerification and isSqStillValid and !isTrackingDairyView and !isDocTypeQuotation}"
 			value="#{lbl['lbl.sc.loa.supplier.reviseDocument.instruction']}">
 		</h:outputText>
+		<!-- Bug_30923 End -->
 		<!-- #22211 End -->
 		
 	    <table border="0" cellspacing="0" cellpadding="0" width="100%">
