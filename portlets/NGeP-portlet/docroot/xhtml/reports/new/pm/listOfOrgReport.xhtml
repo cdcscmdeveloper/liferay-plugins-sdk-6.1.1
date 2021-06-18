@@ -26,7 +26,7 @@
 				$("input[id$=':form:sorSearchOrgTypeId:0']").change();
 			}
 		}
-		
+		//#29991 start 
 		function hideOrgCodeName() {
 			$('.tabOrgCode').hide();
 			$('.tabOrgName').hide();
@@ -35,6 +35,8 @@
 			$('.tabOrgCode').show();
 			$('.tabOrgName').show();
 		}
+		//#29991 end 
+		
 	</script>
 	<p:outputPanel id="orgSearchPanel">
 		<table style="width: 100%;">
@@ -90,7 +92,7 @@
 							oncomplete="blockWidget.hide()" event="change"
 							partialSubmit="true"
 							update=":form:orgNameIt,:form:orgProfilePG, @form" 
-							listener="#{pmReportsBackingBean.onChangeOrgType()}" /> <!-- #28833 -->
+							listener="#{pmReportsBackingBean.onChangeOrgType()}" /> 
 					</p:selectOneMenu> <p:selectOneMenu id="orgTypeOthersList"
 						rendered="#{pmReportsBackingBean.managedBean.searchOrgCategory eq PmReportConst.orgCatOthers}"
 						styleClass="ppDropDownWidthL"
@@ -102,8 +104,8 @@
 						<p:ajax process="@this" onstart="blockWidget.show()"
 							oncomplete="blockWidget.hide()" event="change"
 							partialSubmit="true"
-							update=":form:orgNameIt,:form:orgProfilePG, @form"
-							listener="#{pmReportsBackingBean.onChangeOrgType()}" />
+							update=":form:orgNameIt,:form:orgProfilePG, @form" 
+							listener="#{pmReportsBackingBean.onChangeOrgType()}" /> <!-- #29991 add @form -->
 					</p:selectOneMenu></td>
 			</tr>
 			
