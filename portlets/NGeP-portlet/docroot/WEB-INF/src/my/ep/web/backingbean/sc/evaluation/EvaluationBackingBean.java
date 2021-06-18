@@ -72,7 +72,6 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
-import my.ep.constants.BpmConstants;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
@@ -177,12 +176,10 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.template.DocumentGenerator;
 
-import org.apache.batik.apps.svgbrowser.StatusBar;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
-import org.docx4j.docProps.variantTypes.Array;
 import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -193,7 +190,6 @@ import org.primefaces.model.MenuModel;
 
 import com.liferay.portal.util.PortalUtil;
 //25138
-import com.sun.faces.util.CollectionsUtils;
 
 /**
  * The Class EvaluationBackingBean.
@@ -1950,9 +1946,15 @@ public class EvaluationBackingBean extends
 				}
 
 			}*/
-
-			this.getManagedBean().setCompliancefinancialCheckList(
-					resDTO.getCheckListResultBean().getResultList());
+			//#25138 - 040621 - start
+			List<ScQtCheckList> compliancechecklist = new ArrayList<ScQtCheckList>();
+			for(ScQtCheckList list: resDTO.getCheckListResultBean().getResultList()){
+				if(!list.isScoringReq()){
+					compliancechecklist.add(list);
+				}
+			}
+			this.getManagedBean().setCompliancefinancialCheckList(compliancechecklist);
+			//#25138 - 040621 - end
 			if(CollectionUtils.isNotEmpty(this.getManagedBean().getCompliancefinancialCheckList())){
 				checklistSorting(this.getManagedBean().getCompliancefinancialCheckList());
 				}
@@ -2295,14 +2297,28 @@ public class EvaluationBackingBean extends
 					evalstage.add(QTConstants.COMPLIANCE_CHECK);
 				} else if (this.getManagedBean().getScQt()
 						.isTechEvaluationReq()) {
-					evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM); // #25138
+					//#25138 - 040621 - start
+					if(this.getManagedBean().getScQt().isPartial()){
+						evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM); 
+					}
+					else{
+						evalstage.add(QTConstants.TECHNICAL_EVALUATION);
+					}
+					//#25138 - 040621 - end
 				}
 			} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
 					.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
 				if (this.getManagedBean().getScQt().isDemoRequired()) {
 					evalstage.add(QTConstants.PRESENTATION_DEMO_EVALUATION);
 				} else {
-					evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM); // #25138
+					//#25138 - 040621 - start
+					if(this.getManagedBean().getScQt().isPartial()){
+						evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM); 
+					}
+					else{
+						evalstage.add(QTConstants.TECHNICAL_EVALUATION);
+					}
+					//#25138 - 040621 - end
 				}
 
 			}
@@ -2533,20 +2549,18 @@ public class EvaluationBackingBean extends
 					evaluationStageStatusCheck();
 					evaluationSo.prepareTechnicalEvaluationSummary(evalReqDTO);
 					getManagedBean().setTechnicalSummaryGenerated(true);
-					//#25138,#21695 - display summary package if demorequired - start 
-					if(this.getManagedBean().getScQt().isDemoRequired()){
-						this.getManagedBean().setQualifiedSuppliersDM(
-								new SummarySupplierPagingDataModel(
-										"oneTierQualifiedSupplier", true, false,
-										null, evalReqDTO.getResultStages()));
-						this.getManagedBean().setDisqualifiedSuppliersDM(
-								new SummarySupplierPagingDataModel(
-										"oneTierDisQualifiedSupplier", false,
-										false, null, evalReqDTO.getResultStages()));
-					}
-					//#25138,#21695 - display summary package if demorequired - start
 				}
-
+				
+				if(this.getManagedBean().getScQt().isDemoRequired()){
+					this.getManagedBean().setQualifiedSuppliersDM(
+							new SummarySupplierPagingDataModel(
+									"oneTierQualifiedSupplier", true, false, null,
+									evalReqDTO.getResultStages()));
+					this.getManagedBean().setDisqualifiedSuppliersDM(
+							new SummarySupplierPagingDataModel(
+									"oneTierDisQualifiedSupplier", false, false,
+									null, evalReqDTO.getResultStages()));
+				}
 				/*this.getManagedBean().setQualifiedSuppliersDM(
 						new SummarySupplierPagingDataModel(
 								"oneTierQualifiedSupplier", true, false, null,
@@ -3697,8 +3711,7 @@ public class EvaluationBackingBean extends
 											.getSpeZoneId()));
 					//#25138 - user score bug - start
 					List<ScQtProposalAmount> checklistamount = new ArrayList<ScQtProposalAmount>();
-					if(this.getManagedBean().getTabItemPackageIndex() == 2 
-							&& this.getManagedBean().getOfferScoreType().equalsIgnoreCase(QTConstants.USER_SCORE)){
+					if(this.getManagedBean().getTabItemPackageIndex() == 2){//#25138 - 040621 - remove condition USER SCORE
 						EvaluationReqDTO amountReqDto = new EvaluationReqDTO();
 						EvaluationResDTO amountResDto = new EvaluationResDTO();
 						amountReqDto.setSpeZoneId(speczone.getZones().get(i).getSpecZoneId());

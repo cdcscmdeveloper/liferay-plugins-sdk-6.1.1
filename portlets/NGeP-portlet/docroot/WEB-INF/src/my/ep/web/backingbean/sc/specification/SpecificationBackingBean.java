@@ -700,10 +700,10 @@ public class SpecificationBackingBean extends
 		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
 				.equalsIgnoreCase(financialCheckList.get(0).getDefinationType()
 						.getParameterCode())){
-                if(this.getManagedBean().getQt().isZonal()){
-                    checkSpecZoneQtyMaxScore(financialCheckList.get(0));
-                        
-                }
+			if(this.getManagedBean().getQt().isZonal()){
+				checkSpecZoneQtyMaxScore(financialCheckList.get(0));
+					
+			}
 			
 		}
 		//#25138 Reendorsed - set max score for wip data - end
@@ -2051,6 +2051,7 @@ public class SpecificationBackingBean extends
 					.getScQtCheckSt2financeProposalList()
 					|| this.getManagedBean()
 							.getScQtCheckSt2financeProposalList().isEmpty()) {
+				
 				specSo = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 				reqDTO.setSpecType(SourcingConstants.FINANCIAL_DOCTYPE);
@@ -11094,6 +11095,7 @@ public class SpecificationBackingBean extends
 				specReqDTO.setScoreOfferPriceList(this.getManagedBean().getOfferPricePackageList());
 				specReqDTO.setSingleItem(this.getManagedBean().isSingleItem());
 				//#25138 Reendorsed - end
+				specReqDTO.setZonesQt(this.getManagedBean().getQt().isZonal());//#25138 - update validation
 				specReqDTO.setAllowZeroVariance(true);
 				validateFinancialPackageItemPassingScoring(this
 						.getManagedBean().getFinancialScoreSetting(), this
@@ -14041,7 +14043,6 @@ public class SpecificationBackingBean extends
 						}
 
 					}
-
 				}
 				//#25138 - add if condition for one item only - end
 
@@ -18002,6 +18003,7 @@ if(null!=allTechnicalChecklist){
 		try {
 			
 			List<TplSpecQuestion> newSpecQuestions = new ArrayList<TplSpecQuestion>();
+			if(!this.getManagedBean().getScQtCheckSt2financeProposalList().isEmpty()){
 			for (ScQtCheckList maxScoreList : this
 					.getManagedBean().getScQtCheckSt2financeProposalList()) {
 				if(maxScoreList.getDefinationType().getParameterCode()
@@ -18026,6 +18028,7 @@ if(null!=allTechnicalChecklist){
 				this.getManagedBean().setSingleItem(false);
 			}
 			
+			}
 			
 		} finally {
 			specSo = null;
