@@ -480,7 +480,7 @@ public class SmApplicationBackingBean extends
 		cellTitleRow.setCellStyle(titleStyle);  
 		sheetLaporan.addMergedRegionUnsafe(new CellRangeAddress(0,0,0,9)); //to merge cell in selected row
 		
-		List<SmBulkApplOverlapCatVO> overlapCategoryList = getManagedBean().getOverlapCategoryVOList();
+		List<SmBulkApplOverlapCatVO> overlapCategoryList = SmApplicationUtil.checkOverLappingCategoriesMalay(getManagedBean());
 		
 		if(overlapCategoryList != null){
 			log.info("OVERLAP CATEGORY SIZE ---->"+ overlapCategoryList.size());
