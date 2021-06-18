@@ -2111,7 +2111,7 @@ public class PurchaseInDefaultBackingBean extends
 		
 		if(getManagedBean().getPurchaseInDefault().getScPurchaseInDefaultAttachment() == null){
 			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
-					"lbl.txt.service", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()) });
+					"lbl.txt.attachment", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()) });
 		}
 	}
 	
