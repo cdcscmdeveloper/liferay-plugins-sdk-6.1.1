@@ -427,6 +427,7 @@
 						<p:outputLabel value="*" styleClass="mandatory"/>	
 					</td>
 					
+					<!-- #31140 change label  -->
 					<td class="tdContent">
 					<p:inputText value="#{bb.managedBean.smPersonnel.department}" required="#{!empty param['disableValidation']}" size="40" maxlength="255" label="#{lbl['lbl.sm.person.department']}">
 					<p:ajax event="blur" partialSubmit="true"></p:ajax></p:inputText> 
@@ -436,9 +437,10 @@
 					<p:outputLabel value="#{lbl['lbl.sm.person.unit']}" /> 
 					<p:outputLabel value="*" styleClass="mandatory"/>
 					
+					<!-- #31140 change label -->
 					</td>
 					<td class="tdContent">
-					<p:inputText value="#{bb.managedBean.smPersonnel.sectionUnit}" required="#{!empty param ['disableValidation']}" size="40" maxlength="255" label="#{lbl['lbl.sm.unit']}">
+					<p:inputText value="#{bb.managedBean.smPersonnel.sectionUnit}" required="#{!empty param ['disableValidation']}" size="40" maxlength="255" label="#{lbl['lbl.sm.person.unit']}">
 					<p:ajax event="blur" partialSubmit="true"></p:ajax></p:inputText> 
 					</td>
 				</tr>
