@@ -2031,24 +2031,25 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		} 
 		
 		//start #29665
-		for(PmMachineCategory cat: this.getManagedBean().getPmMachineCategoryList()){
-			if(cat.getPmMachineCategorySectionList().contains("818"))
-				cat.setDockYardSiteVisit(ParameterConst.DOCKYARD_TYPEID);
-			else
-				cat.setDockYardSiteVisit(null);
-			
-			if(cat.getPmMachineCategorySectionList().contains("819"))
-				cat.setWorkshopSiteVisit(ParameterConst.WORKSHOP_TYPEID);
-			else
-				cat.setWorkshopSiteVisit(null);
-			
-			if(cat.getPmMachineCategorySectionList().contains("1001"))
-				cat.setPrintingSiteVisit(ParameterConst.PRINTING_TYPEID);
-			else
-				cat.setPrintingSiteVisit(null);
-			
+		if(CollectionUtils.isNotEmpty(this.getManagedBean().getPmMachineCategoryList())){
+			for(PmMachineCategory cat: this.getManagedBean().getPmMachineCategoryList()){
+				if(cat.getPmMachineCategorySectionList().contains("818"))
+					cat.setDockYardSiteVisit(ParameterConst.DOCKYARD_TYPEID);
+				else
+					cat.setDockYardSiteVisit(null);
+				
+				if(cat.getPmMachineCategorySectionList().contains("819"))
+					cat.setWorkshopSiteVisit(ParameterConst.WORKSHOP_TYPEID);
+				else
+					cat.setWorkshopSiteVisit(null);
+				
+				if(cat.getPmMachineCategorySectionList().contains("1001"))
+					cat.setPrintingSiteVisit(ParameterConst.PRINTING_TYPEID);
+				else
+					cat.setPrintingSiteVisit(null);
+			}
+			this.getManagedBean().getPmCategoryL3().setPmMachineCategory(this.getManagedBean().getPmMachineCategoryList());
 		}
-		this.getManagedBean().getPmCategoryL3().setPmMachineCategory(this.getManagedBean().getPmMachineCategoryList());
 		//end #29665
 	}
 
