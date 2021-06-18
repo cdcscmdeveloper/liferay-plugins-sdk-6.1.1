@@ -694,6 +694,12 @@ public class SupplierManagementConst {
 	public static final String CATEGORY_CODE_L3_01 = "01";
 	public static final String CATEGORY_CODE_L3_99 = "99";
 	public static final String CATEGORY_CODE_L1_L2_L3_220701 = "220701";
+	
+	//14530
+	public static final String PORTAL_URL = "https://www.eperolehan.gov.my/";
+	public static final int NOTIFICATION_ID_401189 = 401189;
+	public static final int NOTIFICATION_ID_401190 = 401190;
+
 	//9569
 	public static final String EPROLE_DELETED = "Delete";
 
@@ -1316,6 +1322,21 @@ public class SupplierManagementConst {
 	public String getSM_APPL_PAGE_TYPE_ANNUALINFO() {
 		return SM_APPL_PAGE_TYPE_ANNUALINFO;
 	}
+	
+	//14530 - START
+	public String getPORTAL_URL() {
+		return PORTAL_URL;
+	}
+	
+	public int getNOTIFICATION_ID_401189() {
+		return NOTIFICATION_ID_401189;
+	}
+	
+	public int getNOTIFICATION_ID_401190() {
+		return NOTIFICATION_ID_401190;
+	}
+	
+	//14530 - END
 	//9569
 	public String getEPROLE_DELETED() {
 		return EPROLE_DELETED;
