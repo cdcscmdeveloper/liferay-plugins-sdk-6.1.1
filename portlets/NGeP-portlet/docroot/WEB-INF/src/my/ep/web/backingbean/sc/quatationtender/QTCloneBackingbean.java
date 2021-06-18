@@ -1415,7 +1415,9 @@ public class QTCloneBackingbean extends
 					.retriveQTScheduleDetails(reqDTO);
 			
 			ScQt copyQt=reqDTO.getQtdetail();
-			qt.setNewPublishDate(copyQt.getNewPublishDate());
+			if(null==qt.getNewPublishDate()){//25635-Start
+			qt.setNewPublishDate(copyQt.getPublishDate());
+			}//25635-End
 			qt.setNewClosingDate(copyQt.getNewClosingDate());
 			
 			ISearchResultBean<ScQtContactPerson> contactPersons = resDTO
@@ -1618,7 +1620,9 @@ public class QTCloneBackingbean extends
 			}
 			listBsv.addAll(listSiteVisit);
 			listBsv.addAll(listBrief);
+			if(null!=toUpdate.getScQtBsvDtls()){//25635-start
 			toUpdate.getScQtBsvDtls().clear();
+			}//25635-End
 			toUpdate.setScQtBsvDtls(listBsv);
 		}
 			
@@ -1715,14 +1719,27 @@ public class QTCloneBackingbean extends
 			if(!qt.isZonal()){
 				if (!copyScqt.isZonal()) {
 					qt.setBsvRequired(copyScqt.isBsvRequired());//25635-start
-					qt.setPublishDate(null);//25635-End
+					//qt.setPublishDate(null);//25635-End
 					ScQtBsv qtBsv = resDTO.getScQtBsv();
 					BriefingZoneBean briefingZoneBean=null;
 					if(qt.isBsvRequired()){
 						if(qt.getScQtBriefings()!=null && !qt.getScQtBriefings().isEmpty()){
 							ScQtBsv ori=qt.getScQtBriefings().get(0);
 							briefingZoneBean=updateBrief(ori,qtBsv);
-						}
+						}else{//25635-start
+							
+							ScQtBsv ori=null;
+							if(null==this.getManagedBean().getBsvDtlBean()){
+							
+							 ori=new ScQtBsv();
+							ori.setScQt(qt);
+							ori.setTplSpecZoneDtl(null);
+							}else{
+								
+								ori=this.getManagedBean().getBsvDtlBean().getScQtBsv();	
+							}
+							briefingZoneBean=updateBrief(ori,qtBsv);	
+						}//25635-End
 					}else{
 						qt.setBsvRequired(copyScqt.isBsvRequired());
 						briefingZoneBean=mapBrief(qt,qtBsv);
@@ -1734,6 +1751,16 @@ public class QTCloneBackingbean extends
 						latestBsvDate = updateProposalStartDate(latestBsvDate, bsvDtlBean.getBriefingList());
 						latestBsvDate = updateProposalStartDate(latestBsvDate, bsvDtlBean.getSitevisitList());
 					} 
+					if(null==qt.getNewPublishDate()){//25635-Start
+						qt.setNewPublishDate(copyScqt.getPublishDate());
+						}
+					Date newPublishDate = qt.getNewPublishDate();
+					
+					if (newPublishDate != null) {	
+						qt.setPublishDate(DateUtils.setDefaultDateTime(newPublishDate));
+						
+					}//25635-End
+					
 					// if no briefing / site visit.
 					if (!qt.isBsvRequired()) {
 						latestBsvDate = qt.getPublishDate();
@@ -1766,9 +1793,12 @@ public class QTCloneBackingbean extends
 //					}
 //					this.getManagedBean().setBriefingZoneBean(zoneBeans);
 //					this.getManagedBean().setBsvDtlBean(zoneBeans.get(0));
-				}
+					updatePublishingdates(qt,copyScqt);//25635
+				}			
 			}
-			
+			else{//25635-start			
+				updatePublishingdates(qt,copyScqt);
+			}//25635-End
 
 			
 		}finally{
@@ -4238,5 +4268,28 @@ public class QTCloneBackingbean extends
 	}
 	
 	
+	//25635-end
+	/*25635-start
+	 * updatePublishingdates
+	 * 
+	 */
+	private void updatePublishingdates(ScQt qt,ScQt copyScqt){
+		if(null==qt.getNewPublishDate()){
+			qt.setNewPublishDate(copyScqt.getPublishDate());
+		}
+		Date newPublishDate = qt.getNewPublishDate();
+		if (newPublishDate != null) {
+			qt.setPublishDate(DateUtils.setDefaultDateTime(newPublishDate));
+			
+			if (!qt.isBsvRequired()) {
+				qt.setProposalStartDate(qt.getPublishDate());
+			}
+		
+		}
+		if(null==qt.getProposalStartDate()){
+			qt.setProposalStartDate(qt.getPublishDate());	
+		}
+		updatePublishClosingDate(qt);	
+	}
 	//25635-end
 }
