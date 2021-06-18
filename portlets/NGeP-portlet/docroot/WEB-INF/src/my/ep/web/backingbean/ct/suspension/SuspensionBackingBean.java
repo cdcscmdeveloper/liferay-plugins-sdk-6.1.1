@@ -821,16 +821,40 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		}
 		
 		if(getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_QUOTATION) || getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_TENDER) || getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO)){
-			List<ScRequestItemSpecOffer> scRequestItemSpecOffer = requestItemSO.retrieveNewOfferSpec(requestItemId);
+			List<ScRequestItemSpecOffer> scRequestItemSpecOffer = requestItemSO.retrieveNewOfferSpec(requestItemId);			
+			List<ScRequestItemSpecOffer> scRequestItemSpecOfferList = new ArrayList<ScRequestItemSpecOffer>();
+			String itemSpec = null;
+			String suppOffer = null;
+			String newOfferSpec = null;			
+			Long requestItemIdTemp = 0L;
 			
 			Iterator<ScRequestItemSpecOffer> itr = scRequestItemSpecOffer.iterator();
 			while (itr.hasNext()){
 				ScRequestItemSpecOffer scRequestItemSpecOfferTemp = itr.next();
-				if(scRequestItemSpecOfferTemp.getQuestionType().equals("I"))
+				if(scRequestItemSpecOfferTemp.getQuestionType().equals("I")){
+					suppOffer = scRequestItemSpecOfferTemp.getSupplierOffer();
+					newOfferSpec = scRequestItemSpecOfferTemp.getNewOfferSpec();
+					requestItemIdTemp = scRequestItemSpecOfferTemp.getScRequestItem().getRequestNoteItemId();
 					itr.remove();
+					}
+			}	
+			
+			for(ScRequestItemSpecOffer itemSpecOffer: scRequestItemSpecOffer){
+				ScRequestItemSpecOffer scRequestItemSpecOfferUpdated = new ScRequestItemSpecOffer();
+				if((itemSpecOffer.getQuestionType().equals("S")) && itemSpecOffer.getScRequestItem().getRequestNoteItemId() == requestItemIdTemp){
+					itemSpec = itemSpecOffer.getItemSpec();
+					
+					//Insert data into new object
+					scRequestItemSpecOfferUpdated.setSupplierOffer(suppOffer);
+					scRequestItemSpecOfferUpdated.setNewOfferSpec(newOfferSpec);
+					scRequestItemSpecOfferUpdated.setItemSpec(itemSpec);
+					
+					//Insert new object into the list
+					scRequestItemSpecOfferList.add(scRequestItemSpecOfferUpdated);
+				}				
 			}			
-			getManagedBean().setScRequestItemSpecOfferList(scRequestItemSpecOffer);		
-		}		
+			getManagedBean().setScRequestItemSpecOfferList(scRequestItemSpecOfferList);		
+		}				
 		/*#28854 end*/
 		RequestContext.getCurrentInstance().execute("itemSpecDlg.show()");
 	}
