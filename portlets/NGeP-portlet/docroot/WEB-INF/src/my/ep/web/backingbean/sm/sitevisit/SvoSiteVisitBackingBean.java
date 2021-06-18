@@ -1947,23 +1947,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * @return String - xhtml
 	 */
 	public String saveSiteVisitReport(String action){
-		// #29719 - start
-		PmUser user = new FacesScopes().getUserSessionBean();
-		// #29719 - end
 		
 		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
 		SmSvTask svTask = this.getManagedBean().getSmSvTask();
-		
-		// #29719 - start
-		if (svTask.getSmSvOfficers() != null) {
-			for (SmSvOfficer officer : svTask.getSmSvOfficers()) {
-				if (!(user.getUserId().equals(officer.getPmUser().getUserId()))) {
-					officer.getPmUser().setUserId(user.getUserId());
-					officer.setChangedBy(user.getUserId());
-				}
-			}
-		}
-		// #29719 - end
 		
 		//#30550 - start
 		if(getManagedBean().getSelectedSvTemplate().getSmSvInterviewees() == null ||
