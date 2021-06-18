@@ -1176,7 +1176,10 @@
      		</h:panelGrid>
      		     		
   			<p:dataTable id="itemSpec" var="item" value="#{ctBackingBean.managedBean.itemSpecification}"
-			classStyle="TableHeader" emptyMessage ="#{lbl['lbl.datatable.msg.no.records.found']}" style="margin-bottom: 30px;">
+			classStyle="TableHeader" emptyMessage ="#{lbl['lbl.datatable.msg.no.records.found']}" style="margin-bottom: 30px;"
+			rows="5" paginator="true" paginatorPosition="bottom"
+            paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+            currentPageReportTemplate="Page &#160; {currentPage}/{totalPages}">
 				<p:column styleClass="column-align-center"  style="white-space:normal;">
 					<f:facet name="header">#{lbl['lbl.ct.specification']}</f:facet> 
 					<h:outputText value="#{item}" rows="5" style="float:left;resize:none;" autoResize="false" disabled="true" rendered="#{ctBackingBean.managedBean.itemSpecification ne null}"></h:outputText>      					
@@ -1188,8 +1191,11 @@
 		<h:panelGroup rendered="#{(ctBackingBean.managedBean.contractVer.ctContract.loa.procurementMode.parameterCode eq ParameterConst.procurementModeQuotation) or (ctBackingBean.managedBean.contractVer.ctContract.loa.procurementMode.parameterCode eq ParameterConst.procurementModeTender) or (ctBackingBean.managedBean.contractVer.ctContract.loa.procurementMode.parameterCode eq ParameterConst.procurementModeDirectNego)}">				
      		<h:panelGrid column="1">
      			<p:outputLabel value="#{lbl['lbl.ct.item.desc']}" style="float:left;margin-bottom: 20px;margin-top: 10px;font-weight:bold;">: #{ctBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemName}</p:outputLabel>
-     	
-     			<p:dataTable var="item" value="#{ctBackingBean.managedBean.scRequestItemSpecOfferList}" classStyle="TableHeader" style="margin-bottom: 30px;" emptyMessage ="#{lbl['lbl.datatable.msg.no.records.found']}">   
+     			     			
+     			<p:dataTable var="item" value="#{ctBackingBean.managedBean.scRequestItemSpecOfferList}" classStyle="TableHeader" style="margin-bottom: 30px;" emptyMessage ="#{lbl['lbl.datatable.msg.no.records.found']}"
+     			rows="5" paginator="true" paginatorPosition="bottom"
+                paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                currentPageReportTemplate="Page &#160; {currentPage}/{totalPages}">   
    					<p:column styleClass="column-align-center" style="white-space:normal;">    						  				
       					<f:facet name = "header">#{lbl['lbl.ct.specification']}</f:facet>      					
       					<h:outputText value="#{item.itemSpec}" style="float:left;" rendered="#{item.itemSpec ne null}"></h:outputText>							
@@ -1205,7 +1211,7 @@
       					<h:outputText value="#{item.newOfferSpec}" style="float:left;" rendered="#{item.newOfferSpec ne null}"></h:outputText>        					
       					<h:outputText value="#{lbl['lbl.sc.qt.item.spec.null']}" style="float:left;" rendered="#{item.newOfferSpec eq null}"></h:outputText>    					   										
    					</p:column>  			
-				</p:dataTable>
+				</p:dataTable>					
 			</h:panelGrid>			
 		</h:panelGroup>
 		
