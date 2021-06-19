@@ -1751,7 +1751,7 @@ public class QTCloneBackingbean extends
 						latestBsvDate = updateProposalStartDate(latestBsvDate, bsvDtlBean.getBriefingList());
 						latestBsvDate = updateProposalStartDate(latestBsvDate, bsvDtlBean.getSitevisitList());
 					} 
-					if(null==qt.getNewPublishDate()){//25635-Start
+					if(null!=copyScqt.getPublishDate()){//25635-Start
 						qt.setNewPublishDate(copyScqt.getPublishDate());
 						}
 					Date newPublishDate = qt.getNewPublishDate();
@@ -4274,7 +4274,7 @@ public class QTCloneBackingbean extends
 	 * 
 	 */
 	private void updatePublishingdates(ScQt qt,ScQt copyScqt){
-		if(null==qt.getNewPublishDate()){
+		if(null!=copyScqt.getPublishDate()){
 			qt.setNewPublishDate(copyScqt.getPublishDate());
 		}
 		Date newPublishDate = qt.getNewPublishDate();
