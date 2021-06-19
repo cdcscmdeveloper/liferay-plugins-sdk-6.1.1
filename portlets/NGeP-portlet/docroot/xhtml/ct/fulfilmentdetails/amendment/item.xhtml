@@ -658,7 +658,10 @@
      		</h:panelGrid>
      		     		
   			<p:dataTable id="itemSpec" var="item" value="#{ctBackingBean.managedBean.itemSpecification}"
-			classStyle="TableHeader" emptyMessage ="#{lbl['lbl.datatable.msg.no.records.found']}" style="margin-bottom: 30px;">
+			classStyle="TableHeader" emptyMessage ="#{lbl['lbl.datatable.msg.no.records.found']}" style="margin-bottom: 30px;"
+			rows="5" paginator="true" paginatorPosition="bottom"
+            paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+            currentPageReportTemplate="Page &#160; {currentPage}/{totalPages}">
 				<p:column styleClass="column-align-center"  style="white-space:normal;">
 					<f:facet name="header">#{lbl['lbl.ct.specification']}</f:facet> 
 					<h:outputText value="#{item}" rows="5" style="float:left;resize:none;" autoResize="false" disabled="true" rendered="#{ctBackingBean.managedBean.itemSpecification ne null}"></h:outputText>      					
@@ -671,7 +674,10 @@
      		<h:panelGrid column="1">
      			<p:outputLabel value="#{lbl['lbl.ct.item.desc']}" style="float:left;margin-bottom: 20px;margin-top: 10px;font-weight:bold;">: #{ctBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemName}</p:outputLabel>
      	
-     			<p:dataTable var="item" value="#{ctBackingBean.managedBean.scRequestItemSpecOfferList}" classStyle="TableHeader" style="margin-bottom: 30px;" emptyMessage ="#{lbl['lbl.datatable.msg.no.records.found']}">   
+     			<p:dataTable var="item" value="#{ctBackingBean.managedBean.scRequestItemSpecOfferList}" classStyle="TableHeader" style="margin-bottom: 30px;" emptyMessage ="#{lbl['lbl.datatable.msg.no.records.found']}"
+     			rows="5" paginator="true" paginatorPosition="bottom"
+                paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                currentPageReportTemplate="Page &#160; {currentPage}/{totalPages}">   
    					<p:column styleClass="column-align-center" style="white-space:normal;">    						  				
       					<f:facet name = "header">#{lbl['lbl.ct.specification']}</f:facet>      					
       					<h:outputText value="#{item.itemSpec}" style="float:left;" rendered="#{item.itemSpec ne null}"></h:outputText>							
