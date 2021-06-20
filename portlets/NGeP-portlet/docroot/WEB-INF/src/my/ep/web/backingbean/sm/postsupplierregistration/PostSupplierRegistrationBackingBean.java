@@ -141,8 +141,10 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			SmWorkflowStatus rejectedWf = rejectedApplExist(supplier.getSupplierId());
 			boolean isRejectedApplExist = (rejectedWf == null) ? false : true;
 			//30713 - Start
-			//Add checking check expired for KN
-			if (rejectedWf != null && my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF.equalsIgnoreCase(supplier.getSmAppl().getApplType())) {
+			//Add checking for expired process fee KN
+			SmWorkflowStatus currWorkflowStatus = getSmWorkflowStatus(appl);
+			if(currWorkflowStatus.getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM_PROCESSING_FEE) 
+					&& my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF.equalsIgnoreCase(appl.getApplType())){
 				Timestamp currentDate = new Timestamp(System.currentTimeMillis());
 				long diff = currentDate.getTime()
 						- rejectedWf.getCreatedDate().getTime();
