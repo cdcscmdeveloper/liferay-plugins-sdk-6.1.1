@@ -143,7 +143,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			//30713 - Start
 			//Add checking for expired process fee KN
 			SmWorkflowStatus currWorkflowStatus = getSmWorkflowStatus(appl);
-			if(currWorkflowStatus.getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM_PROCESSING_FEE) 
+			if(rejectedWf != null && currWorkflowStatus.getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM_PROCESSING_FEE) 
 					&& my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF.equalsIgnoreCase(appl.getApplType())){
 				Timestamp currentDate = new Timestamp(System.currentTimeMillis());
 				long diff = currentDate.getTime()
