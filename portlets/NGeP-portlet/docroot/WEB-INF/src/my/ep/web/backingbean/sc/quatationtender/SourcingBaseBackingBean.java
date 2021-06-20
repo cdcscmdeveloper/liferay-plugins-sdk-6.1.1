@@ -4630,20 +4630,17 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				briefingReport
 						.setScQtFinalizationReportAttachment(reportAttachment);
 			}
-			List<ScQtFinalizationReport> briefingReports = getManagedBean()
-					.getNewBriefingPaperReportList();
-			int indexOfReport = briefingReports.indexOf(briefingReport);
+			
+			// #18685 - Start.
 			reportAttachment.setDocNo(briefingReport.getScQtFinalization().getScQt()
 					.getQtNo());
 			scAttachment = reportAttachment;
 			uploadAttachment(event.getFile(), scAttachment);
-			String fileName = scAttachment.getFileName();
-			if (indexOfReport >= 0 && fileName != null) {
-				reportAttachment.setFileName(indexOfReport + SourcingConstants.UNDER_SCORE
-						+ fileName);
-			}
+			reportAttachment.setFileName(scAttachment.getFileName());
+			
 			briefingReport
 					.setScQtFinalizationReportAttachment(reportAttachment);
+			// #18685 - End.
 			
 		}
 	}
@@ -4773,6 +4770,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					}
 					
 				} 
+				// #18685 - Start.
+				if ("UP".equals(finalizationReport.getDefinationType().getParameterCode())) {
+					getManagedBean().getNewBriefingPaperReportList().add(finalizationReport);
+					iterator.remove();
+				}
+				// #18685 - End.
 			}
 			
 			// #18685 - Start
@@ -4786,6 +4789,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						}
 					}
 				}
+				// #18685 - Start.
+				for (ScQtFinalizationReport report : getManagedBean().getNewBriefingPaperReportList()) {
+					if ("UP".equals(report.getDefinationType().getParameterCode())) {
+						tempList.add(report);
+					}
+				}
+				// #18685 - End.
 				getManagedBean().getNewBriefingPaperReportList().clear();
 				getManagedBean().getNewBriefingPaperReportList().addAll(tempList);
 			}
