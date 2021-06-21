@@ -41,6 +41,7 @@ import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.rest.sm.DowngradeExpMofPersonnelRest;
 import my.ep.type.pm.RoleCode;
@@ -513,6 +514,12 @@ public class CommonApplBackingBean extends
 					// #29664 - start
 					smApplBB.getManagedBean().setRoleCode(RoleCode.UPS_APPROVER.value());
 					// #29664 - end
+					// #28778 - Start
+					this.getManagedBean().setSpecialCategoryRechecked(specialCategoryRechecked(appl));
+					if(appl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW ) && this.getManagedBean().isSpecialCategoryRechecked()){
+						setSiteVisitView(smApplBB.getManagedBean(), appl);
+					}
+					// #28778 - End
 					if (appl.getApplType().equals(
 							ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
 						setSiteVisitView(smApplBB.getManagedBean(), appl);
@@ -830,6 +837,18 @@ public class CommonApplBackingBean extends
 	}
 
 	}
+	
+	//28778 - Start
+	private boolean specialCategoryRechecked(SmAppl Appl){
+		for(SmSupplierCategory smSuppCat : Appl.getSmSupplierCategories()){
+		    if (smSuppCat.isSpecialCategory()){
+		    	log.info("IS IT A SPECIAL CATEGORY ? ============================== " + true);
+			 return true;
+		    }
+		  }
+		  return false;
+		}
+	//28778 - End
 
 	private void setSiteVisitView(SmApplicationManagedBean bean, SmAppl appl) {
 		SmWorkflowStatus workFlow = getWorkFlowStatusByMultipleStatusAndApplId(
