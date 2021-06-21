@@ -33,6 +33,9 @@ public class CommonApplManagedBean extends BaseManagedBean {
 	private String secs;		
 	private String mofBeforeExpiryMsg;
 	private String mofAfterExpiryMsg;
+	//28778 - Start
+	private boolean specialCategoryRechecked;
+	//28778 - End
 
 	public String[] getBpmAction() {
 		return bpmAction;
@@ -149,4 +152,10 @@ public class CommonApplManagedBean extends BaseManagedBean {
 			this.mofAfterExpiryMsg = mofAfterExpiryMsg;
 		}
 		//10724 END
+		public boolean isSpecialCategoryRechecked() {
+			return specialCategoryRechecked;
+		}
+		public void setSpecialCategoryRechecked(boolean specialCategoryRechecked) {
+			this.specialCategoryRechecked = specialCategoryRechecked;
+		}
 }
