@@ -4183,10 +4183,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			while (itr.hasNext()){
 				ScRequestItemSpecOffer scRequestItemSpecOfferTemp = itr.next();
 				if(scRequestItemSpecOfferTemp.getQuestionType().equals("I")){
-					if(scRequestItemSpecOfferTemp.getSupplierOffer()!=null || !scRequestItemSpecOfferTemp.getSupplierOffer().isEmpty()){
+					if(scRequestItemSpecOfferTemp.getSupplierOffer()!=null && !scRequestItemSpecOfferTemp.getSupplierOffer().isEmpty()){
 						suppOffer = scRequestItemSpecOfferTemp.getSupplierOffer();
 					}
-					if(scRequestItemSpecOfferTemp.getNewOfferSpec()!=null || !scRequestItemSpecOfferTemp.getNewOfferSpec().isEmpty()){
+					if(scRequestItemSpecOfferTemp.getNewOfferSpec()!=null && !scRequestItemSpecOfferTemp.getNewOfferSpec().isEmpty()){
 						newOfferSpec = scRequestItemSpecOfferTemp.getNewOfferSpec();
 					}
 					requestItemIdTemp = scRequestItemSpecOfferTemp.getScRequestItem().getRequestNoteItemId();
