@@ -39,18 +39,24 @@ public class SmApplicationNotificationUtil {
 			SmSupplierBasicInfoVO basicInfo, boolean isPoUser,
 			SmSupplier supplier, String supplierRemarks,
 			String approvalRemarks, ReviewApplicationReqDTO reqDTO) {
-		reqDTO.setBusinessRegNo(supplier.getRegNo());
-		reqDTO.setCompanyName(supplier.getCompanyName());
+		reqDTO.setBusinessRegNo(supplier.getRegNo()); 
+		reqDTO.setCompanyName(supplier.getCompanyName()); 
 		if (smAppl.getApplType().equalsIgnoreCase(
 				ParameterConst.NEW_SM_APPLN_FOR_MOF)
 				|| smAppl.getApplType().equalsIgnoreCase(
-						ParameterConst.NEW_SM_APPLN_FOR_RENEW)
-				|| smAppl.getApplType().equalsIgnoreCase(
-						ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)) {
-			reqDTO.setPaymentMethods("FPX dan kad kredit");
+						ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
+			reqDTO.setPaymentMethods("FPX dan kad kredit"); 
 			reqDTO.setCategoryDescription(retriveCategoryMessageForNotification(
 					smAppl, isPoUser));
-		} else if ((smAppl.getApplType().equalsIgnoreCase(
+		}//#29782 - START
+		else if ((smAppl.getApplType().equalsIgnoreCase( 
+				ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES))) {
+			reqDTO.setAppType("Add New Category Codes"); 	
+			reqDTO.setApplNo(smAppl.getApplNo());
+			reqDTO.setCategoryDescription(retriveAddNewCategoryMessageForNotification( 
+					smAppl, supplier, basicInfo, supplierRemarks, approvalRemarks, reqDTO)); 
+		//#29782 - END
+		}else if ((smAppl.getApplType().equalsIgnoreCase(
 				ParameterConst.NEW_SM_APPLN_FOR_CANCEL))) {
 			reqDTO.setCategoryDescription(retriveCancelRegistrationMessageForNotification(
 					smAppl, supplier, basicInfo, supplierRemarks, approvalRemarks, reqDTO));
@@ -423,5 +429,118 @@ public class SmApplicationNotificationUtil {
 			return new Locale(CommonConstants.DEFAULT_LANGUAGE_CODE);
 		}
 	}
+	
+	//	#29782 - START
+	/**
+	 * Set the tabular message for Add New Category message for
+	 * notification.This will be passed as a parameter for approval notification
+	 * 
+	 * @param managedBean
+	 *            - SmApplicationManagedBean
+	 * @return String - notification message or table content
+	 */
+	//29782 - Add New Category
+	public static String retriveAddNewCategoryMessageForNotification(
+			SmAppl smAppl, SmSupplier supplier,
+			SmSupplierBasicInfoVO basicInfo, 
+			String supplierRemarks, String approvalRemarks, ReviewApplicationReqDTO reqDTO) {
+		String preferredLang =CommonConstants.LANGUAGE_CODE_MALAY;
+//		log.info(preferredLang+"---reqDTO.getLangCode()>>>>>>>>>>" + reqDTO.getLangCode());
+		
+		if(reqDTO.getLangCode()!=null && !"".equalsIgnoreCase(reqDTO.getLangCode())){
+			preferredLang = reqDTO.getLangCode();
+		}
+		Locale usrLocale = getLocaleByLang(preferredLang);
+		
+		log.info("preferredLang>>>>>>>>>>" + preferredLang);
+		log.info("User Locale>>>>>>>>>>" + usrLocale.getLanguage());
+		
+
+		String applType = ResourceBundleUtils.getMessage("lbl.sm.addNewCategory.notifCol1"
+				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
+		log.info("applType>>>>>>>>>>>>>>>>>>"+applType);
+		String applNo = ResourceBundleUtils.getMessage("lbl.sm.addNewCategory.notifCol2"
+				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
+		log.info("applNo>>>>>>>>>>>>>>>>>>"+applNo);
+		String companyName = ResourceBundleUtils.getMessage("lbl.sm.addNewCategory.notifCol3"
+				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
+		log.info("companyName>>>>>>>>>>>>>>>>>>"+companyName);
+		String regNo = ResourceBundleUtils.getMessage("lbl.sm.addNewCategory.notifCol4"
+				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
+		log.info("regNo>>>>>>>>>>>>>>>>>>"+regNo);
+		String epNo = ResourceBundleUtils.getMessage("lbl.sm.addNewCategory.notifCol5"
+				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
+		log.info("epNo>>>>>>>>>>>>>>>>>>"+epNo);
+		String approveDate = ResourceBundleUtils.getMessage("lbl.sm.addNewCategory.notifCol6"
+				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
+		log.info("approveDate>>>>>>>>>>>>>>>>>>"+approveDate);
+		String addNewCatCodes = ResourceBundleUtils.getMessage("lbl.sm.addNewCategory.notifCol7"
+				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
+		log.info("addNewCatCodes>>>>>>>>>>>>>>>>>>"+addNewCatCodes);
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
+		StringBuilder sb = new StringBuilder();
+		log.info("*********** retriveAddNewCategoryMessageForNotification *********");
+		sb.append("<table style=\"width:50%; border: 1px solid black;border-collapse: collapse;\">");
+		
+//		//Application Type <VAR2>
+//		sb.append("<tr>"); 
+////		sb.append("<td style=\"border: 1px solid black;\">")
+////				.append(applType).append("</td>");
+		sb.append("")
+				.append(addNewCatCodes).append("");
+		sb.append("");
+		log.info("*********** Application Type ********* :"+addNewCatCodes);
+//		
+//		//Application No. <VAR3>
+//		sb.append("<tr>"); 
+////		sb.append("<td style=\"border: 1px solid black;\">")
+////				.append(applNo).append("</td>");
+		sb.append("")
+				.append(reqDTO.getApplNo()).append("");
+		sb.append("");
+		log.info("*********** Application No. ********* :"+reqDTO.getApplNo());
+		// <VAR1>
+		//Company Name 
+		sb.append("<tr>"); 
+		sb.append("<td style=\"border: 1px solid black;\">")
+				.append(companyName).append("</td>");
+		sb.append("<td style=\"border: 1px solid black;\">")
+				.append(supplier.getCompanyName()).append("</td>");
+		sb.append("</tr>");
+		log.info("*********** Company Name ********* :"+supplier.getCompanyName());
+		//Business Registration No. 
+		sb.append("<tr>"); 
+		sb.append("<td style=\"border: 1px solid black;\">")
+				.append(regNo).append("</td>");
+		sb.append("<td style=\"border: 1px solid black;\">")
+				.append(supplier.getRegNo()).append("</td>");
+		sb.append("</tr>");
+		log.info("*********** Business Registration No. ********* :"+supplier.getRegNo());
+		//eP No.
+		sb.append("<tr>"); 
+		sb.append("<td style=\"border: 1px solid black;\">")
+				.append(epNo).append("</td>");
+		sb.append("<td style=\"border: 1px solid black;\">")
+				.append(supplier.getEpNo()).append("</td>");
+		sb.append("</tr>");
+		log.info("*********** eP No. ********* :"+supplier.getEpNo());
+		//Approved Date
+		sb.append("<tr>"); 
+		sb.append("<td style=\"border: 1px solid black;\">")
+				.append(approveDate).append("</td>");
+		sb.append("<td style=\"border: 1px solid black;\">")
+				.append(sdf.format(new Date())).append("</td>");
+		sb.append("</tr>");
+		log.info("*********** Approved Date ********* :"+sdf.format(new Date()));
+		sb.append("</tr>");
+		sb.append("</table>");
+		return sb.toString();
+		
+		
+		
+		
+	}
+	//29782 - END
 	
 }
