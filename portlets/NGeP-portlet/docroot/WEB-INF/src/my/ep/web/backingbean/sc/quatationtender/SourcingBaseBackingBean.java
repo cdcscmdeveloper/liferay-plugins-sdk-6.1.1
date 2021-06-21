@@ -4523,6 +4523,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							//throw new EpException(MessageConst.ERROR_775150, new String[] { scQtFinalizationReport.getTitle() });
 						}
 					}
+					// #18685 - Start.
+					if ("UP".equals(scQtFinalizationReport.getDefinationType().getParameterCode())
+							&& scQtFinalizationReport.getScQtFinalizationReportAttachment() == null) {
+						throw new EpException(MessageConst.ERROR_775166, new String[] { scQtFinalizationReport.getTitle() });
+					}
+					// #18685 - End.
 			} 
 				
 			if (StringUtils.isNotEmpty(reportNames)) {
@@ -4632,8 +4638,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 			
 			// #18685 - Start.
-			reportAttachment.setDocNo(briefingReport.getScQtFinalization().getScQt()
-					.getQtNo());
+			reportAttachment.setDocNo(getManagedBean().getDocNo());
 			scAttachment = reportAttachment;
 			uploadAttachment(event.getFile(), scAttachment);
 			reportAttachment.setFileName(scAttachment.getFileName());
