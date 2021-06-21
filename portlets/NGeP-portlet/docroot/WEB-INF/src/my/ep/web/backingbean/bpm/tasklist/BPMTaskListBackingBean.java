@@ -539,6 +539,10 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 					+ SCProcessNameConst.PRESENTATION_DEMO,
 					SourcingConstants.NAV_PAGE_DEMO_INVITATION);
 			
+			temp.put(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME
+					+ SCProcessNameConst.FINALISE_DEMO_TEC_EVALUATION,
+					SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
+			
 			
 			this.getManagedBean().setBpmMap(temp);
 		}
