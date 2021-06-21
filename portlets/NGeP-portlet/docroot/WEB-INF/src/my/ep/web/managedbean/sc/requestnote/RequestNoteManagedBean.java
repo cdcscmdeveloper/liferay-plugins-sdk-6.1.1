@@ -50,7 +50,6 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.StringUtils;
 import org.primefaces.model.DualListModel;
-// TODO: Auto-generated Javadoc
 
 /**
  * The Class RequestNoteManagedBean.

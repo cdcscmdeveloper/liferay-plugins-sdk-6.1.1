@@ -28,14 +28,12 @@ import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
-import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO; //#22211
+import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
-import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -51,15 +49,14 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
-import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.SourcingIntegrationReqDTO;
 import my.ep.dto.sc.SourcingIntegrationResDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
-import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO; //#22211
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO; //#22211
+import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
@@ -71,12 +68,10 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
-import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
-import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWorkFlowStatus;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchCondition;
@@ -84,6 +79,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate; //#22211
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
 import my.ep.web.backingbean.sc.loacancelation.LOACancelDetailBackingBean;
@@ -92,8 +88,8 @@ import my.ep.web.backingbean.sc.purchaseinquiry.PurchaseInquiryBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.sc.requestnote.RequestNoteBackingBean;
 import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
-import my.ep.web.backingbean.trackingdiary.TrackingDiarySearchBackingBean;
 import my.ep.web.backingbean.trackingdiary.PmTrackingDiaryBackingBean; //#25396
+import my.ep.web.backingbean.trackingdiary.TrackingDiarySearchBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.report.ReportConst;
@@ -103,13 +99,9 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;//#25396
 import my.ep.web.util.pm.helper.StatusHelper;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate; //#22211
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
-
-import org.primefaces.context.RequestContext;
-// TODO: Auto-generated Javadoc
 
 /**
  * The Class DirectPurchaseBackingBean.
@@ -439,7 +431,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			
 			//#22211 - search loa by rn no - start
 			if(getManagedBean().getSearchDocumentNo()!= null && getManagedBean().getSearchDocumentNo() != ""){
-				log.info("docNo not null--");
+				//log.info("docNo not null--");
 				if(getManagedBean().getSearchDocumentNo().toUpperCase().startsWith("R")){
 					getManagedBean().setSearchLoaByRN(true);
 					List<String> loaList = getRequestNoteSO().retrieveLoaListByReqNote(getManagedBean().getSearchDocumentNo(), getFacesScopes().getUserSessionBean().getUserId());	
@@ -456,7 +448,6 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 
 		public SearchTrackingDiaryPagingDataModel() {
 			super("trackingDiaryTableID");
-			// TODO Auto-generated constructor stub
 		}
 
 		@Override
@@ -500,7 +491,6 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 				ITrackingDiarySO trackingDiarySO = (ITrackingDiarySO) BusinessDelegate.getInstance().getServiceObject("cc", ITrackingDiarySO.class);
 				resDTO = trackingDiarySO.retrieveTrackingDiaryBySearchBean(reqDTO);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			return resDTO.getResultBean();
@@ -581,15 +571,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 					
 					loaDetailBackingBean.getManagedBean().setDpObj(dpObj);
 					loaDetailBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
-				}
-			/*
-			#22211 - start comment out conditional statement 	
-			}
-			else{
-				RequestContext.getCurrentInstance().execute("DOAlert.show()");
-			}
-			#22211 - end comment out conditional statement   
-			*/			
+				}			
 		}
 	}
 	
@@ -997,7 +979,6 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 				orgTypeCode.setParameterCode(ParameterConst.ORG_TYPE_PTJ_GROUP);
 				ministryOrgProfile.setOrgTypeCode(orgTypeCode);
 				getManagedBean().setSearchPtjGroupProfile(ministryOrgProfile);
-				
 				postUpdateOrgProfileListener(ministryOrgProfile);
 				
 			} else { 
@@ -1234,7 +1215,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	public boolean isSqStillValid(Date sqEndDate){		
 		
 		Boolean validDate = true;	
-		
+			
 		Integer sqTimeValidity = Integer.valueOf(EpPropertiesUtils.getInstance()
 				.getProperty("sqTimeValidity"));	
 			
@@ -1389,6 +1370,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		 * @param purchaseInDefault the purchase in default
 		 * @param scRequestNote the sc request note
 		 */
+	/*
 		private void pidValidity(ScPurchaseInDefault purchaseInDefault) {
 			Date today  = DateUtils.getCurrentDate();
 			Date ExpDate = DateUtils.addDays(purchaseInDefault.getChangedDate(), purchaseInDefault.getPidValidDays());
@@ -1401,6 +1383,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			}  
 			log.info("pID validity end");
 		}
+		*/
 		
 		//START #22211- Set Approved Cancel Status LOA to Cancel Status
 		protected void searchApprovedCancelLoa() {
