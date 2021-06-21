@@ -201,11 +201,10 @@
 							<p:ajax event="change" update="@form" />
 						</p:selectOneMenu></td>
 				</tr>
-				<!-- 12852 Start -->
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.bn.code']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText style="text-transform:uppercase;width:6%"
+					<td><p:inputText style="text-transform:uppercase"
 							value="#{businessNatureBackingBean.managedBean.pmBusinessNature.levelCode}"
 							disabled="#{!businessNatureBackingBean.managedBean.brandNew}"
 							size="30" maxlength="10" /> &#160; <p:graphicImage id="ttImgId"
@@ -214,7 +213,6 @@
 							<p:outputLabel escape="false" value="#{businessNatureBackingBean.retrieveCodeTT()}" />
 						</p:tooltip></td>
 				</tr>
-				<!-- 12852 End -->
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.bn.name']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
