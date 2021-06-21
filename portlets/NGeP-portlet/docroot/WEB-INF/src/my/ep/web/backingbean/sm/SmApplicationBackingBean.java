@@ -6097,16 +6097,20 @@ public class SmApplicationBackingBean extends
 							.getSelectedCategory().getPmCategoryL3()
 							.getCategoryL3Id(), getManagedBean().getSmAppl()
 							.getSmSupplierCategories(), "pmCategoryL3");
-			if (cat != null) {
+			
+			//29399 - Start add category with expired DA category
+			//filter for not update DA id and status for add new category that effected view cert missing DA history and add category history
+			if (cat != null  && cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
+					&& cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_CANCELLED) {
 				// #25794 & #26031 - start
 				// update applRefId to NULL if previous data is deleted (9)
-				if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED) {
-					cat.setApplRefId(null);
-					
-					//#30864 Start
-					cat.setDisciplinaryActionId(null);
-					//#30864 End
-				}
+//				if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED) {
+//					cat.setApplRefId(null);
+//					
+//					//#30864 Start
+//					cat.setDisciplinaryActionId(null);
+//					//#30864 End
+//				}
 				// #25794 & #26031 - end
 				cat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
 				cat.setPoDecFlg(null);
