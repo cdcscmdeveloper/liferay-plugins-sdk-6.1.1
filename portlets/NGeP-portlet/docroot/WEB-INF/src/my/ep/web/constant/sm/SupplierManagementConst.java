@@ -401,6 +401,13 @@ public class SupplierManagementConst {
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER = my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER;
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_PROFESSIONAL_BODY = my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_PROFESSIONAL_BODY;
 
+	public static List<String> LIST_OF_BUSINESS_TYPE_NOT_SHOW_EQUITY_OWNER_ONLY = Arrays.asList(
+			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN,
+			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP,
+			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD,
+			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD
+			);
+	
 	public static List<String> LIST_OF_BUSINESS_TYPE_ALLOWED_TO_BE_EDITED = Arrays.asList(
 			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH,
 			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK,

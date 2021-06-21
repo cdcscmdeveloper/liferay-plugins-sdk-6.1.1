@@ -2130,7 +2130,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				//26238 - end
 				if(resDTO.getSmSupp().getSmSupplierOwners()!=null && CollectionUtils.isNotEmpty(resDTO.getSmSupp().getSmSupplierOwners())){
 					this.getManagedBean().setSmSuppOwner(resDTO.getSmSupp().getSmSupplierOwners().get(0));
-					this.getManagedBean().getSmSuppOwners().clear(); //#29956
+					// start #29956
+					if (!SupplierManagementConst.LIST_OF_BUSINESS_TYPE_NOT_SHOW_EQUITY_OWNER_ONLY.contains(smSupp
+							.getBusinessType())) {
+						this.getManagedBean().getSmSuppOwners().clear(); // #29956
+					}
+					// end #29956
 					// for view owner
 					if(this.getManagedBean().getSmSupp().getSmAppl().isApplValidWithSsm()){
 						this.getManagedBean().setShowOwnerPersonnel(true);
@@ -2140,15 +2145,17 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 									PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 									personnel.setPmCountry(defaultCountry);
 								}
-								//start #29956
-								if(!resDTO.getSmSupp().getSmSupplierOwners().isEmpty()){
-									for(SmSupplierOwner smSuppOwner : resDTO.getSmSupp().getSmSupplierOwners()){
-										if(personnel.getName().equals(smSuppOwner.getOwnerName())){
+								// start #29956
+								if (!resDTO.getSmSupp().getSmSupplierOwners().isEmpty()
+										&& !SupplierManagementConst.LIST_OF_BUSINESS_TYPE_NOT_SHOW_EQUITY_OWNER_ONLY
+												.contains(smSupp.getBusinessType())) {
+									for (SmSupplierOwner smSuppOwner : resDTO.getSmSupp().getSmSupplierOwners()) {
+										if (personnel.getName().equals(smSuppOwner.getOwnerName())) {
 											this.getManagedBean().getSmSuppOwners().add(smSuppOwner);
 										}
 									}
 								}
-								//end #29956
+								// end #29956
 								this.getManagedBean().getSmPersonnelOwners().add(personnel);
 							}
 						}
