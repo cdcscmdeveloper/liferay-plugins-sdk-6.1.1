@@ -1284,16 +1284,16 @@ public class SmApplicationBackingBean extends
 						currSupp.getSupplierId(), applicationType);
 				//30713 - Start
 				//Add checking check expired for KN
-				if (rejectedAppl != null && my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF.equalsIgnoreCase(currSupp.getSmAppl().getApplType())) {
-					SmWorkflowStatus rejectedWf = rejectedApplExist(currSupp.getSupplierId());
-					
+				SmWorkflowStatus currWorkflowStatus = isLatestActiveWorkFlow(currSupp.getSupplierId());
+				SmWorkflowStatus rejectedWf = rejectedApplExist(currSupp.getSupplierId());
+				if (rejectedAppl != null && my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF.equalsIgnoreCase(currSupp.getSmAppl().getApplType())
+						&& currWorkflowStatus.getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM_PROCESSING_FEE)) {
 					Timestamp currentDate = new Timestamp(System.currentTimeMillis());
 					long diff = currentDate.getTime()
 							- rejectedWf.getCreatedDate().getTime();
 					long diffDays = diff / (24 * 60 * 60 * 1000);
 					//If expired set null
-					if (diffDays >= SmRuleHelper.getInstance()
-							.getApplicationResubmissionDays()) {
+					if (diffDays >= SmRuleHelper.getInstance().getApplicationResubmissionDays()) {
 						rejectedAppl = null;
 					}
 				}
@@ -13472,16 +13472,16 @@ public class SmApplicationBackingBean extends
 				currSupp.getSupplierId(), "N");
 		//30713 - Start
 		//Add checking check expired for KN
-		if (rejectedAppl != null && my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF.equalsIgnoreCase(currSupp.getSmAppl().getApplType())) {
-			SmWorkflowStatus rejectedWf = rejectedApplExist(currSupp.getSupplierId());
-			
+		SmWorkflowStatus currWorkflowStatus = isLatestActiveWorkFlow(currSupp.getSupplierId());
+		SmWorkflowStatus rejectedWf = rejectedApplExist(currSupp.getSupplierId());
+		if (rejectedAppl != null && my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF.equalsIgnoreCase(currSupp.getSmAppl().getApplType())
+				&& currWorkflowStatus.getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM_PROCESSING_FEE)) {
 			Timestamp currentDate = new Timestamp(System.currentTimeMillis());
 			long diff = currentDate.getTime()
 					- rejectedWf.getCreatedDate().getTime();
 			long diffDays = diff / (24 * 60 * 60 * 1000);
 			//If expired set null
-			if (diffDays >= SmRuleHelper.getInstance()
-					.getApplicationResubmissionDays()) {
+			if (diffDays >= SmRuleHelper.getInstance().getApplicationResubmissionDays()) {
 				rejectedAppl = null;
 			}
 		}
@@ -15896,6 +15896,20 @@ public class SmApplicationBackingBean extends
 		}
 		
 		return wf;
+	}
+	private SmWorkflowStatus isLatestActiveWorkFlow(Long supplierId){
+		ISmWorkFlowStatusSO workFlowStatusSO = SmServiceLookup.getSmWorkFlowStatusSO();
+		SmWorkFlowStatusReqDTO reqDTO = new SmWorkFlowStatusReqDTO();
+		SmWorkflowStatus wfStatus = null;
+		
+		reqDTO.setSupplierId(supplierId);	
+		SmWorkFlowStatusResDTO resDTO = workFlowStatusSO.retrieveAllIsCurrentBySupplierId(reqDTO);
+		
+		if(resDTO.getWorkFlowStatusLs().size() > 0){
+			wfStatus = resDTO.getWorkFlowStatusLs().get(0);
+		}
+		
+		return wfStatus;
 	}
 	//30713 - End
 }
