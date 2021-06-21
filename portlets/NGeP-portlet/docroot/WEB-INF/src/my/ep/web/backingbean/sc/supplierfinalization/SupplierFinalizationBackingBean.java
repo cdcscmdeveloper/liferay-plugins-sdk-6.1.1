@@ -290,7 +290,9 @@ public class SupplierFinalizationBackingBean extends
 			 */
 			
 			loadInitialData(qtId);
-			
+			// #18685 - Start.
+			getManagedBean().setDocNo(getManagedBean().getScQt().getQtNo());
+			// #18685 - End.
 			 // #27502 -- Start
 			QTDetailBackingBean qtBackingBean =   new QTDetailBackingBean();
 			qtBackingBean.retrieveQuationTenderDetails(qtId);
@@ -1810,7 +1812,9 @@ public class SupplierFinalizationBackingBean extends
 		getManagedBean().setRenderjustificationTextbox(isRenderjustificationTextbox);
 		
 		loadInitialData(qtId);
-		
+		// #18685 - Start.
+		getManagedBean().setDocNo(getManagedBean().getScQt().getQtNo());
+		// #18685 - End.
 		//27502, navigate to endorsement tab after save
 		QTDetailBackingBean qtBackingBean =   new QTDetailBackingBean();
 		qtBackingBean.retrieveQuationTenderDetails(qtId);

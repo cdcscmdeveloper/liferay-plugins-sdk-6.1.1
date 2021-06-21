@@ -91,7 +91,7 @@ public abstract class BaseManagedBean implements Serializable {
 
 	private boolean disciplinaryAction;
 
-	// 18685 - Start
+	// 18685 - Start.
 	private String reportDownloadFileName;
 	private ScAttachment scAttachment;
 	private List<ScQtEvaluationReport> scQtEvaluationReportList;
@@ -106,7 +106,8 @@ public abstract class BaseManagedBean implements Serializable {
 	private List<ScQtFinalizationReport> removeFinalizationReports;
 	private List<ScQtFinalizationReport> consolidationBriefingPaperReportList;
 	private List<ScQtFinalizationReport> sfBriefingPaperReportList;
-	// 18685 - End
+	private String docNo;
+	// 18685 - End.
 
 	// 17906
 	private String displayMessageBank;
@@ -832,7 +833,22 @@ public abstract class BaseManagedBean implements Serializable {
 			List<ScQtFinalizationReport> sfBriefingPaperReportList) {
 		this.sfBriefingPaperReportList = sfBriefingPaperReportList;
 	}
-	// #18685 - End
+	
+	/**
+	 * @return the docNo
+	 */
+	public String getDocNo() {
+		return docNo;
+	}
+
+	/**
+	 * @param docNo the docNo to set
+	 */
+	public void setDocNo(String docNo) {
+		this.docNo = docNo;
+	}
+	
+	// #18685 - End.
 
 	public String getDisplayMessageBank() {
 		return displayMessageBank;

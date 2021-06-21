@@ -151,7 +151,9 @@ public class ConsolidationReportBackingBean extends
 			getManagedBean().setActiveIndex(0);
 
 			loadInitialData();
-
+			// #18685 - Start.
+			getManagedBean().setDocNo(getManagedBean().getScQt().getQtNo());
+			// #18685 - End.
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
@@ -879,6 +881,9 @@ public class ConsolidationReportBackingBean extends
 				selectedZone != null ? selectedZone.getZoneTabIndex() : 0);
 
 		loadInitialData();
+		// #18685 - Start.
+		getManagedBean().setDocNo(getManagedBean().getScQt().getQtNo());
+		// #18685 - End.
 
 		onTabMenuChangeAction(activeIndex, false);
 	}
