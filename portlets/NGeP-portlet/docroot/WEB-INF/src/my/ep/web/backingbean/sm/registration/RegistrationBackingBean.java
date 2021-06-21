@@ -2162,6 +2162,14 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				}
 				//26238 - end
 				if(resDTO.getSmSupp().getSmSupplierOwners()!=null && CollectionUtils.isNotEmpty(resDTO.getSmSupp().getSmSupplierOwners())){
+					// #27691 - Start
+					for (SmSupplierOwner smSuppOwner: resDTO.getSmSupp().getSmSupplierOwners()){
+						if(smSuppOwner.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE){
+							this.getManagedBean().setSmSuppOwner(resDTO.getSmSupp().getSmSupplierOwners().get(0));
+							this.getManagedBean().setSmSuppOwners(resDTO.getSmSupp().getSmSupplierOwners());
+						}
+					}
+					// #27691 - End
 					this.getManagedBean().setSmSuppOwner(resDTO.getSmSupp().getSmSupplierOwners().get(0));
 					// start #29956
 					if (!SupplierManagementConst.LIST_OF_BUSINESS_TYPE_NOT_SHOW_EQUITY_OWNER_ONLY.contains(smSupp
