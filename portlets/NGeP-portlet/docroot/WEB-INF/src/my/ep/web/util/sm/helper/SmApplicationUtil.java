@@ -11198,6 +11198,11 @@ public class SmApplicationUtil {
 
 	public static void approveApplCategories(boolean isApprover, boolean isPo,
 			SmAppl smAppl) {
+		// #30929 - start
+		log.info("<<< smAppl.getApplId() value : " + smAppl.getApplId() + " >>>");
+		log.info("<<< isApprover value ::::::::: " + isApprover + " >>>");
+		log.info("<<< isPo value ::::::::::::::: " + isPo + " >>>");
+		// #30929 - end
 		for (SmSupplierCategory cat : smAppl.getSmSupplierCategories()) {
 			if (cat.getRecordStatusFlg().compareTo(
 					SupplierManagementConst.PENDING_ACT_STATUS) == 0
