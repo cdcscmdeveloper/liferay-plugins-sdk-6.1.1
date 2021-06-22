@@ -4,8 +4,6 @@
 package my.ep.web.managedbean;
 
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,11 +12,6 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.faces.model.SelectItem;
-
-import org.apache.commons.collections.CollectionUtils;
-
-import org.apache.commons.lang3.StringUtils;
-import org.primefaces.model.StreamedContent;
 
 import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.persistence.entity.sc.common.ScAttachment;
@@ -32,9 +25,11 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
-import my.ep.persistence.entity.sm.SmSupplier_;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.util.FacesScopes;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.primefaces.model.StreamedContent;
 
 /**
  * @author siew mei
@@ -80,7 +75,7 @@ public abstract class BaseManagedBean implements Serializable {
 	//27382
 	private boolean errorInvalidSelfRequest;
 
-	private List<SmPersonnel> personnelsRole = new ArrayList();
+	private List<SmPersonnel> personnelsRole = new ArrayList<SmPersonnel>();
 
 	// For sub title displayed in screen.
 	private String title;
@@ -89,7 +84,7 @@ public abstract class BaseManagedBean implements Serializable {
 
 	private boolean disciplinaryAction;
 
-	// 18685 - Start
+	// 18685 - Start.
 	private String reportDownloadFileName;
 	private ScAttachment scAttachment;
 	private List<ScQtEvaluationReport> scQtEvaluationReportList;
@@ -104,9 +99,10 @@ public abstract class BaseManagedBean implements Serializable {
 	private List<ScQtFinalizationReport> removeFinalizationReports;
 	private List<ScQtFinalizationReport> consolidationBriefingPaperReportList;
 	private List<ScQtFinalizationReport> sfBriefingPaperReportList;
-	// 18685 - End
-	
-	//17906
+	private String docNo;
+	// 18685 - End.
+
+	// 17906
 	private String displayMessageBank;
 	
 	//27951
@@ -131,18 +127,18 @@ public abstract class BaseManagedBean implements Serializable {
 	//27346-start 
 	private SmAppl smAppl;
 	private SmSupplier SmSupplier;
-	private List<SmPersonnel> personnelsDirector  = new ArrayList();
-	private List<SmSupplierBranch>  smSupplierBranchSsm = new ArrayList();
-	private List<SmEquityCompany> smEquityCompaniesSsm   = new ArrayList();   
+	private List<SmPersonnel> personnelsDirector  = new ArrayList<SmPersonnel>();
+	private List<SmSupplierBranch>  smSupplierBranchSsm = new ArrayList<SmSupplierBranch>();
+	private List<SmEquityCompany> smEquityCompaniesSsm   = new ArrayList<SmEquityCompany>();   
 	private boolean disAllowOwnerEdit; 
 	private String businessTypeParamCode;
-	private List<SmPersonnel> personnelsOwner = new ArrayList();
-	private List<SmPersonnel> personnelsSsm  = new ArrayList();
-	private List<SmSupplierBusiness> smSupplierBusinessSsm   = new ArrayList();
+	private List<SmPersonnel> personnelsOwner = new ArrayList<SmPersonnel>();
+	private List<SmPersonnel> personnelsSsm  = new ArrayList<SmPersonnel>();
+	private List<SmSupplierBusiness> smSupplierBusinessSsm   = new ArrayList<SmSupplierBusiness>();
 	private SmCompanyBasic smCompanyBasicSsm = null;
 	private boolean showDetailSSM; 
-	private List<SmPersonnel> smPersonnelDirectorSsm = new ArrayList();
-	private List<SmPersonnel> personnelsOwnerSsm = new ArrayList();
+	private List<SmPersonnel> smPersonnelDirectorSsm = new ArrayList<SmPersonnel>();
+	private List<SmPersonnel> personnelsOwnerSsm = new ArrayList<SmPersonnel>();
 	private SmAddress smAddress;
 	
 	
@@ -814,7 +810,22 @@ public abstract class BaseManagedBean implements Serializable {
 			List<ScQtFinalizationReport> sfBriefingPaperReportList) {
 		this.sfBriefingPaperReportList = sfBriefingPaperReportList;
 	}
-	// #18685 - End
+	
+	/**
+	 * @return the docNo
+	 */
+	public String getDocNo() {
+		return docNo;
+	}
+
+	/**
+	 * @param docNo the docNo to set
+	 */
+	public void setDocNo(String docNo) {
+		this.docNo = docNo;
+	}
+	
+	// #18685 - End.
 
 	public String getDisplayMessageBank() {
 		return displayMessageBank;
