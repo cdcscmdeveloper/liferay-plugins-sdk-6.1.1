@@ -1476,6 +1476,17 @@ public class PmReportsBackingBean extends
 		 */
 		hideOrgCodeName();
 	}
+	
+	public String constructConditionFieldsSupplierList() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("orgTypeCode.parameterCode^");
+		sb.append(getManagedBean().getSelectedOrgType().getParameterCode());
+		sb.append("|orgTypeCode.parameterType^");
+		sb.append(ParameterTypeConst.ORGANISATION_TYPES);
+		sb.append("|smSupplier.recordStatus^1*smSupplier.recordStatus^0");
+		return sb.toString();
+	}
+	
 	//#29991 end---
 
 }
