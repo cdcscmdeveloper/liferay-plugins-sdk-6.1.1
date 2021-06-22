@@ -2400,7 +2400,7 @@ public class SupplierFinalizationBackingBean extends
 	 */
 	//28834 start new 
 	public void submitAction() {
-		//ScQtMeeting scQtMeeting = new ScQtMeeting();
+		ScQtMeeting scQtMeeting = new ScQtMeeting();
 		ScQtFinalization scQtFinalization = this.getManagedBean().getScQtFinalization();
 		String decisionTypeCode = scQtFinalization.getDecision()
 				  .getParameterCode();
@@ -2409,7 +2409,7 @@ public class SupplierFinalizationBackingBean extends
 		if (this.getManagedBean().isSecretaryUser()) {
 			if (this.getManagedBean().getOutcome().equalsIgnoreCase("REVISEBP")) {
 				List<ScQtMeeting> meetingListList = getManagedBean().getMeetingList();
-				//int pendingCount = 0;
+				int pendingCount = 0;
 				for (ScQtMeeting meeting : meetingListList) {
 					if (null != meeting.getMeetingStatus() && null != meeting.getMeetingStatus().getStatusId()
 							&& !QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus().getStatusId())
@@ -2464,7 +2464,7 @@ public class SupplierFinalizationBackingBean extends
 		List<ScQtMeeting> meetingList = getManagedBean().getMeetingList();
 		
 		if (CollectionUtils.isNotEmpty(meetingList)) {
-            //List<ScQtMeeting> localMeetingList = new ArrayList<ScQtMeeting>();
+            List<ScQtMeeting> localMeetingList = new ArrayList<ScQtMeeting>();
 				
 //				for (ScQtMeeting meeting : meetingList) {
 //					meeting.getMeetingStatus().getStatusId();
@@ -2496,37 +2496,50 @@ public class SupplierFinalizationBackingBean extends
 		
 		
 		
-		return	Meetingstatus;	
+return	Meetingstatus;	
 		
 		
 	}
 	//28834 ends
 	//28834 starts
 	public boolean validationRemarksBrief() {
-		Boolean remarksNotFound = true;
-
+		Boolean remarksNotFound= true;
+		
 		List<ScQtMeeting> meetingList = getManagedBean().getMeetingList();
-
+		
 		if (CollectionUtils.isNotEmpty(meetingList)) {
-			// List<ScQtMeeting> localMeetingList = new ArrayList<ScQtMeeting>();
-
-			for (ScQtMeeting meeting : meetingList) {
-
-				if (StringUtils.isEmpty(meeting.getRemark())) {
-
-					remarksNotFound = false;
-					// throw new EpException(MessageConst.ERR_775152);
-					// RequestContext.getCurrentInstance().execute("ReamrksBriefPopup.show()");
-
+            List<ScQtMeeting> localMeetingList = new ArrayList<ScQtMeeting>();
+				
+				for (ScQtMeeting meeting : meetingList) {
+					
+					if (StringUtils.isEmpty(meeting.getRemark())) {
+					
+							
+								remarksNotFound = false;
+								//throw new EpException(MessageConst.ERR_775152);
+								//RequestContext.getCurrentInstance().execute("ReamrksBriefPopup.show()");
+								
+								
+							
+				
 					// #25638 - Start.
+					}
+					else
+					{
+						
+					}
+					
+				
+					
 				}
-
+				
 			}
-
-		}
-
-		return remarksNotFound;
-
+		
+		
+		
+return	remarksNotFound;	
+		
+		
 	}
 	//28834  ends
 	
@@ -2553,7 +2566,7 @@ public class SupplierFinalizationBackingBean extends
 		         }
 	         }
 	         return hidden;
-	 }
+}
 	
 		//28834  end
 	
@@ -2568,12 +2581,15 @@ public class SupplierFinalizationBackingBean extends
 		private SuppFinalizationReqDTO validateInfobreif(int index, boolean skipValidation) {
 			log.info("..In validateInfo()..");
 
-			//IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+			IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 			try {
-				//qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+				qtSuppFinalizationSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IQTSuppFinalizationSO.class);
 //				boolean isZonal = getManagedBean().getScQt().isZonal();
 				SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
-				ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+				ScQtFinalization scQtFinalization = getManagedBean()
+						.getScQtFinalization();
 				
 				switch (index) {
 					case 0:
@@ -3442,8 +3458,26 @@ public class SupplierFinalizationBackingBean extends
 				} else {
 					msgCode = getMessgeConstant(outcome);
 				}
-				successMessage(msgCode, getMessageCommon(label), getManagedBean().getScQt()
-						.getQtNo(), Boolean.TRUE);
+				
+				// #28834 - Start.
+				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISEBP)) {
+					FacesContext.getCurrentInstance()
+					.addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null, 
+									MessageUtils.getMessage(msgCode,
+											new String[] { getManagedBean().getScQt().getQtNo() }, 
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+
+					FacesContext fc = FacesContext.getCurrentInstance();
+					fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
+
+				} else {
+					successMessage(msgCode, getMessageCommon(label), getManagedBean().getScQt()
+							.getQtNo(), Boolean.TRUE);
+				}
+				// #28834 - End.
 				super.renewSesionObject();
 				// #25638 - End
 			}
@@ -3524,6 +3558,11 @@ public class SupplierFinalizationBackingBean extends
 			ScQt scQt = qtBackingBean.getManagedBean().getQt();
 			boolean isBpkCentralContract = false;
 			isBpkCentralContract = isBpkCentralContract(scQt);
+			//27502 - Start.
+			// #28834 - Start.
+			getManagedBean().setBpkCentralContract(isBpkCentralContract);
+			// #28834 - End.
+			//27502 - End.
 			
 			// #28834 - Strat.
 			if (isBpkCentralContract || !getManagedBean().isInitialDecisionFwdToBPK()) {
@@ -4906,7 +4945,6 @@ public class SupplierFinalizationBackingBean extends
 	 * To find Revise Briefing COunt of QT from the Workflow Status.
 	 * @return
 	 */
-	/*
 	private int findReviseBpCount() {
       log.info("findReviseBpCount");
       IScWorkFlowStatusSO scWorkFlowStatusSO = null;
@@ -4931,7 +4969,6 @@ public class SupplierFinalizationBackingBean extends
       
       return 0;
     }
-    */
     // #28834 - End.
 	
 	/*
@@ -9819,21 +9856,6 @@ public class SupplierFinalizationBackingBean extends
 				// #25638 - End.
 			} else {
 			   
-			    // #28834 - Start.
-			    if (CollectionUtils.isNotEmpty(getManagedBean().getDocumentList()) && getManagedBean().getDocumentList().size() > 0) {
-			      ScQtFinalizationReport scQtFinalizationReport = getManagedBean().getDocumentList().get(getManagedBean().getDocumentList().size() -1);
-			      ScQtFinalizationReportAttachment reportAttachment = null;
-			      if (null != scQtFinalizationReport) {
-			        try {
-			          reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
-			        } catch (Exception e) {
-			          log.error("SupplierFinalizationBackingBean.submitBrief(): Error while genarate briefing paper: " + e.getMessage());
-			        }
-			        scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
-			      }
-			    }
-	            // #28834 - End.
-	            
 				signOff();
 				updateBPMTaskBrief(outcome, null, reqDTO);
 			}
