@@ -3590,16 +3590,6 @@ return	remarksNotFound;
 			// #18685 - End
 			
 			resDTO = qtSuppFinalizationSO.submitSupplierFinalization(reqDTO);
-			
-			// #28834 - Start.
-			if (QTStatusConst.QT_SF_MOF_COMMIEEE.longValue() == getManagedBean().getCurrentStatusId().longValue()
-					&& ParameterConst.DECISION_RBP.equals(getManagedBean().getScQtFinalization().getDecision().getParameterCode())
-					&& getManagedBean().isBpkCentralContract()
-					&& BpmOutcomeConst.BPM_REVISEBP.equals(outcome)) {
-				log.info("SupplierFinalizationBackingBean.updateBPMTask(): setting SUBMIT as outcome");
-				outcome = BpmOutcomeConst.BPM_SUBMIT;
-			}
-			// #28834 - End.
 
 			if (resDTO.isSuccessful()) {
 				String msgCode = null;
@@ -3696,9 +3686,7 @@ return	remarksNotFound;
 			boolean isBpkCentralContract = false;
 			isBpkCentralContract = isBpkCentralContract(scQt);
 			//27502 - Start.
-			// #28834 - Start.
 			getManagedBean().setBpkCentralContract(isBpkCentralContract);
-			// #28834 - Start.
 			//27502 - End.
 			
 			// #28834 - Strat.
