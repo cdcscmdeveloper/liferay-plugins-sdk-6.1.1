@@ -7,6 +7,7 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmRemarkSpecialService;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -27,6 +28,8 @@ public class SpecialServiceManagedBean extends BaseManagedBean {
 	private PmParameterDesc oldPmSpecialService;
 
 	private PmParameter pmParameter;
+	
+	private PmRemarkSpecialService pmremarkSS;
 
 	private List<PmParameterDesc> specialService;
 
@@ -37,7 +40,9 @@ public class SpecialServiceManagedBean extends BaseManagedBean {
 	private boolean isLazy = false;
 
 	private String parameterType;
-
+	
+	private String remark;
+	
 	public SpecialServiceManagedBean() {}
 
 	public PmParameterDesc getPmSpecialService() {
@@ -67,6 +72,14 @@ public class SpecialServiceManagedBean extends BaseManagedBean {
 
 	public void setPmParameter(PmParameter pmParameter) {
 		this.pmParameter = pmParameter;
+	}
+	
+	public PmRemarkSpecialService getPmRemarkSS() {
+		return pmremarkSS;
+	}
+
+	public void setPmRemarkSS(PmRemarkSpecialService pmremarkSS) {
+		this.pmremarkSS = pmremarkSS;
 	}
 
 	public List<PmParameterDesc> getSpecialService() {
@@ -107,5 +120,13 @@ public class SpecialServiceManagedBean extends BaseManagedBean {
 
 	public void setParameterType(String parameterType) {
 		this.parameterType = parameterType;
+	}
+	
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
 } //#29644
