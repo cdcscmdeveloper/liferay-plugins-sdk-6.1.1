@@ -142,6 +142,7 @@
 							style="width:289px;" lovId="PM_ORG_PROFILE_WITH_ORGANISATION_REPORT"
 							size="100" update="@this,:form:compNameIt"
 							headerText="#{lbl['lbl.rpt.businessregistrationnoscreen']}"
+							conditionField="#{pmReportsBackingBean.constructConditionFieldsSupplierList()}"
 							value="#{pmReportsBackingBean.managedBean.selectedSupplier.smSupplier.regNo}"
 							postUpdateListener="#{pmReportsBackingBean.onCompanyNameChangeForLOVPMReport()}"
 							saveObject="pmReportsBackingBean.managedBean.selectedSupplier" />
