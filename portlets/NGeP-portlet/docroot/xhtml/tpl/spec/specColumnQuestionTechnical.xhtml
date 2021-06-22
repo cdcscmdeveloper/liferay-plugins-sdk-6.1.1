@@ -26,7 +26,19 @@
 
 			</p:column>
 			<!-- #25725 start -->
-		
+			<p:column rowspan="#{specificationrequired ? 2 : 1}"
+				style="width:120px;"
+				rendered="#{isItemTypeService and isFulfilmentTypeReq}">
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText
+						value="#{lbl['lbl.tpl.spec.content.fulfilment.type']}" />						
+						<ac:iconTooltip id="fulfilmentTypeTP"
+						value="#{lbl['lbl.sc.fulfilment.type.tooltip']}" />
+						<!-- #25725 end -->
+				</f:facet>
+
+			</p:column>
 			<p:column rowspan="#{specificationrequired ? 2 : 1}"
 				style="width:120px;">
 				<f:facet name="header">
