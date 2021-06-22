@@ -724,6 +724,7 @@ public class PmReportsBackingBean extends
 		log.info("resetOrgSearchBean");
 		this.getManagedBean().setSelectedOrgProfile(null);
 		this.getManagedBean().setSelectedOrgType(null);
+		this.getManagedBean().setSelectedSupplier(null);//#29991
 		getManagedBean().setNotFirstRun(false);
 	}
 
@@ -1480,7 +1481,8 @@ public class PmReportsBackingBean extends
 	public String constructConditionFieldsSupplierList() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("orgTypeCode.parameterCode^");
-		sb.append(getManagedBean().getSelectedOrgType().getParameterCode());
+		sb.append(PmReportConst.SUPPLIER_PARAM_CODE);
+		//sb.append(getManagedBean().getSelectedOrgType().getParameterCode());
 		sb.append("|orgTypeCode.parameterType^");
 		sb.append(ParameterTypeConst.ORGANISATION_TYPES);
 		sb.append("|smSupplier.recordStatus^1*smSupplier.recordStatus^0");
