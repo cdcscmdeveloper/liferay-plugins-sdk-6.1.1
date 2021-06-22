@@ -23,6 +23,7 @@ import my.ep.factory.EpLogger;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmRemarkSpecialService;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -51,7 +52,10 @@ public class SpecialServiceBackingBean extends BaseBackingBean<SpecialServiceMan
 
 	/** The Constant NAV_TO_MAIN. */
 	private static final String NAV_TO_MAIN = "specialServiceMain";
-
+	
+	/** The Constant NAV_TO_CREATE. */
+	private static final String NAV_TO_CREATE = "/xhtml/pm/specialservice/specialServiceCreate";
+	
 	/** The Constant NAV_TO_MAINTAIN. */
 	public static final String NAV_TO_MAINTAIN = "/xhtml/pm/specialservice/specialServiceMaintenance";
 
@@ -66,7 +70,6 @@ public class SpecialServiceBackingBean extends BaseBackingBean<SpecialServiceMan
 	 */
 	public SpecialServiceBackingBean() {
 		log.info("inside constructor");
-
 	}
 
 	/**
@@ -107,7 +110,7 @@ public class SpecialServiceBackingBean extends BaseBackingBean<SpecialServiceMan
 	/**
 	 * reload to special service creation page.
 	 * 
-	 * @return (/xhtml/pm/specialservice/specialServiceMaintenance.xhtml)
+	 * @return (/xhtml/pm/specialservice/specialServiceCreate.xhtml)
 	 */
 	public String createspecialService() {
 		debugLogger("createSpecialService");
@@ -116,8 +119,7 @@ public class SpecialServiceBackingBean extends BaseBackingBean<SpecialServiceMan
 		pmSpecialService.setLanguageCode(languageCode);
 		this.getManagedBean().setPmSpecialService(pmSpecialService);
 
-		return NAV_TO_MAINTAIN;
-
+		return NAV_TO_CREATE;
 	}
 
 	/**
@@ -231,10 +233,9 @@ public class SpecialServiceBackingBean extends BaseBackingBean<SpecialServiceMan
 			oldPmSpecialService = pmSpecialService;
 			this.getManagedBean().setOldPmSpecialService(oldPmSpecialService);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return "/xhtml/pm/specialservice/specialServiceMaintenance.xhtml";
+		return NAV_TO_MAINTAIN;
 	}
 
 	private void reloadSpecialServiceData(PmParameterDesc pmSpecialService) {
@@ -247,7 +248,6 @@ public class SpecialServiceBackingBean extends BaseBackingBean<SpecialServiceMan
 			oldPmSpecialService = pmSpecialService;
 			this.getManagedBean().setOldPmSpecialService(oldPmSpecialService);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -258,10 +258,17 @@ public class SpecialServiceBackingBean extends BaseBackingBean<SpecialServiceMan
 			throw new EpException(MessageConst.ERROR_770242,
 					new String[] { PmCommonUtil.getResourceBundleLabels("lbl.pm.ss.name") });
 		}
-		// TODO isBrandNew
 
 		if (DbValueConst.RECORD_STATUS_ACTIVE == pmSpecialService.getRecordStatusFlg()) {
 			validateSpecialNameService(pmSpecialService);
+		}
+	}
+	
+	private void validationMessageRemark(PmRemarkSpecialService pmRemarkSS){
+		debugLogger("validationMessage");
+		if (StringUtils.isBlank(pmRemarkSS.getremark())) {
+			throw new EpException(MessageConst.ERROR_770242,
+					new String[] { PmCommonUtil.getResourceBundleLabels("lbl.pm.ss.remark") });
 		}
 	}
 
@@ -270,7 +277,7 @@ public class SpecialServiceBackingBean extends BaseBackingBean<SpecialServiceMan
 		PmParameterDesc specialService = this.getManagedBean().getPmSpecialService();
 		ISpecialServiceSO specialserviceSO = null;
 		String returnUrl = null;
-
+		String remark = this.getManagedBean().getRemark();
 		try {
 			validationMessage(specialService);
 			setUserDetails(specialService);
@@ -281,6 +288,7 @@ public class SpecialServiceBackingBean extends BaseBackingBean<SpecialServiceMan
 			SpecialServiceReqDTO reqDTO = new SpecialServiceReqDTO();
 			reqDTO.setSpecialService(specialService);
 			reqDTO.setBrandNew(specialService.isBrandNew());
+			reqDTO.setRemark(remark);
 			reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
 			reqDTO.setTrackingStatus(true);
 
