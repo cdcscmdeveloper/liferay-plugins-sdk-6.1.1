@@ -7,8 +7,10 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<ui:define name="contentSection">
+	<!-- #5426 start added  rendered="#{param['javax.faces.source'] ne poll.clientId}-->
 		<p:messages showDetail="true" autoUpdate="#{simpleQuoteBackingBean.managedBean.autoUpdate}" closable="true"
-			severity="error, info" showSummary="false" />
+			severity="error, info" showSummary="false" rendered="#{param['javax.faces.source'] ne poll.clientId}"/>
+	<!-- #5426 end -->		
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
@@ -43,7 +45,7 @@
 			</div>
 	</p:outputPanel>
 		<div class="ppRightBtn">
-			<p:outputPanel autoUpdate="true">					
+			<p:outputPanel autoUpdate="false">					
 				<p:commandButton value="#{lbl['lbl.btn.save']}" process="@form"
 					partialSubmit="true" onclick="blockWidget.show();"
 					oncomplete="blockWidget.hide();"
