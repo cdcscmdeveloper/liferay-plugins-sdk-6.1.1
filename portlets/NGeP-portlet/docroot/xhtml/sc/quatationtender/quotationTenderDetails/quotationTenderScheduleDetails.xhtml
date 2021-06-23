@@ -41,6 +41,11 @@
 												style="width: 65px;margin-top: 1px;margin-bottom: 0px;">
 												<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
 											</p:inputText>
+											<!-- 28772 -start- -->
+											<p:inputText id="tday1" value="#{qTScheduleDetailBackingBean.managedBean.qt.newPublishDate}" style="width: 65px; margin-top: 1px;margin-bottom: 0px; margin-left: 3px; text-align: center;" disabled="true">
+												<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_DAY_ONLY}" />
+											</p:inputText>
+											<!-- 28772 -end- -->
 										</c:when>
 										<c:when test="#{isPublishDateEnable}">
 											<p:calendar label="#{lbl['lbl.sc.publish.date']}"
@@ -60,6 +65,11 @@
 												style="width: 65px;margin-top: 1px;margin-bottom: 0px;">
 												<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
 											</p:inputText>
+											<!-- 28772 -start- -->
+											<p:inputText id="tday2" value="#{qTScheduleDetailBackingBean.managedBean.qt.publishDate}" style="width: 65px; margin-top: 1px;margin-bottom: 0px; margin-left: 3px; text-align: center;" disabled="true">
+												<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_DAY_ONLY}" />
+											</p:inputText>
+											<!-- 28772 -end- -->
 										</c:when>
 										<c:otherwise>
 											<p:inputText id="publishDate" 
@@ -71,6 +81,11 @@
 												style="width: 65px;margin-top: 1px;margin-bottom: 0px;">
 												<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
 											</p:inputText>
+											<!-- 28772 -start- -->
+											<p:inputText id="tday3" value="#{qTScheduleDetailBackingBean.managedBean.qt.publishDate}" style="width: 65px; margin-top: 1px;margin-bottom: 0px; margin-left: 3px; text-align: center;" disabled="true">
+												<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_DAY_ONLY}" />
+											</p:inputText>
+											<!-- 28772 -end- -->
 										</c:otherwise>
 									</c:choose> 
 									
@@ -99,6 +114,11 @@
 							style="width: 65px;margin-top: 1px;margin-bottom: 0px;">
 							<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
 						</p:inputText>
+						<!-- 28772 -start- -->						
+						<p:inputText id="tday4" value="#{qTScheduleDetailBackingBean.managedBean.qt.proposalStartDate}" style="width: 65px; margin-top: 1px;margin-bottom: 0px; margin-left: 3px; text-align: center;" disabled="true">
+							<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_DAY_ONLY}" />
+						</p:inputText>
+						<!-- 28772 -end- -->
 					</td>
 				</tr>
 			</c:if>
@@ -137,6 +157,11 @@
 										style="width: 65px;margin-top: 5px;margin-bottom: 0px;">
 										<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
 									</p:inputText>
+									<!-- 28772 -start- -->
+									<p:inputText id="tday5" value="#{qTScheduleDetailBackingBean.managedBean.qt.newClosingDate}" style="width: 65px; margin-top: 1px;margin-bottom: 0px; margin-left: 3px; text-align: center;" disabled="true">
+										<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_DAY_ONLY}" />
+									</p:inputText>
+									<!-- 28772 -end- -->
 								</c:when>
 								<c:otherwise>
 									<p:inputText id="closingDate"
@@ -151,6 +176,11 @@
 										style="width: 65px;margin-top: 5px;margin-bottom: 0px;">
 										<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
 									</p:inputText>
+									<!-- 28772 -start- -->
+									<p:inputText id="tday6" value="#{qTScheduleDetailBackingBean.managedBean.qt.closingDate}" style="width: 65px; margin-top: 1px;margin-bottom: 0px; margin-left: 3px; text-align: center;" disabled="true">
+										<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_DAY_ONLY}" />
+									</p:inputText>
+									<!-- 28772 -end- -->
 								</c:otherwise>
 							</c:choose>
 						</td>
@@ -165,8 +195,8 @@
 			<c:if
 				test="#{qTScheduleDetailBackingBean.managedBean.qt.sampleReq eq 'true'}">
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.sample.closingdate']}" />
-						<!-- <p:outputLabel value="*" styleClass="mandatory" /> --></td>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.sc.sample.closingdate']}" />						
 					<td>
 						<table>
 							<tr>
@@ -183,6 +213,11 @@
 										style="width: 65px;margin-top: 1px;margin-bottom: 0px;">
 										<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
 									</p:inputText>
+									<!-- 28772 -start- -->
+									<p:inputText id="tday7" value="#{qTScheduleDetailBackingBean.managedBean.qt.sampleClosingDate}" style="width: 65px; margin-top: 1px;margin-bottom: 0px; margin-left: 3px; text-align: center;" disabled="true">
+										<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_DAY_ONLY}" />
+									</p:inputText>
+									<!-- 28772 -end- -->
 								</td>
 								<td><p:message id="sampledate" for="sampleclsdate"
 										display="icon" /></td>
@@ -211,18 +246,14 @@
 						style="width: 120px;margin-top:5px;">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText></td>
+					</p:inputText>
+					<!-- 28772 -start- -->
+					<p:inputText id="tday8" value="#{qTScheduleDetailBackingBean.managedBean.qt.proposalValidityEndDate}" style="width: 65px; margin-top: 1px;margin-bottom: 0px; margin-left: 3px; text-align: center;" disabled="true">
+						<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_DAY_ONLY}" /> 
+					</p:inputText>
+					<!-- 28772 -end- -->
+				</td>
 			</tr>
-			<!-- <tr>
-				<td style="width: 204px;"><p:outputLabel
-						value="#{lbl['lbl.sc.qt.expected.loa.date']}" /></td>
-				<td><p:calendar id="loaDate"
-						value="#{qTScheduleDetailBackingBean.managedBean.qt.expectedLoaDate}"
-						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
-						mindate="#{qTScheduleDetailBackingBean.managedBean.qt.closingDate}"
-						readonlyInput="true" showOn="button"
-						disabled="#{scheduleReadonly}" /></td>
-			</tr> -->
 		</table>
 	</p:panel>
 	<c:if
