@@ -4776,7 +4776,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					
 				} 
 				// #18685 - Start.
-				if ("UP".equals(finalizationReport.getDefinationType().getParameterCode())) {
+				if ("UP".equals(finalizationReport.getDefinationType().getParameterCode()) 
+						&& !finalizationReport.getTitle().contains("Kertas Keputusan")) {
 					getManagedBean().getNewBriefingPaperReportList().add(finalizationReport);
 					iterator.remove();
 				}
