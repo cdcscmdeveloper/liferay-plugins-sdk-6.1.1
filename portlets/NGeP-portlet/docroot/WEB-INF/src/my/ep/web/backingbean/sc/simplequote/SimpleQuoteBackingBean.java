@@ -11,7 +11,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -20,17 +19,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-import javax.faces.validator.ValidatorException;
 import javax.portlet.PortletSession;
 import javax.servlet.http.HttpServletRequest;
 
@@ -159,11 +154,9 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
-import my.ep.web.backingbean.components.lov.LovBackingBean;
 import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
-import my.ep.web.bean.LovBean;
 import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
@@ -219,6 +212,7 @@ public class SimpleQuoteBackingBean extends
 	
 	/** The simple quote page nav. */
 	private String SIMPLE_QUOTE_PAGE_NAV = "simpleQuoteMain";
+	
 	
 	//26284 - Start
 	//private String disciplinaryActionstartDate;
@@ -3975,6 +3969,7 @@ public class SimpleQuoteBackingBean extends
         getManagedBean().setHours(time);
         
         //#5426 - start
+        
         getManagedBean().setRemainingInterval(diff);
         getManagedBean().setRemainingDay(diffDays);
         getManagedBean().setRemainingHour(diffHours);
@@ -8223,8 +8218,12 @@ public class SimpleQuoteBackingBean extends
 									"lbl.sc.sq.remaining.time.day", new String[] {String.valueOf(addingZeroInfront(getManagedBean().getRemainingDay())), String.valueOf(addingZeroInfront(getManagedBean().getRemainingHour())),String.valueOf(addingZeroInfront(getManagedBean().getRemainingMinute())) });
 				        }else if (getManagedBean().getRemainingDay() == 0 && getManagedBean().getRemainingHour() > 0){
 				        	message = getMessage(
-									"lbl.sc.sq.remaining.time.hour", new String[] { String.valueOf(addingZeroInfront(getManagedBean().getRemainingHour())),String.valueOf(addingZeroInfront(getManagedBean().getRemainingMinute())) });
-				        }else if (getManagedBean().getRemainingInterval() > 0){
+									"lbl.sc.sq.remaining.time.hour", new String[] { String.valueOf(addingZeroInfront(getManagedBean().getRemainingHour())), String.valueOf(addingZeroInfront(getManagedBean().getRemainingMinute())) });
+				        }else if (getManagedBean().getRemainingInterval() >= 0){
+				        	message = getMessage(
+									"lbl.sc.sq.remaining.time.minute", new String[] {String.valueOf(addingZeroInfront(getManagedBean().getRemainingMinute()))});
+				        }else if (getManagedBean().getRemainingInterval() <0){ //if time after the end date display 00minute
+				        	getManagedBean().setRemainingMinute(0L);
 				        	message = getMessage(
 									"lbl.sc.sq.remaining.time.minute", new String[] {String.valueOf(addingZeroInfront(getManagedBean().getRemainingMinute()))});
 				        }
@@ -8236,17 +8235,18 @@ public class SimpleQuoteBackingBean extends
 			}
             return message;
 		}
+		
 		 
 	    public void initCountdown(){
 			try {
 				
 		    	getDaysAndHours(new Date(), getManagedBean().getScQuote().getEndDate());
 
-				if (getManagedBean().getRemainingInterval() == 0){
+				if (getManagedBean().getRemainingInterval() < 0){
 					RequestContext reqCtx = RequestContext.getCurrentInstance();
 			        reqCtx.execute("poll.stop();");
 				}
-				
+			
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
@@ -8260,12 +8260,12 @@ public class SimpleQuoteBackingBean extends
 	    	getDaysAndHours(new Date(), getManagedBean().getScQuote().getEndDate());
 	    	
 	    	if (isStarted){
-	    		if (getManagedBean().getRemainingInterval() > 0){
 		    		remainingMsg = getMessageCommon("lbl.sc.sq.remaining.time");
-				}
 	    	}
 	    	
 	    	return remainingMsg;
 	    }
+	    
+	    
 		//#5426 - end
 }
