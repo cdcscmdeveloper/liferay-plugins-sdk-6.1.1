@@ -32,18 +32,17 @@ simpleQuoteBackingBean.managedBean.scQuote.createdDate)}
 								pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 						</h:outputText></td>
 				<!--#5426 start-->		
-					<!-- <td style="width: 8%">
-						<c:if test="simpleQuoteBackingBean.managedBean.remainingInterval > 0"></c:if>
+					<td style="width: 8%">
 						<h:outputLabel id="remainingMsg" value="#{simpleQuoteBackingBean.displayRemainingTimeMsg()}" />
-					</td>-->	
-					<!-- <td>
+					</td>	
+					 <td>
 					<FONT style="color: red;font-weight: bold;">
 							<h:outputText id="days" value="#{simpleQuoteBackingBean.displayRemainingTime()}"/>
 				
 						
-					 	<p:poll interval="1" listener="#{simpleQuoteBackingBean.initCountdown()}" update="days,remainingMsg" widgetVar="poll" />
+					 	<p:poll binding="#{poll}" interval="1" listener="#{simpleQuoteBackingBean.initCountdown()}" update="days, remainingMsg" widgetVar="poll" process="@this" partialSubmit="true"/>
 					</FONT> 
-					</td>-->
+					</td>
 				<!-- #5426 end -->
 				</tr>
 			</table>
