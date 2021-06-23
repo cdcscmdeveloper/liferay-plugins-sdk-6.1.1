@@ -309,9 +309,11 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	
 	private List<DisciplinaryActionVO> disciplineVOs; 
 	private boolean disciplinaryAction;
-	//31018
-	private List<SmBulkApplOverlapCatVO> overlapCategoryVOList;
 	//28281 - end 
+	
+	//31111
+	private List<SmBulkApplOverlapCatVO> overlapCategoryVOList;
+	
 	
 	//28771 - start
 	private String supportingDocMode;
@@ -2305,13 +2307,13 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	}
 	// #29617 end
 	
-	//START 31018
-	public List<SmBulkApplOverlapCatVO> getOverlapCategoryVOList() {
-		return overlapCategoryVOList;
-	}
+	//START 31111
+		public List<SmBulkApplOverlapCatVO> getOverlapCategoryVOList() {
+			return overlapCategoryVOList;
+		}
 
-	public void setOverlapCategoryVOList(List<SmBulkApplOverlapCatVO> overlapCategoryVOList) {
-		this.overlapCategoryVOList = overlapCategoryVOList;
-	}
-	//END 31018
+		public void setOverlapCategoryVOList(List<SmBulkApplOverlapCatVO> overlapCategoryVOList) {
+			this.overlapCategoryVOList = overlapCategoryVOList;
+		}
+	//END 31111
 }
