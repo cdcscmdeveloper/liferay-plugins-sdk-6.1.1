@@ -53,17 +53,6 @@
 		</p:panel>
 
 		<p:panel header="#{lbl['lbl.sc.brifing.sv.dtls']}" toggleable="true">
-			<!-- <h:panelGroup rendered="#{!bsvDetails.briefingList.isEmpty()}">
-				<h:outputText value="* #{lbl['lbl.sc.all.attendance.required.for.briefiing']}"
-					rendered="#{bsvAttendanceBackingBean.managedBean.scQtBriefing.scQtBsv.allBriefingReq}"
-					style="font-weight:bold;text-align: left;" />
-
-				<h:outputText
-					value="#{lbl['lbl.sc.qt.atleast']} #{bsvAttendanceBackingBean.managedBean.scQtBriefing.scQtBsv.minBriefingAttend} Attandence required for Briefing and SiteVisit"
-					rendered="#{!bsvAttendanceBackingBean.managedBean.scQtBriefing.scQtBsv.allBriefingReq}"
-					style="font-weight:bold;text-align: left;" />
-
-			</h:panelGroup> -->
 
 			<p:dataTable id="samebsvdtls" var="brfsitdtl"
 			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -74,14 +63,15 @@
 					style="width:25%;white-space: normal;">
 					<h:outputText value="#{brfsitdtl.bsvDesc}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.date.time']}"
+				<!-- 28772 -start- -->
+				<p:column headerText="#{lbl['lbl.sc.date.time.day']}"
 					style="width:18%;white-space: normal;">
 					<h:outputText value="#{brfsitdtl.bsvDate}">
 						<f:convertDateTime
-							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT_WITH_DAY}" />
 					</h:outputText>
 				</p:column>
-
+				<!-- 28772 -end- -->
 				<p:column headerText="#{lbl['lbl.sc.location']}"
 					style="width:20%;white-space: normal;">
 

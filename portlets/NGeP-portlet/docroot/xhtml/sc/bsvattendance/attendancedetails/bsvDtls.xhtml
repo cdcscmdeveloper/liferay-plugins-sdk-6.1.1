@@ -22,14 +22,15 @@
 					style="width:25%;white-space: normal;">
 					<h:outputText value="#{brfsitdtl.bsvDesc}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.date.time']}"
+				<!-- 28772 -start- -->
+				<p:column headerText="#{lbl['lbl.sc.date.time.day']}"
 					style="width:18%;white-space: normal;">
 					<h:outputText value="#{brfsitdtl.bsvDate}">
 						<f:convertDateTime
-							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT_WITH_DAY}" />
 					</h:outputText>
 				</p:column>
-
+				<!-- 28772 -end- -->
 				<p:column headerText="#{lbl['lbl.sc.location']}"
 					style="width:20%;white-space: normal;">
 					<p:commandLink style="margin-right:20px;;"
@@ -85,14 +86,15 @@
 					style="width:25%;white-space: normal;">
 					<h:outputText value="#{brfsitdtl.bsvDesc}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.date.time']}"
+				<!-- 28772 -start- -->
+				<p:column headerText="#{lbl['lbl.sc.date.time.day']}"
 					style="width:18%;white-space: normal;">
 					<h:outputText value="#{brfsitdtl.bsvDate}">
 						<f:convertDateTime
-							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT_WITH_DAY}" />
 					</h:outputText>
 				</p:column>
-
+				<!-- 28772 -end- -->
 				<p:column headerText="#{lbl['lbl.sc.location']}"
 					style="width:20%;white-space: normal;">
 					<p:commandLink style="margin-right:20px;;"
@@ -149,14 +151,15 @@
 					style="width:25%;white-space: normal;">
 					<h:outputText value="#{sitevisitDtls.bsvDesc}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.date.time']}"
+				<!-- 28772 -start- -->
+				<p:column headerText="#{lbl['lbl.sc.date.time.day']}"
 					style="width:18%;white-space: normal;">
 					<h:outputText value="#{sitevisitDtls.bsvDate}">
 						<f:convertDateTime
-							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT_WITH_DAY}" />
 					</h:outputText>
 				</p:column>
-
+				<!-- 28772 -end- -->
 				<p:column headerText="#{lbl['lbl.sc.location']}"
 					style="width:20%;white-space: normal;">
 					<p:commandLink style="margin-right:20px;"
