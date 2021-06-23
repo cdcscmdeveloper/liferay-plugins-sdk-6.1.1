@@ -47,7 +47,7 @@
 							<tr>
 								<td style="width: 160px"><p:outputLabel
 										value="#{lbl['lbl.sc.location.level']}" /></td>
-								<td><p:selectOneMenu id="locLevels"
+								<td style="width: 152px;"><p:selectOneMenu id="locLevels"
 										value="#{simpleQuoteBackingBean.managedBean.supplierLocLevel}"
 										style="width: 150px;" disabled="#{!isEditable}">
 										<f:selectItems
@@ -56,6 +56,8 @@
 											process="@this"
 											listener="#{simpleQuoteBackingBean.localityLocLevelEvent(simpleQuoteBackingBean.managedBean.supplierLocLevel)}" />
 									</p:selectOneMenu></td>
+								<td><ac:iconTooltip
+										value="#{lbl['lbl.sc.localitycoverage.tooltip']}"/></td>
 							</tr>
 						</table>
 						<p:dataTable id="locationDataTable"
