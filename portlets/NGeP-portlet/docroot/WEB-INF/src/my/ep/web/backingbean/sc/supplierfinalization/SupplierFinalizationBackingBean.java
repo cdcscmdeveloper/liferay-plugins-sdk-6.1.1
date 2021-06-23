@@ -2471,7 +2471,9 @@ public class SupplierFinalizationBackingBean extends
 		  ScQtFinalizationReportAttachment reportAttachment = null;
 		  if (null != scQtFinalizationReport) {
 		    try {
-		      reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
+		      // #28834 - Start. 
+		      reportAttachment = generateDocumentAttachment(scQtFinalizationReport, true);
+		      // #28834 - End. 
 		    } catch (Exception e) {
 		      log.error("SupplierFinalizationBackingBean.submitBrief(): Error while genarate briefing paper: " + e.getMessage());
 		    }
