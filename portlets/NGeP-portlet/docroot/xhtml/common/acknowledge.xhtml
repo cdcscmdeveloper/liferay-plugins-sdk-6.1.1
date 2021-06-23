@@ -6,8 +6,9 @@
 	
     <ui:define name="contentSection">
 		<p:panel id="acknowledge" header="#{lbl['lbl.acknowledgement.title']}">
-			<p:messages id="ackMsg" showDetail="true" autoUpdate="true" severity="info" escape="false"/>
-			
+		<!-- #5426 start change autoUpdate="true" -> autoUpdate="false"   -->
+			<p:messages id="ackMsg" showDetail="true" autoUpdate="false" severity="info" escape="false"/>
+		<!-- #5426 end -->	
 
 		</p:panel>
 	</ui:define>
