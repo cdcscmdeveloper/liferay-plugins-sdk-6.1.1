@@ -254,7 +254,7 @@
 			</div>
 		</p:dialog>
 		<!-- ***28834 end new -->
-<!-- ***28834 start  new -->
+		<!-- ***28834 start  new -->
 		<p:dialog id="submissionPopupId" widgetVar="submissionPopup"
 			header="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit.header']}"
 			resizable="false" width="325" height="100" closable="false"
@@ -269,7 +269,7 @@
 			</table>
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true" onclick="blockWidget.show();"
 					action="#{suppFinalizationBackingBean.submitSuppFinalization('')}"
 					oncomplete="submissionPopup.hide();if(#{checkDisableBfButtonAfterValidation}) { disableBfButtonAfterValidation.disable(); } "  update="@form">
 				</p:commandButton>
