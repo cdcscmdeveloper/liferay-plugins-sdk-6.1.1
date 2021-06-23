@@ -289,8 +289,6 @@ public class LocationSingleton {
 									}
 								}
 							}
-						} else {
-							stateNode.setSelectable(false);	// #5426
 						}
 						if (stateIds.contains(state.getStateId())) {
 							stateNode.setSelected(Boolean.TRUE);
