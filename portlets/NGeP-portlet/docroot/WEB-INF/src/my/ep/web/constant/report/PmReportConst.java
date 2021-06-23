@@ -84,6 +84,7 @@ public class PmReportConst implements Serializable {
 	
 	//Org Type Values and Org Cat eq Others
 	public static final int ORG_TYPE_SUPPLIER = 15; //#29991
+	public static final String SUPPLIER_PARAM_CODE = "SUP"; //#29991
 	public static final String PARAM_PM_BUSINESS_REGNO = "PREGNO"; //#29991
 		
 	
