@@ -1819,7 +1819,8 @@ public class SmApplicationUtil {
 					// #30718 - start
 					|| (per.isMuslim() == null && per.getMuslimFlg() == null && per.getMuslimFlgTrans() == null && (per.getPmCountry().getCountryId() == 131L))
 					// #30718 - end
-					|| per.getPmRace() == null) {
+					//31130
+					|| per.getPmRace() == null || per.getTitle() == null) {
 				validPersonnel = false;
 			} else if (per.getSmPersonnelAddresses() == null || per.getSmPersonnelAddresses().size() <= 0) {
 				validPersonnel = false;
@@ -1937,7 +1938,8 @@ public class SmApplicationUtil {
 		// end #30076
 
 		//16052019 - SSM INTEGRATION CR #27219
-		if (showerror && appl.isApplValidWithSsm() && managedBean.isSupplierUser() && appl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+		//31130
+		if (showerror && appl.isApplValidWithSsm() && managedBean.isSupplierUser() || appl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
 			if (currentTab != -1) {
 				setNavigationBackToCurrentPage(currentTab, managedBean);
 			}
