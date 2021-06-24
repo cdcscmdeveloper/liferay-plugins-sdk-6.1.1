@@ -2846,8 +2846,10 @@ public class SimpleQuoteBackingBean extends
 		if (locationLevel == null) {
 			locationLevel = ParameterConst.LOCATION_LEVEL_DISTRICT;
 		}
+		// #5426 use method buildLocationPopupTree2() instead of
+		// buildLocationPopupTree()
 		getManagedBean().setRootZoneTree(
-				LocationSingleton.getInstance().buildLocationPopupTree(
+				LocationSingleton.getInstance().buildLocationPopupTree2(
 						getManagedBean().getDefaultCountryId(), null, null,
 						null, null, locationLevel, TplSpecZoneLoc.class,
 						false));
@@ -2882,8 +2884,10 @@ public class SimpleQuoteBackingBean extends
 		List<PmDistrict> districts = SourcingLocationHelper
 				.getDistrictFromLocationDTO(locationDTOs);
 
+		// #5426 use method buildLocationPopupTree2() instead of
+		// buildLocationPopupTree()
 		getManagedBean().setRootLocationTree(
-				LocationSingleton.getInstance().buildLocationPopupTree(
+				LocationSingleton.getInstance().buildLocationPopupTree2(
 						getManagedBean().getDefaultCountryId(), states,
 						districts, divisions, null, locationLevel,
 						TplSpecZoneLoc.class,
@@ -3179,8 +3183,10 @@ public class SimpleQuoteBackingBean extends
 		List<PmCity> cities = SourcingLocationHelper
 				.getCityFromLocationDTO(locationDTOs);
 
+		// #5426 use method buildLocationPopupTree2() instead of
+		// buildLocationPopupTree()
 		getManagedBean().setRootZoneTree(
-				LocationSingleton.getInstance().buildLocationPopupTree(
+				LocationSingleton.getInstance().buildLocationPopupTree2(
 						getManagedBean().getDefaultCountryId(), states,
 						districts, divisions, cities, locationLevel,
 						TplSpecZoneLoc.class,
@@ -3216,8 +3222,10 @@ public class SimpleQuoteBackingBean extends
 		List<PmDistrict> districts = SourcingLocationHelper
 				.getDistrictFromLocationDTO(locationDTOs);
 
+		// #5426 use method buildLocationPopupTree2() instead of
+		// buildLocationPopupTree()
 		getManagedBean().setRootLocationTree(
-				LocationSingleton.getInstance().buildLocationPopupTree(
+				LocationSingleton.getInstance().buildLocationPopupTree2(
 						getManagedBean().getDefaultCountryId(), states,
 						districts, divisions, null, locationLevel,
 						TplSpecZoneLoc.class,
