@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
-	<ui:param name="scQt" value="#{demoInvBB.managedBean.scQt}" />
+	<ui:param name="scQt" value="#{demoInvBB.managedBean.qt}" />
 <!-- 	<ui:param name="qtStatusAfterChecklistScoring" -->
 <!-- 		value="#{createQtBB.isQTStatusGreaterThan(scQt.qtStatus.statusId, QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)}" /> -->
 <!-- 	<ui:param name="qtStatusChecklistScoring" -->
@@ -225,9 +225,9 @@
 					<td valign="top"><p:outputLabel
 							value="#{lbl['lbl.sc.prepare.for.ptj']}" /></td>
 					<td colspan="3"><p:inputText
-							value="#{qTDetailBB.retrievePTJByOrgProfileId(demoInvBB.managedBean.scQt.pmOrgProfile.orgProfileId,
-							qTDetailBB.isQTStatusPublished(demoInvBB.managedBean.currentStatusId)?demoInvBB.managedBean.scQt.publishDate : 
-							demoInvBB.managedBean.scQt.createdDate)}"
+							value="#{qTDetailBB.retrievePTJByOrgProfileId(demoInvBB.managedBean.qt.pmOrgProfile.orgProfileId,
+							qTDetailBB.isQTStatusPublished(demoInvBB.managedBean.currentStatusId)?demoInvBB.managedBean.qt.publishDate : 
+							demoInvBB.managedBean.qt.createdDate)}"
 							disabled="true" readonly="true" style="width:653px;" /></td>
 				</tr>
 <!-- 			</c:if> -->

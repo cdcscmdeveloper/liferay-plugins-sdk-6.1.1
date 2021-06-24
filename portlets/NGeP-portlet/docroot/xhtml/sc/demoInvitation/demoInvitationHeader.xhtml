@@ -9,6 +9,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
+		<f:event listener="#{demoInvBB.prerenderView}" type="preRenderView" />
 		<table style="border: 0px; width: 100%">
 			<tr>
 				<td width="100%"><p:blockUI block=":form"
@@ -24,14 +25,14 @@
 							<td width="15%"><h:outputLabel
 									value="#{lbl['lbl.sc.qtn.no']}" /></td>
 							<td class="header-info-text"><h:outputText
-									value="#{demoInvBB.managedBean.scQt.qtNo}" /></td>
+									value="#{demoInvBB.managedBean.qt.qtNo}" /></td>
 
 							<td width="10%"><h:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
 							<td class="header-info-text">
-								#{demoInvBB.retrievePTJByOrgProfileId(demoInvBB.managedBean.scQt.ownerOrgProfile.orgProfileId,
+								#{demoInvBB.retrievePTJByOrgProfileId(demoInvBB.managedBean.qt.ownerOrgProfile.orgProfileId,
 								demoInvBB.isQTStatusPublished(demoInvBB.managedBean.currentStatusId)?
-								demoInvBB.managedBean.scQt.publishDate :
-								demoInvBB.managedBean.scQt.createdDate)}</td>
+								demoInvBB.managedBean.qt.publishDate :
+								demoInvBB.managedBean.qt.createdDate)}</td>
 
 							<td width="10%"><h:outputLabel
 									value="#{lbl['lbl.sc.status']}" /></td>

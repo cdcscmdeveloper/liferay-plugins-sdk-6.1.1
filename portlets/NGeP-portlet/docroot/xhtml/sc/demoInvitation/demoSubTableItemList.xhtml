@@ -8,7 +8,7 @@
 
 	<h:panelGroup id="demoSubItemTable">
 		<p:dataTable id="demoItemListId" var="demoSpecTempList"
-			value="#{demoInvBB.managedBean.byItemList}" rowIndexVar="index"
+			value="#{demoInvBB.managedBean.byItemList}" rowIndexVar="rowIndex"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{demoSpecTempList}">
 			<p:column headerText="By Item">
@@ -16,7 +16,7 @@
 					value="#{demoSpecTempList.itemName}"></h:outputText>
 				<p:dataTable id="byItem"
 					value="#{demoSpecTempList.scQtDemoByItemScoreList}"
-					var="byItemList">
+					rowIndexVar="rowSubIndex" var="byItemList">
 					<p:column headerText="#{lbl['lbl.demo.no']}"
 						style="width:24%;white-space: normal;">
 						<h:outputText value="#{byItemList.scQtDemoSupplier.demoNo}"></h:outputText>
@@ -59,7 +59,7 @@
 						<ac:dateTime id="demoStartDate" required="true"
 							label="#{lbl['lbl.sc.start.date']}" disabled="#{disableMeeting}"
 							value="#{byItemList.scQtDemoSchedule.demoStartDate}"
-							update="@([id$=demoStartDate])" rowIndex="#{rowIndex}">
+							update="@([id$=demoStartDate])" rowIndex="#{rowSubIndex}">
 						</ac:dateTime>
 						<p:message id="demoStartDateMsg" for="demoStartDate"
 							display="icon" showDetail="false"></p:message>
@@ -76,7 +76,7 @@
 							label="#{lbl['lbl.ss.item.detail.end.date']}"
 							disabled="#{disableMeeting}"
 							value="#{byItemList.scQtDemoSchedule.demoEndDate}"
-							update="@([id$=demoEndDate])" rowIndex="#{rowIndex}">
+							update="@([id$=demoEndDate])" rowIndex="#{rowSubIndex}">
 						</ac:dateTime>
 						<p:message id="demoEndDateMsg" for="demoEndDate" display="icon"
 							showDetail="false"></p:message>

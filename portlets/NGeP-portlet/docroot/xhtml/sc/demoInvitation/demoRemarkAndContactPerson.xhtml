@@ -100,10 +100,10 @@
 											disabled="#{empty demoInvBB.managedBean.selectedContactList}"
 											oncomplete="contactPersonDeletePopUp.show();"
 											update="@([id$=#{contactPersonDeleteId}])"
-											onclick="contactPersonDeletePopUpDeletePopUp.show()" />
+											onclick="contactPersonDeletePopUp.show()" />
 									</div> 
-									<ui:param name="contactPersonDeleteId"
-										value="contactPersonDeleteId" /> 
+<!-- 									<ui:param name="contactPersonDeleteId" -->
+<!-- 										value="contactPersonDeleteId" />  -->
 <!-- 										<ac:confirmationPopup -->
 <!-- 										id="#{contactPersonDeleteId}" -->
 <!-- 										widget="contactPersonDeletePopUpDeletePopUp" -->
@@ -121,7 +121,7 @@
 											<p:commandButton id="okDialogId"
 												value="#{lbl['lbl.btn.dialog.cofirm.yes']}"
 												action="#{demoInvBB.deleteContactPerson}"
-												update="@([id$=democontactPersonPanel])" process="@this"
+												update="@([id$=contactPrsId])" process="@this"
 												onclick="contactPersonDeleteId.hide();" />
 											<p:commandButton value="#{lbl['lbl.btn.no']}"
 												onclick="contactPersonDeleteId.hide();" type="button"
