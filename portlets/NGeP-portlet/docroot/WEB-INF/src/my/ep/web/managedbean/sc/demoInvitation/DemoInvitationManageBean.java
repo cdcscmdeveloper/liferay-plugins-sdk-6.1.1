@@ -5,10 +5,12 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.sc.QtAmendMentBean;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.pm.authorization.PmPtjSpecialApproval;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtBudget;
@@ -20,6 +22,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDemoItem;
 import my.ep.persistence.entity.sc.quationtender.ScQtDemoSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQtDemoSupplier;
 import my.ep.web.bean.sc.common.ZonesBean;
+import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.TreeNode;
@@ -45,7 +48,7 @@ public class DemoInvitationManageBean extends BaseManagedBean {
 	private int activeIndex;
 	
 	/** The scQt. */
-	private ScQt scQt;
+	private ScQt qt;
 	
 	private boolean secretaryValidate;
 	
@@ -116,6 +119,14 @@ public class DemoInvitationManageBean extends BaseManagedBean {
 	private boolean rendered;
 	
 	private boolean qualifiedSupplier = true;
+	
+	public TabBean selectedApprovalTabBean;
+	
+	private SelectItem[] finalizationSecratary;
+	
+	private List<PmUser> pmUsersList;
+	
+	private boolean readOnly;
 
 	public int getTabActiveIndex() {
 		return tabActiveIndex;
@@ -123,14 +134,6 @@ public class DemoInvitationManageBean extends BaseManagedBean {
 
 	public void setTabActiveIndex(int tabActiveIndex) {
 		this.tabActiveIndex = tabActiveIndex;
-	}
-
-	public ScQt getScQt() {
-		return scQt;
-	}
-
-	public void setScQt(ScQt scQt) {
-		this.scQt = scQt;
 	}
 
 	public int getActiveIndex() {
@@ -421,6 +424,47 @@ public class DemoInvitationManageBean extends BaseManagedBean {
 		this.qualifiedSupplier = qualifiedSupplier;
 	}
 
+	public TabBean getSelectedApprovalTabBean() {
+		return selectedApprovalTabBean;
+	}
+
+	public void setSelectedApprovalTabBean(TabBean selectedApprovalTabBean) {
+		this.selectedApprovalTabBean = selectedApprovalTabBean;
+	}
+
+	public SelectItem[] getFinalizationSecratary() {
+		return finalizationSecratary;
+	}
+
+	public void setFinalizationSecratary(SelectItem[] finalizationSecratary) {
+		this.finalizationSecratary = finalizationSecratary;
+	}
+
+	public ScQt getQt() {
+		return qt;
+	}
+
+	public void setQt(ScQt qt) {
+		this.qt = qt;
+	}
+
+	public List<PmUser> getPmUsersList() {
+		return pmUsersList;
+	}
+
+	public void setPmUsersList(List<PmUser> pmUsersList) {
+		this.pmUsersList = pmUsersList;
+	}
+
+	public boolean isReadOnly() {
+		return readOnly;
+	}
+
+	public void setReadOnly(boolean readOnly) {
+		this.readOnly = readOnly;
+	}
+
+	
 	
 
 	
