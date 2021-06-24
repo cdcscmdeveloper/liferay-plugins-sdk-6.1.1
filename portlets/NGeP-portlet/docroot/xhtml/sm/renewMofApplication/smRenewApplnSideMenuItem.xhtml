@@ -58,12 +58,13 @@
 		<c:when test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew and backingBean.managedBean.smAppl.applValidWithSsm}">
 		<c:choose>
 		<c:when test="#{backingBean.managedBean.smSupplier.businessType eq 'I' or backingBean.managedBean.smSupplier.businessType eq 'J'}">	 	
-		<p:menuitem>
-			<ac:smApplMenuItem
-				backingBean = "#{backingBean}"
-				section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_ANNUALINFO}" 
-				tabNo="4" label="#{lbl['lbl.sm.annualInfoStepLbl']}" />
-		</p:menuitem>
+		<p:menuitem
+				value="#{lbl['lbl.sm.annualInfoStepLbl']}"
+				style="white-space: normal;" onstart="blockWidget.show()"
+				oncomplete="blockWidget.hide()"
+				actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'4')}"
+				action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_ANNUALINFO)}"
+				update=":form" /> 
 			 		
 		<p:menuitem>
 			<ac:smApplMenuItem
