@@ -186,6 +186,7 @@
 			<portlet id="deskOfficerMaintenanceApproval"/>
 			<portlet id="maintenanceRequestApproval"/>
 			<portlet id="maintenanceRequestRevision"/>
+			<portlet id="demoInvitation"/><!-- #28784 -->
 		</category>
 
 		<!-- Fulfilment Start Added by Giri -->
