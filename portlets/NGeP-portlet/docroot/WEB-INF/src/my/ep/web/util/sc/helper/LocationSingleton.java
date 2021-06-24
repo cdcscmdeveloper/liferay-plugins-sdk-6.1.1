@@ -360,6 +360,178 @@ public class LocationSingleton {
 
 		return rootLocationTree;
 	}
+	
+	// #5426 - start
+	public <LOCATION_CLASS extends TplSpecLoc> TreeNode buildLocationPopupTree2(
+			Long countryId, List<PmState> listStates,
+			List<PmDistrict> listDistricts, List<PmDivision> listDivisions,
+			List<PmCity> listCities, String locationLevelCode,
+			Class<LOCATION_CLASS> locClass,
+			boolean disabledSelectable) {
+		// build tree
+		TreeNode rootLocationTree = new DefaultTreeNode(QTConstants.NODE_ROOT,
+				null);
+
+		try {
+			List<PmState> allStates = mapStates.get(countryId);
+			Set<Long> stateIds = new HashSet<Long>();
+			Set<Long> districtIds = new HashSet<Long>();
+			Set<Long> divisionIds = new HashSet<Long>();
+			Set<Long> stateNonSelectableIds = new HashSet<Long>();
+			Set<Long> districtNonSelectableIds = new HashSet<Long>();
+			Set<Long> divisionNonSelectableIds = new HashSet<Long>();
+
+			// get list Id for all state, district, division
+			if (listStates != null && listStates.size() > 0) {
+
+				for (PmState state : listStates) {
+					stateIds.add(state.getStateId());
+					
+					if (ParameterConst.LOCATION_LEVEL_STATE.equals(locationLevelCode) &&
+							!state.isSelectable()) {
+						stateNonSelectableIds.add(state.getStateId());
+					}
+				}
+			}
+
+			if (listDistricts != null && listDistricts.size() > 0) {
+
+				for (PmDistrict district : listDistricts) {
+					districtIds.add(district.getDistrictId());
+					
+					if (ParameterConst.LOCATION_LEVEL_DISTRICT.equals(locationLevelCode) &&
+							!district.isSelectable()) {
+						districtNonSelectableIds.add(district.getDistrictId());
+					}
+				}
+			}
+
+			if (listDivisions != null && listDivisions.size() > 0) {
+
+				for (PmDivision division : listDivisions) {
+					divisionIds.add(division.getDivisionId());
+					
+					if ((ParameterConst.LOCATION_LEVEL_DISTRICT.equals(locationLevelCode) ||
+							ParameterConst.LOCATION_LEVEL_DIVISION.equals(locationLevelCode)) &&
+							!division.isSelectable()) {
+						divisionNonSelectableIds.add(division.getDivisionId());
+					}
+				}
+			}
+
+			if (allStates == null) {
+
+				allStates = initialStatesForCountry(countryId);
+			}
+
+			for (PmState state : allStates) {
+				// LocationDTO stateLocation = new LocationDTO(state);
+				if (!disabledSelectable || !stateNonSelectableIds.contains(state.getStateId())) {
+					LOCATION_CLASS locCriteria = locClass.newInstance();
+					locCriteria.setPmState(state);
+					TreeNode stateNode = new DefaultTreeNode(
+							QTConstants.NODE_STATE, locCriteria, rootLocationTree);
+					// build state tree
+
+					if (ParameterConst.LOCATION_LEVEL_STATE
+							.equals(locationLevelCode)) {
+						if (stateIds.contains(state.getStateId())) {
+							stateNode.setSelected(Boolean.TRUE);
+						}
+					} else if (ParameterConst.LOCATION_LEVEL_DIVISION
+							.equals(locationLevelCode)) {
+
+						if (state.getPmDivisions() != null
+								&& !state.getPmDivisions().isEmpty()) {
+
+							for (PmDivision division : state.getPmDivisions()) {
+								if (!disabledSelectable || !divisionNonSelectableIds.contains(division.getDivisionId())) {
+									LOCATION_CLASS locCriteria1 = locClass
+											.newInstance();
+									locCriteria1.setPmDivision(division);
+									TreeNode divisionNode = new DefaultTreeNode(
+											QTConstants.NODE_DIVISION, locCriteria1,
+											stateNode);
+						
+									if (divisionIds.contains(division.getDivisionId())) {
+										divisionNode.setSelected(Boolean.TRUE);
+									}
+								}
+							}
+						} else {
+							stateNode.setSelectable(false);	// to disable checkbox for other states
+						}
+						if (stateIds.contains(state.getStateId())) {
+							stateNode.setSelected(Boolean.TRUE);
+						}
+					} else if (ParameterConst.LOCATION_LEVEL_DISTRICT
+							.equals(locationLevelCode)) {
+
+						for (PmDistrict district : state.getPmDistricts()) {
+							if (district.getPmDivision() == null) {
+								if (!disabledSelectable || !districtNonSelectableIds.contains(district.getDistrictId())) {
+									LOCATION_CLASS criteria = locClass.newInstance();
+									criteria.setPmDistrict(district);
+									TreeNode districtNode = new DefaultTreeNode(
+											QTConstants.NODE_DISTRICT, criteria,
+											stateNode);
+								
+									if (districtIds.contains(district.getDistrictId())) {
+										districtNode.setSelected(Boolean.TRUE);
+									}
+								}
+							}
+						}
+						if (state.getPmDivisions() != null
+								&& !state.getPmDivisions().isEmpty()) {
+
+							for (PmDivision division : state.getPmDivisions()) {
+								if (!disabledSelectable || !divisionNonSelectableIds.contains(division.getDivisionId())) {
+									LOCATION_CLASS locCriteria1 = locClass
+											.newInstance();
+									locCriteria1.setPmDivision(division);
+									// LocationDTO divisionLocation = new
+									// LocationDTO(division);
+									TreeNode divisionNode = new DefaultTreeNode(
+											QTConstants.NODE_DIVISION, locCriteria1,
+											stateNode);
+									// build division tree
+									for (PmDistrict district : division
+											.getPmDistricts()) {
+										// LocationDTO districtLocation = new
+										// LocationDTO(district);
+										if (!disabledSelectable || !districtNonSelectableIds.contains(district.getDistrictId())) {
+											LOCATION_CLASS locCriteria11 = locClass
+													.newInstance();
+											locCriteria11.setPmDistrict(district);
+											TreeNode districtNode = new DefaultTreeNode(
+													QTConstants.NODE_DISTRICT,
+													locCriteria11, divisionNode);
+											
+											if (districtIds.contains(district
+													.getDistrictId())) {
+												districtNode.setSelected(Boolean.TRUE);
+											}
+										}
+									}
+									if (divisionIds.contains(division.getDivisionId())) {
+										divisionNode.setSelected(Boolean.TRUE);
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		} catch (InstantiationException e) {
+			throw new EpException(e.getMessage());
+		} catch (IllegalAccessException e) {
+			throw new EpException(e.getMessage());
+		}
+
+		return rootLocationTree;
+	}
+	// #5426 - end
 
 	/**
 	 * To Build Location TreeNode
