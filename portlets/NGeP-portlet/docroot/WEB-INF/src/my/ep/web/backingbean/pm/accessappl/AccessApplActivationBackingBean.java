@@ -111,7 +111,7 @@ BaseBackingBean<AccessApplActivationManagedBean>{
 			if(accessAppl != null  
 					&& hashAccessApplId.equals(
 							PmCommonUtil.hashString(String.valueOf(accessAppl.getAccessApplId())))
-							&& isLatestActivationEmail(createdTimeParam, accessAppl) && validateUserActive(accessAppl)) {	
+							&& isLatestActivationEmail(createdTimeParam, accessAppl)){ //#30851: remove **&& validateUserActive(accessAppl)) {**
 				Date latestApproved = null;
 				boolean isPendingCp = false;
 				boolean isPendingMr = false;
