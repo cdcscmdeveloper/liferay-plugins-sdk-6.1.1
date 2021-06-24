@@ -5189,6 +5189,9 @@ public class SimpleQuoteBackingBean extends
 					// in supplier view
 					getManagedBean().setSubmitButtonFlg(Boolean.FALSE);
 					getManagedBean().setSaveButtonFlg(Boolean.FALSE);
+					//#5426 start
+					getManagedBean().setRemainingTimeMsg(MessageConst.ERROR_760034);
+					//#5426 end
 				} else if (MessageConst.ERROR_760033.equals(message)) {
 					// hide the save & submit button when Quote has been
 					// submitted previously. You are not allowed to submit twice
@@ -5398,6 +5401,9 @@ public class SimpleQuoteBackingBean extends
 					// in supplier view
 					getManagedBean().setSubmitButtonFlg(Boolean.FALSE);
 					getManagedBean().setSaveButtonFlg(Boolean.FALSE);
+					//#5426 start
+					getManagedBean().setRemainingTimeMsg(MessageConst.ERROR_760034);
+					//#5426 end
 				} else if (MessageConst.ERROR_760033.equals(message)) {
 					// hide the save & submit button when Quote has been
 					// submitted previously. You are not allowed to submit twice
@@ -8222,7 +8228,12 @@ public class SimpleQuoteBackingBean extends
 				        }else if (getManagedBean().getRemainingInterval() >= 0){
 				        	message = getMessage(
 									"lbl.sc.sq.remaining.time.minute", new String[] {String.valueOf(addingZeroInfront(getManagedBean().getRemainingMinute()))});
-				        }else if (getManagedBean().getRemainingInterval() <0){ //if time after the end date display 00minute
+				        }else if (getManagedBean().getRemainingTimeMsg()!= null && !getManagedBean().getRemainingTimeMsg().equalsIgnoreCase("")){
+				        	if (getManagedBean().getRemainingTimeMsg().equalsIgnoreCase(MessageConst.ERROR_760034)){
+				        		message="";
+				        	}
+				        }
+				        else if (getManagedBean().getRemainingInterval() <0){ //if time after the end date display 00minute
 				        	getManagedBean().setRemainingMinute(0L);
 				        	message = getMessage(
 									"lbl.sc.sq.remaining.time.minute", new String[] {String.valueOf(addingZeroInfront(getManagedBean().getRemainingMinute()))});
@@ -8260,7 +8271,16 @@ public class SimpleQuoteBackingBean extends
 	    	getDaysAndHours(new Date(), getManagedBean().getScQuote().getEndDate());
 	    	
 	    	if (isStarted){
-		    		remainingMsg = getMessageCommon("lbl.sc.sq.remaining.time");
+	    		
+	    		if (getManagedBean().getRemainingTimeMsg() != null && !getManagedBean().getRemainingTimeMsg().equalsIgnoreCase("")){
+	    			if (getManagedBean().getRemainingTimeMsg().equalsIgnoreCase(MessageConst.ERROR_760034)){
+	    				remainingMsg ="";
+	    			}
+	    			
+	    		}else {
+	    			remainingMsg = getMessageCommon("lbl.sc.sq.remaining.time");
+	    		}
+		    		
 	    	}
 	    	
 	    	return remainingMsg;
