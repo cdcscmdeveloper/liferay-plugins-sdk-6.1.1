@@ -4177,7 +4177,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			Iterator<ScRequestItemSpecOffer> itr = scRequestItemSpecOffer.iterator();
 			while (itr.hasNext()){
 				ScRequestItemSpecOffer scRequestItemSpecOfferTemp = itr.next();
-				if(scRequestItemSpecOfferTemp.getQuestionType().equals("S")){
+				if(scRequestItemSpecOfferTemp.getQuestionType().equals("I")){
 					itr.remove();
 					}
 			}
