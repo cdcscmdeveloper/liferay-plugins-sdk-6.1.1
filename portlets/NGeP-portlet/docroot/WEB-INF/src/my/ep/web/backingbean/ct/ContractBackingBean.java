@@ -4145,17 +4145,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		
 		if(getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)){
 			List<String> itemSpecList = new ArrayList<>();
-			List<ScRequestItemSpecOffer> itemSpecOfferList = requestItemSO.retrieveNewOfferSpec(requestItemId);
-			
-			for(ScRequestItemSpecOffer i: itemSpecOfferList){				
-				if(i.getQuestionType().equals("S")){
-					itemSpecList.add(i.getItemSpec());				
-				}				
-			}
-			getManagedBean().setItemSpecification(itemSpecList);
+			List<ScRequestItemSpecOffer> itemSpecOfferList = requestItemSO.retrieveNewOfferSpec(requestItemId);			
 			
 			for(ScRequestItemSpecOffer itemSpecOffer: itemSpecOfferList){
-				if((itemSpecOffer.getQuestionType().equals("I"))){
+				if(itemSpecOffer.getQuestionType().equals(ContractConst.QUESTION_TYPE_ITEM)){
 					if(itemSpecOffer.getSupplierOffer() != null && !itemSpecOffer.getSupplierOffer().isEmpty()){
 						getManagedBean().setSupplierOffer(itemSpecOffer.getSupplierOffer());
 					}else{
@@ -4168,7 +4161,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 						getManagedBean().setNewOfferSpec(null);
 					}
 				}
+				else if(itemSpecOffer.getQuestionType().equals(ContractConst.QUESTION_TYPE_SPEC)){
+					itemSpecList.add(itemSpecOffer.getItemSpec());				
+				}	
 			}
+			getManagedBean().setItemSpecification(itemSpecList);
 		}
 		
 		if(getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_QUOTATION) || getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_TENDER) || getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO)){
@@ -4177,7 +4174,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			Iterator<ScRequestItemSpecOffer> itr = scRequestItemSpecOffer.iterator();
 			while (itr.hasNext()){
 				ScRequestItemSpecOffer scRequestItemSpecOfferTemp = itr.next();
-				if(scRequestItemSpecOfferTemp.getQuestionType().equals("I")){
+				if(scRequestItemSpecOfferTemp.getQuestionType().equals(ContractConst.QUESTION_TYPE_ITEM)){
 					itr.remove();
 					}
 			}
