@@ -6496,7 +6496,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				} else {
 					currSupp = SmApplicationUtil.getCurrentSupplier();
 				}
-
+				
+				//#30756 start
+				currSupp.setFlagSupplier(true);
+				currSupp.setFlagDASuppProfile(true);
+				//#30756 end
+				
 				List<DisciplinaryActionVO> voList = ViewSuppProfileBackingBean.getDisciplinaryActionVO(currSupp);
 
 				if(voList != null || voList.size() > 0){
