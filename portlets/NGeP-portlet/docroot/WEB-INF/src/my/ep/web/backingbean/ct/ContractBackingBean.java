@@ -3983,17 +3983,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		
 		if(getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)){
 			List<String> itemSpecList = new ArrayList<>();
-			List<ScRequestItemSpecOffer> itemSpecOfferList = requestItemSO.retrieveNewOfferSpec(requestItemId);
-			
-			for(ScRequestItemSpecOffer i: itemSpecOfferList){				
-				if(i.getQuestionType().equals("S")){
-					itemSpecList.add(i.getItemSpec());				
-				}				
-			}
-			getManagedBean().setItemSpecification(itemSpecList);
+			List<ScRequestItemSpecOffer> itemSpecOfferList = requestItemSO.retrieveNewOfferSpec(requestItemId);			
 			
 			for(ScRequestItemSpecOffer itemSpecOffer: itemSpecOfferList){
-				if((itemSpecOffer.getQuestionType().equals("I"))){
+				if(itemSpecOffer.getQuestionType().equals(ContractConst.QUESTION_TYPE_ITEM)){
 					if(itemSpecOffer.getSupplierOffer() != null && !itemSpecOffer.getSupplierOffer().isEmpty()){
 						getManagedBean().setSupplierOffer(itemSpecOffer.getSupplierOffer());
 					}else{
@@ -4006,47 +3999,25 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 						getManagedBean().setNewOfferSpec(null);
 					}
 				}
+				else if(itemSpecOffer.getQuestionType().equals(ContractConst.QUESTION_TYPE_SPEC)){
+					itemSpecList.add(itemSpecOffer.getItemSpec());				
+				}	
 			}
+			getManagedBean().setItemSpecification(itemSpecList);
 		}
 		
 		if(getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_QUOTATION) || getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_TENDER) || getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO)){
-			List<ScRequestItemSpecOffer> scRequestItemSpecOffer = requestItemSO.retrieveNewOfferSpec(requestItemId);			
-			List<ScRequestItemSpecOffer> scRequestItemSpecOfferList = new ArrayList<ScRequestItemSpecOffer>();
-			String itemSpec = null;
-			String suppOffer = null;
-			String newOfferSpec = null;			
-			Long requestItemIdTemp = 0L;
+			List<ScRequestItemSpecOffer> scRequestItemSpecOffer = requestItemSO.retrieveNewOfferSpec(requestItemId);	
 			
 			Iterator<ScRequestItemSpecOffer> itr = scRequestItemSpecOffer.iterator();
 			while (itr.hasNext()){
 				ScRequestItemSpecOffer scRequestItemSpecOfferTemp = itr.next();
-				if(scRequestItemSpecOfferTemp.getQuestionType().equals("I")){
-					if(scRequestItemSpecOfferTemp.getSupplierOffer()!=null && !scRequestItemSpecOfferTemp.getSupplierOffer().isEmpty()){
-						suppOffer = scRequestItemSpecOfferTemp.getSupplierOffer();
-					}
-					if(scRequestItemSpecOfferTemp.getNewOfferSpec()!=null && !scRequestItemSpecOfferTemp.getNewOfferSpec().isEmpty()){
-						newOfferSpec = scRequestItemSpecOfferTemp.getNewOfferSpec();
-					}
-					requestItemIdTemp = scRequestItemSpecOfferTemp.getScRequestItem().getRequestNoteItemId();
+				if(scRequestItemSpecOfferTemp.getQuestionType().equals(ContractConst.QUESTION_TYPE_ITEM)){
 					itr.remove();
 					}
-			}	
-			
-			for(ScRequestItemSpecOffer itemSpecOffer: scRequestItemSpecOffer){
-				ScRequestItemSpecOffer scRequestItemSpecOfferUpdated = new ScRequestItemSpecOffer();
-				if((itemSpecOffer.getQuestionType().equals("S")) && itemSpecOffer.getScRequestItem().getRequestNoteItemId() == requestItemIdTemp){
-					itemSpec = itemSpecOffer.getItemSpec();
-					
-					//Insert data into new object
-					scRequestItemSpecOfferUpdated.setSupplierOffer(suppOffer);
-					scRequestItemSpecOfferUpdated.setNewOfferSpec(newOfferSpec);
-					scRequestItemSpecOfferUpdated.setItemSpec(itemSpec);
-					
-					//Insert new object into the list
-					scRequestItemSpecOfferList.add(scRequestItemSpecOfferUpdated);
-				}				
-			}			
-			getManagedBean().setScRequestItemSpecOfferList(scRequestItemSpecOfferList);		
+			}
+		
+			getManagedBean().setScRequestItemSpecOfferList(scRequestItemSpecOffer);		
 		}		
 		/*#28854 end*/
 		log.info("HHHHHHH");
