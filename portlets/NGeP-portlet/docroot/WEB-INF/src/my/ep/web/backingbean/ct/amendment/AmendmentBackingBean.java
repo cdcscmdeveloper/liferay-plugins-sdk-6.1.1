@@ -5693,11 +5693,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					ctAmendment.getAmendmentLoa().setContractAdmin(userSO.checkingcontractadminstatus(reqLoadDTO).getPmUser());
 					
 				}
-	
-				if(ctAmendment.getAmendmentLoa().getContractSigner()!=null && ctAmendment.getAmendmentLoa().getContractSigner().getUserId()!=null) {
-					userReqDTO.setUserId(ctAmendment.getAmendmentLoa().getContractSigner().getUserId());
-					ctAmendment.getAmendmentLoa().setContractSigner(userSO.retrieveUserProfileByUserId(userReqDTO).getPmUser());
-				}
 			}
 		}
 	 
