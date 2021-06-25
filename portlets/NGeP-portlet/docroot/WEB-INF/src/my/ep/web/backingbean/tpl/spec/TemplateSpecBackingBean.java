@@ -5290,4 +5290,16 @@ public class TemplateSpecBackingBean extends
 		getManagedBean().setTemplateSpecBean(templateSpecBean);
 	}
 	//#28784 - END
+	
+	//#31134 Farid end 25/6/2021
+	public boolean checkPriceTierEnableColumn(TemplateSpecBean templateSpecBean) {
+		int count = 0;
+		for(TplSpecAnswer retrieveAns : templateSpecBean.getSpecAnswerList()){
+			if(retrieveAns != null && retrieveAns.getTplSpecTierQty() != null){
+				return true;
+			}
+		}
+		return false;
+	}
+	//#31134 Farid end 25/6/2021
 }
