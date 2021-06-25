@@ -10,21 +10,28 @@ import javax.faces.application.Application;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.portlet.PortletConfig;
 import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
 import javax.portlet.PortletSession;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.epx.bean.UserActivityBean;
+import my.epx.monitor.UserActivityLogger;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -64,7 +71,6 @@ public class FacesScopes implements Serializable {
 	 * FacesScopes constructor.
 	 */
 	public FacesScopes() {
-
 		portletSession = (PortletSession) FacesContext.getCurrentInstance()
 				.getExternalContext().getSession(false);
 		portletRequest = (PortletRequest) FacesContext.getCurrentInstance()
@@ -88,6 +94,31 @@ public class FacesScopes implements Serializable {
 		application = FacesContext.getCurrentInstance().getApplication();
 	}
 
+	//20210610@fadhli - #31062 Added user activity logging - Start
+	public void logUserActivity() {
+		HttpServletRequest httpServletRequest = PortalUtil.getHttpServletRequest((PortletRequest) FacesContext
+				.getCurrentInstance().getExternalContext().getRequest());
+		
+		HttpServletResponse httpServletResponse = PortalUtil.getHttpServletResponse((PortletResponse) FacesContext
+				.getCurrentInstance().getExternalContext().getResponse());
+		
+		UserActivityBean userActivityBean = new UserActivityBean();
+		userActivityBean.setLoginId(getUserScreenName());
+		userActivityBean.setSessionId(portletRequest.getRequestedSessionId());
+		userActivityBean.setPortletPage(getPortletPage());
+		userActivityBean.setPortletId(getObjectToString(httpServletRequest.getAttribute("PORTLET_ID")));
+		userActivityBean.setRequestMethod(httpServletRequest.getMethod());
+		userActivityBean.setRequestedUrl(getObjectToString(httpServletRequest.getAttribute("CURRENT_COMPLETE_URL")));
+		userActivityBean.setFriendlyUrl(getObjectToString(httpServletRequest.getAttribute("FRIENDLY_URL")));
+		userActivityBean.setUserAgent(httpServletRequest.getHeader("user-agent"));
+		userActivityBean.setResponseStatus(httpServletResponse.getStatus());
+		log.info("[logUserActivity] userActivityLoggingEnabled: " 
+				+ EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTLET_USER_ACTIVITY_LOGGING));
+		
+		UserActivityLogger.getInstance().log(userActivityBean);
+	}
+	//20210610@fadhli - #31062 Added user activity logging - End
+	
 	/**
 	 * Returns the object bound with the specified name in this session, or null
 	 * if no object is bound under the name.
@@ -218,6 +249,11 @@ public class FacesScopes implements Serializable {
 						user = resDTO.getPmUser();
 						setApplicationScope(SESS_USER_SESSION_BEAN, user);
 						
+						//20210610@fadhli - #31062 Added user activity logging - Start
+						log.info("[getUserSessionBean] userActivityTracing");
+						logUserActivity();
+						//20210610@fadhli - #31062 Added user activity logging - End
+
 						// update user last login
 						if(user != null) {
 							reqDTO.setPmUser(resDTO.getPmUser());
@@ -250,7 +286,7 @@ public class FacesScopes implements Serializable {
 
 		return user;
 	}
-
+	
 	public String getUserScreenName() {
 //		log.info("#25061 getUserScreenName");
 		String screenName = "";
@@ -269,7 +305,27 @@ public class FacesScopes implements Serializable {
 		}
 		return screenName;
 	}
-
+	
+	//20210610@fadhli - #31062 Added user activity logging - Start
+	private String getObjectToString(Object object) {
+		String string = StringUtils.EMPTY;
+		if (null != object) {
+			string = object.toString();
+		}
+		return string;
+	}
+	
+	private String getPortletPage() {
+		String portletPage = StringUtils.EMPTY;
+		Object attributeObject = portletRequest.getAttribute("javax.portlet.config");
+		if (null != attributeObject && attributeObject instanceof PortletConfig) {
+			portletPage = ((PortletConfig) attributeObject).getInitParameter("javax.portlet.faces.defaultViewId.view");
+		}
+		
+		return portletPage;
+	}
+	//20210610@fadhli - #31062 Added user activity logging - End
+	
 	public List<Role> getUserRoleList() {
 		List<Role> userRoleList = null;
 		try {
@@ -377,6 +433,12 @@ public class FacesScopes implements Serializable {
 				setApplicationScope(BPM_AUTH_CONTEXT_TOKEN, ctxToken);
 			}
 		}
+		
+		//20210610@fadhli - #31062 Added user activity logging - Start
+		log.info("[getBPMAuthenticationCtxToken] userActivityTracing");
+		logUserActivity();
+		//20210610@fadhli - #31062 Added user activity logging - End
+		
 		return ctxToken;
 	}
 	
