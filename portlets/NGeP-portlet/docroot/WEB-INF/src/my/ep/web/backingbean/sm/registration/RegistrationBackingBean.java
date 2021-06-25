@@ -285,8 +285,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	public String validateWithSSM() {
 		this.getManagedBean().setHideButton(false);
 		String regNo = this.getManagedBean().getSmSupp().getRegNo();
-		//30987
+		//30987 - start
 		regNo = regNo.trim();
+		this.getManagedBean().getSmSupp().setRegNo(regNo);
+		//30987 - end
 		String businessType = this.getManagedBean().getSmSupp().getBusinessType();
 		String checkIcSSM = this.getManagedBean().getRegIcCheckSSM();
 		//only business type ROB & ROC will check with SSM
