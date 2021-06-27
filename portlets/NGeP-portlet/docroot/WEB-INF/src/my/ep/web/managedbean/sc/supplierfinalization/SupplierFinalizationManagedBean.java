@@ -279,6 +279,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	// #27502 - Start 
 	//28834 starts
 	private boolean disableBfButton;
+	private boolean ktReportGenerated;
 	//28834 end
 	
 	// #11134 - Start
@@ -2390,8 +2391,22 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.disableBfButton = disableBfButton;
 	}
 	
-	//28834 end
+	/**
+	 * @return the ktReportGenerated
+	 */
+	public boolean isKtReportGenerated() {
+		return ktReportGenerated;
+	}
 	
+	/**
+	 * @param ktReportGenerated the ktReportGenerated to set
+	 */
+	public void setKtReportGenerated(boolean ktReportGenerated) {
+		this.ktReportGenerated = ktReportGenerated;
+	}
+	
+	//28834 end
+
 	//#29729 - Start
 	public List<SmSupplierBranch> getSupplierBranchList() {
 		return supplierBranchList;

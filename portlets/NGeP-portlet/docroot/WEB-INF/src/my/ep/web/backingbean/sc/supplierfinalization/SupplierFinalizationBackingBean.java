@@ -2294,7 +2294,7 @@ public class SupplierFinalizationBackingBean extends
 				&& ParameterConst.DECISION_RBP.equals(getManagedBean().getScQtFinalization().getDecision().getParameterCode())
 				&& getManagedBean().isBpkCentralContract()
 				&& BpmOutcomeConst.BPM_SUBMIT.equals(outcome)
-				&& getManagedBean().getScQtFinalization().getScQtFinalizationAttachment() == null) {
+				&& !getManagedBean().isKtReportGenerated()) {
 			addBriefingPaper(getManagedBean().getScQtFinalization());
 			RequestContext.getCurrentInstance().execute("submissionPopup.show()");
 		} else {
@@ -2342,7 +2342,8 @@ public class SupplierFinalizationBackingBean extends
 				 if (QTStatusConst.SF_PENDING_SIGN_OFF.equals(currentStatusId) && CollectionUtils.isNotEmpty(scQtFinalization.getScQtFinalizationReports())) {
 					 String decisionTypeCode = scQtFinalization.getDecision()
 							  .getParameterCode();
-					  if (ParameterConst.DECISION_RBP.equals(decisionTypeCode) && CollectionUtils.isNotEmpty(getManagedBean().getDocumentList()) && getManagedBean().getDocumentList().size() > 0) {
+					  if (ParameterConst.DECISION_RBP.equals(decisionTypeCode) && CollectionUtils.isNotEmpty(getManagedBean().getDocumentList()) && getManagedBean().getDocumentList().size() > 0
+							  && !getManagedBean().isKtReportGenerated()) {
 						  // #28834 - Start. 
 						  addBriefingPaper(scQtFinalization);
 			              // #28834 - End. 
@@ -2481,33 +2482,39 @@ public class SupplierFinalizationBackingBean extends
 		  }
 		 
 		  ScQtFinalizationReportAttachment reportAttachment = null;
-		  if (null != scQtFinalizationReport) {
-		    try {
-		      // #28834 - Start 
-		      reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
-		      // #28834 - End
-		    } catch (Exception e) {
-		      log.error("SupplierFinalizationBackingBean.submitBrief(): Error while genarate briefing paper: " + e.getMessage());
-		    }
-		    scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
-		  }
 		  
-		  // #28834 - Start.
-		  scQtFinalizationReport = getManagedBean().getDocumentList().get(0);
-		  // #28834 - End.
-		  ScQtFinalizationReport report = new ScQtFinalizationReport();
-		  report.setScQtFinalization(scQtFinalization);
-		  report.setDocCategory(scQtFinalizationReport.getPmDocument().getDocCategoryCode().getParameterCode());
-		  report.setPmDocument(scQtFinalizationReport.getPmDocument());
-		  String reportTitle = ResourceBundleUtils.getMessage("lbl.sc.kertas.taklimat", 
-				  ResourceBundleUtils.BUNDLE_COMMON_LABELS, SourcingConstants.MY_LOCALE) 
-				  + SPACE + "(" + count + ")";
-		  report.setTitle(reportTitle);
-		  report.setDefinationType(scQtFinalizationReport.getPmDocument().getDocDefinitionTypeCode());
-		  report.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		// #28834 - Start 
-		  this.getManagedBean().getDocumentList().add(report);
-		// #28834 - End 
+		  if (scQtFinalizationReport.getScQtFinalizationReportAttachment() == null) {
+			  if (null != scQtFinalizationReport) {
+				  try {
+					  // #28834 - Start 
+					  reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
+					  // #28834 - End
+				  } catch (Exception e) {
+					  log.error("SupplierFinalizationBackingBean.submitBrief(): Error while genarate briefing paper: " + e.getMessage());
+				  }
+				  scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
+				  // #28834 - Start 
+				  getManagedBean().setKtReportGenerated(true);
+				  // #28834 - End 
+			  }
+			  
+			  // #28834 - Start.
+			  scQtFinalizationReport = getManagedBean().getDocumentList().get(0);
+			  // #28834 - End.
+			  ScQtFinalizationReport report = new ScQtFinalizationReport();
+			  report.setScQtFinalization(scQtFinalization);
+			  report.setDocCategory(scQtFinalizationReport.getPmDocument().getDocCategoryCode().getParameterCode());
+			  report.setPmDocument(scQtFinalizationReport.getPmDocument());
+			  String reportTitle = ResourceBundleUtils.getMessage("lbl.sc.kertas.taklimat", 
+					  ResourceBundleUtils.BUNDLE_COMMON_LABELS, SourcingConstants.MY_LOCALE) 
+					  + SPACE + "(" + count + ")";
+			  report.setTitle(reportTitle);
+			  report.setDefinationType(scQtFinalizationReport.getPmDocument().getDocDefinitionTypeCode());
+			  report.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			  // #28834 - Start 
+			  this.getManagedBean().getDocumentList().add(report);
+			  // #28834 - End 
+		  }
 	}
 	// #28834 - End. 
 	
