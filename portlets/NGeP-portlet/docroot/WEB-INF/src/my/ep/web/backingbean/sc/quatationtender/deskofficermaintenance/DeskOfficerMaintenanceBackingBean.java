@@ -1071,30 +1071,42 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 			Map<Long, PmUser> qtNoDeskOfficerMap = new LinkedHashMap<Long, PmUser>();
 			getManagedBean().setQtNoDeskOfficerMap(qtNoDeskOfficerMap );
 		}
+
+		// #25627 - Start.
 		boolean showError = false;
+		boolean disableSubmit = false;
+
 		if (null != selectedUser) {
 			if (CollectionUtils.isNotEmpty(getManagedBean().getSelectedQtIds())) {
-				for (Long qtID: getManagedBean().getSelectedQtIds()) {
-					if(isValidReassignment(qtID, selectedUser)){
+
+				for (Long qtID : getManagedBean().getSelectedQtIds()) {
+					if (isValidReassignment(qtID, selectedUser)) {
 						getManagedBean().getQtNoDeskOfficerMap().put(qtID, selectedUser);
-					}else{
+					} else {
+						if ("N/A".equals(getNewDeskOfficer(qtID))) {
+							disableSubmit = true;
+						}
+
 						showError = true;
 					}
 				}
 			}
-			if(showError){
+
+			if (showError) {
 				RequestContext.getCurrentInstance().execute("dlTaskReassignment.hide()");
 				FacesContext.getCurrentInstance().addMessage(
-						null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-								MessageUtils.getMessage("ERR-760493", null,
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
-				getManagedBean().setDisableSubmit(true);
-			}else{
-				getManagedBean().setDisableSubmit(false);
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage("ERR-760493", null,
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+
+				getManagedBean().setDisableSubmit(disableSubmit);
+			} else {
+				getManagedBean().setDisableSubmit(disableSubmit);
+
 				RequestContext.getCurrentInstance().execute("dlTaskReassignment.hide()");
 			}
 		}
+		// #25627 - End.
 	}
 	
 	public String getNewDeskOfficer(Long qtID) {
@@ -1178,6 +1190,8 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 					reqDTO.setNewDO(entry.getValue());
 					reqDTO.setOriginalDO(originalDO);
 					reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+					reqDTO.setCAApprover(getFacesScopes().getUserSessionBean()); //25627 - update 233
+					
 					resDTO = detailSO.reassignDeskOfficer(reqDTO);
 				}
 
