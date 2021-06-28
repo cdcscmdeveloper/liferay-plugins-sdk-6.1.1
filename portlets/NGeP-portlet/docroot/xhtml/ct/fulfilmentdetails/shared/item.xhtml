@@ -1161,9 +1161,9 @@
      		 		
      			<c:if test="#{ctBackingBean.managedBean.supplierOffer ne null}">    		 		
      		 		<h:panelGroup>
-     		 			<p:outputLabel value="#{lbl['lbl.ct.supp.offer']}" style="float:left;font-weight:bold;">:</p:outputLabel>
-     		 			<h:outputText value="#{ctBackingBean.managedBean.supplierOffer}" escape="false" style="float:left;font-weight:bold"></h:outputText>	
-     		 		</h:panelGroup>      			
+     		 			<h:outputText value="#{lbl['lbl.ct.supp.offer']}:&#160;" escape="false" style="float:left;font-weight:bold"/>     		 			
+     		 		 	<h:outputText value="#{ctBackingBean.managedBean.supplierOffer}" escape="false" style="float:left;font-weight:bold"/>
+     		 		</h:panelGroup>      		 				
      			</c:if>
      			<c:if test="#{ctBackingBean.managedBean.supplierOffer eq null}">
 					<p:outputLabel value = "#{lbl['lbl.ct.supp.offer']}" style="float:left;font-weight:bold;">: #{lbl['lbl.sc.qt.item.spec.null']}</p:outputLabel>					
