@@ -2051,7 +2051,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 		    	}
 			}
 		}
-		if (this.getManagedBean().getSelectedGroupTasks().size() > 1) {
+		if (this.getManagedBean().getSelectedGroupTasks().size() > 0) {
 			this.getManagedBean().setEnableDeleteGroupTasksButton(true);
     	} else {
     		this.getManagedBean().setEnableDeleteGroupTasksButton(false);
