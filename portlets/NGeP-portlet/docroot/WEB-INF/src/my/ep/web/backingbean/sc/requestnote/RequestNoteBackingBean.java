@@ -969,8 +969,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			} else {
 				req.setRoleCodes(Arrays.asList(RoleCode.DESK_OFFICER.value()));
 			}
-			
-			req.setOrgProfileId(pmOrgProfile.getOrgProfileId());
+
+			if(getManagedBean().getOrgProfileIdList() != null && getManagedBean().getOrgProfileIdList().size()> 0) {
+				req.setOrgProfileIds(this.getManagedBean().getOrgProfileIdList());
+			} else {
+				req.setOrgProfileId(pmOrgProfile.getOrgProfileId());
+			}
+
 			UserResDTO res = getUserSO().retrieveUserListByRole(req);
 			userList = res.getUserList();
 
@@ -979,8 +984,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				break;
 			}
 		}
-		if (throwError)
+		if (throwError){
 			throw new EpException(MessageConst.ERROR_770242);
+		}
 	}
 	// #27545 - End
 	
@@ -4946,12 +4952,18 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveProfileGroupByGroupOrgType(orgProfileReqDTO);
 	
 			String orgProfileIds = String.valueOf(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
+			//#27545 - start
+			List<Long> orgProfileIdList = new ArrayList<Long>();
+			orgProfileIdList.add(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
 					
 			if (CollectionUtils.isNotEmpty(orgProfileResDTO.getProfileGroups())) {
 				for(PmProfileGroup group: orgProfileResDTO.getProfileGroups()){
 					orgProfileIds = orgProfileIds + "," + group.getMainOrgProfile().getOrgProfileId();
+					orgProfileIdList.add(group.getMainOrgProfile().getOrgProfileId());
 				}
 			}
+			getManagedBean().setOrgProfileIdList(orgProfileIdList);
+			//#27545 - end
 
 			sb.append("pmUserOrgs.pmOrgProfile.orgProfileId^");				
 			sb.append(orgProfileIds);
