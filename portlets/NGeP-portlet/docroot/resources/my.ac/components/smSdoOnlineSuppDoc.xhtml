@@ -76,6 +76,7 @@
 			<p:column style="width:27% !important; white-space:normal;overflow: hidden !important;">
 				<p:inputTextarea value="#{suppDoc.sdoRemarks}" id="docRemarkId" label="#{lbl['lbl.sm.remark']}" 
 					autoResize="false" maxlength="100" style="width:97% !important" disabled="#{!sdoReviewBackingBean.managedBean.claimTask}">
+					<p:ajax event="change" partialSubmit="true" process="@this" /> <!-- #3460 -->		
 					<f:validateLength maximum="100" />
 				</p:inputTextarea>
 			</p:column>
