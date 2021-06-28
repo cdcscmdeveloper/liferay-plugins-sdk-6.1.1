@@ -130,6 +130,7 @@
 						
 									<p:spacer height="1px" />
 									<div align="right">
+									<!--Bug #31165 - insert 'update="@form"' -->
 										<p:commandButton id="yesBtnConfmR" value="#{lbl['lbl.btn.yes']}"
 											onclick="confmRejectDlg.hide()" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
 											update="@form"
