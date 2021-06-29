@@ -3144,10 +3144,11 @@ public class SmApplicationBackingBean extends
 				//log.info(" ****** REMAIN PREV VALUE ********");
 			}
 			if (valid) {
-				getManagedBean().setCurrentPageType(outputPageType);
-				SmCommonUtil.getInstance().setUserDetails(
-						getManagedBean().getSmAppl());
+				//29383 start - to fix where current page is pass to SmSideMenuIconUtil.setAllSectionEditorVO method instead of next page
+				SmCommonUtil.getInstance().setUserDetails(getManagedBean().getSmAppl());
 				saveOrUpdateAppl();
+				getManagedBean().setCurrentPageType(outputPageType);
+				// 29383 end
 			} else {
 				getManagedBean().setTabActiveIndex(currentTab);
 				getManagedBean().getSmAppl().setCurrentActiveTab(currentTab);
@@ -8790,6 +8791,11 @@ public class SmApplicationBackingBean extends
 		}
 
 		if (valid) {
+			//29383 start - incase of basic page data is changed by supplier before appl is saved
+			SmSideMenuIconUtil.setAllSectionEditorVO(getManagedBean(), false,
+					getManagedBean().getCurrentPageType());
+			//29383 end
+			
 			setTabValue(0, 1);
 			getManagedBean().setTabActiveIndex(outputTab);
 			if (getManagedBean().getSmAppl().getCurrentActiveTab() < outputTab) {
