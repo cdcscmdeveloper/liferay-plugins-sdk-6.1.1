@@ -316,31 +316,27 @@
 			#if ($businessnature.ssmDataIssue == 'false')
 			<th width="15%">$smVmUtil.getDescByLabel('lbl.sm.businessnature.code')</th>
 			#end
-			#if($companyInfo.businessType == 'C' || $companyInfo.businessType == 'F' )
+			
 			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.viewSsm.business.type')</th>
-			#end
+			
 		</tr>
 			#if($businessNature != $null && $businessNature.size() > 0)
 				#foreach($businessnature in $businessNature)
 				<tr>
 					#if ($businessnature.ssmDataIssue != 'false')
-					<th width="15%">$!businessnature.pmBusinessNature.levelCode</th>
+					<td width="15%">$!businessnature.pmBusinessNature.levelCode</td>
 					#end
 					#if ($businessnature.ssmDataIssue == 'false')
 					<td width="15%">$!smVmUtil.getBusinessNature($!businessnature) - $!businessnature.pmBusinessNature.levelCode</td>
 					#end
-					#if($companyInfo.businessType == 'C' || $companyInfo.businessType == 'F' )
+					
 					<td width="25%">$!businessnature.pmBusinessNature.levelName</td>
-					#end
+					
 				</tr>
 				#end
 			#else
 				<tr>
-					#if($companyInfo.businessType == 'I' || $companyInfo.businessType == 'J' )
-		 			<td colspan="1" align="center">$smVmUtil.getDescByLabel('lbl.datatable.msg.no.records.found')</td>
-					#else
 					<td colspan="2" align="center">$smVmUtil.getDescByLabel('lbl.datatable.msg.no.records.found')</td>
-					#end
 		 		</tr>
 			#end	
 		
