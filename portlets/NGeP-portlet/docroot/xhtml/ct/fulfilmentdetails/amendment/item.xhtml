@@ -642,7 +642,10 @@
     			<p:outputLabel value="#{lbl['lbl.ct.item.desc']}" style="float:left;font-weight:bold;">: #{ctBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemName} </p:outputLabel>  	    	  			
      		 		
      			<c:if test="#{ctBackingBean.managedBean.supplierOffer ne null}">
-     		 		<p:outputLabel value="#{lbl['lbl.ct.supp.offer']}" style="float:left;font-weight:bold;">: #{ctBackingBean.managedBean.supplierOffer}</p:outputLabel>     		 				  				
+     		 		<h:panelGroup>
+     		 			<h:outputText value="#{lbl['lbl.ct.supp.offer']}:&#160;" escape="false" style="float:left;font-weight:bold"/>     		 			
+     		 		 	<h:outputText value="#{ctBackingBean.managedBean.supplierOffer}" escape="false" style="float:left;font-weight:bold"/>
+     		 		</h:panelGroup>    		 				  				
      			</c:if>
      			<c:if test="#{ctBackingBean.managedBean.supplierOffer eq null}">
 					<p:outputLabel value = "#{lbl['lbl.ct.supp.offer']}" style="float:left;font-weight:bold;">: #{lbl['lbl.sc.qt.item.spec.null']}</p:outputLabel>					
