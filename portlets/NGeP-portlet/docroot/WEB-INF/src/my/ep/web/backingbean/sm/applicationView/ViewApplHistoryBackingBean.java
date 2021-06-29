@@ -343,58 +343,20 @@ public class ViewApplHistoryBackingBean extends
 					}
 				}
 			}
+			
 			// start #29956 smOwnerSsmPopup
-			String[] params = new String[50];
-			StringBuilder sb = new StringBuilder();
-			int x = 0;
-			Boolean noEp = false;
-			if (!personnelsRole.isEmpty()) {
-				for (SmPersonnel smPersonnel : personnelsRole) {
-					if (x != 0) {
-						for (String roles : params) {
-							if(roles!=null){
-								if (smPersonnel.getEpRole() == null && !roles.equals("no EP Role") && !roles.equals("/ ")
-										&& !noEp) {
-									params[x] = "/ ";
-									sb.append("/ ");
-									x++;
-									params[x] = "no EP Role";
-									sb.append("no EP Role");
-									x++;
-									noEp = true;
-								} else if (smPersonnel.getEpRole() != null&& !roles.equals(getEpRoleDescByRoleCode(smPersonnel.getEpRole())) && !roles.equals("/ ")) {
-									params[x] = "/ ";
-									sb.append("/ ");
-									x++;
-									params[x] = getEpRoleDescByRoleCode(smPersonnel.getEpRole());
-									sb.append(getEpRoleDescByRoleCode(smPersonnel.getEpRole()));
-									x++;
-								}
-							}
-						}
-					} else {
-						if(smPersonnel.getEpRole() == null){
-							params[x] = "no EP Role";
-							sb.append("no EP Role");
-							x++;
-							noEp = true;
-						}else{
-							params[x] = getEpRoleDescByRoleCode(smPersonnel.getEpRole());
-							sb.append(getEpRoleDescByRoleCode(smPersonnel.getEpRole()));
-							x++;
-						}
-					}
-				}
-			}
+			String epRole = getEpRoleDowngradePopupByPersonnel(personnelsRole);
+
 			this.getManagedBean().setTermAndConditionCheckOwner(
-					SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner", new String[] { sb.toString() }));
+					SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner", new String[] { epRole}));
 			this.getManagedBean().setTermAndConditionCheckOwnerA(
-					SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.a", new String[] { sb.toString() }));
+					SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.a", new String[] { epRole}));
 			this.getManagedBean().setTermAndConditionCheckOwnerC(
-					SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.c", new String[] { sb.toString() }));
+					SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.c", new String[] { epRole }));
 			this.getManagedBean().setTermAndConditionCheckOwnerChangeRole(
-					SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole", new String[] { sb.toString() }));
+					SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole", new String[] { epRole }));
 			// end #29956
+			
 			log.info("--------------------------------personnelsRole.size()-----------------------------------"+personnelsRole.size());
 			if(personnelsRole != null && personnelsRole.size() > 0) {
 					proceed = false;

@@ -1944,6 +1944,79 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 		return retVal;
 	}
+	//start #29956
+	/**
+	 * Get no eP Role by language
+	 * 
+	 * @param String
+	 *            roleCode
+	 * @return String
+	 */
+	public String getNoEpRoleDescByLanguage() {
+		String language = new FacesScopes().getUserLocale().getLanguage();
+		String noEp;
+		if(language.equalsIgnoreCase("en")){
+			noEp = "no EP Role";
+		}else{
+			noEp = "tiada peranan EP";
+		}
+		return noEp;
+	}
+	
+	/**
+	 * Get eP Role for Downgrade Popup by personnel
+	 * 
+	 * @param String
+	 *            roleCode
+	 * @return String
+	 */
+	public String getEpRoleDowngradePopupByPersonnel(List<SmPersonnel> personnelsRole) {
+		String[] params = new String[50];
+		StringBuilder sb = new StringBuilder();
+		int x = 0;
+		Boolean noEp = false;
+		if (!personnelsRole.isEmpty()) {
+			for (SmPersonnel smPersonnel : personnelsRole) {
+				if (x != 0) {
+					for (String roles : params) {
+						if(roles!=null){
+							if (smPersonnel.getEpRole() == null && !roles.equals(getNoEpRoleDescByLanguage()) && !roles.equals("/ ")
+									&& !noEp) {
+								params[x] = "/ ";
+								sb.append("/ ");
+								x++;
+								params[x] = getNoEpRoleDescByLanguage();
+								sb.append(getNoEpRoleDescByLanguage());
+								x++;
+								noEp = true;
+							} else if (smPersonnel.getEpRole() != null&& !roles.equals(getEpRoleDescByRoleCode(smPersonnel.getEpRole())) && !roles.equals("/ ")) {
+								params[x] = "/ ";
+								sb.append("/ ");
+								x++;
+								params[x] = getEpRoleDescByRoleCode(smPersonnel.getEpRole());
+								sb.append(getEpRoleDescByRoleCode(smPersonnel.getEpRole()));
+								x++;
+							}
+						}
+					}
+				} else {
+					if(smPersonnel.getEpRole() == null){
+						params[x] = getNoEpRoleDescByLanguage();
+						sb.append(getNoEpRoleDescByLanguage());
+						x++;
+						noEp = true;
+					}else{
+						params[x] = getEpRoleDescByRoleCode(smPersonnel.getEpRole());
+						sb.append(getEpRoleDescByRoleCode(smPersonnel.getEpRole()));
+						x++;
+					}
+				}
+			}
+		}
+		return sb.toString();
+	}
+	//end #29956
+
 
 	/**
 	 * Get machine category type
@@ -2980,56 +3053,16 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 									}
 								}
 							}
-							String[] params = new String[50];
-							StringBuilder stb = new StringBuilder();
-							int x = 0;
-							Boolean noEp = false;
-							if (!personnelsRole.isEmpty()) {
-								for (SmPersonnel smPersonnel : personnelsRole) {
-									if (x != 0) {
-										for (String roles : params) {
-											if(roles!=null){
-												if (smPersonnel.getEpRole() == null && !roles.equals("no EP Role") && !roles.equals("/ ")
-														&& !noEp) {
-													params[x] = "/ ";
-													stb.append("/ ");
-													x++;
-													params[x] = "no EP Role";
-													stb.append("no EP Role");
-													x++;
-													noEp = true;
-												} else if (smPersonnel.getEpRole() != null&& !roles.equals(getEpRoleDescByRoleCode(smPersonnel.getEpRole())) && !roles.equals("/ ")) {
-													params[x] = "/ ";
-													stb.append("/ ");
-													x++;
-													params[x] = getEpRoleDescByRoleCode(smPersonnel.getEpRole());
-													stb.append(getEpRoleDescByRoleCode(smPersonnel.getEpRole()));
-													x++;
-												}
-											}
-										}
-									} else {
-										if(smPersonnel.getEpRole() == null){
-											params[x] = "no EP Role";
-											stb.append("no EP Role");
-											x++;
-											noEp = true;
-										}else{
-											params[x] = getEpRoleDescByRoleCode(smPersonnel.getEpRole());
-											stb.append(getEpRoleDescByRoleCode(smPersonnel.getEpRole()));
-											x++;
-										}
-									}
-								}
-							}
+							String epRole = getEpRoleDowngradePopupByPersonnel(personnelsRole);
+							
 							this.getManagedBean().setTermAndConditionCheckOwner(
-									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner", new String[] { stb.toString() }));
+									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner", new String[] { epRole}));
 							this.getManagedBean().setTermAndConditionCheckOwnerA(
-									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.a", new String[] { stb.toString() }));
+									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.a", new String[] { epRole }));
 							this.getManagedBean().setTermAndConditionCheckOwnerC(
-									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.c", new String[] { stb.toString() }));
+									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.c", new String[] { epRole }));
 							this.getManagedBean().setTermAndConditionCheckOwnerChangeRole(
-									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole", new String[] { stb.toString() }));
+									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole", new String[] { epRole}));
 
 							if (personnelsRole != null && personnelsRole.size() > 0) {
 								postRegBean.setDontGetSsmData(false);
