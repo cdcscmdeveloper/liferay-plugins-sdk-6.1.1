@@ -2146,6 +2146,25 @@ public class SupplierFinalizationBackingBean extends
     }
 	//25638 - End
 	
+	// #28834 - Start.
+	/**
+	 * 
+	 */
+	public void navigateToSubmissionPopup() {
+		if (QTStatusConst.QT_SF_MOF_COMMIEEE.longValue() == getManagedBean().getCurrentStatusId().longValue()
+				&& ParameterConst.DECISION_RBP.equals(getManagedBean().getScQtFinalization().getDecision().getParameterCode())
+				&& getManagedBean().isBpkCentralContract()
+				&& BpmOutcomeConst.BPM_SUBMIT.equals(this.getManagedBean().getOutcome())) {
+			addBriefingPaper(getManagedBean().getScQtFinalization());
+			getManagedBean().setKtReportGenerated(true);
+			this.getManagedBean().setAutoUpdate(Boolean.FALSE);
+			RequestContext.getCurrentInstance().execute("submissionPopup.show()");
+		} else {
+			RequestContext.getCurrentInstance().execute("submissionPopup.show()");
+		}
+	}
+	// #28834 - End.
+	
 	/**
 	 * Validate, save the selected quotation/tender supplier finalization
 	 * details and update to BPM
@@ -2336,9 +2355,9 @@ public class SupplierFinalizationBackingBean extends
 		  ScQtFinalizationReportAttachment reportAttachment = null;
 		  if (null != scQtFinalizationReport) {
 		    try {
-		      // #28834 - Start. 
-		      reportAttachment = generateDocumentAttachment(scQtFinalizationReport, true);
-		      // #28834 - End. 
+		      // #28834 - Start.
+		      reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
+		      // #28834 - End.
 		    } catch (Exception e) {
 		      log.error("SupplierFinalizationBackingBean.submitBrief(): Error while genarate briefing paper: " + e.getMessage());
 		    }
@@ -3241,7 +3260,7 @@ return	remarksNotFound;
 							IQTSuppFinalizationSO.class);
 			if (reqDTO == null) {
 				reqDTO = validateInfo(activeIndex);
-			}	
+			}			
 			
 			// #28834 - Start.
 			if (QTStatusConst.QT_SF_MOF_COMMIEEE.longValue() == getManagedBean().getCurrentStatusId().longValue()
@@ -4919,9 +4938,9 @@ return	remarksNotFound;
 			isBpkCentralContract = isBpkCentralContract(scQt);
 
 			if (isBpkCentralContract) {
-				statusIds.add(QTStatusConst.SF_MOF_COMMITTEE);//#29701
-				//statusIds.add(QTStatusConst.QT_SF_MOF_COMMIEEE);//#29701,  dont use this const, it will causing continues loading when  changing at SF Meeting Decision, selection base on radio button 
-				
+				statusIds.add(QTStatusConst.SF_MOF_COMMITTEE);//#27901
+				//statusIds.add(QTStatusConst.QT_SF_MOF_COMMIEEE);//#27901
+
 			} else {
 				statusIds.add(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION);
 			}
