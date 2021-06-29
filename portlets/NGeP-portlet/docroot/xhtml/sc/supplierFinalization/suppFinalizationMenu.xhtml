@@ -250,7 +250,7 @@
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
 				    onclick="blockWidget.show();"
-				    action="#{suppFinalizationBackingBean.submitSuppFinalization('')}"
+				    action="#{suppFinalizationBackingBean.navigateToSubmissionPopup()}"
 					oncomplete="confirmBriefPopup1.hide();"
 					 partialSubmit="true" process="@form" update="@form" 
 					/>

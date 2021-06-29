@@ -2278,6 +2278,25 @@ public class SupplierFinalizationBackingBean extends
     }
 	//25638 - End
 	
+	// #28834 - Start.
+	/**
+	 * 
+	 */
+	public void navigateToSubmissionPopup() {
+		if (QTStatusConst.QT_SF_MOF_COMMIEEE.longValue() == getManagedBean().getCurrentStatusId().longValue()
+				&& ParameterConst.DECISION_RBP.equals(getManagedBean().getScQtFinalization().getDecision().getParameterCode())
+				&& getManagedBean().isBpkCentralContract()
+				&& BpmOutcomeConst.BPM_SUBMIT.equals(this.getManagedBean().getOutcome())) {
+			addBriefingPaper(getManagedBean().getScQtFinalization());
+			getManagedBean().setKtReportGenerated(true);
+			this.getManagedBean().setAutoUpdate(Boolean.FALSE);
+			RequestContext.getCurrentInstance().execute("submissionPopup.show()");
+		} else {
+			RequestContext.getCurrentInstance().execute("submissionPopup.show()");
+		}
+	}
+	// #28834 - End.
+	
 	/**
 	 * Validate, save the selected quotation/tender supplier finalization
 	 * details and update to BPM
@@ -2471,9 +2490,9 @@ public class SupplierFinalizationBackingBean extends
 		  ScQtFinalizationReportAttachment reportAttachment = null;
 		  if (null != scQtFinalizationReport) {
 		    try {
-		      // #28834 - Start. 
-		      reportAttachment = generateDocumentAttachment(scQtFinalizationReport, true);
-		      // #28834 - End. 
+		      // #28834 - Start.
+		      reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
+		      // #28834 - End.
 		    } catch (Exception e) {
 		      log.error("SupplierFinalizationBackingBean.submitBrief(): Error while genarate briefing paper: " + e.getMessage());
 		    }
