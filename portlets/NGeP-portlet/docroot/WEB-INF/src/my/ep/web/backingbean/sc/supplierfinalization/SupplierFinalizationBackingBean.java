@@ -2288,7 +2288,6 @@ public class SupplierFinalizationBackingBean extends
 				&& getManagedBean().isBpkCentralContract()
 				&& BpmOutcomeConst.BPM_SUBMIT.equals(this.getManagedBean().getOutcome())) {
 			addBriefingPaper(getManagedBean().getScQtFinalization());
-			getManagedBean().setKtReportGenerated(true);
 			this.getManagedBean().setAutoUpdate(Boolean.FALSE);
 			RequestContext.getCurrentInstance().execute("submissionPopup.show()");
 		} else {
