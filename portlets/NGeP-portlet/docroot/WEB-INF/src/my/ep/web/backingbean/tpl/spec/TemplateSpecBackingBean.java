@@ -5186,7 +5186,7 @@ public class TemplateSpecBackingBean extends
 	}
 	// FARID #21695 END
  
-//#21695 Farid start 8/6/2021
+//#21695 Farid start 29/6/2021
 	/**
 	 * Item type change.Change Item Type(product/Service) Checkbox in Template
 	 * 
@@ -5199,7 +5199,7 @@ public class TemplateSpecBackingBean extends
 		int count = 0;
 		for(TplSpecZoneQty specQty : specQuestion.getTplSpecZoneQties()){
 			if(specQty!=null){
-				if(!specQty.getTplSpecZoneOffer().isOffer()){
+				if(!specQty.getTplSpecZoneOffer().isOffer() && !specQty.getQty().equals(new BigDecimal(0))){
 					flag = false;
 					count ++;
 				}
@@ -5223,13 +5223,13 @@ public class TemplateSpecBackingBean extends
 	}
 //#21695 Farid end 8/6/2021
 
-//#21695 Farid start 2/4/2021	
+//#21695 Farid start 29/6/2021	
 	public boolean evaluateSpecDisable(TplSpecAnswer specAnswer) {
 		if(specAnswer.getTplSpecQuestion().getParentSpecQuestion() != null){
 		
 			for(TplSpecZoneQty specQty : specAnswer.getTplSpecQuestion().getParentSpecQuestion().getTplSpecZoneQties()){
 				if(specQty!=null){
-					if(!specQty.getTplSpecZoneOffer().isOffer()){
+					if(!specQty.getTplSpecZoneOffer().isOffer() && !specQty.getQty().equals(new BigDecimal(0))){
 					
 						return false;
 					}
