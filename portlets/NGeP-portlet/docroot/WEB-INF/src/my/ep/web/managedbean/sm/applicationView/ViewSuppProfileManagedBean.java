@@ -34,6 +34,8 @@ import my.ep.web.vo.BlacklistOwnerDirectorVO;
 import my.ep.web.vo.DisciplinaryActionCategoryVO;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.SmSupplierBasicInfoVO;
+//#28175
+import my.ep.persistence.entity.pm.common.PmRemarkCategory;
 
 @ManagedBean(name = "viewSuppProfileMB")
 @SessionScoped
@@ -181,6 +183,11 @@ public class ViewSuppProfileManagedBean extends
 	//29181: Disciplinary Action - start - 26238
 	private boolean editDisciplinaryActionCheckBox;
 	//29181: Disciplinary Action - end - 26238
+	
+	// #28175 start
+	private String catCode;
+	private List<PmRemarkCategory> historyList;
+	// #28175 end
 	
 	public ViewSuppProfileManagedBean() {
 
@@ -965,5 +972,22 @@ public class ViewSuppProfileManagedBean extends
 		this.editDisciplinaryActionCheckBox = editDisciplinaryActionCheckBox;
 	}
 	//29181: Disciplinary Action - end - 26238
+	// #28175 start
+	public String getCatCode() {
+		return catCode;
+	}
+	
+	public void setCatCode(String catCode) {
+		this.catCode = catCode;
+	}
+	
+	public List<PmRemarkCategory> getHistoryList() {
+		return historyList;
+	}
+	
+	public void setHistoryList(List<PmRemarkCategory> historyList) {
+		this.historyList = historyList;
+	}
+	// #28175 end
 
 }

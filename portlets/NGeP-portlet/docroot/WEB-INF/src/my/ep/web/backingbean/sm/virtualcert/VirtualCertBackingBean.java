@@ -30,6 +30,14 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.sm.helper.SmVirtualCertHelper;
+//#28175 start
+import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
+import my.ep.persistence.entity.sm.SmSupplierCategory;
+import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.constant.ModuleCodeConst;
+//#28175 end
 
 import org.apache.log4j.Logger;
 
@@ -187,6 +195,12 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 	// 26340
 	//rollback to v H1.53 cz error on redmine:26915
 	public void printVirtualCert(SmMofCert cert) throws IOException{
+		//#28175
+		if(!checkCatCodeList(cert.getSmAppl())){
+			cert.setFileName(null);
+			cert.setFilePath(null);
+		}
+		//#28175 end
 		if(cert.getFileName() != null || cert.getFilePath() != null){
 			String file = cert.getFilePath() + "/" + cert.getFileName();
 			commonDownload(file,cert.getFileName());
@@ -208,5 +222,42 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 	public String getsupplierApplTypeDesc(String applType){
 		return SmCommonUtil.getApplTypeDesc(applType);
 	}
+	//#28175 start
+	public boolean checkCatCodeList(SmAppl appl){
+		boolean check = true;
+		
+		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,ISupplierSearchSO.class);
+		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
+		SupplierSearchReqDTO supReqDTO = new SupplierSearchReqDTO();
+		SupplierSearchResDTO supResDTO = new SupplierSearchResDTO();
+		supReqDTO.setApplId(appl.getApplId());
+		supResDTO = supplierSearchSO.retrieveSupplierActiveCategoryCodeByApplId(supReqDTO);
+		CategoryCodeReqDTO catReqDTO = new CategoryCodeReqDTO();
+		CategoryCodeResDTO catResDTO = new CategoryCodeResDTO();
+		for (SmSupplierCategory catCode : supResDTO.getSmSupplierCategoryList()){
+			catReqDTO.setCategoryL1Id(catCode.getPmCategoryL1().getCategoryL1Id());
+			catResDTO = categoryCodeSO.retrieveCategoryL1DtlById(catReqDTO);
+			if(!catCode.getCategoryL1Name().equalsIgnoreCase(catResDTO.getCategoryL1().getCategoryName())){
+				check = false;
+				break;
+			}else{
+				catResDTO = categoryCodeSO.retrieveCategoryL2DtlById(catReqDTO);
+				catReqDTO.setCategoryL1Id(catCode.getPmCategoryL2().getCategoryL2Id());
+				if(!catCode.getCategoryL2Name().equalsIgnoreCase(catResDTO.getCategoryL2().getCategoryName())){
+					check = false;
+					break;
+				}else{
+					catReqDTO.setCategoryL1Id(catCode.getPmCategoryL3().getCategoryL3Id());
+					catResDTO = categoryCodeSO.retrieveCategoryL3DtlById(catReqDTO);
+					if(!catCode.getCategoryL3Name().equalsIgnoreCase(catResDTO.getCategoryL3().getCategoryName())){
+						check = false;
+						break;
+					}
+				}	
+			}
+		}
+		return check;
+	}
+	//#28175 end
 }
 
