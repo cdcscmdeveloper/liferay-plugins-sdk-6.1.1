@@ -2816,4 +2816,21 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 	}
 	//#28774 - End
+	// #28175 start
+	public String getSmCategoryL3(Long categoryL3Id, Long applId) { 
+		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
+		reqDTO.setApplId(applId);
+		reqDTO.setCategoryId(categoryL3Id);
+		SupplierSearchResDTO resDTO = SmServiceLookup.getSupplierSearchSO().retrieveCategoryByApplIdAndCategoryId(
+				reqDTO);
+		List<SmSupplierCategory> catLs = resDTO.getSmSupplierCategoryList();
+		String categoryL3Name = "";
+		for (SmSupplierCategory cat : catLs) {
+			if (cat.getPmCategoryL3().getCategoryL3Id().equals(categoryL3Id)) {
+				categoryL3Name = cat.getCategoryL3Name();
+			}
+		}
+		return categoryL3Name;
+	}
+	// #28175 end
 }
