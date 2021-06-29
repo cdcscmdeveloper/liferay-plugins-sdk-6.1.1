@@ -103,6 +103,13 @@ public class DisciplinaryActionRest {
 			//28798: Disciplinary Action - start - 26238 - reopen
 			if(updateBCDAList != null && updateBCDAList.getSmDisciplinaryActions() != null && updateBCDAList.getSmDisciplinaryActions().size() > 0 && enter){
 				Date today = new Date(); 
+				
+				//start create date for re-activate blacklist owner
+				DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+				Date todayWithNoTime = new Date();
+				Date todayWithZeroTime = formatter.parse(formatter.format(todayWithNoTime));
+				//end create date for re-activate blacklist owner
+				
 				for(SmDisciplinaryAction cancelRegBlacklist: updateBCDAList.getSmDisciplinaryActions()){
 					log.info("updateBCDAList. supplier id=============="+cancelRegBlacklist.getSmSupplier().getSupplierId()); 
 					if(cancelRegBlacklist != null
@@ -123,9 +130,31 @@ public class DisciplinaryActionRest {
 								if(disciplinaryActionId != null){
 									SmDisciplinaryAction smDA = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionByDisciplinaryId(disciplinaryActionId);
 									if( (smDA.isBlacklistOwner() || smDA.isCancelRegistration()) 
-											&& (!smDA.isPendingCancel() && !smDA.isPendingBlacklist())){
-										smDA.getSmSupplier();
-										SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(smDA);	
+											&& (!smDA.isPendingCancel() && !smDA.isPendingBlacklist())) {
+
+										//start re-activate blacklist owner
+										if (smDA.isBlacklistOwner() && !smDA.isPendingBlacklist() && smDA.getEndDate().compareTo(todayWithZeroTime) < 0) {
+											RegistrationReqDTO reqDTO = new RegistrationReqDTO();
+											PersonnelReqDTO reqPersonnelDTO = new PersonnelReqDTO();
+											reqPersonnelDTO.setSmSupplierId(smDA.getSmSupplier().getSupplierId());
+
+											PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelBySupplierIdForDA(reqPersonnelDTO);
+
+											reqDTO.setSmSupp(smDA.getSmSupplier());
+											reqDTO.getSmSupp().getSmAppl().setSmPersonnels(personnelResDTO.getSmPersonnelList());
+											try {
+												RegistrationResDTO resDTO = SmServiceLookup.getRegistrationSO().reactivateBasicAccount(reqDTO);
+
+												smDA.getSmSupplier();
+												SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(smDA);
+											} catch (Exception ex) {
+												throw new EpException(ex.getMessage());
+											}
+											//end re-activate blacklist owner
+										}else{
+											smDA.getSmSupplier();
+											SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(smDA);
+										}
 									}
 								}
 								//31100,30878 end
