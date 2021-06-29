@@ -2000,18 +2000,15 @@ public class SmApplicationBackingBean extends
 			
 			SmAppl appli = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppTypeNoExpired(
 					currSupp.getSupplierId(), applType);
-			if(appli != null){
-				SmRemarksReqDTO reqDTO = new SmRemarksReqDTO();
-				reqDTO.setDocType(SupplierManagementConst.SM_RMK_DOC_TYPE_SDOR);
-				reqDTO.setDocId(appli.getApplId());
-				
-				SmRemaksResDTO resDTO = SmServiceLookup.getSmRemarksSO().retrieveSmRemarksByDocument(reqDTO);
-				if (resDTO.getRemarksList() != null && resDTO.getRemarksList().size() > 0) {
-					SmRemark remark = resDTO.getRemarksList().get(0);
-					//log.info("The SDO Remark for the Application is*******" + remark.getRemark());
-					getManagedBean().setSdoRemark(remark.getRemark());
-				}	
-			}
+			SmRemarksReqDTO reqDTO = new SmRemarksReqDTO();
+			reqDTO.setDocType(SupplierManagementConst.SM_RMK_DOC_TYPE_SDOR);
+			reqDTO.setDocId(appli.getApplId());
+			
+			 SmRemaksResDTO resDTO = SmServiceLookup.getSmRemarksSO().retrieveSmRemarksByDocument(reqDTO);
+			if (resDTO.getRemarksList() != null && resDTO.getRemarksList().size() > 0) {
+				SmRemark remark = resDTO.getRemarksList().get(0);
+				getManagedBean().setSdoRemark(remark.getRemark());
+			}	
 		}	
 	}
 	//#3460 - End
@@ -8767,6 +8764,9 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setReasonId(null);
 		getManagedBean().setRejectReasonReqd(false);
 		getManagedBean().getPoSecReview().setRecommendation("");
+		//#3460 - Start
+		getManagedBean().setSelectedRecommendReasonDescs(new ArrayList<PmReasonDesc>());
+		//#3460 - End
 		RequestContext.getCurrentInstance().execute("submitApprvrDialog.hide()");
 	}
 
@@ -8955,6 +8955,42 @@ public class SmApplicationBackingBean extends
 		assignValReqdToFalse();
 		resetSearchRejectedReason();
 		getManagedBean().setReasonId(null);
+		// #3460 - start
+		if (!SmCommonUtil.isCollectionEmpty(getManagedBean().getSelectedReasonDescs())
+				&& dialog.equalsIgnoreCase("rejectDialog")) {
+			getManagedBean().setSelectedReasonDescs(new ArrayList<PmReasonDesc>());
+			resetSearchRejectedReason();
+			getManagedBean().setReasonId(null);
+		}
+			
+			if(dialog.equalsIgnoreCase("approverRejDialog")){
+				if(!EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl().getSmApplRejectReasons())) {
+					getManagedBean().setSelectedReasonDescs(new ArrayList<PmReasonDesc>());
+					List<Long> reasonIdList = new ArrayList<Long>();
+					for(SmApplRejectReason smApplRejectReason : getManagedBean().getSmAppl().getSmApplRejectReasons()){
+							for(PmReasonDesc pmReasonDesc : getManagedBean().getReasonDescList()){
+								if(smApplRejectReason.getPmReason().getReasonId().equals(pmReasonDesc.getPmReason().getReasonId())){
+									getManagedBean().getSelectedReasonDescs().add(pmReasonDesc);
+									reasonIdList.add(pmReasonDesc.getPmReason().getReasonId());
+								}
+							}			
+					}
+					getManagedBean().setReasonId(
+							reasonIdList.toArray(new Long[reasonIdList.size()]));
+					verifySelectedRejectReasons();
+				}
+				
+				getManagedBean().setReasonDescList(
+						getManagedBean().getReasonDescInitList());
+				getManagedBean().setRejectionOtherReasonId(
+						SmApplicationUtil
+								.retrieveOtherRejectReasonIdByParamCodeAndType(
+										ReasonCategory.SUPPLIER_REJECTION_REASON
+												.value(),
+										SupplierManagementConst.SM_REASON_CODE_OTHERS));
+			}
+		// #3460 - end
+		
 		getManagedBean().setRejectReasonReqd(false);
 		//#12483 - START
 		if(dialog.equalsIgnoreCase("approverRevDialog")){
