@@ -5015,11 +5015,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			if (Arrays.asList(QTStatusConst.QT_SPEC_COMM_UPDATE_GROUP).contains(statusId)) {
 				Long[] secretaryExceptSpecCommittee = new Long[] { QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT,
 						QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL };
-				
-				if (!QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId)) {
+
+				if (!Arrays.asList(secretaryExceptSpecCommittee).contains(statusId)) {
 					list.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
 				}
-				
+
 				if (QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF.equals(statusId)) {
 					list.add(ParameterConst.COMMITTEE_ROLE_MEMBER);
 				}
