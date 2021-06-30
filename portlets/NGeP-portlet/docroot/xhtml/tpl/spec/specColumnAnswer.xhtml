@@ -52,19 +52,9 @@
 	<ui:decorate template="specColumnQuestionView.xhtml">
 		<ui:define name="qtySection">
 			<p:column style="width:5%;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.quantity']}">
-				<h:panelGroup rendered="#{isPriceTypeTier and isSpecTypeFinancial}">
-					<h:outputText value="#{tplSpecAnswer.tplSpecTierQty.fromQty}" rendered="#{isQuestionTypeItem}">
-						<f:converter converterId="dynamicNumberConverter" />
-						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, tplSpecAnswer.tplSpecQuestion.clUom.uomCode)}" />
-					</h:outputText>
-					<h:outputText value=" #{lbl['lbl.sc.qty.and.above']}" rendered="#{isQuestionTypeItem and empty tplSpecAnswer.tplSpecTierQty.toQty}" />
-					<h:outputText value=" - " rendered="#{isQuestionTypeItem and !empty tplSpecAnswer.tplSpecTierQty.toQty}" />
-					<h:outputText value="#{tplSpecAnswer.tplSpecTierQty.toQty}" rendered="#{isQuestionTypeItem and !empty tplSpecAnswer.tplSpecTierQty.toQty}">
-						<f:converter converterId="dynamicNumberConverter" />
-						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, tplSpecAnswer.tplSpecQuestion.clUom.uomCode)}" />
-					</h:outputText>
-				</h:panelGroup>
-				<h:panelGroup rendered="#{((!isPriceTypeTier and isSpecTypeFinancial) or !isSpecTypeFinancial) and !isRepeated}">
+				<!-- 11715 danial -start- -->
+				<h:panelGroup rendered="#{(isSpecTypeFinancial or !isSpecTypeFinancial) and !isRepeated}">
+				<!-- 11715 danial -end- -->	
 					<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.clQuantity}" rendered="#{isQuestionTypeItem  and (empty templateSpecBean.specMaster.tplSpecZone or !templateSpecBean.specMaster.qtyByZone)}">
 						<f:converter converterId="dynamicNumberConverter" />
 						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, tplSpecAnswer.tplSpecQuestion.clUom.uomCode)}" />
@@ -88,7 +78,22 @@
 					</p:commandButton>
 				</h:panelGroup>
 			</p:column>
-			
+			<!-- 11715 danial -start- -->
+			<p:column style="width:5%;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.tier.title']}" rendered="#{isPriceTypeTier and isSpecTypeFinancial}">
+				<h:panelGroup rendered="#{isPriceTypeTier and isSpecTypeFinancial}">
+					<h:outputText value="#{tplSpecAnswer.tplSpecTierQty.fromQty}" rendered="#{isQuestionTypeItem}">
+						<f:converter converterId="dynamicNumberConverter" />
+						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, tplSpecAnswer.tplSpecQuestion.clUom.uomCode)}" />
+					</h:outputText>
+					<h:outputText value=" #{lbl['lbl.sc.qty.and.above']}" rendered="#{isQuestionTypeItem and empty tplSpecAnswer.tplSpecTierQty.toQty}" />
+					<h:outputText value=" - " rendered="#{isQuestionTypeItem and !empty tplSpecAnswer.tplSpecTierQty.toQty}" />
+					<h:outputText value="#{tplSpecAnswer.tplSpecTierQty.toQty}" rendered="#{isQuestionTypeItem and !empty tplSpecAnswer.tplSpecTierQty.toQty}">
+						<f:converter converterId="dynamicNumberConverter" />
+						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, tplSpecAnswer.tplSpecQuestion.clUom.uomCode)}" />
+					</h:outputText>
+				</h:panelGroup>
+			</p:column>
+			<!-- 11715 danial -end- -->
 			<p:column style="width:80px;" rendered="#{isSpecTypeFinancial and isZonal and (!isSpecificationReq or isSqSpec)}" >
 				<p:commandLink id="zoneName"
 					oncomplete="zoneLocPopup.show();"
