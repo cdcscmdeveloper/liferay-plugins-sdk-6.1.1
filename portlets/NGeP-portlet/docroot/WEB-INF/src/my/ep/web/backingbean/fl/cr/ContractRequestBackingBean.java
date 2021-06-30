@@ -1678,11 +1678,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "crBasePage.xhtml");
 		
-		//24956
+		//24956 - start
 		if (getManagedBean().getFlRequest().getCtContract().getContractType().
 				getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 			getManagedBean().setCtTypeMinistry(true);
 		}
+		//24956 - end
 		
 	}
 

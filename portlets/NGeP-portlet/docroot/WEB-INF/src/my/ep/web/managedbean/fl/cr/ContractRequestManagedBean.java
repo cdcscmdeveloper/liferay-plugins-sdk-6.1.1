@@ -3290,7 +3290,8 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.preparedBy = preparedBy;
 	}
 	//29555 end
-
+	
+	//24956 - start
 	public boolean isCtTypeMinistry() {
 		return CtTypeMinistry;
 	}
@@ -3298,6 +3299,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	public void setCtTypeMinistry(boolean ctTypeMinistry) {
 		CtTypeMinistry = ctTypeMinistry;
 	}
+	//24956 - end
 
 	//13291 - start
 	private class PreparedForPtjPagingDataModel extends PagingDataModel<PmOrgProfile> {

@@ -829,6 +829,13 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		}
 		//28221 - end
 		
+		//24956 - start
+		if (getManagedBean().getInvoice().getFlRequest().getCtContract().getContractType().
+				getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+			getManagedBean().setCtTypeMinistry(true);
+		}
+		//24956 - end
+		
 		//check is normal invoice or tax invoice
 		reqDTO.setInvoice(getManagedBean().getInvoice());
 		resDTO = invoiceSO.isInvoiceTaxable(reqDTO);
@@ -1161,6 +1168,15 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				if(feeAmount.doubleValue() > ruleFee.doubleValue()){
 					feeAmount = ruleFee;
 				}
+			//24956 -start
+			}else if (getManagedBean().getInvoice().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED) ||
+					getManagedBean().getInvoice().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN)){
+				ruleReqDTO.setRuleType(FulfilmentConst.FNPER);
+				ruleFee = new BigDecimal(ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList().get(0).getRuleValue());
+				if(feeAmount.doubleValue() > ruleFee.doubleValue()){
+					feeAmount = ruleFee;
+				}	
+			//24956 -end
 			}else{
 				ruleReqDTO.setRuleType(FulfilmentConst.FLPER);
 				ruleFee = new BigDecimal(ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList().get(0).getRuleValue());

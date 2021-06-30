@@ -51,7 +51,9 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.fulfilment.type']}" rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.docType eq 'CR'}" /></td>
 				<td><p:inputText disabled="true" size="51" value="#{paymentMatchBackingBean.getParameterDesc(paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.ctContract.fulfillmentType)}" 
-				rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.docType eq 'CR'}"/></td>
+				rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.docType eq 'CR'}"/>
+				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.fulfilment.type']}" rendered="#{paymentMatchBackingBean.managedBean.ctTypeMinistry}"/>
+				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.procur.type.category']}" /></td>

@@ -522,6 +522,13 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 
 		checkSupplierUserActive();
 		//28221 end
+		
+		//24956 start
+		if (getManagedBean().getFulfilmentRequest().getCtContract().getContractType().
+				getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+			getManagedBean().setCtTypeMinistry(true);
+		}
+		//24956 end
 	}
 	
 	/**
@@ -982,6 +989,15 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 				if(getManagedBean().getPaymentAdvice().getFeeAmt().doubleValue() > ruleFee.doubleValue()){
 					getManagedBean().getPaymentAdvice().setFeeAmt(ruleFee);
 				}
+			//24956 -start
+			}else if (getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED) ||
+					getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN)){
+				ruleReqDTO.setRuleType(FulfilmentConst.FNPER);
+				ruleFee = new BigDecimal(ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList().get(0).getRuleValue());
+				if(getManagedBean().getPaymentAdvice().getFeeAmt().doubleValue() > ruleFee.doubleValue()){
+					getManagedBean().getPaymentAdvice().setFeeAmt(ruleFee);	
+					}	
+			//24956 - end
 			}else{
 				ruleReqDTO.setRuleType(FulfilmentConst.FLPER);
 				ruleFee = new BigDecimal(ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList().get(0).getRuleValue());
