@@ -886,6 +886,7 @@ public class QTCloneBackingbean extends
 				
 				
 				list= resDTO.getQtDocReports();
+				if(null!=list && CollectionUtils.isNotEmpty(list)){//25635-start
 				for(ScQtDocReport toRet:list){
 					if(null==toRet.getPmDocument()){
 						listRet.add(toRet);
@@ -899,6 +900,7 @@ public class QTCloneBackingbean extends
 					
 					
 				}
+			}//25635-End
 				
 				
 			} finally {
@@ -1047,7 +1049,7 @@ public class QTCloneBackingbean extends
 			 getManagedBean()
 				.setScQtDocReportList(reportList);
 		} else {
-			throw new EpException(MessageConst.ERROR_760141);
+			//throw new EpException(MessageConst.ERROR_760141);//25635
 		}
 		existedDocumets=null;
 	}
@@ -1510,6 +1512,17 @@ public class QTCloneBackingbean extends
 						this.getManagedBean().setScQtSampleSubmission(sbs);
 					}
 					
+					if (null != this.getManagedBean()
+							.getScQtSampleSubmission()) {//25635-start
+						this.getManagedBean()
+									.setScQtSampleSubmissionList(
+											new ArrayList<ScQtSampleSubmission>());
+						
+						this.getManagedBean()
+								.getScQtSampleSubmissionList()
+								.add(this.getManagedBean()
+										.getScQtSampleSubmission());
+					}//25635-End
 					
 					
 					if (!getManagedBean().isSubmit()) {
@@ -1843,14 +1856,26 @@ public class QTCloneBackingbean extends
 			
 			ScQtApproval prevApp =retrievePublicApprovalByQt(scQt);
 			List<ScQtApproval> toBeApprovalRemoveList = new ArrayList<ScQtApproval>();
-			if(prevApp!=null){
+			/*25635-start if(prevApp!=null){
 				prevApp.setDeleted(true);
 				toBeApprovalRemoveList.add(prevApp);
-			}
+			}25635-end */
 			this.getManagedBean().setToBeApprovalRemoveList(toBeApprovalRemoveList);
 			
 			if(copyApproval!=null){
-				ScQtApproval publicationApproval = new ScQtApproval();
+				ScQtApproval publicationApproval =null;//25635-start
+				if(null!=prevApp){
+				publicationApproval=prevApp;	
+				}else{
+				 publicationApproval = new ScQtApproval();
+				 publicationApproval.setScQt(scQt);
+					publicationApproval.setApprovalCategory(getParameterByTypeAndCode(ParameterTypeConst.APPROVAL_CATEGORY, 
+							ParameterConst.APPROVAL_CATEGORY_PTJ));
+					publicationApproval.setBrandNew(true);
+					publicationApproval.setRecordStatusFlg(copyApproval.getRecordStatusFlg());
+					publicationApproval.setRecordStatus(copyApproval.isRecordStatus());
+					setUserDetails(publicationApproval);
+				}//25635-End
 				publicationApproval
 						.setScQtApprovalRemarks(initializeRemarks(
 								publicationApproval, scQt
@@ -1858,13 +1883,6 @@ public class QTCloneBackingbean extends
 								publicationApproval
 										.getScQtApprovalRemarks(),
 								ScQtApprovalRemark.class));
-				publicationApproval.setScQt(scQt);
-				publicationApproval.setApprovalCategory(getParameterByTypeAndCode(ParameterTypeConst.APPROVAL_CATEGORY, 
-						ParameterConst.APPROVAL_CATEGORY_PTJ));
-				publicationApproval.setBrandNew(true);
-				publicationApproval.setRecordStatusFlg(copyApproval.getRecordStatusFlg());
-				publicationApproval.setRecordStatus(copyApproval.isRecordStatus());
-				setUserDetails(publicationApproval);
 				if(copyApproval.getApproverSettings()!=null && !copyApproval.getApproverSettings().isEmpty()){
 					List<ScQtApproverSettings> approverSettings=new ArrayList<ScQtApproverSettings>();
 					for(ScQtApproverSettings setting:copyApproval.getApproverSettings()){
@@ -1904,7 +1922,7 @@ public class QTCloneBackingbean extends
 					}
 					publicationApproval.setScQtApprovalAttachments(approverAttachments);
 				}
-				
+				if(CollectionUtils.isEmpty(publicationApproval.getScQtApprovalDtls())){//25635-start
 				if(copyApproval.getScQtApprovalDtls()!=null && !copyApproval.getScQtApprovalDtls().isEmpty()){
 					List<ScQtApprovalRequest> approverRequest=new ArrayList<ScQtApprovalRequest>();
 					for(ScQtApprovalRequest request:copyApproval.getScQtApprovalDtls()){
@@ -1922,6 +1940,7 @@ public class QTCloneBackingbean extends
 					}
 					publicationApproval.setScQtApprovalDtls(approverRequest);
 				}
+				}//25635-End
 				
 				this.getManagedBean().setPublicationApproval(
 						publicationApproval);
@@ -2650,7 +2669,7 @@ public class QTCloneBackingbean extends
 		committee.setApprovalReq(true);
 		committee.setModified(true);
 		
-		if(null!=copyScQtCommittee.getScCommittee()){
+		if(null!=copyScQtCommittee && null!=copyScQtCommittee.getScCommittee()){//25635
 			List<ScCommitteeMember> toCloneMemberList = new ArrayList<ScCommitteeMember>();
 			if(CollectionUtils.isNotEmpty(copyScQtCommittee.getScCommittee().getScCommitteeMembers())){
 				toCloneMemberList=copyScQtCommittee.getScCommittee().getScCommitteeMembers();
