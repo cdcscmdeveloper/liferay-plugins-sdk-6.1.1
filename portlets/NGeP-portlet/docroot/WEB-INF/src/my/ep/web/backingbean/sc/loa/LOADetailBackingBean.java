@@ -379,15 +379,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		//end #29173 - CR 26475: Static Code Analysis
 		
 		//#29006 - start
-		// #29006 - start
 		if (Arrays.asList(QTStatusConst.LOA_PENDING_SUBMISSION, QTStatusConst.LOA_PENDING_REVISION,
 				QTStatusConst.LOA_CANCELLED).contains(scLoa.getPmStatus().getStatusId())) {
 			getManagedBean().setSpecificationAndSupplierDialogFlag(true);
+			getManagedBean().setUpdateSupplierInstructionFlag(false); //avoid duplicate flag
 		}
 
 		if (Arrays.asList(QTStatusConst.LOA_PENDING_VERIFICATION, QTStatusConst.LOA_COMPLETED).contains(
 				scLoa.getPmStatus().getStatusId())) {
 			getManagedBean().setUpdateSupplierInstructionFlag(true);
+			getManagedBean().setSpecificationAndSupplierDialogFlag(false); //avoid duplicate flag
 		}
 		
 		removeUnwantedLampiranA3Report(1);
