@@ -4988,53 +4988,72 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return false;
 	}
 	
-	public String[] getRoleFilterListForCommitteeMaintenance(ScQt scQt, String committeeType){	
+	public String[] getRoleFilterListForCommitteeMaintenance(ScQt scQt, String committeeType) {
 		String[] arr = new String[0];
 		List<String> list = new ArrayList<String>();
-		if(scQt == null){
+		
+		if (scQt == null) {
 			return arr;
 		}
-		IScWorkFlowStatusSO wfStatusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+		
+		IScWorkFlowStatusSO wfStatusSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+		
 		ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
 		reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 		reqDTO.setDocId(scQt.getQtId());
-		
+
 		ScWorkFlowStatus wfStatus = wfStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
-		if(wfStatus==null){
+		
+		if (wfStatus == null) {
 			return arr;
 		}
-		Long statusId = wfStatus.getPmStatus().getStatusId();	
-		if(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.contentEquals(committeeType)){
-			if(Arrays.asList(QTStatusConst.QT_SPEC_COMM_UPDATE_GROUP).contains(statusId)){
-				if(!QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId)){
+		
+		Long statusId = wfStatus.getPmStatus().getStatusId();
+		
+		if (ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.contentEquals(committeeType)) {
+			if (Arrays.asList(QTStatusConst.QT_SPEC_COMM_UPDATE_GROUP).contains(statusId)) {
+				Long[] secretaryExceptSpecCommittee = new Long[] { QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT,
+						QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL };
+				
+				if (!QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId)) {
 					list.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
 				}
-				if(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF.equals(statusId)){
+				
+				if (QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF.equals(statusId)) {
 					list.add(ParameterConst.COMMITTEE_ROLE_MEMBER);
 				}
-			}	
-		}else{
-			if(this.isStatusGreaterThanOrEquals(statusId, QTStatusConst.QT_RE_EVALUATION, QTStatusConst.QT_ORDERED_STATUSES)){
+			}
+		} else {
+			if (this.isStatusGreaterThanOrEquals(statusId, QTStatusConst.QT_RE_EVALUATION,
+					QTStatusConst.QT_ORDERED_STATUSES)) {
 				boolean isCommitteeEvalStage = false;
-				if(StringUtils.isNotEmpty(committeeType)){
+				
+				if (StringUtils.isNotEmpty(committeeType)) {
 					reqDTO = new ScWorkFlowStatusReqDTO();
 					reqDTO.setDocType(committeeType);
 					reqDTO.setDocId(scQt.getQtId());
+					
 					wfStatus = wfStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
-					Long evalStatusId = wfStatus!=null ? wfStatus.getPmStatus().getStatusId(): 0L;
-					isCommitteeEvalStage = Arrays.asList(QTStatusConst.QT_EVAL_PREPARATION_GROUP).contains(evalStatusId) 
+					
+					Long evalStatusId = wfStatus != null ? wfStatus.getPmStatus().getStatusId() : 0L;
+					
+					isCommitteeEvalStage = Arrays.asList(QTStatusConst.QT_EVAL_PREPARATION_GROUP)
+							.contains(evalStatusId)
 							|| Arrays.asList(QTStatusConst.QT_EVAL_FINALIZATION_GROUP).contains(evalStatusId);
 				}
-				
-				if(isCommitteeEvalStage){
+
+				if (isCommitteeEvalStage) {
 					list.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
 				}
 			}
 		}
-		if(CollectionUtils.isNotEmpty(list)){
+		
+		if (CollectionUtils.isNotEmpty(list)) {
 			arr = new String[list.size()];
-		    list.toArray(arr);
-		}		
+			list.toArray(arr);
+		}
+		
 		return arr;
 	}		
 	
