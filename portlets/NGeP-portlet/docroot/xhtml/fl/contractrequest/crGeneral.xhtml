@@ -254,6 +254,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.fulfilment.type']}" /></td>
 					<td><p:inputText size="25" disabled="true" 	value="#{contractRequestBackingBean.getParameterDesc(contractRequestBackingBean.managedBean.flRequest.ctContract.fulfillmentType)}">
 					</p:inputText>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.fulfilment.type']}" rendered="#{contractRequestBackingBean.managedBean.ctTypeMinistry}"/>
 				</td>
 				
 					

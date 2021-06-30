@@ -169,10 +169,16 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	private boolean suppInvoiceActive = true;
 	private Long newSupplierUserId;
 	//28221 - end
+
+	//24956 start
+    private boolean CtTypeMinistry;
+    //24956 end
+
 	//29551 - start
 	private boolean showDeductionClause;
 	private Long selectedDeductionClauseParent;
 	//29551 - end
+
 	/**
 	 * Gets the doc type.
 	 *
@@ -1645,10 +1651,19 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	public void setNewSupplierUserId(Long newSupplierUserId) {
 		this.newSupplierUserId = newSupplierUserId;
 	}
-
-
-
+	
 	//28221 - end
+	
+	//24956 - start
+	public boolean isCtTypeMinistry() {
+		return CtTypeMinistry;
+	}
+
+	public void setCtTypeMinistry(boolean ctTypeMinistry) {
+		CtTypeMinistry = ctTypeMinistry;
+	}
+	//24956 - end
+
 	//29551 - start
 	/**
 	 * @return the isShowDeductionClause
@@ -1678,5 +1693,6 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 		this.selectedDeductionClauseParent = selectedDeductionClauseParent;
 	}
 	//29551 - end
+
 
 }

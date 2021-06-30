@@ -151,6 +151,10 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	private List<DisciplinaryActionVO> disciplineVOs;
 	private SmDisciplinaryAction smDisciplinaryAction;
 	//26279 - end
+	
+	//24956 start
+    private boolean CtTypeMinistry;
+    //24956 end
 
 	public Map<String, PmFinancialOrg> getFactoringAccountMap() {
 		if(factoringAccountMap==null) {
@@ -1242,4 +1246,12 @@ public class InvoiceManagedBean extends BaseManagedBean {
 		this.smDisciplinaryAction = smDisciplinaryAction;
 	}
 	//26279 - end
+
+	public boolean isCtTypeMinistry() {
+		return CtTypeMinistry;
+	}
+
+	public void setCtTypeMinistry(boolean ctTypeMinistry) {
+		CtTypeMinistry = ctTypeMinistry;
+	}
 }
