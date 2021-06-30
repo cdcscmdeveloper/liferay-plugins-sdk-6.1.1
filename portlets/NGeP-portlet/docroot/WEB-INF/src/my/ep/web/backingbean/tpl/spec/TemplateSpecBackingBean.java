@@ -2225,7 +2225,7 @@ public class TemplateSpecBackingBean extends
 				TplSpecMaster specMaster = templateSpecBean.getSpecMaster();
 				boolean isFinancialSpec = ParameterConst.SPECIFICATION_TYPE_FINANCIAL
 						.equals(specMaster.getSpecTypeCode().getParameterCode());
-				//boolean isPartial = templateSpecBean.getSpecMaster().getScQtDoc().getScQt().isPartial();
+				boolean isPartial = templateSpecBean.getSpecMaster().getScQtDoc().getScQt().isPartial();
 				if(isFinancialSpec){
 // condition only for zonal quantity 0
 // non zonal cannot insert quantity 0
@@ -3170,6 +3170,8 @@ public class TemplateSpecBackingBean extends
 			}
 			tplSpecQuestion.setTplSpecEstimations(specEstimations);
 		}
+
+	
 	}
 	
 	/**
@@ -3182,7 +3184,6 @@ public class TemplateSpecBackingBean extends
 		debugLogger("zoneEstCostOkAction");
 
 		templateSpecBean.setSelectedSpecQuestion(null);
-
 		RequestContext.getCurrentInstance().execute(
 				templateSpecBean.getSpecComponentId()
 						+ "zoneEstimationPopup.hide()");
@@ -3220,7 +3221,7 @@ public class TemplateSpecBackingBean extends
 	 */
 	public void offerTypeChange(boolean offerType,Long parentQuestionId, int rowindex) {
 		List<TplSpecAnswer> returnSpec = new ArrayList<>();
-		//TemplateSpecBean templateSpecBean = new TemplateSpecBean();
+		TemplateSpecBean templateSpecBean = new TemplateSpecBean();
 		if(this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()!=null && this.getManagedBean().getTemplateSpecBean().getSpecAnswerList().size()>0){
 			for(TplSpecAnswer tplSpecAnswer: this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
 				if(tplSpecAnswer.getTplSpecQuestion().getParentSpecQuestion()!=null){
@@ -3338,7 +3339,7 @@ public class TemplateSpecBackingBean extends
 	}
 	// FARID #21695 END
  
-//#21695 Farid start 8/6/2021
+//#21695 Farid start 29/6/2021
 	/**
 	 * Item type change.Change Item Type(product/Service) Checkbox in Template
 	 * 
@@ -3347,12 +3348,12 @@ public class TemplateSpecBackingBean extends
 	 *            (Long itemType)
 	 */
 	public void offerCheckboxChange(TplSpecQuestion specQuestion) {
-		//boolean flag = true;
+		boolean flag = true;
 		int count = 0;
 		for(TplSpecZoneQty specQty : specQuestion.getTplSpecZoneQties()){
 			if(specQty!=null){
-				if(!specQty.getTplSpecZoneOffer().isOffer()){
-					//flag = false;
+				if(!specQty.getTplSpecZoneOffer().isOffer() && !specQty.getQty().equals(new BigDecimal(0))){
+					flag = false;
 					count ++;
 				}
 			}
@@ -3375,13 +3376,13 @@ public class TemplateSpecBackingBean extends
 	}
 //#21695 Farid end 8/6/2021
 
-//#21695 Farid start 2/4/2021	
+//#21695 Farid start 29/6/2021	
 	public boolean evaluateSpecDisable(TplSpecAnswer specAnswer) {
 		if(specAnswer.getTplSpecQuestion().getParentSpecQuestion() != null){
 		
 			for(TplSpecZoneQty specQty : specAnswer.getTplSpecQuestion().getParentSpecQuestion().getTplSpecZoneQties()){
 				if(specQty!=null){
-					if(!specQty.getTplSpecZoneOffer().isOffer()){
+					if(!specQty.getTplSpecZoneOffer().isOffer() && !specQty.getQty().equals(new BigDecimal(0))){
 					
 						return false;
 					}
@@ -3405,5 +3406,4 @@ public class TemplateSpecBackingBean extends
 		return false;
 	}
 	//#31134 Farid end 25/6/2021
-	
 }
