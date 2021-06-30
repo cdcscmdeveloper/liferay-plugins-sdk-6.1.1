@@ -242,7 +242,7 @@ u {
 							
 				</div>
 				
-				<p><span class="text_family_red">seperti yang ditetapkan dalam <b><i>Lampiran A</i></b> tidak melebihi <span class="text_family_red"> *14/30 </span> hari dari tarikh pengakuan penerimaan surat ini oleh syarikat tuan. Apa-apa kegagalan dalam mematuhi kehendak di perenggan ini dalam tempoh masa yang ditetapkan, boleh mengakibatkan surat ini terbatal dan Kerajaan tidaklah dengan apa-apa cara jua bertanggungan terhadap syarikat tuan <b>melainkan jika</b> penepian bertulis diberikan oleh orang yang diberi kuasa, bagi perkhidmatan yang perlu dibuat dengan segera atau serta-merta apabila kelewatan itu akan memudarat dan menjejaskan perkhidmatan dan kepentingan awam. </span></p>
+				<p><span class="text_family_red">seperti yang ditetapkan dalam <b><i>Lampiran A</i></b> tidak melebihi <span class="text_family_red"> *14/30 </span> hari dari tarikh pengakuan penerimaan Surat ini oleh syarikat tuan. Apa-apa kegagalan dalam mematuhi kehendak di perenggan ini dalam tempoh masa yang ditetapkan, boleh mengakibatkan Surat ini terbatal dan Kerajaan tidaklah dengan apa-apa cara jua bertanggungan terhadap syarikat tuan <b>melainkan jika</b> penepian bertulis diberikan oleh orang yang diberi kuasa, bagi perkhidmatan yang perlu dibuat dengan segera atau serta-merta apabila kelewatan itu akan memudarat dan menjejaskan perkhidmatan dan kepentingan awam. </span></p>
 
 				<p>
 					<span class="text_family">5.	Setelah pesanan/arahan dikeluarkan oleh Kerajaan, syarikat tuan dikehendaki melaksanakan perkhidmatan dalam tempoh yang ditetapkan dan kualiti perkhidmatan tersebut hendaklah memuaskan hati serta memenuhi kehendak Kerajaan. Sekiranya syarikat tuan gagal melaksanakan perkhidmatan dalam tempoh dan/atau kualiti yang ditetapkan, Kerajaan berhak membatalkan pesanan/arahan yang dikeluarkan dan/atau mengenakan <span class="text_family_red">*Denda/ Tolakan/ <i>Liquidated & Ascertained Damages</i> (LAD)</span> seperti yang ditetapkan dalam <b><i>Lampiran A</i></b>.  </span>
@@ -252,13 +252,13 @@ u {
 					<p>
 						<span class="text_family">
 						#if ($scLoa.scLoiLoa.docType == "PR")
-								*6.	Syarikat tuan juga adalah dikehendaki melaksanakan program Professional Training
-									and Education for Growing Entrepreneurs (PROT&Eacute;G&Eacute;) seperti yang ditetapkan oleh Kerajaan berdasarkan harga kontrak
+								*6.	Syarikat tuan juga adalah dikehendaki melaksanakan program <i>Professional Training
+									and Education for Growing Entrepreneurs </i> (PROT&Eacute;G&Eacute;) seperti yang ditetapkan oleh Kerajaan berdasarkan harga kontrak
 									dengan bilangan minimum peserta PROT&Eacute;G&Eacute; sebanyak ____________________________ orang tanpa sebarang kos kepada Kerajaan. Bilangan minimum
 									peserta yang diperlukan hendaklah dikira berdasarkan formula di bawah:</span>
 						#else
-								6.	Syarikat tuan juga adalah dikehendaki melaksanakan program Professional Training
-									and Education for Growing Entrepreneurs (PROT&Eacute;G&Eacute;) seperti yang ditetapkan oleh Kerajaan berdasarkan harga kontrak
+								6.	Syarikat tuan juga adalah dikehendaki melaksanakan program <i>Professional Training
+									and Education for Growing Entrepreneurs </i> (PROT&Eacute;G&Eacute;) seperti yang ditetapkan oleh Kerajaan berdasarkan harga kontrak
 									dengan bilangan minimum peserta PROT&Eacute;G&Eacute; sebanyak ____________________________ orang tanpa sebarang kos kepada Kerajaan. Bilangan minimum
 									peserta yang diperlukan hendaklah dikira berdasarkan formula di bawah:</span>
 						#end
@@ -292,9 +292,10 @@ u {
 					<p>
 						<span class="text_family">
 						#if ($scLoa.scLoiLoa.docType == "PR")
-							*6.	Syarikat tuan juga adalah digalakkan melaksanakan program Professional Training and Education for Growing Entrepreneurs (PROT&Eacute;G&Eacute;) seperti yang ditetapkan oleh Kerajaan.</span>
+							*6.	Syarikat tuan juga adalah digalakkan melaksanakan program <i>Professional Training and Education for Growing Entrepreneurs </i> (PROT&Eacute;G&Eacute;) seperti yang ditetapkan oleh Kerajaan.</span>
 						#else
-							6.	Syarikat tuan juga adalah digalakkan melaksanakan program Professional Training and Education for Growing Entrepreneurs (PROT&Eacute;G&Eacute;) seperti yang ditetapkan oleh Kerajaan.</span>
+							6.	Syarikat tuan juga adalah digalakkan melaksanakan program <i>Professional Training
+						and Education for Growing Entrepreneurs </i> (PROT&Eacute;G&Eacute;) seperti yang ditetapkan oleh Kerajaan.</span>
 						#end
 						
 					</p>
@@ -337,7 +338,7 @@ u {
 					</p>
 											
 					<p>
-						<span class="text_family">9.	Syarikat tuan juga adalah diingatkan bahawa Kerajaan berhak untuk membatalkan surat ini sekiranya:  </span></p>
+						<span class="text_family">9.	Syarikat tuan juga adalah diingatkan bahawa Kerajaan berhak untuk membatalkan Surat ini sekiranya:  </span></p>
 
 					<div class="text_indent">
 						<p>
