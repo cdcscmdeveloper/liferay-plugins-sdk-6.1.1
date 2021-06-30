@@ -394,6 +394,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			getManagedBean().setSpecificationAndSupplierDialogFlag(false); //avoid duplicate flag
 		}
 		
+		if (Arrays.asList(QTStatusConst.LOA_PENDING_APPROVAL, QTStatusConst.LOA_PENDING_REVISION_APPROVAL,
+				QTStatusConst.LOA_PENDING_ACKNOWLEDGE_RECEIPT_SUPPLIER_ACTION,
+				QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT).contains(scLoa.getPmStatus().getStatusId())) {
+			getManagedBean().setSpecificationAndSupplierDialogFlag(false);
+			getManagedBean().setUpdateSupplierInstructionFlag(false);
+		}
+		
 		removeUnwantedLampiranA3Report(1);
 		//#29006 - end
 		//#29007 Start Vinod
