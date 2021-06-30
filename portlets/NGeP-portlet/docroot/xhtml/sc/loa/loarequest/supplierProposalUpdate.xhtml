@@ -25,9 +25,11 @@
 					</div>
 					<div class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.sm.button.save']}"
-							action="#{lOADetailBackingBean.onSaveSupplierOffer('SAVE')}" />
+							action="#{lOADetailBackingBean.onSaveSupplierOffer('SAVE')}" 
+							rendered="#{!isTrackingDairyView}" />
 						<p:commandButton value="#{lbl['lbl.btn.complete']}"
-							action="#{lOADetailBackingBean.onClickSupplierProposalUpdateCompleteButton()}" />
+							action="#{lOADetailBackingBean.onClickSupplierProposalUpdateCompleteButton()}" 
+							rendered="#{!isTrackingDairyView}" />
 					</div>
 				</div>
 			</p:outputPanel>
@@ -68,11 +70,12 @@
 						value="*" styleClass="mandatory" /></td>
 					<td width="80%"><p:inputText id="newSupplierOfferedInput"
 							value="#{lOADetailBackingBean.managedBean.newSupplierOffered}"
-							style="width:310px;" maxlength="1000">
+							style="width:310px;" maxlength="1000" 
+							disabled="#{isTrackingDairyView}">
 							<p:ajax partialSubmit="true" process="@this" update="@this" />
 						</p:inputText> <p:spacer width="10" /> <p:commandLink
 							id="newSupplierOfferedReset" update="newSupplierOfferedInput"
-							action="#{lOADetailBackingBean.onResetNewSupplierOffered}">
+							action="#{lOADetailBackingBean.onResetNewSupplierOffered}" >
 							<p:graphicImage value="/css/images/design/ico-refresh.png" />
 						</p:commandLink></td>
 				</tr>
@@ -83,7 +86,7 @@
 					<td width="80%"><p:inputText
 							id="supplierUpdateProposalJustification"
 							value="#{lOADetailBackingBean.managedBean.newSupplierJustification}"
-							style="width:310px;" maxlength="200">
+							style="width:310px;" maxlength="200" disabled="#{isTrackingDairyView}">
 							<p:ajax partialSubmit="true" process="@this" update="@this" />
 						</p:inputText> <ac:iconTooltip
 							value="#{lbl['lbl.sc.justification.is.mandatory']}" /></td>
