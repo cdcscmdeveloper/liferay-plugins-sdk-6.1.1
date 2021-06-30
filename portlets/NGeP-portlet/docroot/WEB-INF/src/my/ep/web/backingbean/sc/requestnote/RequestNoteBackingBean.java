@@ -5133,12 +5133,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				}
 			}
 			getManagedBean().setOrgProfileIdList(orgProfileIdList);
-			//#27545 - end		
-			if (CollectionUtils.isNotEmpty(orgProfileResDTO.getProfileGroups())) {
-				for(PmProfileGroup group: orgProfileResDTO.getProfileGroups()){
-					orgProfileIds = orgProfileIds + "," + group.getMainOrgProfile().getOrgProfileId();
-				}
-			}
+			//#27545 - end	
 
 			sb.append("pmUserOrgs.pmOrgProfile.orgProfileId^");				
 			sb.append(orgProfileIds);
