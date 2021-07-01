@@ -2919,26 +2919,27 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						&& outputValue.equalsIgnoreCase("DCN")) {
 					//#29549 end
 					getManagedBean().setConfirmMeeting(true);
-					//#29403 start
-					if (getManagedBean().isPbConfirmMeeting() && ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()) {
-						getManagedBean().setSelectedTabIndex(index + 3);
-					}else if (getManagedBean().isPbConfirmMeeting() && !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()) {
-						getManagedBean().setSelectedTabIndex(index + 2);
-					}
-
-					else if (!getManagedBean().isPbConfirmMeeting() && !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()) {
-						getManagedBean().setSelectedTabIndex(index + 1);
-					}
-					else if (!getManagedBean().isPbConfirmMeeting() && (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
-							&& ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()
-							&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
-							&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
-									ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))) {
-						getManagedBean().setSelectedTabIndex(index + 2);
-					}else{
-						getManagedBean().setSelectedTabIndex(index + 1);
-					}
-					//#29403	
+					//#24333 start
+					if (!getManagedBean().isPbConfirmMeeting() && (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
+                            && ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()
+                            && !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
+                            && !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+                                    ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))) {
+                        getManagedBean().setSelectedTabIndex(index + 2);
+                    }
+                    else if (getManagedBean().isPbConfirmMeeting() && !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()) {
+                        getManagedBean().setSelectedTabIndex(index + 2);
+                    }else if (!getManagedBean().isPbConfirmMeeting() && !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()) {
+                        getManagedBean().setSelectedTabIndex(index + 1);
+                    }else if (getManagedBean().isPbConfirmMeeting() && ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()
+                            && ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted() ) {
+                        getManagedBean().setSelectedTabIndex(index + 2);
+                    }else if (getManagedBean().isPbConfirmMeeting() && ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()) {
+                        getManagedBean().setSelectedTabIndex(index + 3);
+                    }else{
+                        getManagedBean().setSelectedTabIndex(index + 1);
+                    }
+					//#24333 - End	
 				}
 				//#20997- End
 
