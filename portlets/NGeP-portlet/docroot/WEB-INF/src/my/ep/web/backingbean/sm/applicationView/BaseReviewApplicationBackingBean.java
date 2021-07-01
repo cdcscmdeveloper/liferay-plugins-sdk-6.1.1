@@ -270,12 +270,14 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				.getOriginalServletRequest(servletRequest);
 		String applicationNo = originalServletRequest
 				.getParameter("applicationNo");
-
+		log.info("TROUBLESHOOT REVISION : applicationNo="+applicationNo);
 		if (applicationNo != null) {
 			if (getManagedBean().getApplicationNoParam() == null) {
+				log.info("TROUBLESHOOT REVISION : getManagedBean().getApplicationNoParam()="+getManagedBean().getApplicationNoParam());
 				reload = true;
 				getManagedBean().setApplicationNoParam(applicationNo);
 			} else {
+				log.info(applicationNo+"====TROUBLESHOOT REVISION ELSE : getManagedBean().getApplicationNoParam()="+getManagedBean().getApplicationNoParam());
 				if (!applicationNo.equals(getManagedBean()
 						.getApplicationNoParam())) {
 					reload = true;
