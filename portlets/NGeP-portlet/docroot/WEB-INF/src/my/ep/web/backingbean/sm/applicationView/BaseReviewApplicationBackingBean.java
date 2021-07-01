@@ -193,9 +193,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 * Initialized all related steps in View Application
 	 */
 	public void initMain() {
+		log.info("TROUBLESHOOT REVISION : initMain");
 		if (reloadApplication()) {
 			initApplication(null);
 			setMaxTab();
+		}else{
+			log.info("TROUBLESHOOT REVISION : Else");
 		}
 		setTabParam();
 	}
