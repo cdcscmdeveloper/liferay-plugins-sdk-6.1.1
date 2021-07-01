@@ -6,9 +6,7 @@ import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -57,7 +55,7 @@ public class ProfileOfRegCompanyRptBackingBean extends
 		log.info("********Report Code************* after set newCode: " + getManagedBean().getReportCode());
 		
 		for (Map.Entry<String, String> entry : params.entrySet()) {
-			log.info("Key : " + entry.getKey() + " Value : " + entry.getValue());
+			log.info("Key : " + entry.getKey() + "=" + entry.getValue() + "&");
 		}
 
 		retrieveReportValueFromDb();
@@ -73,6 +71,9 @@ public class ProfileOfRegCompanyRptBackingBean extends
 		this.getManagedBean().setOrgTypeCode(null);
 		this.getManagedBean().setSelectedOrgProfile(null);
 		// #23080 - end
+		// #29712 - start
+		this.getManagedBean().setSmSupplier(null);
+		// #29712 - end
 	}
 	
 	public void populateMofNo(BaseEntity entity) {
