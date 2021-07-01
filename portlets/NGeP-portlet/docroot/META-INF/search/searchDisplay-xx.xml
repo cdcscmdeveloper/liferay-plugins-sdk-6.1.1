@@ -219,6 +219,36 @@
 			</list>
 		</property>
 	</bean>
+	
+	<!-- #29712 - start -->
+	<bean id="SM_RPT_BASIC_SUPPLIER" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="supplierId" />
+
+		<property name="daoClass" value="my.ep.persistence.dao.sm.SmSupplierDAO" />
+		<property name="searchMethod" value="retrieveBasicSupplierList" /> 
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="companyName" />
+					<property name="bundleFile" value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.companyname" />				
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="regNo" />
+					<property name="bundleFile" value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.businessregno" />
+				</bean>
+				<!-- 
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="mofStatus" />
+					<property name="bundleFile" value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.accountstatus" />
+				</bean>
+				 -->
+			</list>
+		</property>
+	</bean>
+	<!-- #29712 - end -->
 
 	<bean id="PM_ORG_PROFILE_WITH_SUPPLIER" class="my.ep.web.bean.LovBean">
 		<property name="pk" value="orgProfileId" />

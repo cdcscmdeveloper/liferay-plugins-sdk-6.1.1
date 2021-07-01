@@ -30,11 +30,19 @@
 				<p:outputLabel value="#{lbl['lbl.rpt.cmpName']}" />
 				<p:outputLabel value="*" styleClass="mandatory" />
 			</td>
+			<!-- #29712 - start -->
+			<!-- 
 			<td class="tdContent">
 				<ac:smReportCompanyNameLOV bBean="#{profileOfRegCompanyRptBB}" required="true"
 				saveObj="profileOfRegCompanyRptBB.managedBean.selectedOrgProfile" />
 			</td>
+			 -->
+			<td class="tdContent">
+				<ac:smReportBasicSupplier bBean="#{profileOfRegCompanyRptBB}" required="true"
+				saveObj="profileOfRegCompanyRptBB.managedBean.smSupplier" />
+			</td>
 		</p:outputPanel>
+		<!-- #29712 - end -->
 		
 		<p:outputPanel rendered="#{profileOfRegCompanyRptBB.managedBean.regType eq SmReportConst.SM_REG_TYPE_G2G}">
 			<td class="tdTitle">
