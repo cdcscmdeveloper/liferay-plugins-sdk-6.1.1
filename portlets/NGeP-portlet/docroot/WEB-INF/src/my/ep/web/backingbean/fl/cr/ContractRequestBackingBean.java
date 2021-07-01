@@ -4174,8 +4174,15 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 			if(ParameterConst.PRICE_TYPE_STANDARD.equals(flItemAddr.getPriceType().getParameterCode())){
 				ciItemResDTO = contractItemSO.getPricePerUom(reqDTO);
+				
 				getManagedBean().setPricePerUom(ciItemResDTO.getItemPrice());
-				getManagedBean().setMinOrderQuantity(contractItemSO.getItemMaxQuantity(reqDTO).getCtItemMaxQuantity().getMaxQuantity().doubleValue());
+				//28855 start - prod issue
+				if(contractItemSO.getItemMaxQuantity(reqDTO).getCtItemMaxQuantity() !=null ){
+					getManagedBean().setMinOrderQuantity(contractItemSO.getItemMaxQuantity(reqDTO).getCtItemMaxQuantity().getMaxQuantity().doubleValue());
+				}else{
+					getManagedBean().setMinOrderQuantity(1.0);
+				}
+				//28855 end - prod issue
 			}
 			getManagedBean().setUomName(flItemAddr.getScRequestItem().getUom() != null ? flItemAddr.getScRequestItem().getUom().getUomName() : "");
 			
@@ -4230,7 +4237,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}	
 		
 		// 28855 - Start
-		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IContractSO.class);
+		IFulfilmentRequestSO fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
+		FulfilmentReqDTO reqFDTO = new FulfilmentReqDTO();
+		reqFDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
+		String  loaDocType=  fulfilmentRequestSO.getLoaDocType(reqFDTO).getDocType();
+		
+		/*IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IContractSO.class);
 		ContractReqDTO cireqDTO = new ContractReqDTO();
 		ContractResDTO ciResDTO = null;
 		cireqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
@@ -4243,12 +4255,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		AwardSupplierResDTO resLoaDTO = new AwardSupplierResDTO();
 		if (ciResDTO.getContract().getLoa() != null) {
 		reqLoaDTO.setLoaId(ciResDTO.getContract().getLoa().getLoaId());
-		resLoaDTO = qtAwardSO.retrieveLOADtlByLoaId(reqLoaDTO);
+		resLoaDTO = qtAwardSO.retrieveLOADtlByLoaId(reqLoaDTO);*/
 
-			if (resLoaDTO.getScLoa().getProcurementMode()
-					.getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO) ||
-					resLoaDTO.getScLoa().getProcurementMode()
-					.getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+			if (loaDocType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)) {
 				getManagedBean().setDpFlag(true);
 			} else {
 				getManagedBean().setDpFlag(false);
@@ -4256,7 +4265,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					getManagedBean().getItemSpecList().add(getManagedBean().getSpecificationList().get(0));
 				}
 			}
-		}
+		//}
 		// 28855 - End
 	}
 
