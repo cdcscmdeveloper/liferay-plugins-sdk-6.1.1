@@ -76,8 +76,6 @@ import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.authorization.PmUserOrg;
-import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -120,7 +118,6 @@ import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
-import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -2522,28 +2519,17 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	    		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
 	    			getManagedBean().setAutoUpdate(false);	
 	    			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");	
+	    		}else if(outcome.equals(BpmOutcomeConst.BPM_SUBMIT) && taskName.equalsIgnoreCase(SCProcessNameConst.GENERIC_APPROVAL_REVISE)){ //#30477 - Start
+	    			if(isInactivePublicationApproverRole()){
+						throw new EpException(MessageConst.ERROR_775173);	
+					}else{
+						updateGenericApprovalTask(null);
+					}
+	    	    //#30477 - End
 	    		}else{
 	    			updateGenericApprovalTask(null);
 	    		}
 	    	}
-	    	//#30477 - Start
-	    	if(SCProcessNameConst.GENERIC_APPROVAL_REVISE.equalsIgnoreCase(taskName) && outcome.equals(BpmOutcomeConst.BPM_SUBMIT)) {
-	    		for(ScQtApproverSettings approverSetting : this.getManagedBean().getPublicationApproval().getApproverSettings()){
-	    			Long userId = approverSetting.getPmUser().getUserId();
-	    			IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-	    			QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
-	    			PmUserOrg pmUserOrgs = new PmUserOrg();
-	    			quationTenderReqDTO.setUserId(userId);
-	    			pmUserOrgs = detailSO.retrievePmUserOrgByUserid(quationTenderReqDTO).getPmUserOrg();
-	    			PmUserOrg pmUserOrg = PmCommonUtil.retrieveUserOrgByUserIdAndOrgId(userId, pmUserOrgs.getUserOrgId());
-	    			for (PmUserRole roles : pmUserOrg.getPmUserRoles()) {	
-	    				if(RoleCode.PUBLICATION_APPROVER.value().equals(roles.getPmRole().getRoleCode()) && roles.getRecordStatusFlg().equals(0) && roles.isRecordStatus() == false){
-	    					throw new EpException(MessageConst.ERROR_775173);	
-	    				}
-	    			}
-	    		}
-	    	}
-	    	//#30477 - End
 		}catch(Exception e){
 			throw e;
 		}
@@ -2712,6 +2698,32 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 		}
 		//#	29762-start
+		
+		//#30477 - Start
+		public boolean isInactivePublicationApproverRole() {
+			IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			boolean inactive=false;
+			ScQt scQt = this.getManagedBean().getQt();
+			ScQtApproval publicationApproval = this.getManagedBean().getPublicationApproval();
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			reqDTO.setQtId(scQt.getQtId());
+			reqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_PTJ);
+			QuationTenderResDTO resDTO = detailSO.retrieveApprovalDtlsByQtIdNType(reqDTO);
+			if (null == publicationApproval && null!=resDTO && null!=resDTO.getQtApproval()) {
+				publicationApproval = resDTO.getQtApproval();
+				List<ScQtApproverSettings> approverSettings = publicationApproval.getApproverSettings();
+		        for(ScQtApproverSettings approverSetting : approverSettings ){
+		        	QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+			  		if(qtBackingBean.isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId(), 2)){
+		  			   inactive=true;
+		  		    }
+		        }
+			}
+			return inactive;
+		}
+		//#30477 - Start
+		
 }
 
 // ***25692
