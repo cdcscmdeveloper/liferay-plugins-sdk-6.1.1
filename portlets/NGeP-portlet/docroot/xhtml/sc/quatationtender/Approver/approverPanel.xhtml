@@ -37,7 +37,17 @@
 			test="${approvalBackingBean.managedBean.approvalType == ParameterConst.approvalCategoryCommitteeeApointment}">
 			<ui:include src="requestPTJdetails.xhtml" />
 			<ui:include src="approverCommittee.xhtml" />
-			<ui:include src="approveremarksdetails.xhtml" />
+			
+			<!-- 13344 -start- -->
+			<!-- <ui:include src="approveremarksdetails.xhtml" /> -->
+			<ac:scRemarkAndAttachment
+				remarkList="#{qTDetailBB.managedBean.scQtApproval.scQtApprovalRemarks}"
+				attachmentList="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalAttachments}"
+				readonly="#{approvalBackingBean.managedBean.readOnly and !approvalBackingBean.managedBean.approvalEditableSection}"
+				fileUploadListener="approvalBackingBean.handleFileUpload"
+				instruction="#{approvalBackingBean.isReviceOrReject() ? lbl['lbl.sc.approval.remarks.instruction'] : ''}"
+				autoUpdateValue="#{approvalBackingBean.managedBean.autoUpdate}" />
+			<!-- 13344 -end- -->
 		</c:if>
 		<c:if
 			test="${approvalBackingBean.managedBean.approvalType == ParameterConst.approvalRequestPublicationApproval}">

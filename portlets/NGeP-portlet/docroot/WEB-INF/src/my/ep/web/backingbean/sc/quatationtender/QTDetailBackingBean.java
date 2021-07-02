@@ -5113,7 +5113,25 @@ public class QTDetailBackingBean extends
 				setAmmendMentBean(resDTO.getAmendMentBean());
 				retrieveScheduleTabDtl();
 				checkSettingPopUpBPKApprovalNeeded(resDTO.getQtDetail()); // #25077
+				// #13344-start
+			} else if (super.isQTStatusLessThanOrEquals(currentStatus, QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)) {
+				// save scQt info onclick of Activites tab
+				// detailSO.validateQTDetails(reqDTO);
+				resDTO = detailSO.saveQTDtl(reqDTO);
+				
+				renewSesionObject();
+				
+				this.getManagedBean().setTaskName(taskName);
+				
+				retrieveQuationTenderDetails(resDTO.getQtDetail().getQtId());
+				retrieveApprovalTabDtl();
+				
+				setAmmendMentBean(resDTO.getAmendMentBean());
 			}
+
+			this.getManagedBean().setCurrentStatusId(currentStatus); 
+			// #13344-End
+
 			break;
 		case 6:
 			if (isinvokeValidations(getManagedBean().getQt())||isMaintancePendingChklistStatus()) {
@@ -8300,8 +8318,14 @@ public class QTDetailBackingBean extends
 	public void saveQtCAApproval() {
 		log.debug("saveQtCAApproval");
 		IQTDetailSO detailSO;
+		
 		try {
-			this.getManagedBean().setSaveFlow(true);
+			if (((getUserTaskIsCommitteeAppointmentApproval() && this.getManagedBean().getActiveIndex() == 5) || (getUserTaskIsCommitteeAppointmentApprovalEcOcTecFec() && this
+					.getManagedBean().getActiveIndex() == 9))) {
+				log.info("=========saveQtCAApprovalActiveIndexCodesExecuted======="
+						+ this.getManagedBean().getActiveIndex());
+				
+			/*this.getManagedBean().setSaveFlow(true);
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 
@@ -8320,8 +8344,72 @@ public class QTDetailBackingBean extends
 			quationTenderReqDTO.setRoleCode(getUserRoleCode());
 
 			QuationTenderResDTO quationTenderResDTO = detailSO
-					.updateQtCAAprovalDetails(quationTenderReqDTO);
-			if (quationTenderResDTO.isSuccessful()) {	
+					.updateQtCAAprovalDetails(quationTenderReqDTO); */
+
+				String pageAppr = "/xhtml/sc/quatationtender/Approver/approverPanel.xhtml";
+				String approvalType=this.getManagedBean().getApprovalType();
+			    boolean approvaleditable=	this.getManagedBean().isApprovalEditableSection();
+				boolean approvalScreen=this.getManagedBean().isApprovalScreen();
+				boolean isCommitteeUpdateFlow=this.getManagedBean().isCommitteeUpdateFlow();
+				List<ScQtApprovalRequest> approvalRequest=this.getManagedBean().getScQtApprovalRequestList();
+				boolean committeeApprovalSpec=getUserTaskIsCommitteeAppointmentApproval();
+				boolean committeeApprovalECOC=getUserTaskIsCommitteeAppointmentApprovalEcOcTecFec();
+				List<String> paramTypes=this.getManagedBean().getParamTypes();
+				
+				updateApprovalDetails(this.getManagedBean().getQt());
+				retrieveApprovalTabDtl();
+				validateQtDetails();
+				//String pageAppr = "/xhtml/sc/quatationtender/Approver/approverPanel.xhtml";
+				//super.isQTStatusLessThanOrEquals(this.getManagedBean().getCurrentStatusId(), QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)
+				
+				if (committeeApprovalSpec) {
+					log.info("======ifconditionCodesExecuted====");
+					this.getManagedBean().addAdditionalPages(UserTasks.CommitteeAppointmentApproval.toString(),
+							pageAppr);
+					this.getManagedBean().addUserTasks(UserTasks.CommitteeAppointmentApproval);
+				} else {
+					log.info("======elseconditionCodesExecuted====");
+					this.getManagedBean().addAdditionalPages(
+							UserTasks.CommitteeAppointmentApprovalEcOcTecFec.toString(), pageAppr);
+					this.getManagedBean().addUserTasks(UserTasks.CommitteeAppointmentApprovalEcOcTecFec);
+					this.getManagedBean().setParamTypes(paramTypes);
+					
+					ApprovalBackingBean approvalbean = new ApprovalBackingBean();
+					approvalbean.retriveCommiteeApprovalTabDetails();
+					
+					retrieveApprovalTabDtl();
+				}
+				
+				this.getManagedBean().setParamTypes(paramTypes);
+				this.getManagedBean().setApprovalType(approvalType);
+				this.getManagedBean().setApprovalEditableSection(approvaleditable);
+				this.getManagedBean().setApprovalScreen(approvalScreen);
+				this.getManagedBean().setCommitteeUpdateFlow(isCommitteeUpdateFlow);
+				this.getManagedBean().setScQtApprovalRequestList(approvalRequest);
+				
+				ScWorkFlowStatus currentStatus=null;
+				
+				if (currentStatus == null) {
+					currentStatus = getManagedBean().getQt().getCurrentWorkFlowStatus();
+					
+					IScWorkFlowStatusSO wfStatusSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+					
+					ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+					reqDTO.setDocType(ParameterConst.DOCTYPE_COMMITTE_APROVAL);
+					reqDTO.setDocId(this.getManagedBean().getQt().getQtId());
+					
+					ScWorkFlowStatus wfStatus = wfStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+					currentStatus = wfStatus;
+				}
+				
+				initializeRemarks(this.getManagedBean().getScQtApproval(), currentStatus, this.getManagedBean()
+						.getScQtApproval().getScQtApprovalRemarks(), ScQtApprovalRemark.class);
+			
+				successMessage(MessageConst.INFO_700090, ParameterTypeConst.DOCUMENT_TYPES,
+						ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtNo(), Boolean.FALSE);
+			
+			} else {
 				successMessage(MessageConst.INFO_700090, ParameterTypeConst.DOCUMENT_TYPES,
 						ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtNo(), Boolean.FALSE);
 			}
