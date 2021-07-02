@@ -346,6 +346,14 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private ScLoiLoaItem highestZoneScLoiLoaItem;
 	private List<ScLoiLoaItem> highestZoneScLoiLoaItemList;
 	public BigDecimal highestZonePrice = new BigDecimal(0);
+	private List<ScLoiLoaItem> nameZoneScLoiLoaItemList;
+	private List<ScLoiLoaItem> subTotalZoneScLoiLoaItemList;
+	private List<ScLoiLoaItem> dtlScLoiLoaItemList;
+	private Map<Long, Integer> reqItemRowSpanMap;
+	private Map<Long, BigDecimal> reqItemMaxSubTotalMap;
+	private Long reqItemSession = 0L;
+	private Long reqItemSubTotalSession = 0L;
+	public BigDecimal totalZonePrice = new BigDecimal(0);
 	//#27797 - end
     /**
      * Gets the spki backing bean.
@@ -1957,6 +1965,70 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 
 	public void setHighestZonePrice(BigDecimal highestZonePrice) {
 		this.highestZonePrice = highestZonePrice;
+	}
+
+	public List<ScLoiLoaItem> getNameZoneScLoiLoaItemList() {
+		return nameZoneScLoiLoaItemList;
+	}
+
+	public void setNameZoneScLoiLoaItemList(List<ScLoiLoaItem> nameZoneScLoiLoaItemList) {
+		this.nameZoneScLoiLoaItemList = nameZoneScLoiLoaItemList;
+	}
+
+	public List<ScLoiLoaItem> getSubTotalZoneScLoiLoaItemList() {
+		return subTotalZoneScLoiLoaItemList;
+	}
+
+	public void setSubTotalZoneScLoiLoaItemList(List<ScLoiLoaItem> subTotalZoneScLoiLoaItemList) {
+		this.subTotalZoneScLoiLoaItemList = subTotalZoneScLoiLoaItemList;
+	}
+
+	public List<ScLoiLoaItem> getDtlScLoiLoaItemList() {
+		return dtlScLoiLoaItemList;
+	}
+
+	public void setDtlScLoiLoaItemList(List<ScLoiLoaItem> dtlScLoiLoaItemList) {
+		this.dtlScLoiLoaItemList = dtlScLoiLoaItemList;
+	}
+
+	public Map<Long, Integer> getReqItemRowSpanMap() {
+		return reqItemRowSpanMap;
+	}
+
+	public void setReqItemRowSpanMap(Map<Long, Integer> reqItemRowSpanMap) {
+		this.reqItemRowSpanMap = reqItemRowSpanMap;
+	}
+
+	public Long getReqItemSession() {
+		return reqItemSession;
+	}
+
+	public void setReqItemSession(Long reqItemSession) {
+		this.reqItemSession = reqItemSession;
+	}
+
+	public Map<Long, BigDecimal> getReqItemMaxSubTotalMap() {
+		return reqItemMaxSubTotalMap;
+	}
+
+	public void setReqItemMaxSubTotalMap(Map<Long, BigDecimal> reqItemMaxSubTotalMap) {
+		this.reqItemMaxSubTotalMap = reqItemMaxSubTotalMap;
+	}
+
+	public Long getReqItemSubTotalSession() {
+		return reqItemSubTotalSession;
+	}
+
+	public void setReqItemSubTotalSession(Long reqItemSubTotalSession) {
+		this.reqItemSubTotalSession = reqItemSubTotalSession;
+	}
+
+	public BigDecimal getTotalZonePrice() {
+		return totalZonePrice;
+	}
+
+	public void setTotalZonePrice(BigDecimal totalZonePrice) {
+		this.totalZonePrice = totalZonePrice;
 	}
 	//#27797 - end
 }
