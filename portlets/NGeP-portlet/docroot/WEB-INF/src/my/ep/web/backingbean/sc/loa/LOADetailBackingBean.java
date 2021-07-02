@@ -383,7 +383,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		
 		//#29006 - start
 		if (Arrays.asList(QTStatusConst.LOA_PENDING_SUBMISSION, QTStatusConst.LOA_PENDING_REVISION,
-				QTStatusConst.LOA_CANCELLED).contains(scLoa.getPmStatus().getStatusId())) {
+				QTStatusConst.LOA_CANCELLED, QTStatusConst.LOA_PENDING_APPROVAL,
+				QTStatusConst.LOA_PENDING_REVISION_APPROVAL).contains(scLoa.getPmStatus().getStatusId())) {
 			getManagedBean().setSpecificationAndSupplierDialogFlag(true);
 			getManagedBean().setUpdateSupplierInstructionFlag(false); //avoid duplicate flag
 		}
@@ -394,8 +395,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			getManagedBean().setSpecificationAndSupplierDialogFlag(false); //avoid duplicate flag
 		}
 		
-		if (Arrays.asList(QTStatusConst.LOA_PENDING_APPROVAL, QTStatusConst.LOA_PENDING_REVISION_APPROVAL,
-				QTStatusConst.LOA_PENDING_ACKNOWLEDGE_RECEIPT_SUPPLIER_ACTION,
+		if (Arrays.asList(QTStatusConst.LOA_PENDING_ACKNOWLEDGE_RECEIPT_SUPPLIER_ACTION,
 				QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT).contains(scLoa.getPmStatus().getStatusId())) {
 			getManagedBean().setSpecificationAndSupplierDialogFlag(false);
 			getManagedBean().setUpdateSupplierInstructionFlag(false);
