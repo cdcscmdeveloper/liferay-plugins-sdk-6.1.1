@@ -211,18 +211,20 @@
 				style="width:5%;white-space: normal;text-align: center;">
 				<h:panelGroup id="scoreFinanceView">
 				
+<!-- #30559 Farid add condition definition key 'FA' and 'U'-->				
 				<c:choose>	
-					<c:when test="#{(stageTwofunctional.pmDocument.docDefinitionKey ne 'UP')}">
+					<c:when test="#{(stageTwofunctional.pmDocument.docDefinitionKey ne 'UP' and stageTwofunctional.pmDocument.docDefinitionKey ne 'FA' and stageTwofunctional.pmDocument.docDefinitionKey ne 'U')}">
 						<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
-							rendered="#{(stageTwofunctional.pmDocument.docDefinitionKey ne 'UP')}">
+							rendered="#{(stageTwofunctional.pmDocument.docDefinitionKey ne 'UP' and stageTwofunctional.pmDocument.docDefinitionKey ne 'FA' and stageTwofunctional.pmDocument.docDefinitionKey ne 'U')}">
 							<p:ajax event="change" process="@this" partialSubmit="true"
 								update="financialChecklistSpecificationStatus,actionView"
 								listener="#{specificationBackingBean.financialCheckListScoreReqChange(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
 						</p:selectBooleanCheckbox>
 					</c:when>
 					<c:otherwise>
-					
+<!-- #30559 Farid add condition definition key 'FA' and 'U'-->	
+
 					<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						rendered="#{((stageTwofunctional.pmDocument.docDefinitionKey ne 'SD' and   stageTwofunctional.action.parameterCode ne 'U') and !(stageTwofunctional.definationType.parameterCode eq 'TS' and stageTwofunctional.action.parameterCode eq 'I') and !(stageTwofunctional.definationType.parameterCode eq 'UP' and stageTwofunctional.action.parameterCode eq 'V'))}">
