@@ -2517,6 +2517,13 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	    		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
 	    			getManagedBean().setAutoUpdate(false);	
 	    			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");	
+	    		}else if(outcome.equals(BpmOutcomeConst.BPM_SUBMIT) && taskName.equalsIgnoreCase(SCProcessNameConst.GENERIC_APPROVAL_REVISE)){ //#30477 - Start
+	    			if(isInactivePublicationApproverRole()){
+						throw new EpException(MessageConst.ERROR_775173);	
+					}else{
+						updateGenericApprovalTask(null);
+					}
+	    	    //#30477 - End
 	    		}else{
 	    			updateGenericApprovalTask(null);
 	    		}
@@ -2689,6 +2696,32 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 		}
 		//#	29762-start
+		
+		//#30477 - Start
+		public boolean isInactivePublicationApproverRole() {
+			IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			boolean inactive=false;
+			ScQt scQt = this.getManagedBean().getQt();
+			ScQtApproval publicationApproval = this.getManagedBean().getPublicationApproval();
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			reqDTO.setQtId(scQt.getQtId());
+			reqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_PTJ);
+			QuationTenderResDTO resDTO = detailSO.retrieveApprovalDtlsByQtIdNType(reqDTO);
+			if (null == publicationApproval && null!=resDTO && null!=resDTO.getQtApproval()) {
+				publicationApproval = resDTO.getQtApproval();
+				List<ScQtApproverSettings> approverSettings = publicationApproval.getApproverSettings();
+		        for(ScQtApproverSettings approverSetting : approverSettings ){
+		        	QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+			  		if(qtBackingBean.isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId(), 2)){
+		  			   inactive=true;
+		  		    }
+		        }
+			}
+			return inactive;
+		}
+		//#30477 - Start
+		
 }
 
 // ***25692
