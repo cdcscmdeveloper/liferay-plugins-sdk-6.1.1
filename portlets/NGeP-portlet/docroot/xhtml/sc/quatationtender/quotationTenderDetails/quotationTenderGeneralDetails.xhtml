@@ -448,8 +448,8 @@
 							<td>
 							<c:choose>
 							<!-- #21695 farid -->
-				<!-- #21695 farid 7/04/2020 -->
-								<c:when test="#{!isMaintenanceFlow and !qtStatusChecklistScoring and !qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_EVALUATION_TYPE) or scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION or scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION and !isReadOnly}">
+				<!-- #21695 farid 3/07/2021 -->
+								<c:when test="#{createQtBB.hasroleSCSecretary() and qtStatusChecklistScoring and !isMaintenanceFlow and !qtStatusChecklistScoring and !qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_EVALUATION_TYPE) or scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION or scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION and !isReadOnly}">
 										<p:outputPanel id="partialPop">
 													<p:selectOneRadio  value="#{scQt.partial}" disabled="#{scQt.sampleReq}">
 														<f:selectItems
@@ -478,6 +478,7 @@
 										<p:inputText id="partialTxt"
 											value="#{createQtBB.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(scQt.partial))}"
 											style="width:195px;" disabled="true" />
+											
 									</c:otherwise>
 								</c:choose>
 							</td>
