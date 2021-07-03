@@ -172,6 +172,7 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private boolean activeDisicplinaryAction;
 	private boolean divisionBox=true;//13320
 	private Long divisionId;//13320
+	private List <SmSupplierOwner> supplierOwnerls = new ArrayList<SmSupplierOwner>(); // #27691
 	
 	// 27691 - Add/Delete Supplier Owner
 	private SmSupplierOwner[] selectedSuppOwners;
@@ -1059,5 +1060,15 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	public void setPermenantDivisionLs(List<SelectItem> permenantDivisionLs) {
 		this.permenantDivisionLs = permenantDivisionLs;
 	}
+	
+	// #27691 - Start
+	public List<SmSupplierOwner> getSupplierOwnerls() {
+		return supplierOwnerls;
+	}
+
+	public void setSupplierOwnerls(List<SmSupplierOwner> supplierOwnerls) {
+		this.supplierOwnerls = supplierOwnerls;
+	}
+	// #27691 - End
 	
 }
