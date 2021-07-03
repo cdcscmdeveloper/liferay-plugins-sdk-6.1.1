@@ -1202,6 +1202,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			smSupp.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).setSmAddress(smAddress);
 		}
 		smSupp.setEstablishDate(smSupp.getSmAppl().getSmCompanyBasic().getEstablishDate());
+		
+		// #27691 - Start- For supplier owner with record status 9 or 0
+		if(!this.getManagedBean().getSupplierOwnerls().isEmpty()){
+			getManagedBean().getSmSupp().getSmSupplierOwners().addAll(this.getManagedBean().getSupplierOwnerls());
+		}
+		// #27691 - End
 
 		reqDTO.setSmSupp(getManagedBean().getSmSupp());
 		
@@ -2149,14 +2155,17 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				//26238 - end
 				if(resDTO.getSmSupp().getSmSupplierOwners()!=null && CollectionUtils.isNotEmpty(resDTO.getSmSupp().getSmSupplierOwners())){
 					// #27691 - Start
+					// for view director.Display supplier owner with record status 1 or 8 only
 					for (SmSupplierOwner smSuppOwner: resDTO.getSmSupp().getSmSupplierOwners()){
-						if(smSuppOwner.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE){
-							this.getManagedBean().setSmSuppOwner(resDTO.getSmSupp().getSmSupplierOwners().get(0));
-							this.getManagedBean().setSmSuppOwners(resDTO.getSmSupp().getSmSupplierOwners());
-						}
+						if(smSuppOwner.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_DELETED
+								||smSuppOwner.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_SUSPENDED){
+							this.getManagedBean().getSupplierOwnerls().add(smSuppOwner);
+							}
 					}
-					// #27691 - End
 					this.getManagedBean().setSmSuppOwner(resDTO.getSmSupp().getSmSupplierOwners().get(0));
+					this.getManagedBean().setSmSuppOwners(resDTO.getSmSupp().getSmSupplierOwners());
+					resDTO.getSmSupp().getSmSupplierOwners().removeAll(this.getManagedBean().getSupplierOwnerls());
+				// #27691 - End
 					// start #29956
 					if (!SupplierManagementConst.LIST_OF_BUSINESS_TYPE_NOT_SHOW_EQUITY_OWNER_ONLY.contains(smSupp
 							.getBusinessType())) {
@@ -2917,6 +2926,16 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	public void removeSupplierOwner() {
 		if (this.getManagedBean().getSelectedSuppOwners() != null && this.getManagedBean().getSelectedSuppOwners().length > 0) {
 			for (SmSupplierOwner smSupplierOwner : this.getManagedBean().getSelectedSuppOwners()) {
+				// #27691 - Start - Set record status to 9 for deleted personnel
+				if(!this.getManagedBean().getSmAppl().getSmPersonnels().isEmpty()){
+					for (SmPersonnel smPersonnel : this.getManagedBean().getSmAppl().getSmPersonnels()){
+						if(smSupplierOwner.getIdentificationNo().equalsIgnoreCase(smPersonnel.getIdentificationNo())
+								&& smSupplierOwner.getOwnerName().equalsIgnoreCase(smPersonnel.getName())){
+							smPersonnel.setRecordStatusFlg(9);
+						}
+					}
+				}
+				// #27691 - End
 				this.getManagedBean().getSmSuppOwners().remove(smSupplierOwner);
 			}
 		}
@@ -3269,12 +3288,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 */
 	public String updateBasicSupplier(){
 		// 27691 - start -  Add/Delete Supplier Owner - log only for dev server debugging
-		/*
 		log.info("---After declare button clicked Supplier Owner size: " + this.getManagedBean().getSmSupp().getSmSupplierOwners().size() + "---");
 		for (int i = 0; i < this.getManagedBean().getSmSupp().getSmSupplierOwners().size(); i++) {
-			log.info("---" + this.getManagedBean().getSmSupp().getSmSupplierOwners().get(i).getOwnerName() + ": " + this.getManagedBean().getSmSupp().getSmSupplierOwners().get(i).getIdentificationNo() + "---");
+			log.info("---" + this.getManagedBean().getSmSupp().getSmSupplierOwners().get(i).getOwnerName()  + ": " + this.getManagedBean().getSmSupp().getSmSupplierOwners().get(i).getIdentificationNo() + "---");
 		}
-		*/
 		// 27691 - end -  Add/Delete Supplier Owner - log only for dev server debugging
 		//CR 27382: Static Code Analysis Start
 		/*Asal
