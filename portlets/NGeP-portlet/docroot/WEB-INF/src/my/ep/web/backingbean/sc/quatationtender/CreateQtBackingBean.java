@@ -3692,4 +3692,11 @@ public class CreateQtBackingBean extends
 			}
 		}
 	}
+	
+//#21695 Farid START 3/7/2021	
+		public boolean hasroleSCSecretary() {
+			FacesScopes facesScopes = new FacesScopes();
+			return facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value());	
+		}
+//#21695 Farid END 3/7/2021				
 }
