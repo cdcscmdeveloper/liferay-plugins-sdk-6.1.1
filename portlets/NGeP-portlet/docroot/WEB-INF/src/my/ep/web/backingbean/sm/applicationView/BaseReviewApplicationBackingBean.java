@@ -2470,27 +2470,27 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				if(!EntityHelper.isCollectionEmpty(getManagedBean()
 						.getSmAppl().getSmApplRejectReasons())){
 					//#30974 - Start - 2/7/2021
-					Map<String, SmApplRejectReason> removedDuplicateID = new HashMap<String, SmApplRejectReason>();
-					List<SmApplRejectReason> newListOfRejectID = new ArrayList<>();
-					for(SmApplRejectReason reason : this.getManagedBean().getSmAppl().getSmApplRejectReasons()){
-						removedDuplicateID.put(reason.getPmReason().getReasonId().toString(), reason);
+					if (this.getManagedBean().getSmAppl().getPmStatus().getStatusId().toString()
+							.equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER)) {
+						Iterator<SmApplRejectReason> smApplRejectReasonIter = getManagedBean().getSmAppl()
+								.getSmApplRejectReasons().iterator();
+						while (smApplRejectReasonIter.hasNext()) {
+							SmApplRejectReason smApplRejectReason = smApplRejectReasonIter.next();
+							if (!smApplRejectReason.isReasonByPo()) {
+								smApplRejectReasonIter.remove();
+							}
+						}
+					} else if (this.getManagedBean().getSmAppl().getPmStatus().getStatusId().toString()
+							.equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)) {
+						Iterator<SmApplRejectReason> smApplRejectReasonIter = getManagedBean().getSmAppl()
+								.getSmApplRejectReasons().iterator();
+						while (smApplRejectReasonIter.hasNext()) {
+							SmApplRejectReason smApplRejectReason = smApplRejectReasonIter.next();
+							if (smApplRejectReason.isReasonByPo()) {
+								smApplRejectReasonIter.remove();
+							}
+						}
 					}
-					Iterator itr = removedDuplicateID.keySet().iterator();
-					while (itr.hasNext()){
-						String id = itr.next().toString();
-						newListOfRejectID.add((SmApplRejectReason)removedDuplicateID.get(id));
-					}
-					getManagedBean().getSmAppl().setSmApplRejectReasons(newListOfRejectID);
-					
-					/*Iterator<SmApplRejectReason> smApplRejectReasonIter = getManagedBean()
-							.getSmAppl().getSmApplRejectReasons().iterator();
-				    while(smApplRejectReasonIter.hasNext()){
-				    	SmApplRejectReason smApplRejectReason = smApplRejectReasonIter.next();
-				        if(!smApplRejectReason.isReasonByPo()){
-				        	smApplRejectReasonIter.remove();
-				          }
-				      }*/
-					
 					//#30974 - End - 2/7/2021
 				}
 				// Refs #15629 - End - 21/1/2021
