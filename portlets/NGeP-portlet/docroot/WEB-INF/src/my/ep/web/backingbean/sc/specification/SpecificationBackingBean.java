@@ -5013,6 +5013,14 @@ public class SpecificationBackingBean extends
 				return "/xhtml/sc/boSctemplatespec/committeeTechnicalEditAction.xhtml?faces-redirect=true";
 			} else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checkList
 					.getDefinationType().getParameterCode())) {//#11104-start
+				List<ScQtCheckList> technicalChecklist=this.getManagedBean().getScQtCheckSt2techProposal();//#11104-start
+				this.getManagedBean().setSampleSpecCheckList(new ArrayList<ScQtCheckList>());
+				for(ScQtCheckList checklist:technicalChecklist){
+					if (QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(checklist
+							.getDefinationType().getParameterCode()) & QTStatusConst.TS_COMPLETED.equals(checklist.getPmStatus().getStatusId())) {
+						this.getManagedBean().getSampleSpecCheckList().	add(checklist);
+					}
+				}//#11104-End
 				return "/xhtml/sc/specification/specificationCommittee/technicalCheckListSampleMain.xhtml?faces-redirect=true";	
 			}//#11104-End
 			else {
@@ -17666,6 +17674,7 @@ IQTSpecSO specSO = EpEjbBusinessDelegate.getInstance()
 SpecificationReqDTO specReqDTO=new SpecificationReqDTO();
 specReqDTO.setScQtCheckList( this.getManagedBean().getSampleCheckList());
 List<ScQtCheckList> technicalChecklist=this.getManagedBean().getScQtCheckSt2techProposal();
+List<ScQtCheckList> sampleChecklist=this.getManagedBean().getSampleSpecCheckList();//#11104
 for(ScQtCheckList checklist:technicalChecklist){
 	if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checklist
 			.getDefinationType().getParameterCode())) {
@@ -17698,6 +17707,13 @@ for(ScQtCheckList checklist:technicalChecklist){
 		technicalChecklist.set(index,specresDTO.getScQtCheckList());		
 	}
 }
+for(ScQtCheckList checklist:sampleChecklist){//#11104-start
+	if(specresDTO.getScQtCheckList().getQtChecklistId().equals(checklist.getQtChecklistId())){
+		int index=	sampleChecklist.indexOf(checklist);
+		sampleChecklist.set(index,specresDTO.getScQtCheckList());
+		break;
+	}	
+}//#11104-End
 saveSpecMaintenanceWorkFlowStatus();
 if(!actionRender){
 successMessage(MessageConst.INFO_700004, getMessageCommon("lbl.sc.qt.sampel.technical.panel.item.search.header"), "", Boolean.FALSE);

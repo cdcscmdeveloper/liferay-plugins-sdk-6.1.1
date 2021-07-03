@@ -71,7 +71,7 @@
 				headerText="#{lbl['lbl.tpl.spec.content.price.type']}">
 			</p:column>
 			
-			<p:column rowspan="2"  style="width:10%;text-align:right;"
+			<p:column rowspan="2"  style="width:10%;white-space:normal;"
 				headerText="#{lbl['lbl.tpl.spec.content.quantity']}" >
 
 			</p:column>
@@ -100,7 +100,7 @@
 			</p:column>
 			
 			<p:column style="white-space: normal;">
-			<h:outputText value="#{technicalSampleQuestion.clQuantity}"></h:outputText>
+			<h:outputText value="#{technicalSampleQuestion.clQuantity}"  rendered="#{technicalSampleQuestion.clPriceTypeCode ne null and(technicalSampleQuestion.clPriceTypeCode.parameterCode eq ParameterConst.priceTypeStandard)}"></h:outputText>
 			<p:commandButton id="sampleZoneQtyBtn" 
 				icon="ui-icon-pencil" rendered="#{technicalSampleQuestion.clPriceTypeCode ne null and(technicalSampleQuestion.clPriceTypeCode.parameterCode eq ParameterConst.priceTypeZonalStandard or technicalSampleQuestion.clPriceTypeCode.parameterCode eq ParameterConst.priceTypeZonalTier)}"
 				style="background-color:transparent !important; border:0px none;"

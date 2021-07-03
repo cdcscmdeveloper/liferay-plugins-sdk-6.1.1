@@ -1717,6 +1717,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	// #15391 - start
 	private boolean isChecklist;
 	private boolean isGenInfo;
+
 	// #15391 - end
 
 	//#25138-start
@@ -1744,10 +1745,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	// #30451-Start.
 	private boolean isBdSfFlow;
 	// #30451-End.
+	
+	private List<ScQtCheckList> sampleSpecCheckList;//25635
 		
 	public QTDetailManagedBean() {
-		log.info("inside ");
-
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
 
@@ -10839,6 +10840,23 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			this.isBdSfFlow = isBdSfFlow;
 		}
 		// #30451-End.
+		
+		/**25635-start
+		 * @return the sampleSpecCheckList
+		 */
+		public List<ScQtCheckList> getSampleSpecCheckList() {
+			return sampleSpecCheckList;
+		}
+
+		/**
+		 * @param sampleSpecCheckList the sampleSpecCheckList to set
+		 */
+		public void setSampleSpecCheckList(List<ScQtCheckList> sampleSpecCheckList) {
+			this.sampleSpecCheckList = sampleSpecCheckList;
+		}
+		/*
+		 * 25635-End
+		 */
 		
 		//#25037-start
 		public List<String> getMainTaskNames() {
