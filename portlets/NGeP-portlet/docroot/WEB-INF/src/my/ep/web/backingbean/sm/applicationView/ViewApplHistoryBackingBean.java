@@ -334,6 +334,11 @@ public class ViewApplHistoryBackingBean extends
 		log.info("-------------------------------------------------------------------"+SmCommonUtil.getInstance().ssmActive());
 		if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(getManagedBean().getSmAppl().getSmSupplier().getRegNo(),getManagedBean().getSmAppl().getSmSupplier().getBusinessType()) && this.getManagedBean().getSsmResDTO() != null && !this.getManagedBean().isCheckRoleSSM()){			
 			List<SmPersonnel> personnelsRole = this.getManagedBean().getPersonnelsRole();
+			//start #29956
+			if(this.getManagedBean().isDowngradeRole()==null || !this.getManagedBean().isDowngradeRole()){
+				personnelsRole.clear();
+			}
+			//end #29956
 			for(SmPersonnel personnel :  this.getManagedBean().getSmAppl().getSmPersonnels()){
 				if (personnel.isEquityOwner() || personnel.isDirector()) {
 						SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),this.getManagedBean().getSsmResDTO().getSmPersonnelOwners(),"identificationNo");

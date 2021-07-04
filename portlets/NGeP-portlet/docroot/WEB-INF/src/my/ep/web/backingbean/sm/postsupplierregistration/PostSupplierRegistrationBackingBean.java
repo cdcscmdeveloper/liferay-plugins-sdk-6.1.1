@@ -337,14 +337,22 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 					log.info("pageNavigate------------"+path1);
 					checkSSMValid(supplier,this.getManagedBean());
 					log.info("this.getManagedBean().getPersonnelsRole()------------"+this.getManagedBean().getPersonnelsRole());
+					//start #29956
+					if(!this.getManagedBean().getPersonnelsRole().isEmpty()){
+						this.getManagedBean().setTermAndConditionCheckOwnerChangeRole(
+								SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole.temporary.supplier.administrator", null));
+					}
+					//end #29956
 					log.info("this.getManagedBean().isCheckRoleSSM()------------"+this.getManagedBean().isCheckRoleSSM());
 					if(this.getManagedBean().getPersonnelsRole()!= null && this.getManagedBean().getPersonnelsRole().size() > 0 && !this.getManagedBean().isCheckRoleSSM()){
 						proceed =false;
+						//Start 27951
 						if(this.getManagedBean().getSmSupplier().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
 							this.getManagedBean().setPreRegistration(true);
 						}else{
 							this.getManagedBean().setPreRegistration(false);
-						}						
+						}
+						//End 27951
 						RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 						RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
 						SmCommonUtil.redirectToPage(

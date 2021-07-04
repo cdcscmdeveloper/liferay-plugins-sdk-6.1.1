@@ -147,6 +147,7 @@ public abstract class BaseManagedBean implements Serializable {
 	private String termAndConditionCheckOwnerA;
 	private String termAndConditionCheckOwnerC;
 	private String termAndConditionCheckOwnerChangeRole;
+	private Boolean isDowngradeRole;
 	// end #29956
 
 	// 27346
@@ -977,8 +978,17 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setErrorInvalidSelfRequest(boolean errorInvalidSelfRequest) {
 		this.errorInvalidSelfRequest = errorInvalidSelfRequest;
 	}
-}
+	
+	//start #29956
+	public Boolean isDowngradeRole() {
+		return isDowngradeRole;
+	}
 
+	public void setDowngradeRole(Boolean isDowngradeRole) {
+		this.isDowngradeRole = isDowngradeRole;
+	}
+	//end #29956
+}
 
 // ***25201
 // ***25692

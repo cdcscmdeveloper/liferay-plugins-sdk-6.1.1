@@ -1958,7 +1958,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		if(language.equalsIgnoreCase("en")){
 			noEp = "no EP Role";
 		}else{
-			noEp = "tiada peranan EP";
+			noEp = "profil yang tiada peranan";
 		}
 		return noEp;
 	}
@@ -2818,6 +2818,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		//start loop list #28454
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject("sm", IPersonnelSO.class);
+		this.getManagedBean().setDowngradeRole(true);  //#29956
 		for(SmPersonnel personnel : this.getManagedBean().getPersonnelsRole()){
 				//27951
 				if(!personnel.isClerical() && !personnel.isHigherManagement() && !personnel.isManagement()){
@@ -3035,6 +3036,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 						if (postRegBean.getSmSupplier() != null && postRegBean.getSmSupplier().getSupplierId() != null) {
 
 							List<SmPersonnel> personnelsRole = postRegBean.getPersonnelsRole();
+							if(this.getManagedBean().isDowngradeRole()==null || !this.getManagedBean().isDowngradeRole()){
+								personnelsRole.clear();
+							}
 							if (personnelsRole != null && personnelsRole.size() <= 0) {
 								if (postRegBean.getSmSupplier().getSmAppl() != null
 										&& postRegBean.getSmSupplier().getSmAppl().getSmPersonnels() != null) {
@@ -3053,16 +3057,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 									}
 								}
 							}
-							String epRole = getEpRoleDowngradePopupByPersonnel(personnelsRole);
-							
-							this.getManagedBean().setTermAndConditionCheckOwner(
-									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner", new String[] { epRole}));
-							this.getManagedBean().setTermAndConditionCheckOwnerA(
-									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.a", new String[] { epRole }));
-							this.getManagedBean().setTermAndConditionCheckOwnerC(
-									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.c", new String[] { epRole }));
-							this.getManagedBean().setTermAndConditionCheckOwnerChangeRole(
-									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole", new String[] { epRole}));
 
 							if (personnelsRole != null && personnelsRole.size() > 0) {
 								postRegBean.setDontGetSsmData(false);
