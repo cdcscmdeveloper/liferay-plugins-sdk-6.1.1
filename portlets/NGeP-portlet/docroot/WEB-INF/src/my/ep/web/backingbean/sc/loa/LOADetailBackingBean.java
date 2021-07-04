@@ -254,6 +254,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 		reqDTO.setScLoa(scLoa);
+		reqDTO.setLoaId(scLoa.getLoaId()); //27797
 		reqDTO.setLanguageCode(language);
 
 		List<ScLoiLoa> supplierLoiLoas = new ArrayList<ScLoiLoa>();
@@ -396,19 +397,42 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		if (scLoiLoa.getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)
 				|| scLoiLoa.getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
 			if(scLoiLoa.isZonal()){
-				BigDecimal highestZonePrice = BigDecimal.ZERO;
-				for (ScLoiLoaItem item : scLoa.getScLoiLoaItems()) {
+				Map<Long, Integer> reqItemRowSpanMap = new HashMap<Long, Integer>();
+				Map<Long, BigDecimal> reqItemMaxTotalMap = new HashMap<Long, BigDecimal>();
+				AwardSupplierResDTO itemsResDTO = getQtAwardSO().searchScLoiLoaItemByLoaId(reqDTO);
+				
+				//to set rowspan value / max sub total for every RequestNoteItemId
+				for (ScLoiLoaItem item : itemsResDTO.getScLoiLoaItemList()) {
 					BigDecimal subPrice = calcSubTotalPrice(item);
-					int result = subPrice.compareTo(highestZonePrice);					
-					if (result == 1) {
-						highestZonePrice = subPrice;
-						getManagedBean().setHighestZoneScLoiLoaItem(item);
-						getManagedBean().setHighestZonePrice(highestZonePrice);
-						getManagedBean().getHighestZoneScLoiLoaItemList().clear();
-						getManagedBean().getHighestZoneScLoiLoaItemList().add(item);
+					
+					if (reqItemRowSpanMap.containsKey(item.getScRequestItem().getRequestNoteItemId())) {
+						reqItemRowSpanMap.put(item.getScRequestItem().getRequestNoteItemId(),reqItemRowSpanMap.get(item.getScRequestItem().getRequestNoteItemId()) + 1);
+					} else {
+						reqItemRowSpanMap.put(item.getScRequestItem().getRequestNoteItemId(), 1);
 					}
-			
+					
+					if (reqItemMaxTotalMap.containsKey(item.getScRequestItem().getRequestNoteItemId())) {
+						int result = subPrice.compareTo(reqItemMaxTotalMap.get(item.getScRequestItem()
+								.getRequestNoteItemId()));
+						if (result == 1) {
+							reqItemMaxTotalMap.put(item.getScRequestItem().getRequestNoteItemId(), subPrice);
+						}
+					} else {
+						reqItemMaxTotalMap.put(item.getScRequestItem().getRequestNoteItemId(), subPrice);
+					}
 				}
+				
+				//count total sub
+				BigDecimal totalZonePrice = BigDecimal.ZERO; 
+				for(BigDecimal value: reqItemMaxTotalMap.values())
+					totalZonePrice = totalZonePrice.add(value);
+				
+				this.getManagedBean().setNameZoneScLoiLoaItemList(itemsResDTO.getScLoiLoaItemList());
+				this.getManagedBean().setReqItemMaxSubTotalMap(reqItemMaxTotalMap);
+				this.getManagedBean().setReqItemRowSpanMap(reqItemRowSpanMap);
+				this.getManagedBean().setReqItemSession(0L);
+				this.getManagedBean().setReqItemSubTotalSession(0L);
+				this.getManagedBean().setTotalZonePrice(totalZonePrice);				
 			}
 		}
 		// #27797 - end
@@ -834,22 +858,48 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		
 		// #27797 - start
+		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+		reqDTO.setLoaId(loaId);
+		
 		if (scLoiLoa.getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)
 				|| scLoiLoa.getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
-			if (scLoiLoa.isZonal()) {
-				BigDecimal highestZonePrice = BigDecimal.ZERO;
-				for (ScLoiLoaItem item : this.getManagedBean().getScLoa().getScLoiLoaItems()) {
+			if(scLoiLoa.isZonal()){
+				Map<Long, Integer> reqItemRowSpanMap = new HashMap<Long, Integer>();
+				Map<Long, BigDecimal> reqItemMaxTotalMap = new HashMap<Long, BigDecimal>();
+				AwardSupplierResDTO itemsResDTO = getQtAwardSO().searchScLoiLoaItemByLoaId(reqDTO);
+				
+				//to set rowspan value / max sub total for every RequestNoteItemId
+				for (ScLoiLoaItem item : itemsResDTO.getScLoiLoaItemList()) {
 					BigDecimal subPrice = calcSubTotalPrice(item);
-					int result = subPrice.compareTo(highestZonePrice);
-					if (result == 1) {
-						highestZonePrice = subPrice;
-						getManagedBean().setHighestZoneScLoiLoaItem(item);
-						getManagedBean().setHighestZonePrice(highestZonePrice);
-						getManagedBean().getHighestZoneScLoiLoaItemList().clear();
-						getManagedBean().getHighestZoneScLoiLoaItemList().add(item);
+					
+					if (reqItemRowSpanMap.containsKey(item.getScRequestItem().getRequestNoteItemId())) {
+						reqItemRowSpanMap.put(item.getScRequestItem().getRequestNoteItemId(),reqItemRowSpanMap.get(item.getScRequestItem().getRequestNoteItemId()) + 1);
+					} else {
+						reqItemRowSpanMap.put(item.getScRequestItem().getRequestNoteItemId(), 1);
 					}
-
+					
+					if (reqItemMaxTotalMap.containsKey(item.getScRequestItem().getRequestNoteItemId())) {
+						int result = subPrice.compareTo(reqItemMaxTotalMap.get(item.getScRequestItem()
+								.getRequestNoteItemId()));
+						if (result == 1) {
+							reqItemMaxTotalMap.put(item.getScRequestItem().getRequestNoteItemId(), subPrice);
+						}
+					} else {
+						reqItemMaxTotalMap.put(item.getScRequestItem().getRequestNoteItemId(), subPrice);
+					}
 				}
+				
+				//count total sub
+				BigDecimal totalZonePrice = BigDecimal.ZERO; 
+				for(BigDecimal value: reqItemMaxTotalMap.values())
+					totalZonePrice = totalZonePrice.add(value);
+				
+				this.getManagedBean().setNameZoneScLoiLoaItemList(itemsResDTO.getScLoiLoaItemList());
+				this.getManagedBean().setReqItemMaxSubTotalMap(reqItemMaxTotalMap);
+				this.getManagedBean().setReqItemRowSpanMap(reqItemRowSpanMap);
+				this.getManagedBean().setReqItemSession(0L);
+				this.getManagedBean().setReqItemSubTotalSession(0L);
+				this.getManagedBean().setTotalZonePrice(totalZonePrice);				
 			}
 		}
 		// #27797 - end
@@ -8911,5 +8961,68 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		});
 	}
 	//29007 End
+	
+	//27797 start
+	public Integer getScRequestRowCount(Long reqItemId) {
+		int rowCount = 0;
+
+		for (Map.Entry<Long, Integer> entry : this.getManagedBean().getReqItemRowSpanMap().entrySet()) {
+			if (entry.getKey() != null&& entry.getKey().compareTo(reqItemId) == 0) {
+				rowCount = entry.getValue();
+			}
+		}
+		
+		return rowCount;
+	}
+	
+	public BigDecimal getScRequestSubTotalZonal(Long reqItemId) {
+		BigDecimal maxSubTotal = new BigDecimal(0);
+		
+		for (Map.Entry<Long, BigDecimal> entry : this.getManagedBean().getReqItemMaxSubTotalMap().entrySet()) {
+			if (entry.getKey() != null&& entry.getKey().compareTo(reqItemId) == 0) {
+				maxSubTotal = entry.getValue();
+			}
+		}
+		
+		return maxSubTotal;
+	}
+	
+	public Long getScRequestSession(Long reqItemId, int index) {
+		if(this.getManagedBean().getReqItemMaxSubTotalMap().size() == 1)
+		{			
+			if(index == 0){
+				return 0L;
+			}
+			else{
+				return reqItemId;
+			}
+		}
+		if (!this.getManagedBean().getReqItemSession().equals(reqItemId)) {
+			this.getManagedBean().setReqItemSession(reqItemId);
+			return 0L;
+		}
+
+		return this.getManagedBean().getReqItemSession();
+	}
+	
+	public Long getScRequestSubTotalSession(Long reqItemId, int index) {
+		if(this.getManagedBean().getReqItemMaxSubTotalMap().size() == 1)
+		{
+			if(index == 0){
+				return 0L;
+			}
+			else{
+				return reqItemId;
+			}
+		}
+		
+		if (!this.getManagedBean().getReqItemSubTotalSession().equals(reqItemId)) {
+			this.getManagedBean().setReqItemSubTotalSession(reqItemId);
+			return 0L;
+		}
+
+		return this.getManagedBean().getReqItemSubTotalSession();
+	}
+	//27797 end
 }
 
