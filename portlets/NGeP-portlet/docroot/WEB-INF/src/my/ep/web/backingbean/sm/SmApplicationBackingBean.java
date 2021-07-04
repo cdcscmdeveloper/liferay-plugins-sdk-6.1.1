@@ -2229,6 +2229,11 @@ public class SmApplicationBackingBean extends
 							
 						//START NEW CHANGES POPUP OWNER UPDATE ROLE							
 						List<SmPersonnel> personnelsRole = this.getManagedBean().getPersonnelsRole();
+						//start #29956
+						if(this.getManagedBean().isDowngradeRole()==null || !this.getManagedBean().isDowngradeRole()){
+							personnelsRole.clear();
+						}
+						//end #29956
 						if (personnelsRole != null && personnelsRole.size() <= 0) {
 							for (SmPersonnel personnel : this.getManagedBean().getSmAppl().getSmPersonnels()) {
 								if (personnel.isEquityOwner() || personnel.isDirector()) {
@@ -2254,7 +2259,6 @@ public class SmApplicationBackingBean extends
 									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.c", new String[] { epRole }));
 							this.getManagedBean().setTermAndConditionCheckOwnerChangeRole(
 									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole", new String[] { epRole }));
-							// end #29956
 
 								if(personnelsRole != null && personnelsRole.size() > 0 && !dontShowDowngradePopup) {
 									if(this.getManagedBean().isDisAllowOwnerEdit()){
@@ -2262,6 +2266,7 @@ public class SmApplicationBackingBean extends
 									}else{
 										this.getManagedBean().setDontGetSsmData(false);
 									}
+									// end #29956
 									getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupplier());	
 									RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
 									return SmApplicationUtil.setStringNavigationForApplTnCPage(applicationType);								
