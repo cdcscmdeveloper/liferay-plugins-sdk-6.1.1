@@ -9464,7 +9464,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		return maxSubTotal;
 	}
 	
-	public Long getScRequestSession(Long reqItemId) {
+	public Long getScRequestSession(Long reqItemId, int index) {
+		if(this.getManagedBean().getReqItemMaxSubTotalMap().size() == 1)
+		{			
+			if(index == 0){
+				return 0L;
+			}
+			else{
+				return reqItemId;
+			}
+		}
 		if (!this.getManagedBean().getReqItemSession().equals(reqItemId)) {
 			this.getManagedBean().setReqItemSession(reqItemId);
 			return 0L;
@@ -9473,7 +9482,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		return this.getManagedBean().getReqItemSession();
 	}
 	
-	public Long getScRequestSubTotalSession(Long reqItemId) {
+	public Long getScRequestSubTotalSession(Long reqItemId, int index) {
+		if(this.getManagedBean().getReqItemMaxSubTotalMap().size() == 1)
+		{
+			if(index == 0){
+				return 0L;
+			}
+			else{
+				return reqItemId;
+			}
+		}
+		
 		if (!this.getManagedBean().getReqItemSubTotalSession().equals(reqItemId)) {
 			this.getManagedBean().setReqItemSubTotalSession(reqItemId);
 			return 0L;
