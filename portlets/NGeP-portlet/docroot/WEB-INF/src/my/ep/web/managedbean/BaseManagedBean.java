@@ -162,6 +162,7 @@ public abstract class BaseManagedBean implements Serializable {
 	private String termAndConditionCheckOwnerA;
 	private String termAndConditionCheckOwnerC;
 	private String termAndConditionCheckOwnerChangeRole;
+	private Boolean isDowngradeRole;
 	// end #29956
 	
 	//14685 - START
@@ -1045,6 +1046,16 @@ public abstract class BaseManagedBean implements Serializable {
 		this.showMessage = showMessage;
 	}
 	//14685 - END
+
+	//start #29956
+	public Boolean isDowngradeRole() {
+		return isDowngradeRole;
+	}
+
+	public void setDowngradeRole(Boolean isDowngradeRole) {
+		this.isDowngradeRole = isDowngradeRole;
+	}
+	//end #29956
 }
 
 // ***25201

@@ -2320,6 +2320,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						//START NEW CHANGES POPUP OWNER UPDATE ROLE		
 						//ANY CHANGES HERE PLEASE CHANGES IN ViewApplHistoryBackingBean.redirectToReapplyNewAppl & viewOnlineAccount.RegistrationBackingBean & SmApplicationBackingBean.proceedToApplication
 						List<SmPersonnel> personnelsRole = this.getManagedBean().getPersonnelsRole();
+						//start #29956
+						if(this.getManagedBean().isDowngradeRole()==null || !this.getManagedBean().isDowngradeRole()){
+							personnelsRole.clear();
+						}
+						//end #29956
 						if(personnelsRole != null && personnelsRole.isEmpty()){
 							for(SmPersonnel personnel :  this.getManagedBean().getSmAppl().getSmPersonnels()){
 								//#29114, CR 27382: Static Code Analysis Start
