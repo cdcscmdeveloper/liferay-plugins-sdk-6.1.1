@@ -2069,6 +2069,14 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			FacesContext fc = FacesContext.getCurrentInstance();
 			if (resDTO.isSuccessful()) {
 
+				//#24964 - START
+				log.info("TROUBLESHOOT REVISION - #24964 SVO SER File");
+				String serType = "SVO";
+				if(!SmCommonUtil.isSerFileExist(svTask.getSmAppl().getApplNo(), serType+"_"+svTask.getSvTaskId())){
+					SmCommonUtil.createSerFileSVO(svTask, serType);
+				}
+				//#24964 - END
+				
 				if(action.equalsIgnoreCase(SupplierManagementConst.BPM_SUBMIT)){
 					//Start 25294  - Site Visit Grouping Enhancement -28775
 					String poName = "<<Processing Officer Name>>";
