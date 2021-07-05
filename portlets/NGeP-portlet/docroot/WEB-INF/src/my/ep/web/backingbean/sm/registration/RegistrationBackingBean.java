@@ -274,6 +274,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	public String validateWithSSM() {
 		this.getManagedBean().setHideButton(false);
 		String regNo = this.getManagedBean().getSmSupp().getRegNo();
+		//30987 - start
+		regNo = regNo.trim();
+		this.getManagedBean().getSmSupp().setRegNo(regNo);
+		//30987 - end
 		String businessType = this.getManagedBean().getSmSupp().getBusinessType();
 		String checkIcSSM = this.getManagedBean().getRegIcCheckSSM();
 		//only business type ROB & ROC will check with SSM
@@ -312,6 +316,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			ssmReqDTO.setSmResAdd(this.getManagedBean().getSmResAdd());
 			ssmReqDTO.setSmPermenantAdd(this.getManagedBean().getSmPermenantAdd());
 			ssmReqDTO.setRegNo(regNo);
+			//30987
+			ssmReqDTO.getRegNo().trim();
 			ssmReqDTO.setBusinessType(businessType);
 			ssmReqDTO.setSmAppl(this.getManagedBean().getSmAppl());
 			//CR 27382: Static Code Analysis Start
@@ -1477,6 +1483,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			recStatusLs.add(SupplierManagementConst.MIGRATION_DATA_RECORD_STATUS); //#29005
 			
 			IRegistrationSO reqSO = SmServiceLookup.getRegistrationSO();
+			//30987
+			this.getManagedBean().getSmSupp().setRegNo(this.getManagedBean().getSmSupp().getRegNo().trim());
 			reqDTO.setRegNo(this.getManagedBean().getSmSupp().getRegNo());
 			reqDTO.setStatusLs(recStatusLs);
 			RegistrationResDTO resDTO = reqSO.retrieveSupplierByRegNoAndStatusLs(reqDTO);
@@ -1543,7 +1551,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				recStatusLs.add(DbValueConst.RECORD_STATUS_EXPIRED);
 				recStatusLs.add(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
 				recStatusLs.add(DbValueConst.RECORD_STATUS_IN_PROGRESS);
-				
+				//30987
+				this.getManagedBean().getSmSupp().setRegNo(this.getManagedBean().getSmSupp().getRegNo().trim());
 				IRegistrationSO reqSO = SmServiceLookup.getRegistrationSO();
 				reqDTO.setRegNo(this.getManagedBean().getSmSupp().getRegNo());
 				reqDTO.setStatusLs(recStatusLs);
