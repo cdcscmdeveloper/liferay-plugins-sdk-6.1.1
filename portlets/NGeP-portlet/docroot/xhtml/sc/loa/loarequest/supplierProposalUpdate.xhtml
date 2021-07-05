@@ -66,10 +66,14 @@
 				<tr>
 					<td width="20%"><h:outputLabel
 							value="#{lbl['lbl.sc.supplier.offer']}:" /></td>
-					<td width="80%"><h:outputText id="supplierOffer"
+					<td width="80%"><h:outputText id="supplierOffer" rendered="#{!isMultipleSuppOffer}"
 							value="#{empty lOADetailBackingBean.selectedSupplierOffer ? lOADetailBackingBean.notAvailabilityStr : lOADetailBackingBean.selectedSupplierOffer}"
 							style="width:310px;">
-						</h:outputText></td>
+						</h:outputText>
+						
+						<p:inputTextarea rendered="#{isMultipleSuppOffer}" value="#{empty lOADetailBackingBean.selectedSupplierOffer ? lOADetailBackingBean.notAvailabilityStr : lOADetailBackingBean.selectedSupplierOffer}" maxlength="200"
+						style="width:310px;" disabled="true" />
+						</td>
 				</tr>
 				<tr>
 					<td width="20%"><h:outputLabel

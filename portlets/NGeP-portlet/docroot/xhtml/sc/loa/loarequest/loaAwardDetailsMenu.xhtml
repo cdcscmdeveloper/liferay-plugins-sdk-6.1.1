@@ -447,9 +447,14 @@
 			<h:outputText
 				value="#{lbl['lbl.ct.item.name']}: #{lOADetailBackingBean.selectedScLoiLoaItem.scRequestItem.itemName}"
 				style="font-weight:bold" />
-			<h:outputText
+			<h:outputText rendered="#{!isMultipleSuppOffer}"
 				value="#{lbl['lbl.sc.supplier.offer']}: #{empty lOADetailBackingBean.selectedSupplierOffer ? lOADetailBackingBean.notAvailabilityStr : lOADetailBackingBean.selectedSupplierOffer}"
 				style="font-weight:bold" />
+			<h:outputText rendered="#{isMultipleSuppOffer}"
+				value="#{lbl['lbl.sc.supplier.offer']}:"
+				style="font-weight:bold" />
+			<p:inputTextarea rendered="#{isMultipleSuppOffer}" value="#{empty lOADetailBackingBean.selectedSupplierOffer ? lOADetailBackingBean.notAvailabilityStr : lOADetailBackingBean.selectedSupplierOffer}" maxlength="200"
+						style="width:310px;" disabled="true" />
 		</h:panelGrid>
 		<p:spacer height="5" />
 
