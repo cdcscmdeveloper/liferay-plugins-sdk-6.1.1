@@ -35,6 +35,7 @@
 		<ui:param name="isSaveHideSqExpired" value="#{!lOADetailBackingBean.managedBean.scLoa.brandNew and !isSqStillValid}" />
 		<ui:param name="isLOACancelByApprover" value="#{lOADetailBackingBean.isLOACancelByApprover()}" />	
 		<ui:param name="isLoaGenerated" value="#{lOADetailBackingBean.isLoaGenerated()}" />	
+		<ui:param name="isMultipleSuppOffer" value="#{lOADetailBackingBean.managedBean.multipleSuppOffer}" />	
 		<ui:include src="loaButtons.xhtml" />
 		<ui:include src="loaHeader.xhtml" />
 		

@@ -8107,10 +8107,44 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
 		List<TplSpecAnswer> tplSpecAnswerList = templateSpecSO.findSpecAnswersByQuestion(scLoiLoaItem
 				.getScRequestItem().getTplSpecQuestion().getSpecQuestionId());
+		StringBuffer supplierOffer = new StringBuffer("");
+		String singleZoneName = "";
+		String singleSuppOffer = "";
+		String finalSuppOffer = "";
+		Boolean isZonalWithPaOrPs = isZonalWithPaOrPs();
+		
 		if (CollectionUtils.isNotEmpty(tplSpecAnswerList)) {
-			for (TplSpecAnswer tplSpecAnswer : tplSpecAnswerList) {
-				if (StringUtils.isNotBlank(tplSpecAnswer.getAnswerRemark())) {
-					setSelectedSupplierOffer(tplSpecAnswer.getAnswerRemark());
+			int count = 0;
+			if (isZonalWithPaOrPs) {
+				for (TplSpecAnswer tplSpecAnswer : tplSpecAnswerList) {					
+					if (StringUtils.isNotBlank(tplSpecAnswer.getAnswerRemark())) {
+						count++;
+						singleZoneName = tplSpecAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl().getZoneName();
+						supplierOffer.append("Zone "
+								+ tplSpecAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl().getZoneName() + ":"
+								+ tplSpecAnswer.getAnswerRemark());
+						singleSuppOffer = tplSpecAnswer.getAnswerRemark();
+						if (count < tplSpecAnswerList.size()) {
+							supplierOffer.append(System.lineSeparator());
+						}
+					}
+				}
+				
+				if (count > 1) {
+					getManagedBean().setMultipleSuppOffer(true);
+					finalSuppOffer = supplierOffer.toString();
+				} else if (count == 1) {
+					finalSuppOffer = singleSuppOffer;
+				}
+				
+				setSelectedSupplierOffer(finalSuppOffer);
+			}
+
+			else {
+				for (TplSpecAnswer tplSpecAnswer : tplSpecAnswerList) {
+					if (StringUtils.isNotBlank(tplSpecAnswer.getAnswerRemark())) {
+						setSelectedSupplierOffer(tplSpecAnswer.getAnswerRemark());
+					}
 				}
 			}
 		}
