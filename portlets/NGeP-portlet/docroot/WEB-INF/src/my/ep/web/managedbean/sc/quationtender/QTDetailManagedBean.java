@@ -1661,6 +1661,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private TplSpecQuestion sampleSpecQuestion;
 	private String sampleItemName;
 	private int sampleTotalScore;
+	private List<ScQtCheckList> sampleSpecCheckList;
 	//#11104-End
 	
 	// #15391 - start
@@ -1672,7 +1673,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 * Instantiates a new QT detail managed bean.
 	 */
 	public QTDetailManagedBean() {
-		log.info("inside ");
 
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
@@ -10428,6 +10428,20 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		 */
 		public void setSampleTotalScore(int sampleTotalScore) {
 			this.sampleTotalScore = sampleTotalScore;
+		}
+
+		/**
+		 * @return the sampleSpecCheckList
+		 */
+		public List<ScQtCheckList> getSampleSpecCheckList() {
+			return sampleSpecCheckList;
+		}
+
+		/**
+		 * @param sampleSpecCheckList the sampleSpecCheckList to set
+		 */
+		public void setSampleSpecCheckList(List<ScQtCheckList> sampleSpecCheckList) {
+			this.sampleSpecCheckList = sampleSpecCheckList;
 		}
 		//#11104-End
 		
