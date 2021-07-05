@@ -486,7 +486,8 @@
 							<c:choose>
 							<!-- #21695 farid -->
 				<!-- #21695 farid 7/04/2020 -->
-								<c:when test="#{!isMaintenanceFlow and !qtStatusChecklistScoring and !qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_EVALUATION_TYPE) or scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION or scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION and !isReadOnly}">
+				
+								<c:when test="#{!isMaintenanceFlow and !qtStatusChecklistScoring and !qtStatusScheduleDocAndAfter and !qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_EVALUATION_TYPE) or scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION or scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION and !isReadOnly}">
 										<p:outputPanel id="partialPop">
 													<p:selectOneRadio  value="#{scQt.partial}" disabled="#{scQt.sampleReq}">
 														<f:selectItems
@@ -509,6 +510,7 @@
 															<h:inputHidden id="rowIndex"></h:inputHidden>
 													</div>
 												</p:confirmDialog>
+												
 									</c:when>
 									<c:otherwise>
 				<!-- #21695 Add inputext 30/7/2020 -->						
