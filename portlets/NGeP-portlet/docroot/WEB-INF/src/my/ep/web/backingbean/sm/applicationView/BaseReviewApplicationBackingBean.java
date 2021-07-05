@@ -2422,15 +2422,29 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				//	Refs #15629 - Start - 21/1/2021
 				if(!EntityHelper.isCollectionEmpty(getManagedBean()
 						.getSmAppl().getSmApplRejectReasons())){
-
-					Iterator<SmApplRejectReason> smApplRejectReasonIter = getManagedBean()
-							.getSmAppl().getSmApplRejectReasons().iterator();
-				    while(smApplRejectReasonIter.hasNext()){
-				    	SmApplRejectReason smApplRejectReason = smApplRejectReasonIter.next();
-				        if(!smApplRejectReason.isReasonByPo()){
-				        	smApplRejectReasonIter.remove();
-				          }
-				      }
+					//#30974 - Start - 2/7/2021
+					if (this.getManagedBean().getSmAppl().getPmStatus().getStatusId().toString()
+							.equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER)) {
+						Iterator<SmApplRejectReason> smApplRejectReasonIter = getManagedBean().getSmAppl()
+								.getSmApplRejectReasons().iterator();
+						while (smApplRejectReasonIter.hasNext()) {
+							SmApplRejectReason smApplRejectReason = smApplRejectReasonIter.next();
+							if (!smApplRejectReason.isReasonByPo()) {
+								smApplRejectReasonIter.remove();
+							}
+						}
+					} else if (this.getManagedBean().getSmAppl().getPmStatus().getStatusId().toString()
+							.equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)) {
+						Iterator<SmApplRejectReason> smApplRejectReasonIter = getManagedBean().getSmAppl()
+								.getSmApplRejectReasons().iterator();
+						while (smApplRejectReasonIter.hasNext()) {
+							SmApplRejectReason smApplRejectReason = smApplRejectReasonIter.next();
+							if (smApplRejectReason.isReasonByPo()) {
+								smApplRejectReasonIter.remove();
+							}
+						}
+					}
+					//#30974 - End - 2/7/2021
 				}
 				// Refs #15629 - End - 21/1/2021
 				
