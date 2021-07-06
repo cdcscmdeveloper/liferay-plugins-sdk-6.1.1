@@ -528,23 +528,34 @@ public class ConsolidationReportBackingBean extends
 	 */
 	public void downloadAllBriefingPaperReports() throws Exception {
 		
-		// #18685 - Start. 
+		// #18685 - Start.
 		debugLogger("downloadAllReports");
 
 		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean()
 				.getScQtFinalization().getScQtFinalizationReports();
 		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<ScQtFinalizationReportAttachment>();
-
+		ScQtFinalizationReport scQtReport = null;
+		ScQtFinalizationReportAttachment attachment = null;
 		if (CollectionUtils.isNotEmpty(scQtFinalizationReports)
 				&& scQtFinalizationReports.size() > 0) {
 			for (int i = 0; i < scQtFinalizationReports.size(); i++) {
-				ScQtFinalizationReportAttachment attachment = scQtFinalizationReports
-						.get(i).getScQtFinalizationReportAttachment();
-				if (attachment == null) {
-					attachment = generateDocumentAttachment(scQtFinalizationReports
-							.get(i));
-					scQtFinalizationReports.get(i)
-					.setScQtFinalizationReportAttachment(attachment);
+				scQtReport = scQtFinalizationReports.get(i);
+				attachment = scQtReport.getScQtFinalizationReportAttachment();
+				
+				if (null != getManagedBean().getCurrentStatusId() 
+						&&  scQtReport.getTitle().contains("Kertas Taklimat") 
+						&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_CONSOLIDATION_REPORT.longValue() ||
+								getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER.longValue())
+						&& scQtReport.getTitle().equals(scQtFinalizationReports.get(scQtFinalizationReports.size() -1 ).getTitle())) {
+					attachment = generateDocumentAttachment(scQtReport);
+					scQtReport.setScQtFinalizationReportAttachment(attachment);
+				    // #28834 - End.
+				} else {
+
+					if (attachment == null) {
+						attachment = generateDocumentAttachment(scQtReport);
+						scQtReport.setScQtFinalizationReportAttachment(attachment);
+					}
 				}
 				scAttachments.add(attachment);
 			}
@@ -564,7 +575,7 @@ public class ConsolidationReportBackingBean extends
 		if (!getManagedBean().isSubmit()) {
 			downloadAllFiles("NGeP-Finalization-Report", scAttachments);
 		}
-		// #18685 - End. 
+		// #18685 - End.
 	}
 	
 	/**
