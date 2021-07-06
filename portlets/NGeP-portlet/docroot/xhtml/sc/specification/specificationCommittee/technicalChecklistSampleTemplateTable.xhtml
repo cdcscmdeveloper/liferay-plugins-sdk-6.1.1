@@ -21,7 +21,7 @@
 
 			<p:column headerText="#{lbl['lbl.sc.qt.sampel.technical.template']}"
 				style="width:85%;white-space: normal;">
-				<h:outputText value="#{technicalSampletemplate.title}" rendered="#{technicalSampletemplate.definationType.parameterCode eq 'TS' and technicalSampletemplate.pmStatus.statusId eq '60451'}"></h:outputText>
+				<h:outputText value="#{technicalSampletemplate.title}"></h:outputText>
 			</p:column>
 
 
@@ -31,7 +31,7 @@
 					<h:outputText value="#{lbl['lbl.sc.action']}" />
 
 				</f:facet>
-				<p:commandButton value="#{lbl['lbl.btn.view']}" process="@this" rendered="#{technicalSampletemplate.definationType.parameterCode eq 'TS' and technicalSampletemplate.pmStatus.statusId eq '60451'}"
+				<p:commandButton value="#{lbl['lbl.btn.view']}" process="@this" 
 				action="#{specificationBackingBean.sampleTemplateView(technicalSampletemplate)}"	partialSubmit="true" />
 					</p:column>
 					
