@@ -599,6 +599,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean recommendRejectReasonReqd;
 	private String searchRecommendRejectReason;
 	// #15629 - END
+	
+	// #30794 - START
+	private List<PmReasonDesc> selectedRecommendRejectReasonDescs;
+	// #30794 - END
 
 	// 29379 - Site Visit Grouping Enhancement -28775 START
 	private SmEmployee[] selectedEmployees;
@@ -4418,4 +4422,12 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.overlapCategoryListMalay = overlapCategoryListMalay;
 	}
 	//13362 END
+
+	public List<PmReasonDesc> getSelectedRecommendRejectReasonDescs() {
+		return selectedRecommendRejectReasonDescs;
+	}
+
+	public void setSelectedRecommendRejectReasonDescs(List<PmReasonDesc> selectedRecommendRejectReasonDescs) {
+		this.selectedRecommendRejectReasonDescs = selectedRecommendRejectReasonDescs;
+	}
 }
