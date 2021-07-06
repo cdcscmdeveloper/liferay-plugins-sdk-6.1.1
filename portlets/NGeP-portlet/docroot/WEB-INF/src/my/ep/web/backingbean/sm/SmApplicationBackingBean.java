@@ -13139,10 +13139,12 @@ public class SmApplicationBackingBean extends
 			for (int i = 0; i < getManagedBean().getSelectedBanks().size(); i++) {
 				SmSupplierBank bank = getManagedBean().getSelectedBanks().get(i);
 				hasActiveTransactionContractManagement = SmApplicationUtil
-						.hasActiveTransactionForContractManagement(currSupp, bank.getAccountNo())
+						.hasActiveTransactionForContractManagement(currSupp, bank.getAccountNo(), 
+								bank.getSmAppl().getSmSupplier().getSupplierId()) //#30693
 						|| hasActiveTransactionContractManagement;
 				hasActiveTransactionFulfilment = SmApplicationUtil
-						.hasActiveTransactionForFulfilment(currSupp, bank.getAccountNo())
+						.hasActiveTransactionForFulfilment(currSupp, bank.getAccountNo(), 
+								bank.getSmAppl().getSmSupplier().getSupplierId()) //#30693
 						|| hasActiveTransactionFulfilment;				
 			
 			}
@@ -13194,10 +13196,13 @@ public class SmApplicationBackingBean extends
 		
 		SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
 		
+		log.info("checksupplierId" + shareBankBean.getSmAppl().getSmSupplier().getSupplierId());
 		boolean hasActiveTransactionContractManagement = SmApplicationUtil
-				.hasActiveTransactionForContractManagement(currSupp, shareBankBean.getAccountNo());
+				.hasActiveTransactionForContractManagement(currSupp, shareBankBean.getAccountNo(), 
+						shareBankBean.getSmAppl().getSmSupplier().getSupplierId()); //#30693
 		boolean hasActiveTransactionFulfilment = SmApplicationUtil
-				.hasActiveTransactionForFulfilment(currSupp, shareBankBean.getAccountNo());
+				.hasActiveTransactionForFulfilment(currSupp, shareBankBean.getAccountNo(), 
+						shareBankBean.getSmAppl().getSmSupplier().getSupplierId());//#30693
 		
 		String labelNameVal = "";
 		//#17906 - start

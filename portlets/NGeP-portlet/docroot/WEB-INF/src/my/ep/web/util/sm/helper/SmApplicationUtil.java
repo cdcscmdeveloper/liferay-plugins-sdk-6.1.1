@@ -4305,13 +4305,21 @@ public class SmApplicationUtil {
 		return resDTO.isHasActiveTransaction();
 	}
 	
-	public static boolean hasActiveTransactionForContractManagement(SmSupplier smSupplier, String accountNo) {
+	public static boolean hasActiveTransactionForContractManagement(SmSupplier smSupplier, String accountNo, Long supplierId) { //#30693
 
 		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
 
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-		reqDTO.setSupplierId(smSupplier.getSupplierId());
+		//#30693--START
+		if(smSupplier.getSupplierId()!= null){
+			log.info("smSupplier.getSupplierId()...ct");
+			reqDTO.setSupplierId(smSupplier.getSupplierId());
+		}else{
+			log.info("SupplierId...ct");
+			reqDTO.setSupplierId(supplierId);
+		}
+		//#30693--END
 		reqDTO.setAccountNo(accountNo);
 
 		MofRegistrationResDTO resDTO = mofRegistrationSO
@@ -4320,13 +4328,21 @@ public class SmApplicationUtil {
 		return resDTO.isHasActiveTransaction();
 	}
 	
-	public static boolean hasActiveTransactionForFulfilment(SmSupplier smSupplier, String accountNo) {
+	public static boolean hasActiveTransactionForFulfilment(SmSupplier smSupplier, String accountNo, Long supplierId) { //#30693
 
 		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
 
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-		reqDTO.setSupplierId(smSupplier.getSupplierId());
+		//#30693--START
+		if(smSupplier.getSupplierId()!= null){
+			log.info("smSupplier.getSupplierId()...fl");
+			reqDTO.setSupplierId(smSupplier.getSupplierId());
+		}else{
+			log.info("SupplierId...fl");
+			reqDTO.setSupplierId(supplierId);
+		}
+		//#30693--END
 		reqDTO.setAccountNo(accountNo);
 
 		MofRegistrationResDTO resDTO = mofRegistrationSO
@@ -10116,7 +10132,7 @@ public class SmApplicationUtil {
 			String fileNameAndPath = tmpPath + fileName;
 			String vm = "/sm/application/MOF-declaration-form.vm";
 			VelocityContext context = new VelocityContext();
-			FacesScopes fs = new FacesScopes();
+			//FacesScopes fs = new FacesScopes();
 			// context.put("hostUrl", fs.getRequest().getServerName() + ":"
 			// + fs.getRequest().getServerPort());
 			context.put("hostUrl", SmCommonUtil.getBasePortalUrl());
