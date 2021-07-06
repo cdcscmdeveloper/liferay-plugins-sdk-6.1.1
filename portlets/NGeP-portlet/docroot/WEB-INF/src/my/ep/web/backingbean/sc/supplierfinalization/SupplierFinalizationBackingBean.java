@@ -3918,22 +3918,35 @@ return	remarksNotFound;
 	 * @throws Exception
 	 */
 	public void downloadAllBriefingPaperReports() throws Exception {
-		// #18685 - Start. 
+		// #18685 - Start.
 		debugLogger("downloadAllReports");
 
 		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean().getDocumentList();
 		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<ScQtFinalizationReportAttachment>();
-
+		ScQtFinalizationReport scQtReport = null;
+		ScQtFinalizationReportAttachment attachment = null;
 		if (CollectionUtils.isNotEmpty(scQtFinalizationReports)
 				&& scQtFinalizationReports.size() > 0) {
 			for (int i = 0; i < scQtFinalizationReports.size(); i++) {
-				ScQtFinalizationReportAttachment attachment = scQtFinalizationReports
-						.get(i).getScQtFinalizationReportAttachment();
-				if (attachment == null) {
-					attachment = generateDocumentAttachment(scQtFinalizationReports
-							.get(i));
-					scQtFinalizationReports.get(i)
-					.setScQtFinalizationReportAttachment(attachment);
+				scQtReport = scQtFinalizationReports.get(i);
+				attachment = scQtReport.getScQtFinalizationReportAttachment();
+				if (null != getManagedBean().getCurrentStatusId()
+						&&  scQtReport.getTitle().contains("Kertas Taklimat") 
+						&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION.longValue()
+								|| getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION.longValue()
+								|| getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_BIDDING_FINALIZATION_REVISION.longValue()
+								|| getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION_REVISION.longValue()
+								)
+						&& scQtReport.getTitle().equals(scQtFinalizationReports.get(scQtFinalizationReports.size() -1 ).getTitle())) {
+					attachment = generateDocumentAttachment(scQtReport);
+					scQtReport.setScQtFinalizationReportAttachment(attachment);
+				    // #28834 - End.
+				} else {
+
+					if (attachment == null) {
+						attachment = generateDocumentAttachment(scQtReport);
+						scQtReport.setScQtFinalizationReportAttachment(attachment);
+					}
 				}
 				scAttachments.add(attachment);
 			}
@@ -3953,7 +3966,7 @@ return	remarksNotFound;
 		if (!getManagedBean().isSubmit()) {
 			downloadAllFiles("NGeP-Finalization-Report", scAttachments);
 		}
-		// #18685 - End. 
+		// #18685 - End.
 	}
 	
 	/**
