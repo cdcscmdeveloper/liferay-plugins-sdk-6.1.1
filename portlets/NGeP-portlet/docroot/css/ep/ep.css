@@ -3735,3 +3735,9 @@ table.rptTbl {
 .columnWidthSize16 {
 	width: 16%;
 }
+
+/*29021-fix cosmetic, rating star not hard to see*/
+.ui-single-rating-star .ui-rating-star a {
+	background-image: url('../images/design/rating.png') !important;
+}
+/*29021 end - fix cosmetic, rating star not hard to see*/
