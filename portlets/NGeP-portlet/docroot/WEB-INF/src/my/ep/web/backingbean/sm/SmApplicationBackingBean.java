@@ -9656,6 +9656,9 @@ public class SmApplicationBackingBean extends
 		getManagedBean().getPoSecReview().setRecommendation("");
 		//#3460 - Start
 		getManagedBean().setSelectedRecommendReasonDescs(new ArrayList<PmReasonDesc>());
+		//30974 - start
+		getManagedBean().setSelectedRecommendRejectReasonDescs(new ArrayList<PmReasonDesc>());
+		//30974 - end
 		//#3460 - End
 		RequestContext.getCurrentInstance().execute("submitApprvrDialog.hide()");
 	}
@@ -15287,6 +15290,14 @@ public class SmApplicationBackingBean extends
 				SmApplicationUtil.getWildCardSearchRejectReason(
 						getManagedBean().getSearchRecommendRejectReason(),
 						getManagedBean().getRecommendReasonDescInitList()));
+		
+		//30974 - start
+		if(getManagedBean().getSelectedRecommendRejectReasonDescs() != null && getManagedBean().getSelectedRecommendRejectReasonDescs().size() > 0){
+			for (PmReasonDesc reason : getManagedBean().getSelectedRecommendRejectReasonDescs()) {
+				getManagedBean().getRecommendReasonDescList().add(reason);
+			}
+		}
+		//30974 - end
 	}
 
 	/**
@@ -15303,6 +15314,9 @@ public class SmApplicationBackingBean extends
 		if(SmCommonUtil.isCollectionEmpty(getManagedBean().getSelectedRecommendReasonDescs())) {
 			getManagedBean().setSelectedRecommendReasonDescs(new ArrayList<PmReasonDesc>());
 		} 
+		//30974 - start
+		getManagedBean().getSelectedRecommendRejectReasonDescs().clear();
+		//30974 - end
 		//		#15629 -- end - 26/1/2020
 
 	}
@@ -15364,6 +15378,9 @@ public class SmApplicationBackingBean extends
 				reasonIdList1.add(reason);
 			}
 		}
+		
+		reasonIdList1.add(reasonEvent);
+		getManagedBean().setSelectedRecommendRejectReasonDescs(reasonIdList1);
 		
 		//Comment to see data during submit
 /*		if (!EntityHelper.isCollectionEmpty(getManagedBean()
