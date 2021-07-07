@@ -270,6 +270,9 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	// #29664 - start	
 	private boolean viewSupplierMaintenancePage; // #26639
 	
+	//31111
+	private List<SmBulkApplOverlapCatVO> overlapCategoryVOList;
+	
 	//28771 - start
 	private String supportingDocMode;
 	
@@ -1966,5 +1969,15 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		this.viewSupplierMaintenancePage = viewSupplierMaintenancePage;
 	}
 	// #26639 - end
+	
+	//START 31111
+		public List<SmBulkApplOverlapCatVO> getOverlapCategoryVOList() {
+			return overlapCategoryVOList;
+		}
+
+		public void setOverlapCategoryVOList(List<SmBulkApplOverlapCatVO> overlapCategoryVOList) {
+			this.overlapCategoryVOList = overlapCategoryVOList;
+		}
+	//END 31111
 	
 }
