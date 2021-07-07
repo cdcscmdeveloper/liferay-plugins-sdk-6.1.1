@@ -1977,6 +1977,25 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		Boolean noEp = false;
 		if (!personnelsRole.isEmpty()) {
 			for (SmPersonnel smPersonnel : personnelsRole) {
+				int countRole=0;
+				if(smPersonnel.isHigherManagement()){
+					countRole++;
+				}
+				if(smPersonnel.isManagement()){
+					countRole++;
+				}
+				if(smPersonnel.isEquityOwner()){
+					countRole++;
+				}
+				if(countRole>1){
+					if(smPersonnel.isHigherManagement()){
+						smPersonnel.setManagement(false);
+						smPersonnel.setEquityOwner(false);
+					}else if(smPersonnel.isManagement()){
+						smPersonnel.setHigherManagement(false);
+						smPersonnel.setEquityOwner(false);
+					}
+				}
 				if (x != 0) {
 					for (String roles : params) {
 						if(roles!=null){
@@ -2915,6 +2934,14 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		if(smPersonnelSSm.isClerical()){
 			smPersonnelSSm.setHigherManagement(false);
 			smPersonnelSSm.setManagement(false);
+			//start #29956
+		}else if(smPersonnelSSm.isHigherManagement()){
+			smPersonnelSSm.setClerical(false);
+			smPersonnelSSm.setManagement(false);
+		}else if(smPersonnelSSm.isManagement()){
+			smPersonnelSSm.setClerical(false);
+			smPersonnelSSm.setHigherManagement(false);
+			//end #29956
 		}else{
 			smPersonnelSSm.setClerical(false);
 		}
