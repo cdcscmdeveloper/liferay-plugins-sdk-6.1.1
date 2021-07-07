@@ -42,10 +42,17 @@
 					</tr>
 				</table>
 				<div class="ppRightBtn">
-					<p:commandButton id="searchSupplierBtn"
+					<!-- #277977 add !isZonalWithPaOrPs condition -->
+					<p:commandButton id="searchSupplierBtn" rendered="#{!isZonalWithPaOrPs}"
 						value="#{lbl['lbl.btn.search']}"
 						action="#{lOADetailBackingBean.onSearchSupplier}"
 						update="supplierUpdateInstructionPanel, itemtbl" />
+					<!-- #277977 Start -->
+					<p:commandButton id="searchZonalSupplierBtn" rendered="#{isZonalWithPaOrPs}"
+						value="#{lbl['lbl.btn.search']}"
+						action="#{lOADetailBackingBean.onZonalSearchSupplier}"
+						update="supplierUpdateInstructionPanel, form" />
+					<!-- #277977 End -->
 					<p:commandButton id="resetSupplierBtn"
 						value="#{lbl['lbl.btn.reset']}"
 						action="#{lOADetailBackingBean.onResetSupplierCriteria()}"

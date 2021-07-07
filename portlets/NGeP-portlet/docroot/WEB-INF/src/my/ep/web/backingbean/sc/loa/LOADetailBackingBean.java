@@ -8990,40 +8990,53 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 	
 	public Long getScRequestSession(Long reqItemId, int index) {
-		if(this.getManagedBean().getReqItemMaxSubTotalMap().size() == 1)
-		{			
-			if(index == 0){
-				return 0L;
-			}
-			else{
-				return reqItemId;
-			}
-		}
-		if (!this.getManagedBean().getReqItemSession().equals(reqItemId)) {
+		if(index == 0){
+			this.getManagedBean().setReqItemSession(reqItemId);
+			return 0L;
+		}else if(this.getManagedBean().getReqItemSession().equals(reqItemId)) {
+			return reqItemId;
+		}else{
 			this.getManagedBean().setReqItemSession(reqItemId);
 			return 0L;
 		}
-
-		return this.getManagedBean().getReqItemSession();
 	}
 	
 	public Long getScRequestSubTotalSession(Long reqItemId, int index) {
-		if(this.getManagedBean().getReqItemMaxSubTotalMap().size() == 1)
-		{
-			if(index == 0){
-				return 0L;
-			}
-			else{
-				return reqItemId;
-			}
-		}
-		
-		if (!this.getManagedBean().getReqItemSubTotalSession().equals(reqItemId)) {
+		if(index == 0){
+			this.getManagedBean().setReqItemSubTotalSession(reqItemId);
+			return 0L;
+		}else if(this.getManagedBean().getReqItemSubTotalSession().equals(reqItemId)) {
+			return reqItemId;
+		}else{
 			this.getManagedBean().setReqItemSubTotalSession(reqItemId);
 			return 0L;
 		}
+	}
+	
+	public void onZonalSearchSupplier() {
+		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+		
+		if (this.getItemNameSearchCriteria() != null && this.getItemNameSearchCriteria() != "") {
+			reqDTO.setLoaId(this.getManagedBean().getScLoa().getLoaId());
+			AwardSupplierResDTO resDTO = getQtAwardSO().searchScLoiLoaItemByLoaId(reqDTO);
+			List<ScLoiLoaItem> containCriteriaScLoiLoaItemList = new ArrayList<ScLoiLoaItem>();
+			
+			for(ScLoiLoaItem scLoiLoaItem : resDTO.getScLoiLoaItemList()){
+				if(scLoiLoaItem.getScRequestItem().getItemName().toUpperCase().contains(this.getItemNameSearchCriteria().toUpperCase())){
+					containCriteriaScLoiLoaItemList.add(scLoiLoaItem);
+				}			
+				
+			}
 
-		return this.getManagedBean().getReqItemSubTotalSession();
+			this.getManagedBean().setNameZoneScLoiLoaItemList(containCriteriaScLoiLoaItemList);
+			
+			
+		} else {
+			reqDTO.setLoaId(this.getManagedBean().getScLoa().getLoaId());
+			AwardSupplierResDTO resDTO = getQtAwardSO().searchScLoiLoaItemByLoaId(reqDTO);
+
+			this.getManagedBean().setNameZoneScLoiLoaItemList(resDTO.getScLoiLoaItemList());
+		}
 	}
 	//27797 end
 }
