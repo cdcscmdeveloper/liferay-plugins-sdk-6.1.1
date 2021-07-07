@@ -51,8 +51,6 @@ public class SmApplicationNotificationUtil {
 		}//#29782 - START
 		else if ((smAppl.getApplType().equalsIgnoreCase( 
 				ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES))) {
-			reqDTO.setAppType("Add New Category Codes"); 	
-			reqDTO.setApplNo(smAppl.getApplNo());
 			reqDTO.setCategoryDescription(retriveAddNewCategoryMessageForNotification( 
 					smAppl, supplier, basicInfo, supplierRemarks, approvalRemarks, reqDTO)); 
 		//#29782 - END
