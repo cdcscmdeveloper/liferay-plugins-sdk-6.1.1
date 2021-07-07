@@ -2795,28 +2795,39 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		FacesScopes fs = new FacesScopes();
 		//#24964 - start
 		if(fs.hasRoleUser(RoleCode.UPS_PO.value())){
+			log.info("TR Troubleshoot #24964 === 1");
 			if(getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED 
-				|| getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_PENDING_REVIEW_SITE_VISIT_REPORT)) 
+				|| getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_PENDING_REVIEW_SITE_VISIT_REPORT)) {
+					log.info("TR Troubleshoot #24964 === 2");
 					return false;
+			}
 		}
 		//#24964 - end
 		if(this.getManagedBean().isViewMode()){
+			log.info("TR Troubleshoot #24964 === 3");
 			if(fs.hasRoleUser(RoleCode.UPS_APPROVER.value()) && 
 					(this.getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId()==20116 || 
-					 this.getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId()==20108))
+					 this.getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId()==20108)){
+				log.info("TR Troubleshoot #24964 === 4");
 				return true;
-			if(fs.hasRoleUser(RoleCode.UPS_PO.value()) && this.getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId()==20103)
+			}
+				
+			if(fs.hasRoleUser(RoleCode.UPS_PO.value()) && this.getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId()==20103){
+				log.info("TR Troubleshoot #24964 === 5");
 				return true;
+			}
 			if(fs.hasRoleUser(RoleCode.UPS_SVO.value()) || 
 					   fs.hasRoleUser(RoleCode.UPS_SDO.value()) || 
 					   fs.hasRoleUser(RoleCode.UPS_PO.value())  || 
 					   fs.hasRoleUser(RoleCode.UPS_APPROVER.value()) ||
 					   fs.hasRoleUser(RoleCode.UPS_SVC.value()) ||
 					   fs.hasRoleUser(RoleCode.BPK_AUDITOR.value()) ||
-					   fs.hasRoleUser(RoleCode.UPS_ADMIN.value()))
+					   fs.hasRoleUser(RoleCode.UPS_ADMIN.value())){
+						log.info("TR Troubleshoot #24964 === 6");
 						return true;
+			}
 		}
-		
+		log.info("TR Troubleshoot #24964 === 7");
 		return false;
 	}
 	
