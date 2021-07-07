@@ -1444,19 +1444,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 				// for Fixing Enhancement #20997 - Start
 				//#Bug #28339 - Failed to Update Max QTY & price
-				if(getManagedBean().getSelectedItem() != null){
-				if(getManagedBean().getSelectedItem().getCtItemPrices() != null){
-					for(CtItemPrice itemPrice : getManagedBean().getSelectedItem().getCtItemPrices() ){
-						itemPrice.setChangePrice(false);
-					}	
-				}
-
-				if(getManagedBean().getSelectedItem().getCtItemMaxQties() != null){
-					for(CtItemMaxQty itemMaxQty : getManagedBean().getSelectedItem().getCtItemMaxQties() ){
-						itemMaxQty.setChangeQuantity(false);
-					}
-				}
-			}				
+				//#30879,#31065 remove Code for Max QTY & price -Start
+//				if(getManagedBean().getSelectedItem() != null){
+//				if(getManagedBean().getSelectedItem().getCtItemPrices() != null){
+//					for(CtItemPrice itemPrice : getManagedBean().getSelectedItem().getCtItemPrices() ){
+//						itemPrice.setChangePrice(false);
+//					}	
+//				}
+//
+//				if(getManagedBean().getSelectedItem().getCtItemMaxQties() != null){
+//					for(CtItemMaxQty itemMaxQty : getManagedBean().getSelectedItem().getCtItemMaxQties() ){
+//						itemMaxQty.setChangeQuantity(false);
+//					}
+//				}
+//			}
+				//#30879,#31065 remove Code for Max QTY & price -Start	
 		}
 		// for Fixing Enhancement #20997 and #Bug #28339 - End	
 		log.info("Check Putra CtContractItems :"+ctBackingBean.getManagedBean().getContractVer().getCtContractItems().size());
@@ -3452,8 +3454,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 						for(CtContractItem itemPrice : ctBackingBean.getManagedBean().getCtItemList()){
 							if(itemPrice.getScRequestItem().getRequestNoteItemId().equals(getManagedBean().getSelectedItem().getScRequestItem().getRequestNoteItemId())){
-								itemPrice.getCtItemPrices().remove(getManagedBean().getSelectedItem().getCtItemPrices());
-								itemPrice.setCtItemPrices(getManagedBean().getSelectedItem().getCtItemPrices());
+								//#30879,#31065 for Max QTY & price -Start
+								getManagedBean().getSelectedItem().getCtItemPrices().remove(itemPrice.getCtItemPrices());
+								getManagedBean().getSelectedItem().setCtItemPrices(itemPrice.getCtItemPrices());
+								//#30879,#31065 for Max QTY & price - End
 								for(CtItemPrice ctItemPrice : itemPrice.getCtItemPrices()){
 									if(itemPrice.isBrandNew()){
 										ctItemPrice.setItemPriceId(null);
@@ -3468,8 +3472,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 					for(CtContractItem itemPrice : ctBackingBean.getManagedBean().getCtItemServiceList()){
 						if(itemPrice.getScRequestItem().getRequestNoteItemId().equals(getManagedBean().getSelectedServiceItem().getScRequestItem().getRequestNoteItemId())){
-							itemPrice.getCtItemPrices().remove(getManagedBean().getSelectedServiceItem().getCtItemPrices());
-							itemPrice.setCtItemPrices(getManagedBean().getSelectedServiceItem().getCtItemPrices());
+							//#30879,#31065 for Max QTY & price -Start
+							getManagedBean().getSelectedServiceItem().getCtItemPrices().remove(itemPrice.getCtItemPrices());
+							getManagedBean().getSelectedServiceItem().setCtItemPrices(itemPrice.getCtItemPrices());
+							//#30879,#31065 for Max QTY & price - End
 							for(CtItemPrice ctItemPrice : itemPrice.getCtItemPrices()){
 								if(itemPrice.isBrandNew()){
 									ctItemPrice.setItemPriceId(null);
@@ -3604,6 +3610,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		ctItemPrice.setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
 		ctItemPrice.setChkIndexOfRow(false);
 		getManagedBean().getSelectedItem().getCtItemPrices().remove(getManagedBean().getCtItemPrices());
+		//#30879,#31065 for Max QTY & price -Start
+		for(CtItemPrice itemPrice : getManagedBean().getSelectedItem().getCtItemPrices()){
+			itemPrice.setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+			itemPrice.setChkIndexOfRow(false);			
+		}
+		//#30879,#31065 for Max QTY & price -End
 		newItemPrice(getManagedBean().getSelectedItem());
 	}
 
@@ -3616,6 +3628,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		ctItemPrice.setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
 		ctItemPrice.setChkIndexOfRow(false);
 		this.getManagedBean().getSelectedServiceItem().getCtItemPrices().remove(getManagedBean().getCtServiceItemPrices());
+		//#30879,#31065 for Max QTY & price -Start
+		for(CtItemPrice itemPrice : getManagedBean().getSelectedServiceItem().getCtItemPrices()){
+			itemPrice.setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+			itemPrice.setChkIndexOfRow(false);			
+		}
+		//#30879,#31065 for Max QTY & price -End
 		newItemPrice(getManagedBean().getSelectedServiceItem());
 	}
 
@@ -3733,6 +3751,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		ctItemMaxQty.setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
 		ctItemMaxQty.setChkIndexOfRow(false);
 		getManagedBean().getSelectedItem().getCtItemMaxQties().remove(getManagedBean().getCtItemMaxQty());
+		//#30879,#31065 for Max QTY & price -Start
+		for(CtItemMaxQty itemMaxQty : getManagedBean().getSelectedItem().getCtItemMaxQties()){
+			itemMaxQty.setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+			itemMaxQty.setChkIndexOfRow(false);			
+		}
+		//#30879,#31065 for Max QTY & price -Start
 		newItemMaxQty(getManagedBean().getSelectedItem());
 	}
 
@@ -3784,8 +3808,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			
 			for(CtContractItem itemPrice : ctBackingBean.getManagedBean().getCtItemList()){
 				if(itemPrice.getScRequestItem().getRequestNoteItemId().equals(getManagedBean().getSelectedItem().getScRequestItem().getRequestNoteItemId())){
-					itemPrice.getCtItemMaxQties().remove(getManagedBean().getSelectedItem().getCtItemMaxQties());
-					itemPrice.setCtItemMaxQties(getManagedBean().getSelectedItem().getCtItemMaxQties());
+					//#30879,#31065 for Max QTY & price -Start
+					getManagedBean().getSelectedItem().getCtItemMaxQties().remove(itemPrice.getCtItemMaxQties());
+					getManagedBean().getSelectedItem().setCtItemMaxQties(itemPrice.getCtItemMaxQties());
+					//#30879,#31065 for Max QTY & price -End
 					for(CtItemMaxQty ctItemMaxQty : itemPrice.getCtItemMaxQties()){
 						if(itemPrice.isBrandNew()){
 							ctItemMaxQty.setItemMaxQtyId(null);
@@ -3800,8 +3826,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			
 			for(CtContractItem itemPrice : ctBackingBean.getManagedBean().getCtItemServiceList()){
 				if(itemPrice.getScRequestItem().getRequestNoteItemId().equals(getManagedBean().getSelectedServiceItem().getScRequestItem().getRequestNoteItemId())){
-					itemPrice.getCtItemMaxQties().remove(getManagedBean().getSelectedServiceItem().getCtItemMaxQties());
-					itemPrice.setCtItemMaxQties(getManagedBean().getSelectedServiceItem().getCtItemMaxQties());
+					//#30879,#31065 for Max QTY & price -Start
+					getManagedBean().getSelectedServiceItem().getCtItemMaxQties().remove(itemPrice.getCtItemMaxQties());
+					getManagedBean().getSelectedServiceItem().setCtItemMaxQties(itemPrice.getCtItemMaxQties());
+					//#30879,#31065 for Max QTY & price -End
 					for(CtItemMaxQty ctItemMaxQty : itemPrice.getCtItemMaxQties()){
 						if(itemPrice.isBrandNew()){
 							ctItemMaxQty.setItemMaxQtyId(null);
