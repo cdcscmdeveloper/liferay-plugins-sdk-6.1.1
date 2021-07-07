@@ -64,6 +64,8 @@ import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.sm.attachment.SmAttachmentReqDTO;
 import my.ep.dto.sm.attachment.SmAttachmentResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
+import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
+import my.ep.dto.sm.revision.SmApplRevisionResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.siteVisit.SiteVisitReqDTO;
@@ -330,7 +332,12 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			SmCommonUtil.getInstance().setSmSvAddressInfoBySiteTypeAndRefId(smSvTask.getSmSvAddress().getSiteType(),
 					smSvTask.getSmSvAddress().getSiteRefId(),smSvTask.getSmSvAddress(), smSvTask.getSmAppl().getApplId());
 		}
-		
+		//24964 - start
+		if(getManagedBean().getSmSvtaskSVO() == null){
+			getManagedBean().setSmSvtaskSVO(getSVOTask(
+					getManagedBean().getSmSvTask().getSmAppl().getApplNo(), getManagedBean().getSmSvTask().getSvTaskId()));
+		}
+		//24964 - end
 	}
 	
 	/**
@@ -2841,4 +2848,22 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return categoryL3Name;
 	}
 	// #28175 end
+	
+	//#24964 - start
+	private static SmSvTask getSVOTask(String applNo, long svTaskId){
+		try {
+			String fileName = SmCommonUtil.readSerFileSVO(applNo, svTaskId);
+			if (!StringUtils.isBlank(fileName)) {
+				SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
+				reqDTO.setDeSerFileName(fileName);
+				SmApplRevisionResDTO resDTO = SmServiceLookup
+						.getSmApplRevisionSO().readSmSvTask(reqDTO);
+				if (resDTO.getSmAppl().getSmSvTasks() != null) {
+					return resDTO.getSmAppl().getSmSvTasks().get(0);
+				}
+			}
+		} catch (Exception ex) {}
+		return null;
+	}
+	//#24964 - end
 }

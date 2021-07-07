@@ -1796,6 +1796,28 @@ public class SmCommonUtil {
 		}
 	}
 	//#24964 - END
+	
+	//24964 - start
+	public static String readSerFileSVO(String applNo, Long svTaskId){
+		String retVal = StringUtils.EMPTY;
+		String fileName = applNo + "_SVO_" + svTaskId + ".ser";
+		String baseDir = EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)
+				+ File.separator
+				+ Calendar.getInstance().get(Calendar.YEAR)
+				+ File.separator;
+		String smRevisionDir = "SM" + File.separator + applNo + File.separator
+				+ "Revision" + File.separator;
+		
+		log.info("File Name:" + fileName);
+		log.info("Directory:" + baseDir + smRevisionDir);
+		if (new File(baseDir + smRevisionDir, fileName).exists()) {
+			retVal = baseDir + smRevisionDir + fileName;
+			log.info("Is File Exist: true");
+		}
+		return retVal;
+	}
+	//24964 - end
 
 	/**
 	 * Assigns the default address for the given address parameter.
