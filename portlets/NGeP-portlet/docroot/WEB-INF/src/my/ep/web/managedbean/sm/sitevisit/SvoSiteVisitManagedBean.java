@@ -135,6 +135,9 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	//#28774 - Start
 	private SmSvAssistantOfficer selectedAssistantOfficer;
 	//#28774 - End
+	
+	//24964
+	private SmSvTask smSvtaskSVO;
 
 	public Object getBpmPojo() {
 		return bpmPojo;
@@ -786,4 +789,12 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 		this.duplicateInterviewees = duplicateInterviewees;
 	}
 	//#24964 - end
+
+	public SmSvTask getSmSvtaskSVO() {
+		return smSvtaskSVO;
+	}
+
+	public void setSmSvtaskSVO(SmSvTask smSvtaskSVO) {
+		this.smSvtaskSVO = smSvtaskSVO;
+	}
 }
