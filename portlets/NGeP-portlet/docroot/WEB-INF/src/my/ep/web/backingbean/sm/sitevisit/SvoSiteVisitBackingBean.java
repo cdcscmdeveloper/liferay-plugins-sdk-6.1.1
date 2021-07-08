@@ -2876,5 +2876,27 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		} catch (Exception ex) {}
 		return null;
 	}
+	
+	
+	public SmSvLicenseInsurance getSVOLicense(SmSvLicenseInsurance license){
+		if(license == null || getManagedBean().getSmSvtaskSVO() == null ||
+			getManagedBean().getSmSvtaskSVO().getSmSvTemplate().getSmSvLicenseInsurances() == null){
+				return null;
+		}
+		return (SmSvLicenseInsurance) EntityHelper.getEntityByMultiplePropertiesFromList(license, 
+				getManagedBean().getSmSvtaskSVO().getSmSvTemplate().getSmSvLicenseInsurances(),
+				new String[] { "svLicenseInsuranceId" }, null, null);
+	}
+	
+	
+	public SmSvDocLicense getSVOAdtLicense(SmSvDocLicense license){
+		if(license == null || getManagedBean().getSmSvtaskSVO() == null ||
+			getManagedBean().getSmSvtaskSVO().getSmSvDocLicenses() == null){
+				return null;
+		}
+		return (SmSvDocLicense) EntityHelper.getEntityByMultiplePropertiesFromList(license, 
+				getManagedBean().getSmSvtaskSVO().getSmSvDocLicenses(),
+				new String[] { "svDocLicenseId" }, null, null);
+	}
 	//#24964 - end
 }
