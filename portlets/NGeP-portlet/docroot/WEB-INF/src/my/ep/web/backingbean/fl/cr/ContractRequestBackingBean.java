@@ -1624,7 +1624,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			if(smDisciplinaryAction != null) {
 				getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
 				boolean isWarningOnly = false;
-				String warningOrDisciplinaryActionMsg = null;
+				String warningOrDisciplinaryActionMsg;
 				String language =  new FacesScopes().getUserLocale().getLanguage();
 				if(smDisciplinaryAction.isWarning() && !smDisciplinaryAction.isCancelCategory() 
 						&& !smDisciplinaryAction.isSuspendRegistration() && !smDisciplinaryAction.isCancelRegistration() 
@@ -7100,6 +7100,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	//end-13984 - CrList - Back Button
 	
 	//26279 - start
+	/**
+	 * View list of Disciplinary Action
+	 */
 	public void viewDisciplinaryAction() {
 		List<DisciplinaryActionVO> disciplinaryActionVOs = retrieveDisciplinaryActions(getManagedBean().getSmDisciplinaryAction());
 		getManagedBean().setDisciplineVOs(disciplinaryActionVOs);
