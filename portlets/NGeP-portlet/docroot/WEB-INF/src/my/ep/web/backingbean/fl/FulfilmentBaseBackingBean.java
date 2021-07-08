@@ -14,15 +14,12 @@ import java.util.Locale;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
-import my.ep.biz.service.sm.search.ISupplierCategorySO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -40,8 +37,6 @@ import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
-import my.ep.dto.sm.search.SupplierCategoryReqDTO;
-import my.ep.dto.sm.search.SupplierCategoryResDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
@@ -710,7 +705,7 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
 		reqDTO.setSupplier(smSupplier);
 		
-		ISupplierDataMaintenanceSO supplierDataMaintenanceSO = (ISupplierDataMaintenanceSO) BusinessDelegate.getInstance()
+		ISupplierDataMaintenanceSO supplierDataMaintenanceSO = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
 						ISupplierDataMaintenanceSO.class);
 		
@@ -727,7 +722,7 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		StringBuilder msg = new StringBuilder();
 		if (startDate != null && endDate != null) {
 			msg.append(" ");
-			String messagePrefix = null;
+			String messagePrefix;
 			if(isWarningOnly) {
 				messagePrefix = "lbl.sm.supplier.warning.disc.action";				
 			} else {
@@ -765,15 +760,14 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 			if(smDisciplinaryAction.isCancelCategory()
 					|| smDisciplinaryAction.isManufacturerCancel() 
 						|| smDisciplinaryAction.isBumiputeraCancel())/*28640 (add if new condition)*/{
-				List<DisciplinaryActionCategoryVO> catVoList = new ArrayList<DisciplinaryActionCategoryVO>();
+				List<DisciplinaryActionCategoryVO> catVoList = new ArrayList<>();
 				//29456 - start // follow from SM (BaseReviewApplicationBackingBean.getDisciplinaryActionVO(SmSupplier))
 				List<Object[]> catList = SmApplicationUtil.retrieveCancelCategoryByDisciplinaryActionId(smDisciplinaryAction.getDisciplinaryActionId());
-				if(!EntityHelper.isCollectionEmpty(catList)
-						&& catList.size() > 0){
+				if(!EntityHelper.isCollectionEmpty(catList)){
 					for(Object[] arr : catList){
 						if(smDisciplinaryAction.getDisciplinaryActionId().toString().equalsIgnoreCase(arr[7].toString())){//29456
 							DisciplinaryActionCategoryVO catVo = new DisciplinaryActionCategoryVO();
-							String catCode = StringUtils.EMPTY;
+							String catCode;
 							catCode = arr[3].toString() + arr[4].toString() + arr[5].toString() ;
 							catVo.setCategoryCode(catCode);	
 							catVoList.add(catVo);
@@ -786,71 +780,66 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 			if(smDisciplinaryAction.isBlacklistOwner()
 					|| smDisciplinaryAction.isSuspendRegistration()
 						|| smDisciplinaryAction.isCancelRegistration()){
-				List<BlacklistOwnerDirectorVO> blacklistownerDirectorList = new ArrayList<BlacklistOwnerDirectorVO>();
+				List<BlacklistOwnerDirectorVO> blacklistownerDirectorList = new ArrayList<>();
 				PersonnelReqDTO perReqDTO = new PersonnelReqDTO();
 				perReqDTO.setSmSupplierId(smDisciplinaryAction.getSmSupplier().getSupplierId());
 				
 				PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelBySupplierIdAndRecordStatus(perReqDTO);
 				//28790 - start // follow from SM (BaseReviewApplicationBackingBean.getDisciplinaryActionVO(SmSupplier))
-				if(smDisciplinaryAction.isSuspendRegistration()){					
-					if(personnelResDTO != null 
-							&& personnelResDTO.getSmPersonnelList().size() > 0){
-						for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
-							BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
-							if(personnel.isSuspendRegistration()){
-								blacklistOwner.setIcNo(personnel.getIdentificationNo());
-								blacklistownerDirectorList.add(blacklistOwner);
-							}
+				if(smDisciplinaryAction.isSuspendRegistration() && personnelResDTO != null 
+						&& !EntityHelper.isCollectionEmpty(personnelResDTO.getSmPersonnelList())){					
+
+					for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
+						BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
+						if(personnel.isSuspendRegistration()){
+							blacklistOwner.setIcNo(personnel.getIdentificationNo());
+							blacklistownerDirectorList.add(blacklistOwner);
 						}
-						disciplinaryActionVO.setBlacklistownerDirectorList(blacklistownerDirectorList);
-					}						
+					}
+					disciplinaryActionVO.setBlacklistownerDirectorList(blacklistownerDirectorList);						
 				}
 				
 				if(smDisciplinaryAction.isCancelRegistration() 
-						&& !smDisciplinaryAction.isBlacklistOwner()){
-					//29579 - start
-					if(personnelResDTO != null 
-							&& !personnelResDTO.getSmPersonnelList().isEmpty()){						
-						BlacklistDirectorReqDTO reqDTO = new BlacklistDirectorReqDTO();
-						BlacklistDirectorResDTO resDTO;
-						for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
-							BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
-							reqDTO.setDirectorIdNo(personnel.getIdentificationNo());
-							resDTO = SmServiceLookup.getBlacklistDirectorSO().retrieveAllPersonBlacklistByIdentificationNO(reqDTO);
-							if(resDTO != null && resDTO.getPersonBlacklist() != null){//29579 - end
-								blacklistOwner.setIcNo(personnel.getIdentificationNo());
-								blacklistownerDirectorList.add(blacklistOwner);
-							}
+						&& !smDisciplinaryAction.isBlacklistOwner() && personnelResDTO != null 
+						&& !personnelResDTO.getSmPersonnelList().isEmpty()){
+					//29579 - start						
+					BlacklistDirectorReqDTO reqDTO = new BlacklistDirectorReqDTO();
+					BlacklistDirectorResDTO resDTO;
+					for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
+						BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
+						reqDTO.setDirectorIdNo(personnel.getIdentificationNo());
+						resDTO = SmServiceLookup.getBlacklistDirectorSO().retrieveAllPersonBlacklistByIdentificationNO(reqDTO);
+						if(resDTO != null && resDTO.getPersonBlacklist() != null){//29579 - end
+							blacklistOwner.setIcNo(personnel.getIdentificationNo());
+							blacklistownerDirectorList.add(blacklistOwner);
 						}
-						disciplinaryActionVO.setBlacklistownerDirectorList(blacklistownerDirectorList);
-					}						
+					}
+					disciplinaryActionVO.setBlacklistownerDirectorList(blacklistownerDirectorList);						
 				}
 				
-				if(smDisciplinaryAction.isBlacklistOwner()){
-					if(personnelResDTO != null 
-							&& !personnelResDTO.getSmPersonnelList().isEmpty()){
-						BlacklistDirectorReqDTO reqDTO = new BlacklistDirectorReqDTO();
-						BlacklistDirectorResDTO resDTO;//28790
-						for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
-							BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
-							reqDTO.setDirectorIdNo(personnel.getIdentificationNo());
-							// Get blacklist by identification no
-							resDTO = SmServiceLookup.getBlacklistDirectorSO()
-									.retrieveAllPersonBlacklistByIdentificationNO(reqDTO);//28790
-							if(resDTO != null && 
-									resDTO.getPersonBlacklist() != null){
-								blacklistOwner.setIcNo(personnel.getIdentificationNo());
-								blacklistownerDirectorList.add(blacklistOwner);
-							}
+				if(smDisciplinaryAction.isBlacklistOwner() && personnelResDTO != null 
+						&& !personnelResDTO.getSmPersonnelList().isEmpty()){					
+					BlacklistDirectorReqDTO reqDTO = new BlacklistDirectorReqDTO();
+					BlacklistDirectorResDTO resDTO;//28790
+					for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
+						BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
+						reqDTO.setDirectorIdNo(personnel.getIdentificationNo());
+						// Get blacklist by identification no
+						resDTO = SmServiceLookup.getBlacklistDirectorSO()
+								.retrieveAllPersonBlacklistByIdentificationNO(reqDTO);//28790
+						if(resDTO != null && 
+								resDTO.getPersonBlacklist() != null){
+							blacklistOwner.setIcNo(personnel.getIdentificationNo());
+							blacklistownerDirectorList.add(blacklistOwner);
 						}
-						disciplinaryActionVO.setBlacklistownerDirectorList(blacklistownerDirectorList);
 					}
+					disciplinaryActionVO.setBlacklistownerDirectorList(blacklistownerDirectorList);
 				}
 				//28790 - end
 			}
 			
 			//28640 - start
-			List<DisciplinaryActionVO> remarkList = new ArrayList<DisciplinaryActionVO>();
+			List<DisciplinaryActionVO> remarkList = new ArrayList<>();
 			DisciplinaryActionVO remark = new DisciplinaryActionVO();
 			remark.setRemarks(disciplinaryActionVO.getRemarks());
 			remarkList.add(remark);
@@ -864,9 +853,9 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	
 	private String getMessageByKey(String key, String[] params,
 			String langCode) {
-		String msg = "";
+		String msg;
 		Locale loc = new Locale("en", "EN");
-		if (StringUtils.isNotBlank(langCode) && langCode.equalsIgnoreCase("ms")) {
+		if ("ms".equalsIgnoreCase(langCode)) {
 			loc = new Locale("ms", "MY");
 		}
 		if (params != null) {
