@@ -899,15 +899,17 @@
 				<ui:include src="step6RenewAppln_RegisterCategoryCodesInfo.xhtml" />
 			</c:if>
 			<c:choose>
-				<!-- 26671  - Site Visit Grouping Enhancement -28775  START-->
+			<!-- #26671 - START -->
 				<c:when test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S' or backingBean.managedBean.showFacilityMachine}">
+			<!-- #26671 - END -->
 					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 6}">
 						<ui:include src="step6.1RenewAppln_FactoryInfo.xhtml" />
 					</c:if>
 					
 					<c:choose>
+					<!-- #26671 - START -->
 						<c:when test="#{backingBean.managedBean.showMachineryEquipmentPanel or backingBean.managedBean.showTravelSoftwarePanel or backingBean.managedBean.showFacilityMachine}">
-						<!-- 26671  - Site Visit Grouping Enhancement -28775  END-->	
+					<!-- #26671 - END -->			
 							<c:if test="#{backingBean.managedBean.tabActiveIndex eq 7}">
 								<ui:include src="step6.2RenewAppln_EquipmentInfo.xhtml" />
 							</c:if>
@@ -1235,18 +1237,6 @@
 								</c:otherwise>
 								</c:choose>
 								</c:when>
-							<c:otherwise>
-							<c:choose>
-								<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
-									<c:if test="#{backingBean.managedBean.tabActiveIndex eq 7}">
-										<ui:include
-											src="/xhtml/sm/reviewSiteVisitReport/reviewSiteVisitReportDocuments.xhtml" />
-									</c:if>
-									<c:if test="#{backingBean.managedBean.tabActiveIndex eq 8}">
-										<ui:include
-											src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
-									</c:if>
-								</c:when>
 								<c:otherwise>
 								<c:choose>
 										<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
@@ -1270,21 +1260,11 @@
 									</c:choose>
 									<!-- 14530 END -->
 						</c:when>
-									<c:if test="#{backingBean.managedBean.tabActiveIndex eq 7}">
-										<ui:include
-											src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
-									</c:if>
-								</c:otherwise>
-								</c:choose>
-							</c:otherwise>
-							</c:choose>
-							<!-- 14530 END -->
-							</c:when>
-						<c:otherwise>
-						</c:otherwise>
 					</c:choose>
 				</c:otherwise>
 			</c:choose>
+		</c:otherwise>
+	</c:choose>
 
 			<p:dialog id="attachDlg1" widgetVar="attachDlg1" modal="true"
 				dynamic="true" resizable="false" width="700px" height="200"
