@@ -516,7 +516,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				if(smDisciplinaryAction != null) {
 					getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
 					boolean isWarningOnly = false;
-					String warningOrDisciplinaryActionMsg = null;
+					String warningOrDisciplinaryActionMsg;
 					String language =  new FacesScopes().getUserLocale().getLanguage();
 					if(smDisciplinaryAction.isWarning() && !smDisciplinaryAction.isCancelCategory() 
 							&& !smDisciplinaryAction.isSuspendRegistration() && !smDisciplinaryAction.isCancelRegistration() 
@@ -1000,7 +1000,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				if(smDisciplinaryAction != null) {
 					doBB.getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
 					boolean isWarningOnly = false;
-					String warningOrDisciplinaryActionMsg = null;
+					String warningOrDisciplinaryActionMsg;
 					String language =  new FacesScopes().getUserLocale().getLanguage();
 					if(smDisciplinaryAction.isWarning() && !smDisciplinaryAction.isCancelCategory() 
 							&& !smDisciplinaryAction.isSuspendRegistration() && !smDisciplinaryAction.isCancelRegistration() 
@@ -1794,6 +1794,9 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		RequestContext.getCurrentInstance().execute("rejectionRemarksHistory.hide()");
 	}
 	//26279 - start
+	/**
+	 * View list of Disciplinary Action
+	 */
 	public void viewDisciplinaryAction() {
 		List<DisciplinaryActionVO> disciplinaryActionVOs = retrieveDisciplinaryActions(getManagedBean().getSmDisciplinaryAction());
 		getManagedBean().setDisciplineVOs(disciplinaryActionVOs);
