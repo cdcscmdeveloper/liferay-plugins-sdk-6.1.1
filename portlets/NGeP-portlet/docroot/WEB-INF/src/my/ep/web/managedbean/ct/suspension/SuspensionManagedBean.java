@@ -171,21 +171,19 @@ private IPagingDataModel<CtContractItem> SuspensionProductListingPagingDataModel
 					filterBean.setCaseInsensitive(true);   
 					searchBean.getDataFilterBeans().add(filterBean);	
 				}
-				if(getItemstatus()!=null && getItemstatus().length()>0) {
-					//log.info("****In the SuspensionProductListingPagingDataModel IPagingDataModel getItemstatus****** "+getItemstatus());
-					if(getItemstatus().equals(ParameterConst.RECORD_STATUS_INACTIVE) || getItemstatus().equals(ParameterConst.RECORD_STATUS_ACTIVE))
-					{
-						//log.info("****In Side    getItemstatus 0-1 First****** "+getItemstatus());
-						SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.recordStatus", SearchOperator.OPERATOR_LIKE.value(),getItemstatus());
+				if (getItemstatus() != null && getItemstatus().length() > 0) {
+					// log.info("****In the SuspensionProductListingPagingDataModel IPagingDataModel getItemstatus****** "+getItemstatus());
+					if (getItemstatus().equals(ParameterConst.RECORD_STATUS_INACTIVE) || getItemstatus().equals(ParameterConst.RECORD_STATUS_ACTIVE)) {
+						// log.info("****In Side    getItemstatus 0-1 First****** "+getItemstatus());
+						SearchFilterBean filterBean = new SearchFilterBean("recordStatus", SearchOperator.OPERATOR_LIKE.value(), getItemstatus());//bug #31042
 						filterBean.setCaseInsensitive(true);
 						searchBean.getDataFilterBeans().add(filterBean);
 					}
-					if(getItemstatus().equals(ParameterConst.RECORD_STATUS_ALL))
-					{
+					if (getItemstatus().equals(ParameterConst.RECORD_STATUS_ALL)) {
 						SearchFilterBean filterBean = new SearchFilterBean(SearchOperator.OPERATOR_IN.value());
-						filterBean.setSearchField("scRequestItem.recordStatusFlg");
-						filterBean.setSearchValue(new ArrayList<String>(Arrays.asList(ParameterConst.RECORD_STATUS_INACTIVE, ParameterConst.RECORD_STATUS_ACTIVE)));
-						//filterBean.setCaseInsensitive(true);
+						filterBean.setSearchField("recordStatusFlg");//bug #31042
+						filterBean.setSearchValue(new ArrayList<String>(Arrays.asList( ParameterConst.RECORD_STATUS_INACTIVE, ParameterConst.RECORD_STATUS_ACTIVE)));
+						// filterBean.setCaseInsensitive(true);
 						searchBean.getDataFilterBeans().add(filterBean);
 
 					}
