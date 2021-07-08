@@ -31,7 +31,7 @@
 						mindate="#{CommonConstants.CURRENT_DATE}"
 						readonlyInput="true" size="30" showOn="button" />
 				<!-- #24964 -->
-				<ac:smFieldChangeAlert 
+				<ac:smFieldChangeAlertSVO
 						isShow="#{not empty dockWorkLicenseIns.expDate}"
 						oriValue="#{svoSiteVisitBackingBean.getSVOLicense(dockWorkLicenseIns).expDate}" 
 						currValue="#{dockWorkLicenseIns.expDate}" 
