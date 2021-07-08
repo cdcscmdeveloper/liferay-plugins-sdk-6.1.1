@@ -795,7 +795,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				if(smDisciplinaryAction != null) {
 					getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
 					boolean isWarningOnly = false;
-					String warningOrDisciplinaryActionMsg = null;
+					String warningOrDisciplinaryActionMsg;
 					String language =  new FacesScopes().getUserLocale().getLanguage();
 					if(smDisciplinaryAction.isWarning() && !smDisciplinaryAction.isCancelCategory() 
 							&& !smDisciplinaryAction.isSuspendRegistration() && !smDisciplinaryAction.isCancelRegistration() 
@@ -2562,6 +2562,9 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 	
 	//End  #21229
 	//26279 - start
+	/**
+	 * View list of Disciplinary Action
+	 */
 	public void viewDisciplinaryAction() {
 		List<DisciplinaryActionVO> disciplinaryActionVOs = retrieveDisciplinaryActions(getManagedBean().getSmDisciplinaryAction());
 		getManagedBean().setDisciplineVOs(disciplinaryActionVOs);
