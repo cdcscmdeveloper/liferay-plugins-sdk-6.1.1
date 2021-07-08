@@ -221,7 +221,7 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 				if(smDisciplinaryAction != null) {
 					getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
 					boolean isWarningOnly = false;
-					String warningOrDisciplinaryActionMsg = null;
+					String warningOrDisciplinaryActionMsg;
 					String language =  new FacesScopes().getUserLocale().getLanguage();
 					if(smDisciplinaryAction.isWarning() && !smDisciplinaryAction.isCancelCategory() 
 							&& !smDisciplinaryAction.isSuspendRegistration() && !smDisciplinaryAction.isCancelRegistration() 
@@ -686,6 +686,9 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 		return null; 
 	}
 	//26279 - start
+	/**
+	 * View list of Disciplinary Action
+	 */
 	public void viewDisciplinaryAction() {
 		List<DisciplinaryActionVO> disciplinaryActionVOs = retrieveDisciplinaryActions(getManagedBean().getSmDisciplinaryAction());
 		getManagedBean().setDisciplineVOs(disciplinaryActionVOs);
