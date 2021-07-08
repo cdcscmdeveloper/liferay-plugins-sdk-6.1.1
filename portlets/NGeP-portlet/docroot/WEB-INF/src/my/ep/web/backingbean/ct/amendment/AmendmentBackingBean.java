@@ -5678,17 +5678,32 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			UserReqDTO userReqDTO = null;
 			IUserSO userSO = null;
 			UserReqDTO reqLoadDTO = null;
+
 	      if(ctAmendment.getAmendmentLoa()!=null) {
 	    	    userReqDTO = new UserReqDTO();
 				userReqDTO.setUserId(ctAmendment.getAmendmentLoa().getContractAdmin().getUserId());
 				userReqDTO.setOrgProfileId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
-				userReqDTO.setRoleCode(RoleCode.MIN_CONTRACT_ADMIN.value());
+
+				if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+						ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+					userReqDTO.setRoleCode(RoleCode.MIN_CONTRACT_ADMIN.value());
+				} else if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+						ParameterConst.CONTRACT_TYPE_CENTRAL)) {
+					userReqDTO.setRoleCode(RoleCode.BPK_CCA.value());
+				}
+				
 				userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,	IUserSO.class);		
 				ctAmendment.getAmendmentLoa().setContractAdmin(userSO.checkingcontractadminstatus(userReqDTO).getPmUser());
 				if(ctAmendment.getAmendmentLoa().getContractAdmin() == null){
 					reqLoadDTO = new UserReqDTO();
 					reqLoadDTO.setOrgProfileId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
-					reqLoadDTO.setRoleCode(RoleCode.MIN_CONTRACT_ADMIN.value());
+					if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+							ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+						userReqDTO.setRoleCode(RoleCode.MIN_CONTRACT_ADMIN.value());
+					} else if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+							ParameterConst.CONTRACT_TYPE_CENTRAL)) {
+						userReqDTO.setRoleCode(RoleCode.BPK_CCA.value());
+					}
 					userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,	IUserSO.class);		
 					ctAmendment.getAmendmentLoa().setContractAdmin(userSO.checkingcontractadminstatus(reqLoadDTO).getPmUser());
 					
