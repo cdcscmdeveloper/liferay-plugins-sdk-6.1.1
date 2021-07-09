@@ -8118,36 +8118,43 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		List<TplSpecAnswer> tplSpecAnswerList = templateSpecSO.findSpecAnswersByQuestion(scLoiLoaItem
 				.getScRequestItem().getTplSpecQuestion().getSpecQuestionId());
 		StringBuffer supplierOffer = new StringBuffer("");
-		String singleZoneName = "";
-		String singleSuppOffer = "";
-		String finalSuppOffer = "";
 		Boolean isZonalWithPaOrPs = isZonalWithPaOrPs();
 		
 		if (CollectionUtils.isNotEmpty(tplSpecAnswerList)) {
 			int count = 0;
+			String remarkValue = "";
 			if (isZonalWithPaOrPs) {
-				for (TplSpecAnswer tplSpecAnswer : tplSpecAnswerList) {					
-					if (StringUtils.isNotBlank(tplSpecAnswer.getAnswerRemark())) {
-						count++;
-						singleZoneName = tplSpecAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl().getZoneName();
+				for (TplSpecAnswer tplSpecAnswer : tplSpecAnswerList) {
+					count++;
+					if (tplSpecAnswer.getIsWip()) {
+						if (StringUtils.isNotBlank(tplSpecAnswer.getAnswerRemark()))
+							remarkValue = tplSpecAnswer.getAnswerRemark();
+						else
+							remarkValue = getNotAvailabilityStr();
+
 						supplierOffer.append("Zone "
 								+ tplSpecAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl().getZoneName() + ":"
-								+ tplSpecAnswer.getAnswerRemark());
-						singleSuppOffer = tplSpecAnswer.getAnswerRemark();
+								+ remarkValue);
+
+						remarkValue = "";
 						if (count < tplSpecAnswerList.size()) {
 							supplierOffer.append(System.lineSeparator());
+						}
+					} else {
+						if (StringUtils.isNotBlank(tplSpecAnswer.getAnswerRemark())) {
+							supplierOffer.append(tplSpecAnswer.getAnswerRemark());
+							break;
 						}
 					}
 				}
 				
 				if (count > 1) {
 					getManagedBean().setMultipleSuppOffer(true);
-					finalSuppOffer = supplierOffer.toString();
-				} else if (count == 1) {
-					finalSuppOffer = singleSuppOffer;
+				}else{
+					getManagedBean().setMultipleSuppOffer(false);
 				}
-				
-				setSelectedSupplierOffer(finalSuppOffer);
+
+				setSelectedSupplierOffer(supplierOffer.toString());
 			}
 
 			else {
