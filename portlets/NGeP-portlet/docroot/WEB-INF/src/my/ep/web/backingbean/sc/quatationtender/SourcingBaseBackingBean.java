@@ -3421,9 +3421,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
 					TplSpecMaster master = null;
 					master = scQtCheckList.getScQtDoc().getTplSpecMaster();
-					// 26130 - Start
+					// 26130 - Start.
 					for (TplSpecQuestion question : master.getTplSpecQuestions()) {
-						if (CollectionUtils.isNotEmpty(question.getTplSpecAnswers())) {
+						/*if (CollectionUtils.isNotEmpty(question.getTplSpecAnswers())) {
 							Iterator<TplSpecAnswer> iterator =  question.getTplSpecAnswers().iterator();
 							while (iterator.hasNext()) {
 								TplSpecAnswer tplSpecAnswer = iterator.next();
@@ -3446,12 +3446,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								} else {
 									iterator.remove();
 								}
+								
 							}
-						}
+						}*/
+						// #26130 - Start.
+						constructSpecData(scLoa, master, question);
+						// #26130 - End.
 						constructTplSpecQuestion(dafaltValue,
 								newTplSpecQuestionsList, master, question);
 					}
-					// 26130 - End
+					// 26130 - End.
 					master.setTplSpecQuestions(newTplSpecQuestionsList);
 					masters.add(master);
 				}
@@ -3467,6 +3471,89 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			specSO = null;
 		}
 	}
+	
+	// #26130 - Start.
+		/**
+		 * @param scLoa
+		 * @param master
+		 * @param question
+		 */
+		private void constructSpecData(ScLoa scLoa, TplSpecMaster master,
+				TplSpecQuestion question) {
+			if (null != question.getClItem()) {
+				List<String> specList = null;
+				List<String> feedbackList = null;
+				List<String> answerRemarkList = null;
+				boolean addSpecList = false;
+				
+				if (CollectionUtils.isNotEmpty(question.getTplSpecAnswers())) {
+					for (TplSpecAnswer specAnswer : question.getTplSpecAnswers()) {
+						if (answerRemarkList == null) {
+							answerRemarkList = new ArrayList<>();
+						}
+						if (StringUtils.isNotEmpty(specAnswer.getAnswerRemark())) {
+							answerRemarkList.add(specAnswer.getAnswerRemark());
+						} else {
+							answerRemarkList.add("N/A");
+						}
+					}
+					
+					if (feedbackList == null) {
+						feedbackList = new ArrayList<>();
+						feedbackList.add("N/A");
+					}
+				}
+				
+				for (TplSpecQuestion tplSpecQuestion : master.getTplSpecQuestions()) {
+					if (tplSpecQuestion.getSpecQuestionId() == question.getSpecQuestionId()) {
+						addSpecList = true;
+						continue;
+					}
+					if (addSpecList) {
+						if (tplSpecQuestion.getQuestionType().equals("S")) {
+							if (specList == null) {
+								specList = new ArrayList<>();
+							}
+							if (feedbackList == null) {
+								feedbackList = new ArrayList<>();
+							}
+							if (answerRemarkList == null) {
+								answerRemarkList = new ArrayList<>();
+							}
+							specList.add(tplSpecQuestion.getClSpecDetail());
+							
+							for (TplSpecAnswer tplSpecAnswer: tplSpecQuestion.getTplSpecAnswers()) {
+								if (null != tplSpecAnswer && null != tplSpecAnswer.getTplSpecSuppAnswer()
+										&& null != tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier()
+										&& tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier().getSupplierId().longValue() == scLoa.getScLoiLoa().getSmSupplier().getSupplierId().longValue()) {
+									String feedback = null;
+									if (null != tplSpecAnswer.getAnswerNumeric()) {
+										feedback = String.valueOf(tplSpecAnswer.getAnswerNumeric());
+									} else if (null != tplSpecAnswer.getAnswerCompliance()) {
+										if (tplSpecAnswer.getAnswerCompliance()) {
+											feedback = "Yes";
+										} else {
+											feedback = "No";
+										}
+									} else if (StringUtils.isNotEmpty(tplSpecAnswer.getAnswerText())) {
+										feedback = String.valueOf(tplSpecAnswer.getAnswerText());
+									} 
+									feedbackList.add(feedback);
+									answerRemarkList.add(tplSpecAnswer.getAnswerRemark());
+								} 
+							}
+						} else {
+							break;
+						}
+					}
+					
+				}
+				question.setSpecList(specList);
+				question.setFeedbackList(feedbackList);
+				question.setAnswerRemarkList(answerRemarkList);
+			}
+		}
+		// #26130 - End.
 
 	// #26226 - Start
 	/**
@@ -3931,6 +4018,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				if (CollectionUtils.isNotEmpty(master.getTplSpecQuestions())) {
 					List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
 					for (TplSpecQuestion question : master.getTplSpecQuestions()) {
+						// #26130 - Start.
+						constructSpecData(scLoa, master, question);
+						// #26130 - End.
 						constructTplSpecQuestion(dafaltValue,
 								newTplSpecQuestionsList, master, question);
 					}
