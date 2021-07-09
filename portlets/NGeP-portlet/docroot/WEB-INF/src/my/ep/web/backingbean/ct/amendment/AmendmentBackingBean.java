@@ -594,8 +594,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				//Amendment with supplement
 				
 				if(ctBackingBean.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT)){
-					log.info("contract param from amendmentbackingbean :: "+ctBackingBean.getManagedBean().getContractVer().getDocType());
-				    CheckandResetBondExempted();
+					//log.info("contract param from amendmentbackingbean :: "+ctBackingBean.getManagedBean().getContractVer().getDocType());
+					checkandResetBondExempted();
 				  }
 				//End Fix- #29368 / #30856
 				return;
@@ -7375,7 +7375,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		 * set bondExempted false if no attachment/letter for bond_exemption
 		 * otherwise true
 		 */
-		public void CheckandResetBondExempted(){
+		public void checkandResetBondExempted(){
 			
 			if(ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq() && ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()){
 				if(ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getBondExemptedFileName() == null && ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getBondExemptedFilePath() == null){
