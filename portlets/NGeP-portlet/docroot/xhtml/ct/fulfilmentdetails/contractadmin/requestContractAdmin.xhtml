@@ -204,7 +204,7 @@
 		<!-- end butiran pentadbir kontrak -->
 		<ui:include src="approverSetting.xhtml" />
 		<ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
-		<p:confirmDialog message="#{requestCtAdminBackingBean.getCancelConfirmationContent(requestCtAdminBackingBean.managedBean.contractVer.docType)}"
+		<p:confirmDialog message="#{requestCtAdminBackingBean.getCancelRequestAdminConfirmationContent(requestCtAdminBackingBean.managedBean.contractVer.docType)}"
 			severity="alert" widgetVar="cancelConfirmDlg" closable="true"
 			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
 			<div class="ppRightBtn">
