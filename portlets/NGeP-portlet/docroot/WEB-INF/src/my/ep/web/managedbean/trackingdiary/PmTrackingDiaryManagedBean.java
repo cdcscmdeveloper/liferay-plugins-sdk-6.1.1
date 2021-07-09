@@ -1057,8 +1057,19 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 				if (isFilterBySupplier()) {
 					PmOrgProfile pmOrgProfile = getOrgProfileByLoginUser(true);
 					if (ParameterConst.ORG_TYPE_SUPPLIER.equals(pmOrgProfile.getOrgTypeCode().getParameterCode())) {
-						reqDTO.setSupplierId(pmOrgProfile.getOrgProfileId());
-					}	
+						//START- Bug #29861 
+						if(ParameterConst.DOCTYPE_SUPPLIER_APPLICATION.equalsIgnoreCase(getSelectedDocType())){
+							//(Valid Only for docType = SR (From SM Module)
+							log.info("DOC_TYPE === >>> SR ");
+							searchBean.getDataFilterBeans().add(new SearchFilterBean(
+									"roleCode",
+									SearchOperator.OPERATOR_IN.value(), 
+									getAllSupplierRoleForSM()));	
+						}else{
+							reqDTO.setSupplierId(pmOrgProfile.getOrgProfileId());
+						}
+						//END - Bug #29861
+					}
 				}
 				
 				TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
@@ -1162,6 +1173,22 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 		sb.append(String.format("[%s=%s]", searchFilterBean2.getSearchField(), searchFilterBean2.getSearchValue()));
 		searchBean.setDescription("searchTrackingDiary" + sb.toString() + "[Caller:PmTrackingDiaryManagedBean.SearchTrackingDiaryPagingDataModel]");
 	}
+	
+	//START- Bug #29861
+	private List<String> getAllSupplierRoleForSM(){
+		List<String> supplierRoles = new ArrayList<String>();
+		supplierRoles.add(RoleCode.BASIC_SUPPLIER_ADMIN.value());
+		supplierRoles.add(RoleCode.BASIC_SUPPLIER_USER.value());
+		supplierRoles.add(RoleCode.MOF_SUPPLIER_ADMIN.value());
+		supplierRoles.add(RoleCode.MOF_SUPPLIER_USER.value());
+		supplierRoles.add(RoleCode.FL_USER.value());
+		supplierRoles.add(RoleCode.SUPPLIER_TEMP.value());
+		supplierRoles.add(RoleCode.G2G_SUPPLIER_ADMIN.value());
+		supplierRoles.add(RoleCode.G2G_SUPPLIER_USER.value());
+
+		return supplierRoles;
+	}
+	//END - Bug #29861
 
 	//start - #25396
 	public Boolean isUseViewAsOption() {

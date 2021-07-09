@@ -158,6 +158,7 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 	public String submitInquiryResponse(){
 		log.info("**********submitInquiryResponse*********");
 		try{
+			PmUser user = new FacesScopes().getUserSessionBean();
 			log.info("**********submitInquiryResponse*********");
 			ISupportingDocInquirySO reqSO = (ISupportingDocInquirySO) BusinessDelegate.getInstance().getServiceObject("sm", ISupportingDocInquirySO.class);
 			SupportingDocInquiryReqDTO reqDTO = new SupportingDocInquiryReqDTO();
@@ -172,6 +173,7 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 			reqDTO.setOutcome(SupplierManagementConst.BPM_SUBMIT);
 			reqDTO.setSmApplInquiry(this.getManagedBean().getSmApplInquiry());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			reqDTO.setChangedBy(user.getUserId());
 
 			SupportingDocInquiryResDTO resDTO = reqSO.updateInquiry(reqDTO);
 			//SupportingDocInquiryResDTO resDTO = new SupportingDocInquiryResDTO();
