@@ -16,6 +16,7 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.cm.catalog.CmRequestCode;
@@ -1979,5 +1980,4 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 			this.overlapCategoryVOList = overlapCategoryVOList;
 		}
 	//END 31111
-	
 }
