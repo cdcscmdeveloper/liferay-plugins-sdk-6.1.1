@@ -1052,7 +1052,6 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 			setSearchBeanDescription(searchBean, searchFilterBean1, searchFilterBean2);
 			
 			if (isSearchBeanEmpty) {
-				reqDTO.setSearchBean(searchBean);
 				
 				if (isFilterBySupplier()) {
 					PmOrgProfile pmOrgProfile = getOrgProfileByLoginUser(true);
@@ -1071,6 +1070,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 						//END - Bug #29861
 					}
 				}
+				reqDTO.setSearchBean(searchBean);
 				
 				TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
 				try {
