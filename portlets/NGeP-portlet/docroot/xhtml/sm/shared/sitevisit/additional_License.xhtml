@@ -4,7 +4,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.sm.sitevisit.additional.license']}">
 		<p:dataTable var="adtLicense" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -16,6 +17,12 @@
 				</f:facet>
 				<p:selectBooleanCheckbox value="#{adtLicense.available}" disabled="#{viewFlag}">
 				</p:selectBooleanCheckbox>
+				<!-- #24964 -->
+				<ac:smFieldChangeAlertSVO
+					isShow="#{not empty adtLicense.available}"
+					oriValue="#{svoSiteVisitBackingBean.getSVOAdtLicense(adtLicense).available}" 
+					currValue="#{adtLicense.available}" 
+					alertValue="#{svoSiteVisitBackingBean.getSVOAdtLicense(adtLicense).available}"/>
 			</p:column>
 
 			<p:column style="white-space: normal;word-wrap: break-word;">
@@ -35,6 +42,12 @@
 					value="#{adtLicense.smApplSupportDoc.licenseExpDate}">
 					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />	
 				</h:outputText>
+				<!-- #24964 -->
+				<ac:smFieldChangeAlertSVO
+					isShow="#{not empty adtLicense.smApplSupportDoc.licenseExpDate}"
+					oriValue="#{svoSiteVisitBackingBean.getSVOAdtLicense(adtLicense).smApplSupportDoc.licenseExpDate}" 
+					currValue="#{adtLicense.smApplSupportDoc.licenseExpDate}" 
+					alertValue="#{svoSiteVisitBackingBean.getSVOAdtLicense(adtLicense).smApplSupportDoc.licenseExpDate}"/>
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sm.suppdoc.license.no']}">

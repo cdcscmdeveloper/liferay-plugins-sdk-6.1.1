@@ -138,6 +138,8 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	
 	//24964
 	private SmSvTask smSvtaskSVO;
+	private SmSvAdtMachine latestAdtMachine;
+	private SmSvMachine latestSvMachine;
 
 	public Object getBpmPojo() {
 		return bpmPojo;
@@ -788,8 +790,7 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	public void setDuplicateInterviewees(List<SmSvInterviewee> duplicateInterviewees) {
 		this.duplicateInterviewees = duplicateInterviewees;
 	}
-	//#24964 - end
-
+	
 	public SmSvTask getSmSvtaskSVO() {
 		return smSvtaskSVO;
 	}
@@ -797,4 +798,21 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	public void setSmSvtaskSVO(SmSvTask smSvtaskSVO) {
 		this.smSvtaskSVO = smSvtaskSVO;
 	}
+
+	public SmSvAdtMachine getLatestAdtMachine() {
+		return latestAdtMachine;
+	}
+
+	public void setLatestAdtMachine(SmSvAdtMachine latestAdtMachine) {
+		this.latestAdtMachine = latestAdtMachine;
+	}
+
+	public SmSvMachine getLatestSvMachine() {
+		return latestSvMachine;
+	}
+
+	public void setLatestSvMachine(SmSvMachine latestSvMachine) {
+		this.latestSvMachine = latestSvMachine;
+	}
+	//#24964 - end
 }
