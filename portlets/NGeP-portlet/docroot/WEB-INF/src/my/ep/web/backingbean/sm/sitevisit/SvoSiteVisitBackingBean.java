@@ -2980,7 +2980,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	}
 	
 	public SmSvBankInfo getSVOBank(SmSvBankInfo currSmSvBankInfo){
+		log.info("#24964 troubleshoot TR - SmSvBankInfo");
+		log.info("currSmSvBankInfo - " + currSmSvBankInfo.getSvBankInfoId() + "; " + currSmSvBankInfo.getRemark());
 		for(SmSvBankInfo svoSmSvbankInfo : this.getManagedBean().getSmSvtaskSVO().getSmSvBankInfos()){
+			log.info("svoSmSvbankInfo - " + svoSmSvbankInfo.getSvBankInfoId() + "; " + svoSmSvbankInfo.getRemark());
 			if(svoSmSvbankInfo.getSvBankInfoId().equals(currSmSvBankInfo.getSvBankInfoId())){
 				return svoSmSvbankInfo;
 			}
@@ -2989,7 +2992,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	}
 	
 	public SmSvFinChecklist getSVOFinCheckList(SmSvFinChecklist smSvFinChecklist){
+		log.info("#24964 troubleshoot TR - SmSvFinChecklist");
+		log.info("SmSvFinChecklist - " + smSvFinChecklist.getSvFinChecklistId() + "; " + smSvFinChecklist.getRemark());
 		for(SmSvFinChecklist svoSmSvFinChecklist : this.getManagedBean().getSmSvtaskSVO().getSmSvFinChecklists()){
+			log.info("svoSmSvFinChecklist - " + svoSmSvFinChecklist.getSvFinChecklistId() + "; " + svoSmSvFinChecklist.getRemark());
 			if(svoSmSvFinChecklist.getSvFinChecklistId().equals(smSvFinChecklist.getSvFinChecklistId())){
 				return svoSmSvFinChecklist;
 			}
@@ -2998,7 +3004,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	}
 	
 	public SmSvInterviewee getSVOInterviewee(SmSvInterviewee smSvInterviewee){
+		log.info("#24964 troubleshoot TR - interviewee");
+		log.info("interviewee - " + smSvInterviewee.getSvIntervieweeId() + "; " + smSvInterviewee.getName());
 		for(SmSvInterviewee svoSmSvInterviewee : this.getManagedBean().getSmSvtaskSVO().getSmSvTemplate().getSmSvInterviewees()){
+			log.info("interviewee SVO - " + svoSmSvInterviewee.getSvIntervieweeId() + "; " + svoSmSvInterviewee.getName());
 			if(svoSmSvInterviewee.getSvIntervieweeId() == smSvInterviewee.getSvIntervieweeId()){
 				return svoSmSvInterviewee;
 			}
