@@ -466,7 +466,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 				if(smDisciplinaryAction != null) {
 					getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
 					boolean isWarningOnly = false;
-					String warningOrDisciplinaryActionMsg = null;
+					String warningOrDisciplinaryActionMsg;
 					String language =  new FacesScopes().getUserLocale().getLanguage();
 					if(smDisciplinaryAction.isWarning() && !smDisciplinaryAction.isCancelCategory() 
 							&& !smDisciplinaryAction.isSuspendRegistration() && !smDisciplinaryAction.isCancelRegistration() 
@@ -482,7 +482,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 						warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
 						getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
 					}
-					System.out.println("Message: " + getManagedBean().getDisciplinaryActionMessage());
+					log.info("Message: " + getManagedBean().getDisciplinaryActionMessage());
 				} else {
 					getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
 				}
@@ -2613,6 +2613,9 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 	
 	//end 21229
 	//26279 - start
+	/**
+	 * View list of Disciplinary Action
+	 */
 	public void viewDisciplinaryAction() {
 		List<DisciplinaryActionVO> disciplinaryActionVOs = retrieveDisciplinaryActions(getManagedBean().getSmDisciplinaryAction());
 		getManagedBean().setDisciplineVOs(disciplinaryActionVOs);
