@@ -333,7 +333,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 					smSvTask.getSmSvAddress().getSiteRefId(),smSvTask.getSmSvAddress(), smSvTask.getSmAppl().getApplId());
 		}
 		//24964 - start
-		if(getManagedBean().getSmSvtaskSVO() == null){
+		if(getManagedBean().getSmSvtaskSVO() == null 
+				|| getManagedBean().getSmSvTask().getSvTaskId() != getManagedBean().getSmSvtaskSVO().getSvTaskId()){
 			getManagedBean().setSmSvtaskSVO(getSVOTask(
 					getManagedBean().getSmSvTask().getSmAppl().getApplNo(), getManagedBean().getSmSvTask().getSvTaskId()));
 		}
@@ -1940,9 +1941,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			SmSvAdtMachine svAdtMachine = (SmSvAdtMachine) ((SmSvAdtMachine) obj).cloneEntity();
 			this.getManagedBean().setSelectedAdtMachine(svAdtMachine);
 			this.getManagedBean().getSelectedAdtMachine().setNewMachine(false);
+			//24964
+			getManagedBean().setLatestAdtMachine(getSVOSmSvAdtMachine(svAdtMachine));
 		}else if (obj instanceof SmSvMachine) {
 			getManagedBean().setOriSelectedMachine((SmSvMachine) obj);
 			this.getManagedBean().setSelectedSvMachine((SmSvMachine) obj);
+			//24964
+			getManagedBean().setLatestSvMachine(getSVOSmSvMachine((SmSvMachine) obj));
 		} else {
 			getManagedBean().setOriSelectedManufacturingDtl((SmManufacturingDtl) obj);
 			SmManufacturingDtl manufacDtl = (SmManufacturingDtl) ((SmManufacturingDtl) obj).cloneEntity();
@@ -2895,6 +2900,83 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return (SmSvDocLicense) EntityHelper.getEntityByMultiplePropertiesFromList(license, 
 				getManagedBean().getSmSvtaskSVO().getSmSvDocLicenses(),
 				new String[] { "svDocLicenseId" }, null, null);
+	}
+	
+	public SmSvEquipment getSVOSmSvEquipment(SmSvEquipment equipment){
+		if(equipment == null || getManagedBean().getSmSvtaskSVO() == null ||
+				getManagedBean().getSmSvtaskSVO().getSmSvTemplate().getSmSvEquipments() == null){
+					return null;
+		}
+		return (SmSvEquipment) EntityHelper.getEntityByMultiplePropertiesFromList(equipment, 
+				 getManagedBean().getSmSvtaskSVO().getSmSvTemplate().getSmSvEquipments(),
+				new String[] { "svEquipmentId" }, null, null);
+	}
+	
+	public SmSvWorker getSVOSmSvWorker(SmSvWorker worker){
+		if(worker == null || getManagedBean().getSmSvtaskSVO() == null ||
+				getManagedBean().getSmSvtaskSVO().getSmSvTemplate().getSmSvWorkers() == null){
+					return null;
+		}
+		return (SmSvWorker) EntityHelper.getEntityByMultiplePropertiesFromList(worker, 
+				getManagedBean().getSmSvtaskSVO().getSmSvTemplate().getSmSvWorkers(),
+				new String[] { "svWorkerId" }, null, null);
+	}
+	
+	public SmSvPrintwork getSVOSmSvPrintwork(SmSvPrintwork printwork){
+		if(printwork == null || getManagedBean().getSmSvtaskSVO() == null ||
+				getManagedBean().getSmSvtaskSVO().getSmSvTemplate().getSmSvPrintworks() == null){
+					return null;
+		}
+		return (SmSvPrintwork) EntityHelper.getEntityByMultiplePropertiesFromList(printwork, 
+				getManagedBean().getSmSvtaskSVO().getSmSvTemplate().getSmSvPrintworks(),
+				new String[] { "svPrintworkId" }, null, null);
+	}
+	
+	public SmSvMachine getSVOSmSvMachine(SmSvMachine machine){
+		if(machine == null || getManagedBean().getSmSvtaskSVO() == null ||
+				getManagedBean().getSmSvtaskSVO().getSmSvTemplate().getSmSvMachines() == null){
+					return null;
+		}
+		return (SmSvMachine) EntityHelper.getEntityByMultiplePropertiesFromList(machine, 
+				getManagedBean().getSmSvtaskSVO().getSmSvTemplate().getSmSvMachines(),
+				new String[] { "svMachineId" }, null, null);
+	}
+	
+	public boolean isSVOSmSvMachineDifferent(SmSvMachine machine){
+		SmSvMachine svoMachine = getSVOSmSvMachine(machine);
+		if(svoMachine == null) return true;
+		return SmCommonUtil.isHasDifferences(machine.getSmMachineDtl(), svoMachine.getSmMachineDtl(), null);
+	}
+	
+	public SmSvAdtMachine getSVOSmSvAdtMachine(SmSvAdtMachine machine){
+		if(machine == null || getManagedBean().getSmSvtaskSVO() == null ||
+				getManagedBean().getSmSvtaskSVO().getSmSvTemplate().getSmSvAdtMachines() == null){
+					return null;
+		}
+		return (SmSvAdtMachine) EntityHelper.getEntityByMultiplePropertiesFromList(machine, 
+				getManagedBean().getSmSvtaskSVO().getSmSvTemplate().getSmSvAdtMachines(),
+				new String[] { "svAdtMachineId" }, null, null);
+	}
+	
+	public boolean isSVOSmSvAdtMachineDifferent(SmSvAdtMachine machine){
+		SmSvAdtMachine svoMachine = getSVOSmSvAdtMachine(machine);
+		return SmCommonUtil.isHasDifferences(machine, svoMachine, null);
+	}
+	
+	
+	public SmManufacturingDtl getSVOSmManufacturingDtl(SmManufacturingDtl manu){
+		if(manu == null || getManagedBean().getSmSvtaskSVO() == null ||
+				getManagedBean().getSmSvtaskSVO().getSmAppl().getSmManufacturingDtls() == null){
+					return null;
+		}
+		return (SmManufacturingDtl) EntityHelper.getEntityByMultiplePropertiesFromList(manu, 
+				getManagedBean().getSmSvtaskSVO().getSmAppl().getSmManufacturingDtls(),
+				new String[] { "manufacturingDtlId" }, null, null);
+	}
+	
+	public boolean isSVOSmManufacturingDtlDifferent(SmManufacturingDtl manu){
+		SmManufacturingDtl svoManu = getSVOSmManufacturingDtl(manu);
+		return SmCommonUtil.isHasDifferences(manu, svoManu, null);
 	}
 	
 	public SmSvBankInfo getSVOBank(SmSvBankInfo currSmSvBankInfo){
