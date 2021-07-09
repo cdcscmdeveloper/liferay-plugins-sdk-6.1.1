@@ -428,12 +428,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		//#29007 End Vinod
 		
 		// #27797 - start
-		if (scLoiLoa.getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)
-				|| scLoiLoa.getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+		if (isZonalWithPaOrPs()) {//29006 - change condition
 			if(scLoiLoa.isZonal()){
 				Map<Long, Integer> reqItemRowSpanMap = new HashMap<Long, Integer>();
 				Map<Long, BigDecimal> reqItemMaxTotalMap = new HashMap<Long, BigDecimal>();
 				AwardSupplierResDTO itemsResDTO = getQtAwardSO().searchScLoiLoaItemByLoaId(reqDTO);
+				
+				//29006 - start
+				if(itemsResDTO.getScLoiLoaItemList().size()==0){
+					itemsResDTO.setScLoiLoaItemList(scLoa.getScLoiLoaItems());
+				}
+				//29006 - end
 				
 				//to set rowspan value / max sub total for every RequestNoteItemId
 				for (ScLoiLoaItem item : itemsResDTO.getScLoiLoaItemList()) {
@@ -895,12 +900,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 		reqDTO.setLoaId(loaId);
 		
-		if (scLoiLoa.getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)
-				|| scLoiLoa.getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+		if (isZonalWithPaOrPs()) {//29006 - change condition
 			if(scLoiLoa.isZonal()){
 				Map<Long, Integer> reqItemRowSpanMap = new HashMap<Long, Integer>();
 				Map<Long, BigDecimal> reqItemMaxTotalMap = new HashMap<Long, BigDecimal>();
 				AwardSupplierResDTO itemsResDTO = getQtAwardSO().searchScLoiLoaItemByLoaId(reqDTO);
+				
+				//29006 - start
+				if(itemsResDTO.getScLoiLoaItemList().size()==0){
+					itemsResDTO.setScLoiLoaItemList(this.getManagedBean().getScLoa().getScLoiLoaItems());
+				}
+				//29006 - end
 				
 				//to set rowspan value / max sub total for every RequestNoteItemId
 				for (ScLoiLoaItem item : itemsResDTO.getScLoiLoaItemList()) {
