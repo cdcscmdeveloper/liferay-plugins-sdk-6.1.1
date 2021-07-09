@@ -34,6 +34,9 @@
 	</p:panel>
 
 	<p:panel header="#{lbl['lbl.sm.bankDtls.bankDiaHdr']}" toggleable="true">
+		<!-- #24964 - START -->
+		#{svoSiteVisitBackingBean.mapSmSvBankSVOWithPO()}
+		<!-- #24964 - END -->
 		<p:dataTable var="bankInfo"  rowIndexVar="index" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvBankInfos}" 
 		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 		
@@ -87,9 +90,9 @@
 				<!-- #24964 - START -->
 				<ac:smFieldChangeAlertSVO 
 					isShow="true"
-					oriValue="#{svoSiteVisitBackingBean.getSVOBank(bankInfo).valid}" 
+					oriValue="#{bankInfo.svoSmSvBankInfo.valid}" 
 					currValue="#{bankInfo.valid}"
-					alertValue="#{svoSiteVisitBackingBean.getSVOBank(bankInfo).valid}" />
+					alertValue="#{bankInfo.svoSmSvBankInfo.valid}" />
 				<!-- #24964 - END -->
 				</div>
 			</p:column>
@@ -101,9 +104,9 @@
 				<!-- #24964 - START -->
 				<ac:smFieldChangeAlertSVO 
 					isShow="true"
-					oriValue="#{svoSiteVisitBackingBean.getSVOBank(bankInfo).remark}" 
+					oriValue="#{bankInfo.svoSmSvBankInfo.remark}" 
 					currValue="#{bankInfo.remark}" 
-					alertValue="#{svoSiteVisitBackingBean.getSVOBank(bankInfo).remark}" />
+					alertValue="#{bankInfo.svoSmSvBankInfo.remark}"  />
 				<!-- #24964 - END -->
 			</p:column>
 		</p:dataTable>
@@ -115,6 +118,9 @@
 
 
 	<p:panel header="#{lbl['lbl.sm.check.list.header']}" toggleable="true">
+		<!-- #24964 - START -->
+		#{svoSiteVisitBackingBean.mapfinLsItemSVOWithPO()}
+		<!-- #24964 - END -->
 		<p:dataTable var="finLsItem" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvFinChecklists}"
 			rowIndexVar="rowIndex">
@@ -130,9 +136,9 @@
 				<!-- #24964 - START -->
 				<ac:smFieldChangeAlertSVO 
 					isShow="true"
-					oriValue="#{svoSiteVisitBackingBean.getSVOFinCheckList(finLsItem).valid}" 
+					oriValue="#{finLsItem.svoSmSvFinChecklist.valid}" 
 					currValue="#{finLsItem.valid}" 
-					alertValue="#{svoSiteVisitBackingBean.getSVOFinCheckList(finLsItem).valid}"  />
+					alertValue="#{finLsItem.svoSmSvFinChecklist.valid}"  />
 				<!-- #24964 - END -->
 				</div>
 			</p:column>
@@ -145,9 +151,9 @@
 				<!-- #24964 - START -->
 				<ac:smFieldChangeAlertSVO 
 					isShow="true"
-					oriValue="#{svoSiteVisitBackingBean.getSVOFinCheckList(finLsItem).remark}" 
+					oriValue="#{finLsItem.svoSmSvFinChecklist.remark}" 
 					currValue="#{finLsItem.remark}" 
-					alertValue="#{svoSiteVisitBackingBean.getSVOFinCheckList(finLsItem).remark}"  />
+					alertValue="#{finLsItem.svoSmSvFinChecklist.remark}"  />
 				<!-- #24964 - END -->
 			</p:column>
 		</p:dataTable>
