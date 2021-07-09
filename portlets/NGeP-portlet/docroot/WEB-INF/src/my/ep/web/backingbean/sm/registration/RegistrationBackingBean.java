@@ -2188,16 +2188,19 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				//26238 - end
 				if(resDTO.getSmSupp().getSmSupplierOwners()!=null && CollectionUtils.isNotEmpty(resDTO.getSmSupp().getSmSupplierOwners())){
 					// #27691 - Start
-					// for view director.Display supplier owner with record status 1 or 8 only
-					for (SmSupplierOwner smSuppOwner: resDTO.getSmSupp().getSmSupplierOwners()){
-						if(smSuppOwner.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_DELETED
-								||smSuppOwner.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_SUSPENDED){
-							this.getManagedBean().getSupplierOwnerls().add(smSuppOwner);
-							}
+					if(!resDTO.getSmSupp().getSmAppl().isApplValidWithSsm()){
+						// for view director.Display supplier owner with record status 1 or 8 only
+						for (SmSupplierOwner smSuppOwner: resDTO.getSmSupp().getSmSupplierOwners()){
+							if(smSuppOwner.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_DELETED
+									||smSuppOwner.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_SUSPENDED){
+								this.getManagedBean().getSupplierOwnerls().add(smSuppOwner);
+								}
+						}
+						this.getManagedBean().setSmSuppOwner(resDTO.getSmSupp().getSmSupplierOwners().get(0));
+						this.getManagedBean().setSmSuppOwners(resDTO.getSmSupp().getSmSupplierOwners());
+						resDTO.getSmSupp().getSmSupplierOwners().removeAll(this.getManagedBean().getSupplierOwnerls());
 					}
-					this.getManagedBean().setSmSuppOwner(resDTO.getSmSupp().getSmSupplierOwners().get(0));
-					this.getManagedBean().setSmSuppOwners(resDTO.getSmSupp().getSmSupplierOwners());
-					resDTO.getSmSupp().getSmSupplierOwners().removeAll(this.getManagedBean().getSupplierOwnerls());
+
 				// #27691 - End
 					this.getManagedBean().setSmSuppOwner(resDTO.getSmSupp().getSmSupplierOwners().get(0));
 					// start #29956
