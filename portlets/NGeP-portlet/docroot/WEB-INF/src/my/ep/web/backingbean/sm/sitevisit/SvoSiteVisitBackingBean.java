@@ -2980,9 +2980,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	}
 	
 	public void mapSmSvBankSVOWithPO(){
+		log.info("#24964 - Troubleshoot SmSvBank");
 		for(SmSvBankInfo smSvBankInfo : this.getManagedBean().getSmSvTask().getSmSvBankInfos()){
+			log.info("current - "+smSvBankInfo.getSvBankInfoId());
 			for(SmSvBankInfo svoSmSvBankInfo : this.getManagedBean().getSmSvtaskSVO().getSmSvBankInfos()){
+				log.info("svo - "+svoSmSvBankInfo.getSvBankInfoId());
 				if(smSvBankInfo.getSvBankInfoId().equals(svoSmSvBankInfo.getSvBankInfoId())){
+					log.info("in if bank");
 					smSvBankInfo.setSvoSmSvBankInfo(svoSmSvBankInfo);
 				}
 			}
@@ -2990,9 +2994,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	}
 	
 	public void mapfinLsItemSVOWithPO(){
+		log.info("#24964 - Troubleshoot finLsItem");
 		for(SmSvFinChecklist smSvFinChecklist : this.getManagedBean().getSmSvTask().getSmSvFinChecklists()){
+			log.info("current - "+smSvFinChecklist.getSvFinChecklistId());
 			for(SmSvFinChecklist svoSmSvFinChecklist : this.getManagedBean().getSmSvtaskSVO().getSmSvFinChecklists()){
+				log.info("svo - "+svoSmSvFinChecklist.getSvFinChecklistId());
 				if(smSvFinChecklist.getSvFinChecklistId().equals(svoSmSvFinChecklist.getSvFinChecklistId())){
+					log.info("in if finLsItem");
 					smSvFinChecklist.setSvoSmSvFinChecklist(svoSmSvFinChecklist);
 				}
 			}
@@ -3000,9 +3008,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	}
 	
 	public void mapSmSvIntervieweesSVOWithPO(){
+		log.info("#24964 - Troubleshoot interviewee");
 		for(SmSvInterviewee smSvInterviewee : this.getManagedBean().getSmSvTask().getSmSvTemplate().getSmSvInterviewees()){
+			log.info("current - "+smSvInterviewee.getSvIntervieweeId());
 			for(SmSvInterviewee svoSmSvInterviewee : this.getManagedBean().getSmSvtaskSVO().getSmSvTemplate().getSmSvInterviewees()){
+				log.info("svo - "+svoSmSvInterviewee.getSvIntervieweeId());
 				if(smSvInterviewee.getSvIntervieweeId()  == svoSmSvInterviewee.getSvIntervieweeId()){
+					log.info("in if interview");
 					smSvInterviewee.setSvoSmSvInterviewee(svoSmSvInterviewee);
 				}
 			}
