@@ -530,7 +530,8 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 			for (int i = 0; i < docSectionList.size(); i++) {
 				TplDocSection sectionOrder = docSectionList.get(i);
 				sectionOrder.setSectionOrder(i);
-				
+			//20210709@asyrafhaziq - 31330 - start
+               if (sectionOrder.getSectionContent() != null){
 				html = sectionOrder.getSectionContent();
 				html = html.replaceAll("<<", "&lt;&lt;");
 				html = html.replaceAll(">>", "&gt;&gt;");
@@ -545,8 +546,8 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 				doc.outputSettings().syntax(Document.OutputSettings.Syntax.xml); 
 				doc.outputSettings().charset("UTF-8");
 				sectionOrder.setSectionContent(doc.body().html());
-				
-				
+               }
+             //20210709@asyrafhaziq - 31330 - End
 				//25142 - end
 			}
 			tplDocMaster.setTplDocSectionCollection(docSectionList);
