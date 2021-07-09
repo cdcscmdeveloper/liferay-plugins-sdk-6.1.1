@@ -2877,7 +2877,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return null;
 	}
 	
-	
 	public SmSvLicenseInsurance getSVOLicense(SmSvLicenseInsurance license){
 		if(license == null || getManagedBean().getSmSvtaskSVO() == null ||
 			getManagedBean().getSmSvtaskSVO().getSmSvTemplate().getSmSvLicenseInsurances() == null){
@@ -2888,7 +2887,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				new String[] { "svLicenseInsuranceId" }, null, null);
 	}
 	
-	
 	public SmSvDocLicense getSVOAdtLicense(SmSvDocLicense license){
 		if(license == null || getManagedBean().getSmSvtaskSVO() == null ||
 			getManagedBean().getSmSvtaskSVO().getSmSvDocLicenses() == null){
@@ -2897,6 +2895,33 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return (SmSvDocLicense) EntityHelper.getEntityByMultiplePropertiesFromList(license, 
 				getManagedBean().getSmSvtaskSVO().getSmSvDocLicenses(),
 				new String[] { "svDocLicenseId" }, null, null);
+	}
+	
+	public SmSvBankInfo getSVOBank(SmSvBankInfo currSmSvBankInfo){
+		for(SmSvBankInfo svoSmSvbankInfo : this.getManagedBean().getSmSvtaskSVO().getSmSvBankInfos()){
+			if(svoSmSvbankInfo.getSvBankInfoId().equals(currSmSvBankInfo.getSvBankInfoId())){
+				return svoSmSvbankInfo;
+			}
+		}
+		return null;
+	}
+	
+	public SmSvFinChecklist getSVOFinCheckList(SmSvFinChecklist smSvFinChecklist){
+		for(SmSvFinChecklist svoSmSvFinChecklist : this.getManagedBean().getSmSvtaskSVO().getSmSvFinChecklists()){
+			if(svoSmSvFinChecklist.getSvFinChecklistId().equals(smSvFinChecklist.getSvFinChecklistId())){
+				return svoSmSvFinChecklist;
+			}
+		}
+		return null;
+	}
+	
+	public SmSvInterviewee getSVOInterviewee(SmSvInterviewee smSvInterviewee){
+		for(SmSvInterviewee svoSmSvInterviewee : this.getManagedBean().getSmSvtaskSVO().getSmSvTemplate().getSmSvInterviewees()){
+			if(svoSmSvInterviewee.getSvIntervieweeId() == smSvInterviewee.getSvIntervieweeId()){
+				return svoSmSvInterviewee;
+			}
+		}
+		return null;
 	}
 	//#24964 - end
 }

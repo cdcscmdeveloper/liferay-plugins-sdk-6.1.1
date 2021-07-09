@@ -26,6 +26,13 @@
 				<h:outputText value="#{lbl['lbl.sm.person.composition.name']}" />
 			</f:facet>
 			<p:inputText value="#{interviewee.name}" label="#{lbl['lbl.sm.person.composition.name']}" id="intName"  maxlength="50" size="55"  required="true" />
+			<!-- #24964 - START -->
+			<ac:smFieldChangeAlertSVO 
+				isShow="true"
+				oriValue="#{svoSiteVisitBackingBean.getSVOInterviewee(interviewee).name}" 
+				currValue="#{interviewee.name}" 
+				alertValue="#{svoSiteVisitBackingBean.getSVOInterviewee(interviewee).name}"   />
+			<!-- #24964 - END -->
 		</p:column>
 		
 		<p:column>	
@@ -35,6 +42,13 @@
 			</f:facet>
 			<p:inputText value="#{interviewee.designation}" label="#{lbl['lbl.sm.userprofile.designation']}" id="intDesignation"  
 			maxlength="50" size="55"  required="true" />
+			<!-- #24964 - START -->
+			<ac:smFieldChangeAlertSVO 
+				isShow="true"
+				oriValue="#{svoSiteVisitBackingBean.getSVOInterviewee(interviewee).designation}" 
+				currValue="#{interviewee.designation}" 
+				alertValue="#{svoSiteVisitBackingBean.getSVOInterviewee(interviewee).designation}"   />
+			<!-- #24964 - START -->
 		</p:column>
 		
 		</p:dataTable>
