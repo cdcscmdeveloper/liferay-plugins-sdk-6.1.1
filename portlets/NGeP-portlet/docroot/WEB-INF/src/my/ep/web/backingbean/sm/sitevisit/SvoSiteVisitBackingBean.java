@@ -3014,5 +3014,12 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 		return null;
 	}
+	//this method testonlu will remove
+	public void testlist(List<SmSvBankInfo> smSvBankInfolist){
+		for(SmSvBankInfo bankinfo : smSvBankInfolist){
+			log.info("bank id - " + bankinfo.getSvBankInfoId());
+			log.info("bank remark - " + bankinfo.getRemark());
+		}
+	}
 	//#24964 - end
 }
