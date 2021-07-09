@@ -2981,6 +2981,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	
 	public void mapSmSvBankSVOWithPO(){
 		log.info("#24964 - Troubleshoot SmSvBank");
+		if(getManagedBean().getSmSvtaskSVO() == null || getManagedBean().getSmSvTask().getSvTaskId() != getManagedBean().getSmSvtaskSVO().getSvTaskId()){
+			log.info("SmSvTaskSVO is null");
+			getManagedBean().setSmSvtaskSVO(getSVOTask(getManagedBean().getSmSvTask().getSmAppl().getApplNo(), getManagedBean().getSmSvTask().getSvTaskId()));
+		}
+		
 		for(SmSvBankInfo smSvBankInfo : this.getManagedBean().getSmSvTask().getSmSvBankInfos()){
 			log.info("current - "+smSvBankInfo.getSvBankInfoId());
 			for(SmSvBankInfo svoSmSvBankInfo : this.getManagedBean().getSmSvtaskSVO().getSmSvBankInfos()){
@@ -2995,6 +3000,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	
 	public void mapfinLsItemSVOWithPO(){
 		log.info("#24964 - Troubleshoot finLsItem");
+		if(getManagedBean().getSmSvtaskSVO() == null || getManagedBean().getSmSvTask().getSvTaskId() != getManagedBean().getSmSvtaskSVO().getSvTaskId()){
+			log.info("SmSvTaskSVO is null");
+			getManagedBean().setSmSvtaskSVO(getSVOTask(getManagedBean().getSmSvTask().getSmAppl().getApplNo(), getManagedBean().getSmSvTask().getSvTaskId()));
+		}
+		
 		for(SmSvFinChecklist smSvFinChecklist : this.getManagedBean().getSmSvTask().getSmSvFinChecklists()){
 			log.info("current - "+smSvFinChecklist.getSvFinChecklistId());
 			for(SmSvFinChecklist svoSmSvFinChecklist : this.getManagedBean().getSmSvtaskSVO().getSmSvFinChecklists()){
@@ -3009,6 +3019,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	
 	public void mapSmSvIntervieweesSVOWithPO(){
 		log.info("#24964 - Troubleshoot interviewee");
+		if(getManagedBean().getSmSvtaskSVO() == null || getManagedBean().getSmSvTask().getSvTaskId() != getManagedBean().getSmSvtaskSVO().getSvTaskId()){
+			log.info("SmSvTaskSVO is null");
+			getManagedBean().setSmSvtaskSVO(getSVOTask(getManagedBean().getSmSvTask().getSmAppl().getApplNo(), getManagedBean().getSmSvTask().getSvTaskId()));
+		}
+		
 		for(SmSvInterviewee smSvInterviewee : this.getManagedBean().getSmSvTask().getSmSvTemplate().getSmSvInterviewees()){
 			log.info("current - "+smSvInterviewee.getSvIntervieweeId());
 			for(SmSvInterviewee svoSmSvInterviewee : this.getManagedBean().getSmSvtaskSVO().getSmSvTemplate().getSmSvInterviewees()){
