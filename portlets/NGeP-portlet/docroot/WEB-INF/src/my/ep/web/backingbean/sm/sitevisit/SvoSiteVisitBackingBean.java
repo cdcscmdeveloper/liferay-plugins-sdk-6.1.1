@@ -338,7 +338,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			getManagedBean().setSmSvtaskSVO(getSVOTask(
 					getManagedBean().getSmSvTask().getSmAppl().getApplNo(), getManagedBean().getSmSvTask().getSvTaskId()));
 			log.info("=============TR troubleshoot smSvTaskSVO==============");
+			log.info("svtasksvo id -- "+getManagedBean().getSmSvtaskSVO().getSvTaskId());
 			log.info("svtask id -- "+getManagedBean().getSmSvTask().getSvTaskId());
+			log.info("appl no svo -- "+getManagedBean().getSmSvtaskSVO().getSmAppl().getApplNo());
 			log.info("appl no -- "+getManagedBean().getSmSvTask().getSmAppl().getApplNo());
 			log.info("read svosvbank");
 			for(SmSvBankInfo svoSmSvBankInfo : getManagedBean().getSmSvtaskSVO().getSmSvBankInfos()){
