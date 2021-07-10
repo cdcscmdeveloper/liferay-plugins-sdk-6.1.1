@@ -337,6 +337,18 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				|| getManagedBean().getSmSvTask().getSvTaskId() != getManagedBean().getSmSvtaskSVO().getSvTaskId()){
 			getManagedBean().setSmSvtaskSVO(getSVOTask(
 					getManagedBean().getSmSvTask().getSmAppl().getApplNo(), getManagedBean().getSmSvTask().getSvTaskId()));
+			log.info("=============TR troubleshoot smSvTaskSVO==============");
+			log.info("svtask id -- "+getManagedBean().getSmSvTask().getSvTaskId());
+			log.info("appl no -- "+getManagedBean().getSmSvTask().getSmAppl().getApplNo());
+			log.info("read svosvbank");
+			for(SmSvBankInfo svoSmSvBankInfo : getManagedBean().getSmSvtaskSVO().getSmSvBankInfos()){
+				log.info("3bank info - " + svoSmSvBankInfo );
+				log.info("3bank id" +svoSmSvBankInfo.getSvBankInfoId());
+			}
+			for(int i=0; i<getManagedBean().getSmSvtaskSVO().getSmSvBankInfos().size(); i++){
+				log.info("4bank info - " + getManagedBean().getSmSvtaskSVO().getSmSvBankInfos().get(i) );
+				log.info("4bank id" +getManagedBean().getSmSvtaskSVO().getSmSvBankInfos().get(i).getSvBankInfoId());
+			}
 		}
 		//24964 - end
 	}
@@ -3018,6 +3030,16 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 					smSvBankInfo.setSvoSmSvBankInfo(svoSmSvBankInfo);
 				}
 			}
+		}
+		log.info("test bank for loop");
+		for(SmSvBankInfo svoSmSvBankInfo : getManagedBean().getSmSvtaskSVO().getSmSvBankInfos()){
+			log.info("1bank info - " + svoSmSvBankInfo );
+			log.info("1bank id" +svoSmSvBankInfo.getSvBankInfoId());
+		}
+		log.info("test bank basic for loop");
+		for(int i=0; i<getManagedBean().getSmSvtaskSVO().getSmSvBankInfos().size(); i++){
+			log.info("2bank info - " + getManagedBean().getSmSvtaskSVO().getSmSvBankInfos().get(i) );
+			log.info("2bank id" +getManagedBean().getSmSvtaskSVO().getSmSvBankInfos().get(i).getSvBankInfoId());
 		}
 	}
 	
