@@ -57,7 +57,7 @@
 				<!-- #24964 - START -->
 				<td>
 					<ac:smFieldChangeAlertSVO 
-						isShow="true"
+						isShow="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO ne null}"
 						oriValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvOffice.signboardRemark}" 
 						currValue="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.signboardRemark}" 
 						alertValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvOffice.signboardRemark}"  />
@@ -70,7 +70,7 @@
 				<!-- #24964 - START -->
 				<td>
 					<ac:smFieldChangeAlertSVO 
-						isShow="true"
+						isShow="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO ne null}"
 						oriValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvOffice.shareWithRemark}" 
 						currValue="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.shareWithRemark}" 
 						alertValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvOffice.shareWithRemark}"  />
