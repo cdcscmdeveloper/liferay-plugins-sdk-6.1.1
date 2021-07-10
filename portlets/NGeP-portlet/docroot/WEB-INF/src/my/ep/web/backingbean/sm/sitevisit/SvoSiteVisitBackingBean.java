@@ -2882,6 +2882,22 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return null;
 	}
 	
+	private static SmAppl getTempSmAppl(String applNo){
+		try {
+			String fileName = SmCommonUtil.getSerializedFileFullDirByApplNo(applNo, "SUP");
+			if (!StringUtils.isBlank(fileName)) {
+				SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
+				reqDTO.setDeSerFileName(fileName);
+				SmApplRevisionResDTO resDTO = SmServiceLookup
+						.getSmApplRevisionSO().readApplicationHist(reqDTO);
+				if (resDTO.getSmAppl() != null) {
+					return resDTO.getSmAppl();
+				}
+			}
+		} catch (Exception ex) {}
+		return null;
+	}
+	
 	public SmSvLicenseInsurance getSVOLicense(SmSvLicenseInsurance license){
 		if(license == null || getManagedBean().getSmSvtaskSVO() == null ||
 			getManagedBean().getSmSvtaskSVO().getSmSvTemplate().getSmSvLicenseInsurances() == null){
@@ -2980,10 +2996,17 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	}
 	
 	public void mapSmSvBankSVOWithPO(){
-		log.info("#24964 - Troubleshoot SmSvBank");
-		if(getManagedBean().getSmSvtaskSVO() == null || getManagedBean().getSmSvTask().getSvTaskId() != getManagedBean().getSmSvtaskSVO().getSvTaskId()){
-			log.info("SmSvTaskSVO is null");
-			getManagedBean().setSmSvtaskSVO(getSVOTask(getManagedBean().getSmSvTask().getSmAppl().getApplNo(), getManagedBean().getSmSvTask().getSvTaskId()));
+		log.info("#24964 - Troubleshoot SmSvBank===================================");
+		
+		if((getManagedBean().getTempSmAppl() == null)){
+			log.info("null supplier ser file");
+			getManagedBean().setTempSmAppl(getTempSmAppl(getManagedBean().getSmSvTask().getSmAppl().getApplNo()));
+			log.info("supplier ser file read appl 1 -- " + getManagedBean().getTempSmAppl());
+			log.info("supplier appl no in ser file 1 -- " + getManagedBean().getTempSmAppl().getApplNo());
+		}
+		if(getManagedBean().getTempSmAppl() != null){
+			log.info("supplier ser file read appl 2 -- " + getManagedBean().getTempSmAppl());
+			log.info("supplier appl no in ser file 2 -- " + getManagedBean().getTempSmAppl().getApplNo());
 		}
 		
 		for(SmSvBankInfo smSvBankInfo : this.getManagedBean().getSmSvTask().getSmSvBankInfos()){
@@ -2999,10 +3022,17 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	}
 	
 	public void mapfinLsItemSVOWithPO(){
-		log.info("#24964 - Troubleshoot finLsItem");
-		if(getManagedBean().getSmSvtaskSVO() == null || getManagedBean().getSmSvTask().getSvTaskId() != getManagedBean().getSmSvtaskSVO().getSvTaskId()){
-			log.info("SmSvTaskSVO is null");
-			getManagedBean().setSmSvtaskSVO(getSVOTask(getManagedBean().getSmSvTask().getSmAppl().getApplNo(), getManagedBean().getSmSvTask().getSvTaskId()));
+		log.info("#24964 - Troubleshoot finLsItem=======================");
+
+		if((getManagedBean().getTempSmAppl() == null)){
+			log.info("null supplier ser file");
+			getManagedBean().setTempSmAppl(getTempSmAppl(getManagedBean().getSmSvTask().getSmAppl().getApplNo()));
+			log.info("supplier ser file read appl 1 -- " + getManagedBean().getTempSmAppl());
+			log.info("supplier appl no in ser file 1 -- " + getManagedBean().getTempSmAppl().getApplNo());
+		}
+		if(getManagedBean().getTempSmAppl() != null){
+			log.info("supplier ser file read appl 2 -- " + getManagedBean().getTempSmAppl());
+			log.info("supplier appl no in ser file 2 -- " + getManagedBean().getTempSmAppl().getApplNo());
 		}
 		
 		for(SmSvFinChecklist smSvFinChecklist : this.getManagedBean().getSmSvTask().getSmSvFinChecklists()){
@@ -3018,10 +3048,17 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	}
 	
 	public void mapSmSvIntervieweesSVOWithPO(){
-		log.info("#24964 - Troubleshoot interviewee");
-		if(getManagedBean().getSmSvtaskSVO() == null || getManagedBean().getSmSvTask().getSvTaskId() != getManagedBean().getSmSvtaskSVO().getSvTaskId()){
-			log.info("SmSvTaskSVO is null");
-			getManagedBean().setSmSvtaskSVO(getSVOTask(getManagedBean().getSmSvTask().getSmAppl().getApplNo(), getManagedBean().getSmSvTask().getSvTaskId()));
+		log.info("#24964 - Troubleshoot interviewee==========================");
+
+		if((getManagedBean().getTempSmAppl() == null)){
+			log.info("null supplier ser file");
+			getManagedBean().setTempSmAppl(getTempSmAppl(getManagedBean().getSmSvTask().getSmAppl().getApplNo()));
+			log.info("supplier ser file read appl 1 -- " + getManagedBean().getTempSmAppl());
+			log.info("supplier appl no in ser file 1 -- " + getManagedBean().getTempSmAppl().getApplNo());
+		}
+		if(getManagedBean().getTempSmAppl() != null){
+			log.info("supplier ser file read appl 2 -- " + getManagedBean().getTempSmAppl());
+			log.info("supplier appl no in ser file 2 -- " + getManagedBean().getTempSmAppl().getApplNo());
 		}
 		
 		for(SmSvInterviewee smSvInterviewee : this.getManagedBean().getSmSvTask().getSmSvTemplate().getSmSvInterviewees()){
