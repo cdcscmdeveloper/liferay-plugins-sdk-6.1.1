@@ -3096,5 +3096,66 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			}
 		}
 	}
+	
+	public void testSendBank(SmSvBankInfo smSvBankInfo){
+		log.info("testSendBank start===============");
+		log.info("id - " + smSvBankInfo.getSvBankInfoId());
+		log.info("remark - " + smSvBankInfo.getRemark());
+		log.info("name" + smSvBankInfo.getSmSupplierBank().getPmFinancialOrg().getFinOrgName());
+		log.info("testSendBank end===============");
+	}
+	
+	public void testSVOBankList(List<SmSvBankInfo> smSvBankInfoLs){
+		log.info("testSVOBankList start===============");
+		log.info("list size" + smSvBankInfoLs.size());
+		for(SmSvBankInfo smSvBankInfoSVO : smSvBankInfoLs){
+			log.info("id - " + smSvBankInfoSVO.getSvBankInfoId());
+			log.info("remark - " + smSvBankInfoSVO.getRemark());
+			log.info("name" + smSvBankInfoSVO.getSmSupplierBank().getPmFinancialOrg().getFinOrgName());
+		}
+		log.info("testSVOBankList end===============");
+	}
+	
+	public void testBankList(List<SmSvBankInfo> smSvBankInfoLs){
+		log.info("testBankList start===============");
+		log.info("list size" + smSvBankInfoLs.size());
+		for(SmSvBankInfo smSvBankInfo : smSvBankInfoLs){
+			log.info("id - " + smSvBankInfo.getSvBankInfoId());
+			log.info("remark - " + smSvBankInfo.getRemark());
+			log.info("name" + smSvBankInfo.getSmSupplierBank().getPmFinancialOrg().getFinOrgName());
+		}
+		log.info("testBankList end===============");
+	}
+	
+	public void testbothlist(List<SmSvBankInfo> smSvBankInfoLsSVO, List<SmSvBankInfo> smSvBankInfoLs){
+		log.info("testbothlist start===============");
+		log.info("list size biasa" + smSvBankInfoLs.size());
+		for(SmSvBankInfo smSvBankInfo : smSvBankInfoLs){
+			log.info("id - " + smSvBankInfo.getSvBankInfoId());
+			log.info("remark - " + smSvBankInfo.getRemark());
+			log.info("name" + smSvBankInfo.getSmSupplierBank().getPmFinancialOrg().getFinOrgName());
+		}
+		
+		log.info("list size svo punya" + smSvBankInfoLs.size());
+		for(SmSvBankInfo smSvBankInfosvo : smSvBankInfoLsSVO){
+			log.info("id - " + smSvBankInfosvo.getSvBankInfoId());
+			log.info("remark - " + smSvBankInfosvo.getRemark());
+			log.info("name" + smSvBankInfosvo.getSmSupplierBank().getPmFinancialOrg().getFinOrgName());
+		}
+		log.info("testbothlist end===============");
+		
+		
+		for(SmSvBankInfo smSvBankInfo : smSvBankInfoLs){
+			log.info("current - "+smSvBankInfo.getSvBankInfoId());
+			for(SmSvBankInfo svoSmSvBankInfo : smSvBankInfoLsSVO){
+				log.info("svo - "+svoSmSvBankInfo.getSvBankInfoId());
+				if(smSvBankInfo.getSvBankInfoId().equals(svoSmSvBankInfo.getSvBankInfoId())){
+					log.info("in if bank");
+					smSvBankInfo.setSvoSmSvBankInfo(svoSmSvBankInfo);
+				}
+			}
+		}
+		
+	}
 	//#24964 - end
 }
