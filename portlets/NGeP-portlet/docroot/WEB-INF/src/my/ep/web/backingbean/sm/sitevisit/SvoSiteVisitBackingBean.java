@@ -2097,9 +2097,16 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 
 				//#24964 - START
 				log.info("TROUBLESHOOT REVISION - #24964 SVO SER File");
+				log.info("BEFORE RETRIEVE --- " + svTask.getSmSvBankInfos().get(0).getSvBankInfoId());
+				log.info("BEFORE RETRIEVE --- " + svTask.getSmSvBankInfos().get(0).getSmSupplierBank().getPmFinancialOrg().getFinOrgName());
+				log.info("BEFORE RETRIEVE --- " + svTask.getSmSvBankInfos().get(0).getRemark());
+				SmSvTask svoTask = reqSO.retrieveSiteVisitInfoBySvTaskId(reqDTO).getSmSvTask();
+				log.info("AFTER RETRIEVE --- " + svoTask.getSmSvBankInfos().get(0).getSvBankInfoId());
+				log.info("AFTER RETRIEVE --- " + svoTask.getSmSvBankInfos().get(0).getSmSupplierBank().getPmFinancialOrg().getFinOrgName());
+				log.info("AFTER RETRIEVE --- " + svoTask.getSmSvBankInfos().get(0).getRemark());
 				String serType = "SVO";
 				if(!SmCommonUtil.isSerFileExist(svTask.getSmAppl().getApplNo(), serType+"_"+svTask.getSvTaskId())){
-					SmCommonUtil.createSerFileSVO(svTask, serType);
+					SmCommonUtil.createSerFileSVO(svoTask, serType);
 				}
 				//#24964 - END
 				
