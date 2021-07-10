@@ -19,7 +19,7 @@
 				</p:selectBooleanCheckbox>
 				<!-- #24964 -->
 				<ac:smFieldChangeAlertSVO
-					isShow="#{not empty adtLicense.available}"
+					isShow="#{not empty adtLicense.available and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
 					oriValue="#{svoSiteVisitBackingBean.getSVOAdtLicense(adtLicense).available}" 
 					currValue="#{adtLicense.available}" 
 					alertValue="#{svoSiteVisitBackingBean.getSVOAdtLicense(adtLicense).available}"/>
@@ -44,7 +44,7 @@
 				</h:outputText>
 				<!-- #24964 -->
 				<ac:smFieldChangeAlertSVO
-					isShow="#{not empty adtLicense.smApplSupportDoc.licenseExpDate}"
+					isShow="#{not empty adtLicense.smApplSupportDoc.licenseExpDate and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
 					oriValue="#{svoSiteVisitBackingBean.getSVOAdtLicense(adtLicense).smApplSupportDoc.licenseExpDate}" 
 					currValue="#{adtLicense.smApplSupportDoc.licenseExpDate}" 
 					alertValue="#{svoSiteVisitBackingBean.getSVOAdtLicense(adtLicense).smApplSupportDoc.licenseExpDate}"/>
