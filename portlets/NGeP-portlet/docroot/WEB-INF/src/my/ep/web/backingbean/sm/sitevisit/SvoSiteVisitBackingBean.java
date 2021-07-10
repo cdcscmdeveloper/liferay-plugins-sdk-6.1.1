@@ -2082,29 +2082,18 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			if (resDTO.isSuccessful()) {
 
 				//#24964 - START
-				log.info("TROUBLESHOOT REVISION - #24964 SVO SER File");
-				log.info("smsvtaskid -- " + svTask.getSvTaskId());
-				log.info("BEFORE RETRIEVE --- " + svTask.getSmSvBankInfos().get(0).getSvBankInfoId());
-				log.info("BEFORE RETRIEVE --- " + svTask.getSmSvBankInfos().get(0).getSmSupplierBank().getPmFinancialOrg().getFinOrgName());
-				log.info("BEFORE RETRIEVE --- " + svTask.getSmSvBankInfos().get(0).getRemark());
-				
+				log.info("START TROUBLESHOOT REVISION - #24964 SVO SER File");
 				SiteVisitReqDTO siteVisitReqDTO = new SiteVisitReqDTO();
 				siteVisitReqDTO.setSmSvTask(svTask);
 				siteVisitReqDTO.setSvTaskId(svTask.getSvTaskId());
 				
-				
-				log.info("siteVisitReqDTO svtaskid dlm object" +siteVisitReqDTO.getSmSvTask());
-				log.info("siteVisitReqDTO svtaskid dlm dto " +siteVisitReqDTO.getSmSvTask());
-				
 				SmSvTask svoTask = reqSO.retrieveSiteVisitInfoBySvTaskId(siteVisitReqDTO).getSmSvTask();
 				
-				log.info("AFTER RETRIEVE --- " + svoTask.getSmSvBankInfos().get(0).getSvBankInfoId());
-				log.info("AFTER RETRIEVE --- " + svoTask.getSmSvBankInfos().get(0).getSmSupplierBank().getPmFinancialOrg().getFinOrgName());
-				log.info("AFTER RETRIEVE --- " + svoTask.getSmSvBankInfos().get(0).getRemark());
 				String serType = "SVO";
 				if(!SmCommonUtil.isSerFileExist(svTask.getSmAppl().getApplNo(), serType+"_"+svTask.getSvTaskId())){
 					SmCommonUtil.createSerFileSVO(svoTask, serType);
 				}
+				log.info("END TROUBLESHOOT REVISION - #24964 SVO SER File");
 				//#24964 - END
 				
 				if(action.equalsIgnoreCase(SupplierManagementConst.BPM_SUBMIT)){
@@ -3013,199 +3002,73 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return SmCommonUtil.isHasDifferences(manu, svoManu, null);
 	}
 	
-	public void mapSmSvBankSVOWithPO(){
-		log.info("#24964 - Troubleshoot SmSvBank===================================");
+	public void mapSmSvBankSVOWithPO(List<SmSvBankInfo> svoSmSvBankInfoLs){
+		log.info("=============#24964 - execute mapSmSvBankSVOWithPO=======================");
 		
-		if((getManagedBean().getTempSmAppl() == null)){
-			log.info("null supplier ser file");
-			getManagedBean().setTempSmAppl(getTempSmAppl(getManagedBean().getSmSvTask().getSmAppl().getApplNo()));
-			log.info("supplier ser file read appl 1 -- " + getManagedBean().getTempSmAppl());
-			log.info("supplier appl no in ser file 1 -- " + getManagedBean().getTempSmAppl().getApplNo());
-		}
-		if(getManagedBean().getTempSmAppl() != null){
-			log.info("supplier ser file read appl 2 -- " + getManagedBean().getTempSmAppl());
-			log.info("supplier appl no in ser file 2 -- " + getManagedBean().getTempSmAppl().getApplNo());
+		if(svoSmSvBankInfoLs.isEmpty() || svoSmSvBankInfoLs == null){
+			log.info("SVO SmSvBank List id null or empty");
 		}
 		
-		for(SmSvBankInfo smSvBankInfo : getManagedBean().getSmSvTask().getSmSvBankInfos()){
-			log.info("current - "+smSvBankInfo.getSvBankInfoId());
-			for(SmSvBankInfo svoSmSvBankInfo : getManagedBean().getSmSvtaskSVO().getSmSvBankInfos()){
-				log.info("svo - "+svoSmSvBankInfo.getSvBankInfoId());
-				if(smSvBankInfo.getSvBankInfoId().equals(svoSmSvBankInfo.getSvBankInfoId())){
-					log.info("in if bank");
-					smSvBankInfo.setSvoSmSvBankInfo(svoSmSvBankInfo);
+		if(!svoSmSvBankInfoLs.isEmpty() || svoSmSvBankInfoLs != null){
+			for(SmSvBankInfo smSvBankInfo : getManagedBean().getSmSvTask().getSmSvBankInfos()){
+				log.info("poBank - "+smSvBankInfo.getSvBankInfoId());
+				for(SmSvBankInfo svoSmSvBankInfo : svoSmSvBankInfoLs){
+					log.info("svoBank - "+svoSmSvBankInfo.getSvBankInfoId());
+					if(smSvBankInfo.getSvBankInfoId().equals(svoSmSvBankInfo.getSvBankInfoId())){
+						log.info("poBank is equal svoBank");
+						smSvBankInfo.setSvoSmSvBankInfo(svoSmSvBankInfo);
+						log.info("test read after set id = " + smSvBankInfo.getSvoSmSvBankInfo().getSvBankInfoId());
+					}
 				}
 			}
 		}
-		log.info("test bank for loop");
-		for(SmSvBankInfo svoSmSvBankInfo : getManagedBean().getSmSvtaskSVO().getSmSvBankInfos()){
-			log.info("1bank info - " + svoSmSvBankInfo );
-			log.info("1bank id" +svoSmSvBankInfo.getSvBankInfoId());
-		}
-		log.info("test bank basic for loop");
-		for(int i=0; i<getManagedBean().getSmSvtaskSVO().getSmSvBankInfos().size(); i++){
-			log.info("2bank info - " + getManagedBean().getSmSvtaskSVO().getSmSvBankInfos().get(i) );
-			log.info("2bank id" +getManagedBean().getSmSvtaskSVO().getSmSvBankInfos().get(i).getSvBankInfoId());
-		}
+		log.info("=============#24964 - finished mapSmSvBankSVOWithPO=======================");
 	}
 	
-	public void mapfinLsItemSVOWithPO(){
-		log.info("#24964 - Troubleshoot finLsItem=======================");
+	public void mapfinLsItemSVOWithPO(List<SmSvFinChecklist> svoSmSvFinChecklists){
+		log.info("=============#24964 - execute mapfinLsItemSVOWithPO=======================");
+		
+		if(svoSmSvFinChecklists.isEmpty() || svoSmSvFinChecklists == null){
+			log.info("SVO SmSvFinChecklist List id null or empty");
+		}
+		
+		if(!svoSmSvFinChecklists.isEmpty() || svoSmSvFinChecklists != null){
+			for(SmSvFinChecklist smSvFinChecklist : getManagedBean().getSmSvTask().getSmSvFinChecklists()){
+				log.info("poCheckList - "+smSvFinChecklist.getSvFinChecklistId());
+				for(SmSvFinChecklist svoSmSvFinChecklist : svoSmSvFinChecklists){
+					log.info("svoCheckList - "+svoSmSvFinChecklist.getSvFinChecklistId());
+					if(smSvFinChecklist.getSvFinChecklistId().equals(svoSmSvFinChecklist.getSvFinChecklistId())){
+						log.info("poCheckList is equal svoCheckList");
+						smSvFinChecklist.setSvoSmSvFinChecklist(svoSmSvFinChecklist);
+						log.info("test read after set id = " + smSvFinChecklist.getSvoSmSvFinChecklist().getSvFinChecklistId());
+					}
+				}
+			}
+		}
+		log.info("=============#24964 - finished mapfinLsItemSVOWithPO=======================");
+	}
+	
+	public void mapSmSvIntervieweesSVOWithPO(List<SmSvInterviewee> svoSmSvIntervieweeLs){
+		log.info("=============#24964 - execute mapSmSvIntervieweesSVOWithPO=======================");
+		
+		if(svoSmSvIntervieweeLs.isEmpty() || svoSmSvIntervieweeLs == null){
+			log.info("SVO SmSvInterviewee List id null or empty");
+		}
 
-		if((getManagedBean().getTempSmAppl() == null)){
-			log.info("null supplier ser file");
-			getManagedBean().setTempSmAppl(getTempSmAppl(getManagedBean().getSmSvTask().getSmAppl().getApplNo()));
-			log.info("supplier ser file read appl 1 -- " + getManagedBean().getTempSmAppl());
-			log.info("supplier appl no in ser file 1 -- " + getManagedBean().getTempSmAppl().getApplNo());
-		}
-		if(getManagedBean().getTempSmAppl() != null){
-			log.info("supplier ser file read appl 2 -- " + getManagedBean().getTempSmAppl());
-			log.info("supplier appl no in ser file 2 -- " + getManagedBean().getTempSmAppl().getApplNo());
-		}
-		
-		for(SmSvFinChecklist smSvFinChecklist : getManagedBean().getSmSvTask().getSmSvFinChecklists()){
-			log.info("current - "+smSvFinChecklist.getSvFinChecklistId());
-			for(SmSvFinChecklist svoSmSvFinChecklist : getManagedBean().getSmSvtaskSVO().getSmSvFinChecklists()){
-				log.info("svo - "+svoSmSvFinChecklist.getSvFinChecklistId());
-				if(smSvFinChecklist.getSvFinChecklistId().equals(svoSmSvFinChecklist.getSvFinChecklistId())){
-					log.info("in if finLsItem");
-					smSvFinChecklist.setSvoSmSvFinChecklist(svoSmSvFinChecklist);
+		if(!svoSmSvIntervieweeLs.isEmpty() || svoSmSvIntervieweeLs != null){
+			for(SmSvInterviewee smSvInterviewee : getManagedBean().getSmSvTask().getSmSvTemplate().getSmSvInterviewees()){
+				log.info("poInterviewee - "+smSvInterviewee.getSvIntervieweeId());
+				for(SmSvInterviewee svoSmSvInterviewee : svoSmSvIntervieweeLs){
+					log.info("svoInterviewee - "+svoSmSvInterviewee.getSvIntervieweeId());
+					if(smSvInterviewee.getSvIntervieweeId()  == svoSmSvInterviewee.getSvIntervieweeId()){
+						log.info("poInterviewee is equal svoInterviewee");
+						smSvInterviewee.setSvoSmSvInterviewee(svoSmSvInterviewee);
+						log.info("test read after set id = " + smSvInterviewee.getSvoSmSvInterviewee().getSvIntervieweeId());
+					}
 				}
 			}
 		}
-	}
-	
-	public void mapSmSvIntervieweesSVOWithPO(){
-		log.info("#24964 - Troubleshoot interviewee==========================");
-
-		if((getManagedBean().getTempSmAppl() == null)){
-			log.info("null supplier ser file");
-			getManagedBean().setTempSmAppl(getTempSmAppl(getManagedBean().getSmSvTask().getSmAppl().getApplNo()));
-			log.info("supplier ser file read appl 1 -- " + getManagedBean().getTempSmAppl());
-			log.info("supplier appl no in ser file 1 -- " + getManagedBean().getTempSmAppl().getApplNo());
-		}
-		if(getManagedBean().getTempSmAppl() != null){
-			log.info("supplier ser file read appl 2 -- " + getManagedBean().getTempSmAppl());
-			log.info("supplier appl no in ser file 2 -- " + getManagedBean().getTempSmAppl().getApplNo());
-		}
-		
-		for(SmSvInterviewee smSvInterviewee : getManagedBean().getSmSvTask().getSmSvTemplate().getSmSvInterviewees()){
-			log.info("current - "+smSvInterviewee.getSvIntervieweeId());
-			for(SmSvInterviewee svoSmSvInterviewee : getManagedBean().getSmSvtaskSVO().getSmSvTemplate().getSmSvInterviewees()){
-				log.info("svo - "+svoSmSvInterviewee.getSvIntervieweeId());
-				if(smSvInterviewee.getSvIntervieweeId()  == svoSmSvInterviewee.getSvIntervieweeId()){
-					log.info("in if interview");
-					smSvInterviewee.setSvoSmSvInterviewee(svoSmSvInterviewee);
-				}
-			}
-		}
-	}
-	
-	public void testSendBank(SmSvBankInfo smSvBankInfo){
-		log.info("testSendBank start===============");
-		log.info("id - " + smSvBankInfo.getSvBankInfoId());
-		log.info("remark - " + smSvBankInfo.getRemark());
-		log.info("name" + smSvBankInfo.getSmSupplierBank().getPmFinancialOrg().getFinOrgName());
-		log.info("testSendBank end===============");
-		log.info("sambung");
-		for(SmSvBankInfo svoSmSvbankInfo : this.getManagedBean().getSmSvtaskSVO().getSmSvBankInfos()){
-			log.info("id - " + svoSmSvbankInfo.getSvBankInfoId());
-			log.info("remark - " + svoSmSvbankInfo.getRemark());
-			log.info("name" + svoSmSvbankInfo.getSmSupplierBank().getPmFinancialOrg().getFinOrgName());
-		}
-		log.info("sambung end ");
-	}
-	
-	public void testSVOBankList(List<SmSvBankInfo> smSvBankInfoLs){
-		log.info("testSVOBankList start===============");
-		log.info("list size" + smSvBankInfoLs.size());
-		for(SmSvBankInfo smSvBankInfoSVO : smSvBankInfoLs){
-			log.info("id - " + smSvBankInfoSVO.getSvBankInfoId());
-			log.info("remark - " + smSvBankInfoSVO.getRemark());
-			log.info("name" + smSvBankInfoSVO.getSmSupplierBank().getPmFinancialOrg().getFinOrgName());
-		}
-		log.info("testSVOBankList end===============");
-	}
-	
-	public void testBankList(List<SmSvBankInfo> smSvBankInfoLs){
-		log.info("testBankList start===============");
-		log.info("list size" + smSvBankInfoLs.size());
-		for(SmSvBankInfo smSvBankInfo : smSvBankInfoLs){
-			log.info("id - " + smSvBankInfo.getSvBankInfoId());
-			log.info("remark - " + smSvBankInfo.getRemark());
-			log.info("name" + smSvBankInfo.getSmSupplierBank().getPmFinancialOrg().getFinOrgName());
-		}
-		log.info("testBankList end===============");
-	}
-	
-	public void testbothlist(List<SmSvBankInfo> smSvBankInfoLsSVO, List<SmSvBankInfo> smSvBankInfoLs){
-		log.info("testbothlist start===============");
-		log.info("list size biasa" + smSvBankInfoLs.size());
-		for(SmSvBankInfo smSvBankInfo : smSvBankInfoLs){
-			log.info("id - " + smSvBankInfo.getSvBankInfoId());
-			log.info("remark - " + smSvBankInfo.getRemark());
-			log.info("name" + smSvBankInfo.getSmSupplierBank().getPmFinancialOrg().getFinOrgName());
-		}
-		
-		log.info("list size svo punya" + smSvBankInfoLs.size());
-		for(SmSvBankInfo smSvBankInfosvo : smSvBankInfoLsSVO){
-			log.info("id - " + smSvBankInfosvo.getSvBankInfoId());
-			log.info("remark - " + smSvBankInfosvo.getRemark());
-			log.info("name" + smSvBankInfosvo.getSmSupplierBank().getPmFinancialOrg().getFinOrgName());
-		}
-		log.info("testbothlist end===============");
-		
-		
-		for(SmSvBankInfo smSvBankInfo : smSvBankInfoLs){
-			log.info("current - "+smSvBankInfo.getSvBankInfoId());
-			for(SmSvBankInfo svoSmSvBankInfo : smSvBankInfoLsSVO){
-				log.info("svo - "+svoSmSvBankInfo.getSvBankInfoId());
-				if(smSvBankInfo.getSvBankInfoId().equals(svoSmSvBankInfo.getSvBankInfoId())){
-					log.info("in if bank");
-					smSvBankInfo.setSvoSmSvBankInfo(svoSmSvBankInfo);
-				}
-			}
-		}
-		
-	}
-	
-	public SmSvBankInfo getSVOBank(SmSvBankInfo smSvBankInfo){
-		log.info("#24964 troubleshoot TR - SmSvBankInfo");
-		log.info("id - " + smSvBankInfo.getSvBankInfoId());
-		log.info("remark - " + smSvBankInfo.getRemark());
-		log.info("name" + smSvBankInfo.getSmSupplierBank().getPmFinancialOrg().getFinOrgName());
-		
-		for(SmSvBankInfo svoSmSvbankInfo : this.getManagedBean().getSmSvtaskSVO().getSmSvBankInfos()){
-			log.info("svoSmSvbankInfo - " + svoSmSvbankInfo.getSvBankInfoId() + "; " + svoSmSvbankInfo.getRemark());
-			if(svoSmSvbankInfo.getSvBankInfoId().equals(smSvBankInfo.getSvBankInfoId())){
-				return svoSmSvbankInfo;
-			}
-		}
-		return null;
-	}
-	
-	public SmSvFinChecklist getSVOFinCheckList(SmSvFinChecklist smSvFinChecklist){
-		log.info("#24964 troubleshoot TR - SmSvFinChecklist");
-		log.info("SmSvFinChecklist - " + smSvFinChecklist.getSvFinChecklistId() + "; " + smSvFinChecklist.getRemark());
-		for(SmSvFinChecklist svoSmSvFinChecklist : this.getManagedBean().getSmSvtaskSVO().getSmSvFinChecklists()){
-			log.info("svoSmSvFinChecklist - " + svoSmSvFinChecklist.getSvFinChecklistId() + "; " + svoSmSvFinChecklist.getRemark());
-			if(svoSmSvFinChecklist.getSvFinChecklistId().equals(smSvFinChecklist.getSvFinChecklistId())){
-				return svoSmSvFinChecklist;
-			}
-		}
-		return null;
-	}
-	
-	public SmSvInterviewee getSVOInterviewee(SmSvInterviewee smSvInterviewee){
-		log.info("#24964 troubleshoot TR - interviewee");
-		log.info("interviewee - " + smSvInterviewee.getSvIntervieweeId() + "; " + smSvInterviewee.getName());
-		for(SmSvInterviewee svoSmSvInterviewee : this.getManagedBean().getSmSvtaskSVO().getSmSvTemplate().getSmSvInterviewees()){
-			log.info("interviewee SVO - " + svoSmSvInterviewee.getSvIntervieweeId() + "; " + svoSmSvInterviewee.getName());
-			if(svoSmSvInterviewee.getSvIntervieweeId() == smSvInterviewee.getSvIntervieweeId()){
-				return svoSmSvInterviewee;
-			}
-		}
-		return null;
+		log.info("=============#24964 - finished mapSmSvIntervieweesSVOWithPO=======================");
 	}
 	//#24964 - end
 }
