@@ -111,7 +111,7 @@
 				<td><p:inputText maxlength="50" size="50" label="#{lbl['lbl.sm.manufacturing.type.machine']}" required="#{!empty param['disableMsgAutoUpdate']}" value="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine.machineType}" />
 				<!-- #24964 -->
 					<ac:smFieldChangeAlertSVO
-						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedAdtMachine}"
+						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedAdtMachine and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
 						oriValue="#{svoSiteVisitBackingBean.managedBean.latestAdtMachine.machineType}" 
 						currValue="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine.machineType}" 
 						alertValue="#{svoSiteVisitBackingBean.managedBean.latestAdtMachine.machineType}"/>
@@ -123,7 +123,7 @@
 				<td><p:inputText maxlength="50" size="50" label="#{lbl['lbl.sm.machine.brand']}" required="#{!empty param['disableMsgAutoUpdate']}" value="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine.brandName}" />
 					<!-- #24964 -->
 					<ac:smFieldChangeAlertSVO
-						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedAdtMachine}"
+						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedAdtMachine and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
 						oriValue="#{svoSiteVisitBackingBean.managedBean.latestAdtMachine.brandName}" 
 						currValue="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine.brandName}" 
 						alertValue="#{svoSiteVisitBackingBean.managedBean.latestAdtMachine.brandName}"/>
@@ -138,7 +138,7 @@
 				</p:inputTextarea>
 					<!-- #24964 -->
 					<ac:smFieldChangeAlertSVO
-						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedAdtMachine}"
+						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedAdtMachine and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
 						oriValue="#{svoSiteVisitBackingBean.managedBean.latestAdtMachine.machineFunction}" 
 						currValue="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine.brandName}" 
 						alertValue="#{svoSiteVisitBackingBean.managedBean.latestAdtMachine.brandName}"/>
@@ -154,7 +154,7 @@
 					</p:inputText>
 					<!-- #24964 -->
 					<ac:smFieldChangeAlertSVO
-						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedAdtMachine}"
+						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedAdtMachine and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
 						oriValue="#{svoSiteVisitBackingBean.managedBean.latestAdtMachine.qty}" 
 						currValue="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine.qty}" 
 						alertValue="#{svoSiteVisitBackingBean.managedBean.latestAdtMachine.qty}"/>
@@ -172,7 +172,7 @@
 					</p:inputText>
 					<!-- #24964 -->
 					<ac:smFieldChangeAlertSVO
-						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedAdtMachine}"
+						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedAdtMachine and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
 						oriValue="#{svoSiteVisitBackingBean.managedBean.latestAdtMachine.value}" 
 						currValue="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine.value}" 
 						alertValue="#{svoSiteVisitBackingBean.managedBean.latestAdtMachine.value}"/>
@@ -188,7 +188,7 @@
 					</p:selectOneMenu>
 					<!-- #24964 -->
 					<ac:smFieldChangeAlertSVO
-						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedAdtMachine}"
+						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedAdtMachine and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
 						oriValue="#{svoSiteVisitBackingBean.managedBean.latestAdtMachine.purchaseMethod}" 
 						currValue="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine.purchaseMethod}" 
 						alertValue="#{svoSiteVisitBackingBean.getParameterDesc(ParameterTypeConst.purchasingMethod,svoSiteVisitBackingBean.managedBean.latestAdtMachine.purchaseMethod)}"/>
@@ -212,7 +212,7 @@
 						required="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine.purchaseMethod eq 'O'}" />
 					<!-- #24964 -->
 					<ac:smFieldChangeAlertSVO
-						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedAdtMachine.purchaseMethodRemark}"
+						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedAdtMachine.purchaseMethodRemark and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
 						oriValue="#{svoSiteVisitBackingBean.managedBean.latestAdtMachine.purchaseMethodRemark}" 
 						currValue="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine.purchaseMethodRemark}" 
 						alertValue="#{svoSiteVisitBackingBean.managedBean.latestAdtMachine.purchaseMethodRemark}"/>
@@ -224,7 +224,7 @@
 				<td><p:inputText maxlength="50" size="50" label="#{lbl['lbl.sm.machine.guarnName']}" value="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine.guarantorName}" />
 					<!-- #24964 -->
 					<ac:smFieldChangeAlertSVO
-						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedAdtMachine}"
+						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedAdtMachine and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
 						oriValue="#{svoSiteVisitBackingBean.managedBean.latestAdtMachine.guarantorName}" 
 						currValue="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine.guarantorName}" 
 						alertValue="#{svoSiteVisitBackingBean.managedBean.latestAdtMachine.guarantorName}"/>
@@ -239,7 +239,7 @@
 				</p:selectOneMenu>
 					<!-- #24964 -->
 					<ac:smFieldChangeAlertSVO
-						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedAdtMachine}"
+						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedAdtMachine and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
 						oriValue="#{svoSiteVisitBackingBean.managedBean.latestAdtMachine.purchaseYear}" 
 						currValue="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine.purchaseYear}" 
 						alertValue="#{svoSiteVisitBackingBean.managedBean.latestAdtMachine.purchaseYear}"/>

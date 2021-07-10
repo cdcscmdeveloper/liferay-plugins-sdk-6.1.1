@@ -45,7 +45,7 @@
 					</p:inputText>
 					<!-- #24964 -->
 					<ac:smFieldChangeAlertSVO
-						isShow="#{not empty equipMaint}"
+						isShow="#{not empty equipMaint and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
 						oriValue="#{svoSiteVisitBackingBean.getSVOSmSvEquipment(equipMaint).equipmentQty}" 
 						currValue="#{equipMaint.equipmentQty}" 
 						alertValue="#{svoSiteVisitBackingBean.getSVOSmSvEquipment(equipMaint).equipmentQty}"/>
@@ -88,7 +88,7 @@
 					</p:inputText>
 					<!-- #24964 -->
 					<ac:smFieldChangeAlertSVO
-						isShow="#{not empty equipBinding}"
+						isShow="#{not empty equipBinding and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
 						oriValue="#{svoSiteVisitBackingBean.getSVOSmSvEquipment(equipBinding).equipmentQty}" 
 						currValue="#{equipBinding.equipmentQty}" 
 						alertValue="#{svoSiteVisitBackingBean.getSVOSmSvEquipment(equipBinding).equipmentQty}"/>
