@@ -3107,6 +3107,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		log.info("remark - " + smSvBankInfo.getRemark());
 		log.info("name" + smSvBankInfo.getSmSupplierBank().getPmFinancialOrg().getFinOrgName());
 		log.info("testSendBank end===============");
+		log.info("sambung");
+		for(SmSvBankInfo svoSmSvbankInfo : this.getManagedBean().getSmSvtaskSVO().getSmSvBankInfos()){
+			log.info("id - " + svoSmSvbankInfo.getSvBankInfoId());
+			log.info("remark - " + svoSmSvbankInfo.getRemark());
+			log.info("name" + svoSmSvbankInfo.getSmSupplierBank().getPmFinancialOrg().getFinOrgName());
+		}
+		log.info("sambung end ");
 	}
 	
 	public void testSVOBankList(List<SmSvBankInfo> smSvBankInfoLs){
