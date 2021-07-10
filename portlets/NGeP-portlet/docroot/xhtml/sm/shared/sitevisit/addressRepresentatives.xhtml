@@ -10,7 +10,7 @@
 <!-- 	<ui:include src="/xhtml/sm/shared/sitevisit/assistingOfficer.xhtml" /> -->
 	<p:panel header="#{lbl['lbl.sm.companyinfo.intvw.represent']}" id="pnlIntRep" toggleable="true">
 		<!-- #24964 - START -->
-		#{svoSiteVisitBackingBean.mapSmSvIntervieweesSVOWithPO()}
+		#{svoSiteVisitBackingBean.mapSmSvIntervieweesSVOWithPO(svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvTemplate.smSvInterviewees)}
 		<!-- #24964 - END -->
 		<p:dataTable id="dtIntRepTbl" var="interviewee" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 		value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvInterviewees}"
@@ -31,7 +31,7 @@
 			<p:inputText value="#{interviewee.name}" label="#{lbl['lbl.sm.person.composition.name']}" id="intName"  maxlength="50" size="55"  required="true" />
 			<!-- #24964 - START -->
 			<ac:smFieldChangeAlertSVO 
-				isShow="true"
+				isShow="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO ne null}"
 				oriValue="#{interviewee.svoSmSvInterviewee.name}" 
 				currValue="#{interviewee.name}" 
 				alertValue="#{interviewee.svoSmSvInterviewee.name}"   />
@@ -47,7 +47,7 @@
 			maxlength="50" size="55"  required="true" />
 			<!-- #24964 - START -->
 			<ac:smFieldChangeAlertSVO 
-				isShow="true"
+				isShow="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO ne null}"
 				oriValue="#{interviewee.svoSmSvInterviewee.designation}" 
 				currValue="#{interviewee.designation}" 
 				alertValue="#{interviewee.svoSmSvInterviewee.designation}"   />

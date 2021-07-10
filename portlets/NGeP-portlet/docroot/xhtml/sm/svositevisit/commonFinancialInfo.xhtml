@@ -35,7 +35,7 @@
 
 	<p:panel header="#{lbl['lbl.sm.bankDtls.bankDiaHdr']}" toggleable="true">
 		<!-- #24964 - START -->
-		#{svoSiteVisitBackingBean.mapSmSvBankSVOWithPO()}
+		#{svoSiteVisitBackingBean.mapSmSvBankSVOWithPO(svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvBankInfos)}
 		<!-- #24964 - END -->
 		<p:dataTable var="bankInfo"  rowIndexVar="index" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvBankInfos}" 
 		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
@@ -89,7 +89,7 @@
 				<p:selectBooleanCheckbox value="#{bankInfo.valid}" disabled="#{viewFlag}"></p:selectBooleanCheckbox>
 				<!-- #24964 - START -->
 				<ac:smFieldChangeAlertSVO 
-					isShow="true"
+					isShow="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO ne null}"
 					oriValue="#{bankInfo.svoSmSvBankInfo.valid}" 
 					currValue="#{bankInfo.valid}"
 					alertValue="#{bankInfo.svoSmSvBankInfo.valid}" />
@@ -103,7 +103,7 @@
 				</p:inputTextarea>
 				<!-- #24964 - START -->
 				<ac:smFieldChangeAlertSVO 
-					isShow="true"
+					isShow="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO ne null}"
 					oriValue="#{bankInfo.svoSmSvBankInfo.remark}" 
 					currValue="#{bankInfo.remark}" 
 					alertValue="#{bankInfo.svoSmSvBankInfo.remark}"  />
@@ -119,7 +119,7 @@
 
 	<p:panel header="#{lbl['lbl.sm.check.list.header']}" toggleable="true">
 		<!-- #24964 - START -->
-		#{svoSiteVisitBackingBean.mapfinLsItemSVOWithPO()}
+		#{svoSiteVisitBackingBean.mapfinLsItemSVOWithPO(svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvFinChecklists)}
 		<!-- #24964 - END -->
 		<p:dataTable var="finLsItem" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvFinChecklists}"
@@ -135,7 +135,7 @@
 				</p:selectBooleanCheckbox>
 				<!-- #24964 - START -->
 				<ac:smFieldChangeAlertSVO 
-					isShow="true"
+					isShow="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO ne null}"
 					oriValue="#{finLsItem.svoSmSvFinChecklist.valid}" 
 					currValue="#{finLsItem.valid}" 
 					alertValue="#{finLsItem.svoSmSvFinChecklist.valid}"  />
@@ -150,7 +150,7 @@
 				</p:inputTextarea>
 				<!-- #24964 - START -->
 				<ac:smFieldChangeAlertSVO 
-					isShow="true"
+					isShow="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO ne null}"
 					oriValue="#{finLsItem.svoSmSvFinChecklist.remark}" 
 					currValue="#{finLsItem.remark}" 
 					alertValue="#{finLsItem.svoSmSvFinChecklist.remark}"  />
