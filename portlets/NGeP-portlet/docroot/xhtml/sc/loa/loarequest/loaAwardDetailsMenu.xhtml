@@ -451,30 +451,40 @@
 		styleClass="pop_up_top" modal="true" width="500" resizable="false">
 		<p:spacer height="20" />
 		<table>
-			<tr>
-			<td width="20%">
+			<tr valign="top">
+			<td width="30%">
 				<h:outputText
-				value="#{lbl['lbl.ct.item.name']}  "
+				value="#{lbl['lbl.ct.item.name']} "
 				style="font-weight:bold" />
 			</td>
-			<td width="80%">
+			<td width="5%">
 				<h:outputText
-				value=": #{lOADetailBackingBean.selectedScLoiLoaItem.scRequestItem.itemName}"
+				value=" : "
+				style="font-weight:bold" />
+			</td>
+			<td width="75%">
+				<h:outputText
+				value="#{lOADetailBackingBean.selectedScLoiLoaItem.scRequestItem.itemName}"
 				style="font-weight:bold" />
 			</td>
 			</tr>
-			<tr style="background-color:white !important;">
-			<td width="20%">
+			<tr valign="top" style="background-color:white !important;">
+			<td width="30%">
 				<h:outputText 
 				value="#{lbl['lbl.sc.supplier.offer']} "
 				style="font-weight:bold" />
 			</td>
-			<td width="80%">
+			<td width="5%">
+				<h:outputText
+				value=" : "
+				style="font-weight:bold" />
+			</td>
+			<td width="75%">
 				<h:outputText rendered="#{!isMultipleSuppOffer}"
-				value=": #{empty lOADetailBackingBean.selectedSupplierOffer ? lOADetailBackingBean.notAvailabilityStr : lOADetailBackingBean.selectedSupplierOffer}"
+				value="#{empty lOADetailBackingBean.selectedSupplierOffer ? lOADetailBackingBean.notAvailabilityStr : lOADetailBackingBean.selectedSupplierOffer}"
 				style="font-weight:bold" />
 				<h:outputText rendered="#{isMultipleSuppOffer}" escape="false"
-				value=": #{empty lOADetailBackingBean.selectedSupplierOffer ? lOADetailBackingBean.notAvailabilityStr : lOADetailBackingBean.selectedSupplierOffer}"
+				value="#{empty lOADetailBackingBean.selectedSupplierOffer ? lOADetailBackingBean.notAvailabilityStr : lOADetailBackingBean.selectedSupplierOffer}"
 				style="font-weight:bold;float:left;" />
 			</td>
 			</tr>		
