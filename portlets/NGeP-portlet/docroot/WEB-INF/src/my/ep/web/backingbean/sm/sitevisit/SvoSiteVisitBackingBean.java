@@ -3162,12 +3162,15 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		
 	}
 	
-	public SmSvBankInfo getSVOBank(SmSvBankInfo currSmSvBankInfo){
+	public SmSvBankInfo getSVOBank(SmSvBankInfo smSvBankInfo){
 		log.info("#24964 troubleshoot TR - SmSvBankInfo");
-		log.info("currSmSvBankInfo - " + currSmSvBankInfo.getSvBankInfoId() + "; " + currSmSvBankInfo.getRemark());
+		log.info("id - " + smSvBankInfo.getSvBankInfoId());
+		log.info("remark - " + smSvBankInfo.getRemark());
+		log.info("name" + smSvBankInfo.getSmSupplierBank().getPmFinancialOrg().getFinOrgName());
+		
 		for(SmSvBankInfo svoSmSvbankInfo : this.getManagedBean().getSmSvtaskSVO().getSmSvBankInfos()){
 			log.info("svoSmSvbankInfo - " + svoSmSvbankInfo.getSvBankInfoId() + "; " + svoSmSvbankInfo.getRemark());
-			if(svoSmSvbankInfo.getSvBankInfoId().equals(currSmSvBankInfo.getSvBankInfoId())){
+			if(svoSmSvbankInfo.getSvBankInfoId().equals(smSvBankInfo.getSvBankInfoId())){
 				return svoSmSvbankInfo;
 			}
 		}
