@@ -2083,10 +2083,21 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 
 				//#24964 - START
 				log.info("TROUBLESHOOT REVISION - #24964 SVO SER File");
+				log.info("smsvtaskid -- " + svTask.getSvTaskId());
 				log.info("BEFORE RETRIEVE --- " + svTask.getSmSvBankInfos().get(0).getSvBankInfoId());
 				log.info("BEFORE RETRIEVE --- " + svTask.getSmSvBankInfos().get(0).getSmSupplierBank().getPmFinancialOrg().getFinOrgName());
 				log.info("BEFORE RETRIEVE --- " + svTask.getSmSvBankInfos().get(0).getRemark());
-				SmSvTask svoTask = reqSO.retrieveSiteVisitInfoBySvTaskId(reqDTO).getSmSvTask();
+				
+				SiteVisitReqDTO siteVisitReqDTO = new SiteVisitReqDTO();
+				siteVisitReqDTO.setSmSvTask(svTask);
+				siteVisitReqDTO.setSvTaskId(svTask.getSvTaskId());
+				
+				
+				log.info("siteVisitReqDTO svtaskid dlm object" +siteVisitReqDTO.getSmSvTask());
+				log.info("siteVisitReqDTO svtaskid dlm dto " +siteVisitReqDTO.getSmSvTask());
+				
+				SmSvTask svoTask = reqSO.retrieveSiteVisitInfoBySvTaskId(siteVisitReqDTO).getSmSvTask();
+				
 				log.info("AFTER RETRIEVE --- " + svoTask.getSmSvBankInfos().get(0).getSvBankInfoId());
 				log.info("AFTER RETRIEVE --- " + svoTask.getSmSvBankInfos().get(0).getSmSupplierBank().getPmFinancialOrg().getFinOrgName());
 				log.info("AFTER RETRIEVE --- " + svoTask.getSmSvBankInfos().get(0).getRemark());
