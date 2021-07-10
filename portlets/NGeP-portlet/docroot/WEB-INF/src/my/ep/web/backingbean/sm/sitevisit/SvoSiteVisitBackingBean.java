@@ -3009,9 +3009,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			log.info("supplier appl no in ser file 2 -- " + getManagedBean().getTempSmAppl().getApplNo());
 		}
 		
-		for(SmSvBankInfo smSvBankInfo : this.getManagedBean().getSmSvTask().getSmSvBankInfos()){
+		for(SmSvBankInfo smSvBankInfo : getManagedBean().getSmSvTask().getSmSvBankInfos()){
 			log.info("current - "+smSvBankInfo.getSvBankInfoId());
-			for(SmSvBankInfo svoSmSvBankInfo : this.getManagedBean().getSmSvtaskSVO().getSmSvBankInfos()){
+			for(SmSvBankInfo svoSmSvBankInfo : getManagedBean().getSmSvtaskSVO().getSmSvBankInfos()){
 				log.info("svo - "+svoSmSvBankInfo.getSvBankInfoId());
 				if(smSvBankInfo.getSvBankInfoId().equals(svoSmSvBankInfo.getSvBankInfoId())){
 					log.info("in if bank");
@@ -3035,9 +3035,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			log.info("supplier appl no in ser file 2 -- " + getManagedBean().getTempSmAppl().getApplNo());
 		}
 		
-		for(SmSvFinChecklist smSvFinChecklist : this.getManagedBean().getSmSvTask().getSmSvFinChecklists()){
+		for(SmSvFinChecklist smSvFinChecklist : getManagedBean().getSmSvTask().getSmSvFinChecklists()){
 			log.info("current - "+smSvFinChecklist.getSvFinChecklistId());
-			for(SmSvFinChecklist svoSmSvFinChecklist : this.getManagedBean().getSmSvtaskSVO().getSmSvFinChecklists()){
+			for(SmSvFinChecklist svoSmSvFinChecklist : getManagedBean().getSmSvtaskSVO().getSmSvFinChecklists()){
 				log.info("svo - "+svoSmSvFinChecklist.getSvFinChecklistId());
 				if(smSvFinChecklist.getSvFinChecklistId().equals(svoSmSvFinChecklist.getSvFinChecklistId())){
 					log.info("in if finLsItem");
@@ -3061,9 +3061,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			log.info("supplier appl no in ser file 2 -- " + getManagedBean().getTempSmAppl().getApplNo());
 		}
 		
-		for(SmSvInterviewee smSvInterviewee : this.getManagedBean().getSmSvTask().getSmSvTemplate().getSmSvInterviewees()){
+		for(SmSvInterviewee smSvInterviewee : getManagedBean().getSmSvTask().getSmSvTemplate().getSmSvInterviewees()){
 			log.info("current - "+smSvInterviewee.getSvIntervieweeId());
-			for(SmSvInterviewee svoSmSvInterviewee : this.getManagedBean().getSmSvtaskSVO().getSmSvTemplate().getSmSvInterviewees()){
+			for(SmSvInterviewee svoSmSvInterviewee : getManagedBean().getSmSvtaskSVO().getSmSvTemplate().getSmSvInterviewees()){
 				log.info("svo - "+svoSmSvInterviewee.getSvIntervieweeId());
 				if(smSvInterviewee.getSvIntervieweeId()  == svoSmSvInterviewee.getSvIntervieweeId()){
 					log.info("in if interview");
