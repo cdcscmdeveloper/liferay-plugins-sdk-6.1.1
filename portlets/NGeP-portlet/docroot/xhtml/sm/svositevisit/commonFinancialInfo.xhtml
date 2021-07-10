@@ -35,7 +35,9 @@
 
 	<p:panel header="#{lbl['lbl.sm.bankDtls.bankDiaHdr']}" toggleable="true">
 		<!-- #24964 - START -->
-		#{svoSiteVisitBackingBean.mapSmSvBankSVOWithPO(svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvBankInfos)}
+		<c:if test="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO ne null}">
+			#{svoSiteVisitBackingBean.mapSmSvBankSVOWithPO(svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvBankInfos)}
+		</c:if>
 		<!-- #24964 - END -->
 		<p:dataTable var="bankInfo"  rowIndexVar="index" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvBankInfos}" 
 		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
@@ -119,7 +121,9 @@
 
 	<p:panel header="#{lbl['lbl.sm.check.list.header']}" toggleable="true">
 		<!-- #24964 - START -->
-		#{svoSiteVisitBackingBean.mapfinLsItemSVOWithPO(svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvFinChecklists)}
+		<c:if test="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO ne null}">
+			#{svoSiteVisitBackingBean.mapfinLsItemSVOWithPO(svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvFinChecklists)}
+		</c:if>
 		<!-- #24964 - END -->
 		<p:dataTable var="finLsItem" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvFinChecklists}"

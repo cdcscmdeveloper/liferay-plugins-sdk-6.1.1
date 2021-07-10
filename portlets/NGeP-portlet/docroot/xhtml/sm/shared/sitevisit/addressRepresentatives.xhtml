@@ -10,7 +10,9 @@
 <!-- 	<ui:include src="/xhtml/sm/shared/sitevisit/assistingOfficer.xhtml" /> -->
 	<p:panel header="#{lbl['lbl.sm.companyinfo.intvw.represent']}" id="pnlIntRep" toggleable="true">
 		<!-- #24964 - START -->
-		#{svoSiteVisitBackingBean.mapSmSvIntervieweesSVOWithPO(svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvTemplate.smSvInterviewees)}
+		<c:if test="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO ne null}">
+			#{svoSiteVisitBackingBean.mapSmSvIntervieweesSVOWithPO(svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvTemplate.smSvInterviewees)}
+		</c:if>
 		<!-- #24964 - END -->
 		<p:dataTable id="dtIntRepTbl" var="interviewee" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 		value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvInterviewees}"
