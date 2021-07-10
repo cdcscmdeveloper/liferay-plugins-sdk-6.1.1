@@ -140,6 +140,7 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private SmSvTask smSvtaskSVO;
 	private SmSvAdtMachine latestAdtMachine;
 	private SmSvMachine latestSvMachine;
+	private SmAppl tempSmAppl;
 
 	public Object getBpmPojo() {
 		return bpmPojo;
@@ -813,6 +814,14 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 
 	public void setLatestSvMachine(SmSvMachine latestSvMachine) {
 		this.latestSvMachine = latestSvMachine;
+	}
+
+	public SmAppl getTempSmAppl() {
+		return tempSmAppl;
+	}
+
+	public void setTempSmAppl(SmAppl tempSmAppl) {
+		this.tempSmAppl = tempSmAppl;
 	}
 	//#24964 - end
 }
