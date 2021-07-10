@@ -55,7 +55,7 @@
 			<br />
 			<br />
 			<table border="0" cellspacing="0" cellpadding="0" width="100%">
-				<tr>
+				<tr valign= "top" >
 					<td width="20%"><h:outputLabel
 							value="#{lbl['lbl.sc.price.inquiry.item.name']}:" /></td>
 					<td width="80%"><h:outputText id="itemName"
@@ -63,16 +63,17 @@
 							style="width:310px;">
 						</h:outputText></td>
 				</tr>
-				<tr>
+				<tr valign= "top" >
 					<td width="20%"><h:outputLabel
 							value="#{lbl['lbl.sc.supplier.offer']}:" /></td>
 					<td width="80%"><h:outputText id="supplierOffer" rendered="#{!isMultipleSuppOffer}"
 							value="#{empty lOADetailBackingBean.selectedSupplierOffer ? lOADetailBackingBean.notAvailabilityStr : lOADetailBackingBean.selectedSupplierOffer}"
 							style="width:310px;">
 						</h:outputText>
-						
-						<p:inputTextarea rendered="#{isMultipleSuppOffer}" value="#{empty lOADetailBackingBean.selectedSupplierOffer ? lOADetailBackingBean.notAvailabilityStr : lOADetailBackingBean.selectedSupplierOffer}" maxlength="200"
-						style="width:310px;" disabled="true" />
+						<h:outputText id="supplierOfferMultiple" rendered="#{isMultipleSuppOffer}" escape="false"
+							value="#{empty lOADetailBackingBean.selectedSupplierOffer ? lOADetailBackingBean.notAvailabilityStr : lOADetailBackingBean.selectedSupplierOffer}"
+							style="width:310px;float:left;">
+						</h:outputText>
 						</td>
 				</tr>
 				<tr>

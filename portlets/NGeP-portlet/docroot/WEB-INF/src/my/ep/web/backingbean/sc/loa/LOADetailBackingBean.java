@@ -436,7 +436,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				
 				//29006 - start
 				if(itemsResDTO.getScLoiLoaItemList().size()==0){
-					itemsResDTO.setScLoiLoaItemList(scLoa.getScLoiLoaItems());
+					List<ScLoiLoaItem> tempScLoiLoaItemList = scLoa.getScLoiLoaItems();
+					
+					//sort by scLoiLoaItem.getScRequestItem().getRequestNoteItemId()
+					Collections.sort(tempScLoiLoaItemList, new Comparator<ScLoiLoaItem>() {
+						@Override
+						public int compare(ScLoiLoaItem s1, ScLoiLoaItem s2) {
+							return Long.compare(s1.getScRequestItem().getRequestNoteItemId(), s2.getScRequestItem()
+									.getRequestNoteItemId());
+						}
+					});
+					itemsResDTO.setScLoiLoaItemList(tempScLoiLoaItemList);
 				}
 				//29006 - end
 				
@@ -908,7 +918,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				
 				//29006 - start
 				if(itemsResDTO.getScLoiLoaItemList().size()==0){
-					itemsResDTO.setScLoiLoaItemList(this.getManagedBean().getScLoa().getScLoiLoaItems());
+					List<ScLoiLoaItem> tempScLoiLoaItemList = this.getManagedBean().getScLoa().getScLoiLoaItems();
+					
+					//sort by scLoiLoaItem.getScRequestItem().getRequestNoteItemId()
+					Collections.sort(tempScLoiLoaItemList, new Comparator<ScLoiLoaItem>() {
+						@Override
+						public int compare(ScLoiLoaItem s1, ScLoiLoaItem s2) {
+							return Long.compare(s1.getScRequestItem().getRequestNoteItemId(), s2.getScRequestItem()
+									.getRequestNoteItemId());
+						}
+					});
+					itemsResDTO.setScLoiLoaItemList(tempScLoiLoaItemList);
 				}
 				//29006 - end
 				
@@ -8133,12 +8153,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							remarkValue = getNotAvailabilityStr();
 
 						supplierOffer.append("Zone "
-								+ tplSpecAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl().getZoneName() + ":"
+								+ tplSpecAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl().getZoneName() + " : "
 								+ remarkValue);
 
 						remarkValue = "";
 						if (count < tplSpecAnswerList.size()) {
-							supplierOffer.append(System.lineSeparator());
+							supplierOffer.append(System.lineSeparator()+"<br/>");
 						}
 					} else {
 						if (StringUtils.isNotBlank(tplSpecAnswer.getAnswerRemark())) {
@@ -8483,7 +8503,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		tpaClone.setAllowAnotherPindaan(tpa.isAllowAnotherPindaan());
 		tpaClone.setAmountPerYear(tpa.getAmountPerYear());
 		tpaClone.setAnswerNumeric(tpa.getAnswerNumeric());
-		tpaClone.setAnswerRemark(tpa.getAnswerRemark());
+		
+		if(tpa.getIsWip())
+			tpaClone.setAnswerRemark("Zone " + tpa.getTplSpecSuppAnswer().getTplSpecZoneDtl().getZoneName() + " : " + tpa.getAnswerRemark());
+		else
+			tpaClone.setAnswerRemark(tpa.getAnswerRemark());
+		
 		tpaClone.setDisableEditAccount(tpa.isDisableEditAccount());
 		tpaClone.setDisableForPindaan(tpa.isDisableForPindaan());
 		tpaClone.setDisableReviseItem(tpa.isDisableReviseItem());
