@@ -3621,6 +3621,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		Integer days=null;
 		Long zoneId =new Long(0l);
 		boolean isSpecificationEnable=false;
+		boolean isWipData=false; //#29006
 		try {
 			quoteSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
@@ -3713,6 +3714,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							+ "|" + answer.getRatePerUom() 
 							+ "|" + answer.getAnswerRemark()
 							+ "|" + answer.getTplSpecQuestion().getClDeliveryTerm()
+							+ "|" + answer.getIsWip() //#29006
 							//+ "|" + answer.getTplSpecZoneDtls().size()
 							//+ "|" + answer.getTplSpecZoneQty()
 							//+ "|" + answer.getTplSpecQuestion().getTplSpecMaster().getTplSpecZone().getSpecZoneId()
@@ -3731,6 +3733,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					else{
 						answer.getTplSpecQuestion().setAnswerRemarks(dafaltValue);
 					}
+					
+					isWipData = answer.getIsWip();//#29006
 					
 					if((days.equals(answer.getTplSpecQuestion().getClDeliveryTerm())) && (answer.getTplSpecQuestion().getClItem()!=null))
 					{ 
@@ -3879,6 +3883,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			context.put("masters", masters);
 			context.put("bean", this);
 			context.put("isZonal", scLoa.getScLoiLoa().isZonal());
+			context.put("isWipData", isWipData); //#29006
 			
 		} finally {
 			quoteSO = null;
