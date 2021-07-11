@@ -42,12 +42,6 @@
 					value="#{adtLicense.smApplSupportDoc.licenseExpDate}">
 					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />	
 				</h:outputText>
-				<!-- #24964 -->
-				<ac:smFieldChangeAlertSVO
-					isShow="#{not empty adtLicense.smApplSupportDoc.licenseExpDate and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
-					oriValue="#{svoSiteVisitBackingBean.getSVOAdtLicense(adtLicense).smApplSupportDoc.licenseExpDate}" 
-					currValue="#{adtLicense.smApplSupportDoc.licenseExpDate}" 
-					alertValue="#{svoSiteVisitBackingBean.getSVOAdtLicense(adtLicense).smApplSupportDoc.licenseExpDate}"/>
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sm.suppdoc.license.no']}">
