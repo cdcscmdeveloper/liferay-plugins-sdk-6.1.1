@@ -8178,8 +8178,22 @@ public class QTDetailBackingBean extends
 				 }
 			 }
 		}
-		if(!inProgress && showPopup){
-			RequestContext.getCurrentInstance().execute("submitConfirmPopUp2.show()");
+
+		// #25077 - Start
+		if (this.getManagedBean().isShowPopUpBPKApprovalNeeded()) {
+			ScQt scQt = this.getManagedBean().getQt();
+			Long statusId = scQt.getQtStatus().getStatusId();
+			
+			if (statusId.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)) {
+				if (!inProgress && showPopup) {
+					RequestContext.getCurrentInstance().execute("bpkApprovalNeededDlgs.show()");
+				}
+			}
+		} else {
+			// #25077 - End
+			if (!inProgress && showPopup) {
+				RequestContext.getCurrentInstance().execute("submitConfirmPopUp2.show()");
+			}
 		}
 	}
 	
