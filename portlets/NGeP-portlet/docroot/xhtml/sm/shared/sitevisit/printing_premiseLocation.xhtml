@@ -49,7 +49,7 @@
 			<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.document}" />
 			<!-- #24964 -->
 			<ac:smFieldChangeAlertSVO
-				isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility}"
+				isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
 				oriValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvTemplate.smSvFacility.document}" 
 				currValue="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.document}" 
 				alertValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvTemplate.smSvFacility.document}"/>
@@ -60,7 +60,7 @@
 			<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.agreementLetter}" />
 			<!-- #24964 -->
 			<ac:smFieldChangeAlertSVO
-				isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility}"
+				isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
 				oriValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvTemplate.smSvFacility.agreementLetter}" 
 				currValue="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.agreementLetter}" 
 				alertValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvTemplate.smSvFacility.agreementLetter}"/>
