@@ -8146,6 +8146,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			if (isZonalWithPaOrPs) {
 				for (TplSpecAnswer tplSpecAnswer : tplSpecAnswerList) {
 					count++;
+					
+					if(tplSpecAnswer.getIsWip() == null){
+						tplSpecAnswer.setIsWip(false);
+					}
+					
 					if (tplSpecAnswer.getIsWip()) {
 						if (StringUtils.isNotBlank(tplSpecAnswer.getAnswerRemark()))
 							remarkValue = tplSpecAnswer.getAnswerRemark();
