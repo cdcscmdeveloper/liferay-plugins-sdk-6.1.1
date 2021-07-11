@@ -8509,6 +8509,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		tpaClone.setAmountPerYear(tpa.getAmountPerYear());
 		tpaClone.setAnswerNumeric(tpa.getAnswerNumeric());
 		
+		if(tpa.getIsWip() == null){
+			tpa.setIsWip(false);
+		}
+		
 		if(tpa.getIsWip())
 			tpaClone.setAnswerRemark("Zone " + tpa.getTplSpecSuppAnswer().getTplSpecZoneDtl().getZoneName() + " : " + tpa.getAnswerRemark());
 		else
