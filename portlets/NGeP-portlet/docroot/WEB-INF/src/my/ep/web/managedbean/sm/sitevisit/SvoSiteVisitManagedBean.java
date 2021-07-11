@@ -136,11 +136,13 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private SmSvAssistantOfficer selectedAssistantOfficer;
 	//#28774 - End
 	
-	//24964
+	//24964 - start
 	private SmSvTask smSvtaskSVO;
 	private SmSvAdtMachine latestAdtMachine;
 	private SmSvMachine latestSvMachine;
+	private SmManufacturingDtl latestManufacturer;
 	private SmAppl tempSmAppl;
+	//24964 - end
 
 	public Object getBpmPojo() {
 		return bpmPojo;
@@ -824,4 +826,12 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 		this.tempSmAppl = tempSmAppl;
 	}
 	//#24964 - end
+
+	public SmManufacturingDtl getLatestManufacturer() {
+		return latestManufacturer;
+	}
+
+	public void setLatestManufacturer(SmManufacturingDtl latestManufacturer) {
+		this.latestManufacturer = latestManufacturer;
+	}
 }
