@@ -20,7 +20,7 @@
 					maxlength="100" required="#{empty param['disabledValidation'] and empty param['disableMsgAutoUpdate'] and empty param['disabledValidation']}" />
 					<!-- #24964 -->
 					<ac:smFieldChangeAlertSVO
-						isShow="#{not empty svWorker}"
+						isShow="#{not empty svWorker and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
 						oriValue="#{svoSiteVisitBackingBean.getSVOSmSvWorker(svWorker).expertise}" 
 						currValue="#{svWorker.expertise}" 
 						alertValue="#{svoSiteVisitBackingBean.getSVOSmSvWorker(svWorker).expertise}"/>
@@ -33,7 +33,7 @@
 				maxlength="50" required="#{empty param['disabledValidation'] and empty param['disableMsgAutoUpdate'] and empty param['disabledValidation']}"/>
 				<!-- #24964 -->
 				<ac:smFieldChangeAlertSVO
-					isShow="#{not empty svWorker}"
+					isShow="#{not empty svWorker and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
 					oriValue="#{svoSiteVisitBackingBean.getSVOSmSvWorker(svWorker).name}" 
 					currValue="#{svWorker.name}" 
 					alertValue="#{svoSiteVisitBackingBean.getSVOSmSvWorker(svWorker).name}"/>
@@ -48,7 +48,7 @@
                 </p:inputText>                				
                 <!-- #24964 -->
 				<ac:smFieldChangeAlertSVO
-					isShow="#{not empty svWorker}"
+					isShow="#{not empty svWorker and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
 					oriValue="#{svoSiteVisitBackingBean.getSVOSmSvWorker(svWorker).identificationNo}" 
 					currValue="#{svWorker.identificationNo}" 
 					alertValue="#{svoSiteVisitBackingBean.getSVOSmSvWorker(svWorker).identificationNo}"/>
@@ -61,7 +61,7 @@
 				maxlength="2" required="#{empty param['disabledValidation'] and empty param['disableMsgAutoUpdate'] and empty param['disabledValidation']}" />
 				<!-- #24964 -->
 				<ac:smFieldChangeAlertSVO
-					isShow="#{not empty svWorker}"
+					isShow="#{not empty svWorker and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
 					oriValue="#{svoSiteVisitBackingBean.getSVOSmSvWorker(svWorker).workExpYear}" 
 					currValue="#{svWorker.workExpYear}" 
 					alertValue="#{svoSiteVisitBackingBean.getSVOSmSvWorker(svWorker).workExpYear}"/>

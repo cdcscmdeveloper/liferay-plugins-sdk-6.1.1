@@ -21,7 +21,7 @@
 				required="#{empty param['disabledValidation']}" label="#{lbl['lbl.sm.sitevisit.printing.type']}" />
 				<!-- #24964 -->
 				<ac:smFieldChangeAlertSVO
-					isShow="#{not empty pWork}"
+					isShow="#{not empty pWork and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
 					oriValue="#{svoSiteVisitBackingBean.getSVOSmSvPrintwork(pWork).printType}" 
 					currValue="#{pWork.printType}" 
 					alertValue="#{svoSiteVisitBackingBean.getSVOSmSvPrintwork(pWork).printType}"/>
@@ -35,7 +35,7 @@
 				required="#{empty param['disabledValidation']}" label="#{lbl['lbl.sm.sitevisit.printing.uname']}" />
 				<!-- #24964 -->
 				<ac:smFieldChangeAlertSVO
-					isShow="#{not empty pWork}"
+					isShow="#{not empty pWork and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
 					oriValue="#{svoSiteVisitBackingBean.getSVOSmSvPrintwork(pWork).clientName}" 
 					currValue="#{pWork.clientName}" 
 					alertValue="#{svoSiteVisitBackingBean.getSVOSmSvPrintwork(pWork).clientName}"/>
@@ -51,7 +51,7 @@
 				</p:inputText>
 				<!-- #24964 -->
 				<ac:smFieldChangeAlertSVO
-					isShow="#{not empty pWork}"
+					isShow="#{not empty pWork and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
 					oriValue="#{svoSiteVisitBackingBean.getSVOSmSvPrintwork(pWork).printAmt}" 
 					currValue="#{pWork.printAmt}" 
 					alertValue="#{svoSiteVisitBackingBean.getSVOSmSvPrintwork(pWork).printAmt}"/>

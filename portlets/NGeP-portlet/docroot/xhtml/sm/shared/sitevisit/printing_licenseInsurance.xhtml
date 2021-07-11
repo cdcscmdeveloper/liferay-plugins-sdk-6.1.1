@@ -31,7 +31,7 @@
 						readonlyInput="true" size="30" showOn="button" />
 				<!-- #24964 -->
 				<ac:smFieldChangeAlertSVO
-						isShow="#{not empty printingLicenseIns.expDate}"
+						isShow="#{not empty printingLicenseIns.expDate and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
 						oriValue="#{svoSiteVisitBackingBean.getSVOLicense(printingLicenseIns).expDate}" 
 						currValue="#{printingLicenseIns.expDate}" 
 						alertValue="#{svoSiteVisitBackingBean.getSVOLicense(printingLicenseIns).expDate}"/>
@@ -41,7 +41,7 @@
 				<p:inputText value="#{printingLicenseIns.pppmmNo}" maxlength="10" disabled="#{viewFlag}" />
 				<!-- #24964 -->
 				<ac:smFieldChangeAlertSVO
-						isShow="#{not empty printingLicenseIns.pppmmNo}"
+						isShow="#{not empty printingLicenseIns.pppmmNo and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
 						oriValue="#{svoSiteVisitBackingBean.getSVOLicense(printingLicenseIns).pppmmNo}" 
 						currValue="#{printingLicenseIns.pppmmNo}" 
 						alertValue="#{svoSiteVisitBackingBean.getSVOLicense(printingLicenseIns).pppmmNo}"/>

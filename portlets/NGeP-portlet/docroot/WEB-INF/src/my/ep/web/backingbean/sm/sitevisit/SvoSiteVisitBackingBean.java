@@ -1877,6 +1877,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		
 		this.getManagedBean().setSelectedAdtMachine(adtMachine);
 		this.getManagedBean().getSelectedAdtMachine().setNewMachine(true);
+		//24964
+		getManagedBean().setLatestAdtMachine(null);
 	}
 	
 	/**
@@ -1953,6 +1955,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			SmManufacturingDtl manufacDtl = (SmManufacturingDtl) ((SmManufacturingDtl) obj).cloneEntity();
 			this.getManagedBean().setSelectedManufacturer(manufacDtl);
 			this.getManagedBean().getSelectedManufacturer().setBrandNew(false);
+			//24964
+			getManagedBean().setLatestManufacturer(getSVOSmManufacturingDtl(manufacDtl));
 		}
 	}
 	
@@ -2668,6 +2672,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		manufacDtl.setBrandNew(true);
 		manufacDtl.setSmAppl(getManagedBean().getSmSvTask().getSmAppl());
 		this.getManagedBean().setSelectedManufacturer(manufacDtl);
+		//24964
+		getManagedBean().setLatestManufacturer(null);
 
 	}
 
@@ -2965,7 +2971,18 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				new String[] { "svMachineId" }, null, null);
 	}
 	
+	public SmSvManufacturingDoc getSVOSmSvManufacturingDoc(SmSvManufacturingDoc finDoc){
+		if(finDoc == null || getManagedBean().getSmSvtaskSVO() == null ||
+				getManagedBean().getSmSvtaskSVO().getSmSvTemplate().getSmSvManufacturingDocs() == null){
+					return null;
+		}
+		return (SmSvManufacturingDoc) EntityHelper.getEntityByMultiplePropertiesFromList(finDoc, 
+				getManagedBean().getSmSvtaskSVO().getSmSvTemplate().getSmSvManufacturingDocs(),
+				new String[] { "svManufacturingDocId" }, null, null);
+	}
+	
 	public boolean isSVOSmSvMachineDifferent(SmSvMachine machine){
+		if(getManagedBean().getSmSvtaskSVO() == null) return false;
 		SmSvMachine svoMachine = getSVOSmSvMachine(machine);
 		if(svoMachine == null) return true;
 		return SmCommonUtil.isHasDifferences(machine.getSmMachineDtl(), svoMachine.getSmMachineDtl(), null);
@@ -2982,6 +2999,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	}
 	
 	public boolean isSVOSmSvAdtMachineDifferent(SmSvAdtMachine machine){
+		if(getManagedBean().getSmSvtaskSVO() == null) return false;
 		SmSvAdtMachine svoMachine = getSVOSmSvAdtMachine(machine);
 		return SmCommonUtil.isHasDifferences(machine, svoMachine, null);
 	}

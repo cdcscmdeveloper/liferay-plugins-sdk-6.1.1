@@ -172,7 +172,7 @@
 					</p:inputText>
 					<!-- #24964 -->
 					<ac:smFieldChangeAlertSVO
-						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedAdtMachine and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
+						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedAdtMachine.value and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
 						oriValue="#{svoSiteVisitBackingBean.managedBean.latestAdtMachine.value}" 
 						currValue="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine.value}" 
 						alertValue="#{svoSiteVisitBackingBean.managedBean.latestAdtMachine.value}"/>

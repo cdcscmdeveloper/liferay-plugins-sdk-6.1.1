@@ -119,7 +119,7 @@
 				value="#{svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl.brandName}" />
 					<!-- #24964 -->
 					<ac:smFieldChangeAlertSVO
-						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl}"
+						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
 						oriValue="#{svoSiteVisitBackingBean.managedBean.latestSvMachine.smMachineDtl.brandName}" 
 						currValue="#{svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl.brandName}" 
 						alertValue="#{svoSiteVisitBackingBean.managedBean.latestSvMachine.smMachineDtl.brandName}"/>
@@ -134,7 +134,7 @@
 				</p:inputTextarea>
 					<!-- #24964 -->
 					<ac:smFieldChangeAlertSVO
-						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl}"
+						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
 						oriValue="#{svoSiteVisitBackingBean.managedBean.latestSvMachine.smMachineDtl.machineFunction}" 
 						currValue="#{svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl.machineFunction}" 
 						alertValue="#{svoSiteVisitBackingBean.managedBean.latestSvMachine.smMachineDtl.machineFunction}"/>
@@ -150,7 +150,7 @@
 					</p:inputText>
 					<!-- #24964 -->
 					<ac:smFieldChangeAlertSVO
-						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl}"
+						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
 						oriValue="#{svoSiteVisitBackingBean.managedBean.latestSvMachine.smMachineDtl.qty}" 
 						currValue="#{svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl.qty}" 
 						alertValue="#{svoSiteVisitBackingBean.managedBean.latestSvMachine.smMachineDtl.qty}"/>
@@ -169,7 +169,7 @@
 					</p:inputText>
 					<!-- #24964 -->
 					<ac:smFieldChangeAlertSVO
-						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl}"
+						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
 						oriValue="#{svoSiteVisitBackingBean.managedBean.latestSvMachine.smMachineDtl.value}" 
 						currValue="#{svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl.value}" 
 						alertValue="#{svoSiteVisitBackingBean.managedBean.latestSvMachine.smMachineDtl.value}"/>
@@ -184,7 +184,7 @@
 					</p:selectOneMenu>
 					<!-- #24964 -->
 					<ac:smFieldChangeAlertSVO
-						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl}"
+						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
 						oriValue="#{svoSiteVisitBackingBean.managedBean.latestSvMachine.smMachineDtl.purchaseMethod}" 
 						currValue="#{svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl.purchaseMethod}" 
 						alertValue="#{svoSiteVisitBackingBean.getParameterDesc(ParameterTypeConst.purchasingMethod,svoSiteVisitBackingBean.managedBean.latestSvMachine.smMachineDtl.purchaseMethod)}"/>
@@ -196,7 +196,7 @@
 				<td><p:inputText maxlength="50" size="50" label="#{lbl['lbl.sm.machine.guarnName']}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl.guarantorName}" />
 					<!-- #24964 -->
 					<ac:smFieldChangeAlertSVO
-						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl.guarantorName}"
+						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl.guarantorName and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
 						oriValue="#{svoSiteVisitBackingBean.managedBean.latestSvMachine.smMachineDtl.guarantorName}" 
 						currValue="#{svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl.guarantorName}" 
 						alertValue="#{svoSiteVisitBackingBean.managedBean.latestSvMachine.smMachineDtl.guarantorName}"/>
@@ -211,7 +211,7 @@
 				</p:selectOneMenu>
 					<!-- #24964 -->
 					<ac:smFieldChangeAlertSVO
-						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl}"
+						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
 						oriValue="#{svoSiteVisitBackingBean.managedBean.latestSvMachine.smMachineDtl.purchaseYear}" 
 						currValue="#{svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl.purchaseYear}" 
 						alertValue="#{svoSiteVisitBackingBean.managedBean.latestSvMachine.smMachineDtl.purchaseYear}"/>
