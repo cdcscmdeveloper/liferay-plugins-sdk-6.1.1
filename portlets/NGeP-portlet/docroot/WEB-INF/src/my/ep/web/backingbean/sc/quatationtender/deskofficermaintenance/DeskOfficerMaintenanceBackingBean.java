@@ -86,6 +86,7 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
@@ -1078,7 +1079,8 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 					if(isValidReassignment(qtID, selectedUser)){
 						getManagedBean().getQtNoDeskOfficerMap().put(qtID, selectedUser);
 					}else{
-						if ("N/A".equals(getNewDeskOfficer(qtID))) {
+						String notAvailableStr = ResourceBundleUtils.getMessage("lbl.txt.na", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+						if (notAvailableStr.trim().equals(getNewDeskOfficer(qtID))) {
 							disableSubmit = true;
 						}
 						showError = true;
