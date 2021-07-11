@@ -4102,13 +4102,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		String fulfilmentType = getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode();
 		String docType = getManagedBean().getScLoa().getScLoiLoa().getDocType();
 		
-		if (fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
+		/*if (fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
 				|| fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)
 						|| fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)
 								|| fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN)) {
 			if (isZonal && (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(docType)))
 				isZonalWithPaOrPs = true;
-		}
+		}*/
+		//only detect Zonal PR
+		if (isZonal && (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(docType)))
+			isZonalWithPaOrPs = true;
+		
 		return isZonalWithPaOrPs;
 	}
 
