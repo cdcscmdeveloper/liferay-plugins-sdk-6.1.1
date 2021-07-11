@@ -11,21 +11,17 @@
 	<p:panel id="creditFacilitiesPanel"
 		header="#{lbl['lbl.sc.spec.credit.facility']}" toggleable="true">
 
-		<ui:remove>#25201 - start </ui:remove>
 		<h:outputText styleClass="instruction"
-			value="#{lbl['lbl.sc.sp.btn.complete.instruction']}" escape="false"
+			value="#{lbl['lbl.sc.sp.btn.complete.instruction3']}" escape="false"
 			rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly}" />
-		<ui:remove>#25201 - end </ui:remove>
-		
+
 		<p:dataTable id="creditfaciitiesid" var="creditfacilities"
 			value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPCreditFacilities}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{creditfacilities}" rowIndexVar="rowIndex" rows="10">
 			<ac:paginator for="creditfaciitiesid" />
 
-			<ui:remove>#25201 - start </ui:remove>
-			<p:column style="width:2%" rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.readOnly}">
-			<ui:remove>#25201 - end </ui:remove>
+			<p:column style="width:2%" rendered="#{!statusHide}">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox
 						value="#{supplierProposalDetailBackingBean.managedBean.selectedAll}">
