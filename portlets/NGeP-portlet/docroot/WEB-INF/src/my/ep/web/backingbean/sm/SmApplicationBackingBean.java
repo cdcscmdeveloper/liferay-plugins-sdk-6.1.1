@@ -15370,7 +15370,7 @@ public class SmApplicationBackingBean extends
 	 * @param SelectEvent
 	 *            e
 	 */
-	//30794 - Start
+	//30974 - Start
 	public void onTickOrUnTickRecommendReason(SelectEvent e) {
 		getManagedBean().setRecommendRejectReasonReqd(false);
 		
@@ -15415,9 +15415,9 @@ public class SmApplicationBackingBean extends
 		}
 		verifySelectedRecommendRejectReasons();
 	}
-	//30794 - End
+	//30974 - End
 	
-	//30794 - Start
+	//30974 - Start
 	public void unTickRecommendReason(UnselectEvent e) {
 		getManagedBean().setRecommendRejectReasonReqd(false);
 
@@ -15436,7 +15436,7 @@ public class SmApplicationBackingBean extends
 		}
 		verifySelectedRecommendRejectReasons();
 	}
-	//30794 - End
+	//30974 - End
 	
 	/**
 	 * On tick checkbox during search recommend rejection reason
@@ -15444,7 +15444,7 @@ public class SmApplicationBackingBean extends
 	 * @param ToggleSelectEvent
 	 *            e
 	 */
-	//30794 - Start
+	//30974 - Start
 	public void allOnTickOrUnTickRecommendReason(ToggleSelectEvent e) {
 		getManagedBean().setRecommendRejectReasonReqd(false);
 		
@@ -15485,7 +15485,7 @@ public class SmApplicationBackingBean extends
 		}
 		verifySelectedRecommendRejectReasons();
 	}
-	//30794 - End
+	//30974 - End
 	
 	/**
 	 * Sets the SM application recommend rejection reasons selected.
