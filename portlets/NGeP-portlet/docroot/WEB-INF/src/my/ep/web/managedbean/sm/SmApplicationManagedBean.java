@@ -600,9 +600,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String searchRecommendRejectReason;
 	// #15629 - END
 	
-	// #30794 - START
+	// #30974 - START
 	private List<PmReasonDesc> selectedRecommendRejectReasonDescs;
-	// #30794 - END
+	// #30974 - END
 
 	// 29379 - Site Visit Grouping Enhancement -28775 START
 	private SmEmployee[] selectedEmployees;
