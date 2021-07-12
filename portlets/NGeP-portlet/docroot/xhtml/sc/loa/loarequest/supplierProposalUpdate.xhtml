@@ -18,17 +18,26 @@
 			toggleable="true">
 			<p:outputPanel id="suppProposalUpdate">
 				<div style="width: 100%">
-					<div class="ppLeftBtn">
-						<p:commandButton value="#{lbl['lbl.cm.back']}"
-							immediate="true" style="float:left;"
-							action="#{lOADetailBackingBean.onBackToZoneItemDetailsTab}" />
-					</div>
-					<div class="ppRightBtn">
-						<p:commandButton value="#{lbl['lbl.sm.button.save']}"
-							action="#{lOADetailBackingBean.onSaveSupplierOffer('SAVE')}" />
-						<p:commandButton value="#{lbl['lbl.btn.complete']}"
-							action="#{lOADetailBackingBean.onClickSupplierProposalUpdateCompleteButton()}" />
-					</div>
+					<table width="100%">
+						<tr>
+							<td>
+								<div style="text-align: left !important">
+									<p:commandButton value="#{lbl['lbl.cm.back']}" immediate="true"
+										action="#{lOADetailBackingBean.onBackToZoneItemDetailsTab}" />
+								</div>
+							</td>
+							<td>
+								<div style="text-align: right !important">
+									<p:commandButton value="#{lbl['lbl.sm.button.save']}"
+										action="#{lOADetailBackingBean.onSaveSupplierOffer('SAVE')}"
+										rendered="#{!isTrackingDairyView}" />
+									<p:commandButton value="#{lbl['lbl.btn.complete']}"
+										action="#{lOADetailBackingBean.onClickSupplierProposalUpdateCompleteButton()}"
+										rendered="#{!isTrackingDairyView}" />
+								</div>
+							</td>
+						</tr>
+					</table>
 				</div>
 			</p:outputPanel>
 		</p:panel>
@@ -46,7 +55,7 @@
 			<br />
 			<br />
 			<table border="0" cellspacing="0" cellpadding="0" width="100%">
-				<tr>
+				<tr valign= "top" >
 					<td width="20%"><h:outputLabel
 							value="#{lbl['lbl.sc.price.inquiry.item.name']}:" /></td>
 					<td width="80%"><h:outputText id="itemName"
@@ -54,13 +63,18 @@
 							style="width:310px;">
 						</h:outputText></td>
 				</tr>
-				<tr>
+				<tr valign= "top" >
 					<td width="20%"><h:outputLabel
 							value="#{lbl['lbl.sc.supplier.offer']}:" /></td>
-					<td width="80%"><h:outputText id="supplierOffer"
+					<td width="80%"><h:outputText id="supplierOffer" rendered="#{!isMultipleSuppOffer}"
 							value="#{empty lOADetailBackingBean.selectedSupplierOffer ? lOADetailBackingBean.notAvailabilityStr : lOADetailBackingBean.selectedSupplierOffer}"
 							style="width:310px;">
-						</h:outputText></td>
+						</h:outputText>
+						<h:outputText id="supplierOfferMultiple" rendered="#{isMultipleSuppOffer}" escape="false"
+							value="#{empty lOADetailBackingBean.selectedSupplierOffer ? lOADetailBackingBean.notAvailabilityStr : lOADetailBackingBean.selectedSupplierOffer}"
+							style="width:310px;float:left;">
+						</h:outputText>
+						</td>
 				</tr>
 				<tr>
 					<td width="20%"><h:outputLabel
@@ -68,11 +82,12 @@
 						value="*" styleClass="mandatory" /></td>
 					<td width="80%"><p:inputText id="newSupplierOfferedInput"
 							value="#{lOADetailBackingBean.managedBean.newSupplierOffered}"
-							style="width:310px;" maxlength="1000">
+							style="width:310px;" maxlength="1000" 
+							disabled="#{isTrackingDairyView}">
 							<p:ajax partialSubmit="true" process="@this" update="@this" />
 						</p:inputText> <p:spacer width="10" /> <p:commandLink
 							id="newSupplierOfferedReset" update="newSupplierOfferedInput"
-							action="#{lOADetailBackingBean.onResetNewSupplierOffered}">
+							action="#{lOADetailBackingBean.onResetNewSupplierOffered}" >
 							<p:graphicImage value="/css/images/design/ico-refresh.png" />
 						</p:commandLink></td>
 				</tr>
@@ -83,7 +98,7 @@
 					<td width="80%"><p:inputText
 							id="supplierUpdateProposalJustification"
 							value="#{lOADetailBackingBean.managedBean.newSupplierJustification}"
-							style="width:310px;" maxlength="200">
+							style="width:310px;" maxlength="200" disabled="#{isTrackingDairyView}">
 							<p:ajax partialSubmit="true" process="@this" update="@this" />
 						</p:inputText> <ac:iconTooltip
 							value="#{lbl['lbl.sc.justification.is.mandatory']}" /></td>
