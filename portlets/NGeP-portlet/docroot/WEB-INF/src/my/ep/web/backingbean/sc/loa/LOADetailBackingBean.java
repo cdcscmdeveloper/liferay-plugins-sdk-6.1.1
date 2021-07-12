@@ -4094,7 +4094,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 	// #22211 - end
 	
-	// #27797 - start
+	// #27797 & 29006 - start
 	public boolean isZonalWithPaOrPs() {
 
 		Boolean isZonalWithPaOrPs = false;
@@ -4116,7 +4116,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		return isZonalWithPaOrPs;
 	}
 
-	// #27797 - end
+	// #27797 & 29006 - end
 	
 	/**
 	 * Update bpm task action.
@@ -8512,7 +8512,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		tpaClone.setAllowAnotherPindaan(tpa.isAllowAnotherPindaan());
 		tpaClone.setAmountPerYear(tpa.getAmountPerYear());
 		tpaClone.setAnswerNumeric(tpa.getAnswerNumeric());
-		
+		// 29006 -start
 		if(tpa.getIsWip() == null){
 			tpa.setIsWip(false);
 		}
@@ -8521,7 +8521,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			tpaClone.setAnswerRemark("Zone " + tpa.getTplSpecSuppAnswer().getTplSpecZoneDtl().getZoneName() + " : " + tpa.getAnswerRemark());
 		else
 			tpaClone.setAnswerRemark(tpa.getAnswerRemark());
-		
+		// 29006 -end
 		tpaClone.setDisableEditAccount(tpa.isDisableEditAccount());
 		tpaClone.setDisableForPindaan(tpa.isDisableForPindaan());
 		tpaClone.setDisableReviseItem(tpa.isDisableReviseItem());
@@ -9530,7 +9530,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 	//29007 End
 	
-	//27797 start
+	//27797 & 29006 start
 	public Integer getScRequestRowCount(Long reqItemId) {
 		int rowCount = 0;
 
@@ -9604,6 +9604,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			this.getManagedBean().setNameZoneScLoiLoaItemList(resDTO.getScLoiLoaItemList());
 		}
 	}
-	//27797 end
+	//27797 & 29006 end
 }
 
