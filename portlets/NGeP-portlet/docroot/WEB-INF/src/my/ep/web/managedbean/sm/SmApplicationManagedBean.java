@@ -598,7 +598,11 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private Long[] recommendReasonId;
 	private boolean recommendRejectReasonReqd;
 	private String searchRecommendRejectReason;
-	//#15629 - END
+	// #15629 - END
+	
+	// #30974 - START
+	private List<PmReasonDesc> selectedRecommendRejectReasonDescs;
+	// #30974 - END
 
 	
 	private class RejectReasonPagingDataModel extends
@@ -4422,5 +4426,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.searchRecommendRejectReason = searchRecommendRejectReason;
 	}
 	//#15629 - END
+	
+	public List<PmReasonDesc> getSelectedRecommendRejectReasonDescs() {
+		return selectedRecommendRejectReasonDescs;
+	}
+
+	public void setSelectedRecommendRejectReasonDescs(List<PmReasonDesc> selectedRecommendRejectReasonDescs) {
+		this.selectedRecommendRejectReasonDescs = selectedRecommendRejectReasonDescs;
+	}
 
 }
