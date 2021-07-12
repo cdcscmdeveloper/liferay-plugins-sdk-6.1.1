@@ -450,14 +450,45 @@
 		header="#{lbl['lbl.sc.spec.and.supplier.offer']}"
 		styleClass="pop_up_top" modal="true" width="500" resizable="false">
 		<p:spacer height="20" />
-		<h:panelGrid columns="1">
-			<h:outputText
-				value="#{lbl['lbl.ct.item.name']}: #{lOADetailBackingBean.selectedScLoiLoaItem.scRequestItem.itemName}"
+		<table>
+			<tr valign="top">
+			<td width="30%">
+				<h:outputText
+				value="#{lbl['lbl.ct.item.name']} "
 				style="font-weight:bold" />
-			<h:outputText
-				value="#{lbl['lbl.sc.supplier.offer']}: #{empty lOADetailBackingBean.selectedSupplierOffer ? lOADetailBackingBean.notAvailabilityStr : lOADetailBackingBean.selectedSupplierOffer}"
+			</td>
+			<td width="5%">
+				<h:outputText
+				value=" : "
 				style="font-weight:bold" />
-		</h:panelGrid>
+			</td>
+			<td width="75%">
+				<h:outputText
+				value="#{lOADetailBackingBean.selectedScLoiLoaItem.scRequestItem.itemName}"
+				style="font-weight:bold" />
+			</td>
+			</tr>
+			<tr valign="top" style="background-color:white !important;">
+			<td width="30%">
+				<h:outputText 
+				value="#{lbl['lbl.sc.supplier.offer']} "
+				style="font-weight:bold" />
+			</td>
+			<td width="5%">
+				<h:outputText
+				value=" : "
+				style="font-weight:bold" />
+			</td>
+			<td width="75%">
+				<h:outputText rendered="#{!isMultipleSuppOffer}"
+				value="#{empty lOADetailBackingBean.selectedSupplierOffer ? lOADetailBackingBean.notAvailabilityStr : lOADetailBackingBean.selectedSupplierOffer}"
+				style="font-weight:bold" />
+				<h:outputText rendered="#{isMultipleSuppOffer}" escape="false"
+				value="#{empty lOADetailBackingBean.selectedSupplierOffer ? lOADetailBackingBean.notAvailabilityStr : lOADetailBackingBean.selectedSupplierOffer}"
+				style="font-weight:bold;float:left;" />
+			</td>
+			</tr>		
+		</table>
 		<p:spacer height="5" />
 
 		<p:dataTable id="specAndSupplierOfferTbl"

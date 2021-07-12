@@ -313,6 +313,7 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private List<String> downloadedLoaReportsTitleList;
 	private Map<Long, List<String>> scRequestItemIdNewSuppOfferAndJustMap;
 	private Long selectedItemId;
+	private boolean multipleSuppOffer = Boolean.FALSE;
 	//#29006 - end
 	
 	//#19336
@@ -1800,6 +1801,14 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 
 	public void setSelectedItemId(Long selectedItemId) {
 		this.selectedItemId = selectedItemId;
+	}
+	
+	public boolean isMultipleSuppOffer() {
+		return multipleSuppOffer;
+	}
+
+	public void setMultipleSuppOffer(boolean multipleSuppOffer) {
+		this.multipleSuppOffer = multipleSuppOffer;
 	}
 	//#29006 - end
 
