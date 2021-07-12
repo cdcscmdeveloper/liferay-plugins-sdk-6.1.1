@@ -47,7 +47,7 @@
 					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.mofNo}"
 					disabled="true" />
 			</td>
-			<!-- Bug #30600 Start -->
+			<!-- Bug #30600 , #31033 Start -->
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sm.disciplinary.action.headerLbl']}" />
 			</td>
@@ -56,7 +56,7 @@
 				  <c:if test="#{actionDA.smSupplier.supplierId eq lOADetailBackingBean.managedBean.scLoa.scLoiLoa.smSupplier.supplierId}">
 				     <p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
 							rendered="#{actionDA.smSupplier.disciplinaryActions}"
-							action="#{viewSuppProfileBackingBean.onViewDisciplinaryAction(actionDA.smSupplier)}" 
+							action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(actionDA.smSupplier)}" 
 							process="@this" partialSubmit="true" update=":form">
 								<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
 					 </p:commandLink><p:spacer width="2"/>
@@ -66,7 +66,7 @@
 			      </c:if>
 				</c:forEach>
 			</td>
-		    <!-- Bug #30600 End -->
+		    <!-- Bug #30600 , #31033 End -->
 		</tr>
 
 		<tr>

@@ -508,4 +508,52 @@ public class ViewSuppProfileBackingBean extends
 		retrieveActiveDisciplinaryAction(supplier);
 	}
 	//28281 - end
+	
+	//31033 start
+	public void onViewActiveDisciplinaryAction(SmSupplier smSupplier) {
+
+		// 27876: Disciplinary Action - start - <27876>
+		smSupplier.setFlagSupplier(true);
+		// 27876: Disciplinary Action - start - <27876>
+
+		List<DisciplinaryActionVO> voList = getActiveDisciplinaryActionVO(smSupplier);
+		if (!EntityHelper.isCollectionEmpty(voList) && voList.size() > 0) {
+			getManagedBean().setDisciplineVOs(voList);
+			// #-29771 - Start.
+			getManagedBean().setSmSupplier(smSupplier);
+			// #-29771 - End.
+			SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+			FacesScopes facesScopes = new FacesScopes();
+			PmUser sUsers = facesScopes.getUserSessionBean();
+
+			if (sUsers != null && sUsers.getPreferredLanguage() != null) {
+				reqDTO.setLanguage(sUsers.getPreferredLanguage());
+			}
+
+			reqDTO.setSupplier(smSupplier);
+			ISupplierDataMaintenanceSO suppDataSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
+			SupplierDataMaintenanceResDTO resDTO = null;
+
+			if (null != suppDataSO) {
+				resDTO = suppDataSO.retrieveDisciplinaryActionMsg(reqDTO);
+				if (StringUtils.isNotEmpty(resDTO.getErrorMessage())) {
+					if (resDTO.getErrorMessage().contains("Please click")) {
+						resDTO.setErrorMessage(resDTO.getErrorMessage().split("Please click")[0]);
+					}
+					if (resDTO.getErrorMessage().contains("Sila semak")) {
+						resDTO.setErrorMessage(resDTO.getErrorMessage().split("Sila semak")[0]);
+					}
+					this.getManagedBean().setDisciplinaryActionMsg(resDTO.getErrorMessage());
+				} else {
+					this.getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
+				}
+			}
+
+		} else {
+			getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
+		}
+		RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
+	} 
+	//31033 end
 }
