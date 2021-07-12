@@ -87,7 +87,14 @@
 				value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.officeArrangement}">
 					<f:validateLength maximum="1000" />
 				</p:inputTextarea>
-				</td>
+				<!-- #24964 - START -->
+				<ac:smFieldChangeAlertSVO 
+					isShow="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO ne null}"
+					oriValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvOffice.officeArrangement}" 
+					currValue="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.officeArrangement}" 
+					alertValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvOffice.officeArrangement}"  />
+				</td>	
+				<!-- #24964 - END -->
 			</tr>
 		</table>
 	</p:panel>
