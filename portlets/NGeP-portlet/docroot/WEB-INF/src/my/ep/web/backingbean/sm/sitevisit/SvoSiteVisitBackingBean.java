@@ -1783,7 +1783,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		context.put("templateCode", templateType);
 		context.put("review", review);
 		context.put("svTask", svTask);
-		context.put("categoryCodeLs", getManagedBean().getSupplierCategory());
+		//#28774 - START 
+		context.put("categoryCodeLs", this.getManagedBean().getCategoryApplicable());
+		context.put("smVmUtil", new VmUtil());
+		//#28874 - END
 		
 		String fileName = fileInitName + "sectionC.pdf";
 		//CR 28774: Static Code Analysis
@@ -1835,12 +1838,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			}
 			
 		}
-/*		else if(templateType.equals(SupplierManagementConst.CAT_TYPE_DOCKYARD) || templateType.equals(SupplierManagementConst.CAT_TYPE_WORKSHOP) || 
-				templateType.equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING) || templateType.equals(SupplierManagementConst.CAT_TYPE_PRINTING)){
-			SmSupplierCategory suppCat = getManagedBean().getSupplierCategory();
-			
-		}*/
-		context.put("categoryCodeLs", getManagedBean().getSupplierCategory());
+		//#28774 - START
+		context.put("categoryCodeLs", this.getManagedBean().getCategoryApplicable());
+		context.put("smVmUtil", new VmUtil());
+		//#28874 - END
 		context.put("hostUrl", getLogoHeaderPath());
 		context.put("templateType",templateDesc);
 		context.put("templateCode", templateType);
@@ -1884,7 +1885,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		
 		if(review){
 			context.put("svTask", svTask);
-			log.info("sv officer count-" + svTask.getSmSvOfficers().size());
 		}
 		
 		String fileName = fileInitName + "sectionE.pdf";

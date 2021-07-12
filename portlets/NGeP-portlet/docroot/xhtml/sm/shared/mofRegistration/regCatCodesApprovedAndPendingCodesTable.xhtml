@@ -42,13 +42,15 @@
 					<p:column style="width :350px;white-space : normal"
 						headerText="#{lbl['lbl.sm.catCodes.cate']}"
 						disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
-					<p:column 
+					<!-- #28774 - Start -->
+					<p:column style="width :250px;white-space : normal"
 						disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
 						<f:facet name="header">
 							<h:outputText value="* " styleClass="mandatory" rendered="#{backingBean.specialDescriptionMandatory(backingBean.managedBean.activeCategoryList)}"/>
 							<h:outputText value="#{lbl['lbl.sm.catCodes.othDesc']}" />
 						</f:facet>
 					</p:column>
+					<!-- #28774 - End -->
 					<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}"
 						disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
 					<p:column headerText="#{lbl['lbl.sm.status']}"
