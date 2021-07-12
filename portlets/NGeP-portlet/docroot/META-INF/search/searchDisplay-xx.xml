@@ -182,7 +182,8 @@
 		</property>
 	</bean>
 
-	<bean id="SM_SUPPLIER_RPT" class="my.ep.web.bean.LovBean">
+	<!-- #29712 - start -->
+	<bean id="SM_RPT_MOF_SUPPLIER" class="my.ep.web.bean.LovBean">
 		<property name="pk" value="supplierId" />
 
 		<property name="daoClass" value="my.ep.persistence.dao.sm.SmSupplierDAO" />
@@ -216,11 +217,16 @@
 					<property name="bundleKey" value="lbl.sm.mofno" />
 					<property name="viewable" value="false" />
 				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="mofStatus" />
+					<property name="bundleFile" value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.accountstatus" />
+					<property name="searchable" value="false" />
+				</bean>
 			</list>
 		</property>
 	</bean>
 	
-	<!-- #29712 - start -->
 	<bean id="SM_RPT_BASIC_SUPPLIER" class="my.ep.web.bean.LovBean">
 		<property name="pk" value="supplierId" />
 
@@ -238,13 +244,12 @@
 					<property name="bundleFile" value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.sm.businessregno" />
 				</bean>
-				<!-- 
 				<bean class="my.ep.web.bean.LovColumnBean">
 					<property name="columnName" value="mofStatus" />
 					<property name="bundleFile" value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.sm.accountstatus" />
+					<property name="searchable" value="false" />
 				</bean>
-				 -->
 			</list>
 		</property>
 	</bean>
