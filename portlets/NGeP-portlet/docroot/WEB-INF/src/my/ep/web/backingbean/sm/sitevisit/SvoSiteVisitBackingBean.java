@@ -2879,7 +2879,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	// #28175 end
 	
 	//#24964 - start
-	private static SmSvTask getSVOTask(String applNo, long svTaskId){
+	public static SmSvTask getSVOTask(String applNo, long svTaskId){
 		try {
 			String fileName = SmCommonUtil.readSerFileSVO(applNo, svTaskId);
 			if (!StringUtils.isBlank(fileName)) {
