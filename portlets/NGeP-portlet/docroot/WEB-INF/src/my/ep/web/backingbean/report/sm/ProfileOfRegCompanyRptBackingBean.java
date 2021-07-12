@@ -59,10 +59,10 @@ public class ProfileOfRegCompanyRptBackingBean extends
 			getManagedBean().setReportCode(SmReportConst.SM_REG_COMPANY_IN_BASIC_G2G);
 			if (getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.SM_REG_TYPE_BASIC)) {
 				params.put(SmReportConst.PARAM_REG_TYPE, SmReportConst.REG_ACC_TYPE_BASIC);
-				params.put(SmReportConst.PARAM_COMPANY_NAME, getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName());
+				params.put(SmReportConst.PARAM_COMPANY_NAME, getManagedBean().getSmSupplier().getCompanyName());
 			} else {
 				params.put(SmReportConst.PARAM_REG_TYPE, SmReportConst.REG_ACC_TYPE_G2G);
-				params.put(SmReportConst.PARAM_COMPANY_NAME, getManagedBean().getSelectedOrgProfile().getPmOrgValidity().getOrgName());
+				params.put(SmReportConst.PARAM_COMPANY_NAME, getManagedBean().getSelectedSupplier().getCompanyName());
 			}
 		} else {
 			params.put(SmReportConst.PARAM_MOF_NO, getManagedBean().getMofNo());

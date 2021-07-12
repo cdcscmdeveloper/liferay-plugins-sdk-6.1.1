@@ -207,7 +207,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 				if (getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.SM_REG_TYPE_MOF)) {
 					validateMofRegNo(getManagedBean().getMofNo());
 				} else if (getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.SM_REG_TYPE_BASIC)) {
-					if (getManagedBean().getSelectedOrgProfile() == null) {
+					if (StringUtils.isEmpty(getManagedBean().getSmSupplier().getCompanyName()) || getManagedBean().getSmSupplier().getCompanyName() == null) {
 						throw new EpException(MessageConst.ERROR_REPORT_780044);
 					}
 				} else if (getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.SM_REG_TYPE_G2G)) {
