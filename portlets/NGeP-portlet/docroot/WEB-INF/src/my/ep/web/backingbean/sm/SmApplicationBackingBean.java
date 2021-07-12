@@ -189,6 +189,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.ToggleEvent;
+import org.primefaces.event.ToggleSelectEvent;
+import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.StreamedContent;
 
 import com.liferay.portal.kernel.util.StringUtil;
@@ -9233,6 +9237,9 @@ public class SmApplicationBackingBean extends
 		getManagedBean().getPoSecReview().setRecommendation("");
 		//#3460 - Start
 		getManagedBean().setSelectedRecommendReasonDescs(new ArrayList<PmReasonDesc>());
+		//30974 - start
+		getManagedBean().setSelectedRecommendRejectReasonDescs(new ArrayList<PmReasonDesc>());
+		//30974 - end
 		//#3460 - End
 		RequestContext.getCurrentInstance().execute("submitApprvrDialog.hide()");
 	}
@@ -14782,8 +14789,21 @@ public class SmApplicationBackingBean extends
 				SmApplicationUtil.getWildCardSearchRejectReason(
 						getManagedBean().getSearchRecommendRejectReason(),
 						getManagedBean().getRecommendReasonDescInitList()));
+		
+		//30974 - start
+		if (getManagedBean().getSelectedRecommendRejectReasonDescs() != null
+				&& getManagedBean().getSelectedRecommendRejectReasonDescs().size() > 0) {
+			for (PmReasonDesc reason : getManagedBean().getSelectedRecommendRejectReasonDescs()) {
+				if (!StringUtils.upperCase(reason.getReasonDesc()).contains(
+						StringUtils.upperCase(getManagedBean().getSearchRecommendRejectReason()))) {
+					getManagedBean().getRecommendReasonDescList().add(reason);
+				}
+			}
+		}
+		//30974 - end
+	
 	}
-
+		
 	/**
 	 * Reset search recommend rejected reason
 	 */
@@ -14798,6 +14818,10 @@ public class SmApplicationBackingBean extends
 		if(SmCommonUtil.isCollectionEmpty(getManagedBean().getSelectedRecommendReasonDescs())) {
 			getManagedBean().setSelectedRecommendReasonDescs(new ArrayList<PmReasonDesc>());
 		} 
+		
+		//30974 - start
+				getManagedBean().getSelectedRecommendRejectReasonDescs().clear();
+		//30974 - end	
 		//		#15629 -- end - 26/1/2020
 
 	}
@@ -14842,12 +14866,29 @@ public class SmApplicationBackingBean extends
 	/**
 	 * On tick checkbox during search recommend rejection reason
 	 * 
-	 * @param AjaxBehaviorEvent
+	 * @param SelectEvent
 	 *            e
 	 */
-	public void onTickOrUnTickRecommendReason(AjaxBehaviorEvent e) {
+	//30974 - Start
+	public void onTickOrUnTickRecommendReason(SelectEvent e) {
 		getManagedBean().setRecommendRejectReasonReqd(false);
-		if (!EntityHelper.isCollectionEmpty(getManagedBean()
+		
+		PmReasonDesc reasonEvent = (PmReasonDesc) e.getObject();
+		System.out.println(reasonEvent);
+		
+		List<PmReasonDesc> reasonIdList1 = new ArrayList<PmReasonDesc>();
+		
+		if (getManagedBean().getSelectedRecommendRejectReasonDescs() != null && getManagedBean().getSelectedRecommendRejectReasonDescs().size() > 0) {
+			for (PmReasonDesc reason : getManagedBean().getSelectedRecommendRejectReasonDescs()) {
+				reasonIdList1.add(reason);
+			}
+		}
+		
+		reasonIdList1.add(reasonEvent);
+		getManagedBean().setSelectedRecommendRejectReasonDescs(reasonIdList1);
+		
+		//Comment to see data during submit
+/*		if (!EntityHelper.isCollectionEmpty(getManagedBean()
 				.getSelectedRecommendReasonDescs())) {
 			List<Long> reasonIdList = new ArrayList<Long>();
 			for (PmReasonDesc reason : getManagedBean()
@@ -14858,9 +14899,92 @@ public class SmApplicationBackingBean extends
 					reasonIdList.toArray(new Long[reasonIdList.size()]));
 		}else{
 			getManagedBean().setRecommendReasonId(null);
+		}*/
+		
+		if (!EntityHelper.isCollectionEmpty(getManagedBean()
+				.getSelectedRecommendRejectReasonDescs())) {
+			List<Long> reasonIdList = new ArrayList<Long>();
+			for (PmReasonDesc reason : getManagedBean().getSelectedRecommendRejectReasonDescs()) {
+				reasonIdList.add(reason.getPmReason().getReasonId());
+			}
+			getManagedBean().setRecommendReasonId(
+					reasonIdList.toArray(new Long[reasonIdList.size()]));
+		}else{
+			getManagedBean().setRecommendReasonId(null);
 		}
 		verifySelectedRecommendRejectReasons();
 	}
+	//30974 - End
+	
+	//30974 - Start
+	public void unTickRecommendReason(UnselectEvent e) {
+		getManagedBean().setRecommendRejectReasonReqd(false);
+
+		PmReasonDesc reasonEvent = (PmReasonDesc) e.getObject();
+
+		getManagedBean().getSelectedRecommendRejectReasonDescs().remove(reasonEvent);
+
+		if (!EntityHelper.isCollectionEmpty(getManagedBean().getSelectedRecommendRejectReasonDescs())) {
+			List<Long> reasonIdList = new ArrayList<Long>();
+			for (PmReasonDesc reason : getManagedBean().getSelectedRecommendRejectReasonDescs()) {
+				reasonIdList.add(reason.getPmReason().getReasonId());
+			}
+			getManagedBean().setRecommendReasonId(reasonIdList.toArray(new Long[reasonIdList.size()]));
+		} else {
+			getManagedBean().setRecommendReasonId(null);
+		}
+		verifySelectedRecommendRejectReasons();
+	}
+	//30974 - End
+	
+	/**
+	 * On tick checkbox during search recommend rejection reason
+	 * 
+	 * @param ToggleSelectEvent
+	 *            e
+	 */
+	//30974 - Start
+	public void allOnTickOrUnTickRecommendReason(ToggleSelectEvent e) {
+		getManagedBean().setRecommendRejectReasonReqd(false);
+		
+		if(e.isSelected()){
+			getManagedBean().setSelectedRecommendRejectReasonDescs(getManagedBean().getSelectedRecommendReasonDescs());
+		}else{
+			getManagedBean().setSelectedRecommendReasonDescs(new ArrayList<PmReasonDesc>());
+			getManagedBean().setSelectedRecommendRejectReasonDescs(new ArrayList<PmReasonDesc>());
+		}
+		
+//		reasonIdList1.add(reasonEvent);
+//		getManagedBean().setSelectedRecommendRejectReasonDescs(reasonIdList1);
+		
+		//Comment to see data during submit
+/*		if (!EntityHelper.isCollectionEmpty(getManagedBean()
+				.getSelectedRecommendReasonDescs())) {
+			List<Long> reasonIdList = new ArrayList<Long>();
+			for (PmReasonDesc reason : getManagedBean()
+					.getSelectedRecommendReasonDescs()) {
+				reasonIdList.add(reason.getPmReason().getReasonId());
+			}
+			getManagedBean().setRecommendReasonId(
+					reasonIdList.toArray(new Long[reasonIdList.size()]));
+		}else{
+			getManagedBean().setRecommendReasonId(null);
+		}*/
+		
+		if (!EntityHelper.isCollectionEmpty(getManagedBean()
+				.getSelectedRecommendRejectReasonDescs())) {
+			List<Long> reasonIdList = new ArrayList<Long>();
+			for (PmReasonDesc reason : getManagedBean().getSelectedRecommendRejectReasonDescs()) {
+				reasonIdList.add(reason.getPmReason().getReasonId());
+			}
+			getManagedBean().setRecommendReasonId(
+					reasonIdList.toArray(new Long[reasonIdList.size()]));
+		}else{
+			getManagedBean().setRecommendReasonId(null);
+		}
+		verifySelectedRecommendRejectReasons();
+	}
+	//30974 - End
 	
 	/**
 	 * Sets the SM application recommend rejection reasons selected.
