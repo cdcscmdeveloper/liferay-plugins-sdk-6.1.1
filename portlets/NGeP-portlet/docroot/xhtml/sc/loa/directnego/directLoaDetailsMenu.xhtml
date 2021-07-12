@@ -43,9 +43,10 @@
 				<td width="160px"><p:outputLabel value="#{lbl['lbl.sc.discipline.action']}" />
 				</td>
 				<td>
+				<!--  31033 start -->
 					<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
 						rendered="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier.disciplinaryActions}"
-						action="#{viewSuppProfileBackingBean.onViewDisciplinaryAction(directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier)}" 
+						action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier)}" 
 						process="@this" partialSubmit="true" update=":form">
 							<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
 					</p:commandLink><p:spacer width="2"/>
@@ -54,6 +55,7 @@
 					 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
 					 
 					<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
+				<!--  31033 end -->
 				</td>
 			</tr>
 			<tr>
