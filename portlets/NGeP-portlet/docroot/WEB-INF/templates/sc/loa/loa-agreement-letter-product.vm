@@ -2205,47 +2205,80 @@ u {
 									#end
 								</td>
 								
-								<td bgcolor="#d0eaee" >
-								
+								<td valign="top" bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-size:12px;">
+									#set($maxQty = 0)
+									#set($minQty = 0)
+									#set($currentValue = 0)
+									
 									
 									#foreach(  $tplSpecZoneDtls in $tplspecQuestion.tplSpecMaster.tplSpecZone.tplSpecZoneDtls )
-									
-									<table width="100%">
-										<tbody>
-										<tr>
-											
-											  #if($tplspecQuestion.clQuantity)
-													<td rowspan="$tplSpecZoneDtls.specCount" class="standard border-bottom left" style="text-align: top; border-bottom: 1px solid black; height: 80px; font-size:12px;">$tplspecQuestion.clQuantity</td>
-									
-									#else
-										       #if(($tplSpecZoneQtie.qty))
-													<td rowspan="$tplSpecZoneDtls.specCount" class="standard border-bottom left" style="text-align: top; border-bottom: 1px solid black; height: 80px; font-size:12px;">$tplSpecZoneQtie.qty</td>
+											   #if($tplspecQuestion.clQuantity)
+											   		#set($currentValue = $tplspecQuestion.clQuantity)												
 											   #else
-													<td rowspan="$tplSpecZoneDtls.specCount" class="standard border-bottom left" style="text-align: top; border-bottom: 1px solid black; height: 80px; font-size:12px;">$serviceScope</td>
-													 
-											    #end;
-											   #end
-											</td>
-										</tr>
-										</tbody>
-										</table>
+												   #if($tplSpecZoneQtie.qty)
+												   		#set($currentValue = $tplSpecZoneQtie.qty) 
+													#end
+											   #end		
+											   
+											   #if($maxQty == 0)
+												   #set($maxQty = $currentValue)
+												   #set($minQty = $currentValue)								   
+											   #end	
+											   
+											   #if($currentValue > $maxQty)
+											   		#set($maxQty = $currentValue)
+											   #end											 
+											   #if($currentValue < $minQty)
+												   #set($minQty = $currentValue)
+											   #end		   
 									#end
-								</td>
+									
+									
+									 	#if($minQty != $maxQty)
+											<span>$minQty - $maxQty</span>
+										#else
+											<span>$maxQty</span>
+										#end
 										
-								<td bgcolor="#d0eaee">
-									#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
-									<table width="100%">
+								</td>
+
+								<td valign="top" bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-size:12px;">							
+										#set($rowCount = 0)							
+										#if ($isWipData)											
+											#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
+											<table width="100%">
 											<tbody>
-											<tr >
-											#if ($tplSpecAnswer.answerRemark) 
-												<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left" style="text-align: top; border-bottom: 1px solid black; height: 80px; font-size:12px;">$tplSpecAnswer.answerRemark</td>
+											<tr>
+												#if ($tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
+													<td class="standard border-bottom left" style="text-align: top; border-bottom: 1px solid black; height: 80px; font-size:12px;">Zone $tplSpecAnswer.tplSpecSuppAnswer.tplSpecZoneDtl.zoneName : $tplSpecAnswer.answerRemark</td>
 												#else
-												<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left" style="text-align: top; border-bottom: 1px solid black; height: 80px; font-size:12px;">$serviceScope</td>
+													<td class="standard border-bottom left" style="text-align: top; border-bottom: 1px solid black; height: 80px; font-size:12px;">Zone $tplSpecAnswer.tplSpecSuppAnswer.tplSpecZoneDtl.zoneName : $serviceScope</td>
 												#end
-										</tr>
-										</tbody>
-									</table>	
-									#end
+											</tr>
+											</tbody>
+											</table>
+													
+											#end
+										#else				
+											#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
+											#if($rowCount == 0)											
+											<table width="100%">
+											<tbody>
+											<tr>
+												
+												#if ($tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
+													<span>$tplSpecAnswer.answerRemark</span>
+												#else
+													<span>$serviceScope</span>
+												#end
+											</tr>
+											</tbody>
+											</table>
+											#end
+											#set($rowCount = $rowCount + 1)
+											#end
+										#end
+									
 								</td>	
 								
 								<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2"  style="text-align: left; padding-left: 5px; font-size:12px;">
