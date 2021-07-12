@@ -222,6 +222,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.event.ToggleEvent;
+import org.primefaces.event.ToggleSelectEvent;
 import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.StreamedContent;
 
@@ -15292,9 +15294,13 @@ public class SmApplicationBackingBean extends
 						getManagedBean().getRecommendReasonDescInitList()));
 		
 		//30974 - start
-		if(getManagedBean().getSelectedRecommendRejectReasonDescs() != null && getManagedBean().getSelectedRecommendRejectReasonDescs().size() > 0){
+		if (getManagedBean().getSelectedRecommendRejectReasonDescs() != null
+				&& getManagedBean().getSelectedRecommendRejectReasonDescs().size() > 0) {
 			for (PmReasonDesc reason : getManagedBean().getSelectedRecommendRejectReasonDescs()) {
-				getManagedBean().getRecommendReasonDescList().add(reason);
+				if (!StringUtils.upperCase(reason.getReasonDesc()).contains(
+						StringUtils.upperCase(getManagedBean().getSearchRecommendRejectReason()))) {
+					getManagedBean().getRecommendReasonDescList().add(reason);
+				}
 			}
 		}
 		//30974 - end
@@ -15361,7 +15367,7 @@ public class SmApplicationBackingBean extends
 	/**
 	 * On tick checkbox during search recommend rejection reason
 	 * 
-	 * @param AjaxBehaviorEvent
+	 * @param SelectEvent
 	 *            e
 	 */
 	//30794 - Start
@@ -15426,6 +15432,55 @@ public class SmApplicationBackingBean extends
 			}
 			getManagedBean().setRecommendReasonId(reasonIdList.toArray(new Long[reasonIdList.size()]));
 		} else {
+			getManagedBean().setRecommendReasonId(null);
+		}
+		verifySelectedRecommendRejectReasons();
+	}
+	//30794 - End
+	
+	/**
+	 * On tick checkbox during search recommend rejection reason
+	 * 
+	 * @param ToggleSelectEvent
+	 *            e
+	 */
+	//30794 - Start
+	public void allOnTickOrUnTickRecommendReason(ToggleSelectEvent e) {
+		getManagedBean().setRecommendRejectReasonReqd(false);
+		
+		if(e.isSelected()){
+			getManagedBean().setSelectedRecommendRejectReasonDescs(getManagedBean().getSelectedRecommendReasonDescs());
+		}else{
+			getManagedBean().setSelectedRecommendReasonDescs(new ArrayList<PmReasonDesc>());
+			getManagedBean().setSelectedRecommendRejectReasonDescs(new ArrayList<PmReasonDesc>());
+		}
+		
+//		reasonIdList1.add(reasonEvent);
+//		getManagedBean().setSelectedRecommendRejectReasonDescs(reasonIdList1);
+		
+		//Comment to see data during submit
+/*		if (!EntityHelper.isCollectionEmpty(getManagedBean()
+				.getSelectedRecommendReasonDescs())) {
+			List<Long> reasonIdList = new ArrayList<Long>();
+			for (PmReasonDesc reason : getManagedBean()
+					.getSelectedRecommendReasonDescs()) {
+				reasonIdList.add(reason.getPmReason().getReasonId());
+			}
+			getManagedBean().setRecommendReasonId(
+					reasonIdList.toArray(new Long[reasonIdList.size()]));
+		}else{
+			getManagedBean().setRecommendReasonId(null);
+		}*/
+		
+		if (!EntityHelper.isCollectionEmpty(getManagedBean()
+				.getSelectedRecommendRejectReasonDescs())) {
+			List<Long> reasonIdList = new ArrayList<Long>();
+			for (PmReasonDesc reason : getManagedBean().getSelectedRecommendRejectReasonDescs()) {
+				reasonIdList.add(reason.getPmReason().getReasonId());
+			}
+			getManagedBean().setRecommendReasonId(
+					reasonIdList.toArray(new Long[reasonIdList.size()]));
+		}else{
 			getManagedBean().setRecommendReasonId(null);
 		}
 		verifySelectedRecommendRejectReasons();
