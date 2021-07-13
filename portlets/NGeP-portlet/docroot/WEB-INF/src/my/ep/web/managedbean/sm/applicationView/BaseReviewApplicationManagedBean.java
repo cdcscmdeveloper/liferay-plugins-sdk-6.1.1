@@ -15,6 +15,7 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.cm.catalog.CmRequestCode;
@@ -268,6 +269,9 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private String secondPoUserName = null;
 	// #29664 - start	
 	private boolean viewSupplierMaintenancePage; // #26639
+	
+	//31111
+	private List<SmBulkApplOverlapCatVO> overlapCategoryVOList;
 	
 	//28771 - start
 	private String supportingDocMode;
@@ -1967,4 +1971,13 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	}
 	// #26639 - end
 	
+	//START 31111
+		public List<SmBulkApplOverlapCatVO> getOverlapCategoryVOList() {
+			return overlapCategoryVOList;
+		}
+
+		public void setOverlapCategoryVOList(List<SmBulkApplOverlapCatVO> overlapCategoryVOList) {
+			this.overlapCategoryVOList = overlapCategoryVOList;
+		}
+	//END 31111
 }
