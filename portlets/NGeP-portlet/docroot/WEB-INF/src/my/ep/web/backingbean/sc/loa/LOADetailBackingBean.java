@@ -6797,7 +6797,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 *          the scLoa
 	 */	
 	private void validateContractDetails(ScLoa scLoa) {
-		//Locale locale = new FacesScopes().getUserLocale();
+		/*
+		Locale locale = new FacesScopes().getUserLocale();
+		
+		if (StringUtils.isBlank(
+				scLoa.getContractAdmin().getUserName())) {
+			throw new EpException(MessageConst.ERROR_760400,
+					new String[] { ResourceBundleUtils.getMessage("lbl.sc.loiloa.loa.cont.admin", 
+				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+		}
+		*/	
 		
 		//#26475 - start
 		List<PmUser> pmUserList = getUsersByAgency();
@@ -6808,6 +6817,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			scLoa.setContractAdmin(pmUserNull);
 		}
 		//#26475 - end
+		
+		//Bug #30837
+		BigDecimal contractDuration = scLoa.getContractDuration();
+		Calendar contractExpDate = Calendar.getInstance();
+		contractExpDate.setTime(scLoa.getContractEffDate());
+		contractExpDate.add(Calendar.MONTH, contractDuration.intValue());
+		contractExpDate.add(Calendar.DATE, -1);
+
+		if (!scLoa.getContractExpDate().equals(contractExpDate.getTime())){
+			scLoa.setContractExpDate(contractExpDate.getTime());
+		}		
 	}
 	
 	//Enhancement #21573 To have confirmation box for reject/acknowledge button at document LOI/LOA		

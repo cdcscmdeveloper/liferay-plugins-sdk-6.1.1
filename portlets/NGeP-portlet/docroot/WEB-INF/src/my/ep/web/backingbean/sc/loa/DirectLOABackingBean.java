@@ -8449,8 +8449,19 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		} else if (scLoa.getContractDuration() != null && (scLoa.getContractDuration().doubleValue() % 1 != 0)){
 			throw new EpException(MessageConst.ERROR_760472, new String[] {scLoa.getContractDuration().toString()});
 		}
-	}	
+		
+		//Bug #30837
+		BigDecimal contractDuration = scLoa.getContractDuration();
+		Calendar contractExpDate = Calendar.getInstance();
+		contractExpDate.setTime(scLoa.getContractEffDate());
+		contractExpDate.add(Calendar.MONTH, contractDuration.intValue());
+		contractExpDate.add(Calendar.DATE, -1);
 
+		if (!scLoa.getContractExpDate().equals(contractExpDate.getTime())){
+			scLoa.setContractExpDate(contractExpDate.getTime());
+		}
+	}
+	
 	// #26474 - start
 	private void validateContractAdmin(ScLoa scLoa) {
 		List<PmUser> pmUserList = getUsersByAgency();
