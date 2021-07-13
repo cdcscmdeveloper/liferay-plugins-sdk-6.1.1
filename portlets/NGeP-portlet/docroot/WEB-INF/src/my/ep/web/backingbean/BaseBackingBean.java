@@ -2874,6 +2874,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				if(!personnel.isClerical() && !personnel.isHigherManagement() && !personnel.isManagement()){
 					this.getManagedBean().getPersonnelsRole().clear();
 					this.getManagedBean().setCheckRoleSSM(false);
+					this.getManagedBean().setDowngradeRole(false); //#29956
 					throw new EpException(MessageConst.ERROR_722535); 
 				}else{
 					//27951
