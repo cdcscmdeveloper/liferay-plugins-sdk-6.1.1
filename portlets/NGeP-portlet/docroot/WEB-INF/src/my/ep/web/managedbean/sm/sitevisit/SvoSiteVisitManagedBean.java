@@ -135,6 +135,14 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	//#28774 - Start
 	private SmSvAssistantOfficer selectedAssistantOfficer;
 	//#28774 - End
+	
+	//24964 - start
+	private SmSvTask smSvtaskSVO;
+	private SmSvAdtMachine latestAdtMachine;
+	private SmSvMachine latestSvMachine;
+	private SmManufacturingDtl latestManufacturer;
+	private SmAppl tempSmAppl;
+	//24964 - end
 
 	public Object getBpmPojo() {
 		return bpmPojo;
@@ -785,5 +793,45 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	public void setDuplicateInterviewees(List<SmSvInterviewee> duplicateInterviewees) {
 		this.duplicateInterviewees = duplicateInterviewees;
 	}
+	
+	public SmSvTask getSmSvtaskSVO() {
+		return smSvtaskSVO;
+	}
+
+	public void setSmSvtaskSVO(SmSvTask smSvtaskSVO) {
+		this.smSvtaskSVO = smSvtaskSVO;
+	}
+
+	public SmSvAdtMachine getLatestAdtMachine() {
+		return latestAdtMachine;
+	}
+
+	public void setLatestAdtMachine(SmSvAdtMachine latestAdtMachine) {
+		this.latestAdtMachine = latestAdtMachine;
+	}
+
+	public SmSvMachine getLatestSvMachine() {
+		return latestSvMachine;
+	}
+
+	public void setLatestSvMachine(SmSvMachine latestSvMachine) {
+		this.latestSvMachine = latestSvMachine;
+	}
+
+	public SmAppl getTempSmAppl() {
+		return tempSmAppl;
+	}
+
+	public void setTempSmAppl(SmAppl tempSmAppl) {
+		this.tempSmAppl = tempSmAppl;
+	}
 	//#24964 - end
+
+	public SmManufacturingDtl getLatestManufacturer() {
+		return latestManufacturer;
+	}
+
+	public void setLatestManufacturer(SmManufacturingDtl latestManufacturer) {
+		this.latestManufacturer = latestManufacturer;
+	}
 }

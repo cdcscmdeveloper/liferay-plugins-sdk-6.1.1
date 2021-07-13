@@ -189,6 +189,7 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSvAddress;
+import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
@@ -1720,7 +1721,9 @@ public class SmCommonUtil {
 			reqDTO.setSmAppl(smAppl);
 			if (serType.equalsIgnoreCase("SUP")) {
 				reqDTO.setType("supplier");
-			} else {
+			} else if(serType.equalsIgnoreCase("SVO")){
+				reqDTO.setType("svo");
+			}else {
 				reqDTO.setType("approved");
 			}
 			applRevisionSO.applicationHist(reqDTO);
@@ -1730,6 +1733,57 @@ public class SmCommonUtil {
 			applRevisionSO = null;
 		}
 	}
+	
+	//#24964 - START
+	public static void createSerFileSVO(SmSvTask smSvTask, String serType) {
+		ISmApplRevisionSO applRevisionSO = null;
+		try {
+			log.info("start creating SVO SER file for appNo:" + smSvTask.getSmAppl().getApplNo()
+					+ "  serType:" + serType);
+			applRevisionSO = (ISmApplRevisionSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+							ISmApplRevisionSO.class);
+
+			SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
+			reqDTO.setSmAppl(smSvTask.getSmAppl());
+			reqDTO.setSmSvTask(smSvTask);
+			if (serType.equalsIgnoreCase("SUP")) {
+				reqDTO.setType("supplier");
+			} else if(serType.equalsIgnoreCase("SVO")){
+				reqDTO.setType("svo");
+			}else {
+				reqDTO.setType("approved");
+			}
+			applRevisionSO.applicationHist(reqDTO);
+		} catch (Exception ex) {
+			log.info("Failed to create SER file  [" + ex.getMessage() + "]");
+		} finally {
+			applRevisionSO = null;
+		}
+	}
+	//#24964 - END
+	
+	//24964 - start
+	public static String readSerFileSVO(String applNo, Long svTaskId){
+		String retVal = StringUtils.EMPTY;
+		String fileName = applNo + "_SVO_" + svTaskId + ".ser";
+		String baseDir = EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)
+				+ File.separator
+				+ Calendar.getInstance().get(Calendar.YEAR)
+				+ File.separator;
+		String smRevisionDir = "SM" + File.separator + applNo + File.separator
+				+ "Revision" + File.separator;
+		
+		log.info("File Name:" + fileName);
+		log.info("Directory:" + baseDir + smRevisionDir);
+		if (new File(baseDir + smRevisionDir, fileName).exists()) {
+			retVal = baseDir + smRevisionDir + fileName;
+			log.info("Is File Exist: true");
+		}
+		return retVal;
+	}
+	//24964 - end
 
 	/**
 	 * Assigns the default address for the given address parameter.
