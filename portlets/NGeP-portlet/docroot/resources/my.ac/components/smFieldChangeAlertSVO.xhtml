@@ -20,10 +20,12 @@
 		&#160;
 		 	<p:graphicImage id="#{alertId}gi" style="vertical-align:top"
 				value="/css/images/design/icon_alert.png" />
-			<p:tooltip id="alertChangeTtId" for="#{alertId}gi">
+			<!-- 
+			<p:tooltip id="alertChangeTtId" for="#{alertId}gi"> 
 				<p:outputLabel escape="false"
 					value="#{not empty cc.attrs.alertValue ? cc.attrs.alertValue : lbl['lbl.txt.na']}" />
 			</p:tooltip>
+			-->
 		</p:outputPanel>
 	</cc:implementation>
 
