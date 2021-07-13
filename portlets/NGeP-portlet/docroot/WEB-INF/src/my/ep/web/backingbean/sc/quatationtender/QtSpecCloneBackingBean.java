@@ -951,11 +951,11 @@ public class QtSpecCloneBackingBean extends
 		retrieveOverallScoreSettings(tenderResDTO.getQtDetail());
 		retrieveDeliveryAddress(tenderResDTO.getQtDetail());
 		retriveFulfilmentDtls(tenderResDTO.getQtDetail());
+		//#31293 bug Farid after clone set back to index 0
+		this.getManagedBean().setActiveIndex(0);
+		//#31293 End
 		specificationBackingBean.saveSpecificationCommitteeDtls();
-		
-		
-		
-		
+
 		
 	}
 	
