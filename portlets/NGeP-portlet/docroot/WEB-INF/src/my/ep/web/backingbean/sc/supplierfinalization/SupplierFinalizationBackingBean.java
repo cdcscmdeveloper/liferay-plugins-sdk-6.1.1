@@ -8198,10 +8198,16 @@ return	remarksNotFound;
 							
 							recommendationBean = updateCachedData(qualSupplier, 
 									zoneId, selectedItemId, null);
-							
-							if (recommendationBean.isAwarded()) {
+							/*
+							 * BUG #31128 - UNSELECT & DIM RADIOBUTTON WHEN THE SAID SUPPLIER IS IMPOSE OF DISCIPLINARY ACTION
+							 * SHAFFUL
+							 */
+							if (recommendationBean.isAwarded() && !recommendationBean.getScQtProposal().getScQtSupplier().getSmSupplier().isDisciplinaryActions()) {
 								getManagedBean().setRecommendedSupplier(qualSupplier);
 							}
+							/*
+							 * END BUG #31128
+							 */
 							
 							if (selectedItem != null) {
 								if (!selectedItem.isCancelled()) {
