@@ -10303,8 +10303,12 @@ public class SpecificationBackingBean extends
 					scQt.setEstimatedAmount(resTO
 							.getTotalSpecEstimatedAmount());
 				}
-				new CreateQtBackingBean().setProcurementMode(scQt,
-						scQt.getEstimatedAmount());
+				// #31293 Farid Start Bug SIT
+				if(scQt.getEstimatedAmount().compareTo(BigDecimal.ZERO) > 0){
+					new CreateQtBackingBean().setProcurementMode(scQt,
+							scQt.getEstimatedAmount());
+				}
+			// #31293 Farid End Bug SIT
 			}
 			
 		}
