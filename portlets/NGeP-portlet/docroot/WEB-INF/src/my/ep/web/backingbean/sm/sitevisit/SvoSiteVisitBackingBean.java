@@ -333,6 +333,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 					smSvTask.getSmSvAddress().getSiteRefId(),smSvTask.getSmSvAddress(), smSvTask.getSmAppl().getApplId());
 		}
 		//24964 - start
+		String serType = "SVO";
+		if(!SmCommonUtil.isSerFileExist(svoTask.getSmAppl().getApplNo(), serType+"_"+svoTask.getSvTaskId())){
+			SmCommonUtil.createSerFileSVO(svoTask, serType);
+		}
 		if(getManagedBean().getSmSvtaskSVO() == null 
 				|| getManagedBean().getSmSvTask().getSvTaskId() != getManagedBean().getSmSvtaskSVO().getSvTaskId()){
 			getManagedBean().setSmSvtaskSVO(getSVOTask(
