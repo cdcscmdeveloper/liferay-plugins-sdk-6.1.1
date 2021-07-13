@@ -365,7 +365,7 @@ public class ViewApplHistoryBackingBean extends
 			log.info("--------------------------------personnelsRole.size()-----------------------------------"+personnelsRole.size());
 			if(personnelsRole != null && personnelsRole.size() > 0) {
 					proceed = false;
-					getManagedBean().setPreRegistration(true);
+					getManagedBean().setPreRegistration(false);  //#29956
 					getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupplier());	
 					this.getManagedBean().setPersonnelsRole(personnelsRole);
 					RequestContext.getCurrentInstance().execute("blockWidget.hide()");
