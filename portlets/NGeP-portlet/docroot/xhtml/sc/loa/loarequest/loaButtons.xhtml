@@ -42,7 +42,7 @@
 
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt and isSqStillValid}"
-					action="#{lOADetailBackingBean.submitAction}" process="@form"
+					action="#{lOADetailBackingBean.submitConformationForLampiranA3}" process="@form"
 					update="@form" onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();" />
 				
@@ -116,7 +116,7 @@
 									update="#{isReject ? '@this' : '@form'}" />
 							</h:panelGroup>
 							
-							<h:panelGroup rendered="#{(bpmAction != 'CANCEL') and (bpmAction !='REVISE')}">
+							<h:panelGroup id="buttonsPG" rendered="#{(bpmAction != 'CANCEL') and (bpmAction !='REVISE') and (bpmAction !='REJECT')}">
 	                            <!-- 20190405@asyrafhaziq - CR(25062)- Start -->
 								<!-- changes the calling action   -->
 								<p:commandButton value="#{lbl[buttonLabel]}"
@@ -132,7 +132,7 @@
 									rendered="#{isPendingVerification and isSqStillValid}"
 									oncomplete="blockWidget.hide();"
 									disabled="#{lOADetailBackingBean.managedBean.verifyBtnFlag}"
-									action="#{lOADetailBackingBean.approveBeforeupdateBpmTaskAction(bpmAction)}"
+									action="#{lOADetailBackingBean.verifyConformationForLampiranA3(bpmAction)}"
 									partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
 									update="#{isReject ? '@this' : '@form'}" />
 								 <!-- 20190405@asyrafhaziq - CR(25062)- End -->
@@ -161,4 +161,47 @@
 		</h:panelGroup>
 
 	</div>
+	<ui:remove> #29007 Start Vinod </ui:remove>
+	<p:dialog id="submitConfirmId" widgetVar="submitConfirmPopUp"
+			header="#{lbl['lbl.sc.approval.confirm']}" resizable="false"
+			width="50%" height="100" closable="false">
+			<table>
+				<tr>
+					<td align="center"><p:outputLabel
+							value="#{lbl['lbl.sc.proposal.specification.download.alert']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
+				    onclick="blockWidget.show();"
+					oncomplete="submitConfirmPopUp.hide(); blockWidget.hide();"
+					 partialSubmit="true" process="@form" update="@form" 
+					action="#{lOADetailBackingBean.submitAction}" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" 
+					onclick="submitConfirmPopUp.hide();" type="button" partialSubmit="true"  process="@this"/>
+			</div>
+	</p:dialog>
+	<p:dialog id="verifyConfirmId" widgetVar="verifyConfirmPopUp"
+			header="#{lbl['lbl.sc.approval.confirm']}" resizable="false"
+			width="50%" height="100" closable="false">
+			<table>
+				<tr>
+					<td align="center"><p:outputLabel
+							value="#{lbl['lbl.sc.proposal.specification.download.alert']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
+				    onclick="blockWidget.show();"
+					oncomplete="submitConfirmPopUp.hide(); blockWidget.hide();"
+					 partialSubmit="true" process="@form" update="@form" 
+					action="#{lOADetailBackingBean.approveBeforeupdateBpmTaskAction(lOADetailBackingBean.managedBean.loaBpmVerify)}" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" 
+					onclick="verifyConfirmPopUp.hide();" type="button" partialSubmit="true"  process="@this"/>
+			</div>
+	</p:dialog>
+	<ui:remove> #29007 End Vinod </ui:remove>
 </ui:composition>
+	

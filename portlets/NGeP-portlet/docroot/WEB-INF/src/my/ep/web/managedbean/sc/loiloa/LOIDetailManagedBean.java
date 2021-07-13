@@ -404,6 +404,11 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private List<ScLoiRemark> supplierRemarks;
 	// #11134 -end
 
+	//#29007 Start Vinod
+	private String loiSupplierProposalspec;
+	private boolean renderInstruction = true;
+	//#29007 End Vinod
+  
     /**
      * Gets the spki backing bean.
      *
@@ -2318,4 +2323,19 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 	// #11134 -end-
 
+	//#29007 Start Vinod
+	public String getLoiSupplierProposalspec() {
+		return loiSupplierProposalspec;
+	}
+	public void setLoiSupplierProposalspec(String loiSupplierProposalspec) {
+		this.loiSupplierProposalspec = loiSupplierProposalspec;
+	}
+	public boolean isRenderInstruction() {
+		return renderInstruction;
+	}
+	public void setRenderInstruction(boolean renderInstruction) {
+		this.renderInstruction = renderInstruction;
+	}
+	//#29007 End Vinod
+	
 }
