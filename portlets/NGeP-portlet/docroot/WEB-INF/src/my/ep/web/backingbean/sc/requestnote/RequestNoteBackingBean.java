@@ -907,7 +907,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		// #27545 - start
 		if (outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || outcome.equals(BpmOutcomeConst.BPM_APPROVE)
 				|| outcome.equals(BpmOutcomeConst.BPM_REVISE)) {
-			validateAssigneduser(requestNoteDtls);
+			validateAssignedUser(requestNoteDtls);
 		}
 		// #27545 - end
 
@@ -951,41 +951,59 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 	
 	// #27545 - start
-	public void validateAssigneduser(List<ScRequestNoteDtl>	requestNoteDtls) {
+	public void validateAssignedUser(List<ScRequestNoteDtl>	requestNoteDtls) {
 		log.info("--validateAssigneduser--");
 		Boolean throwError = false;
-		for (ScRequestNoteDtl requestNoteDtl : requestNoteDtls) {
-			PmUser pmUser = requestNoteDtl.getAssignedUser();
-			PmOrgProfile pmOrgProfile = getManagedBean().getRequestNote().getPmOrgProfile();
-			String fulfilmentType = requestNoteDtl.getFulfilmentType().getParameterCode();
-			List<PmUser> userList = null;
-
-			UserReqDTO req = new UserReqDTO();
-			req.setIncludeUserIds(new ArrayList<Long>());
-			req.getIncludeUserIds().add(pmUser.getUserId());
-
-			if (fulfilmentType.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
-				req.setRoleCodes(Arrays.asList(RoleCode.REQUISITIONER.value()));				
-			} else {
-				req.setRoleCodes(Arrays.asList(RoleCode.DESK_OFFICER.value()));
+		PmOrgProfile pmOrgProfile = getManagedBean().getRequestNote().getPmOrgProfile();
+		
+		if(CollectionUtils.isNotEmpty(requestNoteDtls)) {
+			
+			OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+			orgProfileReqDTO.setOrgProfileId(pmOrgProfile.getOrgProfileId());
+			orgProfileReqDTO.setGroupOrgType(ParameterConst.ORG_AUTH_TYPE_ORG_GROUP);
+			OrgProfileResDTO orgProfileResDTO = getOrgProfileSO().retrieveProfileGroupByGroupOrgType(orgProfileReqDTO);
+			
+			List<Long> orgProfileIdList = new ArrayList<Long>();
+			orgProfileIdList.add(pmOrgProfile.getOrgProfileId());
+					
+			if (CollectionUtils.isNotEmpty(orgProfileResDTO.getProfileGroups())) {
+				for(PmProfileGroup group: orgProfileResDTO.getProfileGroups()){
+					orgProfileIdList.add(group.getMainOrgProfile().getOrgProfileId());
+				}
 			}
-
-			if(getManagedBean().getOrgProfileIdList() != null && getManagedBean().getOrgProfileIdList().size()> 0) {
-				req.setOrgProfileIds(this.getManagedBean().getOrgProfileIdList());
-			} else {
-				req.setOrgProfileId(pmOrgProfile.getOrgProfileId());
+			
+			for (ScRequestNoteDtl requestNoteDtl : requestNoteDtls) {
+				PmUser pmUser = requestNoteDtl.getAssignedUser();				
+				String fulfilmentType = requestNoteDtl.getFulfilmentType().getParameterCode();
+				List<PmUser> userList = null;
+	
+				UserReqDTO req = new UserReqDTO();
+				req.setIncludeUserIds(new ArrayList<Long>());
+				req.getIncludeUserIds().add(pmUser.getUserId());
+	
+				if (fulfilmentType.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
+					req.setRoleCodes(Arrays.asList(RoleCode.REQUISITIONER.value()));				
+				} else {
+					req.setRoleCodes(Arrays.asList(RoleCode.DESK_OFFICER.value()));
+				}
+				
+				if(orgProfileIdList != null && orgProfileIdList.size()> 1) {
+					req.setOrgProfileIds(orgProfileIdList);
+				} else {
+					req.setOrgProfileId(pmOrgProfile.getOrgProfileId());
+				}
+	
+				UserResDTO res = getUserSO().retrieveUserListByRole(req);
+				userList = res.getUserList();
+	
+				if (CollectionUtils.isEmpty(userList)) {
+					throwError = true;
+					break;
+				}
 			}
-
-			UserResDTO res = getUserSO().retrieveUserListByRole(req);
-			userList = res.getUserList();
-
-			if (CollectionUtils.isEmpty(userList)) {
-				throwError = true;
-				break;
+			if (throwError){
+				throw new EpException(MessageConst.ERROR_770242);
 			}
-		}
-		if (throwError){
-			throw new EpException(MessageConst.ERROR_770242);
 		}
 	}
 	// #27545 - End
@@ -4336,6 +4354,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
 	}
 	
+	//#27545
+	/**
+	 * Gets the org profile so.
+	 *
+	 * @return the org profile so
+	 */
+	private IOrgProfileSO getOrgProfileSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+	}
+	
 	/**
 	 * Gets the server url.
 	 *
@@ -4952,18 +4980,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveProfileGroupByGroupOrgType(orgProfileReqDTO);
 	
 			String orgProfileIds = String.valueOf(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
-			//#27545 - start
-			List<Long> orgProfileIdList = new ArrayList<Long>();
-			orgProfileIdList.add(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
 					
 			if (CollectionUtils.isNotEmpty(orgProfileResDTO.getProfileGroups())) {
 				for(PmProfileGroup group: orgProfileResDTO.getProfileGroups()){
 					orgProfileIds = orgProfileIds + "," + group.getMainOrgProfile().getOrgProfileId();
-					orgProfileIdList.add(group.getMainOrgProfile().getOrgProfileId());
 				}
 			}
-			getManagedBean().setOrgProfileIdList(orgProfileIdList);
-			//#27545 - end
 
 			sb.append("pmUserOrgs.pmOrgProfile.orgProfileId^");				
 			sb.append(orgProfileIds);
