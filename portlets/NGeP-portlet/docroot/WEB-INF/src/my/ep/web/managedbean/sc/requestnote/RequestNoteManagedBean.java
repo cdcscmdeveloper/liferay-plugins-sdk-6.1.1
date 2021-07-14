@@ -373,9 +373,6 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private boolean qtyViewOnly = false;
     //28865 - End
     
-    // #27545
-    private List<Long> orgProfileIdList;
-    
     /**
      * Instantiates a new request note managed bean.
      */
@@ -2156,14 +2153,4 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 		this.qtyViewOnly = qtyViewOnly;
 	}
 	//28865 - End
-
-	// #27545 - Start
-	public List<Long> getOrgProfileIdList() {
-		return orgProfileIdList;
-	}
-
-	public void setOrgProfileIdList(List<Long> orgProfileIdList) {
-		this.orgProfileIdList = orgProfileIdList;
-	}
-	// #27545 - End
 }
