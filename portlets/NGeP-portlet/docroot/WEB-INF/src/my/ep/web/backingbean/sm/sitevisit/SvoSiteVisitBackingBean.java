@@ -341,6 +341,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				|| getManagedBean().getSmSvTask().getSvTaskId() != getManagedBean().getSmSvtaskSVO().getSvTaskId()){
 			getManagedBean().setSmSvtaskSVO(getSVOTask(
 					getManagedBean().getSmSvTask().getSmAppl().getApplNo(), getManagedBean().getSmSvTask().getSvTaskId()));
+		
+		log.info("#24964 - TR TROUBLESHOOT METHOD retrieveSiteVisitInfo");
+		log.info("#24964 - SVTASK ID" + getManagedBean().getSmSvtaskSVO().getSvTaskId());
+
 		}
 		//24964 - end
 	}
@@ -2892,6 +2896,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				SmApplRevisionResDTO resDTO = SmServiceLookup
 						.getSmApplRevisionSO().readSmSvTask(reqDTO);
 				if (resDTO.getSmAppl().getSmSvTasks() != null) {
+					log.info("#24964 - TR TROUBLESHOOT METHOD getSVOTask");
+					log.info("SVTASK ID - " + resDTO.getSmAppl().getSmSvTasks().get(0).getSvTaskId());
 					return resDTO.getSmAppl().getSmSvTasks().get(0);
 				}
 			}
