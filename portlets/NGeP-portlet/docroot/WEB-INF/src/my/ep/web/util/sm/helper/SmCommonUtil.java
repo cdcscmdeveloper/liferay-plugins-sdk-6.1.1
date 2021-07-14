@@ -1721,8 +1721,12 @@ public class SmCommonUtil {
 			reqDTO.setSmAppl(smAppl);
 			if (serType.equalsIgnoreCase("SUP")) {
 				reqDTO.setType("supplier");
+			//#24964 - START
 			} else if(serType.equalsIgnoreCase("SVO")){
 				reqDTO.setType("svo");
+			}else if (serType.equalsIgnoreCase("PO")){
+				reqDTO.setType("po");
+			//#24964 - END
 			}else {
 				reqDTO.setType("approved");
 			}
