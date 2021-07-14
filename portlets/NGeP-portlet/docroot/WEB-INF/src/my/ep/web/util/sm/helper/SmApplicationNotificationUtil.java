@@ -41,16 +41,17 @@ public class SmApplicationNotificationUtil {
 			String approvalRemarks, ReviewApplicationReqDTO reqDTO) {
 		reqDTO.setBusinessRegNo(supplier.getRegNo()); 
 		reqDTO.setCompanyName(supplier.getCompanyName()); 
-		if (smAppl.getApplType().equalsIgnoreCase(
-				ParameterConst.NEW_SM_APPLN_FOR_MOF)
-				|| smAppl.getApplType().equalsIgnoreCase(
-						ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
-			reqDTO.setPaymentMethods("FPX dan kad kredit"); 
-			reqDTO.setCategoryDescription(retriveCategoryMessageForNotification(
-					smAppl, isPoUser));
-		}//#29782 - START
-		else if ((smAppl.getApplType().equalsIgnoreCase( 
-				ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES))) {
+		//#29782 - START
+		if (smAppl.getApplType().equalsIgnoreCase( 
+				ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
+				|| smAppl.getApplType().equalsIgnoreCase( 
+						ParameterConst.NEW_SM_APPLN_FOR_BUMI)
+						|| smAppl.getApplType().equalsIgnoreCase( 
+								ParameterConst.NEW_SM_APPLN_FOR_UPDATE)
+								|| smAppl.getApplType().equalsIgnoreCase( 
+										ParameterConst.NEW_SM_APPLN_FOR_RENEW)
+										|| smAppl.getApplType().equalsIgnoreCase( 
+												ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
 			reqDTO.setCategoryDescription(retriveAddNewCategoryMessageForNotification( 
 					smAppl, supplier, basicInfo, supplierRemarks, approvalRemarks, reqDTO)); 
 		//#29782 - END
@@ -443,7 +444,6 @@ public class SmApplicationNotificationUtil {
 			SmSupplierBasicInfoVO basicInfo, 
 			String supplierRemarks, String approvalRemarks, ReviewApplicationReqDTO reqDTO) {
 		String preferredLang =CommonConstants.LANGUAGE_CODE_MALAY;
-//		log.info(preferredLang+"---reqDTO.getLangCode()>>>>>>>>>>" + reqDTO.getLangCode());
 		
 		if(reqDTO.getLangCode()!=null && !"".equalsIgnoreCase(reqDTO.getLangCode())){
 			preferredLang = reqDTO.getLangCode();
@@ -480,24 +480,6 @@ public class SmApplicationNotificationUtil {
 		StringBuilder sb = new StringBuilder();
 		log.info("*********** retriveAddNewCategoryMessageForNotification *********");
 		sb.append("<table style=\"width:50%; border: 1px solid black;border-collapse: collapse;\">");
-		
-//		//Application Type <VAR2>
-//		sb.append("<tr>"); 
-////		sb.append("<td style=\"border: 1px solid black;\">")
-////				.append(applType).append("</td>");
-		sb.append("")
-				.append(addNewCatCodes).append("");
-		sb.append("");
-		log.info("*********** Application Type ********* :"+addNewCatCodes);
-//		
-//		//Application No. <VAR3>
-//		sb.append("<tr>"); 
-////		sb.append("<td style=\"border: 1px solid black;\">")
-////				.append(applNo).append("</td>");
-		sb.append("")
-				.append(reqDTO.getApplNo()).append("");
-		sb.append("");
-		log.info("*********** Application No. ********* :"+reqDTO.getApplNo());
 		// <VAR1>
 		//Company Name 
 		sb.append("<tr>"); 
@@ -534,10 +516,6 @@ public class SmApplicationNotificationUtil {
 		sb.append("</tr>");
 		sb.append("</table>");
 		return sb.toString();
-		
-		
-		
-		
 	}
 	//29782 - END
 	
