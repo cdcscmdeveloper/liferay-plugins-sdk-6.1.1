@@ -2874,14 +2874,26 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						}
 					}
 				}
-				if (getManagedBean().isPbConfirmMeeting() && outputValue.equalsIgnoreCase("MET")) {
-					getManagedBean().setSelectedTabIndex(index + 1);
-				}
-				//#20997  - Start
-				if(outputValue.equalsIgnoreCase("PB")
-						&& getManagedBean().isPbConfirmMeeting()){
-					getManagedBean().setSelectedTabIndex(index + 2);					
-				}
+				//#31361,#24333 - Start
+				if (getManagedBean().isPbConfirmMeeting() && outputValue.equalsIgnoreCase("MET")){
+					if ( ctBackingBean.getManagedBean().getContractVer().getCtDeductions()!= null
+							&& ctBackingBean.getManagedBean().getContractVer().getCtDeductions().size() > 0){
+								getManagedBean().setSelectedTabIndex(index + 2);					
+						}else{
+								getManagedBean().setSelectedTabIndex(index + 1);
+							}
+						}
+
+
+				if(outputValue.equalsIgnoreCase("PB") && getManagedBean().isPbConfirmMeeting()){
+					if ( ctBackingBean.getManagedBean().getContractVer().getCtDeductions()!= null
+							&& ctBackingBean.getManagedBean().getContractVer().getCtDeductions().size() > 0){
+								getManagedBean().setSelectedTabIndex(index + 3);					
+							}else{
+								getManagedBean().setSelectedTabIndex(index + 2);
+							}
+						}
+				//#31361,#24333 - End				
 								
 				if ((getManagedBean().isSignUpdateDecision() || getManagedBean().isSignOffDecision()) 
 						&& outputValue.equalsIgnoreCase("DCN")) {
@@ -2901,6 +2913,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
                     }else if (getManagedBean().isPbConfirmMeeting() && ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()
                             && ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted() ) {
                         getManagedBean().setSelectedTabIndex(index + 2);
+                    }else if (getManagedBean().isPbConfirmMeeting() && ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq() //#31361,#24333 
+                    		&& ( ctBackingBean.getManagedBean().getContractVer().getCtDeductions()!= null
+    						&& ctBackingBean.getManagedBean().getContractVer().getCtDeductions().size() > 0)) {
+                    	getManagedBean().setSelectedTabIndex(index + 4);                   	
                     }else if (getManagedBean().isPbConfirmMeeting() && ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()) {
                         getManagedBean().setSelectedTabIndex(index + 3);
                     }else{
