@@ -3493,7 +3493,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//#30477 Start Vinod
 			if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
 				for(ScQtCommittee committee : this.getManagedBean().getQt().getScQtCommittees()){
-					if(committee.getScCommittee().getCommitteStatus().getStatusId().equals(QTStatusConst.CMT_PENDING_REVISION)
+					if((committee.getScCommittee().getCommitteStatus().getStatusId().equals(QTStatusConst.CMT_PENDING_REVISION) 
+							|| currentStatus.equals(QTStatusConst.QT_RE_EVALUATION))
 							&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT)){
 						for(ScQtApproval approval : this.getManagedBean().getQt().getScQtApprovals()){
 							for(ScQtApproverSettings approverSetting : approval.getApproverSettings()){
@@ -9978,7 +9979,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	}
   	//#25037 - end
   	
-  	//#30477 - Start
+    //#30477 - Start
   	public boolean isInactiveCommiteeApproverRole(Long userId,int role) {
 		IQTDetailSO detailSO = null;
 		try {
