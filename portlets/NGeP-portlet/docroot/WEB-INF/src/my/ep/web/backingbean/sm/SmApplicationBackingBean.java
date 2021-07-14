@@ -6094,7 +6094,7 @@ public class SmApplicationBackingBean extends
 				cat.setPoRemarks(null);
 				cat.setPrevApproverRemarks(null);
 				cat.setApproverRemarks(null);
-				cat.setCurrentApplCategory(false);
+				cat.setActiveDA(false);
 				cat.setCancelledDate(null);
 			} else {
 				getManagedBean().getSmAppl().getSmSupplierCategories()
