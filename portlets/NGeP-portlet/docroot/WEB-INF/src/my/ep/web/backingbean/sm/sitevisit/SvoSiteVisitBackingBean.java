@@ -2077,23 +2077,21 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			if (resDTO.isSuccessful()) {
-
-				//#24964 - START
-				log.info("START TROUBLESHOOT REVISION - #24964 SVO SER File");
-				SiteVisitReqDTO siteVisitReqDTO = new SiteVisitReqDTO();
-				siteVisitReqDTO.setSmSvTask(svTask);
-				siteVisitReqDTO.setSvTaskId(svTask.getSvTaskId());
-				
-				SmSvTask svoTask = reqSO.retrieveSiteVisitInfoBySvTaskId(siteVisitReqDTO).getSmSvTask();
-				
-				String serType = "SVO";
-				if(!SmCommonUtil.isSerFileExist(svTask.getSmAppl().getApplNo(), serType+"_"+svTask.getSvTaskId())){
-					SmCommonUtil.createSerFileSVO(svoTask, serType);
-				}
-				log.info("END TROUBLESHOOT REVISION - #24964 SVO SER File");
-				//#24964 - END
-				
 				if(action.equalsIgnoreCase(SupplierManagementConst.BPM_SUBMIT)){
+					//#24964 - START
+					log.info("START TROUBLESHOOT REVISION - #24964 SVO SER File");
+					SiteVisitReqDTO siteVisitReqDTO = new SiteVisitReqDTO();
+					siteVisitReqDTO.setSmSvTask(svTask);
+					siteVisitReqDTO.setSvTaskId(svTask.getSvTaskId());
+					
+					SmSvTask svoTask = reqSO.retrieveSiteVisitInfoBySvTaskId(siteVisitReqDTO).getSmSvTask();
+					
+					String serType = "SVO";
+					if(!SmCommonUtil.isSerFileExist(svTask.getSmAppl().getApplNo(), serType+"_"+svTask.getSvTaskId())){
+						SmCommonUtil.createSerFileSVO(svoTask, serType);
+					}
+					log.info("END TROUBLESHOOT REVISION - #24964 SVO SER File");
+					//#24964 - END
 					//Start 25294  - Site Visit Grouping Enhancement -28775
 					String poName = "<<Processing Officer Name>>";
 					if(getManagedBean().getBpmPojo() != null){
