@@ -3007,10 +3007,12 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				log.info("poBank - "+smSvBankInfo.getSvBankInfoId());
 				for(SmSvBankInfo svoSmSvBankInfo : svoSmSvBankInfoLs){
 					log.info("svoBank - "+svoSmSvBankInfo.getSvBankInfoId());
-					if(smSvBankInfo.getSvBankInfoId().equals(svoSmSvBankInfo.getSvBankInfoId())){
-						log.info("poBank is equal svoBank");
-						smSvBankInfo.setSvoSmSvBankInfo(svoSmSvBankInfo);
-						log.info("test read after set id = " + smSvBankInfo.getSvoSmSvBankInfo().getSvBankInfoId());
+					if(smSvBankInfo != null & svoSmSvBankInfo != null){
+						if(smSvBankInfo.getSvBankInfoId().equals(svoSmSvBankInfo.getSvBankInfoId())){
+							log.info("poBank is equal svoBank");
+							smSvBankInfo.setSvoSmSvBankInfo(svoSmSvBankInfo);
+							log.info("test read after set id = " + smSvBankInfo.getSvoSmSvBankInfo().getSvBankInfoId());
+						}
 					}
 				}
 			}
@@ -3030,10 +3032,12 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				log.info("poCheckList - "+smSvFinChecklist.getSvFinChecklistId());
 				for(SmSvFinChecklist svoSmSvFinChecklist : svoSmSvFinChecklists){
 					log.info("svoCheckList - "+svoSmSvFinChecklist.getSvFinChecklistId());
-					if(smSvFinChecklist.getSvFinChecklistId().equals(svoSmSvFinChecklist.getSvFinChecklistId())){
-						log.info("poCheckList is equal svoCheckList");
-						smSvFinChecklist.setSvoSmSvFinChecklist(svoSmSvFinChecklist);
-						log.info("test read after set id = " + smSvFinChecklist.getSvoSmSvFinChecklist().getSvFinChecklistId());
+					if(smSvFinChecklist != null && svoSmSvFinChecklist != null){
+						if(smSvFinChecklist.getSvFinChecklistId().equals(svoSmSvFinChecklist.getSvFinChecklistId())){
+							log.info("poCheckList is equal svoCheckList");
+							smSvFinChecklist.setSvoSmSvFinChecklist(svoSmSvFinChecklist);
+							log.info("test read after set id = " + smSvFinChecklist.getSvoSmSvFinChecklist().getSvFinChecklistId());
+						}
 					}
 				}
 			}
@@ -3053,10 +3057,12 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				log.info("poInterviewee - "+smSvInterviewee.getSvIntervieweeId());
 				for(SmSvInterviewee svoSmSvInterviewee : svoSmSvIntervieweeLs){
 					log.info("svoInterviewee - "+svoSmSvInterviewee.getSvIntervieweeId());
-					if(smSvInterviewee.getSvIntervieweeId()  == svoSmSvInterviewee.getSvIntervieweeId()){
-						log.info("poInterviewee is equal svoInterviewee");
-						smSvInterviewee.setSvoSmSvInterviewee(svoSmSvInterviewee);
-						log.info("test read after set id = " + smSvInterviewee.getSvoSmSvInterviewee().getSvIntervieweeId());
+					if(smSvInterviewee != null && svoSmSvInterviewee != null){
+						if(smSvInterviewee.getSvIntervieweeId()  == svoSmSvInterviewee.getSvIntervieweeId()){
+							log.info("poInterviewee is equal svoInterviewee");
+							smSvInterviewee.setSvoSmSvInterviewee(svoSmSvInterviewee);
+							log.info("test read after set id = " + smSvInterviewee.getSvoSmSvInterviewee().getSvIntervieweeId());
+						}
 					}
 				}
 			}
