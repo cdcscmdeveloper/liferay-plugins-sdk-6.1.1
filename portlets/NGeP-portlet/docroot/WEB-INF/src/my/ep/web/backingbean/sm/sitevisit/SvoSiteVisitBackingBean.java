@@ -2388,6 +2388,21 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		getManagedBean().setSvTaskId(svTask.getSvTaskId());
 		retrieveSiteVisitInfo("V");
 		RequestContext.getCurrentInstance().update("@form");
+		//24964 - start
+		String serType = "SVO";
+		SmSvTask svoTask = getManagedBean().getSmSvTask();
+		if(!SmCommonUtil.isSerFileExist(svoTask.getSmAppl().getApplNo(), serType+"_"+svoTask.getSvTaskId())){
+			SmCommonUtil.createSerFileSVO(svoTask, serType);
+		}
+		if(getManagedBean().getSmSvtaskSVO() == null 
+			|| getManagedBean().getSmSvTask().getSvTaskId() != getManagedBean().getSmSvtaskSVO().getSvTaskId()){
+			getManagedBean().setSmSvtaskSVO(getSVOTask(
+					getManagedBean().getSmSvTask().getSmAppl().getApplNo(), getManagedBean().getSmSvTask().getSvTaskId()));
+		
+			log.info("#24964 - TR TROUBLESHOOT METHOD retrieveSiteVisitInfo");
+			log.info("#24964 - SVTASK ID" + getManagedBean().getSmSvtaskSVO().getSvTaskId());
+		}
+		//24964 - end
 	}
 	
 	/**
