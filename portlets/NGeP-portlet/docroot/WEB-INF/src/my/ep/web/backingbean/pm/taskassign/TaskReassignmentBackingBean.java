@@ -1286,6 +1286,7 @@ public class TaskReassignmentBackingBean extends
 			IBpmSO bpmSO = null;
 			BpmRequestDTO reqDTO = null;
 			BpmResponseDTO responseDTO = null;
+			BpmResponseDTO response2DTO = null;
 			String loginId = null;
 			List<Integer> statusIds = getManagedBean().getStatusIds();
 			TaskAssignmentSearchBean taskSearchBean = null;
@@ -1374,6 +1375,29 @@ public class TaskReassignmentBackingBean extends
 								getManagedBean().setCheckAllGroupTasksEnabled(false);
 							}
 						}
+						
+						//7465
+						reqDTO.setLimit(999);
+						reqDTO.setOffset(0);
+						response2DTO = bpmSO.getReassignedItems(reqDTO);					
+
+						if (response2DTO.getWorklistVO() != null) {
+							log.info("BPM size******"
+									+ response2DTO.getWorklistVO()
+											.getWorklistItem().size());
+							log.info("BPM total******"
+									+ response2DTO.getWorklistVO().getTotal());
+							
+							if (!response2DTO.getWorklistVO().getWorklistItem().isEmpty() && 
+									response2DTO.getWorklistVO().getWorklistItem().size() > 0) {
+								 getManagedBean().getAllPageGroupTasks().clear();
+								for (WorklistItemVO worklist : response2DTO.getWorklistVO().getWorklistItem()) {
+									getManagedBean().getAllPageGroupTasks().add(worklist);
+								}
+							} 
+						}
+						
+						//7465
 					}
 				}
 			} catch (Exception e) {
@@ -1465,6 +1489,7 @@ public class TaskReassignmentBackingBean extends
 			IBpmSO bpmSO = null;
 			BpmRequestDTO reqDTO = null;
 			BpmResponseDTO responseDTO = null;
+			BpmResponseDTO response2DTO = null;
 			String loginId = null;
 			List<Integer> statusIds = getManagedBean().getStatusIds();
 			TaskAssignmentSearchBean taskSearchBean = null;
@@ -1551,6 +1576,28 @@ public class TaskReassignmentBackingBean extends
 								getManagedBean().setCheckAllOthersTasksEnabled(false);
 							} 
 						} 
+						
+						//7465
+						reqDTO.setLimit(999);
+						reqDTO.setOffset(0);
+						response2DTO = bpmSO.getGroupByOthersItems(reqDTO);
+						
+						if (response2DTO.getWorklistVO() != null) {
+							log.info("BPM size******"
+									+ response2DTO.getWorklistVO()
+											.getWorklistItem().size());
+							log.info("BPM total******"
+									+ response2DTO.getWorklistVO().getTotal());
+							
+							if (!response2DTO.getWorklistVO().getWorklistItem().isEmpty() && 
+									response2DTO.getWorklistVO().getWorklistItem().size() > 0) {
+								getManagedBean().getAllPageOthersTasks().clear();
+								for (WorklistItemVO worklist : response2DTO.getWorklistVO().getWorklistItem()) {
+									getManagedBean().getAllPageOthersTasks().add(worklist);
+								}
+							} 
+						}
+						//7465
 					}
 				}
 			} catch (Exception e) {
@@ -3359,10 +3406,11 @@ public class TaskReassignmentBackingBean extends
 				this.getManagedBean().getSelectedGroupTasks().size() > 0) {
 			this.getManagedBean().getSelectedGroupTasks().clear();
 		}
-    	for ( WorklistItemVO task : this.getManagedBean().getAllGroupTasks()) {   		
-    			task.setTaskSelect(true);
-    			this.getManagedBean().getSelectedGroupTasks().put(task.getTaskId(),task);
-		}
+		
+    	for ( WorklistItemVO task : this.getManagedBean().getAllPageGroupTasks()) {   		
+  			task.setTaskSelect(true);
+			this.getManagedBean().getSelectedGroupTasks().put(task.getTaskId(),task);
+    	}
     	
     	this.getManagedBean().setEnableDeleteGroupTasksButton(true);
     	log.info("getSelectedGroupTasks= "+this.getManagedBean().getSelectedGroupTasks().size());
@@ -3382,8 +3430,7 @@ public class TaskReassignmentBackingBean extends
 			
 			
 			
-			for (Entry<String, WorklistItemVO> selectedTask : this.getManagedBean().getSelectedGroupTasks().entrySet()) {
-				
+			for (Entry<String, WorklistItemVO> selectedTask : this.getManagedBean().getSelectedGroupTasks().entrySet()) {			
 				String taskId = selectedTask.getKey();
 				WorklistItemVO task = selectedTask.getValue();
 				log.info("Task(s) to be deleted: "+task.getDocNumber()+" - "+taskId);
@@ -3441,7 +3488,7 @@ public class TaskReassignmentBackingBean extends
 				this.getManagedBean().getSelectedOthersTasks().size() > 0) {
 			this.getManagedBean().getSelectedOthersTasks().clear();
 		}
-    	for ( WorklistItemVO task : this.getManagedBean().getAllOthersTasks()) {
+    	for ( WorklistItemVO task : this.getManagedBean().getAllPageOthersTasks()) {
     			task.setTaskSelect(true);
     			this.getManagedBean().getSelectedOthersTasks().put(task.getTaskId(),task);
 		}
