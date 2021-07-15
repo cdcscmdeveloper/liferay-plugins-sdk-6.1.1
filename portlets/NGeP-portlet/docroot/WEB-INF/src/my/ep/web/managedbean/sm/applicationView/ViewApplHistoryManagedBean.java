@@ -77,6 +77,8 @@ public class ViewApplHistoryManagedBean extends	BaseReviewApplicationManagedBean
 	
 	//14530
 	private SmApplInquiry poToSupplierInquiry;
+	
+	private Boolean displayResubmitButton; //#31248
 
 	public ViewApplHistoryManagedBean() {
 
@@ -412,4 +414,10 @@ public class ViewApplHistoryManagedBean extends	BaseReviewApplicationManagedBean
 		this.poToSupplierInquiry = poToSupplierInquiry;
 	}
 	//14530 - END
+	public Boolean getDisplayResubmitButton() {
+		return displayResubmitButton;
+	}
+	public void setDisplayResubmitButton(Boolean displayResubmitButton) {
+		this.displayResubmitButton = displayResubmitButton;
+	}
 }
