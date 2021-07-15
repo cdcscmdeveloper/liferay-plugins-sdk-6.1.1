@@ -3024,6 +3024,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	}
 	
 	public boolean isSVOSmManufacturingDtlDifferent(SmManufacturingDtl manu){
+		if(getManagedBean().getSmSvtaskSVO() == null) return false;
 		SmManufacturingDtl svoManu = getSVOSmManufacturingDtl(manu);
 		return SmCommonUtil.isHasDifferences(manu, svoManu, null);
 	}
