@@ -2040,64 +2040,6 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 	//26284 - End
 	
-	//26059 - start
-	/**
-	 * @return the proceedWithDPExceedThreshold
-	 */
-	public boolean isProceedWithDPExceedThreshold() {
-		return proceedWithDPExceedThreshold;
-	}
-
-	/**
-	 * @param proceedWithDPExceedThreshold the proceedWithDPExceedThreshold to set
-	 */
-	public void setProceedWithDPExceedThreshold(boolean proceedWithDPExceedThreshold) {
-		this.proceedWithDPExceedThreshold = proceedWithDPExceedThreshold;
-	}
-
-	/**
-	 * @return the exceedThresholdMessage
-	 */
-	public String getExceedThresholdMessage() {
-		return exceedThresholdMessage;
-	}
-
-	/**
-	 * @param exceedThresholdMessage the exceedThresholdMessage to set
-	 */
-	public void setExceedThresholdMessage(String exceedThresholdMessage) {
-		this.exceedThresholdMessage = exceedThresholdMessage;
-	}
-
-	/**
-	 * @return the bpkApprover
-	 */
-	public boolean isBpkApprover() {
-		return bpkApprover;
-	}
-
-	/**
-	 * @param bpkApprover the bpkApprover to set
-	 */
-	public void setBpkApprover(boolean bpkApprover) {
-		this.bpkApprover = bpkApprover;
-	}
-	
-	/**
-	 * @return the itemListExceedThreshold
-	 */
-	public List<Long> getItemListExceedThreshold() {
-		return itemListExceedThreshold;
-	}
-
-	/**
-	 * @param itemListExceedThreshold the itemListExceedThreshold to set
-	 */
-	public void setItemListExceedThreshold(List<Long> itemListExceedThreshold) {
-		this.itemListExceedThreshold = itemListExceedThreshold;
-	}
-	//26059 - end
-	
 	//12183 - Start
 	public boolean isPidValidityExpired() {
 		return pidValidityExpired;
