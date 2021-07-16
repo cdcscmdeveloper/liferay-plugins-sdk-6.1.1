@@ -137,9 +137,9 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 							billType = resDTO.getPyPayment().getPyBill().getBillType();
 						}
 						//#29481 - Start
-						if(appl.getSupplierType().equals(SupplierManagementConst.STYPE_BASIC) || 
+						if(appl != null && (appl.getSupplierType().equals(SupplierManagementConst.STYPE_BASIC) || 
 								appl.getSupplierType().equals(SupplierManagementConst.STYPE_GOVT_SELLER) || 
-								(appl.getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR) && appl.getSmCompanyBasic().isWithFederal()==true)) {
+								(appl.getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR)) && appl.getSmCompanyBasic().isWithFederal()==true)) {
 							//params = new String[] {getSoftCertNameEmailMulti(this.getManagedBean().getNewPyBillDtlLs())};
 							//msgCode = MessageConst.INFO_721068;
 							showPaymentResponseMulti(status, resDTO.getPyPayment().getPaymentId(), errorDesc, billType, resDTO.getPyPayment().getPyBill().getPyBillDtls()) ;
