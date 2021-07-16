@@ -5127,7 +5127,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 	// 12177 - End
 	
-	
 	//26221 - Start
 	public String getPreparedByApprove(ScRequestNoteDtl requestNoteDtl) {
 		debugLogger("getPreparedByApprove");
@@ -5150,18 +5149,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveProfileGroupByGroupOrgType(orgProfileReqDTO);
 	
 			String orgProfileIds = String.valueOf(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
-			//#27545 - start
-			List<Long> orgProfileIdList = new ArrayList<Long>();
-			orgProfileIdList.add(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
 					
 			if (CollectionUtils.isNotEmpty(orgProfileResDTO.getProfileGroups())) {
 				for(PmProfileGroup group: orgProfileResDTO.getProfileGroups()){
 					orgProfileIds = orgProfileIds + "," + group.getMainOrgProfile().getOrgProfileId();
-					orgProfileIdList.add(group.getMainOrgProfile().getOrgProfileId());
 				}
 			}
-			getManagedBean().setOrgProfileIdList(orgProfileIdList);
-			//#27545 - end	
 
 			sb.append("pmUserOrgs.pmOrgProfile.orgProfileId^");				
 			sb.append(orgProfileIds);
@@ -5172,7 +5165,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 		return sb.toString();
 	}
-	//26221-end
 	
 	//26059 - start
 	/**
