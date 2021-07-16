@@ -1673,33 +1673,33 @@ public class ViewApplHistoryBackingBean extends
 	//14530
 	
 	//#31248 - START
-		public Boolean setResubmitButton(SmAppl smAppl){
-			ISmWorkFlowStatusSO workFlowStatusSO = SmServiceLookup.getSmWorkFlowStatusSO();
-			SmWorkFlowStatusReqDTO smWorkFlowStatusReqDTO = new SmWorkFlowStatusReqDTO();
-			smWorkFlowStatusReqDTO.setApplId(smAppl.getApplId());
-			
-			SmWorkFlowStatusResDTO smWorkFlowStatusResDTO = workFlowStatusSO.retrieveCurrentWorkFlowStatusByDocId(smWorkFlowStatusReqDTO);
-			Boolean button = false;
-			if(smWorkFlowStatusResDTO != null 
-					&& smWorkFlowStatusResDTO.getWorkflowStatus() != null 
-					&& smWorkFlowStatusResDTO.getWorkflowStatus().getSmAppl() != null
-					&& !smWorkFlowStatusResDTO.getWorkflowStatus().getSmAppl().isActiveAppl()){
-				button = true;
-				if(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus() != null){
-					if(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_DELETE_PENDING_APPL_CONTRACTOR)){
-						button = false;
-					} else if(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_DELETE_PENDING_APPL_CONSULTANT)){
-						button = false;
-					} else if(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(Long.parseLong(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM_PAYMENT))){
-						button = false;
-					} else if(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(Long.parseLong(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM_PROCESSING_FEE))){
-						button = false;
-					}else if(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_REGISTERED)){
-						button = false;
-					}
+	public Boolean setResubmitButton(SmAppl smAppl){
+		ISmWorkFlowStatusSO workFlowStatusSO = SmServiceLookup.getSmWorkFlowStatusSO();
+		SmWorkFlowStatusReqDTO smWorkFlowStatusReqDTO = new SmWorkFlowStatusReqDTO();
+		smWorkFlowStatusReqDTO.setApplId(smAppl.getApplId());
+		
+		SmWorkFlowStatusResDTO smWorkFlowStatusResDTO = workFlowStatusSO.retrieveCurrentWorkFlowStatusByDocId(smWorkFlowStatusReqDTO);
+		Boolean button = false;
+		if(smWorkFlowStatusResDTO != null 
+				&& smWorkFlowStatusResDTO.getWorkflowStatus() != null 
+				&& smWorkFlowStatusResDTO.getWorkflowStatus().getSmAppl() != null
+				&& !smWorkFlowStatusResDTO.getWorkflowStatus().getSmAppl().isActiveAppl()){
+			button = true;
+			if(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus() != null){
+				if(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_DELETE_PENDING_APPL_CONTRACTOR)){
+					button = false;
+				} else if(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_DELETE_PENDING_APPL_CONSULTANT)){
+					button = false;
+				} else if(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(Long.parseLong(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM_PAYMENT))){
+					button = false;
+				} else if(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(Long.parseLong(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM_PROCESSING_FEE))){
+					button = false;
+				}else if(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_REGISTERED)){
+					button = false;
 				}
 			}
-			return button;
 		}
-		//#31248 - END
+		return button;
+	}
+	//#31248 - END
 }
