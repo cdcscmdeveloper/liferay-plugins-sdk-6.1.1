@@ -728,9 +728,9 @@
 			readonly="true"
 			rendered="#{not empty lOADetailBackingBean.managedBean.supplierRemarks}" />
 	</p:outputPanel>
-	<!-- Bug #30600 Start -->
-	<ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" />
-	<!-- Bug #30600 End -->
+	<!-- Bug #30600, #31033 Start -->
+	<ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" btnView="true" />
+	<!-- Bug #30600, #31033 End -->
 	
 	<p:dialog id="uploadApprovalLetterDlg" widgetVar="uploadApprovalLetterDlg"
 		resizable="false" width="700px" height="350px" modal="true" 

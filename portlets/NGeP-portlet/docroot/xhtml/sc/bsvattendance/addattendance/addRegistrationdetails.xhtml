@@ -36,13 +36,15 @@
 					<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
 				</f:facet>
 				
+				<!-- #31033 start -->
 				<p:commandLink  style="color:red; font-weight:bold;" 
 					immediate="true"
 					rendered="#{scQtBriefReg.supplier.disciplinaryActions}"
-					action="#{viewSuppProfileBackingBean.onViewDisciplinaryAction(scQtBriefReg.supplier)}" 
+					action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(scQtBriefReg.supplier)}" 
 					process="@this" partialSubmit="true" update=":form">
 						<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
 				</p:commandLink><p:spacer width="2"/>
+				<!-- #31033 End -->
 				
 				<h:outputText rendered="#{!scQtBriefReg.supplier.disciplinaryActions}"
 				 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
@@ -210,5 +212,7 @@
 		</p:dataTable>
 			
 	</p:panel>
-	<ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" />
+	<!-- Bug #31033 Start -->
+	<ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}"  btnView="true" />
+	<!-- Bug #31033 end -->
 </ui:composition>
