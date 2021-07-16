@@ -372,6 +372,11 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 					messageId = MessageConst.INFO_700007;
 				}
+				//30663 start
+			    else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+				    messageId = MessageConst.INFO_700004;
+			    }
+				//30663 end
 				//#28377 - razin
 				else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_AP58_PROCEED)) {
 					messageId = MessageConst.INFO_700005;
@@ -379,7 +384,8 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				//#28377 - end razin
 				else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 					messageId = MessageConst.INFO_700008;
-				} else if(action.equalsIgnoreCase(FulfilmentConst.STOP_FULFILMENT)) {
+				}
+				else if(action.equalsIgnoreCase(FulfilmentConst.STOP_FULFILMENT)) {
 					documentType = ParameterConst.DOCTYPE_STOP_DELIVERY;
 					docNo = resDTO.getFlStopInstr().getStopInstrNo();
 					if(reqDTO.isApprover()) {
@@ -387,7 +393,8 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 					} else {
 						messageId = MessageConst.INFO_700005;
 					}
-				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+				}
+				else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 					messageId = MessageConst.INFO_745016;
 				}
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
