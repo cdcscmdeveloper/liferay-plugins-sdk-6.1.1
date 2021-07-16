@@ -4993,7 +4993,10 @@ return	remarksNotFound;
 			ScRemark supplierRejectionRemark = null;
 			List<ScRemark> flattenRemarks = new ArrayList<>();
 			
-			if(CollectionUtils.isNotEmpty(loiList)){
+			boolean rejectedLoi = recommendDtl.getLoiAwarded()==null ? false: !recommendDtl.getLoiAwarded();//11134
+			boolean rejectedLoa = recommendDtl.getLoaAwarded()==null ? false: !recommendDtl.getLoaAwarded();//11134
+			
+			if(CollectionUtils.isNotEmpty(loiList) && rejectedLoi){//11134
 				for(ScLoi each : loiList){
 					if(CollectionUtils.isNotEmpty(each.getScLoiRemarks())){
 						for(ScLoiRemark item : each.getScLoiRemarks()){
@@ -5001,8 +5004,7 @@ return	remarksNotFound;
 						}
 					}
 				}
-				
-			} else if(CollectionUtils.isNotEmpty(loaList)){
+			} else if(CollectionUtils.isNotEmpty(loaList) && rejectedLoa){//11134
 				for(ScLoa each : loaList){
 					if(CollectionUtils.isNotEmpty(each.getScLoaRemarks())){
 						for(ScLoaRemark item : each.getScLoaRemarks()){
