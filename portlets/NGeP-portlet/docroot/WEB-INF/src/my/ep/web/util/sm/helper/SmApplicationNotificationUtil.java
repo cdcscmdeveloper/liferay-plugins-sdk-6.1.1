@@ -2,9 +2,7 @@ package my.ep.web.util.sm.helper;
 
 //10908
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import my.ep.constant.pm.ParameterConst;
@@ -13,10 +11,8 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmAppl;
-import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
-import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.util.AddressUtils;
@@ -30,10 +26,6 @@ import org.apache.log4j.Logger;
 public class SmApplicationNotificationUtil {
 	private static Logger log = Logger
 			.getLogger(SmApplicationNotificationUtil.class);
-	
-	//29782
-		private static String supplierTemp = RoleCode.SUPPLIER_TEMP.value();
-		private static String supplierAdmin = RoleCode.MOF_SUPPLIER_ADMIN.value();
 	/**
 	 * Sets the approval notification parameters to be set in the
 	 * ReviewApplicationDTO and pass it to the SO level.
@@ -451,28 +443,15 @@ public class SmApplicationNotificationUtil {
 			SmAppl smAppl, SmSupplier supplier,
 			SmSupplierBasicInfoVO basicInfo, 
 			String supplierRemarks, String approvalRemarks, ReviewApplicationReqDTO reqDTO) {
-		SmAppl appl = reqDTO.getSmAppl();
-		List <SmPersonnel> smPersonnels = new ArrayList();
+		String preferredLang =CommonConstants.LANGUAGE_CODE_MALAY;
 		
-		log.info("appl>>>>>>>>>>" + appl.getApplId());
-		SmPersonnel personnels = null;
-		
-		for (SmPersonnel personnel : appl.getSmPersonnels()){
-			if (personnel.getEpRole() != null && (personnel.getEpRole().equals(supplierTemp) || personnel.getEpRole().equals(supplierAdmin))) {
-				smPersonnels.add(personnel);
-				personnels = personnel;
-				break;
-			}
-		}
-
-		String preferredLang = CommonConstants.DEFAULT_LANGUAGE_CODE;
-		reqDTO.setLangCode(personnels.getPmUser().getPreferredLanguage());
-		log.info(preferredLang+"---reqDTO.getLangCode()>>>>>>>>>>" + reqDTO.getLangCode());
-			
 		if(reqDTO.getLangCode()!=null && !"".equalsIgnoreCase(reqDTO.getLangCode())){
 			preferredLang = reqDTO.getLangCode();
 		}
 		Locale usrLocale = getLocaleByLang(preferredLang);
+		
+		log.info("preferredLang>>>>>>>>>>" + preferredLang);
+		log.info("User Locale>>>>>>>>>>" + usrLocale.getLanguage());
 		
 
 		String applType = ResourceBundleUtils.getMessage("lbl.sm.addNewCategory.notifCol1"
@@ -537,7 +516,7 @@ public class SmApplicationNotificationUtil {
 		sb.append("</tr>");
 		sb.append("</table>");
 		return sb.toString();
-
-	//29782 - END
 	}
+	//29782 - END
+	
 }
