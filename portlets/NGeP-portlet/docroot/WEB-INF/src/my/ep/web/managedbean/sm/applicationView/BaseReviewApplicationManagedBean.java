@@ -38,6 +38,7 @@ import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplInquiry;
+import my.ep.persistence.entity.sm.SmApplRejectReason;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
@@ -310,6 +311,11 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private List<DisciplinaryActionVO> disciplineVOs; 
 	private boolean disciplinaryAction;
 	//28281 - end 
+	
+	//30974 - Start (16/7/2021)
+	private List<SmApplRejectReason> smApplRejectReasonsByPO;
+	private String rejectReasonByPO;
+	//30974 - End (16/7/2021)
 	
 	//31111
 	private List<SmBulkApplOverlapCatVO> overlapCategoryVOList;
@@ -2316,4 +2322,20 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 			this.overlapCategoryVOList = overlapCategoryVOList;
 		}
 	//END 31111
+
+		public List<SmApplRejectReason> getSmApplRejectReasonsByPO() {
+			return smApplRejectReasonsByPO;
+		}
+
+		public void setSmApplRejectReasonsByPO(List<SmApplRejectReason> smApplRejectReasonsByPO) {
+			this.smApplRejectReasonsByPO = smApplRejectReasonsByPO;
+		}
+
+		public String getRejectReasonByPO() {
+			return rejectReasonByPO;
+		}
+
+		public void setRejectReasonByPO(String rejectReasonByPO) {
+			this.rejectReasonByPO = rejectReasonByPO;
+		}
 }
