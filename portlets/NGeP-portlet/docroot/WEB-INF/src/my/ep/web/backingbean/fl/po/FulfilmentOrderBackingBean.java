@@ -172,10 +172,10 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		try{
 			fulfilementOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
+			Object token = getFacesScopes().getBPMAuthenticationCtxToken(); //30663
 			
 			reqDTO.setOutcome(BpmOutcomeConst.BPM_CLOSE_MANUAL);
-			reqDTO.setToken(token);
+			reqDTO.setToken(token); //30663
 			reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			reqDTO.setUserRole(getUserRole());
@@ -367,6 +367,11 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 					messageId = MessageConst.INFO_700007;
 				}
+				//30663 start
+			    else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+				    messageId = MessageConst.INFO_700004;
+			    }
+				//30663 end
 				//#28377 - razin
 				else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_AP58_PROCEED)) {
 					messageId = MessageConst.INFO_700005;
