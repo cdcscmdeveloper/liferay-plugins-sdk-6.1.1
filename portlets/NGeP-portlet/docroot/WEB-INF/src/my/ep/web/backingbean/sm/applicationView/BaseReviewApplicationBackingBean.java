@@ -2473,44 +2473,75 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				if(!EntityHelper.isCollectionEmpty(getManagedBean()
 						.getSmAppl().getSmApplRejectReasons())){
 					//#30974 - Start - 2/7/2021
-					if (this.getManagedBean().getSmAppl().getPmStatus().getStatusId().toString()
-							.equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER)) {
-						Iterator<SmApplRejectReason> smApplRejectReasonIter = getManagedBean().getSmAppl()
-								.getSmApplRejectReasons().iterator();
-						while (smApplRejectReasonIter.hasNext()) {
-							SmApplRejectReason smApplRejectReason = smApplRejectReasonIter.next();
-							if (!smApplRejectReason.isReasonByPo()) {
-								smApplRejectReasonIter.remove();
+					if (this.getManagedBean().getSmAppl().getPmStatus().getStatusId() != null) {
+						if (this.getManagedBean().getSmAppl().getPmStatus().getStatusId().toString()
+								.equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER)) {
+							Iterator<SmApplRejectReason> smApplRejectReasonIter = getManagedBean().getSmAppl()
+									.getSmApplRejectReasons().iterator();
+							while (smApplRejectReasonIter.hasNext()) {
+								SmApplRejectReason smApplRejectReason = smApplRejectReasonIter.next();
+								if (!smApplRejectReason.isReasonByPo()) {
+									smApplRejectReasonIter.remove();
+								}
 							}
+							// To display Reject Reasons Only By PO - Start
+							List<SmApplRejectReason> ReasonsByPO = new ArrayList<SmApplRejectReason>(getManagedBean()
+									.getSmAppl().getSmApplRejectReasons());
+							getManagedBean().setSmApplRejectReasonsByPO(ReasonsByPO);
+							// To display Reject Reasons Only By PO - End
+						} else if (this.getManagedBean().getSmAppl().getPmStatus().getStatusId().toString()
+								.equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)) {
+
+							// To display Reject Reasons Only By PO - Start
+							List<SmApplRejectReason> ReasonsByPO = new ArrayList<SmApplRejectReason>();
+							for (SmApplRejectReason reason : getManagedBean().getSmAppl().getSmApplRejectReasons()) {
+								if (reason.isReasonByPo()) {
+									ReasonsByPO.add(reason);
+								}
+							}
+							if(ReasonsByPO != null && !ReasonsByPO.isEmpty()){
+								getManagedBean().setSmApplRejectReasonsByPO(ReasonsByPO);	
+							}
+							// To display Reject Reasons Only By PO - End
+
+							Iterator<SmApplRejectReason> smApplRejectReasonIter = getManagedBean().getSmAppl()
+									.getSmApplRejectReasons().iterator();
+							while (smApplRejectReasonIter.hasNext()) {
+								SmApplRejectReason smApplRejectReason = smApplRejectReasonIter.next();
+								if (smApplRejectReason.isReasonByPo()) {
+									smApplRejectReasonIter.remove();
+								}
+							}
+						} else {
+							//If there is status id but not rejected
+							// To display Reject Reasons Only By PO - Start
+							List<SmApplRejectReason> ReasonsByPO = new ArrayList<SmApplRejectReason>();
+							for (SmApplRejectReason reason : getManagedBean().getSmAppl().getSmApplRejectReasons()) {
+								if (reason.isReasonByPo()) {
+									ReasonsByPO.add(reason);
+								}
+							}
+							if(ReasonsByPO != null && !ReasonsByPO.isEmpty()){
+								getManagedBean().setSmApplRejectReasonsByPO(ReasonsByPO);			
+							}	
+							// To display Reject Reasons Only By PO - End
 						}
-						//To display Reject Reasons Only By PO - Start
-						List<SmApplRejectReason> ReasonsByPO = new ArrayList<SmApplRejectReason>(getManagedBean().getSmAppl()
-								.getSmApplRejectReasons());
-						getManagedBean().setSmApplRejectReasonsByPO(ReasonsByPO);
-						//To display Reject Reasons Only By PO - End
-					} else if (this.getManagedBean().getSmAppl().getPmStatus().getStatusId().toString()
-							.equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)) {
-						
-						//To display Reject Reasons Only By PO - Start
+					} else {
+						//If there is no status id null, it goes into this block
+						// To display Reject Reasons Only By PO - Start
 						List<SmApplRejectReason> ReasonsByPO = new ArrayList<SmApplRejectReason>();
-						for(SmApplRejectReason reason : getManagedBean().getSmAppl().getSmApplRejectReasons()){
-							if(reason.isReasonByPo()){
+						for (SmApplRejectReason reason : getManagedBean().getSmAppl().getSmApplRejectReasons()) {
+							if (reason.isReasonByPo()) {
 								ReasonsByPO.add(reason);
-							}		
-						}
-						getManagedBean().setSmApplRejectReasonsByPO(ReasonsByPO);
-						//To display Reject Reasons Only By PO - End
-						
-						Iterator<SmApplRejectReason> smApplRejectReasonIter = getManagedBean().getSmAppl()
-								.getSmApplRejectReasons().iterator();
-						while (smApplRejectReasonIter.hasNext()) {
-							SmApplRejectReason smApplRejectReason = smApplRejectReasonIter.next();
-							if (smApplRejectReason.isReasonByPo()) {
-								smApplRejectReasonIter.remove();
 							}
 						}
+						if(ReasonsByPO != null && !ReasonsByPO.isEmpty()){
+							getManagedBean().setSmApplRejectReasonsByPO(ReasonsByPO);
+						}
+						// To display Reject Reasons Only By PO - End
 					}
-					// If there is duplicate ID checking - Start
+					
+					//since there is duplicate problem occurs, If there is duplicate ID checking - Start
 					if(getManagedBean().getSmAppl().getSmApplRejectReasons() != null && getManagedBean().getSmAppl().getSmApplRejectReasons().size() > 0){
 						Map<String, SmApplRejectReason> removedDuplicateID = new HashMap<String, SmApplRejectReason>();
 						List<SmApplRejectReason> newListOfRejectID = new ArrayList<>();
