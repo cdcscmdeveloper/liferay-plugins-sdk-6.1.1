@@ -152,12 +152,14 @@
 				</p:column>
 						
 				<p:column>
+				<!-- #31033 start -->
 					<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
 						rendered="#{qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-						action="#{viewSuppProfileBackingBean.onViewDisciplinaryAction(qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" 
+						action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" 
 						process="@this" partialSubmit="true" update=":form">
 							<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
 					</p:commandLink><p:spacer width="2"/>
+					<!-- #31033 End -->
 					
 					<h:outputText rendered="#{!qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
 					 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
@@ -210,6 +212,7 @@
 			</p:dataTable>
 		</p:outputPanel>
 	</p:panel>
-	
-	<ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" />
+	<!--  #31033 Start -->
+	<ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" btnView="true" />
+	<!--  #31033 End -->
 </ui:composition>
