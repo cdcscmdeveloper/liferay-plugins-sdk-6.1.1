@@ -95,6 +95,7 @@ import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmMachineCategory;
+import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmManufacturingDtl;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -1940,7 +1941,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			getManagedBean().setLatestAdtMachine(getSVOSmSvAdtMachine(svAdtMachine));
 		}else if (obj instanceof SmSvMachine) {
 			getManagedBean().setOriSelectedMachine((SmSvMachine) obj);
-			this.getManagedBean().setSelectedSvMachine((SmSvMachine) obj);
+			//24964
+			SmSvMachine svMachine = (SmSvMachine) ((SmSvMachine) obj).cloneEntity();
+			this.getManagedBean().setSelectedSvMachine(svMachine);
 			//24964
 			getManagedBean().setLatestSvMachine(getSVOSmSvMachine((SmSvMachine) obj));
 		} else {
@@ -2608,7 +2611,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		oriMachine.getSmMachineDtl().setPurchaseYear(svMachine.getSmMachineDtl().getPurchaseYear());
 		oriMachine.getSmMachineDtl().setQty(svMachine.getSmMachineDtl().getQty());
 		oriMachine.getSmMachineDtl().setValue(svMachine.getSmMachineDtl().getValue());
-
+		//24964
+		getManagedBean().setSelectedSvMachine(new SmSvMachine());
+		getManagedBean().getSelectedSvMachine().setSmMachineDtl(new SmMachineDtl());
 		RequestContext.getCurrentInstance().execute("macDlg.hide()");
 	}
 	
