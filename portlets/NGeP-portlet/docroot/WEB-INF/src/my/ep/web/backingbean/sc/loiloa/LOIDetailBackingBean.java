@@ -116,6 +116,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
+import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalItem;
@@ -926,22 +927,57 @@ public class LOIDetailBackingBean extends
 										List<ScQtRecommend> scQtRecommendList) {
 		getManagedBean().setRecommendList(scQtRecommendList);
 		
-		if (ParameterConst.RECOMMEND_TYPE_ITEM.equals(recommendType)) {
-			getManagedBean().setItemized(true);
-			
-			for (ScQtRecommend scQtRecommend : scQtRecommendList) {
-				setRecommendedSupplierList(scQtRecommend);
-				updateRecommendBy(scQtRecommend);
-			}
-		} else {
-			getManagedBean().setItemized(false);
-			processRecommendedSuppliersByPKG(scQtRecommendList);
-			ScQtRecommend scQtRecommend = scQtRecommendList.get(0);
-			ScQtEvaluationResultDtl awardedSupplier = getRecommendedEvaluationResultDtlByPKG(scQtRecommend);
-			getManagedBean().setRecommendedSupplierList(scQtRecommend.getAwardSupplierList());	
-			getManagedBean().setSelectedSupplier(awardedSupplier);
-		}				
+			if (ParameterConst.RECOMMEND_TYPE_ITEM.equals(recommendType)) {
+				getManagedBean().setItemized(true);
+				for (ScQtRecommend scQtRecommend : scQtRecommendList) {				
+						
+						setRecommendedSupplierList(scQtRecommend);
+						updateRecommendBy(scQtRecommend);
+						/*
+						 * 31061 - SHAFFUL START
+						 */
+						settingDisciplinaryAction(scQtRecommend.getAwardSupplierList());
+						/*
+						 * 31061 - END
+						 */
+				}
+			} else {
+				getManagedBean().setItemized(false);
+				processRecommendedSuppliersByPKG(scQtRecommendList);
+				ScQtRecommend scQtRecommend = scQtRecommendList.get(0);
+				/*
+				 * 31061 - SHAFFUL START
+				 */
+				settingDisciplinaryAction(scQtRecommend.getAwardSupplierList());
+				/*
+				 * 31061 - END
+				 */
+				ScQtEvaluationResultDtl awardedSupplier = getRecommendedEvaluationResultDtlByPKG(scQtRecommend);
+				getManagedBean().setRecommendedSupplierList(scQtRecommend.getAwardSupplierList());	
+				getManagedBean().setSelectedSupplier(awardedSupplier);
+			}			
+		
+		
 	}
+	
+	/**
+	 * @see Bug#31061
+	 * @author shafful
+	 * To Setup DisciplinaryAction to be used in RecommendMA Screen
+	 */
+	private void settingDisciplinaryAction(List<ScQtEvaluationResultDtl> evalResDtl){		
+		IQTDetailSO qtDetailSO;
+		try {
+			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			for(ScQtEvaluationResultDtl qtEvalResDtl:evalResDtl){
+				ScQtProposal qtProposal = qtEvalResDtl.getQtEvaluationResult().getScQtProposal();
+				qtProposal.getScQtSupplier().setSmSupplier(qtDetailSO.retrieveActiveDisciplinaryActionBySupplier(qtProposal.getScQtSupplier().getSmSupplier()));
+			}
+		} finally {
+			qtDetailSO = null;
+		}		
+	}	
 	
 	private void processRecommendedSuppliersByPKG(List<ScQtRecommend> scQtRecommendList) {
 		ScQtRecommend scQtRecommend = scQtRecommendList.get(0);
@@ -1000,13 +1036,20 @@ public class LOIDetailBackingBean extends
 		
 		for (ScQtEvaluationResultDtl recommendedSupplier 
 										: recommendedSuppplierList) {
-			Long recommendedSupplierId = recommendedSupplier.getQtEvaluationResult()
-					.getScQtProposal().getScQtSupplier().getSmSupplier().getSupplierId();
+			/*
+			 * #31061 - SHAFFUL START
+			 */
+			SmSupplier smSupp = recommendedSupplier.getQtEvaluationResult().getScQtProposal().getScQtSupplier().getSmSupplier();
 			
-			if (awardedSupplierId != null && recommendedSupplierId.equals(awardedSupplierId)) {
+			Long recommendedSupplierId = smSupp.getSupplierId();
+			
+			if (awardedSupplierId != null && recommendedSupplierId.equals(awardedSupplierId) && !smSupp.isDisciplinaryActions()) {
 				awardedSupplier = recommendedSupplier;
 				break;
 			}
+			/*
+			 * #31061 - END
+			 */
 		}
 		
 		return awardedSupplier;
