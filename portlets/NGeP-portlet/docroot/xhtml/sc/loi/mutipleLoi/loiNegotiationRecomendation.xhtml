@@ -121,11 +121,36 @@
 									rendered="#{!empty supplierDtl.smMofAccount and 
 														supplierDtl.smMofAccount.recordStatusFlg eq DbValueConst.recordStatusActive}" />
 							</p:column>
-
+							<ui:remove>
+								#31061 - SHAFFUL (START)
+							</ui:remove>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
+									<ac:iconTooltip
+										value="#{lbl['lbl.sc.disciplinaryAction.tooltip']}" />
+								</f:facet>
+								<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
+									rendered="#{supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
+									action="#{viewSuppProfileBackingBean.onViewDisciplinaryAction(supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" 
+									process="@this" partialSubmit="true" update=":form">
+										<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
+								</p:commandLink><p:spacer width="2"/>
+								
+								<h:outputText rendered="#{!supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
+								 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />								
+							</p:column>
+							
 							<p:column selectionMode="single"
 								styleClass="td-check-box-spacing"
-								disabledSelection="#{!isPendingNegotiationStatus or 
-																	  !(supplierDtl.scQtRecommendDtl.get(0).loiAwarded) or lOIDetailBackingBean.managedBean.readOnly}" />
+								disabledSelection="#{!isPendingNegotiationStatus 
+												  or !(supplierDtl.scQtRecommendDtl.get(0).loiAwarded) 
+												  or lOIDetailBackingBean.managedBean.readOnly 
+												  or (supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions 
+												  and !supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.warningDA)}" />
+							<ui:remove>
+								#31061 - SHAFFUL (END)
+							</ui:remove>
 						</p:dataTable> 
 						
 						<p:dataTable id="recommendTbl" var="item"
@@ -158,10 +183,14 @@
 								<p:dataList var="recommendedSuppl" value="#{item.awardSupplierList}" type="none"
 											rendered="#{isPendingNegotiationStatus}">
 									<p:column>
+										<ui:remove>
+											31061 - SHAFFUL (Added filter disciplinaryAction)
+										</ui:remove>
 										<p:selectBooleanCheckbox
 											value="#{recommendedSuppl.scQtRecommendDtl.get(0).recordStatus}"
 											disabled="#{!isPendingNegotiationStatus or 
-															!(recommendedSuppl.scQtRecommendDtl.get(0).loiAwarded) or lOIDetailBackingBean.managedBean.readOnly}"
+															!(recommendedSuppl.scQtRecommendDtl.get(0).loiAwarded) or lOIDetailBackingBean.managedBean.readOnly
+															or recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
 											style="margin-right:1px !important;">
 											<p:ajax event="change" partialSubmit="true" process="@this"
 													update="@this, @([id$=recommendTbl])"
@@ -204,7 +233,6 @@
 									</p:column>
 								</p:dataList>
 							</p:column>
-
 							<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}">
 								<ui:repeat var="recommendedSuppl"
 									value="#{item.awardSupplierList}">
@@ -216,7 +244,32 @@
 										rendered="#{isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}" />
 								</ui:repeat>
 							</p:column>
-
+							<ui:remove>
+								#31061 - SHAFFUL (START)
+							</ui:remove>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
+									<ac:iconTooltip
+										value="#{lbl['lbl.sc.disciplinaryAction.tooltip']}" />
+								</f:facet>
+								<p:dataList var="recommendedSuppl" value="#{item.awardSupplierList}" type="none"
+											rendered="#{isPendingNegotiationStatus}">
+									<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
+													rendered="#{recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
+													action="#{viewSuppProfileBackingBean.onViewDisciplinaryAction(recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" 
+													process="@this" partialSubmit="true" update=":form">
+											<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
+										</p:commandLink>							
+										<h:outputText rendered="#{!recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
+										 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
+										 <h:outputText escape="false" value="&#60;br &#47;&#62;"
+										rendered="#{isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}" />
+								</p:dataList>																							
+							</p:column>
+							<ui:remove>
+								#31061 - SHAFFUL (END)
+							</ui:remove>
 							<p:column headerText="#{lbl['lbl.sc.price.type']}">
 								<h:outputText
 									value="#{lOIDetailBackingBean.getParameterDesc(item.requestItem.tplSpecQuestion.clPriceTypeCode)}" />
@@ -333,8 +386,7 @@
 																	item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalStandard) 
 															and (item.activeSupplierCount lt 2) }" />
 								</h:panelGroup>
-							</p:column>
-
+							</p:column>							
 							<p:column selectionMode="multiple"
 								styleClass="td-check-box-spacing"
 								rendered="#{isPendingNegotiationStatus}" />
@@ -376,5 +428,11 @@
 		remarkList="#{lOIDetailBackingBean.managedBean.scQtCommittee.qtCommitteRemarks}"
 		showAttachment="false"
 		readonly="#{lOIDetailBackingBean.managedBean.readOnly}" />
-	
+	<ui:remove>
+		#31061 - SHAFFUL 
+	</ui:remove>
+	<ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}"  btnView="true" />
+	<ui:remove>
+		#31061 - END
+	</ui:remove>
 </ui:composition>
