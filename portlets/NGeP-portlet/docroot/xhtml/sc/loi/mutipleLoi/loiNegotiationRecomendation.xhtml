@@ -124,7 +124,12 @@
 							<ui:remove>
 								#31061 - SHAFFUL (START)
 							</ui:remove>
-							<p:column headerText="#{lbl['lbl.sc.discipline.action.taken']}">
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
+									<ac:iconTooltip
+										value="#{lbl['lbl.sc.disciplinaryAction.tooltip']}" />
+								</f:facet>
 								<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
 									rendered="#{supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
 									action="#{viewSuppProfileBackingBean.onViewDisciplinaryAction(supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" 
@@ -228,11 +233,26 @@
 									</p:column>
 								</p:dataList>
 							</p:column>
-							
+							<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}">
+								<ui:repeat var="recommendedSuppl"
+									value="#{item.awardSupplierList}">
+									<h:outputText
+										value="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
+												fn:toUpperCase(recommendedSuppl.scQtRecommendDtl.get(0).scQtProposalAmount.scQtProposal.bumi))}"
+										rendered="#{isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}" />
+									<h:outputText escape="false" value="&#60;br &#47;&#62;"
+										rendered="#{isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}" />
+								</ui:repeat>
+							</p:column>
 							<ui:remove>
 								#31061 - SHAFFUL (START)
 							</ui:remove>
-							<p:column headerText="#{lbl['lbl.sc.discipline.action.taken']}">
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
+									<ac:iconTooltip
+										value="#{lbl['lbl.sc.disciplinaryAction.tooltip']}" />
+								</f:facet>
 								<p:dataList var="recommendedSuppl" value="#{item.awardSupplierList}" type="none"
 											rendered="#{isPendingNegotiationStatus}">
 									<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
@@ -250,18 +270,6 @@
 							<ui:remove>
 								#31061 - SHAFFUL (END)
 							</ui:remove>
-							<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}">
-								<ui:repeat var="recommendedSuppl"
-									value="#{item.awardSupplierList}">
-									<h:outputText
-										value="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
-												fn:toUpperCase(recommendedSuppl.scQtRecommendDtl.get(0).scQtProposalAmount.scQtProposal.bumi))}"
-										rendered="#{isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}" />
-									<h:outputText escape="false" value="&#60;br &#47;&#62;"
-										rendered="#{isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}" />
-								</ui:repeat>
-							</p:column>
-
 							<p:column headerText="#{lbl['lbl.sc.price.type']}">
 								<h:outputText
 									value="#{lOIDetailBackingBean.getParameterDesc(item.requestItem.tplSpecQuestion.clPriceTypeCode)}" />
