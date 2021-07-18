@@ -1234,6 +1234,7 @@ u {
 				#end
 		</tbody>
 		</table>
+		<div class="break-after"><br/></div>
 		<br/>
 		<br/>
 	  #else 
@@ -1528,7 +1529,7 @@ u {
 					#end
 			</tbody>
 			</table>
-			
+			<div class="break-after"><br/></div>
 			<br/>
 			<br/>
 		#end
@@ -1561,6 +1562,7 @@ u {
 								#end
 						#end
 					</table>
+					<div class="break-after"><br/></div>
 			</span></td>
 		</tr>
 	#end
