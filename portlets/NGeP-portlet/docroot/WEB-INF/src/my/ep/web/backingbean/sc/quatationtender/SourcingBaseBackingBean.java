@@ -4583,7 +4583,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						} else if (SourcingConstants.EVALUATION_TYPE_TIER2.equals(evaluationType)) {
 							if (SourcingConstants.OPENING_REPORT.equals(report.getTitle())
 									|| SourcingConstants.TECHNICAL_EVALUATION_REPORT.equals(report.getTitle())
-									|| SourcingConstants.FINANCIAL_EVALUATION_REPORT.equals(report.getTitle())) {
+									|| SourcingConstants.FINANCIAL_EVALUATION_REPORT.equals(report.getTitle())
+									|| SourcingConstants.DEMO_EVALUATION_REPORT.equalsIgnoreCase(report.getTitle())) {//#28784
 								getManagedBean().getEvaluationReportList().add(report);
 								iterator.remove();
 							}
