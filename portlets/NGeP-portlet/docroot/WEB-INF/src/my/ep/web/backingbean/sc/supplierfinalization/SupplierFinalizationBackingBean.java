@@ -2689,7 +2689,7 @@ return	remarksNotFound;
 	}
 	//28834  ends
 	
-	//28834 start
+	 //28834 start.
 	 public boolean checkDisableBfButtonAfterValidation(){
 		 
 		    ScQt scQt = this.getManagedBean().getScQt();
@@ -2702,19 +2702,20 @@ return	remarksNotFound;
 
 			 if(!isBpkCentralContract){
 		         List<ScQtMeeting> meetingListList = getManagedBean().getMeetingList();
-		         for (ScQtMeeting meeting : meetingListList) {
-	 	        	  if (null != meeting.getMeetingStatus() && null != meeting.getMeetingStatus().getStatusId()
-                          && QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus().getStatusId())
-                          && meeting.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
-					             hidden = true;
-					             this.getManagedBean().setDisableBfButton(true);
-                   } 
+		         if (CollectionUtils.isNotEmpty(meetingListList) && meetingListList.size() > 0) {
+		        	 for (ScQtMeeting meeting : meetingListList) {
+		        		 if (null != meeting.getMeetingStatus() && null != meeting.getMeetingStatus().getStatusId()
+		        				 && QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus().getStatusId())
+		        				 && meeting.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
+		        			 hidden = true;
+		        			 this.getManagedBean().setDisableBfButton(true);
+		        		 } 
+		        	 }
 		         }
 	         }
 	         return hidden;
-}
-	
-		//28834  end
+	 }
+	 //28834  end.
 	
 	//28834 start
 		private SuppFinalizationReqDTO validateInfobreif(int index) {
