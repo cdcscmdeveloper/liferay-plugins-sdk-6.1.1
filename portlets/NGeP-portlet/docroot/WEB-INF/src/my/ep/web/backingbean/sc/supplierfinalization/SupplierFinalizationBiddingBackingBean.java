@@ -537,12 +537,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 				
 				if (MapUtils.isNotEmpty(
 						this.getManagedBean().getBidSchedulesByZone())) {
-					currentZoneBidSchedules 
-						= this.getManagedBean().getBidSchedulesByZone()
-							  .get(selectedZoneId);
-					currentZoneBidPackageBeans
-						= this.getManagedBean().getBidPackageBeansByZone()
-							  .get(selectedZoneId);
+					currentZoneBidSchedules = this.getManagedBean().getBidSchedulesByZone().get(selectedZoneId);
+					currentZoneBidPackageBeans = this.getManagedBean().getBidPackageBeansByZone().get(selectedZoneId);
 				}
 				if (pkgShortlistedSuppliersByZone == null) {
 					pkgShortlistedSuppliersByZone 
@@ -687,8 +683,11 @@ public class SupplierFinalizationBiddingBackingBean extends
 		
 		getManagedBean().setScheduledBid(bidScheduleList.get(0));
 		getManagedBean().setEstimatedCost(estimatedCost);
-		getManagedBean().setBiddingPackagePriceList(
-				biddingPackagePriceList);
+		
+		/*
+		 * 31101 - Shafful 
+		 */
+		settingDisciplinaryAction(biddingPackagePriceList,null);		
 		
 		BigDecimal bumiSuppLowestOfferedPrice = null;
 		BigDecimal lowestNonBumiOfferedPrice = null;
@@ -721,7 +720,10 @@ public class SupplierFinalizationBiddingBackingBean extends
 					packageBean.setShortlistedSupplier(shortlistedSupplier);
 				}
 				if (supplierId.equals(awardedSupplierId)) {
-					getManagedBean().setSelectedPackageBean(packageBean);
+					/*
+					 * Bug 31101 - Added disciplinary Action filter
+					 */
+					getManagedBean().setSelectedPackageBean(packageBean.getScBidSupplier().getSmSupplier().isDisciplinaryActions()?null:packageBean);
 					if (getManagedBean().isZonal()) {
 						selectedPackageBeans.put(getManagedBean().getSelectedZone()
 								.getSpecZoneId(), packageBean);
@@ -744,6 +746,31 @@ public class SupplierFinalizationBiddingBackingBean extends
 		if (CollectionUtils.isNotEmpty(nonBumiPriceList)) {
 			getManagedBean().setNonBumiAvailable(true);
 		}		
+	}
+	
+	/**
+	 *  @see Bug #31101
+	 *  @author shafful
+	 *  To Setting Disciplinary Action during online bidding recommendation Stage
+	 */
+	private void settingDisciplinaryAction(List<BidPackageBean> biddingPackagePriceList, List<BidItemBean> biddingItemPriceList){
+		IQTDetailSO qtDetailSO;
+		try {
+			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			if(biddingPackagePriceList!=null&&biddingPackagePriceList.size()>0){
+				for(BidPackageBean bidPackage: biddingPackagePriceList){
+					bidPackage.getScBidSupplier().setSmSupplier(qtDetailSO.retrieveActiveDisciplinaryActionBySupplier(bidPackage.getScBidSupplier().getSmSupplier()));
+				}
+				getManagedBean().setBiddingPackagePriceList(biddingPackagePriceList);
+			}else{
+				for(BidItemBean bidItem : biddingItemPriceList){
+					bidItem.setSupplier(qtDetailSO.retrieveActiveDisciplinaryActionBySupplier(bidItem.getSupplier()));
+				}
+			}
+		} finally {
+			qtDetailSO = null;
+		}
 	}
 	
 	private void retrieveBiddingItems(ScheduleBiddingReqDTO reqDTO) {
@@ -935,6 +962,11 @@ public class SupplierFinalizationBiddingBackingBean extends
 				if (CollectionUtils.isNotEmpty(biddingItemPriceList)) {
 					List<BigDecimal> nonBumiPriceList = new ArrayList<BigDecimal>();
 					
+					/*
+					 * 31101 - WIP Impact , added Disciplinary Action 
+					 */
+					settingDisciplinaryAction(null,biddingItemPriceList);
+					
 					for (BidItemBean itemBean : biddingItemPriceList) {
 						SmSupplier smSupplier = itemBean.getSupplier();
 						itemBean.setSupplierName(smSupplier.getCompanyName());
@@ -950,7 +982,10 @@ public class SupplierFinalizationBiddingBackingBean extends
 									.getQtEvaluationResult().getScQtProposal());
 							itemBean.setShortlistedSupplier(shortlistedSupplier);
 						}
-						if (smSupplier.getSupplierId().equals(awardedSupplierId)) {
+						/*
+						 * 31101 - Added Disciplinary Action Validation
+						 */
+						if (smSupplier.getSupplierId().equals(awardedSupplierId) && !itemBean.getSupplier().isDisciplinaryActions()) {
 							getManagedBean().setSelectedBidItemBean(itemBean);
 							selectedItemBeans.put(bidItem.getBidItemId(), itemBean);
 						}
