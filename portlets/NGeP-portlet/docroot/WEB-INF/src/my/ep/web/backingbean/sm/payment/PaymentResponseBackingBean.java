@@ -638,7 +638,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			String[] msgParam = null;
 			
 			//#29481 - Start - added INFO_721068
-			if(getManagedBean().getMessageId().equalsIgnoreCase(MessageConst.INFO_721068) || getManagedBean().getMessageId().equalsIgnoreCase(MessageConst.INFO_721065)){
+			if(getManagedBean().getMessageId() != null && (getManagedBean().getMessageId().equalsIgnoreCase(MessageConst.INFO_721068) || getManagedBean().getMessageId().equalsIgnoreCase(MessageConst.INFO_721065))){
 			//#29481 - End
 				msgParam = getManagedBean().getMsgParam();
 			}else{
