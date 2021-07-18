@@ -33,11 +33,11 @@
 					onkeyup="limitTextArea(this,255);"
 					onkeydown="limitTextArea(this,255);"
 					onmouseout="limitTextArea(this,255);"
-					value="#{demoSpecTempList.scQtDemoSchedule.demoLocation}" id="meetingLocation"
-					disabled="#{disableMeeting}">
+					value="#{demoSpecTempList.scQtDemoSchedule.demoLocation}"
+					id="demoLocation" disabled="#{disableMeeting}">
 					<p:ajax partialSubmit="true" process="@this" update="@this,mtgLoc" />
 				</p:inputTextarea>
-				<p:message id="mtgLoc" for="meetingLocation" display="icon"
+				<p:message id="mtgLoc" for="demoLocation" display="icon"
 					showDetail="false"></p:message>
 			</p:column>
 
@@ -77,8 +77,4 @@
 
 		</p:dataTable>
 	</h:panelGroup>
-
-
-
-
 </ui:composition>

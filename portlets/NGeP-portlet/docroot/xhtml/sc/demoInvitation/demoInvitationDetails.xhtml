@@ -10,37 +10,63 @@
 		<p:panel header="#{lbl['lbl.sc.demo.details']}"
 			text-transform="uppercase" toggleable="true"
 			rendered="#{demoInvBB.managedBean.qualifiedSupplier}">
-			<table>
+			<table style="width: 100%;">
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.invitation.by']}" /><br />
-						<p:selectOneRadio id="invById"
-							required="#{empty param['skipvalidation']}"
-							label="#{lbl['lbl.invitation.by']}"
-							value="#{demoInvBB.managedBean.demoInvBy}">
-							<f:selectItems value="#{demoInvBB.getAllByItemDropDown()}" />
-							<p:ajax event="change"
-								listener="#{demoInvBB.onchangeInvBy(demoInvBy)}" process="@this"
-								partialSubmit="true" update="@form"></p:ajax>
-						</p:selectOneRadio> <p:message id="invByMsgId" for="invById" display="icon" /></td>
-					<td><ac:iconTooltip
-							value="#{lbl['lbl.invitation.by.tooltip']}" /></td>
+					<td>
+						<table>
+							<tr>
+								<td><p:outputLabel value="#{lbl['lbl.invitation.by']}" /></td>
+								<td><p:selectOneRadio id="invById"
+										required="#{empty param['skipvalidation']}"
+										label="#{lbl['lbl.invitation.by']}"
+										value="#{demoInvBB.managedBean.demoInvBy}">
+										<f:selectItems value="#{demoInvBB.getAllByItemDropDown()}" />
+										<p:ajax event="change"
+											listener="#{demoInvBB.onchangeInvBy(demoInvBy)}"
+											process="@this" partialSubmit="true" update="@form"></p:ajax>
+									</p:selectOneRadio></td>
+								<td><p:message id="invByMsgId" for="invById" display="icon" />
+									<ac:iconTooltip value="#{lbl['lbl.invitation.by.tooltip']}" /></td>
+							</tr>
+						</table>
+					</td>
 				</tr>
 				<tr>
-					<td id="demoInstruction"><c:choose>
-							<c:when test="#{demoInvBB.managedBean.demoInvBy eq 'AI'}">
-								<p:outputLabel value="#{lbl['lbl.demo.instruction.all']}" />
-								<ui:include src="demoSubTableAllItemList.xhtml" />
-								<ui:include src="demoRemarkAndContactPerson.xhtml" />
-							</c:when>
-							<c:when test="#{demoInvBB.managedBean.demoInvBy eq 'BI'}">
-								<p:outputLabel value="#{lbl['lbl.demo.instruction.item']}" />
-								<ui:include src="demoSubTableItemList.xhtml" />
-								<ui:include src="demoRemarkAndContactPerson.xhtml" />
-							</c:when>
-							<c:otherwise>
-								<p:outputLabel value="#{lbl['lbl.demo.instruction']}" />
-							</c:otherwise>
-						</c:choose></td>
+					<td id="demoInstruction">
+						<table>
+							<c:choose>
+								<c:when test="#{demoInvBB.managedBean.demoInvBy eq 'AI'}">
+									<tr>
+										<td style="padding-right: 540px;"><p:outputLabel
+												value="#{lbl['lbl.demo.instruction.all']}" /></td>
+									</tr>
+									<tr>
+										<td><ui:include src="demoSubTableAllItemList.xhtml" /></td>
+									</tr>
+									<tr>
+										<td><ui:include src="demoRemarkAndContactPerson.xhtml" /></td>
+									</tr>
+								</c:when>
+								<c:when test="#{demoInvBB.managedBean.demoInvBy eq 'BI'}">
+									<tr>
+										<td style="padding-right: 540px;"><p:outputLabel
+												value="#{lbl['lbl.demo.instruction.item']}" /></td>
+									</tr>
+									<tr>
+										<td><ui:include src="demoSubTableItemList.xhtml" /></td>
+									</tr>
+									<tr>
+										<td><ui:include src="demoRemarkAndContactPerson.xhtml" /></td>
+									</tr>
+								</c:when>
+								<c:otherwise>
+									<tr>
+										<td><p:outputLabel value="#{lbl['lbl.demo.instruction']}" /></td>
+									</tr>
+								</c:otherwise>
+							</c:choose>
+						</table>
+					</td>
 				</tr>
 			</table>
 		</p:panel>

@@ -86,7 +86,6 @@
 						<table width="100%">
 							<tr>
 								<td>
-									<!-- 									<c:if test="#{!categoryCodeReadonly and !specCommitteeReadOnly}"> -->
 									<div class="ppRightBtn">
 										<p:commandButton value="#{lbl['lbl.btn.add']}"
 											styleClass="BtnSpacing" process="@this, contactPrsId"
@@ -101,18 +100,7 @@
 											oncomplete="contactPersonDeletePopUp.show();"
 											update="@([id$=#{contactPersonDeleteId}])"
 											onclick="contactPersonDeletePopUp.show()" />
-									</div> 
-<!-- 									<ui:param name="contactPersonDeleteId" -->
-<!-- 										value="contactPersonDeleteId" />  -->
-<!-- 										<ac:confirmationPopup -->
-<!-- 										id="#{contactPersonDeleteId}" -->
-<!-- 										widget="contactPersonDeletePopUpDeletePopUp" -->
-<!-- 										okAction="demoInvBB.deleteContactPerson" width="33%" -->
-<!-- 										height="100" title="#{lbl['lbl.btn.dialog.cofirm.header']}" -->
-<!-- 										content="#{lbl['lbl.sc.dialog.confirm.contact.person.dtls']}" -->
-<!-- 										update="@([id$=democontactPersonPanel])" /> 									</c:if> -->
-
-									<p:confirmDialog id="contactPersonDeleteId"
+									</div> <p:confirmDialog id="contactPersonDeleteId"
 										widgetVar="contactPersonDeletePopUp"
 										header="#{lbl['lbl.sc.confirmation']}"
 										message="#{lbl['lbl.sc.dialog.confirm.contact.person.dtls']}"
