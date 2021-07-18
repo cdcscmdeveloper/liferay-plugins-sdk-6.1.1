@@ -52,8 +52,8 @@
 						<p:commandButton value="#{lbl['lbl.btn.view']}" process="@this"
 							styleClass="BtnSpacing"
 							action="#{demoInvBB.demoSpectechnicalChecklist(index,demoSpecItemList,'T')}"
-							oncomplete="demoSpecList.show();"
-							update="@([id$=questionTbl])" partialSubmit="true" />
+							oncomplete="demoSpecList.show();" update="@([id$=questionTbl])"
+							partialSubmit="true" />
 					</h:panelGroup>
 				</p:column>
 
@@ -249,12 +249,10 @@
 
 			<p:column style="width:125px;">
 				<p:outputPanel id="demoPop">
-<!-- 					<p:selectOneRadio value="#{question.itemReqDemo}"> -->
-<!-- 						<f:selectItems -->
-<!-- 							value="#{templateSpecBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" /> -->
-<!-- 					</p:selectOneRadio> -->
-					<p:inputText id="demoId" value="#{demoInvBB.getParameterDesc(ParameterTypeConst.yesNoFlag, 
-								fn:toUpperCase(question.itemReqDemo))}" style="width:200px;" disabled="true" />
+					<p:inputText id="demoId"
+						value="#{demoInvBB.getParameterDesc(ParameterTypeConst.yesNoFlag, 
+								fn:toUpperCase(question.itemReqDemo))}"
+						style="width:200px;" disabled="true" />
 				</p:outputPanel>
 			</p:column>
 		</p:dataTable>
