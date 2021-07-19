@@ -360,6 +360,7 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 				#end
 		</tbody>
 		</table>
+		<div style="page-break-after:always;"><br/></div>
 		<br/>
 		<br/>
 	  #else 
@@ -653,7 +654,7 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 					#end
 			</tbody>
 			</table>
-			
+			<div style="page-break-after:always;"><br/></div>
 			<br/>
 			<br/>
 		#end
@@ -686,6 +687,7 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 								#end
 						#end
 					</table>
+					<div style="page-break-after:always;"><br/></div>
 			</span></td>
 		</tr>
 	#end
