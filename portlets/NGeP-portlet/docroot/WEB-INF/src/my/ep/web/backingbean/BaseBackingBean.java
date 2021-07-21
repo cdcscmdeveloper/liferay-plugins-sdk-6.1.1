@@ -47,6 +47,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.faces.validator.ValidatorException;
 import javax.imageio.ImageIO;
+import javax.portlet.PortletConfig;
+import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -152,6 +154,8 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.sm.helper.VmUtil;
 import my.ep.web.util.template.DocumentGenerator;
+import my.epx.bean.UserActivityBean;
+import my.epx.monitor.UserActivityLogger;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
@@ -285,10 +289,62 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 			log.info("managedBean:" + managedBean);
 		}
-
+		
+		//20210721@fadhli - #31062 Added user activity logging similar to the one added in FacesScopes - Start
+		logUserActivity();
+		//20210721@fadhli - #31062 Added user activity logging similar to the one added in FacesScopes - End
+		
 		return managedBean;
 
 	}
+	
+	//20210721@fadhli - #31062 Added user activity logging similar to the one added in FacesScopes - Start
+	public void logUserActivity() {
+		HttpServletRequest httpServletRequest = PortalUtil.getHttpServletRequest((PortletRequest) FacesContext
+				.getCurrentInstance().getExternalContext().getRequest());
+		
+		HttpServletResponse httpServletResponse = PortalUtil.getHttpServletResponse((PortletResponse) FacesContext
+				.getCurrentInstance().getExternalContext().getResponse());
+		
+		FacesScopes facesScopes = new FacesScopes();
+		
+		PortletRequest portletRequest = (PortletRequest) FacesContext.getCurrentInstance()
+				.getExternalContext().getRequest();
+		
+		UserActivityBean userActivityBean = new UserActivityBean();
+		userActivityBean.setLoginId(facesScopes.getUserScreenName());
+		userActivityBean.setSessionId(portletRequest.getRequestedSessionId());
+		userActivityBean.setPortletPage(getPortletPage(portletRequest.getAttribute("javax.portlet.config")));
+		userActivityBean.setPortletId(getObjectToString(httpServletRequest.getAttribute("PORTLET_ID")));
+		userActivityBean.setRequestMethod(httpServletRequest.getMethod());
+		userActivityBean.setRequestedUrl(getObjectToString(httpServletRequest.getAttribute("CURRENT_COMPLETE_URL")));
+		userActivityBean.setFriendlyUrl(getObjectToString(httpServletRequest.getAttribute("FRIENDLY_URL")));
+		userActivityBean.setUserAgent(httpServletRequest.getHeader("user-agent"));
+		userActivityBean.setResponseStatus(httpServletResponse.getStatus());
+		userActivityBean.setTriggerClass(this.getClass().getName());
+		log.info("[logUserActivity] userActivityLoggingEnabled: " 
+				+ EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_USER_ACTIVITY_LOGGING));
+		
+		UserActivityLogger.getInstance().log(userActivityBean);
+	}
+	
+	private String getObjectToString(Object object) {
+		String string = StringUtils.EMPTY;
+		if (null != object) {
+			string = object.toString();
+		}
+		return string;
+	}
+	
+	private String getPortletPage(Object attributeObject) {
+		String portletPage = StringUtils.EMPTY;
+		if (null != attributeObject && attributeObject instanceof PortletConfig) {
+			portletPage = ((PortletConfig) attributeObject).getInitParameter("javax.portlet.faces.defaultViewId.view");
+		}
+		
+		return portletPage;
+	}
+	//20210721@fadhli - #31062 Added user activity logging similar to the one added in FacesScopes - End
 
 	/*
 	 * private String getConcatId(){ String concatId = "";
