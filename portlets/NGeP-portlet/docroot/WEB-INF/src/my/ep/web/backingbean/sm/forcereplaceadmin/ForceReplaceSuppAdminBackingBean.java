@@ -226,8 +226,10 @@ public class ForceReplaceSuppAdminBackingBean extends
 	//#28765 - End
 	public void declare() {
 		if (getManagedBean().isExistingUser()) {
+			log.info("------TROUBLESHOOT 28765 REPLACE EXISTING------");
 			replaceWithExistingUser();
 		} else {
+			log.info("------TROUBLESHOOT 28765 REPLACE NEW------");
 			replaceWithNewUser();
 		}
 	}
@@ -282,8 +284,10 @@ public class ForceReplaceSuppAdminBackingBean extends
 		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO()
 				.replaceAdminWithNewPersonnel(getReqDTO());
 		//START 12981
-		//#28765 - Start - to pass through inactiveSupplierRole for G2G normal replace supplier admin		
+		//#28765 - Start - to pass through inactiveSupplierRole for G2G normal replace supplier admin	
+		log.info("------TROUBLESHOOT 28765 REPLACE NEW ------");
 		if((getManagedBean().isBypassFlag()==false && !getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER))) {
+			log.info("------TROUBLESHOOT 28765 REPLACE NEW ------");
 			PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO()
 					.inactiveSupplierRole(getOldAdminReqDTO());
 		} else if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF) && 
@@ -316,6 +320,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 //		}
 		//#28765 - End
 		//END 12981
+			log.info("------TROUBLESHOOT 28765 EXISTING 22------");
 		redirectToSuccessPage(resDto);
 	}
 	
