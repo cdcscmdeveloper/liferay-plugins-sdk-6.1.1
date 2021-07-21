@@ -122,7 +122,7 @@
 				<tr>
 					<td align="center">
 						<p:inputTextarea value="#{suppFinalizationBackingBean.managedBean.selectedBriefingReport.reportContent}" 
-								 		 scrollHeight="0" rows="15" cols="130" autoResize="false"
+								 		 scrollHeight="0" rows="15" cols="130" autoResize="false" maxlength="1999"
 								 		 disabled="#{suppFinalizationBackingBean.managedBean.readOnly}"
 								 		 rendered="#{suppFinalizationBackingBean.managedBean.selectedBriefingReport ne null}">
 							<p:ajax partialSubmit="true" process="@this" update="@this" />
