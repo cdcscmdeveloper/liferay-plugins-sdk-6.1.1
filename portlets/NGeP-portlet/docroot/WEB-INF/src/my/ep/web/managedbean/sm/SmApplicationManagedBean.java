@@ -603,6 +603,11 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	// #30974 - START
 	private List<PmReasonDesc> selectedRecommendRejectReasonDescs;
 	// #30974 - END
+	
+	//#31043 START
+	private boolean categoryCodeVerified;
+	private boolean documentVerified;
+	//#31043 END
 
 	
 	private class RejectReasonPagingDataModel extends
@@ -4434,5 +4439,23 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setSelectedRecommendRejectReasonDescs(List<PmReasonDesc> selectedRecommendRejectReasonDescs) {
 		this.selectedRecommendRejectReasonDescs = selectedRecommendRejectReasonDescs;
 	}
+	
+	//#31043 START
+	public boolean isCategoryCodeVerified() {
+		return categoryCodeVerified;
+	}
+
+	public void setCategoryCodeVerified(boolean categoryCodeVerified) {
+		this.categoryCodeVerified = categoryCodeVerified;
+	}
+
+	public boolean isDocumentVerified() {
+		return documentVerified;
+	}
+
+	public void setDocumentVerified(boolean documentVerified) {
+		this.documentVerified = documentVerified;
+	}
+	//#31043 END
 
 }
