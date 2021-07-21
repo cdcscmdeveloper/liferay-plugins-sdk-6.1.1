@@ -83,21 +83,29 @@ public class DisciplinaryActionRest {
 			if(updateDAList != null
 					&& updateDAList.getSmDisciplinaryActions() != null
 					&& updateDAList.getSmDisciplinaryActions().size() > 0){
+				
+				//31384 - start
+				DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+				Date today = formatter.parse(formatter.format(new Date()));
+				
 				for (SmDisciplinaryAction pendingDisc : updateDAList.getSmDisciplinaryActions()) {
 					log.info("updateDAList. supplier id=============="+pendingDisc.getSmSupplier().getSupplierId());
 					 
-					if(pendingDisc != null
-							&& pendingDisc.getSmSupplier() != null){
+					if (pendingDisc != null && pendingDisc.getSmSupplier() != null) {
 
-						pendingDisc.getSmSupplier();
-						pendingDisc.getSmSupplier().getSmAppl(); 
-						//27426 : Disciplinary Action - end
-						PmUser user = SmCommonUtil.getUserByUserId(pendingDisc.getChangedBy());
-						List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(user
-								.getUserId());
-						SmServiceLookup.getSupplierDataMaintenanceSO().updatePendingDisciplinaryAction(pendingDisc, user, userRoles);
-					}	
+						if (pendingDisc.getStartDate().compareTo(today) <= 0) {
+
+							pendingDisc.getSmSupplier();
+							pendingDisc.getSmSupplier().getSmAppl();
+							// 27426 : Disciplinary Action - end
+							PmUser user = SmCommonUtil.getUserByUserId(pendingDisc.getChangedBy());
+							List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(user.getUserId());
+							SmServiceLookup.getSupplierDataMaintenanceSO().updatePendingDisciplinaryAction(pendingDisc,
+									user, userRoles);
+						}
+					}
 				}
+				//31384 - end
 			}
 			
 			//28798: Disciplinary Action - start - 26238 - reopen
@@ -147,9 +155,6 @@ public class DisciplinaryActionRest {
 			if (updateSuspendList != null && updateSuspendList.getSmDisciplinaryActions() != null
 					&& updateSuspendList.getSmDisciplinaryActions().size() > 0) {
 
-				//TODO
-				//to check suspend + pending + expired
-				
 				DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 				Date today = new Date();
 				Date todayWithZeroTime = formatter.parse(formatter.format(today));
