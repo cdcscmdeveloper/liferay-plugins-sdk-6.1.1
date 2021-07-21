@@ -13,14 +13,17 @@ import javax.faces.event.AjaxBehaviorEvent;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.common.notify.INotifySO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.NotificationTextConst;
 import my.ep.dto.pm.common.notify.NotifyReqDTO;
 import my.ep.dto.pm.common.notify.NotifyResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmNotifyUser;
+import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -29,10 +32,8 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.pm.notify.NotifyManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.primefaces.event.SelectEvent;
-import org.primefaces.event.UnselectEvent;
 
 @ManagedBean(name = "notifyBackingBean")
 @ViewScoped
@@ -218,10 +219,24 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 									ModuleCodeConst.PROFILE_MANAGEMENT,
 									INotifySO.class);
 
+					//20200601@asyrafhaziq_Enhancement #14291 - Start
 					// Filter By - Notification Mode
+					//searchBean.getDataFilterBeans().add(
+					//		new SearchFilterBean("pmNotifyDashboard.notifyDashboardId",
+					//				SearchOperator.OPERATOR_IS_NOT_NULL.value(), null));
+					
 					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("pmNotifyDashboard.notifyDashboardId",
-									SearchOperator.OPERATOR_IS_NOT_NULL.value(), null));
+							new SearchMultiFilterBean(
+									new SearchFilterBean(
+											"pmNotifyDashboard.notifyDashboardId",
+											SearchOperator.OPERATOR_IS_NOT_NULL.value(),
+											null), 
+									new SearchFilterBean(
+											"pmNotifyDashboardQt.notifyDashboardQtId",
+											SearchOperator.OPERATOR_IS_NOT_NULL.value(),
+											null,
+									SearchCondition.CONDITION_OR.value())));
+					//20200601@asyrafhaziq_Enhancement #14291 - End
 
 					// Filter By - recipient Id
 					searchBean.getDataFilterBeans().add(
@@ -254,19 +269,46 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 					}
 					
 					if(getManagedBean().getSearchItem() != null && getManagedBean().getSearchItem().equals("3")){
+						//20200601@asyrafhaziq_Enhancement #14291 - Start
+						//searchBean.getDataFilterBeans().add(
+						//		new SearchFilterBean("pmNotifyDashboard.subject",
+						//				SearchOperator.OPERATOR_LIKE.value(), 
+						//				getManagedBean().getSearchValue().trim(), true));
+						
 						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean("pmNotifyDashboard.subject",
-										SearchOperator.OPERATOR_LIKE.value(), 
-										getManagedBean().getSearchValue().trim(), true));
+								new SearchMultiFilterBean(
+										new SearchFilterBean(
+												"pmNotifyDashboard.subject",
+												SearchOperator.OPERATOR_LIKE.value(),
+												getManagedBean().getSearchValue().trim(), true), 
+										SearchCondition.CONDITION_OR.value(),
+										new SearchFilterBean(
+												"pmNotifyDashboardQt.subject",
+												SearchOperator.OPERATOR_LIKE.value(),
+												getManagedBean().getSearchValue().trim(), true)));
+						//20200601@asyrafhaziq_Enhancement #14291 - End
 					}
 					
 					
 					if(getManagedBean().getSearchItem() != null && getManagedBean().getSearchItem().equals("4")){
+						//20200601@asyrafhaziq_Enhancement #14291 - Start
+						//searchBean.getDataFilterBeans().add(
+						//			new SearchFilterBean("pmNotifyDashboard.content",
+						//					SearchOperator.OPERATOR_LIKE.value(), 
+						//					getManagedBean().getSearchValue().trim(), true));
 						
 						searchBean.getDataFilterBeans().add(
-									new SearchFilterBean("pmNotifyDashboard.content",
-											SearchOperator.OPERATOR_LIKE.value(), 
-											getManagedBean().getSearchValue().trim(), true));
+								new SearchMultiFilterBean(
+										new SearchFilterBean(
+												"pmNotifyDashboard.content",
+												SearchOperator.OPERATOR_LIKE.value(),
+												getManagedBean().getSearchValue().trim(), true), 
+										SearchCondition.CONDITION_OR.value(),
+										new SearchFilterBean(
+												"pmNotifyDashboardQt.content",
+												SearchOperator.OPERATOR_LIKE.value(),
+												getManagedBean().getSearchValue().trim(), true)));
+						//20200601@asyrafhaziq_Enhancement #14291 - End
 					}
 						
 					if(getManagedBean().getSearchItem() != null && getManagedBean().getSearchItem().equals("5")){
@@ -274,11 +316,24 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 						Date date = covertStringToDate(getManagedBean().getSearchValue());
 						
 						if(date != null){
-						
-							searchBean
-									.getDataFilterBeans()
-									.add(new SearchFilterBean("pmNotifyDashboard.createdDate",
-											SearchOperator.OPERATOR_GREATER_EQUAL.value(), date));
+							//20200601@asyrafhaziq_Enhancement #14291 - Start
+							//searchBean
+							//		.getDataFilterBeans()
+							//		.add(new SearchFilterBean("pmNotifyDashboard.createdDate",
+							//			SearchOperator.OPERATOR_GREATER_EQUAL.value(), date));
+							
+							searchBean.getDataFilterBeans().add(
+									new SearchMultiFilterBean(
+											new SearchFilterBean(
+													"pmNotifyDashboard.createdDate",
+													SearchOperator.OPERATOR_GREATER_EQUAL.value(),
+													date), 
+											new SearchFilterBean(
+													"pmNotifyDashboardQt.createdDate",
+													SearchOperator.OPERATOR_GREATER_EQUAL.value(),
+													date,
+											SearchCondition.CONDITION_OR.value())));
+							//20200601@asyrafhaziq_Enhancement #14291 - End
 						}
 					}
 					
@@ -380,4 +435,79 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 		}
 		//logger.info(message);
 	}
+	
+	// #14291 - Start
+	/**
+	 * @param pmNotifyUser
+	 * @return
+	 */
+	public String getNotifyDashboardContent(PmNotifyUser pmNotifyUser) {
+		logger.debug("Entered: " + this.getClass().getName() + ".getNotifyDashboardContent()");
+		
+		if (null != pmNotifyUser) {
+			String notificationId = String.valueOf(pmNotifyUser.getPmNotification().getNotificationId());
+			
+			logger.info(this.getClass().getName() + ".getNotifyDashboardContent(): notificationId is: " + notificationId);
+			
+			if (NotificationTextConst.TEMPLATE_ID_400048.equals(notificationId)
+					|| NotificationTextConst.TEMPLATE_ID_401048.equals(notificationId)
+					|| NotificationTextConst.TEMPLATE_ID_400050.equals(notificationId)
+					|| NotificationTextConst.TEMPLATE_ID_401050.equals(notificationId)){
+			
+				if( null != pmNotifyUser.getPmNotifyDashboardQt()
+						&& StringUtils.isNotEmpty(pmNotifyUser.getPmNotifyDashboardQt().getContent())){
+					return pmNotifyUser.getPmNotifyDashboardQt().getContent();
+				}
+				else if( null != pmNotifyUser.getPmNotifyDashboard()
+							&& StringUtils.isNotEmpty(pmNotifyUser.getPmNotifyDashboard().getContent())){
+					return pmNotifyUser.getPmNotifyDashboard().getContent();
+				}
+		  
+			} else {
+			  
+				if( null != pmNotifyUser.getPmNotifyDashboard()
+					&& StringUtils.isNotEmpty(pmNotifyUser.getPmNotifyDashboard().getContent())){
+				  return pmNotifyUser.getPmNotifyDashboard().getContent();
+				}
+			}
+		}
+		
+		return "";
+	}
+	
+	public String getNotifyDashboardSubject(PmNotifyUser pmNotifyUser) {
+		logger.debug("Entered: " + this.getClass().getName() + ".getNotifyDashboardContent()");
+		
+		if (null != pmNotifyUser) {
+			String notificationId = String.valueOf(pmNotifyUser.getPmNotification().getNotificationId());
+			
+			logger.info(this.getClass().getName() + ".getNotifyDashboardContent(): notificationId is: " + notificationId);
+			
+			if (NotificationTextConst.TEMPLATE_ID_400048.equals(notificationId)
+					|| NotificationTextConst.TEMPLATE_ID_401048.equals(notificationId)
+					|| NotificationTextConst.TEMPLATE_ID_400050.equals(notificationId)
+					|| NotificationTextConst.TEMPLATE_ID_401050.equals(notificationId)){
+			
+				if( null != pmNotifyUser.getPmNotifyDashboardQt()
+						&& StringUtils.isNotEmpty(pmNotifyUser.getPmNotifyDashboardQt().getSubject())){
+					return pmNotifyUser.getPmNotifyDashboardQt().getSubject();
+				}
+				else if( null != pmNotifyUser.getPmNotifyDashboard()
+							&& StringUtils.isNotEmpty(pmNotifyUser.getPmNotifyDashboard().getSubject())){
+					return pmNotifyUser.getPmNotifyDashboard().getSubject();
+				}
+				
+		  } else {
+			  
+			  if( null != pmNotifyUser.getPmNotifyDashboard()
+					&& StringUtils.isNotEmpty(pmNotifyUser.getPmNotifyDashboard().getSubject())){
+				  return pmNotifyUser.getPmNotifyDashboard().getSubject();
+				}
+			}
+		}
+		
+		return "";
+	}
+	// #14291 - End
+	
 }
