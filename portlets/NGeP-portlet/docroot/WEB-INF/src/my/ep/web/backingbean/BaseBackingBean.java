@@ -2966,18 +2966,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		if(smPersonnelSSm.isClerical()){
 			smPersonnelSSm.setHigherManagement(false);
 			smPersonnelSSm.setManagement(false);
-			//start #29956
-		}else if(smPersonnelSSm.isHigherManagement()){
-			smPersonnelSSm.setClerical(false);
-			smPersonnelSSm.setManagement(false);
-		}else if(smPersonnelSSm.isManagement()){
-			smPersonnelSSm.setClerical(false);
-			smPersonnelSSm.setHigherManagement(false);
-			//end #29956
 		}else{
 			smPersonnelSSm.setClerical(false);
 		}
-		
 	}
 	
 	
