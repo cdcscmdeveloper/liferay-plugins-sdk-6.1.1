@@ -73,7 +73,6 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constant.sc.QTStatusConst;
 import my.ep.constants.BpmConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -85,7 +84,6 @@ import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
 import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
-import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.exception.EpException;
@@ -136,10 +134,6 @@ import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.UserTasks;
 import my.ep.web.managedbean.sm.postsupplierregistration.PostSupplierRegistrationManagedBean;
-import my.ep.web.managedbean.sm.SmApplicationManagedBean;
-import my.ep.web.managedbean.sm.applicationView.ViewApplHistoryManagedBean;
-import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
-import my.ep.web.managedbean.sm.registration.RegistrationManagedBean;
 import my.ep.web.util.AddressUtils;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.EpPortletUtil;
@@ -322,8 +316,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		userActivityBean.setUserAgent(httpServletRequest.getHeader("user-agent"));
 		userActivityBean.setResponseStatus(httpServletResponse.getStatus());
 		userActivityBean.setTriggerClass(this.getClass().getName());
-		log.info("[logUserActivity] userActivityLoggingEnabled: " 
-				+ EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_USER_ACTIVITY_LOGGING));
 		
 		UserActivityLogger.getInstance().log(userActivityBean);
 	}

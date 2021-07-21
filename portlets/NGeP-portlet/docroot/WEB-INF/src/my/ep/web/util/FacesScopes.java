@@ -19,14 +19,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.bpm.service.IBpmSO;
-import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -114,8 +112,7 @@ public class FacesScopes implements Serializable {
 		userActivityBean.setFriendlyUrl(getObjectToString(httpServletRequest.getAttribute("FRIENDLY_URL")));
 		userActivityBean.setUserAgent(httpServletRequest.getHeader("user-agent"));
 		userActivityBean.setResponseStatus(httpServletResponse.getStatus());
-		log.info("[logUserActivity] userActivityLoggingEnabled: " 
-				+ EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTLET_USER_ACTIVITY_LOGGING));
+		userActivityBean.setTriggerClass(this.getClass().getName());
 		
 		UserActivityLogger.getInstance().log(userActivityBean);
 	}
@@ -251,11 +248,6 @@ public class FacesScopes implements Serializable {
 						user = resDTO.getPmUser();
 						setApplicationScope(SESS_USER_SESSION_BEAN, user);
 						
-						//20210610@fadhli - #31062 Added user activity logging - Start
-						log.info("[getUserSessionBean] userActivityTracing");
-						logUserActivity();
-						//20210610@fadhli - #31062 Added user activity logging - End
-
 						// update user last login
 						if(user != null) {
 							reqDTO.setPmUser(resDTO.getPmUser());
@@ -281,6 +273,11 @@ public class FacesScopes implements Serializable {
 								e.getMessage()));
 			}
 		}
+		
+		//20210721@fadhli - #31062 Moved existing user activity logging handling to cater all scenarios - Start
+		log.info("[getUserSessionBean] userActivityTracing");
+		logUserActivity();
+		//20210721@fadhli - #31062 Moved existing user activity logging handling to cater all scenarios - End
 		
 		if (user == null) {
 			user = new PmUser();
