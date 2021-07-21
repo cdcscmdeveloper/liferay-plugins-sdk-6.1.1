@@ -19,9 +19,7 @@
 				<!-- #28212 --> <p:outputPanel
 					rendered="#{not empty viewSmApplBackingBean.managedBean.resubmitUrl 
 					and viewSmApplBackingBean.managedBean.supplierUser 
-					and viewSmApplBackingBean.managedBean.smAppl.pmStatus.statusId ne SupplierMgmtConst.pmStatusDeletePendingApplContractor 
-					and viewSmApplBackingBean.managedBean.smAppl.pmStatus.statusId ne SupplierMgmtConst.pmStatusRejectedBySystemPayment 
-					and viewSmApplBackingBean.managedBean.smAppl.pmStatus.statusId ne SupplierMgmtConst.pmStatusRejectedBySystemProcessingFee
+					and viewSmApplBackingBean.managedBean.displayResubmitButton 
 					and ((viewSmApplBackingBean.managedBean.smAppl.applType eq 'B' and viewSmApplBackingBean.managedBean.smMofAccount!=null and viewSmApplBackingBean.managedBean.smMofAccount.expDate gt CommonConstants.THREE_MONTHS_LATER_DATE
 					) or (viewSmApplBackingBean.managedBean.smAppl.applType ne 'B'))}">
 					<p:commandLink onclick="blockWidget.show()"

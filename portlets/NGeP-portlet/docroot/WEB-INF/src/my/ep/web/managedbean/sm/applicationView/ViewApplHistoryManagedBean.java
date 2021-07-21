@@ -69,7 +69,7 @@ public class ViewApplHistoryManagedBean extends
 	private List<DisciplinaryActionVO> disciplineVOs; 
 	private boolean disciplinaryAction;
 	*/
-	
+	private Boolean displayResubmitButton; //#31248
 
 	public ViewApplHistoryManagedBean() {
 
@@ -396,4 +396,11 @@ public class ViewApplHistoryManagedBean extends
 		this.selectedInquiryResponse = selectedInquiryResponse;
 	}
 	//#11641 - End
+	
+	public Boolean getDisplayResubmitButton() {
+		return displayResubmitButton;
+	}
+	public void setDisplayResubmitButton(Boolean displayResubmitButton) {
+		this.displayResubmitButton = displayResubmitButton;
+	}
 }
