@@ -2619,7 +2619,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					}
 				}
 				if (getManagedBean().isPbConfirmMeeting() && outputValue.equalsIgnoreCase("MET")) {
-					getManagedBean().setSelectedTabIndex(index + 1);
+					//#31361, #31391
+					//getManagedBean().setSelectedTabIndex(index + 1);
+					if ( ctBackingBean.getManagedBean().getContractVer().getCtDeductions()!= null
+							&& ctBackingBean.getManagedBean().getContractVer().getCtDeductions().size() > 0){
+							getManagedBean().setSelectedTabIndex(index + 2);					
+					}else{
+							getManagedBean().setSelectedTabIndex(index + 1);
+					}
 				}
 				if ((getManagedBean().isSignUpdateDecision() || getManagedBean().isSignOffDecision()) 
 						&& outputValue.equalsIgnoreCase("DCN")) {
