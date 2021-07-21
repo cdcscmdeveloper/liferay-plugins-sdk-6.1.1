@@ -269,46 +269,44 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 					}
 					
 					if(getManagedBean().getSearchItem() != null && getManagedBean().getSearchItem().equals("3")){
-						//20200601@asyrafhaziq_Enhancement #14291 - Start
-						//searchBean.getDataFilterBeans().add(
-						//		new SearchFilterBean("pmNotifyDashboard.subject",
-						//				SearchOperator.OPERATOR_LIKE.value(), 
-						//				getManagedBean().getSearchValue().trim(), true));
+						// 20210104@fadhli - #29697 - Start
+						SearchFilterBean pmNotifyDashboardFilterBean = new SearchFilterBean(
+								"pmNotifyDashboard.subject", 
+								SearchOperator.OPERATOR_LIKE.value(), 
+								getManagedBean().getSearchValue().trim());
+						pmNotifyDashboardFilterBean.setCaseInsensitive(true);
 						
-						searchBean.getDataFilterBeans().add(
-								new SearchMultiFilterBean(
-										new SearchFilterBean(
-												"pmNotifyDashboard.subject",
-												SearchOperator.OPERATOR_LIKE.value(),
-												getManagedBean().getSearchValue().trim(), true), 
-										SearchCondition.CONDITION_OR.value(),
-										new SearchFilterBean(
-												"pmNotifyDashboardQt.subject",
-												SearchOperator.OPERATOR_LIKE.value(),
-												getManagedBean().getSearchValue().trim(), true)));
-						//20200601@asyrafhaziq_Enhancement #14291 - End
+						SearchFilterBean pmNotifyDashboardQtFilterBean = new SearchFilterBean(
+								"pmNotifyDashboardQt.subject", 
+								SearchOperator.OPERATOR_LIKE.value(), 
+								getManagedBean().getSearchValue().trim(), 
+								SearchCondition.CONDITION_OR.value());
+						pmNotifyDashboardQtFilterBean.setCaseInsensitive(true);
+						
+						searchBean.getDataFilterBeans().add(new SearchMultiFilterBean(
+								pmNotifyDashboardFilterBean, pmNotifyDashboardQtFilterBean));
+						// 20210104@fadhli - #29697 - End
 					}
 					
 					
 					if(getManagedBean().getSearchItem() != null && getManagedBean().getSearchItem().equals("4")){
-						//20200601@asyrafhaziq_Enhancement #14291 - Start
-						//searchBean.getDataFilterBeans().add(
-						//			new SearchFilterBean("pmNotifyDashboard.content",
-						//					SearchOperator.OPERATOR_LIKE.value(), 
-						//					getManagedBean().getSearchValue().trim(), true));
+						// 20210104@fadhli - #29697 - Start
+						SearchFilterBean pmNotifyDashboardFilterBean = new SearchFilterBean(
+								"pmNotifyDashboard.content", 
+								SearchOperator.OPERATOR_LIKE.value(), 
+								getManagedBean().getSearchValue().trim());
+						pmNotifyDashboardFilterBean.setCaseInsensitive(true);
 						
-						searchBean.getDataFilterBeans().add(
-								new SearchMultiFilterBean(
-										new SearchFilterBean(
-												"pmNotifyDashboard.content",
-												SearchOperator.OPERATOR_LIKE.value(),
-												getManagedBean().getSearchValue().trim(), true), 
-										SearchCondition.CONDITION_OR.value(),
-										new SearchFilterBean(
-												"pmNotifyDashboardQt.content",
-												SearchOperator.OPERATOR_LIKE.value(),
-												getManagedBean().getSearchValue().trim(), true)));
-						//20200601@asyrafhaziq_Enhancement #14291 - End
+						SearchFilterBean pmNotifyDashboardQtFilterBean = new SearchFilterBean(
+								"pmNotifyDashboardQt.content", 
+								SearchOperator.OPERATOR_LIKE.value(), 
+								getManagedBean().getSearchValue().trim(), 
+								SearchCondition.CONDITION_OR.value());
+						pmNotifyDashboardQtFilterBean.setCaseInsensitive(true);
+						
+						searchBean.getDataFilterBeans().add(new SearchMultiFilterBean(
+								pmNotifyDashboardFilterBean, pmNotifyDashboardQtFilterBean));
+						// 20210104@fadhli - #29697 - End
 					}
 						
 					if(getManagedBean().getSearchItem() != null && getManagedBean().getSearchItem().equals("5")){
