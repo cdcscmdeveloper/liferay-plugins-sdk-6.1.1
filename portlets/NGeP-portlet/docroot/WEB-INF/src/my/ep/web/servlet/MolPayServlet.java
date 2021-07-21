@@ -69,7 +69,13 @@ public class MolPayServlet extends HttpServlet {
 		log.info("************Payment PostBack Start********");
 		log.info("******Servlet Testing doPost*********");
 		// #26307 end
-
+		//26307
+		log.info("******START Clear Cache*********");
+		res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+		res.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+		res.setDateHeader("Expires", 0); // Proxies.
+		log.info("******END Clear Cache*********");
+		//26307
 		String nbcb = req.getParameter("nbcb") != null ? req.getParameter("nbcb") : null;
 		String amount = req.getParameter("amount");
 		String orderId = req.getParameter("orderid");
