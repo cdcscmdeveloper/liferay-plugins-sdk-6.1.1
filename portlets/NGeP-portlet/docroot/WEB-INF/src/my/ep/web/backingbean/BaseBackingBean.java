@@ -283,11 +283,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 			log.info("managedBean:" + managedBean);
 		}
-		
-		//20210721@fadhli - #31062 Added user activity logging similar to the one added in FacesScopes - Start
-		logUserActivity();
-		//20210721@fadhli - #31062 Added user activity logging similar to the one added in FacesScopes - End
-		
+//		
+//		//20210721@fadhli - #31062 Added user activity logging similar to the one added in FacesScopes - Start
+//		logUserActivity();
+//		//20210721@fadhli - #31062 Added user activity logging similar to the one added in FacesScopes - End
+//		
 		return managedBean;
 
 	}
