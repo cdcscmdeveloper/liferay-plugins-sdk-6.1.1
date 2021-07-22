@@ -145,9 +145,11 @@
 			<p:column headerText="#{lbl['lbl.sc.compliance.status']}"
 				style="width:15%">
 				<!-- 26339  Removed from disabled attribute  'or evaluationBackingBean.managedBean.FP_Compliance'-->
+				<!-- 28703 -start- -->
 				<p:selectOneMenu
-					disabled="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'false' or evaluationBackingBean.managedBean.statusOnly or evaluationBackingBean.managedBean.complianceReEvaluateRequired}"
+					disabled="#{evaluationBackingBean.isComplianceStatusDisabled(complianceTechnicalSupplier)}"  
 					value="#{complianceTechnicalSupplier.compliance}">
+                <!-- 28703 -end- -->
                   <!-- 26339 End-->
 					<f:selectItems
 						value="#{evaluationBackingBean.statusDropdownCodeValues(ParameterTypeConst.complianceStatus,complianceTechnicalSupplier.scQtProposalChecklistAttachment)}"></f:selectItems>
