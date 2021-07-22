@@ -255,6 +255,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	//#26169 #38 - Start
 	private boolean isHasSupplierQualified;
 	//#26169 #38 - End
+	
 	// #18685 - Start
 	private ScRemark pendingRecItemizedRemark;
 	private ScRemark pendingRecPackageRemark;
@@ -269,6 +270,11 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	// #11134 - Start
 	private boolean haveSupplierRejection;
 	// #11134 - End
+	
+	//28834 starts
+	private boolean disableBfButton;
+	private boolean ktReportGenerated;
+	//28834 end
 	
 	/**
 	 * @return the activeIndex
@@ -2315,5 +2321,30 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.haveSupplierRejection = haveSupplierRejection;
 	}
 	// #11134 -end-
+	
+	//28834 start
+	public boolean isDisableBfButton() {
+		return disableBfButton;
+	}
+
+	public void setDisableBfButton(boolean disableBfButton) {
+		this.disableBfButton = disableBfButton;
+	}
+
+	/**
+	 * @return the ktReportGenerated
+	 */
+	public boolean isKtReportGenerated() {
+		return ktReportGenerated;
+	}
+
+	/**
+	 * @param ktReportGenerated
+	 *            the ktReportGenerated to set
+	 */
+	public void setKtReportGenerated(boolean ktReportGenerated) {
+		this.ktReportGenerated = ktReportGenerated;
+	}	
+	//28834 end
 
 }

@@ -24,7 +24,6 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
@@ -540,9 +539,25 @@ public class ConsolidationReportBackingBean extends
 	 */
 	public void downloadBriefingPaperReport(ScQtFinalizationReport scQtFinalizationReport) throws Exception {
 		ScQtFinalizationReportAttachment reportAttachment = null;
+		//28834 starts.
+		boolean latestBriefingPaper = false;
 		
-		if (null != getManagedBean().getCurrentStatusId() 
-				&& getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_CONSOLIDATION_REPORT.longValue()) {
+		if (CollectionUtils.isNotEmpty(getManagedBean().getFinalizationReports())
+				&& getManagedBean().getFinalizationReports().size() > 0) {
+			ScQtFinalizationReport latestScQtFinalizationReport = getManagedBean().getFinalizationReports().get(
+					getManagedBean().getFinalizationReports().size() - 1);
+			
+			if (null != latestScQtFinalizationReport
+					&& latestScQtFinalizationReport.getTitle().equals(scQtFinalizationReport.getTitle())) {
+				latestBriefingPaper = true;
+			}
+		}
+		
+		if (null != getManagedBean().getCurrentStatusId()
+				&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_CONSOLIDATION_REPORT
+						.longValue() || getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER
+						.longValue()) && latestBriefingPaper) {
+			// 28834 ends.
 			reportAttachment = generateDocumentAttachment(scQtFinalizationReport);
 			
 			scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
@@ -675,7 +690,16 @@ public class ConsolidationReportBackingBean extends
 	 */
 	public void submitAction() {
 		// Validate Desk officer ranking
-		validateConsolidationReport();
+		// #30874 for #28834 start
+		if (null != getManagedBean().getCurrentStatusId()
+				&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER
+						.longValue())) {
+
+		} else {
+			validateConsolidationReport();
+		}
+		// #30874 for #28834 end
+
 		RequestContext.getCurrentInstance().execute("submissionPopup.show()");
 
 	}
@@ -928,6 +952,9 @@ public class ConsolidationReportBackingBean extends
 			}
 			reqDTO.setQtId(qtId);
 			reqDTO.setScQtFinalization(scQtFinalization);
+			 //28834 start
+			reqDTO.setCommitteeType(getManagedBean().getCommitteeType());
+			//28834 ends
 
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 					.retrieveFinalizationReports(reqDTO);

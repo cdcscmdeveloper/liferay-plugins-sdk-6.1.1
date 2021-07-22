@@ -692,6 +692,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		else if (outCome.equalsIgnoreCase(BpmOutcomeConst.BPM_SIGNOFF)) {
 			msgCode = MessageConst.INFO_700032;
 		}
+		//28834 starts
+		else if (outCome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISEBP)) {
+			msgCode = MessageConst.INFO_700091;
+		}
+		//28834 ends
+
 		return msgCode;
 	}
 
@@ -4485,6 +4491,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			List<String> reportTitleList, String taskType) {
 		if (CollectionUtils.isNotEmpty(finalizationReports)) {
 			int count = 0;
+			// #28834 -start-
+			List<ScQtFinalizationReport> localListReport = new ArrayList<ScQtFinalizationReport>();
+			// #28834 -end-
 			Iterator<ScQtFinalizationReport> iterator = finalizationReports.iterator();
 			
 			while (iterator.hasNext()) {
@@ -4493,7 +4502,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				if (null != finalizationReport.getPmDocument()) {
 					if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equalsIgnoreCase(finalizationReport
 							.getPmDocument().getDocDefinitionKey())) {
-						++count;
+
+						// #28834 -start-
+						if (finalizationReport.getDefinationType().getParameterCode()
+								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED)) {
+							count++;
+							localListReport.add(finalizationReport);
+							continue;
+						}
+						// #28834 -end-
 
 						if (null == getManagedBean().getNewBriefingPaperReportList()) {
 							List<ScQtFinalizationReport> newBriefingPaperReportList = new LinkedList<>();
