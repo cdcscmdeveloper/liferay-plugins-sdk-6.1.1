@@ -2391,8 +2391,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					return SmCommonUtil.getMessage("lbl.sm.status.expired", null);
 				}else if("T".equalsIgnoreCase(statusCode)){
 					return SmCommonUtil.getMessage("lbl.sm.status.terminated", null);
-				}else if("B".equalsIgnoreCase(statusCode)){
-					return SmCommonUtil.getMessage("lbl.sm.status.dissolved", null);
+				}else if("B".equalsIgnoreCase(statusCode)){ 
+				//27382
+					return SmCommonUtil.getMessage("lbl.sm.status.b", null);
 				}else if("W".equalsIgnoreCase(statusCode)){
 					return SmCommonUtil.getMessage("lbl.sm.status.w", null);
 				}else if("D".equalsIgnoreCase(statusCode)){

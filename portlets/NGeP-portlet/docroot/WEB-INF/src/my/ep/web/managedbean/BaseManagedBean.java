@@ -44,7 +44,9 @@ public abstract class BaseManagedBean implements Serializable {
 	private List<SelectItem> localAuthorityItems;
 	private String captchaText;
 	private String captchaAnswer;
-
+	//27382
+	private boolean errorInvalidSelfRequest;
+	private boolean autoUpdate = Boolean.TRUE;	
 	//16052019 - SSM INTEGRATION CR - Fahmi
 	private boolean ssmIntegrationActive;
 	private boolean validateWithSSM;
@@ -371,6 +373,20 @@ public abstract class BaseManagedBean implements Serializable {
 		this.disableFields = disableFields;
 	}
 	//#24540 - end -	
+	// #25142 - start
+	/**
+	 * @return the autoUpdate
+	 */
+	public boolean isAutoUpdate() {
+		return autoUpdate;
+	}
+
+	/**
+	 * @param autoUpdate the autoUpdate to set
+	 */
+	public void setAutoUpdate(boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
+	}
 	
 	public List<SmPersonnel> getPersonnelsRole() {
 		return personnelsRole;
@@ -439,4 +455,12 @@ public abstract class BaseManagedBean implements Serializable {
 	
 	
 	
+	//27382
+	public boolean isErrorInvalidSelfRequest() {
+		return errorInvalidSelfRequest;
+	}
+
+	public void setErrorInvalidSelfRequest(boolean errorInvalidSelfRequest) {
+		this.errorInvalidSelfRequest = errorInvalidSelfRequest;
+	}
 }
