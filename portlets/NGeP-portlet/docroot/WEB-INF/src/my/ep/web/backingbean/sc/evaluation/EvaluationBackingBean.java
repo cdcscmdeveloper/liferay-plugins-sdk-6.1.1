@@ -177,6 +177,7 @@ import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.batik.apps.svgbrowser.StatusBar;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.primefaces.component.menuitem.MenuItem;
@@ -9326,6 +9327,39 @@ private void retriveCommitteeRemarksList(){
 		} else {
 			this.getManagedBean().setStatusOnly(true);
 		}
+		
+		// 28834 starts
+		if (QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL.equals(this.getManagedBean().getCurrentStatusId())
+				|| QTStatusConst.OC_PENDING_COMPLIANCE_PROPOSAL.equals(this.getManagedBean().getCurrentStatusId())
+				|| QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL.equals(this.getManagedBean().getCurrentStatusId())
+				|| QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL.equals(this.getManagedBean().getCurrentStatusId())
+				|| isStatusLessThanOrEquals(this.getManagedBean().getCurrentStatusId(),
+						QTStatusConst.OC_PENDING_COMPLIANCE_VERIFICATION_REVISION, QTStatusConst.OC_ORDERED_STATUSES)
+				&& ArrayUtils.isNotEmpty(this.getManagedBean().getOutComes())
+				&& this.getManagedBean().getOutComes().length > 0) {
+			boolean reviseExists = false;
+			
+			for (String outcome : this.getManagedBean().getOutComes()) {
+				if (outcome.equals(BpmOutcomeConst.BPM_REVISEBP)) {
+					reviseExists = true;
+				}
+			}
+
+			if (reviseExists) {
+				String tempOutComes[] = new String[this.getManagedBean().getOutComes().length - 1];
+				
+				for (int i = 0, k = 0; i < this.getManagedBean().getOutComes().length; i++) {					
+					if (this.getManagedBean().getOutComes()[i].equals(BpmOutcomeConst.BPM_REVISEBP)) {
+						continue;
+					}
+					
+					tempOutComes[k++] = this.getManagedBean().getOutComes()[i];
+				}
+				
+				this.getManagedBean().setOutComes(tempOutComes);
+			}
+		}
+		// 28834 ends
 
 		this.getManagedBean().setPrepareActiveIndex(0);
 		if (SCProcessNameConst.FINALISE_EC_EVALUATION
