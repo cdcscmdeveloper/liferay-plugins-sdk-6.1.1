@@ -132,8 +132,11 @@ public class CancelRegistrationBackingBean extends
 						
 						if (selectedPersonnel.getIdentificationNo().equals(getManagedBean().getSuppAdminIdentificationNo().trim())) {
 							//#25474------13072020
-							if(resDTO.getSmSupplier().getSmAppl().getPmStatus().getStatusId().equals(Long.valueOf(DbValueConst.PM_STATUS_ID)) ||
-									resDTO.getSmSupplier().getSmAppl().getPmStatus().getStatusId().equals(Long.valueOf(DbValueConst.PM_PENDING_ACTIVATON_ID)) || appl != null){//PM_STATTUS_ID=20199
+						if (resDTO.getSmSupplier().getSmAppl().getPmStatus() != null  //#30992
+								&& (resDTO.getSmSupplier().getSmAppl().getPmStatus().getStatusId()
+										.equals(Long.valueOf(DbValueConst.PM_STATUS_ID))
+										|| resDTO.getSmSupplier().getSmAppl().getPmStatus().getStatusId()
+												.equals(Long.valueOf(DbValueConst.PM_PENDING_ACTIVATON_ID)) || appl != null)) {// PM_STATTUS_ID=20199
 								
 								//#25474 - same message with basic account if appl was rejected by PO for more than 60 days
 								boolean poRejectFlag = false;
@@ -173,7 +176,14 @@ public class CancelRegistrationBackingBean extends
 										getManagedBean().setConfirmationMsg(msg);
 										RequestContext.getCurrentInstance().execute("confirmDialog.show();");
 									}
-							}else if(resDTO.getSmSupplier().getSmAppl().getPmStatus().getStatusId().equals(Long.valueOf(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION))){
+						} else if (resDTO.getSmSupplier().getSmAppl().getPmStatus() != null //#30992
+								&& resDTO
+										.getSmSupplier()
+										.getSmAppl()
+										.getPmStatus()
+										.getStatusId()
+										.equals(Long
+												.valueOf(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION))) {
 							
 								if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
 									accTypeStr = SmCommonUtil.getMessage("lbl.sm.basic.account.mof.contractor",null);
