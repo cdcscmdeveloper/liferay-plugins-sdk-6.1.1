@@ -270,7 +270,7 @@ public class FacesScopes implements Serializable {
 				}
 				
 				log.info("stored in user session(" + loginId + "):" + (user != null ? user.getUserId() : null));
-				log.info("[getUserSessionBean] 20210722 8 user.getUserId(): " + user.getUserId());
+//				log.info("[getUserSessionBean] 20210722 8 user.getUserId(): " + user.getUserId());
 				
 			} catch (Exception e) {
 				log.error("[getUserSessionBean] 20210722 9 e: ", e);
