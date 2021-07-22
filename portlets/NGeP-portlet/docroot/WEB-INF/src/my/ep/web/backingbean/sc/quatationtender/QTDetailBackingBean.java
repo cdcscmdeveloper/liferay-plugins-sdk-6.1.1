@@ -4507,9 +4507,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						.retriveQTDeductionPaymentDetails(reqDTO);
 				List<ScQtDeduction> deductionList = resDTO
 						.getDeductionResultBean().getResultList();
+				if(null!=this.getManagedBean().getRemoveDeductions() && CollectionUtils.isNotEmpty(this.getManagedBean().getRemoveDeductions())){//25635&31402-start
+					
+				}else{
 				this.getManagedBean().setScQtDeductionList(deductionList);
 				this.getManagedBean().getQt().setScQtDeductions(deductionList);
 				getManagedBean().setSelectedScQtDeduction(null);
+				}//25635&31402-End
 				/*
 				 * if (null != deductionList && !deductionList.isEmpty()) {
 				 * this.
