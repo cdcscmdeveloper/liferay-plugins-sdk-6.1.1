@@ -11,73 +11,8 @@
 	<ui:param name="isZonal" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.zonal}" />
 	<ui:param name="loa" value="#{lOADetailBackingBean.managedBean.scLoa}" />
 	<p:panel header="#{lbl['lbl.sc.loiloa.award.details']}" toggleable="true">
-		<ui:remove> #29006 - start </ui:remove>
-		<ui:remove> #29007 Added rendered for QT Vinod </ui:remove>
-		<p:outputPanel id="supplierUpdateInstructionPanel"
-			rendered="#{lOADetailBackingBean.managedBean.updateSupplierInstructionFlag &amp;&amp; !isDocTypeQuotation || lOADetailBackingBean.managedBean.specificationAndSupplierDialogFlagQT &amp;&amp; isDocTypeQuotation &amp;&amp; lOADetailBackingBean.managedBean.supPropSpecUpdate}">
-			<h:outputText styleClass="instruction"
-				value="#{lbl['lbl.sc.update.supplier.latest.offered.instruction']}" />
-			<p:graphicImage value="/css/images/design/ico-viewnedit.png"
-				id="supplierUpdateInstructionIcon"
-				style="max-width: 16px; padding-right: 7px; padding-left: 7px;" />
-			<h:outputText styleClass="instruction"
-				value="#{lbl['lbl.sc.update.supplier.latest.offered.instruction.end']}" />
-			<p:spacer height="10" />
-			<p:panel id="supplierSearchCriteria" rendered="#{!isDocTypeQuotation}"
-				header="#{lbl['lbl.sc.notice.board.searchCriteria']}" toggleable="true">
-				<table border="0" cellspacing="0" cellpadding="0" width="100%">
-					<tr>
-						<td width="10%"><h:outputLabel
-								value="#{lbl['lbl.sc.price.inquiry.item.name']}" /></td>
-						<td width="90%"><p:inputText id="itemNameSearchInput"
-								value="#{lOADetailBackingBean.itemNameSearchCriteria}"
-								style="width:310px;">
-								<p:ajax partialSubmit="true" process="@this" update="@this" />
-							</p:inputText></td>
-					</tr>
-				</table>
-				<div class="ppRightBtn">
-					<p:commandButton id="searchSupplierBtn"
-						value="#{lbl['lbl.btn.search']}"
-						action="#{lOADetailBackingBean.onSearchSupplier}"
-						update="supplierUpdateInstructionPanel, itemtbl" />
-					<p:commandButton id="resetSupplierBtn"
-						value="#{lbl['lbl.btn.reset']}"
-						action="#{lOADetailBackingBean.onResetSupplierCriteria()}"
-						update="supplierUpdateInstructionPanel" />
-				</div>
-			</p:panel>
-			<ui:remove> #29007 Start Vinod </ui:remove>
-			<p:panel id="supplierSearchCriteriaQT" rendered="#{isDocTypeQuotation}"
-				header="#{lbl['lbl.sc.qt.sampel.technical.panel.search.criteria']}" toggleable="true">
-				<table border="0" cellspacing="0" cellpadding="0" width="100%">
-					<tr>
-						<td width="10%"><h:outputLabel
-								value="#{lbl['lbl.sc.price.inquiry.item.name']}" /></td>
-						<td width="90%"><p:inputText id="itemNameSearchInputQT"
-								value="#{lOADetailBackingBean.itemNameSearchCriteria}"
-								style="width:310px;">
-								<p:ajax partialSubmit="true" process="@this" update="@this" />
-							</p:inputText></td>
-					</tr>
-				</table>
-				<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.search']}" partialSubmit="true" update="itemtbl"
-								 action="#{lOADetailBackingBean.searchSupplierItemByName}"
-								 styleClass="BtnSpacing" process="@this,itemNameSearchInputQT" />
-				<p:commandButton value="#{lbl['lbl.btn.reset']}"
-								 action="#{lOADetailBackingBean.onResetSupplierCriteria()}"
-								 update="supplierUpdateInstructionPanel" />
-				</div>
-			</p:panel>
-			<ui:remove> #29007 End Vinod </ui:remove>
-		</p:outputPanel>
-		<br />
-		<ui:remove> #29006 - end </ui:remove>
-		
 		<h:outputText styleClass="instruction" rendered="#{isSupplierAckStatus}"
 			value="#{lbl['lbl.sc.item.codification.instruction']}" />
-
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
 			<td width="17%">
@@ -108,54 +43,9 @@
 				</p:commandLink>
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.item']}" style="white-space:normal;">
-				#{scLoiLoaItem.scRequestItem.itemName} 
-				<p:spacer width="10" />
-				<ui:remove> #29006 - start </ui:remove>
-				<c:if
-					test="#{lOADetailBackingBean.managedBean.specificationAndSupplierDialogFlag &amp;&amp; !isDocTypeQuotation}"><!-- #29007 Added isDocTypeQuotation Vinod -->
-					<p:commandLink id="specAndSupplierOfferLink" process="@this"
-						update="@([id$=specAndSupplierOfferDlg])"
-						action="#{lOADetailBackingBean.onClickSpecsAndSupplierOfferLink(scLoiLoaItem)}"
-						oncomplete="specAndSupplierOfferDlgVar.show();">
-						<p:graphicImage value="/css/images/design/ico-viewnedit.png" />
-					</p:commandLink>
-					<p:tooltip id="toolTipSpecAndSupplierOffer"
-						for="specAndSupplierOfferLink"
-						value="#{lbl['lbl.sc.spec.and.supplier.offer']}" trackMouse="true" />
-
-				</c:if>
-				<c:if
-					test="#{lOADetailBackingBean.managedBean.updateSupplierInstructionFlag and !isDocTypeQuotation}">
-					<p:commandLink id="supplierProposalUpdateLink" process="@this"
-						partialSubmit="true"
-						action="#{lOADetailBackingBean.onClickSupplierProposalUpdateLink(scLoiLoaItem)}">
-						<p:graphicImage value="/css/images/design/ico-viewnedit.png" />
-					</p:commandLink>
-					<p:tooltip id="toolTipSupplierProposalUpdate"
-						for="supplierProposalUpdateLink"
-						value="#{lbl['lbl.sc.update.supplier.offer.tooltip']}"
-						trackMouse="true" />
-					<br />
-					<br />
-				</c:if>
-				<ui:remove> #29006 - end </ui:remove>
+			<p:column headerText="#{lbl['lbl.sc.item']}">
+				#{scLoiLoaItem.scRequestItem.itemName} <br /><br />
 				<h:outputText value="#{scLoiLoaItem.scRequestItem.cmItem.extensionCode}" rendered="#{scLoiLoaItem.scRequestItem.cmItem != null}" />
-				<ui:remove> #29007 Start Vinod </ui:remove>
-				<p:spacer width="5" />
-				<c:if
-					test="#{lOADetailBackingBean.managedBean.specificationAndSupplierDialogFlagQT &amp;&amp; isDocTypeQuotation &amp;&amp; lOADetailBackingBean.managedBean.supPropSpecUpdate}">
-					<p:commandLink id="itemName"
-						action="#{lOADetailBackingBean.searchSupplierSpecification(scLoiLoaItem,true)}"
-						partialSubmit="true" process="@this">
-						<p:graphicImage value="/css/images/design/ico-viewnedit.png" />
-					</p:commandLink>
-					<p:tooltip id="toolTipSpecAndSupplierOffer"
-						for="itemName"
-						value="#{lbl['lbl.sc.proposal.specification.update.mouseover']}" trackMouse="true" />
-
-				</c:if>
-				<ui:remove> #29007 End Vinod </ui:remove>
 			</p:column>
 			
 			<p:column style="width:7%;white-space:normal;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}">
@@ -237,39 +127,4 @@
 	<c:if test="#{isZonal}">
 		<ui:include src="/xhtml/tpl/spec/zoneLocPopup.xhtml" />
 	</c:if>
-
-	<ui:remove> #29006 - start </ui:remove>
-	<p:dialog id="specAndSupplierOfferDlg"
-		widgetVar="specAndSupplierOfferDlgVar"
-		header="#{lbl['lbl.sc.spec.and.supplier.offer']}"
-		styleClass="pop_up_top" modal="true" width="500" resizable="false">
-		<p:spacer height="20" />
-		<h:panelGrid columns="1">
-			<h:outputText
-				value="#{lbl['lbl.ct.item.name']}: #{lOADetailBackingBean.selectedScLoiLoaItem.scRequestItem.itemName}"
-				style="font-weight:bold" />
-			<h:outputText
-				value="#{lbl['lbl.sc.supplier.offer']}: #{empty lOADetailBackingBean.selectedSupplierOffer ? lOADetailBackingBean.notAvailabilityStr : lOADetailBackingBean.selectedSupplierOffer}"
-				style="font-weight:bold" />
-		</h:panelGrid>
-		<p:spacer height="5" />
-
-		<p:dataTable id="specAndSupplierOfferTbl"
-			emptyMessage="#{lOADetailBackingBean.notAvailabilityStr}" var="spec"
-			rowIndexVar="index"
-			value="#{lOADetailBackingBean.managedBean.scLoiLoaItemSpecsList}">
-			<p:column headerText="#{lbl['lbl.tpl.spec.content.specification']}"
-				style="width:45%; white-space:normal; text-align: center;">
-				<p:inputTextarea value="#{spec}" maxlength="200" rows="3"
-					style="width:98%;" autoResize="false" disabled="true" />
-			</p:column>
-		</p:dataTable>
-		
-		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.close']}"
-				onclick="itemSpecificationDlgVar.hide();" />
-		</div>
-	</p:dialog>
-	<ui:remove> #29006 - end </ui:remove>
-	
 </ui:composition>
