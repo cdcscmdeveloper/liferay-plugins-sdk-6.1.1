@@ -230,50 +230,46 @@ public class FacesScopes implements Serializable {
 	 */
 	public PmUser getUserSessionBean() {
 		PmUser user = (PmUser) getApplicationScope(SESS_USER_SESSION_BEAN);
-		log.info("[getUserSessionBean] 20210722 1 user: " + user);
+		log.info("[getUserSessionBean] 1 user: " + user);
 		
 		if (user == null) {
 			try {
 				String loginId = getUserScreenName();
-				log.info("[getUserSessionBean] 20210722 2 loginId: " + loginId);
+				log.info("[getUserSessionBean] 2 loginId: " + loginId);
 
 				if (StringUtils.isNotBlank(loginId)) {
 					IUserSO userSO;
 					try {
 						userSO = BusinessDelegate.getInstance()
 								.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-						log.info("[getUserSessionBean] 20210722 3 userSO: " + userSO);
 
 						UserReqDTO reqDTO = new UserReqDTO();
 						reqDTO.setLoginId(loginId);
 
 						UserResDTO resDTO = userSO.retrieveUserByLoginId(reqDTO);
-						log.info("[getUserSessionBean] 20210722 3 resDTO: " + resDTO);
 						user = resDTO.getPmUser();
-						log.info("[getUserSessionBean] 20210722 4 user: " + user);
 						setApplicationScope(SESS_USER_SESSION_BEAN, user);
 						
+						log.info("[getUserSessionBean] 3 user: " + user);
 						// update user last login
 						if(user != null) {
 							reqDTO.setPmUser(resDTO.getPmUser());
 							userSO.updateUserLastLogin(reqDTO);
-							log.info("[getUserSessionBean] 20210722 5 reqDTO.getPmUser()" + reqDTO.getPmUser());
 						}					
 					} catch (Exception e) {
-						log.error("[getUserSessionBean] 20210722 6 e: ", e);
+						log.error("[getUserSessionBean] 4 Exception: ", e);
 						e.printStackTrace();
 						throw new EpException(e.getMessage());
 					} finally {
-						log.info("[getUserSessionBean] 20210722 7");
+						log.info("[getUserSessionBean] 5");
 						userSO = null;
 					}
 				}
 				
 				log.info("stored in user session(" + loginId + "):" + (user != null ? user.getUserId() : null));
-//				log.info("[getUserSessionBean] 20210722 8 user.getUserId(): " + user.getUserId());
 				
 			} catch (Exception e) {
-				log.error("[getUserSessionBean] 20210722 9 e: ", e);
+				log.error("[getUserSessionBean] 6 Exception: ", e);
 				log.error(e.getMessage());
 				
 				FacesContext.getCurrentInstance().addMessage(
@@ -288,13 +284,11 @@ public class FacesScopes implements Serializable {
 		UserActivityUtil.getInstance().logUserActivity(this.getClass().getName() + "#getUserSessionBean()");
 		//20210721@fadhli - #31062 Moved existing user activity logging handling to cater all scenarios - End
 		
-		log.info("[getUserSessionBean] 20210722 10 user: " + user);
+		log.info("[getUserSessionBean] 7 user: " + user);
 		if (user == null) {
-			log.info("[getUserSessionBean] 20210722 11");
 			user = new PmUser();
 		}
 
-		log.info("[getUserSessionBean] 20210722 12");
 		return user;
 	}
 	
