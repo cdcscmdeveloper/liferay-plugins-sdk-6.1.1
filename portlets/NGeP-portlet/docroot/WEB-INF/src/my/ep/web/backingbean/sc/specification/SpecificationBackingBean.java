@@ -658,6 +658,17 @@ public class SpecificationBackingBean extends
 						this.getManagedBean().setActiveIndex(2);
 						throw new EpException(MessageConst.ERROR_760513, new String[]{checkList.getTitle()});
 				}
+				//Bug #30637
+				if (ParameterTypeConst.DOCUMENT_DEFINITION_SUPPLIER_UPLOAD
+						.equalsIgnoreCase(checkList.getDefinationType().getParameterCode()) && 
+					(ParameterTypeConst.SC_SUPPLIER_ACTION_VIEW
+							.equalsIgnoreCase(checkList.getAction().getParameterCode()) ||	
+					ParameterTypeConst.SC_SUPPLIER_ACTION_DOWN_UPLOAD
+						.equalsIgnoreCase(checkList.getAction().getParameterCode()))) {
+						this.getManagedBean().setActiveIndex(2);
+						throw new EpException(MessageConst.ERROR_760513, new String[]{checkList.getTitle()});
+				}
+				
 			}
 
 		}
@@ -675,6 +686,16 @@ public class SpecificationBackingBean extends
 								.getParameterCode()) && ParameterTypeConst.SC_SUPPLIER_ACTION_VIEW
 								.equalsIgnoreCase(checkList.getAction().getParameterCode()) &&
 								checkList.isScoringReq()) {
+						this.getManagedBean().setActiveIndex(3);
+						throw new EpException(MessageConst.ERROR_760513, new String[]{checkList.getTitle()});
+				}
+				//Bug #30637
+				if (ParameterTypeConst.DOCUMENT_DEFINITION_SUPPLIER_UPLOAD
+						.equalsIgnoreCase(checkList.getDefinationType().getParameterCode()) && 
+					(ParameterTypeConst.SC_SUPPLIER_ACTION_VIEW
+							.equalsIgnoreCase(checkList.getAction().getParameterCode()) ||	
+					ParameterTypeConst.SC_SUPPLIER_ACTION_DOWN_UPLOAD
+						.equalsIgnoreCase(checkList.getAction().getParameterCode()))) {
 						this.getManagedBean().setActiveIndex(3);
 						throw new EpException(MessageConst.ERROR_760513, new String[]{checkList.getTitle()});
 				}
