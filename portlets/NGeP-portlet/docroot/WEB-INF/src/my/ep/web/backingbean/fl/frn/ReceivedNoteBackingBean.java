@@ -1807,8 +1807,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	
 	//28855 - start
 	public void frnItemInfoList(FlFulfilmentItemAddr flItemAddr) {
-		IRequestItemSO requestItemSO = null;
-		requestItemSO = (IRequestItemSO) BusinessDelegate.getInstance()
+		IRequestItemSO requestItemSO = (IRequestItemSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
 			
 		getManagedBean().setItemName(flItemAddr.getScRequestItem().getItemName());
@@ -1845,18 +1844,16 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IContractSO.class);
 		ContractReqDTO cireqDTO = new ContractReqDTO();
-		ContractResDTO ciResDTO = null;
 		cireqDTO.setContractId(getManagedBean().getFulfilmentRequest().getCtContract().getContractId());
-		ciResDTO = contractSO.retrieveContract(cireqDTO);
+		ContractResDTO ciResDTO = contractSO.retrieveContract(cireqDTO);
 		
 		IQTAwardSO qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 		
 		AwardSupplierReqDTO reqLoaDTO = new AwardSupplierReqDTO();
-		AwardSupplierResDTO resLoaDTO = new AwardSupplierResDTO();
 		if (ciResDTO.getContract().getLoa() != null) {
 		reqLoaDTO.setLoaId(ciResDTO.getContract().getLoa().getLoaId());
-		resLoaDTO = qtAwardSO.retrieveLOADtlByLoaId(reqLoaDTO);
+		AwardSupplierResDTO resLoaDTO = qtAwardSO.retrieveLOADtlByLoaId(reqLoaDTO);
 
 			if (resLoaDTO.getScLoa().getProcurementMode()
 					.getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO) ||
