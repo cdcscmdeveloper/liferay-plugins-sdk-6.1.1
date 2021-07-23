@@ -12,26 +12,20 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
 import javax.portlet.PortletSession;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.bpm.service.IBpmSO;
-import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.epx.bean.UserActivityBean;
-import my.epx.monitor.UserActivityLogger;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -96,31 +90,6 @@ public class FacesScopes implements Serializable {
 		application = FacesContext.getCurrentInstance().getApplication();
 	}
 
-	//20210610@fadhli - #31062 Added user activity logging - Start
-	public void logUserActivity() {
-		HttpServletRequest httpServletRequest = PortalUtil.getHttpServletRequest((PortletRequest) FacesContext
-				.getCurrentInstance().getExternalContext().getRequest());
-		
-		HttpServletResponse httpServletResponse = PortalUtil.getHttpServletResponse((PortletResponse) FacesContext
-				.getCurrentInstance().getExternalContext().getResponse());
-		
-		UserActivityBean userActivityBean = new UserActivityBean();
-		userActivityBean.setLoginId(getUserScreenName());
-		userActivityBean.setSessionId(portletRequest.getRequestedSessionId());
-		userActivityBean.setPortletPage(getPortletPage());
-		userActivityBean.setPortletId(getObjectToString(httpServletRequest.getAttribute("PORTLET_ID")));
-		userActivityBean.setRequestMethod(httpServletRequest.getMethod());
-		userActivityBean.setRequestedUrl(getObjectToString(httpServletRequest.getAttribute("CURRENT_COMPLETE_URL")));
-		userActivityBean.setFriendlyUrl(getObjectToString(httpServletRequest.getAttribute("FRIENDLY_URL")));
-		userActivityBean.setUserAgent(httpServletRequest.getHeader("user-agent"));
-		userActivityBean.setResponseStatus(httpServletResponse.getStatus());
-		log.info("[logUserActivity] userActivityLoggingEnabled: " 
-				+ EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTLET_USER_ACTIVITY_LOGGING));
-		
-		UserActivityLogger.getInstance().log(userActivityBean);
-	}
-	//20210610@fadhli - #31062 Added user activity logging - End
-	
 	/**
 	 * Returns the object bound with the specified name in this session, or null
 	 * if no object is bound under the name.
@@ -251,15 +220,10 @@ public class FacesScopes implements Serializable {
 						user = resDTO.getPmUser();
 						setApplicationScope(SESS_USER_SESSION_BEAN, user);
 						
-						//20210610@fadhli - #31062 Added user activity logging - Start
-						log.info("[getUserSessionBean] userActivityTracing");
-						logUserActivity();
-						//20210610@fadhli - #31062 Added user activity logging - End
-
 						// update user last login
 						if(user != null) {
 							reqDTO.setPmUser(resDTO.getPmUser());
-							userSO.updateUserLastLogin(reqDTO);							
+							userSO.updateUserLastLogin(reqDTO);
 						}					
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -281,6 +245,10 @@ public class FacesScopes implements Serializable {
 								e.getMessage()));
 			}
 		}
+		
+		//20210723@fadhli - #31062 Moved existing user activity logging handling to cater all scenarios - Start
+		UserActivityUtil.getInstance().logUserActivity();
+		//20210723@fadhli - #31062 Moved existing user activity logging handling to cater all scenarios - End
 		
 		if (user == null) {
 			user = new PmUser();
@@ -436,10 +404,9 @@ public class FacesScopes implements Serializable {
 			}
 		}
 		
-		//20210610@fadhli - #31062 Added user activity logging - Start
-		log.info("[getBPMAuthenticationCtxToken] userActivityTracing");
-		logUserActivity();
-		//20210610@fadhli - #31062 Added user activity logging - End
+		//20210723@fadhli - #31062 Added user activity logging - Start
+		UserActivityUtil.getInstance().logUserActivity();
+		//20210723@fadhli - #31062 Added user activity logging - End
 		
 		return ctxToken;
 	}
