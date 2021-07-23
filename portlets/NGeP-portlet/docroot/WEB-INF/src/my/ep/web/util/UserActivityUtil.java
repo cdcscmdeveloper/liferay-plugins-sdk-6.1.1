@@ -23,7 +23,7 @@ import com.liferay.portal.util.PortalUtil;
  * UserActivityUtil is used as the utility class to log user activities. 
  * 
  * @author	fadhli
- * @version	1.2
+ * @version	1.3
  * @since	2021-07-23
  */
 public class UserActivityUtil {
@@ -56,7 +56,7 @@ public class UserActivityUtil {
 		return instance;
 	}
 	
-	public void logUserActivity(String triggerClassMethod) {
+	public void logUserActivity() {
 		if (activityLoggingEnabled) {
 			FacesScopes facesScopes = new FacesScopes();
 			String userScreenName = facesScopes.getUserScreenName();
