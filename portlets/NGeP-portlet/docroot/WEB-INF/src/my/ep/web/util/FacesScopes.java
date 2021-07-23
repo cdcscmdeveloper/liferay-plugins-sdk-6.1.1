@@ -12,10 +12,8 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
 import javax.portlet.PortletSession;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.bpm.service.IBpmSO;
@@ -28,8 +26,6 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.epx.bean.UserActivityBean;
-import my.epx.monitor.UserActivityLogger;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -94,30 +90,6 @@ public class FacesScopes implements Serializable {
 		application = FacesContext.getCurrentInstance().getApplication();
 	}
 
-//	//20210610@fadhli - #31062 Added user activity logging - Start
-//	public void logUserActivity() {
-//		HttpServletRequest httpServletRequest = PortalUtil.getHttpServletRequest((PortletRequest) FacesContext
-//				.getCurrentInstance().getExternalContext().getRequest());
-//		
-//		HttpServletResponse httpServletResponse = PortalUtil.getHttpServletResponse((PortletResponse) FacesContext
-//				.getCurrentInstance().getExternalContext().getResponse());
-//		
-//		UserActivityBean userActivityBean = new UserActivityBean();
-//		userActivityBean.setLoginId(getUserScreenName());
-//		userActivityBean.setSessionId(portletRequest.getRequestedSessionId());
-//		userActivityBean.setPortletPage(getPortletPage());
-//		userActivityBean.setPortletId(getObjectToString(httpServletRequest.getAttribute("PORTLET_ID")));
-//		userActivityBean.setRequestMethod(httpServletRequest.getMethod());
-//		userActivityBean.setRequestedUrl(getObjectToString(httpServletRequest.getAttribute("CURRENT_COMPLETE_URL")));
-//		userActivityBean.setFriendlyUrl(getObjectToString(httpServletRequest.getAttribute("FRIENDLY_URL")));
-//		userActivityBean.setUserAgent(httpServletRequest.getHeader("user-agent"));
-//		userActivityBean.setResponseStatus(httpServletResponse.getStatus());
-//		userActivityBean.setTriggerClass(this.getClass().getName());
-//		
-//		UserActivityLogger.log(userActivityBean);
-//	}
-//	//20210610@fadhli - #31062 Added user activity logging - End
-	
 	/**
 	 * Returns the object bound with the specified name in this session, or null
 	 * if no object is bound under the name.
@@ -230,12 +202,10 @@ public class FacesScopes implements Serializable {
 	 */
 	public PmUser getUserSessionBean() {
 		PmUser user = (PmUser) getApplicationScope(SESS_USER_SESSION_BEAN);
-		log.info("[getUserSessionBean] 1 user: " + user);
 		
 		if (user == null) {
 			try {
 				String loginId = getUserScreenName();
-				log.info("[getUserSessionBean] 2 loginId: " + loginId);
 
 				if (StringUtils.isNotBlank(loginId)) {
 					IUserSO userSO;
@@ -250,18 +220,15 @@ public class FacesScopes implements Serializable {
 						user = resDTO.getPmUser();
 						setApplicationScope(SESS_USER_SESSION_BEAN, user);
 						
-						log.info("[getUserSessionBean] 3 user: " + user);
 						// update user last login
 						if(user != null) {
 							reqDTO.setPmUser(resDTO.getPmUser());
 							userSO.updateUserLastLogin(reqDTO);
 						}					
 					} catch (Exception e) {
-						log.error("[getUserSessionBean] 4 Exception: ", e);
 						e.printStackTrace();
 						throw new EpException(e.getMessage());
 					} finally {
-						log.info("[getUserSessionBean] 5");
 						userSO = null;
 					}
 				}
@@ -269,7 +236,6 @@ public class FacesScopes implements Serializable {
 				log.info("stored in user session(" + loginId + "):" + (user != null ? user.getUserId() : null));
 				
 			} catch (Exception e) {
-				log.error("[getUserSessionBean] 6 Exception: ", e);
 				log.error(e.getMessage());
 				
 				FacesContext.getCurrentInstance().addMessage(
@@ -280,11 +246,10 @@ public class FacesScopes implements Serializable {
 			}
 		}
 		
-		//20210721@fadhli - #31062 Moved existing user activity logging handling to cater all scenarios - Start
-		UserActivityUtil.getInstance().logUserActivity(this.getClass().getName() + "#getUserSessionBean()");
-		//20210721@fadhli - #31062 Moved existing user activity logging handling to cater all scenarios - End
+		//20210723@fadhli - #31062 Moved existing user activity logging handling to cater all scenarios - Start
+		UserActivityUtil.getInstance().logUserActivity();
+		//20210723@fadhli - #31062 Moved existing user activity logging handling to cater all scenarios - End
 		
-		log.info("[getUserSessionBean] 7 user: " + user);
 		if (user == null) {
 			user = new PmUser();
 		}
@@ -439,9 +404,9 @@ public class FacesScopes implements Serializable {
 			}
 		}
 		
-		//20210610@fadhli - #31062 Added user activity logging - Start
-		UserActivityUtil.getInstance().logUserActivity(this.getClass().getName() + "#getBPMAuthenticationCtxToken()");
-		//20210610@fadhli - #31062 Added user activity logging - End
+		//20210723@fadhli - #31062 Added user activity logging - Start
+		UserActivityUtil.getInstance().logUserActivity();
+		//20210723@fadhli - #31062 Added user activity logging - End
 		
 		return ctxToken;
 	}
