@@ -10010,6 +10010,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			detailSO = null;
 		}
 	}
+  	
+    public boolean isCommitteeApprovalReviseTask(String taskName) {
+     	return (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName));
+    }
     //#30477 - End
   	
 }
