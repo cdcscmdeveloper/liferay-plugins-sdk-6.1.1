@@ -57,6 +57,8 @@ import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.ct.circular.CtCircularVer;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -2507,6 +2509,27 @@ public class QtSpecCloneBackingBean extends
 				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 				bean.setSearchValue(this.getManagedBean().getPanel());
 				searchFilterBean.add(bean);
+				
+				if(this.getManagedBean().getQt().isPanel()){//25635&31349-start
+					CtCircularVer circularver=this.getManagedBean().getQt().getCircularVer();
+					CtPanelItemGroup panelItemGroup=this.getManagedBean().getQt().getItemGroup();
+					if(null!=circularver){
+						SearchFilterBean circularbean = new SearchFilterBean();
+						circularbean.setSearchField("circularVer.circularVerId");
+						circularbean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+						circularbean.setSearchValue(circularver.getCircularVerId());
+						searchFilterBean.add(circularbean);	
+					}
+					
+					if(null!=panelItemGroup){
+						SearchFilterBean itemGroupbean = new SearchFilterBean();
+						itemGroupbean.setSearchField("itemGroup.panelItemGroupId");
+						itemGroupbean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+						itemGroupbean.setSearchValue(panelItemGroup.getPanelItemGroupId());
+						searchFilterBean.add(itemGroupbean);	
+					}
+					
+				}//25635&31349-End
 			}
 			
 			if (null != this.getManagedBean().getQt()){
