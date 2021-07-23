@@ -9235,10 +9235,14 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setReasonId(null);
 		getManagedBean().setRejectReasonReqd(false);
 		getManagedBean().getPoSecReview().setRecommendation("");
-		//#3460 - Start
-		getManagedBean().setSelectedRecommendReasonDescs(new ArrayList<PmReasonDesc>());
 		//30974 - start
+
+		getManagedBean().setSearchRecommendRejectReason(null);
+		
+		getManagedBean().setSelectedRecommendReasonDescs(new ArrayList<PmReasonDesc>());
 		getManagedBean().setSelectedRecommendRejectReasonDescs(new ArrayList<PmReasonDesc>());
+		
+		searchRecommendRejectedReason();
 		//30974 - end
 		//#3460 - End
 		RequestContext.getCurrentInstance().execute("submitApprvrDialog.hide()");
@@ -14794,7 +14798,8 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSelectedRecommendRejectReasonDescs() != null
 				&& getManagedBean().getSelectedRecommendRejectReasonDescs().size() > 0) {
 			for (PmReasonDesc reason : getManagedBean().getSelectedRecommendRejectReasonDescs()) {
-				if (!StringUtils.upperCase(reason.getReasonDesc()).contains(
+				if (getManagedBean().getSearchRecommendRejectReason() != null
+						&& !StringUtils.upperCase(reason.getReasonDesc()).contains(
 						StringUtils.upperCase(getManagedBean().getSearchRecommendRejectReason()))) {
 					getManagedBean().getRecommendReasonDescList().add(reason);
 				}
@@ -14809,18 +14814,23 @@ public class SmApplicationBackingBean extends
 	 */
 	public void resetSearchRecommendRejectedReason() {
 		getManagedBean().setSearchRecommendRejectReason(StringUtils.EMPTY);
+		//30974 - start
+		//comment for changing method for set
+//		getManagedBean().setRecommendReasonDescList(
+//				SmApplicationUtil.retrieveMofRejectReason(getManagedBean()
+//						.getSmAppl().getSupplierType(), getManagedBean()
+//						.getSmSupplier().getBusinessType(), getManagedBean()
+//						.getSmAppl().getApplType()));
 		getManagedBean().setRecommendReasonDescList(
-				SmApplicationUtil.retrieveMofRejectReason(getManagedBean()
-						.getSmAppl().getSupplierType(), getManagedBean()
-						.getSmSupplier().getBusinessType(), getManagedBean()
-						.getSmAppl().getApplType()));
+				SmApplicationUtil.getWildCardSearchRejectReason(
+						getManagedBean().getSearchRecommendRejectReason(),
+						getManagedBean().getRecommendReasonDescInitList()));
 		//		#15629 -- start - 26/1/2020
 		if(SmCommonUtil.isCollectionEmpty(getManagedBean().getSelectedRecommendReasonDescs())) {
 			getManagedBean().setSelectedRecommendReasonDescs(new ArrayList<PmReasonDesc>());
+			getManagedBean().setSelectedRecommendRejectReasonDescs(new ArrayList<PmReasonDesc>());
 		} 
 		
-		//30974 - start
-				getManagedBean().getSelectedRecommendRejectReasonDescs().clear();
 		//30974 - end	
 		//		#15629 -- end - 26/1/2020
 

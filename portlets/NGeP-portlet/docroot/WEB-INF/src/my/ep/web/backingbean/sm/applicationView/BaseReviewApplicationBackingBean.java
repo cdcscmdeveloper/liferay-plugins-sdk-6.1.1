@@ -2381,6 +2381,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 */
 	public String getApplicationRejectionReason() {
 		String rejectReasons = StringUtils.EMPTY;
+		//30974 - Start (16/7/2021)
+		String rejectReasonsByPO = StringUtils.EMPTY;
+		//30974 - End (16/7/2021)
 		if (getManagedBean().getSmAppl().isActiveAppl()
 				&& getManagedBean().getSmAppl().isResubmit()
 				&& getManagedBean().getSmAppl().getOriginalAppl() != null) {
@@ -2423,31 +2426,92 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				if(!EntityHelper.isCollectionEmpty(getManagedBean()
 						.getSmAppl().getSmApplRejectReasons())){
 					//#30974 - Start - 2/7/2021
-					if (this.getManagedBean().getSmAppl().getPmStatus().getStatusId().toString()
-							.equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER)) {
-						Iterator<SmApplRejectReason> smApplRejectReasonIter = getManagedBean().getSmAppl()
-								.getSmApplRejectReasons().iterator();
-						while (smApplRejectReasonIter.hasNext()) {
-							SmApplRejectReason smApplRejectReason = smApplRejectReasonIter.next();
-							if (!smApplRejectReason.isReasonByPo()) {
-								smApplRejectReasonIter.remove();
+					if (this.getManagedBean().getSmAppl().getPmStatus().getStatusId() != null) {
+						if (this.getManagedBean().getSmAppl().getPmStatus().getStatusId().toString()
+								.equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER)) {
+							Iterator<SmApplRejectReason> smApplRejectReasonIter = getManagedBean().getSmAppl()
+									.getSmApplRejectReasons().iterator();
+							while (smApplRejectReasonIter.hasNext()) {
+								SmApplRejectReason smApplRejectReason = smApplRejectReasonIter.next();
+								if (!smApplRejectReason.isReasonByPo()) {
+									smApplRejectReasonIter.remove();
+								}
+							}
+							// To display Reject Reasons Only By PO - Start
+							List<SmApplRejectReason> ReasonsByPO = new ArrayList<SmApplRejectReason>(getManagedBean()
+									.getSmAppl().getSmApplRejectReasons());
+							getManagedBean().setSmApplRejectReasonsByPO(ReasonsByPO);
+							// To display Reject Reasons Only By PO - End
+						} else if (this.getManagedBean().getSmAppl().getPmStatus().getStatusId().toString()
+								.equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)) {
+
+							// To display Reject Reasons Only By PO - Start
+							List<SmApplRejectReason> ReasonsByPO = new ArrayList<SmApplRejectReason>();
+							for (SmApplRejectReason reason : getManagedBean().getSmAppl().getSmApplRejectReasons()) {
+								if (reason.isReasonByPo()) {
+									ReasonsByPO.add(reason);
+								}
+							}
+							if(ReasonsByPO != null && !ReasonsByPO.isEmpty()){
+								getManagedBean().setSmApplRejectReasonsByPO(ReasonsByPO);	
+							}
+							// To display Reject Reasons Only By PO - End
+
+							Iterator<SmApplRejectReason> smApplRejectReasonIter = getManagedBean().getSmAppl()
+									.getSmApplRejectReasons().iterator();
+							while (smApplRejectReasonIter.hasNext()) {
+								SmApplRejectReason smApplRejectReason = smApplRejectReasonIter.next();
+								if (smApplRejectReason.isReasonByPo()) {
+									smApplRejectReasonIter.remove();
+								}
+							}
+						} else {
+							//If there is status id but not rejected
+							// To display Reject Reasons Only By PO - Start
+							List<SmApplRejectReason> ReasonsByPO = new ArrayList<SmApplRejectReason>();
+							for (SmApplRejectReason reason : getManagedBean().getSmAppl().getSmApplRejectReasons()) {
+								if (reason.isReasonByPo()) {
+									ReasonsByPO.add(reason);
+								}
+							}
+							if(ReasonsByPO != null && !ReasonsByPO.isEmpty()){
+								getManagedBean().setSmApplRejectReasonsByPO(ReasonsByPO);			
+							}	
+							// To display Reject Reasons Only By PO - End
+						}
+					} else {
+						//If there is no status id null, it goes into this block
+						// To display Reject Reasons Only By PO - Start
+						List<SmApplRejectReason> ReasonsByPO = new ArrayList<SmApplRejectReason>();
+						for (SmApplRejectReason reason : getManagedBean().getSmAppl().getSmApplRejectReasons()) {
+							if (reason.isReasonByPo()) {
+								ReasonsByPO.add(reason);
 							}
 						}
-					} else if (this.getManagedBean().getSmAppl().getPmStatus().getStatusId().toString()
-							.equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)) {
-						Iterator<SmApplRejectReason> smApplRejectReasonIter = getManagedBean().getSmAppl()
-								.getSmApplRejectReasons().iterator();
-						while (smApplRejectReasonIter.hasNext()) {
-							SmApplRejectReason smApplRejectReason = smApplRejectReasonIter.next();
-							if (smApplRejectReason.isReasonByPo()) {
-								smApplRejectReasonIter.remove();
-							}
+						if(ReasonsByPO != null && !ReasonsByPO.isEmpty()){
+							getManagedBean().setSmApplRejectReasonsByPO(ReasonsByPO);
 						}
+						// To display Reject Reasons Only By PO - End
 					}
+					
+					//since there is duplicate problem occurs, If there is duplicate ID checking - Start
+					if(getManagedBean().getSmAppl().getSmApplRejectReasons() != null && getManagedBean().getSmAppl().getSmApplRejectReasons().size() > 0){
+						Map<String, SmApplRejectReason> removedDuplicateID = new HashMap<String, SmApplRejectReason>();
+						List<SmApplRejectReason> newListOfRejectID = new ArrayList<>();
+						for(SmApplRejectReason reason : this.getManagedBean().getSmAppl().getSmApplRejectReasons()){
+							removedDuplicateID.put(reason.getPmReason().getReasonId().toString(), reason);
+						}
+						Iterator itr = removedDuplicateID.keySet().iterator();
+						while (itr.hasNext()){
+							String id = itr.next().toString();
+							newListOfRejectID.add((SmApplRejectReason)removedDuplicateID.get(id));
+						}
+						getManagedBean().getSmAppl().setSmApplRejectReasons(newListOfRejectID);	
+					}
+					// If there is duplicate ID checking - End
 					//#30974 - End - 2/7/2021
 				}
 				// Refs #15629 - End - 21/1/2021
-				
 				rejectReasons = SmCommonUtil
 						.getHtmlApplicationRejectReasons(getManagedBean()
 								.getSmAppl().getSmApplRejectReasons());
@@ -2458,9 +2522,29 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 									ParameterConst.SM_APPLN_RMRK_DECISION_REJECT,
 									getManagedBean().getSmAppl().getApplId());
 				}
+				//30974 - Start - 16/7/2021
+				if(!EntityHelper.isCollectionEmpty(getManagedBean().getSmApplRejectReasonsByPO())){
+					rejectReasonsByPO = SmCommonUtil
+							.getHtmlApplicationRejectReasons(getManagedBean().getSmApplRejectReasonsByPO());
+
+					if (StringUtils.isBlank(rejectReasonsByPO)) {
+						rejectReasons = SmApplicationUtil
+								.getSmRemarksByDocTypeAndId(
+										ParameterConst.SM_APPLN_RMRK_DECISION_REJECT,
+										getManagedBean().getSmAppl().getApplId());
+					}
+				}
+				
+				//30974 - End - 16/7/2021
 			}
 		}
 		log.info("HTML REJECT REASON:" + rejectReasons);
+		log.info("REJECT REASON BY PO ONLY: " + rejectReasons);
+		//30974 - Start - 16/7/2021
+		if(!StringUtils.isBlank(rejectReasonsByPO)){
+			getManagedBean().setRejectReasonByPO(rejectReasonsByPO);
+		}
+		//30974 - End - 16/7/2021
 		return rejectReasons;
 	}
 
