@@ -459,7 +459,18 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				this.getManagedBean().setReqItemRowSpanMap(reqItemRowSpanMap);
 				this.getManagedBean().setReqItemSession(0L);
 				this.getManagedBean().setReqItemSubTotalSession(0L);
-				this.getManagedBean().setTotalZonePrice(totalZonePrice);				
+				this.getManagedBean().setTotalZonePrice(totalZonePrice);
+				
+				if (scLoa.getSstAmt() != null) {
+					BigDecimal overallAmt = BigDecimal.ZERO;
+					overallAmt = totalZonePrice.add(scLoa.getSstAmt());
+					overallAmt.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+
+					this.getManagedBean().setOverallContractAmt(overallAmt);
+
+				} else {
+					this.getManagedBean().setOverallContractAmt(totalZonePrice);
+				}
 			}
 		}
 		// #27797 - end
@@ -941,7 +952,18 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				this.getManagedBean().setReqItemRowSpanMap(reqItemRowSpanMap);
 				this.getManagedBean().setReqItemSession(0L);
 				this.getManagedBean().setReqItemSubTotalSession(0L);
-				this.getManagedBean().setTotalZonePrice(totalZonePrice);				
+				this.getManagedBean().setTotalZonePrice(totalZonePrice);
+				
+				if (this.getManagedBean().getScLoa().getSstAmt() != null) {
+					BigDecimal overallAmt = BigDecimal.ZERO;
+					overallAmt = totalZonePrice.add(this.getManagedBean().getScLoa().getSstAmt());
+					overallAmt.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+
+					this.getManagedBean().setOverallContractAmt(overallAmt);
+
+				} else {
+					this.getManagedBean().setOverallContractAmt(totalZonePrice);
+				}
 			}
 		}
 		// #27797 - end
