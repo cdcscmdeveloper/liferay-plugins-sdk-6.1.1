@@ -13,6 +13,7 @@ import my.epx.bean.UserActivityBean;
 import my.epx.monitor.UserActivityLogger;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -22,11 +23,11 @@ import com.liferay.portal.util.PortalUtil;
  * UserActivityUtil is used as the utility class to log user activities. 
  * 
  * @author	fadhli
- * @version	1.0
- * @since	2021-07-22
+ * @version	1.2
+ * @since	2021-07-23
  */
 public class UserActivityUtil {
-//	private static Logger logger = Logger.getLogger(UserActivityUtil.class);
+	private static Logger logger = Logger.getLogger(UserActivityUtil.class);
 	private static UserActivityUtil instance;
 	private static boolean activityLoggingEnabled;
 	
@@ -57,36 +58,39 @@ public class UserActivityUtil {
 	
 	public void logUserActivity(String triggerClassMethod) {
 		if (activityLoggingEnabled) {
-			HttpServletRequest httpServletRequest = PortalUtil.getHttpServletRequest((PortletRequest) FacesContext
-					.getCurrentInstance().getExternalContext().getRequest());
-			
-			HttpServletResponse httpServletResponse = PortalUtil.getHttpServletResponse((PortletResponse) FacesContext
-					.getCurrentInstance().getExternalContext().getResponse());
-			
 			FacesScopes facesScopes = new FacesScopes();
+			String userScreenName = facesScopes.getUserScreenName();
+			logger.info("[logUserActivity] userScreenName: " + userScreenName);
 			
-			PortletRequest portletRequest = (PortletRequest) FacesContext.getCurrentInstance()
-					.getExternalContext().getRequest();
-			
-			String portletPage = StringUtils.EMPTY;
-			Object portletConfig = portletRequest.getAttribute(PORTLET_CONFIG);
-			if (null != portletConfig && portletConfig instanceof PortletConfig) {
-				portletPage = ((PortletConfig) portletConfig).getInitParameter(PORTLET_DEFAULT_VIEW_ID);
+			if (null != userScreenName && !StringUtils.EMPTY.equals(userScreenName)) {
+				HttpServletRequest httpServletRequest = PortalUtil.getHttpServletRequest((PortletRequest) FacesContext
+						.getCurrentInstance().getExternalContext().getRequest());
+				
+				HttpServletResponse httpServletResponse = PortalUtil.getHttpServletResponse((PortletResponse) FacesContext
+						.getCurrentInstance().getExternalContext().getResponse());
+				
+				PortletRequest portletRequest = (PortletRequest) FacesContext.getCurrentInstance()
+						.getExternalContext().getRequest();
+				
+				String portletPage = StringUtils.EMPTY;
+				Object portletConfig = portletRequest.getAttribute(PORTLET_CONFIG);
+				if (null != portletConfig && portletConfig instanceof PortletConfig) {
+					portletPage = ((PortletConfig) portletConfig).getInitParameter(PORTLET_DEFAULT_VIEW_ID);
+				}
+				
+				UserActivityBean userActivityBean = new UserActivityBean();
+				userActivityBean.setLoginId(userScreenName);
+				userActivityBean.setSessionId(portletRequest.getRequestedSessionId());
+				userActivityBean.setPortletPage(portletPage);
+				userActivityBean.setPortletId(getObjectToString(httpServletRequest.getAttribute(PORTLET_ID)));
+				userActivityBean.setRequestMethod(httpServletRequest.getMethod());
+				userActivityBean.setRequestedUrl(getObjectToString(httpServletRequest.getAttribute(CURRENT_COMPLETE_URL)));
+				userActivityBean.setFriendlyUrl(getObjectToString(httpServletRequest.getAttribute(FRIENDLY_URL)));
+				userActivityBean.setUserAgent(httpServletRequest.getHeader(USER_AGENT));
+				userActivityBean.setResponseStatus(httpServletResponse.getStatus());
+				
+				UserActivityLogger.log(userActivityBean);
 			}
-			
-			UserActivityBean userActivityBean = new UserActivityBean();
-			userActivityBean.setLoginId(facesScopes.getUserScreenName());
-			userActivityBean.setSessionId(portletRequest.getRequestedSessionId());
-			userActivityBean.setPortletPage(portletPage);
-			userActivityBean.setPortletId(getObjectToString(httpServletRequest.getAttribute(PORTLET_ID)));
-			userActivityBean.setRequestMethod(httpServletRequest.getMethod());
-			userActivityBean.setRequestedUrl(getObjectToString(httpServletRequest.getAttribute(CURRENT_COMPLETE_URL)));
-			userActivityBean.setFriendlyUrl(getObjectToString(httpServletRequest.getAttribute(FRIENDLY_URL)));
-			userActivityBean.setUserAgent(httpServletRequest.getHeader(USER_AGENT));
-			userActivityBean.setResponseStatus(httpServletResponse.getStatus());
-			userActivityBean.setTriggerClassMethod(triggerClassMethod);
-			
-			UserActivityLogger.log(userActivityBean);
 		}
 	}
 	
