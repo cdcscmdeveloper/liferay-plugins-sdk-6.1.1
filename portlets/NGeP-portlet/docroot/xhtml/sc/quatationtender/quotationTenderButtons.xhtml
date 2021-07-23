@@ -24,6 +24,9 @@
 	<ui:param name="iscloseQTIfValidityPeriodExpiredAndStatusRelated" value="#{qTDetailBB.closeQTIfValidityPeriodExpiredAndStatusRelated()}" />
 	<ui:param name="isQTStatusPendingScoringEndorsement" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT}" />
 	<!-- 26095@hatta - end -->
+	<ui:remove> #30477 Start </ui:remove>
+	<ui:param name="isCommitteeApprovalReviseTask" value="#{qTDetailBB.isCommitteeApprovalReviseTask(qTDetailBB.managedBean.taskName)}" />
+	<ui:remove> #30477 End </ui:remove>
 		<table width="100%">
 		<tr>
 		<td style="vertical-align: bottom;" align="right"><p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
@@ -113,7 +116,7 @@
 											process="@this" partialSubmit="true" update="pnlid2"
 											action="#{qTCloneBackingbean.cloneCommitteePopupAction}"
 											title="#{lbl['lbl.sc.qt.create.btn.clone.tooltip']}" />
-				<p:commandButton value="#{lbl['lbl.sc.clone.qt.documents']}" style="float:right;" id="cloneButton2" rendered="#{isClone2}"
+				<p:commandButton value="#{lbl['lbl.sc.clone.qt.documents']}" style="float:right;" id="cloneButton2" rendered="#{isClone2 and !isCommitteeApprovalReviseTask}"
 											process="@this" partialSubmit="true" update="pnlid2"
 											action="#{qTCloneBackingbean.cloneCommitteePopupAction}"
 											title="#{lbl['lbl.sc.qt.create.btn.clone.tooltip']}" />	
@@ -139,7 +142,15 @@
 								styleClass="ui-button"
 								actionListener ="#{qTDetailBB.assertSpecificationUpdateInProgress(true)}"  
 								update="@([id$=#{submitConfirmId2}])" 
-								rendered="#{isClone2 and !qTDetailBB.managedBean.showPopUpBPKApprovalNeeded}" />
+								rendered="#{isClone2 and !isCommitteeApprovalReviseTask}" />
+							<ui:remove> #30477 Start </ui:remove>	
+							<p:commandButton value="#{lbl[buttonLabel]}"
+								styleClass="ui-button" onclick="blockWidget.show();"
+								oncomplete="blockWidget.hide();"
+								rendered="#{isClone2 and isCommitteeApprovalReviseTask}"
+								action="#{qTDetailBB.updateBpmTask(bpmAction)}">
+							</p:commandButton>
+							<ui:remove> #30477 End </ui:remove>
 							<!-- #25077 Start -->
 							<c:if test="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION}">
 								<p:commandButton value="#{lbl[buttonLabel]}"
