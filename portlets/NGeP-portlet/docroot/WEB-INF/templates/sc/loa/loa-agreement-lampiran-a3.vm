@@ -360,7 +360,9 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 				#end
 		</tbody>
 		</table>
-		<div style="page-break-after:always;"><br/></div>
+		#if ($rowCount > 0)
+			<div style="page-break-after:always;"><br/></div>
+		#end
 		<br/>
 		<br/>
 	  #else 
@@ -654,7 +656,9 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 					#end
 			</tbody>
 			</table>
-			<div style="page-break-after:always;"><br/></div>
+			#if ($rowCount > 0)
+				<div style="page-break-after:always;"><br/></div>
+			#end
 			<br/>
 			<br/>
 		#end
@@ -687,7 +691,9 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 								#end
 						#end
 					</table>
-					<div style="page-break-after:always;"><br/></div>
+					#if ($rowCount > 0)
+						<div style="page-break-after:always;"><br/></div>
+					#end
 			</span></td>
 		</tr>
 	#end
@@ -1222,6 +1228,16 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 			</span></td>
 		</tr>
 	#end
+	
+	<div class="break-after"><br/></div>
+	<table border="0" cellpadding="0" cellspacing="0" width="100%">
+		<tr>
+			<td align="right"> <span class="text_family"> <b><i>Lampiran A5</i></b></span></td>
+		</tr>
+		<tr>
+			<td align="center"><span class="text_family_header">KADAR DENDA/TOLAKAN</span> <br /> <br /></td>
+		</tr>
+	</table>
 	
 	<div style="margin-top: 200px; font-family:calibri; font-size:13px; float:right">
 		$pageNo

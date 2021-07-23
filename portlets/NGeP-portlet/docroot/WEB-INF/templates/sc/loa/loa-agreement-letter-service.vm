@@ -1235,7 +1235,9 @@ u {
 				#end
 		</tbody>
 		</table>
-		<div class="break-after"><br/></div>
+		#if ($rowCount > 0)
+			<div class="break-after"><br/></div>
+		#end
 		<br/>
 		<br/>
 	  #else 
@@ -1528,7 +1530,9 @@ u {
 					#end
 			</tbody>
 			</table>
-			<div class="break-after"><br/></div>
+			#if ($rowCount > 0)
+				<div class="break-after"><br/></div>
+			#end
 			<br/>
 			<br/>
 		#end
@@ -1561,7 +1565,9 @@ u {
 								#end
 						#end
 					</table>
-					<div class="break-after"><br/></div>
+					#if ($productAnswers)
+						<div class="break-after"><br/></div>
+					#end
 			</span></td>
 		</tr>
 	#end
