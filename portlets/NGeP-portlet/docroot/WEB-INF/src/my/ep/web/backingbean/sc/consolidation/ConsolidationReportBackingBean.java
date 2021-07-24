@@ -542,37 +542,47 @@ public class ConsolidationReportBackingBean extends
 		
 		// #18685 - Start.
 		debugLogger("downloadAllReports");
-
-		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean()
-				.getScQtFinalization().getScQtFinalizationReports();
+		// #28834 - Start.
+		List<ScQtFinalizationReport> briefingPaperList = null;
+		List<ScQtFinalizationReport> decisionPaperList = null;
+		for (ScQtFinalizationReport report: getManagedBean().getScQtFinalization().getScQtFinalizationReports()) {
+			  if (report.getTitle().contains("Kertas Taklimat")) {
+				  if (briefingPaperList == null) {
+					  briefingPaperList = new ArrayList<>();
+				  }
+				  briefingPaperList.add(report);
+			  } else {
+				  if (decisionPaperList == null) {
+					  decisionPaperList = new ArrayList<>();
+				  }
+				  decisionPaperList.add(report);
+			  }
+		}
+		
 		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<ScQtFinalizationReportAttachment>();
-		ScQtFinalizationReport scQtReport = null;
-		ScQtFinalizationReportAttachment attachment = null;
-		if (CollectionUtils.isNotEmpty(scQtFinalizationReports)
-				&& scQtFinalizationReports.size() > 0) {
-			for (int i = 0; i < scQtFinalizationReports.size(); i++) {
-				scQtReport = scQtFinalizationReports.get(i);
-				attachment = scQtReport.getScQtFinalizationReportAttachment();
-				
-				if (null != getManagedBean().getCurrentStatusId() 
-						&&  scQtReport.getTitle().contains("Kertas Taklimat") 
-						&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_CONSOLIDATION_REPORT.longValue() ||
-								getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER.longValue())
-						&& scQtReport.getTitle().equals(scQtFinalizationReports.get(scQtFinalizationReports.size() -1 ).getTitle())) {
-					attachment = generateDocumentAttachment(scQtReport);
-					scQtReport.setScQtFinalizationReportAttachment(attachment);
-				    // #28834 - End.
-				} else {
 
-					if (attachment == null) {
-						attachment = generateDocumentAttachment(scQtReport);
-						scQtReport.setScQtFinalizationReportAttachment(attachment);
-					}
+		if (CollectionUtils.isNotEmpty(briefingPaperList)
+				&& briefingPaperList.size() > 0) {
+			for (ScQtFinalizationReport finalizationReport : briefingPaperList) {
+				ScQtFinalizationReportAttachment attachment = finalizationReport.getScQtFinalizationReportAttachment();
+				if (finalizationReport.getTitle().equals(briefingPaperList.get(briefingPaperList.size() -1).getTitle()) || attachment == null) {
+					attachment = generateDocumentAttachment(finalizationReport);
+					finalizationReport.setScQtFinalizationReportAttachment(attachment);
 				}
 				scAttachments.add(attachment);
 			}
 		}
 		
+		if (CollectionUtils.isNotEmpty(decisionPaperList)
+				&& decisionPaperList.size() > 0) {
+			for (ScQtFinalizationReport finalizationReport : decisionPaperList) {
+				ScQtFinalizationReportAttachment attachment = finalizationReport.getScQtFinalizationReportAttachment();
+				if (null != attachment) {
+					scAttachments.add(attachment);
+				}
+			}
+		}
+		// #28834 - End.
 		if (CollectionUtils.isNotEmpty(this.getManagedBean().getNewBriefingPaperReportList())
 				&& this.getManagedBean().getNewBriefingPaperReportList().size() > 0) {
 			for (ScQtFinalizationReport uploadedSfReport : this.getManagedBean().getNewBriefingPaperReportList()) {
@@ -598,13 +608,23 @@ public class ConsolidationReportBackingBean extends
 		//28834 starts.
 		ScQtFinalizationReportAttachment reportAttachment = null;
         boolean latestBriefingPaper = false;
-        if (CollectionUtils.isNotEmpty(getManagedBean().getFinalizationReports()) && getManagedBean().getFinalizationReports().size() > 0) {
-          ScQtFinalizationReport latestScQtFinalizationReport = getManagedBean().getFinalizationReports().get(getManagedBean().getFinalizationReports().size() -1);
+        // #28834 - Start.
+        List<ScQtFinalizationReport> briefingPaperList = null;
+		for (ScQtFinalizationReport report: getManagedBean().getFinalizationReports()) {
+			  if (report.getTitle().contains("Kertas Taklimat")) {
+				  if (briefingPaperList == null) {
+					  briefingPaperList = new ArrayList<>();
+				  }
+				  briefingPaperList.add(report);
+			  }
+		}
+        if (CollectionUtils.isNotEmpty(briefingPaperList) && briefingPaperList.size() > 0) {
+          ScQtFinalizationReport latestScQtFinalizationReport = briefingPaperList.get(briefingPaperList.size() -1);
           if (null != latestScQtFinalizationReport && latestScQtFinalizationReport.getTitle().equals(scQtFinalizationReport.getTitle())) {
             latestBriefingPaper = true;
           }
         }
-		
+        // #28834 - End.
 		if (null != getManagedBean().getCurrentStatusId() 
 				&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_CONSOLIDATION_REPORT.longValue() ||
 						getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER.longValue()) && latestBriefingPaper) {
