@@ -9485,6 +9485,10 @@ public class SmApplicationBackingBean extends
 		// #3460 - end
 		
 		getManagedBean().setRejectReasonReqd(false);
+		//30974 - start
+		getManagedBean().setSearchRejectReason(null);
+		//30974 - end
+
 		//#12483 - START
 		if(dialog.equalsIgnoreCase("approverRevDialog")){
 			this.getManagedBean().setReviseMandatory(false);
