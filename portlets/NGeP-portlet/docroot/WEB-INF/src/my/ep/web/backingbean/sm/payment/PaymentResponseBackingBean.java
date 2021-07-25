@@ -34,6 +34,7 @@ import my.ep.persistence.entity.py.PyPaymentOrder;
 import my.ep.persistence.entity.py.PyPaymentResponse;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -43,6 +44,7 @@ import my.ep.web.managedbean.sm.payment.PaymentResponseManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
@@ -107,8 +109,33 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		// #26307 start
 		String cardType = null; 
 		String extraP = httpServletRequest.getParameter("extraP");
-		log.info("getsession: -"+httpServletRequest.getSession().getAttribute("orderidS"));
-		
+		log.info("getsession: -"+session.getAttribute("orderidS"));
+		SmSupplier supp = SmApplicationUtil.getCurrentSupplier();
+		log.info("orderId1: " + orderId); 
+		//Start //26307
+		boolean skipChecking = false;
+		if(supp != null){
+			log.info("supplier id =="+supp.getSupplierId());
+			SmAppl activeAppl = SmCommonUtil.getActiveApplBySupplier(getManagedBean().getSmSupplier());
+			if(activeAppl != null){
+				log.info("active appl =="+activeAppl.getApplNo());
+				PaymentReqDTO reqDTO = new PaymentReqDTO();
+				//reqDTO.setApplId(this.getManagedBean().getAppId());
+				reqDTO.setBillNo(getManagedBean().getDocNo());
+				IPaymentSO reqSO1 = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
+				PaymentResDTO resDTO1 = reqSO1.retrievePyBillByDocNo(reqDTO);
+				if(resDTO1.getPyBill() != null){
+					if(resDTO1.getPyBill().getPyPayments()!= null && !resDTO1.getPyBill().getPyPayments().isEmpty()){
+						Long paymentId = resDTO1.getPyBill().getPyPayments().get(0).getPaymentId();
+						orderId = paymentId.toString();
+						skipChecking = true;
+						status = "00";
+					}
+				}
+			}
+			
+		}
+		//end //26307
 		log.info("orderId: " + orderId); 
 		log.info("tranID: " + tranID); 
 		log.info("status:" + status); 
@@ -147,7 +174,8 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 
 					log.info("SKey>>>>" + skey);
 					log.info("Key1>>>>" + key1);
-					if (skey.equals(key1)) {
+					//26307
+					if (skey.equals(key1) || skipChecking) {
 						String billType = StringUtils.EMPTY;
 						String personnelName = null;
 						
