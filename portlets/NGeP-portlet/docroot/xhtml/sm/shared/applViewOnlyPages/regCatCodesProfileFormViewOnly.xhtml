@@ -38,8 +38,9 @@
 			
 			<!-- #28175 start -->
 			<c:choose>
-				<c:when test="#{fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'application-history') or 
-					fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'supplier-application-search')}">
+				<c:when test="#{(fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'application-history') or 
+					fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'supplier-application-search')) and 
+					viewSmApplBackingBean.managedBean.smAppl.workflowStatusDesc eq 'Registered'}">
 					<p:column style="width :350px;white-space : normal">
 						<h:outputText
 							value="#{aprvdCatBean.pmCategoryL1.categoryL1Code} -  #{aprvdCatBean.categoryL1Name}" />
@@ -72,6 +73,7 @@
 									update="@form" />&#160;
 								<h:outputText value="#{lbl['lbl.sm.catCodes.change.alert.third']}" />
 							</span>
+							<br />
 						</p:outputPanel>
 						<h:outputText value="#{aprvdCatBean.pmCategoryL2.categoryL2Code} -  #{aprvdCatBean.pmCategoryL2.categoryName}" />
 						<br />
@@ -109,7 +111,6 @@
 									update="@form" />&#160; 
 								<h:outputText value="#{lbl['lbl.sm.catCodes.change.alert.third']}" />
 							</span>
-							<br />
 						</p:outputPanel>
 					</p:column>
 				</c:when>
