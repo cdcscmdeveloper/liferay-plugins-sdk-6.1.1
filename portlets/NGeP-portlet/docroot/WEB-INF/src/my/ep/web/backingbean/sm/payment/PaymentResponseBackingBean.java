@@ -121,12 +121,15 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				log.info("active appl =="+activeAppl.getApplNo());
 				PaymentReqDTO reqDTO = new PaymentReqDTO();
 				//reqDTO.setApplId(this.getManagedBean().getAppId());
-				reqDTO.setBillNo(getManagedBean().getDocNo());
+				reqDTO.setBillNo(activeAppl.getApplNo());
 				IPaymentSO reqSO1 = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
 				PaymentResDTO resDTO1 = reqSO1.retrievePyBillByDocNo(reqDTO);
+				log.info("resDTO1.getPyBill() =="+resDTO1.getPyBill());
 				if(resDTO1.getPyBill() != null){
+					log.info("resDTO1.getPyBill().getPyPayments() =="+resDTO1.getPyBill().getPyPayments().size());
 					if(resDTO1.getPyBill().getPyPayments()!= null && !resDTO1.getPyBill().getPyPayments().isEmpty()){
 						Long paymentId = resDTO1.getPyBill().getPyPayments().get(0).getPaymentId();
+						log.info("resDTO1.getPyBill().getPyPayments()  paymentId=="+ paymentId);
 						orderId = paymentId.toString();
 						skipChecking = true;
 						status = "00";
