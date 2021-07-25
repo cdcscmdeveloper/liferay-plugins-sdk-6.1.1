@@ -116,7 +116,8 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		boolean skipChecking = false;
 		if(supp != null){
 			log.info("supplier id =="+supp.getSupplierId());
-			SmAppl activeAppl = SmCommonUtil.getActiveApplBySupplier(getManagedBean().getSmSupplier());
+			SmAppl activeAppl = SmCommonUtil.getActiveApplBySupplier(supp);
+			log.info("resDTO1.activeAppl() =="+activeAppl);
 			if(activeAppl != null){
 				log.info("active appl =="+activeAppl.getApplNo());
 				PaymentReqDTO reqDTO = new PaymentReqDTO();
