@@ -129,11 +129,22 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				if(resDTO1.getPyBill() != null){
 					log.info("resDTO1.getPyBill().getPyPayments() =="+resDTO1.getPyBill().getPyPayments().size());
 					if(resDTO1.getPyBill().getPyPayments()!= null && !resDTO1.getPyBill().getPyPayments().isEmpty()){
-						Long paymentId = resDTO1.getPyBill().getPyPayments().get(0).getPaymentId();
+						PyPayment pyPymt = resDTO1.getPyBill().getPyPayments().get(0);
+						Long paymentId = pyPymt.getPaymentId();
 						log.info("resDTO1.getPyBill().getPyPayments()  paymentId=="+ paymentId);
 						orderId = paymentId.toString();
 						skipChecking = true;
-						status = "00";
+						status = SupplierManagementConst.MOL_FAIL;
+						if(pyPymt.getPmStatus()!=null){
+							if(pyPymt.getPmStatus().getStatusId() == my.ep.constant.sm.SupplierManagementConst.PM_STATUS_PAYMENT_SUCCESSFUL){
+								status = SupplierManagementConst.MOL_SUCCESS;
+							}else if(pyPymt.getPmStatus().getStatusId() == my.ep.constant.sm.SupplierManagementConst.PM_STATUS_PENDING_PAYMENT_RESPONSE){
+								status = SupplierManagementConst.MOL_PENDING;
+							}else if(pyPymt.getPmStatus().getStatusId() == my.ep.constant.sm.SupplierManagementConst.PM_STATUS_PAYMENT_FAILED){
+								status = SupplierManagementConst.MOL_FAIL;
+							}
+						}
+						
 					}
 				}
 			}
@@ -179,7 +190,8 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 					log.info("SKey>>>>" + skey);
 					log.info("Key1>>>>" + key1);
 					//26307
-					if (skey.equals(key1) || skipChecking) {
+					if (key1.equals(skey) || skipChecking) {
+						log.info("Enter 1");
 						String billType = StringUtils.EMPTY;
 						String personnelName = null;
 						
@@ -189,20 +201,20 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 						//#29481 - Start
 						if(appl != null && (appl.getSupplierType().equals(SupplierManagementConst.STYPE_BASIC) || 
 								appl.getSupplierType().equals(SupplierManagementConst.STYPE_GOVT_SELLER) || 
-								(appl.getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR)) && appl.getSmCompanyBasic().isWithFederal()==true)) {
+								(appl.getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR)) && appl.getSmCompanyBasic().isWithFederal()==true)) {log.info("Enter 2");
 							//params = new String[] {getSoftCertNameEmailMulti(this.getManagedBean().getNewPyBillDtlLs())};
 							//msgCode = MessageConst.INFO_721068;
 							showPaymentResponseMulti(status, resDTO.getPyPayment().getPaymentId(), errorDesc, billType, resDTO.getPyPayment().getPyBill().getPyBillDtls()) ;
-						} else {
+						} else {log.info("Enter 3");
 						//#29481 - End
 						showPaymentResponse(status, resDTO.getPyPayment().getPaymentId(), errorDesc, billType, resDTO.getPyPayment().getPyBill().getPyBillDtls().get(0)) ;
 						//#29481 - Start
 						}
 						//#29481 - End
-					}else{
+					}else{log.info("Enter 4");
 						showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES,null,null,null,null);
 					}
-				}else{
+				}else{log.info("Enter 5");
 					showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES,null,null,null,null);
 				}
 				log.info("<<<<<<<>PostConstruct Parameter - End>>>>>>>>>>>");
