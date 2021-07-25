@@ -107,6 +107,8 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		// #26307 start
 		String cardType = null; 
 		String extraP = httpServletRequest.getParameter("extraP");
+		log.info("getsession: -"+httpServletRequest.getSession().getAttribute("orderidS"));
+		
 		log.info("orderId: " + orderId); 
 		log.info("tranID: " + tranID); 
 		log.info("status:" + status); 

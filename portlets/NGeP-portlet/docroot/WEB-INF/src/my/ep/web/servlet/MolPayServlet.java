@@ -89,7 +89,8 @@ public class MolPayServlet extends HttpServlet {
 		String paydate = req.getParameter("paydate");
 		String skey = req.getParameter("skey");
 		String channel = req.getParameter("channel") != null ?  req.getParameter("channel") : null;
-		
+		log.info("set session--");
+		req.getSession().setAttribute("orderidS", orderId);
 		// #26307 start
 		String cardType = null;
 		String extraP = req.getParameter("extraP");
