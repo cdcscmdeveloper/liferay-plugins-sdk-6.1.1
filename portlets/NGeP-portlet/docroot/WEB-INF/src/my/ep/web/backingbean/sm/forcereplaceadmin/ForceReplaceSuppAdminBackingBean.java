@@ -94,6 +94,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 	private static final String CATALOGUE_PUBLISHED = "U";
 	//#28765 - End
 	private static final Logger log = EpLogger.getLogger(ForceReplaceSuppAdminBackingBean.class);
+	//12981
+	private PersonnelResDTO replaceExistingPersonnel;
 
 	/**
 	 * Pre - render and redirect to Force Replace Supplier Admin page
@@ -258,6 +260,11 @@ public class ForceReplaceSuppAdminBackingBean extends
 					reqDTO.setRemoveSupplier(true);
 			}	
 			//#28765 - End
+			//12981 - START
+			if(replaceExistingPersonnel != null && replaceExistingPersonnel.isTerminateSupplier()){
+				reqDTO.setRemoveSupplier(true);
+			}
+			//#12981 - END
 			SmAppl activeAppl = getCurrActiveSmAppl(getManagedBean()
 					.getSmSupplier());
 			if (activeAppl != null) {
@@ -282,8 +289,9 @@ public class ForceReplaceSuppAdminBackingBean extends
 		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO()
 				.replaceAdminWithNewPersonnel(getReqDTO());
 		//START 12981
-		//#28765 - Start - to pass through inactiveSupplierRole for G2G normal replace supplier admin		
-		if((getManagedBean().isBypassFlag()==false && !getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER))) {
+		//#28765 - Start - to pass through inactiveSupplierRole for G2G normal replace supplier admin	
+		if((getManagedBean().isBypassFlag()==false && !getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER)) 
+				&& resDto.isTerminateSupplier() == false) {
 			PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO()
 					.inactiveSupplierRole(getOldAdminReqDTO());
 		} else if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF) && 
@@ -306,7 +314,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 				.getNewAdmin(), getManagedBean().getMailAddr(),
 				getManagedBean().getPermAddr());
 		validateMyIdentity();
-		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO()
+		//12981 START
+		replaceExistingPersonnel = SmServiceLookup.getPersonnelSO()
 				.reassignSupplierAdmin(getReqDTO());
 		//START 12981
 		//#28765 - Start - inactiveSupplierRole to apply for both bypass/normal replace supplier admin
@@ -315,8 +324,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 					.inactiveSupplierRole(getOldAdminReqDTO());
 //		}
 		//#28765 - End
-		//END 12981
-		redirectToSuccessPage(resDto);
+		redirectToSuccessPage(replaceExistingPersonnel);
+		//12981 END
 	}
 	
 	//#25969
