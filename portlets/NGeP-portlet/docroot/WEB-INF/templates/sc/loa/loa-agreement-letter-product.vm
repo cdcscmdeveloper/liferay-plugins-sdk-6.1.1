@@ -656,7 +656,7 @@ u {
 				<tr>
 					#if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")
 						<td align="left" style="padding-left: 8px;" colspan="3"><span
-							class="text_family_red">* Senarai item, kuantiti, jenis perkhidmatan dan/atau tempoh serta jadual
+							class="text_family_red">* Senarai item, kuantiti, dan/atau tempoh serta jadual
 							pembekalan yang ditetapkan seperti di <b><i>Lampiran A2</i></b>
 						</span></td>
 					#else
