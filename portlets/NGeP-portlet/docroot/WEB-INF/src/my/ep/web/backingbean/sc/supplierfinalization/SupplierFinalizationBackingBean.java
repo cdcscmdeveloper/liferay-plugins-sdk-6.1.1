@@ -240,7 +240,11 @@ public class SupplierFinalizationBackingBean extends
 			getManagedBean().setLoggedInUserId(loggedInUserId);
 			
 			loadInitialData(qtId);
-
+			
+			// #18685 - Start.
+			getManagedBean().setDocNo(getManagedBean().getScQt().getQtNo());
+			// #18685 - End.
+			
 			// 28834 starts
 			if (getManagedBean().getQtRefinalized() && ArrayUtils.isNotEmpty(this.getManagedBean().getOutComes())
 					&& this.getManagedBean().getOutComes().length > 0) {
@@ -1538,7 +1542,11 @@ public class SupplierFinalizationBackingBean extends
 		getManagedBean().setRenderjustificationTextbox(isRenderjustificationTextbox);
 		
 		loadInitialData(qtId);
-
+		
+		// #18685 - Start.
+		getManagedBean().setDocNo(getManagedBean().getScQt().getQtNo());
+		// #18685 - End.
+		
 		onTabMenuChangeAction();
 	}
 
@@ -2743,18 +2751,23 @@ public class SupplierFinalizationBackingBean extends
 			}
 			
 			if (finalizationReports != null) {
-				//sortReports(finalizationReports);
 				// #18685 - Start
 				populateEvolutionReports(finalizationReports, getManagedBean().getScQt());
-				
+
 				getManagedBean().setDocumentList(finalizationReports);
-				
+
 				if (CollectionUtils.isEmpty(getManagedBean().getNewBriefingPaperReportList())) {
 					saveNewBriefingPaperReportList(reportTitleList, _scQtFinalization, qtId);
+				}
+
+				if (CollectionUtils.isNotEmpty(getManagedBean().getNewBriefingPaperReportList())
+						&& getManagedBean().getNewBriefingPaperReportList().size() > 0
+						&& getManagedBean().isSecretaryUser()) {
+					getManagedBean().getNewBriefingPaperReportList().get(0)
+							.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
+				}
+				// #18685 - End.
 			}
-			}
-			//retrieveReportTabDtl(getManagedBean().getScQt(), "KT", SourcingConstants.SUPPLIER_FINALIZATION_TASK);
-			// #18685 - End
 
 		} finally {
 			qtSuppFinalizationSO = null;
@@ -2893,12 +2906,55 @@ public class SupplierFinalizationBackingBean extends
 	 * @throws Exception
 	 */
 	public void downloadAllBriefingPaperReports() throws Exception {
-		List<ScQtFinalizationReport> finalizationReports = getManagedBean().getDocumentList();
-		if (CollectionUtils.isNotEmpty(finalizationReports)) {
-			this.downloadBriefingPaperReport(finalizationReports.get(0));
+		debugLogger("downloadAllReports");
+
+		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean().getScQtFinalization()
+				.getScQtFinalizationReports();
+		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<ScQtFinalizationReportAttachment>();
+		ScQtFinalizationReport scQtReport = null;
+		ScQtFinalizationReportAttachment attachment = null;
+
+		for (int i = 0; i < scQtFinalizationReports.size(); i++) {
+			scQtReport = scQtFinalizationReports.get(i);
+			
+			attachment = scQtReport.getScQtFinalizationReportAttachment();
+			
+			if (null != getManagedBean().getCurrentStatusId()
+					&& scQtReport.getTitle().contains("Kertas Taklimat")
+					&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
+							.longValue()
+							|| getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION
+									.longValue()
+							|| getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_BIDDING_FINALIZATION_REVISION
+									.longValue() || getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION_REVISION
+							.longValue())
+					&& scQtReport.getTitle().equals(
+							scQtFinalizationReports.get(scQtFinalizationReports.size() - 1).getTitle())) {
+				
+				attachment = generateDocumentAttachment(scQtReport);
+				
+				scQtReport.setScQtFinalizationReportAttachment(attachment);
+
+			} else {
+
+				if (attachment == null) {
+					attachment = generateDocumentAttachment(scQtReport);
+					
+					scQtReport.setScQtFinalizationReportAttachment(attachment);
+				}
+			}
+			
+			scAttachments.add(attachment);
+		}
+
+		// Generate all the reports before submission
+		if (!getManagedBean().isSubmit()) {
+			downloadAllFiles("NGeP-Finalization-Report", scAttachments);
 		}
 	}
+	// #18685 - End.
 	
+	// #18685 - Start
 	/**
 	 * @param scQtFinalizationReport
 	 * @throws Exception
