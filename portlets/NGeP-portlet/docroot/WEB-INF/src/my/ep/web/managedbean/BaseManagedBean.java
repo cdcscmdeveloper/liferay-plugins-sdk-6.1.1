@@ -15,10 +15,6 @@ import java.util.Set;
 
 import javax.faces.model.SelectItem;
 
-import org.apache.commons.collections.CollectionUtils;
-
-import org.apache.commons.lang3.StringUtils;
-
 import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationReport;
@@ -31,9 +27,10 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
-import my.ep.persistence.entity.sm.SmSupplier_;
 import my.ep.web.bean.tpl.TemplateSpecBean;
-import my.ep.web.util.FacesScopes;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author siew mei
@@ -95,7 +92,7 @@ public abstract class BaseManagedBean implements Serializable {
 	private SmSupplier smSupplierSsm;
 	private SmPersonnel smPersonnelSsm;
 		
-	private List<SmPersonnel> personnelsRole  = new ArrayList();
+	private List<SmPersonnel> personnelsRole  = new ArrayList<SmPersonnel>();
 	
 	// For sub title displayed in screen.
 	private String title;
@@ -119,18 +116,18 @@ public abstract class BaseManagedBean implements Serializable {
 	//27346-start 
 	private SmAppl smAppl;
 	private SmSupplier SmSupplier;
-	private List<SmPersonnel> personnelsDirector  = new ArrayList();
-	private List<SmSupplierBranch>  smSupplierBranchSsm = new ArrayList();
-	private List<SmEquityCompany> smEquityCompaniesSsm   = new ArrayList();   
+	private List<SmPersonnel> personnelsDirector  = new ArrayList<SmPersonnel>();
+	private List<SmSupplierBranch>  smSupplierBranchSsm = new ArrayList<SmSupplierBranch>();
+	private List<SmEquityCompany> smEquityCompaniesSsm   = new ArrayList<SmEquityCompany>();   
 	private boolean disAllowOwnerEdit; 
 	private String businessTypeParamCode;
-	private List<SmPersonnel> personnelsOwner = new ArrayList();
-	private List<SmPersonnel> personnelsSsm  = new ArrayList();
-	private List<SmSupplierBusiness> smSupplierBusinessSsm   = new ArrayList();
+	private List<SmPersonnel> personnelsOwner = new ArrayList<SmPersonnel>();
+	private List<SmPersonnel> personnelsSsm  = new ArrayList<SmPersonnel>();
+	private List<SmSupplierBusiness> smSupplierBusinessSsm   = new ArrayList<SmSupplierBusiness>();
 	private SmCompanyBasic smCompanyBasicSsm = null;
 	private boolean showDetailSSM; 
-	private List<SmPersonnel> smPersonnelDirectorSsm = new ArrayList();
-	private List<SmPersonnel> personnelsOwnerSsm = new ArrayList();
+	private List<SmPersonnel> smPersonnelDirectorSsm = new ArrayList<SmPersonnel>();
+	private List<SmPersonnel> personnelsOwnerSsm = new ArrayList<SmPersonnel>();
 	private SmAddress smAddress;
 	//27346-end
 
@@ -701,7 +698,6 @@ public abstract class BaseManagedBean implements Serializable {
 		this.disableFields = disableFields;
 	}
 	//#24540 - end -	
-	
 	// #25142 - start
 	/**
 	 * @return the autoUpdate
@@ -852,6 +848,17 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setResubmitAppl(boolean resubmitAppl) {
 		this.resubmitAppl = resubmitAppl;
 	}
+	
+	
+	
+	//27382
+	public boolean isErrorInvalidSelfRequest() {
+		return errorInvalidSelfRequest;
+	}
+
+	public void setErrorInvalidSelfRequest(boolean errorInvalidSelfRequest) {
+		this.errorInvalidSelfRequest = errorInvalidSelfRequest;
+	}
 
 	// #18685 - Start
 	/**
@@ -971,16 +978,5 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 	// Enhancement #18685 - end
 	
-	//27382
-	public boolean isErrorInvalidSelfRequest() {
-		return errorInvalidSelfRequest;
-	}
 
-	public void setErrorInvalidSelfRequest(boolean errorInvalidSelfRequest) {
-		this.errorInvalidSelfRequest = errorInvalidSelfRequest;
-	}
 }
-
-
-//***25201
-//***25692
