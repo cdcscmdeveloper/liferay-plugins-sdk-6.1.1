@@ -10955,6 +10955,11 @@ public class SmApplicationUtil {
 
 	public static void approveApplCategories(boolean isApprover, boolean isPo,
 			SmAppl smAppl) {
+		// #30929 - start
+		log.info("<<< smAppl.getApplId() value : " + smAppl.getApplId() + " >>>");
+		log.info("<<< isApprover value ::::::::: " + isApprover + " >>>");
+		log.info("<<< isPo value ::::::::::::::: " + isPo + " >>>");
+		// #30929 - end
 		for (SmSupplierCategory cat : smAppl.getSmSupplierCategories()) {
 			if (cat.getRecordStatusFlg().compareTo(
 					SupplierManagementConst.PENDING_ACT_STATUS) == 0
@@ -10966,6 +10971,12 @@ public class SmApplicationUtil {
 								.getApprvrDecFlg().compareTo(new Integer(1)) == 0)) {
 					cat.setApprovedDate(new Date());
 					cat.setRecordStatusFlg(SupplierManagementConst.APPROVED_RECORD_STATUS);
+					// #30929 start
+					log.info("<<< Updating SmSupplierCategory.ApprovedDate >>>");
+					log.info("<<< SmSupplierCategory.ApprovedDate value : " + cat.getApprovedDate() + " >>>");
+					log.info("<<< Updating SmSupplierCategory.RecordStatus >>>");
+					log.info("<<< SmSupplierCategory.RecordStatus value : " + cat.getRecordStatusFlg() + " >>>");
+					// #30929 end
 					setSupplierCategoryEffectiveDate(cat, smAppl.getApplType());
 				} else {
 					cat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
@@ -13093,6 +13104,10 @@ public class SmApplicationUtil {
 						.getNewCatEffectiveMonth());
 			}
 			cat.setCategoryEffDate(c.getTime());
+			// #30929 start
+			log.info("<<< Updating SmSupplierCategory.CategoryEffDate >>>");
+			log.info("<<< SmSupplierCategory.CategoryEffDate value : " + cat.getCategoryEffDate() + " >>>");
+			// #30929 end
 		}
 	}
 
