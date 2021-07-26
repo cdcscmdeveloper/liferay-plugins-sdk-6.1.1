@@ -80,7 +80,8 @@ public abstract class BaseManagedBean implements Serializable {
 	private List<ScQtFinalizationReport> removeFinalizationReports;
 	private List<ScQtFinalizationReport> consolidationBriefingPaperReportList;
 	private List<ScQtFinalizationReport> sfBriefingPaperReportList;
-	// 18685 - End
+	private String docNo;
+	// 18685 - End.
 
 	//16052019 - SSM INTEGRATION CR - Fahmi
 	private boolean ssmIntegrationActive;
@@ -889,6 +890,20 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setSfBriefingPaperReportList(
 			List<ScQtFinalizationReport> sfBriefingPaperReportList) {
 		this.sfBriefingPaperReportList = sfBriefingPaperReportList;
+	}
+	
+	/**
+	 * @return the docNo
+	 */
+	public String getDocNo() {
+		return docNo;
+	}
+
+	/**
+	 * @param docNo the docNo to set
+	 */
+	public void setDocNo(String docNo) {
+		this.docNo = docNo;
 	}
 	// #18685 - End
 	
