@@ -134,9 +134,15 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 							Long paymentId = pyPymt.getPaymentId();
 							log.info("resDTO1.getPyBill().getPyPayments()  paymentId=="+ paymentId);
 							orderId = paymentId.toString();
+							errorDesc = "";
+							errorCode = "";
+							paydate = DateUtils.dateToString("yyyy-MM-dd HH:mm:ss", pyPymt.getPaymentDate());;
+							if(pyPymt.getPyPaymentOrder() != null && pyPymt.getPyPaymentOrder().getPyPaymentResponses().size()>0){
+								tranID = pyPymt.getPyPaymentOrder().getPyPaymentResponses().get(0).getTransactionId();
+							}
 							skipChecking = true;
 							status = SupplierManagementConst.MOL_FAIL;
-							if(pyPymt.getPmStatus()!=null){
+							if(pyPymt.getPmStatus()!=null){	
 								if(pyPymt.getPmStatus().getStatusId() == my.ep.constant.sm.SupplierManagementConst.PM_STATUS_PAYMENT_SUCCESSFUL){
 									status = SupplierManagementConst.MOL_SUCCESS;
 								}else if(pyPymt.getPmStatus().getStatusId() == my.ep.constant.sm.SupplierManagementConst.PM_STATUS_PENDING_PAYMENT_RESPONSE){
@@ -581,13 +587,6 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			
 			getManagedBean().setMessageId(msgCode);
 			getManagedBean().setMessageSeverity(FacesMessage.SEVERITY_INFO);
-			pymtAckBB.getManagedBean().setPaymentId(paymentId);
-			try {
-				pymtAckBB.printReceipt();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			paymentStatus = true;
 			break;
 
