@@ -4011,8 +4011,13 @@ public class SupplierFinalizationBackingBean extends
 			ScRemark supplierRejectionRemark = null;
 			List<ScRemark> flattenRemarks = new ArrayList<>();
 
-			if (CollectionUtils.isNotEmpty(loiList)) {
+			boolean rejectedLoi = recommendDtl.getLoiAwarded() == null ? false : !recommendDtl.getLoiAwarded();
+			boolean rejectedLoa = recommendDtl.getLoaAwarded() == null ? false : !recommendDtl.getLoaAwarded();
+
+			if (CollectionUtils.isNotEmpty(loiList) && rejectedLoi) {
+
 				for (ScLoi each : loiList) {
+					
 					if (CollectionUtils.isNotEmpty(each.getScLoiRemarks())) {
 						
 						for (ScLoiRemark item : each.getScLoiRemarks()) {
@@ -4021,7 +4026,8 @@ public class SupplierFinalizationBackingBean extends
 					}
 				}
 
-			} else if (CollectionUtils.isNotEmpty(loaList)) {
+			} else if (CollectionUtils.isNotEmpty(loaList) && rejectedLoa) {
+
 				for (ScLoa each : loaList) {
 					if (CollectionUtils.isNotEmpty(each.getScLoaRemarks())) {
 						
