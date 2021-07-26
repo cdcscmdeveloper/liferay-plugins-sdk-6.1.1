@@ -581,6 +581,13 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			
 			getManagedBean().setMessageId(msgCode);
 			getManagedBean().setMessageSeverity(FacesMessage.SEVERITY_INFO);
+			pymtAckBB.getManagedBean().setPaymentId(paymentId);
+			try {
+				pymtAckBB.printReceipt();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			paymentStatus = true;
 			break;
 
