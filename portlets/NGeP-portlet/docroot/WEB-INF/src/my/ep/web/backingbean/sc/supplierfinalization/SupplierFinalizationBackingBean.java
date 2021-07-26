@@ -2718,10 +2718,21 @@ return	remarksNotFound;
 	 //28834  end.
 	
 	//28834 start
-		private SuppFinalizationReqDTO validateInfobreif(int index) {
-			return validateInfobreif(index, false);
+	 private SuppFinalizationReqDTO validateInfobreif(int index) {
+		boolean skipValidation = false;
+		List<ScQtMeeting> meetingList = this.getManagedBean().getMeetingList();
+		if (CollectionUtils.isNotEmpty(meetingList) && meetingList.size() > 0) {
+			for (ScQtMeeting meeting : meetingList) {
+				if (null != meeting.getMeetingStatus() && null != meeting.getMeetingStatus().getStatusId()
+						&& !QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus().getStatusId())
+						&& meeting.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
+					skipValidation = true;
+				}
+			}
 		}
-		//28834 end
+		return validateInfobreif(index, skipValidation);
+	}
+	//28834 end
 		
 		
 		//28834 start
