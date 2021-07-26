@@ -2031,6 +2031,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			// #29006 - start
 			if (scLoaReport.getTitle().contains(lampiranA3SubStr) && !ParameterConst.DOCTYPE_QUOTATION.equals(this.getManagedBean().getScLoa().getScLoiLoa().getDocType())) {//29007&30963
 				try {
+					//#31425 - start
+					if(scLoaReport.getScLoaReportAttachment().getDocNo() == null){
+						scLoaReport.getScLoaReportAttachment().setDocNo(getManagedBean().getScLoa().getLoaNo());
+					}
+					//#31425 - end
 					generateUpdatedLampiranA3FromVelocity((ScAttachment) scLoaReport.getScLoaReportAttachment(),
 							getManagedBean().getScLoa(), this.getManagedBean().getScQt());
 				} catch (Exception e) {
