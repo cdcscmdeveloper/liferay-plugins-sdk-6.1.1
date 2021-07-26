@@ -657,7 +657,7 @@ u {
 					#if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")
 						<td align="left" style="padding-left: 8px;" colspan="3"><span
 							class="text_family_red">* Senarai item, kuantiti, jenis perkhidmatan dan/atau tempoh serta jadual
-							penyempurnaan perkhidmatan yang ditetapkan seperti di <b><i>Lampiran A2</i></b>
+							pembekalan yang ditetapkan seperti di <b><i>Lampiran A2</i></b>
 						</span></td>
 					#else
 						<td align="left" style="padding-left: 8px;" colspan="3"><span
@@ -667,7 +667,7 @@ u {
 					#end
 				</tr>
 				<tr>
-					<td colspan="3"><span class="text_family_red"><b><i>Lampiran A2</i></b> adalah untuk menyatakan tempoh atau jadual perkhidmatan mengikut tawaran syarikat dan disediakan oleh Agensi</span></td>
+					<td colspan="3"><span class="text_family_red"><b><i>Lampiran A2</i></b> adalah untuk menyatakan tempoh atau jadual pembekalan mengikut tawaran syarikat dan disediakan oleh Agensi</span></td>
 				</tr>
 
 				<tr>
