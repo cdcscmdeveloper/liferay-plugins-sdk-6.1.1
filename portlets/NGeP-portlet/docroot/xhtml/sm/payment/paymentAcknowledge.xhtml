@@ -12,6 +12,8 @@
 		  value="#{empty paymentResponseBB.managedBean.billTypeLbl ? 'lbl.sm.payment.process' : paymentResponseBB.managedBean.billTypeLbl}" />
 		<p:panel id="acknowledge" header="#{lbl[lblPaymentBillType]}">
 			<p:messages id="ackMsg" showDetail="true" autoUpdate="true" escape="false" />
+			payment id : #{paymentResponseBB.managedBean.paymentId}
+			paymentstatus : #{paymentResponseBB.managedBean.paymentStatus}
 			<p:outputPanel rendered="#{(paymentResponseBB.managedBean.paymentId != null) and (paymentResponseBB.managedBean.paymentStatus)}">
 				<h:outputText value="#{lbl['lbl.sm.payment.click']} " />
 				<p:commandLink value="#{lbl['lbl.sm.payment.here']} " ajax="false">
