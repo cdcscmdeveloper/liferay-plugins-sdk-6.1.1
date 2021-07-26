@@ -27,6 +27,8 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sm.payment.PaymentReqDTO;
 import my.ep.dto.sm.payment.PaymentResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.py.PyBillDtl;
 import my.ep.persistence.entity.py.PyPayment;
@@ -117,7 +119,15 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			SmSupplier supp = SmApplicationUtil.getCurrentSupplier();			
 			if(supp != null){
 				log.info("supplier id =="+supp.getSupplierId());
-				SmAppl activeAppl = SmCommonUtil.getActiveApplBySupplier(supp);
+				SmAppl activeAppl = SmCommonUtil.getActiveApplBySupplier(supp);activeAppl = null;
+				if(activeAppl == null){
+					log.info("activeAppl is null");
+					SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
+					supplierSearchReqDTO.setSupplierId(supp.getSupplierId());
+					SupplierSearchResDTO supplierResDTO =  SmServiceLookup.getSupplierSearchSO().retriveLatestApplBySupplierId(supplierSearchReqDTO);
+					activeAppl = supplierResDTO.getSmAppl();
+					log.info("resDTO1.activeAppl() =="+activeAppl.getApplNo());
+				}
 				log.info("resDTO1.activeAppl() =="+activeAppl);
 				if(activeAppl != null){
 					log.info("active appl =="+activeAppl.getApplNo());
