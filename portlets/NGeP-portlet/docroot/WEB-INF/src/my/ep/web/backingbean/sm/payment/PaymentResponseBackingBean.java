@@ -119,7 +119,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			SmSupplier supp = SmApplicationUtil.getCurrentSupplier();			
 			if(supp != null){
 				log.info("supplier id =="+supp.getSupplierId());
-				SmAppl activeAppl = SmCommonUtil.getActiveApplBySupplier(supp);activeAppl = null;
+				SmAppl activeAppl = SmCommonUtil.getActiveApplBySupplier(supp);
 				if(activeAppl == null){
 					log.info("activeAppl is null");
 					SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
