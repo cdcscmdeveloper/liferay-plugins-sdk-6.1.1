@@ -359,6 +359,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		public void searchReset(){
 			
 			AmendmentBackingBean ccBB = new AmendmentBackingBean();
+			ContractBackingBean bbBB = new ContractBackingBean();
 
 			getManagedBean().setItemcode(null);
 			getManagedBean().setItemname(null);
@@ -369,9 +370,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setTypeofgoods(null);
 			ccBB.getManagedBean().setSelectedItem(null);
 			ccBB.getManagedBean().setSelectedServiceItem(null);
-			// Start Fix - #31042
-			getManagedBean().getContractListingPagingDataModel().reloadData();
-			getManagedBean().getServiceListingPagingDataModel().reloadData();
+			// Start Fix - #31042		
+			getManagedBean().getContractListingPagingDataModel().resetData();
+			getManagedBean().getServiceListingPagingDataModel().resetData();     
+			
+			if(bbBB.getManagedBean().getCtItemList().size() > 0 || !bbBB.getManagedBean().getCtItemList().isEmpty()){
+				getManagedBean().setItemProductExist(true);
+			}else{
+				getManagedBean().setItemProductExist(false);
+			}
+			
+			if(bbBB.getManagedBean().getCtItemServiceList().size() > 0 || !bbBB.getManagedBean().getCtItemServiceList().isEmpty()){
+				getManagedBean().setItemServiceExist(true);
+			}else{
+				getManagedBean().setItemServiceExist(false);
+			}
 			// End Fix - #31042
 			
 		}
@@ -392,7 +405,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 								getManagedBean().getItemname().equals("") &&
 								getManagedBean().getItemstatus() == null &&
 								getManagedBean().getItemtype()== null &&
-								getManagedBean().getSelectedSearchItem() == null &&	
 								getManagedBean().getSkuno().equals("") &&
 								getManagedBean().getTypeofgoods()== null  ){
 						
@@ -429,9 +441,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 								}
 						//20997 - End-Fixing
 						}					
-					}else{
-						throw new EpException(MessageConst.ERROR_750051);
-					} 
+					}// Start Fix - #31042
+					 else if(getManagedBean().getItemtype() != null || getManagedBean().getItemstatus() != null || !getManagedBean().getItemname().isEmpty() || !getManagedBean().getItemcode().isEmpty() ||
+								getManagedBean().getTypeofgoods() != null || !getManagedBean().getSkuno().isEmpty() || getManagedBean().getUOM() != null){
+							
+							  getManagedBean().getContractListingPagingDataModel().reloadData();
+							  getManagedBean().getServiceListingPagingDataModel().reloadData();
+							  
+						}
+//						    // End Fix - #31042
 			} finally{
 				    // Do nothing
 				}
