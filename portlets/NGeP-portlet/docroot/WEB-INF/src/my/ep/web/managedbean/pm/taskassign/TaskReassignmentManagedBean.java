@@ -12,6 +12,7 @@ import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -88,6 +89,10 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	private List<WorklistItemVO> allPageGroupTasks = new ArrayList<WorklistItemVO>();
 	private List<WorklistItemVO> allPageOthersTasks = new ArrayList<WorklistItemVO>();
 	//7465
+	
+	//#29874 - START
+	private ISearchResultBean<PmUser> resultBeanUser;
+	//#29874 - END
 	
 	public TaskReassignmentManagedBean(){}
 
@@ -661,4 +666,14 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 		this.allPageOthersTasks = allPageOthersTasks;
 	}
 	//7465
+	
+	//#29874 - START
+	public ISearchResultBean<PmUser> getResultBeanUser() {
+		return resultBeanUser;
+	}
+
+	public void setResultBeanUser(ISearchResultBean<PmUser> resultBeanUser) {
+		this.resultBeanUser = resultBeanUser;
+	}
+	//#29874 - END
 }
