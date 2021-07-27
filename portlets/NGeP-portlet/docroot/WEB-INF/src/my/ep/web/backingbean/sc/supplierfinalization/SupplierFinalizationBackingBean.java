@@ -9390,9 +9390,26 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				} else {
 					msgCode = getMessgeConstant(outcome);
 				}
+				// #25638 - End
 				
-				successMessage(msgCode, getMessageCommon(label), getManagedBean().getScQt().getQtNo(), Boolean.TRUE);
+				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISEBP)) {
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(msgCode,
+									new String[] { getManagedBean().getScQt().getQtNo() },
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+
+					FacesContext fc = FacesContext.getCurrentInstance();
+					fc.getApplication().getNavigationHandler()
+							.handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
+
+				} else {
+					// #25638 - Start
+					successMessage(msgCode, getMessageCommon(label), getManagedBean().getScQt().getQtNo(), Boolean.TRUE);
+					// #25638 - End
+				}
 				
+				// #25638 - Start
 				super.renewSesionObject();
 				// #25638 - End
 			}
