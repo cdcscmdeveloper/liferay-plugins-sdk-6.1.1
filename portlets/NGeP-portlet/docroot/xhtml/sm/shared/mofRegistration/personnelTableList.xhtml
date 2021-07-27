@@ -36,7 +36,9 @@
 				disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
 				or person.softcertFlg eq 3 or backingBean.managedBean.disAllowOwnerEdit or person.ssmData }"
 				>
-				<h:outputText value="#{person.name}" />
+				<!-- 29659 START -->
+				<h:outputText value="#{person.title.salutationName} #{person.name}" />
+				<!-- 29659 END -->
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.person.composition.idenNum']}"

@@ -61,7 +61,9 @@
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sm.userprofile.name']}" />
 					</f:facet>
-					<h:outputText value="#{upload.personnel.name}" />
+					<!-- 29659 START -->
+					<h:outputText value="#{upload.personnel.pmUser.salutationCode.salutationName} #{upload.personnel.name}" />
+					<!-- 29659 END -->
 				</p:column>
 		
 				<!-- #10729 start -->

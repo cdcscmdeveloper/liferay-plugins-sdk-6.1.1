@@ -83,7 +83,9 @@
 
 					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.name']}"
 						disabledSelection="#{shareBean.prevApprovedDirector or shareBean.prevApprovedEquityOwner}">
-						<h:outputText value="#{shareBean.name}" />
+						<!-- 29659 START -->
+						<h:outputText value="#{shareBean.title.salutationName} #{shareBean.name}" />
+						<!-- 29659 END -->
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.idNo']}"
 						disabledSelection="#{shareBean.prevApprovedDirector or shareBean.prevApprovedEquityOwner}">

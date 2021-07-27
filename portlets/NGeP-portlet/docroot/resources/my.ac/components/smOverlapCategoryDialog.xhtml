@@ -38,12 +38,12 @@
 					<p:column style="width : 5%;text-align: center !important;" headerText="#{lbl['lbl.sm.userprofile.num']}">
 						<h:outputText value="#{index + 1}" />
 					</p:column>
-		
+					<!-- 29659 START -->
 					<p:column headerText="#{lbl['lbl.sm.overlapped.category.personnel.name']}" 
 						style="width : 15% !important;white-space: normal !important;">
-						<h:outputText value="#{voSub.personnelName}" />
+						<h:outputText value="#{voSub.title} #{voSub.personnelName}" />
 					</p:column>
-		
+					<!-- 29659 END -->
 					<p:column headerText="#{lbl['lbl.sm.overlapped.category.personnel.idno']}">
 						<h:outputText value="#{voSub.identificationNo}" />
 					</p:column>

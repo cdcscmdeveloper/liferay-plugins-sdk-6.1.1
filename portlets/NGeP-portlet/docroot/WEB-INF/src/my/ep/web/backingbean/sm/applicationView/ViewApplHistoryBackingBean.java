@@ -971,8 +971,20 @@ public class ViewApplHistoryBackingBean extends
 		reqDTO.setLangCode(new FacesScopes().getUserLocale().getLanguage());
 		List<Object[]> resultList = SmServiceLookup.getMofRegistrationSO()
 				.retrieveOverLappedCategoryDetails(reqDTO).getResultList();
-		if (!EntityHelper.isCollectionEmpty(resultList)
-				&& resultList.size() > 0) {
+		//#29659 - START
+		List<Object[]> resultListNew = new ArrayList<>();
+		for (Object[] arr : resultList) {
+			
+			Object[] object = new Object[arr.length + 1];
+			for(int i=0; i<arr.length;i++){
+				object[i]=arr[i];
+			}
+			String title = SmServiceLookup.getPersonnelSO().getSalutationNameByPersonnelId(Long.parseLong(arr[23] + ""));
+			object[object.length - 1] = title;
+			resultListNew.add(object);
+		}
+		if (!EntityHelper.isCollectionEmpty(resultListNew)
+				&& resultListNew.size() > 0) {
 			retVal = new SmOverlapCategoryVO();
 			retVal.setOverLappedCategoryExist(true);
 			retVal.setOverLappedCategoryMsg(SmCommonUtil.getMessage(
@@ -985,15 +997,16 @@ public class ViewApplHistoryBackingBean extends
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, loc)
 					+ System.lineSeparator() + System.lineSeparator());
 			retVal.setOverlapCategoryVOList(getOverlapCategoryVOList(
-					resultList, smAppl.getSupplierType()));
+					resultListNew, smAppl.getSupplierType()));
 		}
+		//#29659 - END
 		return retVal;
 	}
 
 	private static List<SmBulkApplOverlapCatVO> getOverlapCategoryVOList(
 			List<Object[]> resultList, String suppType) {
 		List<SmBulkApplOverlapCatVO> retVal = new ArrayList<SmBulkApplOverlapCatVO>();
-
+	
 		if (!EntityHelper.isCollectionEmpty(resultList)) {
 			SmBulkApplOverlapCatVO voTmp = null;
 			SmBulkApplOverlapCatVO voSubTmp = null;
@@ -1077,6 +1090,9 @@ public class ViewApplHistoryBackingBean extends
 					voSubTmp.setApplStatus(StringUtils.isBlank(applStatus) ? arr[21]
 							+ ""
 							: applStatus);
+					//#29659 - START 
+					voSubTmp.setTitle(arr[24] + "");
+					//#29659 - END
 					voTmp.getOverlapInfoList().add(voSubTmp);
 					isSubAdd = false;
 				}
