@@ -66,9 +66,23 @@ public class ContractItemSearchBackingBean extends BaseBackingBean<ContractItemS
 		//ccBB.getManagedBean().setServiceselectedItem(null);
 		ccBB.getManagedBean().setSelectedItem(null);
 		ccBB.getManagedBean().setServiceselectedItem(null);
-		// Start Fix - #31042
-		getManagedBean().getContractListingPagingDataModel().reloadData();
-		getManagedBean().getServiceListingPagingDataModel().reloadData();
+		// Start Fix - #31042		
+		getManagedBean().getContractListingPagingDataModel().resetData();
+		getManagedBean().getServiceListingPagingDataModel().resetData();     
+		
+		if(ccBB.getManagedBean().getCtItemList().size() > 0 || !ccBB.getManagedBean().getCtItemList().isEmpty()){
+			getManagedBean().setItemProductExist(true);
+		}else{
+			getManagedBean().setItemProductExist(false);
+			getManagedBean().setItemProductNotExist(false);
+		}
+		
+		if(ccBB.getManagedBean().getCtItemServiceList().size() > 0 || !ccBB.getManagedBean().getCtItemServiceList().isEmpty()){
+			getManagedBean().setItemServiceExist(true);
+		}else{
+			getManagedBean().setItemServiceExist(false);
+			getManagedBean().setItemServiceNotExist(false);
+		} 
 		// End Fix - #31042
 	}
 
@@ -87,7 +101,6 @@ public class ContractItemSearchBackingBean extends BaseBackingBean<ContractItemS
 							getManagedBean().getItemname().equals("") &&
 							getManagedBean().getItemstatus() == null &&
 							getManagedBean().getItemtype()== null &&
-							getManagedBean().getSelectedSearchItem() == null &&	
 							getManagedBean().getSkuno().equals("") &&
 							getManagedBean().getTypeofgoods()== null  )
 				{
@@ -131,13 +144,17 @@ public class ContractItemSearchBackingBean extends BaseBackingBean<ContractItemS
 								getManagedBean().setItemServiceExist(false);
 								getManagedBean().setItemServiceNotExist(false);
 							} 
-					}				
-				}else if(getManagedBean().getItemtype()== null)
-				{
-					throw new EpException(MessageConst.ERROR_750051);
+					}
+					}// Start Fix - #31042
+				 else if(getManagedBean().getItemtype() != null || getManagedBean().getItemstatus() != null || !getManagedBean().getItemname().isEmpty() || !getManagedBean().getItemcode().isEmpty() ||
+						getManagedBean().getTypeofgoods() != null || !getManagedBean().getSkuno().isEmpty() || getManagedBean().getUOM() != null){
+					
+					  getManagedBean().getContractListingPagingDataModel().reloadData();
+					  getManagedBean().getServiceListingPagingDataModel().reloadData();
+					  
 				}
-				
-			   
+				    // End Fix - #31042
+					
 			//System.out.println("*****************searchCircular************-->5"+getManagedBean().get);
 			/*if (getManagedBean().getSearchCircularDocType() == null) {
 				
