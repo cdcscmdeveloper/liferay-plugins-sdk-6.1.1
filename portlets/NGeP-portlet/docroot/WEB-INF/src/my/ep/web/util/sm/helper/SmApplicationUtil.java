@@ -1939,7 +1939,7 @@ public class SmApplicationUtil {
 
 		//16052019 - SSM INTEGRATION CR #27219
 		//31130
-		if (showerror && managedBean.isSupplierUser()) {
+		if (showerror && managedBean.isSupplierUser() && !managedBean.isDisAllowOwnerEdit()) {
 			if (currentTab != -1) {
 				setNavigationBackToCurrentPage(currentTab, managedBean);
 			}
