@@ -2876,15 +2876,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 				//#31361,#24333 - Start
 				if (getManagedBean().isPbConfirmMeeting() && outputValue.equalsIgnoreCase("MET")){
-					if ( ctBackingBean.getManagedBean().getContractVer().getCtDeductions()!= null
-							&& ctBackingBean.getManagedBean().getContractVer().getCtDeductions().size() > 0){
-								getManagedBean().setSelectedTabIndex(index + 2);					
-						}else{
-								getManagedBean().setSelectedTabIndex(index + 1);
-							}
-						}
-
-
+					//#31441
+					if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
+							&&(ctBackingBean.getManagedBean().getContractVer().getCtDeductions()!= null
+							|| ctBackingBean.getManagedBean().getContractVer().getCtDeductions().size() > 0)){
+							getManagedBean().setSelectedTabIndex(index + 2);					
+					}else{
+							getManagedBean().setSelectedTabIndex(index + 1);
+					}
+				}
 				if(outputValue.equalsIgnoreCase("PB") && getManagedBean().isPbConfirmMeeting()){
 					if ( ctBackingBean.getManagedBean().getContractVer().getCtDeductions()!= null
 							&& ctBackingBean.getManagedBean().getContractVer().getCtDeductions().size() > 0){
