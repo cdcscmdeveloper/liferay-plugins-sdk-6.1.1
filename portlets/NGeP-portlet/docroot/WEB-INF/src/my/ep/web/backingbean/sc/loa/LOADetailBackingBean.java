@@ -460,6 +460,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				this.getManagedBean().setReqItemSession(0L);
 				this.getManagedBean().setReqItemSubTotalSession(0L);
 				this.getManagedBean().setTotalZonePrice(totalZonePrice);
+				this.getManagedBean().getScLoa().setLoaAmt(getManagedBean().getTotalZonePrice());//27797 & 29006
 				
 				if (scLoa.getSstAmt() != null) {
 					BigDecimal overallAmt = BigDecimal.ZERO;
@@ -953,6 +954,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				this.getManagedBean().setReqItemSession(0L);
 				this.getManagedBean().setReqItemSubTotalSession(0L);
 				this.getManagedBean().setTotalZonePrice(totalZonePrice);
+				this.getManagedBean().getScLoa().setLoaAmt(getManagedBean().getTotalZonePrice());//27797 & 29006
 				
 				if (this.getManagedBean().getScLoa().getSstAmt() != null) {
 					BigDecimal overallAmt = BigDecimal.ZERO;
