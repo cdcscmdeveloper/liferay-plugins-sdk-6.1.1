@@ -3115,8 +3115,24 @@ return	remarksNotFound;
 					} else {
 						msgCode = getMessgeConstant(outcome);
 					}
-					successMessage(msgCode, getMessageCommon(label), getManagedBean().getScQt()
-							.getQtNo(), Boolean.TRUE);
+					
+					// #28834 - Start.
+					if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISEBP)) {
+						FacesContext.getCurrentInstance().addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(msgCode,
+										new String[] { getManagedBean().getScQt().getQtNo() },
+										MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+
+						FacesContext fc = FacesContext.getCurrentInstance();
+						fc.getApplication().getNavigationHandler()
+								.handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
+
+					} else {
+					  successMessage(msgCode, getMessageCommon(label), getManagedBean().getScQt().getQtNo(), Boolean.TRUE);
+					}
+					// #28834 - End.
+					
 					super.renewSesionObject();
 					// #25638 - End
 				}
