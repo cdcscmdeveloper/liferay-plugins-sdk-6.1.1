@@ -146,8 +146,7 @@ public class ContractItemSearchBackingBean extends BaseBackingBean<ContractItemS
 							} 
 					}
 					}// Start Fix - #31042
-				 else if(getManagedBean().getItemtype() != null || getManagedBean().getItemstatus() != null || !getManagedBean().getItemname().isEmpty() || !getManagedBean().getItemcode().isEmpty() ||
-						getManagedBean().getTypeofgoods() != null || !getManagedBean().getSkuno().isEmpty() || getManagedBean().getUOM() != null){
+				 else if(getManagedBean().getItemtype() == null){
 					
 					  getManagedBean().getContractListingPagingDataModel().reloadData();
 					  getManagedBean().getServiceListingPagingDataModel().reloadData();
