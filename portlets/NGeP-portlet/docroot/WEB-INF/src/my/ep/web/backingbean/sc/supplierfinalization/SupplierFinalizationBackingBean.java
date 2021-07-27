@@ -9461,11 +9461,9 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			// SuppFinalizationReqDTO reqDTOBreif =
 			// preSubmitValidationbreifButton();
 			
-			// #18685-Start.
 			for (ScQtFinalizationReport scQtFinalizationReport : getManagedBean().getNewBriefingPaperReportList()) {
 				scQtFinalizationReport.setPreviousReportContent(scQtFinalizationReport.getReportContent());
 			}
-			// #18685-End.
 			
 			reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
 			
