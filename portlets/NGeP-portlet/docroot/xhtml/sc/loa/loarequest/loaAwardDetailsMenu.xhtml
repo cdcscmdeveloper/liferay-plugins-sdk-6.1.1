@@ -301,14 +301,14 @@
 								width="10" /> <c:if
 								test="#{lOADetailBackingBean.managedBean.specificationAndSupplierDialogFlag &amp;&amp; !isDocTypeQuotation}">
 
-								<p:commandLink id="specAndSupplierOfferLink" process="@this"
+								<p:commandLink id="specAndSupplierOfferLink#{varStatus.index}" process="@this"
 									update="@([id$=specAndSupplierOfferDlg])"
 									action="#{lOADetailBackingBean.onClickSpecsAndSupplierOfferLink(scLoiLoaItem)}"
 									oncomplete="specAndSupplierOfferDlgVar.show();">
 									<p:graphicImage value="/css/images/design/ico-viewnedit.png" />
 								</p:commandLink>
-								<p:tooltip id="toolTipSpecAndSupplierOffer"
-									for="specAndSupplierOfferLink"
+								<p:tooltip id="toolTipSpecAndSupplierOffer#{varStatus.index}"
+									for="specAndSupplierOfferLink#{varStatus.index}"
 									value="#{lbl['lbl.sc.spec.and.supplier.offer']}"
 									trackMouse="true" />
 
@@ -328,7 +328,7 @@
 								rendered="#{scLoiLoaItem.scRequestItem.cmItem != null}" /> <!-- #29007 Start Vinod -->
 							<p:spacer width="5" /> <c:if
 								test="#{lOADetailBackingBean.managedBean.specificationAndSupplierDialogFlagQT &amp;&amp; isDocTypeQuotation &amp;&amp; lOADetailBackingBean.managedBean.supPropSpecUpdate}">
-								<p:commandLink id="itemName"
+								<p:commandLink id="itemName#{varStatus.index}"
 									action="#{lOADetailBackingBean.searchSupplierSpecification(scLoiLoaItem,true)}"
 									partialSubmit="true" process="@this">
 									<p:graphicImage value="/css/images/design/ico-viewnedit.png" />
