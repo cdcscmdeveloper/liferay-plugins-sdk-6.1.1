@@ -2929,7 +2929,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					//#31441
 					if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
 							&&(ctBackingBean.getManagedBean().getContractVer().getCtDeductions()!= null
-							|| ctBackingBean.getManagedBean().getContractVer().getCtDeductions().size() > 0)){
+							&& ctBackingBean.getManagedBean().getContractVer().getCtDeductions().size() > 0)){
 							getManagedBean().setSelectedTabIndex(index + 2);					
 					}else{
 							getManagedBean().setSelectedTabIndex(index + 1);
