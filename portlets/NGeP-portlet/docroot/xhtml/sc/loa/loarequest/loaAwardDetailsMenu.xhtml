@@ -333,7 +333,7 @@
 									partialSubmit="true" process="@this">
 									<p:graphicImage value="/css/images/design/ico-viewnedit.png" />
 								</p:commandLink>
-								<p:tooltip id="toolTipSpecAndSupplierOffer" for="itemName"
+								<p:tooltip id="toolTipSpecAndSupplierOffer#{varStatus.index}supplierProposalUpdateLink" for="itemName#{varStatus.index}"
 									value="#{lbl['lbl.sc.proposal.specification.update.mouseover']}"
 									trackMouse="true" />
 							</c:if></td>
