@@ -14086,6 +14086,12 @@ private void retriveCommitteeRemarksList(){
 							}
 							
 						}
+						// #31420 Bug fixed
+						if(CollectionUtils.isEmpty(resDTO2.getComplianceResultBean().getResultList())){
+							this.getManagedBean().setEvalStatus(QTStatusConst.TS_PENDING_SUBMISSION);
+							break;
+						}
+						// #31420 Bug fixed
 					}
 					
 					
