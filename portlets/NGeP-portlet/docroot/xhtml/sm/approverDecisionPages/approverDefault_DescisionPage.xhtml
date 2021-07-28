@@ -61,7 +61,7 @@
 					</c:if>
 					<!-- 26671  - Site Visit Grouping Enhancement -28775  END-->
 				</div> <c:if
-					test="#{!backingBean.managedBean.apprvrSecReview.verifiedAll}">
+					test="#{!backingBean.managedBean.apprvrSecReview.verifiedAll or !backingBean.managedBean.categoryCodeVerified or !backingBean.managedBean.documentVerified}">
 					<table style="width: 100%">
 						<tr>
 							<td><h:outputText value="#{lbl['lbl.sm.po.vrfyAllNotes']}"
