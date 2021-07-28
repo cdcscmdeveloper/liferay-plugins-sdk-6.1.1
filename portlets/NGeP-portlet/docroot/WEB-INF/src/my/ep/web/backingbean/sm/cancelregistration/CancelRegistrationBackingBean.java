@@ -132,12 +132,15 @@ public class CancelRegistrationBackingBean extends
 						
 						if (selectedPersonnel.getIdentificationNo().equals(getManagedBean().getSuppAdminIdentificationNo().trim())) {
 							//#25474------13072020
-						if (resDTO.getSmSupplier().getSmAppl().getPmStatus() != null  //#30992
+							//start #30992
+						if ((resDTO.getSmSupplier().getRecordStatusFlg() == 5 && resDTO.getSmSupplier().getSmAppl()
+								.getPmStatus() == null)
+								|| (resDTO.getSmSupplier().getSmAppl().getPmStatus() != null 
 								&& (resDTO.getSmSupplier().getSmAppl().getPmStatus().getStatusId()
 										.equals(Long.valueOf(DbValueConst.PM_STATUS_ID))
 										|| resDTO.getSmSupplier().getSmAppl().getPmStatus().getStatusId()
-												.equals(Long.valueOf(DbValueConst.PM_PENDING_ACTIVATON_ID)) || appl != null)) {// PM_STATTUS_ID=20199
-								
+												.equals(Long.valueOf(DbValueConst.PM_PENDING_ACTIVATON_ID)) || appl != null))) {// PM_STATTUS_ID=20199
+							//end #30992
 								//#25474 - same message with basic account if appl was rejected by PO for more than 60 days
 								boolean poRejectFlag = false;
 								if(appl != null && appl.getSdoReceivedDate() != null){
