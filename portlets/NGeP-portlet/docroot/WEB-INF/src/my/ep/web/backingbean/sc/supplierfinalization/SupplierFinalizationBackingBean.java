@@ -9381,6 +9381,23 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 					e.printStackTrace();
 				}
 			}
+			
+			// #18685 - Start
+			resetUnSavedReportContent(this.getManagedBean().getNewBriefingPaperReportList());
+
+			if (CollectionUtils.isNotEmpty(reqDTO.getScQtFinalization().getScQtFinalizationReports())) {
+				reqDTO.getScQtFinalization().getScQtFinalizationReports()
+						.addAll(getManagedBean().getEvaluationReportList());
+			}
+
+			if (CollectionUtils.isNotEmpty(getManagedBean().getNewBriefingPaperReportList())
+					&& CollectionUtils.isNotEmpty(getManagedBean().getConsolidationBriefingPaperReportList())) {
+				getManagedBean().getNewBriefingPaperReportList().addAll(
+						getManagedBean().getConsolidationBriefingPaperReportList());
+			}
+
+			reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
+			// #18685 - End			
 
 			resDTO = qtSuppFinalizationSO.submitSupplierFinalizationBrief(reqDTO);
 
