@@ -34,16 +34,28 @@
 			<p:column headerText="#{lbl['lbl.sc.main.category']}"
 				style="white-space: normal;">
 				<h:outputText value="#{cateGory.pmCategoryL1Name}" />
+				<p:spacer width="5" />
+			<p:commandLink onclick="remarkHisCatCodePopup.show()" immediate="true">
+							<p:graphicImage value="/css/images/design/ico-view.png" /> 
+						</p:commandLink> 
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.sub.category']}"
 				style="white-space: normal;">
 				<h:outputText value="#{cateGory.pmCategoryL2Name}" />
+				<p:spacer width="5" />
+			<p:commandLink onclick="remarkHisCatCodePopup.show()" immediate="true">
+							<p:graphicImage value="/css/images/design/ico-view.png" /> 
+						</p:commandLink> 
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.sub.category.division']}"
 				style="white-space: normal;">
 				<h:outputText value="#{cateGory.pmCategoryL3Name}" />
+				<p:spacer width="5" />
+			<p:commandLink onclick="remarkHisCatCodePopup.show()" immediate="true">
+							<p:graphicImage value="/css/images/design/ico-view.png" /> 
+						</p:commandLink> 
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.category.type']}">

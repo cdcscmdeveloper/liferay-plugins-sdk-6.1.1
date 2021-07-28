@@ -27,16 +27,28 @@
 				<p:column headerText="#{lbl['lbl.sc.main.category']}"
 					style="width:30%;white-space: normal;">
 					<h:outputText value="#{scQtCategory.pmCategoryL1Name}" />
+					<p:spacer width="5" />
+			<p:commandLink onclick="remarkHisCatCodePopup.show()" immediate="true">
+							<p:graphicImage value="/css/images/design/ico-view.png" /> 
+						</p:commandLink> 
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.sub.category']}"
 					style="width:30%;white-space: normal;">
 					<h:outputText value="#{scQtCategory.pmCategoryL2Name}" />
+					<p:spacer width="5" />
+			<p:commandLink onclick="remarkHisCatCodePopup.show()" immediate="true">
+				<p:graphicImage  value="/css/images/design/ico-view.png" /> 
+						</p:commandLink> 
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.sub.category.division']}"
 					style="width:25%;white-space: normal;">
 					<h:outputText value="#{scQtCategory.pmCategoryL3Name}" />
+					<p:spacer width="5" />		
+						<p:commandLink onclick="remarkHisCatCodePopup.show()" immediate="true">
+							<p:graphicImage id="hisImage" value="/css/images/design/ico-view.png" /> 
+						</p:commandLink> 
 				</p:column>
 
 			</p:dataTable>
