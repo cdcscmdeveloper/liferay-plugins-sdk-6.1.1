@@ -1015,20 +1015,21 @@ public class ViewApplHistoryBackingBean extends
 		reqDTO.setLangCode(new FacesScopes().getUserLocale().getLanguage());
 		List<Object[]> resultList = SmServiceLookup.getMofRegistrationSO()
 				.retrieveOverLappedCategoryDetails(reqDTO).getResultList();
-		//#29659 - START
-		List<Object[]> resultListNew = new ArrayList<>();
-		for (Object[] arr : resultList) {
-			
-			Object[] object = new Object[arr.length + 1];
-			for(int i=0; i<arr.length;i++){
-				object[i]=arr[i];
+		if (!EntityHelper.isCollectionEmpty(resultList)
+				&& resultList.size() > 0) {
+			//#29659 - START
+			List<Object[]> resultListNew = new ArrayList<>();
+			for (Object[] arr : resultList) {
+				
+				Object[] object = new Object[arr.length + 1];
+				for(int i=0; i<arr.length;i++){
+					object[i]=arr[i];
+				}
+				String title = SmServiceLookup.getPersonnelSO().getSalutationNameByPersonnelId(Long.parseLong(arr[23] + ""));
+				object[object.length - 1] = title;
+				resultListNew.add(object);
 			}
-			String title = SmServiceLookup.getPersonnelSO().getSalutationNameByPersonnelId(Long.parseLong(arr[23] + ""));
-			object[object.length - 1] = title;
-			resultListNew.add(object);
-		}
-		if (!EntityHelper.isCollectionEmpty(resultListNew)
-				&& resultListNew.size() > 0) {
+			
 			retVal = new SmOverlapCategoryVO();
 			retVal.setOverLappedCategoryExist(true);
 			retVal.setOverLappedCategoryMsg(SmCommonUtil.getMessage(
