@@ -3643,6 +3643,15 @@ return	remarksNotFound;
 					msgCode = getMessgeConstant(outcome);
 				}
 				
+				// #28834 - Start
+				if (null != getManagedBean().getScQtFinalization().getDecision() 
+				    && "RBP".equals(getManagedBean().getScQtFinalization().getDecision().getParameterCode())
+				    && outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SIGNOFF)) {
+				  msgCode = MessageConst.INFO_700091;
+				  outcome = BpmOutcomeConst.BPM_REVISEBP;
+				}
+				// #28834 - End
+				
 				// #28834 - Start.
 				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISEBP)) {
 					FacesContext.getCurrentInstance()
