@@ -241,13 +241,13 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 				check = false;
 				break;
 			}else{
+				catReqDTO.setCategoryL2Id(catCode.getPmCategoryL2().getCategoryL2Id());
 				catResDTO = categoryCodeSO.retrieveCategoryL2DtlById(catReqDTO);
-				catReqDTO.setCategoryL1Id(catCode.getPmCategoryL2().getCategoryL2Id());
 				if(!catCode.getCategoryL2Name().equalsIgnoreCase(catResDTO.getCategoryL2().getCategoryName())){
 					check = false;
 					break;
 				}else{
-					catReqDTO.setCategoryL1Id(catCode.getPmCategoryL3().getCategoryL3Id());
+					catReqDTO.setCategoryL3Id(catCode.getPmCategoryL3().getCategoryL3Id());
 					catResDTO = categoryCodeSO.retrieveCategoryL3DtlById(catReqDTO);
 					if(!catCode.getCategoryL3Name().equalsIgnoreCase(catResDTO.getCategoryL3().getCategoryName())){
 						check = false;
