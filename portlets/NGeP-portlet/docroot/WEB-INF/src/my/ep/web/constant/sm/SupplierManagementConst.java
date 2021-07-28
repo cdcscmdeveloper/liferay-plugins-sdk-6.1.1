@@ -408,7 +408,9 @@ public class SupplierManagementConst {
 			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN,
 			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP,
 			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD,
-			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD
+			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD,
+			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH,
+			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK
 			);
 	
 	public static List<String> LIST_OF_BUSINESS_TYPE_ALLOWED_TO_BE_EDITED = Arrays.asList(
