@@ -369,9 +369,9 @@ u {
 						
 						<p>
 							#if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")	
-								<span class="text_family">(g)	syarikat tuan gagal *membekalkan barang/menyempurnakan perkhidmatan dalam tempoh yang ditetapkan seperti di <b><i>Lampiran A</i></b>;  </span>
+								<span class="text_family">(g)	syarikat tuan gagal <span class="text_family_red"> *membekalkan barang/menyempurnakan perkhidmatan </span> dalam tempoh yang ditetapkan seperti di <b><i>Lampiran A</i></b>;  </span>
 							#else
-								<span class="text_family">(g)	syarikat tuan gagal <span class="text_family_red"> * membekalkan barang/menyempurnakan perkhidmatan </span> dalam tempoh yang ditetapkan seperti di <b><i>Lampiran A</i></b>;  </span> 
+								<span class="text_family">(g)	syarikat tuan gagal <span class="text_family_red"> *membekalkan barang/menyempurnakan perkhidmatan </span> dalam tempoh yang ditetapkan seperti di <b><i>Lampiran A</i></b>;  </span> 
 							#end
 						</p>
 						
