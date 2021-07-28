@@ -2298,10 +2298,11 @@ u {
 								</tr>
 							
 								</tr>
-								<td valign="top" bgcolor="#d0eaee" colspan="9">						
+								<td valign="top" bgcolor="#d0eaee" colspan="9">
+										#set($rowCount = 0)						
 										#if ($tplspecQuestion.specList)
 											#foreach( $specVal in $tplspecQuestion.specList )
-												
+												#if($rowCount == 0)
 												<table width="100%">
 													<tbody>
 													<tr>
@@ -2309,7 +2310,8 @@ u {
 													</tr>
 													</tbody>
 												</table>
-													
+												#end
+												#set($rowCount = $rowCount + 1)	
 											#end
 										#end
 								</td>
