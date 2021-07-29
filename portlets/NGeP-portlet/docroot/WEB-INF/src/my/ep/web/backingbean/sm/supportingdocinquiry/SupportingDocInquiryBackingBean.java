@@ -620,16 +620,14 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 							.getNewAddedFiles().get(0).getFilePath()
 							.equalsIgnoreCase(" "))
 							&& !sb.toString().contains(doc.getPmDocument().getDocName())) {
-				sb.append(++i + ".)");
+				sb.append(++i + ")");
 				sb.append(doc.getPmDocument().getDocName());
-				// sb.append(",  ");
 				sb.append("<br/>");
 				validSupportDocs = false;
 			}
 		}
 		if (!validSupportDocs) {
-			throw new EpException(MessageConst.ERROR_722537,
-					new String[] { sb.toString() });
+			throw new EpException(MessageConst.ERROR_722686, new String[] { sb.toString() });
 		} else {
 			RequestContext.getCurrentInstance().execute("submissionConfirmDlg.show();");
 		}
@@ -637,3 +635,4 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 	}
 	//#11641 - END
 }
+
