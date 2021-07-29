@@ -12122,6 +12122,15 @@ private void retriveCommitteeRemarksList(){
 		} else if(null==scQtProposalChecklistAttachment && this.getManagedBean().isFP_Compliance())
 		{
 			// #28308 Fix - Start (#26339)
+			// #28703 (#26339) - Start.
+			for (ScQtProposalChecklist proposalChecklist : getManagedBean().getComplianceTechnicalProposalCheckListDM()
+					.getList()) {
+				if (proposalChecklist.getScQtProposalChecklistAttachment() == null) {
+					proposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
+				}
+			}
+			// #28703 (#26339) - End.
+
 			types.add(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
 			// #28308 Fix - End (#26339)
 		} else {
