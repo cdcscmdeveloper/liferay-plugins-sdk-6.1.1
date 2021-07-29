@@ -603,5 +603,37 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 		}
 		return remark;
 	}
+	
+	public void validateSupportDocs(){
+		log.info("=====Start Validate Supporting Doc=====");
+		boolean validSupportDocs = true;
+		int i = 0;
+		StringBuilder sb = new StringBuilder();
+		sb.append("<br/>");
+		for (SmApplSupportDoc doc : getManagedBean().getSmApplInquiry().getSmAppl().getSmApplSupportDocs()) {
+			if (doc.getPmDocument() != null
+					&& doc.getPmDocument().isMandatory()
+					&& !doc.getPmDocument().isHardCopyReq()
+					&& (EntityHelper.isCollectionEmpty(doc.getNewAddedFiles())
+							|| doc.getNewAddedFiles().get(0).getFileName()
+									.equalsIgnoreCase(" ") || doc
+							.getNewAddedFiles().get(0).getFilePath()
+							.equalsIgnoreCase(" "))
+							&& !sb.toString().contains(doc.getPmDocument().getDocName())) {
+				sb.append(++i + ".)");
+				sb.append(doc.getPmDocument().getDocName());
+				// sb.append(",  ");
+				sb.append("<br/>");
+				validSupportDocs = false;
+			}
+		}
+		if (!validSupportDocs) {
+			throw new EpException(MessageConst.ERROR_722537,
+					new String[] { sb.toString() });
+		} else {
+			RequestContext.getCurrentInstance().execute("submissionConfirmDlg.show();");
+		}
+		
+	}
 	//#11641 - END
 }

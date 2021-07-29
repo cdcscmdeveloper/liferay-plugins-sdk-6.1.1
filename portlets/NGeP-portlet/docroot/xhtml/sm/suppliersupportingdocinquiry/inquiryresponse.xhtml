@@ -23,7 +23,7 @@
 		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		<div align="right">
 		<!-- #11641 - START -->
-			<p:commandButton value="#{lbl['lbl.sm.suppdoc.submit.response']}" onclick="submissionConfirmDlg.show();" />
+			<p:commandButton value="#{lbl['lbl.sm.suppdoc.submit.response']}" action="#{supportingDocInquiryBackingBean.validateSupportDocs()}" />
 		<!-- #11641 - END -->
 		</div>
 
