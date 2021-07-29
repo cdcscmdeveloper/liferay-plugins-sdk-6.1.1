@@ -10139,6 +10139,30 @@ return	remarksNotFound;
 			return reqDTO;
 		}
 		//28834 ends
+		
+		// #30567 - Start.
+		/**
+		 * @param scQtFinalizationReport
+		 * @return
+		 * @throws Exception
+		 */
+		public ScQtFinalizationReportAttachment downloadBriefingPaperReportForBidding(ScQtFinalizationReport scQtFinalizationReport) throws Exception {
+		    ScQtFinalizationReportAttachment reportAttachment = null;
+			if (null != getManagedBean().getCurrentStatusId() 
+					&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_BIDDING_FINALIZATION.longValue()
+							|| getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_BIDDING_FINALIZATION_REVISION.longValue()
+							)) {
+				reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
+			} else {
+				reportAttachment = scQtFinalizationReport.getScQtFinalizationReportAttachment();
+
+				if (reportAttachment == null) {
+					reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
+				}
+			}
+			return reportAttachment;
+		}
+		// #30567 - End.
 }
 // ***19336
 
