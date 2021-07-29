@@ -12,9 +12,9 @@
 	<p:dialog widgetVar="submissionConfirmDlg" id="submissionConfirmDlg" modal="true" height="100" width="500">
    			 #{lbl['lbl.sm.rptpreview.want.proceed/download.qmark']}	
    			<div align="right">
-   			<!-- 29430 -->
+   			<!-- 29430, 24964 -->
 			<p:commandButton value="#{lbl['lbl.btn.download']}" ajax="false" onclick="submissionConfirmDlg.hide()">
-					<p:fileDownload value="#{svoSiteVisitBackingBean.downloadPOApprovalSiteVisitReport(svTask)}" />
+					<p:fileDownload value="#{svoSiteVisitBackingBean.downloadPOApprovalSiteVisitReport(null)}" />
 				</p:commandButton>
 			<p:commandButton value="#{lbl['lbl.btn.proceed']}" oncomplete="submissionConfirmDlg.hide()"
 				action="#{svoSiteVisitBackingBean.saveSiteVisitReport(SupplierManagementConst.BPM_SUBMIT)}"></p:commandButton>

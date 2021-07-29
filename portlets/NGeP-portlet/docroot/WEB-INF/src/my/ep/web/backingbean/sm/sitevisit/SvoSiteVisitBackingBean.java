@@ -2490,9 +2490,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		//#29430 - start
 		//#24964 - start
 		if(svTask == null){
+			svTask = getManagedBean().getSmSvTask();
 			try{
 				SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
-				reqDTO.setSmSvTask(getManagedBean().getSmSvTask());
+				reqDTO.setSmSvTask(svTask);
 				reqDTO.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
 				((ISiteVisitSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISiteVisitSO.class))
 						.saveOrSubmitSiteVisitReport(reqDTO);
