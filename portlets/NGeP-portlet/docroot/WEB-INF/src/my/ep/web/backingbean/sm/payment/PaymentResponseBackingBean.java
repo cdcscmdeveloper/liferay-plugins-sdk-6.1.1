@@ -152,6 +152,9 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 							}
 							skipChecking = true;
 							status = SupplierManagementConst.MOL_FAIL;
+							if(pyPymt.getPaymentAmt() != null){
+								amount = pyPymt.getPaymentAmt().toString();
+							}	
 							if(pyPymt.getPmStatus()!=null){	
 								if(pyPymt.getPmStatus().getStatusId() == my.ep.constant.sm.SupplierManagementConst.PM_STATUS_PAYMENT_SUCCESSFUL){
 									status = SupplierManagementConst.MOL_SUCCESS;
@@ -297,8 +300,15 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 									Long paymentId = pyPymt.getPaymentId();
 									log.info("resDTO1.getPyBill().getPyPayments()  paymentId=="+ paymentId);
 									orderId = paymentId.toString();
+									paydate = DateUtils.dateToString("yyyy-MM-dd HH:mm:ss", pyPymt.getPaymentDate());;
+									if(pyPymt.getPyPaymentOrder() != null && pyPymt.getPyPaymentOrder().getPyPaymentResponses().size()>0){
+										tranID = pyPymt.getPyPaymentOrder().getPyPaymentResponses().get(0).getTransactionId();
+									}
 									skipChecking = true;
 									status = SupplierManagementConst.MOL_FAIL;
+									if(pyPymt.getPaymentAmt() != null){
+										amount = pyPymt.getPaymentAmt().toString();
+									}									
 									if(pyPymt.getPmStatus()!=null){
 										if(pyPymt.getPmStatus().getStatusId() == my.ep.constant.sm.SupplierManagementConst.PM_STATUS_PAYMENT_SUCCESSFUL){
 											status = SupplierManagementConst.MOL_SUCCESS;
