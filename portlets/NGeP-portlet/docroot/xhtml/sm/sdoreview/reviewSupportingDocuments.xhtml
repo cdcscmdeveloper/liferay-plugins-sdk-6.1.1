@@ -213,7 +213,7 @@
 		</p:outputPanel>
 
 		<!-- #11641 - START -->
-		<p:dialog header="#{lbl['lbl.sm.supportingdoc.inquiry']}" widgetVar="inquiryDlg" modal="true" id="inquiryDlg" width="1400">
+		<p:dialog header="#{lbl['lbl.sm.supportingdoc.inquiry']}" widgetVar="inquiryDlg" modal="true" id="inquiryDlg" width="auto">
 			
 			<p:scrollPanel mode="native" style="max-height:auto;auto;border:none">
 			<p:messages id="inquiryMessageId"  showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
@@ -266,9 +266,9 @@
 							</p:column>
 						</p:dataTable>
 						<p:dataTable styleClass="suppDocEmpty-tbl" var="emptyMandatory" value="" id="mandatoryEmptyForInquiry" rendered="#{sdoReviewBackingBean.mandatoryEmpty or sdoReviewBackingBean.mandatoryAllReceived}"
-							rowIndexVar="index" style="width:82% !important; table-layout: fixed !important;" 
+							rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
 							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
-							<p:column style="width : 65%;">
+							<p:column style="width : 100%;">
 								<h:outputText value="#{lbl['lbl.datatable.msg.no.records.found']}"
 									style="float: left;white-space: normal;" disabled="true"/>
 							</p:column>
@@ -306,9 +306,9 @@
 							</p:column>
 						</p:dataTable>
 						<p:dataTable styleClass="suppDocEmpty-tbl" var="emptyNonMandatory" value="" id="nonMandatoryEmptyForInquiry" rendered="#{sdoReviewBackingBean.nonMandatoryEmpty or sdoReviewBackingBean.nonMandatoryAllReceived}"
-							rowIndexVar="index" style="width:82% !important; table-layout: fixed !important;" 
+							rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
 							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
-							<p:column style="width : 65%;">
+							<p:column style="width : 100%;">
 								<h:outputText value="#{lbl['lbl.datatable.msg.no.records.found']}"
 									style="float: left;white-space: normal;" disabled="true"/>
 							</p:column>
