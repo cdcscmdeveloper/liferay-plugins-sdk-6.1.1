@@ -2970,9 +2970,22 @@ public class SupplierFinalizationBiddingBackingBean extends
 	public void downloadReport(ScQtFinalizationReport scQtFinalizationReport)
 			throws Exception {
 		debugLogger("downloadReport");
-
-		ScQtFinalizationReportAttachment reportAttachment = scQtFinalizationReport
-				.getScQtFinalizationReportAttachment();
+		
+		// #30567 - Start.
+		ScQtFinalizationReportAttachment reportAttachment = null;
+		if (scQtFinalizationReport.getTitle().contains("Kertas Taklimat")) {
+			SupplierFinalizationBackingBean supplierFinalizationBackingBean = new SupplierFinalizationBackingBean();
+			supplierFinalizationBackingBean.renewSesionObject();
+			supplierFinalizationBackingBean.getManagedBean().setCurrentStatusId(this.getManagedBean().getCurrentStatusId());
+			supplierFinalizationBackingBean.getManagedBean().setScQtFinalization(this.getManagedBean().getScQtFinalization());
+			supplierFinalizationBackingBean.getManagedBean().setScQt(this.getManagedBean().getScQt());
+			reportAttachment = supplierFinalizationBackingBean.downloadBriefingPaperReportForBidding(scQtFinalizationReport);
+			scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
+		} else {
+			reportAttachment = scQtFinalizationReport
+					.getScQtFinalizationReportAttachment();
+		}
+		// #30567 - End.
 		downloadFile(reportAttachment);
 	}
 	
