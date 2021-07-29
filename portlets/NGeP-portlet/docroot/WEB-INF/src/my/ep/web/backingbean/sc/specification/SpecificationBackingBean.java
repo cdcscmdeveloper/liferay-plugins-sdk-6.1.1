@@ -886,6 +886,9 @@ public class SpecificationBackingBean extends
 			}
 			specReqDTO.setScQt(constructSpecCommitteDtls().getScQt());
 			specSo.validateCheckList(specReqDTO);
+			//#31292 - start
+			specSo.validateSpecZoneQtyZero(specReqDTO);
+			//#31292 - end
 
 			break;
 		case 3:
