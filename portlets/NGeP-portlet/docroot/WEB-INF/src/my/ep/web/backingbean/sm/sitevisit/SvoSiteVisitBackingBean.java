@@ -2488,7 +2488,19 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 */
 	public void downloadPOApprovalSiteVisitReport(SmSvTask svTask) throws Exception{
 		//#29430 - start
-		//refreshPage();
+		//#24964 - start
+		if(svTask == null){
+			try{
+				SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
+				reqDTO.setSmSvTask(getManagedBean().getSmSvTask());
+				reqDTO.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
+				((ISiteVisitSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISiteVisitSO.class))
+						.saveOrSubmitSiteVisitReport(reqDTO);
+			}catch(Exception ex){
+				throw new EpException(ex.getMessage());
+			}
+		}
+		//#24964 - end
 		getManagedBean().setFromReport(true);
 		getManagedBean().setSvTaskId(svTask.getSvTaskId());
 		retrieveSiteVisitInfo("V");
