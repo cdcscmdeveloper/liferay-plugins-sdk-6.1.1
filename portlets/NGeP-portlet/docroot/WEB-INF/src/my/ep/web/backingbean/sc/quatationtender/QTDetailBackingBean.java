@@ -8434,15 +8434,23 @@ public class QTDetailBackingBean extends
 	//#13344 - End
 	
 	// #25077 - Start
-	public void checkPopUpBPKApprovalNeeded(boolean showPopup) {	
-		ScQt scQt = this.getManagedBean().getQt();
-		Long statusId = scQt.getQtStatus().getStatusId();
-		
-		if(statusId.equals(QTStatusConst.QT_REVISION_PUBLICATION)) {
-			if(this.getManagedBean().isShowPopUpBPKApprovalNeeded() && showPopup){
-				 RequestContext.getCurrentInstance().execute("bpkApprovalNeededDlg.show()");
-			} 
+	public void checkPopUpBPKApprovalNeeded(boolean showPopup) {
+		// 25077 note-#136 temporary patching in UAT only -start-
+		if (this.getManagedBean().isShowPopUpBPKApprovalNeeded() && showPopup) {
+			RequestContext.getCurrentInstance().execute("bpkApprovalNeededDlgTemp.show()");
 		}
+
+		// ScQt scQt = this.getManagedBean().getQt();
+		// Long statusId = scQt.getQtStatus().getStatusId();
+		//
+		// if(statusId.equals(QTStatusConst.QT_REVISION_PUBLICATION)) {
+		// if(this.getManagedBean().isShowPopUpBPKApprovalNeeded() &&
+		// showPopup){
+		// RequestContext.getCurrentInstance().execute("bpkApprovalNeededDlg.show()");
+		// }
+		// }
+
+		// 25077 note-#136 temporary patching in UAT only -end-
 	}
 	
 	public void checkDefaultSettingPopUpBPKApprovalNeeded(ScQt scQt) {
