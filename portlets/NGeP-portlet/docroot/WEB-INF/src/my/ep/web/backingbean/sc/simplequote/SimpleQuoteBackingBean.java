@@ -4009,22 +4009,22 @@ public class SimpleQuoteBackingBean extends
 			
 				if(tplSpecQuestion.getClFulfilmentTypeCode() != null && 
 				(tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
-				.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED) && (result<0 || result == 0))){
+				.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED) && (result<0 || result != 0))){
 					validateDuration();
 					return;				
 				}else if(tplSpecQuestion.getClFulfilmentTypeCode() != null && 
 				(tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
-				.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN) && (result<0 || result == 0))){
+				.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN) && (result<0 || result != 0))){
 					validateDuration();
 					return;				
-				}else if(tplSpecQuestion.getClFulfilmentTypeCode() != null && 
-				(tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
-				.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED) && result>0)){
+				}else if((tplSpecQuestion.getClFulfilmentTypeCode() != null && 
+				tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
+				.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)) && (result>0 || result == 0)){
 					validateDuration();
 					return;			
-				}else if(tplSpecQuestion.getClFulfilmentTypeCode() != null && 
-				(tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
-				.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN)&& result>0)){
+				}else if((tplSpecQuestion.getClFulfilmentTypeCode() != null && 
+				tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
+				.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN))&& (result>0 || result == 0)){
 					validateDuration();
 					return;				
 				}
