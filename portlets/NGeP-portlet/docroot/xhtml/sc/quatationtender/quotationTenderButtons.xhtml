@@ -106,20 +106,34 @@
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 							<ui:param name="bpAction" value="SUBMIT" />
 							<ui:remove> 25077 Start </ui:remove>
-							<c:if test="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION}">
+							<ui:remove> 25077 note-#136 patching in UAT only -start-  </ui:remove>
+							<ui:remove><c:if test="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION}"></ui:remove>
+							<c:if
+								test="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION or 
+									qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT}">
 								<p:commandButton value="#{lbl[buttonLabel]}"
-									styleClass="ui-button"
-									actionListener="#{qTDetailBB.checkPopUpBPKApprovalNeeded(true)}"
-									update="@([id$=#{bpkApprovalNeededId}])" 
-									rendered="#{qTDetailBB.managedBean.showPopUpBPKApprovalNeeded}" />	
-							</c:if>	
-										 
+										styleClass="ui-button"
+										actionListener="#{qTDetailBB.checkPopUpBPKApprovalNeeded(true)}"
+										update="@([id$=#{bpkApprovalNeededId}])"
+										rendered="#{qTDetailBB.managedBean.showPopUpBPKApprovalNeeded}" />
+							</c:if>
 							<ui:remove> 25077 End </ui:remove>
+							<ui:remove>
 							<p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button"
 								onclick="blockWidget.show();"
 								oncomplete="blockWidget.hide();"
 								action="#{qTDetailBB.updateBpmTask(bpmAction)}" />
+							</ui:remove>
+							<c:if
+								test="#{!qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION and 
+									!qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT }">
+								<p:commandButton value="#{lbl[buttonLabel]}"
+									styleClass="ui-button" onclick="blockWidget.show();"
+									oncomplete="blockWidget.hide();"
+									action="#{qTDetailBB.updateBpmTask(bpmAction)}" />
+							</c:if>
+							<ui:remove> 25077 note-#136 patching in UAT only -end- </ui:remove>
 						</ui:repeat>
 					</c:when>
 					<c:when test="#{qTDetailBB.managedBean.createQt or isQTStatusPendingQtSubmission}">
