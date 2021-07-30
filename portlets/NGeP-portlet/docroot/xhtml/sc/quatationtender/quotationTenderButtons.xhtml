@@ -107,7 +107,6 @@
 							<ui:param name="bpAction" value="SUBMIT" />
 							<ui:remove> 25077 Start </ui:remove>
 							<ui:remove> 25077 note-#136 patching in UAT only -start-  </ui:remove>
-							<ui:remove><c:if test="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION}"></ui:remove>
 							<c:if
 								test="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION or 
 									qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT}">
