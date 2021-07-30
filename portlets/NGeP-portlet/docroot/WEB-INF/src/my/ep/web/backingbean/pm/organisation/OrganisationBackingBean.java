@@ -149,6 +149,7 @@ public class OrganisationBackingBean extends
 
 	private Long selectedAddrForEdit;
 	private LogKey userLoginId; //#30651
+	private PmUser currentUser; //#30651
 
 	/**
 	 * The constructor used for save user logging.
@@ -162,8 +163,8 @@ public class OrganisationBackingBean extends
 						IUserSO.class);
 		UserReqDTO userReqDTO = new UserReqDTO();
 		userReqDTO.setLoginId(getFacesScopes().getUserScreenName());
-		PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
-		if (pmUser == null) {
+		currentUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
+		if (currentUser == null) {
 			PmUser tmp = new FacesScopes().getUserSessionBean();
 			if (tmp != null && tmp.getUserId() != null) {
 				userLoginId = new LogKey(tmp.getUserId());
@@ -171,7 +172,7 @@ public class OrganisationBackingBean extends
 				userLoginId = new LogKey(1L);
 			}
 		}else{
-			userLoginId = new LogKey(pmUser.getUserId());
+			userLoginId = new LogKey(currentUser.getUserId());
 		}
 		//reqDTO.setUser(getFacesScopes().getUserSessionBean());  
 		// Bug #30651 - END
@@ -1222,6 +1223,7 @@ public class OrganisationBackingBean extends
 			
 			//#30651 - start
 			reqDTO.setUserId(userLoginId.getUserId());
+			reqDTO.setUser(currentUser);
 			//#30651 - end
 			
 			OrgProfileResDTO resDTO = orgProfileSO.saveOrgProfile(reqDTO);
