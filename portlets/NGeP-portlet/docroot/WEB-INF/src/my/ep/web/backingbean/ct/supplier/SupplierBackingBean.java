@@ -1128,13 +1128,16 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	 * 
 	 */
 	/*#25139-basri*/
-public void selectFinancialAcc(){
-		String[] str = getManagedBean().getAccBankName().split("/");
-		this.getManagedBean().getFactoring().setBankAccountNo(str[0]);
-		this.getManagedBean().getFactoring().setBankName(str[1]);
-		
-		log.info(this.getManagedBean().getFactoring().getBankAccountNo()+" "+this.getManagedBean().getFactoring().getBankName());
-		
+	public void selectFinancialAcc(){
+		//#30910 start
+		if(getManagedBean().getFactoring().getBankAccountNo()!=null && getManagedBean().getFactoring().getBankName()!=null){
+			String[] str = getManagedBean().getAccBankName().split("/");
+			this.getManagedBean().getFactoring().setBankAccountNo(str[0]);
+			this.getManagedBean().getFactoring().setBankName(str[1]);
+			
+			log.info(this.getManagedBean().getFactoring().getBankAccountNo()+" "+this.getManagedBean().getFactoring().getBankName());
+		}
+		//#30910 end
 		
 	}
 	/*#25139-end*/
@@ -1679,8 +1682,10 @@ public void selectFinancialAcc(){
 
 		if (!statusFactoringCompany || !statusFactoringFinAcc){
 			getManagedBean().getFactoring().getFinancialOrg().setFinancialOrgId(null);
-			getManagedBean().setAccBankName(null);
 			getManagedBean().getFactoring().setBankAccountNo(null);
+			getManagedBean().getFactoring().setBankName(null);
+			getManagedBean().setAccBankName(null);
+			
 			return false;
 		}
 		
