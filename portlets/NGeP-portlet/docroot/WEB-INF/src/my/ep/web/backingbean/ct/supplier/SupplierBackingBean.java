@@ -682,9 +682,11 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && isSupplierRole()) {
 
 				//#30910 start
-				boolean statusOfFactoringCompany = checkFactoringCompanyStatus();
-				if (!statusOfFactoringCompany) {
-					throw new EpException(MessageConst.ERROR_750072);
+				if (!getManagedBean().isRemoveFactoring()){
+					boolean statusOfFactoringCompany = checkFactoringCompanyStatus();
+					if (!statusOfFactoringCompany) {
+						throw new EpException(MessageConst.ERROR_750072);
+					}
 				}
 				//#30910 end
 				getContractAdminlist();
@@ -1660,14 +1662,14 @@ public void selectFinancialAcc(){
 					}
 				}
 			}
-			
+			/*
 			resDTO = financialOrgSO.retriveFinAccDtlByFinOrgIdAccNo(reqDTO);
 			if (resDTO.getPmFinancialAcc()!=null){
 				if(getManagedBean().getFactoring().getBankAccountNo().equals(resDTO.getPmFinancialAcc()) 
 						&& resDTO.getPmFinancialAcc().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
 					statusFactoringFinAcc = true;
 				}
-			}
+			}*/
 		
 		} finally {
 			financialOrgSO = null;
