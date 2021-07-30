@@ -350,6 +350,7 @@ public class ViewApplHistoryBackingBean extends
 			}
 			// start #29956
 			Boolean dontShowDowngradePopup = false;
+			this.getManagedBean().setDisAllowOwnerEdit(isMofAccEffDatePassedCurrDate(this.getManagedBean().getSmSupplier()));
 			if (this.getManagedBean().isDisAllowOwnerEdit()) {
 				if (personnelsRole != null && personnelsRole.size() <= 0) {
 					for (SmPersonnel personnel : this.getManagedBean().getSmAppl().getSmPersonnels()) {
