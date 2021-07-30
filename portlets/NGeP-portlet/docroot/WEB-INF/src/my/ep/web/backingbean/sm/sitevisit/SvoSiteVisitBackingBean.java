@@ -28,31 +28,14 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.apache.velocity.VelocityContext;
-import org.primefaces.context.RequestContext;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.StreamedContent;
-
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.pdf.PdfContentByte;
-import com.lowagie.text.pdf.PdfImportedPage;
-import com.lowagie.text.pdf.PdfReader;
-import com.lowagie.text.pdf.PdfWriter;
-
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 //#30504 start
 import my.ep.biz.service.pm.common.zone.IZoneSO;
-import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
-import my.ep.dto.pm.common.zone.ZoneReqDTO;
 //#30504 end
 import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.siteVisit.ISiteVisitSO;
-import my.ep.biz.service.sm.trackingdiary.ISmTrackingDiarySO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -61,6 +44,7 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
+import my.ep.dto.pm.common.zone.ZoneReqDTO;
 import my.ep.dto.sm.attachment.SmAttachmentReqDTO;
 import my.ep.dto.sm.attachment.SmAttachmentResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
@@ -72,7 +56,6 @@ import my.ep.dto.sm.siteVisit.SiteVisitReqDTO;
 import my.ep.dto.sm.siteVisit.SiteVisitResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
-import my.ep.dto.sm.trackingdiary.SmTrackingDiaryReqDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
@@ -140,6 +123,20 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.sm.helper.VmUtil;
 import my.ep.web.util.template.DocumentGenerator;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.velocity.VelocityContext;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.StreamedContent;
+
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfImportedPage;
+import com.lowagie.text.pdf.PdfReader;
+import com.lowagie.text.pdf.PdfWriter;
 
 @ManagedBean(name = "svoSiteVisitBackingBean")
 @RequestScoped
@@ -2455,7 +2452,20 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 */
 	public void downloadPOApprovalSiteVisitReport(SmSvTask svTask) throws Exception{
 		//#29430 - start
-		//refreshPage();
+		//#24964 - start
+		if(svTask == null){
+			svTask = getManagedBean().getSmSvTask();
+			try{
+				SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
+				reqDTO.setSmSvTask(svTask);
+				reqDTO.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
+				((ISiteVisitSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISiteVisitSO.class))
+						.saveOrSubmitSiteVisitReport(reqDTO);
+			}catch(Exception ex){
+				throw new EpException(ex.getMessage());
+			}
+		}
+		//#24964 - end
 		getManagedBean().setFromReport(true);
 		getManagedBean().setSvTaskId(svTask.getSvTaskId());
 		retrieveSiteVisitInfo("V");
