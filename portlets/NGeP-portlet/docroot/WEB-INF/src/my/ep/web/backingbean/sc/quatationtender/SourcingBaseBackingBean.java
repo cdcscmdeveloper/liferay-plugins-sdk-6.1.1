@@ -4757,6 +4757,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					master = scQtCheckList.getScQtDoc().getTplSpecMaster();
 					
 					for (TplSpecQuestion question : master.getTplSpecQuestions()) {
+						constructSpecData(scLoa, master, question);
+
 						constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master, question);
 					}
 					
@@ -4774,7 +4776,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			specSO = null;
 		}
 	}
+	//Enhancement #26130 -end-
 	
+	//Enhancement #26130 -start-	
 	/**
 	 * @param context
 	 * @param scLoa
@@ -4796,6 +4800,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
 					
 					for (TplSpecQuestion question : master.getTplSpecQuestions()) {
+						constructSpecData(scLoa, master, question);
+
 						constructTplSpecQuestion(dafaltValue,
 								newTplSpecQuestionsList, master, question);
 					}
@@ -4813,6 +4819,81 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		context.put("bean", this);
 	}
 	//Enhancement #26130 -end-
+	
+	// #26130 - Start
+	/**
+	 * @param scLoa
+	 * @param master
+	 * @param question
+	 */
+	private void constructSpecData(ScLoa scLoa, TplSpecMaster master, TplSpecQuestion question) {
+		if (null != question.getClItem()) {
+			List<String> specList = null;
+			List<String> feedbackList = null;
+			List<String> answerRemarkList = null;
+			boolean addSpecList = false;
+
+			for (TplSpecQuestion tplSpecQuestion : master.getTplSpecQuestions()) {
+				if (tplSpecQuestion.getSpecQuestionId() == question.getSpecQuestionId()) {
+					addSpecList = true;
+					continue;
+				}
+				
+				if (addSpecList) {
+					if (tplSpecQuestion.getQuestionType().equals("S")) {
+						if (specList == null) {
+							specList = new ArrayList<>();
+						}
+						
+						if (feedbackList == null) {
+							feedbackList = new ArrayList<>();
+						}
+						
+						if (answerRemarkList == null) {
+							answerRemarkList = new ArrayList<>();
+						}
+						
+						specList.add(tplSpecQuestion.getClSpecDetail());
+
+						for (TplSpecAnswer tplSpecAnswer : tplSpecQuestion.getTplSpecAnswers()) {
+							
+							if (null != tplSpecAnswer
+									&& null != tplSpecAnswer.getTplSpecSuppAnswer()
+									&& null != tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier()
+									&& tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier().getSupplierId().longValue() == scLoa
+											.getScLoiLoa().getSmSupplier().getSupplierId().longValue()) {
+								String feedback = null;
+								
+								if (null != tplSpecAnswer.getAnswerNumeric()) {
+									feedback = String.valueOf(tplSpecAnswer.getAnswerNumeric());
+								} else if (null != tplSpecAnswer.getAnswerCompliance()) {
+									if (tplSpecAnswer.getAnswerCompliance()) {
+										feedback = "Yes";
+									} else {
+										feedback = "No";
+									}
+								} else if (StringUtils.isNotEmpty(tplSpecAnswer.getAnswerText())) {
+									feedback = String.valueOf(tplSpecAnswer.getAnswerText());
+								}
+								
+								feedbackList.add(feedback);
+								
+								answerRemarkList.add(tplSpecAnswer.getAnswerRemark());
+							}
+						}
+					} else {
+						break;
+					}
+				}
+
+			}
+			
+			question.setSpecList(specList);
+			question.setFeedbackList(feedbackList);
+			question.setAnswerRemarkList(answerRemarkList);
+		}
+	}
+	// #26130 - End
 		
     //Enhancement #25729 Allow create QT below threshold RM20k - start -
     //#25729 #142 start - checking total indicative price <= 20k

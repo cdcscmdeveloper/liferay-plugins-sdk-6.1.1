@@ -1,10 +1,14 @@
 package my.ep.web.backingbean.sc.loa;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.Format;
@@ -18,6 +22,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -170,6 +176,8 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.log4j.Logger;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
@@ -4108,16 +4116,19 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
 							.equals(docDefinitionKey)) {
 						//Enhancement #26130 -start-
-						if (getManagedBean().getScLoa().getPmStatus().getStatusId().equals(
-								QTStatusConst.LOA_PENDING_VERIFICATION)
-								|| getManagedBean().getScLoa().getPmStatus().getStatusId().equals(
-										QTStatusConst.LOA_COMPLETED)) {
-							filename.append(".pdf");
-							scLoaReportAttachment.setFileName(filename.toString());
-							generateAgreementLetterPdfFromVelocity(
-									(ScAttachment) scLoaReportAttachment, scLoa, getManagedBean().getScQt());
+						if (getManagedBean().getScLoa().getPmStatus().getStatusId()
+								.equals(QTStatusConst.LOA_PENDING_VERIFICATION)
+								|| getManagedBean().getScLoa().getPmStatus().getStatusId()
+										.equals(QTStatusConst.LOA_COMPLETED)) {
+
+							scLoaReportAttachment = scLoaReport.getScLoaReportAttachment();
+							
+							scLoaReportAttachment.setDocNo(scLoaReport.getScLoa().getLoaNo());
+							
+							generaateUpdatedLampiraA3PDF(scLoaReportAttachment, scLoa);
 
 						} else {
+
 							filename.append(".docx");
 							scLoaReportAttachment.setFileName(filename.toString());
 							generateAgreementLetterDocFromVelocity(
@@ -4292,6 +4303,199 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 		return scLoaReportAttachment;
 	}
+
+	// #26130 - Start.
+	/**
+     * @param scLoaReportAttachment
+     * @param scLoa
+     * @throws Exception
+     * @throws FileNotFoundException
+     */
+	private void generaateUpdatedLampiraA3PDF(ScLoaReportAttachment scLoaReportAttachment, ScLoa scLoa)
+			throws Exception, FileNotFoundException {
+		VelocityContext context = new VelocityContext();
+		ScQt scQt = getManagedBean().getScQt();
+		
+		if (scQt != null
+				&& (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType()) || ParameterConst.DOCTYPE_DIRECT_NEGO
+						.equals(scLoa.getScLoiLoa().getDocType()))
+				&& (ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(scQt.getFulfilmentType().getParameterCode())
+						|| ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scQt.getFulfilmentType().getParameterCode()) || ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
+							.equals(scQt.getFulfilmentType().getParameterCode()))) {
+			
+			TplSpecMaster productSpecMaster = getManagedBean().getProdTemplateSpecBean().getSpecMaster();
+			TplSpecMaster serviceSpecMaster = getManagedBean().getSpecTemplateSpecBean().getSpecMaster();
+			List<TplSpecMaster> specMasters = null;
+			
+			if (null != productSpecMaster || null != serviceSpecMaster) {
+				specMasters = new ArrayList<>();
+				
+				if (null != productSpecMaster) {
+					specMasters.add(productSpecMaster);
+				}
+				
+				if (null != serviceSpecMaster) {
+					specMasters.add(serviceSpecMaster);
+				}
+			}
+			
+			constructSupplierSpecificationAndRemarks(context, scLoa, specMasters);
+
+			// scLoa
+			context.put("scLoa", scLoa);
+
+			FileInputStream inputStream = null;
+			
+			try {
+				String filePath = getActualFilePath(scLoaReportAttachment);
+				
+				if (filePath.endsWith(".gz")) {
+					if (!filePath.endsWith("_merged.pdf.gz")) {
+						inputStream = new FileInputStream(new File(filePath));
+						GZIPInputStream gis = new GZIPInputStream(inputStream);
+						filePath = filePath.replace(".pdf.gz", ".pdf");
+
+						File pdfFile = new File(filePath);
+						
+						if (pdfFile.exists()) {
+							pdfFile.delete();
+						}
+						
+						Path path = FileSystems.getDefault().getPath(filePath);
+
+						try {
+							Files.copy(gis, path);
+						} catch (Exception e) {
+							log.error("DirectLOABackingBean: generaateUpdatedLampiraA3PDF: " + e.getMessage());
+						}
+
+						String tempFilePath = filePath.replace(".pdf", "_temp.pdf");
+						File file = new File(filePath);
+						
+						mergePdf(file, filePath, tempFilePath, context);
+
+						String destinatonZipFilepath = filePath.replace(".pdf", "_merged.pdf.gz");
+						byte[] buffer = new byte[1024];
+						FileInputStream fileInput = null;
+						FileOutputStream fileOutputStream = null;
+						GZIPOutputStream gzipOuputStream = null;
+						
+						try {
+							fileOutputStream = new FileOutputStream(destinatonZipFilepath);
+							gzipOuputStream = new GZIPOutputStream(fileOutputStream);
+							fileInput = new FileInputStream(filePath);
+							int bytes_read;
+							
+							while ((bytes_read = fileInput.read(buffer)) > 0) {
+								gzipOuputStream.write(buffer, 0, bytes_read);
+							}
+							
+							gzipOuputStream.finish();
+						} catch (IOException ex) {
+							ex.printStackTrace();
+						} finally {
+							if (null != fileInput)
+								fileInput.close();
+							if (null != fileOutputStream)
+								fileOutputStream.close();
+							if (null != gzipOuputStream)
+								gzipOuputStream.close();
+						}
+
+						if (file.exists()) {
+							file.delete();
+						}
+						
+						if (!scLoaReportAttachment.getFilePath().endsWith("_merged.pdf.gz")) {
+							String filepath = scLoaReportAttachment.getFilePath().replace(".pdf.gz", "_merged.pdf.gz");
+							scLoaReportAttachment.setFilePath(filepath);
+						}
+					}
+				} else if (filePath.endsWith(".pdf")) {
+					String tempFilePath = filePath.replace(".pdf", "_temp.pdf");
+					File file = new File(filePath);
+					mergePdf(file, filePath, tempFilePath, context);
+				}
+			} finally {
+				if (null != inputStream)
+					inputStream.close();
+			}
+		}
+	}
+    // #26130 - End.
+    
+    // #26130 - Start.
+    /**
+     * @param file
+     * @param filePath
+     * @param tempFilePath
+     * @param context
+     * @throws IOException
+     */
+	public void mergePdf(File file, String filePath, String tempFilePath, VelocityContext context) throws IOException {
+		PDDocument sstDocument = null;
+		PDDocument lampiranA3Doc = null;
+		
+		try {
+			sstDocument = PDDocument.load(file);
+			int noOfPages = sstDocument.getNumberOfPages();
+			
+			StringBuffer sb = new StringBuffer();
+			sb.append(noOfPages);
+			sb.append(" ");
+			sb.append("daripada");
+			sb.append(" ");
+			sb.append(noOfPages);
+			
+			context.put("pageNo", sb.toString());
+
+			log.info("DirectLOABackingBean: mergePdf(): filePath is: " + filePath);
+			log.info("DirectLOABackingBean: mergePdf(): tempFilePath is: " + tempFilePath);
+
+			DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.LOA_AGREEMENT_LAMPIRAN_A3,
+					context, new FileOutputStream(tempFilePath));
+
+			log.info("DirectLOABackingBean: mergePdf(): SST pages: " + noOfPages);
+
+			if (noOfPages >= 14) {
+				sstDocument.removePage(noOfPages - 1);
+			}
+
+			lampiranA3Doc = PDDocument.load(tempFilePath);
+			
+			for (int i = 0; i < noOfPages - 1; i++) {
+				PDPage page = (PDPage) sstDocument.getDocumentCatalog().getAllPages().get(i);
+				page.setMediaBox(PDPage.PAGE_SIZE_A4);
+			}
+
+			noOfPages = lampiranA3Doc.getNumberOfPages();
+			
+			log.info("DirectLOABackingBean: mergePdf(): Lamiran A3 pages: " + noOfPages);
+			
+			for (int i = 0; i < noOfPages; i++) {
+				PDPage page = (PDPage) lampiranA3Doc.getDocumentCatalog().getAllPages().get(i);
+				page.setMediaBox(PDPage.PAGE_SIZE_A4);
+				
+				sstDocument.addPage(page);
+			}
+			
+			sstDocument.save(filePath);
+			
+			File tempFile = new File(tempFilePath);
+			
+			if (tempFile.exists()) {
+				tempFile.delete();
+			}
+		} catch (Exception e) {
+			log.error("DirectLOABackingBean: mergePdf(): error message is: " + e.getMessage());
+		} finally {
+			if (null != sstDocument)
+				sstDocument.close();
+			if (null != lampiranA3Doc)
+				lampiranA3Doc.close();
+		}
+	}
+    // #26130 - End.
 
 	/**
 	 * Gets the qt award so.
@@ -5290,6 +5494,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		String agencyAddress = "";
 		String agencyPhoneNo = "";
 		String agencyFaxNo = "";
+		
 		if (pmAddressType != null) {
 			PmAddress pmAddress = pmAddressType.getPmAddress();
 
@@ -5298,21 +5503,93 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			agencyPhoneNo = pmAddress.getPhoneNo();
 			agencyFaxNo = pmAddress.getFaxNo();
 		}
+		
 		context.put("agencyAddress", agencyAddress);
 		context.put("agencyPhoneNo", agencyPhoneNo);
 		context.put("agencyFaxNo", agencyFaxNo);
 		context.put("fileNo", scLoiLoa.getFileNo() + "-" + scLoa.getFileExtNo());
 		context.put("loaNo", scLoa.getLoaNo());
 
-		String issueDate = "";
-		if (scLoa.getIssueDate() != null) {
-			issueDate = DateUtils.getLocalizeDate(scLoa.getIssueDate(),
-					myLocale);
+		// #26130 -start-
+        SimpleDateFormat dateSDF = new SimpleDateFormat(
+                commonUtils
+                        .getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
+                        
+        context.put("dateSDF", dateSDF);
+        context.put("isZonal", scQt.isZonal());
+        context.put("isSL1M", scLoa.isSl1mReq());
+        
+		String fileNo = "";
+		
+		if (!StringUtils.isBlank(scQt.getFileNo())) {
+			fileNo = scQt.getFileNo();
+			
+			if (fileNo.length() > 30) {
+				fileNo = splitLongLengthString(fileNo, 29);
+			}
 		}
+		
+		context.put("fileNo", fileNo + "-" + scLoa.getFileExtNo());
+		context.put("loaNo", scLoa.getLoaNo());
+
+		String issueDate = "______________";
+		
+		if (scLoa.getIssueDate() != null) {
+			issueDate = getLocalizeDate(scLoa.getIssueDate(), myLocale);
+		}
+		// #26130 -end- 
+
 		context.put("issueDate", issueDate);
 
-		context.put("supplierName", scLoiLoa.getSupplierName());
+		// #26130 -start-
+		String govtSignDate = "______________";
+		
+		if (scLoa.getGovtSignDate() != null) {
+			govtSignDate = getLocalizeDate(scLoa.getGovtSignDate(), myLocale);
+		}
+		
+		context.put("govtSignDate", govtSignDate);
+
 		String supplierAddress = "";
+		
+		if (scLoa.getScSupplierAddress() != null) {
+			supplierAddress = getFullAddress(scLoa.getScSupplierAddress());
+		}
+		
+		StringBuilder supplierAddressTable = null;
+		
+		if (StringUtils.isNotBlank(supplierAddress)) {
+			String[] address = supplierAddress.split(System.getProperty("line.separator"));
+			supplierAddressTable = new StringBuilder();
+			
+			for (String suppAddr : address) {
+				supplierAddressTable.append(suppAddr);
+				supplierAddressTable.append("<br />");
+			}
+			// supplierAddressTable.append("</table>");
+		}
+		
+		context.put("supplierAddressTable", supplierAddressTable);
+
+		String headerTitle = "";
+	
+		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType())) {
+			headerTitle = "Pembelian Terus (Bermasa)";
+		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())
+				|| ParameterConst.DOCTYPE_DIRECT_NEGO.equals(scLoa.getScLoiLoa().getDocType())) {
+			if (ParameterConst.PROCUREMENT_MODE_TENDER.equals(scLoa.getProcurementMode().getParameterCode())) {
+				headerTitle = "Tender";
+			} else {
+				headerTitle = "Sebut Harga";
+			}
+		}
+
+		context.put("headerTitle", headerTitle);
+		context.put("subTitle", headerTitle.toLowerCase());
+		// #26130 -end-
+
+		context.put("supplierName", scLoiLoa.getSupplierName());
+		
 		String supplierEmail = "";
 		String supplierPhoneNo = "";
 		String supplierFaxNo = "";
@@ -5365,6 +5642,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		context.put("procurementMode", procurementMode);
 		context.put("s1ors2", procurementMode);
 
+        // loa title		
 		String title=	scQt.getQtTitle();
 		if (title == null) {
 			title = "";
@@ -5422,16 +5700,25 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		context.put("insWarrantyReq", scLoa.isInsWarrantyReq());
 
 		String contractEffDate = "";
+		
 		if (scLoa.getContractEffDate() != null) {
 			contractEffDate = DateUtils.getLocalizeDate(
 					scLoa.getContractEffDate(), myLocale);
 		}
+		
 		context.put("contractEffDate", contractEffDate);
+		
+		// #26130 -start-
+		context.put("contractDuration", scLoa.getContractDuration());
+		context.put("isAgreementReq", scLoa.isAgreementReq());
 
-		String LoaSigner = "";
-		String loaSignerDesig = "";
-		if(getManagedBean().getContractSignerUser() != null){
-			PmUser contractSigner = getManagedBean().getContractSignerUser();
+		String LoaSigner = "______________";
+		String loaSignerDesig = "______________";
+
+		if (scLoa.getContractSigner() != null) {
+			PmUser contractSigner = scLoa.getContractSigner();
+		// #26130 -end-
+
 			if(StringUtils.isNotEmpty(contractSigner.getUserName())){
 				LoaSigner = contractSigner.getUserName();
 			}
@@ -5532,15 +5819,43 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		context.put("gstRegFlag", gstRegFlag);
 
-		//Enhancement #24259 #24269
-		setSstInfoForAgreementLetter(context, scLoa, amountDF, myLocale);
+		//Enhancement #24259 #24269 -start-
+        setSstInfoForAgreementLetter(context, scLoa, amountDF, myLocale);
 //		setGstInfoForAgreementLetter(context, scLoa, amountDF, myLocale);
+        //Enhancement #24259 #24269 -end-
 
-		/*DocumentGenerator.getInstance().generatePdfFromVelocity(
-				SourcingConstants.LOA_AGREEMENT_LETTER, context,
-				new FileOutputStream(getActualFilePath(attachment)));*/
+		// #26130 -start-
+		setMofInfoForAgreementLetter(context, scLoa, myLocale);
+		setMinSL1MParticipant(context, scLoa,
+				new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)));
+
+		String fiService = "T/B";
+
+		if (scQt != null) {
+			if (ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(scQt.getFulfilmentType().getParameterCode())) {
+				fiService = "0.8%";
+			}
+
+			else if (ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scQt.getFulfilmentType().getParameterCode())
+					|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equals(scQt.getFulfilmentType().getParameterCode())) { // Bug
+																															// #22393
+				fiService = "0.4%";
+			}
+		}
 		
-		// #26130 - Start
+		context.put("fiService", fiService);
+
+		// qtno
+		String qtNo = (StringUtils.isEmpty(scQt.getQtNo())) ? "______________" : scQt.getQtNo();
+		
+		context.put("qtNo", qtNo);
+
+		if (isQuotationOrTender(scQt)) {
+			context.put("docType", "Sebut Harga");
+		} else {
+			context.put("docType", "Tender");
+		}        
+
 		if(scQt != null && (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())
 				|| ParameterConst.DOCTYPE_DIRECT_NEGO.equals(scLoa.getScLoiLoa().getDocType()))
 				&& (ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(scQt.getFulfilmentType().getParameterCode()) 
@@ -5557,6 +5872,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				if (null != productSpecMaster) {
 					specMasters.add(productSpecMaster);
 				}
+				
 				if (null != serviceSpecMaster) {
 					specMasters.add(serviceSpecMaster);
 				}
