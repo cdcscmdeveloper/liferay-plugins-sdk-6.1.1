@@ -367,29 +367,25 @@ public class SmSideMenuIconUtil {
 				}				
 				//27641, 27736 : Disciplinary Action - #26238 - end
 				bean.getEditVO().setSuppEditCategory(false);
-				//#31230 start
-				if (step6CatCodeHasDifference(true, bean.getLatestAppl(),
-						bean.getSmAppl(), bean.isOverLappedCategoryExists()) && !flagSmDisciplinaryActionIsCancelCategory) {
+				
+				if (step6CatCodeHasDifference(true, bean.getLatestAppl(),bean.getSmAppl()) 
+						&& !flagSmDisciplinaryActionIsCancelCategory) {
 					bean.getEditVO().setSuppEditCategory(true);
 				}
 				// used to check got changes to display supporting doc
 				if (step6CatCodeHasDifference(true,
-						bean.getLatestApproveAppl(), bean.getSmAppl(), bean.isOverLappedCategoryExists())) {
+						bean.getLatestApproveAppl(), bean.getSmAppl())) {
 					bean.getSupplierEditVO().setSuppEditCategory(true);
 				}
-//				if(bean.isOverLappedCategoryExists()){
-//					bean.getSupplierEditVO().setSuppEditCategory(true);
-//				}
+				
 			} else if (bean.isPoUser()) {
 				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditCategory(false);
 				bean.getEditVO().setPoEditCategory(false);
-				if (step6CatCodeHasDifference(true, bean.getLatestAppl(),
-						bean.getSupplierAppl(), bean.isOverLappedCategoryExists())) {
+				if (step6CatCodeHasDifference(true, bean.getLatestAppl(),bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditCategory(true);
 				}
-				if (step6CatCodeHasDifference(false, bean.getSupplierAppl(),
-						bean.getSmAppl(), bean.isOverLappedCategoryExists())) {
+				if (step6CatCodeHasDifference(false, bean.getSupplierAppl(),bean.getSmAppl())) {
 					bean.getEditVO().setPoEditCategory(true);
 				}
 			} else if (bean.isApproverUser()) {
@@ -398,19 +394,23 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setPoEditCategory(false);
 				bean.getEditVO().setAppEditCategory(false);
 				if (step6CatCodeHasDifference(true, bean.getLatestAppl(),
-						bean.getSupplierAppl(), bean.isOverLappedCategoryExists())) {
+						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditCategory(true);
 				}
 				if (step6CatCodeHasDifference(false, bean.getSupplierAppl(),
-						bean.getPoAppl(), bean.isOverLappedCategoryExists())) {
+						bean.getPoAppl())) {
 					bean.getEditVO().setPoEditCategory(true);
 				}
 				if (step6CatCodeHasDifference(false, bean.getPoAppl(),
-						bean.getSmAppl(), bean.isOverLappedCategoryExists())) {
+						bean.getSmAppl())) {
 					bean.getEditVO().setAppEditCategory(true);
 				}
-				//#31230 end
 			}
+			//#31230 START
+			if(step6OverlappedCategory(bean.isOverLappedCategoryExists())){
+				bean.getEditVO().setHasOverlapped(true);
+			}
+			//#31230 END
 		} else if (sectionType
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)) {
 			if (bean.isSupplierUser()) {
@@ -1388,9 +1388,8 @@ public class SmSideMenuIconUtil {
 		return retVal;
 	}
 
-	//#31230 start
 	private static boolean step6CatCodeHasDifference(boolean isSupplier,
-			SmAppl applPrev, SmAppl applCurr, boolean isOverlap) {
+			SmAppl applPrev, SmAppl applCurr) {
 		boolean retVal = false;
 
 		if (applPrev != null && applCurr != null) {
@@ -1440,27 +1439,27 @@ public class SmSideMenuIconUtil {
 				retVal = EntityHelper.hasDiffBetweenList(prevCatList,
 						currCatList, null, new String[] { "pmCategoryL3" },
 						arrExcludeProps);
-				
-				if(isOverlap){
-					retVal = true;
-				}
 			} else {
 				retVal = EntityHelper.hasDiffBetweenList(
 						applPrev.getSmSupplierCategories(),
 						applCurr.getSmSupplierCategories(),
 						new String[] { "supplierCategoryId" }, null,
 						arrExcludeProps);
-				
-				if(isOverlap){
-					retVal = true;
-				}
 			}
-			log.info("-------retVal: "+ retVal);
-			//#31230 end
 		}
 		return retVal;
 	}
-
+	
+	//#31230 START
+	private static boolean step6OverlappedCategory(boolean isOverlapped){
+		boolean retVal = false;
+		if(isOverlapped){
+			retVal = true;
+		}
+		return retVal;		
+	}
+	//#31230 END
+	
 	private static boolean step7FacilityHasDifference(boolean isSupplier,
 			SmAppl applPrev, SmAppl applCurr) {
 		boolean retVal = false;
