@@ -293,9 +293,15 @@ public class CommitteBackingBean extends
 				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 				OrgProfileReqDTO mofReqDTO = new OrgProfileReqDTO();
-				mofReqDTO.setOrgCode("103"); //KEMENTERIAN KEWANGAN MALAYSIA
 				
-				OrgProfileResDTO mofResDTO = orgProfileSO.retrieveOrgProfileByCode(mofReqDTO);
+				// 25638 - Start.
+				//mofReqDTO.setOrgCode("103"); //KEMENTERIAN KEWANGAN MALAYSIA
+				
+				//OrgProfileResDTO mofResDTO = orgProfileSO.retrieveOrgProfileByCode(mofReqDTO);
+				mofReqDTO.setOrgName("KEMENTERIAN KEWANGAN MALAYSIA");
+				OrgProfileResDTO mofResDTO = orgProfileSO.retrieveOrgProfileByName(mofReqDTO);
+				// 25638 - End.
+				
 				reqDTO.setPmOrgProfile(mofResDTO.getPmOrgProfile());	
 				log.info(":::getRoleDesc() MOF ministry orgProfileId: "+ mofResDTO.getPmOrgProfile().getOrgProfileId()); //orgprofileid 955020
 			
