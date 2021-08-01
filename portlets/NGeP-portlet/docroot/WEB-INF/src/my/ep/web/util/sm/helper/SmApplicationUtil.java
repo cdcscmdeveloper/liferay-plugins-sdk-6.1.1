@@ -1778,11 +1778,13 @@ public class SmApplicationUtil {
 		//16052019 - SSM INTEGRATION CR
 		int i = 0;
 		int j = 0; //#30444
-		int k = 0; //#30444
-		StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder();		
 		sb.append("<br/>");
+		StringBuilder sbd = new StringBuilder(); //#30444 --31072021--
+		sbd.append("<br/>"); //#30444 --31072021--
 		boolean validPersonnel = true;
 		boolean validPersonnels = true; //#30444
+		boolean displayError = false; //#30444 --31072021--
 		boolean showerror = false;
 		for (SmPersonnel per : appl.getSmPersonnels()) {
 			//16052019 - SSM INTEGRATION CR - To check address complete or not
@@ -1792,6 +1794,7 @@ public class SmApplicationUtil {
 				}
 			}*/
 			validPersonnel = true;
+			validPersonnels = true; //#30444 --31072021--
 			//#28693
 			if ((per.isBumi() == null && per.getBumiFlg() == null && per.getBumiFlgTrans() == null)
 					// #30718 - start
@@ -1803,6 +1806,13 @@ public class SmApplicationUtil {
 			} else if (per.getSmPersonnelAddresses() == null || per.getSmPersonnelAddresses().size() <= 0) {
 				validPersonnel = false;
 			}
+			//#30444 --START--31072021--
+			if (per.isClerical() && (per.isManagement() || per.isHigherManagement())
+					&& !managedBean.getBusinessTypeVal().equalsIgnoreCase(
+							SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)){
+				validPersonnels = false;
+			}
+			//#30444 --END--31072021--
 			if(!validPersonnel){
 				sb.append(++i + ". ");
 				sb.append(per.getName());
@@ -1848,24 +1858,18 @@ public class SmApplicationUtil {
 				if (per.isSemiProf() && !StringUtils.isBlank(per.getEpfNo())) {
 					semiProfCount = semiProfCount + 1;
 				}
-				//#30444 --START
-				if (per.isClerical() && (per.isManagement() || per.isDirector() 
-						|| per.isProf() || per.isSemiProf())
-						&& !managedBean.getBusinessTypeVal().equalsIgnoreCase(
-								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)){
-					validPersonnels = false;
-					sb.append(++j + ". ");
-					sb.append(per.getName());
-					sb.append("<br/>");
-				}
-				//#30444 --END				
+		}
+			//#30444 --START--31072021--
+			if(!validPersonnels){
+				sbd.append(++j + ". ");
+				sbd.append(per.getName());
+				sbd.append("<br/>");
+				displayError = true;				
 			}
+			//#30444 --END--31072021--
 		}
 		//#30444 --START	
-		if (!validPersonnels) {
-			validSave = false;
-			StringBuilder sbd = new StringBuilder();
-			sbd.append(sb);
+		if (displayError && managedBean.isSupplierUser()) {	 //#30444 --31072021--	
 			if (currentTab != -1) {
 				setNavigationBackToCurrentPage(currentTab, managedBean);
 			}
@@ -12152,8 +12156,8 @@ public class SmApplicationUtil {
 				  bean.getSelectedShareHolder().setDisableStaff(true);
 		//#29666 - END 
 		//#30444 - START
-			} else if (bean.getBusinessTypeVal()     
-					.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT)
+			} else if (!bean.getBusinessTypeVal()     
+					.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT) //#30444 --31072021--
 					&& (bean.getSelectedShareHolder().isDirector()
 						|| bean.getSelectedShareHolder().isHigherManagement()
 						|| bean.getSelectedShareHolder().isEquityOwner()
@@ -12162,7 +12166,7 @@ public class SmApplicationUtil {
 				  bean.getSelectedShareHolder().setDisableStaff(true);
 		//#30444 - END
 		//#30444 - START 07052021
-			} else if (bean.getBusinessTypeVal()     
+			/*} else if (bean.getBusinessTypeVal()     
 					.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT)
 					&& (bean.getSelectedShareHolder().isDirector()
 						|| bean.getSelectedShareHolder().isHigherManagement()
@@ -12171,7 +12175,7 @@ public class SmApplicationUtil {
 				  bean.getSelectedShareHolder().setClerical(false);
 				  bean.getSelectedShareHolder().setDisableStaff(true);
 		//#30444 - END
-			} else {
+*/			} else {
 					bean.getSelectedShareHolder().setDisableStaff(false);
 			}
 			
