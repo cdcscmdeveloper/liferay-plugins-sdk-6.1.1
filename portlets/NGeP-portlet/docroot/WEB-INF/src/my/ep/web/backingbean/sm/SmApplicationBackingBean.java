@@ -14781,7 +14781,7 @@ public class SmApplicationBackingBean extends
 					getManagedBean().getSelectedShareHolder().setManagement(false);
 					getManagedBean().getSelectedShareHolder().setDisableEquityOwner(true);
 			//#29666- END 
-					30444 - START
+			//		30444 - START
 				} else if (!getManagedBean().getBusinessTypeVal()     
 						.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT) //#30444 --31072021--
 						&& (getManagedBean().getSelectedShareHolder().isClerical())) {
