@@ -611,7 +611,7 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 		StringBuilder sb = new StringBuilder();
 		sb.append("<br/>");
 		for (SmApplSupportDoc doc : getManagedBean().getSmApplInquiry().getSmAppl().getSmApplSupportDocs()) {
-			if (doc.getPmDocument() != null
+			if (doc.getPmDocument() != null &!doc.isReceived()
 					&& doc.getPmDocument().isMandatory()
 					&& !doc.getPmDocument().isHardCopyReq()
 					&& (EntityHelper.isCollectionEmpty(doc.getNewAddedFiles())
