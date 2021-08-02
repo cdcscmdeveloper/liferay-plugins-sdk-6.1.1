@@ -3651,12 +3651,10 @@ public class SmApplicationBackingBean extends
 					}		
 					if (displayError && (getManagedBean().isPoUser() || getManagedBean().isApproverUser())) {
 						if (getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
-							throw new EpException(MessageConst.ERROR_722689, new String[] {sbd.toString() });
+							//throw new EpException(MessageConst.ERROR_722689, new String[] {sbd.toString() });
 						}
-						if (getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(
-								SupplierManagementConst.STYPE_CONSULTANT)){
-						throw new EpException(MessageConst.ERROR_722690, new String[]
-								{sbd.toString() });
+						if (getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)){
+							//throw new EpException(MessageConst.ERROR_722690, new String[] {sbd.toString() });
 						}	
 					}
 				//#30444 --END--  --31072021	
