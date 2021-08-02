@@ -15226,10 +15226,10 @@ public class SmApplicationBackingBean extends
 					getManagedBean().getSelectedShareHolder().setDisableEquityOwner(true);
 			//#29666- END 
 			//#30444 - START
-				} else if (getManagedBean().getBusinessTypeVal()     
-						.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT)
+				} else if (!getManagedBean().getBusinessTypeVal()     
+						.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT) //#30444 --31072021--
 						&& (getManagedBean().getSelectedShareHolder().isClerical())) {
-					log.info("roc--fatintest");
+					log.info("other than rob partnership");
 			    	getManagedBean().getSelectedShareHolder().setEquityOwner(false);
 					getManagedBean().getSelectedShareHolder().setDirector(false);
 					getManagedBean().getSelectedShareHolder().setHigherManagement(false);
@@ -15237,7 +15237,7 @@ public class SmApplicationBackingBean extends
 					getManagedBean().getSelectedShareHolder().setDisableEquityOwner(true);
 			//#30444 - END
 			//#30444 - START 07052021
-				} else if (getManagedBean().getBusinessTypeVal()     
+				/*} else if (getManagedBean().getBusinessTypeVal()     
 						.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT)
 						&& (getManagedBean().getSelectedShareHolder().isClerical())) {
 					log.info("rob-sole p");
@@ -15245,7 +15245,7 @@ public class SmApplicationBackingBean extends
 					getManagedBean().getSelectedShareHolder().setDirector(false);
 					getManagedBean().getSelectedShareHolder().setHigherManagement(false);
 					getManagedBean().getSelectedShareHolder().setManagement(false);
-					getManagedBean().getSelectedShareHolder().setDisableEquityOwner(true);
+					getManagedBean().getSelectedShareHolder().setDisableEquityOwner(true);*/
 			//#30444 - END
 			    }else {
 			    getManagedBean().getSelectedShareHolder().setDisableEquityOwner(false);
