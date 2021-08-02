@@ -148,21 +148,34 @@ public class OrganisationBackingBean extends
 	private boolean gmapDisabled;
 
 	private Long selectedAddrForEdit;
+	private LogKey userLoginId; //#30651
+	private PmUser currentUser; //#30651
 
 	/**
 	 * The constructor used for save user logging.
 	 * 
 	 **/
 	public OrganisationBackingBean() {
-		PmUser pmUser = new FacesScopes().getUserSessionBean();
-		if (pmUser != null && pmUser.getUserId() != null) {
-			log.info("userID--" + pmUser.getUserId());
-
-			new LogKey(pmUser.getUserId());
-		} else {
-			new LogKey(1L);
+		
+		// Bug #30651 - START
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IUserSO.class);
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setLoginId(getFacesScopes().getUserScreenName());
+		currentUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
+		if (currentUser == null) {
+			PmUser tmp = new FacesScopes().getUserSessionBean();
+			if (tmp != null && tmp.getUserId() != null) {
+				userLoginId = new LogKey(tmp.getUserId());
+			} else {
+				userLoginId = new LogKey(1L);
+			}
+		}else{
+			userLoginId = new LogKey(currentUser.getUserId());
 		}
-
+		//reqDTO.setUser(getFacesScopes().getUserSessionBean());  
+		// Bug #30651 - END
 	}
 
 	/**
@@ -1051,6 +1064,14 @@ public class OrganisationBackingBean extends
 				orgValidity.setPmOrgProfile(orgProfile);
 				orgProfile.setPmOrgValidity(orgValidity);
 			}
+			//#30651 - start
+			else{
+				if(this.getManagedBean().getOfficeAddress() != null)
+					this.getManagedBean().getOfficeAddress().setChangedBy(userLoginId.getUserId());
+				if(this.getManagedBean().getOfficeContactPerson() != null)
+					this.getManagedBean().getOfficeContactPerson().setChangedBy(userLoginId.getUserId());
+			}
+			//30651 - end
 
 			if (parameter.getParameterCode().equalsIgnoreCase(
 					OrganizationType.BPK_PENDAFTARAN_HQ.value())
@@ -1194,22 +1215,10 @@ public class OrganisationBackingBean extends
 			reqDTO.setPmOrgProfile(orgProfile);
 			reqDTO.setRoleCode(PmCommonUtil.getUserRoleValue());
 			
-			// Bug #30651 - START
-			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IUserSO.class);
-			UserReqDTO userReqDTO = new UserReqDTO();
-			userReqDTO.setLoginId(getFacesScopes().getUserScreenName());
-			PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
-			if (pmUser == null) {
-				new LogKey(getFacesScopes().getUserSessionBean().getUserId());
-				reqDTO.setUser(getFacesScopes().getUserSessionBean());
-			}else{
-				new LogKey(pmUser.getUserId());
-				reqDTO.setUser(pmUser); 
-			}
-			//reqDTO.setUser(getFacesScopes().getUserSessionBean());  
-			// Bug #30651 - END
+			//#30651 - start
+			reqDTO.setUserId(userLoginId.getUserId());
+			reqDTO.setUser(currentUser);
+			//#30651 - end
 			
 			OrgProfileResDTO resDTO = orgProfileSO.saveOrgProfile(reqDTO);
 			/*
