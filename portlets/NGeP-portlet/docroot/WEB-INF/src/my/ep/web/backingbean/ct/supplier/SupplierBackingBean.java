@@ -1681,11 +1681,11 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		}
 
 		if (!statusFactoringCompany || !statusFactoringFinAcc){
+			getManagedBean().setAccBankName(null);
+			getManagedBean().setPopulateBankAccountList(null);
 			getManagedBean().getFactoring().getFinancialOrg().setFinancialOrgId(null);
 			getManagedBean().getFactoring().setBankAccountNo(null);
 			getManagedBean().getFactoring().setBankName(null);
-			getManagedBean().setAccBankName(null);
-			
 			return false;
 		}
 		
