@@ -3455,7 +3455,7 @@ public class SmApplicationBackingBean extends
 			String currentPageType, String outputPageType, Boolean isBpmSubmit) {
 		boolean valid = false;
 		//30444--START--31072021--
-		int k = 0; 
+		int k = 1; //#30444--02082021-
 		boolean validPersonnels = true; 
 		boolean displayError = false; 
 		StringBuilder sbd = new StringBuilder(); 
@@ -3644,9 +3644,7 @@ public class SmApplicationBackingBean extends
 							validPersonnels = false;
 						}
 						if(!validPersonnels){
-							//sbd.append(++k + ". ");
-							sbd.append(k+1);
-							sbd.append(". ");
+							sbd.append(k++ + ". ");//#30444--02082021-
 							sbd.append(personnel.getName());
 							sbd.append("<br/>");
 							displayError = true;				
@@ -3682,9 +3680,7 @@ public class SmApplicationBackingBean extends
 							validPersonnels = false;
 						}
 						if(!validPersonnels){
-							//sbd.append(++k + ". ");
-							sbd.append(k+1);
-							sbd.append(". ");
+							sbd.append(k++ + ". ");//#30444--02082021-
 							sbd.append(personnel.getName());
 							sbd.append("<br/>");
 							displayError = true;				
