@@ -207,6 +207,7 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 			//#11641 - START
 			reqDTO.setAddedSmApplDocFiles(this.getManagedBean().getAddedDocFile());
 			reqDTO.setUpdatedSupportDocs(this.getManagedBean().getUpdatedSupportDocs());
+			reqDTO.setEmptyToRemove(this.getManagedBean().getEmptyToRemove());
 			//#11641 - END
 
 			//#28807 - START
@@ -524,13 +525,15 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 				smApplDocFile.setFilePath(filePath);
 				
 				for(int i=0; i<doc.getSmApplDocFiles().size(); i++){
-					if(doc.getSmApplDocFiles().get(i).getFileName()==null || 
-							doc.getSmApplDocFiles().get(i).getFileName().equalsIgnoreCase(" ")){
-						doc.getSmApplDocFiles().remove(i);
+					if(doc.getSmApplDocFiles().get(i).getFileName()==null || doc.getSmApplDocFiles().get(i).getFileName().equalsIgnoreCase(" ")){
+						if(this.getManagedBean().getEmptyToRemove() == null){
+							this.getManagedBean().setEmptyToRemove(new ArrayList<SmApplDocFile>());
+							this.getManagedBean().getEmptyToRemove().add(doc.getSmApplDocFiles().get(i));
+						}else{
+							this.getManagedBean().getEmptyToRemove().add(doc.getSmApplDocFiles().get(i));
+						}
 					}
 				}
-				doc.getSmApplDocFiles().get(0).setFilePath(filePath);
-
 				getManagedBean()
 						.getSmApplInquiry()
 						.getSmAppl()
@@ -611,7 +614,7 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 		StringBuilder sb = new StringBuilder();
 		sb.append("<br/>");
 		for (SmApplSupportDoc doc : getManagedBean().getSmApplInquiry().getSmAppl().getSmApplSupportDocs()) {
-			if (doc.getPmDocument() != null &!doc.isReceived()
+			if (doc.getPmDocument() != null && !doc.isReceived()
 					&& doc.getPmDocument().isMandatory()
 					&& !doc.getPmDocument().isHardCopyReq()
 					&& (EntityHelper.isCollectionEmpty(doc.getNewAddedFiles())
