@@ -3957,7 +3957,8 @@ public class SmApplicationBackingBean extends
 						validSave, getManagedBean(), currentTab);
 			}
 			//#30762 --START
-			if(!getManagedBean().isDisAllowOwnerEdit()){			
+			if(!getManagedBean().isDisAllowOwnerEdit() 
+					&& !getManagedBean().isPoUser() && !getManagedBean().isApproverUser()){	 //#30444 --31072021--		
 			validSave = SmApplicationUtil.validatePersonnelBeforeSave(
 					validSave, currentTab, getManagedBean());
 			}
