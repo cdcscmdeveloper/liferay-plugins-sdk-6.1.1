@@ -3644,7 +3644,7 @@ public class SmApplicationBackingBean extends
 							validPersonnels = false;
 						}
 						if(!validPersonnels){
-							sbd.append(k++ + ". ");
+							//sbd.append(++k + ". ");
 							sbd.append(personnel.getName());
 							sbd.append("<br/>");
 							displayError = true;				
@@ -3680,7 +3680,7 @@ public class SmApplicationBackingBean extends
 							validPersonnels = false;
 						}
 						if(!validPersonnels){
-							sbd.append(k++ + ". ");
+							//sbd.append(++k + ". ");
 							sbd.append(personnel.getName());
 							sbd.append("<br/>");
 							displayError = true;				
