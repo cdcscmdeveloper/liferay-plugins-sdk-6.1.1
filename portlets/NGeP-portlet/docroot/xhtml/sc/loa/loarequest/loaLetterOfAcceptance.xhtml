@@ -40,16 +40,19 @@
 				</td>
 				<td>
 				
+				
 				   <p:outputPanel id="opUserLov">
+				   <!-- #30449 - start -->
 					<ac:lov id="lovUser" lovId="PM_USER_ID" size="80"
 						disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}"
 						update="@form" readonly="true"
 						headerText="#{lbl['lbl.pm.ta.user.lov']}"
 						selectionMode="single"
-						value="#{lOADetailBackingBean.managedBean.contractSignerUser.userName}"
+						value=" #{lOADetailBackingBean.managedBean.contractSignerUser.userName}"
 						saveObject="lOADetailBackingBean.managedBean.contractSignerUser"
 						conditionField="#{lOADetailBackingBean.constructUserConditionFields()}"
 						postUpdateListener="lOADetailBackingBean.signerUserListener(lOADetailBackingBean.managedBean.contractSignerUser)" />
+					<!-- #30449 - end -->
 					</p:outputPanel>
 				
 				</td>

@@ -143,10 +143,12 @@
 
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
+								<!-- #30449 - start added #{pmuser.salutationCode.salutationName}-->
 							<f:selectItems
-								value="#{lOADetailBackingBean.managedBean.supplierContractSignerList}"
-								var="pmuser" itemLabel="#{pmuser.userName}"
-								itemValue="#{pmuser.userId}" />
+								value="#{lOADetailBackingBean.managedBean.supplierContractSignerList}" 
+								var="pmuser" itemLabel="#{pmuser.salutationCode.salutationName} #{pmuser.userName}"
+								itemValue="#{pmuser.userId}"/>
+								<!-- #30449 - end -->
 							<p:ajax event="change"
 								listener="#{lOADetailBackingBean.supplierContractSignerEvent()}"
 								partialSubmit="true" process="@this" update="@this supplierContractSignerPanel " />
@@ -154,9 +156,11 @@
 						<p:message id="supplierContractSignerMsg" for="supplierContractSigner"
 							display="icon" />
 					</c:if> <c:if test="#{!isSupplierAckStatus}">
+					<!-- #30449 - start -->
 						<p:inputText
-							value="#{lOADetailBackingBean.managedBean.scLoa.ackBy.userName}"
-							disabled="true" size="35" />
+							value="#{lOADetailBackingBean.managedBean.scLoa.ackBy.salutationCode.salutationName} #{lOADetailBackingBean.managedBean.scLoa.ackBy.userName}"
+							disabled="true" size="35" /> 
+					<!-- #30449 - end -->
 					</c:if></td>
 			</tr>
 			<tr>

@@ -2662,7 +2662,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		PmUser ackBy = scLoa.getAckBy();
 		if(ackBy !=null){
-			supplierSignerUser = ackBy.getUserName();
+			//#30449 - start
+			if (ackBy.getSalutationCode() != null){
+				supplierSignerUser = ackBy.getSalutationCode().getSalutationName()+" "+ackBy.getUserName();
+			}else {
+				supplierSignerUser = ackBy.getUserName();
+			}
+			//#30449 - end
 			supplierSignerIcNo = ackBy.getIdentificationNo();
 		}
 
@@ -2829,7 +2835,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				String userName = "&#60;Nama Pembekal&#62;";
 				String icNo = "&#60;No. Kad Pengenalan&#62;";
 				if (pmUser != null) {
-					userName = pmUser.getUserName();
+					// #30449 - start
+						if (pmUser.getSalutationCode()!= null){
+							userName = pmUser.getSalutationCode().getSalutationName()+" "+pmUser.getUserName();
+						}else{
+							userName = pmUser.getUserName();
+						}
+					//#30449 - end  
 					icNo = pmUser.getIdentificationNo();
 				}
 				context.put("userName", userName);
@@ -7553,6 +7565,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		ScLoa scLoa = getManagedBean().getScLoa();
 		scLoa.setLoaSignerDesig(contractSignerUser.getDesignation());
+		//#30449 -start
+		scLoa.getContractSigner().setUserName(contractSignerUser.getUserName());
+		//#30449 - end
 
 	}
 
