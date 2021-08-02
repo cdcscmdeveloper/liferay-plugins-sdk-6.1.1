@@ -3456,10 +3456,8 @@ public class SmApplicationBackingBean extends
 		StringBuilder sbd = new StringBuilder(); 
 		sbd.append("<br/>"); //30444
 		//30444--END--31072021--
-		log.info(" ***** Business  Type After hard code *********"
-				+ getManagedBean().getSmAppl().getSmSupplier()
-						.getBusinessType());
-		getManagedBean().setTabActiveIndex(outputTab);
+		log.info(" ***** Business  Type After hard code *********"+ getManagedBean().getSmAppl().getSmSupplier().getBusinessType());
+		//getManagedBean().setTabActiveIndex(outputTab);  najmi
 		try {
 
 			log.info("******* IS PO *******" + getManagedBean().isPoUser());
@@ -3651,10 +3649,10 @@ public class SmApplicationBackingBean extends
 					}		
 					if (displayError && (getManagedBean().isPoUser() || getManagedBean().isApproverUser())) {
 						if (getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
-							//throw new EpException(MessageConst.ERROR_722689, new String[] {sbd.toString() });
+							throw new EpException(MessageConst.ERROR_722689, new String[] {sbd.toString() });
 						}
 						if (getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)){
-							//throw new EpException(MessageConst.ERROR_722690, new String[] {sbd.toString() });
+							throw new EpException(MessageConst.ERROR_722690, new String[] {sbd.toString() });
 						}	
 					}
 				//#30444 --END--  --31072021	
@@ -3667,29 +3665,29 @@ public class SmApplicationBackingBean extends
 					for (SmPersonnel personnel : getManagedBean().getSmAppl().getSmPersonnels()){
 						validPersonnels = true;
 						
-						if (personnel.isClerical() && (personnel.isManagement() || personnel.isHigherManagement())
-								&& !getManagedBean().getBusinessTypeVal().equalsIgnoreCase(
-										SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)){
+						if (personnel.isClerical() && (personnel.isManagement() || personnel.isHigherManagement()) && !getManagedBean().getBusinessTypeVal().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)){
 						   
-							validPersonnels = false;
+							//validPersonnels = false;
+							sbd.append(++k + ". ");
+							sbd.append(personnel.getName());
+							sbd.append("<br/>");
+							displayError = true;	
 						}
+						/*
 						if(!validPersonnels){
 							sbd.append(++k + ". ");
 							sbd.append(personnel.getName());
 							sbd.append("<br/>");
 							displayError = true;				
-						}	
+						}
+						*/	
 					}		
 					if (displayError && (getManagedBean().isPoUser() || getManagedBean().isApproverUser())) {
-						if (getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(
-								SupplierManagementConst.STYPE_CONTRACTOR)){
-						throw new EpException(MessageConst.ERROR_722689, new String[]
-								{sbd.toString() });
+						if (getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
+							throw new EpException(MessageConst.ERROR_722689, new String[]{sbd.toString() });
 						}
-						if (getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(
-								SupplierManagementConst.STYPE_CONSULTANT)){
-						throw new EpException(MessageConst.ERROR_722690, new String[]
-								{sbd.toString() });
+						if (getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)){
+							throw new EpException(MessageConst.ERROR_722690, new String[]{sbd.toString() });
 						}	
 					}
 				//#30444 --END--  --31072021
@@ -15281,7 +15279,7 @@ public class SmApplicationBackingBean extends
 					getManagedBean().getSelectedShareHolder().setManagement(false);
 					getManagedBean().getSelectedShareHolder().setDisableEquityOwner(true);
 			//#29666- END 
-			//#30444 - START
+					//#30444 - START
 				} else if (!getManagedBean().getBusinessTypeVal().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT) && (getManagedBean().getSelectedShareHolder().isClerical())) {
 					log.info("other than rob partnership");
 			    	getManagedBean().getSelectedShareHolder().setEquityOwner(false);
@@ -15289,7 +15287,7 @@ public class SmApplicationBackingBean extends
 					getManagedBean().getSelectedShareHolder().setHigherManagement(false);
 					getManagedBean().getSelectedShareHolder().setManagement(false);
 					getManagedBean().getSelectedShareHolder().setDisableEquityOwner(true);
-			//#30444 - END
+					//#30444 - END
 			//#30444 - START 07052021
 				/*} else if (getManagedBean().getBusinessTypeVal()     
 						.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT)
