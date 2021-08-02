@@ -3633,7 +3633,7 @@ public class SmApplicationBackingBean extends
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC:
 					//#30444 --START--  --31072021
-					/*
+					
 					for (SmPersonnel personnel : getManagedBean().getSmAppl().getSmPersonnels()){
 						validPersonnels = true;
 						
@@ -3644,13 +3644,13 @@ public class SmApplicationBackingBean extends
 							validPersonnels = false;
 						}
 						if(!validPersonnels){
-							sbd.append(++k + ". ");
+							//sbd.append(++k + ". ");
 							sbd.append(personnel.getName());
 							sbd.append("<br/>");
 							displayError = true;				
 						}	
 					}	
-					*/	
+						
 					if (displayError && (getManagedBean().isPoUser() || getManagedBean().isApproverUser())) {
 						if (getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(
 								SupplierManagementConst.STYPE_CONTRACTOR)){
@@ -3670,7 +3670,6 @@ public class SmApplicationBackingBean extends
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC:
 					//#30444 --START--  --31072021
-					/*
 					for (SmPersonnel personnel : getManagedBean().getSmAppl().getSmPersonnels()){
 						validPersonnels = true;
 						
@@ -3681,13 +3680,13 @@ public class SmApplicationBackingBean extends
 							validPersonnels = false;
 						}
 						if(!validPersonnels){
-							sbd.append(++k + ". ");
+							//sbd.append(++k + ". ");
 							sbd.append(personnel.getName());
 							sbd.append("<br/>");
 							displayError = true;				
 						}	
 					}	
-					*/	
+					
 					if (displayError && (getManagedBean().isPoUser() || getManagedBean().isApproverUser())) {
 						if (getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(
 								SupplierManagementConst.STYPE_CONTRACTOR)){
