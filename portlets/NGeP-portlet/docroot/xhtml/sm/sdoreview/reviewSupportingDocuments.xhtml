@@ -54,7 +54,9 @@
 		</p:dialog>
 
 		<p:outputPanel id="resOutPanelId">
-			<p:dialog header="#{lbl['lbl.sm.supportingdoc.panel.response']}" widgetVar="responseDlg" modal="true" height="500">
+		<!-- #11641 - START -->
+			<p:dialog header="#{lbl['lbl.sm.supportingdoc.panel.response']}" widgetVar="responseDlg" modal="true" height="500" width="1400">
+		<!-- #11641 - END -->
 				<p:panel header="#{lbl['lbl.sm.supportingdoc.inquiry']}" id="pnlInquiryId">
 					<table>
 					<tr>
@@ -212,9 +214,9 @@
 		</p:outputPanel>
 
 		<!-- #11641 - START -->
-		<p:dialog header="#{lbl['lbl.sm.supportingdoc.inquiry']}" widgetVar="inquiryDlg" modal="true" id="inquiryDlg">
+		<p:dialog header="#{lbl['lbl.sm.supportingdoc.inquiry']}" widgetVar="inquiryDlg" modal="true" id="inquiryDlg" width="auto">
 			
-			<p:scrollPanel mode="native" style="max-height:auto;width:auto;border:none">
+			<p:scrollPanel mode="native" style="max-height:auto;auto;border:none">
 			<p:messages id="inquiryMessageId"  showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 			
 			<p:blockUI block="abcde" widgetVar="abcdeblockWidget">
@@ -245,56 +247,28 @@
 				                	<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
 										style="width : 3% !important;text-align: center !important;" />
 									<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" 
-										style="width : 65% !important;overflow: hidden !important;" />
-									<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}"
-										style="width : 15% !important;overflow: hidden !important;"
-										rendered="#{sdoReviewBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}" />
-									<p:column headerText="#{lbl['lbl.sm.supportingdoc.isreceive']}" 
-										style="width : 3% !important;overflow: hidden !important;"
-										rendered="#{sdoReviewBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}"/>
+										style="width : 70% !important;overflow: hidden !important;" />
 									<p:column headerText="#{lbl['lbl.sm.remarks']}" 
-										style="width : 14% !important;overflow: hidden !important;" />
+										style="width : 27% !important;overflow: hidden !important;" />
 				                </p:row>
 							</p:columnGroup>	
 							<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 3% !important;" rendered="#{table.pmDocument.mandatory and !table.received}">
 								<h:outputText value="#{sdoReviewBackingBean.mandatoryCounter}"
 									style="float: left;white-space: normal;font-weight:bold;" />
 							</p:column>
-							<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" style="width : 65% !important;" rendered="#{table.pmDocument.mandatory and !table.received}">
+							<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" style="width : 70% !important;" rendered="#{table.pmDocument.mandatory and !table.received}">
 								<h:outputText value="#{table.pmDocument.docName}"
 									style="float: left;white-space: normal;" />
 							</p:column>
-							<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}" style="width : 15% !important;" rendered="#{table.pmDocument.mandatory and sdoReviewBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE and !table.received}">
-								<ui:repeat var="applDocs" value="#{table.smApplDocFiles}">
-									<ui:remove>
-										<p:commandLink value="#{applDocs.fileName}" rendered="#{not empty table.smApplDocFiles}"  ajax="false"
-						            		action="#{sdoReviewBackingBean.downloadSuppDoc(applDocs.fileName,applDocs.filePath)}">
-						           			<p:fileDownload value="#{sdoReviewBackingBean.file}" />
-						        		</p:commandLink>
-						        	</ui:remove>
-						        	<h:panelGroup rendered="#{not empty table.smApplDocFiles}">
-						        		<a href="#{DocumentRepositoryUtils.baseRepo}#{applDocs.filePath}#{applDocs.fileName}">#{sdoReviewBackingBean.getShortFileName(applDocs.fileName)}</a>
-						        	</h:panelGroup>
-									<br />
-								</ui:repeat>
-							</p:column>
-							<p:column headerText="#{lbl['lbl.sm.supportingdoc.isreceive']}" style="width : 3% !important;" rendered="#{table.pmDocument.mandatory and sdoReviewBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE and !table.received}">
-								<div align="center">
-									<p:selectBooleanCheckbox value="#{table.received}" disabled="#{!sdoReviewBackingBean.managedBean.claimTask}">
-										<p:ajax event="change"
-											listener="#{sdoReviewBackingBean.receivedStatus(table)}" disabled="#{!table.pmDocument.mandatory}"/>
-									</p:selectBooleanCheckbox>
-								</div>
-							</p:column>
-							<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 14% !important;" rendered="#{table.pmDocument.mandatory and !table.received}">
+							<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 27% !important;" rendered="#{table.pmDocument.mandatory and !table.received}">
 								<h:inputTextarea value="#{table.inquiryRemark}"
-									style="float: left;white-space: normal;" />
+									style="float: left;white-space: normal;width:97% !important;" />
 							</p:column>
 						</p:dataTable>
 						<p:dataTable styleClass="suppDocEmpty-tbl" var="emptyMandatory" value="" id="mandatoryEmptyForInquiry" rendered="#{sdoReviewBackingBean.mandatoryEmpty or sdoReviewBackingBean.mandatoryAllReceived}"
 							rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
 							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
-							<p:column style="width : 65%;">
+							<p:column style="width : 100%;">
 								<h:outputText value="#{lbl['lbl.datatable.msg.no.records.found']}"
 									style="float: left;white-space: normal;" disabled="true"/>
 							</p:column>
@@ -313,56 +287,28 @@
 				                	<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
 										style="width : 3% !important;text-align: center !important;" />
 									<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" 
-										style="width : 65% !important;overflow: hidden !important;" />
-									<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}"
-										style="width : 15% !important;overflow: hidden !important;"
-										rendered="#{sdoReviewBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}" />
-									<p:column headerText="#{lbl['lbl.sm.supportingdoc.isreceive']}" 
-										style="width : 3% !important;overflow: hidden !important;"
-										rendered="#{sdoReviewBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}"/>
+										style="width : 70% !important;overflow: hidden !important;" />
 									<p:column headerText="#{lbl['lbl.sm.remarks']}" 
-										style="width : 14% !important;overflow: hidden !important;" />
+										style="width : 27% !important;overflow: hidden !important;" />
 				                </p:row>
 							</p:columnGroup>	
 							<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 3% !important;" rendered="#{!table.pmDocument.mandatory and !table.received}">
 								<h:outputText value="#{sdoReviewBackingBean.nonMandatoryCounter}"
 									style="float: left;white-space: normal;font-weight:bold;" />
 							</p:column>
-							<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" style="width : 65% !important;" rendered="#{!table.pmDocument.mandatory and !table.received}">
+							<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" style="width : 70% !important;" rendered="#{!table.pmDocument.mandatory and !table.received}">
 								<h:outputText value="#{table.pmDocument.docName}"
 									style="float: left;white-space: normal;" />
 							</p:column>
-							<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}" style="width : 15% !important;" rendered="#{!table.pmDocument.mandatory and sdoReviewBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE and !table.received}">
-								<ui:repeat var="applDocs" value="#{table.smApplDocFiles}">
-									<ui:remove>
-										<p:commandLink value="#{applDocs.fileName}" rendered="#{not empty table.smApplDocFiles}"  ajax="false"
-						            		action="#{sdoReviewBackingBean.downloadSuppDoc(applDocs.fileName,applDocs.filePath)}">
-						           			<p:fileDownload value="#{sdoReviewBackingBean.file}" />
-						        		</p:commandLink>
-						        	</ui:remove>
-						        	<h:panelGroup rendered="#{not empty table.smApplDocFiles}">
-						        		<a href="#{DocumentRepositoryUtils.baseRepo}#{applDocs.filePath}#{applDocs.fileName}">#{sdoReviewBackingBean.getShortFileName(applDocs.fileName)}</a>
-						        	</h:panelGroup>
-									<br />
-								</ui:repeat>
-							</p:column>
-							<p:column headerText="#{lbl['lbl.sm.supportingdoc.isreceive']}" style="width : 3% !important;" rendered="#{!table.pmDocument.mandatory and sdoReviewBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE and !table.received}">
-								<div align="center">
-									<p:selectBooleanCheckbox value="#{table.received}" disabled="#{!sdoReviewBackingBean.managedBean.claimTask}">
-										<p:ajax event="change"
-											listener="#{sdoReviewBackingBean.receivedStatus(table)}" disabled="#{!table.pmDocument.mandatory}"/>
-									</p:selectBooleanCheckbox>
-								</div>
-							</p:column>
-							<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 14% !important;" rendered="#{!table.pmDocument.mandatory and !table.received}">
+							<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 27% !important;" rendered="#{!table.pmDocument.mandatory and !table.received}">
 								<h:inputTextarea value="#{table.inquiryRemark}"
-									style="float: left;white-space: normal;" />
+									style="float: left;white-space: normal;width:97% !important;" />
 							</p:column>
 						</p:dataTable>
 						<p:dataTable styleClass="suppDocEmpty-tbl" var="emptyNonMandatory" value="" id="nonMandatoryEmptyForInquiry" rendered="#{sdoReviewBackingBean.nonMandatoryEmpty or sdoReviewBackingBean.nonMandatoryAllReceived}"
 							rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
 							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
-							<p:column style="width : 65%;">
+							<p:column style="width : 100%;">
 								<h:outputText value="#{lbl['lbl.datatable.msg.no.records.found']}"
 									style="float: left;white-space: normal;" disabled="true"/>
 							</p:column>
