@@ -31,6 +31,7 @@ public class SupportingDocInquiryManagedBean extends ViewApplHistoryManagedBean 
 	private int attachedFileIndex;
 	private List<SmApplDocFile> addedDocFile;
 	private List<SmApplSupportDoc> updatedSupportDocs;
+	private List<SmApplDocFile> emptyToRemove;
 	//#11641 - End
 	
 	private Date inquiryStartDate;
@@ -147,6 +148,14 @@ public class SupportingDocInquiryManagedBean extends ViewApplHistoryManagedBean 
 
 	public void setUpdatedSupportDocs(List<SmApplSupportDoc> updatedSupportDocs) {
 		this.updatedSupportDocs = updatedSupportDocs;
+	}
+
+	public List<SmApplDocFile> getEmptyToRemove() {
+		return emptyToRemove;
+	}
+
+	public void setEmptyToRemove(List<SmApplDocFile> emptyToRemove) {
+		this.emptyToRemove = emptyToRemove;
 	}
 	//#11641 - End
 	
