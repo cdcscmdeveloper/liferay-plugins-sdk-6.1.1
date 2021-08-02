@@ -50,10 +50,6 @@ import org.primefaces.event.FileUploadEvent;
 @RequestScoped
 public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingDocInquiryManagedBean> {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(SupportingDocInquiryBackingBean.class);
 	//#11641 - Start
 	private int mandatoryCounter = 1;
@@ -213,6 +209,7 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 			//#11641 - START
 			reqDTO.setAddedSmApplDocFiles(this.getManagedBean().getAddedDocFile());
 			reqDTO.setUpdatedSupportDocs(this.getManagedBean().getUpdatedSupportDocs());
+			reqDTO.setEmptyToRemove(this.getManagedBean().getEmptyToRemove());
 			//#11641 - END
 
 			//#28807 - START
@@ -511,12 +508,12 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 	}
 	
 	public void handleSupDocFileAttachment(FileUploadEvent event) {
-		//log.info("********handleFileAttachment********");
+		log.info("********handleFileAttachment********");
 		if (event.getFile() != null) {
-			//log.info("***** File attached *******"+ event.getFile().getFileName());
+			log.info("***** File attached *******"+ event.getFile().getFileName());
 			
 			if (getManagedBean().getSmApplInquiry().getSmAppl().getSmApplSupportDocs().contains(this.getManagedBean().getSupportDoc())) {
-				//log.info("******* Contains selected file ****");
+				log.info("******* Contains selected file ****");
 				String filePath = Calendar.getInstance().get(Calendar.YEAR)
 						+ "/SM/APPLICATION/"
 						+ this.getManagedBean().getSmApplInquiry().getSmAppl().getApplNo() + "/SD/";
@@ -532,13 +529,15 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 				smApplDocFile.setFilePath(filePath);
 				
 				for(int i=0; i<doc.getSmApplDocFiles().size(); i++){
-					if(doc.getSmApplDocFiles().get(i).getFileName()==null || 
-							doc.getSmApplDocFiles().get(i).getFileName().equalsIgnoreCase(" ")){
-						doc.getSmApplDocFiles().remove(i);
+					if(doc.getSmApplDocFiles().get(i).getFileName()==null || doc.getSmApplDocFiles().get(i).getFileName().equalsIgnoreCase(" ")){
+						if(this.getManagedBean().getEmptyToRemove() == null){
+							this.getManagedBean().setEmptyToRemove(new ArrayList<SmApplDocFile>());
+							this.getManagedBean().getEmptyToRemove().add(doc.getSmApplDocFiles().get(i));
+						}else{
+							this.getManagedBean().getEmptyToRemove().add(doc.getSmApplDocFiles().get(i));
+						}
 					}
 				}
-				doc.getSmApplDocFiles().get(0).setFilePath(filePath);
-
 				getManagedBean()
 						.getSmApplInquiry()
 						.getSmAppl()
@@ -611,5 +610,36 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 		}
 		return remark;
 	}
+	
+	public void validateSupportDocs(){
+		log.info("=====Start Validate Supporting Doc=====");
+		boolean validSupportDocs = true;
+		int i = 0;
+		StringBuilder sb = new StringBuilder();
+		sb.append("<br/>");
+		for (SmApplSupportDoc doc : getManagedBean().getSmApplInquiry().getSmAppl().getSmApplSupportDocs()) {
+			if (doc.getPmDocument() != null && !doc.isReceived()
+					&& doc.getPmDocument().isMandatory()
+					&& !doc.getPmDocument().isHardCopyReq()
+					&& (EntityHelper.isCollectionEmpty(doc.getNewAddedFiles())
+							|| doc.getNewAddedFiles().get(0).getFileName()
+									.equalsIgnoreCase(" ") || doc
+							.getNewAddedFiles().get(0).getFilePath()
+							.equalsIgnoreCase(" "))
+							&& !sb.toString().contains(doc.getPmDocument().getDocName())) {
+				sb.append(++i + ")");
+				sb.append(doc.getPmDocument().getDocName());
+				sb.append("<br/>");
+				validSupportDocs = false;
+			}
+		}
+		if (!validSupportDocs) {
+			throw new EpException(MessageConst.ERROR_722686, new String[] { sb.toString() });
+		} else {
+			RequestContext.getCurrentInstance().execute("submissionConfirmDlg.show();");
+		}
+		
+	}
 	//#11641 - END
 }
+
