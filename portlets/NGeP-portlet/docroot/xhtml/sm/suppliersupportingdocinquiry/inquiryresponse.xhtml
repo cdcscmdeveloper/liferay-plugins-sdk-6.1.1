@@ -20,10 +20,10 @@
 		<ui:param name="applType" value="#{supportingDocInquiryBackingBean.getsupplierApplTypeDesc(supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.applType)}" />
 		<ui:include src="/xhtml/sm/shared/common/commonHeader.xhtml" />
 		
-		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
-		<div align="right">
 		<!-- #11641 - START -->
-			<p:commandButton value="#{lbl['lbl.sm.suppdoc.submit.response']}" onclick="submissionConfirmDlg.show();" />
+		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" escape="false"/>
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.sm.suppdoc.submit.response']}" action="#{supportingDocInquiryBackingBean.validateSupportDocs()}" />
 		<!-- #11641 - END -->
 		</div>
 
