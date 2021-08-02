@@ -3633,6 +3633,7 @@ public class SmApplicationBackingBean extends
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC:
 					//#30444 --START--  --31072021
+					/*
 					for (SmPersonnel personnel : getManagedBean().getSmAppl().getSmPersonnels()){
 						validPersonnels = true;
 						
@@ -3640,20 +3641,17 @@ public class SmApplicationBackingBean extends
 								&& !getManagedBean().getBusinessTypeVal().equalsIgnoreCase(
 										SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)){
 						   
-							//validPersonnels = false;
-							sbd.append(++k + ". ");
-							sbd.append(personnel.getName());
-							sbd.append("<br/>");
-							displayError = true;	
+							validPersonnels = false;
 						}
-						/*if(!validPersonnels){
+						if(!validPersonnels){
 							sbd.append(++k + ". ");
 							sbd.append(personnel.getName());
 							sbd.append("<br/>");
 							displayError = true;				
-						}*/	
-					}		
-					/* if (displayError && (getManagedBean().isPoUser() || getManagedBean().isApproverUser())) {
+						}	
+					}	
+					*/	
+					if (displayError && (getManagedBean().isPoUser() || getManagedBean().isApproverUser())) {
 						if (getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(
 								SupplierManagementConst.STYPE_CONTRACTOR)){
 						throw new EpException(MessageConst.ERROR_722689, new String[]
@@ -3664,7 +3662,7 @@ public class SmApplicationBackingBean extends
 						throw new EpException(MessageConst.ERROR_722690, new String[]
 								{sbd.toString() });
 						}	
-					}*/
+					}
 				//#30444 --END--  --31072021	
 					SmApplicationUtil.checkAllowedToApprove(getManagedBean());
 					displayBumiRecommendNote();
@@ -3672,6 +3670,7 @@ public class SmApplicationBackingBean extends
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC:
 					//#30444 --START--  --31072021
+					/*
 					for (SmPersonnel personnel : getManagedBean().getSmAppl().getSmPersonnels()){
 						validPersonnels = true;
 						
@@ -3679,20 +3678,17 @@ public class SmApplicationBackingBean extends
 								&& !getManagedBean().getBusinessTypeVal().equalsIgnoreCase(
 										SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)){
 						   
-							//validPersonnels = false;
-							sbd.append(++k + ". ");
-							sbd.append(personnel.getName());
-							sbd.append("<br/>");
-							displayError = true;
+							validPersonnels = false;
 						}
-						/*if(!validPersonnels){
+						if(!validPersonnels){
 							sbd.append(++k + ". ");
 							sbd.append(personnel.getName());
 							sbd.append("<br/>");
 							displayError = true;				
-						}*/	
-					}		
-					/*if (displayError && (getManagedBean().isPoUser() || getManagedBean().isApproverUser())) {
+						}	
+					}	
+					*/	
+					if (displayError && (getManagedBean().isPoUser() || getManagedBean().isApproverUser())) {
 						if (getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(
 								SupplierManagementConst.STYPE_CONTRACTOR)){
 						throw new EpException(MessageConst.ERROR_722689, new String[]
@@ -3703,7 +3699,7 @@ public class SmApplicationBackingBean extends
 						throw new EpException(MessageConst.ERROR_722690, new String[]
 								{sbd.toString() });
 						}	
-					}*/
+					}
 				//#30444 --END--  --31072021
 					SmApplicationUtil.checkAllowedToApprove(getManagedBean());
 					displayBumiRecommendNote();
