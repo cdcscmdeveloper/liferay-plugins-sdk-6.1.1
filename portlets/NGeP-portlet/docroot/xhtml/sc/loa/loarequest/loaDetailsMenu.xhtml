@@ -204,9 +204,11 @@
 				<p:outputLabel value="#{lbl['lbl.sc.contact.person']}" />
 			</td>
 			<td>
+			<!-- #30449 - start -->
 				<p:inputText id="suppContact" size="35"
-					value="#{lOADetailBackingBean.managedBean.scLoa.scSupplierAddress.contactPerson}"
+					value="#{lOADetailBackingBean.managedBean.scLoa.scSupplierAddress.pmContactUserID.salutationCode.salutationName} #{lOADetailBackingBean.managedBean.scLoa.scSupplierAddress.contactPerson}"
 					disabled="true" />
+			<!-- #30449 - end -->
 			</td>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.email']}" />
