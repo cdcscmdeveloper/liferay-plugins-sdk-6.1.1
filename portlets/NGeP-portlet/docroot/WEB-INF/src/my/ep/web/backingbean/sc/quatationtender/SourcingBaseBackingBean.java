@@ -2742,7 +2742,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			scAddress.setContactPhoneArea(smPersonnel.getPhoneArea());
 			scAddress.setContactPhoneCountry(smPersonnel.getPhoneCountry());
 			scAddress.setContactPhoneNo(smPersonnel.getPhoneNo());
-			
+			//30449 - start
+			scAddress.setPmContactUserID(smPersonnel.getPmUser());
+			//30449 -end			
 			if (smCompanyBasic == null) {
 				// to reset all company contact details as null.
 				smCompanyBasic = new SmCompanyBasic();
