@@ -86,6 +86,8 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
 import my.ep.exception.EpException;
@@ -201,9 +203,8 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.jasper.compiler.SmapUtil;
 import org.apache.log4j.Logger;
-import org.apache.poi.EncryptedDocumentException;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -221,10 +222,15 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.event.ToggleEvent;
 import org.primefaces.event.ToggleSelectEvent;
 import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.StreamedContent;
 
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+
+import com.liferay.portal.kernel.util.StreamUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.util.PortalUtil;
 
@@ -3448,13 +3454,6 @@ public class SmApplicationBackingBean extends
 	public boolean validateUpdateSmAppl(String applType,
 			String currentPageType, String outputPageType, Boolean isBpmSubmit) {
 		boolean valid = false;
-		//30444--START--31072021--
-		int k = 0; 
-		boolean validPersonnels = true; 
-		boolean displayError = false; 
-		StringBuilder sbd = new StringBuilder(); 
-		sbd.append("<br/>"); //30444
-		//30444--END--31072021--
 		log.info(" ***** Business  Type After hard code *********"
 				+ getManagedBean().getSmAppl().getSmSupplier()
 						.getBusinessType());
@@ -3626,71 +3625,11 @@ public class SmApplicationBackingBean extends
 					SmApplicationUtil.initPoInquiry(getManagedBean(), false);
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC:
-					//#30444 --START--  --31072021
-					for (SmPersonnel personnel : getManagedBean().getSmAppl().getSmPersonnels()){
-						validPersonnels = true;
-						
-						if (personnel.isClerical() && (personnel.isManagement() || personnel.isHigherManagement())
-								&& !getManagedBean().getBusinessTypeVal().equalsIgnoreCase(
-										SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)){
-						   
-							validPersonnels = false;
-						}
-						if(!validPersonnels){
-							sbd.append(++k + ". ");
-							sbd.append(personnel.getName());
-							sbd.append("<br/>");
-							displayError = true;				
-						}	
-					}		
-					if (displayError && (getManagedBean().isPoUser() || getManagedBean().isApproverUser())) {
-						if (getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(
-								SupplierManagementConst.STYPE_CONTRACTOR)){
-						throw new EpException(MessageConst.ERROR_722689, new String[]
-								{sbd.toString() });
-						}
-						if (getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(
-								SupplierManagementConst.STYPE_CONSULTANT)){
-						throw new EpException(MessageConst.ERROR_722690, new String[]
-								{sbd.toString() });
-						}	
-					}
-				//#30444 --END--  --31072021	
 					SmApplicationUtil.checkAllowedToApprove(getManagedBean());
 					displayBumiRecommendNote();
 					getHqFacility();
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC:
-					//#30444 --START--  --31072021
-					for (SmPersonnel personnel : getManagedBean().getSmAppl().getSmPersonnels()){
-						validPersonnels = true;
-						
-						if (personnel.isClerical() && (personnel.isManagement() || personnel.isHigherManagement())
-								&& !getManagedBean().getBusinessTypeVal().equalsIgnoreCase(
-										SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)){
-						   
-							validPersonnels = false;
-						}
-						if(!validPersonnels){
-							sbd.append(++k + ". ");
-							sbd.append(personnel.getName());
-							sbd.append("<br/>");
-							displayError = true;				
-						}	
-					}		
-					if (displayError && (getManagedBean().isPoUser() || getManagedBean().isApproverUser())) {
-						if (getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(
-								SupplierManagementConst.STYPE_CONTRACTOR)){
-						throw new EpException(MessageConst.ERROR_722689, new String[]
-								{sbd.toString() });
-						}
-						if (getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(
-								SupplierManagementConst.STYPE_CONSULTANT)){
-						throw new EpException(MessageConst.ERROR_722690, new String[]
-								{sbd.toString() });
-						}	
-					}
-				//#30444 --END--  --31072021
 					SmApplicationUtil.checkAllowedToApprove(getManagedBean());
 					displayBumiRecommendNote();
 					break;
@@ -4011,8 +3950,7 @@ public class SmApplicationBackingBean extends
 						validSave, getManagedBean(), currentTab);
 			}
 			//#30762 --START
-			if(!getManagedBean().isDisAllowOwnerEdit() 
-					&& !getManagedBean().isPoUser() && !getManagedBean().isApproverUser()){	 //#30444 --31072021--		
+			if(!getManagedBean().isDisAllowOwnerEdit()){			
 			validSave = SmApplicationUtil.validatePersonnelBeforeSave(
 					validSave, currentTab, getManagedBean());
 			}
@@ -15281,10 +15219,10 @@ public class SmApplicationBackingBean extends
 					getManagedBean().getSelectedShareHolder().setDisableEquityOwner(true);
 			//#29666- END 
 			//#30444 - START
-				} else if (!getManagedBean().getBusinessTypeVal()     
-						.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT) //#30444 --31072021--
+				} else if (getManagedBean().getBusinessTypeVal()     
+						.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT)
 						&& (getManagedBean().getSelectedShareHolder().isClerical())) {
-					log.info("other than rob partnership");
+					log.info("roc--fatintest");
 			    	getManagedBean().getSelectedShareHolder().setEquityOwner(false);
 					getManagedBean().getSelectedShareHolder().setDirector(false);
 					getManagedBean().getSelectedShareHolder().setHigherManagement(false);
@@ -15292,7 +15230,7 @@ public class SmApplicationBackingBean extends
 					getManagedBean().getSelectedShareHolder().setDisableEquityOwner(true);
 			//#30444 - END
 			//#30444 - START 07052021
-				/*} else if (getManagedBean().getBusinessTypeVal()     
+				} else if (getManagedBean().getBusinessTypeVal()     
 						.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT)
 						&& (getManagedBean().getSelectedShareHolder().isClerical())) {
 					log.info("rob-sole p");
@@ -15300,7 +15238,7 @@ public class SmApplicationBackingBean extends
 					getManagedBean().getSelectedShareHolder().setDirector(false);
 					getManagedBean().getSelectedShareHolder().setHigherManagement(false);
 					getManagedBean().getSelectedShareHolder().setManagement(false);
-					getManagedBean().getSelectedShareHolder().setDisableEquityOwner(true);*/
+					getManagedBean().getSelectedShareHolder().setDisableEquityOwner(true);
 			//#30444 - END
 			    }else {
 			    getManagedBean().getSelectedShareHolder().setDisableEquityOwner(false);
