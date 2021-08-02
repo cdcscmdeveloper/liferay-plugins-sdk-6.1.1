@@ -3633,21 +3633,20 @@ public class SmApplicationBackingBean extends
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC:
 					//#30444 --START--  --31072021
-					
 					for (SmPersonnel personnel : getManagedBean().getSmAppl().getSmPersonnels()){
 						validPersonnels = true;
 						
-						if (personnel.isClerical() && (personnel.isManagement() || personnel.isHigherManagement())
-								&& !getManagedBean().getBusinessTypeVal().equalsIgnoreCase(
-										SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)){
+						if (personnel.isClerical() && (personnel.isManagement() || personnel.isHigherManagement())	
+								&& !getManagedBean().getBusinessTypeVal().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)){
 						   
 							validPersonnels = false;
 						}
 						if(!validPersonnels){
-							sbd.append(k++ + ". ");//#30444--02082021-
+							sbd.append(k + ". ");//#30444--02082021-
 							sbd.append(personnel.getName());
 							sbd.append("<br/>");
-							displayError = true;				
+							displayError = true;
+							k++;//#30444--02082021-
 						}	
 					}	
 						
@@ -3669,7 +3668,7 @@ public class SmApplicationBackingBean extends
 					getHqFacility();
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC:
-					//#30444 --START--  --31072021
+					//#30444 --START--  --31072021					
 					for (SmPersonnel personnel : getManagedBean().getSmAppl().getSmPersonnels()){
 						validPersonnels = true;
 						
@@ -3680,10 +3679,11 @@ public class SmApplicationBackingBean extends
 							validPersonnels = false;
 						}
 						if(!validPersonnels){
-							sbd.append(k++ + ". ");//#30444--02082021-
+							sbd.append(k + ". ");//#30444--02082021-
 							sbd.append(personnel.getName());
 							sbd.append("<br/>");
-							displayError = true;				
+							displayError = true;	
+							k++;//#30444--02082021-
 						}	
 					}	
 					
