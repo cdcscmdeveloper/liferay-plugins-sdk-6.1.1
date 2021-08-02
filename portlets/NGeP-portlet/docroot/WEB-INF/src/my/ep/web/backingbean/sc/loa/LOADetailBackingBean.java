@@ -7565,9 +7565,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		ScLoa scLoa = getManagedBean().getScLoa();
 		scLoa.setLoaSignerDesig(contractSignerUser.getDesignation());
-		//#30449 -start
-		scLoa.getContractSigner().setUserName(contractSignerUser.getUserName());
-		//#30449 - end
+
 
 	}
 
