@@ -12204,7 +12204,7 @@ private void retriveCommitteeRemarksList(){
 		
 		if (!scQtProposalChecklist.getScQtProposal().isSubmitted() || this.getManagedBean().isStatusOnly() 
 				|| this.getManagedBean().isComplianceReEvaluateRequired() 
-				|| this.getManagedBean().isReadOnly()  || !this.getManagedBean().isFP_Compliance()) {
+				|| this.getManagedBean().isReadOnly()) {
 			return true;
 		}
 		
