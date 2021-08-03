@@ -1656,7 +1656,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			
 			reqDTO.setAccountNo(getManagedBean().getFactoring().getBankAccountNo());
 			
-			resDTO = financialOrgSO.retriveFinAccListByFinOrgId(reqDTO);
+			/*resDTO = financialOrgSO.retriveFinAccListByFinOrgId(reqDTO);
 			if (resDTO.getPmFinancialAccList()!=null && resDTO.getPmFinancialAccList().size()>0){
 				for (PmFinancialAcc pmFinancialAcc : resDTO.getPmFinancialAccList()) {
 					if(getManagedBean().getFactoring().getBankAccountNo().trim().equals(pmFinancialAcc.getAccountNo().trim()) 
@@ -1664,15 +1664,13 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 						statusFactoringFinAcc = true;
 					}
 				}
-			}
-			/*
-			resDTO = financialOrgSO.retriveFinAccDtlByFinOrgIdAccNo(reqDTO);
-			if (resDTO.getPmFinancialAcc()!=null){
-				if(getManagedBean().getFactoring().getBankAccountNo().equals(resDTO.getPmFinancialAcc()) 
-						&& resDTO.getPmFinancialAcc().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
-					statusFactoringFinAcc = true;
-				}
 			}*/
+			
+			resDTO = financialOrgSO.retriveFinAccByFinOrgIdAccNo(reqDTO);
+			if (resDTO.getPmFinancialAcc()!=null && getManagedBean().getFactoring().getBankAccountNo().equals(resDTO.getPmFinancialAcc()) 
+					&& resDTO.getPmFinancialAcc().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
+				statusFactoringFinAcc = true;
+			}
 		
 		} finally {
 			financialOrgSO = null;
