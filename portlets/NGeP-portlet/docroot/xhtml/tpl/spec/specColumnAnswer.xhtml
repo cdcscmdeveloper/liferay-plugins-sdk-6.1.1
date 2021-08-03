@@ -227,14 +227,15 @@
 					     		listener="#{templateSpecBackingBean.offerTypeChange(tplSpecAnswer.offer,tplSpecAnswer.tplSpecQuestion.specQuestionId,row)}"/>					  							  	
 	   
 				</h:selectOneMenu>
-					
+<!-- #21695 Farid start 3/8/2021-->					
 		<c:if test="#{isZonal}">		
 			<h:panelGroup layout="div" 
 			rendered="#{!tplSpecAnswer.offer and tplSpecAnswer.offer ne null and
 						templateSpecBean.specMaster.scQtDoc.scQt.partial ne null and
 						templateSpecBean.specMaster.scQtDoc.scQt.partial eq true and isZonal
-						and isQuestionTypeItem}">
-						
+						and isQuestionTypeItem}"
+			disabled="#{!editable}">
+<!-- #21695 Farid end 3/8/2021-->						
 							<ui:decorate template="specColumnAnswerOfferZone.xhtml" />
 			</h:panelGroup>	
 		</c:if>					
