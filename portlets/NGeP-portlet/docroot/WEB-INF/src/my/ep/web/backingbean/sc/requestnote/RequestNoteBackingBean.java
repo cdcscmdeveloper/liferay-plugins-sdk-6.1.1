@@ -90,6 +90,7 @@ import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
@@ -865,6 +866,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}	
 		}
 		
+		// #27545 - start
+		if (outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || outcome.equals(BpmOutcomeConst.BPM_APPROVE)
+				|| outcome.equals(BpmOutcomeConst.BPM_REVISE)) {
+			validateAssignedUser(requestNoteDtls);
+		}
+		// #27545 - end
+
 		if(outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || 
 				outcome.isEmpty() || 
 				outcome.equals(BpmOutcomeConst.BPM_APPROVE)){
@@ -921,6 +929,64 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 		}
 	}
+	
+	// #27545 - start
+	public void validateAssignedUser(List<ScRequestNoteDtl>	requestNoteDtls) {
+		//log.info("--validateAssigneduser--");
+		Boolean throwError = false;
+		PmOrgProfile pmOrgProfile = getManagedBean().getRequestNote().getPmOrgProfile();
+		
+		if(CollectionUtils.isNotEmpty(requestNoteDtls)) {
+			
+			OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+			orgProfileReqDTO.setOrgProfileId(pmOrgProfile.getOrgProfileId());
+			orgProfileReqDTO.setGroupOrgType(ParameterConst.ORG_AUTH_TYPE_ORG_GROUP);
+			OrgProfileResDTO orgProfileResDTO = getOrgProfileSO().retrieveProfileGroupByGroupOrgType(orgProfileReqDTO);
+			
+			List<Long> orgProfileIdList = new ArrayList<Long>();
+			orgProfileIdList.add(pmOrgProfile.getOrgProfileId());
+					
+			if (CollectionUtils.isNotEmpty(orgProfileResDTO.getProfileGroups())) {
+				for(PmProfileGroup group: orgProfileResDTO.getProfileGroups()){
+					orgProfileIdList.add(group.getMainOrgProfile().getOrgProfileId());
+				}
+			}
+			
+			for (ScRequestNoteDtl requestNoteDtl : requestNoteDtls) {
+				PmUser pmUser = requestNoteDtl.getAssignedUser();				
+				String fulfilmentType = requestNoteDtl.getFulfilmentType().getParameterCode();
+				List<PmUser> userList = null;
+	
+				UserReqDTO req = new UserReqDTO();
+				req.setIncludeUserIds(new ArrayList<Long>());
+				req.getIncludeUserIds().add(pmUser.getUserId());
+	
+				if (fulfilmentType.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
+					req.setRoleCodes(Arrays.asList(RoleCode.REQUISITIONER.value()));				
+				} else {
+					req.setRoleCodes(Arrays.asList(RoleCode.DESK_OFFICER.value()));
+				}
+				
+				if(orgProfileIdList != null && orgProfileIdList.size()> 1) {
+					req.setOrgProfileIds(orgProfileIdList);
+				} else {
+					req.setOrgProfileId(pmOrgProfile.getOrgProfileId());
+				}
+	
+				UserResDTO res = getUserSO().retrieveUserListByRole(req);
+				userList = res.getUserList();
+	
+				if (CollectionUtils.isEmpty(userList)) {
+					throwError = true;
+					break;
+				}
+			}
+			if (throwError){
+				throw new EpException(MessageConst.ERROR_770242);
+			}
+		}
+	}
+	// #27545 - End
 	
 	/**
 	 * submit codification task Action. 
@@ -4225,6 +4291,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 */
 	private IRequestItemSO getRequestItemSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
+	}
+	
+	//#27545
+	/**
+	 * Gets the org profile so.
+	 *
+	 * @return the org profile so
+	 */
+	private IOrgProfileSO getOrgProfileSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 	}
 	
 	/**
