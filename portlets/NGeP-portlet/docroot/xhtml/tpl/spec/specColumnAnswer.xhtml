@@ -210,7 +210,7 @@
 			</h:selectOneMenu>
 			<p:message id="answerComplianceMsg" for="answerCompliance" display="icon" rendered="#{isAnswerTypeDropdown}" />
 <!-- #21695 Farid end 1/4/2021-->				
-<!-- #21695 Farid start 1/4/2021-->
+<!-- #21695 Farid start 3/8/2021-->	
 			<h:panelGroup layout="div" rendered="#{!isSqSpec and 
 														
 												   !isSpecTypeFinancial}">
@@ -219,7 +219,8 @@
 						rendered="#{!isSqSpec and templateSpecBean.specMaster.scQtDoc.scQt.partial ne null and 
 						templateSpecBean.specMaster.scQtDoc.scQt.partial eq true and
 						!isSpecTypeFinancial and isQuestionTypeItem}" 
-						label="#{lbl[answerlbl]}">
+						label="#{lbl[answerlbl]}"
+						disabled="#{!editable}">
 					<f:selectItems value="#{templateSpecBackingBean.offerDetails}"></f:selectItems>
 									  
 					<p:ajax event="change" partialSubmit="true" process="@form" update="@form"
@@ -240,7 +241,7 @@
 			</h:panelGroup>	
 		</c:if>					
 		</h:panelGroup>	
-<!-- #21695 Farid end 1/4/2021-->				
+<!-- #21695 Farid end 3/8/2021-->			
 	 
 <!-- END -->
 		
