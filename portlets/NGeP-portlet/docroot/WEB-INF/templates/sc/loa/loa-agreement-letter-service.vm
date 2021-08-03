@@ -1686,7 +1686,20 @@ u {
 #end
 	
 <div class="break-after"><br/></div>
-	
+  
+  #if ($scLoa.scLoiLoa.docType == "PR")
+	  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+		  <tr>
+				<td align="right"> <span class="text_family"> <b><i>Lampiran A3</i></b></span></td>
+		  </tr>
+			<tr>
+				<td><span class="text_header_submenu"><u style="text-decoration:underline;">*Spesifikasi/Skop
+						Perkhidmatan/Service Level Agreement (SLA) (sekiranya berkaitan)</u></span> <br />
+					<br /></td>
+			</tr>
+	  </table>
+  #end
+		
   #if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")	
 		#set($rowCount = 0)
 		#if ($scLoa.scLoiLoa.docType == "NG")
@@ -2233,9 +2246,10 @@ u {
 						#set($specType = $tplspecMaster.specTypeCode.parameterCode) 
 						
 						#if ($isZonal)
-						<tr>
+						
 							#if ($tplspecQuestion.questionType == "I")
-							  
+							 
+							<tr>							 
 								
 								<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:12px;" >
 									
@@ -2278,10 +2292,10 @@ u {
 									#end
 								</td>
 								<td valign="top" bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-size:12px;">
-									#if(($tplspecQuestion.clDurationMonth =="") || ($tplspecQuestion.clDurationMonth == 0))
-									$serviceScope 
+									#if($tplspecQuestion.clDurationMonth)
+										$tplspecQuestion.clDurationMonth
 									#else	
-									$tplspecQuestion.clDurationMonth
+										$serviceScope
 									#end
 								</td>
 								
@@ -2362,20 +2376,33 @@ u {
 								</td>
 								
 								
-
+								</tr>
 							
+								</tr>
+								<td valign="top" bgcolor="#d0eaee" colspan="9">
+										#set($rowCount = 0)						
+										#if ($tplspecQuestion.specList)
+											#foreach( $specVal in $tplspecQuestion.specList )
+												#if($rowCount == 0)
+												<table width="100%">
+													<tbody>
+													<tr>
+														<td valign="top" bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$specVal</td>
+													</tr>
+													</tbody>
+												</table>
+												#end
+												#set($rowCount = $rowCount + 1)	
+											#end
+										#end
+								</td>
+								</tr>
 							
 								
 							
 								#end
-								#if ($tplspecQuestion.questionType == "S")
 								
-									
-									<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="9" style="text-align: center; padding-left: 5px; font-size:12px;">$tplspecQuestion.clSpecDetail</td>
-									
 							
-								#end
-							</tr>
 						#else
 							#if ($tplspecQuestion.questionType == "I")
 						 
@@ -2421,10 +2448,10 @@ u {
 										#end
 									</td>
 									<td valign="top" bgcolor="#d0eaee"  class="title border left" style="text-align: left; padding-left: 5px; font-size:12px;">
-										#if(($tplspecQuestion.clDurationMonth =="") || ($tplspecQuestion.clDurationMonth == 0))
-										$serviceScope 
+										#if($tplspecQuestion.clDurationMonth)
+											$tplspecQuestion.clDurationMonth
 										#else	
-										$tplspecQuestion.clDurationMonth
+											$serviceScope
 										#end
 									</td>
 									<td valign="top" bgcolor="#d0eaee" class="title border left"  style="text-align: left; padding-left: 5px; font-size:12px;">
@@ -2447,17 +2474,24 @@ u {
 									</td>
 						
 								</tr>	
-									
+								
+								<td valign="top" bgcolor="#d0eaee" colspan="7">						
+										#if ($tplspecQuestion.specList)
+											#foreach( $specVal in $tplspecQuestion.specList )
+												
+												<table width="100%">
+													<tbody>
+													<tr>
+														<td valign="top" bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$specVal</td>
+													</tr>
+													</tbody>
+												</table>
+													
+											#end
+										#end
+								</td>
 								#end	
-								#if ($tplspecQuestion.questionType == "S")
-							
-									
-									
-									<td valign="top" bgcolor="#d0eaee" class="title border left" colspan="7" style="text-align: center; padding-left: 5px; font-size:12px;">$tplspecQuestion.clSpecDetail</td>
-									
-									
-							
-								#end
+								
 								</tr>	
 						#end
 					    	
