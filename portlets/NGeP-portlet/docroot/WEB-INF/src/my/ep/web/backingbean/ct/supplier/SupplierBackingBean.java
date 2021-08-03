@@ -1653,8 +1653,14 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			if (resDTO.getPmFinancialOrg()!=null && resDTO.getPmFinancialOrg().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
 				statusFactoringCompany = true;
 			}
+
+			if(getManagedBean().getFactoring().getBankAccountNo()!=null){
+				reqDTO.setAccountNo(getManagedBean().getFactoring().getBankAccountNo());
+			}else{
+				String[] accBankList = getManagedBean().getAccBankName().split("/");
+				reqDTO.setAccountNo(accBankList[0].trim());
+			}
 			
-			reqDTO.setAccountNo(getManagedBean().getFactoring().getBankAccountNo());
 			
 			/*resDTO = financialOrgSO.retriveFinAccListByFinOrgId(reqDTO);
 			if (resDTO.getPmFinancialAccList()!=null && resDTO.getPmFinancialAccList().size()>0){
