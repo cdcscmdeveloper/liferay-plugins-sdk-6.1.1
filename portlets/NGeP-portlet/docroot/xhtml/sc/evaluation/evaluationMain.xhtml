@@ -55,7 +55,7 @@
 		</ui:fragment>
 		<ui:fragment
 			rendered="#{evaluationBackingBean.managedBean.tabActiveIndex eq 2 and evaluationBackingBean.managedBean.committeeType eq 'TEC' 
-			and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
+			and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true' and !evaluationBackingBean.managedBean.afterDemoInv}"><!-- #28784 -->
 			<ui:repeat var="bpmAction"
 				value="#{evaluationBackingBean.managedBean.outComes}">
 				<ui:param name="buttonLabel"

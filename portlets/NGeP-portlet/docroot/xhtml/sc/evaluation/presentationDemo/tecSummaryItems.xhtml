@@ -1,0 +1,201 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+	<p:panel header="#{lbl['lbl.sc.item.list']}" toggleable="true">
+       <h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.eva.summary.item.instruction']}"
+			escape="false" />
+		<p:dataTable var="summaryItem" id="evaluationTechnicalSummaryItem"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			editable="true" value="#{itemList}" rows="10"
+			selection="#{evaluationBackingBean.managedBean.singlesummaryItemList}"
+			selectionMode="single" rowIndexVar="index" rowKey="#{summaryItem}">
+
+			<ac:paginator for="evaluationTechnicalSummaryItem" />
+
+			<p:ajax event="rowSelect" process="@this" partialSubmit="true"
+				update="@form"
+				listener="#{evaluationBackingBean.technicalSummaryItemSelect}"></p:ajax>
+			<p:column headerText="#{lbl['lbl.sc.item']}" style="width:35%;white-space: normal;">
+
+				<h:outputText value="#{summaryItem.tplSpecQuestion.clItem}"></h:outputText>
+
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+	
+	
+	
+	<h:panelGroup id="TechnicalOrEvaluationCommitteesummaryItemQualified">
+
+		<p:panel toggleable="true">
+			<f:facet name="header">
+			<h:outputText
+				value="#{lbl['lbl.demo.overall.summary']}" />
+		</f:facet>
+
+			<p:dataTable var="summaryqualSup"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				id="TechnicalevaluationCommitteeSummaryItemQualifiedSuppliers" rows="10"
+				value="#{evaluationBackingBean.managedBean.qualifiedSuppliersDM}"
+				lazy="true" editable="true" rowIndexVar="index"
+				rowKey="#{summaryqualSup}">
+
+
+				<ac:paginator for="TechnicalevaluationCommitteeSummaryItemQualifiedSuppliers"></ac:paginator>
+
+				<p:column headerText="#{lbl['lbl.sc.ranking']}"
+					style="text-align:right">
+
+					<h:outputText value="#{summaryqualSup.evalRank}"></h:outputText>
+				</p:column>
+
+
+				<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
+					style="width:30%; text-align:center;">
+
+					<h:outputText
+						value="#{summaryqualSup.qtEvaluationResult.scQtProposal.supplierNo}"></h:outputText>
+
+
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.technical']}"
+				style="text-align:right">
+				<h:outputText value="#{evaluationBackingBean.retrieveTotalTechnicalItemScore(summaryqualSup)}"></h:outputText>
+				</p:column>
+			
+				<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.presentation']}"
+					style="text-align:right">
+					<h:outputText value="#{evaluationBackingBean.managedBean.techScore}"></h:outputText>
+				</p:column>
+
+
+				<p:column headerText="#{lbl['lbl.sc.total.score']}"
+					style="text-align:right">
+					<h:outputText value="#{summaryqualSup.totalScore}"></h:outputText>
+				</p:column>
+
+			</p:dataTable>
+			<p:spacer height="10px" />
+			<table>
+				<tr>
+					<td style="width: 230px;"><h:outputLabel
+							value="#{lbl['lbl.sc.passing.score']}" /></td>
+					<td><p:inputText readonly="true" disabled="true"
+							style="text-align:right" value="#{passingScore}"></p:inputText></td>
+				</tr>
+
+				<tr>
+					<td><h:outputLabel value="#{lbl['lbl.sc.evaluation.total.suppliers']}" /></td>
+					<td><p:inputText readonly="true" disabled="true"
+							style="text-align:right"
+							value="#{evaluationBackingBean.managedBean.qualifiedSuppliersDM.rowCount}"></p:inputText></td>
+				</tr>
+
+			</table>
+
+		</p:panel>
+
+
+
+
+	</h:panelGroup>
+
+	<h:panelGroup id="TechnicalOrEvaluationCommitteesummaryItemDisQualified">
+		<p:panel toggleable="true">
+			<f:facet name="header">
+			<h:outputText
+				value="#{lbl['lbl.demo.not.overall.summary']}" />
+		</f:facet>
+
+			<p:dataTable var="disQualifiedSupplier"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				id="TechnicalevaluationCommitteeSummaryItemDisQualifiedSuppliers" rows="10"
+				value="#{evaluationBackingBean.managedBean.disqualifiedSuppliersDM}"
+				lazy="true" editable="true" rowIndexVar="index"
+				rowKey="#{disQualifiedSupplier}">
+
+				<ac:paginator for="TechnicalevaluationCommitteeSummaryItemDisQualifiedSuppliers"></ac:paginator>
+
+				<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
+					style="width:30%; text-align:center;">
+
+					<h:outputText
+						value="#{disQualifiedSupplier.qtEvaluationResult.scQtProposal.supplierNo}"></h:outputText>
+
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.technical']}"
+				style="text-align:right">
+				<h:outputText value="#{evaluationBackingBean.retrieveTotalTechnicalItemScore(disQualifiedSupplier)}"></h:outputText>
+				</p:column>
+			
+				<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.presentation']}"
+					style="text-align:right">
+					<h:outputText value="#{evaluationBackingBean.managedBean.techScore}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.total.score']}"
+					style="text-align:right">
+					<h:outputText value="#{disQualifiedSupplier.totalScore}"></h:outputText>
+				</p:column>
+
+
+			</p:dataTable>
+			<p:spacer height="10px" />
+			<table>
+
+				<tr>
+					<td style="width: 230px;"><h:outputLabel
+							value="#{lbl['lbl.sc.evaluation.total.suppliers']}" /></td>
+					<td><p:inputText readonly="true" disabled="true"
+							style="text-align:right"
+							value="#{evaluationBackingBean.managedBean.disqualifiedSuppliersDM.rowCount}"></p:inputText></td>
+				</tr>
+
+			</table>
+
+		</p:panel>
+
+
+
+	</h:panelGroup>
+<!--#21695 Start FARID -->	
+<c:if test ="#{evaluationBackingBean.managedBean.scQt.partial ne null and evaluationBackingBean.managedBean.scQt.partial ne 'false'}">
+	<h:panelGroup id="TechnicalOrEvaluationCommitteesummaryNotOfferSuplier">
+		<p:panel toggleable="true">
+			<f:facet name="header">
+			<h:outputText
+				value="#{lbl['lbl.sc.eva.not.offer.supplier.list.tec.evaluation.item.stage']}" />
+			<ac:iconTooltip
+				value="#{lbl['lbl.sc.eva.not.offer.supplier.list.tec.evaluation.item.stage.tooltip']}" />
+		   </f:facet>
+           <c:if test ="#{evaluationBackingBean.managedBean.scQt.zonal ne 'false'}">
+				<p:accordionPanel dynamic="true"
+					value="#{evaluationBackingBean.managedBean.evaluationStageZonesSummary}"
+					var="zonePnlList">
+					<p:ajax event="tabChange"
+						listener="#{evaluationBackingBean.evaluationNotOfferSupplierZoneSummaryTabChange}"
+						update="@(.evaluationStageSummaryItemtab)" />
+					<p:tab title="#{zonePnlList.zoneName}">
+						<h:panelGroup styleClass="evaluationStageSummaryItemtab">
+							<ui:include src="notOfferSupplierSummary.xhtml"></ui:include>
+						</h:panelGroup>
+					</p:tab>
+				</p:accordionPanel>
+			</c:if>
+			<c:if test="#{evaluationBackingBean.managedBean.scQt.zonal eq 'null'}">				
+				<ui:include src="notOfferSupplierSummary.xhtml"></ui:include>
+			</c:if>    
+		</p:panel>
+	</h:panelGroup>
+</c:if> 	
+<!--#21695 End FARID -->	
+</ui:composition>
