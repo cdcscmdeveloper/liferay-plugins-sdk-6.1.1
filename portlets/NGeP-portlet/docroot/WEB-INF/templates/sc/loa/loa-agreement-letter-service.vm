@@ -2299,10 +2299,28 @@ u {
 							
 								</tr>
 								<td valign="top" bgcolor="#d0eaee" colspan="9">
-										#set($rowCount = 0)						
 										#if ($tplspecQuestion.specList)
-											#foreach( $specVal in $tplspecQuestion.specList )
-												#if($rowCount == 0)
+										#set($specList = $tplspecQuestion.specList)
+										#set($uniquePosts = [])
+										#foreach($specVal in $specList) 
+										    #set($exists = false)
+										    #foreach($uniquePost in $uniquePosts)
+										        #if($uniquePost == $specVal)
+										            #set($exists = true)
+										            #break
+										        #end
+										    #end
+										
+										    #if(!$exists)
+										        #set($added = $uniquePosts.add($specVal))
+										    #end
+										
+										    #set($specList = $uniquePosts)
+										#end
+																								
+										
+											#foreach( $specVal in $specList )
+												
 												<table width="100%">
 													<tbody>
 													<tr>
@@ -2310,8 +2328,7 @@ u {
 													</tr>
 													</tbody>
 												</table>
-												#end
-												#set($rowCount = $rowCount + 1)	
+												
 											#end
 										#end
 								</td>
