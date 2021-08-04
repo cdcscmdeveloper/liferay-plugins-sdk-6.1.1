@@ -2171,8 +2171,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				// #27691 - End
 					this.getManagedBean().setSmSuppOwner(resDTO.getSmSupp().getSmSupplierOwners().get(0));
 					// start #29956
-					if (!SupplierManagementConst.LIST_OF_BUSINESS_TYPE_NOT_SHOW_EQUITY_OWNER_ONLY.contains(smSupp
-							.getBusinessType())) {
+					if (businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupp().getRegNo(), this
+							.getManagedBean().getSmSupp().getBusinessType())) {
 						this.getManagedBean().getSmSuppOwners().clear(); // #29956
 					}
 					// end #29956
@@ -2187,8 +2187,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 								}
 								// start #29956
 								if (!resDTO.getSmSupp().getSmSupplierOwners().isEmpty()
-										&& !SupplierManagementConst.LIST_OF_BUSINESS_TYPE_NOT_SHOW_EQUITY_OWNER_ONLY
-												.contains(smSupp.getBusinessType())) {
+										&& businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupp().getRegNo(),
+												this.getManagedBean().getSmSupp().getBusinessType())) {
 									for (SmSupplierOwner smSuppOwner : resDTO.getSmSupp().getSmSupplierOwners()) {
 										if (personnel.getName().equals(smSuppOwner.getOwnerName())) {
 											this.getManagedBean().getSmSuppOwners().add(smSuppOwner);
