@@ -650,7 +650,7 @@
 									<p:selectOneRadio id="agreementReq" styleClass="commonLabel"
 										value="#{lOADetailBackingBean.managedBean.scLoa.agreementReq}"
 										required="true" label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
-										disabled="#{lOADetailBackingBean.disabledButton()}">									
+										disabled="#{(!isEditableStatus or lOADetailBackingBean.managedBean.readOnly) or lOADetailBackingBean.disabledButton()}">									
 									<f:selectItems id="agreementReqSelect"
 										value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />																		
 									<p:ajax partialSubmit="true" update="@([id$=uploadApprovalLetterPg])"
