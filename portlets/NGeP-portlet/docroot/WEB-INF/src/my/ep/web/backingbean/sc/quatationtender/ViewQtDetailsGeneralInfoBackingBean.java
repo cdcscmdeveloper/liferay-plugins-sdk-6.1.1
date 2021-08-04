@@ -36,6 +36,8 @@ public class ViewQtDetailsGeneralInfoBackingBean{
 		
 		if(null!=scQt){
 		QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+		//Bug_30922
+		qtBackingBean.getManagedBean().setQt(null);
 		qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
 		//qtBackingBean.editQuationTenderDetails(qtBackingBean.getManagedBean().getQt(), true);
 		qtBackingBean.getManagedBean().setViewOriginalUrl(backUrl);
