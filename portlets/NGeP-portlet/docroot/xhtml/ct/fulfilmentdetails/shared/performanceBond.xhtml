@@ -104,13 +104,14 @@
 				        <h:outputText value="#{lbl['lbl.ct.financial.inst']}"  styleClass="required"/>
 				</f:facet>
 				
+				<!-- #30479 start change width 200px -> 95% -->
 				<p:selectOneMenu id="orgName"  value="#{varBond.financialOrg.financialOrgId}"
-				    style="width:200px;" rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting
-				    and ctBackingBean.managedBean.ctContractAmount.bondReq}" >
+				    style="width:95%;" rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting
+				    and ctBackingBean.managedBean.ctContractAmount.bondReq}" disabled ="ctBackingBean.isContractExtend()" >
 					   <f:selectItems value="#{ctBackingBean.retrieveFinancialOrgList()}" />
 					   <p:ajax  process="@this"></p:ajax>
 				</p:selectOneMenu>	  
-	
+				<!-- #30479 end -->
 				<h:outputText value="#{varBond.financialOrgName}"
 				   style="float:left;text-align:left;" rendered="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting
 				   or !ctBackingBean.managedBean.ctContractAmount.bondReq}"/>
