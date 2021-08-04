@@ -361,6 +361,24 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 		</tbody>
 		</table>
 		#if ($rowCount > 0)
+			<div style="margin-top: 200px; font-family:calibri; font-size:13px; float:right">
+				$pageNo
+			</div>
+			
+			<div style="margin-top: 200px; font-family:calibri; font-size:13px;">
+			Tandatangan & Cop (Kerajaan) : _____________
+			<br/>
+			<br/>
+			<br/>
+			Tandatangan & Cop (Syarikat ) : _____________
+			<br/>
+			<br/>
+			</div>
+			<div style="color:red; font-family:calibri;font-size:13px;">
+			<span>Pihak Kerajaan : pegawai yang diberi kuasa oleh Kerajaan di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk</span><br />
+			menandatangani Surat ini<br/>
+			Pihak Syarikat : Penama pada sijil pendaftaran untuk menandatangani Surat ini.
+			</div>
 			<div style="page-break-after:always;"><br/></div>
 		#end
 		<br/>
@@ -657,6 +675,24 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 			</tbody>
 			</table>
 			#if ($rowCount > 0)
+				<div style="margin-top: 200px; font-family:calibri; font-size:13px; float:right">
+					$pageNo
+				</div>
+				
+				<div style="margin-top: 200px; font-family:calibri; font-size:13px;">
+				Tandatangan & Cop (Kerajaan) : _____________
+				<br/>
+				<br/>
+				<br/>
+				Tandatangan & Cop (Syarikat ) : _____________
+				<br/>
+				<br/>
+				</div>
+				<div style="color:red; font-family:calibri;font-size:13px;">
+				<span>Pihak Kerajaan : pegawai yang diberi kuasa oleh Kerajaan di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk</span><br />
+				menandatangani Surat ini<br/>
+				Pihak Syarikat : Penama pada sijil pendaftaran untuk menandatangani Surat ini.
+				</div>
 				<div style="page-break-after:always;"><br/></div>
 			#end
 			<br/>
@@ -692,15 +728,33 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 						#end
 					</table>
 					#if ($rowCount > 0)
+						<div style="margin-top: 200px; font-family:calibri; font-size:13px; float:right">
+							$pageNo
+						</div>
+						
+						<div style="margin-top: 200px; font-family:calibri; font-size:13px;">
+						Tandatangan & Cop (Kerajaan) : _____________
+						<br/>
+						<br/>
+						<br/>
+						Tandatangan & Cop (Syarikat ) : _____________
+						<br/>
+						<br/>
+						</div>
+						<div style="color:red; font-family:calibri;font-size:13px;">
+						<span>Pihak Kerajaan : Pegawai yang diberi kuasa oleh Menteri di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk</span><br />
+						menandatangani kontrak<br/>
+						Pihak Syarikat : Penama pada sijil pendaftaran untuk menandatangani Surat ini.
+						</div>
 						<div style="page-break-after:always;"><br/></div>
 					#end
 			</span></td>
 		</tr>
 	#end
 	
-	<div class="break-after"><br/></div>
 	
-	#if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")
+	
+#if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")
 #set($rowCount = 0)	
 #if ($scLoa.scLoiLoa.docType == "NG")
 		<table width="100%" border="1" cellpadding="0" cellspacing="0">
@@ -1230,6 +1284,7 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 	#end
 	
 	<div class="break-after"><br/></div>
+	
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
 		<tr>
 			<td align="right"> <span class="text_family"> <b><i>Lampiran A5</i></b></span></td>
@@ -1239,23 +1294,27 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 		</tr>
 	</table>
 	
-	<div style="margin-top: 200px; font-family:calibri; font-size:13px; float:right">
-		$pageNo
-	</div>
-	
-	<div style="margin-top: 200px; font-family:calibri; font-size:13px;">
-	Tandatangan & Cop (Kerajaan) : _____________
-	<br/>
-	<br/>
-	<br/>
-	Tandatangan & Cop (Syarikat ) : _____________
-	<br/>
-	<br/>
-	</div>
-	<div style="color:red; font-family:calibri;font-size:13px;">
-	<span>Pihak Kerajaan : Pegawai yang diberi kuasa oleh Menteri di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk</span><br />
-	menandatangani kontrak<br/>
-	Pihak Syarikat : Penama pada sijil pendaftaran untuk menandatangani Surat ini.
-	</div>
+	#if ($serviceItemPageNo)
+		
+		
+		<div style="margin-top: 200px; font-family:calibri; font-size:13px; float:right">
+			$serviceItemPageNo
+		</div>
+		
+		<div style="margin-top: 200px; font-family:calibri; font-size:13px;">
+		Tandatangan & Cop (Kerajaan) : _____________
+		<br/>
+		<br/>
+		<br/>
+		Tandatangan & Cop (Syarikat ) : _____________
+		<br/>
+		<br/>
+		</div>
+		<div style="color:red; font-family:calibri;font-size:13px;">
+		<span>Pihak Kerajaan : Pegawai yang diberi kuasa oleh Menteri di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk</span><br />
+		menandatangani kontrak<br/>
+		Pihak Syarikat : Penama pada sijil pendaftaran untuk menandatangani Surat ini.
+		</div>
+	#end
 </body>
 </html>
