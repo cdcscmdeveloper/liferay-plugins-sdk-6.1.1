@@ -131,10 +131,7 @@
 									<f:selectItem itemLabel="#{lbl['lbl.sm.person.epRoleStatus.active']}" itemValue="1" />
 									<f:selectItem itemLabel="#{lbl['lbl.sm.person.epRoleStatus.deleted']}" itemValue="2" />
 									</p:selectOneMenu>
-									<p:graphicImage id="toolTipIcon" value="/css/images/design/tooltips.png" /> 
-							  		<p:tooltip id="sourceTooltip" for="toolTipIcon">
-										<h:outputText id="sourceLabel" escape="false" value="#{lbl['lbl.sm.person.epRoleStatus.info']}" />
-									</p:tooltip> 
+									 
 							</td>
 						</tr>
 					<!-- EP Role Status -->
@@ -198,7 +195,7 @@
 					<!-- User Account Status  -->
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{lbl['lbl.sm.person.userAccountStatus']}" />
+							<h:outputText value="#{lbl['lbl.sm.person.userAccountStatus']} " />
 							<p:graphicImage id="toolTipIcon1" value="/css/images/design/tooltips.png" /> 
 							<p:tooltip	id="sourceTooltip1" for="toolTipIcon1">
 							<h:outputText id="sourceLabel1" escape="false" value="#{lbl['lbl.sm.person.userAccountStatus.info']}" />
@@ -224,7 +221,7 @@
 					<!-- Ep Role Status ****  -->
 					<p:column>
 					<f:facet name="header">
-							<h:outputText value="#{lbl['lbl.sm.person.epRoleStatus']}" />
+							<h:outputText value="#{lbl['lbl.sm.person.epRoleStatus']} " />
 							<p:graphicImage id="toolTipIcon" value="/css/images/design/tooltips.png" /> 
 							<p:tooltip id="sourceTooltip" for="toolTipIcon">
 							<h:outputText id="sourceLabel" escape="false" value="#{lbl['lbl.sm.person.epRoleStatus.info']}" />
