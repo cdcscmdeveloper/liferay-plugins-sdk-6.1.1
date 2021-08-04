@@ -1873,6 +1873,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().setSuppProfileOrHistoryCategoryList(
 				new ArrayList<SmSupplierCategory>());
 		List<SmSupplierCategory> catList = new ArrayList<>();
+		//31480 start
+		List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(getManagedBean().getSmAppl().getSmSupplier());
+		//31480 end
 		for (SmSupplierCategory cat : getManagedBean().getSmAppl()
 				.getSmSupplierCategories()) {
 			if (cat.getRecordStatusFlg().compareTo(
@@ -1885,22 +1888,18 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				// for history load all category
 				getManagedBean().getSuppProfileOrHistoryCategoryList().add(cat);
 			} else {
+				//31480 - start
 				// for supp profile load all active category only
 				if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 					//29949:Disciplinary Action - 26238 - start, filter out category code that active and imposed with DA
 					if(getManagedBean().getSmAppl().getSmSupplier() != null){
-						List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(getManagedBean().getSmAppl().getSmSupplier());
-						
 						if (resultList != null && resultList.size() > 0) {
 							for(SmDisciplinaryAction disciplinaryAction: resultList){
-								//31480 - start
-								if(disciplinaryAction.isBumiputeraCancel() && disciplinaryAction.isBumiputeraPending()){
-									getManagedBean().getSuppProfileOrHistoryCategoryList().add(cat);
-								}else if((disciplinaryAction.isCancelCategory()|| disciplinaryAction.isManufacturerCancel() || disciplinaryAction.isBumiputeraCancel()) && cat.getDisciplinaryActionId() == null){
+								if((disciplinaryAction.isCancelCategory()|| disciplinaryAction.isManufacturerCancel() || disciplinaryAction.isBumiputeraCancel()) && cat.getDisciplinaryActionId() == null){
 									getManagedBean().getSuppProfileOrHistoryCategoryList().add(
 											cat);
 								}
-								//31480 - end
+								
 							}
 						} else {
 							getManagedBean().getSuppProfileOrHistoryCategoryList().add(cat);//29949:Disciplinary Action - 26238 - bug fix
@@ -1908,6 +1907,22 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					}
 					//29949:Disciplinary Action - 26238 - end
 				}
+				//to show category for bumiputera that imposed canceled bumiputera DA but still have pending
+				else if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED) {
+					if (getManagedBean().getSmAppl().getSmSupplier() != null) {
+						if (resultList != null && resultList.size() > 0) {
+							for (SmDisciplinaryAction disciplinaryAction : resultList) {
+								if (cat.getDisciplinaryActionId() == disciplinaryAction.getDisciplinaryActionId()) {
+									if (disciplinaryAction.isBumiputeraCancel() && disciplinaryAction.isBumiputeraPending()) {
+										getManagedBean().getSuppProfileOrHistoryCategoryList().add(cat);
+									}
+								}
+								break;
+							}
+						}
+					}
+				}
+				//31480 - end
 			}
 		}
 		getManagedBean().setActiveCategoryList(catList);
