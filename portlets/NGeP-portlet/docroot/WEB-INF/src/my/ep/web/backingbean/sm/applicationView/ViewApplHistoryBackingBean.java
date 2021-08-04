@@ -341,6 +341,44 @@ public class ViewApplHistoryBackingBean extends
 			if(this.getManagedBean().isDowngradeRole()==null || !this.getManagedBean().isDowngradeRole()){
 				personnelsRole.clear();
 			}
+			// start #29956
+			Boolean dontShowDowngradePopup = false;
+			this.getManagedBean().setDisAllowOwnerEdit(isMofAccEffDatePassedCurrDate(this.getManagedBean().getSmSupplier()));
+			if (this.getManagedBean().isDisAllowOwnerEdit()) {
+				if (personnelsRole != null && personnelsRole.size() <= 0) {
+					for (SmPersonnel personnel : this.getManagedBean().getSmAppl().getSmPersonnels()) {
+						if (personnel.getEpRole() == null
+								|| (personnel.getEpRole() != null && !my.ep.constant.sm.SupplierManagementConst.SUPPLIER_ADMIN_ROLES
+										.contains(personnel.getEpRole()))) {
+							SmPersonnel personnelSSM = (SmPersonnel) EntityHelper
+									.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),
+											this.getManagedBean().getSsmResDTO().getSmPersonnelOwners(), "identificationNo");
+							SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper
+									.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),
+											this.getManagedBean().getSsmResDTO().getSmPersonnelDirector(), "identificationNo");
+							if (personnelDirectorSSM == null && personnelSSM == null) {
+								dontShowDowngradePopup = true;
+							}
+						}
+					}
+					for (SmPersonnel personnel : this.getManagedBean().getSmAppl().getSmPersonnels()) {
+						if (personnel.getEpRole() != null
+								&& my.ep.constant.sm.SupplierManagementConst.SUPPLIER_ADMIN_ROLES
+										.contains(personnel.getEpRole())) {
+							SmPersonnel personnelSSM = (SmPersonnel) EntityHelper
+									.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),
+											this.getManagedBean().getSsmResDTO().getSmPersonnelOwners(), "identificationNo");
+							SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper
+									.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),
+											this.getManagedBean().getSsmResDTO().getSmPersonnelDirector(), "identificationNo");
+							if (personnelDirectorSSM == null && personnelSSM == null) {
+								dontShowDowngradePopup = false;
+							}
+						}
+					}
+				}
+			}
+			// end #29956
 			//end #29956
 			for(SmPersonnel personnel :  this.getManagedBean().getSmAppl().getSmPersonnels()){
 				if (personnel.isEquityOwner() || personnel.isDirector()) {
@@ -366,7 +404,14 @@ public class ViewApplHistoryBackingBean extends
 			// end #29956
 			
 			log.info("--------------------------------personnelsRole.size()-----------------------------------"+personnelsRole.size());
-			if(personnelsRole != null && personnelsRole.size() > 0) {
+			//#start #29956
+			if(personnelsRole != null && personnelsRole.size() > 0 && !dontShowDowngradePopup) {
+				if (this.getManagedBean().isDisAllowOwnerEdit()) {
+					this.getManagedBean().setDontGetSsmData(true);
+				} else {
+					this.getManagedBean().setDontGetSsmData(false);
+				}
+				//#end #29956
 					proceed = false;
 					getManagedBean().setPreRegistration(false);  //#29956
 					getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupplier());	
