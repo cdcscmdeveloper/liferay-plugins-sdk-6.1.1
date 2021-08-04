@@ -30,17 +30,6 @@
 
 
 				</p:column>
-				<p:column style="width:20%;white-space: normal;">
-					<f:facet name="header">
-						<h:outputText value="#{lbl['lbl.sc.type']}" />
-						<ac:iconTooltip id="type#{row}TEC" value="#{lbl['lbl.sc.type.technical.tooltip']}" />
-					</f:facet>
-
-					<h:outputText
-						value="#{evaluationBackingBean.getParameterDesc(technicalEvaluate.definationType)}"></h:outputText>
-
-
-				</p:column>
 
 
 				<p:column headerText="#{lbl['lbl.sc.evalvation.status']}"
@@ -58,16 +47,13 @@
 					
 					<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.action']}" />
-					<ac:iconTooltip id="technicalEvaluationChecklistaction#{index}TSSOTSP"
-						value="#{lbl['lbl.sc.action.evaluation.tooltip']}" />
 				</f:facet>
 
-					<ui:fragment>
-						<p:commandButton value="#{lbl['lbl.btn.view']}"
-							disabled="true"
-							process="@this" partialSubmit="true"
-							action="#{evaluationBackingBean.viewTechnicalEvaluation(technicalEvaluate,index,'ET')}" />
-					</ui:fragment>
+					<h:panelGroup id="technicalChecklistEditActionView">
+						<p:commandButton value="#{lbl['lbl.btn.view']}" process="@this"
+							styleClass="BtnSpacing"
+							action="#{evaluationBackingBean.demoSpectechnicalChecklist(index,technicalEvaluate,'T')}"/>
+					</h:panelGroup>
 
 				</p:column>
 
@@ -76,5 +62,4 @@
 
 		</p:panel>	
 	</h:panelGroup>
-
 </ui:composition>
