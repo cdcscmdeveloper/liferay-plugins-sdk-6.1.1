@@ -9,8 +9,11 @@ import java.util.Comparator;
 
 //9569 end
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -1521,6 +1524,16 @@ public class SmPersonnelBackingBean extends
 		PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO()
 				.retrievePersonnelById(reqDTO);
 		SmPersonnel smPersonnel = resDTO.getSmPersonnel();
+		// start searching for user role history
+		if (smPersonnel.getPmUser().getUserId() != null) {
+			log.info("Dekat Sini sepatutnya dapat user ID" + smPersonnel.getPmUser().getUserId());
+			PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
+			reqDTO1.setPmUserId(smPersonnel.getPmUser().getUserId());
+			PersonnelResDTO resDTO1 = SmServiceLookup.getPersonnelSO().retrieveUserRolesHistoryByUserOrgID(reqDTO1);
+			getManagedBean().setPersonnelHistoryList(resDTO1.getPersonnelHistory());
+		}
+		//End searching for user role history	
+		
 		this.getManagedBean().setBasicSmPersonnel(smPersonnel);
 		setPersonnelViewOnlyMode(getManagedBean().getBasicSmPersonnel());
 		//9569 - Start
@@ -2978,6 +2991,8 @@ public class SmPersonnelBackingBean extends
 		this.getManagedBean().setSpSoftcertFlg(0);
 		this.getManagedBean().setSpRecordStatus(0);
 		this.getManagedBean().setSpEpRole(null);
+		this.getManagedBean().setSpIsAuthorize(0);
+		this.getManagedBean().setSpIEpRoleStatus(0);
 	}
 
 	/**
@@ -2999,7 +3014,8 @@ public class SmPersonnelBackingBean extends
 		reqDTO.setHasActiveAppl(false);
 		if (getManagedBean().getSpName().isEmpty() && getManagedBean().getSpCountryId() == null
 				&& getManagedBean().getSpSoftcertFlg() == 99 && getManagedBean().getSpRecordStatus() == 0
-				&& getManagedBean().getSpEpRole() == null) {
+				&& getManagedBean().getSpEpRole() == null && getManagedBean().getSpIsAuthorize() == 0
+				&& getManagedBean().getSpIEpRoleStatus() == 0) {
 			reqDTO.setSmPersonnel(null);
 		} else {
 			reqDTO.setSmPersonnel(new SmPersonnel());
@@ -3015,13 +3031,26 @@ public class SmPersonnelBackingBean extends
 			if (getManagedBean().getSpEpRole() != null && !getManagedBean().getSpEpRole().isEmpty()) {
 				reqDTO.getSmPersonnel().setEpRole(this.getManagedBean().getSpEpRole());
 			}
-
-			if (getManagedBean().getSpRecordStatus() == 0) {
-				reqDTO.getSmPersonnel().setRecordStatusFlg(0);
-			} else if (getManagedBean().getSpRecordStatus() != 0) {
+			
+			if(getManagedBean().getSpRecordStatus() == 0){
+				reqDTO.getSmPersonnel().setRecordStatusFlg(99);
+			}else{
 				reqDTO.getSmPersonnel().setRecordStatusFlg(this.getManagedBean().getSpRecordStatus());
 			}
-
+			
+			//as 29/7/2021 - Start
+			//Since default value in 0, this step required for is authorized
+			if(getManagedBean().getSpIsAuthorize() == 0){
+				reqDTO.getSmPersonnel().setAuthorizedFlg(99);
+			}else{
+				if(getManagedBean().getSpIsAuthorize() == 1){
+					reqDTO.getSmPersonnel().setAuthorizedFlg(this.getManagedBean().getSpIsAuthorize());	
+				}else if(getManagedBean().getSpIsAuthorize() == 2){
+					reqDTO.getSmPersonnel().setAuthorizedFlg(0);
+				}			
+			}
+			//as 29/7/2021 - End
+			
 			if (getManagedBean().getSpSoftcertFlg() == 99) {
 				reqDTO.getSmPersonnel().setSoftcertFlg(99);
 			} else if (getManagedBean().getSpSoftcertFlg() != 99) {
@@ -3030,6 +3059,26 @@ public class SmPersonnelBackingBean extends
 		}
 		List<SmPersonnel> smPersonnelList = SmServiceLookup.getPersonnelSO().retrieveMOFPersonnelListByApplId(reqDTO)
 				.getSmPersonnelList();
+		//for searching ep role status
+		if(getManagedBean().getSpIEpRoleStatus() != 0){
+			if(getManagedBean().getSpIEpRoleStatus() == 1){
+				Set<SmPersonnel> set = new LinkedHashSet<SmPersonnel>(smPersonnelList);
+				for(Iterator<SmPersonnel> it = smPersonnelList.iterator(); it.hasNext();){
+					SmPersonnel a = it.next();
+					if(a.getPmUser() == null && a.getUserIdTemp() == null || a.getPmUser() == null && a.getUserIdTemp() != null){
+						it.remove();
+					}
+				}			
+			}else if(getManagedBean().getSpIEpRoleStatus() == 2){
+				Set<SmPersonnel> set = new LinkedHashSet<SmPersonnel>(smPersonnelList);
+				for(Iterator<SmPersonnel> it = smPersonnelList.iterator(); it.hasNext();){
+					SmPersonnel a = it.next();
+					if(a.getPmUser() != null && a.getUserIdTemp() == null || a.getPmUser() != null || a.getPmUser() == null && a.getUserIdTemp() == null ){
+						it.remove();
+					}
+				}		
+			}
+		}
 		sortPersonnelByEpRole(smPersonnelList);
 		getManagedBean().setSmPersonnelList(smPersonnelList);
 		//change back value for the softcert flag
@@ -3147,6 +3196,9 @@ public class SmPersonnelBackingBean extends
 		    {
 	    		if(getManagedBean().getEpRoleTrans().equalsIgnoreCase(SupplierManagementConst.EPROLE_DELETED)){
 					getManagedBean().setEpRoleTrans(null);
+					// as 1/8/2021
+					personnel.setUserIdTemp(personnel.getPmUser().getUserId());
+			    	personnel.setPmUser(null);
 			    }
 		    }
 		   
