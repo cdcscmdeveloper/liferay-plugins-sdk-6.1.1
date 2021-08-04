@@ -343,7 +343,7 @@ BaseBackingBean<AccessApplActivationManagedBean>{
 	private boolean validateUserActive(PmAccessAppl accessAppl){
 		boolean isValid = true;
 		PmUser user = PmCommonUtil.retrieveUserByIdNo(accessAppl.getIdentificationNo());
-		if(user!=null){
+		if(user!=null && !user.isRecordStatus()){//#30851 add check if user inactive 
 			isValid = false;
 		}
 		return isValid;
