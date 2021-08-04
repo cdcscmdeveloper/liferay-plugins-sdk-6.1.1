@@ -1893,11 +1893,14 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						
 						if (resultList != null && resultList.size() > 0) {
 							for(SmDisciplinaryAction disciplinaryAction: resultList){
-								if((disciplinaryAction.isCancelCategory()|| disciplinaryAction.isManufacturerCancel() || disciplinaryAction.isBumiputeraCancel()) && cat.getDisciplinaryActionId() == null){
+								//31480 - start
+								if(disciplinaryAction.isBumiputeraCancel() && disciplinaryAction.isBumiputeraPending()){
+									getManagedBean().getSuppProfileOrHistoryCategoryList().add(cat);
+								}else if((disciplinaryAction.isCancelCategory()|| disciplinaryAction.isManufacturerCancel() || disciplinaryAction.isBumiputeraCancel()) && cat.getDisciplinaryActionId() == null){
 									getManagedBean().getSuppProfileOrHistoryCategoryList().add(
 											cat);
 								}
-								
+								//31480 - end
 							}
 						} else {
 							getManagedBean().getSuppProfileOrHistoryCategoryList().add(cat);//29949:Disciplinary Action - 26238 - bug fix
