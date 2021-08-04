@@ -1912,12 +1912,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					if (getManagedBean().getSmAppl().getSmSupplier() != null) {
 						if (resultList != null && resultList.size() > 0) {
 							for (SmDisciplinaryAction disciplinaryAction : resultList) {
-								if (cat.getDisciplinaryActionId() == disciplinaryAction.getDisciplinaryActionId()) {
+								if (cat.getDisciplinaryActionId().equals(disciplinaryAction.getDisciplinaryActionId())) {
 									if (disciplinaryAction.isBumiputeraCancel() && disciplinaryAction.isBumiputeraPending()) {
 										getManagedBean().getSuppProfileOrHistoryCategoryList().add(cat);
 									}
+									break;
 								}
-								break;
 							}
 						}
 					}
