@@ -4480,17 +4480,22 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
                   }
                 }
               } else if (filePath.endsWith(".pdf")) {
-                String tempFilePath = filePath.replace(".pdf", "_temp.pdf");
-                File file = new File(filePath);
-                mergePdf(file, filePath, tempFilePath, context);
-              }
-            } finally {
-              if (null != inputStream)
-              inputStream.close();
-            }
-            // #26130 - End.
-        }
-    }
+				  // #26130 - Start.
+				  if (!filePath.endsWith("_merged.pdf")) {
+				    String tempFilePath = filePath.replace(".pdf", "_temp.pdf");
+				    File file = new File(filePath);
+				    mergePdf(file, filePath, tempFilePath, context);
+				    file.renameTo(new File(filePath.replace(".pdf", "_merged.pdf")));
+				    scLoaReportAttachment.setFilePath(scLoaReportAttachment.getFilePath().replace(".pdf", "_merged.pdf"));
+				  }
+				  // #26130 - End.
+				}
+			} finally {
+				if (null != inputStream)
+					inputStream.close();
+			}
+		}
+	}
     // #26130 - End.
     
     // #26130 - Start.
@@ -4507,14 +4512,51 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
       try {
         sstDocument = PDDocument.load(file);
         int noOfPages = sstDocument.getNumberOfPages();
-        StringBuffer sb = new StringBuffer();
-        sb.append(noOfPages);
-        sb.append(" ");
-        sb.append("daripada");
-        sb.append(" ");
-        sb.append(noOfPages);
-        context.put("pageNo", sb.toString());
-        
+		
+        // #26130 - Start.
+		List<TplSpecMaster> specMasters = (List<TplSpecMaster>) context.get("masters");
+		boolean serviceItemFound = false;
+		boolean productItemFound = false;
+        if (CollectionUtils.isNotEmpty(specMasters) && specMasters.size() > 0) {
+          for (TplSpecMaster tplSpecMaster : specMasters) {
+            if (null != tplSpecMaster) {
+              String itemType = getParameterDescForReport(tplSpecMaster.getItemTypeCode());
+              if (itemType.equals("Perkhidmatan") || itemType.equals("Service")) {
+                serviceItemFound = true;
+              } else if (itemType.equals("Produk") || itemType.equals("Product")) {
+                productItemFound = true;
+              }
+            }
+          }
+        }
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append(noOfPages);
+		sb.append(" ");
+		sb.append("daripada");
+		sb.append(" ");
+		if ((productItemFound && serviceItemFound) || (productItemFound && !serviceItemFound)) {
+		  noOfPages = noOfPages + 1;
+		}
+		sb.append(noOfPages);
+		context.put("pageNo", sb.toString());
+		
+		if ((productItemFound && serviceItemFound) || (productItemFound && !serviceItemFound)) {
+		    sb = new StringBuffer();
+		    sb.append(noOfPages);
+		    sb.append(" ");
+		    sb.append("daripada");
+		    sb.append(" ");
+		    sb.append(noOfPages);
+		    context.put("serviceItemPageNo", sb.toString());
+            noOfPages = noOfPages - 1;
+		}
+		
+		if (!productItemFound && serviceItemFound) {
+		  context.put("serviceItemPageNo", sb.toString());
+		}
+		// #26130 - End.
+		
         log.info("DirectLOABackingBean: mergePdf(): filePath is: " + filePath);
         log.info("DirectLOABackingBean: mergePdf(): tempFilePath is: " + tempFilePath);
         
