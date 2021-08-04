@@ -322,8 +322,16 @@
 								<p:ajax event="change" partialSubmit="true" process="@this"
 									update="perPrivPanel" onstart="blockWidget.show()"
 									oncomplete="blockWidget.hide()" />
-							</p:selectOneMenu> <p:message id="basicBURoleMsg" for="basicBURole"
-								showSummary="true" showDetail="false" display="icon" /></td>
+							</p:selectOneMenu> 
+							<!-- As 4/8/2021  -->
+							<p:message id="basicBURoleMsg" for="basicBURole" showSummary="true" showDetail="false" display="icon" />
+								</td>
+						<td><h:outputText style="float:initial" value="#{lbl['lbl.sm.personnel.history']} " escape="false" /> 
+								<p:commandLink
+								onclick="personnelRoleHistoryInfo.show()"
+								value="#{lbl['lbl.sm.personnel.history1']} "
+								style="float: inherit" /> 
+								<h:outputText style="float:initial" value="#{lbl['lbl.sm.personnel.history2']} " escape="false" /></td>
 					</tr>
 					<p:outputPanel
 						rendered="#{smPersonnelBackingBean.managedBean.epRoleTrans eq 'MOF_SUPPLIER_USER' 
@@ -1224,7 +1232,54 @@
 							</table>
 					 </p:panel></td>
 				</tr>
-			</table>
+			</table>	
+			<!-- #9569 - Start (for history popup)-->
+			<p:dialog id="personnelRoleHistory" header="#{lbl['lbl.sm.personnel.history.panel']}"  widgetVar="personnelRoleHistoryInfo" closable="true" modal="true" resizable="false" style="display: static;">
+			<p:outputPanel layout="block" id="personnelRoleHistoryInfoBlockPanel">
+				<p:dataTable id="personnelHistoryListId"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					value="#{smPersonnelBackingBean.managedBean.personnelHistoryList}"
+					var="personnel" rowKey="#{personnel}" rowIndexVar="index" rows="10">
+					<ac:paginator for="personnelHistoryListId" />
+					
+					<!-- No.  -->
+					<p:column headerText="#{lbl['lbl.sm.personnel.history.column']}">
+						<h:outputText value="#{index+1}" />
+					</p:column>
+					
+					<!-- Current eP Role  -->
+					<p:column headerText="#{lbl['lbl.sm.personnel.history.column1']}">
+						<h:outputText value="#{lbl['lbl.sm.personnel.epRole.name.admin']}"  rendered="#{personnel.pmRole.roleCode eq SupplierManagementConst.ROLE_CODE_SM_1}" />
+						<h:outputText value="#{lbl['lbl.sm.personnel.epRole.name.supplierUser']}"  rendered="#{personnel.pmRole.roleCode eq SupplierManagementConst.ROLE_CODE_SM_2}" />
+						<h:outputText value="#{lbl['lbl.sm.personnel.epRole.name.catalogue']}" rendered="#{personnel.pmRole.roleCode eq SupplierManagementConst.ROLE_CODE_SM_3}" />
+						<h:outputText value="#{lbl['lbl.sm.personnel.epRole.name.fulfillment']}"  rendered="#{personnel.pmRole.roleCode eq SupplierManagementConst.ROLE_CODE_SM_4}" />
+						<h:outputText value="#{lbl['lbl.sm.person.epRoleStatus.unavailable']}" rendered="#{personnel.pmRole eq null }" />
+					</p:column>
+					
+					<!-- Previous eP Role -->
+					<p:column headerText="#{lbl['lbl.sm.personnel.history.column2']}">
+						<h:outputText value="#{lbl['lbl.sm.personnel.epRole.name.admin']}"  rendered="#{personnel.pmRole.roleCode eq SupplierManagementConst.ROLE_CODE_SM_1}" />
+						<h:outputText value="#{lbl['lbl.sm.personnel.epRole.name.supplierUser']}"  rendered="#{personnel.pmRole.roleCode eq SupplierManagementConst.ROLE_CODE_SM_2}" />
+						<h:outputText value="#{lbl['lbl.sm.personnel.epRole.name.catalogue']}" rendered="#{personnel.pmRole.roleCode eq SupplierManagementConst.ROLE_CODE_SM_3}" />
+						<h:outputText value="#{lbl['lbl.sm.personnel.epRole.name.fulfillment']}"  rendered="#{personnel.pmRole.roleCode eq SupplierManagementConst.ROLE_CODE_SM_4}" />
+						<h:outputText value="#{lbl['lbl.sm.person.epRoleStatus.unavailable']}" rendered="#{personnel.pmRole eq null }" />
+					</p:column>
+
+					<!-- Action Date  -->
+					<p:column headerText="#{lbl['lbl.sm.personnel.history.column3']}">
+						<h:outputText value="#{personnel.changedDate}"  rendered="#{personnel.changedDate ne null }"/>
+						<h:outputText value="#{lbl['lbl.sm.person.epRoleStatus.unavailable']}"  rendered="#{personnel.changedDate eq null }"/>
+					</p:column>
+					
+					<!-- Deleted By  -->
+					<p:column headerText="#{lbl['lbl.sm.personnel.history.column4']}">
+						<h:outputText value="#{personnel.changedByUserName}"  rendered="#{personnel.changedByUserName ne null}"/>
+						<h:outputText value= "#{lbl['lbl.sm.person.epRoleStatus.unavailable']}"  rendered="#{personnel.changedByUserName eq null }"/>
+					</p:column>
+				</p:dataTable>
+
+			</p:outputPanel>
+		</p:dialog>
 		</p:panel>
 		<ac:smEmailAlertPopup bBean="#{backingBean}" title="#{lbl['lbl.sm.email.change.header']}" dialogId="emailPopUp" 
 			btnOkLabel="#{lbl['lbl.btn.ok']}" />
