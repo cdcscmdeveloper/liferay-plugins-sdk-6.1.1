@@ -523,32 +523,36 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 
 			List<TplDocSection> docSectionList = new ArrayList<TplDocSection>();
 			getDocSectionList(1, getManagedBean().getDocSectionTN(), docSectionList);
+			
 			//25142 - start
 			String html = null;
 			Document doc = null;
 			boolean valid = false;
+			//25142 - end
+			
 			for (int i = 0; i < docSectionList.size(); i++) {
 				TplDocSection sectionOrder = docSectionList.get(i);
 				sectionOrder.setSectionOrder(i);
-				
-				html = sectionOrder.getSectionContent();
-				html = html.replaceAll("<<", "&lt;&lt;");
-				html = html.replaceAll(">>", "&gt;&gt;");
-				doc = Jsoup.parse(html);
-				valid = Jsoup.isValid(html, Whitelist.relaxed());
-				if(!valid)
-				{
-					Document cleanDoc = new Cleaner(Whitelist.relaxed()).clean(doc);
-					doc = cleanDoc;
-				}
-				
-				doc.outputSettings().syntax(Document.OutputSettings.Syntax.xml); 
-				doc.outputSettings().charset("UTF-8");
-				sectionOrder.setSectionContent(doc.body().html());
-				
-				
-				//25142 - end
+				//20210709@asyrafhaziq - 31330 - start
+	             if (sectionOrder.getSectionContent() != null) {
+	            	 html = sectionOrder.getSectionContent();
+	            	 html = html.replaceAll("<<", "&lt;&lt;");
+					 html = html.replaceAll(">>", "&gt;&gt;");
+					 doc = Jsoup.parse(html);
+					 valid = Jsoup.isValid(html, Whitelist.relaxed());
+					
+					 if(!valid) {
+						 Document cleanDoc = new Cleaner(Whitelist.relaxed()).clean(doc);
+						 doc = cleanDoc;
+					 }
+					
+					doc.outputSettings().syntax(Document.OutputSettings.Syntax.xml); 
+					doc.outputSettings().charset("UTF-8");
+					sectionOrder.setSectionContent(doc.body().html());		
+	             }    
+	             //20210709@asyrafhaziq - 31330 - End
 			}
+			
 			tplDocMaster.setTplDocSectionCollection(docSectionList);
 
 			List<TplDocSection> deletedSectionList = new ArrayList<TplDocSection>();
