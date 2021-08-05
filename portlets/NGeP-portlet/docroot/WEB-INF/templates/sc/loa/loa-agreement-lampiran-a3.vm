@@ -797,7 +797,7 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 							
 							<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
 							<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clUom.uomName</td>
-							<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$bean.getParameterDescForReport($tplspecQuestion.clPriceTypeCode)</td>
+							
 							<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">
 								#if ($tplspecQuestion.clUomFrequency)
 									$tplspecQuestion.clUomFrequency
