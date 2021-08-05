@@ -37,6 +37,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -502,6 +503,19 @@ public void editSpecificationMaintenance(ScQt scQt,
 			this.getManagedBean().setFulfilmentType(scQt_.getFulfilmentType()
 							.getParameterCode());
 		}
+		specBB.retriveTechnicalCheckList();//#11104-start
+		List<ScQtCheckList> technicalChekclist= this.getManagedBean().getScQtCheckSt2techProposal();
+		if(null!=technicalChekclist && CollectionUtils.isNotEmpty(technicalChekclist)){
+		for(ScQtCheckList checkList: technicalChekclist){
+		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
+				.equalsIgnoreCase(checkList.getDefinationType()
+						.getParameterCode())) {
+			scQt_.setSampleReq(Boolean.TRUE);//#11104
+			break;
+
+		}
+		}
+		}//#11104-End
 		this.getManagedBean().setCurrentStatusId(scQt.getQtStatus().getStatusId());
 		this.getManagedBean().setSpecMaintenanceScreen(QTConstants.SPEC_MAINTENANCE);
 		this.getManagedBean().setLoginRoleType("SC");
