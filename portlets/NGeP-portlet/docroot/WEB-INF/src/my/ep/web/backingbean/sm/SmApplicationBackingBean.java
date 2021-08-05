@@ -10313,6 +10313,10 @@ public class SmApplicationBackingBean extends
 					reqDto.setResubmitExpired(true);
 				}
 			}
+			//#30749 - START
+			PmUser pmUser = new FacesScopes().getUserSessionBean();
+			reqDto.setPmUser(pmUser);
+			//#30749 - END
 			MofRegistrationResDTO resDTO = mofRegistrationSO
 					.cloneSmApplicationDraft(reqDto);
 			return resDTO;
