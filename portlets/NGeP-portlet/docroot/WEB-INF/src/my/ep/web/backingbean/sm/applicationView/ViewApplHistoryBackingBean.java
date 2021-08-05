@@ -322,6 +322,25 @@ public class ViewApplHistoryBackingBean extends
 			}
 		}
 	}
+	
+	//start #29956
+	public static boolean isMofAccEffDateBefore6Months(SmSupplier supplier) {
+		boolean retVal = false;
+		if (supplier != null && supplier.getSupplierId() != null) {
+			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+			reqDTO.setSupplierId(supplier.getSupplierId());
+			reqDTO.setParamMonths(6);
+			int count = SmServiceLookup
+					.getMofRegistrationSO()
+					.countMofAccEffDatePassedCurrDateByMonthsAndSupplierId(
+							reqDTO).getCount();
+			if (count > 0) {
+				retVal = true;
+			}
+		}
+		return retVal;
+	}	
+	//end #29956
 
 	/**
 	 * Cloning new application and redirect to New MOF application page
@@ -343,7 +362,7 @@ public class ViewApplHistoryBackingBean extends
 			}
 			// start #29956
 			Boolean dontShowDowngradePopup = false;
-			this.getManagedBean().setDisAllowOwnerEdit(isMofAccEffDatePassedCurrDate(this.getManagedBean().getSmSupplier()));
+			this.getManagedBean().setDisAllowOwnerEdit(isMofAccEffDateBefore6Months(this.getManagedBean().getSmSupplier()));
 			if (this.getManagedBean().isDisAllowOwnerEdit()) {
 				if (personnelsRole != null && personnelsRole.size() <= 0) {
 					for (SmPersonnel personnel : this.getManagedBean().getSmAppl().getSmPersonnels()) {
