@@ -234,9 +234,11 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 							billType = resDTO.getPyPayment().getPyBill().getBillType();
 						}
 						//#29481 - Start
-						if(appl != null && (appl.getSupplierType().equals(SupplierManagementConst.STYPE_BASIC) || 
-								appl.getSupplierType().equals(SupplierManagementConst.STYPE_GOVT_SELLER) || 
-								(appl.getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR)) && appl.getSmCompanyBasic().isWithFederal()==true)) {
+						//if(appl != null && (appl.getSupplierType().equals(SupplierManagementConst.STYPE_BASIC) || 
+								//appl.getSupplierType().equals(SupplierManagementConst.STYPE_GOVT_SELLER) || 
+								//(appl.getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR)) && appl.getSmCompanyBasic().isWithFederal()==true)) {
+						if(billType.equalsIgnoreCase("S")){
+							log.info("Testing 29481 Multi response --in init--");
 							//params = new String[] {getSoftCertNameEmailMulti(this.getManagedBean().getNewPyBillDtlLs())};
 							//msgCode = MessageConst.INFO_721068;
 							showPaymentResponseMulti(status, resDTO.getPyPayment().getPaymentId(), errorDesc, billType, resDTO.getPyPayment().getPyBill().getPyBillDtls()) ;
@@ -571,9 +573,11 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				billType = resDTO.getPyPayment().getPyBill().getBillType();
 			}
 			//#29481 - Start
-			if(appl.getSupplierType().equals(SupplierManagementConst.STYPE_BASIC) || 
-					appl.getSupplierType().equals(SupplierManagementConst.STYPE_GOVT_SELLER) || 
-					(appl.getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR) && appl.getSmCompanyBasic().isWithFederal()==true)) {
+			//if(appl.getSupplierType().equals(SupplierManagementConst.STYPE_BASIC) || 
+					//appl.getSupplierType().equals(SupplierManagementConst.STYPE_GOVT_SELLER) || 
+					//(appl.getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR) && appl.getSmCompanyBasic().isWithFederal()==true)) {
+			if(billType.equalsIgnoreCase("S")){
+				log.info("Testing 29481 Multi response --in responsePreRender--");
 				//params = new String[] {getSoftCertNameEmailMulti(this.getManagedBean().getNewPyBillDtlLs())};
 				//msgCode = MessageConst.INFO_721068;
 				showPaymentResponseMulti(status,Long.valueOf(orderId),errorDesc,billType,resDTO.getPyPayment().getPyBill().getPyBillDtls());
