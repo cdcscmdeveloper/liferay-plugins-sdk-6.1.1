@@ -1640,6 +1640,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	public boolean  checkFactoringCompanyStatus(){
 		boolean statusFactoringCompany = false;
 		boolean statusFactoringFinAcc = false;
+		String financialAccountNo = null;
 		IFinancialOrgSO financialOrgSO = null;
 		FinancialOrgReqDTO reqDTO = null;
 		FinancialOrgResDTO resDTO = null;
@@ -1655,9 +1656,11 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			}
 
 			if(getManagedBean().getFactoring().getBankAccountNo()!=null){
+				financialAccountNo = getManagedBean().getFactoring().getBankAccountNo();
 				reqDTO.setAccountNo(getManagedBean().getFactoring().getBankAccountNo());
 			}else{
 				String[] accBankList = getManagedBean().getAccBankName().split("/");
+				financialAccountNo = accBankList[0].trim();
 				reqDTO.setAccountNo(accBankList[0].trim());
 			}
 			
@@ -1673,7 +1676,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			}*/
 			
 			resDTO = financialOrgSO.retriveFinAccByFinOrgIdAccNo(reqDTO);
-			if (resDTO.getPmFinancialAcc()!=null && getManagedBean().getFactoring().getBankAccountNo().equals(resDTO.getPmFinancialAcc()) 
+			if (resDTO.getPmFinancialAcc()!=null && financialAccountNo.equals(resDTO.getPmFinancialAcc()) 
 					&& resDTO.getPmFinancialAcc().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
 				statusFactoringFinAcc = true;
 			}
