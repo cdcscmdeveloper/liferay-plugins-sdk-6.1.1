@@ -1525,11 +1525,17 @@ public class SmPersonnelBackingBean extends
 				.retrievePersonnelById(reqDTO);
 		SmPersonnel smPersonnel = resDTO.getSmPersonnel();
 		// start searching for user role history
-		if (smPersonnel.getPmUser().getUserId() != null) {
-			log.info("Dekat Sini sepatutnya dapat user ID" + smPersonnel.getPmUser().getUserId());
+		getManagedBean().setPersonnelHistoryList(null);
+		Long userId = null;
+		if(smPersonnel.getPmUser() != null){
+			userId = smPersonnel.getPmUser().getUserId();
+		}else if (smPersonnel.getPmUser() == null && smPersonnel.getUserIdTemp() != null){
+			userId = smPersonnel.getUserIdTemp();
+		}
+		if (userId != null) {
 			PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
-			reqDTO1.setPmUserId(smPersonnel.getPmUser().getUserId());
-			PersonnelResDTO resDTO1 = SmServiceLookup.getPersonnelSO().retrieveUserRolesHistoryByUserOrgID(reqDTO1);
+			reqDTO1.setPmUserId(userId);
+			PersonnelResDTO resDTO1 = SmServiceLookup.getPersonnelSO().retrieveUserRolesHistoryByUserOrgID(reqDTO1, smPersonnel);
 			getManagedBean().setPersonnelHistoryList(resDTO1.getPersonnelHistory());
 		}
 		//End searching for user role history	
