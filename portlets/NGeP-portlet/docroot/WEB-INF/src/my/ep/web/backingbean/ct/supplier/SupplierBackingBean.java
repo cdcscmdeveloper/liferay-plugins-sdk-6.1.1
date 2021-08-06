@@ -1676,8 +1676,8 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			}*/
 			
 			resDTO = financialOrgSO.retriveFinAccByFinOrgIdAccNo(reqDTO);
-			if (resDTO.getPmFinancialAcc()!=null && financialAccountNo.equals(resDTO.getPmFinancialAcc()) 
-					&& resDTO.getPmFinancialAcc().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
+			if (resDTO.getPmFinancialAcc()!=null 
+					&& financialAccountNo.equals(resDTO.getPmFinancialAcc().getAccountNo().trim())){
 				statusFactoringFinAcc = true;
 			}
 		
