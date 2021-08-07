@@ -229,13 +229,13 @@
 					</f:facet>
 						<h:outputText
 							value="#{lbl['lbl.sm.person.epRoleStatus.unavailable']}"
-							rendered="#{personnel.pmUser.userId eq null and personnel.userIdTemp eq null}" />
+							rendered="#{personnel.pmUser eq null and personnel.userIdTemp eq null}" />
 						<h:outputText
 							value="#{lbl['lbl.sm.person.epRoleStatus.active']}"
-							rendered="#{personnel.pmUser.userId ne null and personnel.userIdTemp eq null}" />
+							rendered="#{personnel.pmUser ne null}" />
 						<h:outputText
 							value="#{lbl['lbl.sm.person.epRoleStatus.deleted']}"
-							rendered="#{personnel.pmUser.userId eq null and personnel.userIdTemp ne null}" />
+							rendered="#{personnel.pmUser eq null and personnel.userIdTemp ne null}" />
 					</p:column>
 					
 					<!-- Action  -->
