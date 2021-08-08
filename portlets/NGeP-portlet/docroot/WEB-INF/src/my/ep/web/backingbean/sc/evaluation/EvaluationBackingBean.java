@@ -3709,29 +3709,40 @@ public class EvaluationBackingBean extends
 											.getQtId(), zoneReqDto
 											.getEvalStage(), zoneReqDto
 											.getSpeZoneId()));
-					//#25138 - user score bug - start
-					List<ScQtProposalAmount> checklistamount = new ArrayList<ScQtProposalAmount>();
-					if(this.getManagedBean().getTabItemPackageIndex() == 2){//#25138 - 040621 - remove condition USER SCORE
-						EvaluationReqDTO amountReqDto = new EvaluationReqDTO();
-						EvaluationResDTO amountResDto = new EvaluationResDTO();
-						amountReqDto.setSpeZoneId(speczone.getZones().get(i).getSpecZoneId());
-						amountResDto = evaluationSO.retrieveProposalAmount(amountReqDto);
-						
-						for(ScQtProposalAmount amtbyproposal : amountResDto.getProposalAmountListbyZone()){
-							amountReqDto.setProposalId(amtbyproposal.getScQtProposal().getQtProposalId());
-							amountResDto = evaluationSO.retrieveProposalAmountbyProposal(amountReqDto); 
-							checklistamount.addAll(amountResDto.getProposalAmountListbyProposal());
-						}
-						List<ScQtProposalAmount> amountbyzone = new ArrayList<ScQtProposalAmount>();
-						for(ScQtProposalAmount amtbyproposal:checklistamount){
-							if(amtbyproposal.getTplSpecZoneDtl().getSpecZoneId().equals(speczone.getZones().get(i).getSpecZoneId())){
-								amountbyzone.add(amtbyproposal);
+					//#31438 - start
+					if(this.getManagedBean().getTabItemPackageIndex() == 2){
+					    EvaluationReqDTO amountReqDto = new EvaluationReqDTO();
+					    EvaluationResDTO amountResDto = new EvaluationResDTO();
+					    amountReqDto.setQtId(this.getManagedBean().getScQt().getQtId());
+					    amountResDto = evaluationSO.retrieveProposals(amountReqDto);
+					    List<ScQtProposalAmount> listProposalAmountByQualifiedProposal = new ArrayList<ScQtProposalAmount>();
+					    List<ScQtProposalAmount> listProposalAmountByZone = new ArrayList<ScQtProposalAmount>();
+					    for(ScQtProposal qualifiedProposal : amountResDto.getProposalList()){
+					        amountReqDto.setScQt(this.getManagedBean().getScQt());
+					        amountReqDto.setProposalId(qualifiedProposal.getQtProposalId());
+					        amountResDto=evaluationSO.retrieveProposalAmountbyProposal(amountReqDto);
+					        listProposalAmountByQualifiedProposal.addAll(amountResDto.getProposalAmountListbyProposal());
+					    
+					    }
+					    for(ScQtProposalAmount scQtProposalAmountByZone : listProposalAmountByQualifiedProposal){
+					        if(scQtProposalAmountByZone.getTplSpecZoneDtl().getSpecZoneId().equals(speczone.getZones().get(0)
+					                .getSpecZoneId())){
+					            listProposalAmountByZone.add(scQtProposalAmountByZone);
+
+					        }					
+					    }
+					    Collections.sort(listProposalAmountByZone, new Comparator<ScQtProposalAmount>() {
+							public int compare(ScQtProposalAmount amountDtl1,
+									ScQtProposalAmount amountDtl2) {
+
+								return amountDtl1.getScQtProposal().getSupplierNo()
+										.compareTo(amountDtl2.getScQtProposal().getSupplierNo());
 							}
-						}
-						this.getManagedBean().setQtProposalAmounts(amountbyzone);
-						this.getManagedBean().setQtProposalAmountByProposal(checklistamount);
+						});
+					    this.getManagedBean().setQtProposalAmounts(listProposalAmountByZone);
+					    this.getManagedBean().setQtProposalAmountByProposal(listProposalAmountByQualifiedProposal);
 					}
-					//#25138 - user score bug - end
+					//#31438 - end
 					break;
 				}
 
@@ -4269,23 +4280,40 @@ public class EvaluationBackingBean extends
 											.getQtId(), zoneReqDto
 											.getEvalStage(), zoneReqDto
 											.getSpeZoneId()));
-					//#25138 - user score bug - start
+					//#31438 - start
 					if(this.getManagedBean().getTabItemPackageIndex() == 2 
 							&& this.getManagedBean().getOfferScoreType().equalsIgnoreCase(QTConstants.USER_SCORE)){
 						List<ScQtProposalAmount> qtProposalAmountByZone = new ArrayList<ScQtProposalAmount>();
-						for(ScQtProposalAmount amountbyproposal : this.getManagedBean().getQtProposalAmountByProposal()){
-							for(ScQtProposalAmount amountbyzone : this.getManagedBean().getQtProposalAmounts()){
-								if(amountbyzone.getQtProposalAmtId().equals(amountbyproposal.getQtProposalAmtId())){
-									amountbyproposal.setTotalScore(amountbyzone.getTotalScore());
+						for(ScQtProposalAmount qtProposalAmountByProposal: this.getManagedBean().getQtProposalAmountByProposal()){
+							if(qtProposalAmountByProposal.getTplSpecZoneDtl().getSpecZoneId()
+									.equals(this.getManagedBean().getSpecZoneDtls().get(i).getSpecZoneId())){
+								qtProposalAmountByZone.add(qtProposalAmountByProposal);
+								
+							}
+							for(ScQtProposalAmount qtProposalAmountPreviousZone: this.getManagedBean().getQtProposalAmounts()){
+								if(qtProposalAmountPreviousZone.getQtProposalAmtId().equals(qtProposalAmountByProposal.getQtProposalAmtId())){
+									qtProposalAmountByProposal.setTotalScore(qtProposalAmountPreviousZone.getTotalScore());
+								
 								}
 							}
-							if(amountbyproposal.getTplSpecZoneDtl().getSpecZoneId().equals(specZoneDtl.getSpecZoneId())){
-								qtProposalAmountByZone.add(amountbyproposal);
-							}
+							
 						}
-						this.getManagedBean().setQtProposalAmounts(qtProposalAmountByZone);
+						Collections.sort(qtProposalAmountByZone, new Comparator<ScQtProposalAmount>() {
+							public int compare(ScQtProposalAmount amountDtl1,
+									ScQtProposalAmount amountDtl2) {
+
+								return amountDtl1.getScQtProposal().getSupplierNo()
+										.compareTo(amountDtl2.getScQtProposal().getSupplierNo());
+							}
+						});
+						if(qtProposalAmountByZone!=null && !qtProposalAmountByZone.isEmpty()){
+							this.getManagedBean().setQtProposalAmounts(null);
+							this.getManagedBean().setQtProposalAmounts(qtProposalAmountByZone);
+						
+						}
+						
 					}
-					//#25138 - user score bug - end
+					//#31438 - end
 
 					break;
 				}
@@ -14124,6 +14152,7 @@ private void retriveCommitteeRemarksList(){
 			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 			//#25138 - user score bug - start
+			evalReqDTO.setScQt(this.getManagedBean().getScQt());//#31438
 			if(this.getManagedBean().getScQt().isZonal()){
 				List<ScQtProposalAmount> scoreDtls = this.getManagedBean()
 						.getQtProposalAmountByProposal();
