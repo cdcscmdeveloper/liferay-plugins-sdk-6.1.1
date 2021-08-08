@@ -3204,7 +3204,6 @@ public class SmPersonnelBackingBean extends
 					getManagedBean().setEpRoleTrans(null);
 					// as 1/8/2021
 					personnel.setUserIdTemp(personnel.getPmUser().getUserId());
-			    	personnel.setPmUser(null);
 			    }
 		    }
 		   
