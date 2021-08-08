@@ -3199,7 +3199,7 @@ public class SmPersonnelBackingBean extends
 		    }
 		    
 		    //9569
-		    if (getManagedBean().getEpRoleTrans() != null)
+		   /* if (getManagedBean().getEpRoleTrans() != null)
 		    {
 	    		if(getManagedBean().getEpRoleTrans().equalsIgnoreCase(SupplierManagementConst.EPROLE_DELETED)){
 					getManagedBean().setEpRoleTrans(null);
@@ -3207,24 +3207,55 @@ public class SmPersonnelBackingBean extends
 					personnel.setUserIdTemp(personnel.getPmUser().getUserId());
 					ePDeleted = true;
 			    }
-		    }
+		    }*/
 		   
-		    
 		    if (getManagedBean().getEpRoleTrans() != null && !personnel.getEpRole().equalsIgnoreCase(getManagedBean().getEpRoleTrans())) {
-		    	PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
-		      PersonnelResDTO resDTO1 = new PersonnelResDTO();
+		     
 		      if (personnel.getPmUser() != null) {
-		    	  int softcert = checkSoftCert();
-		    	  if(getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()) || getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.FL_USER.value())){
+		    	
+		    	  if(getManagedBean().getEpRoleTrans().equalsIgnoreCase(SupplierManagementConst.EPROLE_DELETED)){
+		    		  personnel.setUserIdTemp(personnel.getPmUser().getUserId());
+		    		  ePDeleted = true;
+		    		  PersonnelAuthorizationReqDTO reqPersonnelAuthDTO = new PersonnelAuthorizationReqDTO();
+		    		  UserReqDTO reqUserDTO = new UserReqDTO();
+				      reqPersonnelAuthDTO.setPersonnel(personnel);
+				      reqUserDTO.setPmUser(personnel.getPmUser());
+				      PersonnelAuthorizationResDTO resPersonnelAuthDTO = SmServiceLookup.getPersonnelAuthorizationSO().deleteRoleAuthorizedPersonnel(reqPersonnelAuthDTO, ePDeleted);
+				      UserResDTO userResDTO = SmServiceLookup.getUserSO().updatePmUserRecord(reqUserDTO);
+				      if (!resPersonnelAuthDTO.isSuccessful() && !userResDTO.isSuccessful()) {
+					      throw new EpException(MessageConst.ERROR_722632);
+					    }
+		    	  }
+		    	  else if(getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()) || getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.FL_USER.value())){
+		    		  int softcert = checkSoftCert();
+		    		  PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
+				      PersonnelResDTO resDTO1 = new PersonnelResDTO();
+				      
 		    		  personnel.setSoftcertFlg(softcert);
-		    	  }else{
+		    		  reqDTO1.setSmPersonnel(personnel);
+				      reqDTO1.setNewEpRole(getManagedBean().getEpRoleTrans());
+				      resDTO1 = SmServiceLookup.getPersonnelSO().updateMofPersonnelAndPmRole(reqDTO1);
+				      if (!resDTO1.isSuccessful()) {
+				          throw new EpException(MessageConst.ERROR_722632);
+				        }
+		    	  }
+		    	  else{
+		    		  PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
+				      PersonnelResDTO resDTO1 = new PersonnelResDTO();
+				      
 		    		  personnel.setSoftcertFlg( SupplierManagementConst.RECORD_STATUS_SUSPENDED);
 		    		  personnel.setContractSignerFlg(Integer.parseInt(ParameterConst.FLAG_NO));
-		    	  }
-		        reqDTO1.setSmPersonnel(personnel);
-		        reqDTO1.setNewEpRole(getManagedBean().getEpRoleTrans());
-		        resDTO1 = SmServiceLookup.getPersonnelSO().updateMofPersonnelAndPmRole(reqDTO1);
+		    		  reqDTO1.setSmPersonnel(personnel);
+				      reqDTO1.setNewEpRole(getManagedBean().getEpRoleTrans());
+				      resDTO1 = SmServiceLookup.getPersonnelSO().updateMofPersonnelAndPmRole(reqDTO1);
+				      if (!resDTO1.isSuccessful()) {
+				          throw new EpException(MessageConst.ERROR_722632);
+				        }
+		    	  }    
 		      }else{
+		    	  PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
+			      PersonnelResDTO resDTO1 = new PersonnelResDTO();
+			      
 		    	  personnel.setEpRole(getManagedBean().getEpRoleTrans());
 		    	  personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
 		    	  personnel.setCreatedDate(new Timestamp(System.currentTimeMillis()));
@@ -3243,11 +3274,10 @@ public class SmPersonnelBackingBean extends
 		        log.info("End first update------------------------------------------------------");
 		        SmServiceLookup.getPersonnelSO().updatePersonnelRecord(reqDTO2);
 		        log.info("End second update------------------------------------------------------");
-		      
+		        if (!resDTO1.isSuccessful()) {
+			          throw new EpException(MessageConst.ERROR_722632);
+			        }
 		      }
-		      if (!resDTO1.isSuccessful()) {
-		          throw new EpException(MessageConst.ERROR_722632);
-		        }
 		    }else{
 	    	  	PersonnelResDTO resDTO2 = SmServiceLookup.getPersonnelSO().updatePersonnelRecord(reqDTO2);
 			    if (!resDTO2.isSuccessful()) {
@@ -3256,7 +3286,7 @@ public class SmPersonnelBackingBean extends
 		    }
 		    //9569
 		    //delete role authorized personnel 
-		    if(getManagedBean().getEpRoleTrans() == null){
+		    /*if(getManagedBean().getEpRoleTrans() == null){
 		    	PersonnelAuthorizationReqDTO reqPersonnelAuthDTO = new PersonnelAuthorizationReqDTO();
 		    	UserReqDTO reqUserDTO = new UserReqDTO();
 		    	reqPersonnelAuthDTO.setPersonnel(personnel);
@@ -3267,7 +3297,7 @@ public class SmPersonnelBackingBean extends
 		    	if (!resPersonnelAuthDTO.isSuccessful() && !userResDTO.isSuccessful()) {
 				      throw new EpException(MessageConst.ERROR_722632);
 				    }
-		    }
+		    }*/
 		    //Make sure table is updated
 			PersonnelReqDTO reqDTO3 = new PersonnelReqDTO();
 			reqDTO3.setApplId(getManagedBean().getSmAppl().getApplId());
