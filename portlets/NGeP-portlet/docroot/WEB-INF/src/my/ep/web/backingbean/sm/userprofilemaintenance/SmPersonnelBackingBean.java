@@ -3161,6 +3161,7 @@ public class SmPersonnelBackingBean extends
 	//9569 - Start
 	public void saveUserMOFUpdate(){
 		  try{
+			boolean ePDeleted = false;
 			SmPersonnel personnel = getManagedBean().getBasicSmPersonnel();
 		    //This is to save all the address
 			SmPersonnelAddress personnelAddressPer = getManagedBean().getBasicSmPersonnelPermanentAddress();
@@ -3204,6 +3205,7 @@ public class SmPersonnelBackingBean extends
 					getManagedBean().setEpRoleTrans(null);
 					// as 1/8/2021
 					personnel.setUserIdTemp(personnel.getPmUser().getUserId());
+					ePDeleted = true;
 			    }
 		    }
 		   
@@ -3260,7 +3262,7 @@ public class SmPersonnelBackingBean extends
 		    	reqPersonnelAuthDTO.setPersonnel(personnel);
 		    	reqUserDTO.setPmUser(personnel.getPmUser());
 		    	PersonnelAuthorizationResDTO resPersonnelAuthDTO = SmServiceLookup.getPersonnelAuthorizationSO().
-		    			deleteRoleAuthorizedPersonnel(reqPersonnelAuthDTO);
+		    			deleteRoleAuthorizedPersonnel(reqPersonnelAuthDTO, ePDeleted);
 		    	UserResDTO userResDTO = SmServiceLookup.getUserSO().updatePmUserRecord(reqUserDTO);
 		    	if (!resPersonnelAuthDTO.isSuccessful() && !userResDTO.isSuccessful()) {
 				      throw new EpException(MessageConst.ERROR_722632);
