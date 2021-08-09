@@ -3161,7 +3161,11 @@ public class SmPersonnelBackingBean extends
 	//9569 - Start
 	public void saveUserMOFUpdate(){
 		  try{
+			//to check if selected role is deleted or not
 			boolean ePDeleted = false;
+			//to check for the ep status
+			boolean ePStatus = false;
+			
 			SmPersonnel personnel = getManagedBean().getBasicSmPersonnel();
 		    //This is to save all the address
 			SmPersonnelAddress personnelAddressPer = getManagedBean().getBasicSmPersonnelPermanentAddress();
@@ -3196,6 +3200,12 @@ public class SmPersonnelBackingBean extends
 		   // SmPersonnel personnel1 = getManagedBean().getBasicSmPersonnel();
 		    if(personnel.getEpRole() == null){
 		    	personnel.setEpRole("");
+		    }
+		    
+		    int recheckedSoftcert = 0;
+		    if(personnel.getUserIdTemp() != null && personnel.getPmUser() == null){
+		    	ePStatus = true;
+		    	recheckedSoftcert = personnel.getSoftcertFlg();
 		    }
 		    
 		    //9569
@@ -3259,8 +3269,15 @@ public class SmPersonnelBackingBean extends
 		    	  personnel.setEpRole(getManagedBean().getEpRoleTrans());
 		    	  personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
 		    	  personnel.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		    	  if(getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()) || getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.FL_USER.value())){
+					if (getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()) && !ePStatus
+							|| getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.FL_USER.value())) {
 		    		  personnel.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
+		    		  //kalau user tambah role dr dlete, tak perlu usik dari asal - case 1
+					} else if (getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()) && ePStatus
+							|| getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.CM_USER.value()) && ePStatus) {
+					  
+					 personnel.setSoftcertFlg(recheckedSoftcert);
+		    		  
 		    	  }else{
 		    		  personnel.setSoftcertFlg( SupplierManagementConst.RECORD_STATUS_SUSPENDED);
 		    		  personnel.setContractSignerFlg(Integer.parseInt(ParameterConst.FLAG_NO));
