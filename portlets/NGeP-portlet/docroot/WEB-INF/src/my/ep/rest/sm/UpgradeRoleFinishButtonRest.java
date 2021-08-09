@@ -7,23 +7,15 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
-import my.ep.biz.service.intg.gfmas.IGfmasServiceSO;
-import my.ep.biz.service.ntf.scheduler.INtfMessageBulkSchedulerSO;
-import my.ep.biz.service.ntf.scheduler.INtfMessageRealTimeSchedulerSO;
 import my.ep.biz.service.osb.sm.ISMOsbSO;
 import my.ep.biz.service.sm.upgraderole.IUpgradeRoleSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.osb.sm.SMOsbReqDTO;
-import my.ep.dto.osb.sm.SMOsbResDTO;
 import my.ep.dto.sm.scheduler.SmSchedulerResDTO;
 import my.ep.persistence.constant.DbValueConst;
-import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.sm.SmPersonnel;
-import my.ep.web.backingbean.sm.postsupplierregistration.PostSupplierRegistrationBackingBean;
-import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.sm.helper.SmApplicationUtil;
-import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.persistence.entity.sm.SmUpdateRoleProcess;
+import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.log4j.Logger;
 
@@ -31,11 +23,19 @@ import org.apache.log4j.Logger;
 public class UpgradeRoleFinishButtonRest {
 	public static Logger log = Logger.getLogger(UpgradeRoleFinishButtonRest.class);
 	
+	//#30942 LOG START
+	private void debugLogger(Object message) {
+		if (log.isDebugEnabled()) {
+			log.debug(message);
+		}
+		log.info(message);
+	}
+	
 	@GET
 	@Path("/upgraderolefinishbutton/{userId}")
 	public Response upgradeRoleFinishButton(@PathParam("userId") long userId) {
 		log.info("Before success calling upgradeRoleFinishButton rest api....loginId="+userId);
-		PostSupplierRegistrationBackingBean bean = new PostSupplierRegistrationBackingBean();
+		//PostSupplierRegistrationBackingBean bean = new PostSupplierRegistrationBackingBean();
 
 		try {	
 			//bean.finishButtonAction(userId);	
@@ -62,6 +62,7 @@ public class UpgradeRoleFinishButtonRest {
 		try {	
 			//START 12491
 			IUpgradeRoleSO upgradeRoleSO = SmServiceLookup.getUpgradeRoleSO();
+			debugLogger("30942 :: start -> upgradeRoleFinishButtonBulk()");
 			SmSchedulerResDTO resDTO = upgradeRoleSO.retrievePendingUpgradeRole();
 			if(resDTO.getSmUpdateRoleProcess()!= null){
 				for(SmUpdateRoleProcess process:resDTO.getSmUpdateRoleProcess()){
@@ -118,7 +119,8 @@ public class UpgradeRoleFinishButtonRest {
 			smOsbReqDTO.setReasonCode()
 			smOsbReqDTO.setResponseRemark()
 			smOsbReqDTO.setResponseStatus()*/
-			SMOsbResDTO smOsbResDTO =  osbSO.updateSupplierSoftcert(smOsbReqDTO);
+			//SMOsbResDTO smOsbResDTO =  osbSO.updateSupplierSoftcert(smOsbReqDTO);
+			osbSO.updateSupplierSoftcert(smOsbReqDTO);
 			
 			return Response.status(200).entity("success calling callscheduler!!").build();
 		} catch (Exception ex) {
