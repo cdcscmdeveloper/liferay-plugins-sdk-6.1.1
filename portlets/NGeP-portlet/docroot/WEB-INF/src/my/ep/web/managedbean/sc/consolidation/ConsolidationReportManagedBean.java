@@ -98,6 +98,8 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	private List<ScQtRecommendationPengesyoranRemarks> finalizationPengreysonremarks;
 	private List<SmSupplierBranch> supplierBranchList; //#29729
 	
+	private boolean isSetNull ; //Bug #31364
+
 	private final static List<String> directDownloadDocDefKeys = new ArrayList<String>() {
 		{
 			add(SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT);
@@ -632,4 +634,11 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	}
 	//#29729 - End
 
+	public boolean isSetNull() {
+		return isSetNull;
+	}
+
+	public void setSetNull(boolean isSetNull) {
+		this.isSetNull = isSetNull;
+	}
 }
