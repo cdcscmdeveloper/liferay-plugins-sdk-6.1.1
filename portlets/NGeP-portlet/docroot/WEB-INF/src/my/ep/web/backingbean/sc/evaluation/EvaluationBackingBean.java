@@ -14775,6 +14775,7 @@ private void retriveCommitteeRemarksList(){
 										
 										List<ScQtProposalAmount> proposalamount = new ArrayList<ScQtProposalAmount>();
 										for(ScQtProposal amtbyproposal : resDTO2.getProposalList()){
+											reqDTO2.setScQt(this.getManagedBean().getScQt());//#31438 - for single item scenario
 											reqDTO2.setProposalId(amtbyproposal.getQtProposalId());
 											resDTO2 = evaluationSO.retrieveProposalAmountbyProposal(reqDTO2); 
 											proposalamount.addAll(resDTO2.getProposalAmountListbyProposal());
