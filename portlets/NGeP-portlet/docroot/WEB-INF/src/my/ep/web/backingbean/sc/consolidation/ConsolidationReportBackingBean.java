@@ -62,8 +62,12 @@ import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalItem;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+// #31443 Start
+import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
+// #31443 End
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -1381,6 +1385,9 @@ public class ConsolidationReportBackingBean extends
 			List<ScQtRecommend> items) {
 		List<ScQtEvaluationResultDtl> qualifiedSuppliers = null;
 		List<QtEvaluationResultDtlBean> qualifiedSupplierBeans = null;
+		// #31443 Farid Start 
+		ScQt scQt = getManagedBean().getScQt();
+		// #31443 Farid End
 		SuppFinalizationResDTO resDTO = getQualifiedSuppliersWithDORank(
 				specZoneDtl, null);
 
@@ -1417,8 +1424,15 @@ public class ConsolidationReportBackingBean extends
 				qualifiedSupplierBeans = getQtEvaluationResultDtlBeansWithRank(
 						specZoneDtl, item.getRequestItem(),
 						itemQualifiedSuppliers);
-				validateRanking(qualifiedSupplierBeans, true, item,
-						specZoneDtl, totalQualifiedSuppliers);
+				// #31443 Start -exclude validate if quantity 0					
+				if(scQt!=null && !scQt.isPartial() && item.getOrderQty() != null && item.getOrderQty().compareTo(BigDecimal.ZERO) > 0){
+					validateRanking(qualifiedSupplierBeans, true, item,
+							specZoneDtl, totalQualifiedSuppliers);
+				}
+				else if(scQt!=null && scQt.isPartial()){
+					excludeValidatePartialRanking(specZoneDtl,items);
+				}
+				// #31443 End 	
 			}
 		}
 
@@ -2168,4 +2182,76 @@ public class ConsolidationReportBackingBean extends
 		getManagedBean().setActiveIndex(EVALUATION_REPORT_TAB_INDEX);
 	}
 	
+	//#31443 here to exclude validation for not offer entry supplier ranking
+		@SuppressWarnings("unused")
+		private void excludeValidatePartialRanking(TplSpecZoneDtl specZoneDtl,
+				List<ScQtRecommend> items) {
+			List<ScQtEvaluationResultDtl> qualifiedSuppliers = null;
+			List<QtEvaluationResultDtlBean> qualifiedSupplierBeans = null;
+			ScQt scQt = getManagedBean().getScQt();
+			SuppFinalizationResDTO resDTO = getQualifiedSuppliersWithDORank(
+					specZoneDtl, null);
+
+			int totalQualifiedSuppliers = 0;
+			if (resDTO != null) {
+				qualifiedSuppliers = resDTO.getQualifiedSupplierDetails();
+				totalQualifiedSuppliers = resDTO.getTotalQualifiedSuppliers();
+			}
+
+			// Package wise validation
+			if (SourcingConstants.EVALUATE_BY_BOTH_PACKAGE_ITEM
+					.equalsIgnoreCase(this.getManagedBean().getScQt()
+							.getEvaluateBy())) {
+				qualifiedSupplierBeans = getQtEvaluationResultDtlBeansWithRank(
+						specZoneDtl, null, qualifiedSuppliers);
+				validateRanking(qualifiedSupplierBeans, false, null, specZoneDtl,
+						totalQualifiedSuppliers);
+			}
+			// End of // Package wise validation
+
+			// Item wise validation
+			List<ScQtEvaluationResultDtl> itemQualifiedSuppliers = null;
+			if (CollectionUtils.isNotEmpty(items)) {
+				for (ScQtRecommend item : items) {
+					totalQualifiedSuppliers = 0;
+					resDTO = getQualifiedSuppliersWithDORank(specZoneDtl, item);
+
+					if (resDTO != null) {
+						itemQualifiedSuppliers = resDTO
+								.getQualifiedSupplierDetails();
+						totalQualifiedSuppliers = resDTO
+								.getTotalQualifiedSuppliers();
+					}
+					qualifiedSupplierBeans = getQtEvaluationResultDtlBeansWithRank(
+							specZoneDtl, item.getRequestItem(),
+							itemQualifiedSuppliers);
+		// #31443 Start -exclude validate if quantity 0					
+
+					 if(specZoneDtl != null){
+						for(TplSpecZoneQty finditemOfferZone : item.getTplSpecZoneDtl().getTplSpecZoneQties()){
+							if(finditemOfferZone != null && !finditemOfferZone.getTplSpecZoneOffer().isOffer()
+									&& item.getOrderQty() != null && item.getOrderQty().compareTo(BigDecimal.ZERO) > 0){
+								log.info("validate zonal offer");
+								validateRanking(qualifiedSupplierBeans, true, item,
+										specZoneDtl, totalQualifiedSuppliers);
+							}
+						}
+					}
+					else {
+						for(TplSpecAnswer finditemOfferNonZonal : item.getRequestItem().getTplSpecQuestion().getTplSpecAnswers()){
+							if(finditemOfferNonZonal != null && finditemOfferNonZonal.getOffer()
+									&& finditemOfferNonZonal.getTplSpecQuestion().getClQuantity() != null 
+										&& finditemOfferNonZonal.getTplSpecQuestion().getClQuantity().compareTo(BigDecimal.ZERO) > 0){
+								log.info("validate nonzonal offer");
+								validateRanking(qualifiedSupplierBeans, true, item,
+										specZoneDtl, totalQualifiedSuppliers);
+							}
+						}
+					}
+		// #31443 End			
+				}
+			}
+
+			// End of item wise validation
+		}
 }
