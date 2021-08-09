@@ -1437,12 +1437,7 @@ public class ConsolidationReportBackingBean extends
 						specZoneDtl, item.getRequestItem(),
 						itemQualifiedSuppliers);
 				// #31443 Start -exclude validate if quantity 0					
-				if(item.getOrderQty() != null && item.getOrderQty().compareTo(BigDecimal.ZERO) > 0){
-					validateRanking(qualifiedSupplierBeans, true, item,
-							specZoneDtl, totalQualifiedSuppliers);
-				}
-				else if(item.getOrderQty() != null && item.getOrderQty().equals(new BigDecimal(0))){
-					log.info("quantity 0");
+				if(scQt!=null && !scQt.isPartial() && item.getOrderQty() != null && item.getOrderQty().compareTo(BigDecimal.ZERO) > 0){
 					validateRanking(qualifiedSupplierBeans, true, item,
 							specZoneDtl, totalQualifiedSuppliers);
 				}
