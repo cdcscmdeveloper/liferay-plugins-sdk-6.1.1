@@ -3071,7 +3071,7 @@ public class SmPersonnelBackingBean extends
 				Set<SmPersonnel> set = new LinkedHashSet<SmPersonnel>(smPersonnelList);
 				for(Iterator<SmPersonnel> it = smPersonnelList.iterator(); it.hasNext();){
 					SmPersonnel a = it.next();
-					if(a.getPmUser() == null && a.getUserIdTemp() == null || a.getPmUser() == null && a.getUserIdTemp() != null){
+					if(a.getEpRole() == null && a.getUserIdTemp() == null || a.getEpRole() == null && a.getUserIdTemp() != null){
 						it.remove();
 					}
 				}			
@@ -3079,7 +3079,7 @@ public class SmPersonnelBackingBean extends
 				Set<SmPersonnel> set = new LinkedHashSet<SmPersonnel>(smPersonnelList);
 				for(Iterator<SmPersonnel> it = smPersonnelList.iterator(); it.hasNext();){
 					SmPersonnel a = it.next();
-					if(a.getPmUser() != null && a.getUserIdTemp() == null || a.getPmUser() != null || a.getPmUser() == null && a.getUserIdTemp() == null ){
+					if(a.getEpRole() != null || a.getEpRole() == null && a.getUserIdTemp() == null ){
 						it.remove();
 					}
 				}		
