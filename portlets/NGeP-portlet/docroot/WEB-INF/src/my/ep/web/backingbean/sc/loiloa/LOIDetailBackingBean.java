@@ -972,7 +972,7 @@ public class LOIDetailBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			for(ScQtEvaluationResultDtl qtEvalResDtl:evalResDtl){
 				ScQtProposal qtProposal = qtEvalResDtl.getQtEvaluationResult().getScQtProposal();
-				qtProposal.getScQtSupplier().setSmSupplier(qtDetailSO.retrieveActiveDisciplinaryActionBySupplier(qtProposal.getScQtSupplier().getSmSupplier()));
+				qtProposal.getScQtSupplier().setSmSupplier(qtDetailSO.retrieveActiveDABySupplierExcludePendingTransaction(qtProposal.getScQtSupplier().getSmSupplier()));
 			}
 		} finally {
 			qtDetailSO = null;
