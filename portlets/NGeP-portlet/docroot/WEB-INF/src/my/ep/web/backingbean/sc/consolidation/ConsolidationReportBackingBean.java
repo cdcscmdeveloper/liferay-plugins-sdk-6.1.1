@@ -754,6 +754,33 @@ public class ConsolidationReportBackingBean extends
 		RequestContext.getCurrentInstance().execute("submissionPopup.show()");
 
 	}
+	
+	//haziq -Bug #31364 - start
+	public void preSubmitConsolidationReport() {
+		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTSuppFinalizationSO.class);
+	
+		SuppFinalizationReqDTO  reqDTO  = new SuppFinalizationReqDTO ();
+	
+		reqDTO.setScQt(this.getManagedBean().getScQt());
+		System.out.println("getFinalizationCommitte " + this.getManagedBean().getScQt().getFinalizationCommitte() );
+		System.out.println("getFinalizationSecratery " + this.getManagedBean().getScQt().getFinalizationSecratery() );
+	
+		
+		SuppFinalizationResDTO  suppFinalizationResDTO = qtSuppFinalizationSO.checkNonActiveComAndsetNull(reqDTO, false);
+		
+		if (suppFinalizationResDTO.isSetNull()){
+			this.getManagedBean().setSetNull(true);
+			//this.getManagedBean().setScQt(suppFinalizationResDTO.getScQt());
+			RequestContext.getCurrentInstance().execute("submissionPopupAndNewCom.show()");
+		}
+		else{
+			this.getManagedBean().setSetNull(false);
+			submitConsolidationReport();
+		}
+	}
+	//haziq -Bug #31364 - End
 
 	/**
 	 * submit consolidationReport Details.
@@ -768,14 +795,21 @@ public class ConsolidationReportBackingBean extends
 
 		try {
 			// #27502 -- Start
+			qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, //haziq -Bug #31364
+					IQTSuppFinalizationSO.class);	
 			ScQt scQt = this.getManagedBean().getScQt();
+			
+			if  (this.getManagedBean().isSetNull()){ ////haziq -Bug #31364
+				reqDTO.setScQt(scQt);	
+				SuppFinalizationResDTO  suppFinalizationResDTO = qtSuppFinalizationSO.checkNonActiveComAndsetNull(reqDTO, true);
+				scQt = suppFinalizationResDTO.getScQt();
+			}
+			
 			QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
 			qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
 
 			validateEvaluationReports(SourcingConstants.CONSOLIDATION_TASK);
 
-			qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-					IQTSuppFinalizationSO.class);		
 
 			// BPM Params
 			FacesScopes facesScopes = new FacesScopes();
