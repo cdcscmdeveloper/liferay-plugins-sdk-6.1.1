@@ -3270,30 +3270,59 @@ public class SmPersonnelBackingBean extends
 		    	  personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
 		    	  personnel.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 					if (getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()) && !ePStatus
-							|| getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.FL_USER.value())) {
+							|| getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.FL_USER.value()) && !ePStatus ) {
+						
 		    		  personnel.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
+		    		
 		    		  //kalau user tambah role dr dlete, tak perlu usik dari asal - case 1
-					} else if (getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()) && ePStatus
-							|| getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.CM_USER.value()) && ePStatus) {
-					  
-					 personnel.setSoftcertFlg(recheckedSoftcert);
+					} else if (getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()) && ePStatus ) {
+						
+						personnel.setSoftcertFlg(recheckedSoftcert);
+						personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
+
+					}else if(getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.CM_USER.value()) && ePStatus){
+						
+						personnel.setSoftcertFlg(recheckedSoftcert);
+						personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
+						
+					} else if(getManagedBean().getEpRoleTrans().equalsIgnoreCase(SupplierManagementConst.EPROLE_DELETED) ){
 		    		  
-		    	  }else{
+		    		  personnel.setEpRole(null);
+		    		  personnel.setSoftcertFlg( SupplierManagementConst.RECORD_STATUS_SUSPENDED);
+		    		  personnel.setContractSignerFlg(Integer.parseInt(ParameterConst.FLAG_NO));
+		    		  personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+		    		  
+					} else if (getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.FL_USER.value()) && ePStatus) {
+						
+						personnel.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
+						personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
+
+					} else{
 		    		  personnel.setSoftcertFlg( SupplierManagementConst.RECORD_STATUS_SUSPENDED);
 		    		  personnel.setContractSignerFlg(Integer.parseInt(ParameterConst.FLAG_NO));
 		    	  }
-		        List<SmPersonnel> smPersonnelList = new ArrayList<SmPersonnel>();
-		        smPersonnelList.add(personnel);
-		        reqDTO1.setSmPersonnelList(smPersonnelList);
-		        reqDTO1.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
-		        resDTO1 = SmServiceLookup.getPersonnelSO().sendPersonnelActivationEmail(reqDTO1);
-		        reqDTO2.setSmPersonnel(personnel);
-		        log.info("End first update------------------------------------------------------");
-		        SmServiceLookup.getPersonnelSO().updatePersonnelRecord(reqDTO2);
-		        log.info("End second update------------------------------------------------------");
-		        if (!resDTO1.isSuccessful()) {
-			          throw new EpException(MessageConst.ERROR_722632);
-			        }
+					
+					//after done sorting by type, this is the final to update sm_personnel
+					if (personnel.getEpRole() != null) {
+						List<SmPersonnel> smPersonnelList = new ArrayList<SmPersonnel>();
+						smPersonnelList.add(personnel);
+						reqDTO1.setSmPersonnelList(smPersonnelList);
+						reqDTO1.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
+						resDTO1 = SmServiceLookup.getPersonnelSO().sendPersonnelActivationEmail(reqDTO1);
+						reqDTO2.setSmPersonnel(personnel);
+						log.info("End first update------------------------------------------------------");
+						SmServiceLookup.getPersonnelSO().updatePersonnelRecord(reqDTO2);
+						log.info("End second update------------------------------------------------------");
+						if (!resDTO1.isSuccessful()) {
+							throw new EpException(MessageConst.ERROR_722632);
+						}
+					} else {
+						reqDTO2.setSmPersonnel(personnel);
+						resDTO1 = SmServiceLookup.getPersonnelSO().updatePersonnelRecord(reqDTO2);
+						if (!resDTO1.isSuccessful()) {
+							throw new EpException(MessageConst.ERROR_722632);
+						}
+					}		
 		      }
 		    }else{
 	    	  	PersonnelResDTO resDTO2 = SmServiceLookup.getPersonnelSO().updatePersonnelRecord(reqDTO2);
@@ -3499,15 +3528,7 @@ public class SmPersonnelBackingBean extends
 		return disableRadio;
 	}
 	//END 30053
-	//9569
-	public static boolean personnelToDeleteRole(SmPersonnel basicSmPersonnel) {
-		boolean retVal = false;
-		if(basicSmPersonnel.getEpRole()!=null && basicSmPersonnel.getAuthorizedFlg()==1 &&
-				!basicSmPersonnel.getEpRole().equalsIgnoreCase(SupplierManagementConst.MOF_SUPPLIER_ADMIN)){
-			retVal = true;
-		}
-		return retVal;
-	}
+
 	// #28720 Start
 	public void onChangeEmail()
 	{
