@@ -19,12 +19,17 @@ import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import javax.faces.model.ListDataModel;
+import my.ep.persistence.entity.pm.common.PmRemarkCategory; //#29665
+
 import my.ep.biz.bean.sc.SupplierQualificationBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
+import my.ep.persistence.entity.pm.common.PmRemarkCategory;
+
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
@@ -37,6 +42,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalAmount;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
+
+
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.bean.sc.quatationtender.AwardedItemsBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
@@ -46,6 +53,8 @@ import my.ep.web.managedbean.BaseManagedBean;
 import org.primefaces.component.tabview.Tab;
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.TreeNode;
+
+
 
 /**
  * NoticeBoard Managed Bean class holds the properties of Notice Board UI screens.
@@ -184,6 +193,17 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private Map<Long,Boolean> committeeFormed;
 	private boolean navigateFromMobileView;
 	private ScWorkFlowStatus workflowStatus;
+	
+	//#29732
+	private boolean newCategory = false;
+	
+	private PmCategoryL3 pmCategoryL3;
+	
+	private String remarkCategory;
+	
+	private List<PmRemarkCategory> remarkHistoryList;
+	
+	// #29732 End 
 	
 	public NoticeBoardManagedBean() {
 		// scQt = new ScQt();
@@ -1290,6 +1310,39 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	 */
 	public void setWorkflowStatus(ScWorkFlowStatus workflowStatus) {
 		this.workflowStatus = workflowStatus;
+	}
+
+	public boolean isNewCategory() {
+		return newCategory;
+	}
+
+	public void setNewCategory(boolean newCategory) {
+		this.newCategory = newCategory;
+	}
+
+	public PmCategoryL3 getPmCategoryL3() {
+		return pmCategoryL3;
+	}
+
+	public void setPmCategoryL3(PmCategoryL3 pmCategoryL3) {
+		this.pmCategoryL3 = pmCategoryL3;
+	}
+
+	public String getRemarkCategory() {
+		return remarkCategory;
+	}
+
+	public void setRemarkCategory(String remarkCategory) {
+		this.remarkCategory = remarkCategory;
+	}
+
+
+	public List<PmRemarkCategory> getRemarkHistoryList() {
+		return remarkHistoryList;
+	}
+
+	public void setRemarkHistoryList(List<PmRemarkCategory> remarkHistoryList) {
+		this.remarkHistoryList = remarkHistoryList;
 	}
 
 	
