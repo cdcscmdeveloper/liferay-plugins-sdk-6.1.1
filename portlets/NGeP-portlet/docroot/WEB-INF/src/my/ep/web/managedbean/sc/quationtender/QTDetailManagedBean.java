@@ -49,6 +49,7 @@ import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmGo;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmRemarkCategory;
 import my.ep.persistence.entity.pm.common.PmReportSection;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
@@ -1766,6 +1767,18 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	//29464-start
 	private boolean committeeAppointmentMenuTab = true;
 	//29464-end
+	
+	
+	//#29732
+		private boolean newCategory = false;
+		
+		private PmCategoryL3 pmCategoryL3;
+		
+		private String remarkCategory;
+		
+		private List<PmRemarkCategory> remarkHistoryList;
+		
+		// #29732 End 
 	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -10971,8 +10984,43 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		}
 		//#25037-end
 
+		//#29732
+		
+		public boolean isNewCategory() {
+			return newCategory;
+		}
+
+		public void setNewCategory(boolean newCategory) {
+			this.newCategory = newCategory;
+		}
+
+		public PmCategoryL3 getPmCategoryL3() {
+			return pmCategoryL3;
+		}
+
+		public void setPmCategoryL3(PmCategoryL3 pmCategoryL3) {
+			this.pmCategoryL3 = pmCategoryL3;
+		}
+
+		public String getRemarkCategory() {
+			return remarkCategory;
+		}
+
+		public void setRemarkCategory(String remarkCategory) {
+			this.remarkCategory = remarkCategory;
+		}
+
+		public List<PmRemarkCategory> getRemarkHistoryList() {
+			return remarkHistoryList;
+		}
+
+		public void setRemarkHistoryList(List<PmRemarkCategory> remarkHistoryList) {
+			this.remarkHistoryList = remarkHistoryList;
+		}
+
 }
 
+//#29732 End
 
 
 // ***25201
