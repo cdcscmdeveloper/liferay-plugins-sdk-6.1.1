@@ -14620,8 +14620,7 @@ private void retriveCommitteeRemarksList(){
 		}
 		
 		if (!scQtProposalChecklist.getScQtProposal().isSubmitted() || this.getManagedBean().isStatusOnly() 
-				|| this.getManagedBean().isComplianceReEvaluateRequired() 
-				|| this.getManagedBean().isReadOnly()) {
+				|| this.getManagedBean().isComplianceReEvaluateRequired()) {
 			return true;
 		}
 		return false;
