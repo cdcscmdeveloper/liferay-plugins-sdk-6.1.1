@@ -709,6 +709,7 @@ public class SupplierManagementConst {
 	public static final String ROLE_CODE_SM_2 = "MOF_SUPPLIER_USER";
 	public static final String ROLE_CODE_SM_3 = "CM_USER";
 	public static final String ROLE_CODE_SM_4 = "FL_USER";
+	public static final String ROLE_CODE_SM_5 = "SUPPLIER_TEMP";
 
 	public String getCATEGORY_CODE_L3_99() {
 		return CATEGORY_CODE_L3_99;
@@ -1363,5 +1364,9 @@ public class SupplierManagementConst {
 
 	public String getROLE_CODE_SM_4() {
 		return ROLE_CODE_SM_4;
+	}
+
+	public String getROLE_CODE_SM_5() {
+		return ROLE_CODE_SM_5;
 	}
 }
