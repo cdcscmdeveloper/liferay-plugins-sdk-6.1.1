@@ -760,12 +760,12 @@ public class SupplierFinalizationBiddingBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			if(biddingPackagePriceList!=null&&biddingPackagePriceList.size()>0){
 				for(BidPackageBean bidPackage: biddingPackagePriceList){
-					bidPackage.getScBidSupplier().setSmSupplier(qtDetailSO.retrieveActiveDisciplinaryActionBySupplier(bidPackage.getScBidSupplier().getSmSupplier()));
+					bidPackage.getScBidSupplier().setSmSupplier(qtDetailSO.retrieveActiveDABySupplierExcludePendingTransaction(bidPackage.getScBidSupplier().getSmSupplier()));
 				}
 				getManagedBean().setBiddingPackagePriceList(biddingPackagePriceList);
 			}else{
 				for(BidItemBean bidItem : biddingItemPriceList){
-					bidItem.setSupplier(qtDetailSO.retrieveActiveDisciplinaryActionBySupplier(bidItem.getSupplier()));
+					bidItem.setSupplier(qtDetailSO.retrieveActiveDABySupplierExcludePendingTransaction(bidItem.getSupplier()));
 				}
 			}
 		} finally {
