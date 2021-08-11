@@ -1952,7 +1952,7 @@ public class SupplierDataMaintenanceBackingBean extends
 
 		}
 		if (!alreadyHasMsg
-				&& SmApplicationUtil.checkActiveSmApplForSupp(getManagedBean()
+				&& SmApplicationUtil.checkActiveSmApplForSuppDA(getManagedBean()
 						.getSmSupplier())) {
 			hasActiveAppl = true;
 			//Redmine #18959

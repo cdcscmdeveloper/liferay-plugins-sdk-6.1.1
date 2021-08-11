@@ -4640,6 +4640,18 @@ public class SmApplicationUtil {
 		resDTO = mofRegistrationSO.checkActiveApplicationBySupplierId(reqDTO);
 		return resDTO.isHasActiveTransaction();
 	}
+	
+	//26238 - start
+	public static boolean checkActiveSmApplForSuppDA(SmSupplier smSupplier) {
+		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+				.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
+		reqDTO.setSupplierId(smSupplier.getSupplierId());
+		resDTO = mofRegistrationSO.checkActiveApplicationBySupplierIdDA(reqDTO);
+		return resDTO.isHasActiveTransaction();
+	}
+	//26238 - end
 
 	/**
 	 * Check if there is any active Cancel MOF appl for supplier.
