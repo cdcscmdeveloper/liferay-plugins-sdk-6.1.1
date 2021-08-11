@@ -329,7 +329,7 @@
 								<f:selectItems
 									value="#{smPersonnelBackingBean.managedBean.roleList}" />
 								<!-- 9569 -->	
-								<c:if test="#{smPersonnelBackingBean.personnelToDeleteRole(smPersonnelBackingBean.managedBean.basicSmPersonnel)}">
+								<c:if test= "#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole ne null}">
 									<f:selectItem itemLabel="#{lbl['lbl.sm.maintenance.delete.role']}" itemValue="#{SupplierManagementConst.EPROLE_DELETED}" />
 								</c:if>
 								<p:ajax event="change" partialSubmit="true" process="@this"
