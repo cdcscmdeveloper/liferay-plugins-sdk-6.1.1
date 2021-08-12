@@ -86,7 +86,9 @@
 		rendered="#{amendmentBackingBean.managedBean.prepareLOA}">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.ct.loa.signer']}"/>
-	        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.signer']}"/>
+	        <!-- #30453 start -->
+	        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.agency.contract.signer']}"/>
+	        <!-- #30453 end -->
 	  	</f:facet>
 		<h:panelGrid columns="2" columnClasses="columnWidth225">
 			    <p:outputLabel value="#{lbl['lbl.ct.loa.signer']}"  styleClass="required"/>
@@ -96,7 +98,7 @@
 						disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails}"
 						update=":form:contractSigner" readonly="true"
 						headerText="#{lbl['lbl.ct.signer']}"
-						value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractSigner.userName}"
+						value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractSigner.salutationCode.salutationName.concat(' ').concat(ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractSigner.userName)}"
 						saveObject="ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractSigner"
 						conditionField="#{amendmentBackingBean.constructSignerConditionFields()}"
 						postUpdateListener="amendmentBackingBean.contractSignerChange()" />

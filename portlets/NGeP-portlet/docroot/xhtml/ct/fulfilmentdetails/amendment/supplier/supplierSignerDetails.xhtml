@@ -13,8 +13,10 @@
 			
 			<p:outputLabel value="#{lbl['lbl.ct.signed.by']}" />
 			<h:panelGrid columns="2">
+				<!-- #30453 start -->
 				<p:inputText style="width:300px;" disabled="true"
-					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.ackBy.userName}" />
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.ackBy.salutationCode.salutationName.concat(' ').concat(ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.ackBy.userName)}" />
+				<!-- #30453 end -->	
 					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.supplier.signed.by']}"/>
 			</h:panelGrid>			
 			        
