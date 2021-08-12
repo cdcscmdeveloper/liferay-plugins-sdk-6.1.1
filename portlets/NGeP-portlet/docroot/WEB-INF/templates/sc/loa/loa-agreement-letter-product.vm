@@ -2198,18 +2198,24 @@ u {
 								</td>
 								
 								<td bgcolor="#d0eaee">
+									#set($countZoneList = 1)
 									#foreach( $tplSpecZoneDtls in $tplspecQuestion.tplSpecMaster.tplSpecZone.tplSpecZoneDtls )
 									<table width="100%">
 										<tbody>
 										<tr >
-											#if ($tplSpecZoneDtls.zoneName) 
-												<td rowspan="$tplSpecZoneDtls.specCount" class="standard border-bottom left" style="text-align: top; border-bottom: 1px solid black; height: 80px; font-size:12px;">$tplSpecZoneDtls.zoneName</td>
+											#if ($tplSpecZoneDtls.zoneName)
+												#if ($countZoneList == $tplspecQuestion.tplSpecMaster.tplSpecZone.tplSpecZoneDtls.size())
+													<td rowspan="$tplSpecZoneDtls.specCount" class="standard border-bottom left" style="text-align: top; height: 80px; font-size:12px;">$tplSpecZoneDtls.zoneName</td>
+												#else
+													<td rowspan="$tplSpecZoneDtls.specCount" class="standard border-bottom left" style="text-align: top; border-bottom: 1px solid black; height: 80px; font-size:12px;">$tplSpecZoneDtls.zoneName</td>
+												#end
 											#else
 												<td rowspan="$tplSpecZoneDtls.specCount" class="standard border-bottom left" style="text-align: top; border-bottom: 1px solid black; height: 80px; font-size:12px;">$serviceScope</td>
 											#end
 										</tr>
 										</tbody>
 										</table>
+									#set($countZoneList = $countZoneList + 1)
 									#end
 								</td>
 								
