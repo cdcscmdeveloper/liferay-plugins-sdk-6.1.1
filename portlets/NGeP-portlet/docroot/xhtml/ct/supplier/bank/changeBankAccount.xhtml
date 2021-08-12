@@ -322,9 +322,16 @@
                           rendered="#{supplierBackingBean.managedBean.contractVer.ctContractValue.gstDeclaredDate == null}"/> 
 				
 				<p:outputLabel value="#{lbl['lbl.ct.contact.person']}" />
+				<!-- #30453 start -->
+				<h:panelGrid columns="3">
 				<p:inputText disabled="true" style="width:250px;"
-					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.contactPerson}" />
-				
+					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.pmUser.salutationCode.salutationName.concat(' ')
+					.concat(supplierBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.contactPerson)}" />
+					<p:spacer width="1" />
+					<ac:iconTooltip
+						value="#{lbl['lbl.ct.change.bank.acc.contact.person']}" />
+				</h:panelGrid>
+				<!-- #30453 end -->
 				<f:verbatim></f:verbatim> <f:verbatim></f:verbatim>
 				
 				
