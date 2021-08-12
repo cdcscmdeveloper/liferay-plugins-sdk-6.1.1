@@ -232,6 +232,7 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	private String zoneName;
 	private String tempZoneName;
 	private int index;
+	private String space = " ";
 
 	/** The ministry condition field. */
 	private String ministryConditionField;
@@ -1972,5 +1973,13 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 		this.searchItemForDL = searchItemForDL;
 	}
 	/*#29007 End Vinod*/
+
+	public String getSpace() {
+		return space;
+	}
+
+	public void setSpace(String space) {
+		this.space = space;
+	}
 	
 }
