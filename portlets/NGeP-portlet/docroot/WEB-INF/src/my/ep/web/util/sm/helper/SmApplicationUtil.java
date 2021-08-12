@@ -1778,6 +1778,7 @@ public class SmApplicationUtil {
 		//16052019 - SSM INTEGRATION CR
 		int i = 0;
 		int j = 0; //#30444
+		int k = 0;
 		StringBuilder sb = new StringBuilder();		
 		sb.append("<br/>");
 		StringBuilder sbd = new StringBuilder(); //#30444 --31072021--
@@ -4455,6 +4456,18 @@ public class SmApplicationUtil {
 		resDTO = mofRegistrationSO.checkActiveApplicationBySupplierId(reqDTO);
 		return resDTO.isHasActiveTransaction();
 	}
+	
+	//26238 - start
+	public static boolean checkActiveSmApplForSuppDA(SmSupplier smSupplier) {
+		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+				.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
+		reqDTO.setSupplierId(smSupplier.getSupplierId());
+		resDTO = mofRegistrationSO.checkActiveApplicationBySupplierIdDA(reqDTO);
+		return resDTO.isHasActiveTransaction();
+	}
+	//26238 - end
 
 	/**
 	 * Check if there is any active Cancel MOF appl for supplier.

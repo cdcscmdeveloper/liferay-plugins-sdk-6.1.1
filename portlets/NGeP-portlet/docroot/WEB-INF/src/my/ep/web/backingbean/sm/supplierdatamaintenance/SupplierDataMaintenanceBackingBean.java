@@ -1942,8 +1942,9 @@ public class SupplierDataMaintenanceBackingBean extends
 			}
 
 		}
+		//26238 - start
 		if (!alreadyHasMsg
-				&& SmApplicationUtil.checkActiveSmApplForSupp(getManagedBean()
+				&& SmApplicationUtil.checkActiveSmApplForSuppDA(getManagedBean()
 						.getSmSupplier())) {
 			hasActiveAppl = true;
 			//Redmine #18959
@@ -1953,6 +1954,7 @@ public class SupplierDataMaintenanceBackingBean extends
 							new FacesScopes().getUserLocale()), null);*/
 		}
 		getManagedBean().setHasActiveTransaction(hasActiveAppl);
+		//26238 - end
 	}
 
 	/**
