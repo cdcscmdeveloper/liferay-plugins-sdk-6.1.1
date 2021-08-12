@@ -1951,6 +1951,7 @@ public class SupplierDataMaintenanceBackingBean extends
 			}
 
 		}
+		//26238 - start
 		if (!alreadyHasMsg
 				&& SmApplicationUtil.checkActiveSmApplForSuppDA(getManagedBean()
 						.getSmSupplier())) {
@@ -1962,6 +1963,7 @@ public class SupplierDataMaintenanceBackingBean extends
 							new FacesScopes().getUserLocale()), null);*/
 		}
 		getManagedBean().setHasActiveTransaction(hasActiveAppl);
+		//26238 - end
 	}
 
 	/**
