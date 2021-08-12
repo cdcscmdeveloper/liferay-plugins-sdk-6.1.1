@@ -5917,7 +5917,7 @@
 				<portlet-mode>view</portlet-mode>
 			</supports>
 			<portlet-info>
-				<title>Review / Request Purchase Inquiry</title>
+				<title>Item Inquiry</title>
 				<short-title>Review / Request Purchase Inquiry</short-title>
 				<keywords></keywords>
 			</portlet-info>
