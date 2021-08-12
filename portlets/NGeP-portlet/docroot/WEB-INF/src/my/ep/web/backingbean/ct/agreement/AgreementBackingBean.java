@@ -1124,9 +1124,12 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			items = new SelectItem[list.size() + 1];
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			
+			//#30453 start
 			for (PmUser pmUser : list) {
-				items[i++] = new SelectItem(pmUser.getUserId(), pmUser.getUserName());
+				items[i++] = new SelectItem(pmUser.getUserId(),new StringBuilder().append( pmUser.getSalutationCode().getSalutationName() ).append( " " ).append(pmUser.getUserName()).toString());
 			}
+			//#30453 end
 		} finally {
 			userSO = null;
 			reqDTO = null;
