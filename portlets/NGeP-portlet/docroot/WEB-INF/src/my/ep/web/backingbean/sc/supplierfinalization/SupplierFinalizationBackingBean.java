@@ -7280,8 +7280,19 @@ return	remarksNotFound;
 		if (isAwarded != null) {
 			recommendedBean.setAwarded(isAwarded);	
 		}
-		recommendedBean.setShortlisted(
-				selectedSupplier.isShortListed());
+		
+		/*
+		 * BUG 31459 START
+		 * UNCHECK BOOLEANCHECKBOX IN MULTIPLE LOI ITEM
+		 */
+		if(selectedSupplier.getEvaluationResultDtlId()!=null && selectedSupplier.getQtEvaluationResult().getScQtProposal()!=null){
+			if(!selectedSupplier.getQtEvaluationResult().getScQtProposal().getScQtSupplier().getSmSupplier().isDisciplinaryActions()){
+				recommendedBean.setShortlisted(selectedSupplier.isShortListed());				
+			}
+		}		
+		/*
+		 * BUG 31459 END
+		 */
 		recommendedBean.setBidRank(
 				selectedSupplier.getBidRank());
 		recommendedBean.setSmSupplier(selectedSupplier.getQtEvaluationResult()
