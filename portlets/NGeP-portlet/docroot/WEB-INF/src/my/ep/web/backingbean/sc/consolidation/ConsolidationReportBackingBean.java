@@ -2372,18 +2372,19 @@ public class ConsolidationReportBackingBean extends
 							}
 						}
 					}
-					else {
-						for(TplSpecAnswer finditemOfferNonZonal : item.getRequestItem().getTplSpecQuestion().getTplSpecAnswers()){
-							if(finditemOfferNonZonal != null && finditemOfferNonZonal.getOffer()
-									&& finditemOfferNonZonal.getTplSpecQuestion().getClQuantity() != null 
-										&& finditemOfferNonZonal.getTplSpecQuestion().getClQuantity().compareTo(BigDecimal.ZERO) > 0){
-								log.info("validate nonzonal offer");
-								validateRanking(qualifiedSupplierBeans, true, item,
-										specZoneDtl, totalQualifiedSuppliers);
+					//#bug 31520					 
+						else {
+							for(TplSpecAnswer finditemOfferNonZonal : item.getRequestItem().getTplSpecQuestion().getTplSpecAnswers()){
+								if(finditemOfferNonZonal != null && finditemOfferNonZonal.getRatePerUom().compareTo(BigDecimal.ZERO) > 0
+										&& finditemOfferNonZonal.getTplSpecQuestion().getClQuantity() != null 
+											&& finditemOfferNonZonal.getTplSpecQuestion().getClQuantity().compareTo(BigDecimal.ZERO) > 0){
+									log.info("validate nonzonal offer");
+									validateRanking(qualifiedSupplierBeans, true, item,
+											specZoneDtl, totalQualifiedSuppliers);
+								}
 							}
 						}
-					}
-		// #31443 End			
+			// #31443 End				
 				}
 			}
 
