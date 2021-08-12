@@ -62,9 +62,12 @@
 			closable="true" severity="error, info" />
 		<table style="width: 100%;">
 			<tr>
+				<!-- Bug #30038 start -->
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}"
 						immediate="true" onstart="blockWidget.show();"
-						oncomplete="window.history.back();blockWidget.hide();" rendered="#{supplierBackingBean.managedBean.taskId==null}" /></td>
+						action = "#{supplierBackingBean.backAction}" 
+						oncomplete="blockWidget.hide();" rendered="#{supplierBackingBean.managedBean.taskId==null}" /></td>	
+				<!-- Bug #30038 end -->					
 				<td class="ppRightBtn"><ui:repeat var="outcome"
 						value="#{supplierBackingBean.managedBean.outComes}">
 						<ui:param name="buttonLabel"
