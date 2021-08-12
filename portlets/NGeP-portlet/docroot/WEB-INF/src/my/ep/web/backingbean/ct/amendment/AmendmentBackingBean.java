@@ -5994,7 +5994,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					context.put("supplierIcNo", getFacesScopes().getUserSessionBean().getIdentificationNo());
 					context.put("supplierAckDate", dateSDF.format(new Date()));
 					//#30453 start
-					context.put("supplierSalutation", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getSalutationCode().getSalutationName());
+					if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getSalutationCode() != null){
+						context.put("supplierSalutation", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getSalutationCode().getSalutationName());
+					}else if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getSalutationCode() == null){
+						context.put("supplierSalutation","");
+					}
 					//#30453 end
 				} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)) {
 					context.put("supplierName", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getUserName());
