@@ -190,7 +190,6 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
-import org.primefaces.event.ToggleEvent;
 import org.primefaces.event.ToggleSelectEvent;
 import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.StreamedContent;
@@ -11156,10 +11155,6 @@ public class SmApplicationBackingBean extends
 					// #25794 - start
 				}
 			}
-			//#30749 - START
-			PmUser pmUser = new FacesScopes().getUserSessionBean();
-			reqDto.setPmUser(pmUser);
-			//#30749 - END
 			MofRegistrationResDTO resDTO = mofRegistrationSO
 					.cloneSmApplicationDraft(reqDto);
 			return resDTO;
