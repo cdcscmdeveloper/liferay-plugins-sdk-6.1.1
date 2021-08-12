@@ -22,7 +22,7 @@
       #foreach( $ctAgencySigner in $ctAgencySignerList )
       Di hadapan
       <br/>
-      Nama			:  #if ( $ctAgencySigner.officerName ) $ctAgencySigner.officerName #end
+      Nama			:   #if($ctAgencySigner.officer.salutationCode.salutationName) $ctAgencySigner.officer.salutationCode.salutationName  #end #if ( $ctAgencySigner.officerName ) $ctAgencySigner.officerName #end
       <br/>
       No. K/Pengenalan	: #if ( $ctAgencySigner.officerIc ) $ctAgencySigner.officerIc #end
       <br/>
@@ -55,7 +55,7 @@
       #foreach( $ctSupplierSigner in $ctSupplierSignerList )
       Di hadapan
       <br/>
-      Nama			:  #if ( $ctSupplierSigner.officerName ) $ctSupplierSigner.officerName #end
+      Nama			:  #if($ctSupplierSigner.officer.salutationCode.salutationName) $ctSupplierSigner.officer.salutationCode.salutationName  #end #if ( $ctSupplierSigner.officerName ) $ctSupplierSigner.officerName #end
       <br/>
       No. K/Pengenalan	: #if ( $ctSupplierSigner.officerIc ) $ctSupplierSigner.officerIc #end
       <br/>

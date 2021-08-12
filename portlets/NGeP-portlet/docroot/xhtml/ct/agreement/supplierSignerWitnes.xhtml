@@ -42,7 +42,7 @@
                    <p:column style="width:25%;" styleClass="column-align-center">
                         <f:facet name="header">
 					         <h:outputText value="#{lbl['lbl.ct.contract.signer']}" styleClass="required"/>
-					        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.signer']}"/>
+					        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.supplier.contract.signer']}"/>
 				        </f:facet>
                  
                        <p:selectOneMenu id="contractSigner" value="#{signSupplierVar.officerName}"  style="width:95%;">
@@ -114,11 +114,18 @@
 		           		                         update=":form:supplierWitnesTable,:form:delSupplierWitnessBtn" listener="#{agreementBackingBean.selectOneSupplierSignerCheckBox}"></p:ajax>
 			                         </p:selectBooleanCheckbox>
 			            </p:column>
-                     
-                       <p:column style="width:35%;" headerText="#{lbl['lbl.ct.name']}" styleClass="column-align-center">
-                           <p:inputText value="#{supplierWitnessVar.officerName}"  style="width:95%;" maxlength="80" />
-                        </p:column>
-                       
+			            
+			            <!-- #30453 start -->
+			            <p:column style="width:35%;" styleClass="column-align-center">
+					     <f:facet name="header">
+					         <h:outputText value="#{lbl['lbl.ct.name']}" styleClass="required"/>
+					         <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.supplier.witness']}"/>
+					        </f:facet>
+                 
+                             <p:inputText value="#{supplierWitnessVar.officerName}" 
+		                          style="width:90%" maxlength="80" />
+                         </p:column>                       
+                       <!-- #30453 end -->
                         <p:column style="width:20%;"  styleClass="column-align-center"> 
                          	 <f:facet name="header">
 		                           <h:outputText value="#{lbl['lbl.ct.identification.no']}" styleClass="required"/>

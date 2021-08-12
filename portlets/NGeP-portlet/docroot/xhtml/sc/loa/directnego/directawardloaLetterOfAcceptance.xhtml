@@ -42,18 +42,19 @@
 						value="*" styleClass="mandatory" />
 				</td>
 				<td>
+				<!-- #30453 start -->
 				          <p:outputPanel id="opUserLov">
 							<ac:lov id="lovUser" lovId="PM_USER_ID" size="80"
 								disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 								update="@form" readonly="true"
 								headerText="#{lbl['lbl.pm.ta.user.lov']}"
 								selectionMode="single"
-								value="#{directLOABackingBean.managedBean.scLoa.contractSigner.userName}"
+								value="#{directLOABackingBean.managedBean.scLoa.contractSigner.salutationCode.salutationName.concat(directLOABackingBean.managedBean.space).concat(directLOABackingBean.managedBean.scLoa.contractSigner.userName)}"
 								saveObject="directLOABackingBean.managedBean.scLoa.contractSigner"
 								conditionField="#{directLOABackingBean.constructUserConditionFields()}"
 								postUpdateListener="directLOABackingBean.signerUserListener(directLOABackingBean.managedBean.scLoa.contractSigner)" />
 							</p:outputPanel>
-				
+				<!-- #30453 end -->
 				</td>
 				
 			</tr>
