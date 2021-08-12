@@ -198,11 +198,7 @@
 				<tr>
 					<td>
 						<p:outputLabel value="#{lbl['lbl.sm.maintenance.person.email']}" />
-						<c:choose>
-							<c:when test="#{smPersonnelBackingBean.managedBean.epRoleTrans ne null}">
-								<p:outputLabel value="*" styleClass="mandatory" />
-							</c:when>
-						</c:choose>
+						<p:outputLabel value="*" styleClass="mandatory" />			
 					</td>
 					<td>
 						<c:choose>
@@ -352,8 +348,30 @@
 						<tr>
 							<td><p:outputLabel
 									value="#{lbl['lbl.sm.person.composition.certStatus']} :" /></td>
-							<td><ac:smSoftcertStatus
-									personnel="#{smPersonnelBackingBean.managedBean.basicSmPersonnel}" />
+							<td><h:outputText
+									value="#{lbl['lbl.txt.na']}"
+									rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.softcertFlg eq '0' or empty smPersonnelBackingBean.managedBean.basicSmPersonnel.softcertFlg }" />
+									<h:outputText
+									value="#{lbl['lbl.sm.person.composition.request.failed']}"
+									rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.softcertFlg eq '9'}" />
+									<h:outputText
+									value="#{lbl['lbl.sm.person.composition.ready.renewal']}"
+									rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.softcertFlg eq '7'}" />
+									<h:outputText
+									value="#{lbl['lbl.sm.person.composition.rejected']}"
+									rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.softcertFlg eq '6'}" />
+									<h:outputText
+									value="#{lbl['lbl.sm.person.composition.pending.request']}"
+									rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.softcertFlg eq '4'}" />
+									<h:outputText
+									value="#{lbl['lbl.sm.person.composition.processing']}"
+									rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.softcertFlg eq '3'}" />
+									<h:outputText
+									value="#{lbl['lbl.sm.person.composition.requested']}"
+									rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.softcertFlg eq '2'}" />
+									<h:outputText
+									value="#{lbl['lbl.sm.person.composition.issued']}"
+									rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.softcertFlg eq '1'}" />
 							</td>
 						</tr>
 					</p:outputPanel>
