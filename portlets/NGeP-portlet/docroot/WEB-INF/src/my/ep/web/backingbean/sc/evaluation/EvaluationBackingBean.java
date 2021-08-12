@@ -15584,6 +15584,7 @@ private void retriveCommitteeRemarksList(){
 					amountResDto= evaluationSO.retrieveProposals(amountReqDto); 
 					List<ScQtProposalAmount> checklistamount = new ArrayList<ScQtProposalAmount>();
 					for(ScQtProposal amtbyproposal : amountResDto.getProposalList()){
+						amountReqDto.setScQt(this.getManagedBean().getScQt());//#31525
 						amountReqDto.setProposalId(amtbyproposal.getQtProposalId());
 						amountResDto = evaluationSO.retrieveProposalAmountbyProposal(amountReqDto); 
 						checklistamount.addAll(amountResDto.getProposalAmountListbyProposal());
