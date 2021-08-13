@@ -29,10 +29,9 @@
 					<!-- #29822 - END -->
 					<p:outputLabel value="#{lbl['lbl.pm.ta.doc.no']}" />
 					<!-- #29822 - START -->
-					<p:inputText label="#{lbl['lbl.pm.ta.doc.no']}" disabled="true"
-						size="60"
+					<p:inputText label="#{lbl['lbl.pm.ta.doc.no']}" rows="3" cols="60" disabled="true" 
 						value="#{supplierTaskReassignmentBackingBean.managedBean.selectedTask.docNumber}" 
-						rendered="{supplierTaskReassignmentBackingBean.managedBean.singleReassign}"/>
+						rendered="#{supplierTaskReassignmentBackingBean.managedBean.singleReassign}"/>
 					<p:inputTextarea label="#{lbl['lbl.pm.ta.doc.no']}" rows="3" cols="60" disabled="true" 
 						value="#{supplierTaskReassignmentBackingBean.managedBean.selectedTasksTA}" 
 						rendered="#{supplierTaskReassignmentBackingBean.managedBean.bulkReassign}" />
