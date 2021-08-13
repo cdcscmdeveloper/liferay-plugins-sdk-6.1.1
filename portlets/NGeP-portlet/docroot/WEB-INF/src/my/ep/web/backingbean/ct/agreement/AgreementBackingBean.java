@@ -1167,8 +1167,10 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 				items = new SelectItem[resDTO.getPersonnels().size() + 1];
 				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 				for (SmPersonnel personnel : resDTO.getPersonnels()) {
-					items[i++] = new SelectItem(personnel.getName(),personnel.getName());
-					getManagedBean().getSupplierUserMap().put(personnel.getName(),personnel);
+					//#30453 start
+					items[i++] = new SelectItem(personnel.getName(),personnel.getPmUser().getSalutationCode().getSalutationName().concat(" ").concat(personnel.getName()));
+					getManagedBean().getSupplierUserMap().put(personnel.getPmUser().getSalutationCode().getSalutationName().concat(" ").concat(personnel.getName()),personnel);
+					//#30453 end
 				} 			             
 				getManagedBean().setSupplierSignerDropdown(items);
 
