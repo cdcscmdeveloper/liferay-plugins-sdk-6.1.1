@@ -612,6 +612,12 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 			this.getManagedBean().setSelectedUser(null);
 			this.getManagedBean().setSelectedTask(item);
 			resetAvailableUser();
+			
+			//#29822 - START
+			log.info("Selected Task - " + this.getManagedBean().getSelectedTask().getDocNumber());
+			this.getManagedBean().setBulkReassign(false);
+			this.getManagedBean().setSingleReassign(true);
+			//#29822 - END
 		} catch (Exception e) {
 			throw e;
 		}
