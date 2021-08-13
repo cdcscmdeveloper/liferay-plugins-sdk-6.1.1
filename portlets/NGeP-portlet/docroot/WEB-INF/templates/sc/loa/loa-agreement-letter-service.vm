@@ -2324,17 +2324,22 @@ u {
 										    #set($specList = $uniquePosts)
 										#end
 																								
-										
+											#set($countSpecList = 1)
 											#foreach( $specVal in $specList )
 												
 												<table width="100%">
 													<tbody>
 													<tr>
-														<td valign="top" bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$specVal</td>
+														#if ($countSpecList == $specList.size())
+															<td valign="top" bgcolor="#d0eaee" class="title border left"   style="text-align: center; padding-left: 5px; font-size:12px;">$specVal</td>
+														#else
+															<td valign="top" bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$specVal</td>
+														#end
+														
 													</tr>
 													</tbody>
 												</table>
-												
+											#set($countSpecList = $countSpecList + 1)	
 											#end
 										#end
 								</td>
