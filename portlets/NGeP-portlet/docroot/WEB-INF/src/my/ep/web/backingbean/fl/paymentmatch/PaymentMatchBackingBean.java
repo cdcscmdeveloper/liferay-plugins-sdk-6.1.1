@@ -524,7 +524,8 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 		//28221 end
 		
 		//24956 start
-		if (getManagedBean().getFulfilmentRequest().getCtContract().getContractType().
+		if (getManagedBean().getFulfilmentRequest().getCtContract() != null 
+				&& getManagedBean().getFulfilmentRequest().getCtContract().getContractType().
 				getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 			getManagedBean().setCtTypeMinistry(true);
 		}
