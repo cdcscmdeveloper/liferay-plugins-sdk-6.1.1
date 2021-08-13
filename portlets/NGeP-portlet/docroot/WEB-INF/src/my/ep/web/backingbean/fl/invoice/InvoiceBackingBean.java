@@ -220,6 +220,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				invoice.setInvoiceNo(invoiceSO.generateInvoiceNumber(reqDTO).getInvoiceNo());
 				log.info("InvoiceBackingBean.submitAction(). A new invoice number is generated. "+invoice.getInvoiceNo());
 			}
+			
 			// Need to call this as user may not click on summary menu
 			removeDuplicateInvoiceSummaryItem();
 			calInvSummary();
@@ -1179,15 +1180,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				if(feeAmount.doubleValue() > ruleFee.doubleValue()){
 					feeAmount = ruleFee;
 				}
-			//24956 -start
-			}else if (getManagedBean().getInvoice().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED) ||
-					getManagedBean().getInvoice().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN)){
-				ruleReqDTO.setRuleType(FulfilmentConst.FNPER);
-				ruleFee = new BigDecimal(ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList().get(0).getRuleValue());
-				if(feeAmount.doubleValue() > ruleFee.doubleValue()){
-					feeAmount = ruleFee;
-				}	
-			//24956 -end
+
 			}else{
 				ruleReqDTO.setRuleType(FulfilmentConst.FLPER);
 				ruleFee = new BigDecimal(ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList().get(0).getRuleValue());
