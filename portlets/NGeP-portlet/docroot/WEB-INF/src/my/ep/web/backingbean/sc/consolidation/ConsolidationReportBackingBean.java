@@ -2262,7 +2262,7 @@ public class ConsolidationReportBackingBean extends
 		// #31443 Start -exclude validate if quantity 0					
 
 					 if(specZoneDtl != null){
-						for(TplSpecZoneQty finditemOfferZone : item.getTplSpecZoneDtl().getTplSpecZoneQties()){
+						for(TplSpecZoneQty finditemOfferZone : item.getRequestItem().getTplSpecQuestion().getTplSpecZoneQties()){
 							if(finditemOfferZone != null && !finditemOfferZone.getTplSpecZoneOffer().isOffer()
 									&& item.getOrderQty() != null && item.getOrderQty().compareTo(BigDecimal.ZERO) > 0){
 								log.info("validate zonal offer");
@@ -2271,18 +2271,18 @@ public class ConsolidationReportBackingBean extends
 							}
 						}
 					}
-					//#bug 31520					 
-						else {
-							for(TplSpecAnswer finditemOfferNonZonal : item.getRequestItem().getTplSpecQuestion().getTplSpecAnswers()){
-								if(finditemOfferNonZonal != null && finditemOfferNonZonal.getRatePerUom().compareTo(BigDecimal.ZERO) > 0
-										&& finditemOfferNonZonal.getTplSpecQuestion().getClQuantity() != null 
-											&& finditemOfferNonZonal.getTplSpecQuestion().getClQuantity().compareTo(BigDecimal.ZERO) > 0){
-									log.info("validate nonzonal offer");
-									validateRanking(qualifiedSupplierBeans, true, item,
-											specZoneDtl, totalQualifiedSuppliers);
-								}
+//#bug 31520					 
+					else {
+						for(TplSpecAnswer finditemOfferNonZonal : item.getRequestItem().getTplSpecQuestion().getTplSpecAnswers()){
+							if(finditemOfferNonZonal != null && finditemOfferNonZonal.getRatePerUom().compareTo(BigDecimal.ZERO) > 0
+									&& item.getRequestItem().getQuantity() != null 
+										&& item.getRequestItem().getQuantity().compareTo(BigDecimal.ZERO) > 0){
+								log.info("validate nonzonal offer");
+								validateRanking(qualifiedSupplierBeans, true, item,
+										specZoneDtl, totalQualifiedSuppliers);
 							}
 						}
+					}
 			// #31443 End				
 				}
 			}
