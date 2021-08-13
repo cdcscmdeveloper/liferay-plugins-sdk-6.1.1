@@ -328,11 +328,11 @@
 					action="#{specificationBackingBean.technicalChecklistEditAction(index,stageTwoTechnical,'T')}">
 					<ui:fragment
 						rendered="#{specificationBackingBean.isQTStatusChecklistScoring() or 
-						(!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision()) or(specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance() and specificationBackingBean.managedBean.specMaintenance)}">
+						(specificationBackingBean.isQTStatusChecklistScoringRevision()) or(specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance() and specificationBackingBean.managedBean.specMaintenance)}">
 						<h:graphicImage value="/css/images/design/edit.png" />
 					</ui:fragment>
 					<ui:fragment
-						rendered="#{((specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()) or (specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance() and !specificationBackingBean.managedBean.specMaintenance))}">
+						rendered="#{((specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring() and !specificationBackingBean.isQTStatusChecklistScoringRevision()) or (specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance() and !specificationBackingBean.managedBean.specMaintenance))}">
 						<h:graphicImage value="/css/images/design/ico-view.png" />
 					</ui:fragment>
 					<f:setPropertyActionListener value="#{stageTwoTechnical}"
@@ -354,7 +354,7 @@
 				update="@([id$=specCommitteeTechnicalChecklist])" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.create.specification']}"
 				rendered="#{specificationBackingBean.managedBean.isChecklist() or !specificationBackingBean.managedBean.qt.panel and 
-				!((specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()) or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance())}"
+				!((specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring() and !specificationBackingBean.isQTStatusChecklistScoringRevision()) or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance())}"
 				process="@this" styleClass="BtnSpacing"
 				update="@([id$=commiteeCreationSpec])"
 				actionListener="#{specificationBackingBean.technicalSpecBoValidate}"
@@ -382,7 +382,7 @@
 			</p:commandButton>
 
 			<p:commandButton styleClass="BtnSpacing" 
-				rendered="#{specificationBackingBean.managedBean.qt.panel and !((specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()) or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance())}"
+				rendered="#{specificationBackingBean.managedBean.qt.panel and !((specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring() and !specificationBackingBean.isQTStatusChecklistScoringRevision()) or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance())}"
 				value="#{lbl['lbl.sc.spec.btn.add.panel.item']}" process="@this"
 				actionListener="#{specificationBackingBean.circularListSelect(specificationBackingBean.managedBean.qt.circularVer)}"
 				oncomplete="addPanelItem.show();" update="@([id$=circularpanelItemsSelectionPopUp])" />
