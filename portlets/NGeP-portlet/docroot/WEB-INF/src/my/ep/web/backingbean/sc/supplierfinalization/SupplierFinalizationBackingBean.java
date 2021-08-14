@@ -4910,58 +4910,60 @@ return	remarksNotFound;
 							Long supplierId = recommendDtl.getSupplier()
 									.getSupplierId();
 								/* Enhancement #21694 START */
-								if (recommendDtlId != null
-										&& supplierId != null
-										&& supplierId.compareTo(currentSupplierId) == 0
-										&& specZoneId == evaZoneId) {
-									if(null!=this.getManagedBean().getScQtReverse()){
-										IQTSuppFinalizationSO qtSuppFinalizationSO = null;					
-										qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
-												ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
-										SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
-										if(recommendDtl.getRecordStatusFlg().equals(
-													DbValueConst.RECORD_STATUS_REVERSED)){
-											evalResultDtl.setSuppSelectionDisabled(false);
-										}else{
-											if(recommend.isAwardedItem()){
-												evalResultDtl.setSuppSelectionDisabled(true);
-											}else if(this.getManagedBean().getScQtReverse().getDocType().equals(ParameterConst.DOCTYPE_LETTER_OF_INTENT)){
-												//CASE WHEN REVERSE IS LOI
-												//CHECK BASED ON SC_LOI_LOA_ITEM, IF COLUMN LOI_ID IS EMPTY, MEANS THAT SUPPLIER CAN BE CHOSEN, ELSE DISABLE
-												try {
-													if(null!=recommend.getRecommendDtls()){
-														reqDTO.setQtId(getManagedBean().getScQt().getQtId());
-														reqDTO.setRecommendDtlId(recommendDtl.getRecommendDtlId());
-														SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.checkIfLoiCreated(reqDTO);
-														evalResultDtl.setSuppSelectionDisabled(resDTO.isLoiCreated()?true:false);
-													}else{
-														evalResultDtl.setSuppSelectionDisabled(true);
-													}
-												} finally {
-													qtSuppFinalizationSO = null;
-												}
-											}else{
-												//CASE WHEN REVERSE IS LOA, IF COLUMN LOA_ID IS EMPTY, MEANS THAT SUPLLIER CAN BE CHOSEN, ELSE DISABLE
-												try {
-													if(null!=recommend.getRecommendDtls()){
-														reqDTO.setQtId(getManagedBean().getScQt().getQtId());
-														reqDTO.setRecommendDtlId(recommendDtl.getRecommendDtlId());
-														SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.checkIfLoaCreated(reqDTO);
-														evalResultDtl.setSuppSelectionDisabled(resDTO.isLoiCreated()?true:false);
-													}else{
-														evalResultDtl.setSuppSelectionDisabled(true);
-													}
-												} finally {
-													qtSuppFinalizationSO = null;
-												}
-											}			
-										}
-										
+//								if (recommendDtlId != null
+//										&& supplierId != null
+//										&& supplierId.compareTo(currentSupplierId) == 0
+//										&& specZoneId == evaZoneId) {
+//									if(null!=this.getManagedBean().getScQtReverse()){
+//										IQTSuppFinalizationSO qtSuppFinalizationSO = null;					
+//										qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+//												ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+//										SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+//										if(recommendDtl.getRecordStatusFlg().equals(
+//													DbValueConst.RECORD_STATUS_REVERSED)){
+//											evalResultDtl.setSuppSelectionDisabled(false);
+//										}else{
+//											if(recommend.isAwardedItem()){
+//												evalResultDtl.setSuppSelectionDisabled(true);
+//											}else if(this.getManagedBean().getScQtReverse().getDocType().equals(ParameterConst.DOCTYPE_LETTER_OF_INTENT)){
+//												//CASE WHEN REVERSE IS LOI
+//												//CHECK BASED ON SC_LOI_LOA_ITEM, IF COLUMN LOI_ID IS EMPTY, MEANS THAT SUPPLIER CAN BE CHOSEN, ELSE DISABLE
+//												try {
+//													if(null!=recommend.getRecommendDtls()){
+//														reqDTO.setQtId(getManagedBean().getScQt().getQtId());
+//														reqDTO.setRecommendDtlId(recommendDtl.getRecommendDtlId());
+//														SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.checkIfLoiCreated(reqDTO);
+//														evalResultDtl.setSuppSelectionDisabled(resDTO.isLoiCreated()?true:false);
+//													}else{
+//														evalResultDtl.setSuppSelectionDisabled(true);
+//													}
+//												} finally {
+//													qtSuppFinalizationSO = null;
+//												}
+//											}else{
+//												//CASE WHEN REVERSE IS LOA, IF COLUMN LOA_ID IS EMPTY, MEANS THAT SUPLLIER CAN BE CHOSEN, ELSE DISABLE
+//												try {
+//													if(null!=recommend.getRecommendDtls()){
+//														reqDTO.setQtId(getManagedBean().getScQt().getQtId());
+//														reqDTO.setRecommendDtlId(recommendDtl.getRecommendDtlId());
+//														SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.checkIfLoaCreated(reqDTO);
+//														evalResultDtl.setSuppSelectionDisabled(resDTO.isLoiCreated()?true:false);
+//													}else{
+//														evalResultDtl.setSuppSelectionDisabled(true);
+//													}
+//												} finally {
+//													qtSuppFinalizationSO = null;
+//												}
+//											}			
+//										}
+//										
+//
+//									}
+//									break;
+//									/* Enhancement #21694 END*/
+//								}else 
 
-									}
-									break;
-									/* Enhancement #21694 END*/
-								}else if (recommendDtlId != null
+							if (recommendDtlId != null
 									&& supplierId != null
 									&& supplierId.equals(currentSupplierId)//#11134 - fix change to object comparator
 									&& specZoneId.equals(evaZoneId)//#11134 - fix change to object comparator
