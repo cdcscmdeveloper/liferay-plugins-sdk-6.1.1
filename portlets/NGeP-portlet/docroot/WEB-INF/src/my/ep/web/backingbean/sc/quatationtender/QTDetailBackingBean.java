@@ -3582,6 +3582,17 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 
 			Long currentStatus = qt.getQtStatus().getStatusId();
+			//#25077 Start 
+			if (currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
+					|| currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION) 
+					&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT) ){
+				if(checkSettingPopUpBPKApprovalNeeded(qt)){
+                    this.getManagedBean().setShowPopUpBPKApprovalNeeded(true);
+					RequestContext.getCurrentInstance().execute("bpkApprovalNeededDlgTemp.show()");
+					throw new EpException(" ");
+				}
+			}
+			//#25077 End 
 			//#30477 Start Vinod
 			if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
 				for(ScQtCommittee committee : this.getManagedBean().getQt().getScQtCommittees()){
@@ -10043,12 +10054,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 	}
 	
-	public void checkSettingPopUpBPKApprovalNeeded(ScQt scQt){
+	public boolean checkSettingPopUpBPKApprovalNeeded(ScQt scQt){
 		IQTDetailSO detailSO;
 		try {
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			
+			    boolean bpkFlag = false;
 			    Long statusId = scQt.getQtStatus().getStatusId();
 			    if(this.getManagedBean().isMaintanceFlow() == false && 
 				    null != statusId && (statusId.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) || 
@@ -10064,18 +10076,21 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 								String approvalCategoryCode = bpkApproval.getApprovalCategory().getParameterCode();
 								if (!bpkApproval.isDeleted()){
 									if(ParameterConst.APPROVAL_CATEGORY_BPK.equals(approvalCategoryCode)) {
-									    this.getManagedBean().setShowPopUpBPKApprovalNeeded(Boolean.TRUE);
-									}else{
-										this.getManagedBean().setShowPopUpBPKApprovalNeeded(Boolean.FALSE);
+										bpkFlag = true;
 									}
 								}
 							}
 						}
 		    		}
 			    }
+			    return bpkFlag;
 		} finally {
 			detailSO = null;
 		}
+	}
+	
+	public void resetBpkCurrentArea(){
+		this.getManagedBean().setShowPopUpBPKApprovalNeeded(false);
 	}
 	
 	public boolean isOthersApprovalForInstruction(){
