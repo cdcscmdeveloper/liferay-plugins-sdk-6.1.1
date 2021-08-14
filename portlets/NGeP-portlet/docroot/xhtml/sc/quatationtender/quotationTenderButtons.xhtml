@@ -319,8 +319,8 @@
 			</div>
 		</p:dialog>
 		<!-- 26095@hatta - end -->
-		<!-- 25077 Start -->
-		<p:dialog id="bpkApprovalNeededId" widgetVar="bpkApprovalNeededDlg"
+	    <ui:remove> #25077 Start </ui:remove>
+		<p:dialog id="bpkApprovalNeededIdTemp" widgetVar="bpkApprovalNeededDlgTemp"
 			header="#{lbl['lbl.sc.confirmation']}" resizable="false" width="auto"
 			height="100" closable="false">
 			<table>
@@ -329,15 +329,16 @@
 			</table>
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}"
-					onclick="bpkApprovalNeededDlg.hide(); blockWidget.show();" oncomplete="blockWidget.hide();" 
+					onclick="bpkApprovalNeededDlgTemp.hide(); blockWidget.show();" oncomplete="blockWidget.hide();" 
 					partialSubmit="true" process="@form" update="@form"
 					action="#{qTDetailBB.updateBpmTask(bpAction)}" />
 				<p:commandButton value="#{lbl['lbl.btn.no']}"
-					onclick="bpkApprovalNeededDlg.hide();" type="button"
-					partialSubmit="true" process="@this" />
+					onclick="bpkApprovalNeededDlgTemp.hide(); blockWidget.show();" oncomplete="blockWidget.hide();"
+					partialSubmit="true" process="@form" update="@form"
+					action="#{qTDetailBB.resetBpkCurrentArea()}" />
 			</div>
 		</p:dialog>
-		<!-- 25077 End -->
+		<ui:remove> #25077 End </ui:remove>
 		<!-- 15391 Start -->
 		<p:dialog id="specCommAlertdialog" widgetVar="specCommAlert"
 			header="#{lbl['lbl.sc.confirmation']}" resizable="false"
