@@ -151,26 +151,17 @@
 								action="#{qTDetailBB.updateBpmTask(bpmAction)}">
 							</p:commandButton>
 							<ui:remove> #30477 End </ui:remove>
-							<!-- #25077 Start -->
-							<c:if test="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION}">
-								<p:commandButton value="#{lbl[buttonLabel]}"
-									styleClass="ui-button"
-									actionListener="#{qTDetailBB.checkPopUpBPKApprovalNeeded(true)}"
-									update="@([id$=#{bpkApprovalNeededId}])" 
-									rendered="#{qTDetailBB.managedBean.showPopUpBPKApprovalNeeded}" />	
-							</c:if>	
-							<!-- #25077 End -->
 							 <p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button" onclick="cancel1QTDlg.show();"
 								update="@([id$=#{cancel1QTDlg}])"
-								rendered="#{!isClone2 and !qTDetailBB.managedBean.showPopUpBPKApprovalNeeded and qTDetailBB.isCancel(bpmAction)}">
+								rendered="#{!isClone2 and qTDetailBB.isCancel(bpmAction)}">
 							   <f:param name="skipvalidation" value="0" />
 							</p:commandButton>
 						
 							<p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button" onclick="blockWidget.show();"
 								oncomplete="blockWidget.hide();"
-								rendered="#{!isClone2 and !qTDetailBB.managedBean.showPopUpBPKApprovalNeeded and !qTDetailBB.isCancel(bpmAction)}"
+								rendered="#{!isClone2 and !qTDetailBB.isCancel(bpmAction)}"
 								action="#{qTDetailBB.updateBpmTask(bpmAction)}">
 							</p:commandButton>
 
@@ -329,22 +320,6 @@
 		</p:dialog>
 		<!-- 26095@hatta - end -->
 		<!-- 25077 Start -->
-		<p:dialog id="bpkApprovalNeededIds" widgetVar="bpkApprovalNeededDlgs"
-			header="#{lbl['lbl.sc.confirmation']}" resizable="false" width="auto"
-			height="100" closable="false">
-			<table>
-				<tr><td style="float: left;"><p:outputLabel value="#{lbl['lbl.sc.qt.approval.oth.confirmation.first']}" /></td></tr>
-				<tr><td style="float: left;"><p:outputLabel value="#{lbl['lbl.sc.qt.approval.oth.confirmation.second']}" /></td></tr>
-			</table>
-			<div class="ppRightBtn">
-			    <p:commandButton value="#{lbl['lbl.btn.yes']}"
-					oncomplete="bpkApprovalNeededDlgs.hide();submitConfirmPopUp2.show();" 
-					partialSubmit="true" process="@form" update="@form" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}"
-					onclick="bpkApprovalNeededDlgs.hide();" type="button"
-					partialSubmit="true" process="@this" />
-			</div>
-		</p:dialog>
 		<p:dialog id="bpkApprovalNeededId" widgetVar="bpkApprovalNeededDlg"
 			header="#{lbl['lbl.sc.confirmation']}" resizable="false" width="auto"
 			height="100" closable="false">
