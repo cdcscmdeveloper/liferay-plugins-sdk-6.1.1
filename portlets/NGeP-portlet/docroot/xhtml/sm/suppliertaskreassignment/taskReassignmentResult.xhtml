@@ -189,13 +189,13 @@
 		                    <p:ajax partialSubmit="true" 
 		                    		process="@this" 
 		                    		update="@form, @([dtOthersTaskAssignResult])"
-		                    		listerner="#{supplierTaskReassignmentBackingBean.checkAllOthersTasks}"/>
+		                    		listener="#{supplierTaskReassignmentBackingBean.checkAllOthersTasks}"/>
                  		</p:selectBooleanCheckbox>
 	                 </f:facet>
                      <p:selectBooleanCheckbox value="#{otherTasks.taskSelect}"> 
 	               		<p:ajax event="change" 
 	               				update="@form, @([dtOthersTaskAssignResult])"
-	               				listerner="#{supplierTaskReassignmentBackingBean.checkOthersTask}"/>
+	               				listener="#{supplierTaskReassignmentBackingBean.checkOthersTask}"/>
    	                  </p:selectBooleanCheckbox>
 				</p:column>
 				<!-- #29822 - END -->
