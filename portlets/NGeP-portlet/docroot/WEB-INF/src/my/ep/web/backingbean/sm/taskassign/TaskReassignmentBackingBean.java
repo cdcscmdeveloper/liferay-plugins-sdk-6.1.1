@@ -721,7 +721,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 			
 			// isSuccess = reassignTask(pmUser, task);
 			if (resDTO != null && resDTO.isSuccessful()) {
-				RequestContext.getCurrentInstance().execute("dlTaskReassignment.hide()");
+				RequestContext.getCurrentInstance().execute("dlSuppTaskReassignment.hide()");
 				reloadAllTaskList();
 				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), 
 						FacesMessage.SEVERITY_INFO, MessageConst.INFO_770104, 
