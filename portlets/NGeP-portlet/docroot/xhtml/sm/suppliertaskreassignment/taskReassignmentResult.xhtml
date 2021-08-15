@@ -239,13 +239,13 @@
 						value="#{lbl['lbl.btn.remove.all']}"
 						process="@this"
 						partialSubmit="true"
-						onComplete="allOtherTasksDeletePopUp.show();"
-						update="@([id$=#{allOtherTasksDeleteId}])"/>
+						update="@([id$=#{allOtherTasksDeleteId}])"
+						action="#{supplierTaskReassignmentBackingBean.showDialog('allOtherTasksDeletePopUp')}"/>
 					<p:commandButton 
 					    value="#{lbl['lbl.btn.remove']}" 
 						process="@this"
 						partialSubmit="true"
-						onComplete="multipleOthersTasksDeletePopUp.show();"
+						action="#{supplierTaskReassignmentBackingBean.showDialog('multipleOthersTasksDeletePopUp')}"
 						update="@([id$=#{multipleOthersTasksDeleteId}])"
 						disabled="#{not supplierTaskReassignmentBackingBean.managedBean.enableDeleteOthersTasksButton}"/>
 				</div>
