@@ -518,6 +518,18 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 									.getWorklistVO().getTotal());
 							resultBean.setResultList(responseDTO
 									.getWorklistVO().getWorklistItem());
+							
+							//#29822 - START
+							if(!responseDTO.getWorklistVO().getWorklistItem().isEmpty() && responseDTO.getWorklistVO().getWorklistItem().size() > 0){
+								getManagedBean().setAllOthersTasks(new ArrayList <WorklistItemVO>());
+								getManagedBean().setCheckAllOthersTasksEnabled(true);
+								for(WorklistItemVO worklist : responseDTO.getWorklistVO().getWorklistItem()){
+									getManagedBean().getAllOthersTasks().add(worklist);
+								}
+							}else{
+								getManagedBean().setCheckAllOthersTasksEnabled(false);
+							}
+							//#29822 - END
 						}
 					}
 				}
@@ -2106,9 +2118,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 		    	}
 			}
 		}
-		if ( (this.getManagedBean().getSelectedOthersTasks() != null && 
-				!this.getManagedBean().getSelectedOthersTasks().isEmpty()) &&
-				(this.getManagedBean().getSelectedOthersTasks().size() > 1) ) {
+		if (this.getManagedBean().getSelectedOthersTasks().size() > 0) {
 			this.getManagedBean().setEnableDeleteOthersTasksButton(true);
     	} else {
     		this.getManagedBean().setEnableDeleteOthersTasksButton(false);
