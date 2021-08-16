@@ -64,22 +64,22 @@
 							styleClass="selectRejectReasonTable">
 							
 							<ac:paginator for="reasonDtId" />
-							<p:ajax event="rowSelect" listener="#{backingBean.onTickOrUnTickReason}"
+							<p:ajax event="rowSelect" listener="#{backingBean.onTickOrUnTickRecommendReason}"
 								update=":#{p:component('rejectBlockPanel')}"></p:ajax>
 							<p:ajax event="rowUnselect"
-								listener="#{backingBean.onTickOrUnTickReason}"
+								listener="#{backingBean.unTickRecommendReason}"
 								update=":#{p:component('rejectBlockPanel')}"></p:ajax>
 							<p:ajax event="rowSelectCheckbox"
-								listener="#{backingBean.onTickOrUnTickReason}"
+								listener="#{backingBean.onTickOrUnTickRecommendReason}"
 								update=":#{p:component('rejectBlockPanel')}"></p:ajax>
 							<p:ajax event="rowUnselectCheckbox"
-								listener="#{backingBean.onTickOrUnTickReason}"
+								listener="#{backingBean.unTickRecommendReason}"
 								update=":#{p:component('rejectBlockPanel')}"></p:ajax>
 							<p:ajax event="rowDblselect"
-								listener="#{backingBean.onTickOrUnTickReason}"
+								listener="#{backingBean.oonTickOrUnTickRecommendReason}"
 								update=":#{p:component('rejectBlockPanel')}"></p:ajax>
 							<p:ajax event="toggleSelect"
-								listener="#{backingBean.onTickOrUnTickReason}"
+								listener="#{backingBean.allOnTickOrUnTickRecommendReason}"
 								update=":#{p:component('rejectBlockPanel')}"></p:ajax>
 							
 							<p:column selectionMode="multiple" width="1%" />

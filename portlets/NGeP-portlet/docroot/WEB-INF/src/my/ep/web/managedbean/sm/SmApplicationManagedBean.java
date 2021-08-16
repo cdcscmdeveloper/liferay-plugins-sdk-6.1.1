@@ -602,6 +602,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	
 	// #30974 - START
 	private List<PmReasonDesc> selectedRecommendRejectReasonDescs;
+	private List<PmReasonDesc> selectedRejectReasonDescs;
 	// #30974 - END
 
 	// 29379 - Site Visit Grouping Enhancement -28775 START
@@ -4428,6 +4429,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	}
 	//13362 END
 
+	//30974 - start
 	public List<PmReasonDesc> getSelectedRecommendRejectReasonDescs() {
 		return selectedRecommendRejectReasonDescs;
 	}
@@ -4435,6 +4437,15 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setSelectedRecommendRejectReasonDescs(List<PmReasonDesc> selectedRecommendRejectReasonDescs) {
 		this.selectedRecommendRejectReasonDescs = selectedRecommendRejectReasonDescs;
 	}
+	
+	public List<PmReasonDesc> getSelectedRejectReasonDescs() {
+		return selectedRejectReasonDescs;
+	}
+
+	public void setSelectedRejectReasonDescs(List<PmReasonDesc> selectedRejectReasonDescs) {
+		this.selectedRejectReasonDescs = selectedRejectReasonDescs;
+	}
+	//30974 - end
 
 	//#31043 START
 	public boolean isCategoryCodeVerified() {
