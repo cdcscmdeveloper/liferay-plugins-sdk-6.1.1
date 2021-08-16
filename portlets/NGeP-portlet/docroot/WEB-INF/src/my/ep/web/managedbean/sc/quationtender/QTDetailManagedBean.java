@@ -1704,6 +1704,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	//#25077 - Start
 	private ScQtApprovalRequest historyApprovalRequests;
 	private boolean showPopUpBPKApprovalNeeded=false;
+	private boolean resetBpkCurrentArea=false;
 	private String previousApprovalTabName;
 	//#25077 - End
 
@@ -10586,6 +10587,36 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		public void setHistoryApprovalRequests(ScQtApprovalRequest historyApprovalRequests) {
 			this.historyApprovalRequests = historyApprovalRequests;
 		}
+		
+		public boolean isShowPopUpBPKApprovalNeeded() {
+			return showPopUpBPKApprovalNeeded;
+		}
+
+		public void setShowPopUpBPKApprovalNeeded(boolean showPopUpBPKApprovalNeeded) {
+			this.showPopUpBPKApprovalNeeded = showPopUpBPKApprovalNeeded;
+		}
+		
+		public boolean isResetBpkCurrentArea() {
+			return resetBpkCurrentArea;
+		}
+
+		public void setResetBpkCurrentArea(boolean resetBpkCurrentArea) {
+			this.resetBpkCurrentArea = resetBpkCurrentArea;
+		}
+		
+		/**
+		 * @return the previousApprovalTabName
+		 */
+		public String getPreviousApprovalTabName() {
+			return previousApprovalTabName;
+		}
+		
+		/**
+		 * @param previousApprovalTabName the previousApprovalTabName to set
+		 */
+		public void setPreviousApprovalTabName(String previousApprovalTabName) {
+			this.previousApprovalTabName = previousApprovalTabName;
+		}
 		//#25077 - End
 		
 		//#25692 End
@@ -10646,32 +10677,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			this.sampleTotalScore = sampleTotalScore;
 		}
 		//#11104-End
-		
-		public boolean isShowPopUpBPKApprovalNeeded() {
-			return showPopUpBPKApprovalNeeded;
-		}
 
-		public void setShowPopUpBPKApprovalNeeded(boolean showPopUpBPKApprovalNeeded) {
-			this.showPopUpBPKApprovalNeeded = showPopUpBPKApprovalNeeded;
-		}
-		
-		/**
-		 * @return the previousApprovalTabName
-		 */
-		public String getPreviousApprovalTabName() {
-			return previousApprovalTabName;
-		}
-		
-		/**
-		 * @param previousApprovalTabName the previousApprovalTabName to set
-		 */
-		public void setPreviousApprovalTabName(String previousApprovalTabName) {
-			this.previousApprovalTabName = previousApprovalTabName;
-		}
-		//#25077 - End
-		
-		//#25692 End
-		
 		public boolean isChecklist() {
 			return isChecklist;
 		}
@@ -10687,7 +10693,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		public void setGenInfo(boolean isGenInfo) {
 			this.isGenInfo = isGenInfo;
 		}
-		
+
 		public Long getCurrentCMTStatus() {
 			return currentCMTStatus;
 		}
@@ -10840,7 +10846,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			this.isBdSfFlow = isBdSfFlow;
 		}
 		// #30451-End.
-		
+
 		/**25635-start
 		 * @return the sampleSpecCheckList
 		 */

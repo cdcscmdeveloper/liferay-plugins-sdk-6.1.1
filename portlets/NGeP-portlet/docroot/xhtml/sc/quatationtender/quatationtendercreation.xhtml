@@ -14,10 +14,21 @@
 				<td width="100%"><p:blockUI block=":form"
 						widgetVar="blockWidget">
 						<p:graphicImage value="/css/images/ajax-loader.gif" />
-					</p:blockUI> <p:messages id="specmessages" showDetail="true" autoUpdate="true"
-						closable="true" showSummary="false" severity="error, info" /> <ui:include
-						src="/xhtml/sc/quatationtender/quotationTenderButtons.xhtml" /> <ui:include
-						src="/xhtml/sc/quatationtender/quotationTenderHeader.xhtml" /></td>
+					</p:blockUI> 
+					   <ui:remove> #25077 Start </ui:remove> 
+						  <c:if test="#{qTDetailBB.managedBean.showPopUpBPKApprovalNeeded}">
+	                            <p:messages id="specmessages" showDetail="true" autoUpdate="true"
+							     closable="true" showSummary="false" severity="info"/>
+	                      </c:if>
+	                      <c:if test="#{!qTDetailBB.managedBean.showPopUpBPKApprovalNeeded}">
+	                   <ui:remove> #25077 End </ui:remove> 
+							    <p:messages id="specmessages" showDetail="true" autoUpdate="true"
+								 closable="true" showSummary="false" severity="error, info" />
+					   <ui:remove> #25077 Start </ui:remove> 
+						   </c:if> 
+					   <ui:remove> #25077 End </ui:remove>                   
+					   <ui:include src="/xhtml/sc/quatationtender/quotationTenderButtons.xhtml" />
+					   <ui:include src="/xhtml/sc/quatationtender/quotationTenderHeader.xhtml" /></td>
 			</tr>
 			<tr>
 				<td width="100%" valign="top">
