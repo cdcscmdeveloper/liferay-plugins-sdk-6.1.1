@@ -3682,10 +3682,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		ctItemPrice.setChkIndexOfRow(false);
 		getManagedBean().getSelectedItem().getCtItemPrices().remove(getManagedBean().getCtItemPrices());
 		//#30879,#31065 for Max QTY & price -Start
-		for(CtItemPrice itemPrice : getManagedBean().getSelectedItem().getCtItemPrices()){
-			itemPrice.setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
-			itemPrice.setChkIndexOfRow(false);			
-		}
+//		for(CtItemPrice itemPrice : getManagedBean().getSelectedItem().getCtItemPrices()){
+//			itemPrice.setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+//			itemPrice.setChkIndexOfRow(false);			
+//		}
 		//#30879,#31065 for Max QTY & price -End
 		newItemPrice(getManagedBean().getSelectedItem());
 	}
@@ -3700,10 +3700,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		ctItemPrice.setChkIndexOfRow(false);
 		this.getManagedBean().getSelectedServiceItem().getCtItemPrices().remove(getManagedBean().getCtServiceItemPrices());
 		//#30879,#31065 for Max QTY & price -Start
-		for(CtItemPrice itemPrice : getManagedBean().getSelectedServiceItem().getCtItemPrices()){
-			itemPrice.setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
-			itemPrice.setChkIndexOfRow(false);			
-		}
+//		for(CtItemPrice itemPrice : getManagedBean().getSelectedServiceItem().getCtItemPrices()){
+//			itemPrice.setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+//			itemPrice.setChkIndexOfRow(false);			
+//		}
 		//#30879,#31065 for Max QTY & price -End
 		newItemPrice(getManagedBean().getSelectedServiceItem());
 	}
@@ -3823,10 +3823,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		ctItemMaxQty.setChkIndexOfRow(false);
 		getManagedBean().getSelectedItem().getCtItemMaxQties().remove(getManagedBean().getCtItemMaxQty());
 		//#30879,#31065 for Max QTY & price -Start
-		for(CtItemMaxQty itemMaxQty : getManagedBean().getSelectedItem().getCtItemMaxQties()){
-			itemMaxQty.setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
-			itemMaxQty.setChkIndexOfRow(false);			
-		}
+//		for(CtItemMaxQty itemMaxQty : getManagedBean().getSelectedItem().getCtItemMaxQties()){
+//			itemMaxQty.setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+//			itemMaxQty.setChkIndexOfRow(false);			
+//		}
 		//#30879,#31065 for Max QTY & price -Start
 		newItemMaxQty(getManagedBean().getSelectedItem());
 		System.out.println("Process item removed ::::::::::::::: !!"+getManagedBean().getSelectedItem().getCtItemMaxQties().remove(getManagedBean().getCtItemMaxQty()));
@@ -4359,6 +4359,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByStax()) {
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
 			onChangeValueChecked();
+			resetItemPrice(); // #30879 
 		}
 		ConstructTabSideMenu();
 	}
@@ -4382,6 +4383,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByStax()) {
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
 			onChangeValueChecked();
+			resetItemQty(); // #30879 
 		}
 		ConstructTabSideMenu();
 	}
@@ -7437,5 +7439,68 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		
 	// End Fix - #29368 / #30856
-
+	
+	// #30879 - Start
+		/**
+		 * The method used to reset item price on amendment 
+		 * when user changed Price on the amendment.
+		 */
+		public void resetItemPrice() {
+			
+			for (CtContractItem item : ctBackingBean.getManagedBean().getContractVer().getCtContractItems()) {
+				log.info("Check Size Price :"+item.getCtItemPrices().size());
+				if(item.getCtItemPrices().size() >= 2){
+					for(CtItemPrice itemPrice : item.getCtItemPrices()){
+						if(itemPrice.isChkIndexOfRow()){
+							itemPrice.setChkIndexOfRow(false);
+							itemPrice.setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+						}
+						if(itemPrice.isChangePrice()){
+							getManagedBean().setCtItemPrices(itemPrice);
+						}
+					}
+					item.getCtItemPrices().remove(getManagedBean().getCtItemPrices());
+					newItemPrice(item);
+				}
+			}
+		}
+		// #30879 - End
+				
+		// #30879 - Start
+				/**
+				 * The method used to reset item quantity on amendment 
+				 * when user changed Max Quantity or Ceiling Quantity on the amendment.
+				 */
+				public void resetItemQty() {
+					
+					for (CtContractItem item : ctBackingBean.getManagedBean().getContractVer().getCtContractItems()) {						
+						if(item.getCtItemMaxQties().size() >= 2){
+							for(CtItemMaxQty itemMaxQty : item.getCtItemMaxQties()){
+								if(itemMaxQty.isChkIndexOfRow()){
+									itemMaxQty.setChkIndexOfRow(false);
+									itemMaxQty.setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+								}
+								if(itemMaxQty.isChangeQuantity()){
+									getManagedBean().setCtItemMaxQty(itemMaxQty);
+								}
+							}
+							item.getCtItemMaxQties().remove(getManagedBean().getCtItemMaxQty());
+							newItemMaxQty(item);
+						}
+						
+						if(item.getCtItemCeilingQties().size() >= 2){
+							for(CtItemCeilingQty itemCeilingQty : item.getCtItemCeilingQties()){
+								if(itemCeilingQty.isChkIndexOfRow()){
+									itemCeilingQty.setChkIndexOfRow(false);
+									itemCeilingQty.setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+								}
+								if(itemCeilingQty.isChangeCeilQuantity()){
+									getManagedBean().setCtItemCeilingQtys(itemCeilingQty);
+								}
+							}
+							item.getCtItemMaxQties().remove(getManagedBean().getCtItemMaxQty());
+						}
+					}
+				}
+				// #30879 - End
 	}
