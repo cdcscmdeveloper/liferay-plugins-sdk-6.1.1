@@ -749,7 +749,17 @@ public class SmSideMenuIconUtil {
 			} else if (sectionType
 					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)) {
 				//24964 & 31043 - start
-				retVal = ICON_UNTICK; 
+				//retVal = ICON_UNTICK; 
+				
+				//#31043 start
+				if(bean.isApproverUser()){
+					retVal = ICON_TICK;
+				}
+				else{
+					retVal = ICON_UNTICK;
+				}
+				//#31043 end
+				
 				boolean mandatoryDocVerified = false; 
 				boolean nonMandatoryDocVerified = false; 
 				boolean licenseMandatoryDocVerified = false; 
