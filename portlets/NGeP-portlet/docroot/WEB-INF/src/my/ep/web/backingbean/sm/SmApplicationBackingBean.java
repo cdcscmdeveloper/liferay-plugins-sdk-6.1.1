@@ -15434,10 +15434,10 @@ public class SmApplicationBackingBean extends
 						getManagedBean().getSearchRecommendRejectReason(),
 						getManagedBean().getRecommendReasonDescInitList()));
 		//		#15629 -- start - 26/1/2020
-		if(SmCommonUtil.isCollectionEmpty(getManagedBean().getSelectedRecommendReasonDescs())) {
+//		if(SmCommonUtil.isCollectionEmpty(getManagedBean().getSelectedRecommendReasonDescs())) {
 			getManagedBean().setSelectedRecommendReasonDescs(new ArrayList<PmReasonDesc>());
 			getManagedBean().setSelectedRecommendRejectReasonDescs(new ArrayList<PmReasonDesc>());
-		}
+//		}
 		//30974 - end
 		//		#15629 -- end - 26/1/2020
 
