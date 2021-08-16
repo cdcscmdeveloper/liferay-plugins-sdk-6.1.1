@@ -331,11 +331,11 @@
 				<p:commandButton value="#{lbl['lbl.btn.yes']}"
 					onclick="bpkApprovalNeededDlgTemp.hide(); blockWidget.show();" oncomplete="blockWidget.hide();" 
 					partialSubmit="true" process="@form" update="@form"
-					action="#{qTDetailBB.updateBpmTask(bpAction)}" />
+					action="#{qTDetailBB.updateBpmTask(bpAction)}" actionListener="#{qTDetailBB.resetBpkCurrentArea(true)}"/>
 				<p:commandButton value="#{lbl['lbl.btn.no']}"
 					onclick="bpkApprovalNeededDlgTemp.hide(); blockWidget.show();" oncomplete="blockWidget.hide();"
 					partialSubmit="true" process="@form" update="@form"
-					action="#{qTDetailBB.resetBpkCurrentArea()}" />
+					action="#{qTDetailBB.resetBpkCurrentArea(false)}" />
 			</div>
 		</p:dialog>
 		<ui:remove> #25077 End </ui:remove>

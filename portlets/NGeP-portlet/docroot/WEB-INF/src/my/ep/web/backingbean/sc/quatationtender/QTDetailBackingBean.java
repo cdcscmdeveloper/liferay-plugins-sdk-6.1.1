@@ -3587,9 +3587,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					|| currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION) 
 					&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT) ){
 				if(checkSettingPopUpBPKApprovalNeeded(qt)){
-                    this.getManagedBean().setShowPopUpBPKApprovalNeeded(true);
-					RequestContext.getCurrentInstance().execute("bpkApprovalNeededDlgTemp.show()");
-					throw new EpException(" ");
+					if(!this.getManagedBean().isResetBpkCurrentArea()){
+					    this.getManagedBean().setShowPopUpBPKApprovalNeeded(true);
+						RequestContext.getCurrentInstance().execute("bpkApprovalNeededDlgTemp.show()");
+						throw new EpException(" ");
+					}
 				}
 			}
 			//#25077 End 
@@ -10089,8 +10091,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 	}
 	
-	public void resetBpkCurrentArea(){
-		this.getManagedBean().setShowPopUpBPKApprovalNeeded(false);
+	public void resetBpkCurrentArea(boolean actionFlow){
+		if(actionFlow){
+		   this.getManagedBean().setResetBpkCurrentArea(true);
+		   this.getManagedBean().setShowPopUpBPKApprovalNeeded(false);
+		}else{
+		   this.getManagedBean().setShowPopUpBPKApprovalNeeded(false);
+		}
 	}
 	
 	public boolean isOthersApprovalForInstruction(){
