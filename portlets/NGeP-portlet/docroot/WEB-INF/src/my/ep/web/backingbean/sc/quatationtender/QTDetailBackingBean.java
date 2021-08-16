@@ -9685,27 +9685,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				 }
 			 }
 		}
-		//#25077 - Start
-		//#29425 - start
-		if (this.getManagedBean().isNewValueValidity() && (this.getManagedBean().getNewValidityDays() == 0 || this.getManagedBean().getNewValidityDays() > 90)) {
-			validateValidityDays(this.getManagedBean().getNewValidityDays());
+
+		if(!inProgress && showPopup){
+			RequestContext.getCurrentInstance().execute("submitConfirmPopUp2.show()");
 		}
-		disableNewValueValidity();
-		if(this.getManagedBean().isShowPopUpBPKApprovalNeeded() || this.getManagedBean().isNewValueValidity()){
-		//#29425 - end
-			ScQt scQt = this.getManagedBean().getQt();
-			Long statusId = scQt.getQtStatus().getStatusId();
-			if(statusId.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)){
-			  if(!inProgress && showPopup){
-					RequestContext.getCurrentInstance().execute("bpkApprovalNeededDlgs.show()");
-			  }
-			}
-		}else{
-		//#25077 - End
-			if(!inProgress && showPopup){
-				RequestContext.getCurrentInstance().execute("submitConfirmPopUp2.show()");
-			}
-		}
+		
 	}
 	//#29425 - start
 	public void validateNewValueForValidityDays(int newValue) {
@@ -10040,22 +10024,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 	}
 	// 25077 - Start
-	public void checkPopUpBPKApprovalNeeded(boolean showPopup){	
-		ScQt scQt = this.getManagedBean().getQt();
-		Long statusId = scQt.getQtStatus().getStatusId();
-		//#29425 - start
-		if (this.getManagedBean().isNewValueValidity() && (this.getManagedBean().getNewValidityDays() == 0 || this.getManagedBean().getNewValidityDays() > 90)) {
-			validateValidityDays(this.getManagedBean().getNewValidityDays());
-		}
-		disableNewValueValidity();
-		if(statusId.equals(QTStatusConst.QT_REVISION_PUBLICATION)){
-			if((this.getManagedBean().isNewValueValidity() || this.getManagedBean().isShowPopUpBPKApprovalNeeded()) && showPopup){
-		//#29425 - end
-				 RequestContext.getCurrentInstance().execute("bpkApprovalNeededDlg.show()");
-			} 
-		}
-	}
-	
 	public boolean checkSettingPopUpBPKApprovalNeeded(ScQt scQt){
 		IQTDetailSO detailSO;
 		try {
