@@ -25,7 +25,7 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.equiComp.shrAmt']}">
-					<h:outputText value="#{equiBean.shareAmt}">
+					<h:outputText value="#{equiBean.shareAmtSsm}"><!-- #31403 -->
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
