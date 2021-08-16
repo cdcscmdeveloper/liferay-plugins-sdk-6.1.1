@@ -202,8 +202,11 @@
                  <tr>
                  <td>
                     <p:outputLabel value="#{lbl['lbl.ct.contact.person']}"/>  </td>
-                <td>  <p:inputText disabled="true" style="width:265px;margin-bottom: 5px;" 
-                      value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.contactPerson}" />
+                <td>  
+                <!-- #30453 start -->
+                <p:inputText disabled="true" style="width:265px;margin-bottom: 5px;" 
+                      value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.pmUser.salutationCode.salutationName.concat(' ').concat(ctBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.contactPerson)}" />
+                <!-- #30453 end -->
                 </td>
                  </tr>
                   <tr>
