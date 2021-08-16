@@ -1708,6 +1708,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	//#25077 - Start
 	private ScQtApprovalRequest historyApprovalRequests;
 	private boolean showPopUpBPKApprovalNeeded=false;
+	private boolean resetBpkCurrentArea=false;
 	private String previousApprovalTabName;
 	//#25077 - End
 
@@ -10612,6 +10613,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 		public void setShowPopUpBPKApprovalNeeded(boolean showPopUpBPKApprovalNeeded) {
 			this.showPopUpBPKApprovalNeeded = showPopUpBPKApprovalNeeded;
+		}
+		
+		public boolean isResetBpkCurrentArea() {
+			return resetBpkCurrentArea;
+		}
+
+		public void setResetBpkCurrentArea(boolean resetBpkCurrentArea) {
+			this.resetBpkCurrentArea = resetBpkCurrentArea;
 		}
 		
 		/**
