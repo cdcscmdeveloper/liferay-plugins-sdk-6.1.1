@@ -1748,11 +1748,13 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					throw ex;
 				} else if ((RoleCode.FL_APPROVER.value().equals(pmUserRole.getPmRole().getRoleCode())
 						|| RoleCode.RN_APPROVER.value().equals(pmUserRole.getPmRole().getRoleCode()))
-						&& isActiveUserGroupUser() != null) {
+						//Bug #31509 - Start 
+						&& isActiveAtUserGroupUser(pmUserRole.getPmRole().getRoleCode()) != null) {
 					// check for FL Approver and RN Approver only
 					// revert it to active
 					pmUserRole.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-					throw new EpException(MessageConst.ERROR_770202, isActiveUserGroupUser());
+					throw new EpException(MessageConst.ERROR_770202, isActiveAtUserGroupUser(pmUserRole.getPmRole().getRoleCode()));
+					//Bug #31509 - End
 				} else {
 					if (!pmUserRole.isModified()) {
 						pmUserRole.setModified(true);
@@ -4272,6 +4274,14 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		List<PmUserGroup> userGroups = PmCommonUtil.retrieveUserActiveUserGroup(userId, null);
 		return userGroups != null ? userGroups.get(0) : null;
 	}
+	
+	//Bug #31509 - Start 
+	private PmUserGroup retrieveUserActiveAtUserGroup(Long userId, String role) {
+		logger.info("userActiveAtUserGroup");
+		List<PmUserGroup> userGroups = PmCommonUtil.retrieveUserActiveAtUserGroup(userId, role, null);
+		return userGroups != null ? userGroups.get(0) : null;
+	}
+	//Bug #31509 - Start 
 
 	/*
 	 * private boolean checkOldPassword(PmUser pmUser) throws PortalException,
@@ -5093,7 +5103,24 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 		return errorParams;
 	}
+	
+	//Bug #31509 - Start 
+	private String[] isActiveAtUserGroupUser(String role) {
 
+		System.out.println("isActiveUserGroupUserTest" + role);
+
+		String[] errorParams = null;
+		// check if user group user is active
+		PmUserGroup userGroup = retrieveUserActiveAtUserGroup(this.getManagedBean().getSelectedUser().getUserId(), role);
+
+		if (userGroup != null) {
+			errorParams = new String[] { userGroup.getGroupCode(), userGroup.getGroupName() };
+		}
+
+		return errorParams;
+	}
+	//Bug #31509 - End
+	
 	private boolean isUserRoleModified(PmUserRole userRole) {
 		logger.info("isUserRoleModified");
 		if (!userRole.isBrandNew()) {
