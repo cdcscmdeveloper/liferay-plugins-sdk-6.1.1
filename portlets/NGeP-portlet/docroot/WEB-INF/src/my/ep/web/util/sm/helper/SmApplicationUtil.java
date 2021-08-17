@@ -527,6 +527,8 @@ public class SmApplicationUtil {
 			}
 			UserReqDTO userReqDTO = new UserReqDTO();
 			userReqDTO.setLoginId(pmUser.getLoginId());
+			log.info("************Supplier PmUser Login Id:"
+					+ pmUser.getLoginId());
 
 			supplierSearchReqDTO.setUserId(pmUser.getUserId());
 			supplierSearchReqDTO.setAllStatuses(true);
@@ -1778,7 +1780,6 @@ public class SmApplicationUtil {
 		//16052019 - SSM INTEGRATION CR
 		int i = 0;
 		int j = 0; //#30444
-		int k = 0;
 		StringBuilder sb = new StringBuilder();		
 		sb.append("<br/>");
 		StringBuilder sbd = new StringBuilder(); //#30444 --31072021--
@@ -1835,16 +1836,6 @@ public class SmApplicationUtil {
 				if (per.isClerical()) {
 					staffCount = staffCount + 1;
 				}
-				//#30444 --START
-				if (per.isClerical() && (per.isManagement() || per.isDirector() )
-						&& !managedBean.getBusinessTypeVal().equalsIgnoreCase(
-								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)){
-					validPersonnels = false;
-					sb.append(++k + ". ");
-					sb.append(per.getName());
-					sb.append("<br/>");
-				}
-				//#30444 --END
 			}
 			if (appl.getSupplierType().equalsIgnoreCase(
 					SupplierManagementConst.STYPE_CONSULTANT)) {
@@ -2718,6 +2709,7 @@ public class SmApplicationUtil {
 				per.setIdentityResponseCode(resDTO.getStatusCode());
 				per.setIdentityResidentStatus(resDTO.getResidentStatus());
 			}
+			log.info("**** My identiy output is *****" + resDTO.getStatusCode());
 		} catch (Exception e) {
 			log.error("**********error calling myidentity api[" + e.getMessage()
 					+ "]");
@@ -3054,7 +3046,7 @@ public class SmApplicationUtil {
 	 */
 	public static List<SmStaffTotal> getStaffList(SmAppl app) {
 		List<SmStaffTotal> staffList = new ArrayList<SmStaffTotal>();
-		//log.info("****  getStaffList *********" + app.getSupplierType());
+		log.info("****  getStaffList *********" + app.getSupplierType());
 		if (app.getSupplierType().equals(
 				SupplierManagementConst.STYPE_CONSULTANT)) {
 			SmStaffTotal stf1 = new SmStaffTotal();
@@ -3312,7 +3304,7 @@ public class SmApplicationUtil {
 			} else {
 				overLapCategory = false;
 			}
-			//log.info("*** Over lap record *** " + overLapCategory);
+			log.info("*** Over lap record *** " + overLapCategory);
 			return overLapCategory;
 		} finally {
 			mofRegistrationSO = null;
@@ -3563,7 +3555,7 @@ public class SmApplicationUtil {
 		}
 		return sb.length() > 0 ? StringUtils.removeEnd(sb.toString(), ",")
 				: StringUtils.EMPTY;
-	}
+	}		
 
 	/**
 	 * Validate supporting docs decision by PO.
@@ -4019,8 +4011,8 @@ public class SmApplicationUtil {
 		String poLogin = null;
 		if (resDTO != null && resDTO.getWorkflowStatus() != null
 				&& resDTO.getWorkflowStatus().getCreatedBy() != null) {
-			//log.info("******** The user id for PO from the data ******* "
-					//+ resDTO.getWorkflowStatus().getCreatedBy());
+			log.info("******** The user id for PO from the data ******* "
+					+ resDTO.getWorkflowStatus().getCreatedBy());
 			UserReqDTO userReqDTO = new UserReqDTO();
 			userReqDTO.setUserId(resDTO.getWorkflowStatus().getCreatedBy());
 			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
@@ -4182,8 +4174,8 @@ public class SmApplicationUtil {
 				}
 			}
 
-			//log.info("validate before proceed regNo:" + smSupplier.getRegNo()
-					//+ " isBumi:" + smSupplier.isBumi());
+			log.info("validate before proceed regNo:" + smSupplier.getRegNo()
+					+ " isBumi:" + smSupplier.isBumi());
 
 			// not allowed to proceed if not answer questionaire except for
 			// bumi application and basic supplier admin role (happen for
@@ -4322,7 +4314,7 @@ public class SmApplicationUtil {
 						suppCategory.add(cat);
 					}
 				}
-				//log.info("total category:" + suppCategory.size());
+				log.info("total category:" + suppCategory.size());
 				if (suppCategory.size() >= maxCatSize) {
 					throw new EpException(MessageConst.ERROR_722675);
 				}
@@ -4658,10 +4650,10 @@ public class SmApplicationUtil {
 		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
 				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-		//log.info("** getSupplierType type ***"
-				//+ managedBean.getSmAppl().getSupplierType());
-		//log.info("** getApplCategoryType type ***"
-				//+ managedBean.getSmAppl().getApplCategoryType());
+		log.info("** getSupplierType type ***"
+				+ managedBean.getSmAppl().getSupplierType());
+		log.info("** getApplCategoryType type ***"
+				+ managedBean.getSmAppl().getApplCategoryType());
 		reqDTO.setSupplierTypeCode(managedBean.getSmAppl().getSupplierType());
 		if (managedBean.getBasicCompanyFacility() != null
 				&& managedBean.getBasicCompanyFacility().getFacilityType() != null
@@ -4688,7 +4680,7 @@ public class SmApplicationUtil {
 		} else {
 			reqDTO.setIsSpecialCategory(true);
 		}
-		//log.info("*** Bumi Percent Sent for Category L1 ***** " + bumiPerc);
+		log.info("*** Bumi Percent Sent for Category L1 ***** " + bumiPerc);
 		reqDTO.setBumiPercentage(bumiPerc);
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL1s(reqDTO);
 
@@ -4760,7 +4752,7 @@ public class SmApplicationUtil {
 		}
 		reqDTO.setBusinessTypeCode(managedBean.getSmSupplier()
 				.getBusinessType());
-		//log.info("*** Bumi Percent Sent for Category L2 ***** " + bumiPerc);
+		log.info("*** Bumi Percent Sent for Category L2 ***** " + bumiPerc);
 		reqDTO.setBumiPercentage(bumiPerc);
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL2s(reqDTO);
 
@@ -4804,10 +4796,10 @@ public class SmApplicationUtil {
 				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		reqDTO.setCategoryL2Id(categoryL2Id);
-		//log.info("** getSupplierType type ***"
-				//+ managedBean.getSmAppl().getSupplierType());
-		//log.info("** getApplCategoryType type ***"
-				//+ managedBean.getSmAppl().getApplCategoryType());
+		log.info("** getSupplierType type ***"
+				+ managedBean.getSmAppl().getSupplierType());
+		log.info("** getApplCategoryType type ***"
+				+ managedBean.getSmAppl().getApplCategoryType());
 		reqDTO.setSupplierTypeCode(managedBean.getSmAppl().getSupplierType());
 		reqDTO.setBusinessTypeCode(managedBean.getSmSupplier()
 				.getBusinessType());
@@ -4836,7 +4828,7 @@ public class SmApplicationUtil {
 				bumiPerc = 99;
 			}
 		}
-		//log.info("*** Bumi Percent Sent for Category L3 ***** " + bumiPerc);
+		log.info("*** Bumi Percent Sent for Category L3 ***** " + bumiPerc);
 		reqDTO.setBumiPercentage(bumiPerc);
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL3ListByL2Id(reqDTO);
 
@@ -4874,8 +4866,8 @@ public class SmApplicationUtil {
 							.getCategoryL3Id());
 					MofRegistrationResDTO resDTO = mofRegistrationSO
 							.hasActiveTransactionsForSupplierAndCategoryCode(reqDto);
-					//log.info("**** Active Transactions ********"
-							//+ resDTO.isHasActiveTransaction());
+					log.info("**** Active Transactions ********"
+							+ resDTO.isHasActiveTransaction());
 					if (resDTO.isHasActiveTransaction()) {
 						hasActiveTransactionCategory = true;
 						sb.append("<br/>")
@@ -4890,8 +4882,8 @@ public class SmApplicationUtil {
 					}
 				}
 			}
-			//log.info("*** Has active transaction  *** "
-					//+ hasActiveTransactionCategory);
+			log.info("*** Has active transaction  *** "
+					+ hasActiveTransactionCategory);
 			if (hasActiveTransactionCategory) {
 				throw new EpException(sb.toString());
 			}
@@ -5749,15 +5741,15 @@ public class SmApplicationUtil {
 	 */
 	public static void calculateShareHolderPercent(
 			SmApplicationManagedBean managedBean) {
-		//log.info("********* calculateShareHolderPercent ********  ");
-		//log.info(" *** Non Bumi Equity **** "
-				//+ managedBean.getSmAppl().getSmCompanyBasic()
-						//.getNonBumiEquity());
-		//log.info(" *** Bumi Equity **** "
-				//+ managedBean.getSmAppl().getSmCompanyBasic().getBumiEquity());
-		//log.info(" *** Non MY Equity **** "
-				//+ managedBean.getSmAppl().getSmCompanyBasic()
-					//	.getForeignerEquity());
+		log.info("********* calculateShareHolderPercent ********  ");
+		log.info(" *** Non Bumi Equity **** "
+				+ managedBean.getSmAppl().getSmCompanyBasic()
+						.getNonBumiEquity());
+		log.info(" *** Bumi Equity **** "
+				+ managedBean.getSmAppl().getSmCompanyBasic().getBumiEquity());
+		log.info(" *** Non MY Equity **** "
+				+ managedBean.getSmAppl().getSmCompanyBasic()
+						.getForeignerEquity());
 
 		IPersonnelSO perSO = null;
 		String perType = null;
@@ -5809,7 +5801,7 @@ public class SmApplicationUtil {
 			}
 			if (resDto.getSmPersonnelList() != null) {
 				selPerList = resDto.getSmPersonnelList();
-				//log.info("*** List retrieved *** " + selPerList.size());
+				log.info("*** List retrieved *** " + selPerList.size());
 			}
 			for (SmPersonnel per : selPerList) {
 				if ((per.getShareAmt() == null)) {
@@ -6205,8 +6197,8 @@ public class SmApplicationUtil {
 				}
 			}
 		}
-		//log.info("*** isAllCatcodeVerified Valid For Approval After category checking Decision **** "
-				//+ valid);
+		log.info("*** isAllCatcodeVerified Valid For Approval After category checking Decision **** "
+				+ valid);
 		if (valid) {
 			valid = false;
 			if (SmApplicationUtil.isAllSuppDocAlreadyVerified(managedBean
@@ -6219,7 +6211,7 @@ public class SmApplicationUtil {
 				valid = true;
 			}
 		}
-		//log.info("*** Valid For Approval Final Decision **** " + valid);
+		log.info("*** Valid For Approval Final Decision **** " + valid);
 		managedBean.setAllowedToApprove(valid);
 	}
 
