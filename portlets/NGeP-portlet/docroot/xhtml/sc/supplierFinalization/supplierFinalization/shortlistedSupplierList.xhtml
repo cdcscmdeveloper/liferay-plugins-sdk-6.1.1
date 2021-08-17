@@ -248,12 +248,14 @@
 					</h:outputText>					
 				</p:column>
 				
-				<p:column style="text-align:left;">
+				<ui:remove>#11134 -start-</ui:remove>
+				<p:column style="text-align:left;white-space: normal;">
+				<ui:remove>#11134 -end-</ui:remove>
 					<h:outputText value="#{shortlistedSupp.deskOfficerRemark}"/>
 				</p:column>
 
 				<ui:remove>#11134 -start-</ui:remove>
-				<p:column style="text-align:left;"
+				<p:column style="text-align:left;white-space: normal;"
 					rendered="#{haveSupplierRejection}">
 					<h:outputText
 						value="#{shortlistedSupp.supplierRejectionRemark.remark}" />
