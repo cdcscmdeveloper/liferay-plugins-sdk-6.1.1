@@ -10,7 +10,7 @@
 		<p:dataTable id="demoItemListId" var="demoSpecTempList"
 			value="#{demoInvBB.managedBean.byItemList}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			rowKey="#{demoSpecTempList}">
+			rowKey="#{demoSpecTempList}" rowIndexVar="pIndex">
 			<p:column headerText="By Item">
 				<h:outputText style="white-space: normal; font-weight:bold"
 					value="#{demoSpecTempList.itemName}"></h:outputText>
@@ -56,10 +56,10 @@
 								value="#{lbl['lbl.sc.demo.meeting.date.tooltip']}" />
 						</f:facet>
 
-						<ac:dateTime id="demoStartDate" required="true"
+						<ac:dateTime id="demoStartDate" required="false"
 							label="#{lbl['lbl.sc.start.date']}" disabled="#{disableMeeting}"
 							value="#{byItemList.scQtDemoSchedule.demoStartDate}"
-							update="@([id$=demoStartDate])" rowIndex="#{rowIndex}">
+							update="@([id$=demoStartDate])" rowIndex="#{rowIndex}#{pIndex}">
 						</ac:dateTime>
 						<p:message id="demoStartDateMsg" for="demoStartDate"
 							display="icon" showDetail="false"></p:message>
@@ -72,11 +72,11 @@
 							<h:outputText value="#{lbl['lbl.ss.item.detail.end.date']}" />
 						</f:facet>
 
-						<ac:dateTime id="demoEndDate" required="true"
+						<ac:dateTime id="demoEndDate" required="false"
 							label="#{lbl['lbl.ss.item.detail.end.date']}"
 							disabled="#{disableMeeting}"
 							value="#{byItemList.scQtDemoSchedule.demoEndDate}"
-							update="@([id$=demoEndDate])" rowIndex="#{rowIndex}">
+							update="@([id$=demoEndDate])" rowIndex="#{rowIndex}#{pIndex}">
 						</ac:dateTime>
 						<p:message id="demoEndDateMsg" for="demoEndDate" display="icon"
 							showDetail="false"></p:message>
