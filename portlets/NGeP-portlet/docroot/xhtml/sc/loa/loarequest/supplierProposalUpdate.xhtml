@@ -56,16 +56,16 @@
 			<br />
 			<table border="0" cellspacing="0" cellpadding="0" width="100%">
 				<tr valign= "top" >
-					<td width="20%"><h:outputLabel
-							value="#{lbl['lbl.sc.price.inquiry.item.name']}:" /></td>
+					<td width="20%"><h:outputLabel style="text-align:left"
+							value="#{lbl['lbl.sc.price.inquiry.item.name']}" /><h:outputLabel value=":" /></td>
 					<td width="80%"><h:outputText id="itemName"
 							value="#{lOADetailBackingBean.selectedScLoiLoaItem.scRequestItem.itemName}"
 							style="width:310px;">
 						</h:outputText></td>
 				</tr>
 				<tr valign= "top" >
-					<td width="20%"><h:outputLabel
-							value="#{lbl['lbl.sc.supplier.offer']}:" /></td>
+					<td width="20%"><h:outputLabel style="text-align:left"
+							value="#{lbl['lbl.sc.supplier.offer']}" /><h:outputLabel value=":" /></td>
 					<td width="80%"><h:outputText id="supplierOffer" rendered="#{!isMultipleSuppOffer}"
 							value="#{empty lOADetailBackingBean.selectedSupplierOffer ? lOADetailBackingBean.notAvailabilityStr : lOADetailBackingBean.selectedSupplierOffer}"
 							style="width:310px;">
@@ -77,9 +77,9 @@
 						</td>
 				</tr>
 				<tr>
-					<td width="20%"><h:outputLabel
-							value="#{lbl['lbl.sc.new.supplier.offered']}:" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
+					<td width="20%"><h:outputLabel style="text-align:left"
+							value="#{lbl['lbl.sc.new.supplier.offered']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /><h:outputLabel value=":" /></td>
 					<td width="80%"><p:inputText id="newSupplierOfferedInput"
 							value="#{lOADetailBackingBean.managedBean.newSupplierOffered}"
 							style="width:310px;" maxlength="1000" 
@@ -92,8 +92,8 @@
 						</p:commandLink></td>
 				</tr>
 				<tr>
-					<td width="20%"><h:outputLabel
-							value="#{lbl['lbl.sc.justification']}:" /> <p:outputLabel
+					<td width="20%"><h:outputLabel style="text-align:left"
+							value="#{lbl['lbl.sc.justification']}" /><h:outputLabel value=":" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 					<td width="80%"><p:inputText
 							id="supplierUpdateProposalJustification"
