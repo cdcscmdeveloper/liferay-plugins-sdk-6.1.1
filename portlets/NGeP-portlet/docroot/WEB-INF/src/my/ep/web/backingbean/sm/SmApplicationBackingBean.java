@@ -9308,6 +9308,7 @@ public class SmApplicationBackingBean extends
 		
 		getManagedBean().setSelectedRecommendReasonDescs(new ArrayList<PmReasonDesc>());
 		getManagedBean().setSelectedRecommendRejectReasonDescs(new ArrayList<PmReasonDesc>());
+		setReasonIdList();
 		
 		searchRecommendRejectedReason();
 		//30974 - end
@@ -9366,6 +9367,13 @@ public class SmApplicationBackingBean extends
 		} else {
 			getManagedBean().setChangeCurrRegStatus(false);
 		}
+		
+		//30974 - start
+		getManagedBean().setSelectedRecommendRejectReasonDescs(getManagedBean().getSelectedReasonDescs());
+		getManagedBean().setSelectedRejectReasonDescs(getManagedBean().getSelectedReasonDescs());
+		setReasonIdList();
+		//30974 - end
+		
 		RequestContext.getCurrentInstance().execute(dialog + ".show()");
 	}
 
@@ -12344,6 +12352,30 @@ public class SmApplicationBackingBean extends
 				SmApplicationUtil.getWildCardSearchRejectReason(
 						getManagedBean().getSearchRejectReason(),
 						getManagedBean().getReasonDescInitList()));
+		
+		//30974 - start
+		if (getManagedBean().getSelectedRecommendRejectReasonDescs() != null
+				&& getManagedBean().getSelectedRecommendRejectReasonDescs().size() > 0) {
+			for (PmReasonDesc reason : getManagedBean().getSelectedRecommendRejectReasonDescs()) {
+				if (getManagedBean().getSearchRejectReason() != null
+						&& !StringUtils.upperCase(reason.getReasonDesc()).contains(
+								StringUtils.upperCase(getManagedBean().getSearchRejectReason()))) {
+					getManagedBean().getReasonDescInitList().add(reason);
+				}
+			}
+		}
+		
+		if (getManagedBean().getSelectedRecommendRejectReasonDescs() != null
+				&& getManagedBean().getSelectedRecommendRejectReasonDescs().size() > 0) {
+			getManagedBean().setSelectedReasonDescs(getManagedBean().getSelectedRecommendRejectReasonDescs());
+			getManagedBean().setSelectedRecommendRejectReasonDescs(getManagedBean().getSelectedRecommendRejectReasonDescs());	
+			setReasonIdList();
+		}else{
+			getManagedBean().setSelectedReasonDescs(getManagedBean().getSelectedRejectReasonDescs());
+			getManagedBean().setSelectedRecommendRejectReasonDescs(getManagedBean().getSelectedRejectReasonDescs());
+			setReasonIdList();
+		}
+		//30974 - end
 	}
 
 	/**
@@ -12360,9 +12392,13 @@ public class SmApplicationBackingBean extends
 						.getSmSupplier().getBusinessType(), getManagedBean()
 						.getSmAppl().getApplType()));
 		//	#15629 -- start - 26/1/2020
-		if(SmCommonUtil.isCollectionEmpty(getManagedBean().getSelectedReasonDescs())) {
-			getManagedBean().setSelectedReasonDescs(new ArrayList<PmReasonDesc>());
-		} 
+//		if(SmCommonUtil.isCollectionEmpty(getManagedBean().getSelectedReasonDescs())) {	
+		//30974 - Start
+		getManagedBean().setSelectedReasonDescs(getManagedBean().getSelectedRejectReasonDescs());
+		getManagedBean().setSelectedRecommendRejectReasonDescs(getManagedBean().getSelectedRejectReasonDescs());
+		setReasonIdList();
+//		} 
+		//30974 - Start
 		// #15629 -- end - 26/1/2020
 
 	}
@@ -14893,11 +14929,12 @@ public class SmApplicationBackingBean extends
 						getManagedBean().getSearchRecommendRejectReason(),
 						getManagedBean().getRecommendReasonDescInitList()));
 		//		#15629 -- start - 26/1/2020
-		if(SmCommonUtil.isCollectionEmpty(getManagedBean().getSelectedRecommendReasonDescs())) {
+//		if(SmCommonUtil.isCollectionEmpty(getManagedBean().getSelectedRecommendReasonDescs())) {
 			getManagedBean().setSelectedRecommendReasonDescs(new ArrayList<PmReasonDesc>());
 			getManagedBean().setSelectedRecommendRejectReasonDescs(new ArrayList<PmReasonDesc>());
-		} 
 		
+			setReasonIdList();
+//		}
 		//30974 - end	
 		//		#15629 -- end - 26/1/2020
 
@@ -14978,17 +15015,7 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setRecommendReasonId(null);
 		}*/
 		
-		if (!EntityHelper.isCollectionEmpty(getManagedBean()
-				.getSelectedRecommendRejectReasonDescs())) {
-			List<Long> reasonIdList = new ArrayList<Long>();
-			for (PmReasonDesc reason : getManagedBean().getSelectedRecommendRejectReasonDescs()) {
-				reasonIdList.add(reason.getPmReason().getReasonId());
-			}
-			getManagedBean().setRecommendReasonId(
-					reasonIdList.toArray(new Long[reasonIdList.size()]));
-		}else{
-			getManagedBean().setRecommendReasonId(null);
-		}
+		setReasonIdList();
 		verifySelectedRecommendRejectReasons();
 	}
 	//30974 - End
@@ -15001,15 +15028,7 @@ public class SmApplicationBackingBean extends
 
 		getManagedBean().getSelectedRecommendRejectReasonDescs().remove(reasonEvent);
 
-		if (!EntityHelper.isCollectionEmpty(getManagedBean().getSelectedRecommendRejectReasonDescs())) {
-			List<Long> reasonIdList = new ArrayList<Long>();
-			for (PmReasonDesc reason : getManagedBean().getSelectedRecommendRejectReasonDescs()) {
-				reasonIdList.add(reason.getPmReason().getReasonId());
-			}
-			getManagedBean().setRecommendReasonId(reasonIdList.toArray(new Long[reasonIdList.size()]));
-		} else {
-			getManagedBean().setRecommendReasonId(null);
-		}
+		setReasonIdList();
 		verifySelectedRecommendRejectReasons();
 	}
 	//30974 - End
@@ -15048,17 +15067,7 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setRecommendReasonId(null);
 		}*/
 		
-		if (!EntityHelper.isCollectionEmpty(getManagedBean()
-				.getSelectedRecommendRejectReasonDescs())) {
-			List<Long> reasonIdList = new ArrayList<Long>();
-			for (PmReasonDesc reason : getManagedBean().getSelectedRecommendRejectReasonDescs()) {
-				reasonIdList.add(reason.getPmReason().getReasonId());
-			}
-			getManagedBean().setRecommendReasonId(
-					reasonIdList.toArray(new Long[reasonIdList.size()]));
-		}else{
-			getManagedBean().setRecommendReasonId(null);
-		}
+		setReasonIdList();
 		verifySelectedRecommendRejectReasons();
 	}
 	//30974 - End
@@ -15184,4 +15193,25 @@ public class SmApplicationBackingBean extends
 		return wfStatus;
 	}
 	//30713 - End
+	//30974 - Start
+	public void setReasonIdList(){
+		List<Long> reasonIdList = new ArrayList<Long>();
+		if (!EntityHelper.isCollectionEmpty(getManagedBean()
+				.getSelectedRecommendRejectReasonDescs())) {
+			for (PmReasonDesc reason : getManagedBean().getSelectedRecommendRejectReasonDescs()) {
+				reasonIdList.add(reason.getPmReason().getReasonId());
+			}
+			if(getManagedBean().getSelectedRejectReasonDescs() != null){
+				getManagedBean().setReasonId(
+						reasonIdList.toArray(new Long[reasonIdList.size()]));
+			}else{
+				getManagedBean().setRecommendReasonId(
+						reasonIdList.toArray(new Long[reasonIdList.size()]));	
+			}	
+		}else{
+			getManagedBean().setReasonId(null);
+			getManagedBean().setRecommendReasonId(null);
+		}
+	}
+	//30974 - End
 }
