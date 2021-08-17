@@ -39,7 +39,7 @@
 				</h:outputText>
 
 				<c:if
-					test="#{backingBean.managedBean.smSupplier.businessType == 'C' or backingBean.managedBean.smSupplier.businessType == 'F'}">
+					test="#{backingBean.managedBean.smSupplier.businessType == SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG or backingBean.managedBean.smSupplier.businessType == SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG}"> <!-- #31403 -->
 					<h:outputLabel style="font-weight:bold"
 						value="#{lbl['lbl.sm.account.rob.expire']} :"></h:outputLabel>
 					<h:outputText 
@@ -91,7 +91,7 @@
 		</p:panel>
 
 		<c:if
-			test="#{backingBean.managedBean.smSupplier.businessType == 'C' or backingBean.managedBean.smSupplier.businessType == 'F'}">
+			test="#{backingBean.managedBean.smSupplier.businessType == SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG or backingBean.managedBean.smSupplier.businessType == SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG}"> <!-- #31403 -->
 			<ui:include
 				src="/xhtml/sm/renewMofApplication/viewSsmInformationBranch.xhtml" />
 		</c:if>
@@ -99,8 +99,10 @@
 		<ui:include
 			src="/xhtml/sm/renewMofApplication/viewSsmInformationOwnerDirector.xhtml" />
 		
-		<ui:include
-			src="/xhtml/sm/renewMofApplication/viewSsmInformationCompanyEquity.xhtml" />
+		<c:if test="#{backingBean.managedBean.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD or backingBean.managedBean.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD}"><!-- #31403 -->
+			<ui:include
+				src="/xhtml/sm/renewMofApplication/viewSsmInformationCompanyEquity.xhtml" />
+		</c:if><!-- #31403 -->
 
 		<ui:include
 			src="/xhtml/sm/renewMofApplication/viewSsmInformationPersonnel.xhtml" />

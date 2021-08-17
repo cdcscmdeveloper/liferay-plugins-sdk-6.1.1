@@ -110,21 +110,20 @@
 					<f:convertDateTime pattern="dd/MM/yyyy" />
 				</h:outputText>
 			</p:column>
-
-			<p:column styleClass="column-align-center">
+			
+			<p:column styleClass="column-align-center" rendered="#{backingBean.managedBean.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD or backingBean.managedBean.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD}"> <!-- #31403 -->
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.equiComp.shrAmt']}" />
-				</f:facet>
-				<h:outputText value="#{varOwner.shareAmt}">
+					</f:facet>
+				<h:outputText value="#{varOwner.shareAmtSsm}"><!-- #31403 -->
 					<f:convertNumber groupingUsed="true" maxFractionDigits="2" minFractionDigits="2" />
 				</h:outputText>
 			</p:column>
-
 		</p:dataTable>
 	</p:panel>
 
 	<!-- Director Information -->
-	<c:if test="#{backingBean.managedBean.smSupplier.businessType == 'I' or backingBean.managedBean.smSupplier.businessType == 'J'}">
+	<c:if test="#{backingBean.managedBean.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD or backingBean.managedBean.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD}"> <!-- #31403 -->
 		<p:panel header="#{lbl['lbl.sm.directorinfo']}" id="directorBusiness"
 			toggleable="true">
 
@@ -226,7 +225,7 @@
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sm.equiComp.shrAmt']}" />
 					</f:facet>
-					<h:outputText value="#{varDirector.shareAmt}">
+					<h:outputText value="#{varDirector.shareAmtSsm}"> <!-- #31403 -->
 						<f:convertNumber groupingUsed="true" maxFractionDigits="2"
 							minFractionDigits="2" />
 					</h:outputText>
