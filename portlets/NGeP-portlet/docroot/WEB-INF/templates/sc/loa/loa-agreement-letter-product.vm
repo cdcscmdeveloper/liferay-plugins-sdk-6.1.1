@@ -2313,7 +2313,7 @@ u {
 								</tr>
 
 								</tr>
-								<td valign="top" bgcolor="#d0eaee" colspan="9">
+								<td valign="top" bgcolor="#d0eaee" colspan="8">
 										#if ($tplspecQuestion.specList)
 										#set($specList = $tplspecQuestion.specList)
 										#set($uniquePosts = [])
