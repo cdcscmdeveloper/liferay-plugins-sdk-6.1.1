@@ -5992,29 +5992,24 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (getManagedBean().getTaskName() != null) {
 				if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)
 						&&  !getManagedBean().isReadOnly()) {
-					context.put("supplierName", getFacesScopes().getUserSessionBean().getUserName());
-					context.put("supplierIcNo", getFacesScopes().getUserSessionBean().getIdentificationNo());
-					context.put("supplierAckDate", dateSDF.format(new Date()));
 					//#30453 start
-					if(getFacesScopes().getUserSessionBean().getSalutationCode() != null){
-						context.put("supplierSalutation",getFacesScopes().getUserSessionBean().getSalutationCode().getSalutationName());
-					}else if(getFacesScopes().getUserSessionBean().getSalutationCode() == null){
-						context.put("supplierSalutation","");
-					}
+					if(getFacesScopes().getUserSessionBean().getSalutationCode() != null)
+						context.put("supplierName", getFacesScopes().getUserSessionBean().getSalutationCode().getSalutationName().concat(" ").concat(getFacesScopes().getUserSessionBean().getUserName()));
+					else
+						context.put("supplierName", getFacesScopes().getUserSessionBean().getUserName());
 					//#30453 end
+					context.put("supplierIcNo", getFacesScopes().getUserSessionBean().getIdentificationNo());
+					context.put("supplierAckDate", dateSDF.format(new Date()));					
+					
 				} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)) {
-					context.put("supplierName", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getUserName());
+					//#30453 start
+					if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getSalutationCode() != null)
+						context.put("supplierName", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getSalutationCode().getSalutationName().concat(" ").concat(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getUserName()));
+					else
+						context.put("supplierName", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getUserName());
+					//#30453 end
 					context.put("supplierIcNo", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getIdentificationNo());
 					context.put("supplierAckDate", dateSDF.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckDate()));
-					//#30453 start
-					if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getSalutationCode()==null)
-					log.info("No salutation");
-					if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getSalutationCode() != null){
-						context.put("supplierSalutation", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getSalutationCode().getSalutationName());
-					}else if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getSalutationCode() == null){
-						context.put("supplierSalutation","");
-					}
-					//#30453 end
 				}
 			}
 			context.put("companyName", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierName());

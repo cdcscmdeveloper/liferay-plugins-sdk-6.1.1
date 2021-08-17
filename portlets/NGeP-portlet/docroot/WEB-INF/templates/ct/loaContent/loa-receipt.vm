@@ -35,7 +35,7 @@
 					: 
 				</td>
 				<td width="50%">
-					$supplierSalutation $supplierName
+					$supplierName
 				</td>
 			</tr>
 			<tr  valign="top" >
