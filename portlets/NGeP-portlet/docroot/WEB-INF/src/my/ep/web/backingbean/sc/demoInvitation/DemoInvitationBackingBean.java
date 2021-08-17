@@ -258,6 +258,13 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 						this.getManagedBean().setByItemList(scQtDemo.getScQtDemoItemList());
 					}
 
+					List<ScQtDemoContact> ct = scQtDemo.getScQtDemoContactList();
+					for (ScQtDemoContact c : ct) {
+						if (c.isDeskofficer()) {
+							c.setDisableRowSelection(true);
+						}
+					}
+
 					this.getManagedBean().setScQtDemoContactList(scQtDemo.getScQtDemoContactList());
 					this.getManagedBean().setDemoRemark(scQtDemo.getDemoInvRemark());
 					this.getManagedBean().setScQtDemo(scQtDemo);
@@ -625,6 +632,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 				demoCtc.setFaxNo(resDTO.getPmUser().getFaxNo());
 				demoCtc.setEmail(resDTO.getPmUser().getEmail());
 				demoCtc.setDisableRowSelection(true);
+				demoCtc.setDeskofficer(true);
 				demoCtc.setScQtDemo(qtDemo);
 				demoContactList.add(demoCtc);
 				this.getManagedBean().setScQtDemoContactList(demoContactList);
@@ -757,24 +765,22 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 	}
 
 	public void deleteContactPerson() {
-		try {
-			IQTDemoSO qtDemoSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDemoSO.class);
+		IQTDemoSO qtDemoSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTDemoSO.class);
 
-			List<ScQtDemoContact> selectedDemoContact = new ArrayList<ScQtDemoContact>();
-			List<ScQtDemoContact> demoConList = this.getManagedBean().getScQtDemoContactList();
-			selectedDemoContact = this.getManagedBean().getSelectedContactList();
+		List<ScQtDemoContact> selectedDemoContact = new ArrayList<ScQtDemoContact>();
+		List<ScQtDemoContact> demoConList = this.getManagedBean().getScQtDemoContactList();
+		selectedDemoContact = this.getManagedBean().getSelectedContactList();
 
-			for (ScQtDemoContact c : selectedDemoContact) {
-				if (c.getDemoContactId() != null) {
-					qtDemoSO.removeContactPerson(c);
-				}
-				demoConList.remove(c);
+		for (ScQtDemoContact c : selectedDemoContact) {
+			if (c.isDeskofficer()) {
+				throw new EpException(MessageConst.ERROR_760526);
+			} else if (c.getDemoContactId() != null) {
+				qtDemoSO.removeContactPerson(c);
 			}
-			this.getManagedBean().setScQtDemoContactList(demoConList);
-		} catch (Exception e) {
-			e.printStackTrace();
+			demoConList.remove(c);
 		}
+		this.getManagedBean().setScQtDemoContactList(demoConList);
 	}
 
 	public DemoResDTO saveDemoInvitation() {
@@ -794,7 +800,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 					scQtDemo.setScQtDemoItemList(null);
 				} else if (this.getManagedBean().getDemoInvBy().equalsIgnoreCase(SourcingConstants.BY_ITEM)) {
 					scQtDemo.setScQtDemoSupplierList(null);
-					scQtDemo.setScQtDemoItemList(this.getManagedBean().getByItemList());
+					// scQtDemo.setScQtDemoItemList(this.getManagedBean().getByItemList());
 				}
 
 				if (!resDto.getScQtDemo().getDemoCategoryId().getParameterCode()
