@@ -267,14 +267,16 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	//#26169 #38 - Start
 	private boolean isHasSupplierQualified;
 	//#26169 #38 - End
-	// #18685 - Start 
-	private ScRemark pendingRecItemizedRemark;
-	private ScRemark pendingRecPackageRemark;
+	
+	// #18685 - Start. 
+	private List<ScRemark> pendingRecItemizedRemark;
+	private List<ScRemark> pendingRecPackageRemark;
+	
     // #25638 - Start.
 	private List<ScRemark> newSfRemarks;
     // #25638 - End.
 	private List<ScRemark> scRemarks;
-	// #18685 - End 
+	// #18685 - End. 
 	
 	// #27502 - Start 
 	private boolean isMofFinalization;
@@ -2290,11 +2292,11 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 	//#26169 #38 - End
 	
-	// #18685 - Start
+	// #18685 - Start.
 	/**
 	 * @return the pendingRecItemizedRemark
 	 */
-	public ScRemark getPendingRecItemizedRemark() {
+	public List<ScRemark> getPendingRecItemizedRemark() {
 		return pendingRecItemizedRemark;
 	}
 
@@ -2302,14 +2304,14 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 * @param pendingRecItemizedRemark the pendingRecItemizedRemark to set
 	 */
 	public void setPendingRecItemizedRemark(
-	    ScRemark pendingRecItemizedRemark) {
+	    List<ScRemark> pendingRecItemizedRemark) {
 		this.pendingRecItemizedRemark = pendingRecItemizedRemark;
 	}
 
 	/**
 	 * @return the pendingRecPackageRemark
 	 */
-	public ScRemark getPendingRecPackageRemark() {
+	public List<ScRemark> getPendingRecPackageRemark() {
 		return pendingRecPackageRemark;
 	}
 
@@ -2317,7 +2319,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 * @param pendingRecPackageRemark the pendingRecPackageRemark to set
 	 */
 	public void setPendingRecPackageRemark(
-	    ScRemark pendingRecPackageRemark) {
+	    List<ScRemark> pendingRecPackageRemark) {
 		this.pendingRecPackageRemark = pendingRecPackageRemark;
 	}
 	
@@ -2352,7 +2354,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 
     // #25638 - End.
 
-    //#18685 - End
+    //#18685 - End.
     
 	public boolean isMofFinalization() {
 		return isMofFinalization;
