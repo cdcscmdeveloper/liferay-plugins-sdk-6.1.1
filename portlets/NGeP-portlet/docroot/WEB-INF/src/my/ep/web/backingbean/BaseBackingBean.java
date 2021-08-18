@@ -2909,10 +2909,18 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 	}
 
-	//SSM CHANGES #27201
+	//SSM CHANGES #27201	
 	public SmPersonnel setDesignationSSM(SmPersonnel personnel){
-		if(personnel.getDesignation() != null){
-			String designation = populateDesignationSSM(personnel.getDesignation());
+		//Start #27346
+		if(personnel.getDesignation() != null || personnel.getSsmPosition() != null){
+			String position = "";
+			if(personnel.getDesignation() != null && !"".equalsIgnoreCase(personnel.getDesignation())){
+				position = personnel.getDesignation();
+			}else if(personnel.getSsmPosition() != null && !"".equalsIgnoreCase(personnel.getSsmPosition())){
+				position = personnel.getSsmPosition();
+			}
+			String designation = populateDesignationSSM(position);
+		//End #27346
 			if(personnel.isSsmData()){
 				if(personnel.isEquityOwner()){
 					personnel.setDesignation(designation);
