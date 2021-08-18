@@ -290,13 +290,17 @@
 						action="#{specificationBackingBean.financialChecklistEditAction(index,stageTwofunctional,'F')}"
 						rendered="#{stageTwofunctional.definationType.parameterCode eq 'TS' or ((stageTwofunctional.pmDocument ne null) and (stageTwofunctional.pmDocument.docDefinitionKey eq 'FG' or stageTwofunctional.pmDocument.docDefinitionKey eq 'FN' or stageTwofunctional.pmDocument.docDefinitionKey eq 'BS' or ((stageTwofunctional.pmDocument.docDefinitionKey eq 'CH' or stageTwofunctional.pmDocument.docDefinitionKey eq 'AL' or stageTwofunctional.pmDocument.docDefinitionKey eq 'PC' or stageTwofunctional.pmDocument.docDefinitionKey eq 'SD' or stageTwofunctional.pmDocument.docDefinitionKey eq 'CF') and stageTwofunctional.scoringReq)))}">
 
+						<!-- 8979 -start- -->
 						<ui:fragment
 							rendered="#{specificationBackingBean.isQTStatusChecklistScoring() or 
-						(!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision()) or(specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance() and specificationBackingBean.managedBean.specMaintenance)}">
+						(specificationBackingBean.isQTStatusChecklistScoringRevision()) or(specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance() and specificationBackingBean.managedBean.specMaintenance)}">
+						<!-- 8979 -end- -->
 							<h:graphicImage value="/css/images/design/edit.png" />
 						</ui:fragment>
+						<!-- 8979 -start- -->
 						<ui:fragment
-							rendered="#{(specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()) or(specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance() and !specificationBackingBean.managedBean.specMaintenance)}">
+							rendered="#{(specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring() and !specificationBackingBean.isQTStatusChecklistScoringRevision()) or(specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance() and !specificationBackingBean.managedBean.specMaintenance)}">
+						<!-- 8979 -end- -->
 							<h:graphicImage value="/css/images/design/ico-view.png" />
 						</ui:fragment>
 						<f:setPropertyActionListener value="#{stageTwofunctional}"
