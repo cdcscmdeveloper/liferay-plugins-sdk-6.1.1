@@ -12399,11 +12399,19 @@ public class SmApplicationBackingBean extends
 		//	#15629 -- start - 26/1/2020
 //		if(SmCommonUtil.isCollectionEmpty(getManagedBean().getSelectedReasonDescs())) {	
 		//30974 - Start
-		getManagedBean().setSelectedReasonDescs(getManagedBean().getSelectedRejectReasonDescs());
-		getManagedBean().setSelectedRecommendRejectReasonDescs(getManagedBean().getSelectedRejectReasonDescs());
+		getManagedBean().setSelectedReasonDescs(new ArrayList<PmReasonDesc>());
+		for(SmApplRejectReason smApplRejectReason : getManagedBean().getSmAppl().getSmApplRejectReasons()){
+			for(PmReasonDesc pmReasonDesc : getManagedBean().getReasonDescList()){
+				if(smApplRejectReason.getPmReason().getReasonId().equals(pmReasonDesc.getPmReason().getReasonId())){
+					getManagedBean().getSelectedReasonDescs().add(pmReasonDesc);
+				}
+			}			
+		}
+		
+		getManagedBean().setSelectedRecommendRejectReasonDescs(getManagedBean().getSelectedReasonDescs());
 		setReasonIdList();
 //		} 
-		//30974 - Start
+		//30974 - end
 		// #15629 -- end - 26/1/2020
 
 	}
