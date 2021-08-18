@@ -483,7 +483,7 @@ u {
 				</tr>
 				<tr>
 					#if ($isZonal)
-						<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="9" >
+						<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="8" >
 							#if ($scLoiLoaItem.itemSpecificationList)
 								#set($rowCount = 0)
 								#foreach($tpqSpec in $scLoiLoaItem.itemSpecificationList)
@@ -510,7 +510,7 @@ u {
 							#end
 						</td>
 					#else
-						<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="8" >
+						<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="7" >
 							#if ($scLoiLoaItem.itemSpecificationList)
 								#set($rowCount = 0)	
 								#foreach($tpqSpec in $scLoiLoaItem.itemSpecificationList)
