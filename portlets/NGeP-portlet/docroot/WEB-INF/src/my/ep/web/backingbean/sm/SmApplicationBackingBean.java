@@ -12357,10 +12357,9 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSelectedRecommendRejectReasonDescs() != null
 				&& getManagedBean().getSelectedRecommendRejectReasonDescs().size() > 0) {
 			for (PmReasonDesc reason : getManagedBean().getSelectedRecommendRejectReasonDescs()) {
-				if (getManagedBean().getSearchRejectReason() != null
-						&& !StringUtils.upperCase(reason.getReasonDesc()).contains(
-								StringUtils.upperCase(getManagedBean().getSearchRejectReason()))) {
-					getManagedBean().getReasonDescInitList().add(reason);
+				if (getManagedBean().getSearchRejectReason() != null 
+						&& !StringUtils.upperCase(reason.getReasonDesc()).contains(StringUtils.upperCase(getManagedBean().getSearchRejectReason()))) {
+					getManagedBean().getReasonDescList().add(reason);
 				}
 			}
 		}
@@ -12386,11 +12385,17 @@ public class SmApplicationBackingBean extends
 		//	#30974 -- start - 15/6/2020
 		getManagedBean().setSearchRecommendRejectReason(StringUtils.EMPTY);
 		//	#30974 -- end - 15/6/2020
+//		getManagedBean().setReasonDescInitList(
+//				SmApplicationUtil.retrieveMofRejectReason(getManagedBean()
+//						.getSmAppl().getSupplierType(), getManagedBean()
+//						.getSmSupplier().getBusinessType(), getManagedBean()
+//						.getSmAppl().getApplType()));
+		
 		getManagedBean().setReasonDescList(
-				SmApplicationUtil.retrieveMofRejectReason(getManagedBean()
-						.getSmAppl().getSupplierType(), getManagedBean()
-						.getSmSupplier().getBusinessType(), getManagedBean()
-						.getSmAppl().getApplType()));
+				SmApplicationUtil.getWildCardSearchRejectReason(
+						getManagedBean().getSearchRejectReason(),
+						getManagedBean().getReasonDescInitList()));
+		
 		//	#15629 -- start - 26/1/2020
 //		if(SmCommonUtil.isCollectionEmpty(getManagedBean().getSelectedReasonDescs())) {	
 		//30974 - Start
@@ -14909,9 +14914,8 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		//30974 - end
-	
 	}
-		
+
 	/**
 	 * Reset search recommend rejected reason
 	 */
@@ -14924,17 +14928,14 @@ public class SmApplicationBackingBean extends
 //						.getSmAppl().getSupplierType(), getManagedBean()
 //						.getSmSupplier().getBusinessType(), getManagedBean()
 //						.getSmAppl().getApplType()));
+		
+		getManagedBean().setSelectedRecommendReasonDescs(new ArrayList<PmReasonDesc>());
+		getManagedBean().setSelectedRecommendRejectReasonDescs(new ArrayList<PmReasonDesc>());
+		
 		getManagedBean().setRecommendReasonDescList(
 				SmApplicationUtil.getWildCardSearchRejectReason(
 						getManagedBean().getSearchRecommendRejectReason(),
 						getManagedBean().getRecommendReasonDescInitList()));
-		//		#15629 -- start - 26/1/2020
-//		if(SmCommonUtil.isCollectionEmpty(getManagedBean().getSelectedRecommendReasonDescs())) {
-			getManagedBean().setSelectedRecommendReasonDescs(new ArrayList<PmReasonDesc>());
-			getManagedBean().setSelectedRecommendRejectReasonDescs(new ArrayList<PmReasonDesc>());
-		
-			setReasonIdList();
-//		}
 		//30974 - end	
 		//		#15629 -- end - 26/1/2020
 
