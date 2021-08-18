@@ -3229,18 +3229,21 @@ public class SmApplicationUtil {
 			String currPage) {
 		String msg = currPage == null ? MessageConst.ERROR_722654
 				: MessageConst.ERROR_722661;
-		if (EntityHelper.isCollectionEmpty(bean.getOverlapDocs())) {
-			throw new EpException(msg);
-		} else {
-			for (SmCategoryOverlapDoc doc : bean.getOverlapDocs()) {
-				if (doc.getPmDocument() == null
-						|| StringUtils.isBlank(doc.getFileName())) {
-					throw new EpException(msg);
-				} else if (StringUtils.isBlank(doc.getOverlapReason())) {
-					throw new EpException(msg);
+		//#31018 START
+		if(bean.isSupplierUser()) { 
+			if (EntityHelper.isCollectionEmpty(bean.getOverlapDocs())) {
+				throw new EpException(msg);
+			} else {
+				for (SmCategoryOverlapDoc doc : bean.getOverlapDocs()) {
+					if (doc.getPmDocument() == null
+							|| StringUtils.isBlank(doc.getFileName())) {
+						throw new EpException(msg);
+					} else if (StringUtils.isBlank(doc.getOverlapReason())) {
+						throw new EpException(msg);
+					}
 				}
 			}
-		}
+		}//#31018 END
 	}
 
 	public static void updateOverlapDocsToSmAppl(SmApplicationManagedBean bean) {
