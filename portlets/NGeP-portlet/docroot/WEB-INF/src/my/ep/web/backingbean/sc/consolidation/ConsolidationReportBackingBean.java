@@ -710,15 +710,15 @@ public class ConsolidationReportBackingBean extends
 					.saveConsolidationReport(reqDTO);
 			//saveEvaluationReportsDetaills();
 			
-            // #18685 - Start.
-            for (ScQtFinalizationRemarks updatedRemark : resDTO.getScQtFinalization().getScQtFinalizationRemarks()) {
+            // #18685 - Start
+            /*for (ScQtFinalizationRemarks updatedRemark : resDTO.getScQtFinalization().getScQtFinalizationRemarks()) {
               for (ScQtFinalizationRemarks remark : getManagedBean().getFinalizationItemizedRemarks()) {
                 if (updatedRemark.getRemark().equalsIgnoreCase(remark.getRemark()) && CommonConstants.ITEMIZED.equals(remark.getSourceName())) {
                     getManagedBean().getFinalizationItemizedRemarks().set(0, updatedRemark);
                 }
               }
-            }
-            // #18685 - End.
+            }*/
+            // #18685 - End
             
 			if (resDTO.isSuccessful()) {
 				renewSessionAndRetrieve(getManagedBean().getActiveIndex());
@@ -1313,11 +1313,14 @@ public class ConsolidationReportBackingBean extends
 			while (iterator.hasNext()) {
 				ScQtFinalizationRemarks remark = iterator.next();
 				if (CommonConstants.ITEMIZED.equals(remark.getSourceName())) {
-					List<ScQtFinalizationRemarks> itemizedRemarks = new ArrayList<>();
-					itemizedRemarks.add(remark);
-					getManagedBean().setFinalizationItemizedRemarks(itemizedRemarks);
+					// #18685 - Start
+					if (null == getManagedBean().getFinalizationItemizedRemarks()) {
+						List<ScQtFinalizationRemarks> itemizedRemarks = new ArrayList<>();
+						getManagedBean().setFinalizationItemizedRemarks(itemizedRemarks);
+					}
+					getManagedBean().getFinalizationItemizedRemarks().add(remark);
 					iterator.remove();
-					break;
+					// #18685 - End
 				}
 			}
 		}
@@ -1331,7 +1334,11 @@ public class ConsolidationReportBackingBean extends
 				ScQtFinalizationRemarks.class);
 		if (null != remarks && remarks.size() > 0) {
 			for (ScQtFinalizationRemarks remark : remarks) {
-				remark.setSourceName(CommonConstants.PACKAGE_WISE);
+				// #18685 - Start
+				if (StringUtils.isEmpty(remark.getSourceName())) {
+					remark.setSourceName(CommonConstants.PACKAGE_WISE);
+				}
+				// #18685 - End
 			}
 		}
 		scQtFinalization.setScQtFinalizationRemarks(remarks);
@@ -1346,7 +1353,11 @@ public class ConsolidationReportBackingBean extends
 				ScQtFinalizationRemarks.class);
 		if (null != itemizedRemarks && itemizedRemarks.size() > 0) {
 			for (ScQtFinalizationRemarks remark : itemizedRemarks) {
-				remark.setSourceName(CommonConstants.ITEMIZED);
+				// #18685 - Start
+				if (StringUtils.isEmpty(remark.getSourceName())) {
+					remark.setSourceName(CommonConstants.ITEMIZED);
+				}
+				// #18685 - End
 			}
 		}
 		//scQtFinalization.getScQtFinalizationRemarks().addAll(itemizedRemarks);
