@@ -626,9 +626,21 @@ public class SupplierFinalizationBackingBean extends
 			while (iterator.hasNext()) {
 				ScQtFinalizationRemarks remark = iterator.next();
 				if (CommonConstants.ITEMIZED.equals(remark.getSourceName())) {
-					getManagedBean().setPendingRecItemizedRemark(remark);
+					// #18685 - Start
+					if (null == getManagedBean().getPendingRecItemizedRemark()) {
+						List<ScRemark> itemizedRemarks = new ArrayList<>();
+						getManagedBean().setPendingRecItemizedRemark(itemizedRemarks);
+					}
+					getManagedBean().getPendingRecItemizedRemark().add(remark);
+					// #18685 - End
 				} else if (CommonConstants.PACKAGE_WISE.equals(remark.getSourceName())) {
-					getManagedBean().setPendingRecPackageRemark(remark);
+					// #18685 - Start
+					if (null == getManagedBean().getPendingRecPackageRemark()) {
+						List<ScRemark> packageRemarks = new ArrayList<>();
+						getManagedBean().setPendingRecPackageRemark(packageRemarks);
+					}
+					getManagedBean().getPendingRecPackageRemark().add(remark);
+					// #18685 - End
 				} else {
 				  // #25638 - Start.
 				  if (getManagedBean().getNewSfRemarks() == null) {
@@ -6199,11 +6211,13 @@ return	remarksNotFound;
 	  if (StringUtils.isNotEmpty(decision) && !decision.equals(ParameterConst.DECISION_RECOMMEND_SUPPLIER)) {
 	    getManagedBean().getScRemarks().addAll(getManagedBean().getScQtFinalization().getScQtRecommendationUlasanRemarks());
 	  } else {
+		// #18685 - Start
 	    if (getManagedBean().isItemize()) {
-	      getManagedBean().getScRemarks().add(getManagedBean().getPendingRecItemizedRemark());
+	      getManagedBean().getScRemarks().addAll(getManagedBean().getPendingRecItemizedRemark());
 	    } else {
-	      getManagedBean().getScRemarks().add(getManagedBean().getPendingRecPackageRemark());
+	      getManagedBean().getScRemarks().addAll(getManagedBean().getPendingRecPackageRemark());
 	    }
+	    // #18685 - End
 	  }
 	  return getManagedBean().getScRemarks();
 	}
