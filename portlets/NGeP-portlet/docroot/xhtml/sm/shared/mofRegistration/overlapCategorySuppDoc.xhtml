@@ -85,7 +85,7 @@
 			
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="*" styleClass="mandatory" />
+					<h:outputText rendered="#{backingBean.managedBean.supplierUser}" value="*" styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sm.justification']}" />
 				</f:facet>
 				<p:inputTextarea value="#{overlap.overlapReason}" maxlength="200" 
@@ -104,7 +104,7 @@
 
 			<p:column style="width : 10%;">
 				<f:facet name="header">
-					<h:outputText value="*" styleClass="mandatory" />
+					<h:outputText rendered="#{backingBean.managedBean.supplierUser}" value="*" styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.btn.upload.doc']}" />
 				</f:facet>
 				<p:commandLink oncomplete="overlapCatUploadDialog.show();return false;"
