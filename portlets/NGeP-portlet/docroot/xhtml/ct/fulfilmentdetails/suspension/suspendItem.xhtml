@@ -73,13 +73,17 @@
 				    <h:outputText style="float:left;" value="#{suspensionBackingBean.getParameterDesc(itemData.itemType)}" />
 			   </p:column>
 	         
-	         <p:column id="modelColumn" headerText="#{lbl['lbl.ct.item.desc']}"  styleClass="column-align-center" style="width:30%;white-space:normal;"> 
-			        <h:outputText id="serviceNameID"  value="#{fn:replace(suspensionBackingBean.contactItem(itemData),',','&lt;/br&gt;')}"  size="50" escape="false"  style="float:left; text-align:left;"/>
-			        <p:commandLink id="productSpec" update=":form:itemSpecDlg" action="#{suspensionBackingBean.viewItemSpecDlg(itemData)}">
-						<p:graphicImage value="/css/images/design/ico-viewnedit.png" title="#{lbl['lbl.ct.specification']}" style="float:left; padding-left: 5px;"  />
-					</p:commandLink>
-			   </p:column>
-	         
+	         <!-- #31558 start -->
+	         <p:column headerText="#{lbl['lbl.ct.item.desc']}" style="width:32%; white-space:normal;">	                       
+	         	#{suspensionBackingBean.contactItem(itemData).itemName}
+	         	<p:spacer width="10" />       		 	
+       		 	<p:commandLink id="serviceSpec" update=":form:itemSpecDlg" action="#{suspensionBackingBean.viewItemSpecDlg(itemData)}">
+       		 		<p:graphicImage value="/css/images/design/ico-viewnedit.png" title="#{lbl['lbl.ct.specification']}"/>
+			 	</p:commandLink>
+				<br /><br />
+			  	<h:outputText id="extensionCodeID" value="#{suspensionBackingBean.contactItem(itemData).cmItem.extensionCode}" size="50" escape="false"  style="float:left; text-align:left; display:block;width:200px"/>       		 				                        
+	      	</p:column>	       
+	         <!-- #31558 end -->
 
 			
 			  <p:column headerText="#{lbl['lbl.ct.skuno']}" styleClass="column-align-center" style="width:12%; white-space:normal;">
@@ -137,26 +141,43 @@
    		
    		<h:panelGroup rendered="#{(suspensionBackingBean.managedBean.contractVer.ctContract.loa.procurementMode.parameterCode eq ParameterConst.procurementModeDirectPurchase)}">
    			<h:panelGrid column="1" style="margin-bottom: 20px;margin-top: 10px;">
-    		
-    			<p:outputLabel value="#{lbl['lbl.ct.item.desc']}" style="float:left;font-weight:bold;">: #{suspensionBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemName} </p:outputLabel>  	    	  			
+    			
+    			<h:panelGroup>
+     		 			<h:outputText value="#{lbl['lbl.ct.item.desc']}" escape="false" style="float:left;font-weight:bold;display:block;width:80px"/>     		 			
+     		 		 	<h:outputText value=":&#160;" escape="false" style="float:left;font-weight:bold"/>
+     		 		 	<h:outputText value="#{suspensionBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemName}" escape="false" style="float:left;font-weight:bold;display:block;width:600px"/>
+     		 	</h:panelGroup>
      		 		
-     			<c:if test="#{suspensionBackingBean.managedBean.supplierOffer ne null}">
+     			<c:if test="#{suspensionBackingBean.managedBean.supplierOffer ne null}">    		 		
      		 		<h:panelGroup>
-     		 			<h:outputText value="#{lbl['lbl.ct.supp.offer']}:&#160;" escape="false" style="float:left;font-weight:bold"/>     		 			
-     		 		 	<h:outputText value="#{suspensionBackingBean.managedBean.supplierOffer}" escape="false" style="float:left;font-weight:bold"/>
-     		 		</h:panelGroup>     		 				  				
+     		 			<h:outputText value="#{lbl['lbl.ct.supp.offer']}" escape="false" style="float:left;font-weight:bold;display:block;width:80px"/>     		 			
+     		 		 	<h:outputText value=":&#160;" escape="false" style="float:left;font-weight:bold"/>
+     		 		 	<h:outputText value="#{suspensionBackingBean.managedBean.supplierOffer}" escape="false" style="float:left;font-weight:bold;display:block;width:600px"/>
+     		 		</h:panelGroup>      		 				
      			</c:if>
-     			<c:if test="#{suspensionBackingBean.managedBean.supplierOffer eq null}">
-					<p:outputLabel value = "#{lbl['lbl.ct.supp.offer']}" style="float:left;font-weight:bold;">: #{lbl['lbl.sc.qt.item.spec.null']}</p:outputLabel>					
+     			<c:if test="#{suspensionBackingBean.managedBean.supplierOffer eq null}">										
+     				<h:panelGroup>
+     		 			<h:outputText value="#{lbl['lbl.ct.supp.offer']}" escape="false" style="float:left;font-weight:bold;display:block;width:80px"/>     		 			
+     		 		 	<h:outputText value=":&#160;" escape="false" style="float:left;font-weight:bold"/>
+     		 		 	<h:outputText value="#{lbl['lbl.sc.qt.item.spec.null']}" escape="false" style="float:left;font-weight:bold;display:block;width:600px"/>
+     		 		</h:panelGroup> 
      			</c:if>     		   	
      		   		
      			<c:if test="#{suspensionBackingBean.managedBean.newOfferSpec ne null}">
-     		 		<p:outputLabel value="#{lbl['lbl.ct.new.supp.offer']}" style="float:left;font-weight:bold;">: #{suspensionBackingBean.managedBean.newOfferSpec}</p:outputLabel>      		 			
+     		 		<h:panelGroup>
+     		 			<h:outputText value="#{lbl['lbl.ct.new.supp.offer']}" escape="false" style="float:left;font-weight:bold;display:block;width:80px"/>     		 			
+     		 		 	<h:outputText value=":&#160;" escape="false" style="float:left;font-weight:bold"/>
+     		 		 	<h:outputText value="#{suspensionBackingBean.managedBean.newOfferSpec}" escape="false" style="float:left;font-weight:bold;display:block;width:600px"/>
+     		 		</h:panelGroup>      		 				 			
      			</c:if>
      			<c:if test="#{suspensionBackingBean.managedBean.newOfferSpec eq null}">
-					<p:outputLabel value = "#{lbl['lbl.ct.new.supp.offer']}" style="float:left;font-weight:bold;">: #{lbl['lbl.sc.qt.item.spec.null']}</p:outputLabel>					
+     				<h:panelGroup>
+     		 			<h:outputText value="#{lbl['lbl.ct.new.supp.offer']}" escape="false" style="float:left;font-weight:bold;display:block;width:80px"/>     		 			
+     		 		 	<h:outputText value=":&#160;" escape="false" style="float:left;font-weight:bold"/>
+     		 		 	<h:outputText value="#{lbl['lbl.sc.qt.item.spec.null']}" escape="false" style="float:left;font-weight:bold;display:block;width:600px"/>
+     		 		</h:panelGroup> 
      			</c:if>
-     			     					
+     			<!-- #31558 end -->     					
      		</h:panelGrid>
      		     		
   			<p:dataTable id="itemSpec" var="item" value="#{suspensionBackingBean.managedBean.itemSpecification}"
@@ -165,13 +186,15 @@
             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
             currentPageReportTemplate="Page &#160; {currentPage}/{totalPages}">
 				<p:column styleClass="column-align-center"  style="white-space:normal;">
-					<f:facet name="header">#{lbl['lbl.ct.specification']}</f:facet> 
-					<h:outputText value="#{item}" rows="5" style="float:left;resize:none;" autoResize="false" disabled="true" rendered="#{suspensionBackingBean.managedBean.itemSpecification ne null}"></h:outputText>      					
-      				<h:outputText rows="5" style="resize:none;" autoResize="false" disabled="true" rendered="#{suspensionBackingBean.managedBean.itemSpecification eq null}">#{lbl['lbl.sc.qt.item.spec.null']}</h:outputText>					
-				</p:column>				
+					<f:facet name="header">#{lbl['lbl.ct.specification']}</f:facet>				
+					<!-- #31558 start - Aligning the title to the center but the content to the left -->								
+					<h:outputText value="#{item}" rows="5" style="float:left;text-align:left;resize:none;;display:block;width:600px" autoResize="false" disabled="true" rendered="#{suspensionBackingBean.managedBean.itemSpecification ne null}"></h:outputText>      					
+      				<h:outputText rows="5" style="resize:none;text-align:left;" autoResize="false" disabled="true" rendered="#{suspensionBackingBean.managedBean.itemSpecification eq null}">#{lbl['lbl.sc.qt.item.spec.null']}</h:outputText>
+					<!-- #31558 end -->
+					</p:column>		
 			</p:dataTable>			
 		</h:panelGroup>
-		
+				
 		<h:panelGroup rendered="#{(suspensionBackingBean.managedBean.contractVer.ctContract.loa.procurementMode.parameterCode eq ParameterConst.procurementModeQuotation) or (suspensionBackingBean.managedBean.contractVer.ctContract.loa.procurementMode.parameterCode eq ParameterConst.procurementModeTender) or (suspensionBackingBean.managedBean.contractVer.ctContract.loa.procurementMode.parameterCode eq ParameterConst.procurementModeDirectNego)}">				    		
      		<h:panelGrid column="1">
      			<p:outputLabel value="#{lbl['lbl.ct.item.desc']}" style="float:left;margin-bottom: 20px;margin-top: 10px;font-weight:bold;">: #{suspensionBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemName}</p:outputLabel>
