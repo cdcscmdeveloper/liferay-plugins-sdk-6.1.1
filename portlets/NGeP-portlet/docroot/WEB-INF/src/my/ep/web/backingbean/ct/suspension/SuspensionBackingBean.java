@@ -45,6 +45,7 @@ import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
@@ -838,24 +839,30 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	/**
 	 * The method used to concat both Item code and Item Name.
 	 */
-	public String contactItem(CtContractItem ctItem) {
-		//String result=new String();
-		
-		String itemcode=ctItem.getScRequestItem().getCmItem().getExtensionCode();
-		String itemName=ctItem.getScRequestItem().getItemName();
-		if(itemcode==null)
-		{
-			itemcode=ParameterConst.ITEM_CODE;
-		}
-		if(itemName==null)
-		{
-			itemName=ParameterConst.ITEM_NAME;
-		}
-		String result = itemName +","+ itemcode;
-	
-		return result;
-	     
-	}
+	//#31558 start
+			public ScRequestItem contactItem(CtContractItem ctItem) {
+				
+				
+				String itemcode=ctItem.getScRequestItem().getCmItem().getExtensionCode();
+				String itemName=ctItem.getScRequestItem().getItemName();
+				if(itemcode==null)
+				{
+					itemcode=ParameterConst.ITEM_CODE;
+				}
+				if(itemName==null)
+				{
+					itemName=ParameterConst.ITEM_NAME;
+				}			
+				
+				ScRequestItem scRequestItem = new ScRequestItem();
+				scRequestItem.setItemName(itemName);
+				scRequestItem.setCmItem(ctItem.getScRequestItem().getCmItem());
+				scRequestItem.getCmItem().setExtensionCode(itemcode);
+				
+				return scRequestItem;
+			     
+			}
+			//#31558 end
 	
 	
 	
