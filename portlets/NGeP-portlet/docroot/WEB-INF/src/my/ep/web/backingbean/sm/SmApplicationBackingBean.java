@@ -201,7 +201,7 @@ import com.liferay.portal.kernel.util.StringUtil;
 public class SmApplicationBackingBean extends
 		BaseBackingBean<SmApplicationManagedBean> {
 
-	/**
+	/** 
 	 * 
 	 */
 	private static final long serialVersionUID = -7293382095687532399L;
