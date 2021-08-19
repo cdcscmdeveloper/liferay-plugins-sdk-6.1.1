@@ -6415,13 +6415,17 @@ return	remarksNotFound;
 	  if (StringUtils.isNotEmpty(decision) && !decision.equals(ParameterConst.DECISION_RECOMMEND_SUPPLIER)) {
 	    getManagedBean().getScRemarks().addAll(getManagedBean().getScQtFinalization().getScQtRecommendationUlasanRemarks());
 	  } else {
-		// #18685 - Start
+		// #18685 - Start.
 	    if (getManagedBean().isItemize()) {
-	      getManagedBean().getScRemarks().addAll(getManagedBean().getPendingRecItemizedRemark());
+	    	if (CollectionUtils.isNotEmpty(getManagedBean().getPendingRecItemizedRemark())) {
+	    		getManagedBean().getScRemarks().addAll(getManagedBean().getPendingRecItemizedRemark());
+	    	}
 	    } else {
-	      getManagedBean().getScRemarks().addAll(getManagedBean().getPendingRecPackageRemark());
+	    	if (CollectionUtils.isNotEmpty(getManagedBean().getPendingRecPackageRemark())) {
+	    		getManagedBean().getScRemarks().addAll(getManagedBean().getPendingRecPackageRemark());
+	    	}
 	    }
-	    // #18685 - End
+	    // #18685 - End.
 	  }
 	  return getManagedBean().getScRemarks();
 	}
