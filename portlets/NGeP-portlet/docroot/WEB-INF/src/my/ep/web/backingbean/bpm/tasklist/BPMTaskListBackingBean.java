@@ -1104,10 +1104,30 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
 		log.info("taskId:"+this.getManagedBean().getTaskId());
 		log.info("token:"+token);
-		reqDTO.setTaskId(this.getManagedBean().getTaskId());
-		reqDTO.setCtxToken(token);
-		bpmSO.claimTask(reqDTO);
-
+		/*#31422-basri 190821*/
+		if(this.getManagedBean().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_AGREEMENT) || this.getManagedBean().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION)){
+		List<WorklistItemVO>  list = this.getManagedBean().getTaskListGroupDataModel().getList();
+	    
+	    
+		    for(WorklistItemVO a : list){
+		    	String var = a.getDocNumber();
+		    	String taski = a.getTaskId();
+		    	if(var.equalsIgnoreCase(this.getManagedBean().getDocNo())){
+		    		reqDTO.setTaskId(this.getManagedBean().getTaskId());
+		    		reqDTO.setCtxToken(token);
+		    		bpmSO.claimTask(reqDTO);
+		    		
+		    	}
+	    	
+		    	
+		    	
+		    }
+		}else{
+			reqDTO.setTaskId(this.getManagedBean().getTaskId());
+    		reqDTO.setCtxToken(token);
+    		bpmSO.claimTask(reqDTO);
+		}
+		/*#31422-basri 190821*/
 
 		this.getManagedBean().getTaskListGroupDataModel().reloadData();
 		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
