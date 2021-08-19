@@ -319,7 +319,8 @@
 						id="financialScoreUserScoreUploadBtn"
 						popupWidgetVar="financialUserScoringSchema"
 						attachment="#{specificationBackingBean.managedBean.qt.financialUserScoringSchemaAttachment}"
-						readonly="#{specificationBackingBean.managedBean.readOnly}" />
+						readonly="#{specificationBackingBean.managedBean.readOnly}" 
+						update="@([id$=financialScoreUserScoreUploadBtn])" />
 				
 				</td>
 			</tr>
