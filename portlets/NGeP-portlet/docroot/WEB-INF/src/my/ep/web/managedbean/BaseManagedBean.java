@@ -31,6 +31,7 @@ import my.ep.web.bean.tpl.TemplateSpecBean;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.primefaces.model.StreamedContent;
 
 /**
  * @author siew mei
@@ -142,6 +143,9 @@ public abstract class BaseManagedBean implements Serializable {
 	//#25037-end
 	
 	//27346-start 
+	// 27346
+	private StreamedContent downloadfile;
+
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
 	}
@@ -976,7 +980,7 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setSelectedBriefingReport(ScQtFinalizationReport selectedBriefingReport) {
 		this.selectedBriefingReport = selectedBriefingReport;
 	}
-
+	
 	/**
 	 * @return the removeFinalizationReports
 	 */
@@ -992,6 +996,14 @@ public abstract class BaseManagedBean implements Serializable {
 		this.removeFinalizationReports = removeFinalizationReports;
 	}
 	// Enhancement #18685 - end
+
+	public StreamedContent getDownloadfile() {
+		return downloadfile;
+	}
+
+	public void setDownloadfile(StreamedContent downloadfile) {
+		this.downloadfile = downloadfile;
+	}
 	
 
 }

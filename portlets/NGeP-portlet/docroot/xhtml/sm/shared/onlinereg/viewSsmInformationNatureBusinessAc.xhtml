@@ -23,27 +23,25 @@
 			rowIndexVar="index" id="suppBizNatureId" rowKey="#{suppBizNature}"
 			rows="10">
 			<ac:paginator for="suppBizNatureId" />
-
-			<p:column style="width:3%" styleClass="column-align-center">
-				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.sm.no']}" />
-				</f:facet>
-				<h:outputText value="#{index + 1}" />
-			</p:column>
-
-			<p:column>
+			
+			<p:column>	
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.businessnature.code']}" />
 				</f:facet>
 				<h:outputText
-					value="#{cc.attrs.bBean.getBusinessNatureSection(suppBizNature)} - #{suppBizNature.pmBusinessNature.levelCode}" />
+					value="#{cc.attrs.bBean.getBusinessNatureSection(suppBizNature)} - #{suppBizNature.pmBusinessNature.levelCode}" 
+					rendered="#{!suppBizNature.ssmDataIssue}"/>
+				<h:outputText
+					value="#{suppBizNature.pmBusinessNature.levelCode}" rendered="#{suppBizNature.ssmDataIssue}" /> 
 			</p:column>
-
-			<p:column>
+			
+			
+			
+			 <p:column>
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.sm.natureofbusiness']}" />
+					<h:outputText value="#{lbl['lbl.sm.viewSsm.business.type']}" />
 				</f:facet>
-				<h:outputText value="#{suppBizNature.pmBusinessNature.levelName}" />
+				<h:outputText value="#{suppBizNature.pmBusinessNature.levelName}" /> 
 			</p:column>
 		</p:dataTable>
 	</p:panel>

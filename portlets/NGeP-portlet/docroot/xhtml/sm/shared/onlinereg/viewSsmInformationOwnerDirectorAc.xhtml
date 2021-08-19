@@ -7,48 +7,44 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<!-- Owner Information -->
-	<p:panel header="#{lbl['lbl.sm.ownerinfo']}" id="ownerBusiness"
+	<p:panel header="#{lbl['lbl.sm.viewSsm.equiOwner']}" id="ownerBusiness"
 		toggleable="true">
 		<p:dataTable id="tableOwner1" var="varOwner1" rowIndexVar="index"
 			widgetVar="tableOwner1Widget"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			render="#{cc.attrs.bBean.managedBean.personnelsOwnerSsm != null and cc.attrs.bBean.managedBean.personnelsOwnerSsm.size() >0}"
 			value="#{cc.attrs.bBean.managedBean.personnelsOwnerSsm}"
-			rowKey="#{rowKeyObj}"
-			sortBy="#{varOwner11.name}">
+			rowKey="#{varOwner1}"
+			sortBy="#{varOwner1.name}">
 			<ac:paginator for="tableOwner" />
 
-			<p:column style="width:3%" styleClass="column-align-center">
-				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.sm.no']}" />
-				</f:facet>
-				<h:outputText value="#{index + 1}" />
-			</p:column>
+		
 
 			<p:column styleClass="column-align-center">
 				<f:facet name="header">
 					<c:if
 						test="#{cc.attrs.bBean.managedBean.smSupplier.businessType == 'K'}">
-						<h:outputText value="#{lbl['lbl.sm.directorname']}" />
+						<h:outputText value="#{lbl['lbl.sm.userprofile.name']}" />
 					</c:if>
 					<c:if
 						test="#{cc.attrs.bBean.managedBean.smSupplier.businessType != 'K'}">
-						<h:outputText value="#{lbl['lbl.sm.ownername']}" />
+						<h:outputText value="#{lbl['lbl.sm.userprofile.name']}" />
 					</c:if>
 				</f:facet>
 				<h:outputText value="#{varOwner1.name}" />
 			</p:column>
-
+			<c:if
+			test="#{cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'C' or cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'F'}">
 			<p:column styleClass="column-align-center">
 				<f:facet name="header">
-					<c:if
-						test="#{not empty varOwner1.pmCountry and varOwner1.pmCountry.countryCode != 'MY'}">
-						<h:outputText value="#{lbl['lbl.sm.individual.passport']}" />
-					</c:if>
-					<c:if
-						test="#{empty varOwner1.pmCountry or varOwner1.pmCountry.countryCode eq 'MY'}">
-						<h:outputText value="#{lbl['lbl.sm.individual.newicno']}" />
-					</c:if>
+					<h:outputText value="#{lbl['lbl.sm.viewSsm.nationality']}" />
+				</f:facet>
+				<h:outputText value="#{varOwner1.pmCountry.countryName}" />
+			</p:column>
+			</c:if>
+			<p:column styleClass="column-align-center">
+				<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sm.person.composition.idenNum']}" />
 				</f:facet>
 				<h:outputText value="#{varOwner1.identificationNo}" />
 			</p:column>
@@ -62,12 +58,6 @@
 			</p:column>
 			<c:if
 			test="#{cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'C' or cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'F'}">
-			<p:column styleClass="column-align-center">
-				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.sm.nationality']}" />
-				</f:facet>
-				<h:outputText value="#{varOwner1.pmCountry.countryName}" />
-			</p:column>
 
 			<p:column styleClass="column-align-center">
 				<f:facet name="header">
@@ -78,7 +68,16 @@
 
 			<p:column styleClass="column-align-center">
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.sm.address']}" />
+					<h:outputText value="#{lbl['lbl.sm.person.dob']}" />
+				</f:facet>
+				<h:outputText value="#{varOwner1.birthDate}">
+					<f:convertDateTime pattern="dd/MM/yyyy" />
+				</h:outputText>
+			</p:column>
+			
+			<p:column styleClass="column-align-center">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sm.viewSsm.residentialAddress']}" />
 				</f:facet>
 				<h:outputText
 					rendered="#{not empty varOwner1.smPersonnelAddresses[0].smAddress.address1}"
@@ -102,22 +101,15 @@
 					escape="false" converter="toUpperCaseConverter" />
 			</p:column>
 
-			<p:column styleClass="column-align-center">
-				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.sm.person.dob']}" />
-				</f:facet>
-				<h:outputText value="#{varOwner1.birthDate}">
-					<f:convertDateTime pattern="dd/MM/yyyy" />
-				</h:outputText>
-			</p:column>
+			
 			</c:if>
 			<c:if
 			test="#{cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'I' or cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'J'}">
 			<p:column styleClass="column-align-center">
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.sm.equiComp.shrAmt']}" />
+					<h:outputText value="#{lbl['lbl.sm.viewSsm.ShareholdingAmt']}" />
 				</f:facet>
-				<h:outputText value="#{varOwner1.shareAmt}">
+				<h:outputText value="#{varOwner1.personnelShareAmtSsmView}">
 					<f:convertNumber groupingUsed="true" maxFractionDigits="2" minFractionDigits="2" />
 				</h:outputText>
 			</p:column>
@@ -126,118 +118,5 @@
 		</p:dataTable>
 	</p:panel>
 	
-	<!-- Director Information -->
-	<c:if test="#{cc.attrs.bBean.managedBean.smSupplier.businessType == 'I' or cc.attrs.bBean.managedBean.smSupplier.businessType == 'J'}">
-		<p:panel header="#{lbl['lbl.sm.directorinfo']}" id="directorBusiness"
-			toggleable="true">
-
-			<p:dataTable id="tableDirector" var="varDirector" rowIndexVar="index"
-				widgetVar="tableDirectorWidget"
-				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				render="#{cc.attrs.bBean.managedBean.smPersonnelDirectorSsm != null and cc.attrs.bBean.managedBean.smPersonnelDirectorSsm.size() >0}"
-				value="#{cc.attrs.bBean.managedBean.smPersonnelDirectorSsm}"
-				rowKey="#{rowKeyObj}"
-				sortBy="#{varDirector.name}">
-				<ac:paginator for="tableDirector" />
-
-				<p:column style="width:3%" styleClass="column-align-center">
-					<f:facet name="header">
-						<h:outputText value="#{lbl['lbl.sm.no']}" />
-					</f:facet>
-					<h:outputText value="#{index + 1}" />
-				</p:column>
-
-				<p:column styleClass="column-align-center">
-					<f:facet name="header">
-						<h:outputText value="#{lbl['lbl.sm.directorname']}" />
-					</f:facet>
-					<h:outputText value="#{varDirector.name}" />
-				</p:column>
-
-				<p:column styleClass="column-align-center">
-					<f:facet name="header">
-						<c:if
-							test="#{not empty varDirector.pmCountry and varDirector.pmCountry.countryCode != 'MY'}">
-							<h:outputText value="#{lbl['lbl.sm.individual.passport']}" />
-						</c:if>
-						<c:if
-							test="#{empty varDirector.pmCountry or varDirector.pmCountry.countryCode eq 'MY'}">
-							<h:outputText value="#{lbl['lbl.sm.individual.newicno']}" />
-						</c:if>
-					</f:facet>
-					<h:outputText value="#{varDirector.identificationNo}" />
-				</p:column>
-
-				<p:column styleClass="column-align-center">
-					<f:facet name="header">
-						<h:outputText value="#{lbl['lbl.sm.identificationtype']}" />
-					</f:facet>
-					<h:outputText
-						value="#{cc.attrs.bBean.getParameterDesc(varDirector.identificationType)}" />
-				</p:column>
-			<c:if
-				test="#{cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'C' or cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'F'}">		
-				<p:column styleClass="column-align-center">
-					<f:facet name="header">
-						<h:outputText value="#{lbl['lbl.sm.nationality']}" />
-					</f:facet>
-					<h:outputText value="#{varDirector.pmCountry.countryName}" />
-				</p:column>
-
-				<p:column styleClass="column-align-center">
-					<f:facet name="header">
-						<h:outputText value="#{lbl['lbl.sm.person.race']}" />
-					</f:facet>
-					<h:outputText value="#{varDirector.pmRace.raceName}" />
-				</p:column>
-
-				<p:column styleClass="column-align-center">
-					<f:facet name="header">
-						<h:outputText value="#{lbl['lbl.sm.address']}" />
-					</f:facet>
-					<h:outputText
-						rendered="#{not empty varDirector.smPersonnelAddresses[0].smAddress.address1}"
-						value="#{varDirector.smPersonnelAddresses[0].smAddress.address1}"
-						converter="toUpperCaseConverter" />
-					<h:outputText
-						rendered="#{not empty varDirector.smPersonnelAddresses[0].smAddress.address2}"
-						value="&lt;br/&gt; #{varDirector.smPersonnelAddresses[0].smAddress.address2}"
-						escape="false" converter="toUpperCaseConverter" />
-					<h:outputText
-						rendered="#{not empty varDirector.smPersonnelAddresses[0].smAddress.address3}"
-						value="&lt;br/&gt; #{varDirector.smPersonnelAddresses[0].smAddress.address3}"
-						escape="false" converter="toUpperCaseConverter" />
-					<h:outputText
-						rendered="#{not empty varDirector.smPersonnelAddresses[0].smAddress.postcode}"
-						value="&lt;br/&gt; #{varDirector.smPersonnelAddresses[0].smAddress.postcode}"
-						escape="false" converter="toUpperCaseConverter" />
-					<h:outputText
-						rendered="#{not empty varDirector.smPersonnelAddresses[0].smAddress.pmState.stateName}"
-						value="&lt;br/&gt; #{varDirector.smPersonnelAddresses[0].smAddress.pmState.stateName}"
-						escape="false" converter="toUpperCaseConverter" />
-				</p:column>
-
-				<p:column styleClass="column-align-center">
-					<f:facet name="header">
-						<h:outputText value="#{lbl['lbl.sm.person.dob']}" />
-					</f:facet>
-					<h:outputText value="#{varDirector.birthDate}">
-						<f:convertDateTime pattern="dd/MM/yyyy" />
-					</h:outputText>
-				</p:column>
-				</c:if>
-
-				<p:column styleClass="column-align-center">
-					<f:facet name="header">
-						<h:outputText value="#{lbl['lbl.sm.equiComp.shrAmt']}" />
-					</f:facet>
-					<h:outputText value="#{varDirector.shareAmt}">
-						<f:convertNumber groupingUsed="true" maxFractionDigits="2"
-							minFractionDigits="2" />
-					</h:outputText>
-				</p:column>
-
-			</p:dataTable>
-		</p:panel>
-	</c:if>
+	
 </ui:composition>

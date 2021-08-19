@@ -24,6 +24,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -122,6 +123,8 @@ import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.exceptionhandler.EpExceptionHandler;
+import my.ep.web.format.AttachmentDateFormat;
+import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.UserTasks;
 import my.ep.web.managedbean.sm.postsupplierregistration.PostSupplierRegistrationManagedBean;
@@ -137,12 +140,15 @@ import my.ep.web.util.pm.helper.StatusHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.util.sm.helper.VmUtil;
+import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
@@ -2744,8 +2750,17 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			//SSM #27264
 			//SSM CHANGES #27201
 			public SmPersonnel setDesignationSSM(SmPersonnel personnel){
-				if(personnel.getDesignation() != null){
-					String designation = populateDesignationSSM(personnel.getDesignation());
+				//Start #27346
+				//Start #27346
+				if(personnel.getDesignation() != null || personnel.getSsmPosition() != null){
+					String position = "";
+					if(personnel.getDesignation() != null && !"".equalsIgnoreCase(personnel.getDesignation())){
+						position = personnel.getDesignation();
+					}else if(personnel.getSsmPosition() != null && !"".equalsIgnoreCase(personnel.getSsmPosition())){
+						position = personnel.getSsmPosition();
+					}
+					String designation = populateDesignationSSM(position);
+				//End #27346
 					if(personnel.isSsmData()){
 						if(personnel.isEquityOwner()){
 							personnel.setDesignation(designation);
@@ -2848,11 +2863,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				SsmReqDTO ssmReqDTO = new SsmReqDTO();
 				ssmReqDTO.setRegNo(regNo);
 				ssmReqDTO.setBusinessType(businesstype);
-				if(this.getManagedBean().getSmAppl() != null && SupplierManagementConst.ACC_BASIC.equalsIgnoreCase(this.getManagedBean().getSmAppl().getApplType())){
+				/*if(this.getManagedBean().getSmAppl() != null && SupplierManagementConst.ACC_BASIC.equalsIgnoreCase(this.getManagedBean().getSmAppl().getApplType())){
 					ssmReqDTO.setBasicAcc(true);
 				}else{
 					ssmReqDTO.setBasicAcc(false);
-				}
+				}*/
+				ssmReqDTO.setFromViewSSMInfo(true);
 				SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
 				this.getManagedBean().setCompanyValidWithSSM(false);
 				this.getManagedBean().setValidateWithSSM(true);
@@ -2992,7 +3008,87 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	
 	
 	//END 27239
+	
+	//27346 START PRINT REPORT
+	/**
+	 * download site visit template report in PDF
+	 * @param templateType
+	 * @throws Exception
+	 */
+	public void downloadViewSSMInfo() throws Exception{
+		printReportVM("ssm","SM_SSMInfo.pdf","/sm/ssm/ssm_info.vm",setDetail());
+	}
+	
+	public VelocityContext setDetail(){
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+		VelocityContext context = new VelocityContext();
+		FacesScopes face = new FacesScopes();		
 		
+		context.put("hostUrl", getLogoHeaderPath());
+		context.put("title", ResourceBundleUtils.getMessage("lbl.sm.view.ssm.infomation",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("companyInfoSec", ResourceBundleUtils.getMessage("lbl.sm.comp.info.hdr",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("capitalEquityInfolbl", ResourceBundleUtils.getMessage("lbl.sm.equiInfo.panHdr",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("branchInfolbl", ResourceBundleUtils.getMessage("lbl.sm.viewSsm.branch.details",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("ownerInfolbl", ResourceBundleUtils.getMessage("lbl.sm.viewSsm.equiOwner",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("directorInfolbl", ResourceBundleUtils.getMessage("lbl.sm.comp.director.info.hdr",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("capitalEquityCompanieslbl", ResourceBundleUtils.getMessage("lbl.sm.viewSsm.equiCompany",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("personnelInfolbl", ResourceBundleUtils.getMessage("lbl.sm.viewSsm.personnel",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("businessNaturelbl", ResourceBundleUtils.getMessage("lbl.sm.nature.of.biz.hdr",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("companyInfo", this.getManagedBean().getSmSupplierSsm());
+		context.put("companyBasic", this.getManagedBean().getSmCompanyBasicSsm());
+		context.put("smAddress", this.getManagedBean().getSmAddress());
+		context.put("ownerInfo", this.getManagedBean().getPersonnelsOwnerSsm());
+		context.put("directorInfo", this.getManagedBean().getSmPersonnelDirectorSsm());
+		context.put("businessNature", this.getManagedBean().getSmSupplierBusinessSsm());
+		context.put("branchInfo",this.getManagedBean().getSmSupplierBranchSsm());
+		context.put("equityCompanies",this.getManagedBean().getSmEquityCompaniesSsm());
+		context.put("personnelInfo",this.getManagedBean().getPersonnelsSsm());
+		context.put("businessNatureCode", this.getManagedBean().getSmSupplierBusinessSsm());
+		context.put("smVmUtil", VmUtil.getInstance());
+		context.put("establishdate", sdf.format(this.getManagedBean().getSmCompanyBasicSsm().getEstablishDate()));
+		if(this.getManagedBean().getSmSupplierSsm().getBusinessType().equalsIgnoreCase(SupplierManagementConst.BUSINESS_TYPE_ROB_SOLE_PROPRIETORSHIP)|| this.getManagedBean().getSmSupplierSsm().getBusinessType().equalsIgnoreCase(SupplierManagementConst.BUSINESS_TYPE_ROB_PARTNERSHIP)){
+		context.put("robexpdate", sdf.format(this.getManagedBean().getSmCompanyBasicSsm().getRobExpiryDate()));
+		}
+		return context;
+	}
+	
+	public void printReportVM(String tmpFolder,String fileName,String vmFile,VelocityContext context){
+		String filePath = null;
+		filePath = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+		
+		filePath = filePath + "/" + tmpFolder;
+       
+		File file = new File(filePath);
+		if(!file.exists()) file.mkdirs();
+		AttachmentFormat attachmentFormat = null;
+		attachmentFormat = new AttachmentDateFormat();
+		String newName = attachmentFormat.format(fileName, null);
+		filePath = filePath + "/"+ newName;
+		OutputStream os1 = null;
+		File finalOutputFile = new File(filePath);
+		try{
+			os1 = new FileOutputStream(filePath);
+			DocumentGenerator.getInstance().generatePdfFromVelocity(vmFile, context, os1);		
+			os1.flush();
+			os1.close();
+			this.getManagedBean().setDownloadfile(commonDownload(tmpFolder+"/"+newName, fileName));
+			finalOutputFile.delete();
+		}catch(Exception e){
+			log.error("File: BaseBackingBean, printReportVM, Message: "+e.getMessage());
+		}
+	}
+	/**
+	 * get the template logo path 
+	 * @return String
+	 */
+	private String getLogoHeaderPath(){
+		return SmCommonUtil.getBasePortalUrl();
+	}
+	
+
+	
+	//27346 END PRINT REPORT
+	
 	/*** 25692#95 - start ***/
 	public String getTempManagedBeanName(){
 		return managedBeanName+"_Temp";
