@@ -19,6 +19,8 @@
 					oncomplete="window.history.back();blockWidget.hide();"
 					onstart="blockWidget.show();" /></td>
 			<td class="ppRightBtn">
+				<ui:decorate template="/xhtml/ct/shared/claim_template.xhtml"><!-- #31422-basri 190821 -->
+				<ui:define name="outComeSection"><!-- #31422-basri 190821 -->
 				<ui:repeat var="action"
 					value="#{agreementBackingBean.managedBean.outComes}">
 					<ui:param name="buttonLabel"
@@ -28,6 +30,8 @@
 						action="#{agreementBackingBean.gpkiSignAction(action)}"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 				</ui:repeat>
+				</ui:define><!-- #31422-basri 190821 -->
+				</ui:decorate><!-- #31422-basri 190821 -->
 			</td>
 		</tr>
 	</table>
