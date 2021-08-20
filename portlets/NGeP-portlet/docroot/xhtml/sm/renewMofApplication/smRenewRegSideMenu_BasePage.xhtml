@@ -102,7 +102,7 @@
 		</p:blockUI>  
 	  	<h:outputText rendered="#{backingBean.managedBean.smAppl.applValidWithSsm}" 
 					  value="#{lbl['lbl.sm.po.disclaimer1']}" styleClass="splNotesFonts" style="float: inherit" escape="false" />
-		<h:commandLink
+		<h:commandLink onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
 				rendered="#{backingBean.managedBean.smAppl.applValidWithSsm}"
 				action="#{backingBean.redirectToViewSSMInfo(backingBean.managedBean.smSupplier.regNo,backingBean.managedBean.smSupplier.businessType)}"
 				value="#{lbl['lbl.sm.instruction.here']}" 
