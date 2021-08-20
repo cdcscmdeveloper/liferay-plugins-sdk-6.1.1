@@ -2254,13 +2254,16 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	protected <BPM_DATA_TYPE> BPM_DATA_TYPE getBpmTaskDetails(
 			Class<BPM_DATA_TYPE> clazz, String[] additionalButtons, String theTaskId, String theLoginId) {
 		String taskId = null;
+		String taskIdPair = null;// #31422-basri 190821
 		FacesScopes facesScopes = new FacesScopes();
 		if(StringUtils.isBlank(theTaskId)){			
 			HttpServletRequest servletRequest = PortalUtil
 					.getHttpServletRequest(facesScopes.getRequest());
 			HttpServletRequest originalServletRequest = PortalUtil
 					.getOriginalServletRequest(servletRequest);
+		
 			taskId = originalServletRequest.getParameter("taskId");
+			taskIdPair = originalServletRequest.getParameter("taskIdPair");	// #31422-basri 190821
 		}
 		else{
 			taskId = theTaskId;
@@ -2303,6 +2306,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				}
 				bb.getManagedBean().setClaim(claim);
 				bb.getManagedBean().setTaskId(taskId);
+				bb.getManagedBean().setTaskIdPair(taskIdPair); //#31422-basri 190821
 				bb.getManagedBean().setGroupTask(true);
 			} else {
 				log.info("====groupTask null===" + resDTO.isGroupTask());
