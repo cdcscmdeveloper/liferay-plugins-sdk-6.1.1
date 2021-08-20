@@ -784,17 +784,39 @@ BaseBackingBean<BPMTaskListManagedBean> {
 							+ themeDisplay.getLayout().getGroup()
 							.getFriendlyURL().length());
 			log.info("commonUrl" + commonUrl);
+			
+			
+			/*#31422-basri 190821*/
+			
+			StringBuilder strbuildtask = new StringBuilder();
+			if(docType.equalsIgnoreCase(ContractConst.DOC_TYPE_AGREEMENT) || docType.equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION)){
+				List<WorklistItemVO>  list = this.getManagedBean().getTaskListGroupDataModel().getList();
+			    
+			    
+				    for(WorklistItemVO a : list){
+				    	String var = a.getDocNumber();
+				    	String taski = a.getTaskId();
+				    	if(var.equalsIgnoreCase(docNo) && !taski.equalsIgnoreCase(taskId)){
+				    		strbuildtask.append(taski);
+				    		
+				    	}
+			    	
+				    	
+				    	
+				    }
+				}
+			/*#31422-basri 190821*/
+			
 
 			ExternalContext externalContext = FacesContext.getCurrentInstance()
 					.getExternalContext();
 			//26238 -  Disciplinary Action - 28111
 			// externalContext.redirect("/web/guest/" +url +"?taskId="+taskId);
 			externalContext.redirect(commonUrl + "/" + url + "?taskId="
-					+ taskId + "&claim=" + claim+"&docNo="+docNo);
+					+ taskId + "&taskIdPair="+strbuildtask+"&claim=" + claim);/*#31422-basri 190821*/
 			// externalContext.redirect("http://localhost:8080/web/guest/" +url
 			// +"?taskId="+taskId);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -1105,10 +1127,21 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
 		log.info("taskId:"+this.getManagedBean().getTaskId());
 		log.info("token:"+token);
+		
+		
+		
+		/*#31422-basri 190821*/
+		if(this.getManagedBean().getTaskIdPair() != null){
+			reqDTO.setTaskId(this.getManagedBean().getTaskIdPair());
+	    	reqDTO.setCtxToken(token);
+	    	bpmSO.claimTask(reqDTO);
+		}
+		
 		reqDTO.setTaskId(this.getManagedBean().getTaskId());
-		reqDTO.setCtxToken(token);
-		bpmSO.claimTask(reqDTO);
-
+    	reqDTO.setCtxToken(token);
+    	bpmSO.claimTask(reqDTO);
+		
+		/*#31422-basri 190821*/
 
 		this.getManagedBean().getTaskListGroupDataModel().reloadData();
 		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
