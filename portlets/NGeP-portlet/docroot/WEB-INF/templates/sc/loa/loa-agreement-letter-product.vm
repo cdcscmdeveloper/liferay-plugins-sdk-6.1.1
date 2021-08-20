@@ -2274,19 +2274,12 @@ u {
 											#end
 										#else				
 											#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
-											#if($rowCount == 0)											
-											<table width="100%">
-											<tbody>
-											<tr>
-												
+											#if($rowCount == 0)
 												#if ($tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
 													<span>$tplSpecAnswer.answerRemark</span>
 												#else
 													<span>$serviceScope</span>
 												#end
-											</tr>
-											</tbody>
-											</table>
 											#end
 											#set($rowCount = $rowCount + 1)
 											#end
