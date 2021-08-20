@@ -44,7 +44,7 @@
 		<h:commandLink onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
 				rendered="#{registrationBackingBean.managedBean.companyValidWithSSM}"
 				action="#{registrationBackingBean.redirectToViewSSMInfo(registrationBackingBean.managedBean.smSupp.regNo,registrationBackingBean.managedBean.smSupp.businessType)}"
-				value="#{lbl['lbl.fl.instruction.here']}" 
+				value="#{lbl['lbl.sm.instruction.here']}" 
 				styleClass="splNotesFonts" style="float: inherit" escape="false">
 				 <f:ajax execute="@form" render="@form" />
 				</h:commandLink>
