@@ -15,12 +15,16 @@
 	</ui:define> 
 
 	<ui:define name="contentSection"> 
+	<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>  
 		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		
 		<h:outputText  rendered="#{supplierBusinessNatureBackingBean.managedBean.companyValidWithSSM}" styleClass="splNotesFonts" value="#{lbl['lbl.sm.po.disclaimer1']}" style="float: inherit" escape="false" ></h:outputText>
-		<h:commandLink rendered="#{supplierBusinessNatureBackingBean.managedBean.companyValidWithSSM}"	
+		<h:commandLink onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
+				rendered="#{supplierBusinessNatureBackingBean.managedBean.companyValidWithSSM}"	
 				action="#{supplierBusinessNatureBackingBean.redirectToViewSSMInfo(supplierBusinessNatureBackingBean.managedBean.smSupplier.regNo,supplierBusinessNatureBackingBean.managedBean.smSupplier.businessType)}"
-				value="#{lbl['lbl.fl.instruction.here']}" 
+				value="#{lbl['lbl.sm.instruction.here']}" 
 				styleClass="splNotesFonts" style="float: inherit" escape="false">
 				 <f:ajax execute="@form" render="@form" />
 				</h:commandLink>
