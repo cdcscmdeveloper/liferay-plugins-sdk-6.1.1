@@ -12,7 +12,7 @@
 	<table width='100%'>
 		<tr align='center' style="background-color: #3366ff;">
 	        <td>
-	            <font style='color:#ffffff;'>$companyInfoSec</font>
+	            <font style='color:#ffffff;text-transform:uppercase;'>$smVmUtil.getDescByLabel('lbl.sm.panHdr.comBasic')</font>
 	        </td>
     	</tr>
     	<tr><td><br /></td></tr>
