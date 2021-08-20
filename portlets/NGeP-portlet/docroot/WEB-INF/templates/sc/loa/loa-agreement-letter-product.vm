@@ -2259,7 +2259,7 @@ u {
 										#set($rowCount = 0)							
 										#if ($isWipData)											
 											#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
-											<table width="100%">
+											<table width="100%" border="0" cellspacing="0" cellpadding="0">
 											<tbody>
 											<tr>
 												#if ($tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
