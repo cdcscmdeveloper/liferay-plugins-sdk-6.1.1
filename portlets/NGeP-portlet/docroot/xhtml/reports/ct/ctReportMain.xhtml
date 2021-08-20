@@ -60,7 +60,9 @@
 			
 			<c:choose>
 				<c:when test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctContractItemUsageMonitoringRptCcVal 
-				or ctReportBB.managedBean.reportCode eq CtReportConst.ctContractItemUsageMonitoringRptMcVal}">
+				or ctReportBB.managedBean.reportCode eq CtReportConst.ctContractItemUsageMonitoringRptMcVal
+				or ctReportBB.managedBean.reportCode eq CtReportConst.ctContractManagementRptCcVal
+				or ctReportBB.managedBean.reportCode eq CtReportConst.ctContractManagementRptMcVal}">
 					<h:outputText styleClass="instruction" value="#{lbl['lbl.rpt.instructioninfo']}" escape="false"/><br/><br/>
 				</c:when>
 				
