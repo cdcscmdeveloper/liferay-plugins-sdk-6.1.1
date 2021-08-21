@@ -143,11 +143,13 @@
 										<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 30%;overflow: hidden !important;" />
 					                </p:row>
 					                 <p:row>
-					                	<p:column headerText="#{lbl['lbl.datatable.msg.no.records.found']}" colspan="5" style="background-color:white !important; color:black; font-weight:normal !important;"></p:column>
+					                	<p:column headerText="#{lbl['lbl.datatable.msg.no.records.found']}" colspan="5" style="background-color:white !important; color:black; font-weight:normal !important; text-align:left !important;">
+										
+										</p:column>
 					                </p:row>
 								</p:columnGroup>
 							</p:dataTable>
-							<br/>
+							
 							<p:dataTable var="inquirytbl" value="#{sdoReviewBackingBean.managedBean.selectedInquiryResponse.smApplSupportDocInquiries}" id="inquiryHistoryOnlineNonMandatoryList" 
 								rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" rendered="#{!sdoReviewBackingBean.managedBean.emptyNonMandatoryDocHistory}"
 								emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
@@ -200,7 +202,7 @@
 										<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 30%;overflow: hidden !important;" />
 					                </p:row>
 					                <p:row>
-					                	<p:column headerText="#{lbl['lbl.datatable.msg.no.records.found']}" colspan="5" style="background-color:white !important; color:black; font-weight:normal !important;"></p:column>
+					                	<p:column headerText="#{lbl['lbl.datatable.msg.no.records.found']}" colspan="5" style="background-color:white !important; color:black; font-weight:normal !important; text-align:left !important;"></p:column>
 					                </p:row>
 								</p:columnGroup>
 							</p:dataTable>
@@ -312,7 +314,7 @@
 				                </p:row>
 							</p:columnGroup>
 						</p:dataTable>
-						<br/>
+						
 						<p:dataTable var="table" value="#{sdoReviewBackingBean.managedBean.smAppl.smApplSupportDocs}" id="onlineNonMandatoryList" 
 							rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" rendered="#{!sdoReviewBackingBean.nonMandatoryAllReceived}"
 							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
