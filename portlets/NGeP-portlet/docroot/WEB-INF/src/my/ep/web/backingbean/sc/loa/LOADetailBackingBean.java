@@ -2413,7 +2413,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		String itemType = null;
 		String dafaltValue = "T/B";
 		if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
-			dafaltValue = "T/B";
+			dafaltValue = "N/A";//#29006
 		}
 		
 

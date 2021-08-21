@@ -2104,7 +2104,6 @@ u {
 									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Zon</th>
 									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Kuantiti</th>
 									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; font-size:10px;">Tawaran Pembekal</th>
-									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; font-size:10px;">Catatan</th>
 									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; font-size:10px;">Skop Perkhidmatan / SLA</th>
 								</tr>
 								
@@ -2247,11 +2246,11 @@ u {
 										
 								</td>
 
-								<td valign="top" bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-size:12px;">							
+								<td valign="top" bgcolor="#d0eaee"  class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:12px;">							
 										#set($rowCount = 0)							
 										#if ($isWipData)											
 											#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
-											<table width="100%">
+											<table width="100%" border="0" cellspacing="0" cellpadding="0">
 											<tbody>
 											<tr>
 												#if ($tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
@@ -2267,31 +2266,16 @@ u {
 										#else				
 											#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
 											#if($rowCount == 0)											
-											<table width="100%">
-											<tbody>
-											<tr>
-												
 												#if ($tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
 													<span>$tplSpecAnswer.answerRemark</span>
 												#else
 													<span>$serviceScope</span>
 												#end
-											</tr>
-											</tbody>
-											</table>
 											#end
 											#set($rowCount = $rowCount + 1)
 											#end
 										#end
 									
-								</td>
-								
-								<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2"  style="text-align: left; padding-left: 5px; font-size:12px;">
-										#if(($tplspecQuestion.clReviewRemark == "" ))
-										 $serviceScope 
-										#else
-											 $tplspecQuestion.clReviewRemark							
-										#end
 								</td>
 								
 								<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2"  style="text-align: left; padding-left: 5px; font-size:12px;">
@@ -2304,7 +2288,7 @@ u {
 								</tr>
 							
 								</tr>
-								<td valign="top" bgcolor="#d0eaee" colspan="9">
+								<td valign="top" bgcolor="#d0eaee" colspan="8">
 										#if ($tplspecQuestion.specList)
 										#set($specList = $tplspecQuestion.specList)
 										#set($uniquePosts = [])
