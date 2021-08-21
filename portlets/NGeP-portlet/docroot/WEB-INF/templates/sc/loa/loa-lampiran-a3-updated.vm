@@ -163,7 +163,7 @@ u {
 			</tbody>
 		</table>
 		#set($itemType = $bean.getParameterDescForReport($scLoiLoaItem.scRequestItem.tplSpecQuestion.tplSpecMaster.itemTypeCode)) 
-		#if ($itemType == "Produk" || $itemType == "Product")
+		#if ($itemType == "Produk-" || $itemType == "Product-")
 		<table width="100%" border="1" cellpadding="0" cellspacing="0">
 			<tbody>
 			<tr>
@@ -296,7 +296,7 @@ u {
 		<br/>
 		<br/>
 		#end
-		#if ($itemType == "Perkhidmatan" || $itemType == "Service")
+		#if ($itemType == "Perkhidmatan" || $itemType == "Service" || $itemType == "Produk" || $itemType == "Product")
 		<table width="100%" border="1" cellpadding="0" cellspacing="0" style='font-size:85%'>
 			<tbody>
 			<tr>
