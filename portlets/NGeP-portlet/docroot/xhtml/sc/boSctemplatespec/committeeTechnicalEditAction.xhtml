@@ -157,13 +157,16 @@
 
 			</p:panel>
 
-
+			<ui:remove>30917, 31151 remove '!specificationBackingBean.managedBean.readOnly and' -start-</ui:remove>
 			<ac:templateSpec
 			    updateSpec="#{specificationBackingBean.managedBean.updateSpec}"
 				newable="#{specificationBackingBean.managedBean.specNewable}"
 				removable="#{specificationBackingBean.managedBean.specNewable}"
-				editable="#{((specificationBackingBean.isQTStatusChecklistScoring()) or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision()) or (specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance() and !specificationBackingBean.managedBean.readOnly))}"
+				editable="#{((specificationBackingBean.isQTStatusChecklistScoring()) 
+					or (specificationBackingBean.isQTStatusChecklistScoringRevision()) 
+					or (specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance() and !specificationBackingBean.managedBean.readOnly))}"
 				templateSpecBean="#{specificationBackingBean.managedBean.templateSpecBean}" />
+			<ui:remove>30917, 31151 remove '!specificationBackingBean.managedBean.readOnly and' -end-</ui:remove>
 
 		</h:panelGroup>
 	</ui:define>
