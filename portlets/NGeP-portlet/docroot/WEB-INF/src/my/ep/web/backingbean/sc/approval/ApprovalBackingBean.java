@@ -553,7 +553,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//#25037-end
 
 			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT;
-			paramTypes = Arrays.asList(new String[]{"SC","OC","EC", "TEC", "FEC"});//#25037
+			paramTypes = Arrays.asList(ParameterConst.QT_COMMITTEES_ORDERED_LIST);//25037 #372
 			approvalRequests = getApprovalRequests(qtId, approvalCategoryCode,
 					ParameterConst.DOCTYPE_COMMITTE_APROVAL, paramTypes, null);
 			//#25037-start
@@ -569,7 +569,10 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			docType = ParameterConst.DOCTYPE_COMMITTE_APROVAL; //#25692#128
 
 			List<Long> cmtStatus = new ArrayList<Long>(3);
-			cmtStatus.add(QTStatusConst.CMT_PENDING_SUBMISSION);
+			//25037-start #372
+			if(!Arrays.asList(QTStatusConst.QT_DOC_SCHEDULE_GROUP).contains(this.getManagedBean().getCurrentQTStatus())){
+				cmtStatus.add(QTStatusConst.CMT_PENDING_SUBMISSION);
+			}//25037-end #372
 			cmtStatus.add(QTStatusConst.CMT_COMPLETED);
 			cmtStatus.add(QTStatusConst.CMT_PENDING_REVISION);
 			ICommitteSO committeSO = BusinessDelegate.getInstance()
@@ -771,17 +774,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					List<TabBean> cTabs = this.getManagedBean().getScCommitteeMemberTabList();
 					String currentCommitteeType = cTabs.get(this.getManagedBean().getSelectedCommitteeTabIndex()).getTabType();
 					getManagedBean().setRoleFilterList(getRoleFilterListForCommitteeMaintenance(this.getManagedBean().getQt(), currentCommitteeType));
-				//#25037-start
-					Collections.sort(this.getManagedBean().getScCommitteeMemberTabList(), new Comparator<TabBean>() {
-						List<String> sortOrder = Arrays.asList("SC", "EC", "OC", "TEC", "FEC");
-						public int compare(TabBean o1, TabBean o2) {
-									return Integer.valueOf(
-											sortOrder.indexOf(o1.getTabType())).compareTo(
-											Integer.valueOf(sortOrder.indexOf(o2.getTabType())));
-						}
-					});
-				//#25037-end
-				
 				}
 				if(this.getManagedBean().isCommitteeReviseFlow()){
 					getManagedBean().setRoleFilterList(new String[] {ParameterConst.COMMITTEE_ROLE_SECRETARY});
@@ -1587,7 +1579,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				successMessage(MessageConst.INFO_60119, new String[]{qt.getQtNo()}, true);
 			}
 			// #14398 - end
-			else if (ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT.equalsIgnoreCase(this.getManagedBean().getApprovalType())) {
+			else if (ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT.equalsIgnoreCase(this.getManagedBean().getApprovalType())
+					&& Arrays.asList(QTStatusConst.CMT_APPROVAL_GROUP).contains(this.getManagedBean().getCurrentStatusId())) {//25037 #372
 				String committeeType = "";
 				String committeeNames = "";
 				if(CollectionUtils.isNotEmpty(qt.getScQtCommittees())){
@@ -1659,6 +1652,16 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				committeTabs.add(bean);
 			}
 		}
+		//#25037-start #372
+		Collections.sort(committeTabs, new Comparator<TabBean>() {
+			List<String> sortOrder = Arrays.asList(ParameterConst.QT_COMMITTEES_ORDERED_LIST);
+			public int compare(TabBean o1, TabBean o2) {
+						return Integer.valueOf(
+								sortOrder.indexOf(o1.getTabType())).compareTo(
+								Integer.valueOf(sortOrder.indexOf(o2.getTabType())));
+			}
+		});
+		//#25037-end #372
 		return committeTabs;
 	}
 

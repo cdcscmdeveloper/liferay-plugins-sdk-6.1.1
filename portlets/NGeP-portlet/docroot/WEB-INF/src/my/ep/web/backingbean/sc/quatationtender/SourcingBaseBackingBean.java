@@ -5209,7 +5209,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			Long statusId = wfStatus.getPmStatus().getStatusId();	
 			if(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.contentEquals(committeeType)){
 				if(Arrays.asList(QTStatusConst.QT_SPEC_COMM_UPDATE_GROUP).contains(statusId)){
-					Long[] secretaryExceptSpecCommittee = new Long[]{QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT, QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL};
+					//25037 #372 -Start
+					Long[] secretaryExceptSpecCommittee = new Long[]{
+							QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT, 
+							QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL,
+							QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL_RESCHEDULE,
+							QTStatusConst.QT_REVISION_PUBLICATION,
+							QTStatusConst.QT_PENDING_SCHEDULE_REVISION};
+					//25037 #372 -end
+
 					if(!Arrays.asList(secretaryExceptSpecCommittee).contains(statusId)){
 						list.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
 					}
