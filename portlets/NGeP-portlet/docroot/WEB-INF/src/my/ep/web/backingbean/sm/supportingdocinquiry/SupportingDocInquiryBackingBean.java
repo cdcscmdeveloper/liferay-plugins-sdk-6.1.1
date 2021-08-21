@@ -205,6 +205,23 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 			reqDTO.setChangedBy(user.getUserId());
 			
 			//#11641 - START
+			if(!this.getManagedBean().getSmApplInquiry().getSmAppl().getSmApplSupportDocs().isEmpty()){
+				for(SmApplSupportDoc smApplSupportDoc : this.getManagedBean().getSmApplInquiry().getSmAppl().getSmApplSupportDocs()){
+					if(!smApplSupportDoc.getPmDocument().isMandatory() && !smApplSupportDoc.isReceived()){
+						boolean nonMandatoryDocHasNew = false;
+						if(!this.getManagedBean().getAddedDocFile().isEmpty()){
+							for(SmApplDocFile addedDoc : this.getManagedBean().getAddedDocFile()){
+								if(addedDoc.getSmApplSupportDoc().getApplSupportDocId() == smApplSupportDoc.getApplSupportDocId()){
+									nonMandatoryDocHasNew = true;
+								}
+							}
+						}
+						if(!nonMandatoryDocHasNew){
+							this.getManagedBean().getAddedDocFile().addAll(smApplSupportDoc.getSmApplDocFiles());
+						}
+					}
+				}
+			}
 			reqDTO.setAddedSmApplDocFiles(this.getManagedBean().getAddedDocFile());
 			reqDTO.setUpdatedSupportDocs(this.getManagedBean().getUpdatedSupportDocs());
 			reqDTO.setEmptyToRemove(this.getManagedBean().getEmptyToRemove());

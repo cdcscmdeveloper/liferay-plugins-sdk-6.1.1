@@ -41,6 +41,11 @@ public class SdoReviewManagedBean extends BaseManagedBean{
 	private List<SmApplSupportDoc> mandatoryDocs;
 	private List<SmApplSupportDoc> nonMandatoryDocs;
 	private String rejectReasonsMsg;
+	
+	//#11641 - START
+	private boolean emptyMandatoryDocHistory;
+	private boolean emptyNonMandatoryDocHistory;
+	//#11641 - END
 
 	public SmAppl getSmAppl() {
 		return smAppl;
@@ -201,6 +206,22 @@ public class SdoReviewManagedBean extends BaseManagedBean{
 
 	public void setRejectReasonsMsg(String rejectReasonsMsg) {
 		this.rejectReasonsMsg = rejectReasonsMsg;
+	}
+
+	public boolean isEmptyMandatoryDocHistory() {
+		return emptyMandatoryDocHistory;
+	}
+
+	public void setEmptyMandatoryDocHistory(boolean emptyMandatoryDocHistory) {
+		this.emptyMandatoryDocHistory = emptyMandatoryDocHistory;
+	}
+
+	public boolean isEmptyNonMandatoryDocHistory() {
+		return emptyNonMandatoryDocHistory;
+	}
+
+	public void setEmptyNonMandatoryDocHistory(boolean emptyNonMandatoryDocHistory) {
+		this.emptyNonMandatoryDocHistory = emptyNonMandatoryDocHistory;
 	}
 
 	

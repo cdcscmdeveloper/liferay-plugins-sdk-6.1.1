@@ -443,6 +443,18 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 	 * inquiry row select
 	 */
 	public void inquiryRowSelect(){
+		//#11641 - START
+		this.getManagedBean().setEmptyMandatoryDocHistory(true);
+		this.getManagedBean().setEmptyNonMandatoryDocHistory(true);
+		for(SmApplSupportDocInquiry historySupportDoc: this.getManagedBean().getSelectedInquiryResponse().getSmApplSupportDocInquiries()){
+			if(historySupportDoc.getPmDocument().isMandatory()){
+				this.getManagedBean().setEmptyMandatoryDocHistory(false);
+			}
+			else if(!historySupportDoc.getPmDocument().isMandatory()){
+				this.getManagedBean().setEmptyNonMandatoryDocHistory(false);
+			}
+		}
+		//#11641 - END
 		RequestContext.getCurrentInstance().update("resOutPanelId");
 
 	}
