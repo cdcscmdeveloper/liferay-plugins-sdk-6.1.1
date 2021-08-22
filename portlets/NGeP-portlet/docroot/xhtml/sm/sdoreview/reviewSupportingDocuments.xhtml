@@ -90,7 +90,7 @@
     							display:none;
 							}
 							</style>
-						
+							<!-- datatable for mandatory support doc with record to display -->
 							<p:dataTable var="inquirytbl" value="#{sdoReviewBackingBean.managedBean.selectedInquiryResponse.smApplSupportDocInquiries}" id="inquiryHistoryOnlineMandatoryList" 
 								rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" rendered="#{!sdoReviewBackingBean.managedBean.emptyMandatoryDocHistory}"
 								emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
@@ -129,6 +129,7 @@
 									<h:inputTextarea value="#{inquirytbl.sdoRemarks}" style="float:left; white-space:normal; width:97%;" disabled="true"/>
 								</p:column>
 							</p:dataTable>
+							<!-- datatable for mandatory support doc with no record to display(fix primeface version bug when no record found) -->
 							<p:dataTable var="emptyMandatory" value="" id="mandatoryEmpty" rendered="#{sdoReviewBackingBean.managedBean.emptyMandatoryDocHistory}"
 								rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
 								emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
@@ -149,7 +150,7 @@
 					                </p:row>
 								</p:columnGroup>
 							</p:dataTable>
-							
+							<!-- datatable for non-mandatory support doc with record to display -->
 							<p:dataTable var="inquirytbl" value="#{sdoReviewBackingBean.managedBean.selectedInquiryResponse.smApplSupportDocInquiries}" id="inquiryHistoryOnlineNonMandatoryList" 
 								rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" rendered="#{!sdoReviewBackingBean.managedBean.emptyNonMandatoryDocHistory}"
 								emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
@@ -188,6 +189,7 @@
 									<h:inputTextarea value="#{inquirytbl.sdoRemarks}" style="float:left; white-space:normal; width:97%;" disabled="true"/>
 								</p:column>
 							</p:dataTable>
+							<!-- datatable for non-mandatory support doc with no record to display(fix primeface version bug when no record found) -->
 							<p:dataTable var="emptyNonMandatory" value="" id="nonMandatoryEmpty" rendered="#{sdoReviewBackingBean.managedBean.emptyNonMandatoryDocHistory}"
 								rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
 								emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
@@ -261,6 +263,7 @@
 				</tr>
 				<tr>
 					<td>
+						<!-- datatable for mandatory support doc with record to display -->
 						<p:dataTable var="table" value="#{sdoReviewBackingBean.managedBean.smAppl.smApplSupportDocs}" id="onlineMandatoryList" 
 							rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" rendered="#{!sdoReviewBackingBean.mandatoryAllReceived}"
 							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
@@ -291,6 +294,7 @@
 									style="float: left;white-space: normal;width:97% !important;" />
 							</p:column>
 						</p:dataTable>
+						<!-- datatable for mandatory support doc with no record to display(fix bug in primeface version) -->
 						<p:dataTable var="" value="" id="EmptyOnlineMandatoryList" 
 							rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" rendered="#{sdoReviewBackingBean.mandatoryAllReceived}"
 							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
@@ -314,7 +318,7 @@
 				                </p:row>
 							</p:columnGroup>
 						</p:dataTable>
-						
+						<!-- datatable for non-mandatory support doc with record to display -->
 						<p:dataTable var="table" value="#{sdoReviewBackingBean.managedBean.smAppl.smApplSupportDocs}" id="onlineNonMandatoryList" 
 							rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" rendered="#{!sdoReviewBackingBean.nonMandatoryAllReceived}"
 							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
@@ -346,6 +350,7 @@
 									style="float: left;white-space: normal;width:97% !important;" />
 							</p:column>
 						</p:dataTable>
+						<!-- datatable for non-mandatory support doc with no record to display(fix bug in primeface version) -->
 						<p:dataTable var="" value="" id="EmptyOnlineNonMandatoryList" 
 							rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" rendered="#{sdoReviewBackingBean.nonMandatoryAllReceived}"
 							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
