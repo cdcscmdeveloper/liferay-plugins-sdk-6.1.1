@@ -3071,9 +3071,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						}
 					}
 					//25037-start #372
-					if(!Arrays.asList(QTStatusConst.QT_DOC_SCHEDULE_GROUP).contains(this.getManagedBean().getCurrentQTStatus())
+					if(!(Arrays.asList(QTStatusConst.QT_DOC_SCHEDULE_GROUP).contains(this.getManagedBean().getCurrentQTStatus())
 							&& taskName.equalsIgnoreCase(SCProcessNameConst.REVISE_COMMITTEE)
-							&& openingCommitte.getScCommittee().getCommitteStatus().getStatusId().equals(QTStatusConst.CMT_PENDING_SUBMISSION)){
+							&& openingCommitte.getScCommittee().getCommitteStatus().getStatusId().equals(QTStatusConst.CMT_PENDING_SUBMISSION))){
 					
 						committeTabs.add(new TabBean(parameterHelper
 								.getParameterDesc(parameterType, tabType), tabType,
@@ -3100,9 +3100,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						}
 					}
 					//25037-start #372
-					if(!Arrays.asList(QTStatusConst.QT_DOC_SCHEDULE_GROUP).contains(this.getManagedBean().getCurrentQTStatus())
+					if(!(Arrays.asList(QTStatusConst.QT_DOC_SCHEDULE_GROUP).contains(this.getManagedBean().getCurrentQTStatus())
 							&& taskName.equalsIgnoreCase(SCProcessNameConst.REVISE_COMMITTEE)
-							&& tecCommitte.getScCommittee().getCommitteStatus().getStatusId().equals(QTStatusConst.CMT_PENDING_SUBMISSION)){
+							&& tecCommitte.getScCommittee().getCommitteStatus().getStatusId().equals(QTStatusConst.CMT_PENDING_SUBMISSION))){
 					
 						committeTabs.add(new TabBean(parameterHelper
 								.getParameterDesc(parameterType, tabType), tabType,
@@ -3129,9 +3129,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						}
 					}
 					//25037-start #372
-					if(!Arrays.asList(QTStatusConst.QT_DOC_SCHEDULE_GROUP).contains(this.getManagedBean().getCurrentQTStatus())
+					if(!(Arrays.asList(QTStatusConst.QT_DOC_SCHEDULE_GROUP).contains(this.getManagedBean().getCurrentQTStatus())
 							&& taskName.equalsIgnoreCase(SCProcessNameConst.REVISE_COMMITTEE)
-							&& fecCommitte.getScCommittee().getCommitteStatus().getStatusId().equals(QTStatusConst.CMT_PENDING_SUBMISSION)){
+							&& fecCommitte.getScCommittee().getCommitteStatus().getStatusId().equals(QTStatusConst.CMT_PENDING_SUBMISSION))){
 					
 						committeTabs.add(new TabBean(parameterHelper
 								.getParameterDesc(parameterType, tabType), tabType,
