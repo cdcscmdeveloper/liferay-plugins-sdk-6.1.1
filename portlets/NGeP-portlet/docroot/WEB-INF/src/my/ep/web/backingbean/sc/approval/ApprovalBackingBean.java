@@ -1577,7 +1577,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 			// #14398 - end
 			else if (ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT.equalsIgnoreCase(this.getManagedBean().getApprovalType())
-					&& Arrays.asList(QTStatusConst.CMT_APPROVAL_GROUP).contains(this.getManagedBean().getCurrentStatusId())) {//25037 #372
+					&& Arrays.asList(new Long[]{
+						QTStatusConst.CMT_PENDING_REAPPROVAL, 
+						QTStatusConst.CMT_PENDING_REAPPROVAL_REVISION_APPROVAL}).contains(this.getManagedBean().getCurrentStatusId())) {//25037 #372
 				String committeeType = "";
 				String committeeNames = "";
 				if(CollectionUtils.isNotEmpty(qt.getScQtCommittees())){
