@@ -569,10 +569,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			docType = ParameterConst.DOCTYPE_COMMITTE_APROVAL; //#25692#128
 
 			List<Long> cmtStatus = new ArrayList<Long>(3);
-			//25037-start #372
-			if(!Arrays.asList(QTStatusConst.QT_DOC_SCHEDULE_GROUP).contains(this.getManagedBean().getCurrentQTStatus())){
-				cmtStatus.add(QTStatusConst.CMT_PENDING_SUBMISSION);
-			}//25037-end #372
+			cmtStatus.add(QTStatusConst.CMT_PENDING_SUBMISSION);
 			cmtStatus.add(QTStatusConst.CMT_COMPLETED);
 			cmtStatus.add(QTStatusConst.CMT_PENDING_REVISION);
 			ICommitteSO committeSO = BusinessDelegate.getInstance()
