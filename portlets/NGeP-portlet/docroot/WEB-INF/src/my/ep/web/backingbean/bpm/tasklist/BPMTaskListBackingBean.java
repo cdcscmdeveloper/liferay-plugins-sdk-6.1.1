@@ -714,6 +714,8 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		String taskName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
 				.get("taskName");
 		String docType = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docType");
+		//26238 -  Disciplinary Action - 28111
+		String docNo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docNo");
 
 		String claim = FacesContext.getCurrentInstance().getExternalContext()
 				.getRequestParameterMap().get("isClaim");
@@ -771,11 +773,11 @@ BaseBackingBean<BPMTaskListManagedBean> {
 				    	String var = a.getDocNumber();
 				    	String taski = a.getTaskId();
 				    	if(var.equalsIgnoreCase(docNo) && !taski.equalsIgnoreCase(taskId)){
-				    		strbuildtask.append(taski);				    		
-				    	}	
+				    		strbuildtask.append(taski);
+				    	}
 				    }
 				}
-			/*#31422-basri 190821*/			
+			/*#31422-basri 190821*/
 
 			ExternalContext externalContext = FacesContext.getCurrentInstance()
 					.getExternalContext();
