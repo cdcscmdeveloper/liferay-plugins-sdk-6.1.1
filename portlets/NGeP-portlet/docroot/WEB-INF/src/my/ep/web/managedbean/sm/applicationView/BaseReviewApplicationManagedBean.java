@@ -327,6 +327,9 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	// #29617
 	private SmSmeSupplier smeSupplier;
 	
+	//#3460
+	private String sdoRemark;
+	
 	public String getSupportingDocMode() {
 		return supportingDocMode;
 	}
@@ -2337,5 +2340,13 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 		public void setRejectReasonByPO(String rejectReasonByPO) {
 			this.rejectReasonByPO = rejectReasonByPO;
+		}
+
+		public String getSdoRemark() {
+			return sdoRemark;
+		}
+
+		public void setSdoRemark(String sdoRemark) {
+			this.sdoRemark = sdoRemark;
 		}
 }
