@@ -37,6 +37,7 @@ import org.primefaces.context.RequestContext;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.persistence.entity.pm.common.PmRemarkCategory;
 //#28175 end
 
@@ -539,9 +540,17 @@ public class ViewSuppProfileBackingBean extends
 			reqDTO.setCategoryL3Id(catCodeID);
 			resDTO = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO);
 		}
-		getManagedBean().setHistoryList(resDTO.getRemarkList());
+		getManagedBean().setHistoryList(updateCreatedUserName(resDTO.getRemarkList()));
 		getManagedBean().setCatCode(catCode);
 		RequestContext.getCurrentInstance().execute("remarkHisCatCodePopup.show()");
+	}
+	
+	private List<PmRemarkCategory> updateCreatedUserName(List<PmRemarkCategory> remarkList) {
+		for(PmRemarkCategory rc: remarkList){
+			PmUser user = PmCommonUtil.retrieveUserById(rc.getCreatedBy(),true);
+			rc.setCreatedUsername(user.getUserName());
+		}
+		return remarkList;
 	}
 	// #28175 end
 	
