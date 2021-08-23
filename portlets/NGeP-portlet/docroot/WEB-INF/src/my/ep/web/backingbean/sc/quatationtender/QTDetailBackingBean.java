@@ -6582,19 +6582,36 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					String committeeType = "";
 					String committeeNames = "";
 					List<ScQtApprovalRequest> list = quationTenderResDTO.getCmtModififationRequests();
+					//25037 start #372
+					List<ScQtCommittee> qtCommittees = quationTenderResDTO.getQtDetail().getScQtCommittees();
+					Map<Object, Object> map = CustomUtils.listToMap(qtCommittees, "getScCommittee.getCommitteeType.getParameterCode");
+					//25037 end #372
 					for(ScQtApprovalRequest r: list){
-						count++;
-						String code = r.getApprovalType().getParameterCode();
-						committeeType = committeeType.concat(code);
-						committeeNames = committeeNames.concat(this.getParameterDesc(ParameterConst.COMMITTE_TYPE, code));
-						if(count<list.size()){
-							committeeType = committeeType.concat("/");
-							committeeNames = committeeNames.concat("/");
+						//25037 start #372
+						String code = r.getApprovalType().getParameterCode(); 
+						ScQtCommittee qtCommittee =  (ScQtCommittee)map.get(code);
+						Long cmtStatus = qtCommittee !=null ? qtCommittee.getScCommittee().getCommitteStatus().getStatusId(): 0L;
+						if(cmtStatus.equals(QTStatusConst.CMT_PENDING_APPROVAL)){
+							count++;
+							committeeType = committeeType.concat(code);
+							committeeNames = committeeNames.concat(this.getParameterDesc(ParameterConst.COMMITTE_TYPE, code));
+							if(count<list.size()){
+								committeeType = committeeType.concat("/");
+								committeeNames = committeeNames.concat("/");
+							}
+						//25037 end #372
 						}
 					}
 					String procurementMode = this.getParameterDesc(scQt.getProcurementMode());
 					String qtNo = scQt.getQtNo();
-					successMessage(MessageConst.INFO_760504, new String[]{committeeNames, procurementMode, qtNo}, true);
+					
+					//25037 start #372
+					if(StringUtils.isNotBlank(committeeNames)){
+						successMessage(MessageConst.INFO_760504, new String[]{committeeNames, procurementMode, qtNo}, true);
+					}else{
+						successMessage(msgCode, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION, scQt.getQtNo(), Boolean.TRUE);
+					}
+					//25037 end #372
 				}else{
 					successMessage(msgCode, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION,
 							scQt.getQtNo(), Boolean.TRUE);
