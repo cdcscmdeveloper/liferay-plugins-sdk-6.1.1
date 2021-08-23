@@ -925,13 +925,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}	
 		}
 		
-		// #27545 - start
-		if (outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || outcome.equals(BpmOutcomeConst.BPM_APPROVE)
-				|| outcome.equals(BpmOutcomeConst.BPM_REVISE)) {
-			validateAssignedUser(requestNoteDtls);
-		}
-		// #27545 - end
-
 		if(outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || 
 				outcome.isEmpty() || 
 				outcome.equals(BpmOutcomeConst.BPM_APPROVE)){
@@ -959,30 +952,22 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				}
 			}
 		}
-
-		debugLogger("RequestNoteBackingBean >> submitAction ---- isExceededAmountAlerted() = "+ getManagedBean().isExceededAmountAlerted());
 		
-		if(getManagedBean().isExceededAmountAlerted() && !BpmOutcomeConst.BPM_REVISE.equals(outcome)){//26059
-			//26059 - start			
-			if(!getManagedBean().isProceedWithDPExceedThreshold() && !BpmOutcomeConst.BPM_REVISE.equals(outcome)) {
-				// refresh remarks
-				getManagedBean().getRequestNote().setRemarks(initializeRemarks(
-						getManagedBean().getRequestNote(),
-						getManagedBean().getRequestNote().getCurrentStatus(),
-						getManagedBean().getRequestNote().getRemarks(),
-						ScRequestNoteRemark.class));
-				RequestContext.getCurrentInstance().execute("dpExceedDlg.show()");			
-			}		
-			//26059 - end
-		} else{
-			if(!isDeliveryTermPrompt){
-				if(outcome.equals(BpmOutcomeConst.BPM_APPROVE) || 
-						outcome.equals(BpmOutcomeConst.BPM_REVISE) || 
-						outcome.equals(BpmOutcomeConst.BPM_REJECT)){
-					approverAction(outcome);
-				} else{
-					requestNoteSubmit(outcome);
-				}
+		// #27545 - start
+		if (outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || outcome.equals(BpmOutcomeConst.BPM_APPROVE)
+				|| outcome.equals(BpmOutcomeConst.BPM_REVISE)) {
+			validateAssignedUser(requestNoteDtls);
+		}
+		// #27545 - end
+				
+		//26059 - remove if else
+		if(!isDeliveryTermPrompt){
+			if(outcome.equals(BpmOutcomeConst.BPM_APPROVE) || 
+					outcome.equals(BpmOutcomeConst.BPM_REVISE) || 
+					outcome.equals(BpmOutcomeConst.BPM_REJECT)){
+				approverAction(outcome);
+			} else{
+				requestNoteSubmit(outcome);
 			}
 		}
 	}
