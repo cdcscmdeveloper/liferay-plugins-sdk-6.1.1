@@ -1047,6 +1047,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		
 		//#3460 - Start
 		//To get sdo remarks by application
+		getManagedBean().setSdoRemark("");
 		initSDORemarkInfo();
 		//#3460 - End
 	}
