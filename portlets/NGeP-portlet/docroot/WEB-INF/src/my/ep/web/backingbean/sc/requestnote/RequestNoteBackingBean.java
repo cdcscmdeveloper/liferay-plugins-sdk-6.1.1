@@ -905,13 +905,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}	
 		}
 		
-		// #27545 - start
-		if (outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || outcome.equals(BpmOutcomeConst.BPM_APPROVE)
-				|| outcome.equals(BpmOutcomeConst.BPM_REVISE)) {
-			validateAssignedUser(requestNoteDtls);
-		}
-		// #27545 - end
-
 		if(outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || 
 				outcome.isEmpty() || 
 				outcome.equals(BpmOutcomeConst.BPM_APPROVE)){
@@ -939,6 +932,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				}
 			}
 		}
+		
+		// #27545 - start
+		if (outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || outcome.equals(BpmOutcomeConst.BPM_APPROVE)
+				|| outcome.equals(BpmOutcomeConst.BPM_REVISE)) {
+			validateAssignedUser(requestNoteDtls);
+		}
+		// #27545 - end
+				
 		//26059 - remove if else
 		if(!isDeliveryTermPrompt){
 			if(outcome.equals(BpmOutcomeConst.BPM_APPROVE) || 
