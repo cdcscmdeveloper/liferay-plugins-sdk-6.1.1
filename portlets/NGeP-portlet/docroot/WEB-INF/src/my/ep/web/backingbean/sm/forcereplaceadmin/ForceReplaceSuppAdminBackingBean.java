@@ -202,7 +202,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 			}
 			if(getManagedBean().isBypassFlag()==false) {
 				StringBuilder sb = new StringBuilder();
-				sb.append(SmCommonUtil.getMessage("lbl.msg.confirm.declare4", null));
+				sb.append(SmCommonUtil.getMessage("lbl.msg.confirm.declare4", new String[] {getManagedBean().getOldAdmin().getName()})); //#28765
 				getManagedBean().setDisplayMessageReplaceTrans(sb.toString());
 				//#28765 End
 				validate();
@@ -1439,7 +1439,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 						appl.getApplNo(),
 						getManagedBean().getSmSupplier().getCompanyName()}));
 			} else {
-				sb.append(SmCommonUtil.getMessage("lbl.msg.confirm.declare4", null));
+				sb.append(SmCommonUtil.getMessage("lbl.msg.confirm.declare4", new String[] {getManagedBean().getOldAdmin().getName()}));  //#28765
 			}
 			getManagedBean().setDisplayMessageReplaceTrans(sb.toString());
 			getManagedBean().setSmAppl(appl);
