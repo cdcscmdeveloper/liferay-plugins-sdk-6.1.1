@@ -1789,6 +1789,10 @@ public class SmCommonUtil {
 				reqDTO.setType("supplier");
 			} else if(serType.equalsIgnoreCase("SVO")){
 				reqDTO.setType("svo");
+			//#24964 - start
+			} else if(serType.equalsIgnoreCase("PO")){
+				reqDTO.setType("po_svTask");
+			//#24964 - end
 			}else {
 				reqDTO.setType("approved");
 			}
@@ -1802,9 +1806,9 @@ public class SmCommonUtil {
 	//#24964 - END
 	
 	//24964 - start
-	public static String readSerFileSVO(String applNo, Long svTaskId){
+	public static String readSerFileSvTask(String applNo, Long svTaskId, String role){
 		String retVal = StringUtils.EMPTY;
-		String fileName = applNo + "_SVO_" + svTaskId + ".ser";
+		String fileName = applNo + "_" + role.toUpperCase()+"_" + svTaskId + ".ser";
 		String baseDir = EpPropertiesUtils.getInstance().getProperty(
 				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)
 				+ File.separator

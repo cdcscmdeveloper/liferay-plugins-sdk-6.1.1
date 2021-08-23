@@ -27,6 +27,7 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBranchBank;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
+import my.ep.persistence.entity.sm.SmSvInterviewee;
 import my.ep.persistence.entity.sm.SmSvMachine;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.type.pm.RoleCode;
@@ -530,22 +531,23 @@ public class SmSideMenuIconUtil {
 			bean.getEditVO().setDisciplinary(false);
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setSuppEditSiteVisit(false);
-				if (step10SiteVisitReportHasDifference(true, bean.getLatestAppl(),
+				//#24964 - start
+				if (step10SiteVisitReportHasDifference("supplier", bean.getLatestAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setSuppEditSiteVisit(true);
 				}
-				if (step10SiteVisitReportHasDifference(true,
+				if (step10SiteVisitReportHasDifference("supplier",
 						bean.getLatestApproveAppl(), bean.getSmAppl())) {
 					bean.getSupplierEditVO().setSuppEditSiteVisit(true);
 				}
 			} else if (bean.isPoUser()) {
 				bean.getEditVO().setSuppEditSiteVisit(false);
 				bean.getEditVO().setPoEditSiteVisit(false);
-				if (step10SiteVisitReportHasDifference(true, bean.getLatestAppl(),
+				if (step10SiteVisitReportHasDifference("supplier", bean.getLatestAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditSiteVisit(true);
 				}
-				if (step10SiteVisitReportHasDifference(false, bean.getSupplierAppl(),
+				if (step10SiteVisitReportHasDifference("po", bean.getSupplierAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setPoEditSiteVisit(true);
 				}
@@ -553,16 +555,17 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setSuppEditSiteVisit(false);
 				bean.getEditVO().setPoEditSiteVisit(false);
 				bean.getEditVO().setAppEditSiteVisit(false);
-				if (step10SiteVisitReportHasDifference(true, bean.getLatestAppl(),
+				if (step10SiteVisitReportHasDifference("supplier", bean.getLatestAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditSiteVisit(true);
 				}
-				if (step10SiteVisitReportHasDifference(false, bean.getSupplierAppl(),
+				if (step10SiteVisitReportHasDifference("po", bean.getSupplierAppl(),
 						bean.getPoAppl())) {
 					bean.getEditVO().setPoEditSiteVisit(true);
 				}
-				if (step10SiteVisitReportHasDifference(false, bean.getPoAppl(),
+				if (step10SiteVisitReportHasDifference("app", bean.getPoAppl(),
 						bean.getSmAppl())) {
+					//#24964 - end
 					bean.getEditVO().setAppEditSiteVisit(true);
 				}
 			}
@@ -1630,7 +1633,7 @@ public class SmSideMenuIconUtil {
 	}
 	
 	//24964
-	private static boolean step10SiteVisitReportHasDifference(boolean isSupplier,
+	private static boolean step10SiteVisitReportHasDifference(String role,
 			SmAppl applPrev, SmAppl applCurr) {
 		boolean retVal = false;
 		/*
@@ -1650,7 +1653,7 @@ public class SmSideMenuIconUtil {
 		}
 		*/
 		//24964 - start
-		if(isSupplier) return retVal;
+		if(role.equals("supplier")) return retVal;
 		String excludes[] = new String[] {"smSvTask, smSvTemplate, pmParameter, pmMachine"};
 		
 		for(SmSvTask svTask : applCurr.getSmSvTasks()){
@@ -1660,7 +1663,12 @@ public class SmSideMenuIconUtil {
 					ModuleCodeConst.SUPPLIER_MANAGEMENT, ISiteVisitSO.class))
 					.retrieveSiteVisitCompareBySvTaskId(reqDTO).getSmSvTask();
 			if(svTask == null) break;
-			SmSvTask svTaskSVO = SvoSiteVisitBackingBean.getSVOTask(applCurr.getApplNo(), svTask.getSvTaskId());
+			SmSvTask svTaskSVO = null;
+			if(role.equals("po")){
+				svTaskSVO = SvoSiteVisitBackingBean.getPrevSvTask(applCurr.getApplNo(), svTask.getSvTaskId(), "SVO");
+			} else {
+				svTaskSVO = SvoSiteVisitBackingBean.getPrevSvTask(applCurr.getApplNo(), svTask.getSvTaskId(), "PO");
+			}
 			if(svTaskSVO == null) break;
 			String param = svTask.getSmSvTemplate().getPmParameter().getParameterCode();
 			
@@ -1670,11 +1678,22 @@ public class SmSideMenuIconUtil {
 					new String[] {"svAssistantOfficerId"}, null, new String[] {"smSvTask, nameEnterBySvo"});
 			if(retVal) break;
 			
-			retVal = EntityHelper.hasDiffBetweenList(
-					svTask.getSmSvTemplate().getSmSvInterviewees(),
-					svTaskSVO.getSmSvTemplate().getSmSvInterviewees(), 
-					new String[] {"svIntervieweeId"}, null, excludes);
-			if(retVal) break;
+			//#24964 - start
+			for(SmSvInterviewee itvw : svTask.getSmSvTemplate().getSmSvInterviewees()){
+				boolean exist = false;
+				for(SmSvInterviewee itvwSVO : svTaskSVO.getSmSvTemplate().getSmSvInterviewees()){
+					if(itvw.getSvIntervieweeId() == itvwSVO.getSvIntervieweeId()){
+						exist = true;
+						if(!itvw.getName().equals(itvwSVO.getName()) 
+							|| !itvw.getDesignation().equals(itvwSVO.getDesignation())){
+								return true;
+						}
+						break;
+					}
+				}
+				if(!exist) return true;
+			}
+			//#24964 - end
 			
 			//financial information
 			retVal = EntityHelper.hasDiffBetweenList(

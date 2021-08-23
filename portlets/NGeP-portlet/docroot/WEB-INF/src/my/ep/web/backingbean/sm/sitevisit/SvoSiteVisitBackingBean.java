@@ -2416,8 +2416,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 		if(getManagedBean().getSmSvtaskSVO() == null 
 			|| getManagedBean().getSmSvTask().getSvTaskId() != getManagedBean().getSmSvtaskSVO().getSvTaskId()){
-			getManagedBean().setSmSvtaskSVO(getSVOTask(
-					getManagedBean().getSmSvTask().getSmAppl().getApplNo(), getManagedBean().getSmSvTask().getSvTaskId()));
+			getManagedBean().setSmSvtaskSVO(getPrevSvTask(
+					getManagedBean().getSmSvTask().getSmAppl().getApplNo(), 
+					getManagedBean().getSmSvTask().getSvTaskId(), "SVO"));
 		
 			log.info("#24964 - TR TROUBLESHOOT METHOD retrieveSiteVisitInfo");
 			log.info("#24964 - SVTASK ID" + getManagedBean().getSmSvtaskSVO().getSvTaskId());
@@ -2773,7 +2774,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		reqDTO.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
 		ISiteVisitSO reqSO = (ISiteVisitSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISiteVisitSO.class);
 		reqSO.saveOrSubmitSiteVisitReport(reqDTO);
-		retrieveSiteVisitInfo("V");
+		//#24964 - start
+		SmCommonUtil.createSerFileSVO(svTask, "PO");
+		//retrieveSiteVisitInfo("V");
+		//#24964 - end
 		RequestContext.getCurrentInstance().execute("poReportDlg.hide()");
 	} 
 	
@@ -2904,9 +2908,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	// #28175 end
 	
 	//#24964 - start
-	public static SmSvTask getSVOTask(String applNo, long svTaskId){
+	public static SmSvTask getPrevSvTask(String applNo, long svTaskId, String role){
 		try {
-			String fileName = SmCommonUtil.readSerFileSVO(applNo, svTaskId);
+			String fileName = SmCommonUtil.readSerFileSvTask(applNo, svTaskId, role);
 			if (!StringUtils.isBlank(fileName)) {
 				SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
 				reqDTO.setDeSerFileName(fileName);
