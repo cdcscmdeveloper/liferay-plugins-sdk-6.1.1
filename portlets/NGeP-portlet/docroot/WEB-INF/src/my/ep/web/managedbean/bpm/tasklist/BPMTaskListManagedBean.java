@@ -111,6 +111,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	private String processName;
 	private String[] action;
 	private String taskId;
+	private String taskIdPair;/*#31422-basri 190821*/
 	private Integer tabActiveIndex = 0;
 	private String taskName;
 	private String tempLoginId; // TODO: temp and to be removed
@@ -1719,6 +1720,17 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
     	//#25037-end
 		  
 	}
- 	// end #24968 
+ 	// end #24968
+    
+	/*#31422-basri 190821*/
+	public void setTaskIdPair(String taskIdPair) {
+		this.taskIdPair = taskIdPair;
+		
+	}
+	
+	public String getTaskIdPair() {
+		return taskIdPair;
+	}
+	/*#31422-basri 190821*/
 	
 }
