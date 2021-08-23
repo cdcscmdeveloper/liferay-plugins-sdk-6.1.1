@@ -1938,10 +1938,15 @@ public class QTCommitteBackingBean extends
 						QTStatusConst.QT_PROPOSAL_PREPARATION
 				};
 				if(!Arrays.asList(allowedStatusAfterPublish).contains(currentStatusId)){//#25037 
-					if(Arrays.asList(new String[]{"EC", "OC", "SC", "TEC", "FEC"}).contains(commType)){
+					if(Arrays.asList(ParameterConst.QT_COMMITTEES_ORDERED_LIST).contains(commType)){//25037 #372
 						return false;
 					}
 				}
+				//25037 start #372
+				else if(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equalsIgnoreCase(commType)){
+					return false;
+				}
+				//25037 end #372
 //				if (super.isQTStatusInBetween(currentStatusId, QTStatusConst.QT_BRIEFING_SITE_VISIT, QTStatusConst.QT_EVALUATION_PROPOSAL)) {
 //					if (QTStatusConst.QT_EVALUATION_PROPOSAL.equals(currentStatusId)) {
 //						Long qtId = scQt.getQtId();
@@ -2026,7 +2031,7 @@ public class QTCommitteBackingBean extends
 						return false;
 					}
 					if(QTStatusConst.QT_EVALUATION_PROPOSAL.equals(currentStatusId)){
-						if(Arrays.asList(new String[]{"EC", "OC", "TEC", "FEC"}).contains(commType)){
+						if(Arrays.asList(ParameterConst.QT_EVALUATION_COMMITTEES).contains(commType)){//25037 #372
 							return true;
 						}
 					}
