@@ -55,6 +55,7 @@ public class ContractManagementReportBackingBean extends CtReportBaseBackingBean
 		getManagedBean().setCircularEffFromDate(null);
 		getManagedBean().setCircularEffToDate(null);
 		getManagedBean().setFulfilmentType(null);
+		getManagedBean().setSelectedSupplier(null);
 		
 	}
 	@Override
@@ -132,7 +133,37 @@ public class ContractManagementReportBackingBean extends CtReportBaseBackingBean
 				&& StringUtils.isNotEmpty(getManagedBean().getCircularEffToDate().toString())) {
 			map.put(CtReportConst.PARAM_KEY_CIRCULAR_TO_DATE, df.format(
 					getManagedBean().getCircularEffToDate()));
-		}	
+		}
+		
+		if (getManagedBean().getSelectedMinistry() != null)
+		log.info("ZAIM test1 "+getManagedBean().getSelectedMinistry().getPmOrgValidity().getOrgName());
+		log.info("ZAIM test2 "+getManagedBean().getSelectedKumpulanPTJ().getOrgName());
+		log.info("ZAIM test3 "+getManagedBean().getSelectedPTJ().getPmOrgValidity().getOrgName());
+		log.info("ZAIM test4 "+getManagedBean().getContractNo());
+		log.info("ZAIM test5 "+getManagedBean().getContractPhysicalNo());
+		log.info("ZAIM test6 "+getManagedBean().getLoaNo());
+		log.info("ZAIM test7 "+getManagedBean().getLoaPhysicalNo());
+		log.info("ZAIM test8 "+getManagedBean().getAgreement());
+		log.info("ZAIM test9 "+getManagedBean().getProcurementMode().toString());
+		log.info("ZAIM test10 "+getManagedBean().getStatus());
+		log.info("ZAIM test11 "+getManagedBean().getFulfilmentType());
+		log.info("ZAIM test12 "+df.format(getManagedBean().getFromDate()));
+		log.info("ZAIM test13 "+df.format(getManagedBean().getToDate()));
+		
+		if (getManagedBean().getSelectedSupplier() != null){
+			log.info("ZAIM Supplier Name "+getManagedBean().getSelectedSupplier().getOrgProfileId().toString());
+			log.info("ZAIM PP/ PKP No "+ getManagedBean().getCircularNo());
+			log.info("ZAIM Circular Effective Date From "+getManagedBean().getCircularEffFromDate());
+			log.info("ZAIM Circular Effective Date to "+getManagedBean().getCircularEffToDate());
+			log.info("ZAIM Central Contract Name "+getManagedBean().getCircularName());
+		}else if (getManagedBean().getSupplierID() != null){
+			log.info("ZAIM Supplier Name "+getManagedBean().getSupplierID().toString());
+		}
+		
+		
+		
+		
+		
 		if (getManagedBean().getFulfilmentType()!= null){
 			map.put(CtReportConst.PARAM_KEY_FULFILMENT_TYPE, getManagedBean()
 					.getFulfilmentType().toString());
