@@ -1207,9 +1207,13 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					reqDTO.setCompanyTypeCode(businessType);
 					reqDTO.setOwner(softcertUploadSuppDocVO.getPersonnel()
 							.isEquityOwner());
-					reqDTO.setFirstUser(softcertUploadSuppDocVO.getPersonnel()
-							.getEpRole().equals(RoleCode.SUPPLIER_TEMP.value()) ? true
-							: false);
+					// #31462 - start
+					reqDTO.setFirstUser((softcertUploadSuppDocVO.getPersonnel().getEpRole()
+							.equals(RoleCode.SUPPLIER_TEMP.value())
+							|| softcertUploadSuppDocVO.getPersonnel().getEpRole()
+									.equals(RoleCode.BASIC_SUPPLIER_ADMIN.value()) || softcertUploadSuppDocVO
+							.getPersonnel().getEpRole().equals(RoleCode.MOF_SUPPLIER_ADMIN.value())) ? true : false);
+					// #31462 - end
 					reqDTO.setForeigner(softcertUploadSuppDocVO
 							.getPersonnel()
 							.getPmCountry()
