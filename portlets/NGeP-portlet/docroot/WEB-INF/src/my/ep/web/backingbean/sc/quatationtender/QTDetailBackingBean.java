@@ -3966,6 +3966,18 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						this.getManagedBean().getSelectedApprovalTabBean()
 								.getScQtApproval());
 			}
+			
+			// #25077 Start
+			Collections.sort(tabBeans, new Comparator<TabBean>() {
+				List<String> sortOrder = Arrays.asList("ACC", "OTH", "BPK", "PTJ", "PBA", "FC");
+				public int compare(TabBean o1, TabBean o2) {
+							return Integer.valueOf(
+									sortOrder.indexOf(o1.getTabType())).compareTo(
+									Integer.valueOf(sortOrder.indexOf(o2.getTabType())));
+				}
+			});	
+			// #25077 End
+			
 			this.getManagedBean().setTabList(tabBeans);
 		} finally {
 			detailSO = null;
@@ -5725,13 +5737,15 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				this.getManagedBean().setSaveFlow(false);
 				detailSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-				QuationTenderReqDTO reqDTO = prepareQTInfo();
-				reqDTO.getQtdetail().setOtherApproval(true);
-				// #25077 - #91 - Start
-				reqDTO.getQtdetail().setMitiApproval(true);
-				// #25077 - #91 - End
-				reqDTO.setApprovalOTH(this.getManagedBean().getSelectedApprovalTabBean().getTabType());//bug #30434
-				detailSO.validateApprovalDetails(reqDTO);
+				if(this.getManagedBean().isMaintanceFlow()==false){
+					QuationTenderReqDTO reqDTO = prepareQTInfo();
+					reqDTO.getQtdetail().setOtherApproval(true);
+					// #25077 - #91 - Start
+					reqDTO.getQtdetail().setMitiApproval(true);
+					// #25077 - #91 - End
+					reqDTO.setApprovalOTH(this.getManagedBean().getSelectedApprovalTabBean().getTabType());//bug #30434
+					detailSO.validateApprovalDetails(reqDTO);
+				}
 			} finally {
 				detailSO = null;
 			}
@@ -6004,10 +6018,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 								.getQt().getQtStatus().getStatusId())) {
 							reqDTO.getQtdetail().setFCApproval(true);
 							// #25077 - #80 - Start.
-							reqDTO.getQtdetail().setOtherApproval(true);
+							if(this.getManagedBean().isMaintanceFlow()==false){reqDTO.getQtdetail().setOtherApproval(true);}
 							// #25077 - #80 - End.
 							// #25077 - #91 - Start
-							reqDTO.getQtdetail().setMitiApproval(true);
+							if(this.getManagedBean().isMaintanceFlow()==false){reqDTO.getQtdetail().setMitiApproval(true);}
 							// #25077 - #91 - End
 						}
 						
