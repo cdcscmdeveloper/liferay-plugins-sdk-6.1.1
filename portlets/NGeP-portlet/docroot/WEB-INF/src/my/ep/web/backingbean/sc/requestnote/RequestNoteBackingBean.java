@@ -38,6 +38,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
 import my.ep.biz.service.fl.itemsummary.IFlItemSummarySO;
+import my.ep.biz.service.osb.sc.IDPOsbSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -48,7 +49,6 @@ import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
-import my.ep.biz.service.osb.sc.IDPOsbSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
@@ -63,6 +63,8 @@ import my.ep.constants.CommonConstants;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.fl.itemsummary.FlItemSummaryReqDTO;
+import my.ep.dto.osb.sc.DPOsbReqDTO;
+import my.ep.dto.osb.sc.DPOsbResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -78,8 +80,6 @@ import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
-import my.ep.dto.osb.sc.DPOsbReqDTO;
-import my.ep.dto.osb.sc.DPOsbResDTO;
 import my.ep.dto.sc.requestitem.RequestItemReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
@@ -134,7 +134,6 @@ import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;
 import my.ep.web.backingbean.sc.purchaseinquiry.PurchaseInquiryBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
-import my.ep.web.backingbean.trackingdiary.TrackingDiarySearchBackingBean;
 import my.ep.web.bean.sc.directpurchase.MarketSummaryAndPIBean;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.sc.requestnote.RequestNoteManagedBean;
@@ -1250,16 +1249,23 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setPurchaseInDefaultId(directPurchaseDataType.getPidId());
 		
 		requestNoteReqDTO.setRequestNoteId(dpId);
+		
+		//28999,30063,30448 - Start
+		if(getManagedBean().getCurrentStatusId() != null 
+				&& getManagedBean().getCurrentStatusId().equals(DPStatusConstants.SQ_PENDING_RN_CREATION)){
+			if(requestNoteReqDTO.getRequestNoteId() != null){
+				getRequestNoteSO().checkingPriceTypeAndRequestSupplierItem(requestNoteReqDTO);
+			}
+		}		
+		//28999,30063,30448 - End
+		
+		log.info("Temp2: start performance - getRequestNoteSO().getRequestNote");
 		RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNote(requestNoteReqDTO);
 		if(requestNoteResDTO.getRequestNoteDetail() != null){
 			requestNote = requestNoteResDTO.getRequestNoteDetail();
 		}
 
-		if(requestNote != null){
-			
-			//28999 - Start
-			requestNote = checkingPriceType(requestNote);
-			//28999 - End
+		if(requestNote != null){	
 			
 			if (requestNote.getScRNZone() != null) {
 				getManagedBean().setScRNZone(requestNote.getScRNZone());	
@@ -5058,103 +5064,4 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 	// #28789 - end
-	
-	//28999 - Start
-	public ScRequestNote checkingPriceType(ScRequestNote requestNote){
-		log.info("checkingPriceType");
-		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
-		TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
-		boolean priceTypeChange = false;
-		boolean priceTypeChangeSpecQuestion = false;
-		
-		if(requestNote.getQuote() != null){
-
-			if(!requestNote.getQuote().isZonal()){
-
-				if(requestNote.getRequestNoteDtls() != null){
-
-					for(ScRequestNoteDtl requestNoteDtl : requestNote.getRequestNoteDtls()){
-						
-						priceTypeChangeSpecQuestion = false;
-						
-						if(requestNoteDtl.getPriceType() != null){
-
-							if(requestNoteDtl.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)){
-								requestNoteDtl.setPriceType(getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE, ParameterConst.PRICE_TYPE_STANDARD));
-								priceTypeChange = true;
-							}else if(requestNoteDtl.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)){
-								requestNoteDtl.setPriceType(getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE, ParameterConst.PRICE_TYPE_TIER));
-								priceTypeChange = true;
-							}	
-						}
-						
-						if(requestNoteDtl.getRequestItem() != null){
-
-							if(requestNoteDtl.getRequestItem().getSupplierItems() != null){
-
-								for(ScRequestSupplierItem supplierItem : requestNoteDtl.getRequestItem().getSupplierItems()){
-									if(supplierItem.getSupplierItemPrices() != null){
-
-										for(ScSupplierItemPrice supplierItemPrice : supplierItem.getSupplierItemPrices()){
-											if(supplierItemPrice.getPriceType() != null){
-
-												if(supplierItemPrice.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)){
-													supplierItemPrice.setPriceType(getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE, ParameterConst.PRICE_TYPE_STANDARD));
-													priceTypeChange = true;
-												}else if(supplierItemPrice.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)){
-													supplierItemPrice.setPriceType(getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE, ParameterConst.PRICE_TYPE_TIER));
-													priceTypeChange = true;
-												}
-											}
-										}
-									}
-								}
-							}
-							
-							if(requestNoteDtl.getRequestItem().getTplSpecQuestion() != null){
-
-								if(!requestNoteDtl.getRequestItem().getTplSpecQuestion().getQuestionType()
-										.equalsIgnoreCase(ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC)){
-
-									if(requestNoteDtl.getRequestItem().getTplSpecQuestion().getClPriceTypeCode() != null){
-
-										if(requestNoteDtl.getRequestItem().getTplSpecQuestion().getClPriceTypeCode().getParameterCode()
-												.equals(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)){
-											requestNoteDtl.getRequestItem().getTplSpecQuestion()
-											.setClPriceTypeCode(getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE,ParameterConst.PRICE_TYPE_STANDARD));
-											priceTypeChangeSpecQuestion = true;
-										}else if(requestNoteDtl.getRequestItem().getTplSpecQuestion().getClPriceTypeCode().getParameterCode()
-												.equals(ParameterConst.PRICE_TYPE_ZONAL_TIER)){
-											requestNoteDtl.getRequestItem().getTplSpecQuestion()
-											.setClPriceTypeCode(getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE,ParameterConst.PRICE_TYPE_TIER));
-											priceTypeChangeSpecQuestion = true;
-										}
-										
-									}
-									
-								}
-							}
-							
-							if(priceTypeChangeSpecQuestion){
-								specReqDTO.setTplSpecQuestion(requestNoteDtl.getRequestItem().getTplSpecQuestion());
-								getTemplateSpecSO().updateSpecQuestionInfo(specReqDTO);
-							}
-						}
-						
-					}
-					
-				}
-				
-			}
-			
-		}
-		
-		if(priceTypeChange){
-			requestNoteReqDTO.setRequestNote(requestNote);
-			getRequestNoteSO().updateRequestNoteInfo(requestNoteReqDTO);
-		}
-				
-		return requestNote;
-	}
-	//28999- End
 }
