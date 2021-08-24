@@ -5175,4 +5175,16 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					"emailPopUpWidgetVar.show()");
 		}
 	}
+	
+	//#29594 - START
+	public String retrieveMinistryName() {
+		return retrieveMinistryCodeNameByOrgProfileId(getManagedBean().getSelectedUserOrg().getPmOrgProfile()
+				.getOrgProfileId());
+	}
+	
+	public String retrievePTJGroupName() {
+		return retrieveJabatanCodeNameByOrgProfileId(getManagedBean().getSelectedUserOrg().getPmOrgProfile()
+				.getOrgProfileId());
+	}
+	//#29594 - END
 }
