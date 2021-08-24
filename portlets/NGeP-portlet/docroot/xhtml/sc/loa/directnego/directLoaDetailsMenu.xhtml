@@ -161,7 +161,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.contact.person']}" />
 				</td>
 				<td><p:inputText id="suppContact" size="35" disabled="true"
-						value="#{directLOABackingBean.managedBean.scLoa.scSupplierAddress.contactPerson}" />
+						value="#{directLOABackingBean.managedBean.scLoa.scSupplierAddress.pmContactUserID.salutationCode.salutationName.concat(' ').concat(directLOABackingBean.managedBean.scLoa.scSupplierAddress.contactPerson)}" />
 				</td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.email']}" /></td>
 				<td><p:inputText id="suppEmail" size="28"
