@@ -3599,10 +3599,10 @@ public class QTCloneBackingbean extends
 	
 	private void retrieveQtnDetails(ScQt scQt,ScQt copyScqt,IQTDetailSO QtDetailsSO){
 		//ScQt scQt=new ScQt();
-		if(null==scQt.getFileNo()){
+		//if(null==scQt.getFileNo()){25635&31548-start
 			
-			scQt.setBrandNew(true);
-		}
+			//scQt.setBrandNew(true);
+		//}25635&31548-End
 		scQt.setFileNo(null);
 		scQt.setObtainSpecialApproval(copyScqt
 				.getObtainSpecialApproval());
