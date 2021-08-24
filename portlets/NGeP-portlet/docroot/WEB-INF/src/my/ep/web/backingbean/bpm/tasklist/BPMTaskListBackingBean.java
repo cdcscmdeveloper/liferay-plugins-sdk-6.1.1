@@ -784,11 +784,10 @@ BaseBackingBean<BPMTaskListManagedBean> {
 
 			// externalContext.redirect("/web/guest/" +url +"?taskId="+taskId);
 			externalContext.redirect(commonUrl + "/" + url + "?taskId="
-					+ taskId + "&taskIdPair="+strbuildtask+"&claim=" + claim);/*#31422-basri 190821*/
+					+ taskId + "&taskIdPair="+strbuildtask+"&claim=" + claim+"&docNo="+docNo);/*#31422-basri 190821*/
 			// externalContext.redirect("http://localhost:8080/web/guest/" +url
 			// +"?taskId="+taskId);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -1095,7 +1094,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		log.info("token:"+token);
 		
 		/*#31422-basri 190821*/
-		if(this.getManagedBean().getTaskIdPair() != null){
+		if(!this.getManagedBean().getTaskIdPair().isEmpty()){
 			reqDTO.setTaskId(this.getManagedBean().getTaskIdPair());
 	    	reqDTO.setCtxToken(token);
 	    	bpmSO.claimTask(reqDTO);
