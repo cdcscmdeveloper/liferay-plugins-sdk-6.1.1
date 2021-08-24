@@ -324,6 +324,7 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	public boolean above500K = true;
 	public boolean AgreementReqChange = false;
 	public String docStatus;
+	public String procurementType;
 	//#25725 end
 	
 	//#19336
@@ -2040,6 +2041,16 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 		this.totalZonePrice = totalZonePrice;
 	}
 	//#27797 - end
+	
+	//#25725 - start
+	public String getProcurementType() {
+		return procurementType;
+	}
+
+	public void setProcurementType(String procurementType) {
+		this.procurementType = procurementType;
+	}
+	//#25725 - end
 }
 
 

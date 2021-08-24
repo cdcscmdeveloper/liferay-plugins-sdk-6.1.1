@@ -19,7 +19,7 @@
 	<ui:param name="isOneOff" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeOneOff}"></ui:param>
 	<ui:param name="isNonPeriodic" value="#{(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeNonPeriodicAsAndWhen) or
 	(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeNonPeriodicScheduled)}"></ui:param>
-	<ui:param name="isPK7" value="#{(lOADetailBackingBean.managedBean.scLoa.scQuote.procurementType.parameterCode eq ParameterConst.procTypePk7)}"></ui:param>
+	<ui:param name="isPK7" value="#{(lOADetailBackingBean.managedBean.procurementType eq ParameterConst.procTypePk7)}"></ui:param>
 	
 	<c:if test="#{lOADetailBackingBean.managedBean.above500K}">
 		<ui:param name="above500K" value="#{true}"></ui:param>
