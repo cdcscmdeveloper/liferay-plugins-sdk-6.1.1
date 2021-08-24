@@ -4704,9 +4704,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				}
 			}
 		}
+		requestNoteDtl.setTotalPricePerItem(subTotalAmount);
+		
 		//#31528 - Start
 		//rounding to 2 decimal places
-		requestNoteDtl.setTotalPricePerItem(subTotalAmount.setScale(2, RoundingMode.HALF_UP));
+		requestNoteDtl.setTotalPricePerItemRounded(subTotalAmount.setScale(2, RoundingMode.HALF_UP));
 		//#31528 - End
 		
 		return subTotalAmount;
