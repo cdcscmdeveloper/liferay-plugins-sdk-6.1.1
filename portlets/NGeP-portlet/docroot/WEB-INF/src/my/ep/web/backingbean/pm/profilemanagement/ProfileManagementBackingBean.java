@@ -1753,6 +1753,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					// check for FL Approver and RN Approver only
 					// revert it to active
 					pmUserRole.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+					this.getManagedBean().setErrorMessage(true);
+					this.getManagedBean().setCheckSelectedRole(pmUserRole.getPmRole().getRoleCode());
 					throw new EpException(MessageConst.ERROR_770202, isActiveAtUserGroupUser(pmUserRole.getPmRole().getRoleCode()));
 					//Bug #31509 - End
 				} else {
@@ -3131,7 +3133,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			if (userOrg.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 				userRoleList = userOrg.getPmUserRoles();
 				for (PmUserRole userRole : userOrg.getPmUserRoles()) {
-					String roleCode = userRole.getPmRole().getRoleCode();
+					String roleCode = userRole.getPmRole().getRoleCode();		
 					if (userRole.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
 							&& userRole.getPmRole().isLimitRequired()) {
 						if (userRole.getApprovalLimit() == null
@@ -3582,10 +3584,20 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		// boolean addressEntered = false;
 		boolean isNewUser = this.getManagedBean().getSelectedUser().isBrandNew();
 		logger.info("..............saveUserProfile.................isNewUser=" + isNewUser);
-
+		
 		try {
 			user = this.getManagedBean().getSelectedUser();
 			userOrg = this.getManagedBean().getSelectedUserOrg();
+			
+			//Bug #31509 - Start - Checking active user at User Group
+			if (this.getManagedBean().isErrorMessage() == true) {
+				this.getManagedBean().setErrorMessage(false);
+				throw new EpException(MessageConst.ERROR_770202, 
+						isActiveAtUserGroupUser(this.getManagedBean()
+						.getCheckSelectedRole()));
+			}
+			//Bug #31509 - End 
+			
 			// Validation
 			if (isNewUser) {
 				checkIdentificationNumber1();
