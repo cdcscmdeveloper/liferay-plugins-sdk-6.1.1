@@ -5032,6 +5032,10 @@ public class QTDetailBackingBean extends
 				reqDTO.getQtdetail().setMitiApproval(true);
 				// #25077 - #91 - End
 				
+				// bug #30434 for #25077 -start-
+				reqDTO.setApprovalOTH(this.getManagedBean().getSelectedApprovalTabBean().getTabType());
+				// bug #30434 for #25077 -end-
+
 				detailSO.validateApprovalDetails(reqDTO);
 			} finally {
 				detailSO = null;
