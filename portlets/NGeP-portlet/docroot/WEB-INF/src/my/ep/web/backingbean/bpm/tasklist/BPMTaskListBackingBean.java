@@ -968,7 +968,7 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 		
 		
 		/*#31422-basri 190821*/
-		if(this.getManagedBean().getTaskIdPair() != null){
+		if(!this.getManagedBean().getTaskIdPair().isEmpty()){
 			reqDTO.setTaskId(this.getManagedBean().getTaskIdPair());
 	    	reqDTO.setCtxToken(token);
 	    	bpmSO.claimTask(reqDTO);
