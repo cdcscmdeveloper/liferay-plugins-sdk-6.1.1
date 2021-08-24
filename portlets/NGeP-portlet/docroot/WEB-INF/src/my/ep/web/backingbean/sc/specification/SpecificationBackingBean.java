@@ -18965,26 +18965,37 @@ if(null!=allTechnicalChecklist){
 			
 			for(ScQtScoreOfferPrice offerprice:checklist.getQtScoreWeightage().getScQtScoreOfferPrices()){
 				BigDecimal totalMaxScore = new BigDecimal(0);
-				for(TplSpecQuestion specQuestion : this.getManagedBean().getSpecQuestionList()){
-					System.out.println("specquestionID====>"+specQuestion.getSpecQuestionId());
-					
-					TemplateSpecReqDTO reqScoreDto = new TemplateSpecReqDTO();
-					TemplateSpecResDTO resScoreDto = new TemplateSpecResDTO();
-					reqScoreDto.setSpecQuestionId(specQuestion.getSpecQuestionId());
-					reqScoreDto.setSpecZoneId(offerprice.getTplSpecZoneDtl().getSpecZoneId());
-					resScoreDto = templateSpecSo.retrieveMaxScoreByQuestionIdNZoneId(reqScoreDto);
-					
-					if(resScoreDto.getMaxScore()!=null){
-						System.out.println("maxscore===>"+resScoreDto.getMaxScore());	
-						totalMaxScore = totalMaxScore.add(resScoreDto.getMaxScore());
-						System.out.println("totalmaxscore===>"+totalMaxScore);
+				/*
+				 * Bug #31578 SHAFFUL START
+				 */
+				if(offerprice.getTplSpecZoneDtl()!=null && offerprice.getTplSpecZoneDtl().getSpecZoneId()!=null){
+					for(TplSpecQuestion specQuestion : this.getManagedBean().getSpecQuestionList()){
+						System.out.println("specquestionID====>"+specQuestion.getSpecQuestionId());
+						
+						TemplateSpecReqDTO reqScoreDto = new TemplateSpecReqDTO();
+						TemplateSpecResDTO resScoreDto = new TemplateSpecResDTO();
+						reqScoreDto.setSpecQuestionId(specQuestion.getSpecQuestionId());
+						reqScoreDto.setSpecZoneId(offerprice.getTplSpecZoneDtl().getSpecZoneId());
+						resScoreDto = templateSpecSo.retrieveMaxScoreByQuestionIdNZoneId(reqScoreDto);
+						
+						if(resScoreDto.getMaxScore()!=null){
+							System.out.println("maxscore===>"+resScoreDto.getMaxScore());	
+							totalMaxScore = totalMaxScore.add(resScoreDto.getMaxScore());
+							System.out.println("totalmaxscore===>"+totalMaxScore);
+						}
+						
+						
 					}
-					
-					
+					if(totalMaxScore!=null){
+						offerprice.getTplSpecZoneDtl().setTotalMaxScore(totalMaxScore);
+					}
+				}else{
+					throw new EpException(MessageConst.ERROR_760152);
 				}
-				if(totalMaxScore!=null){
-					offerprice.getTplSpecZoneDtl().setTotalMaxScore(totalMaxScore);
-				}
+				/*
+				 * Bug #31578 END
+				 */
+				
 			}
 			
 		} finally {
