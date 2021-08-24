@@ -3581,10 +3581,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					}	
 				}
 				
-				//#25725 start
-				Boolean isPK7 = null!=scLoa.getScQuote() && null!=scLoa.getScQuote().getProcurementType() && scLoa.getScQuote().getProcurementType().getParameterCode().equals(ParameterConst.PROC_TYPE_PK7);
+				//#25725 start 								
 				Boolean isNonPeriodic = (scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)) || (scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN));
-				if((!scLoa.isAgreementReq())&&(isNonPeriodic && !isPK7 && over500K(scLoa))){
+				if((!scLoa.isAgreementReq())&&(isNonPeriodic && !isPK7(scLoa) && over500K(scLoa))){
 					if(scLoa.getScLoaAttachment() != null){
 						
 					}else{
@@ -6115,14 +6114,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}		
 	}
 	
-	private boolean isPK7(ScLoa loa){		
-		boolean PK7 = loa.getScQuote().getProcurementType().getParameterCode().equals(ParameterConst.PROC_TYPE_PK7);
-		
-		if(PK7){
-			return true;
-		}else{
-			return false;
+	private boolean isPK7(ScLoa loa){				
+		boolean PK7 = false;
+		if(loa.getProcurementType()!=null){					
+			if(loa.getProcurementType().getParameterCode().equals(ParameterConst.PROC_TYPE_PK7)){
+				this.getManagedBean().setProcurementType(loa.getProcurementType().getParameterCode());
+				PK7 = true;
+			}else{
+				this.getManagedBean().setProcurementType(loa.getProcurementType().getParameterCode());				
+			}
 		}
+		return PK7;
 	}
 	
 	//#25725 - end
@@ -9499,27 +9501,25 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		Boolean agreementReq = (Boolean) event.getComponent().getAttributes()
 				.get("value");
 		Boolean isPeriodic = (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) || (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN));
-		Boolean isPK7 = this.getManagedBean().getScLoa().getScQuote().getProcurementType().getParameterCode().equals(ParameterConst.PROC_TYPE_PK7);
 		Boolean isNonPeriodic = (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)) || (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN));
 		Boolean above500K;
+		ScLoa scLoa = this.getManagedBean().getScLoa();
 		
-		if(over500K(this.getManagedBean().getScLoa()) == true){
+		if(over500K(scLoa) == true){
 			above500K = true;
 			this.getManagedBean().setAbove500K(true);
 		}else{
 			above500K = false;
 			this.getManagedBean().setAbove500K(false);
 		}
-		if((isPK7 && (isPeriodic || isNonPeriodic))&& !agreementReq){
+		if((isPK7(scLoa) && (isPeriodic || isNonPeriodic))&& !agreementReq){
 			this.getManagedBean().setAgreementReqChange(true);
 			RequestContext.getCurrentInstance().execute("changeAgreementReqDlg.show()");			
-		}else if((agreementReq == false)&&((isNonPeriodic && above500K) && !isPK7)){
-			ScLoa scLoa = this.getManagedBean().getScLoa();			
+		}else if((agreementReq == false)&&((isNonPeriodic && above500K) && !isPK7(scLoa))){						
 			scLoa.setAgreementReq(false);
 			this.getManagedBean().setAgreementReqChange(true);
 			RequestContext.getCurrentInstance().update("contractDetailsId");
-		}else{
-			ScLoa scLoa = this.getManagedBean().getScLoa();			
+		}else{					
 			scLoa.setAgreementReq(true);
 			this.getManagedBean().setAgreementReqChange(true);
 			RequestContext.getCurrentInstance().update("contractDetailsId");
@@ -9531,11 +9531,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		Boolean result = true;
 		if(this.getManagedBean().getScLoa().getProcurementMode().getParameterCode().equals(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)){
 			Boolean isPeriodic = (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) || (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN));
-			Boolean isPK7 = this.getManagedBean().getScLoa().getScQuote().getProcurementType().getParameterCode().equals(ParameterConst.PROC_TYPE_PK7);
 			Boolean isNonPeriodic = (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)) || (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN));
 			Long disabledID = new Long(62505);
 			
-			if(isNonPeriodic || (isPK7 && isPeriodic)){
+			if(isNonPeriodic || (isPK7(this.getManagedBean().getScLoa()) && isPeriodic)){
 				result = false;
 				if(getManagedBean().getScLoa().getPmStatus().getStatusId().equals(disabledID)){
 					result = true;
@@ -9563,8 +9562,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 	
 	public String docStatus(){
-		log.info("LOA ID : "+getManagedBean().getScLoa().getLoaId());
-		log.info("Status ID : "+getManagedBean().getScLoa().getPmStatus().getStatusId());
 		return getStatusDescById(getManagedBean().getScLoa().getPmStatus().getStatusId());			
 	}	
 	
