@@ -32,6 +32,7 @@ import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.py.PyBillDtl;
 import my.ep.persistence.entity.py.PyPayment;
+import my.ep.persistence.entity.py.PyPaymentDtl;
 import my.ep.persistence.entity.py.PyPaymentOrder;
 import my.ep.persistence.entity.py.PyPaymentResponse;
 import my.ep.persistence.entity.sm.SmAppl;
@@ -705,7 +706,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			}else if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)){
 				msgCode = MessageConst.INFO_721068;
 				
-				getManagedBean().setMsgParam(getSoftCertNameEmailMulti(billDtl));
+				getManagedBean().setMsgParam(getSoftCertNameEmailMulti(paymentId));
 			}else{
 				msgCode = MessageConst.INFO_721064;
 			}
@@ -883,29 +884,28 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 	}
 	
 	//#29481 - Start
-	private String[] getSoftCertNameEmailMulti(List<PyBillDtl> bill) {
+
+	private String[] getSoftCertNameEmailMulti(Long paymentId) {
+		
 		StringBuilder sbName = new StringBuilder();
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		
+		IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
+		PaymentReqDTO reqDTO2 = new PaymentReqDTO();
+		reqDTO2.setPaymentId(paymentId);
+		PaymentResDTO resDTO = reqSO.retrievePaymentInfoByPaymentId(reqDTO2);
+		
 		int count = 1;
-		for (PyBillDtl billDtl : bill) {
-			if (billDtl.getItemCode().getParameterCode().equals(SupplierManagementConst.SOFTCERT_PAYMENT)) {
-				// TODO: need to fix & new payment design
+		for (PyPaymentDtl paymentDtl : resDTO.getPyPayment().getPyPaymentDtls()) {
+			if (paymentDtl.getPyBillDtl().getItemCode().getParameterCode().equals(SupplierManagementConst.SOFTCERT_PAYMENT)) {
+				reqDTO.setPersonnelId(paymentDtl.getPyBillDtl().getBillDtlRefId());
 				SmPersonnel personnel = SmServiceLookup.getPersonnelSO().retrievePersonnelById(reqDTO).getSmPersonnel();
+				
 				if(personnel!=null) {
 					sbName.append(count).append(". ").append(personnel.getName()).append(" (").append(personnel.getEmail()).append(")<br />");
 				}
-				count++;
 			}
 		}
-//		for (int count=1, per=0; count<=bill.size(); count++,per++) {
-//			
-//			reqDTO.setPersonnelId(bill.get(per).getBillDtlRefId());
-//			SmPersonnel personnel = SmServiceLookup.getPersonnelSO().retrievePersonnelById(reqDTO).getSmPersonnel();
-//			
-//			if(personnel!=null) {
-//				sbName.append(count).append(". ").append(personnel.getName()).append(" (").append(personnel.getEmail()).append(")<br />");
-//			}
-//		}
 		String[] strArr = new String[]{sbName.toString()};
 		return strArr;
 	}
