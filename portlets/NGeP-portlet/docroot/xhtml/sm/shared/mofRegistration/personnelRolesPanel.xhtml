@@ -81,8 +81,8 @@
 								<!-- bug #28173 & #28315-->
 								<!-- #28256 -->
 									<td style="width: 20px"><p:selectBooleanCheckbox
-									        disabled="#{backingBean.managedBean.selectedShareHolder.disableEquityOwner || backingBean.managedBean.currentPageType eq SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY}"
-											value="#{backingBean.managedBean.selectedShareHolder.management}">
+									        disabled="#{backingBean.managedBean.selectedShareHolder.disableManagement || backingBean.managedBean.currentPageType eq SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY}"
+											value="#{backingBean.managedBean.selectedShareHolder.management}"> <!--#30444 -25082021 alter disabled-->
 											<p:ajax event="change" update=":#{p:component('shrRolesPanel')},@([id$=shareHolderAddrDialog])"
 												process=":#{p:component('shrRolesPanel')}" partialSubmit="true"
 												listener="#{backingBean.managePersonnelRoles('N')}" />
@@ -153,7 +153,8 @@
 										<h:panelGroup rendered="#{backingBean.showDirector(backingBean.managedBean)}" >
 											<td style="width: 20px">
 												<p:selectBooleanCheckbox
-													value="#{backingBean.managedBean.selectedShareHolder.director}" >
+													value="#{backingBean.managedBean.selectedShareHolder.director}" 
+													disabled="#{backingBean.managedBean.selectedShareHolder.disableEquityOwner}" ><!--#30444 -25082021 add disabled-->
 													<p:ajax event="change" update=":#{p:component('shrRolesPanel')}, @([id$=shareHolderAddrDialog])"
 														process=":#{p:component('shrRolesPanel')}" partialSubmit="true"
 														listener="#{backingBean.managePersonnelRoles('Y')}" />
@@ -170,7 +171,8 @@
 										</h:panelGroup>
 										
 										<td style="width: 20px"><p:selectBooleanCheckbox
-												value="#{backingBean.managedBean.selectedShareHolder.higherManagement}">
+												value="#{backingBean.managedBean.selectedShareHolder.higherManagement}"
+												disabled="#{backingBean.managedBean.selectedShareHolder.disableEquityOwner}" ><!--#30444 -25082021 add disabled-->
 												<p:ajax event="change" update=":#{p:component('shrRolesPanel')}, @([id$=shareHolderAddrDialog])"
 													process=":#{p:component('shrRolesPanel')}" partialSubmit="true"
 													listener="#{backingBean.managePersonnelRoles('Y')}" />
