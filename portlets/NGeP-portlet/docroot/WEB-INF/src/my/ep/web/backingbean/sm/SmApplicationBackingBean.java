@@ -220,6 +220,11 @@ public class SmApplicationBackingBean extends
 	//TO HANDLE, IF KN IS SIGN UP NEW SUPPLIER NO NEED TO CHECK WITH SSM AGAIN. IF UPGRADE NEED TO CHECK WITH SSM
 	public boolean fromPrerenderNewReg = false;
 
+	//#11641 - START
+	private int mandatoryCounter = 1;
+	private int nonMandatoryCounter = 1;
+	//#11641 - END
+	
 	/**
 	 * Instantiates a new sm application backing bean.
 	 */
@@ -15285,4 +15290,29 @@ public class SmApplicationBackingBean extends
 		}
 	}
 	//30974 - End
+	//#11641 - START
+	public void inquiryRowSelect(){
+		//#11641 - START
+		this.getManagedBean().setEmptyMandatoryDocHistory(true);
+		this.getManagedBean().setEmptyNonMandatoryDocHistory(true);
+		for(SmApplSupportDocInquiry historySupportDoc: this.getManagedBean().getSelectedInquiryResponse().getSmApplSupportDocInquiries()){
+			if(historySupportDoc.getPmDocument().isMandatory()){
+				this.getManagedBean().setEmptyMandatoryDocHistory(false);
+			}
+			else if(!historySupportDoc.getPmDocument().isMandatory()){
+				this.getManagedBean().setEmptyNonMandatoryDocHistory(false);
+			}
+		}
+		//#11641 - END
+		RequestContext.getCurrentInstance().update("resOutPanelId");
+
+	}
+	public int getMandatoryCounter() {
+		return mandatoryCounter++;
+	}
+
+	public int getNonMandatoryCounter() {
+		return nonMandatoryCounter++;
+	}
+	//#11641 - END
 }
