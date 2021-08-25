@@ -886,15 +886,26 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 	private String[] getSoftCertNameEmailMulti(List<PyBillDtl> bill) {
 		StringBuilder sbName = new StringBuilder();
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-		for (int count=1, per=0; count<=bill.size(); count++,per++) {
-			
-			reqDTO.setPersonnelId(bill.get(per).getBillDtlRefId());
-			SmPersonnel personnel = SmServiceLookup.getPersonnelSO().retrievePersonnelById(reqDTO).getSmPersonnel();
-			log.info(personnel.isSoftcert());
-			if(personnel!=null && personnel.isSoftcert()) {
-				sbName.append(count).append(". ").append(personnel.getName()).append(" (").append(personnel.getEmail()).append(")<br />");
+		int count = 1;
+		for (PyBillDtl billDtl : bill) {
+			if (billDtl.getItemCode().getParameterCode().equals(SupplierManagementConst.SOFTCERT_PAYMENT)) {
+				// TODO: need to fix & new payment design
+				SmPersonnel personnel = SmServiceLookup.getPersonnelSO().retrievePersonnelById(reqDTO).getSmPersonnel();
+				if(personnel!=null) {
+					sbName.append(count).append(". ").append(personnel.getName()).append(" (").append(personnel.getEmail()).append(")<br />");
+				}
+				count++;
 			}
 		}
+//		for (int count=1, per=0; count<=bill.size(); count++,per++) {
+//			
+//			reqDTO.setPersonnelId(bill.get(per).getBillDtlRefId());
+//			SmPersonnel personnel = SmServiceLookup.getPersonnelSO().retrievePersonnelById(reqDTO).getSmPersonnel();
+//			
+//			if(personnel!=null) {
+//				sbName.append(count).append(". ").append(personnel.getName()).append(" (").append(personnel.getEmail()).append(")<br />");
+//			}
+//		}
 		String[] strArr = new String[]{sbName.toString()};
 		return strArr;
 	}
