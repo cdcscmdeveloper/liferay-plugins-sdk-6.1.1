@@ -776,43 +776,35 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				setDisciplinaryAction();
 				
 				if(getManagedBean().isDisciplinaryActionCancel()){
+					String msgThrowDisc = null;
 					String[] str_array = this.getManagedBean().getOutComes();
 					List<String> listButton = new ArrayList<String>(Arrays.asList(str_array));
 					
 					if(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_SIGN_OFF)
 							|| ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_CHAIRPERSON_SIGN_OFF)){
 						if(listButton.contains(BpmOutcomeConst.BPM_REVISE)){
-							getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
-							ctBackingBean.getManagedBean().getContractVer().setDisciplinaryActionCancel(true);
-							
 							outcome = new String[] {BpmOutcomeConst.BPM_REVISE};
-							getManagedBean().setOutComes(outcome);
-							
-							FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,  
-									MessageUtils.getMessage(MessageConst.ERROR_750069,MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+							msgThrowDisc = MessageConst.ERROR_750069;
+						}
+					}else if (ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_CANCELLATION_ACKNOWLEDGEMENT)){
+						ctBackingBean.getManagedBean().getContractVer().setDisciplinaryActionCancel(true);
+					}else{
+						if(listButton.contains(BpmOutcomeConst.BPM_CANCEL)
+								||ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_REVISION)){
+							outcome = new String[] {BpmOutcomeConst.BPM_CANCEL};
+							msgThrowDisc = MessageConst.ERROR_750052;
+						}else if(listButton.contains(BpmOutcomeConst.BPM_REJECT)){
+							outcome = new String[] {BpmOutcomeConst.BPM_REJECT};
+							msgThrowDisc = MessageConst.ERROR_750068;
 						}
 					}
-					else{
-						if(listButton.contains(BpmOutcomeConst.BPM_CANCEL)){
-							getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
-							ctBackingBean.getManagedBean().getContractVer().setDisciplinaryActionCancel(true);
-							
-							outcome = new String[] {BpmOutcomeConst.BPM_CANCEL};
-							getManagedBean().setOutComes(outcome);
-							
-							FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,  
-									MessageUtils.getMessage(MessageConst.ERROR_750052,MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
-							
-						}else if(listButton.contains(BpmOutcomeConst.BPM_REJECT)){
-							getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
-							ctBackingBean.getManagedBean().getContractVer().setDisciplinaryActionCancel(true);
-							
-							outcome = new String[] {BpmOutcomeConst.BPM_REJECT};
-							getManagedBean().setOutComes(outcome);
-							
-							FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,  
-									MessageUtils.getMessage(MessageConst.ERROR_750068,MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
-						}
+					
+					if (msgThrowDisc!=null && outcome!=null){
+						ctBackingBean.getManagedBean().getContractVer().setDisciplinaryActionCancel(true);
+						getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
+						getManagedBean().setOutComes(outcome);
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,  
+								MessageUtils.getMessage(msgThrowDisc,MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 					}
 				}
 			}
@@ -6444,29 +6436,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	//#26520 - end
 	
-	//Enhancement #26186 start - retrieve disciplinary info 
-	
-	//#29793 start
-	
-	/**
-	 * Reformat date to control issue 
-	 * when there's date that return nullPointerException value when format is not right when comparing 
-	 */
-	public Date reformatDate(Date receiveDate) {
-		try{
-			if(receiveDate!=null){
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");		
-				receiveDate = sdf.parse(sdf.format(receiveDate));	
-			}
-		}
-		catch(ParseException e){
-			e.printStackTrace();
-		}
-		
-		return receiveDate;
-	}
-	
-	
+	//#29793 #26186 start 	
 	public void setDisciplinaryAction(){
 		
 		getManagedBean().setDisciplinaryActionCancel(false);
@@ -6486,14 +6456,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if((getManagedBean().getTaskName() != null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME) &&
 					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate() == null) 
 					|| (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate() != null &&
-					reformatDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate()).before(reformatDate(getManagedBean().getDisciplinaryActionStartDate())))){
+					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate().before(getManagedBean().getDisciplinaryActionStartDate()))){
 				getManagedBean().setDisciplinaryActionCancel(false);
+				log.info(" ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate()" + ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate());
 			}
 			if((getManagedBean().getTaskName() != null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_MOF_RESULT_HT_NAME) &&
 					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate() == null)
 					|| (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate() != null &&
-					reformatDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate()).before(reformatDate(getManagedBean().getDisciplinaryActionStartDate())))){
+					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate().before(getManagedBean().getDisciplinaryActionStartDate()))){
 				getManagedBean().setDisciplinaryActionCancel(false);
+				log.info(" ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate()" + ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate());
 			}
 		}
 		else if((ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_LOA_SUBMISSION) ||
@@ -6532,12 +6504,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			
 			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate() != null
-					&& reformatDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate()).before(reformatDate(getManagedBean().getDisciplinaryActionStartDate()))){
+					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate().before(getManagedBean().getDisciplinaryActionStartDate())){
 				getManagedBean().setDisciplinaryActionCancel(false);
+				log.info(" ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate()" + ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate());
 			}
 			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate() != null
-					&& reformatDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate()).before(reformatDate(getManagedBean().getDisciplinaryActionStartDate()))){
+					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate().before(getManagedBean().getDisciplinaryActionStartDate())){
 				getManagedBean().setDisciplinaryActionCancel(false);
+				log.info(" ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate()" + ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate());
 			}
 		}
 		log.info("getManagedBean().isDisciplinaryActionCancel() :" + getManagedBean().isDisciplinaryActionCancel());
@@ -6586,7 +6560,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			throw new EpException(MessageConst.ERROR_750053, new String[] { e.getMessage() });
 		}
 	}
-	//#29793 end	
 	
 		/**
 		* the method will retrieve the disciplinary action info from supplier module.
@@ -6594,7 +6567,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		* or “Blacklist Owner / Director of Company” or “Cancel of Bumiputera Status” 
 		* or “Cancel of Manufacturer Status”, this Amendment With Supplemental process not able to proceed
 		**/
-		//29793 start
 		private void retrieveDisciplinaryAction() {
 			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
 
@@ -6609,11 +6581,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				if (resultList != null){
 					for(SmDisciplinaryAction disciplinaryAction: resultList){
 						if(disciplinaryAction.isSuspendRegistration() || disciplinaryAction.isCancelRegistration() ||
-								disciplinaryAction.isBlacklistOwner() || disciplinaryAction.isBumiputeraCancel() ||
-								disciplinaryAction.isManufacturerCancel()){
+								disciplinaryAction.isBlacklistOwner() || disciplinaryAction.isBumiputeraCancel()){
 							getManagedBean().setDisciplinaryActionNotification(false);
 							getManagedBean().setDisciplinaryAction(true);
-						}else if(disciplinaryAction.isWarning() || disciplinaryAction.isCancelCategory()){
+						}else if(disciplinaryAction.isWarning() || disciplinaryAction.isCancelCategory() ||
+								disciplinaryAction.isManufacturerCancel()){
 							getManagedBean().setDisciplinaryActionNotification(true);
 							getManagedBean().setDisciplinaryAction(true);
 						}
@@ -6664,7 +6636,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 		}
 
-		//Enhancement #26186 end - retrieve disciplinary info
+		//#26186 end
+		
 		//#25890 - Start
 		private PmParameter retrieveParameterById(Long parameterId) {
 			if (parameterId == null) {
