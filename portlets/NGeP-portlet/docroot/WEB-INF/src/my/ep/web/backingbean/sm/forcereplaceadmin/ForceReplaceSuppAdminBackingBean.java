@@ -202,7 +202,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 			}
 			if(getManagedBean().isBypassFlag()==false) {
 				StringBuilder sb = new StringBuilder();
-				//28765
+				//12981
 				if(getManagedBean().getOldAdmin() != null){
 					sb.append(SmCommonUtil.getMessage("lbl.msg.confirm.declare4", new String[] {getManagedBean().getOldAdmin().getName()})); //#28765
 				}else{
