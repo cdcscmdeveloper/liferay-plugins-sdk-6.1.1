@@ -3638,14 +3638,18 @@ public class SmApplicationBackingBean extends
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC:
 					//#30444 --START--  --31072021
-					for (SmPersonnel personnel : getManagedBean().getSmAppl().getSmPersonnels()){
-						validPersonnels = true;
-						
-						if (personnel.isClerical() && (personnel.isManagement() || personnel.isHigherManagement())	
-								&& !getManagedBean().getBusinessTypeVal().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)){
-						   
+					for (SmPersonnel personnel : getManagedBean().getSmAppl().getSmPersonnels()){ 
+						validPersonnels = true;					
+						//#30444 --START--25082021--
+						if ((personnel.isClerical() && personnel.isManagement() 
+								&& !getManagedBean().getBusinessTypeVal().equalsIgnoreCase(
+										SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT))
+										|| (personnel.isClerical() && personnel.isManagement() && !personnel.isEquityOwner()
+												&& getManagedBean().getBusinessTypeVal().equalsIgnoreCase(
+														SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT))){
 							validPersonnels = false;
 						}
+						//#30444 --END--25082021--
 						if(!validPersonnels){
 							sbd.append(k + ". ");//#30444--02082021-
 							sbd.append(personnel.getName());
@@ -3676,13 +3680,16 @@ public class SmApplicationBackingBean extends
 					//#30444 --START--  --31072021					
 					for (SmPersonnel personnel : getManagedBean().getSmAppl().getSmPersonnels()){
 						validPersonnels = true;
-						
-						if (personnel.isClerical() && (personnel.isManagement() || personnel.isHigherManagement())
+						//#30444 --START--25082021--
+						if ((personnel.isClerical() && personnel.isManagement() 
 								&& !getManagedBean().getBusinessTypeVal().equalsIgnoreCase(
-										SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)){
-						   
+										SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT))
+										|| (personnel.isClerical() && personnel.isManagement() && !personnel.isEquityOwner()
+												&& getManagedBean().getBusinessTypeVal().equalsIgnoreCase(
+														SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT))){
 							validPersonnels = false;
 						}
+						//#30444 --END--25082021--
 						if(!validPersonnels){
 							sbd.append(k + ". ");//#30444--02082021-
 							sbd.append(personnel.getName());
@@ -15367,89 +15374,83 @@ public class SmApplicationBackingBean extends
 	public void managePersonnelStaff() {
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
-
-		    if (getManagedBean().getSmSupplier().getBusinessType()     
-					.equals(my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG) //#29666 
-					&& getManagedBean().getSelectedShareHolder().isClerical()
-		    		&& alreadyHadEquityOwnerAsStaff(getManagedBean().getSmAppl(), getManagedBean().getSelectedShareHolder().getPersonnelId())) {  //#29666 
-		    	log.info("insert clerical contractor semenanjung");
-				getManagedBean().getSelectedShareHolder().setEquityOwner(false);
-				getManagedBean().getSelectedShareHolder().setDirector(false);
-				getManagedBean().getSelectedShareHolder().setHigherManagement(false);
-				getManagedBean().getSelectedShareHolder().setManagement(false);
-				getManagedBean().getSelectedShareHolder().setDisableEquityOwner(true);
-		    //#29666- START 	
-			   } else if (getManagedBean().getSmSupplier().getBusinessType()     
-						.equals(my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK)
-						&& getManagedBean().getSelectedShareHolder().isClerical()
-			      && alreadyHadEquityOwnerAsStaff(getManagedBean().getSmAppl(), getManagedBean().getSelectedShareHolder().getPersonnelId())){
-			    	log.info("insert clerical contractor sarawak");
-			    	getManagedBean().getSelectedShareHolder().setEquityOwner(false);
-					getManagedBean().getSelectedShareHolder().setDirector(false);
-					getManagedBean().getSelectedShareHolder().setHigherManagement(false);
+			//#30444 START--25082021--
+			if(getManagedBean().getBusinessTypeVal()
+						.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)
+						&& !alreadyHadEquityOwnerAsStaff(getManagedBean().getSmAppl(), getManagedBean().getSelectedShareHolder().getPersonnelId())){
+				if(getManagedBean().getSelectedShareHolder().isClerical()
+						&& !getManagedBean().getSelectedShareHolder().isEquityOwner()) {
 					getManagedBean().getSelectedShareHolder().setManagement(false);
+					getManagedBean().getSelectedShareHolder().setDisableManagement(true);
+				}else{
+					getManagedBean().getSelectedShareHolder().setDisableManagement(false);
+				}
+			} else {
+				if (getManagedBean().getSelectedShareHolder().isClerical()) {
+					getManagedBean().getSelectedShareHolder().setManagement(false);
+					getManagedBean().getSelectedShareHolder().setEquityOwner(false);
+					getManagedBean().getSelectedShareHolder().setHigherManagement(false);
+					getManagedBean().getSelectedShareHolder().setDirector(false);
+					getManagedBean().getSelectedShareHolder().setDisableManagement(true);
 					getManagedBean().getSelectedShareHolder().setDisableEquityOwner(true);
-					
-			   } else if (getManagedBean().getSmSupplier().getBusinessType()     
-						.equals(my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH)
-						&& getManagedBean().getSelectedShareHolder().isClerical()
-			      && alreadyHadEquityOwnerAsStaff(getManagedBean().getSmAppl(), getManagedBean().getSelectedShareHolder().getPersonnelId())){
-			    	log.info("insert clerical contractor sabah");
-			    	getManagedBean().getSelectedShareHolder().setEquityOwner(false);
-					getManagedBean().getSelectedShareHolder().setDirector(false);
-					getManagedBean().getSelectedShareHolder().setHigherManagement(false);
-					getManagedBean().getSelectedShareHolder().setManagement(false);
-					getManagedBean().getSelectedShareHolder().setDisableEquityOwner(true);
-			//#29666- END 
-			//#30444 - START
-				} else if (!getManagedBean().getBusinessTypeVal()     
-						.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT) //#30444 --31072021--
-						&& (getManagedBean().getSelectedShareHolder().isClerical())) {
-					log.info("other than rob partnership");
-			    	getManagedBean().getSelectedShareHolder().setEquityOwner(false);
-					getManagedBean().getSelectedShareHolder().setDirector(false);
-					getManagedBean().getSelectedShareHolder().setHigherManagement(false);
-					getManagedBean().getSelectedShareHolder().setManagement(false);
-					getManagedBean().getSelectedShareHolder().setDisableEquityOwner(true);
-			//#30444 - END
-			//#30444 - START 07052021
-				/*} else if (getManagedBean().getBusinessTypeVal()     
-						.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT)
-						&& (getManagedBean().getSelectedShareHolder().isClerical())) {
-					log.info("rob-sole p");
-			    	getManagedBean().getSelectedShareHolder().setEquityOwner(false);
-					getManagedBean().getSelectedShareHolder().setDirector(false);
-					getManagedBean().getSelectedShareHolder().setHigherManagement(false);
-					getManagedBean().getSelectedShareHolder().setManagement(false);
-					getManagedBean().getSelectedShareHolder().setDisableEquityOwner(true);*/
-			//#30444 - END
-			    }else {
-			    getManagedBean().getSelectedShareHolder().setDisableEquityOwner(false);
-			    log.info("unchecked all roles for contractor");
-			    }
-			    
+				} else {
+					getManagedBean().getSelectedShareHolder().setDisableManagement(false);
+					getManagedBean().getSelectedShareHolder().setDisableEquityOwner(false);
+				}
+			}
+			//#30444 END--25082021--
 		   } else if (getManagedBean().getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)){
-		//#30444 - START 07052021
-			 if (getManagedBean().getBusinessTypeVal()     
-					.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT)
-					&& (getManagedBean().getSelectedShareHolder().isClerical())) {
-				log.info("rob-sole i");
-				getManagedBean().getSelectedShareHolder().setManagement(false);
-		    	getManagedBean().getSelectedShareHolder().setDisableProf(true);
-		    	getManagedBean().getSelectedShareHolder().setDisableSemiProf(true);
-				getManagedBean().getSelectedShareHolder().setDisableManagement(true);
-				getManagedBean().getSelectedShareHolder().setDisableEquityOwner(true);
-			}else {
-				getManagedBean().getSelectedShareHolder().setDisableProf(false);
-		    	getManagedBean().getSelectedShareHolder().setDisableSemiProf(false);
-				getManagedBean().getSelectedShareHolder().setDisableManagement(false);
-				getManagedBean().getSelectedShareHolder().setDisableEquityOwner(false);
-		//#30444 - END
-				log.info("unchecked all roles for consultant");
-			}
-		}
-   }
+			 //#30444 START--25082021--
+			   if (getManagedBean().getBusinessTypeVal()     
+						.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)
+						&& !alreadyHadEquityOwnerAsStaff(getManagedBean().getSmAppl(), 
+					    				getManagedBean().getSelectedShareHolder().getPersonnelId())) {   		
+						if (getManagedBean().getSelectedShareHolder().isClerical()
+									&& !getManagedBean().getSelectedShareHolder().isEquityOwner()) {
+							getManagedBean().getSelectedShareHolder().setProf(false);
+							getManagedBean().getSelectedShareHolder().setManagement(false);
+							getManagedBean().getSelectedShareHolder().setDisableProf(true);
+							getManagedBean().getSelectedShareHolder().setDisableManagement(true);
+						} else {
+							getManagedBean().getSelectedShareHolder().setDisableProf(false);
+							getManagedBean().getSelectedShareHolder().setDisableManagement(false);				
+							}
+						if (getManagedBean().getSelectedShareHolder().isClerical()){
+							getManagedBean().getSelectedShareHolder().setSemiProf(false);
+							getManagedBean().getSelectedShareHolder().setDisableSemiProf(true);
+			    		}else{
+			    			if(getManagedBean().getSelectedShareHolder().isEquityOwner()
+			    					||getManagedBean().getSelectedShareHolder().isProf()
+			    					||getManagedBean().getSelectedShareHolder().isManagement()){
+			    				getManagedBean().getSelectedShareHolder().setDisableSemiProf(true);
+			    			} else {
+			    			getManagedBean().getSelectedShareHolder().setDisableSemiProf(false);
+			    			}
+			    		}
+			    		
+			   } else {
+				   if (getManagedBean().getSelectedShareHolder().isClerical()) {		   
+						getManagedBean().getSelectedShareHolder().setProf(false);
+						getManagedBean().getSelectedShareHolder().setManagement(false);
+						getManagedBean().getSelectedShareHolder().setEquityOwner(false);
+						getManagedBean().getSelectedShareHolder().setSemiProf(false);
+						getManagedBean().getSelectedShareHolder().setDisableProf(true);
+						getManagedBean().getSelectedShareHolder().setDisableManagement(true);
+						getManagedBean().getSelectedShareHolder().setDisableEquityOwner(true);
+						getManagedBean().getSelectedShareHolder().setDisableSemiProf(true);
+						
+				   }else{
+					    getManagedBean().getSelectedShareHolder().setDisableProf(false);
+						getManagedBean().getSelectedShareHolder().setDisableManagement(false);
+						getManagedBean().getSelectedShareHolder().setDisableEquityOwner(false);	
+						getManagedBean().getSelectedShareHolder().setDisableSemiProf(false);
+				   }
+			     }
+
+			  }
+		   }
+	//#30444 END--25082021--
     private static boolean alreadyHadEquityOwnerAsStaff(SmAppl appl, Long personnelId) { //#29666- add Long variable
 		boolean retVal = false;
 		for (SmPersonnel per : appl.getSmPersonnels()) {
