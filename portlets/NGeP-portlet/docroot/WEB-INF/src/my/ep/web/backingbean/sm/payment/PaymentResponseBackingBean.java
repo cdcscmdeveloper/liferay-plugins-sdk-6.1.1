@@ -890,8 +890,8 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			
 			reqDTO.setPersonnelId(bill.get(per).getBillDtlRefId());
 			SmPersonnel personnel = SmServiceLookup.getPersonnelSO().retrievePersonnelById(reqDTO).getSmPersonnel();
-			
-			if(personnel!=null) {
+			log.info(personnel.isSoftcert());
+			if(personnel!=null && personnel.isSoftcert()) {
 				sbName.append(count).append(". ").append(personnel.getName()).append(" (").append(personnel.getEmail()).append(")<br />");
 			}
 		}
