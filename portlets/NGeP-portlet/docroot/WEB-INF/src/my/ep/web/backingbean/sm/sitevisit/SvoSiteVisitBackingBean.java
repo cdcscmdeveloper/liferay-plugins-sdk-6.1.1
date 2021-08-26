@@ -2775,7 +2775,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		ISiteVisitSO reqSO = (ISiteVisitSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISiteVisitSO.class);
 		reqSO.saveOrSubmitSiteVisitReport(reqDTO);
 		//#24964 - start
-		SmCommonUtil.createSerFileSVO(svTask, "PO");
+		String statusId = svTask.getSmAppl().getPmStatus().getStatusId().toString();
+		if(statusId.equals(SupplierManagementConst.PM_STATUS_PENDING_REVIEW_SITE_VISIT_REPORT)
+				|| statusId.equals(SupplierManagementConst.PM_STATUS_PENDING_RE_REVIEW )){
+			SmCommonUtil.createSerFileSVO(svTask, "PO");
+		}
 		//retrieveSiteVisitInfo("V");
 		//#24964 - end
 		RequestContext.getCurrentInstance().execute("poReportDlg.hide()");
