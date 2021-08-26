@@ -197,7 +197,27 @@ public class DisciplinaryActionRest {
 								} catch (Exception ex) {
 									throw new EpException(ex.getMessage());
 								}
-							}
+							} else { // 26238 start future date for suspend registration								
+								suspendList.getSmSupplier();
+								suspendList.getSmSupplier().getSmAppl();
+								
+								PmUser user = SmCommonUtil.getUserByUserId(suspendList.getChangedBy());
+								List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(user.getUserId());
+								SmServiceLookup.getSupplierDataMaintenanceSO().updatePendingDisciplinaryAction(suspendList,user, userRoles);
+
+								Long disciplinaryActionId = suspendList.getDisciplinaryActionId();
+
+								// release DA if pending is completed
+								if (disciplinaryActionId != null) {
+									SmDisciplinaryAction completedPendingSmDa = SmServiceLookup.getSupplierDataMaintenanceSO()
+											.retrieveActiveDisciplinaryActionByDisciplinaryId(disciplinaryActionId);
+									
+									if (completedPendingSmDa.isSuspendRegistration() && !completedPendingSmDa.isPendingSuspend()) {
+										completedPendingSmDa.getSmSupplier();
+										SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(completedPendingSmDa);
+									}
+								}
+							} // 26238 end future date for suspend registration	
 
 							// check pending suspend task, if completed = release DA
 							if (suspendList.isPendingSuspend()) {
