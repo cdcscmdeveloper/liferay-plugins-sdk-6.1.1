@@ -80,6 +80,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtScoreWeightage;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -706,6 +707,11 @@ public class QtSpecCloneBackingBean extends
 								specQuestion.getTplSpecZoneQties().get(i).setTplSpecZoneDtl(this.getManagedBean().getTemplateSpecZoneDtls().get(i));
 							}
 						}
+						if(null!=specQuestion.getTplSpecZoneQties()&&CollectionUtils.isNotEmpty(specQuestion.getTplSpecZoneQties())){//25635&31545-start
+							for(TplSpecZoneQty zoneQty:specQuestion.getTplSpecZoneQties()){
+								zoneQty.setTplSpecZoneOffer(null);
+							}
+						}//25635&31545-start
 						}
 						}
 					}//21695&25635-End
