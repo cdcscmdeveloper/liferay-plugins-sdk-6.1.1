@@ -70,18 +70,18 @@
 					<td><h:outputLabel value=":" /></td>
 					<td width="85%"><h:outputText id="supplierOffer" rendered="#{!isMultipleSuppOffer}"
 							value="#{empty lOADetailBackingBean.selectedSupplierOffer ? lOADetailBackingBean.notAvailabilityStr : lOADetailBackingBean.selectedSupplierOffer}"
-							style="width:310px;">
+							style="display:block;width:310px;">
 						</h:outputText>
 						<h:outputText id="supplierOfferMultiple" rendered="#{isMultipleSuppOffer}" escape="false"
 							value="#{empty lOADetailBackingBean.selectedSupplierOffer ? lOADetailBackingBean.notAvailabilityStr : lOADetailBackingBean.selectedSupplierOffer}"
-							style="width:310px;float:left;">
+							style="display:block;width:310px;float:left;">
 						</h:outputText>
 						</td>
 				</tr>
 				<tr>
-					<td width="15%"><h:outputLabel style="float:left;"
-							value="#{lbl['lbl.sc.new.supplier.offered']}" /> <p:outputLabel style="float:left;"
-						value="*" styleClass="mandatory" /></td>
+					<td width="15%"> <p:outputLabel style="float:left;"
+						value="*" styleClass="mandatory" /><h:outputLabel style="float:left;"
+							value="#{lbl['lbl.sc.new.supplier.offered']}" /></td>
 					<td><h:outputLabel value=":" /></td>
 					<td width="85%"><p:inputText id="newSupplierOfferedInput"
 							value="#{lOADetailBackingBean.managedBean.newSupplierOffered}"
@@ -95,9 +95,9 @@
 						</p:commandLink></td>
 				</tr>
 				<tr>
-					<td width="15%"><h:outputLabel style="float:left;"
-							value="#{lbl['lbl.sc.justification']}" /> <p:outputLabel style="float:left;"
-						value="*" styleClass="mandatory" /></td>
+					<td width="15%"> <p:outputLabel style="float:left;"
+						value="*" styleClass="mandatory" /><h:outputLabel style="float:left;"
+							value="#{lbl['lbl.sc.justification']}" /></td>
 					<td><h:outputLabel value=":" /></td>
 					<td width="85%"><p:inputText
 							id="supplierUpdateProposalJustification"
