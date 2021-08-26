@@ -2478,6 +2478,23 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			constructPRSupplierSpecificationAndRemarks(context, scLoa);
 			log.info(".....CR Enhancement 26226 generateAgreementLetterDocFromVelocity method.....");
 		}
+		
+		 ArrayList list = new ArrayList();
+		 Map map = new HashMap();
+		
+		int count = 0;
+		if (CollectionUtils.isNotEmpty(scLoa.getScLoiLoaItems())) {
+			for (ScLoiLoaItem x : scLoa.getScLoiLoaItems()) {
+				map.put("index", count);
+				map.put("itemName", x.getScRequestItem().getItemName());
+				map.put("itemQty", x.getQty());
+				list.add(map);
+				map = new HashMap();
+				count++;
+			}
+		}
+
+		context.put("scLoiLoaItemList", list);
 		// #29006 - end
 		
 		// scLoa
@@ -8194,6 +8211,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		} else {
 			setNotAvailabilityStr(MALAY_NA);
 		}
+		
+		Long currentSupplier = getManagedBean().getScLoa().getScLoiLoa().getSmSupplier().getSupplierId();
 
 		setSelectedSupplierOffer(null);
 		ITemplateSpecSO templateSpecSO = (ITemplateSpecSO) BusinessDelegate.getInstance().getServiceObject(
@@ -8230,8 +8249,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						}
 					} else {
 						if (StringUtils.isNotBlank(tplSpecAnswer.getAnswerRemark())) {
-							supplierOffer.append(tplSpecAnswer.getAnswerRemark());
-							break;
+							if(tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier().getSupplierId().equals(currentSupplier)){
+								supplierOffer.append(tplSpecAnswer.getAnswerRemark());
+								break;
+							}
 						}
 					}
 				}
@@ -8248,7 +8269,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			else {
 				for (TplSpecAnswer tplSpecAnswer : tplSpecAnswerList) {
 					if (StringUtils.isNotBlank(tplSpecAnswer.getAnswerRemark())) {
-						setSelectedSupplierOffer(tplSpecAnswer.getAnswerRemark());
+						if(tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier().getSupplierId().equals(currentSupplier))						
+							setSelectedSupplierOffer(tplSpecAnswer.getAnswerRemark());
 					}
 				}
 			}
