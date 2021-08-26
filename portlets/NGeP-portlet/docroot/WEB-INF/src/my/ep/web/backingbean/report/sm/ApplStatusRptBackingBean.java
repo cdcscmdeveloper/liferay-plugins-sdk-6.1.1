@@ -7,6 +7,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constants.CommonConstants;
@@ -16,6 +17,7 @@ import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.web.backingbean.sm.SmApplicationBackingBean;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.ApplStatusRptManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -30,6 +32,8 @@ public class ApplStatusRptBackingBean extends
 	 * 
 	 */
 	private static final long serialVersionUID = -3440385149367317737L;
+	
+	public static Logger log = Logger.getLogger(ApplStatusRptBackingBean.class);
 
 	public ApplStatusRptBackingBean() {
 		setDefaultDateFromAndDateTo();
@@ -46,6 +50,14 @@ public class ApplStatusRptBackingBean extends
 				df.format(getManagedBean().getDateFrom()));
 		params.put(SmReportConst.PARAM_DATE_TO,
 				df.format(getManagedBean().getDateTo()));
+		
+		if(getManagedBean().getMofNo() == null){
+			getManagedBean().setMofNo("");
+		}
+		if(getManagedBean().getRegNo() == null){
+			getManagedBean().setRegNo("");
+		}
+		
 		params.put(SmReportConst.PARAM_MOF_NO, getManagedBean().getMofNo());
 		params.put(SmReportConst.PARAM_APPL_NO, getManagedBean().getApplNo());
 		params.put(SmReportConst.PARAM_REG_NO, getManagedBean().getRegNo());
@@ -53,7 +65,12 @@ public class ApplStatusRptBackingBean extends
 			params.put(SmReportConst.PARAM_APPL_TYPE, getManagedBean()
 					.getApplType());
 		}
-
+		log.info("----Appl No: "+ getManagedBean().getApplNo());
+		log.info("----Appl Type: "+ getManagedBean().getApplType());
+		log.info("----Mof No: "+ getManagedBean().getMofNo());
+		log.info("----Reg No: "+ getManagedBean().getRegNo());
+		
+		
 		generateSmReport(params);
 	}
 
