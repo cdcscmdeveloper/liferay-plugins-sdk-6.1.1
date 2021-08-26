@@ -16230,4 +16230,34 @@ public class SmApplicationBackingBean extends
 		return nonMandatoryCounter++;
 	}
 	//#11641 - END
+	
+	//#31407 - START
+	public void checkBeforeSubmit() {
+		
+		//check category code start
+		StringBuilder msg = new StringBuilder();
+		msg.append("<br />");
+		int homeFacilities = 0;
+		for(SmSupplierCategory smSupplierCategory : getManagedBean().getSmAppl().getSmSupplierCategories()){
+			if(!smSupplierCategory.getPmCategoryL3().isHomeOperatedValue()){
+				msg.append(smSupplierCategory.getPmCategoryL1().getCategoryL1Code());
+				msg.append(smSupplierCategory.getPmCategoryL2().getCategoryL2Code());
+				msg.append(smSupplierCategory.getPmCategoryL3().getCategoryL3Code());
+				msg.append(", ");
+			} else {
+				homeFacilities = homeFacilities + 1;
+			}
+		}
+		if(msg.length() > 0){
+			msg.setLength(msg.length() - 2);
+		}
+		
+		if(homeFacilities > 0 && !SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE.equalsIgnoreCase(getManagedBean().getBasicCompanyFacility().getFacilityType())) {
+			throw new EpException(SmCommonUtil.getMessage("lbl.sm.not.allowed.change.factype.home.office", null)+msg.toString());
+		}
+		//check category code end
+		
+		RequestContext.getCurrentInstance().execute("printConfirm.show();");
+	}
+	//#31407 - END
 }
