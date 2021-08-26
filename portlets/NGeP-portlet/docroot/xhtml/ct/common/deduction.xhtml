@@ -52,13 +52,15 @@
 			              <h:outputText  rendered="#{(ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting) and 
 			      		          datas.deductionType.parameterCode != ParameterConst.deductionTypeAdvancePayment}" 
 			                     value="#{ctBackingBean.getParameterDesc(datas.deductionType)}" style="float:left;" />
+			              <!-- Start Fix - #31500 AP screen display should be under deduction type column-->
+			              <h:outputText rendered="#{datas.deductionType.parameterCode == ParameterConst.deductionTypeAdvancePayment}" 
+							value="#{ctBackingBean.getParameterDesc(datas.deductionType)}" style="float:left;" />
+						  <!-- End Fix - #31500 -->
 					</p:column> 
 					<p:column style="width:400px;text-align:center;">
 						<f:facet name="header">
 							<h:outputText value="#{lbl['lbl.ct.deduction.description']}" styleClass="required"/>
 						</f:facet>
-						<h:outputText rendered="#{datas.deductionType.parameterCode == ParameterConst.deductionTypeAdvancePayment}" 
-							value="#{ctBackingBean.getParameterDesc(datas.deductionType)}" style="float:left;" />
 						<p:spacer width="15"/>
 						<p:inputText  value="#{datas.deductionDesc}"  style="width:400px;float:left;" maxlength="255"
 							disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
