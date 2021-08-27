@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import org.primefaces.context.RequestContext;
+
 import my.ep.constant.MessageConst;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
@@ -83,5 +85,18 @@ public class SmPersonnelRequestActivationBackingBean extends
 				.getExpiredActivationPersonnels());
 
 	}
-
+	
+	// #28720 Start
+	public void onChangeEmail()
+	{
+		// managedBean.selectedAdmin.email
+		String email = this.getManagedBean().getSelectedExpiredActivationPersonnel().getEmail().toLowerCase();
+		if(email.contains("@yahoo.com") || email.contains("@ymail.com") || email.contains("@rocketmail.com"))
+		{
+			this.getManagedBean().getSelectedExpiredActivationPersonnel().setEmail("");
+			RequestContext.getCurrentInstance().execute(
+					"emailPopUpWidgetVar.show()");
+		}
+	}
+	// #28720 End
 }
