@@ -158,6 +158,7 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.vo.DisciplinaryActionVO;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -2261,7 +2262,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				} **/
 				
 				//Enhancement 26186 start #29793 start
-				if (getManagedBean().isDisciplinaryAction()){					
+				if (getManagedBean().isDisciplinaryAction()){
 					if (getManagedBean().getDisciplinaryApprovedFlag()==null 
 							|| getManagedBean().getDisciplinaryApprovedFlag().equalsIgnoreCase("") ){
 						setTabValue("CNT");
@@ -2272,12 +2273,19 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					if (getManagedBean().getDisciplinaryApprovedFlag().equalsIgnoreCase("R") || 
 							ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().getApproveFlag() == 0){
 						if (ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().getJustification() == null ||
-								ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().getJustification() == ""){
+								ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().getJustification().trim() == ""){
 							setTabValue("CNT");
 							throw new EpException(MessageConst.ERROR_100022, 
 									new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks", 
 											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-						}						
+						}
+					}
+					if(CollectionUtils.isEmpty(ctBackingBean.getManagedBean().getContractVer().getDisciplinaryActionAttachments()) ||
+							ctBackingBean.getManagedBean().getContractVer().getDisciplinaryActionAttachments().size()<1){
+						setTabValue("CNT");
+						throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.disciplinary.attachment", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 					}
 				}
 				//Enhancement 26186 end #29793 end
