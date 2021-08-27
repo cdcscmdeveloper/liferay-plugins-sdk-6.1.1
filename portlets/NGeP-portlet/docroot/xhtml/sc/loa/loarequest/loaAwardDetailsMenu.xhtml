@@ -285,7 +285,18 @@
 							style="color: white !important;font-size: 12px;font-weight: bold;font-family:Arial;"></p:outputLabel></font></th>
 				</c:if>
 			</tr>
-
+			
+			<c:if test="#{empty lOADetailBackingBean.managedBean.nameZoneScLoiLoaItemList}">
+				<tr bgcolor="#FFFFFF" style="border: 1px solid #dddddd;">
+					<c:if test=	"#{!isSupplierAckStatus}">
+						<td colspan="10" style="border: 1px solid #e8e8e8; border-collapse: collapse;text-align: left;">#{lbl['lbl.datatable.msg.no.records.found']}</td>
+					</c:if>
+					<c:if test=	"#{isSupplierAckStatus}">
+						<td colspan="11" style="border: 1px solid #e8e8e8; border-collapse: collapse;text-align: left;">#{lbl['lbl.datatable.msg.no.records.found']}</td>
+					</c:if>
+				</tr>
+			</c:if>
+			
 			<c:forEach id="itemZonaltbl"
 				items="#{lOADetailBackingBean.managedBean.nameZoneScLoiLoaItemList}"
 				var="scLoiLoaItem" varStatus="varStatus"
