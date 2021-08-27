@@ -134,7 +134,7 @@
 					</p:commandLink>
 					<p:tooltip id="toolTipSpecAndSupplierOffer"
 						for="specAndSupplierOfferLink"
-						value="#{lbl['lbl.sc.spec.and.supplier.offer']}" trackMouse="true" />
+						value="#{lbl['lbl.sc.spec.and.supplier.offer']}" trackMouse="true" hideEvent="mouseleave click" />
 
 				</c:if>
 				<c:if
@@ -147,7 +147,7 @@
 					<p:tooltip id="toolTipSupplierProposalUpdate"
 						for="supplierProposalUpdateLink#{varStatus.index}"
 						value="#{lbl['lbl.sc.update.supplier.offer.tooltip']}"
-						trackMouse="true" />
+						trackMouse="true" hideEvent="mouseleave click" />
 				</c:if>
 				<br /><br />
 				<!-- #29006 - end -->
@@ -163,7 +163,7 @@
 					</p:commandLink>
 					<p:tooltip id="toolTipSpecAndSupplierOffer"
 						for="itemName"
-						value="#{lbl['lbl.sc.proposal.specification.update.mouseover']}" trackMouse="true" />
+						value="#{lbl['lbl.sc.proposal.specification.update.mouseover']}" trackMouse="true" hideEvent="mouseleave click" />
 
 				</c:if>
 				<!-- #29007 End Vinod -->
@@ -310,7 +310,7 @@
 								<p:tooltip id="toolTipSpecAndSupplierOffer#{varStatus.index}"
 									for="specAndSupplierOfferLink#{varStatus.index}"
 									value="#{lbl['lbl.sc.spec.and.supplier.offer']}"
-									trackMouse="true" />
+									trackMouse="true" hideEvent="mouseleave click" />
 
 							</c:if> <c:if
 								test="#{lOADetailBackingBean.managedBean.updateSupplierInstructionFlag and !isDocTypeQuotation}">
@@ -322,7 +322,7 @@
 								<p:tooltip id="toolTipSupplierProposalUpdate#{varStatus.index}"
 									for="supplierProposalUpdateLink#{varStatus.index}"
 									value="#{lbl['lbl.sc.update.supplier.offer.tooltip']}"
-									trackMouse="true" />
+									trackMouse="true" hideEvent="mouseleave click" />
 							</c:if> <br /> <br /> <!-- #29006 - end --> <h:outputText
 								value="#{scLoiLoaItem.scRequestItem.cmItem.extensionCode}"
 								rendered="#{scLoiLoaItem.scRequestItem.cmItem != null}" /> <!-- #29007 Start Vinod -->
@@ -335,7 +335,7 @@
 								</p:commandLink>
 								<p:tooltip id="toolTipSpecAndSupplierOffer#{varStatus.index}" for="itemName#{varStatus.index}"
 									value="#{lbl['lbl.sc.proposal.specification.update.mouseover']}"
-									trackMouse="true" />
+									trackMouse="true" hideEvent="mouseleave click" />
 							</c:if></td>
 					</c:if>
 
