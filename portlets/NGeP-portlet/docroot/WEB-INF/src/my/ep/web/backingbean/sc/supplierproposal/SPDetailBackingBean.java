@@ -6038,35 +6038,56 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 		}
 		//Bug #30073 End
 
-//#21695 Farid start 1/4/2021
-public void validateTechSuppNotOfferAll() {
+		//#21695 Farid start 27/8/2021
+		public void validateTechSuppNotOfferAll() {
 
-		ScQt scQt = this.getManagedBean().getQt();
-		final Long qtId = scQt.getQtId();
+				ScQt scQt = this.getManagedBean().getQt();
+				final Long qtId = scQt.getQtId();
+				
+				if (scQt.isPartial() && scQt.isZonal()) {
+					List<TplSpecAnswer> answerList = this.getManagedBean()
+							.getTemplateSpecBean().getSpecAnswerList();
+					ITemplateSpecSO templateSpecSO = null;
+					templateSpecSO = EpEjbBusinessDelegate.getInstance()
+							.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
+									ITemplateSpecSO.class);
+
+					TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
+					reqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
+
+					SmSupplier smSupplier = new SmSupplier();
+					smSupplier.setSupplierId(getManagedBean().getSupplierId());
+					reqDTO.setSupplier(smSupplier);
+					reqDTO.setQtId(qtId);
+					reqDTO.setAnswerList(answerList);
+					reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+
+					TemplateSpecResDTO resDTO = templateSpecSO
+							.checkTecNotOfferAllSupProposal(reqDTO);							 
+				}else if(scQt.isPartial() && !scQt.isZonal()){
+					List<TplSpecAnswer> answerList = this.getManagedBean()
+							.getTemplateSpecBean().getSpecAnswerList();
+					ITemplateSpecSO templateSpecSO = null;
+					templateSpecSO = EpEjbBusinessDelegate.getInstance()
+							.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
+									ITemplateSpecSO.class);
+
+					TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
+					reqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
+
+					SmSupplier smSupplier = new SmSupplier();
+					smSupplier.setSupplierId(getManagedBean().getSupplierId());
+					reqDTO.setSupplier(smSupplier);
+					reqDTO.setQtId(qtId);
+					reqDTO.setAnswerList(answerList);
+					reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+
+					TemplateSpecResDTO resDTO = templateSpecSO
+							.validateSpecAnwerNotOfferNonZonal(reqDTO);
+				}
+			}
+		//#21695 Farid end 27/8/2021
 		
-		if (scQt.isPartial() && scQt.isZonal()) {
-			List<TplSpecAnswer> answerList = this.getManagedBean()
-					.getTemplateSpecBean().getSpecAnswerList();
-			ITemplateSpecSO templateSpecSO = null;
-			templateSpecSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
-							ITemplateSpecSO.class);
-
-			TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
-			reqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
-
-			SmSupplier smSupplier = new SmSupplier();
-			smSupplier.setSupplierId(getManagedBean().getSupplierId());
-			reqDTO.setSupplier(smSupplier);
-			reqDTO.setQtId(qtId);
-			reqDTO.setAnswerList(answerList);
-			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
-
-			TemplateSpecResDTO resDTO = templateSpecSO
-					.checkTecNotOfferAllSupProposal(reqDTO);							 
-		}
-	}
-//#21695 Farid end 1/4/2021		
 
 
 //#21695 Farid start 2/4/2021	
