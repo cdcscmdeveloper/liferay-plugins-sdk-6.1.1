@@ -3884,28 +3884,35 @@ public void saveComplianceSample() {
 					    amountResDto = evaluationSO.retrieveProposals(amountReqDto);
 					    List<ScQtProposalAmount> listProposalAmountByQualifiedProposal = new ArrayList<ScQtProposalAmount>();
 					    List<ScQtProposalAmount> listProposalAmountByZone = new ArrayList<ScQtProposalAmount>();
-					    for(ScQtProposal qualifiedProposal : amountResDto.getProposalList()){
-					        amountReqDto.setScQt(this.getManagedBean().getScQt());
-					        amountReqDto.setProposalId(qualifiedProposal.getQtProposalId());
-					        amountResDto=evaluationSO.retrieveProposalAmountbyProposal(amountReqDto);
-					        listProposalAmountByQualifiedProposal.addAll(amountResDto.getProposalAmountListbyProposal());
-					    
-					    }
-					    for(ScQtProposalAmount scQtProposalAmountByZone : listProposalAmountByQualifiedProposal){
-					        if(scQtProposalAmountByZone.getTplSpecZoneDtl().getSpecZoneId().equals(speczone.getZones().get(0)
-					                .getSpecZoneId())){
-					            listProposalAmountByZone.add(scQtProposalAmountByZone);
+					    //#31525 - start
+					    if(CollectionUtils.isNotEmpty(amountResDto.getProposalList())){
+				    	 	for(ScQtProposal qualifiedProposal : amountResDto.getProposalList()){
+						        amountReqDto.setScQt(this.getManagedBean().getScQt());
+						        amountReqDto.setProposalId(qualifiedProposal.getQtProposalId());
+						        amountReqDto.setSpeZoneId(speczone.getZones().get(i).getSpecZoneId());
+						        amountResDto=evaluationSO.retrieveProposalAmountbyProposal(amountReqDto);
+						        listProposalAmountByQualifiedProposal.addAll(amountResDto.getProposalAmountListbyProposal());
+						    
+						    }
+						    for(ScQtProposalAmount scQtProposalAmountByZone : listProposalAmountByQualifiedProposal){
+						        if(scQtProposalAmountByZone.getTplSpecZoneDtl().getSpecZoneId().equals(speczone.getZones().get(0)
+						                .getSpecZoneId())){
+						            listProposalAmountByZone.add(scQtProposalAmountByZone);
 
-					        }					
-					    }
-					    Collections.sort(listProposalAmountByZone, new Comparator<ScQtProposalAmount>() {
-							public int compare(ScQtProposalAmount amountDtl1,
-									ScQtProposalAmount amountDtl2) {
+						        }					
+						    }
+						    if(listProposalAmountByZone.size()>1){
+						    	Collections.sort(listProposalAmountByZone, new Comparator<ScQtProposalAmount>() {
+									public int compare(ScQtProposalAmount amountDtl1,
+											ScQtProposalAmount amountDtl2) {
 
-								return amountDtl1.getScQtProposal().getSupplierNo()
-										.compareTo(amountDtl2.getScQtProposal().getSupplierNo());
-							}
-						});
+										return amountDtl1.getScQtProposal().getSupplierNo()
+												.compareTo(amountDtl2.getScQtProposal().getSupplierNo());
+									}
+								});
+						    }
+					    }
+					    //#31525 - end
 					    this.getManagedBean().setQtProposalAmounts(listProposalAmountByZone);
 					    this.getManagedBean().setQtProposalAmountByProposal(listProposalAmountByQualifiedProposal);
 					}
@@ -4451,10 +4458,24 @@ public void saveComplianceSample() {
 					if(this.getManagedBean().getTabItemPackageIndex() == 2 
 							&& this.getManagedBean().getOfferScoreType().equalsIgnoreCase(QTConstants.USER_SCORE)){
 						List<ScQtProposalAmount> qtProposalAmountByZone = new ArrayList<ScQtProposalAmount>();
+						//#31525 - start
+						evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+								ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+						EvaluationReqDTO amountReqDto = new EvaluationReqDTO();
+					    EvaluationResDTO amountResDto = new EvaluationResDTO();
 						for(ScQtProposalAmount qtProposalAmountByProposal: this.getManagedBean().getQtProposalAmountByProposal()){
 							if(qtProposalAmountByProposal.getTplSpecZoneDtl().getSpecZoneId()
 									.equals(this.getManagedBean().getSpecZoneDtls().get(i).getSpecZoneId())){
-								qtProposalAmountByZone.add(qtProposalAmountByProposal);
+								amountReqDto.setProposalId(qtProposalAmountByProposal.getScQtProposal().getQtProposalId());
+								amountReqDto.setSpeZoneId(qtProposalAmountByProposal.getTplSpecZoneDtl().getSpecZoneId());
+								amountReqDto.setQtSupplierId(qtProposalAmountByProposal.getScQtProposal()
+										.getScQtSupplier().getQtSupplierId());
+								amountReqDto.setPropAmount(qtProposalAmountByProposal);
+								amountResDto=evaluationSO.excludeProposalIdNotOfferByPackage(amountReqDto);
+								
+								if(!qtProposalAmountByProposal.getScQtProposal().getQtProposalId().equals(amountResDto.getQtProposalId())){
+									qtProposalAmountByZone.add(qtProposalAmountByProposal);	
+								}
 								
 							}
 							for(ScQtProposalAmount qtProposalAmountPreviousZone: this.getManagedBean().getQtProposalAmounts()){
@@ -4465,14 +4486,16 @@ public void saveComplianceSample() {
 							}
 							
 						}
-						Collections.sort(qtProposalAmountByZone, new Comparator<ScQtProposalAmount>() {
-							public int compare(ScQtProposalAmount amountDtl1,
-									ScQtProposalAmount amountDtl2) {
-
-								return amountDtl1.getScQtProposal().getSupplierNo()
-										.compareTo(amountDtl2.getScQtProposal().getSupplierNo());
-							}
-						});
+						if(qtProposalAmountByZone.size()>1){
+							Collections.sort(qtProposalAmountByZone, new Comparator<ScQtProposalAmount>() {
+								public int compare(ScQtProposalAmount amountDtl1,
+										ScQtProposalAmount amountDtl2) {
+									return amountDtl1.getScQtProposal().getSupplierNo()
+											.compareTo(amountDtl2.getScQtProposal().getSupplierNo());
+								}
+							});
+						}
+						//#31525 - end
 						if(qtProposalAmountByZone!=null && !qtProposalAmountByZone.isEmpty()){
 							this.getManagedBean().setQtProposalAmounts(null);
 							this.getManagedBean().setQtProposalAmounts(qtProposalAmountByZone);
@@ -13815,7 +13838,7 @@ private void retriveCommitteeRemarksList(){
 
 						} else {
 							if (proposalCheckList.isScoringReq()) {
-//								outerCheckList.add(proposalCheckList);
+//								outerCheckList.add(proposalCheckList);//#31485
 								outerCheckList
 										.add(checkStausForUploadNoActionCheckLists(
 												proposalCheckList, evalstage.get(0)));
@@ -13835,13 +13858,13 @@ private void retriveCommitteeRemarksList(){
 					localCheckList.add(innerCheckList);
 				}//last group
 				
-				this.getManagedBean().setDetachedPaginator(new Paginator(localCheckList));
+				this.getManagedBean().setTechStgPkgInnerList(localCheckList);//#31485
 				/*
 				 * this.getManagedBean().setEvaluationStgTechnicalCheckList(
 				 * resDTO.getCheckListResultBean().getResultList());
 				 */
 			}
-			this.getManagedBean().setDetachedPaginatorTest(new Paginator(outerCheckList));
+			this.getManagedBean().setTechStgPkgOterList(outerCheckList);//#31485
 //			this.getManagedBean().setEvaluationStgTechnicalCheckList(
 //					outerCheckList);
 //			if(CollectionUtils.isNotEmpty((Collection) this.getManagedBean().getDetachedPaginatorTest())){
