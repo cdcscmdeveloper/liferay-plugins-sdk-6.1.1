@@ -118,7 +118,7 @@
 							</p:dataTable>
 							<!-- datatable for mandatory support doc with no record to display(fix primeface version bug when no record found) -->
 							<p:dataTable var="emptyMandatory" value="" id="mandatoryEmpty" rendered="#{backingBean.managedBean.emptyMandatoryDocHistory}"
-								rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
+								rowIndexVar="index" style="min-width:1200px !important; table-layout: fixed !important;" 
 								emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 								<p:columnGroup type="header">
 									<p:row>
@@ -178,7 +178,7 @@
 							</p:dataTable>
 							<!-- datatable for non-mandatory support doc with no record to display(fix primeface version bug when no record found) -->
 							<p:dataTable var="emptyNonMandatory" value="" id="nonMandatoryEmpty" rendered="#{backingBean.managedBean.emptyNonMandatoryDocHistory}"
-								rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
+								rowIndexVar="index" style="min-width:1200px !important; table-layout: fixed !important;" 
 								emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 								<p:columnGroup type="header">
 									<p:row>
