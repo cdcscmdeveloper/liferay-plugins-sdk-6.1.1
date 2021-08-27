@@ -630,6 +630,10 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	
 	private List<ScQtProposalAmount> qtProposalAmountByProposal;
 	//#25138 - end
+	//#31485 - start
+	private List<List<ScQtCheckList>> techStgPkgInnerList;
+	private List<ScQtCheckList> techStgPkgOterList;
+	//#31485 - end
 	/**tabIndex
 	 * Gets the today.
 	 * 
@@ -4125,4 +4129,21 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.qtProposalAmountByProposal = qtProposalAmountByProposal;
 	}
 	//#25138 - end
+	//#31485 - start
+	public List<List<ScQtCheckList>> getTechStgPkgInnerList() {
+		return techStgPkgInnerList;
+	}
+
+	public void setTechStgPkgInnerList(List<List<ScQtCheckList>> techStgPkgInnerList) {
+		this.techStgPkgInnerList = techStgPkgInnerList;
+	}
+
+	public List<ScQtCheckList> getTechStgPkgOterList() {
+		return techStgPkgOterList;
+	}
+
+	public void setTechStgPkgOterList(List<ScQtCheckList> techStgPkgOterList) {
+		this.techStgPkgOterList = techStgPkgOterList;
+	}
+	//#31485 - end
 }
