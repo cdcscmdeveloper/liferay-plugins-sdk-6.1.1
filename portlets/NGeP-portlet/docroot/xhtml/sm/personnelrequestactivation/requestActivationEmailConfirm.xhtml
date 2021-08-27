@@ -45,13 +45,24 @@
 						validatorMessage="#{lbl['lbl.sm.userprofile.email']} - #{lbl['lbl.sm.invalidEmail']}"
 						size="40" required="true">
 						<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+						
+						<p:ajax process="@this" partialSubmit="true"/>
+							<p:ajax event="change" process="@this" listener="#{bb.onChangeEmail()}" update="emailConfirmId"/> 
+						
 					</p:inputText>
+										&#160;&#160;
+					<p:graphicImage id="toolTipIcon" value="/css/images/design/tooltips.png" /> 
+				  	<p:tooltip id="sourceTooltip" for="toolTipIcon">
+						<h:outputText id="sourceLabel" escape="false" value="#{lbl['lbl.sm.email.change.tooltip']}" />
+					</p:tooltip> 
+					
 					<p:message id="emailConfirmIdMsg" for="emailConfirmId"
 						showSummary="true" showDetail="false" display="icon" />
 				</td>
 			</tr>
 		</table>
-		
+		<ac:smEmailAlertPopup bBean="#{backingBean}" title="#{lbl['lbl.sm.email.change.header']}" dialogId="emailPopUp" 
+		btnOkLabel="#{lbl['lbl.btn.ok']}" />
 	</p:panel>
 
 </ui:composition>	
