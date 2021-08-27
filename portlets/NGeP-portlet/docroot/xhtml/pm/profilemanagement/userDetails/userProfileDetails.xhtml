@@ -136,6 +136,8 @@
 							</td>
 					</tr>
 					<!-- #29594 start -->
+					<c:if test="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterCode eq 'FJA'
+					            or profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterCode eq 'FPJ'}">
 					<tr>
 						<th width="20%"><p:outputLabel
 								value="#{lbl['lbl.pm.organisation.ministry']}" /> </th>
@@ -161,6 +163,7 @@
 							</p:inputText>
 						</td>
 					</tr>
+					</c:if>
 					</c:if>
 					<!-- #29594 end -->
 					<tr>
