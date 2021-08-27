@@ -2221,18 +2221,26 @@ u {
 								<td valign="top" bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-size:12px;">
 									#set($maxQty = 0)
 									#set($minQty = 0)
-									#set($currentValue = 0)
-									
+									#set($currentValue = 0)								
 									
 									#foreach(  $tplSpecZoneDtls in $tplspecQuestion.tplSpecMaster.tplSpecZone.tplSpecZoneDtls )
-											   #if($tplspecQuestion.clQuantity)
-											   		#set($currentValue = $tplspecQuestion.clQuantity)												
-											   #else
-												   #if($tplSpecZoneQtie.qty)
-												   		#set($currentValue = $tplSpecZoneQtie.qty) 
-													#end
-											   #end		
-											   
+											#foreach( $scLoiLoaItem in $scLoiLoaItemList )												
+												#if($scLoiLoaItem.itemName.trim() == $tplspecQuestion.clItem.trim())
+ 											  		#set($currentValue = $scLoiLoaItem.itemQty)
+											  	#end
+											
+							
+											   #if($currentValue == 0)
+												   	#if($tplspecQuestion.clQuantity)
+											   			#set($currentValue = $tplspecQuestion.clQuantity)												
+											  	   	#else
+												   		#if($tplSpecZoneQtie.qty)
+												   			#set($currentValue = $tplSpecZoneQtie.qty) 
+														#end
+											   		#end									   
+											   #end	
+																	
+											  
 											   #if($maxQty == 0)
 												   #set($maxQty = $currentValue)
 												   #set($minQty = $currentValue)								   
@@ -2243,15 +2251,17 @@ u {
 											   #end											 
 											   #if($currentValue < $minQty)
 												   #set($minQty = $currentValue)
-											   #end		   
+											   #end
+	
+											#end
+	   
 									#end
 									
-									
-									 	#if($minQty != $maxQty)
-											<span>$minQty - $maxQty</span>
-										#else
-											<span>$maxQty</span>
-										#end
+									#if($minQty != $maxQty)
+										<span>$minQty - $maxQty</span>
+									#else
+										<span>$maxQty</span>
+									#end
 										
 								</td>
 
@@ -2395,9 +2405,24 @@ u {
 										#end
 									</td>
 									<td valign="top" bgcolor="#d0eaee" class="title border left"  style="text-align: left; padding-left: 5px; font-size:12px;">
-										#if($tplspecQuestion.clQuantity)
-										 $tplspecQuestion.clQuantity
+										#set($currentValue = 0)										
+										#foreach( $scLoiLoaItem in $scLoiLoaItemList )												
+												#if($scLoiLoaItem.itemName.trim() == $tplspecQuestion.clItem.trim())
+ 											  		#set($currentValue = $scLoiLoaItem.itemQty)
+											  	#end
 										#end
+										
+										#if($currentValue == 0)
+											#if($tplspecQuestion.clQuantity)
+											   	#set($currentValue = $tplspecQuestion.clQuantity)												
+											#else
+												#if($tplSpecZoneQtie.qty)
+												   	#set($currentValue = $tplSpecZoneQtie.qty) 
+												#end
+											#end									   
+									  	#end	
+										
+										$currentValue
 									</td>
 									
 									<td valign="top" bgcolor="#d0eaee" class="title border left" rowspan="2"  style="text-align: left; padding-left: 5px; font-size:12px;">
