@@ -418,19 +418,19 @@ u {
 						#set($minQty = 0)
 						#set($currentValue = 0)								
 									
-							#foreach(  $tplSpecZoneDtls in $tplspecQuestion.tplSpecMaster.tplSpecZone.tplSpecZoneDtls )
-									#foreach( $scLoiLoaItem in $scLoiLoaItemList )												
-										#if($scLoiLoaItem.itemName.trim() == $tplspecQuestion.clItem.trim())
- 											  #set($currentValue = $scLoiLoaItem.itemQty)
+							#foreach(  $tplSpecZoneDtls in $tplSpecAnswer.tplSpecQuestion.tplSpecMaster.tplSpecZone.tplSpecZoneDtls )
+									#foreach( $scLoiLoaItm in $scLoiLoaItemList )												
+										#if($scLoiLoaItm.itemName.trim() == $tplSpecAnswer.tplSpecQuestion.clItem.trim())
+ 											  #set($currentValue = $scLoiLoaItm.itemQty)
 										#end
 											
 							
 										#if($currentValue == 0)
-											#if($tplspecQuestion.clQuantity)
-											   	#set($currentValue = $tplspecQuestion.clQuantity)												
+											#if($tplSpecAnswer.tplSpecQuestion.clQuantity)
+											   	#set($currentValue = $tplSpecAnswer.tplSpecQuestion.clQuantity)												
 											#else
-												#if($tplSpecZoneQtie.qty)
-												   	#set($currentValue = $tplSpecZoneQtie.qty) 
+												#if($scLoiLoaItem.qty)
+												   	#set($currentValue = $scLoiLoaItem.qty) 
 												#end
 											#end									   
 										 #end	
