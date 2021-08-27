@@ -299,6 +299,21 @@
 				<td><p:inputText disabled="true" size="25"
 						value="#{paymentMatchBackingBean.getText(paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.flAddress.contactPhoneNoFull)}" /></td>
 			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.supp.invoice.submited']}" /></td>
+				<td><p:inputText size="66" disabled="true"
+				        rendered="#{paymentMatchBackingBean.managedBean.suppInvoiceActive}"
+						value="#{paymentMatchBackingBean.managedBean.suppInvoiceSubmitted ==null ? lbl['lbl.fl.supp.na'] : paymentMatchBackingBean.managedBean.suppInvoiceSubmitted.userName}" />
+				<p:selectOneMenu
+						rendered="#{!paymentMatchBackingBean.managedBean.suppInvoiceActive}"
+						style="width: 300px;margin-bottom: 5px;" 
+						disabled="#{paymentMatchBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or !bpmTasklistBackingBean.managedBean.claim}"						
+						label="#{lbl['lbl.fl.supp.invoice.submited']}"
+						value="#{paymentMatchBackingBean.managedBean.newSupplierUserId}">
+						<f:selectItems
+							value="#{paymentMatchBackingBean.showSupplierList()}" />
+				</p:selectOneMenu></td>
+			</tr>
 		</table>
 	</p:panel>
 	<p:panel header="#{lbl['lbl.fl.factoring.details']}" toggleable="true"

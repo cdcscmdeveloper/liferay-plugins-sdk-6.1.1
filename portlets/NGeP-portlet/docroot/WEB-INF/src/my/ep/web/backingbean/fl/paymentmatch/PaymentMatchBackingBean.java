@@ -58,6 +58,7 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.votfund.IVotFundSO;
 import my.ep.biz.service.pm.fee.settings.IFeeExemptionSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -76,6 +77,8 @@ import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.confgeneral.ConfigGeneralResDTO;
 import my.ep.dto.pm.common.fund.FundReqDTO;
 import my.ep.dto.pm.common.fund.FundResDTO;
@@ -89,6 +92,8 @@ import my.ep.dto.pm.common.votfund.VotFundResDTO;
 import my.ep.dto.pm.fee.settings.FeeExemptionReqDTO;
 import my.ep.dto.pm.fee.settings.FeeExemptionResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
+import my.ep.dto.sm.personnel.PersonnelReqDTO;
+import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.payment.instruction.FLPaymentInstructionDataType;
 import my.ep.persistence.constant.DbValueConst;
@@ -277,6 +282,13 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			}
 			
 			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
+			//28221 - start
+			if(getManagedBean().getNewSupplierUserId() != null){
+				reqDTO.setSupplierSubmittedItd(getManagedBean().getNewSupplierUserId());
+				getManagedBean().getPaymentAdvice().getFlInvoice().setSupplierSubmittedId(getManagedBean().getNewSupplierUserId());
+				reqDTO.setInvoice(getManagedBean().getPaymentAdvice().getFlInvoice());
+			}
+			//28221 - end
 			
 			FulfilmentResDTO resDTO = paymentSO.createPaymentMatch(reqDTO);
 			if(resDTO.isSuccessful()) {
@@ -454,6 +466,24 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			getManagedBean().setTaxInvoice(resDTO.isTaxable());
 		}
 		
+		//28221 start
+		//WIP data patch
+		if (getManagedBean().getPaymentAdvice().getFlInvoice().getSupplierSubmittedId() == null) {
+			getManagedBean().getPaymentAdvice().getFlInvoice()
+					.setSupplierSubmittedId(getManagedBean().getPaymentAdvice().getFlInvoice().getCreatedBy());
+			getManagedBean().setNewSupplierUserId(getManagedBean().getPaymentAdvice().getFlInvoice().getCreatedBy());
+		}
+
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setUserId(getManagedBean().getPaymentAdvice().getFlInvoice().getSupplierSubmittedId());
+
+		UserResDTO userResDTO = userSO.retrieveUserDtlById(userReqDTO);		
+		getManagedBean().setSuppInvoiceSubmitted(userResDTO.getPmUser());
+
+		checkSupplierUserActive();
+		//28221 end
 	}
 	
 	/**
@@ -1507,6 +1537,13 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 				}
 			}
 			
+			//28221
+			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) 
+					&& !getManagedBean().isSuppInvoiceActive() && getManagedBean().getNewSupplierUserId() == null){
+				getManagedBean().setSelectedTabIndex(0);
+				throw new EpException(MessageConst.ERROR_740065, new String[]{getManagedBean().getSuppInvoiceSubmitted().getUserName()});
+			}
+			
 		}finally {
 			paymentSO = null;
 		}
@@ -2511,4 +2548,42 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 	}
 	
 	//end 21229
+	
+	//28221 -start
+	public void checkSupplierUserActive(){
+		IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,IPersonnelSO.class);
+		PersonnelReqDTO personnelReqDTO = new PersonnelReqDTO();
+		PersonnelResDTO personnelResDTO = new PersonnelResDTO();
+		personnelReqDTO.setUserId(getManagedBean().getPaymentAdvice().getFlInvoice().getSupplierSubmittedId());
+		Long supplierId = getManagedBean().getPaymentAdvice().getFlRequest().getSmSupplier().getSupplierId();			
+		personnelReqDTO.setSmSupplierId(supplierId);
+		personnelResDTO = personnelSO.retrieveLatestActivePersonnelFL(personnelReqDTO);		
+		if(personnelResDTO.getSmPersonnelList().size() > 0){
+			getManagedBean().setSuppInvoiceActive(true);
+		}else{
+			getManagedBean().setSuppInvoiceActive(false);
+		}
+			
+	}
+		
+	public SelectItem[] showSupplierList(){
+			SelectItem[] items = null;
+			int i = 1;
+			IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
+			PersonnelReqDTO personnelReqDTO = new PersonnelReqDTO();
+			PersonnelResDTO personnelResDTO = new PersonnelResDTO();
+			
+			Long supplierId = getManagedBean().getPaymentAdvice().getFlRequest().getSmSupplier().getSupplierId();
+			personnelReqDTO.setSmSupplierId(supplierId);
+			personnelResDTO = personnelSO.retrieveLatestActivePersonnelBySupplierId(personnelReqDTO);
+		
+			items = new SelectItem[personnelResDTO.getSmPersonnelList().size() + 1];
+		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+		    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			for (SmPersonnel smPersonnel : personnelResDTO.getSmPersonnelList()) {				
+			  items[i++] = new SelectItem(smPersonnel.getPmUser().getUserId(), smPersonnel.getPmUser().getUserName());
+			}
+			return items;
+	}
+	//28221 -end
 }
