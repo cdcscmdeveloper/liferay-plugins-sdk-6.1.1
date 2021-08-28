@@ -49,6 +49,13 @@
 									<p:ajax event="keyup" update="deleteSvAObtnId" />
 								</p:inputText>
 								<p:commandButton rendered="#{svoSiteVisitBackingBean.checkUserRole() eq false}" value="#{lbl['lbl.btn.delete']}" update="@this" id="deleteSvAObtnId" action="#{svoSiteVisitBackingBean.selectSvAssistantOfficer(svAOfficer)}" disabled="#{svAOfficer.name eq null}"/>
+								<!-- #24964 - start -->
+								<ac:smFieldChangeAlert 
+									isShow="#{svoSiteVisitBackingBean.showEditAssistant(svAOfficer)}"
+									oriValue="#{svAOfficer.nameEnterBySvo}" 
+									currValue="#{svAOfficer.name}" 
+									alertValue="#{svAOfficer.nameEnterBySvo}"/>
+								<!-- #24964 - end -->
 								<br/>
 							</ui:repeat>
 						</p:column>

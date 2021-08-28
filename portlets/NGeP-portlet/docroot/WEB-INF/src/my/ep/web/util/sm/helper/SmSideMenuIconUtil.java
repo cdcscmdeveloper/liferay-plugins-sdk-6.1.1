@@ -3,9 +3,12 @@ package my.ep.web.util.sm.helper;
 import java.util.ArrayList;
 import java.util.List;
 
+import my.ep.biz.service.sm.siteVisit.ISiteVisitSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.dto.sm.revision.SmApplRevisionResDTO;
+import my.ep.dto.sm.siteVisit.SiteVisitReqDTO;
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
@@ -23,9 +26,14 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBranchBank;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
+import my.ep.persistence.entity.sm.SmSvInterviewee;
+import my.ep.persistence.entity.sm.SmSvMachine;
+import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.type.pm.RoleCode;
+import my.ep.web.backingbean.sm.sitevisit.SvoSiteVisitBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.SmLicenseInfoVO;
 
 import org.apache.commons.lang.StringUtils;
@@ -399,22 +407,23 @@ public class SmSideMenuIconUtil {
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)) {
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setSuppEditSiteVisit(false);
-				if (step10SiteVisitReportHasDifference(true, bean.getLatestAppl(),
+				//#24964 - start
+				if (step10SiteVisitReportHasDifference("supplier", bean.getLatestAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setSuppEditSiteVisit(true);
 				}
-				if (step10SiteVisitReportHasDifference(true,
+				if (step10SiteVisitReportHasDifference("supplier",
 						bean.getLatestApproveAppl(), bean.getSmAppl())) {
 					bean.getSupplierEditVO().setSuppEditSiteVisit(true);
 				}
 			} else if (bean.isPoUser()) {
 				bean.getEditVO().setSuppEditSiteVisit(false);
 				bean.getEditVO().setPoEditSiteVisit(false);
-				if (step10SiteVisitReportHasDifference(true, bean.getLatestAppl(),
+				if (step10SiteVisitReportHasDifference("supplier", bean.getLatestAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditSiteVisit(true);
 				}
-				if (step10SiteVisitReportHasDifference(false, bean.getSupplierAppl(),
+				if (step10SiteVisitReportHasDifference("po", bean.getSupplierAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setPoEditSiteVisit(true);
 				}
@@ -422,16 +431,17 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setSuppEditSiteVisit(false);
 				bean.getEditVO().setPoEditSiteVisit(false);
 				bean.getEditVO().setAppEditSiteVisit(false);
-				if (step10SiteVisitReportHasDifference(true, bean.getLatestAppl(),
+				if (step10SiteVisitReportHasDifference("supplier", bean.getLatestAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditSiteVisit(true);
 				}
-				if (step10SiteVisitReportHasDifference(false, bean.getSupplierAppl(),
+				if (step10SiteVisitReportHasDifference("po", bean.getSupplierAppl(),
 						bean.getPoAppl())) {
 					bean.getEditVO().setPoEditSiteVisit(true);
 				}
-				if (step10SiteVisitReportHasDifference(false, bean.getPoAppl(),
+				if (step10SiteVisitReportHasDifference("app", bean.getPoAppl(),
 						bean.getSmAppl())) {
+					//#24964 - end
 					bean.getEditVO().setAppEditSiteVisit(true);
 				}
 			}
@@ -459,6 +469,9 @@ public class SmSideMenuIconUtil {
 					SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP);
 			setSectionEditorVO(bean,
 					SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS);
+			//#24964
+			setSectionEditorVO(bean,
+					SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV);
 		} else {
 			setSectionEditorVO(bean, page);
 		}
@@ -643,11 +656,23 @@ public class SmSideMenuIconUtil {
 			bean.setSupplierAppl(getSmApplFromSerFile(bean.getSmAppl()
 					.getApplNo(), "SUP"));
 		} else if (bean.isApproverUser()) {
+			//#24964 - START
+			if(!SmCommonUtil.isSerFileExist(bean.getSmAppl().getApplNo(), "PO")){
+				SmCommonUtil.createSerFile(bean.getSmAppl(), "PO");
+			}
+			//#24964 - END
 			bean.setSupplierAppl(getSmApplFromSerFile(bean.getSmAppl()
 					.getApplNo(), "SUP"));
 			bean.setPoAppl(getSmApplFromSerFile(bean.getSmAppl().getApplNo(),
 					"PO"));
 		}
+		//#24964 - start
+		if(bean.getSupplierAppl() == null){
+			SmCommonUtil.createSerFile(bean.getSmAppl(), "SUP");
+			bean.setSupplierAppl(getSmApplFromSerFile(bean.getSmAppl()
+					.getApplNo(), "SUP"));
+		}
+		//#24964 - end
 	}
 
 	private static boolean step1CompanyBasicHasDifference(SmAppl applPrev,
@@ -865,6 +890,7 @@ public class SmSideMenuIconUtil {
 								currPersonnel, new String[] { "shareAmt",
 										"sharePercentage", "softcert",
 										"softcertFlg", "epRole" });
+						//24964
 					} else {
 						retVal = EntityHelper.isObjectDifference(prevPersonnel,
 								currPersonnel, new String[] { "shareAmt",
@@ -1413,10 +1439,10 @@ public class SmSideMenuIconUtil {
 	}
 	
 	//24964
-	private static boolean step10SiteVisitReportHasDifference(boolean isSupplier,
+	private static boolean step10SiteVisitReportHasDifference(String role,
 			SmAppl applPrev, SmAppl applCurr) {
 		boolean retVal = false;
-
+		/*
 		if (applPrev != null && applCurr != null) {
 			if (isSupplier) {
 				retVal = EntityHelper.hasDiffBetweenList(
@@ -1431,7 +1457,149 @@ public class SmSideMenuIconUtil {
 						new String[] { "smSvAssistantOfficer" }, null, null);
 			}
 		}
-
+		*/
+		//24964 - start
+		if(role.equals("supplier")) return retVal;
+		String excludes[] = new String[] {"smSvTask, smSvTemplate, pmParameter, pmMachine"};
+		
+		for(SmSvTask svTask : applCurr.getSmSvTasks()){
+			SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
+			reqDTO.setSvTaskId(svTask.getSvTaskId());
+			svTask = ((ISiteVisitSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_MANAGEMENT, ISiteVisitSO.class))
+					.retrieveSiteVisitCompareBySvTaskId(reqDTO).getSmSvTask();
+			if(svTask == null) break;
+			SmSvTask svTaskSVO = null;
+			if(role.equals("po")){
+				svTaskSVO = SvoSiteVisitBackingBean.getPrevSvTask(applCurr.getApplNo(), svTask.getSvTaskId(), "SVO");
+			} else {
+				svTaskSVO = SvoSiteVisitBackingBean.getPrevSvTask(applCurr.getApplNo(), svTask.getSvTaskId(), "PO");
+			}
+			if(svTaskSVO == null) break;
+			String param = svTask.getSmSvTemplate().getPmParameter().getParameterCode();
+			
+			retVal = EntityHelper.hasDiffBetweenList(
+					svTask.getSmSvAssistantOfficers(),
+					svTaskSVO.getSmSvAssistantOfficers(), 
+					new String[] {"svAssistantOfficerId"}, null, new String[] {"smSvTask, nameEnterBySvo"});
+			if(retVal) break;
+			
+			//#24964 - start
+			for(SmSvInterviewee itvw : svTask.getSmSvTemplate().getSmSvInterviewees()){
+				boolean exist = false;
+				for(SmSvInterviewee itvwSVO : svTaskSVO.getSmSvTemplate().getSmSvInterviewees()){
+					if(itvw.getSvIntervieweeId() == itvwSVO.getSvIntervieweeId()){
+						exist = true;
+						if(!itvw.getName().equals(itvwSVO.getName()) 
+							|| !itvw.getDesignation().equals(itvwSVO.getDesignation())){
+								return true;
+						}
+						break;
+					}
+				}
+				if(!exist) return true;
+			}
+			//#24964 - end
+			
+			//financial information
+			retVal = EntityHelper.hasDiffBetweenList(
+					svTask.getSmSvBankInfos(),
+					svTaskSVO.getSmSvBankInfos(), 
+					new String[] {"svBankInfoId"}, null, excludes);
+			if(retVal) break;
+			
+			retVal = EntityHelper.hasDiffBetweenList(
+					svTask.getSmSvFinChecklists(),
+					svTaskSVO.getSmSvFinChecklists(), 
+					new String[] {"svFinChecklistId"}, null, excludes);
+			if(retVal) break;
+			
+			//license, insurance
+			retVal = EntityHelper.hasDiffBetweenList(
+					svTask.getSmSvTemplate().getSmSvLicenseInsurances(),
+					svTaskSVO.getSmSvTemplate().getSmSvLicenseInsurances(), 
+					new String[] {"svLicenseInsuranceId"}, null, excludes);
+			if(retVal) break;
+			
+			retVal = EntityHelper.hasDiffBetweenList(
+					svTask.getSmSvDocLicenses(),
+					svTaskSVO.getSmSvDocLicenses(), 
+					new String[] {"svDocLicenseId"}, null, excludes);
+			if(retVal) break;
+			
+			if(param.equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING)){
+				retVal = EntityHelper.hasDiffBetweenList(
+						svTask.getSmSvTemplate().getSmSvManufacturingDocs(),
+						svTaskSVO.getSmSvTemplate().getSmSvManufacturingDocs(), 
+						new String[] {"svManufacturingDocId"}, null, excludes);
+				if(retVal) break;
+			}
+			
+			//equipment details
+			if(param.equals(SupplierManagementConst.CAT_TYPE_WORKSHOP)
+					|| param.equals(SupplierManagementConst.CAT_TYPE_DOCKYARD)){
+				retVal = EntityHelper.hasDiffBetweenList(
+						svTask.getSmSvTemplate().getSmSvEquipments(),
+						svTaskSVO.getSmSvTemplate().getSmSvEquipments(), 
+						new String[] {"svEquipmentId"}, null, excludes);
+				if(retVal) break;
+			}
+			
+			if(param.equals(SupplierManagementConst.CAT_TYPE_WORKSHOP)){
+				retVal = EntityHelper.hasDiffBetweenList(
+						svTask.getSmSvTemplate().getSmSvWorkers(),
+						svTaskSVO.getSmSvTemplate().getSmSvWorkers(), 
+						new String[] {"svWorkerId"}, null, excludes);
+				if(retVal) break;
+			}
+			
+			if(param.equals(SupplierManagementConst.CAT_TYPE_WORKSHOP)
+					|| param.equals(SupplierManagementConst.CAT_TYPE_DOCKYARD)
+					|| param.equals(SupplierManagementConst.CAT_TYPE_PRINTING)
+					|| param.equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING)){
+				
+				for(SmSvMachine mach : svTask.getSmSvTemplate().getSmSvMachines()){
+					SmSvMachine svoMach = (SmSvMachine) EntityHelper.getEntityByMultiplePropertiesFromList(mach, 
+							svTaskSVO.getSmSvTemplate().getSmSvMachines(),
+							new String[] { "svMachineId" }, null, null);
+					if(svoMach == null) return true;
+					if(EntityHelper.isObjectDifference(mach.getSmMachineDtl(), svoMach.getSmMachineDtl(), excludes)){
+						return true;
+					}
+				}
+				
+				retVal = EntityHelper.hasDiffBetweenList(
+						svTask.getSmSvTemplate().getSmSvAdtMachines(),
+						svTaskSVO.getSmSvTemplate().getSmSvAdtMachines(), 
+						new String[] {"svAdtMachineId"}, null, excludes);
+				if(retVal) break;
+			}
+			
+			if(param.equals(SupplierManagementConst.CAT_TYPE_PRINTING)){
+				retVal = EntityHelper.hasDiffBetweenList(
+						svTask.getSmSvTemplate().getSmSvPrintworks(),
+						svTaskSVO.getSmSvTemplate().getSmSvPrintworks(), 
+						new String[] {"svPrintworkId"}, null, excludes);
+				if(retVal) break;
+			}
+			
+			if(param.equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING)){
+				retVal = EntityHelper.hasDiffBetweenList(
+						applPrev.getSmManufacturingDtls(),
+						applCurr.getSmManufacturingDtls(), 
+						new String[] {"manufacturingDtlId"}, null, excludes);
+				if(retVal) break;
+			}
+			//site visit location
+			retVal = EntityHelper.isObjectDifference(svTask.getSmSvTemplate().getSmSvFacility(),
+					svTaskSVO.getSmSvTemplate().getSmSvFacility(), excludes);
+			if(retVal) break;
+			
+			retVal = EntityHelper.isObjectDifference(svTask.getSmSvOffice(),
+					svTaskSVO.getSmSvOffice(), excludes);
+			if(retVal) break;
+		}
+		//24964 - end
 		return retVal;
 	} //END
 
