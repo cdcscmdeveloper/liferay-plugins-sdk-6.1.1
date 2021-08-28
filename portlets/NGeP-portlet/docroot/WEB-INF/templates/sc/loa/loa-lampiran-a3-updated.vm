@@ -414,49 +414,43 @@ u {
 						</td>
 					#end
 					<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;border: 1px solid black !important;">
-						#set($maxQty = 0)
-						#set($minQty = 0)
-						#set($currentValue = 0)								
-									
-							#foreach(  $tplSpecZoneDtls in $tplSpecAnswer.tplSpecQuestion.tplSpecMaster.tplSpecZone.tplSpecZoneDtls )
-									#foreach( $scLoiLoaItm in $scLoiLoaItemList )												
-										#if($scLoiLoaItm.itemName.trim() == $tplSpecAnswer.tplSpecQuestion.clItem.trim())
- 											  #set($currentValue = $scLoiLoaItm.itemQty)
-										#end
-											
-							
-										#if($currentValue == 0)
-											#if($tplSpecAnswer.tplSpecQuestion.clQuantity)
-											   	#set($currentValue = $tplSpecAnswer.tplSpecQuestion.clQuantity)												
-											#else
-												#if($scLoiLoaItem.qty)
-												   	#set($currentValue = $scLoiLoaItem.qty) 
-												#end
-											#end									   
-										 #end	
-																	
-											  
-										 #if($maxQty == 0)
-											#set($maxQty = $currentValue)
-											#set($minQty = $currentValue)								   
-										 #end	
-											   
-										 #if($currentValue > $maxQty)
-											#set($maxQty = $currentValue)
-										 #end											 
-										 #if($currentValue < $minQty)
-											#set($minQty = $currentValue)
-										 #end
-	
+						#if ($isZonal)
+							#set($maxQty = 0)
+							#set($minQty = 0)
+							#set($currentValue = 0)
+
+							#foreach( $scLoiLoaItm in $scLoiLoaItemList )			
+									#if($scLoiLoaItm.scRequestItem.tplSpecQuestion.clItem.trim() == $tplSpecAnswer.tplSpecQuestion.clItem.trim())
+										#set($currentValue = $scLoiLoaItm.qty)
 									#end
-	   
+
+									#if($currentValue == 0)
+										#if($tplSpecAnswer.tplspecQuestion.clQuantity)
+											#set($currentValue = $$tplSpecAnswer.tplspecQuestion.clQuantity)												
+										#end									   
+									#end	
+																												  
+									#if($maxQty == 0)
+										#set($maxQty = $currentValue)
+										#set($minQty = $currentValue)								   
+									 #end	
+											   
+									#if($currentValue > $maxQty)
+										#set($maxQty = $currentValue)
+									#end											 
+									#if($currentValue < $minQty)
+										#set($minQty = $currentValue)
+									#end
 							#end
-									
+
 							#if($minQty != $maxQty)
-								<span>$minQty - $maxQty</span>
+								$minQty - $maxQty
 							#else
-								<span>$maxQty</span>
+								$maxQty
 							#end
+						#else
+							$scLoiLoaItem.qty
+						#end
 					</td>
 						#if ($isZonal)
 							<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2" colspan="1" style="border: 1px solid black;padding-left: 2px; padding-right: 2px;padding-top: 2px;padding-bottom: 2px;">
