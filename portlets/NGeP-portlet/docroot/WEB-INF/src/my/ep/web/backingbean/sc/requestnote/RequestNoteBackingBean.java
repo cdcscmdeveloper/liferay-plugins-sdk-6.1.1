@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -4859,6 +4860,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 		requestNoteDtl.setTotalPricePerItem(subTotalAmount);
 		
+		//#31528 - Start
+		//rounding to 2 decimal places
+		requestNoteDtl.setTotalPricePerItemRounded(subTotalAmount.setScale(2, RoundingMode.HALF_UP));
+		//#31528 - End
+		
 		return subTotalAmount;
 	}
 	
@@ -5399,7 +5405,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 							}						
 						}
 						
-						if(disciplinaryAction.isBlacklistOwner()){						
+						if(disciplinaryAction.isBlacklistOwner()){
 							if(personnelResDTO != null 
 									&& personnelResDTO.getSmPersonnelList().size() > 0){
 								for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
