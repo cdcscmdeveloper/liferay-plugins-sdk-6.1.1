@@ -19,6 +19,12 @@
 				</f:facet>
 				<p:inputText value="#{pWork.printType}" maxlength="100" id="txtPrintTypeId" disabled="#{viewFlag}"
 				required="#{empty param['disabledValidation']}" label="#{lbl['lbl.sm.sitevisit.printing.type']}" />
+				<!-- #24964 -->
+				<ac:smFieldChangeAlertSVO
+					isShow="#{not empty pWork and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
+					oriValue="#{svoSiteVisitBackingBean.getSVOSmSvPrintwork(pWork).printType}" 
+					currValue="#{pWork.printType}" 
+					alertValue="#{svoSiteVisitBackingBean.getSVOSmSvPrintwork(pWork).printType}"/>
 			</p:column>
 			
 			<p:column>
@@ -27,6 +33,12 @@
 				</f:facet>
 				<p:inputText value="#{pWork.clientName}" maxlength="100" id="txtUsernameId" disabled="#{viewFlag}" 
 				required="#{empty param['disabledValidation']}" label="#{lbl['lbl.sm.sitevisit.printing.uname']}" />
+				<!-- #24964 -->
+				<ac:smFieldChangeAlertSVO
+					isShow="#{not empty pWork and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
+					oriValue="#{svoSiteVisitBackingBean.getSVOSmSvPrintwork(pWork).clientName}" 
+					currValue="#{pWork.clientName}" 
+					alertValue="#{svoSiteVisitBackingBean.getSVOSmSvPrintwork(pWork).clientName}"/>
 			</p:column>
 			
 			<p:column>	
@@ -37,6 +49,12 @@
 					id="txtWorkValueId" disabled="#{viewFlag}" required="#{empty param['disabledValidation']}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />					
 				</p:inputText>
+				<!-- #24964 -->
+				<ac:smFieldChangeAlertSVO
+					isShow="#{not empty pWork and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
+					oriValue="#{svoSiteVisitBackingBean.getSVOSmSvPrintwork(pWork).printAmt}" 
+					currValue="#{pWork.printAmt}" 
+					alertValue="#{svoSiteVisitBackingBean.getSVOSmSvPrintwork(pWork).printAmt}"/>
 
 			</p:column>
 		</p:dataTable>
