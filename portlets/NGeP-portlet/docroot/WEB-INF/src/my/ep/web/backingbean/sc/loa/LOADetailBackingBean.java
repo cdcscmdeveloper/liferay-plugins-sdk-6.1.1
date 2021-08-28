@@ -8771,23 +8771,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			constructPRSupplierSpecificationAndRemarks(context, scLoa);
 		}
 
-		
-		ArrayList list = new ArrayList();
-		Map map = new HashMap();
-		
-		int count = 0;
-		if (CollectionUtils.isNotEmpty(scLoa.getScLoiLoaItems())) {
-			for (ScLoiLoaItem scLoiLoaItem : scLoa.getScLoiLoaItems()) {
-				map.put("index", count);
-				map.put("itemName", scLoiLoaItem.getScRequestItem().getItemName());
-				map.put("itemQty", scLoiLoaItem.getQty());
-				list.add(map);
-				map = new HashMap();
-				count++;
-			}
-		}
-
-		context.put("scLoiLoaItemList", list);
+		context.put("scLoiLoaItemList", scLoa.getScLoiLoaItems());
 		// scLoa
 		context.put("scLoa", scLoa);
 		context.put("bean", this);
