@@ -140,12 +140,12 @@
 	</p:column>
 	
 <!-- Farid end -->
-<!-- #21695 Farid START -->
+<!-- #31537 related #21695 Farid START 28/8/2021 -->
 	<p:column style="width:130px;">	
 		<p:inputTextarea disabled="#{tplSpecAnswer.ratePerUom eq 0 or evaluationBackingBean.managedBean.readOnly}" 
 		  		rendered="#{isSpecTypeFinancial and isZonal and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 and tplSpecAnswer.ratePerUom eq 0 or isSpecTypeFinancial and !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 and tplSpecAnswer.ratePerUom eq 0}"
 		  		style="width:calc(100% - 15px);" 
-				value="#{isZonal and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 and tplSpecAnswer.ratePerUom eq 0 or !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 and tplSpecAnswer.ratePerUom eq 0 ? 'Not Offer' : tplSpecAnswer.userRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);"/>
+				value="#{isZonal and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 and tplSpecAnswer.ratePerUom eq 0 or !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 and tplSpecAnswer.ratePerUom eq 0 ? lbl['lbl.sc.spec.score.po'] : tplSpecAnswer.userRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);"/>
 		
 		<p:inputTextarea disabled="#{evaluationBackingBean.managedBean.readOnly}" 
 			  	rendered="#{isZonal and isSpecTypeFinancial and tplSpecAnswer.ratePerUom ne 0 or !isZonal and isSpecTypeFinancial and tplSpecAnswer.ratePerUom ne 0}"
@@ -155,7 +155,7 @@
 		<p:inputTextarea disabled="#{evaluationBackingBean.managedBean.readOnly or tplSpecAnswer.notOfferAll}" 
 			  	rendered="#{isSpecTypeTechnical and tplSpecAnswer.tplSpecQuestion.questionType eq 'S' and tplSpecAnswer.notOfferAll}"
 			  	style="width:calc(100% - 15px);" 
-				value="#{'N/A'}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);"/>
+				value="#{lbl['lbl.sc.spec.score.po']}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);"/>
 		
 		<p:inputTextarea disabled="#{evaluationBackingBean.managedBean.readOnly}" 
 			  	rendered="#{isSpecTypeTechnical and tplSpecAnswer.tplSpecQuestion.questionType eq 'S' and !tplSpecAnswer.notOfferAll}"
@@ -163,5 +163,5 @@
 				value="#{tplSpecAnswer.userRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);"/>
 		
 	</p:column>
-<!-- #21695 Farid end -->
+<!--#31537 related to #21695 Farid end 28/8/2021-->
 </ui:composition>
