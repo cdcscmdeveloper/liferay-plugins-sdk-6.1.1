@@ -1442,17 +1442,25 @@ public class ConsolidationReportBackingBean extends
 			totalQualifiedSuppliers = resDTO.getTotalQualifiedSuppliers();
 		}
 
-		// Package wise validation
-		if (SourcingConstants.EVALUATE_BY_BOTH_PACKAGE_ITEM
-				.equalsIgnoreCase(this.getManagedBean().getScQt()
-						.getEvaluateBy())) {
-			qualifiedSupplierBeans = getQtEvaluationResultDtlBeansWithRank(
-					specZoneDtl, null, qualifiedSuppliers);
-			validateRanking(qualifiedSupplierBeans, false, null, specZoneDtl,
-					totalQualifiedSuppliers);
-		}
-		// End of // Package wise validation
-
+		// farid start bug #31556 related to #21695
+		// exclude validation ranking if has not offer
+				if(scQt!=null && !scQt.isPartial()){
+					// Package wise validation
+					if (SourcingConstants.EVALUATE_BY_BOTH_PACKAGE_ITEM
+							.equalsIgnoreCase(this.getManagedBean().getScQt()
+									.getEvaluateBy())) {
+						qualifiedSupplierBeans = getQtEvaluationResultDtlBeansWithRank(
+								specZoneDtl, null, qualifiedSuppliers);
+						validateRanking(qualifiedSupplierBeans, false, null, specZoneDtl,
+								totalQualifiedSuppliers);
+					}
+					// End of // Package wise validation
+				}else if(scQt!=null && scQt.isPartial()){
+					excludeValidatePartialRanking(specZoneDtl,items);
+				}
+		// farid End bug #31556 related to #21695
+		// exclude validation ranking if has not offer	
+				
 		// Item wise validation
 		List<ScQtEvaluationResultDtl> itemQualifiedSuppliers = null;
 		if (CollectionUtils.isNotEmpty(items)) {
@@ -2246,16 +2254,20 @@ public class ConsolidationReportBackingBean extends
 				totalQualifiedSuppliers = resDTO.getTotalQualifiedSuppliers();
 			}
 
-			// Package wise validation
-			if (SourcingConstants.EVALUATE_BY_BOTH_PACKAGE_ITEM
-					.equalsIgnoreCase(this.getManagedBean().getScQt()
-							.getEvaluateBy())) {
-				qualifiedSupplierBeans = getQtEvaluationResultDtlBeansWithRank(
-						specZoneDtl, null, qualifiedSuppliers);
-				validateRanking(qualifiedSupplierBeans, false, null, specZoneDtl,
-						totalQualifiedSuppliers);
-			}
-			// End of // Package wise validation
+		// farid start bug #31556 related to #21695
+		// exclude validation ranking if has not offer
+		// Package wise validation for partial offer
+		if (SourcingConstants.EVALUATE_BY_BOTH_PACKAGE_ITEM
+				.equalsIgnoreCase(this.getManagedBean().getScQt()
+						.getEvaluateBy()) && !this.getManagedBean().isOfferAll()) {
+			qualifiedSupplierBeans = getQtEvaluationResultDtlBeansWithRank(
+					specZoneDtl, null, qualifiedSuppliers);
+			validateRanking(qualifiedSupplierBeans, false, null, specZoneDtl,
+					totalQualifiedSuppliers);
+		}
+		// farid start bug #31556 related to #21695
+		// exclude validation ranking if has not offer
+		// End of // Package wise validation for partial offer
 
 			// Item wise validation
 			List<ScQtEvaluationResultDtl> itemQualifiedSuppliers = null;
