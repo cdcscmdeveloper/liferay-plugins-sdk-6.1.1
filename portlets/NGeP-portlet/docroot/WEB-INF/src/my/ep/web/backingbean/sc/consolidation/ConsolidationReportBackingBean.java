@@ -735,18 +735,15 @@ public class ConsolidationReportBackingBean extends
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 					.saveConsolidationReport(reqDTO);
 			
-            // #18685 - Start.
-			for (ScQtFinalizationRemarks updatedRemark : resDTO.getScQtFinalization().getScQtFinalizationRemarks()) {
-				
-				for (ScQtFinalizationRemarks remark : getManagedBean().getFinalizationItemizedRemarks()) {
-					
-					if (updatedRemark.getRemark().equalsIgnoreCase(remark.getRemark())
-							&& CommonConstants.ITEMIZED.equals(remark.getSourceName())) {
-						getManagedBean().getFinalizationItemizedRemarks().set(0, updatedRemark);
-					}
-				}
-			}
-            // #18685 - End.
+            // #18685 - Start
+            /*for (ScQtFinalizationRemarks updatedRemark : resDTO.getScQtFinalization().getScQtFinalizationRemarks()) {
+              for (ScQtFinalizationRemarks remark : getManagedBean().getFinalizationItemizedRemarks()) {
+                if (updatedRemark.getRemark().equalsIgnoreCase(remark.getRemark()) && CommonConstants.ITEMIZED.equals(remark.getSourceName())) {
+                    getManagedBean().getFinalizationItemizedRemarks().set(0, updatedRemark);
+                }
+              }
+            }*/
+            // #18685 - End
             
 			if (resDTO.isSuccessful()) {
 				renewSessionAndRetrieve(getManagedBean().getActiveIndex());
@@ -1244,19 +1241,24 @@ public class ConsolidationReportBackingBean extends
 		// #18685 - Start
 		if (null != scQtFinalization && CollectionUtils.isNotEmpty(scQtFinalization.getScQtFinalizationRemarks())) {
 			Iterator<ScQtFinalizationRemarks> iterator = scQtFinalization.getScQtFinalizationRemarks().iterator();
+			
 			while (iterator.hasNext()) {
 				ScQtFinalizationRemarks remark = iterator.next();
+				
 				if (CommonConstants.ITEMIZED.equals(remark.getSourceName())) {
-					List<ScQtFinalizationRemarks> itemizedRemarks = new ArrayList<>();
-					itemizedRemarks.add(remark);
-					getManagedBean().setFinalizationItemizedRemarks(itemizedRemarks);
+
+					if (null == getManagedBean().getFinalizationItemizedRemarks()) {
+						List<ScQtFinalizationRemarks> itemizedRemarks = new ArrayList<>();
+						
+						getManagedBean().setFinalizationItemizedRemarks(itemizedRemarks);
+					}
+					
+					getManagedBean().getFinalizationItemizedRemarks().add(remark);
+					
 					iterator.remove();
-					break;
 				}
 			}
 		}
-		
-
 
 		// Retrieve finalization remarks for Package Wise
 		List<ScQtFinalizationRemarks> remarks = initializeRemarks(
@@ -1264,12 +1266,18 @@ public class ConsolidationReportBackingBean extends
 						.getCurrentWorkFlowStatus(),
 				scQtFinalization.getScQtFinalizationRemarks(),
 				ScQtFinalizationRemarks.class);
+		
 		if (null != remarks && remarks.size() > 0) {
 			for (ScQtFinalizationRemarks remark : remarks) {
-				remark.setSourceName(CommonConstants.PACKAGE_WISE);
+
+				if (StringUtils.isEmpty(remark.getSourceName())) {
+					remark.setSourceName(CommonConstants.PACKAGE_WISE);
+				}
 			}
 		}
+		
 		scQtFinalization.setScQtFinalizationRemarks(remarks);
+
 		// Finalization Remarks list
 		getManagedBean().setFinalizationRemars(remarks);
 		
@@ -1279,11 +1287,16 @@ public class ConsolidationReportBackingBean extends
 						.getCurrentWorkFlowStatus(),
 						getManagedBean().getFinalizationItemizedRemarks(),
 				ScQtFinalizationRemarks.class);
+		
 		if (null != itemizedRemarks && itemizedRemarks.size() > 0) {
 			for (ScQtFinalizationRemarks remark : itemizedRemarks) {
-				remark.setSourceName(CommonConstants.ITEMIZED);
+				
+				if (StringUtils.isEmpty(remark.getSourceName())) {
+					remark.setSourceName(CommonConstants.ITEMIZED);
+				}
 			}
 		}
+		
 		//scQtFinalization.getScQtFinalizationRemarks().addAll(itemizedRemarks);
 		getManagedBean().setFinalizationItemizedRemarks(itemizedRemarks);
 		// #18685 - End
@@ -1657,6 +1670,10 @@ public class ConsolidationReportBackingBean extends
 		paramMap.put(ReportConst.PARAM_REMARK,
 				ulasan.length() == 0 ? StringUtils.EMPTY : ulasan.toString());
 		paramMap.put(ReportConst.PARAM_REPORT_OUTPUT_FORMAT, "rtf");
+		// #18685 - Start
+		paramMap.put("flowType", "tasklist");
+		// #18685 - End
+
 		generatePdfFromOracle(reportName, paramMap, attachment, false);
 	}
 
@@ -2137,14 +2154,18 @@ public class ConsolidationReportBackingBean extends
 		
 		newBPReportList.add(report);
 	}
+	//#18685 -end-
 	
+	//#18685 -start-
 	/**
 	 * @return the evaluationReportTabIndex
 	 */
 	public static int getEvaluationReportTabIndex() {
 		return EVALUATION_REPORT_TAB_INDEX;
 	}
+	//#18685 -end-
 	
+	//#18685 -start-
 	private void navigateToEvaluationReport() {
 		getManagedBean().setActiveIndex(EVALUATION_REPORT_TAB_INDEX);
 	}

@@ -3898,6 +3898,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	// end of 25396
 
 	// ----------------------------------- group of #18685 - start ----------------------------------------
+	// #18685-Start.
 	/**
 	 * Retrieve report tab dtl.Event handle set attachment for Reports tab.
 	 */
@@ -3997,7 +3998,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 
 	}
-
+	// #18685-End.
+	
+	// #18685-Start.
 	/**
 	 * Create new report during Supplier Finalization Preparation.
 	 * @param qtId 
@@ -4077,7 +4080,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		log.debug("Exit " + this.getClass().getName() +".createReportForSF");*/
 	}
+	// #18685-End.
 	
+	// #18685-Start.
 	/**
 	 * Download all reports.download all evaluation reports.
 	 * 
@@ -4112,7 +4117,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		downloadAllFiles(this.getManagedBean().getReportDownloadFileName(),
 				attachments);
 	}
+	// #18685-End.
 	
+	// #18685-Start.
 	/**
 	 * @param scqt
 	 * @param committeeType
@@ -4150,7 +4157,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		
 		return reportAttachment;
 	}
+	// #18685-End.
 	
+	// #18685-Start.
 	/**
 	 * @param committeeType 
 	 * @param scQtEvaluationReportAttachment
@@ -4204,7 +4213,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			log.info("ReportName is empty");
 		}
 	}
+	// #18685-End.
 	
+	// #18685-Start.
 	/**
 	 * Delete reports upload file.Event handle to delete upload file in
 	 * reports tab.
@@ -4226,7 +4237,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 
 	}
+	// #18685-End.
 	
+	// #18685-Start.	
 	/**
 	 * @param finalizationReports
 	 * @param scQt 
@@ -4262,7 +4275,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 		}
 	}
+	// #18685-End.
 	
+	// #18685-Start.	
 	/**
 	 * @param taskType 
 	 * 
@@ -4271,9 +4286,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		List<ScQtFinalizationReport> scQtFinalizationReportList = this.getManagedBean().getNewBriefingPaperReportList();
 		if (null != scQtFinalizationReportList && scQtFinalizationReportList.size() > 0) {
 			String reportNames = "";
-			// #18685 - Start.
+
 			resetUnSavedReportContent(scQtFinalizationReportList);
-			// #18685 - End.
+
 			for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReportList) {
 				
 				if (taskType.equals(SourcingConstants.CONSOLIDATION_TASK)) {
@@ -4305,6 +4320,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							//throw new EpException(MessageConst.ERROR_775150, new String[] { scQtFinalizationReport.getTitle() });
 						}
 					}
+
+				if ("UP".equals(scQtFinalizationReport.getDefinationType().getParameterCode())
+						&& scQtFinalizationReport.getScQtFinalizationReportAttachment() == null) {
+					throw new EpException(MessageConst.ERROR_775166, new String[] { scQtFinalizationReport.getTitle() });
+				}
+
 			} 
 				
 			if (StringUtils.isNotEmpty(reportNames)) {
@@ -4312,7 +4333,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 		}
 	}
-		
+	// #18685-End.
+	
+	// #18685-Start.	
 	/**
 	 * @param scQtFinalizationReportList
 	 */
@@ -4352,8 +4375,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
-	}	
-	
+	}
+	// #18685-End.
+
+	// #18685-Start.	
 	/**
 	 * this method is used to save the userInput type popup window content in reports tab.
 	 * @param brefingPaperRepor
@@ -4386,7 +4411,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 
 	}
+	// #18685-End.
 	
+	// #18685-Start.
 	/**
 	 *reports file upload.to upload files for manual added reports.
 	 * 
@@ -4412,26 +4439,21 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				briefingReport.setScQtFinalizationReportAttachment(reportAttachment);
 			}
 			
-			List<ScQtFinalizationReport> briefingReports = getManagedBean().getNewBriefingPaperReportList();
-			int indexOfReport = briefingReports.indexOf(briefingReport);
-			
-			reportAttachment.setDocNo(briefingReport.getScQtFinalization().getScQt().getQtNo());
+			reportAttachment.setDocNo(getManagedBean().getDocNo());
 			
 			scAttachment = reportAttachment;
+			
 			uploadAttachment(event.getFile(), scAttachment);
 			
-			String fileName = scAttachment.getFileName();
-			
-			if (indexOfReport >= 0 && fileName != null) {
-				reportAttachment.setFileName(indexOfReport + SourcingConstants.UNDER_SCORE + fileName);
-			}
+			reportAttachment.setFileName(scAttachment.getFileName());
 			
 			briefingReport.setScQtFinalizationReportAttachment(reportAttachment);
 
 		}
 	}
+	// #18685-End.
 	
-	
+	// #18685-Start.	
 	/**
 	 * @param reportTitle
 	 * @param scQtFinalization
@@ -4459,7 +4481,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 
 	}
+	// #18685-End.
 	
+	// #18685-Start.
 	/**
 	 * delete existing report details records from database.
 	 *  
@@ -4478,7 +4502,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			getManagedBean().setRemoveFinalizationReports(removeFinalizationReports);
 		}
 	}
-
+	// #18685-End.
+	
+	// #18685-Start.
 	/**
 	 * checkKertasTaklimat Uploaded report
 	 * 
@@ -4565,6 +4591,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					}
 
 				}
+				
+				if ("UP".equals(finalizationReport.getDefinationType().getParameterCode())
+						&& !finalizationReport.getTitle().contains("Kertas Keputusan")) {
+					getManagedBean().getNewBriefingPaperReportList().add(finalizationReport);
+					
+					iterator.remove();
+				}
 			}
 
 			if (taskType.equals(SourcingConstants.CONSOLIDATION_TASK)
@@ -4582,6 +4615,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					}
 				}
 				
+				for (ScQtFinalizationReport report : getManagedBean().getNewBriefingPaperReportList()) {
+					if ("UP".equals(report.getDefinationType().getParameterCode())) {
+						tempList.add(report);
+					}
+				}
+
 				getManagedBean().getNewBriefingPaperReportList().clear();
 				getManagedBean().getNewBriefingPaperReportList().addAll(tempList);
 			}
@@ -4622,7 +4661,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 		}
 	}
-	
+	// #18685-End.
+
+	// #18685-Start.	
     /**
      * @param finalizationReport
      */
@@ -4670,7 +4711,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			qtSuppFinalizationSO = null;
 		}
 	}  
-	
+	// #18685-End.
+
 	// #28215 for #18685 - Start
 	/**
 	 * @param finalizationReport

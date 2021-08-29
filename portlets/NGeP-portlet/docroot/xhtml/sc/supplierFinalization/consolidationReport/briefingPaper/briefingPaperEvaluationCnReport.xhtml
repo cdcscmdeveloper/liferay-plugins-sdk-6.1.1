@@ -122,10 +122,12 @@
 			<table>
 				<tr>
 					<td align="center">
+						<!-- 18685 -start- -->
 						<p:inputTextarea value="#{consolidationReportBackingBean.managedBean.selectedBriefingReport.reportContent}" 
-								 		 scrollHeight="0" rows="15" cols="130" autoResize="false"
+								 		 scrollHeight="0" rows="15" cols="130" autoResize="false" maxlength="2000"
 								 		 disabled="#{consolidationReportBackingBean.managedBean.readOnly}"
 								 		 rendered="#{consolidationReportBackingBean.managedBean.selectedBriefingReport ne null}">
+						<!-- 18685 -end- -->
 							<p:ajax partialSubmit="true" process="@this" update="@this" />
 						</p:inputTextarea>					
 					</td>

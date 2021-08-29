@@ -256,12 +256,11 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean isHasSupplierQualified;
 	//#26169 #38 - End
 	
-	// #18685 - Start
-	private ScRemark pendingRecItemizedRemark;
-	private ScRemark pendingRecPackageRemark;
-	private ScRemark newSfRemark;
+	// #18685 - Start. 
+	private List<ScRemark> pendingRecItemizedRemark;
+	private List<ScRemark> pendingRecPackageRemark;
 	private List<ScRemark> scRemarks;
-	// #18685 - End
+	// #18685 - End. 
 	
     // #25638 - Start.
 	private List<ScRemark> newSfRemarks;
@@ -2207,14 +2206,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.maxAmountCommitteeAuthority = maxAmountCommitteeAuthority;
 	}	
 	//#25729#142 & #26169 - End 
-
-	// #18685 - Start 
-	/**
-	 * @return the pendingRecItemizedRemark
-	 */
-	public ScRemark getPendingRecItemizedRemark() {
-		return pendingRecItemizedRemark;
-	}
 	
 	//#26169 #38 - Start
 	public boolean isHasSupplierQualified() {
@@ -2225,19 +2216,27 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.isHasSupplierQualified = isHasSupplierQualified;
 	}
 	//#26169 #38 - End
-		
+	
+	// #18685 - Start.
+	/**
+	 * @return the pendingRecItemizedRemark
+	 */
+	public List<ScRemark> getPendingRecItemizedRemark() {
+		return pendingRecItemizedRemark;
+	}
+
 	/**
 	 * @param pendingRecItemizedRemark the pendingRecItemizedRemark to set
 	 */
 	public void setPendingRecItemizedRemark(
-	    ScRemark pendingRecItemizedRemark) {
+	    List<ScRemark> pendingRecItemizedRemark) {
 		this.pendingRecItemizedRemark = pendingRecItemizedRemark;
 	}
 
 	/**
 	 * @return the pendingRecPackageRemark
 	 */
-	public ScRemark getPendingRecPackageRemark() {
+	public List<ScRemark> getPendingRecPackageRemark() {
 		return pendingRecPackageRemark;
 	}
 
@@ -2245,24 +2244,10 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 * @param pendingRecPackageRemark the pendingRecPackageRemark to set
 	 */
 	public void setPendingRecPackageRemark(
-	    ScRemark pendingRecPackageRemark) {
+	    List<ScRemark> pendingRecPackageRemark) {
 		this.pendingRecPackageRemark = pendingRecPackageRemark;
 	}
 	
-	/**
-     * @return the newSfRemark
-     */
-    public ScRemark getNewSfRemark() {
-      return newSfRemark;
-    }
-  
-    /**
-     * @param newSfRemark the newSfRemark to set
-     */
-    public void setNewSfRemark(ScRemark newSfRemark) {
-      this.newSfRemark = newSfRemark;
-    }
-
     /**
      * @return the scRemarks
      */
