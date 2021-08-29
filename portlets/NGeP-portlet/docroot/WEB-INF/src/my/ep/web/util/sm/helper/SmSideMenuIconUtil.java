@@ -757,6 +757,7 @@ public class SmSideMenuIconUtil {
 				//#31043 start
 				if(bean.isApproverUser()){
 					retVal = ICON_TICK;
+					bean.setDocumentVerified(true);
 				}
 				else{
 					retVal = ICON_UNTICK;
@@ -810,6 +811,9 @@ public class SmSideMenuIconUtil {
 					bean.setDocumentVerified(true);
 				}
 				else{
+					if(bean.isApproverUser()){
+						retVal = ICON_UNTICK;
+					}
 					bean.setDocumentVerified(false);
 				}
 				//24964 & 31043 - end
