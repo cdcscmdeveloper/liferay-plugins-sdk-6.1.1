@@ -2843,10 +2843,13 @@ public class SmApplicationUtil {
 				|| managedBean.isShowWorkShopPanel()) {
 			sec.setFactoryVerify(isVerifiedAll);
 		}
-		if (managedBean.isShowMachineryEquipmentPanel()) {
+		
+		//31043 Start
+		if (managedBean.isShowMachineryEquipmentPanel() || managedBean.isShowFacilityMachine()) {
 			sec.setMachineryVerified(isVerifiedAll);
 			sec.setManufacturingVerified(isVerifiedAll);
 		}
+		//31043 End
 		if (managedBean.getSmAppl().getSupplierType().equals("J")) {
 			sec.setAssocBodyVerified(isVerifiedAll);
 		}
