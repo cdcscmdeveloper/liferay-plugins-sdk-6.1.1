@@ -754,19 +754,21 @@ public class SmSideMenuIconUtil {
 				//24964 & 31043 - start
 				//retVal = ICON_UNTICK; 
 				
+				boolean mandatoryDocVerified = false; 
+				boolean nonMandatoryDocVerified = false; 
+				boolean licenseMandatoryDocVerified = false; 
+				
 				//#31043 start
 				if(bean.isApproverUser()){
 					retVal = ICON_TICK;
 					bean.setDocumentVerified(true);
+					mandatoryDocVerified = true; 
 				}
 				else{
 					retVal = ICON_UNTICK;
 				}
 				//#31043 end
 				
-				boolean mandatoryDocVerified = false; 
-				boolean nonMandatoryDocVerified = false; 
-				boolean licenseMandatoryDocVerified = false; 
 				//24964 & 31043 - end
 				List<SmApplSupportDoc> licenseMandatoryDocs = new ArrayList<SmApplSupportDoc>();
 				if (!EntityHelper.isCollectionEmpty(bean
@@ -781,6 +783,11 @@ public class SmSideMenuIconUtil {
 							.getMandatoryDocs(), bean.getSmAppl()
 							.getSupportingDocMode(), bean.isApproverUser())){
 						mandatoryDocVerified = true;
+					}
+					else{
+						if(bean.isApproverUser()){
+							mandatoryDocVerified = false;
+						}
 					}
 				}
 				
