@@ -6509,8 +6509,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			
 			//contract approver authority 
-			if (!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isPbqcAuthorityReq()
-					&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isMofAuthorityReq()) {
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isApproverAuthorityReq()) {
 				String roleCode = null;
 				if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
 						ParameterConst.CONTRACT_TYPE_MINISTRY)) {
@@ -6528,15 +6527,24 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 			}
 			
-			//pbm/mof decision
-			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate() != null
-					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate().before(getManagedBean().getDisciplinaryActionStartDate())){
-				getManagedBean().setDisciplinaryActionCancel(false);
+			//pbm & mof decision
+			else if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isPbqcAuthorityReq()
+					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isMofAuthorityReq()){
+				if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate().before(getManagedBean().getDisciplinaryActionStartDate())
+						&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate().before(getManagedBean().getDisciplinaryActionStartDate())){
+					getManagedBean().setDisciplinaryActionCancel(false);
+				}
 			}
-			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate() != null
-					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate().before(getManagedBean().getDisciplinaryActionStartDate())){
-				getManagedBean().setDisciplinaryActionCancel(false);
+			//pbm or mof decision
+			else{
+				if((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate() != null
+						&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate().before(getManagedBean().getDisciplinaryActionStartDate()))
+					|| (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate() != null
+						&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate().before(getManagedBean().getDisciplinaryActionStartDate()))){
+					getManagedBean().setDisciplinaryActionCancel(false);
+				}
 			}
+			
 		}
 		log.info("getManagedBean().isDisciplinaryActionCancel() :" + getManagedBean().isDisciplinaryActionCancel());
 	}
