@@ -9639,7 +9639,7 @@ private void retriveCommitteeRemarksList(){
 			ScQtCommittee qt = resDTO.getQtCommittee();
 			
 			// #28784 - start
-			if (qt.getScQt().isDemoRequired() && !this.getManagedBean().isAfterDemoInv() && this.getManagedBean().getTaskName().equals(SCProcessNameConst.SIGNOFF_DEMO_TEC_EVALUATION)) {//#28784
+			if (qt.getScQt().isDemoRequired() && this.getManagedBean().getTaskName().equals(SCProcessNameConst.SIGNOFF_TEC_EVALUATION)) {//#28784
 				successMessage(MessageConst.INFO_700101, getMessageCommon("lbl.sc.eva.technical.presentation.demo.signoff"), qt
 						.getScQt().getQtNo(), Boolean.TRUE);
 			} else {
