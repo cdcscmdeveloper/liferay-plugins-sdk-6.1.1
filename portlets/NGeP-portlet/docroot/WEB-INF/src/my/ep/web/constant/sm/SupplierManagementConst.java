@@ -401,9 +401,8 @@ public class SupplierManagementConst {
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_NGO = my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_NGO;
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2 = my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2;
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI_LAIN2 = my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI_LAIN2;
-	// public static final String SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER = my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER;
+	public static final String SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER = my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER;
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_PROFESSIONAL_BODY = my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_PROFESSIONAL_BODY;
-	public static final String SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER = "Q";
 	
 	public static List<String> LIST_OF_BUSINESS_TYPE_ALLOWED_TO_BE_EDITED = Arrays.asList(
 			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH,
@@ -658,14 +657,10 @@ public class SupplierManagementConst {
 	public static final String SME_STATUS_BOTH = my.ep.constant.sm.SupplierManagementConst.SME_STATUS_BOTH;
 
 	// SUPPLIER TYPE
-	public static final String SUPP_TYPE_CONTRACTOR = "K";
-	public static final String SUPP_TYPE_CONSULTANT = "J";
-	public static final String SUPP_TYPE_BASIC = "B";
-	public static final String SUPP_TYPE_GOVT_TO_GOVT = "G";
-	/*public static final String SUPP_TYPE_CONTRACTOR = my.ep.constant.sm.SupplierManagementConst.SUPP_TYPE_CONTRACTOR;
+	public static final String SUPP_TYPE_CONTRACTOR = my.ep.constant.sm.SupplierManagementConst.SUPP_TYPE_CONTRACTOR;
 	public static final String SUPP_TYPE_CONSULTANT = my.ep.constant.sm.SupplierManagementConst.SUPP_TYPE_CONSULTANT;
 	public static final String SUPP_TYPE_BASIC = my.ep.constant.sm.SupplierManagementConst.SUPP_TYPE_BASIC;
-	public static final String SUPP_TYPE_GOVT_TO_GOVT = my.ep.constant.sm.SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT;*/
+	public static final String SUPP_TYPE_GOVT_TO_GOVT = my.ep.constant.sm.SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT;
 
 	public static final String SITE_VISIT_ASSIGNMENT_TYPE_ALL = "C";
 	public static final String SITE_VISIT_ASSIGNMENT_TYPE_BEFORE = "B";
