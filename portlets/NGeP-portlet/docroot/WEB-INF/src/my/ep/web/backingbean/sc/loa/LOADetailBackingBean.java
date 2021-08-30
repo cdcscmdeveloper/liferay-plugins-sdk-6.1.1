@@ -2388,10 +2388,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		
 		int count = 0;
 		if (CollectionUtils.isNotEmpty(scLoa.getScLoiLoaItems())) {
-			for (ScLoiLoaItem x : scLoa.getScLoiLoaItems()) {
+			for (ScLoiLoaItem scLoiLoaItem : scLoa.getScLoiLoaItems()) {
 				map.put("index", count);
-				map.put("itemName", x.getScRequestItem().getItemName());
-				map.put("itemQty", x.getQty());
+				map.put("itemName", scLoiLoaItem.getScRequestItem().getItemName());
+				map.put("itemQty", scLoiLoaItem.getQty());
 				list.add(map);
 				map = new HashMap();
 				count++;
@@ -8164,10 +8164,14 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		} else {
 			List<ScLoiLoaItem> filteredItemList = new ArrayList<>();
 			for (ScLoiLoaItem item : completeScLoiLoaItemList) {
+				
+				String searchCriteria = itemNameSearchCriteria.toUpperCase().trim().replaceAll("[ ]{2,}", " ");
+				String checkedItem = item.getScRequestItem().getItemName().toUpperCase().trim().replaceAll("[ ]{2,}", " ");
+				
 				if (item.getScRequestItem() != null
 						&& StringUtils.isNotBlank(item.getScRequestItem().getItemName())
 						&& StringUtils
-								.containsIgnoreCase(item.getScRequestItem().getItemName(), itemNameSearchCriteria)) {
+								.containsIgnoreCase(checkedItem, searchCriteria)) {
 					filteredItemList.add(item);
 				}
 			}
@@ -8587,6 +8591,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			constructPRSupplierSpecificationAndRemarks(context, scLoa);
 		}
 
+		context.put("scLoiLoaItemList", scLoa.getScLoiLoaItems());
 		// scLoa
 		context.put("scLoa", scLoa);
 		context.put("bean", this);
@@ -9413,7 +9418,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			List<ScLoiLoaItem> containCriteriaScLoiLoaItemList = new ArrayList<ScLoiLoaItem>();
 			
 			for(ScLoiLoaItem scLoiLoaItem : resDTO.getScLoiLoaItemList()){
-				if(scLoiLoaItem.getScRequestItem().getItemName().toUpperCase().contains(this.getItemNameSearchCriteria().toUpperCase())){
+				String itemNameSearchCriteria = this.getItemNameSearchCriteria().toUpperCase().trim().replaceAll("[ ]{2,}", " ");
+				String checkedItem = scLoiLoaItem.getScRequestItem().getItemName().toUpperCase().trim().replaceAll("[ ]{2,}", " ");
+				
+				if(checkedItem.contains(itemNameSearchCriteria)){
 					containCriteriaScLoiLoaItemList.add(scLoiLoaItem);
 				}			
 				
