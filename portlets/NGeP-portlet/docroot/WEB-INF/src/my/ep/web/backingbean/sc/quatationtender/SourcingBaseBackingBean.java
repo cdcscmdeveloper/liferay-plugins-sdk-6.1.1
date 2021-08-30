@@ -4840,6 +4840,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				// #18685 - Start.
 				if ("UP".equals(finalizationReport.getDefinationType().getParameterCode()) 
 						&& !finalizationReport.getTitle().contains("Kertas Keputusan")) {
+					// #18685 - Start.
+					if (null == getManagedBean().getNewBriefingPaperReportList()) {
+						List<ScQtFinalizationReport> newBriefingPaperReportList = new LinkedList<>();
+						getManagedBean().setNewBriefingPaperReportList(newBriefingPaperReportList );
+					}
+					// #18685 - End.
 					getManagedBean().getNewBriefingPaperReportList().add(finalizationReport);
 					iterator.remove();
 				}
@@ -4851,10 +4857,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				List<ScQtFinalizationReport>  tempList = new ArrayList<>();
 				for (String reportName : reportTitleList) {
 					for (ScQtFinalizationReport report : getManagedBean().getNewBriefingPaperReportList()) {
-						if (reportName.equals(report.getPmDocument().getDocName())) {
+						// #18685 - Start.
+						if (null != report && null != report.getPmDocument() && reportName.equals(report.getPmDocument().getDocName())) {
 							tempList.add(report);
 							break;
 						}
+						// #18685 - End.
 					}
 				}
 				// #18685 - Start.
