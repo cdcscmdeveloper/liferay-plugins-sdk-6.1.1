@@ -2834,9 +2834,11 @@ public class SmApplicationUtil {
 
 		sec.setBankVerified(isVerifiedAll);
 		sec.setCategoryVerified(isVerifiedAll);
-		if (managedBean.isReviewSiteVisit()) {
-			sec.setSitevisitVerified(isVerifiedAll);
-		}
+		//#31043 start
+//		if (managedBean.isReviewSiteVisit()) {
+//			sec.setSitevisitVerified(isVerifiedAll);
+//		}
+		//#31043 end
 		if (managedBean.isShowDockyardPanel()
 				|| managedBean.isShowFactoryPanel()
 				|| managedBean.isShowStorePanel()
