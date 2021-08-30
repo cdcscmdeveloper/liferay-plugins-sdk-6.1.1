@@ -11,17 +11,16 @@
 	<ui:define name="contentSection">
 		<table style="border: 0px; width: 100%">
 			<tr>
-				<td width="100%"><p:blockUI block=":form"
-						widgetVar="blockWidget">
-						<p:graphicImage value="/css/images/ajax-loader.gif" />
-					
+				<td width="100%"><p:blockUI block=":form" widgetVar="blockWidget">
+					<p:graphicImage value="/css/images/ajax-loader.gif" />
+					</p:blockUI>
 					<ui:remove> #25692 - start </ui:remove>	
-					</p:blockUI> <p:messages id="specmessages" showDetail="true" autoUpdate="true"
-						closable="true" showSummary="false" severity="error, info" /> <ui:include
-						src="/xhtml/sc/quatationtender/quotationTenderButtons.xhtml" /> <ui:include
-						src="/xhtml/sc/quatationtender/quotationTenderHeader.xhtml" /></td>
-					<ui:remove> #25692 - end </ui:remove>	
-					
+					<p:messages id="specmessages" showDetail="true" autoUpdate="true"
+						closable="true" showSummary="false" severity="error, info" />
+					<ui:remove> #25692 - end </ui:remove>
+					<ui:include src="/xhtml/sc/quatationtender/quotationTenderButtons.xhtml" />
+					<ui:include src="/xhtml/sc/quatationtender/quotationTenderHeader.xhtml" />
+				</td>
 			</tr>
 			<tr>
 				<td width="100%" valign="top">
