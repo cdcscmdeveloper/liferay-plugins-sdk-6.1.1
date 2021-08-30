@@ -249,7 +249,7 @@
 						style="float:right;" styleClass="BtnSpacing"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','4')}"
-						action="#{evaluationBackingBean.updateSmAppl}" iconPos="right" disabled="!evaluationBackingBean.managedBean.afterDemoInv"
+						action="#{evaluationBackingBean.updateSmAppl}" iconPos="right" disabled="#{!evaluationBackingBean.managedBean.afterDemoInv}"
 						update=":form" /><!-- #28784 -->
 
 

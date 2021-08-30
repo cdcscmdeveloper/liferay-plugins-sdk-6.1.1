@@ -15883,6 +15883,8 @@ private void retriveCommitteeRemarksList(){
 					this.getManagedBean().setReadOnly(false);
 				}
 			}
+		} else {
+			this.getManagedBean().setAfterDemoInv(false);
 		}
 	}
 	
