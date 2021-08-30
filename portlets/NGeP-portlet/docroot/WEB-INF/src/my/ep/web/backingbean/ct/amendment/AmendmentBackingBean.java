@@ -6453,14 +6453,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if(getManagedBean().isDisciplinaryAction() && !getManagedBean().isDisciplinaryActionNotification()){
 			getManagedBean().setDisciplinaryActionCancel(true);
 		}
-		//#26688 start
+		
 		if((ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_MEETING_DECISION) || 
 				ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_SIGN_OFF) ||
 				ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_CHAIRPERSON_SIGN_OFF) ||
 				ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_MOF_MEETING_DECISION)
 				|| ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_MEETING_DECISION_REVISION)) 
 				&& getManagedBean().isDisciplinaryAction()){
-		//#26688 end
 			if((getManagedBean().getTaskName() != null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME) &&
 					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate() == null) 
 					|| (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate() != null &&
@@ -6509,6 +6508,27 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getManagedBean().setJustification("");
 			}
 			
+			//contract approver authority 
+			if (!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isPbqcAuthorityReq()
+					&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isMofAuthorityReq()) {
+				String roleCode = null;
+				if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+						ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+					roleCode = RoleCode.CT_APPROVER.value();
+				} else if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+						ParameterConst.CONTRACT_TYPE_CENTRAL)) {
+					roleCode = RoleCode.BPK_CC_APPROVER.value();
+				}
+				CtActor approverActor = retrieveContractActor(
+						ctBackingBean.getManagedBean().getContractVer().getContractVerId(),
+						ctBackingBean.getManagedBean().getContractVer().getDocType(),
+						roleCode);
+				if (approverActor != null && approverActor.getActionDate().before(getManagedBean().getDisciplinaryActionStartDate())) {
+					getManagedBean().setDisciplinaryActionCancel(false);
+				}
+			}
+			
+			//pbm/mof decision
 			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate() != null
 					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate().before(getManagedBean().getDisciplinaryActionStartDate())){
 				getManagedBean().setDisciplinaryActionCancel(false);
