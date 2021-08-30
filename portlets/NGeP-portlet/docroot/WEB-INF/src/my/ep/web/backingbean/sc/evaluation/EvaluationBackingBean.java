@@ -4663,7 +4663,9 @@ public void saveComplianceSample() {
 				if (resDTO.getItemResultBean().getTotalRecord() > 0) {
 					this.getManagedBean().setSampleItemList(
 							resDTO.getItemResultBean().getResultList());
+					if(null!=resDTO.getItemResultBean().getResultList().get(0).getScRequestItem().getTplSpecQuestion().getParentSpecQuestion()){//#11104-start
 					getManagedBean().setItemSampleReq(resDTO.getItemResultBean().getResultList().get(0).getScRequestItem().getTplSpecQuestion().getParentSpecQuestion().isSampleReq());//#11104
+					}//#11104_End
 				}
 
 				this.getManagedBean().setNoOfContractsProposalScore(null);
