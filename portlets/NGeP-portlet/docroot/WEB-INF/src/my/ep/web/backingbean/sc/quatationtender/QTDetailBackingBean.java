@@ -8529,7 +8529,7 @@ public class QTDetailBackingBean extends
 	//#13344 - End
 	
 	// #25077 - Start
-	public void checkSettingPopUpBPKApprovalNeeded(ScQt scQt) {
+	public boolean checkSettingPopUpBPKApprovalNeeded(ScQt scQt) {
 		IQTDetailSO detailSO;
 		
 		try {
