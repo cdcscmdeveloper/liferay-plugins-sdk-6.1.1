@@ -9,7 +9,9 @@
 	
 	<ui:param name="isQTStatusPendingQtSubmission" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_QT_SUBMISSION}" />
 	<ui:param name="isQTStatusPendingScheduleAndBefore" value="#{qTDetailBB.isQTStatusLessThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
+	<!-- 25037 Start -->
 	<ui:param name="isQTStatusPendingSpecCommitteeApprovalAndBefore" value="#{qTDetailBB.isQTStatusLessThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)}" />
+	<!-- 25037 End -->
 	<ui:remove>
 		#13344 Start				
 	</ui:remove>
@@ -20,8 +22,10 @@
 	<ui:remove> 26095@hatta - start </ui:remove>
 	<ui:param name="isQTClosePermanently" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_CLOSE_PERMANENTLY}" />
 	<ui:param name="iscloseQTIfValidityPeriodExpiredAndStatusRelated" value="#{qTDetailBB.closeQTIfValidityPeriodExpiredAndStatusRelated()}" />
-	<ui:remove> 26095@hatta - end </ui:remove>
+	<!-- 25037 Start -->
 	<ui:param name="isQTStatusPendingScoringEndorsement" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT}" />
+	<!-- 25037 End -->
+	<ui:remove> 26095@hatta - end </ui:remove>
 		<table width="100%">
 		<tr>
 		<td style="vertical-align: bottom;" align="right"><p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
@@ -90,6 +94,7 @@
 			<ui:remove> ***25692 - end </ui:remove>	
 				
 			<c:if test="#{!qTDetailBB.managedBean.readOnly}">
+				<!-- 25037 Start -->
 				<p:commandButton value="#{lbl['lbl.btn.save']}"
 					action="#{qTDetailBB.saveQtDetailsAction}" process="@form" partialSubmit="true"
 					onclick="blockWidget.show();"
@@ -97,7 +102,7 @@
 					update="@form"
 					rendered="#{isQTStatusPendingSpecCommitteeApprovalAndBefore or !qTDetailBB.managedBean.maintanceFlow}" 
 					disabled="#{!qTDetailBB.managedBean.ptjPresent}"/>
-
+				<!-- 25037 End -->
 				<c:choose>
 					<c:when test="#{qTDetailBB.managedBean.taskId ne null}">
 						<ui:repeat var="bpmAction"
@@ -121,7 +126,7 @@
 	   
 					</c:when>
 					<c:otherwise>
-	   
+						<!-- 25037 Start -->
 							<p:commandButton value="#{lbl['lbl.btn.submit']}"
 								styleClass="amendButton"
 								action="#{qTDetailBB.submitQtDetailsFormMaintanace(isQTStatusPendingScoringEndorsement)}"
@@ -130,7 +135,8 @@
 								rendered="#{(qTDetailBB.isQTStatusInBetween(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING, QTStatusConst.QT_PENDING_LOA))}"
 								disabled="#{qTDetailBB.isQTStatusEvaluation(qTDetailBB.managedBean.qt.qtStatus.statusId) and 
 								(empty qTDetailBB.managedBean.amendMentBean or !qTDetailBB.managedBean.amendMentBean.brandNew) and !qTDetailBB.managedBean.changesOnQTMaintenance}" />
-						</c:otherwise>
+						<!-- 25037 End -->
+					</c:otherwise>
 				</c:choose> 
 				<ui:remove> 26095@hatta - start </ui:remove>
 				<c:if test="#{iscloseQTIfValidityPeriodExpiredAndStatusRelated}">
@@ -209,11 +215,6 @@
 					action="#{qTDetailBB.resetBpkCurrentArea(false)}" />
 			</div>
 		</p:dialog>
-		<ac:confirmationPopup id="confirmReendorseOnReassignmentId"
-			widget="confirmReendorseOnReassignmentPopup" loadingWidget="blockWidget"
-			title="#{lbl['lbl.sc.confirmation']}"
-			okAction="qTDetailBB.submitQtDetailsFormMaintanace()"
-			content="#{lbl['lbl.sc.popup.confirmSpecMemberReendorse']}" />		
 		<ui:remove> #25077 End </ui:remove>
 
 		<!-- 15391 Start -->
@@ -233,4 +234,12 @@
 			</div>
 		</p:dialog>
 		<!-- 15391 End  -->
+		
+		<!-- 25037 Start -->
+		<ac:confirmationPopup id="confirmReendorseOnReassignmentId"
+			widget="confirmReendorseOnReassignmentPopup" loadingWidget="blockWidget"
+			title="#{lbl['lbl.sc.confirmation']}"
+			okAction="qTDetailBB.submitQtDetailsFormMaintanace()"
+			content="#{lbl['lbl.sc.popup.confirmSpecMemberReendorse']}" />
+		<!-- 25037 End -->
 </ui:composition>
