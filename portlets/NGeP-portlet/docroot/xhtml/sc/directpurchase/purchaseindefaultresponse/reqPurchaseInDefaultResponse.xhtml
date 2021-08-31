@@ -407,7 +407,7 @@
 								selectionMode="single"
 								saveObject="purchaseInDefaultBackingBean.managedBean.ctReason"
 								conditionField="#{purchaseInDefaultBackingBean.ctContractCriteria}"
-								readonly="#{isQtySupEqualQtyReq}" size="51"
+								readonly="true" size="51"
 								value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.justification}"
 								update="@form" required="true" />
 						</h:panelGroup> 
@@ -421,7 +421,7 @@
 								selectionMode="single"
 								saveObject="purchaseInDefaultBackingBean.managedBean.panelReason"
 								conditionField="#{purchaseInDefaultBackingBean.circularCriteria}"
-								readonly="#{isQtySupEqualQtyReq}" size="51"
+								readonly="#true" size="51"
 								value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.justification}"
 								update="@form" required="true" />
 						</h:panelGroup> <p:message id="ctJustLovIdMsg" for="ctJustLovId" display="icon" /><p:message id="panelJustLovIdMsg" for="panelJustLovId" display="icon" /></TD> 
