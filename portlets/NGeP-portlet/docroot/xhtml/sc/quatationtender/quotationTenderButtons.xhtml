@@ -105,25 +105,11 @@
 							<ui:param name="buttonLabel"
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 							<ui:param name="bpAction" value="SUBMIT" />
-							<ui:remove> 25077 Start </ui:remove>
-							<ui:remove> 25077 note-#136 temporary patching in UAT only -start-  </ui:remove>
-							<c:if
-								test="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION or 
-									qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT}">
-								<p:commandButton value="#{lbl[buttonLabel]}"
-										styleClass="ui-button"
-										actionListener="#{qTDetailBB.checkPopUpBPKApprovalNeeded(true)}"
-										update="@([id$=#{bpkApprovalNeededIdTemp}])"
-										rendered="#{qTDetailBB.managedBean.showPopUpBPKApprovalNeeded}" />
-							</c:if>
-							<ui:remove> 25077 End </ui:remove>
 							<p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button"
 								onclick="blockWidget.show();"
 								oncomplete="blockWidget.hide();"
-								rendered="#{!qTDetailBB.managedBean.showPopUpBPKApprovalNeeded}"
 								action="#{qTDetailBB.updateBpmTask(bpmAction)}" />
-							<ui:remove> 25077 note-#136 temporary patching in UAT only -end- </ui:remove>
 						</ui:repeat>
 					</c:when>
 					<c:when test="#{qTDetailBB.managedBean.createQt or isQTStatusPendingQtSubmission}">
@@ -182,8 +168,7 @@
 			</div>
 		</p:dialog>
 
-		<ui:remove> 26095@hatta - start </ui:remove>
-	
+		<ui:remove> 26095@hatta - start </ui:remove>	
 		<p:dialog id="closeQTDlg" widgetVar="closeQTDlg"
 			header="#{lbl['lbl.sc.qt.close.confirmation']}" resizable="false"
 			width="auto" height="100" closable="false">
@@ -205,8 +190,7 @@
 		</p:dialog>
 		<ui:remove> 26095@hatta - end </ui:remove>
   
-		<ui:remove> 25077 Start </ui:remove>
-		<ui:remove> 25077 note-#136 temporary patching in UAT only -start- </ui:remove>
+	    <ui:remove> #25077 Start </ui:remove>
 		<p:dialog id="bpkApprovalNeededIdTemp" widgetVar="bpkApprovalNeededDlgTemp"
 			header="#{lbl['lbl.sc.confirmation']}" resizable="false" width="auto"
 			height="100" closable="false">
@@ -218,57 +202,20 @@
 				<p:commandButton value="#{lbl['lbl.btn.yes']}"
 					onclick="bpkApprovalNeededDlgTemp.hide(); blockWidget.show();" oncomplete="blockWidget.hide();" 
 					partialSubmit="true" process="@form" update="@form"
-					action="#{qTDetailBB.updateBpmTask(bpAction)}" />	 
+					action="#{qTDetailBB.updateBpmTask(bpAction)}" actionListener="#{qTDetailBB.resetBpkCurrentArea(true)}"/>
 				<p:commandButton value="#{lbl['lbl.btn.no']}"
-					onclick="bpkApprovalNeededDlgTemp.hide();" type="button"
-					partialSubmit="true" process="@this" />
-			</div>
-		</p:dialog>
-		<ui:remove> 25077 note-#136 temporary patching in UAT only -end- </ui:remove>
-		<!-- status pending doc prep QT_PENDING_SCHEDULE_DOCUMENT -start- -->
-		<p:dialog id="bpkApprovalNeededIds" widgetVar="bpkApprovalNeededDlgs"
-			header="#{lbl['lbl.sc.confirmation']}" resizable="false" width="auto"
-			height="100" closable="false">
-			<table>
-				<tr><td style="float: left;"><p:outputLabel value="#{lbl['lbl.sc.qt.approval.oth.confirmation.first']}" /></td></tr>
-				<tr><td style="float: left;"><p:outputLabel value="#{lbl['lbl.sc.qt.approval.oth.confirmation.second']}" /></td></tr>
-			</table>
-			<div class="ppRightBtn">
-			    <p:commandButton value="#{lbl['lbl.btn.yes']}"
-					oncomplete="bpkApprovalNeededDlgs.hide();submitConfirmPopUp2.show();" 
-					partialSubmit="true" process="@form" update="@form" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}"
-					onclick="bpkApprovalNeededDlgs.hide();" type="button"
-					partialSubmit="true" process="@this" />
-			</div>
-		</p:dialog>
-		<!-- status pending doc prep QT_PENDING_SCHEDULE_DOCUMENT -end- -->
-		<!-- status pending doc revision QT_REVISION_PUBLICATION -start- -->
-		<p:dialog id="bpkApprovalNeededId" widgetVar="bpkApprovalNeededDlg"
-			header="#{lbl['lbl.sc.confirmation']}" resizable="false" width="auto"
-			height="100" closable="false">
-			<table>
-				<tr><td style="float: left;"><p:outputLabel value="#{lbl['lbl.sc.qt.approval.oth.confirmation.first']}" /></td></tr>
-				<tr><td style="float: left;"><p:outputLabel value="#{lbl['lbl.sc.qt.approval.oth.confirmation.second']}" /></td></tr>
-			</table>
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}"
-					onclick="bpkApprovalNeededDlg.hide(); blockWidget.show();" oncomplete="blockWidget.hide();" 
+					onclick="bpkApprovalNeededDlgTemp.hide(); blockWidget.show();" oncomplete="blockWidget.hide();"
 					partialSubmit="true" process="@form" update="@form"
-					action="#{qTDetailBB.updateBpmTask(bpAction)}" />
-	 
-				<p:commandButton value="#{lbl['lbl.btn.no']}"
-					onclick="bpkApprovalNeededDlg.hide();" type="button"
-					partialSubmit="true" process="@this" />
+					action="#{qTDetailBB.resetBpkCurrentArea(false)}" />
 			</div>
 		</p:dialog>
-		<!-- status pending doc revision QT_REVISION_PUBLICATION -end- -->
 		<ac:confirmationPopup id="confirmReendorseOnReassignmentId"
 			widget="confirmReendorseOnReassignmentPopup" loadingWidget="blockWidget"
 			title="#{lbl['lbl.sc.confirmation']}"
 			okAction="qTDetailBB.submitQtDetailsFormMaintanace()"
 			content="#{lbl['lbl.sc.popup.confirmSpecMemberReendorse']}" />		
-		<ui:remove> 25077 End </ui:remove>
+		<ui:remove> #25077 End </ui:remove>
+
 		<!-- 15391 Start -->
 		<p:dialog id="specCommAlertdialog" widgetVar="specCommAlert"
 			header="#{lbl['lbl.sc.confirmation']}" resizable="false"
