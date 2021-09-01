@@ -1752,7 +1752,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 						&& isActiveAtUserGroupUser(pmUserRole.getPmRole().getRoleCode()) != null) {
 					// check for FL Approver and RN Approver only
 					// revert it to active
-					pmUserRole.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+					//pmUserRole.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 					throw new EpException(MessageConst.ERROR_770202, isActiveAtUserGroupUser(pmUserRole.getPmRole().getRoleCode()));
 					//Bug #31509 - End
 				} else {
@@ -3140,6 +3140,20 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 									new String[] { getRoleDescByRoleCode(roleCode, languageCode) });
 						}
 					}
+					
+					// Bug #31509 - Start
+					if (userRole.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED
+							&& (RoleCode.FL_APPROVER.value().equals(userRole.getPmRole().getRoleCode()) || RoleCode.RN_APPROVER
+									.value().equals(userRole.getPmRole().getRoleCode()))
+							&& isActiveAtUserGroupUser(userRole.getPmRole().getRoleCode()) != null) {
+						// check for FL Approver and RN Approver only
+						// revert it to active
+						userRole.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+						throw new EpException(MessageConst.ERROR_770202, isActiveAtUserGroupUser(userRole.getPmRole()
+								.getRoleCode()));
+					}
+					// Bug #31509 - End
+
 
 					// Check single role for all users
 					if (userRole.getPmRole().isSingleRole()
