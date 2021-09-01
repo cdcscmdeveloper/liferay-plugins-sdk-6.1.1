@@ -22,6 +22,9 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
+import javax.faces.model.ListDataModel;
+import my.ep.persistence.entity.pm.common.PmRemarkCategory; //#29665
+
 import my.ep.biz.bean.sc.QtAmendMentBean;
 import my.ep.biz.bean.sc.QtAmendMentValueBean;
 import my.ep.biz.bean.sc.SupplierQualificationBean;
@@ -82,6 +85,7 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmRemarkCategory;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
@@ -180,6 +184,17 @@ public class NoticeBoardBackingBean extends
 	private String slectedHeaderName;
 	
 	
+	/*new #29732 */ 
+	
+	private boolean newCategory = false;
+	
+	private PmCategoryL3 pmCategoryL3;
+	
+	private String remarkCategory;
+	
+	private List<PmRemarkCategory> remarkHistoryList;
+	
+
 	public NoticeBoardBackingBean() {
 		
 	}
@@ -3365,4 +3380,37 @@ public class NoticeBoardBackingBean extends
 		}
 		return isRenderRigisterBtn;
 	}
+
+	public boolean isNewCategory() {
+		return newCategory;
+	}
+
+	public void setNewCategory(boolean newCategory) {
+		this.newCategory = newCategory;
+	}
+
+	public PmCategoryL3 getPmCategoryL3() {
+		return pmCategoryL3;
+	}
+
+	public void setPmCategoryL3(PmCategoryL3 pmCategoryL3) {
+		this.pmCategoryL3 = pmCategoryL3;
+	}
+
+	public String getRemarkCategory() {
+		return remarkCategory;
+	}
+
+	public void setRemarkCategory(String remarkCategory) {
+		this.remarkCategory = remarkCategory;
+	}
+
+	public List<PmRemarkCategory> getRemarkHistoryList() {
+		return remarkHistoryList;
+	}
+
+	public void setRemarkHistoryList(List<PmRemarkCategory> remarkHistoryList) {
+		this.remarkHistoryList = remarkHistoryList;
+	}
+	
 }
