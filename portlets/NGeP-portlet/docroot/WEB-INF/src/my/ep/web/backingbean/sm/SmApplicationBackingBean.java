@@ -12983,16 +12983,8 @@ public class SmApplicationBackingBean extends
 		//	#15629 -- start - 26/1/2020
 //		if(SmCommonUtil.isCollectionEmpty(getManagedBean().getSelectedReasonDescs())) {	
 		//30974 - Start
-		getManagedBean().setSelectedReasonDescs(new ArrayList<PmReasonDesc>());
-		for(SmApplRejectReason smApplRejectReason : getManagedBean().getSmAppl().getSmApplRejectReasons()){
-			for(PmReasonDesc pmReasonDesc : getManagedBean().getReasonDescList()){
-				if(smApplRejectReason.getPmReason().getReasonId().equals(pmReasonDesc.getPmReason().getReasonId())){
-					getManagedBean().getSelectedReasonDescs().add(pmReasonDesc);
-				}
-			}			
-		}
-		
-		getManagedBean().setSelectedRecommendRejectReasonDescs(getManagedBean().getSelectedReasonDescs());
+		getManagedBean().setSelectedReasonDescs(new ArrayList<PmReasonDesc>());		
+		getManagedBean().setSelectedRecommendRejectReasonDescs(new ArrayList<PmReasonDesc>());
 		setReasonIdList();
 //		} 
 		//30974 - end
@@ -15494,7 +15486,6 @@ public class SmApplicationBackingBean extends
 		// reset remark for other and remove remark required flag during search
 		getManagedBean().setRecommendReasonId(null);
 		// reset selected recommend reject reason remarks during search
-		verifySelectedRecommendRejectReasons();
 
 		getManagedBean().setRecommendReasonDescList(
 				SmApplicationUtil.getWildCardSearchRejectReason(
@@ -15512,6 +15503,9 @@ public class SmApplicationBackingBean extends
 				}
 			}
 		}
+		
+		setReasonIdList();
+		verifySelectedRecommendRejectReasons();
 		//30974 - end
 	}
 
@@ -15530,6 +15524,7 @@ public class SmApplicationBackingBean extends
 		
 		getManagedBean().setSelectedRecommendReasonDescs(new ArrayList<PmReasonDesc>());
 		getManagedBean().setSelectedRecommendRejectReasonDescs(new ArrayList<PmReasonDesc>());
+		setReasonIdList();
 		
 		getManagedBean().setRecommendReasonDescList(
 				SmApplicationUtil.getWildCardSearchRejectReason(
