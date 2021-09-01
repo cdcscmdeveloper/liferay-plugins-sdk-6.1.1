@@ -495,11 +495,13 @@
 
 		<table style="width: 100%">
 			<tr>
+			<!-- #31603 - start - added rendered -->
 				<td
 					style="vertical-align: top; padding-right: 1px; text-align: right;width: 200px;">
 					<h:outputLabel value="#{lbl['lbl.sc.remark']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" />
+						value="*" styleClass="mandatory" rendered="#{purchaseInDefaultBackingBean.managedBean.pidStatus.statusId eq DPStatusConstants.pidPendingSubmission}" />
 				</td>
+				<!-- #31603 - end -->
 				<td class="TableFieldRight"><ac:scRemarkAndAttachment header=""
 						remarkList="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.remarks}"
 						showRemarkLabel="false" showAttachment="false"
