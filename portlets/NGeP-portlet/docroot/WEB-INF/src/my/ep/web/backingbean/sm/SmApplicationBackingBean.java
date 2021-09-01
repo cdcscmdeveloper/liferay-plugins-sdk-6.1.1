@@ -10672,7 +10672,7 @@ public class SmApplicationBackingBean extends
 											SupplierManagementConst.BPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE)) {
 						//#29823 - Start
 						if(this.getManagedBean().getSmAppl() != null){
-							SmAppl lastApplAppr = SmApplicationUtil.getLastApprovedApplictionForSupplier(getManagedBean());
+							SmAppl lastApplAppr = SmApplicationUtil.getLastApprovedApplictionForSupplier(getManagedBean(), res);
 							reqDTO.setLastApprovedAppl(lastApplAppr);
 						}else{
 							reqDTO.setApplId(getManagedBean().getSmAppl().getApplId());
@@ -10688,7 +10688,9 @@ public class SmApplicationBackingBean extends
 					// #29663 - start
 					if (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
 						//28774
-						reqDTO.setLastApprovedAppl(SmApplicationUtil.getLastApprovedApplictionForSupplier(getManagedBean()));
+						//#29823 - START
+						reqDTO.setLastApprovedAppl(SmApplicationUtil.getLastApprovedApplictionForSupplier(getManagedBean(), res));
+						//#29823 - END
 						getManagedBean().getSmAppl().setBumi(false);
 						getManagedBean().getSmAppl().setPmRegStatus(null);
 						getManagedBean().getSmAppl().getSmSupplier().setBumi(false);

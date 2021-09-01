@@ -8347,8 +8347,10 @@ public class SupplierApplicationBackingBean extends
 									.getBpmTaskName()
 									.equalsIgnoreCase(
 											SupplierManagementConst.BPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE)) {
+						//#29823 - START
 						reqDTO.setLastApprovedAppl(SmApplicationUtil
-								.getLastApprovedApplictionForSupplier(getManagedBean()));
+								.getLastApprovedApplictionForSupplier(getManagedBean(), res));
+						//#29823 - END
 					}
 					if (StringUtils.isNotBlank(mofNo)) {
 						successMsg = SmCommonUtil.getOutputMsgBundle(
