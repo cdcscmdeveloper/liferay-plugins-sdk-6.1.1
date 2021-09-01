@@ -765,54 +765,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getLoaDocumentList();
 			}
 			
-			//#29793 start
-			//Enhancement #26186 start - retrieve disciplinary info 
-			log.info("______________________________________________________________________________________________________");
-			log.info("Hafiz test disciplinary statusid: " + ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId());
-			log.info("Hafiz test disciplinary getTaskName: " + getManagedBean().getTaskName());
-			ctBackingBean.getManagedBean().getContractVer().setDisciplinaryActionCancel(false);
-			if (!ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_LOA_ACKNOWLEDGEMENT)
-				&& !ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_VERIFICATION)){
-				
-				setDisciplinaryAction();
-				
-				if(getManagedBean().isDisciplinaryActionCancel()){
-					String msgThrowDisc = null;
-					String[] str_array = this.getManagedBean().getOutComes();
-					List<String> listButton = new ArrayList<String>(Arrays.asList(str_array));
-					
-					if(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_SIGN_OFF)
-							|| ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_CHAIRPERSON_SIGN_OFF)){
-						if(listButton.contains(BpmOutcomeConst.BPM_REVISE)){
-							outcome = new String[] {BpmOutcomeConst.BPM_REVISE};
-							msgThrowDisc = MessageConst.ERROR_750069;
-						}
-					}else if (ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_CANCELLATION_ACKNOWLEDGEMENT)){
-						ctBackingBean.getManagedBean().getContractVer().setDisciplinaryActionCancel(true);
-					}else{
-						if(listButton.contains(BpmOutcomeConst.BPM_CANCEL)
-								||ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_REVISION)){
-							outcome = new String[] {BpmOutcomeConst.BPM_CANCEL};
-							msgThrowDisc = MessageConst.ERROR_750052;
-						}else if(listButton.contains(BpmOutcomeConst.BPM_REJECT)){
-							outcome = new String[] {BpmOutcomeConst.BPM_REJECT};
-							msgThrowDisc = MessageConst.ERROR_750068;
-						}
-					}
-					
-					if (msgThrowDisc!=null && outcome!=null){
-						ctBackingBean.getManagedBean().getContractVer().setDisciplinaryActionCancel(true);
-						getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
-						getManagedBean().setOutComes(outcome);
-						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,  
-								MessageUtils.getMessage(msgThrowDisc,MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
-					}
-				}
-			}
-			log.info("______________________________________________________________________________________________________");
-			
-			//Enhancement #26186 end - retrieve disciplinary info
-			//29793 end
+			//Enhancement #26186/#29793 start - retrieve disciplinary info 
+			disciplinaryActionCheckAndSet();			
+			//Enhancement #26186/#29793 end - retrieve disciplinary info
 			
 			ConstructTabSideMenu();
 			
@@ -1583,7 +1538,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			reqDTO.setContractAdminlist(getManagedBean().getContractAdminlist());
 			
 			//26186 start
-			if(getManagedBean().isDisciplinaryAction()){
+			if(getManagedBean().isDisciplinaryAction() && ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions()!=null){
 				reqDTO.setCtDisciplinaryAction(ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions());
 			}
 			//26186 end
@@ -6445,6 +6400,53 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	//#26520 - end
 	
 	//#29793 #26186 start 	
+	public void disciplinaryActionCheckAndSet(){
+		log.info("______________________________________________________________________________________________________");
+		log.info("Hafiz test disciplinary statusid: " + ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId());
+		log.info("Hafiz test disciplinary getTaskName: " + getManagedBean().getTaskName());
+		ctBackingBean.getManagedBean().getContractVer().setDisciplinaryActionCancel(false);
+		if (!ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_LOA_ACKNOWLEDGEMENT)
+			&& !ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_VERIFICATION)){
+			
+			setDisciplinaryAction();
+			
+			if(getManagedBean().isDisciplinaryActionCancel()){
+				String msgThrowDisc = null;
+				String[] outcome = new String[getManagedBean().getOutComes().length];
+				String[] str_array = this.getManagedBean().getOutComes();
+				List<String> listButton = new ArrayList<String>(Arrays.asList(str_array));
+				
+				if(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_SIGN_OFF)
+						|| ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_CHAIRPERSON_SIGN_OFF)){
+					if(listButton.contains(BpmOutcomeConst.BPM_REVISE)){
+						outcome = new String[] {BpmOutcomeConst.BPM_REVISE};
+						msgThrowDisc = MessageConst.ERROR_750069;
+					}
+				}else if (ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_CANCELLATION_ACKNOWLEDGEMENT)){
+					ctBackingBean.getManagedBean().getContractVer().setDisciplinaryActionCancel(getManagedBean().isDisciplinaryActionCancel());
+				}else{
+					if(listButton.contains(BpmOutcomeConst.BPM_CANCEL)
+							||ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_REVISION)){
+						outcome = new String[] {BpmOutcomeConst.BPM_CANCEL};
+						msgThrowDisc = MessageConst.ERROR_750052;
+					}else if(listButton.contains(BpmOutcomeConst.BPM_REJECT)){
+						outcome = new String[] {BpmOutcomeConst.BPM_REJECT};
+						msgThrowDisc = MessageConst.ERROR_750068;
+					}
+				}
+				
+				if (msgThrowDisc!=null && outcome!=null){
+					ctBackingBean.getManagedBean().getContractVer().setDisciplinaryActionCancel(getManagedBean().isDisciplinaryActionCancel());
+					getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
+					getManagedBean().setOutComes(outcome);
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,  
+							MessageUtils.getMessage(msgThrowDisc,MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+				}
+			}
+		}
+		log.info("______________________________________________________________________________________________________");
+	}
+	
 	public void setDisciplinaryAction(){
 		
 		getManagedBean().setDisciplinaryActionCancel(false);
