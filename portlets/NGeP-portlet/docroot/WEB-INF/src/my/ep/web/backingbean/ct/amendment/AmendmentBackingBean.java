@@ -6405,9 +6405,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		log.info("Hafiz test disciplinary statusid: " + ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId());
 		log.info("Hafiz test disciplinary getTaskName: " + getManagedBean().getTaskName());
 		ctBackingBean.getManagedBean().getContractVer().setDisciplinaryActionCancel(false);
-		if (!ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_LOA_ACKNOWLEDGEMENT)
-			&& !ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_VERIFICATION)){
-
+		
+		if(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_VERIFICATION)){
+			setDADetailsCT();
+		}
+		else if (!ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_LOA_ACKNOWLEDGEMENT)){
 			getManagedBean().setDisciplinaryActionCancel(false);
 			checkDisciplinaryAction();
 			setDisciplinaryAction();
@@ -6479,35 +6481,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_LOA_APPROVAL) ||
 				ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_LOA_REVISION_APPROVAL))
 				&& getManagedBean().isDisciplinaryAction()){
-			IContractAmendmentSO contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
-			ContractResDTO resContractDTO = contractAmendmentSO.retrieveDisciplinaryActionByContractVerId(ctBackingBean.getManagedBean().getContractVer().getContractVerId());
 			
-			ctBackingBean.getManagedBean().getContractVer().setCtDisciplinaryActions(resContractDTO.getCtDisciplinaryAction());
-			if (ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions() != null) {
-				if (ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().getApproveFlag() == null) {
-					getManagedBean().setDisciplinaryApprovedFlag("");
-				} else if (ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().getApproveFlag() == ParameterConst.FLAG_INT_YES) {
-					getManagedBean().setDisciplinaryApprovedFlag(ParameterConst.FLAG_ACCEPT);
-				} else if (ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().getApproveFlag() == ParameterConst.FLAG_INT_NO) {
-					getManagedBean().setDisciplinaryApprovedFlag(ParameterConst.FLAG_REJECT);
-				}
-					
-				if(ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().getJustification() == null){
-					ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().setJustification("");
-				}
-			} else {
-					
-			//set discplinary action if null
-				CtDisciplinaryAction ctDisciplinaryActions = new CtDisciplinaryAction();
-				ctDisciplinaryActions.setApprove(false);
-				ctDisciplinaryActions.setApproveFlag(ParameterConst.FLAG_INT_NO);
-				ctDisciplinaryActions.setJustification(null);
-				ctDisciplinaryActions.setCtContractVer(ctBackingBean.getManagedBean().getContractVer());
-					
-				ctBackingBean.getManagedBean().getContractVer().setCtDisciplinaryActions(ctDisciplinaryActions);
-				getManagedBean().setDisciplinaryApprovedFlag("");
-				getManagedBean().setJustification("");
-			}
+			setDADetailsCT();
 			
 			//contract approver authority 
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isApproverAuthorityReq()) {
@@ -6666,6 +6641,39 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if(getManagedBean().getDisciplinaryApprovedFlag()!=null && getManagedBean().getDisciplinaryApprovedFlag().equalsIgnoreCase(ParameterConst.FLAG_ACCEPT)){
 				ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().setApproveFlag(ParameterConst.FLAG_INT_YES);
 				ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().setApprove(true);
+			}
+		}
+		
+		public void setDADetailsCT(){
+			IContractAmendmentSO contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
+			ContractResDTO resContractDTO = contractAmendmentSO.retrieveDisciplinaryActionByContractVerId(ctBackingBean.getManagedBean().getContractVer().getContractVerId());
+			
+			ctBackingBean.getManagedBean().getContractVer().setCtDisciplinaryActions(resContractDTO.getCtDisciplinaryAction());
+			if (ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions() != null) {
+				if (ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().getApproveFlag() == null) {
+					getManagedBean().setDisciplinaryApprovedFlag("");
+				} else if (ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().getApproveFlag() == ParameterConst.FLAG_INT_YES) {
+					getManagedBean().setDisciplinaryApprovedFlag(ParameterConst.FLAG_ACCEPT);
+				} else if (ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().getApproveFlag() == ParameterConst.FLAG_INT_NO) {
+					getManagedBean().setDisciplinaryApprovedFlag(ParameterConst.FLAG_REJECT);
+				}
+					
+				if(ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().getJustification() == null){
+					ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().setJustification("");
+				}
+				this.getManagedBean().setDisciplinaryActionDetails(true);
+			} else {
+					
+			//set discplinary action if null
+				CtDisciplinaryAction ctDisciplinaryActions = new CtDisciplinaryAction();
+				ctDisciplinaryActions.setApprove(false);
+				ctDisciplinaryActions.setApproveFlag(ParameterConst.FLAG_INT_NO);
+				ctDisciplinaryActions.setJustification(null);
+				ctDisciplinaryActions.setCtContractVer(ctBackingBean.getManagedBean().getContractVer());
+					
+				ctBackingBean.getManagedBean().getContractVer().setCtDisciplinaryActions(ctDisciplinaryActions);
+				getManagedBean().setDisciplinaryApprovedFlag("");
+				getManagedBean().setJustification("");
 			}
 		}
 

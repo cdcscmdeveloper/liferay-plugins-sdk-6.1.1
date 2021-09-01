@@ -158,6 +158,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private boolean disciplinaryActionCancel;
 	private Date disciplinaryActionStartDate;
 	private Date disciplinaryActionEndDate;
+	private boolean disciplinaryActionDetails; //#26186
 	//#29793 end
 	
 	private boolean itemProductNotExist;
@@ -1464,8 +1465,15 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	public void setDisciplinaryActionEndDate(Date disciplinaryActionEndDate) {
 		this.disciplinaryActionEndDate = disciplinaryActionEndDate;
 	}
-	//#29793 end
+	
+	public boolean isDisciplinaryActionDetails() {
+		return disciplinaryActionDetails;
+	}
 
+	public void setDisciplinaryActionDetails(boolean disciplinaryActionDetails) {
+		this.disciplinaryActionDetails = disciplinaryActionDetails;
+	}
+	//#29793 end
 	//Enhancement #26186 end
 	
 	//#25956 Start
@@ -1477,8 +1485,6 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	}
 	//#25956 End
 
-
-	//Enhancement #26186 end
 	//26753 - start
 	/**
 	 * @return the updateCommittee
