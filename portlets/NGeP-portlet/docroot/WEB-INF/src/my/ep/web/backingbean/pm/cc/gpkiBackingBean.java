@@ -72,7 +72,7 @@ public class gpkiBackingBean implements Serializable {
 	public String gpkiSignAction(ContextualCompositeMethodExpression postSignActionMtdExpr, ContextualCompositeMethodExpression enableAutoUpdateMtdExpr) {
 		long startTime = System.currentTimeMillis();
 		log.info("gpkiBackingBean.gpkiSignAction(): startTime in milli seconds is: " + startTime);
-		System.out.println("ContextualCompositeMethodExpression");
+		log.info("ContextualCompositeMethodExpression");
 		
 		String textBeforeSign = FacesContext.getCurrentInstance()
 				.getExternalContext().getRequestParameterMap()
@@ -98,18 +98,18 @@ public class gpkiBackingBean implements Serializable {
 		userSO.retrieveUserByUserId(reqDTO);
 		UserResDTO resDTO = new UserResDTO();
 		resDTO = userSO.retrieveUserByUserId(reqDTO);
-		System.out.println("serialNo====================================: " + serialNo);
-		System.out.println("subjectDN====================================: "+ subjectDN);
-		System.out.println("getIdentificationNo=====================================: "
+		log.info("serialNo====================================: " + serialNo);
+		log.info("subjectDN====================================: "+ subjectDN);
+		log.info("getIdentificationNo=====================================: "
 				+ resDTO.getPmUser().getLoginId());
-		System.out.println("ContextualCompositeMethodExpression  2");
-		System.out.println("postSignActionMtdExpr=====================================: "
+		log.info("ContextualCompositeMethodExpression  2");
+		log.info("postSignActionMtdExpr=====================================: "
 				+ postSignActionMtdExpr);
-		System.out.println("enableAutoUpdateMtdExpr=====================================: "
+		log.info("enableAutoUpdateMtdExpr=====================================: "
 				+ enableAutoUpdateMtdExpr);
 		Object returnObj = null;
-		System.out.println("textBeforeSign:"+textBeforeSign);
-		System.out.println("signedText:"+signedText);
+		log.info("textBeforeSign:"+textBeforeSign);
+		log.info("signedText:"+signedText);
 		
 		try {
 			this.setNonSigningException(null);
