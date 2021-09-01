@@ -89,11 +89,6 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private Integer selectedRoleSearchOption;
 	private boolean isPmUserExist = false;
 	private SelectItem[] orgTypeList;
-	
-	//Bug #31509 - Start 
-	private boolean errorMessage;
-	private String checkSelectedRole;
-	//Bug #31509 - End
 
 	public ProfileManagementManagedBean(){}
 	
@@ -805,22 +800,5 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	public void setOrgTypeList(SelectItem[] orgTypeList) {
 		this.orgTypeList = orgTypeList;
 	}
-	
-	//Bug #31509 - Start 
-	public boolean isErrorMessage() {
-		return errorMessage;
-	}
 
-	public void setErrorMessage(boolean errorMessage) {
-		this.errorMessage = errorMessage;
-	}
-	
-	public String getCheckSelectedRole() {
-		return checkSelectedRole;
-	}
-
-	public void setCheckSelectedRole(String checkSelectedRole) {
-		this.checkSelectedRole = checkSelectedRole;
-	}
-	//Bug #31509 - End
 }
