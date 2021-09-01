@@ -324,6 +324,47 @@ public class SmCommonUtil {
 		return retrieveParameterDescByTypeAndCodeAndLang(paramType, paramCode,
 				new FacesScopes().getUserLocale().getLanguage());
 	}
+	
+	
+	/**
+	 * Retrieve parameter description list by param type,param code and language
+	 * code. If searchAllValue is true, it will select all regardless the record status
+	 * 
+	 * @param String
+	 *            paramType
+	 * @param String
+	 *            lang
+	 * @param String
+	 *            paramCode
+	 * @return PmParameterDesc
+	 * 
+	 * 
+	 */
+	public static PmParameterDesc retrieveParameterDescByTypeAndCodeAndLang(
+			String paramType, String paramCode,String lang,boolean searchAllValue){
+		PmParameterDesc retVal = null;
+		ParameterReqDTO reqDTO = new ParameterReqDTO();
+		reqDTO.setParameterType(paramType);
+		reqDTO.setLanguageCode(lang);
+		reqDTO.setParameterCode(paramCode);
+		reqDTO.setSearchAllValue(searchAllValue);
+		
+		IParameterSO reqSO = (IParameterSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IParameterSO.class);
+		ParameterResDTO resDTO = reqSO.retrieveParameterDescListByType(reqDTO);
+		if (!EntityHelper.isCollectionEmpty(resDTO.getParameterDescList())) {
+			retVal = resDTO.getParameterDescList().get(0);
+			for (PmParameterDesc pd : resDTO.getParameterDescList()) {
+				if (pd.getLanguageCode() != null
+						&& pd.getLanguageCode().equalsIgnoreCase(lang)) {
+					retVal = pd;
+					break;
+				}
+			}
+		}
+		return retVal;
+	}
 
 	/**
 	 * Retrieve parameter description list by param type,param code and language

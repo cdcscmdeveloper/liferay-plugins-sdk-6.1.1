@@ -32,20 +32,8 @@
 					</tr>
 					<tr>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.individual.service']}" /></td>
-						<td>
-						<c:choose>
-						<c:when test="#{viewSmApplBackingBean.managedBean.smSupplier.serviceType eq SupplierMgmtConst.smServiceTypeA}">
-						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.service.typeA']}" /></c:when>
-						<c:when test="#{viewSmApplBackingBean.managedBean.smSupplier.serviceType eq SupplierMgmtConst.smServiceTypeB}">
-						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.service.typeB']}" /></c:when>
-						<c:when test="#{viewSmApplBackingBean.managedBean.smSupplier.serviceType eq SupplierMgmtConst.smServiceTypeC}">
-						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.service.typeC']}" /></c:when>
-						<c:when test="#{viewSmApplBackingBean.managedBean.smSupplier.serviceType eq SupplierMgmtConst.smServiceTypeD}">
-						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.service.typeD']}" /></c:when>
-						<c:when test="#{viewSmApplBackingBean.managedBean.smSupplier.serviceType eq SupplierMgmtConst.smServiceTypeE }">
-						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.service.typeE']}" /></c:when>
-						</c:choose>						
-						</td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.serviceCodeName}" /></td>
+						<td></td>
 						<td></td>
 					</tr>
 				</p:outputPanel>				
