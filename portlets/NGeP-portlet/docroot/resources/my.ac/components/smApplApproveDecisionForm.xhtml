@@ -133,9 +133,11 @@
 								<td><p:outputLabel value="#{lbl['lbl.sm.rejection.reasons']}" /></td>
 								<td>
 									<p:inputText id="recRejectReasonSearchId"
-										label="#{lbl['lbl.sm.rejection.reasons']}"
-										value="#{cc.attrs.bean.searchRecommendRejectReason}"
-										size="35" >
+										label="#{lbl['lbl.sm.rejection.reasons']}" 
+										value="#{cc.attrs.bean.searchRecommendRejectReason}" 
+										onkeypress="if (event.keyCode == 13) { rejectReasonSearch.jq.click(); return false;}"
+										size="35" 
+										partialSubmit="true">
 										<p:ajax event="blur" process="@this" update="@this"/>
 									</p:inputText>
 								</td>
@@ -143,10 +145,10 @@
 							<tr>
 								<td colspan="2">
 									<div style="text-align: right;">
-										<p:commandButton value="#{lbl['lbl.btn.search']}" 
+										<p:commandButton value="#{lbl['lbl.btn.search']}"
 											action="#{cc.attrs.backingBean.searchRecommendRejectedReason()}"
 											onstart="recRejectBlockPanelWidget.show()" oncomplete="recRejectBlockPanelWidget.hide()"
-											update=":#{p:component(cc.attrs.changeRegStatusUpdateId)}" process="@this">
+											update=":#{p:component(cc.attrs.changeRegStatusUpdateId)}"  process="@this, recRejectReasonSearchId" widgetVar="rejectReasonSearch">
 										</p:commandButton>
 										<p:commandButton value="#{lbl['lbl.btn.reset']}" process="@this"
 											action="#{cc.attrs.backingBean.resetSearchRecommendRejectedReason}"
