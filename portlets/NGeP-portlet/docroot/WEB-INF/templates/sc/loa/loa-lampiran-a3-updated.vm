@@ -422,7 +422,7 @@ u {
 							#foreach( $scLoiLoaItm in $scLoiLoaItemList )			
 									#if($scLoiLoaItm.scRequestItem.tplSpecQuestion.clItem.trim() == $tplSpecAnswer.tplSpecQuestion.clItem.trim())
 										#set($currentValue = $scLoiLoaItm.qty)
-									#end
+									
 
 									#if($currentValue == 0)
 										#if($tplSpecAnswer.tplspecQuestion.clQuantity)
@@ -440,6 +440,7 @@ u {
 									#end											 
 									#if($currentValue < $minQty)
 										#set($minQty = $currentValue)
+									#end
 									#end
 							#end
 
