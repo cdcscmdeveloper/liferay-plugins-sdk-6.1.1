@@ -205,7 +205,8 @@
 				<h:outputLabel for="password" value="#{lbl['lbl.cc.gpki.pin']}" />
 				<p:password binding="#{pin}" id="password" />
 				<p:commandButton id="signButtonId" value="#{lbl['lbl.btn.sign']}" onstart="DigiSign();" />
-				<p:commandButton id="signButtonId1" value="Sign W/O Token" action="#{gpkiBackingBean.gpkiSignAction(cc.attrs.postSignAction, cc.attrs.enableAutoUpdate)}"  />
+				<!-- BELOW BUTTON IS TO SKIP USE TOKEN. DO NOT MERGE TO PROD!!! -->
+				<p:commandButton id="signButtonId1" value="Sign W/O Token" rendered="#{gpkiBackingBean.getGpkiEnabledProperty() eq false}" action="#{gpkiBackingBean.gpkiSignAction(cc.attrs.postSignAction, cc.attrs.enableAutoUpdate)}"  />
 				
 			</h:panelGrid>
 		</p:panel>
