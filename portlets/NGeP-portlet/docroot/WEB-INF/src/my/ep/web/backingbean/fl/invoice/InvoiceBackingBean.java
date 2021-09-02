@@ -249,7 +249,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				}
 			}
 			List<PmUser> listOfApprover = null;
-			if(reqDTO.isDan()){
+			if(reqDTO.isDan() || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) ){ //  #28956 set approverlist for submit wihout DAN;
 				BigDecimal sumItemAmt = fulfilmentSO.getSumTotalItemsAmtByReqId(invoice.getFlRequest().getFulfilmentReqId());
 				reqDTO.setGroupId(invoice.getFlRequest().getPmUserGroup().getUserGroupId());
 				reqDTO.setApproverLimit(sumItemAmt);
@@ -618,6 +618,24 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				}
 				
 				FLInvoiceDataType paymentObj = (FLInvoiceDataType)obj;
+			
+				//29193 all 
+				getManagedBean().setGfmasError(false);
+				if(paymentObj.getErrorId() != null && !paymentObj.getErrorId().isEmpty() ){
+					long errorId = Long.parseLong(paymentObj.getErrorId());
+					if(errorId > 0	){
+						getManagedBean().setAutoUpdate(Boolean.FALSE);
+						getManagedBean().setGfmasError(true);
+						FulfilmentReqDTO errReq = new FulfilmentReqDTO();
+						errReq.setErrorId(Long.parseLong(paymentObj.getErrorId()));
+						IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+						FulfilmentResDTO errRes = requestSO.retrieveErrorContent(errReq);
+						getManagedBean().setGfmasErrorCode(errRes.getErrorCode());
+						getManagedBean().setGfmasErrorDesc(MessageUtils.getMessage("ERR-"+errRes.getErrorCode(), new String[]{}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale()));
+						getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
+					}
+				}
+				
 				IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 				reqDTO.setDocType(ParameterConst.DOCTYPE_INVOICE);
 				reqDTO.setFlOrderId(paymentObj.getFlOrderId());
@@ -755,6 +773,13 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				flBB.getManagedBean().setHideRemarks(false);
 			}
 		}
+		
+		//28221 - start
+		if(getManagedBean().getInvoice().getSupplierSubmittedId() == null){
+			getManagedBean().getInvoice().setSupplierSubmittedId(getFacesScopes().getUserSessionBean().getUserId());
+		}
+		//28221 - end
+		
 		//check is normal invoice or tax invoice
 		reqDTO.setInvoice(getManagedBean().getInvoice());
 		resDTO = invoiceSO.isInvoiceTaxable(reqDTO);
