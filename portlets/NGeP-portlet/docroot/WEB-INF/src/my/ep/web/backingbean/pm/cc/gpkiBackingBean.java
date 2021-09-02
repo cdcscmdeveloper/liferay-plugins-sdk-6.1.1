@@ -77,6 +77,7 @@ public class gpkiBackingBean implements Serializable {
 		String textBeforeSign = FacesContext.getCurrentInstance()
 				.getExternalContext().getRequestParameterMap()
 				.get("textBeforeSign");
+		log.info("W/O TOken : enter function--"+textBeforeSign);
 		String signedText = FacesContext.getCurrentInstance()
 				.getExternalContext().getRequestParameterMap()
 				.get("signedText");
@@ -175,6 +176,7 @@ public class gpkiBackingBean implements Serializable {
 											"Token's certificate not match with signer identity."));
 				}
 			} else {
+				log.info("W/O TOken : textBeforeSign--"+textBeforeSign);
 				pmDigiSign.setCreatedBy(userId);
 				pmDigiSign.setCreatedDate(date);
 				pmDigiSign.setOriginalData(textBeforeSign);
