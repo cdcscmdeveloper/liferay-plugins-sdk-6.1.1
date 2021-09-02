@@ -6592,13 +6592,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						ScQtCommittee qtCommittee =  (ScQtCommittee)map.get(code);
 						Long cmtStatus = qtCommittee !=null ? qtCommittee.getScCommittee().getCommitteStatus().getStatusId(): 0L;
 						if(cmtStatus.equals(QTStatusConst.CMT_PENDING_APPROVAL)){
+							committeeType = committeeType.concat((count>0 ? "/":"").concat(code));
+							committeeNames = committeeNames.concat((count>0 ? "/":"").concat(this.getParameterDesc(ParameterConst.COMMITTE_TYPE, code)));
 							count++;
-							committeeType = committeeType.concat(code);
-							committeeNames = committeeNames.concat(this.getParameterDesc(ParameterConst.COMMITTE_TYPE, code));
-							if(count<list.size()){
-								committeeType = committeeType.concat("/");
-								committeeNames = committeeNames.concat("/");
-							}
 						//25037 end #372
 						}
 					}
