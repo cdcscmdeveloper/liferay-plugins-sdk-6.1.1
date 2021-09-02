@@ -32,7 +32,9 @@
 								<p:inputText id="rejectReasonSearchId"
 									label="#{lbl['lbl.sm.rejection.reasons']}"
 									value="#{backingBean.managedBean.searchRejectReason}"
-									size="35" >
+									onkeypress="if (event.keyCode == 13) { rejectReasonSearch.jq.click(); return false;}"
+									size="35" 
+									partialSubmit="true">
 									<p:ajax event="blur" process="@this" update="@this"/>
 								</p:inputText>
 							</td>
@@ -43,7 +45,7 @@
 									<p:commandButton value="#{lbl['lbl.btn.search']}" 
 										action="#{backingBean.searchRejectedReason()}"
 										onstart="rejectBlockPanelWidget.show()" oncomplete="rejectBlockPanelWidget.hide()"
-										update="rejectBlockPanel" process="@this">
+										update="rejectBlockPanel" process="@this, rejectReasonSearchId" widgetVar="rejectReasonSearch">
 									</p:commandButton>
 									<p:commandButton value="#{lbl['lbl.btn.reset']}" process="@this"
 										action="#{backingBean.resetSearchRejectedReason}"
