@@ -5,13 +5,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
-import my.ep.constant.MessageConst;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
@@ -21,9 +18,6 @@ import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
-import my.ep.persistence.entity.sm.SmPersonnel;
-import my.ep.web.util.FacesScopes;
-import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
@@ -155,9 +149,6 @@ public class DisciplinaryActionRest {
 			if (updateSuspendList != null && updateSuspendList.getSmDisciplinaryActions() != null
 					&& updateSuspendList.getSmDisciplinaryActions().size() > 0) {
 
-				//TODO
-				//to check suspend + pending + expired
-				
 				DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 				Date today = new Date();
 				Date todayWithZeroTime = formatter.parse(formatter.format(today));
@@ -200,7 +191,27 @@ public class DisciplinaryActionRest {
 								} catch (Exception ex) {
 									throw new EpException(ex.getMessage());
 								}
-							}
+							} else { // 26238 start future date for suspend registration								
+								suspendList.getSmSupplier();
+								suspendList.getSmSupplier().getSmAppl();
+								
+								PmUser user = SmCommonUtil.getUserByUserId(suspendList.getChangedBy());
+								List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(user.getUserId());
+								SmServiceLookup.getSupplierDataMaintenanceSO().updatePendingDisciplinaryAction(suspendList,user, userRoles);
+
+								Long disciplinaryActionId = suspendList.getDisciplinaryActionId();
+
+								// release DA if pending is completed
+								if (disciplinaryActionId != null) {
+									SmDisciplinaryAction completedPendingSmDa = SmServiceLookup.getSupplierDataMaintenanceSO()
+											.retrieveActiveDisciplinaryActionByDisciplinaryId(disciplinaryActionId);
+									
+									if (completedPendingSmDa.isSuspendRegistration() && !completedPendingSmDa.isPendingSuspend()) {
+										completedPendingSmDa.getSmSupplier();
+										SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(completedPendingSmDa);
+									}
+								}
+							} // 26238 end future date for suspend registration	
 
 							// check pending suspend task, if completed = release DA
 							if (suspendList.isPendingSuspend()) {
