@@ -95,7 +95,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 	//#28765 - End
 	private static final Logger log = EpLogger.getLogger(ForceReplaceSuppAdminBackingBean.class);
 	//12981
-	private PersonnelResDTO replaceExistingPersonnel;
+	//private PersonnelResDTO replaceExistingPersonnel;
 
 	/**
 	 * Pre - render and redirect to Force Replace Supplier Admin page
@@ -266,9 +266,9 @@ public class ForceReplaceSuppAdminBackingBean extends
 			}	
 			//#28765 - End
 			//12981 - START
-			if(replaceExistingPersonnel != null && replaceExistingPersonnel.isTerminateSupplier()){
-				reqDTO.setRemoveSupplier(true);
-			}
+//			if(replaceExistingPersonnel != null && replaceExistingPersonnel.isTerminateSupplier()){
+//				reqDTO.setRemoveSupplier(true);
+//			}
 			//#12981 - END
 			SmAppl activeAppl = getCurrActiveSmAppl(getManagedBean()
 					.getSmSupplier());
@@ -296,7 +296,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 		//START 12981
 		//#28765 - Start - to pass through inactiveSupplierRole for G2G normal replace supplier admin	
 		if((getManagedBean().isBypassFlag()==false && !getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER)) 
-				&& resDto.isTerminateSupplier() == false) {
+//				&& resDto.isTerminateSupplier() == false
+				) {
 			PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO()
 					.inactiveSupplierRole(getOldAdminReqDTO());
 		} else if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF) && 
@@ -320,7 +321,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 				getManagedBean().getPermAddr());
 		validateMyIdentity();
 		//12981 START
-		replaceExistingPersonnel = SmServiceLookup.getPersonnelSO()
+		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO()
 				.reassignSupplierAdmin(getReqDTO());
 		//START 12981
 		//#28765 - Start - inactiveSupplierRole to apply for both bypass/normal replace supplier admin
@@ -329,7 +330,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 					.inactiveSupplierRole(getOldAdminReqDTO());
 //		}
 		//#28765 - End
-		redirectToSuccessPage(replaceExistingPersonnel);
+		redirectToSuccessPage(resDto);
 		//12981 END
 	}
 	
