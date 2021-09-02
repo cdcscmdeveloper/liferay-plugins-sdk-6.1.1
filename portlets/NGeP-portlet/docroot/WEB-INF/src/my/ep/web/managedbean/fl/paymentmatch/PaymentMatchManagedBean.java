@@ -157,6 +157,12 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	//24893 - start
 	private PmOrgProfile chargePTJOrg;
 	//24893 - end
+	
+	//28221 - start
+	private PmUser suppInvoiceSubmitted;
+	private boolean suppInvoiceActive = true;
+	private Long newSupplierUserId;
+	//28221 - end
 	/**
 	 * Gets the doc type.
 	 *
@@ -1579,5 +1585,35 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 		this.chargePTJOrg = chargePTJOrg;
 	}
 	//24893 - end
+	//28221 - start
+
+
+	public PmUser getSuppInvoiceSubmitted() {
+		return suppInvoiceSubmitted;
+	}
+
+	public boolean isSuppInvoiceActive() {
+		return suppInvoiceActive;
+	}
+
+	public void setSuppInvoiceActive(boolean suppInvoiceActive) {
+		this.suppInvoiceActive = suppInvoiceActive;
+	}
+
+	public void setSuppInvoiceSubmitted(PmUser suppInvoiceSubmitted) {
+		this.suppInvoiceSubmitted = suppInvoiceSubmitted;
+	}
+
+	public Long getNewSupplierUserId() {
+		return newSupplierUserId;
+	}
+
+	public void setNewSupplierUserId(Long newSupplierUserId) {
+		this.newSupplierUserId = newSupplierUserId;
+	}
+
+
+
+	//28221 - end
 
 }
