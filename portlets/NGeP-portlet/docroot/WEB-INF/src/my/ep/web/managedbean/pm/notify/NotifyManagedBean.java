@@ -44,9 +44,6 @@ public class NotifyManagedBean extends BaseManagedBean {
 
 	private String searchItem;
 	private String searchValue;
-	
-	private Object[] selectedNotifyObj;
-	private List<Object[]> filteredSelectedNotifyObj;
 
 	public NotifyManagedBean() {
 		log.info("NotifyManagedBean inside ");
@@ -225,22 +222,4 @@ public class NotifyManagedBean extends BaseManagedBean {
 	public void setSearchValue(String searchValue) {
 		this.searchValue = searchValue;
 	}
-	
-	// #27009 -- start
-	public Object[] getSelectedNotifyObj() {
-		return selectedNotifyObj;
-	}
-
-	public void setSelectedNotifyObj(Object[] selectedNotifyObj) {
-		this.selectedNotifyObj = selectedNotifyObj;
-	}
-	
-	public List<Object[]> getFilteredSelectedNotifyObj() {
-		return filteredSelectedNotifyObj;
-	}
-
-	public void setFilteredSelectedNotifyObj(List<Object[]> filteredSelectedNotifyObj) {
-		this.filteredSelectedNotifyObj = filteredSelectedNotifyObj;
-	}
-	// #27009 -- end
 }
