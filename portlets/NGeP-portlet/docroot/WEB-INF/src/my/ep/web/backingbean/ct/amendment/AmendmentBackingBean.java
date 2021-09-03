@@ -2786,6 +2786,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 //							abb.getManagedBean().reassignValue(true);
 //							abb.getManagedBean().getServiceListingPagingDataModel().reloadData();
 //							abb.getManagedBean().getContractListingPagingDataModel().reloadData();
+							
+	                        searchReset(); // Fix - #31042
 						}
 						if(outputValue.equalsIgnoreCase(ContractConst.DEDUCTION_DETAIL)){
 							getManagedBean().setSelectedTabIndex(4);
@@ -2810,6 +2812,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 //						abb.getManagedBean().reassignValue(true);
 //						abb.getManagedBean().getServiceListingPagingDataModel().reloadData();
 //						abb.getManagedBean().getContractListingPagingDataModel().reloadData();
+						
+                        searchReset(); // Fix - #31042
+						
 					}else if(outputValue.equalsIgnoreCase(ContractConst.DEDUCTION_DETAIL)){
 						getManagedBean().setSelectedTabIndex(3);
 					}else if(outputValue.equalsIgnoreCase("PB") && ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq() ){
@@ -2960,6 +2965,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 //						abb.getManagedBean().reassignValue(true);
 //						abb.getManagedBean().getServiceListingPagingDataModel().reloadData();
 //						abb.getManagedBean().getContractListingPagingDataModel().reloadData();
+						
+                        searchReset(); // Fix - #31042
 					}
 				} else {
 					if (outputValue.equalsIgnoreCase("AG")) {
@@ -2972,6 +2979,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 //						abb.getManagedBean().reassignValue(true);
 //						abb.getManagedBean().getServiceListingPagingDataModel().reloadData();
 //						abb.getManagedBean().getContractListingPagingDataModel().reloadData();
+						
+                        searchReset(); // Fix - #31042
+						
 					}
 				}
 				if (outputValue.equalsIgnoreCase(ContractConst.DEDUCTION_DETAIL)) {
