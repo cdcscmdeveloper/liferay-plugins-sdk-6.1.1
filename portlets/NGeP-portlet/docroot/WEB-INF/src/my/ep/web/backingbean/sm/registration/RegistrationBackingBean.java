@@ -2318,6 +2318,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					this.getManagedBean().setShowOwnerPersonnel(false);
 					this.getManagedBean().setValidateWithSSM(true);
 					if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
+						//start #30964
+						this.getManagedBean().getSmBusinessAdd().setSsmData(ssmResDTO.getSmAddress().isSsmData());
+						this.getManagedBean().getSmBusinessAdd().setAddressSsmNull(ssmResDTO.getSmAddress().isAddressSsmNull());
+						//end #30964
+						
 						//POPUP USER NOT SSM OWNER #26734  START			
 						//START #27239
 						//START NEW CHANGES POPUP OWNER UPDATE ROLE		
