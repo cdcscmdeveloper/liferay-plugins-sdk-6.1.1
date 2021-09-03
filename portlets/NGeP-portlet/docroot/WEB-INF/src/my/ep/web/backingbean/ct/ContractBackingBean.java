@@ -3140,7 +3140,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		cal.add(Calendar.YEAR, 1); 
 		newBond.setExpDate(cal.getTime());
 		//#24333 - Start
-		if(isContractExtend()){
+		if(isContractExtendOrIsBond()){
 			newBond.setBondNew(true);
 			getManagedBean().getCtContractAmount().getCtPerformanceBondsNew().add(newBond);
 			getManagedBean().getCtContractAmount().getCtPerformanceBonds().add(newBond);
@@ -3171,7 +3171,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		fileOuputStream.write(item.getContents());
 		fileOuputStream.close();
 		//#24333 - Start
-		if(isContractExtend()){
+		if(isContractExtendOrIsBond()){
 			for (CtPerformanceBond ctPerformanceBondNew : getManagedBean().getCtContractAmount().getCtPerformanceBondsNew()) {
 				if (ctPerformanceBondNew.equals(getManagedBean().getCtPerformanceBond())) {
 					ctPerformanceBondNew.setFileName(item.getFileName());
@@ -3203,7 +3203,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	public void removePerformanceBond() {
 		try {
 			//#24333 - Start
-			if(isContractExtend()){
+			if(isContractExtendOrIsBond()){
 				if (getManagedBean().getCtContractAmount().getCtPerformanceBondsNew() != null) {
 					Iterator<CtPerformanceBond> performanceBond = getManagedBean().getCtContractAmount().getCtPerformanceBondsNew().iterator();
 					while (performanceBond.hasNext()) {
@@ -3776,8 +3776,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * The method used to delete 
 	 * the uploaded bond attached file
 	 */    
-	public void deleteBondAttachement(){		
-		if(isContractExtend()){			
+	public void deleteBondAttachement(){
+		//#24333
+		if(isContractExtendOrIsBond()){			
 			CtPerformanceBond ctBondAttch =  getManagedBean().getCtContractAmount().getCtPerformanceBondsNew().get(getManagedBean().getIndex());
 			getManagedBean().getCtContractAmount().getCtPerformanceBondsNew().remove(getManagedBean().getIndex());
 			ctBondAttch.setFileName(null);
@@ -4475,7 +4476,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			return "";
 		}
 	}
-	
+
+	//#24333 - Start
 	/**
 	 * The method used to retrieve thecontract period
 	 * 
@@ -4490,7 +4492,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			return String.valueOf(getManagedBean().getContractVer().getCtContract().getLoa().getContractDuration());
 
 	}
-	
+	//#24333 - End	
 	/**
 	 * Function to check if bond required for contract is extend
 	 * 
@@ -4498,12 +4500,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 *         false, if performance bond is not required contract extend
 	 * */
 	
-	public boolean isContractExtend() {
+	public boolean isContractExtendOrIsBond() {
 		//#24333 - Start
 		String currentPeriod = null;
 		String extendPeriod = null;
-		boolean isContractExtend = false;
-		log.info("isContractExtend");
+		boolean isContractExtendOrIsBond = false;
 		
 		if(getManagedBean().getContractVer().getCtContract().getLoa().getContractDuration() != null) {
 			currentPeriod = BigDecimal.valueOf(getManagedBean().getContractVer().getCtContract().getLoa().getContractDuration().longValue()).toString();
@@ -4514,11 +4515,23 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		getManagedBean().setExtendContract(false);
 		if(currentPeriod != null && extendPeriod != null) {
 			if(!extendPeriod.equals(currentPeriod)){
-				isContractExtend = true;
+				isContractExtendOrIsBond = true;
 				getManagedBean().setExtendContract(true);
 			}
 		}
-		return isContractExtend;
+		if((getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
+				|| getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)
+				)&& getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
+			isContractExtendOrIsBond = true;
+			getManagedBean().setDisableOriginalBond(true);
+		}
+		if (getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT)
+				&& getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
+			if(getManagedBean().getContractVer().getCtAmendment() != null && getManagedBean().getContractVer().getCtAmendment().isContractExtend())
+			isContractExtendOrIsBond = true;
+		}
+		log.info("is ContractExtend or IsBond :"+isContractExtendOrIsBond);
+		return isContractExtendOrIsBond;
 		//#24333 - End	
 		}
 	
