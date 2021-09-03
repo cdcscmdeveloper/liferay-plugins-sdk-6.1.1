@@ -47,7 +47,9 @@
 			<p:blockUI block=":form:tt:bankInfPan" widgetVar="buiPoBank"
 				id="poBankBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.bankVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.bankVerified : false)}" />
-			<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.bankDtls.instruction']}" escape="false" /><br />			
+			<!--#12492-START-->
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.insertcmpnybank.instruction']}" escape="false" /><br />			
+			<!--#12492-END-->
 			<!-- #17906 -->
 			<p:messages id="bankDeleteMsg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" for="bankDeleteMsg" escape="false"/>	
 			<p:dataTable var="bankBean" widgetVar="suppBankInfoDtWidVar"
@@ -658,7 +660,7 @@
 				<p>#{lbl['lbl.sm.duplicateInfo']}</p>
 			</div>
 			<div class="ppRightBtn">		    
-		 		<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"  onclick="bankDialogDuplicate.hide();" type="button" />
+		 		<p:commandButton value="#{lbl['lbl.btn.close']}"  onclick="bankDialogDuplicate.hide();" type="button" />
 			</div>
 		</p:outputPanel>
 	</p:dialog>
