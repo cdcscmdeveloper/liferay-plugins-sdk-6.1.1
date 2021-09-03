@@ -94,8 +94,10 @@ public class ForceReplaceSuppAdminBackingBean extends
 	private static final String CATALOGUE_PUBLISHED = "U";
 	//#28765 - End
 	private static final Logger log = EpLogger.getLogger(ForceReplaceSuppAdminBackingBean.class);
+	// Start 28765 comment changes 12981
 	//12981
 	//private PersonnelResDTO replaceExistingPersonnel;
+	// End 28765 comment changes 12981
 
 	/**
 	 * Pre - render and redirect to Force Replace Supplier Admin page
@@ -264,12 +266,15 @@ public class ForceReplaceSuppAdminBackingBean extends
 			if (getManagedBean().getBypassFlag1()==1 || getManagedBean().getBypassFlag2()==1) {
 					reqDTO.setRemoveSupplier(true);
 			}	
+			reqDTO.setFromReplaceAdmin(true);
 			//#28765 - End
+			// Start 28765 comment changes 12981
 			//12981 - START
 //			if(replaceExistingPersonnel != null && replaceExistingPersonnel.isTerminateSupplier()){
 //				reqDTO.setRemoveSupplier(true);
 //			}
 			//#12981 - END
+			// End 28765 comment changes 12981
 			SmAppl activeAppl = getCurrActiveSmAppl(getManagedBean()
 					.getSmSupplier());
 			if (activeAppl != null) {
@@ -293,11 +298,13 @@ public class ForceReplaceSuppAdminBackingBean extends
 		validateMyIdentity();
 		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO()
 				.replaceAdminWithNewPersonnel(getReqDTO());
+		// Start 28765 comment changes 12981
 		//START 12981
 		//#28765 - Start - to pass through inactiveSupplierRole for G2G normal replace supplier admin	
 		if((getManagedBean().isBypassFlag()==false && !getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER)) 
 //				&& resDto.isTerminateSupplier() == false
 				) {
+			// End 28765 comment changes 12981
 			PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO()
 					.inactiveSupplierRole(getOldAdminReqDTO());
 		} else if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF) && 
@@ -320,6 +327,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 				.getNewAdmin(), getManagedBean().getMailAddr(),
 				getManagedBean().getPermAddr());
 		validateMyIdentity();
+		// Start 28765 comment changes 12981
 		//12981 START
 		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO()
 				.reassignSupplierAdmin(getReqDTO());
@@ -332,6 +340,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		//#28765 - End
 		redirectToSuccessPage(resDto);
 		//12981 END
+		// End 28765 comment changes 12981
 	}
 	
 	//#25969
