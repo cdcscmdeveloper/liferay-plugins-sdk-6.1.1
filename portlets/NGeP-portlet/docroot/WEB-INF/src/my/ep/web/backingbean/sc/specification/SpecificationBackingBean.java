@@ -57,6 +57,7 @@ import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
+import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO; //#25638																	  
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
@@ -111,6 +112,8 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.quationtender.SpecificationReqDTO;
 import my.ep.dto.sc.quationtender.SpecificationResDTO;
+import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO; //#25638
+import my.ep.dto.sc.quationtender.SuppFinalizationResDTO; //#25638
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
@@ -9423,11 +9426,13 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		retriveSpecdetails(quotationTenderDataType.getQtId().longValue());
 		ScQt scQt = this.getManagedBean().getQt();
 		
-		// #25638 - Start.
-		if (null != scQt && null != scQt.getScQt()) {
+		// #25638 - Start
+		if (null != this.getManagedBean().getCurrentStatusId()
+				&& QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH.equals(this.getManagedBean().getCurrentStatusId()) 
+				&& null != scQt && null != scQt.getScQt()) {
 			removeReviseForRepublishQT();
 		}
-		// #25638 - End.
+		// #25638 - End
 		
 		/*#19637-basri*/
 		if(scQt.isZonal()  && scQt.isPanel()){
@@ -9467,24 +9472,24 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				&& Arrays.toString(this.getManagedBean().getOutComes()).contains(BpmOutcomeConst.BPM_REVISE)) {
 			
 			boolean removeRevise = false;
-			retriveCommitteeEndorsment();
-			
-			if (CollectionUtils.isNotEmpty(getManagedBean().getCommitteeActivities())) {
-				for (ScQtCommitteeActivity committeeActivity : getManagedBean().getCommitteeActivities()) {
-					
-					if (null != committeeActivity && null != committeeActivity.getScCommitteeMember()
-							&& null != committeeActivity.getScCommitteeMember().getMemberRole()
-							&& null != committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode()
-							&& ParameterConst.COMMITTEE_ROLE_MEMBER
-							.equalsIgnoreCase(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())
-							&& committeeActivity.isSignedOff()) {
+			// #25638 - Start.
+			if (null != this.getManagedBean().getQt() && null != this.getManagedBean().getQt().getScQt()) {
+				IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IQTSuppFinalizationSO.class);
+				SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+				reqDTO.setQtId(this.getManagedBean().getQt().getScQt().getQtId());
+				SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.retrieveSupplierFinalizationByQtId(reqDTO);
+				if(null != resDTO && null != resDTO.getScQtFinalization() && null != resDTO.getScQtFinalization().getRePublishOption()){
+					if (ParameterConst.WITH_OUT_SPEC_CHANGES.equalsIgnoreCase(resDTO.getScQtFinalization().getRePublishOption().getParameterCode())) {
+											
 						removeRevise = true;
-						
-						break;
+	  
+			
 					}
 				}
 			}
-			
+			// #25638 - End.
 			if (removeRevise) {
 				String tempOutComes[] = new String[this.getManagedBean().getOutComes().length -1];
 				
