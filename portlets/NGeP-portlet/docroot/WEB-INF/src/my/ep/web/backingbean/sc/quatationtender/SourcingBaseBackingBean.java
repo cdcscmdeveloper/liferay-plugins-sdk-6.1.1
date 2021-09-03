@@ -4788,14 +4788,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			List<ScQtFinalizationReport> localListReport=new ArrayList<ScQtFinalizationReport>();
 			Iterator<ScQtFinalizationReport> iterator = finalizationReports.iterator();
 			//List<String> localTitle=new ArrayList<String>();
-			//String localTitle="Kertas Taklimat ";
+			String localTitle="Kertas Taklimat ";
 			while(iterator.hasNext()){
 				ScQtFinalizationReport finalizationReport = iterator.next();
 				if(null!=finalizationReport.getPmDocument()){
 					if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equalsIgnoreCase(finalizationReport.getPmDocument().getDocDefinitionKey())) {
-						//log.info("=======sourbasebackingBeanTitle===="+finalizationReport.getTitle());
+						log.info("=======sourbasebackingBeanTitle===="+finalizationReport.getTitle());
 						if(finalizationReport.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED)){
-						//log.info("=======mangatitlecodesexecutes========"+finalizationReport.getPmDocument().getDocName());	
+						log.info("=======mangatitlecodesexecutes========"+finalizationReport.getPmDocument().getDocName());	
 						count++;
 						localListReport.add(finalizationReport);
 						continue;
@@ -5156,7 +5156,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			Long statusId = wfStatus.getPmStatus().getStatusId();	
 			if(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.contentEquals(committeeType)){
 				if(Arrays.asList(QTStatusConst.QT_SPEC_COMM_UPDATE_GROUP).contains(statusId)){
-					Long[] secretaryExceptSpecCommittee = new Long[]{QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT, QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL};
+					//25037 #372 -Start
+					Long[] secretaryExceptSpecCommittee = new Long[]{
+							QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT, 
+							QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL,
+							QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL_RESCHEDULE,
+							QTStatusConst.QT_REVISION_PUBLICATION,
+							QTStatusConst.QT_PENDING_SCHEDULE_REVISION};
+					//25037 #372 -end
+
 					if(!Arrays.asList(secretaryExceptSpecCommittee).contains(statusId)){
 						list.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
 					}

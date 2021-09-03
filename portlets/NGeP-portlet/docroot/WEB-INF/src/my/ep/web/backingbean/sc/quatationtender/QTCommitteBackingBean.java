@@ -1870,10 +1870,15 @@ public class QTCommitteBackingBean extends
 						QTStatusConst.QT_PROPOSAL_PREPARATION
 				};
 				if(!Arrays.asList(allowedStatusAfterPublish).contains(currentStatusId)){//#25037 
-					if(Arrays.asList(new String[]{"EC", "OC", "SC", "TEC", "FEC"}).contains(commType)){
+					if(Arrays.asList(ParameterConst.QT_COMMITTEES_ORDERED_LIST).contains(commType)){//25037 #372
 						return false;
 					}
 				}
+				//25037 start #372
+				else if(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equalsIgnoreCase(commType)){
+					return false;
+				}
+				//25037 end #372
 //				if (super.isQTStatusInBetween(currentStatusId, QTStatusConst.QT_BRIEFING_SITE_VISIT, QTStatusConst.QT_EVALUATION_PROPOSAL)) {
 //					if (QTStatusConst.QT_EVALUATION_PROPOSAL.equals(currentStatusId)) {
 //						Long qtId = scQt.getQtId();
@@ -1928,13 +1933,21 @@ public class QTCommitteBackingBean extends
 			if (QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL.equals(currentStatusId)
 					&& !SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
 				return false;
-			} else if(
-					// #14398 - Start.
-					(SCProcessNameConst.PREPARE_QT_SCHEDULE.equalsIgnoreCase(taskName) || SCProcessNameConst.REVISE_QT_SCHEDULE.equalsIgnoreCase(taskName)
-					// #14398 - End.	
-					)
-					&& ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equalsIgnoreCase(commType)){
-				return false;
+			}
+			//25037-START #372
+			else if(Arrays.asList(QTStatusConst.QT_DOC_SCHEDULE_GROUP).contains(currentStatusId)){
+				if(taskName.equalsIgnoreCase(SCProcessNameConst.PREPARE_QT_SCHEDULE) 
+						|| taskName.equalsIgnoreCase(SCProcessNameConst.REVISE_QT_SCHEDULE)){
+					if(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equalsIgnoreCase(commType)){
+						return false;
+					}
+				}else if(taskName.equalsIgnoreCase(SCProcessNameConst.REVISE_COMMITTEE)
+						|| taskName.equalsIgnoreCase(SCProcessNameConst.APPROVE_COMMITTEE)){
+					if(Arrays.asList(ParameterConst.QT_EVALUATION_COMMITTEES).contains(commType)){
+						return false;
+					}
+				}
+				//25037-END #372
 			}else if (isQTStatusAfterScheduleDoc(currentStatusId)) {
 				if (SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE.equalsIgnoreCase(taskName)) {
 				} else if ((SCProcessNameConst.ASSIGN_TEC_COMMITTEE.equalsIgnoreCase(taskName)
@@ -1950,7 +1963,7 @@ public class QTCommitteBackingBean extends
 						return false;
 					}
 					if(QTStatusConst.QT_EVALUATION_PROPOSAL.equals(currentStatusId)){
-						if(Arrays.asList(new String[]{"EC", "OC", "TEC", "FEC"}).contains(commType)){
+						if(Arrays.asList(ParameterConst.QT_EVALUATION_COMMITTEES).contains(commType)){//25037 #372
 							return true;
 						}
 					}
