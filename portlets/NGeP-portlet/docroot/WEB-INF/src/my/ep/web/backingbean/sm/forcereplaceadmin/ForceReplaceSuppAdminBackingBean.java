@@ -266,6 +266,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 			if (getManagedBean().getBypassFlag1()==1 || getManagedBean().getBypassFlag2()==1) {
 					reqDTO.setRemoveSupplier(true);
 			}	
+			reqDTO.setFromReplaceAdmin(true);
 			//#28765 - End
 			// Start 28765 comment changes 12981
 			//12981 - START
