@@ -1882,6 +1882,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				cmbb.getManagedBean().getContractListingPagingDataModel().reloadData();
 				cmbb.getManagedBean().getServiceListingPagingDataModel().reloadData();
 				cmbb.getManagedBean().allValue(true);
+				cmbb.searchReset(); // Fix - #31042
 				//log.info("Value from the Cental Tab ********>>>>>>>>>>>>>>>>>>>>>>>>>>>>>..");
 			} else if (outputTab.equalsIgnoreCase(ContractConst.DEDUCTION_DETAIL)) {
 				getManagedBean().setSelectedTabIndex(3);
@@ -1957,6 +1958,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			if (outputTab.equalsIgnoreCase(ContractConst.ITEM_DETAIL)) {
 				getManagedBean().setSelectedTabIndex(1);
 				getManagedBean().setItemIndex(1);
+				// Start Fix - #31042
+				ContractItemSearchBackingBean cisbb = new ContractItemSearchBackingBean();
+				cisbb.searchReset();
+				// End Fix - #31042
 
 			} else if (outputTab.equalsIgnoreCase(ContractConst.DEDUCTION_DETAIL)) {
 				getManagedBean().setSelectedTabIndex(2);
@@ -2087,6 +2092,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				cmbb.getManagedBean().getContractListingPagingDataModel().reloadData();
 				cmbb.getManagedBean().getServiceListingPagingDataModel().reloadData();
 				//cmbb.getManagedBean().allValue(true);
+				cmbb.searchReset(); //Fix - #31042
 			}
 			if (outputTab.equalsIgnoreCase(ContractConst.DEDUCTION_DETAIL)) {
 				getManagedBean().setSelectedTabIndex(4);
@@ -2186,6 +2192,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				contractBb.getManagedBean().reassignValue(true);
 				contractBb.getManagedBean().getContractListingPagingDataModel().reloadData();
 				contractBb.getManagedBean().getServiceListingPagingDataModel().reloadData();
+				contractBb.searchReset(); //  Fix - #31042
 				
 			}
 			if (outputTab.equalsIgnoreCase(ContractConst.DEDUCTION_DETAIL)) {
