@@ -211,7 +211,20 @@
 				</p:column>
 			</p:dataTable>
 		</p:outputPanel>
-		
+		<!-- #3460 - Start -->
+		<br/>
+			<table>
+				<tr>
+					<td><p:outputLabel valign="top"
+							value="#{lbl['lbl.sm.supportingdoc.supp.application.sdo.remarks']}" /></td>
+					<td><p:inputTextarea align="right" id="sdoRemarksOffline"
+							rows="10" cols="10" autoResize="false" maxlength="4000"
+							style="width: 300px;"
+							value="#{viewSmApplBackingBean.managedBean.sdoRemark}"
+							readonly="true" /></td>
+				</tr>
+			</table>
+			<!-- #3460 - End -->	
 		<p:outputPanel rendered="#{!viewSmApplBackingBean.inquiryResponse and viewSmApplBackingBean.managedBean.smAppl.pmStatus.statusId eq '20200'}">
 			<p:dataTable var="table" value="#{viewSmApplBackingBean.getNoResponseInquiryForApplHistory()}" id="offlineNonSDPendingMandatoryList" 
 				rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 

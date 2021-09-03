@@ -276,6 +276,9 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	//28771 - start
 	private String supportingDocMode;
 	
+	//#3460
+	private String sdoRemark;
+	
 	public String getSupportingDocMode() {
 		return supportingDocMode;
 	}
@@ -1980,4 +1983,12 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 			this.overlapCategoryVOList = overlapCategoryVOList;
 		}
 	//END 31111
+		
+	public String getSdoRemark() {
+		return sdoRemark;
+	}
+
+	public void setSdoRemark(String sdoRemark) {
+		this.sdoRemark = sdoRemark;
+	}
 }
