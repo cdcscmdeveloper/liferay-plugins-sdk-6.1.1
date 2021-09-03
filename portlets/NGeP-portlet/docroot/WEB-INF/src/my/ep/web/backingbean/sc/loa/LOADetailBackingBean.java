@@ -8730,6 +8730,28 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			scLoiLoaItemCloneList.add(populateSingleScLoiLoaItemClone(scLoa));
 		}
 		
+		Long currentSupplier = getManagedBean().getScLoa().getScLoiLoa().getSmSupplier().getSupplierId();		
+		for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItemCloneList) {
+			ITemplateSpecSO templateSpecSO = (ITemplateSpecSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
+			List<TplSpecAnswer> tplSpecAnswerList = templateSpecSO.findSpecAnswersByQuestion(scLoiLoaItem
+					.getScRequestItem().getTplSpecQuestion().getSpecQuestionId());			
+					
+				for (TplSpecAnswer tplSpecAnswer :tplSpecAnswerList) {
+					if(tplSpecAnswer.getIsWip() != null)
+						break;
+					
+					scLoiLoaItem.getSupplierOfferDetailList().clear();
+					
+					if (StringUtils.isNotBlank(tplSpecAnswer.getAnswerRemark())) {						
+						if(tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier().getSupplierId().equals(currentSupplier)){							
+							scLoiLoaItem.getSupplierOfferDetailList().add(tplSpecAnswer.getAnswerRemark());
+							break;
+						}
+					}
+				}				
+		}
+				
 		for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItemCloneList) {
 			for (Map.Entry<Long, List<TplSpecAnswer>> entry : this.getManagedBean().getScLoiLoaItemAnswerMap()
 					.entrySet()) {
