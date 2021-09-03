@@ -138,12 +138,14 @@
 								action="#{qTDetailBB.updateBpmTask(bpmAction)}">
 							</p:commandButton>
 							<ui:remove> #30477 End </ui:remove>
+						
 							<p:commandButton value="#{lbl[buttonLabel]}"
-								styleClass="ui-button"
-								onclick="blockWidget.show();"
+								styleClass="ui-button" onclick="blockWidget.show();"
 								oncomplete="blockWidget.hide();"
-								rendered="#{!isClone2 and !qTDetailBB.managedBean.showPopUpBPKApprovalNeeded}" 
-								action="#{qTDetailBB.updateBpmTask(bpmAction)}" />
+								rendered="#{!isClone2}"
+								action="#{qTDetailBB.updateBpmTask(bpmAction)}">
+							</p:commandButton>
+
 						</ui:repeat>
 					</c:when>
 					<c:when test="#{qTDetailBB.managedBean.createQt or isQTStatusPendingQtSubmission}">
