@@ -156,7 +156,10 @@ public class ContractManagedBean extends BaseManagedBean {
 	private CtAttachment ctAttachmentLatest;
 	private CtAttachment ctAttachmentDelete;
 	private List<ScLoa> bondDetail;
+	// #24333 - Start
 	private boolean isExtendContract = false;
+	private boolean disableOriginalBond = false;
+	// #24333 - End
 	
 	// Start - 28479	
 	private boolean isErr100033 = false;
@@ -1467,4 +1470,12 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.businessRegNoNew = businessRegNoNew;
 	}
 	//#29983 end
+
+	public boolean isDisableOriginalBond() {
+		return disableOriginalBond;
+	}
+
+	public void setDisableOriginalBond(boolean disableOriginalBond) {
+		this.disableOriginalBond = disableOriginalBond;
+	}
 }
