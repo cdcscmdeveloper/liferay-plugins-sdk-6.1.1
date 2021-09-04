@@ -8558,7 +8558,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					.getScRequestItem().getTplSpecQuestion().getSpecQuestionId());			
 					
 				for (TplSpecAnswer tplSpecAnswer :tplSpecAnswerList) {
-					if(tplSpecAnswer.getIsWip() != null)
+					if(tplSpecAnswer.getIsWip() == null){
+						tplSpecAnswer.setIsWip(false);
+					}
+					
+					if(tplSpecAnswer.getIsWip())
 						break;
 					
 					scLoiLoaItem.getSupplierOfferDetailList().clear();
