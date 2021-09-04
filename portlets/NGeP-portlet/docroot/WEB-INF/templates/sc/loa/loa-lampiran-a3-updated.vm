@@ -422,7 +422,7 @@ u {
 							#foreach( $scLoiLoaItm in $scLoiLoaItemList )			
 									#if($scLoiLoaItm.scRequestItem.tplSpecQuestion.clItem.trim() == $tplSpecAnswer.tplSpecQuestion.clItem.trim())
 										#set($currentValue = $scLoiLoaItm.qty)
-									#end
+									
 
 									#if($currentValue == 0)
 										#if($tplSpecAnswer.tplspecQuestion.clQuantity)
@@ -441,6 +441,7 @@ u {
 									#if($currentValue < $minQty)
 										#set($minQty = $currentValue)
 									#end
+									#end
 							#end
 
 							#if($minQty != $maxQty)
@@ -452,57 +453,37 @@ u {
 							$scLoiLoaItem.qty
 						#end
 					</td>
-						#if ($isZonal)
 							<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2" colspan="1" style="border: 1px solid black;padding-left: 2px; padding-right: 2px;padding-top: 2px;padding-bottom: 2px;">
-								#if ($scLoiLoaItem.supplierOfferDetailList && $scLoiLoaItem.supplierOfferDetailList.size() > 1)
-									#set($rowCount = 0)
-									#foreach($supplierOffer in $scLoiLoaItem.supplierOfferDetailList)
-										#set($rowCount = $rowCount + 1)
-										<table width="100%">
-											<tbody>
-												<tr>
-												#if ($scLoiLoaItem.supplierOfferDetailList.size() == $rowCount)
-													<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="1" style="text-align: center; font-size:7px; font-family: Arial, Helvetica, sans-serif;">
-														<span>$supplierOffer</span>
-													</td>
-												#else
-													<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="1" style="text-align: center; font-size:7px; font-family: Arial, Helvetica, sans-serif; border-bottom: 1px solid black;">
-														<span>$supplierOffer</span>
-													</td>
-												#end
-												</tr>
-											</tbody>
-										</table>
-										
-									#end
-								#else
 									 <td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2" colspan="1" style="text-align: left; font-size:9.3px; font-family: Arial, Helvetica, sans-serif; padding-left: 5px; padding-right: 5px;">
 										#if ($tplSpecAnswer.newSupplierOffer != $null && $tplSpecAnswer.newSupplierOffer != "")
 											<span>$tplSpecAnswer.newSupplierOffer</span>
-										#else
-											#if ($tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
-												$tplSpecAnswer.answerRemark
+										#else											
+											#set($rowCount = 0)
+											#if($scLoiLoaItem.supplierOfferDetailList.size() != 0)											
+												#foreach($supplierOffer in $scLoiLoaItem.supplierOfferDetailList)
+													#set($rowCount = $rowCount + 1)
+													<table width="100%">
+														<tbody>
+															<tr>
+															#if ($scLoiLoaItem.supplierOfferDetailList.size() == $rowCount)
+																<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="1" style="text-align: center; font-size:7px; font-family: Arial, Helvetica, sans-serif;">
+																	<span>$supplierOffer</span>																
+																</td>
+															#else
+																<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="1" style="text-align: center; font-size:7px; font-family: Arial, Helvetica, sans-serif; border-bottom: 1px solid black;">
+																	<span>$supplierOffer</span>
+																</td>
+															#end
+															</tr>
+														</tbody>
+													</table>										
+												#end
 											#else
-												$defaultValue
-											#end
+												$serviceScope											
+											#end		
 										#end
-									</td>
-								#end
+									</td>								
 							</td>
-						#else
-							<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2" colspan="1" style="text-align: left; font-size:9.3px; font-family: Arial, Helvetica, sans-serif; padding-left: 5px; padding-right: 5px; border-right: 1px solid black;
-							border-bottom: 1px solid black;border: 1px solid black !important;">
-								#if ($tplSpecAnswer.newSupplierOffer != $null && $tplSpecAnswer.newSupplierOffer != "")
-									<span>$tplSpecAnswer.newSupplierOffer</span>
-								#else
-									#if ($tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
-										$tplSpecAnswer.answerRemark
-									#else
-										$defaultValue
-									#end
-								#end
-							</td>
-						#end
 					<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;border: 1px solid black !important;">
 					$serviceScope
 					</td>
