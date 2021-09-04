@@ -453,9 +453,10 @@ public class SupplierFinalizationBackingBean extends
 				}
 				// getManagedBean().setProcCategoryMedicine(isMedicalProcCategory);
 
-				List<TplSpecZoneDtl> zoneDetails = resDTO.getZoneDetails();
-				getManagedBean().setZoneDetails(zoneDetails);
+				
 			}
+			List<TplSpecZoneDtl> zoneDetails = resDTO.getZoneDetails();//31401&27502-start
+			getManagedBean().setZoneDetails(zoneDetails);//31401&27502-End
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
