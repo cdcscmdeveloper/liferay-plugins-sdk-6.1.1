@@ -8054,18 +8054,20 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					}
 					
 					if (tplSpecAnswer.getIsWip()) {
-						if (StringUtils.isNotBlank(tplSpecAnswer.getAnswerRemark()))
-							remarkValue = tplSpecAnswer.getAnswerRemark();
-						else
-							remarkValue = getNotAvailabilityStr();
-
-						supplierOffer.append("Zone "
-								+ tplSpecAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl().getZoneName() + " : "
-								+ remarkValue);
-
-						remarkValue = "";
-						if (count < tplSpecAnswerList.size()) {
-							supplierOffer.append(System.lineSeparator()+"<br/>");
+						if(tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier().getSupplierId().equals(currentSupplier)){
+							if (StringUtils.isNotBlank(tplSpecAnswer.getAnswerRemark()))
+								remarkValue = tplSpecAnswer.getAnswerRemark();
+							else
+								remarkValue = getNotAvailabilityStr();
+	
+							supplierOffer.append("Zone "
+									+ tplSpecAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl().getZoneName() + " : "
+									+ remarkValue);
+	
+							remarkValue = "";
+							if (count < tplSpecAnswerList.size()) {
+								supplierOffer.append(System.lineSeparator()+"<br/>");
+							}
 						}
 					} else {
 						if (StringUtils.isNotBlank(tplSpecAnswer.getAnswerRemark())) {
@@ -8422,9 +8424,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			tpa.setIsWip(false);
 		}
 		
-		if(tpa.getIsWip())
-			tpaClone.setAnswerRemark("Zone " + tpa.getTplSpecSuppAnswer().getTplSpecZoneDtl().getZoneName() + " : " + tpa.getAnswerRemark());
-		else
+		if(tpa.getIsWip()){
+			Long currentSupplier = getManagedBean().getScLoa().getScLoiLoa().getSmSupplier().getSupplierId();
+			
+			if(tpa.getTplSpecSuppAnswer().getSmSupplier().getSupplierId().equals(currentSupplier)){
+				tpaClone.setAnswerRemark("Zone " + tpa.getTplSpecSuppAnswer().getTplSpecZoneDtl().getZoneName() + " : " + tpa.getAnswerRemark());
+			}
+		}else
 			tpaClone.setAnswerRemark(tpa.getAnswerRemark());
 		// 29006 -end
 		tpaClone.setDisableEditAccount(tpa.isDisableEditAccount());
