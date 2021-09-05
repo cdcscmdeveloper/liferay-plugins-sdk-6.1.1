@@ -31,7 +31,7 @@
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.unclaim.task.submit.msg']}" rendered="#{!sdoReviewBackingBean.managedBean.claimTask}"/><br />
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sm.supportingdoc.inquiry']}" id="btnInquiryId" 
-				disabled="#{!sdoReviewBackingBean.managedBean.claimTask or sdoReviewBackingBean.managedBean.supportingDocMap.size() lt 1}" 
+				disabled="#{!sdoReviewBackingBean.managedBean.claimTask or empty sdoReviewBackingBean.managedBean.unselectedSmApplSuppDocs}" 
 				update="inquiryDlg" action="#{sdoReviewBackingBean.showSdoActionDialog(SupplierManagementConst.BPM_INQUIRY)}">
 			</p:commandButton>
 			<p:commandButton value="#{lbl['lbl.sm.supportingdoc.verify']}" id="btnSubmitId" update="receiveCalIdMsg"
