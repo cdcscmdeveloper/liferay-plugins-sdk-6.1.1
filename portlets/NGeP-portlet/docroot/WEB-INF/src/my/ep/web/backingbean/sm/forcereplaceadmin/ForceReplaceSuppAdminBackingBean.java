@@ -204,10 +204,11 @@ public class ForceReplaceSuppAdminBackingBean extends
 			}
 			if(getManagedBean().isBypassFlag()==false) {
 				StringBuilder sb = new StringBuilder();
-				//12981
+				//12981 
+				//28765 - START
 				if(getManagedBean().getOldAdmin() != null){
 					sb.append(SmCommonUtil.getMessage("lbl.msg.confirm.declare4", new String[] {getManagedBean().getOldAdmin().getName()})); //#28765
-				}else{
+				}else if(getManagedBean().getSmSupplier().getSmPersonnel() != null){
 					sb.append(SmCommonUtil.getMessage("lbl.msg.confirm.declare4", new String[] {getManagedBean().getSmSupplier().getSmPersonnel().getName()})); //#28765
 				}
 				getManagedBean().setDisplayMessageReplaceTrans(sb.toString());
