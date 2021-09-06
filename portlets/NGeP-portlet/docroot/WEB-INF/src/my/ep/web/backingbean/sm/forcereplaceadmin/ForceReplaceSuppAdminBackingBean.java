@@ -360,7 +360,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		*/
 			
 			if (getManagedBean().getSmSupplier().getRecordStatusFlg()
-						.equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)) {
+						.equals(DbValueConst.RECORD_STATUS_IN_PROGRESS) && !getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER)){
 				//#27300
 				//28765
 				if (activeAppl != null) {
