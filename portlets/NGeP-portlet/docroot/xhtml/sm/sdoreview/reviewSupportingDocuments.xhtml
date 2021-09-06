@@ -30,12 +30,10 @@
 		<p:messages id="messages" showDetail="true" autoUpdate="#{empty param['disableMsgAutoUpdate']}" closable="true" showSummary="false" />
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.unclaim.task.submit.msg']}" rendered="#{!sdoReviewBackingBean.managedBean.claimTask}"/><br />
 		<div align="right">
-		<!-- #11641 - START -->
 			<p:commandButton value="#{lbl['lbl.sm.supportingdoc.inquiry']}" id="btnInquiryId" 
-				disabled="#{!sdoReviewBackingBean.managedBean.claimTask or empty sdoReviewBackingBean.managedBean.unselectedSmApplSuppDocs}" 
+				disabled="#{!sdoReviewBackingBean.managedBean.claimTask or sdoReviewBackingBean.managedBean.supportingDocMap.size() lt 1}" 
 				update="inquiryDlg" action="#{sdoReviewBackingBean.showSdoActionDialog(SupplierManagementConst.BPM_INQUIRY)}">
 			</p:commandButton>
-	    <!-- #11641 - END -->	
 			<p:commandButton value="#{lbl['lbl.sm.supportingdoc.verify']}" id="btnSubmitId" update="receiveCalIdMsg"
 				disabled="#{!sdoReviewBackingBean.managedBean.claimTask or !empty sdoReviewBackingBean.managedBean.unselectedSmApplSuppDocs}" 
 				action="#{sdoReviewBackingBean.showVerifyConfirmation}">
