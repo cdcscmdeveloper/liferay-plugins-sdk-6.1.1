@@ -10,8 +10,11 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -19,14 +22,20 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import my.ep.biz.service.rpt.IPMReportSO;
+import my.ep.constant.fl.FulfilmentStatusConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.constants.CommonConstants;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.report.fl.FlReportBackingBean;
 import my.ep.web.constant.report.CommonMethod;
 import my.ep.web.constant.report.FlReportConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.fl.yep.YearEndRptManagedBean;
+import my.ep.web.util.FacesScopes;
+import my.ep.web.util.pm.helper.StatusHelper;
 /**
  * Backing Bean for PurchaseRequestRpt.
  *
@@ -64,7 +73,6 @@ public class YearEndRptBackingBean extends FlReportBackingBean<YearEndRptManaged
 		getManagedBean().setCheckCFwd(false);
 		getManagedBean().setCheckCMP(false);
 		getManagedBean().setCheckNAT(false);
-		
 	}
 	
 	/**
@@ -286,6 +294,81 @@ public class YearEndRptBackingBean extends FlReportBackingBean<YearEndRptManaged
 		}
 		return financialYearOpt;
 	}
+	
+	//28379 start - new yep dropdown status
+	/**
+	 * Get status select items by module and doc type for dropdown.
+	 * 
+	 * @param moduleCode
+	 *            the module code
+	 * @param docType
+	 *            the document type
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getStatusDropdownValuesForYEP(String moduleCode,
+			String docType) {
+		log.info("**inside getStatusDropdownValuesForYEP**");
+		
+		
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+
+		try {
+			List<PmStatusDesc> statusDescs = StatusHelper.getInstance()
+					.getStatusDescList(moduleCode, docType, null);
+			
+			List<PmStatusDesc> statusDescsYep = new ArrayList<PmStatusDesc>();
+			
+				for (PmStatusDesc statusDesc : statusDescs) {
+				
+				if(statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_SUPPLIER_ACKNOWLEDGEMENT)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_FULFILMENT)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_PARTIAL_FL)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_INVOICE)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_DAN_APPROVAL)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_PAYMENT_MATCH)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_CANCELLED)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_CANCELLED_BY_YEP)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_SUPPLIER_ACKNOWLEDGEMENT)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_FULFILMENT)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_PARTIAL_FL)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_INVOICE)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_DAN_APPROVAL)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_PAYMENT_MATCH)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_CANCELLED)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_CANCELLED_BY_YEP)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_REVISION_INVOICE)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_REVISION_INVOICE2)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_PAYMENT_QUERY)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_PAYMENT_QUERY)){
+					
+					statusDescsYep.add(statusDesc);
+				}
+			}
+				
+				
+			items = new SelectItem[statusDescsYep.size() + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			int i = 1;
+			for (PmStatusDesc statusDescYep : statusDescsYep) {
+				
+					items[i++] = new SelectItem(statusDescYep.getPmStatus()
+							.getStatusId(), statusDescYep.getStatusName());
+				
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+
+		return items;
+	}
+	//end 28379 
 	
 	/**
 	 * reset action
