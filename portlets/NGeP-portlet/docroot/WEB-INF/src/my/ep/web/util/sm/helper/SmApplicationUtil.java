@@ -13623,6 +13623,9 @@ public class SmApplicationUtil {
 			apprApplSecRev.setRecommendation(null);
 			apprApplSecRev.setRemarkToApprover(null);
 			apprApplSecRev.setPmRegStatus(null);
+			//#31043 start
+			apprApplSecRev.setSitevisitVerified(false);
+			//#31043 end
 			managedBean.setApprvrSecReview(apprApplSecRev);
 		}
 		managedBean.getSmAppl().getSmApplSectionReviews()
