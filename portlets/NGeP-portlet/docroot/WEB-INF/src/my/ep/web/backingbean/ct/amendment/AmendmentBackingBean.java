@@ -4271,6 +4271,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByStax()) {
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
 			onChangeValueChecked();
+//			resetItemPrice(); // #30879 
+		}
+		if(!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()) {
 			resetItemPrice(); // #30879 
 		}
 		ConstructTabSideMenu();
@@ -4295,6 +4298,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByStax()) {
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
 			onChangeValueChecked();
+//			resetItemQty(); // #30879 
+		}
+		if(!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()) {
 			resetItemQty(); // #30879 
 		}
 		ConstructTabSideMenu();
