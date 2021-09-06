@@ -68,8 +68,10 @@
 			<p:column style="width:3% !important; white-space:normal;overflow: hidden !important;" >
 				<div align="center">
 				<p:selectBooleanCheckbox value="#{suppDoc.received}" disabled="#{!sdoReviewBackingBean.managedBean.claimTask}">
+					<!-- #11641 - START -->
 					<p:ajax event="change" update=":form:btnInquiryId,:form:btnSubmitId" 
-					listener="#{sdoReviewBackingBean.receiveStatusChange(suppDoc)}" disabled="#{!cc.attrs.mandatory}"/>
+					listener="#{sdoReviewBackingBean.receiveStatusChange(suppDoc)}"/>
+					<!-- #11641 - END -->
 				</p:selectBooleanCheckbox>
 				</div>
 			</p:column>
