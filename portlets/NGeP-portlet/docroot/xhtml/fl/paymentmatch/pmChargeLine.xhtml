@@ -175,9 +175,13 @@
 							value="#{paymentMatchBackingBean.managedBean.projectCode}"
 							size="9" disabled="true" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.setia.subsetia']}" /></td> 
-					<td><p:inputText
+					<td><!-- 31634 start-->
+					<p:inputText
 							value="#{paymentMatchBackingBean.managedBean.setiaCode}"
-							size="9" disabled="true" />
+							size="4" disabled="true" />
+						<p:inputText size="4" disabled="true" 
+						value="#{paymentMatchBackingBean.managedBean.subSetiaCode}" />
+						<!-- 31634 end-->
 					</td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.cp']}" /></td> 
 					<td>
