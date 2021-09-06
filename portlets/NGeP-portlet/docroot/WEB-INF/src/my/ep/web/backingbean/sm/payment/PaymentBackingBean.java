@@ -18,6 +18,7 @@ import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.sm.payment.IPaymentSO;
 import my.ep.biz.service.sm.pending.IPendingPaymentSO;
 import my.ep.constant.MessageConst;
@@ -53,6 +54,7 @@ import my.ep.web.managedbean.sm.payment.PaymentManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
@@ -387,6 +389,13 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			this.getManagedBean().setTotalAmount(ttlAmt);
 			
 			setPaymentHttpSession(this.getManagedBean().getTaskId(),this.getManagedBean().getBpmPojo());
+			
+			// start #30859
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			FacesScopes fs = new FacesScopes();
+			userSO.removeDuplicatePmUserRole(PmCommonUtil.retrieveActiveOrg(fs.getUserSessionBean().getUserId()).get(0));
+			// end #30859
 			
 			return "paymentRequestSubmission";
 

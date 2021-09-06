@@ -658,15 +658,6 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 				}
 			/*#31422-basri 190821*/
 			
-
-			//start #30859
-			/*if(taskName.equals("Processing Fee") || taskName.equals("Make Payment")){
-				IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-				FacesScopes fs = new FacesScopes();
-				userSO.removeDuplicatePmUserRole(PmCommonUtil.retrieveActiveOrg(fs.getUserSessionBean().getUserId()).get(0));
-			}*/
-			//end #30859
 			ExternalContext externalContext = FacesContext.getCurrentInstance()
 					.getExternalContext();
 			//26238 -  Disciplinary Action - 28111
