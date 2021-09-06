@@ -173,7 +173,8 @@ public class YearEndRptBackingBean extends FlReportBackingBean<YearEndRptManaged
 	public void onChangeDocType(){
 		
 		if(getManagedBean().getDocumentType() != null){
-			if(getManagedBean().getDocumentType().equals(ReportConst.FL_DOCTYPE_CO)){
+			//28379
+			if(getManagedBean().getDocumentType().equals(ReportConst.DOC_TYPE_CO)){
 				getManagedBean().setContractFlag(true);
 				getManagedBean().setPurchaseOrderNo(null);
 				getManagedBean().setPurchaseOrderStatus(null);
