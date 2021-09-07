@@ -117,6 +117,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		boolean skipChecking = false;
 		log.info("Enter Init");
 		if(orderId == null){
+			log.info("Testing payment 1");
 			SmSupplier supp = SmApplicationUtil.getCurrentSupplier();			
 			if(supp != null){
 				log.info("supplier id =="+supp.getSupplierId());
@@ -209,6 +210,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			responsePreRender(paymentTaskId, paymentBpmPojo, appl);
 			responseRedirect();
 		}else{
+			log.info("Testing payment 2");
 			log.info("<<<<<<<>PostConstruct Parameter - STart>>>>>>>>>>>");
 			if(orderId != null){
 				Long ordId = Long.valueOf(orderId);
@@ -635,7 +637,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		case SupplierManagementConst.MOL_SUCCESS:
 			log.info(">>>>MOL_SUCCESS<<<<<<<<<<" + status);
 			String msgCode = null;
-
+			log.info("Testing payment 3");
 			if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_PROCESS_FEE)){
 				msgCode = MessageConst.INFO_721058;
 			}else if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)){
