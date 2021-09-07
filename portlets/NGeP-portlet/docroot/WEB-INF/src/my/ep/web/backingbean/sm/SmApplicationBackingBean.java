@@ -5532,6 +5532,20 @@ public class SmApplicationBackingBean extends
 				}
 			}
 		}
+		
+		//#31043 start
+		if (!SmCommonUtil
+				.isCollectionEmpty(getManagedBean().getNonMandatoryDocs())) {
+			for (SmApplSupportDoc doc : getManagedBean().getNonMandatoryDocs()) {
+				if (getManagedBean().isPoUser()) {
+					doc.setVerifiedFlg(1);
+				}
+				if (getManagedBean().isApproverUser()) {
+					doc.setApproverVerifiedFlg(1);
+				}
+			}
+		}
+		//#31043 end
 	}
 
 	public void deleteSelectedExistingCatCodes() {
