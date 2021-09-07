@@ -77,6 +77,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
@@ -1620,7 +1621,7 @@ public class QTCloneBackingbean extends
 				copydtl.setBsvType(bsvDtl.getBsvType());
 				copydtl.setBsvDesc(bsvDtl.getBsvDesc());
 				copydtl.setBsvDate(bsvDtl.getBsvDate());
-				copydtl.setAddress(bsvDtl.getAddress());
+				copydtl.setAddress(populateScAddress(bsvDtl.getAddress()));//31653&25635-start
 				copydtl.setCoordinatingOfficer(bsvDtl.getCoordinatingOfficer());
 				copydtl.setMaxNoOfAttendance(bsvDtl.getMaxNoOfAttendance());
 				if(SourcingConstants.BSV_TYPE_SITEVISIT.equals(bsvDtl.getBsvType())){
@@ -1678,7 +1679,7 @@ public class QTCloneBackingbean extends
 				copydtl.setBsvType(bsvDtl.getBsvType());
 				copydtl.setBsvDesc(bsvDtl.getBsvDesc());
 				copydtl.setBsvDate(bsvDtl.getBsvDate());
-				copydtl.setAddress(bsvDtl.getAddress());
+				copydtl.setAddress(populateScAddress(bsvDtl.getAddress()));//31653&25635-start
 				copydtl.setCoordinatingOfficer(bsvDtl.getCoordinatingOfficer());
 				copydtl.setMaxNoOfAttendance(bsvDtl.getMaxNoOfAttendance());
 				if(SourcingConstants.BSV_TYPE_SITEVISIT.equals(bsvDtl.getBsvType())){
@@ -4343,4 +4344,32 @@ public class QTCloneBackingbean extends
 		updatePublishClosingDate(qt);	
 	}
 	//25635-end
+	
+	private ScAddress populateScAddress(ScAddress address) {//31653&25635-start
+		//PmAddress pmAddress = addressType.getPmAddress();
+		ScAddress scAddress = new ScAddress();
+		scAddress.setAddressName(address.getAddressName());
+		scAddress.setAddress1(address.getAddress1());
+		scAddress.setAddress2(address.getAddress2());
+		scAddress.setAddress3(address.getAddress3());
+		// scAddress.setAddress4(pmAddress.getAddress4());
+		scAddress.setPostcode(address.getPostcode());
+		scAddress.setPmCountry(address.getPmCountry());
+		scAddress.setPmState(address.getPmState());
+		scAddress.setPmDivision(address.getPmDivision());
+		scAddress.setPmDistrict(address.getPmDistrict());
+		scAddress.setPmCity(address.getPmCity());
+		scAddress.setMapLatitude(address.getMapLatitude());
+		scAddress.setMapLongitude(address.getMapLongitude());
+
+		scAddress.setContactFaxArea(address.getFaxArea());
+		scAddress.setContactFaxCountry(address.getFaxCountry());
+		scAddress.setContactPhoneArea(address.getPhoneArea());
+		scAddress.setContactPhoneCountry(address.getPhoneCountry());
+		scAddress.setContactFaxNo(address.getFaxNo());
+		scAddress.setContactPhoneNo(address.getPhoneNo());
+        setUserDetails(scAddress);
+		return scAddress;
+	}
+	//31653&25635-End
 }
