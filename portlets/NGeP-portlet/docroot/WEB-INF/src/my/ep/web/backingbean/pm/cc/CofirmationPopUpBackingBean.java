@@ -39,6 +39,8 @@ public class CofirmationPopUpBackingBean extends
 	private static final long serialVersionUID = 1L;
 	public static Logger log = EpLogger
 			.getLogger(CofirmationPopUpBackingBean.class);
+	
+	private boolean declareChecked; //#30457
 
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
@@ -62,4 +64,14 @@ public class CofirmationPopUpBackingBean extends
 
 		}
 	}
+	
+	//#30457 start setter getter
+	public boolean isDeclareChecked() {
+		return declareChecked;
+	}
+
+	public void setDeclareChecked(boolean declareChecked) {
+		this.declareChecked = declareChecked;
+	}
+	//#30457 end setter getter
 }

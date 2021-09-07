@@ -174,8 +174,12 @@
 
 
 				<tr style="height: 30px;">
-					<td><p:outputLabel styleClass="outputLabel-view-label"
-							value="#{lbl['lbl.cm.additional.item.description']}" /></td>
+					<!-- #30457 - start -->
+					<td>
+						<h:outputText styleClass="outputLabel-view-label" 
+						value="#{lbl['lbl.cm.basic.item.spec']}" />
+					</td>
+					<!-- #30457 - end -->
 					<td colspan="3"><p:outputLabel styleClass="outputLabel-view"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc}" /></td>
 
