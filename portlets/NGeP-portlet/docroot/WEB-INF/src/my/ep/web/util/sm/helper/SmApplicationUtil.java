@@ -2813,19 +2813,24 @@ public class SmApplicationUtil {
 
 		sec.setBankVerified(isVerifiedAll);
 		sec.setCategoryVerified(isVerifiedAll);
-		if (managedBean.isReviewSiteVisit()) {
-			sec.setSitevisitVerified(isVerifiedAll);
-		}
+		//#31043 start
+//		if (managedBean.isReviewSiteVisit()) {
+//			sec.setSitevisitVerified(isVerifiedAll);
+//		}
+		//#31043 end
 		if (managedBean.isShowDockyardPanel()
 				|| managedBean.isShowFactoryPanel()
 				|| managedBean.isShowStorePanel()
 				|| managedBean.isShowWorkShopPanel()) {
 			sec.setFactoryVerify(isVerifiedAll);
 		}
-		if (managedBean.isShowMachineryEquipmentPanel()) {
+		
+		//31043 Start
+		if (managedBean.isShowMachineryEquipmentPanel() || managedBean.isShowFacilityMachine()) {
 			sec.setMachineryVerified(isVerifiedAll);
 			sec.setManufacturingVerified(isVerifiedAll);
 		}
+		//31043 End
 		if (managedBean.getSmAppl().getSupplierType().equals("J")) {
 			sec.setAssocBodyVerified(isVerifiedAll);
 		}
@@ -13381,6 +13386,9 @@ public class SmApplicationUtil {
 			apprApplSecRev.setRecommendation(null);
 			apprApplSecRev.setRemarkToApprover(null);
 			apprApplSecRev.setPmRegStatus(null);
+			//#31043 start
+			apprApplSecRev.setSitevisitVerified(false);
+			//#31043 end
 			managedBean.setApprvrSecReview(apprApplSecRev);
 		}
 		managedBean.getSmAppl().getSmApplSectionReviews()
