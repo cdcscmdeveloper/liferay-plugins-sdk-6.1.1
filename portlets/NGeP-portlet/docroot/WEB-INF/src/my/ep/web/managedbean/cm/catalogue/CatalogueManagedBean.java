@@ -563,6 +563,11 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	//SSM integration
 	/** The current date. */
 	private Date minDate = new Date();
+	
+	//#30457 - start
+	private int itemSelectedIndex;
+	private boolean viewOnlyBasicPopup;
+	//#30457 - end
 
 	private class ExpiredSearchPagingDataModel extends
 			PagingDataModel<CmSupplierItem> {
@@ -2057,7 +2062,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		compareLabel.add(ResourceBundleUtils.getMessage("lbl.cm.delivery.term.days",
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
 		compareLabel.add(ResourceBundleUtils.getMessage(
-				"lbl.cm.additional.item.description",
+				"lbl.cm.image.basic.item.spec", //#30457 - change label
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
 		//26282 - Start
 		compareLabel.add(ResourceBundleUtils.getMessage(
@@ -4462,4 +4467,22 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.isPromoPriceExist = isPromoPriceExist;
 	}
 	//201002@akmal - Bug29265 - End
+	
+	//#30457-start
+	public int getItemSelectedIndex() {
+		return itemSelectedIndex;
+	}
+
+	public void setItemSelectedIndex(int itemSelectedIndex) {
+		this.itemSelectedIndex = itemSelectedIndex;
+	}
+	
+	public boolean isViewOnlyBasicPopup() {
+		return viewOnlyBasicPopup;
+	}
+
+	public void setViewOnlyBasicPopup(boolean viewOnlyBasicPopup) {
+		this.viewOnlyBasicPopup = viewOnlyBasicPopup;
+	}
+	//#30457-end
 }
