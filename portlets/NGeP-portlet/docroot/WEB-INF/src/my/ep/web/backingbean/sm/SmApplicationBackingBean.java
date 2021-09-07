@@ -2314,6 +2314,7 @@ public class SmApplicationBackingBean extends
 				if (ssmBranch.getBranchName().equals(branch.getBranchName()) && !branch.isCopy()) {
 					branch.setCopy(true);
 					branch.setSmAddress(SmCommonUtil.cloneAddress(ssmBranch.getSmAddress()));
+					branch.setSsmData(true); //#31627
 					isExist = true;
 					break;
 				}
