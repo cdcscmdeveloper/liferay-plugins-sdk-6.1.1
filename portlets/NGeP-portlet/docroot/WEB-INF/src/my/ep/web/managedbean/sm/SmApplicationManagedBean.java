@@ -608,6 +608,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	//#31043 START
 	private boolean categoryCodeVerified;
 	private boolean documentVerified;
+	private boolean showFacilityMachine;
 	//#31043 END
 	
 	//#11641 - START
@@ -4499,4 +4500,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.emptyNonMandatoryDocHistory = emptyNonMandatoryDocHistory;
 	}
 	//#11641 - END
+	
+	// 26671 - Site Visit Grouping Enhancement -28775 START
+	public boolean isShowFacilityMachine() {
+		return showFacilityMachine;
+	}
+
+	public void setShowFacilityMachine(boolean showFacilityMachine) {
+		this.showFacilityMachine = showFacilityMachine;
+	}
+	// 26671 - Site Visit Grouping Enhancement -28775 END
 }
