@@ -5488,7 +5488,20 @@ return	remarksNotFound;
 			excludedDecisionList.add(
 					ParameterConst.DECISION_RE_EVALUATION);	
 		}
-		
+		//START - #26169
+		else{
+			//If no available/qualified supplier, exclude the defined decision type(s)
+			if(!getManagedBean().isHasSupplierQualified()){
+				if (excludedDecisionList == null) {
+					excludedDecisionList = new ArrayList<String>();
+				}
+				excludedDecisionList.add(
+						ParameterConst.DECISION_RECOMMEND_SUPPLIER);
+				excludedDecisionList.add(
+						ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY);
+			}
+		}
+		//END - #26169
 		if (getManagedBean().isInitialDecisionFwdToBPK() || 
 				getManagedBean().isDisableFwdToHighAuthorityOption()) {
 			if (excludedDecisionList == null) {
