@@ -3792,7 +3792,15 @@ public class EvaluationBackingBean extends
 				if (resDTO.getItemResultBean().getTotalRecord() > 0) {
 					this.getManagedBean().setSampleItemList(
 							resDTO.getItemResultBean().getResultList());
-					getManagedBean().setItemSampleReq(resDTO.getItemResultBean().getResultList().get(0).getScRequestItem().getTplSpecQuestion().getParentSpecQuestion().isSampleReq());//#11104
+
+					// #11104-start
+					if (null != resDTO.getItemResultBean().getResultList().get(0).getScRequestItem()
+							.getTplSpecQuestion().getParentSpecQuestion()) {
+						getManagedBean().setItemSampleReq(
+								resDTO.getItemResultBean().getResultList().get(0).getScRequestItem()
+										.getTplSpecQuestion().getParentSpecQuestion().isSampleReq());
+					}
+					// #11104_End
 				}
 
 				this.getManagedBean().setNoOfContractsProposalScore(null);
