@@ -181,21 +181,22 @@ public class gpkiBackingBean implements Serializable {
 				pmDigiSign.setCreatedDate(date);
 				pmDigiSign.setOriginalData(textBeforeSign);
 				pmDigiSign.setGpkiSignedData(signedText);
-
+				log.info("W/O TOken : set data success--");
 				returnObj = postSignActionMtdExpr.invoke(
 						FacesContext.getCurrentInstance().getELContext(),
 						new Object[] { pmDigiSign });
-				
+				log.info("W/O TOken : postSignActionMtdExpr success--"+enableAutoUpdateMtdExpr);
 				if (enableAutoUpdateMtdExpr != null) {
 					enableAutoUpdateMtdExpr.invoke(
 							FacesContext.getCurrentInstance().getELContext(),
 							new Object[] {});
 				}
-				
+				log.info("W/O TOken : enableAutoUpdateMtdExpr success--");
 				RequestContext.getCurrentInstance().execute("gpki_dlg.hide()");
 				
 			}
 		} catch (Exception e) {
+			log.info("W/O TOken : enableAutoUpdateMtdExpr Error setRunGPKIEnableAutoUpdate--");
 			RequestContext.getCurrentInstance().execute("setRunGPKIEnableAutoUpdate(true);");	
 			if (enableAutoUpdateMtdExpr != null) {
 				enableAutoUpdateMtdExpr.invoke(
