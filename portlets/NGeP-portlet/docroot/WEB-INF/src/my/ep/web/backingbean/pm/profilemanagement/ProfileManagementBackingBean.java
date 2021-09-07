@@ -3712,8 +3712,9 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				fillUserInfoFromUserOrg(user, userOrg);
 			}
 			
-
-			if (isNewUser) {
+			//Redmine Bug #31541 - START
+			if (this.getManagedBean().getIsNewUser()) {
+			//Redmine Bug #31541 - END
 				logger.info("Tracking diary for user profile: create new user :saveUserProfile");
 				String orgCode = null;
 				String orgName = null;
