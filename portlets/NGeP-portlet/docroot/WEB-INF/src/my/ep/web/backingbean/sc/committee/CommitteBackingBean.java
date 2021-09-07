@@ -711,6 +711,10 @@ public class CommitteBackingBean extends
 			 committeSo = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							ICommitteSO.class);
+
+			// #26189 -start-
+			resDTO = committeSo.validateFcCommitteDetails(committeReqDTO);
+			// #26189 -end-
 			resDTO = committeSo.updateCommitteDetails(committeReqDTO);
 
 			if (resDTO.isSuccessful()) {
@@ -972,10 +976,15 @@ public class CommitteBackingBean extends
 			reqDTO.setQtId(qtId);
 			CommitteResDTO resDTO = null;
 			ICommitteSO committeSO;
+			IParameterSO parameterSO; //#26189
 			ScQtCommittee qtCommitte = null;
 			try {
 				committeSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+				//#26189 -start-
+				parameterSO = BusinessDelegate.getInstance().getServiceObject(
+			            ModuleCodeConst.SUPPLIER_SELECTION, IParameterSO.class);
+				//#26189 -end-
 				resDTO = committeSO.retrieveCommitteByQtIdNCommType(reqDTO);
 				qtCommitte = resDTO.getScQtCommittee();
 				if (null == qtCommitte) {
@@ -993,6 +1002,34 @@ public class CommitteBackingBean extends
 							.setScCommitteeMembers(new ArrayList<ScCommitteeMember>());
 					qtCommitte.setScCommittee(committee);
 				}
+				
+				// Start #26189:PK2.1
+				if (committeeType.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)
+						|| committeeType.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+
+					for (ScCommitteeMember member : qtCommitte.getScCommittee().getScCommitteeMembers()) {
+						if (!ParameterConst.COMMITTEE_ROLE_CHAIRPERSON
+								.equals(member.getMemberRole().getParameterCode())) {
+
+							if (member.getRepresentativeTypeId() == null
+									&& !ParameterConst.COMMITTEE_ROLE_SECRETARY.equals(member.getMemberRole()
+											.getParameterCode())) {
+								ParameterReqDTO roleReqDTO = new ParameterReqDTO();
+								roleReqDTO.setParameterCode(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
+								roleReqDTO.setParameterType(ParameterTypeConst.COMMITTEE_ROLE);
+
+								ParameterResDTO roleResDTO = parameterSO.retrieveParameterByTypeAndCode(roleReqDTO);
+								member.setMemberRole(roleResDTO.getPmParameter());
+
+								Long memberRoleId = SourcingConstants.MEMBER_ROLE_ID_CHAIRPERSON;
+
+								member.setMemberRoleId(memberRoleId);
+							}
+						}
+					}
+				}
+				// End #26189:PK2.1
+				
 				for (ScCommitteeMember committeeMember : qtCommitte
 						.getScCommittee().getScCommitteeMembers()) {
 					if (committeeMember.getRepresentativeType() == null) {
