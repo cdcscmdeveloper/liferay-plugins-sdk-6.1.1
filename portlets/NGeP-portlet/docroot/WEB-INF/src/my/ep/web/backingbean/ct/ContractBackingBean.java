@@ -405,7 +405,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 	}
 	
-	//#29549 start
+	//#Start Fix - #31657
 	/**
 	 * The method used to remove file from the attachment list.
 	 * 
@@ -414,10 +414,16 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @see    Exception
 	 */
 	public void deleteAttachmentActionByEvent(ActionEvent event) throws Exception {
-
 		CtAttachment attachment = new CtAttachment();
-
-		if(event.getComponent().getId().equalsIgnoreCase("delMeetingAmendmentAttachId")){
+		if(event.getComponent().getId().equalsIgnoreCase("deleteItemAttachment")){
+			attachment = getManagedBean().getContractVer().getItemAttachments().get(this.getManagedBean().getAttachFileIndex());
+			 if(attachment.getAttachmentId() != null){
+					getManagedBean().getDeleteAttachmentList().add(attachment);
+				}
+				this.getManagedBean().getContractVer().getItemAttachments().remove(getManagedBean().getAttachFileIndex());
+		}
+		//#29549 start
+		else if(event.getComponent().getId().equalsIgnoreCase("delMeetingAmendmentAttachId")){
 			attachment = getManagedBean().getContractVer().getCtAmendment().getCtMeetings().get(this.getManagedBean().getAttachFileIndex()).getMeetingAmendmentAttachment();
 			if(attachment.getAttachmentId() != null){
 				getManagedBean().getDeleteAttachmentList().add(attachment);
@@ -425,7 +431,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			
 			//getManagedBean().getContractVer().getCtAmendment().getCtMeetings().get(this.getManagedBean().getAttachFileIndex()).setMeetingAmendmentAttachment(new CtAttachment());		
 			getManagedBean().getContractVer().getCtAmendment().getCtMeetings().get(this.getManagedBean().getAttachFileIndex()).setMeetingAmendmentAttachment(null);
-		}
+		} //#29549 end
 		else {
 			attachment = this.getManagedBean().getAttachmentList().get(getManagedBean().getAttachFileIndex());
 			if(attachment.getAttachmentId() != null){
@@ -434,7 +440,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			this.getManagedBean().getAttachmentList().remove(getManagedBean().getAttachFileIndex());
 		}
 	}
-	//#29549 end
+	//#End Fix - #31657
 
 	/**
 	 * The method used to download the attached file.
