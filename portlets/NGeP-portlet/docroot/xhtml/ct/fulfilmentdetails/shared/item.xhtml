@@ -1350,17 +1350,19 @@
 		    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadItemDlg.hide();" />
   		</div>
    		</f:facet>
-	</p:dialog>	
+	</p:dialog> 
 	
 	  <p:confirmDialog id="deleteItemAttachmentDlg" widgetVar="deleteItemAttachmentDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
                            severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
                          <div class="ppRightBtn">
+                         <!-- Start Fix - #31657 -->
 		                     <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
 		                         update=":form:lampiranItem" 
 		                         id="deleteItemAttachment"
 		                         actionListener="#{ctBackingBean.deleteAttachmentActionByEvent}"
 		                         oncomplete="deleteItemAttachmentDlg.hide();"/>
 			                 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteItemAttachmentDlg.hide();" type="button" />
+			              <!-- End Fix - #31657 -->
 		                 </div>
                    </p:confirmDialog>
 	</p:panel>
