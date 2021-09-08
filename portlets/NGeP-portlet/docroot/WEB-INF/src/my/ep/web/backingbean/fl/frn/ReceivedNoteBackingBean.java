@@ -1842,7 +1842,13 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			getManagedBean().setItemSpecList(new ArrayList<ScRequestItemSpecOffer>());
 			}
 		
-		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IContractSO.class);
+		Long contractId = getManagedBean().getFulfilmentRequest().getCtContract()!=null?getManagedBean().getFulfilmentRequest().getCtContract().getContractId() : null;
+		IFulfilmentRequestSO fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
+		FulfilmentReqDTO reqFDTO = new FulfilmentReqDTO();
+		reqFDTO.setContractId(contractId);
+		String  loaDocType=  fulfilmentRequestSO.getLoaDocType(reqFDTO).getDocType();
+		
+		/*IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IContractSO.class);
 		ContractReqDTO cireqDTO = new ContractReqDTO();
 		cireqDTO.setContractId(getManagedBean().getFulfilmentRequest().getCtContract().getContractId());
 		ContractResDTO ciResDTO = contractSO.retrieveContract(cireqDTO);
@@ -1853,12 +1859,9 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		AwardSupplierReqDTO reqLoaDTO = new AwardSupplierReqDTO();
 		if (ciResDTO.getContract().getLoa() != null) {
 		reqLoaDTO.setLoaId(ciResDTO.getContract().getLoa().getLoaId());
-		AwardSupplierResDTO resLoaDTO = qtAwardSO.retrieveLOADtlByLoaId(reqLoaDTO);
+		AwardSupplierResDTO resLoaDTO = qtAwardSO.retrieveLOADtlByLoaId(reqLoaDTO); */
 
-			if (resLoaDTO.getScLoa().getProcurementMode()
-					.getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO) ||
-					resLoaDTO.getScLoa().getProcurementMode()
-					.getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+			if (loaDocType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)) {
 				getManagedBean().setDpFlag(true);
 			} else {
 				getManagedBean().setDpFlag(false);
@@ -1866,7 +1869,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 					getManagedBean().getItemSpecList().add(getManagedBean().getSpecificationList().get(0));
 				}
 			}
-		}
+		//}
 	
 	}
 	//28855 - end

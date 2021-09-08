@@ -488,25 +488,25 @@
 	<p:dialog id="doItemInfoDialog2" header="#{lbl['lbl.fl.do.item']}"
 		widgetVar="doItemInfo" showEffect="fade" hideEffect="fade"
 		modal="true" width="900" height="400" resizable="false" style="overflow:scroll">
-		<table style="width: 68%">
+		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.item.name']}" /></td>
-				<td><p:inputText disabled="true"
-						value="#{createDOBackingBean.managedBean.itemName}"
-						size="35" /></td>
+				<td valign="top" width="25%"><p:outputLabel value="#{lbl['lbl.fl.item.name']} :&#160;" /></td>
+				<td><h:outputText style="float:left;"
+						value="#{createDOBackingBean.managedBean.itemName}"	/>
+				</td>
 						
 			</tr>		
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.supp.offer']}" rendered="#{createDOBackingBean.managedBean.dpFlag}"/></td>
-				<td><p:inputText disabled="true" rendered="#{createDOBackingBean.managedBean.dpFlag}"
-						value="#{createDOBackingBean.managedBean.supplierOffer == null ? lbl['lbl.fl.supp.na'] : createDOBackingBean.managedBean.supplierOffer}"
-						size="35" /></td>
+				<td valign="top" width="25%"><p:outputLabel value="#{lbl['lbl.fl.supp.offer']} :&#160;" rendered="#{createDOBackingBean.managedBean.dpFlag}"/></td>
+				<td><h:outputText style="float:left;" rendered="#{createDOBackingBean.managedBean.dpFlag}" escape="false" 
+						value="#{createDOBackingBean.managedBean.supplierOffer == null ? lbl['lbl.fl.supp.na'] : createDOBackingBean.managedBean.supplierOffer}" />
+				</td>
 			</tr>			
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.new.supp.offer']}" rendered="#{createDOBackingBean.managedBean.dpFlag}"/></td>
-				<td><p:inputText disabled="true" rendered="#{createDOBackingBean.managedBean.dpFlag}"
-						value="#{createDOBackingBean.managedBean.newOfferedSpec == null ? lbl['lbl.fl.supp.na'] : createDOBackingBean.managedBean.newOfferedSpec}"
-						size="35" /></td>
+				<td valign="top" width="25%"><p:outputLabel value="#{lbl['lbl.fl.new.supp.offer']} :&#160;" rendered="#{createDOBackingBean.managedBean.dpFlag}"/></td>
+				<td><h:outputText style="float:left;" rendered="#{createDOBackingBean.managedBean.dpFlag}"
+						value="#{createDOBackingBean.managedBean.newOfferedSpec == null ? lbl['lbl.fl.supp.na'] : createDOBackingBean.managedBean.newOfferedSpec}" />
+				</td>
 			</tr>
 			</table> 
 			<p:dataTable id="specificationDt2" var="specificationList"

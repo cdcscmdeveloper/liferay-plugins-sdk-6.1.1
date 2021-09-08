@@ -249,25 +249,22 @@
 		 <p:dialog id="frnItemInfoDialog" header="#{lbl['lbl.fl.do.item']}"
 		widgetVar="frnItemInfo" showEffect="fade" hideEffect="fade"
 		modal="true" width="900" height="400" resizable="false" style="overflow:scroll">
-		<table style="width: 68%">
+		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.item.name']}" /></td>
-				<td><p:inputText disabled="true"
-						value="#{receivedNoteBackingBean.managedBean.itemName}"
-						size="35" /></td>
+				<td valign="top" width="25%"><p:outputLabel value="#{lbl['lbl.fl.item.name']} :&#160;" /></td>
+				<td><h:outputText style="float:left;" 
+						value="#{receivedNoteBackingBean.managedBean.itemName}"/></td>
 						
 			</tr>		
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.supp.offer']}" rendered="#{receivedNoteBackingBean.managedBean.dpFlag}"/></td>
-				<td><p:inputText disabled="true" rendered="#{receivedNoteBackingBean.managedBean.dpFlag}"
-						value="#{receivedNoteBackingBean.managedBean.supplierOffer == null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.managedBean.supplierOffer}"
-						size="35" /></td>
+				<td valign="top" width="25%"><p:outputLabel value="#{lbl['lbl.fl.supp.offer']} :&#160;" rendered="#{receivedNoteBackingBean.managedBean.dpFlag}"/></td>
+				<td><h:outputText style="float:left;" rendered="#{receivedNoteBackingBean.managedBean.dpFlag}" escape="false" 
+						value="#{receivedNoteBackingBean.managedBean.supplierOffer == null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.managedBean.supplierOffer}"/></td>
 			</tr>			
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.new.supp.offer']}" rendered="#{receivedNoteBackingBean.managedBean.dpFlag}"/></td>
-				<td><p:inputText disabled="true" rendered="#{receivedNoteBackingBean.managedBean.dpFlag}"
-						value="#{receivedNoteBackingBean.managedBean.newOfferedSpec == null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.managedBean.newOfferedSpec}"
-						size="35" /></td>
+				<td valign="top" width="25%"><p:outputLabel value="#{lbl['lbl.fl.new.supp.offer']} :&#160;" rendered="#{receivedNoteBackingBean.managedBean.dpFlag}"/></td>
+				<td><h:outputText style="float:left;" rendered="#{receivedNoteBackingBean.managedBean.dpFlag}"
+						value="#{receivedNoteBackingBean.managedBean.newOfferedSpec == null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.managedBean.newOfferedSpec}"/></td>
 			</tr>
 			</table> 
 			
