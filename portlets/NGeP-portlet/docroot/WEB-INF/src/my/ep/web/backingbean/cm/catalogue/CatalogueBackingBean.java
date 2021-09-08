@@ -222,7 +222,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 
 //#30457 import
-import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections.CollectionUtils;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 //#30457 import
