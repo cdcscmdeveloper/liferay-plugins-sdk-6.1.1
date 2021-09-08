@@ -3685,10 +3685,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				user.setChangedBy(loginSessionUserId);
 				user.setCreatedBy(loginSessionUserId);
 			}
-			if (!isNewUser) {
-				checkChangesAndFillTrackingDiary(user, userOrg, reqDTO);
-
-			}
 			
 			//Having other active user org?
 			boolean deactivateRequired = true;
@@ -3714,7 +3710,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			
 			//Redmine Bug #31541 - START
 			if (this.getManagedBean().getIsNewUser()) {
-			//Redmine Bug #31541 - END
 				logger.info("Tracking diary for user profile: create new user :saveUserProfile");
 				String orgCode = null;
 				String orgName = null;
@@ -3737,6 +3732,12 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyValues(user,
 						getActionDesc(messageId, msgParam), userOrg.getRecordStatusFlg().longValue()));
 			}
+			
+			if (!isNewUser) {
+				checkChangesAndFillTrackingDiary(user, userOrg, reqDTO);
+			}
+			//Redmine Bug #31541 - END
+			
 			reqDTO.setPmUser(user);
 			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
 
