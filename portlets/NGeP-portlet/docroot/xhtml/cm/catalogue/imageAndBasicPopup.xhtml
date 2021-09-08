@@ -12,8 +12,9 @@
 		#imageAndBasicId.ui-dialog {
 		position: fixed !important;
 		}
-		.imageRightBtn .fileupload-buttonbar{
+		.imageRightBtn .ui-widget-header{
 		    background-color: transparent;
+		    float: right;
 		}
 		.imageRightBtn .ui-fileupload .start {
         display: none;
@@ -28,7 +29,7 @@
 	<!--end #30457 -->
 		
 	<p:dialog id="imageAndBasicId" widgetVar="imageBasicDialog" position="center"
-		width="80" height="350" closable="true" resizable="true" styleClass="pop_up_top"
+		width="780" height="400" closable="true" resizable="true" styleClass="pop_up_top"
 		title="#{lbl['lbl.cm.image.basic.item.spec']}" modal="true">
 			<c:if test="#{!catalogueBackingBean.managedBean.viewOnlyBasicPopup}">
 				<p:ajax event="close" process="@form"
