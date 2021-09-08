@@ -41,7 +41,7 @@
 			<p:column headerText="#{lbl['lbl.sc.total.score']}"
 				style="width:15%; text-align:center;">
 				<p:inputText value="#{demoSupplier.totalUserScore}"
-					style="text-align:right" maxlength="18"
+					style="text-align:right" maxlength="10"
 					disabled="true">
 					<ac:validateNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
