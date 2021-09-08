@@ -13,7 +13,7 @@
 		position: fixed !important;
 		}
 		.imageRightBtn .ui-widget-header{
-		    background-color: transparent;
+		    background: transparent;
 		    float: right;
 		}
 		.imageRightBtn .ui-fileupload .start {
@@ -24,6 +24,10 @@
 	    }
 	    .imageRightBtn .ui-fileupload .progress {
 	        display: none;
+	    }
+	    .imageRightBtn .fileupload-buttonbar .ui-state-disabled{
+	    	background: #c1c1c1 !important;
+	    	opacity: 0.55;
 	    }
 	</style>
 	<!--end #30457 -->
@@ -85,7 +89,7 @@
 										label="#{lbl['lbl.btn.choose']}" id="uploadImageBasicDirect"
 										allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|webpg)$/"
 										invalidFileMessage="#{lbl['lbl.cm.validation.img.type']}"
-										multiple="#{multipleFile}"
+										multiple="#{multipleFile}" 
 										disabled="#{not empty items 
 											or fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) gt (multipleFile? 5 : 0)
 											or catalogueBackingBean.managedBean.viewOnlyBasicPopup}" 
