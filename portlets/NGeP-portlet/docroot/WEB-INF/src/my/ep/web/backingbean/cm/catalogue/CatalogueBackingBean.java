@@ -10420,7 +10420,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		if (new FacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())) {
 			page.append("catalogMaintenanceFile_suptemp");
 		} else {
-			page.append("catalogMaintenanceFile_suptemp");
+			page.append("catalogMaintenanceFile");
 		}
 
 		if (redirect) {
