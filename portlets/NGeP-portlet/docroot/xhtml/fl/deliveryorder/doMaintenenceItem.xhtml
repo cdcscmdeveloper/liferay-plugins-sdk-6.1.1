@@ -85,19 +85,19 @@
 		<table style="width: 68%">
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.item.name']} :&#160;" /></td>
-				<td valign="top"><h:outputText style="float:left;"
+				<td><h:outputText style="float:left;"
 						value="#{createDOBackingBean.managedBean.itemName}"/></td>
 						
 			</tr>		
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.supp.offer']} :&#160;" rendered="#{createDOBackingBean.managedBean.dpFlag}"/>
 				</td>
-				<td valign="top"><h:outputText style="float:left;" rendered="#{createDOBackingBean.managedBean.dpFlag}" escape="false" 
+				<td><h:outputText style="float:left;" rendered="#{createDOBackingBean.managedBean.dpFlag}" escape="false" 
 						value="#{createDOBackingBean.managedBean.supplierOffer == null ? lbl['lbl.fl.supp.na'] : createDOBackingBean.managedBean.supplierOffer}" /></td>
 			</tr>			
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.new.supp.offer']} :&#160;" rendered="#{createDOBackingBean.managedBean.dpFlag}"/></td>
-				<td valign="top"><h:outputText style="float:left;" rendered="#{createDOBackingBean.managedBean.dpFlag}" 
+				<td><h:outputText style="float:left;" rendered="#{createDOBackingBean.managedBean.dpFlag}" 
 						value="#{createDOBackingBean.managedBean.newOfferedSpec == null ? lbl['lbl.fl.supp.na'] : createDOBackingBean.managedBean.newOfferedSpec}"/></td>
 			</tr>
 			</table> 
