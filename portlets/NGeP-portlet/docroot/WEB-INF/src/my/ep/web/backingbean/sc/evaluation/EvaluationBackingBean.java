@@ -13528,7 +13528,7 @@ private void retriveCommitteeRemarksList(){
 
 						} else {
 							if (proposalCheckList.isScoringReq()) {
-//								outerCheckList.add(proposalCheckList);
+//								outerCheckList.add(proposalCheckList);//#31485
 								outerCheckList
 										.add(checkStausForUploadNoActionCheckLists(
 												proposalCheckList, evalstage.get(0)));
@@ -13548,13 +13548,13 @@ private void retriveCommitteeRemarksList(){
 					localCheckList.add(innerCheckList);
 				}//last group
 				
-				this.getManagedBean().setDetachedPaginator(new Paginator(localCheckList));
+				this.getManagedBean().setTechStgPkgInnerList(localCheckList);//#31485
 				/*
 				 * this.getManagedBean().setEvaluationStgTechnicalCheckList(
 				 * resDTO.getCheckListResultBean().getResultList());
 				 */
 			}
-			this.getManagedBean().setDetachedPaginatorTest(new Paginator(outerCheckList));
+			this.getManagedBean().setTechStgPkgOterList(outerCheckList);//#31485
 //			this.getManagedBean().setEvaluationStgTechnicalCheckList(
 //					outerCheckList);
 //			if(CollectionUtils.isNotEmpty((Collection) this.getManagedBean().getDetachedPaginatorTest())){

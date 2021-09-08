@@ -29,7 +29,7 @@
 						</p:column>	
 					</p:row>
 				</f:facet>
-				<c:forEach var="reasonGroup" items="#{evaluationBackingBean.managedBean.getDetachedPaginator().getModel()}" rowIndexVar="index">
+				<c:forEach var="reasonGroup" items="#{evaluationBackingBean.managedBean.getTechStgPkgInnerList()}" rowIndexVar="index">
 					<c:forEach var="technicalEvaluate" items="#{reasonGroup}" varStatus="st">
 						<p:row rendered="#{st.index lt reasonGroup.size()}">
 							<p:column style="width:55%;white-space: normal;">
@@ -54,7 +54,7 @@
 							</p:column>
 						</p:row>
 					</c:forEach>
-					<c:forEach var="technicalEval" items="#{evaluationBackingBean.managedBean.getDetachedPaginatorTest().getModel()}" rowIndexVar="index">
+					<c:forEach var="technicalEval" items="#{evaluationBackingBean.managedBean.getTechStgPkgOterList()}" rowIndexVar="index">
 						<p:row>
 							<p:column style="width:55%;white-space: normal;">
 								<h:outputText value="#{technicalEval.title}"></h:outputText>
