@@ -1708,6 +1708,36 @@ public class EvaluationBackingBean extends
 		// this.getManagedBean().setCheckListType(checklistType);
 		this.getManagedBean().setComplianceCheckListIndex(-1);
 		this.getManagedBean().setCheckListType("");
+		//#31525 - checking view/evaluate button if not save package score - start 
+		List<ScQtProposalAmount> proposalamounts = new ArrayList<ScQtProposalAmount>();
+		if(this.getManagedBean().getScQt().isZonal()){
+			if(CollectionUtils.isNotEmpty(this.getManagedBean().getQtProposalAmountByProposal())){
+				proposalamounts.addAll(this.getManagedBean().getQtProposalAmountByProposal());	
+				
+			}
+			
+		}else{
+			if(CollectionUtils.isNotEmpty(this.getManagedBean().getQtProposalAmounts())){
+				proposalamounts.addAll(this.getManagedBean().getQtProposalAmounts());	
+				
+			}
+			
+		}
+		if(CollectionUtils.isNotEmpty(proposalamounts)){
+			for(ScQtProposalAmount newList : proposalamounts){
+				if(newList.getPmEvalStatus().getStatusId()==null || newList.getPmEvalStatus().getStatusId()
+						.equals(QTStatusConst.TS_PENDING_SUBMISSION)){
+					this.getManagedBean().setEvalStatus(QTStatusConst.TS_PENDING_SUBMISSION);
+					break;
+					
+				}else{
+					this.getManagedBean().setEvalStatus(newList
+							.getPmEvalStatus().getStatusId());
+				
+				}
+			}
+		}
+		//#31525 - checking view/evaluate button if not save package score - end
 
 		return "/xhtml/sc/evaluation/evaluationMain.xhtml";
 
