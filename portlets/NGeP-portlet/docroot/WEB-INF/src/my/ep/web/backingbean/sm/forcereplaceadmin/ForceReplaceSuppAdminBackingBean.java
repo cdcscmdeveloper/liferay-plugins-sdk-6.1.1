@@ -190,7 +190,13 @@ public class ForceReplaceSuppAdminBackingBean extends
 			}
 			if(getManagedBean().isBypassFlag()==false) {
 				StringBuilder sb = new StringBuilder();
-				sb.append(SmCommonUtil.getMessage("lbl.msg.confirm.declare4", null));
+				//12981 
+				//28765 - START
+				if(getManagedBean().getOldAdmin() != null){
+					sb.append(SmCommonUtil.getMessage("lbl.msg.confirm.declare4", new String[] {getManagedBean().getOldAdmin().getName()})); //#28765
+				}else if(getManagedBean().getSmSupplier().getSmPersonnel() != null){
+					sb.append(SmCommonUtil.getMessage("lbl.msg.confirm.declare4", new String[] {getManagedBean().getSmSupplier().getSmPersonnel().getName()})); //#28765
+				}
 				getManagedBean().setDisplayMessageReplaceTrans(sb.toString());
 				//#28765 End
 				validate();
@@ -247,6 +253,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 			if (getManagedBean().getBypassFlag1()==1 || getManagedBean().getBypassFlag2()==1) {
 					reqDTO.setRemoveSupplier(true);
 			}	
+			reqDTO.setFromReplaceAdmin(true);
 			//#28765 - End
 			SmAppl activeAppl = getCurrActiveSmAppl(getManagedBean()
 					.getSmSupplier());
@@ -271,9 +278,13 @@ public class ForceReplaceSuppAdminBackingBean extends
 		validateMyIdentity();
 		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO()
 				.replaceAdminWithNewPersonnel(getReqDTO());
+		// Start 28765 comment changes 12981
 		//START 12981
-		//#28765 - Start - to pass through inactiveSupplierRole for G2G normal replace supplier admin		
-		if((getManagedBean().isBypassFlag()==false && !getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER))) {
+		//#28765 - Start - to pass through inactiveSupplierRole for G2G normal replace supplier admin	
+		if((getManagedBean().isBypassFlag()==false && !getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER)) 
+//				&& resDto.isTerminateSupplier() == false
+				) {
+			// End 28765 comment changes 12981
 			PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO()
 					.inactiveSupplierRole(getOldAdminReqDTO());
 		} else if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF) && 
@@ -296,6 +307,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 				.getNewAdmin(), getManagedBean().getMailAddr(),
 				getManagedBean().getPermAddr());
 		validateMyIdentity();
+		// Start 28765 comment changes 12981
+		//12981 START
 		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO()
 				.reassignSupplierAdmin(getReqDTO());
 		//START 12981
@@ -305,8 +318,9 @@ public class ForceReplaceSuppAdminBackingBean extends
 					.inactiveSupplierRole(getOldAdminReqDTO());
 //		}
 		//#28765 - End
-		//END 12981
 		redirectToSuccessPage(resDto);
+		//12981 END
+		// End 28765 comment changes 12981
 	}
 	
 	//#25969
@@ -325,7 +339,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		*/
 			
 			if (getManagedBean().getSmSupplier().getRecordStatusFlg()
-						.equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)) {
+						.equals(DbValueConst.RECORD_STATUS_IN_PROGRESS) && !getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER)){
 				//#27300
 				//28765
 				if (activeAppl != null) {
@@ -1414,7 +1428,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 						appl.getApplNo(),
 						getManagedBean().getSmSupplier().getCompanyName()}));
 			} else {
-				sb.append(SmCommonUtil.getMessage("lbl.msg.confirm.declare4", null));
+				sb.append(SmCommonUtil.getMessage("lbl.msg.confirm.declare4", new String[] {getManagedBean().getOldAdmin().getName()}));  //#28765
 			}
 			getManagedBean().setDisplayMessageReplaceTrans(sb.toString());
 			getManagedBean().setSmAppl(appl);
