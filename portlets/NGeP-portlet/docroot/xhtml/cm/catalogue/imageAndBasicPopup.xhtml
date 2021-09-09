@@ -34,7 +34,7 @@
 		
 	<p:dialog id="imageAndBasicId" widgetVar="imageBasicDialog" position="center"
 		width="780" height="400" closable="true" resizable="true" styleClass="pop_up_top"
-		title="#{lbl['lbl.cm.image.basic.item.spec']}" modal="true">
+		header="#{lbl['lbl.cm.image.basic.item.spec']}" modal="true" >
 			<c:if test="#{!catalogueBackingBean.managedBean.viewOnlyBasicPopup}">
 				<p:ajax event="close" process="@form"
 				listener="#{catalogueBackingBean.closeImagePopup()}"/>
@@ -66,9 +66,10 @@
 									<p:column width="15%" headerText="#{lbl['lbl.cm.action']}" style="text-align: center;">
 										<p:commandLink process="@this"
 											title="Delete" action="#{catalogueBackingBean.deleteImageFromPopup(rowIndex)}" 
-											update="imageTable" disabled="#{catalogueBackingBean.managedBean.viewOnlyBasicPopup}">
+											update="imageUploadId" disabled="#{catalogueBackingBean.managedBean.viewOnlyBasicPopup}">
 											<p:graphicImage style="padding-top:10px;"
-												value="/css/images/design/trash.png"></p:graphicImage>
+												value="/css/images/design/trash.png"
+												title="#{lbl['lbl.btn.delete']}"></p:graphicImage>
 										</p:commandLink>
 										
 									</p:column>
@@ -91,7 +92,7 @@
 										invalidFileMessage="#{lbl['lbl.cm.validation.img.type']}"
 										multiple="#{multipleFile}" 
 										disabled="#{not empty items 
-											or fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) gt (multipleFile? 5 : 0)
+											or fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) ge (multipleFile? 5 : 0)
 											or catalogueBackingBean.managedBean.viewOnlyBasicPopup}" 
 										onstart="popupBlockWidget.show();"
 								    	oncomplete="popupBlockWidget.hide();">
