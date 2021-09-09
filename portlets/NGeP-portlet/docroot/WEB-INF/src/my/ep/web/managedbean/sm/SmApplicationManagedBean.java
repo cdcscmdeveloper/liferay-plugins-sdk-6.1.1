@@ -634,6 +634,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean emptyMandatoryDocHistory;
 	private boolean emptyNonMandatoryDocHistory;
 	//#11641 - END
+	
+	private boolean poApproverEquityErr;//#31461-start
+	private String msgEquityErr;//#31461-end
 
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
@@ -4495,4 +4498,21 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.emptyNonMandatoryDocHistory = emptyNonMandatoryDocHistory;
 	}
 	//#11641 - END
+	//#31461-start
+	public boolean isPoApproverEquityErr() {
+		return poApproverEquityErr;
+	}
+
+	public void setPoApproverEquityErr(boolean poApproverEquityErr) {
+		this.poApproverEquityErr = poApproverEquityErr;
+	}
+
+	public String getMsgEquityErr() {
+		return msgEquityErr;
+	}
+
+	public void setMsgEquityErr(String msgEquityErr) {
+		this.msgEquityErr = msgEquityErr;
+	}
+	//#31461-end	
 }
