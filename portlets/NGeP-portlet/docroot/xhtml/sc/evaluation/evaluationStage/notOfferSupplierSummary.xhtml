@@ -28,6 +28,15 @@
 						value="#{notOfferSupplierTec[1]}"></h:outputText>
 
 				</p:column>
+				<ui:remove>//31644 for 29021 - start</ui:remove>
+				<p:column style="width:25%;white-space: normal;text-align:center;">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.rating']}" />
+						<ac:iconTooltip value="#{lbl['lbl.sc.tec.rating.tooltip']}" />
+					</f:facet>
+					<h:outputText value="#{empty notOfferSupplierTec[2] ? 0: notOfferSupplierTec[2]}"/>
+				</p:column>
+				<ui:remove>//31644 for 29021 - end</ui:remove>
 			
 			</p:dataTable>
 			<p:spacer height="10px" />
