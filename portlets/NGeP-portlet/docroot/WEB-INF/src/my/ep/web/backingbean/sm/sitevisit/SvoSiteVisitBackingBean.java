@@ -261,6 +261,12 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				smSvTask.setSmSvOffice(new SmSvOffice());
 				smSvTask.getSmSvOffice().setSmSvTask(this.getManagedBean().getSmSvTask());
 			}
+			//24964 - start
+			if(smSvTask.getSmSvTemplate().getSmSvComment() == null){
+				smSvTask.getSmSvTemplate().setSmSvComment(new SmSvComment());
+				smSvTask.getSmSvTemplate().getSmSvComment().setSmSvTemplate(smSvTask.getSmSvTemplate());
+			}
+			//24964 - end
 			
 			//#28774 - Start
 			if(smSvTask.getSmSvAssistantOfficers() == null){
