@@ -66,7 +66,7 @@
 									<p:column width="15%" headerText="#{lbl['lbl.cm.action']}" style="text-align: center;">
 										<p:commandLink process="@this"
 											title="Delete" action="#{catalogueBackingBean.deleteImageFromPopup(rowIndex)}" 
-											update="imageUploadId" disabled="#{catalogueBackingBean.managedBean.viewOnlyBasicPopup}">
+											update=":form:uplimg:imageUploadId" disabled="#{catalogueBackingBean.managedBean.viewOnlyBasicPopup}">
 											<p:graphicImage style="padding-top:10px;"
 												value="/css/images/design/trash.png"
 												title="#{lbl['lbl.btn.delete']}"></p:graphicImage>
