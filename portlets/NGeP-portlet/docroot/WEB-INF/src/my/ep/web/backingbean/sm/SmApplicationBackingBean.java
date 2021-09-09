@@ -9811,6 +9811,15 @@ public class SmApplicationBackingBean extends
 		} else {
 			getManagedBean().setChangeCurrRegStatus(false);
 		}
+		
+		//30974 - start
+		if(recommendation.equalsIgnoreCase("REJECT")){	
+			if(getManagedBean().getPoSecReview().getRemarkToApprover() != null){
+				getManagedBean().getPoSecReview().setRemarkToApprover(null);
+			}	
+		}
+		//30974 - end
+		
 		RequestContext.getCurrentInstance()
 				.execute("submitApprvrDialog.show()");
 	}
