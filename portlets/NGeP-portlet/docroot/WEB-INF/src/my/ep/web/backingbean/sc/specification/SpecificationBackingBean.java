@@ -4069,10 +4069,22 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		if (null != scoreType && !"".equalsIgnoreCase(scoreType)) {
 			if (scoreType.equalsIgnoreCase(QTConstants.USER_SCORE)) {
 				ScQtCheckListScore score = new ScQtCheckListScore();
-			score.setCriteriaType(this.getManagedBean().getCriteriaType());
-			setUserDetails(score);
-				this.getManagedBean().setScQtCheckListScore(
-						score);
+				
+				//  #31489/#31672 - Start.
+				if (0 == this.getManagedBean().getCriteriaType() && null != this.getManagedBean().getScQtChecklist()
+						&& null != this.getManagedBean().getScQtChecklist().getPmDocument()) {
+					log.info("SpecificationBackingBean.scoreTypeChange(): settinf criteriaType as bank statement");
+					if (QTConstants.FINANCIAL_BANK_STMT_CODE
+						.equalsIgnoreCase(this.getManagedBean().getScQtChecklist().getPmDocument()
+								.getDocDefinitionKey())) {
+						this.getManagedBean().setCriteriaType(QTConstants.CRITERIA_TYPE_AVERAGE_OF_BANK_STATEMENT);
+					}
+				}
+				// #31489/#31672 - End.
+				
+				score.setCriteriaType(this.getManagedBean().getCriteriaType());
+				setUserDetails(score);
+				this.getManagedBean().setScQtCheckListScore(score);
 				// toBeRemoveList.add(this.getManagedBean().getCheckListScore());
 				if (null != this.getManagedBean().getCheckListScore()
 						&& !this.getManagedBean().getCheckListScore().isEmpty()) {
