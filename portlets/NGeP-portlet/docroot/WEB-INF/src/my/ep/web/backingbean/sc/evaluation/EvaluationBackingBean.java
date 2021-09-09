@@ -2807,20 +2807,21 @@ public void saveComplianceSample() {
             //28784 - start
             if (this.getManagedBean().getScQt().isDemoRequired()) {
             	retriveSummaryEvalPresentationDemo();
+
+    			
+    			for (ScQtCheckList newChecklist : this.getManagedBean()
+    					.getEvaluationStgTechnicalCheckList()) {
+    				if (null != newChecklist
+    						&& newChecklist.getPmEvalStatus().getStatusId() == 60450) {
+    					this.getManagedBean().setEvalStatusComp(true);
+    					break;
+    				}
+    				if (null != newChecklist
+    						&& newChecklist.getPmEvalStatus().getStatusId() == 60451) {
+    					this.getManagedBean().setEvalStatusComp(false);
+    				}
+    			}
             }
-			
-			for (ScQtCheckList newChecklist : this.getManagedBean()
-					.getEvaluationStgTechnicalCheckList()) {
-				if (null != newChecklist
-						&& newChecklist.getPmEvalStatus().getStatusId() == 60450) {
-					this.getManagedBean().setEvalStatusComp(true);
-					break;
-				}
-				if (null != newChecklist
-						&& newChecklist.getPmEvalStatus().getStatusId() == 60451) {
-					this.getManagedBean().setEvalStatusComp(false);
-				}
-			}
             //28784 - end
 
 		} finally {
@@ -16013,7 +16014,7 @@ private void retriveCommitteeRemarksList(){
 		return demoSupplier.getScQtDemoSupplierAttachment();
 	}
 
-	public String presentationDemoScoring(String supplierNo, ScQtProposalChecklist demoPropChecklist) {
+	public String presentationDemoScoring(String supplierNo) {
 		
 		retrieveDemoSupplierNo(supplierNo);
 		
@@ -16025,7 +16026,7 @@ private void retriveCommitteeRemarksList(){
 			demoReqDTO.setDemoSupplierNo(this.getManagedBean().getDemoSupplierNo());
 			resDto = qtDemoSO.retrieveByItemListBySupplierId(demoReqDTO);
 			this.getManagedBean().setByItemDemoList(resDto.getByItemList());
-			this.getManagedBean().setQtProposalChecklist(demoPropChecklist);
+//			this.getManagedBean().setQtProposalChecklist(demoPropChecklist);
 			}
 		finally {
 
