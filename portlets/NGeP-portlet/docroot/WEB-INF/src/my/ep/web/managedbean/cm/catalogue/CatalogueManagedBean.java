@@ -2062,7 +2062,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		compareLabel.add(ResourceBundleUtils.getMessage("lbl.cm.delivery.term.days",
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
 		compareLabel.add(ResourceBundleUtils.getMessage(
-				"lbl.cm.image.basic.item.spec", //#30457 - change label
+				"lbl.cm.basic.item.spec", //#30457 - change label
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
 		//26282 - Start
 		compareLabel.add(ResourceBundleUtils.getMessage(

@@ -3659,7 +3659,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
-								MessageConst.ERROR_715050, MessageUtils.BUNDLE_COMMON_MESSAGES,
+								MessageConst.ERROR_715008, MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
 				return "editCatalogItem";
 			}
@@ -9076,14 +9076,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				tobeDeleted.add(image); //for db data purpose
 			
 			//#30457 - start
-			String tempDir = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/images");
-			log.info("tempDir = " + tempDir);
-
 			StringBuilder deleteImgDir = new StringBuilder();
 			deleteImgDir.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)).append("/CM/")
 					.append(this.getManagedBean().getSelectedMaintainItem().getSmSupplier().getEpNo()).append("/")
-					.append(image.getImagePath());
-			log.info("uploadDir***" + deleteImgDir);
+					.append(image.getImageDesc());
+			log.info("deleteImgDir***" + deleteImgDir);
 			
 			try {
 	            boolean result = Files.deleteIfExists(Paths.get(deleteImgDir.toString()));
@@ -11326,8 +11323,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		StringBuilder deleteImgDir = new StringBuilder();
 		deleteImgDir.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)).append("/CM/")
 				.append(this.getManagedBean().getSelectedMaintainItem().getSmSupplier().getEpNo()).append("/")
-				.append(img.getImagePath());
-		log.info("uploadDir***" + deleteImgDir);
+				.append(img.getImageDesc());
+		log.info("deleteImgDir***" + deleteImgDir);
 		
 		try {
             boolean result = Files.deleteIfExists(Paths.get(deleteImgDir.toString()));
