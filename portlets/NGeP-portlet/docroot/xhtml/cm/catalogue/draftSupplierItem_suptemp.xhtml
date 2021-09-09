@@ -130,7 +130,10 @@
 				navigator="true" showOn="button" size="10"
 				mindate="#{catalogueBackingBean.managedBean.currentDate}"
 				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
-				<p:ajax event="dateSelect" listener="#{catalogueBackingBean.getMinDate(selectedSuppCat.cmStandardPricing.startDate,null)}" partialSubmit="true" update="endDate" process="@this"/>
+				<!-- #30457-start -->
+				<p:ajax event="dateSelect" listener="#{catalogueBackingBean.getMinDate(selectedSuppCat.cmStandardPricing.startDate,null)}" 
+				update="endDate" process="@this"/>
+				<!-- #30457-end -->
 			</p:calendar>
 
 		</p:column>
