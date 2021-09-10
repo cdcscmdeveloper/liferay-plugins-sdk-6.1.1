@@ -2705,13 +2705,20 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		reqDTO.setContractPeriod(new BigDecimal(getManagedBean().getContractVer().getCtContractValue().getContractPeriod()));
 		reqDTO.setScLoa(getManagedBean().getContractVer().getCtContract().getLoa());
 
-		ContractResDTO resDTO = contractSO.retrievePerformanceBondAmt(reqDTO);			 
-		getManagedBean().getCtContractAmount().setBondReq(resDTO.isBondReq());
-		if (resDTO.isBondReq()) {				 
+		ContractResDTO resDTO = contractSO.retrievePerformanceBondAmt(reqDTO);
+		//#24333 - Start
+		if(resDTO.isBondReq() == reqDTO.getScLoa().isBondReq()){
+			getManagedBean().getCtContractAmount().setBondReq(resDTO.isBondReq());
+		}else{
+			getManagedBean().getCtContractAmount().setBondReq(false);
+		}
+		
+		if (resDTO.isBondReq() == reqDTO.getScLoa().isBondReq()) {				 
 			getManagedBean().getCtContractAmount().setTotalBondAmt(resDTO.getBondAmount());
 		} else {
 			getManagedBean().getCtContractAmount().setTotalBondAmt(null);
 		}
+		//#24333 - End
 	}
 
 	/**
