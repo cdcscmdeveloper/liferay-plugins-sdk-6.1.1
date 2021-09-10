@@ -3111,10 +3111,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		if(this.getManagedBean().getSelectedMaintainItem().getCmImages()!=null 
 				&& this.getManagedBean().getSelectedMaintainItem().getCmImages().size()>=5){
 			log.info("More than 5");
+			//#30457-start
 			if(!this.getManagedBean().isDupplicatedInd()){
 				this.getManagedBean().setDupplicatedInd(true);
-				throw new EpException(MessageConst.ERROR_715064);	// 14118
 			}
+			FacesContext.getCurrentInstance().addMessage("growlMssg",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+							MessageConst.ERROR_715064, MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));				
+			//#30457-end
 			
 		}else{
 			// render for display
@@ -3654,8 +3659,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			
 			//#30457-start
 			if((StringUtils.isBlank(this.getManagedBean().getSelectedMaintainItem().getItemDesc())
-					|| CollectionUtils.isEmpty(this.getManagedBean().getSelectedMaintainItem().getCmImages()))
-					&& this.getManagedBean().getSelectedMaintainItem().getItemStatus().equals(CmConst.ITEM_STATUS_DRAFT)){
+					|| CollectionUtils.isEmpty(this.getManagedBean().getSelectedMaintainItem().getCmImages()))){
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
