@@ -12220,6 +12220,7 @@ private void retriveCommitteeRemarksList(){
 					}
 				}
 				else{
+					reqDTO.setAwardBy(awardBy); //31644 for 29021
 					return evaluationSO.retrieveSummaryNotOfferSuppliersNonZonal(reqDTO)
 						.getNotOfferSupplierResultBean();
 				}
