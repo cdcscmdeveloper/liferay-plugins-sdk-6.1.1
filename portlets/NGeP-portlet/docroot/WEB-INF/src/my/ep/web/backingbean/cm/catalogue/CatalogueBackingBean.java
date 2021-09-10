@@ -5755,6 +5755,18 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				csiList.add(csi);
 				reqDTO.setTrackingStatus(true);
 				reqDTO.setSupplierId(csi.getSupplierId());
+				
+				//#30457-start
+				if((StringUtils.isBlank(csi.getItemDesc()) || CollectionUtils.isEmpty(csi.getCmImages()))){
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+									MessageConst.ERROR_715050, MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+					return naviToMaintenancePage(false);
+					
+				}
+				//#30457-end
 
 				// end date before start date
 				if (csi.getCmStandardPricing().getStartDate().after(csi.getCmStandardPricing().getEndDate())) {
