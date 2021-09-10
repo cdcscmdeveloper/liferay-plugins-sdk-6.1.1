@@ -7,7 +7,6 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 	
-	<!--start #30457 -->
 	<style type="text/css">
 		#imageAndBasicId.ui-dialog {
 		position: fixed !important;
@@ -30,8 +29,7 @@
 	    	opacity: 0.55;
 	    }
 	</style>
-	<!--end #30457 -->
-		
+			
 	<p:dialog id="imageAndBasicId" widgetVar="imageBasicDialog" position="center"
 		width="780" height="400" closable="true" resizable="true" styleClass="pop_up_top"
 		header="#{lbl['lbl.cm.image.basic.item.spec']}" modal="true" >
@@ -43,8 +41,8 @@
 			<p:blockUI block="imageAndBasicIdPopup" widgetVar="popupBlockWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 			</p:blockUI>
-			<p:outputPanel id="imageAndBasicIdPopup" layout="block">
-			
+			<p:growl for="growlMssg" showDetail="true"/>
+			<p:outputPanel id="imageAndBasicIdPopup" layout="block">			
 				<p:panel id="imageUploadId" header="#{lbl['lbl.pm.profiles.userdetails.upload.image']}" toggleable="true">
 					<table class="noBorder" width="100%">
 						<tr class="noBorder">
@@ -66,7 +64,8 @@
 									<p:column width="15%" headerText="#{lbl['lbl.cm.action']}" style="text-align: center;">
 										<p:commandLink process="@this"
 											title="Delete" action="#{catalogueBackingBean.deleteImageFromPopup(rowIndex)}" 
-											update=":form:uplimg:imageUploadId" disabled="#{catalogueBackingBean.managedBean.viewOnlyBasicPopup}">
+											update=":form:uplimg:imageUploadId" 
+											disabled="#{catalogueBackingBean.managedBean.viewOnlyBasicPopup}">
 											<p:graphicImage style="padding-top:10px;"
 												value="/css/images/design/trash.png"
 												title="#{lbl['lbl.btn.delete']}"></p:graphicImage>
