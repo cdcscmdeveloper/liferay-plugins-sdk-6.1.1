@@ -4240,32 +4240,21 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		IFulfilmentRequestSO fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 		FulfilmentReqDTO reqFDTO = new FulfilmentReqDTO();
 		reqFDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
-		String  loaDocType=  fulfilmentRequestSO.getLoaDocType(reqFDTO).getDocType();
-		
-		/*IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IContractSO.class);
-		ContractReqDTO cireqDTO = new ContractReqDTO();
-		ContractResDTO ciResDTO = null;
-		cireqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
-		ciResDTO = contractSO.retrieveContract(cireqDTO);
-		
-		IQTAwardSO qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-		
-		AwardSupplierReqDTO reqLoaDTO = new AwardSupplierReqDTO();
-		AwardSupplierResDTO resLoaDTO = new AwardSupplierResDTO();
-		if (ciResDTO.getContract().getLoa() != null) {
-		reqLoaDTO.setLoaId(ciResDTO.getContract().getLoa().getLoaId());
-		resLoaDTO = qtAwardSO.retrieveLOADtlByLoaId(reqLoaDTO);*/
+		String  loaDocType=  fulfilmentRequestSO.getLoaDocType(reqFDTO).getDocType();	
 
 			if (loaDocType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)) {
 				getManagedBean().setDpFlag(true);
+				String supplierOffer = getManagedBean().getSupplierOffer();
+				if(supplierOffer !=null && supplierOffer.length() > 0) {
+					String trimWipDpZone = supplierOffer.replace("<br/>", "");
+					getManagedBean().setSupplierOffer(trimWipDpZone);
+				}
 			} else {
 				getManagedBean().setDpFlag(false);
 				if (getManagedBean().getItemSpecList().isEmpty() && !getManagedBean().getSpecificationList().isEmpty()) {
 					getManagedBean().getItemSpecList().add(getManagedBean().getSpecificationList().get(0));
 				}
 			}
-		//}
 		// 28855 - End
 	}
 
