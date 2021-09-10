@@ -619,6 +619,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	
 	private boolean poApproverEquityErr;//#31461-start
 	private String msgEquityErr;//#31461-end
+	
+	// 26671 - Site Visit Grouping Enhancement -28775 START
+	private boolean showFacilityMachine;
+	// 26671 - Site Visit Grouping Enhancement -28775 END
 
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
@@ -4518,4 +4522,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.msgEquityErr = msgEquityErr;
 	}
 	//#31461-end	
+	
+	// 26671 - Site Visit Grouping Enhancement -28775 START
+	public boolean isShowFacilityMachine() {
+		return showFacilityMachine;
+	}
+
+	public void setShowFacilityMachine(boolean showFacilityMachine) {
+		this.showFacilityMachine = showFacilityMachine;
+	}
+	// 26671 - Site Visit Grouping Enhancement -28775 END
 }
