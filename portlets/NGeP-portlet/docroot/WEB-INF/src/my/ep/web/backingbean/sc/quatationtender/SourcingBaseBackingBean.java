@@ -4772,13 +4772,23 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 			
 			// #18685 - Start.
+			if (null != briefingReport.getScQtFinalizationReportAttachment() 
+			    && StringUtils.isNotEmpty(event.getFile().getFileName())
+			    && CollectionUtils.isNotEmpty(getManagedBean().getNewBriefingPaperReportList())) {
+				  for (ScQtFinalizationReport finalizationReport : getManagedBean().getNewBriefingPaperReportList()) {
+				    if (null != finalizationReport.getScQtFinalizationReportAttachment()
+				        && event.getFile().getFileName().equals(finalizationReport.getScQtFinalizationReportAttachment().getFileName())) {
+				      throw new EpException(MessageConst.ERROR_775167);
+				    }
+				  }
+			}
 			reportAttachment.setDocNo(getManagedBean().getDocNo());
 			scAttachment = reportAttachment;
 			uploadAttachment(event.getFile(), scAttachment);
 			reportAttachment.setFileName(scAttachment.getFileName());
 			
-			briefingReport
-					.setScQtFinalizationReportAttachment(reportAttachment);
+			briefingReport.setScQtFinalizationReportAttachment(reportAttachment);
+			saveScQtFinalizationReport(briefingReport);
 			// #18685 - End.
 			
 		}
