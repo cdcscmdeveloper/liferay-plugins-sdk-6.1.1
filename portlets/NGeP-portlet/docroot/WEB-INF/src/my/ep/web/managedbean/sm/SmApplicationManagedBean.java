@@ -608,7 +608,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	//#31043 START
 	private boolean categoryCodeVerified;
 	private boolean documentVerified;
-	private boolean showFacilityMachine;
 	//#31043 END
 	
 	//#11641 - START
