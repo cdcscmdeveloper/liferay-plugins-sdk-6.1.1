@@ -4282,9 +4282,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 *         false, if performance bond is not required
 	 * */
 	public boolean isPerformanceBond(){
-		if(getManagedBean().getCtContractAmount() != null
-				&&(getManagedBean().getCtContractAmount().isBondReq()
-						|| getManagedBean().getCtContractAmount().getTotalBondAmt() != null)
+		//#24333
+		if(getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
 						&& (!getManagedBean().isDirectPurchase() || getManagedBean().isNewPk7())
 						&& !getManagedBean().getCtContractAmount().isBondExempted()
 						&& (!getManagedBean().isCommonView()
