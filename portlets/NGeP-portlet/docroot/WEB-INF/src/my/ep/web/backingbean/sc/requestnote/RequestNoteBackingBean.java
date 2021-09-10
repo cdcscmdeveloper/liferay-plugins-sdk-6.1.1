@@ -357,6 +357,40 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNoteReqDTO.setPurchaseInquiryId(prInqId);
 		}
 	    Object token = face.getBPMAuthenticationCtxToken();
+	    
+	  //#31679 - Start
+	  		log.info("------------------------------------------------------------");
+	  	   	log.info("Bug 31679");
+	  	   	log.info("Method: saveAction");
+	  	   	if(outcome != null){
+	  	   		log.info("Outcome: " + outcome);
+	  	   	}
+	  	   	if(getManagedBean().getCurrentStatusId() != null){
+	     			log.info("Status ID: " + getManagedBean().getCurrentStatusId());
+	     		}
+	  	   	
+	  	   	if(requestNoteReqDTO.getRequestNote() != null){
+		  	   	if(requestNoteReqDTO.getRequestNote().getQuote() != null){
+		  	   		log.info("SQ No: " + requestNoteReqDTO.getRequestNote().getQuote().getQuoteNo());
+		  	   		log.info("Zonal: " + requestNoteReqDTO.getRequestNote().getQuote().isZonal());
+		  	   	}
+	  	   		log.info("RN No: " + requestNoteReqDTO.getRequestNote().getRequestNoteNo());   		
+	  	   		
+	  	   		if(requestNoteReqDTO.getRequestNote().getRequestNoteDtls() != null){
+	  	   			log.info("| RequestNoteDtlId | RequestItemId | RequestSupplierItemId |");
+	  		    		for(ScRequestNoteDtl rnDtl : requestNoteReqDTO.getRequestNote().getRequestNoteDtls()){		    			
+	  		    			if(rnDtl.getRequestItem() != null 
+	  		    					&& rnDtl.getScRequestSupplierItem() != null){	  		    				
+	  		    				log.info("      " + rnDtl.getRequestNoteDtlId() + "          " 
+	  		    						+ rnDtl.getRequestItem().getRequestNoteItemId() + "           " 
+	  		    						+ rnDtl.getScRequestSupplierItem().getRequestSupplierItemId()); 
+	  		    			}
+	  		    		}
+	  		    }
+	  	   	}
+	  	   	log.info("------------------------------------------------------------");
+	  	   	//#31679 - End
+	    
 	    try {
 	    	if(outcome.isEmpty()){
 		    	requestNoteReqDTO.setSubmit(Boolean.FALSE);
@@ -368,6 +402,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		    	 requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
 		    	 requestNoteReqDTO.setToken(token);
 		    	 requestNoteReqDTO.setOutcome("");
+		    	 
 		    	 requestNoteResDTO = getRequestNoteSO().updateRequestNote(requestNoteReqDTO);
 		    	 renewSesionObject();
 		    	 getManagedBean().setPrInquiryId(prInqId);
@@ -444,6 +479,43 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    requestNoteReqDTO.setToken(token);
 	    requestNoteReqDTO.setOutcome("");
 	    requestNoteReqDTO.setRequestNoteDtls(requestNoteDtls);
+	    
+	    //#31679 - Start
+  		log.info("------------------------------------------------------------");
+  	   	log.info("Bug 31679");
+  	   	log.info("Method: saveCodificationAction");
+  	   	if(outcome != null){
+  	   		log.info("Outcome: " + outcome);
+  	   	}
+  	   	if(getManagedBean().getCurrentStatusId() != null){
+     			log.info("Status ID: " + getManagedBean().getCurrentStatusId());
+     		}  	   	
+  	   	if(getManagedBean().getRequestNote() != null){
+  	   		if(getManagedBean().getRequestNote().getQuote() != null){
+	  	   		log.info("SQ No: " + getManagedBean().getRequestNote().getQuote().getQuoteNo());
+	  	   		log.info("Zonal: " + getManagedBean().getRequestNote().getQuote().isZonal());
+  	   		}
+  	   		log.info("RN No: " + getManagedBean().getRequestNote().getRequestNoteNo());
+  	   	}
+  	   	if(supplier != null){
+  	   		log.info("Supplier ID: " + supplier.getSupplierId());
+  	   		log.info("Company Name: " + supplier.getCompanyName());
+  	   	}
+  	   				   		
+  	   	if(requestNoteReqDTO.getRequestNoteDtls() != null){
+  	   		log.info("| RequestNoteDtlId | RequestItemId | RequestSupplierItemId |");
+  		    for(ScRequestNoteDtl rnDtl : requestNoteReqDTO.getRequestNoteDtls()){
+  		    	if(rnDtl.getRequestItem() != null 
+  		    			&& rnDtl.getScRequestSupplierItem() != null){	  		    				
+  		    		log.info("      " + rnDtl.getRequestNoteDtlId() + "          " 
+  		    				+ rnDtl.getRequestItem().getRequestNoteItemId() + "           " 
+  		    				+ rnDtl.getScRequestSupplierItem().getRequestSupplierItemId()); 
+  		    	}
+  		    }
+  		}
+  	   	log.info("------------------------------------------------------------");
+  	   	//#31679 - End
+	    
 	    requestNoteReqDTO.setPayLoad(payload);
 	    requestNoteResDTO = getRequestNoteSO().submitRNDtlsAfterCodify(requestNoteReqDTO);
 	    renewSesionObject();
@@ -766,6 +838,40 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			// 12177 - Start
 			requestNoteReqDTO.setSqEndDate(getManagedBean().getSqEndDate());
 			// 12177 - End
+			
+			//#31679 - Start
+	  		log.info("------------------------------------------------------------");
+	  	   	log.info("Bug 31679");
+	  	   	log.info("Method: requestNoteSubmit");
+	  	   	if(outcome != null){
+	  	   		log.info("Outcome: " + outcome);
+	  	   	}
+	  	   	if(getManagedBean().getCurrentStatusId() != null){
+	     			log.info("Status ID: " + getManagedBean().getCurrentStatusId());
+	     		}
+	  	   	
+	  	   	if(requestNoteReqDTO.getRequestNote() != null){
+		  	   	if(requestNoteReqDTO.getRequestNote().getQuote() != null){
+		  	   		log.info("SQ No: " + requestNoteReqDTO.getRequestNote().getQuote().getQuoteNo());
+		  	   		log.info("Zonal: " + requestNoteReqDTO.getRequestNote().getQuote().isZonal());
+		  	   	}
+	  	   		log.info("RN No: " + requestNoteReqDTO.getRequestNote().getRequestNoteNo());   		
+	  	   		
+	  	   		if(requestNoteReqDTO.getRequestNote().getRequestNoteDtls() != null){
+	  	   			log.info("| RequestNoteDtlId | RequestItemId | RequestSupplierItemId |");
+	  		    		for(ScRequestNoteDtl rnDtl : requestNoteReqDTO.getRequestNote().getRequestNoteDtls()){
+	  		    			if(rnDtl.getRequestItem() != null 
+	  		    					&& rnDtl.getScRequestSupplierItem() != null){	  		    				
+	  		    				log.info("      " + rnDtl.getRequestNoteDtlId() + "          " 
+	  		    						+ rnDtl.getRequestItem().getRequestNoteItemId() + "           " 
+	  		    						+ rnDtl.getScRequestSupplierItem().getRequestSupplierItemId()); 
+	  		    			}
+	  		    		}
+	  		    }
+	  	   	}
+	  	   	log.info("------------------------------------------------------------");
+	  	   	//#31679 - End
+		   	
 			try {
 				if(outcome.isEmpty()) {	
 					requestNoteReqDTO.setToken(ctxToken);
@@ -829,6 +935,43 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			
 			Object ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 			requestNoteReqDTO.setRequestNoteDtls(requestNoteDtls);
+			
+			//#31679 - Start
+	  		log.info("------------------------------------------------------------");
+	  	   	log.info("Bug 31679");
+	  	   	log.info("Method: requestNoteCodificationSubmit");
+	  	   	if(outcome != null){
+	  	   		log.info("Outcome: " + outcome);
+	  	   	}
+	  	   	if(getManagedBean().getCurrentStatusId() != null){
+	     			log.info("Status ID: " + getManagedBean().getCurrentStatusId());
+	     		}  	   	
+	  	   	if(getManagedBean().getRequestNote() != null){
+	  	   		if(getManagedBean().getRequestNote().getQuote() != null){
+		  	   		log.info("SQ No: " + requestNoteReqDTO.getRequestNote().getQuote().getQuoteNo());
+		  	   		log.info("Zonal: " + requestNoteReqDTO.getRequestNote().getQuote().isZonal());
+	  	   		}
+	  	   		log.info("RN No: " + requestNoteReqDTO.getRequestNote().getRequestNoteNo());
+	  	   	}
+	  	  if(getManagedBean().getSmSupplier() != null){
+	  	   		log.info("Supplier ID: " + getManagedBean().getSmSupplier().getSupplierId());
+	  	   		log.info("Company Name: " + getManagedBean().getSmSupplier().getCompanyName());
+	  	   	}
+	  	   				   		
+	  	   	if(requestNoteReqDTO.getRequestNoteDtls() != null){
+	  	   		log.info("| RequestNoteDtlId | RequestItemId | RequestSupplierItemId |");
+	  		    for(ScRequestNoteDtl rnDtl : requestNoteReqDTO.getRequestNoteDtls()){
+	  		    	if(rnDtl.getRequestItem() != null 
+	  		    			&& rnDtl.getScRequestSupplierItem() != null){	  		    				
+	  		    		log.info("      " + rnDtl.getRequestNoteDtlId() + "          " 
+	  		    				+ rnDtl.getRequestItem().getRequestNoteItemId() + "           " 
+	  		    				+ rnDtl.getScRequestSupplierItem().getRequestSupplierItemId()); 
+	  		    	}
+	  		    }
+	  		}
+	  	   	log.info("------------------------------------------------------------");
+	  	   	//#31679 - End
+			
 			requestNoteReqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
 			requestNoteReqDTO.setToken(ctxToken);
@@ -1677,6 +1820,39 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		ScRequestNote scRequestNote = getManagedBean().getRequestNote();
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		requestNoteReqDTO.setRequestNote(scRequestNote);
+		
+		//#31679 - Start
+		log.info("------------------------------------------------------------");
+	   	log.info("Bug 31679");
+	   	log.info("Method: approverAction");
+	   	if(outcome != null){
+	   		log.info("Outcome: " + outcome);
+	   	}
+	   	if(getManagedBean().getCurrentStatusId() != null){
+   			log.info("Status ID: " + getManagedBean().getCurrentStatusId());
+   		}
+	   	
+	   	if(requestNoteReqDTO.getRequestNote() != null){
+	   		if(requestNoteReqDTO.getRequestNote().getQuote() != null){
+	  	   		log.info("SQ No: " + requestNoteReqDTO.getRequestNote().getQuote().getQuoteNo());
+	  	   		log.info("Zonal: " + requestNoteReqDTO.getRequestNote().getQuote().isZonal());
+	  	   	}
+	   		log.info("RN No: " + requestNoteReqDTO.getRequestNote().getRequestNoteNo());   		
+	   		
+	   		if(requestNoteReqDTO.getRequestNote().getRequestNoteDtls() != null){
+	   			log.info("| RequestNoteDtlId | RequestItemId | RequestSupplierItemId |");
+		    		for(ScRequestNoteDtl rnDtl : requestNoteReqDTO.getRequestNote().getRequestNoteDtls()){		    			
+		    			if(rnDtl.getRequestItem() != null 
+  		    					&& rnDtl.getScRequestSupplierItem() != null){	  		    				
+  		    				log.info("      " + rnDtl.getRequestNoteDtlId() + "          " 
+  		    						+ rnDtl.getRequestItem().getRequestNoteItemId() + "           " 
+  		    						+ rnDtl.getScRequestSupplierItem().getRequestSupplierItemId()); 
+  		    			}
+		    		}
+		    }
+	   	}
+	   	log.info("------------------------------------------------------------");
+	   	//#31679 - End
 
 		List<ScRequestNoteDtl> mixedDtls = scRequestNote.getRequestNoteDtls();
 		List<ScRequestNoteDtl> nonDeletedDtls = new ArrayList<ScRequestNoteDtl>();
