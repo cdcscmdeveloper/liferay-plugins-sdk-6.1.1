@@ -616,10 +616,11 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean emptyMandatoryDocHistory;
 	private boolean emptyNonMandatoryDocHistory;
 	//#11641 - END
-
 	
-	private class RejectReasonPagingDataModel extends
-			PagingDataModel<PmReasonDesc> {
+	private boolean poApproverEquityErr;//#31461-start
+	private String msgEquityErr;//#31461-end
+
+	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
 		 * 
 		 */
@@ -4500,14 +4501,21 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.emptyNonMandatoryDocHistory = emptyNonMandatoryDocHistory;
 	}
 	//#11641 - END
-	
-	// 26671 - Site Visit Grouping Enhancement -28775 START
-	public boolean isShowFacilityMachine() {
-		return showFacilityMachine;
+	//#31461-start
+	public boolean isPoApproverEquityErr() {
+		return poApproverEquityErr;
 	}
 
-	public void setShowFacilityMachine(boolean showFacilityMachine) {
-		this.showFacilityMachine = showFacilityMachine;
+	public void setPoApproverEquityErr(boolean poApproverEquityErr) {
+		this.poApproverEquityErr = poApproverEquityErr;
 	}
-	// 26671 - Site Visit Grouping Enhancement -28775 END
+
+	public String getMsgEquityErr() {
+		return msgEquityErr;
+	}
+
+	public void setMsgEquityErr(String msgEquityErr) {
+		this.msgEquityErr = msgEquityErr;
+	}
+	//#31461-end	
 }

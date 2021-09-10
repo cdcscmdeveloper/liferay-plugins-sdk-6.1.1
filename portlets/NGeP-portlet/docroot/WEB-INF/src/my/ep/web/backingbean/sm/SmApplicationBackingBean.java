@@ -3342,6 +3342,12 @@ public class SmApplicationBackingBean extends
 						}	
 					}
 				//#30444 --END--  --31072021	
+					//#31461-Start
+					SmApplicationUtil.validateEquityOwnerCount(getManagedBean(), -1,
+							SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
+					if (getManagedBean().isPoApproverEquityErr()) {
+						throw new EpException(getManagedBean().getMsgEquityErr());
+					}//#31461-end
 					SmApplicationUtil.checkAllowedToApprove(getManagedBean());
 					displayBumiRecommendNote();
 					getHqFacility();
@@ -3382,6 +3388,12 @@ public class SmApplicationBackingBean extends
 						}	
 					}
 				//#30444 --END--  --31072021
+					//#31461-Start
+					SmApplicationUtil.validateEquityOwnerCount(getManagedBean(), -1,
+							SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
+					if (getManagedBean().isPoApproverEquityErr()) {
+						throw new EpException(getManagedBean().getMsgEquityErr());
+					}//#31461-End
 					SmApplicationUtil.checkAllowedToApprove(getManagedBean());
 					displayBumiRecommendNote();
 					break;
