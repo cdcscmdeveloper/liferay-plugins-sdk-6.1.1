@@ -92,7 +92,7 @@
 										invalidFileMessage="#{lbl['lbl.cm.validation.img.type']}"
 										multiple="#{multipleFile}" 
 										disabled="#{not empty items 
-											or fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) ge (multipleFile? 6 : 1)
+											or fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) ge (multipleFile? 5 : 1)
 											or catalogueBackingBean.managedBean.viewOnlyBasicPopup}" 
 										onstart="popupBlockWidget.show();"
 								    	oncomplete="popupBlockWidget.hide();">
