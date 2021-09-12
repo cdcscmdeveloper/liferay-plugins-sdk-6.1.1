@@ -263,6 +263,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			.getLogger(SourcingBaseBackingBean.class);
 	
 	private static final String UTF = "UTF-8";
+	
+	// #18685 - Start
+	private static final String  UNDER_SCORE = "_";
+	// #18685 - End
 
 	/**
 	 * To upload the attachment.
@@ -4771,25 +4775,30 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						.setScQtFinalizationReportAttachment(reportAttachment);
 			}
 			
-			// #18685 - Start.
-			if (null != briefingReport.getScQtFinalizationReportAttachment() 
-			    && StringUtils.isNotEmpty(event.getFile().getFileName())
-			    && CollectionUtils.isNotEmpty(getManagedBean().getNewBriefingPaperReportList())) {
-				  for (ScQtFinalizationReport finalizationReport : getManagedBean().getNewBriefingPaperReportList()) {
-				    if (null != finalizationReport.getScQtFinalizationReportAttachment()
-				        && event.getFile().getFileName().equals(finalizationReport.getScQtFinalizationReportAttachment().getFileName())) {
-				      throw new EpException(MessageConst.ERROR_775167);
-				    }
-				  }
+			// #18685 - Start
+			int index = 0;
+			
+			if (CollectionUtils.isNotEmpty(getManagedBean().getNewBriefingPaperReportList())
+			    && this.getManagedBean().getNewBriefingPaperReportList().size() > 0) {
+			  for (ScQtFinalizationReport finalizationReport : getManagedBean().getNewBriefingPaperReportList()) {
+			    if (finalizationReport.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)) {
+			      index++;
+			    }
+			  }
 			}
 			reportAttachment.setDocNo(getManagedBean().getDocNo());
 			scAttachment = reportAttachment;
 			uploadAttachment(event.getFile(), scAttachment);
-			reportAttachment.setFileName(scAttachment.getFileName());
+			String fileName = scAttachment.getFileName();
+			
+			if (index >= 0 && fileName != null) {
+              reportAttachment.setFileName(index + UNDER_SCORE
+                      + fileName);
+			}
 			
 			briefingReport.setScQtFinalizationReportAttachment(reportAttachment);
 			saveScQtFinalizationReport(briefingReport);
-			// #18685 - End.
+			// #18685 - End
 			
 		}
 	}
