@@ -3475,7 +3475,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							//+ "|" + answer.getTplSpecZoneQty()
 							//+ "|" + answer.getTplSpecQuestion().getTplSpecMaster().getTplSpecZone().getSpecZoneId()
 							);
-					if(master.getTplSpecZone().getTplSpecZoneDtls()!=null)
+					if(master != null && master.getTplSpecZone() != null && master.getTplSpecZone().getTplSpecZoneDtls()!=null)
 					{
 						log.info("Size of the Zone Dtls" +master.getTplSpecZone().getTplSpecZoneDtls().size());
 						log.info("Size of the Zone Qty" +answer.getTplSpecZoneQty());
