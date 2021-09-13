@@ -12385,12 +12385,13 @@ public class SmApplicationBackingBean extends
 	public void calculateCapital() {
 		try {
 			// start #30900
-			if (businessTypeIsROC(this.getManagedBean().getSmSupplier().getBusinessType())
+			/*if (businessTypeIsROC(this.getManagedBean().getSmSupplier().getBusinessType())
 					&& !this.getManagedBean().getSmAppl().getApplType()
 							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+				log.info("enter here fatin");
 				calcPersonnelShareAmt(getManagedBean().getSmAppl().getSmPersonnels(), getManagedBean().getSmAppl()
 						.getSmCompanyBasic());
-			}
+			}*/ //fatin commented for #31446
 			//end #30900
 			SmCommonUtil.calculateSmApplicationPaidUpCapitalSum(getManagedBean().getSmAppl().getSmCompanyBasic(),
 					getManagedBean().getSmAppl().getSmEquityCompanies(), getManagedBean().getBusinessTypeVal());
