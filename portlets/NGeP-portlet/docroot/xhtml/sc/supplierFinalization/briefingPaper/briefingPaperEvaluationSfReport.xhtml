@@ -31,7 +31,7 @@
 				</p:selectBooleanCheckbox>
 
 				<p:selectBooleanCheckbox value="#{scQtEvaluationReport.selected}"
-				disabled="#{suppFinalizationBackingBean.managedBean.readOnly}"
+				disabled="#{suppFinalizationBackingBean.managedBean.readOnly or suppFinalizationBackingBean.managedBean.currentStatusId == QTStatusConst.SF_PENDING_ENDORSEMENT or suppFinalizationBackingBean.managedBean.currentStatusId == QTStatusConst.SF_PENDING_SIGN_OFF}"
 					rendered="#{scQtEvaluationReport.definationType.parameterCode eq 'UP'}">
 					<p:ajax partialSubmit="true" process="@this" update="@([id$=evaluationReportsFilesDownloadIds])" />
 				</p:selectBooleanCheckbox>
@@ -99,14 +99,14 @@
 				styleClass="BtnSpacing" />
 			
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
-			disabled="#{suppFinalizationBackingBean.managedBean.readOnly}"
+			disabled="#{suppFinalizationBackingBean.managedBean.readOnly or suppFinalizationBackingBean.managedBean.currentStatusId == QTStatusConst.SF_PENDING_ENDORSEMENT or suppFinalizationBackingBean.managedBean.currentStatusId == QTStatusConst.SF_PENDING_SIGN_OFF}"
 				styleClass="BtnSpacing" process="@this, evaluationreport"
 				partialSubmit="true" action="#{suppFinalizationBackingBean.addDocumentList(suppFinalizationBackingBean.managedBean.scQt)}"
 				oncomplete="documentWidget.paginator.endLink.click();"
 				update="@([id$=evaluationreport])" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				styleClass="BtnSpacing"
-				disabled="#{suppFinalizationBackingBean.deleteselectedList(suppFinalizationBackingBean.managedBean.newBriefingPaperReportList)}"
+				disabled="#{suppFinalizationBackingBean.deleteselectedList(suppFinalizationBackingBean.managedBean.newBriefingPaperReportList) or suppFinalizationBackingBean.managedBean.currentStatusId == QTStatusConst.SF_PENDING_ENDORSEMENT or suppFinalizationBackingBean.managedBean.currentStatusId == QTStatusConst.SF_PENDING_SIGN_OFF}"
 				process="@this,evaluationReportsFilesDownloadIds" partialSubmit="true"
 				oncomplete="evaluationReportsDeletePopUp.show();"
 				update="@([id$=#{evaluationReportListDeleteId}])"/>
