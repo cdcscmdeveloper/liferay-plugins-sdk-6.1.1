@@ -76,6 +76,7 @@ import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.entity.sm.SmSupplierSystem;
 import my.ep.persistence.entity.sm.SmSvTask;
+import my.ep.persistence.entity.sm.SmSvWorker;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
@@ -608,6 +609,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	// 29379 - Site Visit Grouping Enhancement -28775 START
 	private SmEmployee[] selectedEmployees;
 	private SmEmployee selectedEmployee;
+	private SmSvWorker[] selectedWorkers;
 	// 29379 - Site Visit Grouping Enhancement -28775 END
 	
 	// #28778 - Start
@@ -4389,6 +4391,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setSelectedEmployee(SmEmployee selectedEmployee) {
 		this.selectedEmployee = selectedEmployee;
+	}
+
+	public SmSvWorker[] getSelectedWorkers() {
+		return selectedWorkers;
+	}
+
+	public void setSelectedWorkers(SmSvWorker[] selectedWorkers) {
+		this.selectedWorkers = selectedWorkers;
 	}
 	// 29379 - Site Visit Grouping Enhancement -28775 END
 
