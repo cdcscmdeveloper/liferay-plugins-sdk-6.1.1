@@ -218,6 +218,7 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 							.getServiceObject(
 									ModuleCodeConst.PROFILE_MANAGEMENT,
 									INotifySO.class);
+
 					//20200601@asyrafhaziq_Enhancement #14291 - Start
 					// Filter By - Notification Mode
 					//searchBean.getDataFilterBeans().add(
@@ -236,6 +237,7 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 											null,
 									SearchCondition.CONDITION_OR.value())));
 					//20200601@asyrafhaziq_Enhancement #14291 - End
+
 					// Filter By - recipient Id
 					searchBean.getDataFilterBeans().add(
 							new SearchFilterBean("recipient.userId",
@@ -332,6 +334,7 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 							//20200601@asyrafhaziq_Enhancement #14291 - End
 						}
 					}
+					
 					NotifyReqDTO reqDTO = new NotifyReqDTO();
 					reqDTO.setSearchBean(searchBean);
 					NotifyResDTO resDTO = ntfSO.searchNotifyList(reqDTO);
@@ -441,7 +444,9 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 		
 		if (null != pmNotifyUser) {
 			String notificationId = String.valueOf(pmNotifyUser.getPmNotification().getNotificationId());
+			
 			logger.info(this.getClass().getName() + ".getNotifyDashboardContent(): notificationId is: " + notificationId);
+			
 			if (NotificationTextConst.TEMPLATE_ID_400048.equals(notificationId)
 					|| NotificationTextConst.TEMPLATE_ID_401048.equals(notificationId)
 					|| NotificationTextConst.TEMPLATE_ID_400050.equals(notificationId)
@@ -455,14 +460,16 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 							&& StringUtils.isNotEmpty(pmNotifyUser.getPmNotifyDashboard().getContent())){
 					return pmNotifyUser.getPmNotifyDashboard().getContent();
 				}
-		  }else {
+		  
+			} else {
 			  
-			  if( null != pmNotifyUser.getPmNotifyDashboard()
+				if( null != pmNotifyUser.getPmNotifyDashboard()
 					&& StringUtils.isNotEmpty(pmNotifyUser.getPmNotifyDashboard().getContent())){
 				  return pmNotifyUser.getPmNotifyDashboard().getContent();
 				}
 			}
 		}
+		
 		return "";
 	}
 	
@@ -471,7 +478,9 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 		
 		if (null != pmNotifyUser) {
 			String notificationId = String.valueOf(pmNotifyUser.getPmNotification().getNotificationId());
+			
 			logger.info(this.getClass().getName() + ".getNotifyDashboardContent(): notificationId is: " + notificationId);
+			
 			if (NotificationTextConst.TEMPLATE_ID_400048.equals(notificationId)
 					|| NotificationTextConst.TEMPLATE_ID_401048.equals(notificationId)
 					|| NotificationTextConst.TEMPLATE_ID_400050.equals(notificationId)
@@ -485,7 +494,8 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 							&& StringUtils.isNotEmpty(pmNotifyUser.getPmNotifyDashboard().getSubject())){
 					return pmNotifyUser.getPmNotifyDashboard().getSubject();
 				}
-		  }else {
+				
+		  } else {
 			  
 			  if( null != pmNotifyUser.getPmNotifyDashboard()
 					&& StringUtils.isNotEmpty(pmNotifyUser.getPmNotifyDashboard().getSubject())){
@@ -493,6 +503,7 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 				}
 			}
 		}
+		
 		return "";
 	}
 	// #14291 - End

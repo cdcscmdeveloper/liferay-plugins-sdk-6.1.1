@@ -104,10 +104,13 @@
 										<p:commandLink id="btnNotifyLink"
 											action="#{notifyBackingBean.selectedNotify}"
 											update=":form:pnldetail, :form:pnlemptydetail,:form:notifyTable">
-												
-											<h:outputText 
-											     value="#{notifyBackingBean.getNotifyDashboardSubject(notify).length() gt 50 ? notifyBackingBean.getNotifyDashboardSubject(notify).substring(0,47).concat('...') : notifyBackingBean.getNotifyDashboardSubject(notify)}"></h:outputText>
-											
+
+											<!-- 14291 -start- -->
+											<h:outputText
+											     value="#{notifyBackingBean.getNotifyDashboardSubject(notify).length() gt 50 ? notifyBackingBean.getNotifyDashboardSubject(notify).substring(0,47).concat('...') : notifyBackingBean.getNotifyDashboardSubject(notify)}">
+											<!-- 14291 -end- -->
+									     	</h:outputText>
+
 											<f:setPropertyActionListener value="#{notify}"
 												target="#{notifyBackingBean.managedBean.selectedNotify}" />
 
@@ -166,11 +169,14 @@
 									<p:ajax event="change" listener="#{notifyBackingBean.searchItem}" update=":form:pnldetail, :form:pnlemptydetail,:form:notifyTable, :form:searchItem, :form:searchValue"/>
 								</p:selectOneMenu>
 				
+								<!-- 29697 -start- -->
 								<p:inputText id="searchValue" size="20" value="#{notifyBackingBean.managedBean.searchValue}" mask="#{notifyBackingBean.mask}" style="width: 400px; !important" 
 										onkeypress="if (event.keyCode == 13) { searchNotifications.jq.click(); return false; }">
+								<!-- 29697 -end- -->
 									<p:ajax event="change" listener="#{notifyBackingBean.searchValue}"/>
 								</p:inputText>
 				
+								<!-- 29697 -start- -->
 								<p:commandButton id="searchBtn"
 										onstart="blockWidget.show()"
 										oncomplete="blockWidget.hide()"
@@ -178,6 +184,7 @@
 										value="#{lbl['lbl.portal.notify.search']}"
 										action="#{notifyBackingBean.searchNotify}"
 										update=":form:pnldetail, :form:pnlemptydetail,:form:notifyTable"/>
+								<!-- 29697 -end- -->
  							</td>
 				
 						</tr>
@@ -234,9 +241,13 @@
 															style="font-weight:bold;text-align: left"
 															value="#{lbl['lbl.portal.notify.subject']}"></h:outputText></td>
 												
-													<td colspan="3"><h:outputText readonly="true"
+													<td colspan="3">
+														<!-- 14291 -start- -->
+														<h:outputText readonly="true"
 															style="width:545px"
-															value="#{notifyBackingBean.getNotifyDashboardSubject(notifyBackingBean.managedBean.selectedNotify)}"></h:outputText>
+															value="#{notifyBackingBean.getNotifyDashboardSubject(notifyBackingBean.managedBean.selectedNotify)}">
+														<!-- 14291 -end- -->
+														</h:outputText>
 													</td>
 													
 												</tr>
@@ -250,9 +261,12 @@
 																	<td>
 																		<p:outputPanel>
 																			<p>
+																				<!-- 14291 -start- -->
 																				<h:outputText escape="false"
 																						style="text-align:left;width:98%;height:220px;overflow: auto;"
-																						value="#{notifyBackingBean.getNotifyDashboardContent(notifyBackingBean.managedBean.selectedNotify)}"></h:outputText>
+																						value="#{notifyBackingBean.getNotifyDashboardContent(notifyBackingBean.managedBean.selectedNotify)}">
+																				<!-- 14291 -end- -->
+																				</h:outputText>
 																			</p>
 																		</p:outputPanel>
 																	</td>
@@ -271,9 +285,11 @@
 				</tr>
 			</table>
 			
+		<!-- 29697 -start- -->	
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
+		<!-- 29697 -end- -->
 		
 		<p:confirmDialog message="#{lbl['lbl.btn.dialog.cofirm.delete.msg']}" header="#{lbl['lbl.btn.dialog.cofirm.header']}" widgetVar="confirmation">
 	
