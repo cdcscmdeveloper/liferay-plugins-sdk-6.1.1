@@ -73,8 +73,9 @@
 
 					<h:panelGroup id="approverBtns">
 					<ui:param name="readOnlyTask" value="#{approvalBackingBean.managedBean.readOnly}" />
-						<ui:decorate
-							template="/WEB-INF/facelets/templates/claim_template.xhtml">
+					<!-- 28932,25692 -start- -->
+						<ui:decorate template="/WEB-INF/facelets/templates/claim_template_true.xhtml">
+					<!-- 28932,25692 -end- -->
 							<ui:define name="outComeSection">
 								<ui:repeat var="bpmAction"
 									value="#{approvalBackingBean.managedBean.outComes}">
