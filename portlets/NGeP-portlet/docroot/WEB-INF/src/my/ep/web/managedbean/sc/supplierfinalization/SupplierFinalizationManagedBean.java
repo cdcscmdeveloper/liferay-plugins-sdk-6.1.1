@@ -282,6 +282,10 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean isMofFinalization;
 	private boolean isBpkCentralContract;
 	// #27502 - Start 
+	
+	//#31632
+	private boolean isMofCntralCtc;
+	
 	//28834 starts
 	private boolean disableBfButton;
 	private boolean ktReportGenerated;
@@ -2428,6 +2432,14 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 
 	public void setDemoReq(boolean isDemoReq) {
 		this.isDemoReq = isDemoReq;
+	}
+
+	public boolean isMofCntralCtc() {
+		return isMofCntralCtc;
+	}
+
+	public void setMofCntralCtc(boolean isMofCntralCtc) {
+		this.isMofCntralCtc = isMofCntralCtc;
 	}
 	
 }
