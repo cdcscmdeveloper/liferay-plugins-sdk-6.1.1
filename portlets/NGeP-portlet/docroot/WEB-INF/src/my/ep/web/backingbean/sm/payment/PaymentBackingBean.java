@@ -390,13 +390,6 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			
 			setPaymentHttpSession(this.getManagedBean().getTaskId(),this.getManagedBean().getBpmPojo());
 			
-			// start #30859
-			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			FacesScopes fs = new FacesScopes();
-			userSO.removeDuplicatePmUserRole(PmCommonUtil.retrieveActiveOrg(fs.getUserSessionBean().getUserId()).get(0));
-			// end #30859
-			
 			return "paymentRequestSubmission";
 
 		}
