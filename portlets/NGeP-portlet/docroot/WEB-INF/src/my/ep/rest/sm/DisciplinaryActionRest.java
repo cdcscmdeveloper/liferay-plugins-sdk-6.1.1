@@ -175,6 +175,7 @@ public class DisciplinaryActionRest {
 								PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelBySupplierIdForDA(reqPersonnelDTO);
 
 								reqDTO.setSmSupp(suspendList.getSmSupplier());
+								reqDTO.setDisciplinaryAction(true); //30784: disciplinary action - 26238
 								reqDTO.getSmSupp().getSmAppl().setSmPersonnels(personnelResDTO.getSmPersonnelList());
 								try {
 									RegistrationResDTO resDTO = SmServiceLookup.getRegistrationSO().reactivateBasicAccount(reqDTO);
