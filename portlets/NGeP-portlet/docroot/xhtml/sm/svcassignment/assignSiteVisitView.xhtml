@@ -109,12 +109,14 @@
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sm.catCodes.catcode']}">
-					#{catCode}
+				<!-- 28775 - Site Visit Grouping Enhancement - 28775 - start-->
+					<!-- #{catCode} -->
+					<h:outputText value="#{catCode} - #{catApp.categoryL1Name} / #{catApp.categoryL2Name} / #{catApp.categoryL3Name}"></h:outputText>
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sm.category.description']}">
-					#{catApp.pmCategoryL3.categoryName}
-					<h:outputText value="(#{catApp.otherDesc})" rendered="#{catApp.pmCategoryL3.categoryL3Code eq SupplierMgmtConst.categoryCatManufacturingCode}"></h:outputText>
+					<!-- #{catApp.pmCategoryL3.categoryName} -->
+					<h:outputText value="#{catApp.otherDesc}" rendered="#{catApp.pmCategoryL3.categoryL3Code eq SupplierMgmtConst.categoryCatManufacturingCode}" />
 				</p:column>
 			</p:dataTable>
 		</p:panel>
@@ -125,7 +127,10 @@
 				<ui:param name="facilityType" 
 				value="#{svc.smSvTask.smSvAddress.facilityType}" />
 				<p:column headerText="#{lbl['lbl.sm.facility.type']}">
-					#{facilityType}
+					<!--  #{facilityType} -->
+					<h:outputText value="#{svcSiteAssignBackingBean.getFacilityType(svc.smSvTask)}" 
+						escape="false"/>
+					<!-- 28775 - Site Visit Grouping Enhancement - 28775  - end-->
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.facility.name']}"

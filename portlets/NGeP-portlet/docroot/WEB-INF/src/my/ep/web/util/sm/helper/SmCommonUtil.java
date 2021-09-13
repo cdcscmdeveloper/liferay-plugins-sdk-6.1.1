@@ -1824,6 +1824,10 @@ public class SmCommonUtil {
 							ISmApplRevisionSO.class);
 
 			SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
+			//28775 - Site Visit Grouping Enhancement - 28775 - start
+			smSvTask.setSmSupplierSystems(smSvTask.getSmAppl().getSmSupplierSystems());
+			smSvTask.setSmManufacturingDtls(smSvTask.getSmAppl().getSmManufacturingDtls());
+			//28775 - Site Visit Grouping Enhancement - 28775 - end
 			reqDTO.setSmAppl(smSvTask.getSmAppl());
 			reqDTO.setSmSvTask(smSvTask);
 			if (serType.equalsIgnoreCase("SUP")) {
