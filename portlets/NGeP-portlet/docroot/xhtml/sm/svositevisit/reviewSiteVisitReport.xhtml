@@ -53,14 +53,8 @@
 	
 	<p:dialog widgetVar="poReportDlg" modal="true" height="600" width="1500" id="poReportDlgId" resizable="false" closable="false">
 		<p:outputPanel id="reportPanel" rendered="#{!empty svoSiteVisitBackingBean.managedBean.smSvTask}" >
-			<!-- 28775 - Site Visit Grouping Enhancement - 28775 - start -->
-			<c:if test="#{svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.siteVisitGroup}">
-				<ui:include src="/xhtml/sm/shared/sitevisit/group/siteVisitReportPOReview.xhtml" />
-			</c:if>
-			<c:if test="#{!svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.siteVisitGroup}">
-				<ui:include src="/xhtml/sm/shared/sitevisit/siteVisitReportPOReview.xhtml"></ui:include>
-			</c:if>
-			<!-- 28775 - Site Visit Grouping Enhancement - 28775 - end -->
+			<!-- 28775 - Site Visit Grouping Enhancement - 28775 -->
+			<ui:include src="/xhtml/sm/shared/sitevisit/group/siteVisitReportPOReview.xhtml" />
 		</p:outputPanel>
 	</p:dialog>
 
