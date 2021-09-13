@@ -27,9 +27,10 @@
 		<br />
 		<p:dataTable var="empInfo"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			value="#{backingBean.managedBean.getSelectedWorkShopFacility().smEmployees}"
-			selection="#{backingBean.managedBean.selectedEmployees}"
+			value="#{backingBean.managedBean.selectedWorkShopFacility.smSvWorkers}"
+			selection="#{backingBean.managedBean.selectedWorkers}"
 			id="empInfoId" rowKey="#{empInfo}">
+			<!-- value="#{backingBean.managedBean.getSelectedWorkShopFacility().smEmployees -->
 
 			<p:ajax event="rowSelectCheckbox"
 				update=":#{p:component('deleteEmpBtnId')}" />
@@ -49,7 +50,7 @@
 					<h:outputText value="*" styleClass="mandatory" />
 					#{lbl['lbl.sm.employee.name']}
 				</f:facet>
-				<p:inputText id="empNameId" value="#{empInfo.employeeName}"
+				<p:inputText id="empNameId" value="#{empInfo.name}"
 					label="#{lbl['lbl.sm.employee.name']}"
 					required="#{backingBean.managedBean.valueReqd}" size="50"
 					maxlength="80">
