@@ -188,6 +188,7 @@ import my.ep.persistence.entity.sm.SmSupplierSystem;
 import my.ep.persistence.entity.sm.SmSvAddress;
 import my.ep.persistence.entity.sm.SmSvOffice;
 import my.ep.persistence.entity.sm.SmSvTask;
+import my.ep.persistence.entity.sm.SmSvTaskGroup;
 import my.ep.persistence.entity.sm.SmSvTemplate;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.type.pm.RoleCode;
@@ -197,6 +198,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.pm.cc.CategoryCodeSearchBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
+import my.ep.web.util.AddressUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -6629,8 +6631,13 @@ public class SmApplicationUtil {
 	 */
 	public static void setSiteVisitData(SmApplicationManagedBean bean,
 			List<SmSiteVisitFacilityVO> voList) {
-		if (!SmCommonUtil.isCollectionEmpty(voList)) {
+		//28775 - Site Visit Grouping Enhancement - 28775 - start
+		if (SmCommonUtil.isCollectionEmpty(bean.getSvTaskList()))
 			bean.setSvTaskList(new ArrayList<SmSvTask>());
+		
+		if (!SmCommonUtil.isCollectionEmpty(voList)) {
+			//bean.setSvTaskList(new ArrayList<SmSvTask>());
+			//28775 - Site Visit Grouping Enhancement - 28775 - end
 
 			// only set new list if svTask is empty
 			if (EntityHelper.isCollectionEmpty(bean.getSmAppl().getSmSvTasks())) {
@@ -6730,25 +6737,44 @@ public class SmApplicationUtil {
 	private static void setSmSvTask(SmApplicationManagedBean bean,
 			PmParameter bumiType, SmSiteVisitFacilityVO facVO, SmSvTask svTask,
 			SmAddress addr, Long siteRefId, String siteType) {
-		// SmSvTask
-		svTask = new SmSvTask();
-		svTask.setSmAppl(bean.getSmAppl());
-		if (!bean.getSmAppl().getApplType()
-				.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
-			svTask.setPmCategoryL3(facVO.getL3());
+		//28775 - Site Visit Grouping Enhancement - 28775 - start
+		String addr1 = AddressUtils.getSmFullFormattedAddress(addr);
+		String param1 = bumiType.getParameterCode();
+		if(facVO.getL3() != null && facVO.getL3().getCategoryTypeCode() != null)
+			param1 = facVO.getL3().getCategoryTypeCode().getParameterCode();
+		boolean isGroup = false;
+				
+		for(SmSvTask t : bean.getSvTaskList()){
+			String addr2 = AddressUtils.getSmFullFormattedAddress(t.getSmSvAddress().getAddress());
+			String param2 = t.getSmSvTemplate().getPmParameter().getParameterCode();
+			if(addr1.equals(addr2) && param1.equals(param2)){
+				isGroup = true;
+				addSmSvTaskGroup(bean, t, bumiType, facVO);
+				break;
+			}
 		}
+		if(!isGroup){
+			// SmSvTask
+			svTask = new SmSvTask();
+			svTask.setSmAppl(bean.getSmAppl());
+			if (!bean.getSmAppl().getApplType()
+					.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
+				svTask.setPmCategoryL3(facVO.getL3());
+			}
 
-		// SmSvOffice
-		setSmSvOffice(bean, svTask);
+			// SmSvOffice
+			setSmSvOffice(bean, svTask);
 
-		// SmSvTemplate
-		setSmSvTemplate(bumiType, facVO.getL3(), svTask);
+			// SmSvTemplate
+			setSmSvTemplate(bumiType, facVO.getL3(), svTask);
 
-		// SmSvAddress
-		setSmSvAddress(addr, svTask, siteRefId, siteType);
-
-		bean.getSmAppl().getSmSvTasks().add(svTask);
-		bean.getSvTaskList().add(svTask);
+			// SmSvAddress
+			setSmSvAddress(addr, svTask, siteRefId, siteType);
+			bean.getSvTaskList().add(svTask);
+		}
+		//bean.getSmAppl().getSmSvTasks().add(svTask);
+		//bean.getSvTaskList().add(svTask);
+		//28775 - Site Visit Grouping Enhancement - 28775 - end
 	}
 
 	private static void setSmSvTemplate(PmParameter bumiType, PmCategoryL3 l3,
@@ -6769,6 +6795,8 @@ public class SmApplicationUtil {
 		smSvAddress.setSmSvTask(svTask);
 		smSvAddress.setSiteType(siteType);
 		smSvAddress.setSiteRefId(siteRefId);
+		//28775 - Site Visit Grouping Enhancement - 28775
+		smSvAddress.setAddress(addr);
 		svTask.setSmSvAddress(smSvAddress);
 	}
 
@@ -6779,7 +6807,27 @@ public class SmApplicationUtil {
 		svOff.setSmFacility(bean.getBasicCompanyFacility());
 		svTask.setSmSvOffice(svOff);
 	}
-
+	
+	//28775 - Site Visit Grouping Enhancement - 28775 - start
+	private static void addSmSvTaskGroup(SmApplicationManagedBean bean, 
+			SmSvTask svTask, PmParameter bumiType, SmSiteVisitFacilityVO facVO){
+		SmSvTaskGroup group = new SmSvTaskGroup();
+		group.setSmSvTask(svTask);
+		SmSvTemplate template = new SmSvTemplate();
+		template.setSmSvTaskGroup(group);
+		template.setPmParameter(bumiType);
+		if (!bean.getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)){
+			group.setPmCategoryL3(facVO.getL3());
+			template.setPmParameter(facVO.getL3().getCategoryTypeCode());
+		}
+		group.setSmSvTemplate(template);
+		
+		if(svTask.getSmSvTaskGroups() == null)
+			svTask.setSmSvTaskGroups(new ArrayList<SmSvTaskGroup>());
+		svTask.getSmSvTaskGroups().add(group);
+	}
+	//28775 - Site Visit Grouping Enhancement - 28775 - end
+	
 	/**
 	 * Update site visit task.
 	 * 
