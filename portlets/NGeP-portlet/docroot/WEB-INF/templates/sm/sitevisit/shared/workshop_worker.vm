@@ -1,13 +1,13 @@
-<u class="txtBold">Employee</u>
+<u class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.employee.employee')</u>
 <br /><br />
 
 <table  class="descTable" width="100%">
 		<tr style="background-color:#99ccff;" align="center">
 			<th width="5%">No.</th>
-			<th width="25%">Specialization</th>
-			<th width="25%">Name</th>
-			<th width="20%">IC No.</th>
-			<th width="25%">Experience</th>
+			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.employee.specialization')</th>
+			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.employee.name')</th>
+			<th width="20%">$smVmUtil.getDescByLabel('lbl.sm.worker.icno')</th>
+			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.worker.experience')</th>
 		</tr>
 		
 		
@@ -24,12 +24,12 @@
 				#end
 			#else
 				<tr>
-		 			<td colspan="5" align="center">No Record Found</td>
+		 			<td colspan="5" align="center">$smVmUtil.getDescByLabel('lbl.datatable.msg.no.records.found')</td>
 		 		</tr>
 			#end
 		#else
 		 	<tr>
-		 		<td colspan="5" align="center">No Record Found</td>
+		 		<td colspan="5" align="center">$smVmUtil.getDescByLabel('lbl.datatable.msg.no.records.found')</td>
 		 	</tr>
 		#end
 </table>
