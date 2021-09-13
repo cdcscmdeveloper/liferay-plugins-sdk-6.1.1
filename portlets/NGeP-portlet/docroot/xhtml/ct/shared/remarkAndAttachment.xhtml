@@ -55,11 +55,8 @@
 					</p:dataGrid>
 				</td>
 				<td class="TableFieldRight" width="50%" style="padding-left:6.25%">
-					<c:if test="#{not empty ctBackingBean.managedBean.attachmentList}">
 						<p:dataGrid value="#{ctBackingBean.managedBean.attachmentList}"
 							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" var="attachment"
-							rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex != contractDetailsBackingBean.managedBean.settingIndex and
-								contractDetailsBackingBean.managedBean.selectedTabIndex != contractDetailsBackingBean.managedBean.notificationIndex}"
 							rowIndexVar="attachFileIndex" columns="1" style="width:100%">
 							<table>
 								<tr>
@@ -82,10 +79,6 @@
 								</tr>
 							</table>
 						</p:dataGrid>
-					</c:if>
-					<c:otherwise>
-						#{lbl['lbl.datatable.msg.no.records.found']}
-					</c:otherwise>
 				</td>
 			</tr>
 		</table>
