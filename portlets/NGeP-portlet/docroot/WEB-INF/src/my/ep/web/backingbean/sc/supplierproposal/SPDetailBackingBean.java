@@ -1617,6 +1617,9 @@ public class SPDetailBackingBean extends
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
+
+			totalAmountSum(); //Bug #31360
+		
 			CriteriaValue avgBankStatementVal = new CriteriaValue(
 					SourcingConstants.CRITERIA_TYPE_AVERAGE_OF_BANK_STATEMENT,
 					this.getManagedBean().getAvgAmount());
