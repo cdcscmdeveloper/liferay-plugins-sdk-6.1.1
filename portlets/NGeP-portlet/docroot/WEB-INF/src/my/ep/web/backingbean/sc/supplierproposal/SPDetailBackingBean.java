@@ -4189,7 +4189,8 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		Integer selectedZoneTabIndex = Integer.valueOf(FacesContext
 				.getCurrentInstance().getExternalContext()
 				.getRequestParameterMap().get("selectedZoneTabIndex"));
-
+		//Bug #31542 related to #21695 start
+		List<TplSpecAnswer> removeZeroQuantity = new ArrayList<TplSpecAnswer>();
 		getManagedBean().setActiveIndex(selectedZoneTabIndex);
 		debugLogger("zoneTabChange");
 		TplSpecZoneDtl specZoneDtl = (TplSpecZoneDtl) getManagedBean()
@@ -4213,8 +4214,19 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 				specAnswerList.get(i).getTplSpecSuppAnswer().setTplSpecZoneDtl(getManagedBean().getSelectedZone());
 				}
 			}
+			
 			getManagedBean().getTemplateSpecBean().setSpecAnswerList(specAnswerList);
-		} //#28785-End
+			//#28785-End
+			
+			//Bug #31542 related to #21695 start
+			for(TplSpecAnswer removeZero: getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
+				if(removeZero.getTplSpecZoneQty() != null && removeZero.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0){
+					removeZeroQuantity.add(removeZero);
+				}
+			}
+			
+			getManagedBean().getTemplateSpecBean().getSpecAnswerList().removeAll(removeZeroQuantity);
+		} //Bug #31542 related to #21695 End
 	}
 
 	/**
