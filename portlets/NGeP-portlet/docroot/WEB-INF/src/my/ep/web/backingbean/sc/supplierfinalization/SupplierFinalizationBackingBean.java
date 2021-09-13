@@ -300,6 +300,9 @@ public class SupplierFinalizationBackingBean extends
 			boolean isBpkCentralContract = false;
 			isBpkCentralContract = isBpkCentralContract(scQt);
 			
+			//#31632
+			getManagedBean().setMofCntralCtc(isBpkCentralContract);
+			
 			if (!isBpkCentralContract) {
 						prepareUpdateCommitteeMember();//#25037
 			}
@@ -1665,7 +1668,8 @@ public class SupplierFinalizationBackingBean extends
 						}
 						// isBpkFinalizationReq is true for Restricted Tender whose sent for  BPK Approval
 					if (!this.getManagedBean().isInitialDecisionFwdToBPK()
-							&& this.getManagedBean().getScQt().isBpkFinalizationReq()) {
+							&& this.getManagedBean().getScQt().isBpkFinalizationReq()
+							&& !this.getManagedBean().isMofCntralCtc()) {//#31632
 							
 						if ((!ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY
 								.equals(decisionTypeCode)
@@ -2804,7 +2808,8 @@ return	remarksNotFound;
 							}
 							// isBpkFinalizationReq is true for Restricted Tender whose sent for  BPK Approval
 						if (!this.getManagedBean().isInitialDecisionFwdToBPK()
-								&& this.getManagedBean().getScQt().isBpkFinalizationReq()) {
+								&& this.getManagedBean().getScQt().isBpkFinalizationReq()
+								&& !this.getManagedBean().isMofCntralCtc()) {//#31632
 								
 							if ((!ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY
 									.equals(decisionTypeCode)
