@@ -25,6 +25,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
@@ -361,6 +362,32 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 	}
 
+	//#Start Fix - #31657
+	/**
+	 * The method used to remove file from the attachment list.
+	 * 
+	 * @param  event      the delete event for file attach from screen
+	 * @throws Exception  if an exception occurred
+	 * @see    Exception
+	 */
+	public void deleteAttachmentActionByEvent(ActionEvent event) throws Exception {
+		CtAttachment attachment = new CtAttachment();
+		if(event.getComponent().getId().equalsIgnoreCase("deleteItemAttachment")){
+			attachment = getManagedBean().getContractVer().getItemAttachments().get(this.getManagedBean().getAttachFileIndex());
+			 if(attachment.getAttachmentId() != null){
+					getManagedBean().getDeleteAttachmentList().add(attachment);
+				}
+				this.getManagedBean().getContractVer().getItemAttachments().remove(getManagedBean().getAttachFileIndex());
+		} else {
+			attachment = this.getManagedBean().getAttachmentList().get(getManagedBean().getAttachFileIndex());
+			if(attachment.getAttachmentId() != null){
+				getManagedBean().getDeleteAttachmentList().add(attachment);
+			}
+			this.getManagedBean().getAttachmentList().remove(getManagedBean().getAttachFileIndex());
+		}
+	}
+	//#End Fix - #31657
+	
 	/**
 	 * The method used to download the attached file.
 	 * 
