@@ -680,8 +680,10 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			System.out.println("getPaymentType == " + getManagedBean().getPaymentType());
 			System.out.println("getBillType ===== " + pyBill.getBillType());
 			
+			log.info("Payment lalu sini 1>>>>>");
 			PaymentResDTO pymtResDTO = reqSO.updatePayment(pymtReqDTO);
-		
+			log.info("Lepas update payment 1>>>>>");
+			
 			showPaymentResponse(status, ordId, null, pyBill.getBillType());
 			this.renewSesionObject();
 			
