@@ -795,6 +795,22 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			
 			validateQtDetails();
 			if(isFirstSave){
+				
+				/*
+				 * BUG 31610
+				 * Added WorkflowStatus to cater qt maintenance search result not working
+				 */
+				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+				reqDTO.setDocId(this.getManagedBean().getQt().getQtId());
+				reqDTO.setQtdetail(this.getManagedBean().getQt());
+				IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IQTDetailSO.class);
+				
+				detailSO.updateDraftWorkflowStatus(reqDTO);
+				/*
+				 * Bug 31610 END
+				 */
 				successMessage(MessageConst.INFO_7000044, ParameterTypeConst.DOCUMENT_TYPES,
 						ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtNo(),  Boolean.TRUE);
 			}else{
