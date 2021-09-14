@@ -56,7 +56,10 @@ public class DeactivateUserRoleRest {
 								if (pmLoginHistory != null && pmLoginHistory.getLoginDate().compareTo(new Date(userRole.getChangedDate().getTime())) > 0) {
 									log.info("User has login history for user id >>> "+resDTO1.getPmUser().getUserId());
 									log.info("User role changed date >>> "+userRole.getChangedDate());
-									if(new Date(userRole.getChangedDate().getTime()+86400000).compareTo(DateUtils.addMonths(new Date(), -UsersdeactivationPerioid)) <= 0 ){
+									//#31682-start
+									if(DateUtils.addHours(userRole.getChangedDate(), 24)
+											.compareTo(DateUtils.addMonths(new Date(), -UsersdeactivationPerioid)) <= 0 ){
+									//#31682-end
 										log.info("Deactivate user role  Role_Id >>> "+userRole.getUserRoleId());
 										userRole.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
 										reqDTOFinal.getRemoveRoleList().add(userRole);
@@ -70,7 +73,10 @@ public class DeactivateUserRoleRest {
 								} else {
 									log.info("User never log into the system user id >>> "+resDTO1.getPmUser().getUserId());
 									log.info("User role changed date >>> "+userRole.getChangedDate());	
-									if(new Date(userRole.getChangedDate().getTime()+86400000).compareTo(DateUtils.addMonths(new Date(), -UsersdeactivationPerioidNotLogging)) <= 0 ){
+									//#31682-start
+									if(DateUtils.addHours(userRole.getChangedDate(), 24)
+											.compareTo(DateUtils.addMonths(new Date(), -UsersdeactivationPerioidNotLogging)) <= 0 ){
+									//#31682-end
 											log.info("Deactivate user role  Role_Id >>> "+userRole.getUserRoleId());
 											userRole.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
 											reqDTOFinal.getRemoveRoleList().add(userRole);
