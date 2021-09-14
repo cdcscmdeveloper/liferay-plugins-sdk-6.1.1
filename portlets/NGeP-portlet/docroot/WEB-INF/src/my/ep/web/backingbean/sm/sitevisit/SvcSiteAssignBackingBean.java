@@ -354,19 +354,14 @@ public class SvcSiteAssignBackingBean extends
 		for(SmSupplierCategory catTemp : tempL){
 			boolean dupe = false;
 			for(SmSupplierCategory catBean : getManagedBean().getCategoryLs()){
-				log.info("28775_svc cat1:"+catTemp.getPmCategoryL3().getCategoryL3Id()
-						+"\tcat2:"+catBean.getPmCategoryL3().getCategoryL3Id());
-				if(catTemp.getPmCategoryL3().getCategoryL3Id() 
-						== catBean.getPmCategoryL3().getCategoryL3Id()){
+				if(catTemp.getPmCategoryL3().getCategoryL3Id().equals(
+						catBean.getPmCategoryL3().getCategoryL3Id())){
 					dupe = true;
-					log.info("28775_svc\tskip cat:"+catTemp.getPmCategoryL3().getCategoryL3Id());
 					break;
 				}
 			}
-			if(!dupe){
-				log.info("28775_svc\tadd cat:"+catTemp.getPmCategoryL3().getCategoryL3Id());
+			if(!dupe)	
 				getManagedBean().getCategoryLs().add(catTemp);
-			}
 		}
 		/*
 		List<String> tempCatLs = new ArrayList<String>();
