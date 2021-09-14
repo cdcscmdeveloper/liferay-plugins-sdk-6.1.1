@@ -44,12 +44,11 @@
 			</p:column>
 	
 			<p:column headerText="#{lbl['lbl.sm.rptpreview.template']}">
-				<p:commandButton value="#{lbl['lbl.sm.button.preview']}" update=":form:rptDialogId" oncomplete="rptDlg.show();" id="btnPreview" action="#{svoSiteVisitBackingBean.rptPreview(svTask.smSvTemplate)}" />
+				<p:commandButton value="#{lbl['lbl.sm.button.preview']}" oncomplete="rptDlg.show();" id="btnPreview" action="#{svoSiteVisitBackingBean.rptPreview(svTask.smSvTemplate)}" />
 			</p:column>
 			<!--28775 - Site Visit Grouping Enhancement - 28775 - start-->
 			<p:column>
-				<p:commandButton value="#{lbl['lbl.btn.upload']}" onclick="uploadDlg.show();" actionListener="#{svoSiteVisitBackingBean.setReportUploadTemplate(svTask.smSvTemplate)}"
-					disabled="#{viewFlag}"/>
+				<p:commandButton value="#{lbl['lbl.btn.upload']}" onclick="uploadDlg.show();" actionListener="#{svoSiteVisitBackingBean.setReportUploadTemplate(svTask.smSvTemplate)}" />
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sm.sitevist.report.uploadedfile']}">
