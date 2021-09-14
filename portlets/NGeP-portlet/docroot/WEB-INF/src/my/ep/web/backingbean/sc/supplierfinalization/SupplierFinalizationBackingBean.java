@@ -9321,6 +9321,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			scAttachment = attachment;
 			uploadAttachment(event.getFile(), scAttachment);
 			
+			// #18685 - Start.
 			int index = 0;
 			if (CollectionUtils.isNotEmpty(getManagedBean().getEndorsementReports())
 			    && this.getManagedBean().getEndorsementReports().size() > 0) {
@@ -9333,6 +9334,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			if (index >= 0 && fileName != null) {
 				scAttachment.setFileName(index + UNDER_SCORE + fileName);
 			}
+			// #18685 - End.
 		}
 	}
 	
