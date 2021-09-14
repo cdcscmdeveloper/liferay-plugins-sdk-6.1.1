@@ -811,33 +811,41 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 	}
 
 	public void responseRedirect(){
-		log.info("*************responseRedirect*********");
-		FacesContext fc = FacesContext.getCurrentInstance();
+		try{
+			log.info("*************responseRedirect*********");
+			FacesContext fc = FacesContext.getCurrentInstance();
 
-		String errorDesc = getManagedBean().getErrDesc() != null ? getManagedBean().getErrDesc() : "";
-		if(fc.getMessageList().size() < 1){
-			String[] msgParam = null;
+			String errorDesc = getManagedBean().getErrDesc() != null ? getManagedBean().getErrDesc() : "";
+			log.info("*************responseRedirect*********errorDesc"+errorDesc);
+			log.info("*************responseRedirect*********"+fc.getMessageList());
+			log.info("*************responseRedirect*********"+fc.getMessageList().size());
+			if(fc.getMessageList().size() < 1){
+				String[] msgParam = null;
+				
+				//#29481 - Start - added INFO_721068
+				if(getManagedBean().getMessageId() != null && (getManagedBean().getMessageId().equalsIgnoreCase(MessageConst.INFO_721068) || getManagedBean().getMessageId().equalsIgnoreCase(MessageConst.INFO_721065))){
+				//#29481 - End
+					msgParam = getManagedBean().getMsgParam();
+				}else{
+					msgParam = new String[]{errorDesc};
+				}
+				fc.addMessage(
+						null,
+						new FacesMessage(getManagedBean().getMessageSeverity(), null,
+								MessageUtils.getMessage(getManagedBean().getMessageId(),msgParam,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
 			
-			//#29481 - Start - added INFO_721068
-			if(getManagedBean().getMessageId() != null && (getManagedBean().getMessageId().equalsIgnoreCase(MessageConst.INFO_721068) || getManagedBean().getMessageId().equalsIgnoreCase(MessageConst.INFO_721065))){
-			//#29481 - End
-				msgParam = getManagedBean().getMsgParam();
-			}else{
-				msgParam = new String[]{errorDesc};
 			}
-			fc.addMessage(
-					null,
-					new FacesMessage(getManagedBean().getMessageSeverity(), null,
-							MessageUtils.getMessage(getManagedBean().getMessageId(),msgParam,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-		
-		}
 
-		fc.getApplication()
-		.getNavigationHandler()
-		.handleNavigation(fc, null,
-				"/xhtml/sm/payment/paymentAcknowledge.xhtml");
+			fc.getApplication()
+			.getNavigationHandler()
+			.handleNavigation(fc, null,
+					"/xhtml/sm/payment/paymentAcknowledge.xhtml");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
 	}
 
 	private FacesScopes getFacesScopes() {
