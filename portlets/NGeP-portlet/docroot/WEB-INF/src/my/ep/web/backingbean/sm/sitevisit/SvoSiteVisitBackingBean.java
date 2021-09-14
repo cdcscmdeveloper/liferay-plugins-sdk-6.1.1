@@ -3656,35 +3656,44 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return SmCommonUtil.getMessage(
 				"lbl.sm.travel.software.instruction", new String[] {catCode});
 	}
+	//28775 - Site Visit Grouping Enhancement - 28775 - end
 	
+	//29379 - Site Visit Grouping Enhancement - 28775 - start
 	public void changeWorkerIdentificationType(SmSvWorker worker){
 		worker.setIdentificationType(ParameterHelper.getInstance()
 				.getPmParameterById(worker.getIdentificationTypeId()));
 	}
-	//28775 - Site Visit Grouping Enhancement - 28775 - end
-	//29379 - Site Visit Grouping Enhancement - 28775 - start
+	
 	private void prepareWorkshopWorkers(){
 		SmSvTask svTask = getManagedBean().getSmSvTask();
-		if(svTask.getSmSvTemplate().getSmSvWorkers() != null &&
-			!svTask.getSmSvTemplate().getSmSvWorkers().isEmpty()) 
-				return;
+		SmSvTemplate svTemplate = svTask.getSmSvTemplate();
+		if(svTemplate.getSmSvWorkers() != null && svTemplate.getSmSvWorkers().isEmpty()) 
+			return;
 		
-		for(SmSvTemplate svTemplate : getManagedBean().getTemplates()){
-			svTemplate.setSmSvWorkers(new ArrayList<SmSvWorker>());
+		for(SmSvTemplate tmp : getManagedBean().getTemplates()){
+			tmp.setSmSvWorkers(new ArrayList<SmSvWorker>());
 			//add all workshop workers with the same catcode
 			for(SmFacility fac : svTask.getSmAppl().getSmFacilities()){
 				for(SmSupplierCategoryFacility catFac : fac.getSmSupplierCategoryFacilities()){
-					Long templateL3 = svTemplate.getSuppCategory().getPmCategoryL3().getCategoryL3Id();
+					Long templateL3 = tmp.getSuppCategory().getPmCategoryL3().getCategoryL3Id();
 					Long facilityL3 = catFac.getPmCategoryL3().getCategoryL3Id();
-					if(templateL3 == facilityL3){
-						svTemplate.getSmSvWorkers().addAll(fac.getSmSvWorkers());
+					if(templateL3.equals(facilityL3)){
+						for(SmSvWorker work : fac.getSmSvWorkers()){
+							SmSvWorker svWorker = new SmSvWorker();
+							svWorker.setSvWorkerId(work.getSvWorkerId());
+							svWorker.setName(work.getName());
+							svWorker.setExpertise(work.getExpertise());
+							svWorker.setWorkExpYear(work.getWorkExpYear());
+							svWorker.setIdentificationNo(work.getIdentificationNo());
+							svWorker.setIdentificationTypeId(work.getIdentificationTypeId());
+							svWorker.setSmSvTemplate(svTemplate);
+							tmp.getSmSvWorkers().add(svWorker);
+						}
+						//tmp.getSmSvWorkers().addAll(fac.getSmSvWorkers());
 						break;
 					}
 				}
 			}
-		}
-		for(SmSvWorker worker : svTask.getSmSvTemplate().getSmSvWorkers()){
-			worker.setSmSvTemplate(svTask.getSmSvTemplate());
 		}
 		if(svTask.getSmAppl().isSiteVisitGroup() && ! svTask.getSmSvTaskGroups().isEmpty()){
 			for(SmSvTaskGroup svTGroup : svTask.getSmSvTaskGroups()){
