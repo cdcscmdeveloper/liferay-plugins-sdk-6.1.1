@@ -83,14 +83,14 @@
 					</td>
 					<td>
 						<p:outputLabel style="white-space: normal; word-wrap: break-word !important; vertical-align: top;" 
-						value="#{confirmationContent}" escape="false" />
+						value="#{confirmationContent}"/>
 					</td>
 				</tr>
 			</table>
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
 				<p:commandButton id="yesWithLoadId" value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
-					partialSubmit="true" disabled="#{not cofirmationPopUpBackingBean.declareChecked}"
+					disabled="#{not cofirmationPopUpBackingBean.declareChecked}"
 					onstart="#{cc.attrs.widget}.hide();#{cc.attrs.loadingWidget}.show();"
 					action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.okAction)}"
 					oncomplete="confirmPopupBlockWidget.hide(); #{cc.attrs.widget}.hide();" update="#{cc.attrs.update}" />
