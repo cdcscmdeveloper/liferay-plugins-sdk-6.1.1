@@ -34,30 +34,30 @@
 				</tr>
 			</table>
 			
-			<p:panel id="presentationDemoSupplierHeaderIds" header="#{lbl['lbl.sc.eva.technical.presentation.demo.presentation.demo.item']}"
+			<p:panel id="presentationDemoItemSupplierHeaderIds" header="#{lbl['lbl.sc.eva.technical.presentation.demo.presentation.demo.item']}"
 				toggleable="true">
-				<p:dataTable var="demoSupplier" id="demoSupplierId" editable="true"
+				<p:dataTable var="demoitemsupplier" id="demoitemsupplierId" editable="true"
 		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rows="10" lazy="true"
 			value="#{evaluationBackingBean.managedBean.byItemDemoList}"
-			rowIndexVar="index" rowKey="#{demoSupplier}">
+			rowIndexVar="index" rowKey="#{demoitemsupplier}">
 			<p:column headerText="#{lbl['lbl.sc.price.inquiry.item.name']}"
 				style="width:10%; white-space:normal; text-align:center;">
 
-				<h:outputText value="#{demoSupplier.scQtDemoItem.itemName}"></h:outputText>
+				<h:outputText value="#{demoitemsupplier.scQtDemoItem.itemName}"></h:outputText>
 
 
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.score']}"
 				style="width:2%; text-align:center;">
-				<p:inputText value="#{demoSupplier.demoEvalScore}"
+				<p:inputText value="#{demoitemsupplier.demoEvalScore}"
 					style="text-align:right" maxlength="18"
 					disabled="#{evaluationBackingBean.managedBean.readOnly}">
 				</p:inputText>
 				<p:spacer width="5"></p:spacer>
 				<h:outputText
-					value="/#{demoSupplier.scQtDemoItem.tplSpecQuestion.maxScore}" />
+					value="/#{demoitemsupplier.scQtDemoItem.tplSpecQuestion.maxScore}" />
 			</p:column>
 		</p:dataTable>
 		
@@ -68,7 +68,7 @@
 				<td style="width: 230px;"><h:outputLabel
 						value="#{lbl['lbl.sc.total.score']}" /></td>
 				<td>
-				<p:inputText value="#{evaluationBackingBean.managedBean.qtProposalChecklist.totalUserScore}/#{evaluationBackingBean.managedBean.userScores}"
+				<p:inputText value="#{evaluationBackingBean.managedBean.totalUserScore}/#{evaluationBackingBean.managedBean.userScores}"
 					style="text-align:right" maxlength="18"
 					disabled="true">
 				</p:inputText></td>
