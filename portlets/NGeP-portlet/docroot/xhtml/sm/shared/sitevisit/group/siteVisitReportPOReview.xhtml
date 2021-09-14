@@ -103,9 +103,9 @@
 		</c:if>
 		
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.close']} 1" action="#{svoSiteVisitBackingBean.saveSiteVisitReportByPO}"
+			<p:commandButton value="#{lbl['lbl.btn.close']}" action="#{svoSiteVisitBackingBean.saveSiteVisitReportByPO}"
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" rendered="#{!viewFlag}"/>
-			<p:commandButton value="#{lbl['lbl.btn.close']} 2" onclick="poReportDlg.hide()" 
+			<p:commandButton value="#{lbl['lbl.btn.close']}" onclick="poReportDlg.hide()" 
 				actionListener="#{svoSiteVisitBackingBean.changePageIndex(0,null,false)}" rendered="#{viewFlag}"/>
 		</div>	
 	</p:outputPanel>
