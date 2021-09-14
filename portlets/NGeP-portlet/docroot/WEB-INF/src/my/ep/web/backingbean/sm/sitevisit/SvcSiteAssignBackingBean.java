@@ -351,19 +351,21 @@ public class SvcSiteAssignBackingBean extends
 						(smAppl.getApplId(), svTGroup.getPmCategoryL3().getCategoryL3Id()));
 			}
 		}
-		if(!tempL.isEmpty()){
-			for(SmSupplierCategory catTemp : tempL){
-				boolean dupe = false;
-				for(SmSupplierCategory catBean : getManagedBean().getCategoryLs()){
-					if(catTemp.getPmCategoryL3().getCategoryL3Id() 
-							== catBean.getPmCategoryL3().getCategoryL3Id()){
-						dupe = true;
-						break;
-					}
+		for(SmSupplierCategory catTemp : tempL){
+			boolean dupe = false;
+			for(SmSupplierCategory catBean : getManagedBean().getCategoryLs()){
+				log.info("28775_svc cat1:"+catTemp.getPmCategoryL3().getCategoryL3Id()
+						+"\tcat2:"+catBean.getPmCategoryL3().getCategoryL3Id());
+				if(catTemp.getPmCategoryL3().getCategoryL3Id() 
+						== catBean.getPmCategoryL3().getCategoryL3Id()){
+					dupe = true;
+					log.info("28775_svc\tskip cat:"+catTemp.getPmCategoryL3().getCategoryL3Id());
+					break;
 				}
-				if(!dupe){
-					getManagedBean().getCategoryLs().add(catTemp);
-				}
+			}
+			if(!dupe){
+				log.info("28775_svc\tadd cat:"+catTemp.getPmCategoryL3().getCategoryL3Id());
+				getManagedBean().getCategoryLs().add(catTemp);
 			}
 		}
 		/*
