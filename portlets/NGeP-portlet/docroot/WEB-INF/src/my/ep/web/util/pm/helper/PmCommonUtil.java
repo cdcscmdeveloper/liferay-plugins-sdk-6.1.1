@@ -2689,6 +2689,53 @@ public class PmCommonUtil implements Serializable{
 		return userActiveUserGroups;
 	}
 	
+	// Bug #31509 - Start
+	public static List<PmUserGroup> retrieveUserActiveAtUserGroup(Long userId, String role,
+			SearchBean<PmUserGroup> searchBean) {
+		log.info("retrieveUserActiveAtUserGroup");
+		List<PmUserGroup> userActiveAtUserGroups = null;
+		IUserGroupSO userGroupSO = null;
+		UserGroupReqDTO reqDTO = null;
+		try {
+			if (userId != null) {
+				if (searchBean == null) {
+					searchBean = new SearchBean<PmUserGroup>();
+				}
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("recordStatusFlg", SearchOperator.OPERATOR_EQUALS.value(),
+								DbValueConst.RECORD_STATUS_ACTIVE));
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("pmUserGroupUsers.recordStatusFlg",
+								SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_ACTIVE));
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("pmUserGroupUsers.pmUser.userId", SearchOperator.OPERATOR_EQUALS.value(),
+								userId));
+
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("roleCode", SearchOperator.OPERATOR_EQUALS.value(), role));
+
+				reqDTO = new UserGroupReqDTO();
+				reqDTO.setUserGroupSearchBean(searchBean);
+				userGroupSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IUserGroupSO.class);
+				UserGroupResDTO resDTO = userGroupSO.searchUserGroupProfile(reqDTO);
+				if (resDTO != null && resDTO.getPmUserGroupList() != null && !resDTO.getPmUserGroupList().isEmpty()) {
+					userActiveAtUserGroups = resDTO.getPmUserGroupList();
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.info(e.getMessage());
+		} finally {
+			userGroupSO = null;
+			reqDTO = null;
+		}
+		return userActiveAtUserGroups;
+	}
+
+	// Bug #31509 - End
+	
 	public static void clearLiferayCache(){
 		log.info("clearCache start");
 		try{

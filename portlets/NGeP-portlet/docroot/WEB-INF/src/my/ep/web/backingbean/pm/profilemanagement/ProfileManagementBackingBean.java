@@ -5117,7 +5117,24 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 		return errorParams;
 	}
+	
+	//Bug #31509 - Start 
+	private String[] isActiveAtUserGroupUser(String role) {
 
+		System.out.println("isActiveUserGroupUserTest" + role);
+
+		String[] errorParams = null;
+		// check if user group user is active
+		PmUserGroup userGroup = retrieveUserActiveAtUserGroup(this.getManagedBean().getSelectedUser().getUserId(), role);
+
+		if (userGroup != null) {
+			errorParams = new String[] { userGroup.getGroupCode(), userGroup.getGroupName() };
+		}
+
+		return errorParams;
+	}
+	//Bug #31509 - End
+	
 	private boolean isUserRoleModified(PmUserRole userRole) {
 		logger.info("isUserRoleModified");
 		if (!userRole.isBrandNew()) {
