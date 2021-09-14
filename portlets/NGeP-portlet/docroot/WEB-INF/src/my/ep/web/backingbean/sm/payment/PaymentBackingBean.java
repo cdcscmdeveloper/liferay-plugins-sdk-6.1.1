@@ -230,7 +230,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		PaymentReqDTO reqDTO = new PaymentReqDTO();
 		reqDTO.setBillId(this.getManagedBean().getPyBill().getBillId());
 		PendingPaymentResDTO resDTO = reqSO.checkAlreadyDonePayement(reqDTO);
-				
+		
 		if(resDTO.isFoundCompletePayment()){
 			log.info("<<<< Failure Payment - Bill ID >>>> "+reqDTO.getBillId());
 			throw new EpException(MessageConst.ERROR_721055);
@@ -687,11 +687,11 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			showPaymentResponse(status, ordId, null, pyBill.getBillType());
 			this.renewSesionObject();
 			
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication()
-			.getNavigationHandler()
-			.handleNavigation(fc, null,
-					"/xhtml/sm/payment/paymentAcknowledge.xhtml");
+//			FacesContext fc = FacesContext.getCurrentInstance();
+//			fc.getApplication()
+//			.getNavigationHandler()
+//			.handleNavigation(fc, null,
+//					"/xhtml/sm/payment/paymentAcknowledge.xhtml");
 		}
 
 	}
