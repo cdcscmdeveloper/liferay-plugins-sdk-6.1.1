@@ -18,7 +18,6 @@
 		<cc:attribute name="width" default="auto" />
 		<cc:attribute name="height" default="auto" />
 		<cc:attribute name="resetInput" default="" />
-		<cc:attribute name="okProcess" default="@this" />
 		<cc:attribute name="noProcess" default="@this" />
 		<cc:attribute name="style" default="" />
 		<cc:attribute name="dialogCSS" default="" />
@@ -89,7 +88,7 @@
 			</table>
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
-				<p:commandButton id="yesWithLoadId" value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
+				<p:commandButton id="yesWithLoadId" value="#{lbl['lbl.btn.yes']}"
 					disabled="#{not cofirmationPopUpBackingBean.declareChecked}"
 					onstart="#{cc.attrs.widget}.hide();#{cc.attrs.loadingWidget}.show();"
 					action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.okAction)}"
