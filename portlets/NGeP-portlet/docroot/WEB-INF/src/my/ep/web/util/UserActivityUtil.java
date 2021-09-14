@@ -102,4 +102,10 @@ public class UserActivityUtil {
 		return string;
 	}
 	
+	//20210914@fadhli - #31092 - Start
+	public void associateRevisionDummyMethod() {
+		// This dummy method is created to check issues with Redmine associated revision
+		return;
+	}
+	//20210914@fadhli - #31092 - End
 }
