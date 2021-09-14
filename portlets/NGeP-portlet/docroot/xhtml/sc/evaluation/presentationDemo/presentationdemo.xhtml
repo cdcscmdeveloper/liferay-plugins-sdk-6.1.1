@@ -68,7 +68,7 @@
 				<h:panelGroup id="demoSupplierAttach">
 					<ac:scSingleFileUploadButton id="attachedIdsDemoDtl"
 						popupWidgetVar="demoSupplierAttachDlg"
-						attachment="#{evaluationBackingBean.retrieveDemoSupplierAttachment(demoSupplier.scQtProposal.supplierNo.toString())}"
+						attachment="#{evaluationBackingBean.retrieveDemoSupplierAttachment(demoSupplier.scQtProposal.supplierNo)}"
 						deleteFileUploadListener="evaluationBackingBean.deleteProposalDemoUploadFile"
 						readonly="#{evaluationBackingBean.managedBean.readOnly}">
 						<f:setPropertyActionListener for="actionEvent"
@@ -82,12 +82,12 @@
 				<p:commandButton value="#{lbl['lbl.btn.evaluate']}"
 					rendered="#{demoSupplier.totalScore == null}"
 					process="@this" partialSubmit="true"
-					action="#{evaluationBackingBean.presentationDemoScoring('1')}" />
+					action="#{evaluationBackingBean.presentationDemoScoring(demoSupplier.scQtProposal.supplierNo, demoSupplier)}" />
 					
 						<p:commandButton value="#{lbl['lbl.btn.view']}"
 					rendered="#{demoSupplier.totalScore != null}"
 					process="@this" partialSubmit="true"
-					action="#{evaluationBackingBean.presentationDemoScoring('1')}" />
+					action="#{evaluationBackingBean.presentationDemoScoring(demoSupplier.scQtProposal.supplierNo, demoSupplier)}" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>
