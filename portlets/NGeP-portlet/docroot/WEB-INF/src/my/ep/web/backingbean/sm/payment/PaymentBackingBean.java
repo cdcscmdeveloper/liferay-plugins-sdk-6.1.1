@@ -687,11 +687,11 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			showPaymentResponse(status, ordId, null, pyBill.getBillType());
 			this.renewSesionObject();
 			
-//			FacesContext fc = FacesContext.getCurrentInstance();
-//			fc.getApplication()
-//			.getNavigationHandler()
-//			.handleNavigation(fc, null,
-//					"/xhtml/sm/payment/paymentAcknowledge.xhtml");
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication()
+			.getNavigationHandler()
+			.handleNavigation(fc, null,
+					"/xhtml/sm/payment/paymentAcknowledge.xhtml");
 		}
 
 	}
