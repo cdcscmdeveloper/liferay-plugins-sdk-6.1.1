@@ -9320,6 +9320,19 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			attachment.setDocNo(getManagedBean().getScQt().getQtNo());
 			scAttachment = attachment;
 			uploadAttachment(event.getFile(), scAttachment);
+			
+			int index = 0;
+			if (CollectionUtils.isNotEmpty(getManagedBean().getEndorsementReports())
+			    && this.getManagedBean().getEndorsementReports().size() > 0) {
+			  index = getManagedBean().getEndorsementReports().size() + 1;
+			} else {
+				index = 1;
+			}
+			String fileName = scAttachment.getFileName();
+			
+			if (index >= 0 && fileName != null) {
+				scAttachment.setFileName(index + UNDER_SCORE + fileName);
+			}
 		}
 	}
 	
