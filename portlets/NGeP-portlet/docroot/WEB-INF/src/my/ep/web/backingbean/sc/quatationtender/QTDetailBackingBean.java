@@ -775,10 +775,38 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					&& !isPtjAddressTypePresent(qtOrgProfile.getOrgProfileId())) {
 				throw new EpException(MessageConst.ERROR_760450);
 			}
+			
+			ScQt scQt = this.getManagedBean().getQt();
+			
+			/*
+			 * Bug 31610 - To Exclude 9019 to allow 31610 to be merge into SIT
+			 * NOTE: 9019 WHEN COMMIT MAKE SURE CHANGE SUCCESSMESSAGE FROM THIS INTO THE ONE THAT 9019 
+			 */			
+			boolean isFirstSave = scQt.getQtNo() == null && scQt.isBrandNew() ? true : false;
+			
 			validateQtDetails();
-			successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES,
-					ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtNo(), Boolean.FALSE);
-
+			if(isFirstSave){								
+				 /* 
+				  * BUG 31610
+				  * Added WorkflowStatus to cater qt maintenance search result not working
+				  */
+				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+				reqDTO.setDocId(this.getManagedBean().getQt().getQtId());
+				reqDTO.setQtdetail(this.getManagedBean().getQt());
+				IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IQTDetailSO.class);
+				
+				detailSO.updateDraftWorkflowStatus(reqDTO);				
+				 
+				 
+				successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES,
+						ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtNo(), Boolean.TRUE);
+			}else{
+				successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES,
+						ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtNo(), Boolean.FALSE);
+			}
+			/* Bug 31610 END */
 			debugLogger("end of saveQtDetailsAction");
 		} finally {
 
