@@ -3015,6 +3015,8 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		debugLogger("retrieveFinancialSpecDtls::::supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		this.getManagedBean().setActiveIndex(0);
 		this.getManagedBean().setFinancialQtProposalChecklist(scQtProposalChecklist);
+		//Bug #31542 related to #21695 start
+		List<TplSpecAnswer> removeZeroQuantity = new ArrayList<TplSpecAnswer>();
 		IQTProposalSO proposalSO = null;
 
 		try {
@@ -3051,8 +3053,20 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 							}
 						}
 						getManagedBean().getTemplateSpecBean().setSpecAnswerList(specAnswerList);
-					} //#28785-End
+						//#28785-End
+					} 
+					
 				}
+				
+				//Bug #31542 related to #21695 start
+				for(TplSpecAnswer removeZero: getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
+					if(removeZero.getTplSpecZoneQty() != null && removeZero.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0){
+						removeZeroQuantity.add(removeZero);
+					}
+				}
+				
+				getManagedBean().getTemplateSpecBean().getSpecAnswerList().removeAll(removeZeroQuantity);
+				//Bug #31542 related to #21695 end
 				populateFinancialSpecDetailsByZone();
 
 			}
