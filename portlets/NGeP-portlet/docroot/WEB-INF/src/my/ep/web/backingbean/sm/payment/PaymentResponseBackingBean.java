@@ -76,9 +76,15 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			.getProperty("molpay.ipnurl");
 
 	public PaymentResponseBackingBean(){
-		
+		log.info("Enter here const");
 	}
-	
+	//26307 - to handle manual payment
+	private boolean manualPayment = false;
+	public PaymentResponseBackingBean(boolean manualPayment){
+		log.info("Enter here const 2");
+		this.manualPayment = manualPayment;
+	}
+	//end 26307
 	@PostConstruct
 	public void init() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
 		log.info("<<<<<<@PostConstruct>>>>>>>>");
@@ -116,7 +122,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		//Start //26307
 		boolean skipChecking = false;
 		log.info("Enter Init");
-		if(orderId == null){
+		if(orderId == null && !this.manualPayment){
 			SmSupplier supp = SmApplicationUtil.getCurrentSupplier();			
 			if(supp != null){
 				log.info("supplier id =="+supp.getSupplierId());
