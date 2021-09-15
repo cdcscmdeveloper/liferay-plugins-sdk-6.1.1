@@ -28,9 +28,9 @@
 	<!-- 25692 -start- -->
 	<ui:param name="isCmtStatusCompletedAndBefore" value="#{qTDetailBB.isStatusLessThanOrEquals(statusId, QTStatusConst.CMT_COMPLETED, qTDetailBB.cmtOrderedStatuses)}" />
 	<!-- 25692 -end- -->
-	<!-- 26095@hatta - start -->
+	<!-- 26095@hatta -start- -->
 	<ui:param name="isQTClosePermanently" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_CLOSE_PERMANENTLY}" />
-	<!-- 26095@hatta - end -->
+	<!-- 26095@hatta -end- -->
 
 			<table border="0" cellspacing="0" cellpadding="0" width="100%">
 				<tr>
@@ -114,11 +114,11 @@
 										action="#{qTDetailBB.qtDetailsTabChange(5)}" update="@form"
 										style="white-space: normal;" process="@form"
 										rendered="#{isMaintancePendingChklistStatus and qTDetailBB.displayMenuItem(qTDetailBB.menuItemDocuments)}" />
-									<!-- 26095@hatta - start -->
+									<!-- 26095@hatta -start- -->
 									<p:menuitem value="#{lbl['lbl.sc.qt.close.panel']}"
 										action="#{qTDetailBB.qtDetailsTabChange(5)}" update="@form"
 										process="@form" rendered="#{isQTClosePermanently}" />
-									<!-- 26095@hatta - end -->
+									<!-- 26095@hatta -end- -->
 									<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}"
 										action="#{qTDetailBB.qtDetailsTabChange(6)}" update="@form"
 										process="@form"
@@ -229,14 +229,14 @@
 									</c:choose>
 								</c:when>
 								<c:otherwise>
-									<!-- 26095@hatta - start -->
+									<!-- 26095@hatta -start- -->
 									<c:if test="#{isQTClosePermanently}">
 										<c:if test="#{qTDetailBB.managedBean.activeIndex eq '5'}">
 											<ui:include
 												src="/xhtml/sc/quatationtender/viewQuotationTender.xhtml" />
 										</c:if>
 									</c:if>
-									<!-- 26095@hatta - end -->
+									<!-- 26095@hatta -end- -->
 									<c:if test="#{isQTStatusScheduleDocAndAfter}">
 										<c:if test="#{qTDetailBB.managedBean.activeIndex eq '4'}">
 											<ui:include
