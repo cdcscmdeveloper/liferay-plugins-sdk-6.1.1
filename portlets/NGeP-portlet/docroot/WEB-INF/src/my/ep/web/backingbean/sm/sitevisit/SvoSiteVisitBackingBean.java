@@ -3672,7 +3672,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		
 		for(SmSvTemplate template : getManagedBean().getTemplates()){
 			template.setSmSvWorkers(new ArrayList<SmSvWorker>());
-			//add all workshop workers with the same catcode
 			for(SmFacility fac : svTask.getSmAppl().getSmFacilities()){
 				for(SmSupplierCategoryFacility catFac : fac.getSmSupplierCategoryFacilities()){
 					Long templateL3 = template.getSuppCategory().getPmCategoryL3().getCategoryL3Id();
