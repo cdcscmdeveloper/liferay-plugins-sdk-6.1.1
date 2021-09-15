@@ -74,9 +74,12 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 	public static Logger log = Logger.getLogger(PaymentResponseBackingBean.class);
 	private final String molIpnUrl = EpPropertiesUtils.getInstance()
 			.getProperty("molpay.ipnurl");
-
+	private boolean manualPayment = false;
 	public PaymentResponseBackingBean(){
-		
+		this.manualPayment = false;
+	}
+	public PaymentResponseBackingBean(boolean manualPayment){
+		this.manualPayment = manualPayment;
 	}
 	
 	@PostConstruct
@@ -212,7 +215,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		}else{
 			log.info("Testing payment 2");
 			log.info("<<<<<<<>PostConstruct Parameter - STart>>>>>>>>>>>");
-			if(orderId != null){
+			if(orderId != null && !this.manualPayment){
 				log.info("Testing payment enter if");
 				Long ordId = Long.valueOf(orderId);
 				IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
