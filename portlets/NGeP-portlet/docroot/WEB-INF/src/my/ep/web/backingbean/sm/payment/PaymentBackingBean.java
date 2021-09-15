@@ -230,7 +230,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		PaymentReqDTO reqDTO = new PaymentReqDTO();
 		reqDTO.setBillId(this.getManagedBean().getPyBill().getBillId());
 		PendingPaymentResDTO resDTO = reqSO.checkAlreadyDonePayement(reqDTO);
-		
+				
 		if(resDTO.isFoundCompletePayment()){
 			log.info("<<<< Failure Payment - Bill ID >>>> "+reqDTO.getBillId());
 			throw new EpException(MessageConst.ERROR_721055);
@@ -515,7 +515,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 
 		}
 		
-		PaymentResponseBackingBean paymentRespBB = new PaymentResponseBackingBean(false);
+		PaymentResponseBackingBean paymentRespBB = new PaymentResponseBackingBean();
 		if (paymentStatus && paymentId != null) {
 			//PaymentAcknowledgeBackingBean paymentAckBB = new PaymentAcknowledgeBackingBean();
 			paymentRespBB.getManagedBean().setPaymentId(paymentId);
@@ -680,20 +680,12 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			System.out.println("getPaymentType == " + getManagedBean().getPaymentType());
 			System.out.println("getBillType ===== " + pyBill.getBillType());
 			
-			log.info("Payment lalu sini 1>>>>>");
 			PaymentResDTO pymtResDTO = reqSO.updatePayment(pymtReqDTO);
-			log.info("Lepas update payment 1>>>>>");
-			
+		
 			showPaymentResponse(status, ordId, null, pyBill.getBillType());
 			this.renewSesionObject();
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
-			log.info("Fc here =="+fc.getMessageList());
-			if(fc.getMessageList() != null){
-				for(int i=0;i<fc.getMessageList().size();i++){
-					log.info("MEssage :"+fc.getMessageList().get(0));
-				}
-			}
 			fc.getApplication()
 			.getNavigationHandler()
 			.handleNavigation(fc, null,
