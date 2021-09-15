@@ -5256,6 +5256,9 @@ public class SpecificationBackingBean extends
 											.getPanelItemCategory())) {
 						this.getManagedBean().setSpecNewable(false);
 						this.getManagedBean().setUpdateSpec(false);
+						//31499
+						this.getManagedBean().setSpecificFlag(true);
+						//31499
 					} else if ((null != this.getManagedBean()
 							.getPanelItemCategory() && !"".equals(this
 							.getManagedBean().getPanelItemCategory()))
@@ -6698,6 +6701,9 @@ public class SpecificationBackingBean extends
 										.getPanelItemCategory())) {
 					this.getManagedBean().setSpecNewable(false);
 					this.getManagedBean().setUpdateSpec(false);
+					//31499
+					this.getManagedBean().setSpecificFlag(true);
+					//31499
 				}
 			}
 			/*
@@ -17063,6 +17069,9 @@ public class SpecificationBackingBean extends
 									.getPanelItemCategory())) {
 						this.getManagedBean().setSpecNewable(false);
 						this.getManagedBean().setUpdateSpec(false);
+						//31499
+						this.getManagedBean().setSpecificFlag(true);
+						//31499
 					} else if ((null != this.getManagedBean().getPanelItemCategory() && !"".equals(this
 							.getManagedBean().getPanelItemCategory()))
 							&& ParameterConst.ITEM_CATEGORY_TYPE_GENERAL.equalsIgnoreCase(this.getManagedBean()
