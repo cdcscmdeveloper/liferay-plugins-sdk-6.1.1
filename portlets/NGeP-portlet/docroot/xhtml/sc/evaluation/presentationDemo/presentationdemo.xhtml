@@ -39,7 +39,7 @@
 
 
 			<p:column headerText="#{lbl['lbl.sc.total.score']}"
-				style="width:15%; text-align:center;">
+				style="width:20%; text-align:center;">
 				<p:inputText value="#{demoSupplier.totalUserScore}"
 					style="text-align:right" maxlength="10"
 					disabled="true">
@@ -55,7 +55,7 @@
 					value="/#{evaluationBackingBean.managedBean.userScores}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.remarks']}" style="width:30%; text-align:center;">
+			<p:column headerText="#{lbl['lbl.sc.remarks']}" style="width:25%; text-align:center;">
 				<p:inputTextarea rows="2" cols="40" maxlength="200" onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);" onmouseout="limitTextArea(this,200);" 
 				value="#{demoSupplier.remark}" disabled="#{evaluationBackingBean.managedBean.readOnly}">
 					<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
@@ -68,7 +68,7 @@
 				<h:panelGroup id="demoSupplierAttach">
 					<ac:scSingleFileUploadButton id="attachedIdsDemoDtl"
 						popupWidgetVar="demoSupplierAttachDlg"
-						attachment="#{evaluationBackingBean.retrieveDemoSupplierAttachment(demoSupplier.scQtProposal.supplierNo)}"
+						attachment="#{evaluationBackingBean.retrieveDemoSupplierAttachment(demoSupplier.scQtProposal.supplierNo.toString())}"
 						deleteFileUploadListener="evaluationBackingBean.deleteProposalDemoUploadFile"
 						readonly="#{evaluationBackingBean.managedBean.readOnly}">
 						<f:setPropertyActionListener for="actionEvent"
