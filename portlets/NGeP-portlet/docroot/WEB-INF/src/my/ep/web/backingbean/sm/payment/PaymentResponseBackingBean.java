@@ -213,13 +213,14 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			log.info("Testing payment 2");
 			log.info("<<<<<<<>PostConstruct Parameter - STart>>>>>>>>>>>");
 			if(orderId != null){
+				log.info("Testing payment enter if");
 				Long ordId = Long.valueOf(orderId);
 				IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
 				PaymentReqDTO reqDTO = new PaymentReqDTO();
 				reqDTO.setPaymentId(ordId);
 				PaymentResDTO resDTO = reqSO.retrievePaymentInfoByPaymentId(reqDTO);
 
-				if(resDTO.getPyPayment() != null && ordId != null){
+				if(resDTO.getPyPayment() != null && ordId != null){ log.info("Testing payment enter second if");
 					String vKey = SmCommonUtil.getInstance().getPaymentGatewayVKeyByBillType(resDTO.getPyPayment().getPyBill().getBillType());
 					// To verify the data integrity sending by MOLPay
 					String key0 = SmCommonUtil.md5(tranID + orderId + status + domain + amount + currency);
@@ -255,6 +256,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 						showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES,null,null,null,null);
 					}
 				}else{
+					log.info("Testing payment exit second if");
 					showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES,null,null,null,null);
 				}
 				log.info("<<<<<<<>PostConstruct Parameter - End>>>>>>>>>>>");
