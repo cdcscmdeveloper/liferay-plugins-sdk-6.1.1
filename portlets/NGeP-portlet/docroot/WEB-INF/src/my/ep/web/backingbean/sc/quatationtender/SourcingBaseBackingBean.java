@@ -4797,7 +4797,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 			
 			briefingReport.setScQtFinalizationReportAttachment(reportAttachment);
-			saveScQtFinalizationReport(briefingReport);
+			//saveScQtFinalizationReport(briefingReport);
 			// #18685 - End
 			
 		}
