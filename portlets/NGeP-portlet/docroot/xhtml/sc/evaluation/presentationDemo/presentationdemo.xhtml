@@ -80,12 +80,12 @@
 
 			<p:column headerText="#{lbl['lbl.txt.action']}" style="width:25%; text-align:center;">
 				<p:commandButton value="#{lbl['lbl.btn.evaluate']}"
-					rendered="#{demoSupplier.totalScore == null}"
+					rendered="#{demoSupplier.totalUserScore == null and evaluationBackingBean.managedBean.taskName == SCProcessNameConst.FINALISE_DEMO_TEC_EVALUATION}"
 					process="@this" partialSubmit="true"
 					action="#{evaluationBackingBean.presentationDemoScoring(demoSupplier.scQtProposal.supplierNo, demoSupplier)}" />
 					
 						<p:commandButton value="#{lbl['lbl.btn.view']}"
-					rendered="#{demoSupplier.totalScore != null}"
+					rendered="#{demoSupplier.totalUserScore != null or evaluationBackingBean.managedBean.taskName != SCProcessNameConst.FINALISE_DEMO_TEC_EVALUATION}"
 					process="@this" partialSubmit="true"
 					action="#{evaluationBackingBean.presentationDemoScoring(demoSupplier.scQtProposal.supplierNo, demoSupplier)}" />
 			</p:column>
