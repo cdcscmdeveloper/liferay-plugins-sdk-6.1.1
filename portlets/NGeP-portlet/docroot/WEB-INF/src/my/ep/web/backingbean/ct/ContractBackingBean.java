@@ -422,6 +422,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}
 				this.getManagedBean().getContractVer().getItemAttachments().remove(getManagedBean().getAttachFileIndex());
 		}
+		//#26186 start
+		else if(event.getComponent().getId().equalsIgnoreCase("delDisciplinaryAttachmentId")){
+			attachment = getManagedBean().getContractVer().getDisciplinaryActionAttachments().get(this.getManagedBean().getAttachFileIndex());
+			if(attachment.getAttachmentId() != null){
+				getManagedBean().getDeleteAttachmentList().add(attachment);
+			}
+			getManagedBean().getContractVer().getDisciplinaryActionAttachments().remove(this.getManagedBean().getAttachFileIndex());
+		}
+		//#26186 end
 		//#29549 start
 		else if(event.getComponent().getId().equalsIgnoreCase("delMeetingAmendmentAttachId")){
 			attachment = getManagedBean().getContractVer().getCtAmendment().getCtMeetings().get(this.getManagedBean().getAttachFileIndex()).getMeetingAmendmentAttachment();
@@ -575,22 +584,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 		getManagedBean().getContractVer().getScheduleAttachments().remove(index);
 	}
-	
-	//26186 start
-	/**
-	 * The method used to delete disciplinary action attachment from the list.
-	 * 
-	 * @param index  file index of attachment list
-	 */
-	public void deleteDisciplinaryAttachmentAction(int index) {
-		CtAttachment attachment = getManagedBean().getContractVer().getDisciplinaryActionAttachments().get(index);
-		if(attachment.getAttachmentId() != null){
-			getManagedBean().getDeleteAttachmentList().add(attachment);
-		}
-		getManagedBean().getContractVer().getDisciplinaryActionAttachments().remove(index);
-	}
-	//26186 end
-	
+		
 	/**
 	 * The method used to retrieve the address of supplier.
 	 * 
