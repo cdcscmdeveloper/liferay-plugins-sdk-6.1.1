@@ -1769,6 +1769,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean committeeAppointmentMenuTab = true;
 	//29464-end
 	
+	//#31499
+	private boolean specificFlag;
+	//#31499
+	
 	//#29732
 			private boolean newCategory = false;
 			
@@ -1779,6 +1783,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			private List<PmRemarkCategory> remarkHistoryList;
 			
 			// #29732 End 
+	
 	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -11025,6 +11030,15 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			this.remarkHistoryList = remarkHistoryList;
 		}
 
+		//#31499
+		public boolean isSpecificFlag() {
+			return specificFlag;
+		}
+
+		public void setSpecificFlag(boolean specificFlag) {
+			this.specificFlag = specificFlag;
+		}
+		//#31499
 }
 
 // ***25201
