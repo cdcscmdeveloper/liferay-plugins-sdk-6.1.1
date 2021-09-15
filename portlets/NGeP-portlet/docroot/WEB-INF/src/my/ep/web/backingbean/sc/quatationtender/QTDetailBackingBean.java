@@ -2649,7 +2649,9 @@ public class QTDetailBackingBean extends
 			QuationTenderResDTO resDTO = null;
 
 			reqDTO.setQtdetail(scQt);
-			reqDTO.setAvaliableApprovals(scQt.getScQtApprovals());
+			// #25692 Lazy error fix Approval tab. -start-
+			// reqDTO.setAvaliableApprovals(scQt.getScQtApprovals());
+			// #25692 Lazy error fix Approval tab. -end-
 			reqDTO.setAmendMentBean(this.getManagedBean().getAmendMentBean());
 			reqDTO.setDeskOfficer(new FacesScopes().getUserSessionBean());
 			// reqDTO.setRuleDataBean(this.getManagedBean().getRuleDataBean());
