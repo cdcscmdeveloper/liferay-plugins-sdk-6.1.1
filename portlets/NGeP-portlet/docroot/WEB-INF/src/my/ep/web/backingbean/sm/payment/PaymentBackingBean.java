@@ -688,6 +688,12 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			this.renewSesionObject();
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
+			log.info("Fc here =="+fc.getMessageList());
+			if(fc.getMessageList() != null){
+				for(int i=0;i<fc.getMessageList().size();i++){
+					log.info("MEssage :"+fc.getMessageList().get(0));
+				}
+			}
 			fc.getApplication()
 			.getNavigationHandler()
 			.handleNavigation(fc, null,
