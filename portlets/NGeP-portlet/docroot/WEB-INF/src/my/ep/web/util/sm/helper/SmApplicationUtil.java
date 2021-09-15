@@ -13408,7 +13408,7 @@ public class SmApplicationUtil {
 				resultList = rejectReasons;
 			} else {
 				for (PmReasonDesc tmp : rejectReasons) {
-					if (StringUtils.upperCase(tmp.getReasonDesc()).equalsIgnoreCase(
+					if (StringUtils.upperCase(tmp.getReasonDesc()).contains(
 							StringUtils.upperCase(searchQuery))) {
 						resultList.add(tmp);
 					}
