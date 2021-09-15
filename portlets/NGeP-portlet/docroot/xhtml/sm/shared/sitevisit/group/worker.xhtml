@@ -46,11 +46,12 @@
 				<f:facet name="header">
 					#{lbl['lbl.sm.employee.idtype']}
 				</f:facet>
-				<p:selectOneMenu id="empIdTypeId" size="50" required="true"
-						label="#{lbl['lbl.sm.employee.idtype']}"
+				<p:selectOneMenu id="empIdTypeId" size="50" disabled="#{viewFlag}" label="#{lbl['lbl.sm.employee.idtype']}"
+						required="#{empty param['disabledValidation'] and empty param['disableMsgAutoUpdate'] and empty param['disabledValidation']}" 
 						value="#{svWorker.identificationTypeId}">
 						<f:selectItems value="#{svoSiteVisitBackingBean.managedBean.identificationTypes}" />
-						<p:ajax listener="#{svoSiteVisitBackingBean.changeWorkerIdentificationType(svWorker)}"/>
+						<p:ajax event="change" process="@form" 
+							listener="#{svoSiteVisitBackingBean.changeWorkerIdentificationType(svWorker)}"/>
 				</p:selectOneMenu>
 				<ac:smFieldChangeAlertSVO
 					isShow="#{not empty svWorker and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
