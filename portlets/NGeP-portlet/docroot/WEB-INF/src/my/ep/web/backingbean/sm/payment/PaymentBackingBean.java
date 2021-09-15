@@ -514,8 +514,8 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			break;
 
 		}
-		
-		PaymentResponseBackingBean paymentRespBB = new PaymentResponseBackingBean();
+		//26307 - to handle manual payment
+		PaymentResponseBackingBean paymentRespBB = new PaymentResponseBackingBean(false);
 		if (paymentStatus && paymentId != null) {
 			//PaymentAcknowledgeBackingBean paymentAckBB = new PaymentAcknowledgeBackingBean();
 			paymentRespBB.getManagedBean().setPaymentId(paymentId);
