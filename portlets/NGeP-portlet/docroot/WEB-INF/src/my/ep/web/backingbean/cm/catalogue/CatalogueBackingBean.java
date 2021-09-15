@@ -296,6 +296,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	private static final String NAV_TO_DA = "/xhtml/cm/shared/applicationView/cmDisciplinaryActionViewOnly.xhtml";
 
 	// [#26282] disciplinary action - end
+	
+	private boolean declareChecked; //#30457
 
 	public CatalogueBackingBean() {
 		initSchPhaseTable();
@@ -11429,6 +11431,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			}
 		}
 		RequestContext.getCurrentInstance().execute("updateDeclareDialog.show()");
+	}
+	
+	public boolean isDeclareChecked() {
+		return declareChecked;
+	}
+
+	public void setDeclareChecked(boolean declareChecked) {
+		this.declareChecked = declareChecked;
 	}
 	
 	//#30457 - farid - end

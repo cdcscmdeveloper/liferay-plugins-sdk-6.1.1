@@ -99,7 +99,7 @@
 				<h:outputText value="#{lbl['lbl.cm.suptemp.upload.image']}" escape="false"/>
 			</f:facet>
 			<p:commandLink action="#{catalogueBackingBean.loadBasicImageDialog(rowIndex,true)}"
-			update=":form:uplimg:imageAndBasicId" oncomplete="imageBasicDialog.show()" >
+			update=":form:imageAndBasicId" oncomplete="imageBasicDialog.show()" >
 				<p:graphicImage id="uploadImage" value="/css/images/design/document.png" 
 				title="#{lbl['lbl.cm.suptemp.upload.image.tooltip']}" /> 
 			</p:commandLink>
@@ -136,9 +136,8 @@
 	</p:dataTable>
 </h:panelGroup>
 <!-- #30457 start-->
-<h:form id="uplimg" enctype="multipart/form-data">
-	<ui:param name="multipleFile" value="false"/>
-	<ui:include src="imageAndBasicPopup.xhtml" />
-</h:form>
+<ui:param name="multipleFile" value="false"/>
+<ui:param name="updateImg" value=":form:imageUploadId"/>
+<ui:include src="imageAndBasicPopup.xhtml" />
 <!-- #30457 end-->
 </ui:composition>

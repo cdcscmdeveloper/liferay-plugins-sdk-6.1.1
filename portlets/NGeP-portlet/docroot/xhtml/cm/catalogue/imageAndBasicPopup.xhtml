@@ -7,6 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 	
+	<!-- Image Upload Dialog Start -->
 	<style type="text/css">
 		#imageAndBasicId.ui-dialog {
 		position: fixed !important;
@@ -64,7 +65,7 @@
 									<p:column width="15%" headerText="#{lbl['lbl.cm.action']}" style="text-align: center;">
 										<p:commandLink process="@this"
 											title="Delete" action="#{catalogueBackingBean.deleteImageFromPopup(rowIndex)}" 
-											update=":form:uplimg:imageUploadId" 
+											update="#{updateImg}" 
 											disabled="#{catalogueBackingBean.managedBean.viewOnlyBasicPopup}">
 											<p:graphicImage style="padding-top:10px;"
 												value="/css/images/design/trash.png"
@@ -143,4 +144,73 @@
 			</p:outputPanel>
 	
 	</p:dialog>
+
+	<!-- Image Upload Dialog End -->
+
+
+	<!-- Declaration Dialog Start -->
+	<style>
+			#{cc.attrs.dialogCSS}
+			.confirm-ui-dialog{
+				max-width: 500px;
+				width: auto;
+			}
+			.confirm-ui-dialog .ui-dialog-content table{
+				margin: auto;
+			}
+			.confirm-ui-dialog .ui-dialog-content table td label {
+				white-space: normal;
+				padding-left: 5px;
+				display: inline !important;
+				float: none !important;
+			}
+			.confirm-ui-dialog .ui-dialog-content{
+				padding: 1em 1em !important;
+				height: auto !important;
+			}
+			.confirm-ui-dialog .ui-dialog-content span img{
+				margin-top: -4px;
+			}
+			.confirm-ui-dialog .ui-dialog {
+			position: fixed !important;
+			}
+		
+		</style>
+		<p:dialog styleClass="confirm-ui-dialog" id="updateDeclareDialog" widgetVar="updateDeclareDialog"
+			header="#{lbl['lbl.cm.dialog.cofirm.header']}" resizable="true"
+			width="410" height="200" closable="true" modal="true">
+			
+			<p:outputPanel id="updateDeclareDialogPopup" layout="block">
+			<table width="100%">
+				<tr><td colspan="2" style="padding-bottom: 10px; vertical-align: top;">
+					<p:outputLabel value="#{lbl['lbl.cm.suptemp.publish.sure']}" style="float: left;"/><br/>
+				</td></tr>
+				<tr>
+					<td align="center" style="white-space: normal; word-wrap: break-word !important; vertical-align: top;">
+						<p:selectBooleanCheckbox id="isDeclareChkBox" style="float:left;"
+							value="#{catalogueBackingBean.declareChecked}">
+							<f:ajax render="btnSection" />
+						</p:selectBooleanCheckbox>
+					</td>
+					<td>
+						<p:outputLabel style="white-space: normal; word-wrap: break-word !important; vertical-align: top;" 
+						value="#{lbl['lbl.cm.suptemp.publish.declare']}"/>
+					</td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:remoteCommand name="rc" update="@form" action="#{catalogueBackingBean.submitToReviewItems(false)}"
+				oncomplete="updateDeclareDialog.hide();"/>
+				<p:outputPanel id="btnSection">
+					<p:commandButton id="yesWithLoadId" value="#{lbl['lbl.btn.yes']}"
+						disabled="#{not catalogueBackingBean.declareChecked}"
+						onclick="rc()"/>
+			    	<p:commandButton id="noWithoutActionId" value="#{lbl['lbl.btn.no']}" immediate="true"
+						oncomplete="updateDeclareDialog.hide();" />
+				</p:outputPanel>
+			</div>
+			</p:outputPanel>
+		</p:dialog>
+	<!-- Declaration Dialog End -->
 </ui:composition>
