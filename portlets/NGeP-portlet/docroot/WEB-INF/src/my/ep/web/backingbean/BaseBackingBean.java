@@ -117,7 +117,7 @@ import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.exceptionhandler.EpExceptionHandler;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.managedbean.sm.SmApplicationManagedBean;
+import my.ep.web.managedbean.UserTasks;
 import my.ep.web.managedbean.sm.postsupplierregistration.PostSupplierRegistrationManagedBean;
 import my.ep.web.util.AddressUtils;
 import my.ep.web.util.CommonUtils;
@@ -132,11 +132,11 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -2343,6 +2343,27 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	return uomCodeDesc;	
 	}
 	
+	// #25692, original by #25201 -start-
+	/**
+	 * Determine if user for current session have role
+	 * 
+	 * @param roleCodes
+	 * @return
+	 */
+	public Boolean userHasRole(RoleCode[] roleCodes) {
+		FacesScopes faceScopes = new FacesScopes();
+		
+		if (roleCodes != null && roleCodes.length > 0) {
+			for (int i = 0; i < roleCodes.length; i++) {
+				if (faceScopes.hasRoleUser(roleCodes[i].value()))
+					return true;
+			}
+		}
+		
+		return false;
+	}
+	// #25692, original by #25201 -end-
+	
 	//16052019 - SSM INTEGRATION CR - Fahmi
 			public boolean businessTypeTovalidateWithSSM(String regNo,String businessType){
 				//String regNo = this.getManagedBean().getSmSupp().getRegNo();
@@ -2409,7 +2430,50 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				}
 				return "";
 			}
-	
+
+	// #25692 -start-
+	public Boolean userHasUserTask(UserTasks[] uts) {
+		for (int i = 0; i < uts.length; i++) {
+			if (userHasUserTask(uts[i])) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	/**
+	 * To determine user's UserTasks in getManagedBean()
+	 * 
+	 * @param ut
+	 *            - userTask to be tested
+	 * @return
+	 */
+	public Boolean userHasUserTask(UserTasks ut) {
+		if (getManagedBean().getUserTasks() != null && !CollectionUtils.isEmpty(getManagedBean().getUserTasks())) {
+			if (getManagedBean().getUserTasks().contains(ut)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	public Boolean userHasUserTask(String ut) {
+		if (getManagedBean().getUserTasks() != null && !CollectionUtils.isEmpty(getManagedBean().getUserTasks())) {
+			Object[] t = getManagedBean().getUserTasks().toArray();
+			
+			for (int i = 0; i < t.length; i++) {
+				if (((UserTasks) t[i]).toString().equals(ut)) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	// #25692 -end-
+			
 	//16052019 - SSM INTEGRATION CR
 	public boolean showGreenIconSsm(Boolean ssmData,boolean isSsmAppl,boolean isNullValue){
 		boolean showIcon = false;
@@ -2651,4 +2715,46 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return "";
 	}
 	//25792 - end
+	
+	//#25692 -start-
+	/**
+	 * Check if Status less than or equals from status.
+	 * 
+	 * @param currentStatusId
+	 * 		the current status id
+	 * @param toStatusId
+	 * 		the to status id
+	 * @param orderedStatusArr
+	 * 		ordered status array
+	 * @return	the indicator qt status less than from status.
+	 */
+	public boolean isStatusLessThanOrEquals(Long currentStatusId, Long toStatusId, Long[] orderedStatusArr) {
+		List<Long> orderedStatuses = Arrays.asList(orderedStatusArr);
+
+		if (orderedStatuses.indexOf(currentStatusId) < 0)
+			return false;
+
+		if (orderedStatuses.indexOf(toStatusId) < 0)
+			return false;
+
+		return orderedStatuses.indexOf(currentStatusId) <= orderedStatuses.indexOf(toStatusId);
+	}
+	//#25692 -end-
+	
+	/*** 25692#95 - start ***/
+	public String getTempManagedBeanName() {
+		return managedBeanName + "_Temp";
+	}
+	
+	/**
+	 * set reference of managedBean to null. Not removing managedBean from session.
+	 */
+	public void nullifyManagedBean() {
+		this.managedBean = null;
+	}
+
+	protected String getManagedBeanName() {
+		return managedBeanName;
+	}	
+	/*** 25692#95 - end ***/	
 }
