@@ -258,7 +258,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	private static final String UTF = "UTF-8";
 	
 	// #18685 - Start
-	private static final String  UNDER_SCORE = "_";
+	protected static final String  UNDER_SCORE = "_";
 	// #18685 - End
 
 	/**
