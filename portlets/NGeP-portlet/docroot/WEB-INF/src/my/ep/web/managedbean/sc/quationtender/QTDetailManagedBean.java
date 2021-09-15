@@ -1573,6 +1573,12 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private String fileDirectory;
 	// 26095@hatta*** - end
 
+	// #25692-start
+	private boolean isApprovalScreen = false;
+	private Long subStatusId;
+	private List<String> paramTypes = null;
+	// #25692-End
+
 	/**
 	 * Sets the panel suppliers.
 	 * 
@@ -1584,6 +1590,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	private ScQtApprovalRequest scQtApprovalDtls;
+	
+	// ***25692 -start-
+	/*
+	 * approval. some part is readOnly, some part is updatable 
+	 */
+	private boolean approvalEditableSection;
+	// ***25692 -end-
 
 	/**
 	 * Instantiates a new QT detail managed bean.
@@ -9934,5 +9947,53 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.fileDirectory = fileDirectory;
 	}
 	// 26095@hatta - end
+	
+	// #25692 start
+	public boolean isApprovalEditableSection() {
+		return approvalEditableSection;
+	}
+
+	public void setApprovalEditableSection(boolean approvalEditableSection) {
+		this.approvalEditableSection = approvalEditableSection;
+	}
+
+	public boolean isApprovalScreen() {
+		return isApprovalScreen;
+	}
+
+	public void setApprovalScreen(boolean isApprovalScreen) {
+		this.isApprovalScreen = isApprovalScreen;
+	}
+
+	/**
+	 * @return the subStatusId
+	 */
+	public Long getSubStatusId() {
+		return subStatusId;
+	}
+
+	/**
+	 * @param subStatusId
+	 *            the subStatusId to set
+	 */
+	public void setSubStatusId(Long subStatusId) {
+		this.subStatusId = subStatusId;
+	}
+
+	/**
+	 * @return the paramTypes
+	 */
+	public List<String> getParamTypes() {
+		return paramTypes;
+	}
+
+	/**
+	 * @param paramTypes
+	 *            the paramTypes to set
+	 */
+	public void setParamTypes(List<String> paramTypes) {
+		this.paramTypes = paramTypes;
+	}
+	// #25692 End
 
 }

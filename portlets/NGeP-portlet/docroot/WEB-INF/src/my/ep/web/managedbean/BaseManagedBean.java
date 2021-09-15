@@ -5,21 +5,19 @@ package my.ep.web.managedbean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.faces.model.SelectItem;
 
-import org.apache.commons.collections.CollectionUtils;
-
-import org.apache.commons.lang3.StringUtils;
-
 import my.ep.dto.sm.common.ssm.SsmResDTO;
-import my.ep.persistence.entity.sc.common.ScAttachment;
-import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationReport;
-import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.web.bean.tpl.TemplateSpecBean;
+
+import org.apache.commons.collections.CollectionUtils;
 
 /**
  * @author siew mei
@@ -44,6 +42,10 @@ public abstract class BaseManagedBean implements Serializable {
 	private List<SelectItem> localAuthorityItems;
 	private String captchaText;
 	private String captchaAnswer;
+	// #25692 -start-
+	private Set<UserTasks> userTasks;
+	private Map<String, List<String>> additionalPages;
+	// #25692 -end-
 	//27382
 	private boolean errorInvalidSelfRequest;
 	private boolean autoUpdate = Boolean.TRUE;	
@@ -341,6 +343,75 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setStatusDescFromSSM(String statusDescFromSSM) {
 		this.statusDescFromSSM = statusDescFromSSM;
 	}
+	
+	// #25692 -start-
+	public Set<UserTasks> getUserTasks() {
+		return userTasks;
+	}
+
+	public void setUserTasks(Set<UserTasks> userTasks) {
+		this.userTasks = userTasks;
+	}
+
+	public void addUserTasks(UserTasks userTask) {
+		if (this.userTasks == null) {
+			userTasks = new HashSet<UserTasks>();
+		}
+		
+		userTasks.add(userTask);
+	}
+
+	public void removeUserTasks(UserTasks userTask) {
+		if (this.userTasks != null && !CollectionUtils.isEmpty(userTasks)) {
+			userTasks.remove(userTask);
+		}
+	}
+
+	public Map<String, List<String>> getAdditionalPages() {
+		return additionalPages;
+	}
+
+	public void setAdditionalPages(Map<String, List<String>> additionalPages) {
+		this.additionalPages = additionalPages;
+	}
+
+	public void addAdditionalPages(String k, String page) {
+		if (this.additionalPages == null) {
+			this.additionalPages = new HashMap<String, List<String>>();
+			
+			List<String> t = new ArrayList<String>();
+			
+			this.additionalPages.put(k, t);
+		}
+		
+		if (!this.additionalPages.containsKey(k) || this.additionalPages.get(k) == null) {
+			List<String> t = new ArrayList<String>();
+			
+			this.additionalPages.put(k, t);
+		}
+		
+		this.additionalPages.get(k).add(page);
+	}
+
+	/**
+	 * Copy BPM TaskDetails to another instance of BaseManagedBean
+	 * 
+	 * @param bm
+	 *            - another BaseManagedBean instance
+	 */
+	public void copyBPMTaskDetails(BaseManagedBean bm) {
+		bm.setToken(this.token);
+		bm.setTaskId(this.taskId);
+		bm.setOutComes(this.outComes);
+		bm.setCurrentStatusId(this.currentStatusId);
+		bm.setTaskName(taskName);
+		bm.setAssignedState(this.isAssignedState);
+		bm.setPayLoad(this.payLoad);
+		bm.setProcessName(this.processName);
+		bm.setGroupTask(this.groupTask);
+		bm.setReadOnly(this.isReadOnly);
+	}
+	// #25692 -end-
 	
 	public SmSupplier getSmSupplierSsm() {
 		return smSupplierSsm;

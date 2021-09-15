@@ -19,6 +19,9 @@ public interface QTConstants {
 	public static final String CLOSED_DATE = "closingDate";
 	public static final String STATUS = "";
 
+	// #25692 -start-
+	public static final String MAINTANANCE_PAGE_FULL = "/xhtml/sc/quatationtender/quatationtendercreation.xhtml";
+	// #25692 -end-
 	public static final String MAINTANANCE_PAGE = "quatationtendercreation";
 	public static final String BO_MAINTANANCE_PAGE = "/xhtml/sc/quatationtender/businessowner/businessownercreation.xhtml";
 	public static final String SEARCH_PAGE = "/xhtml/sc/quatationtender/quatationtendersearch.xhtml";
@@ -216,6 +219,10 @@ public interface QTConstants {
 	public static final String HTML_GREATER_THEN = "&#62;";
 	
 	public static final String PORTLET_NAME_QT_MAINTENANCE = "scQuotationTender_WAR_NGePportlet";
+	// ***25692#19 - start
+	public static final String PORTLET_NAME_APPROVAL = "QTApproval_WAR_NGePportlet";
+	// ***25692#19 - end
+	
 	public static final String PORTLET_NAME_QT_SUPPLIER_INVITATION = "scSupplierInvitationQt_WAR_NGePportlet";
 	public static final String FINANCIAL_SUMMARY_PACKAGE_MARGIN="FPM";
 	public static final String FINANCIAL_SUMMARY_ITEM="FI";
