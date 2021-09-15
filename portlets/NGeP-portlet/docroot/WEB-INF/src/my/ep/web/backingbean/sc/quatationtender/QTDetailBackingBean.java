@@ -795,7 +795,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			/*
 			 * Bug 31610 - To Exclude 9019 to allow 31610 to be merge into SIT
 			 * NOTE: 9019 WHEN COMMIT MAKE SURE CHANGE SUCCESSMESSAGE FROM THIS INTO THE ONE THAT 9019 
-			 */			
+			 * INCLUDE BACK 9019
+			 * */
 			boolean isFirstSave = scQt.getQtNo() == null && scQt.isBrandNew() ? true : false;
 			
 			validateQtDetails();
@@ -813,8 +814,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				
 				detailSO.updateDraftWorkflowStatus(reqDTO);				
 				 
-				 
-				successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES,
+
+				successMessage(MessageConst.INFO_7000044, ParameterTypeConst.DOCUMENT_TYPES,
 						ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtNo(), Boolean.TRUE);
 			}else{
 				successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES,
