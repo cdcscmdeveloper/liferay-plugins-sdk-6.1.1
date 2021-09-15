@@ -29,14 +29,16 @@
 				<td>
 					<c:choose>
 						<c:when test="#{isStatusPendingPublicationApproval}">
+							<!-- 25692 -start- -->
 							<p:calendar label="#{lbl['lbl.sc.publish.date']}"
-								disabled="#{approvalBackingBean.managedBean.readOnly}"
+								disabled="#{approvalBackingBean.managedBean.readOnly and not approvalBackingBean.inApprovalEditableSection}"
 								mindate="#{approvalBackingBean.handlePublishDate()}"
 								value="#{approvalBackingBean.managedBean.qt.newPublishDate}"
 								id="noticePublish" required="true"
 								maxdate="#{qTScheduleDetailBackingBean.handleMaximumDate()}"
 								pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button"
 								size="15">
+							<!-- 25692 -end- -->
 								<p:ajax event="dateSelect" process="@this"
 									listener="#{qTScheduleDetailBackingBean.handlePublishedDate}"
 									update="publicationApprovalScheduleDetailsId" />
@@ -185,11 +187,13 @@
 		<ui:include src="/xhtml/sc/quatationtender/briefingsitevisit/briefingsitevisitdetails.xhtml" />
 	</c:if>
 	
+	<!-- 25692 -start- -->
 	<ac:scRemarkAndAttachment
 		remarkList="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalRemarks}"
 		showAttachment="false"
-		readonly="#{approvalBackingBean.managedBean.readOnly}"
+		readonly="#{approvalBackingBean.managedBean.readOnly and !approvalBackingBean.managedBean.approvalEditableSection}"
 		instruction="#{approvalBackingBean.isReviceOrReject() ? lbl['lbl.sc.approval.remarks.instruction'] : ''}"
 		autoUpdateValue="#{approvalBackingBean.managedBean.autoUpdate}" />
+	<!-- 25692 -end- -->
 		
 </ui:composition>
