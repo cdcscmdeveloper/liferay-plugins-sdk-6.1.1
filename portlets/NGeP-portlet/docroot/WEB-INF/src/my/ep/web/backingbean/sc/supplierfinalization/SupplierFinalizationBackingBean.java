@@ -9101,6 +9101,21 @@ return	remarksNotFound;
 			attachment.setDocNo(getManagedBean().getScQt().getQtNo());
 			scAttachment = attachment;
 			uploadAttachment(event.getFile(), scAttachment);
+			
+			// #18685 - Start.
+			int index = 0;
+			if (CollectionUtils.isNotEmpty(getManagedBean().getEndorsementReports())
+			    && this.getManagedBean().getEndorsementReports().size() > 0) {
+			  index = getManagedBean().getEndorsementReports().size() + 1;
+			} else {
+				index = 1;
+			}
+			String fileName = scAttachment.getFileName();
+			
+			if (index >= 0 && fileName != null) {
+				scAttachment.setFileName(index + UNDER_SCORE + fileName);
+			}
+			// #18685 - End.
 		}
 	}
 	
@@ -9461,9 +9476,12 @@ return	remarksNotFound;
 	 * @return
 	 * @throws Exception
 	 */
-	private ScQtFinalizationReportAttachment generateDocumentAttachment(ScQtFinalizationReport scQtFinalizationReport) throws Exception {
-		String definitionType = scQtFinalizationReport.getDefinationType().getParameterCode();
-		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+	private ScQtFinalizationReportAttachment generateDocumentAttachment(
+			ScQtFinalizationReport scQtFinalizationReport) throws Exception {
+		String definitionType = scQtFinalizationReport.getDefinationType()
+				.getParameterCode();
+		ScQtFinalization scQtFinalization = getManagedBean()
+				.getScQtFinalization();
 
 		ScQtFinalizationReportAttachment reportAttachment = null;
 		// Commented this condition for #18685.
@@ -10211,6 +10229,151 @@ return	remarksNotFound;
 			return reportAttachment;
 		}
 		// #30567 - End.
+		
+		protected void checkKertasTaklimatReports(List<ScQtFinalizationReport> finalizationReports, List<String> reportTitleList, String taskType){
+			if(CollectionUtils.isNotEmpty(finalizationReports)){
+				int count=0;
+				List<ScQtFinalizationReport> localListReport=new ArrayList<ScQtFinalizationReport>();
+				Iterator<ScQtFinalizationReport> iterator = finalizationReports.iterator();
+				//List<String> localTitle=new ArrayList<String>();
+				String localTitle="Kertas Taklimat ";
+				while(iterator.hasNext()){
+					ScQtFinalizationReport finalizationReport = iterator.next();
+					if(null!=finalizationReport.getPmDocument()){
+						if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equalsIgnoreCase(finalizationReport.getPmDocument().getDocDefinitionKey())) {
+							log.info("=======sourbasebackingBeanTitle===="+finalizationReport.getTitle());
+							if(finalizationReport.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED)){
+							log.info("=======mangatitlecodesexecutes========"+finalizationReport.getPmDocument().getDocName());	
+							count++;
+							localListReport.add(finalizationReport);
+							continue;
+						}
+							// #18685 - Start
+							if (null == getManagedBean().getNewBriefingPaperReportList()) {
+								List<ScQtFinalizationReport> newBriefingPaperReportList = new LinkedList<>();
+								getManagedBean().setNewBriefingPaperReportList(newBriefingPaperReportList );
+							}
+							// #18685 - End
+							if (reportTitleList.contains(finalizationReport.getPmDocument().getDocName())) {
+								getManagedBean().getNewBriefingPaperReportList().add(finalizationReport);
+								// #18685 - Start
+								/*if (QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION.longValue() == getManagedBean().getCurrentStatusId() 
+										&& taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK)) {
+									finalizationReport.setPreviousReportContent(finalizationReport.getReportContent());
+									saveScQtFinalizationReport(finalizationReport);
+								}*/
+								// #18685 - End
+								iterator.remove();
+								continue;
+							} 
+						} 
+						
+						if (taskType.equals(SourcingConstants.CONSOLIDATION_TASK) && finalizationReport.getPmDocument().getDocName().equals(SourcingConstants.UDPUPBM_REPORT)) {
+							// #18685 - Start
+							if (null == getManagedBean().getSfBriefingPaperReportList()) {
+								List<ScQtFinalizationReport> sFBriefingPaperReportList = new ArrayList<>();
+								getManagedBean().setSfBriefingPaperReportList(sFBriefingPaperReportList );
+							}
+							getManagedBean().getSfBriefingPaperReportList().add(finalizationReport);
+							// #18685 - End
+							iterator.remove();
+							continue;
+						}
+						
+						if (taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK) && 
+								(finalizationReport.getPmDocument().getDocName().equals(SourcingConstants.LATAR_BELAKANG_REPORT)
+										|| finalizationReport.getPmDocument().getDocName().equals(SourcingConstants.TUJUAN_REPORT)
+										|| finalizationReport.getPmDocument().getDocName().equals(SourcingConstants.METODOLOGI_PENILAIAN_REPORT)
+										|| finalizationReport.getPmDocument().getDocName().equals(SourcingConstants.UDPUP_REPORT))) {
+							// #18685 - Start
+							if (null == getManagedBean().getConsolidationBriefingPaperReportList()) {
+								List<ScQtFinalizationReport> consolidationBriefingPaperReportList = new ArrayList<>();
+								getManagedBean().setConsolidationBriefingPaperReportList(consolidationBriefingPaperReportList );
+							}
+							getManagedBean().getConsolidationBriefingPaperReportList().add(finalizationReport);
+							// #18685 - End
+							iterator.remove(); 
+							continue;
+							
+						}
+						
+					} 
+					// #18685 - Start.
+					if ("UP".equals(finalizationReport.getDefinationType().getParameterCode()) 
+							&& !finalizationReport.getTitle().contains("Kertas Keputusan")) {
+						getManagedBean().getNewBriefingPaperReportList().add(finalizationReport);
+						iterator.remove();
+					}
+					// #18685 - End.
+				}
+				
+				// #18685 - Start
+				if (taskType.equals(SourcingConstants.CONSOLIDATION_TASK) && CollectionUtils.isNotEmpty(getManagedBean().getNewBriefingPaperReportList())) {
+					List<ScQtFinalizationReport>  tempList = new ArrayList<>();
+					for (String reportName : reportTitleList) {
+						for (ScQtFinalizationReport report : getManagedBean().getNewBriefingPaperReportList()) {
+							if (reportName.equals(report.getPmDocument().getDocName())) {
+								tempList.add(report);
+								break;
+							}
+						}
+					}
+					// #18685 - Start.
+					for (ScQtFinalizationReport report : getManagedBean().getNewBriefingPaperReportList()) {
+						if ("UP".equals(report.getDefinationType().getParameterCode())) {
+							tempList.add(report);
+						}
+					}
+					// #18685 - End.
+					getManagedBean().getNewBriefingPaperReportList().clear();
+					getManagedBean().getNewBriefingPaperReportList().addAll(tempList);
+				}
+				// #18685 - End
+				log.info("=========localListReportsizefirst===="+localListReport.size());
+			/*	if(localListReport.size()>1){
+					log.info("=========localListReportsize===="+localListReport.size());
+					log.info("=========finalizationReportssize===="+finalizationReports.size());
+				finalizationReports.addAll(localListReport);
+				log.info("=========finalizationReportssize2222222===="+finalizationReports.size());
+				localListReport=new ArrayList<ScQtFinalizationReport>();
+				List<String> localTitleList=new ArrayList<String>();
+				for(ScQtFinalizationReport localfinalReport:finalizationReports){
+					if(!localTitleList.contains(localfinalReport.getTitle())){
+						localTitleList.add(localfinalReport.getTitle());
+						localListReport.add(localfinalReport)	;
+					}
+				}
+				finalizationReports.clear();
+				finalizationReports.addAll(localListReport);
+				log.info("=========finalizationReportssize111111111===="+finalizationReports.size());
+				}*/
+				log.info("checkKertasTaklimatReports count"+count);
+				if(count==1){
+					log.info("enter count1"+count);
+					for(ScQtFinalizationReport finalizationReport:finalizationReports){
+						if(null!=finalizationReport.getPmDocument() && SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equalsIgnoreCase(finalizationReport.getPmDocument().getDocDefinitionKey())){
+							finalizationReport.setKertasTaklimatUpload(Boolean.TRUE);	
+						}
+						
+					}	
+				}else if(count>1){
+					log.info("enter countGreaterThan1"+count);
+					 String SPACE = " ";
+					  String reportTitle = ResourceBundleUtils.getMessage("lbl.sc.kertas.taklimat", 
+					 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, SourcingConstants.MY_LOCALE) 
+					 			+ SPACE + "(" + (count-1) + ")";
+					  log.info("reportTitle"+reportTitle);
+					for(ScQtFinalizationReport finalizationReport:finalizationReports){
+						if(null!=finalizationReport.getPmDocument() && SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equalsIgnoreCase(finalizationReport.getPmDocument().getDocDefinitionKey()) && reportTitle.equalsIgnoreCase(finalizationReport.getTitle()) ){
+							finalizationReport.setKertasTaklimatUpload(Boolean.TRUE);	
+							break;
+						}
+						
+					}	
+				}
+			}
+			
+		}
 }
 // ***19336
 
