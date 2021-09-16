@@ -3976,6 +3976,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			}else{
 				RegistrationReqDTO reqDTO = new RegistrationReqDTO();
 				reqDTO.setSmSupp(getManagedBean().getSmSupp());
+				//#31674 - Start
+				reqDTO.setFromStatus("deactivateBasicSupp");
+				//#31674 - End
 				IRegistrationSO reqSO = SmServiceLookup.getRegistrationSO();
 				try {
 					reqSO.updateOnlineAcc(reqDTO);			
