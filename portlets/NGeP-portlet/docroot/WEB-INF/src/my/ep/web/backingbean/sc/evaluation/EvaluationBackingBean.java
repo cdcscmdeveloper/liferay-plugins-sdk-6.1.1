@@ -15966,6 +15966,7 @@ private void retriveCommitteeRemarksList(){
 			this.getManagedBean().setDemoSupplierNo(resDto.getDemoSupplierNo());
 			this.getManagedBean().setScQtDemo(resDto.getScQtDemo());
 			this.getManagedBean().setScQtDemoSupplier(resDto.getScQtDemoSupplier());
+			this.getManagedBean().setQtDemoSupplierNo(supplierNo);
 			}
 		finally {
 
@@ -16014,7 +16015,7 @@ private void retriveCommitteeRemarksList(){
 		return demoSupplier.getScQtDemoSupplierAttachment();
 	}
 
-	public String presentationDemoScoring(String supplierNo, ScQtProposalChecklist demoPropChecklist) {
+	public String presentationDemoScoring(String supplierNo) {
 		
 		retrieveDemoSupplierNo(supplierNo);
 		
@@ -16026,7 +16027,7 @@ private void retriveCommitteeRemarksList(){
 			demoReqDTO.setDemoSupplierNo(this.getManagedBean().getDemoSupplierNo());
 			resDto = qtDemoSO.retrieveByItemListBySupplierId(demoReqDTO);
 			this.getManagedBean().setByItemDemoList(resDto.getByItemList());
-			this.getManagedBean().setQtProposalChecklist(demoPropChecklist);
+//			this.getManagedBean().setQtProposalChecklist(demoPropChecklist);
 			}
 		finally {
 

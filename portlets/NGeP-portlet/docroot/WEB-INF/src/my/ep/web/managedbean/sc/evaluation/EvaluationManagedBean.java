@@ -603,6 +603,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private ScQtDemoSupplier scQtDemoSupplier;
 	private BigDecimal techScore;
 	private BigDecimal otherScore;
+	private String qtDemoSupplierNo;
 	//#28784 - end
 
 	/** The total technical package max score. */
@@ -4110,6 +4111,20 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setOtherScore(BigDecimal otherScore) {
 		this.otherScore = otherScore;
+	}
+	
+	/**
+	 * @return the qtDemoSupplierNo
+	 */
+	public String getQtDemoSupplierNo() {
+		return qtDemoSupplierNo;
+	}
+
+	/**
+	 * @param qtDemoSupplierNo the qtDemoSupplierNo to set
+	 */
+	public void setQtDemoSupplierNo(String qtDemoSupplierNo) {
+		this.qtDemoSupplierNo = qtDemoSupplierNo;
 	}
 	//#28784 - end
 	//#25138 - start
