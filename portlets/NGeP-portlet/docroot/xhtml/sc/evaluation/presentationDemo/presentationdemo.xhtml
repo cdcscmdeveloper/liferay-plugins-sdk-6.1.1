@@ -68,7 +68,7 @@
 				<h:panelGroup id="demoSupplierAttach">
 					<ac:scSingleFileUploadButton id="attachedIdsDemoDtl"
 						popupWidgetVar="demoSupplierAttachDlg"
-						attachment="#{evaluationBackingBean.retrieveDemoSupplierAttachment(demoSupplier.scQtProposal.supplierNo.toString())}"
+						attachment="#{evaluationBackingBean.retrieveDemoSupplierAttachment(demoSupplier.scQtProposal.supplierNo)}"
 						deleteFileUploadListener="evaluationBackingBean.deleteProposalDemoUploadFile"
 						readonly="#{evaluationBackingBean.managedBean.readOnly}">
 						<f:setPropertyActionListener for="actionEvent"
@@ -80,12 +80,12 @@
 
 			<p:column headerText="#{lbl['lbl.txt.action']}" style="width:25%; text-align:center;">
 				<p:commandButton value="#{lbl['lbl.btn.evaluate']}"
-					rendered="#{demoSupplier.totalUserScore == null and evaluationBackingBean.managedBean.taskName == SCProcessNameConst.FINALISE_DEMO_TEC_EVALUATION}"
+					rendered="#{demoSupplier.totalUserScore == null and !evaluationBackingBean.managedBean.readOnly}"
 					process="@this" partialSubmit="true"
 					action="#{evaluationBackingBean.presentationDemoScoring(demoSupplier.scQtProposal.supplierNo, demoSupplier)}" />
 					
 						<p:commandButton value="#{lbl['lbl.btn.view']}"
-					rendered="#{demoSupplier.totalUserScore != null or evaluationBackingBean.managedBean.taskName != SCProcessNameConst.FINALISE_DEMO_TEC_EVALUATION}"
+					rendered="#{demoSupplier.totalUserScore != null or evaluationBackingBean.managedBean.readOnly}"
 					process="@this" partialSubmit="true"
 					action="#{evaluationBackingBean.presentationDemoScoring(demoSupplier.scQtProposal.supplierNo, demoSupplier)}" />
 			</p:column>
