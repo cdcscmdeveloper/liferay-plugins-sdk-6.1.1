@@ -567,6 +567,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	//#30457 - start
 	private int itemSelectedIndex;
 	private boolean viewOnlyBasicPopup;
+	private boolean yesEnable=false; //#30457
 	//#30457 - end
 
 	private class ExpiredSearchPagingDataModel extends
@@ -4484,5 +4485,13 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public void setViewOnlyBasicPopup(boolean viewOnlyBasicPopup) {
 		this.viewOnlyBasicPopup = viewOnlyBasicPopup;
 	}
+	public boolean isYesEnable() {
+		return yesEnable;
+	}
+
+	public void setYesEnable(boolean yesEnable) {
+		this.yesEnable = yesEnable;
+	}
 	//#30457-end
+
 }
