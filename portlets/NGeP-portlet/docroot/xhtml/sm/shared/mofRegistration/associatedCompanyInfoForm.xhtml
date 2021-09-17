@@ -275,6 +275,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td>
+					<!-- Start 31736 -->
 					<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.state']}"
@@ -287,6 +288,7 @@
 								listener="#{backingBean.onChangeState(backingBean.managedBean.selectedAssocCompany.smAddress,SupplierManagementConst.SM_ASSOC_COMPANY_PANEL)}"
 								update="divisionAssocDropdownPanelId,divisionLabelAssocPanelId,divisionAssocDropdownPanelId,assocDist,assocCity" />
 						</p:selectOneMenu> 
+						<!-- END 31736 -->
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges 
 									and not empty backingBean.managedBean.selectedAssocCompany.associateCompanyId}"
@@ -299,6 +301,7 @@
 						<p:message id="assocStateMsg" for="assocState" showSummary="true"
 							showDetail="false" display="icon" /></td>
 				</tr>
+				<!-- Start 31736 -->
 				<!-- 13320 -->
 				<tr id="diTrId">
 				<td class="tdTitle">
@@ -323,6 +326,7 @@
 							listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.selectedAssocCompany.smAddress,SupplierManagementConst.SM_ASSOC_COMPANY_PANEL)}"
 								update="assocDist,assocCity" />
 					</p:selectOneMenu>
+					<!-- END 31736 -->
 					<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges 
 									and not empty backingBean.managedBean.selectedAssocCompany.associateCompanyId}"
