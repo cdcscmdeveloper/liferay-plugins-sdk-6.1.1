@@ -7401,7 +7401,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					.getOrgProfileId());
 			UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
 			getManagedBean().setContractSignerList(userResDTO.getUserList());
+			// #31704 - start
 //			scLoa.setContractSigner(new PmUser());
+			// #31704 - end
 		}
 	}
 	
@@ -7568,11 +7570,12 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	public void setOverallCtAmount(BigDecimal loaAmount) {
 		BigDecimal contractOverAllAmt = BigDecimal.ZERO;
 		ScLoa scLoa = this.getManagedBean().getScLoa();
+		// #31704 - start
 //		scLoa.setContractSigner(new PmUser());
 		// #26474 - Start.
 		//scLoa.setLoaSignerDesig(null);
         // #26474 - End.
-		
+		// #31704 - End
 		if (loaAmount != null) {
 			contractOverAllAmt   = overallCtAmountWithSST(loaAmount, scLoa.getSstAmt());
 //			contractOverAllAmt   = overallCtAmount(loaAmount, scLoa.getGstAmt());
