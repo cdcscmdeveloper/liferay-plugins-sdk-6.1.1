@@ -2658,13 +2658,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 								// item desc
 								//start #30457
 								if(row.getCell(11).toString().isEmpty()) {
-									FacesContext facesContext = FacesContext.getCurrentInstance();
-									facesContext.addMessage(
-											null,
-											new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils
-													.getMessage(MessageConst.ERROR_716026,
-															MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes().getUserLocale())));
+									invalidDataMsg = invalidDataMsg.concat("Row " + rowNum + "\n");
+									count++;
 									break;
 								}else if (row.getCell(11) != null && !row.getCell(11).toString().isEmpty()) {
 									additionalItemDesc = row.getCell(11).toString();
