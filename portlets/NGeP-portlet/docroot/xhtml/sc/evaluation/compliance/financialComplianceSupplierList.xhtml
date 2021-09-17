@@ -146,7 +146,7 @@
 				style="width:15%">
 				<!-- 26339 and 25138 Removed from disabled attribute  'or evaluationBackingBean.managedBean.FP_Compliance' and 'or evaluationBackingBean.managedBean.readOnly'-->
 				<p:selectOneMenu
-					disabled="#{evaluationBackingBean.isComplianceStatusDisabled(complianceTechnicalSupplier)}"  
+					disabled="#{evaluationBackingBean.isComplianceStatusDisabled(complianceTechnicalSupplier) or evaluationBackingBean.managedBean.readOnly}"
 					value="#{complianceTechnicalSupplier.compliance}">
                   <!-- 26339 End-->
 					<f:selectItems
