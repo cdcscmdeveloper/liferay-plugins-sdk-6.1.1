@@ -784,6 +784,18 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			// 12177 - Start
 			requestNoteReqDTO.setSqEndDate(getManagedBean().getSqEndDate());
 			// 12177 - End
+			
+			//#31689 - start	
+	  		if(requestNoteReqDTO.getRequestNote() != null){	
+	  	   		if(requestNoteReqDTO.getRequestNote().getRequestNoteDtls() != null){
+	  		    		for(ScRequestNoteDtl rnDtl : requestNoteReqDTO.getRequestNote().getRequestNoteDtls()){
+	  		    			if(rnDtl.getTotalPricePerItem().compareTo(BigDecimal.ZERO) == 0)
+	  		    	  	   		calculatePricePerItem(rnDtl);		    			
+	  		    		}
+	  		    }
+	  	   	}
+	  		//#31689 - end
+	  		
 			//26059 - start
 			requestNoteReqDTO.setExceedThreshold(getManagedBean().isProceedWithDPExceedThreshold());
 			//26059 - end
