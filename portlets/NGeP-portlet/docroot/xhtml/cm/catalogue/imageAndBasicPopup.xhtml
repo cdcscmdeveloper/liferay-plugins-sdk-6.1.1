@@ -189,7 +189,8 @@
 					<td align="center" style="white-space: normal; word-wrap: break-word !important; vertical-align: top;">
 						<p:selectBooleanCheckbox id="isDeclareChkBox" style="float:left;"
 							value="#{catalogueBackingBean.declareChecked}">
-							<f:ajax render="btnSection" />
+							<p:ajax event="change" listener="#{catalogueBackingBean.enableBtn(catalogueBackingBean.declareChecked)}"
+								update=":form:btnSection"/>
 						</p:selectBooleanCheckbox>
 					</td>
 					<td>
@@ -200,12 +201,13 @@
 			</table>
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
-				<p:remoteCommand name="rc" update="@form" action="#{catalogueBackingBean.submitToReviewItems(false)}"
+				<p:remoteCommand name="rc" update=":form" action="#{catalogueBackingBean.submitToReviewItems(false)}"
 				oncomplete="updateDeclareDialog.hide();"/>
 				<p:outputPanel id="btnSection">
 					<p:commandButton id="yesWithLoadId" value="#{lbl['lbl.btn.yes']}"
-						disabled="#{not catalogueBackingBean.declareChecked}"
-						onclick="rc()"/>
+						disabled="#{!catalogueBackingBean.managedBean.yesEnable}"
+						action="#{catalogueBackingBean.submitToReviewItems(false)}" update="@form"
+						oncomplete="updateDeclareDialog.hide();"/>
 			    	<p:commandButton id="noWithoutActionId" value="#{lbl['lbl.btn.no']}" immediate="true"
 						oncomplete="updateDeclareDialog.hide();" />
 				</p:outputPanel>

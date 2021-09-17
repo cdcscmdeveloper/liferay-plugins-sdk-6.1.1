@@ -11433,6 +11433,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		RequestContext.getCurrentInstance().execute("updateDeclareDialog.show()");
 	}
 	
+	public void enableBtn(boolean tick){
+		this.getManagedBean().setYesEnable(tick);
+	}
+	
 	public boolean isDeclareChecked() {
 		return declareChecked;
 	}
