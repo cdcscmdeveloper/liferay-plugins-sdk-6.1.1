@@ -339,20 +339,36 @@ public class SupplierFinalizationBackingBean extends
 		}
 		loadSupplierFinalizationTabDetails();
 		retrieveBriefingPaper();
-		//#17376-start
-		if(isQTMaintenanceScreen()){
-			if(null==dataType.getCommitteeType() || StringUtils.isEmpty(dataType.getCommitteeType()) || StringUtils.isBlank(dataType.getCommitteeType())){ //17376-165
-				dataType.setCommitteeType(this.getManagedBean().getScQt().getFinalizationCommitte().getParameterCode());
-				this.getManagedBean().setCommitteeType(this.getManagedBean().getScQt().getFinalizationCommitte().getParameterCode());
+
+		// #17376-start
+		if (isQTMaintenanceScreen()) {
+			// 17376-165 -start-
+			if (null == dataType.getCommitteeType() || StringUtils.isEmpty(dataType.getCommitteeType())
+					|| StringUtils.isBlank(dataType.getCommitteeType())) {
+				// #30451-Start.
+				if (null != this.getManagedBean().getScQt().getFinalizationCommitte()) {
+					// #30451-End.
+					dataType.setCommitteeType(this.getManagedBean().getScQt().getFinalizationCommitte()
+							.getParameterCode());
+					
+					this.getManagedBean().setCommitteeType(
+							this.getManagedBean().getScQt().getFinalizationCommitte().getParameterCode());
+				// #30451-Start.
+				}
+				// #30451-End.
+
 				loadPreparationTabDetails();
-				
-			} //17376-165
-			if(getManagedBean().isInitialDecisionFwdToBPK()){
-			getManagedBean().setInitialDecisionFwdToBPK(Boolean.FALSE);
-			getManagedBean().setCommitteeType(dataType.getCommitteeType());
-			loadPreparationTabDetails();
 			}
-		} //#17376-End
+			// 17376-165 -end-
+
+			if (getManagedBean().isInitialDecisionFwdToBPK()) {
+				getManagedBean().setInitialDecisionFwdToBPK(Boolean.FALSE);
+				getManagedBean().setCommitteeType(dataType.getCommitteeType());
+				
+				loadPreparationTabDetails();
+			}
+		}
+		// #17376-End
 		
 		int tabIndex = 0;
 		if (getManagedBean().isInitialDecisionFwdToBPK()) {
