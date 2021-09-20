@@ -1991,13 +1991,17 @@ public void saveComplianceSample() {
 
 			}*/
 			//#25138 - 040621 - start
-			List<ScQtCheckList> compliancechecklist = new ArrayList<ScQtCheckList>();
+			// #25138 - #31493 - Start.
+			/*List<ScQtCheckList> compliancechecklist = new ArrayList<ScQtCheckList>();
 			for(ScQtCheckList list: resDTO.getCheckListResultBean().getResultList()){
 				if(!list.isScoringReq()){
 					compliancechecklist.add(list);
 				}
 			}
-			this.getManagedBean().setCompliancefinancialCheckList(compliancechecklist);
+			this.getManagedBean().setCompliancefinancialCheckList(compliancechecklist);*/
+			this.getManagedBean().setCompliancefinancialCheckList(
+					resDTO.getCheckListResultBean().getResultList());
+			// #25138 - #31493 - End
 			//#25138 - 040621 - end
 			if(CollectionUtils.isNotEmpty(this.getManagedBean().getCompliancefinancialCheckList())){
 				checklistSorting(this.getManagedBean().getCompliancefinancialCheckList());
