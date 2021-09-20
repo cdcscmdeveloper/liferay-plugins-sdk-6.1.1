@@ -134,7 +134,7 @@
 
 				<p:commandButton value="#{lbl['lbl.btn.delete']}"
 					partialSubmit="true" process="@this,empInfoId"
-					disabled="#{empty backingBean.managedBean.selectedEmployees}"
+					disabled="#{empty backingBean.managedBean.selectedWorkShopFacility.smSvWorkers}"
 					id="deleteEmpBtnId" oncomplete="empDeletePopUp.show()"
 					update="@this" />
 			</div>
