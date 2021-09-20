@@ -714,15 +714,15 @@ public class SpecificationBackingBean extends
 		}
 		// retriveFinancialScoring();
 		//#25138 Reendorsed - set max score for wip data - start
-		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
-				.equalsIgnoreCase(financialCheckList.get(0).getDefinationType()
-						.getParameterCode())){
-			if(this.getManagedBean().getQt().isZonal()){
-				checkSpecZoneQtyMaxScore(financialCheckList.get(0));
-					
-			}
-			
-		}
+//		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
+//				.equalsIgnoreCase(financialCheckList.get(0).getDefinationType()
+//						.getParameterCode())){
+//			if(this.getManagedBean().getQt().isZonal()){
+//				checkSpecZoneQtyMaxScore(financialCheckList.get(0));
+//					
+//			}
+//			
+//		}
 		//#25138 Reendorsed - set max score for wip data - end
 		if (null != financialCheckList && !financialCheckList.isEmpty()) {
 			isFinancialSpec(financialCheckList);
@@ -2507,9 +2507,9 @@ public class SpecificationBackingBean extends
 						retriveSpecQuestion();
 						if(this.getManagedBean().getQt().isZonal()){
 							//#25138 Reendorsed - set max score for wip data - start
-							if(tmpCheckList.getQtScoreWeightage().getScQtScoreOfferPrices().get(0).getTplSpecZoneDtl() == null){
-								checkSpecZoneQtyMaxScore(tmpCheckList);
-							}
+//							if(tmpCheckList.getQtScoreWeightage().getScQtScoreOfferPrices().get(0).getTplSpecZoneDtl() == null){
+//								checkSpecZoneQtyMaxScore(tmpCheckList);
+//							}
 							//#25138 Reendorsed - set max score for wip data - end
 							populateFinancialSpecDetailsByZone();
 							saveTotalMaxScoreItemZonal(tmpCheckList);
@@ -11397,15 +11397,15 @@ public class SpecificationBackingBean extends
 				specSO.validateSCScoreSettings(specReqDTO);
 				specSO.validateSpecOfferPrice(specReqDTO);
 				//#25138 Reendorsed - set max score for wip data - start
-				if(this.getManagedBean().getQt().isZonal()){
-					if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
-							.equalsIgnoreCase(financialScoring1.get(0).getDefinationType()
-									.getParameterCode())){
-						checkSpecZoneQtyMaxScore(financialScoring1.get(0));	
-
-					}
-						
-				}
+//				if(this.getManagedBean().getQt().isZonal()){
+//					if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
+//							.equalsIgnoreCase(financialScoring1.get(0).getDefinationType()
+//									.getParameterCode())){
+//						checkSpecZoneQtyMaxScore(financialScoring1.get(0));	
+//
+//					}
+//						
+//				}
 				//#25138 Reendorsed - set max score for wip data - end
 				financialWeightageCalculate();
 				financialItemScoreCalculate(this.getManagedBean()
