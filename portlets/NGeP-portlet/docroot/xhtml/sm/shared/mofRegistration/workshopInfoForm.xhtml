@@ -307,7 +307,7 @@
 					partialSubmit="true" process="workShopDialog"
 					onclick="workShopBlockWidget.show();"
 					oncomplete="workShopBlockWidget.hide();"
-					update=":#{p:component('smWorkShopDtPanel')}, :#{p:component('empAlertPopUpId')}, @([id$=Msg])" />
+					update=":#{p:component('smWorkShopDtPanel')}, @([id$=Msg])" />
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 					process="@this" partialSubmit="true"
 					action="#{backingBean.cancelWorkShopSaveorUpdate}"
@@ -333,6 +333,7 @@
 		content="#{lbl['lbl.msg.confirm.delete']}"
 		update=":#{p:component('pnlEmployeeInfo')}" />
 
+<!-- 
 <style>
 .splNotesFontEmp {
 	color: rgb(79, 0, 255);
@@ -362,5 +363,6 @@
 				onclick="empAlertPopUp.hide();" type="button" />
 		</div>
 	</p:confirmDialog>
+-->
 	<!-- 29379  - Site Visit Grouping Enhancement -28775  END-->
 </ui:composition>
