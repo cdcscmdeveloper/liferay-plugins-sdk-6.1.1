@@ -6510,20 +6510,8 @@ public class SmApplicationBackingBean extends
 		//if(getManagedBean().getSelectedWorkShopFacility().getSmEmployees().size() < SupplierManagementConst.MIN_EMPLOYEE){
 		if(getManagedBean().getSelectedWorkShopFacility().getSmSvWorkers().size() < SupplierManagementConst.MIN_EMPLOYEE){
 			log.info("---------------Insert more than 2 employee-------------------");
-			StringBuilder sb = new StringBuilder();
-			boolean showErrorPopup = true;
-			sb.append("<font color='red'>");
-			//this.getManagedBean().setDisplayMessageEmp("");
-			sb.append(SmCommonUtil.getMessage("lbl.sm.insertemployee.instruction",null));
-			sb.append("<br/>");
-			
-			sb.append("</font>");
-		//	this.getManagedBean().setDisplayMessageEmp(sb.toString());
-			if(showErrorPopup){
-				RequestContext.getCurrentInstance().execute("empAlertPopUp.show()");
-				return;
-			}
-			//RequestContext.getCurrentInstance().execute("bankDeletePopUp.show()");
+			throw new EpException(
+					SmCommonUtil.getMessage("lbl.sm.insertemployee.instruction",null), null);
 		}
 		else{
 			SmFacility smFac = getManagedBean().getSelectedWorkShopFacility();
