@@ -9320,19 +9320,22 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			attachment.setDocNo(getManagedBean().getScQt().getQtNo());
 			scAttachment = attachment;
 			uploadAttachment(event.getFile(), scAttachment);
-			
 			// #18685 - Start.
 			int index = 0;
 			if (CollectionUtils.isNotEmpty(getManagedBean().getEndorsementReports())
 			    && this.getManagedBean().getEndorsementReports().size() > 0) {
-			  index = getManagedBean().getEndorsementReports().size() + 1;
+			  for (ScQtFinalizationReport report: getManagedBean().getEndorsementReports()) {
+				  if (report.getScQtFinalizationReportAttachment() != null) {
+					  index++;
+				  }
+			  }
 			} else {
 				index = 1;
 			}
 			String fileName = scAttachment.getFileName();
 			
 			if (index >= 0 && fileName != null) {
-				scAttachment.setFileName(index + UNDER_SCORE + fileName);
+				scAttachment.setFileName("K" + index + UNDER_SCORE + fileName);
 			}
 			// #18685 - End.
 		}
