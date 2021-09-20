@@ -13403,12 +13403,15 @@ public class SmApplicationUtil {
 	public static List<PmReasonDesc> getWildCardSearchRejectReason(
 			String searchQuery, List<PmReasonDesc> rejectReasons) {
 		List<PmReasonDesc> resultList = new ArrayList<PmReasonDesc>();
+		
 		if (!EntityHelper.isCollectionEmpty(rejectReasons)) {
 			if (StringUtils.isBlank(searchQuery)) {
 				resultList = rejectReasons;
 			} else {
-				for (PmReasonDesc tmp : rejectReasons) {
-					if (StringUtils.upperCase(tmp.getReasonDesc()).contains(
+				for (PmReasonDesc tmp : rejectReasons) {					
+					String stringtest = tmp.getReasonDesc().replaceAll("\\s{2,}"," ").trim();
+
+					if (StringUtils.upperCase(stringtest).contains(
 							StringUtils.upperCase(searchQuery))) {
 						resultList.add(tmp);
 					}
