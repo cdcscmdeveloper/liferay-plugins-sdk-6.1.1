@@ -30,10 +30,12 @@
 		<ui:param name="isPendingVerification" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_VERIFICATION}" />
 		<ui:param name="isFulfilmentTypeScheduled"
 			value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeScheduled}" />
+		<ui:param name="isZonalWithPaOrPs" value="#{lOADetailBackingBean.isZonalWithPaOrPs()}" />
 		<ui:param name="isSqStillValid" value="#{lOADetailBackingBean.isSqStillValid()}" />
 		<ui:param name="isSaveHideSqExpired" value="#{!lOADetailBackingBean.managedBean.scLoa.brandNew and !isSqStillValid}" />
 		<ui:param name="isLOACancelByApprover" value="#{lOADetailBackingBean.isLOACancelByApprover()}" />	
 		<ui:param name="isLoaGenerated" value="#{lOADetailBackingBean.isLoaGenerated()}" />	
+		<ui:param name="isMultipleSuppOffer" value="#{lOADetailBackingBean.managedBean.multipleSuppOffer}" />	
 		<ui:include src="loaButtons.xhtml" />
 		<ui:include src="loaHeader.xhtml" />
 		
