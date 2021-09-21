@@ -66,6 +66,7 @@
 				headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.file.attachment']}"
 				style="width:25%; text-align:center;">
 				<h:panelGroup id="demoSupplierAttach">
+					<ui:fragment>
 					<ac:scSingleFileUploadButton id="attachedIdsDemoDtl"
 						popupWidgetVar="demoSupplierAttachDlg"
 						attachment="#{evaluationBackingBean.retrieveDemoSupplierAttachment(demoSupplier.scQtProposal.supplierNo)}"
@@ -75,6 +76,7 @@
 								value="#{evaluationBackingBean.retrieveDemoSupplier(demoSupplier.scQtProposal.supplierNo)}"
 								target="#{evaluationBackingBean.managedBean.scQtDemoSupplier}" />
 						</ac:scSingleFileUploadButton>
+					</ui:fragment>
 				</h:panelGroup>
 			</p:column>
 
