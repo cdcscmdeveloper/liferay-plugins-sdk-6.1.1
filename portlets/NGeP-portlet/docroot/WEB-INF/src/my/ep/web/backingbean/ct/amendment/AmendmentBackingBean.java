@@ -107,6 +107,7 @@ import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
@@ -428,8 +429,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 
 		/** to concat Itemcode and Item Name */
-
-		public String contactItem(CtContractItem ctItem) {
+		//#31558 start
+		public ScRequestItem contactItem(CtContractItem ctItem) {
 			
 			String itemcode=ctItem.getScRequestItem().getCmItem().getExtensionCode();
 			String itemName=ctItem.getScRequestItem().getItemName();
@@ -441,10 +442,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			{
 				itemName=ParameterConst.ITEM_NAME;
 			}
-			String result = itemName +","+ itemcode;
+			//String result = itemName +","+ itemcode;
+			ScRequestItem scRequestItem = new ScRequestItem();
+			scRequestItem.setItemName(itemName);
+			scRequestItem.setCmItem(ctItem.getScRequestItem().getCmItem());
+			scRequestItem.getCmItem().setExtensionCode(itemcode);
 			
-			return result;
+			return scRequestItem;
 		}
+		//#31558 end
 		
 		public String contactItemProd(CtContractItem ctItem) {
 			
