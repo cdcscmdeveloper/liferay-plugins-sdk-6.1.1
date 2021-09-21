@@ -21,6 +21,7 @@ import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.ct.suspension.IContractSuspensionSO;
+import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -44,6 +45,8 @@ import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.sc.common.ScRequestItem;
+import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
@@ -758,15 +761,61 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	 * The method used to invoke and initiate the item specification dialog.
 	 */
 	public void viewItemSpecDlg(CtContractItem ctContractItem) {
+		/*#28854 start*/
+		IRequestItemSO requestItemSO = null;
 		getManagedBean().setSelectedItemForSpec(ctContractItem);
+		requestItemSO = (IRequestItemSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
+		
+		Long requestItemId = this.getManagedBean().getSelectedItemForSpec().getScRequestItem().getRequestNoteItemId();		
+		
+		if(getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)){
+			List<String> itemSpecList = new ArrayList<>();
+			List<ScRequestItemSpecOffer> itemSpecOfferList = requestItemSO.retrieveNewOfferSpec(requestItemId);			
+			
+			for(ScRequestItemSpecOffer itemSpecOffer: itemSpecOfferList){
+				if(itemSpecOffer.getQuestionType().equals(ContractConst.QUESTION_TYPE_ITEM)){
+					if(itemSpecOffer.getSupplierOffer() != null && !itemSpecOffer.getSupplierOffer().isEmpty()){
+						getManagedBean().setSupplierOffer(itemSpecOffer.getSupplierOffer());
+					}else{
+						getManagedBean().setSupplierOffer(null);
+					}	
+											
+					if(itemSpecOffer.getNewOfferSpec() != null && !itemSpecOffer.getNewOfferSpec().isEmpty()){	
+						getManagedBean().setNewOfferSpec(itemSpecOffer.getNewOfferSpec());
+					}else{
+						getManagedBean().setNewOfferSpec(null);
+					}
+				}
+				else if(itemSpecOffer.getQuestionType().equals(ContractConst.QUESTION_TYPE_SPEC)){
+					itemSpecList.add(itemSpecOffer.getItemSpec());				
+				}	
+			}
+			getManagedBean().setItemSpecification(itemSpecList);
+		}
+		
+		if(getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_QUOTATION) || getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_TENDER) || getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO)){
+			List<ScRequestItemSpecOffer> scRequestItemSpecOffer = requestItemSO.retrieveNewOfferSpec(requestItemId);	
+			
+			Iterator<ScRequestItemSpecOffer> itr = scRequestItemSpecOffer.iterator();
+			while (itr.hasNext()){
+				ScRequestItemSpecOffer scRequestItemSpecOfferTemp = itr.next();
+				if(scRequestItemSpecOfferTemp.getQuestionType().equals(ContractConst.QUESTION_TYPE_ITEM)){
+					itr.remove();
+					}
+			}
+		
+			getManagedBean().setScRequestItemSpecOfferList(scRequestItemSpecOffer);		
+		}				
+		/*#28854 end*/
 		RequestContext.getCurrentInstance().execute("itemSpecDlg.show()");
 	}
 	
 	/**
 	 * The method used to concat both Item code and Item Name.
 	 */
-	public String contactItem(CtContractItem ctItem) {
-		//String result=new String();
+	//#31558 start
+	public ScRequestItem contactItem(CtContractItem ctItem) {
 		
 		String itemcode=ctItem.getScRequestItem().getCmItem().getExtensionCode();
 		String itemName=ctItem.getScRequestItem().getItemName();
@@ -778,12 +827,16 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		{
 			itemName=ParameterConst.ITEM_NAME;
 		}
-		String result = itemName +","+ itemcode;
-	
-		return result;
-	     
+		//String result = itemName +","+ itemcode;
+		ScRequestItem scRequestItem = new ScRequestItem();
+		scRequestItem.setItemName(itemName);
+		scRequestItem.setCmItem(ctItem.getScRequestItem().getCmItem());
+		scRequestItem.getCmItem().setExtensionCode(itemcode);
+		
+		return scRequestItem;
+	    
 	}
-	
+	//#31558 end
 	
 	
 	/**

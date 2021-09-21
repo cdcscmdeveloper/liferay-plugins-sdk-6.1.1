@@ -36,6 +36,7 @@ import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -84,6 +85,13 @@ public class SuspensionManagedBean extends BaseManagedBean {
 	private HashMap<Long, CtContractItem> itemMap;	
 	private DualListModel<PmUser> approverModel;
 	private Map<Long, PmUser> userMap;
+	
+	//#28854 - start
+	private List<String> itemSpecification;
+	private String newOfferSpec;
+	private String supplierOffer;
+	private List<ScRequestItemSpecOffer> scRequestItemSpecOfferList;
+	//#28854 - end	
 
 private IPagingDataModel<CtContractItem> SuspensionProductListingPagingDataModel = new SuspensionProductListingPagingDataModel();
 
@@ -99,7 +107,7 @@ private IPagingDataModel<CtContractItem> SuspensionProductListingPagingDataModel
       
 		@Override
 		public ISearchResultBean<CtContractItem> pageChangeListener(ISearchBean<CtContractItem> searchBean) {
-			try {				
+			try {
 				
 				//private String contractId = null;
 				IContractSO	contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
@@ -556,4 +564,38 @@ private IPagingDataModel<CtContractItem> SuspensionProductListingPagingDataModel
 	public SuspensionProductListingPagingDataModel  resetSuspensionProductListingPagingDataModel() {
 		return new SuspensionProductListingPagingDataModel();
 	}
+	
+	/* #28854 start*/
+	public String getNewOfferSpec() {
+		return newOfferSpec;
+	}
+
+	public void setNewOfferSpec(String newOfferSpec) {
+		this.newOfferSpec = newOfferSpec;
+	}
+
+	public String getSupplierOffer() {
+		return supplierOffer;
+	}
+
+	public void setSupplierOffer(String supplierOffer) {
+		this.supplierOffer = supplierOffer;
+	}	
+
+	public List<String> getItemSpecification() {
+		return itemSpecification;
+	}
+
+	public void setItemSpecification(List<String> itemSpecification) {
+		this.itemSpecification = itemSpecification;
+	}
+
+	public List<ScRequestItemSpecOffer> getScRequestItemSpecOfferList() {
+		return scRequestItemSpecOfferList;
+	}
+	
+	public void setScRequestItemSpecOfferList(List<ScRequestItemSpecOffer> scRequestItemSpecOfferList) {
+		this.scRequestItemSpecOfferList = scRequestItemSpecOfferList;
+	}
+	/* #28854 end*/	
 }
