@@ -399,9 +399,9 @@ public class SpecificationBackingBean extends
 							
 							if (null != otherofferpriceofferPrice
 									&& !otherofferpriceofferPrice.isEmpty() 
-									// #25638 - 31578 - Start.
+									// #25138 - 31578 - Start.
 									&& CollectionUtils.isNotEmpty(this.getManagedBean().getOfferPricePackageList())
-									// #25638 - 31578 - End.
+									// #25138 - 31578 - End.
 									) {
 								
 								otherofferpriceofferPrice.addAll(this
@@ -2161,10 +2161,10 @@ public class SpecificationBackingBean extends
 					.getScQtCheckSt2financeProposalList()
 					|| this.getManagedBean()
 							.getScQtCheckSt2financeProposalList().isEmpty()
-					// #25638 - 31578 - Start.
+					// #25138 - 31578 - Start.
 					|| (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)
 										&& CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecZoneDtls()))
-					// #25638 - 31578 - End.					
+					// #25138 - 31578 - End.					
 					) {
 				
 				specSo = BusinessDelegate.getInstance().getServiceObject(
@@ -2419,12 +2419,12 @@ public class SpecificationBackingBean extends
 						}else{
 							System.out.println("offerscoreSIZE====="+tmpCheckList.getQtScoreWeightage()
 									.getScQtScoreOfferPrices().size());
-							// #25638 - 31578 - Start.
+							// #25138 - 31578 - Start.
 							if (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)
 										&& CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecZoneDtls())) {
 						        	populateZonalDetails(tmpCheckList, newOfferList);
 							}
-							// #25638 - 31578 - End.
+							// #25138 - 31578 - End.
 					        for(ScQtScoreOfferPrice offerScore : tmpCheckList.getQtScoreWeightage()
 									.getScQtScoreOfferPrices()){
 								
@@ -2609,7 +2609,7 @@ public class SpecificationBackingBean extends
 						retriveSpecQuestion();
 						//#25138 Reendorsed - end
 						
-						// #25638 - 31578 - Start.
+						// #25138 - 31578 - Start.
 						if (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)) {
 							
 							if (tmpCheckList.getQtScoreWeightage().getScQtScoreOfferPrices().size() > 1) {
@@ -2627,7 +2627,7 @@ public class SpecificationBackingBean extends
 								this.getManagedBean().setOfferPricePackageList(tmpCheckList.getQtScoreWeightage().getScQtScoreOfferPrices());
 							}
 						}
-						// #25638 - 31578 - End.
+						// #25138 - 31578 - End.
 					}
 					this.getManagedBean().getFinancialScoring()
 							.add(0, tmpCheckList);
@@ -2693,7 +2693,7 @@ public class SpecificationBackingBean extends
 
 	}
 
-	// #25638 - 31578 - Start.
+	// #25138 - 31578 - Start.
 	/**
 	 * @param tmpCheckList
 	 * @param newOfferList
@@ -2763,7 +2763,7 @@ public class SpecificationBackingBean extends
 			
 		}
 	}
-	// #25638 - 31578 - End.
+	// #25138 - 31578 - End.
 	
 	/**
 	 * Retrieve recommendation details.retrieve all the Recommendation menu
