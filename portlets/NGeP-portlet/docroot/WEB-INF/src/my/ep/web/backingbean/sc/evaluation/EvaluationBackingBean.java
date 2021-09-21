@@ -16000,7 +16000,11 @@ private void retriveCommitteeRemarksList(){
 	
 	public ScQtDemoSupplierAttachment retrieveDemoSupplierAttachment(String supplierNo) {
 		ScQtDemoSupplier demoSupplier = new ScQtDemoSupplier();
-		
+		if (StringUtils.isEmpty(supplierNo)) {
+			log.info("Syes ah null");
+			return null;
+		}
+		log.info("Syes ah x null " + supplierNo);
 		DemoResDTO resDto = new DemoResDTO();
 		try {
 			IQTDemoSO qtDemoSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
