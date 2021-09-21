@@ -3686,28 +3686,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				user.setCreatedBy(loginSessionUserId);
 			}
 			
-			//Having other active user org?
-			boolean deactivateRequired = true;
-			//if inactive user org, check whether the user has another active user org.
-			if (!user.isBrandNew() && userOrg.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_SUSPENDED) {
-				List<PmUserOrg> userOrgs = PmCommonUtil.retrieveAllUserOrg(user.getUserId());
-				if (userOrgs != null && !userOrgs.isEmpty()) {
-					for (PmUserOrg uo : userOrgs) {
-						if (uo.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE
-								&& !uo.getUserOrgId().equals(userOrg.getUserOrgId())) {
-							deactivateRequired = false;
-							break;
-						}
-					}
-				}
-			}
-			logger.info("deactivateRequired : " + deactivateRequired);
-			reqDTO.setDeactivateRequired(deactivateRequired);
-			
-			if(deactivateRequired){
-				fillUserInfoFromUserOrg(user, userOrg);
-			}
-			
 			//Redmine Bug #31541 - START
 			if (this.getManagedBean().getIsNewUser()) {
 				logger.info("Tracking diary for user profile: create new user :saveUserProfile");
@@ -3737,6 +3715,28 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				checkChangesAndFillTrackingDiary(user, userOrg, reqDTO);
 			}
 			//Redmine Bug #31541 - END
+			
+			//Having other active user org?
+			boolean deactivateRequired = true;
+			//if inactive user org, check whether the user has another active user org.
+			if (!user.isBrandNew() && userOrg.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+				List<PmUserOrg> userOrgs = PmCommonUtil.retrieveAllUserOrg(user.getUserId());
+				if (userOrgs != null && !userOrgs.isEmpty()) {
+					for (PmUserOrg uo : userOrgs) {
+						if (uo.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE
+								&& !uo.getUserOrgId().equals(userOrg.getUserOrgId())) {
+							deactivateRequired = false;
+							break;
+						}
+					}
+				}
+			}
+			logger.info("deactivateRequired : " + deactivateRequired);
+			reqDTO.setDeactivateRequired(deactivateRequired);
+			
+			if(deactivateRequired){
+				fillUserInfoFromUserOrg(user, userOrg);
+			}
 			
 			reqDTO.setPmUser(user);
 			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
