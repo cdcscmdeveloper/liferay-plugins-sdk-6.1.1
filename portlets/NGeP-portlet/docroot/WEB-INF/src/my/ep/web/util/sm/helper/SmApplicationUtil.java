@@ -1528,6 +1528,20 @@ public class SmApplicationUtil {
 		}
 	}
 
+	//#30508-start
+	public static void validateSpecialAndNormalCategory(boolean validSave, SmApplicationManagedBean managedBean,
+			int currentTab) {
+		boolean isSpecial = false;
+		for (SmSupplierCategory category : managedBean.getSmAppl().getSmSupplierCategories()) {
+			if (category.isSpecialCategory() && managedBean.getSmAppl().getApplType().equals("N")) {
+				setNavigationBackToCurrentPage(currentTab, managedBean);
+				isSpecial = true;
+			}
+		}
+		if (isSpecial) {
+			throw new EpException(MessageConst.ERROR_722691);
+		}
+	}//#30508-end
 	/**
 	 * Validate categories before saving application based on supplier type ,
 	 * personnel info and logged in user role.
@@ -1544,6 +1558,7 @@ public class SmApplicationUtil {
 			SmApplicationManagedBean managedBean, int currentTab) {
 		validateCategoryOtherDesc(validSave, managedBean, currentTab);
 		validateOverlapSuppDoc(validSave, managedBean, currentTab);
+		validateSpecialAndNormalCategory(validSave, managedBean, currentTab);//#30508
 
 		if (!managedBean.isSiteVisitAfterApproval()) {
 			//#11765
