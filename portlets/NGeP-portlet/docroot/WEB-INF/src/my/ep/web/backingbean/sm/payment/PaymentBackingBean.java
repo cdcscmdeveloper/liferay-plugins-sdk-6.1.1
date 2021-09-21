@@ -741,8 +741,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			
 			if(personnel != null){
 				if (personnel.getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ || 
-						personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL || 
-						personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED) {
+						personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL) {
 					this.getManagedBean().getSoftCertReqPersonnels()
 					.add(personnel);
 				}
