@@ -3144,4 +3144,54 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 			this.catalogueFlag = catalogueFlag;
 		}
 		//end-13984 - CrList - Back Button
+		
+		// 28855 - start
+		public boolean isDpFlag() {
+			return dpFlag;
+		}
+
+		public void setDpFlag(boolean dpFlag) {
+			this.dpFlag = dpFlag;
+		}
+
+		public List<ScRequestItemSpecOffer> getSpecificationList() {
+			return specificationList;
+		}
+
+		public void setSpecificationList(List<ScRequestItemSpecOffer> specificationList) {
+			this.specificationList = specificationList;
+		}
+
+		public List<ScRequestItemSpecOffer> getItemSpecList() {
+			return itemSpecList;
+		}
+
+		public void setItemSpecList(List<ScRequestItemSpecOffer> itemSpecList) {
+			this.itemSpecList = itemSpecList;
+		}
+
+		public String getSupplierOffer() {
+			return supplierOffer;
+		}
+
+		public void setSupplierOffer(String supplierOffer) {
+			this.supplierOffer = supplierOffer;
+		}
+
+		public String getNewOfferedSpec() {
+			return newOfferedSpec;
+		}
+
+		public void setNewOfferedSpec(String newOfferedSpec) {
+			this.newOfferedSpec = newOfferedSpec;
+		}
+
+		public String getItemSpecification() {
+			return itemSpecification;
+		}
+
+		public void setItemSpecification(String itemSpecification) {
+			this.itemSpecification = itemSpecification;
+		}
+		// 28855 - End
 }
