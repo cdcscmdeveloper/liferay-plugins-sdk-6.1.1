@@ -2730,11 +2730,17 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				SearchFilterBean searchFilterBean1 = null;
 				if (ptjProfiles != null && ptjProfiles.getOrgProfileId() != null) {
 					// Filter By - PTJ
+					/*
+					 * BUG 31120
+					 */
 					searchFilterBean1 = new SearchFilterBean(
 							"pmOrgProfile." + OrgProfileUtil
 								.getSearchBeanParentString(OrganizationType.DIVISION.value()),
 							SearchOperator.OPERATOR_EQUALS.value(),
-							ptjProfiles.getOrgProfileId(),SearchCondition.CONDITION_OR.value());
+							ptjProfiles.getOrgProfileId(),SearchCondition.CONDITION_AND.value());
+					/*
+					 * END
+					 */
 				} else {
 					// Filter By - PTJ Group
 					PmOrgProfile ptjGroupProfile = qtnTenderSearchBean.getPtjGroupProfile();
