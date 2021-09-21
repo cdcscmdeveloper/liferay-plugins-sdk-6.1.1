@@ -28,21 +28,10 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.apache.velocity.VelocityContext;
-import org.primefaces.context.RequestContext;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.StreamedContent;
-
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.pdf.PdfContentByte;
-import com.lowagie.text.pdf.PdfImportedPage;
-import com.lowagie.text.pdf.PdfReader;
-import com.lowagie.text.pdf.PdfWriter;
-
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
+//#30504 start
+import my.ep.biz.service.pm.common.zone.IZoneSO;
+//#30504 end
 import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -55,6 +44,7 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
+import my.ep.dto.pm.common.zone.ZoneReqDTO;
 import my.ep.dto.sm.attachment.SmAttachmentReqDTO;
 import my.ep.dto.sm.attachment.SmAttachmentResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
@@ -133,6 +123,20 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.sm.helper.VmUtil;
 import my.ep.web.util.template.DocumentGenerator;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.velocity.VelocityContext;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.StreamedContent;
+
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfImportedPage;
+import com.lowagie.text.pdf.PdfReader;
+import com.lowagie.text.pdf.PdfWriter;
 
 @ManagedBean(name = "svoSiteVisitBackingBean")
 @RequestScoped
@@ -949,10 +953,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		int cheqNonMalaysian = 0;
 		
 		// #14055 - start
-		LinkedHashSet<String> totalCheckingList = new LinkedHashSet();
-		LinkedHashSet<String> bumiCheckingList = new LinkedHashSet();
-		LinkedHashSet<String> nonBumiCheckingList = new LinkedHashSet();
-		LinkedHashSet<String> nonMyCheckingList = new LinkedHashSet();
+		LinkedHashSet<String> totalCheckingList = new LinkedHashSet<String>();
+		LinkedHashSet<String> bumiCheckingList = new LinkedHashSet<String>();
+		LinkedHashSet<String> nonBumiCheckingList = new LinkedHashSet<String>();
+		LinkedHashSet<String> nonMyCheckingList = new LinkedHashSet<String>();
 		
 		if (this.getManagedBean().getSmSvTask().getSmSvBankInfos() != null) {
 			for (SmSvBankInfo svBankInfo : this.getManagedBean().getSmSvTask().getSmSvBankInfos()) {
@@ -2192,12 +2196,39 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		try{
 			//if Action equals to SUBMIT, set the BPM Info
 			if(action.equals(SupplierManagementConst.BPM_SUBMIT)){
+				// #30504 start
+				String currPoLoginId = ((SMMOFRegDataType) getManagedBean().getBpmPojo()).getPoUsers();
+				PmUser currPo = PmCommonUtil.retrieveUserByLoginId(currPoLoginId);
+				log.info("---Curent PO: "+currPo.getUserName());
+
+				if (currPo.getPmUserOrgs().get(0).getRecordStatusFlg() == 0) {
+					IZoneSO zoneReqSO = (IZoneSO) BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
+					ZoneReqDTO zoneReqDTO = new ZoneReqDTO();
+					zoneReqDTO.setStateId(svTask.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0)
+							.getSmAddress().getPmState().getStateId());
+					PmUser newPo = SmCommonUtil.getInstance().retrievePOWithLowestWeightage(
+							svTask.getSmAppl().getSupplierType(), svTask.getSmAppl().getApplType(),
+							svTask.getSmAppl().getApplCategoryType(),
+							zoneReqSO.retrieveZoneByStateId(zoneReqDTO).getPmZone().getZoneCode());  
+					//#30504 Re-open start
+					currPo = newPo;
+					SMMOFRegDataType smObj = (SMMOFRegDataType) this.getManagedBean().getBpmPojo();
+					smObj.setPoUsers(newPo.getLoginId());
+					this.getManagedBean().setBpmPojo(smObj);
+
+				}
+				log.info("---Curent PO Latest: "+currPo.getUserName());
+				
+				// #30504 end
 				Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 				reqDTO.setAppId(this.getManagedBean().getAppId());
 				reqDTO.setToken(token);
 				reqDTO.setOutcome(SupplierManagementConst.BPM_SUBMIT);
 				reqDTO.setTaskId(this.getManagedBean().getTaskId());
 				reqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
+				reqDTO.setPoName(currPo.getUserName());
+				//#30504 Re-open end
 			}
 
 			reqDTO.setSmSvTask(svTask);
