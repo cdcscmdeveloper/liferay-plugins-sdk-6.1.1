@@ -2215,7 +2215,6 @@ u {
 									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Zon</th>
 									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Kuantiti</th>
 									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; font-size:10px;">Tawaran Pembekal</th>
-									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; font-size:10px;">Catatan</th>
 									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; font-size:10px;">Skop Perkhidmatan / SLA</th>
 								</tr>
 								
@@ -2300,73 +2299,104 @@ u {
 								</td>
 								
 								<td bgcolor="#d0eaee">
+									#set($countZoneList = 1)
 									#foreach( $tplSpecZoneDtls in $tplspecQuestion.tplSpecMaster.tplSpecZone.tplSpecZoneDtls )
 									<table width="100%">
 										<tbody>
 										<tr >
-											#if ($tplSpecZoneDtls.zoneName) 
-												<td rowspan="$tplSpecZoneDtls.specCount" class="standard border-bottom left" style="text-align: top; border-bottom: 1px solid black; height: 80px; font-size:12px;">$tplSpecZoneDtls.zoneName</td>
+											#if ($tplSpecZoneDtls.zoneName)
+												#if ($countZoneList == $tplspecQuestion.tplSpecMaster.tplSpecZone.tplSpecZoneDtls.size())
+													<td rowspan="$tplSpecZoneDtls.specCount" class="standard border-bottom left" style="text-align: top; height: 80px; font-size:12px;">$tplSpecZoneDtls.zoneName</td>
+												#else
+													<td rowspan="$tplSpecZoneDtls.specCount" class="standard border-bottom left" style="text-align: top; border-bottom: 1px solid black; height: 80px; font-size:12px;">$tplSpecZoneDtls.zoneName</td>
+												#end
 											#else
 												<td rowspan="$tplSpecZoneDtls.specCount" class="standard border-bottom left" style="text-align: top; border-bottom: 1px solid black; height: 80px; font-size:12px;">$serviceScope</td>
 											#end
 										</tr>
 										</tbody>
 										</table>
+									#set($countZoneList = $countZoneList + 1)
 									#end
 								</td>
 								
-								<td bgcolor="#d0eaee" >
-								
+								<td valign="top" bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-size:12px;">
+									#set($maxQty = 0)
+									#set($minQty = 0)
+									#set($currentValue = 0)
+									
 									
 									#foreach(  $tplSpecZoneDtls in $tplspecQuestion.tplSpecMaster.tplSpecZone.tplSpecZoneDtls )
-									
-									<table width="100%">
-										<tbody>
-										<tr>
-											
-											   #if($tplspecQuestion.clQuantity)
-													<td rowspan="$tplSpecZoneDtls.specCount" class="standard border-bottom left" style="text-align: top; border-bottom: 1px solid black; height: 80px; font-size:12px;">$tplspecQuestion.clQuantity</td>
-												
-											   #else
-												   #if(($tplSpecZoneQtie.qty))
-													<td rowspan="$tplSpecZoneDtls.specCount" class="standard border-bottom left" style="text-align: top; border-bottom: 1px solid black; height: 80px; font-size:12px;">$tplSpecZoneQtie.qty</td>
-												   #else
-													<td rowspan="$tplSpecZoneDtls.specCount" class="standard border-bottom left" style="text-align: top; border-bottom: 1px solid black; height: 80px; font-size:12px;">$serviceScope</td>
-														 
-													#end;
+											#foreach( $scLoiLoaItem in $scLoiLoaItemList )												
+												#if($scLoiLoaItem.itemName.trim() == $tplspecQuestion.clItem.trim())
+ 											  		#set($currentValue = $scLoiLoaItem.itemQty)
+											  
+											   #if($currentValue == 0)
+												   	#if($tplspecQuestion.clQuantity)
+											   			#set($currentValue = $tplspecQuestion.clQuantity)												
+											  	   	#else
+												   		#if($tplSpecZoneQtie.qty)
+												   			#set($currentValue = $tplSpecZoneQtie.qty) 
+														#end
+											   		#end									   
+											   #end	
+																	
+											  
+											   #if($maxQty == 0)
+												   #set($maxQty = $currentValue)
+												   #set($minQty = $currentValue)								   
+											   #end	
+											   
+											   #if($currentValue > $maxQty)
+											   		#set($maxQty = $currentValue)
+											   #end											 
+											   #if($currentValue < $minQty)
+												   #set($minQty = $currentValue)
 											   #end
-											</td>
-										</tr>
-										</tbody>
-										</table>
-									
-									#end
-								</td>
-								
-								
-
-								<td bgcolor="#d0eaee">
-									#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
-									<table width="100%">
-										<tbody>
-										<tr>
-											#if ($tplSpecAnswer.answerRemark) 
-												<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left" style="text-align: top; border-bottom: 1px solid black; height: 80px; font-size:12px;">$tplSpecAnswer.answerRemark</td>
-											#else
-												<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left" style="text-align: top; border-bottom: 1px solid black; height: 80px; font-size:12px;">$serviceScope</td>
+											   #end
+	
 											#end
-										</tr>
-										</tbody>
-										</table>
+	   
 									#end
+									
+									#if($minQty != $maxQty)
+										<span>$minQty - $maxQty</span>
+									#else
+										<span>$maxQty</span>
+									#end
+										
 								</td>
-								
-								<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2"  style="text-align: left; padding-left: 5px; font-size:12px;">
-										#if(($tplspecQuestion.clReviewRemark == "" ))
-										 $serviceScope 
-										#else
-											 $tplspecQuestion.clReviewRemark							
+
+								<td valign="top" bgcolor="#d0eaee"  class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:12px;">							
+										#set($rowCount = 0)							
+										#if ($isWipData)											
+											#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
+											<table width="100%" border="0" cellspacing="0" cellpadding="0">
+											<tbody>
+											<tr>
+												#if ($tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
+													<td class="standard border-bottom left" style="text-align: top; border-bottom: 1px solid black; height: 80px; font-size:12px;">Zone $tplSpecAnswer.tplSpecSuppAnswer.tplSpecZoneDtl.zoneName : $tplSpecAnswer.answerRemark</td>
+												#else
+													<td class="standard border-bottom left" style="text-align: top; border-bottom: 1px solid black; height: 80px; font-size:12px;">Zone $tplSpecAnswer.tplSpecSuppAnswer.tplSpecZoneDtl.zoneName : $serviceScope</td>
+												#end
+											</tr>
+											</tbody>
+											</table>
+													
+											#end
+										#else				
+											#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
+											#if($rowCount == 0)											
+												#if ($tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
+													<span>$tplSpecAnswer.answerRemark</span>
+												#else
+													<span>$serviceScope</span>
+												#end
+											#end
+											#set($rowCount = $rowCount + 1)
+											#end
 										#end
+									
 								</td>
 								
 								<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2"  style="text-align: left; padding-left: 5px; font-size:12px;">
@@ -2379,20 +2409,42 @@ u {
 								</tr>
 							
 								</tr>
-								<td valign="top" bgcolor="#d0eaee" colspan="9">
-										#set($rowCount = 0)						
+								<td valign="top" bgcolor="#d0eaee" colspan="8">
 										#if ($tplspecQuestion.specList)
-											#foreach( $specVal in $tplspecQuestion.specList )
-												#if($rowCount == 0)
+										#set($specList = $tplspecQuestion.specList)
+										#set($uniquePosts = [])
+										#foreach($specVal in $specList) 
+										    #set($exists = false)
+										    #foreach($uniquePost in $uniquePosts)
+										        #if($uniquePost == $specVal)
+										            #set($exists = true)
+										            #break
+										        #end
+										    #end
+										
+										    #if(!$exists)
+										        #set($added = $uniquePosts.add($specVal))
+										    #end
+										
+										    #set($specList = $uniquePosts)
+										#end
+																								
+											#set($countSpecList = 1)
+											#foreach( $specVal in $specList )
+												
 												<table width="100%">
 													<tbody>
 													<tr>
-														<td valign="top" bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$specVal</td>
+														#if ($countSpecList == $specList.size())
+															<td valign="top" bgcolor="#d0eaee" class="title border left"   style="text-align: center; padding-left: 5px; font-size:12px;">$specVal</td>
+														#else
+															<td valign="top" bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$specVal</td>
+														#end
+														
 													</tr>
 													</tbody>
 												</table>
-												#end
-												#set($rowCount = $rowCount + 1)	
+											#set($countSpecList = $countSpecList + 1)	
 											#end
 										#end
 								</td>
@@ -2428,7 +2480,7 @@ u {
 									#end
 									
 									</td>
-									<td valign="top" bgcolor="#d0eaee"  class="title border left" style="text-align: left; padding-left: 5px; font-size:12px;">
+									<td valign="top" bgcolor="#d0eaee"  class="title border left"												
 										#if ($tplspecQuestion.clUomFrequency)
 											$tplspecQuestion.clUomFrequency
 										#end
@@ -2455,9 +2507,24 @@ u {
 										#end
 									</td>
 									<td valign="top" bgcolor="#d0eaee" class="title border left"  style="text-align: left; padding-left: 5px; font-size:12px;">
-										#if($tplspecQuestion.clQuantity)
-										 $tplspecQuestion.clQuantity
+										#set($currentValue = 0)										
+										#foreach( $scLoiLoaItem in $scLoiLoaItemList )												
+												#if($scLoiLoaItem.itemName.trim() == $tplspecQuestion.clItem.trim())
+ 											  		#set($currentValue = $scLoiLoaItem.itemQty)
+											  	#end
 										#end
+										
+										#if($currentValue == 0)
+											#if($tplspecQuestion.clQuantity)
+											   	#set($currentValue = $tplspecQuestion.clQuantity)												
+											#else
+												#if($tplSpecZoneQtie.qty)
+												   	#set($currentValue = $tplSpecZoneQtie.qty) 
+												#end
+											#end									   
+									  #end	
+										
+										$currentValue								
 									</td>
 									
 									<td valign="top" bgcolor="#d0eaee" class="title border left" rowspan="2"  style="text-align: left; padding-left: 5px; font-size:12px;">
@@ -2477,16 +2544,21 @@ u {
 								
 								<td valign="top" bgcolor="#d0eaee" colspan="7">						
 										#if ($tplspecQuestion.specList)
+											#set($countSpecList = 1)
 											#foreach( $specVal in $tplspecQuestion.specList )
 												
 												<table width="100%">
 													<tbody>
 													<tr>
-														<td valign="top" bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$specVal</td>
+														#if ($countSpecList == $tplspecQuestion.specList.size())
+															<td valign="top" bgcolor="#d0eaee" class="title border left"   style="text-align: center; padding-left: 5px; font-size:12px;">$specVal</td>
+														#else
+															<td valign="top" bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$specVal</td>
+														#end
 													</tr>
 													</tbody>
 												</table>
-													
+											#set($countSpecList = $countSpecList + 1)			
 											#end
 										#end
 								</td>
