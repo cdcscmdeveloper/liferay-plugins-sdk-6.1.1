@@ -6,7 +6,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 	<ui:param name="answerlbl" value="#{isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer'}" />
-	<ui:param name="remarklbl" value="#{isSqSpec ? 'lbl.sc.supplier.offer' : 'lbl.tpl.spec.content.note'}" />
+	<ui:param name="remarklbl" value="#{isSqSpec or isSpecTypeTechnical ? 'lbl.sc.supplier.offer' : 'lbl.tpl.spec.content.note'}" /><ui:remove> #29007 Vinod changed lbl.tpl.spec.content.note to lbl.sc.supplier.offer </ui:remove>
 	<ui:decorate template="specColumnQuestionViewHeader.xhtml">
 	<ui:define name="otherHeaderSection">
 	<ui:param name="specificationRequired" value="#{isSpecTypeTechnical or isSqSpec or (isSpecTypeFinancial and !isSpecificationReq)}"></ui:param>
@@ -178,6 +178,7 @@
 				<p:ajax partialSubmit="true" process="@this" update="@this, answerNumericMsg" />
 			</p:inputText>
 			<p:message id="answerNumericMsg" for="answerNumeric" display="icon" rendered="#{isAnswerTypeNumeric and !isSpecTypeFinancial}" />
+			<h:outputText value="#{templateSpecBackingBean.getParameterDesc(tplSpecAnswer.tplSpecQuestion.answerTypeCode)}" rendered="#{isAnswerTypeNumeric and !isSpecTypeFinancial}"/><ui:remove> #29007	Vinod Added </ui:remove>
 			<h:outputText id="answerNumText" 
 				value="#{tplSpecAnswer.answerNumeric}"
 				rendered="#{isAnswerTypeNumeric and (isSpecTypeFinancial and !isPriceTypeTier)}">
