@@ -432,7 +432,6 @@ public class SvcSiteAssignBackingBean extends
 					+ svTGroup.getPmCategoryL3().getCategoryL3Code();
 			if(!s.contains(catCode))
 				s = s.concat("<br/>"+catCode);
-			getManagedBean().getCategoryLs().get(0).getPmCategoryL1().getCategoryL1Code();
 		}
 		return s;
 	}
