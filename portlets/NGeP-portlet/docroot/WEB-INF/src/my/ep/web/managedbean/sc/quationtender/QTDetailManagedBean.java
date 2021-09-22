@@ -1647,7 +1647,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private Long currentQTStatus;
 	private Long currentCMTStatus;
 	private boolean committeeUpdateFlow;
-
 	//#25037-END
 	
 	//#25077 - Start
@@ -1669,6 +1668,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean isChecklist;
 	private boolean isGenInfo;
 	// #15391 - end
+	
+	// #30451-Start.
+	private boolean isBdSfFlow;
+	// #30451-End.
 	
 	/**
 	 * Instantiates a new QT detail managed bean.
@@ -10521,5 +10524,21 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.isGenInfo = isGenInfo;
 	}
 	// #15391 -end-
+
+	// #30451-Start.
+	/**
+	 * @return the isBdSfFlow
+	 */
+	public boolean isBdSfFlow() {
+		return isBdSfFlow;
+	}
+
+	/**
+	 * @param isBdSfFlow the isBdSfFlow to set
+	 */
+	public void setBdSfFlow(boolean isBdSfFlow) {
+		this.isBdSfFlow = isBdSfFlow;
+	}
+	// #30451-End.
 
 }
