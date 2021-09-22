@@ -2167,13 +2167,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			os = new ByteArrayOutputStream();
 			ImageIO.write(bufferedImg, "png", os);
 			graphicText = new DefaultStreamedContent(new ByteArrayInputStream( os.toByteArray()), "image/png");
-			/*
 			if (graphicText == null) {
 				log.info(">>>>>>>>>>>>Graphic is null!!!");
 			} else {
 				log.info(">>>>>>>>>>>>Graphic is not null:" + graphicText.getStream());
 			}
-			*/
 		} catch (Exception e) {
 			log.error(e);
 		} finally {
@@ -2200,6 +2198,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		String skipValidator = FacesContext.getCurrentInstance()
 				.getExternalContext().getRequestParameterMap()
 				.get("skipValidator");
+		//START 31758
+		EpPropertiesUtils prop = EpPropertiesUtils.getInstance();
+		String captchaEnable = prop.getProperty("captcha.enabled");
+		if(captchaEnable != null && "false".equalsIgnoreCase(captchaEnable)){
+			skipValidator = "true";
+		}		
+		//END 31758
 		if (skipValidator == null) {
 			String captchaAnswer = (String) value;
 			if (captchaAnswer == null || captchaAnswer.length() == 0) {
@@ -3205,6 +3210,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	//25792 - end
 	
 	//27346 - start 
+	//FIXME : 16052019 - SSM INTEGRATION CR - start
 		public void redirectToViewSSMInfo(String regNo,String businesstype) {
 			log.info("redirectToViewSSMInfo---------------------------------------------------Start");
 			clearPersonnelList();
