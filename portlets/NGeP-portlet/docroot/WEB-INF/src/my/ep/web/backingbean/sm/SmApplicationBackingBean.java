@@ -13337,12 +13337,18 @@ public class SmApplicationBackingBean extends
 			List<SmSupplierCategory> activeList = new ArrayList<SmSupplierCategory>();
 			if(getManagedBean().getSmAppl().getSmSupplierCategories()!=null 
 					&& getManagedBean().getSmAppl().getSmSupplierCategories().size()>0 ){
-				for(SmSupplierCategory activeSuppCat: getManagedBean().getSmAppl().getSmSupplierCategories()){
-					if(activeSuppCat.getRecordStatusFlg().compareTo(
-							SupplierManagementConst.PENDING_ACT_STATUS) == 0 ){
-						activeList.add(activeSuppCat);
+				//28775 - Site Visit Grouping Enhancement - 28775 - start
+				if(getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
+					activeList = getManagedBean().getSmAppl().getSmSupplierCategories();
+				} else {
+					for(SmSupplierCategory activeSuppCat: getManagedBean().getSmAppl().getSmSupplierCategories()){
+						if(activeSuppCat.getRecordStatusFlg().compareTo(
+								SupplierManagementConst.PENDING_ACT_STATUS) == 0 ){
+							activeList.add(activeSuppCat);
+						}
 					}
 				}
+				//28775 - Site Visit Grouping Enhancement - 28775 - end
 			}
 			for (PmDocumentRestr tmp : doc.getPmDocumentRestrs()) {
 				if (tmp.getPmCategoryL3() != null) {
