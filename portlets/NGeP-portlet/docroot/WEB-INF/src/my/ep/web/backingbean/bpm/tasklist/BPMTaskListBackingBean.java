@@ -981,7 +981,7 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 		log.info("taskId:"+this.getManagedBean().getTaskId());
 		log.info("token:"+token);
 		
-		/*#31422-basri 190821*/
+		//#31681 - basri 22/10/21
 		if(null == this.getManagedBean().getTaskIdPair()){
 			this.getManagedBean().setTaskIdPair("null");
 		}
