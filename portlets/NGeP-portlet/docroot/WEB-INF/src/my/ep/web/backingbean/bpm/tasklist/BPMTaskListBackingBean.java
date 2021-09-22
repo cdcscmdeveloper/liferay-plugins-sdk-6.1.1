@@ -655,6 +655,8 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 				    	
 				    	
 				    }
+				}else{
+					strbuildtask = null; //#31681 - basri 22/10/21
 				}
 			/*#31422-basri 190821*/
 			
@@ -982,7 +984,7 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 		
 		
 		/*#31422-basri 190821*/
-		if(!this.getManagedBean().getTaskIdPair().isEmpty()){
+		if(!(null == this.getManagedBean().getTaskIdPair())){//#31681 - basri 22/10/21
 			reqDTO.setTaskId(this.getManagedBean().getTaskIdPair());
 	    	reqDTO.setCtxToken(token);
 	    	bpmSO.claimTask(reqDTO);
