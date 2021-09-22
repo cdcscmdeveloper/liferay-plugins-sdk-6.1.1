@@ -1528,14 +1528,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public void validateCeilingAmount(CtAgency agencyData) {
 		List<CtAgency> agencyList = this.getManagedBean().getContractVer().getCtAgencies();
-		log.info("agencyList : "+agencyList.size());
-		log.info("Changes value using(agencyData) in ContractBackingBean :"+agencyData.getCeilingAmount());
+		//added log for  Bug #31740
+		log.info(" Bug #31740 agencyList : "+agencyList.size());
 		if (agencyList.size() > 0) {
 			double ceilingAmt = 0.0;
 			DecimalFormat df = new DecimalFormat("#.00");
 			for (CtAgency ctAgency : agencyList) {
 				ceilingAmt = ceilingAmt + ctAgency.getCeilingAmount().doubleValue();
-				log.info("Changes value in ContractBackingBean : "+ctAgency.getCeilingAmount().doubleValue());
+				//added log for  Bug #31740
+				log.info("Bug #31740 Changes value in ContractBackingBean : "+ctAgency.getCeilingAmount().doubleValue()+"   ### Agency ID : "+ctAgency.getAgencyId());
 				
 			}
 			ceilingAmt = Double.valueOf(df.format(ceilingAmt));
