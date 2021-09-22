@@ -342,6 +342,7 @@ public class SvcSiteAssignBackingBean extends
 		//28775 - Site Visit Grouping Enhancement - 28775 - start
 		List<SmSupplierCategory> tempL = new ArrayList<SmSupplierCategory>();
 		for(SmSvTask svTask : smAppl.getSmSvTasks()){
+			if(svTask.getPmCategoryL3() == null) continue;
 			tempL.addAll(SmCommonUtil.getInstance().retrieveSupplierCategoryByApplIdAndCategoryId
 					(smAppl.getApplId(), svTask.getPmCategoryL3().getCategoryL3Id()));
 			if(!smAppl.isSiteVisitGroup() || svTask.getSmSvTaskGroups() == null)
@@ -418,11 +419,13 @@ public class SvcSiteAssignBackingBean extends
 	
 	//28775 - Site Visit Grouping Enhancement - 28775 - start
 	public String getFacilityType(SmSvTask svTask){
-		String s = svTask.getSmSvAddress().getFacilityType() + "<br/>"
-				+ svTask.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
-				+ svTask.getPmCategoryL3().getPmCategoryL2().getCategoryL2Code()
-				+ svTask.getPmCategoryL3().getCategoryL3Code();
-		
+		String s = svTask.getSmSvAddress().getFacilityType();
+		if(svTask.getPmCategoryL3() != null){
+			s = s.concat("<br/>"
+					+ svTask.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
+					+ svTask.getPmCategoryL3().getPmCategoryL2().getCategoryL2Code()
+					+ svTask.getPmCategoryL3().getCategoryL3Code());
+		}		
 		if(!getManagedBean().getSmAppl().isSiteVisitGroup()) 
 			return s;
 		
