@@ -91,13 +91,13 @@
 				<p:outputLabel value="*" styleClass="mandatory" />
 			</td>
 			<td>
-				<p:selectOneMenu value="#{yepRptBB.managedBean.documentType}" required="true">
+				<p:selectOneMenu label="#{lbl['lbl.fl.yep.search.doc.type']}" value="#{yepRptBB.managedBean.documentType}" required="true">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 						itemValue="#{null}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.fl.do.poco']}"
-						itemValue="PR"></f:selectItem>
+						itemValue="PO"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.fl.menu.contract.order']}"
-						itemValue="CR"></f:selectItem>
+						itemValue="CO"></f:selectItem>
 					<p:ajax event="change" partialSubmit="true" process="@this"
 						listener="#{yepRptBB.onChangeDocType()}"
 						update=":form" />
@@ -111,15 +111,13 @@
 			
 			<td>
 			<div>
-				<p:selectOneMenu id="pOStatusId" required="true"
-								value="#{yepRptBB.managedBean.purchaseOrderStatus}"
-								style="width: 314px;">
-								<f:selectItems
-									value="#{yepRptBB.getStatusDropDownValues('PY')}" />
-								<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue="0"></f:selectItem>
-								<p:ajax event="change" partialSubmit="true" process="@this"
-									update=":form" />	
-							</p:selectOneMenu>
+			<p:selectOneMenu id="pOStatusId" required="true"
+				style="width: 314px;"
+				label="#{lbl['lbl.fl.purchaseorder.status']}"
+				value="#{yepRptBB.managedBean.purchaseOrderStatus}">
+				<f:selectItems value="#{yepRptBB.getStatusDropdownValuesForYEP('FL',yepRptBB.managedBean.documentType)}"/>
+				<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue="0"></f:selectItem>
+			</p:selectOneMenu>
 			 </div>
 			</td>
 			
@@ -263,7 +261,7 @@
 					display="icon"/></td>
 					
 			<td>
-				<p:outputLabel value="#{lbl['lbl.fl.physical.treasury.circular']}" rendered="#{yepRptBB.managedBean.contractFlag}"/>
+				<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.circular.no']}" rendered="#{yepRptBB.managedBean.contractFlag}"/>
 			</td>
 			<td>
 			<p:inputText maxlength="20" id="pkpNoId"
@@ -309,7 +307,7 @@
 		
 		<tr>
 			<td>
-			<p:outputLabel value="#{lbl['lbl.fl.doc.search.loa.no']}" rendered="#{yepRptBB.managedBean.contractFlag}"/></td>
+			<p:outputLabel value="#{lbl['lbl.fl.deduction.loa']}" rendered="#{yepRptBB.managedBean.contractFlag}"/></td>
 			<td><p:inputText maxlength="20"
 					rendered="#{yepRptBB.managedBean.contractFlag}"
 					value="#{yepRptBB.managedBean.loaNo}">
