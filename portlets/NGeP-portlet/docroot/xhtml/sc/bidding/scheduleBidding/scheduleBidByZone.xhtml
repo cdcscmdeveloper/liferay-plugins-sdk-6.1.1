@@ -35,12 +35,15 @@
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.bidding.start']}" />
 				</f:facet>
+				<!-- 30451,17376 -start- -->
 				<ac:dateTime id="zoneBidStartDate"
 					mindate="#{scheduleBiddingBB.managedBean.minStartDate}"
 					postUpdateListener="#{scheduleBiddingBB.bidStartDateSelectListener(scheduleZoneBid)}"
 					label="#{lbl['lbl.sc.bidding.start']}"
 					value="#{scheduleZoneBid.startDate}" rowIndex="#{index}"
-					update="@([id$=bidScheduleByZonal])">
+					update="@([id$=bidScheduleByZonal])"
+					disabled="#{scheduleBiddingBB.managedBean.bdSfFlow}">
+				<!-- 30451,17376 -end- -->
 				</ac:dateTime>
 				<p:message id="startDateByZoneMsg" showDetail="false"
 					for="zoneBidStartDate" display="icon" />
@@ -49,8 +52,11 @@
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.bidding.end']}" />
 				</f:facet>
+				<!-- 30451,17376 -start- -->
 				<p:inputText id="zoneBidEndDate" readonly="true"
-					value="#{scheduleZoneBid.endDate}">
+					value="#{scheduleZoneBid.endDate}"
+					disabled="#{scheduleBiddingBB.managedBean.bdSfFlow}">
+					<!-- 30451,17376 -end- -->
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 				</p:inputText>
@@ -60,8 +66,11 @@
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.duration.hours']}" />
 				</f:facet>
+				<!-- 30451,17376 -start- -->
 				<p:selectOneMenu id="bidDurationByZone"
-					value="#{scheduleZoneBid.duration}">
+					value="#{scheduleZoneBid.duration}"
+					disabled="#{scheduleBiddingBB.managedBean.bdSfFlow}">
+					<!-- 30451,17376 -end- -->
 					<f:selectItems value="#{scheduleBiddingBB.managedBean.selectItems}"
 						var="selectItem" itemLabel="#{selectItem.label}"
 						itemValue="#{selectItem.value}" />
@@ -131,8 +140,11 @@
 						<ac:iconTooltip
 							value="#{lbl['lbl.sc.min.decrement.block.tooltip']}" />
 					</f:facet>
+					<!-- 30451,17376 -start- -->
 					<p:inputText style="text-align : right" id="decrementAmtByZone"
-						immediate="true" maxlength="19" value="#{item.decrementAmt}">
+						immediate="true" maxlength="19" value="#{item.decrementAmt}"
+						disabled="#{scheduleBiddingBB.managedBean.bdSfFlow}">
+						<!-- 30451,17376 -end- -->
 						<p:ajax event="change" process="@this" partialSubmit="true" />
 						<ac:validateNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"
