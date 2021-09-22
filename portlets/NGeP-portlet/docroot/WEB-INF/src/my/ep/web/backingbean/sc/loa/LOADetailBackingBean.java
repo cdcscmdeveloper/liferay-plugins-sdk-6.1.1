@@ -1576,7 +1576,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	public void downloadReport(ScLoaReport scLoaReport) throws IOException {
 		debugLogger("downloadReport");
 		// #29006 - start
-		if (scLoaReport.getTitle().contains(lampiranA3SubStr) && !ParameterConst.DOCTYPE_QUOTATION.equals(this.getManagedBean().getScLoa().getScLoiLoa().getDocType())){//29007&30963
+		if (scLoaReport.getTitle().contains(lampiranA3SubStr) && !ParameterConst.DOCTYPE_QUOTATION.equals(this.getManagedBean().getScLoa().getScLoiLoa().getDocType())){// #29007 & #30963
 			try {
 				//#31425 - start
 				if(scLoaReport.getScLoaReportAttachment().getDocNo() == null){
@@ -1866,7 +1866,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				} //#19336
 			}
 			// #29006 - start
-			if (scLoaReport.getTitle().contains(lampiranA3SubStr) && !ParameterConst.DOCTYPE_QUOTATION.equals(this.getManagedBean().getScLoa().getScLoiLoa().getDocType())) {//29007&30963
+			if (scLoaReport.getTitle().contains(lampiranA3SubStr) && !ParameterConst.DOCTYPE_QUOTATION.equals(this.getManagedBean().getScLoa().getScLoiLoa().getDocType())) {// #29007 & #30963
 				try {
 					//#31425 - start
 					if(scLoaReport.getScLoaReportAttachment().getDocNo() == null){
