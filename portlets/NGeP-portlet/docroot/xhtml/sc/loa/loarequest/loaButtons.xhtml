@@ -40,7 +40,7 @@
 					rendered="#{isEditableStatus and !isSaveHideSqExpired}" process="@form" update="@form"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 
-				<ui:remove> #29007 - start - change action</ui:remove>
+				<ui:remove> #29007 - start - change action </ui:remove>
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt and isSqStillValid}"
 					action="#{lOADetailBackingBean.submitConformationForLampiranA3}" process="@form"
