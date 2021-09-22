@@ -14197,6 +14197,10 @@ private void retriveCommitteeRemarksList(){
 						
 						EvaluationReqDTO reqDTO2 = new EvaluationReqDTO();
 						EvaluationResDTO resDTO2 = new EvaluationResDTO();
+			//Bug #31553 - related to 25138 (FARID)			
+						reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+						reqDTO.setNotOfferSupplierSearchBean(new SearchBean<Object[]>());
+			//Bug #31553 - related to 25138 (FARID)
 						reqDTO2.setCheckListId(singleChecklist.getQtChecklistId());
 						reqDTO2.setQtId(this.getManagedBean().getScQt().getQtId());
 						reqDTO2.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
@@ -14206,17 +14210,36 @@ private void retriveCommitteeRemarksList(){
 							} 
 						}
 						resDTO2 = evaluationSO.retrievProposalCheckListByCheckListNZone(reqDTO2);
-						
-						for(ScQtProposalChecklist proplist : resDTO2.getComplianceResultBean().getResultList()){
-							if (null != proplist.getScQtProposal()
-									.getProposalAmount().getPmEvalStatus()) {
-								this.getManagedBean().setEvalStatus(QTStatusConst.TS_COMPLETED);
-								
-							}else{
-								this.getManagedBean().setEvalStatus(QTStatusConst.TS_PENDING_SUBMISSION);
-								break;//#25138
-							}
+			//Bug #31553 - related to 25138 (FARID)
+						List<Object[]> partialOfferQualified = evaluationSO.retrieveSummaryNotOfferSuppliersPackageTech(reqDTO).getNotOfferSupplierResultBean().getResultList();
+						List<Long> excludeSupplier = new ArrayList<Long>();
+						for(Object[] exclude : partialOfferQualified){
 							
+							Long suppId = new Long(((BigDecimal)exclude[0]).toString());
+							
+							excludeSupplier.add(suppId);
+							
+						}
+			//Bug #31553 - related to 25138 (FARID)	
+						for(ScQtProposalChecklist proplist : resDTO2.getComplianceResultBean().getResultList()){
+							//Bug #31553 - related to 25138 (FARID)						
+							if (!excludeSupplier.contains(proplist
+									.getScQtProposal().getScQtSupplier()
+									.getSmSupplier().getSupplierId())) {
+
+								if (null != proplist.getScQtProposal()
+										.getProposalAmount().getPmEvalStatus()) {
+									this.getManagedBean().setEvalStatus(
+											QTStatusConst.TS_COMPLETED);
+
+								} else {
+									this.getManagedBean()
+											.setEvalStatus(
+													QTStatusConst.TS_PENDING_SUBMISSION);
+									break;// #25138
+								}
+							}
+			//Bug #31553 - related to 25138 (FARID)								
 						}
 						// #31420 Bug fixed
 						if(CollectionUtils.isEmpty(resDTO2.getComplianceResultBean().getResultList())){
@@ -15020,6 +15043,10 @@ private void retriveCommitteeRemarksList(){
 						
 						EvaluationReqDTO reqDTO2 = new EvaluationReqDTO();
 						EvaluationResDTO resDTO2 = new EvaluationResDTO();
+			//Bug #31553 - related to 25138 (FARID)			
+						reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+						reqDTO.setNotOfferSupplierSearchBean(new SearchBean<Object[]>());
+			//Bug #31553 - related to 25138 (FARID)
 						reqDTO2.setCheckListId(newList.getQtChecklistId());
 						reqDTO2.setQtId(this.getManagedBean().getScQt().getQtId());
 						reqDTO2.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
@@ -15029,17 +15056,39 @@ private void retriveCommitteeRemarksList(){
 							} 
 						}
 						resDTO2 = evaluationSO.retrievProposalCheckListByCheckListNZone(reqDTO2);
-						
-						for(ScQtProposalChecklist proplist : resDTO2.getComplianceResultBean().getResultList()){
-							if (null == proplist.getScQtProposal()
-									.getProposalAmount().getPmEvalStatus()) {
-								this.getManagedBean().getOneTierFinancialActiveIndex();
-								retriveFinancialEvaluationStagePackage();
-								throw new EpException(
-										MessageConst.ERROR_760241);
-								
-							}
+			//Bug #31553 - related to 25138 (FARID)				
+						List<Object[]> partialOfferQualified = evaluationSO.retrieveSummaryNotOfferSuppliersPackageTech(reqDTO).getNotOfferSupplierResultBean().getResultList();
+						List<Long> excludeSupplier = new ArrayList<Long>();
+						for(Object[] exclude : partialOfferQualified){
 							
+							Long suppId = new Long(((BigDecimal)exclude[0]).toString());
+							
+							excludeSupplier.add(suppId);
+							
+						}
+			//Bug #31553 - related to 25138 (FARID)	
+						for(ScQtProposalChecklist proplist : resDTO2.getComplianceResultBean().getResultList()){
+							//Bug #31553 - related to 25138 (FARID)	
+							if (!excludeSupplier.contains(proplist
+									.getScQtProposal().getScQtSupplier()
+									.getSmSupplier().getSupplierId())) {
+
+								if (proplist.getCompliance() != null
+										&& proplist.getCompliance() == 1) {
+									if (null == proplist.getScQtProposal()
+											.getProposalAmount()
+											.getPmEvalStatus()) {
+										this.getManagedBean()
+												.getOneTierFinancialActiveIndex();
+										retriveFinancialEvaluationStagePackage();
+										throw new EpException(
+												MessageConst.ERROR_760241);
+
+									}
+
+								}
+							}
+				//Bug #31553 - related to 25138 (FARID)
 						}
 					}
 					
