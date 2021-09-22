@@ -1263,10 +1263,6 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		validateSelectedPersonnelInfo();
 		//#27371 - end
 
-		// #30425 - start
-		setSoftcertFlag();
-		// #30425 - end
-
 		if (softcertSuppDocList == null || softcertSuppDocList.isEmpty()) {
 			getManagedBean().setSuppDocMode("H");
 		}
@@ -1674,20 +1670,4 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 	}
 	
-	// #30425 - start
-	private void setSoftcertFlag() {
-		if (getManagedBean().getSoftCertSelectList() != null) {
-			for (SmPersonnel personnel : getManagedBean().getSoftCertSelectList()) {
-				System.out.println("SoftCertBackingBean.setSoftcertFlag() | getPersonnelId == "
-						+ personnel.getPersonnelId());
-				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL
-						&& !(SmCommonUtil.isSoftcertReadyForRenewal(getManagedBean().getSmAppl().getSmSupplier()
-								.getSupplierId(), personnel))) {
-					personnel.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_ISSUED);
-				}
-				System.out.println("after set getSoftcertFlg == " + personnel.getSoftcertFlg());
-			}
-		}
-	}
-	// #30425 - end
 }
