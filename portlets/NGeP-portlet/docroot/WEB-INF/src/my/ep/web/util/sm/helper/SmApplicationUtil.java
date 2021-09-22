@@ -1554,7 +1554,7 @@ public class SmApplicationUtil {
 			int currentTab) {
 		boolean isSpecial = false;
 		for (SmSupplierCategory category : managedBean.getSmAppl().getSmSupplierCategories()) {
-			if (category.isSpecialCategory() && managedBean.getSmAppl().getApplType().equals("N")) {
+			if (category.isSpecialCategory() && managedBean.getSmAppl().getApplCategoryType().equals("N")) {
 				setNavigationBackToCurrentPage(currentTab, managedBean);
 				isSpecial = true;
 			}
