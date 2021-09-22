@@ -108,7 +108,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		// #26307 start
 		String cardType = null; 
 		String extraP = httpServletRequest.getParameter("extraP");
-		
+		boolean fromManualPayment = false;
 		//Start //26307
 		boolean skipChecking = false;
 		log.info("Enter Init");
@@ -165,6 +165,9 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				paydate = DateUtils.dateToString("yyyy-MM-dd HH:mm:ss", pyPymt.getPaymentDate());;
 				if(pyPymt.getPyPaymentOrder() != null && pyPymt.getPyPaymentOrder().getPyPaymentResponses().size()>0){
 					tranID = pyPymt.getPyPaymentOrder().getPyPaymentResponses().get(0).getTransactionId();
+					if(tranID != null && "123456".equalsIgnoreCase(tranID)){
+						fromManualPayment = true;
+					}
 				}
 				skipChecking = true;
 				status = SupplierManagementConst.MOL_FAIL;
@@ -206,7 +209,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			responseRedirect();
 		}else{
 			log.info("<<<<<<<>PostConstruct Parameter - STart>>>>>>>>>>>");
-			if(orderId != null){
+			if(orderId != null && !fromManualPayment){//26307 to handle manual payment
 				Long ordId = Long.valueOf(orderId);
 				IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
 				PaymentReqDTO reqDTO = new PaymentReqDTO();
