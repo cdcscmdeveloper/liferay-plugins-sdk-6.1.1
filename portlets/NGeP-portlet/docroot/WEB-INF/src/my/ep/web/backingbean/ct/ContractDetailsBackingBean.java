@@ -893,8 +893,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		//#25406 - Start
 		if (ctBB.getManagedBean().getContractVer().getDocType().equals(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)
 				&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
-			//added log for  Bug #31740
-			log.info(" Bug #31740 BPM_SAVE saveContract(contractDetailsBackingBean) ceiling amount in save method : "+ctContractVer.getCtAgencies().size());
 			ctContractVer.setOwnerOrgProfile(getManagedBean().getSearchPtjProfile());
 		}
 		
@@ -902,8 +900,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
 			if(ctContractVer.getCtAgencies() != null){
 			for (CtAgency ctAgency : ctContractVer.getCtAgencies()) {
-				//added log for  Bug #31740
-				log.info(" Bug #31740 BPM_SUBMIT saveContract(contractDetailsBackingBean) ceiling amount in save method : "+ctAgency.getCeilingAmount()+"  and  ### Agency ID :"+ctAgency.getAgencyId());
 				ctAgency.setOrgProfile(getManagedBean().getSearchPtjProfile());
 			}
 		}
@@ -976,14 +972,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		reqDTO.setDeleteAgencyMap(ctBB.getManagedBean().getDeleteAgencyMap());
 		reqDTO.setUpdateZoneMap(ctBB.getManagedBean().getUpdateZoneMap());
 		reqDTO.setUpdateItemMap(ctBB.getManagedBean().getUpdateItemMap());
-	
-		//added log for  Bug #31740
-		if(ctContractVer.getCtAgencies() != null){
-			for (CtAgency ctAgency : ctContractVer.getCtAgencies()) {
-				log.info(" Bug #31740  saveContract(contractDetailsBackingBean) ceiling amount in save method before saveContractVer : "+ctAgency.getCeilingAmount()+"  and  ### Agency ID :"+ctAgency.getAgencyId());
-			}
-		}
-		
+
 		if (this.getManagedBean().getPmDigiSign() != null) {
 			reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
 		}
@@ -1102,8 +1091,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 */
 	public void validateCtContractVer(String action) throws EpException {
 		getManagedBean().setAutoUpdate(true);
-		//added log for  Bug #31740
-         log.info(" Bug #31740 inside validateCtContractVer ");
+
 		/*Validation for delivery term main page*/
 		if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) &&
 				!ctBB.getManagedBean().getContractVer().getCtContract().isZonalPricing()
@@ -1245,8 +1233,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				DecimalFormat df = new DecimalFormat("#.00");
 				for (CtAgency ctAgency : ctBB.getManagedBean().getContractVer().getCtAgencies()) {
 					ceilingAmt = ceilingAmt + ctAgency.getCeilingAmount().doubleValue();
-					//added log for  Bug #31740
-					log.info("Bug #31740 Changes value in ContractDetailsBackingBean inside validatecontractver : "+ctAgency.getCeilingAmount().doubleValue()+"   ### Agency ID : "+ctAgency.getAgencyId());
 				}
 				ceilingAmt = Double.valueOf(df.format(ceilingAmt));
 
