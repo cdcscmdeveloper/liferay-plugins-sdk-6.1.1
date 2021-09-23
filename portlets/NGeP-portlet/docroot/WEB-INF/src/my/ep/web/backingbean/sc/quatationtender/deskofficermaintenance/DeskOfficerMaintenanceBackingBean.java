@@ -1299,7 +1299,13 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 	private void submitDOReassignmentApproval(String outcome, PmDigiSign digisign){
 		try{
 			if(CollectionUtils.isNotEmpty(getManagedBean().getCurrentApproval().getScQtApprovalRemarks())){
-				this.getManagedBean().getCurrentApprovalRequest().setChangedValue(this.getManagedBean().getNewDeskOfficer().getUserId().toString());
+				// 25627 - note 310 start
+				if (!BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
+					this.getManagedBean().getCurrentApprovalRequest()
+							.setChangedValue(this.getManagedBean().getNewDeskOfficer().getUserId().toString());
+				}
+				// 25627 - note 310 end
+
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 				reqDTO.setApproval(this.getManagedBean().getCurrentApproval());
 				reqDTO.setApproverAction(outcome);
