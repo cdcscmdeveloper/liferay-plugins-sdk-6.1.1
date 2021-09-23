@@ -6,7 +6,10 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 	<ui:param name="answerlbl" value="#{isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer'}" />
-	<ui:param name="remarklbl" value="#{isSqSpec or isSpecTypeTechnical ? 'lbl.sc.supplier.offer' : 'lbl.tpl.spec.content.note'}" /><ui:remove> #29007 Vinod changed  lbl.tpl.spec.content.note to lbl.sc.supplier.offer </ui:remove>
+	<ui:remove> #29007 Vinod changed  lbl.tpl.spec.content.note to lbl.sc.supplier.offer -start- </ui:remove>
+	<ui:param name="remarklbl" value="#{isSqSpec or isSpecTypeTechnical ? 'lbl.sc.supplier.offer' : 'lbl.tpl.spec.content.note'}" />
+	<ui:remove> #29007 Vinod changed  lbl.tpl.spec.content.note to lbl.sc.supplier.offer -end- </ui:remove>
+
 	<ui:decorate template="specColumnQuestionViewHeader.xhtml">
 	<ui:define name="otherHeaderSection">
 	<ui:param name="specificationRequired" value="#{isSpecTypeTechnical or isSqSpec or (isSpecTypeFinancial and !isSpecificationReq)}"></ui:param>
@@ -170,6 +173,9 @@
 				<f:validateLength for="answerText" maximum="1000" />
 			</p:inputTextarea>
 			<p:message id="answerTextMsg" for="answerText" display="icon" rendered="#{isAnswerTypeText}" />
+			<!-- #29007	Vinod Added -start- -->
+			<h:outputText value="#{templateSpecBackingBean.getParameterDesc(tplSpecAnswer.tplSpecQuestion.answerTypeCode)}" rendered="#{isAnswerTypeText}"/>
+			<!-- #29007	Vinod Added -end- -->
 			<p:inputText id="answerNumeric" style="width:calc(100% - 40px); text-align:right;" 
 				value="#{tplSpecAnswer.answerNumeric}" maxlength="19"
 				rendered="#{isAnswerTypeNumeric and !isSpecTypeFinancial}" required="false"
@@ -178,7 +184,9 @@
 				<p:ajax partialSubmit="true" process="@this" update="@this, answerNumericMsg" />
 			</p:inputText>
 			<p:message id="answerNumericMsg" for="answerNumeric" display="icon" rendered="#{isAnswerTypeNumeric and !isSpecTypeFinancial}" />
-			<h:outputText value="#{templateSpecBackingBean.getParameterDesc(tplSpecAnswer.tplSpecQuestion.answerTypeCode)}" rendered="#{isAnswerTypeNumeric and !isSpecTypeFinancial}"/><ui:remove> #29007	Vinod Added </ui:remove>
+			<ui:remove> #29007	Vinod Added -start- </ui:remove>
+			<h:outputText value="#{templateSpecBackingBean.getParameterDesc(tplSpecAnswer.tplSpecQuestion.answerTypeCode)}" rendered="#{isAnswerTypeNumeric and !isSpecTypeFinancial}"/>
+			<ui:remove> #29007	Vinod Added -end- </ui:remove>
 			<h:outputText id="answerNumText" 
 				value="#{tplSpecAnswer.answerNumeric}"
 				rendered="#{isAnswerTypeNumeric and (isSpecTypeFinancial and !isPriceTypeTier)}">
@@ -223,7 +231,9 @@
 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 		</h:outputText>
 	</p:column>
-	<p:column  style="width:200px;"  rendered="#{!(isSpecTypeFinancial and !isSpecificationReq) and !isSqSpec}"> <!-- #29006 add !isSqSpec -->
+	<!-- #29006 add !isSqSpec -start- -->
+	<p:column  style="width:200px;"  rendered="#{!(isSpecTypeFinancial and !isSpecificationReq) and !isSqSpec}">
+	<!-- #29006 add !isSqSpec -end- -->
 		<p:inputTextarea id="answerRemarks" label="#{lbl[remarklbl]}" style="width:calc(100% - 15px);" value="#{tplSpecAnswer.answerRemark}" 
 		disabled="#{!editable}" rows="1"  onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
 		onmouseout="limitTextArea(this,1000);" rendered="#{!isSqSpec or (isSqSpec and isQuestionTypeItem)}">
