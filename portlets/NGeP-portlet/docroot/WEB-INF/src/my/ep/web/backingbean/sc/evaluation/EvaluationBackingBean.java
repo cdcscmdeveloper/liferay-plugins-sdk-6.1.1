@@ -12301,6 +12301,9 @@ private void retriveCommitteeRemarksList(){
 				reqDTO.setQtId(qtId);
 				reqDTO.setEvalStage(evalStage);
 				reqDTO.setProposalChecklistSearchBean(searchBean);
+	//Bug #31551 Farid start 23/9/2021
+				reqDTO.setCheckZonal(getManagedBean().getScQt().isZonal());
+	//Bug #31551 Farid end 23/9/2021
 				return evaluationSO.retrieveComplianceDtlsByCheckList(reqDTO)
 						.getComplianceResultBean();
 
