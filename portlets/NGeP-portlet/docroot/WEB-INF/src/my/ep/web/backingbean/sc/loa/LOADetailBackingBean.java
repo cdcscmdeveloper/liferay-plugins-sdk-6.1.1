@@ -6510,7 +6510,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		context.put("mofCertValidityDuration", mofCertValidityDuration);
 		context.put("isBumi", isBumi);		
 		context.put("kodBidang", kodBidang);
-		context.put("mofNo", scLoiLoa.getMofNo());
+		// #25025 - Start.
+		if (StringUtils.isNotEmpty(scLoiLoa.getMofNo())) {
+			context.put("mofNo", scLoiLoa.getMofNo());
+		} else {
+			context.put("mofNo", "");
+		}
+		// #25025 - End.
 	}
 
 	/**
