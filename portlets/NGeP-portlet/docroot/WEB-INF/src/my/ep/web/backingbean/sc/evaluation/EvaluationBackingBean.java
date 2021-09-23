@@ -14215,7 +14215,12 @@ private void retriveCommitteeRemarksList(){
 						resDTO2 = evaluationSO.retrievProposalCheckListByCheckListNZone(reqDTO2);
 			//Bug #31553 - related to 25138 (FARID)
 						List<Object[]> partialOfferQualified = evaluationSO.retrieveSummaryNotOfferSuppliersPackageTech(reqDTO).getNotOfferSupplierResultBean().getResultList();
+						//Bug #31768 - related to 25138 (FARID)
 						List<Long> excludeSupplier = new ArrayList<Long>();
+						if(CollectionUtils.isEmpty(partialOfferQualified)){
+							partialOfferQualified = new ArrayList<Object[]>();
+						}
+						//Bug #31768 - related to 25138 (FARID)
 						for(Object[] exclude : partialOfferQualified){
 							
 							Long suppId = new Long(((BigDecimal)exclude[0]).toString());
@@ -15061,7 +15066,12 @@ private void retriveCommitteeRemarksList(){
 						resDTO2 = evaluationSO.retrievProposalCheckListByCheckListNZone(reqDTO2);
 			//Bug #31553 - related to 25138 (FARID)				
 						List<Object[]> partialOfferQualified = evaluationSO.retrieveSummaryNotOfferSuppliersPackageTech(reqDTO).getNotOfferSupplierResultBean().getResultList();
+						//Bug #31768 - related to 25138 (FARID)
 						List<Long> excludeSupplier = new ArrayList<Long>();
+						if(CollectionUtils.isEmpty(partialOfferQualified)){
+							partialOfferQualified = new ArrayList<Object[]>();
+						}
+						//Bug #31768 - related to 25138 (FARID)
 						for(Object[] exclude : partialOfferQualified){
 							
 							Long suppId = new Long(((BigDecimal)exclude[0]).toString());
