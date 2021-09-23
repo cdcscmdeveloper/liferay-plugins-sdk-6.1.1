@@ -7789,18 +7789,22 @@ public class SmApplicationBackingBean extends
 							ssmResDTO.getSmPersonnelAll(), "identificationNo");
 			if(personnelSSM!=null && !personnelSSM.getSmPersonnelAddresses().isEmpty()){
 				for(SmPersonnelAddress smpersonAddress : personnelSSM.getSmPersonnelAddresses()){
-					if(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE.equals(smpersonAddress.getAddressType())){
-						getManagedBean().getShareHolderOffAddr().setSmAddress(smpersonAddress.getSmAddress());
-						initializeSmAddressChilds(getManagedBean().getShareHolderOffAddr().getSmAddress());
-					}else if(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES.equals(smpersonAddress.getAddressType())){
-						getManagedBean().getShareHolderResdAddr().setSmAddress(smpersonAddress.getSmAddress());
-						initializeSmAddressChilds(getManagedBean().getShareHolderResdAddr().getSmAddress());
-					}else if(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL.equals(smpersonAddress.getAddressType())){
-						getManagedBean().getShareHolderMailAddr().setSmAddress(smpersonAddress.getSmAddress());
-						initializeSmAddressChilds(getManagedBean().getShareHolderMailAddr().getSmAddress());
-					}else if(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM.equals(smpersonAddress.getAddressType())){
-						getManagedBean().getShareHolderPermAddr().setSmAddress(smpersonAddress.getSmAddress());
-						initializeSmAddressChilds(getManagedBean().getShareHolderPermAddr().getSmAddress());
+					if((smpersonAddress.getSmAddress()!=null && smpersonAddress.getSmAddress().getPmDistrict()==null)||
+							(smpersonAddress.getSmAddress()!=null && smpersonAddress.getSmAddress().getPmCity()==null)
+							||smpersonAddress.getSmAddress()==null){
+						if(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE.equals(smpersonAddress.getAddressType())){
+							getManagedBean().getShareHolderOffAddr().setSmAddress(smpersonAddress.getSmAddress());
+							initializeSmAddressChilds(getManagedBean().getShareHolderOffAddr().getSmAddress());
+						}else if(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES.equals(smpersonAddress.getAddressType())){
+							getManagedBean().getShareHolderResdAddr().setSmAddress(smpersonAddress.getSmAddress());
+							initializeSmAddressChilds(getManagedBean().getShareHolderResdAddr().getSmAddress());
+						}else if(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL.equals(smpersonAddress.getAddressType())){
+							getManagedBean().getShareHolderMailAddr().setSmAddress(smpersonAddress.getSmAddress());
+							initializeSmAddressChilds(getManagedBean().getShareHolderMailAddr().getSmAddress());
+						}else if(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM.equals(smpersonAddress.getAddressType())){
+							getManagedBean().getShareHolderPermAddr().setSmAddress(smpersonAddress.getSmAddress());
+							initializeSmAddressChilds(getManagedBean().getShareHolderPermAddr().getSmAddress());
+						}
 					}
 				}
 			}
