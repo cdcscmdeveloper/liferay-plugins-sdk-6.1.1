@@ -2853,10 +2853,17 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		 * IF BPK DONT SET ORG_PROFILE (PTJ)
 		 */
 		if(scMember.getPmUser()!=null && scMember.getPmUser().getOrgTypeCode()!=null) {
-			if(scMember.getPmUser().getOrgTypeCode().getParameterCode().equalsIgnoreCase("BPK")) {
+			//20210716@asyrafhaziq - 30421 -start
+			String orgTypeCode = scMember.getPmUser().getOrgTypeCode().getParameterCode();
+			if(orgTypeCode.equalsIgnoreCase(ParameterConst.ORG_TYPE_BPK)){
 				scMember.setPmOrgProfile(getBKPOrgProfileByUserId(scMember.getPmUser()
 						.getUserId()));
-			} else {
+			} else if (orgTypeCode.equalsIgnoreCase(ParameterConst.ORG_TYPE_OTHERS)){
+				scMember.setPmOrgProfile(getOTHOrgProfileByUserId(scMember.getPmUser()
+						.getUserId()));
+			}
+			//20210716@asyrafhaziq - 30421 -end
+			else {
 				scMember.setPmOrgProfile(getPTJOrgProfileByUserId(scMember.getPmUser()
 						.getUserId()));
 			}			
@@ -2893,7 +2900,37 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return pmOrgProfile;
 	}
 	// Enhancement #21689 - end - 
-	
+	//20210716@asyrafhaziq - 30421 -start
+	private PmOrgProfile getOTHOrgProfileByUserId(Long userId) {
+		PmOrgProfile pmOrgProfile = null;
+		
+		if (userId != null) {
+			IOrgProfileSO orgProfileSO = null;
+			
+			try {
+				orgProfileSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IOrgProfileSO.class);
+
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				reqDTO.setUserId(userId);
+				reqDTO.setOrgType(OrganizationType.OTHERS.value());
+				
+				OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
+				List<PmOrgProfile> pmOrgProfiles = resDTO.getOrgProfileList();
+				
+				if (pmOrgProfiles != null && pmOrgProfiles.size() > 0) {
+					pmOrgProfile = pmOrgProfiles.get(0);
+				}
+
+			} finally {
+				orgProfileSO = null;
+			}
+		}
+		
+		return pmOrgProfile;
+	}
+	//20210716@asyrafhaziq - 30421 -end	
 	private PmOrgProfile getPTJOrgProfileByUserId(Long userId) {
 
 		PmOrgProfile pmOrgProfile = null;
