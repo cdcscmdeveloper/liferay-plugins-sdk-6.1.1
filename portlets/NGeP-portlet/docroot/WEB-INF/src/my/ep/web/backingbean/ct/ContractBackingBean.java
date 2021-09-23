@@ -1528,15 +1528,23 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public void validateCeilingAmount(CtAgency agencyData) {
 		List<CtAgency> agencyList = this.getManagedBean().getContractVer().getCtAgencies();
-		//added log for  Bug #31740
+		// Start added log for  Bug #31740
 		log.info(" Bug #31740 agencyList : "+agencyList.size());
+		log.info("Changes value using(agencyData) in ContractBackingBean before set :"+agencyData.getCeilingAmount());
+		log.info("Changes value using(getOrgProfileId()) in ContractBackingBean before set :"+agencyData.getOrgProfile().getOrgProfileId());
 		if (agencyList.size() > 0) {
 			double ceilingAmt = 0.0;
 			DecimalFormat df = new DecimalFormat("#.00");
 			for (CtAgency ctAgency : agencyList) {
+				if(ctAgency.getOrgProfile().getOrgProfileId().equals(agencyData.getOrgProfile().getOrgProfileId())){
+					ctAgency.setCeilingAmount(agencyData.getCeilingAmount());
+					log.info("Changes value using(agencyData) in ContractBackingBean after set : "+agencyData.getCeilingAmount());
+					log.info("Changes value using(getOrgProfileId()) in ContractBackingBean after set : "+ctAgency.getOrgProfile().getOrgProfileId());
+				}
 				ceilingAmt = ceilingAmt + ctAgency.getCeilingAmount().doubleValue();
 				//added log for  Bug #31740
 				log.info("Bug #31740 Changes value in ContractBackingBean : "+ctAgency.getCeilingAmount().doubleValue()+"   ### Agency ID : "+ctAgency.getAgencyId());
+		// End added log for  Bug #31740 			
 				
 			}
 			ceilingAmt = Double.valueOf(df.format(ceilingAmt));
