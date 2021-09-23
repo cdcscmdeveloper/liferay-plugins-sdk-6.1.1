@@ -39,14 +39,21 @@
 
 			<p:column headerText="#{lbl['lbl.sc.content']}"
 				style="width:58%;white-space: normal;">
-				<h:inputText  value="#{scQtEvaluationReport.title}" required="true" style="width:500px;"
-				disabled="#{suppFinalizationBackingBean.managedBean.readOnly}" label="#{lbl['lbl.sc.content']}"
-					rendered="#{empty scQtEvaluationReport.pmDocument}" >
-					<p:ajax event="change" process="@this" partialSubmit="true" update="@this"></p:ajax>
-					</h:inputText>
-				<h:outputText value="#{scQtEvaluationReport.title}" 
-					rendered="#{!empty scQtEvaluationReport.pmDocument}" />
-					<p:outputLabel style="float: left;" value="*" styleClass="mandatory" />
+				<!-- 18685 -start- -->
+				<h:inputText value="#{scQtEvaluationReport.title}" required="true"
+					style="width:500px;"
+					disabled="#{suppFinalizationBackingBean.managedBean.readOnly or suppFinalizationBackingBean.managedBean.currentStatusId == QTStatusConst.SF_PENDING_ENDORSEMENT or suppFinalizationBackingBean.managedBean.currentStatusId == QTStatusConst.SF_PENDING_SIGN_OFF}"
+					label="#{lbl['lbl.sc.content']}"
+					rendered="#{suppFinalizationBackingBean.managedBean.currentStatusId != QTStatusConst.SF_PENDING_ENDORSEMENT and suppFinalizationBackingBean.managedBean.currentStatusId != QTStatusConst.SF_PENDING_SIGN_OFF}">
+					<!-- 18685 -end- -->
+					<p:ajax event="change" process="@this" partialSubmit="true"
+						update="@this"></p:ajax>
+				</h:inputText>
+				<!-- 18685 -start- -->
+				<h:outputText value="#{scQtEvaluationReport.title}"
+					rendered="#{suppFinalizationBackingBean.managedBean.currentStatusId == QTStatusConst.SF_PENDING_ENDORSEMENT or suppFinalizationBackingBean.managedBean.currentStatusId == QTStatusConst.SF_PENDING_SIGN_OFF}" />
+				<!-- 18685 -end- -->
+				<p:outputLabel style="float: left;" value="*" styleClass="mandatory" />
 			</p:column>
 
 			<p:column style="width:20%;white-space: normal;"
@@ -58,38 +65,49 @@
 				headerText="#{lbl['lbl.sc.action']}">
 					<ui:fragment
 						rendered="#{scQtEvaluationReport.definationType.parameterCode eq 'UI'}">
-				<p:commandLink
-					rendered="#{!suppFinalizationBackingBean.managedBean.readOnly}"
-					process="@this" update="@([id$=reportContentPopupDlgId])"
-					oncomplete="reportContentPopupDlg.show(); return false;">
-					<f:setPropertyActionListener value="#{scQtEvaluationReport}"
-						target="#{suppFinalizationBackingBean.managedBean.selectedBriefingReport}" />
-					<h:graphicImage value="/css/images/design/edit.png"
-						rendered="#{scQtEvaluationReport.definationType.parameterCode eq 'UI'}" />
-				</p:commandLink>
-				<p:commandLink
-					rendered="#{suppFinalizationBackingBean.managedBean.readOnly}"
-					process="@this" update="@([id$=reportContentPopupDlgId])"
-					oncomplete="reportContentPopupDlg.show(); return false;">
-					<f:setPropertyActionListener value="#{scQtEvaluationReport}"
-						target="#{suppFinalizationBackingBean.managedBean.selectedBriefingReport}" />
-					<h:graphicImage
-						value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png"
-						rendered="#{scQtEvaluationReport.definationType.parameterCode eq 'UI'}" />
-				</p:commandLink>
+					<!-- 18685 -start- -->
+					<p:commandLink
+						rendered="#{suppFinalizationBackingBean.managedBean.currentStatusId != QTStatusConst.SF_PENDING_ENDORSEMENT and suppFinalizationBackingBean.managedBean.currentStatusId != QTStatusConst.SF_PENDING_SIGN_OFF}"
+						process="@this" update="@([id$=reportContentPopupDlgId])"
+						oncomplete="reportContentPopupDlg.show(); return false;">
+						<!-- 18685 -end- -->
+						<f:setPropertyActionListener value="#{scQtEvaluationReport}"
+							target="#{suppFinalizationBackingBean.managedBean.selectedBriefingReport}" />
+						<!-- 18685 -start- -->
+						<h:graphicImage value="/css/images/design/edit.png"
+							rendered="#{scQtEvaluationReport.definationType.parameterCode eq 'UI' and (suppFinalizationBackingBean.managedBean.currentStatusId != QTStatusConst.SF_PENDING_ENDORSEMENT or suppFinalizationBackingBean.managedBean.currentStatusId != QTStatusConst.SF_PENDING_SIGN_OFF)}" />
+						<!-- 18685 -end- -->
+					</p:commandLink>
+					<!-- 18685 -start- -->
+					<p:commandLink
+						rendered="#{suppFinalizationBackingBean.managedBean.currentStatusId == QTStatusConst.SF_PENDING_ENDORSEMENT or suppFinalizationBackingBean.managedBean.currentStatusId == QTStatusConst.SF_PENDING_SIGN_OFF}"
+						process="@this" update="@([id$=reportContentPopupDlgId])"
+						oncomplete="reportContentPopupDlg.show(); return false;">
+						<!-- 18685 -end- -->
+						<f:setPropertyActionListener value="#{scQtEvaluationReport}"
+							target="#{suppFinalizationBackingBean.managedBean.selectedBriefingReport}" />
+						<!-- 18685 -start- -->
+						<h:graphicImage
+							value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png"
+							rendered="#{scQtEvaluationReport.definationType.parameterCode eq 'UI' and (suppFinalizationBackingBean.managedBean.readOnly or suppFinalizationBackingBean.managedBean.currentStatusId == QTStatusConst.SF_PENDING_ENDORSEMENT or suppFinalizationBackingBean.managedBean.currentStatusId == QTStatusConst.SF_PENDING_SIGN_OFF)}" />
+						<!-- 18685 -end- -->
+					</p:commandLink>
 				</ui:fragment>
 				<ui:fragment
 						rendered="#{scQtEvaluationReport.definationType.parameterCode eq 'UP'}">
-						<ac:scSingleFileUploadButton id="evaluationReportUploadBtn"
-							popupWidgetVar="evaluationManualReportUploadWidget"
-							attachment="#{scQtEvaluationReport.scQtFinalizationReportAttachment}"
-							deleteFileUploadListener="suppFinalizationBackingBean.deleteReportsUploadFile"
-							rowIndex="#{index}">
-							<f:setPropertyActionListener for="actionEvent"
-								value="#{scQtEvaluationReport}"
-								target="#{suppFinalizationBackingBean.managedBean.selectedBriefingReport}" />
-						</ac:scSingleFileUploadButton>
-					</ui:fragment>
+					<!-- 18685 -start- -->
+					<ac:scSingleFileUploadButton id="evaluationReportUploadBtn"
+						readonly="#{suppFinalizationBackingBean.managedBean.currentStatusId == QTStatusConst.SF_PENDING_ENDORSEMENT or suppFinalizationBackingBean.managedBean.currentStatusId == QTStatusConst.SF_PENDING_SIGN_OFF}"
+						popupWidgetVar="evaluationManualReportUploadWidget"
+						attachment="#{scQtEvaluationReport.scQtFinalizationReportAttachment}"
+						deleteFileUploadListener="suppFinalizationBackingBean.deleteReportsUploadFile"
+						rowIndex="#{index}">
+						<!-- 18685 -end- -->
+						<f:setPropertyActionListener for="actionEvent"
+							value="#{scQtEvaluationReport}"
+							target="#{suppFinalizationBackingBean.managedBean.selectedBriefingReport}" />
+					</ac:scSingleFileUploadButton>
+				</ui:fragment>
 			</p:column>
 		</p:dataTable>
 
@@ -121,11 +139,13 @@
 			<table>
 				<tr>
 					<td align="center">
-						<!-- 18685 -start- -->
-						<p:inputTextarea value="#{suppFinalizationBackingBean.managedBean.selectedBriefingReport.reportContent}" 
-								 		 scrollHeight="0" rows="15" cols="130" autoResize="false" maxlength="2000"
-								 		 disabled="#{suppFinalizationBackingBean.managedBean.readOnly}"
-								 		 rendered="#{suppFinalizationBackingBean.managedBean.selectedBriefingReport ne null}">
+					<!-- 18685 -start- -->
+					<p:inputTextarea
+						value="#{suppFinalizationBackingBean.managedBean.selectedBriefingReport.reportContent}"
+						scrollHeight="0" rows="15" cols="130" autoResize="false"
+						maxlength="2000"
+						disabled="#{suppFinalizationBackingBean.managedBean.readOnly or suppFinalizationBackingBean.managedBean.currentStatusId == QTStatusConst.SF_PENDING_ENDORSEMENT or suppFinalizationBackingBean.managedBean.currentStatusId == QTStatusConst.SF_PENDING_SIGN_OFF}"
+						rendered="#{suppFinalizationBackingBean.managedBean.selectedBriefingReport ne null}">
 						<!-- 18685 -end- -->
 							<p:ajax partialSubmit="true" process="@this" update="@this" />
 						</p:inputTextarea>					
