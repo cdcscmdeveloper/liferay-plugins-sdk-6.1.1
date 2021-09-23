@@ -479,39 +479,39 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    requestNoteReqDTO.setRequestNoteDtls(requestNoteDtls);
 	    
 	  //#31679 - Start	  		 	  	   	
-  	   	if(requestNoteReqDTO.getRequestNote() != null){
+  	   	if(requestNote != null){
   	   		
-  	   		log.info("--- Bug 31679 (" + requestNoteReqDTO.getRequestNote().getRequestNoteNo() + ")" + "- Method: saveCodificationAction Start ---");
+  	   		log.info("--- Bug 31679 (" + requestNote.getRequestNoteNo() + ")" + "- Method: saveCodificationAction Start ---");
   	   		
 	  	   	if(getManagedBean().getSmSupplier() != null){
 	  	   		log.info("Supplier ID (" + getManagedBean().getSmSupplier().getSupplierId() + ") "
 	  	   				+ "Company Name (" + getManagedBean().getSmSupplier().getCompanyName() + ") "
-	  	   				+ "RN No.(" + requestNoteReqDTO.getRequestNote().getRequestNoteNo()+ ")");
+	  	   				+ "RN No.(" + requestNote.getRequestNoteNo()+ ")");
 	  	   	}
   	   		
 	  	  	if(getManagedBean().getCurrentStatusId() != null && outcome != null  ){
 	  	   		log.info("Outcome(" + outcome + ") " + "StatusId (" + getManagedBean().getCurrentStatusId() + ") "
-	  	   				+ "RN No.(" + requestNoteReqDTO.getRequestNote().getRequestNoteNo()+ ")");
+	  	   				+ "RN No.(" + requestNote.getRequestNoteNo()+ ")");
 	  	   	}
 	  	  	
-  	   		if(requestNoteReqDTO.getRequestNote().getQuote() != null){
-	  	   		log.info("RN No.(" + requestNoteReqDTO.getRequestNote().getRequestNoteNo()+ ") " 
-	  	   				+ "SQ No.(" + requestNoteReqDTO.getRequestNote().getQuote().getQuoteNo() + ") "
-	  	   				+ "Zonal(" + requestNoteReqDTO.getRequestNote().getQuote().isZonal() + ")");
+  	   		if(requestNote.getQuote() != null){
+	  	   		log.info("RN No.(" + requestNote.getRequestNoteNo()+ ") " 
+	  	   				+ "SQ No.(" + requestNote.getQuote().getQuoteNo() + ") "
+	  	   				+ "Zonal(" + requestNote.getQuote().isZonal() + ")");
   	   		}	  	   		 		
   	   		
-  	   		if(requestNoteReqDTO.getRequestNote().getRequestNoteDtls() != null){
-  		    		for(ScRequestNoteDtl rnDtl : requestNoteReqDTO.getRequestNote().getRequestNoteDtls()){		    			
+  	   		if(requestNoteDtls != null){
+  		    		for(ScRequestNoteDtl rnDtl : requestNoteDtls){		    			
   		    			if(rnDtl.getRequestItem() != null 
   		    					&& rnDtl.getScRequestSupplierItem() != null){	  		    				
   		    				log.info("RnDtlId (" + rnDtl.getRequestNoteDtlId() + ") " 
   		    						+ "ReqItemId (" + rnDtl.getRequestItem().getRequestNoteItemId() + ") " 
   		    						+ "ReqSupItemId (" + rnDtl.getScRequestSupplierItem().getRequestSupplierItemId() + ") "
-  		    						+ "RnNo (" + requestNoteReqDTO.getRequestNote().getRequestNoteNo() + ")"); 
+  		    						+ "RnNo (" + requestNote.getRequestNoteNo() + ")"); 
   		    			}
   		    		}
   		    }
-  	   	log.info("--- Bug 31679 (" + requestNoteReqDTO.getRequestNote().getRequestNoteNo() + ")" + "- Method: saveCodificationAction End ---");
+  	   	log.info("--- Bug 31679 (" + requestNote.getRequestNoteNo() + ")" + "- Method: saveCodificationAction End ---");
   	   	}  
   	   	//#31679 - End
   	   	
@@ -946,40 +946,40 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			Object ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 			requestNoteReqDTO.setRequestNoteDtls(requestNoteDtls);
 	  	   	
-	  	   	//#31679 - Start	  		 	  	   	
-	  	   	if(requestNoteReqDTO.getRequestNote() != null){
+			//#31679 - Start	  		 	  	   	
+	  	   	if(requestNote != null){
 	  	   		
-	  	   		log.info("--- Bug 31679 (" + requestNoteReqDTO.getRequestNote().getRequestNoteNo() + ")" + "- Method: requestNoteCodificationSubmit Start ---");
+	  	   		log.info("--- Bug 31679 (" + requestNote.getRequestNoteNo() + ")" + "- Method: saveCodificationAction Start ---");
 	  	   		
 		  	   	if(getManagedBean().getSmSupplier() != null){
 		  	   		log.info("Supplier ID (" + getManagedBean().getSmSupplier().getSupplierId() + ") "
 		  	   				+ "Company Name (" + getManagedBean().getSmSupplier().getCompanyName() + ") "
-		  	   				+ "RN No.(" + requestNoteReqDTO.getRequestNote().getRequestNoteNo()+ ")");
+		  	   				+ "RN No.(" + requestNote.getRequestNoteNo()+ ")");
 		  	   	}
 	  	   		
 		  	  	if(getManagedBean().getCurrentStatusId() != null && outcome != null  ){
 		  	   		log.info("Outcome(" + outcome + ") " + "StatusId (" + getManagedBean().getCurrentStatusId() + ") "
-		  	   				+ "RN No.(" + requestNoteReqDTO.getRequestNote().getRequestNoteNo()+ ")");
+		  	   				+ "RN No.(" + requestNote.getRequestNoteNo()+ ")");
 		  	   	}
 		  	  	
-	  	   		if(requestNoteReqDTO.getRequestNote().getQuote() != null){
-		  	   		log.info("RN No.(" + requestNoteReqDTO.getRequestNote().getRequestNoteNo()+ ") " 
-		  	   				+ "SQ No.(" + requestNoteReqDTO.getRequestNote().getQuote().getQuoteNo() + ") "
-		  	   				+ "Zonal(" + requestNoteReqDTO.getRequestNote().getQuote().isZonal() + ")");
+	  	   		if(requestNote.getQuote() != null){
+		  	   		log.info("RN No.(" + requestNote.getRequestNoteNo()+ ") " 
+		  	   				+ "SQ No.(" + requestNote.getQuote().getQuoteNo() + ") "
+		  	   				+ "Zonal(" + requestNote.getQuote().isZonal() + ")");
 	  	   		}	  	   		 		
 	  	   		
-	  	   		if(requestNoteReqDTO.getRequestNote().getRequestNoteDtls() != null){
-	  		    		for(ScRequestNoteDtl rnDtl : requestNoteReqDTO.getRequestNote().getRequestNoteDtls()){		    			
+	  	   		if(requestNoteDtls != null){
+	  		    		for(ScRequestNoteDtl rnDtl : requestNoteDtls){		    			
 	  		    			if(rnDtl.getRequestItem() != null 
 	  		    					&& rnDtl.getScRequestSupplierItem() != null){	  		    				
 	  		    				log.info("RnDtlId (" + rnDtl.getRequestNoteDtlId() + ") " 
 	  		    						+ "ReqItemId (" + rnDtl.getRequestItem().getRequestNoteItemId() + ") " 
 	  		    						+ "ReqSupItemId (" + rnDtl.getScRequestSupplierItem().getRequestSupplierItemId() + ") "
-	  		    						+ "RnNo (" + requestNoteReqDTO.getRequestNote().getRequestNoteNo() + ")"); 
+	  		    						+ "RnNo (" + requestNote.getRequestNoteNo() + ")"); 
 	  		    			}
 	  		    		}
 	  		    }
-	  	   	log.info("--- Bug 31679 (" + requestNoteReqDTO.getRequestNote().getRequestNoteNo() + ")" + "- Method: requestNoteCodificationSubmit End ---");
+	  	   	log.info("--- Bug 31679 (" + requestNote.getRequestNoteNo() + ")" + "- Method: saveCodificationAction End ---");
 	  	   	}  
 	  	   	//#31679 - End
 			
