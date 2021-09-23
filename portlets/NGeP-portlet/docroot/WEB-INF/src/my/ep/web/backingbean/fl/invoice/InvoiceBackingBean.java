@@ -817,6 +817,12 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				}
 			}
 			//26279 - end
+			//28221 - start
+			if(getManagedBean().getInvoice().getSupplierSubmittedId() == null && 
+					FLProcessNameConst.CREATE_INVOICE.equals(this.getManagedBean().getTaskName())){
+				getManagedBean().getInvoice().setSupplierSubmittedId(getFacesScopes().getUserSessionBean().getUserId());
+			}
+			//28221 - end
 		}else{
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
@@ -825,9 +831,9 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		}
 		
 		//28221 - start
-		if(getManagedBean().getInvoice().getSupplierSubmittedId() == null){
-			getManagedBean().getInvoice().setSupplierSubmittedId(getFacesScopes().getUserSessionBean().getUserId());
-		}
+		//if(getManagedBean().getInvoice().getSupplierSubmittedId() == null){
+		//	getManagedBean().getInvoice().setSupplierSubmittedId(getFacesScopes().getUserSessionBean().getUserId());
+		//}
 		//28221 - end
 		
 		//24956 - start
