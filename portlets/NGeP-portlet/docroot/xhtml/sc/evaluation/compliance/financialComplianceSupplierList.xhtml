@@ -146,9 +146,11 @@
 				style="width:15%">
 				<!-- 26339  Removed from disabled attribute  'or evaluationBackingBean.managedBean.FP_Compliance'-->
 				<!-- 28703 -start- -->
+				<!-- 29685,25638 add 'or evaluationBackingBean.managedBean.readOnly' -start- -->
 				<p:selectOneMenu
-					disabled="#{evaluationBackingBean.isComplianceStatusDisabled(complianceTechnicalSupplier)}"  
+					disabled="#{evaluationBackingBean.isComplianceStatusDisabled(complianceTechnicalSupplier) or evaluationBackingBean.managedBean.readOnly}"
 					value="#{complianceTechnicalSupplier.compliance}">
+                <!-- 29685,25638 add 'or evaluationBackingBean.managedBean.readOnly' -end- -->
                 <!-- 28703 -end- -->
                   <!-- 26339 End-->
 					<f:selectItems

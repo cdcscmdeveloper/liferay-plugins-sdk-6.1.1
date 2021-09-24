@@ -49,10 +49,12 @@
 
 			<p:column headerText="#{lbl['lbl.sc.compliance.status']}"
 				style="width:15%">
+				<!-- 29685,25638 -start- -->
 				<p:selectOneMenu
-					disabled="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'false' or  evaluationBackingBean.managedBean.statusOnly or  evaluationBackingBean.managedBean.complianceReEvaluateRequired}"
+					disabled="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'false' or  evaluationBackingBean.managedBean.statusOnly or  evaluationBackingBean.managedBean.complianceReEvaluateRequired 
+					or evaluationBackingBean.managedBean.readOnly}"
 					value="#{complianceTechnicalSupplier.compliance}">
-
+				<!-- 29685,25638 -end- -->
 					<f:selectItems
 						value="#{evaluationBackingBean.statusDropdownCodeValues(ParameterTypeConst.complianceStatus,complianceTechnicalSupplier.scQtProposalChecklistAttachment)}"></f:selectItems>
 					<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
