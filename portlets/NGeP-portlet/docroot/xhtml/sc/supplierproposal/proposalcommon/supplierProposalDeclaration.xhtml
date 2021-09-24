@@ -13,16 +13,19 @@
 						<p:editor controls="" id="integrityPactEditor" value="#{supplierProposalDetailBackingBean.managedBean.othersTermsConditions}"
 						width="930" height="100" styleClass="hideToolbar"
 						 disabled="true" /> 
-						 
-						  </td> <!-- style="overflow : auto;" -->
+				</td>
 			</tr>
 			<tr height="10">
 				<td></td>
 			</tr>
 			<tr>
-				<td><p:selectBooleanCheckbox
+				<td>
+					<!-- 27200,17376 -start- -->
+					<p:selectBooleanCheckbox
 						value="#{supplierProposalDetailBackingBean.managedBean.agreeWithIntegrityPact}"
-						style="vertical-align:top; float: left;" disabled="#{supplierProposalDetailBackingBean.managedBean.readOnly}"/> <p:spacer width="2" />
+						style="vertical-align:top; float: left;" disabled="#{supplierProposalDetailBackingBean.managedBean.readOnly}"/>
+					<!-- 27200,17376 -end- -->
+					<p:spacer width="2" />
 					<p:outputLabel value="#{lbl['lbl.sc.others.note']}"
 						style="vertical-align:top; float: left;" /></td>
 			</tr>
