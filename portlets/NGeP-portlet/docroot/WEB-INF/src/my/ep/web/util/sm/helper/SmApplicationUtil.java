@@ -5338,6 +5338,7 @@ public class SmApplicationUtil {
 				if(managedBean.getBpmTaskName().equalsIgnoreCase(SupplierManagementConst.BPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE)){
 					if(managedBean.getSmAppl().getSmSupplier() != null){
 						reqDto.setSupplierId(managedBean.getSmAppl().getSmSupplier().getSupplierId());
+						reqDto.setSmAppl(managedBean.getSmAppl().getOriginalAppl());
 						appl = revisionSO.retrieveLatestPreviousApproveAppl(reqDto).getSmAppl();
 					}
 				}

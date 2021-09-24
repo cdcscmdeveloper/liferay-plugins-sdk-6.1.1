@@ -16,12 +16,15 @@
 				</td>
 			<td style="text-align: right;">
 			<!-- #31248 - SupplierMgmtConst.pmStatusDeletePendingApplContractor -->
+			<!-- #29823 - START -->
 				<!-- #28212 --> <p:outputPanel
 					rendered="#{not empty viewSmApplBackingBean.managedBean.resubmitUrl 
 					and viewSmApplBackingBean.managedBean.supplierUser 
 					and viewSmApplBackingBean.managedBean.displayResubmitButton 
 					and ((viewSmApplBackingBean.managedBean.smAppl.applType eq 'B' and viewSmApplBackingBean.managedBean.smMofAccount!=null and viewSmApplBackingBean.managedBean.smMofAccount.expDate gt CommonConstants.THREE_MONTHS_LATER_DATE
-					) or (viewSmApplBackingBean.managedBean.smAppl.applType ne 'B'))}">
+					) or (viewSmApplBackingBean.managedBean.smAppl.applType ne 'B'))
+					and viewSmApplBackingBean.isApplPORejectedAfterApprovelSV()}">
+				<!-- #29823 - START -->
 					<p:commandLink onclick="blockWidget.show()"
 						action="#{viewSmApplBackingBean.redirectToResubmit()}"
 						process="@this" partialSubmit="true" update=":form"
