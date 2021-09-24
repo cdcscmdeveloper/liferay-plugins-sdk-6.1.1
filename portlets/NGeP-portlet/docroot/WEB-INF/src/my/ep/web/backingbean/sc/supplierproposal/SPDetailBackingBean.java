@@ -4257,6 +4257,13 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			retrieveProposalChecklistDtls(qtOrProposalId, new FacesScopes()
 			.getUserSessionBean().getUserId(), isReadonly, true);
 		}
+		
+		// #27200,#17376 -start-
+		if (this.isProposalSubmitted()) {
+			this.getManagedBean().setAgreeWithIntegrityPact(true);
+			this.getManagedBean().setAgreeWithOthersTermsConditions(true);
+		}
+		// #27200,#17376 -end-
 
 		getManagedBean()
 				.setProcCategoryMedicine(
