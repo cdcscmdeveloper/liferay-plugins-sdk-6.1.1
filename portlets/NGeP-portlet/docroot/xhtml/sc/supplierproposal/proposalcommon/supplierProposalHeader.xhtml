@@ -9,7 +9,10 @@
 	
 		<ui:param name="isSubmitted"
 			value="#{supplierProposalDetailBackingBean.isProposalSubmitted()}" />
-	
+		<!-- 27368,17376 -start- -->
+		<ui:param name="enableQtNoHyperlink" value="#{supplierProposaldetailBackingBean.enableQtNoHyperlink()}" />
+		<!-- 27368,17376 -end- -->
+
 		<div align="left" class="header-info">
 			<table width="100%">
 				<tr>
@@ -18,14 +21,18 @@
 					
 					<ui:remove> #19287 - start </ui:remove>
 					<td class="header-info-text">
+						<!-- 27368,17376 -start- -->
 						<p:commandLink process="@this" partialSubmit="true" 
-						action="#{qTDetailBB.editQuationTenderDetails(supplierProposalDetailBackingBean.managedBean.qt, false, true, view.viewId)}">
+							action="#{qTDetailBB.editQuationTenderDetails(supplierProposalDetailBackingBean.managedBean.qt, false, true, view.viewId)}" 
+							rendered="#{enableQtNoHyperlink}">
+						<!-- 27368,17376 -end- -->
 					<ui:remove> #19287 - end </ui:remove>
-					
-				<h:outputText value="#{supplierProposalDetailBackingBean.managedBean.qt.qtNo}" escape="false" />
-					</p:commandLink>
-						
-						</td>
+							<h:outputText value="#{supplierProposalDetailBackingBean.managedBean.qt.qtNo}" escape="false" />
+						</p:commandLink>
+						<!-- 27368,17376 -start- -->
+						<h:outputText value="#{supplierProposalDetailBackingBean.managedBean.qt.qtNo}" rendered="#{not enableQtNoHyperlink}" />
+						<!-- 27368,17376 -end- -->
+					</td>
 					
 					<td width="8%"><h:outputLabel value="#{lbl['lbl.sc.proposal.no']}" /></td>
 					<td class="header-info-text">#{supplierProposalDetailBackingBean.managedBean.qtProposal.proposalNo}
