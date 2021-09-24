@@ -12398,7 +12398,9 @@ private void retriveCommitteeRemarksList(){
 				reqDTO.setQualified(isQualified);
 				reqDTO.setResultStages(resultStages);
 				reqDTO.setEvalResultSearchBean(searchBean);
-
+				//Bug #31551 Farid start 23/9/2021
+				reqDTO.setCheckZonal(getManagedBean().getScQt().isZonal());
+				//Bug #31551 Farid end 23/9/2021
 				if (getManagedBean().getSelectedZone() != null && isZonal) {
 					reqDTO.setSpeZoneId(getManagedBean().getSelectedZone()
 							.getSpecZoneId());
