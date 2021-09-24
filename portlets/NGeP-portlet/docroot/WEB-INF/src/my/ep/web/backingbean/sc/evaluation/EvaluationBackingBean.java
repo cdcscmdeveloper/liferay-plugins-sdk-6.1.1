@@ -13913,7 +13913,9 @@ private void retriveCommitteeRemarksList(){
 							excludeSupplier.add(suppId);
 							
 						}
-			//Bug #31553 - related to 25138 (FARID)	
+						//Bug #31553 - related to 25138 (FARID)	24/9/2021
+						int countsupplier = 0;
+						//Bug #31553 - related to 25138 (FARID)	24/9/2021
 						for(ScQtProposalChecklist proplist : resDTO2.getComplianceResultBean().getResultList()){
 							//Bug #31553 - related to 25138 (FARID)						
 							if (!excludeSupplier.contains(proplist
@@ -13932,8 +13934,18 @@ private void retriveCommitteeRemarksList(){
 									break;// #25138
 								}
 							}
-			//Bug #31553 - related to 25138 (FARID)								
+							//Bug #31553 - related to 25138 (FARID)	24/9/2021
+							else{
+								countsupplier ++;
+							}
+							//Bug #31553 - related to 25138 (FARID)	24/9/2021
 						}
+						//Bug #31553 - related to 25138 (FARID)	24/9/2021
+						if(CollectionUtils.isNotEmpty(resDTO2.getComplianceResultBean().getResultList()) && resDTO2.getComplianceResultBean().getResultList().size() == countsupplier){
+						this.getManagedBean().setEvalStatus(
+								QTStatusConst.TS_COMPLETED);
+						}
+						//Bug #31553 - related to 25138 (FARID)	24/9/2021
 						// #31420 Bug fixed
 						if(CollectionUtils.isEmpty(resDTO2.getComplianceResultBean().getResultList())){
 							this.getManagedBean().setEvalStatus(QTStatusConst.TS_PENDING_SUBMISSION);
@@ -14817,9 +14829,7 @@ private void retriveCommitteeRemarksList(){
 							if (!excludeSupplier.contains(proplist
 									.getScQtProposal().getScQtSupplier()
 									.getSmSupplier().getSupplierId())) {
-
-								if (proplist.getCompliance() != null
-										&& proplist.getCompliance() == 1) {
+								//Bug #31553 -remove if (FARID)	24/9/2021
 									if (null == proplist.getScQtProposal()
 											.getProposalAmount()
 											.getPmEvalStatus()) {
@@ -14830,8 +14840,7 @@ private void retriveCommitteeRemarksList(){
 												MessageConst.ERROR_760241);
 
 									}
-
-								}
+								//Bug #31553 -remove if (FARID)	24/9/2021
 							}
 				//Bug #31553 - related to 25138 (FARID)
 						}
