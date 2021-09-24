@@ -1965,6 +1965,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		String skipValidator = FacesContext.getCurrentInstance()
 				.getExternalContext().getRequestParameterMap()
 				.get("skipValidator");
+		//START 31758
+		EpPropertiesUtils prop = EpPropertiesUtils.getInstance();
+		String captchaEnable = prop.getProperty("captcha.enabled");
+		if(captchaEnable != null && "false".equalsIgnoreCase(captchaEnable)){
+			skipValidator = "true";
+		}		
+		//END 31758
 		if (skipValidator == null) {
 			String captchaAnswer = (String) value;
 			if (captchaAnswer == null || captchaAnswer.length() == 0) {
