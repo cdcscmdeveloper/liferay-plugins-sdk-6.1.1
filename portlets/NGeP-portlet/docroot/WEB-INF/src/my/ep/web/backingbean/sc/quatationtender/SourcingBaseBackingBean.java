@@ -3500,6 +3500,29 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					
 					if((days.equals(answer.getTplSpecQuestion().getClDeliveryTerm())) && (answer.getTplSpecQuestion().getClItem()!=null))
 					{ 
+						// #25025 - Start.
+						List<String> specList = null;
+						boolean addSpecList = false;
+						for (TplSpecAnswer tplSpecAns : quoteResDTO.getServiceAnswersTpl()) {
+							if (tplSpecAns.getTplSpecQuestion().getSpecQuestionId() == answer.getTplSpecQuestion().getSpecQuestionId()) {
+								addSpecList = true;
+								continue;
+							}
+							if (addSpecList) {
+								if (tplSpecAns.getTplSpecQuestion().getQuestionType().equals("S")) {
+									if (specList == null) {
+										specList = new ArrayList<>();
+									}
+									specList.add(tplSpecAns.getTplSpecQuestion().getClSpecDetail());
+								} else {
+									break;
+								}
+							}
+							
+						}
+						answer.getTplSpecQuestion().setSpecList(specList);
+						// #25025 - End.
+						
 						/**  This code is for LOA with Single Item Details  **/
 						
 						if(items.size() == 1)
@@ -3566,8 +3589,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							populateSpecAnswers(answer);
 							// #26226 - End
 							master.setTplSpecQuestions(newTplSpecQuestionsList);
-							isSpecificationEnable=false;
-							
+							// #25025 - Start.
+							isSpecificationEnable=true;
+							// #25025 - End.
 							}
 						
 						
@@ -3581,7 +3605,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								populateSpecAnswers(answer);
 								// #26226 - End
 								master.setTplSpecQuestions(newTplSpecQuestionsList);
-								isSpecificationEnable=false;
+								// #25025 - Start.
+								isSpecificationEnable=true;
+								// #25025 - End.
 								
 							}
 
