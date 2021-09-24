@@ -7356,7 +7356,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 		//#30428 - End
 		
-		//#25949 start
+		//#29549 start
 		public void sortCTCommitteeMemberRole (List<CtCommitteeMember> list){
 			if(list!=null){
 				Collections.sort(list, new Comparator<CtCommitteeMember>() {
@@ -7364,12 +7364,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					public int compare(CtCommitteeMember o1, CtCommitteeMember o2) {
 						if(o1.getMemberRole()!=null && o2.getMemberRole()!=null && o1.getMemberRole().getParameterCode()!=null && o2.getMemberRole().getParameterCode()!=null){
 							return Integer.valueOf(sortOrder.indexOf(o1.getMemberRole().getParameterCode())).compareTo(Integer.valueOf(sortOrder.indexOf(o2.getMemberRole().getParameterCode())));
+						}else if (o1.getMemberRoleId()!=null && o2.getMemberRoleId()!=null){
+							return Integer.valueOf(
+									sortOrder.indexOf(ParameterHelper.getInstance()
+											.getPmParameterById(o1.getMemberRoleId()).getParameterCode())).compareTo(
+									Integer.valueOf(sortOrder.indexOf(ParameterHelper.getInstance()
+											.getPmParameterById(o2.getMemberRoleId()).getParameterCode())));
 						}else{
-						return Integer.valueOf(
-								sortOrder.indexOf(ParameterHelper.getInstance()
-										.getPmParameterById(o1.getMemberRoleId()).getParameterCode())).compareTo(
-								Integer.valueOf(sortOrder.indexOf(ParameterHelper.getInstance()
-										.getPmParameterById(o2.getMemberRoleId()).getParameterCode())));
+							return 0;
 						}
 					}
 				});
@@ -7381,16 +7383,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				Collections.sort(list, new Comparator<CtCommitteeMember>() {
 					List<String> sortOrder = Arrays.asList(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON, ParameterConst.COMMITTEE_ROLE_SECRETARY, ParameterConst.COMMITTEE_ROLE_MEMBER);
 					public int compare(CtCommitteeMember o1, CtCommitteeMember o2) {
-						return Integer.valueOf(
-								sortOrder.indexOf(ParameterHelper.getInstance().getPmParameterById(o1.getMemberRoleId())
-										.getParameterCode())).compareTo(
-								Integer.valueOf(sortOrder.indexOf(ParameterHelper.getInstance()
-										.getPmParameterById(o2.getMemberRoleId()).getParameterCode())));
+						if(o1.getMemberRoleId()!=null && o2.getMemberRoleId()!=null){
+							return Integer.valueOf(
+									sortOrder.indexOf(ParameterHelper.getInstance().getPmParameterById(o1.getMemberRoleId())
+											.getParameterCode())).compareTo(
+									Integer.valueOf(sortOrder.indexOf(ParameterHelper.getInstance()
+											.getPmParameterById(o2.getMemberRoleId()).getParameterCode())));
+						}
+						else{
+							return 0;
+						}
 					}
 				});
 			}
 		}
-		//#25949 end
+		//#29549 end
 		
 		// Start Fix - #30022	
 		/**
