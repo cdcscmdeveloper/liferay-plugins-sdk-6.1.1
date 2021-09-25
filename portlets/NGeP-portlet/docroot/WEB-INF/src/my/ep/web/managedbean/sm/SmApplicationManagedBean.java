@@ -604,6 +604,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	// #30974 - START
 	private List<PmReasonDesc> selectedRecommendRejectReasonDescs;
 	private List<PmReasonDesc> selectedRejectReasonDescs;
+	private boolean showDifferenceRejection;
 	// #30974 - END
 
 	// 29379 - Site Visit Grouping Enhancement -28775 START
@@ -4525,4 +4526,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.msgEquityErr = msgEquityErr;
 	}
 	//#31461-end	
+
+	// #30974 - START
+	public boolean isShowDifferenceRejection() {
+		return showDifferenceRejection;
+	}
+
+	public void setShowDifferenceRejection(boolean showDifferenceRejection) {
+		this.showDifferenceRejection = showDifferenceRejection;
+	}
+	// #30974 - END
 }
