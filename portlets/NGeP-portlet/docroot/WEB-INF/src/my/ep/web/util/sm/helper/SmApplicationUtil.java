@@ -5732,6 +5732,27 @@ public class SmApplicationUtil {
 		docu.setReceived(false);
 
 		setDefaultSmApplDocFiles(docu);
+		//28775 - Site Visit Grouping Enhancement - 28775 - start
+		if(appl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW) && doc.isByCategory()){
+			IMofRegistrationSO reqSO = (IMofRegistrationSO) BusinessDelegate
+					.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
+			SmApplSupportDoc prevDoc = reqSO.retrievePrevSupportingDocument(
+					appl.getSmSupplier().getSupplierId(), doc.getDocumentId());
+			if(prevDoc == null) return docu;
+			
+			docu.setLicenseNo(prevDoc.getLicenseNo());
+			docu.setLicenseEffDate(prevDoc.getLicenseEffDate());
+			docu.setLicenseExpDate(prevDoc.getLicenseExpDate());
+			docu.getSmApplDocFiles().clear();
+			for(SmApplDocFile prevFile : prevDoc.getSmApplDocFiles()){
+				SmApplDocFile docFile = new SmApplDocFile();
+				docFile.setSmApplSupportDoc(docu);
+				docFile.setFileName(prevFile.getFileName());
+				docFile.setFilePath(prevFile.getFilePath());
+				docu.getSmApplDocFiles().add(docFile);
+			}
+		}
+		//28775 - Site Visit Grouping Enhancement - 28775 - end
 		return docu;
 	}
 
