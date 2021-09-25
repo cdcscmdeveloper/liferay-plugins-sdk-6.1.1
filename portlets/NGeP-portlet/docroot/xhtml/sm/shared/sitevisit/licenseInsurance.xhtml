@@ -8,8 +8,9 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.sm.license.insurance']}">
+		<!-- 28775 - Site Visit Grouping Enhancement - 28775 -->
 		<p:dataTable var="dockWorkLicenseIns" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvLicenseInsurances}">
+			value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplate.smSvLicenseInsurances}">
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.sm.license.insurance']}
