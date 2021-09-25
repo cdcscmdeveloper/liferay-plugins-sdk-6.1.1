@@ -9402,6 +9402,7 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getPoSecReview().setRemarkToApprover(null);
 			}	
 		}
+		getManagedBean().setShowDifferenceRejection(false);
 		//30974 - end
 		
 		RequestContext.getCurrentInstance()
@@ -9486,6 +9487,7 @@ public class SmApplicationBackingBean extends
 		//30974 - start
 		getManagedBean().setSelectedRecommendRejectReasonDescs(getManagedBean().getSelectedReasonDescs());
 		getManagedBean().setSelectedRejectReasonDescs(getManagedBean().getSelectedReasonDescs());
+		getManagedBean().setShowDifferenceRejection(true);
 		setReasonIdList();
 		//30974 - end
 		
@@ -15315,7 +15317,8 @@ public class SmApplicationBackingBean extends
 			for (PmReasonDesc reason : getManagedBean().getSelectedRecommendRejectReasonDescs()) {
 				reasonIdList.add(reason.getPmReason().getReasonId());
 			}
-			if(getManagedBean().getSelectedRejectReasonDescs() != null){
+			
+			if(getManagedBean().isShowDifferenceRejection()){
 				getManagedBean().setReasonId(
 						reasonIdList.toArray(new Long[reasonIdList.size()]));
 			}else{
