@@ -15697,12 +15697,21 @@ public class SmApplicationBackingBean extends
 	public void allOnTickOrUnTickRecommendReason(ToggleSelectEvent e) {
 		getManagedBean().setRecommendRejectReasonReqd(false);
 		
-		if(e.isSelected()){
-			getManagedBean().setSelectedRecommendRejectReasonDescs(getManagedBean().getSelectedRecommendReasonDescs());
+		if(getManagedBean().isShowDifferenceRejection()){
+			if(e.isSelected()){
+				getManagedBean().setSelectedRecommendRejectReasonDescs(getManagedBean().getSelectedReasonDescs());
+			}else{
+				getManagedBean().setSelectedReasonDescs(new ArrayList<PmReasonDesc>());
+				getManagedBean().setSelectedRecommendRejectReasonDescs(new ArrayList<PmReasonDesc>());
+			}
 		}else{
-			getManagedBean().setSelectedRecommendReasonDescs(new ArrayList<PmReasonDesc>());
-			getManagedBean().setSelectedRecommendRejectReasonDescs(new ArrayList<PmReasonDesc>());
-		}
+			if(e.isSelected()){
+				getManagedBean().setSelectedRecommendRejectReasonDescs(getManagedBean().getSelectedRecommendReasonDescs());
+			}else{
+				getManagedBean().setSelectedRecommendReasonDescs(new ArrayList<PmReasonDesc>());
+				getManagedBean().setSelectedRecommendRejectReasonDescs(new ArrayList<PmReasonDesc>());
+			}	
+		}	
 		
 //		reasonIdList1.add(reasonEvent);
 //		getManagedBean().setSelectedRecommendRejectReasonDescs(reasonIdList1);
