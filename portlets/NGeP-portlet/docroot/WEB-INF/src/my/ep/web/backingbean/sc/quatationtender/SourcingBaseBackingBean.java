@@ -68,6 +68,7 @@ import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.bpm.vo.WorklistVO;
@@ -81,6 +82,7 @@ import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateDocConst;
+import my.ep.constants.BpmConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.circular.PanelGroupItemReqDTO;
 import my.ep.dto.ct.circular.PanelGroupItemResDTO;
@@ -5229,8 +5231,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		
 		if (ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.contentEquals(committeeType)) {
 			if (Arrays.asList(QTStatusConst.QT_SPEC_COMM_UPDATE_GROUP).contains(statusId)) {
-				Long[] secretaryExceptSpecCommittee = new Long[] { QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT,
-						QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL };
+				//25037 #372 -Start
+				Long[] secretaryExceptSpecCommittee = new Long[]{
+						QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT, 
+						QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL,
+						QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL_RESCHEDULE,
+						QTStatusConst.QT_REVISION_PUBLICATION,
+						QTStatusConst.QT_PENDING_SCHEDULE_REVISION};
+				//25037 #372 -end				
 
 				if (!Arrays.asList(secretaryExceptSpecCommittee).contains(statusId)) {
 					list.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
@@ -5321,6 +5329,29 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		return list;
 		
+	}
+	
+	public List<String> getCurrentlyAssignedTaskNames(ScQt qt) {
+		List<String> taskNames = new ArrayList<String>();
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+		BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
+		bpmReqDTO.setDocNumber(qt.getQtNo());
+		bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
+		BpmResponseDTO resDTO = bpmSO.getTasksByDocNumber(bpmReqDTO);
+		if (resDTO.getWorklistVO() != null) {
+			if (CollectionUtils.isNotEmpty(resDTO.getWorklistVO().getWorklistItem())) {
+				for (WorklistItemVO currentVO : resDTO.getWorklistVO().getWorklistItem()) {
+					if (StringUtils.isNotBlank(currentVO.getTaskName())) {
+						taskNames.add(currentVO.getTaskName());
+					}
+				}
+			}
+		}
+
+		if (CollectionUtils.isEmpty(taskNames)) {
+			return null;
+		}
+		return taskNames;
 	}
 	//25037 - End
 
