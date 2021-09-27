@@ -12149,6 +12149,9 @@ public class SpecificationBackingBean extends
 		//#25138 - set for one item only - start
 		spReqDTO.setSingleItem(this.getManagedBean().isSingleItem());
 		//#25138 - set for one item only - end
+		//#31450 - bug for #25138 - start
+		spReqDTO.setScoreOfferPriceList(this.getManagedBean().getOfferPricePackageList());
+		//#31450 - bug for #25138 - end
 		IQTSpecSO specSO = getSpecSO();
 		SpecificationResDTO resDTO = new SpecificationResDTO();
 		try {
