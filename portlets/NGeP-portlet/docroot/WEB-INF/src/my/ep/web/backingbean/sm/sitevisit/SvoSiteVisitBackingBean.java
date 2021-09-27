@@ -3687,6 +3687,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	}
 	
 	private void prepareWorkshopWorkers(){
+		try{
+			
 		log.info("28775 find error worker 1");
 		SmSvTask svTask = getManagedBean().getSmSvTask();
 		if(svTask.getSmSvTemplate().getSmSvWorkers() != null 
@@ -3699,6 +3701,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			for(SmFacility fac : svTask.getSmAppl().getSmFacilities()){
 				log.info("28775 find error worker 4");
 				for(SmSupplierCategoryFacility catFac : fac.getSmSupplierCategoryFacilities()){
+					log.info("28775 find error worker 5.1");
 					Long templateL3 = template.getSuppCategory().getPmCategoryL3().getCategoryL3Id();
 					Long facilityL3 = catFac.getPmCategoryL3().getCategoryL3Id();
 					log.info("28775 find error worker 5");
@@ -3715,6 +3718,12 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			for(SmSvWorker worker : template.getSmSvWorkers()){
 				worker.setSmSvTemplate(template);
 			}
+		}
+
+		}catch(Exception e){
+			log.info("28775 find error worker catch");
+			e.printStackTrace();
+			log.info("28775 find error worker catch=="+e.getMessage());
 		}
 		log.info("28775 find error worker end");
 	}
