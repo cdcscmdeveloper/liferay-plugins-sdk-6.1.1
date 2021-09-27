@@ -8486,8 +8486,6 @@ public class QTDetailBackingBean extends
 		boolean isReapproval = committeeData.getReapproval() == null ? false:  committeeData.getReapproval();
 		this.getManagedBean().setReapproval(isReapproval);
 		if(isReapproval && this.getManagedBean().getQt()!=null){
-			getManagedBean().setRoleFilterList(new String[] {ParameterConst.COMMITTEE_ROLE_SECRETARY});
-			String tabType = committeeData.getCommitteeType() == null ? "": committeeData.getCommitteeType();
 			IScWorkFlowStatusSO wfStatusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
 			ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
 			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
@@ -8497,6 +8495,10 @@ public class QTDetailBackingBean extends
 			if(wfStatus!=null){
 				Long statusId = wfStatus.getPmStatus().getStatusId();
 				if(!this.isStatusLessThanOrEquals(statusId, QTStatusConst.QT_PROPOSAL_PREPARATION, QTStatusConst.QT_ORDERED_STATUSES)){
+		            //25037-start #372
+					String tabType = committeeData.getCommitteeType() == null ? "": committeeData.getCommitteeType();
+					getManagedBean().setRoleFilterList(getRoleFilterListForCommitteeMaintenance(this.getManagedBean().getQt(), tabType));
+		            //25037-end #372
 					List<TabBean> tabs = this.getManagedBean().getScCommitteeMemberTabList();
 					int i = 0;
 					for(TabBean tab: tabs){
