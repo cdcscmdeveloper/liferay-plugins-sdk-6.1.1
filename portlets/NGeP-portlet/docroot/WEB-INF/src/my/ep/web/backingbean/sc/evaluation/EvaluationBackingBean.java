@@ -14368,12 +14368,14 @@ private void retriveCommitteeRemarksList(){
 				.getSpecAnswerList()){
 			log.info("===========speanswerUserScore======"+specAnswer.getUserScore());
 			log.info("===========speanswerAutoScore======"+specAnswer.getAutoScore());
-			if(null!=specAnswer.getUserScore()){
+			//fix Bug #31623 related to 25138 === farid START
+			if(null!=specAnswer.getUserScore() && !specAnswer.getTplSpecZoneQty().getQty().equals(new BigDecimal(0))){
 				totalUserScore=totalUserScore.add(specAnswer.getUserScore());	
 			}
-			if(null!=specAnswer.getAutoScore()){
+			if(null!=specAnswer.getAutoScore() && !specAnswer.getTplSpecZoneQty().getQty().equals(new BigDecimal(0))){
 				totalAutoScore=totalAutoScore.add(specAnswer.getAutoScore());	
 			}
+			//fix Bug #31623 related to 25138 === farid END
 			log.info("===========totalUserScore======"+totalUserScore);
 			log.info("===========totalAutoScore======"+totalAutoScore);
 		}
