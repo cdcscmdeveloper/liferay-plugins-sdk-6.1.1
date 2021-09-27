@@ -3464,8 +3464,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		File dir = new File(tmpPath);
 		if(!dir.exists()) dir.mkdirs();
 		
-		
-		fileInitName = getManagedBean().getSmAppl().getApplId().toString();
+		fileInitName = String.valueOf(new Date().getTime());
+		//fileInitName = getManagedBean().getSmAppl().getApplId().toString();
 		
 		// combine all pdf into 1
 		String compInfoEquity = compInfoEquity();
