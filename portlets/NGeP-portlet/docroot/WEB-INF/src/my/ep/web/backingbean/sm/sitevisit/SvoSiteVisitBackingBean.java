@@ -3687,29 +3687,36 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	}
 	
 	private void prepareWorkshopWorkers(){
+		log.info("28775 find error worker 1");
 		SmSvTask svTask = getManagedBean().getSmSvTask();
 		if(svTask.getSmSvTemplate().getSmSvWorkers() != null 
 			&& !svTask.getSmSvTemplate().getSmSvWorkers().isEmpty()) 
 				return;
-		
+		log.info("28775 find error worker 2");
 		for(SmSvTemplate template : getManagedBean().getTemplates()){
 			template.setSmSvWorkers(new ArrayList<SmSvWorker>());
+			log.info("28775 find error worker 3");
 			for(SmFacility fac : svTask.getSmAppl().getSmFacilities()){
+				log.info("28775 find error worker 4");
 				for(SmSupplierCategoryFacility catFac : fac.getSmSupplierCategoryFacilities()){
 					Long templateL3 = template.getSuppCategory().getPmCategoryL3().getCategoryL3Id();
 					Long facilityL3 = catFac.getPmCategoryL3().getCategoryL3Id();
+					log.info("28775 find error worker 5");
 					if(templateL3.equals(facilityL3)){
 						template.getSmSvWorkers().addAll(fac.getSmSvWorkers());
+						log.info("28775 find error worker 6");
 						if(getManagedBean().getWorkerFacility() == null)
 							getManagedBean().setWorkerFacility(fac);
 						break;
 					}
 				}
 			}
+			log.info("28775 find error worker 7");
 			for(SmSvWorker worker : template.getSmSvWorkers()){
 				worker.setSmSvTemplate(template);
 			}
 		}
+		log.info("28775 find error worker end");
 	}
 	//29379 - Site Visit Grouping Enhancement - 28775 - end
 }
