@@ -1783,8 +1783,13 @@ public class EvaluationBackingBean extends
 					|| this.getManagedBean()
 							.getCurrentStatusId()
 							.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION)
-					// #25638 - End
-					) {
+							// #25638 - End
+							// #25638 - #31493 - Start.
+							|| this.getManagedBean()
+							.getCurrentStatusId()
+							.equals(QTStatusConst.OC_PENDING_COMPLIANCE_VERIFICATION_REVISION)
+							// #25638 - #31493 - End.
+							) {
 				ScQtFinalization finalization = retriveScQtFinalizationForReEvaluate();
 				if (null != finalization) {
 					if (finalization.isReEvaluateCompReq()) {
