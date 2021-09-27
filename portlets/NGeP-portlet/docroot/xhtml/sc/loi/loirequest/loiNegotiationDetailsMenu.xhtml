@@ -100,7 +100,7 @@
 
 	<p:panel id="negoTermId" header="#{lbl['lbl.sc.loiloa.nego.term']}"
 		toggleable="true">
-		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.loiloa.nego.term.instruction']}" escape="false" />
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.loiloa.nego.term.instruction']}" escape="false" rendered="#{isPendingSubmissionStatus or isPendingRevisionStatus}" />  <ui:remove> #29007 rendered added</ui:remove>
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.loiloa.nego.term.instruction1']}" rendered="#{lOIDetailBackingBean.managedBean.buttonFlag and isPendingNegotiation}" escape="false" /><ui:remove> #29007 Added Vinod  </ui:remove>
 		
 	   <ui:param name="delBtnClientId" value="delNegoTermBtn" />
