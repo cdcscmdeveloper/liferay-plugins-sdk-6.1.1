@@ -2479,6 +2479,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					reqDTO.setDocNo(docNo);
 				}
 			}
+			/*BUG 31120 START*/
+			if (qtnTenderSearchBean.getPtjProfile() != null && qtnTenderSearchBean.getPtjProfile().getOrgProfileId() != null) {
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchField(QTConstants.QT_ORG_PROFILE);
+				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+				bean.setSearchValue(qtnTenderSearchBean.getPtjProfile().getOrgProfileId());
+			}
+			/*BUG 31120 END*/
 			String procurementMode = qtnTenderSearchBean.getProcurementMode();
 			if (!StringUtils.isBlank(procurementMode) && !ParameterConst.DOCTYPE_LETTER_OF_AWARD.equals(docType)) {
 				searchFilterBean.add(
@@ -2730,17 +2738,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				SearchFilterBean searchFilterBean1 = null;
 				if (ptjProfiles != null && ptjProfiles.getOrgProfileId() != null) {
 					// Filter By - PTJ
-					/*
-					 * BUG 31120
-					 */
 					searchFilterBean1 = new SearchFilterBean(
 							"pmOrgProfile." + OrgProfileUtil
 								.getSearchBeanParentString(OrganizationType.DIVISION.value()),
 							SearchOperator.OPERATOR_EQUALS.value(),
-							ptjProfiles.getOrgProfileId(),SearchCondition.CONDITION_AND.value());
-					/*
-					 * END
-					 */
+							ptjProfiles.getOrgProfileId(),SearchCondition.CONDITION_OR.value());
 				} else {
 					// Filter By - PTJ Group
 					PmOrgProfile ptjGroupProfile = qtnTenderSearchBean.getPtjGroupProfile();
