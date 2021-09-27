@@ -420,6 +420,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 		}catch(Exception e){
 			log.info("START 28775 TO FIND ERROR Enter CATCH");
+			log.info("ERROR=="+e.getMessage());
 			e.printStackTrace();
 		}
 		log.info("START 28775 TO FIND ERROR END");
