@@ -36,9 +36,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.zip.Deflater;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -56,7 +53,6 @@ import my.ep.biz.service.ct.circular.IPanelGroupItemSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IPtjSpecialApprovalSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -79,10 +75,8 @@ import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
@@ -106,7 +100,6 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.general.settings.bpm.CompositeValidityReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
-import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
 import my.ep.dto.sc.quationtender.EvaluationReqDTO;
@@ -209,10 +202,8 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
-import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.template.DocumentGenerator;
-import my.ep.dto.sc.directpurchase.QuoteReqDTO;
-import my.ep.dto.sc.directpurchase.QuoteResDTO;
+
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -883,7 +874,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				return null;
 			}
 		}finally{
-			//TODO baffled to close tmpOut
 		}
 		
 	}
@@ -2916,10 +2906,17 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		 * IF BPK DONT SET ORG_PROFILE (PTJ)
 		 */
 		if(scMember.getPmUser()!=null && scMember.getPmUser().getOrgTypeCode()!=null) {
-			if(scMember.getPmUser().getOrgTypeCode().getParameterCode().equalsIgnoreCase("BPK")) {
+			//20210716@asyrafhaziq - 30421 -start
+			String orgTypeCode = scMember.getPmUser().getOrgTypeCode().getParameterCode();
+			if(orgTypeCode.equalsIgnoreCase(ParameterConst.ORG_TYPE_BPK)){
 				scMember.setPmOrgProfile(getBKPOrgProfileByUserId(scMember.getPmUser()
 						.getUserId()));
-			} else {
+			} else if (orgTypeCode.equalsIgnoreCase(ParameterConst.ORG_TYPE_OTHERS)){
+				scMember.setPmOrgProfile(getOTHOrgProfileByUserId(scMember.getPmUser()
+						.getUserId()));
+			}
+			//20210716@asyrafhaziq - 30421 -end
+			else {
 				scMember.setPmOrgProfile(getPTJOrgProfileByUserId(scMember.getPmUser()
 						.getUserId()));
 			}			
@@ -2956,6 +2953,36 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return pmOrgProfile;
 	}
 	// Enhancement #21689 - end - 
+	
+	//20210716@asyrafhaziq - 30421 -start
+	private PmOrgProfile getOTHOrgProfileByUserId(Long userId) {
+		PmOrgProfile pmOrgProfile = null;
+		
+		if (userId != null) {
+			IOrgProfileSO orgProfileSO = null;
+			
+			try {
+				orgProfileSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IOrgProfileSO.class);
+
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				reqDTO.setUserId(userId);
+				reqDTO.setOrgType(OrganizationType.DIVISION.value());
+				OrgProfileResDTO resDTO = orgProfileSO
+						.retrieveOrgProfileListByOrgType(reqDTO);
+				List<PmOrgProfile> pmOrgProfiles = resDTO.getOrgProfileList();
+				if (pmOrgProfiles != null && pmOrgProfiles.size() > 0) {
+					pmOrgProfile = pmOrgProfiles.get(0);
+				}
+
+			} finally {
+				orgProfileSO = null;
+			}
+		}
+		return pmOrgProfile;
+	}
+	//20210716@asyrafhaziq - 30421 -end	
 	
 	private PmOrgProfile getPTJOrgProfileByUserId(Long userId) {
 
