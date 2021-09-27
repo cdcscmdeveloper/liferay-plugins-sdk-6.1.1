@@ -75,13 +75,13 @@
 	         
 	         <!-- #31558 start -->
 	         <p:column headerText="#{lbl['lbl.ct.item.desc']}" style="width:32%; white-space:normal;">	                       
-	         	#{suspensionBackingBean.contactItem(itemData).itemName}
+	         	#{itemData.scRequestItem.itemName}
 	         	<p:spacer width="10" />       		 	
        		 	<p:commandLink id="serviceSpec" update=":form:itemSpecDlg" action="#{suspensionBackingBean.viewItemSpecDlg(itemData)}">
        		 		<p:graphicImage value="/css/images/design/ico-viewnedit.png" title="#{lbl['lbl.ct.specification']}"/>
 			 	</p:commandLink>
-				<br /><br />
-			  	<h:outputText id="extensionCodeID" value="#{suspensionBackingBean.contactItem(itemData).cmItem.extensionCode}" size="50" escape="false"  style="float:left; text-align:left; display:block;width:200px"/>       		 				                        
+				<br/>				
+			  	<h:outputText id="extensionCodeID" value="#{itemData.scRequestItem.cmItem.extensionCode}" size="50" escape="false"  style="float:left; text-align:left; display:block;width:200px"/>       		 				                        
 	      	</p:column>	       
 	         <!-- #31558 end -->
 
