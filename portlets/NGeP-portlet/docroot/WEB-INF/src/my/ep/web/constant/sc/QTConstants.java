@@ -21,6 +21,10 @@ public interface QTConstants {
 	public static final String CLOSED_DATE = "closingDate";
 	public static final String STATUS = "";
 	
+	/* BUG 31120 START*/
+	public static final String QT_ORG_PROFILE = "orgProfileId";
+	/* BUG 31120 END*/
+	
 	/* Enhancement 27668 START*/
 	public static final String FINALIZATION_SECRETARY_LOGIN_ID = "finalizationSecratery.loginId";
 	public static final String FINALIZATION_HIGH_AUTH_SECRETARY_LOGIN_ID = "finalization.higherSecretary.loginId";
