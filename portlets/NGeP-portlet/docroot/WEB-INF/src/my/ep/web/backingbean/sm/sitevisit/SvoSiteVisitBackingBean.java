@@ -232,6 +232,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			getManagedBean().setViewMode(true);
 		}
 		log.info("START 28775 TO FIND ERROR");
+		try{
+			
+		
 		if(svoTask != null){
 			this.getManagedBean().setSmSvTask(svoTask);
 			SmSvTask smSvTask = this.getManagedBean().getSmSvTask();
@@ -414,6 +417,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			//28775 - Site Visit Grouping Enhancement - 28775 - end
 			SmCommonUtil.getInstance().setSmSvAddressInfoBySiteTypeAndRefId(smSvTask.getSmSvAddress().getSiteType(),
 					smSvTask.getSmSvAddress().getSiteRefId(),smSvTask.getSmSvAddress(), smSvTask.getSmAppl().getApplId());
+		}
+		}catch(Exception e){
+			log.info("START 28775 TO FIND ERROR Enter CATCH");
+			e.printStackTrace();
 		}
 		log.info("START 28775 TO FIND ERROR END");
 	}
