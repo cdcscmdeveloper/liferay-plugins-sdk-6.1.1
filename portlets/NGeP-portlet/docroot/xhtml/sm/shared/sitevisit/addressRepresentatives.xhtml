@@ -14,7 +14,7 @@
 			#{svoSiteVisitBackingBean.mapSmSvIntervieweesSVOWithPO(svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvTemplate.smSvInterviewees)}
 		</c:if>
 		<!-- #24964 - END -->
-		<!-- 28775 - Site Visit Grouping Enhancement - 28775 - start -->
+		<!-- 28775 - Site Visit Grouping Enhancement - 28775 - start --> 
 		<p:dataTable id="dtIntRepTbl" var="interviewee" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 		value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplate.smSvInterviewees}"
 		selection="#{svoSiteVisitBackingBean.managedBean.selectedInterviewees}" rowKey="#{interviewee}">
