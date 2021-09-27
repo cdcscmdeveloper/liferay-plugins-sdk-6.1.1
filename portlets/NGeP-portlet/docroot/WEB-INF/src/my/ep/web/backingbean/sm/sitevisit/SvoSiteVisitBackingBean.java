@@ -231,11 +231,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		if(StringUtils.isNotBlank(viewMode)){
 			getManagedBean().setViewMode(true);
 		}
-		
+		log.info("START 28775 TO FIND ERROR");
 		if(svoTask != null){
 			this.getManagedBean().setSmSvTask(svoTask);
 			SmSvTask smSvTask = this.getManagedBean().getSmSvTask();
-			
+			log.info("START 28775 TO FIND ERROR SV TASK ID="+smSvTask.getSvTaskId());
 			if(smSvTask.getSmSvFinChecklists().isEmpty()){
 				List<PmParameterDesc> pmParamDesc = new ArrayList<PmParameterDesc>();
 				pmParamDesc = SmCommonUtil.retrieveParameterDescList(ParameterTypeConst.SVO_FIN_CHECKLIST, new FacesScopes().getUserLocale().getLanguage());
@@ -410,10 +410,12 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			if(getManagedBean().getSmSvTask().getSmSvTemplate().getSmAttachments() == null){
 				retrievUploadedSiteVisitReport(getManagedBean().getSmSvTask().getSmSvTemplate());
 			}
+			log.info("START 28775 TO FIND ERROR BEFORE END");
 			//28775 - Site Visit Grouping Enhancement - 28775 - end
 			SmCommonUtil.getInstance().setSmSvAddressInfoBySiteTypeAndRefId(smSvTask.getSmSvAddress().getSiteType(),
 					smSvTask.getSmSvAddress().getSiteRefId(),smSvTask.getSmSvAddress(), smSvTask.getSmAppl().getApplId());
 		}
+		log.info("START 28775 TO FIND ERROR END");
 	}
 	
 	/**
