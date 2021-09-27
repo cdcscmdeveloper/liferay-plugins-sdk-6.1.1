@@ -2485,6 +2485,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				bean.setSearchField(QTConstants.QT_ORG_PROFILE);
 				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 				bean.setSearchValue(qtnTenderSearchBean.getPtjProfile().getOrgProfileId());
+				searchFilterBean.add(bean);
 			}
 			/*BUG 31120 END*/
 			String procurementMode = qtnTenderSearchBean.getProcurementMode();
