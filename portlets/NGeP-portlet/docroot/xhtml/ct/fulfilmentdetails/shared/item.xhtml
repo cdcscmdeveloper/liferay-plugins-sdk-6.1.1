@@ -114,8 +114,17 @@
                  <p:column headerText="#{lbl['lbl.ct.No']}" styleClass="column-align-center" style="width:8%; white-space:normal;">
                  <h:outputText value="#{index+1}" />
 	         </p:column>     
-	             
-		
+	        <p:column headerText="#{lbl['lbl.ct.item.desc']}" style="width:32%; white-space:normal;">	                       
+	         	#{ctItemVar.scRequestItem.itemName}
+	         	<p:spacer width="1" />       		 	
+       		 	<p:commandLink id="productSpec" update=":form:itemSpecDlg" action="#{ctBackingBean.viewItemSpecDlg(ctItemVar)}">
+       		 		<p:graphicImage value="/css/images/design/ico-viewnedit.png" title="#{lbl['lbl.ct.specification']}"/>
+			 	</p:commandLink>
+				<br />
+			    <h:outputText id="extensionCodeID" value="#{ctItemVar.scRequestItem.cmItem.extensionCode}" size="50" escape="false"  style="float:left; text-align:left; display:block;width:200px"/> 	
+			  	<h:outputText id="skuID" value="#{ctItemVar.sku == null ? lbl['lbl.ct.item.no.skuno'] : ctItemVar.sku }" size="50" escape="false"  style="float:left; text-align:left; display:block;width:200px"/> 				
+	      	</p:column>
+		<!--  
 	         <p:column  styleClass="column-align-center" style="width:35%; white-space:normal;"  >
 	 			<f:facet name="header">
 	      			<h:outputText id="productItemDesc" value="#{lbl['lbl.ct.item.desc']}" escape="false"/>
@@ -125,7 +134,7 @@
 						<p:graphicImage value="/css/images/design/ico-viewnedit.png" title="#{lbl['lbl.ct.specification']}" style="float:left; padding-left: 5px;" />
 					</p:commandLink>
          		 </p:column>       
-		     
+		     -->
                 <!--  <p:column headerText="#{lbl['lbl.ct.item.code']}" styleClass="column-align-center" style="width:8%; white-space:normal;">
 	              <h:outputText value="#{ctItemVar.scRequestItem.cmItem.extensionCode}" style="float:left;"/>
 	         </p:column> -->
