@@ -3586,7 +3586,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				Long catL3Id = svTGroup.getPmCategoryL3().getCategoryL3Id();
 				if(!catId.contains(catL3Id.toString())){
 					setMachineList(svTGroup.getSmSvTemplate(), catL3Id);
+					log.info("setTemplateList svTGroup.getSmSvTemplate()="+svTGroup.getSmSvTemplate().getSvTemplateId());
+					log.info("setTemplateList catL3Id="+catL3Id);
 					svTGroup.getSmSvTemplate().setSuppCategory(retrieveSupplierCategory(catL3Id));
+					log.info("setTemplateList catL3Id="+svTGroup.getSmSvTemplate().getSuppCategory());
 					templates.add(svTGroup.getSmSvTemplate());
 					catId = catId.concat(catL3Id+" ");
 				} else {
