@@ -752,8 +752,11 @@ public class CreateQtBackingBean extends
 	
 		
 			if (amount != null) {
-				// QT Type
-				scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
+				//Bug #31605
+				if (scQt.getQtType() == null){
+					// QT Type
+					scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
+				}
 				// Open For
 				if (isPanel) {
 					scQt.setOpenFor(null);
