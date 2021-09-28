@@ -491,8 +491,9 @@
 				</tr>
 				<tr>
 					<td style="width: 200px;"><p:outputLabel
-							value="#{lbl['lbl.sc.purchase.in.default.supplier.allowed.order.qty']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
+							value="*" styleClass="mandatory" />
+							<p:outputLabel
+							value="#{lbl['lbl.sc.purchase.in.default.supplier.allowed.order.qty']}" /></td>
 					<td><p:inputText id="ordSupQty" maxlength="14"
 							required="#{purchaseInDefaultBackingBean.managedBean.visibleOrderQty}"
 							validatorMessage="* Order Qty: must be a decimal number between 0.0 and 9999999999.999"
