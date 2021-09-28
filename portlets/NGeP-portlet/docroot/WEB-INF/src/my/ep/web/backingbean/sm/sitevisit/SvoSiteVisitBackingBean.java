@@ -2919,6 +2919,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
 		reqDTO.setApplId(getManagedBean().getSmSvTask().getSmAppl().getApplId());
 		reqDTO.setCategoryId(categoryL3Id);
+		log.info("28775 find error - cat: "+categoryL3Id+"\t"+reqDTO.getApplId());
 		SupplierSearchResDTO resDTO = SmServiceLookup.getSupplierSearchSO().retrievePendingApprovalCategoryByApplIdAndCategoryId(reqDTO);
 		
 		return resDTO.getSmSupplierCategoryList();
