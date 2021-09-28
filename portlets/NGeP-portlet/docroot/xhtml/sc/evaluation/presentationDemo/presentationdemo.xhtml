@@ -55,12 +55,14 @@
 					value="/#{evaluationBackingBean.managedBean.userScores}" />
 			</p:column>
 
+			<ui:remove>
 			<p:column headerText="#{lbl['lbl.sc.remarks']}" style="width:25%; text-align:center;">
 				<p:inputTextarea rows="2" cols="40" maxlength="200" onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);" onmouseout="limitTextArea(this,200);" 
 				value="#{demoSupplier.remark}" disabled="#{evaluationBackingBean.managedBean.readOnly}">
 					<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
 				</p:inputTextarea>
 			</p:column>
+			</ui:remove>
 
 			<p:column
 				headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.file.attachment']}"
