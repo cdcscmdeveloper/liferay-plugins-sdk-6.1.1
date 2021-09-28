@@ -91,20 +91,19 @@
 					maxlength="12"
 					validatorMessage="#{lbl['lbl.sm.person.icNum']} - #{lbl['lbl.sm.invalidNo']}">
 					<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+					<p:message id="empIcIdMsg" for="empIcId"
+							showSummary="true" showDetail="false" display="icon" />
 					<p:ajax event="blur" process="@this" update="@this" />
 				</p:inputText>
-				<p:message id="empIcIdMsg" for="empIcId"
-							showSummary="true" showDetail="false" display="icon" />
 				<p:inputText id="empPassId" value="#{empInfo.identificationNo}"
 					label="#{lbl['lbl.sm.employee.icno']}"
 					rendered="#{empInfo.identificationTypeId ne '115'}"
 					required="#{backingBean.managedBean.valueReqd}" size="30"
 					maxlength="12">
+					<p:message id="empPassIdMsg" for="empPassId"
+							showSummary="true" showDetail="false" display="icon" />
 					<p:ajax event="blur" process="@this" update="@this" />
 				</p:inputText>
-				<p:message id="empPassIdMsg" for="empPassId"
-							showSummary="true" showDetail="false" display="icon" />
-
 			</p:column>
 
 			<p:column style="white-space:normal;">
@@ -115,10 +114,10 @@
 				<p:inputText id="empSpclId" value="#{empInfo.expertise}" size="30"
 					label="#{lbl['lbl.sm.employee.specialization']}" maxlength="2000"
 					required="#{backingBean.managedBean.valueReqd}">
+					<p:message id="empSpclIdMsg" for="empSpclId"
+							showSummary="true" showDetail="false" display="icon" />
 					<p:ajax event="blur" process="@this" update="@this" />
 				</p:inputText>
-				<p:message id="empSpclIdMsg" for="empSpclId"
-							showSummary="true" showDetail="false" display="icon" />
 			</p:column>
 
 			<p:column style="white-space:normal;">
@@ -129,10 +128,10 @@
 				<p:inputText id="empExpId" value="#{empInfo.workExpYear}" size="30"
 					label="#{lbl['lbl.sm.employee.experience']}" maxlength="2000"
 					required="#{backingBean.managedBean.valueReqd}">
+					<p:message id="empExpIdMsg" for="empExpId"
+							showSummary="true" showDetail="false" display="icon" />
 					<p:ajax event="blur" process="@this" update="@this" />
 				</p:inputText>
-				<p:message id="empExpIdMsg" for="empExpId"
-							showSummary="true" showDetail="false" display="icon" />
 			</p:column>
 		</p:dataTable>
 
