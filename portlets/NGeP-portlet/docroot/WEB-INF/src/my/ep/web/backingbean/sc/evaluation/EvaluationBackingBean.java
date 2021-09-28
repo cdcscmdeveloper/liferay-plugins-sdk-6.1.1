@@ -14686,10 +14686,10 @@ private void retriveCommitteeRemarksList(){
 			log.info("===========speanswerUserScore======"+specAnswer.getUserScore());
 			log.info("===========speanswerAutoScore======"+specAnswer.getAutoScore());
 			//fix Bug #31623 related to 25138 === farid START
-			if(null!=specAnswer.getUserScore() && !specAnswer.getTplSpecZoneQty().getQty().equals(new BigDecimal(0))){
+			if(null!=specAnswer.getUserScore() && specAnswer.getTplSpecZoneQty() !=null && !specAnswer.getTplSpecZoneQty().getQty().equals(new BigDecimal(0))){
 				totalUserScore=totalUserScore.add(specAnswer.getUserScore());	
 			}
-			if(null!=specAnswer.getAutoScore() && !specAnswer.getTplSpecZoneQty().getQty().equals(new BigDecimal(0))){
+			if(null!=specAnswer.getAutoScore() && specAnswer.getTplSpecZoneQty() !=null && !specAnswer.getTplSpecZoneQty().getQty().equals(new BigDecimal(0))){
 				totalAutoScore=totalAutoScore.add(specAnswer.getAutoScore());	
 			}
 			//fix Bug #31623 related to 25138 === farid END
