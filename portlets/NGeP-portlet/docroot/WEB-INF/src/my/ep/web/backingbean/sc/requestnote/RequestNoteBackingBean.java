@@ -1373,8 +1373,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 										} else {
 											itemTitle = requestNoteDtl.getRequestItem().getCmItem().getCmUnspsc().getUnspscTitle();
 										}
-										throw new EpException(MessageConst.ERROR_760518,
-												new String[] {itemTitle, requestNoteDtl.getRequestItem().getCmItem().getCmUnspsc().getUnspscCode()});
+										/*throw new EpException(MessageConst.ERROR_760518,
+												new String[] {itemTitle, requestNoteDtl.getRequestItem().getCmItem().getCmUnspsc().getUnspscCode()});*/
 								}
 								//26059 - end
 							} else {
