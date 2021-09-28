@@ -3702,6 +3702,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				log.info("28775 find error worker 4");
 				for(SmSupplierCategoryFacility catFac : fac.getSmSupplierCategoryFacilities()){
 					log.info("28775 find error worker 5.1");
+					
+					log.info("28775 find error worker 5.2 "+template);
+					log.info("28775 find error worker 5.3 "+template.getSuppCategory());
+					log.info("28775 find error worker 5.4 "+template.getSuppCategory().getPmCategoryL3());
+					log.info("28775 find error worker 5.5 "+catFac);
+					log.info("28775 find error worker 5.6 "+catFac.getPmCategoryL3());
+					
 					Long templateL3 = template.getSuppCategory().getPmCategoryL3().getCategoryL3Id();
 					Long facilityL3 = catFac.getPmCategoryL3().getCategoryL3Id();
 					log.info("28775 find error worker 5");
