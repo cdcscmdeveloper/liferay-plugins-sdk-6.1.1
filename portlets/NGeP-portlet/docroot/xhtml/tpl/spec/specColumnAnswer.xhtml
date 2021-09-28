@@ -122,6 +122,7 @@
 	<p:column style="width:10%;" rendered="#{isSpecTypeFinancial}">
 		<f:facet name="footer">
 			<h:outputText value="#{lbl['lbl.tpl.spec.specification.total']}" rendered="#{isAllPriceTypesStandard and !(isZonal and isSqSpec)}" />
+			<h:outputText value="#{lbl['lbl.tpl.spec.specification.total']}" rendered="#{isAllPriceTypesStandard and isZonal and isSqSpec}" /><!-- #31789  -->
 		</f:facet>
 <!-- FARID START #28673 fix bug #21695 -->
 		<!-- FARID START  add disable tplSpecAnswer.tplSpecZoneQty.qty eq 0-->
@@ -174,6 +175,14 @@
 				rendered="#{isSpecTypeFinancial and isAllPriceTypesStandard and !(isZonal and isSqSpec)}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</h:outputText>
+			<!-- #31789 START -->
+			<h:outputText id="totalAmount" 
+				styleClass="calcAmount" 
+				value="#{templateSpecBean.specMaster.totalAmount}"
+				rendered="#{isSpecTypeFinancial and isAllPriceTypesStandard and isZonal and isSqSpec}">
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			</h:outputText
+			<!-- #31789 END -->
 		</f:facet>
 <!-- #21695 Farid start 1/4/2021-->	
 		<h:panelGroup id="ansPG">
