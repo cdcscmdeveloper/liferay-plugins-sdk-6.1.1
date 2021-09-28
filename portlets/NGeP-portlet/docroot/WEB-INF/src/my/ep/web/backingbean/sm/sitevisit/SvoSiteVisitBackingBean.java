@@ -3577,6 +3577,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		
 		task.getSmSvTemplate().setSuppCategory(
 				retrieveSupplierCategory(task.getPmCategoryL3().getCategoryL3Id()));
+		log.info("28775 suppCat: "+task.getSmSvTemplate().getSuppCategory());
 		
 		templates.add(task.getSmSvTemplate());
 		catId = task.getPmCategoryL3().getCategoryL3Id() + " ";
