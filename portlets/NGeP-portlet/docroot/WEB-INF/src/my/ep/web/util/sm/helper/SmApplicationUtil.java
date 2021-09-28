@@ -1532,14 +1532,17 @@ public class SmApplicationUtil {
 	public static void validateSpecialAndNormalCategory(boolean validSave, SmApplicationManagedBean managedBean,
 			int currentTab) {
 		boolean isSpecial = false;
-		for (SmSupplierCategory category : managedBean.getSmAppl().getSmSupplierCategories()) {
-			if (category.isSpecialCategory() && managedBean.getSmAppl().getApplCategoryType().equals("N")) {
-				setNavigationBackToCurrentPage(currentTab, managedBean);
-				isSpecial = true;
+		if(managedBean.isSupplierUser()){
+			for (SmSupplierCategory category : managedBean.getSmAppl().getSmSupplierCategories()) {
+				if (category.isSpecialCategory() && managedBean.getSmAppl().getApplCategoryType().equals("N")
+						&& category.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION)) {
+					setNavigationBackToCurrentPage(currentTab, managedBean);
+					isSpecial = true;
+				}
 			}
-		}
-		if (isSpecial) {
-			throw new EpException(MessageConst.ERROR_722691);
+			if (isSpecial) {
+				throw new EpException(MessageConst.ERROR_722691);
+			}	
 		}
 	}//#30508-end
 	/**
