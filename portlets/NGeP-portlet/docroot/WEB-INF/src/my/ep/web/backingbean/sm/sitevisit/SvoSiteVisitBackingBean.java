@@ -3708,14 +3708,24 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 					
 					log.info("28775 find error worker 5.2 "+template);
 					log.info("28775 find error worker 5.3 "+template.getSuppCategory());
-					log.info("28775 find error worker 5.4 "+template.getSuppCategory().getPmCategoryL3());
+					//log.info("28775 find error worker 5.4 "+template.getSuppCategory().getPmCategoryL3());
 					log.info("28775 find error worker 5.5 "+catFac);
-					log.info("28775 find error worker 5.6 "+catFac.getPmCategoryL3());
+					//log.info("28775 find error worker 5.6 "+catFac.getPmCategoryL3());
 					
-					Long templateL3 = template.getSuppCategory().getPmCategoryL3().getCategoryL3Id();
-					Long facilityL3 = catFac.getPmCategoryL3().getCategoryL3Id();
+					Long templateL3 = null;
+					if(template.getSuppCategory() != null){
+						templateL3 = template.getSuppCategory().getPmCategoryL3().getCategoryL3Id();
+					}else{
+						log.info("28775 find error template.getSuppCategory() is null");
+					}
+					Long facilityL3 = null;
+					if(catFac.getPmCategoryL3() != null){
+						facilityL3 = catFac.getPmCategoryL3().getCategoryL3Id();
+					}else{
+						log.info("28775 find error catFac.getPmCategoryL3() is null");
+					}
 					log.info("28775 find error worker 5");
-					if(templateL3.equals(facilityL3)){
+					if(templateL3 != null && facilityL3 != null && templateL3.equals(facilityL3)){
 						template.getSmSvWorkers().addAll(fac.getSmSvWorkers());
 						log.info("28775 find error worker 6");
 						if(getManagedBean().getWorkerFacility() == null)
