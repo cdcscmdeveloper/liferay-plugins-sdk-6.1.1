@@ -54,6 +54,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.util.SLAUtils;
+import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -418,6 +419,10 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 								cloned.setCommitteeMemberId(null);
 								setUserDetails(cloned);
 								setCommitteeMemberOrgProfile(cloned);
+								if(null==cloned.getPmOrgProfile()){//31709-start
+									QtnTenderSearchBean qtnTenderSearchBean = getManagedBean().getQtnTenderSearchBean();
+									cloned.setPmOrgProfile(qtnTenderSearchBean.getPtjProfile());	
+								}//31709-End
 								cloned.setChangedDate(null);
 								if (cloned.isConsolidate()) {
 									this.getManagedBean().setSelectScCommitteMember(
@@ -581,7 +586,9 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 		scQt.setPartial(copyScqt.isPartial());
 		BigDecimal tmpExpectedIntendedPrice = QtDetailsSO
 				.getDecryptedExpectedIntendedPrice(copyScqt.getQtId());
-		
+		if(null==tmpExpectedIntendedPrice){//31709-start
+			tmpExpectedIntendedPrice=copyScqt.getExpectedIntendedPrice();	
+		}//31709-End
 		scQt.setTmpExpectedIntendedPrice(tmpExpectedIntendedPrice);
 	//	scQt.setEstimatedAmount(copyScqt.getEstimatedAmount());
 	//	scQt.setDecryptedEstAmt(copyScqt.getDecryptedEstAmt());
