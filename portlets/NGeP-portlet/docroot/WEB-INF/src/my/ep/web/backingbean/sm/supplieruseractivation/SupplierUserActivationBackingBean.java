@@ -24,6 +24,7 @@ import my.ep.dto.sm.supplieruseractivation.SupplierUserActivationReqDTO;
 import my.ep.dto.sm.supplieruseractivation.SupplierUserActivationResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -449,11 +450,19 @@ public class SupplierUserActivationBackingBean extends
 						supplierSearchReqDTO).getSmSupplier();
 				// means already MOF because have applNo
 				// change BASIC_SUPPLIER_USER to MOF_SUPPLIER_USER
+				//12981 - START
 				if (smSupplierTmp.getSmAppl().getApplNo() != null
 						&& StringUtils.isNotBlank(smSupplierTmp.getSmAppl()
 								.getApplNo())) {
-					epRole = RoleCode.MOF_SUPPLIER_USER.value();
+					epRole = RoleCode.BASIC_SUPPLIER_USER.value();
+					for(SmMofAccount mofAcc : smSupplier.getSmMofAccounts()){
+						if(mofAcc.getRecordStatusFlg() == 1){
+							epRole = RoleCode.MOF_SUPPLIER_USER.value();
+							break;
+						}
+					}
 				}
+				//12981 - END
 			} catch (Exception ex) {
 				log.info(ex.getMessage());
 			} finally {
