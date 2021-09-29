@@ -153,7 +153,6 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private List<SelectItem> raceSelectItems;
 	private boolean disableRoleSelection;
 	private boolean allowAccess;
-	//9569 start - 28/7/2021
 	private int spIsAuthorize;
 	private int spIEpRoleStatus;
 	private List<PmUserRole> personnelHistoryList;
