@@ -9,15 +9,14 @@
 	<!-- 29723 Start -->	
 	<p:outputPanel
 		rendered="#{backingBean.managedBean.smAppl.applType ne 'R' and 
-		backingBean.managedBean.smAppl.pmStatus.statusId ne SupplierMgmtConst.pmStatusPendingReviewSiteVisitReportAfterApproval and
-		backingBean.managedBean.smAppl.pmStatus.statusId ne SupplierMgmtConst.pmStatusPendingReviewApplication}">
+		backingBean.managedBean.smAppl.pmStatus.statusId ne SupplierMgmtConst.pmStatusPendingReviewSiteVisitReportAfterApproval}">
 		<!-- 29723 End -->	
 		<p:dataTable var="catBean" widgetVar="smCatCodesNonRenewApplDtWidVar"
 			value="#{backingBean.managedBean.activeCategoryList}"
 			rowKey="#{catBean}" rowIndexVar="index" id="catDt"
 			selection="#{backingBean.managedBean.deleteNewApplCategoryList}"
 			rendered="#{backingBean.managedBean.smAppl.applType ne 'R'}"
-			emptyMessage="copium here two']}">
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			<ac:paginator for="catDt" />
 			<p:ajax event="rowSelect" partialSubmit="true" process="@this"
 				listener="#{backingBean.unSelectApporvedCategories}"
@@ -413,14 +412,13 @@
 	<!-- 29723 Start -->	
 	<p:outputPanel
 		rendered="#{backingBean.managedBean.smAppl.applType ne 'R' and 
-		backingBean.managedBean.smAppl.pmStatus.statusId eq SupplierMgmtConst.pmStatusPendingReviewSiteVisitReportAfterApproval or
-		backingBean.managedBean.smAppl.pmStatus.statusId eq SupplierMgmtConst.pmStatusPendingReviewApplication }">
+		backingBean.managedBean.smAppl.pmStatus.statusId eq SupplierMgmtConst.pmStatusPendingReviewSiteVisitReportAfterApproval}">
 		
 		<p:dataTable var="aprvdCatNBean"
 			widgetVar="smApprvdCatCodesNewApplDtWidVar"
 			value="#{backingBean.managedBean.approvedCategoryList}"
 			rowKey="#{aprvdCatNBean}" rowIndexVar="index" id="catApprNDt"
-			emptyMessage="copium here">
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			<ac:paginator for="catApprNDt" />
 			
 			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2%;">
