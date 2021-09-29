@@ -9,7 +9,8 @@
 	<!-- 29723 Start -->	
 	<p:outputPanel
 		rendered="#{backingBean.managedBean.smAppl.applType ne 'R' and 
-		backingBean.managedBean.smAppl.pmStatus.statusId ne SupplierMgmtConst.pmStatusPendingReviewSiteVisitReportAfterApproval}">
+		backingBean.managedBean.currentStatus ne 'Pending Review Site Visit Report - After Approval' and
+		backingBean.managedBean.currentStatus ne 'Menunggu Laporan Lawatan Tapak - Selepas Diluluskan'}">
 		<!-- 29723 End -->	
 		<p:dataTable var="catBean" widgetVar="smCatCodesNonRenewApplDtWidVar"
 			value="#{backingBean.managedBean.activeCategoryList}"
@@ -412,8 +413,9 @@
 	<!-- 29723 Start -->	
 	<p:outputPanel
 		rendered="#{backingBean.managedBean.smAppl.applType ne 'R' and 
-		backingBean.managedBean.smAppl.pmStatus.statusId eq SupplierMgmtConst.pmStatusPendingReviewSiteVisitReportAfterApproval}">
-		
+		(backingBean.managedBean.currentStatus eq 'Pending Review Site Visit Report - After Approval' 
+		or backingBean.managedBean.currentStatus eq 'Menunggu Laporan Lawatan Tapak - Selepas Diluluskan')}">
+
 		<p:dataTable var="aprvdCatNBean"
 			widgetVar="smApprvdCatCodesNewApplDtWidVar"
 			value="#{backingBean.managedBean.approvedCategoryList}"
