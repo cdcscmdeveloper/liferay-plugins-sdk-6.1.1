@@ -2225,6 +2225,10 @@ public class TemplateSpecBackingBean extends
 				TplSpecMaster specMaster = templateSpecBean.getSpecMaster();
 				boolean isFinancialSpec = ParameterConst.SPECIFICATION_TYPE_FINANCIAL
 						.equals(specMaster.getSpecTypeCode().getParameterCode());
+// #21695 29/9/2021 (#31661) - Start
+				boolean isTechnicalSpec = ParameterConst.SPECIFICATION_TYPE_TECHNICAL
+						.equals(specMaster.getSpecTypeCode().getParameterCode());
+// #21695 29/9/2021 (#31661)- End
 				boolean isPartial = templateSpecBean.getSpecMaster().getScQtDoc().getScQt().isPartial();
 				if(isFinancialSpec){
 // condition only for zonal quantity 0
@@ -2283,7 +2287,24 @@ public class TemplateSpecBackingBean extends
 								totalMaxScore = totalMaxScore.add(specAnswer
 										.getTplSpecQuestion().getMaxScore());
 					}
-				}else{
+				}
+// #21695 29/9/2021	(#31661) - Start			
+				else if(isPartial && isTechnicalSpec){
+					if (specAnswer.getTplSpecQuestion().getMaxScore() != null) {
+						totalMaxScore = totalMaxScore.add(specAnswer
+								.getTplSpecQuestion().getMaxScore());
+					} //(#31661) - End
+					if (autoScore != null) {
+						totalScore = totalScore.add(autoScore);
+					}
+	
+					if (userScore != null) {
+						totalScore = totalScore.add(userScore);
+					}
+				}
+				
+				else{
+// #21695 29/9/2021 (#31661) - Start
 // Technical score					
 					if (autoScore != null) {
 						totalScore = totalScore.add(autoScore);
