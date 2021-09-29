@@ -23,8 +23,8 @@
 					and ((viewSmApplBackingBean.managedBean.smAppl.applType eq 'B' and viewSmApplBackingBean.managedBean.smMofAccount!=null and viewSmApplBackingBean.managedBean.smMofAccount.expDate gt CommonConstants.THREE_MONTHS_LATER_DATE
 					) or (viewSmApplBackingBean.managedBean.smAppl.applType ne 'B'))}">
 					<!-- START 29823 -->
-					<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'N' and viewSmApplBackingBean.isApplPORejectedAfterApprovelSV()}">
-					<p:commandLink onclick="blockWidget.show()"
+					<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'N'}">
+					<p:commandLink onclick="blockWidget.show()" rendered="#{!viewSmApplBackingBean.isApplPORejectedAfterApprovelSV()}"
 							action="#{viewSmApplBackingBean.redirectToResubmit()}"
 							process="@this" partialSubmit="true" update=":form"
 							value="#{lbl['lbl.sm.resubmit']}" />&#160;&#160;
