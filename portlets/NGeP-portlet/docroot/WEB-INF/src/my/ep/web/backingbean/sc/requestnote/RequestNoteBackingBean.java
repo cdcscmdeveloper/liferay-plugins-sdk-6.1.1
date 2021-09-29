@@ -1208,6 +1208,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						// Check total procurement amount per ptj per item per year
 						FlItemSummaryReqDTO flReqDTO = new FlItemSummaryReqDTO();
 						if (requestNoteDtl.getRequestItem().getCmItem() != null) {
+							Long itemId = requestNoteDtl.getRequestItem().getCmItem().getItemId();
 							String extensionCode = requestNoteDtl.getRequestItem().getCmItem().getExtensionCode();
 							debugLogger("RequestNoteBackingBean >> validateRequestNote : RequestNoteDtl ID = "
 									+ requestNoteDtl.getRequestNoteDtlId());
