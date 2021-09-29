@@ -27,7 +27,7 @@
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" /></td>
 				<td style="white-space: nowrap; float: right;"><p:commandButton
 						value="#{lbl['lbl.sm.button.save']}" update=":form"
-						action="#{smPersonnelBackingBean.saveUserMOFUpdate(smPersonnelBackingBean.managedBean.basicSmPersonnel)}"
+						action="#{smPersonnelBackingBean.saveUserMOFUpdate()}"
 						onclick="blockWidget.show()" oncomplete="blockWidget.hide()" /></td>
 			</tr>
 		</table>
@@ -335,7 +335,7 @@
 							<!-- As 4/8/2021  -->
 							<p:message id="basicBURoleMsg" for="basicBURole" showSummary="true" showDetail="false" display="icon" />
 								</td>
-						<td><h:outputText style="float:initial" value=" #{lbl['lbl.sm.personnel.history']} " escape="false" /> 
+						<td><h:outputText style="float:initial" value=" &#160; #{lbl['lbl.sm.personnel.history']} " escape="false" /> 
 								<p:commandLink
 								onclick="personnelRoleHistoryInfo.show()"
 								value="#{lbl['lbl.sm.personnel.history1']} "
@@ -1287,27 +1287,24 @@
 						<h:outputText value="#{lbl['lbl.sm.personnel.epRole.name.supplierTemp']}"  rendered="#{history.pmRole.roleCode eq SupplierManagementConst.ROLE_CODE_SM_5}" />
 						<h:outputText value="#{lbl['lbl.sm.person.epRoleStatus.unavailable']}" rendered="#{history.pmRole eq null }" />
 					</p:column>
-					
-					<!-- Previous eP Role -->
-					<p:column headerText="#{lbl['lbl.sm.personnel.history.column2']}">
-						<h:outputText value="#{lbl['lbl.sm.personnel.epRole.name.admin']}"  rendered="#{history.pmRolePrevious.roleCode eq SupplierManagementConst.ROLE_CODE_SM_1}" />
-						<h:outputText value="#{lbl['lbl.sm.personnel.epRole.name.supplierUser']}"  rendered="#{history.pmRolePrevious.roleCode eq SupplierManagementConst.ROLE_CODE_SM_2}" />
-						<h:outputText value="#{lbl['lbl.sm.personnel.epRole.name.catalogue']}" rendered="#{history.pmRolePrevious.roleCode eq SupplierManagementConst.ROLE_CODE_SM_3}" />
-						<h:outputText value="#{lbl['lbl.sm.personnel.epRole.name.fulfillment']}"  rendered="#{history.pmRolePrevious.roleCode eq SupplierManagementConst.ROLE_CODE_SM_4}" />
-						<h:outputText value="#{lbl['lbl.sm.personnel.epRole.name.supplierTemp']}"  rendered="#{history.pmRolePrevious.roleCode eq SupplierManagementConst.ROLE_CODE_SM_5}" />
-						<h:outputText value="#{lbl['lbl.sm.person.epRoleStatus.unavailable']}" rendered="#{history.pmRolePrevious.roleCode eq null }" />
-					</p:column>
 
 					<!-- Action Date  -->
-					<p:column headerText="#{lbl['lbl.sm.personnel.history.column3']}">
+					<p:column headerText="#{lbl['lbl.sm.personnel.history.column2']}">
 						<h:outputText value="#{history.changedDateFormat}"  rendered="#{history.changedDateFormat ne null }"/>
 						<h:outputText value="#{lbl['lbl.sm.person.epRoleStatus.unavailable']}"  rendered="#{history.changedDateFormat eq null }"/>
 					</p:column>
 					
-					<!-- Deleted By  -->
-					<p:column headerText="#{lbl['lbl.sm.personnel.history.column4']}">
+					<!-- Change By Name  -->
+					<p:column headerText="#{lbl['lbl.sm.personnel.history.column3']}">
 						<h:outputText value="#{history.changedByUserName}"  rendered="#{history.changedByUserName ne null}"/>
 						<h:outputText value= "#{lbl['lbl.sm.person.epRoleStatus.unavailable']}"  rendered="#{history.changedByUserName eq null }"/>
+					</p:column>
+					
+					<!-- Status  -->
+					<p:column headerText="#{lbl['lbl.sm.personnel.history.column4']}">
+						<h:outputText value= "#{lbl['lbl.sm.personnel.history.column4.active']}"  rendered="#{history.recordStatusFlg eq '1'}"/>
+						<h:outputText value= "#{lbl['lbl.sm.personnel.history.column4.inactive']}"  rendered="#{history.recordStatusFlg eq '0'}"/>
+						<h:outputText value= "#{lbl['lbl.sm.personnel.history.column4.deleted']}"  rendered="#{history.recordStatusFlg eq '9'}"/>
 					</p:column>
 				</p:dataTable>
 
