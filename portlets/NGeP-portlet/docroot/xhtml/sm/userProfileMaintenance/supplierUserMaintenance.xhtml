@@ -122,19 +122,23 @@
 						</tr>
 					<!-- EP Role  -->
 					<!-- EP Role Status  -->
-					<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.person.epRoleStatus']}"/></td>
+						<tr>
+							<td><p:outputLabel
+									value="#{lbl['lbl.sm.person.epRoleStatus']}" /></td>
 							<td><p:selectOneMenu id="epRoleStatus"
 									value="#{smPersonnelBackingBean.managedBean.spIEpRoleStatus}"
 									style="width: 207px;margin-bottom: 5px;">
-									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
-									<f:selectItem itemLabel="#{lbl['lbl.sm.person.epRoleStatus.active']}" itemValue="1" />
-									<f:selectItem itemLabel="#{lbl['lbl.sm.person.epRoleStatus.deleted']}" itemValue="2" />
-									</p:selectOneMenu>
-									 
-							</td>
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+										itemValue="0" />
+									<f:selectItem
+										itemLabel="#{lbl['lbl.sm.person.epRoleStatus.active']}"
+										itemValue="1" />
+									<f:selectItem
+										itemLabel="#{lbl['lbl.sm.person.epRoleStatus.deleted']}"
+										itemValue="2" />
+								</p:selectOneMenu></td>
 						</tr>
-					<!-- EP Role Status -->
+						<!-- EP Role Status -->
 						<tr >
 							<td colspan="2">
 								<div style="text-align: right;">
@@ -237,11 +241,11 @@
 					
 					<!-- Ep Role  -->
 					<p:column headerText="#{lbl['lbl.sm.userprofile.eprole']}">
-						<ac:smRoleDesc roleCode="#{personnel.epRole}"
+						<ac:smRoleDesc roleCode="#{personnel.prevEpRole}"
 							backingBean="#{smPersonnelBackingBean}" />
 					</p:column>
 					
-					<!-- Ep Role Status ****  -->
+					<!-- Ep Role Status ** -->
 					<p:column>
 					<f:facet name="header">
 							<h:outputText value="#{lbl['lbl.sm.person.epRoleStatus']} " />
@@ -249,16 +253,16 @@
 							<p:tooltip id="sourceTooltip" for="toolTipIcon">
 							<h:outputText id="sourceLabel" escape="false" value="#{lbl['lbl.sm.person.epRoleStatus.info']}" />
 							</p:tooltip> 
-					</f:facet>
+					</f:facet>						
 						<h:outputText
 							value="#{lbl['lbl.sm.person.epRoleStatus.unavailable']}"
-							rendered="#{personnel.epRole eq null and personnel.userIdTemp eq null}" />
+							rendered="#{personnel.epRole eq null and personnel.pmUser eq null or personnel.epRole ne null and personnel.pmUser eq null}" />
 						<h:outputText
 							value="#{lbl['lbl.sm.person.epRoleStatus.active']}"
-							rendered="#{personnel.epRole ne null}" />
+							rendered="#{personnel.epRole ne null and personnel.pmUser ne null}" />
 						<h:outputText
 							value="#{lbl['lbl.sm.person.epRoleStatus.deleted']}"
-							rendered="#{personnel.epRole eq null and personnel.userIdTemp ne null}" />
+							rendered="#{personnel.epRole eq null and personnel.pmUser ne null}" />
 					</p:column>
 					
 					<!-- Action  -->
