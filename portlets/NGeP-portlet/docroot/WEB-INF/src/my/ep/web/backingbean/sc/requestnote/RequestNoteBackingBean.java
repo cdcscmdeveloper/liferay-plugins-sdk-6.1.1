@@ -1162,10 +1162,52 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					if ((!pType.equals(ParameterConst.PROC_TYPE_G2G) && 
 							!pType.equals(ParameterConst.PROC_TYPE_EMERGENCY)) && 
 							!pType.equals(ParameterConst.PROC_TYPE_PK7)) {
+						// start - #31689
+						// title validation
+						if(StringUtils.isBlank(requestNoteDtl.getProcurementTitle())){
+							throw new EpException(
+									MessageConst.ERROR_760315,
+									new String[] {ResourceBundleUtils.getMessage("lbl.sc.direct.purchase.title",
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						}
+
+						// pid validity
+						log.info("pID validity begin");
+						if(requestNoteDtl.getRequestItem() != null && requestNoteDtl.getRequestItem().getPurchaseInDefault() != null){
+							pidValidity(requestNoteDtl.getRequestItem().getPurchaseInDefault(), requestNote);
+						}
+						log.info("pID validity end");
+
+						// validate price type
+						if(null == requestNoteDtl.getPriceType() || null == requestNoteDtl.getPriceType().getParameterId()){
+							throw new EpException(MessageConst.ERROR_760343, new String[]{requestNoteDtl.getRequestItem().getItemName()});
+						}
+
+						// validate recommended supplier
+						if(null == requestNoteDtl.getScRequestSupplierItem() || null == requestNoteDtl.getScRequestSupplierItem().getSmSupplier() 
+								|| null == requestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId() ){
+							throw new EpException(MessageConst.ERROR_760356, new String[]{requestNoteDtl.getRequestItem().getItemName()});
+						}
+
+						// quantity
+						if( null != requestNoteDtl.getRequestItem() && null == requestNoteDtl.getRequestItem().getQuantity() ){
+							throw new EpException(
+									MessageConst.ERROR_760315,
+									new String[] {ResourceBundleUtils.getMessage("lbl.sc.quantity",
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						}
+						
+						if (requestNoteDtl.getAssignedUser() == null || (requestNoteDtl.getAssignedUser() != null && requestNoteDtl.getAssignedUser().getUserId()==null)) {
+							throw new EpException(MessageConst.ERROR_100022, new String[]{
+								ResourceBundleUtils.getMessage(
+										"lbl.sc.request.note.loa.prepare.by", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+										new FacesScopes().getUserLocale())});
+						}
+						// end - #31689						
 						// Check total procurement amount per ptj per item per year
 						FlItemSummaryReqDTO flReqDTO = new FlItemSummaryReqDTO();
 						if (requestNoteDtl.getRequestItem().getCmItem() != null) {
-							Long itemId = requestNoteDtl.getRequestItem().getCmItem().getItemId();
 							String extensionCode = requestNoteDtl.getRequestItem().getCmItem().getExtensionCode();
 							debugLogger("RequestNoteBackingBean >> validateRequestNote : RequestNoteDtl ID = "
 									+ requestNoteDtl.getRequestNoteDtlId());
@@ -1263,8 +1305,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						}
 					}
 
+					//  #31689 (start - comment out all)
 					// title validation
-					if(StringUtils.isBlank(requestNoteDtl.getProcurementTitle())){
+					/*if(StringUtils.isBlank(requestNoteDtl.getProcurementTitle())){
 						throw new EpException(
 								MessageConst.ERROR_760315,
 								new String[] {ResourceBundleUtils.getMessage("lbl.sc.direct.purchase.title",
@@ -1305,9 +1348,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 									new FacesScopes().getUserLocale())});
 					//26221 - end
-					}
+					}*/
+					// #31689 (end - comment out all)
 				}
-				count++;//26059
 			}
 		}
 		
