@@ -3617,7 +3617,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	private SmSupplierCategory retrieveSupplierCategory(Long categoryL3Id){
 		if(categoryL3Id == null) return null;
 		for(SmSupplierCategory sCat : getManagedBean().getCategoryApplicable()){
-			if(sCat.getPmCategoryL3().getCategoryL3Id() == categoryL3Id)
+			if(sCat.getPmCategoryL3().getCategoryL3Id().equals(categoryL3Id))
 				return sCat;
 		}
 		List<SmSupplierCategory> catL = retrieveSupplierCategoryByApplIdAndCategoryL3Id(categoryL3Id);
