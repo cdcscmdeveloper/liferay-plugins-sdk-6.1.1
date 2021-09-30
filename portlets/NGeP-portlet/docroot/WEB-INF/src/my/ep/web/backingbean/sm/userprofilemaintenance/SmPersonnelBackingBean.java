@@ -3284,6 +3284,7 @@ public class SmPersonnelBackingBean extends
 						PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 						reqDTO.setRdeleted(true);
 						reqDTO.setSmPersonnel(personnel);
+						reqDTO.getSmPersonnel().setPrevEpRole(personnel.getEpRole());
 						PersonnelResDTO personnelRes = SmServiceLookup.getPersonnelSO().updateOrDeletedRole(reqDTO, status);
 						if(!personnelRes.isSuccessful()){
 							log.info("Unsuccessful to delete personnel role");
