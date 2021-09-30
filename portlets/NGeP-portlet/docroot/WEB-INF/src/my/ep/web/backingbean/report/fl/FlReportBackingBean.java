@@ -105,6 +105,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 			//R5 #14076 start
 			RPTRequestDtlReqDTO restDtlDTO = new RPTRequestDtlReqDTO();
 			restDtlDTO.getRptRequestDtl().setRequestId(resDTO.getRequestId());
+			log.info("28379: url: "+resDTO.getReportUrl());
 			
 			//1 = Contract No 
 			//2 = Contract Request No || Invoice No(Supplier)
