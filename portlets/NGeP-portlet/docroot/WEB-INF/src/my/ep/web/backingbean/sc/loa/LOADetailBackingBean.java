@@ -8025,6 +8025,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		getManagedBean().setNewSupplierJustification(null);
 		getManagedBean().setSelectedItemId(null);
 		getManagedBean().setSelectedTabIndex(2);
+		this.getManagedBean().setSpecKeyword(null); // #29007
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, QTConstants.LOA_PAGE);
 	}
