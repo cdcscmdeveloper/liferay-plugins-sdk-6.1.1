@@ -757,23 +757,24 @@ public class CreateQtBackingBean extends
 					// QT Type
 					scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
 				}
-				// Open For
-				if (isPanel) {
-					scQt.setOpenFor(null);
-				} else {
-					if (isQuotationThresHold && isOpenForBumiputraThresHold(amount)) {
-						scQt.setOpenFor(ParameterConst.OPEN_FOR_BUMI);
+				if (scQt.getQtType().equals(ParameterConst.QUOTATION_TENDER_TYPE_OPEN)){
+					// Open For
+					if (isPanel) {
+						scQt.setOpenFor(null);
 					} else {
-						
-						boolean printed = false; 
-						printed = isPrintedForBumiputraOnly(this.getManagedBean().getQtCategoryList(),printed);
-						if(printed || scQt.getOpenFor().equals(ParameterConst.OPEN_FOR_BUMI)){
+						if (isQuotationThresHold && isOpenForBumiputraThresHold(amount)) {
 							scQt.setOpenFor(ParameterConst.OPEN_FOR_BUMI);
-						}else{
-							scQt.setOpenFor(ParameterConst.OPEN_FOR_ALL);
-						}   
-						
-					}	
+						} else {
+							
+							boolean printed = false; 
+							printed = isPrintedForBumiputraOnly(this.getManagedBean().getQtCategoryList(),printed);
+							if(printed || scQt.getOpenFor().equals(ParameterConst.OPEN_FOR_BUMI)){
+								scQt.setOpenFor(ParameterConst.OPEN_FOR_BUMI);
+							}else{
+								scQt.setOpenFor(ParameterConst.OPEN_FOR_ALL);
+							}   
+						}	
+					}
 				}
 			} 
 	}
