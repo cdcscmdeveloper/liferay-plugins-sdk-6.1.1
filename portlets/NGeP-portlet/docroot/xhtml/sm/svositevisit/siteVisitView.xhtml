@@ -44,8 +44,7 @@
 						<h:outputText value="#{tmp.suppCategory.pmCategoryL1.categoryL1Code}#{tmp.suppCategory.pmCategoryL2.categoryL2Code}#{tmp.suppCategory.pmCategoryL3.categoryL3Code}
 				 			- #{tmp.suppCategory.categoryL1Name} / #{tmp.suppCategory.categoryL2Name}"/><br/>
 						<h:outputText value="/ #{tmp.suppCategory.categoryL3Name}"/>
-						<h:outputText value="(#{cat.otherDesc})"
-							rendered="#{cat.pmCategoryL3.categoryL3Code eq SupplierMgmtConst.categoryCatManufacturingCode}"></h:outputText>
+						<h:outputText value="  (#{tmp.suppCategory.otherDesc})" rendered="#{tmp.suppCategory.otherDesc != null}"/>
 					</p:column>
 				</c:when>
 				<c:otherwise>
@@ -53,8 +52,7 @@
 						<h:outputText value="#{tmp.suppCategory.pmCategoryL1.categoryL1Code}#{tmp.suppCategory.pmCategoryL2.categoryL2Code}#{tmp.suppCategory.pmCategoryL3.categoryL3Code}
 				 			- #{tmp.suppCategory.categoryL1Name} / #{tmp.suppCategory.categoryL2Name}"/><br/>
 						<h:outputText value="/ #{tmp.suppCategory.categoryL3Name}"/>
-						<h:outputText value="(#{cat.otherDesc})" 
-							rendered="#{cat.pmCategoryL3.categoryL3Code eq SupplierMgmtConst.categoryCatManufacturingCode}"></h:outputText>
+						<h:outputText value="  (#{tmp.suppCategory.otherDesc})" rendered="#{tmp.suppCategory.otherDesc != null}"/>
 					</p:column>
 				</c:otherwise>
 			</c:choose>
