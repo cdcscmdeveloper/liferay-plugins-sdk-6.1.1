@@ -37,6 +37,7 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.sitevisit.SvcSiteAssignManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SmSvcAssignmentVO;
@@ -364,6 +365,7 @@ public class SvcSiteAssignBackingBean extends
 			if(!dupe)	
 				getManagedBean().getCategoryLs().add(catTemp);
 		}
+		SmApplicationUtil.sortSupplierCategory(getManagedBean().getCategoryLs());
 		/*
 		List<String> tempCatLs = new ArrayList<String>();
 		for(SmSvTask svTask : smAppl.getSmSvTasks()){
