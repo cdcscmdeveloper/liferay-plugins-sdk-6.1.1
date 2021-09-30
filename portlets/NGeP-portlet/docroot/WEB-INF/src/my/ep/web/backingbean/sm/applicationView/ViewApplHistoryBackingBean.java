@@ -1741,10 +1741,10 @@ public class ViewApplHistoryBackingBean extends
 			}
 		}
 		
-		if(!isRejected && !isHasBasic){
-			return true;
+		if(isRejected && !isHasBasic){
+			return false;
 		}
-		return false;
+		return true;
 	}
 	//#29823 - END
 }
