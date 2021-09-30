@@ -21,12 +21,12 @@
 		<p:outputPanel id="supplierUpdateInstructionPanel"
 			rendered="#{lOADetailBackingBean.managedBean.updateSupplierInstructionFlag &amp;&amp; !isDocTypeQuotation || lOADetailBackingBean.managedBean.specificationAndSupplierDialogFlagQT &amp;&amp; isDocTypeQuotation &amp;&amp; lOADetailBackingBean.managedBean.supPropSpecUpdate}">
 			<h:outputText styleClass="instruction"
-				value="#{lbl['lbl.sc.update.supplier.latest.offered.instruction']}" />
-			<p:graphicImage value="/css/images/design/ico-viewnedit.png"
-				id="supplierUpdateInstructionIcon"
-				style="max-width: 16px; padding-right: 7px; padding-left: 7px;" />
+				value="#{lbl['lbl.sc.update.supplier.latest.offered.instruction']}" />			
 			<h:outputText styleClass="instruction"
 				value="#{lbl['lbl.sc.update.supplier.latest.offered.instruction.end']}" />
+				<p:graphicImage value="/css/images/design/ico-viewnedit.png"
+				id="supplierUpdateInstructionIcon"
+				style="max-width: 16px; padding-right: 7px; padding-left: 7px;" />
 			<p:spacer height="10" />
 			<p:panel id="supplierSearchCriteria" rendered="#{!isDocTypeQuotation}"
 				header="#{lbl['lbl.sc.notice.board.searchCriteria']}" toggleable="true">
