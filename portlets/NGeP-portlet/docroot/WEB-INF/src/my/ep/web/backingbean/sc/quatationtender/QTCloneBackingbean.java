@@ -2481,6 +2481,9 @@ public class QTCloneBackingbean extends
 								cloned.setCommitteeMemberId(null);
 								setUserDetails(cloned);
 								setCommitteeMemberOrgProfile(cloned);
+								if(null==cloned.getPmOrgProfile()){//31709-start
+									cloned.setPmOrgProfile(scQt.getPmOrgProfile());	
+								}//31709-End
 								cloned.setChangedDate(null);
 								if (cloned.isConsolidate()) {
 									this.getManagedBean().setSelectScCommitteMember(
@@ -3615,7 +3618,9 @@ public class QTCloneBackingbean extends
 		scQt.setPartial(copyScqt.isPartial());
 		BigDecimal tmpExpectedIntendedPrice = QtDetailsSO
 				.getDecryptedExpectedIntendedPrice(copyScqt.getQtId());
-		
+		if(null==tmpExpectedIntendedPrice){//31709-start
+			tmpExpectedIntendedPrice=copyScqt.getExpectedIntendedPrice();	
+		}//31709-End
 		scQt.setTmpExpectedIntendedPrice(tmpExpectedIntendedPrice);
 	//	scQt.setEstimatedAmount(copyScqt.getEstimatedAmount());
 	//	scQt.setDecryptedEstAmt(copyScqt.getDecryptedEstAmt());
