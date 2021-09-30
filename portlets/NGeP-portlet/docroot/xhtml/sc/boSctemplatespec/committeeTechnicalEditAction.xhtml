@@ -190,19 +190,14 @@ label.ui-button>span.ui-button-text {
 					</div>
 				</p:dialog>
 
-				<ac:templateSpec
-					updateSpec="#{specificationBackingBean.managedBean.updateSpec}"
-					newable="#{specificationBackingBean.managedBean.specNewable}"
-					removable="#{specificationBackingBean.managedBean.specNewable}"
-					templateSpecBean="#{specificationBackingBean.managedBean.templateSpecBean}" />
 				
 
-<!--  			<ac:templateSpec
+ 			<ac:templateSpec
 					updateSpec="#{specificationBackingBean.managedBean.updateSpec}"
 					newable="#{specificationBackingBean.managedBean.specNewable}"
 					removable="#{specificationBackingBean.managedBean.specNewable}"
 					editable="#{specificationBackingBean.managedBean.specificFlag or ((specificationBackingBean.isQTStatusChecklistScoring()) or (specificationBackingBean.isQTStatusChecklistScoringRevision()) or (specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance() and !specificationBackingBean.managedBean.readOnly))}"
-					templateSpecBean="#{specificationBackingBean.managedBean.templateSpecBean}" /> -->	
+					templateSpecBean="#{specificationBackingBean.managedBean.templateSpecBean}" /> 	
 
 			</p:panel>
 
