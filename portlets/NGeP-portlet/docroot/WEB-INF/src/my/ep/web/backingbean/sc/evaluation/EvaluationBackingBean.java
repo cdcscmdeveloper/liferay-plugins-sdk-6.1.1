@@ -4495,8 +4495,11 @@ public void saveComplianceSample() {
 											.getEvalStage(), zoneReqDto
 											.getSpeZoneId()));
 					//#31438 - start
+					//Bug #31762 related to 25138 start ====Farid
 					if(this.getManagedBean().getTabItemPackageIndex() == 2 
-							&& this.getManagedBean().getOfferScoreType().equalsIgnoreCase(QTConstants.USER_SCORE)){
+							&& this.getManagedBean().getOfferScoreType().equalsIgnoreCase(QTConstants.USER_SCORE) || this.getManagedBean().getTabItemPackageIndex() == 2 
+									&& this.getManagedBean().getOfferScoreType().equalsIgnoreCase(QTConstants.AUTO_SCORE)){
+					//Bug #31762 related to 25138 end ====Farid	
 						List<ScQtProposalAmount> qtProposalAmountByZone = new ArrayList<ScQtProposalAmount>();
 						//#31525 - start
 						evaluationSO = BusinessDelegate.getInstance().getServiceObject(
