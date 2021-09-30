@@ -56,7 +56,7 @@
 			</tr>
 
 			<tr>
-				<td style="width: 250px;"><p:outputLabel
+				<td style="width: 270px;"><p:outputLabel
 						value="#{lbl['lbl.sc.purchase.in.default.supp.name']}" /></td>
 				<td style="width: 360px;"><p:inputText disabled="true"
 						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctContractVer.ctContract.smSupplier.companyName}"
@@ -70,7 +70,7 @@
 			<tr>
 				
 
-				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.sc.gst.effective.date']}" /></td>
+				<td style="width: 270px;"><p:outputLabel value="#{lbl['lbl.sc.gst.effective.date']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{purchaseInDefaultBackingBean.managedBean.smGstSupplier.gstEffDate}"
 						size="51">
@@ -203,7 +203,7 @@
 		rendered="#{!purchaseInDefaultBackingBean.managedBean.checkContractItem}">
 		<table>
 			<tr>
-				<td style="width: 250px;"><p:outputLabel
+				<td style="width: 270px;"><p:outputLabel
 						value="#{lbl['lbl.sc.direct.purchase.title']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td colspan="3"><p:inputText size="106" id="ptitle"
@@ -380,7 +380,7 @@
 		<h:panelGroup>
 			<table style="margin-top: 8px;width:100%" >
 				<tr>
-					<td style="width: 250px;"><p:outputLabel
+					<td style="width: 270px;"><p:outputLabel
 							value="#{lbl['lbl.sc.purchase.in.default.valid.period']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText id="pidvalidDays" maxlength="3"
@@ -449,7 +449,7 @@
 					</tr>
 				</h:panelGroup>
 				<tr>
-					<td style="width: 250px;"><p:outputLabel
+					<td style="width: 270px;"><p:outputLabel
 							value="#{lbl['lbl.sc.request.note.header.method']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td>
@@ -476,7 +476,7 @@
 		<h:panelGroup id="orderQty">
 			<table style="width: 100%">
 				<tr>
-					<td style="width: 250px;"><p:outputLabel
+					<td style="width: 270px;"><p:outputLabel
 							value="#{lbl['lbl.sc.purchase.in.default.order.qty']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText id="ordqty" maxlength="14"
@@ -490,7 +490,7 @@
 						</p:inputText> <p:message id="ordqtyMsg" for="ordqty" display="icon" /></td>
 				</tr>
 				<tr>
-					<td style="text-align:right;width: 250px;"><font color="red">* </font><p:outputLabel
+					<td style="text-align:right;width: 270px;"><font color="red">*</font>&#160;&#160;&#160;<p:outputLabel
 							value="#{lbl['lbl.sc.purchase.in.default.supplier.allowed.order.qty']}" /></td>
 					<td><p:inputText id="ordSupQty" maxlength="14"
 							required="#{purchaseInDefaultBackingBean.managedBean.visibleOrderQty}"
@@ -508,7 +508,7 @@
 		<table style="width: 100%">
 			<tr>
 				<td
-					style="vertical-align: top; padding-right: 1px; text-align: right;width: 250px;">
+					style="vertical-align: top; padding-right: 1px; text-align: right;width: 270px;">
 					<h:outputLabel value="#{lbl['lbl.sc.remark']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" />
 				</td>
@@ -522,7 +522,7 @@
 
 		<table style="width: 100%">
 			<tr>
-				<td style="padding-right: 0px; text-align: right;width: 250px;">
+				<td style="padding-right: 0px; text-align: right;width: 270px;">
 					<p:outputLabel value="#{lbl['lbl.txt.attachment']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" />
 				</td>
@@ -549,7 +549,7 @@
 
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 250px"><h:outputLabel
+				<td style="width: 270px"><h:outputLabel
 						value="#{lbl['lbl.sc.ptj.approver.group']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="appGroupId"
@@ -588,7 +588,7 @@
 		header="#{lbl['lbl.sc.approved.by']}">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 250px"><h:outputLabel
+				<td style="width: 270px"><h:outputLabel
 						value="#{lbl['lbl.sc.approved.by']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{purchaseInDefaultBackingBean.managedBean.approvedBy.userName}"
