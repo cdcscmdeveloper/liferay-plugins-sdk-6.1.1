@@ -643,7 +643,26 @@ public class SmBulkApplicationBackingBean extends
 			SmApplRejectReason rej = new SmApplRejectReason();
 			rej.setPmReason(desc.getPmReason());
 			rej.setSmAppl(bulkVO.getAppl());
+			rej.setReasonByPo(true);
+
 			resList.add(rej);
+			log.info("Reason Id === " + desc.getPmReason().getReasonId());
+			/*
+			 * sb.append(++count).append(".)"); sb.append(desc.getReasonDesc());
+			 * sb.append("\n");
+			 */
+			sb.append(desc.getPmReason().getReasonId());
+			sb.append("|");
+		}
+		
+		for (PmReasonDesc desc : bulkVO.getSelectedReasonDescs()) {
+			SmApplRejectReason rej = new SmApplRejectReason();
+			rej.setPmReason(desc.getPmReason());
+			rej.setSmAppl(bulkVO.getAppl());
+			rej.setReasonByPo(false);
+
+			resList.add(rej);
+			log.info("Reason Id === " + desc.getPmReason().getReasonId());
 			/*
 			 * sb.append(++count).append(".)"); sb.append(desc.getReasonDesc());
 			 * sb.append("\n");
@@ -657,6 +676,7 @@ public class SmBulkApplicationBackingBean extends
 				.getSmApplRejectReasons())) {
 			bulkVO.getAppl().getSmApplRejectReasons().clear();
 		}
+		
 		bulkVO.getAppl().getSmApplRejectReasons().addAll(resList);
 		bulkVO.setReasonDesc(sb.toString());
 	}
