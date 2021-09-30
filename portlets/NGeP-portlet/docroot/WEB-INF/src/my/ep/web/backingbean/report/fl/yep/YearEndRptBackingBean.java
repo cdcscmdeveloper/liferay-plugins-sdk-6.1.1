@@ -92,7 +92,7 @@ public class YearEndRptBackingBean extends FlReportBackingBean<YearEndRptManaged
 		if (StringUtils.isNotBlank(getManagedBean().getPurchaseOrderNo())) {
 			params.put(FlReportConst.FL_RPT_PURCHASE_ORDER, getManagedBean().getPurchaseOrderNo());
 		}	
-		
+		//log.info("28379: getPurchaseOrderStatus: "+getManagedBean().getPurchaseOrderStatus());
 		if (StringUtils.isNotBlank(getManagedBean().getPurchaseOrderStatus())) {
 			params.put(FlReportConst.FL_RPT_PO_STATUS, getManagedBean().getPurchaseOrderStatus());
 		}	
@@ -132,12 +132,15 @@ public class YearEndRptBackingBean extends FlReportBackingBean<YearEndRptManaged
 		if(getManagedBean().getMinistry() != null){
 			params.put(FlReportConst.FL_RPT_MINISTRY, getManagedBean().getMinistry().getOrgProfileId().toString());
 		}
+		//log.info("28379: getMinistry: "+getManagedBean().getMinistry().getOrgProfileId().toString());
 		if (getManagedBean().getPtjGroup() != null) {
 			params.put(FlReportConst.FL_RPT_KUMPULAN, getManagedBean().getPtjGroup().getOrgProfileId().toString());
 		}
+		//log.info("28379: getPtjGroup: "+getManagedBean().getPtjGroup().getOrgProfileId().toString());
 		if (getManagedBean().getPtj() != null) {
 			params.put(FlReportConst.FL_RPT_PTJ_NAME, getManagedBean().getPtj().getOrgProfileId().toString());
 		}
+		//log.info("28379: getPtj: "+getManagedBean().getPtj().getOrgProfileId().toString());
 		
 		if (StringUtils.isNotBlank(getManagedBean().getPanelName())) {
 			params.put(FlReportConst.FL_RPT_CC_PANEL_NAME, getManagedBean().getPanelName());
