@@ -27,7 +27,7 @@
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" /></td>
 				<td style="white-space: nowrap; float: right;"><p:commandButton
 						value="#{lbl['lbl.sm.button.save']}" update=":form"
-						action="#{smPersonnelBackingBean.saveUserMOFUpdate(smPersonnelBackingBean.managedBean.basicSmPersonnel)}"
+						action="#{smPersonnelBackingBean.saveUserMOFUpdate()}"
 						onclick="blockWidget.show()" oncomplete="blockWidget.hide()" /></td>
 			</tr>
 		</table>
@@ -84,12 +84,23 @@
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu id="basicBURace"
 							label="#{lbl['lbl.sm.person.race']}"
-							value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.pmRace}"
+							value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.pmRace.raceId}"
+							rendered = "#{smPersonnelBackingBean.managedBean.basicSmPersonnel.pmRace ne null}"
 							style="width: 207px;margin-bottom: 5px;" required="true"
 							disabled="true">
 							<f:selectItems
 								value="#{smPersonnelBackingBean.managedBean.raceSelectItems}" />
-						</p:selectOneMenu> <p:message id="basicBURaceMsg" for="basicBURace"
+						</p:selectOneMenu> 
+						<p:selectOneMenu id="basicBURaceNull"
+							label="#{lbl['lbl.sm.person.race']}"
+							value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.pmRace.raceId}"
+							rendered = "#{smPersonnelBackingBean.managedBean.basicSmPersonnel.pmRace eq null}"
+							style="width: 207px;margin-bottom: 5px;" required="true"
+							disabled="true">
+							<f:selectItem itemLabel="#{lbl['lbl.sm.person.epRoleStatus.unavailable']}"  itemValue="#{null}" />
+						</p:selectOneMenu>
+						
+						<p:message id="basicBURaceMsg" for="basicBURace"
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
 				<tr>
@@ -185,25 +196,42 @@
 				</tr>
 
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.maintenance.person.email']}" />
-						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="basicBUEmail"
-							label="#{lbl['lbl.sm.userprofile.email']}"
-							value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.email}"
-							validatorMessage="#{lbl['lbl.sm.userprofile.email']} - #{lbl['lbl.sm.invalidEmail']}"
-							size="40" required="true">
-							<f:validateRegex
-								pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />						
-						</p:inputText>
-						<p:graphicImage id="toolTipIcon" value="/css/images/design/tooltips.png" /> 
-					  	<p:tooltip id="sourceTooltip" for="toolTipIcon">
-							<h:outputText id="sourceLabel" escape="false" value="#{lbl['lbl.sm.email.change.tooltip']}" />
-						</p:tooltip> 
-						
-						 <p:message id="basicBUEmailMsg" for="basicBUEmail"
-							showSummary="true" showDetail="false" display="icon" /></td>
-
-
+					<td>
+						<p:outputLabel value="#{lbl['lbl.sm.maintenance.person.email']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />			
+					</td>
+					<td>
+						<c:choose>
+							<c:when test="#{smPersonnelBackingBean.managedBean.epRoleTrans ne null}">
+								<p:inputText id="basicBUEmail" label="#{lbl['lbl.sm.userprofile.email']}" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.email}"
+								validatorMessage="#{lbl['lbl.sm.userprofile.email']} - #{lbl['lbl.sm.invalidEmail']}" size="40" required="true">
+							
+								<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+								<p:ajax event="change" process="@this" listener="#{smPersonnelBackingBean.onChangeEmail()}" update="basicBUEmail"/> 
+								</p:inputText>
+								<p:graphicImage id="toolTipIcon" value="/css/images/design/tooltips.png" /> 
+							  	<p:tooltip id="sourceTooltip" for="toolTipIcon">
+									<h:outputText id="sourceLabel" escape="false" value="#{lbl['lbl.sm.email.change.tooltip']}" />
+								</p:tooltip> 
+								
+							 	<p:message id="basicBUEmailMsg" for="basicBUEmail" showSummary="true" showDetail="false" display="icon" />
+							</c:when>
+							<c:otherwise>
+								<p:inputText id="basicBUEmail" label="#{lbl['lbl.sm.userprofile.email']}" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.email}"
+								validatorMessage="#{lbl['lbl.sm.userprofile.email']} - #{lbl['lbl.sm.invalidEmail']}" size="40" >
+							
+								<f:validateRegex pattern="(|[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})|^)$" />
+								<p:ajax event="change" process="@this" listener="#{smPersonnelBackingBean.onChangeEmail()}" update="basicBUEmail"/> 
+								</p:inputText>
+								<p:graphicImage id="toolTipIcon" value="/css/images/design/tooltips.png" /> 
+							  	<p:tooltip id="sourceTooltip" for="toolTipIcon">
+									<h:outputText id="sourceLabel" escape="false" value="#{lbl['lbl.sm.email.change.tooltip']}" />
+								</p:tooltip> 
+								
+							 	<p:message id="basicBUEmailMsg" for="basicBUEmail" showSummary="true" showDetail="false" display="icon" />
+							</c:otherwise>
+						</c:choose>
+					</td>
 					<td><p:outputLabel value="#{lbl['lbl.sm.mobileNo']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><ac:phone id="basicBUMobile"
@@ -291,18 +319,28 @@
 								label="#{lbl['lbl.sm.userprofile.eprole']}"
 								value="#{smPersonnelBackingBean.managedBean.epRoleTrans}"
 								style="width: 207px;margin-bottom: 5px;">
-								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+								<c:if test = "#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq null}">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+								</c:if>
 								<f:selectItems
 									value="#{smPersonnelBackingBean.managedBean.roleList}" />
 								<!-- 9569 -->	
-								<c:if test="#{smPersonnelBackingBean.personnelToDeleteRole(smPersonnelBackingBean.managedBean.basicSmPersonnel)}">
+								<c:if test= "#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole ne null}">
 									<f:selectItem itemLabel="#{lbl['lbl.sm.maintenance.delete.role']}" itemValue="#{SupplierManagementConst.EPROLE_DELETED}" />
 								</c:if>
 								<p:ajax event="change" partialSubmit="true" process="@this"
 									update="perPrivPanel" onstart="blockWidget.show()"
 									oncomplete="blockWidget.hide()" />
-							</p:selectOneMenu> <p:message id="basicBURoleMsg" for="basicBURole"
-								showSummary="true" showDetail="false" display="icon" /></td>
+							</p:selectOneMenu> 
+							<!-- As 4/8/2021  -->
+							<p:message id="basicBURoleMsg" for="basicBURole" showSummary="true" showDetail="false" display="icon" />
+								</td>
+						<td><h:outputText style="float:initial" value=" &#160; #{lbl['lbl.sm.personnel.history']} " escape="false" /> 
+								<p:commandLink
+								onclick="personnelRoleHistoryInfo.show()"
+								value="#{lbl['lbl.sm.personnel.history1']} "
+								style="float: inherit" /> 
+								<h:outputText style="float:initial" value="#{lbl['lbl.sm.personnel.history2']} " escape="false" /></td>
 					</tr>
 					<p:outputPanel
 						rendered="#{smPersonnelBackingBean.managedBean.epRoleTrans eq 'MOF_SUPPLIER_USER' 
@@ -310,8 +348,30 @@
 						<tr>
 							<td><p:outputLabel
 									value="#{lbl['lbl.sm.person.composition.certStatus']} :" /></td>
-							<td><ac:smSoftcertStatus
-									personnel="#{smPersonnelBackingBean.managedBean.basicSmPersonnel}" />
+							<td><h:outputText
+									value="#{lbl['lbl.txt.na']}"
+									rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.softcertFlg eq '0' or empty smPersonnelBackingBean.managedBean.basicSmPersonnel.softcertFlg }" />
+									<h:outputText
+									value="#{lbl['lbl.sm.person.composition.request.failed']}"
+									rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.softcertFlg eq '9'}" />
+									<h:outputText
+									value="#{lbl['lbl.sm.person.composition.ready.renewal']}"
+									rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.softcertFlg eq '7'}" />
+									<h:outputText
+									value="#{lbl['lbl.sm.person.composition.rejected']}"
+									rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.softcertFlg eq '6'}" />
+									<h:outputText
+									value="#{lbl['lbl.sm.person.composition.pending.request']}"
+									rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.softcertFlg eq '4'}" />
+									<h:outputText
+									value="#{lbl['lbl.sm.person.composition.processing']}"
+									rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.softcertFlg eq '3'}" />
+									<h:outputText
+									value="#{lbl['lbl.sm.person.composition.requested']}"
+									rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.softcertFlg eq '2'}" />
+									<h:outputText
+									value="#{lbl['lbl.sm.person.composition.issued']}"
+									rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.softcertFlg eq '1'}" />
 							</td>
 						</tr>
 					</p:outputPanel>
@@ -343,7 +403,7 @@
 						or smPersonnelBackingBean.managedBean.epRoleTrans eq 'FL_USER'}">
 						<tr>
 							<td><p:outputLabel
-									value="#{lbl['lbl.sm.activation.status']} :" /></td>
+									value="#{lbl['lbl.sm.person.userAccountStatus']} :" /></td>
 							<td><p:column
 									headerText="#{lbl['lbl.sm.activation.status']}">
 									<h:outputText
@@ -1203,8 +1263,55 @@
 							</table>
 					 </p:panel></td>
 				</tr>
-			</table>
+			</table>	
+			<!-- #9569 - Start (for history popup)-->
+			<p:dialog id="personnelRoleHistory" header="#{lbl['lbl.sm.personnel.history.panel']}"  widgetVar="personnelRoleHistoryInfo" closable="true" modal="true" resizable="false" style="display: static;" height="350" width="600">
+			<p:outputPanel layout="block" id="personnelRoleHistoryInfoBlockPanel">
+				<p:dataTable id="personnelHistoryListId"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					value="#{smPersonnelBackingBean.managedBean.personnelHistoryList}"
+					var="history" rowKey="#{history}" rowIndexVar="index" rows="10">
+					<ac:paginator for="personnelHistoryListId" />
+					
+					<!-- No.  -->
+					<p:column headerText="#{lbl['lbl.sm.personnel.history.column']}">
+						<h:outputText value="#{index+1}" />
+					</p:column>
+					
+					<!-- Current eP Role  -->
+					<p:column headerText="#{lbl['lbl.sm.personnel.history.column1']}">
+						<h:outputText value="#{lbl['lbl.sm.personnel.epRole.name.admin']}"  rendered="#{history.pmRole.roleCode eq SupplierManagementConst.ROLE_CODE_SM_1}" />
+						<h:outputText value="#{lbl['lbl.sm.personnel.epRole.name.supplierUser']}"  rendered="#{history.pmRole.roleCode eq SupplierManagementConst.ROLE_CODE_SM_2}" />
+						<h:outputText value="#{lbl['lbl.sm.personnel.epRole.name.catalogue']}" rendered="#{history.pmRole.roleCode eq SupplierManagementConst.ROLE_CODE_SM_3}" />
+						<h:outputText value="#{lbl['lbl.sm.personnel.epRole.name.fulfillment']}"  rendered="#{history.pmRole.roleCode eq SupplierManagementConst.ROLE_CODE_SM_4}" />
+						<h:outputText value="#{lbl['lbl.sm.personnel.epRole.name.supplierTemp']}"  rendered="#{history.pmRole.roleCode eq SupplierManagementConst.ROLE_CODE_SM_5}" />
+						<h:outputText value="#{lbl['lbl.sm.person.epRoleStatus.unavailable']}" rendered="#{history.pmRole eq null }" />
+					</p:column>
+
+					<!-- Action Date  -->
+					<p:column headerText="#{lbl['lbl.sm.personnel.history.column2']}">
+						<h:outputText value="#{history.changedDateFormat}"  rendered="#{history.changedDateFormat ne null }"/>
+						<h:outputText value="#{lbl['lbl.sm.person.epRoleStatus.unavailable']}"  rendered="#{history.changedDateFormat eq null }"/>
+					</p:column>
+					
+					<!-- Change By Name  -->
+					<p:column headerText="#{lbl['lbl.sm.personnel.history.column3']}">
+						<h:outputText value="#{history.changedByUserName}"  rendered="#{history.changedByUserName ne null}"/>
+						<h:outputText value= "#{lbl['lbl.sm.person.epRoleStatus.unavailable']}"  rendered="#{history.changedByUserName eq null }"/>
+					</p:column>
+					
+					<!-- Status  -->
+					<p:column headerText="#{lbl['lbl.sm.personnel.history.column4']}">
+						<h:outputText value= "#{lbl['lbl.sm.personnel.history.column4.active']}"  rendered="#{history.recordStatusFlg eq '1'}"/>
+						<h:outputText value= "#{lbl['lbl.sm.personnel.history.column4.inactive']}"  rendered="#{history.recordStatusFlg eq '0'}"/>
+						<h:outputText value= "#{lbl['lbl.sm.personnel.history.column4.deleted']}"  rendered="#{history.recordStatusFlg eq '9'}"/>
+					</p:column>
+				</p:dataTable>
+
+			</p:outputPanel>
+		</p:dialog>
 		</p:panel>
-		
+		<ac:smEmailAlertPopup bBean="#{backingBean}" title="#{lbl['lbl.sm.email.change.header']}" dialogId="emailPopUp" 
+			btnOkLabel="#{lbl['lbl.btn.ok']}" />
 	</ui:define>
 </ui:composition>
