@@ -315,8 +315,17 @@ public class YearEndRptBackingBean extends FlReportBackingBean<YearEndRptManaged
 		FacesScopes face = new FacesScopes();
 
 		try {
+			String newdocType = null;
+			if(docType != null){
+				if(docType == "CR"){
+					newdocType = "CO";
+				}else{
+					newdocType = "PO";
+				}
+				
+			}
 			List<PmStatusDesc> statusDescs = StatusHelper.getInstance()
-					.getStatusDescList(moduleCode, docType, null);
+					.getStatusDescList(moduleCode, newdocType, null);
 			
 			List<PmStatusDesc> statusDescsYep = new ArrayList<PmStatusDesc>();
 			
