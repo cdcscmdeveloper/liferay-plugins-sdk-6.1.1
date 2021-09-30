@@ -91,7 +91,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalReqAttachement;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
-import my.ep.persistence.entity.sc.quationtender.ScQtApproverSettings;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
@@ -101,7 +100,6 @@ import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
-import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -111,9 +109,9 @@ import my.ep.web.backingbean.sc.quatationtender.QTDocumentsBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.QTScheduleDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
+import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.UserTasks;
-import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -135,6 +133,11 @@ import org.primefaces.event.FileUploadEvent;
 public class ApprovalBackingBean extends
 		SourcingBaseBackingBean<QTDetailManagedBean> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** The Constant logger. */
 	private static final Logger logger = EpLogger.getLogger(ApprovalBackingBean.class);
 
@@ -151,7 +154,6 @@ public class ApprovalBackingBean extends
 
 	}
 
-	// TODO Need to check why this code... vidya
 
 	/**
 	 * Inits the.
@@ -1242,6 +1244,9 @@ public class ApprovalBackingBean extends
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 								IQTDetailSO.class);
 				String approvalDocType = ParameterConst.DOCTYPE_QUOTATION;
+				// Bug #31759 - Start
+				checkApprovalAndRefreshDetails (qt.getQtId(),taskName, this.getManagedBean().getScQtApproval());
+				// Bug #31759 - End
 				ScQtApproval approval = this.getManagedBean().getScQtApproval();
 
 				String approvalCategoryCode = approval.getApprovalCategory()
@@ -1386,6 +1391,107 @@ public class ApprovalBackingBean extends
 		}
 		return tenderResDTO;
 	}
+	// Bug #31759 - Start
+	public void checkApprovalAndRefreshDetails (Long qtId, String taskName, ScQtApproval approval){
+
+    	List<String> paramTypes = new ArrayList<String>();
+    	List<ScQtApprovalRequest> approvalRequests = this
+				.getManagedBean().getScQtApprovalRequestList();
+		
+		if (approvalRequests != null ){
+		       for (ScQtApprovalRequest req : approvalRequests){
+			      paramTypes.add(req.getApprovalType().getParameterCode()) ;
+		       }
+		}
+	
+		String approvalCategoryCode = approval.getApprovalCategory().getParameterCode();		
+	
+	 if ((SCProcessNameConst.APPROVE_BPK.equalsIgnoreCase(taskName)
+				|| SCProcessNameConst.BPK_APPROVE_QT_CHANGE
+						.equalsIgnoreCase(taskName) )
+			&& !approvalCategoryCode.equalsIgnoreCase(ParameterConst.APPROVAL_CATEGORY_BPK)) {
+			
+			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_BPK;
+			getApprovalRequest(qtId, approvalCategoryCode,
+					ParameterConst.DOCTYPE_BPK_APPROVAL, paramTypes, null);
+
+		} else if (SCProcessNameConst.PUBLICATION_APPROVE_QT_CHANGE
+				.equalsIgnoreCase(taskName)
+				&& !approvalCategoryCode.equalsIgnoreCase(ParameterConst.APPROVAL_CATEGORY_PTJ)) {
+			
+			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_PTJ;
+			getApprovalRequest(qtId, approvalCategoryCode,
+					ParameterConst.DOCTYPE_QUOTATION, paramTypes, null);
+
+		} else if (SCProcessNameConst.FC_APPROVE_QT_CHANGE
+				.equalsIgnoreCase(taskName)
+				&& !approvalCategoryCode.equalsIgnoreCase(ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE)) {
+			
+			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE;
+			getApprovalRequest(qtId, approvalCategoryCode,
+					ParameterConst.DOCTYPE_QUOTATION, paramTypes, null);
+		
+		} else if (SCProcessNameConst.SUPPLIER_ACCEPT_QT_CHANGE
+						.equalsIgnoreCase(taskName)
+			&& !approvalCategoryCode.equalsIgnoreCase(ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE)) {
+			
+			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE;
+			getApprovalRequest(qtId, approvalCategoryCode,
+					ParameterConst.DOCTYPE_QUOTATION, paramTypes, 
+					ParameterConst.APPROVAL_DECISION_TYPE_APPROVED);
+			
+		} else if (SCProcessNameConst.REVISE_BPK.equalsIgnoreCase(taskName)
+				&& !approvalCategoryCode.equalsIgnoreCase(ParameterConst.APPROVAL_CATEGORY_BPK)) {
+			
+			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_BPK;
+			getApprovalRequest(qtId, approvalCategoryCode,
+					ParameterConst.DOCTYPE_BPK_APPROVAL, paramTypes, null);
+
+		} else if (SCProcessNameConst.APPROVE_PUBLICATION
+				.equalsIgnoreCase(taskName)
+				&& !approvalCategoryCode.equalsIgnoreCase(ParameterConst.APPROVAL_CATEGORY_PTJ)) {
+			
+			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_PTJ;
+			getApprovalRequest(qtId,
+					approvalCategoryCode,
+					ParameterConst.DOCTYPE_QUOTATION, paramTypes, null);
+			
+		}  else if (SCProcessNameConst.APPROVE_CANCELATION
+				.equalsIgnoreCase(taskName)
+				&& !approvalCategoryCode.equalsIgnoreCase(ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE)) {
+			
+			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE;
+			getApprovalRequest(qtId, approvalCategoryCode,
+					ParameterConst.DOCTYPE_PCB_APPROVAL, paramTypes, null);
+
+		}
+	}
+	
+	private void getApprovalRequest(Long qtId,
+			String approvalCategory, String docType, List<String> reqTypes, String approverAction) {
+		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+		String taskName = this.getManagedBean().getTaskName();
+
+		tenderReqDTO.setQtId(qtId);
+		tenderReqDTO.setDocType(docType);
+		tenderReqDTO.setApprovalReqTypes(reqTypes);
+		tenderReqDTO.setApprovalCategory(approvalCategory);
+		tenderReqDTO.setApproverAction(approverAction);
+		tenderReqDTO.setSuppAcceptedQtChange(
+				SCProcessNameConst.SUPPLIER_ACCEPT_QT_CHANGE.equalsIgnoreCase(taskName));
+		tenderReqDTO.setShowAmendmentData(
+				SCProcessNameConst.PUBLICATION_APPROVE_QT_CHANGE.equalsIgnoreCase(taskName));
+		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTDetailSO.class);
+		QuationTenderResDTO resDTO = detailSO
+				.retrieveApprovalsByQtIdNType(tenderReqDTO);
+
+		this.getManagedBean().setScQtApproval(resDTO.getQtApproval());
+	}
+	//Bug #31759 - End
+	
+	
 
 	/**
 	 * Update Approval Revice from bpm.
