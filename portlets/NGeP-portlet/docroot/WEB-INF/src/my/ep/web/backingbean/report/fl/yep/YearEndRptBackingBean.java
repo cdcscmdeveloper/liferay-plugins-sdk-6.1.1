@@ -161,6 +161,7 @@ public class YearEndRptBackingBean extends FlReportBackingBean<YearEndRptManaged
 		params.put(FlReportConst.FL_RPT_CT_FROM_DATE, df.format(getManagedBean().getContractFromDate()));
 		params.put(FlReportConst.FL_RPT_CT_TO_DATE, df.format(getManagedBean().getContractToDate()));
 		checkOneYearDifferent(getManagedBean().getContractFromDate(), getManagedBean().getContractToDate());
+		log.info("28379: params: "+params);
 		
 		generateFlReport(params);
 	}
@@ -169,7 +170,7 @@ public class YearEndRptBackingBean extends FlReportBackingBean<YearEndRptManaged
 		
 		if(getManagedBean().getDocumentType() != null){
 			//28379
-			if(getManagedBean().getDocumentType().equals(ReportConst.DOC_TYPE_CO)){
+			if(getManagedBean().getDocumentType().equals(ReportConst.DOC_TYPE_CR)){
 				getManagedBean().setContractFlag(true);
 				getManagedBean().setPurchaseOrderNo(null);
 				getManagedBean().setPurchaseOrderStatus(null);
@@ -310,8 +311,17 @@ public class YearEndRptBackingBean extends FlReportBackingBean<YearEndRptManaged
 		FacesScopes face = new FacesScopes();
 
 		try {
+			String newdocType = null;
+			if(docType != null){
+				if(docType == "CR"){
+					newdocType = "CO";
+				}else{
+					newdocType = "PO";
+				}
+				
+			}
 			List<PmStatusDesc> statusDescs = StatusHelper.getInstance()
-					.getStatusDescList(moduleCode, docType, null);
+					.getStatusDescList(moduleCode, newdocType, null);
 			
 			List<PmStatusDesc> statusDescsYep = new ArrayList<PmStatusDesc>();
 			
