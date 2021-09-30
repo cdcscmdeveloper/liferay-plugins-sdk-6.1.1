@@ -9,8 +9,11 @@ import java.util.Comparator;
 
 //9569 end
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -55,6 +58,7 @@ import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSoftcertRequest;
@@ -1520,6 +1524,18 @@ public class SmPersonnelBackingBean extends
 		PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO()
 				.retrievePersonnelById(reqDTO);
 		SmPersonnel smPersonnel = resDTO.getSmPersonnel();
+		//start searching for user role history for supplier maintenance
+		getManagedBean().setPersonnelHistoryList(null);
+		Long userId = null;
+		if(smPersonnel.getPmUser() != null){
+			userId = smPersonnel.getPmUser().getUserId();
+			PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
+			reqDTO1.setPmUserId(userId);
+			PersonnelResDTO resDTO1 = SmServiceLookup.getPersonnelSO().retrieveUserRolesHistoryByUserOrgID(reqDTO1, smPersonnel);
+			getManagedBean().setPersonnelHistoryList(resDTO1.getPersonnelHistory());
+		}
+		//End searching for user role history	
+		
 		this.getManagedBean().setBasicSmPersonnel(smPersonnel);
 		setPersonnelViewOnlyMode(getManagedBean().getBasicSmPersonnel());
 		//9569 - Start
@@ -2881,8 +2897,22 @@ public class SmPersonnelBackingBean extends
 			getManagedBean().setSmAppl(smSupplier.getSmAppl());
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setApplId(getManagedBean().getSmAppl().getApplId());
-			List<SmPersonnel> smPersonnelList = SmServiceLookup.getPersonnelSO().retrieveMOFPersonnelListByApplId(reqDTO)
-					.getSmPersonnelList();
+			List<SmPersonnel> smPersonnelList = SmServiceLookup.getPersonnelSO().retrieveMOFPersonnelListByApplId(reqDTO).getSmPersonnelList();
+			
+			//to get role for deleted personnel
+			if (smPersonnelList != null && !smPersonnelList.isEmpty()) {
+				for (SmPersonnel smPersonnel : smPersonnelList) {
+					if(smPersonnel.getEpRole() == null && smPersonnel.getPmUser() != null ){			
+						Long userId = smPersonnel.getPmUser().getUserId();
+						log.info("This is the user id == " + userId);
+						String epRole = setPrevEpRoleSuppMain(userId);
+						smPersonnel.setPrevEpRole(epRole);
+					}else if(smPersonnel.getPmUser() != null){
+						smPersonnel.setPrevEpRole(smPersonnel.getEpRole());
+					}
+				}
+			}
+			
 			sortPersonnelByEpRole(smPersonnelList);
 			getManagedBean().setSmPersonnelList(smPersonnelList);
 			countAuthUserWithRole(smPersonnelList);
@@ -2977,6 +3007,8 @@ public class SmPersonnelBackingBean extends
 		this.getManagedBean().setSpSoftcertFlg(0);
 		this.getManagedBean().setSpRecordStatus(0);
 		this.getManagedBean().setSpEpRole(null);
+		this.getManagedBean().setSpIsAuthorize(0);
+		this.getManagedBean().setSpIEpRoleStatus(0);
 	}
 
 	/**
@@ -2998,7 +3030,8 @@ public class SmPersonnelBackingBean extends
 		reqDTO.setHasActiveAppl(false);
 		if (getManagedBean().getSpName().isEmpty() && getManagedBean().getSpCountryId() == null
 				&& getManagedBean().getSpSoftcertFlg() == 99 && getManagedBean().getSpRecordStatus() == 0
-				&& getManagedBean().getSpEpRole() == null) {
+				&& getManagedBean().getSpEpRole() == null && getManagedBean().getSpIsAuthorize() == 0
+				&& getManagedBean().getSpIEpRoleStatus() == 0) {
 			reqDTO.setSmPersonnel(null);
 		} else {
 			reqDTO.setSmPersonnel(new SmPersonnel());
@@ -3014,13 +3047,26 @@ public class SmPersonnelBackingBean extends
 			if (getManagedBean().getSpEpRole() != null && !getManagedBean().getSpEpRole().isEmpty()) {
 				reqDTO.getSmPersonnel().setEpRole(this.getManagedBean().getSpEpRole());
 			}
-
-			if (getManagedBean().getSpRecordStatus() == 0) {
-				reqDTO.getSmPersonnel().setRecordStatusFlg(0);
-			} else if (getManagedBean().getSpRecordStatus() != 0) {
+			
+			if(getManagedBean().getSpRecordStatus() == 0){
+				reqDTO.getSmPersonnel().setRecordStatusFlg(99);
+			}else{
 				reqDTO.getSmPersonnel().setRecordStatusFlg(this.getManagedBean().getSpRecordStatus());
 			}
-
+			
+			//as 29/7/2021 - Start
+			//Since default value in 0, this step required for is authorized
+			if(getManagedBean().getSpIsAuthorize() == 0){
+				reqDTO.getSmPersonnel().setAuthorizedFlg(99);
+			}else{
+				if(getManagedBean().getSpIsAuthorize() == 1){
+					reqDTO.getSmPersonnel().setAuthorizedFlg(this.getManagedBean().getSpIsAuthorize());	
+				}else if(getManagedBean().getSpIsAuthorize() == 2){
+					reqDTO.getSmPersonnel().setAuthorizedFlg(0);
+				}			
+			}
+			//as 29/7/2021 - End
+			
 			if (getManagedBean().getSpSoftcertFlg() == 99) {
 				reqDTO.getSmPersonnel().setSoftcertFlg(99);
 			} else if (getManagedBean().getSpSoftcertFlg() != 99) {
@@ -3029,6 +3075,42 @@ public class SmPersonnelBackingBean extends
 		}
 		List<SmPersonnel> smPersonnelList = SmServiceLookup.getPersonnelSO().retrieveMOFPersonnelListByApplId(reqDTO)
 				.getSmPersonnelList();
+		
+		//for deleted personnel epRole
+		//to get role for deleted personnel
+		if (smPersonnelList != null && !smPersonnelList.isEmpty()) {
+			for (SmPersonnel smPersonnel : smPersonnelList) {
+				if(smPersonnel.getEpRole() == null && smPersonnel.getPmUser() != null ){			
+					Long userId = smPersonnel.getPmUser().getUserId();
+					log.info("This is the user id == " + userId);
+					String epRole = setPrevEpRoleSuppMain(userId);
+					smPersonnel.setPrevEpRole(epRole);
+				}else if(smPersonnel.getPmUser() != null){
+					smPersonnel.setPrevEpRole(smPersonnel.getEpRole());
+				}
+			}
+		}
+		
+		//for searching ep role status
+		if(getManagedBean().getSpIEpRoleStatus() != 0){
+			if(getManagedBean().getSpIEpRoleStatus() == 1){
+				Set<SmPersonnel> set = new LinkedHashSet<SmPersonnel>(smPersonnelList);
+				for(Iterator<SmPersonnel> it = smPersonnelList.iterator(); it.hasNext();){
+					SmPersonnel a = it.next();
+					if(a.getEpRole() == null && a.getPmUser() != null || a.getEpRole() == null && a.getPmUser() == null){
+						it.remove();
+					}
+				}			
+			}else if(getManagedBean().getSpIEpRoleStatus() == 2){
+				Set<SmPersonnel> set = new LinkedHashSet<SmPersonnel>(smPersonnelList);
+				for(Iterator<SmPersonnel> it = smPersonnelList.iterator(); it.hasNext();){
+					SmPersonnel a = it.next();
+					if(a.getEpRole() != null && a.getPmUser() != null || a.getEpRole() == null && a.getPmUser() == null){
+						it.remove();
+					}
+				}		
+			}
+		}
 		sortPersonnelByEpRole(smPersonnelList);
 		getManagedBean().setSmPersonnelList(smPersonnelList);
 		//change back value for the softcert flag
@@ -3102,112 +3184,321 @@ public class SmPersonnelBackingBean extends
 			smPersonnelAddresses.add(personnelAddress);
 		}
 	}
-	//9569 - Start
-	public void saveUserMOFUpdate(){
-		  try{
-			SmPersonnel personnel = getManagedBean().getBasicSmPersonnel();
-		    //This is to save all the address
+	
+	/**
+	 * Set personnel previous role
+	 * 
+	 * @param SmPersonnel
+	 *            personnel
+	 */
+	private String setPrevEpRoleSuppMain(Long userId) {
+		String epRole = "";
+		PersonnelReqDTO personnelReqDTO = new PersonnelReqDTO();
+		personnelReqDTO.setPmUserId(userId);
+		PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrieveUserRolesForDeactivatedPersonnel(personnelReqDTO);
+		if (!personnelResDTO.isSuccessful()) {
+			throw new EpException(MessageConst.ERROR_721108);
+		}
+		epRole = personnelResDTO.getDeletedRole();
+		return epRole;
+	}
+	
+	public void saveUserMOFUpdate() {
+		SmPersonnel personnel = getManagedBean().getBasicSmPersonnel();
+		
+		//#9569 - Start
+		//to validate if user that admin want to delete or change role doesn't have any pending task - Start
+		if(personnel.getPmUser() != null && personnel.getEpRole() != null){
+			if(getManagedBean().getEpRoleTrans() != null && getManagedBean().getEpRoleTrans() == SupplierManagementConst.EPROLE_DELETED){
+				if (personnel.getPmUser() != null && PmCommonUtil.isAnyPendingTask(personnel.getPmUser().getLoginId())
+						||personnel.getPmUser() != null && personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING) {
+					String errMsg = personnel.getName();
+					throw new EpException(MessageConst.ERROR_770950, new String[] { errMsg });
+				}
+				
+			}else if (getManagedBean().getEpRoleTrans() != null && !personnel.getEpRole().equalsIgnoreCase(getManagedBean().getEpRoleTrans())){
+				if (personnel.getPmUser() != null && PmCommonUtil.isAnyPendingTask(personnel.getPmUser().getLoginId())
+						||personnel.getPmUser() != null && personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING) {
+					String errMsg = personnel.getName();
+					throw new EpException(MessageConst.ERROR_770949, new String[] { errMsg });
+				}
+			}
+			
+		}
+		//to validate if user that admin want to delete or change role doesn't have any pending task - End
+		//#9569 - End
+		
+		try {
+			
+			// to check if selected role is deleted or not
+			boolean ePDeleted = false;
+			// to check for the ep status
+			boolean ePStatus = false;
+			//to send status to SO
+			String status = null;
+			
+			// This is to save all the address
 			SmPersonnelAddress personnelAddressPer = getManagedBean().getBasicSmPersonnelPermanentAddress();
-		    SmPersonnelAddress personnelAddress = getManagedBean().getBasicSmPersonnelMailingAddress();
-		    SmPersonnelAddress personnelAddress1 = getManagedBean().getBasicSmPersonnelResidentialAddress();
-		    SmPersonnelAddress personnelAddress2 = getManagedBean().getBasicSmPersonnelOfficeAddress();
-		    
-		    //personnel.getSmPersonnelAddresses().add(personnelAddressPer);
-		    setAddress(personnel.getSmPersonnelAddresses(),personnelAddressPer);
-		   // personnel.getSmPersonnelAddresses().add(personnelAddress);
-		    setAddress(personnel.getSmPersonnelAddresses(),personnelAddress);
-		    
-		    //To check if the address not empty
-		    if(getManagedBean().getBasicSmPersonnelResidentialAddress().getSmAddress().getAddress1() != null){
-		    	//personnel.getSmPersonnelAddresses().add(personnelAddress1);
-		    	setAddress(personnel.getSmPersonnelAddresses(),personnelAddress1);
-		    }
-		    if(getManagedBean().getBasicSmPersonnelOfficeAddress().getSmAddress().getAddress1() != null){
-		    	//personnel.getSmPersonnelAddresses().add(personnelAddress2);
-		    	setAddress(personnel.getSmPersonnelAddresses(),personnelAddress2);
-		    }
-		    
-		    for (SmPersonnelAddress per : personnel.getSmPersonnelAddresses()) {
-		      if (!per.getSmAddress().getPmState().getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)){
-		    	  per.getSmAddress().setPmDivision(null);
-		      }
-		    }
-		    PersonnelReqDTO reqDTO2 = new PersonnelReqDTO();
-		    reqDTO2.setSmPersonnel(personnel);
-		    
-		    //start updating role
-		   // SmPersonnel personnel1 = getManagedBean().getBasicSmPersonnel();
-		    if(personnel.getEpRole() == null){
-		    	personnel.setEpRole("");
-		    }
-		    //9569
-		    if(getManagedBean().getEpRoleTrans().equalsIgnoreCase(SupplierManagementConst.EPROLE_DELETED)){
-				getManagedBean().setEpRoleTrans(null);
-		    }
-		    
-		    if (getManagedBean().getEpRoleTrans() != null && !personnel.getEpRole().equalsIgnoreCase(getManagedBean().getEpRoleTrans())) {
-		    	PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
-		      PersonnelResDTO resDTO1 = new PersonnelResDTO();
-		      if (personnel.getPmUser() != null) {
-		    	  int softcert = checkSoftCert();
-		    	  if(getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()) || getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.FL_USER.value())){
-		    		  personnel.setSoftcertFlg(softcert);
-		    	  }else{
-		    		  personnel.setSoftcertFlg( SupplierManagementConst.RECORD_STATUS_SUSPENDED);
-		    		  personnel.setContractSignerFlg(Integer.parseInt(ParameterConst.FLAG_NO));
-		    	  }
-		        reqDTO1.setSmPersonnel(personnel);
-		        reqDTO1.setNewEpRole(getManagedBean().getEpRoleTrans());
-		        resDTO1 = SmServiceLookup.getPersonnelSO().updateMofPersonnelAndPmRole(reqDTO1);
-		      }else{
-		    	  personnel.setEpRole(getManagedBean().getEpRoleTrans());
-		    	  personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
-		    	  personnel.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		    	  if(getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()) || getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.FL_USER.value())){
-		    		  personnel.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
-		    	  }else{
-		    		  personnel.setSoftcertFlg( SupplierManagementConst.RECORD_STATUS_SUSPENDED);
-		    		  personnel.setContractSignerFlg(Integer.parseInt(ParameterConst.FLAG_NO));
-		    	  }
-		        List<SmPersonnel> smPersonnelList = new ArrayList<SmPersonnel>();
-		        smPersonnelList.add(personnel);
-		        reqDTO1.setSmPersonnelList(smPersonnelList);
-		        reqDTO1.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
-		        resDTO1 = SmServiceLookup.getPersonnelSO().sendPersonnelActivationEmail(reqDTO1);
-		        reqDTO2.setSmPersonnel(personnel);
-		        log.info("End first update------------------------------------------------------");
-		        SmServiceLookup.getPersonnelSO().updatePersonnelRecord(reqDTO2);
-		        log.info("End second update------------------------------------------------------");
-		      
-		      }
-		      if (!resDTO1.isSuccessful()) {
-		          throw new EpException(MessageConst.ERROR_722632);
-		        }
-		    }else{
-	    	  	PersonnelResDTO resDTO2 = SmServiceLookup.getPersonnelSO().updatePersonnelRecord(reqDTO2);
-			    if (!resDTO2.isSuccessful()) {
-			      throw new EpException(MessageConst.ERROR_722632);
-			    }
-		    }
-		    //9569
-		    //delete role authorized personnel 
-		    if(getManagedBean().getEpRoleTrans() == null){
-		    	PersonnelAuthorizationReqDTO reqPersonnelAuthDTO = new PersonnelAuthorizationReqDTO();
-		    	UserReqDTO reqUserDTO = new UserReqDTO();
-		    	reqPersonnelAuthDTO.setPersonnel(personnel);
-		    	reqUserDTO.setPmUser(personnel.getPmUser());
-		    	PersonnelAuthorizationResDTO resPersonnelAuthDTO = SmServiceLookup.getPersonnelAuthorizationSO().
-		    			deleteRoleAuthorizedPersonnel(reqPersonnelAuthDTO);
-		    	UserResDTO userResDTO = SmServiceLookup.getUserSO().updatePmUserRecord(reqUserDTO);
-		    	if (!resPersonnelAuthDTO.isSuccessful() && !userResDTO.isSuccessful()) {
-				      throw new EpException(MessageConst.ERROR_722632);
-				    }
-		    }
-		    //Make sure table is updated
+			SmPersonnelAddress personnelAddress = getManagedBean().getBasicSmPersonnelMailingAddress();
+			SmPersonnelAddress personnelAddress1 = getManagedBean().getBasicSmPersonnelResidentialAddress();
+			SmPersonnelAddress personnelAddress2 = getManagedBean().getBasicSmPersonnelOfficeAddress();
+
+			setAddress(personnel.getSmPersonnelAddresses(), personnelAddressPer);
+			setAddress(personnel.getSmPersonnelAddresses(), personnelAddress);
+
+			// To check if the address not empty
+			if (getManagedBean().getBasicSmPersonnelResidentialAddress().getSmAddress().getAddress1() != null) {
+				setAddress(personnel.getSmPersonnelAddresses(), personnelAddress1);
+			}
+			if (getManagedBean().getBasicSmPersonnelOfficeAddress().getSmAddress().getAddress1() != null) {
+				setAddress(personnel.getSmPersonnelAddresses(), personnelAddress2);
+			}
+
+			for (SmPersonnelAddress per : personnel.getSmPersonnelAddresses()) {
+				if (!per.getSmAddress().getPmState().getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)) {
+					per.getSmAddress().setPmDivision(null);
+				}
+			}
+			PersonnelReqDTO reqDTO2 = new PersonnelReqDTO();
+			reqDTO2.setSmPersonnel(personnel);
+
+			// start updating role
+			// SmPersonnel personnel1 = getManagedBean().getBasicSmPersonnel();
+			if (personnel.getEpRole() == null) {
+				personnel.setEpRole("");
+			}
+
+			int recheckedSoftcert = 0;
+			if (personnel.getPmUser() != null && (personnel.getEpRole() == null ||personnel.getEpRole() == "" ) && personnel.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
+				ePStatus = true;
+				recheckedSoftcert = personnel.getSoftcertFlg();
+			}
+			
+			//The whole changing delete and changing role process start here
+			if (getManagedBean().getEpRoleTrans() != null
+					&& !personnel.getEpRole().equalsIgnoreCase(getManagedBean().getEpRoleTrans())) {
+				//If user has a pmUser or active role
+				if (personnel.getPmUser() != null) {
+					//If supplier admin want to delete the role
+					if (getManagedBean().getEpRoleTrans().equalsIgnoreCase(SupplierManagementConst.EPROLE_DELETED)) {
+						PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+						reqDTO.setRdeleted(true);
+						reqDTO.setSmPersonnel(personnel);
+						reqDTO.getSmPersonnel().setPrevEpRole(personnel.getEpRole());
+						PersonnelResDTO personnelRes = SmServiceLookup.getPersonnelSO().updateOrDeletedRole(reqDTO, status);
+						if(!personnelRes.isSuccessful()){
+							log.info("Unsuccessful to delete personnel role");
+							throw new EpException(MessageConst.ERROR_722632);
+						}
+					} 
+					//If supplier admin want to change the role to supplier user or fullfillment user
+					else if (getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()) && !ePStatus
+							|| getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.FL_USER.value())
+							&& !ePStatus) {
+
+						int softcert = checkSoftCert();
+						PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
+						PersonnelResDTO personnelRes = new PersonnelResDTO();
+
+						personnel.setSoftcertFlg(softcert);
+						reqDTO1.setSmPersonnel(personnel);
+						reqDTO1.setNewEpRole(getManagedBean().getEpRoleTrans());
+						personnelRes = SmServiceLookup.getPersonnelSO().updateMofPersonnelAndPmRole(reqDTO1);
+						if (!personnelRes.isSuccessful()) {
+							throw new EpException(MessageConst.ERROR_722632);
+						}
+					} 
+					//if supplier admin want to change the role to catalog user
+					else if (getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.CM_USER.value()) && !ePStatus){
+						PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
+						PersonnelResDTO personnelRes = new PersonnelResDTO();
+
+						personnel.setSoftcertFlg(SupplierManagementConst.RECORD_STATUS_SUSPENDED);
+						personnel.setContractSignerFlg(Integer.parseInt(ParameterConst.FLAG_NO));
+						reqDTO1.setSmPersonnel(personnel);
+						reqDTO1.setNewEpRole(getManagedBean().getEpRoleTrans());
+						personnelRes = SmServiceLookup.getPersonnelSO().updateMofPersonnelAndPmRole(reqDTO1);
+						if (!personnelRes.isSuccessful()) {
+							throw new EpException(MessageConst.ERROR_722632);
+						}
+					}
+					
+					//reactivating from deleted, and assign MOF Supplier User
+					else if (getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value())
+							&& ePStatus) {
+
+						PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+						reqDTO.setReactive(true);
+						reqDTO.setSmPersonnel(personnel);
+						PersonnelResDTO personnelRes = SmServiceLookup.getPersonnelSO().updateOrDeletedRole(reqDTO,status);
+
+						if (personnelRes.isSuccessful()) {
+							//If it is not same epRole, then the system will change
+							//Compare role between real time data after reactivate & what role admin decide
+							if(!getManagedBean().getEpRoleTrans().equalsIgnoreCase(personnelRes.getSmPersonnel().getEpRole())){
+								// assign the role that supplier admin desire after reactivating personnel
+								int softcert = checkSoftCert();
+								PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
+								PersonnelResDTO personnelRes1 = new PersonnelResDTO();
+								
+								personnel = personnelRes.getSmPersonnel();
+								personnel.setSoftcertFlg(softcert);
+								reqDTO1.setSmPersonnel(personnel);
+								reqDTO1.setNewEpRole(getManagedBean().getEpRoleTrans());
+								personnelRes1 = SmServiceLookup.getPersonnelSO().updateMofPersonnelAndPmRole(reqDTO1);
+								if (!personnelRes1.isSuccessful()) {
+									throw new EpException(MessageConst.ERROR_722632);
+								}
+							}
+						} else {
+							log.info("Unsuccessful to reactivate personnel at deleted status to supplier user role");
+							throw new EpException(MessageConst.ERROR_722632);
+						}
+					}
+					
+					//reactivating from deleted, and assign catalog user
+					else if (getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.CM_USER.value()) && ePStatus) {
+						PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+						reqDTO.setReactive(true);
+						reqDTO.setSmPersonnel(personnel);
+						PersonnelResDTO personnelRes = SmServiceLookup.getPersonnelSO().updateOrDeletedRole(reqDTO, status);
+						
+						if (personnelRes.isSuccessful()) {
+							//If it is not same epRole, then the system will change
+							//Compare role between real time data after reactivate & what role admin decide
+							if(!getManagedBean().getEpRoleTrans().equalsIgnoreCase(personnelRes.getSmPersonnel().getEpRole())){
+								//assign the role that supplier admin desire after reactivating personnel
+								PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
+								PersonnelResDTO personnelRes1 = new PersonnelResDTO();
+								
+								personnel = personnelRes.getSmPersonnel();
+								personnel.setSoftcertFlg(SupplierManagementConst.RECORD_STATUS_SUSPENDED);
+								personnel.setContractSignerFlg(Integer.parseInt(ParameterConst.FLAG_NO));
+								reqDTO1.setSmPersonnel(personnel);
+								reqDTO1.setNewEpRole(getManagedBean().getEpRoleTrans());
+								personnelRes1 = SmServiceLookup.getPersonnelSO().updateMofPersonnelAndPmRole(reqDTO1);
+								if (!personnelRes1.isSuccessful()) {
+									throw new EpException(MessageConst.ERROR_722632);
+								}
+							}	
+						}else {
+							log.info("Unsuccessful to reactivate personnel at deleted status to catalog user role");
+							throw new EpException(MessageConst.ERROR_722632);
+						}
+					}
+					
+					//reactivating from deleted, and assign fullfillment user
+					else if (getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.FL_USER.value()) && ePStatus) {
+						if (!getManagedBean().getEpRoleTrans().equalsIgnoreCase(personnel.getEpRole())) {
+							PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+							reqDTO.setReactive(true);
+							reqDTO.setSmPersonnel(personnel);
+							PersonnelResDTO personnelRes = SmServiceLookup.getPersonnelSO().updateOrDeletedRole(reqDTO,
+									status);
+							if (personnelRes.isSuccessful()) {
+								// assign the role that supplier admin desire after reactivating personnel
+								//Compare role between real time data after reactivate & what role admin decide
+								if(!getManagedBean().getEpRoleTrans().equalsIgnoreCase(personnelRes.getSmPersonnel().getEpRole())){
+									int softcert = checkSoftCert();
+									PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
+									PersonnelResDTO personnelRes1 = new PersonnelResDTO();
+									
+									personnel = personnelRes.getSmPersonnel();
+									personnel.setSoftcertFlg(softcert);
+									reqDTO1.setSmPersonnel(personnel);
+									reqDTO1.setNewEpRole(getManagedBean().getEpRoleTrans());
+									personnelRes1 = SmServiceLookup.getPersonnelSO().updateMofPersonnelAndPmRole(reqDTO1);
+									if (!personnelRes1.isSuccessful()) {
+										throw new EpException(MessageConst.ERROR_722632);
+									}	
+								}
+							}
+						}else {
+							log.info("Unsuccessful to reactivate personnel at deleted status to fullfillment user role");
+							throw new EpException(MessageConst.ERROR_722632);
+						}
+					}
+									
+				} else {
+					
+					PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
+					PersonnelResDTO resDTO1 = new PersonnelResDTO();
+					
+					personnel.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+					
+					//admin assign new roles to personnel (supplier user & fullfillment user)
+					if (getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()) && !ePStatus
+							|| getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.FL_USER.value()) && !ePStatus) {
+						
+						personnel.setEpRole(getManagedBean().getEpRoleTrans());
+						personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
+						personnel.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
+					}
+					
+					//admin assign new roles to personnel (Catalog User)
+					else if(getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.CM_USER.value()) && !ePStatus) {
+						
+						personnel.setEpRole(getManagedBean().getEpRoleTrans());
+						personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
+						personnel.setSoftcertFlg(SupplierManagementConst.RECORD_STATUS_SUSPENDED);
+					}
+					
+					//just delete, personnel didn't yet activate the account
+					else if (getManagedBean().getEpRoleTrans().equalsIgnoreCase(
+							SupplierManagementConst.EPROLE_DELETED)) {
+
+						personnel.setEpRole(null);
+						personnel.setSoftcertFlg(SupplierManagementConst.RECORD_STATUS_SUSPENDED);
+						personnel.setContractSignerFlg(Integer.parseInt(ParameterConst.FLAG_NO));
+						personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+
+					}
+					
+					if (personnel.getEpRole() != null) {
+						List<SmPersonnel> smPersonnelList = new ArrayList<SmPersonnel>();
+						smPersonnelList.add(personnel);
+						reqDTO1.setSmPersonnelList(smPersonnelList);
+						reqDTO1.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
+						resDTO1 = SmServiceLookup.getPersonnelSO().sendPersonnelActivationEmail(reqDTO1);
+						reqDTO2.setSmPersonnel(personnel);
+						log.info("End first update------------------------------------------------------");
+						SmServiceLookup.getPersonnelSO().updatePersonnelRecord(reqDTO2);
+						log.info("End second update------------------------------------------------------");
+						if (!resDTO1.isSuccessful()) {
+							throw new EpException(MessageConst.ERROR_722632);
+						}
+					} else {
+						reqDTO2.setSmPersonnel(personnel);
+						resDTO1 = SmServiceLookup.getPersonnelSO().updatePersonnelRecord(reqDTO2);
+						if (!resDTO1.isSuccessful()) {
+							throw new EpException(MessageConst.ERROR_722632);
+						}
+					}
+				}
+			} else {
+				PersonnelResDTO resDTO2 = SmServiceLookup.getPersonnelSO().updatePersonnelRecord(reqDTO2);
+				if (!resDTO2.isSuccessful()) {
+					throw new EpException(MessageConst.ERROR_722632);
+				}
+			}
+			// 9569
+			// Make sure table is updated
 			PersonnelReqDTO reqDTO3 = new PersonnelReqDTO();
 			reqDTO3.setApplId(getManagedBean().getSmAppl().getApplId());
-			List<SmPersonnel> smPersonnelList2 = SmServiceLookup.getPersonnelSO().retrieveMOFPersonnelListByApplId(reqDTO3)
-					.getSmPersonnelList();
+			List<SmPersonnel> smPersonnelList2 = SmServiceLookup.getPersonnelSO().retrieveMOFPersonnelListByApplId(reqDTO3).getSmPersonnelList();
+			//to get role for deleted personnel
+			if (smPersonnelList2 != null && !smPersonnelList2.isEmpty()) {
+				for (SmPersonnel smPersonnel : smPersonnelList2) {
+					if(smPersonnel.getEpRole() == null && smPersonnel.getPmUser() != null ){			
+						Long userId = smPersonnel.getPmUser().getUserId();
+						log.info("This is the user id == " + userId);
+						String epRole = setPrevEpRoleSuppMain(userId);
+						smPersonnel.setPrevEpRole(epRole);
+					}else if(smPersonnel.getPmUser() != null){
+						smPersonnel.setPrevEpRole(smPersonnel.getEpRole());
+					}
+				}
+			}
 			sortPersonnelByEpRole(smPersonnelList2);
 			getManagedBean().setSmPersonnelList(smPersonnelList2);
 			countAuthUserWithRole(smPersonnelList2);
