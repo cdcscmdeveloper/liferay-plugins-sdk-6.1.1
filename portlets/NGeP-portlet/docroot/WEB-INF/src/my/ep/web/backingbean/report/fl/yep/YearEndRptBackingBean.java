@@ -92,7 +92,6 @@ public class YearEndRptBackingBean extends FlReportBackingBean<YearEndRptManaged
 		if (StringUtils.isNotBlank(getManagedBean().getPurchaseOrderNo())) {
 			params.put(FlReportConst.FL_RPT_PURCHASE_ORDER, getManagedBean().getPurchaseOrderNo());
 		}	
-		//log.info("28379: getPurchaseOrderStatus: "+getManagedBean().getPurchaseOrderStatus());
 		if (StringUtils.isNotBlank(getManagedBean().getPurchaseOrderStatus())) {
 			params.put(FlReportConst.FL_RPT_PO_STATUS, getManagedBean().getPurchaseOrderStatus());
 		}	
@@ -132,15 +131,12 @@ public class YearEndRptBackingBean extends FlReportBackingBean<YearEndRptManaged
 		if(getManagedBean().getMinistry() != null){
 			params.put(FlReportConst.FL_RPT_MINISTRY, getManagedBean().getMinistry().getOrgProfileId().toString());
 		}
-		//log.info("28379: getMinistry: "+getManagedBean().getMinistry().getOrgProfileId().toString());
 		if (getManagedBean().getPtjGroup() != null) {
 			params.put(FlReportConst.FL_RPT_KUMPULAN, getManagedBean().getPtjGroup().getOrgProfileId().toString());
 		}
-		//log.info("28379: getPtjGroup: "+getManagedBean().getPtjGroup().getOrgProfileId().toString());
 		if (getManagedBean().getPtj() != null) {
 			params.put(FlReportConst.FL_RPT_PTJ_NAME, getManagedBean().getPtj().getOrgProfileId().toString());
 		}
-		//log.info("28379: getPtj: "+getManagedBean().getPtj().getOrgProfileId().toString());
 		
 		if (StringUtils.isNotBlank(getManagedBean().getPanelName())) {
 			params.put(FlReportConst.FL_RPT_CC_PANEL_NAME, getManagedBean().getPanelName());
@@ -169,6 +165,7 @@ public class YearEndRptBackingBean extends FlReportBackingBean<YearEndRptManaged
 		params.put(FlReportConst.FL_RPT_CT_FROM_DATE, df.format(getManagedBean().getContractFromDate()));
 		params.put(FlReportConst.FL_RPT_CT_TO_DATE, df.format(getManagedBean().getContractToDate()));
 		checkOneYearDifferent(getManagedBean().getContractFromDate(), getManagedBean().getContractToDate());
+		log.info("28379: params: "+params);
 		
 		generateFlReport(params);
 	}
@@ -177,7 +174,7 @@ public class YearEndRptBackingBean extends FlReportBackingBean<YearEndRptManaged
 		
 		if(getManagedBean().getDocumentType() != null){
 			//28379
-			if(getManagedBean().getDocumentType().equals(ReportConst.DOC_TYPE_CO)){
+			if(getManagedBean().getDocumentType().equals(ReportConst.DOC_TYPE_CR)){
 				getManagedBean().setContractFlag(true);
 				getManagedBean().setPurchaseOrderNo(null);
 				getManagedBean().setPurchaseOrderStatus(null);
