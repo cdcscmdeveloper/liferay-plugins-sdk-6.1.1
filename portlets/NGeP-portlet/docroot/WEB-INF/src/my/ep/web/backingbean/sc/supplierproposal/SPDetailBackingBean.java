@@ -3795,8 +3795,10 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			}
 		}
 
+		//#31746 - start
 		if (bankStmtList.size() > 0 && totalAmount != null
-				&& totalAmount.intValue() > 0) {
+				&& totalAmount.longValue() > 0) {
+		//#31746 - end	
 			MathContext mc = new MathContext(14);
 
 			avgAmount = totalAmount.divide(
