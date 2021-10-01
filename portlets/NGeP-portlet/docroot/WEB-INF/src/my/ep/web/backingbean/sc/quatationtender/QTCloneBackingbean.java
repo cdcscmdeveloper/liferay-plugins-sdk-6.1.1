@@ -3646,8 +3646,8 @@ public class QTCloneBackingbean extends
 		scQt.setExistingContractNo(copyScqt.getExistingContractNo());
 		scQt.setFulfilmentType(copyScqt.getFulfilmentType());
 		scQt.setContractDuration(copyScqt.getContractDuration());
-		scQt.setPublishPeriod(copyScqt.getPublishPeriod());
-		scQt.setQtValidityPeriod(copyScqt.getQtValidityPeriod());
+		//scQt.setPublishPeriod(copyScqt.getPublishPeriod());//31799
+		//scQt.setQtValidityPeriod(copyScqt.getQtValidityPeriod());//31799
 		
 		scQt.setSpecApprovalReq(copyScqt.getSpecApprovalReq());
 		scQt.setMinistrySpecSecrataryId(copyScqt.getMinistrySpecSecrataryId());
