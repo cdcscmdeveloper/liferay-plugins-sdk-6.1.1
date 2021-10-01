@@ -504,6 +504,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		if(save)
 			saveSiteVisitReport(changeTab);
 		getManagedBean().setSelectedSvTemplate(getManagedBean().getSmSvTask().getSmSvTemplate());
+		svTemplate = getManagedBean().getSelectedSvTemplate();
 		getManagedBean().setActivePage(page);
 		int n = getManagedBean().getLicensed() ? 1 : 0;
 		switch(page.charAt(0)){
@@ -740,13 +741,15 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * add new financialDoc to the List
 	 */
 	public void addFinancialDoc(){
-		SmSvTemplate svTemplate = this.getManagedBean().getSelectedSvTemplate();
-		List<SmSvManufacturingDoc> addFinancialDocLs = svTemplate.getAdditionalDocLs();
+		//28775 - Site Visit Grouping Enhancement - 28775 - start
+		SmSvTemplate svTemplate = getManagedBean().getSmSvTask().getSmSvTemplate();
+		//List<SmSvManufacturingDoc> addFinancialDocLs = svTemplate.getAdditionalDocLs();
+		if(svTemplate.getAdditionalDocLs() == null)
+			svTemplate.setAdditionalDocLs(new ArrayList<SmSvManufacturingDoc>());
 		SmSvManufacturingDoc addFinancialDoc = new SmSvManufacturingDoc();
 		addFinancialDoc.setSmSvTemplate(svTemplate);
-		
-		addFinancialDocLs.add(addFinancialDoc);
-
+		svTemplate.getAdditionalDocLs().add(addFinancialDoc);
+		//28775 - Site Visit Grouping Enhancement - 28775 - end
 	}
 	
 	/**

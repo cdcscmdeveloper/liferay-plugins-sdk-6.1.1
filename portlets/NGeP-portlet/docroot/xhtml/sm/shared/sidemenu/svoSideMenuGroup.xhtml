@@ -38,7 +38,7 @@
 				
 		<p:menuitem value="#{lbl['lbl.sm.sitevist.report.submission']}" update="@form" 
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-				actionListener="#{svoSiteVisitBackingBean.changePageIndex('s',null,true)}" />
+				actionListener="#{svoSiteVisitBackingBean.changePageIndex('s',svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplate,true)}" />
 	</p:tabMenu>
 	
 </ui:composition>
