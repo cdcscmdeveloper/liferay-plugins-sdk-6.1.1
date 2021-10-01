@@ -204,26 +204,18 @@
 						<c:choose>
 							<c:when test="#{smPersonnelBackingBean.managedBean.epRoleTrans ne null}">
 								<p:inputText id="basicBUEmail" label="#{lbl['lbl.sm.userprofile.email']}" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.email}"
-								validatorMessage="#{lbl['lbl.sm.userprofile.email']} - #{lbl['lbl.sm.invalidEmail']}" size="40" required="true">
-							
+								validatorMessage="#{lbl['lbl.sm.userprofile.email']} - #{lbl['lbl.sm.invalidEmail']}" size="40" required="true">						
 								<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
 								<p:ajax event="change" process="@this" listener="#{smPersonnelBackingBean.onChangeEmail()}" update="basicBUEmail"/> 
-								</p:inputText>
-								<p:graphicImage id="toolTipIcon" value="/css/images/design/tooltips.png" /> 
-							  	<p:tooltip id="sourceTooltip" for="toolTipIcon">
-									<h:outputText id="sourceLabel" escape="false" value="#{lbl['lbl.sm.email.change.tooltip']}" />
-								</p:tooltip> 
-								
+								</p:inputText>																
 							 	<p:message id="basicBUEmailMsg" for="basicBUEmail" showSummary="true" showDetail="false" display="icon" />
 							</c:when>
 							<c:otherwise>
 								<p:inputText id="basicBUEmail" label="#{lbl['lbl.sm.userprofile.email']}" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.email}"
-								validatorMessage="#{lbl['lbl.sm.userprofile.email']} - #{lbl['lbl.sm.invalidEmail']}" size="40" >
-							
+								validatorMessage="#{lbl['lbl.sm.userprofile.email']} - #{lbl['lbl.sm.invalidEmail']}" size="40" >							
 								<f:validateRegex pattern="(|[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})|^)$" />
 								<p:ajax event="change" process="@this" update="basicBUEmail"/> 
-								</p:inputText>
-								
+								</p:inputText>								
 							 	<p:message id="basicBUEmailMsg" for="basicBUEmail" showSummary="true" showDetail="false" display="icon" />
 							</c:otherwise>
 						</c:choose>
