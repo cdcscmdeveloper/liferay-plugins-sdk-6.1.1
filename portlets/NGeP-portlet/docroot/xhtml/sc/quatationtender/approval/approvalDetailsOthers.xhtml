@@ -41,8 +41,9 @@
 					value="#{otherrequestdetails.approverAction.parameterId}"
 					style="width: 178px;margin-bottom: 5px;" disabled="#{createQtBB.managedBean.readOnly}">
 					<ui:remove> #19287 - end </ui:remove>
-
-					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+					<!-- #25077 Start -->
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" noSelectionOption="true" itemDisabled="true" />
+					<!-- #25077 End -->
 					<f:selectItems var="app"
 						value="#{approvalBackingBean.getStatusDropdownValues()}"
 						itemLabel="#{app.codeName}"
