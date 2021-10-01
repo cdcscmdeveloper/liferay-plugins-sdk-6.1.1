@@ -221,7 +221,7 @@
 								validatorMessage="#{lbl['lbl.sm.userprofile.email']} - #{lbl['lbl.sm.invalidEmail']}" size="40" >
 							
 								<f:validateRegex pattern="(|[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})|^)$" />
-								<p:ajax event="change" process="@this" listener="#{smPersonnelBackingBean.onChangeEmail()}" update="basicBUEmail"/> 
+								<p:ajax event="change" process="@this" update="basicBUEmail"/> 
 								</p:inputText>
 								<p:graphicImage id="toolTipIcon" value="/css/images/design/tooltips.png" /> 
 							  	<p:tooltip id="sourceTooltip" for="toolTipIcon">
