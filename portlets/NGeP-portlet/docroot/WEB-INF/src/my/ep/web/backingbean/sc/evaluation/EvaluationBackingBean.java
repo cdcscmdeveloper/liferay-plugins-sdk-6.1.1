@@ -2766,9 +2766,14 @@ public class EvaluationBackingBean extends
 							}
 						}
 					}
-					if (this.getManagedBean()
+					if (// #25638 -Start.
+							(this.getManagedBean()
 							.getCurrentStatusId()
 							.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
+							|| this.getManagedBean()
+							.getCurrentStatusId()
+							.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION))
+						// #25638 - End.
 							&& !this.getManagedBean().isReadOnly()
 							&& !getManagedBean().isTechnicalSummaryGenerated()) {
 						evaluationStageStatusCheck();
@@ -2851,8 +2856,14 @@ public class EvaluationBackingBean extends
 				resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE);
 				resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_ITEM);
 				summaryReqDTO.setResultStages(resultStg2);
-				if (this.getManagedBean().getCurrentStatusId()
+				if (// #25638 -Start.
+						(this.getManagedBean()
+						.getCurrentStatusId()
 						.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
+						|| this.getManagedBean()
+						.getCurrentStatusId()
+						.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION))
+					// #25638 - End.
 						&& !this.getManagedBean().isReadOnly()
 						&& !getManagedBean().isFinancialSummaryGenerated()) {
 					/*
@@ -2892,8 +2903,14 @@ public class EvaluationBackingBean extends
 			this.getManagedBean().setFinancialSummaryView("");
 			/** #21695 Farid */
 			this.getManagedBean().setTechnicalSummaryView("");
-			if (this.getManagedBean().getCurrentStatusId()
+			if (// #25638 -Start.
+					(this.getManagedBean()
+					.getCurrentStatusId()
 					.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
+					|| this.getManagedBean()
+					.getCurrentStatusId()
+					.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION))
+				// #25638 - End.
 					&& !this.getManagedBean().isReadOnly()
 					&& this.getManagedBean().getScQt().getEvaluationType()
 							.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER)
@@ -2913,8 +2930,14 @@ public class EvaluationBackingBean extends
 				resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE);
 				resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_ITEM);
 				summaryReqDTO.setResultStages(resultStg2);
-				if (this.getManagedBean().getCurrentStatusId()
+				if (// #25638 -Start.
+						(this.getManagedBean()
+						.getCurrentStatusId()
 						.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
+						|| this.getManagedBean()
+						.getCurrentStatusId()
+						.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION))
+					// #25638 - End.
 						&& !this.getManagedBean().isReadOnly()
 						&& !getManagedBean().isFinancialSummaryGenerated()) {
 					/*
@@ -2953,8 +2976,14 @@ public class EvaluationBackingBean extends
 				evaluationSo = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTEvaluationSO.class);
-				if (this.getManagedBean().getCurrentStatusId()
+				if (// #25638 -Start.
+						(this.getManagedBean()
+						.getCurrentStatusId()
 						.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
+						|| this.getManagedBean()
+						.getCurrentStatusId()
+						.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION))
+					// #25638 - End.
 						&& !this.getManagedBean().isReadOnly()
 						&& this.getManagedBean()
 								.getScQt()
@@ -6944,7 +6973,13 @@ public class EvaluationBackingBean extends
 						.getCurrentStatusId()
 						.equals(QTStatusConst.OC_PENDING_COMPLIANCE_PROPOSAL) || this.getManagedBean()
 						.getCurrentStatusId()
-						.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)) {
+						.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
+						// #25638 - Start.
+						|| this.getManagedBean()
+						.getCurrentStatusId()
+						.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION)
+						// #25638 - End.
+						) {
 				int lcaloutputTab=retriveFinancialChecklistStatusCheck();
 				if(lcaloutputTab>0){
 					outputTab=lcaloutputTab;
@@ -6988,9 +7023,15 @@ public class EvaluationBackingBean extends
 				if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 						.equalsIgnoreCase(this.getManagedBean()
 								.getCommitteeType())) {
-					if (this.getManagedBean()
+					if (// #25638 -Start.
+							(this.getManagedBean()
 							.getCurrentStatusId()
-							.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)) {
+							.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
+							|| this.getManagedBean()
+							.getCurrentStatusId()
+							.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION))
+						// #25638 - End.
+							) {
 						complianceStageStatusCheck();
 					}
 					if (currentTab == 1) {
@@ -7004,9 +7045,15 @@ public class EvaluationBackingBean extends
 
 						} else {
 							sampleClosingDateCountDays();
-							if (this.getManagedBean()
+							if (// #25638 -Start.
+									(this.getManagedBean()
 									.getCurrentStatusId()
-									.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)) {
+									.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
+									|| this.getManagedBean()
+									.getCurrentStatusId()
+									.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION))
+								// #25638 - End.
+									) {
 
 								if (this.getManagedBean().getCountDays() > 0
 										|| (this.getManagedBean()
@@ -7020,9 +7067,15 @@ public class EvaluationBackingBean extends
 							if (this.getManagedBean().getCountDays() < 0
 									|| (this.getManagedBean().getCountDays() == 0 && this
 											.getManagedBean().getCurrentTime() >= 12)) {
-								if (this.getManagedBean()
+								if (// #25638 -Start.
+										(this.getManagedBean()
 										.getCurrentStatusId()
-										.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)) {
+										.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
+										|| this.getManagedBean()
+										.getCurrentStatusId()
+										.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION))
+									// #25638 - End.
+										) {
 									checkSampleComplianceCompleted();
 								}
 							}
@@ -9500,6 +9553,9 @@ private void retriveCommitteeRemarksList(){
 				|| QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL.equals(this
 						.getManagedBean().getCurrentStatusId())
 				|| isStatusLessThanOrEquals(this.getManagedBean().getCurrentStatusId(), QTStatusConst.OC_PENDING_COMPLIANCE_VERIFICATION_REVISION, QTStatusConst.OC_ORDERED_STATUSES)		
+				// #25638 - Start.
+				|| QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION.equals(this.getManagedBean().getCurrentStatusId())
+				// #25638 - End.
 				) {
 			this.getManagedBean().setStatusOnly(false);
 
