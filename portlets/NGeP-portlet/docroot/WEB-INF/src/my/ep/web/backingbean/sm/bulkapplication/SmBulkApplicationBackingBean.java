@@ -215,7 +215,14 @@ public class SmBulkApplicationBackingBean extends
 							.getAppl().getApplId(),
 							ParameterConst.SM_APPLN_RMRK_DECISION_REJECT,
 							bulkAppl.getRejectionRemarks());
+				}else{
+					bulkAppl.setRejectionRemarks("N/A");
+					SmApplicationUtil.manageAndSaveNewSmRemarks(bulkAppl
+							.getAppl().getApplId(),
+							ParameterConst.SM_APPLN_RMRK_DECISION_REJECT,
+							bulkAppl.getRejectionRemarks());
 				}
+				cloneBulkPoApplSectionReview(bulkAppl);
 				reqDTO = getReviewApplicationReqDTO(fs, basePortalUrl,
 						bulkAppl, "REJECT");
 
@@ -1126,6 +1133,26 @@ public class SmBulkApplicationBackingBean extends
 		}
 		log.info("HTML REJECT REASON:" + rejectReasons);
 		return rejectReasons;
+	}
+	
+	private void cloneBulkPoApplSectionReview(SmBulkApplicationVO bulkAppl) {
+		SmApplSectionReview apprApplSecRev = new SmApplSectionReview();
+		for (SmApplSectionReview applSecRev : bulkAppl.getAppl().getSmApplSectionReviews()) {
+			EntityHelper.copyEntityProperties(applSecRev, apprApplSecRev,
+					new String[] { "applSectionReviewId" });
+			apprApplSecRev.setSmAppl(bulkAppl.getAppl());
+			apprApplSecRev
+					.setRoleType(SupplierManagementConst.SECTION_REV_ROLE_APP);
+			apprApplSecRev.setCheckCount(0);
+			apprApplSecRev.setRecommendation(null);
+			apprApplSecRev.setRemarkToApprover(null);
+			apprApplSecRev.setPmRegStatus(null);
+			//#31043 start
+			apprApplSecRev.setSitevisitVerified(false);
+			//#31043 end
+			bulkAppl.setApprvrSecReview(apprApplSecRev);
+		}
+		bulkAppl.getAppl().getSmApplSectionReviews().add(bulkAppl.getApprvrSecReview());
 	}
 
 }
