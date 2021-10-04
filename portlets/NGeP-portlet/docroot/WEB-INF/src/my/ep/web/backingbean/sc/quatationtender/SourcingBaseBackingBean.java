@@ -653,9 +653,20 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * 
 	 * @param baseObject
 	 */
+	//Bug #31583 - start
 	public void setUserDetails(BaseEntity baseObject) {
-		PmUser user = new FacesScopes().getUserSessionBean();
-
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IUserSO.class);
+		PmUser user = new PmUser();
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setLoginId(new FacesScopes().getUserScreenName());
+		UserResDTO resDTO = userSO.retrieveUserByLoginId(userReqDTO);
+		if (resDTO.getPmUser() == null) {
+		  user = new FacesScopes().getUserSessionBean();
+		}else{
+		  user = resDTO.getPmUser();
+		}
 		if (baseObject.isBrandNew()) {
 			baseObject.setCreatedBy(user.getUserId());
 			baseObject
@@ -663,6 +674,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		baseObject.setChangedBy(user.getUserId());
 	}
+	//Bug #31583 - end
 
 	/**
 	 * To get Message constant.
