@@ -11036,6 +11036,10 @@ public class SmApplicationBackingBean extends
 									statusDesc.getStatusName());
 						}
 					}
+					//31210-start
+					if (rev.getRecommendation() !=null) {
+						getManagedBean().setPoRecommendationDesc(rev.getRecommendation());
+					}//31210-end
 				}
 			} else if (getManagedBean().isPoUser()
 					|| (getManagedBean().isSupplierUser() && getManagedBean()
