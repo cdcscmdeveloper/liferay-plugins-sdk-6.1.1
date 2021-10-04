@@ -20,12 +20,17 @@
 		<!-- #29007 Added rendered for QT Vinod -->
 		<p:outputPanel id="supplierUpdateInstructionPanel"
 			rendered="#{lOADetailBackingBean.managedBean.updateSupplierInstructionFlag &amp;&amp; !isDocTypeQuotation || lOADetailBackingBean.managedBean.specificationAndSupplierDialogFlagQT &amp;&amp; isDocTypeQuotation &amp;&amp; lOADetailBackingBean.managedBean.supPropSpecUpdate}">
-			<h:outputText styleClass="instruction"
-				value="#{lbl['lbl.sc.update.supplier.latest.offered.instruction']}" />			
-			<h:outputText styleClass="instruction"
-				value="#{lbl['lbl.sc.update.supplier.latest.offered.instruction.end']}" />
+			<h:outputText styleClass="instruction" rendered="#{lOADetailBackingBean.managedBean.updateSupplierInstructionFlag &amp;&amp; !isDocTypeQuotation}"
+				value="#{lbl['lbl.sc.update.supplier.latest.offered.instruction']}" />
 				<p:graphicImage value="/css/images/design/ico-viewnedit.png"
-				id="supplierUpdateInstructionIcon"
+				id="supplierUpdateInstructionIcon" rendered="#{lOADetailBackingBean.managedBean.updateSupplierInstructionFlag &amp;&amp; !isDocTypeQuotation}"
+				style="max-width: 16px; padding-right: 7px; padding-left: 7px;" />			
+			<h:outputText styleClass="instruction" rendered="#{lOADetailBackingBean.managedBean.updateSupplierInstructionFlag &amp;&amp; !isDocTypeQuotation}"
+				value="#{lbl['lbl.sc.update.supplier.latest.offered.instruction.end']}" />
+				<h:outputText styleClass="instruction" rendered="#{lOADetailBackingBean.managedBean.specificationAndSupplierDialogFlagQT &amp;&amp; isDocTypeQuotation &amp;&amp; lOADetailBackingBean.managedBean.supPropSpecUpdate}"
+				value="#{lbl['lbl.sc.loiloa.loa.zone.instruction']}" />
+				<p:graphicImage value="/css/images/design/ico-viewnedit.png"
+				id="supplierUpdateInstructionIconQT" rendered="#{lOADetailBackingBean.managedBean.specificationAndSupplierDialogFlagQT &amp;&amp; isDocTypeQuotation &amp;&amp; lOADetailBackingBean.managedBean.supPropSpecUpdate}"
 				style="max-width: 16px; padding-right: 7px; padding-left: 7px;" />
 			<p:spacer height="10" />
 			<p:panel id="supplierSearchCriteria" rendered="#{!isDocTypeQuotation}"
