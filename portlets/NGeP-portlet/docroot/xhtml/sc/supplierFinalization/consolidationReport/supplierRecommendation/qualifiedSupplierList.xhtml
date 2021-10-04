@@ -162,7 +162,7 @@
 							maxIntegerDigits="4" integerOnly="true"  />
 							<f:attribute name="min" value="1" />
 							<f:attribute name="max" value="#{consolidationReportBackingBean.managedBean.maxRank}" />
-						<p:ajax partialSubmit="true" process="@this" update="@([id$=supplierListTblPanel])" 
+						<p:ajax partialSubmit="true" process="@this" update="@this" 
 								listener="#{consolidationReportBackingBean.updateCachedData(qualifiedSupp)}" />						
 					</p:inputText>
 					<p:message id="deskOfficerRankInputErrorMsg" for="deskOfficerRankInput" display="icon"/>					
@@ -172,7 +172,7 @@
 					<p:inputText id="deskOfficerRemarks" value="#{qualifiedSupp.deskOfficerRemark}" 
 								 label="#{lbl['lbl.sc.consolidation.report.do.remarks']}" 
 								 required="false" size="20" autocomplete="false">
-						<p:ajax partialSubmit="true" process="@this" update="@([id$=supplierListTblPanel])" 
+						<p:ajax partialSubmit="true" process="@this" update="@this" 
 								listener="#{consolidationReportBackingBean.updateCachedData(qualifiedSupp)}" />
 					</p:inputText>
 					<p:message id="deskOfficerRemarksErrorMsg" for="deskOfficerRemarks" display="icon"/>					
