@@ -2663,6 +2663,16 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		for(SmSvTask smSvTask : appl.getSmSvTasks()){
 			SmCommonUtil.getInstance().setSmSvAddressInfoBySiteTypeAndRefId(smSvTask.getSmSvAddress().getSiteType(),
 					smSvTask.getSmSvAddress().getSiteRefId(),smSvTask.getSmSvAddress(), appl.getApplId());
+			//28775 - Site Visit Grouping Enhancement - 28775 - start
+			List<SmSupplierCategory> suppCatLs = retrieveSupplierCategoryByApplIdAndCategoryL3Id(
+					appl.getApplId(), smSvTask.getPmCategoryL3().getCategoryL3Id());
+			smSvTask.getSmSvTemplate().setSuppCategory(suppCatLs.get(0));
+			for(SmSvTaskGroup svTGroup : smSvTask.getSmSvTaskGroups()){
+				suppCatLs = retrieveSupplierCategoryByApplIdAndCategoryL3Id(
+						appl.getApplId(), svTGroup.getPmCategoryL3().getCategoryL3Id());
+				svTGroup.getSmSvTemplate().setSuppCategory(suppCatLs.get(0));
+			}
+			//28775 - Site Visit Grouping Enhancement - 28775 - end
 		}
 		
 		// sort by code
@@ -2896,9 +2906,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	}
 	
 	//28775 - Site Visit Grouping Enhancement - 28775 - start
-	public List<SmSupplierCategory> retrieveSupplierCategoryByApplIdAndCategoryL3Id(Long categoryL3Id){
+	public List<SmSupplierCategory> retrieveSupplierCategoryByApplIdAndCategoryL3Id(Long applId, Long categoryL3Id){
 		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
-		reqDTO.setApplId(getManagedBean().getSmSvTask().getSmAppl().getApplId());
+		reqDTO.setApplId(applId);
 		reqDTO.setCategoryId(categoryL3Id);
 		SupplierSearchResDTO resDTO = SmServiceLookup.getSupplierSearchSO().retrievePendingApprovalCategoryByApplIdAndCategoryId(reqDTO);
 		
@@ -3623,7 +3633,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			if(sCat.getPmCategoryL3().getCategoryL3Id().equals(categoryL3Id))
 				return sCat;
 		}
-		List<SmSupplierCategory> catL = retrieveSupplierCategoryByApplIdAndCategoryL3Id(categoryL3Id);
+		List<SmSupplierCategory> catL = retrieveSupplierCategoryByApplIdAndCategoryL3Id(
+				getManagedBean().getSmSvTask().getSmAppl().getApplId(), categoryL3Id);
 		if(catL != null && !catL.isEmpty()) return catL.get(0);
 		return null;
 	}

@@ -27,15 +27,17 @@
 		<p:column headerText="#{lbl['lbl.sm.catCodes.catcode']}" style="white-space: normal; width:30%;">
 			<!-- 28775 - Site Visit Grouping Enhancement - 28775 - start -->
 			<h:outputText rendered="#{!empty svTask.pmCategoryL3}"
-				value="#{svTask.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}#{svTask.pmCategoryL3.pmCategoryL2.categoryL2Code}#{svTask.pmCategoryL3.categoryL3Code} : 
+				value="#{svTask.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}#{svTask.pmCategoryL3.pmCategoryL2.categoryL2Code}#{svTask.pmCategoryL3.categoryL3Code} - 
 				#{svTask.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName} / #{svTask.pmCategoryL3.pmCategoryL2.categoryName} / #{svTask.pmCategoryL3.categoryName}"/>
-			<c:if test="#{svoSiteVisitBackingBean.managedBean.smAppl.siteVisitGroup}">
-				<c:forEach var="taskGroup" items="#{svTask.smSvTaskGroups}">
-					<h:outputText rendered="#{!taskGroup.redundant}"
-					value="#{taskGroup.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}#{taskGroup.pmCategoryL3.pmCategoryL2.categoryL2Code}#{taskGroup.pmCategoryL3.categoryL3Code} : 
-					#{taskGroup.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName} / #{taskGroup.pmCategoryL3.pmCategoryL2.categoryName} / #{taskGroup.pmCategoryL3.categoryName}"/>
-				</c:forEach>
-			</c:if>
+			<ui:repeat var="taskGroup" value="#{svTask.smSvTaskGroups}">
+				<br/>
+				<h:outputText rendered="#{!taskGroup.redundant}"
+				value="#{taskGroup.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}#{taskGroup.pmCategoryL3.pmCategoryL2.categoryL2Code}#{taskGroup.pmCategoryL3.categoryL3Code} - 
+				#{taskGroup.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName} / #{taskGroup.pmCategoryL3.pmCategoryL2.categoryName} / #{taskGroup.pmCategoryL3.categoryName}"/>
+				
+				<h:outputText rendered="#{!taskGroup.redundant and taskGroup.smSvTemplate.suppCategory.otherDesc != null}"
+				value=" (#{taskGroup.smSvTemplate.suppCategory.otherDesc})"/>
+			</ui:repeat>
 			<!-- 28775 - Site Visit Grouping Enhancement - 28775 - end -->
 		</p:column>
 		
