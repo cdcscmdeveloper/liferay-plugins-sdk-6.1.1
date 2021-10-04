@@ -12,7 +12,7 @@
 		#foreach($licenseIns in $licenseInsuranceLs)
 		<tr>
 			<td>$velocityCount</td>
-			<td>$!licenseIns.pmParameter.pmParameterDescs.get(0).codeName</td>
+			<td>$smVmUtil.getParameterDesc($!licenseIns.pmParameter)</td>
 			<td>#if($licenseIns.expDate != $null)
 					$smVmUtil.formatDate($licenseIns.expDate)
 				#end</td>

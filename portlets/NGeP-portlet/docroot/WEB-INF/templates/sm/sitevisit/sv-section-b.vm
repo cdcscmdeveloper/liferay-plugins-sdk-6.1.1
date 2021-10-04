@@ -131,7 +131,7 @@
 		#if($financialCheckList.size() > 0)
 			#foreach($finCheckItem in $financialCheckList)
 				<tr>
-			    	<td>$finCheckItem.pmParameter.pmParameterDescs.get(0).codeDesc</td>
+			    	<td>$smVmUtil.getParameterDesc($finCheckItem.pmParameter)</td>
 			    	<td>#if($finCheckItem.valid)$smVmUtil.getDescByLabel('lbl.sm.sme.txt.yes') #else $smVmUtil.getDescByLabel('lbl.sm.sme.txt.no') #end</td>
 			    	<td>$!finCheckItem.remark</td>
 			    </tr>
