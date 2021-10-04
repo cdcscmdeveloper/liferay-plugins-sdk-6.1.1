@@ -1264,7 +1264,11 @@ public class SmSideMenuIconUtil {
 
 			// smSupplierCategory
 			if (isSupplier) {
-
+				//30912 - if current bumi means no changes
+				if(!applCurr.getApplType().isEmpty() 
+						&& applCurr.getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_BUMI)){
+					return false;
+				}
 				List<SmSupplierCategory> prevCatList = new ArrayList<SmSupplierCategory>();
 				List<SmSupplierCategory> currCatList = new ArrayList<SmSupplierCategory>();
 

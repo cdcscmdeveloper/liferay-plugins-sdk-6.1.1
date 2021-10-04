@@ -184,7 +184,10 @@ public class SupplierManagementConst {
 	// Application Category Type
 	public static final String SM_APPL_CATEGORY_TYPE_NORMAL = "N";
 	public static final String SM_APPL_CATEGORY_TYPE_SPECIAL = "S";
-
+	//30912 - START
+	// APPLICATION TYPE
+	public static final String APPL_TYPE_BUMI = "B";
+	//30912 - END
 	public static final String PERSONNEL_TYPE_DIRECTOR = "DIR";
 	public static final String PERSONNEL_TYPE_STAFF = "STF";
 	public static final String PERSONNEL_TYPE_EQUITY = "EQUI";
