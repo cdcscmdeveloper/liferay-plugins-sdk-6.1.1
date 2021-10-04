@@ -274,7 +274,24 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 											getManagedBean().setFlowStatus(1);
 											getManagedBean().setDisplayRejectLabel(true);
 										}
+									//31792 - START
+									}else if(wfStat.getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER)
+												|| wfStat.getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)){
+								
+										Timestamp currentDate = new Timestamp(System.currentTimeMillis());
+										long diff = currentDate.getTime()
+													- wfStat.getCreatedDate().getTime();
+										long diffDays = diff / (24 * 60 * 60 * 1000);
+										//if expired
+										if (diffDays >= SmRuleHelper.getInstance()
+												.getApplicationResubmissionDays()) {
+											getManagedBean().setRejectedApplExist(false);
+											isRejectedApplExist = false;
+											path = MOF_REG_PATH;
+											getManagedBean().setFlowStatus(1);
+										}
 									}
+									//31792 - END
 								}else{
 									getManagedBean().setRejectedApplExist(false);
 									log.info("*******Not Resubmit********");
