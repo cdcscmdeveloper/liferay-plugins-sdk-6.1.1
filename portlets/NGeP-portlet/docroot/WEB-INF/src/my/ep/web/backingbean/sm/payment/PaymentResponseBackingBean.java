@@ -164,6 +164,8 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				errorCode = "";
 				paydate = DateUtils.dateToString("yyyy-MM-dd HH:mm:ss", pyPymt.getPaymentDate());;
 				if(pyPymt.getPyPaymentOrder() != null && pyPymt.getPyPaymentOrder().getPyPaymentResponses().size()>0){
+					log.info("pyPymt.getPyPaymentOrder() channel name=="+ pyPymt.getPyPaymentOrder().getChannelName());
+					channel = pyPymt.getPyPaymentOrder().getChannelName();
 					tranID = pyPymt.getPyPaymentOrder().getPyPaymentResponses().get(0).getTransactionId();
 					if(tranID != null && "123456".equalsIgnoreCase(tranID)){
 						fromManualPayment = true;
@@ -334,6 +336,8 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 						errorCode = "";
 						paydate = DateUtils.dateToString("yyyy-MM-dd HH:mm:ss", pyPymt.getPaymentDate());;
 						if(pyPymt.getPyPaymentOrder() != null && pyPymt.getPyPaymentOrder().getPyPaymentResponses().size()>0){
+							log.info("pyPymt.getPyPaymentOrder() channel name=="+ pyPymt.getPyPaymentOrder().getChannelName());
+							channel = pyPymt.getPyPaymentOrder().getChannelName();
 							tranID = pyPymt.getPyPaymentOrder().getPyPaymentResponses().get(0).getTransactionId();
 						}
 						skipChecking = true;
