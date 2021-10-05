@@ -74,6 +74,7 @@ public class MolPayServlet extends HttpServlet {
 		res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
 		res.setHeader("Pragma", "no-cache"); // HTTP 1.0.
 		res.setDateHeader("Expires", 0); // Proxies.
+		
 		log.info("******END Clear Cache*********");
 		//26307
 		String nbcb = req.getParameter("nbcb") != null ? req.getParameter("nbcb") : null;
@@ -89,7 +90,9 @@ public class MolPayServlet extends HttpServlet {
 		String paydate = req.getParameter("paydate");
 		String skey = req.getParameter("skey");
 		String channel = req.getParameter("channel") != null ?  req.getParameter("channel") : null;
-		
+		log.info("set session--");
+		req.getSession().setAttribute("orderidS", orderId);
+		log.info("getsession servlet: -"+req.getSession().getAttribute("orderidS"));
 		// #26307 start
 		String cardType = null;
 		String extraP = req.getParameter("extraP");
@@ -182,6 +185,7 @@ public class MolPayServlet extends HttpServlet {
 					}
 					// #26307 start
 					PaymentReqDTO pymtReqDTO = new PaymentReqDTO();
+					log.info("Card type=============="+cardType);
 					if (cardType != null) {
 						if (cardType.equalsIgnoreCase("Credit")) {
 							cardType = "CC";
@@ -215,7 +219,7 @@ public class MolPayServlet extends HttpServlet {
 						} 
 					}
 					// #26307 end
-					
+					log.info("channel---------"+channel);
 					paymentOrder.setChannelName(channel);
 					smPaymentRes.setTransactionId(tranID);
 					smPaymentRes.setErrorCode(errorCode);
