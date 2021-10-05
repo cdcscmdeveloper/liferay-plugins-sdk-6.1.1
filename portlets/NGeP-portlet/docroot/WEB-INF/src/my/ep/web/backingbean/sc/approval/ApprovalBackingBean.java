@@ -13,6 +13,7 @@ package my.ep.web.backingbean.sc.approval;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -34,6 +35,10 @@ import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
+import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.bpm.service.IBpmSO;
+import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -42,6 +47,7 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTFieldConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.constants.BpmConstants;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
@@ -83,6 +89,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.QTDocumentsBackingBean;
@@ -946,6 +953,13 @@ public class ApprovalBackingBean extends
 					FacesContext fc = FacesContext.getCurrentInstance();
 					fc.getApplication().getNavigationHandler()
 							.handleNavigation(fc, null, gpkiSignAction(null));
+
+				// 15391 -start-
+				} else if (SCProcessNameConst.APPROVE_PUBLICATION.equalsIgnoreCase(taskName)) {
+					isGpkiPopup = assertSpecificationUpdateInProgress();
+					showDialog = isGpkiPopup ? "" : "gpki_dlg.show()";
+				// 15391 -end-
+
 				} else {
 					showDialog = "gpki_dlg.show()";
 					isGpkiPopup = true;
@@ -2216,4 +2230,50 @@ return scQt;
 		}
 	}
 	// #29762, #25692 -end-
+	
+	// 15391 -start-
+	public boolean assertSpecificationUpdateInProgress() {
+		boolean inProgress = false;
+		String taskName = this.getManagedBean().getTaskName();
+		taskName = StringUtils.isNotEmpty(taskName) ? taskName: "";
+		
+		String[] taskNames = new String[] {
+				//SCProcessNameConst.PREPARE_QT_SCHEDULE, //exclude from 15391, include if 25037 ready for prod
+				SCProcessNameConst.APPROVE_PUBLICATION };
+		String[] specTaskName = new String[] {
+				SCProcessNameConst.SPEC_MAINTENANCE_ENDORSE_SCORING,
+				SCProcessNameConst.SPEC_MAINTENANCE_SIGNOFF_SCORING,
+				SCProcessNameConst.SPEC_MAINTENANCE_REVISE_SCORING };
+		
+		if (Arrays.asList(taskNames).contains(taskName)) {
+			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+			BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
+			ScQt qt = this.getManagedBean().getQt();
+			
+			bpmReqDTO.setDocNumber(qt.getQtNo());
+			bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
+			
+			BpmResponseDTO resDTO = bpmSO.getTasksByDocNumber(bpmReqDTO);
+			
+			for (WorklistItemVO currentVO : resDTO.getWorklistVO().getWorklistItem()) {
+				if (StringUtils.isNotBlank(currentVO.getTaskName())) {
+					
+					if (Arrays.asList(specTaskName).contains(currentVO.getTaskName())) {
+						this.getManagedBean().setSpecUpdateInProgress(true);
+
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+							FacesMessage.SEVERITY_ERROR, null, getMessage("lbl.sc.popup.checkBeforePublish2", null)));
+
+						inProgress = true;
+						
+						break;
+					}
+				}
+			}
+		}
+		
+		return inProgress;
+	}
+	// 15391 -end-
+	
 }
