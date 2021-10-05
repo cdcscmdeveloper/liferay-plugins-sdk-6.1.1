@@ -21,7 +21,6 @@ import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
-import my.ep.biz.service.sm.upgraderole.IUpgradeRoleSO;
 import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.MessageConst;
@@ -29,7 +28,6 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
-import my.ep.dto.osb.sm.SMOsbReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
@@ -280,7 +278,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 								
 										Timestamp currentDate = new Timestamp(System.currentTimeMillis());
 										long diff = currentDate.getTime()
-													- wfStat.getCreatedDate().getTime();
+													- wfStatus.getCreatedDate().getTime();
 										long diffDays = diff / (24 * 60 * 60 * 1000);
 										//if expired
 										if (diffDays >= SmRuleHelper.getInstance()
