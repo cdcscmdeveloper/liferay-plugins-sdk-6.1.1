@@ -7659,6 +7659,8 @@ public class SmApplicationUtil {
 		remark.setDocId(docId);
 		remark.setDocType(docType);
 		remark.setRemark(remarks);
+		//30974
+		remark.setCreatedBy(SmCommonUtil.retrieveCreatedByChangeBy());
 		saveSmRemarks(remark);
 
 	}

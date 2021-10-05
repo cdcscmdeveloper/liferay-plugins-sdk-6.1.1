@@ -210,6 +210,7 @@ public class SmBulkApplicationBackingBean extends
 								ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 					setSmApplRejectionReasons(bulkAppl);
 				}
+				//30974 - start
 				if (!StringUtils.isBlank(bulkAppl.getRejectionRemarks())) {
 					SmApplicationUtil.manageAndSaveNewSmRemarks(bulkAppl
 							.getAppl().getApplId(),
@@ -223,6 +224,7 @@ public class SmBulkApplicationBackingBean extends
 							bulkAppl.getRejectionRemarks());
 				}
 				cloneBulkPoApplSectionReview(bulkAppl);
+				//30974 - end
 				reqDTO = getReviewApplicationReqDTO(fs, basePortalUrl,
 						bulkAppl, "REJECT");
 
@@ -1135,6 +1137,7 @@ public class SmBulkApplicationBackingBean extends
 		return rejectReasons;
 	}
 	
+	//30974 - start
 	private void cloneBulkPoApplSectionReview(SmBulkApplicationVO bulkAppl) {
 		SmApplSectionReview apprApplSecRev = new SmApplSectionReview();
 		for (SmApplSectionReview applSecRev : bulkAppl.getAppl().getSmApplSectionReviews()) {
@@ -1147,12 +1150,11 @@ public class SmBulkApplicationBackingBean extends
 			apprApplSecRev.setRecommendation(null);
 			apprApplSecRev.setRemarkToApprover(null);
 			apprApplSecRev.setPmRegStatus(null);
-			//#31043 start
 			apprApplSecRev.setSitevisitVerified(false);
-			//#31043 end
+			apprApplSecRev.setCreatedBy(SmCommonUtil.retrieveCreatedByChangeBy());
 			bulkAppl.setApprvrSecReview(apprApplSecRev);
 		}
 		bulkAppl.getAppl().getSmApplSectionReviews().add(bulkAppl.getApprvrSecReview());
 	}
-
+	//30974 - end
 }
