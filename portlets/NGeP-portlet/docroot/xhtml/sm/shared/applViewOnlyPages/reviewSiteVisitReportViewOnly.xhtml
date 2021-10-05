@@ -22,26 +22,23 @@
 			</p:column>
 
 			<!-- #28175 start -->
-			<c:choose>
-				<c:when
-					test="#{fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'application-history') or 
-					fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'supplier-application-search')}">
-					<p:column headerText="#{lbl['lbl.sm.catCodes.catcode']}"
-						style="white-space: normal; width:30%;">
-						<h:outputText rendered="#{!empty svTask.pmCategoryL3}"
-							value="#{svTask.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}#{svTask.pmCategoryL3.pmCategoryL2.categoryL2Code}#{svTask.pmCategoryL3.categoryL3Code} : 
-							#{svoSiteVisitBackingBean.getSmCategoryL3(svTask.pmCategoryL3.categoryL3Id, svoSiteVisitBackingBean.managedBean.smAppl.applId)}" />
-					</p:column>
-				</c:when>
-				<c:otherwise>
-					<p:column headerText="#{lbl['lbl.sm.catCodes.catcode']}"
-						style="white-space: normal; width:30%;">
-						<h:outputText rendered="#{!empty svTask.pmCategoryL3}"
-							value="#{svTask.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}#{svTask.pmCategoryL3.pmCategoryL2.categoryL2Code}#{svTask.pmCategoryL3.categoryL3Code} : 
-							#{svTask.pmCategoryL3.categoryName}" />
-					</p:column>
-				</c:otherwise>
-			</c:choose>
+			<p:column headerText="#{lbl['lbl.sm.catCodes.catcode']} testt" style="white-space: normal; width:30%;">
+				<!-- 28775 - Site Visit Grouping Enhancement - 28775 - start -->
+				<h:outputText rendered="#{!empty svTask.pmCategoryL3}"
+					value="#{svTask.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}#{svTask.pmCategoryL3.pmCategoryL2.categoryL2Code}#{svTask.pmCategoryL3.categoryL3Code} - 
+					#{svTask.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName} / #{svTask.pmCategoryL3.pmCategoryL2.categoryName} / #{svTask.pmCategoryL3.categoryName}"/>
+				<h:outputText rendered="#{svTask.smSvTemplate.suppCategory.otherDesc != null}"
+					value=" (#{svTask.smSvTemplate.suppCategory.otherDesc})"/>
+				<ui:repeat var="taskGroup" value="#{svTask.smSvTaskGroups}">
+					<br/>
+					<h:outputText rendered="#{!taskGroup.redundant}"
+						value="#{taskGroup.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}#{taskGroup.pmCategoryL3.pmCategoryL2.categoryL2Code}#{taskGroup.pmCategoryL3.categoryL3Code} - 
+						#{taskGroup.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName} / #{taskGroup.pmCategoryL3.pmCategoryL2.categoryName} / #{taskGroup.pmCategoryL3.categoryName}"/>
+					<h:outputText rendered="#{!taskGroup.redundant and taskGroup.smSvTemplate.suppCategory.otherDesc != null}"
+						value=" (#{taskGroup.smSvTemplate.suppCategory.otherDesc})"/>
+				</ui:repeat>
+				<!-- 28775 - Site Visit Grouping Enhancement - 28775 - end -->
+			</p:column>
 			<!-- #28175 end -->
 
 			<p:column headerText="#{lbl['lbl.sm.address']}"
