@@ -280,7 +280,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 								
 										Timestamp currentDate = new Timestamp(System.currentTimeMillis());
 										long diff = currentDate.getTime()
-													- wfStat.getCreatedDate().getTime();
+													- wfStatus.getCreatedDate().getTime();
 										long diffDays = diff / (24 * 60 * 60 * 1000);
 										//if expired
 										if (diffDays >= SmRuleHelper.getInstance()
