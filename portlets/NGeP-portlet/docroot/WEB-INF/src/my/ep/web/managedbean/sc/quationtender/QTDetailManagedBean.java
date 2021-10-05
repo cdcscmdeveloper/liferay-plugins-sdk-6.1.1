@@ -1598,6 +1598,12 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean approvalEditableSection;
 	// ***25692 -end-
 
+	// #15391 - start
+	private boolean isChecklist;
+	private boolean isGenInfo;
+	private boolean specUpdateInProgress;
+	// #15391 - end
+
 	/**
 	 * Instantiates a new QT detail managed bean.
 	 */
@@ -9995,5 +10001,31 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.paramTypes = paramTypes;
 	}
 	// #25692 End
+
+	// #15391 -start-
+	public boolean isChecklist() {
+		return isChecklist;
+	}
+
+	public void setChecklist(boolean isChecklist) {
+		this.isChecklist = isChecklist;
+	}
+
+	public boolean isGenInfo() {
+		return isGenInfo;
+	}
+
+	public void setGenInfo(boolean isGenInfo) {
+		this.isGenInfo = isGenInfo;
+	}
+
+	public boolean isSpecUpdateInProgress() {
+		return specUpdateInProgress;
+	}
+
+	public void setSpecUpdateInProgress(boolean specUpdateInProgress) {
+		this.specUpdateInProgress = specUpdateInProgress;
+	}
+	// #15391 -end-
 
 }
