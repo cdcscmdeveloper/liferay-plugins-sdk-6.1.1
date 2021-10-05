@@ -34,7 +34,6 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
-import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.sc.actor.ScActorReqDTO;
@@ -153,6 +152,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 			String committeeType = ((SCEvaluationDataType) evaluationDataType).getCommitteeType();
 			Long qtId = evaluationDataType.getQtId().longValue();
 			retrieveQuotationTenderDetails(new Long(qtId), committeeType);
+			retrieveDemoDetailsData(); 
 
 			this.getManagedBean().setReadOnly(false);
 			this.getManagedBean().setActiveIndex(0);
@@ -264,8 +264,8 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 							c.setDisableRowSelection(true);
 						}
 					}
-
-					this.getManagedBean().setScQtDemoContactList(scQtDemo.getScQtDemoContactList());
+					//log.info("*****contact list = " + ct.size());
+					this.getManagedBean().setScQtDemoContactList(ct);
 					this.getManagedBean().setDemoRemark(scQtDemo.getDemoInvRemark());
 					this.getManagedBean().setScQtDemo(scQtDemo);
 
@@ -498,10 +498,8 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 				this.getManagedBean().setDemoRemark(resDto.getScQtDemo().getDemoInvRemark());
 
 			} else if (savedData
-					&& !this.getManagedBean()
-							.getDemoInvBy()
-							.equalsIgnoreCase(
-									this.getManagedBean().getScQtDemo().getDemoCategoryId().getParameterCode())
+					&& !this.getManagedBean().getDemoInvBy()
+							.equalsIgnoreCase(resDto.getScQtDemo().getDemoCategoryId().getParameterCode())
 					|| !savedData) {
 				if (this.getManagedBean().getDemoInvBy().equalsIgnoreCase(SourcingConstants.ALL_ITEM)) {
 					List<ScQtProposal> qualifiedSupp = new ArrayList<ScQtProposal>();
@@ -521,6 +519,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 							scQtDemoSchedule = new ScQtDemoSchedule();
 							s.setScQtDemoSchedule(scQtDemoSchedule);
 							s.setScQtDemoByItemScoreList(null);
+							scQtDemoSchedule.setScQtDemoSupplier(s);
 						}
 
 					} else {
@@ -591,12 +590,16 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 						}
 					}
 
-					for (TplSpecQuestion s : specQuestionList) {
-						demoItem = new ScQtDemoItem();
-						demoItem.setScQtDemo(qtDemo);
-						demoItem.setTplSpecQuestion(s);
-						demoItem.setItemName(s.getClSpecDetail());
-						demoItemList.add(demoItem);
+					if (savedData) {
+						demoItemList.addAll(resDto.getScQtDemo().getScQtDemoItemList());
+					} else {
+						for (TplSpecQuestion s : specQuestionList) {
+							demoItem = new ScQtDemoItem();
+							demoItem.setScQtDemo(qtDemo);
+							demoItem.setTplSpecQuestion(s);
+							demoItem.setItemName(s.getClSpecDetail());
+							demoItemList.add(demoItem);
+						}
 					}
 
 					for (ScQtDemoItem i : demoItemList) {
@@ -616,27 +619,32 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 						i.setScQtDemoByItemScoreList(demoDemoByItemList);
 					}
 					this.getManagedBean().setByItemList(demoItemList);
+
 				}
 
-				ScActorReqDTO reqDTO = new ScActorReqDTO();
-				reqDTO.setDocId(this.getManagedBean().getQt().getQtId());
-				reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
-				reqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
-				ScActorResDTO resActorDto = actorSO.retrieveActorByTypeIdAndRoleCode(reqDTO);
-				UserResDTO resDTO = retrieveUserByUserId(resActorDto.getScActor().getUserId());
+				if (!savedData) {
+					ScActorReqDTO reqDTO = new ScActorReqDTO();
+					reqDTO.setDocId(this.getManagedBean().getQt().getQtId());
+					reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+					reqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
+					ScActorResDTO resActorDto = actorSO.retrieveActorByTypeIdAndRoleCode(reqDTO);
+					UserResDTO resDTO = retrieveUserByUserId(resActorDto.getScActor().getUserId());
 
-				ScQtDemoContact demoCtc = new ScQtDemoContact();
-				demoCtc.setUserName(resDTO.getPmUser().getUserName());
-				demoCtc.setPmUser(resDTO.getPmUser());
-				demoCtc.setTelephoneNo(resDTO.getPmUser().getPhoneNo());
-				demoCtc.setFaxNo(resDTO.getPmUser().getFaxNo());
-				demoCtc.setEmail(resDTO.getPmUser().getEmail());
-				demoCtc.setDisableRowSelection(true);
-				demoCtc.setDeskofficer(true);
-				demoCtc.setScQtDemo(qtDemo);
-				demoContactList.add(demoCtc);
-				this.getManagedBean().setScQtDemoContactList(demoContactList);
-				this.getManagedBean().setCurrentOfficer(resDTO.getPmUser().getUserName());
+					ScQtDemoContact demoCtc = new ScQtDemoContact();
+					demoCtc.setUserName(resDTO.getPmUser().getUserName());
+					demoCtc.setPmUser(resDTO.getPmUser());
+					demoCtc.setTelephoneNo(resDTO.getPmUser().getPhoneNo());
+					demoCtc.setFaxNo(resDTO.getPmUser().getFaxNo());
+					demoCtc.setEmail(resDTO.getPmUser().getEmail());
+					demoCtc.setDisableRowSelection(true);
+					demoCtc.setDeskofficer(true);
+					demoCtc.setScQtDemo(qtDemo);
+					demoContactList.add(demoCtc);
+					this.getManagedBean().setScQtDemoContactList(demoContactList);
+					this.getManagedBean().setCurrentOfficer(resDTO.getPmUser().getUserName());
+				} else {
+					demoContactList.addAll(resDto.getScQtDemo().getScQtDemoContactList());
+				}
 			}
 
 			qtDemo.setScQtDemoSupplierList(demoSuppList);
@@ -796,16 +804,20 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 
 			if (resDto.getScQtDemo() != null) {
 				if (this.getManagedBean().getDemoInvBy().equalsIgnoreCase(SourcingConstants.ALL_ITEM)) {
-					scQtDemo.setScQtDemoSupplierList(this.getManagedBean().getAllItemList());
 					scQtDemo.setScQtDemoItemList(null);
 				} else if (this.getManagedBean().getDemoInvBy().equalsIgnoreCase(SourcingConstants.BY_ITEM)) {
 					scQtDemo.setScQtDemoSupplierList(null);
-					// scQtDemo.setScQtDemoItemList(this.getManagedBean().getByItemList());
 				}
 
 				if (!resDto.getScQtDemo().getDemoCategoryId().getParameterCode()
 						.equalsIgnoreCase(scQtDemo.getDemoCategoryId().getParameterCode())) {
-					reqDto.setSupplierScheduleToBeDeleted(resDto.getScQtDemo().getScQtDemoSupplierList());
+					if (resDto.getScQtDemo().getDemoCategoryId().getParameterCode()
+							.equalsIgnoreCase(SourcingConstants.BY_ITEM)) {
+						reqDto.setDemoItemToBeDeleted(resDto.getScQtDemo().getScQtDemoItemList());
+					} else if (resDto.getScQtDemo().getDemoCategoryId().getParameterCode()
+							.equalsIgnoreCase(SourcingConstants.ALL_ITEM)) {
+						reqDto.setSupplierScheduleToBeDeleted(resDto.getScQtDemo().getScQtDemoSupplierList());
+					}
 
 				}
 				reqDto.setExistedData(true);
@@ -846,7 +858,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 				resDTO = demoUpdateBpmTask(resDTO, outcome);
 
 				if (resDTO.isSuccessful()) {
-					resolveAcknowledgement(this.getManagedBean().getQt(), resDTO);
+					resolveAcknowledgement(resDTO.getScQt(), resDTO);
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				}
@@ -860,26 +872,11 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 	}
 
 	private void resolveAcknowledgement(ScQt scQt, DemoResDTO resDTO) {
-		String taskName = this.getManagedBean().getTaskName();
-		String outcome = resDTO.getOutcome();
 		String message = null;
-
-		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && this.getManagedBean().isValidFor25037()) {
-			if (((Arrays.asList(SCProcessNameConst.EVAL_COMM_PREPARATION_GROUP).contains(taskName) || Arrays.asList(
-					SCProcessNameConst.EVAL_COMM_FINALIZE_GROUP).contains(taskName)))
-					|| taskName.equals(SCProcessNameConst.REVISE_EVALUATION_MEETING)) {
-				String committeeType = this.getManagedBean().getCommitteeType();
-				committeeType = StringUtils.isEmpty(committeeType) ? "" : this.getParameterDesc(
-						ParameterConst.COMMITTE_TYPE, committeeType);
-				String procumentMode = this.getParameterDesc(scQt.getProcurementMode());
-				message = MessageUtils.getMessage(MessageConst.INFO_760504, new String[] { committeeType,
-						procumentMode, scQt.getQtNo() }, MessageUtils.BUNDLE_COMMON_MESSAGES,
-						new FacesScopes().getUserLocale());
-			}
-		}
+		
 		if (StringUtils.isEmpty(message)) {
 			message = MessageUtils.getMessage(getMessgeConstant("SUBMIT"), new String[] {
-					getMessageCommon("lbl.sc.evaluation.meeting"), scQt.getQtNo() },
+					getMessageCommon("lbl.demo.presentation.submit"), scQt.getQtNo() },
 					MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
 		}
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null, message));
