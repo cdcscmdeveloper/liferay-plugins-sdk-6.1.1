@@ -72,7 +72,8 @@
 						label="#{lbl['lbl.sm.rptpreview.actual.site.visit.date']}"
 						maxdate="#{CommonConstants.CURRENT_DATE}" readonlyInput="true"
 						value="#{svoSiteVisitBackingBean.managedBean.smSvTask.actualVisitDate}"
-						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" 
+						disabled="#{viewFlag}"/>
 					<ac:smFieldChangeAlertSVO
 						isShow="#{not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
 						oriValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.actualVisitDate}" 
