@@ -1322,9 +1322,7 @@ public class SupplierFinalizationBackingBean extends
 			}*/
 			//Bug #29707 - end
 
-			if (!skipValidation) {
-				validateFinalizationReports(reqDTO);
-			}
+			validateFinalizationReports(reqDTO, skipValidation);//25037 note31
 			
 			//validateEvaluationReports(SourcingConstants.SUPPLIER_FINALIZATION_TASK);
 			//saveEvaluationReportsDetaills();
@@ -1424,7 +1422,7 @@ public class SupplierFinalizationBackingBean extends
 		}
 	}
 	
-	private void validateFinalizationReports(SuppFinalizationReqDTO reqDTO) {
+	private void validateFinalizationReports(SuppFinalizationReqDTO reqDTO, boolean skipValidation) {//25037 note31
 		log.info("validateFinalizationReports");
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 		List<ScQtFinalizationReport> finalizationReports = 
@@ -1448,6 +1446,7 @@ public class SupplierFinalizationBackingBean extends
 						toBeRemovedReports.add(report);
 					} else {
 						finalizationReports.removeAll(this.getManagedBean().getEndorsementReports());
+						if(skipValidation) return;//25037 note31
 						navigateToEndorsementReportTab();
 						throw new EpException(MessageConst.ERROR_760386);
 					}
