@@ -185,6 +185,7 @@ public class MolPayServlet extends HttpServlet {
 					}
 					// #26307 start
 					PaymentReqDTO pymtReqDTO = new PaymentReqDTO();
+					log.info("Card type=============="+cardType);
 					if (cardType != null) {
 						if (cardType.equalsIgnoreCase("Credit")) {
 							cardType = "CC";
@@ -218,7 +219,7 @@ public class MolPayServlet extends HttpServlet {
 						} 
 					}
 					// #26307 end
-					
+					log.info("channel---------"+channel);
 					paymentOrder.setChannelName(channel);
 					smPaymentRes.setTransactionId(tranID);
 					smPaymentRes.setErrorCode(errorCode);
