@@ -1150,9 +1150,8 @@ public class SmBulkApplicationBackingBean extends
 			apprApplSecRev.setRecommendation(null);
 			apprApplSecRev.setRemarkToApprover(null);
 			apprApplSecRev.setPmRegStatus(null);
-			//#31043 start
 			apprApplSecRev.setSitevisitVerified(false);
-			//#31043 end
+			apprApplSecRev.setCreatedBy(SmCommonUtil.retrieveCreatedByChangeBy());
 			bulkAppl.setApprvrSecReview(apprApplSecRev);
 		}
 		bulkAppl.getAppl().getSmApplSectionReviews().add(bulkAppl.getApprvrSecReview());
