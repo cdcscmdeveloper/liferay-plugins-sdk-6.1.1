@@ -218,6 +218,11 @@ public class MolPayServlet extends HttpServlet {
 							channel="debit";
 						} 
 					}
+					//START THIS LINE OF CODE DO NOT MERGE TO PRODUCTION
+					if(cardType == null && channel != null && !"credit".equalsIgnoreCase(channel) && !"debit".equalsIgnoreCase(channel)){
+						channel = "FPX";
+					}
+					//END THIS LINE OF CODE DO NOT MERGE TO PRODUCTION
 					// #26307 end
 					log.info("channel---------"+channel);
 					paymentOrder.setChannelName(channel);
