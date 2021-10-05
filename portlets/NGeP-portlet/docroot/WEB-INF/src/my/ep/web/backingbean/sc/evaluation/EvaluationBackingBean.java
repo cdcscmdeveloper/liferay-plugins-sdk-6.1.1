@@ -9874,7 +9874,7 @@ private void retriveCommitteeRemarksList(){
 		} else if (SCProcessNameConst.FINALISE_TEC_EVALUATION
 				.equalsIgnoreCase(taskName)
 				|| SCProcessNameConst.UPDATE_TEC_EVALUATION
-						.equalsIgnoreCase(taskName) || SCProcessNameConst.VIEW_TEC_EVALUATION//#28748 - start
+						.equalsIgnoreCase(taskName) || SCProcessNameConst.VIEW_TEC_EVALUATION//#28784 - start
 						.equalsIgnoreCase(taskName) || SCProcessNameConst.FINALISE_DEMO_TEC_EVALUATION
 						.equalsIgnoreCase(taskName) || SCProcessNameConst.UPDATE_DEMO_TEC_EVALUATION
 						.equalsIgnoreCase(taskName) || SCProcessNameConst.VIEW_DEMO_TEC_EVALUATION
@@ -9914,7 +9914,7 @@ private void retriveCommitteeRemarksList(){
 						|| SCProcessNameConst.SIGNOFF_DEMO_TEC_EVALUATION
 						.equalsIgnoreCase(taskName)) {
 			afterDemoInv(true);
-			//#28748 - end
+			//#28784 - end
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
