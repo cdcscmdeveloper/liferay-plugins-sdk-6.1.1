@@ -82,9 +82,9 @@ public class ViewSuppProfileBackingBean extends
 			MofRegistrationResDTO resDTO = SmServiceLookup
 					.getMofRegistrationSO()
 					.retrieveLatestSmApplWithChildBySupplierId(reqDTO);
-			SLAUtils.getInstance().logSLASubInfo("SM","SP", sessionId,
+			SLAUtils.getInstance().logSLASubInfo("SM","SP", sessionId, "NULL",
 					"ViewSuppProfileBackingBean.preRenderViewSupplierProfile", "retrieveLatestSmApplWithChildBySupplierId", 
-					"NULL", subStartTime); //20211005@fadhli - #31754
+					subStartTime); //20211005@fadhli - #31754
 			String redirectToAppl = SmApplicationUtil.getApplicationErrorPage();
 
 			logger.info("[preRenderViewSupplierProfile] #31754 resDTO.getSmAppl(): " + resDTO.getSmAppl());
@@ -95,9 +95,9 @@ public class ViewSuppProfileBackingBean extends
 				if (applNo != null && StringUtils.isNotBlank(applNo)) {
 					subStartTime = System.currentTimeMillis();
 					viewApplication(resDTO.getSmAppl());
-					SLAUtils.getInstance().logSLASubInfo("SM","SP", sessionId,
+					SLAUtils.getInstance().logSLASubInfo("SM","SP", sessionId, applNo,
 							"ViewSuppProfileBackingBean.preRenderViewSupplierProfile", "viewApplication", 
-							applNo, subStartTime); //20211005@fadhli - #31754
+							subStartTime); //20211005@fadhli - #31754
 				} else {
 					SmCommonUtil.redirectToPage(redirectToAppl,
 							MessageConst.INFO_721212, null, null);
@@ -108,9 +108,9 @@ public class ViewSuppProfileBackingBean extends
 			}
 			subStartTime = System.currentTimeMillis();
 			setTabParam();
-			SLAUtils.getInstance().logSLASubInfo("SM","SP", sessionId,
+			SLAUtils.getInstance().logSLASubInfo("SM","SP", sessionId, "NULL",
 					"ViewSuppProfileBackingBean.preRenderViewSupplierProfile", "setTabParam", 
-					"NULL", subStartTime); //20211005@fadhli - #31754
+					subStartTime); //20211005@fadhli - #31754
 			SLAUtils.getInstance().logSLAInfo("SM","SP",
 					"ViewSuppProfileBackingBean.preRenderViewSupplierProfile", startTime);
 			getManagedBean().setRenderedBackButton(false);
@@ -138,24 +138,24 @@ public class ViewSuppProfileBackingBean extends
 		} else {
 			subStartTime = System.currentTimeMillis();
 			initLoginUserZone();
-			SLAUtils.getInstance().logSLASubInfo("SM","SP", sessionId,
+			SLAUtils.getInstance().logSLASubInfo("SM","SP", sessionId, "NULL",
 					"ViewSuppProfileBackingBean.preRenderViewSupplierProfile", "initLoginUserZone", 
-					"NULL", subStartTime); //20211005@fadhli - #31754
+					subStartTime); //20211005@fadhli - #31754
 			getManagedBean().setRenderedBackButton(true);
 			String supplierIdParam = getSupplierIdParam();
 			subStartTime = System.currentTimeMillis();
 			getManagedBean().setRegStatusDescList(
 					retrieveRegistrationStatusList());
-			SLAUtils.getInstance().logSLASubInfo("SM","SP", sessionId,
+			SLAUtils.getInstance().logSLASubInfo("SM","SP", sessionId, "NULL",
 					"ViewSuppProfileBackingBean.preRenderViewSupplierProfile", "retrieveRegistrationStatusList", 
-					"NULL", subStartTime); //20211005@fadhli - #31754
+					subStartTime); //20211005@fadhli - #31754
 			subStartTime = System.currentTimeMillis();
 			getManagedBean().setZoneList(
 					SmServiceLookup.getZoneSO().retrieveActiveZoneList()
 							.getZoneList());
-			SLAUtils.getInstance().logSLASubInfo("SM","SP", sessionId,
+			SLAUtils.getInstance().logSLASubInfo("SM","SP", sessionId, "NULL",
 					"ViewSuppProfileBackingBean.preRenderViewSupplierProfile", "retrieveActiveZoneList", 
-					"NULL", subStartTime); //20211005@fadhli - #31754
+					subStartTime); //20211005@fadhli - #31754
 			logger.info("[preRenderViewSupplierProfile] #31754 supplierIdParam: " + supplierIdParam);
 			if (StringUtils.isNotBlank(supplierIdParam)) {
 				getManagedBean().setRenderedBackButton(false);
@@ -164,8 +164,8 @@ public class ViewSuppProfileBackingBean extends
 						.getLatestApplBySupplierId(Long
 								.parseLong(supplierIdParam)));
 				SLAUtils.getInstance().logSLASubInfo("SM","SP", sessionId,
+						SmApplicationUtil.getLatestApplBySupplierId(Long.valueOf(supplierIdParam)).getApplNo(),
 						"ViewSuppProfileBackingBean.preRenderViewSupplierProfile", "viewApplication", 
-						SmApplicationUtil.getLatestApplBySupplierId(Long.valueOf(supplierIdParam)).getApplNo(), 
 						subStartTime); //20211005@fadhli - #31754
 				//LOG : 26549 : SLA Monitoring
 				SLAUtils.getInstance().logSLAInfo("SM","SP",
