@@ -14113,18 +14113,16 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		return QTConstants.SPEC_MAINTENANCE;
 	}
 	
-	private void setTechnicalSpecEnableDisable(){
-		if(this.getManagedBean().getSpecMaintenanceScreen().equals(getSpecMaintenance())){
-			if(!this.getManagedBean().isReadOnly()){
-			this.getManagedBean().setSpecNewable(false);
-			this.getManagedBean().setUpdateSpec(true);
-			}
-			else{
+	private void setTechnicalSpecEnableDisable() {
+		if (this.getManagedBean().getSpecMaintenanceScreen().equals(getSpecMaintenance())) {
+			if (!this.getManagedBean().isReadOnly()) {
+				this.getManagedBean().setSpecNewable(true); // #15391
+				this.getManagedBean().setUpdateSpec(true);
+			} else {
 				this.getManagedBean().setSpecNewable(false);
-				this.getManagedBean().setUpdateSpec(false);	
+				this.getManagedBean().setUpdateSpec(false);
 			}
-			}
-			
+		}
 	}
 	
 	/**
@@ -14172,6 +14170,29 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		ScQt scQt=this.getManagedBean().getQt();
 		loadPrepareSpecCommitteeMaintenanceDetails(scQt.getQtId());
 		SpecificationReqDTO spReqDTO = constructSpecCommitteDtls();
+		
+		//#15391 - start
+		List<ScQtCheckList> checklistRemoveList = getToBeRemoveList();
+		
+		if (null != checklistRemoveList && !checklistRemoveList.isEmpty()) {
+			for (int i = 0; i < checklistRemoveList.size(); i++) {
+				if (null == checklistRemoveList.get(i).getQtChecklistId()) {
+					checklistRemoveList.remove(i);
+				}
+			}
+		} 
+		
+		List<ScQtDeliveryLoc> deliveryRemoveList = this.getManagedBean().getDeliveryLocRemoveList();
+		
+		if (null != deliveryRemoveList && !deliveryRemoveList.isEmpty()) {
+			for (int i = 0; i < deliveryRemoveList.size(); i++) {
+				if (null == deliveryRemoveList.get(i).getQtDeliveryLocId()) {
+					deliveryRemoveList.remove(i);
+				}
+			}
+		}
+		//#15391 - end
+		
 		spReqDTO.setOutcome(action);
 		
 		signoffCommitteeActivity(spReqDTO, action);
@@ -14182,6 +14203,10 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					scQt.getQtNo());
 		}
 		
+		//#15391 - start
+		spReqDTO.setTobeRemoveList(checklistRemoveList);
+		spReqDTO.setTobeRemoveDeliveryLocs(deliveryRemoveList);
+		//#15391 - end
 		spReqDTO.setDigiSignData(digiSign);
 		spReqDTO.setTaskId(this.getManagedBean().getTaskId());
 		spReqDTO.setPayLoad(this.getManagedBean().getPayLoad());
@@ -14355,6 +14380,31 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
     	  log.debug("spec maintenance status id==="+this.getManagedBean().getSpecMaintenanceWorkFlowStatus().getPmStatus().getStatusId());
     	  this.getManagedBean().setCurrentStatusId(this.getManagedBean().getSpecMaintenanceWorkFlowStatus().getPmStatus().getStatusId());
       }
+      
+		//#15391 - start
+		if(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(scQt.getQtStatus().getStatusId()) 
+				|| QTStatusConst.QT_REVISION_PUBLICATION.equals(scQt.getQtStatus().getStatusId())){
+			this.getManagedBean().setGenInfo(true);
+			
+			if(QTStatusConst.SE_PENDING_ENDORSMENT.equals(this.getManagedBean().getCurrentStatusId())
+					|| QTStatusConst.SE_PENDING_SIGNOFF.equals(this.getManagedBean().getCurrentStatusId())) {
+				this.getManagedBean().setGenInfo(false);
+			}
+		}
+		
+		if((QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(scQt.getQtStatus().getStatusId())) 
+				|| (QTStatusConst.QT_REVISION_PUBLICATION.equals(scQt.getQtStatus().getStatusId()))
+				|| (QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL.equals(scQt.getQtStatus().getStatusId()))
+				|| (QTStatusConst.QT_PENDING_PUBLICATION_REVISION_APPROVAL.equals(scQt.getQtStatus().getStatusId()))){
+			this.getManagedBean().setChecklist(true);
+			
+			if(QTStatusConst.SE_PENDING_ENDORSMENT.equals(this.getManagedBean().getCurrentStatusId())
+					|| QTStatusConst.SE_PENDING_SIGNOFF.equals(this.getManagedBean().getCurrentStatusId())) {
+				this.getManagedBean().setChecklist(false);
+			}
+		}
+		//#15391 - end
+		
       committeSO =null;   
 		this.getManagedBean().setLoginRoleType("SC");
 		
@@ -14395,8 +14445,34 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						.equalsIgnoreCase(
 								ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
 			this.getManagedBean().setLocalOutCome(action);
-			getManagedBean().setAutoUpdate(false);	
-			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+
+			//#15391 - start
+			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
+				retriveCommitteeEndorsment();
+				
+				List<ScQtSpecificationRemark> remarks = this.getManagedBean().getSpecificationRemarks();
+				
+				if (null != remarks) {
+					for (int i = 0; i < remarks.size(); i++) {
+						ScQtSpecificationRemark Remark = remarks.get(0);
+						String userRemark = remarks.get(i).getRemark();
+						
+						if (null == userRemark || "".equals(userRemark)) {
+							throw new EpException(MessageConst.ERROR_100022,
+									new String[] { ResourceBundleUtils.getMessage(
+												    "lbl.sc.remarks",
+												    ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+												    new FacesScopes().getUserLocale()) });
+						}
+					}
+				}
+				
+				RequestContext.getCurrentInstance().execute("revicespecMaintenanceEndorsmentDlgs.show()");
+			} else {
+				getManagedBean().setAutoUpdate(false);
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			}
+			//#15391 - end
 
 		}else{
 			this.getManagedBean().setLocalOutCome(action);
@@ -14540,6 +14616,28 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		loadPrepareSpecCommitteeMaintenanceDetails(scQt.getQtId());
 		SpecificationReqDTO spReqDTO = constructSpecCommitteDtls();
 		spReqDTO.setOutcome(action);
+
+		//#15391 - start
+		List<ScQtCheckList> checklistRemoveList = getToBeRemoveList();
+		
+		if (null != checklistRemoveList && !checklistRemoveList.isEmpty()) {
+			for (int i = 0; i < checklistRemoveList.size(); i++) {
+				if (null == checklistRemoveList.get(i).getQtChecklistId()) {
+					checklistRemoveList.remove(i);
+				}
+			}
+		}
+		
+		List<ScQtDeliveryLoc> deliveryRemoveList = this.getManagedBean().getDeliveryLocRemoveList();
+		
+		if (null != deliveryRemoveList && !deliveryRemoveList.isEmpty()) {
+			for (int i = 0; i < deliveryRemoveList.size(); i++) {
+				if (null == deliveryRemoveList.get(i).getQtDeliveryLocId()) {
+					deliveryRemoveList.remove(i);
+				}
+			}
+		}
+		//#15391 - end
 	
 		signoffCommitteeActivity(spReqDTO,action);
 		if (null != digiSign) {
@@ -14547,7 +14645,11 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, scQt.getQtId(),
 					scQt.getQtNo());
 		}
-		
+
+		//#15391 - start
+		spReqDTO.setTobeRemoveList(checklistRemoveList);
+		spReqDTO.setTobeRemoveDeliveryLocs(deliveryRemoveList);
+		//#15391 - end
 		spReqDTO.setDigiSignData(digiSign);
 		spReqDTO.setTaskId(this.getManagedBean().getTaskId());
 		spReqDTO.setPayLoad(this.getManagedBean().getPayLoad());
