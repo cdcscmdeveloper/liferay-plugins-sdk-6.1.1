@@ -2919,13 +2919,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 				if(outputValue.equalsIgnoreCase("PB") && getManagedBean().isPbConfirmMeeting()){
 					if ( ctBackingBean.getManagedBean().getContractVer().getCtDeductions()!= null
-							&& ctBackingBean.getManagedBean().getContractVer().getCtDeductions().size() > 0){
+							&& ctBackingBean.getManagedBean().getContractVer().getCtDeductions().size() > 0
+							&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()){
 								getManagedBean().setSelectedTabIndex(index + 3);					
 							}else{
 								getManagedBean().setSelectedTabIndex(index + 2);
 							}
 						}
-				//#31361,#24333 - End				
+				//#31361, #24333 - End				
 				
 				//#29549 start
 				if ((getManagedBean().isSignUpdateDecision() || getManagedBean().isSignOffDecision() 
@@ -2948,9 +2949,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
                     }else if (getManagedBean().isPbConfirmMeeting() && ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()
                             && ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted() ) {
                         getManagedBean().setSelectedTabIndex(index + 2);
-                    }else if (getManagedBean().isPbConfirmMeeting() && ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq() //#31361,#24333 
+                    }else if (getManagedBean().isPbConfirmMeeting() && ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq() //#31361 ,#24333 
                     		&& ( ctBackingBean.getManagedBean().getContractVer().getCtDeductions()!= null
-    						&& ctBackingBean.getManagedBean().getContractVer().getCtDeductions().size() > 0)) {
+    						&& ctBackingBean.getManagedBean().getContractVer().getCtDeductions().size() > 0)
+    						&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()) {
                     	getManagedBean().setSelectedTabIndex(index + 4);                   	
                     }else if (getManagedBean().isPbConfirmMeeting() && ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()) {
                         getManagedBean().setSelectedTabIndex(index + 3);
