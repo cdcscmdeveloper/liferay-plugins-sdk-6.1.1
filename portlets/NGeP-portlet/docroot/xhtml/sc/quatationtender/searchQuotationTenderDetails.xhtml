@@ -82,10 +82,13 @@
 					<h:outputLabel value="#{lbl['lbl.sc.document.type']}" />
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
-					<td><p:selectOneMenu
+				<td>
+					<!-- 15391 -start- -->
+					<p:selectOneMenu
 							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.docType}"
-							style="width: 297px;margin-bottom: 5px;"
+							style="width: 297px;margin-bottom: 5px;" disabled="#{specMaintenanceBB.isSpecCommittee()}"
 							label="#{lbl['lbl.sc.document.type']}" required="true">
+					<!-- 15391 -end- -->	
 							<f:selectItems
 								value="#{qTDetailBB.getDocTypeQtLOADropdownValues()}" />
 								<p:ajax update="@form" process="@this"/>

@@ -571,8 +571,10 @@
 				<td><p:outputLabel value=" #{lbl['lbl.sc.fullfillent.type']}" />
 					<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel></td>
 				<td><c:choose>
+						<!-- 15391 -start- -->
 						<c:when
-							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_FULFILMENT_TYPE) and !isReadOnly}">
+							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_FULFILMENT_TYPE) and !isReadOnly or isGenInfo}">
+						<!-- 15391 -end- -->
 							<p:selectOneMenu required="true" id="fulfilId"
 								disabled="#{scQt.contractType ne null and scQt.contractType.parameterCode eq 'CC'}"
 								label="#{lbl['lbl.sc.fullfillent.type']}"
@@ -586,9 +588,23 @@
 							<p:message id="fulfilType" for="fulfilId" display="icon" />
 						</c:when>
 						<c:otherwise>
-							<p:inputText id="fulfilTypeTxt"
+							<!-- 15391 -start- -->
+							<p:inputText id="fulfilTypeTxt" rendered="#{!specificationBackingBean.managedBean.isGenInfo()}"
 								value="#{createQtBB.getParameterDesc(scQt.fulfilmentType)}"
 								style="width:195px;" disabled="true" />
+							<p:selectOneMenu required="#{empty param['skipvalidation']}"
+								id="fulfilId" rendered="#{specificationBackingBean.managedBean.isGenInfo()}"
+								disabled="#{scQt.contractType ne null and scQt.contractType.parameterCode eq 'CC'}"
+								label="#{lbl['lbl.sc.fullfillent.type']}"
+								value="#{scQt.fulfilmentType.parameterId}"
+								style="width: 205px;margin-bottom: 5px;">
+								<f:selectItems
+									value="#{createQtBB.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
+								<p:ajax event="change" process="@this" partialSubmit="true"
+									update="@form" listener="#{createQtBB.fulfilmentChange}"></p:ajax>
+							</p:selectOneMenu>
+							<p:message id="fulfilType" for="fulfilId" display="icon" />
+							<!-- 15391 -end- -->
 						</c:otherwise>
 					</c:choose></td>
 				<td style="white-space: nowrap;"><p:outputLabel
@@ -598,8 +614,10 @@
 				</td>
 				<td>
 					<c:choose>
+						<!-- 15391 -start- -->
 						<c:when
-							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_CONTRACT_DURATION) and !isReadOnly}">
+							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_CONTRACT_DURATION) and !isReadOnly or isGenInfo}">
+						<!-- 15391 -end- -->
 							<p:inputText id="contractBo" maxlength="3"
 								label="#{lbl['lbl.sc.spec.complete.period']}"
 								value="#{scQt.contractDuration}"
@@ -610,12 +628,22 @@
 							<p:message id="completionBo" for="contractBo" display="icon"></p:message>
 						</c:when>
 						<c:otherwise>
+							<!-- 15391 -start- -->
 							<p:inputText label="#{lbl['lbl.sc.spec.complete.period']}"
-								value="#{scQt.contractDuration}"
+								value="#{scQt.contractDuration}" rendered="#{!specificationBackingBean.managedBean.isGenInfo()}"
 								style="text-align:right;margin-bottom:5px; width:200px;"
 								required="#{qtStatusChecklistScoring or qtStatusAfterChecklistScoring}"
 								disabled="true">
 							</p:inputText>
+							<p:inputText id="contractBo" maxlength="3"
+								label="#{lbl['lbl.sc.spec.complete.period']}"
+								value="#{scQt.contractDuration}" rendered="#{specificationBackingBean.managedBean.isGenInfo()}"
+								style="text-align:right;margin-bottom:5px; width:200px;"
+								required="#{qtStatusChecklistScoring or qtStatusAfterChecklistScoring}">
+								<p:ajax event="change" process="@this" partialSubmit="true"
+									update="@this" />
+							</p:inputText>
+							<!-- 15391 -end- -->
 						</c:otherwise>
 					</c:choose> 
 				</td>
