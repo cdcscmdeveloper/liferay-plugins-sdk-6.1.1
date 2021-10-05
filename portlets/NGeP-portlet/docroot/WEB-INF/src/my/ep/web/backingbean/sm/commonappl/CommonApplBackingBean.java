@@ -11,6 +11,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
@@ -80,11 +81,15 @@ public class CommonApplBackingBean extends
 	public boolean isPoSdoUser = false;
 
 	public void preRenderView() {
+		 //20211005@fadhli - #31754
+		String sessionId = ((PortletRequest) FacesContext.getCurrentInstance()
+				.getExternalContext().getRequest()).getRequestedSessionId(); 
 		try{
 			
 		
 		//LOG : 26549 : SLA Monitoring
 		long startTime = System.currentTimeMillis();
+		long subStartTime = 0L;
 		log.info("-------ComAppl prerender view-------");
 		HttpServletRequest servletRequest = PortalUtil
 				.getHttpServletRequest(new FacesScopes().getRequest());
@@ -369,6 +374,7 @@ public class CommonApplBackingBean extends
 				setNavigationForSmDecision(appl.getApplType(), smApplBB);
 			} else if (resDTO.getProcessName().equalsIgnoreCase(
 					SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION)) {
+				long processNameMofSuppRegisStartTime = System.currentTimeMillis(); //20211005@fadhli - #31754
 				SMMOFRegDataType smObj = (SMMOFRegDataType) resDTO.getPojo();
 				// TODO Remove this code and get the applicationType From DB
 				log.info(" *** DOCUMENT NUMBER  FROM THE BPM IS ******"
@@ -378,7 +384,11 @@ public class CommonApplBackingBean extends
 				log.info(" *** DOCUMENT ID FROM THE BPM IS ******"
 						+ smObj.getDocumentId());
 				MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
+				subStartTime = System.currentTimeMillis(); //20211005@fadhli - #31754
 				mofResDto = retriveApplicationById(smObj.getDocumentId());
+				SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "NULL",
+						"CommonApplBackingBean.preRenderView", "retriveApplicationById", 
+						subStartTime); //20211005@fadhli - #31754
 				SmAppl appl = mofResDto.getSmAppl();
 				log.info("********Review Application Escalted for new mof********");
 				log.info("********getTaskId********" + taskId);
@@ -393,6 +403,7 @@ public class CommonApplBackingBean extends
 				String currentStatus = bpmBean.applicationStatus(resDTO
 						.getDocStatus());
 				smApplBB.getManagedBean().setCurrentStatus(currentStatus);
+				log.info("[preRenderView] #31754 resDTO.getTaskName(): " + resDTO.getTaskName());
 				if (resDTO.getTaskName().equalsIgnoreCase(
 						SMProcessNameConst.REVIEW_APPL)
 						|| resDTO.getTaskName().equalsIgnoreCase(
@@ -435,10 +446,15 @@ public class CommonApplBackingBean extends
 				}
 				log.info("mofResDto.getSmSupplier()>>>"
 						+ mofResDto.getSmSupplier());
+				subStartTime = System.currentTimeMillis(); //20211005@fadhli - #31754
 				smApplBB.proceedToApplication(appl.getApplType(), Boolean.TRUE,
 						appl, mofResDto.getSmSupplier());
+				SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+						"CommonApplBackingBean.preRenderView", "proceedToApplication", 
+						subStartTime); //20211005@fadhli - #31754
 
 				smApplBB.getManagedBean().setBpmTaskName(resDTO.getTaskName());
+				log.info("[preRenderView] #31754 smObj.getSupplierList(): " + smObj.getSupplierList());
 				if (smObj.getSupplierList() != null) {
 					smApplBB.getManagedBean().setSupplierToPOList(
 							smObj.getSupplierList());
@@ -446,6 +462,9 @@ public class CommonApplBackingBean extends
 				smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
 				smApplBB.getManagedBean().setTaskId(taskId);
 				smApplBB.getManagedBean().setClaimTask(isClaim);
+				SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "NULL",
+						"CommonApplBackingBean.preRenderView", "SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION", 
+						processNameMofSuppRegisStartTime); //20211005@fadhli - #31754
 				//LOG : 26549 : SLA Monitoring
 				SLAUtils.getInstance().logSLAInfo("SM","VA",
 						"CommonApplBackingBean.preRenderView", startTime);
