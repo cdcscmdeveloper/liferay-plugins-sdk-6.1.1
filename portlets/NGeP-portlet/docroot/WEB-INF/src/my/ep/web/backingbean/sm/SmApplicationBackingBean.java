@@ -3770,7 +3770,7 @@ public class SmApplicationBackingBean extends
 
 		if (validSave && !StringUtils.isBlank(currentPageType)) {
 			if (currentPageType
-					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
+					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY) && !getManagedBean().isDisAllowOwnerEdit() ) {//31461
 				validSave = SmApplicationUtil.validateEquityOwnerCount(
 						getManagedBean(), currentTab, currentPageType);
 				if (validSave) {
