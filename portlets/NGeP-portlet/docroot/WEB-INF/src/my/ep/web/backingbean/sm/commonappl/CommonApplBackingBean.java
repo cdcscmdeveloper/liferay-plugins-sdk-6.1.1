@@ -100,7 +100,11 @@ public class CommonApplBackingBean extends
 				.getParameter("claim"));
 		SdoReviewReqDTO reqDTO = new SdoReviewReqDTO();
 
+		subStartTime = System.currentTimeMillis();
 		Object token = new FacesScopes().getBPMAuthenticationCtxToken();
+		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "NULL",
+				"CommonApplBackingBean.preRenderView", "getBPMAuthenticationCtxToken", 
+				subStartTime); //20211005@fadhli - #31754
 
 		reqDTO.setTaskId(taskId);
 		reqDTO.setToken(token);
@@ -108,9 +112,13 @@ public class CommonApplBackingBean extends
 
 		ISdoReviewSO reqSO = (ISdoReviewSO) BusinessDelegate.getInstance()
 				.getServiceObject("sm", ISdoReviewSO.class);
-
+		
+		subStartTime = System.currentTimeMillis();
 		BpmResponseDTO resDTO = (BpmResponseDTO) reqSO
 				.getBPMTaskDetails(reqDTO);
+		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "NULL",
+				"CommonApplBackingBean.preRenderView", "getBPMTaskDetails", 
+				subStartTime); //20211005@fadhli - #31754
 
 		this.getManagedBean().setTaskName(resDTO.getTaskName());
 
