@@ -1360,7 +1360,13 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setSpecItemWeightageRequired(
 						istechnicalSpec);
 				boolean weightageType = retriveExistingTemplatespec(technicalCheckList);
-				specMaster.setWeightageReq(weightageType);
+
+				// #8979-start
+				if (istechnicalSpec) {
+					specMaster.setWeightageReq(weightageType);
+				}
+				// #8979-End
+
 				templateSpecBean.setSpecMaster(specMaster);
 				TemplateSpecBackingBean templateSpecBackingbean = new TemplateSpecBackingBean();
 				templateSpecBackingbean
@@ -9392,8 +9398,15 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		ScCommitteeMember member = resDTO.getCommMember();
 		if (null != member) {
 
+			//danial #8979 17/12/2020 -start-
 			if (member.getMemberRole().getParameterCode()
-					.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
+                    .equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)||
+                member.getMemberRole().getParameterCode()
+                    .equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_MEMBER)||
+                member.getMemberRole().getParameterCode()
+                        .equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)
+                    ) {
+			//danial #8979 17/12/2020 -end-
 				this.getManagedBean().setReadOnly(false);
 
 			} else {
@@ -12070,7 +12083,13 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				this.getManagedBean().setSpecItemWeightageRequired(
 						istechnicalSpec);
 				boolean weightageType = retriveExistingTemplatespec(technicalCheckList);
-				specMaster.setWeightageReq(weightageType);
+
+				//#8979-start
+				if (istechnicalSpec) {
+					specMaster.setWeightageReq(weightageType);
+				}
+				//#8979-End
+
 				templateSpecBean.setSpecMaster(specMaster);
 				TemplateSpecBackingBean templateSpecBackingbean = new TemplateSpecBackingBean();
 				templateSpecBackingbean
