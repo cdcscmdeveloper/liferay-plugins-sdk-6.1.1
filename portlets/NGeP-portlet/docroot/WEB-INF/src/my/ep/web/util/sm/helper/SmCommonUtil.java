@@ -58,6 +58,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.businessnature.IBusinessNatureSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
@@ -6225,4 +6226,36 @@ public class SmCommonUtil {
 			}
 		}
 		//13320-End
+		
+		/**
+		 * Retrieve pm user for use in created by and changed by.
+		 * 
+		 * @param paramType
+		 *            -String param type
+		 * @param lang
+		 *            -String lang
+		 * @return List<PmParameterDesc>
+		 */
+		//START 30974
+		public static long retrieveCreatedByChangeBy(){
+			LogKey userLoginId; 
+			PmUser currentUser; 
+			FacesScopes facesScopes = new FacesScopes();
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setLoginId(facesScopes.getUserScreenName());
+			currentUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
+			if (currentUser == null) {
+				PmUser tmp = new FacesScopes().getUserSessionBean();
+				if (tmp != null && tmp.getUserId() != null) {
+					userLoginId = new LogKey(tmp.getUserId());
+				} else {
+					userLoginId = new LogKey(1L);
+				}
+			}else{
+				userLoginId = new LogKey(currentUser.getUserId());
+			}
+			return userLoginId.getUserId();
+		}
+		//END 30974
 }
