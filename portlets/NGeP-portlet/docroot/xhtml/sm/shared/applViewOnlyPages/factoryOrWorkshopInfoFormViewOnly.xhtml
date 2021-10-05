@@ -25,9 +25,7 @@
 					<tr>
 						<td style="white-space: nowrap; float: left;" >
 						    <p:outputLabel style="text-indent: 10px;" value="#{lbl['lbl.sm.catCodes.othDesc']}: #{categoryVar.otherDesc}" 
-						    rendered="#{categoryVar.pmCategoryL3.categoryL3Code eq SupplierManagementConst.CATEGORY_CODE_L3_99 and factoryCatVar.categoryL3Code eq SupplierManagementConst.CATEGORY_CODE_L3_99
-						    and categoryVar.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS
-						    and categoryVar.pmCategoryL3.categoryL3Id eq factoryCatVar.categoryL3Id}"/>
+						    rendered="#{categoryVar.otherDesc != null and categoryVar.pmCategoryL3.categoryL3Id eq factoryCatVar.categoryL3Id}"/>
 						</td>
 					</tr>
 					</ui:repeat>
