@@ -146,7 +146,8 @@
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="equiPerIdenType" required="true"
 						label="#{lbl['lbl.sm.identificationtype']}"
-						disabled="#{backingBean.managedBean.selectedShareHolder.pmCountry.countryCode eq 'MY'}"
+						disabled="#{backingBean.managedBean.selectedShareHolder.pmCountry.countryCode eq 'MY' 
+						or backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'PR'}"
 						value="#{backingBean.managedBean.selectedShareHolder.identificationTypeId}"
 						style="width:200px">
 						<f:selectItems
