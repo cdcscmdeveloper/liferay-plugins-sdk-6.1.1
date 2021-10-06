@@ -8296,6 +8296,42 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					}
 				}
 			}
+			
+			//#31869 - start
+			if(getManagedBean().getSelectedItemId() == scLoiLoaItem.getLoiLoaItemId()){
+				ScRequestItem requestItem = scLoiLoaItem.getScRequestItem();
+				RequestItemReqDTO itemReqDTO = new RequestItemReqDTO();
+				itemReqDTO.setRequestItemId(requestItem.getRequestNoteItemId());							
+				ScRequestItem selectedRequestItem = getRequestItemSO().retrieveItemByRequestItemId(itemReqDTO).getRequestItem();
+				
+				TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
+				specReqDTO.setSpecQuestionId(selectedRequestItem.getTplSpecQuestion().getSpecQuestionId());
+				TemplateSpecResDTO specResDTO = templateSpecSO.retrieveSpecAnswersByQuestionId(specReqDTO);
+				
+				List<String> nsoJustList = new ArrayList<String>();
+				if(specResDTO.getSpecAnswerList().size() > 0){
+					for(TplSpecAnswer tplSpecAnswer : specResDTO.getSpecAnswerList()){
+						if (tplSpecAnswer.getNewSupplierOffer() != null
+								&& tplSpecAnswer.getNewSupplierOffer().trim().length() > 0
+								&& StringUtils.isNotBlank(tplSpecAnswer.getNewSupplierOffer())) {							
+							nsoJustList.add("NSO_" + tplSpecAnswer.getNewSupplierOffer());
+							nsoJustList.add("NSOJ_" + scLoiLoaItem.getLoaSpecJustification());							
+							break;
+						}
+					}
+				}
+				
+				if(!nsoJustList.isEmpty()){
+					if (MapUtils.isEmpty(getManagedBean().getScRequestItemIdNewSuppOfferAndJustMap())) {
+						getManagedBean().setScRequestItemIdNewSuppOfferAndJustMap(new HashMap<Long, List<String>>());
+					}
+					
+					getManagedBean().getScRequestItemIdNewSuppOfferAndJustMap().put(
+							requestItem.getRequestNoteItemId(), nsoJustList);
+				}
+			}
+			//#31869 - end
+			
 			// Populate New SUpplier Offered and Justification fields for
 			// selcted item
 			if (MapUtils.isEmpty(getManagedBean().getScRequestItemIdNewSuppOfferAndJustMap())) {
