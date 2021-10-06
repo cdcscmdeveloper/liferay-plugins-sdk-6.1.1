@@ -208,6 +208,12 @@ public class SmSideMenuIconUtil {
 						bean.getSupplierAppl(), bean.getDowngradeMofAcc())) {
 					bean.getEditVO().setSuppEditPersonnel(true);
 				}
+				//to check server side value ser file
+				if(bean.getSupplierAppl().getSmPersonnels().size()>0){
+					log.info("--------------------------------------------------------------SM PERSONNEL IDENTITY RESIDENT STATUS--");
+					log.info("-----"+bean.getSupplierAppl().getSmPersonnels().get(0).getIdentityResidentStatus()+"-----");
+				}
+				
 				if (step3PersonnelHasDifference(false, bean.getSupplierAppl(),
 						bean.getSmAppl(), bean.getDowngradeMofAcc())) {
 					bean.getEditVO().setPoEditPersonnel(true);
