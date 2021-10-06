@@ -123,9 +123,9 @@
 			<h:outputText style="width:24%;white-space: normal;" value="#{(spec.answerRemark ne null) ? spec.answerRemark : 'N/A'}" />
 		</p:column>
 		<p:column style="width:40%; text-align: center;">
-			<p:inputTextarea id="newOfferedSpec" label="#{lbl['lbl.sc.loiloa.newoffered.specification']}" style="width:calc(100% - 15px);" value="#{spec.newSupplierOffer}" 
-				disabled="#{directLOABackingBean.managedBean.supPropSpecDisable}" rows="1"  onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
-				rendered="#{spec.renderNewSpec}"
+			<p:inputTextarea id="newOfferedSpec" label="#{lbl['lbl.sc.loiloa.newoffered.specification']}" style="width:calc(100% - 30px);" value="#{spec.newSupplierOffer}" 
+				disabled="#{directLOABackingBean.managedBean.supPropSpecDisable}" rows="5"  onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
+				rendered="#{spec.renderNewSpec}" autoResize="false"
 				onmouseout="limitTextArea(this,1000);">
 			<p:ajax event="change" process="@this" update="@this" />
 			<f:validateLength for="newOfferedSpec" maximum="1000" />
