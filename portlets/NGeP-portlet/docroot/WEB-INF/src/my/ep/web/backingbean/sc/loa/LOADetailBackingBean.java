@@ -837,6 +837,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			getManagedBean().setDownloadedLoaReportsTitleList(new ArrayList<String>());
 			// #29006 - end
 			
+			// #31869 - start
+			if (!ParameterConst.DOCTYPE_QUOTATION.equals(this.getManagedBean().getScLoa().getScLoiLoa().getDocType())) {
+				if(tplSpecContainsNewOffer()){
+					createLampiranA3(null);
+				}				
+			}
+			// #31869 - end			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
 			.handleNavigation(fc, null, QTConstants.LOA_PAGE);
@@ -9753,5 +9760,33 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 	}
 	//27797 & 29006 end
+	
+	//#31869 - start
+	public boolean tplSpecContainsNewOffer() {
+		Boolean containsNewOffer = false;
+
+		ITemplateSpecSO templateSpecSO = (ITemplateSpecSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
+
+		for (ScLoiLoaItem scLoiLoaItem : getManagedBean().getScLoa().getScLoiLoaItems()) {
+			List<TplSpecAnswer> tplSpecAnswerList = templateSpecSO.findSpecAnswersByQuestion(scLoiLoaItem
+					.getScRequestItem().getTplSpecQuestion().getSpecQuestionId());
+
+			for (TplSpecAnswer tplSpecAnswer : tplSpecAnswerList) {
+				if (tplSpecAnswer.getNewSupplierOffer() != null
+						&& tplSpecAnswer.getNewSupplierOffer().trim().length() > 0
+						&& StringUtils.isNotBlank(tplSpecAnswer.getNewSupplierOffer())) {
+					containsNewOffer = true;
+					break;
+				}
+			}
+			
+			if(containsNewOffer)
+				break;
+		}
+		return containsNewOffer;
+	}
+	//#31869 - end
+	
 }
 
