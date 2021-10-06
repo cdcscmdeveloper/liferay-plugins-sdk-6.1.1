@@ -402,7 +402,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			getManagedBean().setUpdateSupplierInstructionFlag(false);
 		}
 		
-		removeUnwantedLampiranA3Report(1);
+		//#31869 - start (comment out removeUnwantedLampiranA3Report)
+		//removeUnwantedLampiranA3Report(1);
+		//#31869 - end
 		//#29006 - end
 		//#29007 Start Vinod
 		if (Arrays.asList(QTStatusConst.LOA_PENDING_SUBMISSION,QTStatusConst.LOA_PENDING_VERIFICATION,QTStatusConst.LOA_PENDING_APPROVAL,QTStatusConst.LOA_PENDING_REVISION,QTStatusConst.LOA_PENDING_REVISION_APPROVAL).contains(scLoa.getPmStatus().getStatusId())) {//29007
@@ -833,7 +835,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			getQtProposalValidExpiredMessage(getManagedBean().getScQt());	
 			
 			// #29006 - start
-			removeUnwantedLampiranA3Report(1);
+			//#31869 - start (comment out removeUnwantedLampiranA3Report)
+			//removeUnwantedLampiranA3Report(1);
+			//#31869 - end
 			getManagedBean().setDownloadedLoaReportsTitleList(new ArrayList<String>());
 			// #29006 - end
 			
@@ -8686,7 +8690,20 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		try {
 			StringBuilder filename = new StringBuilder();
 			filename.append(lampiranA3.getTitle());
-			lampiranA3.setScLoaReportAttachment(new ScLoaReportAttachment());
+			//#31869 - start
+			//lampiranA3.setScLoaReportAttachment(new ScLoaReportAttachment());
+			Date today = new Date(); 
+			Calendar cal = Calendar.getInstance(); 
+			cal.setTime(today);
+			int year = cal.get(Calendar.YEAR); 		
+			
+			ScLoaReportAttachment scLoaReportAttachment = new ScLoaReportAttachment();
+			AttachmentFormat scFormat = new AttachmentDateFormat();
+			String formatedFileName = scFormat.format(filename.toString().replaceAll("/",""), null);
+			scLoaReportAttachment.setFilePath(Integer.toString(year)+"/SC/"+lampiranA3.getScLoa().getLoaNo()+"/LAR/"+formatedFileName);
+			
+			lampiranA3.setScLoaReportAttachment(scLoaReportAttachment);
+			//#31869 - end
 			lampiranA3.getScLoaReportAttachment().setScLoaReport(lampiranA3);
 			lampiranA3.getScLoaReportAttachment().setDocNo(lampiranA3.getScLoa().getLoaNo());
 			filename.append(".pdf");
@@ -8698,6 +8715,19 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		
 		getManagedBean().getScLoa().getScLoaReports().add(lampiranA3);
+		//#31869 - start
+		AwardSupplierReqDTO finalAwardReqDTO = new AwardSupplierReqDTO();
+		
+		if(null!=this.getManagedBean().getScLoa() && !this.getManagedBean().getScLoa().isBrandNew()){
+			finalAwardReqDTO.setScLoa(getManagedBean().getScLoa());
+		
+			AwardSupplierResDTO resDTO  = getQtAwardSO().saveLampiranA3Report(finalAwardReqDTO);
+			List<ScLoaReport> scLoaReports = resDTO.getScLoa().getScLoaReports();
+			ScLoa scLoa = getManagedBean().getScLoa();
+			scLoa.setScLoaReports(scLoaReports);
+			getManagedBean().setScLoa(scLoa);
+		}
+		//#31869 - end
 	}
 
 	private void generateUpdatedLampiranA3FromVelocity(ScAttachment attachment, ScLoa scLoa, ScQt scQt)
@@ -8870,13 +8900,24 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				if (StringUtils.isNotBlank(report.getTitle())) {
 					if ((mode == 1) && report.getTitle().contains(lampiranA3SubStr)
 							&& report.getTitle().contains("<date update> <Desk Officer Name>")) {
+						report.setDeleted(true); //#31869
 						oldLampiranA3List.add(report);
 					} else if ((mode == 2) && report.getTitle().contains(lampiranA3SubStr)) {
+						report.setDeleted(true); //#31869
 						oldLampiranA3List.add(report);
 					}
 				}
 			}
 			getManagedBean().getScLoa().getScLoaReports().removeAll(oldLampiranA3List);
+			//#31869 - start
+			AwardSupplierReqDTO awardReqDTO = new AwardSupplierReqDTO();
+			if(null!=this.getManagedBean().getScLoa() && !this.getManagedBean().getScLoa().isBrandNew()){
+				ScLoa scLoa = new ScLoa();
+				scLoa.setScLoaReports(oldLampiranA3List);
+				awardReqDTO.setScLoa(scLoa);
+				getQtAwardSO().deleteLampiranA3Report(awardReqDTO);
+			}
+			//#31869 - end
 		}
 	}
 	
