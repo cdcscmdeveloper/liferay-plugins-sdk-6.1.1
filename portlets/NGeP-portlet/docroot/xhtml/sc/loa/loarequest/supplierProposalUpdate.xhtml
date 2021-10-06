@@ -89,7 +89,7 @@
 							disabled="#{isTrackingDairyView}">
 							<p:ajax partialSubmit="true" process="@this" update="@this" />
 						</p:inputText> <p:spacer width="10" />
-						<c:if test="#{isTrackingDairyView}">
+						<c:if test="#{!isTrackingDairyView}">
 						<p:commandLink
 							id="newSupplierOfferedReset" update="newSupplierOfferedInput"
 							action="#{lOADetailBackingBean.onResetNewSupplierOffered}" >
