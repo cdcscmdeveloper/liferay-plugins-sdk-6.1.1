@@ -570,7 +570,13 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			Collections.sort(this.getManagedBean().getSmAppl().getSmApplSupportDocs(), new Comparator<SmApplSupportDoc>(){
 				@Override
 				public int compare(SmApplSupportDoc doc1, SmApplSupportDoc doc2) {
-					return Integer.valueOf(doc1.getPmDocument().getDocName().compareTo(doc2.getPmDocument().getDocName()));
+					if(doc1.getPmDocument().getDisplaySeq() == null){
+						return (doc2.getPmDocument().getDisplaySeq() == null) ?  0 : 1;
+					}
+					if(doc2.getPmDocument().getDisplaySeq() == null){
+						return -1;
+					}
+					return Integer.valueOf(doc1.getPmDocument().getDisplaySeq().compareTo(doc2.getPmDocument().getDisplaySeq()));
 				}
 			});
 			//#30294 - END
