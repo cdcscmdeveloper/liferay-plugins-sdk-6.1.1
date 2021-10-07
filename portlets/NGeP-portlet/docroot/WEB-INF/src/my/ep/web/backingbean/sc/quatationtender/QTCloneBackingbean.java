@@ -832,7 +832,9 @@ public class QTCloneBackingbean extends
 					
 				}
 				if(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId) || QTStatusConst.QT_REVISION_PUBLICATION.equals(statusId)){//25635
+				if(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId)){//31350-start
 					retrieveComittee1And2Tier(scQt,copyScqt);
+				}//31350-End
 					retrieveBrief(copyScqt);
 					retrievePublishing(copyScqt);
 					retrieveDeductionPaymentTabDtl(scQt,copyScqt,QtDetailsSO);
