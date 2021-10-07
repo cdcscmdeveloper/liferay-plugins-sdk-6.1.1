@@ -1209,21 +1209,23 @@ public class SPDetailBackingBean extends
 			}
             if(answers == null || answers.size() == 0){
             	for(TplSpecAnswer answer:answers){
+// #21695 7/10/2021	START	            		
 //farid start #21695 to allow item has 0 qty and 0 price
-            	if(answer.getRatePerUom().equals(0) && answer.getTplSpecZoneQty()!= null){
-                	throw new EpException(MessageConst.ERROR_760463);
+            		if(answer.getRatePerUom().equals(0) && answer.getTplSpecZoneQty()!= null || answer.getRatePerUom().equals(0) && answer.getTplSpecZoneQty() == null){
+            			throw new EpException(MessageConst.ERROR_760463);
+            		   }
+//farid end #21695 7/10/2021
+            		  }
+            		} else {
+            		   for(TplSpecAnswer answer:answers){
+            			if (isCompleted) {
+// #21695 7/10/2021	START
+//farid start #21695 to allow item has 0 qty and 0 price
+            			if (answer.getRatePerUom() == null && answer.getTplSpecZoneQty()!= null || answer.getRatePerUom() == null && answer.getTplSpecZoneQty() == null) {
+            				throw new EpException(MessageConst.ERROR_760464);
+            			}
+//farid end #21695 7/10/2021
             		}
-//farid end #21695            	
-            	}
-			} else {
-            	for(TplSpecAnswer answer:answers){
-					if (isCompleted) {
-//farid start #21695 to allow item has 0 qty and 0 price
-						if (answer.getRatePerUom() == null && answer.getTplSpecZoneQty()!= null) {
-							throw new EpException(MessageConst.ERROR_760464);
-						}
-//farid end #21695
-					}
             		//added because of Bug #17772, please do not remove or change the order of if statements
             		if(answer.getAnswerNumeric() == null || answer.getAnswerNumeric().equals(0)){
             			boolean isItemTypeService = false; 
