@@ -3332,29 +3332,11 @@ public class SmPersonnelBackingBean extends
 
 						PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 						reqDTO.setReactive(true);
+						personnel.setEpRole(getManagedBean().getEpRoleTrans());
 						reqDTO.setSmPersonnel(personnel);
 						PersonnelResDTO personnelRes = SmServiceLookup.getPersonnelSO().updateOrDeletedRole(reqDTO,status);
-
-						if (personnelRes.isSuccessful()) {
-							//If it is not same epRole, then the system will change
-							//Compare role between real time data after reactivate & what role admin decide
-							if(!getManagedBean().getEpRoleTrans().equalsIgnoreCase(personnelRes.getSmPersonnel().getEpRole())){
-								// assign the role that supplier admin desire after reactivating personnel
-								int softcert = checkSoftCert();
-								PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
-								PersonnelResDTO personnelRes1 = new PersonnelResDTO();
-								
-								personnel = personnelRes.getSmPersonnel();
-								personnel.setSoftcertFlg(softcert);
-								reqDTO1.setSmPersonnel(personnel);
-								reqDTO1.setNewEpRole(getManagedBean().getEpRoleTrans());
-								personnelRes1 = SmServiceLookup.getPersonnelSO().updateMofPersonnelAndPmRole(reqDTO1);
-								if (!personnelRes1.isSuccessful()) {
-									throw new EpException(MessageConst.ERROR_722632);
-								}
-							}
-						} else {
-							log.info("Unsuccessful to reactivate personnel at deleted status to supplier user role");
+						
+						if(!personnelRes.isSuccessful()){
 							throw new EpException(MessageConst.ERROR_722632);
 						}
 					}
@@ -3363,65 +3345,28 @@ public class SmPersonnelBackingBean extends
 					else if (getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.CM_USER.value()) && ePStatus) {
 						PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 						reqDTO.setReactive(true);
+						personnel.setSoftcertFlg(SupplierManagementConst.RECORD_STATUS_SUSPENDED);
+						personnel.setContractSignerFlg(Integer.parseInt(ParameterConst.FLAG_NO));
+						personnel.setEpRole(getManagedBean().getEpRoleTrans());
 						reqDTO.setSmPersonnel(personnel);
 						PersonnelResDTO personnelRes = SmServiceLookup.getPersonnelSO().updateOrDeletedRole(reqDTO, status);
 						
-						if (personnelRes.isSuccessful()) {
-							//If it is not same epRole, then the system will change
-							//Compare role between real time data after reactivate & what role admin decide
-							if(!getManagedBean().getEpRoleTrans().equalsIgnoreCase(personnelRes.getSmPersonnel().getEpRole())){
-								//assign the role that supplier admin desire after reactivating personnel
-								PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
-								PersonnelResDTO personnelRes1 = new PersonnelResDTO();
-								
-								personnel = personnelRes.getSmPersonnel();
-								personnel.setSoftcertFlg(SupplierManagementConst.RECORD_STATUS_SUSPENDED);
-								personnel.setContractSignerFlg(Integer.parseInt(ParameterConst.FLAG_NO));
-								reqDTO1.setSmPersonnel(personnel);
-								reqDTO1.setNewEpRole(getManagedBean().getEpRoleTrans());
-								personnelRes1 = SmServiceLookup.getPersonnelSO().updateMofPersonnelAndPmRole(reqDTO1);
-								if (!personnelRes1.isSuccessful()) {
-									throw new EpException(MessageConst.ERROR_722632);
-								}
-							}	
-						}else {
-							log.info("Unsuccessful to reactivate personnel at deleted status to catalog user role");
+						if(!personnelRes.isSuccessful()){
 							throw new EpException(MessageConst.ERROR_722632);
 						}
-					}
-					
+					}		
 					//reactivating from deleted, and assign fullfillment user
 					else if (getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.FL_USER.value()) && ePStatus) {
-						if (!getManagedBean().getEpRoleTrans().equalsIgnoreCase(personnel.getEpRole())) {
-							PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-							reqDTO.setReactive(true);
-							reqDTO.setSmPersonnel(personnel);
-							PersonnelResDTO personnelRes = SmServiceLookup.getPersonnelSO().updateOrDeletedRole(reqDTO,
-									status);
-							if (personnelRes.isSuccessful()) {
-								// assign the role that supplier admin desire after reactivating personnel
-								//Compare role between real time data after reactivate & what role admin decide
-								if(!getManagedBean().getEpRoleTrans().equalsIgnoreCase(personnelRes.getSmPersonnel().getEpRole())){
-									int softcert = checkSoftCert();
-									PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
-									PersonnelResDTO personnelRes1 = new PersonnelResDTO();
-									
-									personnel = personnelRes.getSmPersonnel();
-									personnel.setSoftcertFlg(softcert);
-									reqDTO1.setSmPersonnel(personnel);
-									reqDTO1.setNewEpRole(getManagedBean().getEpRoleTrans());
-									personnelRes1 = SmServiceLookup.getPersonnelSO().updateMofPersonnelAndPmRole(reqDTO1);
-									if (!personnelRes1.isSuccessful()) {
-										throw new EpException(MessageConst.ERROR_722632);
-									}	
-								}
-							}
-						}else {
-							log.info("Unsuccessful to reactivate personnel at deleted status to fullfillment user role");
+						PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+						reqDTO.setReactive(true);
+						personnel.setEpRole(getManagedBean().getEpRoleTrans());
+						reqDTO.setSmPersonnel(personnel);
+						PersonnelResDTO personnelRes = SmServiceLookup.getPersonnelSO().updateOrDeletedRole(reqDTO, status);
+						
+						if(!personnelRes.isSuccessful()){
 							throw new EpException(MessageConst.ERROR_722632);
 						}
 					}
-									
 				} else {
 					
 					PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
