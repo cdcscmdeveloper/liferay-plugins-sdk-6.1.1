@@ -295,9 +295,6 @@ public class SvcSiteAssignBackingBean extends
 	 * Set site visit address list facility name in data table
 	 */
 	private void setSiteVisitAddressesFacilityName() {
-		//28775 - Site Visit Grouping Enhancement - 28775 
-		//name in sm_facility
-		//unique name too?
 		//CR 28774: Static Code Analysis
 		if (!getManagedBean().getSmAppl().getSmSvTasks().isEmpty()) {
 			for (SmSvTask svTask : getManagedBean().getSmAppl().getSmSvTasks()) {
