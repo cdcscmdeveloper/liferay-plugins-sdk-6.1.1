@@ -83,6 +83,11 @@
 				<h:outputText
 					rendered="#{financeList.scQtCheckList.definationType.parameterCode eq 'SP' or financeList.scQtCheckList.definationType.parameterCode eq 'SD'}"
 					value="#{lbl['lbl.sc.view.supplier.info.instruction']}" />
+				<h:outputText rendered="#{financeList.scQtCheckList.definationType.parameterCode eq 'NA'
+				and !fn:contains(financeList.scQtCheckList.title,'Pengesahan dari Institusi Kewangan untuk tiga bulan Penyata Bank')
+				and !fn:contains(financeList.scQtCheckList.title,'Kunci Kira-Kira Tahunan')
+				and !fn:contains(financeList.scQtCheckList.title,'Pengesahan dari Institusi Kewangan ke atas jumlah yang telah dibayar')}" 
+				value="#{lbl['lbl.sc.attachment.upload.instruction']}" />	
 			</p:column>
 
 			<p:column style="white-space: normal; text-align: center;">
