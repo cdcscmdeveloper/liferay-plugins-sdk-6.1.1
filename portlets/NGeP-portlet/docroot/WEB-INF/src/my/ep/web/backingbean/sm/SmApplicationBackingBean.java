@@ -15900,6 +15900,10 @@ public class SmApplicationBackingBean extends
 		// 14530 - END
 
 	// START #29727
+	public void unSelectSsmBranch(AjaxBehaviorEvent e) {
+		SmApplicationUtil.ajaxRemoveSelectedSSMBranches(getManagedBean().getSelectedBranches());
+	}
+	
 	public void validateCompanyBranch(SmApplicationManagedBean managedBean) {
 		validateCompanyBranch(managedBean,"");
 	}
