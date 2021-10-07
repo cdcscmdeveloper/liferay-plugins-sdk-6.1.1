@@ -1621,7 +1621,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 									errorMessageSSM(supplier);
 								}
 							}else if(!getManagedBean().getSmAppl().getSupplierType().equals(supplier.getSmAppl().getSupplierType()) && resDTO.getSmSuppliers().size() == 1){
-								if(supplier.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE){
+								//start #30571
+							if (supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+								throw new EpException(MessageConst.ERROR_721074, new String[] { supplier.getRegNo() }); // end #30571
+							} else if(supplier.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE){
 									String labelText = null;
 									if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
 										labelText = SmCommonUtil.getMessage("lbl.sm.contractor", null);
@@ -1649,7 +1652,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							}
 							//b)	If registration number exist and account is inactive 
 							else if(supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED){
-								throw new EpException(MessageConst.ERROR_721067,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
+								throw new EpException(MessageConst.ERROR_721074,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
 							}
 							//c)	If account already created but has not been activated, 
 							else if(supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION || supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_IN_PROGRESS){
