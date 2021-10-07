@@ -203,6 +203,9 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			for (PmUser user : list) {
 				sourceList.add(user);
 				getManagedBean().getUserMap().put(user.getUserId(), user);
+//				if(user.getSalutationCode()!=null){
+//					user.getSalutationCode().getSalutationName();
+//				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1118,7 +1121,9 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			
 			reqDTO.setApprovalLimit(approvalLimit);
 			//#26686 - end
-			resDTO = userSO.retrieveUserListByRole(reqDTO);			
+			//#30453 - change retrieve to new method for less impact on performance
+			resDTO = userSO.retrieveUserListByRoleWithSalutation(reqDTO);	
+			//#30453 end
 
 			List<PmUser> list = resDTO.getUserList();
 			items = new SelectItem[list.size() + 1];
