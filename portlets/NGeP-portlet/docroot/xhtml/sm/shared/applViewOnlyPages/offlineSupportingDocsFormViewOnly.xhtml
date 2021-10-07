@@ -130,7 +130,7 @@
 			display:none;
 		}
 		</style>
-		<p:outputPanel rendered="#{viewSmApplBackingBean.inquiryResponse and viewSmApplBackingBean.managedBean.smAppl.pmStatus.statusId ne '20200'}">
+		<p:outputPanel id="offlineSupportDocTable">
 			<p:dataTable var="table" value="#{viewSmApplBackingBean.managedBean.smAppl.smApplSupportDocs}" id="offlineMandatoryList" 
 			rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
@@ -211,6 +211,7 @@
 				</p:column>
 			</p:dataTable>
 		</p:outputPanel>
+		
 		<!-- #3460 - Start -->
 		<br/>
 			<table>
@@ -225,86 +226,6 @@
 				</tr>
 			</table>
 			<!-- #3460 - End -->	
-		<p:outputPanel rendered="#{!viewSmApplBackingBean.inquiryResponse and viewSmApplBackingBean.managedBean.smAppl.pmStatus.statusId eq '20200'}">
-			<p:dataTable var="table" value="#{viewSmApplBackingBean.getNoResponseInquiryForApplHistory()}" id="offlineNonSDPendingMandatoryList" 
-				rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
-				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
-				<p:columnGroup type="header">
-					<p:row>
-						<p:column headerText="#{lbl['lbl.sm.mandatory.suppdoc']}" colspan="5" 
-							style="background-color:PeachPuff !important;text-align: center !important;color:black !important"/>
-	                </p:row>
-	                <p:row>
-	                	<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
-							style="width : 5%;text-align: center !important;" />
-						<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" 
-							style="width : 55%;overflow: hidden !important;" />
-						<p:column headerText="#{lbl['lbl.sm.remarks']}" 
-							style="width : 55%;overflow: hidden !important;" />
-	                </p:row>
-				</p:columnGroup>	
-				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 5%;" rendered="#{table.pmDocument.mandatory}">
-					<h:outputText value="#{viewSmApplBackingBean.mandatoryCounter}"
-						style="float: left;white-space: normal;font-weight:bold;" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" style="width : 65%;" rendered="#{table.pmDocument.mandatory}">
-					<h:outputText value="#{table.pmDocument.docName}"
-						style="float: left;white-space: normal;" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 65%;" rendered="#{table.pmDocument.mandatory}">
-					<h:outputText value="#{table.sdoRemarks}"
-						style="float: left;white-space: normal;" />
-				</p:column>
-			</p:dataTable>
-			<p:dataTable styleClass="suppDocEmpty-tbl" var="emptyMandatory" value="" id="offlineNonSDPendingMandatoryEmptyTable" rendered="#{viewSmApplBackingBean.mandatoryEmpty}"
-				rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
-				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
-				<p:column style="width : 65%;">
-					<h:outputText value="#{lbl['lbl.datatable.msg.no.records.found']}"
-						style="float: left;white-space: normal;" disabled="true"/>
-				</p:column>
-			</p:dataTable>
-		
-			<p:dataTable var="table" value="#{viewSmApplBackingBean.getNoResponseInquiryForApplHistory()}" id="offlineNonSDPendingNonMandatoryList" 
-				rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
-				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
-				
-				<p:columnGroup type="header">
-					<p:row>
-						<p:column headerText="#{lbl['lbl.sm.nonmandatory.suppdoc']}" colspan="5" 
-							style="background-color:PaleGreen !important;text-align: center !important;color:black !important"/>
-	                </p:row>
-	                <p:row>
-	                	<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
-							style="width : 5%;text-align: center !important;" />
-						<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" 
-							style="width : 55%;overflow: hidden !important;" />
-						<p:column headerText="#{lbl['lbl.sm.remarks']}" 
-							style="width : 55%;overflow: hidden !important;" />
-	                </p:row>
-				</p:columnGroup>	
-				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 5%;" rendered="#{!table.pmDocument.mandatory}">
-					<h:outputText value="#{viewSmApplBackingBean.nonMandatoryCounter}"
-						style="float: left;white-space: normal;font-weight:bold;" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" style="width : 65%;" rendered="#{!table.pmDocument.mandatory}">
-					<h:outputText value="#{table.pmDocument.docName}"
-						style="float: left;white-space: normal;" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 65%;" rendered="#{!table.pmDocument.mandatory}">
-					<h:outputText value="#{table.sdoRemarks}"
-						style="float: left;white-space: normal;" />
-				</p:column>
-			</p:dataTable>
-			<p:dataTable styleClass="suppDocEmpty-tbl" var="emptyNonMandatory" value="" id="offlineNonSDPendingNonMandatoryEmptyTable" rendered="#{viewSmApplBackingBean.nonMandatoryEmpty}"
-				rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
-				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
-				<p:column style="width : 65%;">
-					<h:outputText value="#{lbl['lbl.datatable.msg.no.records.found']}"
-						style="float: left;white-space: normal;" disabled="true"/>
-				</p:column>
-			</p:dataTable>
-		</p:outputPanel>
 	</p:panel>
 	
 	<br/>
@@ -314,18 +235,18 @@
 		selection="#{viewSmApplBackingBean.managedBean.selectedInquiryResponse}" rowKey="#{applInq}" 
 		value="#{viewSmApplBackingBean.managedBean.smAppl.smApplInquiries}" var="applInq">
 			<p:column headerText="#{lbl['lbl.sm.supportingdoc.subject']}">
-				#{applInq.inquirySubject}
+				<h:outputText value="#{applInq.inquirySubject}" rendered="#{applInq.inquirySubject ne 'INQUIRY_PO_SUPPLIER'}"/>
 			</p:column>
 			<p:ajax event="rowSelect" listener="#{viewSmApplBackingBean.inquiryRowSelect('offline')}"  update=":#{p:component('resOutPanelIdOffline')}" oncomplete="responseDlg.show();" />
 			
 			<p:column headerText="#{lbl['lbl.sm.supportingdoc.inquirydate']}">
-				<h:outputText value="#{applInq.createdDate}">
+				<h:outputText value="#{applInq.createdDate}" rendered="#{applInq.inquirySubject ne 'INQUIRY_PO_SUPPLIER'}">
 					<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.supportingdoc.responsedate']}">
-				<h:outputText value="#{applInq.responseDate}">
+				<h:outputText value="#{applInq.responseDate}" rendered="#{applInq.inquirySubject ne 'INQUIRY_PO_SUPPLIER'}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>

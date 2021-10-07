@@ -20,10 +20,10 @@
 		<ui:param name="applType" value="#{supportingDocInquiryBackingBean.getsupplierApplTypeDesc(supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.applType)}" />
 		<ui:include src="/xhtml/sm/shared/common/commonHeader.xhtml" />
 		
-		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
-		<div align="right">
 		<!-- #11641 - START -->
-			<p:commandButton value="#{lbl['lbl.sm.suppdoc.submit.response']}" onclick="submissionConfirmDlg.show();" />
+		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" escape="false"/>
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.sm.suppdoc.submit.response']}" action="#{supportingDocInquiryBackingBean.validateSupportDocs()}" />
 		<!-- #11641 - END -->
 		</div>
 
@@ -88,9 +88,9 @@
 				display:none;
 			}
 			</style>
-
+			<!-- datatable for mandatory support doc with record to display -->
 			<p:dataTable var="table" value="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.smApplSupportDocs}" id="InquiriesMandatoryList" 
-				rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
+				rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" rendered="#{!supportingDocInquiryBackingBean.mandatoryEmpty}"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 				<p:columnGroup type="header">
 					<p:row>
@@ -167,16 +167,41 @@
 				</ui:repeat>
 				</p:column>
 			</p:dataTable>
-			<p:dataTable styleClass="suppDocEmpty-tbl" var="emptyMandatory" value="" id="mandatoryEmptyForInquiry" rendered="#{supportingDocInquiryBackingBean.mandatoryEmpty}"
+			<!-- datatable for mandatory support doc with no record to display(fix bug in primeface) -->
+			<p:dataTable var="" value="" id="mandatoryEmptyForInquiry" rendered="#{supportingDocInquiryBackingBean.mandatoryEmpty}"
 				rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
-				<p:column style="width : 100% !important;">
-					<h:outputText value="#{lbl['lbl.datatable.msg.no.records.found']}" style="float: left;white-space: normal;" disabled="true"/>
-				</p:column>
+				<p:columnGroup type="header">
+					<p:row>
+						<p:column headerText="#{lbl['lbl.sm.mandatory.suppdoc']}" colspan="6" style="background-color:PeachPuff !important;text-align: center !important;color:black !important"/>
+		            </p:row>
+             		<p:row>
+	                	<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
+							style="width:2% !important; text-align: center !important;" />
+						<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" 
+							style="width:48% !important; overflow: hidden !important;" />
+						<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}"
+							style="width:11% !important; overflow: hidden !important;"
+							rendered="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}" />
+						<p:column headerText="#{lbl['lbl.sm.remarks']}" 
+							style="width:23% !important; overflow: hidden !important;" />
+						<p:column headerText="#{lbl['lbl.sm.suppdoc.upload.document']}" 
+							style="width:5% !important; overflow: hidden !important;"
+							rendered="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}" />
+						<p:column headerText="#{lbl['lbl.sm.suppDoc.added.document.name']}"  
+							style="width:11% !important; overflow: hidden !important;" 
+							rendered="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}"/>
+	                </p:row>
+	                <p:row>
+	                	<p:column headerText="#{lbl['lbl.datatable.msg.no.records.found']}" colspan="6" style="background-color:white !important; color:black; font-weight:normal !important; text-align:left !important;">
+						
+						</p:column>
+	                </p:row>
+				</p:columnGroup>
 			</p:dataTable>
-			
+			<!-- datatable for non-mandatory support doc with record to display -->
 			<p:dataTable var="table" value="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.smApplSupportDocs}" id="InquiriesNonMandatoryList" 
-				rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
+				rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" rendered="#{!supportingDocInquiryBackingBean.nonMandatoryEmpty}"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 				<p:columnGroup type="header">
 					<p:row>
@@ -254,12 +279,38 @@
 				</ui:repeat>
 				</p:column>
 			</p:dataTable>
-			<p:dataTable styleClass="suppDocEmpty-tbl" var="emptyNonMandatory" value="" id="nonMandatoryEmptyForInquiry" rendered="#{supportingDocInquiryBackingBean.nonMandatoryEmpty}"
+			<!-- datatable for non-mandatory support doc with record to display(to fix bug in primeface version) -->
+			<p:dataTable var="" value="" id="nonMandatoryEmptyForInquiry" rendered="#{supportingDocInquiryBackingBean.nonMandatoryEmpty}"
 				rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
-				<p:column style="width : 100% !important;">
-					<h:outputText value="#{lbl['lbl.datatable.msg.no.records.found']}" style="float: left;white-space: normal;" disabled="true"/>
-				</p:column>
+				<p:columnGroup type="header">
+					<p:row>
+						<p:column headerText="#{lbl['lbl.sm.nonmandatory.suppdoc']}" colspan="6" 
+							style="background-color:PaleGreen !important;text-align: center !important;color:black !important"/>
+		            </p:row>
+             		<p:row>
+	                	<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
+							style="width:2% !important; text-align: center !important;" />
+						<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" 
+							style="width:48% !important; overflow: hidden !important;" />
+						<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}"
+							style="width:11% !important; overflow:hidden !important;"
+							rendered="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}" />
+						<p:column headerText="#{lbl['lbl.sm.remarks']}" 
+							style="width:23% !important; overflow:hidden !important;" />
+						<p:column headerText="#{lbl['lbl.sm.suppdoc.upload.document']}" 
+							style="width:5% !important; overflow:hidden !important;"
+							rendered="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}" />
+						<p:column headerText="#{lbl['lbl.sm.suppDoc.added.document.name']}"  
+							style="width:11% !important; overflow:hidden !important;" 
+							rendered="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}"/>
+	                </p:row>
+	                <p:row>
+	                	<p:column headerText="#{lbl['lbl.datatable.msg.no.records.found']}" colspan="6" style="background-color:white !important; color:black; font-weight:normal !important; text-align:left !important;">
+						
+						</p:column>
+	                </p:row>
+				</p:columnGroup>
 			</p:dataTable>
 
 			<!-- #11641 - End -->

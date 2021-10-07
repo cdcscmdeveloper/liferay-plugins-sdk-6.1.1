@@ -596,6 +596,12 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean recommendRejectReasonReqd;
 	private String searchRecommendRejectReason;
 	//#15629 - END
+	
+	//#11641 - START
+	private SmApplInquiry selectedInquiryResponse;
+	private boolean emptyMandatoryDocHistory;
+	private boolean emptyNonMandatoryDocHistory;
+	//#11641 - END
 
 	
 	private class RejectReasonPagingDataModel extends
@@ -4498,5 +4504,30 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.searchRecommendRejectReason = searchRecommendRejectReason;
 	}
 	//#15629 - END
+	
+	//#11641 - START
+	public SmApplInquiry getSelectedInquiryResponse() {
+		return selectedInquiryResponse;
+	}
 
+	public void setSelectedInquiryResponse(SmApplInquiry selectedInquiryResponse) {
+		this.selectedInquiryResponse = selectedInquiryResponse;
+	}
+
+	public boolean isEmptyMandatoryDocHistory() {
+		return emptyMandatoryDocHistory;
+	}
+
+	public void setEmptyMandatoryDocHistory(boolean emptyMandatoryDocHistory) {
+		this.emptyMandatoryDocHistory = emptyMandatoryDocHistory;
+	}
+
+	public boolean isEmptyNonMandatoryDocHistory() {
+		return emptyNonMandatoryDocHistory;
+	}
+
+	public void setEmptyNonMandatoryDocHistory(boolean emptyNonMandatoryDocHistory) {
+		this.emptyNonMandatoryDocHistory = emptyNonMandatoryDocHistory;
+	}
+	//#11641 - END
 }

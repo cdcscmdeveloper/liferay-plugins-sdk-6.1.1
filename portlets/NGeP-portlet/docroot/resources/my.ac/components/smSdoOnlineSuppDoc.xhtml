@@ -44,7 +44,7 @@
 	            <h:outputText value="#{suppDoc.pmDocument.docName}"  /> 
 	        </p:column>
 		
-			<p:column style="width:18%;white-space:normal;overflow: hidden !important;"
+			<p:column style="width:18% !important;white-space:normal;overflow: hidden !important;"
 				rendered="#{sdoReviewBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
 				<!-- #11641 - END -->
 				<!-- #28807 - Start -->
@@ -56,7 +56,9 @@
 		        		</p:commandLink>
 		        	</ui:remove>
 		        	<h:panelGroup rendered="#{not empty suppDoc.smApplDocFiles}">
-		        		<a href="#{DocumentRepositoryUtils.baseRepo}#{applDocs.filePath}#{applDocs.fileName}">#{applDocs.fileName}</a>
+		        		<!-- #11641 -START reopen log #125-->
+		        		<a href="#{DocumentRepositoryUtils.baseRepo}#{applDocs.filePath}#{applDocs.fileName}">#{sdoReviewBackingBean.getShortFileName(applDocs.fileName)}</a>
+		        		<!-- #11641 - END reopen log #125-->
 		        	</h:panelGroup>
 					<br />
 				</ui:repeat>
@@ -66,8 +68,10 @@
 			<p:column style="width:3% !important; white-space:normal;overflow: hidden !important;" >
 				<div align="center">
 				<p:selectBooleanCheckbox value="#{suppDoc.received}" disabled="#{!sdoReviewBackingBean.managedBean.claimTask}">
+					<!-- #11641 - START -->
 					<p:ajax event="change" update=":form:btnInquiryId,:form:btnSubmitId" 
-					listener="#{sdoReviewBackingBean.receiveStatusChange(suppDoc)}" disabled="#{!cc.attrs.mandatory}"/>
+					listener="#{sdoReviewBackingBean.receiveStatusChange(suppDoc)}"/>
+					<!-- #11641 - END -->
 				</p:selectBooleanCheckbox>
 				</div>
 			</p:column>
