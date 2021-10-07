@@ -5470,7 +5470,7 @@ public class SmCommonUtil {
 		//29823 - start
 		//to check the current appl status is after approval assignment site visit or not
 		SmWorkflowStatus wf = SmCommonUtil.getCurrentActiveWokFlowStatus(applId);
-		boolean isAfterApproval = (wf!=null && wf.getPmStatus().getStatusId() == 20117 ? true : false);
+		boolean isAfterApproval = (wf!=null && wf.getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_AFTER_APPROVED ? true : false);
 		
 		SupplierSearchResDTO resDTO = null;
 		
