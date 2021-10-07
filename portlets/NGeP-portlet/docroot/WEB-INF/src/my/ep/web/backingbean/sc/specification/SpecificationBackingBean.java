@@ -4376,10 +4376,23 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				else{
 					setTechnicalSpecEnableDisable();
 				}
-				/*
-				 * templateSpecBean.getSpecMaster().setScoringReq(
-				 * this.getManagedBean().getQt().isTechEvaluationReq());
-				 */
+
+				// #8979,#30917,#31151 -start
+				List<ScQtCheckList> technicalChecklist = this.getManagedBean().getScQtCheckSt2techProposal();
+				int i = 0;
+				
+				for (ScQtCheckList checklist : technicalChecklist) {
+					if (QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(checklist.getDefinationType()
+							.getParameterCode())) {
+						i++;
+					}
+				}
+
+				if (i > 1) {
+					this.getManagedBean().setSpecItemWeightageRequired(Boolean.TRUE);
+				}
+				// #8979,#30917,#31151 -End
+
 				return "/xhtml/sc/boSctemplatespec/committeeTechnicalEditAction.xhtml?faces-redirect=true";
 			} else {
 				setUserDetails(checkList);
@@ -9398,15 +9411,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		ScCommitteeMember member = resDTO.getCommMember();
 		if (null != member) {
 
-			//danial #8979 17/12/2020 -start-
 			if (member.getMemberRole().getParameterCode()
-                    .equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)||
-                member.getMemberRole().getParameterCode()
-                    .equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_MEMBER)||
-                member.getMemberRole().getParameterCode()
-                        .equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)
-                    ) {
-			//danial #8979 17/12/2020 -end-
+					.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
 				this.getManagedBean().setReadOnly(false);
 
 			} else {
