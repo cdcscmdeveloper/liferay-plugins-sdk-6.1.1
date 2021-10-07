@@ -28,21 +28,32 @@
 						value="#{lbl['lbl.btn.print']}" process="@all" type="button">
 						<p:printer target="committeeTechEdit" />
 					</p:commandButton>
+					<!-- 30917, 31151 -start- -->
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-						rendered="#{((specificationBackingBean.isQTStatusChecklistScoring()) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.isQTStatusChecklistScoringRevision()))}"
+						rendered="#{((specificationBackingBean.isQTStatusChecklistScoring()) or(specificationBackingBean.isQTStatusChecklistScoringRevision()))}"
 						style="float:right;" immediate="true"
-						onclick="createTechnicalDialog.show();"></p:commandButton> <p:commandButton
+						onclick="createTechnicalDialog.show();">
+					</p:commandButton> 
+					<p:commandButton
 						value="#{lbl['lbl.btn.complete']}"
-						rendered="#{((specificationBackingBean.isQTStatusChecklistScoring()) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.isQTStatusChecklistScoringRevision()) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.isQTStatusChecklistScoringRevision()) or(!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()))}"
+						rendered="#{((specificationBackingBean.isQTStatusChecklistScoring()) 
+							or(specificationBackingBean.isQTStatusChecklistScoringRevision()) 
+							or(specificationBackingBean.isQTStatusChecklistScoringRevision()) 
+							or(!specificationBackingBean.managedBean.readOnly 
+							and specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()))}"
 						style="float:right;" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();"
 						action="#{specificationBackingBean.completeTemplateSpecDetails('SC',1)}"
-						update="@all" /> <p:commandButton value="#{lbl['lbl.btn.save']}"
-						rendered="#{((specificationBackingBean.isQTStatusChecklistScoring()) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.isQTStatusChecklistScoringRevision()) or(!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()))}"
+						update="@all" /> 
+					<p:commandButton value="#{lbl['lbl.btn.save']}"
+						rendered="#{((specificationBackingBean.isQTStatusChecklistScoring()) 
+							or(specificationBackingBean.isQTStatusChecklistScoringRevision()) 
+							or(!specificationBackingBean.managedBean.readOnly 
+							and specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()))}"
 						style="float:right;" update="@all" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();"
 						action="#{specificationBackingBean.saveTemplateSpecDetails('SC',1)}" />
-
+					<!-- 30917, 31151 -end- -->
 				</td>
 			</tr>
 		</table>
@@ -56,11 +67,15 @@
 					<tr>
 						<td valign="top"><h:outputLabel
 								value="#{lbl['lbl.sc.document.title']}"></h:outputLabel></td>
-						<td colspan="3"><p:inputTextarea rows="2" cols="95"
-								disabled="#{(specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring())}"
+						<td colspan="3">
+							<!-- 30917, 31151 -start- -->
+							<p:inputTextarea rows="2" cols="95"
+								disabled="#{(!specificationBackingBean.isQTStatusChecklistScoringRevision() and !specificationBackingBean.isQTStatusChecklistScoring())}"
 								style="margin-bottom:5px;width:83%;" maxlength="200" onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"
 								onmouseout="limitTextArea(this,200);"
-								value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specName}" /></td>
+								value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specName}" />
+							<!-- 30917, 31151 -end- -->
+						</td>
 					</tr>
 
 					<tr>
@@ -78,9 +93,12 @@
 					<tr>
 
 						<td><h:outputLabel value="#{lbl['lbl.sc.spec.local.goods']}" /></td>
-						<td><p:selectOneRadio
-								disabled="#{(specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring())}"
+						<td>
+							<!-- 30917, 31151 -start- -->
+							<p:selectOneRadio
+								disabled="#{(!specificationBackingBean.isQTStatusChecklistScoringRevision() and !specificationBackingBean.isQTStatusChecklistScoring())}"
 								value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.itemOriginCode.parameterId}">
+							<!-- 30917, 31151 -end- -->
 								<f:selectItems
 									value="#{specificationBackingBean.getLocalGoodsRadioValues(ParameterTypeConst.itemOrigin)}" />
 								<p:ajax event="change" partialSubmit="true" process="@this" />
@@ -139,13 +157,16 @@
 
 			</p:panel>
 
-
+			<ui:remove>30917, 31151 remove '!specificationBackingBean.managedBean.readOnly and' -start-</ui:remove>
 			<ac:templateSpec
 			    updateSpec="#{specificationBackingBean.managedBean.updateSpec}"
 				newable="#{specificationBackingBean.managedBean.specNewable}"
 				removable="#{specificationBackingBean.managedBean.specNewable}"
-				editable="#{((specificationBackingBean.isQTStatusChecklistScoring()) or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision()) or (specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance() and !specificationBackingBean.managedBean.readOnly))}"
+				editable="#{((specificationBackingBean.isQTStatusChecklistScoring()) 
+					or (specificationBackingBean.isQTStatusChecklistScoringRevision()) 
+					or (specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance() and !specificationBackingBean.managedBean.readOnly))}"
 				templateSpecBean="#{specificationBackingBean.managedBean.templateSpecBean}" />
+			<ui:remove>30917, 31151 remove '!specificationBackingBean.managedBean.readOnly and' -end-</ui:remove>
 
 		</h:panelGroup>
 	</ui:define>
