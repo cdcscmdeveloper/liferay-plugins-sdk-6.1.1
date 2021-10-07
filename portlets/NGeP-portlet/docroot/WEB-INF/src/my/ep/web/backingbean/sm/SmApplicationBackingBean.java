@@ -9225,6 +9225,7 @@ public class SmApplicationBackingBean extends
 			reqDTO.setAppType(this.getManagedBean().getSmAppl().getApplType());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
+			reqDTO.setSupplierType(this.getManagedBean().getSmAppl().getSupplierType());//#31181
 			//#30516 - start
 			if (this.getManagedBean()
 					.getSmAppl()
