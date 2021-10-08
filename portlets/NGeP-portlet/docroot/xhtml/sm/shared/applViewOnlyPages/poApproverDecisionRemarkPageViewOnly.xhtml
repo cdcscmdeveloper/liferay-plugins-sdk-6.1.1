@@ -110,15 +110,19 @@
 						rendered="#{empty viewSmApplBackingBean.managedBean.approverUserName}" />
 				</td>
 			</tr>
+			<!-- #30974 start -->
 			<tr>
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.po.approver.decision.remark']}" /></td>
 				<td>
 					<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.approverRemark}" 
-						rendered="#{not empty viewSmApplBackingBean.managedBean.approverRemark}"/>
+						rendered="#{viewSmApplBackingBean.managedBean.approverRemark ne 'N/A'}"/>
+					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}" 
+						rendered="#{viewSmApplBackingBean.managedBean.approverRemark eq 'N/A'}" />
 				    <p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}" 
 						rendered="#{empty viewSmApplBackingBean.managedBean.approverRemark}"/>
 				</td>
 			</tr>
+			<!-- #30974 end -->
 			<tr>
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.po.approver.decision.remark.date']}" /></td>
 				<td><c:if test="#{not empty viewSmApplBackingBean.managedBean.approverRemarkCreatedDate}" >
