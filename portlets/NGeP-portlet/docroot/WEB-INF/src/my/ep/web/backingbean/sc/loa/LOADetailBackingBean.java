@@ -9177,6 +9177,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				
 				TemplateSpecResDTO templateSpecResDTO  = templateSpecSO.searchSupplierSpecification(specReqDto);
 				if(null!=templateSpecResDTO && null!=templateSpecResDTO.getSpecAnswerList() && CollectionUtils.isNotEmpty(templateSpecResDTO.getSpecAnswerList())){//29007-start
+					boolean newOfferedSpecification=false;//29007
 					for(TplSpecAnswer specAnswer:templateSpecResDTO.getSpecAnswerList()){
 						String feedback = null;
 						if (null != specAnswer.getAnswerCompliance()) {
@@ -9187,7 +9188,14 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							}
 							specAnswer.setFeedback(feedback);
 						}
+						if(specAnswer.getNewSupplierOffer() != null && StringUtils.isNotBlank(specAnswer.getNewSupplierOffer()) && StringUtils.isNotEmpty(specAnswer.getNewSupplierOffer())){//29007-start
+							newOfferedSpecification=true;
+						}//29007-End
+						
 					}
+					if(!newOfferedSpecification){//29007-start
+					scLoiLoaItem.setLoaSpecJustificationForVelocity(null);	
+					}//29007-End
 				}//29007-End
 				scLoiLoaItem.setTplSpecAnswerList(templateSpecResDTO.getSpecAnswerList());
 				scLoiLoaItemsList.add(scLoiLoaItem);
