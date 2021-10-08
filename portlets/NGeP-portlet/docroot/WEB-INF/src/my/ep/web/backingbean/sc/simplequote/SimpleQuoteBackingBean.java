@@ -5683,6 +5683,40 @@ public class SimpleQuoteBackingBean extends
 			reqDTO.setQuoteSupplier(getManagedBean().getScQuoteSupplier());
 			reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
 			QuoteResDTO quoteResDTO = getQuoteSO().saveSupplierResponse(reqDTO);
+			
+			//#30840 - Start
+			if(quote != null){
+				log.info("--- Bug 30840 (" + quote.getQuoteNo() + ") Method: supplierSave Start ---");
+				
+				if(reqDTO.getOutcome() != null){
+					log.info("Outcome: " + reqDTO.getOutcome() + " SqNo(" + quote.getQuoteNo() + ")");
+				}
+				
+				if(reqDTO.getQuoteSupplier() != null){
+					if(reqDTO.getQuoteSupplier().getSmSupplier() != null){
+						log.info("Supplier ID (" + reqDTO.getQuoteSupplier().getSmSupplier().getSupplierId() + ")" 
+								+ "Supplier Name (" + reqDTO.getQuoteSupplier().getSupplierName() + ") "
+								+ "SqNo (" + quote.getQuoteNo() + ")");
+					}
+					
+					if(reqDTO.getSpecAnswers() != null){
+						int totalItemCount = 0;
+						int itemRespondCount = 0;
+						for(TplSpecAnswer specAnswer : reqDTO.getSpecAnswers()){
+							if(specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom() != BigDecimal.ZERO){
+								itemRespondCount++;
+							}
+							totalItemCount++;
+						}
+						log.info("totalItemCount (" + totalItemCount + ") "
+								+ "itemRespondCount (" + itemRespondCount + ") "
+								+ "SqNo (" + quote.getQuoteNo() + ")");					
+					}
+				}	
+				log.info("--- Bug 30840 (" + quote.getQuoteNo() + ") Method: supplierSave End ---");
+			}
+			//#30840 - End
+			
 			if (quoteResDTO.isSuccessful()) {
 				ScQuote scQuote = getManagedBean().getScQuote();
 
@@ -5802,13 +5836,16 @@ public class SimpleQuoteBackingBean extends
 				RequestContext.getCurrentInstance().execute("gpki_dlg.hide();");
 
 			} else {
+				log.info("Bug 30840 - spki SqNo (" + quote.getQuoteNo() + ")");
 				// spki
 				String originalText = prepareOriginalText(Boolean.FALSE); 
 				if (null != pmDigiSign) {
+					log.info("Bug 30840 - start updateSpkiDigiSignData SqNo (" + quote.getQuoteNo() + ")");
 					updateSpkiDigiSignData(pmDigiSign,
 							ParameterConst.DOCTYPE_SIMPLE_QUOTE,
 							quote.getQuoteId(), quote.getQuoteNo(),
 							originalText);
+					log.info("Bug 30840 - end updateSpkiDigiSignData SqNo (" + quote.getQuoteNo() + ")");
 				}
 				
 				byte[] signedData = getManagedBean().getSpkiBackingBean()
@@ -5849,9 +5886,46 @@ public class SimpleQuoteBackingBean extends
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
 			reqDTO.setQuoteSupplier(getManagedBean().getScQuoteSupplier());
 			reqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
+			log.info("Bug 30840 - start saveSupplierResponse SqNo (" + quote.getQuoteNo() + ")");
 			QuoteResDTO quoteResDTO = getQuoteSO().saveSupplierResponse(reqDTO);
-			if (quoteResDTO.isSuccessful()) {
+			log.info("Bug 30840 - end saveSupplierResponse SqNo (" + quote.getQuoteNo() + ")");
+			
+			//#30840 - Start
+			if(quote != null){
+				log.info("--- Bug 30840 (" + quote.getQuoteNo() + ") Method: updateSupplierResponse Start ---");
+				
+				if(reqDTO.getOutcome() != null){
+					log.info("Outcome: " + reqDTO.getOutcome() + " SqNo(" + quote.getQuoteNo() + ")");
+				}
+				
+				if(reqDTO.getQuoteSupplier() != null){
+					if(reqDTO.getQuoteSupplier().getSmSupplier() != null){
+						log.info("Supplier ID (" + reqDTO.getQuoteSupplier().getSmSupplier().getSupplierId() + ")" 
+								+ "Supplier Name (" + reqDTO.getQuoteSupplier().getSupplierName() + ") "
+								+ "SqNo (" + quote.getQuoteNo() + ")");
+					}
+					
+					if(reqDTO.getSpecAnswers() != null){
+						int totalItemCount = 0;
+						int itemRespondCount = 0;
+						for(TplSpecAnswer specAnswer : reqDTO.getSpecAnswers()){
+							if(specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom() != BigDecimal.ZERO){
+								itemRespondCount++;
+							}
+							totalItemCount++;
+						}
+						log.info("totalItemCount (" + totalItemCount + ") "
+								+ "itemRespondCount (" + itemRespondCount + ") "
+								+ "SqNo (" + quote.getQuoteNo() + ")");					
+					}
+				}	
+				log.info("--- Bug 30840 (" + quote.getQuoteNo() + ") Method: updateSupplierResponse End ---");
+			}
+			//#30840 - End
+			
+			if (quoteResDTO.isSuccessful()) {				
 				ScQuote scQuote = getManagedBean().getScQuote();
+				log.info("Bug 30840 - isSuccessful SqNo (" + scQuote.getQuoteNo() + ")");
 
 				FacesContext
 						.getCurrentInstance()
@@ -5874,10 +5948,12 @@ public class SimpleQuoteBackingBean extends
 
 				FacesContext fc = FacesContext.getCurrentInstance();
 				if (scQuote.getMultipleQuote().equals(Boolean.TRUE)) {
+					log.info("Bug 30840 - getMultipleQuote SqNo (" + scQuote.getQuoteNo() + ")");
 					retrieveSupplierView(scQuote);
 					fc.getApplication().getNavigationHandler()
 							.handleNavigation(fc, null, "supplerView");
 				} else {
+					log.info("Bug 30840 - ACKNOWLEDGE_PAGE SqNo (" + scQuote.getQuoteNo() + ")");
 					fc.getApplication()
 							.getNavigationHandler()
 							.handleNavigation(fc, null,
