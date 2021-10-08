@@ -5473,6 +5473,10 @@ public void saveComplianceSample() {
 								distinctScoring.values());
 						this.getManagedBean().setSpecItemScoringList(
 								scoringList);
+						
+						//#31857 - start
+						Collections.sort(this.getManagedBean().getSpecItemScoringList());
+						//#31857 - end
 					}
 				}
 				retriveTemplateSpecScoring(proposalCheckList.getScQtCheckList(),this.getManagedBean().getNewchecklist());
