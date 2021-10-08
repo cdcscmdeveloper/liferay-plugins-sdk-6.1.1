@@ -5359,9 +5359,23 @@ public class SmCommonUtil {
 		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
 		reqDTO.setApplId(applId);
 		reqDTO.setCategoryId(categoryL3Id);
-		SupplierSearchResDTO resDTO = SmServiceLookup.getSupplierSearchSO()
-				.retrievePendingApprovalCategoryByApplIdAndCategoryId(reqDTO);
-
+		
+		//29823 - start
+		//to check the current appl status is after approval assignment site visit or not
+		SmWorkflowStatus wf = SmCommonUtil.getCurrentActiveWokFlowStatus(applId);
+		boolean isAfterApproval = (wf!=null && wf.getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_AFTER_APPROVED ? true : false);
+		
+		SupplierSearchResDTO resDTO = null;
+		
+		if(isAfterApproval){
+			resDTO = SmServiceLookup.getSupplierSearchSO()
+					.retrieveAfterApprovalCategoryByApplIdAndCategoryId(reqDTO);
+		}else{
+			resDTO = SmServiceLookup.getSupplierSearchSO()
+					.retrievePendingApprovalCategoryByApplIdAndCategoryId(reqDTO);
+		}
+		//29823 - end
+		
 		return resDTO.getSmSupplierCategoryList();
 	}
 
