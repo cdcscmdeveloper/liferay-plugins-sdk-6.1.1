@@ -9905,7 +9905,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				TemplateSpecResDTO templateSpecResDTO  = templateSpecSO.searchSupplierSpecification(specReqDto);
 				if(this.getManagedBean().getScQt().isZonal()){//29007&31423-start
 				List<TplSpecAnswer>	zoneSpecAnswerList=new ArrayList<TplSpecAnswer>();
-				
+				boolean newOfferedSpecification=false;//29007
 				for(TplSpecAnswer specAnswer:templateSpecResDTO.getSpecAnswerList()){
 					if(TemplateSpecConst.QUESTION_TYPE_ITEM.equalsIgnoreCase(specAnswer.getTplSpecQuestion().getQuestionType())){
 						
@@ -9922,14 +9922,20 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 							}
 						}
 					}else{
-						
+						if(specAnswer.getNewSupplierOffer() != null && StringUtils.isNotBlank(specAnswer.getNewSupplierOffer()) && StringUtils.isNotEmpty(specAnswer.getNewSupplierOffer())){//29007-start
+							newOfferedSpecification=true;
+						}//29007-End
 						zoneSpecAnswerList.add(specAnswer);	
 					}
 					
 				}
+				if(!newOfferedSpecification){//29007-start
+					scLoiLoaItem.setLoaSpecJustificationForVelocity(null);	
+					}//29007-End
 				scLoiLoaItem.setTplSpecAnswerList(zoneSpecAnswerList);//29007&31423
 				}else{//29007&31423_End
 					List<TplSpecAnswer>	zoneSpecAnswerList=new ArrayList<TplSpecAnswer>();//29007&31423-Start
+					boolean newOfferedSpecification=false;//29007
 					for(TplSpecAnswer specAnswer:templateSpecResDTO.getSpecAnswerList()){
 						if(TemplateSpecConst.QUESTION_TYPE_ITEM.equalsIgnoreCase(specAnswer.getTplSpecQuestion().getQuestionType())){
 							
@@ -9946,12 +9952,16 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 								}
 							//}
 						}else{
-							
+							if(specAnswer.getNewSupplierOffer() != null && StringUtils.isNotBlank(specAnswer.getNewSupplierOffer()) && StringUtils.isNotEmpty(specAnswer.getNewSupplierOffer())){//29007-start
+								newOfferedSpecification=true;
+							}//29007-End
 							zoneSpecAnswerList.add(specAnswer);	
 						}
 						
 					}//29007&31423-End
-				
+					if(!newOfferedSpecification){//29007-start
+						scLoiLoaItem.setLoaSpecJustificationForVelocity(null);	
+						}//29007-End
 				scLoiLoaItem.setTplSpecAnswerList(zoneSpecAnswerList);//29007&31423
 				}//29007&31423_End
 				
