@@ -5475,7 +5475,7 @@ public void saveComplianceSample() {
 								scoringList);
 						
 						//#31857 - start
-						Collections.sort(this.getManagedBean().getSpecItemScoringList());
+					//	Collections.sort(this.getManagedBean().getSpecItemScoringList());
 						//#31857 - end
 					}
 				}
