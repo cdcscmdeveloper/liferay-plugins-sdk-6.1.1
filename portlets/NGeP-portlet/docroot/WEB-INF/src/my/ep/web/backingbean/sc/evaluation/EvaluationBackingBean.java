@@ -33,6 +33,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -121,6 +123,7 @@ import my.ep.persistence.entity.sc.quationtender.ScEvaluationCommitteeReportAtta
 import my.ep.persistence.entity.sc.quationtender.ScFinancialEvaluationReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScOpenCommitteeReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListScore;
@@ -5467,15 +5470,24 @@ public void saveComplianceSample() {
 											.getManagedBean().getSelectedZone());
 							distinctScoring.put(specScoring.get(0)
 									.getSpecScoringId(), specScoring.get(0));
+							
 
 						}
-						List<TplSpecScoring> scoringList = new ArrayList<TplSpecScoring>(
+						 final List<TplSpecScoring> scoringList = new ArrayList<TplSpecScoring>(
 								distinctScoring.values());
+						 
 						this.getManagedBean().setSpecItemScoringList(
 								scoringList);
-						
 						//#31857 - start
-					//	Collections.sort(this.getManagedBean().getSpecItemScoringList());
+						Collections.sort(scoringList, new Comparator<TplSpecScoring>() {
+							public int compare(TplSpecScoring o1,
+									TplSpecScoring o2) {
+
+								return o1.getTplSpecQuestion().getSpecQuestionId()
+										.compareTo(o2.getTplSpecQuestion().getSpecQuestionId());
+							}
+						});
+						this.getManagedBean().setSpecItemScoringList(scoringList);
 						//#31857 - end
 					}
 				}
