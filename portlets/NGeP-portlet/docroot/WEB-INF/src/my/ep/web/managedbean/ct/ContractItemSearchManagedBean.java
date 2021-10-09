@@ -155,13 +155,13 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 				if(getItemstatus()!=null && getItemstatus().length()>0) {
 					
 					if(getItemstatus().equals(ParameterConst.RECORD_STATUS_INACTIVE) || getItemstatus().equals(ParameterConst.RECORD_STATUS_ACTIVE)){
-						SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.recordStatus", SearchOperator.OPERATOR_LIKE.value(),getItemstatus());
+						SearchFilterBean filterBean = new SearchFilterBean("recordStatus", SearchOperator.OPERATOR_LIKE.value(),getItemstatus()); // # Fix - #31042
 						filterBean.setCaseInsensitive(true);
 						searchBean.getDataFilterBeans().add(filterBean);
 					}
 					if(getItemstatus().equals(ParameterConst.RECORD_STATUS_ALL)){
 						SearchFilterBean filterBean = new SearchFilterBean(SearchOperator.OPERATOR_IN.value());
-						filterBean.setSearchField("scRequestItem.recordStatusFlg");
+						filterBean.setSearchField("recordStatusFlg"); // # Fix - #31042
 						filterBean.setSearchValue(new ArrayList<String>(Arrays.asList(ParameterConst.RECORD_STATUS_INACTIVE, ParameterConst.RECORD_STATUS_ACTIVE)));
 						searchBean.getDataFilterBeans().add(filterBean);
 					}
@@ -287,14 +287,14 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 					
 					if(getItemstatus().equals(ParameterConst.RECORD_STATUS_INACTIVE) || getItemstatus().equals(ParameterConst.RECORD_STATUS_ACTIVE)){
 						
-						SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.recordStatus", SearchOperator.OPERATOR_LIKE.value(),getItemstatus());
+						SearchFilterBean filterBean = new SearchFilterBean("recordStatus", SearchOperator.OPERATOR_LIKE.value(),getItemstatus()); // Fix - #31042
 						filterBean.setCaseInsensitive(true);
 						searchBean.getDataFilterBeans().add(filterBean);
 					}
 					if(getItemstatus().equals(ParameterConst.RECORD_STATUS_ALL)){
 						
 						SearchFilterBean filterBean = new SearchFilterBean(SearchOperator.OPERATOR_IN.value());
-						filterBean.setSearchField("scRequestItem.recordStatusFlg");
+						filterBean.setSearchField("recordStatusFlg"); // Fix - #31042
 						filterBean.setSearchValue(new ArrayList<String>(Arrays.asList(ParameterConst.RECORD_STATUS_INACTIVE, ParameterConst.RECORD_STATUS_ACTIVE)));
 						searchBean.getDataFilterBeans().add(filterBean);
 					}
