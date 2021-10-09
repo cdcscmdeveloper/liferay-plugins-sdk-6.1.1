@@ -341,6 +341,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		public void searchReset(){
 			
 			AmendmentBackingBean ccBB = new AmendmentBackingBean();
+			ContractBackingBean bbBB = new ContractBackingBean(); //#31042
 
 			getManagedBean().setItemcode(null);
 			getManagedBean().setItemname(null);
@@ -423,13 +424,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						//20997 - End-Fixing
 						}					
 					}// Start Fix - #31042
-					 else if(getManagedBean().getItemtype() == null){
-							
+					 else if(getManagedBean().getItemtype() == null){							
 							  getManagedBean().getContractListingPagingDataModel().reloadData();
-							  getManagedBean().getServiceListingPagingDataModel().reloadData();
-							  
+							  getManagedBean().getServiceListingPagingDataModel().reloadData();							  
 						}
-//						    // End Fix - #31042
+						// End Fix - #31042
 			} finally{
 				    // Do nothing
 				}
