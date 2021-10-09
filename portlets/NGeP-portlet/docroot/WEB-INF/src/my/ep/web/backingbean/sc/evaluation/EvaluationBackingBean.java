@@ -33,6 +33,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -5299,12 +5301,25 @@ public class EvaluationBackingBean extends
 											.getManagedBean().getSelectedZone());
 							distinctScoring.put(specScoring.get(0)
 									.getSpecScoringId(), specScoring.get(0));
+							
 
 						}
-						List<TplSpecScoring> scoringList = new ArrayList<TplSpecScoring>(
+						 final List<TplSpecScoring> scoringList = new ArrayList<TplSpecScoring>(
 								distinctScoring.values());
+						 
 						this.getManagedBean().setSpecItemScoringList(
 								scoringList);
+						//#31857 - start
+						Collections.sort(scoringList, new Comparator<TplSpecScoring>() {
+							public int compare(TplSpecScoring o1,
+									TplSpecScoring o2) {
+
+								return o1.getTplSpecQuestion().getSpecQuestionId()
+										.compareTo(o2.getTplSpecQuestion().getSpecQuestionId());
+							}
+						});
+						this.getManagedBean().setSpecItemScoringList(scoringList);
+						//#31857 - end
 					}
 				}
 				retriveTemplateSpecScoring(proposalCheckList.getScQtCheckList(),this.getManagedBean().getNewchecklist());
