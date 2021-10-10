@@ -190,6 +190,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtAppRequestRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
+import my.ep.persistence.entity.sc.quationtender.ScQtApprovalReqAttachement;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproverSettings;
 import my.ep.persistence.entity.sc.quationtender.ScQtBSVRemark;
@@ -866,9 +867,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			quationTenderReqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
 			quationTenderReqDTO.setUserLocale(facesScopes.getUserLocale());
 			quationTenderReqDTO.getQtdetail().setOtherApproval(true);
-			//#25077 - Start 
-			quationTenderReqDTO.getQtdetail().setMitiApproval(true);
-			//#25077 - End
 			quationTenderReqDTO.setDeskOfficer(facesScopes.getUserSessionBean());
 			QuationTenderResDTO quationTenderResDTO = detailSO
 					.submitQT(quationTenderReqDTO);
@@ -3643,11 +3641,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT) ){
 				if(checkSettingPopUpBPKApprovalNeeded(qt)){
 					if(!this.getManagedBean().isResetBpkCurrentArea()){
+						checkingOtherApprovalFileAttachmentNeedDeleted(qt.getScQtApprovals(),ParameterConst.APPROVAL_CATEGORY_OTHERS);
 					    this.getManagedBean().setShowPopUpBPKApprovalNeeded(true);
 						RequestContext.getCurrentInstance().execute("bpkApprovalNeededDlgTemp.show()");
 						throw new EpException(" ");
 					}
 				}
+				checkingOtherApprovalFileAttachmentNeedDeleted(qt.getScQtApprovals(),ParameterConst.APPROVAL_CATEGORY_OTHERS);
 			}
 			//#25077 End 
 			//#30477 Start Vinod
@@ -4067,6 +4067,21 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 									}
 								}
 							}
+							// #25077 - Start
+							List<ScQtApprovalRequest> approvalRequestHistory = qtApproval.getHistoryApprovalRequests();
+							if (null != approvalRequestHistory && !approvalRequestHistory.isEmpty()){
+								for (int i = 0; i < approvalRequestHistory.size(); i++) {
+									PmParameter parameter = approvalRequestHistory.get(i).getApproverAction();
+									if (null != parameter) {
+										if(null != this.getManagedBean().getScQtApprovalReqAttachementHistory()){
+											   approvalRequestHistory.get(i)
+											         .setApprovalRequestAttachement(
+											        		 this.getManagedBean().getScQtApprovalReqAttachementHistory());
+										}
+									}
+								}
+							}
+							// #25077 - End
 							tabBeans.add(new TabBean(titleName,
 									approvalCategoryCode, qtApproval, settings));
 						}
@@ -10191,6 +10206,32 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		   } 
 		}
         return isMandatoryForUpload; 
+	}
+	
+	private void checkingOtherApprovalFileAttachmentNeedDeleted(List<ScQtApproval> approval,String approvalCategory){
+		if (CollectionUtils.isNotEmpty(approval)) {
+			for (int i = 0; i < approval.size(); i++) {
+				if (approvalCategory.equalsIgnoreCase(approval.get(i).getApprovalCategory().getParameterCode())) {
+					List<ScQtApprovalRequest> approvalRequestHistory = approval.get(i).getHistoryApprovalRequests();
+       				if (CollectionUtils.isNotEmpty(approvalRequestHistory)) {
+       					for (int j = 0; j < approvalRequestHistory.size(); j++) {
+       						PmParameter approvalAction = approvalRequestHistory.get(j).getApproverAction();
+       						if(null!=approvalAction){
+	       						if(null == this.getManagedBean().getScQtApprovalReqAttachementHistory()){
+	       						         approvalRequestHistory.get(j)
+					   					         .setApprovalRequestAttachement(
+					   					        		 this.getManagedBean().getScQtApprovalReqAttachementHistory());
+	       						}
+       			                ScQtApprovalReqAttachement approvalReqAttachement = approvalRequestHistory.get(j).getApprovalRequestAttachement();
+	       	                    if(null == approvalReqAttachement){
+	       	                    	  throw new EpException(MessageConst.ERROR_760509);
+	       	                    }
+       						}
+       					}
+       				}
+				}
+			}
+		}
 	}
 	// 25077 - End
 	

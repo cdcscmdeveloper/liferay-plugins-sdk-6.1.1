@@ -1711,6 +1711,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean showPopUpBPKApprovalNeeded=false;
 	private boolean resetBpkCurrentArea=false;
 	private String previousApprovalTabName;
+	private ScQtApprovalReqAttachement scQtApprovalReqAttachementHistory;
 	//#25077 - End
 
 	//#11104-start
@@ -10652,6 +10653,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		 */
 		public void setPreviousApprovalTabName(String previousApprovalTabName) {
 			this.previousApprovalTabName = previousApprovalTabName;
+		}
+		
+		public ScQtApprovalReqAttachement getScQtApprovalReqAttachementHistory() {
+			return scQtApprovalReqAttachementHistory;
+		}
+
+		public void setScQtApprovalReqAttachementHistory(ScQtApprovalReqAttachement scQtApprovalReqAttachementHistory) {
+			this.scQtApprovalReqAttachementHistory = scQtApprovalReqAttachementHistory;
 		}
 		//#25077 - End
 		
