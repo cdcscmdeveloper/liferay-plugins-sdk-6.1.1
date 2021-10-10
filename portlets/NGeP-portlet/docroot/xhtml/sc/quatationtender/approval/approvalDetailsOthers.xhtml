@@ -69,7 +69,7 @@
 						        <h:outputText value="* " styleClass="mandatory" />
 						      </c:if> 
 								<h:outputText value="#{lbl['lbl.sc.document']}" />
-							   <c:if test="#{not empty othersApprovalDtlsList.scQtApprovalDtls and isOthersApprovalMandatoryForAttachment}">
+							   <c:if test="#{(not empty othersApprovalDtlsList.scQtApprovalDtls and isOthersApprovalMandatoryForAttachment) or (qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_QT_SUBMISSION)}">
 			                    <ac:iconTooltip value="#{lbl['lbl.sc.qt.approval.oth.supporting.document.tooltip']}" />
 			                   </c:if> 
 							</f:facet>
