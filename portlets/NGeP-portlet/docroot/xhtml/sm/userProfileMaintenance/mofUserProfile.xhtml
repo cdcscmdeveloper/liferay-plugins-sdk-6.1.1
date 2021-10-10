@@ -198,11 +198,11 @@
 				<tr>
 					<td>
 						<p:outputLabel value="#{lbl['lbl.sm.maintenance.person.email']}" />
-						<p:outputLabel value="*" styleClass="mandatory" />			
+						<p:outputLabel value="*" styleClass="mandatory" rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.pmUser ne null}"/>			
 					</td>
 					<td>
 						<c:choose>
-							<c:when test="#{smPersonnelBackingBean.managedBean.epRoleTrans ne null}">
+							<c:when test="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.pmUser ne null}">
 								<p:inputText id="basicBUEmail" label="#{lbl['lbl.sm.userprofile.email']}" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.email}"
 								validatorMessage="#{lbl['lbl.sm.userprofile.email']} - #{lbl['lbl.sm.invalidEmail']}" size="40" required="true">
 							
