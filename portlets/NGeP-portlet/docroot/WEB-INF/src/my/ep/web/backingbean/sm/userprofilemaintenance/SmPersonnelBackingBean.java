@@ -2902,12 +2902,12 @@ public class SmPersonnelBackingBean extends
 			//to get role for deleted personnel
 			if (smPersonnelList != null && !smPersonnelList.isEmpty()) {
 				for (SmPersonnel smPersonnel : smPersonnelList) {
-					if(smPersonnel.getEpRole() == null && smPersonnel.getPmUser() != null ){			
+					if(smPersonnel.getEpRole() == null && smPersonnel.getPmUser() != null){			
 						Long userId = smPersonnel.getPmUser().getUserId();
 						log.info("This is the user id == " + userId);
 						String epRole = setPrevEpRoleSuppMain(userId);
 						smPersonnel.setPrevEpRole(epRole);
-					}else if(smPersonnel.getPmUser() != null){
+					}else {
 						smPersonnel.setPrevEpRole(smPersonnel.getEpRole());
 					}
 				}
@@ -3085,7 +3085,7 @@ public class SmPersonnelBackingBean extends
 					log.info("This is the user id == " + userId);
 					String epRole = setPrevEpRoleSuppMain(userId);
 					smPersonnel.setPrevEpRole(epRole);
-				}else if(smPersonnel.getPmUser() != null){
+				}else {
 					smPersonnel.setPrevEpRole(smPersonnel.getEpRole());
 				}
 			}
@@ -3437,12 +3437,16 @@ public class SmPersonnelBackingBean extends
 			//to get role for deleted personnel
 			if (smPersonnelList2 != null && !smPersonnelList2.isEmpty()) {
 				for (SmPersonnel smPersonnel : smPersonnelList2) {
-					if(smPersonnel.getEpRole() == null && smPersonnel.getPmUser() != null ){			
+					if(smPersonnel.getEpRole() == ""){
+						smPersonnel.setEpRole(null);
+					}
+					
+					if((smPersonnel.getEpRole() == null ||smPersonnel.getEpRole() == "") && smPersonnel.getPmUser() != null){			
 						Long userId = smPersonnel.getPmUser().getUserId();
 						log.info("This is the user id == " + userId);
 						String epRole = setPrevEpRoleSuppMain(userId);
 						smPersonnel.setPrevEpRole(epRole);
-					}else if(smPersonnel.getPmUser() != null){
+					}else {
 						smPersonnel.setPrevEpRole(smPersonnel.getEpRole());
 					}
 				}
