@@ -776,6 +776,8 @@ BaseBackingBean<BPMTaskListManagedBean> {
 				    		strbuildtask.append(taski);
 				    	}
 				    }
+				}else{
+					strbuildtask = null; //#31681 - basri 22/10/21
 				}
 			/*#31422-basri 190821*/
 
@@ -1093,8 +1095,13 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		log.info("taskId:"+this.getManagedBean().getTaskId());
 		log.info("token:"+token);
 		
-		/*#31422-basri 190821*/
-		if(!this.getManagedBean().getTaskIdPair().isEmpty()){
+		//#31681 - basri 22/10/21
+		if(null == this.getManagedBean().getTaskIdPair()){
+			this.getManagedBean().setTaskIdPair("null");
+		}
+		
+		/*#31422-basri 190821*///(null == this.getManagedBean().getTaskIdPair())
+		if(!(this.getManagedBean().getTaskIdPair().equals("null"))){//#31681 - basri 22/10/21
 			reqDTO.setTaskId(this.getManagedBean().getTaskIdPair());
 	    	reqDTO.setCtxToken(token);
 	    	bpmSO.claimTask(reqDTO);
