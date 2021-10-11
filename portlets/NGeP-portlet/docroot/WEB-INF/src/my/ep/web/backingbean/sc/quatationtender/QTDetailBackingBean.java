@@ -2024,6 +2024,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					ScQtRequestContent requestContent = this.getManagedBean().getRequestContent();
 					deskOfficerAdminList = deskOfficerAdminList==null? new ArrayList<ScQtContactPerson>(): deskOfficerAdminList;
 					requestContent.setModified(isDOAListModified());
+					requestContent.setDeleted(requestContent.isBrandNew() && !requestContent.isModified());//31112 - remove request content container when no modification 
 					if(requestContent.isModified()){
 						requestContent.setRequireApproval(true);
 						Map<Long, String> map = new HashMap<Long, String>();
@@ -2037,10 +2038,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							requestContent.setRequestContent(map);
 						} catch (IOException e) {
 							throw new EpException(e.getMessage());
-						}
-					}else if(requestContent.isBrandNew()){
-						if(this.getManagedBean().isMaintanceFlow()){
-							scQt.getRequestContents().remove(requestContent);
 						}
 					}
 				}
