@@ -483,6 +483,7 @@ public class SimpleQuoteBackingBean extends
 		
 		if (scQuote == null) {
 			scQuote = new ScQuote();
+			
 		} else {
 			if (docId != null && docId > 0) {
 				boolean isPanel = scQuote.isPanel();
@@ -549,7 +550,7 @@ public class SimpleQuoteBackingBean extends
 						reqDTO);
 				CtPanelItem selectedPanelItem = resDTO.getCtPanelItem();
 				
-				if (selectedPanelItem != null && selectedPanelItem.getItemCategoryId() != null) {					
+				if (selectedPanelItem != null && selectedPanelItem.getItemCategoryId() != null) {
 					if (!isPanelItemAddable(selectedPanelItem)) {
 						// #29800 - start
 						// Do not show Exception is user returns from Treasury
@@ -586,6 +587,7 @@ public class SimpleQuoteBackingBean extends
 						getManagedBean().setTreasuryCircularLinkClickedFlag(null);
 						//#3761 - end
 					}
+
 					boolean alreadyExists = checkItemExists(null, selectedPanelItem);
 					if (alreadyExists) {
 						String itemName = "";
@@ -2099,6 +2101,7 @@ public class SimpleQuoteBackingBean extends
 		// Initializing Remarks
 		scQuote.setRemarks(initializeRemarks(scQuote, null,
 				scQuote.getRemarks(), ScSQRemark.class));
+		log.info(" in reloadSimpleQuote : --- HERE 5 : QuoteNo = " + scQuote.getQuoteNo());
 		
 		//#28865 - start
 		if (scQuote.getPurchaseInDefault() != null) {
@@ -4952,7 +4955,7 @@ public class SimpleQuoteBackingBean extends
 		.append("^").append(SupplierManagementConst.SUPP_TYPE_CONSULTANT)
 		.append("^").append(SearchOperator.OPERATOR_NOT_EQUALS.value())
 		.append("|");
-
+		
 		// #28536 - start
 		if (!getManagedBean().isG2GFlag()) {
 			criteria.append("smAppl.supplierType")
@@ -5702,6 +5705,40 @@ public class SimpleQuoteBackingBean extends
 			reqDTO.setQuoteSupplier(getManagedBean().getScQuoteSupplier());
 			reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
 			QuoteResDTO quoteResDTO = getQuoteSO().saveSupplierResponse(reqDTO);
+			
+			//#30840 - Start
+			if(quote != null){
+				log.info("--- Bug 30840 (" + quote.getQuoteNo() + ") Method: supplierSave Start ---");
+				
+				if(reqDTO.getOutcome() != null){
+					log.info("Outcome: " + reqDTO.getOutcome() + " SqNo(" + quote.getQuoteNo() + ")");
+				}
+				
+				if(reqDTO.getQuoteSupplier() != null){
+					if(reqDTO.getQuoteSupplier().getSmSupplier() != null){
+						log.info("Supplier ID (" + reqDTO.getQuoteSupplier().getSmSupplier().getSupplierId() + ")" 
+								+ "Supplier Name (" + reqDTO.getQuoteSupplier().getSupplierName() + ") "
+								+ "SqNo (" + quote.getQuoteNo() + ")");
+					}
+					
+					if(reqDTO.getSpecAnswers() != null){
+						int totalItemCount = 0;
+						int itemRespondCount = 0;
+						for(TplSpecAnswer specAnswer : reqDTO.getSpecAnswers()){
+							if(specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom() != BigDecimal.ZERO){
+								itemRespondCount++;
+							}
+							totalItemCount++;
+						}
+						log.info("totalItemCount (" + totalItemCount + ") "
+								+ "itemRespondCount (" + itemRespondCount + ") "
+								+ "SqNo (" + quote.getQuoteNo() + ")");					
+					}
+				}	
+				log.info("--- Bug 30840 (" + quote.getQuoteNo() + ") Method: supplierSave End ---");
+			}
+			//#30840 - End
+			
 			if (quoteResDTO.isSuccessful()) {
 				ScQuote scQuote = getManagedBean().getScQuote();
 
@@ -5821,13 +5858,16 @@ public class SimpleQuoteBackingBean extends
 				RequestContext.getCurrentInstance().execute("gpki_dlg.hide();");
 
 			} else {
+				log.info("Bug 30840 - spki SqNo (" + quote.getQuoteNo() + ")");
 				// spki
 				String originalText = prepareOriginalText(Boolean.FALSE); 
 				if (null != pmDigiSign) {
+					log.info("Bug 30840 - start updateSpkiDigiSignData SqNo (" + quote.getQuoteNo() + ")");
 					updateSpkiDigiSignData(pmDigiSign,
 							ParameterConst.DOCTYPE_SIMPLE_QUOTE,
 							quote.getQuoteId(), quote.getQuoteNo(),
 							originalText);
+					log.info("Bug 30840 - end updateSpkiDigiSignData SqNo (" + quote.getQuoteNo() + ")");
 				}
 				
 				byte[] signedData = getManagedBean().getSpkiBackingBean()
@@ -5868,9 +5908,46 @@ public class SimpleQuoteBackingBean extends
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
 			reqDTO.setQuoteSupplier(getManagedBean().getScQuoteSupplier());
 			reqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
+			log.info("Bug 30840 - start saveSupplierResponse SqNo (" + quote.getQuoteNo() + ")");
 			QuoteResDTO quoteResDTO = getQuoteSO().saveSupplierResponse(reqDTO);
-			if (quoteResDTO.isSuccessful()) {
+			log.info("Bug 30840 - end saveSupplierResponse SqNo (" + quote.getQuoteNo() + ")");
+			
+			//#30840 - Start
+			if(quote != null){
+				log.info("--- Bug 30840 (" + quote.getQuoteNo() + ") Method: updateSupplierResponse Start ---");
+				
+				if(reqDTO.getOutcome() != null){
+					log.info("Outcome: " + reqDTO.getOutcome() + " SqNo(" + quote.getQuoteNo() + ")");
+				}
+				
+				if(reqDTO.getQuoteSupplier() != null){
+					if(reqDTO.getQuoteSupplier().getSmSupplier() != null){
+						log.info("Supplier ID (" + reqDTO.getQuoteSupplier().getSmSupplier().getSupplierId() + ")" 
+								+ "Supplier Name (" + reqDTO.getQuoteSupplier().getSupplierName() + ") "
+								+ "SqNo (" + quote.getQuoteNo() + ")");
+					}
+					
+					if(reqDTO.getSpecAnswers() != null){
+						int totalItemCount = 0;
+						int itemRespondCount = 0;
+						for(TplSpecAnswer specAnswer : reqDTO.getSpecAnswers()){
+							if(specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom() != BigDecimal.ZERO){
+								itemRespondCount++;
+							}
+							totalItemCount++;
+						}
+						log.info("totalItemCount (" + totalItemCount + ") "
+								+ "itemRespondCount (" + itemRespondCount + ") "
+								+ "SqNo (" + quote.getQuoteNo() + ")");					
+					}
+				}	
+				log.info("--- Bug 30840 (" + quote.getQuoteNo() + ") Method: updateSupplierResponse End ---");
+			}
+			//#30840 - End
+			
+			if (quoteResDTO.isSuccessful()) {				
 				ScQuote scQuote = getManagedBean().getScQuote();
+				log.info("Bug 30840 - isSuccessful SqNo (" + scQuote.getQuoteNo() + ")");
 
 				FacesContext
 						.getCurrentInstance()
@@ -5893,10 +5970,12 @@ public class SimpleQuoteBackingBean extends
 
 				FacesContext fc = FacesContext.getCurrentInstance();
 				if (scQuote.getMultipleQuote().equals(Boolean.TRUE)) {
+					log.info("Bug 30840 - getMultipleQuote SqNo (" + scQuote.getQuoteNo() + ")");
 					retrieveSupplierView(scQuote);
 					fc.getApplication().getNavigationHandler()
 							.handleNavigation(fc, null, "supplerView");
 				} else {
+					log.info("Bug 30840 - ACKNOWLEDGE_PAGE SqNo (" + scQuote.getQuoteNo() + ")");
 					fc.getApplication()
 							.getNavigationHandler()
 							.handleNavigation(fc, null,
@@ -7737,12 +7816,12 @@ public class SimpleQuoteBackingBean extends
 			if(scQuote.getPurchaseInDefault() == null){
 				Date currentDate = new Date();
 				Date closingDate = scQuote.getEndDate();
-					
+				
 				Calendar cal = Calendar.getInstance();
 				cal.clear(); 
 				cal.setTime(closingDate);
 				cal.add(Calendar.DATE, sqTimeValidity); //add 60days to closing/end date
-					
+				
 				if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION)){
 					if(currentDate.compareTo(cal.getTime()) >= 0){
 						validDate = false;
