@@ -317,6 +317,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				.getScQtApprovalDtls();
 		for (int i = 0; i < list.size(); i++) {
 			list.get(i).setApprovalRequestAttachement(null);
+			getManagedBean().setScQtApprovalReqAttachement(null);// 25077
 		}
 		logger.debug("deleteOthersApprovalFile - END");
 	}
@@ -2745,6 +2746,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				approvalReqAttachement.setDocNo(scQtApprovalHistoryDtls.getScQtApproval().getScQt().getQtNo());
 				uploadAttachment(event.getFile(), approvalReqAttachement);
 				scQtApprovalHistoryDtls.setApprovalRequestAttachement(approvalReqAttachement);
+				this.getManagedBean().setScQtApprovalReqAttachementHistory(approvalReqAttachement);
 			}
 		}
 		
@@ -2757,6 +2759,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					.getHistoryApprovalRequests();
 			for (int i = 0; i < list.size(); i++) {
 				list.get(i).setApprovalRequestAttachement(null);
+				this.getManagedBean().setScQtApprovalReqAttachementHistory(null);
 			}
 		}
 		//#25077 - End
