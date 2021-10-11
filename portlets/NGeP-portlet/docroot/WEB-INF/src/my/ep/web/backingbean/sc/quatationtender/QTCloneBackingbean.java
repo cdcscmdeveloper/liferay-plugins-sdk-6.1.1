@@ -832,9 +832,11 @@ public class QTCloneBackingbean extends
 					
 				}
 				if(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId) || QTStatusConst.QT_REVISION_PUBLICATION.equals(statusId)){//25635
-				if(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId)){//31350-start
-					retrieveComittee1And2Tier(scQt,copyScqt);
-				}//31350-End
+					if(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId)){//31350-start
+						log.info("==========stratCommitteeCloneDuringPendingDocument========="+scQt.getQtNo());//31350
+						retrieveComittee1And2Tier(scQt,copyScqt);
+						log.info("==========EndCommitteeCloneDuringPendingDocument========="+scQt.getQtNo());//31350
+					}//31350-End
 					retrieveBrief(copyScqt);
 					retrievePublishing(copyScqt);
 					retrieveDeductionPaymentTabDtl(scQt,copyScqt,QtDetailsSO);
@@ -2569,6 +2571,7 @@ public class QTCloneBackingbean extends
 	    	committeTabs.add(new TabBean(parameterHelper.getParameterDesc(
 					parameterType, tabType), tabType, clonedScQtCommittee));
 		}else{
+			log.info("==========2TierCommitteeCloneDuringPendingDocument========="+scQt.getQtNo());//31350
 			tabType=ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE;
 	    	clonedScQtCommittee =cloneComitteee(scQt,copyScqt,tabType);
 	    	qtCommitteList.add(clonedScQtCommittee);
