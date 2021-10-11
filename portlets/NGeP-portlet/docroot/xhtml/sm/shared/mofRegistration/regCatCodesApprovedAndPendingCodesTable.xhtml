@@ -418,7 +418,7 @@
 
 		<p:dataTable var="aprvdCatNBean"
 			widgetVar="smApprvdCatCodesNewApplDtWidVar"
-			value="#{backingBean.managedBean.approvedCategoryList}"
+			value="#{backingBean.managedBean.activeCategoryList}"
 			rowKey="#{aprvdCatNBean}" rowIndexVar="index" id="catApprNDt"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			<ac:paginator for="catApprNDt" />
