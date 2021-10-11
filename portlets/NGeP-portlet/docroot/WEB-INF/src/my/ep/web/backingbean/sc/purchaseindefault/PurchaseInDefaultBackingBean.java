@@ -825,6 +825,7 @@ public class PurchaseInDefaultBackingBean extends
 			Long stsId = getManagedBean().getPidStatus().getStatusId(); //#28865
 			
 			if (!BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)
+					&& !BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome) //#9133
 					&& !BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome) //#9133
 					&& !DPStatusConstants.PID_PENDING_REVISION.equals(stsId) //#9133
 					&& !DPStatusConstants.PID_PENDING_SUPPLIER_RESPONSE.equals(stsId)
@@ -964,7 +965,7 @@ public class PurchaseInDefaultBackingBean extends
 				else
 					finalizeRemarks(scPurchaseInDefault.getRemarks());
 					
-				saveRemark(scPurchaseInDefault);
+				//saveRemark(scPurchaseInDefault); comment out this //#9133
 				purchaseInDefaultSO.savePurchaseInDefault(reqDTO);
 			    reqDTO.setPurchaseInDefaultId(scPurchaseInDefault.getPurchaseInDefaultId());
 				reqDTO.setFetchSubEntity(true);
