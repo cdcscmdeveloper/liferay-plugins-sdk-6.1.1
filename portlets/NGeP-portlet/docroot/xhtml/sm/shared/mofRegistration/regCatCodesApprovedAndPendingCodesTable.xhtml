@@ -416,12 +416,14 @@
 		(backingBean.managedBean.currentStatus eq 'Pending Review Site Visit Report - After Approval' 
 		or backingBean.managedBean.currentStatus eq 'Menunggu Laporan Lawatan Tapak - Selepas Diluluskan')}">
 
+		<!-- 29723 Start -->	
 		<p:dataTable var="aprvdCatNBean"
 			widgetVar="smApprvdCatCodesNewApplDtWidVar"
-			value="#{backingBean.managedBean.approvedCategoryList}"
+			value="#{backingBean.managedBean.activeCategoryList}"
 			rowKey="#{aprvdCatNBean}" rowIndexVar="index" id="catApprNDt"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			<ac:paginator for="catApprNDt" />
+			<!-- 29723 End -->	
 			
 			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2%;">
 				<p:outputLabel value="#{index + 1}"
