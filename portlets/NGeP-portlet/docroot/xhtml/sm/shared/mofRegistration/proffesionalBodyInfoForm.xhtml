@@ -182,13 +182,15 @@
 						value="
 						#{lbl['lbl.sm.profBody.regNo']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
+				<!-- 31763 START-->
 				<td><p:inputText size="35"
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.profBody.regNo']}" id="profBodyRegNo"
 						value="#{backingBean.managedBean.selectedAssocBody.regNo}"
-						maxlength="20" /> <p:message id="profBodyRegNoMsg"
+						maxlength="30" /> <p:message id="profBodyRegNoMsg"
 						for="profBodyRegNo" showSummary="true" showDetail="false"
 						display="icon" /></td>
+				<!-- 31763 END-->
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.profBody.expDate']}" />
