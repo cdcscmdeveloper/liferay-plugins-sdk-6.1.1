@@ -30,7 +30,7 @@
 	<p:messages id="catalogDetMsgId" showDetail="true" autoUpdate="true"
 		closable="true" showSummary="false"></p:messages>
 	<!-- #30457-start -->
-	<p:growl id="growlMssg" showDetail="true"/>
+	<p:growl id="growlMssg" showDetail="true" showSummary="false"/>
 	<!-- #30457-end -->
 
 	<p:blockUI block="form" widgetVar="blockWidget">
@@ -202,7 +202,12 @@
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.pmUom}"
 							completeMethod="#{catalogueBackingBean.autoCompleteUom}"
 							maxResults="50" dropdown="false" forceSelection="true" />
-						
+						<!-- #569 Start -->
+						<p:graphicImage
+				     		rendered="#{catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.pmUom.uomId==null}"
+				    		value="#{catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.pmUom.uomId==null ? '/css/images/design/icon_error.png' : ''}" 
+				    		update="@form" />
+						<!-- #569 End -->
 					</td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.sku']}" /></td>
 					<td><p:inputText size="35" maxlength="50"
@@ -249,8 +254,14 @@
 					<td colspan="3"><p:inputTextarea maxlength="2000"
 							style="width:80% !important;height:100px;overflow:scroll;"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc}"
-							readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue or unspscCodeBackingBean.supplierTemp}" /></td>
-
+							readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue or unspscCodeBackingBean.supplierTemp}" />
+						<!-- #569 Start -->
+						<p:graphicImage
+				     		rendered="#{catalogueBackingBean.managedBean.publish and empty catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc}"
+				    		value="#{catalogueBackingBean.managedBean.publish and empty catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc ? '/css/images/design/icon_error.png' : ''}" 
+				    		update="@form" />
+						<!-- #569 End -->		
+					</td>
 				</tr>
 
 
