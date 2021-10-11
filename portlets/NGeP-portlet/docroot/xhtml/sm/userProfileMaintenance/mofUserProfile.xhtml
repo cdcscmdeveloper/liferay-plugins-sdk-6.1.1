@@ -198,11 +198,11 @@
 				<tr>
 					<td>
 						<p:outputLabel value="#{lbl['lbl.sm.maintenance.person.email']}" />
-						<p:outputLabel value="*" styleClass="mandatory" />			
+						<p:outputLabel value="*" styleClass="mandatory" rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.pmUser ne null}"/>			
 					</td>
 					<td>
 						<c:choose>
-							<c:when test="#{smPersonnelBackingBean.managedBean.epRoleTrans ne null}">
+							<c:when test="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.pmUser ne null}">
 								<p:inputText id="basicBUEmail" label="#{lbl['lbl.sm.userprofile.email']}" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.email}"
 								validatorMessage="#{lbl['lbl.sm.userprofile.email']} - #{lbl['lbl.sm.invalidEmail']}" size="40" required="true">						
 								<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
@@ -1267,13 +1267,9 @@
 					</p:column>
 					
 					<!-- Current eP Role  -->
-					<p:column headerText="#{lbl['lbl.sm.personnel.history.column1']}">
-						<h:outputText value="#{lbl['lbl.sm.personnel.epRole.name.admin']}"  rendered="#{history.pmRole.roleCode eq SupplierManagementConst.ROLE_CODE_SM_1}" />
-						<h:outputText value="#{lbl['lbl.sm.personnel.epRole.name.supplierUser']}"  rendered="#{history.pmRole.roleCode eq SupplierManagementConst.ROLE_CODE_SM_2}" />
-						<h:outputText value="#{lbl['lbl.sm.personnel.epRole.name.catalogue']}" rendered="#{history.pmRole.roleCode eq SupplierManagementConst.ROLE_CODE_SM_3}" />
-						<h:outputText value="#{lbl['lbl.sm.personnel.epRole.name.fulfillment']}"  rendered="#{history.pmRole.roleCode eq SupplierManagementConst.ROLE_CODE_SM_4}" />
-						<h:outputText value="#{lbl['lbl.sm.personnel.epRole.name.supplierTemp']}"  rendered="#{history.pmRole.roleCode eq SupplierManagementConst.ROLE_CODE_SM_5}" />
-						<h:outputText value="#{lbl['lbl.sm.person.epRoleStatus.unavailable']}" rendered="#{history.pmRole eq null }" />
+					<p:column headerText="#{lbl['lbl.sm.userprofile.eprole']}">
+						<ac:smRoleDesc roleCode="#{history.pmRole.roleCode}"
+							backingBean="#{smPersonnelBackingBean}" />
 					</p:column>
 
 					<!-- Action Date  -->

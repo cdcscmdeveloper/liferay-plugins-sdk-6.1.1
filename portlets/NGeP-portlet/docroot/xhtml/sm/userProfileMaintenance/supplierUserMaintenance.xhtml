@@ -58,23 +58,6 @@
 								</p:selectOneMenu></td>
 						</tr>
 					<!-- NATIONALITY  -->
-					<!-- USER ACCOUNT STATUS  -->	
-						<tr>
-							<td><p:outputLabel
-									value="#{lbl['lbl.sm.person.userAccountStatus']}" /></td>
-							<td><p:selectOneMenu id="mofspRecordStatus"
-									value="#{smPersonnelBackingBean.managedBean.spRecordStatus}">
-									<f:selectItem itemLabel="#{lbl['lbl.cm.selectOne']}"
-										itemValue="0" />
-									<f:selectItem
-										itemLabel="#{lbl['lbl.sm.maintenance.status.activate']}"
-										itemValue="1" />
-									<f:selectItem
-										itemLabel="#{lbl['lbl.sm.maintenance.status.pending']}"
-										itemValue="8" />
-								</p:selectOneMenu> 
-								</td>
-						</tr>
 					<!-- SOFT CERT STATUS  -->
 						<tr>
 							<td><p:outputLabel
@@ -107,6 +90,24 @@
 								</p:selectOneMenu></td>
 						</tr>
 					<!-- SOFT CERT STATUS  -->
+					<!-- USER ACCOUNT STATUS  -->	
+						<tr>
+							<td><p:outputLabel
+									value="#{lbl['lbl.sm.person.userAccountStatus']}" /></td>
+							<td><p:selectOneMenu id="mofspRecordStatus"
+									value="#{smPersonnelBackingBean.managedBean.spRecordStatus}">
+									<f:selectItem itemLabel="#{lbl['lbl.cm.selectOne']}"
+										itemValue="0" />
+									<f:selectItem
+										itemLabel="#{lbl['lbl.sm.maintenance.status.activate']}"
+										itemValue="1" />
+									<f:selectItem
+										itemLabel="#{lbl['lbl.sm.maintenance.status.pending']}"
+										itemValue="8" />
+								</p:selectOneMenu> 
+								</td>
+						</tr>
+					<!-- USER ACCOUNT STATUS  -->
 					<!-- EP Role  -->
 						<tr>
 							<td><p:outputLabel
