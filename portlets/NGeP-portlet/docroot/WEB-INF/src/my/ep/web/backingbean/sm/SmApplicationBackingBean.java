@@ -1965,9 +1965,11 @@ public class SmApplicationBackingBean extends
 					.retrieveLatestRejectedApplication(mofReqDTO).getSmAppl();
 			if (latestRejectedAppl != null) {
 				//	Refs #15629 - Start - 21/1/2021
+				//STart 30974
+				log.info("STATUS 30974 - atestRejectedAppl.getPmStatus().getStatusId()="+latestRejectedAppl.getPmStatus().getStatusId());
 				if(!EntityHelper.isCollectionEmpty(latestRejectedAppl
-						.getSmApplRejectReasons())){
-
+						.getSmApplRejectReasons()) && latestRejectedAppl.getPmStatus() != null && SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER.equalsIgnoreCase(latestRejectedAppl.getPmStatus().getStatusId().toString())){
+					
 					Iterator<SmApplRejectReason> smApplRejectReasonIter = latestRejectedAppl
 							.getSmApplRejectReasons().iterator();
 				    while(smApplRejectReasonIter.hasNext()){
@@ -1977,6 +1979,7 @@ public class SmApplicationBackingBean extends
 				          }
 				      }
 				}
+				///end 30974
 				// Refs #15629 - End - 21/1/2021
 				getManagedBean()
 						.setRejectReasonsMsg(
