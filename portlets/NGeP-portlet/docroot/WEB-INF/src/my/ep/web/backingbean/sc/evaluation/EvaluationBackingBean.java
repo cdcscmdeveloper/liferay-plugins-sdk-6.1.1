@@ -6444,6 +6444,7 @@ public void saveComplianceSample() {
 	 * @throws Exception 
 	 */
 	public void retrivePresentationDemoSummary() throws Exception {
+		demoAttachmentChecking();
 		IQTEvaluationSO evaluationSo = null;
 		try {
 			//#28784 - start
@@ -6503,7 +6504,6 @@ public void saveComplianceSample() {
 			this.getManagedBean().setDisqualifiedSuppliersDM(
 					new SummarySupplierPagingDataModel("disQualifiedListId",
 							false, false, null, evalReqDTO.getResultStages()));
-			demoAttachmentChecking();
 			retrieveAllTechnicalChecklist();
 			//#28784 - end
 		} finally {
