@@ -26,7 +26,6 @@
 				</f:facet>
 				<p:inputText value="#{price.fromQty}" size="5" readonly="true"
 					maxlength="6" disabled="#{price.standardDisabled}"></p:inputText>
-
 			</p:column>
 			<p:column>
 				<f:facet name="header">
@@ -46,6 +45,13 @@
 						update="pTErrorLink, promotionTierId" />
 					<f:converter converterId="bigDecimalConverter" />
 				</p:inputText>
+				<!-- 569 Start -->
+				<p:graphicImage
+				    rendered="#{catalogueBackingBean.managedBean.publish and price.price==null 
+						or (catalogueBackingBean.managedBean.publish and price.price le 0)}"
+					value="#{catalogueBackingBean.managedBean.publish and price.price==null 
+						or (catalogueBackingBean.managedBean.publish and price.price le 0) ? '/css/images/design/icon_error.png' : ''}" update="@form" />
+				<!-- 569 ENd -->
 			</p:column>
 			<p:column>
 				<f:facet name="header">
@@ -68,7 +74,14 @@
 						listener="#{catalogueBackingBean.validateTierPromotionPrice(rowIndex)}"
 						update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID" />
 				</p:calendar>
-
+				<!-- 569 Start -->
+				<p:graphicImage
+					rendered="#{catalogueBackingBean.managedBean.publish and price.startDate==null 
+						or (catalogueBackingBean.managedBean.publish and price.startDate ge price.endDate)}"
+				    value="#{catalogueBackingBean.managedBean.publish and price.startDate==null 
+				    	or (catalogueBackingBean.managedBean.publish and price.startDate ge price.endDate) ? '/css/images/design/icon_error.png' : ''}" 
+				    update="@form" />
+				<!-- 569 End -->
 			</p:column>
 			<p:column>
 				<f:facet name="header">
@@ -92,7 +105,16 @@
 						listener="#{catalogueBackingBean.validateTierPromotionPrice(rowIndex)}"
 						update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID" />
 				</p:calendar>
-
+				<!-- 569 Start -->
+				<p:graphicImage
+				    rendered="#{catalogueBackingBean.managedBean.publish and price.startDate==null and price.endDate==null 
+				    	or (catalogueBackingBean.managedBean.publish and price.startDate ge price.endDate)
+				    	or (catalogueBackingBean.managedBean.publish and price.endDate lt catalogueBackingBean.managedBean.currentDate)}"
+				    value="#{catalogueBackingBean.managedBean.publish and price.startDate==null and price.endDate==null
+				    	or (catalogueBackingBean.managedBean.publish and price.startDate ge price.endDate) 
+				    	or (catalogueBackingBean.managedBean.publish and price.endDate lt catalogueBackingBean.managedBean.currentDate) ? '/css/images/design/icon_error.png' : ''}" 
+				    update="@form" />
+				<!-- 569 End -->
 			</p:column>
 
 			<p:column>

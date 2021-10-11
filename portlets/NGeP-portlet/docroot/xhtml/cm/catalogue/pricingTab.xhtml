@@ -41,22 +41,46 @@
 						<f:converter converterId="bigDecimalConverter" />
 					<p:ajax process="@this" update="normalPriceId"></p:ajax>
 				</p:inputText>
+				<!-- 569 Start -->
+				<p:graphicImage
+				    rendered="#{catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price==null 
+				     	or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price le 0)}"
+				    value="#{catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price==null 
+				    	or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price le 0) ? '/css/images/design/icon_error.png' : ''}" 
+				    update="@form" />
+				<!-- 569 End -->
 			</p:column>
 			<p:column>
 				<p:calendar disabled="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"
 					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate}" mindate="#{catalogueBackingBean.managedBean.currentDate}" readonlyInput="true"
-					showOn="button" navigator="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
+					showOn="button" navigator="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"  id="sdate">
 					<p:ajax event="dateSelect" listener="#{catalogueBackingBean.onDateSelectListener(catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing)}" update="standardEndDateId"/>
 				</p:calendar>
-
+				<!-- 569 Start -->
+				<p:graphicImage
+				    rendered="#{catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate==null 
+				    	or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate gt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate)}"
+				    value="#{catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate==null 
+				    	or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate gt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate) ? '/css/images/design/icon_error.png' : ''}" 
+				    update="@form" />
+				<!-- 569 End -->
 			</p:column>
 			<p:column>
 				<p:calendar id="standardEndDateId" disabled="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue or catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate==null}"
 					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate}" mindate="#{catalogueBackingBean.managedBean.currentDate}" readonlyInput="true" 
 					maxdate="#{catalogueBackingBean.getNextTwoYear(catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate)}"
-					showOn="button" navigator="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
+					showOn="button" navigator="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" required="true">
 				</p:calendar>
-
+				<!-- 569 Start -->
+				<p:graphicImage
+				     rendered="#{catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate==null and catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate==null 
+				     	or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate gt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate)
+				     	or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate le catalogueBackingBean.managedBean.currentDate)}"
+				    value="#{catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate==null and catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate==null 
+				    	or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate gt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate) 
+				    	or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate le catalogueBackingBean.managedBean.currentDate) ? '/css/images/design/icon_error.png' : ''}"
+				    update="@form" />
+				<!-- 569 End -->
 			</p:column>
 		</p:row>
 

@@ -48,6 +48,12 @@
 					<p:ajax process="@this" listener="#{catalogueBackingBean.validatePromotionPrice(rowIndex)}" update="zonalPromoErrorLink zonalPromoPriceId" />
 						<f:converter converterId="bigDecimalConverter" />
 				</p:inputText>
+				<!--569-Start -->
+				<p:graphicImage
+				    rendered="#{catalogueBackingBean.managedBean.publish and zPromotion.price==null or zPromotion.price le 0}"
+				    value="#{catalogueBackingBean.managedBean.publish and zPromotion.price==null or zPromotion.price le 0 ? '/css/images/design/icon_error.png' : ''}" 
+				    update="@form" />
+				<!--569-End -->
 			</p:column>
 			<p:column>
 				<f:facet name="header">
@@ -63,7 +69,16 @@
 						listener="#{catalogueBackingBean.validateZonalPromoDateOverlap(rowIndex)}"
 						update="zonalPromoErrorLink" />
 				</p:calendar>
-
+				<!--569-Start -->
+				<p:graphicImage 
+					rendered="#{catalogueBackingBean.managedBean.publish and zPromotion.startDate gt zPromotion.endDate 
+						or (catalogueBackingBean.managedBean.publish and zPromotion.startDate lt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate) 
+						or (catalogueBackingBean.managedBean.publish and zPromotion.startDate gt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate)}"
+					value="#{catalogueBackingBean.managedBean.publish and zPromotion.startDate gt zPromotion.endDate 
+						or (catalogueBackingBean.managedBean.publish and zPromotion.startDate lt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate) 
+						or (catalogueBackingBean.managedBean.publish and zPromotion.startDate gt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate) ? '/css/images/design/icon_error.png' : ''}" 
+					update="@form" />
+				<!--569-End -->
 			</p:column>
 			<p:column>
 				<f:facet name="header">
@@ -79,7 +94,18 @@
 						listener="#{catalogueBackingBean.validateZonalPromoDateOverlap(rowIndex)}"
 						update="zonalPromoErrorLink" />
 				</p:calendar>
-
+				<!--569-Start -->
+				<p:graphicImage
+				    rendered="#{catalogueBackingBean.managedBean.publish and zPromotion.startDate gt zPromotion.endDate 
+				    	or (catalogueBackingBean.managedBean.publish and zPromotion.endDate lt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate) 
+				    	or (catalogueBackingBean.managedBean.publish and zPromotion.endDate gt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate)
+				    	or (catalogueBackingBean.managedBean.publish and zPromotion.endDate lt catalogueBackingBean.managedBean.currentDate)}"
+				    value="#{catalogueBackingBean.managedBean.publish and zPromotion.startDate gt zPromotion.endDate 
+				    	or (catalogueBackingBean.managedBean.publish and zPromotion.endDate lt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate) 
+				    	or (catalogueBackingBean.managedBean.publish and zPromotion.endDate gt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate) 
+				    	or (catalogueBackingBean.managedBean.publish and zPromotion.endDate lt catalogueBackingBean.managedBean.currentDate) ? '/css/images/design/icon_error.png' : ''}" 
+				    update="@form" />
+				<!--569-End -->
 			</p:column>
 
 
