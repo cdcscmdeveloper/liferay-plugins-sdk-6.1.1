@@ -91,7 +91,7 @@
 							</style>
 							<!-- datatable for mandatory support doc with record to display -->
 							<p:dataTable var="inquirytbl" value="#{sdoReviewBackingBean.managedBean.selectedInquiryResponse.smApplSupportDocInquiries}" id="inquiryHistoryOnlineMandatoryList" 
-								rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" rendered="#{!sdoReviewBackingBean.managedBean.emptyMandatoryDocHistory}"
+								rowIndexVar="index" style="width:1000px !important; table-layout: fixed !important;" rendered="#{!sdoReviewBackingBean.managedBean.emptyMandatoryDocHistory}"
 								emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 								<p:columnGroup type="header">
 									<p:row>
@@ -151,7 +151,7 @@
 							</p:dataTable>
 							<!-- datatable for non-mandatory support doc with record to display -->
 							<p:dataTable var="inquirytbl" value="#{sdoReviewBackingBean.managedBean.selectedInquiryResponse.smApplSupportDocInquiries}" id="inquiryHistoryOnlineNonMandatoryList" 
-								rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" rendered="#{!sdoReviewBackingBean.managedBean.emptyNonMandatoryDocHistory}"
+								rowIndexVar="index" style="width:1000px !important; table-layout: fixed !important;" rendered="#{!sdoReviewBackingBean.managedBean.emptyNonMandatoryDocHistory}"
 								emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 								<p:columnGroup type="header">
 									<p:row>
@@ -263,7 +263,7 @@
 					<td>
 						<!-- datatable for mandatory support doc with record to display -->
 						<p:dataTable var="table" value="#{sdoReviewBackingBean.managedBean.smAppl.smApplSupportDocs}" id="onlineMandatoryList" 
-							rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" rendered="#{!sdoReviewBackingBean.mandatoryAllReceived}"
+							rowIndexVar="index" style="width:1000px !important; table-layout: fixed !important;" rendered="#{!sdoReviewBackingBean.mandatoryAllReceived}"
 							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 							<p:columnGroup type="header">
 								<p:row>
@@ -318,7 +318,7 @@
 						</p:dataTable>
 						<!-- datatable for non-mandatory support doc with record to display -->
 						<p:dataTable var="table" value="#{sdoReviewBackingBean.managedBean.smAppl.smApplSupportDocs}" id="onlineNonMandatoryList" 
-							rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" rendered="#{!sdoReviewBackingBean.nonMandatoryAllReceived}"
+							rowIndexVar="index" style="width:1000px !important; table-layout: fixed !important;" rendered="#{!sdoReviewBackingBean.nonMandatoryAllReceived}"
 							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 							
 							<p:columnGroup type="header">
