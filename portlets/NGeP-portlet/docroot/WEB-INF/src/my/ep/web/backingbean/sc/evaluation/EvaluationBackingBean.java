@@ -6331,7 +6331,8 @@ public class EvaluationBackingBean extends
 								if (// #25638 -Start.
 										(this.getManagedBean().getCurrentStatusId()
 										.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
-										|| this.getManagedBean().equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION))
+										|| this.getManagedBean().getCurrentStatusId()
+										.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION))
 									// #25638 - End.
 										) {
 									checkSampleComplianceCompleted();
