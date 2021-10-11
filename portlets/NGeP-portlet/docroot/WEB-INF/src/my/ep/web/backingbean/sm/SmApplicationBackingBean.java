@@ -1966,7 +1966,7 @@ public class SmApplicationBackingBean extends
 			if (latestRejectedAppl != null) {
 				//	Refs #15629 - Start - 21/1/2021
 				//STart 30974
-				log.info("STATUS 30974 - atestRejectedAppl.getPmStatus().getStatusId()="+latestRejectedAppl.getPmStatus().getStatusId());
+				//log.info("STATUS 30974 - atestRejectedAppl.getPmStatus().getStatusId()="+latestRejectedAppl.getPmStatus().getStatusId());
 				if(!EntityHelper.isCollectionEmpty(latestRejectedAppl
 						.getSmApplRejectReasons()) && latestRejectedAppl.getPmStatus() != null && SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER.equalsIgnoreCase(latestRejectedAppl.getPmStatus().getStatusId().toString())){
 					

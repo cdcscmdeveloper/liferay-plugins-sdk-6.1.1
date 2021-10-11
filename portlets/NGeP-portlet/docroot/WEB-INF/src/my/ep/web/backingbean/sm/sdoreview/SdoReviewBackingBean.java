@@ -130,8 +130,9 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 					.retrieveLatestRejectedApplication(mofReqDTO).getSmAppl();
 			
 			//	Refs #15629 - Start - 5/2/2021
+			//start 30974
 			if(!EntityHelper.isCollectionEmpty(latestRejectedAppl
-					.getSmApplRejectReasons())){
+					.getSmApplRejectReasons()) && latestRejectedAppl.getPmStatus() != null && SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER.equalsIgnoreCase(latestRejectedAppl.getPmStatus().getStatusId().toString())){
 
 				Iterator<SmApplRejectReason> smApplRejectReasonIter = latestRejectedAppl
 						.getSmApplRejectReasons().iterator();
@@ -142,6 +143,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			          }
 			      }
 			}
+			//End 30974
 			// Refs #15629 - End - 5/2/2021
 			
 			getManagedBean().setRejectReasonsMsg(
