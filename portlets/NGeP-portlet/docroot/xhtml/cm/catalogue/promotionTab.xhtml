@@ -47,26 +47,59 @@
 			<p:column>
 				<p:inputText id="promotionPriceId" disabled="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"
 					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.price}" maxlength="18" style="text-align:right">
-					
 						<f:converter converterId="bigDecimalConverter" />
 					<p:ajax process="@this" update="promotionPriceId"></p:ajax>
-					</p:inputText>
+				</p:inputText>
+				<!-- 569 Start -->
+				<p:graphicImage
+				    rendered="#{catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.price==null 
+				    	or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.price le 0)
+				    	or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.price ge catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing)}"
+				    value="#{catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.price==null 
+				    	or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.price le 0) 
+				    	or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.price ge catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing) ? '/css/images/design/icon_error.png' : ''}" 
+				    update="@form" />
+				<!-- 569 End -->
 			</p:column>
 			<p:column>
 				<p:calendar disabled="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"
 					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.startDate}" mindate="#{catalogueBackingBean.managedBean.currentDate}" readonlyInput="true"
 					showOn="button" navigator="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					
-					</p:calendar>
-
+				</p:calendar>
+				<!-- 569 Start -->
+				<p:graphicImage
+				    rendered="#{catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.startDate==null 
+				   		or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.startDate gt catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.endDate) 
+				   		or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.startDate le catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate) 
+				   		or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.startDate gt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate)}"
+				    value="#{catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.startDate==null 
+				    	or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.startDate gt catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.endDate) 
+				   		or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.startDate le catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate) 
+				   		or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.startDate gt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate) ? '/css/images/design/icon_error.png' : ''}" 
+				   	update="@form" />
+				<!-- 569 End -->
 			</p:column>
 			<p:column>
 				<p:calendar disabled="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"
 					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.endDate}" mindate="#{catalogueBackingBean.managedBean.currentDate}" readonlyInput="true"
 					showOn="button" navigator="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					
-					</p:calendar>
-
+				</p:calendar>
+				<!-- 569 Start -->
+				<p:graphicImage
+				    rendered="#{catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.startDate==null and catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.endDate==null 
+				  		or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.startDate gt catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.endDate)
+			   			or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.endDate ge catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate) 
+				 	 	or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.endDate lt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate)
+				 	 	or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.endDate lt catalogueBackingBean.managedBean.currentDate)}"
+				    value="#{catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.startDate==null and catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.endDate==null 
+				    	or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.startDate gt catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.endDate)
+			   			or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.endDate ge catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate) 
+				  		or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.endDate lt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate) 
+				  		or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.endDate lt catalogueBackingBean.managedBean.currentDate)? '/css/images/design/icon_error.png' : ''}" 
+				  	update="@form" />
+				<!-- 569 End -->
 			</p:column>
 			
 			<!--20200520@akmal - Enhancement27627 - Start -->

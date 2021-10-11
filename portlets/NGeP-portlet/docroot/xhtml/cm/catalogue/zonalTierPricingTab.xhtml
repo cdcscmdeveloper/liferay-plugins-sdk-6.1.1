@@ -44,7 +44,12 @@
 					action="#{catalogueBackingBean.viewAllZone(tier.cmSupplierZone.suppZoneId)}">
 					<p:graphicImage value="/css/images/design/document.png"></p:graphicImage>
 				</p:commandLink>
-
+				<!-- #569-start -->
+				<p:graphicImage
+				   	rendered="#{catalogueBackingBean.managedBean.publish and tier.cmSupplierZone.suppZoneId==0}"
+				    value="#{catalogueBackingBean.managedBean.publish and tier.cmSupplierZone.suppZoneId==0 ? '/css/images/design/icon_error.png' : ''}" 
+				    update="@form" />
+				<!-- #569-End -->
 			</p:column>
 
 
@@ -58,7 +63,12 @@
 					<p:ajax event="keyup"
 						update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
 				</p:inputText>
-
+				<!-- #569-start -->
+				<p:graphicImage
+					rendered="#{catalogueBackingBean.managedBean.publish and tier.fromQty==null or tier.fromQty le 0}"
+				    value="#{catalogueBackingBean.managedBean.publish and tier.fromQty==null or tier.fromQty le 0 ? '/css/images/design/icon_error.png' : ''}" 
+				    update="@form" />
+				<!-- #569-End -->
 			</p:column>
 			<p:column>
 				<f:facet name="header">
@@ -71,6 +81,12 @@
 						update="@(.fromQty)" />
 					<p:ajax event="keyup" update="zTErrorLink," />
 				</p:inputText>
+				<!-- #569-start -->
+				<p:graphicImage
+				    rendered="#{catalogueBackingBean.managedBean.publish and tier.toQty==null or tier.toQty le tier.fromQty}"
+				    value="#{catalogueBackingBean.managedBean.publish and tier.toQty==null or tier.toQty le tier.fromQty ? '/css/images/design/icon_error.png' : ''}" 
+				    update="@form" />
+				<!-- #569-End -->
 			</p:column>
 			<p:column>
 
@@ -84,6 +100,12 @@
 						update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink, zTierPriceId" />
 						<f:converter converterId="bigDecimalConverter" />
 				</p:inputText>
+				<!-- #569-start -->
+				<p:graphicImage
+					rendered="#{catalogueBackingBean.managedBean.publish and tier.price==null or tier.price le 0}"
+				    value="#{catalogueBackingBean.managedBean.publish and tier.price==null or tier.price le 0 ? '/css/images/design/icon_error.png' : ''}" 
+				    update="@form" />
+				<!-- #569-End -->
 			</p:column>
 
 			<p:column>
@@ -110,7 +132,18 @@
 						listener="#{catalogueBackingBean.validateZonalTierPrice(rowIndex)}"
 						update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
 				</p:calendar>
-
+				<!-- #569-start -->
+				<p:graphicImage
+				   rendered="#{catalogueBackingBean.managedBean.publish and tier.startDate==null 
+				     	or (catalogueBackingBean.managedBean.publish and tier.startDate gt tier.endDate) 
+				     	or (catalogueBackingBean.managedBean.publish and tier.startDate lt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate) 
+				     	or (catalogueBackingBean.managedBean.publish and tier.startDate gt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate)}"
+				   value="#{catalogueBackingBean.managedBean.publish and tier.startDate==null 
+				    	or (catalogueBackingBean.managedBean.publish and tier.startDate gt tier.endDate) 
+				    	or (catalogueBackingBean.managedBean.publish and tier.startDate lt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate) 
+				    	or (catalogueBackingBean.managedBean.publish and tier.startDate gt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate) ? '/css/images/design/icon_error.png' : ''}" 
+				   update="@form" />
+				<!-- #569-End -->
 			</p:column>
 			<p:column>
 				<f:facet name="header">
@@ -136,7 +169,20 @@
 						listener="#{catalogueBackingBean.validateZonalTierPrice(rowIndex)}"
 						update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
 				</p:calendar>
-
+				<!-- #569-start -->
+				<p:graphicImage
+				    rendered="#{catalogueBackingBean.managedBean.publish and tier.startDate==null and tier.endDate==null 
+				  		or (catalogueBackingBean.managedBean.publish and tier.startDate gt tier.endDate) 
+				    	or (catalogueBackingBean.managedBean.publish and tier.endDate lt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate) 
+				    	or (catalogueBackingBean.managedBean.publish and tier.endDate gt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate)
+				    	or (catalogueBackingBean.managedBean.publish and tier.endDate lt catalogueBackingBean.managedBean.currentDate)}"
+				    value="#{catalogueBackingBean.managedBean.publish and tier.startDate==null and tier.endDate==null 
+				    	or (catalogueBackingBean.managedBean.publish and tier.startDate gt tier.endDate) 
+				    	or (catalogueBackingBean.managedBean.publish and tier.endDate lt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate) 
+				    	or (catalogueBackingBean.managedBean.publish and tier.endDate gt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate) 
+				    	or (catalogueBackingBean.managedBean.publish and tier.endDate lt catalogueBackingBean.managedBean.currentDate) ? '/css/images/design/icon_error.png' : ''}" 
+				    update="@form" />
+				<!-- #569-End -->
 			</p:column>
 
 			<p:column>

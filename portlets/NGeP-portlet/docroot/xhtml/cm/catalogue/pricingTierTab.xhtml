@@ -32,7 +32,14 @@
 					<p:ajax event="keyup"
 						update="promoLink, cloneLink, deleteLink, errorLink" />
 				</p:inputText>
-
+				<!-- 569 Start -->
+				<p:graphicImage
+					rendered="#{catalogueBackingBean.managedBean.publish and price.fromQty==null
+						or (catalogueBackingBean.managedBean.publish and price.toQty le price.fromQty)}"
+				    value="#{catalogueBackingBean.managedBean.publish and price.fromQty==null 
+				    	or (catalogueBackingBean.managedBean.publish and price.toQty le price.fromQty) ? '/css/images/design/icon_error.png' : ''}" 
+				    update="@form" />
+				<!-- 569 End -->
 			</p:column>
 			<p:column>
 				<f:facet name="header">
@@ -45,6 +52,14 @@
 						update="@(.fromQty)" />
 					<p:ajax event="keyup" update="errorLink, cloneLink" />
 				</p:inputText>
+				<!-- 569 Start -->
+				<p:graphicImage
+				    rendered="#{catalogueBackingBean.managedBean.publish and price.toQty==null 
+				    	or (catalogueBackingBean.managedBean.publish and price.toQty le price.fromQty)}"
+				    value="#{catalogueBackingBean.managedBean.publish and price.toQty==null 
+				    	or (catalogueBackingBean.managedBean.publish and price.toQty le price.fromQty) ? '/css/images/design/icon_error.png' : ''}" 
+				    update="@form" />
+				<!-- 569 End -->
 			</p:column>
 			<p:column>
 
@@ -59,6 +74,12 @@
 						update="promoLink, cloneLink, deleteLink, errorLink, tierPriceId" />
 					<f:converter converterId="bigDecimalConverter" />
 				</p:inputText>
+				<!-- 569 Start -->
+				<p:graphicImage
+					rendered="#{catalogueBackingBean.managedBean.publish and price.price==null or price.price le 0}"
+				    value="#{catalogueBackingBean.managedBean.publish and price.price==null or price.price le 0 ? '/css/images/design/icon_error.png' : ''}" 
+				    update="@form" />
+				<!-- 569 End -->
 			</p:column>
 			<p:column>
 				<f:facet name="header">
@@ -85,7 +106,20 @@
 						listener="#{catalogueBackingBean.validateTierPrice(rowIndex)}"
 						update="promoLink, cloneLink, deleteLink, errorLink" />
 				</p:calendar>
-
+				<!-- 569 Start -->
+				<p:graphicImage
+					rendered="#{catalogueBackingBean.managedBean.publish and price.startDate==null 
+				    	or (catalogueBackingBean.managedBean.publish and price.startDate gt price.endDate) 
+				    	or (catalogueBackingBean.managedBean.publish and price.startDate lt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate)
+				     	or (catalogueBackingBean.managedBean.publish and price.startDate gt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate)
+				     	or (catalogueBackingBean.managedBean.publish and price.startDate eq catalogueBackingBean.managedBean.currentDate)}"
+				    value="#{catalogueBackingBean.managedBean.publish and price.startDate==null  
+				     	or (catalogueBackingBean.managedBean.publish and price.startDate gt price.endDate) 
+				     	or (catalogueBackingBean.managedBean.publish and price.startDate lt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate)
+				     	or (catalogueBackingBean.managedBean.publish and price.startDate gt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate)
+				     	or (catalogueBackingBean.managedBean.publish and price.startDate eq catalogueBackingBean.managedBean.currentDate) ? '/css/images/design/icon_error.png' : ''}" 
+				     	update="@form" />
+				<!-- 569 End -->
 			</p:column>
 			<p:column>
 				<f:facet name="header">
@@ -112,6 +146,20 @@
 						listener="#{catalogueBackingBean.validateTierPrice(rowIndex)}"
 						update="promoLink, cloneLink, deleteLink, errorLink" />
 				</p:calendar>
+				<!-- 569 Start -->
+				<p:graphicImage
+					rendered="#{catalogueBackingBean.managedBean.publish and price.startDate==null and price.endDate==null 
+				    	or (catalogueBackingBean.managedBean.publish and price.startDate gt price.endDate) 
+				     	or (catalogueBackingBean.managedBean.publish and price.endDate lt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate)
+				     	or (catalogueBackingBean.managedBean.publish and price.endDate gt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate)
+				     	or (catalogueBackingBean.managedBean.publish and price.endDate le catalogueBackingBean.managedBean.currentDate)}"
+				    value="#{catalogueBackingBean.managedBean.publish and price.startDate==null and price.endDate==null  
+				     	or (catalogueBackingBean.managedBean.publish and price.startDate gt price.endDate) 
+				     	or (catalogueBackingBean.managedBean.publish and price.endDate lt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate)
+				     	or (catalogueBackingBean.managedBean.publish and price.endDate gt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate) 
+				     	or (catalogueBackingBean.managedBean.publish and price.endDate le catalogueBackingBean.managedBean.currentDate) ? '/css/images/design/icon_error.png' : ''}" 
+				    update="@form" />
+				<!-- 569 End -->
 			</p:column>
 
 			<p:column>

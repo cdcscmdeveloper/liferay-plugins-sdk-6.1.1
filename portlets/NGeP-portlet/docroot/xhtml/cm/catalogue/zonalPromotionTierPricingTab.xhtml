@@ -62,6 +62,12 @@
 						update="zPromoTierPriceId zTierPromoPriceId" />
 					<f:converter converterId="bigDecimalConverter" />
 				</p:inputText>
+				<!--569-Start -->
+				<p:graphicImage
+					rendered="#{catalogueBackingBean.managedBean.publish and tier.price==null or tier.price le 0}"
+				    value="#{catalogueBackingBean.managedBean.publish and tier.price==null or tier.price le 0 ? '/css/images/design/icon_error.png' : ''}" 
+				    update="@form" />
+				<!--569-End -->
 			</p:column>
 
 			<p:column>
@@ -85,7 +91,12 @@
 						listener="#{catalogueBackingBean.validateZonalPromotionTierPrice(rowIndex)}"
 						update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalPromotionTierPricingsId" />
 				</p:calendar>
-
+				<!--569-Start -->
+				<p:graphicImage
+				    rendered="#{catalogueBackingBean.managedBean.publish and tier.startDate gt tier.endDate}"
+				    value="#{catalogueBackingBean.managedBean.publish and tier.startDate gt tier.endDate ? '/css/images/design/icon_error.png' : ''}" 
+				    update="@form" />
+				<!--569-End -->
 			</p:column>
 			<p:column>
 				<f:facet name="header">
@@ -108,7 +119,14 @@
 						listener="#{catalogueBackingBean.validateZonalPromotionTierPrice(rowIndex)}"
 						update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalPromotionTierPricingsId" />
 				</p:calendar>
-
+				<!--569-Start -->
+				<p:graphicImage
+					rendered="#{catalogueBackingBean.managedBean.publish and tier.startDate gt tier.endDate 
+				     	or (catalogueBackingBean.managedBean.publish and tier.endDate lt catalogueBackingBean.managedBean.currentDate)}"
+				    value="#{catalogueBackingBean.managedBean.publish and tier.startDate gt tier.endDate 
+				    	or (catalogueBackingBean.managedBean.publish and zPromotion.endDate lt catalogueBackingBean.managedBean.currentDate) ? '/css/images/design/icon_error.png' : ''}" 
+				    update="@form" />
+				<!--569-End -->
 			</p:column>
 
 			<p:column>
