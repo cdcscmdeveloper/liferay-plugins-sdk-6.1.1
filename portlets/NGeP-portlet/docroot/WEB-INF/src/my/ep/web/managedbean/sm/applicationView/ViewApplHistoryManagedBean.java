@@ -58,6 +58,8 @@ public class ViewApplHistoryManagedBean extends
 	private SmMofAccount currMof;
 	//#11641 - Start
 	private SmApplInquiry selectedInquiryResponse;
+	private boolean emptyMandatoryDocHistory;
+	private boolean emptyNonMandatoryDocHistory;
 	//#11641 - End
 
 	//25792 - start
@@ -404,6 +406,18 @@ public class ViewApplHistoryManagedBean extends
 
 	public void setSelectedInquiryResponse(SmApplInquiry selectedInquiryResponse) {
 		this.selectedInquiryResponse = selectedInquiryResponse;
+	}
+	public boolean isEmptyMandatoryDocHistory() {
+		return emptyMandatoryDocHistory;
+	}
+	public void setEmptyMandatoryDocHistory(boolean emptyMandatoryDocHistory) {
+		this.emptyMandatoryDocHistory = emptyMandatoryDocHistory;
+	}
+	public boolean isEmptyNonMandatoryDocHistory() {
+		return emptyNonMandatoryDocHistory;
+	}
+	public void setEmptyNonMandatoryDocHistory(boolean emptyNonMandatoryDocHistory) {
+		this.emptyNonMandatoryDocHistory = emptyNonMandatoryDocHistory;
 	}
 	//#11641 - End
 }
