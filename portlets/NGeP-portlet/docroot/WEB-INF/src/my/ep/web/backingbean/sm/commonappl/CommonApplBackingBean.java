@@ -382,7 +382,6 @@ public class CommonApplBackingBean extends
 				setNavigationForSmDecision(appl.getApplType(), smApplBB);
 			} else if (resDTO.getProcessName().equalsIgnoreCase(
 					SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION)) {
-				long processNameMofSuppRegisStartTime = System.currentTimeMillis(); //20211005@fadhli - #31754
 				SMMOFRegDataType smObj = (SMMOFRegDataType) resDTO.getPojo();
 				// TODO Remove this code and get the applicationType From DB
 				log.info(" *** DOCUMENT NUMBER  FROM THE BPM IS ******"
@@ -470,9 +469,6 @@ public class CommonApplBackingBean extends
 				smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
 				smApplBB.getManagedBean().setTaskId(taskId);
 				smApplBB.getManagedBean().setClaimTask(isClaim);
-				SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "NULL",
-						"CommonApplBackingBean.preRenderView", "SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION", 
-						processNameMofSuppRegisStartTime); //20211005@fadhli - #31754
 				//LOG : 26549 : SLA Monitoring
 				SLAUtils.getInstance().logSLAInfo("SM","VA",
 						"CommonApplBackingBean.preRenderView", startTime);
