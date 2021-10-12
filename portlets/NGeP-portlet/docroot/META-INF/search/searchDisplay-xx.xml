@@ -2434,5 +2434,30 @@
 		</property>
 	</bean>
 	<!--29991  end-->
-	
+	<!-- 29554 - find ag office -->
+	<bean id="PM_AG_OFFICE" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="interfaceAgOffId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.common.interfaceptj.InterfaceAgOffDAO" />
+		<property name="searchMethod" value="retrieveAgOfficeSearchData" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="offCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.accounting.office.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="offDesc" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.gl.description" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<!-- 29554 - end-->
 </beans>
