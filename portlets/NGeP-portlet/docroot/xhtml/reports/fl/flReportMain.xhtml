@@ -261,6 +261,16 @@
 					<ui:include src="/xhtml/reports/fl/yep/Fl067_yearEndReport.xhtml"></ui:include>
 				</c:when>
 				
+				<!-- 29554 start - transaction fee -->
+				<c:when test="#{FlReportConst.fl071ServiceFeeReportBasedOfAccountingOffice == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/tf/Fl071_ServiceFeeReportBasedOfAccountingOffice.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl072AccumulatedServiceFeeReport == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/tf/Fl072_AccumulatedServiceFeeReport.xhtml"></ui:include>
+				</c:when>
+				<!-- 29554 end - transaction fee -->
+				
 				<c:otherwise>
         			ERROR!
     
