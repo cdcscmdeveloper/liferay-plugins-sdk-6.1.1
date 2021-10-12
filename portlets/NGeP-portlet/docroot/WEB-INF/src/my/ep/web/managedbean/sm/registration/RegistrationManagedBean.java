@@ -173,6 +173,9 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private boolean divisionBox=true;//13320
 	private Long divisionId;//13320
 	private List <SmSupplierOwner> supplierOwnerls = new ArrayList<SmSupplierOwner>(); // #27691
+	//#30829 Start
+	private boolean disableManagement=false;
+	//#30829 end
 	
 	// 27691 - Add/Delete Supplier Owner
 	private SmSupplierOwner[] selectedSuppOwners;
@@ -1070,5 +1073,15 @@ public class RegistrationManagedBean extends BaseManagedBean {
 		this.supplierOwnerls = supplierOwnerls;
 	}
 	// #27691 - End
+
+	//#30829 Start
+	public boolean isDisableManagement() {
+		return disableManagement;
+	}
+
+	public void setDisableManagement(boolean disableManagement) {
+		this.disableManagement = disableManagement;
+	}
+	//#30829 End
 	
 }
