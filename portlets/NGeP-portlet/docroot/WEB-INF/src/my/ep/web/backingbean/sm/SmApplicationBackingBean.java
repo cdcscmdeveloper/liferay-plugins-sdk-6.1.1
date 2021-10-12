@@ -284,8 +284,7 @@ public class SmApplicationBackingBean extends
 	 */
 	public void renewSesionObjectByApplicationType(String applicationType) {
 		renewSesionObject();
-		//log.info("*** renewSesionObjectByApplicationType *** "
-				//+ applicationType);
+		//log.info("*** renewSesionObjectByApplicationType *** " + applicationType);
 		String errMsg = StringUtils.EMPTY;
 		if (applicationType.equals("DPA")) {
 			errMsg = getDeletePendingApplicationErrorMsg();
@@ -2860,9 +2859,9 @@ public class SmApplicationBackingBean extends
 	public boolean validateUpdateSmAppl(String applType,
 			String currentPageType, String outputPageType, Boolean isBpmSubmit) {
 		boolean valid = false;
-		//log.info(" ***** Business  Type After hard code *********"
-				//+ getManagedBean().getSmAppl().getSmSupplier()
-						//.getBusinessType());
+		log.info(" ***** Business  Type After hard code *********"
+				+ getManagedBean().getSmAppl().getSmSupplier()
+						.getBusinessType());
 		getManagedBean().setTabActiveIndex(outputTab);
 		try {
 
@@ -6801,7 +6800,9 @@ public class SmApplicationBackingBean extends
 		// set personnel field change value
 		SmFieldChangeUtil.initPersonnelChangeField(getManagedBean());
 		//start #31479
-		if(businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupplier().getRegNo(),this.getManagedBean().getSmSupplier().getBusinessType())){
+		if (SmCommonUtil.getInstance().ssmActive()
+				&& businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupplier().getRegNo(), this
+						.getManagedBean().getSmSupplier().getBusinessType())) {
 			SsmReqDTO ssmReqDTO = new SsmReqDTO();
 			ssmReqDTO.setRegNo(this.getManagedBean().getSmSupplier().getRegNo());
 			ssmReqDTO.setBusinessType(this.getManagedBean().getSmSupplier().getBusinessType());
