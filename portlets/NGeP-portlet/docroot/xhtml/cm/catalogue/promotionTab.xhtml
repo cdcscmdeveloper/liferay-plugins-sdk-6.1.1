@@ -54,10 +54,10 @@
 				<p:graphicImage
 				    rendered="#{catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.price==null 
 				    	or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.price le 0)
-				    	or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.price ge catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing)}"
+				    	or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.price ge catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price)}"
 				    value="#{catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.price==null 
 				    	or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.price le 0) 
-				    	or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.price ge catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing) ? '/css/images/design/icon_error.png' : ''}" 
+				    	or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.price ge catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price) ? '/css/images/design/icon_error.png' : ''}" 
 				    update="@form" />
 				<!-- 569 End -->
 			</p:column>
