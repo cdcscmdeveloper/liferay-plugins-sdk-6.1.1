@@ -3021,8 +3021,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		debugLogger("retrieveFinancialSpecDtls::::supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		this.getManagedBean().setActiveIndex(0);
 		this.getManagedBean().setFinancialQtProposalChecklist(scQtProposalChecklist);
-		//Bug #31542 related to #21695 start
-		List<TplSpecAnswer> removeZeroQuantity = new ArrayList<TplSpecAnswer>();
+		//REMOVE Bug #31542 
 		IQTProposalSO proposalSO = null;
 
 		try {
@@ -3058,21 +3057,21 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 							specAnswerList.get(i).getTplSpecSuppAnswer().setTplSpecZoneDtl(getManagedBean().getSelectedZone());
 							}
 						}
-						getManagedBean().getTemplateSpecBean().setSpecAnswerList(specAnswerList);
-						//#28785-End
-					} 
+					// BUG #31733 START 12/10/2021
+					//related to #21695 sort quantity 0 , hide at speccolumnanswer.xhtml & speccolumnquestionview.xhtml
+					// have to sort it descending item has 0quantity.. because xhtml only redered the first data
+					Collections.sort(specAnswerList, new Comparator<TplSpecAnswer>() {
+					    public int compare(TplSpecAnswer lhs, TplSpecAnswer rhs) {	
+					        // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
+					        return lhs.getTplSpecZoneQty().getQty().intValue() > rhs.getTplSpecZoneQty().getQty().intValue() ? -1 : (lhs.getTplSpecZoneQty().getQty().intValue() < rhs.getTplSpecZoneQty().getQty().intValue()) ? 1 : 0;
+					    }
+					});
+					// BUG #31733 END 12/10/2021
 					
+						getManagedBean().getTemplateSpecBean().setSpecAnswerList(specAnswerList);
+					} //#28785-End
 				}
-				
-				//Bug #31542 related to #21695 start
-				for(TplSpecAnswer removeZero: getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
-					if(removeZero.getTplSpecZoneQty() != null && removeZero.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0){
-						removeZeroQuantity.add(removeZero);
-					}
-				}
-				
-				getManagedBean().getTemplateSpecBean().getSpecAnswerList().removeAll(removeZeroQuantity);
-				//Bug #31542 related to #21695 end
+				//REMOVE Bug #31542 
 				populateFinancialSpecDetailsByZone();
 
 			}
@@ -4211,8 +4210,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		Integer selectedZoneTabIndex = Integer.valueOf(FacesContext
 				.getCurrentInstance().getExternalContext()
 				.getRequestParameterMap().get("selectedZoneTabIndex"));
-		//Bug #31542 related to #21695 start
-		List<TplSpecAnswer> removeZeroQuantity = new ArrayList<TplSpecAnswer>();
+		//REMOVE Bug #31542 
 		getManagedBean().setActiveIndex(selectedZoneTabIndex);
 		debugLogger("zoneTabChange");
 		TplSpecZoneDtl specZoneDtl = (TplSpecZoneDtl) getManagedBean()
@@ -4236,19 +4234,19 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 				specAnswerList.get(i).getTplSpecSuppAnswer().setTplSpecZoneDtl(getManagedBean().getSelectedZone());
 				}
 			}
-			
-			getManagedBean().getTemplateSpecBean().setSpecAnswerList(specAnswerList);
-			//#28785-End
-			
-			//Bug #31542 related to #21695 start
-			for(TplSpecAnswer removeZero: getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
-				if(removeZero.getTplSpecZoneQty() != null && removeZero.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0){
-					removeZeroQuantity.add(removeZero);
-				}
-			}
-			
-			getManagedBean().getTemplateSpecBean().getSpecAnswerList().removeAll(removeZeroQuantity);
-		} //Bug #31542 related to #21695 End
+			// BUG #31733 START 12/10/2021
+			//related to #21695 sort quantity 0 , hide at speccolumnanswer.xhtml & speccolumnquestionview.xhtml
+			// have to sort it descending item has 0quantity.. because xhtml only redered the first data
+			Collections.sort(specAnswerList, new Comparator<TplSpecAnswer>() {
+			    public int compare(TplSpecAnswer lhs, TplSpecAnswer rhs) {	
+			        // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
+			        return lhs.getTplSpecZoneQty().getQty().intValue() > rhs.getTplSpecZoneQty().getQty().intValue() ? -1 : (lhs.getTplSpecZoneQty().getQty().intValue() < rhs.getTplSpecZoneQty().getQty().intValue()) ? 1 : 0;
+			    }
+			});
+			// BUG #31733 END 12/10/2021
+				getManagedBean().getTemplateSpecBean().setSpecAnswerList(specAnswerList);
+			} //#28785-End
+		//REMOVE Bug #31542 
 	}
 
 	/**
