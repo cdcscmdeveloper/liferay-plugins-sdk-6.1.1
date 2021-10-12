@@ -76,6 +76,7 @@ public class FlReportConst implements Serializable {
 	// Service Report Const
 	public static final String FL_071_SERVICE_FEE_REPORT_BASED_OF_ACCOUNTING_OFFICE = "FL_071";
 	public static final String FL_072_ACCUMULATED_SERVICE_FEE_REPORT = "FL_072";
+	//end 29554
 	
 	public static final String FL_RPT_FROM_DATE = "PFROMDATE";
 	public static final String FL_RPT_TO_DATE = "PTODATE";
@@ -128,6 +129,14 @@ public class FlReportConst implements Serializable {
 	public static final String FL_RPT_REF_NO = "PREFNO";
 	public static final String FL_RPT_CT_FROM_DATE = "PCTFRDATE";
 	public static final String FL_RPT_CT_TO_DATE = "PCTTODATE";
+	
+	//29554 start
+	public static final String FL_RPT_TRANSACTION_FROM_DATE = "PFROMDATE";
+	public static final String FL_RPT_TRANSACTION_TO_DATE = "PTODATE";
+	public static final String FL_RPT_AG_OFFICE = "POFFICECODE";
+	public static final String FL_RPT_PSF_ONE_OFF = "PSFONEOFF";
+	public static final String FL_RPT_PSF_PERIOD = "PSFPERIOD ";
+	//29554 end
 	
 	
 	public FlReportConst(){}
@@ -316,11 +325,11 @@ public class FlReportConst implements Serializable {
 	}
 
 	/*29554 - Logan - Beginning*/
-	public static String getFl071ServiceFeeReportBasedOfAccountingOffice() {
+	public String getFl071ServiceFeeReportBasedOfAccountingOffice() {
 		return FL_071_SERVICE_FEE_REPORT_BASED_OF_ACCOUNTING_OFFICE;
 	}
 
-	public static String getFl072AccumulatedServiceFeeReport() {
+	public String getFl072AccumulatedServiceFeeReport() {
 		return FL_072_ACCUMULATED_SERVICE_FEE_REPORT;
 	}
 	/*Ends 29554*/
