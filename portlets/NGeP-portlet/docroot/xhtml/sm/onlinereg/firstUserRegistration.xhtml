@@ -573,7 +573,12 @@
 						<table>
 							<tr>
 								<td>
-									<p:selectBooleanCheckbox disabled="" value="#{registrationBackingBean.managedBean.smPersonnel.management}"/>
+								<!--#30829-START-->
+									<p:selectBooleanCheckbox disabled="#{registrationBackingBean.managedBean.disableManagement}" value="#{registrationBackingBean.managedBean.smPersonnel.management}">
+									<p:ajax event="change" update="@([id$=pnlUsrInfo])" listener="#{registrationBackingBean.listenerChangeRole}"
+									partialSubmit="true" 
+									process="@form" /></p:selectBooleanCheckbox>
+								<!--#30829-End-->
 								</td>
 								<td>
 									<h:outputText style="float: left" value="#{lbl['lbl.sm.person.mngmt']}" />

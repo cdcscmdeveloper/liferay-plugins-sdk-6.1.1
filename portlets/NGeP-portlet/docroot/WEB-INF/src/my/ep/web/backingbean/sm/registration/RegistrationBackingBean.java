@@ -4478,8 +4478,20 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				this.getManagedBean().setDisableStaff(true);
 				this.getManagedBean().getSmPersonnel().setClerical(false);
 			}else if(!this.getManagedBean().getSmPersonnel().isEquityOwner() || this.getManagedBean().getSmPersonnel().isClerical()){
-				this.getManagedBean().setDisableStaff(false);
-				this.getManagedBean().setDisableEquity(false);				
+				//30829 Start
+				if(getManagedBean().getSmPersonnel().isManagement()){
+					this.getManagedBean().setDisableStaff(true);
+					this.getManagedBean().getSmPersonnel().setClerical(false);
+				} else if (getManagedBean().getSmPersonnel().isClerical()){
+					this.getManagedBean().setDisableManagement(true);
+					this.getManagedBean().getSmPersonnel().setManagement(false);
+				} else {
+					this.getManagedBean().setDisableStaff(false);
+					this.getManagedBean().setDisableEquity(false);
+					this.getManagedBean().setDisableManagement(false);
+				}
+				//30829 End 
+
 			}
 			/*
 			else if(this.getManagedBean().getSmPersonnel().isClerical()){
