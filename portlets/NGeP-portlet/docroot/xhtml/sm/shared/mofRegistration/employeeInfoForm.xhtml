@@ -53,7 +53,7 @@
 				<p:inputText id="empNameId" value="#{empInfo.name}"
 					label="#{lbl['lbl.sm.employee.name']}"
 					required="#{backingBean.managedBean.valueReqd}" size="50"
-					maxlength="80">
+					maxlength="50">
 					<p:ajax event="blur" process="@this" update="@this" />
 				</p:inputText>
 				<p:message id="empNameIdMsg" for="empNameId"
@@ -113,7 +113,7 @@
 					#{lbl['lbl.sm.employee.specialization']}
 				</f:facet>
 				<p:inputText id="empSpclId" value="#{empInfo.expertise}" size="30"
-					label="#{lbl['lbl.sm.employee.specialization']}" maxlength="2000"
+					label="#{lbl['lbl.sm.employee.specialization']}" maxlength="100"
 					required="#{backingBean.managedBean.valueReqd}">
 					<p:ajax event="blur" process="@this" update="@this" />
 				</p:inputText>
@@ -127,7 +127,7 @@
 					#{lbl['lbl.sm.employee.experience']}
 				</f:facet>
 				<p:inputText id="empExpId" value="#{empInfo.workExpYear}" size="30"
-					label="#{lbl['lbl.sm.employee.experience']}" maxlength="2000"
+					label="#{lbl['lbl.sm.employee.experience']}" maxlength="2"
 					required="#{backingBean.managedBean.valueReqd}">
 					<p:ajax event="blur" process="@this" update="@this" />
 				</p:inputText>
