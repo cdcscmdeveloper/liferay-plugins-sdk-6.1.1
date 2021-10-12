@@ -1,0 +1,85 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<table style="width: 100%;">
+		<tr>
+			<td colspan="4">
+				<h:outputText value="#{tfRptBB.managedBean.reportUrl}" /><br/><br/>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<p:outputLabel value="#{lbl['lbl.fl.accounting.ofc']}" />
+			<p:outputLabel value="*" styleClass="mandatory" /></td>
+			<td colspan="3">
+				<ac:lov id="lovAccountingOff"
+					lovId="PM_AG_OFFICE" size="100" update="@form"
+					readonly="true" headerText="#{lbl['lbl.fl.accounting.ofc']}"
+					value="#{tfRptBB.managedBean.agOff.offDesc}"
+					saveObject="tfRptBB.managedBean.agOff"
+					conditionField="" /></td>
+		</tr>
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.pm.report.transation.date.from']}" /></td>
+			<td><p:calendar showOn="button" navigator="true"
+					display="inline" readonlyInput="true"
+					value="#{tfRptBB.managedBean.transactionFromDate}" size="9"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+					partialSubmit="true" process="@form" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.pm.report.transation.date.to']}" /></td>
+		    <td><p:calendar showOn="button" navigator="true"
+					display="inline" readonlyInput="true"
+					value="#{tfRptBB.managedBean.transactionToDate}" size="9"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+					partialSubmit="true" process="@form">
+				</p:calendar></td>
+		</tr>
+		<tr>
+		   <td><p:outputLabel value="#{lbl['lbl.fl.yep.search.doc.type']}"/>
+				<p:outputLabel value="*" styleClass="mandatory" /></td>
+			<td>
+				<p:selectOneMenu value="#{tfRptBB.managedBean.documentType}" required="true">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+						itemValue="#{null}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.pm.report.pdf']}"
+						itemValue="PDF"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.pm.report.excel']}"
+						itemValue="Excel"></f:selectItem>
+				</p:selectOneMenu>
+			</td>
+		</tr>
+	</table>
+	<div style="text-align: right;">
+		<p:commandButton id="generateBtnId" value="#{lbl['lbl.btn.generate']}"
+			process="@form" update="@form"
+			action="#{tfRptBB.generateReport()}">
+			<f:setPropertyActionListener target="#{tfRptBB.managedBean.reportCode}" value="#{flReportBB.managedBean.reportCode}" />
+		</p:commandButton>
+		<p:commandButton id="resetBtnId" value="#{lbl['lbl.btn.reset']}"
+			process="@this" update="@form" action="#{tfRptBB.resetAction()}">
+		</p:commandButton>
+	</div>
+		<p:dialog id="confirmationId" widgetVar="confirmationId" modal="true"
+			width="500px" resizable="false" styleClass="pop_up_top">
+			<h:outputText escape="false" style="float:left;margin-left:5px;"
+				value="#{tfRptBB.managedBean.popUpMsg}">
+			</h:outputText>
+			<br />
+			<div style="float:right;">
+				<table style="width:100%">
+					<tr>
+						<td><p:commandButton value="#{lbl['lbl.rpt.btn.generate']}"
+								onclick="confirmationId.hide();" />
+							<p:commandButton value="#{lbl['lbl.rpt.btn.viewreport']}"
+								action="#{tfRptBB.redirect()}">
+							</p:commandButton></td>
+					</tr>
+				</table>
+			</div>
+		</p:dialog>
+</ui:composition>
