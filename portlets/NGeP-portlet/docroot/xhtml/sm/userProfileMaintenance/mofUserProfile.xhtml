@@ -198,11 +198,11 @@
 				<tr>
 					<td>
 						<p:outputLabel value="#{lbl['lbl.sm.maintenance.person.email']}" />
-						<p:outputLabel value="*" styleClass="mandatory" rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.pmUser ne null}"/>			
+						<p:outputLabel value="*" id="mandatoryEmail" styleClass="mandatory" rendered="#{smPersonnelBackingBean.managedBean.showMandatory}"/>			
 					</td>
 					<td>
 						<c:choose>
-							<c:when test="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.pmUser ne null}">
+							<c:when test="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.pmUser ne null or smPersonnelBackingBean.managedBean.epRoleTrans ne null}">
 								<p:inputText id="basicBUEmail" label="#{lbl['lbl.sm.userprofile.email']}" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.email}"
 								validatorMessage="#{lbl['lbl.sm.userprofile.email']} - #{lbl['lbl.sm.invalidEmail']}" size="40" required="true">
 							
@@ -328,8 +328,8 @@
 								<c:if test= "#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole ne null}">
 									<f:selectItem itemLabel="#{lbl['lbl.sm.maintenance.delete.role']}" itemValue="#{SupplierManagementConst.EPROLE_DELETED}" />
 								</c:if>
-								<p:ajax event="change" partialSubmit="true" process="@this"
-									update="perPrivPanel" onstart="blockWidget.show()"
+								<p:ajax event="change" partialSubmit="true" listener="#{smPersonnelBackingBean.checkEmailMandatory()}" process="@this"
+									update="perPrivPanel, UserProfile" onstart="blockWidget.show()"
 									oncomplete="blockWidget.hide()" />
 							</p:selectOneMenu> 
 							<!-- As 4/8/2021  -->
