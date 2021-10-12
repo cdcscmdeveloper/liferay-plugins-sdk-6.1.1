@@ -2285,10 +2285,16 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					this.getManagedBean().setShowOwnerPersonnel(false);
 					this.getManagedBean().setValidateWithSSM(true);
 					if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
-						//start #30964
+						// start #30964
 						this.getManagedBean().getSmBusinessAdd().setSsmData(ssmResDTO.getSmAddress().isSsmData());
-						this.getManagedBean().getSmBusinessAdd().setAddressSsmNull(ssmResDTO.getSmAddress().isAddressSsmNull());
-						//end #30964
+						this.getManagedBean().getSmBusinessAdd()
+								.setAddressSsmNull(ssmResDTO.getSmAddress().isAddressSsmNull());
+						String[] copyPropAddresss = { "address1", "address2", "address3", "addressSsmNull",
+								"postcodeSsmNull", "stateSsmNull", "countrySsmNull", "ssmData", "postcode", "pmState",
+								"stateId" };
+						EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmAddress(), this.getManagedBean()
+								.getSmBusinessAdd(), copyPropAddresss);
+						// end #30964
 						
 						//POPUP USER NOT SSM OWNER #26734  START			
 						//START #27239
@@ -2380,16 +2386,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						//SET ADDRESS
 						String[] copyPropAddress = {"address1","address2","address3","addressSsmNull","postcodeSsmNull","stateSsmNull","countrySsmNull","ssmData","postcode"};
 
-						
-						ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance() //#30964
-								.getServiceObject("sm", ISupplierSearchSO.class);
 						EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmAddress(),this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress(),copyPropAddress);
-						
-						// start #30964
-						ssmResDTO.setSmAddress(supplierSearchSO.retrieveSmAddressByAddressId(this.getManagedBean()
-								.getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0)
-								.getSmAddress().getAddressId()));
-						// end #30964
 						
 						this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPostcode(ssmResDTO.getSmAddress().getPostcode());
 						this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPmState(ssmResDTO.getSmAddress().getPmState());
@@ -2398,14 +2395,20 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setStateId(ssmResDTO.getSmAddress().getPmState().getStateId());
 							this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setDistrictId((long) 0);
 
-							this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPmDistrict(new PmDistrict());
+//							this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPmDistrict(new PmDistrict());
 											
 							// start #30964
 							if (ssmResDTO.getSmAddress().getPmDistrict() != null) {
 								this.getManagedBean().setBusinessCityLs(
 										SmCommonUtil.getCityList(ssmResDTO.getSmAddress().getPmDistrict()
 												.getDistrictId()));
-							}else{
+							} else if (this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic()
+									.getSmCompanyAddresses().get(0).getSmAddress().getPmDistrict() != null) {
+								this.getManagedBean().setBusinessCityLs(
+										SmCommonUtil.getCityList(this.getManagedBean().getSmSupp().getSmAppl()
+												.getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress()
+												.getPmDistrict().getDistrictId()));
+							} else {
 								this.getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
 							}
 							
@@ -2413,10 +2416,18 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 									&& ssmResDTO.getSmAddress().getPmState().getStateCode()
 											.equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
 								this.getManagedBean().setBusinessDivisionLs(
-										SmCommonUtil.getDivisionList(ssmResDTO.getSmAddress().getPmState().getStateId()));
-							}else if (ssmResDTO.getSmAddress().getPmState() != null
-									&& ssmResDTO.getSmAddress().getPmState().getStateCode()
-									.equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)){
+										SmCommonUtil
+												.getDivisionList(ssmResDTO.getSmAddress().getPmState().getStateId()));
+							} else if (this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic()
+									.getSmCompanyAddresses().get(0).getSmAddress().getPmState() != null
+									&& this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic()
+											.getSmCompanyAddresses().get(0).getSmAddress().getPmState().getStateCode()
+											.equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
+								this.getManagedBean().setBusinessCityLs(
+										SmCommonUtil.getCityList(this.getManagedBean().getSmSupp().getSmAppl()
+												.getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress()
+												.getPmDistrict().getDistrictId()));
+							} else {
 								this.getManagedBean().setBusinessDivisionLs(new ArrayList<SelectItem>());
 							}
 							// end #30964
