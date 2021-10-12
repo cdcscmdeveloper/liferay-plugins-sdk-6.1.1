@@ -81,6 +81,7 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private boolean resDivisionBox=true;
 	private Long offDivisionId;
 	private boolean offDivisionBox=true;
+	private boolean showMandatory;
 	//9569 - End
 	private List<SelectItem> mailAddCountryList;
 	private List<SelectItem> mailAddStateList;
@@ -1109,5 +1110,13 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 
 	public void setPersonnelHistoryList(List<PmUserRole> personnelHistoryList) {
 		this.personnelHistoryList = personnelHistoryList;
+	}
+
+	public boolean isShowMandatory() {
+		return showMandatory;
+	}
+
+	public void setShowMandatory(boolean showMandatory) {
+		this.showMandatory = showMandatory;
 	}
 }

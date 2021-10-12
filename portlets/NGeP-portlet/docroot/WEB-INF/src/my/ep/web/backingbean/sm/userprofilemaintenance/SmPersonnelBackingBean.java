@@ -3163,6 +3163,7 @@ public class SmPersonnelBackingBean extends
 		}*/
 		getManagedBean().setDisableRoleSelection(disableEpRoleDropDown(getManagedBean()
 				.getBasicSmPersonnel()));
+		checkEmailMandatory();
 		return "mofUserProfile.xhtml";
 	}
 	
@@ -3209,6 +3210,14 @@ public class SmPersonnelBackingBean extends
 		}
 		epRole = personnelResDTO.getDeletedRole();
 		return epRole;
+	}
+	
+	public void checkEmailMandatory(){
+		if(getManagedBean().getEpRoleTrans() != null || getManagedBean().getBasicSmPersonnel().getPmUser() != null ){
+			getManagedBean().setShowMandatory(true);	
+		}else{
+			getManagedBean().setShowMandatory(false);
+		}
 	}
 	
 	public void saveUserMOFUpdate() {
