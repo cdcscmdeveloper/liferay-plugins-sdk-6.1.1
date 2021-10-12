@@ -26,6 +26,7 @@ import java.net.URLConnection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -2203,9 +2204,14 @@ public class EvaluationBackingBean extends
 				List<String> resultStg = new ArrayList<String>();
 				resultStg.add(QTConstants.TECHNICAL_EVALUATION);
 				evalReqDTO.setResultStages(resultStg);
-				if (this.getManagedBean().getCurrentStatusId()
-						.equals(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL)
+
+				// #25638 -start-
+				Long[] technicalEvaluationStatus = new Long[] { QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL,
+						QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_REVISION };
+				
+				if (Arrays.asList(technicalEvaluationStatus).contains(this.getManagedBean().getCurrentStatusId())
 						&& !this.getManagedBean().isReadOnly()) {
+					// #25638 -end-
 					ScQtFinalization finalization = retriveScQtFinalizationForReEvaluate();
 					if (null != finalization) {
 						if (finalization.isReEvaluateTechReq()) {
@@ -2219,10 +2225,12 @@ public class EvaluationBackingBean extends
 						}
 					}
 				}
-				if (this.getManagedBean().getCurrentStatusId()
-						.equals(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL)
+
+				// #25638 -start-
+				if (Arrays.asList(technicalEvaluationStatus).contains(this.getManagedBean().getCurrentStatusId())
 						&& !this.getManagedBean().isReadOnly()
 						&& !getManagedBean().isTechnicalSummaryGenerated()) {
+					// #25638 -end-
 					evaluationStageStatusCheck();
 					evaluationSo.prepareTechnicalEvaluationSummary(evalReqDTO);
 					getManagedBean().setTechnicalSummaryGenerated(true);
@@ -2287,10 +2295,15 @@ public class EvaluationBackingBean extends
 				resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE);
 				resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_ITEM);
 				summaryReqDTO.setResultStages(resultStg2);
-				if (this.getManagedBean().getCurrentStatusId()
-						.equals(QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL)
+
+				// #25638 -start-
+				Long[] financialEvaluationStatus = new Long[] { QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL,
+						QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL_REVISION };
+				
+				if (Arrays.asList(financialEvaluationStatus).contains(this.getManagedBean().getCurrentStatusId())
 						&& !this.getManagedBean().isReadOnly()
 						&& !getManagedBean().isFinancialSummaryGenerated()) {
+					// #25638 -end-
 					/*
 					 * evaluationSo
 					 * .prepareEvaluationResultsSummaryForTwoTier(summaryReqDTO
@@ -2307,6 +2320,11 @@ public class EvaluationBackingBean extends
 			else if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 					.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
 
+				// #25638 -start-
+				Long[] evaluationStatus = new Long[] { QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL,
+						QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION };
+				// #25638 -end-
+				
 				if (this.getManagedBean().getScQt().getEvaluationType()
 						.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER)
 						&& !this.getManagedBean().getScQt()
@@ -2321,11 +2339,12 @@ public class EvaluationBackingBean extends
 					resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE);
 					resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_ITEM);
 					summaryReqDTO.setResultStages(resultStg2);
-					if (this.getManagedBean()
-							.getCurrentStatusId()
-							.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
+
+					// #25638 -start-
+					if (Arrays.asList(evaluationStatus).contains(this.getManagedBean().getCurrentStatusId())
 							&& !this.getManagedBean().isReadOnly()
 							&& !getManagedBean().isFinancialSummaryGenerated()) {
+						// #25638 -end-
 						evaluationStageStatusCheck();
 						evaluationSo
 								.prepareFinancialEvaluationSummary(summaryReqDTO);
@@ -2357,10 +2376,11 @@ public class EvaluationBackingBean extends
 					List<String> resultStg = new ArrayList<String>();
 					resultStg.add(QTConstants.TECHNICAL_EVALUATION);
 					evalReqDTO.setResultStages(resultStg);
-					if (this.getManagedBean()
-							.getCurrentStatusId()
-							.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
+					
+					// #25638 -start-
+					if (Arrays.asList(evaluationStatus).contains(this.getManagedBean().getCurrentStatusId())
 							&& !this.getManagedBean().isReadOnly()) {
+						// #25638 -end-
 						ScQtFinalization finalization = retriveScQtFinalizationForReEvaluate();
 						if (null != finalization) {
 							if (finalization.isReEvaluateTechReq()) {
