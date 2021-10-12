@@ -234,7 +234,7 @@
 			  	      </h:panelGrid>
 		 </h:panelGrid>		 	
 		   <h:panelGrid columns="3" 
-		     rendered="#{!ctBackingBean.managedBean.directPurchase and ctBackingBean.isPerformanceBond()}">
+		     rendered="#{!ctBackingBean.managedBean.directPurchase and ctBackingBean.managedBean.contractVer.ctContract.loa.bondReq}">
 			 <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.ctContractAmount.bondExempted}"
 				 disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting
 				 	or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement
