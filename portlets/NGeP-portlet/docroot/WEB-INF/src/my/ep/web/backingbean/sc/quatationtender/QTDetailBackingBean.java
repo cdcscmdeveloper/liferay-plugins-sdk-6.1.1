@@ -3651,7 +3651,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
 				for(ScQtCommittee committee : this.getManagedBean().getQt().getScQtCommittees()){
 					if((committee.getScCommittee().getCommitteStatus().getStatusId().equals(QTStatusConst.CMT_PENDING_REVISION) 
-							|| currentStatus.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)
 							|| currentStatus.equals(QTStatusConst.QT_RE_EVALUATION))
 							&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT)){
 						for(ScQtApproval approval : this.getManagedBean().getQt().getScQtApprovals()){
