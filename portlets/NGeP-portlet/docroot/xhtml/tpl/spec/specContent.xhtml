@@ -222,7 +222,7 @@
 								action="#{templateSpecBackingBean.zoneEstCostOkAction(templateSpecBean)}"
 								partialSubmit="true"
 								process="@this, zoneEstimationPnl"
-								update="zoneEstimationPnl, @(.calcEstAmount), @(.indicativeBtn)"> <!--#25039#67 add indicativeBtn -->
+								update="zoneEstimationPnl, @(.calcEstAmount)"> <!--#25039#67-->
 								<f:setPropertyActionListener target="#{templateSpecBean.specComponentId}" value="#{templateSpecId}" />
 							</p:commandButton>
 							<p:commandButton value="#{lbl['lbl.btn.cancel']}" 
