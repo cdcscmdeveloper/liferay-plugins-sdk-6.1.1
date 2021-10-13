@@ -3429,6 +3429,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * 
 	 * @return new bond amount in text format.
 	 */
+	/** Remove Code #24333
 	public String getBondAmountInText() {
 		Locale locale = null;
 		String lang = new FacesScopes().getUserLocale().getLanguage();
@@ -3450,7 +3451,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			return "";
 		}
 	}
-
+ */
 	/**
 	 * The method used to indicate the label 
 	 * flag for new price of product or service item.
