@@ -3111,9 +3111,9 @@ return	remarksNotFound;
 		if (!getManagedBean().isInitialDecisionFwdToBPK()) {
 			if (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
 					.equals(this.getManagedBean().getCurrentStatusId())) {
-				//28834 starts
-				//validateFinalizationReports(null);
-				//28834 ends
+				// #28834 - #31934 - starts.
+				validateFinalizationReports(null, false);
+				// #28834 - #31934 - ends.
 				
 				if (CollectionUtils.isNotEmpty(meetingList)) {
 					boolean atleastOneMeetingIsDone = false;
