@@ -82,7 +82,7 @@ public class ViewSuppProfileBackingBean extends
 			MofRegistrationResDTO resDTO = SmServiceLookup
 					.getMofRegistrationSO()
 					.retrieveLatestSmApplWithChildBySupplierId(reqDTO);
-			SLAUtils.getInstance().logSLASubInfo("SM","SP", sessionId, "NULL",
+			SLAUtils.getInstance().logSLASubInfo("SM","SP", sessionId, "null",
 					"ViewSuppProfileBackingBean.preRenderViewSupplierProfile", "retrieveLatestSmApplWithChildBySupplierId", 
 					subStartTime); //20211005@fadhli - #31754
 			String redirectToAppl = SmApplicationUtil.getApplicationErrorPage();
@@ -108,7 +108,7 @@ public class ViewSuppProfileBackingBean extends
 			}
 			subStartTime = System.currentTimeMillis();
 			setTabParam();
-			SLAUtils.getInstance().logSLASubInfo("SM","SP", sessionId, "NULL",
+			SLAUtils.getInstance().logSLASubInfo("SM","SP", sessionId, "null",
 					"ViewSuppProfileBackingBean.preRenderViewSupplierProfile", "setTabParam", 
 					subStartTime); //20211005@fadhli - #31754
 			SLAUtils.getInstance().logSLAInfo("SM","SP",
@@ -138,7 +138,7 @@ public class ViewSuppProfileBackingBean extends
 		} else {
 			subStartTime = System.currentTimeMillis();
 			initLoginUserZone();
-			SLAUtils.getInstance().logSLASubInfo("SM","SP", sessionId, "NULL",
+			SLAUtils.getInstance().logSLASubInfo("SM","SP", sessionId, "null",
 					"ViewSuppProfileBackingBean.preRenderViewSupplierProfile", "initLoginUserZone", 
 					subStartTime); //20211005@fadhli - #31754
 			getManagedBean().setRenderedBackButton(true);
@@ -146,14 +146,14 @@ public class ViewSuppProfileBackingBean extends
 			subStartTime = System.currentTimeMillis();
 			getManagedBean().setRegStatusDescList(
 					retrieveRegistrationStatusList());
-			SLAUtils.getInstance().logSLASubInfo("SM","SP", sessionId, "NULL",
+			SLAUtils.getInstance().logSLASubInfo("SM","SP", sessionId, "null",
 					"ViewSuppProfileBackingBean.preRenderViewSupplierProfile", "retrieveRegistrationStatusList", 
 					subStartTime); //20211005@fadhli - #31754
 			subStartTime = System.currentTimeMillis();
 			getManagedBean().setZoneList(
 					SmServiceLookup.getZoneSO().retrieveActiveZoneList()
 							.getZoneList());
-			SLAUtils.getInstance().logSLASubInfo("SM","SP", sessionId, "NULL",
+			SLAUtils.getInstance().logSLASubInfo("SM","SP", sessionId, "null",
 					"ViewSuppProfileBackingBean.preRenderViewSupplierProfile", "retrieveActiveZoneList", 
 					subStartTime); //20211005@fadhli - #31754
 			logger.info("[preRenderViewSupplierProfile] #31754 supplierIdParam: " + supplierIdParam);

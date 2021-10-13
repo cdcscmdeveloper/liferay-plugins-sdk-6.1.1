@@ -10109,7 +10109,7 @@ public class SpecificationBackingBean extends
 				ParameterResDTO techspecTyperesDTO = parameterSo
 						.retrieveParameterByTypeAndCode(techSpecType);
 				SLAUtils.getInstance().logSLASubInfo(ModuleCodeConst.SUPPLIER_SELECTION, 
-						ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, sessionId, "NULL",
+						ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, sessionId, "null",
 						"SpecificationBackingBean.pageChangeListener", "retrieveParameterByTypeAndCode", 
 						subStartTime); //20211005@fadhli - #31754
 				String specTypeCode = techspecTyperesDTO.getPmParameter()
@@ -10148,14 +10148,14 @@ public class SpecificationBackingBean extends
 					List<Long> orgProfileIds = getMinistryPTJOrgIds(scQt
 							.getPmOrgProfile());
 					SLAUtils.getInstance().logSLASubInfo(ModuleCodeConst.SUPPLIER_SELECTION, 
-							ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, sessionId, "NULL",
+							ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, sessionId, "null",
 							"SpecificationBackingBean.pageChangeListener", "getMinistryPTJOrgIds(getPmOrgProfile())", 
 							subStartTime); //20211005@fadhli - #31754
 					subStartTime = System.currentTimeMillis();
 					List<Long> ownerOrgProfileIds = getMinistryPTJOrgIds(scQt
 							.getOwnerOrgProfile());
 					SLAUtils.getInstance().logSLASubInfo(ModuleCodeConst.SUPPLIER_SELECTION, 
-							ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, sessionId, "NULL",
+							ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, sessionId, "null",
 							"SpecificationBackingBean.pageChangeListener", "getMinistryPTJOrgIds(getOwnerOrgProfile())", 
 							subStartTime); //20211005@fadhli - #31754
 
@@ -10227,7 +10227,7 @@ public class SpecificationBackingBean extends
 					populateQTSearchCriteria(templateQtnTenderSearchBean,
 							searchBean);
 					SLAUtils.getInstance().logSLASubInfo(ModuleCodeConst.SUPPLIER_SELECTION, 
-							ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, sessionId, "NULL",
+							ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, sessionId, "null",
 							"SpecificationBackingBean.pageChangeListener", "populateQTSearchCriteria", 
 							subStartTime); //20211005@fadhli - #31754
 				}
@@ -10286,8 +10286,12 @@ public class SpecificationBackingBean extends
 								ITemplateSpecSO.class);
 				subStartTime = System.currentTimeMillis();
 				resDto = qtTemplateSO.searchTemplateMaster(qtTemplateReqDTO);
+				String qtNumber = "null";
+				if (null != getManagedBean() && null != getManagedBean().getQt()) {
+					qtNumber = getManagedBean().getQt().getQtNo();
+				}
 				SLAUtils.getInstance().logSLASubInfo(ModuleCodeConst.SUPPLIER_SELECTION, 
-						ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, sessionId, getManagedBean().getQt().getQtNo(),
+						ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, sessionId, qtNumber,
 						"SpecificationBackingBean.pageChangeListener", "searchTemplateMaster", 
 						subStartTime); //20211005@fadhli - #31754
 
