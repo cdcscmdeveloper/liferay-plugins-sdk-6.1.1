@@ -3597,12 +3597,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				//#25725 start 								
 				Boolean isNonPeriodic = (scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)) || (scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN));
 				if((!scLoa.isAgreementReq())&&(isNonPeriodic && !isPK7(scLoa) && over500K(scLoa))){
-					if(scLoa.getScLoaAttachment() != null){
-						
-					}else{
+					if(scLoa.getScLoaAttachment() == null){
 						RequestContext.getCurrentInstance().execute("approvalLetterAlertDlg.show()");
 						return;
-						
 					}
 				}else{
 					scLoa.setScLoaAttachment(null);
