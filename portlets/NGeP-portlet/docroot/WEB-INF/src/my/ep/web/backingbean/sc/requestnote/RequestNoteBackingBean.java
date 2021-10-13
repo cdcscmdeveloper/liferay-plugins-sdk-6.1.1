@@ -1807,6 +1807,26 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			//12183 - Start
 			requestNoteReqDTO.setPidValidityExpired(getManagedBean().isPidValidityExpired());
 			//12183 - End
+			
+			//#31874 - Start
+			if(requestNoteReqDTO.getRequestNote() != null){
+				log.info("--- Bug 31874 (" + requestNoteReqDTO.getRequestNote().getRequestNoteNo() + ")" + "- Method: updateBPMTask Start ---");
+				if(outcome != null){
+					log.info("Outcome: " + outcome + "RN no. (" + requestNoteReqDTO.getRequestNote().getRequestNoteNo() + ")");
+				}	
+				if(requestNoteReqDTO.getRequestNote().getRequestNoteDtls() != null){
+					for(ScRequestNoteDtl rnDtl : requestNoteReqDTO.getRequestNote().getRequestNoteDtls()){
+						if(rnDtl.getRequestItem() != null){
+							log.info("RequestItemId (" + rnDtl.getRequestItem().getRequestNoteItemId() + ") "
+									+ "QtyOrder (" + rnDtl.getRequestItem().getQuantity() + ") "
+									+ "RN No. (" + requestNoteReqDTO.getRequestNote().getRequestNoteNo() + ")");
+						}				
+					}					
+				}
+				log.info("--- Bug 31874 (" + requestNoteReqDTO.getRequestNote().getRequestNoteNo() + ")" + "- Method: updateBPMTask End ---");
+			}		
+			//#31874 - End
+			
 			try {
 				requestNoteResDTO = getRequestNoteSO().updateRequestNote(requestNoteReqDTO);
 			} catch(EpException e) {
