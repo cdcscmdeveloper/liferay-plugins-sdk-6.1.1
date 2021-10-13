@@ -2476,7 +2476,20 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			//								.getApplId());
 			//			}
 			//			Refs #15629 - End - 5/2/2021
-
+			//30974 - start - 13/10/2021
+			List<SmApplRejectReason> ReasonsByPO = new ArrayList<SmApplRejectReason>();
+			for (SmApplRejectReason reason : getManagedBean().getSmAppl().getSmApplRejectReasons()) {
+				if (reason.isReasonByPo()) {
+					ReasonsByPO.add(reason);
+				}
+			}
+			if(ReasonsByPO != null && !ReasonsByPO.isEmpty()){
+				getManagedBean().setSmApplRejectReasonsByPO(ReasonsByPO);			
+			}
+			
+			rejectReasonsByPO = SmCommonUtil
+					.getHtmlApplicationRejectReasons(getManagedBean().getSmApplRejectReasonsByPO());
+			//30974 - end - 13/10/2021
 		} else {
 			if (getManagedBean().getSmAppl().getApplType()
 					.equals(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
@@ -2599,10 +2612,13 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					//#30974 - End - 2/7/2021
 				}
 				// Refs #15629 - End - 21/1/2021
-				rejectReasons = SmCommonUtil
-						.getHtmlApplicationRejectReasons(getManagedBean()
-								.getSmAppl().getSmApplRejectReasons());
-
+				
+				//30974 - Start - 13/10/2021
+				if (!this.getManagedBean().getSmAppl().getPmStatus().getStatusId().toString()
+						.equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REGISTERED)){
+					rejectReasons = SmCommonUtil.getHtmlApplicationRejectReasons(getManagedBean().getSmAppl().getSmApplRejectReasons());	
+				}
+				//30974 - end - 13/10/2021
 				if (StringUtils.isBlank(rejectReasons)) {
 					rejectReasons = SmApplicationUtil
 							.getSmRemarksByDocTypeAndId(
