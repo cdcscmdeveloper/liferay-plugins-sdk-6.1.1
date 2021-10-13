@@ -3057,17 +3057,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 							specAnswerList.get(i).getTplSpecSuppAnswer().setTplSpecZoneDtl(getManagedBean().getSelectedZone());
 							}
 						}
-					// BUG #31733 START 12/10/2021
-					//related to #21695 sort quantity 0 , hide at speccolumnanswer.xhtml & speccolumnquestionview.xhtml
-					// have to sort it descending item has 0quantity.. because xhtml only redered the first data
-					Collections.sort(specAnswerList, new Comparator<TplSpecAnswer>() {
-					    public int compare(TplSpecAnswer lhs, TplSpecAnswer rhs) {	
-					        // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
-					        return lhs.getTplSpecZoneQty().getQty().intValue() > rhs.getTplSpecZoneQty().getQty().intValue() ? -1 : (lhs.getTplSpecZoneQty().getQty().intValue() < rhs.getTplSpecZoneQty().getQty().intValue()) ? 1 : 0;
-					    }
-					});
-					// BUG #31733 END 12/10/2021
-					
+						//REMOVE Bug #31733
 						getManagedBean().getTemplateSpecBean().setSpecAnswerList(specAnswerList);
 					} //#28785-End
 				}
@@ -4234,16 +4224,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 				specAnswerList.get(i).getTplSpecSuppAnswer().setTplSpecZoneDtl(getManagedBean().getSelectedZone());
 				}
 			}
-			// BUG #31733 START 12/10/2021
-			//related to #21695 sort quantity 0 , hide at speccolumnanswer.xhtml & speccolumnquestionview.xhtml
-			// have to sort it descending item has 0quantity.. because xhtml only redered the first data
-			Collections.sort(specAnswerList, new Comparator<TplSpecAnswer>() {
-			    public int compare(TplSpecAnswer lhs, TplSpecAnswer rhs) {	
-			        // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
-			        return lhs.getTplSpecZoneQty().getQty().intValue() > rhs.getTplSpecZoneQty().getQty().intValue() ? -1 : (lhs.getTplSpecZoneQty().getQty().intValue() < rhs.getTplSpecZoneQty().getQty().intValue()) ? 1 : 0;
-			    }
-			});
-			// BUG #31733 END 12/10/2021
+			//REMOVE Bug #31733
 				getManagedBean().getTemplateSpecBean().setSpecAnswerList(specAnswerList);
 			} //#28785-End
 		//REMOVE Bug #31542 
