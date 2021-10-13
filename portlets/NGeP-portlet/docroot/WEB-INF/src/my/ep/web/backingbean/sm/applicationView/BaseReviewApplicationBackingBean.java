@@ -2484,11 +2484,10 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				}
 			}
 			if(ReasonsByPO != null && !ReasonsByPO.isEmpty()){
-				getManagedBean().setSmApplRejectReasonsByPO(ReasonsByPO);			
+				getManagedBean().setSmApplRejectReasonsByPO(ReasonsByPO);
+				rejectReasonsByPO = SmCommonUtil
+						.getHtmlApplicationRejectReasons(getManagedBean().getSmApplRejectReasonsByPO());
 			}
-			
-			rejectReasonsByPO = SmCommonUtil
-					.getHtmlApplicationRejectReasons(getManagedBean().getSmApplRejectReasonsByPO());
 			//30974 - end - 13/10/2021
 		} else {
 			if (getManagedBean().getSmAppl().getApplType()
