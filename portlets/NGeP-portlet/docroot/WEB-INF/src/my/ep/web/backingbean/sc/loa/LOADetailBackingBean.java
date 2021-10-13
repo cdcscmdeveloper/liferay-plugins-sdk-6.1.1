@@ -9649,7 +9649,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			above500K = false;
 			this.getManagedBean().setAbove500K(false);
 		}
-		if((isPK7(scLoa) && (isPeriodic || isNonPeriodic))&& !agreementReq){
+		if((isPK7(scLoa) && (isPeriodic || (isNonPeriodic && above500K)))&& !agreementReq){
 			this.getManagedBean().setAgreementReqChange(true);
 			RequestContext.getCurrentInstance().execute("changeAgreementReqDlg.show()");			
 		}else if((agreementReq == false)&&((isNonPeriodic && above500K) && !isPK7(scLoa))){						
