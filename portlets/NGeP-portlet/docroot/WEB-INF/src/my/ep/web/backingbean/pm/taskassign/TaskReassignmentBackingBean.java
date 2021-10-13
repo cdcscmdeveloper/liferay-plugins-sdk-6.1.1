@@ -1594,6 +1594,7 @@ public class TaskReassignmentBackingBean extends
 								getManagedBean().getAllPageOthersTasks().clear();
 								for (WorklistItemVO worklist : response2DTO.getWorklistVO().getWorklistItem()) {
 									getManagedBean().getAllPageOthersTasks().add(worklist);
+									log.info("getManagedBean().getAllPageOthersTasks()----TOTAL DATA ="+getManagedBean().getAllPageOthersTasks().size());
 								}
 							} 
 						}
