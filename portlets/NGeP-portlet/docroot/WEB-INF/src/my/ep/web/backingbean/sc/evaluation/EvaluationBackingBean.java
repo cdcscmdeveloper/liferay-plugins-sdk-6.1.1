@@ -2451,6 +2451,10 @@ public class EvaluationBackingBean extends
 			this.getManagedBean().setFinancialSummaryView("");
 			if (this.getManagedBean().getCurrentStatusId()
 					.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
+					// #25638 -start-
+					|| this.getManagedBean().getCurrentStatusId()
+							.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION)
+					// #25638 -end-
 					&& !this.getManagedBean().isReadOnly()
 					&& this.getManagedBean().getScQt().getEvaluationType()
 							.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER)
@@ -6560,11 +6564,13 @@ public class EvaluationBackingBean extends
 						.equalsIgnoreCase(this.getManagedBean()
 								.getCommitteeType())) {
 					if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
-							.equalsIgnoreCase(this.getManagedBean()
-									.getCommitteeType())
-							&& this.getManagedBean()
-									.getCurrentStatusId()
-									.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
+							.equalsIgnoreCase(this.getManagedBean().getCommitteeType())
+							// #25638 -start-
+							&& (QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL.equals(this
+												.getManagedBean().getCurrentStatusId())
+							|| QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION.equals(this
+												.getManagedBean().getCurrentStatusId()))
+							// #25638 -end-
 							&& !this.getManagedBean().isReadOnly()) {
 						if (currentTab == 2) {
 
@@ -6654,9 +6660,12 @@ public class EvaluationBackingBean extends
 				else if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 						.equalsIgnoreCase(this.getManagedBean()
 								.getCommitteeType())
-						&& this.getManagedBean()
-								.getCurrentStatusId()
-								.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
+							// #25638 -start-
+							&& (QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL.equals(this
+									.getManagedBean().getCurrentStatusId())
+							|| QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION.equals(this
+									.getManagedBean().getCurrentStatusId()))
+							// #25638 -end-								
 						&& !this.getManagedBean().isReadOnly()) {
 					// evaluationStageCheck();
 					if (currentTab == 2) {
