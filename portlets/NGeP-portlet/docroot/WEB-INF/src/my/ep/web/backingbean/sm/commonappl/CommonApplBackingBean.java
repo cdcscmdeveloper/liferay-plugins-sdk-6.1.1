@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
-import my.ep.biz.service.sm.scheduler.ISmSchedulerSO;
 import my.ep.biz.service.sm.sdoreview.ISdoReviewSO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.constant.MessageConst;
@@ -44,7 +43,6 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
-import my.ep.rest.sm.DowngradeExpMofPersonnelRest;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.SLAUtils;
@@ -68,6 +66,7 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.liferay.portal.util.PortalUtil;
@@ -102,7 +101,7 @@ public class CommonApplBackingBean extends
 
 		subStartTime = System.currentTimeMillis();
 		Object token = new FacesScopes().getBPMAuthenticationCtxToken();
-		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "NULL",
+		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 				"CommonApplBackingBean.preRenderView", "getBPMAuthenticationCtxToken", 
 				subStartTime); //20211005@fadhli - #31754
 
@@ -116,7 +115,7 @@ public class CommonApplBackingBean extends
 		subStartTime = System.currentTimeMillis();
 		BpmResponseDTO resDTO = (BpmResponseDTO) reqSO
 				.getBPMTaskDetails(reqDTO);
-		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "NULL",
+		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 				"CommonApplBackingBean.preRenderView", "getBPMTaskDetails", 
 				subStartTime); //20211005@fadhli - #31754
 
@@ -393,10 +392,14 @@ public class CommonApplBackingBean extends
 				MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
 				subStartTime = System.currentTimeMillis(); //20211005@fadhli - #31754
 				mofResDto = retriveApplicationById(smObj.getDocumentId());
-				SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "NULL",
+				SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 						"CommonApplBackingBean.preRenderView", "retriveApplicationById", 
 						subStartTime); //20211005@fadhli - #31754
 				SmAppl appl = mofResDto.getSmAppl();
+				String applNumber = "null";
+				if (null != appl) {
+					applNumber = appl.getApplNo();
+				}
 				log.info("********Review Application Escalted for new mof********");
 				log.info("********getTaskId********" + taskId);
 				log.info("********getTaskName********"
@@ -456,7 +459,7 @@ public class CommonApplBackingBean extends
 				subStartTime = System.currentTimeMillis(); //20211005@fadhli - #31754
 				smApplBB.proceedToApplication(appl.getApplType(), Boolean.TRUE,
 						appl, mofResDto.getSmSupplier());
-				SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+				SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, applNumber,
 						"CommonApplBackingBean.preRenderView", "proceedToApplication", 
 						subStartTime); //20211005@fadhli - #31754
 
