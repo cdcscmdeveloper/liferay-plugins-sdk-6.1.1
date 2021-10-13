@@ -1393,6 +1393,7 @@ public class TaskReassignmentBackingBean extends
 								 getManagedBean().getAllPageGroupTasks().clear();
 								for (WorklistItemVO worklist : response2DTO.getWorklistVO().getWorklistItem()) {
 									getManagedBean().getAllPageGroupTasks().add(worklist);
+									log.info("getManagedBean().getAllPageGroupTasks()--------size="+getManagedBean().getAllPageGroupTasks().size());
 								}
 							} 
 						}
@@ -1594,7 +1595,7 @@ public class TaskReassignmentBackingBean extends
 								getManagedBean().getAllPageOthersTasks().clear();
 								for (WorklistItemVO worklist : response2DTO.getWorklistVO().getWorklistItem()) {
 									getManagedBean().getAllPageOthersTasks().add(worklist);
-									log.info("getManagedBean().getAllPageOthersTasks()----TOTAL DATA ="+getManagedBean().getAllPageOthersTasks().size());
+									log.info("getManagedBean().getAllPageOthersTasks()----"+getManagedBean().getAllPageOthersTasks().size());
 								}
 							} 
 						}
