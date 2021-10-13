@@ -192,8 +192,6 @@ public class ContractItemSearchBackingBean extends BaseBackingBean<ContractItemS
 		scRequestItem.setItemName(itemName);
 		scRequestItem.setCmItem(ctItem.getScRequestItem().getCmItem());
 		scRequestItem.getCmItem().setExtensionCode(itemcode);
-		
-		//String result = itemName +","+ itemcode;
 
 		/*result.append(itemcode);
 		result.append(",");
