@@ -4822,7 +4822,7 @@ public class SmCommonUtil {
 		if (per.getPmCountry() != null) {
 			if (per.getPmCountry().getCountryCode()
 					.equals(SupplierManagementConst.MALAYSIA_CODE)
-					|| per.getIdentificationType().equals(ParameterConst.PERMANENT_RESIDENCE_TYPES)) { //#30064
+					|| per.getIdentificationType().getParameterCode().equals(ParameterConst.PERMANENT_RESIDENCE_TYPES)) { //#30064
 				PmParameter ic = retrieveParameterByTypeAndCode(
 						ParameterTypeConst.IDENTIFICATION_TYPES,
 						SupplierManagementConst.NEW_IC, StringUtils.EMPTY);
