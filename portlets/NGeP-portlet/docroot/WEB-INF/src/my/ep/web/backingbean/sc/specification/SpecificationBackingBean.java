@@ -10036,7 +10036,12 @@ public class SpecificationBackingBean extends
 			IParameterSO parameterSo;
 
 			try {
+				 //20211005@fadhli - #31754
+				String sessionId = ((PortletRequest) FacesContext.getCurrentInstance()
+						.getExternalContext().getRequest()).getRequestedSessionId(); 
+				
 				long startTime = System.currentTimeMillis();
+				long subStartTime = 0L;
 				
 				TemplateSpecReqDTO qtTemplateReqDTO = new TemplateSpecReqDTO();
 				parameterSo = BusinessDelegate.getInstance().getServiceObject(
@@ -10045,10 +10050,17 @@ public class SpecificationBackingBean extends
 				techSpecType
 						.setParameterType(ParameterTypeConst.SPECIFICATION_TYPE);
 				techSpecType.setParameterCode(ParameterConst.ANSWER_TYPE_TEXT);
+				subStartTime = System.currentTimeMillis();
 				ParameterResDTO techspecTyperesDTO = parameterSo
 						.retrieveParameterByTypeAndCode(techSpecType);
+				SLAUtils.getInstance().logSLASubInfo(ModuleCodeConst.SUPPLIER_SELECTION, 
+						ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, sessionId, "null",
+						"SpecificationBackingBean.pageChangeListener", "retrieveParameterByTypeAndCode", 
+						subStartTime); //20211005@fadhli - #31754
 				String specTypeCode = techspecTyperesDTO.getPmParameter()
 						.getParameterCode();
+				log.info("[CreateTemplateSpecPagingDataModel#pageChangeListener] #31754 getManagedBean().getStandardTemplate(): " 
+						+ getManagedBean().getStandardTemplate());
 				if (TemplateSpecConst.PROCESS_TYPE_STANDARD
 						.equalsIgnoreCase(getManagedBean()
 								.getStandardTemplate())) {
@@ -10077,10 +10089,20 @@ public class SpecificationBackingBean extends
 					templeteTypes.add(ParameterConst.TEMPLATE_TYPE_MINISTRY);
 					templeteTypes.add(ParameterConst.TEMPLATE_TYPE_PTJ);
 
+					subStartTime = System.currentTimeMillis();
 					List<Long> orgProfileIds = getMinistryPTJOrgIds(scQt
 							.getPmOrgProfile());
+					SLAUtils.getInstance().logSLASubInfo(ModuleCodeConst.SUPPLIER_SELECTION, 
+							ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, sessionId, "null",
+							"SpecificationBackingBean.pageChangeListener", "getMinistryPTJOrgIds(getPmOrgProfile())", 
+							subStartTime); //20211005@fadhli - #31754
+					subStartTime = System.currentTimeMillis();
 					List<Long> ownerOrgProfileIds = getMinistryPTJOrgIds(scQt
 							.getOwnerOrgProfile());
+					SLAUtils.getInstance().logSLASubInfo(ModuleCodeConst.SUPPLIER_SELECTION, 
+							ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, sessionId, "null",
+							"SpecificationBackingBean.pageChangeListener", "getMinistryPTJOrgIds(getOwnerOrgProfile())", 
+							subStartTime); //20211005@fadhli - #31754
 
 					if (ownerOrgProfileIds != null
 							&& ownerOrgProfileIds.size() > 0) {
@@ -10146,8 +10168,13 @@ public class SpecificationBackingBean extends
 										.getPmProcurementCategory()
 										.getParameterId());
 					}
+					subStartTime = System.currentTimeMillis();
 					populateQTSearchCriteria(templateQtnTenderSearchBean,
 							searchBean);
+					SLAUtils.getInstance().logSLASubInfo(ModuleCodeConst.SUPPLIER_SELECTION, 
+							ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, sessionId, "null",
+							"SpecificationBackingBean.pageChangeListener", "populateQTSearchCriteria", 
+							subStartTime); //20211005@fadhli - #31754
 				}
 				if (null != getManagedBean().getSpecName()
 						&& !"".equalsIgnoreCase(getManagedBean().getSpecName())) {
@@ -10202,7 +10229,16 @@ public class SpecificationBackingBean extends
 				qtTemplateSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
 								ITemplateSpecSO.class);
+				subStartTime = System.currentTimeMillis();
 				resDto = qtTemplateSO.searchTemplateMaster(qtTemplateReqDTO);
+				String qtNumber = "null";
+				if (null != getManagedBean() && null != getManagedBean().getQt()) {
+					qtNumber = getManagedBean().getQt().getQtNo();
+				}
+				SLAUtils.getInstance().logSLASubInfo(ModuleCodeConst.SUPPLIER_SELECTION, 
+						ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, sessionId, qtNumber,
+						"SpecificationBackingBean.pageChangeListener", "searchTemplateMaster", 
+						subStartTime); //20211005@fadhli - #31754
 
 				if (resDto != null) {
 					SLAUtils.getInstance().logSLAInfo(ModuleCodeConst.SUPPLIER_SELECTION, ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, 

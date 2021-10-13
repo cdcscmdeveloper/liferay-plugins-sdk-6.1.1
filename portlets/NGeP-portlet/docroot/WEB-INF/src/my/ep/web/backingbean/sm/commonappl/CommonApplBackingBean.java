@@ -76,11 +76,15 @@ public class CommonApplBackingBean extends
 	public boolean isPoSdoUser = false;
 
 	public void preRenderView() {
+		 //20211005@fadhli - #31754
+		String sessionId = ((PortletRequest) FacesContext.getCurrentInstance()
+				.getExternalContext().getRequest()).getRequestedSessionId(); 
 		try{
 			
 		
 		//LOG : 26549 : SLA Monitoring
 		long startTime = System.currentTimeMillis();
+		long subStartTime = 0L;
 		log.info("-------ComAppl prerender view-------");
 		HttpServletRequest servletRequest = PortalUtil
 				.getHttpServletRequest(new FacesScopes().getRequest());
@@ -91,7 +95,11 @@ public class CommonApplBackingBean extends
 				.getParameter("claim"));
 		SdoReviewReqDTO reqDTO = new SdoReviewReqDTO();
 
+		subStartTime = System.currentTimeMillis();
 		Object token = new FacesScopes().getBPMAuthenticationCtxToken();
+		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
+				"CommonApplBackingBean.preRenderView", "getBPMAuthenticationCtxToken", 
+				subStartTime); //20211005@fadhli - #31754
 
 		reqDTO.setTaskId(taskId);
 		reqDTO.setToken(token);
@@ -99,9 +107,13 @@ public class CommonApplBackingBean extends
 
 		ISdoReviewSO reqSO = (ISdoReviewSO) BusinessDelegate.getInstance()
 				.getServiceObject("sm", ISdoReviewSO.class);
-
+		
+		subStartTime = System.currentTimeMillis();
 		BpmResponseDTO resDTO = (BpmResponseDTO) reqSO
 				.getBPMTaskDetails(reqDTO);
+		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
+				"CommonApplBackingBean.preRenderView", "getBPMTaskDetails", 
+				subStartTime); //20211005@fadhli - #31754
 
 		this.getManagedBean().setTaskName(resDTO.getTaskName());
 
@@ -374,7 +386,11 @@ public class CommonApplBackingBean extends
 				log.info(" *** DOCUMENT ID FROM THE BPM IS ******"
 						+ smObj.getDocumentId());
 				MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
+				subStartTime = System.currentTimeMillis(); //20211005@fadhli - #31754
 				mofResDto = retriveApplicationById(smObj.getDocumentId());
+				SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
+						"CommonApplBackingBean.preRenderView", "retriveApplicationById", 
+						subStartTime); //20211005@fadhli - #31754
 				SmAppl appl = mofResDto.getSmAppl();
 				log.info("********Review Application Escalted for new mof********");
 				log.info("********getTaskId********" + taskId);
@@ -389,6 +405,7 @@ public class CommonApplBackingBean extends
 				String currentStatus = bpmBean.applicationStatus(resDTO
 						.getDocStatus());
 				smApplBB.getManagedBean().setCurrentStatus(currentStatus);
+				log.info("[preRenderView] #31754 resDTO.getTaskName(): " + resDTO.getTaskName());
 				if (resDTO.getTaskName().equalsIgnoreCase(
 						SMProcessNameConst.REVIEW_APPL)
 						|| resDTO.getTaskName().equalsIgnoreCase(
@@ -431,10 +448,15 @@ public class CommonApplBackingBean extends
 				}
 				log.info("mofResDto.getSmSupplier()>>>"
 						+ mofResDto.getSmSupplier());
+				subStartTime = System.currentTimeMillis(); //20211005@fadhli - #31754
 				smApplBB.proceedToApplication(appl.getApplType(), Boolean.TRUE,
 						appl, mofResDto.getSmSupplier());
+				SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, applNumber,
+						"CommonApplBackingBean.preRenderView", "proceedToApplication", 
+						subStartTime); //20211005@fadhli - #31754
 
 				smApplBB.getManagedBean().setBpmTaskName(resDTO.getTaskName());
+				log.info("[preRenderView] #31754 smObj.getSupplierList(): " + smObj.getSupplierList());
 				if (smObj.getSupplierList() != null) {
 					smApplBB.getManagedBean().setSupplierToPOList(
 							smObj.getSupplierList());
@@ -588,7 +610,9 @@ public class CommonApplBackingBean extends
 			SmSupplier currentSupplier = SmApplicationUtil.getCurrentSupplier();
 			List<SmDisciplinaryAction> activeDisc = new ArrayList<SmDisciplinaryAction>();
 			if(currentSupplier != null){
+				//27876: Disciplinary Action - start - <27876>
 				activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currentSupplier);
+				//27876: Disciplinary Action - End- <27876>
 			}
 			
 			if(activeDisc != null && activeDisc.size() > 0){
