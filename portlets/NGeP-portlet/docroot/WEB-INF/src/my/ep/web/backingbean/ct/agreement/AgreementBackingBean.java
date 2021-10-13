@@ -203,9 +203,6 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			for (PmUser user : list) {
 				sourceList.add(user);
 				getManagedBean().getUserMap().put(user.getUserId(), user);
-//				if(user.getSalutationCode()!=null){
-//					user.getSalutationCode().getSalutationName();
-//				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2806,7 +2803,6 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 					result = newAdditionContract.add(newAdditionTax);
 				}
 			}else if((gstAmtChange.equals(ContractConst.DEDUCT_AMOUNT) && sTaxAmtChange.equals(ContractConst.ADD_AMOUNT)) || (gstAmtChange.equals(ContractConst.ADD_AMOUNT) && sTaxAmtChange.equals(ContractConst.DEDUCT_AMOUNT))){
-				//BigDecimal newTaxAmount = getManagedBean().getCtAgreement().getCtAmendment().getNewGstAmount().add(getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount());
 				
 				res = (getGstAmt().add(getStaxAmt())).compareTo(newAdditionTax);
 				
@@ -2893,7 +2889,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 					result = newAdditionTax;
 				}
 			}else if((gstAmtChange.equals(ContractConst.ADD_AMOUNT) && sTaxAmtChange.equals(ContractConst.DEDUCT_AMOUNT)) || (gstAmtChange.equals(ContractConst.DEDUCT_AMOUNT) && sTaxAmtChange.equals(ContractConst.ADD_AMOUNT))){					
-				//BigDecimal newTaxAmount = getManagedBean().getCtAgreement().getCtAmendment().getNewGstAmount().add(getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount());					
+									
 				res = (getGstAmt().add(getStaxAmt())).compareTo(newAdditionTax);
 				
 				if(res == 1){
