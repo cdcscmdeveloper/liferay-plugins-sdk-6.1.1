@@ -1186,7 +1186,7 @@ public class SmApplicationBackingBean extends
 		if (!fromBpm) {
 			subStartTime = System.currentTimeMillis();
 			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
-			SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+			SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 					"SmApplicationBackingBean.proceedToApplication", "getCurrentSupplier-1", 
 					subStartTime); //20211005@fadhli - #31754
 			boolean cannotProceedAlertMsg = false;
@@ -1195,7 +1195,7 @@ public class SmApplicationBackingBean extends
 				if (currSupp != null){
 					subStartTime = System.currentTimeMillis();
 					List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
-					SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+					SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 							"SmApplicationBackingBean.proceedToApplication", "retrieveActiveSmDisciplinaryActionBySupplier-2", 
 							subStartTime); //20211005@fadhli - #31754
 					
@@ -1221,7 +1221,7 @@ public class SmApplicationBackingBean extends
 				if(currSupp != null){
 					subStartTime = System.currentTimeMillis();
 					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
-					SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+					SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 							"SmApplicationBackingBean.proceedToApplication", "retrieveActiveSmDisciplinaryActionBySupplier-3", 
 							subStartTime); //20211005@fadhli - #31754
 					
@@ -1257,13 +1257,13 @@ public class SmApplicationBackingBean extends
 				subStartTime = System.currentTimeMillis();
 				boolean hasActiveTransactions = SmApplicationUtil
 						.hasActiveTransactions(currSupp);
-				SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+				SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 						"SmApplicationBackingBean.proceedToApplication", "hasActiveTransactions-4", 
 						subStartTime); //20211005@fadhli - #31754
 				subStartTime = System.currentTimeMillis();
 				boolean hasOtherActiveTransactions = SmApplicationUtil
 						.hasOtherActiveTransactions(currSupp);
-				SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+				SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 						"SmApplicationBackingBean.proceedToApplication", "hasOtherActiveTransactions-5", 
 						subStartTime); //20211005@fadhli - #31754
 				if (hasActiveTransactions || hasOtherActiveTransactions) {
@@ -1312,19 +1312,19 @@ public class SmApplicationBackingBean extends
 				// 25157
 				SmAppl rejectedAppl = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppType(
 						currSupp.getSupplierId(), applicationType);
-				SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+				SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 						"SmApplicationBackingBean.proceedToApplication", "getLatesRejectedApplicationBySuppIdAndAppType-6", 
 						subStartTime); //20211005@fadhli - #31754
 				//30713 - Start
 				subStartTime = System.currentTimeMillis();
 				//Add checking check expired for KN
 				SmWorkflowStatus currWorkflowStatus = isLatestActiveWorkFlow(currSupp.getSupplierId());
-				SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+				SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 						"SmApplicationBackingBean.proceedToApplication", "isLatestActiveWorkFlow-7", 
 						subStartTime); //20211005@fadhli - #31754
 				subStartTime = System.currentTimeMillis();
 				SmWorkflowStatus rejectedWf = rejectedApplExist(currSupp.getSupplierId());
-				SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+				SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 						"SmApplicationBackingBean.proceedToApplication", "rejectedApplExist-8", 
 						subStartTime); //20211005@fadhli - #31754
 				if (rejectedAppl != null && my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF.equalsIgnoreCase(currSupp.getSmAppl().getApplType())
@@ -1354,7 +1354,7 @@ public class SmApplicationBackingBean extends
 				if (currSupp != null){
 					subStartTime = System.currentTimeMillis();
 					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
-					SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+					SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 							"SmApplicationBackingBean.proceedToApplication", "retrieveActiveSmDisciplinaryActionBySupplier-9", 
 							subStartTime); //20211005@fadhli - #31754
 //					SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionBySupplier(supReqDTO);
@@ -1415,7 +1415,7 @@ public class SmApplicationBackingBean extends
 				cannotProceedAlertMsg = SmApplicationUtil
 						.validateBeforeProceed(currSupp.getSupplierId(),
 								applicationType);
-				SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+				SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 						"SmApplicationBackingBean.proceedToApplication", "validateBeforeProceed-10", 
 						subStartTime); //20211005@fadhli - #31754
 			}
@@ -1428,7 +1428,7 @@ public class SmApplicationBackingBean extends
 				subStartTime = System.currentTimeMillis();
 				resDto = cloneSmApplicationDraft(currSupp.getSupplierId(),
 						applicationType, smAppl.getSupplierType());
-				SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+				SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 						"SmApplicationBackingBean.proceedToApplication", "cloneSmApplicationDraft-11", 
 						subStartTime); //20211005@fadhli - #31754
 				if (resDto.isErrorCaued()) {
@@ -1481,13 +1481,13 @@ public class SmApplicationBackingBean extends
 						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
 			subStartTime = System.currentTimeMillis();
 			SmApplicationUtil.checkEquityOwnerUpdateAllowance(getManagedBean());
-			SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+			SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 					"SmApplicationBackingBean.proceedToApplication", "checkEquityOwnerUpdateAllowance-12", 
 					subStartTime); //20211005@fadhli - #31754
 		}
 		subStartTime = System.currentTimeMillis();
 		retrieveBusinessTypeList();
-		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 				"SmApplicationBackingBean.proceedToApplication", "retrieveBusinessTypeList-13", 
 				subStartTime); //20211005@fadhli - #31754
 		assignSupplierBusinessType(getManagedBean().getSmSupplier());
@@ -1500,7 +1500,7 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setReasonDescInitList(
 				SmApplicationUtil.retrieveMofRejectReason(suppType, getManagedBean()
 						.getSmSupplier().getBusinessType(), applicationType));
-		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 				"SmApplicationBackingBean.proceedToApplication", "retrieveMofRejectReason-14", 
 				subStartTime); //20211005@fadhli - #31754
 		//#15629 - END	
@@ -1513,7 +1513,7 @@ public class SmApplicationBackingBean extends
 								ReasonCategory.SUPPLIER_REJECTION_REASON
 										.value(),
 								SupplierManagementConst.SM_REASON_CODE_OTHERS));
-		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 				"SmApplicationBackingBean.proceedToApplication", "retrieveOtherRejectReasonIdByParamCodeAndType-15", 
 				subStartTime); //20211005@fadhli - #31754
 		
@@ -1546,7 +1546,7 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setRecommendReasonDescInitList(
 				SmApplicationUtil.retrieveMofRejectReason(suppTypePo, getManagedBean()
 						.getSmSupplier().getBusinessType(), applicationType));
-		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 				"SmApplicationBackingBean.proceedToApplication", "retrieveMofRejectReason-16", 
 				subStartTime); //20211005@fadhli - #31754
 		getManagedBean().setRecommendReasonDescList(
@@ -1607,7 +1607,7 @@ public class SmApplicationBackingBean extends
 				|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)){
 			subStartTime = System.currentTimeMillis();
 			SmWorkflowStatus sts = SmCommonUtil.getCurrentActiveWokFlowStatus(getManagedBean().getSmAppl().getApplId());
-			SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+			SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 					"SmApplicationBackingBean.proceedToApplication", "getCurrentActiveWokFlowStatus-17", 
 					subStartTime); //20211005@fadhli - #31754
 			if (sts != null && sts.getPmStatus() != null){
@@ -1681,7 +1681,7 @@ public class SmApplicationBackingBean extends
 				subStartTime = System.currentTimeMillis();
 				SmWorkflowStatus sts = SmCommonUtil
 						.getCurrentActiveWokFlowStatus(smAppl.getApplId());
-				SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+				SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 						"SmApplicationBackingBean.proceedToApplication", "getCurrentActiveWokFlowStatus-18", 
 						subStartTime); //20211005@fadhli - #31754
 				if (sts != null && sts.getPmStatus() != null
@@ -1763,7 +1763,7 @@ public class SmApplicationBackingBean extends
 						SmApplicationUtil.getSmRemarksByDocTypeAndId(
 								applicationType, getManagedBean().getSmAppl()
 										.getApplId()));
-				SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+				SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 						"SmApplicationBackingBean.proceedToApplication", "getSmRemarksByDocTypeAndId-18", 
 						subStartTime); //20211005@fadhli - #31754
 			}
@@ -1774,7 +1774,7 @@ public class SmApplicationBackingBean extends
 					SmApplicationUtil.getSmSupplierBasicInfoVO(getManagedBean()
 							.getBasicInfo(), getManagedBean().getSmSupplier(),
 							getManagedBean().getSmAppl()));
-			SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+			SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 					"SmApplicationBackingBean.proceedToApplication", "getSmSupplierBasicInfoVO-19", 
 					subStartTime); //20211005@fadhli - #31754
 		}
@@ -1805,7 +1805,7 @@ public class SmApplicationBackingBean extends
 						fac.getSmAddress(),
 						getManagedBean().getSmAppl().getSmCompanyBasic()
 								.getSmCompanyAddresses().get(0).getSmAddress());
-				SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+				SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 						"SmApplicationBackingBean.proceedToApplication", "cloneAddress-20", 
 						subStartTime); //20211005@fadhli - #31754
 			}
@@ -1821,13 +1821,13 @@ public class SmApplicationBackingBean extends
 			SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
 					getManagedBean(), fac.getSmAddress(),
 					SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
-			SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+			SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 					"SmApplicationBackingBean.proceedToApplication", "assignStateDistAndCityForSelVal-21", 
 					subStartTime); //20211005@fadhli - #31754
 		} else {
 			subStartTime = System.currentTimeMillis();
 			setApplicationFailities(smAppl.getSmFacilities());
-			SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+			SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 					"SmApplicationBackingBean.proceedToApplication", "assignStateDistAndCityForSelVal-22", 
 					subStartTime); //20211005@fadhli - #31754
 		}
@@ -1861,7 +1861,7 @@ public class SmApplicationBackingBean extends
 		// set whether allowed to change business type from office to
 		// business
 		setBusinessAndHadApprovedSpecialCatcode();
-		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 				"SmApplicationBackingBean.proceedToApplication", "setBusinessAndHadApprovedSpecialCatcode-23", 
 				subStartTime); //20211005@fadhli - #31754
 
@@ -1882,7 +1882,7 @@ public class SmApplicationBackingBean extends
 				SmApplicationUtil.getInstance().retrieveRegistrationStatusList(
 						getManagedBean().getSmAppl().getSupplierType(),
 						applicationType));
-		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 				"SmApplicationBackingBean.proceedToApplication", "setBusinessAndHadApprovedSpecialCatcode-23", 
 				subStartTime); //20211005@fadhli - #31754
 		if (!getManagedBean().getSmAppl().getApplType()
@@ -1897,7 +1897,7 @@ public class SmApplicationBackingBean extends
 			
 			subStartTime = System.currentTimeMillis();
 			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
-			SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+			SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 					"SmApplicationBackingBean.proceedToApplication", "getCurrentSupplier-24", 
 					subStartTime); //20211005@fadhli - #31754
 			PmStatusDesc regStatusToExclude = (PmStatusDesc) EntityHelper
@@ -1923,7 +1923,7 @@ public class SmApplicationBackingBean extends
 				.setSupplierParentCatList(
 						SmApplicationUtil
 								.retrieveParentCategoryListForExperiencePage(getManagedBean()));
-		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 				"SmApplicationBackingBean.proceedToApplication", "retrieveParentCategoryListForExperiencePage-25", 
 				subStartTime); //20211005@fadhli - #31754
 		if (getManagedBean().getSmAppl().getSmAssociationBodies() != null) {
@@ -1956,14 +1956,14 @@ public class SmApplicationBackingBean extends
 				SmCommonUtil.getMofAccountBySuppIdAndSuppType(getManagedBean()
 						.getSmSupplier().getSupplierId(), getManagedBean()
 						.getSmAppl().getSupplierType()));
-		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 				"SmApplicationBackingBean.proceedToApplication", "getMofAccountBySuppIdAndSuppType-26", 
 				subStartTime); //20211005@fadhli - #31754
 
 		// init GST information
 		subStartTime = System.currentTimeMillis();
 		initGst();
-		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 				"SmApplicationBackingBean.proceedToApplication", "initGst-27", 
 				subStartTime); //20211005@fadhli - #31754
 
@@ -2036,7 +2036,7 @@ public class SmApplicationBackingBean extends
 		// set section editor VO
 		SmSideMenuIconUtil.setAllSectionEditorVO(getManagedBean(), true,
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC);
-		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 				"SmApplicationBackingBean.proceedToApplication", "post-initGst-29", 
 				subStartTime); //20211005@fadhli - #31754
 		
@@ -2044,7 +2044,7 @@ public class SmApplicationBackingBean extends
 		if(!fromBpm){
 			subStartTime = System.currentTimeMillis();
 			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
-			SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+			SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 					"SmApplicationBackingBean.proceedToApplication", "subStartTime-30", 
 					subStartTime); //20211005@fadhli - #31754
 			
@@ -2052,7 +2052,7 @@ public class SmApplicationBackingBean extends
 				if(currSupp != null){
 					subStartTime = System.currentTimeMillis();
 					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
-					SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+					SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 							"SmApplicationBackingBean.proceedToApplication", "retrieveActiveSmDisciplinaryActionBySupplier-31", 
 							subStartTime); //20211005@fadhli - #31754
 					
@@ -2081,7 +2081,7 @@ public class SmApplicationBackingBean extends
 
 		// PO inquiry initialization
 		initMissingDocs(false, null);
-		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 				"SmApplicationBackingBean.proceedToApplication", "post-Disciplinary-Action-32", 
 				subStartTime); //20211005@fadhli - #31754
 
@@ -2119,7 +2119,7 @@ public class SmApplicationBackingBean extends
 										.getHtmlApplicationRejectReasons(latestRejectedAppl
 												.getSmApplRejectReasons()));
 			}
-			SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+			SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 					"SmApplicationBackingBean.proceedToApplication", "poRemarksRejectionReason-33", 
 					subStartTime); //20211005@fadhli - #31754
 		}
@@ -2675,7 +2675,7 @@ public class SmApplicationBackingBean extends
 				getManagedBean().setCompanyValidWithSSM(this.getManagedBean().getSmAppl().isApplValidWithSsm());
 				getManagedBean().setValidateWithSSM(this.getManagedBean().getSmAppl().isApplValidWithSsm());
 			}
-			SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+			SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 					"SmApplicationBackingBean.proceedToApplication", "ssm-integration-34", 
 					subStartTime); //20211005@fadhli - #31754
 		}
@@ -2714,7 +2714,7 @@ public class SmApplicationBackingBean extends
 				if(currSupp != null){
 					subStartTime = System.currentTimeMillis();
 					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
-					SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+					SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 							"SmApplicationBackingBean.proceedToApplication", "retrieveActiveSmDisciplinaryActionBySupplier-35", 
 							subStartTime); //20211005@fadhli - #31754
 					
@@ -2735,7 +2735,7 @@ public class SmApplicationBackingBean extends
 		// set Personnel List Count
 		calcPersonnelListCount();
 		updateCategoriesRecordStatus(); //#29847
-		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, appl.getApplNo(),
+		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 				"SmApplicationBackingBean.proceedToApplication", "calcPersonnelListCount-updateCategoriesRecordStatus-36", 
 				subStartTime); //20211005@fadhli - #31754
 		return SmApplicationUtil.setNavigationForAppl(applicationType);
