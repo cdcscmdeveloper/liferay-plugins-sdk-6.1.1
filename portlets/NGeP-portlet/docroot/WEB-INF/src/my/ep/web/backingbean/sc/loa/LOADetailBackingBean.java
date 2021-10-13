@@ -1251,15 +1251,15 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			boolean agreementReq = getManagedBean().isAgreementMandatory();
 										
 			if (isPeriodic){
-				if(agreementReq == false){
+				if(!agreementReq){
 					getManagedBean().setAgreementReqChange(true);
 				}					
 			}else if(isNonPeriodic && !over500K(loa)){
-				if(agreementReq == true){
+				if(agreementReq){
 					getManagedBean().setAgreementReqChange(true);
 				}					
 			}else if(isNonPeriodic && over500K(loa)){
-				if(agreementReq == false){
+				if(!agreementReq){
 					getManagedBean().setAgreementReqChange(true);
 				}					
 			}else{
@@ -1706,7 +1706,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	public void fileDownload(){
 		debugLogger("FileDownload");
 		ScAttachment scAttachment = getManagedBean().getScLoa().getScLoaAttachment();
-		log.info(scAttachment.getFileName());
 		if(scAttachment != null){
 			try{
 				downloadFile(scAttachment);
@@ -9639,20 +9638,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				.get("value");
 		Boolean isPeriodic = (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) || (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN));
 		Boolean isNonPeriodic = (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)) || (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN));
-		Boolean above500K;
 		ScLoa scLoa = this.getManagedBean().getScLoa();
 		
-		if(over500K(scLoa) == true){
-			above500K = true;
+		if(over500K(scLoa)){			
 			this.getManagedBean().setAbove500K(true);
-		}else{
-			above500K = false;
+		}else{			
 			this.getManagedBean().setAbove500K(false);
 		}
-		if((isPK7(scLoa) && (isPeriodic || (isNonPeriodic && above500K)))&& !agreementReq){
+		if((isPK7(scLoa) && (isPeriodic || (isNonPeriodic && over500K(scLoa))))&& !agreementReq){
 			this.getManagedBean().setAgreementReqChange(true);
 			RequestContext.getCurrentInstance().execute("changeAgreementReqDlg.show()");			
-		}else if((agreementReq == false)&&((isNonPeriodic && above500K) && !isPK7(scLoa))){						
+		}else if((agreementReq == false)&&((isNonPeriodic && over500K(scLoa)) && !isPK7(scLoa))){						
 			scLoa.setAgreementReq(false);
 			this.getManagedBean().setAgreementReqChange(true);
 			RequestContext.getCurrentInstance().update("contractDetailsId");
@@ -9677,10 +9673,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					result = true;
 				}
 			}
-		}else{
-			result = true;
-		}
-		
+		}		
 		return result;
 	}
 	
