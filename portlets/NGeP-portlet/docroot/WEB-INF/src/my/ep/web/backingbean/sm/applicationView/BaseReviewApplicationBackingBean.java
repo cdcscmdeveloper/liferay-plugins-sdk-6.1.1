@@ -2437,11 +2437,10 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				}
 			}
 			if(ReasonsByPO != null && !ReasonsByPO.isEmpty()){
-				getManagedBean().setSmApplRejectReasonsByPO(ReasonsByPO);			
+				getManagedBean().setSmApplRejectReasonsByPO(ReasonsByPO);
+				rejectReasonsByPO = SmCommonUtil
+						.getHtmlApplicationRejectReasons(getManagedBean().getSmApplRejectReasonsByPO());
 			}
-			
-			rejectReasonsByPO = SmCommonUtil
-					.getHtmlApplicationRejectReasons(getManagedBean().getSmApplRejectReasonsByPO());
 			//30974 - end - 13/10/2021
 		} else {
 			if (getManagedBean().getSmAppl().getApplType()
@@ -2544,6 +2543,21 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 							newListOfRejectID.add((SmApplRejectReason)removedDuplicateID.get(id));
 						}
 						getManagedBean().getSmAppl().setSmApplRejectReasons(newListOfRejectID);	
+					}
+					
+					//this is for PO reject reasons only
+					if(getManagedBean().getSmApplRejectReasonsByPO() != null && getManagedBean().getSmApplRejectReasonsByPO().size() > 0){
+						Map<String, SmApplRejectReason> removedDuplicateID = new HashMap<String, SmApplRejectReason>();
+						List<SmApplRejectReason> newListOfRejectID = new ArrayList<>();
+						for(SmApplRejectReason reason : this.getManagedBean().getSmApplRejectReasonsByPO()){
+							removedDuplicateID.put(reason.getPmReason().getReasonId().toString(), reason);
+						}
+						Iterator itr = removedDuplicateID.keySet().iterator();
+						while (itr.hasNext()){
+							String id = itr.next().toString();
+							newListOfRejectID.add((SmApplRejectReason)removedDuplicateID.get(id));
+						}
+						getManagedBean().setSmApplRejectReasonsByPO(newListOfRejectID);	
 					}
 					// If there is duplicate ID checking - End
 					//#30974 - End - 2/7/2021
