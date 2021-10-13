@@ -1377,7 +1377,7 @@ public class TaskReassignmentBackingBean extends
 						}
 						
 						//7465
-						reqDTO.setLimit(999);
+						reqDTO.setLimit(100);
 						reqDTO.setOffset(0);
 						response2DTO = bpmSO.getReassignedItems(reqDTO);					
 
