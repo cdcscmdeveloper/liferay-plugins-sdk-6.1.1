@@ -9,6 +9,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
@@ -392,6 +393,10 @@ public class CommonApplBackingBean extends
 						"CommonApplBackingBean.preRenderView", "retriveApplicationById", 
 						subStartTime); //20211005@fadhli - #31754
 				SmAppl appl = mofResDto.getSmAppl();
+				String applNumber = "null";
+				if (null != appl) {
+					applNumber = appl.getApplNo();
+				}
 				log.info("********Review Application Escalted for new mof********");
 				log.info("********getTaskId********" + taskId);
 				log.info("********getTaskName********"
