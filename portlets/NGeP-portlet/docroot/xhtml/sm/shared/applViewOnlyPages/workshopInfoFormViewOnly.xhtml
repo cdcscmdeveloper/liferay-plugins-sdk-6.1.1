@@ -193,7 +193,7 @@
 						</p:column>
 
 						<p:column headerText="#{lbl['lbl.sm.employee.idtype']}">
-							<p:outputLabel value="#{empInfo.identificationTypeId}" />
+							<p:outputLabel value="#{viewSmApplBackingBean.getParamDescByParameterId(empInfo.identificationTypeId)}" />
 						</p:column>
 
 						<p:column headerText="#{lbl['lbl.sm.employee.icno']}">
