@@ -18,15 +18,12 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
-import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
@@ -38,7 +35,6 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.VCtActiveContract;
 import my.ep.persistence.entity.ct.VCtContract;
-import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.fl.FlAttachment;
@@ -69,15 +65,11 @@ import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
-import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
-import my.ep.type.pm.OrganizationType;
-import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.GlAccountSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.DisciplinaryActionVO;
@@ -134,7 +126,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private List<FlFulfilmentItemAddr> itemAddrList;
 	private List<FlFulfilmentItemAddr> showItemAddrList;
 	private List <FlFulfilmentItemAddr>  selectedItemsRows;
-	
+	private List<ScRequestItemSpecOffer> specificationList;
 	private List<FlDeliveryAddress> selectedAddressRows;
 	private List<VAddressTypeDeliveryAddress> selectedDeliveryFullAddr;
 	private List<VAgencyDeliveryAddress> selectedAgencyAddressList;
@@ -243,6 +235,9 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private String approver;
 	private String orgProfileIds;
 	private String fulfilmentRequisitioner;
+	private String supplierOffer;
+	private String newOfferedSpec;
+	private String itemSpecification;
 	
 	private Long ministryProfileId;
 	private Long jabatanProfileId;
@@ -314,7 +309,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private boolean espkb;
 	private boolean showCommitmentNo;
 	private boolean oldGstRateFlg = false;
-	
+	private boolean dpFlag;
 	//17087 -- radio button
 	private boolean radioCheckDeliveryDate;
 	/*13984 Current schedule number Information*/
@@ -341,27 +336,10 @@ public class ContractRequestManagedBean extends BaseManagedBean {
   //29555 start
     private String preparedBy;
     //29555 end
-    //13291 - start
-    private IPagingDataModel<PmOrgProfile> preparedForPtjDataModel = new PreparedForPtjPagingDataModel();
-    private List<Object[]> approverPTJOrgList;
-    private Long selectedApproverPTJ;
-    private Long selectedPmoPTJ;
-    //13291 - end
-    
- // 28855 - Start
- 	private boolean dpFlag;
-	private String supplierOffer;
-	private String newOfferedSpec;
-	private String itemSpecification;
-	private List<ScRequestItemSpecOffer> specificationList;
-	private List<ScRequestItemSpecOffer> itemSpecList;
-
-
- // 28855 - End
- 	
-    //24956 start
-    private boolean CtTypeMinistry;
-    //24956 end
+    //11076
+    private int totalExistingItem = 0;
+    private int totalNewItemsAdded = 0;
+    private int overallTotalItem = 0;
     
 	private class ActiveContractPagingDataModel extends PagingDataModel<VCtActiveContract> {
 		
@@ -3214,8 +3192,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.catalogueFlag = catalogueFlag;
 	}
 	//end-13984 - CrList - Back Button
-	
-	// 28855 - start
+
 	public boolean isDpFlag() {
 		return dpFlag;
 	}
@@ -3230,14 +3207,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 	public void setSpecificationList(List<ScRequestItemSpecOffer> specificationList) {
 		this.specificationList = specificationList;
-	}
-
-	public List<ScRequestItemSpecOffer> getItemSpecList() {
-		return itemSpecList;
-	}
-
-	public void setItemSpecList(List<ScRequestItemSpecOffer> itemSpecList) {
-		this.itemSpecList = itemSpecList;
 	}
 
 	public String getSupplierOffer() {
@@ -3263,8 +3232,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	public void setItemSpecification(String itemSpecification) {
 		this.itemSpecification = itemSpecification;
 	}
-	// 28855 - End
-	
 	//29728 - start
 	/**
 	 * @return the isBranchNeedToChange
@@ -3290,162 +3257,30 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.preparedBy = preparedBy;
 	}
 	//29555 end
+	//public static void getTotalE()
 	
-	//24956 - start
-	public boolean isCtTypeMinistry() {
-		return CtTypeMinistry;
+	//11076
+	public int getTotalExistingItem() {
+		return totalExistingItem;
+	}
+	//11076
+	public void setTotalExistingItem(int totalExistingItem) {
+		this.totalExistingItem = totalExistingItem;
 	}
 
-	public void setCtTypeMinistry(boolean ctTypeMinistry) {
-		CtTypeMinistry = ctTypeMinistry;
-	}
-	//24956 - end
-
-	//13291 - start
-	private class PreparedForPtjPagingDataModel extends PagingDataModel<PmOrgProfile> {
-
-		/** The Constant serialVersionUID. */
-		private static final long serialVersionUID = 1L;
-
-		public PreparedForPtjPagingDataModel() {
-			super("tablePreparePtj", false);
-		}
-
-		@Override
-		protected ISearchResultBean<PmOrgProfile> pageChangeListener(
-				ISearchBean<PmOrgProfile> searchBean) {
-			try {
-				// Filter By - parameterType
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("orgTypeCode.pmParameterType.parameterType",SearchOperator.OPERATOR_EQUALS.value(),ParameterTypeConst.ORGANISATION_TYPES));
-
-				// Filter By - Org Type
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("orgTypeCode.parameterCode",SearchOperator.OPERATOR_EQUALS.value(),OrganizationType.DIVISION.value()));
-
-
-				// Filter By - Ministry Profile Id
-				Long ministryOrgProfileId = getMinistryProfileId();
-				if (ministryOrgProfileId == null) {
-					ministryOrgProfileId = 0L;
-				}
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean(OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
-								SearchOperator.OPERATOR_EQUALS.value(),
-								ministryOrgProfileId));
-
-				if (jabatanProfileId != null) {
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean(OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()),
-									SearchOperator.OPERATOR_EQUALS.value(),
-									jabatanProfileId));
-				}
-
-				Date currentDate = DateUtils.getCurrentDateWithoutTime();
-				// Filter By - Org effDate
-				searchBean.getDataFilterBeans()
-				.add(new SearchFilterBean("pmOrgValidity.effDate",SearchOperator.OPERATOR_LESS_EQUAL.value(), currentDate));
-
-				// Filter By - Org expDate
-				searchBean.getDataFilterBeans().add(
-						new SearchMultiFilterBean(new SearchFilterBean(
-								"pmOrgValidity.expDate",
-								SearchOperator.OPERATOR_GREATER_EQUAL.value(),
-								currentDate), new SearchFilterBean(
-										"pmOrgValidity.expDate",
-										SearchOperator.OPERATOR_IS_NULL.value(), null,
-										SearchCondition.CONDITION_OR.value())));
-
-				if (ptjCodeName != null
-						&& (ptjCodeNameSearchValues != null && !"".equalsIgnoreCase(ptjCodeNameSearchValues))) {
-					if (ptjCodeName.equalsIgnoreCase(ContractConst.PTJ_CODE)) {
-						SearchFilterBean filterBean = new SearchFilterBean("pmOrgValidity.orgCode", SearchOperator.OPERATOR_LIKE.value(), ptjCodeNameSearchValues);
-						filterBean.setCaseInsensitive(true);
-						searchBean.getDataFilterBeans().add(filterBean);
-
-					} else if (ptjCodeName.equalsIgnoreCase(ContractConst.PTJ_NAME)) {
-						SearchFilterBean filterBean = new SearchFilterBean("pmOrgValidity.orgName", SearchOperator.OPERATOR_LIKE.value(), ptjCodeNameSearchValues);
-						filterBean.setCaseInsensitive(true);
-						searchBean.getDataFilterBeans().add(filterBean);
-					}
-				}
-				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-				reqDTO.setOrgProfileSearchBean(searchBean);
-				OrgProfileResDTO resDTO;
-				List<CtAgency> ctAgencies = flRequest.getCtContract().getLatestContractVer().getCtAgencies();
-				if(ctAgencies != null && !ctAgencies.isEmpty()) {
-					List<Long> orgIdList = new ArrayList<>();
-					for(CtAgency ctAgency: ctAgencies) {
-						orgIdList.add(ctAgency.getOrgProfile().getOrgProfileId());						
-					}					
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("orgProfileId", SearchOperator.OPERATOR_IN.value(), orgIdList));
-				}
-				resDTO = orgProfileSO.searchOrgProfile(reqDTO);
-				if (resDTO.isSuccessful()) {
-					return resDTO.getOrgProfileResultBean();
-				}
-			} catch (Exception e) {
-				log.error(e.getMessage());
-			}
-			return null;
-		}
-
-	}
-	/**
-	 * @return the preparedForPtjDataModel
-	 */
-	public IPagingDataModel<PmOrgProfile> getPreparedForPtjDataModel() {
-		return preparedForPtjDataModel;
+	public int getTotalNewItemsAdded() {
+		return totalNewItemsAdded;
 	}
 
-	/**
-	 * @param preparedForPtjDataModel the preparedForPtjDataModel to set
-	 */
-	public void setPreparedForPtjDataModel(
-			IPagingDataModel<PmOrgProfile> preparedForPtjDataModel) {
-		this.preparedForPtjDataModel = preparedForPtjDataModel;
-	}
-	
-	/**
-	 * @return the approverPTJOrgList
-	 */
-	public List<Object[]> getApproverPTJOrgList() {
-		return approverPTJOrgList;
+	public void setTotalNewItemsAdded(int totalNewItemsAdded) {
+		this.totalNewItemsAdded = totalNewItemsAdded;
 	}
 
-	/**
-	 * @param approverPTJOrgList the approverPTJOrgList to set
-	 */
-	public void setApproverPTJOrgList(List<Object[]> approverPTJOrgList) {
-		this.approverPTJOrgList = approverPTJOrgList;
+	public int getOverallTotalItem() {
+		return overallTotalItem;
 	}
 
-	/**
-	 * @return the selectedApproverPTJ
-	 */
-	public Long getSelectedApproverPTJ() {
-		return selectedApproverPTJ;
+	public void setOverallTotalItem(int overallTotalItem) {
+		this.overallTotalItem = overallTotalItem;
 	}
-
-	/**
-	 * @param selectedApproverPTJ the selectedApproverPTJ to set
-	 */
-	public void setSelectedApproverPTJ(Long selectedApproverPTJ) {
-		this.selectedApproverPTJ = selectedApproverPTJ;
-	}
-
-	/**
-	 * @return the selectedPmoPTJ
-	 */
-	public Long getSelectedPmoPTJ() {
-		return selectedPmoPTJ;
-	}
-
-	/**
-	 * @param selectedPmoPTJ the selectedPmoPTJ to set
-	 */
-	public void setSelectedPmoPTJ(Long selectedPmoPTJ) {
-		this.selectedPmoPTJ = selectedPmoPTJ;
-	}
-	//13291 - end
 }
