@@ -187,7 +187,8 @@
 							required="true" id="equiPerIcNum"
 							requiredMessage="#{lbl['lbl.sm.icNo.required']}"
 							disabled="#{backingBean.managedBean.disableIcEmail || backingBean.managedBean.selectedShareHolder.ssmData}"
-							rendered="#{backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'I'}"
+							rendered="#{backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'I' 
+							or backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'PR' }"
 							value="#{backingBean.managedBean.selectedShareHolder.identificationNo}"
 							size="35" maxlength="12"
 							validatorMessage="#{lbl['lbl.sm.person.icNum']} - #{lbl['lbl.sm.invalidNo']}">
@@ -196,7 +197,8 @@
 						<p:inputText label="#{lbl['lbl.sm.shrHldrInfo.idNo']}"
 							required="true" id="equiPerPasptNum"
 							disabled="#{backingBean.managedBean.disableIcEmail || backingBean.managedBean.selectedShareHolder.ssmData}"
-							rendered="#{backingBean.managedBean.selectedShareHolder.identificationType.parameterCode ne 'I'}"
+							rendered="#{backingBean.managedBean.selectedShareHolder.identificationType.parameterCode ne 'I'
+							or backingBean.managedBean.selectedShareHolder.identificationType.parameterCode ne 'PR'}"
 							value="#{backingBean.managedBean.selectedShareHolder.identificationNo}"
 							size="35" maxlength="12">
 							<p:ajax process="@this" partialSubmit="true" update="@this"
