@@ -65,11 +65,11 @@
 				<td><p:inputText readonly="true" disabled="true"
 						value="#{noOfContracts.autoScore}" style="text-align:right"
 						rendered="#{ checklistScoreType eq '1'}"></p:inputText> <p:inputText
-						id="technicalEmployeeListUserScoreId"
+						id="technicalEmployeeListUserScoreId" readonly="true"
 						label="#{lbl['lbl.tpl.spec.content.user.score']}"
 						value="#{noOfContracts.userScore}" maxlength="18" required="true"
 						disabled="#{pageDisable or technicalorFinancialReEvaluateRequired}"
-						style="text-align:right" rendered="#{ checklistScoreType eq '2'}">
+						style="text-align:right" rendered="#{ checklistScoreType eq '2'}"> <!--#31482 add readonly-->
 						<ac:validateNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
 							maxIntegerDigits="14" integerOnly="true" />
