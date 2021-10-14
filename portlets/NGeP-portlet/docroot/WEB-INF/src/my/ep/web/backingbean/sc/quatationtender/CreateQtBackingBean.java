@@ -697,9 +697,17 @@ public class CreateQtBackingBean extends
 			boolean isPanel = scQt.isPanel();
 	
 		
-			if (amount != null) {
+		if (amount != null) {
+			// Bug #31605 -start-
+			if (scQt.getQtType() == null || (amount.intValue() <= 500000 && !isPanel) || isPanel) {
+			// Bug #31605 -end-
 				// QT Type
 				scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
+			// Bug #31605 -start-
+			}
+
+			if (scQt.getQtType().equals(ParameterConst.QUOTATION_TENDER_TYPE_OPEN)) {
+			// Bug #31605 -end-
 				// Open For
 				if (isPanel) {
 					scQt.setOpenFor(null);
@@ -707,18 +715,20 @@ public class CreateQtBackingBean extends
 					if (isQuotationThresHold && isOpenForBumiputraThresHold(amount)) {
 						scQt.setOpenFor(ParameterConst.OPEN_FOR_BUMI);
 					} else {
+						boolean printed = false;
+						printed = isPrintedForBumiputraOnly(this.getManagedBean().getQtCategoryList(), printed);
 						
-						boolean printed = false; 
-						printed = isPrintedForBumiputraOnly(this.getManagedBean().getQtCategoryList(),printed);
-						if(printed || scQt.getOpenFor().equals(ParameterConst.OPEN_FOR_BUMI)){
+						if (printed || scQt.getOpenFor().equals(ParameterConst.OPEN_FOR_BUMI)) {
 							scQt.setOpenFor(ParameterConst.OPEN_FOR_BUMI);
-						}else{
+						} else {
 							scQt.setOpenFor(ParameterConst.OPEN_FOR_ALL);
-						}   
-						
-					}	
+						}
+					}
 				}
-			} 
+			// Bug #31605 -start-
+			}
+			// Bug #31605 -end-
+		} 
 	}
 	//20190415@asyrafhaziq - 15979 -End
 	
