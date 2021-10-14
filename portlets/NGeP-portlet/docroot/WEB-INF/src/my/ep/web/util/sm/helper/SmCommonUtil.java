@@ -4827,7 +4827,11 @@ public class SmCommonUtil {
 						ParameterTypeConst.IDENTIFICATION_TYPES,
 						SupplierManagementConst.NEW_IC, StringUtils.EMPTY);
 				per.setIdentificationTypeId(ic.getParameterId());
-				per.setIdentificationType(ic);
+				//start #30064
+				if(!per.getIdentificationType().getParameterCode().equals(ParameterConst.PERMANENT_RESIDENCE_TYPES)){
+					per.setIdentificationType(ic);
+				}
+				//end #30064
 			} else {
 				PmParameter passport = retrieveParameterByTypeAndCode(
 						ParameterTypeConst.IDENTIFICATION_TYPES, "P",
