@@ -1775,15 +1775,19 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	//#31499
 	
 	//#29732
-			private boolean newCategory = false;
-			
-			private PmCategoryL3 pmCategoryL3;
-			
-			private String remarkCategory;
-			
-			private List<PmRemarkCategory> remarkHistoryList;
-			
-			// #29732 End 
+	private boolean newCategory = false;
+	
+	private PmCategoryL3 pmCategoryL3;
+	
+	private String remarkCategory;
+	
+	private List<PmRemarkCategory> remarkHistoryList;
+	
+	// #29732 End
+	
+	//====#31913 bug related to #25138==== start
+	private BigDecimal totalmaxscore;
+	//====#31913 bug related to #25138==== end
 	
 	
 	public QTDetailManagedBean() {
@@ -11048,6 +11052,15 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			this.specificFlag = specificFlag;
 		}
 		//#31499
+		//====#31913 bug related to #25138==== start
+		public BigDecimal getTotalmaxscore() {
+			return totalmaxscore;
+		}
+
+		public void setTotalmaxscore(BigDecimal totalmaxscore) {
+			this.totalmaxscore = totalmaxscore;
+		}
+		//====#31913 bug related to #25138==== end
 }
 
 // ***25201
