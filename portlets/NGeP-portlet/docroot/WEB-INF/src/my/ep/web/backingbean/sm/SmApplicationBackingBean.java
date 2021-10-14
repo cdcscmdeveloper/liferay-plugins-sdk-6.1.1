@@ -12581,7 +12581,9 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setCurrLocalCompanyEquity(
 					getManagedBean().getSmAppl().getSmCompanyBasic()
 							.getLocalCompanyEquity());
-			validatePaidCaptialAmt(false);
+			if (!getManagedBean().isDisAllowOwnerEdit()){//#31461-start
+				validatePaidCaptialAmt(false);
+			}//#31461-end	
 			// #28466 end - fix reopen
 		} catch (NumberFormatException ne) {
 			throw new EpException(MessageConst.ERROR_722522);
