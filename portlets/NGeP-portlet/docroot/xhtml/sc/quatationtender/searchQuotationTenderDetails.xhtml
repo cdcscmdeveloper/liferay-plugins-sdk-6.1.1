@@ -54,10 +54,7 @@
 							update="@form"
 							saveObject="qTDetailBB.managedBean.qtnTenderSearchBean.ptjProfile"
 							conditionField="recordStatus^1" />
-						</ui:remove>	
-						<ui:remove>
-							BUG 31120, to put disabled to Audit & Maintenance Screen, Note #29 START x
-						</ui:remove>					
+						</ui:remove>						
 						<c:choose>
 							<c:when test="#{qTDetailBB.isQTMaintenanceScreen() or qTDetailBB.isQTSearchScreen()}">
 								<ac:lov id="searchPtj1" lovId="PM_ORG_PROFILE_PTJ" 
@@ -82,7 +79,7 @@
 							</c:otherwise>
 						</c:choose>
 						<ui:remove>
-							BUG 31120 END
+							Bug #31120 END
 						</ui:remove>
 					</td>
 				</tr>
