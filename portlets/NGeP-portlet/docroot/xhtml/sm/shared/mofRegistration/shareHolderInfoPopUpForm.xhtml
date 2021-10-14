@@ -198,7 +198,7 @@
 							required="true" id="equiPerPasptNum"
 							disabled="#{backingBean.managedBean.disableIcEmail || backingBean.managedBean.selectedShareHolder.ssmData}"
 							rendered="#{backingBean.managedBean.selectedShareHolder.identificationType.parameterCode ne 'I'
-							or backingBean.managedBean.selectedShareHolder.identificationType.parameterCode ne 'PR'}"
+							and backingBean.managedBean.selectedShareHolder.identificationType.parameterCode ne 'PR'}"
 							value="#{backingBean.managedBean.selectedShareHolder.identificationNo}"
 							size="35" maxlength="12">
 							<p:ajax process="@this" partialSubmit="true" update="@this"
