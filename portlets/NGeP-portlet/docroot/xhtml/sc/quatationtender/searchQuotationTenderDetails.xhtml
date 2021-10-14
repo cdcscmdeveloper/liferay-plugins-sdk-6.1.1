@@ -44,7 +44,9 @@
 						<p:outputLabel id="searchPtjLbL" value="#{lbl['lbl.sc.ptj']}" />
 					</td>
 					<td colspan="3">
-						<ac:lov id="searchPtjAuth" lovId="PM_ORG_PROFILE_AUTH_TYPE"
+						<ui:remove>
+							BUG #31120
+							<ac:lov id="searchPtjAuth" lovId="PM_ORG_PROFILE_AUTH_TYPE"
 							size="135" readonly="true"
 							headerText="#{lbl['lbl.sc.ptj']}" 
 							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.ptjProfile.orgName}"
@@ -52,23 +54,36 @@
 							update="@form"
 							saveObject="qTDetailBB.managedBean.qtnTenderSearchBean.ptjProfile"
 							conditionField="recordStatus^1" />
-						<ac:lov id="searchPtj" lovId="PM_ORG_PROFILE_PTJ" 
-							size="135" readonly="true"
-							headerText="#{lbl['lbl.sc.ptj']}"
-							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.ptjProfile.orgName}"
-							postUpdateListener="qTDetailBB.postUpdateOrgProfileListener"
-							update="@form"
-							saveObject="qTDetailBB.managedBean.qtnTenderSearchBean.ptjProfile"
-							conditionField="#{qTDetailBB.getPTJCondition()}" >
-						</ac:lov>
-						<ac:lov id="searchSpecMaintenancePtj" lovId="PM_ORG_PROFILE_SPEC_MAINTENANCE"
-							size="135" readonly="true"
-							headerText="#{lbl['lbl.sc.ptj']}" 
-							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.ptjProfile.orgName}"
-							postUpdateListener="qTDetailBB.SpecMaintenacepostUpdateOrgProfileListener"
-							update="@form"
-							saveObject="qTDetailBB.managedBean.qtnTenderSearchBean.ptjProfile"
-							conditionField="recordStatus^1" />
+						</ui:remove>	
+						<ui:remove>
+							BUG 31120, to put disabled to Audit & Maintenance Screen, Note #29 START
+						</ui:remove>					
+						<c:choose>
+							<c:when test="#{qTDetailBB.isQTMaintenanceScreen() or qTDetailBB.isQTSearchScreen()}">
+								<ac:lov id="searchPtj1" lovId="PM_ORG_PROFILE_PTJ" 
+										size="135" readonly="true"
+										headerText="#{lbl['lbl.sc.ptj']}"
+										disabled="#{qTDetailBB.isDisabledPtj()}"
+										value="#{qTDetailBB.managedBean.qtnTenderSearchBean.ptjProfile.orgName}"
+										postUpdateListener="qTDetailBB.postUpdateOrgProfileListener"
+										update="@form"
+										saveObject="qTDetailBB.managedBean.qtnTenderSearchBean.ptjProfile"
+										conditionField="#{qTDetailBB.getPTJCondition()}"/>
+							</c:when>
+							<c:otherwise>
+								<ac:lov id="searchSpecMaintenancePtj" lovId="PM_ORG_PROFILE_SPEC_MAINTENANCE"
+										size="135" readonly="true"
+										headerText="#{lbl['lbl.sc.ptj']}" 
+										value="#{qTDetailBB.managedBean.qtnTenderSearchBean.ptjProfile.orgName}"
+										postUpdateListener="qTDetailBB.SpecMaintenacepostUpdateOrgProfileListener"
+										update="@form"
+										saveObject="qTDetailBB.managedBean.qtnTenderSearchBean.ptjProfile"
+										conditionField="recordStatus^1" />
+							</c:otherwise>
+						</c:choose>
+						<ui:remove>
+							BUG 31120 END
+						</ui:remove>
 					</td>
 				</tr>
 				<tr>
