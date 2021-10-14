@@ -2780,8 +2780,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	
-	// ***17376#42
-	private boolean isQTSearchScreen() {
+	// ***17376#42 31120#29
+	public boolean isQTSearchScreen() {
 		return QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	
@@ -7857,7 +7857,38 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	}
 	/*
 	 * Enhancement #27668 END
+	 */	
+	
+	/*
+	 * BUG #31120
 	 */
+	private boolean isAuditPTJRuleSet(){
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value())
+				|| facesScopes.hasRoleUser(RoleCode.MOF_DESK_OFFICER.value())
+				|| facesScopes.hasRoleUser(RoleCode.COMMITTEE_APPROVER.value())
+				|| facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value())
+				|| facesScopes.hasRoleUser(RoleCode.QCA_SECRETARY.value())
+				|| facesScopes.hasRoleUser(RoleCode.QCB_SECRETARY.value())
+				|| facesScopes.hasRoleUser(RoleCode.PBB_SECRETARY.value())
+				|| facesScopes.hasRoleUser(RoleCode.PPB_SECRETARY.value())
+				|| facesScopes.hasRoleUser(RoleCode.FPB_SECRETARY.value())
+				|| isAuditor();
+	}
+	
+	/*
+	 * BUG #31120
+	 */
+	private boolean isMaintenancePTJRuleSet(){
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value())
+				|| facesScopes.hasRoleUser(RoleCode.MOF_DESK_OFFICER.value())
+				|| facesScopes.hasRoleUser(RoleCode.QCA_SECRETARY.value())
+				|| facesScopes.hasRoleUser(RoleCode.QCB_SECRETARY.value())
+				|| facesScopes.hasRoleUser(RoleCode.PBB_SECRETARY.value())
+				|| facesScopes.hasRoleUser(RoleCode.PPB_SECRETARY.value())
+				|| facesScopes.hasRoleUser(RoleCode.FPB_SECRETARY.value());
+	}
 	
 	
 	/* Bug #27412 START - CHANGE PRIVATE TO PUBLIC TO ALLOWED METHOD CALLED FROM FRONT*/
@@ -10470,7 +10501,15 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
      	return (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName));
     }
     //#30477 - End
-  	
+    
+  	public Boolean isDisabledPtj(){
+  		if(isQTSearchScreen()){
+  			return !isAuditPTJRuleSet();
+  		}else if(isQTMaintenanceScreen()){
+  			return !isMaintenancePTJRuleSet();
+  		}else 
+  			return true;
+  	}
   
   	
 }
