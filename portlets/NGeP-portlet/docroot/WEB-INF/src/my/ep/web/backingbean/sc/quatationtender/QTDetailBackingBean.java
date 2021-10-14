@@ -7860,7 +7860,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 */	
 	
 	/*
-	 * BUG #31120
+	 * BUG #31120 x
 	 */
 	private boolean isAuditPTJRuleSet(){
 		FacesScopes facesScopes = new FacesScopes();
