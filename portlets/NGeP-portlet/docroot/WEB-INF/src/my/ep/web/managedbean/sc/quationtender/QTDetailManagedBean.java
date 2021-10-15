@@ -1749,7 +1749,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	// #30451-End.
 	
 	private List<ScQtCheckList> sampleSpecCheckList;//25635
-		
+	
+	//====#31913 bug related to #25138==== start
+	private BigDecimal totalmaxscore;
+	//====#31913 bug related to #25138==== end
+	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
@@ -10882,5 +10886,15 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			this.mainTaskNames = mainTaskNames;
 		}
 		//#25037-end
+		
+		//====#31913 bug related to #25138==== start
+		public BigDecimal getTotalmaxscore() {
+			return totalmaxscore;
+		}
+
+		public void setTotalmaxscore(BigDecimal totalmaxscore) {
+			this.totalmaxscore = totalmaxscore;
+		}
+		//====#31913 bug related to #25138==== end
 }
 // ***25201
