@@ -2707,10 +2707,11 @@ public class QTCloneBackingbean extends
 		
 		committee.setScCommitteeMembers(new ArrayList<ScCommitteeMember>());
 		committee.setCommitteStatus(getPmStatusByStatusId(QTStatusConst.CMT_PENDING_SUBMISSION));
-		committee.setApprovalReq(true);
+		//committee.setApprovalReq(true);//31943
 		committee.setModified(true);
 		
 		if(null!=copyScQtCommittee && null!=copyScQtCommittee.getScCommittee()){//25635
+			committee.setApprovalReq(copyScQtCommittee.getScCommittee().isApprovalReq());//31943
 			List<ScCommitteeMember> toCloneMemberList = new ArrayList<ScCommitteeMember>();
 			if(CollectionUtils.isNotEmpty(copyScQtCommittee.getScCommittee().getScCommitteeMembers())){
 				toCloneMemberList=copyScQtCommittee.getScCommittee().getScCommitteeMembers();
@@ -2728,6 +2729,9 @@ public class QTCloneBackingbean extends
 						cloned.setCommitteeMemberId(null);
 						setUserDetails(cloned);
 						setCommitteeMemberOrgProfile(cloned);
+						if(null==cloned.getPmOrgProfile()){//31943-start
+							cloned.setPmOrgProfile(scQt.getPmOrgProfile());	
+						}//31943-End
 						cloned.setChangedDate(null);
 						if (cloned.isConsolidate()) {
 							this.getManagedBean().setSelectScCommitteMember(
