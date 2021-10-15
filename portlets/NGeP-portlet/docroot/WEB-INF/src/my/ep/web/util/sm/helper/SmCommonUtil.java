@@ -4822,13 +4822,19 @@ public class SmCommonUtil {
 		if (per.getPmCountry() != null) {
 			if (per.getPmCountry().getCountryCode()
 					.equals(SupplierManagementConst.MALAYSIA_CODE)
-					|| per.getIdentificationType().getParameterCode().equals(ParameterConst.PERMANENT_RESIDENCE_TYPES)) { //#30064
+					|| (per.getIdentificationType() != null && per.getIdentificationType().getParameterCode() != null && per // start #30064
+							.getIdentificationType().getParameterCode()
+							.equals(ParameterConst.PERMANENT_RESIDENCE_TYPES))) { // end #30064
 				PmParameter ic = retrieveParameterByTypeAndCode(
 						ParameterTypeConst.IDENTIFICATION_TYPES,
 						SupplierManagementConst.NEW_IC, StringUtils.EMPTY);
 				per.setIdentificationTypeId(ic.getParameterId());
 				//start #30064
-				if(!per.getIdentificationType().getParameterCode().equals(ParameterConst.PERMANENT_RESIDENCE_TYPES)){
+				if(per.getIdentificationType() != null && per.getIdentificationType().getParameterCode() != null && per 
+						.getIdentificationType().getParameterCode()
+						.equals(ParameterConst.PERMANENT_RESIDENCE_TYPES)){
+					per.setIdentificationType(per.getIdentificationType());
+				}else{
 					per.setIdentificationType(ic);
 				}
 				//end #30064
