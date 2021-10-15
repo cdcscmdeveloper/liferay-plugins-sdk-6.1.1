@@ -2069,7 +2069,7 @@ public class SmApplicationBackingBean extends
 		SmSideMenuIconUtil.setAllSectionEditorVO(getManagedBean(), true,
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC);
 		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
-				"SmApplicationBackingBean.proceedToApplication", "post-initGst-29", 
+				"SmApplicationBackingBean.proceedToApplication", "setAllSectionEditorVO-29", 
 				subStartTime); //20211005@fadhli - #31754
 		
 		//27805: Disciplinary Action - start
