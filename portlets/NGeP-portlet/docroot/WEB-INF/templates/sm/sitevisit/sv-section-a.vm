@@ -204,7 +204,7 @@
 			    	$velocityCount. $manager.name <br />
 			  	#end
 	  		#end
-	  		#if($managementNames.size() == 0)
+	  		#if($managementLs.size() == 0)
 	  			$smVmUtil.getDescByLabel('lbl.ct.not.applicable').toUpperCase()
 	  		#end
 
