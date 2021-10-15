@@ -196,31 +196,19 @@
 	</tr>
 	
 	<tr>
-		<td width="40%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.ceo.name')</td>
+		<!-- #29781 - start -->
+		<td width="40%" class="txtBold" valign="top">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.manager.name')</td>
 		<td class="sColTwentyPerc">
-			#if($higherManagementNames.size() > 0)
-				#foreach($name in $higherManagementNames)
-			    	$velocityCount. $name <br />
-			  	#end
-	  		#end
-	  		#if($higherManagementNames.size() == 0)
-	  			$smVmUtil.getDescByLabel('lbl.ct.not.applicable').toUpperCase()
-	  		#end
-		</td>
-		<td class="sColTwentyPerc"></td>
-	</tr>
-	
-		<tr>
-		<td width="40%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.manager.name')</td>
-		<td class="sColTwentyPerc">
-			#if($managementNames.size() > 0)
-				#foreach($name in $managementNames)
-			    	$velocityCount. $name <br />
+			#if($managementLs.size() > 0)
+				#foreach($manager in $managementLs)
+			    	$velocityCount. $manager.name <br />
 			  	#end
 	  		#end
 	  		#if($managementNames.size() == 0)
 	  			$smVmUtil.getDescByLabel('lbl.ct.not.applicable').toUpperCase()
 	  		#end
+
+	  		<!-- #29781 - end -->
 		</td>
 		<td class="sColTwentyPerc"></td>
 	</tr>
