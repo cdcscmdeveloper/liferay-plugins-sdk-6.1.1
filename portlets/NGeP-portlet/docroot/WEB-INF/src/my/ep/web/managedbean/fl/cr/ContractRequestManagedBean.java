@@ -18,6 +18,7 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
@@ -3259,11 +3260,11 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	//29555 end
 	//public static void getTotalE()
 	
-	//11076
+	//11076 -start
 	public int getTotalExistingItem() {
 		return totalExistingItem;
 	}
-	//11076
+	
 	public void setTotalExistingItem(int totalExistingItem) {
 		this.totalExistingItem = totalExistingItem;
 	}
@@ -3283,4 +3284,5 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	public void setOverallTotalItem(int overallTotalItem) {
 		this.overallTotalItem = overallTotalItem;
 	}
+	//11076 - end
 }
