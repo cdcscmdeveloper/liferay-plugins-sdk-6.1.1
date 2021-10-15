@@ -2347,9 +2347,20 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			setApplication(smAppl);
 		}
 		// 25792 - end
-
+		//30974
+		List<SmApplRejectReason> ReasonsByPO = new ArrayList<SmApplRejectReason>();
+		if(this.getManagedBean().getSmAppl()!= null && this.getManagedBean().getSmAppl().getSmApplRejectReasons() != null){
+			for(SmApplRejectReason reasonPO : this.getManagedBean().getSmAppl().getSmApplRejectReasons()){
+				if(reasonPO.isReasonByPo()){
+					ReasonsByPO.add(reasonPO);
+				}
+			}
+			getManagedBean().setRejectReasonByPO( SmCommonUtil
+							.getHtmlApplicationRejectReasons(ReasonsByPO));
+		}
+		//30974
 		getManagedBean().setRejectReason(getApplicationRejectionReason());
-
+		
 		setSupplierProfileOrHistoryUrl(baseUrl, baseUrlLabel, smAppl
 				.getSmSupplier().getSupplierId().toString());
 		SmCommonUtil.redirectToPage(basePage, "", null);
@@ -2595,9 +2606,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		log.info("HTML REJECT REASON:" + rejectReasons);
 		log.info("REJECT REASON BY PO ONLY: " + rejectReasons);
 		//30974 - Start - 16/7/2021
-		if(!StringUtils.isBlank(rejectReasonsByPO)){
+		/*if(!StringUtils.isBlank(rejectReasonsByPO)){
 			getManagedBean().setRejectReasonByPO(rejectReasonsByPO);
-		}
+		}*/
 		//30974 - End - 16/7/2021
 		return rejectReasons;
 	}
