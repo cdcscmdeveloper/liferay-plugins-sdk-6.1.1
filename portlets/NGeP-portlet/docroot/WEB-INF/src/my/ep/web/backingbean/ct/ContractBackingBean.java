@@ -1529,21 +1529,16 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	public void validateCeilingAmount(CtAgency agencyData) {
 		List<CtAgency> agencyList = this.getManagedBean().getContractVer().getCtAgencies();
 		// Start added log for  Bug #31740
-		log.info(" Bug #31740 agencyList : "+agencyList.size());
-		log.info("Changes value using(agencyData) in ContractBackingBean before set :"+agencyData.getCeilingAmount());
-		log.info("Changes value using(getOrgProfileId()) in ContractBackingBean before set :"+agencyData.getOrgProfile().getOrgProfileId());
+		log.info(" Bug #31740 agencyList : "+agencyList.size()+" and  Contract No : "+getManagedBean().getContractVer().getCtContract().getContractNo());
+		log.info(" Bug #31740 Changes value using(agencyData) in ContractBackingBean  :"+agencyData.getCeilingAmount()+" and Contract NO : "+getManagedBean().getContractVer().getCtContract().getContractNo());
 		if (agencyList.size() > 0) {
 			double ceilingAmt = 0.0;
 			DecimalFormat df = new DecimalFormat("#.00");
 			for (CtAgency ctAgency : agencyList) {
 				if(ctAgency.getOrgProfile().getOrgProfileId().equals(agencyData.getOrgProfile().getOrgProfileId())){
-					ctAgency.setCeilingAmount(agencyData.getCeilingAmount());
-					log.info("Changes value using(agencyData) in ContractBackingBean after set : "+agencyData.getCeilingAmount());
-					log.info("Changes value using(getOrgProfileId()) in ContractBackingBean after set : "+ctAgency.getOrgProfile().getOrgProfileId());
+					log.info(" Bug #31740 Changes value using(ctAgency) in ContractBackingBean  :"+ctAgency.getCeilingAmount()+" and contract No : "+getManagedBean().getContractVer().getCtContract().getContractNo());
 				}
-				ceilingAmt = ceilingAmt + ctAgency.getCeilingAmount().doubleValue();
-				//added log for  Bug #31740
-				log.info("Bug #31740 Changes value in ContractBackingBean : "+ctAgency.getCeilingAmount().doubleValue()+"   ### Agency ID : "+ctAgency.getAgencyId());
+				ceilingAmt = ceilingAmt + ctAgency.getCeilingAmount().doubleValue();						
 		// End added log for  Bug #31740 			
 				
 			}
