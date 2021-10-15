@@ -18270,7 +18270,7 @@ if(null!=allTechnicalChecklist){
 			finScoreSum();
 			int finalScorePoint = this.getManagedBean().getFinPoints();
 			//====#31913 bug related to #25138==== start
-			BigDecimal totalPoints = this.getManagedBean().getTotalmaxscore();
+			BigDecimal totalPoints = totalMaxScore;
 			//====#31913 bug related to #25138==== end
 			// #25638 - 31578 - Start.
 			if (null != totalPoints) {
