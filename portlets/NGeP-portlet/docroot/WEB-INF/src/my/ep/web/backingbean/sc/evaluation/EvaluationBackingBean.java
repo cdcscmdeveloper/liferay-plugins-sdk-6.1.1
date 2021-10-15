@@ -7423,7 +7423,9 @@ public void saveComplianceSample() {
 							this.getManagedBean().setScQt(evalResDTO.getScQt());
 						}
 					}
-					retriveComplianceFinancial(true);
+					//=====#31766 bug related to #25138==== start
+					retriveNonScoringComplianceFinancial(true);
+					//=====#31766 bug related to #25138==== end
 					retriveFinancialEvaluationStage();
 					this.getManagedBean().setTabFinancialIndex(1);
 					//#30722 - start 
