@@ -12076,6 +12076,12 @@ public class SmApplicationUtil {
 									.getSelectedShareHolder()
 									.getIdentificationTypeId()));
 		}
+		//start - #30064
+		if(bean.getSelectedShareHolder().getIdentificationType()!=null && ParameterConst.PERMANENT_RESIDENCE_TYPES.equalsIgnoreCase(bean.getSelectedShareHolder().getIdentificationType().getParameterCode())){
+			bean.getSelectedShareHolder().setIdentificationTypeId(SmApplicationUtil.retrievePmParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES,
+					ParameterConst.IDENTIFICATION_TYPES_IC).getParameterId());
+		}
+		//end - #30064
 		if (bean.getSelectedShareHolder().getIdentificationType() == null) {
 			bean.getSelectedShareHolder().setIdentificationType(
 					new PmParameter());
@@ -12173,7 +12179,8 @@ public class SmApplicationUtil {
 						retVal = false;
 					}
 					//27821
-					if(smPersonnel.getIdentificationType() != null && ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(smPersonnel.getIdentificationType().getParameterCode())){
+					if(smPersonnel.getIdentificationType() != null && ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(smPersonnel.getIdentificationType().getParameterCode())
+							|| smPersonnel.getIdentificationType() != null && ParameterConst.PERMANENT_RESIDENCE_TYPES.equalsIgnoreCase(smPersonnel.getIdentificationType().getParameterCode())){ //#30064
 						retVal = false;
 					}
 					// #28831 - start

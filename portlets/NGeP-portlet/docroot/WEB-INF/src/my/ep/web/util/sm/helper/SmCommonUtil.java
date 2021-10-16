@@ -1491,7 +1491,6 @@ public class SmCommonUtil {
 				//end #30900
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		log.info("**** Paid up capital ****** " + compBasic.getPaidUpCapital());
@@ -3822,17 +3821,17 @@ public class SmCommonUtil {
 				: new String[] {};
 		try {
 			if (hostNameArr != null && hostNameArr.length > 1) {
-				Hashtable env = new Hashtable();
+				Hashtable<String, String> env = new Hashtable<String, String>();
 				env.put("java.naming.factory.initial",
 						"com.sun.jndi.dns.DnsContextFactory");
 				DirContext ictx = new InitialDirContext(env);
 				Attributes attrs = ictx.getAttributes(hostNameArr[1],
 						new String[] { "NS" });
 				Attribute attr = attrs.get("NS");
-				ArrayList res = new ArrayList();
+				ArrayList<String> res = new ArrayList<String>();
 
 				if (attr != null) {
-					NamingEnumeration en = attr.getAll();
+					NamingEnumeration<?> en = attr.getAll();
 					while (en.hasMore()) {
 						String x = (String) en.next();
 						if (x.endsWith("."))
@@ -4403,7 +4402,6 @@ public class SmCommonUtil {
 		try {
 			return reqSO.ssmActive();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
@@ -4427,8 +4425,10 @@ public class SmCommonUtil {
 			//set default parameter
 			PmParameter identificationType = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_IC);
 			PmParameter passportType = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_PASSPORT);
+			PmParameter permanentResidenceType = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.PERMANENT_RESIDENCE_TYPES); //#30064
 			ssmReqDTO.setPmParameter(identificationType);
 			ssmReqDTO.setPmParameterIdTypeP(passportType);
+			ssmReqDTO.setPmParameterIdTypePR(permanentResidenceType); //#30064
 			String regNo = ssmReqDTO.getRegNo();
 			ssmReqDTO.setDigitNo(ssmReqDTO.getRegNo().substring(ssmReqDTO.getRegNo().length()-1));
 			regNo = regNo.substring(0, regNo.length() - 2);
@@ -4714,12 +4714,23 @@ public class SmCommonUtil {
 	public static void setDefaultPersonnelNationality(SmPersonnel per) {
 		if (per.getPmCountry() != null) {
 			if (per.getPmCountry().getCountryCode()
-					.equals(SupplierManagementConst.MALAYSIA_CODE)) {
+					.equals(SupplierManagementConst.MALAYSIA_CODE)
+					|| (per.getIdentificationType() != null && per.getIdentificationType().getParameterCode() != null && per // start #30064
+							.getIdentificationType().getParameterCode()
+							.equals(ParameterConst.PERMANENT_RESIDENCE_TYPES))) { // end #30064
 				PmParameter ic = retrieveParameterByTypeAndCode(
 						ParameterTypeConst.IDENTIFICATION_TYPES,
 						SupplierManagementConst.NEW_IC, StringUtils.EMPTY);
 				per.setIdentificationTypeId(ic.getParameterId());
-				per.setIdentificationType(ic);
+				//start #30064
+				if(per.getIdentificationType() != null && per.getIdentificationType().getParameterCode() != null && per 
+						.getIdentificationType().getParameterCode()
+						.equals(ParameterConst.PERMANENT_RESIDENCE_TYPES)){
+					per.setIdentificationType(per.getIdentificationType());
+				}else{
+					per.setIdentificationType(ic);
+				}
+				//end #30064
 			} else {
 				PmParameter passport = retrieveParameterByTypeAndCode(
 						ParameterTypeConst.IDENTIFICATION_TYPES, "P",
@@ -5296,7 +5307,6 @@ public class SmCommonUtil {
 
 			@Override
 			public int compare(SmApplRejectReason o1, SmApplRejectReason o2) {
-				// TODO Auto-generated method stub
 				return o1.getPmReason().getReasonId().compareTo(o2.getPmReason().getReasonId());
 			}
 
@@ -5954,6 +5964,7 @@ public class SmCommonUtil {
 		return null;
 	}
 	
+	@SuppressWarnings("static-access")
 	public int getDaysDiffMinusHolidayByState(Date start, Date end, Long stateId) {
 		int retVal = 0;
 		Calendar startCal = Calendar.getInstance();

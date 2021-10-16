@@ -2180,7 +2180,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					if(this.getManagedBean().getSmSupp().getSmAppl().isApplValidWithSsm()){
 						this.getManagedBean().setShowOwnerPersonnel(true);
 						for(SmPersonnel personnel: this.getManagedBean().getSmAppl().getSmPersonnels()){
-							if(personnel.isEquityOwner()){
+							if (personnel.isEquityOwner()
+									&& personnel.getIdentificationType() != null				//start - #30064
+									&& personnel.getIdentificationType().getParameterCode()		
+											.equals(ParameterConst.IDENTIFICATION_TYPES_IC)) {	//end - #30064
 								if(personnel.getPmCountry() == null){
 									PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 									personnel.setPmCountry(defaultCountry);
@@ -2914,8 +2917,15 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		return SmCommonUtil.getParamDescByParameterId(parameterId);
 	}
 	//16052019 - SSM INTEGRATION CR
-	public String getParamDescriptionByLanguageAndPmParameter(PmParameter parameter){
-		return SmCommonUtil.getParamDescriptionByLanguageAndPmParameter(parameter);
+	public String getParamDescriptionByLanguageAndPmParameter(PmParameter parameter) {
+		//start - #30064
+		if (parameter.getParameterType().equals(ParameterTypeConst.IDENTIFICATION_TYPES)) {
+			return SmCommonUtil.getParamDescriptionByLanguageAndPmParameter(parameter);
+		} else {
+			return SmCommonUtil.retrieveParameterDescByTypeAndCodeAndLang(ParameterTypeConst.IDENTIFICATION_TYPES,
+					ParameterConst.IDENTIFICATION_TYPES_IC).getCodeName();
+		}
+		//end - #30064
 	}
 	
 	// 27691 - start -  Add/Delete Supplier Owner
