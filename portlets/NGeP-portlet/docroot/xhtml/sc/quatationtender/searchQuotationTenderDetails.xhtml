@@ -28,9 +28,20 @@
 					<td>
 						<p:outputLabel id="searchPtjGroupLbL" value="#{lbl['lbl.sc.ptj.group']}" />
 					</td>
-					<td colspan="3">
-						<ac:lov id="searchPtjGroup" lovId="PM_ORG_PROFILE_PTJ_GROUP" 
+					<td colspan="3">						
+						<ui:remove>
+							BUG #31120
+							<ac:lov id="searchPtjGroup" lovId="PM_ORG_PROFILE_PTJ_GROUP" 
 							size="135" readonly="true"
+							headerText="#{lbl['lbl.sc.ptj.group']}" 
+							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.ptjGroupProfile.orgName}"
+							postUpdateListener="qTDetailBB.postUpdateOrgProfileListener"
+							update="@form"
+							saveObject="qTDetailBB.managedBean.qtnTenderSearchBean.ptjGroupProfile"
+							conditionField="#{qTDetailBB.getPTJGroupCondition()}"/>
+						</ui:remove>
+						<ac:lov id="searchPtjGroup1" lovId="PM_ORG_PROFILE_PTJ_GROUP" 
+							size="135" readonly="true" disabled="#{qTDetailBB.isDisabledGroupPtj()}"
 							headerText="#{lbl['lbl.sc.ptj.group']}" 
 							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.ptjGroupProfile.orgName}"
 							postUpdateListener="qTDetailBB.postUpdateOrgProfileListener"

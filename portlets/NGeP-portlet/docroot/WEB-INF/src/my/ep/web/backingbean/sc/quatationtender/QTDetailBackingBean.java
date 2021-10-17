@@ -7837,9 +7837,15 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				|| facesScopes.hasRoleUser(RoleCode.BPK_AUDITOR.value());
 	}
 	
+	/**
+	 * BUG 31120
+	 * Added MOF Desk Officer
+	 * @return
+	 */
 	private boolean isDeskOfficer() {
 		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value());
+		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value())
+			   || facesScopes.hasRoleUser(RoleCode.MOF_DESK_OFFICER.value());
 	}
 	
 	private boolean isPbbSecretary() {
@@ -7859,35 +7865,48 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * Enhancement #27668 END
 	 */	
 	
-	/*
-	 * BUG #31120 x
+	/**
+	 * BUG #31120
+	 * TO CATER Finalization Committee Desk Officer
+	 * USED IN QT MAINTENANCE & AUDIT QT SEARCH
+	 * @return Boolean
 	 */
-	private boolean isAuditPTJRuleSet(){
+	private boolean isFCDeskOfficer(){
 		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value())
-				|| facesScopes.hasRoleUser(RoleCode.MOF_DESK_OFFICER.value())
-				|| facesScopes.hasRoleUser(RoleCode.COMMITTEE_APPROVER.value())
-				|| facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value())
-				|| facesScopes.hasRoleUser(RoleCode.QCA_SECRETARY.value())
-				|| facesScopes.hasRoleUser(RoleCode.QCB_SECRETARY.value())
-				|| facesScopes.hasRoleUser(RoleCode.PBB_SECRETARY.value())
-				|| facesScopes.hasRoleUser(RoleCode.PPB_SECRETARY.value())
-				|| facesScopes.hasRoleUser(RoleCode.FPB_SECRETARY.value())
-				|| isAuditor();
+		return facesScopes.hasRoleUser(RoleCode.QCA_SECRETARY.value())
+			   || facesScopes.hasRoleUser(RoleCode.QCB_SECRETARY.value())
+			   || facesScopes.hasRoleUser(RoleCode.PBA_SECRETARY.value())
+			   || facesScopes.hasRoleUser(RoleCode.PBB_SECRETARY.value())
+			   || facesScopes.hasRoleUser(RoleCode.FPB_SECRETARY.value());
+	
+	}	
+	
+	/**
+	 * BUG #31120
+	 * RULE SET FOR MAGNIFIER GLASS USED IN QT MAINTENANCE & AUDIT 
+	 * @return Boolean
+	 */
+	private boolean isGroupPTJRuleSet(){
+		return  isDeskOfficer()	|| isFCDeskOfficer() || isAuditor();
 	}
 	
-	/*
+	
+	/**
 	 * BUG #31120
+	 * RULE SET FOR MAGNIFIER GLASS USED IN QT MAINTENANCE & AUDIT
+	 * @return Boolean 
+	 */
+	private boolean isAuditPTJRuleSet(){
+		return  isDeskOfficer()	|| isAuditor();
+	}
+	
+	/**
+	 * BUG #31120
+	 * RULE SET FOR MAGNIFIER GLASS USED IN QT MAINTENANCE & AUDIT 
+	 * @return Boolean
 	 */
 	private boolean isMaintenancePTJRuleSet(){
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value())
-				|| facesScopes.hasRoleUser(RoleCode.MOF_DESK_OFFICER.value())
-				|| facesScopes.hasRoleUser(RoleCode.QCA_SECRETARY.value())
-				|| facesScopes.hasRoleUser(RoleCode.QCB_SECRETARY.value())
-				|| facesScopes.hasRoleUser(RoleCode.PBB_SECRETARY.value())
-				|| facesScopes.hasRoleUser(RoleCode.PPB_SECRETARY.value())
-				|| facesScopes.hasRoleUser(RoleCode.FPB_SECRETARY.value());
+		return isDeskOfficer() || isFCDeskOfficer();
 	}
 	
 	
@@ -10502,6 +10521,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
     }
     //#30477 - End
     
+    /**
+     * BUG 31120
+     * TO ENABLE MAGNIFIER GLASS FOR GROUP PTJ & PTJ
+     * @return Boolean
+     */
   	public Boolean isDisabledPtj(){
   		if(isQTSearchScreen()){
   			return !isAuditPTJRuleSet();
@@ -10510,6 +10534,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
   		}else 
   			return true;
   	}
-  
+  	
+  	/**
+  	 * BUG 31120
+  	 * TO ENABLE MAGNIFIER GLASS FOR GROUP PTJ & PTJ
+  	 * @return Boolean
+  	 */
+  	public Boolean isDisabledGroupPtj(){
+  		return !isGroupPTJRuleSet();
+  	}
   	
 }
