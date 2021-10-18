@@ -14,6 +14,7 @@ import java.util.Set;
 import javax.faces.model.SelectItem;
 
 import my.ep.dto.sm.common.ssm.SsmResDTO;
+import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 
@@ -80,6 +81,15 @@ public abstract class BaseManagedBean implements Serializable {
 	//17906
 	private String displayMessageBank;
 
+	private SmAppl smAppl;
+	
+	public SmAppl getSmAppl() {
+		return smAppl;
+	}
+
+	public void setSmAppl(SmAppl smAppl) {
+		this.smAppl = smAppl;
+	}
 	/**
 	 * @return the token
 	 */
