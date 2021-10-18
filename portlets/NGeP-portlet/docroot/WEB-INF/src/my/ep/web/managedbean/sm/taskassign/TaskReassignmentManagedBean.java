@@ -68,8 +68,8 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	private boolean enableDeleteOthersTasksButton;
 	private String remarks;
 	private String selectedTasksTA;
-	private Map<String, WorklistItemVO> selectedGroupTasks = new HashMap<String, WorklistItemVO>();
-	private Map<String, WorklistItemVO> selectedOthersTasks = new HashMap<String, WorklistItemVO>();
+	private Map<String, WorklistItemVO> selectedGroupTasks = new HashMap<>();
+	private Map<String, WorklistItemVO> selectedOthersTasks = new HashMap<>();
 	private SmTaskReassignmentVO smTaskReassignmentVO;
 	//#29822 - END
 	
