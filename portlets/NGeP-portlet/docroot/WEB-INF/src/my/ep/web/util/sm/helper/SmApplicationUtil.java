@@ -3336,9 +3336,9 @@ public class SmApplicationUtil {
 			reqDTO.setLangCode(CommonConstants.LANGUAGE_CODE_MALAY);
 			List<Object[]> resultList = SmServiceLookup.getMofRegistrationSO()
 					.retrieveOverLappedCategoryDetails(reqDTO).getResultList();
+			//#29659 - START
 			if (!EntityHelper.isCollectionEmpty(resultList)
-					&& resultList.size() > 0) {
-				//#29659 - START
+					&& !resultList.isEmpty()) {
 				List<Object[]> resultListNew = new ArrayList<>();
 				for (Object[] arr : resultList) {
 					
@@ -3359,9 +3359,9 @@ public class SmApplicationUtil {
 		reqDTO.setLangCode(new FacesScopes().getUserLocale().getLanguage());
 		List<Object[]> resultList = SmServiceLookup.getMofRegistrationSO()
 				.retrieveOverLappedCategoryDetails(reqDTO).getResultList();
+		//#29659 - START
 		if (!EntityHelper.isCollectionEmpty(resultList)
-				&& resultList.size() > 0) {
-			//#29659 - START
+				&& !resultList.isEmpty()) {
 			List<Object[]> resultListNew = new ArrayList<>();
 			for (Object[] arr : resultList) {
 				
