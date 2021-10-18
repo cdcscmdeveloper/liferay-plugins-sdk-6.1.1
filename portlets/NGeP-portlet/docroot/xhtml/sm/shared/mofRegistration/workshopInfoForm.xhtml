@@ -332,37 +332,5 @@
 		title="#{lbl['lbl.msg.confirm.delete.header']}"
 		content="#{lbl['lbl.msg.confirm.delete']}"
 		update=":#{p:component('pnlEmployeeInfo')}" />
-
-<!-- 
-<style>
-.splNotesFontEmp {
-	color: rgb(79, 0, 255);
-	font-weight: italic;
-	float: left
-}
-
-.ui-dialog-content>.ui-icon {
-	display: none;
-}
-
-.auto-width{
-	width: auto !important;
-}
-</style>
-	<p:confirmDialog id="empAlertPopUpId" widgetVar="empAlertPopUp"
-		closable="true" header="#{lbl['lbl.txt.alert']}"
-		styleClass="splNotesFontEmp">
-		<div class="ppLeftBtn">
-			<f:facet name="message">
-				<h:outputText value="#{backingBean.managedBean.displayMessageEmp}"
-					styleClass="" escape="false" />
-			</f:facet>
-		</div>
-		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
-				onclick="empAlertPopUp.hide();" type="button" />
-		</div>
-	</p:confirmDialog>
--->
 	<!-- 29379  - Site Visit Grouping Enhancement -28775  END-->
 </ui:composition>
