@@ -65,7 +65,7 @@
 				</f:facet>
 				<p:inputText value="#{svWorker.identificationNo}" disabled="#{viewFlag}" label="#{lbl['lbl.sm.worker.icno']}"
 				maxlength="12" validatorMessage="#{lbl['lbl.sm.invalidIcNo']}" required="#{empty param['disabledValidation'] and empty param['disableMsgAutoUpdate'] and empty param['disabledValidation']}"> 
-					<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+					<f:validateRegex pattern="^-?\d*(\.\d+)?$" disabled="#{svWorker.identificationTypeId ne '115'}"/>
                 </p:inputText>                				
 				<!-- #24964 -->
 				<ac:smFieldChangeAlertSVO
