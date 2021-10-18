@@ -249,7 +249,10 @@ public class GovtSellerRegistrationBackingBean extends
 		if (orgProfile != null) {
 			if (orgProfile.getSmSupplier() != null
 					&& orgProfile.getSmSupplier().getRecordStatusFlg() != null) {
-				if (orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED) {
+				//#28765 - Start add OR DbValueConst.RECORD_STATUS_REJECTED
+				if (orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED || 
+						orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_REJECTED) {
+				//#28765 - End
 					supplier = orgProfile.getSmSupplier();
 					getManagedBean().setDeletedNotActivatedSupplier(true);
 				} else {
