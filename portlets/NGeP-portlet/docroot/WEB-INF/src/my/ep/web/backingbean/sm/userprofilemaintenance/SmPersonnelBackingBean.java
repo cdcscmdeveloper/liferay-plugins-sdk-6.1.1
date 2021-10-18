@@ -36,8 +36,6 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
-import my.ep.dto.sm.personnelauthorization.PersonnelAuthorizationReqDTO;
-import my.ep.dto.sm.personnelauthorization.PersonnelAuthorizationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
