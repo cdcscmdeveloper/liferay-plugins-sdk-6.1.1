@@ -1520,8 +1520,7 @@ public class SPDetailBackingBean extends
 						}
 						// #28398 BUG - 26339 CR - End
 						// #26339 - End
-						ProposalResDTO resDto = proposalSO
-								.saveProposalDetails(reqDTO);
+						ProposalResDTO resDto = proposalSO.saveProposalDetails(reqDTO);
 						
 						// #26339 - Start
 						/*getManagedBean().getFinanceCheckDetailsList().set(index,
@@ -2002,32 +2001,37 @@ public class SPDetailBackingBean extends
 					//assetProposalChecklist.setScQtProposalChecklistAttachment(null);
 					removeAttachment = true;
 					// #26339 - End
-					assetProposalChecklist.setSubmitted(true);
-					//this.getManagedBean().setReadOnly(true);
-					assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
+					//start Bug #28887
+					if (null != assetProposalChecklist) {
+						assetProposalChecklist.setSubmitted(true);
+						//this.getManagedBean().setReadOnly(true);
+						assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
+					}
+					
+					//end Bug #28887
 					// #28398 BUG - 26339 CR - End
-				}else{
-					if (assetProposalChecklist.isSubmitted()){
-						if (assetProposalChecklist.getScQtProposalChecklistAttachment() == null 
-								|| (scQtPRPAssetLiability.getCurrentAssets() != null)
-								|| (scQtPRPAssetLiability.getCurrentLiabilities() != null) 
-							    || (scQtPRPAssetLiability.getTotalCashInHand() != null)
-								|| (scQtPRPAssetLiability.getTotalAccountReceivable() != null)
-								|| (scQtPRPAssetLiability.getAcidRatio() != null )
-							    || (scQtPRPAssetLiability.getCurrentRatio() != null)) 
-						{
-							assetProposalChecklist.setSubmitted(false);
-							assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
-							
+				} else {
+					//start Bug #28887
+					if (null != assetProposalChecklist) {
+						if (assetProposalChecklist.isSubmitted()){
+							if (assetProposalChecklist.getScQtProposalChecklistAttachment() == null 
+									|| (scQtPRPAssetLiability.getCurrentAssets() != null)
+									|| (scQtPRPAssetLiability.getCurrentLiabilities() != null) 
+								    || (scQtPRPAssetLiability.getTotalCashInHand() != null)
+									|| (scQtPRPAssetLiability.getTotalAccountReceivable() != null)
+									|| (scQtPRPAssetLiability.getAcidRatio() != null )
+								    || (scQtPRPAssetLiability.getCurrentRatio() != null)) 
+							{
+								assetProposalChecklist.setSubmitted(false);
+								assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
+							} else {
+								assetProposalChecklist.setSubmitted(false);
+								assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
+							}
 						} else {
 							assetProposalChecklist.setSubmitted(false);
 							assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
-							
 						}
-					}else{
-						assetProposalChecklist.setSubmitted(false);
-						assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
-						
 					}
 				}
 			}      	// #26339 Venkat End
@@ -2042,8 +2046,7 @@ public class SPDetailBackingBean extends
 			currentAsset.setColumnName(EncryptColumnName.CURRENT_ASSETS
 					.toString());
 			if (null != scQtPRPAssetLiability.getCurrentAssets()) {
-				currentAsset.setValue(scQtPRPAssetLiability.getCurrentAssets()
-						.toString());
+				currentAsset.setValue(scQtPRPAssetLiability.getCurrentAssets().toString());
 			} else {
 				currentAsset.setValue(null);
 			}
@@ -2113,8 +2116,7 @@ public class SPDetailBackingBean extends
 						}
 						// #28398 BUG - 26339 CR - End
 						// #26339 - End
-						ProposalResDTO resDto = proposalSO
-								.saveProposalDetails(reqDTO);
+						ProposalResDTO resDto = proposalSO.saveProposalDetails(reqDTO);
 						// #26339 - Start
 						/*getManagedBean().getFinanceCheckDetailsList().set(index,
 								resDto.getProposalChecklist());*/
