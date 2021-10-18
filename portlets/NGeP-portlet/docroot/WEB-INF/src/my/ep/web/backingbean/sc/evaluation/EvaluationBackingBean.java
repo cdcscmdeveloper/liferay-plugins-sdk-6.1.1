@@ -3814,16 +3814,22 @@ public void saveComplianceSample() {
 
 				EvaluationReqDTO zoneReqDto = new EvaluationReqDTO();
 				if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
-						.equalsIgnoreCase(this.getManagedBean()
-								.getCommitteeType())) {
+						//========#31474 bug related to #25138====== start
+						.equalsIgnoreCase(this.getManagedBean().getCommitteeType()) 
+						|| ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
+								.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
+						//========#31474 bug related to #25138====== start
 					if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
 							.equalsIgnoreCase(this.getManagedBean()
 									.getCommitteeType())) {
 						zoneReqDto
 								.setEvalStage(SourcingConstants.COMPLAINCE_STAGE);
 					} else if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
-							.equalsIgnoreCase(this.getManagedBean()
-									.getCommitteeType())) {
+							//========#31474 bug related to #25138====== start
+							.equalsIgnoreCase(this.getManagedBean().getCommitteeType()) 
+							|| ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
+									.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
+							//========#31474 bug related to #25138====== start
 						if (this.getManagedBean().getScQt()
 								.isTechEvaluationReq()) {
 						//#21695 START	&& #25138
@@ -4375,16 +4381,18 @@ public void saveComplianceSample() {
 
 	private String getEvaluationStageForFinancialChecklist() {
 		String committeeType = this.getManagedBean().getCommitteeType();
-
-		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
-				.equalsIgnoreCase(committeeType)
-				|| ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
-						.equalsIgnoreCase(committeeType)) {
+		//========#31474 bug related to #25138====== start
+		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equalsIgnoreCase(committeeType)
+				|| ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equalsIgnoreCase(committeeType)
+						|| ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equalsIgnoreCase(committeeType)) {
+		//========#31474 bug related to #25138====== start
 			if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
 					.equalsIgnoreCase(committeeType)) {
 				return SourcingConstants.COMPLAINCE_STAGE;
-			} else if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
-					.equalsIgnoreCase(committeeType)) {
+		//========#31474 bug related to #25138====== start
+			} else if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equalsIgnoreCase(committeeType) 
+					|| ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equalsIgnoreCase(committeeType)) {
+		//========#31474 bug related to #25138====== end
 				if (this.getManagedBean().getScQt().isTechEvaluationReq()) {
 					//#21695 FARID start && #25138
 					if(this.getManagedBean().getScQt().isPartial()){
