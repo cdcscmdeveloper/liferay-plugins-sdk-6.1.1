@@ -4142,16 +4142,17 @@ public class TaskReassignmentBackingBean extends
 		String claimedBy = null;
 		BpmResponseDTO responseDTO = null;
 		TaskAssignmentResDTO resDTO = new TaskAssignmentResDTO();
+		IBpmSO bpmSO = null;
 		
-		//get bpm service
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-				.getServiceObject(IBpmSO.class);
-		
-		//get all the task based on limit -> 10
-		responseDTO = bpmSO.getReassignedItems(bpmReqDTO);
-		
-		//start do-while
 		try {
+			//get bpm service
+			bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+					.getServiceObject(IBpmSO.class);
+			
+			//get all the task based on limit -> 10
+			responseDTO = bpmSO.getReassignedItems(bpmReqDTO);
+			
+			//start do-while
 			do{
 				if (responseDTO.getWorklistVO() != null) {
 					if (!responseDTO.getWorklistVO().getWorklistItem().isEmpty() && 
@@ -4239,6 +4240,8 @@ public class TaskReassignmentBackingBean extends
 		} catch (Exception e) {
 			resDTO.setSuccessful(false);
 			return resDTO;
+		} finally {
+			bpmSO = null;
 		}
 	}
 	
@@ -4253,16 +4256,17 @@ public class TaskReassignmentBackingBean extends
 		String claimedBy = null;
 		BpmResponseDTO responseDTO = null;
 		TaskAssignmentResDTO resDTO = new TaskAssignmentResDTO();
+		IBpmSO bpmSO = null;
 		
-		//get bpm service
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-				.getServiceObject(IBpmSO.class);
-		
-		//get all the task based on limit -> 10
-		responseDTO = bpmSO.getGroupByOthersItems(bpmReqDTO);
-		
-		//start do-while
 		try {
+			//get bpm service
+			bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+					.getServiceObject(IBpmSO.class);
+			
+			//get all the task based on limit -> 10
+			responseDTO = bpmSO.getGroupByOthersItems(bpmReqDTO);
+			
+			//start do-while
 			do{
 				if (responseDTO.getWorklistVO() != null) {
 					if (!responseDTO.getWorklistVO().getWorklistItem().isEmpty() && 
@@ -4349,6 +4353,8 @@ public class TaskReassignmentBackingBean extends
 		} catch (Exception e) {
 			resDTO.setSuccessful(false);
 			return resDTO;
+		} finally {
+			bpmSO = null;
 		}
 	}
 	
