@@ -4341,6 +4341,8 @@ public class TaskReassignmentBackingBean extends
 				//get all the task based on limit -> 10
 				//end the loop if size is equal to zero
 				responseDTO = bpmSO.getGroupByOthersItems(bpmReqDTO);
+				count++;
+				
 //			}while(responseDTO.getWorklistVO().getWorklistItem().size() > 0);
 			}while(count<3);
 			
