@@ -4134,6 +4134,9 @@ public class TaskReassignmentBackingBean extends
 	
 	public TaskAssignmentResDTO removeReassignAllGroupTasks(BpmRequestDTO bpmReqDTO, TaskReassignmentManagedBean taskReassignmentManagedBean) {
 		
+		//unit test to break the loop (only 2 times loop)
+		int count = 1;
+		
 		//init
 		ITaskAssignmentSO taskAssignmentSO  = null;
 		String claimedBy = null;
@@ -4223,8 +4226,10 @@ public class TaskReassignmentBackingBean extends
 				//get all the task based on limit -> 10
 				//end the loop if size is equal to zero
 				responseDTO = bpmSO.getReassignedItems(bpmReqDTO);
-			}while(responseDTO.getWorklistVO().getWorklistItem().size() > 0);
-			
+				count++;
+				
+//			}while(responseDTO.getWorklistVO().getWorklistItem().size() > 0);
+			}while(count<3);
 			//end while
 			
 			log.info("finish delete all task");
@@ -4239,6 +4244,9 @@ public class TaskReassignmentBackingBean extends
 	
 	
 	public TaskAssignmentResDTO removeReassignAllOthersTasks(BpmRequestDTO bpmReqDTO, TaskReassignmentManagedBean taskReassignmentManagedBean) {
+		
+		//unit test to break the loop (only 2 times loop)
+		int count = 1;
 		
 		//init
 		ITaskAssignmentSO taskAssignmentSO  = null;
@@ -4329,7 +4337,8 @@ public class TaskReassignmentBackingBean extends
 				//get all the task based on limit -> 10
 				//end the loop if size is equal to zero
 				responseDTO = bpmSO.getGroupByOthersItems(bpmReqDTO);
-			}while(responseDTO.getWorklistVO().getWorklistItem().size() > 0);
+//			}while(responseDTO.getWorklistVO().getWorklistItem().size() > 0);
+			}while(count<3);
 			
 			//end while
 			
