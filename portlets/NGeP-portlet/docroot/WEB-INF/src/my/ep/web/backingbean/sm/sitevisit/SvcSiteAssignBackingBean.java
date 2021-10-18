@@ -342,12 +342,12 @@ public class SvcSiteAssignBackingBean extends
 		for(SmSvTask svTask : smAppl.getSmSvTasks()){
 			if(svTask.getPmCategoryL3() == null) continue;
 			tempL.addAll(SmCommonUtil.getInstance().retrieveSupplierCategoryByApplIdAndCategoryId
-					(smAppl.getApplId(), svTask.getPmCategoryL3().getCategoryL3Id()));
+					(smAppl.getApplId(), svTask.getPmCategoryL3().getCategoryL3Id(), smAppl.getApplType()));
 			if(!smAppl.isSiteVisitGroup() || svTask.getSmSvTaskGroups() == null)
 				continue;
 			for(SmSvTaskGroup svTGroup : svTask.getSmSvTaskGroups()){
 				tempL.addAll(SmCommonUtil.getInstance().retrieveSupplierCategoryByApplIdAndCategoryId
-						(smAppl.getApplId(), svTGroup.getPmCategoryL3().getCategoryL3Id()));
+						(smAppl.getApplId(), svTGroup.getPmCategoryL3().getCategoryL3Id(), smAppl.getApplType()));
 			}
 		}
 		for(SmSupplierCategory catTemp : tempL){
