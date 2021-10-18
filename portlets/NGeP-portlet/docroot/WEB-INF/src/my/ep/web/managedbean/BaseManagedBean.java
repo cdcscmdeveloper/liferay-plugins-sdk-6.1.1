@@ -112,9 +112,6 @@ public abstract class BaseManagedBean implements Serializable {
 	// 17906
 	private String displayMessageBank;
 
-	// 29379
-	private String displayMessageEmp;
-
 	// 27951
 	private boolean preRegistration = false;
 	private SsmResDTO ssmResDTO;
@@ -1020,14 +1017,6 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 	// end 27346
 
-	//29379
-	public String getDisplayMessageEmp() {
-		return displayMessageEmp;
-	}
-
-	public void setDisplayMessageEmp(String displayMessageEmp) {
-		this.displayMessageEmp = displayMessageEmp;
-	}
 	//27382
 	public boolean isErrorInvalidSelfRequest() {
 		return errorInvalidSelfRequest;

@@ -53,7 +53,6 @@ import my.ep.persistence.entity.sm.SmCategoryOverlapDoc;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
 import my.ep.persistence.entity.sm.SmCompanyExperienceCat;
-import my.ep.persistence.entity.sm.SmEmployee;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
@@ -607,11 +606,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean showDifferenceRejection;
 	// #30974 - END
 
-	// 29379 - Site Visit Grouping Enhancement -28775 START
-	private SmEmployee[] selectedEmployees;
-	private SmEmployee selectedEmployee;
+	// 29379 - Site Visit Grouping Enhancement -28775
 	private SmSvWorker[] selectedWorkers;
-	// 29379 - Site Visit Grouping Enhancement -28775 END
 	
 	// #28778 - Start
 	private boolean specialCategoryRechecked;
@@ -870,10 +866,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		currForeignCompanyEquity = BigDecimal.ZERO;
 		currLocalCompanyEquity = BigDecimal.ZERO;
 		selectedPmReasonDescs = new ArrayList<PmReasonDesc>();
-		
-		//29379
-//		setSelectedEmployee(new SmEmployee());
-//		setSelectedEmployees(new ArrayList<SmEmployee>());
 	}
 
 	private SmCompanyExperienceCat setDefaulatExpCatVal() {
@@ -4370,30 +4362,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	// #15629 - END
 
 	// 29379 - Site Visit Grouping Enhancement -28775 START
-//	public List<SmEmployee> getSelectedEmployees() {
-//		return selectedEmployees;
-//	}
-//
-//	public void setSelectedEmployees(List<SmEmployee> selectedEmployees) {
-//		this.selectedEmployees = selectedEmployees;
-//	}
-	
-	public SmEmployee[] getSelectedEmployees() {
-		return selectedEmployees;
-	}
-
-	public void setSelectedEmployees(SmEmployee[] selectedEmployees) {
-		this.selectedEmployees = selectedEmployees;
-	}
-
-	public SmEmployee getSelectedEmployee() {
-		return selectedEmployee;
-	}
-
-	public void setSelectedEmployee(SmEmployee selectedEmployee) {
-		this.selectedEmployee = selectedEmployee;
-	}
-
 	public SmSvWorker[] getSelectedWorkers() {
 		return selectedWorkers;
 	}
