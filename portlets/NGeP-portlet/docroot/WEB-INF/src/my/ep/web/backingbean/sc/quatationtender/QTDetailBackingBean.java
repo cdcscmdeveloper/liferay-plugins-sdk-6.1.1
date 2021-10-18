@@ -2425,6 +2425,15 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					reqDTO.setDocNo(docNo);
 				}
 			}
+			/*BUG 31120 START*/
+			if (qtnTenderSearchBean.getPtjProfile() != null && qtnTenderSearchBean.getPtjProfile().getOrgProfileId() != null) {
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchField(QTConstants.QT_ORG_PROFILE);
+				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+				bean.setSearchValue(qtnTenderSearchBean.getPtjProfile().getOrgProfileId());
+				searchFilterBean.add(bean);
+			}
+			/*BUG 31120 END*/
 			String procurementMode = qtnTenderSearchBean.getProcurementMode();
 			if (!StringUtils.isBlank(procurementMode) && !ParameterConst.DOCTYPE_LETTER_OF_AWARD.equals(docType)) {
 				searchFilterBean.add(
@@ -2719,8 +2728,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	
-	// ***17376#42
-	private boolean isQTSearchScreen() {
+	// ***17376#42 31120#29
+	public boolean isQTSearchScreen() {
 		return QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	
@@ -7691,9 +7700,15 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				|| facesScopes.hasRoleUser(RoleCode.BPK_AUDITOR.value());
 	}
 	
+	/**
+	 * BUG 31120
+	 * Added MOF Desk Officer
+	 * @return
+	 */
 	private boolean isDeskOfficer() {
 		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value());
+		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value())
+			   || facesScopes.hasRoleUser(RoleCode.MOF_DESK_OFFICER.value());
 	}
 	
 	private boolean isPbbSecretary() {
@@ -7711,7 +7726,51 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	}
 	/*
 	 * Enhancement #27668 END
+	 */	
+	
+	/**
+	 * BUG #31120
+	 * TO CATER Finalization Committee Desk Officer
+	 * USED IN QT MAINTENANCE & AUDIT QT SEARCH
+	 * @return Boolean
 	 */
+	private boolean isFCDeskOfficer(){
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.QCA_SECRETARY.value())
+			   || facesScopes.hasRoleUser(RoleCode.QCB_SECRETARY.value())
+			   || facesScopes.hasRoleUser(RoleCode.PBA_SECRETARY.value())
+			   || facesScopes.hasRoleUser(RoleCode.PBB_SECRETARY.value())
+			   || facesScopes.hasRoleUser(RoleCode.FPB_SECRETARY.value());
+	
+	}	
+	
+	/**
+	 * BUG #31120
+	 * RULE SET FOR MAGNIFIER GLASS USED IN QT MAINTENANCE & AUDIT 
+	 * @return Boolean
+	 */
+	private boolean isGroupPTJRuleSet(){
+		return  isDeskOfficer()	|| isFCDeskOfficer() || isAuditor();
+	}
+	
+	
+	/**
+	 * BUG #31120
+	 * RULE SET FOR MAGNIFIER GLASS USED IN QT MAINTENANCE & AUDIT
+	 * @return Boolean 
+	 */
+	private boolean isAuditPTJRuleSet(){
+		return  isDeskOfficer()	|| isAuditor();
+	}
+	
+	/**
+	 * BUG #31120
+	 * RULE SET FOR MAGNIFIER GLASS USED IN QT MAINTENANCE & AUDIT 
+	 * @return Boolean
+	 */
+	private boolean isMaintenancePTJRuleSet(){
+		return isDeskOfficer() || isFCDeskOfficer();
+	}
 	
 	
 	/* Bug #27412 START - CHANGE PRIVATE TO PUBLIC TO ALLOWED METHOD CALLED FROM FRONT*/
@@ -10071,5 +10130,28 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
      	return (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName));
     }
     //#30477 - End
+    
+    /**
+     * BUG 31120
+     * TO ENABLE MAGNIFIER GLASS FOR GROUP PTJ & PTJ
+     * @return Boolean
+     */
+  	public Boolean isDisabledPtj(){
+  		if(isQTSearchScreen()){
+  			return !isAuditPTJRuleSet();
+  		}else if(isQTMaintenanceScreen()){
+  			return !isMaintenancePTJRuleSet();
+  		}else 
+  			return true;
+  	}
+  	
+  	/**
+  	 * BUG 31120
+  	 * TO ENABLE MAGNIFIER GLASS FOR GROUP PTJ & PTJ
+  	 * @return Boolean
+  	 */
+  	public Boolean isDisabledGroupPtj(){
+  		return !isGroupPTJRuleSet();
+  	}
   	
 }
