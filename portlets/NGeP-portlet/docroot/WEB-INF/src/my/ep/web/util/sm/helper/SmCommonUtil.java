@@ -5520,17 +5520,23 @@ public class SmCommonUtil {
 	}
 
 	public List<SmSupplierCategory> retrieveSupplierCategoryByApplIdAndCategoryId(
-			Long applId, Long categoryL3Id) {
+			Long applId, Long categoryL3Id, String applType) {
 		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
 		reqDTO.setApplId(applId);
 		reqDTO.setCategoryId(categoryL3Id);
 		
+		SupplierSearchResDTO resDTO = null;
+		//28775 - Site Visit Grouping Enhancement - 28775 - start
+		if(applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
+			resDTO = SmServiceLookup.getSupplierSearchSO()
+					.retrieveCategoryByApplIdAndCategoryId(reqDTO);
+			return resDTO.getSmSupplierCategoryList();
+		}
+		//28775 - Site Visit Grouping Enhancement - 28775 - end
 		//29823 - start
 		//to check the current appl status is after approval assignment site visit or not
 		SmWorkflowStatus wf = SmCommonUtil.getCurrentActiveWokFlowStatus(applId);
 		boolean isAfterApproval = (wf!=null && wf.getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_AFTER_APPROVED ? true : false);
-		
-		SupplierSearchResDTO resDTO = null;
 		
 		if(isAfterApproval){
 			resDTO = SmServiceLookup.getSupplierSearchSO()
