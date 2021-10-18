@@ -4494,6 +4494,53 @@ public class SmCommonUtil {
 			}
 		}
 	}
+	
+	//29379 - Site Visit Grouping Enhancement - 28775 -start
+	public String verifyWithMyIdentityICOnly(String name, String identificationNo){
+		MyIdentityReqDTO reqDTO = new MyIdentityReqDTO();
+		IMyIdentitySO reqSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, IMyIdentitySO.class);
+		reqDTO.setName(name.trim());
+		reqDTO.setNewIcNo(identificationNo);
+		reqDTO.setType(my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_ONLINE);
+		try{
+			MyIdentityResDTO resDTO = reqSO.myIdentityVerificationIcOnly(reqDTO);
+			log.info("verifyWithMyIdentityICOnly>>>>" + resDTO.getSeverity()
+					+ ">>code>>" + resDTO.getStatusCode());
+			
+			if (!resDTO.getSeverity().equalsIgnoreCase(
+					my.ep.constant.sm.SupplierManagementConst.MYIDENTITY_SEVERITY_SUCC)) {
+				switch (resDTO.getStatusCode()) {
+				case "70019":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70019);
+				case "70020":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70020);
+				case "70031":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70031);
+				case "70004":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70004);
+				case "70005":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70004);
+				case "70039":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70039);
+				case "70040":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70040);
+				}
+			}
+			return resDTO.getStatusCode();
+			
+		} catch(Exception ex){
+			String msg = MessageUtils.getMessage(ex.getMessage(), MessageUtils.BUNDLE_COMMON_MESSAGES,
+					new FacesScopes().getUserLocale());
+			if (msg != null) {
+				throw new EpException(msg + "(ERR-"+ ex.getMessage().toString() + ")");
+			} else {
+				throw new EpException(ex.getMessage() + "(ERR-729999)");
+			}
+		}
+	}
+	//29379 - Site Visit Grouping Enhancement - 28775 -end
+	
 	//16052019 - SSM INTEGRATION CR - Fahmi
 		/**
 		 * Verify regNo no with SSM
