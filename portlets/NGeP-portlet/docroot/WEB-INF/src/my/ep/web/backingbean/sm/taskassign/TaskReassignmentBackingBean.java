@@ -656,11 +656,11 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 		StringBuilder stb = null;
 		
 		if(getManagedBean().isSingleReassign()){
-			tasks = new ArrayList<WorklistItemVO>();
+			tasks = new ArrayList<>();
 			tasks.add(getManagedBean().getSelectedTask());
 		}
 		else if(getManagedBean().isBulkReassign()) {
-			tasks = new ArrayList<WorklistItemVO>();
+			tasks = new ArrayList<>();
 			tasks.addAll(getManagedBean().getSelectedTasksToBulkReassign());					
 		}
 		
@@ -949,9 +949,9 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 			log.info("generateAvailableUsers");
 			
 			//#29822 - START
-			List<WorklistItemVO> tasks = new ArrayList<WorklistItemVO>();
+			List<WorklistItemVO> tasks = new ArrayList<>();
 			ISearchResultBean<SmPersonnel> resultBean = null;
-			HashMap<String, SmPersonnel> users = new HashMap<String, SmPersonnel>();
+			HashMap<String, SmPersonnel> users = new HashMap<>();
 			String capitalizeUserName;
 			SmTaskReassignmentVO vo = null;
 			List<String> roleList = new ArrayList<String>();
@@ -1733,7 +1733,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 		String claimedBy = null;
 		ISmTaskAssignmentSO taskAssignmentSO = null;
 		int reassignWorkListType = getManagedBean().getTaskType();
-		List<String> assigneeUsers = new ArrayList<String>();
+		List<String> assigneeUsers = new ArrayList<>();
 		
 		TaskAssignmentResDTO resDTO = new TaskAssignmentResDTO();
 		
@@ -1820,7 +1820,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 		String claimedBy = null;
 		ISmTaskAssignmentSO taskAssignmentSO = null;
 		int reassignWorkListType = getManagedBean().getTaskType();
-		List<String> assigneeUsers = new ArrayList<String>();
+		List<String> assigneeUsers = new ArrayList<>();
 		
 		TaskAssignmentResDTO resDTO = new TaskAssignmentResDTO();
 		
@@ -1897,7 +1897,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 		String claimedBy = null;
 		ISmTaskAssignmentSO taskAssignmentSO = null;
 		int reassignWorkListType = getManagedBean().getTaskType();
-		List<String> assigneeUsers = new ArrayList<String>();
+		List<String> assigneeUsers = new ArrayList<>();
 		
 		TaskAssignmentResDTO resDTO = new TaskAssignmentResDTO();
 		
@@ -1964,7 +1964,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 		String claimedBy = null;
 		ISmTaskAssignmentSO taskAssignmentSO = null;
 		int reassignWorkListType = getManagedBean().getTaskType();
-		List<String> assigneeUsers = new ArrayList<String>();
+		List<String> assigneeUsers = new ArrayList<>();
 		
 		TaskAssignmentResDTO resDTO = new TaskAssignmentResDTO();
 		
