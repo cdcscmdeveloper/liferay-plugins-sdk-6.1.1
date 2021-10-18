@@ -61,6 +61,7 @@ import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.BpmCommonUtils; // Fix - #31962
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -1479,6 +1480,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	 * contract owner organization profile when the loa's administrator 
 	 * is invalid.
 	 */
+	@SuppressWarnings("unchecked")
 	private void getContractAdminlist() {
 		IUserSO userSO = null;
 		UserReqDTO userReqDTO = null;
@@ -1517,8 +1519,12 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 										reqDTO.setRoleCode(roleCode);
 										reqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 										userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,	IUserSO.class);
-										getManagedBean().setContractAdminlist(userSO.retrieveUserListByRole(reqDTO).getUserList());
-										//System.out.println("TEST list size ::: getManagedBean().getContractAdminlist().isEmpty() "+getManagedBean().getContractAdminlist().size());
+										// Start Fix - #31962
+										List<PmUser> userList_1 = userSO.retrieveUserListByRole(reqDTO).getUserList();
+										// Oracle BPM product limitation, ASSIGNEE field size is 1000; only can support up to 83*12(IC number)
+										userList_1 = (List<PmUser>) BpmCommonUtils.limitAssigneeSize(userList_1);
+										getManagedBean().setContractAdminlist(userList_1);
+										// End Fix - #31962
 									}
 									//getManagedBean().getContractAdminlist().add(userResDTO);
 																	
@@ -1529,7 +1535,13 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 									userReqDTO.setRoleCode(roleCode);
 									userReqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 									userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,	IUserSO.class);
-									getManagedBean().setContractAdminlist(userSO.retrieveUserListByRole(userReqDTO).getUserList());			
+									//Start Fix - #31962
+									List<PmUser> userList_2 = userSO.retrieveUserListByRole(userReqDTO).getUserList();
+									// Oracle BPM product limitation, ASSIGNEE field size is 1000; only can support up to 83*12(IC number)
+									userList_2 = (List<PmUser>) BpmCommonUtils.limitAssigneeSize(userList_2);
+									getManagedBean().setContractAdminlist(userList_2);
+									//End Fix - #31962
+
 								}
 			}
 		} finally {
