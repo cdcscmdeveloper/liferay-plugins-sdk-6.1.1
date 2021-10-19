@@ -138,6 +138,8 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	private String checkOtherCommitteeTypes;
 	private boolean nameRequired;
 	
+	private boolean hasPreviousMeeting; //#29473, #31675
+	
 	/**
 	 * Gets the today.
 	 * 
@@ -792,5 +794,22 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	public void setNameRequired(boolean nameRequired) {
 		this.nameRequired = nameRequired;
 	}
+
+	// #29473, #31675_start
+	/**
+	 * @return the hasPreviousMeeting
+	 */
+	public boolean isHasPreviousMeeting() {
+		return hasPreviousMeeting;
+	}
+
+	/**
+	 * @param hasPreviousMeeting
+	 *            the hasPreviousMeeting to set
+	 */
+	public void setHasPreviousMeeting(boolean hasPreviousMeeting) {
+		this.hasPreviousMeeting = hasPreviousMeeting;
+	}
+	// #29473, #31675 -End
 
 }

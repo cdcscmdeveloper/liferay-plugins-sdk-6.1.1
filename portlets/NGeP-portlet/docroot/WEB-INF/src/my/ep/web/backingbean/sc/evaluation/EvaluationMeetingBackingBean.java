@@ -60,6 +60,7 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -302,7 +303,19 @@ public class EvaluationMeetingBackingBean extends
 				resDTO = meetingSO.retrieveMeetingDls(reqDTO);
 				ScQtCommittee qtCommittee = resDTO.getQtCommittee();
 
-				if (null != resDTO.getMeetingDtls()) {
+				// 29473, 31675 -start
+				if (null != resDTO.getMeetingDtls() && !resDTO.getMeetingDtls().isEmpty()) {
+
+					for (ScQtMeeting scQtMeeting : resDTO.getMeetingDtls()) {
+						Long meetingStatusId = scQtMeeting.getMeetingStatus() != null ? scQtMeeting.getMeetingStatus()
+								.getStatusId() : null;
+						scQtMeeting.setMeetingStatusStr(meetingStatusId);
+						
+						if (scQtMeeting.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_SUSPENDED)) {
+							this.getManagedBean().setHasPreviousMeeting(true);
+						}
+					}
+					// 29473, 31675 -End
 
 					this.getManagedBean().setScQtMeetings(
 							resDTO.getMeetingDtls());
