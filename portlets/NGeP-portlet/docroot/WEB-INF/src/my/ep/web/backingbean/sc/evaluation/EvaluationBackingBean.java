@@ -93,6 +93,7 @@ import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
@@ -732,7 +733,14 @@ public class EvaluationBackingBean extends
 						Long meetingStatusId = scQtMeeting.getMeetingStatus() != null ? scQtMeeting
 								.getMeetingStatus().getStatusId() : null;
 						scQtMeeting.setMeetingStatusStr(meetingStatusId);
+						
+						// 29473, 31675 -start
+						if (scQtMeeting.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_SUSPENDED)) {
+							this.getManagedBean().setHasPreviousMeeting(true);
+						}
+						// 29473, 31675 -End					
 					}
+
 					this.getManagedBean().setScQtMeetings(
 							resDTO.getMeetingDtls());
 
@@ -6592,10 +6600,12 @@ public class EvaluationBackingBean extends
 		} else {
 			int i = 0;
 			for (ScQtMeeting meeting : meetingDetailsList) {
-				if (null != meeting.getMeetingStatus()
-						&& null != meeting.getMeetingStatus().getStatusId()
-						&& QTStatusConst.MS_DONE.equals(meeting
-								.getMeetingStatus().getStatusId())) {
+
+				// #29473, #31675_start
+				if (null != meeting.getMeetingStatus() && null != meeting.getMeetingStatus().getStatusId()
+						&& QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus().getStatusId())
+						&& meeting.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
+				// #29473, #31675 -end-
 					i++;
 
 				}
