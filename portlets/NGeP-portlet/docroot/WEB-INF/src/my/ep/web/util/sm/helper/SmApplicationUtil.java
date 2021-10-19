@@ -3823,15 +3823,16 @@ public class SmApplicationUtil {
 	 * @param managedBean
 	 *            - SmApplicationManagedBean object
 	 */
+	//#31043 start
 	public static void validateSupportingDocsDecision(
 			SmApplicationManagedBean managedBean) {
 		if (!SmApplicationUtil.isAllSuppDocAlreadyVerified(managedBean
 				.getSmAppl().getSmApplSupportDocs(), managedBean.getSmAppl()
-				.getSupportingDocMode(), managedBean.isApproverUser())) {
+				.getSupportingDocMode(), managedBean.isApproverUser(), managedBean.getSmAppl().getApplNo())) {
 			throw new EpException(MessageConst.ERROR_722559);
 		}
 	}
-
+	//#31043 end
 	/**
 	 * Validate category and docs decision.Whether verified PO and Approver
 	 * before making the final decision
@@ -6494,15 +6495,17 @@ public class SmApplicationUtil {
 				+ valid);
 		if (valid) {
 			valid = false;
+			//#31043 start
 			if (SmApplicationUtil.isAllSuppDocAlreadyVerified(managedBean
 					.getMandatoryDocs(), managedBean.getSmAppl()
-					.getSupportingDocMode(), managedBean.isApproverUser())
+					.getSupportingDocMode(), managedBean.isApproverUser(),managedBean.getSmAppl().getApplNo())
 					&& SmApplicationUtil.isAllSuppDocAlreadyVerified(
 							managedBean.getNonMandatoryDocs(), managedBean
 									.getSmAppl().getSupportingDocMode(),
-							managedBean.isApproverUser())) {
+							managedBean.isApproverUser(), managedBean.getSmAppl().getApplNo())) {
 				valid = true;
 			}
+			//#31043 end
 		}
 		log.info("*** Valid For Approval Final Decision **** " + valid);
 		managedBean.setAllowedToApprove(valid);
@@ -10923,37 +10926,44 @@ public class SmApplicationUtil {
 	 *            appl
 	 * @return boolean
 	 */
+	//#31043 start
 	public static boolean isAllSuppDocAlreadyVerified(
-			List<SmApplSupportDoc> docs, String suppDocMode, boolean approver) {
+			List<SmApplSupportDoc> docs, String suppDocMode, boolean approver, String applNo) {
 		boolean retVal = true;
 		if (!EntityHelper.isCollectionEmpty(docs)) {
 			for (SmApplSupportDoc doc : docs) {
-				if ((approver && (doc.getApproverVerifiedFlg() == null || doc
-						.getApproverVerifiedFlg() == 0))
-						|| (!approver && (doc.getVerifiedFlg() == null || doc
-								.getVerifiedFlg() == 0))) {
-					if (suppDocMode != null
-							&& suppDocMode
-									.equals(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
-						if (!EntityHelper.isCollectionEmpty(doc
-								.getSmApplDocFiles())
-								&& !StringUtils.isBlank(doc.getSmApplDocFiles()
-										.get(0).getFileName())) {
-							retVal = false;
-							break;
+				if(doc.getSmAppl().getApplNo().equals(applNo)){
+					if ((approver && (doc.getApproverVerifiedFlg() == null || doc
+							.getApproverVerifiedFlg() == 0))
+							|| (!approver && (doc.getVerifiedFlg() == null || doc
+									.getVerifiedFlg() == 0))) {
+						if (suppDocMode != null
+								&& suppDocMode
+										.equals(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
+							if (!EntityHelper.isCollectionEmpty(doc
+									.getSmApplDocFiles())
+									&& !StringUtils.isBlank(doc.getSmApplDocFiles()
+											.get(0).getFileName())) {
+								retVal = false;
+								break;
+							}
+						} else {
+							if (doc.getPmDocument().isMandatory()) {
+								retVal = false;
+								break;
+							}
 						}
-					} else {
-						if (doc.getPmDocument().isMandatory()) {
-							retVal = false;
-							break;
-						}
-					}
 
-				} else if ((approver && doc.getApproverVerifiedFlg() == 0)
-						|| (!approver && doc.getVerifiedFlg() == 0)) {
+					} else if ((approver && doc.getApproverVerifiedFlg() == 0)
+							|| (!approver && doc.getVerifiedFlg() == 0)) {
+						retVal = false;
+						break;
+					}
+				} else{
 					retVal = false;
 					break;
 				}
+				//#31043 end
 			}
 		}
 
