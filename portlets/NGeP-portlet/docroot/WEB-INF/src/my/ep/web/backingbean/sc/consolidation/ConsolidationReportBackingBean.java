@@ -588,6 +588,33 @@ public class ConsolidationReportBackingBean extends
 
 	}
 
+	//haziq -Bug #31364 - start
+	public void preSubmitConsolidationReport() {
+		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTSuppFinalizationSO.class);
+	
+		SuppFinalizationReqDTO  reqDTO  = new SuppFinalizationReqDTO ();
+	
+		reqDTO.setScQt(this.getManagedBean().getScQt());
+		System.out.println("getFinalizationCommitte " + this.getManagedBean().getScQt().getFinalizationCommitte() );
+		System.out.println("getFinalizationSecratery " + this.getManagedBean().getScQt().getFinalizationSecratery() );
+	
+		
+		SuppFinalizationResDTO  suppFinalizationResDTO = qtSuppFinalizationSO.checkNonActiveComAndsetNull(reqDTO, false);
+		
+		if (suppFinalizationResDTO.isSetNull()){
+			this.getManagedBean().setSetNull(true);
+			//this.getManagedBean().setScQt(suppFinalizationResDTO.getScQt());
+			RequestContext.getCurrentInstance().execute("submissionPopupAndNewCom.show()");
+		}
+		else{
+			this.getManagedBean().setSetNull(false);
+			submitConsolidationReport();
+		}
+	}
+	//haziq -Bug #31364 - End
+	
 	/**
 	 * submit consolidationReport Details.
 	 * 
@@ -602,6 +629,13 @@ public class ConsolidationReportBackingBean extends
 			qtSuppFinalizationSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTSuppFinalizationSO.class);
+			ScQt scQt = this.getManagedBean().getScQt();
+			
+			if  (this.getManagedBean().isSetNull()){ ////haziq -Bug #31364
+				reqDTO.setScQt(scQt);	
+				SuppFinalizationResDTO  suppFinalizationResDTO = qtSuppFinalizationSO.checkNonActiveComAndsetNull(reqDTO, true);
+				scQt = suppFinalizationResDTO.getScQt();
+			}
 
 			// BPM Params
 			FacesScopes facesScopes = new FacesScopes();
