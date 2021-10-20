@@ -3685,10 +3685,36 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				user.setChangedBy(loginSessionUserId);
 				user.setCreatedBy(loginSessionUserId);
 			}
+			
+			//Redmine Bug #31541 - START
+			if (this.getManagedBean().getIsNewUser()) {
+				logger.info("Tracking diary for user profile: create new user :saveUserProfile");
+				String orgCode = null;
+				String orgName = null;
+				if (ParameterConst.ORG_TYPE_FACTORING
+						.equals(userOrg.getPmOrgProfile().getOrgTypeCode().getParameterCode())) {
+					orgCode = userOrg.getPmOrgProfile().getPmFinancialOrg().getBizRegNumber();
+					orgName = userOrg.getPmOrgProfile().getPmFinancialOrg().getFinOrgName();
+				} else if (ParameterConst.ORG_TYPE_SUPPLIER
+						.equals(userOrg.getPmOrgProfile().getOrgTypeCode().getParameterCode())) {
+					orgCode = userOrg.getPmOrgProfile().getSmSupplier().getRegNo();
+					orgName = userOrg.getPmOrgProfile().getSmSupplier().getCompanyName();
+				} else {
+					orgCode = userOrg.getPmOrgProfile().getOrgCode();
+					orgName = userOrg.getPmOrgProfile().getOrgName();
+				}
+
+				String messageId = MessageConst.TD_80000;
+				String[] msgParam = new String[] { user.getUserName(), orgCode, orgName };
+				reqDTO.setTrackingStatus(true);
+				reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyValues(user,
+						getActionDesc(messageId, msgParam), userOrg.getRecordStatusFlg().longValue()));
+			}
+			
 			if (!isNewUser) {
 				checkChangesAndFillTrackingDiary(user, userOrg, reqDTO);
-
 			}
+			//Redmine Bug #31541 - END
 			
 			//Having other active user org?
 			boolean deactivateRequired = true;
@@ -3712,30 +3738,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				fillUserInfoFromUserOrg(user, userOrg);
 			}
 			
-
-			if (isNewUser) {
-				logger.info("Tracking diary for user profile: create new user :saveUserProfile");
-				String orgCode = null;
-				String orgName = null;
-				if (ParameterConst.ORG_TYPE_FACTORING
-						.equals(userOrg.getPmOrgProfile().getOrgTypeCode().getParameterCode())) {
-					orgCode = userOrg.getPmOrgProfile().getPmFinancialOrg().getBizRegNumber();
-					orgName = userOrg.getPmOrgProfile().getPmFinancialOrg().getFinOrgName();
-				} else if (ParameterConst.ORG_TYPE_SUPPLIER
-						.equals(userOrg.getPmOrgProfile().getOrgTypeCode().getParameterCode())) {
-					orgCode = userOrg.getPmOrgProfile().getSmSupplier().getRegNo();
-					orgName = userOrg.getPmOrgProfile().getSmSupplier().getCompanyName();
-				} else {
-					orgCode = userOrg.getPmOrgProfile().getOrgCode();
-					orgName = userOrg.getPmOrgProfile().getOrgName();
-				}
-
-				String messageId = MessageConst.TD_80000;
-				String[] msgParam = new String[] { user.getUserName(), orgCode, orgName };
-				reqDTO.setTrackingStatus(true);
-				reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyValues(user,
-						getActionDesc(messageId, msgParam), userOrg.getRecordStatusFlg().longValue()));
-			}
 			reqDTO.setPmUser(user);
 			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
 
