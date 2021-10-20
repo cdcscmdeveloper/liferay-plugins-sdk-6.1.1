@@ -6516,11 +6516,16 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		 PpProcurementItem cloned = items.get(idx);
 		 
 		 if ((cloned.isCloned() && cloned.isBrandNew())) {
+			 
+			 log.info("...Trace log for Bug #31872 START 001....");
+			 
 			 cloned.setAllowAnotherPindaan(false);
 			 cloned.setCloneEnabled(false);
 			 cloned.setReasonForUpdateEnabled(false);
 			 cloned.setStatusEnabled(false);
 			 cloned.setEnableRevise(true);
+			 
+			 log.info("...Trace log for Bug #31872 END 001....");
 		 }
 		 
 		 log.info("cloned= "+cloned.getProcurementTitle()+" ("+cloned.getProcurementItemId()
@@ -6534,6 +6539,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		 // For originals that were previously clones and this time they are used to clone new ones 
 		 if (!original.isOriginal() &&
 			 original.getFromPpItem() != null) {
+			 
+			 log.info("...Trace log for Bug #31872 START 002....");
+			 
 			 original.setBrandNew(false);
 			 original.setOriginal(true);
 			 original.setCloned(false);
@@ -6545,8 +6553,15 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			 original.setDisableForPindaan(false);
 			//this.getManagedBean().setDisable(false);
 			 original.setEnableRevise(false);
+			 
+			 log.info("...Trace log for Bug #31872 END 002....");
 		 } else {
+			 
+			 log.info("...Trace log for Bug #31872 START 003....");
+			 
 			 original.setEnableRevise(true);
+			 
+			 log.info("...Trace log for Bug #31872 END 003....");
 		 }
 		 
 		 log.info("original= "+original.getProcurementTitle()+" ("+original.getProcurementItemId()
@@ -6555,6 +6570,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				 +", allowAnotherPindaan= "+original.isAllowAnotherPindaan());
 		 
 		 if (!(original.isCloned() && original.isBrandNew())) {
+			 
+			 log.info("...Trace log for Bug #31872 START 003...." + original.getRecordStatusFlg());
 			 
 			 if (!original.isRejected() && original.isAllowAnotherPindaan()) {
 				 original.setAllowAnotherPindaan(false);
@@ -6567,6 +6584,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			 if (original.isEnableRevise()) {
 			 	original.setEnableRevise(false);
 			 }
+			 
+			 log.info("...Trace log for Bug #31872 END 003...." + original.getRecordStatusFlg());
 		 }
 		 
 	}
