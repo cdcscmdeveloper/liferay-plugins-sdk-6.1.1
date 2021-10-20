@@ -649,7 +649,7 @@ private IPagingDataModel<CtAgency> agencyPersistDataModel = new AgencyPersistDat
 					return resDTO.getCtAgencyResultBean();
 				}
 			} catch (Exception e) {
-				log.error(e.getMessage());
+				e.printStackTrace();
 			}
 			return null;
 		}
