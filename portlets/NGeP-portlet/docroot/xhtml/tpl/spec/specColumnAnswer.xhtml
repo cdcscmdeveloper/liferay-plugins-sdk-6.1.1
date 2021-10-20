@@ -83,7 +83,8 @@
 			</p:column>
 			<!-- #31134 Farid Start 25/6/2021-->
 			<!-- Bug #31733 Related to #21695 12/10/2021 -->
-			<p:column style="width:5%;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.tier.title']}" rendered="#{isPriceTypeTier and isSpecTypeFinancial or (!qtyZero and isPriceTypeTier and isSpecTypeFinancial and templateSpecBackingBean.checkPriceTierEnableColumn(templateSpecBean) or !isSqSpec and !isZonal and isPriceTypeTier and isSpecTypeFinancial and templateSpecBackingBean.checkPriceTierEnableColumn(templateSpecBean)) }">
+			<p:column style="width:5%;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.tier.title']}" rendered="#{isPriceTypeTier and isSpecTypeFinancial or !isSqSpec and !isZonal and isSpecTypeFinancial and templateSpecBackingBean.checkPriceTierEnableColumn(templateSpecBean)
+			 or !isSqSpec and isZonal and isSpecTypeFinancial and templateSpecBackingBean.checkPriceTierEnableColumn(templateSpecBean)}">
 				<h:panelGroup rendered="#{isPriceTypeTier and isSpecTypeFinancial}">
 				<!-- Align if has mix data normal standard and tier price -->
 					<h:outputText value=" " rendered="#{!isSqSpec and isSpecTypeFinancial and templateSpecBackingBean.checkPriceTierEnableColumn(templateSpecBean)}">
@@ -173,8 +174,7 @@
 		</h:panelGroup>
 	</p:column>
 	
-	<!-- Bug #31733 Related to #21695 12/10/2021 -->
-	<p:column style="#{isSpecTypeFinancial ? 'width:115px; text-align:right;' : 'width:150px;'}"  rendered="#{!qtyZero}">
+	<p:column style="#{isSpecTypeFinancial ? 'width:115px; text-align:right;' : 'width:150px;'}"  rendered="#{(!isSqSpec and !isSpecTypeFinancial or (isSpecTypeFinancial and (((!isZonal or isItemTypeService) and !isSpecificationReq) or isSpecificationReq)) and isAllPriceTypesStandard and !qtyZero) or !isSpecTypeFinancial or (isSpecTypeFinancial and (((!isZonal or isItemTypeService) and !isSpecificationReq) or isSpecificationReq)) and isAllPriceTypesStandard}">
 		
 		<f:facet name="footer">
 			<h:outputText id="totalAmount" 
@@ -277,8 +277,8 @@
 				rendered="#{isQuestionTypeItem}" />
 		</h:panelGroup>
 	</p:column>
-	<!-- Bug #31733 Related to #21695 12/10/2021 -->
-	<p:column style="width:8%;" rendered="#{isItemTypeService and isDeliveryTermReq and isSqSpec and !qtyZero}">
+	
+	<p:column style="width:8%;" rendered="#{isItemTypeService and isDeliveryTermReq and isSqSpec}">
 		
 		<h:panelGroup rendered="#{!isRepeated}">
 			<h:outputText id="serviceTerm" 
