@@ -341,6 +341,13 @@ public class LovBackingBean implements Serializable {
 //			initSearchBean();
 //		}
 		resetAction();
+		//#29832 - start
+		if(getLovBean().getLovId().equalsIgnoreCase("PM_BUSINESS_NATURE")){
+			FacesScopes facesScopesLovID = new FacesScopes();
+			facesScopesLovID.setSessionScope("LovID_Business_Nature", "PM_BUSINESS_NATURE");
+			removeSelectedBusinessNature();
+		}
+		//#29832 - end
 	}
 	
 	/**
@@ -711,7 +718,7 @@ public class LovBackingBean implements Serializable {
 							Long key = ((PmBusinessNature) item).getBusinessNatureId();
 							if(!persistedEntities.containsKey(key))
 								persistedEntities.put(key, item);
-							debugLogger("MASUK "+persistedEntities.size());
+							
 						}
 					}
 				}
@@ -772,15 +779,6 @@ public class LovBackingBean implements Serializable {
 	}
 	
 	public void populateSelectedItems(){
-		
-		//#29832 to remove auto populate checkbox after delete the list
-		if(getLovBean().getLovId().equalsIgnoreCase("PM_BUSINESS_NATURE")){
-			removeSelectedBusinessNature();
-		}
-		// #29832 end
-
-	
-
 		selectedEntities = new ArrayList<BaseEntity>(persistedEntities.values()); 
 	}
 	//20200909@akmal - Enhancement28951 - End
@@ -875,33 +873,35 @@ public class LovBackingBean implements Serializable {
 	
 	/**
 	 * @author zaim
-	 * #29832 to remove auto populate checkbox after delete the list for business nature
+	 * #29832 start - to remove auto populate checkbox after delete the list for business nature
 	 * 
 	 * **/
-	public void removeSelectedBusinessNature(){
+	public void removeSelectedBusinessNature() {
 		SimpleQuoteManagedBean simpleQuoteMB = new SimpleQuoteManagedBean();
-	if (getLovBean().getSimpleQuoteBackingBean() != null){
-		simpleQuoteMB = getLovBean().getSimpleQuoteBackingBean().deleteSuccess();
-		
-		if (simpleQuoteMB.getDeletedBusinessNatureMap() != null){
-			if (simpleQuoteMB.getDeletedBusinessNatureMap().size() > 0){
-					for (Long item: simpleQuoteMB.getDeletedBusinessNatureMap().keySet()){
-						debugLogger("Delete key "+item);
-						
-						for(Iterator<Map.Entry<Long, BaseEntity>> it = persistedEntities.entrySet().iterator(); it.hasNext(); ) {
-						    Map.Entry<Long, BaseEntity> entry = it.next();
-						    if(entry.getKey().equals(item)) {
-						        it.remove();
-						    }
+		if (getLovBean().getSimpleQuoteBackingBean() != null) {
+			simpleQuoteMB = getLovBean().getSimpleQuoteBackingBean().deleteSuccess();
+			if (simpleQuoteMB.getDeleteBusinessNature()) {
+				if (simpleQuoteMB.getDeletedBusinessNatureMap() != null) {
+					if (simpleQuoteMB.getDeletedBusinessNatureMap().size() > 0) {
+						for (Long item : simpleQuoteMB.getDeletedBusinessNatureMap().keySet()) {
+							debugLogger("Delete key " + item);
+
+							for (Iterator<Map.Entry<Long, BaseEntity>> it = persistedEntities.entrySet().iterator(); it
+									.hasNext();) {
+								Map.Entry<Long, BaseEntity> entry = it.next();
+								if (entry.getKey().equals(item)) {
+									it.remove();
+								}
+							}
 						}
+						simpleQuoteMB = new SimpleQuoteManagedBean();
 					}
-					simpleQuoteMB = new SimpleQuoteManagedBean();
 				}
+			}
+		} else {
+			SimpleQuoteBackingBean bb = new SimpleQuoteBackingBean();
+			getLovBean().setSimpleQuoteBackingBean(bb);
 		}
-	}else {
-		SimpleQuoteBackingBean bb = new SimpleQuoteBackingBean();
-		getLovBean().setSimpleQuoteBackingBean(bb);
-	}
 	}
 	// #29832 end
 }

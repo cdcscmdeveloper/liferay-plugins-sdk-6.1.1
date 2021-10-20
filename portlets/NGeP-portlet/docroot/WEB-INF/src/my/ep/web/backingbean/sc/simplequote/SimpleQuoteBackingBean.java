@@ -2745,7 +2745,9 @@ public class SimpleQuoteBackingBean extends
 			 
 		}
 		
-		deleteSuccess();
+		//29832-start
+		getManagedBean().setDeleteBusinessNature(true);
+		//#29832-end 
 		 
 		
 	}
@@ -4573,6 +4575,16 @@ public class SimpleQuoteBackingBean extends
 					}
 				}
 			}
+			// #29832 - start
+			FacesScopes facesScopes = new FacesScopes();
+			String lovID = (String) facesScopes.getSessionScope("LovID_Business_Nature");
+			if (lovID.equalsIgnoreCase("PM_BUSINESS_NATURE")) {
+				getManagedBean().setDeleteBusinessNature(false);
+				getManagedBean().setDeletedBusinessNatureMap(null);
+			}
+
+			// #29832 - end
+			
 		}
 	}
 
