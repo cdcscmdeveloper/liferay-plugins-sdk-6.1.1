@@ -8343,16 +8343,28 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		 
 		   public void disableEnablePpExpItemFields(List<PpExpenditureItem> items, Integer idx) {
 				
+				 log.info("...Trace log for Bug #31887 disableEnablePpExpItemFields....");
 			   
 			   PpExpenditureItem cloned = items.get(idx);
 			 
 			 if ((cloned.isCloned() && cloned.isBrandNew())) {
+				 
+				 log.info("...Trace log for Bug #31887 START 001....");
+				 			 
 				 cloned.setCloneEnabled(false);
 				 cloned.setReasonForUpdateEnabled(false);
 				 cloned.setStatusEnabled(false);
 				 cloned.setJustificationEnabled(false);
-				 cloned.setDisableEditAccount(true);				
+				 cloned.setDisableEditAccount(true);	
+				 
+				 log.info("...Trace log for Bug #31887 END 001....");
+
 			 }
+			 
+			 log.info("cloned= "+cloned.getPmGlAccount()+" ("+cloned.getExpenditureItemId()
+					 +"), isCloned= "+cloned.isCloned()+", isClonedItem= "
+					 +cloned.isClonedItem()+", isBrandNew= "+cloned.isBrandNew()
+					 +", allowAnotherPindaan= "+cloned.isAllowAnotherPindaan());
 			 
 			 idx -= 1;
 			 PpExpenditureItem original = items.get(idx);
@@ -8362,20 +8374,32 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			 
 			 if (!original.isCloned() && !original.isBrandNew()) {	
 				//24975@26102020 - end	 
+				 
+				 log.info("...Trace log for Bug #31887 START 002...." + original.getRecordStatusFlg());
+				 
 				 original.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 				 original.setCloneEnabled(true);
 				 original.setReasonForUpdateEnabled(true);
 				 original.setStatusEnabled(true);
 				 original.setDisableEditAccount(true);
 				 original.setJustificationEnabled(true);
+				 
+				 log.info("...Trace log for Bug #31887 END 002...." + original.getRecordStatusFlg());
+
 			//24975@04112020@azza - start
 			 }else if (original.isCloned() && !original.isBrandNew()){
+				 
+				 log.info("...Trace log for Bug #31887 START 003...." + original.getRecordStatusFlg());
+				 
 				 original.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 				 original.setCloneEnabled(true);
 				 original.setReasonForUpdateEnabled(true);
 				 original.setStatusEnabled(true);
 				 original.setDisableEditAccount(true);
 				 original.setJustificationEnabled(true);
+				 
+				 log.info("...Trace log for Bug #31887 END 003...." + original.getRecordStatusFlg());
+
 			 }
 		}
 
