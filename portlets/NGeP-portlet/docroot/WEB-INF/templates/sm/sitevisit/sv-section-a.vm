@@ -212,21 +212,6 @@
 		</td>
 		<td class="sColTwentyPerc"></td>
 	</tr>
-	
-		<tr>
-		<td width="40%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.manager.name')</td>
-		<td class="sColTwentyPerc">
-			#if($managementNames.size() > 0)
-				#foreach($name in $managementNames)
-			    	$velocityCount. $name <br />
-			  	#end
-	  		#end
-	  		#if($managementNames.size() == 0)
-	  			NOT APPLICABLE
-	  		#end
-		</td>
-		<td class="sColTwentyPerc"></td>
-	</tr>
 </table>
 <br /><br/>
 
