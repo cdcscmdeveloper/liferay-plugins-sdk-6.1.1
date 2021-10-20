@@ -4077,7 +4077,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					if(statusId.equals(QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT) && 
 							loaReport.getDefinationType().getParameterCode().equals(
 									ParameterConst.DOCUMENT_DEFINITION_TYPE_SUPPLIER_UPLOAD_AND_DOWNLOAD) &&
-									null == loaReport.getScLoaReportAttachment()){
+									null == loaReport.getScLoaReportAttachment() && !loaReport.getTitle().contains(lampiranA3SubStr)){//#29007 Vinod added lampiranA3SubStr
 						throw new EpException(MessageConst.ERROR_760441,
 								new String[] {loaReport.getTitle()});
 					}
