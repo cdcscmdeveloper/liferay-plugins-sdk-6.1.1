@@ -190,6 +190,10 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	private String progressStatus;
 	private String iscarryForward="";
 	//#28374	Vinod End
+	
+	//30911 - start
+	private PmFinancialOrg factoringOrg;
+	//30911 - end
     /**
 	 * @return the pendingDoDataModel
 	 */
@@ -1575,5 +1579,15 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	public void setAttachment(FlAttachment attachment) {
 		this.attachment = attachment;
 	}
+	
+	//30911 - start
+	public PmFinancialOrg getFactoringOrg() {
+		return factoringOrg;
+	}
+
+	public void setFactoringOrg(PmFinancialOrg factoringOrg) {
+		this.factoringOrg = factoringOrg;
+	}
+	//30911 - end
 
 }
