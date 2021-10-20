@@ -458,6 +458,8 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	private Long remainingInterval;
 	private String remainingTimeMsg;
 	//#5426 - end
+	
+	private Boolean deleteBusinessNature = false;
 	/**
 	 * Gets the spki backing bean.
 	 * 
@@ -2896,6 +2898,20 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	 */
 	public void setRemainingTimeMsg(String remainingTimeMsg) {
 		this.remainingTimeMsg = remainingTimeMsg;
+	}
+
+	/**
+	 * @return the deleteBusinessNature
+	 */
+	public Boolean getDeleteBusinessNature() {
+		return deleteBusinessNature;
+	}
+
+	/**
+	 * @param deleteBusinessNature the deleteBusinessNature to set
+	 */
+	public void setDeleteBusinessNature(Boolean deleteBusinessNature) {
+		this.deleteBusinessNature = deleteBusinessNature;
 	}
 	
 }
