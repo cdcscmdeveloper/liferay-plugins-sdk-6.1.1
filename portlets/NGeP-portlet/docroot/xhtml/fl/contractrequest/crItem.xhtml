@@ -210,8 +210,6 @@
 			<p:commandLink value="#{lbl['lbl.fl.instruction.items.spec.click.here']}" ajax="false"
 				style="font-size:10px;font-style:italic" process="@this" 
 				action="#{contractRequestBackingBean.downloadFile('/shared/FL/Garis_Panduan_Item_dan_Spesifikasi.pdf')}"></p:commandLink>
-			<p:spacer height="100px"></p:spacer>
-			
 			<!-- Test start 11076-->
 			<h:form id="itemExistingForm">
 			<h:panelGrid columns="3" cellpadding="40"  cellspacing = "50">
@@ -226,7 +224,7 @@
 				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.overall.item']}"/>
 			</h:panelGrid>	
 			</h:form>
-			<!-- Test end 11076-->
+			<!-- Test end 11076-->	
 			<p:dataTable id="itemDataTable" var="item"
 				rowIndexVar="index" rowKey="#{item}"
 				value="#{contractRequestBackingBean.managedBean.showItemAddrList}"
@@ -1070,7 +1068,7 @@
 										<f:attribute name="pattern"
 											value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, flItem.scRequestItem.uom.uomCode)}" />
 									</h:outputText>
-								</p:column> 
+								</p:column>
 									<p:column headerText="#{lbl['lbl.fl.qty']}"
 									style="text-align:right"
 									 rendered="#{contractRequestBackingBean.managedBean.zonalPrice}"> 
@@ -1114,21 +1112,9 @@
 		
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
-		<!-- #11076 START-->
-			<p:commandButton id="itemSelectAll" value = "#{lbl['lbl.fl.btn.addall']}" 
-				process="@this,itemListResultDt"
-				update="itemDataTable,messages,:form:itemExistingForm:textBox1,:form:itemExistingForm:textBox2,:form:itemExistingForm:textBox3"
-				onclick = "addItems.hide();"
-				onstart="blockWidget.show();"
-				disabled="#{contractRequestBackingBean.contractItemPagingDataModel.list == null 
-				or fn:length(contractRequestBackingBean.contractItemPagingDataModel.list)== 0}"
-				oncomplete="blockWidget.hide();"
-				action = "#{contractRequestBackingBean.checkAllItem}">
-			</p:commandButton>
-		<!-- #11076 END-->
-			<p:commandButton value="#{lbl['lbl.btn.add']}" id="itemAddButton"
+			<p:commandButton  value="#{lbl['lbl.btn.add']}" id="itemAddButton"
 				action="#{contractRequestBackingBean.updateContractedItemDt}"
-				oncomplete="addItems.hide();" update="itemDataTable,messages,:form:itemExistingForm:textBox2"
+				oncomplete="addItems.hide();" update="itemDataTable,messages"
 				disabled="#{contractRequestBackingBean.managedBean.selectedContractedItemList.size() == 0 }"
 				process="@this,itemListResultDt">
 			</p:commandButton>
@@ -1139,8 +1125,6 @@
 		</div>
 		</p:panel>
 	</p:dialog>
-	
-	
 	
 	<p:dialog id="uomRefDlg" header="#{lbl['lbl.fl.instruction.uom.table']}" 
 			widgetVar="uomRefDialog" showEffect="fade" hideEffect="fade" modal="true"
