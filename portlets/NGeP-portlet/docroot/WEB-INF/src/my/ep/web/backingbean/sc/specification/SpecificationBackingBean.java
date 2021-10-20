@@ -675,6 +675,7 @@ public class SpecificationBackingBean extends
 		
 		List<ScQtCheckList> financialCheckList = this.getManagedBean()
 				.getScQtCheckSt2financeProposalList();
+		HashMap<Integer, Integer> totalGroupId = new HashMap<Integer, Integer>() ; // 31658
 		if (null == financialCheckList || financialCheckList.isEmpty()) {
 			retriveFinancialCheckList();
 		}
@@ -699,8 +700,110 @@ public class SpecificationBackingBean extends
 						this.getManagedBean().setActiveIndex(3);
 						throw new EpException(MessageConst.ERROR_760513, new String[]{checkList.getTitle()});
 				}
-			}
+			//20210914@haziq - 31658 - Start
+				
+				if (checkList.getPmDocument() != null && checkList.getPmDocument().getDocGroupId() != null){
+				
+				   Integer groupId = checkList.getPmDocument().getDocGroupId();
+                   Integer total = totalGroupId.get(groupId);
 
+					if (total == null){
+						totalGroupId.put(groupId, 1);
+					}
+					else{
+						total = total +1;
+						totalGroupId.remove(groupId);
+						totalGroupId.put(groupId, total);
+					}
+				}
+			}
+			
+			for (Map.Entry<Integer, Integer> entry : totalGroupId.entrySet()) {
+				boolean isInsertPair = false ;	
+				Integer groupId = entry.getKey();
+				Integer total = totalGroupId.get(groupId);
+				
+				if ( total == 1 ){
+					retriveFinancialStandardCheckList();
+					isInsertPair = true;
+					for ( PmDocument document : this.getManagedBean().getStageTwoFinComplianceList()){
+						if (document.getDocGroupId() != null && document.getDocGroupId().equals(groupId)){
+								this.getManagedBean().setFinStandaraChecklist(true);
+								ScQtCheckList scqtlist = createSpecList("2");
+								scqtlist.setTitle(document.getDocName());
+								scqtlist.setDocCategory(QTConstants.FINANCIAL_DOC_TYPE);
+								scqtlist.setScoringReq(document.isScoringReq());
+								scqtlist.setDefinationType(document.getDocDefinitionTypeCode());
+								scqtlist.setAction(document.getChecklistActionCode());
+								scqtlist.setManditory(false);
+								scqtlist.setPmDocument(document);
+								if (null == document.getDisplaySeq()) {
+									scqtlist.setChecklistSeq(formatChecklistSequence(
+											SourcingConstants.STANDARD_CHECKLIST_SEQUENCE,
+											0));
+								} else {
+									scqtlist.setChecklistSeq(formatChecklistSequence(
+											SourcingConstants.STANDARD_CHECKLIST_SEQUENCE,
+											new Integer(document.getDisplaySeq())));
+								}
+								scqtlist.setScQt(this.getManagedBean().getQt());
+
+								setUserDetails(scqtlist);
+							
+								if (null != scqtlist.getDefinationType()
+										&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
+												.equalsIgnoreCase(scqtlist
+														.getDefinationType()
+														.getParameterCode())) {
+									Long statusId = null;
+									if (!scqtlist.isScoringReq()) {
+										statusId = QTStatusConst.TS_COMPLETED;
+									} else {
+										statusId = QTStatusConst.TS_PENDING_SUBMISSION;
+									}
+									scqtlist.setPmStatus(getPmStatusByStatusId(statusId));
+								} else {
+									scqtlist.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+								}
+
+								scqtlist.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+								financialCheckList.add(scqtlist);
+						break;
+						}
+					}	
+				}
+				
+				if (isInsertPair){
+					for ( ScQtCheckList scQtCheckList :financialCheckList){						
+						if (  scQtCheckList.getPmDocument() != null &&
+							  scQtCheckList.getPmDocument().getDocGroupId() != null && 
+							  scQtCheckList.getPmDocument().getDocGroupId().equals(groupId) &&
+							  scQtCheckList.getPmStatus().getStatusId().equals(QTStatusConst.TS_COMPLETED)&&
+							  ParameterConst.DOCUMENT_DEFINITION_TYPE_WEB_FORM.equalsIgnoreCase(scQtCheckList.getDefinationType().getParameterCode())){
+							scQtCheckList.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));	
+						}
+					}
+					getManagedBean().setScQtCheckSt2financeProposalList(financialCheckList);
+					checklistSorting(getManagedBean().getScQtCheckSt2financeProposalList());
+				}
+			}
+			FacesScopes facesScopes = new FacesScopes();
+				for (ScQtCheckList checkList : this.getManagedBean()
+						.getScQtCheckSt2financeProposalList()) {
+				
+					if (checkList.isScoringReq()) {
+						String checklistScoring =  ResourceBundleUtils.getMessage(
+								"lbl.sc.checklist.scoring.completed", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								facesScopes.getUserLocale());
+						if (checkList.getPmStatus().getStatusId().equals(QTStatusConst.TS_PENDING_SUBMISSION) &&
+								SourcingConstants.FINANCIAL_DOCTYPE.equalsIgnoreCase(checkList.getDocCategory())) {
+							throw new EpException(MessageConst.ERROR_760267,
+							new String[] { checkList.getTitle(),checklistScoring });
+						}
+					}
+				}
+		//20210914@haziq - 31658 - End
 		}
 
 	}
