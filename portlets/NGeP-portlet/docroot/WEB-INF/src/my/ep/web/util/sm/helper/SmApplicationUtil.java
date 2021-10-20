@@ -1536,7 +1536,6 @@ public class SmApplicationUtil {
 			for (SmSupplierCategory category : managedBean.getSmAppl().getSmSupplierCategories()) {
 				if (category.isSpecialCategory() && managedBean.getSmAppl().getApplCategoryType().equals("N")
 						&& category.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION)) {
-					setNavigationBackToCurrentPage(currentTab, managedBean);
 					isSpecial = true;
 				}
 			}
