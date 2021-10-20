@@ -108,6 +108,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -1799,8 +1800,57 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 					throw new EpException(MessageConst.ERROR_740043, new String[]{getManagedBean().getInvoice().getSupplierInvoiceRef(),getManagedBean().getInvoice().getFlRequest().getFlSupplierDtl().getSupplierName()});
 				}
 			}
-		}
+			
+			//30911
+			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()) {
+				IFinancialOrgSO financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IFinancialOrgSO.class);
+				FinancialOrgReqDTO finOrgReqDTO = new FinancialOrgReqDTO();
+				FinancialOrgResDTO finOrgResDTO = null;
+				
+				if(getManagedBean().getInvoice().getFlFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)) {
+					if(getManagedBean().getInvoice().getStatus().getStatusId().equals(FulfilmentStatusConst.IN_PENDING_INVOICE)) {		
+						
+						if (getManagedBean().getInvoice().getPaymentBank()!=null && !getManagedBean().getInvoice()
+						.getPaymentBank().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
+							throw new EpException(MessageConst.ERROR_770264);
+						} else if(getManagedBean().getInvoice().getAccountNo()!=null){
+							finOrgReqDTO.setFinancialOrgId(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialOrgId());
+							finOrgReqDTO.setAccountNo(getManagedBean().getInvoice().getAccountNo());
+							finOrgResDTO = financialOrgSO.retriveFinAccDtlByFinOrgIdAccNo(finOrgReqDTO);							
+							
+							if (finOrgResDTO.getPmFinancialAcc()==null ||
+									finOrgResDTO.getPmFinancialAcc()!=null 
+									&& !getManagedBean().getInvoice().getAccountNo()
+									.equals(finOrgResDTO.getPmFinancialAcc().getAccountNo().trim())){
+								throw new EpException(MessageConst.ERROR_770263);
+							}
+						}			
+					}
+				} else if (getManagedBean().getInvoice().getFlFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
+					if(getManagedBean().getInvoice().getStatus().getStatusId().equals(FulfilmentStatusConst.IN_PENDING_INVOICE)) {
+						
+						if (getManagedBean().getInvoice().getPaymentBank()!=null && !getManagedBean().getInvoice()
+						.getPaymentBank().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
+							throw new EpException(MessageConst.ERROR_770262);
+						} else if(getManagedBean().getInvoice().getAccountNo()!=null){
+							finOrgReqDTO.setFinancialOrgId(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialOrgId());
+							finOrgReqDTO.setAccountNo(getManagedBean().getInvoice().getAccountNo());
+							finOrgResDTO = financialOrgSO.retriveFinAccDtlByFinOrgIdAccNo(finOrgReqDTO);							
+							
+							if (finOrgResDTO.getPmFinancialAcc()==null ||
+									finOrgResDTO.getPmFinancialAcc()!=null 
+									&& !getManagedBean().getInvoice().getAccountNo()
+									.equals(finOrgResDTO.getPmFinancialAcc().getAccountNo().trim())){
+								throw new EpException(MessageConst.ERROR_770261);
+							}
+						}		
 
+					}
+				}
+			}			
+			//30911
+		}
+		
 		if(getManagedBean().getInvoice().isBrandNew()) { // validate to avoid duplicate invoice record for one order/request
 			reqDTO.setFlRequestId(getManagedBean().getInvoice().getFlRequest().getFulfilmentReqId());
 			if(invoiceSO.retrieveInvoiceByFlRequestId(reqDTO).getInvoice()!=null) {
