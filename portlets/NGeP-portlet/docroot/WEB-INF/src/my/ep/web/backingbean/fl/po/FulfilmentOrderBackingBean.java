@@ -105,6 +105,7 @@ import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.fee.settings.PmFeeExemption;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
@@ -452,7 +453,29 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				if(null==getManagedBean().getFulfilmentOrder().getPmFinancialOrgId()){
 					throw new EpException(MessageConst.ERROR_745062);
 				}
-			}			
+			}	
+			
+			//30911
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) && getManagedBean().getFactoringCheck().equalsIgnoreCase("true")
+					&& getManagedBean().getFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {	
+							
+				if (getManagedBean().getFulfilmentOrder().getStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_SUPPLIER_ACKNOWLEDGEMENT)) {
+					
+					IFinancialOrgSO financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFinancialOrgSO.class);
+					FinancialOrgReqDTO finReqDTO = new FinancialOrgReqDTO();
+					finReqDTO.setFinancialOrgId(getManagedBean().getFactoringOrg().getFinancialOrgId());
+					FinancialOrgResDTO finResDTO = financialOrgSO.retrieveOrgProfileIdByFinancialId(finReqDTO);
+					if (finResDTO.getPmFinancialOrg()!=null && !finResDTO.getPmFinancialOrg()
+							.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
+							getManagedBean().getFulfilmentOrder().setFactoringOrgName(null);
+							getManagedBean().getFulfilmentOrder().setFactoringAddress(null);
+							getManagedBean().getFulfilmentOrder().setPmFinancialOrgId(null);
+								throw new EpException(MessageConst.ERROR_770260);
+					}
+				}
+				
+			}
+			//30911		
 		}
 		if(getManagedBean().isRemoveFactoring() && action.equalsIgnoreCase(BpmOutcomeConst.BPM_REMOVE_FACTORING)){
 			IUserSO userSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
@@ -908,6 +931,9 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				}
 				getManagedBean().getFulfilmentOrder().setFactoringOrgName(resDTO.getAddressTypeList().get(0).getPmFinancialOrg().getFinOrgName());
 				getManagedBean().getFulfilmentOrder().setFactoringAddress(convertFinAccAddressToFlAddress(resDTO.getAddressTypeList().get(0)));
+				//30911
+				getManagedBean().setFactoringOrg(resDTO.getAddressTypeList().get(0).getPmFinancialOrg());
+				//30911
 			}
 		}
 	}
