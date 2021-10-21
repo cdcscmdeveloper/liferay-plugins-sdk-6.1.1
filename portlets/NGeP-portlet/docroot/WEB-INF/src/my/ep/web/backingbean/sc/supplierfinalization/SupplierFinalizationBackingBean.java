@@ -1580,7 +1580,10 @@ public class SupplierFinalizationBackingBean extends
 						finalizationReports.removeAll(this.getManagedBean().getEndorsementReports());
 						if(skipValidation) return;//25037 note31
 						navigateToEndorsementReportTab();
-						throw new EpException(MessageConst.ERROR_760386);
+						// #31934 - Start.
+						//throw new EpException(MessageConst.ERROR_760386);
+						throw new EpException(MessageConst.ERROR_770271);
+						// #31934 - End.
 					}
 				}
 			}
@@ -3200,10 +3203,13 @@ return	remarksNotFound;
 		//27502 - Start //28834 starts.
 		if ((getManagedBean().isBpkCentralContract() || !getManagedBean().isInitialDecisionFwdToBPK()) && null !=this.getManagedBean().getEndorsementReport()
 				&& this.getManagedBean().getEndorsementReport().getScQtFinalizationReportAttachment() == null){
-			throw new EpException(MessageConst.ERROR_775150,new String[] { ResourceBundleUtils.getMessage(
+			// #31934 - Start.
+			/*throw new EpException(MessageConst.ERROR_775150,new String[] { ResourceBundleUtils.getMessage(
 					"lbl.sc.committee.endorsement.report",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale()) });
+					new FacesScopes().getUserLocale()) });*/
+			throw new EpException(MessageConst.ERROR_770271);
+			// #31934 - End.
 		}
 		//27502 - End.
 		
