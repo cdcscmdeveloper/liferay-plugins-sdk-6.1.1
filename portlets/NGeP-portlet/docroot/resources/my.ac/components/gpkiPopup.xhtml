@@ -200,11 +200,15 @@
 <!-- 					<f:selectItem id="r2" itemLabel="Smart Card" itemValue="Smart Card" /> -->
 <!-- 				</p:selectOneRadio> -->
 <!-- 			</h:panelGrid> -->
-			<h:panelGrid columns="4" cellpadding="4">
+			<h:panelGrid columns="5" cellpadding="5">
 				<h:outputLabel value="*" styleClass="mandatory" />
 				<h:outputLabel for="password" value="#{lbl['lbl.cc.gpki.pin']}" />
 				<p:password binding="#{pin}" id="password" />
 				<p:commandButton id="signButtonId" value="#{lbl['lbl.btn.sign']}" onstart="DigiSign();" />
+				<!-- BELOW BUTTON IS TO SKIP USE TOKEN. DO NOT MERGE TO PROD!!! -->
+				<p:commandButton id="signButtonId1" value="Sign W/O Token"  onstart="setRunGPKIEnableAutoUpdate(false);gpkiBlockWidget.show();" oncomplete="gpkiBlockWidget.hide();"  rendered="#{gpkiBackingBean.getGpkiEnabledProperty() eq false}" action="#{gpkiBackingBean.gpkiSignAction(cc.attrs.postSignAction, cc.attrs.enableAutoUpdate)}" >
+					<f:param name="textBeforeSign" value="#{cc.attrs.textBeforeSign}" />
+				</p:commandButton>
 				
 			</h:panelGrid>
 		</p:panel>
