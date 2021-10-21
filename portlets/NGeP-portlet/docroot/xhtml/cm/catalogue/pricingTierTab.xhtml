@@ -37,7 +37,7 @@
 					rendered="#{catalogueBackingBean.managedBean.publish and price.fromQty==null
 						or (catalogueBackingBean.managedBean.publish and price.toQty le price.fromQty)}"
 				    value="#{catalogueBackingBean.managedBean.publish and price.fromQty==null 
-				    	or (catalogueBackingBean.managedBean.publish and price.toQty le price.fromQty) ? '/css/images/design/icon_error.png' : ''}" 
+				    	or (catalogueBackingBean.managedBean.publish and price.toQty le price.fromQty) ? '/css/images/design/ico-termination.png' : ''}" 
 				    update="@form" />
 				<!-- 569 End -->
 			</p:column>
@@ -57,7 +57,7 @@
 				    rendered="#{catalogueBackingBean.managedBean.publish and price.toQty==null 
 				    	or (catalogueBackingBean.managedBean.publish and price.toQty le price.fromQty)}"
 				    value="#{catalogueBackingBean.managedBean.publish and price.toQty==null 
-				    	or (catalogueBackingBean.managedBean.publish and price.toQty le price.fromQty) ? '/css/images/design/icon_error.png' : ''}" 
+				    	or (catalogueBackingBean.managedBean.publish and price.toQty le price.fromQty) ? '/css/images/design/ico-termination.png' : ''}" 
 				    update="@form" />
 				<!-- 569 End -->
 			</p:column>
@@ -77,7 +77,7 @@
 				<!-- 569 Start -->
 				<p:graphicImage
 					rendered="#{catalogueBackingBean.managedBean.publish and price.price==null or price.price le 0}"
-				    value="#{catalogueBackingBean.managedBean.publish and price.price==null or price.price le 0 ? '/css/images/design/icon_error.png' : ''}" 
+				    value="#{catalogueBackingBean.managedBean.publish and price.price==null or price.price le 0 ? '/css/images/design/ico-termination.png' : ''}" 
 				    update="@form" />
 				<!-- 569 End -->
 			</p:column>
@@ -108,16 +108,16 @@
 				</p:calendar>
 				<!-- 569 Start -->
 				<p:graphicImage
-					rendered="#{catalogueBackingBean.managedBean.publish and price.startDate==null 
+					rendered="#{catalogueBackingBean.managedBean.publish and price.startDate==null
 				    	or (catalogueBackingBean.managedBean.publish and price.startDate gt price.endDate) 
 				    	or (catalogueBackingBean.managedBean.publish and price.startDate lt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate)
 				     	or (catalogueBackingBean.managedBean.publish and price.startDate gt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate)
 				     	or (catalogueBackingBean.managedBean.publish and price.startDate eq catalogueBackingBean.managedBean.currentDate)}"
-				    value="#{catalogueBackingBean.managedBean.publish and price.startDate==null  
+				    value="#{catalogueBackingBean.managedBean.publish and price.startDate==null
 				     	or (catalogueBackingBean.managedBean.publish and price.startDate gt price.endDate) 
 				     	or (catalogueBackingBean.managedBean.publish and price.startDate lt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate)
 				     	or (catalogueBackingBean.managedBean.publish and price.startDate gt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate)
-				     	or (catalogueBackingBean.managedBean.publish and price.startDate eq catalogueBackingBean.managedBean.currentDate) ? '/css/images/design/icon_error.png' : ''}" 
+				     	or (catalogueBackingBean.managedBean.publish and price.startDate eq catalogueBackingBean.managedBean.currentDate) ? '/css/images/design/ico-termination.png' : ''}" 
 				     	update="@form" />
 				<!-- 569 End -->
 			</p:column>
@@ -157,7 +157,7 @@
 				     	or (catalogueBackingBean.managedBean.publish and price.startDate gt price.endDate) 
 				     	or (catalogueBackingBean.managedBean.publish and price.endDate lt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate)
 				     	or (catalogueBackingBean.managedBean.publish and price.endDate gt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate) 
-				     	or (catalogueBackingBean.managedBean.publish and price.endDate le catalogueBackingBean.managedBean.currentDate) ? '/css/images/design/icon_error.png' : ''}" 
+				     	or (catalogueBackingBean.managedBean.publish and price.endDate le catalogueBackingBean.managedBean.currentDate) ? '/css/images/design/ico-termination.png' : ''}" 
 				    update="@form" />
 				<!-- 569 End -->
 			</p:column>
@@ -197,7 +197,7 @@
 						update=":form" oncomplete="errorDialog.show();"
 						rendered="#{(price.price eq null or price.fromQty eq null or price.toQty eq null or price.fromQty >= price.toQty or price.startDate eq null or price.endDate eq null or price.startDate >= price.endDate or !price.displayAction or !price.checkOk)}">
 						<f:param name="index" value="#{rowIndex}"></f:param>
-						<p:graphicImage value="/css/images/design/icon_error.png"></p:graphicImage>
+						<p:graphicImage value="/css/images/design/ico-termination.png"></p:graphicImage>
 					</p:commandLink>
 					<p:graphicImage value="/css/images/design/icon_success.png"
 						rendered="#{!(price.price eq null or price.fromQty eq null or price.toQty eq null or price.fromQty >= price.toQty or price.startDate eq null or price.endDate eq null or price.startDate >= price.endDate or !price.displayAction or !price.checkOk)}"></p:graphicImage>

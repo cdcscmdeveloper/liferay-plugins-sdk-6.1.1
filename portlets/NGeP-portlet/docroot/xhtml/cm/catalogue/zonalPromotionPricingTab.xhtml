@@ -51,7 +51,7 @@
 				<!--569-Start -->
 				<p:graphicImage
 				    rendered="#{catalogueBackingBean.managedBean.publish and zPromotion.price==null or zPromotion.price le 0}"
-				    value="#{catalogueBackingBean.managedBean.publish and zPromotion.price==null or zPromotion.price le 0 ? '/css/images/design/icon_error.png' : ''}" 
+				    value="#{catalogueBackingBean.managedBean.publish and zPromotion.price==null or zPromotion.price le 0 ? '/css/images/design/ico-termination.png' : ''}" 
 				    update="@form" />
 				<!--569-End -->
 			</p:column>
@@ -76,7 +76,7 @@
 						or (catalogueBackingBean.managedBean.publish and zPromotion.startDate gt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate)}"
 					value="#{catalogueBackingBean.managedBean.publish and zPromotion.startDate gt zPromotion.endDate 
 						or (catalogueBackingBean.managedBean.publish and zPromotion.startDate lt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate) 
-						or (catalogueBackingBean.managedBean.publish and zPromotion.startDate gt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate) ? '/css/images/design/icon_error.png' : ''}" 
+						or (catalogueBackingBean.managedBean.publish and zPromotion.startDate gt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate) ? '/css/images/design/ico-termination.png' : ''}" 
 					update="@form" />
 				<!--569-End -->
 			</p:column>
@@ -103,7 +103,7 @@
 				    value="#{catalogueBackingBean.managedBean.publish and zPromotion.startDate gt zPromotion.endDate 
 				    	or (catalogueBackingBean.managedBean.publish and zPromotion.endDate lt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate) 
 				    	or (catalogueBackingBean.managedBean.publish and zPromotion.endDate gt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate) 
-				    	or (catalogueBackingBean.managedBean.publish and zPromotion.endDate lt catalogueBackingBean.managedBean.currentDate) ? '/css/images/design/icon_error.png' : ''}" 
+				    	or (catalogueBackingBean.managedBean.publish and zPromotion.endDate lt catalogueBackingBean.managedBean.currentDate) ? '/css/images/design/ico-termination.png' : ''}" 
 				    update="@form" />
 				<!--569-End -->
 			</p:column>
@@ -126,7 +126,7 @@
 						actionListener="#{catalogueBackingBean.updateZonalPromoErrorDialog(rowIndex)}"
 						update=":form" oncomplete="errorDialog.show();"
 						rendered="#{(zPromotion.price eq null or zPromotion.startDate eq null or zPromotion.endDate eq null or zPromotion.startDate >= zPromotion.endDate or zPromotion.cmSupplierZone.suppZoneId == 0 or !zPromotion.displayAction)}">
-						<p:graphicImage value="/css/images/design/icon_error.png"></p:graphicImage>
+						<p:graphicImage value="/css/images/design/ico-termination.png"></p:graphicImage>
 					</p:commandLink>
 					<p:graphicImage value="/css/images/design/icon_success.png"
 						rendered="#{!(zPromotion.price eq null or zPromotion.startDate eq null or zPromotion.endDate eq null or zPromotion.startDate >= zPromotion.endDate or zPromotion.cmSupplierZone.suppZoneId == 0 or !zPromotion.displayAction)}"></p:graphicImage>

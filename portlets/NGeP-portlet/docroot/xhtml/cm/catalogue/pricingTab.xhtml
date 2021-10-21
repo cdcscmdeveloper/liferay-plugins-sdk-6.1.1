@@ -46,7 +46,7 @@
 				    rendered="#{catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price==null 
 				     	or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price le 0)}"
 				    value="#{catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price==null 
-				    	or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price le 0) ? '/css/images/design/icon_error.png' : ''}" 
+				    	or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price le 0) ? '/css/images/design/ico-termination.png' : ''}" 
 				    update="@form" />
 				<!-- 569 End -->
 			</p:column>
@@ -61,7 +61,7 @@
 				    rendered="#{catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate==null 
 				    	or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate gt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate)}"
 				    value="#{catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate==null 
-				    	or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate gt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate) ? '/css/images/design/icon_error.png' : ''}" 
+				    	or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate gt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate) ? '/css/images/design/ico-termination.png' : ''}" 
 				    update="@form" />
 				<!-- 569 End -->
 			</p:column>
@@ -78,7 +78,7 @@
 				     	or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate le catalogueBackingBean.managedBean.currentDate)}"
 				    value="#{catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate==null and catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate==null 
 				    	or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate gt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate) 
-				    	or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate le catalogueBackingBean.managedBean.currentDate) ? '/css/images/design/icon_error.png' : ''}"
+				    	or (catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate le catalogueBackingBean.managedBean.currentDate) ? '/css/images/design/ico-termination.png' : ''}"
 				    update="@form" />
 				<!-- 569 End -->
 			</p:column>
