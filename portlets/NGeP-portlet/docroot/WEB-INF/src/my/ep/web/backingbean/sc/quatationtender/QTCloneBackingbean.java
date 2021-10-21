@@ -837,6 +837,11 @@ public class QTCloneBackingbean extends
 						retrieveComittee1And2Tier(scQt,copyScqt);
 						log.info("==========EndCommitteeCloneDuringPendingDocument========="+scQt.getQtNo());//31350
 					}//31350-End
+					else if(QTStatusConst.QT_REVISION_PUBLICATION.equals(statusId)){//31350-start
+						log.info("==========stratCommitteeCloneDuringPendingrevision========="+scQt.getQtNo());//31350
+						retrieveComittee1And2TierRevision(scQt,copyScqt);
+						log.info("==========EndCommitteeCloneDuringPendingrevision========="+scQt.getQtNo());//31350
+					}//31350-End
 					retrieveBrief(copyScqt);
 					retrievePublishing(copyScqt);
 					retrieveDeductionPaymentTabDtl(scQt,copyScqt,QtDetailsSO);
@@ -4386,4 +4391,201 @@ public class QTCloneBackingbean extends
 		return scAddress;
 	}
 	//31653&25635-End
+	
+	private void retrieveComittee1And2TierRevision(ScQt scQt,ScQt copyScqt){//31350-start
+		String evaluationType = copyScqt.getEvaluationType();
+		List<ScQtCommittee> qtCommitteList = new ArrayList<ScQtCommittee>();
+		this.getManagedBean().setToBeDelCommitteMemebers(new ArrayList<ScCommitteeMember>());
+		 List<TabBean> committeTabs = new ArrayList<TabBean>();
+		 ParameterHelper parameterHelper = ParameterHelper.getInstance();
+		 String parameterType = ParameterTypeConst.SC_COMMITTEE_TYPE;
+		 String tabType=null;
+		 ScQtCommittee clonedScQtCommittee =null;
+
+			tabType = ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE;
+			ScQtCommittee specCommitte = getQtCommiteDtlsByQtIdNType(tabType,
+					scQt.getQtId());
+			committeTabs.add(new TabBean(parameterHelper.getParameterDesc(
+					parameterType, tabType), tabType, specCommitte));
+		boolean fsApplicable=false;
+			SelectItem[] fcTypes=this.retrieveFinalizationCommitteeType();
+			if(null!=fcTypes){
+				if(fcTypes.length>0){
+					for(SelectItem i:fcTypes){
+						if(copyScqt.getFinalizationCommitte()!=null){
+							if(i.getValue().equals(copyScqt.getFinalizationCommitte().getParameterId())){
+								fsApplicable=true;
+							}
+						}
+					}
+				}
+			}	
+			if(fsApplicable){
+				scQt.setFinalizationCommitte(copyScqt.getFinalizationCommitte());
+				scQt.setFinalizationSecratery(copyScqt.getFinalizationSecratery());
+			}
+			
+			if (null == this.getManagedBean().getQt().getFinalizationCommitte()) {
+				scQt.setFinalizationCommitte(new PmParameter());
+			}
+			if (null == this.getManagedBean().getQt().getFinalizationSecratery()) {
+				scQt.setFinalizationSecratery(new PmUser());
+			}
+			
+	
+	    if (ParameterConst.EVALUATION_TYPES_ONE_TIER.equals(evaluationType)) {
+	    	tabType=ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE;
+	    	ScQtCommittee ecCommitte = getQtCommiteDtlsByQtIdNType(tabType,
+					scQt.getQtId());
+	    	if(null!=ecCommitte && null!=ecCommitte.getScCommittee() && (QTStatusConst.CMT_PENDING_SUBMISSION.equals(ecCommitte.getScCommittee().getCommitteStatus().getStatusId()) || QTStatusConst.CMT_COMPLETED.equals(ecCommitte.getScCommittee().getCommitteStatus().getStatusId()))){
+	    		clonedScQtCommittee =cloneComitteee(scQt,copyScqt,tabType);
+		    	qtCommitteList.add(clonedScQtCommittee);
+		    	committeTabs.add(new TabBean(parameterHelper.getParameterDesc(
+						parameterType, tabType), tabType, clonedScQtCommittee));	
+	    	}else{
+	    		
+	    		qtCommitteList.add(ecCommitte);
+		    	committeTabs.add(new TabBean(parameterHelper.getParameterDesc(
+						parameterType, tabType), tabType, ecCommitte));
+	    	}
+	    
+		}
+	    else{
+			
+			tabType=ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE;
+			ScQtCommittee ocCommitte = getQtCommiteDtlsByQtIdNType(tabType,
+					scQt.getQtId());
+			if(null!=ocCommitte && null!=ocCommitte.getScCommittee() && (QTStatusConst.CMT_PENDING_SUBMISSION.equals(ocCommitte.getScCommittee().getCommitteStatus().getStatusId()) || QTStatusConst.CMT_COMPLETED.equals(ocCommitte.getScCommittee().getCommitteStatus().getStatusId()))){
+	    	clonedScQtCommittee =cloneComitteee(scQt,copyScqt,tabType);
+	    	qtCommitteList.add(clonedScQtCommittee);
+	    	committeTabs.add(new TabBean(parameterHelper.getParameterDesc(
+					parameterType, tabType), tabType, clonedScQtCommittee));
+			}else{
+	    		qtCommitteList.add(ocCommitte);
+		    	committeTabs.add(new TabBean(parameterHelper.getParameterDesc(
+						parameterType, tabType), tabType, ocCommitte));
+	    	}
+			
+			
+			tabType=ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE;
+			ScQtCommittee tecCommitte = getQtCommiteDtlsByQtIdNType(tabType,
+					scQt.getQtId());
+			if(null!=tecCommitte && null!=tecCommitte.getScCommittee() && (QTStatusConst.CMT_PENDING_SUBMISSION.equals(tecCommitte.getScCommittee().getCommitteStatus().getStatusId()) || QTStatusConst.CMT_COMPLETED.equals(tecCommitte.getScCommittee().getCommitteStatus().getStatusId()))){
+	    	clonedScQtCommittee =cloneComitteee(scQt,copyScqt,tabType);
+	    	qtCommitteList.add(clonedScQtCommittee);
+	    	committeTabs.add(new TabBean(parameterHelper.getParameterDesc(
+					parameterType, tabType), tabType, clonedScQtCommittee));
+			}else{
+	    		qtCommitteList.add(tecCommitte);
+		    	committeTabs.add(new TabBean(parameterHelper.getParameterDesc(
+						parameterType, tabType), tabType, tecCommitte));
+	    	}
+			
+			
+			tabType=ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE;
+			ScQtCommittee fecCommitte = getQtCommiteDtlsByQtIdNType(tabType,
+					scQt.getQtId());
+			if(null!=fecCommitte && null!=fecCommitte.getScCommittee() && (QTStatusConst.CMT_PENDING_SUBMISSION.equals(fecCommitte.getScCommittee().getCommitteStatus().getStatusId()) || QTStatusConst.CMT_COMPLETED.equals(fecCommitte.getScCommittee().getCommitteStatus().getStatusId()))){
+	    	clonedScQtCommittee =cloneComitteee(scQt,copyScqt,tabType);
+	    	qtCommitteList.add(clonedScQtCommittee);
+	    	committeTabs.add(new TabBean(parameterHelper.getParameterDesc(
+					parameterType, tabType), tabType, clonedScQtCommittee));
+			}
+			else{
+	    		qtCommitteList.add(fecCommitte);
+		    	committeTabs.add(new TabBean(parameterHelper.getParameterDesc(
+						parameterType, tabType), tabType, fecCommitte));
+	    	}
+		}
+	    
+	    
+	    
+	    if (scQt.getPmOrgProfile().getBpk() &&						
+				scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT)) {
+			StringBuilder fcTitleLabel = new StringBuilder("lbl.ministry.finance");
+			String fcTitleName = ResourceBundleUtils.getMessage(fcTitleLabel.toString(),
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			tabType = SourcingConstants.COMMITTE_TYPE_MINISTRY_OF_FINANCE;
+			ScQtCommittee mofCommitte = cloneComitteee(scQt,copyScqt,tabType);			
+			committeTabs.add(new TabBean(fcTitleName, tabType, mofCommitte));
+
+		}else{
+			//FC Tabs
+			PmParameter fcSecretaryCode = scQt.getFinalizationCommitte();
+			tabType = SourcingConstants.COMMITTE_TYPE_FINALIZATION;
+			StringBuilder fcTitleLabel = new StringBuilder(
+					"lbl.sc.finalization.committee.secretary.");
+			String fcTitleName = ResourceBundleUtils
+					.getMessage(fcTitleLabel.toString()
+								+ SourcingConstants.FC_COMMITTEE_TYPE_QUOTATION_COMMITTEE.toLowerCase(),
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale());
+		    
+			if (fcSecretaryCode == null
+					|| fcSecretaryCode.getParameterId() == null) {
+				SelectItem[] fcSecretaries = retrieveFinalizationCommitteeType();
+				if (fcSecretaries != null && fcSecretaries.length > 0) {
+					fcSecretaryCode = retrieveParameterById(Long
+							.valueOf(fcSecretaries[0].getValue().toString()));
+					;
+				} else {
+					fcSecretaryCode = null;
+				}
+			}
+			
+			// Displaying the Secretary Details
+			if (fcSecretaryCode != null) {
+				
+				String fcSecretary = fcSecretaryCode.getParameterCode();
+
+				if (fcSecretary != null) {
+					if (fcSecretary
+							.indexOf(SourcingConstants.FC_COMMITTEE_TYPE_QUOTATION_COMMITTEE) >= 0) {
+						fcTitleLabel
+								.append(SourcingConstants.FC_COMMITTEE_TYPE_QUOTATION_COMMITTEE);
+					} else {
+						fcTitleLabel
+								.append(SourcingConstants.FC_COMMITTEE_TYPE_PROCUREMENT_BOARD);
+					}
+					fcTitleName = ResourceBundleUtils.getMessage(
+							fcTitleLabel.toString().toLowerCase(),
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale());
+				}
+			}
+			committeTabs.add(new TabBean(fcTitleName, tabType, null));
+		}
+	    
+	  //pass
+	  		this.getManagedBean()
+	  		.setScCommitteeMemberTabList(committeTabs);
+	  	    
+	  	    
+	  		scQt.setScQtCommittees(qtCommitteList);
+	  		
+	  	
+	  		for (TabBean tabBean : committeTabs) {
+	  			if ((!SourcingConstants.COMMITTE_TYPE_FINALIZATION.equals(tabBean
+	  					.getTabType()) && tabBean.getScQtCommittee()
+	  					.getScCommittee().getCommitteStatus().getStatusId()
+	  					.equals(QTStatusConst.CMT_COMPLETED))
+	  					|| (SourcingConstants.COMMITTE_TYPE_FINALIZATION
+	  							.equals(tabBean.getTabType())
+	  							&& scQt.getFinalizationCommitte() != null
+	  							&& scQt.getFinalizationCommitte().getParameterId() != null
+	  							&& scQt.getFinalizationSecratery() != null && scQt
+	  							.getFinalizationSecratery().getUserId() != null)) {
+	  				tabBean.setIcon("ui-icon-endorse");
+	  			}
+	  		}
+	  		if (committeTabs.size() > 0) {
+	  			// this.getManagedBean().setSelectedTabBean(committeTabs.get(0));
+	  			this.getManagedBean().setSelectedTabBean(
+	  					committeTabs.get(this.getManagedBean()
+	  							.getSelectedCommitteeTabIndex()));
+	  		}
+	  		
+	  		this.getManagedBean().setQt(scQt);
+		
+	}//31350-End
 }
