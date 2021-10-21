@@ -2500,6 +2500,15 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						.getHtmlApplicationRejectReasons(getManagedBean().getSmApplRejectReasonsByPO());
 			}
 			//30974 - end - 13/10/2021
+			
+			//30974 - Start - 21/10/2021
+			if (this.getManagedBean().getSmAppl().getPmStatus().getStatusId()
+					.equals(SupplierManagementConst.PM_STATUS_PENDING_PAYMENT)
+					&& this.getManagedBean().getSmAppl().getApplType()
+							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+				rejectReasons = StringUtils.EMPTY;
+			}
+			//30974 - end - 21/10/2021
 		} else {
 			if (getManagedBean().getSmAppl().getApplType()
 					.equals(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
