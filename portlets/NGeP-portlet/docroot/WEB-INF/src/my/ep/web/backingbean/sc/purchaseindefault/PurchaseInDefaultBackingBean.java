@@ -709,7 +709,7 @@ public class PurchaseInDefaultBackingBean extends
 					//#9133 - start
 					if(BpmOutcomeConst.BPM_DRAFT.equalsIgnoreCase(outcome)){
 						if(saveAsTaskList){
-							successMessage(MessageConst.INFO_700024,
+							successMessage(MessageConst.INFO_700106,
 									ParameterTypeConst.DOCUMENT_TYPES,
 									ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT,
 									purchaseInDefault.getPurchaseInDefaultNo(), Boolean.TRUE);
@@ -733,7 +733,7 @@ public class PurchaseInDefaultBackingBean extends
 					//#9133 - start
 					if(BpmOutcomeConst.BPM_DRAFT.equalsIgnoreCase(outcome)){
 						if(saveAsTaskList){
-							successMessage(MessageConst.INFO_700024,
+							successMessage(MessageConst.INFO_700106,
 									ParameterTypeConst.DOCUMENT_TYPES,
 									ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT,
 									purchaseInDefault.getPurchaseInDefaultNo(), Boolean.TRUE);
