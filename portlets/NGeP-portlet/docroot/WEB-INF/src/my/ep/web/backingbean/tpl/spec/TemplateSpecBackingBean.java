@@ -2290,10 +2290,22 @@ public class TemplateSpecBackingBean extends
 				}
 // #21695 29/9/2021	(#31661) - Start			
 				else if(isPartial && isTechnicalSpec){
-					if (specAnswer.getTplSpecQuestion().getMaxScore() != null) {
-						totalMaxScore = totalMaxScore.add(specAnswer
-								.getTplSpecQuestion().getMaxScore());
-					} //(#31661) - End
+					//===#31902== max score if weightage required==== start
+					if(specAnswer.getTplSpecQuestion().getMaxScore() != null
+				            && (autoScore != null || userScore != null)) {
+				    	if(specAnswer.getTplSpecQuestion().isWeightageReq()){
+				    		totalMaxScore = totalMaxScore.add(specAnswer
+					                .getTplSpecQuestion().getMaxScore().multiply(specAnswer
+					                .getTplSpecQuestion().getWeightage()));
+				    	
+						}
+				    	else{
+					        totalMaxScore = totalMaxScore.add(specAnswer
+					                .getTplSpecQuestion().getMaxScore());
+					    
+				    	}
+				    }
+					//===#31902== max score if weightage required==== end
 					if (autoScore != null) {
 						totalScore = totalScore.add(autoScore);
 					}
@@ -2313,11 +2325,22 @@ public class TemplateSpecBackingBean extends
 					if (userScore != null) {
 						totalScore = totalScore.add(userScore);
 					}
-					if (specAnswer.getTplSpecQuestion().getMaxScore() != null
-							&& (autoScore != null || userScore != null)) {
-						totalMaxScore = totalMaxScore.add(specAnswer
-								.getTplSpecQuestion().getMaxScore());
-					}
+					//===#31902== max score if weightage required==== start
+					if(specAnswer.getTplSpecQuestion().getMaxScore() != null
+				            && (autoScore != null || userScore != null)) {
+				    	if(specAnswer.getTplSpecQuestion().isWeightageReq()){
+				    		totalMaxScore = totalMaxScore.add(specAnswer
+					                .getTplSpecQuestion().getMaxScore().multiply(specAnswer
+					                .getTplSpecQuestion().getWeightage()));
+				    	
+						}
+				    	else{
+					        totalMaxScore = totalMaxScore.add(specAnswer
+					                .getTplSpecQuestion().getMaxScore());
+					    
+				    	}
+				    }
+					//===#31902== max score if weightage required==== end
 				}
 			}
 //#21695 Farid END 20/10/2020
