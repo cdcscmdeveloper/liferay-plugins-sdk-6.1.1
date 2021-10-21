@@ -846,7 +846,9 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		//24956 - end
 		
 		//30911 - start
-		getManagedBean().setFactoringAccList(getFactoringAccountList());	
+		if(getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()) {
+			getManagedBean().setFactoringAccList(getFactoringAccountList());
+		}
 		//30911 - end
 		
 		//check is normal invoice or tax invoice
