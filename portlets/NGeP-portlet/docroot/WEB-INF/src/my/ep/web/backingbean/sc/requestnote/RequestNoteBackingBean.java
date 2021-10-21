@@ -1817,7 +1817,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				if(requestNoteReqDTO.getRequestNote().getRequestNoteDtls() != null){
 					for(ScRequestNoteDtl rnDtl : requestNoteReqDTO.getRequestNote().getRequestNoteDtls()){
 						if(rnDtl.getRequestItem() != null){
-							log.info("RequestItemId (" + rnDtl.getRequestItem().getRequestNoteItemId() + ") "
+							log.info( "RNDetailsId (" + rnDtl.getRequestNoteDtlId() + ") "
+									+ "RequestItemId (" + rnDtl.getRequestItem().getRequestNoteItemId() + ") "
 									+ "QtyOrder (" + rnDtl.getRequestItem().getQuantity() + ") "
 									+ "RN No. (" + requestNoteReqDTO.getRequestNote().getRequestNoteNo() + ")");
 						}				
