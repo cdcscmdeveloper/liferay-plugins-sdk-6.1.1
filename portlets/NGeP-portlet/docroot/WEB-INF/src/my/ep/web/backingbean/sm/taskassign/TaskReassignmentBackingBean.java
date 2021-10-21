@@ -1715,72 +1715,73 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 	
 	public void removeReassignAllGroupTasks() {
 		
-		log.info("removeAllReassignGroupTasks");
-		
-		if (this.getManagedBean().getSelectedGroupTasks() != null && 
-				this.getManagedBean().getSelectedGroupTasks().size() > 0) {
-			this.getManagedBean().getSelectedGroupTasks().clear();
-		}
-    	for ( WorklistItemVO task : this.getManagedBean().getAllGroupTasks()) {   		
-    			task.setTaskSelect(true);
-    			this.getManagedBean().getSelectedGroupTasks().put(task.getTaskId(),task);
-		}
-    	
-    	this.getManagedBean().setEnableDeleteGroupTasksButton(true);
-    	log.info("getSelectedGroupTasks= "+this.getManagedBean().getSelectedGroupTasks().size());
-    	log.info("enableDeleteGroupTasksButton= "+this.getManagedBean().isEnableDeleteGroupTasksButton());
+		IBpmSO bpmSO = null;
+		BpmRequestDTO reqDTO = null;
+		String loginId = null;
+		List<Integer> statusIds = retrieveAvailableStatusId();
+		TaskAssignmentSearchBean taskSearchBean = null;
 
-		String claimedBy = null;
-		ISmTaskAssignmentSO taskAssignmentSO = null;
-		int reassignWorkListType = getManagedBean().getTaskType();
-		List<String> assigneeUsers = new ArrayList<>();
-		
 		TaskAssignmentResDTO resDTO = new TaskAssignmentResDTO();
 		
-		if (this.getManagedBean().getSelectedGroupTasks() != null && 
-				!this.getManagedBean().getSelectedGroupTasks().isEmpty()) {
-			
-			log.info("Number of task(s) to be deleted= "+this.getManagedBean().getSelectedGroupTasks().size());
-			
-			
-			
-			for (Entry<String, WorklistItemVO> selectedTask : this.getManagedBean().getSelectedGroupTasks().entrySet()) {
-				
-				String taskId = selectedTask.getKey();
-				WorklistItemVO task = selectedTask.getValue();
-				log.info("Task(s) to be deleted: "+task.getDocNumber()+" - "+taskId);
-				
-				if (!task.getAssignees().isEmpty()) {
-					assigneeUsers = task.getAssignees();
-				}
-				if (assigneeUsers != null && !assigneeUsers.isEmpty()) {
-					String currentUser = getManagedBean().getTaskAssignmentSearchBean().getUser() != null ?
-							  getManagedBean().getTaskAssignmentSearchBean().getUser().getPmUser().getLoginId() : 
-							  this.getManagedBean().getSelectedReassignee().get(0);
-					
-					if (assigneeUsers.contains(currentUser)) {
-						assigneeUsers.remove(currentUser);
-					}
-					if (assigneeUsers != null && assigneeUsers.size() > 1 && 
-							ProfileManagementConst.REASSIGN_WORKLIST_TYPE_OTHERS == reassignWorkListType) {
-						claimedBy = task.getAcquiredBy();
-					}
-				}
-				
-				try {
-					TaskAssignmentReqDTO reqDTO = new TaskAssignmentReqDTO();
-					reqDTO.setTaskId(task.getTaskId());
-					reqDTO.setUserIdList(assigneeUsers);
-					reqDTO.setClaimedBy(claimedBy);
-					
-					taskAssignmentSO = (ISmTaskAssignmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmTaskAssignmentSO.class);
-					resDTO = taskAssignmentSO.removeGroupOrOthersTask(reqDTO);
+		try {
+			taskSearchBean = getManagedBean().getTaskAssignmentSearchBean();
+			loginId = taskSearchBean.getUser() != null ? taskSearchBean
+					.getUser().getPmUser().getLoginId() : null;
 
-				} finally {
-					taskAssignmentSO = null;
+			if (loginId == null) {
+				if (getManagedBean().getResultUser() != null) {
+					loginId = getManagedBean().getResultUser().getLoginId();
+				}
+			} 
+			if (loginId != null && loginId.length() > 0) {
+				
+				if (statusIds != null && !statusIds.isEmpty()) {
+					bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+							.getServiceObject(IBpmSO.class);
+					reqDTO = new BpmRequestDTO();
+					Object ctxToken = bpmSO.authenticate(loginId);
+
+					//set limit to 10
+					reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
+					reqDTO.setOffset(0);
+					reqDTO.setStatusList(statusIds);
+					reqDTO.setUserId(loginId);
+					reqDTO.setCtxToken(ctxToken);
+					List<String> docNumberList = new ArrayList<String>();
+					if (StringUtils.isNotBlank(getManagedBean()
+							.getTaskAssignmentSearchBean().getDocNo())) {
+						docNumberList.add(getManagedBean()
+								.getTaskAssignmentSearchBean().getDocNo());
+						reqDTO.setDocNumberList(docNumberList);
+					}
+
+					
+					if (StringUtils.isNotBlank(getManagedBean().getTaskAssignmentSearchBean().getDocNo())) {
+						docNumberList.add(getManagedBean().getTaskAssignmentSearchBean().getDocNo());
+						reqDTO.setDocNumberList(docNumberList);
+					}
+
+					if (getManagedBean().getTaskAssignmentSearchBean().getDocType() != null
+							&& getManagedBean().getTaskAssignmentSearchBean().getDocType() != null) {
+						reqDTO.setDocType(getManagedBean()
+								.getTaskAssignmentSearchBean().getDocType());
+					}
+					
+					reqDTO.setState(BpmConstants.STATE_ASSIGNED);
+					reqDTO.setAssignment(BpmConstants.ASSIGNMENT_GROUP);
+					reqDTO.setIsClaimed(false);
+					
+					//start remove all task
+					resDTO = removeReassignAllGroupTasks(reqDTO, this.getManagedBean());
 				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			bpmSO = null;
 		}
+		
+		
 		if (resDTO != null && resDTO.isSuccessful()) {
 			resetCheckAllTasks();
 			this.getManagedBean().getAllGroupTasks().clear();
@@ -1879,73 +1880,68 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 	
 	public void removeReassignAllOthersTasks() {
 		
-		log.info("removeReassignAllOthersTasks");
-			
-		if (this.getManagedBean().getSelectedOthersTasks() != null && 
-				this.getManagedBean().getSelectedOthersTasks().size() > 0) {
-			this.getManagedBean().getSelectedOthersTasks().clear();
-		}
-    	for ( WorklistItemVO task : this.getManagedBean().getAllOthersTasks()) {
-    			task.setTaskSelect(true);
-    			this.getManagedBean().getSelectedOthersTasks().put(task.getTaskId(),task);
-		}
-    	
-    	this.getManagedBean().setEnableDeleteOthersTasksButton(true);
-    	log.info("getSelectedOthersTasks= "+this.getManagedBean().getSelectedOthersTasks().size());
-    	log.info("enableDeleteOthersTasksButton= "+this.getManagedBean().isEnableDeleteOthersTasksButton());
+		IBpmSO bpmSO = null;
+		BpmRequestDTO reqDTO = null;
+		String loginId = null;
+		List<Integer> statusIds = retrieveAvailableStatusId();
+		TaskAssignmentSearchBean taskSearchBean = null;
 
-		String claimedBy = null;
-		ISmTaskAssignmentSO taskAssignmentSO = null;
-		int reassignWorkListType = getManagedBean().getTaskType();
-		List<String> assigneeUsers = new ArrayList<>();
-		
 		TaskAssignmentResDTO resDTO = new TaskAssignmentResDTO();
 		
-		if (this.getManagedBean().getSelectedOthersTasks() != null && 
-				!this.getManagedBean().getSelectedOthersTasks().isEmpty()) {
-			
-			log.info("Number of task(s) to be deleted= "+this.getManagedBean().getSelectedOthersTasks().size());
-			
-			for (Entry<String, WorklistItemVO> selectedTask : this.getManagedBean().getSelectedOthersTasks().entrySet()) {
-				
-				String taskId = selectedTask.getKey();
-				WorklistItemVO task = selectedTask.getValue();
-				log.info("Task(s) to be deleted: "+taskId);
-				
-				if (!task.getAssignees().isEmpty()) {
-					assigneeUsers = task.getAssignees();
+		try {
+			taskSearchBean = getManagedBean().getTaskAssignmentSearchBean();
+			loginId = taskSearchBean.getUser() != null ? taskSearchBean
+					.getUser().getPmUser().getLoginId() : null;
+
+			if (loginId == null) {
+				if (getManagedBean().getResultUser() != null) {
+					loginId = getManagedBean().getResultUser().getLoginId();
 				}
+			} 
+			if (loginId != null && loginId.length() > 0) {
 				
-				if (assigneeUsers != null && !assigneeUsers.isEmpty()) {
-					String currentUser = getManagedBean().getTaskAssignmentSearchBean().getUser() != null ?
-							  getManagedBean().getTaskAssignmentSearchBean().getUser().getPmUser().getLoginId() : 
-							  this.getManagedBean().getSelectedReassignee().get(0);
+				if (statusIds != null && !statusIds.isEmpty()) {
+					bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+							.getServiceObject(IBpmSO.class);
+					reqDTO = new BpmRequestDTO();
+					Object ctxToken = bpmSO.authenticate(loginId);
+
+					//set limit to 10
+					reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
+					reqDTO.setOffset(0);
+					reqDTO.setStatusList(statusIds);
+					reqDTO.setUserId(loginId);
+					reqDTO.setCtxToken(ctxToken);
+					List<String> docNumberList = new ArrayList<String>();
+					if (StringUtils.isNotBlank(getManagedBean()
+							.getTaskAssignmentSearchBean().getDocNo())) {
+						docNumberList.add(getManagedBean()
+								.getTaskAssignmentSearchBean().getDocNo());
+						reqDTO.setDocNumberList(docNumberList);
+					}
+
+					if (getManagedBean().getTaskAssignmentSearchBean()
+							.getDocType() != null
+							&& getManagedBean()
+									.getTaskAssignmentSearchBean().getDocType() != null) {
+						reqDTO.setDocType(getManagedBean()
+								.getTaskAssignmentSearchBean().getDocType());
+					}
 					
-					if (assigneeUsers.contains(currentUser)) {
-						assigneeUsers.remove(currentUser);
-					}
-					if (assigneeUsers != null && assigneeUsers.size() > 1 && 
-							ProfileManagementConst.REASSIGN_WORKLIST_TYPE_OTHERS == reassignWorkListType) {
-						claimedBy = task.getAcquiredBy();
-					}
-				}
-				
-				try {
-					TaskAssignmentReqDTO reqDTO = new TaskAssignmentReqDTO();
-					reqDTO.setTaskId(task.getTaskId());
-					reqDTO.setUserIdList(assigneeUsers);
-					reqDTO.setClaimedBy(claimedBy);
-
-					taskAssignmentSO = (ISmTaskAssignmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmTaskAssignmentSO.class);
-					resDTO = taskAssignmentSO.removeGroupOrOthersTask(reqDTO);
-
-				} finally {
-					taskAssignmentSO = null;
+					reqDTO.setState(BpmConstants.STATE_ASSIGNED);
+					reqDTO.setAssignment(BpmConstants.ASSIGNMENT_ALL);
+					
+					//start remove all task
+					resDTO = removeReassignAllOthersTasks(reqDTO, this.getManagedBean());
 				}
 			}
-		} else {
-			throw new EpException(MessageConst.ERROR_770098);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			bpmSO = null;
 		}
+		
+		
 		if (resDTO != null && resDTO.isSuccessful()) {
 			resetCheckAllTasks();
 			this.getManagedBean().getAllOthersTasks().clear();
@@ -1955,6 +1951,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 			PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), 
 			FacesMessage.SEVERITY_INFO, MessageConst.INFO_770105, null);
 		}
+	
 	}
 	
 	public void removeReassignOthersTasks() {
@@ -2127,4 +2124,236 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 		log.info("enableDeleteOthersTasksButton= " + this.getManagedBean().isEnableDeleteOthersTasksButton());
 	}
 	//#29822 - END
+	
+	/**
+	 * Method to remove all task reassigment PM
+	 * 
+	 *
+	 */
+	
+	public TaskAssignmentResDTO removeReassignAllGroupTasks(BpmRequestDTO bpmReqDTO, TaskReassignmentManagedBean taskReassignmentManagedBean) {
+		
+		//unit test to break the loop (only 2 times loop)
+		int count = 1;
+		
+		//init
+		ISmTaskAssignmentSO taskAssignmentSO  = null;
+		IBpmSO bpmSO = null;
+		
+		String claimedBy = null;
+		
+		BpmResponseDTO responseDTO = null;
+		TaskAssignmentResDTO resDTO = new TaskAssignmentResDTO();
+	
+		
+		try {
+			//get services
+			bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+					.getServiceObject(IBpmSO.class);
+			
+			taskAssignmentSO = (ISmTaskAssignmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+					ISmTaskAssignmentSO.class);
+			
+			//get all the task based on limit -> 10
+			responseDTO = bpmSO.getReassignedItems(bpmReqDTO);
+			
+			//start do-while
+			do{
+				if (responseDTO.getWorklistVO() != null) {
+					if (!responseDTO.getWorklistVO().getWorklistItem().isEmpty() && 
+							responseDTO.getWorklistVO().getWorklistItem().size() > 0) {
+						
+						//clear selected group task
+						if (taskReassignmentManagedBean.getSelectedGroupTasks() != null && 
+								taskReassignmentManagedBean.getSelectedGroupTasks().size() > 0) {
+							taskReassignmentManagedBean.getSelectedGroupTasks().clear();
+						}
+						
+						//add the task from respondeDTO to bean selected group taks
+				    	for (WorklistItemVO task : responseDTO.getWorklistVO().getWorklistItem()) {   		
+				  			task.setTaskSelect(true);
+							taskReassignmentManagedBean.getSelectedGroupTasks().put(task.getTaskId(),task);
+				    	}
+				    	
+				    	taskReassignmentManagedBean.setEnableDeleteGroupTasksButton(true);
+				    	log.info("getSelectedGroupTasks= "+taskReassignmentManagedBean.getSelectedGroupTasks().size());
+				    	log.info("enableDeleteGroupTasksButton= "+taskReassignmentManagedBean.isEnableDeleteGroupTasksButton());
+
+						int reassignWorkListType = taskReassignmentManagedBean.getTaskType();
+						List<String> assigneeUsers = new ArrayList<String>();
+						
+						if (taskReassignmentManagedBean.getSelectedGroupTasks() != null && 
+								!taskReassignmentManagedBean.getSelectedGroupTasks().isEmpty()) {
+							
+							log.info("Number of task(s) to be deleted= "+taskReassignmentManagedBean.getSelectedGroupTasks().size());
+							
+							for (Entry<String, WorklistItemVO> selectedTask : taskReassignmentManagedBean.getSelectedGroupTasks().entrySet()) {			
+								String taskId = selectedTask.getKey();
+								WorklistItemVO task = selectedTask.getValue();
+								log.info("Task(s) to be deleted: "+task.getDocNumber()+" - "+taskId);
+								
+								if (!task.getAssignees().isEmpty()) {
+									assigneeUsers = task.getAssignees();
+								}
+								if (assigneeUsers != null && !assigneeUsers.isEmpty()) {
+									String currentUser = taskReassignmentManagedBean.getTaskAssignmentSearchBean().getUser() != null ?
+											taskReassignmentManagedBean.getTaskAssignmentSearchBean().getUser().getPmUser().getLoginId() : 
+											  taskReassignmentManagedBean.getSelectedReassignee().get(0);
+									
+									if (assigneeUsers.contains(currentUser)) {
+										assigneeUsers.remove(currentUser);
+									}
+									if (assigneeUsers != null && assigneeUsers.size() > 1 && 
+											ProfileManagementConst.REASSIGN_WORKLIST_TYPE_OTHERS == reassignWorkListType) {
+										claimedBy = task.getAcquiredBy();
+									}
+								}
+								
+								TaskAssignmentReqDTO reqDTO = new TaskAssignmentReqDTO();
+								reqDTO.setTaskId(task.getTaskId());
+								reqDTO.setUserIdList(assigneeUsers);
+								reqDTO.setClaimedBy(claimedBy);
+
+								taskAssignmentSO.removeGroupOrOthersTask(reqDTO);
+							}
+						}
+					} 
+				}
+				
+				//get all the task based on limit -> 10
+				//end the loop if size is equal to zero
+				responseDTO = bpmSO.getReassignedItems(bpmReqDTO);
+				count++;
+				
+//			}while(responseDTO.getWorklistVO().getWorklistItem().size() > 0);
+			}while(count<3);
+			//end while
+			
+			log.info("finish delete all task");
+			
+			resDTO.setSuccessful(true);
+			return resDTO;
+		} catch (Exception e) {
+			resDTO.setSuccessful(false);
+			return resDTO;
+		} finally {
+			bpmSO = null;
+			taskAssignmentSO = null;
+		}
+	}
+	
+	
+	public TaskAssignmentResDTO removeReassignAllOthersTasks(BpmRequestDTO bpmReqDTO, TaskReassignmentManagedBean taskReassignmentManagedBean) {
+		
+		//unit test to break the loop (only 2 times loop)
+		int count = 1;
+		
+		//init
+		ISmTaskAssignmentSO taskAssignmentSO  = null;
+		IBpmSO bpmSO = null;
+
+		String claimedBy = null;
+		
+		BpmResponseDTO responseDTO = null;
+		TaskAssignmentResDTO resDTO = new TaskAssignmentResDTO();
+		
+		
+		try {
+			//get services
+			bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+					.getServiceObject(IBpmSO.class);
+			
+			taskAssignmentSO = (ISmTaskAssignmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+					ISmTaskAssignmentSO.class);
+			
+			//get all the task based on limit -> 10
+			responseDTO = bpmSO.getGroupByOthersItems(bpmReqDTO);
+			
+			//start do-while
+			do{
+				if (responseDTO.getWorklistVO() != null) {
+					if (!responseDTO.getWorklistVO().getWorklistItem().isEmpty() && 
+							responseDTO.getWorklistVO().getWorklistItem().size() > 0) {
+						
+						//clear selected group task
+						if (taskReassignmentManagedBean.getSelectedOthersTasks() != null && 
+								taskReassignmentManagedBean.getSelectedOthersTasks().size() > 0) {
+							taskReassignmentManagedBean.getSelectedOthersTasks().clear();
+						}
+						
+						//add the task from respondeDTO to bean selected group taks
+				    	for (WorklistItemVO task : responseDTO.getWorklistVO().getWorklistItem()) {   		
+				  			task.setTaskSelect(true);
+							taskReassignmentManagedBean.getSelectedOthersTasks().put(task.getTaskId(),task);
+				    	}
+				    	
+				    	taskReassignmentManagedBean.setEnableDeleteGroupTasksButton(true);
+				    	log.info("getSelectedGroupTasks= "+taskReassignmentManagedBean.getSelectedOthersTasks().size());
+				    	log.info("enableDeleteGroupTasksButton= "+taskReassignmentManagedBean.isEnableDeleteGroupTasksButton());
+
+						int reassignWorkListType = taskReassignmentManagedBean.getTaskType();
+						List<String> assigneeUsers = new ArrayList<String>();
+						
+						if (taskReassignmentManagedBean.getSelectedOthersTasks() != null && 
+								!taskReassignmentManagedBean.getSelectedOthersTasks().isEmpty()) {
+							
+							log.info("Number of task(s) to be deleted= "+taskReassignmentManagedBean.getSelectedOthersTasks().size());
+							
+							for (Entry<String, WorklistItemVO> selectedTask : taskReassignmentManagedBean.getSelectedOthersTasks().entrySet()) {			
+								String taskId = selectedTask.getKey();
+								WorklistItemVO task = selectedTask.getValue();
+								log.info("Task(s) to be deleted: "+task.getDocNumber()+" - "+taskId);
+								
+								if (!task.getAssignees().isEmpty()) {
+									assigneeUsers = task.getAssignees();
+								}
+								if (assigneeUsers != null && !assigneeUsers.isEmpty()) {
+									String currentUser = taskReassignmentManagedBean.getTaskAssignmentSearchBean().getUser() != null ?
+											taskReassignmentManagedBean.getTaskAssignmentSearchBean().getUser().getPmUser().getLoginId() : 
+											  taskReassignmentManagedBean.getSelectedReassignee().get(0);
+									
+									if (assigneeUsers.contains(currentUser)) {
+										assigneeUsers.remove(currentUser);
+									}
+									if (assigneeUsers != null && assigneeUsers.size() > 1 && 
+											ProfileManagementConst.REASSIGN_WORKLIST_TYPE_OTHERS == reassignWorkListType) {
+										claimedBy = task.getAcquiredBy();
+									}
+								}
+								
+								TaskAssignmentReqDTO reqDTO = new TaskAssignmentReqDTO();
+								reqDTO.setTaskId(task.getTaskId());
+								reqDTO.setUserIdList(assigneeUsers);
+								reqDTO.setClaimedBy(claimedBy);
+
+								taskAssignmentSO.removeGroupOrOthersTask(reqDTO);
+
+							}
+						}
+					} 
+				}
+				
+				//get all the task based on limit -> 10
+				//end the loop if size is equal to zero
+				responseDTO = bpmSO.getGroupByOthersItems(bpmReqDTO);
+				count++;
+				
+//			}while(responseDTO.getWorklistVO().getWorklistItem().size() > 0);
+			}while(count<3);
+			
+			//end while
+			
+			log.info("finish delete all task");
+			
+			resDTO.setSuccessful(true);
+			return resDTO;
+		} catch (Exception e) {
+			resDTO.setSuccessful(false);
+			return resDTO;
+		} finally {
+			bpmSO = null;
+			taskAssignmentSO = null;
+		}
+	}
+	
 }
