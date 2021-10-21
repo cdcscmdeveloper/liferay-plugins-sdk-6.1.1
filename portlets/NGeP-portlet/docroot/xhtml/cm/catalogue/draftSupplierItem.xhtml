@@ -151,7 +151,7 @@
 					rendered="#{selectedSuppCat.selected and selectedSuppCat.cmStandardPricing.price==null
 						or (selectedSuppCat.selected and selectedSuppCat.cmStandardPricing.price le 0)}"
 					value="#{selectedSuppCat.selected and selectedSuppCat.cmStandardPricing.price==null
-						or (selectedSuppCat.selected and selectedSuppCat.cmStandardPricing.price le 0) ? '/css/images/design/icon_error.png' : ''}"
+						or (selectedSuppCat.selected and selectedSuppCat.cmStandardPricing.price le 0) ? '/css/images/design/ico-termination.png' : ''}"
 					update="@form" />	
 				<!-- #569-End -->
 			</p:column>
@@ -171,7 +171,7 @@
 				<p:graphicImage
 				    rendered="#{catalogueBackingBean.managedBean.publish and selectedSuppCat.selected and selectedSuppCat.pmUom.uomId==null}"
 				    value="#{catalogueBackingBean.managedBean.publish and selectedSuppCat.selected
-						and selectedSuppCat.pmUom.uomId==null ? '/css/images/design/icon_error.png' : ''}"
+						and selectedSuppCat.pmUom.uomId==null ? '/css/images/design/ico-termination.png' : ''}"
 					update="@form" />
 				 <!-- #569 - end -->			
 			</p:column>
@@ -196,7 +196,7 @@
 				    value="#{catalogueBackingBean.managedBean.publish and selectedSuppCat.selected
 						and catalogueBackingBean.managedBean.selectedMaintainItem.cmImages==null 
 				    	or (catalogueBackingBean.managedBean.publish and selectedSuppCat.selected 
-				    	and catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc==null) ? '/css/images/design/icon_error.png' : ''}"
+				    	and catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc==null) ? '/css/images/design/ico-termination.png' : ''}"
 					update="@form" />
 				<!-- 569 End -->
 			</p:column>
@@ -217,7 +217,7 @@
 				    rendered="#{catalogueBackingBean.managedBean.publish and selectedSuppCat.selected and selectedSuppCat.cmStandardPricing.startDate==null 
 						or (catalogueBackingBean.managedBean.publish and selectedSuppCat.selected and selectedSuppCat.cmStandardPricing.startDate gt selectedSuppCat.cmStandardPricing.endDate)}"
 				    value="#{catalogueBackingBean.managedBean.publish and selectedSuppCat.selected and selectedSuppCat.cmStandardPricing.startDate==null 
-				     	or (catalogueBackingBean.managedBean.publish and selectedSuppCat.selected and selectedSuppCat.cmStandardPricing.startDate gt selectedSuppCat.cmStandardPricing.endDate) ? '/css/images/design/icon_error.png' : ''}"
+				     	or (catalogueBackingBean.managedBean.publish and selectedSuppCat.selected and selectedSuppCat.cmStandardPricing.startDate gt selectedSuppCat.cmStandardPricing.endDate) ? '/css/images/design/ico-termination.png' : ''}"
 					update="@form" />
 			 	<!-- #569 - end -->
 			</p:column>
@@ -237,7 +237,7 @@
 					rendered="#{catalogueBackingBean.managedBean.publish and selectedSuppCat.selected and selectedSuppCat.cmStandardPricing.startDate==null and selectedSuppCat.cmStandardPricing.endDate==null
 						or (catalogueBackingBean.managedBean.publish and selectedSuppCat.selected and selectedSuppCat.cmStandardPricing.startDate gt selectedSuppCat.cmStandardPricing.endDate)}"
 					value="#{catalogueBackingBean.managedBean.publish and selectedSuppCat.selected and selectedSuppCat.cmStandardPricing.startDate==null and selectedSuppCat.cmStandardPricing.endDate==null 
-						or (catalogueBackingBean.managedBean.publish and selectedSuppCat.selected and selectedSuppCat.cmStandardPricing.startDate gt selectedSuppCat.cmStandardPricing.endDate)? '/css/images/design/icon_error.png' : ''}"
+						or (catalogueBackingBean.managedBean.publish and selectedSuppCat.selected and selectedSuppCat.cmStandardPricing.startDate gt selectedSuppCat.cmStandardPricing.endDate)? '/css/images/design/ico-termination.png' : ''}"
 					update="@form" />
 				<!-- #569 - end -->
 			 </p:column>
