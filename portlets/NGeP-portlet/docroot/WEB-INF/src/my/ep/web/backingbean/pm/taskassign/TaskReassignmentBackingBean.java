@@ -4138,16 +4138,22 @@ public class TaskReassignmentBackingBean extends
 		int count = 1;
 		
 		//init
-		ITaskAssignmentSO taskAssignmentSO  = null;
+		ITaskAssignmentSO taskAssignmentSO = null;
+		IBpmSO bpmSO = null;
+		
 		String claimedBy = null;
+		
 		BpmResponseDTO responseDTO = null;
 		TaskAssignmentResDTO resDTO = new TaskAssignmentResDTO();
-		IBpmSO bpmSO = null;
+	
 		
 		try {
 			//get bpm service
 			bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 					.getServiceObject(IBpmSO.class);
+			
+			taskAssignmentSO = (ITaskAssignmentSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ITaskAssignmentSO.class);
 			
 			//get all the task based on limit -> 10
 			responseDTO = bpmSO.getReassignedItems(bpmReqDTO);
@@ -4204,21 +4210,13 @@ public class TaskReassignmentBackingBean extends
 									}
 								}
 								
-								try {
-									TaskAssignmentReqDTO reqDTO = new TaskAssignmentReqDTO();
-									reqDTO.setTaskId(task.getTaskId());
-									reqDTO.setUserIdList(assigneeUsers);
-									reqDTO.setClaimedBy(claimedBy);
+								TaskAssignmentReqDTO reqDTO = new TaskAssignmentReqDTO();
+								reqDTO.setTaskId(task.getTaskId());
+								reqDTO.setUserIdList(assigneeUsers);
+								reqDTO.setClaimedBy(claimedBy);
+								
+								taskAssignmentSO.removeGroupOrOthersTask(reqDTO);
 
-									taskAssignmentSO = (ITaskAssignmentSO) BusinessDelegate
-											.getInstance().getServiceObject(
-													ModuleCodeConst.PROFILE_MANAGEMENT,
-													ITaskAssignmentSO.class);
-									taskAssignmentSO.removeGroupOrOthersTask(reqDTO);
-
-								} finally {
-									taskAssignmentSO = null;
-								}
 							}
 						}
 					} 
@@ -4242,6 +4240,7 @@ public class TaskReassignmentBackingBean extends
 			return resDTO;
 		} finally {
 			bpmSO = null;
+			taskAssignmentSO = null;
 		}
 	}
 	
@@ -4252,16 +4251,22 @@ public class TaskReassignmentBackingBean extends
 		int count = 1;
 		
 		//init
-		ITaskAssignmentSO taskAssignmentSO  = null;
-		String claimedBy = null;
-		BpmResponseDTO responseDTO = null;
-		TaskAssignmentResDTO resDTO = new TaskAssignmentResDTO();
+		ITaskAssignmentSO taskAssignmentSO = null;
 		IBpmSO bpmSO = null;
 		
+		String claimedBy = null;
+		
+		BpmResponseDTO responseDTO = null;
+		TaskAssignmentResDTO resDTO = new TaskAssignmentResDTO();
+		
+		
 		try {
-			//get bpm service
+			//get services
 			bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 					.getServiceObject(IBpmSO.class);
+			
+			taskAssignmentSO = (ITaskAssignmentSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ITaskAssignmentSO.class);
 			
 			//get all the task based on limit -> 10
 			responseDTO = bpmSO.getGroupByOthersItems(bpmReqDTO);
@@ -4318,21 +4323,13 @@ public class TaskReassignmentBackingBean extends
 									}
 								}
 								
-								try {
-									TaskAssignmentReqDTO reqDTO = new TaskAssignmentReqDTO();
-									reqDTO.setTaskId(task.getTaskId());
-									reqDTO.setUserIdList(assigneeUsers);
-									reqDTO.setClaimedBy(claimedBy);
+								TaskAssignmentReqDTO reqDTO = new TaskAssignmentReqDTO();
+								reqDTO.setTaskId(task.getTaskId());
+								reqDTO.setUserIdList(assigneeUsers);
+								reqDTO.setClaimedBy(claimedBy);
 
-									taskAssignmentSO = (ITaskAssignmentSO) BusinessDelegate
-											.getInstance().getServiceObject(
-													ModuleCodeConst.PROFILE_MANAGEMENT,
-													ITaskAssignmentSO.class);
-									taskAssignmentSO.removeGroupOrOthersTask(reqDTO);
+								taskAssignmentSO.removeGroupOrOthersTask(reqDTO);
 
-								} finally {
-									taskAssignmentSO = null;
-								}
 							}
 						}
 					} 
@@ -4357,6 +4354,7 @@ public class TaskReassignmentBackingBean extends
 			return resDTO;
 		} finally {
 			bpmSO = null;
+			taskAssignmentSO = null;
 		}
 	}
 	
