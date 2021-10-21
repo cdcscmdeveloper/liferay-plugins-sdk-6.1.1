@@ -123,15 +123,15 @@
 			<h:outputText style="width:24%;white-space: normal;" value="#{(spec.answerRemark ne null) ? spec.answerRemark : 'N/A'}" />
 		</p:column>
 		<p:column style="width:40%; text-align: center;">
-			<p:inputTextarea id="newOfferedSpec" label="#{lbl['lbl.sc.loiloa.newoffered.specification']}" style="width:calc(100% - 15px);" value="#{spec.newSupplierOffer}" 
-				disabled="#{directLOABackingBean.managedBean.supPropSpecDisable}" rows="1"  onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
+			<p:inputTextarea id="newOfferedSpec" label="#{lbl['lbl.sc.loiloa.newoffered.specification']}" style="width:calc(100% - 30px);" value="#{spec.newSupplierOffer}" 
+				disabled="#{directLOABackingBean.managedBean.supPropSpecDisable}" rows="5"  onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
 				rendered="#{spec.renderNewSpec}"
 				onmouseout="limitTextArea(this,1000);">
 			<p:ajax event="change" process="@this" update="@this" />
 			<f:validateLength for="newOfferedSpec" maximum="1000" />
 			</p:inputTextarea>
 			<p:message id="newOfferedSpecMsg" for="newOfferedSpec" display="icon" />
-			<h:outputText style="width:24%;white-space: normal;" rendered="#{!spec.renderNewSpec}" value="N/A" />
+		<!-- 	<h:outputText style="width:24%;white-space: normal;" rendered="#{!spec.renderNewSpec}" value="N/A" /> -->
 		</p:column>
 				
 		</p:dataTable>
