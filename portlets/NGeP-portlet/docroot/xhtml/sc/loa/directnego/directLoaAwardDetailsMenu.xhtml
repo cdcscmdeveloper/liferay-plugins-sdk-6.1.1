@@ -18,13 +18,11 @@
 	<!-- #29007 Start Vinod -->
 	<p:outputPanel id="supplierUpdateInstructionPanel"
 			rendered="#{directLOABackingBean.managedBean.iconForDL}">
-			<h:outputText styleClass="instruction"
-				value="#{lbl['lbl.sc.update.supplier.latest.offered.instruction']}" />
-			<p:graphicImage value="/css/images/design/ico-viewnedit.png"
-				id="supplierUpdateInstructionIcon"
+			<h:outputText styleClass="instruction" 
+				value="#{lbl['lbl.sc.loiloa.loa.zone.instruction']}" />
+				<p:graphicImage value="/css/images/design/ico-viewnedit.png"
+				id="supplierUpdateInstructionIconQT" 
 				style="max-width: 16px; padding-right: 7px; padding-left: 7px;" />
-			<h:outputText styleClass="instruction"
-				value="#{lbl['lbl.sc.update.supplier.latest.offered.instruction.end']}" />
 			<p:spacer height="10" />
 			<p:panel id="supplierSearchCriteriaQT" 
 				header="#{lbl['lbl.sc.qt.sampel.technical.panel.search.criteria']}" toggleable="true">
