@@ -15093,7 +15093,15 @@ private void retriveCommitteeRemarksList(){
 				if(null != specQuestion.getQuestionType()
 		                && specQuestion.getQuestionType()
 	                    .equalsIgnoreCase(TemplateSpecConst.CONTENT_TYPE_SCORE)){
-					maxScore = specQuestion.getMaxScore().intValue();
+					//=======#31902 bug related to #25138 === start 
+					if(specQuestion.isWeightageReq()){
+						maxScore = (specQuestion.getMaxScore().multiply(specQuestion.getWeightage())).intValue();
+						
+					}else{
+						maxScore = specQuestion.getMaxScore().intValue();	
+					
+					}
+					//=======#31902 bug related to #25138 ====== end
 					sumMaxScore = sumMaxScore + maxScore;
 		
 				}
