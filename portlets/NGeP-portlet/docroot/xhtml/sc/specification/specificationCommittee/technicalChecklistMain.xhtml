@@ -177,11 +177,27 @@
 							<h:outputText
 							value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.definationType)}"></h:outputText>
 							</c:if>
-							<c:if test="#{specificationBackingBean.managedBean.specMaintenance}">
-							<h:outputText
-							value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.definationType)}"></h:outputText>
-							</c:if>
-							
+						<!-- #31701 START -->
+						<c:if test="#{specificationBackingBean.managedBean.specMaintenance}">
+							<p:selectOneMenu style="width:170px;" required="true"
+								disabled="#{specificationBackingBean.managedBean.readOnly}"
+								id="techChecklistforSpecMaintenance"
+								label="#{lbl['lbl.sc.type']}"
+								value="#{stageTwoTechnical.definationType.parameterId}">
+
+								<f:selectItems
+									value="#{specificationBackingBean.getTechnicalChecklistDefTypeValues(ParameterTypeConst.documentDefinitionType)}"></f:selectItems>
+
+								<p:ajax event="change" process="@this"
+									update="technicalChecklistsupplier,scoreView,uploadtech,technicalSpecificationStatus"
+									partialSubmit="true"
+									listener="#{specificationBackingBean.technicalCheckListTypeChange(index,specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"></p:ajax>
+							</p:selectOneMenu>
+
+							<p:message id="techChecklistforSpecMaintenance1"
+								for="techChecklistforSpecMaintenance" display="icon"></p:message>
+						</c:if>
+						<!-- #31701 END -->
 					</ui:fragment>
 
 
