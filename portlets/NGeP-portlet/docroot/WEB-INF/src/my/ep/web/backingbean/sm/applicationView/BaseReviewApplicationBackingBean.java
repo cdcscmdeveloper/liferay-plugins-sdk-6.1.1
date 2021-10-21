@@ -2502,8 +2502,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			//30974 - end - 13/10/2021
 			
 			//30974 - Start - 21/10/2021
-			if (this.getManagedBean().getSmAppl().getPmStatus().getStatusId()
-					.equals(SupplierManagementConst.PM_STATUS_PENDING_PAYMENT)
+			if (this.getManagedBean().getSmAppl().getPmStatus() != null
+					&& this.getManagedBean().getSmAppl().getPmStatus().getStatusId()
+							.equals(SupplierManagementConst.PM_STATUS_PENDING_PAYMENT)
 					&& this.getManagedBean().getSmAppl().getApplType()
 							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
 				rejectReasons = StringUtils.EMPTY;
@@ -2633,9 +2634,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				// Refs #15629 - End - 21/1/2021
 				
 				//30974 - Start - 13/10/2021
-				if (!this.getManagedBean().getSmAppl().getPmStatus().getStatusId().toString()
-						.equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REGISTERED)){
-					rejectReasons = SmCommonUtil.getHtmlApplicationRejectReasons(getManagedBean().getSmAppl().getSmApplRejectReasons());	
+				if (this.getManagedBean().getSmAppl().getPmStatus() != null
+						&& !this.getManagedBean().getSmAppl().getPmStatus().getStatusId().toString()
+								.equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REGISTERED)){
+					rejectReasons = SmCommonUtil.getHtmlApplicationRejectReasons(getManagedBean().getSmAppl()
+							.getSmApplRejectReasons());
 				}
 				//30974 - end - 13/10/2021
 				if (StringUtils.isBlank(rejectReasons)) {
