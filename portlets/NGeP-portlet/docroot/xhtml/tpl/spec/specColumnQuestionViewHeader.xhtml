@@ -85,7 +85,7 @@
 			</p:column>
 			<ui:insert name="otherHeaderSection" />
 		<!-- #29007 Start Vinod -->
-		<c:if test="#{directLOABackingBean.managedBean.searchItemForDL}">
+		<c:if test="#{directLOABackingBean.managedBean.searchItemForDL and !templateSpecBean.specMaster.brandNew and !isItemTypeService}">
 			<ui:param name="specificationRequired1" value="#{isSpecTypeTechnical or isSqSpec or (isSpecTypeFinancial and !isSpecificationReq)}"></ui:param>
 			<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:97px; white-space:normal;"
 			headerText="#{lbl['lbl.tpl.spec.content.unit.price']}">

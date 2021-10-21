@@ -143,7 +143,7 @@
 	</ui:insert>
 	<!-- #29007 Start Vinod -->
 	<!-- Bug #31733 Related to #21695 12/10/2021 rendered-->
-	<c:if test="#{directLOABackingBean.managedBean.searchItemForDL}">
+	<c:if test="#{directLOABackingBean.managedBean.searchItemForDL and !templateSpecBean.specMaster.brandNew and !isItemTypeService}">
 	<p:column style="width:97px; white-space:normal;" rendered="#{(!qtyZero) or (!isSqSpec and !isZonal) or (isSqSpec)}">
 		
 		<h:panelGroup id="ratePerUomPG1">
