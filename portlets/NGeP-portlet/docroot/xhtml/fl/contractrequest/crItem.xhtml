@@ -1112,9 +1112,21 @@
 		
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
+		<!-- #11076 START-->
+			<p:commandButton id="itemSelectAll" value = "#{lbl['lbl.fl.btn.addall']}" 
+				process="@this,itemListResultDt"
+				update="itemDataTable,messages,:form:itemExistingForm:textBox1,:form:itemExistingForm:textBox2,:form:itemExistingForm:textBox3"
+				onclick = "addItems.hide();"
+				onstart="blockWidget.show();"
+				disabled="#{contractRequestBackingBean.contractItemPagingDataModel.list == null 
+				or fn:length(contractRequestBackingBean.contractItemPagingDataModel.list)== 0}"
+				oncomplete="blockWidget.hide();"
+				action = "#{contractRequestBackingBean.checkAllItem}">
+			</p:commandButton>
+		<!-- #11076 END-->
 			<p:commandButton  value="#{lbl['lbl.btn.add']}" id="itemAddButton"
 				action="#{contractRequestBackingBean.updateContractedItemDt}"
-				oncomplete="addItems.hide();" update="itemDataTable,messages"
+				oncomplete="addItems.hide();" update="itemDataTable,messages,:form:itemExistingForm:textBox1,:form:itemExistingForm:textBox2,:form:itemExistingForm:textBox3"
 				disabled="#{contractRequestBackingBean.managedBean.selectedContractedItemList.size() == 0 }"
 				process="@this,itemListResultDt">
 			</p:commandButton>
