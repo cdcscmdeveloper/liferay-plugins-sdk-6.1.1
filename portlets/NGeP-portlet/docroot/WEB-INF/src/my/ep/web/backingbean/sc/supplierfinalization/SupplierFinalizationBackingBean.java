@@ -3208,6 +3208,7 @@ return	remarksNotFound;
 					"lbl.sc.committee.endorsement.report",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale()) });*/
+			navigateToEndorsementReportTab();
 			throw new EpException(MessageConst.ERROR_770271);
 			// #31934 - End.
 		}
