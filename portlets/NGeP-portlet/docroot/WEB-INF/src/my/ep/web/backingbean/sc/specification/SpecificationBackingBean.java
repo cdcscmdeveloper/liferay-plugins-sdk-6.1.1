@@ -11448,7 +11448,13 @@ public class SpecificationBackingBean extends
 				}
 				//#25138 Reendorsed- end
 				resDTO = specSO.saveQTDtl(specReqDTO);
+				// #31944 - Start.
+				Long currentStatusId = getManagedBean().getCurrentStatusId();
+				// #31944 - End.
 				renewSesionObject();
+				// #31944 - Start.
+				getManagedBean().setCurrentStatusId(currentStatusId);
+				// #31944 - End.
 				this.getManagedBean().setQt(resDTO.getScQt());
 				getfulfilmentDtls(resDTO.getScQt());
 				retriveSpecdetails(resDTO.getScQt().getQtId());
