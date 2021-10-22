@@ -125,12 +125,18 @@
 								rendered="#{scQt.actionRender[0]}"
 								icon="ui-icon-view" action="#{qTDetailBB.editQuationTenderDetails(scQt, false)}" 
 								partialSubmit="true" process="@this"/>
-							
+							<ui:remove>
+								TEMPORARY REMOVE IN DEV TO PROCEED WITH CLONE QT START
+								DATA Rendered: and scQt.qtStatus.statusId ne QTStatusConst.QT_PENDING_QT_SUBMISSION}
+							</ui:remove>
 							<p:menuitem id="menuItem2" value="#{lbl['lbl.btn.update']}" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();" 
-                               rendered="#{!qTDetailBB.isAuditor() and scQt.actionRender[1] and scQt.qtStatus.statusId ne QTStatusConst.QT_PENDING_QT_SUBMISSION}"
+                               rendered="#{!qTDetailBB.isAuditor() and scQt.actionRender[1]}"
 								icon="ui-icon-edit" action="#{qTDetailBB.editQuationTenderDetails(scQt, true)}" 
 								partialSubmit="true" process="@this"/>
+							<ui:remove>
+								TEMPORARY REMOVE IN DEV END
+							</ui:remove>
 							<p:menuitem id="menuItem3" value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();" 
 								rendered="#{scQt.actionRender[2]}"
