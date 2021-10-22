@@ -9514,6 +9514,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	}
 	public void onBackToZoneItemDetailsTab() {
 		getManagedBean().setSelectedTabIndex(2);
+		this.getManagedBean().setSpecKeyword(null);//29007														 
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, QTConstants.SC_DIRECT_LOA_MAIN_PAGE);
 	}
@@ -9524,10 +9525,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if(this.getItemNameSearchCriteria() != null && this.getItemNameSearchCriteria() != ""){
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			TplSpecMaster tplSpecMaster = new TplSpecMaster();
-			boolean isProduct = false;
-			boolean isService = false;
+			boolean isProduct = true;//29007
+			boolean isService = true;//29007
 			
-			for(ScLoiLoaItem scloilaitem : this.getManagedBean().getScLoa().getScLoiLoaItems()){
+		/*29007-start	for(ScLoiLoaItem scloilaitem : this.getManagedBean().getScLoa().getScLoiLoaItems()){
 				if(this.getItemNameSearchCriteria().equalsIgnoreCase(scloilaitem.getScRequestItem().getItemName())){//29007
 					tplSpecMaster = scloilaitem.getScRequestItem().getTplSpecQuestion().getTplSpecMaster();
 					if(ParameterConst.ITEM_TYPE_PRODUCT.equals(tplSpecMaster.getItemTypeCode().getParameterCode())){
@@ -9537,9 +9538,12 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					}
 					break;
 				}
-			}
-			if(tplSpecMaster.getSpecMasterId() != null){
-				reqDTO.setTplSpecMaster(tplSpecMaster);
+			}*/
+			//if(tplSpecMaster.getSpecMasterId() != null){29007-End
+			
+			if (!this.getManagedBean().getProdscQtDoc().getTplSpecMaster()
+					.isBrandNew()) {//29007
+				reqDTO.setTplSpecMaster(this.getManagedBean().getProdscQtDoc().getTplSpecMaster());//29007
 				reqDTO.setItemName(this.getItemNameSearchCriteria());
 				AwardSupplierResDTO resDTO  = getQtAwardSO().searchSupplierItemByIDforDL(reqDTO);
 				
@@ -9552,16 +9556,26 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					this.getManagedBean().setSearchItemForDL(true);
 					this.getManagedBean().setProdTemplateSpecBean(bean);
 				}
+			}//29007
+			if (!this.getManagedBean().getServicescQtDoc().getTplSpecMaster()
+					.isBrandNew()) {//29007
+				reqDTO.setTplSpecMaster(this.getManagedBean().getServicescQtDoc().getTplSpecMaster());
+				reqDTO.setItemName(this.getItemNameSearchCriteria());
+				AwardSupplierResDTO resDTO  = getQtAwardSO().searchSupplierItemByIDforDL(reqDTO);
+				TemplateSpecBean serviceBean = new TemplateSpecBean(
+						TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER);
 				if(isService){
-					bean.setSpecMaster(resDTO.getTplSpecMaster());
-					bean.setSpecAnswerList(resDTO.getTplSpecAnswerList());
-					bean.setSelectedSpecQuestion(null);
-					bean.setSpecAnswersToDelete(null);
+					serviceBean.setSpecMaster(resDTO.getTplSpecMaster());
+					serviceBean.setSpecAnswerList(resDTO.getTplSpecAnswerList());
+					serviceBean.setSelectedSpecQuestion(null);
+					serviceBean.setSpecAnswersToDelete(null);
 					this.getManagedBean().setSearchItemForDL(true);
-					this.getManagedBean().setSpecTemplateSpecBean(bean);
+					this.getManagedBean().setSpecTemplateSpecBean(serviceBean);
 				}
 			}
+			//}
 		}else{
+			this.getManagedBean().setSearchItemForDL(false);//29007
 			TemplateSpecBean bean = new TemplateSpecBean(
 					TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER);
 
