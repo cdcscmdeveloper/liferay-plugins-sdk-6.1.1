@@ -144,7 +144,7 @@
 		</p:column>
 	</ui:insert>
 	<!-- #29007 Start Vinod -->
-	<c:if test="#{directLOABackingBean.managedBean.searchItemForDL}">
+	<c:if test="#{directLOABackingBean.managedBean.searchItemForDL and !templateSpecBean.specMaster.brandNew and !isItemTypeService}">
 	<p:column style="width:97px; white-space:normal;">
 		
 		<h:panelGroup id="ratePerUomPG1">
