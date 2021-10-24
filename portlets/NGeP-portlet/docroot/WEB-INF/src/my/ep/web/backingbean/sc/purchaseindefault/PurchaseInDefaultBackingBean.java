@@ -1905,7 +1905,7 @@ public class PurchaseInDefaultBackingBean extends
 				// #9133 - start
 				if (!DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(statusId)) {
 					validatePID = false;
-					validateRemark();
+					//validateRemark();
 				}
 				// #9133 - end
 
