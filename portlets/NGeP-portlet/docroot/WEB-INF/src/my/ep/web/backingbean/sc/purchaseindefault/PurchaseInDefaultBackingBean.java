@@ -887,7 +887,7 @@ public class PurchaseInDefaultBackingBean extends
 				reqDTO.setSupRes(true);
 				resDTO = purchaseInDefaultSO.updateResponsePurchaseInDefault(reqDTO);
 			}else if(DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(stsId)){						
-				boolean validateRemark = true;
+				boolean validateRemark = false; //#31603 - set to false
 				boolean isQuantityCheckNeeded = false;
 				
 				if (getManagedBean().isVisibleOrderQty()) {
