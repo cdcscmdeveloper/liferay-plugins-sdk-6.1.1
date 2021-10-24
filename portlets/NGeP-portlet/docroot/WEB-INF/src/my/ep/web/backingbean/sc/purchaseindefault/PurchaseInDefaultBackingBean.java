@@ -1904,6 +1904,7 @@ public class PurchaseInDefaultBackingBean extends
 				
 				// #9133 - start
 				if (DPStatusConstants.PID_PENDING_VERIFICATION.equals(statusId)
+						|| DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(statusId)
 						|| DPStatusConstants.PID_PENDING_APPROVAL.equals(statusId)
 						|| DPStatusConstants.PID_PENDING_REVISION.equals(statusId)
 						|| DPStatusConstants.PID_PENDING_REVISION_VERIFICATION.equals(statusId)
