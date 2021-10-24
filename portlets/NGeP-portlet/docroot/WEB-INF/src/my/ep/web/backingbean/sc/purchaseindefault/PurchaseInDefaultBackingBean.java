@@ -959,8 +959,7 @@ public class PurchaseInDefaultBackingBean extends
 				//#9133 -start
 				if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)
 						|| BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)
-						|| BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)
-						|| DPStatusConstants.PID_PENDING_REVISION.equals(stsId))
+						|| BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome))
 					validateRemark();
 				else
 					finalizeRemarks(scPurchaseInDefault.getRemarks());
