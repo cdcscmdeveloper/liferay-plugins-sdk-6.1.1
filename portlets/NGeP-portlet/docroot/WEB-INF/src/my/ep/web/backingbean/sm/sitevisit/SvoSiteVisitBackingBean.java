@@ -354,11 +354,14 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			}
 			
 			setTemplateList();
-			getManagedBean().setParameterDesc(getParameterDesc(
+			if(getManagedBean().getSmSvTask().getPmCategoryL3() != null){
+				getManagedBean().setParameterDesc(getParameterDesc(
 					getManagedBean().getSmSvTask().getPmCategoryL3().getCategoryTypeCode()));
+			}
 			
-			String paramCode = smSvTask.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
-			if(getManagedBean().getSmSvTask().getSmAppl().isSiteVisitGroup()){
+			if(getManagedBean().getSmSvTask().getSmAppl().isSiteVisitGroup() 
+					&& getManagedBean().getSmSvTask().getPmCategoryL3() != null){
+				String paramCode = smSvTask.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
 				if(paramCode.equals(SupplierManagementConst.CAT_TYPE_DOCKYARD) || 
 						paramCode.equals(SupplierManagementConst.CAT_TYPE_WORKSHOP) ||
 						paramCode.equals(SupplierManagementConst.CAT_TYPE_PRINTING)){
@@ -397,6 +400,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 							machine.setSelected(true);
 						}
 					}
+					getManagedBean().getTravellingSoftwareList().add(new PmMachine());
 					getManagedBean().setLicensed(true);
 				}
 			}
