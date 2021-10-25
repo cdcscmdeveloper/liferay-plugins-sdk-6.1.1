@@ -4131,17 +4131,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 								.getScQtApproval());
 			}
 			
-			// #25077 Start
-			Collections.sort(tabBeans, new Comparator<TabBean>() {
-				List<String> sortOrder = Arrays.asList("ACC", "OTH", "BPK", "PTJ", "PBA", "FC");
-				public int compare(TabBean o1, TabBean o2) {
-							return Integer.valueOf(
-									sortOrder.indexOf(o1.getTabType())).compareTo(
-									Integer.valueOf(sortOrder.indexOf(o2.getTabType())));
-				}
-			});	
-			// #25077 End
-			
 			this.getManagedBean().setTabList(tabBeans);
 		} finally {
 			detailSO = null;
@@ -10264,15 +10253,23 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
        					for (int j = 0; j < approvalRequestHistory.size(); j++) {
        						PmParameter approvalAction = approvalRequestHistory.get(j).getApproverAction();
        						if(null!=approvalAction){
-	       						if(null == this.getManagedBean().getScQtApprovalReqAttachementHistory()){
-	       						         approvalRequestHistory.get(j)
-					   					         .setApprovalRequestAttachement(
-					   					        		 this.getManagedBean().getScQtApprovalReqAttachementHistory());
-	       						}
-       			                ScQtApprovalReqAttachement approvalReqAttachement = approvalRequestHistory.get(j).getApprovalRequestAttachement();
-	       	                    if(null == approvalReqAttachement){
-	       	                    	  throw new EpException(MessageConst.ERROR_760509);
-	       	                    }
+       						   if(this.getManagedBean().isFlagFileAttahmentDeleted()){
+       							 if(null == this.getManagedBean().getScQtApprovalReqAttachementHistory()){
+      						         approvalRequestHistory.get(j)
+				   					         .setApprovalRequestAttachement(
+				   					        		 this.getManagedBean().getScQtApprovalReqAttachementHistory());
+		      					 }
+	  			                 ScQtApprovalReqAttachement approvalReqAttachement = approvalRequestHistory.get(j).getApprovalRequestAttachement();
+	      	                     if(null == approvalReqAttachement){
+	      	                    	  throw new EpException(MessageConst.ERROR_760509);
+	      	                     }
+       						   }else{
+       							 if(null != approvalRequestHistory.get(j).getApprovalRequestAttachement()){
+   								       this.getManagedBean().setScQtApprovalReqAttachementHistory(
+   								    	    	approvalRequestHistory.get(j)
+   								    		         .getApprovalRequestAttachement());
+   							     }
+       						   } 
        						}
        					}
        				}
