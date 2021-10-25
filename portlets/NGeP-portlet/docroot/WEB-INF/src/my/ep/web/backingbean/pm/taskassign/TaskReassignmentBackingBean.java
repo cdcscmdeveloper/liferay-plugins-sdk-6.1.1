@@ -1886,6 +1886,10 @@ public class TaskReassignmentBackingBean extends
 				vo.setOrgProfileId(resDTO.getOrgProfileId());
 				vo.setRoleList(StringUtils.isNotBlank(resDTO.getRoleCode()) ? new ArrayList<String>(Arrays.asList(resDTO.getRoleCode())) : new ArrayList<String>());
 				vo.setUserGroupId(resDTO.getUserGroupId());
+				//Redmine Bug #31732 - START
+				if(!resDTO.getRoleCodeList().isEmpty())
+					vo.setRoleList(resDTO.getRoleCodeList());
+				//Redmine Bug #31732 - END
 				
 			}
 		}catch(Exception e){
