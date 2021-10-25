@@ -2958,8 +2958,8 @@ public class PurchaseInDefaultBackingBean extends
 
 				if (scRemark.getRemarkId() == null || scRemark.getRemarkId().toString() == "")
 					scRemark.setEditable(true);
-				if (compareUserName(scRemark.getCreatedUser().getLoginId())
-						&& !isDiffWithPrevWorkFlowStatus(scPurchaseInDefault.getCurrentStatus(), scRemark))
+				if (compareUsrName(scRemark.getCreatedUser().getLoginId())
+						&& !isDiffWithPrevWorkFlowSts(scPurchaseInDefault.getCurrentStatus(), scRemark))
 					scRemark.setEditable(true);
 				else
 					scRemark.setEditable(false);
@@ -2967,7 +2967,7 @@ public class PurchaseInDefaultBackingBean extends
 		}
 	}
 	
-	private boolean isDiffWithPrevWorkFlowStatus(ScWorkFlowStatus workFlowStatus, ScRemark prevRemark) {
+	private boolean isDiffWithPrevWorkFlowSts(ScWorkFlowStatus workFlowStatus, ScRemark prevRemark) {
 		return workFlowStatus != null && 
 				(
 					prevRemark.getScWorkFlowStatus() == null || 
@@ -2979,7 +2979,7 @@ public class PurchaseInDefaultBackingBean extends
 				);
 	}
 	
-	public boolean compareUserName(String username) {
+	public boolean compareUsrName(String username) {
 		FacesScopes facesScopes = new FacesScopes();
 		if (username != null && username.equals(facesScopes.getUserScreenName())) {
 			return true;
