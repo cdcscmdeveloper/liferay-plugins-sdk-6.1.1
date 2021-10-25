@@ -196,7 +196,7 @@ label.ui-button>span.ui-button-text {
 					updateSpec="#{specificationBackingBean.managedBean.updateSpec}"
 					newable="#{specificationBackingBean.managedBean.specNewable}"
 					removable="#{specificationBackingBean.managedBean.specNewable}"
-					editable="#{specificationBackingBean.managedBean.specificFlag or ((specificationBackingBean.isQTStatusChecklistScoring()) or (specificationBackingBean.isQTStatusChecklistScoringRevision()) or (specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance() and !specificationBackingBean.managedBean.readOnly))}"
+					editable="#{(specificationBackingBean.isQTStatusChecklistScoring()) or (specificationBackingBean.isQTStatusChecklistScoringRevision()) or (specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance() and !specificationBackingBean.managedBean.readOnly)}"
 					templateSpecBean="#{specificationBackingBean.managedBean.templateSpecBean}" /> 	
 
 			</p:panel>
