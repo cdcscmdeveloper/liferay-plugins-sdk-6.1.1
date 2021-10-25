@@ -19,6 +19,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -15484,6 +15485,26 @@ public class SmApplicationBackingBean extends
 		return false;
 	}
 	//#12483 - END
+	
+	//12492 - START
+	public void CheckBankAccountInfoForm() {
+		HashSet<String> hsetAccountNo = new HashSet<String>();
+		HashSet<Long> hsetAccountName = new HashSet<Long>();
+		if (this.getManagedBean().getSmAppl().getSmSupplierBanks().size() > 0) {
+			for (SmSupplierBank bankName : this.getManagedBean().getSmAppl().getSmSupplierBanks()) {
+				if (bankName.getPmFinancialOrg().getFinancialOrgId() != null) {
+					hsetAccountName.add(bankName.getPmFinancialOrg().getFinancialOrgId());
+					hsetAccountNo.add(bankName.getAccountNo());
+				}
+			}
+		}
+		if (hsetAccountName.add(getManagedBean().getSelectedBank().getPmFinancialOrg().getFinancialOrgId()) == false) {
+			if (hsetAccountNo.add(getManagedBean().getSelectedBank().getAccountNo()) == false) {
+				RequestContext.getCurrentInstance().execute("bankDialogDuplicate.show()");
+			}
+		}
+	}
+	//12492 - END
 	
 	//30713 - Start
 	private SmWorkflowStatus rejectedApplExist(Long supplierId){
