@@ -4157,6 +4157,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			} 
 			String prefixName = scLoaReport.getTitle().replaceAll(
 					SourcingConstants.REG_EXP_WHITE_SPACE, "");
+			if (StringUtils.isNotBlank(scLoaReport.getTitle()) && scLoaReport.getTitle().contains(lampiranA3SubStr)) {//29007-start
+				prefixName=prefixName.replaceAll(SourcingConstants.REG_EXP_BACK_SLASH, "");
+			}//29007-End
 			scLoaReportAttachmentGenerated.setTempFileName(prefixName);
 			scAttachments.add(scLoaReportAttachmentGenerated);
 		}
