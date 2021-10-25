@@ -1712,6 +1712,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean resetBpkCurrentArea=false;
 	private String previousApprovalTabName;
 	private ScQtApprovalReqAttachement scQtApprovalReqAttachementHistory;
+	private boolean flagFileAttahmentDeleted=false;
 	//#25077 - End
 
 	//#11104-start
@@ -10661,6 +10662,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 		public void setScQtApprovalReqAttachementHistory(ScQtApprovalReqAttachement scQtApprovalReqAttachementHistory) {
 			this.scQtApprovalReqAttachementHistory = scQtApprovalReqAttachementHistory;
+		}
+		
+		public boolean isFlagFileAttahmentDeleted() {
+			return flagFileAttahmentDeleted;
+		}
+
+		public void setFlagFileAttahmentDeleted(boolean flagFileAttahmentDeleted) {
+			this.flagFileAttahmentDeleted = flagFileAttahmentDeleted;
 		}
 		//#25077 - End
 		
