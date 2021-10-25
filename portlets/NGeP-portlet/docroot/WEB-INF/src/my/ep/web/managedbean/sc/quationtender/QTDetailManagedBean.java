@@ -1722,6 +1722,12 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	// #15391 - end
 
+	//#1873 -start
+	private boolean technicalOtherCheckList;
+	private boolean technicalTemplateEdited;
+	private boolean fromSubmit;
+	//#1873 -end
+
 	//#25138-start
 	private List<TplSpecQuestion> specQuestionList;
 	// MenuModel
@@ -10723,6 +10729,30 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			this.committeeUpdateFlow = committeeUpdateFlow;
 		}
 		
+		public boolean isTechnicalOtherCheckList() {
+			return technicalOtherCheckList;
+		}
+
+		public void setTechnicalOtherCheckList(boolean technicalOtherCheckList) {
+			this.technicalOtherCheckList = technicalOtherCheckList;
+		}
+
+		public boolean isTechnicalTemplateEdited() {
+			return technicalTemplateEdited;
+		}
+
+		public void setTechnicalTemplateEdited(boolean technicalTemplateEdited) {
+			this.technicalTemplateEdited = technicalTemplateEdited;
+		}
+
+		public boolean isFromSubmit() {
+			return fromSubmit;
+		}
+
+		public void setFromSubmit(boolean fromSubmit) {
+			this.fromSubmit = fromSubmit;
+		}
+		
 		//#25138 - Reendorsed - start
 		public int getSpecZoneTabIndex() {
 			return specZoneTabIndex;
@@ -10897,4 +10927,5 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		}
 		//====#31913 bug related to #25138==== end
 }
+
 // ***25201
