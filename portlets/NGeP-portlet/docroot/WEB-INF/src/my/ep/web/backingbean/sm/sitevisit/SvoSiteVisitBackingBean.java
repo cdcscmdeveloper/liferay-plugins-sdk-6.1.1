@@ -2390,9 +2390,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				//#30504 Re-open end
 			}
 			//28775 - Site Visit Grouping Enhancement - 28775 - start
-			String paramCode = svTask.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
-			reqDTO.setUpdateSmAppl(paramCode.equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING)||
+			if(svTask.getPmCategoryL3() != null){
+				String paramCode = svTask.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
+				reqDTO.setUpdateSmAppl(paramCode.equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING)||
 						paramCode.equals(SupplierManagementConst.CAT_TYPE_TRAVEL));
+			}
 			//28775 - Site Visit Grouping Enhancement - 28775 - end
 
 			reqDTO.setSmSvTask(svTask);
