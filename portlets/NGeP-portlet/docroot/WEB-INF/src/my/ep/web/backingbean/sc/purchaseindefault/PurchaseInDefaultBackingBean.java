@@ -2952,6 +2952,8 @@ public class PurchaseInDefaultBackingBean extends
 	//#31603 - start
 	private void finaliseEditableRemark(ScPurchaseInDefault scPurchaseInDefault) {
 		List<ScPIDRemark> scRemarks =  scPurchaseInDefault.getRemarks();
+		Long statusId = getManagedBean().getPidStatus().getStatusId();
+
 		if (scRemarks.size() > 0) {
 			for (int row = 0; row < scRemarks.size(); row++) {
 				ScRemark scRemark = scRemarks.get(row);
@@ -2960,6 +2962,8 @@ public class PurchaseInDefaultBackingBean extends
 					scRemark.setEditable(true);
 				if (compareUsrName(scRemark.getCreatedUser().getLoginId())
 						&& !isDiffWithPrevWorkFlowSts(scPurchaseInDefault.getCurrentStatus(), scRemark))
+					scRemark.setEditable(true);
+				if (DPStatusConstants.PID_PENDING_SUBMISSION.equals(statusId))
 					scRemark.setEditable(true);
 				else
 					scRemark.setEditable(false);
