@@ -2957,6 +2957,8 @@ public class PurchaseInDefaultBackingBean extends
 		if (scRemarks.size() > 0) {
 			for (int row = 0; row < scRemarks.size(); row++) {
 				ScRemark scRemark = scRemarks.get(row);
+				
+				scRemark.setEditable(false);
 
 				if (scRemark.getRemarkId() == null || scRemark.getRemarkId().toString() == "")
 					scRemark.setEditable(true);
@@ -2965,8 +2967,6 @@ public class PurchaseInDefaultBackingBean extends
 					scRemark.setEditable(true);
 				if (DPStatusConstants.PID_PENDING_SUBMISSION.equals(statusId))
 					scRemark.setEditable(true);
-				else
-					scRemark.setEditable(false);
 			}
 		}
 	}
