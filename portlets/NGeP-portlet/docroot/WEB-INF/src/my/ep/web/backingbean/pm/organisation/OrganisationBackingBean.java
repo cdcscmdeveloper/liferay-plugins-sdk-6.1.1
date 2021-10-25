@@ -1062,6 +1062,12 @@ public class OrganisationBackingBean extends
 				addressType.setPmOrgProfile(orgProfile);
 				orgProfile.setPmAddressTypes(pmAddressTypes);
 				orgValidity.setPmOrgProfile(orgProfile);
+				
+				//start #3790 assign new code
+				if(this.getManagedBean().getOrgCategory() == OTHERS)
+					orgValidity.setOrgCode(generateOrgCode(this.getManagedBean()));
+				//end #3790
+				
 				orgProfile.setPmOrgValidity(orgValidity);
 			}
 			//#30651 - start
@@ -1265,7 +1271,8 @@ public class OrganisationBackingBean extends
 
 	private void validateOrgProfile(PmOrgProfile orgProfile) {
 
-		if (StringUtils.isBlank(orgProfile.getPmOrgValidity().getOrgCode())) {
+		if (StringUtils.isBlank(orgProfile.getPmOrgValidity().getOrgCode())
+				&& this.getManagedBean().getOrgCategory() == FEDERAL_GOVT) {
 			throw new EpException(MessageConst.ERROR_775105);
 		}
 		if (StringUtils.isBlank(orgProfile.getPmOrgValidity().getOrgName())) {
@@ -1378,6 +1385,8 @@ public class OrganisationBackingBean extends
 				addressType.setPmAddress(pmAddress);
 				personnel.getPmUser().setAddressTypeC(addressType);
 			}
+			
+			pmAddress.setChangedBy(userLoginId.getUserId());
 		}
 
 		return addressEntered;
@@ -1444,6 +1453,8 @@ public class OrganisationBackingBean extends
 			if (StringUtils.isBlank(deliverAddress.getPhoneNo())) {
 				throw new EpException(MessageConst.ERROR_775129);
 			}
+			
+			deliverAddress.setChangedBy(userLoginId.getUserId());
 
 		}
 
@@ -3328,10 +3339,7 @@ public class OrganisationBackingBean extends
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		reqDTO.setOrgProfileId(this.getManagedBean().getOrgProfile().getOrgProfileId());
 		reqDTO.setFetchGovtSeller(true);
-		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
-				.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IOrgProfileSO.class);
+		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
 
 		OrgProfileResDTO orgResDTO = orgProfileSO.retrieveOrgDetailsByOrgId(reqDTO);
 		PmOrgProfile orgProfile = orgResDTO.getPmOrgProfile();
@@ -3346,43 +3354,28 @@ public class OrganisationBackingBean extends
 			 * this.getManagedBean().setSmSupplierBanks(
 			 * orgProfile.getSmSupplier().getSmAppl().getSmSupplierBanks());
 			 */
-			if (orgProfile.getSmSupplier().getSmAppl().getSmSupplierBanks() != null
-					&& !orgProfile.getSmSupplier().getSmAppl()
-							.getSmSupplierBanks().isEmpty()) {
-				this.getManagedBean().setSmSupplierBanks(
-						new ArrayList<SmSupplierBank>());
-				for (SmSupplierBank supplierBank : orgProfile.getSmSupplier()
-						.getSmAppl().getSmSupplierBanks()) {
-					if (supplierBank.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
-							|| supplierBank.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
-						this.getManagedBean().getSmSupplierBanks()
-								.add(supplierBank);
+			if (orgProfile.getSmSupplier().getSmAppl().getSmSupplierBanks() != null && !orgProfile.getSmSupplier().getSmAppl().getSmSupplierBanks().isEmpty()) {
+				this.getManagedBean().setSmSupplierBanks(new ArrayList<SmSupplierBank>());
+				for (SmSupplierBank supplierBank : orgProfile.getSmSupplier().getSmAppl().getSmSupplierBanks()) {
+					if (supplierBank.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE || supplierBank.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+						this.getManagedBean().getSmSupplierBanks().add(supplierBank);
 
 					}
 				}
 			}
 
-			log.info("Supplier Bank-----> "
-					+ orgProfile.getSmSupplier().getSmAppl()
-							.getSmSupplierBanks().size());
-			if (orgProfile.getSmSupplier().getSmAppl().getSmPersonnels() != null
-					&& !orgProfile.getSmSupplier().getSmAppl()
-							.getSmPersonnels().isEmpty()) {
-				this.getManagedBean().setSmPersonnels(
-						new ArrayList<SmPersonnel>());
-				for (SmPersonnel personnel : orgProfile.getSmSupplier()
-						.getSmAppl().getSmPersonnels()) {
-					if (personnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
-							|| personnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+			log.info("Supplier Bank-----> "+ orgProfile.getSmSupplier().getSmAppl().getSmSupplierBanks().size());
+			if (orgProfile.getSmSupplier().getSmAppl().getSmPersonnels() != null && !orgProfile.getSmSupplier().getSmAppl().getSmPersonnels().isEmpty()) {
+				this.getManagedBean().setSmPersonnels(new ArrayList<SmPersonnel>());
+				
+				for (SmPersonnel personnel : orgProfile.getSmSupplier().getSmAppl().getSmPersonnels()) {
+					if (personnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE || personnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
 						this.getManagedBean().getSmPersonnels().add(personnel);
-
 					}
 				}
 			}
 			// this.getManagedBean().setSmPersonnels(orgProfile.getSmSupplier().getSmAppl().getSmPersonnels());
-			log.info("Supplier Users ---->"
-					+ orgProfile.getSmSupplier().getSmAppl().getSmPersonnels()
-							.size());
+			log.info("Supplier Users ---->" + orgProfile.getSmSupplier().getSmAppl().getSmPersonnels().size());
 
 			// if(orgProfile.getSmSupplier().getSmGstSuppliers() != null
 			// && !orgProfile.getSmSupplier().getSmGstSuppliers().isEmpty()){
@@ -3414,18 +3407,12 @@ public class OrganisationBackingBean extends
 			// harris
 			ISupplierSstSO supplierSstSO = null;
 			try {
-				supplierSstSO = (ISupplierSstSO) BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-								ISupplierSstSO.class);
+				supplierSstSO = (ISupplierSstSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSstSO.class);
 				SupplierSstReqDTO sstReqDTO = new SupplierSstReqDTO();
-				sstReqDTO.setSupplierId(orgProfile.getSmSupplier()
-						.getSupplierId());
-				SupplierSstResDTO sstResDTO = supplierSstSO
-						.retrieveSstInfoBySupplierIdAndBranchCode(sstReqDTO);
-				if (sstResDTO.isSuccessful()
-						&& sstResDTO.getSmSstSupplier() != null) {
-					getManagedBean().setSstSupplier(
-							sstResDTO.getSmSstSupplier());
+				sstReqDTO.setSupplierId(orgProfile.getSmSupplier().getSupplierId());
+				SupplierSstResDTO sstResDTO = supplierSstSO.retrieveSstInfoBySupplierIdAndBranchCode(sstReqDTO);
+				if (sstResDTO.isSuccessful() && sstResDTO.getSmSstSupplier() != null) {
+					getManagedBean().setSstSupplier(sstResDTO.getSmSstSupplier());
 				}
 
 			} finally {
@@ -3932,5 +3919,47 @@ public class OrganisationBackingBean extends
 		}
 	}
 	//20201105@Jacky - Enhancement#28836 - End
-
+	
+	//START #3790
+	public String generateOrgCode(OrganisationManagedBean mb){
+		String newOrgCode = "";
+		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
+		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IStateSO.class);
+		Long orgType = PmCommonUtil.retrievePmParameter(ParameterTypeConst.ORGANISATION_TYPES, mb.getOrgType()).getParameterId();
+		if(mb.getOrgType().equalsIgnoreCase(OrganizationType.STATE_GOVERNMENT.value())){
+			newOrgCode = orgProfileSO.generateOrgCode(ProfileManagementConst.ORGCODE_SG,3,5,3,orgType); //code,from,to,digit,type
+		}
+		else if(mb.getOrgType().equalsIgnoreCase(OrganizationType.STATUTORY_BODIES.value())){
+			newOrgCode = orgProfileSO.generateOrgCode(ProfileManagementConst.ORGCODE_FSB,3,5,3,orgType);//code,from,to,digit,type
+		}
+		else if(mb.getOrgType().equalsIgnoreCase(OrganizationType.STATUTORY_BODIES_STATE.value())){
+			StateReqDTO reqstate = new StateReqDTO();
+			reqstate.setStateId(mb.getSelectedStateId());
+			StateResDTO res = stateSO.retriveStateByID(reqstate);
+			newOrgCode = orgProfileSO.generateOrgCode(res.getPmState().getStateCode(),3,4,2,orgType);//code,from,to,digit,type
+		}
+		else if( mb.getOrgType().equalsIgnoreCase(OrganizationType.LOCAL_AUTHORITY.value())){
+			StateReqDTO reqstate = new StateReqDTO();
+			reqstate.setStateId(mb.getSelectedStateId());
+			StateResDTO res = stateSO.retriveStateByID(reqstate);
+			if(res.getPmState().getStateCode().equalsIgnoreCase(ProfileManagementConst.STATE_CODE_SABAH)
+					|| res.getPmState().getStateCode().equalsIgnoreCase(ProfileManagementConst.STATE_CODE_LABUAN))
+				newOrgCode = orgProfileSO.generateOrgCode(ProfileManagementConst.ORGCODE_LATSBH,4,6,3,orgType); //code,from,to,digit,type
+			else if(res.getPmState().getStateCode().equalsIgnoreCase(ProfileManagementConst.STATE_CODE_SARAWAK)){
+				newOrgCode = orgProfileSO.generateOrgCode(ProfileManagementConst.ORGCODE_LATSRWK,4,6,3,orgType); //code,from,to,digit,type
+			}else{
+				newOrgCode = orgProfileSO.generateOrgCode(ProfileManagementConst.ORGCODE_LATPENI,4,6,3,orgType); //code,from,to,digit,type
+			}
+		}
+		else if(mb.getOrgType().equalsIgnoreCase(OrganizationType.GOVERNMENT_LINK_COMPANIES.value())){
+			newOrgCode = orgProfileSO.generateOrgCode(ProfileManagementConst.ORGCODE_GLC,3,5,3,orgType);//code,from,to,digit,type
+		}
+		else if(mb.getOrgType().equalsIgnoreCase(OrganizationType.OTHERS.value())){
+			newOrgCode = orgProfileSO.generateOrgCode(ProfileManagementConst.ORGCODE_OTH,4,5,2,orgType);//code,from,to,digit,type
+		}
+		
+		return newOrgCode;
+	}
+	//END #3790
+	
 }

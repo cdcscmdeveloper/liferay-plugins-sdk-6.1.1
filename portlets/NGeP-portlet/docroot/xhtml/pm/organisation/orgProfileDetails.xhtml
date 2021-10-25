@@ -25,7 +25,7 @@
 						<f:selectItem itemLabel="#{lbl['lbl.pm.org.others']}" itemValue="#{organisationBackingBean.others}"/>
 						<p:ajax process="@this" 
 							onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
-							event="change" partialSubmit="true" update="orgtypeId" />
+							event="change" partialSubmit="true" update="orgtypeId,orgproflieId" /> <!-- #3790 add new update id-->
 					</p:selectOneRadio></td>			
 			</tr>
 			<tr>
@@ -84,15 +84,23 @@
 		id="orgproflieId" styleClass="sampleDetails" toggleable="true">
 		<table width="100%">
 			<tr>
-				<td><p:outputLabel
-						value="#{lbl['lbl.pm.organisation.orgCode']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>				
-						<td><p:inputText id="orgCode" disabled="#{!organisationBackingBean.managedBean.orgProfile.brandNew}"
-								label="#{lbl['lbl.pm.organisation.orgCode']}" size="35"
-								styleClass="ppDisplayTextL"
-								value="#{organisationBackingBean.managedBean.orgProfile.pmOrgValidity.orgCode}"
-								maxlength="20" required="#{!empty param['disableValidation']}" /></td>
-						<td><p:message id="orgCodeMsg" for="orgCode" display="icon" /></td>	
+				<td>
+				<!-- start #3790 -->
+					<p:outputLabel value="#{lbl['lbl.pm.organisation.orgCode']}"/> 
+					<p:outputLabel value="*" styleClass="mandatory" rendered="#{organisationBackingBean.managedBean.orgCategory ne organisationBackingBean.others}" />
+				</td>
+				<!-- 12852 Start -->
+				<td>
+					<p:inputText id="orgCode" label="#{lbl['lbl.pm.organisation.orgCode']}" size="22"
+						disabled="#{!organisationBackingBean.managedBean.orgProfile.brandNew or organisationBackingBean.managedBean.orgCategory eq organisationBackingBean.others}"
+						style="width:22%"
+						value="#{organisationBackingBean.managedBean.orgProfile.pmOrgValidity.orgCode}"
+						maxlength="20" required="#{!empty param['disableValidation'] or organisationBackingBean.managedBean.orgCategory ne organisationBackingBean.others}" /></td>
+				<!-- 12852 End -->
+				<td>
+				<p:message id="orgCodeMsg" for="orgCode" display="icon" /></td>
+				<!-- end #3790 -->
+		
 				<ui:remove>				
 					<ui:fragment
 						rendered="#{ParameterConst.orgTypePtj eq organisationBackingBean.managedBean.orgType and not organisationBackingBean.isGroupOrg()}">
