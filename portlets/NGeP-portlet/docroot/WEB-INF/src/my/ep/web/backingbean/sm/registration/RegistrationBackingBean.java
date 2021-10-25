@@ -1229,6 +1229,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			smSupp.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).setSmAddress(smAddress);
 		}
 		smSupp.setEstablishDate(smSupp.getSmAppl().getSmCompanyBasic().getEstablishDate());
+		getManagedBean().setSmSupp(smSupp);  //#30964
 		
 		// #27691 - Start- For supplier owner with record status 9 or 0
 		if(!this.getManagedBean().getSupplierOwnerls().isEmpty()){

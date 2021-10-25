@@ -329,21 +329,22 @@
 				</td>
 				<td class="tdContent">
 				<p:outputPanel id="divisionDropdownPanelId">
-					<ui:fragment rendered="#{registrationBackingBean.managedBean.smBusinessAdd.pmState.adoptDivision}">
+					<!-- <ui:fragment rendered="#{registrationBackingBean.managedBean.smBusinessAdd.pmState.adoptDivision}"> -->
 						<p:selectOneMenu id="busDivision"
 						label="#{lbl['lbl.sm.division']}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.pmDivision.divisionId}"
+						rendered="#{registrationBackingBean.managedBean.smBusinessAdd.pmState.adoptDivision}"
 						style="width:80%">
 						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 						<f:selectItems var="division"
 							value="#{registrationBackingBean.managedBean.businessDivisionLs}"
 							itemValue="#{division.divisionId}"
 							itemLabel="#{division.divisionName}" />
-						<p:ajax event="change" process="@this" partialSubmit="true"
+						<p:ajax event="change" process="@this" 
 							listener="#{registrationBackingBean.populateDivisionByAddType('business', true)}"
 							update="divisionDropdownPanelId,busDistrict,busCity,:form:acgmap:gmapInput:gmapInput,localAuthLabelOutPanelId,localAuthInputOutPanelId" />
 					</p:selectOneMenu>
-					</ui:fragment>
+			<!-- 		</ui:fragment> -->
 				</p:outputPanel>
 				</td>
 			</tr>
