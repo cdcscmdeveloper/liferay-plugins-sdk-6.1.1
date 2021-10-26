@@ -35,13 +35,6 @@
 				</td>
 			</tr>
 		</table>
-		<p:spacer width="1" />
-		<p:panel width="700px" height="350px" rendered="#{ctBackingBean.isContractExtend() and ctBackingBean.managedBean.ctContractAmount.bondReq}">
-	   	<h:panelGrid columns="1">
-	    <p:outputLabel value="#{lbl['lbl.ct.bond.spl.alert']}" 
-	   	position = "left" styleClass="red_font" />
-	   	</h:panelGrid>
-	   	</p:panel>
 	</div>
 	<br/>
 </ui:composition>
