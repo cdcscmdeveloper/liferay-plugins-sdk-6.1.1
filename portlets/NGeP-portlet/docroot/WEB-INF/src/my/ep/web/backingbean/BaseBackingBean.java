@@ -71,7 +71,6 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constant.sc.QTStatusConst;
 import my.ep.constants.BpmConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -83,7 +82,6 @@ import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
 import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
-import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.exception.EpException;
@@ -133,10 +131,6 @@ import my.ep.web.exceptionhandler.EpExceptionHandler;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.UserTasks;
 import my.ep.web.managedbean.sm.postsupplierregistration.PostSupplierRegistrationManagedBean;
-import my.ep.web.managedbean.sm.SmApplicationManagedBean;
-import my.ep.web.managedbean.sm.applicationView.ViewApplHistoryManagedBean;
-import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
-import my.ep.web.managedbean.sm.registration.RegistrationManagedBean;
 import my.ep.web.util.AddressUtils;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.EpPortletUtil;
@@ -298,7 +292,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 			log.info("managedBean:" + managedBean);
 		}
-
+//		
+//		//20210721@fadhli - #31062 Added user activity logging similar to the one added in FacesScopes - Start
+//		UserActivityUtil.getInstance().logUserActivity(this.getClass().getName() + "#getManagedBean()");
+//		//20210721@fadhli - #31062 Added user activity logging similar to the one added in FacesScopes - End
+//		
 		return managedBean;
 
 	}
@@ -2305,13 +2303,16 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	protected <BPM_DATA_TYPE> BPM_DATA_TYPE getBpmTaskDetails(
 			Class<BPM_DATA_TYPE> clazz, String[] additionalButtons, String theTaskId, String theLoginId) {
 		String taskId = null;
+		String taskIdPair = null;// #31422-basri 190821
 		FacesScopes facesScopes = new FacesScopes();
 		if(StringUtils.isBlank(theTaskId)){			
 			HttpServletRequest servletRequest = PortalUtil
 					.getHttpServletRequest(facesScopes.getRequest());
 			HttpServletRequest originalServletRequest = PortalUtil
 					.getOriginalServletRequest(servletRequest);
+		
 			taskId = originalServletRequest.getParameter("taskId");
+			taskIdPair = originalServletRequest.getParameter("taskIdPair");	// #31422-basri 190821
 		}
 		else{
 			taskId = theTaskId;
@@ -2354,6 +2355,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				}
 				bb.getManagedBean().setClaim(claim);
 				bb.getManagedBean().setTaskId(taskId);
+				bb.getManagedBean().setTaskIdPair(taskIdPair); //#31422-basri 190821
 				bb.getManagedBean().setGroupTask(true);
 			} else {
 				log.info("====groupTask null===" + resDTO.isGroupTask());
@@ -2894,6 +2896,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				if(!personnel.isClerical() && !personnel.isHigherManagement() && !personnel.isManagement()){
 					this.getManagedBean().getPersonnelsRole().clear();
 					this.getManagedBean().setCheckRoleSSM(false);
+					this.getManagedBean().setDowngradeRole(false); //#29956
 					throw new EpException(MessageConst.ERROR_722535); 
 				}else{
 					//27951
@@ -2925,10 +2928,18 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 	}
 
-	//SSM CHANGES #27201
+	//SSM CHANGES #27201	
 	public SmPersonnel setDesignationSSM(SmPersonnel personnel){
-		if(personnel.getDesignation() != null){
-			String designation = populateDesignationSSM(personnel.getDesignation());
+		//Start #27346
+		if(personnel.getDesignation() != null || personnel.getSsmPosition() != null){
+			String position = "";
+			if(personnel.getDesignation() != null && !"".equalsIgnoreCase(personnel.getDesignation())){
+				position = personnel.getDesignation();
+			}else if(personnel.getSsmPosition() != null && !"".equalsIgnoreCase(personnel.getSsmPosition())){
+				position = personnel.getSsmPosition();
+			}
+			String designation = populateDesignationSSM(position);
+		//End #27346
 			if(personnel.isSsmData()){
 				if(personnel.isEquityOwner()){
 					personnel.setDesignation(designation);
@@ -2985,18 +2996,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		if(smPersonnelSSm.isClerical()){
 			smPersonnelSSm.setHigherManagement(false);
 			smPersonnelSSm.setManagement(false);
-			//start #29956
-		}else if(smPersonnelSSm.isHigherManagement()){
-			smPersonnelSSm.setClerical(false);
-			smPersonnelSSm.setManagement(false);
-		}else if(smPersonnelSSm.isManagement()){
-			smPersonnelSSm.setClerical(false);
-			smPersonnelSSm.setHigherManagement(false);
-			//end #29956
 		}else{
 			smPersonnelSSm.setClerical(false);
 		}
-		
 	}
 	
 	
@@ -3702,6 +3704,42 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return result;
 	}
 	//29380  - Site Visit Grouping Enhancement -28775 - End
+	
+	//#29594 - START
+	public String retrieveMinistryCodeNameByOrgProfileId(Long orgProfileId) {
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfileId);
+		PmOrgProfile orgProfile = profileSO.retrieveMinistryByOrgProfileId(
+				reqDTO).getPmOrgProfile();
+		if (orgProfile != null) {
+			return orgProfile.getOrgCode().concat(" - ").concat(orgProfile.getOrgName());
+		} else {
+			log.info("Ministry not found : " + orgProfileId);
+			return "";
+		}
+	}
+	
+	public String retrieveJabatanCodeNameByOrgProfileId(Long orgProfileId) {
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfileId);
+		OrgProfileResDTO resDTO = new OrgProfileResDTO();
+		resDTO = profileSO.retrieveJabatanByOrgProfileId(reqDTO);
+		String jabatan = "";
+		if (resDTO.getPmOrgProfile() != null) {
+			jabatan = resDTO.getPmOrgProfile().getOrgCode().concat(" - ").concat(resDTO.getPmOrgProfile().getOrgName());
+		}
+		return jabatan;
+	}
+	//#29594 - END
+	
 	//Enhancement 29418 -start
 
 	/**
