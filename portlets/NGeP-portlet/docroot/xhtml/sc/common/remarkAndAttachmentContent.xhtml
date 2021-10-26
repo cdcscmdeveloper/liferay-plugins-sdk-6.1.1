@@ -95,8 +95,8 @@
 											</tr>
 											<tr>
 												<td>
-													<h:commandLink value="#{scAttachment.fileName}"
-														styleClass="blue_font" immediate="true"
+													<p:commandLink value="#{scAttachment.fileName}"
+														styleClass="blue_font" immediate="false"
 														action="#{scRemarkAndAttachmentBackingBean.downloadFile(scAttachment)}" />
 													<p:commandLink process="@this" partialSubmit="true"
 														oncomplete="delAttPopup.show();"
