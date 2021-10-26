@@ -68,7 +68,7 @@
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.ct.ref.no']}"  styleClass="required"/>
 				</f:facet>
-				<p:inputText id="bondRefNoId" value="#{varBond.refNo}" maxlength="50" style="width:95%;" 
+				<p:inputText id="bondRefNoId" value="#{varBond.refNo}" maxlength="50" style="width:95%;" disabled="true"
 					rendered="#{!ctBackingBean.managedBean.viewContract
 					and ctBackingBean.managedBean.ctContractAmount.bondReq}">
 					<p:ajax  process="@this"></p:ajax>
@@ -83,8 +83,8 @@
 				        <h:outputText value="#{lbl['lbl.ct.financial.inst']}"  styleClass="required"/>
 				</f:facet>
 				
-				<p:selectOneMenu id="orgName"  value="#{varBond.financialOrg.financialOrgId}"
-				    style="width:264px;" rendered="#{!ctBackingBean.managedBean.viewContract
+				<p:selectOneMenu id="orgName"  value="#{varBond.financialOrg.financialOrgId}" disabled="true"
+				    style="width:95%;" rendered="#{!ctBackingBean.managedBean.viewContract
 				    and ctBackingBean.managedBean.ctContractAmount.bondReq}" >
 					   <f:selectItems value="#{ctBackingBean.retrieveFinancialOrgList()}" />
 					   <p:ajax  process="@this"></p:ajax>
@@ -96,8 +96,8 @@
 			</p:column>
 			<!-- #30479 end -->
 					
-			<p:column style="width:12%;" headerText="#{lbl['lbl.ct.amount']}" styleClass="column-align-center" >
-				<p:inputText value="#{varBond.bondAmount}" styleClass="ppRightBtn" maxlength="18" 
+			<p:column style="width:12%;" headerText="#{lbl['lbl.ct.amount']}" styleClass="column-align-center">
+				<p:inputText value="#{varBond.bondAmount}" styleClass="ppRightBtn" maxlength="18" disabled="true"
 				    rendered="#{!ctBackingBean.managedBean.viewContract
 				    and ctBackingBean.managedBean.ctContractAmount.bondReq}" style="width:90px;" label="#{lbl['lbl.ct.amount']}">
 					<f:convertNumber
@@ -117,7 +117,7 @@
 				        <h:outputText value="#{lbl['lbl.ct.effective.date']}"  styleClass="required"/>
 				</f:facet>
 				
-				<p:calendar id="popupButtonCal4" value="#{varBond.effDate}"  styleClass="calendarDateField" size="9" 
+				<p:calendar id="popupButtonCal4" value="#{varBond.effDate}"  styleClass="calendarDateField" size="9" disabled="true"
 					rendered="#{!ctBackingBean.managedBean.viewContract and ctBackingBean.managedBean.ctContractAmount.bondReq}"
 					showOn="button" readonlyInput="true" navigator="true"
 					mindate="#{ctBackingBean.managedBean.contractVer.ctContractValue.effDate}"
@@ -200,7 +200,8 @@
 	
 	  
 	<p:panel id="bondDetails" toggleable="true" 
-				  rendered="#{ctBackingBean.isPendingSupplementalContractLetter()}" toggleSpeed="500">
+				  rendered="#{ctBackingBean.isPendingSupplementalContractLetter() and ctBackingBean.managedBean.contractVer.ctContract.loa.bondReq 
+				  and !ctBackingBean.managedBean.contractVer.ctContractAmount.bondExempted}" toggleSpeed="500">
 			<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.ct.panel.supplemental.bond']}"/>
 			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.supplemental.bond.dtls']}"/>
@@ -210,14 +211,14 @@
 			<h:panelGrid columns="3">
 				<p:inputText style="width:120px;" disabled="true" styleClass="ppRightBtn"
 					value="#{(ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend)
-						? amendmentBackingBean.calculateNewContractPeriod(true) : lbl['lbl.txt.na']}" />
+						? amendmentBackingBean.calculateNewContractPeriod(true) : ctBackingBean.calculateBondPeriod()}" />
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.months']}" />
 			</h:panelGrid>
 			<p:outputLabel value="#{lbl['lbl.ct.new.overall.contract.amt']}" />
 			<p:inputText disabled="true" style="width:200px;" styleClass="ppRightBtn"
 			    value="#{(ctBackingBean.managedBean.contractVer.ctAmendment.valueChange) 
-			    	? amendmentBackingBean.newOverallContractAmount() : lbl['lbl.txt.na']}"  >
+			    	? amendmentBackingBean.newOverallContractAmount() : ctBackingBean.managedBean.contractVer.ctContract.loa.loaAmt}"  >
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />			
 			</p:inputText>
 			<p:outputLabel value="#{lbl['lbl.ct.pb.percentage']}" />
@@ -236,15 +237,16 @@
 			<p:inputTextarea autoResize="false" disabled="true" rows="4" 
 				style="width:200px;margin-bottom:5px;"
 				rendered="#{ctBackingBean.managedBean.contractVer.ctContract.loa.bondAmt != null }"
-			   	value="#{amendmentBackingBean.getBondAmountInText()}" />
-		<p:spacer width="2" />	   	
-		<p:panel rendered="#{ctBackingBean.isContractExtend()}" width="700px" height="350px">
+			   	value="#{ctBackingBean.getBondAmountInText()}" />
+		<p:spacer width="2" />
+		<!--     	
+		<p:panel rendered="#{ctBackingBean.isContractExtendOrIsBond()}" width="700px" height="350px">
 	   	<h:panelGrid columns="1">
 	    <p:outputLabel value="#{lbl['lbl.ct.bond.spl.alert']}" 
 	   	position = "left" styleClass="red_font" />
 	   	</h:panelGrid>
 	   	</p:panel>
-			   	
+			-->	   	
 			<p:confirmDialog widgetVar="bonSignerConfirmPopupWin"
 			id="bonSignerConfirmPopup" width="500px"
 			message="#{lbl['lbl.sc.gst.signers.alert.msg']}">

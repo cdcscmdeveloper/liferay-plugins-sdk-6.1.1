@@ -609,7 +609,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				
 				if(ctBackingBean.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT)){
 					log.info("contract param from amendmentbackingbean :: "+ctBackingBean.getManagedBean().getContractVer().getDocType());
-				    CheckandResetBondExempted();
+					checkandResetBondExempted();
 				  }
 				//End Fix- #29368 / #30856
 				return;
@@ -2894,7 +2894,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 								getManagedBean().setSelectedTabIndex(index + 2);
 							}
 						}
-				//#31361,#24333 - End				
+				//#31361, #24333 - End				
 								
 				if ((getManagedBean().isSignUpdateDecision() || getManagedBean().isSignOffDecision()) 
 						&& outputValue.equalsIgnoreCase("DCN")) {
@@ -3340,7 +3340,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		return ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount().add(
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount());
 	}
-
+    
 	/**
 	 * The method used to retrieve the new overall contract amount
 	 * with addition of new contract amount and new gst amount amount.
@@ -3392,20 +3392,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * 
 	 * @return new bond amount in text format.
 	 */
+	/** Remove Code #24333
 	public String getBondAmountInText() {
-		//Locale locale = null;
+		Locale locale = null;
 		String lang = new FacesScopes().getUserLocale().getLanguage();
 		if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() == null
 				|| ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt().doubleValue() == 0) {
 			return "";
 		}
 		if (lang.equalsIgnoreCase(ReportConst.ENG_LANGUAGE_CODE)) {
-			//locale = new Locale(lang, ReportConst.ENG_COUNTRY_CODE);
+			locale = new Locale(lang, ReportConst.ENG_COUNTRY_CODE);
 			DecimalFormat df = new DecimalFormat("#.00");		
 			return NumberWordUtilEn.convert(df.format(
 					ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt()));
 		} else if (lang.equalsIgnoreCase(ReportConst.MALAY_LANGUAGE_CODE)) {
-			//locale = new Locale(lang, ReportConst.MALAYSIA_COUNTRY_CODE);
+			locale = new Locale(lang, ReportConst.MALAYSIA_COUNTRY_CODE);
 			DecimalFormat df = new DecimalFormat("#.00");
 			return NumberWordUtil.convert(df.format(
 					ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt()));
@@ -3413,7 +3414,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			return "";
 		}
 	}
-
+ */
 	/**
 	 * The method used to indicate the label 
 	 * flag for new price of product or service item.
@@ -7331,7 +7332,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		 * set bondExempted false if no attachment/letter for bond_exemption
 		 * otherwise true
 		 */
-		public void CheckandResetBondExempted(){
+		public void checkandResetBondExempted(){
 			
 			if(ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq() && ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()){
 				if(ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getBondExemptedFileName() == null && ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getBondExemptedFilePath() == null){
