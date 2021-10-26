@@ -10,20 +10,61 @@
 		rendered="#{ctBackingBean.managedBean.contractVer.ctContractAmount.bondReq 
 			and !ctBackingBean.managedBean.directPurchase
 			and !ctBackingBean.managedBean.contractVer.ctContractAmount.bondExempted}" >
-        <f:facet name="header">
+		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.ct.panel.performance.bond']}"/>
-	        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.performance.bond.dtls']}"/>
-	  	</f:facet>	  	
+			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.performance.bond.dtls']}"/>
+	   	</f:facet>
+	   		<f:verbatim />
+			 <h:commandLink value="#{lbl['lbl.ct.sample.bond.letter']}" style="float:left;"
+				styleClass="blue_font"
+				action="#{amendmentBackingBean.downloadSampleBondLetter()}">
+			</h:commandLink>
+	   	<p:spacer width="2" />
 	   	<h:panelGrid columns="2">
-		  	<p:outputLabel id="bondAmount" value="#{lbl['lbl.ct.pb.amount']}" />
-			<p:inputText for="bondAmount" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
-	  				value="#{ctBackingBean.managedBean.ctContractAmount.totalBondAmt}"  disabled="true">
-	   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+	   		<p:outputLabel id="contractPeriodBondId" value="#{lbl['lbl.ct.bond.contractperiod']}" />
+			<p:inputText for="contractPeriodBondId" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
+	  			value="#{ctBackingBean.calculateBondPeriod()}"  disabled="true">
+		 	</p:inputText>
+			
+			<p:outputLabel id="overallContractAmountBondId" value="#{lbl['lbl.ct.bond.overallamount']}" />
+			<p:inputText for="overallContractAmountBondId" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
+	  			value="#{ctBackingBean.managedBean.contractVer.ctContract.loa.loaAmt}"  disabled="true">
+		 		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</p:inputText>
+	   	
+	   		<p:outputLabel id="bondPercentageBondId" value="#{lbl['lbl.ct.bond.bondpercentage']}" />
+			<p:inputText for="bondPercentageBondId" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
+	  			value="#{ctBackingBean.managedBean.contractVer.ctContract.loa.bondPercentage}"  disabled="true">
+		 		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			</p:inputText>
+			
+			<p:outputLabel id="bondAmountBondId" value="#{lbl['lbl.ct.bond.bondamount']}" />
+			<p:inputText for="bondAmountBondId" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
+	  			value="#{ctBackingBean.managedBean.contractVer.ctContract.loa.bondAmt}"  disabled="true">
+		 		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			</p:inputText>
+			<p:outputLabel />
+			<p:inputTextarea autoResize="false" disabled="true" rows="4" 
+				style="width:200px;margin-bottom:5px;"
+			   	value="#{ctBackingBean.getBondAmountInText()}" />
 		</h:panelGrid>
+		
+		<p:spacer width="1" />	
         <p:dataTable  id="tableBond" var="varBond" 
            value="#{ctBackingBean.managedBean.contractVer.ctContractAmount.ctPerformanceBonds}"> 
 	      <ac:paginator for="tableBond" />
+	      			<p:column style="width:2%;"  rendered="#{!ctBackingBean.managedBean.viewContract
+				and ctBackingBean.managedBean.ctContractAmount.bondReq}">
+				<f:facet name="header">
+					<p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.selectAll}">
+					<p:ajax partialSubmit="true" process="@this"
+						update=":form:tableBond" listener="#{ctBackingBean.selectAllBond}" />
+					</p:selectBooleanCheckbox>
+				</f:facet>
+				<p:selectBooleanCheckbox value="#{varBond.selectedCheckBox}" styleClass="myCustomChekBox">
+					<p:ajax event="change"  update="@this, :form:tableBond" listener="#{ctBackingBean.selectOnePerformanceCheckboxSelect}" />
+				</p:selectBooleanCheckbox>
+			</p:column> 
          
             <p:column headerText="#{lbl['lbl.ct.ref.no']}"   style="width:10%;" styleClass="column-align-center">
                 <p:inputText value="#{varBond.refNo}" style="width:70px;" disabled="true"/>
