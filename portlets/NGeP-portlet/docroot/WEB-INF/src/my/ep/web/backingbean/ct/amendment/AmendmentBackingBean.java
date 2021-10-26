@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013 Archisoft. All rights reserved.
+' * Copyright © 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.ct.amendment;
 
@@ -12,6 +12,7 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,6 +22,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
@@ -80,6 +82,7 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
+import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
@@ -135,12 +138,14 @@ import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.ContractBaseBackingBean;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
+import my.ep.web.backingbean.sc.loa.DirectLOABackingBean;
 import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
 import my.ep.web.bean.ct.CtLetterOfAcceptance;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
+import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.amendment.AmendmentManagedBean;
@@ -185,6 +190,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	private static final String CONTRACT_COMMON_PAGE = "/xhtml/ct/viewcontract/fulfilmentTab.xhtml?faces-redirect=true";
 	private static final String UPDATE_COMMITTEE_PAGE = "/xhtml/ct/fulfilmentdetails/amendment/pbqcc/committeeList.xhtml"; //#29403
 	private static final String PROCESS_AMEND_PAGE = "/xhtml/ct/fulfilmentdetails/amendment/amendmentTab.xhtml?faces-redirect=true"; //#29403
+	private static final String PROCESS_AMEND_VIEW_PAGE = "/xhtml/ct/fulfilmentdetails/amendment/viewscl/amendmentTab.xhtml?faces-redirect=true"; //#15851
 	private ContractBackingBean ctBackingBean = null;
 	private CtMeeting[] selectedMeetingUser;
 	private CtPerformanceBond[] selectedBondList;
@@ -556,6 +562,33 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	/**
 	 * The method used to retrieve the information and render it on screen.
 	 */
+		
+	//#15851 - shaqimi start
+	public void preRenderAmendView() throws UnsupportedEncodingException {
+		IContractAmendmentSO contractAmendmentSO = null;
+		ContractReqDTO ctReqDTO = null;
+		ContractResDTO resDTO = null;
+		ContractBackingBean ctbb = new ContractBackingBean();
+		Long contractVerId = ctbb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();
+		
+		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+		
+		if(contractVerId!=null) {
+			ctReqDTO = new ContractReqDTO();
+			ctReqDTO.setContractVerId(contractVerId);
+			ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
+			ctReqDTO.setUpdateAction(false);
+			setAmendmentContractVer(ctReqDTO);
+			ConstructAmendmentViewTabSideMenu();
+		
+			getManagedBean().setViewOnly(true);
+			
+			return;
+		}
+	}
+	//#15851 - shaqimi end
+	
 	public void preRenderView() throws UnsupportedEncodingException {
 
 		IContractAmendmentSO contractAmendmentSO = null;
@@ -788,6 +821,18 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		this.getManagedBean().setSecretaryList(null);
 		return CONTRACT_MAINT_PAGE;
 	}
+
+	//#15851 - shaqimi start
+	/**
+	 * The method used to navigate to supplemental contract view screen.
+	 * 
+	 * @return the navigate URL 
+	 */
+	public String backAmendViewAction() {
+		this.getManagedBean().setSecretaryList(null);
+		return CONTRACT_MAINT_PAGE;
+	}
+	//#15851 - shaqimi end
 
 	/**
 	 * The method used to set the contract amendment information while
@@ -2747,6 +2792,83 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithDeclaration);
 		}
 	}
+	
+	//#Enhancement 15851 - shaqimi start
+
+	/**
+	 * The method used to construct 
+	 * the tab menu for contract amendment.
+	 */
+	public void ConstructAmendmentViewTabSideMenu() {
+		AmendTabSideMenus sideMenu = new AmendTabSideMenus();
+		getManagedBean().setFinalListOfSideMenu(new ArrayList<String>());
+		getManagedBean().setConfirmMeeting(false);
+		getManagedBean().setIndexing(new LinkedHashMap<String, Integer>());
+		
+		int indexing = -1;//to start the indexing at 0;
+
+		if (getManagedBean().getAckFA() == null) {
+			getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendFulfilment);
+
+			if (ctBackingBean.getManagedBean().getContractVer() != null 
+					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment() != null
+					&& (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
+							|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange() 
+							|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange())) {
+
+				if ((ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing() && (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange() || 
+						   ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange())) ||
+						   (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange() && ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing())) {
+					getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithZone);
+
+				} if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
+						&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)){
+					getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAgency);
+				} if ((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange() || 
+						ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()) || 
+						ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()){
+					getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithItem);	 
+				}
+			}
+
+			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()){
+				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuDeduction);
+			}
+			
+			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange() && 
+					ctBackingBean.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
+					&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)){
+				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuSchedule);
+			}
+			
+			if ((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isBondReq() ||
+					ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq())
+					&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
+					&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+							ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareBond);
+			}
+			
+			if ((ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
+					&& ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()
+					&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
+					&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+							ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))){
+				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithBond);
+			}
+
+			getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareLoa);
+			
+			for(String sidemenu : getManagedBean().getFinalListOfSideMenu()){
+				getManagedBean().getIndexing().put(sidemenu, ++indexing);
+			}
+		}
+	}
+
+	public void setMenuByIndex(int outputValue) {
+		getManagedBean().setSelectedTabIndex(outputValue);
+	}
+	//#Enhancement 15851 - shaqimi end
 
 	/**
 	 * The method used for controlling the tab menu
@@ -7531,4 +7653,33 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					}
 				}
 				// #30879 - End
+				
+				
+				//Enhancement 15851 - shaqimi start
+				public void gotoAmendViewPage(Long contractId, long loaId) {		
+					ContractReqDTO reqDTO = new ContractReqDTO();
+					IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+					reqDTO.setContractId(contractId);
+					Long contractVerId = contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId();
+					reqDTO.setContractVerId(contractVerId);
+					reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
+					reqDTO.setUpdateAction(true);
+
+//							ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
+					getManagedBean().setSelectedTabIndex(0);
+					getManagedBean().setViewOnly(true); /*#25956 notification setting*/
+					//log.info("Check Putra gotoAmendPage contractId "+contractId);
+					setAmendmentContractVer(reqDTO);
+					
+					//for loa header
+					DirectLOABackingBean dlbb = new DirectLOABackingBean();	
+					AwardSupplierReqDTO asReqDTO = new AwardSupplierReqDTO();
+					asReqDTO.setLoaId(loaId);
+					dlbb.retriveLoaDetails(loaId, this.getManagedBean().getBackToPreviousPage(), true);
+					
+					FacesContext fc = FacesContext.getCurrentInstance();
+					fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, PROCESS_AMEND_VIEW_PAGE);
+				}
+				//Enhancement 15851 - shaqimi end
 	}
