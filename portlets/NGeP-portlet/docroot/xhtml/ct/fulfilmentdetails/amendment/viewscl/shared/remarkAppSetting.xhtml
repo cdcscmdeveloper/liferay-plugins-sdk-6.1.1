@@ -1,0 +1,122 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true"
+	     rendered="#{!ctBackingBean.managedBean.viewContract}">
+		<table style="width: 100%">
+			<tr>
+				<td width="50%" valign="top">
+					<table style="width: 100%">
+						<tr>
+							<td class="TableFieldLeft" width="24%"><h:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
+							<td class="TableFieldRight">
+								<p:dataGrid value="#{ctBackingBean.managedBean.contractVer.settingRemarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
+									<table>
+										<tr>
+											<td rowspan="2" valign="top">
+												<h:graphicImage value="#{ctBackingBean.userImagePath(remarkVar.createdUser.loginId)}" height="30" width="30" />
+											</td>
+											<td width="5"></td>
+											<td>
+												<h:outputText value="#{remarkVar.createdUser.userName}"></h:outputText>,
+												<h:outputText value="#{remarkVar.changedDate}">
+													<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
+												</h:outputText>
+											</td>
+										</tr>
+										<tr>
+											<td></td>
+											<td>
+												<p:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000"
+													disabled="#{ctBackingBean.managedBean.viewContract}"
+													style="width:70%;" autoResize="false" /> 
+												<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.remark']}" rendered="#{remarkIndex==0}"/>
+												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
+											</td>
+										</tr>
+									</table>
+								</p:dataGrid>
+							</td>
+						</tr>
+					</table>    					
+				</td>
+				<td width="50%" valign="top">
+				</td>
+			</tr>
+		</table>
+	</p:panel>
+	<!-- Bug #29446 - start -->
+	<p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true" 
+	    rendered="#{ctBackingBean.managedBean.viewContract}">
+		<table style="width: 100%">
+			<tr>
+				<td width="50%" valign="top" style="text-align:center"><h:outputLabel value="#{lbl['lbl.txt.remarks']}" style="float:none;text-align:center"/></td>
+			</tr>
+			<tr>
+				<td class="TableFieldLeft" width="50%" style="padding-left:6.25%;text-align:left">
+					<p:dataGrid var="remark" 
+					value="#{ctBackingBean.managedBean.contractVer.settingRemarks}" rowIndexVar="index"
+						columns="1"
+						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+						<table>
+							<tr>
+								<td rowspan="2" valign="top">
+									<h:graphicImage value="#{ctBackingBean.userImagePath(remark.createdUser.loginId)}"
+										height="30" width="30" />
+									</td>
+								<td width="5"></td>
+								<td>
+									<h:outputText id="remarkCreator"
+										value="#{remark.createdUser.userName}" />, 
+									<h:outputText id="remarkDates" value="#{remark.changedDate}">
+										<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+									</h:outputText>
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td>
+									<!-- Bug #29446 -->
+									<h:outputText value="#{remark.remark}"
+									style="display: inline-block; word-break: break-word; white-space:normal"/>
+									<!-- Bug #29446 -->
+								</td>
+							</tr>
+						</table>
+					</p:dataGrid>
+				</td>
+				<td class="TableFieldRight" width="50%" style="padding-left:6.25%">
+					<p:dataGrid value=""
+						rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex != contractDetailsBackingBean.managedBean.settingIndex and
+							contractDetailsBackingBean.managedBean.selectedTabIndex != contractDetailsBackingBean.managedBean.notificationIndex}"
+						rowIndexVar="attachFileIndex" columns="1" style="width:100%">
+						<table>
+							<tr>
+								<td rowspan="2" style="vertical-align: top;" align="left">
+									<h:graphicImage value="/css/images/design/#{ctBackingBean.determineIcon(attachment)}"
+										height="30" width="30" />
+								</td>
+								<td><h:outputText value="#{attachment.createdUser.userName}" />, 
+									<h:outputText value="#{attachment.createdDate}">
+										<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+									</h:outputText>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<h:commandLink value="#{attachment.fileName}"
+										styleClass="blue_font" immediate="true"
+										action="#{ctBackingBean.downloadFile(attachment)}" />
+								</td>
+							</tr>
+						</table>
+					</p:dataGrid>
+				</td>
+			</tr>
+		</table>
+	</p:panel>
+	<!-- Bug #29446 - end -->
+</ui:composition>

@@ -1,0 +1,320 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc" >
+	<p:panel id="secretryPanel"
+		header="#{lbl['lbl.ct.panel.meeting.decision']}" toggleable="true"
+		toggleSpeed="500"
+		rendered="#{(ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingMeetingDecision or 
+		ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingMeetingDecisionRevision)
+    		or (amendmentBackingBean.managedBean.decisionPbQcLOA and ctBackingBean.managedBean.contractVer.ctAmendment.pbqcAuthorityReq)}">
+		<h:panelGrid columns="2" style="width:100%"
+			columnClasses="columnWidth150">
+
+			<h:panelGrid columns="2" style="float:right;">
+				<h:outputText value="* " styleClass="mandatory" />
+				<p:outputLabel value="#{lbl['lbl.ct.pbm.decision.date']}" />
+			</h:panelGrid>
+			<p:calendar
+				value="#{ctBackingBean.managedBean.contractVer.ctAmendment.pbqcDecisionDate}"
+				size="25" id="calPbqDecision" navigator="true" required="true"
+				label="#{lbl['lbl.ct.pbm.decision.date']}" readonlyInput="true"
+				showOn="button" pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"
+				disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails or amendmentBackingBean.managedBean.disableDecisionDetails}">
+			</p:calendar>
+
+			<h:panelGrid columns="2" style="float:right;">
+				<h:outputText value="* " styleClass="mandatory" />
+				<p:outputLabel value="#{lbl['lbl.ct.decision']}" />
+			</h:panelGrid>
+			<p:selectOneMenu id="pqQcDecisionId"
+				style="width:190px;margin-bottom: 10px;"
+				label="#{lbl['lbl.ct.decision']}"
+				disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails or amendmentBackingBean.managedBean.disableDecisionDetails}"
+				value="#{amendmentBackingBean.managedBean.pbQcApproved}">
+				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+				<f:selectItem itemLabel="#{lbl['lbl.ct.approve']}" itemValue="A" />
+				<f:selectItem itemLabel="#{lbl['lbl.ct.reject']}" itemValue="R" />
+				<p:ajax process="@this" partialSubmit="true"
+					update=":form:pqQcDecisionId"
+					listener="#{amendmentBackingBean.setPbQcDecisionValue}"></p:ajax>
+			</p:selectOneMenu>
+
+			<h:panelGrid columns="2" style="float:right;">
+				<h:outputText value="*" styleClass="mandatory" />
+				<p:outputLabel value="#{lbl['lbl.txt.remarks']}" />
+			</h:panelGrid>
+			<h:panelGrid>
+				<p:inputTextarea id="justificationPbQCC" rows="4"
+					disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails or amendmentBackingBean.managedBean.disableDecisionDetails}"
+					style="width:180px;margin-bottom: 4px;" maxlength="200"
+					autoResize="false" label="#{lbl['lbl.txt.remarks']}"
+					onkeyup="limitTextArea(this,1000);"
+					onkeydown="limitTextArea(this,1000);"
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.pbqcJustification}" />
+			</h:panelGrid>
+
+			<h:panelGrid columns="2" style="float:right;">
+				<h:outputText value="* " styleClass="mandatory" />
+				<p:outputLabel value="#{lbl['lbl.ct.decision.letter']}" />
+			</h:panelGrid>
+			<h:panelGroup id="uploadPbqcDecisionLetter">
+				<p:commandButton
+					oncomplete="uploadPbqcDecisionLetterDlg.show();return false;"
+					update="uploadPbqcDecisionLetter, uploadPbqcDecisionLetterDlg"
+					icon="ui-icon-upload"
+					rendered="#{ctBackingBean.managedBean.contractVer.pbqcDecisionLetterAttachment.filePath == null}"
+					disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails or amendmentBackingBean.managedBean.disableDecisionDetails}" />
+				<h:commandLink
+					value="#{ctBackingBean.managedBean.contractVer.pbqcDecisionLetterAttachment.fileName}"
+					rendered="#{ctBackingBean.managedBean.contractVer.pbqcDecisionLetterAttachment.filePath != null}"
+					styleClass="blue_font"
+					action="#{ctBackingBean.commonDownload(ctBackingBean.managedBean.contractVer.pbqcDecisionLetterAttachment.filePath, ctBackingBean.managedBean.contractVer.pbqcDecisionLetterAttachment.fileName)}" />
+				<p:spacer width="3" />
+				<p:commandLink onclick="deletePbqcDecisionLetterDlg.show();"
+					rendered="#{ctBackingBean.managedBean.contractVer.pbqcDecisionLetterAttachment.filePath != null}"
+					disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails or amendmentBackingBean.managedBean.disableDecisionDetails}">
+					<h:graphicImage value="/css/images/design/icon_trash.png"
+						styleClass="tasklist_title1" />
+				</p:commandLink>
+			</h:panelGroup>
+
+			<p:confirmDialog id="deletePbqcDecisionLetterDlg"
+				widgetVar="deletePbqcDecisionLetterDlg"
+				message="#{lbl['lbl.msg.confirm.delete']}" severity="alert"
+				closable="true" appendToBody="true"
+				header="#{lbl['lbl.msg.confirm.delete.header']}">
+				<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@this"
+						partialSubmit="true"
+						update=":form:uploadPbqcDecisionLetter, :form:uploadPbqcDecisionLetterDlg"
+						action="#{ctBackingBean.deleteAttachmentAction(ctBackingBean.managedBean.contractVer.pbqcDecisionLetterAttachment)}"
+						oncomplete="deletePbqcDecisionLetterDlg.hide();" />
+					<p:commandButton value="#{lbl['lbl.btn.no']}"
+						onclick="deletePbqcDecisionLetterDlg.hide();" type="button" />
+				</div>
+			</p:confirmDialog>
+			<p:dialog id="uploadPbqcDecisionLetterDlg"
+				widgetVar="uploadPbqcDecisionLetterDlg" modal="true"
+				resizable="false" width="700px" height="350px"
+				styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}"
+				onShow="singleUploadListener(pbqcDecisionLetterUploadWV);">
+				<p:ajax event="close" />
+				<p:fileUpload style="display:inline;" mode="advanced"
+					dragDropSupport="false" id="pbqcDecisionLetterId"
+					fileUploadListener="#{ctBackingBean.fileUpload}"
+					showButtons="false"
+					sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+					allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+					multiple="false"
+					invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+					widgetVar="pbqcDecisionLetterUploadWV"
+					invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
+					update="uploadPbqcDecisionLetter" label="#{lbl['lbl.btn.choose']}"
+					oncomplete="uploadPbqcDecisionLetterDlg.hide();">
+				</p:fileUpload>
+				<f:facet name="footer">
+					<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.btn.close']}" type="button"
+							ajax="false" onclick="uploadPbqcDecisionLetterDlg.hide();" />
+					</div>
+				</f:facet>
+			</p:dialog>
+		</h:panelGrid>
+
+		<h:panelGrid columns="2" style="width:100%"
+			columnClasses="columnWidth150" styleClass="top-aligned-columns">
+			<p:outputLabel value="#{lbl['lbl.ct.list.comm.members']}" />
+			<p:dataTable id="secretryTable" var="data" rowIndexVar="index"
+				value="#{(CtStatusConst.faPendingMeetingDecision.longValue() == ctBackingBean.managedBean.contractVer.status.statusId.longValue() or 
+				ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingMeetingDecisionRevision) 
+                ? amendmentBackingBean.managedBean.updatedCommitteeMembers : ctBackingBean.managedBean.contractVer.ctAmendment.ctCommitteeMembers}" 
+                filteredValue="#{amendmentBackingBean.getFilteredCommitteeMembers()}"><!-- 26753 -->
+				<ac:paginator for="decisionTable" />
+				<p:column style="width:20%;white-space:normal;"
+					headerText="#{lbl['lbl.ct.name']}" styleClass="column-align-center">
+					<div align="left">
+						<h:outputText value="#{data.memberName}" />
+					</div>
+				</p:column>
+				<p:column style="width:12%;" styleClass="column-align-center"
+					headerText="#{lbl['lbl.ct.identification.no']}">
+					<div align="left">
+						<h:outputText value="#{data.icPassport}" />
+					</div>
+				</p:column>
+				<p:column style="width:20%;white-space:normal;"
+					styleClass="column-align-center"
+					headerText="#{lbl['lbl.ct.designation']}">
+					<div align="left">
+						<h:outputText value="#{data.designation}" />
+					</div>
+				</p:column>
+				<p:column style="width:15%;white-space:normal;"
+					styleClass="column-align-center"
+					headerText="#{lbl['lbl.ct.email']}">
+					<div align="left">
+						<h:outputText value="#{data.email}" />
+					</div>
+				</p:column>
+				<p:column style="width:5%;" styleClass="column-align-center"
+					headerText="#{lbl['lbl.ct.grade']}">
+					<div align="left">
+						<h:outputText value="#{data.grade}" />
+					</div>
+				</p:column>
+				<p:column style="width:5%;" headerText="#{lbl['lbl.ct.pnp']}"
+					styleClass="column-align-center">
+					<div align="left">
+						<h:outputText value="#{data.pnp ? 'Yes' : 'No'}" />
+					</div>
+				</p:column>
+				<p:column style="width:6%;" headerText="#{lbl['lbl.ct.role']}"
+					styleClass="column-align-center">
+					<div align="left">
+						<h:outputText value="#{amendmentBackingBean.getParameterDescCommitteeByMember(data, index)}" />
+					</div>
+				</p:column>
+				<p:column style="width:15%;white-space:normal;"
+					headerText="#{lbl['lbl.ct.represent.type']}"
+					styleClass="column-align-center"
+					rendered="#{(amendmentBackingBean.managedBean.committeeType != ParameterConst.committeeTypeQuotationCommitteeB) 
+				     	and (amendmentBackingBean.managedBean.committeeType != ParameterConst.committeeTypeQuotationCommitteeA)}">
+					<div align="left">
+						<h:outputText
+							value="#{amendmentBackingBean.getParameterDesc(data.representativeType)}" />
+					</div>
+				</p:column>
+				<p:column style="width:7%;" styleClass="column-align-center">
+					<f:facet name="header">
+						<h:outputText value="* " styleClass="mandatory" />
+						<h:outputText value="#{lbl['lbl.ct.attendance']}" />
+					</f:facet>
+					<p:selectBooleanCheckbox value="#{data.attended}"
+						disabled="#{data.memberRole.parameterCode == ParameterConst.committeeRoleSecretary
+							or amendmentBackingBean.managedBean.prepareLOA or amendmentBackingBean.managedBean.disableDecisionDetails}" />
+				</p:column>
+			</p:dataTable>
+		</h:panelGrid>
+		<!-- 26753 start -->
+		<br />
+		<div class="ppRightBtn"> 
+		<p:commandButton value="#{lbl['lbl.ct.update.committee']}"
+			process="@this" onstart="blockWidget.show();"
+			rendered="#{(ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingMeetingDecision or
+			ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingMeetingDecisionRevision)}"
+			disabled ="#{amendmentBackingBean.managedBean.disableDecisionDetails}"
+			oncomplete="blockWidget.hide();"
+			actionListener="#{amendmentBackingBean.updateCommittee()}" />
+		</div>
+		<!-- 26753 end -->
+	</p:panel>
+
+	<p:panel id="mofPanel" header="#{lbl['lbl.ct.panel.mof.meeting.decision']}" toggleable="true"  toggleSpeed="500"
+		rendered="#{ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingMofMeetingDecision
+			or (amendmentBackingBean.managedBean.decisionPbQcLOA and ctBackingBean.managedBean.contractVer.ctAmendment.mofAuthorityReq)}">
+		<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth150">
+		
+		<h:panelGrid columns="2" style="float:right;">
+			<h:outputText value="* " styleClass="mandatory" />
+			<p:outputLabel value="#{lbl['lbl.ct.mof.decision.date']}"    />
+		</h:panelGrid>
+		<p:calendar value="#{ctBackingBean.managedBean.contractVer.ctAmendment.mofDecisionDate}" size="25" id="calMofDecision" navigator="true"
+			required="true" label="#{lbl['lbl.ct.mof.decision.date']}"
+			readonlyInput="true"  showOn="button" pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"
+			disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails or amendmentBackingBean.managedBean.disableDecisionDetails}">
+		</p:calendar>
+		
+		<h:panelGrid columns="2" style="float:right;">
+			<h:outputText value="* " styleClass="mandatory" />
+			<p:outputLabel value="#{lbl['lbl.ct.decision']}"    />
+		</h:panelGrid>
+   		<p:selectOneMenu id="mofDecisionId"  style="width:190px;margin-bottom: 10px;"
+     		label="#{lbl['lbl.ct.decision']}" disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails or amendmentBackingBean.managedBean.disableDecisionDetails}"
+      		value="#{amendmentBackingBean.managedBean.mofApproved}" >
+				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue=""/>
+			    <f:selectItem itemLabel="#{lbl['lbl.ct.approve']}" itemValue="A"/>
+				<f:selectItem itemLabel="#{lbl['lbl.ct.reject']}" itemValue="R"/>
+				<p:ajax process="@this" partialSubmit="true" 
+					update=":form:mofDecisionId"  listener="#{amendmentBackingBean.setMofDecisionValue}"></p:ajax>
+		</p:selectOneMenu>
+		   
+		<h:panelGrid columns="2" style="float:right;">               
+       		<h:outputText value="*" styleClass="mandatory" />
+       		<p:outputLabel value="#{lbl['lbl.txt.remarks']}" />
+     	</h:panelGrid>
+    	<h:panelGrid>
+    		<p:inputTextarea id="justificationMof" rows="4"
+    			disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails or amendmentBackingBean.managedBean.disableDecisionDetails}"
+            	style="width:180px;margin-bottom: 4px;"   maxlength="200"  autoResize="false" 
+         		label="#{lbl['lbl.txt.remarks']}"
+            	onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
+            	value="#{ctBackingBean.managedBean.contractVer.ctAmendment.mofJustification}"/>
+      	</h:panelGrid>
+      	
+      	<h:panelGrid columns="2" style="float:right;">
+			<h:outputText value="* " styleClass="mandatory" />
+			<p:outputLabel value="#{lbl['lbl.ct.approval.letter.date']}"    />
+		</h:panelGrid>
+        <p:calendar value="#{ctBackingBean.managedBean.contractVer.ctAmendment.mofMeetingDate}"
+        	size="25" id="mofMeetingDate" navigator="true"
+ 			maxdate="#{ctBackingBean.managedBean.contractVer.ctAmendment.extendEndDate}" 
+  		  	mindate="#{ctBackingBean.managedBean.contractVer.ctContractValue.effDate}"
+            readonlyInput="true"  showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+            disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails or amendmentBackingBean.managedBean.disableDecisionDetails}">
+        </p:calendar>
+        
+		<h:panelGrid columns="2" style="float:right;">
+     		<h:outputText value="* " styleClass="mandatory" />
+			<p:outputLabel value="#{lbl['lbl.ct.approval.letter']}"    />
+		</h:panelGrid>
+		<h:panelGroup id="uploadMofDecisionLetter">
+			<p:commandButton oncomplete="uploadMofDecisionLetterDlg.show();return false;"
+				update="uploadMofDecisionLetter, uploadMofDecisionLetterDlg" icon="ui-icon-upload"
+				rendered="#{ctBackingBean.managedBean.contractVer.mofDecisionLetterAttachment.filePath == null}"
+		 		disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails or amendmentBackingBean.managedBean.disableDecisionDetails}"/>	
+     		<h:commandLink value="#{ctBackingBean.managedBean.contractVer.mofDecisionLetterAttachment.fileName}" 
+           		rendered="#{ctBackingBean.managedBean.contractVer.mofDecisionLetterAttachment.filePath != null}"
+          		styleClass="blue_font" action="#{ctBackingBean.commonDownload(ctBackingBean.managedBean.contractVer.mofDecisionLetterAttachment.filePath, ctBackingBean.managedBean.contractVer.mofDecisionLetterAttachment.fileName)}" />					
+     		<p:spacer width="3"/>
+         	<p:commandLink onclick="deleteMofDecisionLetterDlg.show();" 
+	           rendered="#{ctBackingBean.managedBean.contractVer.mofDecisionLetterAttachment.filePath != null}"
+	           disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails or amendmentBackingBean.managedBean.disableDecisionDetails}">
+	   			<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
+	      	</p:commandLink>
+		</h:panelGroup>
+
+   		<p:confirmDialog id="deleteMofDecisionLetterDlg" widgetVar="deleteMofDecisionLetterDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
+    		severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+      		<div class="ppRightBtn">
+		 		<p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		   			update=":form:uploadMofDecisionLetter, :form:uploadMofDecisionLetterDlg" 
+		 			action="#{ctBackingBean.deleteAttachmentAction(ctBackingBean.managedBean.contractVer.mofDecisionLetterAttachment)}" oncomplete="deleteMofDecisionLetterDlg.hide();"/>
+				<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteMofDecisionLetterDlg.hide();" type="button" />
+			</div>
+   		</p:confirmDialog>
+  		<p:dialog id="uploadMofDecisionLetterDlg" widgetVar="uploadMofDecisionLetterDlg" modal="true" resizable="false"
+	   		width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}"
+	   		onShow="singleUploadListener(mofDecisionLetterUploadWV);">
+			<p:ajax event="close" />
+			<p:fileUpload style="display:inline;" mode="advanced" dragDropSupport="false" id="mofDecisionLetterId"
+				fileUploadListener="#{ctBackingBean.fileUpload}"  showButtons="false"
+				sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" multiple="false"
+				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" widgetVar="mofDecisionLetterUploadWV"
+				invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
+				update="uploadMofDecisionLetter" label="#{lbl['lbl.btn.choose']}" oncomplete="uploadMofDecisionLetterDlg.hide();" >
+			</p:fileUpload>
+			<f:facet name="footer">
+			<div class="ppRightBtn">
+		    	<p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadMofDecisionLetterDlg.hide();" />
+   			</div>
+   			</f:facet>
+		</p:dialog>            
+     	</h:panelGrid>
+	</p:panel> 
+</ui:composition>
