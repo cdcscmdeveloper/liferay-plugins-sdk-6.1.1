@@ -18883,9 +18883,10 @@ if(null!=allTechnicalChecklist){
 	public void submitAction(String outcome){
 		assertConcurrentComittteeChangesApproval();
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
-			if(!assertPendingFinancialSubmission()){
-				RequestContext.getCurrentInstance().execute("submitConfirmPopUp2.show()");
-			}			
+			//#1873 - start
+			if(!assertPendingFinancialSubmission()){ 
+				RequestContext.getCurrentInstance().execute("submitConfirmPopUp2.show()"); 
+			} //#1873 - end
 		} else {
 			specCommitteBpmTask(outcome);
 		}
