@@ -164,6 +164,7 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean {
 	private Long contractId;//#28865
 	private Long suppRemarkId = null;//#28865
 
+	private Object payLoad; //#9133
 	/**
 	 * Instantiates a new purchase in default managed bean.
 	 */
@@ -854,6 +855,15 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean {
 		this.contractId = contractId;
 	}
 	//#28865 - end
-	
+
+	//#9133 - start
+	public Object getPayLoad() {
+		return payLoad;
+	}
+
+	public void setPayLoad(Object payLoad) {
+		this.payLoad = payLoad;
+	}
+	//#9133 - end
 	
 }

@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.bpm.tasklist;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,7 +54,7 @@ import com.liferay.portal.theme.ThemeDisplay;
 
 @ManagedBean(name = "bpmTasklistBackingBean")
 @RequestScoped
-public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBean> {
+public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBean> implements Serializable{
 
 	/**
 	 * 
@@ -63,6 +64,17 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 	private static Logger log = Logger.getLogger(BPMTaskListBackingBean.class);
 	
 	private String language = new FacesScopes().getUserLocale().getLanguage();
+	private static final String planDetailConstStr = "plan-detail";
+	private static final String mofApplicationConstStr = "mof-application";
+	private static final String fulfilmentDetailsConstStr = "fulfilment-details";
+	private static final String contractReqadminConstStr = "contract-reqadmin";
+	private static final String contractRequestConstStr = "contract-request";
+	private static final String shippingInstructionConstStr = "shipping-instruction";
+	private static final String contractOrderConstStr = "contract-order";
+	private static final String purchaseOrderConstStr = "purchase-order";
+	private static final String invoiceConstStr = "invoice";
+	private static final String deliveryOrderConstStr = "delivery-order";
+	private static final String purchaseRequestConstStr = "purchase-request";
 
 	private ISearchBean<PmParameterDesc> docTypeSearchBean;
 
@@ -77,23 +89,23 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 			temp.put("Extension Code Maintenance", "review-extension-maintenance");
 
 			// Procurement Plan - Start
-			temp.put(PPProcessNameConst.EXPENDITURE_PREPARATION_PROCESS_NAME, "plan-detail");
-			temp.put(PPProcessNameConst.PROCUREMENT_PREPARATION_PROCESS_NAME, "plan-detail");
-			temp.put("Start Expenditure Preparation", "plan-detail");
-			temp.put("Start Procurement Preparation", "plan-detail");
+			temp.put(PPProcessNameConst.EXPENDITURE_PREPARATION_PROCESS_NAME, planDetailConstStr);
+			temp.put(PPProcessNameConst.PROCUREMENT_PREPARATION_PROCESS_NAME, planDetailConstStr);
+			temp.put("Start Expenditure Preparation", planDetailConstStr);
+			temp.put("Start Procurement Preparation", planDetailConstStr);
 			temp.put("Access Application", "access-application-details");
 			// Procurement Plan - End
 
 			// Supplier Management - Start
 			//temp.put("Disciplinary Action", "disciplinary-action");
 			temp.put("Site Visit Manage", "site-visit");
-			temp.put("MOF Supplier Site Visit", "mof-application");
-			temp.put("MOF Supplier Registration", "mof-application");
-			temp.put("MOF Account Maintain", "mof-application");
-			temp.put("Start MOF Supplier Registration", "mof-application");
-			temp.put("Start MOF Account Maintain", "mof-application");
-			temp.put("MOF Registration Cancellation", "mof-application");
-			temp.put("MOF Application Cancellation", "mof-application");
+			temp.put("MOF Supplier Site Visit", mofApplicationConstStr);
+			temp.put("MOF Supplier Registration", mofApplicationConstStr);
+			temp.put("MOF Account Maintain", mofApplicationConstStr);
+			temp.put("Start MOF Supplier Registration", mofApplicationConstStr);
+			temp.put("Start MOF Account Maintain", mofApplicationConstStr);
+			temp.put("MOF Registration Cancellation", mofApplicationConstStr);
+			temp.put("MOF Application Cancellation", mofApplicationConstStr);
 			temp.put("User Add Additional", "soft-cert-payment");
 
 			// s1 module
@@ -109,6 +121,8 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 			temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME + SCProcessNameConst.VERIFY_PID, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT); //#28865
 			temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME + SCProcessNameConst.APPROVE_PID, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT); //#28865
 			temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME + SCProcessNameConst.SUPPLIER_RESPONSE_PURCHASE_IN_DEFAULT, SourcingConstants.NAV_PAGE_RESPONSE_PURCHASE_IN_DEFAULT); //#28865
+			temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME + SCProcessNameConst.REQUISITIONER_REVISION, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT); //#9133
+			temp.put(SCProcessNameConst.START_PURCHASE_IN_DEFAULT + SCProcessNameConst.SUBMIT_PURCHASE_IN_DEFAULT, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT); //#9133
 			temp.put(SCProcessNameConst.START_PURCHASE_INQUIRY_CREATION + SCProcessNameConst.START_PURCHASE_INQUIRY, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_INQUIRY);
 
 			temp.put(SCProcessNameConst.START_SIMPLE_QUOTE_CREATION, SourcingConstants.NAV_PAGE_REVIEW_SIMPLE_QUOTE);
@@ -124,21 +138,21 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 			temp.put(CTProcessNameConst.CIRCULAR_CANCELLATION_PROCESS_NAME, "cancel-circular-approval");
 			temp.put(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME + CTProcessNameConst.ACK_FACTORING_REQUEST_HT_NAME, "review-factoring-request");
 			temp.put(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME + CTProcessNameConst.ENDORSE_FACTORING_REQUEST_HT_NAME, "review-factoring-request");
-			temp.put(CTProcessNameConst.CONTRACT_CREATION_PROCESS_NAME, "fulfilment-details");
-			temp.put(CTProcessNameConst.CONTRACT_INITIATION_PROCESS_NAME, "fulfilment-details");
+			temp.put(CTProcessNameConst.CONTRACT_CREATION_PROCESS_NAME, fulfilmentDetailsConstStr);
+			temp.put(CTProcessNameConst.CONTRACT_INITIATION_PROCESS_NAME, fulfilmentDetailsConstStr);
 			temp.put(CTProcessNameConst.CONTRACT_SUSPEND_ACTIVE_INIT_PROCESS_NAME, "contract-suspension");
 			temp.put(CTProcessNameConst.CONTRACT_SUSPEND_ACTIVE_PROCESS_NAME, "contract-suspension");
-			temp.put(CTProcessNameConst.REQUEST_CONTRACT_ADMIN_INIT_PROCESS_NAME, "contract-reqadmin");
-			temp.put(CTProcessNameConst.REQUEST_CONTRACT_ADMIN_PROCESS_NAME, "contract-reqadmin");
-			temp.put(CTProcessNameConst.REQUEST_CONTRACT_ADMIN_APPROVER_INIT_PROCESS_NAME, "contract-reqadmin");
+			temp.put(CTProcessNameConst.REQUEST_CONTRACT_ADMIN_INIT_PROCESS_NAME, contractReqadminConstStr);
+			temp.put(CTProcessNameConst.REQUEST_CONTRACT_ADMIN_PROCESS_NAME, contractReqadminConstStr);
+			temp.put(CTProcessNameConst.REQUEST_CONTRACT_ADMIN_APPROVER_INIT_PROCESS_NAME, contractReqadminConstStr);
 			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME + ParameterConst.DOCTYPE_CONTRACT_AMENDMENT, "contract-amendment");
-			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME + ParameterConst.DOCTYPE_CONTRACT_UPDATE, "fulfilment-details");
-			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME + ParameterConst.DOCTYPE_NOTIFICATION_SETTING, "fulfilment-details");
-			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME + ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT, "fulfilment-details");
+			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME + ParameterConst.DOCTYPE_CONTRACT_UPDATE, fulfilmentDetailsConstStr);
+			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME + ParameterConst.DOCTYPE_NOTIFICATION_SETTING, fulfilmentDetailsConstStr);
+			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME + ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT, fulfilmentDetailsConstStr);
 			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME + ParameterConst.DOCTYPE_CONTRACT_AMENDMENT, "contract-amendment");
-			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME + ParameterConst.DOCTYPE_NOTIFICATION_SETTING, "fulfilment-details");
-			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME + ParameterConst.DOCTYPE_CONTRACT_UPDATE, "fulfilment-details");
-			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME + ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT, "fulfilment-details");
+			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME + ParameterConst.DOCTYPE_NOTIFICATION_SETTING, fulfilmentDetailsConstStr);
+			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME + ParameterConst.DOCTYPE_CONTRACT_UPDATE, fulfilmentDetailsConstStr);
+			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME + ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT, fulfilmentDetailsConstStr);
 			temp.put(CTProcessNameConst.CONTRACT_TERMINATION_INIT_PROCESS_NAME, "contract-termination");
 			temp.put(CTProcessNameConst.CONTRACT_TERMINATION_PROCESS_NAME, "contract-termination");
 			temp.put(CTProcessNameConst.AGREEMENT_CREATION_PROCESS_NAME, "contract-agreement");
@@ -151,50 +165,50 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 			
 
 			// Fulfilment Management - Start
-			temp.put(FLProcessNameConst.PHIS_CONTRACT_REQ_INITIATION_PROCESS_NAME + FLProcessNameConst.SUBMIT_PHIS_CR, "contract-request");
-			temp.put(FLProcessNameConst.CONTRACT_REQ_INITIATION_PROCESS_NAME + FLProcessNameConst.SUBMIT_CR_HT, "contract-request");
-			temp.put(FLProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME + FLProcessNameConst.REVIEW_CR_HT, "contract-request");
-			temp.put(FLProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME + FLProcessNameConst.REVISE_CR_HT, "contract-request");
-			temp.put(FLProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME + FLProcessNameConst.CREATE_NORMAL_CO_HT, "contract-request");
-			temp.put(FLProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME + FLProcessNameConst.REVISE_MTO_CR_HT, "contract-request");
-			temp.put(FLProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME + FLProcessNameConst.REVIEW_MTO_CR_HT, "contract-request");
-			temp.put(FLProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME + FLProcessNameConst.CREATE_CO_HT, "contract-request");
-			temp.put(FLProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME + FLProcessNameConst.CREATE_NEW_CO_HT, "contract-request");
-			temp.put(FLProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME + FLProcessNameConst.INTIATE_MTO_CR_HT, "contract-request");
-			temp.put(FLProcessNameConst.CONTRACT_REQ_INITIATION_PROCESS_NAME + FLProcessNameConst.CREATE_NEW_CO_HT, "contract-request");
-			temp.put(FLProcessNameConst.CONTRACT_REQ_INITIATION_PROCESS_NAME + FLProcessNameConst.CREATE_NORMAL_CO_HT, "contract-request");
-			temp.put(FLProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME + FLProcessNameConst.CREATE_NEW_MTO_CO_HT, "contract-request");
+			temp.put(FLProcessNameConst.PHIS_CONTRACT_REQ_INITIATION_PROCESS_NAME + FLProcessNameConst.SUBMIT_PHIS_CR, contractRequestConstStr);
+			temp.put(FLProcessNameConst.CONTRACT_REQ_INITIATION_PROCESS_NAME + FLProcessNameConst.SUBMIT_CR_HT, contractRequestConstStr);
+			temp.put(FLProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME + FLProcessNameConst.REVIEW_CR_HT, contractRequestConstStr);
+			temp.put(FLProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME + FLProcessNameConst.REVISE_CR_HT, contractRequestConstStr);
+			temp.put(FLProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME + FLProcessNameConst.CREATE_NORMAL_CO_HT, contractRequestConstStr);
+			temp.put(FLProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME + FLProcessNameConst.REVISE_MTO_CR_HT, contractRequestConstStr);
+			temp.put(FLProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME + FLProcessNameConst.REVIEW_MTO_CR_HT, contractRequestConstStr);
+			temp.put(FLProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME + FLProcessNameConst.CREATE_CO_HT, contractRequestConstStr);
+			temp.put(FLProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME + FLProcessNameConst.CREATE_NEW_CO_HT, contractRequestConstStr);
+			temp.put(FLProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME + FLProcessNameConst.INTIATE_MTO_CR_HT, contractRequestConstStr);
+			temp.put(FLProcessNameConst.CONTRACT_REQ_INITIATION_PROCESS_NAME + FLProcessNameConst.CREATE_NEW_CO_HT, contractRequestConstStr);
+			temp.put(FLProcessNameConst.CONTRACT_REQ_INITIATION_PROCESS_NAME + FLProcessNameConst.CREATE_NORMAL_CO_HT, contractRequestConstStr);
+			temp.put(FLProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME + FLProcessNameConst.CREATE_NEW_MTO_CO_HT, contractRequestConstStr);
 
-			temp.put(FLProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME + FLProcessNameConst.CREATE_SI_HT, "shipping-instruction");
-			temp.put(FLProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME + FLProcessNameConst.REVIEW_SI_HT, "shipping-instruction");
-			temp.put(FLProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME + FLProcessNameConst.REVISE_SI_HT, "shipping-instruction");
+			temp.put(FLProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME + FLProcessNameConst.CREATE_SI_HT, shippingInstructionConstStr);
+			temp.put(FLProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME + FLProcessNameConst.REVIEW_SI_HT, shippingInstructionConstStr);
+			temp.put(FLProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME + FLProcessNameConst.REVISE_SI_HT, shippingInstructionConstStr);
 
-			temp.put(FLProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME + FLProcessNameConst.MTO_CO_ACK_HT, "contract-order");
-			temp.put(FLProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME + FLProcessNameConst.CO_ACK_HT, "contract-order");
-			temp.put(FLProcessNameConst.RESUBMIT_ORDER_CANCELLATION + ParameterConst.DOCTYPE_CONTRACT_ORDER, "contract-order");
-			temp.put(FLProcessNameConst.RESUBMIT_ORDER_CANCELLATION + ParameterConst.DOCTYPE_PURCHASE_ORDER, "purchase-order");
+			temp.put(FLProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME + FLProcessNameConst.MTO_CO_ACK_HT, contractOrderConstStr);
+			temp.put(FLProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME + FLProcessNameConst.CO_ACK_HT, contractOrderConstStr);
+			temp.put(FLProcessNameConst.RESUBMIT_ORDER_CANCELLATION + ParameterConst.DOCTYPE_CONTRACT_ORDER, contractOrderConstStr);
+			temp.put(FLProcessNameConst.RESUBMIT_ORDER_CANCELLATION + ParameterConst.DOCTYPE_PURCHASE_ORDER, purchaseOrderConstStr);
 
-			temp.put(FLProcessNameConst.INVOICE_AND_PAYMENT_CREATION_PROCESS_NAME + FLProcessNameConst.CREATE_INVOICE, "invoice");
+			temp.put(FLProcessNameConst.INVOICE_AND_PAYMENT_CREATION_PROCESS_NAME + FLProcessNameConst.CREATE_INVOICE, invoiceConstStr);
 			temp.put(FLProcessNameConst.INVOICE_AND_PAYMENT_CREATION_PROCESS_NAME + FLProcessNameConst.PERFORM_PAYMNET_MATCH_HT, "payment-match");
 			temp.put(FLProcessNameConst.INVOICE_AND_PAYMENT_CREATION_PROCESS_NAME + FLProcessNameConst.REVIEW_GST, "review-gst");
 
 			temp.put(FLProcessNameConst.DELIVERY_ORDER_FULFILMENT_PROCESS_NAME, "fulfilment-received-note");
 			temp.put(FLProcessNameConst.FRN_CANCELLATION_PROCESS_NAME, "fulfilment-received-note");
-			temp.put(FLProcessNameConst.DELIVERY_ORDER_FL_INITIATION_PROCESS_NAME, "delivery-order");
+			temp.put(FLProcessNameConst.DELIVERY_ORDER_FL_INITIATION_PROCESS_NAME, deliveryOrderConstStr);
 			temp.put(FLProcessNameConst.DAN_GENERATION_PROCESS_NAME, "debit-adjustment-note");
 			temp.put(FLProcessNameConst.STOP_FULFILMENT_REQUEST_PROCESS_NAME, "stop-delivery");
 			temp.put(FLProcessNameConst.STOP_FULFILLMENT_INIT_PROCESS_NAME, "stop-delivery");
-			temp.put(FLProcessNameConst.PURCHASE_REQ_INITIATION_PROCESS_NAME + FLProcessNameConst.SUBMIT_PR_HT, "purchase-request");
-			temp.put(FLProcessNameConst.PURCHASE_REQ_CREATION_PROCESS_NAME + FLProcessNameConst.CREATE_PR_HT, "purchase-request");
-			temp.put(FLProcessNameConst.PURCHASE_REQ_CREATION_PROCESS_NAME + FLProcessNameConst.REVIEW_PR_HT, "purchase-request");
-			temp.put(FLProcessNameConst.PURCHASE_REQ_CREATION_PROCESS_NAME + FLProcessNameConst.REVISE_PR_HT, "purchase-request");
-			temp.put(FLProcessNameConst.PURCHASE_REQ_CREATION_PROCESS_NAME + FLProcessNameConst.PR_ACK_HT, "purchase-order");
-			temp.put(FLProcessNameConst.PURCHASE_REQ_CREATION_PROCESS_NAME + FLProcessNameConst.REVIEW_REJECTED_PO_HT, "purchase-order");
-			temp.put(FLProcessNameConst.DO_MODIFICATION_PROCESS_NAME + FLProcessNameConst.ACK_MODIFIED_DO_HT, "delivery-order");
-			temp.put(FLProcessNameConst.INVOICE_AND_PAYMENT_CREATION_PROCESS_NAME + FLProcessNameConst.ACK_MODIFIED_INVOICE_HT, "invoice");
-			temp.put(FLProcessNameConst.DO_CANCELLATION_PROCESS_NAME + FLProcessNameConst.REVIEW_CANCEL_DO_HT, "delivery-order");
-			temp.put(FLProcessNameConst.DO_CANCELLATION_PROCESS_NAME + FLProcessNameConst.REVIEW_FAILED_CANCEL_DO_HT, "delivery-order");			
-			temp.put(FLProcessNameConst.INVOICE_AND_PAYMENT_CREATION_PROCESS_NAME + FLProcessNameConst.REVIEW_CANCEL_INVOICE_HT, "invoice");
+			temp.put(FLProcessNameConst.PURCHASE_REQ_INITIATION_PROCESS_NAME + FLProcessNameConst.SUBMIT_PR_HT, purchaseRequestConstStr);
+			temp.put(FLProcessNameConst.PURCHASE_REQ_CREATION_PROCESS_NAME + FLProcessNameConst.CREATE_PR_HT, purchaseRequestConstStr);
+			temp.put(FLProcessNameConst.PURCHASE_REQ_CREATION_PROCESS_NAME + FLProcessNameConst.REVIEW_PR_HT, purchaseRequestConstStr);
+			temp.put(FLProcessNameConst.PURCHASE_REQ_CREATION_PROCESS_NAME + FLProcessNameConst.REVISE_PR_HT, purchaseRequestConstStr);
+			temp.put(FLProcessNameConst.PURCHASE_REQ_CREATION_PROCESS_NAME + FLProcessNameConst.PR_ACK_HT, purchaseOrderConstStr);
+			temp.put(FLProcessNameConst.PURCHASE_REQ_CREATION_PROCESS_NAME + FLProcessNameConst.REVIEW_REJECTED_PO_HT, purchaseOrderConstStr);
+			temp.put(FLProcessNameConst.DO_MODIFICATION_PROCESS_NAME + FLProcessNameConst.ACK_MODIFIED_DO_HT, deliveryOrderConstStr);
+			temp.put(FLProcessNameConst.INVOICE_AND_PAYMENT_CREATION_PROCESS_NAME + FLProcessNameConst.ACK_MODIFIED_INVOICE_HT, invoiceConstStr);
+			temp.put(FLProcessNameConst.DO_CANCELLATION_PROCESS_NAME + FLProcessNameConst.REVIEW_CANCEL_DO_HT, deliveryOrderConstStr);
+			temp.put(FLProcessNameConst.DO_CANCELLATION_PROCESS_NAME + FLProcessNameConst.REVIEW_FAILED_CANCEL_DO_HT, deliveryOrderConstStr);			
+			temp.put(FLProcessNameConst.INVOICE_AND_PAYMENT_CREATION_PROCESS_NAME + FLProcessNameConst.REVIEW_CANCEL_INVOICE_HT, invoiceConstStr);
 			temp.put(FLProcessNameConst.FC_REMOVAL_REQUEST_PROCESS_NAME, "remove-factoring-company");
 			temp.put(FLProcessNameConst.RESUBMIT_ORDER_CANCELLATION + FLProcessNameConst.RESUBMIT_AP59_ORDER, "resubmit-ap59-order");
 			/*#28375 - Logan - YEP Process Beginning*/
@@ -202,109 +216,52 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 			//temp.put(FLProcessNameConst.PROCEED_TO_BPM_CARRY_FORWARD_CO, "co-carryForward");
 			/*#28375 - End*/
 			//21229
-			temp.put(FLProcessNameConst.INVOICE_AND_PAYMENT_CREATION_PROCESS_NAME
-					+ FLProcessNameConst.REVISE_INVOICE, "invoice");
+			temp.put(FLProcessNameConst.INVOICE_AND_PAYMENT_CREATION_PROCESS_NAME + FLProcessNameConst.REVISE_INVOICE, invoiceConstStr);
 			// Added for qt..
-			temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS_NAME
-					+ SCProcessNameConst.SPECIFICATION_APPROVAL, SourcingConstants.NAV_PAGE_PREPARE_CHECKLIST_SCORING);
-			temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
-					+ SCProcessNameConst.PREPARE_QT_DETAILS, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
-			temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
-					+ SCProcessNameConst.REVISE_QT_SCHEDULE, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
-			temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
-					+ SCProcessNameConst.REVISE_QT_DOCUMENT, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
+			temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS_NAME + SCProcessNameConst.SPECIFICATION_APPROVAL, SourcingConstants.NAV_PAGE_PREPARE_CHECKLIST_SCORING);
+			temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME + SCProcessNameConst.PREPARE_QT_DETAILS, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
+			temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME + SCProcessNameConst.REVISE_QT_SCHEDULE, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
+			temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME + SCProcessNameConst.REVISE_QT_DOCUMENT, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 			
-			temp.put(SCProcessNameConst.BUDGET_APPROVAL_PROCESS_NAME
-					+ SCProcessNameConst.APPROVE_BUDGET,
-					SourcingConstants.NAV_PAGE_QT_APPROVAL);
-			temp.put(SCProcessNameConst.BPK_APPROVAL_PROCESS_NAME
-					+ SCProcessNameConst.APPROVE_BPK,
-					SourcingConstants.NAV_PAGE_QT_APPROVAL);
-			temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS_NAME
-					+ SCProcessNameConst.UPDATE_SCORING, SourcingConstants.NAV_PAGE_PREPARE_CHECKLIST_SCORING);
-			temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS_NAME
-					+ SCProcessNameConst.FINALISE_SCORING, SourcingConstants.NAV_PAGE_PREPARE_CHECKLIST_SCORING);
-			temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS_NAME
-					+ SCProcessNameConst.ENDORSE_SCORING, SourcingConstants.NAV_PAGE_PREPARE_CHECKLIST_SCORING);
-			temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS_NAME
-					+ SCProcessNameConst.SIGNOFF_SCORING, SourcingConstants.NAV_PAGE_PREPARE_CHECKLIST_SCORING);
-			temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS_NAME
-					+ SCProcessNameConst.VIEW_SCORING, SourcingConstants.NAV_PAGE_PREPARE_CHECKLIST_SCORING);
-			temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
-					+ SCProcessNameConst.SIGNOFF_SCORING, SourcingConstants.NAV_PAGE_PREPARE_CHECKLIST_SCORING);
+			temp.put(SCProcessNameConst.BUDGET_APPROVAL_PROCESS_NAME + SCProcessNameConst.APPROVE_BUDGET, SourcingConstants.NAV_PAGE_QT_APPROVAL);
+			temp.put(SCProcessNameConst.BPK_APPROVAL_PROCESS_NAME + SCProcessNameConst.APPROVE_BPK, SourcingConstants.NAV_PAGE_QT_APPROVAL);
+			temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS_NAME + SCProcessNameConst.UPDATE_SCORING, SourcingConstants.NAV_PAGE_PREPARE_CHECKLIST_SCORING);
+			temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS_NAME + SCProcessNameConst.FINALISE_SCORING, SourcingConstants.NAV_PAGE_PREPARE_CHECKLIST_SCORING);
+			temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS_NAME + SCProcessNameConst.ENDORSE_SCORING, SourcingConstants.NAV_PAGE_PREPARE_CHECKLIST_SCORING);
+			temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS_NAME + SCProcessNameConst.SIGNOFF_SCORING, SourcingConstants.NAV_PAGE_PREPARE_CHECKLIST_SCORING);
+			temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS_NAME + SCProcessNameConst.VIEW_SCORING, SourcingConstants.NAV_PAGE_PREPARE_CHECKLIST_SCORING);
+			temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME + SCProcessNameConst.SIGNOFF_SCORING, SourcingConstants.NAV_PAGE_PREPARE_CHECKLIST_SCORING);
 			
 
-			temp.put(SCProcessNameConst.PCB_APPROVAL_PROCESS_NAME
-					+ SCProcessNameConst.APPROVE_PCB,
-					SourcingConstants.NAV_PAGE_QT_APPROVAL);
-			temp.put(SCProcessNameConst.PCB_APPROVAL_PROCESS_NAME
-					+ SCProcessNameConst.REVISE_PCB, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
+			temp.put(SCProcessNameConst.PCB_APPROVAL_PROCESS_NAME + SCProcessNameConst.APPROVE_PCB, SourcingConstants.NAV_PAGE_QT_APPROVAL);
+			temp.put(SCProcessNameConst.PCB_APPROVAL_PROCESS_NAME + SCProcessNameConst.REVISE_PCB, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 
-			temp.put(SCProcessNameConst.BPK_APPROVAL_PROCESS_NAME
-					+ SCProcessNameConst.REVISE_BPK, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
-			temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
-					+ SCProcessNameConst.PREPARE_QT_SCHEDULE, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
-			temp.put(SCProcessNameConst.COMMITTEE_APPROVAL_PROCESS_NAME
-					+ SCProcessNameConst.APPROVE_COMMITTEE,
-					SourcingConstants.NAV_PAGE_QT_APPROVAL);
-			temp.put(SCProcessNameConst.COMMITTEE_APPROVAL_PROCESS_NAME
-					+ SCProcessNameConst.REVISE_COMMITTEE, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
-			temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
-					+ SCProcessNameConst.ASSIGN_SCORING_COMMITTEE, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
+			temp.put(SCProcessNameConst.BPK_APPROVAL_PROCESS_NAME + SCProcessNameConst.REVISE_BPK, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
+			temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME + SCProcessNameConst.PREPARE_QT_SCHEDULE, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
+			temp.put(SCProcessNameConst.COMMITTEE_APPROVAL_PROCESS_NAME + SCProcessNameConst.APPROVE_COMMITTEE, SourcingConstants.NAV_PAGE_QT_APPROVAL);
+			temp.put(SCProcessNameConst.COMMITTEE_APPROVAL_PROCESS_NAME + SCProcessNameConst.REVISE_COMMITTEE, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
+			temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME + SCProcessNameConst.ASSIGN_SCORING_COMMITTEE, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 
-			temp.put(SCProcessNameConst.SITE_VISIT_PROPOSAL_PROCESS_NAME
-					+ SCProcessNameConst.FINALIZE_ATTANDANCE,
-					SourcingConstants.NAV_PAGE_BSV_ATTENDANCE);
-			temp.put(SCProcessNameConst.SITE_VISIT_PROPOSAL_PROCESS_NAME
-					+ SCProcessNameConst.UPDATE_ATTANDANCE, SourcingConstants.NAV_PAGE_BSV_ATTENDANCE);
-			temp.put(SCProcessNameConst.SUPPLIER_DP_AWARD_PROCESS_NAME
-					+ SCProcessNameConst.PREPARE_LOA,
-					SourcingConstants.NAV_PAGE_DIRECT_PURCHASE_LOA_LIST);
-			temp.put(SCProcessNameConst.SUPPLIER_DP_ACCEPTANCE_PROCESS_NAME
-					+ SCProcessNameConst.APPROVE_LOA,
-					SourcingConstants.NAV_PAGE_REVIEW_LOA);
-			temp.put(SCProcessNameConst.SUPPLIER_DP_ACCEPTANCE_PROCESS_NAME
-					+ SCProcessNameConst.REVISE_LOA, SourcingConstants.NAV_PAGE_REVIEW_LOA);
-			temp.put(SCProcessNameConst.SUPPLIER_DP_ACCEPTANCE_PROCESS_NAME
-					+ SCProcessNameConst.ACCEPT_LOA,
-					SourcingConstants.NAV_PAGE_SUPPLIER_RESPONSE_LOA);
-			temp.put(SCProcessNameConst.SUPPLIER_DP_ACCEPTANCE_PROCESS_NAME
-					+ SCProcessNameConst.VERIFY_LOA, SourcingConstants.NAV_PAGE_REVIEW_LOA);
-			temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
-					+ SCProcessNameConst.APPROVE_PUBLICATION,
-					SourcingConstants.NAV_PAGE_QT_APPROVAL);
+			temp.put(SCProcessNameConst.SITE_VISIT_PROPOSAL_PROCESS_NAME + SCProcessNameConst.FINALIZE_ATTANDANCE, SourcingConstants.NAV_PAGE_BSV_ATTENDANCE);
+			temp.put(SCProcessNameConst.SITE_VISIT_PROPOSAL_PROCESS_NAME + SCProcessNameConst.UPDATE_ATTANDANCE, SourcingConstants.NAV_PAGE_BSV_ATTENDANCE);
+			temp.put(SCProcessNameConst.SUPPLIER_DP_AWARD_PROCESS_NAME + SCProcessNameConst.PREPARE_LOA, SourcingConstants.NAV_PAGE_DIRECT_PURCHASE_LOA_LIST);
+			temp.put(SCProcessNameConst.SUPPLIER_DP_ACCEPTANCE_PROCESS_NAME + SCProcessNameConst.APPROVE_LOA, SourcingConstants.NAV_PAGE_REVIEW_LOA);
+			temp.put(SCProcessNameConst.SUPPLIER_DP_ACCEPTANCE_PROCESS_NAME + SCProcessNameConst.REVISE_LOA, SourcingConstants.NAV_PAGE_REVIEW_LOA);
+			temp.put(SCProcessNameConst.SUPPLIER_DP_ACCEPTANCE_PROCESS_NAME + SCProcessNameConst.ACCEPT_LOA, SourcingConstants.NAV_PAGE_SUPPLIER_RESPONSE_LOA);
+			temp.put(SCProcessNameConst.SUPPLIER_DP_ACCEPTANCE_PROCESS_NAME + SCProcessNameConst.VERIFY_LOA, SourcingConstants.NAV_PAGE_REVIEW_LOA);
+			temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME + SCProcessNameConst.APPROVE_PUBLICATION, SourcingConstants.NAV_PAGE_QT_APPROVAL);
 
-			temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME
-					+ SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE, 
-					SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
-			temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME
-					+ SCProcessNameConst.ASSIGN_TEC_COMMITTEE, 
-					SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
-			temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME
-					+ SCProcessNameConst.ASSIGN_FEC_COMMITTEE, 
-					SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
-			temp.put(SCProcessNameConst.EC_EVALUATION_PROCESS_NAME
-					+ SCProcessNameConst.COORDINATE_EC_MEETING,
-					SourcingConstants.NAV_PAGE_EVALUATION_COORDINATE_MEETING);
-			temp.put(SCProcessNameConst.OC_EVALUATION_PROCESS_NAME
-					+ SCProcessNameConst.COORDINATE_OC_MEETING,
-					SourcingConstants.NAV_PAGE_EVALUATION_COORDINATE_MEETING);
-			temp.put(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME
-					+ SCProcessNameConst.COORDINATE_TEC_MEETING,
-					SourcingConstants.NAV_PAGE_EVALUATION_COORDINATE_MEETING);
-			temp.put(SCProcessNameConst.FEC_EVALUATION_PROCESS_NAME
-					+ SCProcessNameConst.COORDINATE_FEC_MEETING,
-					SourcingConstants.NAV_PAGE_EVALUATION_COORDINATE_MEETING);
+			temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME + SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
+			temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME + SCProcessNameConst.ASSIGN_TEC_COMMITTEE, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
+			temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME + SCProcessNameConst.ASSIGN_FEC_COMMITTEE, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
+			temp.put(SCProcessNameConst.EC_EVALUATION_PROCESS_NAME + SCProcessNameConst.COORDINATE_EC_MEETING, SourcingConstants.NAV_PAGE_EVALUATION_COORDINATE_MEETING);
+			temp.put(SCProcessNameConst.OC_EVALUATION_PROCESS_NAME + SCProcessNameConst.COORDINATE_OC_MEETING, SourcingConstants.NAV_PAGE_EVALUATION_COORDINATE_MEETING);
+			temp.put(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME + SCProcessNameConst.COORDINATE_TEC_MEETING, SourcingConstants.NAV_PAGE_EVALUATION_COORDINATE_MEETING);
+			temp.put(SCProcessNameConst.FEC_EVALUATION_PROCESS_NAME + SCProcessNameConst.COORDINATE_FEC_MEETING, SourcingConstants.NAV_PAGE_EVALUATION_COORDINATE_MEETING);
 
-			temp.put(SCProcessNameConst.EC_EVALUATION_PROCESS_NAME
-					+ SCProcessNameConst.FINALISE_EC_EVALUATION,
-					SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
-			temp.put(SCProcessNameConst.EC_EVALUATION_PROCESS_NAME
-					+ SCProcessNameConst.UPDATE_EC_EVALUATION,
-					SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
-			temp.put(SCProcessNameConst.EC_EVALUATION_PROCESS_NAME
-					+ SCProcessNameConst.VIEW_EC_EVALUATION,
-					SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
+			temp.put(SCProcessNameConst.EC_EVALUATION_PROCESS_NAME + SCProcessNameConst.FINALISE_EC_EVALUATION, SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
+			temp.put(SCProcessNameConst.EC_EVALUATION_PROCESS_NAME + SCProcessNameConst.UPDATE_EC_EVALUATION, SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
+			temp.put(SCProcessNameConst.EC_EVALUATION_PROCESS_NAME + SCProcessNameConst.VIEW_EC_EVALUATION, SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
 			temp.put(SCProcessNameConst.EC_EVALUATION_PROCESS_NAME
 					+ SCProcessNameConst.ENDORSE_EC_EVALUATION,
 					SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
@@ -567,68 +524,22 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 
 	}
 
-	// public void retrieveWorklistItems(String status, String viewBy, String
-	// assignment) {
-
-	// IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-	// .getServiceObject(IBpmSO.class);
-	//
-	// // String token = bpmSO.authenticate("roslan", "welcome1");
-	// FacesScopes face = new FacesScopes();
-	// String token = face.getBPMAuthenticationCtxToken();
-	//
-	// System.out.println("testing BPM auth******" + token);
-	// BpmRequestDTO reqDTO = new BpmRequestDTO();
-	//
-	// reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
-	// reqDTO.setOffset(calculateFinalOffSet(1));
-	// reqDTO.setState(status);
-	// reqDTO.setViewBy(viewBy);
-	// reqDTO.setAssignment(assignment);
-	// reqDTO.setCtxToken(token);
-	// BpmResponseDTO responseDTO = bpmSO.getWorklistItems(reqDTO);
-	//
-	// System.out.println("testing BPM******"+responseDTO.getWorklistVO().getWorklistItem().size());
-	// System.out.println("testing BPM******"+responseDTO.getWorklistVO().getTotal());
-	//
-	//
-	//
-
-	//
-	// this.getManagedBean().setTaskList(responseDTO.getWorklistVO().getWorklistItem());
-	//
-	//
-	//
-	//
-	// return responseDTO;
-	// }
-
-	public void navigateToDeliveryOrderURL() throws IOException,
-	PortalException, SystemException {
-		String orderId = FacesContext.getCurrentInstance().getExternalContext()
-				.getRequestParameterMap().get("orderId");
+	public void navigateToDeliveryOrderURL() throws IOException, PortalException, SystemException {
+		String orderId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("orderId");
 		FacesScopes facesScope = new FacesScopes();
-		ThemeDisplay themeDisplay = (ThemeDisplay) facesScope
-				.getRequestScope(WebKeys.THEME_DISPLAY);
+		ThemeDisplay themeDisplay = (ThemeDisplay) facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
 
 		log.info("getURLCurrent" + themeDisplay.getURLCurrent());
-		String commonUrl = themeDisplay.getURLCurrent().substring(
-				0,
-				themeDisplay.getURLCurrent().indexOf(
-						themeDisplay.getLayout().getGroup().getFriendlyURL())
-						+ themeDisplay.getLayout().getGroup().getFriendlyURL()
-						.length());
+		String commonUrl = themeDisplay.getURLCurrent().substring(0, themeDisplay.getURLCurrent().indexOf( themeDisplay.getLayout().getGroup().getFriendlyURL()) + themeDisplay.getLayout().getGroup().getFriendlyURL() .length());
 		log.info("commonUrl" + commonUrl);
 
-		ExternalContext externalContext = FacesContext.getCurrentInstance()
-				.getExternalContext();
-		externalContext.redirect(commonUrl + "/delivery-order?orderId="
-				+ orderId);
+		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+		externalContext.redirect(commonUrl + "/delivery-order?orderId="+ orderId);
 	}
 
 	public void navigateToURL() throws PortalException, SystemException {
 		log.info("......................navigateToURL");
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+		//IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 
 		String taskId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("taskId");
 		String process = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("process");
@@ -641,9 +552,9 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 
 		log.info("****claim****"+claim);
 
-		FacesScopes face = new FacesScopes();
-		Object token = face.getBPMAuthenticationCtxToken();
-		BpmRequestDTO reqDTO = new BpmRequestDTO();
+		//FacesScopes face = new FacesScopes();
+		//Object token = face.getBPMAuthenticationCtxToken();
+		//BpmRequestDTO reqDTO = new BpmRequestDTO();
 
 		try {
 			log.info("taskId:" + taskId);
@@ -699,7 +610,7 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 					strbuildtask = null; //#31681 - basri 22/10/21
 				}
 			/*#31422-basri 190821*/
-
+			
 			ExternalContext externalContext = FacesContext.getCurrentInstance()
 					.getExternalContext();
 			//26238 -  Disciplinary Action - 28111
@@ -773,7 +684,6 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 	public void refreshAdvanceTaskList() {
 
 		this.getManagedBean().getTaskListGroupDataModel().reloadData();
-
 	}
 
 
@@ -808,36 +718,14 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 
 	public ISearchBean<PmParameterDesc> getDocTypeSearchBean() {
 		if (this.docTypeSearchBean == null) {
-			this.docTypeSearchBean = super.createSearchBean(
-					PmParameterDesc.class, "docTypeId");
+			this.docTypeSearchBean = super.createSearchBean(PmParameterDesc.class, "docTypeId");
 		}
 
 		return this.docTypeSearchBean;
 	}
 
 	public void preRenderTaskListView() {
-
 		log.info("......................preRenderTaskListView");
-		// this.getManagedBean().setViewBy("");
-		// this.getManagedBean().setAssignment("ALL");
-		// this.getManagedBean().setDocType("");
-
-		// HttpServletRequest servletRequest = PortalUtil
-		// .getHttpServletRequest(new FacesScopes().getRequest());
-		// HttpServletRequest originalServletRequest = PortalUtil
-		// .getOriginalServletRequest(servletRequest);
-		// String docTypeId = originalServletRequest.getParameter("docTypeId");
-		//
-		// if (docTypeId != null && !docTypeId.isEmpty()) {
-		// this.getManagedBean().setDocType(docTypeId);
-		// originalServletRequest.getParameterMap().remove("docTypeId");
-		// }
-		//
-		// this.getManagedBean().getTaskListDataModel().reloadData();
-		// // FacesContext fc = FacesContext.getCurrentInstance();
-		// fc.getApplication().getNavigationHandler()
-		// .handleNavigation(fc, null, "taskListTable");
-		// return "/xhtml/bpmtasklist/taskListTable.xhtml";
 	}
 
 	public void preRenderTaskView() {
@@ -852,13 +740,11 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 		this.getManagedBean().setSelectedStatusDesc(new PmStatusDesc());
 		this.getManagedBean().setSelectedStatusDescAdvance(new PmStatusDesc());
 		this.getManagedBean().setDocStatusGroup(0);
-		this.getManagedBean().setDocTypeGroup("");
+		this.getManagedBean().setDocTypeGroup("");		
 		//this.getManagedBean().setAssignment("ALL");
 
-		HttpServletRequest servletRequest = PortalUtil
-				.getHttpServletRequest(new FacesScopes().getRequest());
-		HttpServletRequest originalServletRequest = PortalUtil
-				.getOriginalServletRequest(servletRequest);
+		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String docTypeId = originalServletRequest.getParameter("docTypeId");
 
 		if (docTypeId != null && !docTypeId.isEmpty()) {
@@ -874,8 +760,7 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 		getManagedBean().setSdoWithMultipleRoles(sdoWithMultipleRole());
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-		.handleNavigation(fc, null, "taskListView");
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "taskListView");
 	
 	}
 	
@@ -926,14 +811,11 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 		log.info("**********claimTask");
 		
 		/*21387 - basri*/
-		String taskId = FacesContext.getCurrentInstance().getExternalContext()
-				.getRequestParameterMap().get("taskId");
+		//String taskId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("taskId");
 		
-		String docNumber = FacesContext.getCurrentInstance().getExternalContext()
-				.getRequestParameterMap().get("docNumber");
+		String docNumber = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docNumber");
 		
-		String docType = FacesContext.getCurrentInstance().getExternalContext()
-				.getRequestParameterMap().get("docType");
+		String docType = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docType");
 	
 		
 		if(docType.equalsIgnoreCase(ContractConst.DOC_TYPE_AGREEMENT) || docType.equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION)){
@@ -949,10 +831,11 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 		}else{
 			claimBpmTask();
 		}
-		/*21387 - basri*/
+		    /*21387 - basri*/
+		    
 			
-			this.getManagedBean().getTaskListGroupDataModel().reloadData();
-			this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
+		this.getManagedBean().getTaskListGroupDataModel().reloadData();
+		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
 
 		return "taskListView?faces-redirect=true";
 
@@ -975,11 +858,11 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 
 		log.info("**********claimTaskCombined");
 		
-			claimBpmTask();
-			
-			this.getManagedBean().getTaskListBothDataModel().reloadData();
-			//this.getManagedBean().getTaskListGroupDataModel().reloadData();
-			//this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
+		claimBpmTask();
+		
+		this.getManagedBean().getTaskListBothDataModel().reloadData();
+		//this.getManagedBean().getTaskListGroupDataModel().reloadData();
+		//this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
 		
 		return "taskListCombined?faces-redirect=true";
 
@@ -999,9 +882,6 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 
 	public void claimTaskInDetailPage()  {
 		log.info("**********claimTask");
-
-
-
 
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);
@@ -1024,10 +904,12 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 			reqDTO.setTaskId(this.getManagedBean().getTaskIdPair());
 	    	reqDTO.setCtxToken(token);
 	    	bpmSO.claimTask(reqDTO);
-		}		
+		}
+		
 		reqDTO.setTaskId(this.getManagedBean().getTaskId());
     	reqDTO.setCtxToken(token);
     	bpmSO.claimTask(reqDTO);
+		
 		/*#31422-basri 190821*/
 
 		this.getManagedBean().getTaskListGroupDataModel().reloadData();
@@ -1191,3 +1073,4 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 	}
 	// 25627 -End.
 }
+
