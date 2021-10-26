@@ -2331,8 +2331,19 @@ public class TemplateSpecBackingBean extends
 					if(specAnswer.getTplSpecZoneQty()!=null 
 							&& !specAnswer.getTplSpecZoneQty().getQty().equals(new BigDecimal(0)) 
 								|| specAnswer.getTplSpecZoneQty() == null && !specAnswer.getTplSpecQuestion().getClQuantity().equals(new BigDecimal(0))){
-								totalMaxScore = totalMaxScore.add(specAnswer
-										.getTplSpecQuestion().getMaxScore());
+								//#31902 - filter for spec tier qty - start
+								if(specAnswer.getTplSpecTierQty()!=null){
+									if(specAnswer.getAnswerNumeric()!=null){	
+										totalMaxScore = totalMaxScore.add(specAnswer
+												.getTplSpecQuestion().getMaxScore());
+									
+									}									
+								}else{	
+									totalMaxScore = totalMaxScore.add(specAnswer
+											.getTplSpecQuestion().getMaxScore());
+								
+								}
+								//#31902 - filter for spec tier qty - end
 					}
 				}
 // #21695 29/9/2021				
@@ -2362,7 +2373,7 @@ public class TemplateSpecBackingBean extends
 					}
 				}
 				
-				else{
+				else if(isTechnicalSpec){//#31902 - filter for technical stage
 // #21695 29/9/2021
 // Technical score					
 					if (autoScore != null) {
