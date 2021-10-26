@@ -1820,9 +1820,12 @@ public class ViewApplHistoryBackingBean extends
 			}
 		}
 		
-		if(isRejected && !isHasBasic){
+		if(this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_MOF) && isRejected && !isHasBasic){
+			return false;
+		}else if(this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_CATEGORY) && isRejected){
 			return false;
 		}
+		
 		return true;
 	}
 	//#29823 - END
