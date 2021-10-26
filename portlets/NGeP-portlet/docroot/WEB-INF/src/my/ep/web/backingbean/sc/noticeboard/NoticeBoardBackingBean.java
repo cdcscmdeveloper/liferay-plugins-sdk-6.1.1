@@ -2569,6 +2569,7 @@ public class NoticeBoardBackingBean extends
 						SmMofAccount mofAccount = retrieveMofAccount(supplierId);
 						if (mofAccount != null) {
 							this.getManagedBean().setSupplierMofNo(mofAccount.getMofNo());
+							this.getManagedBean().setSupplierMofExpDate(mofAccount.getExpDate()); //#29560
 						} else {
 							isUser = false;// no need to display the check qualification icon
 						}

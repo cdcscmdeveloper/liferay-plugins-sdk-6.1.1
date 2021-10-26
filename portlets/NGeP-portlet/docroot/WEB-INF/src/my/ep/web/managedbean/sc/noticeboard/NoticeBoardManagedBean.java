@@ -180,6 +180,7 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	// Used to set mof number if logged user is a supplier
 	private String mofNo = null;
 	private String supplierMofNo;
+	private Date supplierMofExpDate; //#29560
 	private boolean validMofNo;
 	private Map<String, Date> amendmentDateMap;
 	private Map<BigDecimal, Date> amendmentClosingDateMap;
@@ -1312,6 +1313,7 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		this.workflowStatus = workflowStatus;
 	}
 
+	
 	public boolean isNewCategory() {
 		return newCategory;
 	}
@@ -1345,7 +1347,20 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		this.remarkHistoryList = remarkHistoryList;
 	}
 
-	
-
+	//#29560 - start
+	/**
+	 * @return the supplierMofExpDate
+	 */
+	public Date getSupplierMofExpDate() {
+		return supplierMofExpDate;
+	}
+		
+	/**
+	 * @param supplierMofExpDate the supplierMofExpDate to set
+	 */
+	public void setSupplierMofExpDate(Date supplierMofExpDate) {
+		this.supplierMofExpDate = supplierMofExpDate;
+	}
+	//#29560 - end
 
 }
