@@ -144,6 +144,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.ct.CtAddressUtil;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
 import my.ep.web.backingbean.ct.circular.cc.CentralContractBackingBean;
 import my.ep.web.backingbean.sc.loa.DirectLOABackingBean;
 import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
@@ -3975,7 +3976,24 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return the navigate URL 
 	 */
 	public void goToLoaView(ScLoa scLoa) {
-		if (scLoa.getScLoiLoa().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DIRECT_NEGO)) { //Direct Nego
+		//Enhancement 15851 - shaqimi start
+		String slLoaNo = this.getManagedBean().getContractVer().getCtContractValue().getLoaNo();
+		Long contractId = this.getManagedBean().getContractVer().getCtContract().getContractId();
+		if(slLoaNo.substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)){
+			AmendmentBackingBean abb = new AmendmentBackingBean();
+			//follow structure but for amendment
+			DirectLOABackingBean directLoaBackingBean = new DirectLOABackingBean();
+			FacesContext fc = FacesContext.getCurrentInstance();
+			directLoaBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+			directLoaBackingBean.getManagedBean().setTrackingDairyView(true);
+			directLoaBackingBean.viewLOA(scLoa.getLoaId());
+			
+			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+			abb.getManagedBean().setTrackingDairyView(true);
+			abb.gotoAmendViewPage(contractId, scLoa.getLoaId());
+		}
+		//Enhancement 15851 - shaqimi end
+		else if (scLoa.getScLoiLoa().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DIRECT_NEGO)) { //Direct Nego
 			DirectLOABackingBean directLoaBackingBean = new DirectLOABackingBean();
 			FacesContext fc = FacesContext.getCurrentInstance();
 			directLoaBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
@@ -4718,5 +4736,43 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 		
 		//#25002 - end
+		
+		//Enhancement 29418 - shaqimi
+		
+		private FacesScopes getFacesScopes() {
+			FacesScopes facesScopes = new FacesScopes();
+			return facesScopes;
+		}
+		
+		/**
+		 * Generate report.
+		 *
+		 * @param dpObj the dp obj
+		 */
+		public void generateReportPDF(CtAgreement agreement){
+			log.info("generateReportPDF");
+			String contractVerId = agreement.getCtAmendment().getCtContractVer().getContractVerId().toString();
+			String docType = "test";
+			
+			Map<String, Map<String, String>> paramMaps = new HashMap<String, Map<String, String>>();
+			Map<String, String> paramMap = new HashMap<String, String>();
+			String reportName = null;
+			
+			reportName = ReportConst.CT_AMENDMENT_UPDATE_RPT_AMENDMENT_DETAIL;
+			paramMap.put(ReportConst.PARAM_CONTRACT_VER_ID, contractVerId);
+			paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+			paramMaps.put(reportName, paramMap);
+			
+			if(reportName!=null) {
+				try {
+					generateReportPDF(reportName, paramMap);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} else {
+				throw new EpException("Report is not available for this document.");
+			}
+		}
+		//Enhancement 29418 - end
 
 }  
