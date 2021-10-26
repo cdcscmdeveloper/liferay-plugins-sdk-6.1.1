@@ -155,7 +155,10 @@ public class ContractManagedBean extends BaseManagedBean {
 	private CtAttachment ctAttachmentLatest;
 	private CtAttachment ctAttachmentDelete;
 	private List<ScLoa> bondDetail;
+	// #24333 - Start
 	private boolean isExtendContract = false;
+	private boolean disableOriginalBond = false;
+	// #24333 - End
 	
 	// Start - 28479	
 	private boolean isErr100033 = false;
@@ -164,9 +167,6 @@ public class ContractManagedBean extends BaseManagedBean {
 	// End - 28479	
 	
 	private boolean hasAmendmentLoaNo = false; //15851
-	
-	//#13847 - start
-	private boolean disableDeferment = false;
 
 	//#28854 - start
 	private List<String> itemSpecification;
@@ -174,6 +174,9 @@ public class ContractManagedBean extends BaseManagedBean {
 	private String supplierOffer;
 	private List<ScRequestItemSpecOffer> scRequestItemSpecOfferList;
 	//#28854 - end	
+	
+	//#13847 - start
+	private boolean disableDeferment = false;
 
 	/**
 	 * @return the fileDirectory
@@ -1392,14 +1395,6 @@ public class ContractManagedBean extends BaseManagedBean {
 	//#15851 - end
 	
 	// End - 28479
-
-	public boolean isDisableDeferment() {
-		return disableDeferment;
-	}
-
-	public void setDisableDeferment(boolean disableDeferment) {
-		this.disableDeferment = disableDeferment;
-	}
 	
 	/* #28854 start*/
 	public String getNewOfferSpec() {
@@ -1432,5 +1427,21 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setScRequestItemSpecOfferList(List<ScRequestItemSpecOffer> scRequestItemSpecOfferList) {
 		this.scRequestItemSpecOfferList = scRequestItemSpecOfferList;
 	}	
-	/* #28854 end*/	
+	/* #28854 end*/
+
+	public boolean isDisableDeferment() {
+		return disableDeferment;
+	}
+
+	public void setDisableDeferment(boolean disableDeferment) {
+		this.disableDeferment = disableDeferment;
+	}
+	
+	public boolean isDisableOriginalBond() {
+		return disableOriginalBond;
+	}
+
+	public void setDisableOriginalBond(boolean disableOriginalBond) {
+		this.disableOriginalBond = disableOriginalBond;
+	}
 }
