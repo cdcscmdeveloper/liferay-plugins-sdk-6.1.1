@@ -1,0 +1,265 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+			
+<!-- START LOG : 24333, by Putra 05082019 -->
+	<p:panel id="bondpanelId" toggleable="true" toggleSpeed="500">
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.ct.panel.performance.bond']}"/>
+			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.performance.bond.dtls']}"/>
+	   	</f:facet>
+	   		<f:verbatim />
+			 <h:commandLink value="#{lbl['lbl.ct.sample.bond.letter']}" style="float:left;"
+				styleClass="blue_font"
+				action="#{amendmentBackingBean.downloadSampleBondLetter()}">
+			</h:commandLink>
+	   	<p:spacer width="2" />	
+	   	<h:panelGrid columns="2">
+	   		<p:outputLabel id="contractPeriodId" value="#{lbl['lbl.ct.bond.contractperiod']}" />
+			<p:inputText for="contractPeriodId" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
+	  			value="#{ctBackingBean.calculateBondPeriod()}"  disabled="true">
+		 	</p:inputText>
+			
+			<p:outputLabel id="overallContractAmountId" value="#{lbl['lbl.ct.bond.overallamount']}" />
+			<p:inputText for="overallContractAmountId" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
+	  			value="#{ctBackingBean.managedBean.contractVer.ctContract.loa.loaAmt}"  disabled="true">
+		 		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			</p:inputText>
+	   	
+	   		<p:outputLabel id="bondPercentageId" value="#{lbl['lbl.ct.bond.bondpercentage']}" />
+			<p:inputText for="bondPercentageId" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
+	  			value="#{ctBackingBean.managedBean.contractVer.ctContract.loa.bondPercentage}"  disabled="true">
+		 		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			</p:inputText>
+			
+			<p:outputLabel id="bondAmountId" value="#{lbl['lbl.ct.bond.bondamount']}" />
+			<p:inputText for="bondAmountId" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
+	  			value="#{ctBackingBean.managedBean.contractVer.ctContract.loa.bondAmt}"  disabled="true">
+		 		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			</p:inputText>
+			<p:outputLabel />
+			<p:inputTextarea autoResize="false" disabled="true" rows="4" 
+				style="width:200px;margin-bottom:5px;"
+			   	value="#{ctBackingBean.getBondAmountInText()}" />
+		</h:panelGrid>
+		
+		<p:spacer width="1" />		
+		<p:dataTable id="tableBondId" var="varBond" rowIndexVar="index" widgetVar="tableBondWidget"
+			value="#{ctBackingBean.managedBean.ctContractAmount.ctPerformanceBonds}"  rowKey="#{rowKeyObj}">
+			<ac:paginator for="tableBondId" />
+			<p:column style="width:2%;"  rendered="#{!ctBackingBean.managedBean.viewContract
+				and ctBackingBean.managedBean.ctContractAmount.bondReq}">
+				<f:facet name="header">
+					<p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.selectAll}">
+					<p:ajax partialSubmit="true" process="@this"
+						update=":form:tableBondId, :form:delPdBtn" listener="#{ctBackingBean.selectAllBond}" />
+					</p:selectBooleanCheckbox>
+				</f:facet>
+				<p:selectBooleanCheckbox value="#{varBond.selectedCheckBox}" styleClass="myCustomChekBox">
+					<p:ajax event="change"  update="@this, :form:tableBondId, :form:delPdBtn" listener="#{ctBackingBean.selectOnePerformanceCheckboxSelect}" />
+				</p:selectBooleanCheckbox>
+			</p:column> 
+					
+			  <p:column style="width:30%;white-space:normal;"  styleClass="column-align-center">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.ct.ref.no']}"  styleClass="required"/>
+				</f:facet>
+				<p:inputText id="bondRefNoId" value="#{varBond.refNo}" maxlength="50" style="width:95%;" 
+					rendered="#{!ctBackingBean.managedBean.viewContract
+					and ctBackingBean.managedBean.ctContractAmount.bondReq}">
+					<p:ajax  process="@this"></p:ajax>
+				</p:inputText>			
+				<h:outputText value="#{varBond.refNo}" 
+				      style="float:left;text-align:left;"  rendered="#{ctBackingBean.managedBean.viewContract
+				      or !ctBackingBean.managedBean.ctContractAmount.bondReq}"/>
+			</p:column> 
+			<!-- #30479 start modify padding and dropdown length -->	
+			<p:column style="width:25%;white-space:normal; padding-top: 0px;"  styleClass="column-align-center">
+				<f:facet name="header">
+				        <h:outputText value="#{lbl['lbl.ct.financial.inst']}"  styleClass="required"/>
+				</f:facet>
+				
+				<p:selectOneMenu id="orgName"  value="#{varBond.financialOrg.financialOrgId}"
+				    style="width:95%;" rendered="#{!ctBackingBean.managedBean.viewContract
+				    and ctBackingBean.managedBean.ctContractAmount.bondReq}" >
+					   <f:selectItems value="#{ctBackingBean.retrieveFinancialOrgList()}" />
+					   <p:ajax  process="@this"></p:ajax>
+				</p:selectOneMenu>	  
+	
+				<h:outputText value="#{varBond.financialOrgName}"
+				   style="float:left;text-align:left;" rendered="#{ctBackingBean.managedBean.viewContract
+				   or !ctBackingBean.managedBean.ctContractAmount.bondReq}"/>
+			</p:column>
+			<!-- #30479 end -->
+					
+			<p:column style="width:12%;" headerText="#{lbl['lbl.ct.amount']}" styleClass="column-align-center" >
+				<p:inputText value="#{varBond.bondAmount}" styleClass="ppRightBtn" maxlength="18" 
+				    rendered="#{!ctBackingBean.managedBean.viewContract
+				    and ctBackingBean.managedBean.ctContractAmount.bondReq}" style="width:90px;" label="#{lbl['lbl.ct.amount']}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						<p:ajax process="@this"></p:ajax>
+				</p:inputText>
+				
+				<h:outputText value="#{varBond.bondAmount}" style="float:right;" rendered="#{ctBackingBean.managedBean.viewContract
+					or !ctBackingBean.managedBean.ctContractAmount.bondReq}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+					
+			<p:column style="width:8%;" styleClass="column-align-center">
+				<f:facet name="header">
+				        <h:outputText value="#{lbl['lbl.ct.effective.date']}"  styleClass="required"/>
+				</f:facet>
+				
+				<p:calendar id="popupButtonCal4" value="#{varBond.effDate}"  styleClass="calendarDateField" size="9" 
+					rendered="#{!ctBackingBean.managedBean.viewContract and ctBackingBean.managedBean.ctContractAmount.bondReq}"
+					showOn="button" readonlyInput="true" navigator="true"
+					mindate="#{ctBackingBean.managedBean.contractVer.ctContractValue.effDate}"
+					maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
+					 <p:ajax event="dateSelect" update="@([id$=bondExpDateCalId])" process="@this" />
+				</p:calendar>
+				
+					<h:outputText value="#{varBond.effDate}" rendered="#{ctBackingBean.managedBean.viewContract
+						or !ctBackingBean.managedBean.ctContractAmount.bondReq}">
+		                <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></h:outputText>
+			</p:column>
+					
+			<p:column style="width:8%;" headerText="#{lbl['lbl.ct.expiry.date']}" styleClass="column-align-center">
+				<p:calendar id="bondExpDateCalId"  value="#{varBond.expDate}" styleClass="calendarDateField" showOn="button"
+				    readonlyInput="true" disabled="true"  navigator="true" rendered="#{!ctBackingBean.managedBean.viewContract
+				    and ctBackingBean.managedBean.ctContractAmount.bondReq}"
+					size="9"  pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+				    <f:attribute name="startDate" value="#{varBond.effDate}" />
+	                   <f:validator validatorId="primeDateRangeValidator" />
+			    </p:calendar>
+			    
+			     <h:outputText value="#{varBond.expDate}" rendered="#{ctBackingBean.managedBean.viewContract
+			     	or !ctBackingBean.managedBean.ctContractAmount.bondReq}">
+		            <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></h:outputText>
+			</p:column>
+					
+			<p:column styleClass="column-align-center"  headerText="#{lbl['lbl.txt.attachment']}" style="width:15%;">			
+				<h:panelGroup id="uploadBondPg" columns="2">
+					<p:commandButton oncomplete="uploadBondDlg.show();return false;" update=":form:uploadBondDlg"
+					   	process="@this" partialSubmit="true" actionListener="#{ctBackingBean.PerformanceBondValue(varBond)}"
+						rendered="#{!ctBackingBean.managedBean.viewContract and varBond.fileName == null
+						and ctBackingBean.managedBean.ctContractAmount.bondReq}"
+						style="float:left;" icon="ui-icon-upload">
+					</p:commandButton>
+					<h:commandLink
+						title="#{varBond.fileName}"
+						value="#{ctBackingBean.getShortFileName(varBond.fileName)}"						
+						style="float:left;" styleClass="blue_font"
+						action="#{ctBackingBean.commonDownload(varBond.filePath, varBond.fileName)}" />
+					<p:commandLink rendered="#{varBond.fileName != null and (!ctBackingBean.managedBean.viewContract
+						or !ctBackingBean.managedBean.ctContractAmount.bondReq)and ctBackingBean.managedBean.contractVer.docType != ParameterConst.doctypeContractAmendment}" style="float:left;" 
+					  	action="#{ctBackingBean.setIndexProperty(index)}"
+					   	process="@this" partialSubmit="true"  onsuccess="deleteBondAttachmentDlg.show();">
+			   			<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
+			 	</p:commandLink>
+				</h:panelGroup>
+			</p:column>
+		</p:dataTable>
+		<div class="ppRightBtn">
+				
+			<p:commandButton id="addPdBtn"  value="#{lbl['lbl.btn.add']}" process="@this" 
+			  rendered="#{!ctBackingBean.managedBean.viewContract
+			  	and ctBackingBean.managedBean.contractVer.docType != ParameterConst.doctypeContractAmendment
+			  	and ctBackingBean.managedBean.ctContractAmount.bondReq}" 
+			     action="#{ctBackingBean.addBondDetails}" update=":form:tableBondId" partialSubmit="true"
+			     oncomplete="tableBondWidget.paginator.endLink.click();">
+				<p:tooltip for="addPdBtn">
+				    <h:outputText value="#{lbl['lbl.ct.tooltip.add.performance.bond']}" escape="false" />
+				</p:tooltip>
+			</p:commandButton>
+			
+			
+			<p:spacer width="1" />
+			  
+		     <p:commandButton id="delPdBtn" value="#{lbl['lbl.ct.delete']}" 
+		          process="@this" partialSubmit="true" onsuccess="dlgPerformDel.show();"
+		          disabled="#{ctBackingBean.managedBean.buttonHideActive}"
+			      rendered="#{!ctBackingBean.managedBean.viewContract
+			      	and ctBackingBean.managedBean.contractVer.docType != ParameterConst.doctypeContractAmendment
+			      	and ctBackingBean.managedBean.ctContractAmount.bondReq}" >
+				<p:tooltip for="delPdBtn">
+				    <h:outputText value="#{lbl['lbl.ct.tooltip.delete.performance.bond']}" escape="false" />
+				</p:tooltip>
+			</p:commandButton>				
+		</div>
+		</p:panel>
+	<!-- END LOG : 24333, by Putra 05082019 -->					
+	<p:spacer width="1" />
+	
+	  
+	<p:panel id="bondDetails" toggleable="true" 
+				  rendered="#{ctBackingBean.isPendingSupplementalContractLetter()}" toggleSpeed="500">
+			<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.ct.panel.supplemental.bond']}"/>
+			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.supplemental.bond.dtls']}"/>
+	   	</f:facet>	
+	<h:panelGrid columns="2" columnClasses="columnWidth225">		
+			<p:outputLabel value="#{lbl['lbl.ct.new.contract.period']}" />
+			<h:panelGrid columns="3">
+				<p:inputText style="width:120px;" disabled="true" styleClass="ppRightBtn"
+					value="#{(ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend)
+						? amendmentBackingBean.calculateNewContractPeriod(true) : lbl['lbl.txt.na']}" />
+				<p:spacer width="2" />
+				<p:outputLabel value="#{lbl['lbl.ct.months']}" />
+			</h:panelGrid>
+			<p:outputLabel value="#{lbl['lbl.ct.new.overall.contract.amt']}" />
+			<p:inputText disabled="true" style="width:200px;" styleClass="ppRightBtn"
+			    value="#{(ctBackingBean.managedBean.contractVer.ctAmendment.valueChange) 
+			    	? amendmentBackingBean.newOverallContractAmount() : lbl['lbl.txt.na']}"  >
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />			
+			</p:inputText>
+			<p:outputLabel value="#{lbl['lbl.ct.pb.percentage']}" />
+			<p:inputText style="width:200px;" disabled="true" styleClass="ppRightBtn"
+				value="#{ctBackingBean.managedBean.contractVer.ctContract.loa.bondPercentage}">
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+				</p:inputText>
+			<p:outputLabel value="#{lbl['lbl.ct.pb.amount']}" />
+			  
+			<p:inputText style="width:200px;" disabled="true"  styleClass="ppRightBtn"
+			  value="#{ctBackingBean.managedBean.contractVer.ctContract.loa.bondAmt}" >
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />				
+			</p:inputText>
+			
+			<p:outputLabel />
+			<p:inputTextarea autoResize="false" disabled="true" rows="4" 
+				style="width:200px;margin-bottom:5px;"
+				rendered="#{ctBackingBean.managedBean.contractVer.ctContract.loa.bondAmt != null }"
+			   	value="#{amendmentBackingBean.getBondAmountInText()}" />
+		<p:spacer width="2" />	   	
+		<p:panel rendered="#{ctBackingBean.isContractExtend()}" width="700px" height="350px">
+	   	<h:panelGrid columns="1">
+	    <p:outputLabel value="#{lbl['lbl.ct.bond.spl.alert']}" 
+	   	position = "left" styleClass="red_font" />
+	   	</h:panelGrid>
+	   	</p:panel>
+			   	
+			<p:confirmDialog widgetVar="bonSignerConfirmPopupWin"
+			id="bonSignerConfirmPopup" width="500px"
+			message="#{lbl['lbl.sc.gst.signers.alert.msg']}">
+			<div align="center">
+				<p:commandButton value="#{lbl['lbl.btn.ok']}"
+					oncomplete="bonSignerConfirmPopupWin.hide()" process="@this"></p:commandButton>
+			</div>
+
+		</p:confirmDialog>
+		</h:panelGrid>
+	</p:panel>
+	
+</ui:composition>
+
+
+
+
+

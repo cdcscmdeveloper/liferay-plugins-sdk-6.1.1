@@ -1,0 +1,831 @@
+ <ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.items.spec.guideline']}" escape="false"  />
+	<p:commandLink value="#{lbl['lbl.ct.instruction.items.spec.click.here']}" ajax="false" 
+		style="font-style:italic" process="@this"
+		action="#{ctBackingBean.downloadItemSpecGuideline()}"></p:commandLink><br/>
+		
+	<p:panel id="searchId" header="#{lbl['lbl.ct.search']}" toggleable="true" toggleSpeed="500">	  		
+  <table style="width:100%">
+	<tr>
+		<td colspan="1" rowspan="1"><h:outputLabel value="#{lbl['lbl.ct.item.name']}"/></td>
+		<td colspan="1" rowspan="1">
+		<h:inputText value="#{amendmentBackingBean.managedBean.itemname}" style="width:270px;" maxlength="50"></h:inputText>	
+		</td>
+		<td colspan="1" rowspan="1">
+	    <h:outputLabel value="#{lbl['lbl.ct.item.code']}" style="float:center-left;"  />
+	    </td>
+		<td colspan="1" rowspan="1">
+		<h:inputText value="#{amendmentBackingBean.managedBean.itemcode}" style="width:270px; float:center;"  maxlength="20"  />
+			</td>
+	</tr>
+	<tr>	
+		   <td colspan="1" rowspan="1">
+		   				<h:outputLabel value="#{lbl['lbl.ct.item.type']}" />
+		   </td>
+			<td colspan="1" rowspan="1">
+				<h:selectOneMenu value="#{amendmentBackingBean.managedBean.itemtype}"  style="width:280px;" maxlength="500" >
+							<f:selectItems value="#{contractRequestBackingBean.itemTypeValues}"></f:selectItems>
+							<f:selectItem itemLabel="#{lbl['lbl.ct.all']}" itemValue="3" >  </f:selectItem>      	
+				</h:selectOneMenu>
+			</td>
+			
+			<td colspan="1" rowspan="1">
+	   		<h:outputLabel value="#{lbl['lbl.ct.item.skuno']}"/> 
+	   		</td>
+	  <td colspan="1" rowspan="1">
+	  		<h:inputText value="#{amendmentBackingBean.managedBean.skuno}" style="width:270px;" maxlength="50"></h:inputText>	
+	 </td>			
+	</tr>			
+	
+	<tr>
+		 <td colspan="1" rowspan="1">
+		 	<p:outputLabel value="#{lbl['lbl.ct.item.status']}"/>
+		</td>
+		 <td colspan="1" rowspan="1">
+				 <h:selectOneMenu value="#{amendmentBackingBean.managedBean.itemstatus}" style="width:280px;" maxlength="500" >  
+			    	<f:selectItem itemLabel="#{lbl['lbl.ct.selectOne']}" itemValue="" />  
+			    	<f:selectItem itemLabel="#{lbl['lbl.ct.inactive']}" itemValue="0" />   
+			    	<f:selectItem itemLabel="#{lbl['lbl.ct.active']}" itemValue="1" /> 
+			    	<f:selectItem itemLabel="#{lbl['lbl.ct.all']}" itemValue="2" />     	            	
+		       </h:selectOneMenu>  
+       </td>
+       		<td colspan="1" rowspan="1">
+			<h:outputLabel value="#{lbl['lbl.ct.item.UOM']}"/>
+		</td>
+		<td colspan="1" rowspan="1"> 
+					<p:autoComplete panelStyleClass="uomAuto" id="uomDetId" scrollHeight="250" size="40" var="pmUom" converter="PmUomConverter"
+							itemLabel="#{amendmentBackingBean.retriveUomCodeDesc(pmUom)}"
+							itemValue="#{pmUom}" 
+							value="#{amendmentBackingBean.managedBean.selectedSearchItem}"
+							completeMethod="#{amendmentBackingBean.autoCompleteUom}"
+							maxResults="50" dropdown="false" forceSelection="true" />
+	  </td>
+	</tr> 
+	
+	<tr >
+		<td colspan="1" rowspan="1"></td>
+		<td colspan="1" rowspan="1"></td>	
+				<td colspan="1" rowspan="1">
+				    <h:outputLabel value="#{lbl['lbl.ct.item.typeofgoods']}"  />
+				 </td>
+		
+	    	  <td colspan="1" rowspan="1">
+		    	  <h:selectOneMenu value="#{amendmentBackingBean.managedBean.typeofgoods}" style="width:280px;" maxlength="500" >  
+	            	<f:selectItem itemLabel="#{lbl['lbl.ct.selectOne']}" itemValue="" />  
+	            	<f:selectItems value="#{amendmentBackingBean.getLocalGoodsRadioValues(ParameterTypeConst.itemOrigin)}" />
+	            	<f:selectItem itemLabel="#{lbl['lbl.ct.all']}" itemValue="197" />      	
+	              </h:selectOneMenu> 
+             </td>
+	 </tr>
+	 </table>	 
+		 <div class="ppRightBtn" style="width:100%" > 
+					<p:commandButton id="panelSearchIditem" value="#{lbl['lbl.btn.search']}" action="#{amendmentBackingBean.searchCircular}" process="@this,searchId" partialsubmit="true" 
+					    onstart="circularSearchBlk.show();" oncomplete="circularSearchBlk.hide();" update="@form"  />
+					<p:commandButton value="#{lbl['lbl.btn.reset']}" action="#{amendmentBackingBean.searchReset}"  update="@form" />
+				</div>
+  	 </p:panel>
+	<p:panel id="itemId" toggleable="true" 
+	    toggleSpeed="500"  rendered="#{amendmentBackingBean.managedBean.itemProductExist}" >
+	      <f:facet name="header">
+			<h:outputText value="#{lbl['lbl.ct.panel.product']}"/>
+	        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.product.dtls']}"/>
+	     </f:facet>
+	  	
+	  	<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.select.item']}" escape="false"/><br/><br/>
+	  	
+		
+		<h:panelGrid style="width:100%;">
+		   <p:dataTable id="amenditemTable" var="ctItemVar" widgetVar="ctItemsTableObj"  lazy="true" rows="10" 
+			     value="#{amendmentBackingBean.managedBean.contractListingPagingDataModel}"  emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" selectionMode="single"	
+			     selection="#{amendmentBackingBean.managedBean.selectedItem}"  rowIndexVar="index" rowKey="#{ctItemVar}"> 
+				 <ac:paginator for="amenditemTable" />
+				 <p:ajax event="rowSelect" update=":form:itemId" listener="#{amendmentBackingBean.onSelectProductItem()}"
+				     process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+			
+		     
+		      <p:column headerText="#{lbl['lbl.ct.No']}" styleClass="column-align-center" style="width:8%; white-space:normal;">
+                 <h:outputText value="#{index+1}" />
+	         </p:column> 
+		     
+		      <p:column  styleClass="column-align-center" style="width:35%; white-space:normal;"  >
+	 			<f:facet name="header">
+	      			<h:outputText id="productItemDesc" value="#{lbl['lbl.ct.item.desc']}" escape="false"/>
+	     		</f:facet>
+	     		<h:outputText id="itemNameID" value="#{fn:replace(amendmentBackingBean.contactItemProd(ctItemVar),',','&lt;/br&gt;')}" size="50" escape="false"  style="float:left; text-align:left;"/>
+            		 <p:commandLink id="productSpec" update=":form:itemSpecDlg" action="#{ctBackingBean.viewItemSpecDlg(ctItemVar)}">
+						<p:graphicImage value="/css/images/design/ico-viewnedit.png" title="#{lbl['lbl.ct.specification']}" style="float:left; padding-left: 5px;" />
+					</p:commandLink>
+         		 </p:column>  
+			
+				  <p:column style="width:15%; white-space:normal;" 
+				      styleClass="column-align-center" headerText="#{lbl['lbl.ct.type.of.goods']}">
+					   <h:outputText  style="float:left;" 
+					     value="#{amendmentBackingBean.getParameterDesc(ctItemVar.itemOrigin)}"  />
+				  </p:column>				
+			
+				  <p:column headerText="#{lbl['lbl.ct.uom']}" 
+				     styleClass="column-align-center" style="width:10%; white-space:normal;">
+					    <h:outputText value="#{ctItemVar.scRequestItem.uom.uomName}" style="float:left;" />
+				  </p:column>
+			
+				  <p:column style="width:10%; white-space:normal;" styleClass="column-align-center">
+		            <f:facet name="header">
+			            <h:outputText value="#{lbl['lbl.ct.min.order.qty']}"/>
+	               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.product.min.order.qty']}"/>
+	               	</f:facet>	               	
+	               	<p:inputText value="#{ctItemVar.minimumOrderQty}" styleClass="ppRightBtn" style="float:right;width:130px;" label="#{lbl['lbl.ct.min.order.qty']}"
+		        		maxlength="#{ctItemVar.scRequestItem.uom.decimalScale == 0 ? 13 : 14}"
+		        		disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.getValueFromAmendment() or ctBackingBean.managedBean.disableAmendDetails}">
+						<f:converter converterId="dynamicNumberConverter" />
+						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItemVar.scRequestItem.uom.uomCode)}" />
+						<p:ajax event="change" update="@this" listener="#{ctBackingBean.onChangeMinimumQty(ctItemVar)}"/>
+			        </p:inputText>
+		         </p:column> 
+				
+				<p:column headerText="#{lbl['lbl.ct.status']}" style="width:15%; white-space:normal;" styleClass="column-align-center">
+		             <h:outputText value="#{ctItemVar.recordStatusFlg == 1 ? lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
+		        </p:column> 
+				
+			</p:dataTable>
+			
+							
+		       </h:panelGrid>
+		
+		       <p:outputPanel id="changeField">
+			       <p:spacer height="20" />
+			       <h:panelGrid columns="2" style="height:50px;text-align:bottom;"
+				        rendered="#{amendmentBackingBean.managedBean.selectedItem != null}">
+				        <h:outputLabel for="show" value="#{lbl['lbl.ct.show']}" style="width:50px;" />
+					    <h:panelGrid columns="3">
+					    	<p:selectOneMenu id="show" value="#{ctBackingBean.managedBean.showItem}" style="width:200px;">
+					           	<f:selectItems value="#{amendmentBackingBean.getItemDisplayTypeDropdownList(
+					           		amendmentBackingBean.managedBean.selectedItem.itemType.parameterCode)}" />
+						        <p:ajax event="change" update=":form:changeField"  process="@form"  onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+					       	</p:selectOneMenu>
+					       	<p:spacer width="1"/>
+				     		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.product.dtls.show']}" />
+			             </h:panelGrid>
+			       </h:panelGrid>
+				   <!-- Item Price -->
+			       <p:outputPanel style="width:100%" 
+			           rendered="#{amendmentBackingBean.managedBean.selectedItem !=null and 
+			    	   ctBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypePrice
+				       and (ctBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or  ctBackingBean.managedBean.contractVer.ctAmendment.otherChange)}">
+				
+				            <p:dataTable id="itemPriceTable" var="itemPriceVar" sortBy="#{itemPriceVar.ctContractZone.zoneName}"
+					             value="#{amendmentBackingBean.managedBean.selectedItem.ctItemPrices}">
+					             <ac:paginator for="itemPriceTable" />
+					 
+					             <p:column headerText="#{lbl['lbl.ct.zone']}" style="width:40%; white-space:normal;" styleClass="column-align-center"
+						             rendered="#{amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalStandard or 
+					  		         amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTier or 
+					  		         amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTariff}">
+						               <p:outputLabel value="#{itemPriceVar.ctContractZone.zoneName}" style="float:left;" rendered="#{!itemPriceVar.changeZoneLabel}" />
+						               <p:outputLabel value="#{itemPriceVar.ctContractZone.zoneName} (#{lbl['lbl.ct.new']})" style="float:left;" rendered="#{itemPriceVar.changeZoneLabel}" />
+			             
+					             </p:column>
+					
+					            <p:column style="width:10%; white-space:normal;" styleClass="column-align-center"
+						            rendered="#{amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeTier or 
+					  		        amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTier or
+					  		        amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeTariff or 
+					  		        amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTariff}">
+						     		<f:facet name="header">
+										<h:outputText value="#{lbl['lbl.ct.from.qty']}"/>
+					               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.qty']}"/>
+					               	</f:facet>
+						            <h:outputText value="#{itemPriceVar.fromQty}" styleClass="ppRightBtn">
+						            	<f:converter converterId="dynamicNumberConverter" />
+										<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
+						            </h:outputText>
+					           </p:column>
+				
+								<p:column style="width:10%; white-space:normal;" styleClass="column-align-center"
+									rendered="#{amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeTier or 
+								  		amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTier or
+								  		amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeTariff or 
+								  		amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTariff}">
+									<f:facet name="header">
+										<h:outputText value="#{lbl['lbl.ct.to.qty']}"/>
+					               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.qty']}"/>
+					            	</f:facet>
+									<h:outputText value="#{itemPriceVar.toQty}" styleClass="ppRightBtn">
+										<f:converter converterId="dynamicNumberConverter" />
+										<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
+						            </h:outputText>
+								</p:column>
+							
+								<p:column style="width:10%; white-space:normal;" styleClass="column-align-center"
+									rendered="#{amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeTariff or 
+								  		amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTariff}">
+									<f:facet name="header">
+										<h:outputText value="#{lbl['lbl.ct.sub.seq']}"/>
+					               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.qty']}"/>
+					               	</f:facet>
+					               	<h:outputText value="#{itemPriceVar.subSequence}" styleClass="ppRightBtn">					               		
+										<f:converter converterId="dynamicNumberConverter" />
+										<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
+						            </h:outputText>
+								</p:column>
+								
+								<p:column headerText="#{lbl['lbl.ct.price']}" style="width:10%; white-space:normal;" styleClass="column-align-center">
+								  <h:panelGroup style="float:right;" rendered="#{itemPriceVar.changePrice}">
+								   	<p:inputText value="#{itemPriceVar.unitPrice}" styleClass="ppRightBtn" style="width:100px;" label="#{lbl['lbl.ct.price']}"
+								   		disabled="#{ctBackingBean.managedBean.disableAmendDetails}" required="true">
+										<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+										<p:ajax process="@this"/>
+									</p:inputText>
+									</h:panelGroup>
+									<h:outputText value="#{itemPriceVar.unitPrice}" style="float:right;" rendered="#{!itemPriceVar.changePrice}">
+										<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+									</h:outputText>
+								</p:column>
+							
+								<p:column headerText="#{lbl['lbl.ct.effective.date']}" style="width:10%; white-space:normal;" styleClass="column-align-center">
+									<h:outputText value="#{itemPriceVar.effDate}" style="float:left;">
+										<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+									</h:outputText>
+								</p:column>
+								
+								<p:column headerText="#{lbl['lbl.ct.expiry.date']}" style="width:10%; white-space:normal;" styleClass="column-align-center">
+									<h:outputText value="#{itemPriceVar.expDate}" style="float:left;">
+										<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+									</h:outputText>
+								</p:column>
+								
+								<p:column headerText="#{lbl['lbl.ct.action']}"  styleClass="column-align-center"
+									rendered="#{!ctBackingBean.managedBean.disableAmendDetails and 
+						           		amendmentBackingBean.managedBean.selectedItem.recordStatusFlg == 1}"
+								     style="width:10%; white-space:normal;">
+									<p:commandLink update=":form:itemId" process="@form" 
+										disabled="#{itemPriceVar.chkIndexOfRow or 
+										(ctBackingBean.managedBean.contractVer.ctAmendment.otherChange and !ctBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange) }"
+									   	rendered="#{!itemPriceVar.changePrice and itemPriceVar.editable}" action="#{amendmentBackingBean.editItemPriceOnIndexs()}">
+										<f:setPropertyActionListener value="#{itemPriceVar}" target="#{amendmentBackingBean.managedBean.ctItemPrices}" />
+										<p:graphicImage value="/css/images/design/ico-edit.png" title="#{lbl['lbl.ct.edit']}" />
+									</p:commandLink>
+									<p:commandLink rendered="#{itemPriceVar.changePrice}" oncomplete="dlgItemPrices.show();return false;">
+										<f:setPropertyActionListener value="#{itemPriceVar}" target="#{amendmentBackingBean.managedBean.ctItemPrices}" />
+										<p:graphicImage value="/css/images/design/delete.png" title="#{lbl['lbl.ct.delete']}" />
+									</p:commandLink>
+								</p:column>
+				        
+				        </p:dataTable>
+				        <p:confirmDialog id="dlgItemPrices" widgetVar="dlgItemPrices" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                             severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                                 <div class="ppRightBtn">
+		                            <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                                update=":form:itemPriceTable" 
+		                                action="#{amendmentBackingBean.deleteItemPriceOnIndexs()}" oncomplete="dlgItemPrices.hide();"/>
+			                       <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgItemPrices.hide();" type="button" />
+		                     </div>
+                      </p:confirmDialog>
+			    </p:outputPanel>
+				<!-- Ceiling Quantity -->
+				<p:outputPanel style="width:100%" 
+			         rendered="#{amendmentBackingBean.managedBean.selectedItem!=null and
+			 		ctBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypeCeilQty
+			 		and (ctBackingBean.managedBean.contractVer.ctAmendment.quantityChange or ctBackingBean.managedBean.contractVer.ctAmendment.otherChange)}">
+				<p:dataTable id="ceilingTable" var="itemCeilingQtiesVar"
+					value="#{amendmentBackingBean.getActiveItemCeilingQty()}" >
+					<ac:paginator for="ceilingTable" />
+					<p:column headerText="#{lbl['lbl.ct.ministry']}" style="width:25%; white-space:normal;" styleClass="column-align-center">
+						<div align="left">
+						<h:outputText  value="#{amendmentBackingBean.retrieveMinistryByOrgProfileId(itemCeilingQtiesVar.ctAgency.orgProfile.orgProfileId)}" />
+					</div>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.ct.jabatan']}" style="width:25%; white-space:normal;" styleClass="column-align-center">
+						<div align="left">
+						<h:outputText  value="#{amendmentBackingBean.retrieveJabatanByOrgProfileId(itemCeilingQtiesVar.ctAgency.orgProfile.orgProfileId)}" />
+					</div>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.ct.ptj']}"	style="width:30%; white-space:normal;" styleClass="column-align-center">
+						<div align="left">
+						   <h:outputText  value="#{itemCeilingQtiesVar.ctAgency.orgProfile.orgName}" />
+					</div>
+					</p:column>
+					<p:column style="width:10%; white-space:normal;" styleClass="column-align-center">
+						 <f:facet name="header">
+							<h:outputText value="#{lbl['lbl.ct.ceiling.qty']}"/>
+		               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ceiling.qty']}"/>
+	               		 </f:facet>
+					     <h:panelGroup style="float:right;" 
+					         rendered="#{itemCeilingQtiesVar.changeCeilQuantity or ctBackingBean.managedBean.contractVer.ctAmendment.otherChange}">
+						  <p:inputText value="#{itemCeilingQtiesVar.ceilingQuantity}" 
+						      styleClass="ppRightBtn" style="width:100px;" label="#{lbl['lbl.ct.ceiling.qty']}"
+						  	  maxlength="#{amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.decimalScale == 0 ? 13 : 14}"
+						  	  disabled="#{ctBackingBean.managedBean.disableAmendDetails}" >
+							<f:converter converterId="dynamicNumberConverter" />
+							<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
+							<p:ajax event="change" update="@this" listener="#{amendmentBackingBean.onChangeCeilingQty(itemCeilingQtiesVar)}"/>
+						</p:inputText>
+						</h:panelGroup>
+						<h:outputText value="#{itemCeilingQtiesVar.ceilingQuantity}"
+						        style="float:right;" rendered="#{!itemCeilingQtiesVar.changeCeilQuantity 
+						             and !ctBackingBean.managedBean.contractVer.ctAmendment.otherChange}">
+							<f:converter converterId="dynamicNumberConverter" />
+							<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
+						</h:outputText>
+					</p:column>
+					<p:column rendered="false" headerText="#{lbl['lbl.ct.effective.date']}" 
+					    style="width:10%; white-space:normal;" styleClass="column-align-center">
+						<h:outputText value="#{itemCeilingQtiesVar.effDate}" style="float:left;">
+							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</p:column>
+					<p:column rendered="false" headerText="#{lbl['lbl.ct.expiry.date']}" style="width:10%; white-space:normal;" styleClass="column-align-center">
+						<h:outputText value="#{itemCeilingQtiesVar.expDate}" style="float:left;">
+							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</p:column>
+					<p:column rendered="false" headerText="#{lbl['lbl.ct.action']}" style="width:5%; white-space:normal;" styleClass="column-align-center">
+						<p:commandLink update=":form:ceilingTable"
+							disabled="#{itemCeilingQtiesVar.chkIndexOfRow}"
+						   	rendered="#{!itemCeilingQtiesVar.changeCeilQuantity and itemCeilingQtiesVar.editable}"
+							action="#{amendmentBackingBean.editCeilingQuantityOnIndexs()}">
+							<f:setPropertyActionListener value="#{itemCeilingQtiesVar}" target="#{amendmentBackingBean.managedBean.ctItemCeilingQtys}" />
+							<p:graphicImage value="/css/images/design/ico-edit.png" title="#{lbl['lbl.ct.edit']}" />
+						</p:commandLink>
+						<p:commandLink oncomplete="dlgCeilQuantity.show();return false;" rendered="#{itemCeilingQtiesVar.changeCeilQuantity}">
+							<f:setPropertyActionListener value="#{itemCeilingQtiesVar}" target="#{amendmentBackingBean.managedBean.ctItemCeilingQtys}" />
+							<p:graphicImage value="/css/images/design/delete.png" title="#{lbl['lbl.ct.delete']}" />
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+				
+				 <p:confirmDialog id="dlgCeilQuantity" widgetVar="dlgCeilQuantity" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                             severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                                 <div class="ppRightBtn">
+		                            <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                                update=":form:ceilingTable" 
+		                                action="#{amendmentBackingBean.deleteCeilingQuantityOnIndexs()}" oncomplete="dlgCeilQuantity.hide();"/>
+			                       <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgCeilQuantity.hide();" type="button" />
+		                     </div>
+                      </p:confirmDialog>
+			</p:outputPanel>
+			<!-- Maximum Order Quantity -->
+			<p:outputPanel style="width:100%" 
+		           rendered="#{amendmentBackingBean.managedBean.selectedItem !=null and 
+		    	   ctBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypeMaxQty
+			       and (ctBackingBean.managedBean.contractVer.ctAmendment.quantityChange or ctBackingBean.managedBean.contractVer.ctAmendment.otherChange)}">
+			
+			            <p:dataTable id="itemMaxQtyTable" var="itemMaxQtyVar" sortBy="#{itemMaxQtyVar.ctContractZone.zoneName}"
+				             value="#{amendmentBackingBean.managedBean.selectedItem.ctItemMaxQties}" >
+				             <ac:paginator for="itemMaxQtyTable" />
+				 
+				             <p:column headerText="#{lbl['lbl.ct.zone']}" style="width:40%; white-space:normal;" styleClass="column-align-center"
+					             rendered="#{amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalStandard or 
+				  		         amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTier or 
+				  		         amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTariff}">
+					               <p:outputLabel value="#{itemMaxQtyVar.ctContractZone.zoneName}" style="float:left;" rendered="#{!itemMaxQtyVar.changeZoneLabel}" />
+					               <p:outputLabel value="#{itemMaxQtyVar.ctContractZone.zoneName} (#{lbl['lbl.ct.new']})" style="float:left;" rendered="#{itemMaxQtyVar.changeZoneLabel}" />
+		             
+				             </p:column>
+				
+				            
+							
+							<p:column headerText="#{lbl['lbl.ct.max.order.qty']}" styleClass="column-align-center">							  								
+								<p:inputText value="#{itemMaxQtyVar.maxQuantity}" styleClass="ppRightBtn" style="float:right;" required="true" rendered="#{itemMaxQtyVar.changeQuantity}" label="#{lbl['lbl.ct.max.order.qty']}"
+					        		maxlength="#{amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.decimalScale == 0 ? 13 : 14}" disabled="#{ctBackingBean.managedBean.disableAmendDetails}">
+									<f:converter converterId="dynamicNumberConverter" />
+									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
+									<p:ajax event="blur" update="@this"/>
+						        </p:inputText>
+						        <h:outputText value="#{itemMaxQtyVar.maxQuantity}" style="float:right;" rendered="#{!itemMaxQtyVar.changeQuantity}">
+							        <f:converter converterId="dynamicNumberConverter" />
+									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
+						        </h:outputText>
+								
+							</p:column>
+						
+							<p:column headerText="#{lbl['lbl.ct.effective.date']}" styleClass="column-align-center">
+								<h:outputText value="#{itemMaxQtyVar.effDate}"  style="float:left;">
+									<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+								</h:outputText>
+							</p:column>
+							
+							<p:column headerText="#{lbl['lbl.ct.expiry.date']}" styleClass="column-align-center">
+								<h:outputText value="#{itemMaxQtyVar.expDate}" style="float:left;">
+									<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+								</h:outputText>
+							</p:column>
+							
+							<p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center"
+								rendered="#{!ctBackingBean.managedBean.disableAmendDetails and 
+					           		amendmentBackingBean.managedBean.selectedItem.recordStatusFlg == 1}"
+							    	style="width:10%; white-space:normal;">
+								<p:commandLink update=":form:itemId" process="@form" 
+									disabled="#{itemMaxQtyVar.chkIndexOfRow 
+									  or (ctBackingBean.managedBean.contractVer.ctAmendment.otherChange and !ctBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"
+								   	rendered="#{!itemMaxQtyVar.changeQuantity and itemMaxQtyVar.editable}" action="#{amendmentBackingBean.editItemMaxQtyOnIndexs()}">
+									<f:setPropertyActionListener value="#{itemMaxQtyVar}" target="#{amendmentBackingBean.managedBean.ctItemMaxQty}" />
+									<p:graphicImage value="/css/images/design/ico-edit.png" title="#{lbl['lbl.ct.edit']}" />
+								</p:commandLink>
+								<p:commandLink rendered="#{itemMaxQtyVar.changeQuantity}" oncomplete="dlgItemMaxQty.show();return false;">
+									<f:setPropertyActionListener value="#{itemMaxQtyVar}" target="#{amendmentBackingBean.managedBean.ctItemMaxQty}" />
+									<p:graphicImage value="/css/images/design/delete.png" title="#{lbl['lbl.ct.delete']}" />
+								</p:commandLink>
+							</p:column>
+			        
+			        </p:dataTable>
+			        
+			         <p:confirmDialog id="dlgItemMaxQty" widgetVar="dlgItemMaxQty" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                             severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                                 <div class="ppRightBtn">
+		                            <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                                update=":form:itemMaxQtyTable" 
+		                                action="#{amendmentBackingBean.deleteItemMaxQtyOnIndexs()}" oncomplete="dlgItemMaxQty.hide();"/>
+			                       <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgItemMaxQty.hide();" type="button" />
+		                     </div>
+                      </p:confirmDialog>
+		    </p:outputPanel>
+		</p:outputPanel>
+	</p:panel>
+	<p:panel id="serviceId" toggleable="true" toggleSpeed="500" rendered="#{amendmentBackingBean.managedBean.itemServiceExist}">
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.ct.panel.service']}"/>
+	        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.service.dtls']}"/>
+	  	</f:facet>
+	  	<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.select.service.item']}" escape="false"/><br/><br/>
+		<h:panelGrid style="width:100%;">
+			<p:dataTable id="amendserviceTable" var="serviceItemVar"  lazy="true" rows="10"  value="#{amendmentBackingBean.managedBean.serviceListingPagingDataModel}" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				selectionMode="single" selection="#{amendmentBackingBean.managedBean.selectedServiceItem}"   rowIndexVar="index" rowKey="#{serviceItemVar}"  widgetVar="serviceTableObj">
+				<ac:paginator for="amendserviceTable" />
+				<p:ajax event="rowSelect" update=":form" process="@this" listener="#{amendmentBackingBean.onSelectServiceItem()}" 
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+				
+				
+				<p:column headerText="#{lbl['lbl.ct.No']}" styleClass="column-align-center" style="width:8%; white-space:normal;">
+              <h:outputText value="#{index+1}" />
+            </p:column>  
+              
+              <p:column style="width:32%; white-space:normal;"  styleClass="column-align-center">
+	             <f:facet name="header">
+	                    <h:outputText id="serviceItemDesc" value="#{lbl['lbl.ct.item.desc']}"/>
+	               </f:facet>
+	           <h:outputText id="serviceNameID" value="#{fn:replace(amendmentBackingBean.contactItem(serviceItemVar),',','&lt;/br&gt;')}" size="50" escape="false"  style="float:left; text-align:left;"/>
+       		 <p:commandLink id="serviceSpec" update=":form:itemSpecDlg" action="#{ctBackingBean.viewItemSpecDlg(serviceItemVar)}">
+       		 <p:graphicImage value="/css/images/design/ico-viewnedit.png" title="#{lbl['lbl.ct.specification']}" style="float:left; padding-left: 5px;" />
+			 </p:commandLink>                        
+	      </p:column>  
+				
+				<p:column headerText="#{lbl['lbl.ct.uom']}"  style="width:14%;white-space:normal;" styleClass="column-align-center">
+					<h:outputText value="#{serviceItemVar.scRequestItem.uom.uomName}" style="float:left;" />
+				</p:column>
+		      <p:column headerText="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}" style="width:8%; white-space:normal;" styleClass="column-align-center">
+		        	<h:outputText value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clUomFrequency == null ? lbl['lbl.txt.na'] : serviceItemVar.scRequestItem.tplSpecQuestion.clUomFrequency}" style="float:right;" />
+		      </p:column>				
+		      	<p:column headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}" 
+		      	     style="width:8%; white-space:normal;" styleClass="column-align-center">
+		          	<h:outputText value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerDay == null ? lbl['lbl.txt.na'] : serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerDay}" style="float:right;" />
+		      	</p:column>				
+				<p:column headerText="#{lbl['lbl.ct.uom.per.month']}" 
+				    style="width:10%; white-space:normal;" styleClass="column-align-center">
+					<h:outputText value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerMonth == null ? lbl['lbl.txt.na'] : serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerMonth}" style="float:right;" />
+				</p:column>
+		      <p:column    headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.year']}" 
+		          styleClass="column-align-center" style="width:10%; white-space:normal;"  rendered="false" >
+		          	<h:outputText value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerYear == null ? lbl['lbl.txt.na'] : serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerYear}" style="float:right;" />
+		      </p:column>
+		      
+		      <p:column style="width:10%; white-space:normal;" styleClass="column-align-center">
+		            <f:facet name="header">
+			            <h:outputText value="#{lbl['lbl.ct.min.order.qty']}"/>
+	               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.service.min.order.qty']}"/>
+	               	</f:facet>	               	
+	               	<p:inputText value="#{serviceItemVar.minimumOrderQty}" styleClass="ppRightBtn" style="float:right;width:130px;" label="#{lbl['lbl.ct.min.order.qty']}"
+		        		maxlength="#{serviceItemVar.scRequestItem.uom.decimalScale == 0 ? 13 : 14}"
+		        		disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.getValueFromAmendment() or ctBackingBean.managedBean.disableAmendDetails}">
+						<f:converter converterId="dynamicNumberConverter" />
+						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, serviceItemVar.scRequestItem.uom.uomCode)}" />
+						<p:ajax event="change" update="@this" listener="#{ctBackingBean.onChangeMinimumQty(serviceItemVar)}"/>
+			        </p:inputText>
+		         </p:column>
+		      		
+				<p:column headerText="#{lbl['lbl.ct.status']}" style="width:8%;white-space:normal;" styleClass="column-align-center">
+		            <h:outputText value="#{serviceItemVar.recordStatusFlg == 1 ? lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
+		        </p:column> 
+			</p:dataTable>
+		</h:panelGrid>
+		<p:outputPanel id="showServicePrice">
+			<p:spacer height="20"/>
+	        <h:panelGrid columns="2" style="height:50px;text-align:bottom;" 
+	        	rendered="#{amendmentBackingBean.managedBean.selectedServiceItem != null}">
+	    		<h:outputLabel for="show" value="#{lbl['lbl.ct.show']}" style="width:50px;"/>
+	   			<h:panelGrid columns="3">
+		   			<p:selectOneMenu id="showService" value="#{ctBackingBean.managedBean.showServiceItem}" style="width:200px;">
+		      			<f:selectItems value="#{amendmentBackingBean.getItemDisplayTypeDropdownList(
+		      				amendmentBackingBean.managedBean.selectedServiceItem.itemType.parameterCode)}" />
+		         		<p:ajax event="change" update=":form:showServicePrice" process="@form"
+		         			onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />  
+			  		</p:selectOneMenu>
+					<p:spacer width="1"/>
+					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.service.dtls.show']}" />
+	  			</h:panelGrid>
+			</h:panelGrid>
+			<!-- Item Price -->
+			<p:outputPanel style="width:100%" 
+				rendered="#{amendmentBackingBean.managedBean.selectedServiceItem !=null and 
+					ctBackingBean.managedBean.showServiceItem == ParameterConst.itemDisplayTypePrice
+					and (ctBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or  ctBackingBean.managedBean.contractVer.ctAmendment.otherChange)}">
+					
+				<p:dataTable id="servicePriceTable" var="ItemPricesVar"
+					value="#{amendmentBackingBean.managedBean.selectedServiceItem.ctItemPrices}" >
+					<ac:paginator for="servicePriceTable" />
+					<p:column headerText="#{lbl['lbl.ct.zone']}" style="width:40%; white-space:normal;" styleClass="column-align-center"
+						rendered="#{amendmentBackingBean.managedBean.selectedServiceItem.priceType.parameterCode eq ParameterConst.priceTypeZonalStandard}">
+						        <p:outputLabel value="#{ItemPricesVar.ctContractZone.zoneName}" style="float:left;" rendered="#{!ItemPricesVar.changeZoneLabel}" />
+						        <p:outputLabel value="#{ItemPricesVar.ctContractZone.zoneName} (#{lbl['lbl.ct.new']})" style="float:left;" rendered="#{ItemPricesVar.changeZoneLabel}" />
+			       	</p:column>
+					<p:column headerText="#{lbl['lbl.ct.price']}" style="width:10%; white-space:normal;" styleClass="column-align-center">
+					     <h:panelGroup style="float:right;"  rendered="#{ItemPricesVar.changePrice}">
+					    	<p:inputText value="#{ItemPricesVar.unitPrice}" styleClass="ppRightBtn" style="width:100px;" label="#{lbl['lbl.ct.price']}"
+					    		disabled="#{ctBackingBean.managedBean.disableAmendDetails}" >
+								<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+								<p:ajax process="@this"/>
+						</p:inputText>
+					</h:panelGroup>
+						<h:outputText value="#{ItemPricesVar.unitPrice}" style="float:right;" rendered="#{!ItemPricesVar.changePrice}">
+							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.ct.effective.date']}" style="width:10%;white-space:normal;" styleClass="column-align-center">
+						<h:outputText value="#{ItemPricesVar.effDate}" style="float:left">
+							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.ct.expiry.date']}" style="width:10%;white-space:normal;" styleClass="column-align-center">
+						<h:outputText value="#{ItemPricesVar.expDate}" style="float:left;">
+							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center" style="width:10%;white-space:normal;" 
+						rendered="#{!ctBackingBean.managedBean.disableAmendDetails and 
+								amendmentBackingBean.managedBean.selectedServiceItem.recordStatusFlg == 1}">
+						<p:commandLink update=":form:servicePriceTable" process="@form" rendered="#{!ItemPricesVar.changePrice and ItemPricesVar.editable}"
+							action="#{amendmentBackingBean.editServiceItemPriceOnIndexs()}"
+							 disabled="#{ItemPricesVar.chkIndexOfRow or 
+										(ctBackingBean.managedBean.contractVer.ctAmendment.otherChange and !ctBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange) }">
+							<f:setPropertyActionListener value="#{ItemPricesVar}" target="#{amendmentBackingBean.managedBean.ctServiceItemPrices}" />
+							<p:graphicImage value="/css/images/design/ico-edit.png" title="#{lbl['lbl.ct.edit']}" />
+						</p:commandLink>
+						<p:commandLink rendered="#{ItemPricesVar.changePrice}" oncomplete="dlgSvcItemPrices.show();return false;"
+						 disabled="#{ctBackingBean.managedBean.disableAmendDetails}" >
+							<f:setPropertyActionListener value="#{ItemPricesVar}" target="#{amendmentBackingBean.managedBean.ctServiceItemPrices}" />
+							<p:graphicImage value="/css/images/design/delete.png" title="#{lbl['lbl.ct.delete']}" />
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+				
+				 <p:confirmDialog id="dlgSvcItemPrices" widgetVar="dlgSvcItemPrices" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                             severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                                 <div class="ppRightBtn">
+		                            <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                                update=":form:servicePriceTable" 
+		                                action="#{amendmentBackingBean.deleteServiceItemPriceOnIndexs()}" oncomplete="dlgSvcItemPrices.hide();"/>
+			                       <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgSvcItemPrices.hide();" type="button" />
+		                     </div>
+                      </p:confirmDialog>	
+			</p:outputPanel>		    
+			<!-- Quantity -->
+			<p:outputPanel style="width:100%" 
+				rendered="#{amendmentBackingBean.managedBean.selectedServiceItem !=null and 
+					ctBackingBean.managedBean.showServiceItem == ParameterConst.itemDisplayTypeQty
+					and (ctBackingBean.managedBean.contractVer.ctAmendment.quantityChange or ctBackingBean.managedBean.contractVer.ctAmendment.otherChange)}">
+					
+					
+				<p:dataTable id="serviceItemMaxQtyTbl" var="serviceItemMaxQty" 
+					value="#{amendmentBackingBean.managedBean.selectedServiceItem.ctItemMaxQties}">
+					<ac:paginator for="serviceItemMaxQtyTbl"/>
+					<p:column headerText="#{lbl['lbl.ct.zone']}" style="width:30%; white-space:normal;"
+						rendered="#{amendmentBackingBean.managedBean.selectedServiceItem.priceType.parameterCode eq ParameterConst.priceTypeZonalStandard or 
+			  		 		amendmentBackingBean.managedBean.selectedServiceItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTier or 
+			  		  		amendmentBackingBean.managedBean.selectedServiceItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTariff}">
+						<p:outputLabel value="#{serviceItemMaxQty.ctContractZone.zoneName}" style="float:left;" rendered="#{!serviceItemMaxQty.changeZoneLabel}" />
+						<p:outputLabel value="#{serviceItemMaxQty.ctContractZone.zoneName} (#{lbl['lbl.ct.new']})" style="float:left;" rendered="#{serviceItemMaxQty.changeZoneLabel}" />
+					</p:column>				            
+			   		<p:column headerText="#{lbl['lbl.ct.quantity']}" style="width: 30%; white-space:normal;" styleClass="column-align-center">
+		       			<h:outputText value="#{serviceItemMaxQty.maxQuantity}" style="float:right;">
+		           			<f:converter converterId="dynamicNumberConverter" />
+							<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctBackingBean.managedBean.selectedServiceItem.scRequestItem.uom.uomCode)}" />
+			  			</h:outputText>
+					</p:column>  
+		            <p:column headerText="#{lbl['lbl.ct.effective.date']}" style="width: 20%; white-space:normal;" styleClass="column-align-center">
+		                <h:outputText value="#{serviceItemMaxQty.effDate}" style="float:left;">
+                   			<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+                  		</h:outputText>			            
+			    	</p:column>       
+		            <p:column headerText="#{lbl['lbl.ct.expiry.date']}" style="width: 20%; white-space:normal;" styleClass="column-align-center">
+		                <h:outputText value="#{serviceItemMaxQty.expDate}" style="float:left;">
+                             <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+                 		</h:outputText>			            
+		 			</p:column>
+			    </p:dataTable>
+		  	</p:outputPanel>
+		</p:outputPanel>
+	</p:panel>
+	
+	 <!-- #28854 start - Display item specification as defined in LOA -->
+   <p:dialog id="itemSpecDlg" widgetVar="itemSpecDlg" header="#{lbl['lbl.ct.specification']}" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+   		styleClass="pop_up_top" modal="true" width="auto" height="auto" resizable="false">
+   		
+   		<h:panelGroup rendered="#{ctBackingBean.managedBean.contractVer.ctContract.loa.procurementMode.parameterCode eq ParameterConst.procurementModeDirectPurchase}">
+   			<h:panelGrid column="2" style="margin-bottom: 20px;margin-top: 10px;">
+    		
+    			<p:outputLabel value="#{lbl['lbl.ct.item.desc']}" style="float:left;font-weight:bold;">: #{ctBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemName} </p:outputLabel>  	    	  			
+     		 		
+     			<c:if test="#{ctBackingBean.managedBean.supplierOffer ne null}">
+     		 		<h:panelGroup>
+     		 			<h:outputText value="#{lbl['lbl.ct.supp.offer']}:&#160;" escape="false" style="float:left;font-weight:bold"/>     		 			
+     		 		 	<h:outputText value="#{ctBackingBean.managedBean.supplierOffer}" escape="false" style="float:left;font-weight:bold"/>
+     		 		</h:panelGroup>    		 				  				
+     			</c:if>
+     			<c:if test="#{ctBackingBean.managedBean.supplierOffer eq null}">
+					<p:outputLabel value = "#{lbl['lbl.ct.supp.offer']}" style="float:left;font-weight:bold;">: #{lbl['lbl.sc.qt.item.spec.null']}</p:outputLabel>					
+     			</c:if>     		   	
+     		   		
+     			<c:if test="#{ctBackingBean.managedBean.newOfferSpec ne null}">
+     		 		<p:outputLabel value="#{lbl['lbl.ct.new.supp.offer']}" style="float:left;font-weight:bold;">: #{ctBackingBean.managedBean.newOfferSpec}</p:outputLabel>      		 			
+     			</c:if>
+     			<c:if test="#{ctBackingBean.managedBean.newOfferSpec eq null}">
+					<p:outputLabel value = "#{lbl['lbl.ct.new.supp.offer']}" style="float:left;font-weight:bold;">: #{lbl['lbl.sc.qt.item.spec.null']}</p:outputLabel>					
+     			</c:if>
+     			     					
+     		</h:panelGrid>
+     		     		
+  			<p:dataTable id="itemSpec" var="item" value="#{ctBackingBean.managedBean.itemSpecification}"
+			classStyle="TableHeader" emptyMessage ="#{lbl['lbl.datatable.msg.no.records.found']}" style="margin-bottom: 30px;"
+			rows="5" paginator="true" paginatorPosition="bottom"
+            paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+            currentPageReportTemplate="Page &#160; {currentPage}/{totalPages}">
+				<p:column styleClass="column-align-center"  style="white-space:normal;">
+					<f:facet name="header">#{lbl['lbl.ct.specification']}</f:facet> 
+					<h:outputText value="#{item}" rows="5" style="float:left;resize:none;" autoResize="false" disabled="true" rendered="#{ctBackingBean.managedBean.itemSpecification ne null}"></h:outputText>      					
+      				<h:outputText rows="5" style="resize:none;" autoResize="false" disabled="true" rendered="#{ctBackingBean.managedBean.itemSpecification eq null}">#{lbl['lbl.sc.qt.item.spec.null']}</h:outputText>					
+				</p:column>				
+			</p:dataTable>			
+		</h:panelGroup>
+		
+		<h:panelGroup rendered="#{(ctBackingBean.managedBean.contractVer.ctContract.loa.procurementMode.parameterCode eq ParameterConst.procurementModeQuotation) or (ctBackingBean.managedBean.contractVer.ctContract.loa.procurementMode.parameterCode eq ParameterConst.procurementModeTender) or (ctBackingBean.managedBean.contractVer.ctContract.loa.procurementMode.parameterCode eq ParameterConst.procurementModeDirectNego)}">				
+     		<h:panelGrid column="1">
+     			<p:outputLabel value="#{lbl['lbl.ct.item.desc']}" style="float:left;margin-bottom: 20px;margin-top: 10px;font-weight:bold;">: #{ctBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemName}</p:outputLabel>
+     	
+     			<p:dataTable var="item" value="#{ctBackingBean.managedBean.scRequestItemSpecOfferList}" classStyle="TableHeader" style="margin-bottom: 30px;" emptyMessage ="#{lbl['lbl.datatable.msg.no.records.found']}"
+     			rows="5" paginator="true" paginatorPosition="bottom"
+                paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                currentPageReportTemplate="Page &#160; {currentPage}/{totalPages}">   
+   					<p:column styleClass="column-align-center" style="white-space:normal;">    						  				
+      					<f:facet name = "header">#{lbl['lbl.ct.specification']}</f:facet>      					
+      					<h:outputText value="#{item.itemSpec}" style="float:left;" rendered="#{item.itemSpec ne null}"></h:outputText>							
+      					<h:outputText value="#{lbl['lbl.sc.qt.item.spec.null']}" style="float:left;" rendered="#{item.itemSpec eq null}"></h:outputText> 									
+   					</p:column>   
+   					<p:column styleClass="column-align-center" style="white-space:normal;">
+     					<f:facet name = "header">#{lbl['lbl.ct.supp.offer']}</f:facet>     					
+     					<h:outputText value="#{item.supplierOffer}" style="float:left;" rendered="#{item.supplierOffer ne null}"></h:outputText>	      					
+      					<h:outputText value="#{lbl['lbl.sc.qt.item.spec.null']}" style="float:left;" rendered="#{item.supplierOffer eq null}"></h:outputText>     																											
+   					</p:column>   
+   					<p:column styleClass="column-align-center" style="white-space:normal;">
+      					<f:facet name = "header">#{lbl['lbl.ct.new.offer.spec']}</f:facet>     					
+      					<h:outputText value="#{item.newOfferSpec}" style="float:left;" rendered="#{item.newOfferSpec ne null}"></h:outputText>        					
+      					<h:outputText value="#{lbl['lbl.sc.qt.item.spec.null']}" style="float:left;" rendered="#{item.newOfferSpec eq null}"></h:outputText>    					   										
+   					</p:column>  			
+				</p:dataTable>
+			</h:panelGrid>			
+		</h:panelGroup>
+		
+		<!-- #28854 end -->
+		
+     	<f:facet name="footer">
+		<div class="ppRightBtn">
+		    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="itemSpecDlg.hide();" />
+  		</div>
+   		</f:facet>
+  	</p:dialog>
+	
+	<p:panel header="#{lbl['lbl.ct.panel.remarks.attachment']}" toggleable="true" rendered="#{!ctBackingBean.managedBean.viewContract}">
+		<table style="width: 100%">
+			<tr>
+				<td width="50%" valign="top">
+					<table style="width: 100%">
+						<tr>
+							<td class="TableFieldLeft" width="24%"><h:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
+							<td class="TableFieldRight">
+								<p:dataGrid value="#{ctBackingBean.managedBean.contractVer.itemRemarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
+									<table>
+										<tr>
+											<td rowspan="2" valign="top">
+												<h:graphicImage value="#{amendmentBackingBean.userImagePath(remarkVar.createdUser.loginId)}" height="30" width="30" />
+											</td>
+											<td width="5"></td>
+											<td>
+												<h:outputText value="#{remarkVar.createdUser.userName}"></h:outputText>,
+												<h:outputText value="#{remarkVar.changedDate}">
+													<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
+												</h:outputText>
+											</td>
+										</tr>
+										<tr>
+											<td></td>
+											<td>
+												<p:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" 
+												   maxlength="1000" style="width:70%;" autoResize="false" /> 
+												<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.remark']}" rendered="#{remarkIndex==0}" />
+												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
+											</td>
+										</tr>
+									</table>
+								</p:dataGrid>
+							</td>
+						</tr>
+					</table>    					
+				</td>
+				<td width="50%" valign="top">
+				<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.attachment']}" escape="false"/><br/><br/>
+					<table style="width: 100%">
+		<tr>
+			<td class="TableFieldLeft" width="24%"><h:outputLabel value="#{lbl['lbl.txt.attachment']}" /></td>
+			<td class="TableFieldRight">
+				<p:commandButton oncomplete="uploadItemDlg.show();return false;"
+					update="lampiranItem, uploadItemDlg" value="#{lbl['lbl.txt.attach.files']}"
+					disabled="#{ctBackingBean.managedBean.viewContract
+						or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}" />
+			</td>
+		</tr>
+		<tr>
+			<td/>
+			<td>
+				<p:dataGrid id="lampiranItem" value="#{ctBackingBean.managedBean.contractVer.itemAmendAttachments}"
+					var="attachFile" rowIndexVar="attachFileIndex" columns="1" style="width:100%"
+					emptyMessage ="#{lbl['lbl.datatable.msg.no.records.found']}">
+					<table>
+						<tr>
+							<td rowspan="2"><h:graphicImage value="/css/images/design/#{ctBackingBean.determineIcon(attachFile)}" height="30" width="30"/></td>
+							<td width="5"></td>
+							<td>
+								<h:outputText value=" #{attachFile.createdUser.userName}"></h:outputText>,
+								<h:outputText value="#{attachFile.createdDate}">									
+									<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
+								</h:outputText>
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td>
+								<h:commandLink value="#{attachFile.fileName}" 
+									styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
+								<p:commandLink onsuccess="deleteItemAttachmentDlg.show();" action="#{ctBackingBean.setAttachFileIndex(attachFileIndex)}"
+									rendered="#{!ctBackingBean.managedBean.viewContract}"
+									disabled="#{ctBackingBean.managedBean.viewContract
+										or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}">
+			   						<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
+			 	 				</p:commandLink>
+			 	 			</td>
+						</tr>
+					</table>
+				</p:dataGrid>
+			</td>
+		</tr>
+	</table>
+				</td>
+			</tr>
+		</table>
+		
+		<p:dialog id="uploadItemDlg" widgetVar="uploadItemDlg" modal="true"  resizable="false"
+	     width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
+		<p:ajax event="close" />
+		<p:fileUpload style="display:inline;"
+			   fileUploadListener="#{ctBackingBean.fileUpload}"
+			   mode="advanced" id="uploadItemAmendId" multiple="true"
+			   sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+			   allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+			   invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+			   invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
+			   label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload.all']}" cancelLabel="#{lbl['lbl.btn.remove.all']}" 
+		   	   update="lampiranItem" >
+		</p:fileUpload>
+		<f:facet name="footer">
+		<div class="ppRightBtn">
+		    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadItemDlg.hide();" />
+  		</div>
+   		</f:facet>
+	</p:dialog>	
+	
+	             <p:confirmDialog id="deleteItemAttachmentDlg" widgetVar="deleteItemAttachmentDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                           severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                         <div class="ppRightBtn">
+		                     <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                         update=":form:lampiranItem" 
+		                         action="#{ctBackingBean.deleteItemAttachmentAction(ctBackingBean.managedBean.attachFileIndex)}"
+		                         oncomplete="deleteItemAttachmentDlg.hide();"/>
+			                 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteItemAttachmentDlg.hide();" type="button" />
+		                 </div>
+                   </p:confirmDialog>
+	</p:panel>		  	
+ </ui:composition>
