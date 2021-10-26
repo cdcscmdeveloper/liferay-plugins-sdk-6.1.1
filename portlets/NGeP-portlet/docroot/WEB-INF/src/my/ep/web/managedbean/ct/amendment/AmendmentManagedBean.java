@@ -180,6 +180,16 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	
 	private boolean disableDecisionDetails; //#29549
 	
+	//Enhancement 15851 - shaqimi start
+	/** The back to previous page. */
+	private String backToPreviousPage;
+
+	/** The tracking dairy view. */
+	private boolean trackingDairyView;
+	
+	private Map<String, Integer> indexing;
+	//Enhancement 15851 - shaqimi end
+	
 	public void reassignValue(boolean value) 
 	{
 		readOnly = value;	
@@ -1582,4 +1592,22 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		this.disableDecisionDetails = disableDecisionDetails;
 	}
 	//#29549 end
+	public String getBackToPreviousPage() {
+		return backToPreviousPage;
+	}
+	public void setBackToPreviousPage(String backToPreviousPage) {
+		this.backToPreviousPage = backToPreviousPage;
+	}
+	public boolean isTrackingDairyView() {
+		return trackingDairyView;
+	}
+	public void setTrackingDairyView(boolean trackingDairyView) {
+		this.trackingDairyView = trackingDairyView;
+	}
+	public Map<String, Integer> getIndexing() {
+		return indexing;
+	}
+	public void setIndexing(Map<String, Integer> indexing) {
+		this.indexing = indexing;
+	}
 }
