@@ -1237,7 +1237,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 		// #27691 - End
 
-		reqDTO.setSmSupp(getManagedBean().getSmSupp());
+		reqDTO.setSmSupp(getManagedBean().getSmSupp()); //#30964
+		reqDTO.setDisabledCompanyNameInMaintenance(getManagedBean().isDisabledCompanyNameInMaintenance()); //#30964
 		
 		// 27691 - added business type validation for SSM
 		if(SmCommonUtil.getInstance().ssmActive() 
