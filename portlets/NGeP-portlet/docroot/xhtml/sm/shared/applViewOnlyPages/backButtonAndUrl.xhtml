@@ -30,7 +30,7 @@
 							value="#{lbl['lbl.sm.resubmit']}" />&#160;&#160;
 				</p:outputPanel>
 				<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.smAppl.applType ne 'N'}">
-					<p:commandLink onclick="blockWidget.show()"
+					<p:commandLink onclick="blockWidget.show()" rendered="#{viewSmApplBackingBean.isApplPORejectedAfterApprovelSV()}"
 							action="#{viewSmApplBackingBean.redirectToResubmit()}"
 							process="@this" partialSubmit="true" update=":form"
 							value="#{lbl['lbl.sm.resubmit']}" />&#160;&#160;
