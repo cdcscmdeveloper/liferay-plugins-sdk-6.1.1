@@ -70,6 +70,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -1713,6 +1714,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 		
 	}
 	
+	//#29822 - start
 	public void removeReassignAllGroupTasks() {
 		
 		IBpmSO bpmSO = null;
@@ -1742,7 +1744,8 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 					Object ctxToken = bpmSO.authenticate(loginId);
 
 					//set limit to 10
-					reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
+//					reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
+					reqDTO.setLimit(20);
 					reqDTO.setOffset(0);
 					reqDTO.setStatusList(statusIds);
 					reqDTO.setUserId(loginId);
@@ -1792,6 +1795,8 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 			FacesMessage.SEVERITY_INFO, MessageConst.INFO_770105, null);
 		}
 	}
+	
+	//#29822 - end
 	
 	public void resetCheckAllTasks() {
 		log.info("resetCheckAllTasks");
@@ -1878,6 +1883,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 		}
 	}
 	
+	//#29822 - start
 	public void removeReassignAllOthersTasks() {
 		
 		IBpmSO bpmSO = null;
@@ -1907,7 +1913,8 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 					Object ctxToken = bpmSO.authenticate(loginId);
 
 					//set limit to 10
-					reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
+//					reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
+					reqDTO.setLimit(20);
 					reqDTO.setOffset(0);
 					reqDTO.setStatusList(statusIds);
 					reqDTO.setUserId(loginId);
@@ -1953,6 +1960,8 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 		}
 	
 	}
+	
+	//#29822 - end
 	
 	public void removeReassignOthersTasks() {
 	
@@ -2125,6 +2134,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 	}
 	//#29822 - END
 	
+	//#29822 - start
 	/**
 	 * Method to remove all task reassigment PM
 	 * 
@@ -2132,9 +2142,6 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 	 */
 	
 	public TaskAssignmentResDTO removeReassignAllGroupTasks(BpmRequestDTO bpmReqDTO, TaskReassignmentManagedBean taskReassignmentManagedBean) {
-		
-		//unit test to break the loop (only 2 times loop)
-		int count = 1;
 		
 		//init
 		ISmTaskAssignmentSO taskAssignmentSO  = null;
@@ -2147,6 +2154,9 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 	
 		
 		try {
+			//SLA Monitoring
+			long startTime = System.currentTimeMillis();
+			
 			//get services
 			bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 					.getServiceObject(IBpmSO.class);
@@ -2223,13 +2233,14 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 				//get all the task based on limit -> 10
 				//end the loop if size is equal to zero
 				responseDTO = bpmSO.getReassignedItems(bpmReqDTO);
-				count++;
 				
-//			}while(responseDTO.getWorklistVO().getWorklistItem().size() > 0);
-			}while(count<3);
+			}while(responseDTO.getWorklistVO().getWorklistItem().size() > 0);
 			//end while
 			
 			log.info("finish delete all task");
+			
+			SLAUtils.getInstance().logSLAInfo("SM","remove",
+					"TaskReassignmentBackingBean.removeReassignAllGroupTasks", startTime);
 			
 			resDTO.setSuccessful(true);
 			return resDTO;
@@ -2245,9 +2256,6 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 	
 	public TaskAssignmentResDTO removeReassignAllOthersTasks(BpmRequestDTO bpmReqDTO, TaskReassignmentManagedBean taskReassignmentManagedBean) {
 		
-		//unit test to break the loop (only 2 times loop)
-		int count = 1;
-		
 		//init
 		ISmTaskAssignmentSO taskAssignmentSO  = null;
 		IBpmSO bpmSO = null;
@@ -2259,6 +2267,9 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 		
 		
 		try {
+			//SLA Monitoring
+			long startTime = System.currentTimeMillis();
+			
 			//get services
 			bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 					.getServiceObject(IBpmSO.class);
@@ -2336,14 +2347,14 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 				//get all the task based on limit -> 10
 				//end the loop if size is equal to zero
 				responseDTO = bpmSO.getGroupByOthersItems(bpmReqDTO);
-				count++;
 				
-//			}while(responseDTO.getWorklistVO().getWorklistItem().size() > 0);
-			}while(count<3);
-			
+			}while(responseDTO.getWorklistVO().getWorklistItem().size() > 0);
 			//end while
 			
 			log.info("finish delete all task");
+			
+			SLAUtils.getInstance().logSLAInfo("SM","remove",
+					"TaskReassignmentBackingBean.removeReassignAllOthersTasks", startTime);
 			
 			resDTO.setSuccessful(true);
 			return resDTO;
@@ -2355,5 +2366,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 			taskAssignmentSO = null;
 		}
 	}
+	
+	//#29822 - end
 	
 }
