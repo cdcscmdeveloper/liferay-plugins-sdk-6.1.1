@@ -72,6 +72,25 @@
 					<h:outputText
 						value="#{lbl[requirementLbL]}"
 						rendered="#{qulificationBean.qtRequirementLabel}" />
+						<ui:remove>
+						<!-- #29560 - start -->
+						</ui:remove>
+					<h:outputText
+						value=" #{lbl['lbl.sc.notice.board.requirement.mof.expiry.date1']} "
+						rendered="#{qulificationBean.qtRequirementLabel and lbl[criteriaLbL] eq 'MOF Registration'}">
+						</h:outputText>
+					<h:outputText
+						value="#{noticeBoardBackingBean.managedBean.supplierMofExpDate}"
+						rendered="#{qulificationBean.qtRequirementLabel and lbl[criteriaLbL] eq 'MOF Registration'}"> 
+						<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+						</h:outputText>
+					<h:outputText
+						value="#{lbl['lbl.sc.notice.board.requirement.mof.expiry.date2']} "
+						rendered="#{qulificationBean.qtRequirementLabel and lbl[criteriaLbL] eq 'MOF Registration'}">
+						</h:outputText>
+						<ui:remove>
+						<!-- #29560 - end -->
+						</ui:remove>
 				</p:column>
 				
 				
