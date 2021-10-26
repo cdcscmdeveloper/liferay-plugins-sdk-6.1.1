@@ -1859,6 +1859,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 									finOrgResDTO.getPmFinancialAcc()!=null 
 									&& !getManagedBean().getInvoice().getAccountNo()
 									.equals(finOrgResDTO.getPmFinancialAcc().getAccountNo().trim())){
+								getManagedBean().getInvoice().setAccountNo(null);
 								throw new EpException(MessageConst.ERROR_770261);
 							}
 						}		
