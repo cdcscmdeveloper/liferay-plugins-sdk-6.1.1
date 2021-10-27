@@ -11,8 +11,6 @@
 package my.ep.web.backingbean.sc.specification;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17775,52 +17773,6 @@ public class SpecificationBackingBean extends
 	}
 	// #25039#67#76 - end
 
-	//#25037-start
-	public void submitAction(String outcome){
-		assertConcurrentComittteeChangesApproval();
-		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
-			//#1873 - start
-			if(!assertPendingFinancialSubmission()){ 
-				RequestContext.getCurrentInstance().execute("submitConfirmPopUp2.show()"); 
-			} //#1873 - end
-		} else {
-			specCommitteBpmTask(outcome);
-		}
-	}
-
-	private void assertConcurrentComittteeChangesApproval(){
-		String taskName = this.getManagedBean().getTaskName();
-		taskName = StringUtils.isNotEmpty(taskName) ? taskName: "";
-		String[] scoringTaskNames = new String[] {
-				SCProcessNameConst.FINALISE_SCORING,
-				SCProcessNameConst.ENDORSE_SCORING,
-				SCProcessNameConst.SIGNOFF_SCORING };
-		String[] approvalTaskName = new String[]{
-				SCProcessNameConst.APPROVE_COMMITTEE,
-				SCProcessNameConst.REVISE_COMMITTEE
-		};
-
-		if(Arrays.asList(scoringTaskNames).contains(taskName)){
-			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-					.getServiceObject(IBpmSO.class);
-			BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
-			ScQt qt = this.getManagedBean().getQt();
-			bpmReqDTO.setDocNumber(qt.getQtNo());
-			bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
-			BpmResponseDTO resDTO = bpmSO.getTasksByDocNumber(bpmReqDTO);
-			for(WorklistItemVO currentVO: resDTO.getWorklistVO().getWorklistItem()){
-				if(StringUtils.isNotBlank(currentVO.getTaskName())){
-					if(Arrays.asList(approvalTaskName).contains(currentVO.getTaskName())){
-						throw new EpException(getMessage("lbl.sc.popup.cannotSubmitWaitingCMT", null));
-					}
-				}
-			 }
-		}	
-	}
-	//#25037-end
-
-	
-	
 	/*11104_start
 	 * sample checklist cretaed during sample radio button select.
 	 */
@@ -18165,6 +18117,47 @@ if(null!=allTechnicalChecklist){
 }
 }
 	//#25037-start
+	public void submitAction(String outcome){
+		assertConcurrentComittteeChangesApproval();
+		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
+			//#1873 - start
+			if(!assertPendingFinancialSubmission()){ 
+				RequestContext.getCurrentInstance().execute("submitConfirmPopUp2.show()"); 
+			} //#1873 - end
+		} else {
+			specCommitteBpmTask(outcome);
+		}
+	}
+	
+	private void assertConcurrentComittteeChangesApproval(){
+		String taskName = this.getManagedBean().getTaskName();
+		taskName = StringUtils.isNotEmpty(taskName) ? taskName: "";
+		String[] scoringTaskNames = new String[] {
+				SCProcessNameConst.FINALISE_SCORING,
+				SCProcessNameConst.ENDORSE_SCORING,
+				SCProcessNameConst.SIGNOFF_SCORING };
+		String[] approvalTaskName = new String[]{
+				SCProcessNameConst.APPROVE_COMMITTEE,
+				SCProcessNameConst.REVISE_COMMITTEE
+		};
+		if(Arrays.asList(scoringTaskNames).contains(taskName)){
+			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+					.getServiceObject(IBpmSO.class);
+			BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
+			ScQt qt = this.getManagedBean().getQt();
+			bpmReqDTO.setDocNumber(qt.getQtNo());
+			bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
+			BpmResponseDTO resDTO = bpmSO.getTasksByDocNumber(bpmReqDTO);
+			for(WorklistItemVO currentVO: resDTO.getWorklistVO().getWorklistItem()){
+				if(StringUtils.isNotBlank(currentVO.getTaskName())){
+					if(Arrays.asList(approvalTaskName).contains(currentVO.getTaskName())){
+						throw new EpException(getMessage("lbl.sc.popup.cannotSubmitWaitingCMT", null));
+					}
+				}
+			 }
+		}	
+	}
+	
 	private void assertSpecCommitteeMaintenanceInProgress(ScQt qt){
 		//specification maintenance cannot be concurrent to spec committee maintenance
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
