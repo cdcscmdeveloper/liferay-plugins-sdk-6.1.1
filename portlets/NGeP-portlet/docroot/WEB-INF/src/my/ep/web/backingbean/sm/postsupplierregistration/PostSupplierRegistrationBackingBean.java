@@ -139,10 +139,10 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			SmWorkflowStatus rejectedWf = rejectedApplExist(supplier.getSupplierId());
 			boolean isRejectedApplExist = (rejectedWf == null) ? false : true;
 			//30713 - Start
+			//Add checking for expired process fee KN
 			SmWorkflowStatus currWorkflowStatus = isLatestActiveWorkFlow(supplier.getSupplierId());
-			//31792 - START
-			if(rejectedWf != null && my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF.equalsIgnoreCase(supplier.getSmAppl().getApplType())){
-			//31792 - END
+			if(rejectedWf != null && currWorkflowStatus.getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM_PROCESSING_FEE) 
+					&& my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF.equalsIgnoreCase(supplier.getSmAppl().getApplType())){
 				Timestamp currentDate = new Timestamp(System.currentTimeMillis());
 				long diff = currentDate.getTime()
 						- rejectedWf.getCreatedDate().getTime();
@@ -253,8 +253,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 							SmWorkflowStatus wfStatus = isLatestActiveWorkFlow(supplier.getSupplierId());
 							if(wfStatus != null){
 								PmStatus wfStat = wfStatus.getPmStatus();
-								//31792
-								if(wfStat != null && rejectedWf != null &&
+								if(wfStat != null && 
 									(wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PO_REJECTED_APPLICATION || 
 									wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_APPROVER_REJECTED_APPLICATION ||
 									wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS)){
@@ -273,7 +272,24 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 											getManagedBean().setFlowStatus(1);
 											getManagedBean().setDisplayRejectLabel(true);
 										}
+									//31792 - START
+									}else if(wfStat.getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER)
+												|| wfStat.getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)){
+								
+										Timestamp currentDate = new Timestamp(System.currentTimeMillis());
+										long diff = currentDate.getTime()
+													- wfStatus.getCreatedDate().getTime();
+										long diffDays = diff / (24 * 60 * 60 * 1000);
+										//if expired
+										if (diffDays >= SmRuleHelper.getInstance()
+												.getApplicationResubmissionDays()) {
+											getManagedBean().setRejectedApplExist(false);
+											isRejectedApplExist = false;
+											path = MOF_REG_PATH;
+											getManagedBean().setFlowStatus(1);
+										}
 									}
+									//31792 - END
 								}else{
 									getManagedBean().setRejectedApplExist(false);
 									log.info("*******Not Resubmit********");
