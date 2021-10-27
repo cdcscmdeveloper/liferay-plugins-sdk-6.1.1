@@ -1756,9 +1756,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	private List<ScQtCheckList> sampleSpecCheckList;//25635
 	
+	//29464-start
+	private boolean committeeAppointmentMenuTab = true;
+	//29464-end
+	
 	//====#31913 bug related to #25138==== start
 	private BigDecimal totalmaxscore;
 	//====#31913 bug related to #25138==== end
+	
 	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -10752,7 +10757,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		public void setFromSubmit(boolean fromSubmit) {
 			this.fromSubmit = fromSubmit;
 		}
-		
 		//#25138 - Reendorsed - start
 		public int getSpecZoneTabIndex() {
 			return specZoneTabIndex;
@@ -10906,7 +10910,18 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		/*
 		 * 25635-End
 		 */
-		
+
+		//29464-start
+		public boolean isCommitteeAppointmentMenuTab() {
+			return committeeAppointmentMenuTab;
+		}
+
+		public void setCommitteeAppointmentMenuTab(
+				boolean committeeAppointmentMenuTab) {
+			this.committeeAppointmentMenuTab = committeeAppointmentMenuTab;
+		}
+		//29464-end
+
 		//#25037-start
 		public List<String> getMainTaskNames() {
 			return mainTaskNames;

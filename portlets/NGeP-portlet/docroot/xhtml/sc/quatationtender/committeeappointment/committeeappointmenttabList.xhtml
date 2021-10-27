@@ -41,10 +41,10 @@
 			
 				<p:commandButton id="specificationcommitteeadd"
 					value="#{lbl['lbl.btn.add']}" process="@this" styleClass="BtnSpacing"
-					rendered="#{isCommitteeInfoEditable}"
+					rendered="#{isCommitteeInfoEditable and isCommitteeAppointmentMenuTab}"
 					actionListener="#{qTCommitteBackingBean.addCommitteMember(qTDetailBB.managedBean.selectedTabBean.scQtCommittee, qTDetailBB.managedBean.selectedTabBean.titleName, qTDetailBB.managedBean.taskName)}"
 					oncomplete="newspecificationcommittee.show();"
-					update="@(.scAddMember)" />
+					update="@(.scAddMember)" /><ui:remove>//29464-add new rendered flag[isCommitteeAppointmentMenuTab] </ui:remove>
 	
 				<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				disabled="#{qTDetailBB.deleteselectedList(committe.scCommitteeMembers)}"
@@ -52,7 +52,7 @@
 					process="@this, specificationcommitteeid" partialSubmit="true" styleClass="BtnSpacing"
 					oncomplete="committeeAppointmentDeletePopUp.show();"
 					update="@([id$=#{committeeAppointmentDeleteId}])"
-					rendered="#{isCommitteeInfoEditable}" >
+					rendered="#{isCommitteeInfoEditable and isCommitteeAppointmentMenuTab}" ><ui:remove>//29464</ui:remove>
 					<f:setPropertyActionListener target="#{qTCommitteBackingBean.managedBean.extraDeleteComitteeSelection}" value="#{qTDetailBB.managedBean.committemembers}"></f:setPropertyActionListener>
 						<f:setPropertyActionListener target="#{qTDetailBB.managedBean.committemembers}" value="#{null}"></f:setPropertyActionListener>
 					</p:commandButton>
