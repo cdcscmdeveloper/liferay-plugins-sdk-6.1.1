@@ -4231,6 +4231,8 @@ public class TaskReassignmentBackingBean extends
 				
 				//get all the task based on limit -> 10
 				//end the loop if size is equal to zero
+				Thread.sleep(200);
+				
 				responseDTO = bpmSO.getReassignedItems(bpmReqDTO);
 				
 			}while(responseDTO.getWorklistVO().getWorklistItem().size() > 0);
@@ -4345,6 +4347,8 @@ public class TaskReassignmentBackingBean extends
 				
 				//get all the task based on limit -> 10
 				//end the loop if size is equal to zero
+				Thread.sleep(200);
+				
 				responseDTO = bpmSO.getGroupByOthersItems(bpmReqDTO);
 				
 			}while(responseDTO.getWorklistVO().getWorklistItem().size() > 0);
