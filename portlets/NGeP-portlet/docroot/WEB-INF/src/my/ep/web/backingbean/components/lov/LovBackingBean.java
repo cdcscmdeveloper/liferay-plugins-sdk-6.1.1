@@ -411,6 +411,10 @@ public class LovBackingBean implements Serializable {
 		if(!getLovBean().isDisplayResultWhenReset()) {
 			disableDisplayResult();
 		}
+		
+		//9442 - start
+		persistedEntities.clear();
+		//9442 - end
 	}
 	
 
@@ -421,6 +425,10 @@ public class LovBackingBean implements Serializable {
 		this.getSearchDataModel().resetData();
 		this.setLovSearchBean(new SearchBean());
 		this.setLovBean(new LovBean());
+		
+		//9442 - start
+		persistedEntities.clear();
+		//9442 - end
 	}
 	
 	//OR: columnName1^value1*columnName1^value2
