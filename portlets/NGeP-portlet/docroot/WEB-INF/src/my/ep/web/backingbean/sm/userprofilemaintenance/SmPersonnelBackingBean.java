@@ -9,11 +9,9 @@ import java.util.Comparator;
 
 //9569 end
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
-import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -36,8 +34,6 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
-import my.ep.dto.sm.personnelauthorization.PersonnelAuthorizationReqDTO;
-import my.ep.dto.sm.personnelauthorization.PersonnelAuthorizationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
@@ -3047,10 +3043,6 @@ public class SmPersonnelBackingBean extends
 			if (getManagedBean().getSpCountryId() != null) {
 				reqDTO.getSmPersonnel().getPmCountry().setCountryId(this.getManagedBean().getSpCountryId());
 			}
-
-			if (getManagedBean().getSpEpRole() != null && !getManagedBean().getSpEpRole().isEmpty()) {
-				reqDTO.getSmPersonnel().setEpRole(this.getManagedBean().getSpEpRole());
-			}
 			
 			if(getManagedBean().getSpRecordStatus() == 0){
 				reqDTO.getSmPersonnel().setRecordStatusFlg(99);
@@ -3099,26 +3091,65 @@ public class SmPersonnelBackingBean extends
 			}
 		}
 		
-		//for searching ep role status
-		if(getManagedBean().getSpIEpRoleStatus() != 0){
-			if(getManagedBean().getSpIEpRoleStatus() == 1){
-				Set<SmPersonnel> set = new LinkedHashSet<SmPersonnel>(smPersonnelList);
-				for(Iterator<SmPersonnel> it = smPersonnelList.iterator(); it.hasNext();){
-					SmPersonnel a = it.next();
-					if(!(a.getEpRole() != null && a.getPmUser() != null)){
-						it.remove();
+		//start removing by using list
+		if(smPersonnelList != null && !smPersonnelList.isEmpty() && smPersonnelList.size() > 0){
+			ListIterator<SmPersonnel> itr = smPersonnelList.listIterator();
+			
+			while(itr.hasNext()){
+				SmPersonnel personnel = itr.next();		
+				//for softcert - since deleted personnel, doesn't need softcert
+				if(getManagedBean().getSpSoftcertFlg() != 99){
+					if(personnel.getEpRole() == null){
+						itr.remove();
+						continue;
 					}
-				}			
-			}else if(getManagedBean().getSpIEpRoleStatus() == 2){
-				Set<SmPersonnel> set = new LinkedHashSet<SmPersonnel>(smPersonnelList);
-				for(Iterator<SmPersonnel> it = smPersonnelList.iterator(); it.hasNext();){
-					SmPersonnel a = it.next();
-					if(!(a.getPmUser() != null && a.getEpRole() == null)){
-						it.remove();
+				}
+				//for searching by epRole
+				if(getManagedBean().getSpEpRole() != null && getManagedBean().getSpEpRole() != ""){
+					if(personnel.getPrevEpRole() != null && personnel.getPrevEpRole() != ""){
+						if(getManagedBean().getSpEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())){
+							if(!personnel.getPrevEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())){
+								itr.remove();
+								continue;
+							}	
+						}else if(getManagedBean().getSpEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value())){
+							if(!personnel.getPrevEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value())){
+								itr.remove();
+								continue;
+							}
+						}else if(getManagedBean().getSpEpRole().equalsIgnoreCase(RoleCode.CM_USER.value())){
+							if(!personnel.getPrevEpRole().equalsIgnoreCase(RoleCode.CM_USER.value())){
+								itr.remove();
+								continue;
+							}	
+						}else if(getManagedBean().getSpEpRole().equalsIgnoreCase(RoleCode.FL_USER.value())){
+							if(!personnel.getPrevEpRole().equalsIgnoreCase(RoleCode.FL_USER.value())){
+								itr.remove();
+								continue;
+							}
+						}
+					}else{
+						itr.remove();
+						continue;
 					}
-				}		
+				}
+				//For searching epRoleStatus
+				if(getManagedBean().getSpIEpRoleStatus() != 0){
+					if(getManagedBean().getSpIEpRoleStatus() == 1){
+						if(!(personnel.getEpRole() != null && personnel.getPmUser() != null)){
+							itr.remove();
+							continue;
+						}
+					}else if(getManagedBean().getSpIEpRoleStatus() == 2){
+						if(!(personnel.getPmUser() != null && personnel.getEpRole() == null)){
+							itr.remove();
+							continue;
+						}
+					}
+				}
 			}
 		}
+		
 		sortPersonnelByEpRole(smPersonnelList);
 		getManagedBean().setSmPersonnelList(smPersonnelList);
 		//change back value for the softcert flag
@@ -3163,7 +3194,6 @@ public class SmPersonnelBackingBean extends
 		}*/
 		getManagedBean().setDisableRoleSelection(disableEpRoleDropDown(getManagedBean()
 				.getBasicSmPersonnel()));
-		checkEmailMandatory();
 		return "mofUserProfile.xhtml";
 	}
 	
@@ -3210,14 +3240,6 @@ public class SmPersonnelBackingBean extends
 		}
 		epRole = personnelResDTO.getDeletedRole();
 		return epRole;
-	}
-	
-	public void checkEmailMandatory(){
-		if(getManagedBean().getEpRoleTrans() != null || getManagedBean().getBasicSmPersonnel().getPmUser() != null ){
-			getManagedBean().setShowMandatory(true);	
-		}else{
-			getManagedBean().setShowMandatory(false);
-		}
 	}
 	
 	public void saveUserMOFUpdate() {
@@ -3507,20 +3529,26 @@ public class SmPersonnelBackingBean extends
 	public static void sortPersonnelByEpRole(List<SmPersonnel> smPersonnelList) {
 		if (smPersonnelList != null) {
 			for (SmPersonnel per : smPersonnelList) {
-				if (per.getEpRole() != null) {
-					if (per.getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
+				if (per.getPrevEpRole() != null) {
+					if (per.getPrevEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
 						per.setSort(1);
-					} else if (per.getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value())) {
+					} else if (per.getPrevEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()) && !(per.getEpRole() == null && per.getPmUser() != null)) {
 						per.setSort(2);
-					} else if (per.getEpRole().equalsIgnoreCase(RoleCode.CM_USER.value())) {
-						per.setSort(3);
-					} else if (per.getEpRole().equalsIgnoreCase(RoleCode.FL_USER.value())) {
+					} else if (per.getPrevEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value())){
+						per.setSort(3);					
+					} else if (per.getPrevEpRole().equalsIgnoreCase(RoleCode.CM_USER.value()) && !(per.getEpRole() == null && per.getPmUser() != null)) {
 						per.setSort(4);
-					}else{
+					} else if (per.getPrevEpRole().equalsIgnoreCase(RoleCode.CM_USER.value())){
 						per.setSort(5);
+					} else if (per.getPrevEpRole().equalsIgnoreCase(RoleCode.FL_USER.value()) && !(per.getEpRole() == null && per.getPmUser() != null)) {
+						per.setSort(6);
+					} else if (per.getPrevEpRole().equalsIgnoreCase(RoleCode.FL_USER.value())) {
+						per.setSort(7);
+					} else{
+						per.setSort(8);
 					}
 				} else {
-					per.setSort(5);
+					per.setSort(8);
 				}
 			}
 			// sort by name
