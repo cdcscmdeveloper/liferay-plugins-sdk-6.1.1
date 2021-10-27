@@ -34,6 +34,16 @@
 					action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeQuotation, qTDetailBB.managedBean.qt.qtId)}"
 					immediate="true" rendered="#{qTDetailBB.managedBean.maintanceFlow and !qTDetailBB.approvalScreen}"/></td>
 		</tr>
+		<ui:remove>//29464-start</ui:remove>
+		<c:if test="#{qTDetailBB.managedBean.maintanceFlow and !qTDetailBB.approvalScreen and not empty qTDetailBB.managedBean.qt.childQt}">
+			<tr>
+				<td style="vertical-align: bottom;" align="right"><h:outputText
+						style="float:right;" styleClass="mandatory"
+						value="#{lbl['lbl.sc.qt.republishTo']} #{qTDetailBB.managedBean.qt.childQt.qtNo}" />
+				</td>
+			</tr>
+		</c:if>
+		<ui:remove>//29464-end</ui:remove>
 		<tr>
 		<td align="right">
 			<c:choose>
@@ -100,7 +110,9 @@
 			<!-- ***25692 - end -->
 				
 			<c:if test="#{!qTDetailBB.managedBean.readOnly}">
-				<p:commandButton value="#{lbl['lbl.btn.clone']}" style="float:right;" id="cloneButton" rendered="#{isClone1}"
+			  	
+			 <!-- danial #25635 - rollback 22/11/2020-->
+			 <p:commandButton value="#{lbl['lbl.btn.clone']}" style="float:right;" id="cloneButton" rendered="#{isClone1}"
 											process="@this" partialSubmit="true" update="pnlid2"
 											action="#{qTCloneBackingbean.cloneCommitteePopupAction}"
 											title="#{lbl['lbl.sc.qt.create.btn.clone.tooltip']}" />
@@ -125,11 +137,13 @@
 							<ui:param name="buttonLabel"
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 							<ui:param name="bpAction" value="SUBMIT" />
+							
 							<p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button"
 								actionListener ="#{qTDetailBB.assertSpecificationUpdateInProgress(true)}"  
 								update="@([id$=#{submitConfirmId2}])" 
 								rendered="#{isClone2 and !isCommitteeApprovalReviseTask}" />
+								
 							<ui:remove> #30477 Start </ui:remove>	
 							<p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button" onclick="blockWidget.show();"
@@ -161,10 +175,8 @@
 							update="@([id$=#{submitConfirmId}])" 
 							rendered="#{isClone1}" 
 							disabled="#{!qTDetailBB.managedBean.ptjPresent}"/>
-							
-						
-					</c:when>
-					<c:otherwise>
+						</c:when>
+						<c:otherwise>
 							<p:commandButton value="#{lbl['lbl.btn.submit']}"
 								styleClass="amendButton"
 								action="#{qTDetailBB.submitQtDetailsFormMaintanace(isQTStatusPendingScoringEndorsement)}"
@@ -191,7 +203,6 @@
 			</td>
 		</tr>
 		</table>
-		
 		
 		<p:dialog id="submitConfirmId2" widgetVar="submitConfirmPopUp2"
 			header="#{lbl['lbl.sc.approval.confirm']}" resizable="false"
