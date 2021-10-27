@@ -401,11 +401,11 @@ public void switchToOrigManagedBean(){
 }
 
 public String backToQtScreen(){
+	String destPage = this.getManagedBean().getPreviousPage()==null ? QTConstants.MAINTANANCE_PAGE_FULL: this.getManagedBean().getPreviousPage();//29464
 	switchToOrigManagedBean();
 	FacesContext fc = FacesContext.getCurrentInstance();
 	fc.getApplication().getNavigationHandler()
-	.handleNavigation(fc, null,
-			QTConstants.MAINTANANCE_PAGE_FULL);
+	.handleNavigation(fc, null, destPage);//29464
 	return "";
 }
 
@@ -435,11 +435,20 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable){
  * @param Boolean useTempManagedBean 
  * @param previousPageId - nullable
  */
-public void editSpecificationMaintenance(ScQt scQt,
+	//29464-start
+	public void editSpecificationMaintenance(ScQt scQt, boolean isEditable,
+			boolean renewSessionObject, boolean useTempManagedBean,
+			String previousPageId) {
+		editSpecificationMaintenance(scQt,isEditable, renewSessionObject, useTempManagedBean, previousPageId, false);
+	}
+	//29464-end
+	
+	public void editSpecificationMaintenance(ScQt scQt,
 		boolean isEditable, 
 		boolean renewSessionObject /*** 25692#95 ***/,
 		boolean useTempManagedBean /*** 25692#95 ***/,
-		String previousPageId /*** 25692#95 ***/){
+		String previousPageId,/*** 25692#95 ***/
+		boolean redirect/*29464-overload arg*/){
 	
 	QtnTenderSearchBean qtTnderBean=this.getManagedBean().getQtnTenderSearchBean();
 	IPagingDataModel<ScQt> qtdataModel=this.getManagedBean().getSearchQTDataModel();
@@ -563,9 +572,15 @@ public void editSpecificationMaintenance(ScQt scQt,
 		}
 		//#15391 - end
 		
+		//29464-start
+		String renderPage = QTConstants.SPECIFICICATON_COMM_PREPARATION;
+		if(redirect){
+			renderPage = renderPage.concat("?faces-redirect=true");
+		}
+		//29464-end
+		
 		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null,
-						QTConstants.SPECIFICICATON_COMM_PREPARATION);
+				.handleNavigation(fc, null, renderPage);//29464
 		
 	log.debug("end editSpecificationMaintenance");
 }
@@ -681,4 +696,13 @@ public boolean isSpecCommittee() {
 	return QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 }	
 //#15391 - end
+
+	// 29464-start
+	public void redirectToSpecificationMaintenance(ScQt scQt,
+			boolean isEditable, String previouPageId, boolean redirect) {
+		this.switchToTempManagedBean();
+		this.getManagedBean().setQt(scQt);
+		editSpecificationMaintenance(scQt, isEditable, true, true, previouPageId, redirect);
+	}
+	// 29464-end
 }

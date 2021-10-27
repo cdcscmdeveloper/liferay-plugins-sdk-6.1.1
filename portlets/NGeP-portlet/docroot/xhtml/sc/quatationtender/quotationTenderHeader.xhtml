@@ -7,6 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<div align="left" class="header-info header-spacing">
+		<ui:param name="statusId" value="#{qTDetailBB.retirveStatusId()}" /><ui:remove>//29464</ui:remove>
 		<table width="100%">
 			<tr>
 				<td width="15%"><h:outputLabel value="#{lbl['lbl.sc.qtn.no']}" /></td>
@@ -45,11 +46,27 @@
 				
 				<td width="10%"><h:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
 				<td class="header-info-text">
-				<ui:param name="statusId" value="#{qTDetailBB.retirveStatusId()}" />
+				<!-- <ui:param name="statusId" value="#{qTDetailBB.retirveStatusId()}" />  -->
 				#{qTDetailBB.getStatusDescById(statusId)}
 					
 				</td>
 			</tr>
+			<ui:remove>//29464-start</ui:remove>
+			<ui:fragment rendered="#{statusId eq QTStatusConst.QT_PENDING_SPECIFICATION_COMMITTEE_APPOINTMENT}">
+				<tr>
+					<td width="15%"><h:outputLabel
+							value="#{lbl['lbl.sc.qt.republishFrom']}" /></td>
+					<td class="header-info-text"><p:commandLink
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+							process="@this" partialSubmit="true" id="republishFromHyperlink"
+							style="margin-right:20px;"
+							action="#{specMaintenanceBB.redirectToSpecificationMaintenance(qTDetailBB.managedBean.qt.scQt, false,'/xhtml/sc/quatationtender/quatationtendercreation.xhtml', true)}">
+							<h:outputText value="#{qTDetailBB.managedBean.qt.scQt.qtNo}"
+								escape="false" />
+						</p:commandLink></td>
+				</tr>
+			</ui:fragment>
+			<ui:remove>//29464-end</ui:remove>
 		</table>
 	</div>
 </ui:composition>

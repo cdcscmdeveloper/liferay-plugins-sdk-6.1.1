@@ -31,14 +31,17 @@
 					action="#{specMaintenanceBB.backToQtScreen()}" rendered="#{(not empty specMaintenanceBB.managedBean.previousPage)}"
 					partialSubmit="true"
 					process="@this"
-					update="@this" />
+					update="@this" 
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/><ui:remove>//29464</ui:remove>
 				</c:when>
 				</c:choose>
 				<!-- 25692#95 - end -->
+				<!-- danial #25635 - rollback 22/11/2020 end -->
 				<p:commandButton value="#{lbl['lbl.sc.clone.specification']}" style="float:right;" id="cloneButton"
 											process="@this" partialSubmit="true" update="pnlid2" rendered="#{isClone and !specificationBackingBean.managedBean.readOnly}"
 											action="#{qtSpecCloneBackingBean.cloneCommitteePopupAction}"
 											title="#{lbl['lbl.sc.qt.create.btn.clone.tooltip']}" />
+				
 			<ui:fragment rendered="#{specificationBackingBean.managedBean.specMaintenanceScreen ne specificationBackingBean.getSpecMaintenance()}">
 				<ui:repeat var="bpmAction"
 						value="#{specificationBackingBean.managedBean.outComes}">

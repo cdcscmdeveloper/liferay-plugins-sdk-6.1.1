@@ -16,7 +16,7 @@
 	<!-- ***25692 - end -->
 	
 	<c:choose>
-	<c:when test="#{qTDetailBB.managedBean.committeeAppointment}">
+	<c:when test="#{qTDetailBB.evaluateCommitteeAppointmentPage()}"><ui:remove>//29464</ui:remove>
 		<ui:include src="/xhtml/sc/quatationtender/committeeappointment/qtcommitteeappointment.xhtml" />
 	</c:when>
 	<c:otherwise>
@@ -160,6 +160,12 @@
 						rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemCommitteeApproval)}" />
 					<!-- ***25692#31 - end -->
 					
+					<ui:remove>29464-start</ui:remove>
+					<p:menuitem value="#{lbl['lbl.sc.qt.specificationCommittee']}" 
+						action="#{qTDetailBB.qtDetailsTabChange(5)}" update="@form" process="@form"
+						rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemSpecificationCommitteeAssignment)}" />
+					<ui:remove>29464-end</ui:remove>
+					
 							
 				</p:tabMenu></td>
 			<td width="80%" valign="top">
@@ -279,6 +285,10 @@
 							<c:when test="#{qTDetailBB.managedBean.activeIndex eq '5' and qTDetailBB.displayMenuItem(qTDetailBB.menuItemBPKApproval)}">
 								 	<ui:include src="#{qTDetailBB.getBPKApprovalPage()}" />
 							</c:when>		
+							<ui:remove>29464-start</ui:remove>
+							<c:when test="#{qTDetailBB.managedBean.activeIndex eq '5'}">
+								<ui:include src="/xhtml/sc/quatationtender/committeeappointment/qtcommitteeappointment.xhtml" />							</c:when>
+							<ui:remove>29464-end</ui:remove>		
 							</c:choose>				
 						 </c:if>
 						
