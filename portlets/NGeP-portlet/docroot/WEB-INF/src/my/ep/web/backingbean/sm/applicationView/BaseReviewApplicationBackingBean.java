@@ -2634,7 +2634,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				// Refs #15629 - End - 21/1/2021
 				
 				//30974 - Start - 13/10/2021
-				if (this.getManagedBean().getSmAppl().getPmStatus() != null
+				if (this.getManagedBean().getSmAppl().getPmStatus() != null && !this.getManagedBean().getSmAppl().isActiveAppl()
 						&& !this.getManagedBean().getSmAppl().getPmStatus().getStatusId().toString()
 								.equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REGISTERED)){
 					rejectReasons = SmCommonUtil.getHtmlApplicationRejectReasons(getManagedBean().getSmAppl()
