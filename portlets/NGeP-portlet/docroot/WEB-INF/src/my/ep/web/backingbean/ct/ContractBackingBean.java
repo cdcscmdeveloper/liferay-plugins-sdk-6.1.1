@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -147,7 +148,6 @@ import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.NumberWordUtilEn;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
-import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -395,15 +395,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					getManagedBean().getDeleteAttachmentList().add(attachment);
 				}
 				this.getManagedBean().getContractVer().getItemAttachments().remove(getManagedBean().getAttachFileIndex());
-		} 
+		}
 		//#26186 start
-			else if(event.getComponent().getId().equalsIgnoreCase("delDisciplinaryAttachmentId")){
-				attachment = getManagedBean().getContractVer().getDisciplinaryActionAttachments().get(this.getManagedBean().getAttachFileIndex());
-				if(attachment.getAttachmentId() != null){
-					getManagedBean().getDeleteAttachmentList().add(attachment);
-				}
-				getManagedBean().getContractVer().getDisciplinaryActionAttachments().remove(this.getManagedBean().getAttachFileIndex());
+		else if(event.getComponent().getId().equalsIgnoreCase("delDisciplinaryAttachmentId")){
+			attachment = getManagedBean().getContractVer().getDisciplinaryActionAttachments().get(this.getManagedBean().getAttachFileIndex());
+			if(attachment.getAttachmentId() != null){
+				getManagedBean().getDeleteAttachmentList().add(attachment);
 			}
+			getManagedBean().getContractVer().getDisciplinaryActionAttachments().remove(this.getManagedBean().getAttachFileIndex());
+		}
 		//#26186 end
 		else {
 			attachment = this.getManagedBean().getAttachmentList().get(getManagedBean().getAttachFileIndex());
@@ -485,6 +485,17 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		RequestContext.getCurrentInstance().execute("deleteWaiverAttachDlg.hide()");
 		
 	}
+	
+	//Enhancement 13847 - start
+	public void deleteWaiverHistoryAttachment() throws EpException {
+		CtAttachment ctAttachmentHistory = getManagedBean().getWaiverDetail().get(getManagedBean().getAttachFileIndex());
+
+		ctAttachmentHistory.setFileName(null);
+		ctAttachmentHistory.setFilePath(null);
+		
+		RequestContext.getCurrentInstance().execute("deleteHistoryWaiverAttachDlg.hide()");
+	}
+	//Enhancement 13847 - end
 
 	/**
 	 * The method used to delete termination letter attachment from the list.
@@ -2253,6 +2264,20 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			//getManagedBean().getContractVer().getBondWaiverAttachments().add(attachment);
 			RequestContext.getCurrentInstance().execute("uploadWaiverDlg.hide()");
 		}
+		//#13847 - start
+		else if(event.getComponent().getId().equalsIgnoreCase("uploadHistoryWaiver")){
+			CtAttachment ctAttachmentHistory = getManagedBean().getWaiverDetail().get(getManagedBean().getAttachFileIndex());
+			
+			ctAttachmentHistory.setModified(true);
+			ctAttachmentHistory.setFileName(item.getFileName());
+			ctAttachmentHistory.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+			ctAttachmentHistory.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+			ctAttachmentHistory.setCreatedUser(facesScopes.getUserSessionBean());
+			ctAttachmentHistory.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			
+			RequestContext.getCurrentInstance().execute("uploadHistoryWaiverDlg.hide()");
+		}
+		//#13847 - end
 	}
 	//LOG : 13847, by Fahmi 22032019
 		/**
@@ -2292,88 +2317,195 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @throws 
 	 * @see    
 	 */
-	public void setBondWaiverToTable() throws Exception {
-		if(getManagedBean().getCtContractAmount().isBondWaived()){
-			if (getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverStartDate() == null) {
-				throw new EpException(MessageConst.ERROR_100022,
-						new String[] {ResourceBundleUtils.getMessage("lbl.ct.pb.waiver.start.date", 
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			}
-			if (getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverEndDate() == null) {
-				throw new EpException(MessageConst.ERROR_100022,
-						new String[] {ResourceBundleUtils.getMessage("lbl.ct.pb.waiver.end.date", 
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			}
-			if (getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getReferenceNo() == null || "".equalsIgnoreCase(getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getReferenceNo())) {
-				throw new EpException(MessageConst.ERROR_100022,
-						new String[] {ResourceBundleUtils.getMessage("lbl.ct.pb.waiver.reference.no", 
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			}
-			if (getManagedBean().getCtAttachmentLatest().getFileName() == null || "".equalsIgnoreCase(getManagedBean().getCtAttachmentLatest().getFileName())) {
-				/*throw new EpException(MessageConst.ERROR_100022,
-						new String[] {ResourceBundleUtils.getMessage("lbl.ct.bond.waiver.deferment", 
-								2, new FacesScopes().getUserLocale())});*/
-				throw new EpException(MessageConst.ERROR_740060,new String[]{SmCommonUtil.getMessage("lbl.ct.bond.waiver.deferment",null), ""});
+		public void setBondWaiverToTable() throws Exception {
+			//#Enhancement 13847 - start
+			Date bondStartDate = null, bondEndDate = null, entryBondStartDate = null, entryBondEndDate = null;
+			boolean sameStartLessEnd = false, overStartSameEnd = false, lessStartLessEndMoreStart = false, lessStartMoreEnd = false, 
+					moreStartLessEndMoreEnd = false, lessStartSameEnd = false, sameStartMoreEnd = false, moreStartLessEnd = false;
+			//#Enhancement 13847 - end
+					
+			if(getManagedBean().getCtContractAmount().isBondWaived()){
+				if(getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverStartDate() == null &&
+						getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverEndDate() == null &&
+						(getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getReferenceNo() == null || "".equalsIgnoreCase(getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getReferenceNo())) &&
+						(getManagedBean().getCtAttachmentLatest().getFileName() == null || "".equalsIgnoreCase(getManagedBean().getCtAttachmentLatest().getFileName()))){
+					throw new EpException(MessageConst.ERROR_750061);//#Enhancement 13847 - shaqimi
+				}
+				if (getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverStartDate() == null) {
+					throw new EpException(MessageConst.ERROR_750062);//#Enhancement 13847 - shaqimi
+				}
+				if (getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverEndDate() == null) {
+					throw new EpException(MessageConst.ERROR_750063);//#Enhancement 13847 - shaqimi
+				}
+				if (getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getReferenceNo() == null || "".equalsIgnoreCase(getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getReferenceNo())) {
+					throw new EpException(MessageConst.ERROR_750064);//#Enhancement 13847 - shaqimi
+				}
+				if (getManagedBean().getCtAttachmentLatest().getFileName() == null || "".equalsIgnoreCase(getManagedBean().getCtAttachmentLatest().getFileName())) {
+					/*throw new EpException(MessageConst.ERROR_100022,
+							new String[] {ResourceBundleUtils.getMessage("lbl.ct.bond.waiver.deferment", 
+									2, new FacesScopes().getUserLocale())});*/
+					throw new EpException(MessageConst.ERROR_750065);//#Enhancement 13847 - shaqimi
+				}
+				
+				/*
+				 * the value 0 if the argument Date is equal to this Date;
+				 * a value less than 0 if this Date is before the Date argument; 
+				 * a value greater than 0 if this Date is after the Date argument
+				 *   
+				*/
+				if (getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverStartDate()
+						.compareTo(getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverEndDate()) > 0) {
+					// start date large than end date
+					throw new EpException(MessageConst.ERROR_760164);
+				}
+			}else{//checking this when user untick/tick bond, if one field null, will return, if not copy data to history. only save data will show in history table
+				if(getManagedBean().getCtAttachmentLatest().getAttachmentId() == null){
+					return;
+				}
+				if (getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverStartDate() == null) {
+					return;
+				}
+				if (getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverEndDate() == null) {
+					return;
+				}
+				if (getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getReferenceNo() == null || "".equalsIgnoreCase(getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getReferenceNo())) {
+					return;
+				}
+				if (getManagedBean().getCtAttachmentLatest().getFileName() == null || "".equalsIgnoreCase(getManagedBean().getCtAttachmentLatest().getFileName())) {
+					return;
+				}
+				if(getManagedBean().getCtAttachmentLatest().getAttachmentId() == null || getManagedBean().getCtAttachmentLatest().getAttachmentId() <= 0){
+					return;
+				}
 			}
 			
-			/*
-			 * the value 0 if the argument Date is equal to this Date;
-			 * a value less than 0 if this Date is before the Date argument; 
-			 * a value greater than 0 if this Date is after the Date argument
-			 *   
-			*/
-			if (getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverStartDate()
-					.compareTo(getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverEndDate()) > 0) {
-				// start date large than end date
-				throw new EpException(MessageConst.ERROR_760164);
+			checkPerformanceBondExceedDate();
+			
+			//Enhancement 13847 - start
+			for(CtAttachment ctAttachmentHistory : getManagedBean().getWaiverDetail()){
+				bondStartDate = getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverStartDate();
+				bondEndDate = getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverEndDate();
+				entryBondStartDate = ctAttachmentHistory.getCtBondWaiverDetail().getWaiverStartDate();
+				entryBondEndDate = ctAttachmentHistory.getCtBondWaiverDetail().getWaiverEndDate();
+				
+				//for easier reading
+				sameStartLessEnd = bondStartDate.compareTo(entryBondStartDate) == 0 && bondEndDate.compareTo(entryBondEndDate) < 0;
+				overStartSameEnd = (bondStartDate.compareTo(entryBondStartDate) > 0 && bondStartDate.compareTo(entryBondEndDate) < 0) &&
+						bondEndDate.compareTo(entryBondEndDate) == 0;
+				lessStartLessEndMoreStart = bondStartDate.compareTo(entryBondStartDate) < 0 &&
+						(bondEndDate.compareTo(entryBondEndDate) < 0 && bondEndDate.compareTo(entryBondStartDate) > 0);
+				lessStartMoreEnd = bondStartDate.compareTo(entryBondStartDate) < 0 && bondEndDate.compareTo(entryBondEndDate) > 0;
+				moreStartLessEndMoreEnd = (bondStartDate.compareTo(entryBondStartDate) > 0 && bondStartDate.compareTo(entryBondEndDate) < 0) && 
+						bondEndDate.compareTo(entryBondEndDate) > 0;
+				lessStartSameEnd = bondStartDate.compareTo(entryBondStartDate) < 0 && bondEndDate.compareTo(entryBondEndDate) == 0;
+				sameStartMoreEnd = bondStartDate.compareTo(entryBondStartDate) == 0 && bondEndDate.compareTo(entryBondEndDate) > 0;
+				moreStartLessEnd = bondStartDate.compareTo(entryBondStartDate) > 0 && bondEndDate.compareTo(entryBondEndDate) < 0;
+				
+				if(entryBondStartDate.compareTo(bondStartDate) == 0 && entryBondEndDate.compareTo(bondEndDate) == 0){
+					//date same as history entry
+	 				throw new EpException(MessageConst.ERROR_750066);
+				} else if (sameStartLessEnd || overStartSameEnd || lessStartLessEndMoreStart || lessStartMoreEnd || moreStartLessEndMoreEnd ||
+						lessStartSameEnd || sameStartMoreEnd || moreStartLessEnd){
+					//date range overlaps with history entry
+	 				throw new EpException(MessageConst.ERROR_750067);
+				}
 			}
-		}else{//checking this when user untick/tick bond, if one field null, will return, if not copy data to history. only save data will show in history table
+			
+			RequestContext.getCurrentInstance().execute("addPBConfirmDlg.show()");
+			//Enhancement 13847 - end
+		}
+		
+		//Enhancement 13847 - start
+		public void saveBondWaiverToTable() throws EpException {
+			FacesScopes facesScopes = new FacesScopes();
+			long noOfDays = 0;
+			
+			//add to tracking list first
+			//reverse list to insert new data at first row
+			Collections.reverse(getManagedBean().getWaiverDetail());
+			//getManagedBean().getWaiverDetail().add(SerializationUtils.clone(getManagedBean().getCtAttachment()));
+			
 			if(getManagedBean().getCtAttachmentLatest().getAttachmentId() == null){
-				return;
+				getManagedBean().getCtAttachmentLatest().setBrandNew(true);
+				getManagedBean().getCtAttachmentLatest().setTempAttachmentId(null);
+
+				getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().setBondWaiverDetaiId(null);
+				getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().setBrandNew(true);
+				getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().setCtAttachment(new CtAttachment());
 			}
-			if (getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverStartDate() == null) {
-				return;
+			
+			getManagedBean().getCtAttachmentLatest().setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+			getManagedBean().getCtAttachmentLatest().setCreatedUser(facesScopes.getUserSessionBean());
+			getManagedBean().getCtAttachmentLatest().setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			
+			getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+			getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			
+			getManagedBean().getWaiverDetail().add(SerializationUtils.clone(getManagedBean().getCtAttachmentLatest()));
+			
+			//gets the last list for editing
+			CtAttachment ctAttachmentNewHistory =  getManagedBean().getWaiverDetail().get(getManagedBean().getWaiverDetail().size() - 1);
+			ctAttachmentNewHistory.setAttachmentId(null);
+			ctAttachmentNewHistory.setBrandNew(true);
+			ctAttachmentNewHistory.setTempAttachmentId(null);
+			ctAttachmentNewHistory.setRecordStatus(false);
+			ctAttachmentNewHistory.setRecordStatusFlg(DbValueConst.RECORD_STATUS_IN_PROGRESS);
+			ctAttachmentNewHistory.getCtBondWaiverDetail().setBondWaiverDetaiId(null);
+			ctAttachmentNewHistory.getCtBondWaiverDetail().setBrandNew(true);
+			ctAttachmentNewHistory.getCtBondWaiverDetail().setCtAttachment(new CtAttachment());
+			ctAttachmentNewHistory.getCtBondWaiverDetail().setRecordStatus(false);
+			ctAttachmentNewHistory.getCtBondWaiverDetail().setRecordStatusFlg(DbValueConst.RECORD_STATUS_IN_PROGRESS);
+			
+			Collections.reverse(getManagedBean().getWaiverDetail());
+			
+			
+			for(CtAttachment ctAttachmentHistory : getManagedBean().getWaiverDetail()){
+				noOfDays += findDifference(ctAttachmentHistory.getCtBondWaiverDetail().getWaiverStartDate(), ctAttachmentHistory.getCtBondWaiverDetail().getWaiverEndDate());
 			}
-			if (getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverEndDate() == null) {
-				return;
-			}
-			if (getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getReferenceNo() == null || "".equalsIgnoreCase(getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getReferenceNo())) {
-				return;
-			}
-			if (getManagedBean().getCtAttachmentLatest().getFileName() == null || "".equalsIgnoreCase(getManagedBean().getCtAttachmentLatest().getFileName())) {
-				return;
-			}
-			if(getManagedBean().getCtAttachmentLatest().getAttachmentId() == null || getManagedBean().getCtAttachmentLatest().getAttachmentId() <= 0){
-				return;
+			
+			if(noOfDays >= 60){
+				getManagedBean().setDisableDeferment(true);
+			} else {
+				getManagedBean().setDisableDeferment(false);
 			}
 		}
 		
+		public long findDifference(Date start_date, Date end_date){
+			// Calculate time difference 
+			// in milliseconds 
+			long difference_In_Time = end_date.getTime() - start_date.getTime(); 
+			
+			// Calculate time difference in seconds, 
+			// minutes, hours, years, and days 
+			long difference_In_Seconds = TimeUnit.MILLISECONDS.toSeconds(difference_In_Time) % 60;
+			long difference_In_Minutes = TimeUnit.MILLISECONDS.toMinutes(difference_In_Time) % 60;
+			long difference_In_Hours = TimeUnit.MILLISECONDS.toHours(difference_In_Time) % 24;
+			long difference_In_Days = TimeUnit.MILLISECONDS.toDays(difference_In_Time) % 365;
+			long difference_In_Years = TimeUnit.MILLISECONDS.toDays(difference_In_Time) / 365l;
+			
+			// Print the date difference in 
+			// years, in days, in hours, in 
+			// minutes, and in seconds 
+			System.out.print("Difference" + " between two dates is: "); 
+			
+			// Print result 
+			System.out.println(difference_In_Years + " years, " + difference_In_Days + " days, " + difference_In_Hours 
+					+ " hours, " + difference_In_Minutes + " minutes, " + difference_In_Seconds + " seconds");
+			
+			return difference_In_Days;
+		}
 		
-		FacesScopes facesScopes = new FacesScopes();
-		
-		//add to tracking list first
-		//reverse list to insert new data at first row
-		Collections.reverse(getManagedBean().getWaiverDetail());
-		//getManagedBean().getWaiverDetail().add(SerializationUtils.clone(getManagedBean().getCtAttachment()));
-		getManagedBean().getWaiverDetail().add(SerializationUtils.clone(getManagedBean().getCtAttachmentLatest()));
-		Collections.reverse(getManagedBean().getWaiverDetail());
-				
-				
-		getManagedBean().getCtAttachmentLatest().setCreatedBy(facesScopes.getUserSessionBean().getUserId());
-		getManagedBean().getCtAttachmentLatest().setCreatedUser(facesScopes.getUserSessionBean());
-		getManagedBean().getCtAttachmentLatest().setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		getManagedBean().getCtAttachmentLatest().setBrandNew(true);
-		getManagedBean().getCtAttachmentLatest().setAttachmentId(null);
-		getManagedBean().getCtAttachmentLatest().setTempAttachmentId(null);
-		
-		getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().setBondWaiverDetaiId(null);
-		getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().setCreatedBy(facesScopes.getUserSessionBean().getUserId());
-		getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().setBrandNew(true);
-		getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().setCtAttachment(new CtAttachment());
-		
-		
-	}
+		public void checkPerformanceBondExceedDate() throws EpException {
+			Date bondStartDate = getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverStartDate(), 
+					bondEndDate = getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverEndDate();
+			
+			long diff = TimeUnit.DAYS.convert((bondEndDate.getTime() - bondStartDate.getTime()), TimeUnit.MILLISECONDS);
+			
+			if(diff > 60){
+				throw new EpException(MessageConst.ERROR_750070);
+			}
+		}
+		//Enhancement 13847 - end
 
 	/**
 	 * The method used to delete the uploaded agency file.
@@ -2578,6 +2710,19 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					getManagedBean().getCtAttachmentDelete().getCtBondWaiverDetail().setDeleted(true);
 					getManagedBean().getCtAttachmentDelete().setBrandNew(false);
 				}
+				//13847 - start
+				getManagedBean().setWaiverDetailDelete(null);
+				for(CtAttachment attachmentHistory : getManagedBean().getWaiverDetail()){
+					if(attachmentHistory.getRecordStatusFlg().equals(5)){
+						attachmentHistory.setDeleted(true);
+						getManagedBean().getWaiverDetailDelete().add(attachmentHistory);
+					}
+				}
+				
+				for(CtAttachment attachmentDelete : getManagedBean().getWaiverDetailDelete()){
+					getManagedBean().getWaiverDetail().remove(attachmentDelete);
+				}
+				//13847 - end
 				
 			} catch (Exception e) {
 				log.error(e.toString());
@@ -3404,17 +3549,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @param ctContractItem   object of contract item
 	 */
 	public void onChangeMinimumQty(CtContractItem ctContractItem) {
-		// Start - 28292
-		//#28479 - Start Putra
-//		CommonUtils commonUtils = new CommonUtils();
-//		String minValue = commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctContractItem
-//				.getScRequestItem().getUom().getUomCode());
-//		DecimalFormat formatter = new DecimalFormat(minValue);
-//		String result = formatter.format(ctContractItem.getMinimumOrderQty());
-//		ctContractItem.setMinimumOrderQty(Double.parseDouble(result));
-		// End - 28292
-		log.info("Putra Check Uom Decimal :"+ctContractItem.getScRequestItem().getUom().getDecimalScale().toString() );
-		log.info("Putra Check Item :"+ctContractItem.getMinimumOrderQty() );
+
 		//Bug #28356 - Start
 		//#28479 - Start Putra
 		if(ctContractItem.getContractItemId() != null){	//28292	- null checker
@@ -3429,16 +3564,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					}
 				}
 			}
-					//Bug #28479 - Start
-//					if ((getManagedBean().getContractVer().getContractVerId() == null)
-//							&& (getManagedBean().getContractVer().getDocType()
-//									.equals(ParameterConst.DOCTYPE_CONTRACT_UPDATE))) {
-//						item.setMinimumOrderQty(1);
-//						ctContractItem.setMinimumOrderQty(1);
-//						getManagedBean().setErr100033(true);
-//						getManagedBean().setMinQtyCheck(true);
-					//Bug #28479 - End				
-			//Bug #28479 - End				
+			
 	if (ctContractItem.getMinimumOrderQty() > 0) {
 		for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
 		if(ctContractItem.getScRequestItem().getRequestNoteItemId().equals(item.getScRequestItem().getRequestNoteItemId())){
@@ -3452,66 +3578,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				if (item.getMinimumOrderQty() > maxValue) {
 					throw new EpException(MessageConst.ERROR_100034,
 							new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-//					throwExceptions(MessageConst.ERROR_100034, "lbl.ct.min.order.qty");						
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});					
+							}				
+						}
+					}//#28479 - End Putra
 				}
-				
-			}
-//		   break;
-		   //#28479 - Start remove Code (related to #28292)
-//		if (ctContractItem.getCtItemMaxQties() != null || ctContractItem.getCtItemMaxQties().size() != 0) {
-//			Double maxValue = new Double(0);							
-//			for (CtItemMaxQty maxQty : item.getCtItemMaxQties()) {
-//				if(maxQty.getMaxQuantity().doubleValue() > maxValue)
-//					maxValue = maxQty.getMaxQuantity().doubleValue();				
-//			}
-//			if (item.getMinimumOrderQty() > maxValue) {
-//				throw new EpException(MessageConst.ERROR_100034,
-//						new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
-//								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});				
-//				}
-//			}
-		 //#28479 - End remove Code (related to #28292)
-		}//#28479 - End Putra
-	}
-}
-//		}//28292 - null checker
-		// Start - 28292
-//		if (!ctContractItem.getCtItemMaxQties().isEmpty()) {
-//			Double maxValue = new Double(0);							
-//			for (CtItemMaxQty maxQty : ctContractItem.getCtItemMaxQties()) {
-//				if (maxValue < maxQty.getMaxQuantity().doubleValue())
-//					maxValue = maxQty.getMaxQuantity().doubleValue();				
-//			}
-//			if (ctContractItem.getMinimumOrderQty() > maxValue) {
-//				//Bug #28479 - Start
-//				if ((getManagedBean().getContractVer().getContractVerId() == null)
-//						&& (getManagedBean().getContractVer().getDocType()
-//								.equals(ParameterConst.DOCTYPE_CONTRACT_UPDATE))) {					
-//					getManagedBean().setErr100034(true);
-//					getManagedBean().setMinQtyCheck(true);
-//					ctContractItem.setMinimumOrderQty(1);
-//				}
-//				//Bug #28479 - End
-//				throw new EpException(MessageConst.ERROR_100034);
-//				
-//			}
-			
+			}			
 		}
-		// End - 28292
 		getManagedBean().getUpdateItemMap().put(ctContractItem.getScRequestItem().getRequestNoteItemId(), ctContractItem);
-		log.info("Putra Check Item :"+ctContractItem.getMinimumOrderQty() );
-		
-//		ContractItemReqDTO reqDTO =  new ContractItemReqDTO();
-//		reqDTO.setCtContactItem(ctContractItem);
-//		
-//		
-//		IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractItemSO.class);
-//		
-//		contractItemSO.updateItemSearchService(reqDTO);
-//Bug #28356 - End		
-			//#28479 - End Putra		
-		
+		log.info("Putra Check Item :"+ctContractItem.getMinimumOrderQty() );			
 	}
 
 	/**

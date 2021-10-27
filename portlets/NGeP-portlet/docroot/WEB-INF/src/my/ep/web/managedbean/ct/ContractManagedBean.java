@@ -150,6 +150,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	private Date waiverEndDate;
 	private String referenceNo;
 	private List<CtAttachment> waiverDetail;
+	private List<CtAttachment> waiverDetailDelete; //13847 - shaqimi
 	private CtAttachment ctAttachment;
 	private CtAttachment ctAttachmentTemp;
 	private CtAttachment ctAttachmentLatest;
@@ -1436,7 +1437,19 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setDisableDeferment(boolean disableDeferment) {
 		this.disableDeferment = disableDeferment;
 	}
-	
+
+	//13847 - shaqimi start
+	public List<CtAttachment> getWaiverDetailDelete() {
+		if(waiverDetailDelete == null){
+			waiverDetailDelete = new ArrayList<CtAttachment>();
+		}
+		return waiverDetailDelete;
+	}
+
+	public void setWaiverDetailDelete(List<CtAttachment> waiverDetailDelete) {
+		this.waiverDetailDelete = waiverDetailDelete;
+	}
+	//13847 - shaqimi end
 	public boolean isDisableOriginalBond() {
 		return disableOriginalBond;
 	}
