@@ -311,6 +311,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			updateMandatoryAndNonMandatorySuppDocToApplDoc();
 			
 			reqDTO.setToken(token);
+			
 			reqDTO.setOutcome(resAction);
 			
 			//3460 - Start
@@ -339,6 +340,8 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.INFO_721105,
 							new String[] {getManagedBean().getSmAppl().getApplNo(),getManagedBean().getSmAppl().getSmSupplier().getCompanyName()},MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale())));
+					//14530
+					sendEmailtoSupplier(reqDTO);
 				}else{
 					
 					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.INFO_721104,
@@ -778,4 +781,22 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		}
 	}
 	//#11641 - End
+	
+	//14530 - Start
+		private void sendEmailtoSupplier(SdoReviewReqDTO sdoReviewReqDTO){
+			ISdoReviewSO sdoreqSO = SmServiceLookup.getSdoReviewSO();
+			SdoReviewResDTO sdoReviewResDTO = sdoreqSO.retrieveApplById(sdoReviewReqDTO);
+			SmAppl smappl = sdoReviewResDTO.getSmAppl();
+			
+			if (smappl.getApplId() == sdoReviewReqDTO.getApplId()){
+				try {
+					log.info("***sendEmailSDOInquirytoSupplpier - Start*****");
+					sdoreqSO.sendEmailSDOInquirytoSupplier(sdoReviewReqDTO);
+					log.info("***sendEmailSDOInquirytoSupplpier - Start*****" + sdoReviewReqDTO);
+				} catch (Exception ex){
+					log.info("sendEmailSDOEnquirytoSupplier ERROR :: " +ex.getMessage());
+				}
+			}
+		}
+	//14530 - End
 }
