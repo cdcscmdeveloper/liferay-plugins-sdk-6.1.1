@@ -85,11 +85,6 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	private boolean bpkAdminUser;
 	//[#22117 - stop]
 	
-	//7465
-	private List<WorklistItemVO> allPageGroupTasks = new ArrayList<WorklistItemVO>();
-	private List<WorklistItemVO> allPageOthersTasks = new ArrayList<WorklistItemVO>();
-	//7465
-	
 	//#29874 - START
 	private ISearchResultBean<PmUser> resultBeanUser;
 	//#29874 - END
@@ -648,24 +643,6 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	public void setBpkAdminUser(boolean bpkAdminUser) {
 		this.bpkAdminUser = bpkAdminUser;
 	}
-
-	//7465
-	public List<WorklistItemVO> getAllPageGroupTasks() {
-		return allPageGroupTasks;
-	}
-	
-	public void setAllPageGroupTasks(List<WorklistItemVO> allPageGroupTasks) {
-		this.allPageGroupTasks = allPageGroupTasks;
-	}
-
-	public List<WorklistItemVO> getAllPageOthersTasks() {
-		return allPageOthersTasks;
-	}
-
-	public void setAllPageOthersTasks(List<WorklistItemVO> allPageOthersTasks) {
-		this.allPageOthersTasks = allPageOthersTasks;
-	}
-	//7465
 	
 	//#29874 - START
 	public ISearchResultBean<PmUser> getResultBeanUser() {
