@@ -737,6 +737,18 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			// 12177 - Start
 			requestNoteReqDTO.setSqEndDate(getManagedBean().getSqEndDate());
 			// 12177 - End
+			
+			//#31689 - start	
+	  		if(requestNoteReqDTO.getRequestNote() != null){	
+	  	   		if(requestNoteReqDTO.getRequestNote().getRequestNoteDtls() != null){
+	  		    		for(ScRequestNoteDtl rnDtl : requestNoteReqDTO.getRequestNote().getRequestNoteDtls()){
+	  		    			if(rnDtl.getTotalPricePerItem().compareTo(BigDecimal.ZERO) == 0)
+	  		    	  	   		calculatePricePerItem(rnDtl);		    			
+	  		    		}
+	  		    }
+	  	   	}
+	  		//#31689 - end
+
 			try {
 				if(outcome.isEmpty()) {	
 					requestNoteReqDTO.setToken(ctxToken);
@@ -870,6 +882,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				outcome.isEmpty() || 
 				outcome.equals(BpmOutcomeConst.BPM_APPROVE)){
 
+			//#31689 - start
+			validateReqNoteIgnoreProcurement(scRequestNote);
+			//#31689 - end
 			// validate RN
 			validateRequestNote(scRequestNote);
 
@@ -1100,6 +1115,49 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					if ((!pType.equals(ParameterConst.PROC_TYPE_G2G) && 
 							!pType.equals(ParameterConst.PROC_TYPE_EMERGENCY)) && 
 							!pType.equals(ParameterConst.PROC_TYPE_PK7)) {
+						// start - #31689
+						// title validation
+						if(StringUtils.isBlank(requestNoteDtl.getProcurementTitle())){
+							throw new EpException(
+									MessageConst.ERROR_760315,
+									new String[] {ResourceBundleUtils.getMessage("lbl.sc.direct.purchase.title",
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						}
+
+						// pid validity
+						//log.info("pID validity begin");
+						if(requestNoteDtl.getRequestItem() != null && requestNoteDtl.getRequestItem().getPurchaseInDefault() != null){
+							pidValidity(requestNoteDtl.getRequestItem().getPurchaseInDefault(), requestNote);
+						}
+						//log.info("pID validity end");
+
+						// validate price type
+						if(null == requestNoteDtl.getPriceType() || null == requestNoteDtl.getPriceType().getParameterId()){
+							throw new EpException(MessageConst.ERROR_760343, new String[]{requestNoteDtl.getRequestItem().getItemName()});
+						}
+
+						// validate recommended supplier
+						if(null == requestNoteDtl.getScRequestSupplierItem() || null == requestNoteDtl.getScRequestSupplierItem().getSmSupplier() 
+								|| null == requestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId() ){
+							throw new EpException(MessageConst.ERROR_760356, new String[]{requestNoteDtl.getRequestItem().getItemName()});
+						}
+
+						// quantity
+						if( null != requestNoteDtl.getRequestItem() && null == requestNoteDtl.getRequestItem().getQuantity() ){
+							throw new EpException(
+									MessageConst.ERROR_760315,
+									new String[] {ResourceBundleUtils.getMessage("lbl.sc.quantity",
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						}
+						
+						if (requestNoteDtl.getAssignedUser() == null || (requestNoteDtl.getAssignedUser() != null && requestNoteDtl.getAssignedUser().getUserId()==null)) {
+							throw new EpException(MessageConst.ERROR_100022, new String[]{
+								ResourceBundleUtils.getMessage(
+										"lbl.sc.request.note.loa.prepare.by", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+										new FacesScopes().getUserLocale())});
+						}
+						// end - #31689						
 						// Check total procurement amount per ptj per item per year
 						FlItemSummaryReqDTO flReqDTO = new FlItemSummaryReqDTO();
 						if (requestNoteDtl.getRequestItem().getCmItem() != null) {
@@ -1162,8 +1220,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						}
 					}
 
+					//  #31689 (start - comment out all)
 					// title validation
-					if(StringUtils.isBlank(requestNoteDtl.getProcurementTitle())){
+					/*if(StringUtils.isBlank(requestNoteDtl.getProcurementTitle())){
 						throw new EpException(
 								MessageConst.ERROR_760315,
 								new String[] {ResourceBundleUtils.getMessage("lbl.sc.direct.purchase.title",
@@ -1202,7 +1261,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 									new FacesScopes().getUserLocale())});
 					//26221 - end
-					}
+					}*/
+					// #31689 (end - comment out all)
 				}
 			}
 		}
@@ -1223,6 +1283,83 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 
+	//#31689 - start
+	private void validateReqNoteIgnoreProcurement(ScRequestNote requestNote) {
+		debugLogger("validateReqNoteIgnoreProcurement");
+		if (requestNote.getRequestNoteDtls() != null && !requestNote.getRequestNoteDtls().isEmpty()) {
+			for (ScRequestNoteDtl requestNoteDtl : requestNote.getRequestNoteDtls()) {
+				if (!requestNoteDtl.isDeleted()) {
+					String pType = requestNoteDtl.getProcurementType().getParameterCode();
+					if ((!pType.equals(ParameterConst.PROC_TYPE_G2G) && !pType
+							.equals(ParameterConst.PROC_TYPE_EMERGENCY)) && !pType.equals(ParameterConst.PROC_TYPE_PK7)) {
+						// title validation
+						if (StringUtils.isBlank(requestNoteDtl.getProcurementTitle())) {
+							throw new EpException(
+									MessageConst.ERROR_760315,
+									new String[] { ResourceBundleUtils.getMessage("lbl.sc.direct.purchase.title",
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
+						}
+
+						// pid validity
+						//log.info("pID validity begin");
+						if (requestNoteDtl.getRequestItem() != null
+								&& requestNoteDtl.getRequestItem().getPurchaseInDefault() != null) {
+							pidValidity(requestNoteDtl.getRequestItem().getPurchaseInDefault(), requestNote);
+						}
+						//log.info("pID validity end");
+
+						// validate price type
+						if (null == requestNoteDtl.getPriceType()
+								|| null == requestNoteDtl.getPriceType().getParameterId()) {
+							throw new EpException(MessageConst.ERROR_760343, new String[] { requestNoteDtl
+									.getRequestItem().getItemName() });
+						}
+
+						// validate recommended supplier
+						if (null == requestNoteDtl.getScRequestSupplierItem()
+								|| null == requestNoteDtl.getScRequestSupplierItem().getSmSupplier()
+								|| null == requestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId()) {
+							throw new EpException(MessageConst.ERROR_760356, new String[] { requestNoteDtl
+									.getRequestItem().getItemName() });
+						}
+
+						// quantity
+						if (null != requestNoteDtl.getRequestItem()
+								&& null == requestNoteDtl.getRequestItem().getQuantity()) {
+							throw new EpException(
+									MessageConst.ERROR_760315,
+									new String[] { ResourceBundleUtils.getMessage("lbl.sc.quantity",
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
+						}
+
+						if (requestNoteDtl.getAssignedUser() == null
+								|| (requestNoteDtl.getAssignedUser() != null && requestNoteDtl.getAssignedUser()
+										.getUserId() == null)) {
+							throw new EpException(
+									MessageConst.ERROR_100022,
+									new String[] { ResourceBundleUtils.getMessage("lbl.sc.request.note.loa.prepare.by",
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
+						}
+					}
+				}
+			}
+		}
+
+		// approver group name validation
+		if (null == requestNote.getPmUserGroup()) {
+			throw new EpException(MessageConst.ERROR_760315, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.sc.ptj.approver.group", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()) });
+		}
+		// approver name validation
+		if (null == requestNote.getApprover()) {
+			throw new EpException(MessageConst.ERROR_760315,
+					new String[] { ResourceBundleUtils.getMessage("lbl.sc.approverName",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
+		}
+	}
+	//#31689 - end
+	
 	/**
 	 * Pre render page navigation to request note page based on task id
 	 * @return void
