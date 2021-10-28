@@ -2824,20 +2824,7 @@ public void saveComplianceSample() {
             //28784 - start
             if (this.getManagedBean().getScQt().isDemoRequired()) {
             	retriveSummaryEvalPresentationDemo();
-
-    			
-    			for (ScQtCheckList newChecklist : this.getManagedBean()
-    					.getEvaluationStgTechnicalCheckList()) {
-    				if (null != newChecklist
-    						&& newChecklist.getPmEvalStatus().getStatusId() == 60450) {
-    					this.getManagedBean().setEvalStatusComp(true);
-    					break;
-    				}
-    				if (null != newChecklist
-    						&& newChecklist.getPmEvalStatus().getStatusId() == 60451) {
-    					this.getManagedBean().setEvalStatusComp(false);
-    				}
-    			}
+            	this.getManagedBean().setEvalStatusComp(false);
             }
             //28784 - end
 
