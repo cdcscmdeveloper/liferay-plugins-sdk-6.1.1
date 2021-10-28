@@ -706,7 +706,7 @@ public class LovBackingBean implements Serializable {
 					return false;
 				}
 			} else if(getSelectedEntities()!=null && getSelectedEntities().size()>0){
-				// #29832 added if else to make sure the selected cb save after tick. 
+				// #29832 & #9442 added if else to make sure the selected cb save after tick. 
 				// Default save after click next page onPageChange listener
 				if(getLovBean().getLovId().equalsIgnoreCase("PM_BUSINESS_NATURE")){
 					for(BaseEntity item : selectedEntities){
@@ -758,13 +758,20 @@ public class LovBackingBean implements Serializable {
 	
 	public void onPageChange(PageEvent event){
 		// put selected into hashmap
-		for(BaseEntity item : selectedEntities){
-			if(item instanceof PmBusinessNature){
-				Long key = ((PmBusinessNature) item).getBusinessNatureId();
-				if(!persistedEntities.containsKey(key))
-					persistedEntities.put(key, item);
+		
+		//#29832 #9442 added if else for Pm_business_nature to skip save selected cb onPageChage
+		if (getLovBean().getLovId().equalsIgnoreCase("PM_BUSINESS_NATURE")){
+			
+		}else{
+			for(BaseEntity item : selectedEntities){
+				if(item instanceof PmBusinessNature){
+					Long key = ((PmBusinessNature) item).getBusinessNatureId();
+					if(!persistedEntities.containsKey(key))
+						persistedEntities.put(key, item);
+				}
 			}
 		}
+		
 	}
 	
 	public void populateSelectedItems(){
