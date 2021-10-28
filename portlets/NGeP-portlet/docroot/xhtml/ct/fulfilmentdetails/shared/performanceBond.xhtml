@@ -423,12 +423,15 @@
 								</p:calendar>
 							</c:when>
 							<c:otherwise test="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting}">
+								<!-- Enhancement 13847 - shaqimi start 28/10/2021 -->
 								<p:calendar id="startDate" value="#{ctBackingBean.managedBean.ctAttachmentLatest.ctBondWaiverDetail.waiverStartDate}" styleClass="calendarDateField" size="9" 
 									showOn="button" readonlyInput="true" navigator="true"
 									mindate="#{ctBackingBean.managedBean.contractVer.ctContractValue.effDate}"
 									maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
+					 				<p:ajax event="dateSelect" update="@([id$=startDate])" process="@this" />
 								</p:calendar>
+								<!-- Enhancement 13847 - shaqimi end 28/10/2021 -->
 							</c:otherwise>
 					</c:choose>
 						
