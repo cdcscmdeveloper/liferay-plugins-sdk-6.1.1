@@ -1287,7 +1287,6 @@ public class TaskReassignmentBackingBean extends
 			IBpmSO bpmSO = null;
 			BpmRequestDTO reqDTO = null;
 			BpmResponseDTO responseDTO = null;
-			BpmResponseDTO response2DTO = null;
 			String loginId = null;
 			List<Integer> statusIds = getManagedBean().getStatusIds();
 			TaskAssignmentSearchBean taskSearchBean = null;
@@ -1376,30 +1375,6 @@ public class TaskReassignmentBackingBean extends
 								getManagedBean().setCheckAllGroupTasksEnabled(false);
 							}
 						}
-						
-						//7465
-						reqDTO.setLimit(100);
-						reqDTO.setOffset(0);
-						response2DTO = bpmSO.getReassignedItems(reqDTO);					
-
-						if (response2DTO.getWorklistVO() != null) {
-							log.info("BPM size******"
-									+ response2DTO.getWorklistVO()
-											.getWorklistItem().size());
-							log.info("BPM total******"
-									+ response2DTO.getWorklistVO().getTotal());
-							
-							if (!response2DTO.getWorklistVO().getWorklistItem().isEmpty() && 
-									response2DTO.getWorklistVO().getWorklistItem().size() > 0) {
-								 getManagedBean().getAllPageGroupTasks().clear();
-								for (WorklistItemVO worklist : response2DTO.getWorklistVO().getWorklistItem()) {
-									getManagedBean().getAllPageGroupTasks().add(worklist);
-									log.info("getManagedBean().getAllPageGroupTasks()--------size="+getManagedBean().getAllPageGroupTasks().size());
-								}
-							} 
-						}
-						
-						//7465
 					}
 				}
 			} catch (Exception e) {
@@ -1491,7 +1466,6 @@ public class TaskReassignmentBackingBean extends
 			IBpmSO bpmSO = null;
 			BpmRequestDTO reqDTO = null;
 			BpmResponseDTO responseDTO = null;
-			BpmResponseDTO response2DTO = null;
 			String loginId = null;
 			List<Integer> statusIds = getManagedBean().getStatusIds();
 			TaskAssignmentSearchBean taskSearchBean = null;
@@ -1576,31 +1550,8 @@ public class TaskReassignmentBackingBean extends
 								}
 							} else {
 								getManagedBean().setCheckAllOthersTasksEnabled(false);
-							} 
-						} 
-						
-						//7465
-						reqDTO.setLimit(999);
-						reqDTO.setOffset(0);
-						response2DTO = bpmSO.getGroupByOthersItems(reqDTO);
-						
-						if (response2DTO.getWorklistVO() != null) {
-							log.info("BPM size******"
-									+ response2DTO.getWorklistVO()
-											.getWorklistItem().size());
-							log.info("BPM total******"
-									+ response2DTO.getWorklistVO().getTotal());
-							
-							if (!response2DTO.getWorklistVO().getWorklistItem().isEmpty() && 
-									response2DTO.getWorklistVO().getWorklistItem().size() > 0) {
-								getManagedBean().getAllPageOthersTasks().clear();
-								for (WorklistItemVO worklist : response2DTO.getWorklistVO().getWorklistItem()) {
-									getManagedBean().getAllPageOthersTasks().add(worklist);
-									log.info("getManagedBean().getAllPageOthersTasks()----"+getManagedBean().getAllPageOthersTasks().size());
-								}
-							} 
+							}
 						}
-						//7465
 					}
 				}
 			} catch (Exception e) {
