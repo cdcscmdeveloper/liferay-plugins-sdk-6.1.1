@@ -9155,8 +9155,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		validateLOADetails(this.getManagedBean().getScLoa(), outcome);
 		// validate spec questions
-		validateSpecQuestions();
-		
+		//11134 -note 172 -start
+		if(StringUtils.isNotEmpty(outcome) && !outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)){
+		}//11134 -note 172 -end
 		String loa = getMessage("lbl.sc.loiloa.loa.header.title", null);
 		String procurementMode = ""; 
 		String mode = this.getManagedBean().getScLoa().getProcurementMode().getParameterCode();
