@@ -4336,10 +4336,24 @@ public class EvaluationBackingBean extends
 									.getSpecScoringId(), specScoring.get(0));
 
 						}
-						List<TplSpecScoring> scoringList = new ArrayList<TplSpecScoring>(
-								distinctScoring.values());
-						this.getManagedBean().setSpecItemScoringList(
-								scoringList);
+
+						// #31857 -start-
+						final List<TplSpecScoring> scoringList = new ArrayList<TplSpecScoring>(distinctScoring.values());
+						// #31857 -end-
+
+						this.getManagedBean().setSpecItemScoringList(scoringList);
+						
+						// #31857 - start
+						Collections.sort(scoringList, new Comparator<TplSpecScoring>() {
+							public int compare(TplSpecScoring o1, TplSpecScoring o2) {
+
+								return o1.getTplSpecQuestion().getSpecQuestionId()
+										.compareTo(o2.getTplSpecQuestion().getSpecQuestionId());
+							}
+						});
+
+						this.getManagedBean().setSpecItemScoringList(scoringList);
+						// #31857 - end
 					}
 				}
 				retriveTemplateSpecScoring(proposalCheckList.getScQtCheckList());
