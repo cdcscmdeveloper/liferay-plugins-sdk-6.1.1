@@ -1139,6 +1139,17 @@ public class SPDetailBackingBean extends
             			this.getManagedBean().getTemplateSpecBackingBean()
             			  .calcTotalAmount(getManagedBean().getTemplateSpecBean(),answer,isItemTypeService);
             		}
+            		//20210419@asyrafhaziq - Bug #30061 - start
+            		if ((answer.getRatePerUom() != null  || !answer.getRatePerUom().equals(0))&& 
+            			(answer.getAnswerNumeric() != null || !answer.getAnswerNumeric().equals(0))) {
+        				boolean isItemTypeService = false; 
+            			if(getManagedBean().getTemplateSpecBean().getSpecMaster().getItemTypeCode().getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE)){
+            				isItemTypeService = true;
+            			}	
+        			   this.getManagedBean().getTemplateSpecBackingBean()
+        			  .CheckAndUpdateCalcTotalAmount(getManagedBean().getTemplateSpecBean(),answer,isItemTypeService);
+				     }
+            		//20210419@asyrafhaziq - Bug #30061 - End
             		super.setUserDetails(answer);
             	}
             }
@@ -1254,10 +1265,13 @@ public class SPDetailBackingBean extends
 				TplSpecQuestion tplSpecQuestion = answer.getTplSpecQuestion();
 				PmParameter answerType = tplSpecQuestion.getAnswerTypeCode();
 				String answerTypeCode = answerType != null ? answerType.getParameterCode() : null;
+				//start Bug #31750
 				if ((ParameterConst.ANSWER_TYPE_TEXT.equalsIgnoreCase(answerTypeCode) && StringUtils.isEmpty(answer.getAnswerText()))
-					|| (ParameterConst.ANSWER_TYPE_DROPDOWN.equalsIgnoreCase(answerTypeCode) && answer.getAnswerCompliance() == null)) {
+					|| (ParameterConst.ANSWER_TYPE_DROPDOWN.equalsIgnoreCase(answerTypeCode) && answer.getAnswerCompliance() == null)
+					|| ((ParameterConst.ANSWER_TYPE_NUMERIC.equalsIgnoreCase(answerTypeCode) && answer.getAnswerNumeric() == null))) {
 						throw new EpException(MessageConst.ERROR_760480);
 				}
+				//end Bug #31750
 			}
 		}
 	}
