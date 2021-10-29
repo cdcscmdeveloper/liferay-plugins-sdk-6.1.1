@@ -1083,6 +1083,7 @@ public class PurchaseInDefaultBackingBean extends
 	 *            
 	 */
 	public void beforeApproverAction(String outcome) {
+		log.info("enter method beforeApproverAction - the outcome: "+outcome);
 		debugLogger("approverAction");
 		
 		if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
