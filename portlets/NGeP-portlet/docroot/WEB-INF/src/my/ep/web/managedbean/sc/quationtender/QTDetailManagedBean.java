@@ -1637,6 +1637,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private PmParameter pmParam;//bug #30435
 	private ScQtApprovalReqAttachement scQtApprovalReqAttachement;//bug #30435
 	private String scQtAppRequestRemark;//bug #30435
+	private boolean approverTabLoaded = false;//bug #30435
 	
 	private boolean isApprovalScreen = false;
 	
@@ -10958,6 +10959,20 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		 */
 		public void setScQtAppRequestRemark(String scQtAppRequestRemark) {
 			this.scQtAppRequestRemark = scQtAppRequestRemark;
+		}
+
+		/**
+		 * @return the approverTabLoaded
+		 */
+		public boolean isApproverTabLoaded() {
+			return approverTabLoaded;
+		}
+
+		/**
+		 * @param approverTabLoaded the approverTabLoaded to set
+		 */
+		public void setApproverTabLoaded(boolean approverTabLoaded) {
+			this.approverTabLoaded = approverTabLoaded;
 		}
 		//bug #30435 - end
 

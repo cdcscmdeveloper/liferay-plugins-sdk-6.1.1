@@ -3596,8 +3596,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		// #14398 - End
 		
 		if (null!= this.getManagedBean().getTaskName() &&!SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(this.getManagedBean().getTaskName())){	//#28644-start	
-			retrieveApprovalTabDtl();
-			} //#28644-End
+			// #30435- Start.
+			if (!getManagedBean().isApproverTabLoaded()) {
+				retrieveApprovalTabDtl();
+			}
+			// #30435 - End.
+		} //#28644-End
 
 		// Code will be called if user didn't visit the supplier qualification
 		// tab.
@@ -4132,6 +4136,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 			
 			this.getManagedBean().setTabList(tabBeans);
+			// #30435- Start.
+			this.getManagedBean().setApproverTabLoaded(true);
+			// #30435- End.
 		} finally {
 			detailSO = null;
 		}
