@@ -173,9 +173,13 @@
 			<h:outputText value="#{lbl['lbl.txt.na']}"/>
 		</h:panelGroup>
 	</p:column>
-	
-	<p:column style="#{isSpecTypeFinancial ? 'width:115px; text-align:right;' : 'width:150px;'}"  rendered="#{(!isSqSpec and !isSpecTypeFinancial or (isSpecTypeFinancial and (((!isZonal or isItemTypeService) and !isSpecificationReq) or isSpecificationReq)) and isAllPriceTypesStandard and !qtyZero) or !isSpecTypeFinancial or (isSpecTypeFinancial and (((!isZonal or isItemTypeService) and !isSpecificationReq) or isSpecificationReq)) and isAllPriceTypesStandard}">
-		
+<!-- Bug #31733 Related to #21695 29/10/2021 -->	
+	<p:column style="#{isSpecTypeFinancial ? 'width:115px; text-align:right;' : 'width:150px;'}"  
+	rendered="#{!isSpecTypeFinancial or (isSpecTypeFinancial and (((!isZonal or isItemTypeService) and !isSpecificationReq)
+				or (isSpecificationReq and !qtyZero)
+				or (isSpecificationReq and isSqSpec)
+				or (isSpecificationReq and !isZonal))) 
+				and isAllPriceTypesStandard}">
 		<f:facet name="footer">
 			<h:outputText id="totalAmount" 
 				styleClass="calcAmount" 
