@@ -1710,24 +1710,24 @@ public class EvaluationBackingBean extends
 		// this.getManagedBean().setCheckListType(checklistType);
 		this.getManagedBean().setComplianceCheckListIndex(-1);
 		this.getManagedBean().setCheckListType("");
-		//#31525 - checking view/evaluate button if not save package score - start 
+		//#32007 - checking view/evaluate button if not save package score - start 
+		IQTEvaluationSO evaluationSO = null;
+		evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 		List<ScQtProposalAmount> proposalamounts = new ArrayList<ScQtProposalAmount>();
-		if(this.getManagedBean().getScQt().isZonal()){
-			if(CollectionUtils.isNotEmpty(this.getManagedBean().getQtProposalAmountByProposal())){
-				proposalamounts.addAll(this.getManagedBean().getQtProposalAmountByProposal());	
-				
-			}
-			
-		}else{
-			if(CollectionUtils.isNotEmpty(this.getManagedBean().getQtProposalAmounts())){
-				proposalamounts.addAll(this.getManagedBean().getQtProposalAmounts());	
-				
-			}
-			
+		EvaluationReqDTO amountReqDto = new EvaluationReqDTO();
+		EvaluationResDTO amountResDto = new EvaluationResDTO();
+		amountReqDto.setQtId(this.getManagedBean().getScQt().getQtId());
+		amountResDto= evaluationSO.retrieveProposals(amountReqDto); 
+		for(ScQtProposal amtbyproposal : amountResDto.getProposalList()){
+			amountReqDto.setScQt(this.getManagedBean().getScQt());
+			amountReqDto.setProposalId(amtbyproposal.getQtProposalId());
+			amountResDto = evaluationSO.retrieveProposalAmountbyProposal(amountReqDto); 
+			proposalamounts.addAll(amountResDto.getProposalAmountListbyProposal());
 		}
 		if(CollectionUtils.isNotEmpty(proposalamounts)){
 			for(ScQtProposalAmount newList : proposalamounts){
-				if(newList.getPmEvalStatus().getStatusId()==null || newList.getPmEvalStatus().getStatusId()
+				if(newList.getPmEvalStatus() == null || newList.getPmEvalStatus().getStatusId()
 						.equals(QTStatusConst.TS_PENDING_SUBMISSION)){
 					this.getManagedBean().setEvalStatus(QTStatusConst.TS_PENDING_SUBMISSION);
 					break;
@@ -1739,7 +1739,8 @@ public class EvaluationBackingBean extends
 				}
 			}
 		}
-		//#31525 - checking view/evaluate button if not save package score - end
+		//#32007 - checking view/evaluate button if not save package score - end
+
 
 		return "/xhtml/sc/evaluation/evaluationMain.xhtml";
 
@@ -4122,7 +4123,15 @@ public class EvaluationBackingBean extends
 						if (this.getManagedBean().getScQt().isDemoRequired()) {
 							specDtls.setEvalStage(QTConstants.PRESENTATION_DEMO_EVALUATION);
 						} else {
-							specDtls.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+							//#32007 - set evalstage 'TI' for partial 'T' for non partial - start 
+							if(this.getManagedBean().getScQt().isPartial()){
+								specDtls.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+							
+							}else{
+								specDtls.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+							
+							}
+							//#32007 - set evalstage 'TI' for partial 'T' for non partial - start
 						}
 					}
 				}
@@ -13982,60 +13991,40 @@ private void retriveCommitteeRemarksList(){
 							} 
 						}
 						resDTO2 = evaluationSO.retrievProposalCheckListByCheckListNZone(reqDTO2);
-			//Bug #31553 - related to 25138 (FARID)
-						List<Object[]> partialOfferQualified = evaluationSO.retrieveSummaryNotOfferSuppliersPackageTech(reqDTO).getNotOfferSupplierResultBean().getResultList();
-						//Bug #31768 - related to 25138 (FARID)
-						List<Long> excludeSupplier = new ArrayList<Long>();
-						if(CollectionUtils.isEmpty(partialOfferQualified)){
-							partialOfferQualified = new ArrayList<Object[]>();
-						}
-						//Bug #31768 - related to 25138 (FARID)
-						for(Object[] exclude : partialOfferQualified){
-							
-							Long suppId = new Long(((BigDecimal)exclude[0]).toString());
-							
-							excludeSupplier.add(suppId);
-							
-						}
-						//Bug #31553 - related to 25138 (FARID)	24/9/2021
-						int countsupplier = 0;
-						//Bug #31553 - related to 25138 (FARID)	24/9/2021
-						for(ScQtProposalChecklist proplist : resDTO2.getComplianceResultBean().getResultList()){
-							//Bug #31553 - related to 25138 (FARID)						
-							if (!excludeSupplier.contains(proplist
-									.getScQtProposal().getScQtSupplier()
-									.getSmSupplier().getSupplierId())) {
-
-								if (null != proplist.getScQtProposal()
-										.getProposalAmount().getPmEvalStatus()) {
-									this.getManagedBean().setEvalStatus(
-											QTStatusConst.TS_COMPLETED);
-
-								} else {
-									this.getManagedBean()
-											.setEvalStatus(
-													QTStatusConst.TS_PENDING_SUBMISSION);
-									break;// #25138
-								}
+						//#32007 - checking for partial qualified suppliers - start
+						List<ScQtProposalAmount> amounts = new ArrayList<ScQtProposalAmount>();						
+						if(this.getManagedBean().getScQt().isPartial()){	
+							EvaluationReqDTO amountReqDto = new EvaluationReqDTO();
+							EvaluationResDTO amountResDto = new EvaluationResDTO();
+							amountReqDto.setQtId(this.getManagedBean().getScQt().getQtId());
+							amountResDto= evaluationSO.retrieveProposals(amountReqDto); 
+							for(ScQtProposal amtbyproposal : amountResDto.getProposalList()){
+								amountReqDto.setScQt(this.getManagedBean().getScQt());//#31525
+								amountReqDto.setProposalId(amtbyproposal.getQtProposalId());
+								amountResDto = evaluationSO.retrieveProposalAmountbyProposal(amountReqDto); 
+								amounts.addAll(amountResDto.getProposalAmountListbyProposal());
 							}
-							//Bug #31553 - related to 25138 (FARID)	24/9/2021
+							
+						}else{
+							for(ScQtProposalChecklist proposalChecklist:resDTO2.getComplianceResultBean().getResultList()){
+								amounts.addAll(proposalChecklist.getScQtProposal().getScQtProposalAmounts()) ;
+								
+							}
+						}
+						for(ScQtProposalAmount amountStatus: amounts){
+							if(amountStatus.getPmEvalStatus()==null) {
+								this.getManagedBean().setEvalStatus(QTStatusConst.TS_PENDING_SUBMISSION);
+								break;
+							
+							}
 							else{
-								countsupplier ++;
+								this.getManagedBean().setEvalStatus(QTStatusConst.TS_COMPLETED);
+							
 							}
-							//Bug #31553 - related to 25138 (FARID)	24/9/2021
 						}
-						//Bug #31553 - related to 25138 (FARID)	24/9/2021
-						if(CollectionUtils.isNotEmpty(resDTO2.getComplianceResultBean().getResultList()) && resDTO2.getComplianceResultBean().getResultList().size() == countsupplier){
-						this.getManagedBean().setEvalStatus(
-								QTStatusConst.TS_COMPLETED);
-						}
-						//Bug #31553 - related to 25138 (FARID)	24/9/2021
-						// #31420 Bug fixed
-						if(CollectionUtils.isEmpty(resDTO2.getComplianceResultBean().getResultList())){
-							this.getManagedBean().setEvalStatus(QTStatusConst.TS_PENDING_SUBMISSION);
-							break;
-						}
-						// #31420 Bug fixed
+						this.getManagedBean().setQtProposalAmountByProposal(amounts);
+						break;
+						//#32007 - checking for partial qualified suppliers - end
 					}
 					
 					
@@ -14908,41 +14897,34 @@ private void retriveCommitteeRemarksList(){
 							} 
 						}
 						resDTO2 = evaluationSO.retrievProposalCheckListByCheckListNZone(reqDTO2);
-			//Bug #31553 - related to 25138 (FARID)				
-						List<Object[]> partialOfferQualified = evaluationSO.retrieveSummaryNotOfferSuppliersPackageTech(reqDTO).getNotOfferSupplierResultBean().getResultList();
-						//Bug #31768 - related to 25138 (FARID)
-						List<Long> excludeSupplier = new ArrayList<Long>();
-						if(CollectionUtils.isEmpty(partialOfferQualified)){
-							partialOfferQualified = new ArrayList<Object[]>();
-						}
-						//Bug #31768 - related to 25138 (FARID)
-						for(Object[] exclude : partialOfferQualified){
-							
-							Long suppId = new Long(((BigDecimal)exclude[0]).toString());
-							
-							excludeSupplier.add(suppId);
-							
-						}
-			//Bug #31553 - related to 25138 (FARID)	
-						for(ScQtProposalChecklist proplist : resDTO2.getComplianceResultBean().getResultList()){
-							//Bug #31553 - related to 25138 (FARID)	
-							if (!excludeSupplier.contains(proplist
-									.getScQtProposal().getScQtSupplier()
-									.getSmSupplier().getSupplierId())) {
-								//Bug #31553 -remove if (FARID)	24/9/2021
-									if (null == proplist.getScQtProposal()
-											.getProposalAmount()
-											.getPmEvalStatus()) {
-										this.getManagedBean()
-												.getOneTierFinancialActiveIndex();
-										retriveFinancialEvaluationStagePackage();
-										throw new EpException(
-												MessageConst.ERROR_760241);
-
-									}
-								//Bug #31553 -remove if (FARID)	24/9/2021
+						//#32007 related to #25138 - validation for partial and non partial in proposalamount evalstatus - start 
+						List<ScQtProposalAmount> amounts = new ArrayList<ScQtProposalAmount>();
+						if(this.getManagedBean().getScQt().isPartial()){	
+							EvaluationReqDTO amountReqDto = new EvaluationReqDTO();
+							EvaluationResDTO amountResDto = new EvaluationResDTO();
+							amountReqDto.setQtId(this.getManagedBean().getScQt().getQtId());
+							amountResDto= evaluationSO.retrieveProposals(amountReqDto); 
+							for(ScQtProposal amtbyproposal : amountResDto.getProposalList()){
+								amountReqDto.setScQt(this.getManagedBean().getScQt());//#31525
+								amountReqDto.setProposalId(amtbyproposal.getQtProposalId());
+								amountResDto = evaluationSO.retrieveProposalAmountbyProposal(amountReqDto); 
+								amounts.addAll(amountResDto.getProposalAmountListbyProposal());
 							}
-				//Bug #31553 - related to 25138 (FARID)
+						}else{
+							for(ScQtProposalChecklist proposalChecklist:resDTO2.getComplianceResultBean().getResultList()){
+								amounts.addAll(proposalChecklist.getScQtProposal().getScQtProposalAmounts()) ;
+								
+							}
+						}
+						for(ScQtProposalAmount amountStatus: amounts){
+							if (null == amountStatus.getPmEvalStatus()) {
+								this.getManagedBean()
+										.getOneTierFinancialActiveIndex();
+								retriveFinancialEvaluationStagePackage();
+								throw new EpException(
+										MessageConst.ERROR_760241);
+							}
+						//#32007 related to #25138 - validation for partial and non partial in proposalamount evalstatus - end
 						}
 					}
 					
