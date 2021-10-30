@@ -64,6 +64,7 @@ import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
@@ -3365,6 +3366,17 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		this.getManagedBean().setDocStatus(
 				resStatusDTO.getPmStatusDesc() != null ? resStatusDTO
 						.getPmStatusDesc().getStatusName() : "Review");
+		
+		log.info("[#26282] Task Id: " + this.getManagedBean().getTaskId());
+		log.info("[#26282] Task name: " + this.getManagedBean().getTaskName());
+		log.info("[#26282] Task action: " + StringUtils.join(this.getManagedBean().getAction(), "-"));
+		
+		log.info("[#26282] check for Disciplinary Action - Start");
+		if(isAllSupplier()) {
+			checkForDisciplinaryAction();
+		}
+		log.info("[#26282] check for Disciplinary Action - End");
+		
 		assertView("Review Extension Code", obj);
 	}
 
@@ -3492,6 +3504,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 //			}
 		}else if(taskName.equalsIgnoreCase("Recommend Result Notification")){
 			if(processGroup.equalsIgnoreCase("Review Extension Code")){
+				log.info("[#26282] CmRecommendCodes size: " + this.getManagedBean().getRequestCode().getCmRecommendCodes().size());
 				if(this.getManagedBean().getRequestCode().getCmRecommendCodes().size()>0){
 					navigateTo(0, "unspscResultNotification");
 				}else{
@@ -3697,6 +3710,16 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			this.getManagedBean().setSelectedLovUnspsc(lovResDTO.getUnspscObj());
 			checkIfLovEditable(null);
 		}
+		log.info("[#26282] Task Id: " + this.getManagedBean().getTaskId());
+		log.info("[#26282] Task name: " + this.getManagedBean().getTaskName());
+		log.info("[#26282] Task action: " + StringUtils.join(this.getManagedBean().getAction(), "-"));
+		
+		log.info("[#26282] check for Disciplinary Action - Start");
+		if(isAllSupplier()) {
+			checkForDisciplinaryAction();
+		}
+		log.info("[#26282] check for Disciplinary Action - End");
+		
 		assertView("Review UNSPSC Code",obj);
 	}
 
@@ -4373,13 +4396,37 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		return resDTO.getRemarkList();
 	}
 	
-
-
-
-
-
-
-
-
-
+	//[#26282]
+	public void checkForDisciplinaryAction() {		
+		//check for disciplinary action
+		List<SmDisciplinaryAction> disciplinaryActList = CmApplicationUtil.checkForDisciplinaryAction(null);
+		
+		if(disciplinaryActList != null && disciplinaryActList.size() > 0) {
+			SmDisciplinaryAction disciplinaryAct = disciplinaryActList.get(0);
+			
+			log.info("[#26282] - DA - Warning: " + disciplinaryAct.isWarning());
+			log.info("[#26282] - DA - Suspend Registration: " + disciplinaryAct.isSuspendRegistration());
+			log.info("[#26282] - DA - Cancel Registration: " + disciplinaryAct.isCancelRegistration());
+			log.info("[#26282] - DA - Blacklist  Owner/Director of Company: " + disciplinaryAct.isBlacklistOwner());
+			
+			//disciplinary action - Warning
+			if(disciplinaryAct.isWarning()) {
+				this.getManagedBean().setDaWarning(disciplinaryAct.isWarning());
+			}
+			//disciplinary action - Suspend Registration
+			if(disciplinaryAct.isSuspendRegistration()) {
+				this.getManagedBean().setDaSuspendReg(disciplinaryAct.isSuspendRegistration());
+			}
+			//disciplinary action - Cancel Registration
+			if(disciplinaryAct.isCancelRegistration()) {
+				this.getManagedBean().setDaCancelReg(disciplinaryAct.isCancelRegistration());
+			}
+			//disciplinary action - Blacklist  Owner/Director of Company
+			if(disciplinaryAct.isBlacklistOwner()) {
+				this.getManagedBean().setDaBlacklistOwner(disciplinaryAct.isBlacklistOwner());
+			}
+		} else {
+			log.info("[#26282] - Disciplinary action does not imposed on supplier");
+		}		 
+	}
 }
