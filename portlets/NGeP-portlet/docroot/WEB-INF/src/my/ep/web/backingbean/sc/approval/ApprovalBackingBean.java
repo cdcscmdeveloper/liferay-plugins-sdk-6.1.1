@@ -2760,6 +2760,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			for (int i = 0; i < list.size(); i++) {
 				list.get(i).setApprovalRequestAttachement(null);
 				this.getManagedBean().setScQtApprovalReqAttachementHistory(null);
+				this.getManagedBean().setFlagFileAttahmentDeleted(true);
 			}
 		}
 		//#25077 - End

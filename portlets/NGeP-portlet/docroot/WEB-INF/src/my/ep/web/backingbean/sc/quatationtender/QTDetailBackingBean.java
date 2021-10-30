@@ -860,11 +860,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			quationTenderReqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
 			quationTenderReqDTO.setUserLocale(facesScopes.getUserLocale());
 			quationTenderReqDTO.getQtdetail().setOtherApproval(true);
-			/*
-			//#25077 - Start 
-			quationTenderReqDTO.getQtdetail().setMitiApproval(true);
-			//#25077 - End
-			 */
 			quationTenderReqDTO.setDeskOfficer(facesScopes.getUserSessionBean());
 			QuationTenderResDTO quationTenderResDTO = detailSO
 					.submitQT(quationTenderReqDTO);
@@ -3418,7 +3413,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				this.getManagedBean().setReadOnly(false);
 				this.getManagedBean().setCommitteeAppointment(true);
 				this.getManagedBean().setCommitteeAppointmentRemark(isCommitteeAppointmentRemark);
-				//this.getManagedBean().setActiveIndex(2);
 				this.getManagedBean().setCurrentStatusId(currentStatusId);
 			} else {
 				// qtId = quotationTenderDataType.getQtId().longValue();
@@ -3678,7 +3672,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				
 			} else if (SCProcessNameConst.ASSIGN_FC_SECRETARY
 					.equalsIgnoreCase(taskName)) {
-				//validateFCSecretaryDtl(qt.getFinalizationCommitte(), qt.getFinalizationSecratery());
 				
 				//#27502 - Start
 				boolean isBpkCentralContract = false;
@@ -8403,12 +8396,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			
 			if (isDeskOfficer() || isAuditor()) {
 				qtLoaDoctypes.add(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION);
-			}
-			/*
-			if (isMofSupplier()) {
-				qtLoaDoctypes.add(ParameterConst.DOCTYPE_SUPPLIER_PROPOSAL);
-			}
-			*/	
+			}	
 		}
 		
 		searchBean.getDataFilterBeans().add(
