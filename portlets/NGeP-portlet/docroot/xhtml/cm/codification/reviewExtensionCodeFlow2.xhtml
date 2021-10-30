@@ -15,7 +15,8 @@
 		<h:panelGroup id="extensionFlowReviewID">
 
 			<div style="text-align: right;">
-				<p:commandButton id="btnAdd" value="#{lbl['lbl.cm.add.to.catalogue']}" rendered="#{unspscCodeBackingBean.allSupplier}" action="#{catalogueBackingBean.addToMaintainByItemId('OK')}">
+				<p:commandButton id="btnAdd" value="#{lbl['lbl.cm.add.to.catalogue']}" rendered="#{unspscCodeBackingBean.allSupplier}" action="#{catalogueBackingBean.addToMaintainByItemId('OK')}" 
+					disabled="#{unspscCodeBackingBean.managedBean.daCancelReg or unspscCodeBackingBean.managedBean.daBlacklistOwner}" >	<!-- [#26282] -->
 					<p:tooltip id="toolTipFade" for="btnAdd" value="#{lbl['lbl.cm.tooltip.btn.addtocatalog']}" position="top"/>
 				</p:commandButton>
 				<ui:repeat var="action"

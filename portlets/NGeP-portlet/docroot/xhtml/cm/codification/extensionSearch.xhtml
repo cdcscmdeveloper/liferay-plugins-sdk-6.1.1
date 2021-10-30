@@ -229,7 +229,8 @@
 						action="#{unspscCodeBackingBean.requestExtensionCode}" />
 					<p:commandButton value="#{lbl['lbl.cm.add.to.catalogue']}"
 						rendered="#{unspscCodeBackingBean.allSupplier}"
-						action="#{catalogueBackingBean.addToMaintain()}" />
+						action="#{catalogueBackingBean.addToMaintain()}" 
+						disabled="#{codificationBackingBean.managedBean.daCancelReg or codificationBackingBean.managedBean.daBlacklistOwner}" /> <!-- [#26282] -->
 				</div>
 
 			</p:panel>
