@@ -66,6 +66,7 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
@@ -79,9 +80,11 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.cm.helper.CmApplicationUtil;
 import my.ep.web.util.cm.helper.CmSupplierZoneStateDistrictDTO;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.AdvanceSearchVO;
+import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.PricingVO;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -379,6 +382,23 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	/** The display catalogue. */
 	private boolean displayCatalogue = false;
+	
+	/** MOF supplier status */
+	private boolean mofSupplier = false;				//[#26282]
+	
+	/** Supplier disciplinary action list */
+	private List<DisciplinaryActionVO> disciplineVOs;	//[#26282]
+	
+	/** Disciplinary message */
+	private String disciplinaryMsg;						//[#26282]
+	
+	//[#26282] disciplinary action - start
+	/** The disciplinary action flag. */
+	private boolean daWarning;
+	private boolean daSuspendReg;
+	private boolean daCancelReg;
+	private boolean daBlacklistOwner;
+	//[#26282] disciplinary action - end
 
 	/** The previous screen. */
 	private int previousScreen = 0;// 0=catSearch;1=catMaintenance;2=pendingTask;
@@ -1154,7 +1174,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				if(StringUtils.isNotBlank(catType) && catType.equals("XC")) {
 					isNonCatalogue = true;
 				}
-					
+				log.info("[#26282] - isNonCatalogue : " + isNonCatalogue);	
 				// XC, MC
 				if (StringUtils.isNotBlank((String) itemNameFilterBean
 						.getSearchValue())) {
@@ -1382,7 +1402,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					reqDTO.setCatType(catTypeFilterBean.getSearchValue()
 							.toString());
 				}
-				
+				log.info("[#26282] - Category type : " + reqDTO.getCatType());
 				if(g2gFlag) {
 					if(isNonCatalogue) {
 						searchBean.getDataFilterBeans().add(
@@ -1406,6 +1426,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				appendSearchCriteria(sb, "PTJ_ID", String.valueOf(reqDTO.getUserOrgProfileId()));
 				reqDTO.setSearchCriteria(sb.toString());
 				
+				log.info("[#26282] - Retrieve supplier items...");
 				CatalogueResDTO resDTO = viewSO.searchViewSupplierItems(reqDTO);
 				setViewSupplierItemList(resDTO.getViewSuppItemResultBean()
 						.getResultList());
@@ -1428,6 +1449,48 @@ public class CatalogueManagedBean extends BaseManagedBean {
 						.size() > 0) {
 					setTotalRecords(ResourceBundleUtils.getMessage("lbl.cm.total.record", new String[] {""+resDTO.getViewSuppItemResultBean().getTotalRecord()},
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+					
+					//[#26282] - start
+					if (unspscCodeBackingBean.isRequisitioner()) {
+						for(VCmSupplierItem supplierItem : getViewSupplierItemList()) {							
+							
+							//check for disciplinary action							
+							List<SmDisciplinaryAction> disciplinaryActList = CmApplicationUtil.checkForDisciplinaryAction(supplierItem.getSupplierId());
+							
+							if(disciplinaryActList != null && disciplinaryActList.size() > 0) {
+								SmDisciplinaryAction disciplinaryAct = disciplinaryActList.get(0);
+								
+								log.info("[#26282] - ====== Disciplinary Action Status ======");								
+								log.info("[#26282] - Supplier ID: " + supplierItem.getSupplierId());
+								log.info("[#26282] - Company name: " + supplierItem.getCompanyName());
+								log.info("[#26282] - DA - Warning: " + disciplinaryAct.isWarning());
+								log.info("[#26282] - DA - Suspend Registration: " + disciplinaryAct.isSuspendRegistration());
+								log.info("[#26282] - DA - Cancel Registration: " + disciplinaryAct.isCancelRegistration());
+								log.info("[#26282] - DA - Blacklist  Owner/Director of Company: " + disciplinaryAct.isBlacklistOwner());
+								log.info("[#26282] - ========================================");
+								
+								//disciplinary action - Warning
+								if(disciplinaryAct.isWarning()) {
+									supplierItem.setDaWarning(disciplinaryAct.isWarning());									
+								}
+								//disciplinary action - Suspend Registration
+								if(disciplinaryAct.isSuspendRegistration()) {
+									supplierItem.setDaSuspendReg(disciplinaryAct.isSuspendRegistration());
+								}
+								//disciplinary action - Cancel Registration
+								if(disciplinaryAct.isCancelRegistration()) {
+									supplierItem.setDaCancelReg(disciplinaryAct.isCancelRegistration());
+								}
+								//disciplinary action - Blacklist  Owner/Director of Company
+								if(disciplinaryAct.isBlacklistOwner()) {
+									supplierItem.setDaBlacklistOwner(disciplinaryAct.isBlacklistOwner());
+								}
+							} else {
+								log.info("[#26282] - Disciplinary action does not imposed on supplier");
+							}														
+						}
+					}
+				//[#26282] - end	
 				} else {
 					setTotalRecords(ResourceBundleUtils.getMessage("lbl.cm.total.record", new String[] {""+resDTO.getViewSuppItemResultBean().getTotalRecord()},
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
@@ -4255,6 +4318,62 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	public void setMinDate(Date minDate) {
 		this.minDate = minDate;
+	}
+	
+	public boolean isMofSupplier() {
+		return mofSupplier;
+	}
+
+	public void setMofSupplier(boolean mofSupplier) {
+		this.mofSupplier = mofSupplier;
+	}
+
+	public List<DisciplinaryActionVO> getDisciplineVOs() {
+		return disciplineVOs;
+	}
+
+	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
+		this.disciplineVOs = disciplineVOs;
+	}
+
+	public String getDisciplinaryMsg() {
+		return disciplinaryMsg;
+	}
+
+	public void setDisciplinaryMsg(String disciplinaryMsg) {
+		this.disciplinaryMsg = disciplinaryMsg;
+	}
+
+	public boolean isDaWarning() {
+		return daWarning;
+	}
+
+	public void setDaWarning(boolean daWarning) {
+		this.daWarning = daWarning;
+	}
+
+	public boolean isDaSuspendReg() {
+		return daSuspendReg;
+	}
+
+	public void setDaSuspendReg(boolean daSuspendReg) {
+		this.daSuspendReg = daSuspendReg;
+	}
+
+	public boolean isDaCancelReg() {
+		return daCancelReg;
+	}
+
+	public void setDaCancelReg(boolean daCancelReg) {
+		this.daCancelReg = daCancelReg;
+	}
+
+	public boolean isDaBlacklistOwner() {
+		return daBlacklistOwner;
+	}
+
+	public void setDaBlacklistOwner(boolean daBlacklistOwner) {
+		this.daBlacklistOwner = daBlacklistOwner;
 	}
 	
 	//20200929@akmal - Enhancement27627 - Start
