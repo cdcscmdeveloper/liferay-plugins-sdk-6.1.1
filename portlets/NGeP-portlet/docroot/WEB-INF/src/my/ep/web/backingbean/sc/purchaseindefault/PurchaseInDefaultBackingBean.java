@@ -1,6 +1,7 @@
 /**
  * Copyright © 2013 Archisoft. All rights reserved.
  */
+// TODO: Auto-generated Javadoc
 package my.ep.web.backingbean.sc.purchaseindefault;
 
 import java.io.FileNotFoundException;
@@ -962,26 +963,29 @@ public class PurchaseInDefaultBackingBean extends
 				resDTO = purchaseInDefaultSO.updateResponsePurchaseInDefault(reqDTO);
 			}else{
 				//#9133 -start
+				log.info("enter updatebpm 1");	
 				if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)
 						|| BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)
 						|| BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome))
 					validateRemark();
 				else
 					finalizeRemarks(scPurchaseInDefault.getRemarks());
-					
+				log.info("enter updatebpm 2");	
 				//saveRemark(scPurchaseInDefault); comment out this //#9133
 				purchaseInDefaultSO.savePurchaseInDefault(reqDTO);
+				log.info("enter updatebpm 3");	
 			    reqDTO.setPurchaseInDefaultId(scPurchaseInDefault.getPurchaseInDefaultId());
 				reqDTO.setFetchSubEntity(true);
 				PurchaseInDefaultResDTO pidResDTO = purchaseInDefaultSO
 						.getPurchaseInDefault(reqDTO);
-				
+				log.info("enter updatebpm 4");	
 				reqDTO.setPurchaseInDefaultDtl(pidResDTO.getPurchaseInDefaultDtl());
 				reqDTO.setStatusId(stsId);
 				reqDTO.setPayLoad(getManagedBean().getPayLoad()); 
 				//#9133 -end
 				
 				resDTO = purchaseInDefaultSO.updatePurchaseInDefault(reqDTO);
+				log.info("enter updatebpm 5");	
 			}
 			//#28865 end
 			if (resDTO.isSuccessful()) {
