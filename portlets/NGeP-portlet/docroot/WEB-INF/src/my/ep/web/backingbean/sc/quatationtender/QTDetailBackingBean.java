@@ -3649,6 +3649,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					}
 				}
 				checkingOtherApprovalFileAttachmentNeedDeleted(qt.getScQtApprovals(),ParameterConst.APPROVAL_CATEGORY_OTHERS);
+				checkValidationForStatusAndFileAttachment(qt.getScQtApprovals(),ParameterConst.APPROVAL_CATEGORY_OTHERS);
 			}
 			//#25077 End 
 			//#30477 Start Vinod
@@ -10282,6 +10283,33 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
        				}
 				}
 			}
+		}
+	}
+	
+	private void checkValidationForStatusAndFileAttachment(List<ScQtApproval> approval,String approvalCategory){
+		if (CollectionUtils.isNotEmpty(approval)) {
+			for (int i = 0; i < approval.size(); i++) {
+				if (approvalCategory.equalsIgnoreCase(approval.get(i).getApprovalCategory().getParameterCode())) {
+					List<ScQtApprovalRequest> approvalRequest = approval.get(i).getScQtApprovalDtls();
+					if (CollectionUtils.isNotEmpty(approvalRequest)) {
+       					for (int j = 0; j < approvalRequest.size(); j++) {
+       						
+       						PmParameter approverAction = approvalRequest.get(j).getApproverAction();
+							if (null == approverAction || null == approverAction.getParameterId()) {
+								this.getManagedBean().setResetBpkCurrentArea(false);
+								throw new EpException(MessageConst.ERROR_760149);
+							}
+							
+       						ScQtApprovalReqAttachement approvalReqAttachement = approvalRequest.get(j).getApprovalRequestAttachement();
+      	                    if(null == approvalReqAttachement){
+      	                    	this.getManagedBean().setResetBpkCurrentArea(false);
+      	                    	throw new EpException(MessageConst.ERROR_760509);
+      	                    }
+      	                    
+       					}
+					}
+				} 
+			} 
 		}
 	}
 	// 25077 - End
