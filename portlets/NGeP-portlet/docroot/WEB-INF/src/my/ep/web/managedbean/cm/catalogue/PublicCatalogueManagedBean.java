@@ -70,6 +70,23 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 
 	/** The price to. */
 	private BigDecimal priceTo;
+	
+	//#10747 - Shafie, Soo - Start
+	/** The delivery from. */
+	private Integer deliveryFrom;
+
+	/** The delivery to. */
+	private Integer deliveryTo;
+	
+	/** The item per page in thumbnail/list view. */
+	private int itemPerPage;
+	
+	/** The sort by in thumbnail/list view. */
+	private int sortBy;
+	
+	/** The visibility of the view. */
+	private boolean visible = true;
+	//#10747 - Shafie, Soo - End
 
 	/** The family code. */
 	private String familyCode;
@@ -185,6 +202,21 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 									SearchOperator.OPERATOR_LESS_EQUAL.value(), bb.getManagedBean().getPriceTo()));
 				}
 				
+				//#10747 - Shafie, Soo - Start
+				if (bb.getManagedBean().getDeliveryFrom() != null
+						&& bb.getManagedBean().getDeliveryFrom() > 0) {
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("deliveryterm",
+									SearchOperator.OPERATOR_GREATER_EQUAL.value(), bb.getManagedBean().getDeliveryFrom()));
+				}
+
+				if (bb.getManagedBean().getDeliveryTo() != null
+						&& bb.getManagedBean().getDeliveryTo() > 0) {
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("deliveryterm",
+									SearchOperator.OPERATOR_LESS_EQUAL.value(), bb.getManagedBean().getDeliveryTo()));
+				}
+				//#10747 - Shafie, Soo - End
 				
 				if (bb.getManagedBean().getFamilyList().size() > 1) {
 					for (CmUnspsc commodity : bb.getManagedBean().getFamilyList()) {
@@ -230,7 +262,13 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 
 
 				reqDTO.setPublicCatalogSearchBean(searchBean);
-
+				// #10747 - Soo - Start
+				if (bb.getManagedBean().getSortBy() != 0) {
+					reqDTO.setSortBy(bb.getManagedBean().getSortBy());
+				}else{
+					reqDTO.setItemName(bb.getManagedBean().getItemName());
+				}
+				// #10747 - Soo - End
 				CatalogueResDTO resDTO = catalogueSO
 						.searchCatalogueBy(reqDTO);
 
@@ -252,6 +290,18 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 								.compareTo(new BigDecimal("0.00")) > 0) {
 					reqDTO1.setPriceTo(bb.getManagedBean().getPriceTo());
 				}
+				
+				//#10747 - Shafie, Soo - Start
+				if (bb.getManagedBean().getDeliveryFrom() != null
+						&& bb.getManagedBean().getDeliveryFrom() > 0) {
+					reqDTO1.setDeliveryFrom(bb.getManagedBean().getDeliveryFrom());
+				}
+				if (bb.getManagedBean().getDeliveryTo() != null
+						&& bb.getManagedBean().getDeliveryTo() > 0) {
+					reqDTO1.setDeliveryTo(bb.getManagedBean().getDeliveryTo());
+				}
+				//#10747 - Shafie, Soo - End
+				
 				CodificationReqDTO codeReqDTO = new CodificationReqDTO();
 				if(singleCommoditySelected){
 					bb.getManagedBean().setFamilyList(null);
@@ -274,7 +324,7 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 					
 				}else{
 				
-					CatalogueResDTO resDTO1 = catalogueSO.searchPublicCatalogueByNamePrice(reqDTO1);
+					CatalogueResDTO resDTO1 = catalogueSO.searchPublicCatalogueByNamePriceDeliveryTerm(reqDTO1); //#10747 - Shafie
 					if(bb.getManagedBean().isCloneNameFlag()){
 						List<String> itemNames = new ArrayList<String>();
 	
@@ -537,6 +587,113 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 	}
 
 
+	//#10747 - Shafie, Soo - Start 
+	/**
+	 *  Gets the delivery from.
+	 * 
+	 * @return the delivery from
+	 */
+	public Integer getDeliveryFrom() {
+		return deliveryFrom;
+	}
+
+
+	/**
+	 * Sets the delivery from.
+	 * 
+	 * @param deliveryFrom
+	 *            the new delivery from
+	 */
+	public void setDeliveryFrom(Integer deliveryFrom) {
+		this.deliveryFrom = deliveryFrom;
+	}
+
+
+	/**
+	 * Gets the delivery to.
+	 * 
+	 * @return the delivery to
+	 */
+	public Integer getDeliveryTo() {
+		return deliveryTo;
+	}
+
+
+	/**
+	 * Sets the delivery to.
+	 * 
+	 * @param deliveryTo
+	 *            the new delivery to
+	 */
+	public void setDeliveryTo(Integer deliveryTo) {
+		this.deliveryTo = deliveryTo;
+	}
+
+
+	/**
+	 * Gets the item per page in thumbnail/list view.
+	 * 
+	 * @return the item per page
+	 */
+	public int getItemPerPage() {
+		return itemPerPage;
+	}
+
+
+	/**
+	 * Sets the item per page in thumbnail/list view.
+	 * 
+	 * @param itemPerPage
+	 *            the new item per page
+	 */
+	public void setItemPerPage(int itemPerPage) {
+		this.itemPerPage = itemPerPage;
+	}
+
+
+	/**
+	 * Gets the sort by in thumbnail/list view.
+	 * 
+	 * @return the sort by
+	 */
+	public int getSortBy() {
+		return sortBy;
+	}
+
+
+	/**
+	 * Sets the sort by in thumbnail/list view.
+	 * 
+	 * @param sortBy
+	 *            the new sort by
+	 */
+	public void setSortBy(int sortBy) {
+		this.sortBy = sortBy;
+	}
+
+
+	/**
+	 * Checks the visibility of the view.
+	 * 
+	 * @return true, if is visible thumbnail view
+	 */
+	public boolean isVisible() {
+		return visible;
+	}
+
+
+	/**
+	 * Sets the visibility of the view.
+	 * 
+	 * @param visible
+	 *            the new visible
+	 */
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+	}
+	//#10747 - Shafie, Soo - End
+
+
 	/**
 	 * Gets the family code.
 	 * 
@@ -751,9 +908,7 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 
 
 	public void reset(){
-
 		this.setSearchDataModel(new SearchPagingDataModel());
-
 	}
 
 	public boolean isCloneNameFlag() {
