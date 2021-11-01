@@ -131,7 +131,6 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.ct.CtAddressUtil;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
 import my.ep.web.backingbean.ct.circular.cc.CentralContractBackingBean;
 import my.ep.web.backingbean.sc.loa.DirectLOABackingBean;
 import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
@@ -3956,24 +3955,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return the navigate URL 
 	 */
 	public void goToLoaView(ScLoa scLoa) {
-		//Enhancement 15851 - shaqimi start
-		String slLoaNo = this.getManagedBean().getContractVer().getCtContractValue().getLoaNo();
-		Long contractId = this.getManagedBean().getContractVer().getCtContract().getContractId();
-		if(slLoaNo.substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)){
-			AmendmentBackingBean abb = new AmendmentBackingBean();
-			//follow structure but for amendment
-			DirectLOABackingBean directLoaBackingBean = new DirectLOABackingBean();
-			FacesContext fc = FacesContext.getCurrentInstance();
-			directLoaBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
-			directLoaBackingBean.getManagedBean().setTrackingDairyView(true);
-			directLoaBackingBean.viewLOA(scLoa.getLoaId());
-			
-			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
-			abb.getManagedBean().setTrackingDairyView(true);
-			abb.gotoAmendViewPage(contractId, scLoa.getLoaId());
-		}
-		//Enhancement 15851 - shaqimi end
-		else if (scLoa.getScLoiLoa().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DIRECT_NEGO)) { //Direct Nego
+		if (scLoa.getScLoiLoa().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DIRECT_NEGO)) { //Direct Nego
 			DirectLOABackingBean directLoaBackingBean = new DirectLOABackingBean();
 			FacesContext fc = FacesContext.getCurrentInstance();
 			directLoaBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
