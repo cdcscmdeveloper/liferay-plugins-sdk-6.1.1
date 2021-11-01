@@ -40,7 +40,6 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
-import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
@@ -811,7 +810,8 @@ public class EvaluationMeetingBackingBean extends
 			metReqDtO.setTaskName(this.getManagedBean().getTaskName());
 			metReqDtO.setOutcome(BpmOutcomeConst.BPM_SAVE);
 			//#25037 End
-			MeetingResDTO meetingResDTO = meetingso.saveQTDtl(metReqDtO);
+			//MeetingResDTO meetingResDTO = meetingso.saveQTDtl(metReqDtO);
+			meetingso.saveQTDtl(metReqDtO);
 			renewSesionObject();
 			this.getManagedBean().setTaskId(taskId);
 			this.getManagedBean().setOutComes(outComes);
@@ -1214,10 +1214,12 @@ public class EvaluationMeetingBackingBean extends
 	 * 
 	 * @return the status so
 	 */
+	/*
 	private IStatusSO getStatusSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 	}
+	*/
 
 	/**
 	 * The Class clonePagingDataModel.to retrieve all the existing
