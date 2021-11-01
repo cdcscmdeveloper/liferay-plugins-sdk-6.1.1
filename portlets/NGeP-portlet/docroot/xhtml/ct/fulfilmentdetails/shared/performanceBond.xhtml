@@ -522,8 +522,11 @@
 					<table>
 					<tr>
 					<td>
+						<!-- #13847 - shaqimi start 01/11/2021 -->
 						<h:commandLink value="#{attachFile.fileName}" 
-							styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
+							styleClass="blue_font" style="word-break: break-word; overflow: hidden; display: -webkit-box; 
+							max-width: 192px; -webkit-line-clamp: 2; -webkit-box-orient: vertical;" action="#{ctBackingBean.downloadFile(attachFile)}" />
+						<!-- #13847 - shaqimi end 01/11/2021 -->
 						<p:commandLink onsuccess="deleteWaiverAttachDlg.show();" action="#{ctBackingBean.setAttachFileIndex(attachFileIndex)}"
 							process="@this" partialSubmit="true"
 							disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting}"
@@ -574,8 +577,10 @@
 					render="#{ctBackingBean.managedBean.waiverDetail.size >0}"
 					value="#{ctBackingBean.managedBean.waiverDetail}"  rowKey="#{rowKeyObj}">
 					<ac:paginator for="tableWaiver" />
-							
-					<p:column style="width:20%;" styleClass="column-align-center">
+					
+					<!-- #13847 - shaqimi start 01/11/2021-->		
+					<p:column style="width:25%;" styleClass="column-align-center">
+					<!-- #13847 - shaqimi end 01/11/2021-->
 						<f:facet name="header">
 						        <h:outputText value="#{lbl['lbl.ct.pb.waiver.start.date']}" />
 						        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.waiver.performance.bond.start.date']}"/>
@@ -589,8 +594,10 @@
 							 <p:ajax event="dateSelect" update="@([id$=bondExpDateCalId],[id$=bondExpDateCalIdSpl])" process="@this" />
 						</p:calendar>
 						</p:column>
-							
-					<p:column style="width:20%;" styleClass="column-align-center">
+					
+					<!-- #13847 - shaqimi start 01/11/2021-->		
+					<p:column style="width:25%;" styleClass="column-align-center">
+					<!-- #13847 - shaqimi end 01/11/2021-->
 						<f:facet name="header">
 						        <h:outputText value="#{lbl['lbl.ct.pb.waiver.end.date']}" />
 								<!-- #13847 - start -->
@@ -621,14 +628,17 @@
 					      style="float:left;text-align:left;"  rendered="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting
 					      or !ctBackingBean.managedBean.ctContractAmount.bondReq}"/>
 					</p:column>	
-					<p:column styleClass="column-align-center"  headerText="#{lbl['lbl.ct.pb.waiver.letter']}" style="width:35%;">		
+					<!-- #13847 - shaqimi start 01/11/2021-->
+					<p:column styleClass="column-align-center"  headerText="#{lbl['lbl.ct.pb.waiver.letter']}" style="width:30%;">	
+					<!-- #13847 - shaqimi end 01/11/2021-->	
 						<h:panelGroup id="uploadBondPg" columns="2">
-							<!--value="#{ctBackingBean.getShortFileName(varWaiver.fileName)}"-->
+							<!-- #13847 - shaqimi start 01/11/2021-->
 							<h:commandLink
-								title="#{varWaiver.fileName}"
-								value="#{varWaiver.fileName}"					
-								style="float:left;" styleClass="blue_font"
+								title="#{varWaiver.fileName}" value="#{varWaiver.fileName}"					
+								style="float:left; overflow: hidden; text-overflow: ellipsis; 
+								max-width: 192px;" styleClass="blue_font"
 								action="#{ctBackingBean.commonDownload(varWaiver.filePath, varWaiver.fileName)}" />
+							<!-- #13847 - shaqimi end 01/11/2021-->
 							<p:commandButton oncomplete="uploadHistoryWaiverDlg.show();return false;"
 								update=":form:uploadHistoryWaiverDlg" icon=" ui-icon-upload" process="@this" partialSubmit="true"
 								rendered="#{varWaiver.fileName eq null and varWaiver.filePath eq null and !ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}"
