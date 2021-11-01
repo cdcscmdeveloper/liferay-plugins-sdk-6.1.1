@@ -5,6 +5,7 @@ package my.ep.web.managedbean.ct.suspension;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;//#29214
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,11 +21,13 @@ import org.primefaces.model.DualListModel;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchMultiFilterBean;//#29214
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.ct.ContractReqDTO;
+import my.ep.dto.ct.ContractResDTO;//#29214
 import my.ep.dto.ct.dtl.ContractItemReqDTO;
 import my.ep.dto.ct.dtl.ContractItemResDTO;
 import my.ep.factory.EpLogger;
@@ -36,13 +39,16 @@ import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.type.aut.SearchCondition;//#29214
 import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.ct.ContractBackingBean;
+import my.ep.web.backingbean.ct.suspension.SuspensionBackingBean;//#29214
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.ct.suspension.SuspensionManagedBean;
+import my.ep.web.util.DateUtils;//#29214
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 /**
@@ -70,6 +76,7 @@ public class SuspensionManagedBean extends BaseManagedBean {
 	private String skuno;
 	private String UOM;
 	private String typeofgoods;
+	private Long agencyDataModelVerId;//Development #29214 - performance
 
 	private boolean autoUpdate = true;
 	private boolean viewOnly = false;
@@ -94,6 +101,8 @@ public class SuspensionManagedBean extends BaseManagedBean {
 	//#28854 - end	
 
 private IPagingDataModel<CtContractItem> SuspensionProductListingPagingDataModel = new SuspensionProductListingPagingDataModel();
+//#29214
+private IPagingDataModel<CtAgency> agencyPersistDataModel = new AgencyPersistDataModel();
 
      
 	 private class SuspensionProductListingPagingDataModel extends PagingDataModel<CtContractItem> {
@@ -107,7 +116,7 @@ private IPagingDataModel<CtContractItem> SuspensionProductListingPagingDataModel
       
 		@Override
 		public ISearchResultBean<CtContractItem> pageChangeListener(ISearchBean<CtContractItem> searchBean) {
-			try {
+			try {				
 				
 				//private String contractId = null;
 				IContractSO	contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
@@ -562,6 +571,96 @@ private IPagingDataModel<CtContractItem> SuspensionProductListingPagingDataModel
 	public SuspensionProductListingPagingDataModel  resetSuspensionProductListingPagingDataModel() {
 		return new SuspensionProductListingPagingDataModel();
 	}
+	
+	//Development #29214 - performance
+	/**
+	 * @return the agencyDataModel
+	 */
+	public IPagingDataModel<CtAgency> getAgencyPersistDataModel() {
+		return agencyPersistDataModel;
+	}
+
+	/**
+	 * @param agencyDataModel the agencyDataModel to set
+	 */
+	public void setAgencyPersistDataModel(IPagingDataModel<CtAgency> agencyPersistDataModel) {
+		this.agencyPersistDataModel = agencyPersistDataModel;
+	}
+
+	public Long getAgencyDataModelVerId() {
+		return agencyDataModelVerId;
+	}
+
+	public void setAgencyDataModelVerId(Long agencyDataModelVerId) {
+		this.agencyDataModelVerId = agencyDataModelVerId;
+	}
+
+	/**
+	 * Pagination for available agency search list
+	 */
+	private class AgencyPersistDataModel extends PagingDataModel<CtAgency> {
+		private static final long serialVersionUID = 1L;
+
+		public AgencyPersistDataModel() {
+			super("tableAgencyDetails", isReadOnly());
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep
+		 * .biz.bean.search.ISearchBean)
+		 */
+		@Override
+		public ISearchResultBean<CtAgency> pageChangeListener(ISearchBean<CtAgency> searchBean) {			
+			try {
+				IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+				ContractReqDTO reqDTO = new ContractReqDTO();
+				
+				Date currentDate = DateUtils.getCurrentDateWithoutTime();
+				//ContractBackingBean contractBb=new ContractBackingBean();
+				SuspensionBackingBean suspBB = new SuspensionBackingBean();
+				
+				
+				Long contractVerId=null;
+				//contractVerId = contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId();
+				contractVerId = suspBB.getManagedBean().getAgencyDataModelVerId();
+				
+				/*searchBean.getDataFilterBeans().clear();*/
+				
+				
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("ctContractVer.contractVerId",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								contractVerId));
+				
+				
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("orgProfile.pmOrgValidity.effDate",
+								SearchOperator.OPERATOR_LESS_EQUAL.value(), currentDate));
+				searchBean.getDataFilterBeans().add(new SearchMultiFilterBean(new SearchFilterBean(
+										"orgProfile.pmOrgValidity.expDate",
+										SearchOperator.OPERATOR_GREATER_EQUAL.value(),
+										currentDate), new SearchFilterBean(
+												"orgProfile.pmOrgValidity.expDate",
+												SearchOperator.OPERATOR_IS_NULL.value(), null,
+												SearchCondition.CONDITION_OR.value())));
+			
+				reqDTO.setContractVerId(contractVerId);
+				reqDTO.setCtContractVer(contractVer);
+				reqDTO.setCtAgencySearchBean(searchBean);
+				ContractResDTO resDTO = contractSO.searchContractAgencyPagination(reqDTO);
+				if (resDTO.isSuccessful()) {
+					return resDTO.getCtAgencyResultBean();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+	}
+	//Development #29214 - performance
 	
 	/* #28854 start*/
 	public String getNewOfferSpec() {
