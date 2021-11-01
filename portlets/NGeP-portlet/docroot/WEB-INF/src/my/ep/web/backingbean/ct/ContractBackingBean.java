@@ -2726,7 +2726,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public void chkBondWaiverAction(){
 		
-		
+		int noOfDays = 0; //Enhancement 13847 - shaqimi 28/10/2021
 		if(!getManagedBean().getCtContractAmount().isBondWaived()){
 			try {
 				//-- LOG : 13847, by Fahmi 22032019
@@ -2791,6 +2791,19 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		//-- LOG : 13847, by Fahmi 22032019
 		///to set value null full tick/untick.
 		getManagedBean().setCtAttachmentLatest(null);
+		
+		//Enhancement 13847 - shaqimi start 28/10/2021
+		for(CtAttachment ctAttachmentHistory : getManagedBean().getWaiverDetail()){
+			noOfDays += findDifference(ctAttachmentHistory.getCtBondWaiverDetail().getWaiverStartDate(), 
+				ctAttachmentHistory.getCtBondWaiverDetail().getWaiverEndDate());
+		}
+		
+		if(noOfDays >= 60){
+			getManagedBean().setDisableDeferment(true);
+		} else {
+			getManagedBean().setDisableDeferment(false);
+		}
+		//Enhancement 13847 - shaqimi end 28/10/2021
 
 	}
 	
