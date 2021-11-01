@@ -983,8 +983,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		smPersonnel.setSmAppl(smAppl);
 		//START SSM CHANGES #27201
 		smPersonnel = setDesignationSSM(smPersonnel);
-		//END SSM CHANGES #27201
+		//END SSM CHANGES #27201		
 		smAppl.getSmPersonnels().add(smPersonnel);
+		if(!smPersonnel.getIdentificationNo().equalsIgnoreCase(smSuppOwner.getIdentificationNo())){
+			SmPersonnel smPersonnelSupplierOwner = new SmPersonnel();
+			smPersonnelSupplierOwner= onSaveSmPersonnelEquityOwner(smAppl, smSuppOwner, smPersonnelSupplierOwner);
+			smAppl.getSmPersonnels().add(smPersonnelSupplierOwner);
+		}
 		//#16052019 - SSM INTEGRATION CR
 		//add list all personel & check if smPersonnel contain in this.getManagedBean().getSmPersonnelAll(), use smPersonnel to add into appl, otherwise use personnel
 		if(this.getManagedBean().isCompanyValidWithSSM()){
@@ -4528,8 +4533,19 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	public void listenerChangeRole(){
 		if(this.getManagedBean().getSmPersonnel()!=null){
 			if(this.getManagedBean().getSmPersonnel().isEquityOwner()){
-				this.getManagedBean().setDisableStaff(true);
-				this.getManagedBean().getSmPersonnel().setClerical(false);
+				//30829 Start - 29/10/2021
+				if (SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG.equalsIgnoreCase(
+						this.getManagedBean().getSmSupp().getBusinessType()) || SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH.equalsIgnoreCase(
+								this.getManagedBean().getSmSupp().getBusinessType())|| SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK.equalsIgnoreCase(
+										this.getManagedBean().getSmSupp().getBusinessType())){
+					this.getManagedBean().setDisableStaff(false);
+					this.getManagedBean().getSmPersonnel().setClerical(true);
+				} else {
+					this.getManagedBean().setDisableStaff(true);
+					this.getManagedBean().getSmPersonnel().setClerical(false);
+				}
+				//30829 End  - 29/10/2021
+
 			}else if(!this.getManagedBean().getSmPersonnel().isEquityOwner() || this.getManagedBean().getSmPersonnel().isClerical()){
 				//30829 Start
 				if(getManagedBean().getSmPersonnel().isManagement()){
@@ -4722,4 +4738,38 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 	}
 	//  #28720 - End
+	
+    //  #30829 - Start 1/11/2021
+	private SmPersonnel onSaveSmPersonnelEquityOwner(SmAppl smAppl, SmSupplierOwner smSupplierOwner, SmPersonnel smPersonnel){
+		
+		smPersonnel.setName(smSupplierOwner.getOwnerName());
+		smPersonnel.setIdentificationNo(smSupplierOwner.getIdentificationNo());
+		smPersonnel.setIdentificationTypeId(smSupplierOwner.getIdentificationTypeId());
+		smPersonnel.setIdentificationType(smSupplierOwner.getIdentificationType());
+
+		this.getManagedBean().getSmPersonnel().setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
+		smPersonnel.setRevNo(SupplierManagementConst.DEFAULT_REV_NO);
+		smPersonnel.setAuthorizedFlg(SupplierManagementConst.FIRST_USER_AUTHO);
+		smPersonnel.setContactPerson(false);
+		smPersonnel.setContractSignerFlg(0);
+		smPersonnel.setBumiFlg(0);
+		smPersonnel.setMuslimFlg(0);
+		smPersonnel.setClerical(false);
+		smPersonnel.setEquityOwner(true);
+		
+		//to set the softcert Flag
+		//All supplier type will mark to "SOFT_CERT_PENDING_REQ", except supplier type is "Consultant"
+		if(!smAppl.getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)){
+			smPersonnel.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
+		}else{
+			smPersonnel.setSoftcertFlg(0);
+		}
+		
+		smPersonnel.setSmAppl(smAppl);
+		
+		return smPersonnel;
+	}
+	//  #30829 - End 1/11/2021
+	
+	
 }
