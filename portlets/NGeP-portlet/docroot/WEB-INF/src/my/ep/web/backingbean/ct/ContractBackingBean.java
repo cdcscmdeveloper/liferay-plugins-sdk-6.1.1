@@ -2687,9 +2687,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 		}
 		// Recalculate the performance bond amount
-		if (!getManagedBean().isDirectPurchase() && !getManagedBean().getCtContractAmount().isBondExempted()) {
-			calculateNewBondAmount();
-		}		    	
+		//#24333
+//		if (!getManagedBean().isDirectPurchase() && !getManagedBean().getCtContractAmount().isBondExempted()) {
+//			calculateNewBondAmount();
+//		}		    	
 	}
 
 	/**
