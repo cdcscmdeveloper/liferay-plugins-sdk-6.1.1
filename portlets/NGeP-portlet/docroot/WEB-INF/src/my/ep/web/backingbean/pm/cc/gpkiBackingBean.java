@@ -102,7 +102,7 @@ public class gpkiBackingBean implements Serializable {
 		log.info("serialNo====================================: " + serialNo);
 		log.info("subjectDN====================================: "+ subjectDN);
 		log.info("getIdentificationNo=====================================: "
-				+ resDTO.getPmUser().getLoginId());
+				+ resDTO.getPmUser().getIdentificationNo());
 		log.info("ContextualCompositeMethodExpression  2");
 		log.info("postSignActionMtdExpr=====================================: "
 				+ postSignActionMtdExpr);
@@ -114,8 +114,9 @@ public class gpkiBackingBean implements Serializable {
 		
 		try {
 			this.setNonSigningException(null);
+			log.info("getGpkiEnabledProperty()====================================: " + getGpkiEnabledProperty());
 			if (getGpkiEnabledProperty().equalsIgnoreCase("true")) {
-				
+				log.info("getGpkiEnabledProperty()====================================:Enter ON ");
 				String[] split = subjectDN.split(",");
 				String icNo = "";
 				String snicNo = "";
@@ -125,21 +126,21 @@ public class gpkiBackingBean implements Serializable {
 					if(split[i].contains("SERIALNUMBER")){
 						System.out.println(""+split[i]);
 						String icno = split[i];
-						System.out.println(""+icno.substring(icno.indexOf("=")+1, icno.length()));	
+						log.info(""+icno.substring(icno.indexOf("=")+1, icno.length()));	
 						icNo = icno.substring(icno.indexOf("=")+1, icno.length());
 					}
 					
 					if(split[i].contains("SN")){
 						System.out.println(""+split[i]);
 						String snicno = split[i];
-						System.out.println(""+snicno.substring(snicno.indexOf("=")+1, snicno.length()));	
+						log.info(""+snicno.substring(snicno.indexOf("=")+1, snicno.length()));	
 						snicNo = snicno.substring(snicno.indexOf("=")+1, snicno.length());
 					}
 					
 					if(split[i].contains("SURNAME")){
 						System.out.println(""+split[i]);
 						String surnameIcno = split[i];
-						System.out.println(""+surnameIcno.substring(surnameIcno.indexOf("=")+1, surnameIcno.length()));	
+						log.info(""+surnameIcno.substring(surnameIcno.indexOf("=")+1, surnameIcno.length()));	
 						surnameIcNo = surnameIcno.substring(surnameIcno.indexOf("=")+1, surnameIcno.length());
 					}
 	
@@ -152,7 +153,7 @@ public class gpkiBackingBean implements Serializable {
 					pmDigiSign.setCreatedDate(date);
 					pmDigiSign.setOriginalData(textBeforeSign);
 					pmDigiSign.setGpkiSignedData(signedText);
-					System.out.println("=================================Same IC No");
+					log.info("=================================Same IC No");
 					
 					returnObj = postSignActionMtdExpr.invoke(
 							FacesContext.getCurrentInstance().getELContext(),
@@ -176,6 +177,7 @@ public class gpkiBackingBean implements Serializable {
 											"Token's certificate not match with signer identity."));
 				}
 			} else {
+				log.info("getGpkiEnabledProperty()====================================:Enter OFF ");
 				log.info("W/O TOken : textBeforeSign--"+textBeforeSign);
 				pmDigiSign.setCreatedBy(userId);
 				pmDigiSign.setCreatedDate(date);
