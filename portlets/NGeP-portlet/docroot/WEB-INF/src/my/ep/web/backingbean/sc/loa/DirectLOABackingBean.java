@@ -123,7 +123,6 @@ import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem; // #29007
 import my.ep.persistence.entity.sc.loaloi.ScPbAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.persistence.entity.sc.quationtender.ScQtCheckList; // #29007
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
@@ -197,6 +196,7 @@ import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
+// #29007
 
 /**
  * The Class directLOABackingBean.
@@ -4515,6 +4515,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
      * @param context
      * @throws IOException
      */
+	@SuppressWarnings("unchecked")
 	public void mergePdf(File file, String filePath, String tempFilePath, VelocityContext context) throws IOException {
 		PDDocument sstDocument = null;
 		PDDocument lampiranA3Doc = null;
@@ -9524,7 +9525,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	public void searchSupplierItemByName(){
 		if(this.getItemNameSearchCriteria() != null && this.getItemNameSearchCriteria() != ""){
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-			TplSpecMaster tplSpecMaster = new TplSpecMaster();
+			//TplSpecMaster tplSpecMaster = new TplSpecMaster();
 			boolean isProduct = true;//29007
 			boolean isService = true;//29007
 			
@@ -9892,8 +9893,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			checkItemSorting(scLoa.getScLoiLoaItems());
 			}//29007-End
 			for(ScLoiLoaItem scLoiLoaItem : scLoa.getScLoiLoaItems()){
-				FacesScopes facesScopes = new FacesScopes();
-				PmUser pmUser = facesScopes.getUserSessionBean();
+				//FacesScopes facesScopes = new FacesScopes();
+				//PmUser pmUser = facesScopes.getUserSessionBean();
 				DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");//29007
 				String date = df.format(scLoiLoaItem.getChangedDate());
 				StringBuilder finalMsg = new StringBuilder();//29007
