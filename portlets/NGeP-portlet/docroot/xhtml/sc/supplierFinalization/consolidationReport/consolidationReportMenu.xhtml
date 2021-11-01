@@ -147,15 +147,40 @@
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
-					action="#{consolidationReportBackingBean.submitConsolidationReport}"
+					action="#{consolidationReportBackingBean.preSubmitConsolidationReport}"
 					oncomplete="submissionPopup.hide();" update="@form">
 				</p:commandButton>
 
 				<p:commandButton value="#{lbl['lbl.btn.no']}" immediate="true"
-					oncomplete="#{cc.attrs.widget}.hide();" />
+					oncomplete="submissionPopup.hide();" />
 
 			</div>
 		</p:dialog>
+
+		<p:dialog id="submissionPopupAndNewComId" widgetVar="submissionPopupAndNewCom"
+			header="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit.header']}"
+			resizable="false" width="325" height="100" closable="false"
+			modal="true">
+
+			<table>
+				<tr>
+					<td align="center"><h:graphicImage
+							value="/css/images/design/exclamation.png" /> <p:outputLabel
+							value="#{lbl['lbl.sc.dialog.confirm.new.sf.commitee.report.submit']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
+					action="#{consolidationReportBackingBean.submitConsolidationReport}"
+					oncomplete="submissionPopupAndNewCom.hide();" update="@form">
+				</p:commandButton>
+
+				<p:commandButton value="#{lbl['lbl.btn.no']}" immediate="true"
+					oncomplete="submissionPopupAndNewCom.hide();" />
+
+			</div>
+		</p:dialog>		
 	</ui:define>
 
 </ui:composition>
