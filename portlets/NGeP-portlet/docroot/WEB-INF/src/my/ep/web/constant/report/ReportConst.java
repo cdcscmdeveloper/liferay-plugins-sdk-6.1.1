@@ -1106,7 +1106,10 @@ public class ReportConst implements Serializable{
 	// ERROR N EXCEPTIONS
 	public static final String ERR_999000_MORTHAN_TEN = "lbl.rpt.ERR_999000_MORTHAN_TEN";
 	public static final String TO_DT_SHOULD_NOT_MORE_THAN_ONE_YEAR = "lbl.rpt.ERR_999001_TO_DT_SHOULD_NOT_MORE_THAN_ONE_YEAR";
-	
+	//26238 : Disciplinary Action
+	public static final String SM_DISCIPLINARY_ACTION_HISTORY_ENG = "SM_DISCIPLINARY_ACTION_HISTORY.jsp";
+	public static final String SM_DISCIPLINARY_ACTION_HISTORY_MALAY = "SM_DISCIPLINARY_ACTION_HISTORY.jsp";
+		
 	//#Bug:28933,#Bug:28934,#Bug:28985,#Bug:28983 - START
 	//Purpose : To Split Tracking Diary Report Based on Module
 	public static final String FL_TRACKING_DIARY = "FL_TRACKING_DIARY.jsp";

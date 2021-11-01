@@ -23,6 +23,22 @@
 		</p:blockUI>
 		
 		<p:outputPanel id="supplierProfilePanelId">
+		
+		<!-- Enhancement 26238 - START -->
+		<p:outputPanel style="color:red;font-weight:bold;" rendered="#{!viewSmApplBackingBean.managedBean.supplierUser
+			and viewApplHistoryBackingBean.managedBean.disciplinaryAction}">
+			<h:outputText styleClass="warning" value="#{lbl['lbl.sm.supplier.disciplinary.action.msg']}" escape="false"/><p:spacer width="2"/>
+			<h:outputText styleClass="warning" value="#{lbl['lbl.sm.disciplinary.click']}" escape="false"/>
+			<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				action="#{viewApplHistoryBackingBean.onViewDisciplinaryAction}" 
+				process="@this" partialSubmit="true" update=":#{p:component('disciplinaryActionHistoryDlgId')}" >
+					<u><h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" styleClass="warning" /></u>
+			</p:commandLink><p:spacer width="2"/>
+			<h:outputText styleClass="warning" value="#{lbl['lbl.sm.disciplinary.to.view.history.disciplinary.action']}" escape="false"/><br />
+			<p:spacer height="2"/>
+		</p:outputPanel>
+		<!-- 26238 - END -->
+		
 			<c:if test="#{viewSmApplBackingBean.managedBean.reviewApplicationExist}">
 			
 				<ui:include src="/xhtml/sm/shared/applViewOnlyPages/backButtonAndUrl.xhtml" />
@@ -32,7 +48,7 @@
 				and viewSmApplBackingBean.managedBean.smAppl.supplierType ne SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT}">
 				<ac:smPanel id="tt">
 					
-					<p:messages id="messages" showDetail="true" closable="false" showSummary="false" />
+					<p:messages id="messages" showDetail="true" closable="false" showSummary="false" escape="false"/>
 					
 					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 0}">
 						<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step1ViewProfileCompanyInfo.xhtml" />
@@ -91,7 +107,6 @@
 							</c:if>
 						</c:otherwise>
 					</c:choose>
-
 				</ac:smPanel>
 				</c:when>
 				<c:when test="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.SUPP_TYPE_BASIC}">
@@ -143,6 +158,7 @@
 				</c:choose>			
 			</c:if>
 		</p:outputPanel>
+		<ac:disciplinaryActionHistory voList="#{viewApplHistoryBackingBean.managedBean.disciplineVOs}" />
 	</ui:define>
 		
 </ui:composition>

@@ -318,8 +318,11 @@
 		<portlet id="disciplinaryAction"></portlet>
 		<portlet id="complaint"></portlet>
 		<portlet id="onlineRegistration"></portlet>
+		<portlet id="smCancelRegistration"></portlet>
 		<portlet id="onlineAccountMaintenance"></portlet>
-		<portlet id="smCancelRegistration"></portlet>	
+		<!-- 26238 disciplinary action -->
+		<portlet id="basicAccountMaintenance"></portlet>
+		<portlet id="profileDisciplinaryAction"></portlet>
 
 		<portlet id="sm" />
 		<portlet id="smAddtionalCatCodes"></portlet>

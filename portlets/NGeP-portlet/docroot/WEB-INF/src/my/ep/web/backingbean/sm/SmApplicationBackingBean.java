@@ -121,6 +121,7 @@ import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
 import my.ep.persistence.entity.sm.SmCompanyExperienceCat;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
@@ -925,12 +926,55 @@ public class SmApplicationBackingBean extends
 		SmSupplier smApplSupplier = new SmSupplier();
 
 		MofRegistrationResDTO resDto = new MofRegistrationResDTO();
+		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - Start
+		boolean redirectToBankInfoTab = false;
+		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - End
 		
 
 		if (!fromBpm) {
 			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
 			boolean cannotProceedAlertMsg = false;
-
+			//26238 - start 28144
+			if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI) || applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)){
+				if (currSupp != null){
+					List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
+					
+					if(discList != null && discList.size() > 0){
+						for(SmDisciplinaryAction disc : discList){
+							if(disc.isBumiputeraCancel()){
+								throw new EpException(SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
+										null));
+							}else if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)){
+								if(disc.isSuspendRegistration() || disc.isCancelRegistration() || disc.isBlacklistOwner()){
+									throw new EpException(SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
+											null));
+								}
+							}
+						}
+					}
+				}
+			} 
+			//26238 - end 28144
+			
+			//27748 : Disciplinary Action - #26238 - start 
+			if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
+				if(currSupp != null){
+					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
+					
+					if(activeDisc != null && activeDisc.size() > 0){
+						for(SmDisciplinaryAction disc : activeDisc){
+							if(disc.isSuspendRegistration()){
+								getManagedBean().getEditVO().setDisciplinary(true);
+								// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - Start
+								redirectToBankInfoTab = true;
+								// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - End
+							}
+						}
+					}
+				}	
+			}				
+			//27748 : Disciplinary Action - #26238 - end
+			
 			if (applicationType
 					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 
@@ -1020,10 +1064,30 @@ public class SmApplicationBackingBean extends
 					SmCommonUtil.redirectToPage(
 							"/xhtml/sm/payment/portletViewMode.xhtml", "", null, null);
 				}
-
-				String currSuppType = currSupp.getSmAppl()
-						.getSupplierType();
 				
+				//26238 - start
+				//check disciplinary action on supplier
+				if (currSupp != null){
+					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
+//					SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionBySupplier(supReqDTO);
+					if(activeDisc != null && activeDisc.size() > 0){
+						for(SmDisciplinaryAction disciplinary : activeDisc){
+							if(disciplinary.isSuspendRegistration() 
+									|| disciplinary.isCancelRegistration()
+									|| disciplinary.isBlacklistOwner()){
+								FacesContext.getCurrentInstance().addMessage("imposedDisciplinary", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+										SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
+												new String[] { labelNameVal })));
+								
+								//27848
+								return SmApplicationUtil.setStringNavigationForApplTnCPage(applicationType);
+							}
+						}					
+					}
+				}							
+				//26238 - end
+				String currSuppType = currSupp.getSmAppl().getSupplierType();
+
 				if(StringUtils.isBlank(currSuppType) || currSuppType.equals("B")){
 					currSuppType = "K";
 				}
@@ -1216,7 +1280,14 @@ public class SmApplicationBackingBean extends
 					SmApplicationUtil.getStaffList(smAppl));
 		}
 
-		getManagedBean().setTabActiveIndex(0);
+		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - Start
+		if(redirectToBankInfoTab){
+			getManagedBean().setTabActiveIndex(4);
+		} else {
+			getManagedBean().setTabActiveIndex(0);
+		}
+		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - End
+
 		if (!fromBpm) {
 			setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION);
 
@@ -1272,7 +1343,9 @@ public class SmApplicationBackingBean extends
 
 			if (getManagedBean().isPoUser()) {
 				setDefaultPoReviewSection();
-				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_VERIFICATION);
+				// 29944 Start
+				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_RE_REVIEW);
+				// 29944 End
 			}
 
 			if (getManagedBean().isApproverUser()) {
@@ -1401,11 +1474,15 @@ public class SmApplicationBackingBean extends
 							.getPmRegStatus().getPmStatus().getStatusId(),
 							getManagedBean().getRegStatusDescList(), "pmStatus");
 			// 27877 - start - if it is pending site review after approval, registration status can follow what was recommended
-			BPMTaskListBackingBean bpmBean = new BPMTaskListBackingBean();
+			// 26238 -  Disciplonary action - 28801 
+			BPMTaskListBackingBean bpmBean = new BPMTaskListBackingBean(); 
 			String pendingSiteVisitReviewAfterApprovedStatus = bpmBean.applicationStatus((int) SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED);
-			if (getManagedBean().getCurrentStatus() != null && !getManagedBean().getCurrentStatus().equals(pendingSiteVisitReviewAfterApprovedStatus)) {
+			String pendingRiviewApplicatonStatus = bpmBean.applicationStatus((int) SupplierManagementConst.PM_STATUS_PENDING_REVIEW_APPLICATION);
+			if (getManagedBean().getCurrentStatus() != null && !getManagedBean().getCurrentStatus().equals(pendingSiteVisitReviewAfterApprovedStatus) 
+					&& !getManagedBean().getCurrentStatus().equals(pendingRiviewApplicatonStatus)) {
 				getManagedBean().getRegStatusDescList().remove(regStatusToExclude);
 			}
+			// 28801 - end
 			// 27877 - end
 		}
 
@@ -1515,6 +1592,26 @@ public class SmApplicationBackingBean extends
 		// set section editor VO
 		SmSideMenuIconUtil.setAllSectionEditorVO(getManagedBean(), true,
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC);
+		
+		//27805: Disciplinary Action - start
+		if(!fromBpm){
+			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
+			
+			if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
+				if(currSupp != null){
+					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
+					
+					if(activeDisc != null && activeDisc.size() > 0){
+						for(SmDisciplinaryAction disc : activeDisc){
+							if(disc.isSuspendRegistration() || disc.isCancelRegistration() || disc.isBlacklistOwner()){
+								getManagedBean().getEditVO().setDisciplinary(true);
+							}
+						}
+					}
+				}	
+			}
+		}
+		//27805: Disciplinary Action - end
 
 		// show or hide travel software panel
 		SmApplicationUtil.showOrHideTravelSoftwarePanel(getManagedBean());
@@ -2002,6 +2099,27 @@ public class SmApplicationBackingBean extends
 		}
 		//16052019 - SSM INTEGRATION CR - Fahmi END
 		
+		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - Start
+		if (fromBpm) {
+		
+			if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
+				SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
+				if(currSupp != null){
+					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
+					
+					if(activeDisc != null && activeDisc.size() > 0){
+						for(SmDisciplinaryAction disc : activeDisc){
+							if(disc.isSuspendRegistration()){
+								getManagedBean().getEditVO().setDisciplinary(true);
+								getManagedBean().setTabActiveIndex(4);
+							}
+						}
+					}
+				}	
+			}				
+		}
+		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - End
+		
 		// set Personnel List Count
 		calcPersonnelListCount();
 		updateCategoriesRecordStatus(); //#29847
@@ -2272,21 +2390,27 @@ public class SmApplicationBackingBean extends
 		if (!StringUtils.isBlank(applType)
 				&& !getManagedBean().getSmAppl().isActiveAppl()
 				&& getManagedBean().isSupplierUser()) {
-			if (getManagedBean().getCompanyBasicGst() != null) {
-				SmCommonUtil.validateGstRegNoUniqueness(getManagedBean()
-						.getSmSupplier().getRegNo(), getManagedBean()
-						.getCompanyBasicGst().getGstRegNo());
-				SmApplicationUtil.validateGSt(getManagedBean(), currentTab,
-						ruleHelper);
+			//27805: Disciplinary Action - start
+			if(!getManagedBean().getEditVO().isDisciplinary()){
+				if (getManagedBean().getCompanyBasicGst() != null) {
+					SmCommonUtil.validateGstRegNoUniqueness(getManagedBean()
+							.getSmSupplier().getRegNo(), getManagedBean()
+							.getCompanyBasicGst().getGstRegNo());
+					SmApplicationUtil.validateGSt(getManagedBean(), currentTab,
+							ruleHelper);
+				}
+				if (SmApplicationUtil.checkActiveSmApplForSupp(getManagedBean()
+						.getSmSupplier())) {
+					throw new EpException(MessageConst.ERROR_722542);
+				}
+				//#27356
+				SmApplicationUtil.validateCoordinate(getManagedBean());
+				RequestContext.getCurrentInstance().execute(
+						"saveDraftConfirmDialog.show();");
+			} else if(getManagedBean().getEditVO().isDisciplinary()) {
+				validateUpdateSmAppl(applType, currentPageType, outputPageType,false);
 			}
-			if (SmApplicationUtil.checkActiveSmApplForSupp(getManagedBean()
-					.getSmSupplier())) {
-				throw new EpException(MessageConst.ERROR_722542);
-			}
-			//#27356
-			SmApplicationUtil.validateCoordinate(getManagedBean());
-			RequestContext.getCurrentInstance().execute(
-					"saveDraftConfirmDialog.show();");
+			//27805: Disciplinary Action - end
 		} else {
 			if ((getManagedBean().isApproverUser() || getManagedBean()
 					.isPoUser())
@@ -2891,10 +3015,11 @@ public class SmApplicationBackingBean extends
 				//log.info(" ****** REMAIN PREV VALUE ********");
 			}
 			if (valid) {
-				getManagedBean().setCurrentPageType(outputPageType);
-				SmCommonUtil.getInstance().setUserDetails(
-						getManagedBean().getSmAppl());
+				//29383 start - to fix where current page is pass to SmSideMenuIconUtil.setAllSectionEditorVO method instead of next page
+				SmCommonUtil.getInstance().setUserDetails(getManagedBean().getSmAppl());
 				saveOrUpdateAppl();
+				getManagedBean().setCurrentPageType(outputPageType);
+				// 29383 end
 			} else {
 				getManagedBean().setTabActiveIndex(currentTab);
 				getManagedBean().getSmAppl().setCurrentActiveTab(currentTab);
@@ -3324,7 +3449,11 @@ public class SmApplicationBackingBean extends
 						validSave, getManagedBean(), currentTab);
 				//#27853
 				if (!getManagedBean().isApproverUser() && !getManagedBean().isPoUser()) {
-					SmApplicationUtil.validateCoordinate(getManagedBean());
+					//START 27748 - SM Disciplinary action - 26238
+					if(getManagedBean().getEditVO()!=null && !getManagedBean().getEditVO().isDisciplinary()){
+						SmApplicationUtil.validateCoordinate(getManagedBean());
+					}
+					//END 27748
 				}
 			}
 			break;
@@ -3415,7 +3544,25 @@ public class SmApplicationBackingBean extends
 	}
 
 	private void validateBeforeSubmit() {
-
+		//START 26238 -  Disciplonary action - 27748
+		if(getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
+			if(this.getManagedBean().getSmAppl().getSmSupplier() != null){
+				List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(this.getManagedBean().getSmAppl().getSmSupplier());
+				
+				if(activeDisc != null && activeDisc.size() > 0){
+					for(SmDisciplinaryAction disc : activeDisc){
+						if(disc.isSuspendRegistration() || disc.isCancelRegistration() || disc.isBlacklistOwner()){
+							getManagedBean().getEditVO().setDisciplinary(true);
+						}
+					}
+				}
+			}	
+		}
+	
+		if(getManagedBean().getEditVO()!=null && getManagedBean().getEditVO().isDisciplinary()){
+			return;
+		}
+		//START END -  Disciplonary action - 27748
 		// validate dont have facility
 		SmApplicationUtil.validateDontHavePremise(getManagedBean().getSmAppl());
 
@@ -5218,16 +5365,103 @@ public class SmApplicationBackingBean extends
 		//log.info("Start deleteSelectedPendingApprovalCategoryCodes");
 		if (getManagedBean().getDeleteNewApplCategoryList() != null
 				&& getManagedBean().getDeleteNewApplCategoryList().size() > 0) {
-			List<SmSupplierCategory> categories = getManagedBean()
-					.getDeleteNewApplCategoryList();
-			deleteCatCodes(categories);
-			// API FOR LIST OF OVERLAPPING CATEGORIES
-			SmApplicationUtil.checkOverLappingCategories(getManagedBean());
 
-			initPhysicalConsultingCatcode();
+			List<SmSupplierCategory> categories = getManagedBean().getDeleteNewApplCategoryList();
+
+			// 28391: Disciplinary Action - start - <
+
+			List<SmSupplierCategory> activeCategoryList = getManagedBean().getActiveCategoryList();
+			boolean flagProceedDeleteCategory = true;
+		    // 28660: Disciplinary Action - start
+			boolean flagProceedDeleteCategoryAddChecking = true; 
+			// 28660: Disciplinary Action - end
+			
+			
+			for (SmSupplierCategory eachActiveCategory : activeCategoryList) {
+
+				if (eachActiveCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+						&& eachActiveCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+						&& eachActiveCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("09")) {
+					flagProceedDeleteCategory = false;
+				}
+				
+				// 28660: Disciplinary Action - start
+				if (eachActiveCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+						&& eachActiveCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+						&& eachActiveCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("04") || 
+						eachActiveCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+						&& eachActiveCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+						&& eachActiveCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("05") ||
+						eachActiveCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+						&& eachActiveCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+						&& eachActiveCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("06")){
+					flagProceedDeleteCategoryAddChecking = false;
+				}
+				// 28660: Disciplinary Action - end
+			}
+			// 28391: Disciplinary Action - end - <28391>
+
+			// 28391: Disciplinary Action - Start - <28391>
+			// 28660: Disciplinary Action - start
+			if (flagProceedDeleteCategory && flagProceedDeleteCategoryAddChecking || flagProceedDeleteCategory 
+					&& !flagProceedDeleteCategoryAddChecking) {
+				// 28660: Disciplinary Action - end
+				deleteCatCodes(categories);
+
+				// API FOR LIST OF OVERLAPPING CATEGORIES
+				SmApplicationUtil.checkOverLappingCategories(getManagedBean());
+
+				initPhysicalConsultingCatcode();
+
+			} else {
+				// 28660: Disciplinary Action - start
+				boolean flagProceedDeleteCategoryFirstCheck = false;
+				boolean flagProceedDeleteCategorySecondCheck = false;
+				boolean flagProceedDeleteCategoryFinalCheck = false; 
+				
+				for (SmSupplierCategory eachSelectedCategory : categories) {
+					
+					if (eachSelectedCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+							&& eachSelectedCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+							&& eachSelectedCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("09")) {
+						flagProceedDeleteCategoryFirstCheck = true;
+					}
+					
+					if (eachSelectedCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+							&& eachSelectedCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+							&& eachSelectedCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("04") || 
+							eachSelectedCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+							&& eachSelectedCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+							&& eachSelectedCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("05") ||
+							eachSelectedCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+							&& eachSelectedCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+							&& eachSelectedCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("06")){
+						flagProceedDeleteCategorySecondCheck = true;
+					}
+				}
+				
+				if(flagProceedDeleteCategorySecondCheck && flagProceedDeleteCategoryFirstCheck){
+					flagProceedDeleteCategoryFinalCheck = true;
+				} else if (!flagProceedDeleteCategorySecondCheck){
+					flagProceedDeleteCategoryFinalCheck = true;
+				} 
+
+				if (flagProceedDeleteCategoryFinalCheck) {
+					// 28660: Disciplinary Action - end
+					deleteCatCodes(categories);
+
+					// API FOR LIST OF OVERLAPPING CATEGORIES
+					SmApplicationUtil.checkOverLappingCategories(getManagedBean());
+
+					initPhysicalConsultingCatcode();
+				} else {
+					throw new EpException(MessageConst.INFO_776044);
+				}
+			}
+			// 28391: Disciplinary Action - end - <28391>
+
 		} else {
-			throw new EpException(MessageConst.ERROR_722534,
-					new String[] { "Category Code" });
+			throw new EpException(MessageConst.ERROR_722534, new String[] { "Category Code" });
 		}
 	}
 
@@ -5283,16 +5517,31 @@ public class SmApplicationBackingBean extends
 							.equals(getManagedBean().getSelectedCategory()
 									.getPmCategoryL3().getCategoryL3Id())) {
 				validCat = false;
+				Date currentDate = new Date();
+				
 				if (cat.getRecordStatusFlg().compareTo(
 						SupplierManagementConst.DELETED_RECORD_STATUS) == 0 || cat.getCancelledDate() != null) {
 					if (cat.getCancelledDate() != null
 							&& !isValidToAddAfterDeleted(cat.getCancelledDate())) {
-						throw new EpException(MessageConst.ERROR_722563);
+						// 29952 - Start
+						if (cat.isCancelCategory() && currentDate.after(getManagedBean().getSmAppl().getSmSupplier().getSmDisciplinaryActions().get(0).getEndDate())){
+							validCat = true;
+						} else {
+							throw new EpException(MessageConst.ERROR_722563);
+						}
+						// 29952 - End		
 					} else {
 						validCat = true;
 					}
 				} else {
-					throw new EpException(MessageConst.ERROR_722533);
+					// 29952 - Start
+					if (cat.getRecordStatusFlg().compareTo(SupplierManagementConst.PENDING_ACTIVATION_RECORD_STATUS) != 0 && (cat.isCancelCategory() || cat.getRecordStatusFlg() == 2) && 
+							currentDate.after(getManagedBean().getSmAppl().getSmSupplier().getSmDisciplinaryActions().get(0).getEndDate())){
+						validCat = true;
+					} else {
+						throw new EpException(MessageConst.ERROR_722533);
+					}
+					// 29952 - End
 				}
 			}
 		}
@@ -5317,11 +5566,18 @@ public class SmApplicationBackingBean extends
 							.getSelectedCategory().getPmCategoryL3()
 							.getCategoryL3Id(), getManagedBean().getSmAppl()
 							.getSmSupplierCategories(), "pmCategoryL3");
-			if (cat != null) {
+			
+			//29399 - Start add category with expired DA category
+			if (cat != null  && cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
+					&& cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_CANCELLED) {
 				// #25794 & #26031 - start
-				// update applRefId to NULL if previous data is deleted (9)
-				if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED) {
+				// update applRefId to NULL if previous data is deleted (9) or canceled(2)
+				if ((cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED) || 
+						(cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED)) {
 					cat.setApplRefId(null);
+					//#30864 Start
+					cat.setDisciplinaryActionId(null);
+					//#30864 End
 				}
 				// #25794 & #26031 - end
 				cat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
@@ -5333,6 +5589,7 @@ public class SmApplicationBackingBean extends
 				cat.setPoRemarks(null);
 				cat.setPrevApproverRemarks(null);
 				cat.setApproverRemarks(null);
+				cat.setActiveDA(false);
 				cat.setCancelledDate(null);
 			} else {
 				getManagedBean().getSmAppl().getSmSupplierCategories()
@@ -6628,7 +6885,11 @@ public class SmApplicationBackingBean extends
 	private void saveOrUpdateAppl() {
 		//checkin if coordinate null #27853
 		if(!getManagedBean().isApproverUser() && !getManagedBean().isPoUser()){
-		SmApplicationUtil.validateCoordinate(getManagedBean());
+			//START 27748
+			if(getManagedBean().getEditVO()!=null && !getManagedBean().getEditVO().isDisciplinary()){
+				SmApplicationUtil.validateCoordinate(getManagedBean());
+			}
+			//END 27748		
 		}
 		
 		// checking if suddenly premise information is missing (#21955)
@@ -8038,7 +8299,11 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		if (!this.getManagedBean().isPoInquiryRespond()) {
-			validateBeforeSubmit();
+			//26238 -  Disciplonary action - 27748
+			if(getManagedBean().getEditVO()!=null && !getManagedBean().getEditVO().isDisciplinary()){
+				validateBeforeSubmit();
+			}
+			//26238 -  Disciplonary action - 27748
 
 			// validate if no SDO exist then dont allowed to submit
 			SmAddress hqAddr = getManagedBean().getSmAppl().getSmCompanyBasic()
@@ -8435,6 +8700,11 @@ public class SmApplicationBackingBean extends
 		}
 
 		if (valid) {
+			//29383 start - incase of basic page data is changed by supplier before appl is saved
+			SmSideMenuIconUtil.setAllSectionEditorVO(getManagedBean(), false,
+					getManagedBean().getCurrentPageType());
+			//29383 end
+			
 			setTabValue(0, 1);
 			getManagedBean().setTabActiveIndex(outputTab);
 			if (getManagedBean().getSmAppl().getCurrentActiveTab() < outputTab) {

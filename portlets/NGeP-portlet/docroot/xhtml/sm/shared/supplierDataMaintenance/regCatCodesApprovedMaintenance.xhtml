@@ -7,11 +7,12 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
 	<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.supp.data.maintenance.delete.approved.cat.instruction']}" />
-	
+	<!-- 28281 - added listener -->
 	<p:dataTable var="aprvdCatBean"
 		widgetVar="smApprvdCatCodesNonRenewApplDtWidVar"
 		value="#{supplierDataMaintenanceBackingBean.managedBean.approvedCategoryList}" 
 		selection="#{supplierDataMaintenanceBackingBean.managedBean.selectedApprovedCategories}"
+		listener="#{supplierDataMaintenanceBackingBean.onTickPunishmentType()}"
 		rowKey="#{aprvdCatBean}" rowIndexVar="index" id="catApprDt"
 		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 		<ac:paginator for="catApprDt" />
@@ -37,7 +38,7 @@
 				<p:column headerText="#{lbl['lbl.sm.status']}" />
 			</p:row>
 		</p:columnGroup>
-		<p:column selectionMode="multiple" style="width:2%" />
+		<p:column selectionMode="multiple" disabledSelection="#{supplierDataMaintenanceBackingBean.managedBean.disabledApprovedCategories}" style="width:2%" />
 		<p:column style="width : 2%;">
 			<p:outputLabel value="#{index + 1}"
 				style="float: left;white-space: normal;" />
@@ -86,7 +87,7 @@
 	<div align="right">
 
 		<p:commandButton value="#{lbl['lbl.sm.button.delete']}" id="deletedApprBtnId" 
-			disabled="#{empty supplierDataMaintenanceBackingBean.managedBean.selectedApprovedCategories or 
+			disabled="#{supplierDataMaintenanceBackingBean.managedBean.disableDeleteButtonAprrovedCategoryCodePanel or empty supplierDataMaintenanceBackingBean.managedBean.selectedApprovedCategories or 
 				!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}"
 			action="#{supplierDataMaintenanceBackingBean.deleteSelectedPendingApprovalCategoryCodes(supplierDataMaintenanceBackingBean.managedBean.selectedApprovedCategories)}" 
 			update=":#{p:component('catcodeMainPanelId')}" partialSubmit="true" 

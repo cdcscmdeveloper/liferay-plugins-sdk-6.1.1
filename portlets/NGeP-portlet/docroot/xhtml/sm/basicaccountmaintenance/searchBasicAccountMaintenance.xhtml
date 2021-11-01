@@ -1,0 +1,845 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+		<script>
+			$('#portlet_basicAccountMaintenance_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.basic.acc.maintenance']}");
+		</script>
+	</ui:define>
+	
+	<ui:define name="contentSection">
+		
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		
+		<ui:param name="viewSuppProfileBackingBean" value="#{supplierDataMaintenanceBackingBean}" />
+		<ui:param name="viewSmApplBackingBean" value="#{supplierDataMaintenanceBackingBean}" />
+		<ui:param name="registrationBackingBean" value="#{supplierDataMaintenanceBackingBean}" />
+		
+		<p:messages id="messages" showDetail="true" closable="true" showSummary="false" escape="false"/>
+		
+		<p:outputPanel id="dataMainTenanceMainId">
+		
+			<p:panel header="#{lbl['lbl.sm.search.basicprofile']}" toggleable="true" id="searchBasicSupplierPanelId" 
+				rendered="#{supplierDataMaintenanceBackingBean.managedBean.displaySearchPage}">
+				<ui:include src="/xhtml/sm/shared/applViewOnlyPages/basicApplicationSearchCriteria.xhtml" />
+			</p:panel>
+			
+			<p:panel header="#{lbl['lbl.sm.results']}" toggleable="true" id="resultSupplierProfilePanelId" 
+				rendered="#{supplierDataMaintenanceBackingBean.managedBean.displaySearchPage}">
+			
+				<p:dataTable var="smSupplier" widgetVar="smApplWidgetVar"
+					editable="false" lazy="true" rows="10" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					value="#{supplierDataMaintenanceBackingBean.managedBean.basicSupplierDataModel}"
+					rowKey="#{smSupplier}" rowIndexVar="index" id="supplierBasicAccountDtId">
+					<ac:paginator for="supplierBasicAccountDtId" />
+					
+					<p:column headerText="#{lbl['lbl.sm.companyname']}" style="width :25%;white-space : normal">
+						<h:outputText value="#{smSupplier.companyName}" />
+					</p:column>
+					
+					<p:column headerText="#{lbl['lbl.sm.rocNo']}" style="width :25%;white-space : normal">
+						<h:outputText value="#{smSupplier.regNo}" />
+					</p:column>
+					                                                <!--#28273-->
+					<p:column headerText="#{lbl['lbl.sm.ep.no']}" style="width :20%;white-space : normal">
+						<h:outputText value="#{smSupplier.epNo}" />
+					</p:column>
+					                                                         <!--#28273-->
+					<p:column headerText="#{lbl['lbl.sm.applicationtype']}" style="width :20%;white-space : normal">
+						<h:outputText value="#{lbl['lbl.sm.appltype.newmof']}"
+							rendered="#{smSupplier.smAppl.applType eq 'N'}" />
+						<h:outputText value="#{lbl['lbl.sm.appltype.bumiputera']}"
+							rendered="#{smSupplier.smAppl.applType eq 'B'}" />
+						<h:outputText value="#{lbl['lbl.sm.appltype.categorycode']}"
+							rendered="#{smSupplier.smAppl.applType eq 'A'}" />
+						<h:outputText value="#{lbl['lbl.sm.appltype.updateprofile']}"
+							rendered="#{smSupplier.smAppl.applType eq 'U'}" />
+						<h:outputText value="#{lbl['lbl.sm.appltype.cancelmof']}"
+							rendered="#{smSupplier.smAppl.applType eq 'C'}" />
+						<h:outputText value="#{lbl['lbl.sm.appltype.renewmof']}"
+							rendered="#{smSupplier.smAppl.applType eq 'R'}" />
+						<h:outputText value="#{lbl['lbl.sm.appltype.basic']}"
+							rendered="#{smSupplier.smAppl.applType eq 'O'}" />
+					</p:column>
+					
+					<!--#28273 & #28278 -start -->
+					<!-- <p:column headerText="#{lbl['lbl.sm.applicationstatus']}" style="width :25%;white-space : normal">
+						<h:outputText value="#{smSupplier.smAppl.workflowStatusDesc}" />
+					</p:column> -->
+					<!--#28273 -START 110620-->
+					<!-- new requirement for wording #29778 -START -->
+					<p:column headerText="#{lbl['lbl.sm.accountstatus']}"
+						style="width :15%;white-space : normal">
+						<!-- bug #29156 -START ,29690,29948  -->
+						<h:outputText value="#{lbl['lbl.sm.status.active']}"
+							rendered="#{smSupplier.recordStatusFlg eq 1 and empty smSupplier.typeDisciplinaryAction}" />
+						<h:outputText value="#{lbl['lbl.sm.status.inactive']}"
+							rendered="#{smSupplier.recordStatusFlg eq 0 and empty smSupplier.typeDisciplinaryAction or(smSupplier.recordStatusFlg eq 2)}" />
+						<!-- bug #28278 -START -->
+						<h:outputText value="#{lbl['lbl.sm.status.deleted.with.transaction']} (#{lbl['lbl.sm.disciplinary.jktt.cancel.registration']})" rendered="#{smSupplier.typeDisciplinaryAction eq SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG and smSupplier.pendingCancel eq true}" />
+						<h:outputText value="#{lbl['lbl.sm.status.deleted1']} (#{lbl['lbl.sm.disciplinary.jktt.cancel.registration']})" rendered="#{smSupplier.typeDisciplinaryAction eq SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG and smSupplier.pendingCancel ne true}" />
+						
+						<h:outputText value="#{lbl['lbl.sm.status.deleted.with.transaction']} (#{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']})" rendered="#{smSupplier.typeDisciplinaryAction eq SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_BLACKLIST and smSupplier.pendingBlacklist eq true}" />
+						<h:outputText value="#{lbl['lbl.sm.status.deleted1']} (#{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']})" rendered="#{smSupplier.typeDisciplinaryAction eq SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_BLACKLIST and smSupplier.pendingBlacklist ne true}" />
+						
+						<h:outputText value="#{lbl['lbl.sm.status.inactive']}" rendered="#{smSupplier.recordStatusFlg eq 9 and empty smSupplier.typeDisciplinaryAction}" />
+						<!-- bug #29156 -END -->	
+						<!-- bug #29690 -START -->
+						<h:outputText
+							value="#{lbl['lbl.sm.status.deleted.with.transaction']} (#{lbl['lbl.sm.status.suspend']})"
+							rendered="#{smSupplier.typeDisciplinaryAction eq 'S' and smSupplier.pendingSuspend eq true}" />
+						<h:outputText 
+							value="#{lbl['lbl.sm.status.deleted_suspend']} (#{lbl['lbl.sm.status.suspend']})"
+							rendered="#{smSupplier.typeDisciplinaryAction eq 'S' and smSupplier.pendingSuspend ne true}" />
+						<!-- bug #29690 -END -->
+						
+					    <!-- new requirement for wording #29778 -END -->
+					</p:column>
+					<!--#28273 -END 110620-->   
+					<!--#28273 & #28278 -end -->
+					
+					<!--#28273 -START -->
+					<p:column headerText="#{lbl['lbl.sm.label.action']}" >
+						<p:commandLink onstart="blockWidget.show()"
+							rendered="#{empty smSupplier.typeDisciplinaryAction or (smSupplier.typeDisciplinaryAction eq 'S')}"
+							oncomplete="blockWidget.hide()"
+							action="#{supplierDataMaintenanceBackingBean.navigateToMaintenance(smSupplier.smAppl,'C')}"
+							process="@this" partialSubmit="true" update="@form"
+							style="padding-right:5px;">
+							<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
+						</p:commandLink>
+						<p:commandLink onstart="blockWidget.show()"
+							rendered="#{not empty smSupplier.typeDisciplinaryAction and smSupplier.typeDisciplinaryAction ne 'S'}"
+							oncomplete="blockWidget.hide()"
+							action="#{supplierDataMaintenanceBackingBean.navigateToMaintenance(smSupplier.smAppl, 'D')}"
+							process="@this" partialSubmit="true" update="@form"
+							style="padding-right:5px;">
+							<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
+						</p:commandLink>
+					</p:column>
+					<!--#28273 -START -->
+					
+				</p:dataTable>
+				
+			</p:panel>
+			
+			<p:outputPanel rendered="#{!supplierDataMaintenanceBackingBean.managedBean.displaySearchPage}">
+			
+			<p:outputPanel rendered="#{supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction}">
+				<table style="width: 100%;">
+					<tr>
+						<td><br/>
+							<p:graphicImage id="bidAlertImage" value="#{CommonUIConstant.imagePath}/priority.png" style="float:left; padding-right:3px"/>
+							<p:outputLabel value="#{lbl['lbl.sm.maintenance.note1']}" style="color: red;font-weight: bold;float:left; padding-right:3px" />
+							<p:commandLink value="#{lbl['lbl.sm.maintenance.note2']}" onstart="blockWidget.show()"
+								oncomplete="blockWidget.hide()"
+								action="#{supplierDataMaintenanceBackingBean.onViewActiveApplList()}"
+								process="@this" partialSubmit="true" update="@form" 
+								style="color: red;font-weight: bold;float: left;text-decoration: underline; padding-right:3px" >
+							</p:commandLink>
+							<p:outputLabel value=" #{lbl['lbl.sm.maintenance.note3']}" style="color: red;font-weight: bold;float:left; padding-right:3px" />							
+						</td>
+					</tr>
+				</table>
+				<br/>
+			</p:outputPanel>
+			
+			<table style="width: 100%;">
+				<tr>
+					<td>
+						<p:commandButton value="#{lbl['lbl.btn.back']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+							action="#{supplierDataMaintenanceBackingBean.backToSearchSupplierMaintenance}" update="@form" process="@this"/>
+					</td>
+					<td style="white-space: nowrap; float: right;">
+					    <p:commandButton value="#{lbl['lbl.btn.submit']}" style="float:right;" id="submitBtnId" update="@form"
+					    	onstart="blockWidget.show()" oncomplete="blockWidget.hide()" action="#{supplierDataMaintenanceBackingBean.showConfirmDialog}" 
+					    	disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}"/>
+					</td>
+				</tr>
+			</table>
+			
+			<p:panel header="#{lbl['lbl.sm.account.info']}" toggleable="true">
+				<table class="customTbl">
+					
+					<tr>
+						<td class="tdTitle">
+							<p:outputLabel value="#{lbl['lbl.sm.businesscomptype']}" />
+							<p:outputLabel value="*" styleClass="mandatory" />
+						</td>
+						<td style="text-align:left;width:30%;word-wrap: break-word;">
+							<p:outputLabel styleClass="outputLabel-view" value="#{supplierDataMaintenanceBackingBean.managedBean.supplierBusinessTypeVal}" />
+						</td>
+						<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.basic.account.created.date']}" /></td>
+						<td class="tdContent"><p:calendar id="createdDateId"
+						navigator="true" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.basic.account.created.date']}"
+						value="#{supplierDataMaintenanceBackingBean.managedBean.smSupplier.createdDate}" rendered="#{not empty supplierDataMaintenanceBackingBean.managedBean.smSupplier.createdDate}"
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"  disabled="true"
+						readonlyInput="true" size="30" showOn="button" yearRange="-99:+0" maxdate="#{CommonConstants.CURRENT_DATE}" />
+						</td>
+					 </tr>
+					 <tr>
+					 	<td class="tdTitle">
+							<p:outputLabel value="#{lbl['lbl.sm.businessregno']}" />
+							<p:outputLabel value="*" styleClass="mandatory" />
+						</td>
+					 	<td class="tdContent">
+					 	<p:inputText readonly="true" value="#{supplierDataMaintenanceBackingBean.managedBean.smSupplier.regNo}" />
+						</td>
+					 </tr>
+				</table>
+			</p:panel>
+			
+			<p:panel header="#{lbl['lbl.sm.disciplinary.action.headerLbl']}" toggleable="true" id="disciplinaryActionPanelId">
+		
+				<!-- Enhancement 26238 - START -->
+				<p:outputPanel >
+					<h:outputText value="#{lbl['lbl.sm.disciplinary.click']}" escape="false"/>
+					<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						action="#{supplierDataMaintenanceBackingBean.onViewDisciplinaryAction}" 
+						process="@this" partialSubmit="true" update=":form">
+							<h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" escape="false" style="color:blue"/>
+					</p:commandLink><p:spacer width="2"/>
+					<h:outputText value="#{lbl['lbl.sm.disciplinary.to.view.history.disciplinary.action']}" escape="false"/><br />
+					<p:spacer height="2"/>
+				</p:outputPanel>
+				<!-- 26238 - END -->
+							
+				<table style="width: 100%;table-layout:fixed">
+					<!-- Enhancement 26238 -->
+					<tr>
+						<td><p:outputLabel styleClass="outputLabel-view-label"
+								value="#{lbl['lbl.sm.disciplinary.jktt.punishment.type']}" /></td>
+						<td><p:spacer width="5" />
+						<!-- #27724 : Disciplinary Action - edit 27534 26238 - start -->
+							<p:selectBooleanCheckbox  value="#{supplierDataMaintenanceBackingBean.managedBean.warning}"
+								disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
+								or supplierDataMaintenanceBackingBean.managedBean.warningExist}" style="float:left">
+					            <p:ajax event="change" partialSubmit="true" process="@this"
+									listener="#{supplierDataMaintenanceBackingBean.onTickPunishmentType()}"
+									update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+					        </p:selectBooleanCheckbox> <p:spacer width="5" />
+					    <!-- #27724 : Disciplinary Action - end -->
+					        <p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.warning']}" styleClass="outputLabel-view"/>
+						</td>
+						<td>
+							<p:spacer width="5" />
+							<p:selectBooleanCheckbox value="#{supplierDataMaintenanceBackingBean.managedBean.suspendRegistration}" 
+								disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}" style="float:left">
+					            <p:ajax event="change" partialSubmit="true" process="@this"
+									listener="#{supplierDataMaintenanceBackingBean.onTickPunishmentType()}"
+									update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+					        </p:selectBooleanCheckbox> <p:spacer width="5" />
+					        <p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.suspend.registration']}" styleClass="outputLabel-view"/>
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>
+							<p:spacer width="5" />
+							<p:selectBooleanCheckbox value="#{supplierDataMaintenanceBackingBean.managedBean.cancelRegistration}" 
+								disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}" style="float:left">
+					            <p:ajax event="change" partialSubmit="true" process="@this"
+									listener="#{supplierDataMaintenanceBackingBean.onTickPunishmentType()}"
+									update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+					        </p:selectBooleanCheckbox> <p:spacer width="5" />
+					        <p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.cancel.registration']}" styleClass="outputLabel-view"/>
+						</td>
+						<td>	
+							<p:spacer width="5" />
+							<p:selectBooleanCheckbox value="#{supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirector}" 
+								disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}" style="float:left">
+					            <p:ajax event="change" partialSubmit="true" process="@this"
+									listener="#{supplierDataMaintenanceBackingBean.onTickPunishmentType()}"
+									update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+					        </p:selectBooleanCheckbox> <p:spacer width="5" />
+					        <p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']}" styleClass="outputLabel-view"/>
+						</td>
+					</tr>
+					
+					<tr>
+						<td><p:outputLabel styleClass="outputLabel-view-label"
+								value="#{lbl['lbl.sm.disciplinary.action.edit']}" /></td>
+						<td>
+							<p:selectBooleanCheckbox value="#{supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryActionCheckBox}" 
+								disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}">
+					            <p:ajax event="change" partialSubmit="true" process="@this"
+									listener="#{supplierDataMaintenanceBackingBean.onTickDiscipline()}"
+									update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+					        </p:selectBooleanCheckbox>
+						</td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr> 
+						<td><p:outputLabel styleClass="outputLabel-view-label"
+								value="#{lbl['lbl.sm.disciplinary.jktt.start.date']}" />
+							<p:outputLabel value="*" styleClass="mandatory" 
+							rendered="#{supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}"/></td>
+						<td><p:calendar showOn="button" navigator="true"
+								display="inline" readonlyInput="true"
+								label="#{lbl['lbl.sm.disciplinary.jktt.start.date']}" id="startDate"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+								value="#{supplierDataMaintenanceBackingBean.managedBean.disciplineVO.smDiscplinaryAction.startDate}"  
+								required="#{supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}"
+								disabled="#{!supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}">
+								<p:ajax event="dateSelect" update="endDate" process="@this" partialSubmit="true"/>
+							</p:calendar>
+							<p:message id="startDateMsg" for="startDate"
+									showSummary="true" showDetail="false" display="icon" /></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel styleClass="outputLabel-view-label"
+								value="#{lbl['lbl.sm.disciplinary.jktt.end.date']}" />
+							<p:outputLabel value="*" styleClass="mandatory" 
+							rendered="#{supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}"/></td>
+						<td><p:calendar showOn="button" navigator="true"
+								display="inline" readonlyInput="true"
+								label="#{lbl['lbl.sm.disciplinary.jktt.end.date']}" id="endDate"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+								mindate="#{supplierDataMaintenanceBackingBean.managedBean.disciplineVO.smDiscplinaryAction.startDate}" 
+								value="#{supplierDataMaintenanceBackingBean.managedBean.disciplineVO.smDiscplinaryAction.endDate}"
+								required="#{supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}"
+								disabled="#{!supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}" >
+							<!-- 26238: Disciplinary Action - start -->
+							<p:ajax event="dateSelect" update="endDate" process="@this" partialSubmit="true"/>
+							</p:calendar>
+							<!-- 26238: Disciplinary Action - end  -->
+							<p:message id="endDateMsg" for="endDate"
+									showSummary="true" showDetail="false" display="icon" /></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.disciplinary.jktt.remarks']}" />
+							<p:outputLabel value="*" styleClass="mandatory" 
+							rendered="#{supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}"/></td>
+						<td><p:inputTextarea autoResize="false" cols="100" rows="10" id="suspendRemark" 
+								required="#{supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}"
+								disabled="#{!supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}"
+								maxlength="2500" label="#{lbl['lbl.sm.disciplinary.jktt.remarks']}"
+								value="#{supplierDataMaintenanceBackingBean.managedBean.disciplineVO.smDiscplinaryAction.remark}" >
+							<!-- 26238: Disciplinary Action - start -->
+							<p:ajax process="@this" partialSubmit="true" update="@this"/>
+							</p:inputTextarea>
+							<!-- 26238: Disciplinary Action - end -->
+							<p:message id="suspendRemarkMsg"
+							for="suspendRemark" showSummary="true" showDetail="false"
+							display="icon" />
+						</td>
+						<td></td>
+						<td></td>
+					</tr>
+				</table>
+			</p:panel>
+			
+			
+			<p:panel header="#{lbl['lbl.sm.companyinfo']}" toggleable="true" id="pnlCompInfo">
+				<table class="customTbl">
+					<tr>
+						<td class="tdTitle">
+							<p:outputLabel value="#{lbl['lbl.sm.businessregno']}" />
+							<p:outputLabel value="*" styleClass="mandatory" />
+						</td>
+						
+						<td class="tdContent">
+							<p:outputPanel id="regNoPanelId">
+								<p:inputText id="regNo" required="#{!empty param['disableValidation']}" maxlength="30"
+									value="#{supplierDataMaintenanceBackingBean.managedBean.smSupp.regNo}" converter="toUpperCaseConverter"
+									disabled="#{!supplierDataMaintenanceBackingBean.managedBean.smSupp.brandNew}"
+									size="40" label="#{lbl['lbl.sm.businessregno']}" >
+									<p:ajax event="blur" update="regNoPanelId" listener="#{supplierDataMaintenanceBackingBean.removeRegNoWhiteSpace}" />
+									<f:validator validatorId="busRegNoValidator" />
+									</p:inputText>
+								&#160;
+								<p:graphicImage id="regNoti" value="/css/images/design/tooltips.png" rendered="#{not empty supplierDataMaintenanceBackingBean.managedBean.smSupp.businessType}"/>
+								<ui:param name="lblRegNoTlTip" value="tt.sm.business.type.#{supplierDataMaintenanceBackingBean.managedBean.smSupp.businessType}" />
+								<p:tooltip id="regNott" for="regNoti" rendered="#{not empty supplierDataMaintenanceBackingBean.managedBean.smSupp.businessType}" >
+									<p:outputLabel escape="false" value="#{lbl[lblRegNoTlTip]}"  />
+								</p:tooltip>&#160;
+								<p:message id="regNoMsg" for="regNo" display="icon" />
+							</p:outputPanel>
+						</td>
+						
+						<td class="tdTitle"><p:outputLabel value="#{lbl[supplierDataMaintenanceBackingBean.getOwnerLabel()]}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
+						<td class="tdContent"><p:inputText id="ownerNameId" required="#{!empty param['disableValidation']}" label="#{lbl[supplierDataMaintenanceBackingBean.getOwnerLabel()]}"
+								value="#{supplierDataMaintenanceBackingBean.managedBean.smSuppOwner.ownerName}"
+								size="40" maxlength="80" disabled="#{!supplierDataMaintenanceBackingBean.managedBean.smSuppOwner.brandNew}"/>
+							&#160;
+							<p:graphicImage id="ownNmti" value="/css/images/design/tooltips.png" />
+							<p:tooltip id="ownNmtt" for="ownNmti">
+								<p:outputLabel escape="false" value="#{lbl['tt.sm.owner.name']}"  />
+							</p:tooltip>
+							<p:message id="ownerNameIdMsg" for="ownerNameId" display="icon" />
+						</td>
+					</tr>
+		
+					<tr>
+						<td class="tdTitle"><p:outputLabel
+								value="#{lbl['lbl.sm.nationality']}" /> <p:outputLabel value="*"
+								styleClass="mandatory" /></td>
+						<td class="tdContent">
+							
+							<p:selectOneMenu id="nationalityId" 
+								required="#{!empty param['disableValidation']}"
+								label="#{lbl['lbl.sm.nationality']}"
+								value="#{supplierDataMaintenanceBackingBean.managedBean.smSuppOwner.nationality.countryId}"
+								style="width:80%" disabled="#{supplierDataMaintenanceBackingBean.managedBean.applType eq SupplierManagementConst.ACC_BASIC}"
+								rendered="#{supplierDataMaintenanceBackingBean.managedBean.smSuppOwner.brandNew and supplierDataMaintenanceBackingBean.managedBean.smAppl.applType ne SupplierManagementConst.ACC_BASIC}">
+								<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
+								<f:selectItems var="counLs"
+									value="#{supplierDataMaintenanceBackingBean.managedBean.countryLs}"
+									itemLabel="#{counLs.countryName}" itemValue="#{counLs.countryId}" />
+								<c:if test="#{supplierDataMaintenanceBackingBean.managedBean.applType eq SupplierManagementConst.ACC_MOF}">
+									<ui:param name="unknownCountry" value="#{supplierDataMaintenanceBackingBean.getUnknownCountry()}" />
+									<f:selectItem itemValue="#{unknownCountry.countryId}" itemLabel="#{unknownCountry.countryName}" />
+								</c:if>
+								<p:ajax event="change" listener="#{supplierDataMaintenanceBackingBean.ownerNationalityOnChange}" update="pnlIdentypeSelect,pnlIdentType,pnlIdentLabel" />
+							</p:selectOneMenu>
+							<p:message id="nationalityIdMsg" for="nationalityId" display="icon" />
+							
+							<h:outputText value="#{supplierDataMaintenanceBackingBean.managedBean.smSuppOwner.nationality.countryName}"
+								rendered="#{!supplierDataMaintenanceBackingBean.managedBean.smSuppOwner.brandNew || supplierDataMaintenanceBackingBean.managedBean.smAppl.applType eq SupplierManagementConst.ACC_BASIC}" />
+							
+						</td>
+					</tr>
+					
+					<tr>
+						<td class="tdTitle">
+							<p:outputLabel value="#{lbl['lbl.sm.identificationtype']}" />	
+							<p:outputLabel value="*" styleClass="mandatory" />
+						</td>
+						<td class="tdContent">
+							<p:outputPanel id="pnlIdentypeSelect">
+							<h:outputText rendered="#{supplierDataMaintenanceBackingBean.managedBean.applType eq SupplierManagementConst.ACC_BASIC || 
+							supplierDataMaintenanceBackingBean.managedBean.smSuppOwner.nationality.countryCode eq SupplierManagementConst.COUNTRY_MALAYSIA_CODE}"
+								value="#{supplierDataMaintenanceBackingBean.getParamDescByParameterId(supplierDataMaintenanceBackingBean.managedBean.smSuppOwner.identificationTypeId)}"/>
+							<p:selectOneMenu id="cmbUsrIdenType" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.identificationtype']}"
+								value="#{supplierDataMaintenanceBackingBean.managedBean.smSuppOwner.identificationTypeId}"
+								style="width:200px" rendered="#{(supplierDataMaintenanceBackingBean.managedBean.applType ne SupplierManagementConst.ACC_BASIC) and 
+								(supplierDataMaintenanceBackingBean.managedBean.smSuppOwner.nationality.countryCode ne SupplierManagementConst.COUNTRY_MALAYSIA_CODE)}">
+								<f:selectItems value="#{supplierDataMaintenanceBackingBean.pmIdTypeDropdownValues()}" />
+								<p:ajax event="change" update="pnlIdentType,pnlIdentLabel"
+									listener="#{supplierDataMaintenanceBackingBean.suppOwnerIdTypeChange}" />
+							</p:selectOneMenu>
+							</p:outputPanel>
+							
+							<p:message id="cmbUsrIdenTypeMsg" for="cmbUsrIdenType" display="icon" />
+						</td>
+		
+						<td class="tdTitle">
+							<p:outputPanel id="pnlIdentLabel">
+							<c:choose>
+									<c:when test="#{supplierDataMaintenanceBackingBean.managedBean.smSuppOwner.identificationType.parameterCode == SupplierManagementConst.NEW_IC}">
+										<p:outputLabel value="#{lbl['lbl.sm.individual.newicno']}" />
+									</c:when>
+									<c:otherwise>
+										<p:outputLabel value="#{lbl['lbl.sm.identificationno']}" />
+									</c:otherwise>
+							</c:choose>
+							<p:outputLabel value="*" styleClass="mandatory" />
+							</p:outputPanel>
+						</td>
+						<td class="tdContent">
+							<p:outputPanel id="pnlIdentType">
+							<c:choose>
+								<c:when test="#{supplierDataMaintenanceBackingBean.managedBean.smSuppOwner.identificationType.parameterCode == SupplierManagementConst.NEW_IC}">
+									<p:inputText id="txtIdNumber" required="#{!empty param['disableValidation']}"
+										requiredMessage="#{lbl['lbl.sm.icNo.required']}"
+										label="#{lbl['lbl.sm.identificationno']}"
+										value="#{supplierDataMaintenanceBackingBean.managedBean.smSuppOwner.identificationNo}"
+										size="30" maxlength="12" validatorMessage="#{lbl['lbl.sm.invalidIcNo']}"
+										disabled="#{!supplierDataMaintenanceBackingBean.managedBean.smSuppOwner.brandNew}">
+										<f:validateRegex pattern="^-?\d*(\.\d+)?$" disabled="#{empty param['disableValidation']}"/>
+									</p:inputText>
+								</c:when>
+								
+								<c:otherwise>
+									<p:inputText id="txtIdNumber" required="#{!empty param['disableValidation']}"
+										label="#{lbl['lbl.sm.identificationno']}"
+										value="#{supplierDataMaintenanceBackingBean.managedBean.smSuppOwner.identificationNo}"
+										size="30" maxlength="15"
+										disabled="#{!supplierDataMaintenanceBackingBean.managedBean.smSuppOwner.brandNew}">
+										<p:ajax process="@this" partialSubmit="true" update="@this" listener="#{supplierDataMaintenanceBackingBean.trimOwnerPassportValue}"/>
+									</p:inputText>
+								</c:otherwise>
+							</c:choose> &#160; 
+							<p:graphicImage id="icti" value="/css/images/design/tooltips.png" />
+							<c:choose>
+								<c:when
+									test="#{supplierDataMaintenanceBackingBean.managedBean.smSuppOwner.nationality.countryCode eq ParameterConst.countryUnknownCode}">
+									<p:tooltip id="ictt" for="icti">
+										<p:outputLabel escape="false" value="#{lbl['tt.sm.mykas']}" />
+									</p:tooltip>
+								</c:when>
+		
+								<c:otherwise>
+									<c:choose>
+										<c:when test="#{supplierDataMaintenanceBackingBean.managedBean.smSuppOwner.identificationType.parameterCode == SupplierManagementConst.NEW_IC}">
+											<p:tooltip id="ictt" for="icti">
+												<p:outputLabel escape="false" value="#{lbl['tt.sm.owner.identification.ic']}" />
+											</p:tooltip>
+										</c:when>
+										
+										<c:otherwise>
+											<p:tooltip id="ictt" for="icti">
+												<p:outputLabel escape="false" value="#{lbl['tt.sm.owner.identification.passport']}" />
+											</p:tooltip>
+										</c:otherwise>						
+									</c:choose>
+								</c:otherwise>
+							</c:choose> 
+							<p:message id="txtIdNumberMsg" for="txtIdNumber" display="icon" />
+							</p:outputPanel>
+						</td>
+					</tr>
+		
+					<tr>
+						<td class="tdTitle">
+							<p:outputLabel value="#{lbl['lbl.sm.companyname']}" />
+							<p:outputLabel value="*" styleClass="mandatory" />
+						</td>
+						<td class="tdContent"><p:inputText required="#{!empty param['disableValidation']}"
+								label="#{lbl['lbl.sm.companyname']}" maxlength="100"
+								value="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.smCompanyBasic.companyName}"
+								size="40" id="companyNameId"  
+								disabled="#{supplierDataMaintenanceBackingBean.managedBean.disabledCompanyNameInMaintenance or supplierDataMaintenanceBackingBean.managedBean.viewMode}" /> 
+								<p:message id="companyNameIdMsg" for="companyNameId" display="icon" /></td>
+		
+						<td class="tdTitle">
+							<p:outputLabel value="#{lbl['lbl.sm.estdate']}" />
+							<p:outputLabel value="*" styleClass="mandatory" />
+						</td>
+						<td class="tdContent"><p:calendar id="estDateCalId"
+								navigator="true" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.estdate']}"
+								value="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.smCompanyBasic.establishDate}"
+								pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
+								readonlyInput="true" size="30" showOn="button" yearRange="#{lbl['lbl.calendar.year.range']}" maxdate="#{CommonConstants.CURRENT_DATE}" />
+							<p:message id="estDateCalIdMsg" for="estDateCalId" display="icon" /></td>
+					</tr>
+		
+					<tr>
+						<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.incometaxno']}" /></td>
+						<td class="tdContent"><p:inputText
+								value="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.smCompanyBasic.incomeTaxNo}"
+								size="40" id="incomeTaxId" maxlength="30" disabled="#{supplierDataMaintenanceBackingBean.managedBean.viewMode}">
+								</p:inputText>
+						<p:message for="incomeTaxId" id="incomeTaxIdMsg" display="icon" /></td>
+						<td></td>
+					</tr>
+		
+					<tr>
+						<td class="tdTitle">
+							<p:outputLabel value="#{lbl['lbl.sm.companyaddress']}" />
+							<p:outputLabel value="*" styleClass="mandatory" />
+						</td>
+						<td class="tdContent" >
+							<p:inputText size="40"
+								id="compAdd1" required="#{!empty param['disableValidation']}" maxlength="100"
+								label="#{lbl['lbl.sm.companyaddress']}" disabled="#{supplierDataMaintenanceBackingBean.managedBean.viewMode}"
+								value="#{supplierDataMaintenanceBackingBean.managedBean.smBusinessAdd.address1}">
+							</p:inputText>
+							<p:graphicImage id="ttImageCompAdd1" value="/css/images/design/tooltips.png" />
+							<p:tooltip for="ttImageCompAdd1" id="ttCompAdd1">
+								<p:outputLabel escape="false" value="#{lbl['tt.sm.address.without.dash']}"  />
+							</p:tooltip>
+							<p:message id="compAdd1Msg" for="compAdd1" display="icon" /></td>
+		
+						<td class="tdTitle">
+							<p:outputLabel value="#{lbl['lbl.sm.country']}" />
+							<p:outputLabel value="*" styleClass="mandatory" />
+						</td>
+						<td class="tdContent"><p:selectOneMenu id="compCountryId" disabled="true"
+								required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.country']}"  style="width:80%"
+								value="#{supplierDataMaintenanceBackingBean.managedBean.smBusinessAdd.pmCountry.countryId}">
+								<f:selectItems var="counLs"
+									value="#{supplierDataMaintenanceBackingBean.managedBean.countryLs}"
+									itemLabel="#{counLs.countryName}" itemValue="#{counLs.countryId}" />
+								<p:ajax event="change"
+									listener="#{supplierDataMaintenanceBackingBean.populateStateByAddType('business',true)}"
+									update="busState,busDivision,busDistrict,busCity,compPostCodePanelId" />
+							</p:selectOneMenu> <p:message id="compCountryIdMsg" for="compCountryId"
+								display="icon" /></td>
+					</tr>
+		
+					<tr>
+						<td></td>
+						<td class="tdContent"><p:inputText size="40"
+								id="compAdd2" maxlength="100" disabled="#{supplierDataMaintenanceBackingBean.managedBean.viewMode}"
+								value="#{supplierDataMaintenanceBackingBean.managedBean.smBusinessAdd.address2}" /></td>
+		
+						<td class="tdTitle">
+							<p:outputLabel value="#{lbl['lbl.sm.state']}" />
+							<p:outputLabel value="*" styleClass="mandatory" />
+						</td>
+						<td class="tdContent"><p:selectOneMenu id="busState" disabled="#{supplierDataMaintenanceBackingBean.managedBean.sabahSarawakType or supplierDataMaintenanceBackingBean.managedBean.viewMode}"
+								required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.state']}"
+								value="#{supplierDataMaintenanceBackingBean.managedBean.smBusinessAdd.pmState.stateId}"
+								style="width:80%">
+								<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
+								<f:selectItems var="state"
+									value="#{supplierDataMaintenanceBackingBean.managedBean.businessStateLs}"
+									itemValue="#{state.stateId}" itemLabel="#{state.stateName}" />
+								<p:ajax event="change" process="@this"
+									listener="#{supplierDataMaintenanceBackingBean.populateDistrictByAddType('business', true)}"
+									update="divisionBasicAcntLabelPanelId,divisionBasicAcntDropdownPanelId,busDistrict,busCity" />
+							</p:selectOneMenu> <p:message id="busStateMsg" for="busState" display="icon" /></td>
+					</tr>
+					<!-- 13320 -->
+					
+					<tr>
+						<td></td>
+						<td></td>
+		<td  class="tdTitle">
+				<p:outputPanel id="divisionBasicAcntLabelPanelId" >
+					<ui:fragment rendered="#{!supplierDataMaintenanceBackingBean.managedBean.divisionBox}">
+						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+						</ui:fragment>
+					</p:outputPanel>
+					</td>
+					<td>
+				<p:outputPanel id="divisionBasicAcntDropdownPanelId">
+				<ui:fragment rendered="#{!supplierDataMaintenanceBackingBean.managedBean.divisionBox}">
+					<p:selectOneMenu id="busDivision"
+						        label="#{lbl['lbl.sm.division']}"
+								value="#{supplierDataMaintenanceBackingBean.managedBean.smBusinessAdd.pmDivision.divisionId}"
+								style="width:80%">
+								<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
+								<f:selectItems var="division"
+									value="#{supplierDataMaintenanceBackingBean.managedBean.businessDivisionLs}"
+									itemValue="#{division.divisionId}" itemLabel="#{division.divisionName}" />
+								<p:ajax event="change" process="@this"
+									listener="#{supplierDataMaintenanceBackingBean.populateDivisionByAddType('business', true)}"
+									update="busDistrict,busCity" />
+							</p:selectOneMenu>
+							</ui:fragment>
+							</p:outputPanel>
+							</td>
+					</tr>
+		
+					<tr>
+						<td></td>
+						<td class="tdContent"><p:inputText size="40"
+								id="compAdd3" maxlength="100" disabled="#{supplierDataMaintenanceBackingBean.managedBean.viewMode}"
+								value="#{supplierDataMaintenanceBackingBean.managedBean.smBusinessAdd.address3}" /></td>
+		
+						<td class="tdTitle">
+							<p:outputLabel value="#{lbl['lbl.sm.district']}" />
+							<p:outputLabel value="*" styleClass="mandatory" />
+						</td>
+						<td class="tdContent"><p:selectOneMenu id="busDistrict"
+								required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.district']}"
+								value="#{supplierDataMaintenanceBackingBean.managedBean.smBusinessAdd.pmDistrict.districtId}"
+								style="width:80%" disabled="#{supplierDataMaintenanceBackingBean.managedBean.viewMode}">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+								<f:selectItems var="dist"
+									value="#{supplierDataMaintenanceBackingBean.managedBean.businessDistrictLs}"
+									itemValue="#{dist.districtId}" itemLabel="#{dist.districtName}" />
+								<p:ajax event="change" process="@this"
+									listener="#{supplierDataMaintenanceBackingBean.populateCityByAddType('business',true)}"
+									update="busCity" />
+							</p:selectOneMenu> <p:message id="busDistrictMsg" for="busDistrict" display="icon" /></td>
+					</tr>
+		
+					<tr>
+						<td class="tdTitle">
+							<p:outputLabel value="#{lbl['lbl.sm.postcode']}" />
+							<p:outputLabel value="*" styleClass="mandatory" />
+						</td>
+						<td class="tdContent">
+							<p:outputPanel id="compPostCodePanelId">
+								<p:outputPanel
+									rendered="#{supplierDataMaintenanceBackingBean.managedBean.smBusinessAdd.pmCountry.countryId==supplierDataMaintenanceBackingBean.managedBean.myCountryId}">
+									<p:inputText maxlength="5" required="#{!empty param['disableValidation']}"
+										label="#{lbl['lbl.sm.postcode']}" id="compPostCodeMy" disabled="#{supplierDataMaintenanceBackingBean.managedBean.viewMode}"
+										value="#{supplierDataMaintenanceBackingBean.managedBean.smBusinessAdd.postcode}"
+										validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
+										size="40">
+										<f:validator validatorId="postcodeValidator" />
+									</p:inputText>
+									<p:message id="compPostCodeMyMsg" for="compPostCodeMy"
+										showSummary="true" showDetail="false" display="icon" />
+								</p:outputPanel>
+								<p:outputPanel
+									rendered="#{supplierDataMaintenanceBackingBean.managedBean.smBusinessAdd.pmCountry.countryId!=supplierDataMaintenanceBackingBean.managedBean.myCountryId}">
+									<p:inputText maxlength="10" required="#{!empty param['disableValidation']}"
+										label="#{lbl['lbl.sm.postcode']}" id="compPostCodeForeign"
+										value="#{supplierDataMaintenanceBackingBean.managedBean.smBusinessAdd.postcode}"
+										size="35" disabled="#{supplierDataMaintenanceBackingBean.managedBean.viewMode}">
+									</p:inputText>
+									<p:message id="compPostCodeForeignMsg"
+										for="compPostCodeForeign" showSummary="true"
+										showDetail="false" display="icon" />
+								</p:outputPanel>
+							</p:outputPanel>
+						</td>
+						<td class="tdTitle">
+							<p:outputLabel value="#{lbl['lbl.sm.towncity']}" />
+							<p:outputLabel value="*" styleClass="mandatory" />
+						</td>
+						<td class="tdContent"><p:selectOneMenu id="busCity"
+								required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.towncity']}"
+								value="#{supplierDataMaintenanceBackingBean.managedBean.smBusinessAdd.pmCity.cityId}"
+								style="width:80%" disabled="#{supplierDataMaintenanceBackingBean.managedBean.viewMode}">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+								<f:selectItems var="pcity"
+									value="#{supplierDataMaintenanceBackingBean.managedBean.businessCityLs}"
+									itemValue="#{pcity.cityId}" itemLabel="#{pcity.cityName}" />
+								<p:ajax event="change" process="@this"
+									listener="#{supplierDataMaintenanceBackingBean.onSelectCity('business')}"/>
+							</p:selectOneMenu> <p:message id="busCityMsg" for="busCity" display="icon" /></td>
+					</tr>
+								
+					<tr>
+						<td class="tdTitle">
+							<p:outputLabel value="#{lbl['lbl.sm.telno']}" />
+							<p:outputLabel value="*" styleClass="mandatory" />
+						</td>
+						<td class="tdContent">
+							<ac:phone id="telNoId" isMobile="false" label="#{lbl['lbl.sm.telno']}" required="#{!empty param['disableValidation']}"
+								countryCode="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.smCompanyBasic.phoneCountry}" 
+								areaCode="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.smCompanyBasic.phoneArea}" 
+								number="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.smCompanyBasic.phoneNo}"  
+								validatorMessage="#{lbl['lbl.sm.telno']} - #{lbl['lbl.sm.invalidNo']}" disabled="#{supplierDataMaintenanceBackingBean.managedBean.viewMode}"/></td>
+						<td class="tdTitle">
+							<p:outputLabel value="#{lbl['lbl.sm.faxno']}" />
+						</td>
+						<td class="tdContent">
+							<ac:phone id="faxNoId" isMobile="false" label="#{lbl['lbl.sm.faxno']}"
+								countryCode="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.smCompanyBasic.faxCountry}" 
+								areaCode="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.smCompanyBasic.faxArea}" 
+								number="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.smCompanyBasic.faxNo}"  
+								validatorMessage="#{lbl['lbl.sm.faxno']} - #{lbl['lbl.sm.invalidNo']}" disabled="#{supplierDataMaintenanceBackingBean.managedBean.viewMode}"/>
+						</td>
+					</tr>
+					
+				</table>
+			</p:panel>
+			
+			<p:panel header="#{lbl['lbl.sm.ownerinfo']}"
+				toggleable="true" id="smPersonnelParentPan">
+		
+				<p:outputPanel id="persInfPan" layout="block">
+					<p:outputPanel id="persInfoDtPanel" layout="block">
+			
+					<p:dataTable var="person" widgetVar="suppPersonnelInfoDtWidVar"
+						value="#{supplierDataMaintenanceBackingBean.managedBean.ownerAndDirectorList}"
+						selection="#{supplierDataMaintenanceBackingBean.managedBean.selectedOwnerAndDirectorList}"
+						rowKey="#{person}" rowIndexVar="index" id="personDt">
+						<ac:paginator for="personDt" />
+						<!-- 28494 start-->
+						<p:column selectionMode="multiple"
+						rendered="#{supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirector
+						and !(supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirectorExist)}">
+						</p:column>
+						<!--
+						<p:column>
+							<h:graphicImage value="/css/images/design/ico-disabled-chckbx.png" 
+								rendered="#{!supplierDataMaintenanceBackingBean.managedBean.suspendRegistration and
+								!supplierDataMaintenanceBackingBean.managedBean.cancelRegistration and
+								!supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirector}"/>
+							<h:graphicImage value="/css/images/design/ico-tick-checkbox.png" 
+								rendered="#{supplierDataMaintenanceBackingBean.managedBean.suspendRegistration  or
+								supplierDataMaintenanceBackingBean.managedBean.cancelRegistration or 
+								supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirector}"/>
+						</p:column>
+						-->
+						<!-- 28494 end-->
+						
+						<p:column headerText="#{lbl['lbl.sm.person.composition.name']}">
+							<h:outputText value="#{person.name}" />
+						</p:column>
+				
+						<p:column headerText="#{lbl['lbl.sm.person.composition.idenNum']}">
+							<h:outputText value="#{person.identificationNo}" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sm.person.composition.isEqui']}">
+							<h:outputText value="#{lbl['lbl.txt.yes']}" rendered="#{person.equityOwner}" />
+							<h:outputText value="#{lbl['lbl.txt.no']}" rendered="#{!person.equityOwner}" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sm.person.composition.isAuth']}">
+							<h:outputText value="#{lbl['lbl.txt.yes']}"
+								rendered="#{person.authorizedFlg eq '1'}" />
+							<h:outputText value="#{lbl['lbl.txt.no']}"
+								rendered="#{person.authorizedFlg eq '0'}" />
+						</p:column>
+						<p:column rendered="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq 'K'}"
+							headerText="#{lbl['lbl.sm.person.composition.certStatus']}">
+							<ac:smSoftcertStatus personnel="#{person}"  />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sm.person.composition.role']}">
+							<h:outputText value="#{person.roleName}" />
+							<h:outputText value=" (#{lbl['lbl.sm.contract.signer']})"
+								rendered="#{person.contractSignerFlg eq 1 
+								and supplierDataMaintenanceBackingBean.managedBean.smAppl.supplierType ne 'J'}" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sm.person.composition.eprole']}">
+							<ac:smRoleDesc backingBean="#{supplierDataMaintenanceBackingBean}" roleCode="#{person.epRole}"/>
+						</p:column>
+				
+					</p:dataTable>
+					
+					</p:outputPanel>
+				</p:outputPanel>
+			</p:panel>
+			
+			<ui:include src="/xhtml/sm/shared/applViewOnlyPages/gstCompanyBasicViewOnly.xhtml" />
+			
+			<ui:include src="/xhtml/sm/shared/onlinereg/bankInfo.xhtml" />
+			</p:outputPanel>
+			
+			<ac:disciplinaryActionHistory mofView="false" voList="#{supplierDataMaintenanceBackingBean.managedBean.disciplineVOs}" />
+			
+			<p:confirmDialog id="confirmDialog" closable="true"
+				message="#{lbl['lbl.sm.supp.data.maintenance.submitoconfirm.msg']}"
+				header="#{lbl['lbl.sm.userprofile.confirmation']}" severity="alert"
+				widgetVar="confirmDialog">
+				
+				<div align="right">
+					<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDialog.hide();" 
+						action="#{supplierDataMaintenanceBackingBean.submitBasicAccountMaintenance}" 
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form" />
+					<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmDialog.hide();" />
+				</div>
+			</p:confirmDialog>
+			
+			<!-- 29012: Disciplinary Action - main cr redmine - 26238 start-->
+			<p:dialog id="activeApplDialog" header="#{lbl['lbl.sm.success.dialog.header']}"
+				widgetVar="activeApplDialog" showEffect="fade" hideEffect="fade"
+				modal="true" width="600" resizable="false">
+				<p:dataTable id="activeApplDtl" var="smAppl" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					value="#{supplierDataMaintenanceBackingBean.managedBean.activeApplList}"
+					rowKey="#{smAppl}">
+					<p:column headerText="#{lbl['lbl.sm.application.no']}" style="text-align:center">
+						<h:outputText value="#{smAppl[0]}" style="float:left;"/>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.applicationtype']}" style="text-align:center">
+						<h:outputText value="#{lbl['lbl.sm.appltype.basic']}" rendered="#{smAppl[1] eq 'O'}" />
+						<h:outputText value="#{lbl['lbl.sm.appltype.newmof']}" rendered="#{smAppl[1] eq 'N'}" />
+						<h:outputText value="#{lbl['lbl.sm.appltype.bumiputera']}" rendered="#{smAppl[1] eq 'B'}" />
+						<h:outputText value="#{lbl['lbl.sm.appltype.categorycode']}" rendered="#{smAppl[1] eq 'A'}" />
+						<h:outputText value="#{lbl['lbl.sm.appltype.updateprofile']}" rendered="#{smAppl[1] eq 'U'}" />
+						<h:outputText value="#{lbl['lbl.sm.appltype.cancelmof']}" rendered="#{smAppl[1] eq 'C'}" />
+						<h:outputText value="#{lbl['lbl.sm.appltype.renewmof']}" rendered="#{smAppl[1] eq 'R'}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.applicationstatus']}" style="text-align:center">
+						<h:outputText value="#{smAppl[2]}" rendered="#{not empty smAppl[2]}"/>
+						<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty smAppl[2]}"/>
+					</p:column>
+				</p:dataTable>
+			</p:dialog>
+			<!-- 29012: Disciplinary Action - main cr redmine - 26238  end-->
+			
+		</p:outputPanel>
+	</ui:define>
+</ui:composition>

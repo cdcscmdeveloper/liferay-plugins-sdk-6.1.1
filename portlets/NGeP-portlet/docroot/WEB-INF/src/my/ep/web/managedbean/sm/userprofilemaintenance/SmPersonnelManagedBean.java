@@ -136,6 +136,8 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private String userLimitTooltips;
 	private int maxUserLimit;
 	private String userAddConfirmationMsg;
+	//27912 -  Disciplinary Action - 26238
+	private boolean suppInPunishment = false;
 	// 26050
 	private boolean hasActiveAppl = false;
 	// 9569 start
@@ -723,15 +725,16 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	public void setUserAddConfirmationMsg(String userAddConfirmationMsg) {
 		this.userAddConfirmationMsg = userAddConfirmationMsg;
 	}
-	
-	public boolean isHasActiveAppl() {
-		return hasActiveAppl;
+	//START 27912 -  Disciplinary Action - 26238
+	public boolean isSuppInPunishment() {
+		return suppInPunishment;
 	}
 
-	public void setHasActiveAppl(boolean hasActiveAppl) {
-		this.hasActiveAppl = hasActiveAppl;
+	public void setSuppInPunishment(boolean suppInPunishment) {
+		this.suppInPunishment = suppInPunishment;
 	}
-	
+	//END 27912 -  Disciplinary Action - 26238
+
 	public List<SelectItem> getMailAddDivisionList() {
 		return mailAddDivisionList;
 	}
@@ -772,6 +775,13 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 		this.divisionBox = divisionBox;
 	}
 
+	public boolean isHasActiveAppl() {
+		return hasActiveAppl;
+	}
+
+	public void setHasActiveAppl(boolean hasActiveAppl) {
+		this.hasActiveAppl = hasActiveAppl;
+	}
 
 	//#13320 - added division - start
 	public Long getMailDivisionId() {

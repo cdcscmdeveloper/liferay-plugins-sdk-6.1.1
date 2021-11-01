@@ -6,22 +6,29 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 
 import my.ep.constant.MessageConst;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.FacesScopes;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
@@ -57,11 +64,37 @@ public class ResendAccountActivationEmailBackingBean extends
 	private SmPersonnel selectedPersonnel;
 	
 	public void preRender() {
-		renewSesionObject();
-		SmCommonUtil
-				.redirectToPage(
-						"/xhtml/sm/resendaccountactivationemail/resendAccountActivationEmail.xhtml",
-						"", null, null);
+		//26238 - start 27848
+		//check disciplinary action on supplier
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		if (pmUser == null || (pmUser != null && pmUser.getUserId() == null)) {
+			renewSesionObject();
+			SmCommonUtil
+					.redirectToPage(
+							"/xhtml/sm/resendaccountactivationemail/resendAccountActivationEmail.xhtml",
+							"", null, null);
+		}else{
+			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
+			
+			SupplierDataMaintenanceReqDTO supReqDTO = new SupplierDataMaintenanceReqDTO();
+			supReqDTO.setSupplier(currSupp);
+			SupplierDataMaintenanceResDTO activeDisc = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionBySupplier(supReqDTO);
+			if(activeDisc != null){
+				String labelNameVal = "";
+				FacesContext.getCurrentInstance().addMessage("imposedDisciplinary", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+						SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
+								new String[] { labelNameVal })));
+				SmCommonUtil.redirectToPage(
+						"/xhtml/sm/resendaccountactivationemail/resendAccountActivationEmail.xhtml", "", null, null);
+			} else {		
+				renewSesionObject();
+				SmCommonUtil
+						.redirectToPage(
+								"/xhtml/sm/resendaccountactivationemail/resendAccountActivationEmail.xhtml",
+								"", null, null);
+			}
+		}
+		// 26238 - END 27848
 	}
 
 	public void onClickResend() {

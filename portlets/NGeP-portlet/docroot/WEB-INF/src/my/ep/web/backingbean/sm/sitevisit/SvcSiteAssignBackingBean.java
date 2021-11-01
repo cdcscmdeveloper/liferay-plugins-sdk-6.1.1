@@ -35,6 +35,7 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.profilepersonalization.ProfilePersonalizationBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.sitevisit.SvcSiteAssignManagedBean;
@@ -75,7 +76,11 @@ public class SvcSiteAssignBackingBean extends
 		log.info("----------------------retrieveSiteAssignInfo----------------" + this.getManagedBean().getAppId());
 		reqDTO.setAppId(this.getManagedBean().getAppId());
 		SiteAssignResDTO resDTO = reqSO.retrieveSiteVisitByApplId(reqDTO);
-		
+		//26238 -  Start Disciplinary Action - 28496
+		ProfilePersonalizationBackingBean profilepersonalization = new  ProfilePersonalizationBackingBean();
+		profilepersonalization.getManagedBean().setSmSupplier(resDTO.getSmAppl().getSmSupplier());
+		profilepersonalization.preRenderDisciplinaryAction(); 
+		//26238 -  End Disciplinary Action - 28496
 		constructSvTaskWithSVOList(resDTO.getSmAppl());	
 		/*if(resDTO.getSmAppl().getSmApplSectionReviews() != null){
 			setPoRemarkToSVC(resDTO.getSmAppl().getSmApplSectionReviews());

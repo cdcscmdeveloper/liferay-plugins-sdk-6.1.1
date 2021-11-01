@@ -48,7 +48,7 @@
 						value="#{registrationBackingBean.managedBean.financialOrgLs}"
 						var="finOrg" itemValue="#{finOrg.financialOrgId}"
 						itemLabel="#{finOrg.finOrgName}" />
-					<p:ajax event="change" process="@this" update="@this" />
+					<p:ajax event="change" process="@form" update="@this, bankAccNoId" listener="#{bankInfo.setAccountNo('')}"/>
 				</p:selectOneMenu>
 				</p:outputPanel>
 				

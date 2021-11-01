@@ -71,6 +71,8 @@
 				</c:otherwise>
 			</c:choose>
 		</p:outputPanel>
+		<!-- 26238 - todo > Disciplinary Action Information display active DA -->
+		<ui:include src="/xhtml/sm/shared/onlinereg/disciplinaryActionInfo.xhtml" />	
 		
 		<p:outputPanel id="detailSsm" rendered="#{registrationBackingBean.managedBean.showDetailSSM}">
 			<ac:baseViewSsmInfo bBean="#{registrationBackingBean}"

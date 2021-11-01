@@ -156,8 +156,13 @@
 			<td>Pegawai Pelawat: 
 				<br />
 				##29781 - Start - Display names of Site Visit Officers 
+				<!-- 
 				<b> i. $svOfficers </b><br/>
 				<b> ii. $svAOfficer </b><br/>
+				-->
+				#foreach($svOfficer in $svOfficers)
+					<b> $velocityCount. $svOfficer </b><br/>
+				#end
 				##29781 - End
 			</td>
 			<td></td>

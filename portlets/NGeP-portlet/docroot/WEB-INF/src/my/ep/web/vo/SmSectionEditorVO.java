@@ -59,6 +59,8 @@ public class SmSectionEditorVO implements Serializable {
 	private boolean poEditSiteVisit;
 	private boolean appEditSiteVisit;
 	private boolean suppEditSiteVisit;
+	//27641 : Disciplinary Action - #26238
+	private boolean disciplinary;
 
 	public boolean isPoEditCompBasic() {
 		return poEditCompBasic;
@@ -306,6 +308,14 @@ public class SmSectionEditorVO implements Serializable {
 
 	public void setSuppEditSiteVisit(boolean suppEditSiteVisit) {
 		this.suppEditSiteVisit = suppEditSiteVisit;
+	}
+	
+	public boolean isDisciplinary() {
+		return disciplinary;
+	}
+
+	public void setDisciplinary(boolean disciplinary) {
+		this.disciplinary = disciplinary;
 	}
 
 }

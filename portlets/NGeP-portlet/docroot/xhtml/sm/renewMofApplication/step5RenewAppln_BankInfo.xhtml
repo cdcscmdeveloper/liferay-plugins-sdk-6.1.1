@@ -32,14 +32,14 @@
 					<table style="width: 100%">
 						<tr>
 							<td><div align="left" style="width: 100%">
-									<p:commandButton value="#{lbl['lbl.sm.prev.section']}"
+									<p:commandButton value="#{lbl['lbl.sm.prev.section']}" rendered="#{!backingBean.managedBean.editVO.disciplinary}"
 										onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
 										actionListener="#{backingBean.setTabValue('4','3')}"
 										action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)}"
 										update=":form" />
 								</div></td>
 							<td><div align="right" style="width: 100%">
-									<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+									<p:commandButton value="#{lbl['lbl.sm.next.section']}" rendered="#{!backingBean.managedBean.editVO.disciplinary}"
 										onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
 										actionListener="#{backingBean.setTabValue('4','5')}"
 										action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"

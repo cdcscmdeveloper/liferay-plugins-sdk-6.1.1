@@ -227,6 +227,12 @@ public class SupplierManagementConst {
 	public static final String NEW_IC = "I";
 	public static final int PENDING_ACT_STATUS = 8;
 	public static final int APPROVED_RECORD_STATUS = 1;
+	//30865 Start
+	public static final int CANCEL_RECORD_STATUS = 2;
+	//30865 End
+	// 29952 Start
+	public static final int PENDING_ACTIVATION_RECORD_STATUS = 8;
+	// 29952 End
 	public static final int DELETED_RECORD_STATUS = 9;
 	public static final int MIGRATION_DATA_RECORD_STATUS = 7;
 	public static final int PENDING_RE_APPROVAL_STATUS = 6;
@@ -442,6 +448,19 @@ public class SupplierManagementConst {
 	public static final String MOF_STATUS_ACTIVE = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_ACTIVE;
 	public static final String MOF_STATUS_EXPIRED = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_EXPIRED;
 	public static final String MOF_STATUS_NOT_AVAILABLE = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_NOT_AVAILABLE;
+	// bug #28278 -START
+	public static final String MOF_STATUS_CANCELLED = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_CANCELLED;
+	public static final String MOF_STATUS_DELETED = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_DELETED;
+	// bug #28278 -END
+	// bug #29156 -START
+	public static final String MOF_STATUS_DELETED_SUPPLIER = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_DELETED_SUPPLIER;
+	public static final String MOF_STATUS_EXPIRED_SYSTEM = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_EXPIRED_SYSTEM;
+	// bug #29156 -END
+
+	// bug #29156 -START
+	public static final String SM_MOF_DISCIPLINARY_ACTION_BLACKLIST = my.ep.constant.sm.SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_BLACKLIST;
+	public static final String SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG = my.ep.constant.sm.SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG;
+	// bug #29156 -END
 
 	public static final String RESUBMIT_APPL_PATH = "resubmit-application?";
 
@@ -487,6 +506,9 @@ public class SupplierManagementConst {
 	public static final long PM_STATUS_PENDING_REVIEW_CANCELLATION = 20301;
 	public static final long PM_STATUS_PENDING_SITE_VISIT_AFTER_APPROVED = 20117;
 	public static final long PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED = 20116;
+	// 26238 - Disciplonary action - 28801 - START
+	public static final long PM_STATUS_PENDING_REVIEW_APPLICATION = 20104;
+	// 28801 - END
 	public static final long PM_STATUS_REJECTED_BY_SYS = 20118L;
 	public static final long PM_STATUS_REGISTRATION_STATUS_REGISTERED = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED;
 	public static final long PM_STATUS_REGISTRATION_STATUS_FOREIGN = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_FOREIGN;
@@ -668,6 +690,9 @@ public class SupplierManagementConst {
 	public static final String BANK_VERIFICATION_FORM_PREFIX = "_PENANDATANGAN_CEK.pdf";
 
 	public static final int MAX_PAYMENT_BANK = 35;
+
+	public static final String DELETED_BY_DISCIPLINARY_ACTION = "Dibatalkan kerana dikenakan Tindakan Tatatertib"; // 26238
+	public static final long PM_STATUS_DELETED_BY_DISCIPLINARY_ACTION = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_DELETED_BY_DISCIPLINARY_ACTION; // 26238
 
 	// EXTERNAL CONTEXT SESSION KEY MAP
 	public static final String KEY_MAP_PERSONNEL_LIST = "personnelList";
@@ -1088,6 +1113,12 @@ public class SupplierManagementConst {
 		return APPROVED_RECORD_STATUS;
 	}
 
+	//30865 Start
+	public int getCANCEL_RECORD_STATUS() {
+		return CANCEL_RECORD_STATUS;
+	}
+	//30865 End
+	
 	public String getSM_SUPPLIER_BUSINESS_TYPE_LLP() {
 		return SM_SUPPLIER_BUSINESS_TYPE_LLP;
 	}
@@ -1212,14 +1243,48 @@ public class SupplierManagementConst {
 	public String getSmSupplierBusinessTypeIndividual() {
 		return SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL;
 	}
-//25792 - end
-	
+
+	// 25792 - end
+
+	// 28278 -START
+	public String getMOF_STATUS_DELETED() {
+		return MOF_STATUS_DELETED;
+	}
+
+	public String getMOF_STATUS_CANCELLED() {
+		return MOF_STATUS_CANCELLED;
+	}
+
+	// 28278 -END
+
 	// 26555 -START
 	public long getPM_STATUS_AUTOREJECT_UNSUBMIT_OFFLINE_DOCUMENT() {
 		return PM_STATUS_AUTOREJECT_UNSUBMIT_OFFLINE_DOCUMENT;
 	}
 	// 26555 -END
-	
+
+	// #29156 -START
+	public String getMOF_STATUS_DELETED_SUPPLIER() {
+		return MOF_STATUS_DELETED_SUPPLIER;
+	}
+
+	public String getMOF_STATUS_EXPIRED_SYSTEM() {
+		return MOF_STATUS_EXPIRED_SYSTEM;
+	}
+
+	// #29156 -END
+
+	// #29156 -START
+	public String getSM_MOF_DISCIPLINARY_ACTION_BLACKLIST() {
+		return SM_MOF_DISCIPLINARY_ACTION_BLACKLIST;
+	}
+
+	public String getSM_MOF_DISCIPLINARY_ACTION_CANCEL_REG() {
+		return SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG;
+	}
+
+	// #29156 -START
+
 	// #12483 - START
 	public long getPM_STATUS_PENDING_REVISE_APPLICATION_LONG_VALUE() {
 		return Long.parseLong(PM_STATUS_PENDING_REVISE_APPLICATION);

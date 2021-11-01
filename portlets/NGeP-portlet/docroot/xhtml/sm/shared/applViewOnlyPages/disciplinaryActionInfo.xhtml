@@ -1,0 +1,144 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<!-- 28237 - start, 28281 -->
+	<p:panel header="#{lbl['lbl.sm.disciplinary.action.info.headerlbl']}" toggleable="true" id="discActionPanelId" 
+		rendered="#{viewSmApplBackingBean.managedBean.disciplinaryAction}">
+		<p:outputPanel>
+			<h:outputText value="#{lbl['lbl.sm.disciplinary.click']}" escape="false"/>
+			<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				action="#{viewSmApplBackingBean.onViewDisciplinaryAction}"
+				process="@this" partialSubmit="true" update=":form">
+					<u><h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" style="color:blue;" escape="false"/></u>
+			</p:commandLink><p:spacer width="2"/>
+			<h:outputText value="#{lbl['lbl.sm.disciplinary.to.view.history.disciplinary.action']}" escape="false"/><br />
+			<p:spacer height="2"/>
+		</p:outputPanel>
+	
+		<table style="width: 50%;table-layout:fixed">
+			<tr>
+				<td style="vertical-align: top;">
+					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.punishment.type']}" styleClass="outputLabel-view-label"/>
+				</td>
+				<td style="vertical-align: top;">
+					<p:outputLabel rendered="#{viewSmApplBackingBean.managedBean.noDisciplinary}"
+						value="#{lbl['lbl.sm.no.available']}" styleClass="outputLabel-view"/>
+					<p:outputLabel rendered="#{viewSmApplBackingBean.managedBean.warning}" styleClass="outputLabel-view">
+						<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.warning']}"/>
+						<h:outputText value="," rendered="#{viewSmApplBackingBean.managedBean.warning and (viewSmApplBackingBean.managedBean.cancelCategoryCode || 
+						viewSmApplBackingBean.managedBean.suspendRegistration || viewSmApplBackingBean.managedBean.cancelRegistration || viewSmApplBackingBean.managedBean.blacklistOwnerOrDirector ||
+						viewSmApplBackingBean.managedBean.bumiputeraStatusCancel || viewSmApplBackingBean.managedBean.manufacturerStatusCancel)}"/>
+					</p:outputLabel>
+					
+					<p:outputLabel rendered="#{viewSmApplBackingBean.managedBean.cancelCategoryCode}" styleClass="outputLabel-view">
+						<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.cancel.cat.code']}"/>
+						<h:outputText value="," rendered="#{viewSmApplBackingBean.managedBean.cancelCategoryCode and (viewSmApplBackingBean.managedBean.suspendRegistration || viewSmApplBackingBean.managedBean.cancelRegistration 
+						|| viewSmApplBackingBean.managedBean.blacklistOwnerOrDirector ||
+						viewSmApplBackingBean.managedBean.bumiputeraStatusCancel || viewSmApplBackingBean.managedBean.manufacturerStatusCancel)}"/>
+					</p:outputLabel>
+					
+					<p:outputLabel rendered="#{viewSmApplBackingBean.managedBean.suspendRegistration}" styleClass="outputLabel-view">
+						<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.suspend.registration']}"/>
+						<h:outputText value="," rendered="#{viewSmApplBackingBean.managedBean.suspendRegistration and (viewSmApplBackingBean.managedBean.cancelRegistration || viewSmApplBackingBean.managedBean.blacklistOwnerOrDirector ||
+						viewSmApplBackingBean.managedBean.bumiputeraStatusCancel || viewSmApplBackingBean.managedBean.manufacturerStatusCancel)}"/>
+					</p:outputLabel>
+					
+					<p:outputLabel rendered="#{viewSmApplBackingBean.managedBean.cancelRegistration}" styleClass="outputLabel-view">
+						<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.cancel.registration']}"/>
+						<h:outputText value="," rendered="#{viewSmApplBackingBean.managedBean.cancelRegistration and (viewSmApplBackingBean.managedBean.blacklistOwnerOrDirector ||
+						viewSmApplBackingBean.managedBean.bumiputeraStatusCancel || viewSmApplBackingBean.managedBean.manufacturerStatusCancel)}"/>
+					</p:outputLabel>
+					
+					<p:outputLabel rendered="#{viewSmApplBackingBean.managedBean.blacklistOwnerOrDirector}" styleClass="outputLabel-view">
+						<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']}"/>
+						<h:outputText value="," rendered="#{viewSmApplBackingBean.managedBean.blacklistOwnerOrDirector and (viewSmApplBackingBean.managedBean.bumiputeraStatusCancel 
+						|| viewSmApplBackingBean.managedBean.manufacturerStatusCancel)}"/>
+					</p:outputLabel>
+					
+					<p:outputLabel rendered="#{viewSmApplBackingBean.managedBean.bumiputeraStatusCancel}" styleClass="outputLabel-view">
+						<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.cancel.of.bumiputera']}"/>
+						<h:outputText value="," rendered="#{viewSmApplBackingBean.managedBean.bumiputeraStatusCancel and viewSmApplBackingBean.managedBean.manufacturerStatusCancel}"/>
+					</p:outputLabel>
+					
+					<p:outputLabel rendered="#{viewSmApplBackingBean.managedBean.manufacturerStatusCancel}" styleClass="outputLabel-view">
+						<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.cancel.of.manufacturer']}"/>
+					</p:outputLabel>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.start.date']}" styleClass="outputLabel-view-label"/>
+				</td>
+				<td>
+					<p:outputLabel rendered="#{viewSmApplBackingBean.managedBean.noDisciplinary}"
+						value="#{lbl['lbl.sm.no.available']}" styleClass="outputLabel-view"/>
+					<p:outputLabel rendered="#{!viewSmApplBackingBean.managedBean.noDisciplinary}"
+						value="#{viewSmApplBackingBean.managedBean.startDate}" styleClass="outputLabel-view"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.end.date']}" styleClass="outputLabel-view-label"/>
+				</td>
+				<td>
+					<p:outputLabel rendered="#{viewSmApplBackingBean.managedBean.noDisciplinary}"
+						value="#{lbl['lbl.sm.no.available']}" styleClass="outputLabel-view"/>
+					<p:outputLabel rendered="#{!viewSmApplBackingBean.managedBean.noDisciplinary}"
+						value="#{viewSmApplBackingBean.managedBean.endDate}" styleClass="outputLabel-view"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.remarks']}" styleClass="outputLabel-view-label"/>
+				</td>
+				<td>
+					<p:outputLabel rendered="#{viewSmApplBackingBean.managedBean.noDisciplinary}"
+						value="#{lbl['lbl.sm.no.available']}" styleClass="outputLabel-view"/>
+					<p:outputLabel rendered="#{!viewSmApplBackingBean.managedBean.noDisciplinary}"
+						value="#{viewSmApplBackingBean.managedBean.remarks}" styleClass="outputLabel-view"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.list.cancel.category.code']}" styleClass="outputLabel-view-label"/>
+				</td>
+				<td>
+					<p:outputLabel rendered="#{empty viewSmApplBackingBean.managedBean.categoryCodeList}"
+						value="#{lbl['lbl.sm.no.available']}" styleClass="outputLabel-view"/>
+					<p:outputLabel rendered="#{not empty viewSmApplBackingBean.managedBean.categoryCodeList}" styleClass="outputLabel-view">
+						<h:dataTable value="#{viewSmApplBackingBean.managedBean.categoryCodeList}"
+							var="categoryCodeList" style="border: none !important;">
+								<p:column style="border: none !important;">
+									<h:outputText value="#{categoryCodeList.categoryCode}"/>
+								</p:column>
+						</h:dataTable>
+					</p:outputLabel>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.list.of.ic.no.blacklist']}" styleClass="outputLabel-view-label"/>
+				</td>
+				<td>
+					<p:outputLabel rendered="#{empty viewSmApplBackingBean.managedBean.blacklistownerDirectorList}"
+						value="#{lbl['lbl.sm.no.available']}" styleClass="outputLabel-view"/>
+					<p:outputLabel rendered="#{not empty viewSmApplBackingBean.managedBean.blacklistownerDirectorList}" styleClass="outputLabel-view">
+						<h:dataTable value="#{viewSmApplBackingBean.managedBean.blacklistownerDirectorList}"
+							var="blacklist" style="border: none !important;">
+								<p:column style="border: none !important;">
+									<h:outputText value="#{blacklist.icNo}"/>
+								</p:column>
+						</h:dataTable>
+					</p:outputLabel>
+				</td>
+			</tr>
+		</table>
+	</p:panel>
+	<ac:disciplinaryActionHistory voList="#{viewSmApplBackingBean.managedBean.disciplineVOs}" /> 
+	<!-- 28237 - end, 28281 -->
+</ui:composition>

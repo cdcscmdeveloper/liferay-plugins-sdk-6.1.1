@@ -28,6 +28,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.web.bean.tpl.TemplateSpecBean;
+import my.ep.web.util.FacesScopes;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -64,6 +65,9 @@ public abstract class BaseManagedBean implements Serializable {
 	
 	//27382
 	private boolean errorInvalidSelfRequest;
+	
+	private boolean disciplinaryAction;
+	
 	// 18685 - Start
 	private String reportDownloadFileName;
 	private ScAttachment scAttachment;
@@ -779,6 +783,23 @@ public abstract class BaseManagedBean implements Serializable {
 
 	// #25142 - end
 	
+	/**
+	 * @return the disciplinaryAction
+	 */
+	public boolean isDisciplinaryAction() {
+		if (!disciplinaryAction) {
+			disciplinaryAction = new FacesScopes().getUserSessionBean().isDisciplinaryAction();
+		}
+		return disciplinaryAction;
+	}
+
+	/**
+	 * @param disciplinaryAction the disciplinaryAction to set
+	 */
+	public void setDisciplinaryAction(boolean disciplinaryAction) {
+		this.disciplinaryAction = disciplinaryAction;
+	}
+	
 	public List<SmPersonnel> getPersonnelsRole() {
 		return personnelsRole;
 	}
@@ -945,6 +966,7 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 	// #25037 - end
 	
+	
 	// Enhancement #18685 - start
 
 	public void setScQtEvaluationReportList(
@@ -1003,7 +1025,5 @@ public abstract class BaseManagedBean implements Serializable {
 
 	public void setDownloadfile(StreamedContent downloadfile) {
 		this.downloadfile = downloadfile;
-	}
-	
-
+	}	
 }

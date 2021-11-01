@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sm.commonappl;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,6 +33,9 @@ import my.ep.jaxb.sm.mofregcandata.SMMOFRegCanDataType;
 import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
 import my.ep.jaxb.sm.sitevisitdata.SMSiteVisitDataType;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
+import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -51,6 +55,7 @@ import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.managedbean.sm.commonappl.CommonApplManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
@@ -564,6 +569,23 @@ public class CommonApplBackingBean extends
 			smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
 			smApplBB.getManagedBean().setTaskId(taskId);
 			smApplBB.getManagedBean().setDraftedAppl(true);
+			
+			//27641,27736 : Disciplinary Action - 26238 - start
+			SmSupplier currentSupplier = SmApplicationUtil.getCurrentSupplier();
+			List<SmDisciplinaryAction> activeDisc = new ArrayList<SmDisciplinaryAction>();
+			if(currentSupplier != null){
+				activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currentSupplier);
+			}
+			
+			if(activeDisc != null && activeDisc.size() > 0){
+				log.info("***Navigate to bank info***");
+				for(SmDisciplinaryAction disc : activeDisc){
+					if(disc.isSuspendRegistration()){
+						smApplBB.getManagedBean().getEditVO().setDisciplinary(true);
+					}
+				}				
+			}			
+			//27641,27736 : Disciplinary Action - 26238 - end
 			setNavigationForDraftAppl(appl.getApplType());
 			// }
 

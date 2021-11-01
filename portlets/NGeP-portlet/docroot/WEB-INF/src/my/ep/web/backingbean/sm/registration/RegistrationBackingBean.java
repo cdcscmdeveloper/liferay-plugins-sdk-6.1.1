@@ -77,6 +77,7 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmGstSupplierDoc;
@@ -108,6 +109,7 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.vo.BlacklistOwnerDirectorVO;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -632,6 +634,52 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			}
 			
 			//END 16052019 - SSM INTEGRATION CR - Validation for owner name n ident no 
+			
+			//27537 : Disciplinary Action - start - fixed together for 27536 & 27520
+			if(this.getManagedBean().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_BASIC) || 
+				this.getManagedBean().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF) ){
+				if(this.getManagedBean().getSmPersonnel() != null ){
+					if(suppOwner.getIdentificationNo() != null){
+						IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject("sm", IPersonnelSO.class);
+						PersonnelReqDTO personneleqDTO = new PersonnelReqDTO();
+						
+						personneleqDTO.setIdentificationNo(suppOwner.getIdentificationNo());
+						PersonnelResDTO personnelResDTO = personnelSO.retrievePersonnelByIdNo(personneleqDTO);
+						
+						if(personnelResDTO != null && personnelResDTO.getSmPersonnelList().size() > 0){
+							for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
+								
+								if(null != personnel.getSmAppl()){
+									
+									SmAppl latestAppl = new SmAppl();
+									latestAppl.setSmSupplier(personnel.getSmAppl().getSmSupplier());
+									
+									SmSupplier supplier = latestAppl.getSmSupplier();
+									
+									List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
+									
+									//CR 27382: Static Code Analysis
+									//if(discList != null && discList.size() > 0){ asal
+									if(discList != null && !discList.isEmpty()){
+										for(SmDisciplinaryAction disc : discList){
+											//27861:  Disciplinary Action - start - 28798
+											if(( disc.getDisciplinaryActionId() != null && disc.isRecordStatus() && disc.isBlacklistOwner() ) ||
+													(disc.getDisciplinaryActionId() != null && disc.isRecordStatus() && disc.isCancelRegistration() ) ||
+													(disc.getDisciplinaryActionId() != null && disc.isRecordStatus() && disc.isSuspendRegistration() ) ){
+												throw new EpException(SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",null));
+												
+											}
+											//27861:  Disciplinary Action - end - 28798
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			//27537 : Disciplinary Action - end
+			
 			if(SmCommonUtil.isSupplierOwnerIndividualAcc(suppOwner.getIdentificationType().getParameterCode(),suppOwner.getIdentificationNo(),
 					my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL)){
 				throw new EpException(MessageConst.ERROR_721050);
@@ -1952,10 +2000,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					this.getManagedBean().setSmBusinessAdd(smAddress);
 				}
 			}
-			// end - #30483
-			this.getManagedBean().getSmBusinessAdd().setPmDistrict(SmCommonUtil.getInstance().getDistrictById(this.getManagedBean().getSmBusinessAdd().getPmDistrict().getDistrictId()));
-			List<SelectItem> cityLs = SmCommonUtil.getCityList(this.getManagedBean().getSmBusinessAdd().getPmDistrict().getDistrictId());
-			this.getManagedBean().setBusinessCityLs(cityLs);
+			//29012: Disciplinary Action - 26238 - fix for when district id null
+			if(this.getManagedBean().getSmBusinessAdd().getPmDistrict().getDistrictId() != null){
+				this.getManagedBean().getSmBusinessAdd().setPmDistrict(SmCommonUtil.getInstance().getDistrictById(this.getManagedBean().getSmBusinessAdd().getPmDistrict().getDistrictId()));
+				List<SelectItem> cityLs = SmCommonUtil.getCityList(this.getManagedBean().getSmBusinessAdd().getPmDistrict().getDistrictId());
+				this.getManagedBean().setBusinessCityLs(cityLs);
+			}
+			//29012: Disciplinary Action - 26238
 			populateLocalAuthority(getManagedBean().getSmSupp(), this.getManagedBean().getSmBusinessAdd());
 		} else if (typeAdd.equals("residential")) {
 			List<SelectItem> cityLs = SmCommonUtil.getCityList(this.getManagedBean().getSmResAdd().getPmDistrict().getDistrictId());
@@ -2065,6 +2116,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				this.getManagedBean().setSmSuppOwner(new SmSupplierOwner());
 				getManagedBean().setApplType(getManagedBean().getSmAppl().getApplType());
 				
+				//26238 - retrieve active DA. To display at basic account supplier screen
+				if(resDTO.getSmSupp() != null){
+					retrieveActiveDisicplinaryAction(resDTO.getSmSupp());
+				}
+				//26238 - end
 				if(resDTO.getSmSupp().getSmSupplierOwners()!=null && CollectionUtils.isNotEmpty(resDTO.getSmSupp().getSmSupplierOwners())){
 					this.getManagedBean().setSmSuppOwner(resDTO.getSmSupp().getSmSupplierOwners().get(0));
 					this.getManagedBean().setSmSuppOwners(resDTO.getSmSupp().getSmSupplierOwners());
@@ -3703,9 +3759,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 
 	public boolean isGmapDisabled() {
-		gmapDisabled = false;
+		boolean gmapDisabled = false;
 		
-		if(getManagedBean().getSmBusinessAdd() != null){
+		//if DA are Cancel Registration  or Black List
+		if(this.getManagedBean().isActiveDisicplinaryAction()){
+			gmapDisabled = true;
+		}else if(getManagedBean().getSmBusinessAdd() != null){
 			SmAddress bizAddress = getManagedBean().getSmBusinessAdd();
 
 			if(bizAddress.getPmCountry() == null || bizAddress.getPmDistrict() == null || 
@@ -4186,6 +4245,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		if(this.getManagedBean().isCompanyValidWithSSM()){
 			this.getManagedBean().setDisableRole(true);
 		}
+		//if DA is active
+		if(this.getManagedBean().isActiveDisicplinaryAction()){
+			this.getManagedBean().setDisableRole(true);
+		}
 	}
 	
 	//16052019 - SSM INTEGRATION CR START
@@ -4242,6 +4305,63 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 	}
 	
+	//26238 - start 
+	public void retrieveActiveDisicplinaryAction(SmSupplier supplier){
+		List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
+		PersonnelReqDTO perReqDTO = new PersonnelReqDTO();
+		perReqDTO.setSmSupplierId(supplier.getSupplierId());
+		
+		PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelBySupplierId(perReqDTO);
+		
+		if(discList != null && !discList.isEmpty()){
+			for(SmDisciplinaryAction disc : discList){
+				//Start 30842
+				if(disc.isWarning() || disc.isSuspendRegistration() 
+						|| disc.isCancelRegistration() || disc.isBlacklistOwner() || disc.isCancelCategory()){
+					if(disc.isWarning())
+						this.getManagedBean().setWarning(true);					
+					if(disc.isSuspendRegistration())
+						this.getManagedBean().setSuspendRegistration(true);
+					if(disc.isCancelRegistration())
+						this.getManagedBean().setCancelRegistration(true);
+					if(disc.isBlacklistOwner())
+						this.getManagedBean().setBlacklistowner(true);
+					if(disc.isCancelCategory())
+						this.getManagedBean().setCancelCategory(true);
+				//End 30842
+					
+					if(!disc.isWarning()){
+						List<BlacklistOwnerDirectorVO> blacklistownerDirectorList = new ArrayList<BlacklistOwnerDirectorVO>();
+						if(personnelResDTO != null 
+								&& personnelResDTO.getSmPersonnelList().size() > 0){
+							for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
+								BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
+								if(personnel.isCancelRegistration()
+										|| personnel.isSuspendRegistration()
+											|| personnel.isBlacklisted()){
+									blacklistOwner.setIcNo(personnel.getIdentificationNo());
+									blacklistownerDirectorList.add(blacklistOwner);
+								}
+							}
+							this.getManagedBean().setBlacklistownerDirectorList(blacklistownerDirectorList);
+						}
+					}
+					this.getManagedBean().setStartDate(DateUtils.dateToString("dd/MM/yyyy",disc.getStartDate()));
+					this.getManagedBean().setEndDate(DateUtils.dateToString("dd/MM/yyyy",disc.getEndDate()));
+					this.getManagedBean().setRemarks(disc.getRemark());
+				}
+			}
+			
+			//26238
+			this.getManagedBean().setActiveDisicplinaryAction(false);
+			if(this.getManagedBean().isSuspendRegistration() || this.getManagedBean().isCancelRegistration() 
+					|| this.getManagedBean().isBlacklistowner()){
+				this.getManagedBean().setActiveDisicplinaryAction(true);
+			}
+		} else {
+			this.getManagedBean().setNoDisciplinary(true);
+		}
+	} //26238 - end
 	
 	//16052019 - SSM INTEGRATION CR => START
 	public void listenerChangeRole(){

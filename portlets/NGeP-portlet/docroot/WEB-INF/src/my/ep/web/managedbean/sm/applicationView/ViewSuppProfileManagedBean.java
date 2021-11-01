@@ -1,5 +1,6 @@
 package my.ep.web.managedbean.sm.applicationView;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -12,15 +13,25 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmFinancialOrg;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmRegStatus;
+import my.ep.persistence.entity.sm.SmAddress;
+import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmGstSupplier;
+import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
+import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.vo.BlacklistOwnerDirectorVO;
+import my.ep.web.vo.DisciplinaryActionCategoryVO;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.SmSupplierBasicInfoVO;
 
@@ -56,8 +67,47 @@ public class ViewSuppProfileManagedBean extends
 	private boolean hasRegStatusChanged = false;
 	private boolean hasMofExpiryDateChanged = false;
 	private Long existingStatusId;
-
+	//26238 - start - #28281
+	/*
+	private boolean warningExist;
+	private boolean warning;
+	private boolean cancelCategoryCode;
+	private boolean suspendRegistration;
+	private boolean cancelRegistration;
+	private boolean blacklistOwnerOrDirector;
+	private boolean bumiputeraStatusCancel;
+	private boolean manufacturerStatusCancel;
+	private List<DisciplinaryActionVO> disciplinaryActionVoList;
+	private List<DisciplinaryActionVO> disciplineVOs; 
+	private List<SmPersonnel> ownerAndDirectorList; 
+	private List<SmPersonnel> selectedOwnerAndDirectorList; 
+	private String applType; 
+	private boolean viewFlag; 
+	private SmSupplier smSupp; 
+	private boolean viewMode; 
+	private boolean disciplinaryAction;
+	private boolean mofNoExist;
+	*/
 	private SmSupplierBank[] selectedSuppBanks;
+	private List<PmFinancialOrg> financialOrgLs;
+	
+	private SmAddress smBusinessAdd;
+	private SmAddress smPermenantAdd;
+	private SmAddress smResAdd;
+	
+	private boolean sameAsOwner;
+	private boolean disabledCompanyNameInMaintenance;
+	private boolean disabledBusinessTypeInMaintenance;
+	
+	private List<SelectItem> countryLs;
+	private List<SelectItem> businessStateLs;
+	private List<SelectItem> residentialStateLs;
+	private List<SelectItem> permenantStateLs;
+
+	private List<SelectItem> businessDistrictLs;
+	private List<SelectItem> residentialDistrictLs;
+	private List<SelectItem> permenantDistrictLs;
+
 	//13320-Start
 	private List<SelectItem> businessDivisionLs;
 	private List<SelectItem> residentialDivisionLs;
@@ -65,6 +115,65 @@ public class ViewSuppProfileManagedBean extends
 	private Long divisionId;
 	private boolean divisionBox = true;
 	//13320-End
+	private List<SelectItem> businessCityLs;
+	private List<SelectItem> residentialCityLs;
+	private List<SelectItem> permenantCityLs;
+	
+	private List<PmParameterDesc> serviceLs;
+	
+	private boolean sabahSarawakType;
+	
+	private SmPersonnel smPersonnel;
+	private SmSupplierOwner smSuppOwner;
+	private List<SmSupplierOwner> smSuppOwners = new ArrayList();
+	private SmPersonnelAddress smPersonnelAdd;
+	
+	private Integer userBumiFlg;
+	private Integer userMuslimFlg;
+	
+	private Long myCountryId;
+	
+	private SmGstSupplier smGstSupplier;
+	
+	private boolean gstFlag;
+	
+	private SmSupplierBusiness selectedBusinessNature;
+	private SmSupplierBusiness[] selectedBusinessNatureLs;
+	
+	//27437 : Disciplinary Action
+	private IPagingDataModel<SmSupplier> basicSupplierDataModel = new SmBasicSupplierPagingDataModel();
+	private String searchByCompanyName;
+	private String searchByRegNo;
+	private String searchByEpNo;
+	private List<SmSupplier> basicSupplierList;
+	//26238 - end
+	
+	private String disciplinaryActionMsg; 
+	
+	//27857: Disciplinary Action - start - 26238
+	private boolean cancelCategoryCodeExist;
+	private boolean suspendRegistrationExist;
+	private boolean cancelRegistrationExist;
+	private boolean blacklistOwnerOrDirectorExist;
+	private boolean bumiputeraStatusCancelExist;
+	private boolean manufacturerStatusCancelExist;
+	//27857: Disciplinary Action - end - 26238
+	
+	//Start - 27815
+	private boolean disableDeleteButtonAprrovedCategoryCodePanel;
+	//End - 27815
+	
+	//28281
+	private List<Long> bumiCodeList;
+	
+	// Start 27815
+	private boolean disabledApprovedCategories;
+	// End 27815
+	
+	//29181: Disciplinary Action - start - 26238
+	private boolean editDisciplinaryActionCheckBox;
+	//29181: Disciplinary Action - end - 26238
+	
 	public ViewSuppProfileManagedBean() {
 
 	}
@@ -113,11 +222,90 @@ public class ViewSuppProfileManagedBean extends
 			reqDTO.setSupplierType(getSearchSuppType());
 			reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
 			reqDTO.setPmZoneId(getSearchPmZoneId());
+			//28237
+			reqDTO.setDisplaySearchPage(true);
 			return SmServiceLookup.getSmApplRevisionSO()
 					.retrieveSupplierBySearchCriteria(reqDTO)
 					.getSupplierResultBean();
 		}
 	}
+	//27437 : Disciplinary action - Start
+	//Basic account maintenance by Approver
+	private class SmBasicSupplierPagingDataModel extends PagingDataModel<SmSupplier> { 
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public SmBasicSupplierPagingDataModel() {
+			super("supplierBasicAccountDtId",true);//REFER TO DATATABLE ID - XHTML
+		}
+
+		@Override
+		protected ISearchResultBean<SmSupplier> pageChangeListener(
+				ISearchBean<SmSupplier> searchBean) {
+			SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
+			reqDTO.setSupplierSearchBean(searchBean);
+			reqDTO.setDisplaySearchPage(isDisplaySearchPage());
+			getSearchSupplier().getCompanyName();
+			getSearchSupplier().getRegNo();
+			getSearchSupplier().getEpNo();
+			reqDTO.setSmSupplier(getSearchSupplier());
+
+			try {
+				if(isBasicAccountMaintenance()){
+					return getBasicSupplierResultBean(reqDTO);
+				} else {
+					return new SearchResultBean();
+				}
+			} catch (Exception ex) {
+				return new SearchResultBean();
+			} finally {
+				reqDTO = null;
+			}
+		}
+		
+		private ISearchResultBean<SmSupplier> getBasicSupplierResultBean(
+				SmApplRevisionReqDTO reqDTO) {
+			reqDTO.setSmSupplier(getSearchSupplier());
+			if(getSearchSupplier().getCompanyName() != null)
+				reqDTO.getSmSupplier().setCompanyName(getSearchSupplier().getCompanyName());
+			if(getSearchSupplier().getRegNo() != null)
+				reqDTO.getSmSupplier().setRegNo(getSearchSupplier().getRegNo());
+			if(getSearchSupplier().getEpNo() != null)
+				reqDTO.getSmSupplier().setEpNo(getSearchSupplier().getEpNo());
+			
+			// 28273: Disciplinary Action - start - 26238
+			SmAppl smAppl = new SmAppl();
+			smAppl.setApplType("O");
+			reqDTO.setSmAppl(smAppl);
+			// 28273: Disciplinary Action - end - 26238
+			
+			ISearchResultBean<SmSupplier> resultBean = SmServiceLookup.getSmApplRevisionSO()
+					.retrieveBasicSupplierForMaintenance(reqDTO)
+					.getSupplierResultBean();
+			return resultBean;
+		}
+	} 
+	
+	/**
+	 * Search supplier latest application
+	 */
+	public void searchBasicSupplier() {
+		validateAtLeastOneSearchCriteria();
+		//HERE WILL START PROCESS PAGING DATA MODEL
+		basicSupplierDataModel.reloadData();
+	}
+
+	public IPagingDataModel<SmSupplier> getBasicSupplierDataModel() {
+		return basicSupplierDataModel;
+	}
+
+	public void setBasicSupplierDataModel(
+			IPagingDataModel<SmSupplier> basicSupplierDataModel) {
+		this.basicSupplierDataModel = basicSupplierDataModel;
+	}
+	//27437 : Disciplinary Action - end
 
 	/**
 	 * Search supplier latest application
@@ -314,6 +502,15 @@ public class ViewSuppProfileManagedBean extends
 	public void setOldRegStatusId(Long oldRegStatusId) {
 		this.oldRegStatusId = oldRegStatusId;
 	}
+
+	public SmSupplierBusiness[] getSelectedBusinessNatureLs() {
+		return selectedBusinessNatureLs;
+	}
+
+	public void setSelectedBusinessNatureLs(SmSupplierBusiness[] selectedBusinessNatureLs) {
+		this.selectedBusinessNatureLs = selectedBusinessNatureLs;
+	}
+
 	public SmSupplierBank[] getSelectedSuppBanks() {
 		return selectedSuppBanks;
 	}
@@ -321,7 +518,375 @@ public class ViewSuppProfileManagedBean extends
 	public void setSelectedSuppBanks(SmSupplierBank[] selectedSuppBanks) {
 		this.selectedSuppBanks = selectedSuppBanks;
 	}
+
+	public List<PmFinancialOrg> getFinancialOrgLs() {
+		return financialOrgLs;
+	}
+
+	public void setFinancialOrgLs(List<PmFinancialOrg> financialOrgLs) {
+		this.financialOrgLs = financialOrgLs;
+	}
+
+	public SmAddress getSmBusinessAdd() {
+		return smBusinessAdd;
+	}
+
+	public void setSmBusinessAdd(SmAddress smBusinessAdd) {
+		this.smBusinessAdd = smBusinessAdd;
+	}
+
+	public SmAddress getSmPermenantAdd() {
+		return smPermenantAdd;
+	}
+
+	public void setSmPermenantAdd(SmAddress smPermenantAdd) {
+		this.smPermenantAdd = smPermenantAdd;
+	}
+
+	public SmAddress getSmResAdd() {
+		return smResAdd;
+	}
+
+	public void setSmResAdd(SmAddress smResAdd) {
+		this.smResAdd = smResAdd;
+	}
+
+	public boolean isSameAsOwner() {
+		return sameAsOwner;
+	}
+
+	public void setSameAsOwner(boolean sameAsOwner) {
+		this.sameAsOwner = sameAsOwner;
+	}
+
+	public boolean isDisabledCompanyNameInMaintenance() {
+		return disabledCompanyNameInMaintenance;
+	}
+
+	public void setDisabledCompanyNameInMaintenance(boolean disabledCompanyNameInMaintenance) {
+		this.disabledCompanyNameInMaintenance = disabledCompanyNameInMaintenance;
+	}
+
+	public boolean isDisabledBusinessTypeInMaintenance() {
+		return disabledBusinessTypeInMaintenance;
+	}
+
+	public void setDisabledBusinessTypeInMaintenance(boolean disabledBusinessTypeInMaintenance) {
+		this.disabledBusinessTypeInMaintenance = disabledBusinessTypeInMaintenance;
+	}
+
+	public List<SelectItem> getCountryLs() {
+		return countryLs;
+	}
+
+	public void setCountryLs(List<SelectItem> countryLs) {
+		this.countryLs = countryLs;
+	}
+
+	public List<SelectItem> getBusinessStateLs() {
+		return businessStateLs;
+	}
+
+	public void setBusinessStateLs(List<SelectItem> businessStateLs) {
+		this.businessStateLs = businessStateLs;
+	}
+
+	public List<SelectItem> getResidentialStateLs() {
+		return residentialStateLs;
+	}
+
+	public void setResidentialStateLs(List<SelectItem> residentialStateLs) {
+		this.residentialStateLs = residentialStateLs;
+	}
+
+	public List<SelectItem> getPermenantStateLs() {
+		return permenantStateLs;
+	}
+
+	public void setPermenantStateLs(List<SelectItem> permenantStateLs) {
+		this.permenantStateLs = permenantStateLs;
+	}
+
+	public List<SelectItem> getBusinessDistrictLs() {
+		return businessDistrictLs;
+	}
+
+	public void setBusinessDistrictLs(List<SelectItem> businessDistrictLs) {
+		this.businessDistrictLs = businessDistrictLs;
+	}
+
+	public List<SelectItem> getResidentialDistrictLs() {
+		return residentialDistrictLs;
+	}
+
+	public void setResidentialDistrictLs(List<SelectItem> residentialDistrictLs) {
+		this.residentialDistrictLs = residentialDistrictLs;
+	}
+
+	public List<SelectItem> getPermenantDistrictLs() {
+		return permenantDistrictLs;
+	}
+
+	public void setPermenantDistrictLs(List<SelectItem> permenantDistrictLs) {
+		this.permenantDistrictLs = permenantDistrictLs;
+	}
+
+	public List<SelectItem> getBusinessCityLs() {
+		return businessCityLs;
+	}
+
+	public void setBusinessCityLs(List<SelectItem> businessCityLs) {
+		this.businessCityLs = businessCityLs;
+	}
+
+	public List<SelectItem> getResidentialCityLs() {
+		return residentialCityLs;
+	}
+
+	public void setResidentialCityLs(List<SelectItem> residentialCityLs) {
+		this.residentialCityLs = residentialCityLs;
+	}
+
+	public List<SelectItem> getPermenantCityLs() {
+		return permenantCityLs;
+	}
+
+	public void setPermenantCityLs(List<SelectItem> permenantCityLs) {
+		this.permenantCityLs = permenantCityLs;
+	}
+
+	public List<PmParameterDesc> getServiceLs() {
+		return serviceLs;
+	}
+
+	public void setServiceLs(List<PmParameterDesc> serviceLs) {
+		this.serviceLs = serviceLs;
+	}
+
+	public boolean isSabahSarawakType() {
+		return sabahSarawakType;
+	}
+
+	public void setSabahSarawakType(boolean sabahSarawakType) {
+		this.sabahSarawakType = sabahSarawakType;
+	}
 	
+	public SmPersonnel getSmPersonnel() {
+		if(smPersonnel == null)
+			smPersonnel = new SmPersonnel();
+		return smPersonnel;
+	}
+
+	public void setSmPersonnel(SmPersonnel smPersonnel) {
+		this.smPersonnel = smPersonnel;
+	}
+
+	public SmSupplierOwner getSmSuppOwner() {
+		if(smSuppOwner == null) {
+			smSuppOwner = new SmSupplierOwner();
+		}
+		return smSuppOwner;
+	}
+
+	public void setSmSuppOwner(SmSupplierOwner smSuppOwner) {
+		this.smSuppOwner = smSuppOwner;
+	}
+
+	public SmPersonnelAddress getSmPersonnelAdd() {
+		return smPersonnelAdd;
+	}
+
+	public void setSmPersonnelAdd(SmPersonnelAddress smPersonnelAdd) {
+		this.smPersonnelAdd = smPersonnelAdd;
+	}
+
+	public Integer getUserBumiFlg() {
+		return userBumiFlg;
+	}
+
+	public void setUserBumiFlg(Integer userBumiFlg) {
+		this.userBumiFlg = userBumiFlg;
+	}
+
+	public Integer getUserMuslimFlg() {
+		return userMuslimFlg;
+	}
+
+	public void setUserMuslimFlg(Integer userMuslimFlg) {
+		this.userMuslimFlg = userMuslimFlg;
+	}
+
+	public Long getMyCountryId() {
+		return myCountryId;
+	}
+
+	public void setMyCountryId(Long myCountryId) {
+		this.myCountryId = myCountryId;
+	}
+
+	public SmGstSupplier getSmGstSupplier() {
+		return smGstSupplier;
+	}
+
+	public void setSmGstSupplier(SmGstSupplier smGstSupplier) {
+		this.smGstSupplier = smGstSupplier;
+	}
+
+	public boolean isGstFlag() {
+		return gstFlag;
+	}
+
+	public void setGstFlag(boolean gstFlag) {
+		this.gstFlag = gstFlag;
+	}
+
+	public SmSupplierBusiness getSelectedBusinessNature() {
+		return selectedBusinessNature;
+	}
+
+	public void setSelectedBusinessNature(SmSupplierBusiness selectedBusinessNature) {
+		this.selectedBusinessNature = selectedBusinessNature;
+	} 
+
+	public List<SmSupplierOwner> getSmSuppOwners() {
+		return smSuppOwners;
+	}
+
+	public void setSmSuppOwners(List<SmSupplierOwner> smSuppOwners) {
+		this.smSuppOwners = smSuppOwners;
+	}
+	/*	#28281
+	public boolean isDisciplinaryAction() {
+		return disciplinaryAction;
+	}
+
+	public void setDisciplinaryAction(boolean disciplinaryAction) {
+		this.disciplinaryAction = disciplinaryAction;
+	}
+
+	public boolean isWarningExist() {
+		return warningExist;
+	}
+
+	public void setWarningExist(boolean warningExist) {
+		this.warningExist = warningExist;
+	} 
+	*/
+	//27437 : Disciplinary Action 
+	/**
+	 * Search supplier latest application
+	 */
+	public void searchSupplierByApprover() {
+		validateAtLeastOneSearchCriteria();
+		//HERE WILL START PROCESS PAGING DATA MODEL
+		basicSupplierDataModel.reloadData();
+	}
+	//26238 - END
+	
+	/**
+	 * @return the disciplinaryActionMsg
+	 */
+	public String getDisciplinaryActionMsg() {
+		return disciplinaryActionMsg;
+	}
+
+	/**
+	 * @param disciplinaryActionMsg the disciplinaryActionMsg to set
+	 */
+	public void setDisciplinaryActionMsg(String disciplinaryActionMsg) {
+		this.disciplinaryActionMsg = disciplinaryActionMsg;
+	}
+
+	public String getSearchByCompanyName() {
+		return searchByCompanyName;
+	}
+
+	public void setSearchByCompanyName(String searchByCompanyName) {
+		this.searchByCompanyName = searchByCompanyName;
+	}
+
+	public String getSearchByRegNo() {
+		return searchByRegNo;
+	}
+
+	public void setSearchByRegNo(String searchByRegNo) {
+		this.searchByRegNo = searchByRegNo;
+	}
+
+	public String getSearchByEpNo() {
+		return searchByEpNo;
+	}
+
+	public void setSearchByEpNo(String searchByEpNo) {
+		this.searchByEpNo = searchByEpNo;
+	}
+
+	public List<SmSupplier> getBasicSupplierList() {
+		return basicSupplierList;
+	}
+
+	public void setBasicSupplierList(List<SmSupplier> basicSupplierList) {
+		this.basicSupplierList = basicSupplierList;
+	}
+
+	//27857: Disciplinary Action - start - 26238
+	public boolean isCancelCategoryCodeExist() {
+		return cancelCategoryCodeExist;
+	}
+
+	public void setCancelCategoryCodeExist(boolean cancelCategoryCodeExist) {
+		this.cancelCategoryCodeExist = cancelCategoryCodeExist;
+	}
+
+	public boolean isSuspendRegistrationExist() {
+		return suspendRegistrationExist;
+	}
+
+	public void setSuspendRegistrationExist(boolean suspendRegistrationExist) {
+		this.suspendRegistrationExist = suspendRegistrationExist;
+	}
+
+	public boolean isCancelRegistrationExist() {
+		return cancelRegistrationExist;
+	}
+
+	public void setCancelRegistrationExist(boolean cancelRegistrationExist) {
+		this.cancelRegistrationExist = cancelRegistrationExist;
+	}
+
+	public boolean isBlacklistOwnerOrDirectorExist() {
+		return blacklistOwnerOrDirectorExist;
+	}
+
+	public void setBlacklistOwnerOrDirectorExist(boolean blacklistOwnerOrDirectorExist) {
+		this.blacklistOwnerOrDirectorExist = blacklistOwnerOrDirectorExist;
+	}
+
+	public boolean isBumiputeraStatusCancelExist() {
+		return bumiputeraStatusCancelExist;
+	}
+
+	public void setBumiputeraStatusCancelExist(boolean bumiputeraStatusCancelExist) {
+		this.bumiputeraStatusCancelExist = bumiputeraStatusCancelExist;
+	}
+
+	public boolean isManufacturerStatusCancelExist() {
+		return manufacturerStatusCancelExist;
+	}
+
+	public void setManufacturerStatusCancelExist(boolean manufacturerStatusCancelExist) {
+		this.manufacturerStatusCancelExist = manufacturerStatusCancelExist;
+	}
+	//27857: Disciplinary Action - end - 26238
+
+	public boolean isDisableDeleteButtonAprrovedCategoryCodePanel() {
+		return disableDeleteButtonAprrovedCategoryCodePanel;
+	}
+
+	public void setDisableDeleteButtonAprrovedCategoryCodePanel(boolean disableDeleteButtonAprrovedCategoryCodePanel) {
+		this.disableDeleteButtonAprrovedCategoryCodePanel = disableDeleteButtonAprrovedCategoryCodePanel;
+	}
+
 	public List<SelectItem> getBusinessDivisionLs() {
 		return businessDivisionLs;
 	}
@@ -361,4 +926,31 @@ public class ViewSuppProfileManagedBean extends
 	public void setDivisionBox(boolean divisionBox) {
 		this.divisionBox = divisionBox;
 	}
+
+	public List<Long> getBumiCodeList() {
+		return bumiCodeList;
+	}
+
+	public void setBumiCodeList(List<Long> bumiCodeList) {
+		this.bumiCodeList = bumiCodeList;
+	}
+
+	public boolean isDisabledApprovedCategories() {
+		return disabledApprovedCategories;
+	}
+
+	public void setDisabledApprovedCategories(boolean disabledApprovedCategories) {
+		this.disabledApprovedCategories = disabledApprovedCategories;
+	}
+
+	//29181: Disciplinary Action - start - 26238
+	public boolean isEditDisciplinaryActionCheckBox() {
+		return editDisciplinaryActionCheckBox;
+	}
+
+	public void setEditDisciplinaryActionCheckBox(boolean editDisciplinaryActionCheckBox) {
+		this.editDisciplinaryActionCheckBox = editDisciplinaryActionCheckBox;
+	}
+	//29181: Disciplinary Action - end - 26238
+
 }

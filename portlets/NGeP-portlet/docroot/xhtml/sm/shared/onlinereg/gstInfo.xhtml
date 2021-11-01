@@ -20,7 +20,7 @@
 					<td class="tdContent" colspan="3">
 						<p:inputText id="gstRegNoId"  maxlength="12"
 							value="#{registrationBackingBean.managedBean.smGstSupplier.gstRegNo}"
-							size="30" label="#{lbl['lbl.sm.gst.regno']}" disabled="#{isReadOnly}">
+							size="30" label="#{lbl['lbl.sm.gst.regno']}" disabled="#{isReadOnly || registrationBackingBean.managedBean.activeDisicplinaryAction}">
 							<p:ajax event="blur" update="pnlGstInfo" listener="#{registrationBackingBean.validateGstRegNo}" 
 								partialSubmit="true" process="@this"/>
 						</p:inputText>

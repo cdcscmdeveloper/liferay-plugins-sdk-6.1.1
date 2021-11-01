@@ -51,29 +51,68 @@
 						<h:outputText value="#{lbl['lbl.txt.na']}" rendered="#{empty smSupplier.smMofAccounts}"/>
 					</p:column>
 		
+					    <!-- new requirement for wording #29778 -START -->
 					<p:column headerText="#{lbl['lbl.sm.accountstatus']}" style="width :25%;white-space : normal">
 						<h:outputText value="#{lbl['lbl.sm.mof.status.active']}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_ACTIVE}" />
 						<h:outputText value="#{lbl['lbl.sm.mof.status.expired']}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_EXPIRED}" />
 						<h:outputText value="#{lbl['lbl.sm.mof.status.not.applicable']}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_NOT_AVAILABLE}" />
+						<!-- bug #28278 -START @harith -->
+						<!-- 26238 -  Disciplonary action - 29156 29778 START @akmal -->
+						<h:outputText value="#{lbl['lbl.sm.status.deleted.with.transaction']} (#{lbl['lbl.sm.disciplinary.jktt.cancel.registration']})" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED and smSupplier.typeDisciplinaryAction eq SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG and smSupplier.pendingCancel eq true}" />	
+						<h:outputText value="#{lbl['lbl.sm.mof.status.deleted1']} (#{lbl['lbl.sm.disciplinary.jktt.cancel.registration']})" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED and smSupplier.typeDisciplinaryAction eq SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG and smSupplier.pendingCancel ne true}" />	
+						
+						<h:outputText value="#{lbl['lbl.sm.status.deleted.with.transaction']} (#{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']})" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED and smSupplier.typeDisciplinaryAction eq SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_BLACKLIST and smSupplier.pendingBlacklist eq true}" />	
+						<h:outputText value="#{lbl['lbl.sm.mof.status.deleted1']} (#{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']})" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED and smSupplier.typeDisciplinaryAction eq SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_BLACKLIST and smSupplier.pendingBlacklist ne true}" />	
+						
+						<h:outputText value="#{lbl['lbl.sm.mof.status.deleted2']} (#{smSupplier.smAppl.applNo})" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_CANCELLED}" />	
+						<h:outputText value="#{lbl['lbl.sm.mof.status.deleted3']}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_EXPIRED_SYSTEM}" />	
+						<!-- 26238 -  Disciplonary action - 29156  29778 -END -->		
+					    <!-- bug #28278 -END -->
+					    <!-- bug #29690 -START -->
+						<h:outputText
+							value="#{lbl['lbl.sm.status.deleted.with.transaction']} (#{lbl['lbl.sm.status.suspend']})"
+							rendered="#{smSupplier.typeDisciplinaryAction eq 'S' and smSupplier.pendingSuspend eq true}" />
+						<h:outputText 
+							value="#{lbl['lbl.sm.status.deleted_suspend']} (#{lbl['lbl.sm.status.suspend']})"
+							rendered="#{smSupplier.typeDisciplinaryAction eq 'S' and smSupplier.pendingSuspend ne true}" /> 
+					    <!-- bug #29690 -END -->
+					    <!-- new requirement for wording #29778 -END -->
 					</p:column>
 					
 					<p:column headerText="#{lbl['lbl.rpt.supplierType']}">
 						<h:outputText value="#{lbl['lbl.sm.contractor']}" rendered="#{smSupplier.smAppl.supplierType eq 'K'}"/>
 						<h:outputText value="#{lbl['lbl.sm.consultant']}" rendered="#{smSupplier.smAppl.supplierType eq 'J'}"/>
 					</p:column>
-					
+
 					<p:column headerText="#{lbl['lbl.sm.regStatus']}">
-						<h:outputText value="#{smSupplier.smAppl.workflowStatusDesc}" rendered="#{not empty smSupplier.smAppl.pmRegStatus}"/>
-						<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty smSupplier.smAppl.pmRegStatus}"/>
+						<h:outputText value="#{smSupplier.smAppl.workflowStatusDesc}"
+							rendered="#{not empty smSupplier.smAppl.pmRegStatus and smSupplier.mofStatus ne SupplierManagementConst.MOF_STATUS_DELETED}" />
+						<h:outputText value="#{lbl['lbl.sm.no.available']}"
+							rendered="#{empty smSupplier.smAppl.pmRegStatus}" />
+						<h:outputText value="#{lbl['lbl.sm.no.available']}"
+							rendered="#{not empty smSupplier.smAppl.pmRegStatus and smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED}" />
 					</p:column>
-					
+
 					<p:column headerText="#{lbl['lbl.sm.label.action']}">
 						<p:commandLink onstart="blockWidget.show()"
 							oncomplete="blockWidget.hide()"
-							action="#{supplierDataMaintenanceBackingBean.navigateToMaintenance(smSupplier.smAppl)}"
+							action="#{supplierDataMaintenanceBackingBean.navigateToMaintenance(smSupplier.smAppl, smSupplier.mofStatus)}"
 							process="@this" partialSubmit="true" update="@form"
 							style="padding-right:5px;">
-							<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
+<!-- 							<p:graphicImage value="/css/images/design/ico-view.png" -->
+<!-- 								title="#{lbl['lbl.sm.view']}" -->
+<!-- 								rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED}" /> -->
+<!-- 							<p:graphicImage value="/css/images/design/edit.png" -->
+<!-- 								title="#{lbl['lbl.sm.edit']}" -->
+<!-- 								rendered="#{smSupplier.mofStatus ne SupplierManagementConst.MOF_STATUS_DELETED}" /> -->
+							<!-- bug #29156 -START -->
+							<p:graphicImage value="/css/images/design/ico-view.png"
+								title="#{lbl['lbl.sm.view']}"
+								rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED or smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_CANCELLED or smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_EXPIRED_SYSTEM}" />
+							<p:graphicImage value="/css/images/design/edit.png"
+								title="#{lbl['lbl.sm.edit']}"
+								rendered="#{smSupplier.mofStatus ne SupplierManagementConst.MOF_STATUS_DELETED and smSupplier.mofStatus ne SupplierManagementConst.MOF_STATUS_CANCELLED and smSupplier.mofStatus ne SupplierManagementConst.MOF_STATUS_EXPIRED_SYSTEM}" />
+						   	<!-- bug #29156 -END -->
 						</p:commandLink>
 					</p:column>
 					
@@ -110,11 +149,16 @@
 							<p:commandButton value="#{lbl['lbl.btn.back']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
 								action="#{supplierDataMaintenanceBackingBean.backToSearchSupplierMaintenance}" update="@form" process="@this"/>
 						</td>
-						<td style="white-space: nowrap; float: right;">
-						    <p:commandButton value="#{lbl['lbl.btn.submit']}" style="float:right;" id="submitBtnId" update="@form"
-						    	onstart="blockWidget.show()" oncomplete="blockWidget.hide()" action="#{supplierDataMaintenanceBackingBean.showConfirmDialog}" 
-						    	disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}"/>
-						</td>
+						<td style="white-space: nowrap; float: right;"><p:commandButton
+								value="#{lbl['lbl.btn.submit']}" style="float:right;" rendered="#{supplierDataMaintenanceBackingBean.managedBean.flagShowButtonSubmit}"
+								id="submitBtnId" update="@form" onstart="blockWidget.show()"
+								oncomplete="blockWidget.hide()"
+								action="#{supplierDataMaintenanceBackingBean.showConfirmDialog}"
+								disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}" />
+							<p:commandButton value="#{lbl['lbl.btn.close']}" rendered="#{!supplierDataMaintenanceBackingBean.managedBean.flagShowButtonSubmit}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								action="#{supplierDataMaintenanceBackingBean.backToSearchSupplierMaintenance}"
+								update="@form" process="@this" /></td>
 					</tr>
 				</table>
 				
@@ -124,6 +168,7 @@
 				
 				<ui:include src="/xhtml/sm/shared/supplierDataMaintenance/supplierInfoMaintenance.xhtml" />
 				<ui:include src="/xhtml/sm/shared/applViewOnlyPages/companyBasicInfoFormViewOnly.xhtml" />
+				<ui:include src="/xhtml/sm/shared/supplierDataMaintenance/regOwnerAndDirectorMaintenance.xhtml" /> <!-- 26238 -->
 				<ui:include src="/xhtml/sm/shared/supplierDataMaintenance/regCatCodesMaintenance.xhtml" />
 				<ui:include src="/xhtml/sm/shared/supplierDataMaintenance/approverRemarkMaintenance.xhtml" />
 				

@@ -1306,6 +1306,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		
 		//#29781 - Start
 		//String accptDate = "";
+		/*
 		StringBuilder SvO = new StringBuilder();
 		if(svTask.getSmSvOfficers() != null && !svTask.getSmSvOfficers().isEmpty()){
 			for(SmSvOfficer smSvOfficer : svTask.getSmSvOfficers()){
@@ -1329,6 +1330,15 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 		context.put("svOfficers", SvO.toString());
 		context.put("svAOfficer", SvOA.toString());
+		*/
+		List<String> svOfficers = new ArrayList<String>();
+		for(SmSvOfficer officer : svTask.getSmSvOfficers()){
+			svOfficers.add(officer.getPmUser().getUserName());
+		}
+		for(SmSvAssistantOfficer officer : svTask.getSmSvAssistantOfficers()){
+			svOfficers.add(officer.getName());
+		}
+		context.put("svOfficers", svOfficers);
 		//#29781 - End
 	
 		String vmCover = "/sm/sitevisit/sv-main.vm";
@@ -1546,9 +1556,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		boolean authorizedCapitalFlag = false;
 
 		// SIR #3108
+		//#29781 - start
+		/*
 		context.put("higherManagementNames", this.getManagedBean().getHigherManagementNames());
 		context.put("managementNames", this.getManagedBean().getManagementNames());	
-		log.info("Business type***************>" + svTask.getSmAppl().getSmSupplier().getBusinessType());
+		*/
+		context.put("managementLs", getManagedBean().getMgmtLs());
+		//#29871 - end
 		
 		String businessType = svTask.getSmAppl().getSmSupplier().getBusinessType();
 		if(businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP) 

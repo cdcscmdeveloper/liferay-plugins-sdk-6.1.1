@@ -19,6 +19,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmAddress;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.bean.pm.ChallengeQAList;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -60,7 +61,12 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	private Date robExpDate;
 	private boolean showRobExpiredDate = false;
 	private boolean showRobExpiredDateMesej = false;
+	//26238
+	private boolean disciplinaryAction; 
+	private String disciplinaryActionMsg; 
 	
+	//26238 -  START Disciplinary Action - 28111
+	private SmSupplier smSupplier;
 	public ProfilePersonalizationManagedBean(){}
 	
 	/**
@@ -377,6 +383,30 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 
 	public void setShowRobExpiredDateMesej(boolean showRobExpiredDateMesej) {
 		this.showRobExpiredDateMesej = showRobExpiredDateMesej;
+	}
+	//26238
+	public boolean isDisciplinaryAction() {
+		return disciplinaryAction;
+	}
+
+	public void setDisciplinaryAction(boolean disciplinaryAction) {
+		this.disciplinaryAction = disciplinaryAction;
+	}
+
+	public String getDisciplinaryActionMsg() {
+		return disciplinaryActionMsg;
+	}
+
+	public void setDisciplinaryActionMsg(String disciplinaryActionMsg) {
+		this.disciplinaryActionMsg = disciplinaryActionMsg;
+	}
+
+	public SmSupplier getSmSupplier() {
+		return smSupplier;
+	}
+
+	public void setSmSupplier(SmSupplier smSupplier) {
+		this.smSupplier = smSupplier;
 	}
 
 }

@@ -136,6 +136,8 @@
 				<f:param name="docType" value="#{tasks.docType}" />
 				<f:param name="isClaim" value="true" />
 				<h:outputText value="#{tasks.title}" escape="false" />
+				<!-- 26238 - Disciplinary Action 28111 -->
+				<f:param name="docNo" value="#{tasks.docNumber}" />
 			</p:commandLink>
 
 		</p:column>

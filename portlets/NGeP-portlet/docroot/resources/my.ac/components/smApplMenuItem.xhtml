@@ -14,11 +14,12 @@
 		<cc:attribute name="tabNo" required="true"/>
 		<cc:attribute name="label" required="true"/>
 		<cc:attribute name="validate" />
+		<cc:attribute name="disciplinary" required="true"/>
 	</cc:interface>
 
 	<cc:implementation>
 		<ui:param name="basicParam" value="#{cc.attrs.backingBean.getStepIcon(cc.attrs.section)}" />
-		<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+		<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" disabled="#{cc.attrs.disciplinary}"
 			actionListener="#{cc.attrs.backingBean.setTabValue(cc.attrs.backingBean.managedBean.tabActiveIndex,cc.attrs.tabNo)}"
 			action="#{cc.attrs.backingBean.updateSmAppl(cc.attrs.backingBean.managedBean.smAppl.applType,cc.attrs.backingBean.managedBean.currentPageType,cc.attrs.section)}"
 			partialSubmit="true" update=":form">
