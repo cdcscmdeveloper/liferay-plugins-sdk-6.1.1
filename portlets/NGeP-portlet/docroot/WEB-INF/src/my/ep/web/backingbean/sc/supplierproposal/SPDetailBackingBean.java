@@ -1183,6 +1183,16 @@ public class SPDetailBackingBean extends
             			this.getManagedBean().getTemplateSpecBackingBean()
             			  .calcTotalAmount(getManagedBean().getTemplateSpecBean(),answer,isItemTypeService);
             		}
+            		//20210419@asyrafhaziq - Bug #30061 - start
+            		if ((answer.getRatePerUom() != null  || !answer.getRatePerUom().equals(0))&& 
+            			(answer.getAnswerNumeric() != null || !answer.getAnswerNumeric().equals(0))) {
+        				boolean isItemTypeService = false; 
+            			if(getManagedBean().getTemplateSpecBean().getSpecMaster().getItemTypeCode().getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE)){
+            				isItemTypeService = true;
+            			}	
+        			   this.getManagedBean().getTemplateSpecBackingBean().CheckAndUpdateCalcTotalAmount(getManagedBean().getTemplateSpecBean(),answer,isItemTypeService);
+				     }
+            		//20210419@asyrafhaziq - Bug #30061 - End
             		super.setUserDetails(answer);
             	}
             }
