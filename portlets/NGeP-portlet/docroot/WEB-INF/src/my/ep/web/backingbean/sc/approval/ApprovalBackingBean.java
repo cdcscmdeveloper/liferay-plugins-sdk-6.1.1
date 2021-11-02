@@ -859,6 +859,10 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			qtDetailBB.getManagedBean().setApprovalEditableSection(true);
 			qtDetailBB.getManagedBean().setApprovalScreen(true);
 			
+			//Bug #31991 - start
+			qtDetailBB.getManagedBean().getScQtApproval().setScQtApprovalAttachments(this.getManagedBean().getScQtApproval().getScQtApprovalAttachments());
+			//Bug #31991 - end
+			
 			/* ***#25692#111 - start */
 			PmStatus sts = getQTDetailSO().retrieveActiveStatusByDoctype(qtDetailBB.getManagedBean().getQt().getQtId(), docType==null?ParameterConst.DOCTYPE_QUOTATION:docType);
 			if(sts != null){
