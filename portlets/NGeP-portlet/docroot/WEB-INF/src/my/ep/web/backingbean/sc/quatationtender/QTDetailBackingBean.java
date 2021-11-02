@@ -10590,9 +10590,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			detailSO.qtReviseDocument(reqDTO);
 			
 			if (scQt.getProcurementMode().getParameterCode().equals(ParameterConst.PROCUREMENT_MODE_TENDER)) {
-				successMessage(MessageConst.INFO_700102, getMessageCommon("lbl.sc.tender"), scQt.getQtNo(), Boolean.TRUE);
+				successMessage(MessageConst.INFO_700107, getMessageCommon("lbl.sc.tender"), scQt.getQtNo(), Boolean.TRUE);
 			} else {
-				successMessage(MessageConst.INFO_700102, getMessageCommon("lbl.sc.quotation"), scQt.getQtNo(), Boolean.TRUE);
+				successMessage(MessageConst.INFO_700107, getMessageCommon("lbl.sc.quotation"), scQt.getQtNo(), Boolean.TRUE);
 			}
 		} finally {
 			detailSO = null;
