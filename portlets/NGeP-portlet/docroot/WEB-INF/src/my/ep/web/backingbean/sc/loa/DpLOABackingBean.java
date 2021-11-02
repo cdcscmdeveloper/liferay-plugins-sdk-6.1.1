@@ -175,12 +175,14 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 								.getStatusId();			
 						
 						if (QTStatusConst.LOA_REJECTED.equals(statusId)) {
-							isCancelled = true;							
+							isCancelled = true;			
+							//#32021 - Start
 						} else if (!QTStatusConst.LOA_PENDING_VERIFICATION.equals(statusId) && 
 								!QTStatusConst.LOA_COMPLETED.equals(statusId) && 
 								!QTStatusConst.LOA_CANCELLED_DUE_TO_SIMPLE_QUOTE_VALIDITY_EXPIRED.equals(statusId) &&
-								!QTStatusConst.LOA_REJECTED_DUE_TO_SIMPLE_QUOTE_VALIDITY_EXPIRED.equals(statusId) ) {
-							
+								!QTStatusConst.LOA_REJECTED_DUE_TO_SIMPLE_QUOTE_VALIDITY_EXPIRED.equals(statusId) &&
+								!QTStatusConst.LOA_CANCELLED.equals(statusId)) {
+							//#32021 - End
 							continue;
 						}
 						
