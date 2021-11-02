@@ -195,7 +195,7 @@
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.sc.title']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td colspan="3"><p:inputTextarea id="title1"
-						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_TITLE) or isReadOnly}"
+						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_TITLE) or isReadOnly or qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION}"
 						label="#{lbl['lbl.sc.title']}" required="#{qTDetailBB.isProcurementTitleMandatory(scQt)}"
 						value="#{scQt.qtTitle}" cols="110" rows="3"
 						valueChangeListener="#{createQtBB.qtTitleValueChanged}"
@@ -763,7 +763,7 @@
 										maxlength="3" placeHolder=""
 										label="#{lbl['lbl.sc.qt.publishing.period']}" required="#{empty param['skipvalidation']}"
 										value="#{scQt.publishPeriod}"
-										disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FIELD_QT_PUBLISH_PERIOD) or  (!empty qTDetailBB.managedBean.amendMentBean and !qTDetailBB.managedBean.amendMentBean.brandNew) or isReadOnly}"
+										disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FIELD_QT_PUBLISH_PERIOD) or  (!empty qTDetailBB.managedBean.amendMentBean and !qTDetailBB.managedBean.amendMentBean.brandNew) or isReadOnly or qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION}"
 										valueChangeListener="#{createQtBB.publishPeriodDaysChanged}"
 										style="text-align:right; width:195px;">
 										<p:ajax event="blur" process="@this" partialSubmit="true"
@@ -787,7 +787,7 @@
 										maxlength="5" placeHolder=""
 										label="#{lbl['lbl.sc.qt.proposal.validity']}" required="#{empty param['skipvalidation']}"
 										value="#{scQt.qtValidityPeriod}"
-										disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FIELD_QT_VALIDITY_PERIOD) or (scQt.procurementMode.parameterCode == ParameterConst.procurementModeQuotation and qTDetailBB.isQTStatusPublished(scQt.qtStatus.statusId)) or (!empty qTDetailBB.managedBean.amendMentBean and !qTDetailBB.managedBean.amendMentBean.brandNew) or isReadOnly}"
+										disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FIELD_QT_VALIDITY_PERIOD) or (scQt.procurementMode.parameterCode == ParameterConst.procurementModeQuotation and qTDetailBB.isQTStatusPublished(scQt.qtStatus.statusId)) or (!empty qTDetailBB.managedBean.amendMentBean and !qTDetailBB.managedBean.amendMentBean.brandNew) or isReadOnly or qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION}"
 										valueChangeListener="#{createQtBB.proposalValidityChanged}"
 										style="text-align:right; width:200px;">
 										<p:ajax event="blur" process="@this" partialSubmit="true"

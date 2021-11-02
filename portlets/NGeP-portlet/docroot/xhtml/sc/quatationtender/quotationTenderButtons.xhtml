@@ -195,7 +195,11 @@
 								oncomplete="blockWidget.hide();"
 								rendered="#{(qTDetailBB.isQTStatusInBetween(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING, QTStatusConst.QT_PENDING_LOA))}"
 								disabled="#{qTDetailBB.isQTStatusEvaluation(qTDetailBB.managedBean.qt.qtStatus.statusId) and !(qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_RE_FINALIZATION) and
-								(empty qTDetailBB.managedBean.amendMentBean or !qTDetailBB.managedBean.amendMentBean.brandNew) and !qTDetailBB.managedBean.changesOnQTMaintenance}" />
+								(empty qTDetailBB.managedBean.amendMentBean or !qTDetailBB.managedBean.amendMentBean.brandNew) and !qTDetailBB.managedBean.changesOnQTMaintenance or qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION}" />
+								
+								<p:commandButton value="#{lbl['lbl.btn.update']}"
+								onclick="updateConfirmPopup.show();"
+								rendered="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION}"/>
 						</c:otherwise>
 					</c:choose>
 					<!-- 26095@hatta - start -->
@@ -361,6 +365,32 @@
 			</div>
 		</p:dialog>
 		<!-- 15391 End  -->
+		
+		<p:dialog id="updateConfirmId" widgetVar="updateConfirmPopup"
+			header="#{lbl['lbl.sc.approval.confirm']}" resizable="false"
+			width="30%" height="100" closable="false">
+			<table>
+				<tr>
+					<td align="center"><p:outputLabel
+							value="#{lbl['lbl.qt.maintenance.update.dialog.tender']} #{qTDetailBB.managedBean.qt.qtNo} #{lbl['lbl.qt.maintenance.update.dialog2']}" 
+							rendered="#{qTDetailBB.managedBean.qt.procurementMode.parameterCode eq 'T'}"/></td>
+					<td align="center"><p:outputLabel
+							value="#{lbl['lbl.qt.maintenance.update.dialog.quotation']} #{qTDetailBB.managedBean.qt.qtNo} #{lbl['lbl.qt.maintenance.update.dialog2']}" 
+							rendered="#{qTDetailBB.managedBean.qt.procurementMode.parameterCode eq 'Q'}"/></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
+				    onclick="updateConfirmPopup.hide(); blockWidget.show();"
+				    action="#{qTDetailBB.reviseQtDocument}"
+					oncomplete="blockWidget.hide();"
+					partialSubmit="true" process="@form" update="@form"/>
+				<p:commandButton value="#{lbl['lbl.btn.no']}" 
+					onclick="updateConfirmPopup.hide();" type="button" partialSubmit="true"  process="@this"/>
+			</div>
+		</p:dialog>
+		
 		<ac:confirmationPopup id="confirmReendorseOnReassignmentId"
 			widget="confirmReendorseOnReassignmentPopup" loadingWidget="blockWidget"
 			title="#{lbl['lbl.sc.confirmation']}"
