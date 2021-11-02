@@ -195,11 +195,12 @@
 								oncomplete="blockWidget.hide();"
 								rendered="#{(qTDetailBB.isQTStatusInBetween(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING, QTStatusConst.QT_PENDING_LOA))}"
 								disabled="#{qTDetailBB.isQTStatusEvaluation(qTDetailBB.managedBean.qt.qtStatus.statusId) and !(qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_RE_FINALIZATION) and
-								(empty qTDetailBB.managedBean.amendMentBean or !qTDetailBB.managedBean.amendMentBean.brandNew) and !qTDetailBB.managedBean.changesOnQTMaintenance or qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION}" />
-								
+								(empty qTDetailBB.managedBean.amendMentBean or !qTDetailBB.managedBean.amendMentBean.brandNew) and !qTDetailBB.managedBean.changesOnQTMaintenance or qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION}" /><ui:remove>#29472</ui:remove>
+								<ui:remove>#29472 - start</ui:remove>
 								<p:commandButton value="#{lbl['lbl.btn.update']}"
 								onclick="updateConfirmPopup.show();"
 								rendered="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION}"/>
+								<ui:remove>#29472 - end</ui:remove>
 						</c:otherwise>
 					</c:choose>
 					<!-- 26095@hatta - start -->
@@ -365,7 +366,7 @@
 			</div>
 		</p:dialog>
 		<!-- 15391 End  -->
-		
+		<ui:remove>#29472 - start</ui:remove>
 		<p:dialog id="updateConfirmId" widgetVar="updateConfirmPopup"
 			header="#{lbl['lbl.sc.approval.confirm']}" resizable="false"
 			width="30%" height="100" closable="false">
@@ -390,7 +391,7 @@
 					onclick="updateConfirmPopup.hide();" type="button" partialSubmit="true"  process="@this"/>
 			</div>
 		</p:dialog>
-		
+		<ui:remove>#29472 - end</ui:remove>
 		<ac:confirmationPopup id="confirmReendorseOnReassignmentId"
 			widget="confirmReendorseOnReassignmentPopup" loadingWidget="blockWidget"
 			title="#{lbl['lbl.sc.confirmation']}"

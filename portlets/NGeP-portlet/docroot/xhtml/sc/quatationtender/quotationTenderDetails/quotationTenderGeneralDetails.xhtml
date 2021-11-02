@@ -202,7 +202,7 @@
 						onkeyup="limitTextArea(this,500);"
 						onkeydown="limitTextArea(this,500);"
 						onmouseout="limitTextArea(this,500);"
-						style=" margin-bottom:5px; width: 714px;" maxlength="500">
+						style=" margin-bottom:5px; width: 714px;" maxlength="500"><ui:remove>#29472</ui:remove>
 						<f:ajax></f:ajax>
 					</p:inputTextarea> <p:message id="title1Msg" for="title1" display="icon" /></td>
 			</tr>
@@ -765,7 +765,7 @@
 										value="#{scQt.publishPeriod}"
 										disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FIELD_QT_PUBLISH_PERIOD) or  (!empty qTDetailBB.managedBean.amendMentBean and !qTDetailBB.managedBean.amendMentBean.brandNew) or isReadOnly or qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION}"
 										valueChangeListener="#{createQtBB.publishPeriodDaysChanged}"
-										style="text-align:right; width:195px;">
+										style="text-align:right; width:195px;"><ui:remove>#29472</ui:remove>
 										<p:ajax event="blur" process="@this" partialSubmit="true"
 											update="@this, @(.amendButton)"
 											listener="#{createQtBB.handlePublishClosingDate}" />
@@ -789,7 +789,7 @@
 										value="#{scQt.qtValidityPeriod}"
 										disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FIELD_QT_VALIDITY_PERIOD) or (scQt.procurementMode.parameterCode == ParameterConst.procurementModeQuotation and qTDetailBB.isQTStatusPublished(scQt.qtStatus.statusId)) or (!empty qTDetailBB.managedBean.amendMentBean and !qTDetailBB.managedBean.amendMentBean.brandNew) or isReadOnly or qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION}"
 										valueChangeListener="#{createQtBB.proposalValidityChanged}"
-										style="text-align:right; width:200px;">
+										style="text-align:right; width:200px;"><ui:remove>#29472</ui:remove>
 										<p:ajax event="blur" process="@this" partialSubmit="true"
 											update="@this, @(.amendButton)"
 											listener="#{createQtBB.handleProposalValidityDate}" />
