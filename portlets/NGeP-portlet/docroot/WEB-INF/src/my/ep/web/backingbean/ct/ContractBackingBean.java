@@ -4556,17 +4556,17 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}		
 		getManagedBean().setExtendContract(false);
 		if(currentPeriod != null && extendPeriod != null) {
-			if(!extendPeriod.equals(currentPeriod)){
+			if(!extendPeriod.equals(currentPeriod) && getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
 				isContractExtendOrIsBond = true;
 				getManagedBean().setExtendContract(true);
 			}
 		}
-		if((getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
-				|| getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)
-				)&& getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
-			isContractExtendOrIsBond = true;
-			getManagedBean().setDisableOriginalBond(true);
-		}
+//		if((getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
+//				|| getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)
+//				)&& getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
+//			isContractExtendOrIsBond = true;
+//			getManagedBean().setDisableOriginalBond(true);
+//		}
 		if (getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT)
 				&& getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
 			if(getManagedBean().getContractVer().getCtAmendment() != null && getManagedBean().getContractVer().getCtAmendment().isContractExtend())
