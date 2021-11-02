@@ -854,7 +854,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			
 			updateApprovalDetails(scQt_);
 			//Required to fetch the approvers when are trying to Save/Submit from other than the Approval tab 
-			retrieveApprovalTabDtl();
+			//bug #30435 - start
+			if (!getManagedBean().isApproverTabLoaded()) {
+				retrieveApprovalTabDtl();
+			}
+			//bug #30435 - end
 			
 			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
 			quationTenderReqDTO.setSaveFlow(false);
@@ -4039,7 +4043,16 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 											approvalRequest.get(i)
 												.setApproverAction(
 														getManagedBean().getPmParam());
+										} 
+										//bug #30435 - start
+										else {
+											PmParameter approveParam =  getQTDetailSO().getPmParameterByTypeAndCode(
+													ParameterTypeConst.APPROVAL_DECISION_TYPE,
+													ParameterConst.APPROVAL_DECISION_TYPE_APPROVED);
+											getManagedBean().setPmParam(approveParam);
+											approvalRequest.get(i).setApproverAction(approveParam);
 										}
+										//bug #30435 - end
 										
 										if (null != getManagedBean().getScQtApprovalReqAttachement()) {
 											approvalRequest.get(i)
