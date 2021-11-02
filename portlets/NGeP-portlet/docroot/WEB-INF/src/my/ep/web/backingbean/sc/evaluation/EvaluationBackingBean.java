@@ -1710,32 +1710,35 @@ public class EvaluationBackingBean extends
 		// this.getManagedBean().setCheckListType(checklistType);
 		this.getManagedBean().setComplianceCheckListIndex(-1);
 		this.getManagedBean().setCheckListType("");
-		//#32007 - checking view/evaluate button if not save package score - start 
-		IQTEvaluationSO evaluationSO = null;
-		evaluationSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-		List<ScQtProposalAmount> proposalamounts = new ArrayList<ScQtProposalAmount>();
-		EvaluationReqDTO amountReqDto = new EvaluationReqDTO();
-		EvaluationResDTO amountResDto = new EvaluationResDTO();
-		amountReqDto.setQtId(this.getManagedBean().getScQt().getQtId());
-		amountResDto= evaluationSO.retrieveProposals(amountReqDto); 
-		for(ScQtProposal amtbyproposal : amountResDto.getProposalList()){
-			amountReqDto.setScQt(this.getManagedBean().getScQt());
-			amountReqDto.setProposalId(amtbyproposal.getQtProposalId());
-			amountResDto = evaluationSO.retrieveProposalAmountbyProposal(amountReqDto); 
-			proposalamounts.addAll(amountResDto.getProposalAmountListbyProposal());
-		}
-		if(CollectionUtils.isNotEmpty(proposalamounts)){
-			for(ScQtProposalAmount newList : proposalamounts){
-				if(newList.getPmEvalStatus() == null || newList.getPmEvalStatus().getStatusId()
-						.equals(QTStatusConst.TS_PENDING_SUBMISSION)){
-					this.getManagedBean().setEvalStatus(QTStatusConst.TS_PENDING_SUBMISSION);
-					break;
+		//#32007 - checking view/evaluate button if not save package score - start
+		if(ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equalsIgnoreCase(this.getManagedBean().getCommitteeType())
+				|| ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equalsIgnoreCase(this.getManagedBean().getCommitteeType())){
+			IQTEvaluationSO evaluationSO = null;
+			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			List<ScQtProposalAmount> proposalamounts = new ArrayList<ScQtProposalAmount>();
+			EvaluationReqDTO amountReqDto = new EvaluationReqDTO();
+			EvaluationResDTO amountResDto = new EvaluationResDTO();
+			amountReqDto.setQtId(this.getManagedBean().getScQt().getQtId());
+			amountResDto= evaluationSO.retrieveProposals(amountReqDto); 
+			for(ScQtProposal amtbyproposal : amountResDto.getProposalList()){
+				amountReqDto.setScQt(this.getManagedBean().getScQt());
+				amountReqDto.setProposalId(amtbyproposal.getQtProposalId());
+				amountResDto = evaluationSO.retrieveProposalAmountbyProposal(amountReqDto); 
+				proposalamounts.addAll(amountResDto.getProposalAmountListbyProposal());
+			}
+			if(CollectionUtils.isNotEmpty(proposalamounts)){
+				for(ScQtProposalAmount newList : proposalamounts){
+					if(newList.getPmEvalStatus() == null || newList.getPmEvalStatus().getStatusId()
+							.equals(QTStatusConst.TS_PENDING_SUBMISSION)){
+						this.getManagedBean().setEvalStatus(QTStatusConst.TS_PENDING_SUBMISSION);
+						break;
+						
+					}else{
+						this.getManagedBean().setEvalStatus(newList
+								.getPmEvalStatus().getStatusId());
 					
-				}else{
-					this.getManagedBean().setEvalStatus(newList
-							.getPmEvalStatus().getStatusId());
-				
+					}
 				}
 			}
 		}
