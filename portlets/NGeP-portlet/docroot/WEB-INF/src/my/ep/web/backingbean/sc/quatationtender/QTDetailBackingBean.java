@@ -10576,4 +10576,28 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
   		return !isGroupPTJRuleSet();
   	}
   	
+  	public void reviseQtDocument() {
+  		
+		IQTDetailSO detailSO;
+		try {
+			ScQt scQt = this.getManagedBean().getQt();
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			reqDTO.setQtdetail(this.getManagedBean().getQt());
+			reqDTO.setOutcome(BpmOutcomeConst.BPM_REVISE);
+			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			detailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			detailSO.qtReviseDocument(reqDTO);
+			
+			if (scQt.getProcurementMode().getParameterCode().equals(ParameterConst.PROCUREMENT_MODE_TENDER)) {
+				successMessage(MessageConst.INFO_700102, getMessageCommon("lbl.sc.tender"), scQt.getQtNo(), Boolean.TRUE);
+			} else {
+				successMessage(MessageConst.INFO_700102, getMessageCommon("lbl.sc.quotation"), scQt.getQtNo(), Boolean.TRUE);
+			}
+		} finally {
+			detailSO = null;
+		}
+	
+  	}
+  	
 }
