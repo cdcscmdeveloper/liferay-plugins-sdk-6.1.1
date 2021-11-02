@@ -99,8 +99,10 @@
 				<p:outputPanel
 					rendered="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.newSmApplnForMof}">
 					<c:choose>
-						<c:when test="#{postSupplierRegBB.managedBean.rejectedApplExist == true || 
+						<!-- #32013 start -->
+						<c:when test="#{postSupplierRegBB.managedBean.rejectedApplExist == true and 
 						postSupplierRegBB.managedBean.displayRejectLabel == true}">
+						<!-- #32013 end -->
 							<p class="title">#{lbl['lbl.sm.basic.mof.title.rejected']}</p>
 						</c:when>
 						
