@@ -1558,18 +1558,19 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						setTabValue("PB");
 						throw new EpException(MessageConst.ERROR_750021);
 					} else {
+						bondAmount = Double.valueOf(df.format(bondAmount));
 						double oriBondAmount = 0.0;
 						if(ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() != null){
 							oriBondAmount = Double.valueOf(df.format(
 									ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt().doubleValue()));
 						}
-						for(CtContractAmount oriBondAmountList : ctBB.getManagedBean().getContractVer().getCtContractAmounts()){					
-						if(oriBondAmountList.getTotalBondAmt() != null){
-							bondAmount = Double.valueOf(df.format(
-									oriBondAmountList.getTotalBondAmt().doubleValue()));
-							}						
-						}
-						int retval = Double.compare(oriBondAmount , bondAmount);
+//						for(CtContractAmount oriBondAmountList : ctBB.getManagedBean().getContractVer().getCtContractAmounts()){					
+//						if(oriBondAmountList.getTotalBondAmt() != null){
+//							bondAmount = Double.valueOf(df.format(
+//									oriBondAmountList.getTotalBondAmt().doubleValue()));
+//							}						
+//						}
+						int retval = Double.compare(bondAmount, oriBondAmount);
 						/** Enhancement #20025: Changes for GST in Contract Management
 						if (retval >0) {
 							setTabValue("PB");
