@@ -860,10 +860,12 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			qtDetailBB.getManagedBean().setApprovalScreen(true);
 			
 			//Bug #31991 - start
-			qtDetailBB.getManagedBean().getScQtApproval().setScQtApprovalAttachments(this.getManagedBean().getAttachments());
-			qtDetailBB.getManagedBean().setAttachments(this.getManagedBean().getAttachments());
-			logger.info("this getScQtApprovalAttachments() size : " + this.getManagedBean().getScQtApproval().getScQtApprovalAttachments().size() + "   ****** qtDetailBB getScQtApprovalAttachments() size : "+qtDetailBB.getManagedBean().getScQtApproval().getScQtApprovalAttachments().size());
-			logger.info("this Attachment size : " + this.getManagedBean().getAttachments().size() + "   ****** qtDetailBB Attachment Size : "+qtDetailBB.getManagedBean().getAttachments().size());
+			if(this.getManagedBean().getAttachments() != null){
+				qtDetailBB.getManagedBean().getScQtApproval().setScQtApprovalAttachments(this.getManagedBean().getAttachments());
+				qtDetailBB.getManagedBean().setAttachments(this.getManagedBean().getAttachments());
+				logger.info("this getScQtApprovalAttachments() size : " + this.getManagedBean().getScQtApproval().getScQtApprovalAttachments().size() + "   ****** qtDetailBB getScQtApprovalAttachments() size : "+qtDetailBB.getManagedBean().getScQtApproval().getScQtApprovalAttachments().size());
+				logger.info("this Attachment size : " + this.getManagedBean().getAttachments().size() + "   ****** qtDetailBB Attachment Size : "+qtDetailBB.getManagedBean().getAttachments().size());
+			}
 			//Bug #31991 - end
 			
 			/* ***#25692#111 - start */
