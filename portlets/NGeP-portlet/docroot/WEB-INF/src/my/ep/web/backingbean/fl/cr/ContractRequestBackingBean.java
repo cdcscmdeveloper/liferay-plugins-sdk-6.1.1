@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
-import my.ep.persistence.logging.LogKey;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -29,20 +28,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang.builder.CompareToBuilder;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.apache.log4j.MDC;
-import org.primefaces.context.RequestContext;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
-
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.theme.ThemeDisplay;
-import com.liferay.portal.util.PortalUtil;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -196,8 +181,10 @@ import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.entity.pm.common.VPmDo;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
@@ -223,7 +210,22 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.fl.helper.LocationSingleton;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.FLCtSupplierItemVO;
+
+import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
+import org.primefaces.context.RequestContext;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.PortalUtil;
 
 /**
  * Backing Bean for Create Contract Order
@@ -601,7 +603,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * Close listener.
 	 */
 	public void closeListener() {
-		log.info("closeListener");
 		getManagedBean().setEmailValidate(true);
 		RequestContext.getCurrentInstance().execute("addManualDeliveryAddr.hide()");
 		getManagedBean().setRequired(Boolean.FALSE);
@@ -751,7 +752,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				
 				deliveryAddr.setPmAddressId(addrType.getPmAddress().getAddressId());
 				
-				//TODO NEW
 				deliveryAddr.setFlAddress(convertPmAddressToFlAddress(addrType.getPmAddress()));
 				if (null == getManagedBean().getFlRequest().getFlDeliveryAddresses()) {
 					getManagedBean().getFlRequest().setFlDeliveryAddresses(new ArrayList<FlDeliveryAddress>());
@@ -1473,6 +1473,39 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			checkAP59();
 			//#14650 - End
 		}
+		
+		//26279 - start
+		if(getManagedBean().getFlRequest().getStatus().getStatusId().longValue() == FulfilmentStatusConst.CR_PENDING_SUBMISSION.longValue() 
+				|| getManagedBean().getFlRequest().getStatus().getStatusId().longValue() == FulfilmentStatusConst.CR_PENDING_APPROVAL.longValue() 
+				|| getManagedBean().getFlRequest().getStatus().getStatusId().longValue() == FulfilmentStatusConst.CR_PENDING_REVISION.longValue() 
+				|| getManagedBean().getFlRequest().getStatus().getStatusId().longValue() == FulfilmentStatusConst.CR_PENDING_REVISION_APPROVAL.longValue() 
+				|| getManagedBean().getFlRequest().getStatus().getStatusId().longValue() == FulfilmentStatusConst.CR_PENDING_QUERY_VERIFICATION.longValue()) {
+			SmSupplier smSupplier = getManagedBean().getFlRequest().getSmSupplier();
+			SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
+			if(smDisciplinaryAction != null) {
+				getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
+				boolean isWarningOnly = false;
+				String warningOrDisciplinaryActionMsg = null;
+				String language =  new FacesScopes().getUserLocale().getLanguage();
+				if(smDisciplinaryAction.isWarning() && !smDisciplinaryAction.isCancelCategory() 
+						&& !smDisciplinaryAction.isSuspendRegistration() && !smDisciplinaryAction.isCancelRegistration() 
+						&& !smDisciplinaryAction.isBlacklistOwner() && !smDisciplinaryAction.isBumiputeraCancel() 
+						&& !smDisciplinaryAction.isManufacturerCancel()) {
+					isWarningOnly = true;
+					warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
+					getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
+				} else if(smDisciplinaryAction.isCancelCategory() 
+						|| smDisciplinaryAction.isSuspendRegistration() || smDisciplinaryAction.isCancelRegistration() 
+						|| smDisciplinaryAction.isBlacklistOwner() || smDisciplinaryAction.isBumiputeraCancel() 
+						|| smDisciplinaryAction.isManufacturerCancel()){
+					warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
+					getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
+				}
+			} else {
+				getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
+			}
+		}
+		//26279 - end
 			
 		//Default procurement type category to Supply of Goods in case of null
 		if(getManagedBean().getFlRequest().getProcurementTypeCategory()==null) {
@@ -1960,7 +1993,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * @param FlItemSummaryReqDTO reqDTO - contractId, orgProfileId,itemId
 	 */
 	public void validateUnitPrice(FlFulfilmentRequest flRequest){
-		log.info("ContractRequestBackingBean.validateUnitPrice");
 		IContractItemSO contractItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
 		String warn ="";
 
@@ -3017,7 +3049,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				//24893 - start
 				if(null != childData.getChargePTJOrg()) {
 					getManagedBean().setChargePTJOrg(childData.getChargePTJOrg());
-					System.out.println("Item Charge PTJ");
+					//System.out.println("Item Charge PTJ");
 				} else {
 					if(getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_SUBMISSION) 
 							|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_APPROVAL) 
@@ -3031,10 +3063,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 							getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getIssuedOrgProfile());
 						}
 						//End-28659
-						System.out.println("PTJ Pembayar");
+						//System.out.println("PTJ Pembayar");
 					} else {
 						getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getChargeOrgProfile());
-						System.out.println("FL Request Charge PTJ");
+						//System.out.println("FL Request Charge PTJ");
 					}					
 				}
 				//24893 - end
@@ -6469,7 +6501,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		if(null == getManagedBean().getFlManualAddress()){
 			getManagedBean().setFlManualAddress(new FlDeliveryAddress());
 			getManagedBean().getFlManualAddress().setDeliveryAddressId(1L);
-			getManagedBean().getFlManualAddress().setFlAddress(new FlAddress());;
+			getManagedBean().getFlManualAddress().setFlAddress(new FlAddress());
 			getManagedBean().getFlManualAddress().getFlAddress().setPmCountry(new PmCountry());
 			getManagedBean().getFlManualAddress().getFlAddress().getPmCountry().setCountryId(1L);
 			getManagedBean().getFlManualAddress().getFlAddress().setPmState(new PmState());
@@ -6676,7 +6708,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		if (schInfo == null)
 			schInfo = new ArrayList<ScheduleInfo>();
 		
-        log.info("schInfo is,ln5983 : "+schInfo);
+        //log.info("schInfo is,ln5983 : "+schInfo);
 		return schInfo;
 	}
 	@SuppressWarnings("static-access")
@@ -6725,6 +6757,15 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		this.CrListSearchTypesDD = CrListSearchTypesDD;
 	}
 	//end-13984 - CrList - Back Button
+	
+	//26279 - start
+	public void viewDisciplinaryAction() {
+		List<DisciplinaryActionVO> disciplinaryActionVOs = retrieveDisciplinaryActions(getManagedBean().getSmDisciplinaryAction());
+		getManagedBean().setDisciplineVOs(disciplinaryActionVOs);
+		RequestContext.getCurrentInstance().execute(
+				"disciplinaryActionHistoryDlg.show();");
+	}
+	//26279 - end
 	
 	//24893 - start
 	/**
