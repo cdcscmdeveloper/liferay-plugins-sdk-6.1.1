@@ -85,6 +85,8 @@ import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
@@ -102,6 +104,7 @@ import my.ep.web.managedbean.fl.po.FulfilmentOrderManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.web.vo.DisciplinaryActionVO;
 
 /**
  * Backing Bean for Fulfillment Order.
@@ -547,6 +550,34 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				flBB.initializeRemarkAndAttachement(resDTO.getFlOrder().getFlWorkflowStatus(), resDTO.getRemarkList(),resDTO.getAttachmentList());
 			}  
 			getManagedBean().setSelectedTabIndex(0);
+			//26279 - start
+			if(getManagedBean().getFulfilmentOrder().getStatus().getStatusId().longValue() == FulfilmentStatusConst.CO_PENDING_CANCELLATION_SUBMISSION) {
+				SmSupplier smSupplier = getManagedBean().getFlRequest().getSmSupplier();
+				SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
+				if(smDisciplinaryAction != null) {
+					getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
+					boolean isWarningOnly = false;
+					String warningOrDisciplinaryActionMsg = null;
+					String language =  new FacesScopes().getUserLocale().getLanguage();
+					if(smDisciplinaryAction.isWarning() && !smDisciplinaryAction.isCancelCategory() 
+							&& !smDisciplinaryAction.isSuspendRegistration() && !smDisciplinaryAction.isCancelRegistration() 
+							&& !smDisciplinaryAction.isBlacklistOwner() && !smDisciplinaryAction.isBumiputeraCancel() 
+							&& !smDisciplinaryAction.isManufacturerCancel()) {
+						isWarningOnly = true;
+						warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
+						getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
+					} else if(smDisciplinaryAction.isCancelCategory() 
+							|| smDisciplinaryAction.isSuspendRegistration() || smDisciplinaryAction.isCancelRegistration() 
+							|| smDisciplinaryAction.isBlacklistOwner() || smDisciplinaryAction.isBumiputeraCancel() 
+							|| smDisciplinaryAction.isManufacturerCancel()){
+						warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
+						getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
+					}
+				} else {
+					getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
+				}
+			}
+			//26279 - end
 		}else{
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
@@ -671,6 +702,34 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				flBB.initializeRemarkAndAttachement(resDTO.getFlOrder().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 			}  
 			getManagedBean().setSelectedTabIndex(0);
+			//26279 - start
+			if(getManagedBean().getFulfilmentOrder().getStatus().getStatusId().longValue() == FulfilmentStatusConst.PO_PENDING_CANCELLATION_SUBMISSION.longValue()) {
+				SmSupplier smSupplier = getManagedBean().getFlRequest().getSmSupplier();
+				SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
+				if(smDisciplinaryAction != null) {
+					getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
+					boolean isWarningOnly = false;
+					String warningOrDisciplinaryActionMsg = null;
+					String language =  new FacesScopes().getUserLocale().getLanguage();
+					if(smDisciplinaryAction.isWarning() && !smDisciplinaryAction.isCancelCategory() 
+							&& !smDisciplinaryAction.isSuspendRegistration() && !smDisciplinaryAction.isCancelRegistration() 
+							&& !smDisciplinaryAction.isBlacklistOwner() && !smDisciplinaryAction.isBumiputeraCancel() 
+							&& !smDisciplinaryAction.isManufacturerCancel()) {
+						isWarningOnly = true;
+						warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
+						getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
+					} else if(smDisciplinaryAction.isCancelCategory() 
+							|| smDisciplinaryAction.isSuspendRegistration() || smDisciplinaryAction.isCancelRegistration() 
+							|| smDisciplinaryAction.isBlacklistOwner() || smDisciplinaryAction.isBumiputeraCancel() 
+							|| smDisciplinaryAction.isManufacturerCancel()){
+						warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
+						getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
+					}
+				} else {
+					getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
+				}
+			}
+			//26279 - end
 		}else{
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
@@ -1814,4 +1873,14 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		return sapOrderNo;
 		
 	}
+	
+    //26279 - start
+	public void viewDisciplinaryAction() {
+		List<DisciplinaryActionVO> disciplinaryActionVOs = retrieveDisciplinaryActions(getManagedBean().getSmDisciplinaryAction());
+		getManagedBean().setDisciplineVOs(disciplinaryActionVOs);
+		RequestContext.getCurrentInstance().execute(
+				"disciplinaryActionHistoryDlg.show();");
+	}
+
+	//26279 - end
 }
