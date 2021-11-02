@@ -44,8 +44,10 @@ import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.web.bean.pm.GlAccountSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.FLSupplierItemVO;
 
 import org.primefaces.model.TreeNode;
@@ -294,7 +296,11 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private String sqNumber;
 	private Long requestNoteId;
 	// 12177 - End	
-	
+	//26279 - start
+	private String disciplinaryActionMessage;
+	private List<DisciplinaryActionVO> disciplineVOs;
+	private SmDisciplinaryAction smDisciplinaryAction;
+	//26279 - end
 	//#28718 - start
 	private boolean triggerPRErrorMsg = false;
 	private boolean isGrouped;
@@ -3308,6 +3314,32 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 		this.requestNoteId = requestNoteId;
 	}
 	// 12177 - End
+	
+	//26279 - start
+	public String getDisciplinaryActionMessage() {
+		return disciplinaryActionMessage;
+	}
+
+	public void setDisciplinaryActionMessage(String disciplinaryActionMessage) {
+		this.disciplinaryActionMessage = disciplinaryActionMessage;
+	}	
+	
+	public List<DisciplinaryActionVO> getDisciplineVOs() {
+		return disciplineVOs;
+	}
+
+	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
+		this.disciplineVOs = disciplineVOs;
+	}
+	
+	public SmDisciplinaryAction getSmDisciplinaryAction() {
+		return smDisciplinaryAction;
+	}
+
+	public void setSmDisciplinaryAction(SmDisciplinaryAction smDisciplinaryAction) {
+		this.smDisciplinaryAction = smDisciplinaryAction;
+	}
+	//26279 - end
 
 	public boolean isRadioCheckDeliveryDate() {
 		return radioCheckDeliveryDate;
