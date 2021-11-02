@@ -2685,13 +2685,15 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			SmCommonUtil.getInstance().setSmSvAddressInfoBySiteTypeAndRefId(smSvTask.getSmSvAddress().getSiteType(),
 					smSvTask.getSmSvAddress().getSiteRefId(),smSvTask.getSmSvAddress(), appl.getApplId());
 			//28775 - Site Visit Grouping Enhancement - 28775 - start
-			List<SmSupplierCategory> suppCatLs = retrieveSupplierCategoryByApplIdAndCategoryL3Id(
+			if(smSvTask.getPmCategoryL3() != null){
+				List<SmSupplierCategory> suppCatLs = retrieveSupplierCategoryByApplIdAndCategoryL3Id(
 					appl.getApplId(), smSvTask.getPmCategoryL3().getCategoryL3Id());
-			smSvTask.getSmSvTemplate().setSuppCategory(suppCatLs.get(0));
-			for(SmSvTaskGroup svTGroup : smSvTask.getSmSvTaskGroups()){
-				suppCatLs = retrieveSupplierCategoryByApplIdAndCategoryL3Id(
+				smSvTask.getSmSvTemplate().setSuppCategory(suppCatLs.get(0));
+				for(SmSvTaskGroup svTGroup : smSvTask.getSmSvTaskGroups()){
+					suppCatLs = retrieveSupplierCategoryByApplIdAndCategoryL3Id(
 						appl.getApplId(), svTGroup.getPmCategoryL3().getCategoryL3Id());
-				svTGroup.getSmSvTemplate().setSuppCategory(suppCatLs.get(0));
+					svTGroup.getSmSvTemplate().setSuppCategory(suppCatLs.get(0));
+				}
 			}
 			//28775 - Site Visit Grouping Enhancement - 28775 - end
 		}
@@ -3130,9 +3132,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		reqDTO.setSmSvTask(svTask);
 		reqDTO.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
 		//28775 - Site Visit Grouping Enhancement - 28775 - start
-		String paramCode = svTask.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
-		reqDTO.setUpdateSmAppl(paramCode.equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING)||
+		if(svTask.getPmCategoryL3() != null){
+			String paramCode = svTask.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
+			reqDTO.setUpdateSmAppl(paramCode.equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING)||
 					paramCode.equals(SupplierManagementConst.CAT_TYPE_TRAVEL));
+		}
 		ISiteVisitSO reqSO = (ISiteVisitSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISiteVisitSO.class);
 		reqSO.saveOrSubmitSiteVisitReport(reqDTO);
 		getManagedBean().setActivePage("1");
