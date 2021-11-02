@@ -10575,7 +10575,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
   	public Boolean isDisabledGroupPtj(){
   		return !isGroupPTJRuleSet();
   	}
-  	
+  	//#29472 - start
   	public void reviseQtDocument() {
   		
 		IQTDetailSO detailSO;
@@ -10599,5 +10599,5 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 	
   	}
-  	
+  	//#29472 - end
 }
