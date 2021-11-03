@@ -11007,6 +11007,58 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	}
 	
 	//[#26282]
+		public void onViewDisciplinaryAction(Long supplierId, String mofNo) {
+			log.info("[#26282] onViewDisciplinaryAction");
+			
+			SmSupplier smSupplier = null;
+			DisciplinaryActionVO voObj = null;
+			String daMsg = "";
+			FacesScopes facesScopes = new FacesScopes();
+			
+			if((facesScopes.hasRoleUser(RoleCode.REQUISITIONER.value()))) {
+				log.info("[#26282] is REQUISITIONER user...");			
+				
+				log.info("[#26282] Supplier Id: " + supplierId + ", MOF No: " + mofNo);
+				if(supplierId != null) {
+					smSupplier = new SmSupplier();
+					// set supplier id
+					smSupplier.setSupplierId(supplierId);
+				} else {
+					log.info("Invalid supplier id!!!");
+					throw new EpException(MessageConst.ERROR_760041);
+				}
+				
+				// set MOF supplier status
+				if(mofNo != null){
+					getManagedBean().setMofSupplier(true);
+				} else {
+					getManagedBean().setMofSupplier(false);
+				}			
+				
+				// get disicplinary action history
+				List<DisciplinaryActionVO> voList = ViewSuppProfileBackingBean.getDisciplinaryActionVO(smSupplier);
+				
+				if(!EntityHelper.isCollectionEmpty(voList) && voList.size() > 0){				
+					voObj = voList.get(0);
+					log.info("[#26282] DA effective date: " + voObj.getStartDate());
+					log.info("[#26282] DA expire date: " + voObj.getEndDate());				
+					daMsg =	ResourceBundleUtils.getMessage("lbl.cm.supplier.disciplinaryAction.warnmessage", new String[] { voObj.getStartDate(), voObj.getEndDate() }, ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale());
+					log.info("[#26282] DA message: " + daMsg);
+					// set disciplinary action message
+					getManagedBean().setDisciplinaryMsg(daMsg);
+					// set disicplinary action history
+					getManagedBean().setDisciplineVOs(voList);
+				} else {
+					getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
+				}
+				
+				// show pop-up dialog						
+				RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show()");
+			}
+		}
+		
+	
+	//[#26282]
 	public void checkForDisciplinaryAction(Long supplierId) {
 		log.info("[#26282] checkForDisciplinaryAction");
 		
