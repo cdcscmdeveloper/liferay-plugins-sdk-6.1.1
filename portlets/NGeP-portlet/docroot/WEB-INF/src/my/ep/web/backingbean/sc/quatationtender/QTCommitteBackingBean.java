@@ -2604,6 +2604,14 @@ public class QTCommitteBackingBean extends
 			//#27502 -End
 		}else {
 			if(!status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)){
+				if(status.equals(QTStatusConst.QT_REVISION_PUBLICATION)){//31954_Start
+				Long committeeStatusId=this.getManagedBean().getSelectedTabBean().getScQtCommittee().getScCommittee().getCommitteStatus().getStatusId();
+				if(null!=committeeStatusId && QTStatusConst.CMT_COMPLETED.equals(committeeStatusId)){
+				return true;	
+				}else{
+				return false;	
+				}
+				}//31954_End		
 				return false;
 			}
 		}
