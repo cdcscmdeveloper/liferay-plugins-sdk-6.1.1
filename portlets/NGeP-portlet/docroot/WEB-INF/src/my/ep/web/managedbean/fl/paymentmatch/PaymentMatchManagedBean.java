@@ -28,8 +28,10 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmGlAccount;
 import my.ep.persistence.entity.pm.common.PmVotFund;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.web.bean.pm.VotSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.TaxInvoiceVO;
 
 /**
@@ -153,7 +155,11 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	private boolean queryDisplay = false;
 	private String queryPaymentDesc;
 	//end 21229
-	
+	//26279 - start
+	private String disciplinaryActionMessage;
+	private List<DisciplinaryActionVO> disciplineVOs;
+	private SmDisciplinaryAction smDisciplinaryAction;
+	//26279 - end
 	//24893 - start
 	private PmOrgProfile chargePTJOrg;
 	//24893 - end
@@ -1575,7 +1581,31 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 	
 	//end 21229
-	
+	//26279 - start
+	public String getDisciplinaryActionMessage() {
+		return disciplinaryActionMessage;
+	}
+
+	public void setDisciplinaryActionMessage(String disciplinaryActionMessage) {
+		this.disciplinaryActionMessage = disciplinaryActionMessage;
+	}	
+
+	public List<DisciplinaryActionVO> getDisciplineVOs() {
+		return disciplineVOs;
+	}
+
+	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
+		this.disciplineVOs = disciplineVOs;
+	}
+
+	public SmDisciplinaryAction getSmDisciplinaryAction() {
+		return smDisciplinaryAction;
+	}
+
+	public void setSmDisciplinaryAction(SmDisciplinaryAction smDisciplinaryAction) {
+		this.smDisciplinaryAction = smDisciplinaryAction;
+	}
+	//26279 - end
 	//24893 - start
 	public PmOrgProfile getChargePTJOrg() {
 		return chargePTJOrg;
