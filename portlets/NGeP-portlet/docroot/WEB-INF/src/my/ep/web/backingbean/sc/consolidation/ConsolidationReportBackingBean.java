@@ -1259,7 +1259,17 @@ public class ConsolidationReportBackingBean extends
 					.getScQtRecommendsByZone();
 			log.debug("scQtFinalization.getScQtRecommendsByZone() : "
 					+ scQtRecommendsByZone);
-
+			//#32009 - related to #21695 - start
+			if(scQtRecommendsByZone.size() > 0){
+				for(List<ScQtRecommend> scQtRecommend: scQtRecommendsByZone.values()){
+					for(ScQtRecommend qtrecommend: scQtRecommend){
+						if(qtrecommend.getOrderQty().compareTo(BigDecimal.ZERO) == 0){
+							scQtRecommend.remove(qtrecommend);
+						}
+					}	
+				}
+			}
+			//#32009 - related to #21695 - end
 			if (selectedZone != null && scQtRecommendsByZone != null
 					&& scQtRecommendsByZone.size() > 0) {
 				getManagedBean().setItemsList(
@@ -2257,14 +2267,16 @@ public class ConsolidationReportBackingBean extends
 		// farid start bug #31556 related to #21695
 		// exclude validation ranking if has not offer
 		// Package wise validation for partial offer
+//-------------> HERE #31556 & #31555 related to #21695 Farid START				
 		if (SourcingConstants.EVALUATE_BY_BOTH_PACKAGE_ITEM
 				.equalsIgnoreCase(this.getManagedBean().getScQt()
 						.getEvaluateBy()) && !this.getManagedBean().isOfferAll()) {
 			qualifiedSupplierBeans = getQtEvaluationResultDtlBeansWithRank(
 					specZoneDtl, null, qualifiedSuppliers);
-			validateRanking(qualifiedSupplierBeans, false, null, specZoneDtl,
+			validateRankingPO(qualifiedSupplierBeans, false, null, specZoneDtl,
 					totalQualifiedSuppliers);
 		}
+//-------------> HERE #31556 & #31555 related to #21695 Farid END			
 		// farid start bug #31556 related to #21695
 		// exclude validation ranking if has not offer
 		// End of // Package wise validation for partial offer
@@ -2286,33 +2298,137 @@ public class ConsolidationReportBackingBean extends
 							specZoneDtl, item.getRequestItem(),
 							itemQualifiedSuppliers);
 		// #31443 Start -exclude validate if quantity 0					
-
+//-------------> HERE #31556 & #31555 related to #21695 Farid START	
 					 if(specZoneDtl != null){
 						for(TplSpecZoneQty finditemOfferZone : item.getRequestItem().getTplSpecQuestion().getTplSpecZoneQties()){
 							if(finditemOfferZone != null && !finditemOfferZone.getTplSpecZoneOffer().isOffer()
 									&& item.getOrderQty() != null && item.getOrderQty().compareTo(BigDecimal.ZERO) > 0){
 								log.info("validate zonal offer");
-								validateRanking(qualifiedSupplierBeans, true, item,
+								validateRankingPO(qualifiedSupplierBeans, true, item,
 										specZoneDtl, totalQualifiedSuppliers);
 							}
 						}
 					}
-//#bug 31520					 
+//-------------> HERE #31556 & #31555 related to #21695 Farid END						 
+//-------------> HERE #31556 & #31555 related to #21695 Farid START				 
 					else {
 						for(TplSpecAnswer finditemOfferNonZonal : item.getRequestItem().getTplSpecQuestion().getTplSpecAnswers()){
 							if(finditemOfferNonZonal != null && finditemOfferNonZonal.getRatePerUom().compareTo(BigDecimal.ZERO) > 0
 									&& item.getRequestItem().getQuantity() != null 
 										&& item.getRequestItem().getQuantity().compareTo(BigDecimal.ZERO) > 0){
 								log.info("validate nonzonal offer");
-								validateRanking(qualifiedSupplierBeans, true, item,
+								validateRankingPO(qualifiedSupplierBeans, true, item,
 										specZoneDtl, totalQualifiedSuppliers);
 							}
 						}
 					}
-			// #31443 End				
+//-------------> HERE #31556 & #31555 related to #21695 Farid END				
 				}
 			}
 
 			// End of item wise validation
 		}
+//#31556 & #31555 related to #21695 Farid END				
+//-------------> HERE #31556 & #31555 related to #21695 Farid START		
+		private void validateRankingPO(
+				List<QtEvaluationResultDtlBean> qualifiedSupplierBeans,
+				boolean isItemized, ScQtRecommend item, TplSpecZoneDtl specZoneDtl,
+				int totalQualifiedSuppliers) {
+			int totalRanksCount = 0;
+			int minRankCount = qualifiedSupplierBeans.size();
+			if (qualifiedSupplierBeans.size() == 1) {
+				minRankCount = 1;
+			}else if (qualifiedSupplierBeans.size() == 2) {
+				minRankCount = 1;
+			} else if (qualifiedSupplierBeans.size() > 2) {
+				minRankCount = 3;
+			}
+
+			int currentRank = 0;
+			EpException epException = null;
+			String expMsgForItem = StringUtils.EMPTY;
+
+			if (isItemized) {
+				expMsgForItem = "- Item : " + item.getRequestItem().getItemName();
+			}
+
+			if (CollectionUtils.isNotEmpty(qualifiedSupplierBeans)) {
+
+				// Sort the suppliers as per the rank given by the desk officer
+				Collections.sort(qualifiedSupplierBeans,
+						new Comparator<QtEvaluationResultDtlBean>() {
+							public int compare(QtEvaluationResultDtlBean supplier1,
+									QtEvaluationResultDtlBean supplier2) {
+								if (supplier1.getDeskOfficerRank() != null
+										&& supplier2.getDeskOfficerRank() != null) {
+
+									// Ascending order
+									return supplier1.getDeskOfficerRank()
+											.intValue()
+											- supplier2.getDeskOfficerRank()
+													.intValue();
+								}
+								return -1;
+							}
+						});
+
+				for (QtEvaluationResultDtlBean qualifiedSupp : qualifiedSupplierBeans) {
+					BigDecimal deskOfficerRank = qualifiedSupp.getDeskOfficerRank();
+
+					if (deskOfficerRank != null) {
+						int doRank = deskOfficerRank.intValue();
+						int evaluationRank = qualifiedSupp.getEvaluationRank();
+						if (evaluationRank != doRank
+								&& StringUtils.isBlank(qualifiedSupp
+										.getDeskOfficerRemark())) {
+							epException = new EpException(
+									MessageConst.ERROR_760431,
+									new String[] { expMsgForItem });
+						}
+
+						if (epException == null) {
+							if (doRank == currentRank) {
+								epException = new EpException(
+										MessageConst.ERROR_760381, new String[] {
+												String.valueOf(currentRank),
+												expMsgForItem });
+							} else if (doRank > totalQualifiedSuppliers) {
+								epException = new EpException(
+										MessageConst.ERROR_760382,
+										new String[] {
+												String.valueOf(totalQualifiedSuppliers),
+												expMsgForItem });
+							} else if (doRank != (currentRank + 1)) {
+								if (currentRank == 0) {
+									epException = new EpException(
+											MessageConst.ERROR_760427,
+											new String[] { expMsgForItem });
+								} else {
+									epException = new EpException(
+											MessageConst.ERROR_760383,
+											new String[] {
+													String.valueOf(currentRank),
+													expMsgForItem });
+								}
+							}
+						}
+						if (epException != null) {
+							setZoneAndTabIndexOnException(isItemized, specZoneDtl);
+							throw epException;
+						}
+
+						currentRank = doRank;
+						++totalRanksCount;
+					}
+				}
+			}
+
+			if (totalRanksCount < minRankCount) {
+				setZoneAndTabIndexOnException(isItemized, specZoneDtl);
+				throw new EpException(MessageConst.ERROR_760384, new String[] {
+						String.valueOf(minRankCount), expMsgForItem });
+			}
+		}
+		
+//-------------> HERE #31556 & #31555 related to #21695 Farid END				
 }
