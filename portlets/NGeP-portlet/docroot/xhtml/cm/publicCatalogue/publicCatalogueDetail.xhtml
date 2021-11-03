@@ -95,22 +95,22 @@
 						</td>
 					</tr>
 					<tr style="height: 40px;">
-						<td colspan="4" style="background-color: #DBDBDB;"><h:outputText
-								value="#{lbl['lbl.cm.normal.price']}  RM #{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price}"
-								style="font-weight:bold;vertical-align: middle;float:left;font-size:16px;padding-left: 8px;" />
-								
-							<!-- #10747 - Shafie - Start -->
+						<td colspan="4" style="background-color: #DBDBDB;">
+							<!-- #10747 - Shafie,Soo - Start -->
+							<h:outputText
+								value="#{lbl['lbl.cm.normal.price']} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RM #{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price}"
+								style="font-weight: bold; vertical-align: middle; float: left; font-size: 16px; padding-left: 8px;" />
 							<c:if test="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.price==null}">
 							<h:outputText 
-								value="#{lbl['lbl.cm.promotion.price']}  #{lbl['lbl.txt.na']} "
-								style="font-weight:bold;vertical-align: middle;float:left;font-size:16px;padding-left: 120px;" />
+								value="#{lbl['lbl.cm.promotion.price']} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #{lbl['lbl.txt.na']} "
+								style="font-weight: bold; vertical-align: middle; float: left; font-size: 16px; padding-left: 100px;" />
 							</c:if>	
 							<c:if test="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.price!=null}">
 							<h:outputText 	 			
-								value="#{lbl['lbl.cm.promotion.price']} RM #{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.price}"
-								style="font-weight:bold;vertical-align: middle;float:left;font-size:16px;padding-left: 120px;" />			
+								value="#{lbl['lbl.cm.promotion.price']} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RM #{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.price}"
+								style="font-weight: bold; vertical-align: middle; float: left; font-size: 16px; padding-left: 100px;" />			
 							</c:if>
-							<!-- #10747 - Shafie - End -->
+							<!-- #10747 - Shafie,Soo - End -->
 						</td>
 					</tr>
 					<tr style="height: 30px;">
