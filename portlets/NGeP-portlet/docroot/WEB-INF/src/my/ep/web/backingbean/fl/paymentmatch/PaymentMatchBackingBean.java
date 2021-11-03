@@ -330,7 +330,10 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 					}
 					setAdjustmentDocNo(resDTO.getPaymentAdvice().getFlInvoice());
 					setStopInstrNo(resDTO.getPaymentAdvice().getFulfilmentOrder());					
-					flBB.initializeRemarkAndAttachement(resDTO.getPaymentAdvice().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
+					//32026 start
+					List<FlRemark> remarkList = initializeRemarkList(paymentAdvice.getPaymentAdviceId());
+					flBB.initializeRemarkAndAttachement(paymentAdvice.getFlWorkflowStatus(), remarkList, resDTO.getAttachmentList());
+					//32026 end
 				}
 			}
 		}finally {
