@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.sc.consolidation;
 
@@ -1271,7 +1271,17 @@ public class ConsolidationReportBackingBean extends
 					.getScQtRecommendsByZone();
 			log.debug("scQtFinalization.getScQtRecommendsByZone() : "
 					+ scQtRecommendsByZone);
-
+			//#32009 - related to #21695 - start
+			if(scQtRecommendsByZone.size() > 0){
+				for(List<ScQtRecommend> scQtRecommend: scQtRecommendsByZone.values()){
+					for(ScQtRecommend qtrecommend: scQtRecommend){
+						if(qtrecommend.getOrderQty().compareTo(BigDecimal.ZERO) == 0){
+							scQtRecommend.remove(qtrecommend);
+						}
+					}	
+				}
+			}
+			//#32009 - related to #21695 - end
 			if (selectedZone != null && scQtRecommendsByZone != null
 					&& scQtRecommendsByZone.size() > 0) {
 				getManagedBean().setItemsList(
