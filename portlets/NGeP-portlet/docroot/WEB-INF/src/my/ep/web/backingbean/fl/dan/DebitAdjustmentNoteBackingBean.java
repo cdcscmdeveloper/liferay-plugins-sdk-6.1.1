@@ -57,6 +57,8 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -69,6 +71,7 @@ import my.ep.web.managedbean.fl.dan.DebitAdjustmentNoteManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.AdjustmentItemNodeVO;
+import my.ep.web.vo.DisciplinaryActionVO;
 
 /**
  * Managed Bean for Debit Adjustment Note.
@@ -210,6 +213,34 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 				getManagedBean().setGfmasErrorDesc(MessageUtils.getMessage("ERR-"+errRes.getErrorCode(), new String[]{}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale()));
 				getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
 			}
+			//26279 - start
+			if(getManagedBean().getAdjustment().getStatus().getStatusId().longValue() == FulfilmentStatusConst.DN_PENDING_APPROVAL.longValue()) {
+				SmSupplier smSupplier = getManagedBean().getAdjustment().getFlRequest().getSmSupplier();
+				SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
+				if(smDisciplinaryAction != null) {
+					getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
+					boolean isWarningOnly = false;
+					String warningOrDisciplinaryActionMsg = null;
+					String language =  new FacesScopes().getUserLocale().getLanguage();
+					if(smDisciplinaryAction.isWarning() && !smDisciplinaryAction.isCancelCategory() 
+							&& !smDisciplinaryAction.isSuspendRegistration() && !smDisciplinaryAction.isCancelRegistration() 
+							&& !smDisciplinaryAction.isBlacklistOwner() && !smDisciplinaryAction.isBumiputeraCancel() 
+							&& !smDisciplinaryAction.isManufacturerCancel()) {
+						isWarningOnly = true;
+						warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
+						getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
+					} else if(smDisciplinaryAction.isCancelCategory() 
+							|| smDisciplinaryAction.isSuspendRegistration() || smDisciplinaryAction.isCancelRegistration() 
+							|| smDisciplinaryAction.isBlacklistOwner() || smDisciplinaryAction.isBumiputeraCancel() 
+							|| smDisciplinaryAction.isManufacturerCancel()){
+						warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
+						getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
+					}
+				} else {
+					getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
+				}
+			}
+			//26279 - end
 		}else{
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
@@ -653,6 +684,14 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 		}
 		return null; 
 	}
+	//26279 - start
+	public void viewDisciplinaryAction() {
+		List<DisciplinaryActionVO> disciplinaryActionVOs = retrieveDisciplinaryActions(getManagedBean().getSmDisciplinaryAction());
+		getManagedBean().setDisciplineVOs(disciplinaryActionVOs);
+		RequestContext.getCurrentInstance().execute(
+				"disciplinaryActionHistoryDlg.show();");
+	}
+	//26279 - end
 	
 	//29599-start
 	private BigDecimal getTotalOrderedAmt(Long flReqId){
