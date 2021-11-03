@@ -371,7 +371,10 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 				paymentAdvice = resDTO.getPaymentAdvice();
 				setAdjustmentDocNo(paymentAdvice.getFlInvoice());
 				setStopInstrNo(paymentAdvice.getFulfilmentOrder());
-				flBB.initializeRemarkAndAttachement(paymentAdvice.getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
+				//32026 start
+				List<FlRemark> remarkList = initializeRemarkList(paymentAdvice.getPaymentAdviceId());
+				flBB.initializeRemarkAndAttachement(paymentAdvice.getFlWorkflowStatus(), remarkList, resDTO.getAttachmentList());
+				//32026 end
 			}
 			
 			//start 21229
@@ -2590,8 +2593,26 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			remarklistT.add(remark);
 			getManagedBean().setRemarkReviseList(remarklistT);
 		}else {
+			remarklist.add(0,remark); // 32026
 			getManagedBean().setRemarkReviseList(remarklist);
-		}			
+		}
+	}
+	/**
+	 * Initialize remark #32026 .
+	 * <p> get remarks lists.
+	 * @param docid
+	 */
+	public List<FlRemark> initializeRemarkList(Long docId) {
+		//32026 start
+		IPaymentMatchSO paymentMatchSO = (IPaymentMatchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IPaymentMatchSO.class);
+		
+		FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTORemark = new FulfilmentResDTO();
+		flReqDTO.setDocId(docId);
+		flReqDTO.setDocType(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
+		resDTORemark = paymentMatchSO.retrieveRemarkByDocIdAndTypeAndNullSection(flReqDTO);
+		return resDTORemark.getRemarkList();
+		//32026 end
 		
 	}
 	
