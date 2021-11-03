@@ -244,7 +244,7 @@ div[id$="catalogueGridViewID_content"] td.ui-datagrid-column {
 									style="font-size: 20px; float: right; opacity: 0.3"></p:graphicImage>
 									</h:panelGroup>
 									</h:commandLink>
-									<p:outputLabel value="#{lbl['lbl.cm.view']}" 
+									<p:outputLabel value="#{lbl['lbl.cm.pub.catalog.view']}" 
 									style="font-weight: bold; float: right; font-size: 18px; margin-left: 20px;"/>	
 									
 									<p:selectOneMenu
@@ -336,7 +336,7 @@ div[id$="catalogueGridViewID_content"] td.ui-datagrid-column {
 													<ui:fragment rendered="#{supplierItem.promotion != null}">
 													<tr>
 														<td style="text-align: center;">RM
-															<h:outputText id="promoThumbnail" value="#{supplierItem.promotion}" />
+															<h:outputText id="promoThumbnail" value="#{supplierItem.promotion}" /	
 														</td>
 													</tr>
 													<tr>
@@ -387,8 +387,12 @@ div[id$="catalogueGridViewID_content"] td.ui-datagrid-column {
 											</h:panelGroup>
 											<h:panelGroup
 												rendered="#{supplierItem.imagePath != null }">
-													<img src="/NGeP-portlet/image?imageName=#{supplierItem.epNo}/#{supplierItem.imagePath}"
-														 style="height: 70px; width: 70px; left: 0px !important;" />
+													<!-- #10747 - Soo - Start -->
+													<div style="text-align: center;">
+														<img src="/NGeP-portlet/image?imageName=#{supplierItem.epNo}/#{supplierItem.imagePath}"
+															 style="height: 70px; width: 70px; left: 0px !important;" />
+													</div>
+													<!-- #10747 - Soo - End -->
 											</h:panelGroup>
 										</p:column>
 										<p:column style="width :30%;white-space:normal">
