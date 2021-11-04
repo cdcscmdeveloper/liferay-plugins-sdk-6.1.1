@@ -2480,7 +2480,7 @@ u {
 									#end
 									
 									</td>
-									<td valign="top" bgcolor="#d0eaee"  class="title border left"												
+									<td valign="top" bgcolor="#d0eaee"  class="title border left" style="text-align: left; padding-left: 5px; font-size:12px;">
 										#if ($tplspecQuestion.clUomFrequency)
 											$tplspecQuestion.clUomFrequency
 										#end
