@@ -1214,6 +1214,10 @@ public class SpecificationBackingBean extends
 			if(panelItems.size()==1){
 				CtPanelItem item=panelItems.get(0);
 				if(ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC.equals(item.getItemCategoryId().getParameterCode())){
+					// 31499 -start-
+					specMaster.setCtPanelItem(item);
+					// 31499 -end-					
+					
 					String description=item.getCtPanelItemGroup().getGroupName();
 					itemName=description;
 					panelCoverage=item.getPanelCoverageId().getParameterCode();
