@@ -548,22 +548,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 		getManagedBean().getContractVer().getScheduleAttachments().remove(index);
 	}
-	
-	//26186 start
-	/**
-	 * The method used to delete disciplinary action attachment from the list.
-	 * 
-	 * @param index  file index of attachment list
-	 */
-	public void deleteDisciplinaryAttachmentAction(int index) {
-		CtAttachment attachment = getManagedBean().getContractVer().getDisciplinaryActionAttachments().get(index);
-		if(attachment.getAttachmentId() != null){
-			getManagedBean().getDeleteAttachmentList().add(attachment);
-		}
-		getManagedBean().getContractVer().getDisciplinaryActionAttachments().remove(index);
-	}
-	//26186 end
-
+		
 	/**
 	 * The method used to retrieve the address of supplier.
 	 * 
