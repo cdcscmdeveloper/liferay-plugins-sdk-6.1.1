@@ -3277,6 +3277,8 @@ public class TemplateSpecBackingBean extends
 	public void offerTypeChange(boolean offerType,Long parentQuestionId, int rowindex) {
 		List<TplSpecAnswer> returnSpec = new ArrayList<>();
 		TemplateSpecBean templateSpecBean = new TemplateSpecBean();
+		Long Auto = 323L;
+		Long User = 324L;
 		if(this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()!=null && this.getManagedBean().getTemplateSpecBean().getSpecAnswerList().size()>0){
 			for(TplSpecAnswer tplSpecAnswer: this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
 				if(tplSpecAnswer.getTplSpecQuestion().getParentSpecQuestion()!=null){
@@ -3286,7 +3288,30 @@ public class TemplateSpecBackingBean extends
 					 */
 					if(tplSpecAnswer.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId().equals(parentQuestionId)){
 						tplSpecAnswer.setOffer(offerType);
+						// Bug #32015 Farid start 5/11/2021						
+						if(offerType){
+							if(tplSpecAnswer.getTplSpecQuestion().getScoreTypeCode() != null && tplSpecAnswer.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals(new Long(User))){
+								tplSpecAnswer.setUserScore(null);
+							}
+							else if(tplSpecAnswer.getTplSpecQuestion().getScoreTypeCode() != null && 
+									tplSpecAnswer.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals(new Long(Auto))){
+								tplSpecAnswer.setAutoScore(null);
+							}
+						}else{
+							if(tplSpecAnswer.getTplSpecQuestion().getScoreTypeCode() != null && 
+									tplSpecAnswer.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals(new Long(User))){
+								tplSpecAnswer.setUserScore(new BigDecimal(0));
+							}
+							else if(tplSpecAnswer.getTplSpecQuestion().getScoreTypeCode() != null && 
+									tplSpecAnswer.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals(new Long(Auto))){
+								tplSpecAnswer.setAutoScore(new BigDecimal(0));
+							}
+							
+						}
 					}
+					
+					// Bug #32015 Farid end 5/11/2021
+					
 				}else{
 					if(tplSpecAnswer.getTplSpecQuestion().getSpecQuestionId().equals(parentQuestionId)){
 						/*
@@ -3405,6 +3430,10 @@ public class TemplateSpecBackingBean extends
 	public void offerCheckboxChange(TplSpecQuestion specQuestion) {
 		boolean flag = true;
 		int count = 0;
+		// Bug #32015 Farid start 5/11/2021
+		Long Auto = 323L;
+		Long User = 324L;
+		// Bug #32015 Farid end 5/11/2021
 		for(TplSpecZoneQty specQty : specQuestion.getTplSpecZoneQties()){
 			if(specQty!=null){
 				if(!specQty.getTplSpecZoneOffer().isOffer() && !specQty.getQty().equals(new BigDecimal(0))){
@@ -3413,22 +3442,44 @@ public class TemplateSpecBackingBean extends
 				}
 			}
 		}
-		if(count == 0){
+		
 			for(TplSpecAnswer specAns : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
 				
 				if (specAns != null && specAns.getTplSpecQuestion().getParentSpecQuestion()!=null){
 					if(specAns.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId().equals(specQuestion.getSpecQuestionId())){
-						
-						specAns.setAnswerText("");
-						specAns.setAnswerNumeric(null);
-						specAns.setAnswerRemark(null);
-						specAns.setAnswerCompliance(null);
+						if(count == 0){
+							specAns.setAnswerText("");
+							specAns.setAnswerNumeric(null);
+							specAns.setAnswerRemark(null);
+							specAns.setAnswerCompliance(null);
+						// Bug #32015 Farid start 5/11/2021
+							if(specAns.getTplSpecQuestion().getScoreTypeCode() != null &&
+									specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals(new Long(User))){
+								specAns.setUserScore(new BigDecimal(0));
+							}else if(specAns.getTplSpecQuestion().getScoreTypeCode() != null && 
+									specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals(new Long(Auto))){
+								specAns.setAutoScore(new BigDecimal(0));
+							}
+							
+						}
+						else{
+							if(specAns.getTplSpecQuestion().getScoreTypeCode() != null && 
+									specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals(new Long(User))){
+								specAns.setUserScore(null);
+							}else if(specAns.getTplSpecQuestion().getScoreTypeCode() != null && 
+									specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals(new Long(Auto))){
+								specAns.setUserScore(null);
+							}
+							
+						}
+						// Bug #32015 Farid end 5/11/2021
 					}
 				}
 			}
-		}
 		
 	}
+
+
 //#21695 Farid end 8/6/2021
 
 //#21695 Farid start 29/6/2021	
