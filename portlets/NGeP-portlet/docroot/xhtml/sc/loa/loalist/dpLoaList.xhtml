@@ -9,6 +9,9 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
 		<p:messages id="loaMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		<ui:include src="dploaListButtons.xhtml" />
 		<ui:include src="dpLoaListHeader.xhtml" />
@@ -20,7 +23,7 @@
 				rows="10" rowIndexVar="rowIndex">
 				<ac:paginator for="dpLoaTbl" />
 
-				<p:column headerText="#{lbl['lbl.sc.supplier.name']}">
+				<p:column headerText="#{lbl['lbl.sc.supplier.name']}" style="text-align: center;">
 					#{scPurchaseRequest.requestNoteDtls[0].scRequestSupplierItem.smSupplier.companyName}
 				</p:column>
 				
@@ -39,14 +42,12 @@
 					#{dpLOABackingBean.getParameterDesc(scPurchaseRequest.requestNoteDtls[0].fulfilmentType)}
 				</p:column>
 				
-				<p:column headerText="#{lbl['lbl.sc.request.note.delivery.term']}"
-					style="width:10%">
+				<p:column headerText="#{lbl['lbl.sc.request.note.delivery.term']}" style="white-space: normal;">
 					#{scPurchaseRequest.requestNoteDtls[0].deliverTerm} 
 					#{dpLOABackingBean.getParameterDesc(scPurchaseRequest.requestNoteDtls[0].deliverTermType)}
 				</p:column>
 				
-				<p:column headerText="#{lbl['lbl.sc.procurment.type.category']}"
-					style="width:10%">
+				<p:column headerText="#{lbl['lbl.sc.procurment.type.category']}" style="white-space: normal;">
 					#{dpLOABackingBean.getParameterDesc(scPurchaseRequest.requestNoteDtls[0].procurementTypeCategory)}
 				</p:column>
 				
@@ -56,7 +57,7 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.status']}"
-					style="width:15%;white-space: normal;">
+					style="white-space: normal;">
 					<c:choose>
 						<c:when test="#{!dpLOABackingBean.isSqStillValid(scPurchaseRequest.scLoa.pmStatus.statusId)}">
 							<h:outputText value="#{dpLOABackingBean.getStatusDescById(DPStatusConstants.SQ_EXPIRED)}" />
@@ -66,8 +67,22 @@
 						</c:otherwise>
 					</c:choose>
 				</p:column>
+				
+				<p:column style="white-space:normal;text-align:center;">
+					<f:facet name="header" style="white-space:normal;">
+						<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}"/>
+						<ac:iconTooltip value="#{lbl['lbl.sc.tooltip.disciplinary.action.taken']}"/>
+					</f:facet>
+					<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						rendered="#{scPurchaseRequest.requestNoteDtls[0].scRequestSupplierItem.smSupplier ne null and dpLOABackingBean.getDisciplinaryActionActive(scPurchaseRequest.requestNoteDtls[0].scRequestSupplierItem.smSupplier)}"
+						action="#{dpLOABackingBean.supplierDisciplinaryActionInfo(scPurchaseRequest.requestNoteDtls[0].scRequestSupplierItem.smSupplier)}" 
+						process="@this" partialSubmit="true" update=":form">
+						<h:outputText value="#{lbl['lbl.sc.da.yes']}" style="color:red;"/>
+					</p:commandLink>
+					<h:outputText rendered="#{scPurchaseRequest.requestNoteDtls[0].scRequestSupplierItem.smSupplier ne null and !dpLOABackingBean.getDisciplinaryActionActive(scPurchaseRequest.requestNoteDtls[0].scRequestSupplierItem.smSupplier)}" value="#{lbl['lbl.sc.da.no']}"/>									   
+				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%">
+				<p:column headerText="#{lbl['lbl.sc.action']}" style="text-align: center;">
 					<p:commandButton value="#{lbl['lbl.sc.loiloa.create.loa']}"
 						action="#{lOADetailBackingBean.editLOAAction(scPurchaseRequest.scLoa)}"
 						rendered="#{scPurchaseRequest.scLoa.brandNew}" />
@@ -89,6 +104,11 @@
 				</p:column>
 
 			</p:dataTable>
-		</p:panel>
+		</p:panel>		
+		<ac:disciplinaryActionActiveDp voList="#{dpLOABackingBean.managedBean.disciplineVOs}" 
+				startDate="#{dpLOABackingBean.managedBean.disciplinaryActionStartDate}"
+				endDate="#{dpLOABackingBean.managedBean.disciplinaryActionEndDate}"
+				isWarning="#{dpLOABackingBean.managedBean.disciplinaryActionWarning}"/>
 	</ui:define>
+	
 </ui:composition>
