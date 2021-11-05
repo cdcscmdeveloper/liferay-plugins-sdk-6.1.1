@@ -173,6 +173,25 @@
 						</p:row>
 					</p:panelGrid>
 				</p:column>
+				
+				<!-- 26284 Start -->
+				<p:column style="white-space:normal;text-align:center;">
+					<f:facet name="header" style="white-space:normal;">
+						<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}"/>
+						<ac:iconTooltip value="#{lbl['lbl.sc.tooltip.disciplinary.action.taken']}"/>
+					</f:facet>	
+					<h:panelGroup rendered="#{requestNoteDtl.scRequestSupplierItem.smSupplier.supplierId ne null}">
+						<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+							rendered="#{requestNoteBackingBean.getDisciplinaryActionActive(requestNoteDtl.scRequestSupplierItem.smSupplier)}"
+							action="#{requestNoteBackingBean.supplierDisciplinaryActionInfo(requestNoteDtl.scRequestSupplierItem.smSupplier)}" 
+							process="@this" partialSubmit="true" update=":form">
+							<h:outputText value="#{lbl['lbl.sc.da.yes']}" style="color:red;"/>
+						</p:commandLink>
+						<h:outputText rendered="#{!requestNoteBackingBean.getDisciplinaryActionActive(requestNoteDtl.scRequestSupplierItem.smSupplier)}" value="#{lbl['lbl.sc.da.no']}"/>	
+					</h:panelGroup>	
+					<h:outputText rendered="#{requestNoteDtl.scRequestSupplierItem.smSupplier.supplierId eq null}" value="#{lbl['lbl.sc.no.available']}"/>																			   
+				</p:column>
+				<!-- 26284 End -->
 
 				<p:column headerText="#{lbl['lbl.sc.request.note.price.offered']}"
 					style="width: 45px;white-space: normal;">
@@ -476,4 +495,12 @@
 			</div>
 		</p:panel>
 	</p:dialog>
+	
+	<!-- 26284 Start -->
+	<ac:disciplinaryActionActiveDp voList="#{requestNoteBackingBean.managedBean.disciplineVOs}" 
+				startDate="#{requestNoteBackingBean.managedBean.disciplinaryActionStartDate}"
+				endDate="#{requestNoteBackingBean.managedBean.disciplinaryActionEndDate}"
+				isWarning="#{requestNoteBackingBean.managedBean.disciplinaryActionWarning}"/>
+	<!-- 26284 End -->
+				
 </ui:composition>
