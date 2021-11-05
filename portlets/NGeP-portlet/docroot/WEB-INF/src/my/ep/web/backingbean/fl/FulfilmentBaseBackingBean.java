@@ -379,7 +379,9 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		flAddress.setPhoneNo(supplierBranch.getPhoneNo());
 		flAddress.setPhoneArea(supplierBranch.getPhoneArea());
 		flAddress.setPhoneCountry(supplierBranch.getPhoneCountry());
-		if(supplierBranch.getSmPersonnel() != null){
+		//#31920 filter active user
+		if(supplierBranch.getSmPersonnel() != null && 
+				supplierBranch.getSmPersonnel().getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE  ){
 			flAddress.setContactEmail(supplierBranch.getSmPersonnel().getEmail());
 			flAddress.setContactFaxNo(supplierBranch.getSmPersonnel().getFaxNo());
 			flAddress.setContactMobileNo(supplierBranch.getSmPersonnel().getMobileNo());
@@ -427,7 +429,9 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 			}
 		}
 		for(SmPersonnel smPersonnel: supplier.getSmAppl().getSmPersonnels()){
-			if(smPersonnel.isContactPerson()){
+			//#31920 filter active user
+			if(smPersonnel.isContactPerson() 
+					&& smPersonnel.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE){
 				flAddress.setContactEmail(smPersonnel.getEmail());
 				flAddress.setContactFaxNo(smPersonnel.getFaxNo());
 				flAddress.setContactMobileNo(smPersonnel.getMobileNo());
