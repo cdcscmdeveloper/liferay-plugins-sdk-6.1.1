@@ -2337,7 +2337,8 @@ public class SupplierFinalizationBackingBean extends
 					.equals(getManagedBean().getCurrentStatusId())) {
 				
 				// #28834 - #31934 - starts.
-				validateFinalizationReports(null, false);
+				// validateFinalizationReports(null, false); Temp comment to fix #31934 #22
+				validateFinalizationReports(null);
 				// #28834 - #31934 - ends.
 				
 				if (CollectionUtils.isNotEmpty(meetingList)) {
