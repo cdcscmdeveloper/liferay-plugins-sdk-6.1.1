@@ -6,7 +6,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
 		<p:messages id="catCmpMsg" showDetail="true"
@@ -178,7 +179,17 @@
 										<td colspan="5"
 											style="background-color: #f5f5f5; width: 270px;">#{supplierItem.itemDesc}&#160;</td>
 									</tr>
-
+									<tr height="40px"
+										style="border-bottom: 2px solid #FFFFFF !important;">
+										<td colspan="5"
+											style="background-color: #f5f5f5; width: 270px;"><p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+												rendered="#{supplierItem.smSupplier ne null and catalogueBackingBean.getDisciplinaryActionActive(supplierItem.smSupplier)}"
+												action="#{catalogueBackingBean.supplierDisciplinaryActionInfo(supplierItem.smSupplier)}" 
+												process="@this" partialSubmit="true" update=":form">
+												<h:outputText value="#{lbl['lbl.sc.da.yes']}" style="color:red;"/>
+												</p:commandLink>
+												<h:outputText rendered="#{supplierItem.smSupplier ne null and !catalogueBackingBean.getDisciplinaryActionActive(supplierItem.smSupplier)}" value="#{lbl['lbl.sc.da.no']}"/>&#160;</td>
+									</tr>
 
 								</table>
 
@@ -248,6 +259,10 @@
 		<ui:include src="/xhtml/sc/directpurchase/requestnote/addToCartPopup.xhtml" />
 		<ui:include
 			src="/xhtml/sc/directpurchase/searchcatalogue/recentPricePopup.xhtml" />
+		<ac:disciplinaryActionActiveDp voList="#{catalogueBackingBean.managedBean.disciplineVOs}" 
+				startDate="#{catalogueBackingBean.managedBean.disciplinaryActionStartDate}"
+				endDate="#{catalogueBackingBean.managedBean.disciplinaryActionEndDate}"
+				isWarning="#{catalogueBackingBean.managedBean.disciplinaryActionWarning}"/>
 	</ui:define>
 
 </ui:composition>

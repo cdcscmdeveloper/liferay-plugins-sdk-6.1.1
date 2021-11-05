@@ -6,6 +6,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
 	<ac:lovPopup />
 	<p:panel id="suppCriteria" header="#{lbl['lbl.sc.sq.supp.criteria']}"
 		toggleable="true">
@@ -215,6 +216,19 @@
 						<p:column headerText="#{lbl['lbl.sc.mof.no']}" style="width:10%">
 							<h:outputText value="#{quoteSupplier.mofNumber}" />
 						</p:column>
+						<p:column style="white-space:normal;text-align:center;width:20%;">
+							<f:facet name="header" style="white-space:normal;">
+								<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}"/>
+								<ac:iconTooltip value="#{lbl['lbl.sc.tooltip.disciplinary.action.taken']}"/>
+							</f:facet>
+							<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								rendered="#{quoteSupplier.smSupplier ne null and simpleQuoteBackingBean.getDisciplinaryActionActive(quoteSupplier.smSupplier)}"
+								action="#{simpleQuoteBackingBean.supplierDisciplinaryActionInfo(quoteSupplier)}" 
+								process="@this" partialSubmit="true" update=":form">
+								<h:outputText value="#{lbl['lbl.sc.da.yes']}" style="color:red;"/>
+							</p:commandLink>
+							<h:outputText rendered="#{quoteSupplier.smSupplier ne null and !simpleQuoteBackingBean.getDisciplinaryActionActive(quoteSupplier.smSupplier)}" value="#{lbl['lbl.sc.da.no']}"/>									   
+						</p:column>
 					</p:dataTable>
 
 					<c:if test="#{isEditable}">
@@ -349,5 +363,9 @@
 			</p:tabView>
 		</h:panelGroup>
 	</p:panel>
+	<ac:disciplinaryActionActiveDp voList="#{simpleQuoteBackingBean.managedBean.disciplineVOs}" 
+				startDate="#{simpleQuoteBackingBean.managedBean.disciplinaryActionStartDate}"
+				endDate="#{simpleQuoteBackingBean.managedBean.disciplinaryActionEndDate}"
+				isWarning="#{simpleQuoteBackingBean.managedBean.disciplinaryActionWarning}"/>
 
 </ui:composition>
