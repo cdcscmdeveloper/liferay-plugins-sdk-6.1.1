@@ -1,0 +1,106 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:cc="http://java.sun.com/jsf/composite">
+	
+	<cc:interface>
+		<cc:attribute name="dialogWidth" default="1100px" />
+		<cc:attribute name="dialogHeight" default="500px" />
+		<cc:attribute name="voList" type="java.util.List" required="true" />
+		<cc:attribute name="mofView" default="true" />
+		<cc:attribute name="startDate" default="" />
+		<cc:attribute name="endDate" default="" />
+		<cc:attribute name="isWarning" default="" />
+	</cc:interface>
+	
+	<cc:implementation>
+	<p:dialog id="disciplinaryActionActiveDpDlgId" closable="true"
+		widgetVar="disciplinaryActionActiveDpDlg" modal="true" width="#{cc.attrs.dialogWidth}" height="#{cc.attrs.dialogHeight}"
+		resizable="true">
+		
+		<table style="width: 100%">
+			<tr>
+				<td>
+					<h:outputText value="#{lbl['lbl.sc.company.has.been.imposed']}" 
+							style="font-size:15px; vertical-align:top; color:red;"/>
+					<c:if test="#{cc.attrs.isWarning}"><h:outputText value="#{lbl['lbl.sc.da.warning']}" 
+							style="font-weight:bold; font-size:15px; vertical-align:top; color:red;"/></c:if>
+				    <c:if test="#{!cc.attrs.isWarning}"><h:outputText value="#{lbl['lbl.sc.da.disciplinary.action']}" 
+							style="font-weight:bold; font-size:15px; vertical-align:top; color:red;"/></c:if>
+					<h:outputText value="#{lbl['lbl.sc.da.from']}" 
+							style="font-size:15px; vertical-align:top; color:red;"/>
+					<h:outputText value="#{cc.attrs.startDate}" 
+							style="font-weight:bold; font-size:15px; vertical-align:top; color:red;"/>
+					<h:outputText value="#{lbl['lbl.sc.da.to']}" 
+							style="font-size:15px; vertical-align:top; color:red;"/>
+					<h:outputText value="#{cc.attrs.endDate}" 
+							style="font-weight:bold; font-size:15px; vertical-align:top; color:red;"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<h:outputText value="#{lbl['lbl.sc.view.details.disciplinary.action']}" 
+							style="font-weight:bold; vertical-align:top;"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p:dataTable value="#{cc.attrs.voList}" var="disciplinaryAction" 
+					 sortBy="#{disciplinaryAction.endDate}" rowIndexVar="index" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" 
+					 style="table-layout: fixed;">
+						
+						<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2% !important; vertical-align:top;">
+							<p:outputLabel value="#{index + 1}"
+								style="float: left;white-space: normal;" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sm.disciplinary.jktt.punishment.type']}" style="width : 23% !important; vertical-align:top;">
+							<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.warning']}" rendered="#{disciplinaryAction.warning}" styleClass="outputLabel-view"/>
+							<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.cancel.cat.code']}" rendered="#{disciplinaryAction.cancelCategory}" styleClass="outputLabel-view"/>
+							<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.suspend.registration']}" rendered="#{disciplinaryAction.suspendRegistration}" styleClass="outputLabel-view"/>
+							<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.cancel.registration']}" rendered="#{disciplinaryAction.cancelRegistration}" styleClass="outputLabel-view"/>
+							<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']}" rendered="#{disciplinaryAction.blacklistOwnerDirector}" styleClass="outputLabel-view"/>
+							<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.cancel.of.bumiputera']}" rendered="#{disciplinaryAction.bumiputeraCancel}" styleClass="outputLabel-view"/>
+							<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.cancel.of.manufacturer']}" rendered="#{disciplinaryAction.manufacturerCancel}" styleClass="outputLabel-view"/>
+						</p:column>			
+						<p:column headerText="#{lbl['lbl.sm.disciplinary.jktt.start.date']}" style="width : 10% !important; vertical-align:top;">
+							<ac:labelDateTime styleClass="outputLabel-view" value="#{disciplinaryAction.startDate}"/>
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sm.disciplinary.jktt.end.date']}" style="width : 10% !important; vertical-align:top;">
+							<ac:labelDateTime styleClass="outputLabel-view" value="#{disciplinaryAction.endDate}"/>
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sm.disciplinary.jktt.remarks']}" style="width : 25% !important; vertical-align:top;word-break: break-all;">
+							<h:outputText value="#{disciplinaryAction.remarks}"/>
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sm.disciplinary.list.cancel.category.code']}" 
+							rendered="#{cc.attrs.mofView}"
+							style="width : 15% !important; vertical-align:top;">
+							<h:dataTable value="#{disciplinaryAction.categoryCodeList}" var="suppCat" rendered="#{not empty disciplinaryAction.categoryCodeList}"
+								rowIndexVar="indexCat" emptyMessage="#{lbl['lbl.sm.no.available']}" style="border: none !important;">
+								<p:column style="border: none !important;">
+									<h:outputText value="#{suppCat.categoryCode}"/>
+								</p:column>
+							</h:dataTable>
+							<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty disciplinaryAction.categoryCodeList}"/>
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sm.disciplinary.list.of.ic.no.blacklist']}" style="width : 15% !important; vertical-align:top;">
+							<h:dataTable value="#{disciplinaryAction.blacklistownerDirectorList}" var="personnel" 
+								rowIndexVar="indexPer" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" rendered="#{not empty disciplinaryAction.blacklistownerDirectorList}">
+								<p:column style="border: none !important;">
+									<h:outputText value="#{personnel.icNo}"/>
+								</p:column>
+							</h:dataTable>
+							<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty disciplinaryAction.blacklistownerDirectorList}" />
+						</p:column>
+					</p:dataTable>
+				</td>
+			</tr>
+		</table>
+		
+		
+	</p:dialog>
+	</cc:implementation>
+</ui:composition>
