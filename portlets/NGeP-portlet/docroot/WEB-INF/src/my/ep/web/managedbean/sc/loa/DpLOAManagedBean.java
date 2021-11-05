@@ -11,6 +11,7 @@ import javax.faces.bean.SessionScoped;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.vo.DisciplinaryActionVO;//#26284
 
 // TODO: Auto-generated Javadoc
 /**
@@ -40,6 +41,14 @@ public class DpLOAManagedBean extends BaseManagedBean {
 	
 	/** The source id. */
 	private Long sourceId;
+	
+	//26284 - Start
+	private List<DisciplinaryActionVO> disciplineVOs;
+	private String disciplinaryActionstartDate;
+	private String disciplinaryActionEndDate;
+	private boolean disciplinaryActionWarning = false;
+	//26284 - End
+	
 	
 	/**
 	 * Instantiates a new dp loa managed bean.
@@ -136,5 +145,39 @@ public class DpLOAManagedBean extends BaseManagedBean {
 	public void setSourceId(Long sourceId) {
 		this.sourceId = sourceId;
 	}
+	
+	//26284 - Start
+	public List<DisciplinaryActionVO> getDisciplineVOs() {
+		return disciplineVOs;
+	}
+
+	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
+		this.disciplineVOs = disciplineVOs;
+	}
+
+	public String getDisciplinaryActionStartDate() {
+		return disciplinaryActionstartDate;
+	}
+
+	public void setDisciplinaryActionStartDate(String disciplinaryActionstartDate) {
+		this.disciplinaryActionstartDate = disciplinaryActionstartDate;
+	}
+
+	public String getDisciplinaryActionEndDate() {
+		return disciplinaryActionEndDate;
+	}
+
+	public void setDisciplinaryActionEndDate(String disciplinaryActionEndDate) {
+		this.disciplinaryActionEndDate = disciplinaryActionEndDate;
+	}
+			
+	public boolean isDisciplinaryActionWarning() {
+		return disciplinaryActionWarning;
+	}
+
+	public void setDisciplinaryActionWarning(boolean disciplinaryActionWarning) {
+		this.disciplinaryActionWarning = disciplinaryActionWarning;
+	}
+	//26284 - End
 
 }
