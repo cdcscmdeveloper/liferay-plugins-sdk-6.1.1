@@ -18,44 +18,60 @@
 	<c:if test="#{!supplierProposalDetailBackingBean.managedBean.readOnly}">
 
 		<c:if test="#{'TS' eq docDefinationKey}">
+			<ui:remove> #30609 - start - Add disabled</ui:remove>	
 			<p:commandButton value="#{lbl['lbl.btn.save']}"
 				styleClass="BtnSpacing" onclick="blockWidget.show()"
 				oncomplete="blockWidget.hide()"
 				action="#{supplierProposalDetailBackingBean.saveTechnicalSpecificationAction(false)}"
-				process="@all" partialSubmit="true" update="@all" />
+				process="@all" partialSubmit="true" update="@all" 
+				disabled="#{supplierProposalDetailBackingBean.managedBean.disableUpdateProposal}"/>
 
 			<p:commandButton value="#{lbl['lbl.btn.complete']}"
 				styleClass="BtnSpacing" onclick="blockWidget.show()"
 				oncomplete="blockWidget.hide()"
 				action="#{supplierProposalDetailBackingBean.saveTechnicalSpecificationAction(true)}"
-				process="@all" partialSubmit="true" update="@all" />
+				process="@all" partialSubmit="true" update="@all"
+				disabled="#{supplierProposalDetailBackingBean.managedBean.disableUpdateProposal}" />
+			<ui:remove> #30609 - end - Add disabled</ui:remove>
+
 		</c:if>
 
 		<c:if test="#{'WF' eq docDefinationKey}">
 			<c:if test="#{'TN' eq chkDefinationKey}">
+				<ui:remove> #30609 - start - Add disabled</ui:remove>	
 				<p:commandButton value="#{lbl['lbl.btn.save']}"
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 					styleClass="BtnSpacing" process="@all" partialSubmit="true"
 					update="@all"
-					action="#{supplierProposalDetailBackingBean.saveTechNonGovCompanyExpAction(false)}" />
+					action="#{supplierProposalDetailBackingBean.saveTechNonGovCompanyExpAction(false)}" 
+					disabled="#{supplierProposalDetailBackingBean.managedBean.disableUpdateProposal}" />
+
 				<p:commandButton value="#{lbl['lbl.btn.complete']}" process="@all"
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 					partialSubmit="true" styleClass="BtnSpacing" update="@all"
-					action="#{supplierProposalDetailBackingBean.saveTechNonGovCompanyExpAction(true)}" />
+					action="#{supplierProposalDetailBackingBean.saveTechNonGovCompanyExpAction(true)}"
+					disabled="#{supplierProposalDetailBackingBean.managedBean.disableUpdateProposal}" />
+				<ui:remove> #30609 - end - Add disabled</ui:remove>
+
 			</c:if>
 			<c:if test="#{'NE' eq chkDefinationKey}">
+				<ui:remove> #30609 - start - Add disabled</ui:remove>	
 				<p:commandButton value="#{lbl['lbl.btn.save']}"
 					styleClass="BtnSpacing" process="@all" partialSubmit="true"
 					update="@all" onstart="blockWidget.show()"
 					oncomplete="blockWidget.hide()"
 					action="#{supplierProposalDetailBackingBean.saveTechEmployeesDtlAction(false)}"
-					rendered="#{!supplierProposalDetailBackingBean.managedBean.technicalQtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}" />
+					rendered="#{!supplierProposalDetailBackingBean.managedBean.technicalQtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}"
+					disabled="#{supplierProposalDetailBackingBean.managedBean.disableUpdateProposal}" />
 
 				<p:commandButton value="#{lbl['lbl.btn.complete']}" process="@all"
 					partialSubmit="true" update="@all" styleClass="BtnSpacing"
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 					action="#{supplierProposalDetailBackingBean.saveTechEmployeesDtlAction(true)}"
-					rendered="#{!supplierProposalDetailBackingBean.managedBean.technicalQtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}" />
+					rendered="#{!supplierProposalDetailBackingBean.managedBean.technicalQtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}"
+					disabled="#{supplierProposalDetailBackingBean.managedBean.disableUpdateProposal}" />
+				<ui:remove> #30609 - end - Add disabled</ui:remove>
+
 			</c:if>
 		</c:if>
 	</c:if>
