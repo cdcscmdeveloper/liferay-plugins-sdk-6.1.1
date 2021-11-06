@@ -4,7 +4,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc">
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 	
 	<style type="text/css">
 		.commandLink {
@@ -77,6 +78,14 @@
 					</p:row>
 		           	<p:row>
 						<ui:remove>#11134 -start-</ui:remove>
+						<ui:remove>#26247 - start </ui:remove>
+						<p:column colspan="1" style="width:7%; white-space:normal;">
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
+								<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
+							</f:facet>
+						</p:column>
+						<ui:remove>#26247 - end </ui:remove>
 						<p:column colspan="1" headerText="#{lbl['lbl.sc.ranking']}"
 							style="width:5%; text-align:center;" />
 						<p:column colspan="1" headerText="#{lbl['lbl.sc.remarks']}"
@@ -146,7 +155,18 @@
 				</p:column>
 						
 				<p:column>
-					<h:outputText value="" />
+					<ui:remove>#26247 - start </ui:remove>						
+					<ui:remove>#31033 - start </ui:remove>							 
+					<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
+						rendered="#{qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
+						action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" 
+						process="@this" partialSubmit="true" update=":form">
+					<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
+					</p:commandLink><p:spacer width="2"/>
+					<ui:remove>#31033 - end </ui:remove>
+					<h:outputText rendered="#{!qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
+					 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
+					<ui:remove>#26247 - end </ui:remove>
 				</p:column>
 				
 				<p:column rendered="#{false}" >
@@ -181,5 +201,7 @@
 			</p:dataTable>
 		</p:outputPanel>
 	</p:panel>
-
+		<ui:remove>#26247 #31033 - start </ui:remove>
+		<ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" btnView="true" />
+		<ui:remove>#26247 #31033 - end </ui:remove>
 </ui:composition>
