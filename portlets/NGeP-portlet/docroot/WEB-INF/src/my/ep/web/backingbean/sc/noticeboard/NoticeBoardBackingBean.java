@@ -41,6 +41,7 @@ import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -70,6 +71,8 @@ import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -1083,6 +1086,11 @@ public class NoticeBoardBackingBean extends
 		}
 		ScQt scQt = this.getManagedBean().getScQt();
 		final Long qtId = scQt.getQtId();
+		
+		// #27575, #26247 -start-
+		getManagedBean().setQtId(qtId);
+		// #27575, #26247 -end-
+
 		Long currentStatus = scQt.getQtStatus().getStatusId();
 		try {
 			
@@ -1142,6 +1150,12 @@ public class NoticeBoardBackingBean extends
 				}
 			}
 			
+			// #26247 -start-
+			if (getManagedBean().isQualified()) {
+				checkDisciplinaryActionExists(supplier);
+			}
+			// #26247 -end-
+			
 			// construct the proposal/update url
 			if (QTStatusConst.QT_PROPOSAL_PREPARATION
 					.equals(currentStatus) && isValidSupplier ) {
@@ -1158,6 +1172,83 @@ public class NoticeBoardBackingBean extends
 		}
 
 	}
+
+	// #26247 -start-
+	/**
+	 * @param supplier
+	 * 
+	 */
+	private void checkDisciplinaryActionExists(SmSupplier supplier) {
+		SupplierDataMaintenanceReqDTO supplierDataMaintenanceReqDTO = new SupplierDataMaintenanceReqDTO();
+		FacesScopes facesScopes = new FacesScopes();
+		PmUser sUsers = facesScopes.getUserSessionBean();
+		IQTNoticeBoardSO qtNoticeBoardSO = null;
+		List<String> categoryCodes = null;
+
+		if (sUsers != null && sUsers.getPreferredLanguage() != null) {
+			supplierDataMaintenanceReqDTO.setLanguage(sUsers.getPreferredLanguage());
+		}
+
+		supplierDataMaintenanceReqDTO.setSupplier(supplier);
+		
+		ISupplierDataMaintenanceSO suppDataSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
+		SupplierDataMaintenanceResDTO supplierDataMaintenanceResDTO = null;
+
+		ISearchBean<ScQtCategory> searchBean = new SearchBean<>();
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("scQt.qtId", SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getQtId()));
+
+		searchBean.getSortColumns().add(new SearchOrderBean("pmCategoryL1.categoryL1Code"));
+		searchBean.getSortColumns().add(new SearchOrderBean("pmCategoryL2.categoryL2Code"));
+		searchBean.getSortColumns().add(new SearchOrderBean("pmCategoryL3.categoryL3Code"));
+
+		try {
+			qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTNoticeBoardSO.class);
+			
+			NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
+			reqDTO.setQtCategorySearchBean(searchBean);
+			
+			NoticeBoardResDTO resDTO = qtNoticeBoardSO.getQtCategoryCodesList(reqDTO);
+			
+			if (null != resDTO && null != resDTO.getCategoryResultBean()) {
+				ISearchResultBean<ScQtCategory> resultBean = resDTO.getCategoryResultBean();
+				List<ScQtCategory> categories = resultBean.getResultList();
+				
+				if (CollectionUtils.isNotEmpty(categories)) {
+					categoryCodes = new ArrayList<>();
+					
+					for (ScQtCategory qtCategory : categories) {
+						categoryCodes.add(qtCategory.getPmCategoryL1().getCategoryL1Code()
+								+ qtCategory.getPmCategoryL2().getCategoryL2Code()
+								+ qtCategory.getPmCategoryL3().getCategoryL3Code());
+					}
+				}
+			}
+		} finally {
+			qtNoticeBoardSO = null;
+		}
+
+		if (null != suppDataSO) {
+			log.info(this.getClass().getName()
+					+ ".checkDisciplinaryActionExists() :  Checking Active Disciplinary Action for supplier ID: "
+					+ supplier.getSupplierId());
+			supplierDataMaintenanceResDTO = suppDataSO.getDisciplinaryActionMsg(supplierDataMaintenanceReqDTO,
+					categoryCodes);
+			
+			if (null != supplierDataMaintenanceResDTO
+					&& StringUtils.isNotEmpty(supplierDataMaintenanceResDTO.getErrorMessage())
+					&& (supplierDataMaintenanceResDTO.getErrorMessage().contains("Disciplinary Action") || supplierDataMaintenanceResDTO
+							.getErrorMessage().contains("Tindakan Tatatertib"))) {
+				log.info(this.getClass().getName()
+						+ ".checkDisciplinaryActionExists() :  Active Disciplinary Action exist for supplier ID: "
+						+ supplier.getSupplierId());
+				this.getManagedBean().setQualified(false);
+			}
+		}
+	}
+	// #26247 -end-
 
 	/**
 	 * Handle Department drop down changed - reset selected ptj profile and
