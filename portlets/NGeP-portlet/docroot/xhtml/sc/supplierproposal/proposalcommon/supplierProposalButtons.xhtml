@@ -31,12 +31,15 @@
 				<ui:remove>
 					Bug #27412 #75 : END
 				</ui:remove>				
+				<ui:remove> #26247 - add disable </ui:remove>	
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					styleClass="BtnSpacing" onstart="blockWidget.show()"
 					oncomplete="blockWidget.hide()"
 					action="#{supplierProposalDetailBackingBean.spkiSignAction}"
 					rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly}"
-					update="spkiOutputPanel,proposalMenuContent" process="@form" />
+					update="spkiOutputPanel" process="@form"
+					disabled="#{supplierProposalDetailBackingBean.checkDisciplinaryActionForQTCat()}" />
+					
 				<p:commandButton value="#{lbl['lbl.btn.update']}"
 					styleClass="BtnSpacing"  onstart="updateProposal.show()"
 					rendered="#{supplierProposalDetailBackingBean.managedBean.readOnly and !supplierProposalDetailBackingBean.managedBean.qtClosed}"
