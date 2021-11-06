@@ -15,6 +15,7 @@ import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections; // #29007
 import java.util.Comparator; // #29007
@@ -47,6 +48,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDirectAwardSO;
+import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -2376,8 +2378,33 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				scLoa.setScLoiLoa(scLoiLoa);
 			}
 		}
-
+		
+		// #29451 -- #26247 -- Start.
+		checkDA(scLoa);
+		// #29451 -- #26247 -- End.
 	}
+
+	// #29451 -- #26247 -- Start.
+	/**
+	 * @param scLoa
+	 */
+	private void checkDA(ScLoa scLoa) {
+		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+
+		try {
+			qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTSuppFinalizationSO.class);
+
+			if (null != qtSuppFinalizationSO) {
+				SmSupplier smSupplier = qtSuppFinalizationSO.retrieveActiveDisciplinaryActionBySupplier(scLoa.getScLoiLoa().getSmSupplier());
+				
+				scLoa.getScLoiLoa().setSmSupplier(smSupplier);
+			}
+		} finally {
+			qtSuppFinalizationSO = null;
+		}
+	}
+	// #29451 -- #26247 -- End.
 			
 	public SelectItem[] getSelectRadioButtonCodeValues(String type) {		
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
@@ -4856,7 +4883,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if (scLoa.getEstimatedPrice() != null) {
 			scQt.setEstimatedAmount(scLoa.getEstimatedPrice());
 		}
-
+		
+		// #29451 -- #26247 -- Start.
+		checkDA(scLoa);
+		// #29451 -- #26247 -- End.
+		
 		this.getManagedBean().setContractSignerList(
 				awardResDTO.getContractSignerList());
 		this.getManagedBean().setSupplierHQPersonnel(
@@ -10075,4 +10106,22 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		});
 	}
 	//29007 End
+	
+	/* #31033, #26247 STARTS */
+	public boolean isHiddenDownloadButtonDAHistory() {
+		boolean hidden = false;
+		Long statusId = this.getManagedBean().getScLoa().getPmStatus().getStatusId();
+		
+		if (statusId.equals(QTStatusConst.LOA_PENDING_SUBMISSION)
+				|| statusId.equals(QTStatusConst.LOA_PENDING_APPROVAL)
+				|| statusId.equals(QTStatusConst.LOA_PENDING_REVISION)
+				|| statusId.equals(QTStatusConst.LOA_PENDING_VERIFICATION)
+				|| statusId.equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL)) {
+			hidden = true;
+		}
+
+		return hidden;
+	}
+	/* #31033, #26247 End */
+	
 }
