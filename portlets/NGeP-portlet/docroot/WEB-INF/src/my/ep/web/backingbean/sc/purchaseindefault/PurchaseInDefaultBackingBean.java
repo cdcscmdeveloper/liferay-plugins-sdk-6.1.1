@@ -1595,9 +1595,15 @@ public class PurchaseInDefaultBackingBean extends
 					purchaseInDefault.getRemarks(), ScPIDRemark.class));
 			getManagedBean().setPayLoad(directPurchaseDataType);
 		}else{
+			//#31603 - start
+			if (DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(getManagedBean().getPidStatus().getStatusId())){
+				finaliseEditableRemark(purchaseInDefault);
+			}else{
 			purchaseInDefault.setRemarks(initializeRemarks(purchaseInDefault,
 					purchaseInDefault.getCurrentStatus(),
 					purchaseInDefault.getRemarks(), ScPIDRemark.class));
+			}
+			//#31603 - end
 		}	
 		//#9133 - end
 		
@@ -1929,10 +1935,16 @@ public class PurchaseInDefaultBackingBean extends
 				getCurrentStatus(getPmStatusByStatusId(getManagedBean().getCurrentStatusId()));				
 				
 				// #9133 - start
-				scPurchaseInDefault.setRemarks(initializeRemarks(
-						scPurchaseInDefault,
-						scPurchaseInDefault.getCurrentStatus(),
-						scPurchaseInDefault.getRemarks(), ScPIDRemark.class));
+				//#31603 - start
+				if (DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(statusId)) {
+					validateRemark();
+				}else{
+					scPurchaseInDefault.setRemarks(initializeRemarks(
+							scPurchaseInDefault,
+							scPurchaseInDefault.getCurrentStatus(),
+							scPurchaseInDefault.getRemarks(), ScPIDRemark.class));
+				}
+				//#31603 - end
 				// #9133 - end
 				
 				finaliseEditableRemark(scPurchaseInDefault);//#31603
@@ -2972,6 +2984,11 @@ public class PurchaseInDefaultBackingBean extends
 					scRemark.setEditable(true);
 				if (DPStatusConstants.PID_PENDING_SUBMISSION.equals(statusId))
 					scRemark.setEditable(true);
+				if (DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(statusId)
+						&& compareUsrName(scRemark.getCreatedUser().getLoginId()))
+					scRemark.setEditable(true);
+				if (getManagedBean().getTaskId() == null)
+					scRemark.setEditable(false);
 			}
 		}
 	}
