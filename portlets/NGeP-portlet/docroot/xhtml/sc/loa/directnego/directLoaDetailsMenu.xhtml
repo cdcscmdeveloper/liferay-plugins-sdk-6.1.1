@@ -8,7 +8,9 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 	<ac:lovPopup />	
 	<ui:include src="../shared/loaInstructionHeader.xhtml" />
-	
+	<ui:remove> #31033 - start </ui:remove>
+	<ui:param name="isHiddenDownloadButtonDAHistory" value="#{directLOABackingBean.isHiddenDownloadButtonDAHistory()}" />
+	<ui:remove> #31033 - end </ui:remove>
 	<ui:param name="isContractTypeAsMinistry"
 		value="#{directLOABackingBean.managedBean.scLoa.contractType.parameterCode == ParameterConst.contractTypeMinistry}" />
 	<ui:param name="isContractTypeAsCentral"
@@ -34,9 +36,29 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.mof.no']}" />
 				</td>
-				<td colspan="3"><p:inputText size="35"
+				<ui:remove> #26247 - start </ui:remove>
+				<td colspan="1"><p:inputText size="35"
 						value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.mofNo}"
 						disabled="true" /></td>
+						
+				<td width="160px"><p:outputLabel value="#{lbl['lbl.sc.discipline.action']}" />
+				</td>
+				<td>
+				<ui:remove> #31033 - start </ui:remove>
+					<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
+						rendered="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier.disciplinaryActions}"
+						action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier)}" 
+						process="@this" partialSubmit="true" update=":form">
+							<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
+					</p:commandLink><p:spacer width="2"/>
+					
+					<h:outputText rendered="#{!directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier.disciplinaryActions}"
+					 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
+					 
+					<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
+				<ui:remove> #31033 - end </ui:remove>
+				</td>
+				<ui:remove> #26247 - end </ui:remove>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.gst.register.num']}" />
@@ -913,5 +935,8 @@
 			showAttachment="false" readonly="true" />
 	</p:outputPanel>
 	<!-- 11134 -end- -->
-
+	<ui:remove> #31033 - start </ui:remove>
+	 <ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" btnView="true" rendered="#{isHiddenDownloadButtonDAHistory}"  />
+	      <ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" rendered="#{!isHiddenDownloadButtonDAHistory}" />
+	<ui:remove> #31033 - end </ui:remove>
 </ui:composition>
