@@ -668,9 +668,16 @@ public class SupplierFinalizationBiddingBackingBean extends
 		
 		getManagedBean().setScheduledBid(bidScheduleList.get(0));
 		getManagedBean().setEstimatedCost(estimatedCost);
-		getManagedBean().setBiddingPackagePriceList(
-				biddingPackagePriceList);
 		
+		// #31101, #26247 -start-
+		// getManagedBean().setBiddingPackagePriceList(biddingPackagePriceList);
+		
+		/*
+		 * 31101 - Shafful 
+		 */
+		settingDisciplinaryAction(biddingPackagePriceList,null);		
+		// #31101, #26247 -end-
+
 		BigDecimal bumiSuppLowestOfferedPrice = null;
 		BigDecimal lowestNonBumiOfferedPrice = null;
 		
@@ -702,7 +709,12 @@ public class SupplierFinalizationBiddingBackingBean extends
 					packageBean.setShortlistedSupplier(shortlistedSupplier);
 				}
 				if (supplierId.equals(awardedSupplierId)) {
-					getManagedBean().setSelectedPackageBean(packageBean);
+					/*
+					 * Bug 31101, #26247 - Added disciplinary Action filter -start-
+					 */
+					getManagedBean().setSelectedPackageBean(packageBean.getScBidSupplier().getSmSupplier().isDisciplinaryActions()?null:packageBean);
+					// #31101, #26247 -end-
+
 					if (getManagedBean().isZonal()) {
 						selectedPackageBeans.put(getManagedBean().getSelectedZone()
 								.getSpecZoneId(), packageBean);
@@ -726,6 +738,36 @@ public class SupplierFinalizationBiddingBackingBean extends
 			getManagedBean().setNonBumiAvailable(true);
 		}		
 	}
+	
+	/**
+	 *  @see Bug #31101, Enhancement #26247 -start-
+	 *  @author shafful
+	 *  To Setting Disciplinary Action during online bidding recommendation Stage
+	 */
+	private void settingDisciplinaryAction(List<BidPackageBean> biddingPackagePriceList,
+			List<BidItemBean> biddingItemPriceList) {
+		IQTDetailSO qtDetailSO;
+		try {
+			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTDetailSO.class);
+			if (biddingPackagePriceList != null && biddingPackagePriceList.size() > 0) {
+				for (BidPackageBean bidPackage : biddingPackagePriceList) {
+					bidPackage.getScBidSupplier().setSmSupplier(
+							qtDetailSO.retrieveActiveDABySupplierExcludePendingTransaction(bidPackage
+									.getScBidSupplier().getSmSupplier()));
+				}
+				getManagedBean().setBiddingPackagePriceList(biddingPackagePriceList);
+			} else {
+				for (BidItemBean bidItem : biddingItemPriceList) {
+					bidItem.setSupplier(qtDetailSO.retrieveActiveDABySupplierExcludePendingTransaction(bidItem
+							.getSupplier()));
+				}
+			}
+		} finally {
+			qtDetailSO = null;
+		}
+	}
+	// Bug #31101, Enhancement #26247 -end-
 	
 	private void retrieveBiddingItems(ScheduleBiddingReqDTO reqDTO) {
 		IScheduleBiddingSO scheduleBiddingSO = null;
@@ -913,6 +955,12 @@ public class SupplierFinalizationBiddingBackingBean extends
 				if (CollectionUtils.isNotEmpty(biddingItemPriceList)) {
 					List<BigDecimal> nonBumiPriceList = new ArrayList<BigDecimal>();
 					
+					/*
+					 * 31101, 26247 - WIP Impact , added Disciplinary Action -start-
+					 */
+					settingDisciplinaryAction(null, biddingItemPriceList);
+					// 31101, 26247 -end-
+
 					for (BidItemBean itemBean : biddingItemPriceList) {
 						SmSupplier smSupplier = itemBean.getSupplier();
 						itemBean.setSupplierName(smSupplier.getCompanyName());
@@ -928,7 +976,11 @@ public class SupplierFinalizationBiddingBackingBean extends
 									.getQtEvaluationResult().getScQtProposal());
 							itemBean.setShortlistedSupplier(shortlistedSupplier);
 						}
-						if (smSupplier.getSupplierId().equals(awardedSupplierId)) {
+						/*
+						 * 31101, 26247 - Added Disciplinary Action Validation -start-
+						 */
+						if (smSupplier.getSupplierId().equals(awardedSupplierId) && !itemBean.getSupplier().isDisciplinaryActions()) {
+							// 31101, 26247 -end-
 							getManagedBean().setSelectedBidItemBean(itemBean);
 							selectedItemBeans.put(bidItem.getBidItemId(), itemBean);
 						}
@@ -2873,9 +2925,24 @@ public class SupplierFinalizationBiddingBackingBean extends
 	public void downloadReport(ScQtFinalizationReport scQtFinalizationReport)
 			throws Exception {
 		debugLogger("downloadReport");
+		
+		// #30567, #26247 - Start.
+		ScQtFinalizationReportAttachment reportAttachment = null;
+		if (scQtFinalizationReport.getTitle().contains("Kertas Taklimat")) {
+			SupplierFinalizationBackingBean supplierFinalizationBackingBean = new SupplierFinalizationBackingBean();
+			supplierFinalizationBackingBean.renewSesionObject();
+			supplierFinalizationBackingBean.getManagedBean().setCurrentStatusId(this.getManagedBean().getCurrentStatusId());
+			supplierFinalizationBackingBean.getManagedBean().setScQtFinalization(this.getManagedBean().getScQtFinalization());
+			supplierFinalizationBackingBean.getManagedBean().setScQt(this.getManagedBean().getScQt());
+			
+			reportAttachment = supplierFinalizationBackingBean.downloadBriefingPaperReportForBidding(scQtFinalizationReport);
+			
+			scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
+		} else {
+			reportAttachment = scQtFinalizationReport.getScQtFinalizationReportAttachment();
+		}
+		// #30567, #26247 - End.
 
-		ScQtFinalizationReportAttachment reportAttachment = scQtFinalizationReport
-				.getScQtFinalizationReportAttachment();
 		downloadFile(reportAttachment);
 	}
 	
