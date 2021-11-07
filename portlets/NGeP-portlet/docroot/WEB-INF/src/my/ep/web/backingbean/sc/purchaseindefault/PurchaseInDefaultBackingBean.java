@@ -1978,7 +1978,8 @@ public class PurchaseInDefaultBackingBean extends
 
 				ScPurchaseInDefault sPID = getManagedBean().getPurchaseInDefault();
 
-				sPID.setRemarks(initializeRemarks(sPID, scPurchaseInDefault.getCurrentStatus(), sPID.getRemarks(), ScPIDRemark.class));
+				if (!DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(statusId))//#31603
+					sPID.setRemarks(initializeRemarks(sPID, scPurchaseInDefault.getCurrentStatus(), sPID.getRemarks(), ScPIDRemark.class));
 				
 				finaliseEditableRemark(sPID);//#31603
 
