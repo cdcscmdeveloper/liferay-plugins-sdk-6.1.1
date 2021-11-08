@@ -211,8 +211,9 @@
 				style="font-size:10px;font-style:italic" process="@this" 
 				action="#{contractRequestBackingBean.downloadFile('/shared/FL/Garis_Panduan_Item_dan_Spesifikasi.pdf')}"></p:commandLink>
 			<!-- Test start 11076-->
+			<br></br>
 			<h:form id="itemExistingForm">
-			<h:panelGrid columns="3" cellpadding="40"  cellspacing = "50">
+			<h:panelGrid columns="3" cellpadding="10"  cellspacing = "5">
 				<h:outputLabel value="#{lbl['lbl.fl.existing.item']}" style="float:left;font-weight:bold" escape="false"/>
 				<h:inputText id="textBox1" value="#{contractRequestBackingBean.managedBean.totalExistingItem}" size="3" readonly="true" style="text-align:center;font-weight:bold"/>
 				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.existing.item']}"/>
