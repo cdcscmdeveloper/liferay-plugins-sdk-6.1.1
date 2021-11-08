@@ -23,11 +23,9 @@
 		<ui:param name="isPendingSubmissionStatus"
 			value="#{requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingSubmission}" />
 		<ui:param name="isPendingRevisionStatus"
-			value="#{requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingRevision or 
-			requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingRevisionBpk}" />
+			value="#{requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingRevision}" />
 		<ui:param name="isPendingApprovalStatus"
-			value="#{requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingApproval or requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingRevisionApproval or 
-			requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingBpkApproval or requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingRevisionBpkApproval}" />
+			value="#{requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingApproval or requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingRevisionApproval}" />
 		<ui:param name="isViewOnly"
 			value="#{requestNoteBackingBean.managedBean.viewOnly}" />
 		<ui:param name="isQtyViewOnly"
@@ -49,13 +47,8 @@
 							src="/xhtml/sc/directpurchase/requestnote/requestNoteItemDetails.xhtml" />
 						<ui:include
 							src="/xhtml/sc/directpurchase/requestnote/requestNoteApprovalDetail.xhtml" />
-						<p:panel header="#{lbl['lbl.sc.remarks']}" toggleable="true" id="scRemarkPanelId">
-							<ui:include
-								src="/xhtml/sc/directpurchase/requestnote/requestNoteRemarks.xhtml" />
-							<ui:include
-								src="/xhtml/sc/directpurchase/requestnote/requestNoteExceedDPJustification.xhtml" />
-						</p:panel>
-						</td>
+						<ui:include
+							src="/xhtml/sc/directpurchase/requestnote/requestNoteRemarks.xhtml" /></td>
 					</td>
 				</tr>
 			</table>
@@ -71,10 +64,6 @@
 				src="/xhtml/sc/directpurchase/requestnote/pricingPopup.xhtml" />
 			<!-- Supplier Details PopUp -->
 			<ui:include src="/xhtml/sc/common/supplierDetailsPopup.xhtml" />
-			<!-- #26059 start -->
-			<!-- eGPA Doc PopUp -->
-			<ui:include src="/xhtml/sc/directpurchase/requestnote/rnApprovalAttachmentPopUp.xhtml" />
-			<!-- #26059 end -->
 		</p:outputPanel>
 	</ui:define>
 

@@ -96,10 +96,7 @@
 			style="float:right;"
 			action="#{pmTrackingDiaryBackingBean.redirectToSupplierTrackingDiary(ParameterConst.doctypeRequestNote, requestNoteBackingBean.managedBean.requestNote.requestNoteId, requestNoteBackingBean.isSupplier())}"
 			immediate="true" 
-			rendered="#{requestNoteBackingBean.managedBean.trackingDairyView or (bpmTasklistBackingBean.managedBean.groupTask eq 'true' and !bpmTasklistBackingBean.managedBean.claim)}" /><!-- 26059 start -->
-			<c:if test="#{bpmTasklistBackingBean.managedBean.groupTask eq 'true' and !bpmTasklistBackingBean.managedBean.claim}">
-			<br />
-			</c:if><!-- 26059 end -->	
+			rendered="#{requestNoteBackingBean.managedBean.trackingDairyView}" />
 	</div>
 	<h:panelGroup
 		rendered="#{!isViewOnly}">
@@ -131,32 +128,10 @@
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 					style="float:right;" process="@this" partialSubmit="true" />
 			</c:if>
-			<!-- 26059 start -->
-			<p:confirmDialog
-				message="#{requestNoteBackingBean.managedBean.exceedThresholdMessage}"
-				header="#{lbl['lbl.sc.dialog.cofirm.header']}" severity="alert"
-				widgetVar="dpExceedDlg"
-				rendered="#{!requestNoteBackingBean.managedBean.proceedWithDPExceedThreshold}">
-				<div class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.btn.yes']}"
-						actionListener="#{requestNoteBackingBean.proceedWithDPExceedThreshold}"
-						oncomplete="dpExceedDlg.hide(); blockWidget.hide();" id="dpExceed"
-						partialSubmit="true" process="@this" update="@([id$= scRemarkPanelId])" />
-					<p:commandButton value="#{lbl['lbl.btn.no']}"
-						oncomplete="dpExceedDlg.hide();" />
-				</div>
-			</p:confirmDialog>
-			<!-- 26059 end -->
 		</div>
 		<div>
 			<c:if test="#{!empty requestNoteBackingBean.managedBean.taskId}">
-				<!-- 26059 start -->
-				<table style="width: 100%;"> 
-				<tr>
-				<td align="right">
 				<div class="ppRightBtn">
-				<ui:decorate template="/xhtml/fl/shared/claim_template.xhtml">
-					<ui:define name="outComeSection">				
 					<c:if test="#{isPendingSubmissionStatus or isPendingRevisionStatus}">
 						<p:commandButton value="#{lbl['lbl.btn.item.search']}"
 							process="@this" partialSubmit="true" style="float:left;"
@@ -176,7 +151,7 @@
 									and isSqStillValid}"
 						action="#{requestNoteBackingBean.saveAction('Save')}"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-						process="@this" update="@([id$= scRemarkPanelId])" />
+						process="@this" />
 
 					<ui:repeat var="bpmAction"
 						value="#{requestNoteBackingBean.managedBean.outComes}">
@@ -194,12 +169,7 @@
 							update="#{isCancel ? '@this,  @([id$= remark])' : '@form'}"
 							actionListener="#{requestNoteBackingBean.cancelRejectAction(bpmAction)}" />	
 					</ui:repeat>
-				</ui:define>
-			</ui:decorate>
-			</div>
-			</td>
-			</tr>
-			</table><!-- 26059 end -->
+				</div>
 			</c:if>
 		</div>
 	</h:panelGroup>
