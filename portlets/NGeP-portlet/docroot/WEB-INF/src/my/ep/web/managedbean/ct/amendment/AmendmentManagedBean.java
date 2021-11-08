@@ -47,6 +47,7 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.vo.DisciplinaryActionVO;
 
 import org.apache.log4j.Logger;
 import org.primefaces.model.DualListModel;
@@ -133,6 +134,22 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private  boolean prodcollapse=false;
 	private IPagingDataModel<CtContractItem> contractListingPagingDataModel = new ContractListingPagingDataModel();
 	private IPagingDataModel<CtContractItem> ServiceListingPagingDataModel =  new ServiceListingPagingDataModel();
+	
+	//Enhancement #26186 start
+	private boolean disciplinaryAction; 
+	private String disciplinaryActionMsg; 
+	private List<DisciplinaryActionVO> disciplineVOs; 
+	private Long disciplinaryActionId;
+	private boolean disciplinaryApproved;
+	private String disciplinaryApprovedFlag;
+	private String justification;
+	//Enhancement #26186 end
+	//#29793 start
+	private boolean disciplinaryActionNotification;
+	private boolean disciplinaryActionCancel;
+	private Date disciplinaryActionStartDate;
+	private Date disciplinaryActionEndDate;
+	//#29793 end
 	
 	private boolean itemProductNotExist;
 	private boolean itemServiceNotExist;
@@ -1332,6 +1349,100 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 			IPagingDataModel<CtContractItem> serviceListingPagingDataModel) {
 		ServiceListingPagingDataModel = serviceListingPagingDataModel;
 	}
+	
+	
+	//Enhancement #26186 start
+	public boolean isDisciplinaryAction() {
+		return disciplinaryAction;
+	}
+
+	public void setDisciplinaryAction(boolean disciplinaryAction) {
+		this.disciplinaryAction = disciplinaryAction;
+	}
+
+	public String getDisciplinaryActionMsg() {
+		return disciplinaryActionMsg;
+	}
+
+	public void setDisciplinaryActionMsg(String disciplinaryActionMsg) {
+		this.disciplinaryActionMsg = disciplinaryActionMsg;
+	}
+	
+	public List<DisciplinaryActionVO> getDisciplineVOs() {
+		return disciplineVOs;
+	}
+
+	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
+		this.disciplineVOs = disciplineVOs;
+	}
+
+	public Long getDisciplinaryActionId() {
+		return disciplinaryActionId;
+	}
+
+	public void setDisciplinaryActionId(Long disciplinaryActionId) {
+		this.disciplinaryActionId = disciplinaryActionId;
+	}
+
+	public boolean isDisciplinaryApproved() {
+		return disciplinaryApproved;
+	}
+
+	public void setDisciplinaryApproved(boolean disciplinaryApproved) {
+		this.disciplinaryApproved = disciplinaryApproved;
+	}
+
+	public String getDisciplinaryApprovedFlag() {
+		return disciplinaryApprovedFlag;
+	}
+
+	public void setDisciplinaryApprovedFlag(String disciplinaryApprovedFlag) {
+		this.disciplinaryApprovedFlag = disciplinaryApprovedFlag;
+	}
+
+	public String getJustification() {
+		return justification;
+	}
+
+	public void setJustification(String justification) {
+		this.justification = justification;
+	}
+	
+	//#29793 start
+	public boolean isDisciplinaryActionNotification() {
+		return disciplinaryActionNotification;
+	}
+
+	public void setDisciplinaryActionNotification(boolean disciplinaryActionNotification) {
+		this.disciplinaryActionNotification = disciplinaryActionNotification;
+	}
+	
+	public boolean isDisciplinaryActionCancel() {
+		return disciplinaryActionCancel;
+	}
+
+	public void setDisciplinaryActionCancel(boolean disciplinaryActionCancel) {
+		this.disciplinaryActionCancel = disciplinaryActionCancel;
+	}
+	
+	public Date getDisciplinaryActionStartDate() {
+		return disciplinaryActionStartDate;
+	}
+
+	public void setDisciplinaryActionStartDate(Date disciplinaryActionStartDate) {
+		this.disciplinaryActionStartDate = disciplinaryActionStartDate;
+	}
+	
+	public Date getDisciplinaryActionEndDate() {
+		return disciplinaryActionEndDate;
+	}
+
+	public void setDisciplinaryActionEndDate(Date disciplinaryActionEndDate) {
+		this.disciplinaryActionEndDate = disciplinaryActionEndDate;
+	}
+	//#29793 end
+
+	//Enhancement #26186 end
 	
 	//#25956 Start
 	public List<PmUser> getContractAdminlist() {
