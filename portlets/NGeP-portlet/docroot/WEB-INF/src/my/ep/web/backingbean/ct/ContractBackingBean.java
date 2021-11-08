@@ -359,7 +359,13 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			getManagedBean().getContractVer().setPbqcDecisionLetterAttachment(attachment);
 		} else if (event.getComponent().getId().equalsIgnoreCase("mofDecisionLetterId")){
 			getManagedBean().getContractVer().setMofDecisionLetterAttachment(attachment);
-		} else {
+		} 
+		//26186 start
+		else if (event.getComponent().getId().equalsIgnoreCase("disciplinaryAttachmentId")){
+			getManagedBean().getContractVer().getDisciplinaryActionAttachments().add(attachment);
+		} 
+		//26186 end
+		else {
 			getManagedBean().getAttachmentList().add(attachment);
 		}
 	}
@@ -380,7 +386,17 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					getManagedBean().getDeleteAttachmentList().add(attachment);
 				}
 				this.getManagedBean().getContractVer().getItemAttachments().remove(getManagedBean().getAttachFileIndex());
-		} else {
+		}
+		//#26186 start
+		else if(event.getComponent().getId().equalsIgnoreCase("delDisciplinaryAttachmentId")){
+			attachment = getManagedBean().getContractVer().getDisciplinaryActionAttachments().get(this.getManagedBean().getAttachFileIndex());
+			if(attachment.getAttachmentId() != null){
+				getManagedBean().getDeleteAttachmentList().add(attachment);
+			}
+			getManagedBean().getContractVer().getDisciplinaryActionAttachments().remove(this.getManagedBean().getAttachFileIndex());
+		}
+		//#26186 end
+		else {
 			attachment = this.getManagedBean().getAttachmentList().get(getManagedBean().getAttachFileIndex());
 			if(attachment.getAttachmentId() != null){
 				getManagedBean().getDeleteAttachmentList().add(attachment);
