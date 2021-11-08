@@ -893,7 +893,7 @@ public class PurchaseInDefaultBackingBean extends
 				reqDTO.setSupRes(true);
 				resDTO = purchaseInDefaultSO.updateResponsePurchaseInDefault(reqDTO);
 			}else if(DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(stsId)){						
-				boolean validateRemark = false; //#31603 - set to false
+				boolean validateRemark = true; //#31603 - set to true
 				boolean isQuantityCheckNeeded = false;
 				
 				if (getManagedBean().isVisibleOrderQty()) {
@@ -2187,7 +2187,10 @@ public class PurchaseInDefaultBackingBean extends
 					if (remark.getRemarkId() == null) {
 						reqDTO.setScPIDRemark(remark);
 						purchaseInDefaultSO.updateRemark(reqDTO);
-						break;
+						
+						if (!DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(getManagedBean()
+								.getPidStatus().getStatusId()))// #31603
+							break;
 					}
 
 					ScPIDRemark fetchRemark = purchaseInDefaultSO
@@ -2196,7 +2199,10 @@ public class PurchaseInDefaultBackingBean extends
 					fetchRemark.setCreatedBy(remark.getCreatedBy());
 					reqDTO.setScPIDRemark(fetchRemark);
 					purchaseInDefaultSO.updateRemark(reqDTO);
-					break;
+					
+					if (!DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(getManagedBean()
+							.getPidStatus().getStatusId()))// #31603
+						break;
 				}
 			}
 
