@@ -82,6 +82,30 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.procur.type.category']}" /></td>
 				<td><p:inputText size="30" disabled="true"
 						value="#{flOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.procurementTypeCategory ==null ? lbl['lbl.fl.supp.na'] : flOrderBB.getParameterDesc(flOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.procurementTypeCategory)}" /></td>
+				<!-- 28377 -->
+				<td><p:outputLabel styleClass="highlight-mark"  rendered="#{ flOrderBB.managedBean.getFulfilmentOrder().isYep() }" 
+						value="#{lbl['lbl.fl.ap58letter']} " /></td>
+				<td><h:panelGroup id="uploadAP58AL"  rendered="#{ flOrderBB.managedBean.getFulfilmentOrder().isYep() }" >
+					<p:commandButton icon="ui-icon-upload"
+						rendered="#{ flOrderBB.managedBean.attachment.getFileName() == null }"
+						disabled='#{ !(flOrderBB.managedBean.buttonVal eq "AP58") }'
+						process="@this" partialSubmit="true"
+						update=":form:AP58LName, :form:uploadLetterAP"
+						oncomplete="uploadLetterAP.show();return false;" >
+					</p:commandButton>
+					<h:commandLink id="AP58LName" rendered="#{ flOrderBB.managedBean.attachment.getFileName() != null }" title="#{ flOrderBB.managedBean.attachment.getFileName() }"
+						value="#{ flOrderBB.managedBean.attachment.getFileName() }" onclick="enableAckBtn()"
+						action="#{flOrderBB.downloadAPLetter }">
+					</h:commandLink>
+					<p:spacer width="1"/>
+					<p:commandLink onsuccess="deleteUploadLetterAP.show();"
+						rendered="#{ flOrderBB.managedBean.attachment.getFileName() != null }"
+						disabled='#{ !(flOrderBB.managedBean.buttonVal eq "AP58") }'
+					     process="@this" update=":form:uploadAP58AL" partialSubmit="true">
+			   			<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
+			 		</p:commandLink>
+				</h:panelGroup></td>
+				<!-- end 28377 -->
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.ct.agency.comitment.no']}" rendered="#{flOrderBB.managedBean.showCommitmentNo}"/></td>
@@ -150,6 +174,36 @@
 					</p:inputText></td>
 			</tr>
 		</table>
+		<!--  28377 -->
+		<p:remoteCommand name="enableAckBtn" update="@form" />
+			 <p:dialog id="uploadLetterAP" widgetVar="uploadLetterAP" resizable="false" modal="true" 
+		    	  width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}" onShow="singleUploadListener(letterUploadWV);">
+					<p:ajax event="close" />
+					<p:fileUpload style="display:inline;" mode="advanced"  dragDropSupport="false" 
+					      sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"  showButtons="false"  
+					      fileUploadListener="#{flOrderBB.UploadApprovalLetterAP}" multiple="false"  
+					      allowTypes="#{CommonConstants.FILE_UPLOAD_PDF_TYPE}"  widgetVar="letterUploadWV"
+					      invalidFileMessage="#{lbl['lbl.txt.upload.pdf.file']}"					      
+						  invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
+						  update=":form:uploadAP58AL"
+					      label="#{lbl['lbl.btn.choose']}" oncomplete="uploadLetterAP.hide();" >
+					</p:fileUpload>
+					<f:facet name="footer">
+							<div class="ppRightBtn">
+			   					 <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadLetterAP.hide();" />
+	   						</div>
+	   				</f:facet>
+				</p:dialog>
+				<p:confirmDialog id="deleteUploadLetterId" widgetVar="deleteUploadLetterAP" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                		  severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                  		 <div class="ppRightBtn">
+		               			<p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                        		 action="#{flOrderBB.DeleteApprovalLetterAP}" update=":form:uploadAP58AL" 
+		                       			  oncomplete="deleteUploadLetterAP.hide();"/>
+			                	 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteUploadLetterAP.hide();" type="button" />
+		                 </div>
+                   </p:confirmDialog>
+         <!-- end 28377 -->
 	</p:panel>
 	<p:panel header="#{lbl['lbl.fl.supp.details']}" toggleable="true">
 		<table style="width: 100%">
