@@ -1109,7 +1109,11 @@ public class ReportConst implements Serializable{
 	//26238 : Disciplinary Action
 	public static final String SM_DISCIPLINARY_ACTION_HISTORY_ENG = "SM_DISCIPLINARY_ACTION_HISTORY.jsp";
 	public static final String SM_DISCIPLINARY_ACTION_HISTORY_MALAY = "SM_DISCIPLINARY_ACTION_HISTORY.jsp";
-		
+	
+	// 28379 YEP
+	public static final String FL_DOCTYPE_CO = "CR";
+	public static final String FL_DOCTYPE_PO = "PR";
+	
 	//#Bug:28933,#Bug:28934,#Bug:28985,#Bug:28983 - START
 	//Purpose : To Split Tracking Diary Report Based on Module
 	public static final String FL_TRACKING_DIARY = "FL_TRACKING_DIARY.jsp";

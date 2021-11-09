@@ -69,6 +69,9 @@ public class FlReportConst implements Serializable {
 	// Panel Const
 	public static final String FL_033_SUMMARY = "FL_033";
 	
+	//28379 Year End Report Const
+	public static final String FL_067_YEAR_END_REPORT = "FL_067";
+	
 	public static final String FL_RPT_FROM_DATE = "PFROMDATE";
 	public static final String FL_RPT_TO_DATE = "PTODATE";
 	public static final String FL_RPT_COTRACT_ORDER = "PCONO";
@@ -109,6 +112,17 @@ public class FlReportConst implements Serializable {
 	public static final String FL_RPT_DOC_TYPE = "PDOCTYPE";
 	public static final String FL_RPT_GROUP_BY = "PGROUP"; 
 	public static final String FL_RPT_PURCHASE_REQUEST = "PPRNO";
+	public static final String FL_RPT_PO_STATUS = "PSTATUS";
+	public static final String FL_RPT_BC_NAME = "PSUPP";
+	public static final String FL_RPT_PO_TITLE = "PTITLE";
+	public static final String FL_RPT_AP58A = "PAP58A";
+	public static final String FL_RPT_CARRY_FORWARD = "PCRFWD";
+	public static final String FL_RPT_CMNL_PAYMENT = "PCMNLPYMT";
+	public static final String FL_RPT_NA_TRNS = "PNATRNS";
+	public static final String FL_RPT_FN_YEAR = "PYEAR";
+	public static final String FL_RPT_REF_NO = "PREFNO";
+	public static final String FL_RPT_CT_FROM_DATE = "PCTFRDATE";
+	public static final String FL_RPT_CT_TO_DATE = "PCTTODATE";
 	
 	public FlReportConst(){}
 
@@ -289,5 +303,9 @@ public class FlReportConst implements Serializable {
 
 	public String getFl033Summary() {
 		return FL_033_SUMMARY;
+	}
+	
+	public String getFl067YearEndReport() {
+		return FL_067_YEAR_END_REPORT;
 	}
  }
