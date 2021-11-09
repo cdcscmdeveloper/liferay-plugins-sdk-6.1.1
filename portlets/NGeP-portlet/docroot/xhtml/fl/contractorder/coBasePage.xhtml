@@ -109,9 +109,68 @@
 						immediate="true" /></td>
 			</c:if>
 			<td colspan="4" style="text-align: right">
-			<p:commandButton value="#{lbl['lbl.btn.close.manual.pay']}" immediate="true" action="#{flOrderBB.closeManualPayment}" 
-					process="@form" partialSubmit="true" rendered="#{flOrderBB.managedBean.yep}"
-					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/></td>
+				<!-- #28375- Beginning - Logan-->
+					
+				
+					
+				<c:if test='#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.carryForward}'>
+		
+				<p:commandButton
+						value="#{lbl['lbl.fl.yep.proceed']}" 
+						action="#{flOrderBB.carryForward(BpmOutcomeConstant.proceed)}" 
+						disabled="#{flOrderBB.managedBean.progressStatus eq '4' and flOrderBB.managedBean.patCheck eq 'true'}">
+						<f:param name="actionName" value="#{BpmOutcomeConstant.proceed}" />
+					</p:commandButton>
+					
+									<p:commandButton
+						value="#{lbl['lbl.fl.yep.carryForward']}"
+						action="#{flOrderBB.carryForward(BpmOutcomeConstant.carryForward)}" 
+						disabled="#{flOrderBB.managedBean.iscarryForward eq 'true'}" >
+						<f:param name="actionName" value="#{BpmOutcomeConstant.carryForward}" />
+					</p:commandButton>
+					
+						<p:commandButton value="#{lbl['lbl.fl.yep.cancel']}" immediate="true"  
+					action="#{flOrderBB.cancelCarryForwardAction(BpmOutcomeConstant.bpmCancelYEP)}"
+					disabled="#{flOrderBB.managedBean.progressStatus eq 4}"/>
+			</c:if>
+					
+					
+					<!-- #28375- Ending -->
+	<!-- #28374	Vinod Start -->
+				<c:if test='#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancelYEP}'>
+					<p:commandButton value="#{lbl['lbl.fl.yep.cancel']}" immediate="true"  
+					action="#{flOrderBB.cancelCarryForwardAction(BpmOutcomeConstant.bpmCancelYEP)}"
+					disabled="#{flOrderBB.managedBean.progressStatus eq 4}"/>
+				</c:if>
+				<!-- #28374	Vinod End -->
+					<!-- 28377 -->
+					<!-- start 29442 -->
+					<p:commandButton value="#{lbl['lbl.fl.general.save']}" immediate="true" action="#{flOrderBB.saveCloseManual}" 
+					process="@form" partialSubmit="true" rendered='#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmCloseManual || flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.carryForward}'
+					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/>
+					<!-- end 29442 -->
+					<p:commandButton value="#{lbl['lbl.btn.close.manual.pay']}" immediate="true" action="#{flOrderBB.closeManualPayment}" 
+					process="@form" partialSubmit="true" rendered='#{(flOrderBB.managedBean.yep) and !(flOrderBB.managedBean.buttonVal eq "AP58")
+					and (flOrderBB.managedBean.getButtonVal() != BpmOutcomeConstant.bpmView)
+					and !(flOrderBB.managedBean.buttonVal eq "NONAP58") and !(flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.carryForward)}'
+					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/>
+					<!-- edit render -->
+					
+					<p:commandButton value="#{lbl['lbl.fl.general.save']}" immediate="true" action="#{flOrderBB.saveAP58}" 
+					process="@form" partialSubmit="true" rendered='#{flOrderBB.managedBean.buttonVal eq "AP58"}'
+					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/>
+					
+					<p:commandButton value="#{lbl['lbl.fl.general.proceed']}" immediate="true" action="#{flOrderBB.submitAP58}" 
+					process="@form" partialSubmit="true" rendered='#{flOrderBB.managedBean.buttonVal eq "AP58"}'
+					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/>
+					<!-- end 28377 -->
+					<!-- start 29440 -->
+					<p:commandButton value="#{lbl['lbl.fl.general.proceed']}" immediate="true" action="#{flOrderBB.proceedNonAP58}" 
+					process="@form" partialSubmit="true" rendered='#{flOrderBB.managedBean.buttonVal eq "NONAP58"}'
+					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/>
+					<!-- end 29440 -->
+			</td>
+
 				<h:panelGroup id="printButtonCo">
 					<td style="text-align: right; width: 30px;"><p:commandLink
 							value="#{lbl['lbl.btn.print']}" ajax="false">
