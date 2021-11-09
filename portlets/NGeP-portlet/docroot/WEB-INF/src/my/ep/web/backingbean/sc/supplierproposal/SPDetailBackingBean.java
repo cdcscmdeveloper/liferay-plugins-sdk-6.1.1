@@ -1215,9 +1215,12 @@ public class SPDetailBackingBean extends
             			if (isCompleted) {
 // #21695 7/10/2021	START
 //farid start #21695 to allow item has 0 qty and 0 price
-            			if (answer.getRatePerUom() == null && answer.getTplSpecZoneQty()!= null || answer.getRatePerUom() == null && answer.getTplSpecZoneQty() == null) {
+            		// bug #31733 add condition 5/11/2021
+            			if (answer.getRatePerUom() == null && answer.getTplSpecZoneQty()!= null && answer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0
+            					|| answer.getRatePerUom() == null && answer.getTplSpecZoneQty() == null) {
             				throw new EpException(MessageConst.ERROR_760464);
             			}
+            		// bug #31733 add condition 5/11/2021
 //farid end #21695 7/10/2021
             		}
             		//added because of Bug #17772, please do not remove or change the order of if statements
@@ -3047,19 +3050,11 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 							specAnswerList.get(i).getTplSpecSuppAnswer().setTplSpecZoneDtl(getManagedBean().getSelectedZone());
 							}
 						}
+						//REMOVE Bug #31733
 						getManagedBean().getTemplateSpecBean().setSpecAnswerList(specAnswerList);
 					} //#28785-End
 				}
-				
-				//Bug #31542 related to #21695 start
-				for(TplSpecAnswer removeZero: getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
-					if(removeZero.getTplSpecZoneQty() != null && removeZero.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0){
-						removeZeroQuantity.add(removeZero);
-					}
-				}
-				
-				getManagedBean().getTemplateSpecBean().getSpecAnswerList().removeAll(removeZeroQuantity);
-				//Bug #31542 related to #21695 end
+				//REMOVE Bug #31542 
 				populateFinancialSpecDetailsByZone();
 
 			}
@@ -4222,18 +4217,10 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 				specAnswerList.get(i).getTplSpecSuppAnswer().setTplSpecZoneDtl(getManagedBean().getSelectedZone());
 				}
 			}
-			getManagedBean().getTemplateSpecBean().setSpecAnswerList(specAnswerList);
-			//#28785-End
-			
-			//Bug #31542 related to #21695 start
-			for(TplSpecAnswer removeZero: getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
-				if(removeZero.getTplSpecZoneQty() != null && removeZero.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0){
-					removeZeroQuantity.add(removeZero);
-				}
-			}
-			
-			getManagedBean().getTemplateSpecBean().getSpecAnswerList().removeAll(removeZeroQuantity);
-		} //Bug #31542 related to #21695 End
+			//REMOVE Bug #31733
+				getManagedBean().getTemplateSpecBean().setSpecAnswerList(specAnswerList);
+			} //#28785-End
+		//REMOVE Bug #31542 
 	}
 
 	/**
