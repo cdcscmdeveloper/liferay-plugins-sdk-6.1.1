@@ -410,8 +410,45 @@
 								value="#{createQtBB.getParameterDesc(ParameterTypeConst.scOpenFor, scQt.openFor)}"
 								style="width:200px;" disabled="true" />
 						</c:otherwise>
-					</c:choose></td>
+					</c:choose></td>		
 			</tr>
+
+			<!-- START #28784 -->
+			<ui:fragment rendered="#{qTDetailBB.managedBean.demoType}">
+				<tr>
+					<td colspan="2"></td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.demo']}" /></td>
+					<td>
+						<table>
+							<tr>
+								<td><c:choose>
+										<c:when
+											test="#{!scQt.panel and !isReadOnly}">
+											<p:outputPanel id="demoPop">
+												<p:selectOneRadio value="#{scQt.demoRequired}" disabled="#{scQt.partial}">
+													<f:selectItems
+														value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+<!-- 													<p:ajax event="change" partialSubmit="true" -->
+<!-- 														update="generalLocationList" process="@this" -->
+<!-- 														listener="#{createQtBB.partialChange}"> -->
+<!-- 													</p:ajax> -->
+												</p:selectOneRadio>
+											</p:outputPanel>
+										</c:when>
+										<c:otherwise>
+											<p:inputText id="demoTxt"
+												value="#{createQtBB.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(scQt.demoRequired))}"
+												style="width:195px;" disabled="true" />
+										</c:otherwise>
+									</c:choose></td>
+								<td><ac:iconTooltip
+										value="#{lbl['lbl.sc.qt.demo.tooltip']}" /></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</ui:fragment>
+			<!-- END #28784 -->
 
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.qt.zone.location']}" /></td>
@@ -569,8 +606,10 @@
 											required="#{scQt.qtStatus.statusId != QTStatusConst.QT_PENDING_QT_SUBMISSION}">
 											<f:selectItems
 												value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.scEvaluationType)}" />
+												<!-- START #28784 -->
 											<p:ajax event="change" process="@this" partialSubmit="true"
-												update="@this"></p:ajax>
+												listener="#{createQtBB.renderDemoRadioButton}"
+												update="@form"></p:ajax><!-- END #26784 -->
 										</p:selectOneRadio></td>
 									<td><p:message id="evalMsg" for="evalType" display="icon" /></td>
 									<td style="margin-top: -3px"><ac:iconTooltip

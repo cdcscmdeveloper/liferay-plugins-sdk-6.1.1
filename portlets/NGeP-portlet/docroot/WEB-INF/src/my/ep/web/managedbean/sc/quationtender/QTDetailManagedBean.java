@@ -25,7 +25,6 @@ import my.ep.biz.bean.sc.QtAmendMentBean;
 import my.ep.biz.bean.sc.QtCommitteeMemberBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.constant.pm.ParameterConst;
-import my.ep.factory.EpLogger;
 import my.ep.helper.Paginator;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.circular.CtCircular;
@@ -125,7 +124,6 @@ import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.type.sc.quationtender.CloneAll;
 
-import org.apache.log4j.Logger;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.MenuModel;//#25138 Reendorsed
 import org.primefaces.model.TreeNode;
@@ -143,8 +141,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 
 	/** The Constant log. */
-	private static final Logger log = EpLogger
-			.getLogger(QTDetailManagedBean.class);
+	//private static final Logger log = EpLogger.getLogger(QTDetailManagedBean.class);
 	
 	/** The qt. */
 	private ScQt qt;
@@ -1752,6 +1749,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean isSingleItem;
 	//#25138-end
 	
+	//#28784
+	private boolean demoType;
+	private boolean demoAction;
+	private List<ScQtCheckList> demoSpecTemplateList;
+
 	// #30451-Start.
 	private boolean isBdSfFlow;
 	// #30451-End.
@@ -10164,6 +10166,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setButtonHideActive(boolean buttonHideActive) {
 		ButtonHideActive = buttonHideActive;
 	}
+	
+	public boolean isButtonHideActive() {
+		return ButtonHideActive;
+	}
 
 	public boolean isButtonHideDedActive() {
 		return buttonHideDedActive;
@@ -10843,6 +10849,30 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		}
 		//#25138 - Reendorsed - end
 
+		public List<ScQtCheckList> getDemoSpecTemplateList() {
+			return demoSpecTemplateList;
+		}
+
+		public void setDemoSpecTemplateList(List<ScQtCheckList> demoSpecTemplateList) {
+			this.demoSpecTemplateList = demoSpecTemplateList;
+		}
+
+		public boolean isDemoAction() {
+			return demoAction;
+		}
+
+		public void setDemoAction(boolean demoAction) {
+			this.demoAction = demoAction;
+		}
+
+		public boolean isDemoType() {
+			return demoType;
+		}
+
+		public void setDemoType(boolean demoType) {
+			this.demoType = demoType;
+		}
+		
 		//bug #30435 - start
 		/**
 		 * @return the pmParam

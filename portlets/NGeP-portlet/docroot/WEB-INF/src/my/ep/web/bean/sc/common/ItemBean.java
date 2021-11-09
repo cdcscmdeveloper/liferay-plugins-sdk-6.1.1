@@ -5,7 +5,6 @@ package my.ep.web.bean.sc.common;
 
 import java.util.List;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ItemBean.
  * 
@@ -24,6 +23,9 @@ public class ItemBean {
 	private String clDurationMonth;
 	private String clDeliveryTerm;
    //End
+	
+	//#28784
+	private boolean itemReqDemo;
 	/**
 	 * @return the item
 	 */
@@ -135,5 +137,13 @@ public class ItemBean {
 		this.clDeliveryTerm = clDeliveryTerm;
 	}
 	//End
+	
+	//#28784
+	public boolean isItemReqDemo() {
+		return itemReqDemo;
+	}
+	public void setItemReqDemo(boolean itemReqDemo) {
+		this.itemReqDemo = itemReqDemo;
+	}
 	
 }
