@@ -177,6 +177,14 @@
 				rendered="#{noticeBoardBackingBean.managedBean.scQt.evaluationType eq '2'}" />
 			<h:outputLabel value="" />  -->
 				<!-- #21693 Venkat END -->
+<!-- Bug #32079 related to #21695 Farid Start -->			
+			<h:outputLabel value="#{lbl['lbl.sc.partial.offer']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
+			<h:outputText value="#{lbl['lbl.sc.partial.offer.no']}"
+				rendered="#{noticeBoardBackingBean.managedBean.scQt.partial eq false or noticeBoardBackingBean.managedBean.scQt.partial eq null}" />
+			<h:outputText value="#{lbl['lbl.sc.partial.offer.yes']}"
+				rendered="#{noticeBoardBackingBean.managedBean.scQt.partial eq true}" />
+			<h:outputLabel value="" />
+<!-- Bug #32079 related to #21695 Farid END -->	
 		</h:panelGrid>
 
 		<h:panelGrid border="0" width="100%" columns="3" id="publishTabQTDtls"
