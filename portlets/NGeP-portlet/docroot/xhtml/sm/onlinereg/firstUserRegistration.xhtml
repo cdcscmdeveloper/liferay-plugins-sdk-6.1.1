@@ -133,8 +133,9 @@
 						<p:inputText size="40"  rendered="#{!registrationBackingBean.managedBean.sameAsOwner}" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.fullname']}"
 							id="fullName" maxlength="80"  readonly="#{registrationBackingBean.managedBean.sameAsOwner}" 
 							disabled="#{registrationBackingBean.managedBean.sameAsOwner}"
-							value="#{registrationBackingBean.managedBean.smPersonnel.name}" />
-							
+							value="#{registrationBackingBean.managedBean.smPersonnel.name}" >
+							<p:ajax event="change" partialSubmit="true"></p:ajax>
+							</p:inputText>
 						<p:selectOneMenu id="selectName"  rendered="#{registrationBackingBean.managedBean.sameAsOwner}" value="#{registrationBackingBean.managedBean.smPersonnelSelected.identificationNo}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 				   			<f:selectItems value="#{registrationBackingBean.managedBean.selectItemsSmPersonnelOwners}"  />
@@ -147,7 +148,9 @@
 						<p:inputText size="40" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.fullname']}"
 							id="fullName" maxlength="80"  readonly="#{registrationBackingBean.managedBean.sameAsOwner}" 
 							disabled="#{registrationBackingBean.managedBean.sameAsOwner}"
-							value="#{registrationBackingBean.managedBean.smPersonnel.name}" />
+							value="#{registrationBackingBean.managedBean.smPersonnel.name}" >
+							<p:ajax event="change" partialSubmit="true"></p:ajax>
+							</p:inputText>
 					</c:if>
 						
 						
@@ -225,6 +228,7 @@
 								value="#{registrationBackingBean.managedBean.smPersonnel.identificationNo}"
 								size="30" maxlength="12" validatorMessage="#{lbl['lbl.sm.invalidIcNo']}">
 								<f:validateRegex pattern="^-?\d*(\.\d+)?$" disabled="#{empty param['disableValidation']}"/>
+								<p:ajax event="change" partialSubmit="true"></p:ajax>
 							</p:inputText>
 						</c:when>
 						
@@ -400,6 +404,7 @@
 						<p:outputLabel value="#{lbl['lbl.sm.state']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
+					<!--#30936-START-->
 					<td class="tdContent"><p:selectOneMenu id="cmbPermState" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.state']}"
 							value="#{registrationBackingBean.managedBean.smPermenantAdd.pmState.stateId}" style="width:80%">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -408,22 +413,27 @@
 								itemValue="#{state.stateId}" itemLabel="#{state.stateName}" />
 							<p:ajax event="change"
 								listener="#{registrationBackingBean.populateDistrictByAddType('permenant',false)}"
-								update="pnlUsrInfo,divisionRegLabelPanelId,divisionRegDropdownPanelId,cmbPermDistrict,cmbPermCity" />
+								update="divisionRegLabelPanelId,divisionRegDropdownPanelId,cmbPermDistrict,cmbPermCity" />
 						</p:selectOneMenu>
 						<p:message id="cmbPermStateMsg" for="cmbPermState" display="icon" /></td>
+					<!--#30936-END-->
 				</tr>
 				<!-- 13320 -->
-         <tr id="">
+				<!--#30936-START-->
+            <tr id="divTrId">
 				<td></td>
 				<td></td>
 				<td class="tdTitle">
-					<h:panelGroup id="divisionRegLabelPanelId" rendered="#{registrationBackingBean.managedBean.smPermenantAdd.pmState.adoptDivision}">
+				<p:outputPanel id="divisionRegLabelPanelId">	
+					<ui:fragment rendered="#{registrationBackingBean.managedBean.smPermenantAdd.pmState.adoptDivision}">
 						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
-					</h:panelGroup>
+					</ui:fragment>
+				</p:outputPanel>
 				</td>
 				<td class="tdContent">
-					<h:panelGroup id="divisionRegDropdownPanelId" rendered="#{registrationBackingBean.managedBean.smPermenantAdd.pmState.adoptDivision}">
+				<p:outputPanel id="divisionRegDropdownPanelId">
+					<ui:fragment rendered="#{registrationBackingBean.managedBean.smPermenantAdd.pmState.adoptDivision}">
 						<p:selectOneMenu id="cmbPermDivision"
 						label="#{lbl['lbl.sm.division']}"
 						value="#{registrationBackingBean.managedBean.smPermenantAdd.pmDivision.divisionId}"
@@ -437,10 +447,11 @@
 							listener="#{registrationBackingBean.populateDivisionByAddType('permenant', true)}"
 							update="cmbPermDistrict,cmbPermCity" />
 					</p:selectOneMenu>
-					</h:panelGroup>
+					</ui:fragment>
+				</p:outputPanel>
 				</td>
             </tr>
-
+				<!--#30936-END-->
 				<tr>
 					<td class="tdTitle"></td>
 					<td class="tdContent"><p:inputText size="40" value="#{registrationBackingBean.managedBean.smPermenantAdd.address3}"
