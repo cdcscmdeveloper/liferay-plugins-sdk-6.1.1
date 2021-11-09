@@ -625,7 +625,7 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 	}
 	
 	public void validateSupportDocs(){
-		if(getManagedBean().getSmApplInquiry().getSmAppl().getSupportingDocMode().equals(SupplierManagementConst.SUPPORTING_DOC_ONLINE)){
+		if(getManagedBean().getSmApplInquiry().getSmAppl().getSupportingDocMode() != null && getManagedBean().getSmApplInquiry().getSmAppl().getSupportingDocMode().equals(SupplierManagementConst.SUPPORTING_DOC_ONLINE)){
 			log.info("=====Start Validate Supporting Doc=====");
 			boolean validSupportDocs = true;
 			int i = 0;
@@ -652,7 +652,7 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 			} else {
 				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.show();");
 			}
-		}else if(getManagedBean().getSmApplInquiry().getSmAppl().getSupportingDocMode().equals(SupplierManagementConst.SUPPORTING_DOC_OFFLINE)){
+		}else if(getManagedBean().getSmApplInquiry().getSmAppl().getSupportingDocMode() != null && getManagedBean().getSmApplInquiry().getSmAppl().getSupportingDocMode().equals(SupplierManagementConst.SUPPORTING_DOC_OFFLINE)){
 			RequestContext.getCurrentInstance().execute("submissionConfirmDlg.show();");
 		}
 	}
