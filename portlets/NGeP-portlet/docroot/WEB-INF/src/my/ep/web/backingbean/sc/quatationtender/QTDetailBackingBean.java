@@ -5915,6 +5915,18 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				.get(selectedApprovalTabIndex);
 		// #25077 - #80 - Start.
 		if (null != approvalTabBean &&  StringUtils.isNotEmpty(approvalTabBean.getTabType())
+				&& ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT.equals(approvalTabBean.getTabType())) {
+			if(approvalTabBean.getBudgetApprovalUsers().getSource() == null && 
+					approvalTabBean.getBudgetApprovalUsers().getTarget() == null){
+				ScQt scQt = this.getManagedBean().getQt();
+				Long[] orgIds={scQt.getOwnerOrgProfile().getOrgProfileId(),scQt.getPmOrgProfile().getOrgProfileId()};
+				DualListModel<ScQtApproverSettings> budgetApprovalUsers=ApproverSettings.getDetails(
+						RoleCode.COMMITTEE_APPROVER,orgIds,approvalTabBean.getScQtApproval());
+				approvalTabBean.getBudgetApprovalUsers().setSource(budgetApprovalUsers.getSource());
+				approvalTabBean.getBudgetApprovalUsers().setTarget(budgetApprovalUsers.getTarget());
+			}
+		}
+		if (null != approvalTabBean &&  StringUtils.isNotEmpty(approvalTabBean.getTabType())
 				&& "OTH".equals(this.getManagedBean().getPreviousApprovalTabName()) && !"OTH".equals(approvalTabBean.getTabType())) {
 			IQTDetailSO detailSO;
 			try {
