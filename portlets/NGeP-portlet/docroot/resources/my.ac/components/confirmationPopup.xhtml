@@ -20,10 +20,35 @@
 		<cc:attribute name="okProcess" default="@this" />
 		<!-- 25692 -start- -->
 		<cc:attribute name="style" default="" />
-		<!-- 25692 -end- -->
+		<cc:attribute name="dialogCSS" default="" />
+		<cc:attribute name="loadingWidget" default=""/>
 	</cc:interface>
 
 	<cc:implementation>
+		<style>
+			#{cc.attrs.dialogCSS}
+			.confirm-ui-dialog{
+				max-width: 500px;
+				width: auto;
+			}
+			.confirm-ui-dialog .ui-dialog-content table{
+				margin: auto;
+			}
+			.confirm-ui-dialog .ui-dialog-content table td label {
+				white-space: normal;
+				padding-left: 5px;
+				display: inline !important;
+				float: none !important;
+			}
+			.confirm-ui-dialog .ui-dialog-content{
+				padding: 1em 1em !important;
+				height: auto !important;
+			}
+			.confirm-ui-dialog .ui-dialog-content span img{
+				margin-top: -4px;
+			}
+		
+		</style>
 		<ui:param name="confirmationheader" value="#{cc.attrs.title}" />
 		<ui:param name="confirmationContent" value="#{cc.attrs.content}" />		
 		
@@ -37,10 +62,11 @@
 			<p:blockUI block="#{cc.attrs.id}Popup" widgetVar="confirmPopupBlockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
-			<h:panelGroup id="#{cc.attrs.id}Popup">
+			<h:panelGroup id="#{cc.attrs.id}Popup" layout="block">
 			<table>
-				<tr>
-					<td align="center"><h:graphicImage
+				<tr><!-- #28765 START -->
+					<td align="center" style="white-space: normal; word-wrap: break-word !important;">
+					<!-- #28765 END --><h:graphicImage
 							value="/css/images/design/exclamation.png" /> <p:outputLabel
 							value="#{confirmationContent}" /></td>
 				</tr>
