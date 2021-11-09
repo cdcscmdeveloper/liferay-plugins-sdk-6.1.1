@@ -2308,7 +2308,7 @@ public class CreateQtBackingBean extends
 			this.getManagedBean().getQt()
 					.setContractType(resDTO.getPmParameter());
 			if(null!=this.getManagedBean().getQt()
-					.getContractType() &&ParameterConst.CONTRACT_TYPE_CENTRAL.equalsIgnoreCase(this.getManagedBean().getQt()
+					.getContractType() && ParameterConst.CONTRACT_TYPE_CENTRAL.equalsIgnoreCase(this.getManagedBean().getQt()
 					.getContractType().getParameterCode())){
 				ParameterReqDTO fulfilMentAsandWhen = new ParameterReqDTO();
 				fulfilMentAsandWhen
@@ -3665,6 +3665,27 @@ public class CreateQtBackingBean extends
 		return screen;
 	}
 //#11104-end
+	
+
+	/**
+	 * Render Demonstration Radio button if Evaluation Method 2 Tier Selected
+	 * #28784
+	 * @param event
+	 *
+	 */
+	public void renderDemoRadioButton(AjaxBehaviorEvent event){
+		Long status = this.getManagedBean().getQt().getQtStatus().getStatusId();
+
+		if (!status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
+			String type = (String) event.getComponent().getAttributes().get("value");
+			if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER)) {
+				this.getManagedBean().setDemoType(true);
+			} else {
+				this.getManagedBean().setDemoType(false);
+				this.getManagedBean().getQt().setDemoRequired(false);
+			}
+		}
+	}
 	
 //#21695 Farid START 3/7/2021	
 		public boolean hasroleSCSecretary() {
