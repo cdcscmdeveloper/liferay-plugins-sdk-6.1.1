@@ -220,7 +220,8 @@
 							<p:spacer width="2"/>
 						<h:outputText value="#{lbl['lbl.fl.yep.ap58a']}"></h:outputText></td>
 					</tr>
-					<!-- <tr>
+					<!-- #28373 added by vinod -->
+					<tr>
 						<td width="20%"></td>
 						<td width="30%"></td>
 						<td width="20%"></td>
@@ -228,7 +229,7 @@
 							<p:ajax process="@this"></p:ajax></p:selectBooleanCheckbox>
 							<p:spacer width="2"/>
 						<h:outputText value="#{lbl['lbl.fl.yep.carryFow']}"></h:outputText></td>
-					</tr> -->
+					</tr>
 					<!-- <tr>
 						<td width="20%"></td>
 						<td width="30%"></td>
@@ -237,8 +238,8 @@
 							<p:ajax process="@this"></p:ajax></p:selectBooleanCheckbox>
 							<p:spacer width="2"/>
 						<h:outputText value="#{lbl['lbl.fl.yep.closedManPay']}"></h:outputText></td>
-					</tr> -->
-					<!-- <tr>
+					</tr>
+					<tr>
 						<td width="20%"></td>
 						<td width="30%"></td>
 						<td width="20%"></td>
@@ -347,7 +348,7 @@
 		</p:panel>
 		<!-- end search panel -->
 		<!-- start result panel -->
-		<p:panel id="resultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
+		<p:panel id="resultPanel" header="#{lbl['lbl.fl.search.result']}" toggleable="true"><!-- #29064 changed lbl.fl.result to lbl.fl.search.result by Vinod -->
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.doc.maintain.result']}"/><br/><br/>
 			<p:dataTable id="flYepList"
 				value="#{yearEndProcessBackingBean.managedBean.flYepDataModel}" lazy="true"
@@ -380,17 +381,63 @@
 					<h:outputText value="#{yearEndProcessBackingBean.getStatusDescById(flYep.statusId)}" />
 				</p:column> 
 				<p:column headerText="#{lbl['lbl.fl.yep.category']}" style="white-space:normal;" >
-					<h:outputText value="#{(yearEndProcessBackingBean.managedBean.searchAp58 eq true) ? 'Ap58a' : ''}" />
+					<!-- #28373 added by vinod start -->
+					<h:outputText value="#{(flYep.isAp58 eq 1) ? 'Ap58a' : ''}" rendered="#{flYep.isAp58 eq 1}"/>
+					<h:outputText value="#{lbl['lbl.fl.yep.carryFow']}" rendered="#{flYep.carryForward}"/>
+					<!-- #28373 added by vinod End -->
 				</p:column> 
 				
 				<p:column headerText="#{lbl['lbl.fl.doc.maintain.action.no']}"
 					style="text-align: center">
-					<p:menuButton value="#{lbl['lbl.btn.option']}">			
+					<p:menuButton value="#{lbl['lbl.btn.option']}">	
+					                <!-- 29440 start -->
+					                <p:menuitem value="#{lbl['lbl.fl.doc.maintain.action.view']}"  
+										onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							        	icon="ui-icon-view"
+							        	onclick="goToDetail([{name:'docType', value:'#{flYep.docType}'}, {name:'docId', value:'#{flYep.docId}'}, {name:'docNo', value:'#{flYep.docNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmView}'}, {name:'statusDesc', value:'#{flYep.statusId}'}])"/>
+							        <p:menuitem value="#{lbl['lbl.btn.print']}" ajax="false"
+										icon="ui-icon-print" 
+										action="#{yearEndProcessBackingBean.generateReport(flYep.docType, flYep.docNo)}" />
+									<p:menuitem value="#{lbl['lbl.btn.proceed']}"  
+							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							        	icon="ui-icon-amendment"
+							        	process="@this" update="flYepList"
+							        	rendered="#{flYep.isAp58 == null and flYep.phase == 5}"
+							        	onclick="goToDetail([{name:'docType', value:'#{flYep.docType}'}, {name:'docId', value:'#{flYep.docId}'}, {name:'docNo', value:'#{flYep.docNo}'}, {name:'buttonVal', value:'NONAP58'}, {name:'statusDesc', value:'#{flYep.statusId}'}])"/>
+					                <!-- 29440 end -->
+									<!-- #29041 start added flYep.phase in rendered by Vinod -->		
 									<p:menuitem value="#{lbl['lbl.fl.yep.closeManPay']}"  
 							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							        	rendered="#{yearEndProcessBackingBean.getAllowClose(flYep.statusId)}"
+							        	rendered="#{yearEndProcessBackingBean.getAllowClose(flYep.statusId) and !(flYep.phase eq '3')}"
 							        	icon="ui-icon-fl-cancel"
 							        	onclick="goToDetail([{name:'docType', value:'#{flYep.docType}'}, {name:'docId', value:'#{flYep.docId}'}, {name:'docNo', value:'#{flYep.docNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmCloseManual}'}, {name:'statusDesc', value:'#{flYep.statusId}'}])"/>
+							        	<!-- #29041 End Vinod-->
+							        	<!-- start 28377 -->
+							        	<p:menuitem value="#{lbl['lbl.fl.ap58']}"  
+							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							        	rendered="#{yearEndProcessBackingBean.isAP58(flYep.statusId) and flYep.isAp58 == 1 and flYep.phase == 5}"
+							        	icon="ui-icon-amendment"
+							        	onclick="goToDetail([{name:'docType', value:'#{flYep.docType}'}, {name:'docId', value:'#{flYep.docId}'}, {name:'docNo', value:'#{flYep.docNo}'}, {name:'buttonVal', value:'AP58'}, {name:'statusDesc', value:'#{flYep.statusId}'}])"/>
+					                    <!-- end 28377 -->		
+					                    
+					                    
+				
+						<!-- #28375- Beginning Logan -->
+					
+						<p:menuitem value="#{lbl['lbl.fl.yep.carryForward']}"  
+							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							        	rendered="#{yearEndProcessBackingBean.isCarryForward(flYep.statusId) and flYep.phase eq '3'}"
+							        	icon="ui-icon-amendment"
+							        	onclick="goToDetail([{name:'docType', value:'#{flYep.docType}'}, {name:'docId', value:'#{flYep.docId}'}, {name:'docNo', value:'#{flYep.docNo}'}, {name:'taskId', value:'#{flYep.yepTaskId}'}, {name:'orderN', value:'#{flYep.orderNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.carryForward}'} , {name:'phase', value:'#{flYep.phase}'} , {name:'statusDesc', value:'#{flYep.statusId}'}, {name:'progressStatus', value:'#{flYep.progressStatus}'}, {name:'carryForward', value:'#{flYep.carryForward}'}])"/>
+					
+					<!-- #28375- Ending Logan-->
+					<!-- #28374	Vinod Start -->
+						<p:menuitem value="#{lbl['lbl.fl.yep.cancel']}"  
+							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							        	rendered="#{flYep.phase eq '3'}"
+							        	icon="ui-icon-fl-cancel" 
+							        	onclick="goToDetail([{name:'docType', value:'#{flYep.docType}'}, {name:'docId', value:'#{flYep.docId}'}, {name:'docNo', value:'#{flYep.docNo}'}, {name:'taskId', value:'#{flYep.yepTaskId}'}, {name:'orderN', value:'#{flYep.orderNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmCancelYEP}'}, {name:'statusDesc', value:'#{flYep.statusId}'}, {name:'progressStatus', value:'#{flYep.progressStatus}'}, {name:'carryForward', value:'#{flYep.carryForward}'}])"/>
+					<!-- #28374	Vinod End -->
 					</p:menuButton>
 				</p:column>
 			</p:dataTable>
