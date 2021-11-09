@@ -819,7 +819,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @return array of SelectItem
 	 */
 	public SelectItem[] getDropdownCodeValues(String parameterType) {
-		return getDropdownCodeValuesBySearchBean(parameterType, null);
+		//#27601 - START
+		return getDropdownCodeValuesBySearchBeanContractorCooperative(parameterType, null);
+		//#27601 - END
 	}
 
 	/**
