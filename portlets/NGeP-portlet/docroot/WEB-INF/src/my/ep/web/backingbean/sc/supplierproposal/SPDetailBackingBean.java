@@ -3013,8 +3013,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		debugLogger("retrieveFinancialSpecDtls::::supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		this.getManagedBean().setActiveIndex(0);
 		this.getManagedBean().setFinancialQtProposalChecklist(scQtProposalChecklist);
-		//Bug #31542 related to #21695 start
-		List<TplSpecAnswer> removeZeroQuantity = new ArrayList<TplSpecAnswer>();
+		//REMOVE Bug #31542 
 		IQTProposalSO proposalSO = null;
 
 		try {
@@ -4192,8 +4191,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		Integer selectedZoneTabIndex = Integer.valueOf(FacesContext
 				.getCurrentInstance().getExternalContext()
 				.getRequestParameterMap().get("selectedZoneTabIndex"));
-		//Bug #31542 related to #21695 start
-		List<TplSpecAnswer> removeZeroQuantity = new ArrayList<TplSpecAnswer>();
+		//REMOVE Bug #31542 
 		getManagedBean().setActiveIndex(selectedZoneTabIndex);
 		debugLogger("zoneTabChange");
 		TplSpecZoneDtl specZoneDtl = (TplSpecZoneDtl) getManagedBean()
