@@ -89,7 +89,7 @@
            	<portlet id="pmPoJobTypeRatio"></portlet>
            	<portlet id="poRoleTaskWeightage"></portlet>
 			<portlet id="softCertProvider"></portlet>
-			<portlet  id="pmSystemConfiguration"></portlet>
+			<portlet id="pmSystemConfiguration"></portlet>
 			
 		</category>
 		<!-- Profile Management - END -->		
@@ -186,6 +186,7 @@
 			<portlet id="deskOfficerMaintenanceApproval"/>
 			<portlet id="maintenanceRequestApproval"/>
 			<portlet id="maintenanceRequestRevision"/>
+			<portlet id="demoInvitation"/><!-- #28784 -->
 		</category>
 
 		<!-- Fulfilment Start Added by Giri -->
@@ -317,8 +318,8 @@
 		<portlet id="disciplinaryAction"></portlet>
 		<portlet id="complaint"></portlet>
 		<portlet id="onlineRegistration"></portlet>
-		<portlet id="smCancelRegistration"></portlet>
 		<portlet id="onlineAccountMaintenance"></portlet>
+		<portlet id="smCancelRegistration"></portlet>	
 		<!-- 26238 disciplinary action -->
 		<portlet id="basicAccountMaintenance"></portlet>
 		<portlet id="profileDisciplinaryAction"></portlet>
@@ -334,6 +335,7 @@
 		<portlet id="smUpdateMofDetails"></portlet>
 		<portlet id="SiteVisit"></portlet>
 		<portlet id="MOFApplication"></portlet>
+		<portlet id="travellingTicketingSystemMaintenance"></portlet>
 
 		<portlet id="smResubmitApplication"></portlet>
 		<portlet id="paymentResponse"></portlet>
@@ -374,7 +376,6 @@
 		<portlet id="rejectionAcknowledgementLetter"></portlet>
 		<portlet id="supplierTaskReassignment"></portlet>
 		<portlet id="smOnScreenSql"></portlet>
-		<portlet id="travellingTicketingSystemMaintenance"></portlet>
 		<!-- SSM INTEGRATION -->
 		<portlet id="profileRobExpire"></portlet>
 		<!-- LOG :12491 Finish Button -->

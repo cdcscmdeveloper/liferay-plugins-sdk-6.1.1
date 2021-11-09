@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
@@ -54,6 +55,7 @@ import com.liferay.portal.theme.ThemeDisplay;
 
 @ManagedBean(name = "bpmTasklistBackingBean")
 @RequestScoped
+@SessionScoped
 public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBean> implements Serializable{
 
 	/**
@@ -517,10 +519,34 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 					+ SCProcessNameConst.GENERIC_APPROVAL_REVISE,
 					SourcingConstants.NAV_PAGE_GENERIC_APPROVAL_REVISE);
 			//#25037-END
+			
+			//#28784
+			temp.put(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME
+					+ SCProcessNameConst.PRESENTATION_DEMO,
+					SourcingConstants.NAV_PAGE_DEMO_INVITATION);
+			//#28784 - start
+			temp.put(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME
+					+ SCProcessNameConst.UPDATE_DEMO_TEC_EVALUATION,
+					SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
+			temp.put(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME
+					+ SCProcessNameConst.FINALISE_DEMO_TEC_EVALUATION,
+					SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
+			temp.put(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME
+					+ SCProcessNameConst.VIEW_DEMO_TEC_EVALUATION,
+					SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
+			temp.put(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME
+					+ SCProcessNameConst.ENDORSE_DEMO_TEC_EVALUATION,
+					SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
+			temp.put(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME
+					+ SCProcessNameConst.SIGNOFF_DEMO_TEC_EVALUATION,
+					SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
+			//#28784 - end
+			
+			
 			this.getManagedBean().setBpmMap(temp);
 		}
 
-		log.info("testing BPM******");
+		//log.info("testing BPM******");
 
 	}
 
@@ -725,7 +751,7 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 	}
 
 	public void preRenderTaskListView() {
-		log.info("......................preRenderTaskListView");
+		//log.info("......................preRenderTaskListView");
 	}
 
 	public void preRenderTaskView() {
