@@ -207,40 +207,7 @@
 	<ui:remove>
 		<ui:include src="/xhtml/sm/shared/forcereplaceadmin/tncPopup.xhtml" />
 	</ui:remove>
-		<!-- #28765 Start -->
-	<p:dialog id="uploadDialog" widgetVar="uploadDialog" modal="true"
-			dynamic="true" resizable="false" width="700px" height="200"
-			styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}"
-			onShow="singleUploadListener(uploadWV);">
-			<p:fileUpload
-				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
-				sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
-				id="upload"
-				invalidFileMessage="#{lbl['lbl.sm.upload.softcert.format.errmsg']}"
-				invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"  
-				fileUploadListener="#{forceReplaceSuppAdminBackingBean.handleSupDocFileAttachment}"
-				update=":form" oncomplete="uploadDialog.hide();" 
-				uploadLabel="#{lbl['lbl.btn.upload']}"  
-				label="#{lbl['lbl.btn.choose']}" 
-				cancelLabel="#{lbl['lbl.btn.cancel']}"
-				showButtons="false" 
-				widgetVar="uploadWV" />
-		</p:dialog>
-		
-			<p:confirmDialog id="confirmDeleteSupDocDialog" closable="true"
-			message="#{lbl['lbl.sm.upload.delete.message']}"
-			header="#{lbl['lbl.sm.upload.delete.confirm.header']}"
-			severity="alert" widgetVar="confirmDeleteSupDocDialog">
-			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.delete']}" 
-					action="#{forceReplaceSuppAdminBackingBean.deleteSupDocFileAttachment}" update="@form"
-					partialSubmit="true" onstart="blockWidget.show()"
-					oncomplete="blockWidget.hide()" process="@this" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}"
-					onclick="confirmDeleteSupDocDialog.hide();" />
-			</div>
-		</p:confirmDialog>
-				<!-- #28765 Start -->
+	
 	</ui:define>
 
 

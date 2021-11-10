@@ -12,12 +12,6 @@ import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.vo.ReactivateSupplierVO;
-//#28765 - Start
-import java.util.ArrayList;
-import my.ep.web.vo.SoftcertUploadSuppDocVO;
-import my.ep.persistence.entity.pm.common.PmDocument;
-import my.ep.persistence.entity.sm.SmReplaceSupplierAdminDoc;
-//#28765 - End
 
 @ManagedBean(name = "forceReplaceSuppAdminMb")
 @SessionScoped
@@ -51,23 +45,9 @@ public class ForceReplaceSuppAdminManagedBean extends BaseManagedBean {
 	private PmParameter identificationType;
 	private Long myCountryId;
 	private String accType;
-	//#28765 - Start
-	private String displayMessageReplaceTrans;
-	private int bypassFlag1;
-	private int bypassFlag2;
-	private int bypassFlag3;
-	private boolean bypassFlag;
-	private List<SmPersonnel> replacesupplieradminSelectList;
-	public List<PmDocument> replacesuppadminUploadSuppDocList;
-	private List<SmReplaceSupplierAdminDoc> smReplaceSupplierAdminDocs = new ArrayList();
-	private int attachedFileIndex;
-	private String fileDirectory;
-	//#28765 - End
 	
 	private boolean disableEquity=false;
 	private boolean disableStaff=false;
-	//28765
-	private boolean disableNationality;
 
 	public ForceReplaceSuppAdminManagedBean() {
 		
@@ -288,80 +268,5 @@ public class ForceReplaceSuppAdminManagedBean extends BaseManagedBean {
 	public void setDisableStaff(boolean disableStaff) {
 		this.disableStaff = disableStaff;
 	}
-	//#28765 - Start
-	public List<SmPersonnel> getReplaceSupplierAdminSelectList() {
-		return replacesupplieradminSelectList;
-	}
-	public void setReplaceSupplierAdminSelectList(List<SmPersonnel> replacesupplieradminSelectList) {
-		this.replacesupplieradminSelectList = replacesupplieradminSelectList;
-	}
-	public int getAttachedFileIndex() {
-		return attachedFileIndex;
-	}
-	public void setAttachedFileIndex(int attachedFileIndex) {
-		this.attachedFileIndex = attachedFileIndex;
-	}
-	public List<PmDocument> getReplacesuppadminUploadSuppDocList() {
-		return replacesuppadminUploadSuppDocList;
-	}
-	public void setReplacesuppadminUploadSuppDocList(List<PmDocument> replacesuppadminUploadSuppDocList) {
-		this.replacesuppadminUploadSuppDocList = replacesuppadminUploadSuppDocList;
-	}
-	public boolean isBypassFlag() {
-		return bypassFlag;
-	}
-	public void setBypassFlag(boolean bypassFlag) {
-		this.bypassFlag = bypassFlag;
-	}
-	public int getBypassFlag1() {
-		return bypassFlag1;
-	}
-	public void setBypassFlag1(int bypassFlag1) {
-		this.bypassFlag1 = bypassFlag1;
-	}
-	public int getBypassFlag2() {
-		return bypassFlag2;
-	}
-	public void setBypassFlag2(int bypassFlag2) {
-		this.bypassFlag2 = bypassFlag2;
-	}
-	public int getBypassFlag3() {
-		return bypassFlag3;
-	}
-	public void setBypassFlag3(int bypassFlag3) {
-		this.bypassFlag3 = bypassFlag3;
-	}
-	public List<SmReplaceSupplierAdminDoc> getSmReplaceSupplierAdminDocs() {
-		return smReplaceSupplierAdminDocs;
-	}
-	public void setSmReplaceSupplierAdminDocs(List<SmReplaceSupplierAdminDoc> smReplaceSupplierAdminDocs) {
-		this.smReplaceSupplierAdminDocs = smReplaceSupplierAdminDocs;
-	}
-	/**
-	 * @return the fileDirectory
-	 */
-	public String getFileDirectory() {
-		return fileDirectory;
-	}
-	/**
-	 * @param fileDirectory the fileDirectory to set
-	 */
-	public void setFileDirectory(String fileDirectory) {
-		this.fileDirectory = fileDirectory;
-	}	
-	public String getDisplayMessageReplaceTrans() {
-		return displayMessageReplaceTrans;
-	}
-	public void setDisplayMessageReplaceTrans(String displayMessageReplaceTrans) {
-		this.displayMessageReplaceTrans = displayMessageReplaceTrans;
-	}
-	
-	public boolean isDisableNationality() {
-		return disableNationality;
-	}
 
-	public void setDisableNationality(boolean disableNationality) {
-		this.disableNationality = disableNationality;
-	}
-	//#28765 - End
 }
