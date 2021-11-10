@@ -9572,8 +9572,9 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		// #27173 -start-
 		Long statusId = scQt.getQtStatus().getStatusId();
 		
-		if (this.getManagedBean().isReadOnly()
-				&& !(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(statusId))) {
+		// #25077 - #91 -start-
+		if (!(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(statusId))) {
+			// #25077 - #91 -end-
 			log.debug("TestmangaEstimatedAmountPrerenderView");
 			
 			if (null == scQt.getEstimatedAmount()) {
@@ -9587,7 +9588,11 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					scQt.setEstimatedAmount(resTO.getTotalSpecEstimatedAmount());
 				}
 				
-				new CreateQtBackingBean().setProcurementMode(scQt, scQt.getEstimatedAmount());
+				// #31293, #25077 Farid Start Bug SIT
+				if (scQt.getEstimatedAmount().compareTo(BigDecimal.ZERO) > 0) {
+					new CreateQtBackingBean().setProcurementMode(scQt, scQt.getEstimatedAmount());
+				}
+				// #31293, #25077 Farid End Bug SIT
 			}
 		}
 		// #27173 -end-
