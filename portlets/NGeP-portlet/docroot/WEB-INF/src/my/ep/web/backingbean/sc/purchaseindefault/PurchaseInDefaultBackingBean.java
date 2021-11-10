@@ -73,8 +73,8 @@ import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
-import my.ep.persistence.entity.sc.common.ScRemark; //#31603
 import my.ep.persistence.entity.sc.common.ScRequestItem;
+import my.ep.persistence.entity.sc.common.ScRemark; //#31603
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus; //#31603
 import my.ep.persistence.entity.sc.directpurchase.ScPIDApprovalUser;
 import my.ep.persistence.entity.sc.directpurchase.ScPIDRemark;
@@ -1593,9 +1593,7 @@ public class PurchaseInDefaultBackingBean extends
 			getManagedBean().setPayLoad(directPurchaseDataType);
 		}else{
 			//#31603 - start
-			if (DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(getManagedBean().getPidStatus().getStatusId())){
-				finaliseEditableRemark(purchaseInDefault);
-			}else{
+			if (!DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(getManagedBean().getPidStatus().getStatusId())){
 			purchaseInDefault.setRemarks(initializeRemarks(purchaseInDefault,
 					purchaseInDefault.getCurrentStatus(),
 					purchaseInDefault.getRemarks(), ScPIDRemark.class));
