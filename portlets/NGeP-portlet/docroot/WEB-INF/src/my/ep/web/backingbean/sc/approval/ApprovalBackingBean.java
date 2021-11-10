@@ -294,6 +294,10 @@ public class ApprovalBackingBean extends
 			//scAttachment = approvalReqAttachement;
 			uploadAttachment(event.getFile(), approvalReqAttachement);
 			scQtApprovalDtls.setApprovalRequestAttachement(approvalReqAttachement);
+			
+			// bug #30435, Enhancement #25077 -start-
+			getManagedBean().setScQtApprovalReqAttachement(approvalReqAttachement);
+			// bug #30435, Enhancement #25077 -end-
 		}
 		logger.debug("handleOtherFileUpload - END");
 	}
@@ -318,6 +322,10 @@ public class ApprovalBackingBean extends
 				.getScQtApprovalDtls();
 		for (int i = 0; i < list.size(); i++) {
 			list.get(i).setApprovalRequestAttachement(null);
+
+			// 25077 -start-
+			getManagedBean().setScQtApprovalReqAttachement(null);
+			// 25077 -end-
 		}
 		logger.debug("deleteOthersApprovalFile - END");
 	}
@@ -2301,8 +2309,11 @@ private String prepareOriginalText(SmSupplier smSupplier) {
 			uploadAttachment(event.getFile(), approvalReqAttachement);
 			
 			scQtApprovalHistoryDtls.setApprovalRequestAttachement(approvalReqAttachement);
+			
+			this.getManagedBean().setScQtApprovalReqAttachementHistory(approvalReqAttachement);
 		}
 	}
+	// #25077 -end-
 
 	/**
 	 * only if managedBean.readOnly and managedBean.approvalEditableSection()
@@ -2642,6 +2653,7 @@ private String prepareOriginalText(SmSupplier smSupplier) {
 	
 	//#25037-END
 	
+	// #25077 -start-
 	/**
 	 * Delete attachment for history others approval.
 	 */
@@ -2652,9 +2664,12 @@ private String prepareOriginalText(SmSupplier smSupplier) {
 		
 		for (int i = 0; i < list.size(); i++) {
 			list.get(i).setApprovalRequestAttachement(null);
+
+			this.getManagedBean().setScQtApprovalReqAttachementHistory(null);
+			this.getManagedBean().setFlagFileAttahmentDeleted(true);
 		}
 	}
-	//#25077 - End
+	// #25077 - End
 	
 	// #29762, #25692 -start-
 	private void checkSampleRequiredChecking(ScQt scQt) {

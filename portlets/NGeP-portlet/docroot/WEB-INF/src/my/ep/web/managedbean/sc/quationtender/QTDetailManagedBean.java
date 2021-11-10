@@ -48,6 +48,7 @@ import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmGo;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmReportSection;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
@@ -68,6 +69,7 @@ import my.ep.persistence.entity.sc.quationtender.ScCommitteeMemberHistory; // #2
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtApprovalReqAttachement;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproverSettings;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvAttendance;
@@ -1654,7 +1656,15 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean showPopUpBPKApprovalNeeded = false;
 	private boolean resetBpkCurrentArea=false;
 	private String previousApprovalTabName;
-	//#25077 - End 
+	private ScQtApprovalReqAttachement scQtApprovalReqAttachementHistory;
+	private boolean flagFileAttahmentDeleted = false;
+	// #25077 - End
+	// bug #30435, Enhancement #25077 -start-
+	private PmParameter pmParam;
+	private ScQtApprovalReqAttachement scQtApprovalReqAttachement;
+	private String scQtAppRequestRemark;
+	private boolean approverTabLoaded = false;
+	// bug #30435, Enhancement #25077 -end-
 
 	//#11104-start
 	private ScQtCheckList sampleCheckList;
@@ -10505,7 +10515,85 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setPreviousApprovalTabName(String previousApprovalTabName) {
 		this.previousApprovalTabName = previousApprovalTabName;
 	}
-	//#25077 - End
+	
+	public ScQtApprovalReqAttachement getScQtApprovalReqAttachementHistory() {
+		return scQtApprovalReqAttachementHistory;
+	}
+
+	public void setScQtApprovalReqAttachementHistory(ScQtApprovalReqAttachement scQtApprovalReqAttachementHistory) {
+		this.scQtApprovalReqAttachementHistory = scQtApprovalReqAttachementHistory;
+	}
+
+	public boolean isFlagFileAttahmentDeleted() {
+		return flagFileAttahmentDeleted;
+	}
+
+	public void setFlagFileAttahmentDeleted(boolean flagFileAttahmentDeleted) {
+		this.flagFileAttahmentDeleted = flagFileAttahmentDeleted;
+	}
+	// #25077 - End
+
+	// bug #30435, Enhancement #25077 - start
+	/**
+	 * @return the pmParam
+	 */
+	public PmParameter getPmParam() {
+		return pmParam;
+	}
+
+	/**
+	 * @param pmParam
+	 *            the pmParam to set
+	 */
+	public void setPmParam(PmParameter pmParam) {
+		this.pmParam = pmParam;
+	}
+
+	/**
+	 * @return the scQtApprovalReqAttachement
+	 */
+	public ScQtApprovalReqAttachement getScQtApprovalReqAttachement() {
+		return scQtApprovalReqAttachement;
+	}
+
+	/**
+	 * @param scQtApprovalReqAttachement
+	 *            the scQtApprovalReqAttachement to set
+	 */
+	public void setScQtApprovalReqAttachement(ScQtApprovalReqAttachement scQtApprovalReqAttachement) {
+		this.scQtApprovalReqAttachement = scQtApprovalReqAttachement;
+	}
+
+	/**
+	 * @return the scQtAppRequestRemark
+	 */
+	public String getScQtAppRequestRemark() {
+		return scQtAppRequestRemark;
+	}
+
+	/**
+	 * @param scQtAppRequestRemark
+	 *            the scQtAppRequestRemark to set
+	 */
+	public void setScQtAppRequestRemark(String scQtAppRequestRemark) {
+		this.scQtAppRequestRemark = scQtAppRequestRemark;
+	}
+
+	/**
+	 * @return the approverTabLoaded
+	 */
+	public boolean isApproverTabLoaded() {
+		return approverTabLoaded;
+	}
+
+	/**
+	 * @param approverTabLoaded
+	 *            the approverTabLoaded to set
+	 */
+	public void setApproverTabLoaded(boolean approverTabLoaded) {
+		this.approverTabLoaded = approverTabLoaded;
+	}
+	// bug #30435, Enhancement #25077 - end
 
 	// #15391 -start-
 	public boolean isChecklist() {

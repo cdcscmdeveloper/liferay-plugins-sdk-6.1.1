@@ -75,10 +75,10 @@
 						        <h:outputText value="* " styleClass="mandatory" />
 						      </c:if> 
 								<h:outputText value="#{lbl['lbl.sc.document']}" />
-							   <c:if test="#{not empty othersApprovalDtlsList.scQtApprovalDtls and isOthersApprovalMandatoryForAttachment}">
-			                    <ac:iconTooltip value="#{lbl['lbl.sc.qt.approval.oth.supporting.document.tooltip']}" />
-			                   </c:if> 
-							</f:facet>
+							<c:if test="#{(not empty othersApprovalDtlsList.scQtApprovalDtls and isOthersApprovalMandatoryForAttachment) or (qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_QT_SUBMISSION)}">
+								<ac:iconTooltip value="#{lbl['lbl.sc.qt.approval.oth.supporting.document.tooltip']}" />
+							</c:if>
+						</f:facet>
 					        <h:panelGroup id="otheruploadId">
 								<ac:scSingleFileUploadButton id="otherApprUploadBtn"
 									popupWidgetVar="otherApprUploadDlg"
@@ -99,10 +99,14 @@
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.remark']}" />
 				</f:facet>
+				<!-- bug #30435, 25077 -start- -->
 				<p:inputTextarea id="remarkid" maxlength="1000"
-				onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);" onmouseout="limitTextArea(this,100);"
+				onkeyup="limitTextArea(this,1000);" valueChangeListener="#{createQtBB.otherAppValueChanged}" onkeydown="limitTextArea(this,1000);" onmouseout="limitTextArea(this,100);"
 					value="#{otherrequestdetails.appRequestRemark.remark}" cols="30"
-					rows="3" />
+					rows="3" >
+					<f:ajax></f:ajax>
+				</p:inputTextarea>
+				<!-- bug #30435, 25077 -end- -->
 				<p:message id="remarkidMsg" for="remarkid" display="icon" />
 			</p:column>
 		</p:dataTable>
