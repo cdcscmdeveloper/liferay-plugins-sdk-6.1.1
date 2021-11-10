@@ -1603,6 +1603,11 @@ public class PurchaseInDefaultBackingBean extends
 				//#31603 - start
 				if (DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(statusId)) {
 					validateRemark();
+				}else{
+					scPurchaseInDefault.setRemarks(initializeRemarks(
+							scPurchaseInDefault,
+							scPurchaseInDefault.getCurrentStatus(),
+							scPurchaseInDefault.getRemarks(), ScPIDRemark.class));
 				}
 				//#31603 - end
 				
