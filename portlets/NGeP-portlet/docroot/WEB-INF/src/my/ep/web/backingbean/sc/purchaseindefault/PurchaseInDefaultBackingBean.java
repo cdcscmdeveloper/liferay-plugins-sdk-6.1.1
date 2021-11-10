@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import org.apache.commons.lang.StringUtils; //#28865
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -74,8 +73,8 @@ import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
-import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScRemark; //#31603
+import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus; //#31603
 import my.ep.persistence.entity.sc.directpurchase.ScPIDApprovalUser;
 import my.ep.persistence.entity.sc.directpurchase.ScPIDRemark;
@@ -99,13 +98,11 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils; //#28865
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
-
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.model.User;
 
 /**
  * The Class PurchaseInDefaultBackingBean.
@@ -893,7 +890,7 @@ public class PurchaseInDefaultBackingBean extends
 				reqDTO.setSupRes(true);
 				resDTO = purchaseInDefaultSO.updateResponsePurchaseInDefault(reqDTO);
 			}else if(DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(stsId)){						
-				boolean validateRemark = false; //#31603 - set to false
+				boolean validateRemark = true; //#31603 - set to true
 				boolean isQuantityCheckNeeded = false;
 				
 				if (getManagedBean().isVisibleOrderQty()) {
@@ -1595,9 +1592,15 @@ public class PurchaseInDefaultBackingBean extends
 					purchaseInDefault.getRemarks(), ScPIDRemark.class));
 			getManagedBean().setPayLoad(directPurchaseDataType);
 		}else{
+			//#31603 - start
+			if (DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(getManagedBean().getPidStatus().getStatusId())){
+				finaliseEditableRemark(purchaseInDefault);
+			}else{
 			purchaseInDefault.setRemarks(initializeRemarks(purchaseInDefault,
 					purchaseInDefault.getCurrentStatus(),
 					purchaseInDefault.getRemarks(), ScPIDRemark.class));
+			}
+			//#31603 - end
 		}	
 		//#9133 - end
 		
@@ -1929,10 +1932,16 @@ public class PurchaseInDefaultBackingBean extends
 				getCurrentStatus(getPmStatusByStatusId(getManagedBean().getCurrentStatusId()));				
 				
 				// #9133 - start
-				scPurchaseInDefault.setRemarks(initializeRemarks(
-						scPurchaseInDefault,
-						scPurchaseInDefault.getCurrentStatus(),
-						scPurchaseInDefault.getRemarks(), ScPIDRemark.class));
+				//#31603 - start
+				if (DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(statusId)) {
+					validateRemark();
+				}else{
+					scPurchaseInDefault.setRemarks(initializeRemarks(
+							scPurchaseInDefault,
+							scPurchaseInDefault.getCurrentStatus(),
+							scPurchaseInDefault.getRemarks(), ScPIDRemark.class));
+				}
+				//#31603 - end
 				// #9133 - end
 				
 				finaliseEditableRemark(scPurchaseInDefault);//#31603
@@ -1966,7 +1975,8 @@ public class PurchaseInDefaultBackingBean extends
 
 				ScPurchaseInDefault sPID = getManagedBean().getPurchaseInDefault();
 
-				sPID.setRemarks(initializeRemarks(sPID, scPurchaseInDefault.getCurrentStatus(), sPID.getRemarks(), ScPIDRemark.class));
+				if (!DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(statusId))//#31603
+					sPID.setRemarks(initializeRemarks(sPID, scPurchaseInDefault.getCurrentStatus(), sPID.getRemarks(), ScPIDRemark.class));
 				
 				finaliseEditableRemark(sPID);//#31603
 
@@ -2174,7 +2184,10 @@ public class PurchaseInDefaultBackingBean extends
 					if (remark.getRemarkId() == null) {
 						reqDTO.setScPIDRemark(remark);
 						purchaseInDefaultSO.updateRemark(reqDTO);
-						break;
+						
+						if (!DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(getManagedBean()
+								.getPidStatus().getStatusId()))// #31603
+							break;
 					}
 
 					ScPIDRemark fetchRemark = purchaseInDefaultSO
@@ -2183,7 +2196,10 @@ public class PurchaseInDefaultBackingBean extends
 					fetchRemark.setCreatedBy(remark.getCreatedBy());
 					reqDTO.setScPIDRemark(fetchRemark);
 					purchaseInDefaultSO.updateRemark(reqDTO);
-					break;
+					
+					if (!DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(getManagedBean()
+							.getPidStatus().getStatusId()))// #31603
+						break;
 				}
 			}
 
@@ -2972,6 +2988,11 @@ public class PurchaseInDefaultBackingBean extends
 					scRemark.setEditable(true);
 				if (DPStatusConstants.PID_PENDING_SUBMISSION.equals(statusId))
 					scRemark.setEditable(true);
+				if (DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(statusId)
+						&& compareUsrName(scRemark.getCreatedUser().getLoginId()))
+					scRemark.setEditable(true);
+				if (getManagedBean().getTaskId() == null)
+					scRemark.setEditable(false);
 			}
 		}
 	}
