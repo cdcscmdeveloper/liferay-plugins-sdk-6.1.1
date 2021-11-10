@@ -674,7 +674,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 									
 									SmSupplier supplier = latestAppl.getSmSupplier();
 									
+									//27876: Disciplinary Action - start - <27876>
 									List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
+									//27876: Disciplinary Action - end - <27876>
 									
 									//CR 27382: Static Code Analysis
 									//if(discList != null && discList.size() > 0){ asal
@@ -972,7 +974,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		smPersonnel.setSmAppl(smAppl);
 		//START SSM CHANGES #27201
 		smPersonnel = setDesignationSSM(smPersonnel);
-		//END SSM CHANGES #27201
+		//END SSM CHANGES #27201		
 		smAppl.getSmPersonnels().add(smPersonnel);
 		//#16052019 - SSM INTEGRATION CR
 		//add list all personel & check if smPersonnel contain in this.getManagedBean().getSmPersonnelAll(), use smPersonnel to add into appl, otherwise use personnel
@@ -1124,17 +1126,33 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					&& StringUtils.isNotBlank(smPersonnel.getEmail()) ? smPersonnel
 					.getEmail() : "";
 					
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(MessageConst.INFO_721012,
-									new String[] {
-											suppAdminEmail,
-											SmRuleHelper.getInstance()
-													.getEmailActivationDays()
-													+ "" },
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
+			//14623 - start : tukar ayat
+			if (this.getManagedBean().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_BASIC)) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(MessageConst.INFO_721012,
+										new String[] {
+												suppAdminEmail,
+												SmRuleHelper.getInstance()
+														.getEmailActivationDays()
+														+ "" },
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+			} else if (this.getManagedBean().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF)) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(MessageConst.INFO_722686,
+										new String[] {
+												suppAdminEmail,
+												SmRuleHelper.getInstance()
+														.getEmailActivationDays()
+														+ "" },
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+			}
+			//14623 - end		
 			renewSesionObject();
 			this.getManagedBean().setSmAppl(null);
 			this.getManagedBean().setSmSupp(null);
@@ -1823,7 +1841,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			}
 		}
 	}
-	public void getIndividualServiceType(){ 
+	public void getIndividualServiceType(){	
 		List<PmParameterDesc> paramDesc = SmCommonUtil.retrieveParameterDescList(SupplierManagementConst.SPECIAL_SERVICE_CODE, new FacesScopes().getUserLocale().getLanguage());
 		this.getManagedBean().setServiceLs(paramDesc);
 	}
@@ -3342,11 +3360,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			throw new EpException(MessageConst.ERROR_721011);
 		}
 		//CR 27382: Static Code Analysis End
-		if(!this.getManagedBean().getSmSupp().getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)){
-			if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1){
-				throw new EpException(MessageConst.ERROR_721011);
-			}
-		}
 
 		if(this.getManagedBean().getSmAppl().getSmSupplierBanks().size() < 1){
 			throw new EpException(MessageConst.ERROR_721002);
@@ -4427,7 +4440,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	
 	//26238 - start 
 	public void retrieveActiveDisicplinaryAction(SmSupplier supplier){
+		
+		//27876: Disciplinary Action - start - <27876>
 		List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
+		//27876: Disciplinary Action - end - <27876>
+		
 		PersonnelReqDTO perReqDTO = new PersonnelReqDTO();
 		perReqDTO.setSmSupplierId(supplier.getSupplierId());
 		
