@@ -1596,9 +1596,7 @@ public class PurchaseInDefaultBackingBean extends
 			getManagedBean().setPayLoad(directPurchaseDataType);
 		}else{
 			//#31603 - start
-			if (DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(getManagedBean().getPidStatus().getStatusId())){
-				finaliseEditableRemark(purchaseInDefault);
-			}else{
+			if (!DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(getManagedBean().getPidStatus().getStatusId())){
 			purchaseInDefault.setRemarks(initializeRemarks(purchaseInDefault,
 					purchaseInDefault.getCurrentStatus(),
 					purchaseInDefault.getRemarks(), ScPIDRemark.class));
