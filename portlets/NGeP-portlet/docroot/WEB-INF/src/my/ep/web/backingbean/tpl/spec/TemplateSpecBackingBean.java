@@ -3501,6 +3501,55 @@ public class TemplateSpecBackingBean extends
 	}
 //#21695 Farid end 2/4/2021
 	
+	//#28784 - Start
+	public void scoringOkActionDemo(TemplateSpecBean templateSpecBean) {
+		ITemplateSpecSO templateSpecSO = null;
+		try {
+			TplSpecQuestion selectedSpecQuestion = templateSpecBean
+					.getSelectedSpecQuestion();
+			List<TplSpecScoring> specScorings = selectedSpecQuestion
+					.getTplSpecScorings();
+			templateSpecSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
+			BigDecimal demoScore = templateSpecSO.validateScoring(
+					selectedSpecQuestion, specScorings, new FacesScopes().getUserLocale());
+			if(demoScore != null && demoScore.equals(new BigDecimal(0))){
+				throw new EpException(MessageConst.ERROR_760476);
+			}
+			if (demoScore != null) {
+				selectedSpecQuestion.setDemoScore(demoScore);
+			}
+		} finally {
+			templateSpecSO = null;
+		}
+		templateSpecBean.setSelectedSpecQuestion(null);
+		getManagedBean().setTemplateSpecBean(templateSpecBean);
+	}
+
+	public void scoringCancelActionDemo(TemplateSpecBean templateSpecBean) {
+		TplSpecQuestion oriSpecQuestion = templateSpecBean.getOriSpecQuestion();
+		TplSpecQuestion selectedSpecQuestion = templateSpecBean
+				.getSelectedSpecQuestion();
+
+		if (oriSpecQuestion.getScoreTypeCode() != null
+				&& oriSpecQuestion.getScoreTypeCode().getParameterId() != null) {
+			selectedSpecQuestion.setScoreTypeCode(oriSpecQuestion
+					.getScoreTypeCode());
+		} else {
+			selectedSpecQuestion.setScoreTypeCode(null);
+		}
+
+		selectedSpecQuestion.setDemoScore(oriSpecQuestion.getDemoScore()!=null? oriSpecQuestion.getDemoScore() : null);
+		selectedSpecQuestion.setWeightageReq(oriSpecQuestion.isWeightageReq());
+		selectedSpecQuestion.setWeightage(oriSpecQuestion.getWeightage());
+		selectedSpecQuestion.setTplSpecScorings(oriSpecQuestion
+				.getTplSpecScorings());
+
+		templateSpecBean.setSelectedSpecQuestion(null);
+		getManagedBean().setTemplateSpecBean(templateSpecBean);
+	}
+	//#28784 - END
+	
 	//#31134 Farid end 25/6/2021
 	public boolean checkPriceTierEnableColumn(TemplateSpecBean templateSpecBean) {
 		int count = 0;
