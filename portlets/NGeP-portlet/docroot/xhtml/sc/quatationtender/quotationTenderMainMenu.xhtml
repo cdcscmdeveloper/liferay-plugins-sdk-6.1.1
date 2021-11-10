@@ -170,6 +170,8 @@
 				</p:tabMenu></td>
 			<td width="80%" valign="top">
 			<h:panelGroup id="menuQTContent">
+					<ui:include src="#{qTDetailBB.getBPKApprovalPage()}" />
+			
 					<c:if test="#{qTDetailBB.managedBean.activeIndex eq '0'}">
 						<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderGeneralDetails.xhtml" />
 					</c:if>
@@ -258,7 +260,7 @@
 									</c:if>
 								</c:when>
 								<c:when test="#{qTDetailBB.managedBean.activeIndex eq '9' and qTDetailBB.displayMenuItem(qTDetailBB.menuItemBPKApproval)}">
-								 	<ui:include src="#{qTDetailBB.getBPKApprovalPage()}" />
+								 	
 								</c:when>
 								<c:when test="#{qTDetailBB.managedBean.activeIndex eq '9' and qTDetailBB.displayMenuItem(qTDetailBB.menuItemCommitteeApprovalEcOcTecFec)}">
 								 	<ui:include src="#{qTDetailBB.getCommitteeAppointmentApprovalPage()}" />
