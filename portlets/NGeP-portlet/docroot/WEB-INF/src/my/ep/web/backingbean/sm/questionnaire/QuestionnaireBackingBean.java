@@ -1,30 +1,39 @@
 package my.ep.web.backingbean.sm.questionnaire;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
+import my.ep.constant.EpPropertiesConst;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.questionnaire.QuestionnaireReqDTO;
 import my.ep.dto.sm.questionnaire.QuestionnaireResDTO;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmAnswer;
-import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmQuestion;
 import my.ep.persistence.entity.sm.SmSupplierAnswer;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
+import my.ep.util.EpPropertiesUtils;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
+import my.ep.web.format.AttachmentDateFormat;
+import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.sm.questionnaire.QuestionnaireManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.log4j.Logger;
+import org.apache.velocity.VelocityContext;
 
 @ManagedBean(name = "questionnaireBackingBean")
 @RequestScoped
@@ -65,6 +74,84 @@ public class QuestionnaireBackingBean extends
 		retrievMOFInfo();
 	}
 
+
+	//<-- START #12768 -->
+	/**
+	 * Download Questionnaire template report in PDF
+	 * @throws Exception
+	 */
+	public void downloadQuestionnaire()throws Exception{
+		
+		List<SmSupplierAnswer> smSuppAnswerLs = new ArrayList<SmSupplierAnswer>();
+		smSuppAnswerLs = getManagedBean().getSmSuppAnswerLs();
+
+		printReportVM("questionnaire","SM_QUESTIONNAIRE_FORM.pdf","/sm/questionnaire/questionnaire_form.vm",setDetail());
+		
+	}
+	
+	/**
+	 * get the VelocityContext
+	 * @return context
+	 */
+	public VelocityContext setDetail(){
+	
+		VelocityContext context = new VelocityContext();	
+		FacesScopes face = new FacesScopes();
+		
+		String lblApplType = getsupplierApplTypeDesc(this.getManagedBean().getSmAppl().getApplType());
+
+		context.put("hostUrl", getLogoHeaderPath());
+		context.put("title",  ResourceBundleUtils.getMessage("lbl.sm.questionaire.answer.header",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("feedbacknote1",  ResourceBundleUtils.getMessage("lbl.sm.questionaire.feedback.note1",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("feedbacknote2",  ResourceBundleUtils.getMessage("lbl.sm.questionaire.feedback.note2",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+
+		context.put("companyName",  this.getManagedBean().getSmSupp().getCompanyName()); 
+		context.put("mof", this.getManagedBean().getMofAccountNo());
+		context.put("applNo",  this.getManagedBean().getSmAppl().getApplNo());
+		context.put("applType",ResourceBundleUtils.getMessage(lblApplType,ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("question", this.getManagedBean().getSmSuppAnswerLs());
+		
+		return context;
+	}
+	
+	/**
+	 * get the printReportVM
+	 * @return String
+	 */
+	public void printReportVM(String tmpFolder,String fileName,String vmFile,VelocityContext context){
+		String filePath = null;
+		filePath = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+		
+		filePath = filePath + "/" + tmpFolder;
+       
+		File file = new File(filePath);
+		file.mkdirs();
+		AttachmentFormat attachmentFormat = null;
+		attachmentFormat = new AttachmentDateFormat();
+		String newName = attachmentFormat.format(fileName, null);
+		filePath = filePath + "/"+ newName;
+		OutputStream os1 = null;
+		try{
+			os1 = new FileOutputStream(filePath);
+			DocumentGenerator.getInstance().generatePdfFromVelocity(vmFile, context, os1);		
+			os1.flush();
+			os1.close();
+			this.getManagedBean().setDownloadfile(commonDownload(tmpFolder+"/"+newName, fileName));
+		}catch(Exception e){
+			log.error("File: QuestionnaireBaseBackingBean, printReportVM, Message: "+e.getMessage());
+		}
+	}
+	
+	/**
+	 * get the template logo path 
+	 * @return String
+	 */
+	private String getLogoHeaderPath(){
+		return SmCommonUtil.getBasePortalUrl();
+	}
+	//<-- END #12768 -->
+
+	
 	public void submitQuestionnaire() {
 		QuestionnaireReqDTO reqDTO = new QuestionnaireReqDTO();
 		reqDTO.setSmSupplier(this.getManagedBean().getSmSupp());
