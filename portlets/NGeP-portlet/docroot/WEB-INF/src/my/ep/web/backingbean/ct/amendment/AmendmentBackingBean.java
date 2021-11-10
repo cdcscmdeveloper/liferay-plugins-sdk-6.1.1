@@ -1583,7 +1583,24 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						}
 					}
 				} else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+					//#25956 start
+					if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)
+							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)) {
+						messageId = MessageConst.INFO_700082;
+						params = new String[] { getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,
+								this.ctBackingBean.getManagedBean().getContractVer().getDocType()),
+								this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo(),
+								RoleHelper.getInstance().getRoleDescByCode(RoleCode.MIN_CONTRACT_ADMIN.value()).getRoleName()};
+					}else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)) {
+						messageId = MessageConst.INFO_700083;
+						params = new String[] { getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,
+								this.ctBackingBean.getManagedBean().getContractVer().getDocType()),
+								this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo(),
+								RoleHelper.getInstance().getRoleDescByCode(RoleCode.MIN_CONTRACT_ADMIN.value()).getRoleName()};
+					}else{
 					messageId = MessageConst.INFO_700010;
+					}
+					//#25956 end
 					
 					//#26186 start
 					if(getManagedBean().isDisciplinaryActionCancel()){
