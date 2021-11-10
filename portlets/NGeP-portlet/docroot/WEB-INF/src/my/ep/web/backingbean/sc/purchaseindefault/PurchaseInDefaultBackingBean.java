@@ -1334,9 +1334,7 @@ public class PurchaseInDefaultBackingBean extends
 
 		// remarks
 		//#31603 - start
-		if (DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(getManagedBean().getPidStatus().getStatusId())){
-			finaliseEditableRemark(purchaseInDefault);
-		}else{
+		if (!DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(getManagedBean().getPidStatus().getStatusId())){
 		purchaseInDefault.setRemarks(initializeRemarks(purchaseInDefault,
 				purchaseInDefault.getCurrentStatus(),
 				purchaseInDefault.getRemarks(), ScPIDRemark.class));
@@ -1601,6 +1599,12 @@ public class PurchaseInDefaultBackingBean extends
 				validateRequisitionerResponsePID(scPurchaseInDefault, validateRemark, isQuantityCheckNeeded, outcome);
 
 				getCurrentStatus(getPmStatusByStatusId(getManagedBean().getCurrentStatusId()));				
+				
+				//#31603 - start
+				if (DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(statusId)) {
+					validateRemark();
+				}
+				//#31603 - end
 				
 				finaliseEditableRemark(scPurchaseInDefault);//#31603
 				saveRemark(scPurchaseInDefault);
@@ -2581,6 +2585,24 @@ public class PurchaseInDefaultBackingBean extends
 		getManagedBean().setAutoUpdate(Boolean.TRUE);		
 	}
 	
+	// #9133, #31603 - start
+	private void validateRemark() {
+		boolean newRemark = false;
+		FacesScopes facesScopes = new FacesScopes();
+		
+		for (ScPIDRemark remark : getManagedBean().getPurchaseInDefault().getRemarks()) {
+			// no new remark being insert
+			if (remark.getRemark() == null || remark.getRemark().equalsIgnoreCase("") || remark.getRemark().isEmpty()) {
+				newRemark = true;
+			}
+		}
+		if (newRemark) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.sc.remark", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()) });
+		}
+	}
+	// #9133, #31603 - end
+	
 	//#31603 - start
 	private void finaliseEditableRemark(ScPurchaseInDefault scPurchaseInDefault) {
 		List<ScPIDRemark> scRemarks =  scPurchaseInDefault.getRemarks();
@@ -2599,6 +2621,11 @@ public class PurchaseInDefaultBackingBean extends
 					scRemark.setEditable(true);
 				if (DPStatusConstants.PID_PENDING_SUBMISSION.equals(statusId))
 					scRemark.setEditable(true);
+				if (DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(statusId)
+						&& compareUsrName(scRemark.getCreatedUser().getLoginId()))
+					scRemark.setEditable(true);
+				if (getManagedBean().getTaskId() == null)
+					scRemark.setEditable(false);
 			}
 		}
 	}
