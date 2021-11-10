@@ -1,11 +1,9 @@
 package my.ep.web.backingbean.sm.forcereplaceadmin;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
@@ -13,32 +11,23 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
-import my.ep.biz.service.cm.catalogue.ICatalogueSO;
-import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.MessageConst;
-import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.dto.cm.catalogue.CatalogueReqDTO;
-import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
-import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
-//#28765 - End
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
-import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
-import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmSalutation;
@@ -47,15 +36,13 @@ import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
-import my.ep.persistence.entity.sm.SmReplaceSupplierAdminDoc;
-import my.ep.persistence.entity.sm.SmReplaceSupplierAdminDocFile;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.forcereplaceadmin.ForceReplaceSuppAdminManagedBean;
 import my.ep.web.util.FacesScopes;
-import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
@@ -67,8 +54,6 @@ import my.ep.web.vo.ReactivateSupplierVO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
-import org.primefaces.event.FileUploadEvent;
-//#28765 - Start
 
 @ManagedBean(name = "forceReplaceSuppAdminBackingBean")
 @RequestScoped
@@ -80,9 +65,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 */
 	private static final long serialVersionUID = 650929814581089830L;
 	
-	//#28765 - Start
-	private static final String CATALOGUE_PUBLISHED = "U";
-	//#28765 - End
 	private static final Logger log = EpLogger.getLogger(ForceReplaceSuppAdminBackingBean.class);
 
 	/**
@@ -127,13 +109,12 @@ public class ForceReplaceSuppAdminBackingBean extends
 				.getAgencyName());
 		reqDTO.setSuppType(getManagedBean().getReactivateBasic().getSuppType());
 
-		//#28765 chained method retrieveSupplierAndPersonnelsByBusRegNoAndNameBypassActiveAcc
 		if (getManagedBean().getAccType().equals(
 				SupplierManagementConst.ACC_GOVT_SELLER)) {
 			getManagedBean().setSmSupplier(
 					SmServiceLookup
 							.getSupplierSearchSO()
-							.retrieveSupplierAndPersonnelsByBusRegNoAndNameBypassActiveAcc(
+							.retrieveSupplierAndPersonnelsByBusRegNoAndName(
 									reqDTO).getSmSupplier());
 
 			if (getManagedBean().getSmSupplier() != null
@@ -170,56 +151,21 @@ public class ForceReplaceSuppAdminBackingBean extends
 				throw new EpException(MessageConst.ERROR_722593);
 			}
 		} else {
-			//#28765 - Start
-			if (getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER) && 
-					getManagedBean().getSmSupplier()!=null && 
-					checkPendingSoftCertRequest(getManagedBean().getSmSupplier().getSupplierId()) && 
-					getManagedBean().getSmSupplier().getRecordStatusFlg()!=DbValueConst.RECORD_STATUS_ACTIVE) {
-					personnelBypassValidation();
+			validate();
+			//START 27239
+			if(SmApplicationUtil.isMofAccEffDatePassedCurrDate(getManagedBean().getSmSupplier())){
+				if (!getManagedBean().isExistingUser()) {
+					throw new EpException(MessageConst.ERROR_721087);
 				}
-			if (getManagedBean().getAccType().equals(SupplierManagementConst.ACC_BASIC) && 
-					getManagedBean().getSmSupplier() != null && 
-					(checkCatalogueUpload(getManagedBean().getSmSupplier().getSupplierId())==null || 
-					checkPendingSoftCertRequest(getManagedBean().getSmSupplier().getSupplierId())) && 
-					getManagedBean().getSmSupplier().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
-				log.info("BASIC ACCOUNT <<<<<<<<<<<<");
-				personnelBypassValidation();
 			}
-			if(getManagedBean().getSmSupplier()!=null && getManagedBean().getAccType().equals(SupplierManagementConst.ACC_MOF)) {
-				personnelBypassValidation();
-			}
-			if(getManagedBean().isBypassFlag()==false) {
-				StringBuilder sb = new StringBuilder();
-				//12981 
-				//28765 - START
-				if(getManagedBean().getOldAdmin() != null){
-					sb.append(SmCommonUtil.getMessage("lbl.msg.confirm.declare4", new String[] {getManagedBean().getOldAdmin().getName()})); //#28765
-				}else if(getManagedBean().getSmSupplier().getSmPersonnel() != null){
-					sb.append(SmCommonUtil.getMessage("lbl.msg.confirm.declare4", new String[] {getManagedBean().getSmSupplier().getSmPersonnel().getName()})); //#28765
-				}
-				getManagedBean().setDisplayMessageReplaceTrans(sb.toString());
-				//#28765 End
-				validate();
-				//START 27239
-				if(SmApplicationUtil.isMofAccEffDatePassedCurrDate(getManagedBean().getSmSupplier())){
-					if (!getManagedBean().isExistingUser()) {
-						throw new EpException(MessageConst.ERROR_721087);
-					}
-				}
-				
-				//END 27239
-				executeDecision();
-				
-				// redirectToNonExistNewAdminPage();
-			}
-			//#28765 - End
+			
+			//END 27239
+			executeDecision();
+			
+			// redirectToNonExistNewAdminPage();
 		}
 	}
-	//#28765 - Start
-	public void checkingBeforeDeclare() {
-		RequestContext.getCurrentInstance().execute("declareDeletePopUp.show()");
-	}
-	//#28765 - End
+
 	public void declare() {
 		if (getManagedBean().isExistingUser()) {
 			replaceWithExistingUser();
@@ -228,42 +174,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 		}
 	}
 
-	//#28765 - Start
-		private PersonnelReqDTO getOldAdminReqDTO() {
-			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-			reqDTO.setSmSupplierId(getManagedBean().getSmSupplier().getSupplierId());
-			reqDTO.setAdminPersonnel(getManagedBean().getOldAdmin());
-			reqDTO.setSmPersonnel(getManagedBean().getOldAdmin());
-			reqDTO.setEmail(getManagedBean().getOldAdmin().getEmail());
-			//#28765 - Start chained method added .getApplId()
-			reqDTO.setApplId(getManagedBean().getSmSupplier().getSmAppl()
-					.getApplId());	
-			//#28765 - End
-			FacesScopes fs = new FacesScopes();
-			reqDTO.setLanguage(fs.getUserLocale().getLanguage());
-			reqDTO.setServerName(fs.getRequest().getServerName());
-			reqDTO.setServerPort(fs.getRequest().getServerPort());
-			reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
-			reqDTO.setOldAdminRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
-			reqDTO.setActionType(my.ep.constant.sm.SupplierManagementConst.FORCE_REPLACE_ADMIN);
-			reqDTO.setTaskList(getTaskList());
-			//#28765 - Start
-			reqDTO.setUserLocale(fs.getUserLocale());
-			reqDTO.setSmReplaceSupplierAdminDocs(getManagedBean().getSmReplaceSupplierAdminDocs());
-			if (getManagedBean().getBypassFlag1()==1 || getManagedBean().getBypassFlag2()==1) {
-					reqDTO.setRemoveSupplier(true);
-			}	
-			reqDTO.setFromReplaceAdmin(true);
-			//#28765 - End
-			SmAppl activeAppl = getCurrActiveSmAppl(getManagedBean()
-					.getSmSupplier());
-			if (activeAppl != null) {
-				reqDTO.setHasActiveAppl(true);
-				reqDTO.setDraftApplId(activeAppl.getApplId());
-			}
-			return reqDTO;
-		}
-		//#28765 - End
 	/**
 	 * Replace admin with new personnel and redirect to success page
 	 */
@@ -278,23 +188,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		validateMyIdentity();
 		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO()
 				.replaceAdminWithNewPersonnel(getReqDTO());
-		// Start 28765 comment changes 12981
-		//START 12981
-		//#28765 - Start - to pass through inactiveSupplierRole for G2G normal replace supplier admin	
-		if((getManagedBean().isBypassFlag()==false && !getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER)) 
-//				&& resDto.isTerminateSupplier() == false
-				) {
-			// End 28765 comment changes 12981
-			PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO()
-					.inactiveSupplierRole(getOldAdminReqDTO());
-		} else if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF) && 
-				(getManagedBean().getSmAppl().getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER) ||
-				getManagedBean().getSmAppl().getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)) ){
-			getManagedBean().setBypassFlag1(1);
-		}
-		//#28765 - End
 		redirectToSuccessPage(resDto);
-		//END 12981
 	}
 
 	/**
@@ -307,20 +201,9 @@ public class ForceReplaceSuppAdminBackingBean extends
 				.getNewAdmin(), getManagedBean().getMailAddr(),
 				getManagedBean().getPermAddr());
 		validateMyIdentity();
-		// Start 28765 comment changes 12981
-		//12981 START
 		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO()
 				.reassignSupplierAdmin(getReqDTO());
-		//START 12981
-		//#28765 - Start - inactiveSupplierRole to apply for both bypass/normal replace supplier admin
-//		if(getManagedBean().getBypassFlag1()==1 && getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER)) {
-			PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO()
-					.inactiveSupplierRole(getOldAdminReqDTO());
-//		}
-		//#28765 - End
 		redirectToSuccessPage(resDto);
-		//12981 END
-		// End 28765 comment changes 12981
 	}
 	
 	//#25969
@@ -334,22 +217,16 @@ public class ForceReplaceSuppAdminBackingBean extends
 		SmAppl latestRejectedAppl = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppType(this
 				.getManagedBean().getSmSupplier().getSupplierId(), ParameterConst.NEW_SM_APPLN_FOR_RENEW);
 		
-		/* #28765 - Comment G2G Negation
+		
 		if (!getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER)) {
-		*/
 			
 			if (getManagedBean().getSmSupplier().getRecordStatusFlg()
-						.equals(DbValueConst.RECORD_STATUS_IN_PROGRESS) && !getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER)){
+						.equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)) {
 				//#27300
-				//28765
 				if (activeAppl != null) {
 					throw new EpException(MessageConst.ERROR_722669, new String[] { activeAppl.getApplNo() });
 				}else if (latestRejectedAppl != null) {
 					throw new EpException(MessageConst.ERROR_722669, new String[] { latestRejectedAppl.getApplNo() });
-				}else if(SmApplicationUtil.isMofAccEffDatePassedCurrDate(getManagedBean().getSmSupplier())){
-					if (!getManagedBean().isExistingUser()) {
-						throw new EpException(MessageConst.ERROR_721087);
-					}
 				}else {
 					throw new EpException(MessageConst.ERROR_722676);
 				}
@@ -372,9 +249,9 @@ public class ForceReplaceSuppAdminBackingBean extends
 					}
 				}
 			}
-		/* #28765 Closing for G2G Negation
+
 		}
-		*/
+
 	}
 	
 
@@ -390,11 +267,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 		getManagedBean().getReactivateBasic().setShowEmailInput(false);
 		getManagedBean().setNewAdmin(null);
 		getManagedBean().setOldAdmin(null);
-		//28765 - START
-		if(getManagedBean().getSmReplaceSupplierAdminDocs() != null){
-			getManagedBean().getSmReplaceSupplierAdminDocs().clear();
-		}
-		//28765 - END
 		return "forceReplaceAdmin.xhtml";
 	}
 
@@ -440,10 +312,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 		reqDTO.setAdminPersonnel(getManagedBean().getOldAdmin());
 		reqDTO.setSmPersonnel(getManagedBean().getNewAdmin());
 		reqDTO.setEmail(getManagedBean().getNewAdmin().getEmail());
-		//#28765 - Start chained method added .getApplId()
 		reqDTO.setApplId(getManagedBean().getSmSupplier().getSmAppl()
-				.getApplId());	
-		//#28765 - End
+				.getApplId());
 		FacesScopes fs = new FacesScopes();
 		reqDTO.setLanguage(fs.getUserLocale().getLanguage());
 		reqDTO.setServerName(fs.getRequest().getServerName());
@@ -452,12 +322,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 		reqDTO.setOldAdminRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 		reqDTO.setActionType(my.ep.constant.sm.SupplierManagementConst.FORCE_REPLACE_ADMIN);
 		reqDTO.setTaskList(getTaskList());
-		//#28765 - Start
-		reqDTO.setSmReplaceSupplierAdminDocs(getManagedBean().getSmReplaceSupplierAdminDocs());
-		if (getManagedBean().getBypassFlag1()==1 || getManagedBean().getBypassFlag2()==1) {
-				reqDTO.setRemoveSupplier(true);
-		}	
-		//#28765 - End
 		SmAppl activeAppl = getCurrActiveSmAppl(getManagedBean()
 				.getSmSupplier());
 		if (activeAppl != null) {
@@ -596,8 +460,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 			throw new EpException(MessageConst.ERROR_722594);
 		} else {
 			// [#26050] check if selected old admin does have any pending task - start
-			//28765 -  Checking null pm user
-			if (getManagedBean().getOldAdmin() != null && getManagedBean().getOldAdmin().getPmUser() !=null) {
+			if (getManagedBean().getOldAdmin() != null) {
 				//log.info("[#26050] Old Admin login Id: " + getManagedBean().getOldAdmin().getPmUser().getLoginId());
 				if (!StringUtils.isBlank(getManagedBean().getOldAdmin().getPmUser().getLoginId())				
 						&& PmCommonUtil.isAnyPendingTask(getManagedBean().getOldAdmin().getPmUser().getLoginId())) {
@@ -651,10 +514,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 	public void redirectToNonExistNewAdminPage() {
 
 		initDefaultNewAdmin();
-		//28765
-		if(getManagedBean().getAccType().equals(SupplierManagementConst.ACC_BASIC)){
-			getManagedBean().setDisableNationality(disableNationalityDropDown(getManagedBean().getSmSupplier().getSmAppl().getSmPersonnels()));
-		}
 		SmCommonUtil.redirectToPage(
 				"/xhtml/sm/forcereplaceadmin/addNewAdminInfo.xhtml", "", null,
 				null);
@@ -726,9 +585,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * Initialize new admin values
 	 */
 	private void initDefaultNewAdmin() {
-		//#28765 - Start
-		initReplaceAdminSupportDoc();
-		//#28765 - End
 		if (!getManagedBean().isExistingUser()) {
 			if (getManagedBean().getNewAdmin() == null) {
 				getManagedBean().setNewAdmin(new SmPersonnel());
@@ -970,65 +826,22 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 */
 	private void redirectToSuccessPage(PersonnelResDTO resDTO) {
 		if (resDTO.isSuccessful()) {
-			//#28765 - Start
-			String accTypeStr = "";
-			if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_BASIC)) {
-				accTypeStr = SmCommonUtil.getMessage("lbl.sm.basic.account.basic", null);
-			} else if (getManagedBean().getReactivateBasic().getSuppType()!=null && getManagedBean().getReactivateBasic().getSuppType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
-				accTypeStr = SmCommonUtil.getMessage("lbl.sm.basic.account.mof.consultant",null);
-			} else if (getManagedBean().getReactivateBasic().getSuppType()!=null && getManagedBean().getReactivateBasic().getSuppType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
-				accTypeStr = SmCommonUtil.getMessage("lbl.sm.basic.account.mof.contractor",null);
-			} else {getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_GOVT_SELLER);
-				accTypeStr = SmCommonUtil.getMessage("lbl.sm.basic.account.govt", null);
-			}
-			//#28765 - End
 			if (getManagedBean().getNewAdmin().getPmUser() == null) {
-				//Before #28765
-				//SmCommonUtil.redirectToPage(
-				//		SmApplicationUtil.getApplicationErrorPage(),
-				//		MessageConst.INFO_721037, new String[] {getManagedBean().getNewAdmin().getEmail(),
-				//				SmRuleHelper.getInstance()
-				//						.getEmailActivationDays() + "" }, null);
-				//#28765 - Start
-				if(getManagedBean().getBypassFlag1()==1) {
-					SmCommonUtil.redirectToPage(
-							SmApplicationUtil.getApplicationErrorPage(),
-							MessageConst.INFO_721041, new String[] {accTypeStr}, null);
-				} else {
 				SmCommonUtil.redirectToPage(
 						SmApplicationUtil.getApplicationErrorPage(),
-						MessageConst.INFO_721037, new String[] {getManagedBean().getOldAdmin().getName(),
-							getManagedBean().getNewAdmin().getName(),getManagedBean().getNewAdmin().getEmail(),
+						MessageConst.INFO_721037, new String[] {
+								getManagedBean().getNewAdmin().getEmail(),
 								SmRuleHelper.getInstance()
 										.getEmailActivationDays() + "" }, null);
-				}
-				//#28765 - End
 			} else {
 				if (getManagedBean().getReactivateBasic().isShowEmailInput()) {
-					//Before #28765
-					//SmCommonUtil.redirectToPage(
-					//		SmApplicationUtil.getApplicationErrorPage(),
-					//		MessageConst.INFO_721037, new String[] {
-					//				getManagedBean().getNewAdmin().getEmail(),
-					//				SmRuleHelper.getInstance()
-					//						.getEmailActivationDays() + "" },
-					//		null);
-					//#28765 - Start
-					if(getManagedBean().getBypassFlag1()==1) {
-						SmCommonUtil.redirectToPage(
-								SmApplicationUtil.getApplicationErrorPage(),
-								MessageConst.INFO_721041, new String[] {accTypeStr}, null);
-					} else {
 					SmCommonUtil.redirectToPage(
 							SmApplicationUtil.getApplicationErrorPage(),
-							MessageConst.INFO_721037, new String[] {getManagedBean().getOldAdmin().getName(),
-								getManagedBean().getNewAdmin().getName(),
+							MessageConst.INFO_721037, new String[] {
 									getManagedBean().getNewAdmin().getEmail(),
 									SmRuleHelper.getInstance()
 											.getEmailActivationDays() + "" },
 							null);
-					}
-					//#28765 - End
 				} else {
 					SmCommonUtil.redirectToPage(
 							SmApplicationUtil.getApplicationErrorPage(),
@@ -1137,384 +950,5 @@ public class ForceReplaceSuppAdminBackingBean extends
 				this.getManagedBean().setDisableEquity(false);
 			}
 		}
-	}
-	//#28765 - Start
-	public void confirmDeclare(){
-		RequestContext.getCurrentInstance().execute("groupDeleteConfirm.show()"); 
-	}
-	private boolean isExistInSelectedPersonnel(SmPersonnel personnel) {
-		boolean exist = false;
-		for (SmPersonnel selectedPersonnel : getManagedBean()
-				.getReplaceSupplierAdminSelectList()) {
-			if (personnel.getIdentificationNo().equals(
-					selectedPersonnel.getIdentificationNo())) {
-				exist = true;
-				break;
-			}
-		}
-		return exist;
-	}
-	public void handleSupDocFileAttachment(FileUploadEvent event) {
-		if (event.getFile() != null) {
-		
-			// construct file path
-			String filePath = Calendar.getInstance().get(Calendar.YEAR)
-					+ "/SM/"
-					+ "REPLACESUPPADMIN/";
-
-			// init suppDocFile (currently only default one file)
-			SmReplaceSupplierAdminDocFile docFile = getManagedBean().getSmReplaceSupplierAdminDocs().get(0).getSmReplacesupplieradminDocFiles().get(0);
-			docFile.setSmReplaceSupplierAdminDoc(getManagedBean().getSmReplaceSupplierAdminDocs().get(0));
-			//docFile.setFileName(System.currentTimeMillis() + "_");
-			docFile.setFileName(StringUtils.replace(event.getFile().getFileName()," ", "_"));
-			docFile.setFilePath(filePath);
-			getManagedBean().getSmReplaceSupplierAdminDocs().get(0).setPmUser(getManagedBean().getOldAdmin().getPmUser());
-			//getManagedBean().setSmReplaceSupplierAdminDocs();
-			SmCommonUtil.processUpload(filePath, event,docFile.getFileName());
-			RequestContext.getCurrentInstance().execute("uploadDialog.hide()");
-		}
-	}
-	public void deleteSupDocFileAttachment() {
-		if (getManagedBean().getSmReplaceSupplierAdminDocs() != null && getManagedBean().getSmReplaceSupplierAdminDocs().size()>0) {
-
-			SmReplaceSupplierAdminDocFile docFile = getManagedBean().getSmReplaceSupplierAdminDocs().get(0).getSmReplacesupplieradminDocFiles().get(0);
-			// set empty value to deleted file
-			SmCommonUtil.deleteUpload(docFile.getFilePath(), docFile.getFileName());
-			docFile.setSmReplaceSupplierAdminDoc(getManagedBean().getSmReplaceSupplierAdminDocs().get(0));		
-			docFile.setFileName(StringUtils.EMPTY);
-			docFile.setFilePath("");		
-		}
-	}
-	//#28765 - End
-	//START 28765 - Replace Supplier Admin
-	private void initReplaceAdminSupportDoc() {
-		//#28765 - Start
-		List<PmDocument>  replaceAdminSuppDocList = new ArrayList<PmDocument>();
-		//#28765 - End
-		DocumentReqDTO reqDTO = null;					
-		Locale userLocale = new FacesScopes().getUserLocale();				
-		reqDTO = new DocumentReqDTO();
-		reqDTO.setUserLocale(userLocale);
-		//#28765 - Start
-		replaceAdminSuppDocList = SmServiceLookup.getDocumentSO().retrieveReplaceAdminSuppDocuments(reqDTO).getDocumentList();
-		PmDocument document = new PmDocument();
-		if(replaceAdminSuppDocList != null && replaceAdminSuppDocList.size()>0){
-			document = replaceAdminSuppDocList.get(0);
-		}
-		SmReplaceSupplierAdminDoc replaceSupplierAdminDoc = new SmReplaceSupplierAdminDoc();
-		replaceSupplierAdminDoc.setPmDocument(document);
-		SmReplaceSupplierAdminDocFile adminDocFile = new SmReplaceSupplierAdminDocFile();
-		replaceSupplierAdminDoc.setSmReplacesupplieradminDocFiles(new ArrayList());
-		replaceSupplierAdminDoc.getSmReplacesupplieradminDocFiles().add(adminDocFile);
-		log.info("--------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>.."+replaceSupplierAdminDoc.getPmDocument().getDocName());
-		getManagedBean().getSmReplaceSupplierAdminDocs().add(replaceSupplierAdminDoc);
-	}
-	private void personnelBypassValidation() {	
-		//from checking appl
-		MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
-		mofReqDTO.setSupplierId(getManagedBean().getSmSupplier()
-				.getSupplierId());		
-		SmAppl activeAppl = SmServiceLookup.getMofRegistrationSO()
-				.retrieveActiveSmApplBySupp(mofReqDTO).getSmAppl();
-
-		//from validat
-		ParameterReqDTO paramReqDTO = new ParameterReqDTO();
-		paramReqDTO.setParameterId(getManagedBean().getReactivateBasic()
-				.getNewIdentificationType());
-		PmParameter idno = SmServiceLookup.getParameterSO()
-				.retrieveParameterById(paramReqDTO).getPmParameter();
-		if (idno.getParameterCode().equals(SupplierManagementConst.NEW_IC)) {
-			if (getManagedBean().getReactivateBasic().getNewIdentificationNo()
-					.length() < 12) {
-				throw new EpException(MessageConst.ERROR_722532,
-						new String[] { getManagedBean().getReactivateBasic()
-								.getNewIdentificationNo() });
-			}
-		}
-		if (getManagedBean()
-				.getReactivateBasic()
-				.getIdentificationNo()
-				.equals(getManagedBean().getReactivateBasic()
-						.getNewIdentificationNo())) {
-			throw new EpException(MessageConst.ERROR_722600);
-		}
-		if(SmApplicationUtil.isMofAccEffDatePassedCurrDate(getManagedBean().getSmSupplier())){
-			if (!getManagedBean().isExistingUser()) {
-//#28765 Bypass				throw new EpException(MessageConst.ERROR_721087);
-			}
-		}
-		//SupplierSearchReqDTO ssreqDTO = new SupplierSearchReqDTO();
-		//ssreqDTO.setSmSupplier(getManagedBean().getSmSupplier());
-		//ssreqDTO.setSmAppl(getManagedBean().getSmSupplier().getSmAppl());
-		//SupplierSearchResDTO resDTO = SmServiceLookup.getSupplierSearchSO()
-		//		.retrieveNewSupplierAndPersonnelsByBusRegNoAndName(ssreqDTO);
-		//SmAppl appl = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppTypeNoExpired(resDTO.getSmSupplier().getSupplierId(),ParameterConst.NEW_SM_APPLN_FOR_MOF);
-		SmAppl appl = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppTypeNoExpired(getManagedBean().getSmSupplier().getSupplierId(),ParameterConst.NEW_SM_APPLN_FOR_MOF);
-				
-		PersonnelReqDTO reqDTO2 = new PersonnelReqDTO();
-		reqDTO2.setSmSupplierId(getManagedBean().getSmSupplier().getSupplierId());
-		List<SmPersonnel> latestActivePersonnels = SmServiceLookup
-				.getPersonnelSO().retrieveLatestPersonnelBySupplierId(reqDTO2)
-				.getSmPersonnelList();
-
-		if (!SmCommonUtil.isCollectionEmpty(latestActivePersonnels)) {
-			for (SmPersonnel smPersonnel : latestActivePersonnels) {
-				if (smPersonnel.getIdentificationNo() != null
-						&& StringUtils.isNotBlank(smPersonnel
-								.getIdentificationNo())
-						&& smPersonnel.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
-					log.info(smPersonnel.getRecordStatusFlg() + " >>> " + smPersonnel.getIdentificationNo() + " ==========================================");
-					if (smPersonnel.getSmAppl() != null) {
-						// already mof
-						if (StringUtils.isNotBlank(smPersonnel.getSmAppl()
-								.getApplType())
-								&& !smPersonnel
-										.getSmAppl()
-										.getApplType()
-										.equals(SupplierManagementConst.ACC_BASIC)) {
-							// check if already had active mof supplier user
-							// account
-							if (StringUtils.isNotBlank(smPersonnel.getEpRole())
-									&& (smPersonnel.getEpRole().equals(
-											RoleCode.MOF_SUPPLIER_USER.value()) || smPersonnel
-											.getEpRole().equals(
-													RoleCode.FL_USER.value()))
-									&& smPersonnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-								getManagedBean().setHasSupplierUser(true);
-							}
-						}
-						// basic
-						else {
-							// check if already had active basic supplier user
-							// account
-							if (StringUtils.isNotBlank(smPersonnel.getEpRole())
-									&& (smPersonnel.getEpRole().equals(
-											RoleCode.BASIC_SUPPLIER_USER
-													.value()) || smPersonnel
-											.getEpRole().equals(
-													RoleCode.G2G_SUPPLIER_USER
-															.value()))
-									&& smPersonnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-								getManagedBean().setHasSupplierUser(true);
-							}
-						}
-					}
-					// set old admin
-					if (smPersonnel.getIdentificationNo().trim().equalsIgnoreCase(
-							getManagedBean().getReactivateBasic()
-									.getIdentificationNo().trim())) {
-						getManagedBean().setOldAdmin(smPersonnel);
-						log.info("SET OLD ADMIN ==========================================");
-					}
-					// set new admin
-					else if (smPersonnel.getIdentificationNo().trim()
-							.equalsIgnoreCase(
-									getManagedBean().getReactivateBasic()
-											.getNewIdentificationNo().trim())) {
-						getManagedBean().setNewAdmin(smPersonnel);
-						getManagedBean().setExistingUser(true);
-						log.info("SET NEW ADMIN ==========================================");
-					}
-				}
-
-				// existing deleted personnel
-				else if (smPersonnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED
-						&& !StringUtils.isBlank(smPersonnel
-								.getIdentificationNo())
-						&& smPersonnel.getIdentificationNo().equalsIgnoreCase(
-								getManagedBean().getReactivateBasic()
-										.getNewIdentificationNo())) {
-					getManagedBean().setNewAdmin(smPersonnel);
-					getManagedBean().setExistingUser(false);
-					log.info("EXISTING DELETED PERSONNEL 2 ==========================================");
-				}
-			}
-		}
-		// selected old admin not exist
-				if (getManagedBean().getOldAdmin() == null) {
-					throw new EpException(MessageConst.ERROR_722594);
-				} /*else { // disable 28765 -> because
-					// [#26050] check if selected old admin does have any pending task - start
-					if (getManagedBean().getOldAdmin() != null) {
-						//log.info("[#26050] Old Admin login Id: " + getManagedBean().getOldAdmin().getPmUser().getLoginId());
-						if (!StringUtils.isBlank(getManagedBean().getOldAdmin().getPmUser().getLoginId())				
-								&& PmCommonUtil.isAnyPendingTask(getManagedBean().getOldAdmin().getPmUser().getLoginId())) {
-							//#28765 - Start comment this code
-							//throw new EpException(MessageConst.ERROR_770167);
-							//#28765 - End
-						}				
-					}
-					// [#26050] check if selected old admin does have any pending task - end
-				}*/
-
-				// selected old admin does not hold role as supplier admin
-				if (getManagedBean().getOldAdmin() != null) {
-					if (StringUtils.isBlank(getManagedBean().getOldAdmin().getEpRole())
-							|| (getManagedBean().getOldAdmin().getEpRole()
-									.equals(RoleCode.BASIC_SUPPLIER_USER.value())
-									|| getManagedBean().getOldAdmin().getEpRole()
-											.equals(RoleCode.MOF_SUPPLIER_USER.value()) || getManagedBean()
-									.getOldAdmin().getEpRole()
-									.equals(RoleCode.G2G_SUPPLIER_USER.value()))) {
-						throw new EpException(MessageConst.ERROR_722651,
-								new String[] { getManagedBean().getOldAdmin()
-										.getIdentificationNo() });
-					}
-				}
-		listenerChangeRole();
-		
-		SmPersonnel admin = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(
-				RoleCode.SUPPLIER_TEMP.value(), getManagedBean().getSmSupplier().getSmAppl().getSmPersonnels(),
-				"epRole");
-		//28765
-		if (	admin!=null && 
-				getManagedBean().getAccType().equals(SupplierManagementConst.ACC_MOF) && activeAppl!=null && 
-				activeAppl.getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_REGISTERED) && 
-				getManagedBean().getSmSupplier().getRecordStatusFlg()==DbValueConst.RECORD_STATUS_ACTIVE && 
-				(
-					checkCatalogueUpload(getManagedBean().getSmSupplier().getSupplierId())==null 
-					|| 
-					checkPendingSoftCertRequest(getManagedBean().getSmSupplier().getSupplierId())
-				)) {
-			getManagedBean().setBypassFlag1(1);
-		} else if (	admin!=null && getManagedBean().getSmSupplier().getSmAppl().getSmCompanyBasic().isWithFederal() &&
-				getManagedBean().getAccType().equals(SupplierManagementConst.ACC_MOF) && getManagedBean().getOldAdmin().getPmUser().getUserId()!=null && 
-				activeAppl==null && appl==null && (
-						checkCatalogueUpload(getManagedBean().getSmSupplier().getSupplierId())==null 
-						|| 
-						checkPendingSoftCertRequest(getManagedBean().getSmSupplier().getSupplierId())	
-				)
-			) {
-			if(getManagedBean().getNewAdmin() != null && getManagedBean().isExistingUser()
-					&& getManagedBean().getNewAdmin().getIdentificationNo().equalsIgnoreCase(getManagedBean().getReactivateBasic().getNewIdentificationNo())){
-				log.info("MOF ACCOUNT DOES NOT HAVE ACTIVEAPPL VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV");
-				getManagedBean().setBypassFlag1(1);
-			}else{
-				getManagedBean().setBypassFlag1(2);
-			}
-		} else if (	admin!=null && !getManagedBean().getSmSupplier().getSmAppl().getSmCompanyBasic().isWithFederal() &&
-				getManagedBean().getAccType().equals(SupplierManagementConst.ACC_MOF) && getManagedBean().getOldAdmin().getPmUser().getUserId()!=null && 
-				activeAppl==null && appl==null) {
-			if(getManagedBean().getNewAdmin() != null && getManagedBean().isExistingUser()
-					&& getManagedBean().getNewAdmin().getIdentificationNo().equalsIgnoreCase(getManagedBean().getReactivateBasic().getNewIdentificationNo())){
-				getManagedBean().setBypassFlag1(1);
-			}else{
-				getManagedBean().setBypassFlag1(2);
-			}
-		} else if (activeAppl==null && admin!=null && getManagedBean().getAccType().equals(SupplierManagementConst.ACC_MOF) && appl!=null) {
-			getManagedBean().setBypassFlag2(1);
-		} else if ((   admin!=null &&
-				getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER)  
-				&& 
-				checkPendingSoftCertRequest(getManagedBean().getSmSupplier().getSupplierId())
-			) || 
-			(	admin!=null && 
-				getManagedBean().getAccType().equals(SupplierManagementConst.ACC_BASIC) 
-				&& 
-				(
-					checkCatalogueUpload(getManagedBean().getSmSupplier().getSupplierId())==null
-					|| 
-					getManagedBean().getOldAdmin().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PENDING_REQ
-				)
-			)) {
-				getManagedBean().setBypassFlag1(1);
-			}
-			
-			StringBuilder sb = new StringBuilder();
-			if(getManagedBean().getBypassFlag1()==1) {
-				sb.append(SmCommonUtil.getMessage("lbl.msg.confirm.declare1", new String[] {getManagedBean().getSmSupplier().getCompanyName()}));
-			} else if(getManagedBean().getBypassFlag2()==1) {
-				sb.append(SmCommonUtil.getMessage("lbl.msg.confirm.declare2", new String[] {
-						appl.getApplNo(),
-						getManagedBean().getSmSupplier().getCompanyName()}));
-			} else {
-				sb.append(SmCommonUtil.getMessage("lbl.msg.confirm.declare4", new String[] {getManagedBean().getOldAdmin().getName()}));  //#28765
-			}
-			getManagedBean().setDisplayMessageReplaceTrans(sb.toString());
-			getManagedBean().setSmAppl(appl);
-			if(getManagedBean().getBypassFlag1()==1 || getManagedBean().getBypassFlag2()==1) {
-				getManagedBean().setBypassFlag(true);
-				executeDecision();
-			} 		
-	}
-	private String checkCatalogueUpload(Long supplierId){
-		List<CmSupplierItem> suppItems = getCmSupplierItems(supplierId);
-		log.info("checkCatalogueUpload Supplier id>>>>>>" + supplierId);
-		log.info("checkCatalogueUpload SupplierItems size:>>>>> " + suppItems.size());
-		String catalogueStatus = null;
-				
-		
-		if(suppItems.size() > 0){
-			for(CmSupplierItem cmSuppItem : suppItems){
-				if(cmSuppItem.getItemStatus().equalsIgnoreCase(CATALOGUE_PUBLISHED)){
-					catalogueStatus = CATALOGUE_PUBLISHED;
-					break;
-				}else{
-					catalogueStatus = cmSuppItem.getItemStatus();
-				}
-			}
-		}
-		
-		return catalogueStatus;
-	}
-	private List<CmSupplierItem> getCmSupplierItems(Long supplierId){
-		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
-		reqDTO.setSupplierId(supplierId);
-		
-		ICatalogueSO reqSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, ICatalogueSO.class);
-		CatalogueResDTO resDTO = reqSO.retrieveSupplierItemBySupplierId(reqDTO);
-		
-		return resDTO.getSupplierItemList();
-	}
-	private boolean checkPendingSoftCertRequest(Long supplierId){
-		IPersonnelSO personnelSO =  SmServiceLookup.getPersonnelSO();
-		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-		reqDTO.setSmSupplierId(supplierId);
-		
-		PersonnelResDTO resDTO = personnelSO.retrievePersonnelBySupplierId(reqDTO); 
-		boolean softCertStatus = false;
-		
-		log.info("resDTO.getSmPersonnelList().size(): "+ resDTO.getSmPersonnelList().size());
-		if(resDTO.getSmPersonnelList().size() > 0){
-			for(SmPersonnel personnel : resDTO.getSmPersonnelList()){
-				if(personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PENDING_REQ){
-					softCertStatus = true;
-					break;
-				}
-			}
-		}
-		
-		return softCertStatus;
-	}
-	private boolean selectedOption;
-    public void showDialog() {
-        RequestContext context = RequestContext.getCurrentInstance();
-        if (selectedOption) {
-            context.execute("testW.show()");
-        } else {
-            context.execute("testW.hide()");
-        }
-
-    }
-    public boolean isSelectedOption() {
-        return selectedOption;
-    }
-    public void setSelectedOption(boolean selectedOption) {
-        this.selectedOption = selectedOption;
-    }
-	//END 28765 - Replace Supplier Admin
-    
-    //28765
-    public static boolean disableNationalityDropDown(List<SmPersonnel> smPersonnelList) {
-		boolean retVal = false;
-
-		// disabled nationality for Basic
-		for(SmPersonnel smPersonnel : smPersonnelList){
-			if (!StringUtils.isBlank(smPersonnel.getPmCountry().getCountryCode())
-					&& (smPersonnel.getPmCountry().getCountryCode().equalsIgnoreCase("MY"))) {
-				retVal = true;
-			}
-		}
-		return retVal;
 	}
 }
