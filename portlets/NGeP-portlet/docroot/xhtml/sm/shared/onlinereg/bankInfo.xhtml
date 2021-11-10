@@ -35,14 +35,15 @@
                 
 			<p:column selectionMode="multiple" style="width:2%"	
 			rendered="#{not empty registrationBackingBean.managedBean.smAppl.smSupplierBanks}" />
-
-			<p:column style="white-space:normal;">
+			<!-- 14685 START -->
+			<p:column style="white-space:normal;" id="bankNameColId">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
 					#{lbl['lbl.sm.bankname']}
 				</f:facet>
 				<p:outputPanel>
-				<h:outputText value="#{bankInfo.displayMessageBank}" styleClass="splNotesFonts" style="float: inherit;width : 70% !important;" escape="false" />
+				<h:outputText value="#{bankInfo.displayMessageBank}" styleClass="splNotesFonts" rendered="#{registrationBackingBean.managedBean.showMessage}"
+				update="bankAlert,bankInfoId" style="float: inherit;width : 70% !important;" escape="false" />
 				
 				<p:selectOneMenu id="bankNameId" value="#{bankInfo.pmFinancialOrg.financialOrgId}"
 					style="width: 80% !important;margin-bottom: 5px !important;"
@@ -54,9 +55,16 @@
 						itemLabel="#{finOrg.finOrgName}" />
 					<p:ajax event="change" process="@form" update="@this, bankAccNoId" listener="#{bankInfo.setAccountNo('')}"/>
 				</p:selectOneMenu>
+				<p:commandLink id="bankAlert" action="#{registrationBackingBean.showMessageToggle}" update="bankNameColId,bankInfoId"
+				 process="@this,bankNameColId" rendered="#{registrationBackingBean.managedBean.viewMode or bankInfo.hasActiveTransactionContractManagement or bankInfo.hasActiveTransactionFulfilment}"
+				 style="padding-right:5px;" >
+				<p:graphicImage value="/css/images/design/icon_info_red.png" />
+				</p:commandLink>
+				
 				</p:outputPanel>
 				
 			</p:column>
+			<!-- 14685 END -->
 			<p:column>
 			
 				<f:facet name="header">
