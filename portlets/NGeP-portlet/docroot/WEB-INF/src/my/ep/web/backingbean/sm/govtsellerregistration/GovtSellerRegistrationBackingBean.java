@@ -1048,9 +1048,14 @@ public class GovtSellerRegistrationBackingBean extends
 			RegistrationResDTO resDTO = SmServiceLookup.getRegistrationSO()
 					.updateGovtSellerAcc(reqDTO);
 			if (resDTO.isSuccessful()) {
+				//#15016 Start
+				//SmCommonUtil.redirectToPage(
+				//		"/xhtml/sm/onlinereg/outputMsg.xhtml",
+				//		MessageConst.INFO_721013, null, null);
 				SmCommonUtil.redirectToPage(
 						"/xhtml/sm/onlinereg/outputMsg.xhtml",
-						MessageConst.INFO_721013, null, null);
+						MessageConst.INFO_721016, null, null);
+				//#15016 End
 			} else {
 				throw new EpException(MessageConst.ERROR_721006);
 			}
@@ -1909,4 +1914,14 @@ public class GovtSellerRegistrationBackingBean extends
 		}
 	}
 	//13320-End
+	
+	//14685 - START
+	public void showMessageToggle(){
+		if(this.getManagedBean().isShowMessage()){
+			this.getManagedBean().setShowMessage(false);
+		}else{
+			this.getManagedBean().setShowMessage(true);
+		}
+	}
+	//14685 - END
 }
