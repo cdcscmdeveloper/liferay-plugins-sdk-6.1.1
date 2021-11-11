@@ -1744,8 +1744,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 					Object ctxToken = bpmSO.authenticate(loginId);
 
 					//set limit to 10
-//					reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
-					reqDTO.setLimit(20);
+					reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
 					reqDTO.setOffset(0);
 					reqDTO.setStatusList(statusIds);
 					reqDTO.setUserId(loginId);
@@ -1913,8 +1912,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 					Object ctxToken = bpmSO.authenticate(loginId);
 
 					//set limit to 10
-//					reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
-					reqDTO.setLimit(20);
+					reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
 					reqDTO.setOffset(0);
 					reqDTO.setStatusList(statusIds);
 					reqDTO.setUserId(loginId);
@@ -2232,6 +2230,8 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 				
 				//get all the task based on limit -> 10
 				//end the loop if size is equal to zero
+				Thread.sleep(200);
+				
 				responseDTO = bpmSO.getReassignedItems(bpmReqDTO);
 				
 			}while(responseDTO.getWorklistVO().getWorklistItem().size() > 0);
@@ -2346,6 +2346,8 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 				
 				//get all the task based on limit -> 10
 				//end the loop if size is equal to zero
+				Thread.sleep(200);
+				
 				responseDTO = bpmSO.getGroupByOthersItems(bpmReqDTO);
 				
 			}while(responseDTO.getWorklistVO().getWorklistItem().size() > 0);
