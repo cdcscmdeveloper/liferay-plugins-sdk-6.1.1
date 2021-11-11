@@ -543,7 +543,10 @@ public class TaskReassignmentBackingBean extends
 
 				List<String> tempRoleCodeList = new ArrayList<String>();
 				for (PmUserRole userRole : userRoles) {
-					tempRoleCodeList.add(userRole.getPmRole().getRoleCode());
+					//Redmine Bug #31732 - START
+					if(userRole.getRecordStatusFlg().equals(ParameterConst.RECORD_STATUS_ACTIVE))
+						tempRoleCodeList.add(userRole.getPmRole().getRoleCode());
+					//Redmine Bug #31732 - END
 				}
 				// get unique role code
 				Set<String> tempRoleCodeSet = new HashSet<String>(
