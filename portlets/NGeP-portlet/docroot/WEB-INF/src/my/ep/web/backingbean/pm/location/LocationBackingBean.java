@@ -8,6 +8,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.convert.ConverterException;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
@@ -23,6 +24,7 @@ import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.city.CityReqDTO;
 import my.ep.dto.pm.common.city.CityResDTO;
@@ -36,10 +38,12 @@ import my.ep.dto.pm.common.location.LocationResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.VPmLocation;
 import my.ep.type.aut.SearchOperator;
@@ -53,6 +57,7 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.pm.location.LocationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.log4j.Logger;
@@ -66,6 +71,8 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(LocationBackingBean.class);
 	private IPagingDataModel<VPmLocation> searchLocation = new SearchLocatonPagingDataModel();
+	private ISearchBean<PmParameterDesc> appTypeSearchBean;
+
 
 
 	// Navigation Details
@@ -88,6 +95,13 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 
 	public void searchLocation() {
 		this.getManagedBean().setLazy(true);
+		//Enhancement29642 - start
+		if(this.getManagedBean().getLocationSearchBean().getLocationType() == null){
+			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.pm.location.type", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale())});
+
+		}//Enhancement29642 - end
 		searchLocation.reloadData();
 	}
 
@@ -190,7 +204,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 							getManagedBean().getLocationSearchBean()
 									.getLocationName(), true));
 		}
-
+		
 		if (lSearchBean.getRecordStatus() != null
 				&& lSearchBean.getRecordStatus().trim().length() > 0) {
 		searchBean.getDataFilterBeans().add(
@@ -203,8 +217,20 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 								.value(), new ArrayList<String>(Arrays.asList(ParameterConst.RECORD_STATUS_INACTIVE, ParameterConst.RECORD_STATUS_ACTIVE))));
 			 
 		 }
+		//Enhancement29642 - Start
+		if (lSearchBean.getRecordAdditional() != null && lSearchBean.getRecordAdditional().trim().length() > 0) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("locationType", SearchOperator.OPERATOR_EQUALS.value(), lSearchBean
+							.getRecordAdditional()));
+		} else {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("locationType", SearchOperator.OPERATOR_IN.value(), new ArrayList<String>(
+							Arrays.asList(ParameterConst.LOCATION_LEVEL_STATE, ParameterConst.LOCATION_LEVEL_DIVISION,
+									ParameterConst.LOCATION_LEVEL_DISTRICT))));
+		}
 
 		return searchBean;
+		//Enhancement29642 - End
 	}
 
 	/**
@@ -593,6 +619,82 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 
 		return PmCommonUtil.getCommonStatusOptions();
 	}
+	
+	//Enhancement29642 - start
+	public SelectItem[] getDropdownCodeValuesAdditionalLocation(String parameterType, String parameterCode) {
+		
+		ISearchBean<PmParameterDesc> searchBean = super.createSearchBean(PmParameterDesc.class,
+				"tdDropdownCodeValuesAdditionalLocation");
+
+
+		if (parameterCode.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DIVISION)) {
+
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_EQUALS.value(),
+							ParameterConst.LOCATION_LEVEL_STATE));
+
+		} else if (parameterCode.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DISTRICT)) {
+
+			SearchFilterBean bean = new SearchFilterBean();
+			bean.setSearchOperator(SearchOperator.OPERATOR_IN.value());
+			bean.setSearchField("pmParameter.parameterCode");
+			bean.setSearchValue(new ArrayList<String>(Arrays.asList(new String[] { ParameterConst.LOCATION_LEVEL_STATE,
+					ParameterConst.LOCATION_LEVEL_DIVISION })));
+
+			searchBean.getDataFilterBeans().add(bean);
+
+		} else if (parameterCode.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_CITY)) {
+
+			SearchFilterBean bean = new SearchFilterBean();
+			bean.setSearchOperator(SearchOperator.OPERATOR_IN.value());
+			bean.setSearchField("pmParameter.parameterCode");
+			bean.setSearchValue(new ArrayList<String>(Arrays.asList(new String[] { ParameterConst.LOCATION_LEVEL_STATE,
+					ParameterConst.LOCATION_LEVEL_DIVISION, ParameterConst.LOCATION_LEVEL_DISTRICT})));
+
+			searchBean.getDataFilterBeans().add(bean);
+		}
+
+		return getDropdownCodeValuesBySearchBeanAddLoc(parameterType, searchBean);
+	}
+
+	public SelectItem[] getDropdownCodeValuesBySearchBeanAddLoc(String parameterType,
+			ISearchBean<PmParameterDesc> searchBean) {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+
+		try {
+			
+			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(
+					parameterType, searchBean);
+
+			if (parameterType.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_STATE)) {
+				items = new SelectItem[parameterDescs.size()];
+			 } else {
+				items = new SelectItem[parameterDescs.size() + 1];
+			 }
+			
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+			int i = 1;
+			for (PmParameterDesc parameterDesc : parameterDescs) {
+				items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterCode(),
+						parameterDesc.getCodeName());
+			 }
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+
+		return items;
+	}
+	
+	public void changeLocationType(){
+		log.info("changeLocationType" );
+		this.getManagedBean().getLocationSearchBean().setRecordAdditional(null);
+	}
+	
+	//Enhancement29642 - end
 
 	/**
 	 * reset search bean fields
@@ -625,6 +727,4 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		log.info("getCountryList");
 		return PmCommonUtil.retrievePmCountryList();
 	}
-
-
 }
