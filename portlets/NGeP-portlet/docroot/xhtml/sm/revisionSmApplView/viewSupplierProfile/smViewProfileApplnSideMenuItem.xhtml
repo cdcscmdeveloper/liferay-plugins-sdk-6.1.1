@@ -22,6 +22,81 @@
 			<p:menuitem value="#{lbl['lbl.sm.capitalStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			actionListener="#{viewSmApplBackingBean.setTabValue('3',SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)}"
 			update=":form" />
+			<!-- 28767  yang ni untuk application form -->
+			<c:choose>
+			<c:when test="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'R' and viewSmApplBackingBean.managedBean.smAppl.applValidWithSsm}">
+			<c:choose>
+			<c:when test="#{viewSmApplBackingBean.managedBean.smSupplier.businessType == 'I' or viewSmApplBackingBean.managedBean.smSupplier.businessType == 'J'}">
+			<p:menuitem value="#{lbl['lbl.sm.annualInfoStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			actionListener="#{viewSmApplBackingBean.setTabValue('4',SupplierManagementConst.SM_APPL_PAGE_TYPE_ANNUALINFO)}"
+			update=":form" />
+			<p:menuitem value="#{lbl['lbl.sm.bankStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			actionListener="#{viewSmApplBackingBean.setTabValue('5',SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)}"
+			update=":form" />
+			<p:menuitem value="#{lbl['lbl.sm.catCodeStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			actionListener="#{viewSmApplBackingBean.setTabValue('6',SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
+			update=":form" />
+			<p:menuitem value="#{lbl['lbl.sm.factoryStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			actionListener="#{viewSmApplBackingBean.setTabValue('7',SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)}"
+			update=":form" />
+			<p:menuitem value="#{lbl['lbl.sm.equipmentStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			actionListener="#{viewSmApplBackingBean.setTabValue('8',SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
+			update=":form" />
+			<c:if test="#{viewSmApplBackingBean.managedBean.viewApplicationHistory}">
+			<p:menuitem value="#{lbl['lbl.sm.supDocStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				actionListener="#{viewSmApplBackingBean.setTabValue('9',SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
+				update=":form" />
+			<c:choose>
+				<c:when test="#{not viewSmApplBackingBean.managedBean.supplierUser}">
+					<p:menuitem value="#{lbl['lbl.sm.sitevist.report']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						actionListener="#{viewSmApplBackingBean.setTabValue('10',SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)}"
+						update=":form" />
+					<p:menuitem value="#{lbl['lbl.sm.virtual.cert']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						actionListener="#{viewSmApplBackingBean.setTabValue('11',SupplierManagementConst.SM_APPL_PAGE_TYPE_VIRTUAL_CERT)}"
+						update=":form" />
+					<p:menuitem value="#{lbl['lbl.td.tracking.diary']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						actionListener="#{viewSmApplBackingBean.setTabValue('12',SupplierManagementConst.SM_APPL_PAGE_TYPE_TRACKING_DIARY)}"
+						update=":form" />
+					<p:menuitem value="#{lbl['lbl.sm.po.approver.decision']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						actionListener="#{viewSmApplBackingBean.setTabValue('13',SupplierManagementConst.SM_APPL_PAGE_TYPE_PO_APPR_DEC)}"
+						update=":form" />
+				</c:when>
+				<c:otherwise>
+					<!-- 14530 START -->
+					<c:choose>
+						<c:when
+							test="#{viewSmApplBackingBean.checkPoinquiry()}"
+							>
+							<p:menuitem value="#{lbl['lbl.sm.inquiry']}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								actionListener="#{viewSmApplBackingBean.setTabValue('10',SupplierManagementConst.SM_APPL_PAGE_TYPE_POINQUIRY)}"
+								update=":form" />
+							<p:menuitem value="#{lbl['lbl.sm.virtual.cert']}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								actionListener="#{viewSmApplBackingBean.setTabValue('11',SupplierManagementConst.SM_APPL_PAGE_TYPE_VIRTUAL_CERT)}"
+								update=":form" />
+							<p:menuitem value="#{lbl['lbl.td.tracking.diary']}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								actionListener="#{viewSmApplBackingBean.setTabValue('12',SupplierManagementConst.SM_APPL_PAGE_TYPE_TRACKING_DIARY)}"
+								update=":form" />
+								</c:when>
+							<c:otherwise>
+							<p:menuitem value="#{lbl['lbl.sm.virtual.cert']}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								actionListener="#{viewSmApplBackingBean.setTabValue('10',SupplierManagementConst.SM_APPL_PAGE_TYPE_VIRTUAL_CERT)}"
+								update=":form" />
+							<p:menuitem value="#{lbl['lbl.td.tracking.diary']}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								actionListener="#{viewSmApplBackingBean.setTabValue('11',SupplierManagementConst.SM_APPL_PAGE_TYPE_TRACKING_DIARY)}"
+								update=":form" />
+							</c:otherwise>
+							</c:choose>
+							<!-- 14530 END -->
+				</c:otherwise>
+			</c:choose>
+			</c:if>	
+			</c:when>
+			<c:otherwise>
 			<p:menuitem value="#{lbl['lbl.sm.bankStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			actionListener="#{viewSmApplBackingBean.setTabValue('4',SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)}"
 			update=":form" />
@@ -54,16 +129,112 @@
 						update=":form" />
 				</c:when>
 				<c:otherwise>
-					<p:menuitem value="#{lbl['lbl.sm.virtual.cert']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-						actionListener="#{viewSmApplBackingBean.setTabValue('9',SupplierManagementConst.SM_APPL_PAGE_TYPE_VIRTUAL_CERT)}"
-						update=":form" />
-					<p:menuitem value="#{lbl['lbl.td.tracking.diary']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-						actionListener="#{viewSmApplBackingBean.setTabValue('10',SupplierManagementConst.SM_APPL_PAGE_TYPE_TRACKING_DIARY)}"
-						update=":form" />
+					<!-- 14530 START -->
+					<c:choose>
+						<c:when
+							test="#{viewSmApplBackingBean.checkPoinquiry()}"
+							>
+							<p:menuitem value="#{lbl['lbl.sm.inquiry']}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								actionListener="#{viewSmApplBackingBean.setTabValue('9',SupplierManagementConst.SM_APPL_PAGE_TYPE_POINQUIRY)}"
+								update=":form" />
+							<p:menuitem value="#{lbl['lbl.sm.virtual.cert']}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								actionListener="#{viewSmApplBackingBean.setTabValue('10',SupplierManagementConst.SM_APPL_PAGE_TYPE_VIRTUAL_CERT)}"
+								update=":form" />
+							<p:menuitem value="#{lbl['lbl.td.tracking.diary']}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								actionListener="#{viewSmApplBackingBean.setTabValue('11',SupplierManagementConst.SM_APPL_PAGE_TYPE_TRACKING_DIARY)}"
+								update=":form" />
+								</c:when>
+							<c:otherwise>
+							<p:menuitem value="#{lbl['lbl.sm.virtual.cert']}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								actionListener="#{viewSmApplBackingBean.setTabValue('9',SupplierManagementConst.SM_APPL_PAGE_TYPE_VIRTUAL_CERT)}"
+								update=":form" />
+							<p:menuitem value="#{lbl['lbl.td.tracking.diary']}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								actionListener="#{viewSmApplBackingBean.setTabValue('10',SupplierManagementConst.SM_APPL_PAGE_TYPE_TRACKING_DIARY)}"
+								update=":form" />
+							</c:otherwise>
+							</c:choose>
+							<!-- 14530 END -->
 				</c:otherwise>
 			</c:choose>
-			</c:if>			
+			</c:if>	
+			</c:otherwise>
+			</c:choose>
+			</c:when>
+			<c:otherwise>
+			<p:menuitem value="#{lbl['lbl.sm.bankStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			actionListener="#{viewSmApplBackingBean.setTabValue('4',SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)}"
+			update=":form" />
+			<p:menuitem value="#{lbl['lbl.sm.catCodeStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			actionListener="#{viewSmApplBackingBean.setTabValue('5',SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
+			update=":form" />
+			<p:menuitem value="#{lbl['lbl.sm.factoryStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			actionListener="#{viewSmApplBackingBean.setTabValue('6',SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)}"
+			update=":form" />
+			<p:menuitem value="#{lbl['lbl.sm.equipmentStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			actionListener="#{viewSmApplBackingBean.setTabValue('7',SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
+			update=":form" />
+			<c:if test="#{viewSmApplBackingBean.managedBean.viewApplicationHistory}">
+			<p:menuitem value="#{lbl['lbl.sm.supDocStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				actionListener="#{viewSmApplBackingBean.setTabValue('8',SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
+				update=":form" />
+			<c:choose>
+				<c:when test="#{not viewSmApplBackingBean.managedBean.supplierUser}">
+					<p:menuitem value="#{lbl['lbl.sm.sitevist.report']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						actionListener="#{viewSmApplBackingBean.setTabValue('9',SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)}"
+						update=":form" />
+					<p:menuitem value="#{lbl['lbl.sm.virtual.cert']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						actionListener="#{viewSmApplBackingBean.setTabValue('10',SupplierManagementConst.SM_APPL_PAGE_TYPE_VIRTUAL_CERT)}"
+						update=":form" />
+					<p:menuitem value="#{lbl['lbl.td.tracking.diary']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						actionListener="#{viewSmApplBackingBean.setTabValue('11',SupplierManagementConst.SM_APPL_PAGE_TYPE_TRACKING_DIARY)}"
+						update=":form" />
+					<p:menuitem value="#{lbl['lbl.sm.po.approver.decision']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						actionListener="#{viewSmApplBackingBean.setTabValue('12',SupplierManagementConst.SM_APPL_PAGE_TYPE_PO_APPR_DEC)}"
+						update=":form" />
+				</c:when>
+				<c:otherwise>
+					<!-- 14530 START -->
+					<c:choose>
+						<c:when
+							test="#{viewSmApplBackingBean.checkPoinquiry()}"
+							>
+							<p:menuitem value="#{lbl['lbl.sm.inquiry']}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								actionListener="#{viewSmApplBackingBean.setTabValue('9',SupplierManagementConst.SM_APPL_PAGE_TYPE_POINQUIRY)}"
+								update=":form" />
+							<p:menuitem value="#{lbl['lbl.sm.virtual.cert']}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								actionListener="#{viewSmApplBackingBean.setTabValue('10',SupplierManagementConst.SM_APPL_PAGE_TYPE_VIRTUAL_CERT)}"
+								update=":form" />
+							<p:menuitem value="#{lbl['lbl.td.tracking.diary']}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								actionListener="#{viewSmApplBackingBean.setTabValue('11',SupplierManagementConst.SM_APPL_PAGE_TYPE_TRACKING_DIARY)}"
+								update=":form" />
+								</c:when>
+							<c:otherwise>
+							<p:menuitem value="#{lbl['lbl.sm.virtual.cert']}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								actionListener="#{viewSmApplBackingBean.setTabValue('9',SupplierManagementConst.SM_APPL_PAGE_TYPE_VIRTUAL_CERT)}"
+								update=":form" />
+							<p:menuitem value="#{lbl['lbl.td.tracking.diary']}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								actionListener="#{viewSmApplBackingBean.setTabValue('10',SupplierManagementConst.SM_APPL_PAGE_TYPE_TRACKING_DIARY)}"
+								update=":form" />
+							</c:otherwise>
+							</c:choose>
+							<!-- 14530 END -->
+				</c:otherwise>
+			</c:choose>
+			</c:if>	
+			</c:otherwise>
+			</c:choose>		
 		</c:when>
+		
 		<c:when test="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.SUPP_TYPE_BASIC}">
 		<p:menuitem value="#{viewSmApplBackingBean.managedBean.smAppl.smSupplier.businessType 
 		eq SupplierMgmtConst.smSupplierBusinessTypeIndividual 
