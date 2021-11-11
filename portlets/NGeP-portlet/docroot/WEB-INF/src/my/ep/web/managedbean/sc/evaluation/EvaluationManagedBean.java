@@ -28,6 +28,9 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCheckListScore;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
+import my.ep.persistence.entity.sc.quationtender.ScQtDemo;
+import my.ep.persistence.entity.sc.quationtender.ScQtDemoByItemScore;
+import my.ep.persistence.entity.sc.quationtender.ScQtDemoSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationCommitteeRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
@@ -147,7 +150,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private ScQtProposalChecklist complianceQtProposalChecklist;
 
 	private List<ScQtProposalChecklist> complianceFinancialProposalCheckList;//#28786 bug
-	
 	//#28786 - end
 
 	/** The qt proposal checklist. */
@@ -515,6 +517,12 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	/** The auto update. */
 	private boolean autoUpdate = Boolean.TRUE;
 	
+	//#25037-START
+	private EvaluationMeetingBackingBean meetingBB;
+	//#25037-END
+	
+	private boolean hasPreviousMeeting;//#29473
+
 	//#25138-Ahmaa-Start
 	/** The total user score. */
 	private String totalUserScore;
@@ -578,16 +586,25 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	//#21695 Farid-start
 	private Boolean checkTecSpecNotOffer;
 	//#21695 end
-	
-	//#25037-START
-	private EvaluationMeetingBackingBean meetingBB;
-	//#25037-END
-	
-	private boolean hasPreviousMeeting;//#29473
-	
+
 	//#25138- total max score- start 
 	private Boolean isScoringReq;
 	
+	//#28784 - start
+	private boolean evalStatusComp;
+	private boolean afterDemoInv;;
+	private Long demoSupplierNo;
+	private BigDecimal demoTotalScore;
+	private List<ScQtCheckList> scQtCheckSt2techProposal;
+	private int technicalTableRow;
+	private List<ScQtCheckList> s2TechSelect;
+	private List<ScQtDemoByItemScore> byItemDemoList;
+	private ScQtDemo scQtDemo;
+	private ScQtDemoSupplier scQtDemoSupplier;
+	private BigDecimal techScore;
+	private BigDecimal otherScore;
+	//#28784 - end
+
 	/** The total technical package max score. */
 	private String totalMaxScore;
 	//#25138- total max score - end
@@ -3517,8 +3534,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 			List<ScQtEvaluationReport> reportsToBeRemovedList) {
 		this.reportsToBeRemovedList = reportsToBeRemovedList;
 	}
-
-	/**
+	
+/**
 	 * @return the offerScoreType
 	 */
 	public String getOfferScoreType() {//#25138 - start
@@ -3530,7 +3547,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setOfferScoreType(String offerScoreType) {
 		this.offerScoreType = offerScoreType;
-	}//#25138 - end
+	}//#25138 - end							  
 	
 	public boolean isFP_Compliance() {
 		return isFP_Compliance;
@@ -3540,7 +3557,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.isFP_Compliance = isFP_Compliance;
 	}
 	
-	//#25138-Ahmaa-Start
+ 	//#25138-Ahmaa-Start
 	public String getTotalUserScore() {
 		return totalUserScore;
 	}
@@ -3734,6 +3751,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.finPackageScore = finPackageScore;
 	}
 	//#25138-Ahmaa-End
+	
 	//#25037
 	public EvaluationMeetingBackingBean getMeetingBB() {
 		return meetingBB;
@@ -3755,29 +3773,29 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	public Boolean getCheckTecSpecNotOffer() {
-		return checkTecSpecNotOffer;
-	}
-
+		return checkTecSpecNotOffer;							   
+	}	
 	public void setCheckTecSpecNotOffer(Boolean checkTecSpecNotOffer) {
 		this.checkTecSpecNotOffer = checkTecSpecNotOffer;
 	}
 	// #21695 farid	end		
 	
 	//#25138- total max score -start
-	public Boolean getIsScoringReq() {
+	public Boolean getIsScoringReq() {					   
 		return isScoringReq;
 	}
 
 	public void setIsScoringReq(Boolean isScoringReq) {
-		this.isScoringReq = isScoringReq;
+		this.isScoringReq = isScoringReq;						 
 	}
+			 
 
-	public String getTotalMaxScore() {
+	public String getTotalMaxScore() {							
 		return totalMaxScore;
 	}
 
 	public void setTotalMaxScore(String totalMaxScore) {
-		this.totalMaxScore = totalMaxScore;
+		this.totalMaxScore = totalMaxScore;																						   
 	}
 	//#25138- total max score - end
 	
@@ -3837,6 +3855,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setComplianceQtChecklist(ScQtCheckList complianceQtChecklist) {
 		this.complianceQtChecklist = complianceQtChecklist;
+											   
 	}
 	
 	/**
@@ -3852,7 +3871,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setComplianceQtProposalChecklist(ScQtProposalChecklist complianceQtProposalChecklist) {
 		this.complianceQtProposalChecklist = complianceQtProposalChecklist;
 	}
-	
 	//#28786 bug - start
 	/**
 	 * @return the complianceFinancialProposalCheckList
@@ -3923,6 +3941,177 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.speczonedtlReq = speczonedtlReq;
 	}
 	//#25138 - end
+	
+	//#28784 - start
+	/**
+	 * @return the evalStatusComp
+	 */
+	public boolean isEvalStatusComp() {
+		return evalStatusComp;
+	}
+
+	/**
+	 * @param evalStatusComp the evalStatusComp to set
+	 */
+	public void setEvalStatusComp(boolean evalStatusComp) {
+		this.evalStatusComp = evalStatusComp;
+	}
+
+	/**
+	 * @return the afterDemoInv
+	 */
+	public boolean isAfterDemoInv() {
+		return afterDemoInv;
+	}
+
+	/**
+	 * @param afterDemoInv the afterDemoInv to set
+	 */
+	public void setAfterDemoInv(boolean afterDemoInv) {
+		this.afterDemoInv = afterDemoInv;
+	}
+
+	/**
+	 * @return the demoTotalScore
+	 */
+	public BigDecimal getDemoTotalScore() {
+		return demoTotalScore;
+	}
+
+	/**
+	 * @param demoTotalScore the demoTotalScore to set
+	 */
+	public void setDemoTotalScore(BigDecimal demoTotalScore) {
+		this.demoTotalScore = demoTotalScore;
+	}
+	
+	/**
+	 * @return the scQtCheckSt2techProposal
+	 */
+	public List<ScQtCheckList> getScQtCheckSt2techProposal() {
+		return scQtCheckSt2techProposal;
+	}
+
+	/**
+	 * @param scQtCheckSt2techProposal the scQtCheckSt2techProposal to set
+	 */
+	public void setScQtCheckSt2techProposal(
+			List<ScQtCheckList> scQtCheckSt2techProposal) {
+		this.scQtCheckSt2techProposal = scQtCheckSt2techProposal;
+	}
+	
+	/**
+	 * @return the s2TechSelect
+	 */
+	public List<ScQtCheckList> getS2TechSelect() {
+		return s2TechSelect;
+	}
+
+	/**
+	 * @param s2TechSelect the s2TechSelect to set
+	 */
+	public void setS2TechSelect(List<ScQtCheckList> s2TechSelect) {
+		this.s2TechSelect = s2TechSelect;
+	}
+	
+	/**
+	 * @return the technicalTableRow
+	 */
+	public int getTechnicalTableRow() {
+		return technicalTableRow;
+	}
+
+	/**
+	 * @param technicalTableRow the technicalTableRow to set
+	 */
+	public void setTechnicalTableRow(int technicalTableRow) {
+		this.technicalTableRow = technicalTableRow;
+	}
+	
+	/**
+	 * @return the demoSupplierNo
+	 */
+	public Long getDemoSupplierNo() {
+		return demoSupplierNo;
+	}
+
+	/**
+	 * @param demoSupplierNo the demoSupplierNo to set
+	 */
+	public void setDemoSupplierNo(Long demoSupplierNo) {
+		this.demoSupplierNo = demoSupplierNo;
+	}
+	
+	/**
+	 * @return the byItemDemoList
+	 */
+	public List<ScQtDemoByItemScore> getByItemDemoList() {
+		return byItemDemoList;
+	}
+
+	/**
+	 * @param byItemDemoList the byItemDemoList to set
+	 */
+	public void setByItemDemoList(List<ScQtDemoByItemScore> byItemDemoList) {
+		this.byItemDemoList = byItemDemoList;
+	}
+	
+	/**
+	 * @return the scQtDemo
+	 */
+	public ScQtDemo getScQtDemo() {
+		return scQtDemo;
+	}
+
+	/**
+	 * @param scQtDemo the scQtDemo to set
+	 */
+	public void setScQtDemo(ScQtDemo scQtDemo) {
+		this.scQtDemo = scQtDemo;
+	}
+	
+	/**
+	 * @return the scQtDemoSupplier
+	 */
+	public ScQtDemoSupplier getScQtDemoSupplier() {
+		return scQtDemoSupplier;
+	}
+
+	/**
+	 * @param scQtDemoSupplier the scQtDemoSupplier to set
+	 */
+	public void setScQtDemoSupplier(ScQtDemoSupplier scQtDemoSupplier) {
+		this.scQtDemoSupplier = scQtDemoSupplier;
+	}
+	
+	/**
+	 * @return the techScore
+	 */
+	public BigDecimal getTechScore() {
+		return techScore;
+	}
+
+	/**
+	 * @param techScore the techScore to set
+	 */
+	public void setTechScore(BigDecimal techScore) {
+		this.techScore = techScore;
+	}
+
+	/**
+	 * @return the otherScore
+	 */
+	public BigDecimal getOtherScore() {
+		return otherScore;
+	}
+
+	/**
+	 * @param otherScore the otherScore to set
+	 */
+	public void setOtherScore(BigDecimal otherScore) {
+		this.otherScore = otherScore;
+	}
+	//#28784 - end
 	//#25138 - start
 	public List<ScQtProposalAmount> getQtProposalAmounts() {
 		return qtProposalAmounts;
