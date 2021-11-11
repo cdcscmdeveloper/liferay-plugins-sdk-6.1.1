@@ -413,7 +413,10 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		item.setValue(ParameterConst.NEW_SM_APPLN_FOR_UPDATE);
 		applTypeItems.add(item);
 		item = new SelectItem();
-		item.setLabel(SmCommonUtil.getMessage("lbl.sm.appltype.renewmof", null));
+		//#15004 Start
+		//item.setLabel(SmCommonUtil.getMessage("lbl.sm.appltype.renewmof", null));
+		item.setLabel(SmCommonUtil.getMessage("lbl.sm.appltype.renewalappl", null));
+		//#15004 End
 		item.setValue(ParameterConst.NEW_SM_APPLN_FOR_RENEW);
 		applTypeItems.add(item);
 		item = new SelectItem();
