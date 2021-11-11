@@ -40,14 +40,17 @@ public class SmSideMenuIconUtil {
 	public static void setSectionEditorVO(SmApplicationManagedBean bean,
 			String sectionType) {
 		if (sectionType.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)) {
+			log.info("31230 Check Company Basic has difference - start");
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setSuppEditCompBasic(false);
+				log.info("31230 Check if Supplier edit company basic");
 				if (step1CompanyBasicHasDifference(bean.getLatestAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setSuppEditCompBasic(true);
 				}
 
 				// used to check got changes to display supporting doc
+				log.info("31230 Check if Supplier edit company basic (To update support docs)");
 				if (step1CompanyBasicHasDifference(bean.getLatestApproveAppl(),
 						bean.getSmAppl())) {
 					bean.getSupplierEditVO().setSuppEditCompBasic(true);
@@ -55,10 +58,12 @@ public class SmSideMenuIconUtil {
 			} else if (bean.isPoUser()) {
 				bean.getEditVO().setSuppEditCompBasic(false);
 				bean.getEditVO().setPoEditCompBasic(false);
+				log.info("31230 Check if Supplier edit company basic");
 				if (step1CompanyBasicHasDifference(bean.getLatestAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditCompBasic(true);
 				}
+				log.info("31230 Check if PO edit application");
 				if (step1CompanyBasicHasDifference(bean.getSupplierAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setPoEditCompBasic(true);
@@ -67,28 +72,35 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setSuppEditCompBasic(false);
 				bean.getEditVO().setPoEditCompBasic(false);
 				bean.getEditVO().setAppEditCompBasic(false);
+				log.info("31230 Check if Supplier edit company basic");
 				if (step1CompanyBasicHasDifference(bean.getLatestAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditCompBasic(true);
 				}
+				log.info("31230 Check if PO edit company basic");
 				if (step1CompanyBasicHasDifference(bean.getSupplierAppl(),
 						bean.getPoAppl())) {
 					bean.getEditVO().setPoEditCompBasic(true);
 				}
+				log.info("31230 Check if Approver edit company basic");
 				if (step1CompanyBasicHasDifference(bean.getPoAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setAppEditCompBasic(true);
 				}
 			}
+			log.info("31230 check Company Basic has difference - end");
 		} else if (sectionType
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH)) {
+			log.info("31230 Check Company Project/Branch has difference - start");
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setSuppEditAssocProj(false);
+				log.info("31230 Check if Supplier edit Project/Branch");
 				if (step2AssocCompProjExpHasDifference(true,
 						bean.getLatestAppl(), bean.getSmAppl())) {
 					bean.getEditVO().setSuppEditAssocProj(true);
 				}
 				// used to check got changes to display supporting doc
+				log.info("31230 Check if Supplier edit Project/Branch (To update support doc)");
 				if (step2AssocCompProjExpHasDifference(true,
 						bean.getLatestApproveAppl(), bean.getSmAppl())) {
 					bean.getSupplierEditVO().setSuppEditAssocProj(true);
@@ -96,10 +108,12 @@ public class SmSideMenuIconUtil {
 			} else if (bean.isPoUser()) {
 				bean.getEditVO().setSuppEditAssocProj(false);
 				bean.getEditVO().setPoEditAssocProj(false);
+				log.info("31230 Check if Supplier edit Project/Branch");
 				if (step2AssocCompProjExpHasDifference(true,
 						bean.getLatestAppl(), bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditAssocProj(true);
 				}
+				log.info("31230 Check if PO edit Project/Branch");
 				if (step2AssocCompProjExpHasDifference(false,
 						bean.getSupplierAppl(), bean.getSmAppl())) {
 					bean.getEditVO().setPoEditAssocProj(true);
@@ -108,28 +122,35 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setSuppEditAssocProj(false);
 				bean.getEditVO().setPoEditAssocProj(false);
 				bean.getEditVO().setAppEditAssocProj(false);
+				log.info("31230 Check if Supplier edit Project/Branch");
 				if (step2AssocCompProjExpHasDifference(true,
 						bean.getLatestAppl(), bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditAssocProj(true);
 				}
+				log.info("31230 Check if PO edit Project/Branch");
 				if (step2AssocCompProjExpHasDifference(false,
 						bean.getSupplierAppl(), bean.getPoAppl())) {
 					bean.getEditVO().setPoEditAssocProj(true);
 				}
+				log.info("31230 Check if Approver edit Project/Branch");
 				if (step2AssocCompProjExpHasDifference(false, bean.getPoAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setAppEditAssocProj(true);
 				}
 			}
+			log.info("31230 Check Company Project/Branch has difference - end");
 		} else if (sectionType
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)) {
+			log.info("31230 Check Personnel has difference - start");
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setSuppEditPersonnel(false);
+				log.info("31230 Check if Supplier edit personnel");
 				if (step3PersonnelHasDifference(true, bean.getLatestAppl(),
 						bean.getSmAppl(), bean.getDowngradeMofAcc())) {
 					bean.getEditVO().setSuppEditPersonnel(true);
 				}
 				// used to check got changes to display supporting doc
+				log.info("31230 Check if Supplier edit personnel (To update support docs)");
 				if (step3PersonnelHasDifference(true,
 						bean.getLatestApproveAppl(), bean.getSmAppl(),
 						bean.getDowngradeMofAcc())) {
@@ -141,10 +162,12 @@ public class SmSideMenuIconUtil {
 			} else if (bean.isPoUser()) {
 				bean.getEditVO().setSuppEditPersonnel(false);
 				bean.getEditVO().setPoEditPersonnel(false);
+				log.info("31230 Check if Supplier edit personnel");
 				if (step3PersonnelHasDifference(true, bean.getLatestAppl(),
 						bean.getSupplierAppl(), bean.getDowngradeMofAcc())) {
 					bean.getEditVO().setSuppEditPersonnel(true);
 				}
+				log.info("31230 Check if PO edit personnel");
 				if (step3PersonnelHasDifference(false, bean.getSupplierAppl(),
 						bean.getSmAppl(), bean.getDowngradeMofAcc())) {
 					bean.getEditVO().setPoEditPersonnel(true);
@@ -153,28 +176,35 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setSuppEditPersonnel(false);
 				bean.getEditVO().setPoEditPersonnel(false);
 				bean.getEditVO().setAppEditPersonnel(false);
+				log.info("31230 Check if Supplier edit personnel");
 				if (step3PersonnelHasDifference(true, bean.getLatestAppl(),
 						bean.getSupplierAppl(), bean.getDowngradeMofAcc())) {
 					bean.getEditVO().setSuppEditPersonnel(true);
 				}
+				log.info("31230 Check if PO edit personnel");
 				if (step3PersonnelHasDifference(false, bean.getSupplierAppl(),
 						bean.getPoAppl(), bean.getDowngradeMofAcc())) {
 					bean.getEditVO().setPoEditPersonnel(true);
 				}
+				log.info("31230 Check if Approver edit personnel");
 				if (step3PersonnelHasDifference(false, bean.getPoAppl(),
 						bean.getSmAppl(), bean.getDowngradeMofAcc())) {
 					bean.getEditVO().setAppEditPersonnel(true);
 				}
 			}
+			log.info("31230 Check Personnel has difference - end");
 		} else if (sectionType
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
+			log.info("31230 Check Equity has difference - start");
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setSuppEditEquity(false);
+				log.info("31230 Check if Supplier edit equity");
 				if (step4EquityHasDifference(true, bean.getLatestAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setSuppEditEquity(true);
 				}
 				// used to check got changes to display supporting doc
+				log.info("31230 Check if Supplier edit equity (To update support docs");
 				if (step4EquityHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSmAppl())) {
 					bean.getSupplierEditVO().setSuppEditEquity(true);
@@ -182,10 +212,12 @@ public class SmSideMenuIconUtil {
 			} else if (bean.isPoUser()) {
 				bean.getEditVO().setSuppEditEquity(false);
 				bean.getEditVO().setPoEditEquity(false);
+				log.info("31230 Check if Supplier edit equity");
 				if (step4EquityHasDifference(true, bean.getLatestAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditEquity(true);
 				}
+				log.info("31230 Check if PO edit equity");
 				if (step4EquityHasDifference(false, bean.getSupplierAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setPoEditEquity(true);
@@ -194,28 +226,35 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setSuppEditEquity(false);
 				bean.getEditVO().setPoEditEquity(false);
 				bean.getEditVO().setAppEditEquity(false);
+				log.info("31230 Check if Supplier edit equity");
 				if (step4EquityHasDifference(true, bean.getLatestAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditEquity(true);
 				}
+				log.info("31230 Check if PO edit equity");
 				if (step4EquityHasDifference(false, bean.getSupplierAppl(),
 						bean.getPoAppl())) {
 					bean.getEditVO().setPoEditEquity(true);
 				}
+				log.info("31230 Check if Approver edit equity");
 				if (step4EquityHasDifference(false, bean.getPoAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setAppEditEquity(true);
 				}
 			}
+			log.info("31230 Check Equity has difference - end");
 		} else if (sectionType
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)) {
+			log.info("31230 Check Bank has difference - start");
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setSuppEditBank(false);
+				log.info("31230 Check if Supplier edit bank");
 				if (step5BankHasDifference(true, bean.getLatestAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setSuppEditBank(true);
 				}
 				// used to check got changes to display supporting doc
+				log.info("31230 Check if Supplier edit bank (To update support docs)");
 				if (step5BankHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSmAppl())) {
 					bean.getSupplierEditVO().setSuppEditBank(true);
@@ -223,10 +262,12 @@ public class SmSideMenuIconUtil {
 			} else if (bean.isPoUser()) {
 				bean.getEditVO().setSuppEditBank(false);
 				bean.getEditVO().setPoEditBank(false);
+				log.info("31230 Check if Supplier edit bank");
 				if (step5BankHasDifference(true, bean.getLatestAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditBank(true);
 				}
+				log.info("31230 Check if PO edit bank");
 				if (step5BankHasDifference(false, bean.getSupplierAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setPoEditBank(true);
@@ -235,69 +276,91 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setSuppEditBank(false);
 				bean.getEditVO().setPoEditBank(false);
 				bean.getEditVO().setAppEditBank(false);
+				log.info("31230 Check if Supplier edit bank");
 				if (step5BankHasDifference(true, bean.getLatestAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditBank(true);
 				}
+				log.info("31230 Check if PO edit bank");
 				if (step5BankHasDifference(false, bean.getSupplierAppl(),
 						bean.getPoAppl())) {
 					bean.getEditVO().setPoEditBank(true);
 				}
+				log.info("31230 Check if Approver edit bank");
 				if (step5BankHasDifference(false, bean.getPoAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setAppEditBank(true);
 				}
 			}
+			log.info("31230 Check Bank has difference - end");
 		} else if (sectionType
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
+			log.info("31230 Check Category Code has difference/overlap - start");
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setSuppEditCategory(false);
+				
+				log.info("31230 Check if Supplier edit category");
 				if (step6CatCodeHasDifference(true, bean.getLatestAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setSuppEditCategory(true);
 				}
 				// used to check got changes to display supporting doc
+				log.info("31230 Check if Supplier edit category (To update support docs)");
 				if (step6CatCodeHasDifference(true,
 						bean.getLatestApproveAppl(), bean.getSmAppl())) {
 					bean.getSupplierEditVO().setSuppEditCategory(true);
 				}
+				
 			} else if (bean.isPoUser()) {
 				bean.getEditVO().setSuppEditCategory(false);
 				bean.getEditVO().setPoEditCategory(false);
-				if (step6CatCodeHasDifference(true, bean.getLatestAppl(),
-						bean.getSupplierAppl())) {
+				log.info("31230 Check if Supplier edit category");
+				if (step6CatCodeHasDifference(true, bean.getLatestAppl(),bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditCategory(true);
 				}
-				if (step6CatCodeHasDifference(false, bean.getSupplierAppl(),
-						bean.getSmAppl())) {
+				log.info("31230 Check if PO edit category");
+				if (step6CatCodeHasDifference(false, bean.getSupplierAppl(),bean.getSmAppl())) {
 					bean.getEditVO().setPoEditCategory(true);
 				}
 			} else if (bean.isApproverUser()) {
 				bean.getEditVO().setSuppEditCategory(false);
 				bean.getEditVO().setPoEditCategory(false);
 				bean.getEditVO().setAppEditCategory(false);
+				log.info("31230 Check if Supplier edit category");
 				if (step6CatCodeHasDifference(true, bean.getLatestAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditCategory(true);
 				}
+				log.info("31230 Check if PO edit category");
 				if (step6CatCodeHasDifference(false, bean.getSupplierAppl(),
 						bean.getPoAppl())) {
 					bean.getEditVO().setPoEditCategory(true);
 				}
+				log.info("31230 Check if Approver edit category");
 				if (step6CatCodeHasDifference(false, bean.getPoAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setAppEditCategory(true);
 				}
 			}
+			//#31230 START
+			log.info("31230 Check if application category is overlap");
+			if(step6OverlappedCategory(bean.isOverLappedCategoryExists())){
+				bean.getEditVO().setHasOverlapped(true);
+			}
+			//#31230 END
+			log.info("31230 Check Category Code has difference/overlap - end");
 		} else if (sectionType
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)) {
+			log.info("31230 Check Facility has difference - start");
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setSuppEditFacility(false);
+				log.info("31230 Check if Supplier edit facility");
 				if (step7FacilityHasDifference(true, bean.getLatestAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setSuppEditFacility(true);
 				}
 				// used to check got changes to display supporting doc
+				log.info("31230 Check if Supplier edit facility (To update support docs)");
 				if (step7FacilityHasDifference(true,
 						bean.getLatestApproveAppl(), bean.getSmAppl())) {
 					bean.getSupplierEditVO().setSuppEditFacility(true);
@@ -305,10 +368,12 @@ public class SmSideMenuIconUtil {
 			} else if (bean.isPoUser()) {
 				bean.getEditVO().setSuppEditFacility(false);
 				bean.getEditVO().setPoEditFacility(false);
+				log.info("31230 Check if Supplier edit facility");
 				if (step7FacilityHasDifference(true, bean.getLatestAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditFacility(true);
 				}
+				log.info("31230 Check if PO edit facility");
 				if (step7FacilityHasDifference(false, bean.getSupplierAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setPoEditFacility(true);
@@ -317,28 +382,35 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setSuppEditFacility(false);
 				bean.getEditVO().setPoEditFacility(false);
 				bean.getEditVO().setAppEditFacility(false);
+				log.info("31230 Check if Supplier edit facility");
 				if (step7FacilityHasDifference(true, bean.getLatestAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditFacility(true);
 				}
+				log.info("31230 Check if PO edit facility");
 				if (step7FacilityHasDifference(false, bean.getSupplierAppl(),
 						bean.getPoAppl())) {
 					bean.getEditVO().setPoEditFacility(true);
 				}
+				log.info("31230 Check if Approver edit facility");
 				if (step7FacilityHasDifference(false, bean.getPoAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setAppEditFacility(true);
 				}
 			}
+			log.info("31230 Check Facility has difference - end");
 		} else if (sectionType
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)) {
+			log.info("31230 Check Equipment has difference - start");
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setSuppEditEquipment(false);
+				log.info("31230 Check if Supplier edit equipment");
 				if (step8EquipmentHasDifference(true, bean.getLatestAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setSuppEditEquipment(true);
 				}
 				// used to check got changes to display supporting doc
+				log.info("31230 Check if Supplier edit equipment (To update support docs)");
 				if (step8EquipmentHasDifference(true,
 						bean.getLatestApproveAppl(), bean.getSmAppl())) {
 					bean.getSupplierEditVO().setSuppEditEquipment(true);
@@ -346,10 +418,12 @@ public class SmSideMenuIconUtil {
 			} else if (bean.isPoUser()) {
 				bean.getEditVO().setSuppEditEquipment(false);
 				bean.getEditVO().setPoEditEquipment(false);
+				log.info("31230 Check if Supplier edit equipment");
 				if (step8EquipmentHasDifference(true, bean.getLatestAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditEquipment(true);
 				}
+				log.info("31230 Check if PO edit equipment");
 				if (step8EquipmentHasDifference(false, bean.getSupplierAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setPoEditEquipment(true);
@@ -358,19 +432,23 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setSuppEditEquipment(false);
 				bean.getEditVO().setPoEditEquipment(false);
 				bean.getEditVO().setAppEditEquipment(false);
+				log.info("31230 Check if Supplier edit equipment");
 				if (step8EquipmentHasDifference(true, bean.getLatestAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditEquipment(true);
 				}
+				log.info("31230 Check if PO edit equipment");
 				if (step8EquipmentHasDifference(false, bean.getSupplierAppl(),
 						bean.getPoAppl())) {
 					bean.getEditVO().setPoEditEquipment(true);
 				}
+				log.info("31230 Check if Approver edit equipment");
 				if (step8EquipmentHasDifference(false, bean.getPoAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setAppEditEquipment(true);
 				}
 			}
+			log.info("31230 Check Equipment has difference - end");
 		} else if (sectionType
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)) {
 			if (bean.isPoUser()) {
@@ -575,15 +653,28 @@ public class SmSideMenuIconUtil {
 			bean.setSupplierAppl(getSmApplFromSerFile(bean.getSmAppl()
 					.getApplNo(), "SUP"));
 		} else if (bean.isApproverUser()) {
+			// #31230 & #24964 - START
+			if(!SmCommonUtil.isSerFileExist(bean.getSmAppl().getApplNo(), "PO")){
+				SmCommonUtil.createSerFile(bean.getSmAppl(), "PO");
+			}
+			// #31230 & #24964 - END
 			bean.setSupplierAppl(getSmApplFromSerFile(bean.getSmAppl()
 					.getApplNo(), "SUP"));
 			bean.setPoAppl(getSmApplFromSerFile(bean.getSmAppl().getApplNo(),
 					"PO"));
 		}
+		// #31230 & #24964 - start
+		if(bean.getSupplierAppl() == null){
+			SmCommonUtil.createSerFile(bean.getSmAppl(), "SUP");
+			bean.setSupplierAppl(getSmApplFromSerFile(bean.getSmAppl()
+					.getApplNo(), "SUP"));
+		}
+		// #31230 & #24964 - end
 	}
 
 	private static boolean step1CompanyBasicHasDifference(SmAppl applPrev,
 			SmAppl applCurr) {
+		log.info("31230 enter method step1CompanyBasicHasDifference");
 		boolean retVal = false;
 
 		if (applPrev != null && applCurr != null) {
@@ -694,13 +785,15 @@ public class SmSideMenuIconUtil {
 					}
 				}
 			}
-
 		}
+		log.info("31230 enter method step1CompanyBasicHasDifference - end");
+		log.info("Company basic has differences?: "+retVal);
 		return retVal;
 	}
 
 	private static boolean step2AssocCompProjExpHasDifference(
 			boolean isSupplier, SmAppl applPrev, SmAppl applCurr) {
+		log.info("31230 enter method step2AssocCompProjExpHasDifference - start");
 		boolean retVal = false;
 
 		if (applPrev != null && applCurr != null) {
@@ -757,11 +850,14 @@ public class SmSideMenuIconUtil {
 				}
 			}
 		}
+		log.info("31230 enter method step2AssocCompProjExpHasDifference - end");
+		log.info("Company project/branch has differences?: "+retVal);
 		return retVal;
 	}
 
 	private static boolean step3PersonnelHasDifference(boolean isSupplier,
 			SmAppl applPrev, SmAppl applCurr, SmMofAccount downgradeMofAcc) {
+		log.info("31230 enter method step3PersonnelHasDifference - start");
 		boolean retVal = false;
 		String[] excludeProps = new String[] { "smPersonnel" };
 		String[] primitive = null;
@@ -946,12 +1042,14 @@ public class SmSideMenuIconUtil {
 				}
 			}
 		}
-
+		log.info("31230 enter method step3PersonnelHasDifference - end");
+		log.info("Personnel has differences?: "+retVal);
 		return retVal;
 	}
 
 	private static boolean step4EquityHasDifference(boolean isSupplier,
 			SmAppl applPrev, SmAppl applCurr) {
+		log.info("31230 enter method step4EquityHasDifference - start");
 		boolean retVal = false;
 
 		if (applPrev != null && applCurr != null) {
@@ -1056,12 +1154,14 @@ public class SmSideMenuIconUtil {
 						null);
 			}
 		}
-
+		log.info("31230 enter method step4EquityHasDifference - end");
+		log.info("31230 Equity has differences?: "+retVal);
 		return retVal;
 	}
 
 	private static boolean step5BankHasDifference(boolean isSupplier,
 			SmAppl applPrev, SmAppl applCurr) {
+		log.info("31230 enter method step5BankHasDifference - start");
 		boolean retVal = false;
 
 		if (applPrev != null && applCurr != null) {
@@ -1113,11 +1213,14 @@ public class SmSideMenuIconUtil {
 				}
 			}
 		}
+		log.info("31230 enter method step5BankHasDifference - end");
+		log.info("31230 Bank has differences?: "+retVal);
 		return retVal;
 	}
 
 	private static boolean step6CatCodeHasDifference(boolean isSupplier,
 			SmAppl applPrev, SmAppl applCurr) {
+		log.info("31230 enter method step6CatCodeHasDifference - start");
 		boolean retVal = false;
 
 		if (applPrev != null && applCurr != null) {
@@ -1168,11 +1271,27 @@ public class SmSideMenuIconUtil {
 						arrExcludeProps);
 			}
 		}
+		log.info("31230 enter method step6CatCodeHasDifference - end");
+		log.info("31230 Category Code has differences?: "+retVal);
 		return retVal;
 	}
-
+	
+	//#31230 START
+	private static boolean step6OverlappedCategory(boolean isOverlapped){
+		log.info("31230 enter method step6OverlappedCategory - start");
+		boolean retVal = false;
+		if(isOverlapped){
+			retVal = true;
+		}
+		log.info("31230 enter method step6OverlappedCategory - end");
+		log.info("31230 Category Code has overlap?: "+retVal);
+		return retVal;		
+	}
+	//#31230 END
+	
 	private static boolean step7FacilityHasDifference(boolean isSupplier,
 			SmAppl applPrev, SmAppl applCurr) {
+		log.info("31230 enter method step7FacilityHasDifference - start");
 		boolean retVal = false;
 
 		if (applPrev != null && applCurr != null) {
@@ -1218,12 +1337,14 @@ public class SmSideMenuIconUtil {
 			retVal = EntityHelper.hasDiffBetweenList(prevFacList, currFacList,
 					searchParam, null, null);
 		}
-
+		log.info("31230 enter method step7FacilityHasDifference - end");
+		log.info("31230 Facility has differences?: "+retVal);
 		return retVal;
 	}
 
 	private static boolean step8EquipmentHasDifference(boolean isSupplier,
 			SmAppl applPrev, SmAppl applCurr) {
+		log.info("31230 enter method step8EquipmentHasDifference - start");
 		boolean retVal = false;
 
 		if (applPrev != null && applCurr != null) {
@@ -1262,7 +1383,8 @@ public class SmSideMenuIconUtil {
 				}
 			}
 		}
-
+		log.info("31230 enter method step8EquipmentHasDifference - end");
+		log.info("31230 Equipment has differences?: "+retVal);
 		return retVal;
 	}
 
