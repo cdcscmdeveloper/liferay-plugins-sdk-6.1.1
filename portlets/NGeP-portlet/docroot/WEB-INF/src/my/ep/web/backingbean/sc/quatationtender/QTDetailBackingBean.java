@@ -5915,6 +5915,26 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				.get(selectedApprovalTabIndex);
 		// #25077 - #80 - Start.
 		if (null != approvalTabBean &&  StringUtils.isNotEmpty(approvalTabBean.getTabType())
+				&& "OTH".equals(this.getManagedBean().getPreviousApprovalTabName()) && !"OTH".equals(approvalTabBean.getTabType())) {
+			IQTDetailSO detailSO;
+			try {
+				this.getManagedBean().setSaveFlow(false);
+				detailSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+				if(this.getManagedBean().isMaintanceFlow()==false){
+					QuationTenderReqDTO reqDTO = prepareQTInfo();
+					reqDTO.getQtdetail().setOtherApproval(true);
+					// #25077 - #91 - Start
+					reqDTO.getQtdetail().setMitiApproval(true);
+					// #25077 - #91 - End
+					reqDTO.setApprovalOTH(this.getManagedBean().getSelectedApprovalTabBean().getTabType());//bug #30434
+					detailSO.validateApprovalDetails(reqDTO);
+				}
+			} finally {
+				detailSO = null;
+			}
+		}
+		if (null != approvalTabBean &&  StringUtils.isNotEmpty(approvalTabBean.getTabType())
 				&& ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT.equals(approvalTabBean.getTabType())) {
 			DualListModel<ScQtApproverSettings> approverSettings = approvalTabBean.getBudgetApprovalUsers();
 			ScQt scQt = this.getManagedBean().getQt();
@@ -5934,26 +5954,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		    	  }
 		    	}
 		    }
-		}
-		if (null != approvalTabBean &&  StringUtils.isNotEmpty(approvalTabBean.getTabType())
-				&& "OTH".equals(this.getManagedBean().getPreviousApprovalTabName()) && !"OTH".equals(approvalTabBean.getTabType())) {
-			IQTDetailSO detailSO;
-			try {
-				this.getManagedBean().setSaveFlow(false);
-				detailSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-				if(this.getManagedBean().isMaintanceFlow()==false){
-					QuationTenderReqDTO reqDTO = prepareQTInfo();
-					reqDTO.getQtdetail().setOtherApproval(true);
-					// #25077 - #91 - Start
-					reqDTO.getQtdetail().setMitiApproval(true);
-					// #25077 - #91 - End
-					reqDTO.setApprovalOTH(this.getManagedBean().getSelectedApprovalTabBean().getTabType());//bug #30434
-					detailSO.validateApprovalDetails(reqDTO);
-				}
-			} finally {
-				detailSO = null;
-			}
 		}
 		// #25077 - #80 - End.
 		this.getManagedBean().setSelectedApprovalTabIndex(
