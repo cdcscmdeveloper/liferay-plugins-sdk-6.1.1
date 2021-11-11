@@ -2052,6 +2052,11 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		compareLabel.add(ResourceBundleUtils.getMessage(
 				"lbl.cm.additional.item.description",
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+		//26284 - Start
+		compareLabel.add(ResourceBundleUtils.getMessage(
+				"lbl.sc.discipline.action.taken",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+		//26284 - End
 
 		return compareLabel;
 	}
