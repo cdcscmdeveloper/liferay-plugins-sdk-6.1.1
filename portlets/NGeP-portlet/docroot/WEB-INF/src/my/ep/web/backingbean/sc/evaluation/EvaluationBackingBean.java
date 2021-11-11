@@ -2668,8 +2668,13 @@ public void saveComplianceSample() {
 					reqDTO.setSettingType(getSettingType(QTConstants.PRESENTATION_DEMO_EVALUATION));
 					resDTO = evaluationSo.retrievePassingScoreByQT(reqDTO);
 				} else {
-					summaryReqDTO
-							.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+					// Bug #32037 related to 21695 & 25138 start 11/11/2021
+					if(this.getManagedBean().getScQt().isPartial()){
+						summaryReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+					}else{	
+						summaryReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+					}
+					// Bug #32037 end 11/11/2021
 
 					EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 					reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
