@@ -10,7 +10,6 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
-import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBranchBank;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -50,6 +49,10 @@ public class GovtSellerRegistrationManagedBean extends RegistrationManagedBean {
 	private boolean showSst;
 	private boolean showBranchPointOfContact;
 	private Long divisionIds;//13320
+	
+	//14685 - START
+	private boolean showMessage;
+	//14685 - END
 
 	private class OrgProfilePagingDataModel extends PagingDataModel<Object[]> {
 		/**
@@ -61,6 +64,7 @@ public class GovtSellerRegistrationManagedBean extends RegistrationManagedBean {
 			super("orgProfileDtId");
 		}
 
+		@SuppressWarnings({ "unchecked", "rawtypes" })
 		@Override
 		protected ISearchResultBean<Object[]> pageChangeListener(
 				ISearchBean<Object[]> searchBean) {
@@ -254,5 +258,13 @@ public class GovtSellerRegistrationManagedBean extends RegistrationManagedBean {
 	public void setBranchCompanyDivisions(List<SelectItem> branchCompanyDivisions) {
 		this.branchCompanyDivisions = branchCompanyDivisions;
 	}
+	//14685 - START
+	public boolean isShowMessage() {
+		return showMessage;
+	}
 
+	public void setShowMessage(boolean showMessage) {
+		this.showMessage = showMessage;
+	}
+	//14685 - END
 }

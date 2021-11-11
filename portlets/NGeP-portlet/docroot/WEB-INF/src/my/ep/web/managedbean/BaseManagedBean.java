@@ -51,7 +51,7 @@ public abstract class BaseManagedBean implements Serializable {
 	private String processName;
 	private Boolean groupTask;
 	private boolean isReadOnly;
-	private String currentTaskDocType;//#25037
+	private String currentTaskDocType;// #25037
 	/*
 	 * commonly used as a flag to user's permission to download documents/attachment
 	 */
@@ -61,8 +61,8 @@ public abstract class BaseManagedBean implements Serializable {
 	private String captchaAnswer;
 	private Set<UserTasks> userTasks;
 	private Map<String, List<String>> additionalPages;
-	
-	//16052019 - SSM INTEGRATION CR - Fahmi
+
+	// 16052019 - SSM INTEGRATION CR - Fahmi
 	private boolean ssmIntegrationActive;
 	private boolean validateWithSSM;
 	private boolean companyValidWithSSM;
@@ -104,39 +104,38 @@ public abstract class BaseManagedBean implements Serializable {
 
 	// 17906
 	private String displayMessageBank;
-	
-	//27951
-	private boolean preRegistration=false;
+
+	// 27951
+	private boolean preRegistration = false;
 	private SsmResDTO ssmResDTO;
-	private boolean checkRoleSSM=false;
-	//27239
+	private boolean checkRoleSSM = false;
+	// 27239
 	private boolean dontGetSsmData = false;
-	//28454
+	// 28454
 	private boolean resubmitAppl = false;
 	private boolean showPopup = false;
 
-	// #25638 - Start		
+	// #25638 - Start
 	private boolean displayReviseInstrn;
-	// #25638 - End	
-	//#25037-start
+	// #25638 - End
+	// #25037-start
 	private boolean validFor25037;//FLAG TO IDENTIFY SUPPORTED ACTION FOR WIP DATA. PLEASE REFER 25037 PMCOMPOSITEVALIDITY
 	private boolean committeModified;
-	//#25037-end
+	// #25037-end
 
-
-	//27346-start 
+	// 27346-start
 	private SmAppl smAppl;
 	private SmSupplier SmSupplier;
-	private List<SmPersonnel> personnelsDirector  = new ArrayList<SmPersonnel>();
-	private List<SmSupplierBranch>  smSupplierBranchSsm = new ArrayList<SmSupplierBranch>();
-	private List<SmEquityCompany> smEquityCompaniesSsm   = new ArrayList<SmEquityCompany>();   
-	private boolean disAllowOwnerEdit; 
+	private List<SmPersonnel> personnelsDirector = new ArrayList<SmPersonnel>();
+	private List<SmSupplierBranch> smSupplierBranchSsm = new ArrayList<SmSupplierBranch>();
+	private List<SmEquityCompany> smEquityCompaniesSsm = new ArrayList<SmEquityCompany>();   
+	private boolean disAllowOwnerEdit;
 	private String businessTypeParamCode;
 	private List<SmPersonnel> personnelsOwner = new ArrayList<SmPersonnel>();
-	private List<SmPersonnel> personnelsSsm  = new ArrayList<SmPersonnel>();
-	private List<SmSupplierBusiness> smSupplierBusinessSsm   = new ArrayList<SmSupplierBusiness>();
+	private List<SmPersonnel> personnelsSsm = new ArrayList<SmPersonnel>();
+	private List<SmSupplierBusiness> smSupplierBusinessSsm = new ArrayList<SmSupplierBusiness>();
 	private SmCompanyBasic smCompanyBasicSsm = null;
-	private boolean showDetailSSM; 
+	private boolean showDetailSSM;
 	private List<SmPersonnel> smPersonnelDirectorSsm = new ArrayList<SmPersonnel>();
 	private List<SmPersonnel> personnelsOwnerSsm = new ArrayList<SmPersonnel>();
 	private SmAddress smAddress;
@@ -149,7 +148,11 @@ public abstract class BaseManagedBean implements Serializable {
 	private String termAndConditionCheckOwnerChangeRole;
 	private Boolean isDowngradeRole;
 	// end #29956
-
+	
+	//14685 - START
+	private boolean showMessage;
+	//14685 - END
+	
 	// 27346
 	private StreamedContent downloadfile;
 
@@ -184,7 +187,7 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setSmAddress(SmAddress smAddress) {
 		this.smAddress = smAddress;
 	}
-	
+
 	public SmCompanyBasic getSmCompanyBasicSsm() {
 		return smCompanyBasicSsm;
 	}
@@ -269,8 +272,7 @@ public abstract class BaseManagedBean implements Serializable {
 		return smSupplierBusinessSsm;
 	}
 
-	public void setSmSupplierBusinessSsm(
-			List<SmSupplierBusiness> smSupplierBusinessSsm) {
+	public void setSmSupplierBusinessSsm(List<SmSupplierBusiness> smSupplierBusinessSsm) {
 		this.smSupplierBusinessSsm = smSupplierBusinessSsm;
 	}
 	//27346-end
@@ -498,7 +500,7 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setEnableDownloadAllDocuments(Boolean enableDownloadAllDocuments) {
 		this.enableDownloadAllDocuments = enableDownloadAllDocuments;
 	}
-	
+
 	public boolean isSsmIntegrationActive() {
 		return ssmIntegrationActive;
 	}
@@ -560,7 +562,7 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setDisableFields(boolean disableFields) {
 		this.disableFields = disableFields;
 	}
-	
+
 	public Set<UserTasks> getUserTasks() {
 		return userTasks;
 	}
@@ -568,16 +570,16 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setUserTasks(Set<UserTasks> userTasks) {
 		this.userTasks = userTasks;
 	}
-	
-	public void addUserTasks(UserTasks userTask){
-		if(this.userTasks == null){
+
+	public void addUserTasks(UserTasks userTask) {
+		if (this.userTasks == null) {
 			userTasks = new HashSet<UserTasks>();
 		}
 		userTasks.add(userTask);
 	}
-	
-	public void removeUserTasks(UserTasks userTask){
-		if(this.userTasks != null && !CollectionUtils.isEmpty(userTasks)){
+
+	public void removeUserTasks(UserTasks userTask) {
+		if (this.userTasks != null && !CollectionUtils.isEmpty(userTasks)) {
 			userTasks.remove(userTask);
 		}
 	}
@@ -589,25 +591,25 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setAdditionalPages(Map<String, List<String>> additionalPages) {
 		this.additionalPages = additionalPages;
 	}
-	
-	public void addAdditionalPages(String k, String page){
-		if(this.additionalPages == null){
+
+	public void addAdditionalPages(String k, String page) {
+		if (this.additionalPages == null) {
 			this.additionalPages = new HashMap<String, List<String>>();
-			List<String> t= new ArrayList<String>();
+			List<String> t = new ArrayList<String>();
 			this.additionalPages.put(k, t);
 		}
-		if(!this.additionalPages.containsKey(k) || this.additionalPages.get(k)==null){
-			List<String> t= new ArrayList<String>();
+		if (!this.additionalPages.containsKey(k) || this.additionalPages.get(k) == null) {
+			List<String> t = new ArrayList<String>();
 			this.additionalPages.put(k, t);
 		}
 		this.additionalPages.get(k).add(page);
 	}
-	
+
 	/**
 	 * Copy BPM TaskDetails to another instance of BaseManagedBean
 	 * @param bm - another BaseManagedBean instance
 	 */
-	public void copyBPMTaskDetails(BaseManagedBean bm){
+	public void copyBPMTaskDetails(BaseManagedBean bm) {
 		bm.setToken(this.token);
 		bm.setTaskId(this.taskId);
 		bm.setOutComes(this.outComes);
@@ -635,7 +637,7 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setSmPersonnelSsm(SmPersonnel smPersonnelSsm) {
 		this.smPersonnelSsm = smPersonnelSsm;
 	}
-	
+
 	/**
 	 * @return the disciplinaryAction
 	 */
@@ -673,8 +675,7 @@ public abstract class BaseManagedBean implements Serializable {
 		return scQtEvaluationReportList;
 	}
 
-	public void setScQtEvaluationReportList(
-			List<ScQtEvaluationReport> scQtEvaluationReportList) {
+	public void setScQtEvaluationReportList(List<ScQtEvaluationReport> scQtEvaluationReportList) {
 		this.scQtEvaluationReportList = scQtEvaluationReportList;
 	}
 
@@ -690,8 +691,7 @@ public abstract class BaseManagedBean implements Serializable {
 		return selectedScQtEvaluationReports;
 	}
 
-	public void setSelectedScQtEvaluationReports(
-			List<ScQtEvaluationReport> selectedScQtEvaluationReports) {
+	public void setSelectedScQtEvaluationReports(List<ScQtEvaluationReport> selectedScQtEvaluationReports) {
 		this.selectedScQtEvaluationReports = selectedScQtEvaluationReports;
 	}
 
@@ -707,8 +707,7 @@ public abstract class BaseManagedBean implements Serializable {
 		return evaluationReportList;
 	}
 
-	public void setEvaluationReportList(
-			List<ScQtFinalizationReport> evaluationReportList) {
+	public void setEvaluationReportList(List<ScQtFinalizationReport> evaluationReportList) {
 		this.evaluationReportList = evaluationReportList;
 	}
 
@@ -716,8 +715,7 @@ public abstract class BaseManagedBean implements Serializable {
 		return reportsToBeRemovedList;
 	}
 
-	public void setReportsToBeRemovedList(
-			List<ScQtEvaluationReport> reportsToBeRemovedList) {
+	public void setReportsToBeRemovedList(List<ScQtEvaluationReport> reportsToBeRemovedList) {
 		this.reportsToBeRemovedList = reportsToBeRemovedList;
 	}
 
@@ -739,8 +737,7 @@ public abstract class BaseManagedBean implements Serializable {
 	/**
 	 * @param newBriefingPaperReportList the newBriefingPaperReportList to set
 	 */
-	public void setNewBriefingPaperReportList(
-			List<ScQtFinalizationReport> newBriefingPaperReportList) {
+	public void setNewBriefingPaperReportList(List<ScQtFinalizationReport> newBriefingPaperReportList) {
 		this.newBriefingPaperReportList = newBriefingPaperReportList;
 	}
 
@@ -768,8 +765,7 @@ public abstract class BaseManagedBean implements Serializable {
 	/**
 	 * @param removeFinalizationReports the removeFinalizationReports to set
 	 */
-	public void setRemoveFinalizationReports(
-			List<ScQtFinalizationReport> removeFinalizationReports) {
+	public void setRemoveFinalizationReports(List<ScQtFinalizationReport> removeFinalizationReports) {
 		this.removeFinalizationReports = removeFinalizationReports;
 	}
 
@@ -780,7 +776,7 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setPersonnelsRole(List<SmPersonnel> personnelsRole) {
 		this.personnelsRole = personnelsRole;
 	}
-	
+
 	// #18685 - Start
 	/**
 	 * @return the consolidationBriefingPaperReportList
@@ -835,7 +831,8 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setDisplayMessageBank(String displayMessageBank) {
 		this.displayMessageBank = displayMessageBank;
 	}
-	//27951
+
+	// 27951
 	public boolean isPreRegistration() {
 		return preRegistration;
 	}
@@ -875,7 +872,6 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setCurrentTaskDocType(String currentTaskDocType) {
 		this.currentTaskDocType = currentTaskDocType;
 	}
-	
 
 	public boolean isShowPopup() {
 		return showPopup;
@@ -969,7 +965,7 @@ public abstract class BaseManagedBean implements Serializable {
 		this.downloadfile = downloadfile;
 	}
 	// end 27346
-	
+
 	//27382
 	public boolean isErrorInvalidSelfRequest() {
 		return errorInvalidSelfRequest;
@@ -979,6 +975,16 @@ public abstract class BaseManagedBean implements Serializable {
 		this.errorInvalidSelfRequest = errorInvalidSelfRequest;
 	}
 	
+	//14685 - START
+	public boolean isShowMessage() {
+		return showMessage;
+	}
+
+	public void setShowMessage(boolean showMessage) {
+		this.showMessage = showMessage;
+	}
+	//14685 - END
+
 	//start #29956
 	public Boolean isDowngradeRole() {
 		return isDowngradeRole;
