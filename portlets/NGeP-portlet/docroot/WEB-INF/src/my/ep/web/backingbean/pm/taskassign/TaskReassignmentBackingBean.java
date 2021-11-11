@@ -544,7 +544,7 @@ public class TaskReassignmentBackingBean extends
 				List<String> tempRoleCodeList = new ArrayList<String>();
 				for (PmUserRole userRole : userRoles) {
 					//Redmine Bug #31732 - START
-					if(userRole.getRecordStatusFlg().equals(ParameterConst.RECORD_STATUS_ACTIVE))
+					if(userRole.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE))
 						tempRoleCodeList.add(userRole.getPmRole().getRoleCode());
 					//Redmine Bug #31732 - END
 				}
