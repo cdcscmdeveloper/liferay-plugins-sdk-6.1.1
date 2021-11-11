@@ -186,15 +186,8 @@
 						<h:outputText value="#{personnel.pmCountry.countryName}" />
 					</p:column>
 					
-					<!-- Soft Cert Status  -->
-					<p:column
-						headerText="#{lbl['lbl.sm.person.composition.certStatus']}" rendered="#{personnel.epRole eq null or personnel.epRole eq ''}">
-						<h:outputText 
-							value="#{lbl['lbl.txt.na']}" />
-					</p:column>
-					<p:column
-						headerText="#{lbl['lbl.sm.person.composition.certStatus']}"
-						rendered="#{personnel.epRole ne null and personnel.epRole ne ''}">
+					<!-- Soft Cert Status  -->					
+					<p:column headerText="#{lbl['lbl.sm.person.composition.certStatus']}">
 						<h:outputText 
 							value="#{lbl['lbl.txt.na']}"
 							rendered="#{personnel.softcertFlg eq '0' or personnel.softcertFlg eq null}" />
