@@ -2617,6 +2617,18 @@
 		</footer-portlet-javascript>
 		<css-class-wrapper>smdeactivateadmin-portlet</css-class-wrapper>
 	</portlet>
+	<!-- #10724 start -->
+	<portlet>
+		<portlet-name>commonSmOverviewInfo</portlet-name>
+		<icon>/icon.png</icon>
+		<requires-namespaced-parameters>false</requires-namespaced-parameters>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>commonapploverview-portlet</css-class-wrapper>
+	</portlet>
+	<!-- #10724 end -->
 	<portlet>
 		<portlet-name>updateGstInfo</portlet-name>
 		<icon>/icon.png</icon>

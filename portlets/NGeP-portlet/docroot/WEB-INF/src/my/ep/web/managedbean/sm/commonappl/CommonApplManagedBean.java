@@ -2,6 +2,7 @@ package my.ep.web.managedbean.sm.commonappl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -24,6 +25,17 @@ public class CommonApplManagedBean extends BaseManagedBean {
 	private BigDecimal totalAmount;
 	private int pListSize;
 	private String applType;
+	//10724
+	private Date expDate;
+	private String days;
+	private String hours;
+	private String mins;
+	private String secs;		
+	private String mofBeforeExpiryMsg;
+	private String mofAfterExpiryMsg;
+	//28778 - Start
+	private boolean specialCategoryRechecked;
+	//28778 - End
 
 	public String[] getBpmAction() {
 		return bpmAction;
@@ -83,4 +95,67 @@ public class CommonApplManagedBean extends BaseManagedBean {
 	public void setApplType(String applType) {
 		this.applType = applType;
 	}
+	//10724 START
+		public Date getExpDate() {
+			return expDate;
+		}
+
+		public void setExpDate(Date expDate) {
+			this.expDate = expDate;
+		}
+
+		public String getDays() {
+			return days;
+		}
+
+		public void setDays(String days) {
+			this.days = days;
+		}
+
+		public String getHours() {
+			return hours;
+		}
+
+		public void setHours(String hours) {
+			this.hours = hours;
+		}
+
+		public String getMins() {
+			return mins;
+		}
+
+		public void setMins(String mins) {
+			this.mins = mins;
+		}
+
+		public String getSecs() {
+			return secs;
+		}
+
+		public void setSecs(String secs) {
+			this.secs = secs;
+		}
+
+		public String getMofBeforeExpiryMsg() {
+			return mofBeforeExpiryMsg;
+		}
+
+		public void setMofBeforeExpiryMsg(String mofBeforeExpiryMsg) {
+			this.mofBeforeExpiryMsg = mofBeforeExpiryMsg;
+		}
+
+		public String getMofAfterExpiryMsg() {
+			return mofAfterExpiryMsg;
+		}
+
+		public void setMofAfterExpiryMsg(String mofAfterExpiryMsg) {
+			this.mofAfterExpiryMsg = mofAfterExpiryMsg;
+		}
+		//10724 END
+		public boolean isSpecialCategoryRechecked() {
+			return specialCategoryRechecked;
+		}
+		public void setSpecialCategoryRechecked(boolean specialCategoryRechecked) {
+			this.specialCategoryRechecked = specialCategoryRechecked;
+		}
 }

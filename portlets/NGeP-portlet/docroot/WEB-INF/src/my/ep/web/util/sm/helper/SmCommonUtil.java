@@ -3275,6 +3275,30 @@ public class SmCommonUtil {
 		}
 		return mofAcc;
 	}
+	
+	//10724
+	/**
+	 * Get expired SmMofAccount by Supplier Id and Supplier Type
+	 * 
+	 * @param Long
+	 *            supplierId
+	 * @param String
+	 *            suppType
+	 * @return SmMofAccount
+	 */
+	public static SmMofAccount getExpiredMofAccountBySuppIdAndSuppType(
+			Long supplierId, String suppType) {
+		SmMofAccount mofAcc = null;
+		if (supplierId != null) {
+			MofAccountReqDTO reqDTO = new MofAccountReqDTO();
+			reqDTO.setSupplierType(suppType);
+			reqDTO.setSupplierId(supplierId);
+			mofAcc = SmServiceLookup.getMofAccountSO()
+					.retriveExpiredMOFAccountBySupplierIdAndType(reqDTO)
+					.getMofAccount();
+		}
+		return mofAcc;
+	}
 	/**
 	 * Get previous SmMofAccount by Supplier Id and Supplier Type And ApplId
 	 * 

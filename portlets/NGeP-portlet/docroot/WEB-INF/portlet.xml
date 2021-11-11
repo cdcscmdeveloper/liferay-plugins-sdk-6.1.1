@@ -8639,6 +8639,43 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
+	<!-- #10724 START -->
+	<portlet>
+		<portlet-name>commonSmOverviewInfo</portlet-name>
+		<display-name>Common SM Overview</display-name>
+		<portlet-class>
+			org.portletfaces.bridge.GenericFacesPortlet
+		</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>
+				/xhtml/sm/commonapploverview/preRenderCommonSmOverviewInfo.xhtml
+			</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Common SM Overview</title>
+			<short-title>NewJSFPortlet</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<!-- #10724 END  -->
 	<portlet>
 		<portlet-name>updateGstInfo</portlet-name>
 		<display-name>Update GST Information</display-name>

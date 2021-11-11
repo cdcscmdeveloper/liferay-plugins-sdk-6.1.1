@@ -3,6 +3,8 @@ package my.ep.web.backingbean.sm.commonappl;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -33,8 +35,10 @@ import my.ep.jaxb.sm.mofappcandata.SMMOFAppCanDataType;
 import my.ep.jaxb.sm.mofregcandata.SMMOFRegCanDataType;
 import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
 import my.ep.jaxb.sm.sitevisitdata.SMSiteVisitDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
@@ -54,6 +58,7 @@ import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.managedbean.sm.commonappl.CommonApplManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
@@ -1238,4 +1243,65 @@ public class CommonApplBackingBean extends
 	//
 	// //this.getManagedBean().setTaskId(taskId);
 	// }
+	
+	//10724 START
+	public void preRenderCommonSmOverviewInfo() {
+		//10724 START
+		renewSesionObject();
+		SmSupplier supp = SmApplicationUtil.getCurrentSupplier();
+		if (supp != null) {
+			SmMofAccount acc = SmCommonUtil.getMofAccountBySuppIdAndSuppType(
+					supp.getSupplierId(), supp.getSmAppl().getSupplierType());
+			if (acc != null
+					&& acc.getExpDate() != null) {
+				Date currDate = new Date();
+				getManagedBean().setExpDate(acc.getExpDate());
+				Date expDate = getManagedBean().getExpDate(); 
+				
+				Calendar currDateAfterThreeMonths = Calendar.getInstance();
+				currDateAfterThreeMonths.setTime(currDate);
+				currDateAfterThreeMonths.add(Calendar.MONTH, 3);
+				
+				
+				if (currDateAfterThreeMonths.getTime().after(acc.getExpDate()) && acc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+					int secsInADay = 24 * 60 * 60;
+					long togo = (getManagedBean().getExpDate().getTime() - currDate
+							.getTime()) / 1000;
+					getManagedBean().setDays((togo / secsInADay) + "");
+					
+					getManagedBean().setMofBeforeExpiryMsg(
+							SmCommonUtil.getMessage(
+									"lbl.sm.MOF.alert.beforeexpiry", new String[] {getManagedBean().getDays(), DateUtils.dateToString("dd/MM/yyyy", expDate)}));
+				}
+			}
+			else {
+				SmMofAccount expiredAcc = SmCommonUtil.getExpiredMofAccountBySuppIdAndSuppType(
+						supp.getSupplierId(), supp.getSmAppl().getSupplierType());
+				
+				Date currDate = new Date();
+				getManagedBean().setExpDate(expiredAcc.getExpDate());
+				Date expDate = getManagedBean().getExpDate(); 
+				
+				if (currDate.after(expiredAcc.getExpDate()) && expiredAcc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED){
+					Calendar dateAfterOneYear = Calendar.getInstance();
+					dateAfterOneYear.setTime(expDate);
+					dateAfterOneYear.add(Calendar.MONTH, 12);
+					
+					int secsInADay = 24 * 60 * 60;
+					long togo = ((dateAfterOneYear.getTimeInMillis()) - currDate
+							.getTime()) / 1000;
+					getManagedBean().setDays(((togo + secsInADay) / secsInADay) + "");
+					
+					getManagedBean().setMofAfterExpiryMsg(
+							SmCommonUtil.getMessage(
+									"lbl.sm.MOF.alert.afterexpiry", new String[] {DateUtils.dateToString("dd/MM/yyyy", expDate), getManagedBean().getDays()}));
+				}
+			}
+		}
+		//10724 END
+		log.info(getManagedBean().getMofBeforeExpiryMsg());
+		log.info(getManagedBean().getMofAfterExpiryMsg());
+		SmCommonUtil.redirectToPage("commonSmOverviewInfo.xhtml", "", null, null);
+	}
+	//10724 END
 }
