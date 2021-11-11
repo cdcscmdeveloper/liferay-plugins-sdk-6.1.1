@@ -3097,13 +3097,6 @@ public class SmPersonnelBackingBean extends
 			
 			while(itr.hasNext()){
 				SmPersonnel personnel = itr.next();		
-				//for softcert - since deleted personnel, doesn't need softcert
-				if(getManagedBean().getSpSoftcertFlg() != 99){
-					if(personnel.getEpRole() == null){
-						itr.remove();
-						continue;
-					}
-				}
 				//for searching by epRole
 				if(getManagedBean().getSpEpRole() != null && getManagedBean().getSpEpRole() != ""){
 					if(personnel.getPrevEpRole() != null && personnel.getPrevEpRole() != ""){
@@ -3355,7 +3348,6 @@ public class SmPersonnelBackingBean extends
 						PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
 						PersonnelResDTO personnelRes = new PersonnelResDTO();
 
-						personnel.setSoftcertFlg(SupplierManagementConst.RECORD_STATUS_SUSPENDED);
 						personnel.setContractSignerFlg(Integer.parseInt(ParameterConst.FLAG_NO));
 						reqDTO1.setSmPersonnel(personnel);
 						reqDTO1.setNewEpRole(getManagedBean().getEpRoleTrans());
@@ -3384,7 +3376,6 @@ public class SmPersonnelBackingBean extends
 					else if (getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.CM_USER.value()) && ePStatus) {
 						PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 						reqDTO.setReactive(true);
-						personnel.setSoftcertFlg(SupplierManagementConst.RECORD_STATUS_SUSPENDED);
 						personnel.setContractSignerFlg(Integer.parseInt(ParameterConst.FLAG_NO));
 						personnel.setEpRole(getManagedBean().getEpRoleTrans());
 						reqDTO.setSmPersonnel(personnel);
