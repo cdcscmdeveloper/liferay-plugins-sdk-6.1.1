@@ -5936,24 +5936,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 		if (null != approvalTabBean &&  StringUtils.isNotEmpty(approvalTabBean.getTabType())
 				&& ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT.equals(approvalTabBean.getTabType())) {
-			DualListModel<ScQtApproverSettings> approverSettings = approvalTabBean.getBudgetApprovalUsers();
-			ScQt scQt = this.getManagedBean().getQt();
-			Long[] orgIds={scQt.getOwnerOrgProfile().getOrgProfileId(),scQt.getPmOrgProfile().getOrgProfileId()};
-			DualListModel<ScQtApproverSettings> budgetApprovalUsers=ApproverSettings.getDetails(RoleCode.COMMITTEE_APPROVER,orgIds,approvalTabBean.getScQtApproval());
-		    for(int i=0;i<approverSettings.getSource().size();i++){
-		    	if(approverSettings.getSource().get(i).getPmUser().getUserName() == null){
-				  for(int j=0;j<budgetApprovalUsers.getSource().size();j++){
-					approverSettings.getSource().get(i).getPmUser().setUserName(budgetApprovalUsers.getSource().get(j).getPmUser().getUserName());
-				  }
-		    	}
-		    }
-		    for(int i=0;i<approverSettings.getTarget().size();i++){
-		    	if(approverSettings.getTarget().get(i).getPmUser().getUserName() == null){
-		    	  for(int j=0;j<budgetApprovalUsers.getTarget().size();j++){
-		    		approverSettings.getTarget().get(i).getPmUser().setUserName(budgetApprovalUsers.getTarget().get(j).getPmUser().getUserName());  
-		    	  }
-		    	}
-		    }
+			if(approvalTabBean.getBudgetApprovalUsers() == null){
+				ScQt scQt = this.getManagedBean().getQt();
+				Long[] orgIds={scQt.getOwnerOrgProfile().getOrgProfileId(),scQt.getPmOrgProfile().getOrgProfileId()};
+				DualListModel<ScQtApproverSettings> budgetApprovalUsers=ApproverSettings.getDetails(RoleCode.COMMITTEE_APPROVER,orgIds,approvalTabBean.getScQtApproval());
+				approvalTabBean.setBudgetApprovalUsers(budgetApprovalUsers);
+			}
 		}
 		// #25077 - #80 - End.
 		this.getManagedBean().setSelectedApprovalTabIndex(
