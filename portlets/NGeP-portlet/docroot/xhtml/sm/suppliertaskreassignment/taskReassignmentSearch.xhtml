@@ -28,6 +28,11 @@
 		</p:outputPanel>
 	<p:panel id="pTaskAssignSearch" header="#{lbl['lbl.pm.ta.search']}"
 		toggleable="true">
+		
+		<p:blockUI block="pTaskAssignSearch" widgetVar="taskReassignconfirmPopupBlockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		
 		<table class="ppTwoTable">
 			<tr>
 				<th width="15%"><p:outputLabel value="#{lbl['lbl.sm.companyname']}" /> </th>
@@ -139,11 +144,13 @@
 							process="pTaskAssignSearch" action="#{supplierTaskReassignmentBackingBean.searchTaskAssign}"
 							update=":form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult" 
 							onclick="cbSearchTask.disable();cbResetTask.disable()"  
-			  				oncomplete="cbSearchTask.enable();cbResetTask.enable()"
+							onstart="taskReassignconfirmPopupBlockWidget.show()"
+			  				oncomplete="cbSearchTask.enable();cbResetTask.enable();taskReassignconfirmPopupBlockWidget.hide();"
 							/>
 						<p:commandButton id="cbResetTask" widgetVar="cbResetTask"
 							onclick="cbSearchTask.disable();cbResetTask.disable()"  
-			  				oncomplete="cbSearchTask.enable();cbResetTask.enable()"
+							onstart="taskReassignconfirmPopupBlockWidget.show()"
+			  				oncomplete="cbSearchTask.enable();cbResetTask.enable();taskReassignconfirmPopupBlockWidget.hide();"
 							value="#{lbl['lbl.btn.reset']}" 
 							action="#{supplierTaskReassignmentBackingBean.resetTaskAssignSearchBean}"
 							update="pTaskAssignSearch,:form:userTaskListID,:form:groupTaskListID,:form:othersTaskListID," 
