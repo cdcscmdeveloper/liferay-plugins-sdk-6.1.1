@@ -2251,13 +2251,14 @@ public class TemplateSpecBackingBean extends
 						}
 					}
 //end					
-// condition zonal & non zonal Not Offer					
+// condition zonal & non zonal Not Offer
+// #32088 add not null 11/11/2021 start
 					if(specAnswer.getTplSpecZoneQty()!=null 
 							&& !specAnswer.getTplSpecZoneQty().getQty().equals(new BigDecimal(0))
-								&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0 
+								&& specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0 
 									|| specAnswer.getTplSpecZoneQty()==null 
 										&& !specAnswer.getTplSpecQuestion().getClQuantity().equals(new BigDecimal(0))
-											&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0){
+											&& specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0){
 													if (specAnswer.getTplSpecQuestion().getScoreTypeCode().getParameterCode()!=null &&
 															specAnswer.getTplSpecQuestion().getScoreTypeCode() != null && 
 															ParameterConst.SCORE_TYPE_AUTO.equals(specAnswer.getTplSpecQuestion().getScoreTypeCode().getParameterCode())){
@@ -2269,6 +2270,7 @@ public class TemplateSpecBackingBean extends
 																specAnswer.setUserScore(BigDecimal.valueOf(0));
 													}
 						}
+// #32088 add not null 11/11/2021 end
 //end					
 					if (autoScore != null && autoScore.compareTo(BigDecimal.ZERO) > 0 
 							&& specAnswer.getTplSpecZoneQty()!=null && !specAnswer.getTplSpecZoneQty().getQty().equals(new BigDecimal(0))
