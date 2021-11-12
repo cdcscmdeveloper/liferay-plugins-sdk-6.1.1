@@ -67,8 +67,7 @@
 				<p:outputLabel value="#{lbl['lbl.rpt.flPurchaseOrderNo']}" rendered="#{!yepRptBB.managedBean.contractFlag}"/>
 			</td>
 			<td>
-				<p:inputText maxlength="35" rendered="#{!yepRptBB.managedBean.contractFlag}"
-					value="#{yepRptBB.managedBean.purchaseOrderNo}">
+				<p:inputText maxlength="35" value="#{yepRptBB.managedBean.purchaseOrderNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText>
 			</td>
