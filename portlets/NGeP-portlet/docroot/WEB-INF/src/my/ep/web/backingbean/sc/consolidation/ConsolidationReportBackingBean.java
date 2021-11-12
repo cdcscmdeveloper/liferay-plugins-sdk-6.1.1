@@ -1271,17 +1271,30 @@ public class ConsolidationReportBackingBean extends
 					.getScQtRecommendsByZone();
 			log.debug("scQtFinalization.getScQtRecommendsByZone() : "
 					+ scQtRecommendsByZone);
+			//#32092 - Start.
 			//#32009 - related to #21695 - start
 			if(scQtRecommendsByZone.size() > 0){
-				for(List<ScQtRecommend> scQtRecommend: scQtRecommendsByZone.values()){
+				Iterator<List<ScQtRecommend>> iterator = scQtRecommendsByZone.values().iterator();
+				while (iterator.hasNext()) {
+					List<ScQtRecommend> qtrecommendList = iterator.next();
+					if (CollectionUtils.isNotEmpty(qtrecommendList)) {
+						for (ScQtRecommend qtrecommend : qtrecommendList) {
+							if(qtrecommend.getOrderQty().compareTo(BigDecimal.ZERO) == 0){
+								iterator.remove();
+							}
+						}
+					}
+				}
+				/*for(List<ScQtRecommend> scQtRecommend: scQtRecommendsByZone.values()){
 					for(ScQtRecommend qtrecommend: scQtRecommend){
 						if(qtrecommend.getOrderQty().compareTo(BigDecimal.ZERO) == 0){
 							scQtRecommend.remove(qtrecommend);
 						}
 					}	
-				}
+				}*/
 			}
 			//#32009 - related to #21695 - end
+			//#32092 - End.
 			if (selectedZone != null && scQtRecommendsByZone != null
 					&& scQtRecommendsByZone.size() > 0) {
 				getManagedBean().setItemsList(
