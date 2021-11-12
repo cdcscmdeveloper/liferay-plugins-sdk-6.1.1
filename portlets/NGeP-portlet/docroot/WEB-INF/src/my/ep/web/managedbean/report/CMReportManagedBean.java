@@ -66,6 +66,12 @@ public class CMReportManagedBean extends ReportBaseManagedBean {
 	private PmOrgProfile selectedPTJOrgProfile;
 	private String docNoSearchInput;
 	// #29592 - end	
+	
+	//#29640 - Start
+	private String requestType;
+	private String docStatus;
+	private Date minDate;
+	//#29640 - End
 
 	/**
 	 * @return the requestNo
@@ -300,5 +306,42 @@ public class CMReportManagedBean extends ReportBaseManagedBean {
 	}
 	// #29592 - end
 	
+	//#29640 - Start
+	/**
+	 * @return the requestType
+	 */
+	public String getRequestType() {
+		return requestType;
+	}
+
+	/**
+	 * @param requestType the requestType to set
+	 */
+	public void setRequestType(String requestType) {
+		this.requestType = requestType;
+	}
+
+	/**
+	 * @return the docStatus
+	 */
+	public String getDocStatus() {
+		return docStatus;
+	}
+
+	/**
+	 * @param docStatus the docStatus to set
+	 */
+	public void setDocStatus(String docStatus) {
+		this.docStatus = docStatus;
+	}
+	
+	public Date getMinDate() {
+		return minDate;
+	}
+
+	public void setMinDate(Date minDate) {
+		this.minDate = minDate;
+	}
+	//#29640 - End
 }
 

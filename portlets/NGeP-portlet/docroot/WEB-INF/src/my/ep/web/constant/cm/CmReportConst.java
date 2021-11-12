@@ -46,6 +46,12 @@ public class CmReportConst {
 	public static final String DOCUMENT_NO = "PDOCNO";
 	// #29592 - end
 	
+	//#29640 - Start
+	public static final String REGISTRATION_TYPE = "PREGISTRATIONTYP";
+	public static final String REQUEST_TYPE = "PREQUESTTYPE";
+	public static final String DOCUMENT_STATUS = "PSTATUSID";
+	//#29640 - End
+	
 	
 	
 	
