@@ -10449,6 +10449,14 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 					//Bug_28291
 					checkTechnicalAndFinancialSpec(this.getManagedBean().getQt());
+					//20210621@asyrafhaziq_Bug #30914 - Start
+					if (null != this.getManagedBean().getLoginRoleType()
+							&& !"".equals(this.getManagedBean().getLoginRoleType())
+							&& "SC".equalsIgnoreCase(this.getManagedBean()
+									.getLoginRoleType())) {
+						checkZoneLocationChange(this.getManagedBean().getQt());
+					}
+					//20210621@asyrafhaziq_Bug #30914 - End
 					
 					if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
 							&& !this.getManagedBean().isReadOnly()) {
@@ -10553,6 +10561,58 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		return null;
 
 	}
+	
+	//20210621@asyrafhaziq_Bug #30914 - Start
+	 private void checkZoneLocationChange(ScQt scQt) {
+			try {
+				
+				List<ScQtCheckList> technicalSpecCheckList = this.getManagedBean()
+						.getScQtCheckSt2techProposal();
+				if (null == technicalSpecCheckList
+						|| technicalSpecCheckList.isEmpty()) {
+					retriveTechnicalCheckList();
+				}
+				List<ScQtCheckList> financialSpecCheckList = this.getManagedBean()
+						.getScQtCheckSt2financeProposalList();
+				if (null == financialSpecCheckList
+						|| financialSpecCheckList.isEmpty()) {
+					retriveFinancialCheckList();
+				}
+				if (null != financialSpecCheckList
+						&& !financialSpecCheckList.isEmpty()) {
+					PmStatus status = getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+					for (ScQtCheckList financialchecklist : financialSpecCheckList) {
+						if (QTConstants.TEMPLETE_SPEC_CODE
+								.equalsIgnoreCase(financialchecklist.getDefinationType()
+										.getParameterCode())) {
+							if ((scQt.isZonal() && financialchecklist.getScQtDoc().getTplSpecMaster().getTplSpecZone() == null )||
+									(!scQt.isZonal() && financialchecklist.getScQtDoc().getTplSpecMaster().getTplSpecZone() != null))	{
+									financialchecklist.setPmStatus(status);
+								}
+					}
+				}
+				}
+				if (null != technicalSpecCheckList
+						&& !technicalSpecCheckList.isEmpty()) {
+					PmStatus status = getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+					for (ScQtCheckList technicalchecklist : technicalSpecCheckList) {
+						if (QTConstants.TEMPLETE_SPEC_CODE
+								.equalsIgnoreCase(technicalchecklist.getDefinationType()
+										.getParameterCode())) {
+							if ((scQt.isZonal() && technicalchecklist.getScQtDoc().getTplSpecMaster().getTplSpecZone() == null)||
+									(!scQt.isZonal() && technicalchecklist.getScQtDoc().getTplSpecMaster().getTplSpecZone() != null))	{
+								technicalchecklist.setPmStatus(status);
+								}
+					}
+					}
+				}
+
+			} finally {
+
+			}
+
+		}
+		//20210621@asyrafhaziq_Bug #30914 - End	
 
 	/**
 	 * Prepare spec chir person request.
