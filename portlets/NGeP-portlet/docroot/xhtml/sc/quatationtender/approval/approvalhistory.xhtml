@@ -11,7 +11,7 @@
 	<!-- #25077 End -->
 
 	<p:panel header="#{lbl['lbl.sc.history']}" toggleable="true">
-		<p:dataTable var="historyDtls" style="width:100%"
+		<p:dataTable var="historyDtls" style="width:100%" rowIndexVar="index"
 		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{approvalDtlsList.historyApprovalRequests}">
 			<p:column headerText="#{lbl['lbl.sc.qt.type.reqdtls']}">
