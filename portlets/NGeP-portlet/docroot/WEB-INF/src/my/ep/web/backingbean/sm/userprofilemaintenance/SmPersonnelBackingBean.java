@@ -3347,7 +3347,11 @@ public class SmPersonnelBackingBean extends
 					else if (getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.CM_USER.value()) && !ePStatus){
 						PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
 						PersonnelResDTO personnelRes = new PersonnelResDTO();
-
+						
+						if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PENDING_REQ
+								|| personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED) {
+							personnel.setSoftcertFlg(SupplierManagementConst.RECORD_STATUS_SUSPENDED);
+						}
 						personnel.setContractSignerFlg(Integer.parseInt(ParameterConst.FLAG_NO));
 						reqDTO1.setSmPersonnel(personnel);
 						reqDTO1.setNewEpRole(getManagedBean().getEpRoleTrans());
