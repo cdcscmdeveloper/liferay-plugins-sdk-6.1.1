@@ -4,45 +4,61 @@
 package my.ep.web.backingbean.report;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import javax.el.MethodExpression;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.rpt.IRPTRequestSO;
-// #29592 - start
 import my.ep.constant.EpPropertiesConst;
-// #29592 - end
 import my.ep.constant.MessageConst;
-// #29592 - start
 import my.ep.constant.pm.ParameterConst;
-// #29592 - end
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
-// #29592 - start
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.util.EpPropertiesUtils;
-// #29592 - end
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
-// #29592 - start
 import my.ep.util.pm.OrgProfileUtil;
-// #29592 - end
 import my.ep.web.constant.cm.CmConst;
 import my.ep.web.constant.cm.CmReportConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.CMReportManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
+// #29592 - start
+// #29592 - end
+// #29592 - start
+// #29592 - end
+// #29592 - start
+// #29592 - end
+// #29592 - start
+// #29592 - end
 
 @ManagedBean(name = "cmReportsBackingBean")
 @ViewScoped
@@ -199,7 +215,11 @@ public class CMReportsBackingBean extends ReportBaseBackingBean<CMReportManagedB
 		this.getManagedBean().setSelectedPTJOrgProfile(null);
 		this.getManagedBean().setDocNoSearchInput(null);
 		// #29592 - end
-
+		
+		//#29640 - Start
+		this.getManagedBean().setRequestType("");
+		this.getManagedBean().setDocStatus(null);
+		//#29640 - End
 	}
 
 
@@ -1298,7 +1318,128 @@ public class CMReportsBackingBean extends ReportBaseBackingBean<CMReportManagedB
 	}
 	
 	// #29592 - end
+	
+	//#29640 - Start
+	public SelectItem[] getDocStatus() {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+
+		try {
+
+			IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject("pm", IStatusSO.class);
+			String languageCode = new FacesScopes().getUserLocale().getLanguage();
+
+			StatusReqDTO reqStatusDTO = new StatusReqDTO();
+
+			SearchBean<PmStatusDesc> searchBean = new SearchBean<PmStatusDesc>();
+
+			reqStatusDTO.setLanguageCode(languageCode);
+			List<String> cmDocTypes = new ArrayList<String>();
+			cmDocTypes.add("CE");
+			cmDocTypes.add("CU");
+			reqStatusDTO.setDocTypeList(cmDocTypes);
+			reqStatusDTO.setModuleCode("CM");
+
+			SearchFilterBean bean = new SearchFilterBean();
+			bean.setSearchOperator(SearchOperator.OPERATOR_IN.value());
+			bean.setSearchField("pmStatus.statusId");
+			bean.setSearchValue(new ArrayList<String>(Arrays.asList(new String[] { "15001", "15011", "15008", "15018",
+					"15014", "15016", "15004" })));
+			searchBean.getDataFilterBeans().add(bean);
+
+			reqStatusDTO.setStatusDescSearchBean(searchBean);
+
+			StatusResDTO resStatusDTO = statusSO.retrieveStatusDescList(reqStatusDTO);
+
+			if (resStatusDTO.getStatusDescList() != null && resStatusDTO.getStatusDescList().size() > 0) {
+
+				items = new SelectItem[resStatusDTO.getStatusDescList().size() + 1];
+
+				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.rpt.all",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+				int i = 1;
+				for (PmStatusDesc desc : resStatusDTO.getStatusDescList()) {
+					log.info("desc.getStatusId()" + desc.getPmStatus().getStatusId());
+					items[i++] = new SelectItem(desc.getPmStatus().getStatusId(), desc.getStatusName());
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+		return items;
+	}
+	
+	public void generateReportCM020(){
+
+		LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();
 
 
+		dateValidation(this.getManagedBean().getDateFrom(), this.getManagedBean().getDateTo());
+		
 
+		if(this.getManagedBean().getItemType()!=null && this.getManagedBean().getItemType().trim().length()>0){
+			log.info("ITEM_TYPE " + this.getManagedBean().getItemType());
+			params.put(CmReportConst.ITEM_TYPE, this.getManagedBean().getItemType());
+		}
+
+		if(this.getManagedBean().getSelectedOrgProfile()!=null &&
+				this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName().trim().length()>0){
+			log.info("COMP_NAME " + this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName());
+			params.put(CmReportConst.COMP_NAME, this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName());
+		}
+		
+		if(this.getManagedBean().getRequestType()!=null && this.getManagedBean().getRequestType().trim().length()>0){
+			log.info("REQUEST_TYPE " + this.getManagedBean().getRequestType());
+			params.put(CmReportConst.REQUEST_TYPE, this.getManagedBean().getRequestType());
+		}
+		
+		if(this.getManagedBean().getRegType()!=null && this.getManagedBean().getRegType().trim().length()>0){
+			log.info("REGISTRATION_TYPE " + this.getManagedBean().getRegType());
+			params.put(CmReportConst.REGISTRATION_TYPE, this.getManagedBean().getRegType());
+		}
+		
+		if(this.getManagedBean().getRequestNo()!=null && this.getManagedBean().getRequestNo().trim().length()>0){
+			log.info("REQUEST_NO " + this.getManagedBean().getRequestNo());
+			params.put(CmReportConst.REQUEST_NO, this.getManagedBean().getRequestNo());
+		}
+
+		if(this.getManagedBean().getDocStatus()!=null && this.getManagedBean().getDocStatus().trim().length()>0){
+			log.info("REQUEST_NO " + this.getManagedBean().getDocStatus());
+			params.put(CmReportConst.DOCUMENT_STATUS, this.getManagedBean().getDocStatus());
+		}
+
+
+		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+
+		if(this.getManagedBean().getDateFrom()!=null ){
+			params.put(CmReportConst.DATE_FROM, df.format(this.getManagedBean().getDateFrom()));
+		}
+
+		if(this.getManagedBean().getDateTo()!=null ){
+			params.put(CmReportConst.DATE_TO, df.format(this.getManagedBean().getDateTo()));
+		}
+
+		FacesScopes facesScopes =new FacesScopes();
+		Long userId = facesScopes.getUserSessionBean().getUserId();
+
+		params.put(CmReportConst.REPORT_ID, this.getManagedBean().getReportCode());
+		params.put(CmReportConst.REPORT, this.getManagedBean().getReportName());
+		params.put(CmReportConst.USER, String.valueOf(userId));
+
+
+		preGenerateReportAPI(params);
+		
+
+		RequestContext.getCurrentInstance().execute("confirmationId.show()");
+	}
+	
+	public Date getMinDate(){
+		Calendar cal = Calendar.getInstance();
+			cal.setTime(DateUtils.getCurrentDateWithoutTime());
+			cal.add(Calendar.YEAR, -7);
+		return cal.getTime();
+	}
+	//#29640 - End
 }
