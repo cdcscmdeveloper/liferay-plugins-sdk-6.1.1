@@ -5550,6 +5550,9 @@ public class SmApplicationUtil {
 			//START 24964 && #28534
 			if(appl == null && managedBean.getSmAppl().getSmSupplier() != null){
 				reqDto.setSupplierId(managedBean.getSmAppl().getSmSupplier().getSupplierId());
+				//#31043 - START
+				reqDto.setSmAppl(managedBean.getSmAppl());
+				//#31043 - END
 				appl = revisionSO
 						.retrieveLatestPreviousApproveAppl(reqDto).getSmAppl();
 			}
