@@ -11,7 +11,7 @@
 	<!-- #25077 End -->
 
 	<p:panel header="#{lbl['lbl.sc.history']}" toggleable="true">
-		<p:dataTable var="historyDtls" style="width:100%" rowIndexVar="index"
+		<p:dataTable var="historyDtls" style="width:100%"
 		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{approvalDtlsList.historyApprovalRequests}">
 			<p:column headerText="#{lbl['lbl.sc.qt.type.reqdtls']}">
@@ -52,7 +52,7 @@
 										      <f:facet name="header">
 											        <h:outputText value="* " styleClass="mandatory" />
 													<h:outputText value="#{lbl['lbl.sc.document']}" />
-								                    <ac:iconTooltip id="historyOtersupdQtApproval#{index}" value="#{lbl['lbl.sc.qt.approval.oth.supporting.document.tooltip']}" />
+								                    <ac:iconTooltip value="#{lbl['lbl.sc.qt.approval.oth.supporting.document.tooltip']}" />
 												</f:facet>
 											    <h:panelGroup id="historyOtheruploadId">
 													<ac:scSingleFileUploadButton id="otherHistoryApprUploadBtn"
