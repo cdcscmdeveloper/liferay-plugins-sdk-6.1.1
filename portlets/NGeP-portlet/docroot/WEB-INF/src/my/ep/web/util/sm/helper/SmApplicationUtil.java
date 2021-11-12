@@ -3789,7 +3789,15 @@ public class SmApplicationUtil {
 					catList.add(cat);
 				} else if (cat.getRecordStatusFlg().compareTo(
 						SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
-					apprvList.add(cat);
+					//29823 - start
+					if(managedBean.getCurrentStatus().equalsIgnoreCase("Pending Review Site Visit Report - After Approval") ||
+							managedBean.getCurrentStatus().equalsIgnoreCase("Menunggu Laporan Lawatan Tapak - Selepas Diluluskan")	){
+						catList.add(cat);
+					}else{
+						apprvList.add(cat);
+					}
+					//29823 - end
+			
 					//30865, 30921 - Starts
 				} else if (cat.getRecordStatusFlg().compareTo(DbValueConst.RECORD_STATUS_CANCELLED) == 0){
 					if(managedBean.getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)){
@@ -5337,14 +5345,12 @@ public class SmApplicationUtil {
 				}				
 			}
 			
-			if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.REJECT)){
-				if(managedBean.getBpmTaskName().equalsIgnoreCase(SupplierManagementConst.BPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE)){
-					if(managedBean.getSmAppl().getSmSupplier() != null){
-						reqDto.setSupplierId(managedBean.getSmAppl().getSmSupplier().getSupplierId());
-						reqDto.setSmAppl(managedBean.getSmAppl());
-						appl = revisionSO.retrieveLatestPreviousApproveAppl(reqDto).getSmAppl();
-					}
-				}
+			if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.REJECT) && 
+				managedBean.getBpmTaskName().equalsIgnoreCase(SupplierManagementConst.BPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE) &&
+				managedBean.getSmAppl().getSmSupplier() != null){
+					reqDto.setSupplierId(managedBean.getSmAppl().getSmSupplier().getSupplierId());
+					reqDto.setSmAppl(managedBean.getSmAppl());
+					appl = revisionSO.retrieveLatestPreviousApproveAppl(reqDto).getSmAppl();
 			}
 			//#29823 - END
 			//START 24964 && #28534
