@@ -449,6 +449,52 @@ public class CreateQtBackingBean extends
 		return ministrySpecApprovers;
 	}
 	
+	//20210615@asyrafahaziq - Bug #30891 - Start
+	public void ContractPeriodChange() {
+		try {			
+		if (null != this.getManagedBean().getLoginRoleType()
+					&& !"".equals(this.getManagedBean().getLoginRoleType())
+					&& "SC".equalsIgnoreCase(this.getManagedBean()
+							.getLoginRoleType())) {
+		 if (ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())){	
+			
+			 Long currentStatus = this.getManagedBean().getQt().getQtStatus()
+					.getStatusId();
+
+			if (currentStatus.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)  ||  
+				currentStatus.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION) ||
+				  isQTStatusGreaterThan(currentStatus,QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)){
+			
+			SpecificationBackingBean specificationBackingBean = new SpecificationBackingBean();
+			List<ScQtCheckList> financialSpecCheckList = this.getManagedBean()
+					.getScQtCheckSt2financeProposalList();
+			if (null == financialSpecCheckList
+					|| financialSpecCheckList.isEmpty()) {
+				specificationBackingBean.retriveFinancialCheckList();
+				financialSpecCheckList = this.getManagedBean()
+						.getScQtCheckSt2financeProposalList();
+			}
+			if (null != financialSpecCheckList
+					&& !financialSpecCheckList.isEmpty()) {
+				PmStatus status = getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+				for (ScQtCheckList financialchecklist : financialSpecCheckList) {
+					if (QTConstants.TEMPLETE_SPEC_CODE
+							.equalsIgnoreCase(financialchecklist.getDefinationType()
+									.getParameterCode())) {
+					financialchecklist.setPmStatus(status);
+				}
+			}
+			}
+		  }
+		}
+		}
+		} finally {
+
+		}
+		
+	}
+	//20210615@asyrafahaziq - Bug #30891 - End
+	
 	/**
 	 * Zone radio change.change zone location level radio in business owner.
 	 * 
@@ -1069,6 +1115,11 @@ public class CreateQtBackingBean extends
 			removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT);
 			removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
 
+			//20210615@asyrafahaziq - Bug #30891 - Start
+			 if (!this.getManagedBean().getQt().getContractDuration().equals(null) ) {
+				 ContractPeriodChange();
+			 }
+			//20210615@asyrafahaziq - Bug #30891 - End
 		} finally {
 
 		}
