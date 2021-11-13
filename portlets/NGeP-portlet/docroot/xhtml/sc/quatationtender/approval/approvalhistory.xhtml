@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
 	<!-- #25077 Start -->
-	<ui:param name="isOthersApprovalMandatoryForAttachment" value="#{qTDetailBB.isOthersApprovalMandatoryForAttachment()}" />
+	<!--  <ui:param name="isOthersApprovalMandatoryForAttachment" value="#{qTDetailBB.isOthersApprovalMandatoryForAttachment()}" /> -->
 	<!-- #25077 End -->
 
 	<p:panel header="#{lbl['lbl.sc.history']}" toggleable="true">
@@ -32,7 +32,7 @@
 				</h:outputText>
 			</p:column>
 			<!-- #25077 Start -->
-		     <c:if test="#{not empty approvalDtlsList.historyApprovalRequests and 
+		    <!--  <c:if test="#{not empty approvalDtlsList.historyApprovalRequests and 
 		                qTDetailBB.managedBean.selectedApprovalTabBean.tabType eq ParameterConst.approvalCategoryOthers and isOthersApprovalMandatoryForAttachment}">
 		               <c:choose>
 							    <c:when test="#{qTDetailBB.managedBean.maintanceFlow}">	
@@ -69,7 +69,7 @@
 										</p:column> 
 							    </c:otherwise>
 				     </c:choose>
-			 </c:if>
+			 </c:if>  -->
 			<!-- #25077 End -->
 		</p:dataTable>
 	</p:panel>
