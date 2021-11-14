@@ -636,10 +636,11 @@ public class PurchaseInDefaultBackingBean extends
 			ScPurchaseInDefault scPurchaseInDefault = getManagedBean()
 					.getPurchaseInDefault();
 			// remarks
-			scPurchaseInDefault.setRemarks(initializeRemarks(
+			//#31603, #9133 - comment out
+			/*scPurchaseInDefault.setRemarks(initializeRemarks(
 					scPurchaseInDefault,
 					scPurchaseInDefault.getCurrentStatus(),
-					scPurchaseInDefault.getRemarks(), ScPIDRemark.class));
+					scPurchaseInDefault.getRemarks(), ScPIDRemark.class));*/
 
 			Long stsId = getManagedBean().getPidStatus().getStatusId(); //#28865
 			
