@@ -7234,7 +7234,17 @@ public void saveComplianceSample() {
 				// retrives1Details();
 			} else if (outputTab == 2) {
 				this.getManagedBean().setDemo(false);
-				afterDemoInv(false);//#28784
+				//#28784 - start
+				afterDemoInv(false);
+				if (this.getManagedBean().getScQt().isDemoRequired()
+						&& (SCProcessNameConst.FINALISE_TEC_EVALUATION
+						.equalsIgnoreCase(this.getManagedBean().getTaskName())
+						|| SCProcessNameConst.ENDORSE_TEC_EVALUATION
+						.equalsIgnoreCase(this.getManagedBean().getTaskName())
+						|| SCProcessNameConst.SIGNOFF_TEC_EVALUATION
+						.equalsIgnoreCase(this.getManagedBean().getTaskName()))) {
+					retriveCommitteeEndorsment();
+				}//#28784 - end
 				this.getManagedBean().setCheckReportDownload(false);
 				// this.getManagedBean().setCheckListType("");
 				if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
@@ -9708,7 +9718,13 @@ private void retriveCommitteeRemarksList(){
 						committeActivities.get(i).setSignedOff(true);			
 					}
 				}
-			}
+			}//#28784 - start
+			if(this.getManagedBean().getScQt().isDemoRequired() && SCProcessNameConst.SIGNOFF_TEC_EVALUATION
+					.equalsIgnoreCase(this.getManagedBean().getTaskName())){
+				for (int i = 0; i < committeActivities.size(); i++){
+					committeActivities.get(i).setSignedOff(false);
+				}
+			}//#28784 - end
 			reqDtO.getScQtCommitte().setCommitteeActivities(committeActivities);
 		}
 		//#28784 - start
