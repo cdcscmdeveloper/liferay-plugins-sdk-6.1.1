@@ -9,13 +9,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-
-
 	<!-- <p:remoteCommand name="updateCoinSlider" update="imageUploadID2" ></p:remoteCommand> -->
 
 	<h:outputScript library="jquery/slides" name="jquery.slides.js" />
-
-
 
 	<script>
 		function clearInvalidFileMsg() {
@@ -60,8 +56,6 @@
 					action="#{catalogueBackingBean.saveCatalogItem}" update="@form"></p:commandButton>
 
 			</h:panelGroup>
-
-
 
 			<h:panelGroup rendered="#{unspscCodeBackingBean.catalogueAdmin}">
 
@@ -147,8 +141,6 @@
 				});
 			});
 		</script>
-
-
 								<div id="slides" style="width: 250px;">
 									<ui:repeat var="cmImage"
 										value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
