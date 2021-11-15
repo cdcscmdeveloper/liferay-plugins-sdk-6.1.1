@@ -56,16 +56,15 @@
 								                    <ac:iconTooltip value="#{lbl['lbl.sc.qt.approval.oth.supporting.document.tooltip']}" />
 												</f:facet>
 											    <h:panelGroup id="historyOtheruploadId">
-													<!--  <ac:scSingleFileUploadButton id="otherHistoryApprUploadBtn"
+													<ac:scSingleFileUploadButton id="otherHistoryApprUploadBtn"
 														popupWidgetVar="otherHistoryApprUploadDlg"
-														attachment="#{historyDtls.approvalRequestAttachement}"
 														readonly="#{createQtBB.managedBean.readOnly}"
 														deleteFileUploadListener="approvalBackingBean.deleteHistoryOthersApprovalFile"
 														rowIndex="#{index}">
 														<f:setPropertyActionListener for="actionEvent"
 															value="#{historyDtls}"
 															target="#{approvalBackingBean.managedBean.historyApprovalRequests}" />
-													</ac:scSingleFileUploadButton> -->
+													</ac:scSingleFileUploadButton> 
 												</h:panelGroup>
 										</p:column>
 							    </c:otherwise>
