@@ -9233,6 +9233,28 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	// 14118 - Start
+	public void deleteCmImages() {
+		log.info("deleteCmImages" + this.getManagedBean().getSelectedImage().getCmImages().size());		
+		for (int i = 0; i < this.getManagedBean().getSelectedImage().getCmImages().size(); i++) {
+			CmImage image = (CmImage) this.getManagedBean().getSelectedImage().getCmImages().get(i);
+			this.getManagedBean().getSelectedMaintainItem().getCmImages().remove(image);
+		}
+		this.getManagedBean().setDisableDeleteBtn(true);
+	}
+	
+	public void rowSelectImage() {
+		System.out.println(this.getManagedBean().getSelectedImage().getCmImages().size());
+		if (this.getManagedBean().getSelectedImage().getCmImages().size() > 0) {
+			this.getManagedBean().setDisableDeleteBtn(false);
+			System.out.println("Disable Delete Button: " + this.getManagedBean().isDisableDeleteBtn());
+		} else if (this.getManagedBean().getSelectedImage().getCmImages().size() == 0
+				|| this.getManagedBean().getSelectedImage().getCmImages().size() < 0) {
+			this.getManagedBean().setDisableDeleteBtn(true);
+			System.out.println("Disable Delete Button: " + this.getManagedBean().isDisableDeleteBtn());
+		}
+	}
+	// 14118 - End
 	/**
 	 * This method is used to Navigate contract request.
 	 * 
@@ -10814,16 +10836,16 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			if(listToSave!=null && listToSave.size()>0){
 				CatalogueReqDTO reqDTO = new CatalogueReqDTO();	
 				CatalogueResDTO resDTO = new CatalogueResDTO();
-				ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
+				ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",
+						ICatalogueSO.class);
 				reqDTO.setSaveSupplierItems(listToSave);
 				try {
 					resDTO = catalogueSO.updateSupplierItem(reqDTO);
 					FacesContext facesContext = FacesContext.getCurrentInstance();
 					facesContext.addMessage(
 							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-									MessageUtils.getMessage(MessageConst.INFO_710026,
-											MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+									MessageConst.INFO_710026, MessageUtils.BUNDLE_COMMON_MESSAGES,
 											new FacesScopes().getUserLocale())));
 					this.getManagedBean().setCloneCmSupplierItemLs(new ArrayList<CmSupplierItem>());
 					this.getManagedBean().setSupplierItemcheckBoxAll(false);

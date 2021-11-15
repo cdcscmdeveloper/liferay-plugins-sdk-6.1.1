@@ -165,7 +165,8 @@
 							action="#{catalogueBackingBean.indForImage}"
 							title="#{lbl['lbl.cm.upload']}"
 							rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' and catalogueBackingBean.managedBean.displayCatalogue and !unspscCodeBackingBean.supplierTemp}"
-							oncomplete="imageDialog.show();">
+							oncomplete="imageDialog.show();"
+							update=":form:imageDialog"> <!-- #14118 --> 
 							<p:graphicImage value="/css/images/design/upload.png"
 								style="margin-top:10px;"></p:graphicImage>
 						</p:commandLink> <p:commandLink
@@ -249,11 +250,11 @@
 		</p:panel>
 
 
-
+		<!-- #14118 - Start -->
 		<p:dialog id="imageDialog" widgetVar="imageDialog" modal="true"
 			width="700px" resizable="false" styleClass="pop_up_top"
-			onShow="uploadListener(importDevicesWidget)">
-
+			onShow="uploadImageListener(importDevicesWidget)">
+			
 			<h:outputText styleClass="instruction" escape="false"
 				style="float:left;margin-left:5px;"
 				value="#{lbl['lbl.cm.image.instruction']}" />
@@ -267,13 +268,12 @@
 				invalidSizeMessage="#{catalogueBackingBean.getInvalidFileSize()}"
 				label="#{lbl['lbl.btn.choose']}" mode="advanced" id="upload"
 				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp)$/"
-				update=":form:deleteImage, :form:refereshImageId"
+				update=":form:deleteImage, :form:refereshImageId, :form:imageDialog"
 				invalidFileMessage="Only JPG, GIF, PNG, BMP files are accepted"
-				multiple="true">
+				multiple="true" oncomplete="imageDialog.show()">
 			</p:fileUpload>
 		</p:dialog>
-
-
+		<!-- #14118 - End -->
 
 		<p:tabView id="pricingTabID" orientation="left"
 			style="margin-top: 10px;"

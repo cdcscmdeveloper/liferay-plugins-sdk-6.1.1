@@ -9,6 +9,19 @@
 
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<ui:insert name="resourceSection" />
+	
+	<!-- #14118 - Start -->
+	<style>
+	.disabled { 
+    	background: #c1c1c1 none repeat scroll 0 0 !important;
+    	color: #f8f8f8 !important;
+    	cursor: default !important;
+    	font-size: 12px !important;
+   		font-weight: bold !important;
+	}
+	</style>
+	<!-- #14118 - End -->
+
 	<!--  	<h:outputScript library="my.ac/js" name="cc.js" />-->
 	<script>
 	
@@ -67,8 +80,35 @@
 				if (files.length == 1) {
 					upload_widget.buttonBar.find('input[type=file]').get(0).disabled=false;
 				}
-			}		
+			}
 		}
+		
+		// 14118 - Start
+		function uploadImageListener(upload_widget) {
+			upload_widget.uploadContent.find('tr.ui-state-error').remove();
+			addChooseOnchange(upload_widget);
+			onChangeDisableUploadBtn(upload_widget);
+		}
+		
+		function onChangeDisableUploadBtn(upload_widget) {
+			if(upload_widget.buttonBar.find('input[type=file]').get(0).type == 'file') {		
+				upload_widget.buttonBar.find('.start').get(0).disabled=true;
+				upload_widget.buttonBar.find('.start').get(0).title = '#{lbl['lbl.cm.tooltip.btn.upload']}';			
+				$("button.start").toggleClass('disabled');
+				upload_widget.buttonBar.find('input[type=file]').change(function() {
+					var sizes = "#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages.size()}";
+					if (sizes >= 5) {
+						upload_widget.buttonBar.find('.start').get(0).disabled=true;
+						$(".start .ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-icon-only").css("pointer-events","none");
+						$(".start .ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-icon-only").toggleClass('disabled');
+					} else {
+						upload_widget.buttonBar.find('.start').get(0).disabled=false;
+						$(".start").removeClass('disabled');
+					}
+				});
+			}
+		}
+		// 14118 - End
 		
 	    function clearInvalidFiles(upload_widget) {
 	    	/*if(upload_widget.uploadContent.find('.files .template-upload').length > 1) {

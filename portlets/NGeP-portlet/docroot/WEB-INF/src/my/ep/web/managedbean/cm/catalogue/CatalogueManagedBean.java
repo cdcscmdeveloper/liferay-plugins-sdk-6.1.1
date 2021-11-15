@@ -19,10 +19,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
@@ -71,7 +69,6 @@ import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.EpPropertiesUtils;
-import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.cm.codification.UnspscCodeBackingBean;
@@ -87,7 +84,6 @@ import my.ep.web.vo.AdvanceSearchVO;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.PricingVO;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -101,6 +97,11 @@ import org.primefaces.model.TreeNode;
 @ManagedBean(name = "catalogueMB")
 @SessionScoped
 public class CatalogueManagedBean extends BaseManagedBean {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/** The log. */
 	private static Logger log = EpLogger.getLogger(CatalogueManagedBean.class);
@@ -535,6 +536,12 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private List<TreeNode> zoneTrees;
 	
 	private boolean dupplicatedInd = false;
+	
+	//14118 - Start
+	private boolean disableDeleteBtn = true;
+	private CmSupplierItem selectedImage;
+	//14118 - End
+	
 	private FlFulfilmentRequest flRequest;
 	
 	private Paginator detachedPaginator;
@@ -4295,6 +4302,26 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.dupplicatedInd = dupplicatedInd;
 	}
 
+	//14118 - Start	
+	public boolean isDisableDeleteBtn() {
+		return disableDeleteBtn;
+	}
+	
+	public void setDisableDeleteBtn(boolean disableDeleteBtn) {
+		this.disableDeleteBtn = disableDeleteBtn;
+	}
+	
+	public CmSupplierItem getSelectedImage() {
+		if (selectedImage == null)
+			selectedImage = new CmSupplierItem();
+		return selectedImage;
+	}
+
+	public void setSelectedImage(CmSupplierItem selectedImage) {
+		this.selectedImage = selectedImage;
+	}
+	//14118 - End
+	
 	public Paginator getDetachedPaginator() {
 		return detachedPaginator;
 	}
