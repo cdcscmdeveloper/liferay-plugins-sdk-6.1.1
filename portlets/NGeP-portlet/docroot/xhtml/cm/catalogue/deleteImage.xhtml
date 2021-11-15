@@ -8,22 +8,30 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-
-
+		
+	<!-- #14118 Allow multiple image deletion in delete image screen - Start --> 	
 	<p:dataTable id="deleteImageId" var="cmImage" rowIndexVar="rowIndex" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-		value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
+		value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}"
+		selection="#{catalogueBackingBean.managedBean.selectedImage.cmImages}" rowSelectMode="checkbox" rowKey="#{cmImage}" >
 
+		<p:ajax event="rowSelectCheckbox" listener="#{catalogueBackingBean.rowSelectImage}" update=":form:btnDelete"/>
+        <p:ajax event="rowUnselectCheckbox" listener="#{catalogueBackingBean.rowSelectImage}" update=":form:btnDelete"/>
+        <p:ajax event="toggleSelect"  listener="#{catalogueBackingBean.rowSelectImage}" update=":form:btnDelete"/>		
+        <p:ajax event="rowUnselect" listener="#{catalogueBackingBean.rowSelectImage}" update=":form:btnDelete"/>
+		<p:ajax event="rowSelect"  listener="#{catalogueBackingBean.rowSelectImage}" update=":form:btnDelete"/>
 		<ac:paginator for="deleteImageId"></ac:paginator>
 
-		<p:column>
+		<p:column selectionMode="multiple" styleClass="selectionCheckBox" style="width:3%; text-align:center;"/>	
+
+		<p:column style="text-align: center;">
 			<f:facet name="header">
 					#{lbl['lbl.cm.image']}
 				</f:facet>
-				<div style="height:200px; width:200px">
+				<div style="height:200px; width:200px; text-align:center; margin:0 auto;">
 			<img src="/NGeP-portlet/image?imageName=#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.epNo}/#{cmImage.imageName}"  style="max-height:100%;max-width:100%;" />
 			</div>
 		</p:column>
-		<p:column>
+		<p:column style="text-align: center;">
 			<f:facet name="header">
 					#{lbl['lbl.cm.action']}
 				</f:facet>
@@ -35,8 +43,15 @@
 
 
 	</p:dataTable>
+	<!-- #14118 Allow multiple image deletion in delete image screen - End -->
+	
 	<div class="clear"></div>
 	<div style="text-align: right;">
+	<!-- #14118 Allow multiple image deletion in delete image screen - Start --> 
+		<p:commandButton id="btnDelete" value="#{lbl['lbl.cm.delete']}"
+			update=":form:deleteImageId, :form:btnDelete" disabled="#{catalogueBackingBean.managedBean.disableDeleteBtn}"
+			action="#{catalogueBackingBean.deleteCmImages()}" ></p:commandButton>
+	<!-- #14118 Allow multiple image deletion in delete image screen - End --> 
 		<p:commandButton value="#{lbl['lbl.cm.ok']}"
 			onclick="deleteImage.hide()" update=":form"></p:commandButton>
 		<p:commandButton value="#{lbl['lbl.cm.cancel']}" update=":form"
