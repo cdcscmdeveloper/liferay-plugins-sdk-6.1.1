@@ -7944,6 +7944,14 @@ public class SmApplicationBackingBean extends
 			SmPersonnel personnelSSM = (SmPersonnel) EntityHelper
 					.getEntityBySinglePropertyFromList(shareHolderBean.getIdentificationNo(),
 							ssmResDTO.getSmPersonnelAll(), "identificationNo");
+			// start - #32014
+			if (personnelSSM.getIdentificationType() != null && this.getManagedBean().getSelectedShareHolder()!=null) {
+				this.getManagedBean().getSelectedShareHolder()
+						.setIdentificationType(personnelSSM.getIdentificationType());
+				this.getManagedBean().getSelectedShareHolder()
+						.setIdentificationTypeId(personnelSSM.getIdentificationTypeId());
+			}
+			// end - #32014
 			if (personnelSSM != null && personnelSSM.getSmPersonnelAddresses() != null  //#32014
 					&& personnelSSM.getSmPersonnelAddresses().size() > 0) {
 				for(SmPersonnelAddress smpersonAddress : personnelSSM.getSmPersonnelAddresses()){
