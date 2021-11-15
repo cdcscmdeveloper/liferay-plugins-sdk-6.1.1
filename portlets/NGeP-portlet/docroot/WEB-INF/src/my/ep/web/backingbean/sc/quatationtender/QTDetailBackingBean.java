@@ -9241,11 +9241,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			menuSet.add(getMenuItemSpecificationCommitteeAssignment());
 		}
 		//29464-end
-		//Bug_#31991
-		else{
-			menuSet.remove(getMenuItemCommitteeApproval());
-			menuSet.remove(getMenuItemBPKApproval());
-		}
 		// ***25692#31
 		if(isApprovalScreen() && menuSet != null){
 			for(Object s : menuSet.toArray()){
