@@ -9198,11 +9198,16 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				getMenuItemPaymentDeduction(), //6
 				getMenuItemDocuments(), //7
 				getMenuItemActivities(), //8
-				getMenuItemPublicationApproverAssignment() //9
+				getMenuItemPublicationApproverAssignment(), //9
+				//Bug_#31991
+				getMenuItemBPKApproval(),
+				getMenuItemCommitteeApproval()
 			));
 		if(getUserTaskIsBPKApproval() && isApprovalScreen()){
 			menuSet.remove(getMenuItemPublicationApproverAssignment());
-			menuSet.add(getMenuItemBPKApproval());
+			//menuSet.add(getMenuItemBPKApproval());
+			//Bug_#31991
+			menuSet.remove(getMenuItemCommitteeApproval());
 		}
 		else if(getUserTaskIsCommitteeAppointmentApproval() && isApprovalScreen()){
 			menuSet.remove(getMenuItemBriefSiteVisit()); //4 from initialized menuSet
@@ -9211,21 +9216,36 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			menuSet.remove(getMenuItemDocuments()); //7 from initialized menuSet
 			menuSet.remove(getMenuItemPublicationApproverAssignment());
 			// ***25692#31 
-			menuSet.add(getMenuItemCommitteeApproval());
+			//Bug_#31991
+			//menuSet.add(getMenuItemCommitteeApproval());
+			menuSet.remove(getMenuItemBPKApproval());
 		}
 		else if(getUserTaskIsCommitteeAppointmentApprovalEcOcTecFec() && isApprovalScreen()){
 			menuSet.remove(getMenuItemPublicationApproverAssignment());
+			//Bug_#31991
+			menuSet.remove(getMenuItemCommitteeApproval());
+			menuSet.remove(getMenuItemBPKApproval());
+			
 			menuSet.add(getMenuItemCommitteeApprovalEcOcTecFec());
 		}
 		else if(getUserTaskIsPublicationApproval() && isApprovalScreen()){
 			menuSet.remove(getMenuItemPublicationApproverAssignment());
+			//Bug_#31991
+			menuSet.remove(getMenuItemCommitteeApproval());
+			menuSet.remove(getMenuItemBPKApproval());
+			
 			menuSet.add(getMenuItemPublicationApproval());
 		}
 		//29464-start
 		else if(taskName.equals(SCProcessNameConst.ASSIGN_SCORING_COMMITTEE)){
 			menuSet.add(getMenuItemSpecificationCommitteeAssignment());
-		};
+		}
 		//29464-end
+		//Bug_#31991
+		else{
+			menuSet.remove(getMenuItemCommitteeApproval());
+			menuSet.remove(getMenuItemBPKApproval());
+		}
 		// ***25692#31
 		if(isApprovalScreen() && menuSet != null){
 			for(Object s : menuSet.toArray()){
