@@ -9543,8 +9543,16 @@ private void retriveCommitteeRemarksList(){
 			this.getManagedBean().setLocalOutCome(outCome);
 
 			//25638 Revise at SC,EC,OC,TEC,FEC,FC - Start
-			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outCome)) {
-				validateRemarks();
+			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outCome)) {//#28784 - start
+				if (this.getManagedBean().getScQt().isDemoRequired()
+						&& (SCProcessNameConst.ENDORSE_TEC_EVALUATION
+								.equalsIgnoreCase(this.getManagedBean().getTaskName())
+								|| SCProcessNameConst.SIGNOFF_TEC_EVALUATION
+								.equalsIgnoreCase(this.getManagedBean().getTaskName()))) {
+					//no need remark before demo invitation
+				} else {
+					validateRemarks();
+				}//#28784 - end
 				RequestContext.getCurrentInstance().execute("reviseApprovalDlgs.show()");
 			} else {
 				getManagedBean().setAutoUpdate(false);
