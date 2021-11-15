@@ -9,7 +9,10 @@
 
 	<ui:define name="resourceSection">
 	</ui:define>
-
+	<!-- #28784 - start -->
+	<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.eva.technical.presentation.demo.presentation.demo.instruction']}" escape="false" />
+	<p:spacer height="15px" />
+	
 	<p:panel
 		id="evaluationPresentationDemoTechnicalQualifiedSupplierListDatatableIds"
 		header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
@@ -25,36 +28,68 @@
 				listener="#{evaluationBackingBean.savePresentationDemoDtls}"
 				update="demoSupplierId" />
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
-				style="width:15%; text-align:center;">
+				style="width:10%; text-align:center;">
 
 				<h:outputText value="#{demoSupplier.scQtProposal.supplierNo}"></h:outputText>
+				
+				<br><h:outputText value="#{evaluationBackingBean.retrieveDemoSupplierNo(demoSupplier.scQtProposal.supplierNo)}"></h:outputText></br>
 
 
 			</p:column>
 
 
-			<p:column headerText="#{lbl['lbl.tpl.spec.content.user.score']}"
-				style="width:25%">
+			<p:column headerText="#{lbl['lbl.sc.total.score']}"
+				style="width:30%; text-align:center;">
 				<p:inputText value="#{demoSupplier.totalUserScore}"
 					style="text-align:right" maxlength="18"
-					disabled="#{evaluationBackingBean.managedBean.readOnly}">
+					disabled="true">
 					<ac:validateNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
 						maxIntegerDigits="14" integerOnly="true" />
 					<f:attribute name="min" value="0" />
 					<f:attribute name="max"
 						value="#{evaluationBackingBean.managedBean.userScores}" />
-					<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
 				</p:inputText>
 				<p:spacer width="5"></p:spacer>
 				<h:outputText
 					value="/#{evaluationBackingBean.managedBean.userScores}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.remarks']}" style="width:30%">
-				<p:inputTextarea rows="2" cols="40" maxlength="200" onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);" onmouseout="limitTextArea(this,200);" value="#{demoSupplier.remark}">
+			<ui:remove>
+			<p:column headerText="#{lbl['lbl.sc.remarks']}" style="width:25%; text-align:center;">
+				<p:inputTextarea rows="2" cols="40" maxlength="200" onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);" onmouseout="limitTextArea(this,200);" 
+				value="#{demoSupplier.remark}" disabled="#{evaluationBackingBean.managedBean.readOnly}">
 					<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
 				</p:inputTextarea>
+			</p:column>
+			</ui:remove>
+
+			<p:column
+				headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.file.attachment']}"
+				style="width:35%; text-align:center;">
+				<h:panelGroup id="demoSupplierAttach">
+					<ac:scSingleFileUploadButton id="attachedIdsDemoDtl"
+						popupWidgetVar="demoSupplierAttachDlg"
+						attachment="#{evaluationBackingBean.retrieveDemoSupplierAttachment(demoSupplier.scQtProposal.supplierNo)}"
+						deleteFileUploadListener="evaluationBackingBean.deleteProposalDemoUploadFile"
+						readonly="#{evaluationBackingBean.managedBean.readOnly}">
+						<f:setPropertyActionListener for="actionEvent"
+								value="#{evaluationBackingBean.retrieveDemoSupplier(demoSupplier.scQtProposal.supplierNo)}"
+								target="#{evaluationBackingBean.managedBean.scQtDemoSupplier}" />
+						</ac:scSingleFileUploadButton>
+				</h:panelGroup>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.txt.action']}" style="width:25%; text-align:center;">
+				<p:commandButton value="#{lbl['lbl.btn.evaluate']}"
+					rendered="#{demoSupplier.totalUserScore == null and !evaluationBackingBean.managedBean.readOnly}"
+					process="@this" partialSubmit="true"
+					action="#{evaluationBackingBean.presentationDemoScoring(demoSupplier.scQtProposal.supplierNo, demoSupplier)}" />
+					
+						<p:commandButton value="#{lbl['lbl.btn.view']}"
+					rendered="#{demoSupplier.totalUserScore != null or evaluationBackingBean.managedBean.readOnly}"
+					process="@this" partialSubmit="true"
+					action="#{evaluationBackingBean.presentationDemoScoring(demoSupplier.scQtProposal.supplierNo, demoSupplier)}" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>
@@ -70,8 +105,8 @@
 
 
 				<td class="TableFieldLeft"><p:outputLabel
-						value="#{lbl['lbl.txt.attachment']}" /></td>
-				<td class="TableFieldRight">
+						value="#{lbl['lbl.sc.eva.technical.presentation.demo.attached.file']}" /></td>
+				<td class="TableFieldRight"><!-- #28784 - end -->
 				<ac:scSingleFileUploadButton
 						id="attachedIdsDemo"
 						popupWidgetVar="demoChecklistAttachDlg"

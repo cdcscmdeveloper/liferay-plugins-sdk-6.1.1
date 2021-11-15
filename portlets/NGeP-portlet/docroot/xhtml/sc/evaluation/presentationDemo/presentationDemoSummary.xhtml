@@ -11,9 +11,7 @@
 	<p:panel toggleable="true">
 		<f:facet name="header">
 			<h:outputText
-				value="#{lbl['lbl.sc.eva.qualified.supplier.list.presentation.demo.stage']}" />
-			<ac:iconTooltip
-				value="#{lbl['lbl.sc.eva.qualified.supplier.list.presentation.demo.stage.tooltip']}" />
+				value="#{lbl['lbl.demo.overall.summary']}" />
 		</f:facet>
 
 		<p:dataTable var="finEvaluationqualifiedSupplier" rows="10"
@@ -39,6 +37,16 @@
 					value="#{finEvaluationqualifiedSupplier.qtEvaluationResult.scQtProposal.supplierNo}"></h:outputText>
 
 
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.technical']}"
+				style="text-align:right">
+				<h:outputText value="#{evaluationBackingBean.retriveTotalTechnicalScore(finEvaluationqualifiedSupplier)}"></h:outputText>
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.presentation']}"
+				style="text-align:right">
+				<h:outputText value="#{evaluationBackingBean.retriveTotalDemolScore(finEvaluationqualifiedSupplier)}"></h:outputText>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.total.score']}"
@@ -78,9 +86,7 @@
 	<p:panel toggleable="true">
 		<f:facet name="header">
 			<h:outputText
-				value="#{lbl['lbl.sc.eva.disqualified.supplier.list.presentation.demo.stage']}" />
-			<ac:iconTooltip
-				value="#{lbl['lbl.sc.eva.disqualified.supplier.list.presentation.demo.stage.tooltip']}" />
+				value="#{lbl['lbl.demo.not.overall.summary']}" />
 		</f:facet>
 
 		<p:dataTable var="disQualifiedSupplier" rows="10"
@@ -98,6 +104,16 @@
 					value="#{disQualifiedSupplier.qtEvaluationResult.scQtProposal.supplierNo}"></h:outputText>
 
 
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.technical']}"
+				style="text-align:right">
+				<h:outputText value="#{evaluationBackingBean.retriveTotalTechnicalScore(disQualifiedSupplier)}"></h:outputText>
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.presentation']}"
+				style="text-align:right">
+				<h:outputText value="#{evaluationBackingBean.retriveTotalDemolScore(disQualifiedSupplier)}"></h:outputText>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.total.score']}"
