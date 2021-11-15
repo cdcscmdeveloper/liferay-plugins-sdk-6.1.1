@@ -10,14 +10,16 @@
 	<p:panel id="groupInfo" header="#{lbl['lbl.pm.ug.result.title1']}"
 		toggleable="true">
 		<table>
+			<!-- 12852 Start -->
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.pm.ug.result.groupcode']}" />
 				</td>
-				<td><p:inputText style="width:220px;text-transform:uppercase"
+				<td><p:inputText style="width:14%;text-transform:uppercase"
 						value="#{usergroupBackingBean.managedBean.userGroup.groupCode}"
 						disabled="#{!usergroupBackingBean.managedBean.userGroup.brandNew or usergroupBackingBean.managedBean.userGroup.brandNew}"
-						size="30" maxlength="10" /></td>
+						size="8" maxlength="10" /></td>
 			</tr>
+			<!-- 12852 End -->
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.pm.ug.result.groupname']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
@@ -48,11 +50,13 @@
 				<td><p:outputLabel value="#{lbl['lbl.pm.ug.info.orgunit']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:columnGroup>
+						<!-- 12852 Start --> 
 						<p:inputText
 							value="#{usergroupBackingBean.managedBean.userGroup.pmOrgProfile.pmOrgValidity.orgCode}"
 							id="orgCodeUpdate"
 							disabled="#{!usergroupBackingBean.managedBean.userGroup.brandNew}"
-							size="10" readonly="true" />&#160;
+							size="8" readonly="true" />
+							<!-- 12852 End --> &#160;
 							<p:inputText 
 						size="80"
 						id="itSelectedPtj" 

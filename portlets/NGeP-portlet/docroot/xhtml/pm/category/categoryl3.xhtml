@@ -202,10 +202,11 @@
 				<tr>
 					<td style="width: 17%"><p:outputLabel
 							value="#{lbl['lbl.pm.main.category.code']}" /></td>
-					<td><p:inputText style="width:80%"
+					<!-- 12852 Start -->
+					<td><p:inputText style="width:13%"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}"
 							size="33" disabled="true" readonly="true" /></td>
-
+					<!-- 12852 End -->
 					<td style="width: 15%"><p:outputLabel
 							value="#{lbl['lbl.pm.main.category.desc']}" style="float: right" /></td>
 					<td><p:inputText style="width:98%"
@@ -215,10 +216,11 @@
 				<tr>
 					<td style="width: 17%"><p:outputLabel
 							value="#{lbl['lbl.pm.sub.category.code']}" /></td>
-					<td><p:inputText style="width:80%"
+					<!-- 12852 Start -->
+					<td><p:inputText style="width:13%"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.pmCategoryL2.categoryL2Code}"
 							size="33" disabled="true" readonly="true" /></td>
-
+					<!-- 12852 End -->
 					<td style="width: 19%;"><p:outputLabel
 							value="#{lbl['lbl.pm.sub.category.desc']}" /></td>
 					<td><p:inputText style="width:98%"
@@ -264,19 +266,21 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.bn.code']}" /> <p:outputLabel
 							value="* " styleClass="mandatory" /></td>
+					<!-- 12852 Start -->
 					<td><p:inputText required="true"
-							id="catCodeId" label="#{lbl['lbl.pm.bn.code']}"
+							id="catCodeId" label="#{lbl['lbl.pm.bn.code']}" style="width:6%"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryL3Code}"
 							maxlength="2"
 							converterMessage="#{lbl['lbl.pm.val.subdiv.cat.code.invalid']}"
 							rendered="#{categoryBackingBean.managedBean.newCategory}">
 							<f:validator validatorId="catCodeValidator" />
 						</p:inputText> <p:message id="catCodeIdMsg" for="catCodeId" showSummary="true"
-							showDetail="false" display="icon" /> <p:inputText							
+							showDetail="false" display="icon" /> <p:inputText style="width:6%"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryL3Code}"
 							maxlength="2"
 							rendered="#{!categoryBackingBean.managedBean.newCategory}"
 							readonly="true" disabled="true" /></td>
+					<!-- 12852 End -->
 					<td><p:outputLabel value="#{lbl['lbl.pm.special.category']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 

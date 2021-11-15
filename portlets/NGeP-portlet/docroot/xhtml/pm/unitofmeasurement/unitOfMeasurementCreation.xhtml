@@ -11,14 +11,16 @@
 		id="uomId">
 		
 		<table>
+			<!-- 12852 Start -->
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.pm.uom.uomcode']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText
 						value="#{unitOfMeasurementBackingBean.managedBean.pmUom.uomCode}"
 						disabled="#{!unitOfMeasurementBackingBean.managedBean.pmUom.brandNew}"
-						size="30" maxlength="3" /></td>
+						size="30" maxlength="3" style="width:18%"/></td>
 			</tr>
+			<!-- 12852 End -->
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.pm.uom.uomname']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>

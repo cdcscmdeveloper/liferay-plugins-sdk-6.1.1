@@ -61,12 +61,14 @@
 						<p:outputLabel value="#{lbl['lbl.pm.bn.code']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
+					<!-- 12852 Start -->
 					<td>
-						<p:inputText
+						<p:inputText style="width:3%"
 							value="#{categoryBackingBean.managedBean.pmCategoryL2.categoryL2Code}"
 							size="15" maxlength="2" disabled="#{!categoryBackingBean.managedBean.newCategory}"
 						/>
 					</td>
+					<!-- 12852 End -->
 				</tr>
 				<tr>
 					<td style="vertical-align:top;">
@@ -105,10 +107,11 @@
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.pm.main.category.code']}" /></td>
-					<td><p:inputText
+					<!-- 12852 Start -->
+					<td><p:inputText style="width:25%"
 						value="#{categoryBackingBean.managedBean.pmCategoryL2.pmCategoryL1.categoryL1Code}"
 						size="8" disabled="true" readonly="true" /></td>
-
+					<!-- 12852 End -->
 					<td><p:outputLabel
 							value="#{lbl['lbl.pm.main.category.desc']}" /></td>
 					<td><p:inputText

@@ -12,14 +12,16 @@
 	<p:spacer height="10"></p:spacer>
 			
 	<table style="width:100%;">
+	  <!-- 12852 Start -->
 	  <tr>	  	
 		<td style="width:16%;"><p:outputLabel value="#{lbl['lbl.pm.sa.code']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
-		<td><p:inputText id="SalutationCode" styleClass="ppDisplayTextM" style="text-transform:uppercase" label="#{lbl['lbl.pm.sa.code']}"
+		<td><p:inputText id="SalutationCode" styleClass="ppDisplayTextS" style="text-transform:uppercase;width:7%" label="#{lbl['lbl.pm.sa.code']}"
 			value="#{salutationBackingBean.managedBean.pmSalutation.salutationCode}" required="true"
 		    disabled="#{!salutationBackingBean.managedBean.pmSalutation.brandNew}" size="30" maxlength="10" />
 		</td>
-	  </tr>	
+	  </tr>
+	  <!-- 12852 End -->
 	  <tr>
 		<td><p:outputLabel value="#{lbl['lbl.pm.sa.name']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>

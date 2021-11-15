@@ -8,12 +8,13 @@
 	<p:panel id="supplierZoneDetailPanel" header="#{lbl['lbl.pm.supplier.zone.dtl']}" toggleable="true">
 
 		<table>
+			<!-- 12852 Start -->
 			<tr>
 				<td class="TableFieldLeft"><h:outputLabel
 						value="#{lbl['lbl.pm.zone.code']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></td>
-				<td class="TableFieldRight"><p:inputText styleClass="ppDisplayTextM"
-						label="#{lbl['lbl.pm.zone.code']}" style="text-transform: uppercase"
+				<td class="TableFieldRight"><p:inputText styleClass="ppDisplayTextS"
+						label="#{lbl['lbl.pm.zone.code']}" style="text-transform: uppercase;width:31%"
 						value="#{zoneBackingBean.managedBean.pmZone.zoneCode}"
 						disabled="#{!zoneBackingBean.managedBean.pmZone.brandNew}"
 						id="zonecode" lable="#{lbl['lbl.pm.zone.code']}" size="40"	
@@ -22,6 +23,7 @@
 						</p:inputText></td>
 				<td><p:message id="zonecodeMsg" for="zonecode" display="icon" /></td>
 			</tr>
+			<!-- 12852 End -->
 			<tr>
 				<td class="TableFieldLeft"><h:outputLabel
 						value="#{lbl['lbl.pm.zone.name']}" /> <p:outputLabel value="*"

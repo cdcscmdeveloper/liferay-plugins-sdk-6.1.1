@@ -19,62 +19,7 @@
 				<h:panelGrid styleClass="noBorders tr,noBorders td"></h:panelGrid>
 			</p:panel>
 		</ui:remove>
-            <ui:remove>
-			<h:panelGrid columns="2">
-				<h:panelGroup style="float: right">
-					<h:outputText value="* " styleClass="mandatory" />
-					<h:outputLabel value="#{lbl['lbl.pm.category.level']}"></h:outputLabel>
-				</h:panelGroup>
-
-				<p:selectOneMenu
-					value="#{categoryBackingBean.managedBean.pmCategoryLevel}">
-					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
-					<f:selectItem itemLabel="#{lbl['lbl.pm.main.category']}"
-						itemValue="1" />
-					<f:selectItem itemLabel="#{lbl['lbl.pm.sub.category']}"
-						itemValue="2" />
-					<f:selectItem itemLabel="#{lbl['lbl.pm.sub.div']}" itemValue="3" />
-					<p:ajax event="change"
-						listener="#{categoryBackingBean.updateCategoryLevel()}"
-						update="catSearch" />
-				</p:selectOneMenu>
-
-				<h:outputLabel value="#{lbl['lbl.pm.main.category.code']}"></h:outputLabel>
-				<h:panelGrid columns="3">
-					<p:inputText value="#{categoryBackingBean.managedBean.mainCatCode}" maxlength="2" 
-					 size="10" />
-					<h:outputLabel value="#{lbl['lbl.pm.main.category.desc']}"></h:outputLabel>
-					<p:inputText value="#{categoryBackingBean.managedBean.mainCatDesc}"
-						size="50" />
-				</h:panelGrid>
-
-				<h:outputLabel value="#{lbl['lbl.pm.sub.category.code']}"
-					rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==2 || categoryBackingBean.managedBean.pmCategoryLevel==3}"></h:outputLabel>
-				<h:panelGrid columns="3">
-					<p:inputText value="#{categoryBackingBean.managedBean.subCatCode}"
-						size="10" maxlength="2"
-						rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==2 || categoryBackingBean.managedBean.pmCategoryLevel==3}" />
-					<h:outputLabel value="#{lbl['lbl.pm.sub.category.desc']}"
-						rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==2 || categoryBackingBean.managedBean.pmCategoryLevel==3}"></h:outputLabel>
-					<p:inputText value="#{categoryBackingBean.managedBean.subCatDesc}"
-						size="50"
-						rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==2 || categoryBackingBean.managedBean.pmCategoryLevel==3}" />
-				</h:panelGrid>
-
-				<h:outputLabel value="#{lbl['lbl.pm.sub.div.code']}"
-					rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==3}"></h:outputLabel>
-				<h:panelGrid columns="3">
-					<p:inputText value="#{categoryBackingBean.managedBean.subDivCode}"
-						size="10" maxlength="2"
-						rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==3}" />
-					<h:outputLabel value="#{lbl['lbl.pm.sub.div.desc']}"
-						rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==3}"></h:outputLabel>
-					<p:inputText value="#{categoryBackingBean.managedBean.subDivDesc}"
-						size="50"
-						rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==3}" />
-				</h:panelGrid>
-			</h:panelGrid>
-			</ui:remove>
+        <!-- #29665 remove UI remove -->
 
 		<p:panel header="#{lbl['lbl.pm.header.general.org.search']}"
 			toggleable="true" id="catSearch">
@@ -96,16 +41,17 @@
 								update="catSearch,searchCategory"/>
 						</p:selectOneMenu></td>
 				</tr>
-
+				<!-- 12852 Start -->
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.main.category.code']}" /></td>
 					<td><p:inputText 
 							value="#{categoryBackingBean.managedBean.mainCatCode}"
-							maxlength="2" size="27" /></td>
+							maxlength="2" size="27" style="width:10%"/></td>
 					<td><p:outputLabel value="#{lbl['lbl.pm.main.category.desc']}" /></td>
 					<td><p:inputText
 							value="#{categoryBackingBean.managedBean.mainCatDesc}" size="50" maxlength="255" /></td>
 				</tr>
+				<!-- 12852 End -->
 				<tr>
 					<h:panelGroup  
 						rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==null || categoryBackingBean.managedBean.pmCategoryLevel==0 ||
@@ -119,12 +65,13 @@
 							</p:selectOneMenu></td>
 					</h:panelGroup>
 				</tr>
+				<!-- 12852 Start -->
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.sub.category.code']}"
 							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==2 || categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
 					<td><p:inputText
 							value="#{categoryBackingBean.managedBean.subCatCode}" size="27"
-							maxlength="2"
+							maxlength="2" style="width:10%"
 							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==2 || categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
 					<td><p:outputLabel style="float: right:width: 15%"
 							value="#{lbl['lbl.pm.sub.category.desc']}"
@@ -134,6 +81,7 @@
 							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==2 || categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
 						
 				</tr>
+				<!-- 12852 End -->
 				<tr>
 					<h:panelGroup
 						rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==2}">
@@ -146,12 +94,13 @@
 							</p:selectOneMenu></td>
 					</h:panelGroup>
 				</tr>
+				<!-- 12852 Start -->
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.sub.div.code']}"
 							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
 					<td><p:inputText
 							value="#{categoryBackingBean.managedBean.subDivCode}" size="27"
-							maxlength="2"
+							maxlength="2" style="width:10%"
 							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.pm.sub.div.desc']}"
 							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
@@ -159,6 +108,7 @@
 							value="#{categoryBackingBean.managedBean.subDivDesc}" size="50" maxlength="255"
 							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
 				</tr>
+				<!-- 12852 End -->
 				<tr>
 					<h:panelGroup
 						rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==3}">
@@ -223,7 +173,6 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.pm.organisation.action']}"
 					style="width :5%">
-
 
 					<p:commandLink rendered="#{category[0]==1}"
 						action="#{categoryBackingBean.addSubCategory(category[1])}"

@@ -12,10 +12,11 @@
 	<p:spacer height="10"></p:spacer>
 			
 	<table style="width:100%;">
+	  <!-- 12852 Start -->
 	  <tr>	  	
 		<td style="width:16%;"><p:outputLabel value="#{lbl['lbl.pm.race.code']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
-		<td><p:inputText id="itRaceCode" styleClass="ppDisplayTextM" 
+		<td><p:inputText id="itRaceCode" style="width: 4%" 
 			validatorMessage="#{lbl['lbl.pm.race.code.error']}"
 			label="#{lbl['lbl.pm.race.code']}"
 			value="#{raceBackingBean.managedBean.pmRace.raceCode}" required="true"
@@ -23,15 +24,18 @@
 		 	 <f:validateRegex pattern="\d*(.\d+)?"/>
              </p:inputText>
 		</td>
-	  </tr>	
+	  </tr>
+	  <!-- 12852 End -->
+	  <!-- 12852 Start -->
 	  <tr>
 		<td><p:outputLabel value="#{lbl['lbl.pm.race.name']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
-		<td><p:inputText id="itRaceName" styleClass="ppDisplayTextM" style="text-transform:uppercase" required="true" 
+		<td><p:inputText id="itRaceName" styleClass="ppDisplayTextXL" style="text-transform:uppercase" required="true" 
 			 value="#{raceBackingBean.managedBean.pmRace.raceName}" 
-			 size="135" maxlength="100" label="#{lbl['lbl.pm.race.name']}" />
+			 size="130" maxlength="100" label="#{lbl['lbl.pm.race.name']}" />
 	  </td>
 	  </tr>
+	  <!-- 12852 End -->
 	   <tr> 
 		<td><p:outputLabel value="#{lbl['lbl.pm.search.status']}" /></td>
      	<td><p:selectOneMenu style="width:178px;margin-bottom:5px;" 

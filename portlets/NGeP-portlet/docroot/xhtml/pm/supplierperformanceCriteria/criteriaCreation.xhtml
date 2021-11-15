@@ -10,12 +10,14 @@
 	
    <p:panel header="#{lbl['lbl.pm.criteria.title']}" toggleable="true">
 	<p:spacer height="10"></p:spacer>
-			
-	<table style="width:100%;">  
+	<!-- 12852 Start -->
+	<table>
+	<!--12852 End -->
+	  <!-- 12852 Start -->
 	  <tr>
 					<th><p:outputLabel value="#{lbl['lbl.pm.criteria.code']}" /></th>
-					<td><p:inputText id="criteriaCode" styleClass="ppDisplayTextM"
-							style="text-transform:uppercase" required="true" maxlength="10"
+					<td><p:inputText id="criteriaCode" styleClass="ppDisplayTextS"
+							style="text-transform:uppercase;width:19%" required="true" maxlength="10"
 							disabled="true"
 							value="#{criteriaBackingBean.managedBean.selectedCriteria.criteriaCode}"
 							validatorMessage="#{lbl['lbl.pm.criteria.code']} - #{lbl['lbl.pm.uppercase']}"
@@ -24,6 +26,7 @@
 						</p:inputText> <p:message id="criteriaCodeMsg" for="criteriaCode" display="icon" />
 					</td>
 				</tr>
+				<!-- 12852 End -->
 	
 	    <tr>
 					<!-- List of languages with description -->

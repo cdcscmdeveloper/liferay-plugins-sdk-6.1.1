@@ -23,17 +23,19 @@
 					<c:forEach
 						items="#{poJobWeightBackingBean.managedBean.jobWeightList}"
 						var="jobWeight">
+						<!-- 12852 Start -->
 						<tr>
 							<td width="20%"><p:outputLabel
 									value="#{poJobWeightBackingBean.getParameterDesc(ParameterTypeConst.jobWeightType,jobWeight.weightType.parameterCode)}" />
 								<p:outputLabel value="*" styleClass="mandatory" /></td>
 							<td width="80%"><p:inputText
 									label="#{poJobWeightBackingBean.getParameterDesc(ParameterTypeConst.jobWeightType,jobWeight.weightType.parameterCode)}"
-									size="5" value="#{jobWeight.weightValue}" maxlength="1"
+									size="5" value="#{jobWeight.weightValue}" maxlength="1" style="width:2%"
 									required="#{!empty param['disableValidation']}">
 								</p:inputText>
 								</td>
 						</tr>
+						<!-- 12852 End -->
 					</c:forEach>
 				</table>
 				<p:tooltip id="tt" rendered="false">

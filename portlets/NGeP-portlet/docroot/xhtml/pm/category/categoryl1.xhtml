@@ -53,17 +53,18 @@
 							<f:selectItem itemLabel="#{lbl['lbl.pm.sub.div']}" itemValue="3" />
 						</p:selectOneMenu></td>
 				</tr>
+				<!-- 12852 Start -->
 				<tr>
 					<td>
 						<p:outputLabel value="#{lbl['lbl.pm.bn.code']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
-					<td><p:inputText
+					<td><p:inputText style="width:3%"
 					value="#{categoryBackingBean.managedBean.pmCategoryL1.categoryL1Code}"
 					size="15" maxlength="2" disabled="#{!categoryBackingBean.managedBean.newCategory}"/>	
 					</td>
 				</tr>
-				
+				<!-- 12852 End -->
 				<tr>
 					<td style="vertical-align:top;">
 						<p:outputLabel value="#{lbl['lbl.pm.desc']}" />

@@ -21,14 +21,15 @@
 	  		</p:selectBooleanCheckbox>
 	  		<h:outputText value="#{lbl['lbl.pm.pc.certBody']}" /></td>	  	
 	  </tr>
-		
-	  <tr>	  	
+	  <!-- 12852 Start-->
+	  <tr>
 		<td style="width:14%;"><p:outputLabel value="#{lbl['lbl.pm.search.codes']}" />
 			</td>
-		<td><p:inputText style="text-transform:uppercase;width:auto !important;" value="#{profcertifiedbodyBackingBean.managedBean.certBody.bodyCode}" 
+		<td><p:inputText style="text-transform:uppercase;width:8%" value="#{profcertifiedbodyBackingBean.managedBean.certBody.bodyCode}" 
 			  disabled="true" size="20" maxlength="12" />
 		</td>
-	  </tr>	
+	  </tr>
+	  <!-- 12852 End-->
 	  <tr>	
 		<td><p:outputLabel value="#{lbl['lbl.pm.pc.certifiedby']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>

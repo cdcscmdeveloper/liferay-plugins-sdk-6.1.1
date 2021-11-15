@@ -16,7 +16,8 @@
 						/>
 					</p:outputPanel>
 				</td>
-				<td><p:inputText id="bizRegNo" styleClass="ppDisplayTextL"
+				<!-- 12852 Start -->
+				<td><p:inputText id="bizRegNo" style="width:50%"
 						required="#{financialOrgBackingBean.bizRegNoMandatory() and 
 						!empty param['disableValidation']}"
 						label="#{lbl['lbl.pm.financialorg.buzregno']}"
@@ -31,6 +32,7 @@
 									<p:outputLabel escape="false" value="#{lbl['lbl.pm.financialorg.buzregno.tt']}"/>
 								</p:tooltip>
 						</td>
+						<!-- 12852 End -->
 				<td><p:message id="bizRegNoMsg" for="bizRegNo" display="icon" /></td>
 			</tr>
 			<tr>

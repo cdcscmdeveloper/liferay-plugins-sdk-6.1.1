@@ -6,6 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<ui:param name="isSysOrgType" value="#{ParameterConst.orgTypeSys eq taskReassignmentBackingBean.managedBean.currentActiveOrg.orgTypeCode.parameterCode}" />
+	
 	<p:outputPanel id="opBackBttn" rendered="#{not empty taskReassignmentBackingBean.managedBean.backURL}">		
 			<table style="width: 100%">
 				<tr>
@@ -26,6 +27,7 @@
 				</tr>
 			</table>
 		</p:outputPanel>
+		
 	<p:panel id="pTaskAssignSearch" header="#{lbl['lbl.pm.ta.search']}"
 		toggleable="true">
 		<table class="ppTwoTable">
@@ -152,15 +154,16 @@
 					
 				</td>
 			</tr>
+				<!-- 12852 Start -->
 				<tr>
 				<th width="15%">
 					<p:outputLabel value="#{lbl['lbl.pm.ta.doc.no']}"/>
 				</th>
 				<td width="60%">
-					<p:inputText id="docNo"  styleClass="ppDisplayTextL"
+					<p:inputText id="docNo"  styleClass="ppDisplayTextM"
 							label="#{lbl['lbl.pm.ta.doc.no']}" maxlength="20"
 							value="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.docNo}"
-							size="37" >
+							size="37" style="width:19%" >
 						<p:ajax event="blur" listener="#{taskReassignmentBackingBean.onChangeUser(null)}" 
 				     		update=":form:pTaskAssignSearch,:form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult"/> 
 					</p:inputText>
@@ -169,9 +172,10 @@
 				</td>
 				
 				<td width="25%">
-					
+				
 				</td>
 			</tr>
+			<!-- 12852 End -->
 			<tr>
 				<td colspan="4">
 					<div class="ppRightBtn">

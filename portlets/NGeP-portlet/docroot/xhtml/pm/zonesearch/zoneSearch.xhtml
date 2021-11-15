@@ -7,16 +7,17 @@
 	<p:panel id="zoneSearchPanel"
 		header="#{lbl['lbl.pm.search.rejection.reason']}" toggleable="true">
 		<table class="ppTwoTable">
-
+			<!-- 12852 Start -->
 			<tr>
 				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.zone.code']}" /></th>
-				<td><p:inputText styleClass="ppDisplayTextM" maxlength="10"
+				<td><p:inputText styleClass="ppDisplayTextS" maxlength="10" style="width:8%"
 						value="#{zoneBackingBean.managedBean.zoneSearchBean.zoneCode}" />
 				</td>
 				<th>&#160;</th>
 				<td>&#160;</td>
 
 			</tr>
+			<!-- 12852 End -->
 			<tr>
 				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.zone.name']}" /></th>
 				<td><p:inputText styleClass="ppDisplayTextM"

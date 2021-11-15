@@ -9,15 +9,16 @@
 	<p:panel id="pCriteriaSearch" header="#{lbl['lbl.pm.search.location']}" toggleable="true" >
   
 		<table class="ppTwoTable">
+			<!-- 12852 Start -->
 			<tr>
 				<th width="20%"><h:outputLabel value="#{lbl['lbl.pm.criteria.code']}"></h:outputLabel></th>
 				<td><p:inputText maxlength="10"
 						value="#{criteriaBackingBean.managedBean.criteriaSearchBean.criteriaCode}"
-						id="supplierCriteriaCode" size="30" update="pCriteriaSearch"/></td>
+						id="supplierCriteriaCode" size="10" update="pCriteriaSearch"/></td>
 				<th>&#160;</th>
 				<td>&#160;</td>
 			</tr>
-			
+			<!-- 12852 End -->
 			<tr>
 				<th width="20%"><h:outputLabel value="#{lbl['lbl.pm.criteria.name']}"></h:outputLabel></th>
 				<td><p:inputText maxlength="10"

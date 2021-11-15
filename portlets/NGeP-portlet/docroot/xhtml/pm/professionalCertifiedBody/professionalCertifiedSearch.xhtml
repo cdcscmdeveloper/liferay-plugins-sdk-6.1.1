@@ -22,12 +22,14 @@
 							value="#{profcertifiedbodyBackingBean.getBodyType()}" />
 					</p:selectOneMenu></td>
 			</tr>
+			<!-- 12852 Start-->
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.pm.search.codes']}"></h:outputLabel></td>
 				<td><p:inputText maxlength="12"
 						value="#{profcertifiedbodyBackingBean.managedBean.profCertifiedBodySearchBean.bodyCode}"
-						size="30" /></td>
+						size="30" style="width:8%"/></td>
 			</tr>
+			<!-- 12852 End-->
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.pm.search.name']}"></h:outputLabel></td>
 				<td><p:inputText maxlength="255"
