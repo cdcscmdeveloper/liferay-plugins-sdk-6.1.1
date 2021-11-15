@@ -9198,16 +9198,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				getMenuItemPaymentDeduction(), //6
 				getMenuItemDocuments(), //7
 				getMenuItemActivities(), //8
-				getMenuItemPublicationApproverAssignment(), //9
-				//Bug_#31991
-				getMenuItemBPKApproval(),
-				getMenuItemCommitteeApproval()
+				getMenuItemPublicationApproverAssignment() //9
 			));
 		if(getUserTaskIsBPKApproval() && isApprovalScreen()){
 			menuSet.remove(getMenuItemPublicationApproverAssignment());
-			//menuSet.add(getMenuItemBPKApproval());
-			//Bug_#31991
-			menuSet.remove(getMenuItemCommitteeApproval());
+			menuSet.add(getMenuItemBPKApproval());
 		}
 		else if(getUserTaskIsCommitteeAppointmentApproval() && isApprovalScreen()){
 			menuSet.remove(getMenuItemBriefSiteVisit()); //4 from initialized menuSet
@@ -9216,30 +9211,20 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			menuSet.remove(getMenuItemDocuments()); //7 from initialized menuSet
 			menuSet.remove(getMenuItemPublicationApproverAssignment());
 			// ***25692#31 
-			//Bug_#31991
-			//menuSet.add(getMenuItemCommitteeApproval());
-			menuSet.remove(getMenuItemBPKApproval());
+			menuSet.add(getMenuItemCommitteeApproval());
 		}
 		else if(getUserTaskIsCommitteeAppointmentApprovalEcOcTecFec() && isApprovalScreen()){
 			menuSet.remove(getMenuItemPublicationApproverAssignment());
-			//Bug_#31991
-			menuSet.remove(getMenuItemCommitteeApproval());
-			menuSet.remove(getMenuItemBPKApproval());
-			
 			menuSet.add(getMenuItemCommitteeApprovalEcOcTecFec());
 		}
 		else if(getUserTaskIsPublicationApproval() && isApprovalScreen()){
 			menuSet.remove(getMenuItemPublicationApproverAssignment());
-			//Bug_#31991
-			menuSet.remove(getMenuItemCommitteeApproval());
-			menuSet.remove(getMenuItemBPKApproval());
-			
 			menuSet.add(getMenuItemPublicationApproval());
 		}
 		//29464-start
 		else if(taskName.equals(SCProcessNameConst.ASSIGN_SCORING_COMMITTEE)){
 			menuSet.add(getMenuItemSpecificationCommitteeAssignment());
-		}
+		};
 		//29464-end
 		// ***25692#31
 		if(isApprovalScreen() && menuSet != null){
