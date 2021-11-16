@@ -30,7 +30,7 @@
 				templateSpecBean="#{evaluationBackingBean.managedBean.templateSpecBean}"
 				title="#{lbl['lbl.sc.spec.financial.title']}" />
 
-			<h:panelGroup>
+			<h:panelGroup rendered="#{evaluationBackingBean.managedBean.showSchema}" >
 				<p:panel header="#{lbl['lbl.sc.spec.scoring.offered.price']}"
 					id="evaluationsStageFinancialSpecSupplierSeletedItemsSpecCommitteeOfferPrice"
 					toggleable="true">

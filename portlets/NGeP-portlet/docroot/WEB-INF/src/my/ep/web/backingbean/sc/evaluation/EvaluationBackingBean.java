@@ -5465,6 +5465,10 @@ public void saveComplianceSample() {
 						null);
 				this.getManagedBean().setSpecItemScoringList(
 						new ArrayList<TplSpecScoring>());
+				//#32089
+				getManagedBean().setShowSchema(true);
+				//#32089
+				
 				Map<Long, TplSpecScoring> distinctScoring = new HashMap<Long, TplSpecScoring>();
 				if (null != templateSpecBean.getSpecAnswerList()
 						&& !templateSpecBean.getSpecAnswerList().isEmpty()) {
@@ -5507,6 +5511,12 @@ public void saveComplianceSample() {
 						});
 						this.getManagedBean().setSpecItemScoringList(scoringList);
 						//#31857 - end
+						
+						//#32089
+						if (specAnswers.getUserScore() != null && !specAnswers.getUserScore().equals(0)) {
+							getManagedBean().setShowSchema(false);
+						}
+						//#32089
 					}
 				}
 				retriveTemplateSpecScoring(proposalCheckList.getScQtCheckList(),this.getManagedBean().getNewchecklist());
@@ -16272,4 +16282,15 @@ private void retriveCommitteeRemarksList(){
 				Boolean.FALSE);
 	}
 	// #28784 - end
+	
+	//32089
+	public void manualScoringHideSchema(BigDecimal userScore) {
+
+		if (userScore != null) {
+			getManagedBean().setShowSchema(false);
+		} else {
+			getManagedBean().setShowSchema(true);	
+		}
+	}
+	//32089
 }
