@@ -3162,7 +3162,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			log.info("More than 5");
 			if(!this.getManagedBean().isDupplicatedInd()){
 				this.getManagedBean().setDupplicatedInd(true);
-				throw new EpException(MessageConst.ERROR_715065);
+				throw new EpException(MessageConst.ERROR_715064);	// 14118
 			}
 			
 		}else{
