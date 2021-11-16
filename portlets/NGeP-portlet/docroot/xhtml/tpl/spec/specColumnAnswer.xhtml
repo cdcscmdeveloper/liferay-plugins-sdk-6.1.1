@@ -82,8 +82,17 @@
 				</h:panelGroup>
 			</p:column>
 			<!-- 11715 danial -start- -->
-			<p:column style="width:5%;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.tier.title']}" rendered="#{isPriceTypeTier and isSpecTypeFinancial}">
+			<!-- #31134 Farid Start 25/6/2021-->
+			<p:column style="width:5%;text-align:right;"
+				headerText="#{lbl['lbl.tpl.spec.content.tier.title']}"
+				rendered="#{isPriceTypeTier and isSpecTypeFinancial or !isSqSpec and isSpecTypeFinancial and templateSpecBackingBean.checkPriceTierEnableColumn(templateSpecBean)}">
 				<h:panelGroup rendered="#{isPriceTypeTier and isSpecTypeFinancial}">
+					<!-- Align if has mix data normal standard and tier price -->
+					<h:outputText value=" "
+						rendered="#{!isSqSpec and isSpecTypeFinancial and templateSpecBackingBean.checkPriceTierEnableColumn(templateSpecBean)}">
+						<f:converter converterId="dynamicNumberConverter" />
+					</h:outputText>
+					<!-- #31134 Farid End 25/6/2021-->
 					<h:outputText value="#{tplSpecAnswer.tplSpecTierQty.fromQty}" rendered="#{isQuestionTypeItem}">
 						<f:converter converterId="dynamicNumberConverter" />
 						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, tplSpecAnswer.tplSpecQuestion.clUom.uomCode)}" />

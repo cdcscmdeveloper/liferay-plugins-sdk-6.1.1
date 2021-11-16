@@ -62,10 +62,15 @@
 
 			</p:column>
 			
-			<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:4%;text-align:right;"
-				headerText="#{lbl['lbl.tpl.spec.content.tier.title']}" rendered="#{isSpecTypeFinancial and supplierProposalDetailManagedBean.tierType}">
+			<!-- 31134 Farid start -->
+			<p:column rowspan="#{specificationRequired ? 2 : 1}"
+				style="width:4%;text-align:right;"
+				headerText="#{lbl['lbl.tpl.spec.content.tier.title']}"
+				rendered="#{isSqSpec and isSpecTypeFinancial and supplierProposalDetailManagedBean.tierType 
+				or (!isSqSpec and isSpecTypeFinancial and supplierProposalDetailManagedBean.tierType and templateSpecBackingBean.checkPriceTierEnableColumn(templateSpecBean))}">
 
 			</p:column>
+			<!-- 31134 Farid end -->
 			<!-- 11715 danial end -->
 
 			<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:100px;white-space:normal;"
