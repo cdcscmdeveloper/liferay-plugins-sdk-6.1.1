@@ -151,11 +151,11 @@
 					<TD style="text-align: right;"><p:commandButton
 							value="#{lbl['lbl.btn.ok']}"
 							action="#{categoryCodeSearchBackingBean.okAction(cc.attrs.okAction)}"
-							process="@form" update="#{cc.attrs.update}" styleClass="BtnSpacing" /> <p:commandButton
+							process="@form" update="#{cc.attrs.update}" styleClass="BtnSpacing" id="okBttn" name="okBttn"/> <p:commandButton
 							value="#{lbl['lbl.btn.cancel']}" partialSubmit="true"
 							process="@this" update="@this"
 							action="#{categoryCodeSearchBackingBean.cancelAction}"
-							oncomplete="catCodePopup.hide()"  styleClass="BtnSpacing" /></TD>
+							oncomplete="catCodePopup.hide()"  styleClass="BtnSpacing" id="cnclBttn" name="cnclBttn" /></TD>
 				</tr>
 			</table>
 		</p:dialog>
