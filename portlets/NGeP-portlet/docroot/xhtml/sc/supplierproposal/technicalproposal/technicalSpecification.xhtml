@@ -6,23 +6,27 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 <!-- #21695 farid START -->
-	<h:panelGroup rendered="#{supplierProposalDetailBackingBean.managedBean.qt.zonal and supplierProposalDetailBackingBean.managedBean.qt.partial ne null and supplierProposalDetailBackingBean.managedBean.qt.partial}">
+<!-- #32125 fix bug related to #21695 START-->
+	<h:panelGroup rendered="#{supplierProposalDetailBackingBean.managedBean.qt.zonal and supplierProposalDetailBackingBean.managedBean.qt.partial ne null and supplierProposalDetailBackingBean.managedBean.qt.partial 
+	or !supplierProposalDetailBackingBean.managedBean.qt.zonal and supplierProposalDetailBackingBean.managedBean.qt.partial ne null and supplierProposalDetailBackingBean.managedBean.qt.partial}">
 	<table>
 		<tr>
 			<td>
 				<h:outputText value="#{lbl['lbl.sc.zone']}" style="width:50px;"
-				rendered="#{supplierProposalDetailBackingBean.managedBean.qt.zonal and supplierProposalDetailBackingBean.managedBean.qt.partial ne null and supplierProposalDetailBackingBean.managedBean.qt.partial or
-				!supplierProposalDetailBackingBean.managedBean.qt.partial}"/>
+				rendered="#{supplierProposalDetailBackingBean.managedBean.qt.zonal and supplierProposalDetailBackingBean.managedBean.qt.partial ne null and supplierProposalDetailBackingBean.managedBean.qt.partial 
+				or !supplierProposalDetailBackingBean.managedBean.qt.zonal and supplierProposalDetailBackingBean.managedBean.qt.partial ne null and supplierProposalDetailBackingBean.managedBean.qt.partial
+				or !supplierProposalDetailBackingBean.managedBean.qt.partial}"/>
 			</td>
 			<td>
 				<h:outputText value=":"/>
 			</td>
 			<td>	
-				<h:outputText style="width:50px;" value="YES"/>
+				<h:outputText style="width:50px;" rendered="#{supplierProposalDetailBackingBean.managedBean.qt.zonal}" value="YES"/>
+				<h:outputText style="width:50px;" rendered="#{!supplierProposalDetailBackingBean.managedBean.qt.zonal}" value="NO"/>
 			</td>
 		</tr>
 	</table>
-		<h:panelGrid width="100%">
+		<h:panelGrid width="100%" rendered="#{supplierProposalDetailBackingBean.managedBean.qt.zonal}">
 			<p:dataTable id="zoneLocationDataTable" rows="10"
 				value="#{supplierProposalDetailBackingBean.managedBean.zoneGeneralTrees}"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -47,7 +51,7 @@
 		</h:panelGrid>
 
 </h:panelGroup>
-
+<!-- #32125 fix bug related to #21695 END-->
 <!-- #21695 farid END -->
 
 	<h:panelGroup id="techspecificationid">	
