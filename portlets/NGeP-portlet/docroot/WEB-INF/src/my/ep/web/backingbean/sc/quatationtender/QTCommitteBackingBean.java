@@ -2011,8 +2011,11 @@ public class QTCommitteBackingBean extends
 					}
 				}else if(taskName.equalsIgnoreCase(SCProcessNameConst.REVISE_COMMITTEE)
 						|| taskName.equalsIgnoreCase(SCProcessNameConst.APPROVE_COMMITTEE)){
-					if(Arrays.asList(ParameterConst.QT_EVALUATION_COMMITTEES).contains(commType)){
+					if(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equalsIgnoreCase(commType)){//31954-Start
 						return false;
+					}//31954-End
+					if(Arrays.asList(ParameterConst.QT_EVALUATION_COMMITTEES).contains(commType)){
+						return true;//31954
 					}
 				}
 				//25037-END #372
