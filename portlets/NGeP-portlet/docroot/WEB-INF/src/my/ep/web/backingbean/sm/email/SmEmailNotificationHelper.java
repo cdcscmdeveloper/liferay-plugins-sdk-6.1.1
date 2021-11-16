@@ -76,6 +76,7 @@ public class SmEmailNotificationHelper {
 		System.out.println("END");
 	}
 
+	/*
 	public static void sendApplicaitonRejectNotifMail(SmAppl smAppl,
 			Long senderId, String reasonDesc) {
 		String templateId = "400001";
@@ -137,6 +138,59 @@ public class SmEmailNotificationHelper {
 
 		sendNotif(templateId, receiverList, senderIdVal, subList, contList);
 
+	}
+	*/
+	//#15208
+	public static void sendApplicaitonRejectNotifMail(SmAppl smAppl,
+			Long senderId, String reasonDesc) {
+		String templateId = "399998";
+		String senderIdVal = null;
+		List<String> receiverList = new ArrayList<String>();
+		List<String> contList = new ArrayList<String>();
+		FacesScopes fs = new FacesScopes();
+		
+		if (senderId != null) {
+			senderIdVal = senderId.toString();
+		}
+
+		List<String> subList = new ArrayList<String>();
+		//subList.add(getApplicationDesc(smAppl.getApplType()));
+		//subList.add(smAppl.getApplNo());
+
+		//contList.add(smPersonnel.getName());
+		contList.add("");
+		//contList.add(smPersonnel.getIdentificationNo());
+		contList.add("");
+		//contList.add(smPersonnel.getPmUser() != null ? smPersonnel.getPmUser().getLoginId() : "");
+		contList.add("");
+		String supplierType = smAppl.getSupplierType();
+		SmPersonnel supplierAdmin = null;
+		for(SmPersonnel personnel : smAppl.getSmPersonnels()) {
+			if(supplierType.equals(SupplierManagementConst.SUPP_TYPE_BASIC)) {
+				if(personnel.getEpRole().equals(RoleCode.BASIC_SUPPLIER_ADMIN.value())){
+					supplierAdmin=personnel;
+					receiverList.add(personnel.getPmUser().getUserId().toString());
+					break;
+				}
+			} else if(supplierType.equals(SupplierManagementConst.SUPP_TYPE_CONTRACTOR) || supplierType.equals(SupplierManagementConst.SUPP_TYPE_CONSULTANT)) {
+				if(personnel.getEpRole().equals(RoleCode.MOF_SUPPLIER_ADMIN.value())){
+					supplierAdmin=personnel;
+					receiverList.add(personnel.getPmUser().getUserId().toString());
+					break;
+				}
+			} else if(supplierType.equals(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
+				if(personnel.getEpRole().equals(RoleCode.G2G_SUPPLIER_ADMIN.value())){
+					supplierAdmin=personnel;
+					receiverList.add(personnel.getPmUser().getUserId().toString());
+					break;
+				}
+			}
+		}
+		//contList.add(supplierAdmin.getName());
+		contList.add(supplierAdmin.getName());
+		
+		//sendSmPersonnelEmail(smPersonnel, cntParaLst, "399998", null);
+		sendNotif(templateId, receiverList, senderIdVal, subList, contList);
 	}
 
 	private static String getApplicationDesc(String appType) {
