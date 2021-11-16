@@ -536,11 +536,15 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 			//temp.put(SCProcessNameConst.START_QUOTATION_TENDER_CREATION+SCProcessNameConst.CANCEL_QT, SourcingConstants.NAV_PAGE_A)
 			//#9019-END
 			
-			//#28784
+			//#28784  - start
 			temp.put(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME
 					+ SCProcessNameConst.PRESENTATION_DEMO,
 					SourcingConstants.NAV_PAGE_DEMO_INVITATION);
-			//#28784 - start
+			
+			temp.put(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME
+					+ SCProcessNameConst.DEMO_APPROVE_CANCELLATION,
+					SourcingConstants.NAV_PAGE_QT_APPROVAL);			
+			
 			temp.put(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME
 					+ SCProcessNameConst.UPDATE_DEMO_TEC_EVALUATION,
 					SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
