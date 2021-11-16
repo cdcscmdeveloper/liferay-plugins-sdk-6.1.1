@@ -10,6 +10,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
+		<ui:param name="currentApproval" value="#{demoInvBB.managedBean.currentApproval}"/>
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/icon_loadingLarge.gif" />
 		</p:blockUI>
@@ -114,11 +115,16 @@
 					</p:column>
 				</p:dataTable>
 			</p:panel>
-
+			
 			<ac:scRemarkAndAttachment
 				remarkList="#{demoInvBB.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalRemarks}"
-				attachmentList="#{demoInvBB.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalAttachments}"
-				readonly="" fileUploadListener="demoInvBB.handleFileUpload" />
+				attachmentList="#{currentApproval.scQtApprovalAttachments}"
+				fileUploadListener="demoInvBB.handleFileUpload" />
+
+<!-- 			<ac:scRemarkAndAttachment -->
+<!-- 				remarkList="#{demoInvBB.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalRemarks}" -->
+<!-- 				attachmentList="#{demoInvBB.managedBean.scQtApprovalAttachments}}" -->
+<!-- 				readonly="" fileUploadListener="demoInvBB.handleFileUpload" /> -->
 
 			<ui:include
 				src="/xhtml/sc/quatationtender/approval/approvalhistory.xhtml" />
