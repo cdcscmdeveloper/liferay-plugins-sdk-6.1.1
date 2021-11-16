@@ -209,14 +209,14 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 				for(SmApplSupportDoc smApplSupportDoc : this.getManagedBean().getSmApplInquiry().getSmAppl().getSmApplSupportDocs()){
 					if(!smApplSupportDoc.getPmDocument().isMandatory() && !smApplSupportDoc.isReceived()){
 						boolean nonMandatoryDocHasNew = false;
-						if(!this.getManagedBean().getAddedDocFile().isEmpty()){
+						if(this.getManagedBean().getAddedDocFile()!=null){
 							for(SmApplDocFile addedDoc : this.getManagedBean().getAddedDocFile()){
 								if(addedDoc.getSmApplSupportDoc().getApplSupportDocId() == smApplSupportDoc.getApplSupportDocId()){
 									nonMandatoryDocHasNew = true;
 								}
 							}
 						}
-						if(!nonMandatoryDocHasNew){
+						if(this.getManagedBean().getAddedDocFile()!=null && !nonMandatoryDocHasNew){
 							this.getManagedBean().getAddedDocFile().addAll(smApplSupportDoc.getSmApplDocFiles());
 						}
 					}
@@ -626,7 +626,7 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 	
 	public void validateSupportDocs(){
 		if(getManagedBean().getSmApplInquiry().getSmAppl().getSupportingDocMode() != null && getManagedBean().getSmApplInquiry().getSmAppl().getSupportingDocMode().equals(SupplierManagementConst.SUPPORTING_DOC_ONLINE)){
-			log.info("=====Start Validate Supporting Doc=====");
+			log.info("=====Start Validate Supporting Doc====="); 
 			boolean validSupportDocs = true;
 			int i = 0;
 			StringBuilder sb = new StringBuilder();
