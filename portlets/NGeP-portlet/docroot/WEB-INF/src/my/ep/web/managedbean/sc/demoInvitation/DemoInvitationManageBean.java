@@ -13,6 +13,7 @@ import my.ep.persistence.entity.pm.authorization.PmPtjSpecialApproval;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtBudget;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
@@ -127,6 +128,8 @@ public class DemoInvitationManageBean extends BaseManagedBean {
 	private List<PmUser> pmUsersList;
 	
 	private boolean readOnly;
+	
+	private ScQtApproval  currentApproval;
 
 	public int getTabActiveIndex() {
 		return tabActiveIndex;
@@ -462,6 +465,14 @@ public class DemoInvitationManageBean extends BaseManagedBean {
 
 	public void setReadOnly(boolean readOnly) {
 		this.readOnly = readOnly;
+	}
+
+	public ScQtApproval getCurrentApproval() {
+		return currentApproval;
+	}
+
+	public void setCurrentApproval(ScQtApproval currentApproval) {
+		this.currentApproval = currentApproval;
 	}
 
 	
