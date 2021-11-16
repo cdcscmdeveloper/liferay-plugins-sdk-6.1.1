@@ -7237,9 +7237,7 @@ public void saveComplianceSample() {
 				//#28784 - start
 				afterDemoInv(false);
 				if (this.getManagedBean().getScQt().isDemoRequired()
-						&& (SCProcessNameConst.FINALISE_TEC_EVALUATION
-						.equalsIgnoreCase(this.getManagedBean().getTaskName())
-						|| SCProcessNameConst.ENDORSE_TEC_EVALUATION
+						&& (SCProcessNameConst.ENDORSE_TEC_EVALUATION
 						.equalsIgnoreCase(this.getManagedBean().getTaskName())
 						|| SCProcessNameConst.SIGNOFF_TEC_EVALUATION
 						.equalsIgnoreCase(this.getManagedBean().getTaskName()))) {
