@@ -156,7 +156,14 @@
 
 					
 					<ui:include src="TECSummary.xhtml" />
-			
+
+				</c:if><c:if
+					test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq eq 'true' 
+					and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '2'}">
+
+					
+					<ui:include src="TECSummary.xhtml" />
+
 				</c:if><c:if
 					test="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '2' 
 					and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
