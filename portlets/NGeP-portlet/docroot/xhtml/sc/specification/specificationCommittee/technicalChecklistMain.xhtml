@@ -63,7 +63,8 @@
 							listener="#{specificationBackingBean.selectAll(specificationBackingBean.managedBean.templateSpecBean.selectAll, specificationBackingBean.managedBean.scQtCheckSt2techProposal)}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
-				<p:selectBooleanCheckbox value="#{stageTwoTechnical.selected}"
+				<!-- #28784 -->
+				<p:selectBooleanCheckbox value="#{stageTwoTechnical.selected}"									
 					disabled="#{(stageTwoTechnical.definationType.parameterCode eq 'PD' and specificationBackingBean.managedBean.qt.demoRequired eq 'true') or (specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()) and !specificationBackingBean.managedBean.isChecklist()}"
 					rendered="#{stageTwoTechnical.manditory !='true' and (stageTwoTechnical.definationType.parameterCode ne 'TS' and stageTwoTechnical.definationType.parameterCode ne 'SP')}"><!-- #15391 -->
 					<p:ajax partialSubmit="true" process="@this" update="@this,@([id$=deleteTechnicalChecklist])"
@@ -121,7 +122,7 @@
 
 				<h:panelGroup id="technicalChecklisttypes">
 
-
+					<!-- #28784 -->
 					<ui:fragment
 						rendered="#{(stageTwoTechnical.definationType.parameterCode eq 'PD' or (stageTwoTechnical.pmDocument ne null and (stageTwoTechnical.pmDocument.docDefinitionKey eq 'TG' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'TN' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'TL' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'NE')) or (stageTwoTechnical.pmDocument eq null and stageTwoTechnical.definationType.parameterCode eq 'TS' or stageTwoTechnical.definationType.parameterCode eq 'SP'))}">
 
@@ -156,7 +157,7 @@
 							value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.definationType)}"></h:outputText>
 							</c:if>
 					</ui:fragment>
-
+					<!-- #28784 -->
 					<ui:fragment
 						rendered="#{stageTwoTechnical.definationType.parameterCode ne 'PD' and stageTwoTechnical.pmDocument eq null and (stageTwoTechnical.definationType.parameterCode ne 'TS' and stageTwoTechnical.definationType.parameterCode ne 'SP')}">
 						<c:if test="#{specificationBackingBean.isQTStatusChecklistScoring() or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision())}">
