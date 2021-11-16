@@ -209,14 +209,14 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 				for(SmApplSupportDoc smApplSupportDoc : this.getManagedBean().getSmApplInquiry().getSmAppl().getSmApplSupportDocs()){
 					if(!smApplSupportDoc.getPmDocument().isMandatory() && !smApplSupportDoc.isReceived()){
 						boolean nonMandatoryDocHasNew = false;
-						if(!this.getManagedBean().getAddedDocFile().isEmpty()){
+						if(this.getManagedBean().getAddedDocFile()!=null){
 							for(SmApplDocFile addedDoc : this.getManagedBean().getAddedDocFile()){
 								if(addedDoc.getSmApplSupportDoc().getApplSupportDocId() == smApplSupportDoc.getApplSupportDocId()){
 									nonMandatoryDocHasNew = true;
 								}
 							}
 						}
-						if(!nonMandatoryDocHasNew){
+						if(this.getManagedBean().getAddedDocFile()!=null && !nonMandatoryDocHasNew){
 							this.getManagedBean().getAddedDocFile().addAll(smApplSupportDoc.getSmApplDocFiles());
 						}
 					}
