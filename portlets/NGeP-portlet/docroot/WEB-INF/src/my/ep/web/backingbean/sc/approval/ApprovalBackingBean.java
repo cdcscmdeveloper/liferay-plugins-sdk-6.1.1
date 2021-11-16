@@ -62,6 +62,7 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
+import my.ep.dto.sc.quationtender.DemoResDTO;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.ProposalResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
@@ -106,6 +107,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.backingbean.sc.demoInvitation.DemoInvitationBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.QTDocumentsBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.QTScheduleDetailBackingBean;
@@ -690,6 +692,45 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 				currentStatus = workFlowStatusSO.
 						retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+			}
+			finally {
+				workFlowStatusSO = null;
+			}
+		} else if(SCProcessNameConst.DEMO_APPROVE_CANCELLATION.equalsIgnoreCase(taskName)) {//#28784		
+			List<String> fc = new ArrayList<String>();
+			fc.add(ParameterConst.APPROVAL_REQUEST_CANCELATITION_QT);
+			paramTypes = fc;
+			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE;			
+			approvalRequests = getApprovalRequests(qtId, approvalCategoryCode,
+					ParameterConst.APPROVAL_REQUEST_CANCELATITION_QT, paramTypes, null);
+			this.getManagedBean().setApprovalType(approvalCategoryCode);
+			docType = ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE;
+			IScWorkFlowStatusSO workFlowStatusSO;
+			try {
+				workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+				ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+				reqDTO.setDocType(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE);
+				reqDTO.setDocId(qtId);
+
+				currentStatus = workFlowStatusSO.
+						retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+				
+				QTDetailBackingBean qtBackingBean =   new QTDetailBackingBean();
+				qtBackingBean.retrieveQuationTenderDetails(qtId);
+				ScQt scQt = qtBackingBean.getManagedBean().getQt();
+				this.getManagedBean().setQt(scQt);				
+				
+				IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTDetailSO.class);
+				
+				QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+				quationTenderReqDTO.setQtId(scQt.getQtId());
+				quationTenderReqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE);
+				QuationTenderResDTO resDTO = detailSO.retrieveApprovalsByQtIdNType(quationTenderReqDTO);
+				this.getManagedBean().setQt(resDTO.getQtDetail());
+				ScQtApproval qtApproval = resDTO.getQtApproval();
+				this.getManagedBean().setScQtApproval(qtApproval);
 			}
 			finally {
 				workFlowStatusSO = null;
@@ -1387,6 +1428,16 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				tenderResDTO.setSuccessful(committeResDto.isSuccessful());
 				tenderResDTO.setQtDetail(qt);
 			
+			} else if(SCProcessNameConst.DEMO_APPROVE_CANCELLATION.equalsIgnoreCase(taskName)){ //#28784
+				DemoResDTO resDTO = new DemoResDTO();
+				DemoInvitationBackingBean demoBB = new DemoInvitationBackingBean();
+				resDTO.setScQt(qt);
+				resDTO.setPmUser(new FacesScopes().getUserSessionBean());				
+				resDTO.setOutcome(BpmOutcomeConst.BPM_APPROVE);
+				resDTO = demoBB.demoUpdateBpmTask(resDTO, outcome);
+				tenderResDTO.setSuccessful(true);
+				tenderResDTO.setQtDetail(qt);			
+				
 			} else {
 				
 				boolean isFinalApproval = false;

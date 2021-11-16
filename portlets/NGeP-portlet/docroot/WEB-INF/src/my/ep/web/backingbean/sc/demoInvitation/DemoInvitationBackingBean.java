@@ -1,5 +1,7 @@
 package my.ep.web.backingbean.sc.demoInvitation;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -54,10 +56,12 @@ import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
+import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproverSettings;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
@@ -94,6 +98,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
 
 /**
  * The Class DemoInvitationBackingBean. #28784
@@ -119,6 +124,8 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 	boolean savedData = false;
 
 	boolean isRendered = false;
+
+	String action = null;
 
 	private FacesScopes getFacesScopes() {
 		FacesScopes facesScopes = new FacesScopes();
@@ -152,7 +159,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 			String committeeType = ((SCEvaluationDataType) evaluationDataType).getCommitteeType();
 			Long qtId = evaluationDataType.getQtId().longValue();
 			retrieveQuotationTenderDetails(new Long(qtId), committeeType);
-			retrieveDemoDetailsData(); 
+			retrieveDemoDetailsData();
 
 			this.getManagedBean().setReadOnly(false);
 			this.getManagedBean().setActiveIndex(0);
@@ -264,7 +271,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 							c.setDisableRowSelection(true);
 						}
 					}
-					//log.info("*****contact list = " + ct.size());
+					// log.info("*****contact list = " + ct.size());
 					this.getManagedBean().setScQtDemoContactList(ct);
 					this.getManagedBean().setDemoRemark(scQtDemo.getDemoInvRemark());
 					this.getManagedBean().setScQtDemo(scQtDemo);
@@ -359,7 +366,12 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 					}
 				}
 			}
-
+			QuationTenderReqDTO reqQtDTO = new QuationTenderReqDTO();
+			reqQtDTO.setQtId(qtId);
+			reqQtDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT);// later
+																									// change
+			QuationTenderResDTO resDTO = getQTDetailSO().retrieveApprovalDtlsByQtIdNType(reqQtDTO);
+			this.getManagedBean().setCurrentApproval(resDTO.getQtApproval());
 			IQTDetailSO QtDetailsSO;
 			try {
 				QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -832,8 +844,10 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 				this.getManagedBean().setScQtDemoContactList(resDto.getScQtDemo().getScQtDemoContactList());
 				this.getManagedBean().setAllItemList(resDto.getScQtDemo().getScQtDemoSupplierList());
 				this.getManagedBean().setByItemList(resDto.getScQtDemo().getScQtDemoItemList());
-				successMessage(MessageConst.INFO_700004, getMessageCommon("lbl.demo.save.msg"), this.getManagedBean()
-						.getQt().getQtNo(), Boolean.FALSE);
+				if (action == null) {
+					successMessage(MessageConst.INFO_700004, getMessageCommon("lbl.demo.save.msg"), this
+							.getManagedBean().getQt().getQtNo(), Boolean.FALSE);
+				}
 
 				return resDto;
 			}
@@ -847,7 +861,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 
 	public String submitDemoInvitation() {
 		try {
-
+			action = BpmOutcomeConst.BPM_SUBMIT;
 			DemoResDTO resDTO = saveDemoInvitation();
 			String outcome = BpmOutcomeConst.BPM_SUBMIT;
 			resDTO.setPmUser(new FacesScopes().getUserSessionBean());
@@ -873,7 +887,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 
 	private void resolveAcknowledgement(ScQt scQt, DemoResDTO resDTO) {
 		String message = null;
-		
+
 		if (StringUtils.isEmpty(message)) {
 			message = MessageUtils.getMessage(getMessgeConstant("SUBMIT"), new String[] {
 					getMessageCommon("lbl.demo.presentation.submit"), scQt.getQtNo() },
@@ -883,15 +897,24 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 
 	}
 
-	private DemoResDTO demoUpdateBpmTask(DemoResDTO resDTO, String outcome) {
+	public DemoResDTO demoUpdateBpmTask(DemoResDTO resDTO, String outcome) {
 		try {
 			FacesScopes facesScopes = new FacesScopes();
 			IQTDemoSO qtDemoSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDemoSO.class);
+			QuationTenderReqDTO qtResDTO = new QuationTenderReqDTO();
+			qtResDTO.setQtdetail(resDTO.getScQt());
+			if (!resDTO.getOutcome().equals(BpmOutcomeConst.BPM_APPROVE)
+					&& !resDTO.getOutcome().equals(BpmOutcomeConst.BPM_SUBMIT)) {
+				getQTDetailSO().saveQTDtl(qtResDTO);// for cancelation only
+			}
 
 			DemoReqDTO demoReqDTO = new DemoReqDTO();
-			demoReqDTO.setCommitteType(this.getManagedBean().getCommitteeType());
-			demoReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+			String committeeType = (this.getManagedBean().getCommitteeType() != null ? this.getManagedBean()
+					.getCommitteeType() : ParameterConst.DOCTYPE_TEC_COMMITTE);
+			demoReqDTO.setCommitteType(committeeType);
+			ScQt scqt = (this.getManagedBean().getQt() != null ? this.getManagedBean().getQt() : resDTO.getScQt());
+			demoReqDTO.setQtId(scqt.getQtId());
 
 			DemoResDTO resNewDTO = qtDemoSO.prepareCommiteeDtls(demoReqDTO);
 			ScQtCommittee qtCommittee = resNewDTO.getQtCommittee();
@@ -912,7 +935,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 				UserResDTO userResDTO = retrieveUserByUserId(loggedInUserId);
 				resDTO.setCurrentOfficer(userResDTO.getPmUser().getUserName());
 				if (resDTO.getScQt() == null) {
-					resDTO.setScQt(this.getManagedBean().getQt());
+					resDTO.setScQt(scqt);
 				}
 				resDTO.setPmUser(userResDTO.getPmUser());
 				demoReqDTO.setTaskId(this.getManagedBean().getTaskId());
@@ -1046,6 +1069,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 				if (null != remarks) {
 					for (int i = 0; i < remarks.size(); i++) {
 						String userRemark = remarks.get(i).getRemark();
+						remarks.get(i).setDocId(qt.getQtId());
 						if (null == userRemark || "".equals(userRemark)) {
 							throw new EpException(
 									MessageConst.ERROR_100022,
@@ -1097,5 +1121,24 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 		} finally {
 		}
 
+	}
+
+	public void handleFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
+		if (event.getFile() != null) {
+			ScAttachment scAttachment = null;
+			ScQtApprovalAttachment attachment = new ScQtApprovalAttachment();
+			ScQtApproval scQtApproval = this.getManagedBean().getCurrentApproval();
+
+			List<ScQtApprovalAttachment> approvalAttachments = scQtApproval.getScQtApprovalAttachments();
+			if (null == approvalAttachments) {
+				approvalAttachments = new ArrayList<ScQtApprovalAttachment>();
+			}
+			attachment.setScQtApproval(scQtApproval);
+			attachment.setDocNo(scQtApproval.getScQt().getQtNo());
+			approvalAttachments.add(attachment);
+			scQtApproval.setScQtApprovalAttachments(approvalAttachments);
+			scAttachment = attachment;
+			uploadAttachment(event.getFile(), scAttachment);
+		}
 	}
 }
