@@ -1397,7 +1397,7 @@ public class CMReportsBackingBean extends ReportBaseBackingBean<CMReportManagedB
 		
 		if(this.getManagedBean().getRegType()!=null && this.getManagedBean().getRegType().trim().length()>0){
 			log.info("REGISTRATION_TYPE " + this.getManagedBean().getRegType());
-			params.put(CmReportConst.REGISTRATION_TYPE, this.getManagedBean().getRegType());
+			params.put(CmReportConst.REG_TYPE, this.getManagedBean().getRegType());
 		}
 		
 		if(this.getManagedBean().getRequestNo()!=null && this.getManagedBean().getRequestNo().trim().length()>0){
