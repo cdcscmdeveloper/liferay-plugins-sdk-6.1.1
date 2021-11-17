@@ -2417,6 +2417,8 @@ public class QTDetailBackingBean extends
 		 }
 		 // #Enhancement 9 CRs - end
 		Long qtId = scQt.getQtId();
+		String taskName = this.getManagedBean().getTaskName()==null ? "": this.getManagedBean().getTaskName(); //25037 #372
+		
 		if (null == committeTabs) {
 			String evaluationType = this.getManagedBean().getQt()
 					.getEvaluationType();
@@ -2462,9 +2464,15 @@ public class QTDetailBackingBean extends
 							}
 						}
 					}
-					committeTabs.add(new TabBean(parameterHelper
-							.getParameterDesc(parameterType, tabType), tabType,
-							evalCommitte));
+					//25037-start #372
+					if(!(Arrays.asList(QTStatusConst.QT_DOC_SCHEDULE_GROUP).contains(this.getManagedBean().getCurrentStatusId())
+							&& taskName.equalsIgnoreCase(SCProcessNameConst.REVISE_COMMITTEE)
+							&& !evalCommitte.getScCommittee().getCommitteStatus().getStatusId().equals(QTStatusConst.CMT_PENDING_REVISION))){
+						
+						committeTabs.add(new TabBean(parameterHelper
+								.getParameterDesc(parameterType, tabType), tabType,
+								evalCommitte));
+					}//25037-end #372
 				}
 				// evaluation type is two tier below committe are added
 				else {
@@ -2487,9 +2495,15 @@ public class QTDetailBackingBean extends
 							}
 						}
 					}
-					committeTabs.add(new TabBean(parameterHelper
-							.getParameterDesc(parameterType, tabType), tabType,
-							openingCommitte));
+					//25037-start #372
+					if(!(Arrays.asList(QTStatusConst.QT_DOC_SCHEDULE_GROUP).contains(this.getManagedBean().getCurrentStatusId())
+							&& taskName.equalsIgnoreCase(SCProcessNameConst.REVISE_COMMITTEE)
+							&& !openingCommitte.getScCommittee().getCommitteStatus().getStatusId().equals(QTStatusConst.CMT_PENDING_REVISION))){
+					
+						committeTabs.add(new TabBean(parameterHelper
+								.getParameterDesc(parameterType, tabType), tabType,
+								openingCommitte));	
+					}//25037-end #372
 
 					tabType = ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE;
 					ScQtCommittee tecCommitte = getQtCommiteDtlsByQtIdNType(
@@ -2510,9 +2524,15 @@ public class QTDetailBackingBean extends
 							}
 						}
 					}
-					committeTabs.add(new TabBean(parameterHelper
-							.getParameterDesc(parameterType, tabType), tabType,
-							tecCommitte));
+					//25037-start #372
+					if(!(Arrays.asList(QTStatusConst.QT_DOC_SCHEDULE_GROUP).contains(this.getManagedBean().getCurrentStatusId())
+							&& taskName.equalsIgnoreCase(SCProcessNameConst.REVISE_COMMITTEE)
+							&& !tecCommitte.getScCommittee().getCommitteStatus().getStatusId().equals(QTStatusConst.CMT_PENDING_REVISION))){
+					
+						committeTabs.add(new TabBean(parameterHelper
+								.getParameterDesc(parameterType, tabType), tabType,
+								tecCommitte));	
+					}//25037-end #372
 
 					tabType = ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE;
 					ScQtCommittee fecCommitte = getQtCommiteDtlsByQtIdNType(
@@ -2533,9 +2553,15 @@ public class QTDetailBackingBean extends
 							}
 						}
 					}
-					committeTabs.add(new TabBean(parameterHelper
-							.getParameterDesc(parameterType, tabType), tabType,
-							fecCommitte));
+					//25037-start #372
+					if(!(Arrays.asList(QTStatusConst.QT_DOC_SCHEDULE_GROUP).contains(this.getManagedBean().getCurrentStatusId())
+							&& taskName.equalsIgnoreCase(SCProcessNameConst.REVISE_COMMITTEE)
+							&& !fecCommitte.getScCommittee().getCommitteStatus().getStatusId().equals(QTStatusConst.CMT_PENDING_REVISION))){
+					
+						committeTabs.add(new TabBean(parameterHelper
+								.getParameterDesc(parameterType, tabType), tabType,
+								fecCommitte));	
+					}//25037-end #372
 				}
 				// FC tab
 				PmParameter fcSecretaryCode = scQt.getFinalizationCommitte();
@@ -5115,7 +5141,7 @@ public class QTDetailBackingBean extends
 		String committeeType = this.getManagedBean().getSelectedTabBean().getTabType();
 		this.getManagedBean().setRoleFilterList(getRoleFilterListForCommitteeMaintenance(this.getManagedBean().getQt(), committeeType));
 		
-		if(this.getManagedBean().isShowHistory() && Arrays.asList(new String[]{"SC", "EC", "OC", "TEC", "FEC"}).contains(committeeType)){
+		if(this.getManagedBean().isShowHistory() && Arrays.asList(ParameterConst.QT_COMMITTEES_ORDERED_LIST).contains(committeeType)){//25037 #372
 			navigateToViewHistory(committeTabBean.getScQtCommittee(), true);
 		}
 		if(committeTabBean!=null){
@@ -5850,19 +5876,32 @@ public class QTDetailBackingBean extends
 					String committeeType = "";
 					String committeeNames = "";
 					List<ScQtApprovalRequest> list = quationTenderResDTO.getCmtModififationRequests();
+					//25037 start #372
+					List<ScQtCommittee> qtCommittees = quationTenderResDTO.getQtDetail().getScQtCommittees();
+					Map<Object, Object> map = CustomUtils.listToMap(qtCommittees, "getScCommittee.getCommitteeType.getParameterCode");
+					//25037 end #372
 					for(ScQtApprovalRequest r: list){
-						count++;
-						String code = r.getApprovalType().getParameterCode();
-						committeeType = committeeType.concat(code);
-						committeeNames = committeeNames.concat(this.getParameterDesc(ParameterConst.COMMITTE_TYPE, code));
-						if(count<list.size()){
-							committeeType = committeeType.concat("/");
-							committeeNames = committeeNames.concat("/");
+						//25037 start #372
+						String code = r.getApprovalType().getParameterCode(); 
+						ScQtCommittee qtCommittee =  (ScQtCommittee)map.get(code);
+						Long cmtStatus = qtCommittee !=null ? qtCommittee.getScCommittee().getCommitteStatus().getStatusId(): 0L;
+						if(cmtStatus.equals(QTStatusConst.CMT_PENDING_APPROVAL)){
+							committeeType = committeeType.concat((count>0 ? "/":"").concat(code));
+							committeeNames = committeeNames.concat((count>0 ? "/":"").concat(this.getParameterDesc(ParameterConst.COMMITTE_TYPE, code)));
+							count++;
+						//25037 end #372
 						}
 					}
 					String procurementMode = this.getParameterDesc(scQt.getProcurementMode());
 					String qtNo = scQt.getQtNo();
-					successMessage(MessageConst.INFO_760504, new String[]{committeeNames, procurementMode, qtNo}, true);
+					
+					//25037 start #372
+					if(StringUtils.isNotBlank(committeeNames)){
+						successMessage(MessageConst.INFO_760504, new String[]{committeeNames, procurementMode, qtNo}, true);
+					}else{
+						successMessage(msgCode, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION, scQt.getQtNo(), Boolean.TRUE);
+					}
+					//25037 end #372
 				}else{
 					successMessage(msgCode, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION,
 							scQt.getQtNo(), Boolean.TRUE);
@@ -8848,7 +8887,7 @@ public class QTDetailBackingBean extends
   		if(CollectionUtils.isNotEmpty(this.getManagedBean().getScCommitteeMemberTabList())){
   			for(TabBean committeeTab: this.getManagedBean().getScCommitteeMemberTabList()){
   				ScQtCommittee qtCommittee = committeeTab.getScQtCommittee();
-  				String[] types = new String[]{"SC","OC","EC","TEC","FEC"};
+  				String[] types = ParameterConst.QT_COMMITTEES_ORDERED_LIST; //25037 #372
   				if(qtCommittee!=null){
   					ScCommittee committee = qtCommittee.getScCommittee();
   					if(Arrays.asList(types).contains(committee.getCommitteeType().getParameterCode())
