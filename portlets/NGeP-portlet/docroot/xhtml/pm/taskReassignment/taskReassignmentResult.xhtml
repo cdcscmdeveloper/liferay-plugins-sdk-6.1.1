@@ -303,7 +303,7 @@
 	</p:panel>
 	
 
-	
+	<!-- 7465 start -->	
 	<ac:confirmationPopupMultiple id="taskDeleteId"
 			widget="taskDeletePopUp"
 			okAction="taskReassignmentBackingBean.removeReassignTask()"
@@ -347,6 +347,7 @@
 			content="#{lbl['lbl.msg.confirm.deleteallothertask']}" 
 			update=":form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult,@([id$=deleteOthersTasks])" />
 	<!-- 7465 -->
+	<!-- 7465 end -->	
 	
 	<!-- Task Selection Popup -->
 	<ui:include src="/xhtml/pm/taskReassignment/taskReassignPopup.xhtml" />
