@@ -8,6 +8,11 @@ import java.util.Collections;
 import java.util.Comparator;
 
 //9569 end
+
+//start #12981 - no 2, comment #189
+import java.util.Arrays;
+//start #12981 - no 2, comment #189
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
@@ -2075,6 +2080,21 @@ public class SmPersonnelBackingBean extends
 	 */
 	public void updateUser(SmPersonnel smPersonnel) {
 		try {
+			//start #12981 - no 2, comment #189
+			List<Integer> statusAllowedToRequest = Arrays.asList(
+					SupplierManagementConst.SOFT_CERT_ISSUED,
+					SupplierManagementConst.IS_SOFTCERT_REQ,
+					SupplierManagementConst.SOFT_CERT_PROCESSING,
+					SupplierManagementConst.SOFT_CERT_PENDING_REQ,
+					SupplierManagementConst.SOFT_CERT_REJECTED,
+					SupplierManagementConst.SOFT_CERT_REQ_FAILED,
+					SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL);
+			
+			if (statusAllowedToRequest.contains(smPersonnel.getSoftcertFlg())) {
+				smPersonnel.setAuthorizedFlg(1);
+			}
+			//end #12981 - no 2, comment #189
+			
 			if (smPersonnel.getTitle() != null
 					&& smPersonnel.getTitle().getSalutationId() == null) {
 				smPersonnel.setTitle(null);
