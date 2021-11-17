@@ -634,6 +634,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<List<ScQtCheckList>> techStgPkgInnerList;
 	private List<ScQtCheckList> techStgPkgOterList;
 	//#31485 - end
+	private boolean showSchema;//#32089
 	/**tabIndex
 	 * Gets the today.
 	 * 
@@ -4146,4 +4147,14 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.techStgPkgOterList = techStgPkgOterList;
 	}
 	//#31485 - end
+	
+	//#32089 - Start
+	public boolean isShowSchema() {
+			return showSchema;
+	}
+
+	public void setShowSchema(boolean showSchema) {
+			this.showSchema = showSchema;
+	}
+	//#32089 - End
 }
