@@ -1231,8 +1231,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			} else {
 				double ceilingAmt = 0.0;
 				DecimalFormat df = new DecimalFormat("#.00");
+				String contractNO = ctBB.getManagedBean().getContractVer().getCtContract().getContractNo();
 				for (CtAgency ctAgency : ctBB.getManagedBean().getContractVer().getCtAgencies()) {
 					ceilingAmt = ceilingAmt + ctAgency.getCeilingAmount().doubleValue();
+					log.info(" Bug #31740 ceiling amount in contractdetailsbackingbean  :"+ctAgency.getCeilingAmount()+" and Contract NO : "+contractNO);
+
 				}
 				ceilingAmt = Double.valueOf(df.format(ceilingAmt));
 
