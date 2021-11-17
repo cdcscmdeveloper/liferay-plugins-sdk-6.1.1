@@ -304,7 +304,7 @@
 	
 
 	
-	<ac:confirmationPopup id="taskDeleteId"
+	<ac:confirmationPopupMultiple id="taskDeleteId"
 			widget="taskDeletePopUp"
 			okAction="taskReassignmentBackingBean.removeReassignTask()"
 			width="400" height="100"
@@ -312,7 +312,7 @@
 			content="#{lbl['lbl.msg.confirm.delete']}" 
 			update=":form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult" />
 	
-	<ac:confirmationPopup id="multipleOthersTasksDeleteId"
+	<ac:confirmationPopupMultiple id="multipleOthersTasksDeleteId"
 			widget="multipleOthersTasksDeletePopUp"
 			okAction="taskReassignmentBackingBean.removeReassignOthersTasks()"
 			width="400" height="100"
@@ -320,7 +320,7 @@
 			content="#{lbl['lbl.msg.confirm.delete']}" 
 			update=":form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult,@([id$=deleteOthersTasks])" />
 			
-	<ac:confirmationPopup id="multipleGroupTasksDeleteId"
+	<ac:confirmationPopupMultiple id="multipleGroupTasksDeleteId"
 			widget="multipleGroupTasksDeletePopUp"
 			okAction="taskReassignmentBackingBean.removeReassignGroupTasks()"
 			width="400" height="100"
@@ -329,7 +329,7 @@
 			update=":form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult,@([id$=deleteGroupTasks])" />
 
 	<!-- 7465 -->	
-	<ac:confirmationPopup id="allGroupTasksDeleteId"
+	<ac:confirmationPopupMultiple id="allGroupTasksDeleteId"
 			widget="allGroupTasksDeletePopUp"
 			okAction="taskReassignmentBackingBean.removeReassignAllGroupTasks()"
 			width="400" height="100"
@@ -339,7 +339,7 @@
 	<!-- 7465 -->
 			
 	<!-- 7465 -->
-	<ac:confirmationPopup id="allOtherTasksDeleteId"
+	<ac:confirmationPopupMultiple id="allOtherTasksDeleteId"
 			widget="allOtherTasksDeletePopUp"
 			okAction="taskReassignmentBackingBean.removeReassignAllOthersTasks()"
 			width="400" height="100"

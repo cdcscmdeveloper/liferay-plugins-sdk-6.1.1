@@ -1,0 +1,125 @@
+<ui:composition xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:p="http://primefaces.org/ui">
+
+	<cc:interface>
+		<cc:attribute name="id" />
+		<cc:attribute name="update" required="true" default="@this" />
+		<cc:attribute name="title" default="" />
+		<cc:attribute name="content" default="" />
+		<!-- <cc:attribute name="postSignAction" method-signature="void action()" /> -->
+		<cc:attribute name="widget" default="" />
+		<cc:attribute name="okAction" required="true" default="" />
+		<cc:attribute name="cancelAction" default="" />
+		<cc:attribute name="width" default="auto" />
+		<cc:attribute name="height" default="auto" />
+		<cc:attribute name="resetInput" default="" />
+		<cc:attribute name="okProcess" default="@this" />
+		<cc:attribute name="noProcess" default="@this" />
+		<cc:attribute name="style" default="" />
+		<cc:attribute name="dialogCSS" default="" />
+		<cc:attribute name="loadingWidget" default=""/>
+	</cc:interface>
+
+	<cc:implementation>
+		<style>
+			#{cc.attrs.dialogCSS}
+			.confirm-ui-dialog{
+				max-width: 500px;
+				width: auto;
+			}
+			.confirm-ui-dialog .ui-dialog-content table{
+				margin: auto;
+			}
+			.confirm-ui-dialog .ui-dialog-content table td label {
+				white-space: normal;
+				padding-left: 5px;
+				display: inline !important;
+				float: none !important;
+			}
+			.confirm-ui-dialog .ui-dialog-content{
+				padding: 1em 1em !important;
+				height: auto !important;
+			}
+			.confirm-ui-dialog .ui-dialog-content span img{
+				margin-top: -4px;
+			}
+		
+		</style>
+		<ui:param name="confirmationheader" value="#{cc.attrs.title}" />
+		<ui:param name="confirmationContent" value="#{cc.attrs.content}" />
+		<!-- <ui:param name="confirmationMethod" value="#{cc.attrs.postSignAction}" /> -->
+		<p:dialog styleClass="confirm-ui-dialog" id="#{cc.attrs.id}" widgetVar="#{cc.attrs.widget}"
+			header="#{confirmationheader}" resizable="false"
+			width="#{cc.attrs.width}" height="#{cc.attrs.height}"
+			closable="false" modal="true" style="#{cc.attrs.style}">
+			
+			<!-- widgetVar="confirmPopupBlockWidget" -> "#{cc.attrs.id}confirmPopupBlockWidget"-->
+			<!-- need to change all because when used multiple <ac:confirmationPopup , only one loading gif will popup (the last ac:) -->
+			<!-- because of same name of widget -->
+			
+			<p:blockUI block="#{cc.attrs.id}Popup" widgetVar="#{cc.attrs.id}confirmPopupBlockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+			<p:outputPanel id="#{cc.attrs.id}Popup" layout="block"> <!-- #29665 change component type -->
+			<table>
+				<tr><!-- #28765 START -->
+					<td align="center" style="white-space: normal; word-wrap: break-word !important;">
+					<!-- #28765 END --><h:graphicImage
+							value="/css/images/design/exclamation.png" /> <!-- #29727 START --><p:outputLabel
+							value="#{confirmationContent}" escape="false" /><!-- #29727 END--></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<c:choose>
+					<c:when test="#{not empty cc.attrs.loadingWidget}">
+						<ui:remove><!--trigger external blockwidget, TODO: maybe refactor this conditional fragment --></ui:remove>
+						<p:commandButton id="yesWithLoadId" value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
+							partialSubmit="true" 
+							onstart="#{cc.attrs.widget}.hide();#{cc.attrs.loadingWidget}.show();"
+							action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.okAction)}"
+							oncomplete="#{cc.attrs.loadingWidget}.hide();" update="#{cc.attrs.update}" />
+					</c:when>
+				    <c:when test="#{empty cc.attrs.resetInput}">
+				       <p:commandButton id="yesWithResetId" value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
+							partialSubmit="true" 
+							onstart="#{cc.attrs.id}confirmPopupBlockWidget.show();"
+							action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.okAction)}"
+							oncomplete="#{cc.attrs.id}confirmPopupBlockWidget.hide(); #{cc.attrs.widget}.hide();" update="#{cc.attrs.update}" />
+				    </c:when>
+				    <c:otherwise>
+				        <p:commandButton id="yesWithoutResetId" value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
+							partialSubmit="true" 
+							onstart="#{cc.attrs.id}confirmPopupBlockWidget.show();"
+							action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.okAction)}"
+							oncomplete="#{cc.attrs.id}confirmPopupBlockWidget.hide(); #{cc.attrs.widget}.hide();" update="#{cc.attrs.update}" >
+							<p:resetInput target="#{cc.attrs.resetInput}" />
+						</p:commandButton>
+				    </c:otherwise>
+				</c:choose>
+				<c:choose>
+				    <c:when test="#{not empty cc.attrs.cancelAction}">
+				    	<p:commandButton id="noWithActionId" value="#{lbl['lbl.btn.no']}"
+				    		partialSubmit="true" 
+				    		onstart="#{cc.attrs.id}confirmPopupBlockWidget.show();"
+							action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.cancelAction)}"
+							oncomplete="#{cc.attrs.id}confirmPopupBlockWidget.hide(); #{cc.attrs.widget}.hide();" update="#{cc.attrs.update}" 
+							process="#{cc.attrs.noProcess}"
+						/>
+				    </c:when>
+				    <c:otherwise>
+				    	<p:commandButton id="noWithoutActionId" value="#{lbl['lbl.btn.no']}" immediate="true"
+							oncomplete="#{cc.attrs.widget}.hide();" process="#{cc.attrs.noProcess}"/>
+				    </c:otherwise>
+				    </c:choose>
+				
+			</div>
+			</p:outputPanel> <!-- #29665 change component type -->
+		</p:dialog>
+	</cc:implementation>
+</ui:composition>
