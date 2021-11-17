@@ -29,9 +29,11 @@
 	<p:panel id="pTaskAssignSearch" header="#{lbl['lbl.pm.ta.search']}"
 		toggleable="true">
 		
+		<!-- 29822 start -->
 		<p:blockUI block="pTaskAssignSearch" widgetVar="taskReassignconfirmPopupBlockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
+		<!-- 29822 end -->
 		
 		<table class="ppTwoTable">
 			<tr>
@@ -136,6 +138,7 @@
 					
 				</td>
 			</tr>
+			<!-- 29822 start -->
 			<tr>
 				<td colspan="4">
 					<div class="ppRightBtn">
@@ -158,6 +161,7 @@
 					</div>
 				</td>
 			</tr>
+			<!-- 29822 end -->
 		</table>
 		
 		
