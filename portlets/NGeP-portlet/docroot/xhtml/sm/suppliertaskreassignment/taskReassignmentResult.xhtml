@@ -259,6 +259,7 @@
 		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	</p:blockUI>
 	
+	<!-- 29822 start -->
 	<ac:confirmationPopupMultiple id="allGroupTasksDeleteId"
 		widget="allGroupTasksDeletePopUp"
 		okAction="supplierTaskReassignmentBackingBean.removeReassignAllGroupTasks()"
@@ -299,6 +300,7 @@
 			title="#{lbl['lbl.msg.confirm.delete.header']}"
 			content="#{lbl['lbl.msg.confirm.delete']}" 
 			update=":form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult" />
+	<!-- 29822 end -->
 	<!-- Task Selection Popup -->
 	<ui:include src="/xhtml/sm/suppliertaskreassignment/taskReassignPopup.xhtml" />
 </ui:composition>
