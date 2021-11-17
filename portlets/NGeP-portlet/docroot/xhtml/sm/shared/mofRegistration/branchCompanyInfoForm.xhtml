@@ -69,6 +69,7 @@
 				rowKey="#{branchBean}" rowIndexVar="index"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 				<ac:paginator for="dt" />
+				<p:ajax event="rowSelect" listener="#{backingBean.unSelectSsmBranch}" update=":form:tt:dt"></p:ajax>
 				<!--  SSM INTEGRATION -->
 				<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.smAppl.smSupplierBranches}" disabledSelection="#{branchBean.ssmData}"/>
 

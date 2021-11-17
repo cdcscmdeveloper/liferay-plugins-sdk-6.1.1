@@ -1921,6 +1921,7 @@ public class SmApplicationBackingBean extends
 				if (ssmBranch.getBranchName().equals(branch.getBranchName()) && !branch.isCopy()) {
 					branch.setCopy(true);
 					branch.setSmAddress(SmCommonUtil.cloneAddress(ssmBranch.getSmAddress()));
+					branch.setSsmData(true); //#31627
 					isExist = true;
 					break;
 				}
@@ -13387,6 +13388,12 @@ public class SmApplicationBackingBean extends
 		}
 		return showDoc;
 	}
+	
+	// START #29727 & 31627
+	public void unSelectSsmBranch(AjaxBehaviorEvent e) {
+		SmApplicationUtil.ajaxRemoveSelectedSSMBranches(getManagedBean().getSelectedBranches());
+	}
+	
 	public boolean showEquity(SmApplicationManagedBean managedBean){
 		boolean show = true;
 		if(managedBean!= null && managedBean.getSmAppl()!=null){
