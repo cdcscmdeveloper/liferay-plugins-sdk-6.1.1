@@ -805,7 +805,8 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		// -FD Update/FD Creation/Change Bank process still in process. 
 		//#28715
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
-				&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_AC_HT_NAME)) {
+				&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_AC_HT_NAME)
+						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_DRAFT_AGREEMENT_HT_NAME))) {
 
 			IAgreementSO agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
 			ContractAgreementReqDTO reqDTO = new ContractAgreementReqDTO();
