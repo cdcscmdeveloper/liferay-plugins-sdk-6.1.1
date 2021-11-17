@@ -7,13 +7,13 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<style>
 		.firstCol {
-			width: 25%;
-			min-width: 220px;
+			width: 10%;
+			min-width: 200px;
 			vertical-align: top;
 			height: auto;
 		}
 		.secondCol {
-			width: 75%;
+			width: 90%;
 			vertical-align: top;
 			height: auto;
 		}
@@ -57,7 +57,7 @@
 			<p:dataTable id="historyMemberTableId" styleClass="history-member-table"
 				value="#{qTDetailBB.managedBean.selectedHistoryMember.model}" var="member"
 				rowIndexVar="index"  emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" >
-				<p:column headerText="#{lbl['lbl.sc.name']}">
+				<p:column headerText="#{lbl['lbl.sc.name']}" style="white-space: normal;">
 					<h:outputText value="#{member.memberName}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.identification.no']}">
@@ -69,17 +69,17 @@
 				<p:column headerText="#{lbl['lbl.sc.email']}">
 					<h:outputText value="#{member.email}" style="white-space: normal;" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.grade']}" style="width: 10%">
+				<p:column headerText="#{lbl['lbl.sc.grade']}">
 					<h:outputText value="#{member.grade}" />
 				</p:column>
-				<p:column style="width: 6%">
+				<p:column style="min-width:60px;">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.pnp']}" />
 						<ac:iconTooltip id="pnpTT#{index}" value="#{lbl['lbl.sc.pnp.tooltip']}" />
 					</f:facet>
 					<h:outputText value="#{lbl[ member.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 				</p:column>
-				<p:column style="width: 13%">
+				<p:column>
 					<f:facet name="header">
 						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.role']}" />

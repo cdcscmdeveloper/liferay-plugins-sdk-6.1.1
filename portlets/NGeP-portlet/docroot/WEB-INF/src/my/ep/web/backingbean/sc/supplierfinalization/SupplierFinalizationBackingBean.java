@@ -1271,6 +1271,7 @@ public class SupplierFinalizationBackingBean extends
 			}
 			// #25037 - end
 
+			validateFinalizationReports(reqDTO, skipValidation);//25037 note31
 			//saveEvaluationReportsDetaills();
 			if (this.getManagedBean().getEndorsementReportActiveIndex() == activeIndex) {
 				//#27364 Start
@@ -1338,7 +1339,7 @@ public class SupplierFinalizationBackingBean extends
 		}
 	}
 	
-	private void validateFinalizationReports(SuppFinalizationReqDTO reqDTO) {
+	private void validateFinalizationReports(SuppFinalizationReqDTO reqDTO, boolean skipValidation) {//25037 note31
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 		List<ScQtFinalizationReport> finalizationReports = 
 					scQtFinalization.getScQtFinalizationReports();
@@ -1360,6 +1361,7 @@ public class SupplierFinalizationBackingBean extends
 						toBeRemovedReports.add(report);
 					} else {
 						finalizationReports.removeAll(this.getManagedBean().getEndorsementReports());
+						if(skipValidation) return;//25037 note31
 						navigateToEndorsementReportTab();
 						throw new EpException(MessageConst.ERROR_760386);
 					}
