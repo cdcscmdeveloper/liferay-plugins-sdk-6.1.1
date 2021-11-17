@@ -230,6 +230,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sc.helper.SourcingLocationHelper;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -12297,6 +12298,11 @@ public class SpecificationBackingBean extends
 		spReqDTO.setScoreOfferPriceList(this.getManagedBean().getOfferPricePackageList());
 		//#31450 - bug for #25138 - end
 		IQTSpecSO specSO = getSpecSO();
+		
+		//29561 -start
+		spReqDTO.setBaseURL(SmCommonUtil.getBasePortalUrl());
+		spReqDTO.setTaskName(this.getManagedBean().getTaskName());
+		//29561 -end
 		SpecificationResDTO resDTO = new SpecificationResDTO();
 		try {
 			resDTO = specSO.updateBPMAction(spReqDTO);
