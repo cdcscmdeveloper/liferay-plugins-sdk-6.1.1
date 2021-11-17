@@ -106,6 +106,7 @@ import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.supplierfinalization.SupplierFinalizationBiddingManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -2365,7 +2366,10 @@ public class SupplierFinalizationBiddingBackingBean extends
 				// Chairperson signing off
 				signOff();
 			}
-			
+			//29561 -starts
+			suppFinalizationReqDTO.setBaseURL(SmCommonUtil.getBasePortalUrl());
+			suppFinalizationReqDTO.setTaskName(this.getManagedBean().getTaskName());
+			//29561 -end
 			suppFinalizationResDTO = qtSuppFinalizationSO.updateBPMAction(suppFinalizationReqDTO);
 				
 			if (suppFinalizationResDTO.isSuccessful()) {
