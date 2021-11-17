@@ -149,6 +149,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
@@ -3048,6 +3049,12 @@ public class LOIDetailBackingBean extends
 			// #25638 - End.
 			
 			reqDTO.setStatusId(getManagedBean().getCurrentStatusId());
+			
+			//29561 - start
+			reqDTO.setBaseURL(SmCommonUtil.getBasePortalUrl());
+			reqDTO.setTaskName(this.getManagedBean().getTaskName());
+			//29561 - end
+
 			AwardSupplierResDTO resDTO = getQtAwardSO().saveMultipleLOIDtl(
 					reqDTO);
 
