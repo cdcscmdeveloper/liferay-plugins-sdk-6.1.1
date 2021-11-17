@@ -13835,4 +13835,19 @@ public class SmApplicationUtil {
 		return smAppl;
 	}
 	//END 25474
+	
+	//#31627 - START
+	public static void ajaxRemoveSelectedSSMBranches(List<SmSupplierBranch> branchesList) {
+		if (branchesList != null) {
+			Iterator<SmSupplierBranch> iterator = branchesList.iterator();
+			while (iterator.hasNext()) {
+				SmSupplierBranch smSupplierBranch = iterator.next();
+				if (smSupplierBranch.isSsmData()) {
+					iterator.remove();
+				}
+			}
+		}
+	}
+	//31627 - END
+	
 }
