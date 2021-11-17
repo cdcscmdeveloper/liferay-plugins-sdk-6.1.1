@@ -259,7 +259,7 @@
 		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	</p:blockUI>
 	
-	<ac:confirmationPopup id="allGroupTasksDeleteId"
+	<ac:confirmationPopupMultiple id="allGroupTasksDeleteId"
 		widget="allGroupTasksDeletePopUp"
 		okAction="supplierTaskReassignmentBackingBean.removeReassignAllGroupTasks()"
 		width="400" height="100"
@@ -267,7 +267,7 @@
 		content="#{lbl['lbl.msg.confirm.deleteallgrouptask']}"
 		update=":form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult,@([id$=deleteGroupTasks])" />
 	
-	<ac:confirmationPopup id="multipleGroupTasksDeleteId"
+	<ac:confirmationPopupMultiple id="multipleGroupTasksDeleteId"
 		widget="mutipleGroupTasksDeletePopup"
 		okAction="supplierTaskReassignmentBackingBean.removeReassignGroupTasks()"
 		width="400" height="100"
@@ -275,7 +275,7 @@
 		content="#{lbl['lbl.msg.confirm.delete']}" 
 		update=":form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult,@([id$=deleteGroupTasks])" />
 		
-	<ac:confirmationPopup id="allOtherTasksDeleteId"
+	<ac:confirmationPopupMultiple id="allOtherTasksDeleteId"
 		widget="allOtherTasksDeletePopUp"
 		okAction="supplierTaskReassignmentBackingBean.removeReassignAllOthersTasks()"
 		width="400" height="100"
@@ -283,7 +283,7 @@
 		content="#{lbl['lbl.msg.confirm.deleteallothertask']}" 
 		update=":form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult,@([id$=deleteOthersTasks])" />
 			
-	<ac:confirmationPopup id="multipleOthersTasksDeleteId"
+	<ac:confirmationPopupMultiple id="multipleOthersTasksDeleteId"
 		widget="multipleOthersTasksDeletePopUp"
 		okAction="supplierTaskReassignmentBackingBean.removeReassignOthersTasks()"
 		width="400" height="100"
@@ -292,7 +292,7 @@
 		update=":form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult,@([id$=deleteOthersTasks])" />
 	<!-- #29822 - END -->
 	
-	<ac:confirmationPopup id="taskDeleteId"
+	<ac:confirmationPopupMultiple id="taskDeleteId"
 			widget="taskDeletePopUp"
 			okAction="supplierTaskReassignmentBackingBean.removeReassignTask()"
 			width="400" height="100"
