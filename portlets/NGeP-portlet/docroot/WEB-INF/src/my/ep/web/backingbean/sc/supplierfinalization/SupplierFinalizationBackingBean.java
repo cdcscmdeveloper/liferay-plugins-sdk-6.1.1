@@ -141,6 +141,7 @@ import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
@@ -3836,12 +3837,23 @@ return	remarksNotFound;
 					saveNewBriefingPaperReportList(reportTitleList, _scQtFinalization, qtId);
 				}
 				
-				// #18685 - Start.
+				// #18685 - START.
 				if (CollectionUtils.isNotEmpty(getManagedBean().getNewBriefingPaperReportList()) && getManagedBean().getNewBriefingPaperReportList().size() > 0
 				    && getManagedBean().isSecretaryUser()) {
-				  getManagedBean().getNewBriefingPaperReportList().get(0).setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
+					IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
+							.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+									IUserSO.class);
+					UserReqDTO userReqDTO = new UserReqDTO();
+					userReqDTO.setLoginId(getFacesScopes().getUserScreenName());
+					PmUser currentUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
+					if (currentUser != null && null != currentUser.getUserId()) {
+						Long userLoginId = new LogKey(currentUser.getUserId()).getUserId();
+						if (null != userLoginId) {
+							getManagedBean().getNewBriefingPaperReportList().get(0).setChangedBy(userLoginId);
+						}
+					}
 				}
-				// #18685 - End.
+				// #18685 - END.
 			}
 			
 			//#28784
