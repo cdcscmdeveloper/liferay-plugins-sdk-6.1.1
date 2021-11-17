@@ -25,8 +25,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.pm.access.app.remarks']}" />
 					</td>
 					<td colspan="3"><p:inputTextarea id="title1"
-							label="#{lbl['lbl.pm.access.app.remarks']}"
-							required="#{empty param['skipvalidation']}"
+							label="#{lbl['lbl.pm.access.app.remarks']}"							
 							value="#{demoInvBB.managedBean.demoRemark}" cols="110" rows="3"
 							valueChangeListener="#{createQtBB.qtTitleValueChanged}"
 							onkeyup="limitTextArea(this,500);"
@@ -34,7 +33,10 @@
 							onmouseout="limitTextArea(this,500);"
 							style=" margin-bottom:5px; width: 714px;" maxlength="500">
 							<f:ajax></f:ajax>
-						</p:inputTextarea> <p:message id="title1Msg" for="title1" display="icon" /></td>
+						</p:inputTextarea> <p:message id="title1Msg" for="title1" display="icon" />
+						<ac:iconTooltip id="technicalChecklistMechasine#{index}Sc"
+							value="#{lbl['lbl.demo.remark.tooltips']}" />
+						</td>
 				</tr>
 			</table>
 		</p:panel>
