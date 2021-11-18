@@ -21,34 +21,69 @@
 
 		<table style="margin-top: 5px; width: 100%;">
 
+			<!-- For #29592, add new ministry, kumpulan ptj, ptj, docno fields : start -->
+			<tr>
+				<td style="width: 15%;"><p:outputLabel value="#{lbl['lbl.rpt.ministry']}"/></td>
+				<td width="60%">
+					<ac:lov id="ministrySearchInputLovId" lovId="PM_ORG_PROFILE_MINSTRY"
+						headerText="#{lbl['lbl.pm.org.ptj.search.ministry.lov']}"
+						size="100" update="@form" readonly="true"
+						saveObject="cmReportsBackingBean.managedBean.selectedMinistryOrgProfile"
+						value="#{cmReportsBackingBean.managedBean.selectedMinistryOrgProfile.pmOrgValidity.orgName}"
+						postUpdateListener="cmReportsBackingBean.updateMinistrySearchCriteria" 
+						conditionField="#{cmReportsBackingBean.constructMinistryConditionFields()}">
+					</ac:lov>
+					<ac:lovPopup/>
+				</td>
+			</tr>
 
 			<tr>
-				<td width="15%"><p:outputLabel
-						value="#{lbl['lbl.rpt.dtFrm']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td width="35%"><p:calendar showOn="button" navigator="true"
-						readonlyInput="true" size="9"
-						value="#{cmReportsBackingBean.managedBean.dateFrom}"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-
-					</p:calendar></td>
-				<td width="15%"><p:outputLabel value="#{lbl['lbl.rpt.dtTo']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td width="35%"><p:calendar showOn="button" navigator="true"
-						readonlyInput="true" size="9"
-						value="#{cmReportsBackingBean.managedBean.dateTo}"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-
-					</p:calendar></td>
+				<td style="width: 15%;"><p:outputLabel value="#{lbl['lbl.rpt.kumpulan.ptj']}"/></td>
+				<td width="60%">
+					<ac:lov id="kptjSearchInputLovId" lovId="PM_ORG_PROFILE_KUMPULAN_PTJ"
+						headerText="#{lbl['lbl.pm.org.ptj.search.kptj.lov']}"
+						size="100" update="@form" readonly="true"
+						disabled="#{cmReportsBackingBean.managedBean.selectedMinistryOrgProfile == null or cmReportsBackingBean.managedBean.selectedMinistryOrgProfile.pmOrgValidity == null or cmReportsBackingBean.managedBean.selectedMinistryOrgProfile.pmOrgValidity.orgName == null}"
+						saveObject="cmReportsBackingBean.managedBean.selectedKumpulanPTJOrgProfile"
+						value="#{cmReportsBackingBean.managedBean.selectedKumpulanPTJOrgProfile.pmOrgValidity.orgName}"
+						postUpdateListener="cmReportsBackingBean.updateKPTJSearchCriteria"
+						conditionField="#{cmReportsBackingBean.constuctConditionFieldsForPTJGroup()}">
+					</ac:lov>
+					<ac:lovPopup/>
+				</td>
 			</tr>
+
+			<tr>
+				<td style="width: 15%;"><p:outputLabel value="#{lbl['lbl.rpt.ptj']}"/></td>
+				<td width="60%">
+					<ac:lov id="ptjSearchInputLovId" lovId="PM_ORG_PROFILE_PTJ"
+						headerText="#{lbl['lbl.pm.org.ptj.search']}"
+						disabled="#{cmReportsBackingBean.managedBean.selectedKumpulanPTJOrgProfile == null or cmReportsBackingBean.managedBean.selectedKumpulanPTJOrgProfile.pmOrgValidity == null or cmReportsBackingBean.managedBean.selectedKumpulanPTJOrgProfile.pmOrgValidity.orgName == null}"
+						size="100" update="@form" readonly="true"
+						saveObject="cmReportsBackingBean.managedBean.selectedPTJOrgProfile"
+						value="#{cmReportsBackingBean.managedBean.selectedPTJOrgProfile.pmOrgValidity.orgName}"
+						postUpdateListener="cmReportsBackingBean.updateSearchCriteria"
+						conditionField="#{cmReportsBackingBean.constuctConditionFieldsForPTJ()}">
+					</ac:lov>
+					<ac:lovPopup/>
+				</td>
+			</tr>
+
+			<tr>
+				<td width="15%"><p:outputLabel value="#{lbl['lbl.cm.doc.no']}"/></td>
+				<td colspan="3" width="35%">
+					<p:inputText id="docNoSearchInput" size="50" value="#{cmReportsBackingBean.managedBean.docNoSearchInput}"/> 
+					<ac:iconTooltip value="#{lbl['lbl.cm.report.doc.no.search.field.tooltip']}"/>
+				</td>
+			</tr>
+			<!-- For #29592, add new ministry, kumpulan ptj, ptj, docno fields : end -->
 			
-			
-			
+			<!-- For #29592, swapped the positions of Item type with Date From/Date To search fields : start -->
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.cm.item.table.type']}" /></td>
 				<td><p:selectOneMenu
 						value="#{cmReportsBackingBean.managedBean.itemType}"
-						style="width:90%">
+						style="width:44.3%">
 						<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue=""></f:selectItem>
 						<f:selectItem itemValue="Product"
 							itemLabel="#{lbl['lbl.txt.product']}" />
@@ -59,6 +94,38 @@
 				<td></td>
 				<td></td>
 			</tr>
+			
+			<!-- For #29592, modified the width of Date From/Date To search field labels from
+			fixed value of 15% to current value. Also modified the width of the search field
+			of Date From/Date To from fixed value of 35% to their respective current values
+			(where applicable)-->
+			<tr>
+				<td width="15%"><p:outputLabel
+						value="#{lbl['lbl.rpt.dtFrm']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td width="35%">
+					<div style="float: left;">
+						<p:calendar showOn="button" navigator="true" readonlyInput="true"
+							size="9" value="#{cmReportsBackingBean.managedBean.dateFrom}"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							style="float: left">
+						</p:calendar>
+
+						<p:outputLabel
+							value="#{lbl['lbl.cm.report.date.to.underscore.padding']}"
+							style="margin-top: 6px; float: left; color: #ffffff !important;" />
+						<p:outputLabel value="*" styleClass="mandatory"
+							style="margin-top: 6px; float: left;" />
+						<p:outputLabel value="#{lbl['lbl.rpt.dtTo']}"
+							style="margin-top: 6px; float: left;" />
+						<p:calendar showOn="button" navigator="true" readonlyInput="true"
+							size="9" value="#{cmReportsBackingBean.managedBean.dateTo}"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+						</p:calendar>
+					</div>
+				</td>
+			</tr>
+			<!-- For #29592, swapped the positions of Item type with Date From/Date To search fields : end -->
 			
 
 
