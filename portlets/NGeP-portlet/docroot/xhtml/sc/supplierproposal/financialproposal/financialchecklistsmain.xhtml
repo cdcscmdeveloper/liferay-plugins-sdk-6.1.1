@@ -18,6 +18,9 @@
 			<!--  Need to add all screen button into a single page and append here.. -->
 			<ui:include src="financialchecklistbuttons.xhtml" />
 		</div>
+		<!-- 32112 START - added <div> and <br> -->
+		<br></br>
+		<div class="title">
 		<p:spacer height="4"></p:spacer>
 		<!-- Header file for all sub screens -->
 		<ui:param name="scQtCheckList"
@@ -25,6 +28,8 @@
 		<ui:include src="/xhtml/sc/supplierproposal/proposalcommon/checklistHeader.xhtml" />
 		<!-- inclueded page for respecitive checklist -->
 		<p:spacer height="4"></p:spacer>
+		</div>
+		<!-- 32112 END -->
 		<ui:include
 			src="#{supplierProposalDetailBackingBean.managedBean.pageUrl}" />
 	</ui:define>

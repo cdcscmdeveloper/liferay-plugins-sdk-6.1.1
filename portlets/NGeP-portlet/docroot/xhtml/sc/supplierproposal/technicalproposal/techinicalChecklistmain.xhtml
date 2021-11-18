@@ -19,11 +19,16 @@
 
 			<ui:include src="technicalchecklistbuttons.xhtml"></ui:include>
 		</div>
+		<!-- 32112 START - added <div> and <br> -->
+		<br></br>
+		<div class="title">
 		<p:spacer height="4"></p:spacer>
 		<ui:param name="scQtCheckList"
 					value="#{supplierProposalDetailBackingBean.managedBean.technicalQtChecklist}"></ui:param>
 		<ui:include src="/xhtml/sc/supplierproposal/proposalcommon/checklistHeader.xhtml" />
 		<p:spacer height="4"></p:spacer>
+		</div>
+		<!-- 32112 END -->
 		<ui:include
 			src="#{supplierProposalDetailBackingBean.managedBean.pageUrl}" />
 
