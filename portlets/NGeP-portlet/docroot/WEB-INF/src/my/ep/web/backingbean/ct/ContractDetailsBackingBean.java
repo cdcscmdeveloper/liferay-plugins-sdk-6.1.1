@@ -1353,9 +1353,12 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					}
 				/*#25592-basri*/
 				/*validation error if deduction clause is empty*/
-				} else {
+				} else {  // Start Fix - #32123
+					   if(!ctBB.getManagedBean().getContractVer().getDocType().equals(ParameterConst.DOCTYPE_NOTIFICATION_SETTING)){
 						setTabValue("DE");
-						throwExceptions(MessageConst.ERROR_100022, "lbl.ct.deduction.clause.desc");					
+						throwExceptions(MessageConst.ERROR_100022, "lbl.ct.deduction.clause.desc");	
+				}
+					   // End Fix - #32123				
 				}
 				/*end*/
 			}  
