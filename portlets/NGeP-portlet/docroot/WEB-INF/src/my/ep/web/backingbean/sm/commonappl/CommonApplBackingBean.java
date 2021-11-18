@@ -1285,9 +1285,14 @@ public class CommonApplBackingBean extends
 							.getTime()) / 1000;
 					getManagedBean().setDays((togo / secsInADay) + "");
 					
+					//17024 - add condition
+					int expiringDays = Integer.parseInt(getManagedBean().getDays());
+					
+					if(expiringDays <= 90){
 					getManagedBean().setMofBeforeExpiryMsg(
 							SmCommonUtil.getMessage(
 									"lbl.sm.MOF.alert.beforeexpiry", new String[] {getManagedBean().getDays(), DateUtils.dateToString("dd/MM/yyyy", expDate)}));
+					}
 				}
 			}
 			else {
