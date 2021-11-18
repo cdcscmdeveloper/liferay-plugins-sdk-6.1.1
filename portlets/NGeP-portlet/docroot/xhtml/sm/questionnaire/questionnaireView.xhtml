@@ -69,7 +69,7 @@
 							<td></td>
 							<td><!--START #12768 -->
 								<p:inputTextarea value="#{ques.otherRemark}" rows="6" cols="100" maxlength="2000" style="width:80%;"
-									required="true" label="#{lbl['lbl.sm.questionnaire.question']} #{status.index+1}"
+									label="#{lbl['lbl.sm.questionnaire.question']} #{status.index+1}"
 									rendered="#{ques.smQuestion.smAnswerCategory.answerCategoryId == 2}" autoResize="false">
 									<c:set value="#{ques.smQuestion.smAnswerCategory.smAnswers[0].answerId}" target="#{ques.smAnswer}" property="answerId" />
 								</p:inputTextarea><!-- END #12768-->
