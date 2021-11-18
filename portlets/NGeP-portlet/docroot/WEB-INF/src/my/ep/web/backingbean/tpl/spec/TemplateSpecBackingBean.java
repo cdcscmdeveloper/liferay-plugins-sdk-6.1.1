@@ -3563,4 +3563,27 @@ public class TemplateSpecBackingBean extends
 		return false;
 	}
 	//#31134 Farid end 25/6/2021
+	
+	//Bug #32110 related to #21695 Farid Start 18/11/2021
+	public boolean checkItemAllQtyZero(TemplateSpecBean templateSpecBean) {
+		
+		for(TplSpecAnswer retrieveAns : templateSpecBean.getSpecAnswerList()){
+			if(retrieveAns.getTplSpecZoneQty() != null && !retrieveAns.getTplSpecZoneQty().getQty().equals(new BigDecimal(0))
+					&& retrieveAns.getTplSpecQuestion().getQuestionType().equalsIgnoreCase("I")){
+				break;
+				
+			}
+			else if(retrieveAns.getTplSpecZoneQty() == null && retrieveAns.getTplSpecQuestion().getClQuantity() != null && !retrieveAns.getTplSpecQuestion().getClQuantity().equals(new BigDecimal(0))
+					&& retrieveAns.getTplSpecQuestion().getQuestionType().equalsIgnoreCase("I")){
+				break;
+				
+			}
+			else{
+				return true;
+			}
+			
+		}
+		return false;
+	}
+	//Bug #32110 related to #21695 Farid End 18/11/2021	
 }
