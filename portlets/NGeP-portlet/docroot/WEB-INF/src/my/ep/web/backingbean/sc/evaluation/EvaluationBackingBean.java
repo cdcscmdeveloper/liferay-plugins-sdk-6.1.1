@@ -7252,9 +7252,7 @@ public class EvaluationBackingBean extends
 				//#28784 - start
 				afterDemoInv(false);
 				if (this.getManagedBean().getScQt().isDemoRequired()
-						&& (SCProcessNameConst.FINALISE_TEC_EVALUATION
-						.equalsIgnoreCase(this.getManagedBean().getTaskName())
-						|| SCProcessNameConst.ENDORSE_TEC_EVALUATION
+						&& (SCProcessNameConst.ENDORSE_TEC_EVALUATION
 						.equalsIgnoreCase(this.getManagedBean().getTaskName())
 						|| SCProcessNameConst.SIGNOFF_TEC_EVALUATION
 						.equalsIgnoreCase(this.getManagedBean().getTaskName()))) {
@@ -9540,9 +9538,7 @@ private void retriveCommitteeRemarksList(){
 			//25638 Revise at SC,EC,OC,TEC,FEC,FC - Start
 			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outCome)) {//#28784 - start
 				if (this.getManagedBean().getScQt().isDemoRequired()
-						&& (SCProcessNameConst.ENDORSE_TEC_EVALUATION
-								.equalsIgnoreCase(this.getManagedBean().getTaskName())
-								|| SCProcessNameConst.SIGNOFF_TEC_EVALUATION
+						&& (SCProcessNameConst.SIGNOFF_TEC_EVALUATION
 								.equalsIgnoreCase(this.getManagedBean().getTaskName()))) {
 					//no need remark before demo invitation
 				} else {
@@ -9557,8 +9553,14 @@ private void retriveCommitteeRemarksList(){
 		} else {
 			this.getManagedBean().setLocalOutCome(outCome);
 
-			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outCome)) {
+			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outCome)) {//#28784 - start
+				if (this.getManagedBean().getScQt().isDemoRequired()
+						&& (SCProcessNameConst.ENDORSE_TEC_EVALUATION
+								.equalsIgnoreCase(this.getManagedBean().getTaskName()))) {
+					//no need remark before demo invitation
+				} else {
 				validateRemarks();
+				}//#28784 - end
 				RequestContext.getCurrentInstance().execute("reviseApprovalDlgs.show()");
 			} else if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outCome)
 					|| BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outCome) || BpmOutcomeConst.BPM_ENDORSE.equalsIgnoreCase(outCome)) {
