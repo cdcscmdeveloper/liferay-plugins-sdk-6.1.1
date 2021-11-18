@@ -623,14 +623,15 @@ public class YearEndProcessBackingBean extends
 				Date d3 = df.parse(df.format(resFeeDTO.getFeeExemptions().get(2).getExpDate()));
 				System.out.println("d2 is : " + d2);
 				System.out.println("d3 is : " + d3);
-				if (d1.compareTo(d3) < 0 && d1.compareTo(d2) > 0) {
+				if (d1.compareTo(d3) <= 0 && d1.compareTo(d2) >= 0) { //28375
 					flOrderBB.getManagedBean().setPatCheck("true");
 
 				} else {
 					flOrderBB.getManagedBean().setPatCheck("false");
 				}
-			} else
-				flOrderBB.getManagedBean().setPatCheck("false");
+			} else{
+				flOrderBB.getManagedBean().setPatCheck("false"); //28375
+			}
 
 			System.out.println("flOrderBB.getManagedBean().getPatCheck() is : "
 					+ flOrderBB.getManagedBean().getPatCheck());
@@ -703,14 +704,15 @@ public class YearEndProcessBackingBean extends
 				Date d3 = df.parse(df.format(resFeeDTO.getFeeExemptions().get(2).getExpDate()));
 				System.out.println("d2 is : " + d2);
 				System.out.println("d3 is : " + d3);
-				if (d1.compareTo(d3) < 0 && d1.compareTo(d2) > 0) {
+				if (d1.compareTo(d3) <= 0 && d1.compareTo(d2) >= 0) { //28375
 					flOrderBB.getManagedBean().setPatCheck("true");
 
 				} else {
 					flOrderBB.getManagedBean().setPatCheck("false");
 				}
-			} else
-				flOrderBB.getManagedBean().setPatCheck("false");
+			} else{
+				flOrderBB.getManagedBean().setPatCheck("false"); //28375
+			}
 
 			System.out.println("flOrderBB.getManagedBean().getPatCheck() is : "
 					+ flOrderBB.getManagedBean().getPatCheck());
