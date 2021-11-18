@@ -125,11 +125,13 @@
 	</p:column>
 		
 <!-- Bug #31733 Related to #21695 12/10/2021 -->
+<!-- Bug #32110 Related to #21695 18/11/2021 START-->
 		<p:column style="width:10%;" rendered="#{isSqSpec and isSpecTypeFinancial or (!qtyZero and isSpecTypeFinancial) or (!isSqSpec and !isZonal and isSpecTypeFinancial)}">
 		<f:facet name="footer">
-			<h:outputText value="#{lbl['lbl.tpl.spec.specification.total']}" rendered="#{isAllPriceTypesStandard and !(isZonal and isSqSpec)}" />
+			<h:outputText value="#{lbl['lbl.tpl.spec.specification.total']}" rendered="#{isAllPriceTypesStandard and !(isZonal and isSqSpec) and !templateSpecBackingBean.checkItemAllQtyZero(templateSpecBean)}" />
 			<h:outputText value="#{lbl['lbl.tpl.spec.specification.total']}" rendered="#{isAllPriceTypesStandard and isZonal and isSqSpec}" /><!-- #31789  -->
 		</f:facet>
+<!-- Bug #32110 Related to #21695 18/11/2021 END-->
 <!-- FARID START #28673 fix bug #21695 -->
 		<!-- FARID START  add disable tplSpecAnswer.tplSpecZoneQty.qty eq 0-->
 		<p:inputText id="ratePerUom" style="min-width:0px !important; width:calc(100% - 40px); text-align:right;"
@@ -181,12 +183,15 @@
 				or (isSpecificationReq and !isZonal))) 
 				and isAllPriceTypesStandard}">
 		<f:facet name="footer">
+		<!-- Bug #32110 Related to #21695 18/11/2021 START-->
 			<h:outputText id="totalAmount" 
 				styleClass="calcAmount" 
 				value="#{templateSpecBean.specMaster.totalAmount}"
-				rendered="#{isSpecTypeFinancial and isAllPriceTypesStandard and !(isZonal and isSqSpec)}">
+				rendered="#{isSpecTypeFinancial and isAllPriceTypesStandard and !(isZonal and isSqSpec)
+				and !templateSpecBackingBean.checkItemAllQtyZero(templateSpecBean)}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</h:outputText>
+			<!-- Bug #32110 Related to #21695 18/11/2021 END-->
 			<!-- #31789 START -->
 			<h:outputText id="totalAmountZonal" 
 				styleClass="calcAmount" 
