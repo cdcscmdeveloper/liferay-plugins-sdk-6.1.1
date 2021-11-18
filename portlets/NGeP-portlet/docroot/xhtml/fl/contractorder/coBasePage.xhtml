@@ -118,7 +118,7 @@
 				<p:commandButton
 						value="#{lbl['lbl.fl.yep.proceed']}" 
 						action="#{flOrderBB.carryForward(BpmOutcomeConstant.proceed)}" 
-						disabled="#{!(flOrderBB.managedBean.progressStatus eq '6' and flOrderBB.managedBean.patCheck eq 'true')}">
+						disabled="#{!(flOrderBB.managedBean.patCheck eq 'true')}">
 						<f:param name="actionName" value="#{BpmOutcomeConstant.proceed}" />
 					</p:commandButton>
 					<!-- 28375 end -->
