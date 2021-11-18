@@ -1247,7 +1247,6 @@ public class SupplierFinalizationBackingBean extends
 				}
 				reqDTO = validateInfo(2);
 			}
-			validateFinalizationReports(reqDTO);
 			
 			if (CollectionUtils.isNotEmpty(scQtFinalization.getScQtFinalizationReports())) {
 				scQtFinalization.getScQtFinalizationReports().addAll(getManagedBean().getEvaluationReportList());
@@ -1265,11 +1264,6 @@ public class SupplierFinalizationBackingBean extends
 				}
 				reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
 				// #18685-End
-			// #25037 - start
-			if (!skipValidation) {
-				validateFinalizationReports(reqDTO);
-			}
-			// #25037 - end
 
 			validateFinalizationReports(reqDTO, skipValidation);//25037 note31
 			//saveEvaluationReportsDetaills();
@@ -2339,8 +2333,7 @@ public class SupplierFinalizationBackingBean extends
 					.equals(getManagedBean().getCurrentStatusId())) {
 				
 				// #28834 - #31934 - starts.
-				// validateFinalizationReports(null, false); Temp comment to fix #31934 #22
-				validateFinalizationReports(null);
+				validateFinalizationReports(null, false); 
 				// #28834 - #31934 - ends.
 				
 				if (CollectionUtils.isNotEmpty(meetingList)) {
