@@ -217,33 +217,53 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.scoring']}"
 				style="width:5%;white-space: normal;text-align: center;">
 				<h:panelGroup id="scoreFinanceView">
-					<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
-						disabled="#{specificationBackingBean.managedBean.readOnly}"
-						rendered="#{((stageTwofunctional.pmDocument.docDefinitionKey ne 'SD' and   stageTwofunctional.action.parameterCode ne 'U') and !(stageTwofunctional.definationType.parameterCode eq 'TS' and stageTwofunctional.action.parameterCode eq 'I') and !(stageTwofunctional.definationType.parameterCode eq 'UP' and stageTwofunctional.action.parameterCode eq 'V'))}">
-						<p:ajax event="change" process="@this" partialSubmit="true"
-							update="financialChecklistSpecificationStatus,actionView"
-							listener="#{specificationBackingBean.financialCheckListScoreReqChange(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
-					</p:selectBooleanCheckbox>
 
-					<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
-						disabled="true"
-						rendered="#{((stageTwofunctional.definationType.parameterCode eq 'TS' and stageTwofunctional.action.parameterCode eq 'I') or (stageTwofunctional.definationType.parameterCode eq 'UP' and stageTwofunctional.action.parameterCode eq 'V'))}">
-					</p:selectBooleanCheckbox>
-					<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
-						disabled="#{specificationBackingBean.managedBean.readOnly}"
-						rendered="#{stageTwofunctional.pmDocument.docDefinitionKey ne 'SD' and stageTwofunctional.action.parameterCode eq 'U' and stageTwofunctional.action.parameterCode ne 'V' and !fn:contains(stageTwofunctional.title,'Annual') and !fn:contains(stageTwofunctional.title,'Verification') and !fn:contains(stageTwofunctional.title,'Pengesahan') and !fn:contains(stageTwofunctional.title,'Kunci')}">
-						<p:ajax event="change" process="@this" partialSubmit="true"
-							update="financialChecklistSpecificationStatus,actionView"
-							listener="#{specificationBackingBean.financialCheckListScoreReqChange(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
-					</p:selectBooleanCheckbox>
-					<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
-						disabled="#{specificationBackingBean.managedBean.readOnly}"
-						rendered="#{stageTwofunctional.pmDocument.docDefinitionKey eq 'SD' and stageTwofunctional.action.parameterCode eq 'V'}">
-						<p:ajax event="change" process="@this" partialSubmit="true"
-							update="actionView,financialChecklistSpecificationStatus"
-							listener="#{specificationBackingBean.financialCheckListScoreReqChange(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
-					</p:selectBooleanCheckbox>
+				<!-- #30559 Farid add condition definition key 'FA' and 'U' -start- -->
+					<c:choose>
+						<c:when
+							test="#{(stageTwofunctional.pmDocument.docDefinitionKey ne 'UP' and stageTwofunctional.pmDocument.docDefinitionKey ne 'FA' and stageTwofunctional.pmDocument.docDefinitionKey ne 'U')}">
+							<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
+								disabled="#{specificationBackingBean.managedBean.readOnly}"
+								rendered="#{(stageTwofunctional.pmDocument.docDefinitionKey ne 'UP' and stageTwofunctional.pmDocument.docDefinitionKey ne 'FA' and stageTwofunctional.pmDocument.docDefinitionKey ne 'U')}">
+								<p:ajax event="change" process="@this" partialSubmit="true"
+									update="financialChecklistSpecificationStatus,actionView"
+									listener="#{specificationBackingBean.financialCheckListScoreReqChange(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
+							</p:selectBooleanCheckbox>
+						</c:when>
+						<c:otherwise>
+							<!-- #30559 Farid add condition definition key 'FA' and 'U' -end- -->
 
+							<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
+								disabled="#{specificationBackingBean.managedBean.readOnly}"
+								rendered="#{((stageTwofunctional.pmDocument.docDefinitionKey ne 'SD' and   stageTwofunctional.action.parameterCode ne 'U') and !(stageTwofunctional.definationType.parameterCode eq 'TS' and stageTwofunctional.action.parameterCode eq 'I') and !(stageTwofunctional.definationType.parameterCode eq 'UP' and stageTwofunctional.action.parameterCode eq 'V'))}">
+								<p:ajax event="change" process="@this" partialSubmit="true"
+									update="financialChecklistSpecificationStatus,actionView"
+									listener="#{specificationBackingBean.financialCheckListScoreReqChange(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
+							</p:selectBooleanCheckbox>
+
+							<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
+								disabled="true"
+								rendered="#{((stageTwofunctional.definationType.parameterCode eq 'TS' and stageTwofunctional.action.parameterCode eq 'I') or (stageTwofunctional.definationType.parameterCode eq 'UP' and stageTwofunctional.action.parameterCode eq 'V'))}">
+							</p:selectBooleanCheckbox>
+							<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
+								disabled="#{specificationBackingBean.managedBean.readOnly}"
+								rendered="#{stageTwofunctional.pmDocument.docDefinitionKey ne 'SD' and stageTwofunctional.action.parameterCode eq 'U' and stageTwofunctional.action.parameterCode ne 'V' and !fn:contains(stageTwofunctional.title,'Annual') and !fn:contains(stageTwofunctional.title,'Verification') and !fn:contains(stageTwofunctional.title,'Pengesahan') and !fn:contains(stageTwofunctional.title,'Kunci')}">
+								<p:ajax event="change" process="@this" partialSubmit="true"
+									update="financialChecklistSpecificationStatus,actionView"
+									listener="#{specificationBackingBean.financialCheckListScoreReqChange(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
+							</p:selectBooleanCheckbox>
+							<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
+								disabled="#{specificationBackingBean.managedBean.readOnly}"
+								rendered="#{stageTwofunctional.pmDocument.docDefinitionKey eq 'SD' and stageTwofunctional.action.parameterCode eq 'V'}">
+								<p:ajax event="change" process="@this" partialSubmit="true"
+									update="actionView,financialChecklistSpecificationStatus"
+									listener="#{specificationBackingBean.financialCheckListScoreReqChange(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
+							</p:selectBooleanCheckbox>
+
+							<!-- #30559 Farid add condition definition key 'FA' and 'U' -start- -->
+						</c:otherwise>
+					</c:choose>
+					<!-- #30559 Farid add condition definition key 'FA' and 'U' -end- -->	
 				</h:panelGroup>
 			</p:column>
 
