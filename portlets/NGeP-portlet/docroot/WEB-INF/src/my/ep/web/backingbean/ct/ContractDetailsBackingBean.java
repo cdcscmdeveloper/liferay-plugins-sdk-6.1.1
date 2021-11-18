@@ -1234,7 +1234,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				String contractNO = ctBB.getManagedBean().getContractVer().getCtContract().getContractNo();
 				for (CtAgency ctAgency : ctBB.getManagedBean().getContractVer().getCtAgencies()) {
 					ceilingAmt = ceilingAmt + ctAgency.getCeilingAmount().doubleValue();
-					log.info(" Bug #31740 ceiling amount in contractdetailsbackingbean  :"+ctAgency.getCeilingAmount()+" and Contract NO : "+contractNO);
+					log.info(" Bug #31740 ceiling amount in contractdetailsbackingbean  :"+ctAgency.getCeilingAmount()+" and Contract NO : "+contractNO+" and agency_profile_id :  "+ctAgency.getOrgProfile().getOrgProfileId());
 
 				}
 				ceilingAmt = Double.valueOf(df.format(ceilingAmt));
