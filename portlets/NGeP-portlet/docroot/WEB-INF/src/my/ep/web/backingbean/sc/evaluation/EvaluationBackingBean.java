@@ -184,6 +184,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.batik.apps.svgbrowser.StatusBar;
@@ -9783,6 +9784,10 @@ private void retriveCommitteeRemarksList(){
 		reqDtO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 		reqDtO.setPmUser(facesScopes.getUserSessionBean());
 		reqDtO.setRoleCode(this.getManagedBean().getRoleCode());
+		//29561 - start
+		reqDtO.setBaseURL(SmCommonUtil.getBasePortalUrl());
+		reqDtO.setTaskName(this.getManagedBean().getTaskName());
+		//29561 - end
 		EvaluationResDTO resDTO = null;
 		try {
 			resDTO = evaluationso.updateBPMAction(reqDtO);
