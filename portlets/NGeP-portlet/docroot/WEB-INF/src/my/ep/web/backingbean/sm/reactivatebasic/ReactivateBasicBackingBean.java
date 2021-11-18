@@ -100,10 +100,12 @@ public class ReactivateBasicBackingBean extends
 
 			if (resDTO.isSuccessful()) {
 				renewObject();
+				//#14639 - START
 				SmCommonUtil.redirectToPage(
 						"/xhtml/sm/userProfileMaintenance/outputMsg",
-						MessageConst.INFO_721028, null,
+						MessageConst.INFO_721028, new String[] {resDTO.getBasicSupplierAdmin().getName(), reqDTO.getEmail() },
 						FacesMessage.SEVERITY_INFO);
+				//#14639 - END
 			}
 		} catch (Exception e) {
 			throw new EpException(e.getMessage());
@@ -127,13 +129,15 @@ public class ReactivateBasicBackingBean extends
 			reqDTO.setServerPort(fs.getRequest().getServerPort());
 			reqDTO.setSmSupp(basicSupplier);
 			try {
-				SmServiceLookup.getRegistrationSO().reactivateBasicAccount(
+				//#14639 - START
+				RegistrationResDTO resDTO = SmServiceLookup.getRegistrationSO().reactivateBasicAccount(
 						reqDTO);
 				renewObject();
 				SmCommonUtil.redirectToPage(
 						SmApplicationUtil.getApplicationErrorPage(),
-						MessageConst.INFO_721029, null,
+						MessageConst.INFO_721029, new String[] {resDTO.getBasicSupplierAdmin().getPmUser().getLoginId() },
 						FacesMessage.SEVERITY_INFO);
+				//#14639 - END
 			} catch (Exception ex) {
 				throw new EpException(ex.getMessage());
 			}
