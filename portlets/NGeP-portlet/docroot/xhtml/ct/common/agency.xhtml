@@ -94,7 +94,7 @@
 			 <f:facet name="header" styleClass="column-align-center">
 					<h:outputText value="#{lbl['lbl.ct.ceiling.amount']}" />
 					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ceiling.amt']}" />
-					<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"></link>
+					
 			 </f:facet>			   
                <p:cellEditor>                            
                     <f:facet name="input">
@@ -113,7 +113,7 @@
                </p:cellEditor> 
                     <ui:fragment  rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}">
                          <div style="text-align:center;">
-                          <i class="fa fa-pencil-square-o"></i>              
+                          <h:graphicImage value="/css/images/design/icon-edit.png" />  <!--Fix #31740 -->           
                          </div>
                     </ui:fragment>							 					  
                 <!-- End Fixing  #28827 -->

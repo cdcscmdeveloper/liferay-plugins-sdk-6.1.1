@@ -1491,13 +1491,13 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		List<CtAgency> agencyList = this.getManagedBean().getContractVer().getCtAgencies();
 		// Start added log for  Bug #31740
 		log.info(" Bug #31740 agencyList : "+agencyList.size()+" and  Contract No : "+getManagedBean().getContractVer().getCtContract().getContractNo());
-		log.info(" Bug #31740 Changes value using(agencyData) in ContractBackingBean  :"+agencyData.getCeilingAmount()+" and Contract NO : "+getManagedBean().getContractVer().getCtContract().getContractNo());
+		log.info(" Bug #31740 Changes value using(agencyData) in ContractBackingBean  :"+agencyData.getCeilingAmount()+" and Contract NO : "+getManagedBean().getContractVer().getCtContract().getContractNo()+" agency_profile_id : "+agencyData.getOrgProfile().getOrgProfileId());
 		if (agencyList.size() > 0) {
 			double ceilingAmt = 0.0;
 			DecimalFormat df = new DecimalFormat("#.00");
 			for (CtAgency ctAgency : agencyList) {
 				if(ctAgency.getOrgProfile().getOrgProfileId().equals(agencyData.getOrgProfile().getOrgProfileId())){
-					log.info(" Bug #31740 Changes value using(ctAgency) in ContractBackingBean  :"+ctAgency.getCeilingAmount()+" and contract No : "+getManagedBean().getContractVer().getCtContract().getContractNo());
+					log.info(" Bug #31740 Changes value using(ctAgency) in ContractBackingBean  :"+ctAgency.getCeilingAmount()+" and contract No : "+getManagedBean().getContractVer().getCtContract().getContractNo()+" agency_profile_id  :"+ctAgency.getOrgProfile().getOrgProfileId());
 				}
 				ceilingAmt = ceilingAmt + ctAgency.getCeilingAmount().doubleValue();						
 		// End added log for  Bug #31740 			
