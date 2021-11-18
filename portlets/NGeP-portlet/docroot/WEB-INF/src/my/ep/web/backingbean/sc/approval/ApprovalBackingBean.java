@@ -742,14 +742,14 @@ public class ApprovalBackingBean extends
 					List<TabBean> cTabs = this.getManagedBean().getScCommitteeMemberTabList();
 					String currentCommitteeType = cTabs.get(this.getManagedBean().getSelectedCommitteeTabIndex()).getTabType();
 					getManagedBean().setRoleFilterList(getRoleFilterListForCommitteeMaintenance(this.getManagedBean().getQt(), currentCommitteeType));
-					Collections.sort(this.getManagedBean().getScCommitteeMemberTabList(), new Comparator<TabBean>() {
+/* 					Collections.sort(this.getManagedBean().getScCommitteeMemberTabList(), new Comparator<TabBean>() {
 						List<String> sortOrder = Arrays.asList("SC", "EC", "OC", "TEC", "FEC");
 						public int compare(TabBean o1, TabBean o2) {
 									return Integer.valueOf(
 											sortOrder.indexOf(o1.getTabType())).compareTo(
 											Integer.valueOf(sortOrder.indexOf(o2.getTabType())));
 						}
-					});
+					}); */
 				}				
 				if(this.getManagedBean().isCommitteeReviseFlow()){
 					getManagedBean().setRoleFilterList(new String[] {ParameterConst.COMMITTEE_ROLE_SECRETARY});
