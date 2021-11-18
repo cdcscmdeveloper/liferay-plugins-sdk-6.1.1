@@ -1,8 +1,0 @@
-	
-<table width='100%'>
-	<tr align='center'>
-		<td align='left'>$userName</td>
-		<td align='center'></td>
-		<td align='right'>$date</td>
-	</tr>
-</table>
