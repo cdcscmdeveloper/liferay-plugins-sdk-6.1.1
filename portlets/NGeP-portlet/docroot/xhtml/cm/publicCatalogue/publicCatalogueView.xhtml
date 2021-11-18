@@ -395,12 +395,13 @@ div[id$="catalogueGridViewID_content"] td.ui-datagrid-column {
 													<!-- #10747 - Soo - End -->
 											</h:panelGroup>
 										</p:column>
+										<!-- Enhancement #31245 - start -->
 										<p:column style="width :30%;white-space:normal">
 											<h:commandLink value="#{supplierItem.itemName.replaceAll('N/A', '').replaceAll(' NA NA NA NA', '').replaceAll(' N A', '').replaceAll('(^|\\s|\\W)(NA)(\\s|\\W|$)', '')}"
 						    				styleClass="blue_font"
 						    				action="#{pCatalogueBackingBean.navigateToSupplierItemDet(supplierItem)}" />
-										
 										</p:column>
+										<!-- Enhancement #31245 - end -->
 										<p:column style="width :40%;white-space:normal">
 											<h:outputText value="#{supplierItem.companyName}"/>
 										</p:column>
