@@ -32,6 +32,9 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sm.SmSupplier;
+// #29592 - start
+import my.ep.web.bean.pm.ProfileManagementSearchBean;
+// #29592 - end
 import my.ep.web.bean.pm.UserProfilesSearchBean;
 import my.ep.web.bean.report.ReportsGenerateBean;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -56,6 +59,13 @@ public class CMReportManagedBean extends ReportBaseManagedBean {
 	
 	private CmItem selectedCmItem;
 	
+	// #29592 - start
+	private ProfileManagementSearchBean pmSearchBean;
+	private PmOrgProfile selectedMinistryOrgProfile;
+	private PmOrgProfile selectedKumpulanPTJOrgProfile;
+	private PmOrgProfile selectedPTJOrgProfile;
+	private String docNoSearchInput;
+	// #29592 - end	
 
 	
 	
@@ -249,6 +259,50 @@ public class CMReportManagedBean extends ReportBaseManagedBean {
 		this.selectedCmItem = selectedCmItem;
 	}
 
+	// #29592 - start
+	public String getDocNoSearchInput() {
+		return docNoSearchInput;
+	}
+
+	public void setDocNoSearchInput(String docNoSearchInput) {
+		this.docNoSearchInput = docNoSearchInput;
+	}
+
+	public PmOrgProfile getSelectedMinistryOrgProfile() {
+		return selectedMinistryOrgProfile;
+	}
+
+	public void setSelectedMinistryOrgProfile(PmOrgProfile selectedMinistryOrgProfile) {
+		this.selectedMinistryOrgProfile = selectedMinistryOrgProfile;
+	}
+
+	public PmOrgProfile getSelectedKumpulanPTJOrgProfile() {
+		return selectedKumpulanPTJOrgProfile;
+	}
+
+	public void setSelectedKumpulanPTJOrgProfile(PmOrgProfile selectedKumpulanPTJOrgProfile) {
+		this.selectedKumpulanPTJOrgProfile = selectedKumpulanPTJOrgProfile;
+	}
+
+	public PmOrgProfile getSelectedPTJOrgProfile() {
+		return selectedPTJOrgProfile;
+	}
+
+	public void setSelectedPTJOrgProfile(PmOrgProfile selectedPTJOrgProfile) {
+		this.selectedPTJOrgProfile = selectedPTJOrgProfile;
+	}
+
+	public ProfileManagementSearchBean getPmSearchBean() {
+		if (pmSearchBean == null) {
+			pmSearchBean = new ProfileManagementSearchBean();
+		}
+		return pmSearchBean;
+	}
+
+	public void setPmSearchBean(ProfileManagementSearchBean pmSearchBean) {
+		this.pmSearchBean = pmSearchBean;
+	}
+	// #29592 - end
 	
 	
 	

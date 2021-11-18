@@ -39,7 +39,12 @@ public class CmReportConst {
 	
 	public static final String REQUEST_NO = "PREQUESTNO";
 	
-	
+	// #29592 - start
+	public static final String MINISTRY = "PMINIS";
+	public static final String KUMPULAN_PTJ = "PKPTJ";
+	public static final String PTJ = "PPTJ";
+	public static final String DOCUMENT_NO = "PDOCNO";
+	// #29592 - end
 	
 	
 	

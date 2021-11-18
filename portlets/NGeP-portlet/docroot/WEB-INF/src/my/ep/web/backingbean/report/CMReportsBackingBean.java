@@ -13,12 +13,19 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.rpt.IRPTRequestSO;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.BaseEntity;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.type.pm.OrganizationType;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.constant.cm.CmConst;
 import my.ep.web.constant.cm.CmReportConst;
 import my.ep.web.constant.report.ReportConst;
@@ -36,6 +43,10 @@ public class CMReportsBackingBean extends ReportBaseBackingBean<CMReportManagedB
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger log = EpLogger.getLogger(ReportBaseBackingBean.class);
+
+	// #29592 - start
+	private static final String CARET_CHAR = "^";
+	// #29592 - end
 
 	public void preRenderCmReport() {
 		log.info(".................preRenderCmReport................");
@@ -174,6 +185,12 @@ public class CMReportsBackingBean extends ReportBaseBackingBean<CMReportManagedB
 		this.getManagedBean().setBusRegNo("");
 		this.getManagedBean().setEpNo("");
 		this.getManagedBean().setRequestNo("");
+		// #29592 - start
+		this.getManagedBean().setSelectedMinistryOrgProfile(null);
+		this.getManagedBean().setSelectedKumpulanPTJOrgProfile(null);
+		this.getManagedBean().setSelectedPTJOrgProfile(null);
+		this.getManagedBean().setDocNoSearchInput(null);
+		// #29592 - end
 
 	}
 
@@ -764,6 +781,32 @@ public class CMReportsBackingBean extends ReportBaseBackingBean<CMReportManagedB
 		if(this.getManagedBean().getDateTo()!=null ){
 			params.put(CmReportConst.DATE_TO, df.format(this.getManagedBean().getDateTo()));
 		}
+		// #29592 - start
+		if (this.getManagedBean().getSelectedMinistryOrgProfile() != null
+				&& this.getManagedBean().getSelectedMinistryOrgProfile().getPmOrgValidity() != null
+				&& StringUtils.isNotBlank(this.getManagedBean().getSelectedMinistryOrgProfile().getPmOrgValidity()
+						.getOrgName())) {
+			params.put(CmReportConst.MINISTRY, this.getManagedBean().getSelectedMinistryOrgProfile().getPmOrgValidity()
+					.getOrgName());
+		}
+		if (this.getManagedBean().getSelectedKumpulanPTJOrgProfile() != null
+				&& this.getManagedBean().getSelectedKumpulanPTJOrgProfile().getPmOrgValidity() != null
+				&& StringUtils.isNotBlank(this.getManagedBean().getSelectedKumpulanPTJOrgProfile().getPmOrgValidity()
+						.getOrgName())) {
+			params.put(CmReportConst.KUMPULAN_PTJ, this.getManagedBean().getSelectedKumpulanPTJOrgProfile()
+					.getPmOrgValidity().getOrgName());
+		}
+		if (this.getManagedBean().getSelectedPTJOrgProfile() != null
+				&& this.getManagedBean().getSelectedPTJOrgProfile().getPmOrgValidity() != null
+				&& StringUtils.isNotBlank(this.getManagedBean().getSelectedPTJOrgProfile().getPmOrgValidity()
+						.getOrgName())) {
+			params.put(CmReportConst.PTJ, this.getManagedBean().getSelectedPTJOrgProfile().getPmOrgValidity()
+					.getOrgName());
+		}
+		if (StringUtils.isNotBlank(this.getManagedBean().getDocNoSearchInput())) {
+			params.put(CmReportConst.DOCUMENT_NO, this.getManagedBean().getDocNoSearchInput());
+		}
+		// #29592 - end
 
 		FacesScopes facesScopes =new FacesScopes();
 		Long userId = facesScopes.getUserSessionBean().getUserId();
@@ -1153,6 +1196,98 @@ public class CMReportsBackingBean extends ReportBaseBackingBean<CMReportManagedB
 
 	}
 
+	// #29592 - start
+	public void updateMinistrySearchCriteria(BaseEntity entity) {
+		log.info("updateMinistrySearchCriteria");
+		PmOrgProfile orgProfile = (PmOrgProfile) entity;
+		this.getManagedBean().getPmSearchBean()
+				.setMinistry(orgProfile);
+		
+		resetPtjGroupOrgProfile(); 
+	}
+	
+	public String constructMinistryConditionFields() {		
+		StringBuilder sb = new StringBuilder();
+		sb.append("orgTypeCode.parameterCode^");
+		sb.append(OrganizationType.MINISTRY.value());
+		sb.append("|recordStatus^1");
+		return sb.toString();
+	}
+	
+	public void updateKPTJSearchCriteria(BaseEntity entity) {
+		log.info("updateKPTJSearchCriteria");
+		PmOrgProfile orgProfile = (PmOrgProfile) entity;
+		this.getManagedBean().getPmSearchBean()
+				.setKptj(orgProfile);
 
+		resetPtjOrgProfile();
+	}
+	
+	public String constuctConditionFieldsForPTJGroup() {
+		StringBuffer parentOrgProfile = new StringBuffer();
+		PmOrgProfile ministryOrgProfile = this.getManagedBean().getSelectedMinistryOrgProfile();
+		Long MinistryOrgProfileId = ministryOrgProfile != null ? ministryOrgProfile
+				.getOrgProfileId() : null;
+		if (null != MinistryOrgProfileId) {
+			String minLevel = EpPropertiesUtils.getInstance().getProperty(
+					EpPropertiesConst.LVL_ORG_PROFILE_MINISTRY);
+			String ptjGrpLevel = EpPropertiesUtils.getInstance().getProperty(
+					EpPropertiesConst.LVL_ORG_PROFILE_PTJGROUP);
+			if (minLevel != null && ptjGrpLevel != null) {
+				int ministryLevel = Integer.valueOf(minLevel);
+				int ptjGroupLevel = Integer.valueOf(ptjGrpLevel);
+				int orgLevel = ministryLevel - ptjGroupLevel;
 
+				for (int i = 0; i < orgLevel; i++) {
+					parentOrgProfile.append("parentOrgProfile.");
+				}
+				parentOrgProfile.append("orgProfileId");
+				parentOrgProfile.append(CARET_CHAR);
+				parentOrgProfile.append(MinistryOrgProfileId);
+			}
+		} else {
+			parentOrgProfile.append("  ");
+		}
+		return parentOrgProfile.toString();
+	}
+	
+	public void updateSearchCriteria(BaseEntity entity) {
+		log.info("updateSearchCriteria");
+		PmOrgProfile orgProfile = (PmOrgProfile) entity;
+		this.getManagedBean().getPmSearchBean()
+				.setPtj(orgProfile);
+	}
+
+	public String constuctConditionFieldsForPTJ() {
+		String parentOrgProfile = null;
+
+		PmOrgProfile ministryOrgProfile = this.getManagedBean().getSelectedMinistryOrgProfile();
+		Long MinistryOrgProfileId = ministryOrgProfile != null ? ministryOrgProfile.getOrgProfileId() : null;
+		PmOrgProfile groupOrgProfile = this.getManagedBean().getSelectedKumpulanPTJOrgProfile();
+		Long PTJGroupOrgProfileId = groupOrgProfile != null ? groupOrgProfile.getOrgProfileId() : null;
+		if (null != PTJGroupOrgProfileId) {
+			parentOrgProfile = OrgProfileUtil.getSearchBeanParentString(ParameterConst.ORG_TYPE_PTJ_GROUP)
+					+ CARET_CHAR + PTJGroupOrgProfileId + ("|groupOrgType^") + ParameterConst.ORG_AUTH_TYPE_ORG_GROUP;
+		} else if (null != MinistryOrgProfileId) {
+			parentOrgProfile = OrgProfileUtil.getSearchBeanParentString(ParameterConst.ORG_TYPE_MINISTRY)
+					+ CARET_CHAR + MinistryOrgProfileId + ("|groupOrgType^") + ParameterConst.ORG_AUTH_TYPE_ORG_GROUP;
+		} else {
+			parentOrgProfile = ("groupOrgType^") + ParameterConst.ORG_AUTH_TYPE_ORG_GROUP;
+		}
+
+		return parentOrgProfile;
+	}
+	
+	public void resetPtjGroupOrgProfile() {
+		this.getManagedBean().setSelectedKumpulanPTJOrgProfile(null);		
+		this.getManagedBean().getPmSearchBean().setKptj(null);
+		resetPtjOrgProfile();
+	}
+	
+	public void resetPtjOrgProfile() {
+		this.getManagedBean().setSelectedPTJOrgProfile(null);		
+		this.getManagedBean().getPmSearchBean().setPtj(null);
+	}
+	
+	// #29592 - end
 }
