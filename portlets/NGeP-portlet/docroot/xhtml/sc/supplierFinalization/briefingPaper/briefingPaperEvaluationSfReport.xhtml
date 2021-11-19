@@ -41,11 +41,11 @@
 				style="width:58%;white-space: normal;">
 				<h:inputText  value="#{scQtEvaluationReport.title}" required="true" style="width:500px;"
 				disabled="#{suppFinalizationBackingBean.managedBean.readOnly or suppFinalizationBackingBean.managedBean.currentStatusId == QTStatusConst.SF_PENDING_ENDORSEMENT or suppFinalizationBackingBean.managedBean.currentStatusId == QTStatusConst.SF_PENDING_SIGN_OFF}" label="#{lbl['lbl.sc.content']}"
-					rendered="#{suppFinalizationBackingBean.managedBean.currentStatusId != QTStatusConst.SF_PENDING_ENDORSEMENT and suppFinalizationBackingBean.managedBean.currentStatusId != QTStatusConst.SF_PENDING_SIGN_OFF}" >
+					rendered="#{scQtEvaluationReport.definationType.parameterCode ne 'UI' and suppFinalizationBackingBean.managedBean.currentStatusId != QTStatusConst.SF_PENDING_ENDORSEMENT and suppFinalizationBackingBean.managedBean.currentStatusId != QTStatusConst.SF_PENDING_SIGN_OFF}" >
 					<p:ajax event="change" process="@this" partialSubmit="true" update="@this"></p:ajax>
 					</h:inputText>
 				<h:outputText value="#{scQtEvaluationReport.title}" 
-					rendered="#{suppFinalizationBackingBean.managedBean.currentStatusId == QTStatusConst.SF_PENDING_ENDORSEMENT or suppFinalizationBackingBean.managedBean.currentStatusId == QTStatusConst.SF_PENDING_SIGN_OFF}" />
+					rendered="#{scQtEvaluationReport.definationType.parameterCode eq 'UI' or suppFinalizationBackingBean.managedBean.currentStatusId == QTStatusConst.SF_PENDING_ENDORSEMENT or suppFinalizationBackingBean.managedBean.currentStatusId == QTStatusConst.SF_PENDING_SIGN_OFF}" />
 					<p:outputLabel style="float: left;" value="*" styleClass="mandatory" />
 			</p:column>
 
