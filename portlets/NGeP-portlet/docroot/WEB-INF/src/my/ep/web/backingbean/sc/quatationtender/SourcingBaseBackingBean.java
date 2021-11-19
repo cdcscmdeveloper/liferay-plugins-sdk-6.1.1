@@ -4588,18 +4588,20 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							getManagedBean().setEvaluationReportList(erList);
 						}
 						// 18685 - START.
-						if (SourcingConstants.EVALUATION_TYPE_TIER1.equals(evaluationType)) {
-							if (SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT.equals(report.getPmDocument().getDocDefinitionKey())) {
-								getManagedBean().getEvaluationReportList().add(report);
-								iterator.remove();
-							}
-						} else if (SourcingConstants.EVALUATION_TYPE_TIER2.equals(evaluationType)) {
-							if (SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT.equals(report.getPmDocument().getDocDefinitionKey())
-									|| SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT.equals(report.getPmDocument().getDocDefinitionKey())
-									|| SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT.equals(report.getPmDocument().getDocDefinitionKey())
-									|| SourcingConstants.DEMO_EVALUATION_REPORT.equalsIgnoreCase(report.getTitle())) {//#28784
-								getManagedBean().getEvaluationReportList().add(report);
-								iterator.remove();
+						if (null != report.getPmDocument()) {
+							if (SourcingConstants.EVALUATION_TYPE_TIER1.equals(evaluationType)) {
+								if (SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT.equals(report.getPmDocument().getDocDefinitionKey())) {
+									getManagedBean().getEvaluationReportList().add(report);
+									iterator.remove();
+								}
+							} else if (SourcingConstants.EVALUATION_TYPE_TIER2.equals(evaluationType)) {
+								if (SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT.equals(report.getPmDocument().getDocDefinitionKey())
+										|| SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT.equals(report.getPmDocument().getDocDefinitionKey())
+										|| SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT.equals(report.getPmDocument().getDocDefinitionKey())
+										|| SourcingConstants.DEMO_EVALUATION_REPORT.equalsIgnoreCase(report.getTitle())) {//#28784
+									getManagedBean().getEvaluationReportList().add(report);
+									iterator.remove();
+								}
 							}
 						// 18685 - END.	
 						}
@@ -4622,34 +4624,37 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			// #18685 - End.
 			for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReportList) {
 				
-				if (taskType.equals(SourcingConstants.CONSOLIDATION_TASK)) {
 					// 18685 - START.
-						if (SourcingConstants.DOC_DEF_KEY_LATAR_BELAKANG_REPORT.equals(scQtFinalizationReport.getPmDocument().getDocDefinitionKey())
-								|| SourcingConstants.DOC_DEF_KEY_TUJUAN_REPORT.equals(scQtFinalizationReport.getPmDocument().getDocDefinitionKey())
-								|| SourcingConstants.DOC_DEF_KEY_METODOLOGI_PENILAIAN_REPORT.equals(scQtFinalizationReport.getPmDocument().getDocDefinitionKey())
-								|| SourcingConstants.DOC_DEF_KEY_UDPUP_REPORT.equals(scQtFinalizationReport.getPmDocument().getDocDefinitionKey())) {
-							
-							if (StringUtils.isEmpty(scQtFinalizationReport.getReportContent())) {
-								if (StringUtils.isEmpty(reportNames)) {
-									reportNames = reportNames + scQtFinalizationReport.getTitle();
-								} else {
-									reportNames = reportNames + ", " + scQtFinalizationReport.getTitle();
+					if (null != scQtFinalizationReport.getPmDocument()) {
+						
+						if (taskType.equals(SourcingConstants.CONSOLIDATION_TASK)) {
+							if (SourcingConstants.DOC_DEF_KEY_LATAR_BELAKANG_REPORT.equals(scQtFinalizationReport.getPmDocument().getDocDefinitionKey())
+									|| SourcingConstants.DOC_DEF_KEY_TUJUAN_REPORT.equals(scQtFinalizationReport.getPmDocument().getDocDefinitionKey())
+									|| SourcingConstants.DOC_DEF_KEY_METODOLOGI_PENILAIAN_REPORT.equals(scQtFinalizationReport.getPmDocument().getDocDefinitionKey())
+									|| SourcingConstants.DOC_DEF_KEY_UDPUP_REPORT.equals(scQtFinalizationReport.getPmDocument().getDocDefinitionKey())) {
+								
+								if (StringUtils.isEmpty(scQtFinalizationReport.getReportContent())) {
+									if (StringUtils.isEmpty(reportNames)) {
+										reportNames = reportNames + scQtFinalizationReport.getTitle();
+									} else {
+										reportNames = reportNames + ", " + scQtFinalizationReport.getTitle();
+									}
 								}
+							} else if (scQtFinalizationReport.getScQtFinalizationReportAttachment() == null){
+								//throw new EpException(MessageConst.ERROR_775150, new String[] { scQtFinalizationReport.getTitle() });
 							}
-						} else if (scQtFinalizationReport.getScQtFinalizationReportAttachment() == null){
-							//throw new EpException(MessageConst.ERROR_775150, new String[] { scQtFinalizationReport.getTitle() });
-						}
-					} else if (taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK)) {
-						if (SourcingConstants.DOC_DEF_KEY_UDPUPBM_REPORT.equals(scQtFinalizationReport.getPmDocument().getDocDefinitionKey())) {
-							if (StringUtils.isEmpty(scQtFinalizationReport.getReportContent())) {
-								if (StringUtils.isEmpty(reportNames)) {
-									reportNames = reportNames + scQtFinalizationReport.getTitle();
-								} else {
-									reportNames = reportNames + ", " + scQtFinalizationReport.getTitle();
+						} else if (taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK)) {
+							if (SourcingConstants.DOC_DEF_KEY_UDPUPBM_REPORT.equals(scQtFinalizationReport.getPmDocument().getDocDefinitionKey())) {
+								if (StringUtils.isEmpty(scQtFinalizationReport.getReportContent())) {
+									if (StringUtils.isEmpty(reportNames)) {
+										reportNames = reportNames + scQtFinalizationReport.getTitle();
+									} else {
+										reportNames = reportNames + ", " + scQtFinalizationReport.getTitle();
+									}
 								}
+							} else if (scQtFinalizationReport.getScQtFinalizationReportAttachment() == null){
+								//throw new EpException(MessageConst.ERROR_775150, new String[] { scQtFinalizationReport.getTitle() });
 							}
-						} else if (scQtFinalizationReport.getScQtFinalizationReportAttachment() == null){
-							//throw new EpException(MessageConst.ERROR_775150, new String[] { scQtFinalizationReport.getTitle() });
 						}
 					}
 					// 18685 - END.
