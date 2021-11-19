@@ -4624,10 +4624,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				
 				if (taskType.equals(SourcingConstants.CONSOLIDATION_TASK)) {
 					// 18685 - START.
-						if (SourcingConstants.DOC_DEF_KEY_LATAR_BELAKANG_REPORT.equals(scQtFinalizationReport.getTitle())
-								|| SourcingConstants.DOC_DEF_KEY_TUJUAN_REPORT.equals(scQtFinalizationReport.getTitle())
-								|| SourcingConstants.DOC_DEF_KEY_METODOLOGI_PENILAIAN_REPORT.equals(scQtFinalizationReport.getTitle())
-								|| SourcingConstants.DOC_DEF_KEY_UDPUP_REPORT.equals(scQtFinalizationReport.getTitle())) {
+						if (SourcingConstants.DOC_DEF_KEY_LATAR_BELAKANG_REPORT.equals(scQtFinalizationReport.getPmDocument().getDocDefinitionKey())
+								|| SourcingConstants.DOC_DEF_KEY_TUJUAN_REPORT.equals(scQtFinalizationReport.getPmDocument().getDocDefinitionKey())
+								|| SourcingConstants.DOC_DEF_KEY_METODOLOGI_PENILAIAN_REPORT.equals(scQtFinalizationReport.getPmDocument().getDocDefinitionKey())
+								|| SourcingConstants.DOC_DEF_KEY_UDPUP_REPORT.equals(scQtFinalizationReport.getPmDocument().getDocDefinitionKey())) {
 							
 							if (StringUtils.isEmpty(scQtFinalizationReport.getReportContent())) {
 								if (StringUtils.isEmpty(reportNames)) {
