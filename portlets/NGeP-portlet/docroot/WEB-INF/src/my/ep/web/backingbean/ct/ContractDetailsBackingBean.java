@@ -1335,8 +1335,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 
 		// Validation for Deduction
-		if(ctBB.getManagedBean().getContractVer().getCtDeductions() != null 
-				&& ctBB.getManagedBean().getContractVer().getCtDeductions().size() > 0){
+		//#32123 - During Notification Setting, no need to validate
+		if((ctBB.getManagedBean().getContractVer().getCtDeductions() != null 
+				&& ctBB.getManagedBean().getContractVer().getCtDeductions().size() > 0)
+				&& !ctBB.getManagedBean().getContractVer().getDocType().equals(ParameterConst.DOCTYPE_NOTIFICATION_SETTING)){
 			for(CtDeduction deduction : ctBB.getManagedBean().getContractVer().getCtDeductions()){
 				if(deduction.getDeductionType() == null ||deduction.getDeductionType().getParameterId() == null ){
 					setTabValue("DE");
@@ -1353,11 +1355,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					}
 				/*#25592-basri*/
 				/*validation error if deduction clause is empty*/
-				} else {  // Start Fix - #32123
-					   if(!ctBB.getManagedBean().getContractVer().getDocType().equals(ParameterConst.DOCTYPE_NOTIFICATION_SETTING)){
+				} else { 
 						setTabValue("DE");
 						throwExceptions(MessageConst.ERROR_100022, "lbl.ct.deduction.clause.desc");	
-				}
 					   // End Fix - #32123				
 				}
 				/*end*/
