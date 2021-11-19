@@ -1479,6 +1479,19 @@ public class RuleCatalogueBackingBean extends
 
 			}
 			// check validation
+			
+			// 29669,29641 start 
+			if (ruleTypeDesc.getRuleType().getRuleDataTypeId().getParameterCode().matches("A|N|M|P") 
+					&& ruleTypeDesc.getRuleType().getRangeType() != 2) {
+				for (PmConfigRuleValue ruleTypeValue : ruleTypeDesc.getRuleType().getConfigRuleValues()) {
+					if (ruleTypeValue.getRuleValue() == null) {
+						throw new EpException(MessageConst.ERROR_770133,
+								new String[] { ruleTypeDesc.getRuleDesc() });
+					}
+				}
+			}
+			// 29669,29641 end
+			
 			for (int i = 0; i < ruleTypeDesc.getRuleType()
 					.getConfigRuleValues().size(); i++) {
 				// add new values to tracking Diary list
@@ -5420,7 +5433,9 @@ public class RuleCatalogueBackingBean extends
 	public void onRuleType(org.primefaces.event.SelectEvent event) {
 
 		String selectedRuleType = null;
-		
+		// 29669,29641,29650 - start
+		RequestContext.getCurrentInstance().reset("form:settingTabId:ruleConfigId"); // reset form when select different Rule if UI validation error
+		// 29669,29641,29650 - end
         if (getManagedBean().getSelectedRuleDescType() != null) {
         	selectedRuleType = getManagedBean().getSelectedRuleDescType()
         			.getRuleType().getRuleType();
