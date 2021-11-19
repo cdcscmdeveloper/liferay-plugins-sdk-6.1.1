@@ -217,15 +217,15 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 			 
 		 }
 		//Enhancement29642 - Start
-		if (lSearchBean.getRecordAdditional() != null && lSearchBean.getRecordAdditional().trim().length() > 0) {
+		if (lSearchBean.getAdditionalLocationType() != null && lSearchBean.getRecordAdditional().trim().length() > 0) {
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("locationType", SearchOperator.OPERATOR_EQUALS.value(), lSearchBean
-							.getRecordAdditional()));
+					new SearchFilterBean("additionallocationType", SearchOperator.OPERATOR_EQUALS.value(), lSearchBean
+							.getAdditionalLocationType()));
 		} else {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("locationType", SearchOperator.OPERATOR_IN.value(), new ArrayList<String>(
 							Arrays.asList(ParameterConst.LOCATION_LEVEL_STATE, ParameterConst.LOCATION_LEVEL_DIVISION,
-									ParameterConst.LOCATION_LEVEL_DISTRICT))));
+									ParameterConst.LOCATION_LEVEL_DISTRICT, ParameterConst.LOCATION_LEVEL_CITY))));
 		}
 		//Enhancement29642 - End
 		return searchBean;
