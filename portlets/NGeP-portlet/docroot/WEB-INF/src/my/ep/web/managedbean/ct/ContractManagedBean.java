@@ -157,7 +157,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	private CtAttachment ctAttachmentDelete;
 	private List<ScLoa> bondDetail;
 	// #24333 - Start
-	private boolean isExtendContract = false;
+	private boolean extendContract = false;
 	private boolean disableOriginalBond = false;
 	// #24333 - End
 	
@@ -1354,11 +1354,11 @@ public class ContractManagedBean extends BaseManagedBean {
 	}
 
 	public boolean isExtendContract() {
-		return isExtendContract;
+		return extendContract;
 	}
 
-	public void setExtendContract(boolean isExtendContract) {
-		this.isExtendContract = isExtendContract;
+	public void setExtendContract(boolean extendContract) {
+		this.extendContract = extendContract;
 	}
 
 	public boolean isNotificationSetting() {
