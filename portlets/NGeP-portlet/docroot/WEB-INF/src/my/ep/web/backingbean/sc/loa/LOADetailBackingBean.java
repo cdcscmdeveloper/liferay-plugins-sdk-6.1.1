@@ -8495,8 +8495,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						// Save and update new supplier offer into related ScLoiLoaItem in DB
 						getQtAwardSO().updateAndSaveNewSupplierJustification(getManagedBean().getNewSupplierJustification(),
 								each.getLoiLoaItemId());
-						
+						log.info("-- SAVE JUSTIFICATION --");
 						for(ScLoiLoaItem scLoiLoaItem : getManagedBean().getNameZoneScLoiLoaItemList()){
+							log.info("-- RELOAD JUSTIFICATION FOR ZONAL --");
 							if(scLoiLoaItem.getLoiLoaItemId() == each.getLoiLoaItemId()){
 								scLoiLoaItem.setLoaSpecJustification(getManagedBean().getNewSupplierJustification());
 							}							
