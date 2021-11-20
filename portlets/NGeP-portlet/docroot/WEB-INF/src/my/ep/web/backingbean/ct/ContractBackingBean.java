@@ -4555,24 +4555,27 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			extendPeriod = Integer.toString(getManagedBean().getContractVer().getCtContractValue().getContractPeriod()); 
 		}		
 		getManagedBean().setExtendContract(false);
-		if(currentPeriod != null && extendPeriod != null) {
-			if(!extendPeriod.equals(currentPeriod) && getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
-				isContractExtendOrIsBond = true;
-				getManagedBean().setExtendContract(true);
+		getManagedBean().setDisableOriginalBond(false);
+
+		if((getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
+				|| getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)
+				|| getManagedBean().isViewContract() == true
+				)&& getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
+			isContractExtendOrIsBond = true;
+			if(currentPeriod != null && extendPeriod != null) {
+				if(!extendPeriod.equals(currentPeriod) && getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
+					isContractExtendOrIsBond = true;
+					getManagedBean().setExtendContract(true);
+					getManagedBean().setDisableOriginalBond(true);
+				}
 			}
 		}
-//		if((getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
-//				|| getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)
-//				)&& getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
-//			isContractExtendOrIsBond = true;
-//			getManagedBean().setDisableOriginalBond(true);
-//		}
 		if (getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT)
 				&& getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
 			if(getManagedBean().getContractVer().getCtAmendment() != null && getManagedBean().getContractVer().getCtAmendment().isContractExtend())
 			isContractExtendOrIsBond = true;
 		}
-		log.info("is ContractExtend or IsBond :"+isContractExtendOrIsBond);
+
 		return isContractExtendOrIsBond;
 		//#24333 - End	
 		}
