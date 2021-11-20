@@ -8498,7 +8498,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						log.info("-- SAVE JUSTIFICATION --");
 						for(ScLoiLoaItem scLoiLoaItem : getManagedBean().getNameZoneScLoiLoaItemList()){
 							log.info("-- RELOAD JUSTIFICATION FOR ZONAL --");
-							if(scLoiLoaItem.getLoiLoaItemId() == each.getLoiLoaItemId()){
+							log.info("scLoiLoaItem.getLoiLoaItemId() : "+scLoiLoaItem.getLoiLoaItemId());
+							log.info("each.getLoiLoaItemId() : "+each.getLoiLoaItemId());
+							if(scLoiLoaItem.getLoiLoaItemId().compareTo(each.getLoiLoaItemId()) == 0){
+								log.info("-- value assign into managedbean --");
 								scLoiLoaItem.setLoaSpecJustification(getManagedBean().getNewSupplierJustification());
 							}							
 						}
