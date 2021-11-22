@@ -182,6 +182,10 @@ public class ContractManagedBean extends BaseManagedBean {
 	//#29983 start
 	private String businessRegNoNew;
 	//#29983 end
+	
+	//#30783 start
+	private Map<String, CtAgency> updateAgencyForSP;
+	//#30783 end
 
 	/**
 	 * @return the fileDirectory
@@ -1478,4 +1482,17 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setDisableOriginalBond(boolean disableOriginalBond) {
 		this.disableOriginalBond = disableOriginalBond;
 	}
+
+	// #30783 - performance start
+	public Map<String, CtAgency> getUpdateAgencyForSP() {
+		if(updateAgencyForSP==null) {
+			updateAgencyForSP = new HashMap<String, CtAgency>();
+		}
+		return updateAgencyForSP;
+	}
+
+	public void setUpdateAgencyForSP(Map<String, CtAgency> updateAgencyForSP) {
+		this.updateAgencyForSP = updateAgencyForSP;
+	}
+	// #30783 - performance end
 }

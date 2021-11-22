@@ -1577,12 +1577,14 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				throw new EpException(MessageConst.ERROR_750007,
 						new String[] {nf.format(overallContractAmount)}); // Total ceiling value exceeded contract value. Please check your ceiling amount.
 			}
-			
-			
 		}
-		
 		//log.info("filtered value in list ==================== : "+getFilteredAgencies().size());
-		
+ 
+		//#30783 start
+		log.info("getManagedBean().getUpdateAgencyForSP() == " + getManagedBean().getUpdateAgencyForSP().size());
+		getManagedBean().getUpdateAgencyForSP().put(String.valueOf(agencyData.getOrgProfile().getOrgProfileId()), agencyData);
+		log.info("done");
+		// /#30783  end performance
 	}
 
 	/**
@@ -1903,6 +1905,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 						!getManagedBean().getUpdateAgencyMap().containsKey(getManagedBean().getSelectedAgency().getOrgProfile().getOrgCode()) && 
 						!getManagedBean().getNewAgencyMap().containsKey(getManagedBean().getSelectedAgency().getOrgProfile().getOrgCode())) {
 					getManagedBean().getUpdateAgencyMap().put(getManagedBean().getSelectedAgency().getOrgProfile().getOrgCode(), getManagedBean().getSelectedAgency());
+					
+					getManagedBean().getUpdateAgencyForSP().put(getManagedBean().getSelectedAgency().getOrgProfile().getOrgCode(), getManagedBean().getSelectedAgency());
+					log.info("done add SP");
 				}
 			}
 			getManagedBean().setButtonHideActive(true);
@@ -1964,6 +1969,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			if((!getManagedBean().getSelectedAgency().isBrandNew() || getManagedBean().getSelectedAgency().isCloned()) && 
 					!getManagedBean().getUpdateAgencyMap().containsKey(getManagedBean().getSelectedAgency().getOrgProfile().getOrgCode())) {
 				getManagedBean().getUpdateAgencyMap().put(getManagedBean().getSelectedAgency().getOrgProfile().getOrgCode(), getManagedBean().getSelectedAgency());
+				
+				getManagedBean().getUpdateAgencyForSP().put(getManagedBean().getSelectedAgency().getOrgProfile().getOrgCode(), getManagedBean().getSelectedAgency());
+				log.info("done add SP");
 			}
 			getManagedBean().setButtonHideActive(true);
 		} catch (Exception e) {
@@ -4788,7 +4796,5 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 		}
 		//Enhancement 29418 - end
-		
-		//test for changes Nordin
 
 }  
