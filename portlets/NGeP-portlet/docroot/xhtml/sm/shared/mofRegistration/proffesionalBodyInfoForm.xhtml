@@ -51,7 +51,18 @@
 				rowKey="#{profBean}" rowIndexVar="index" id="profDt">
 				<ac:paginator for="profDt" />
 				<p:column selectionMode="multiple" width="5%" />
-
+				<!-- START - 32053 -->
+				<p:ajax event="rowSelect"
+						update=":#{p:component('profBodyDelBtnId')}"></p:ajax>
+				<p:ajax event="rowUnselect"
+						update=":#{p:component('profBodyDelBtnId')}"></p:ajax>
+				<p:ajax event="rowSelectCheckbox"
+						update=":#{p:component('profBodyDelBtnId')}"></p:ajax>
+				<p:ajax event="rowUnselectCheckbox"
+						update=":#{p:component('profBodyDelBtnId')}"></p:ajax>
+				<p:ajax event="toggleSelect"
+						update=":#{p:component('profBodyDelBtnId')}"></p:ajax>
+				<!-- END - 32053 -->
 
 				<p:column>
 					<f:facet name="header">
