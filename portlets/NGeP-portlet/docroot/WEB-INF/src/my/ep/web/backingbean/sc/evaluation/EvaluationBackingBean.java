@@ -5514,7 +5514,9 @@ public void saveComplianceSample() {
 						//#31857 - end
 						
 						//#32089
-						if (specAnswers.getUserScore() != null && !specAnswers.getUserScore().equals(0)) {
+						if (specAnswers.getTplSpecQuestion() != null && specAnswers.getTplSpecQuestion().getScoreTypeCode() != null
+										&& specAnswers.getTplSpecQuestion().getScoreTypeCode().getParameterCode()
+										.equalsIgnoreCase(ParameterConst.SCORE_TYPE_USER)) {
 							getManagedBean().setShowSchema(false);
 						}
 						//#32089
@@ -16292,14 +16294,5 @@ private void retriveCommitteeRemarksList(){
 	}
 	// #28784 - end
 	
-	//32089
-	public void manualScoringHideSchema(BigDecimal userScore) {
 
-		if (userScore != null) {
-			getManagedBean().setShowSchema(false);
-		} else {
-			getManagedBean().setShowSchema(true);	
-		}
-	}
-	//32089
 }
