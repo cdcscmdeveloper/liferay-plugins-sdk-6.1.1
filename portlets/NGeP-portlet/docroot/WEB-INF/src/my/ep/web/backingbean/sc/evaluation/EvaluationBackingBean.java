@@ -2107,10 +2107,11 @@ public void saveComplianceSample() {
 	 * Generate evaluation stage.display all the scores for supplies in
 	 * evaluation stage
 	 */
-	private void generateEvaluationStage() {
+	private boolean generateEvaluationStage() { //Bug #31751
 
 		IQTEvaluationSO evaluationSO = null;
-
+		boolean isSuccess = false; //Bug #31751
+		
 		try {
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
@@ -2163,16 +2164,21 @@ public void saveComplianceSample() {
 			 * resDTO.isGenerateSuppliers());
 			 */
 			this.getManagedBean().setGenerateEvaluationButton(true);
-
+			//Bug #31751 - start
+			isSuccess = true; 
+		}catch(Exception e){
+			log.info("Error while decrypt data redmine:31751::qtId:"+this.getManagedBean().getScQt().getQtId() +"::committeeType:"+this.getManagedBean().getCommitteeType());
+			//Bug #31751 - end
 		} finally {
 			evaluationSO = null;
 
 		}
+		return isSuccess; //Bug #31751
 	}
 
-	private void generateFinancialEvaluationresults() {
+	private boolean generateFinancialEvaluationresults() { //Bug #31751
 		IQTEvaluationSO evaluationSO = null;
-
+		boolean isSuccess = false; //Bug #31751
 		try {
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
@@ -2187,10 +2193,15 @@ public void saveComplianceSample() {
 			reqDTO.setPartial(this.getManagedBean().getScQt().isPartial());
 			//#25138, #21695 - end
 			evaluationSO.generateEvaluationSheet(reqDTO);
+			//Bug #31751 - start
+			isSuccess = true; 
+		}catch(Exception e){
+				log.info("Error while decrypt data redmine:31751::qtId:"+this.getManagedBean().getScQt().getQtId() +"::committeeType:"+this.getManagedBean().getCommitteeType());
+			//Bug #31751 - end			
 		} finally {
 			evaluationSO = null;
 		}
-
+		return  isSuccess; //Bug #31751
 	}
 
 	/**
@@ -7334,7 +7345,12 @@ public void saveComplianceSample() {
 							if (null == this.getManagedBean().getScQt()
 									.getFecEvaluationCheck()) {
 
-								generateEvaluationStage();
+								//Bug #31751 - start1	
+								boolean isSuccess = generateEvaluationStage();
+								if(!isSuccess){
+									throw new EpException(MessageConst.ERROR_760530);
+								}
+								//Bug #31751 - end1
 								this.getManagedBean().getScQt()
 										.setFecEvaluationCheck(2);
 
@@ -7357,7 +7373,12 @@ public void saveComplianceSample() {
 							if (null == this.getManagedBean().getScQt()
 									.getTecEvaluationCheck()) {
 
-								generateEvaluationStage();
+								//Bug #31751 - start2
+								boolean isSuccess = generateEvaluationStage();
+								if(!isSuccess){
+									throw new EpException(MessageConst.ERROR_760530);
+								}
+								//Bug #31751 - end2
 								EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 								this.getManagedBean().getScQt()
 										.setTecEvaluationCheck(1);
@@ -7411,7 +7432,12 @@ public void saveComplianceSample() {
 						if (null == this.getManagedBean().getScQt()
 								.getTecEvaluationCheck()) {
 
-							generateEvaluationStage();
+							//Bug #31751 - start3
+							boolean isSuccess = generateEvaluationStage();
+							if(!isSuccess){
+								throw new EpException(MessageConst.ERROR_760530);
+							}
+							//Bug #31751 - end3
 							EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 							this.getManagedBean().getScQt()
 									.setTecEvaluationCheck(1);
@@ -7452,7 +7478,12 @@ public void saveComplianceSample() {
 						if (null == this.getManagedBean().getScQt()
 								.getFecEvaluationCheck()) {
 
-							generateEvaluationStage();
+							//Bug #31751 - start4
+							boolean isSuccess = generateEvaluationStage();
+							if(!isSuccess){
+								throw new EpException(MessageConst.ERROR_760530);
+							}
+							//Bug #31751 - end4
 							this.getManagedBean().getScQt()
 									.setFecEvaluationCheck(2);
 
@@ -7609,7 +7640,12 @@ public void saveComplianceSample() {
 						if (null == this.getManagedBean().getScQt()
 								.getFecEvaluationCheck()) {
 
-							generateFinancialEvaluationresults();
+							//Bug #31751 - start5
+							boolean isSuccess = generateFinancialEvaluationresults();						
+							if(!isSuccess){
+								throw new EpException(MessageConst.ERROR_760530);
+							}
+							//Bug #31751 - end5
 							this.getManagedBean().getScQt()
 									.setFecEvaluationCheck(2);
 							EvaluationReqDTO reqDTO = new EvaluationReqDTO();
