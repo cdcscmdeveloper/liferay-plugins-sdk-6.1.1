@@ -4788,5 +4788,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 		}
 		//Enhancement 29418 - end
+		
+		//test for changes Nordin
 
 }  
