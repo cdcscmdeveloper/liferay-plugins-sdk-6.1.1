@@ -804,84 +804,75 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 	}
 
 	public DemoResDTO saveDemoInvitation() {
-		try {
-			IQTDemoSO qtDemoSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDemoSO.class);
-			DemoReqDTO reqDto = new DemoReqDTO();
-			ScQtDemo scQtDemo = this.getManagedBean().getScQtDemo();
-			scQtDemo.setDemoInvRemark(this.getManagedBean().getDemoRemark());
-			reqDto.setScQtDemo(scQtDemo);
-			reqDto.setScQt(this.getManagedBean().getQt());
-			DemoResDTO resDto = qtDemoSO.retrieveScQtDemoByQtNo(reqDto);
+		IQTDemoSO qtDemoSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTDemoSO.class);
+		DemoReqDTO reqDto = new DemoReqDTO();
+		ScQtDemo scQtDemo = this.getManagedBean().getScQtDemo();
+		if (scQtDemo == null) {
+			throw new EpException(MessageConst.ERROR_760530);
+		}
+		scQtDemo.setDemoInvRemark(this.getManagedBean().getDemoRemark());
+		reqDto.setScQtDemo(scQtDemo);
+		reqDto.setScQt(this.getManagedBean().getQt());
+		DemoResDTO resDto = qtDemoSO.retrieveScQtDemoByQtNo(reqDto);
 
-			if (resDto.getScQtDemo() != null) {
-				if (this.getManagedBean().getDemoInvBy().equalsIgnoreCase(SourcingConstants.ALL_ITEM)) {
-					scQtDemo.setScQtDemoItemList(null);
-				} else if (this.getManagedBean().getDemoInvBy().equalsIgnoreCase(SourcingConstants.BY_ITEM)) {
-					scQtDemo.setScQtDemoSupplierList(null);
-				}
-
-				if (!resDto.getScQtDemo().getDemoCategoryId().getParameterCode()
-						.equalsIgnoreCase(scQtDemo.getDemoCategoryId().getParameterCode())) {
-					if (resDto.getScQtDemo().getDemoCategoryId().getParameterCode()
-							.equalsIgnoreCase(SourcingConstants.BY_ITEM)) {
-						reqDto.setDemoItemToBeDeleted(resDto.getScQtDemo().getScQtDemoItemList());
-					} else if (resDto.getScQtDemo().getDemoCategoryId().getParameterCode()
-							.equalsIgnoreCase(SourcingConstants.ALL_ITEM)) {
-						reqDto.setSupplierScheduleToBeDeleted(resDto.getScQtDemo().getScQtDemoSupplierList());
-					}
-
-				}
-				reqDto.setExistedData(true);
-				resDto = qtDemoSO.saveDemoInvitation(reqDto);
-
-			} else {
-				resDto = qtDemoSO.saveDemoInvitation(reqDto);
+		if (resDto.getScQtDemo() != null) {
+			if (this.getManagedBean().getDemoInvBy().equalsIgnoreCase(SourcingConstants.ALL_ITEM)) {
+				scQtDemo.setScQtDemoItemList(null);
+			} else if (this.getManagedBean().getDemoInvBy().equalsIgnoreCase(SourcingConstants.BY_ITEM)) {
+				scQtDemo.setScQtDemoSupplierList(null);
 			}
 
-			if (resDto.isSuccessful()) {
-				this.getManagedBean().setScQtDemo(resDto.getScQtDemo());
-				this.getManagedBean().setScQtDemoContactList(resDto.getScQtDemo().getScQtDemoContactList());
-				this.getManagedBean().setAllItemList(resDto.getScQtDemo().getScQtDemoSupplierList());
-				this.getManagedBean().setByItemList(resDto.getScQtDemo().getScQtDemoItemList());
-				if (action == null) {
-					successMessage(MessageConst.INFO_700004, getMessageCommon("lbl.demo.save.msg"), this
-							.getManagedBean().getQt().getQtNo(), Boolean.FALSE);
+			if (!resDto.getScQtDemo().getDemoCategoryId().getParameterCode()
+					.equalsIgnoreCase(scQtDemo.getDemoCategoryId().getParameterCode())) {
+				if (resDto.getScQtDemo().getDemoCategoryId().getParameterCode()
+						.equalsIgnoreCase(SourcingConstants.BY_ITEM)) {
+					reqDto.setDemoItemToBeDeleted(resDto.getScQtDemo().getScQtDemoItemList());
+				} else if (resDto.getScQtDemo().getDemoCategoryId().getParameterCode()
+						.equalsIgnoreCase(SourcingConstants.ALL_ITEM)) {
+					reqDto.setSupplierScheduleToBeDeleted(resDto.getScQtDemo().getScQtDemoSupplierList());
 				}
 
-				return resDto;
+			}
+			reqDto.setExistedData(true);
+			resDto = qtDemoSO.saveDemoInvitation(reqDto);
+
+		} else {
+			resDto = qtDemoSO.saveDemoInvitation(reqDto);
+		}
+
+		if (resDto.isSuccessful()) {
+			this.getManagedBean().setScQtDemo(resDto.getScQtDemo());
+			this.getManagedBean().setScQtDemoContactList(resDto.getScQtDemo().getScQtDemoContactList());
+			this.getManagedBean().setAllItemList(resDto.getScQtDemo().getScQtDemoSupplierList());
+			this.getManagedBean().setByItemList(resDto.getScQtDemo().getScQtDemoItemList());
+			if (action == null) {
+				successMessage(MessageConst.INFO_700004, getMessageCommon("lbl.demo.save.msg"), this.getManagedBean()
+						.getQt().getQtNo(), Boolean.FALSE);
 			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
+			return resDto;
 		}
 
 		return null;
 	}
 
 	public String submitDemoInvitation() {
-		try {
-			action = BpmOutcomeConst.BPM_SUBMIT;
-			DemoResDTO resDTO = saveDemoInvitation();
-			String outcome = BpmOutcomeConst.BPM_SUBMIT;
-			resDTO.setPmUser(new FacesScopes().getUserSessionBean());
-			resDTO.setOutcome(outcome);
-			resDTO.setScQt(this.getManagedBean().getQt());
+		action = BpmOutcomeConst.BPM_SUBMIT;
+		DemoResDTO resDTO = saveDemoInvitation();
+		String outcome = BpmOutcomeConst.BPM_SUBMIT;
+		resDTO.setPmUser(new FacesScopes().getUserSessionBean());
+		resDTO.setOutcome(outcome);
+		resDTO.setScQt(this.getManagedBean().getQt());
 
+		if (resDTO.isSuccessful()) {
+			resDTO = demoUpdateBpmTask(resDTO, outcome);
 			if (resDTO.isSuccessful()) {
-				resDTO = demoUpdateBpmTask(resDTO, outcome);
-
-				if (resDTO.isSuccessful()) {
-					resolveAcknowledgement(resDTO.getScQt(), resDTO);
-					renewSesionObject();
-					return CommonUIConst.ACKNOWLEDGE_PAGE;
-				}
+				resolveAcknowledgement(resDTO.getScQt(), resDTO);
+				renewSesionObject();
+				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
-
 		return null;
 	}
 
