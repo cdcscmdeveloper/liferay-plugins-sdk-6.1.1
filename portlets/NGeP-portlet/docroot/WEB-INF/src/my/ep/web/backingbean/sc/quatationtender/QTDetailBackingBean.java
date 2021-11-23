@@ -50,15 +50,21 @@ import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.bean.search.sc.QTSearchBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
+import my.ep.biz.service.pm.common.district.IDistrictSO;
+import my.ep.biz.service.pm.common.division.IDivisionSO;
 import my.ep.biz.service.pm.common.object.IObjectSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.document.IQTDocumentSO;
+import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
@@ -96,13 +102,22 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.city.CityReqDTO;
+import my.ep.dto.pm.common.city.CityResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
+import my.ep.dto.pm.common.district.DistrictReqDTO;
+import my.ep.dto.pm.common.district.DistrictResDTO;
+import my.ep.dto.pm.common.division.DivisionReqDTO;
+import my.ep.dto.pm.common.division.DivisionResDTO;
 import my.ep.dto.pm.common.object.ObjectReqDTO;
 import my.ep.dto.pm.common.object.ObjectResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.pm.common.state.StateReqDTO;
+import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.actor.ScActorReqDTO;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.dto.sc.bidding.BiddingResDTO;
@@ -1957,13 +1972,39 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						&& !sampleSubmissionList.isEmpty()) {
 					for (ScQtSampleSubmission scQtSampleSubmission : sampleSubmissionList) {
 						ScAddress scAddress = scQtSampleSubmission.getScAddress();
+						BriefingZoneBean briefingsamplebean=null;//11104-start
+						if(CollectionUtils.isNotEmpty(this.getManagedBean().getSampleAddressBean())){
+							for(BriefingZoneBean briefBean: this.getManagedBean().getSampleAddressBean()){
+								if(briefBean.getTplSpecZoneDtl().getSpecZoneId().equals(scQtSampleSubmission.getTplSpecZoneDtl().getSpecZoneId())|| scQtSampleSubmission.getTplSpecZoneDtl().getSpecZoneId()==scQtSampleSubmission.getTplSpecZoneDtl().getSpecZoneId()){
+									briefingsamplebean=briefBean;	
+								}							
+							}
+						}//11104-End
 
 						if (null != scAddress) {
 							if (scAddress.getPmDivision() != null
 									&& scAddress.getPmDivision()
 											.getDivisionId() == null) {
 								scAddress.setPmDivision(null);
+								if(null!=briefingsamplebean && null!=briefingsamplebean.getDivisionId()){//11104-start
+									scAddress.setPmDivision(retrievePmDivsById(briefingsamplebean.getDivisionId()));
+								}//11104-End
 							}
+							if(null!=scAddress.getPmState() && scAddress.getPmState().getStateId()==null){//11104-start
+								if(null!=briefingsamplebean && null!=briefingsamplebean.getStateId()){
+									scAddress.setPmState(retrievePmStateById(briefingsamplebean.getStateId()));
+								}
+							}
+							if(null!=scAddress.getPmDistrict() && scAddress.getPmDistrict().getDistrictId()==null){
+								if(null!=briefingsamplebean && null!=briefingsamplebean.getDistrictid()){
+									scAddress.setPmDistrict(retrievePmDistById(briefingsamplebean.getDistrictid()));
+								}
+							}
+							if(null!=scAddress.getPmCity() && scAddress.getPmCity().getCityId()==null){
+								if(null!=briefingsamplebean && null!=briefingsamplebean.getCityId()){
+									scAddress.setPmCity(retrievePmCityById(briefingsamplebean.getCityId()));
+								}
+							}//11104-End
 							scAddress.setPmCountry(retrieveCountry());
 						}
 						scQtSampleSubmission.setScQt(getManagedBean().getQt());
@@ -10282,4 +10323,68 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
   		return !isGroupPTJRuleSet();
   	}
   	
+  	/**11104-start
+	 * Retrieve pm state by id.
+	 * 
+	 * @param stateId
+	 *            - Long state id
+	 * @return PmState object
+	 */
+	public static PmState retrievePmStateById(Long stateId) {
+		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IStateSO.class);
+		StateReqDTO reqDTO = new StateReqDTO();
+		reqDTO.setStateId(stateId);
+		StateResDTO resDTO = reqSO.retriveStateDetailsByID(reqDTO);
+
+		return resDTO.getPmState();
+	}
+	
+	/**
+	 * Retrieve pm city by id.
+	 * 
+	 * @param cityId
+	 *            - Long the city id
+	 * @return PmCity object
+	 */
+	public static PmCity retrievePmCityById(Long cityId) {
+		ICitySO reqSO = (ICitySO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						ICitySO.class);
+		CityReqDTO reqDTO = new CityReqDTO();
+		reqDTO.setCityId(cityId);
+		CityResDTO resDTO = reqSO.retriveCityById(reqDTO);
+
+		return resDTO.getPmCity();
+	}
+
+	/**
+	 * Retrieve pm dist by id.
+	 * 
+	 * @param distId
+	 *            - Long the dist id
+	 * @return PmDistrict object
+	 */
+	public static PmDistrict retrievePmDistById(Long distId) {
+		IDistrictSO reqSO = (IDistrictSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IDistrictSO.class);
+		DistrictReqDTO reqDTO = new DistrictReqDTO();
+		reqDTO.setDistrictId(distId);
+		DistrictResDTO resDTO = reqSO.retriveDistrictByID(reqDTO);
+
+		return resDTO.getPmDistrict();
+	}
+	
+	public static PmDivision retrievePmDivsById(Long divnId) {
+		IDivisionSO reqSO = (IDivisionSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IDivisionSO.class);
+		DivisionReqDTO reqDTO = new DivisionReqDTO();
+		reqDTO.setDivisionId(divnId);
+		DivisionResDTO resDTO = reqSO.retrieveDivisionById(reqDTO);
+
+		return resDTO.getPmDivision();
+	}//11104-End
 }

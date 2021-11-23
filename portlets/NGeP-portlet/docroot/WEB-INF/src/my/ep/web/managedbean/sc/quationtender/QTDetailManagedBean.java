@@ -1768,6 +1768,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private BigDecimal totalmaxscore;
 	//====#31913 bug related to #25138==== end
 	
+	private List<BriefingZoneBean> sampleAddressBean;//11104-start
+	
 	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -10995,6 +10997,22 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			this.totalmaxscore = totalmaxscore;
 		}
 		//====#31913 bug related to #25138==== end
+
+		/**
+		 * 11104-start
+		 * @return the sampleAddressBean
+		 */
+		public List<BriefingZoneBean> getSampleAddressBean() {
+			return sampleAddressBean;
+		}
+
+		/**
+		 * @param sampleAddressBean the sampleAddressBean to set
+		 */
+		public void setSampleAddressBean(List<BriefingZoneBean> sampleAddressBean) {
+			this.sampleAddressBean = sampleAddressBean;
+		}
+		//11104-End
 }
 
 // ***25201
