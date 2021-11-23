@@ -5471,7 +5471,8 @@ public class EvaluationBackingBean extends
 				this.getManagedBean().setSpecItemScoringList(
 						new ArrayList<TplSpecScoring>());
 				//#32089
-				getManagedBean().setShowSchema(true);
+				getManagedBean().setShowSchema(false);
+				boolean FlagAuto = false;
 				//#32089
 				
 				Map<Long, TplSpecScoring> distinctScoring = new HashMap<Long, TplSpecScoring>();
@@ -5518,11 +5519,22 @@ public class EvaluationBackingBean extends
 						//#31857 - end
 						
 						//#32089
-						if (specAnswers.getUserScore() != null && !specAnswers.getUserScore().equals(0)) {
-							getManagedBean().setShowSchema(false);
+						if (specAnswers.getTplSpecQuestion() != null && specAnswers.getTplSpecQuestion().getScoreTypeCode() != null
+										&& specAnswers.getTplSpecQuestion().getScoreTypeCode().getParameterCode()
+										.equalsIgnoreCase(ParameterConst.SCORE_TYPE_AUTO)) {
+							FlagAuto = true;
 						}
+						
 						//#32089
 					}
+					//#32089
+					if (FlagAuto) {
+					getManagedBean().setShowSchema(true);
+					} else {
+					getManagedBean().setShowSchema(false);	
+					}
+					//#32089
+					
 				}
 				retriveTemplateSpecScoring(proposalCheckList.getScQtCheckList(),this.getManagedBean().getNewchecklist());
 				return "/xhtml/sc/evaluation/evaluationStage/financial/financialSpecTemplateSpecScoring.xhtml";
