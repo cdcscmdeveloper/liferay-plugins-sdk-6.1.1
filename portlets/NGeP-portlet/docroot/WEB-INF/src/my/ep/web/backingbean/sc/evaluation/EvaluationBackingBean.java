@@ -5478,7 +5478,8 @@ public void saveComplianceSample() {
 				this.getManagedBean().setSpecItemScoringList(
 						new ArrayList<TplSpecScoring>());
 				//#32089
-				getManagedBean().setShowSchema(true);
+				getManagedBean().setShowSchema(false);
+				boolean FlagAuto = false;
 				//#32089
 				
 				Map<Long, TplSpecScoring> distinctScoring = new HashMap<Long, TplSpecScoring>();
@@ -5527,11 +5528,20 @@ public void saveComplianceSample() {
 						//#32089
 						if (specAnswers.getTplSpecQuestion() != null && specAnswers.getTplSpecQuestion().getScoreTypeCode() != null
 										&& specAnswers.getTplSpecQuestion().getScoreTypeCode().getParameterCode()
-										.equalsIgnoreCase(ParameterConst.SCORE_TYPE_USER)) {
-							getManagedBean().setShowSchema(false);
+										.equalsIgnoreCase(ParameterConst.SCORE_TYPE_AUTO)) {
+							FlagAuto = true;
 						}
+						
 						//#32089
 					}
+					//#32089
+					if (FlagAuto) {
+					getManagedBean().setShowSchema(true);
+					} else {
+					getManagedBean().setShowSchema(false);	
+					}
+					//#32089
+					
 				}
 				retriveTemplateSpecScoring(proposalCheckList.getScQtCheckList(),this.getManagedBean().getNewchecklist());
 				return "/xhtml/sc/evaluation/evaluationStage/financial/financialSpecTemplateSpecScoring.xhtml";
