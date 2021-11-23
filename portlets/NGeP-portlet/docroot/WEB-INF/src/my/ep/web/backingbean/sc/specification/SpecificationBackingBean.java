@@ -1819,6 +1819,7 @@ public class SpecificationBackingBean extends
 			//#28784
 			if(this.getManagedBean().getQt().isDemoRequired()){
 				this.getManagedBean().setDemoAction(true);
+				this.getManagedBean().setDemoType(true);
 			}
 		} finally {
 			specSo = null;
