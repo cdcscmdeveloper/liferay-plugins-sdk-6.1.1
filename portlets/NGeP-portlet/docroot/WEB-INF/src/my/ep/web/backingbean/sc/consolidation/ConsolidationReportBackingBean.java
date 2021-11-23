@@ -523,14 +523,14 @@ public class ConsolidationReportBackingBean extends
 
 		ScQtFinalizationReportAttachment reportAttachment = scQtFinalizationReport
 				.getScQtFinalizationReportAttachment();
-		String definitionType = scQtFinalizationReport.getDefinationType()
-				.getParameterCode();
-		String docDefinitionKey = scQtFinalizationReport.getPmDocument()
-				.getDocDefinitionKey();
-       //codes fixed related to 25619 issue.
+		String definitionType = scQtFinalizationReport.getDefinationType().getParameterCode();
+		String docDefinitionKey = null;
+		if (!SourcingConstants.DEMO_EVALUATION_REPORT.equalsIgnoreCase(scQtFinalizationReport.getTitle())) {//#28784
+			docDefinitionKey = scQtFinalizationReport.getPmDocument().getDocDefinitionKey();
+		}
+		// codes fixed related to 25619 issue.
 		if (reportAttachment == null
-				|| (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED
-						.equals(definitionType) && SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT
+				|| (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED.equals(definitionType) && SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT
 						.equals(docDefinitionKey))) {
 			reportAttachment = generateDocumentAttachment(scQtFinalizationReport);
 			// scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
@@ -1157,6 +1157,11 @@ public class ConsolidationReportBackingBean extends
 				if (CollectionUtils.isEmpty(getManagedBean().getNewBriefingPaperReportList())) {
 					saveNewBriefingPaperReportList(reportDocDefList, _scQtFinalization, qtId);
 				}
+			}
+			
+			//#28784
+			if(this.getManagedBean().getScQt().isDemoRequired()) {
+				this.getManagedBean().setDemoReq(true);
 			}
 			// 18685 - END.
 			//retrieveReportTabDtl(getManagedBean().getScQt(), "KT", SourcingConstants.CONSOLIDATION_TASK);
