@@ -3264,21 +3264,25 @@ public class SmPersonnelBackingBean extends
 		if(personnel.getPmUser() != null && personnel.getEpRole() != null){
 			if(getManagedBean().getEpRoleTrans() != null && getManagedBean().getEpRoleTrans().equalsIgnoreCase(SupplierManagementConst.EPROLE_DELETED)){
 				if (personnel.getPmUser() != null && PmCommonUtil.isAnyPendingTask(personnel.getPmUser().getLoginId())
-						||personnel.getPmUser() != null && personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING) {
+						|| personnel.getPmUser() != null
+						&& personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING
+						|| personnel.getPmUser() != null
+						&& personnel.getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ) {
 					String errMsg = personnel.getName();
 					throw new EpException(MessageConst.ERROR_770950, new String[] { errMsg });
 				}
-				
 			} else if (getManagedBean().getEpRoleTrans() != null
 					&& !personnel.getEpRole().equalsIgnoreCase(getManagedBean().getEpRoleTrans())
 					&& !getManagedBean().getEpRoleTrans().equalsIgnoreCase(SupplierManagementConst.EPROLE_DELETED)) {
 				if (personnel.getPmUser() != null && PmCommonUtil.isAnyPendingTask(personnel.getPmUser().getLoginId())
-						||personnel.getPmUser() != null && personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING) {
+						|| personnel.getPmUser() != null
+						&& personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING
+						|| personnel.getPmUser() != null
+						&& personnel.getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ) {
 					String errMsg = personnel.getName();
 					throw new EpException(MessageConst.ERROR_770949, new String[] { errMsg });
 				}
-			}
-			
+			}	
 		}
 		//to validate if user that admin want to delete or change role doesn't have any pending task - End
 		//#9569 - End
