@@ -7785,6 +7785,20 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	}
 	
 	/**
+	 * BUG 32050
+	 * Checks if QT/DL is submission or cancelled.
+	 * 
+	 * @return true, if is submission or cancelled
+	 */
+	public boolean isQtSubmission(Long statusId) { 
+		if(statusId.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION) || statusId.equals(QTStatusConst.QT_CANCELLED)){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
+	/**
 	 * BUG 31120
 	 * Added MOF Desk Officer
 	 * @return
