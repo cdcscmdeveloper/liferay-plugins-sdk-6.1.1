@@ -14338,9 +14338,9 @@ private void retriveCommitteeRemarksList(){
 				}
 			}
 			//#25138 - get score type from scoreofferprice -end
-			
-			this.getManagedBean().setDetachedPaginatorTest(new Paginator(outerCheckList));
-			
+			//#31917 - start
+			this.getManagedBean().setDetachedPaginatorTest(new Paginator(outerCheckList,outerCheckList.size()));
+			//#31917 - end
 			if (ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
 					.getManagedBean().getScQt().getEvaluationType())
 					|| (ParameterConst.EVALUATION_TYPES_ONE_TIER.equalsIgnoreCase(this
