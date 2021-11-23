@@ -56,7 +56,7 @@
 								value="#{lbl['lbl.sc.demo.meeting.date.tooltip']}" />
 						</f:facet>
 
-						<ac:dateTime id="demoStartDate" required="false"
+						<ac:dateTime id="demoStartDate" required="true"
 							label="#{lbl['lbl.sc.start.date']}" disabled="#{disableMeeting}"
 							value="#{byItemList.scQtDemoSchedule.demoStartDate}"
 							update="@([id$=demoStartDate])" rowIndex="#{rowIndex}#{pIndex}">
@@ -72,7 +72,7 @@
 							<h:outputText value="#{lbl['lbl.ss.item.detail.end.date']}" />
 						</f:facet>
 
-						<ac:dateTime id="demoEndDate" required="false"
+						<ac:dateTime id="demoEndDate" required="true"
 							label="#{lbl['lbl.ss.item.detail.end.date']}"
 							disabled="#{disableMeeting}"
 							value="#{byItemList.scQtDemoSchedule.demoEndDate}"
