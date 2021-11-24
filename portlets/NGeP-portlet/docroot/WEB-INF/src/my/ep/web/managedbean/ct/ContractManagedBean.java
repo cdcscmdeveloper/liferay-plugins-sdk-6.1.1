@@ -182,7 +182,10 @@ public class ContractManagedBean extends BaseManagedBean {
 	//#29983 start
 	private String businessRegNoNew;
 	//#29983 end
-
+	
+	//31740
+	private Map<String, CtAgency> selectedAgencyChanges; // Fix - #31740
+	
 	/**
 	 * @return the fileDirectory
 	 */
@@ -1478,4 +1481,22 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setDisableOriginalBond(boolean disableOriginalBond) {
 		this.disableOriginalBond = disableOriginalBond;
 	}
+
+    // Start Fix - #31740
+	/**
+	 * Populate only changes related to agency
+	 */
+	public Map<String, CtAgency> getSelectedAgencyChanges() {
+		if(selectedAgencyChanges==null) {
+			selectedAgencyChanges = new HashMap<String, CtAgency>();
+		}
+		return selectedAgencyChanges;
+	}
+
+	public void setSelectedAgencyChanges(Map<String, CtAgency> selectedAgencyChanges) {
+		this.selectedAgencyChanges = selectedAgencyChanges;
+	}
+	// End Fix - #31740
+
+		
 }
