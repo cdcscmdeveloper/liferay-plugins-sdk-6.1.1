@@ -126,15 +126,15 @@
 								icon="ui-icon-view" action="#{qTDetailBB.editQuationTenderDetails(scQt, false)}" 
 								partialSubmit="true" process="@this"/>
 							<ui:remove>
-								BUG 32050, Added rendered status not eq pending Submission
+								BUG 32050, reinsert back code START
 							</ui:remove>
 							<p:menuitem id="menuItem2" value="#{lbl['lbl.btn.update']}" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();" 
-                               rendered="#{!qTDetailBB.isAuditor() and scQt.actionRender[1] and !qTDetailBB.isQtSubmission(scQt.qtStatus.statusId,scQt.qtNo)}"
+								rendered="#{!qTDetailBB.isAuditor() and scQt.actionRender[1] and !qTDetailBB.isQtSubmission(scQt.qtStatus.statusId,scQt.qtNo)}"
 								icon="ui-icon-edit" action="#{qTDetailBB.editQuationTenderDetails(scQt, true)}" 
 								partialSubmit="true" process="@this"/>
 							<ui:remove>
-								BUG 32050 END
+								Bug 32050, reinsert back code END
 							</ui:remove>
 							<p:menuitem id="menuItem3" value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();" 
