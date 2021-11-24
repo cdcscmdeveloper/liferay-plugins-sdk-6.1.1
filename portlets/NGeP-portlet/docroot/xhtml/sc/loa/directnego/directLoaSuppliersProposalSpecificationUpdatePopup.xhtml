@@ -120,7 +120,7 @@
 			</p:commandLink>
 		</p:column>
 			<p:column style="width:30%; text-align: left;">
-			<h:outputText style="width:24%;white-space: normal;" value="#{(spec.answerRemark ne null) ? spec.answerRemark : 'N/A'}" />
+			<h:outputText style="width:24%;white-space: normal;" value="#{directLOABackingBean.supplierRemarks(spec.answerRemark)}" />
 		</p:column>
 		<p:column style="width:40%; text-align: center;">
 			<p:inputTextarea id="newOfferedSpec" label="#{lbl['lbl.sc.loiloa.newoffered.specification']}" style="width:calc(100% - 30px);" value="#{spec.newSupplierOffer}" 
