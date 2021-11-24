@@ -809,7 +809,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 		DemoReqDTO reqDto = new DemoReqDTO();
 		ScQtDemo scQtDemo = this.getManagedBean().getScQtDemo();
 		if (scQtDemo == null) {
-			throw new EpException(MessageConst.ERROR_760530);
+			throw new EpException(MessageConst.ERROR_760531);
 		}
 		scQtDemo.setDemoInvRemark(this.getManagedBean().getDemoRemark());
 		reqDto.setScQtDemo(scQtDemo);
