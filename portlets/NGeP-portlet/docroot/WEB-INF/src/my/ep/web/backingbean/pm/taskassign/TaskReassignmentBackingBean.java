@@ -543,7 +543,10 @@ public class TaskReassignmentBackingBean extends
 
 				List<String> tempRoleCodeList = new ArrayList<String>();
 				for (PmUserRole userRole : userRoles) {
-					tempRoleCodeList.add(userRole.getPmRole().getRoleCode());
+					//Redmine Bug #31732 - START
+					if(userRole.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE))
+						tempRoleCodeList.add(userRole.getPmRole().getRoleCode());
+					//Redmine Bug #31732 - END
 				}
 				// get unique role code
 				Set<String> tempRoleCodeSet = new HashSet<String>(
@@ -1838,6 +1841,10 @@ public class TaskReassignmentBackingBean extends
 				vo.setOrgProfileId(resDTO.getOrgProfileId());
 				vo.setRoleList(StringUtils.isNotBlank(resDTO.getRoleCode()) ? new ArrayList<String>(Arrays.asList(resDTO.getRoleCode())) : new ArrayList<String>());
 				vo.setUserGroupId(resDTO.getUserGroupId());
+				//Redmine Bug #31732 - START
+				if(!resDTO.getRoleCodeList().isEmpty())
+					vo.setRoleList(resDTO.getRoleCodeList());
+				//Redmine Bug #31732 - END
 				
 			}
 		}catch(Exception e){
