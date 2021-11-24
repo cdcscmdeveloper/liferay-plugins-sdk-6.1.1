@@ -682,8 +682,7 @@ public class SmApplicationBackingBean extends
 				boolean activeExist = false;
 				activeExist = SmApplicationUtil
 						.checkActiveSmApplForSupp(supplierProfile);
-				//bug #32002
-				if (SmApplicationUtil
+				if (!SmApplicationUtil
 						.isRejectedApplValidForResubmission(rejAppl)) {
 					if (rejAppl.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_IN_PROGRESS) {
 						resubmitErrorKey = "lbl.sm.resubmitExpired.inprogress";
