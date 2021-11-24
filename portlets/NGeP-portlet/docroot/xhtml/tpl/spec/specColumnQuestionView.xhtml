@@ -11,9 +11,9 @@
 <!-- Bug #31733 Related to #21695 12/10/2021 rendered-->
 	<p:column style="width: 25%;white-space: normal;" rendered="#{(!qtyZero) or (!isSqSpec and !isZonal) or (isSqSpec)}">
 		<h:outputText value="#{fn:replace(question.clItem,',',',  ')}"  escape="false"
-			rendered="#{!isRepeated}" /><br /><br />
-		<h:outputText value="#{question.cmItem.extensionCode}" rendered="#{!isRepeated}" />
-		<!-- #29007 Start Vinod -->
+			rendered="#{!isRepeated}" />
+			<!-- #29007 Start Vinod -->
+		<p:spacer width="5" />
 		<ui:fragment rendered="#{!empty question.cmItem.extensionCode and directLOABackingBean.managedBean.iconForDL}">
 		<p:commandLink id="itemName"
 						action="#{directLOABackingBean.searchSupplierSpecification(question,true)}"
@@ -25,6 +25,8 @@
 					value="#{lbl['lbl.sc.proposal.specification.update.mouseover']}" trackMouse="true" />
 		</ui:fragment>
 		<!-- #29007 End Vinod -->
+			<br /><br />
+		<h:outputText value="#{question.cmItem.extensionCode}" rendered="#{!isRepeated}" />
 		<ui:fragment rendered="#{isSpecTypeTechnical or isSqSpec or (isSpecTypeFinancial and !isSpecificationReq)}">
 		<c:if test="#{isContentTypeUpdateSpec}">
 			<p:inputTextarea id="specification" style="width:calc(100% - 20px);"

@@ -154,9 +154,7 @@
 						value="#{lbl['lbl.sc.update.supplier.offer.tooltip']}"
 						trackMouse="true" hideEvent="mouseleave click" />
 				</c:if>
-				<br /><br />
-				<!-- #29006 - end -->
-				<h:outputText value="#{scLoiLoaItem.scRequestItem.cmItem.extensionCode}" rendered="#{scLoiLoaItem.scRequestItem.cmItem != null}" />
+				
 				<!-- #29007 Start Vinod -->
 				<p:spacer width="5" />
 				<c:if
@@ -172,6 +170,10 @@
 
 				</c:if>
 				<!-- #29007 End Vinod -->
+				<br /><br />
+				<!-- #29006 - end -->
+				<h:outputText value="#{scLoiLoaItem.scRequestItem.cmItem.extensionCode}" rendered="#{scLoiLoaItem.scRequestItem.cmItem != null}" />
+				
 			</p:column>
 			
 			<p:column style="width:7%;white-space:normal;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}">
