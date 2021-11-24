@@ -6551,6 +6551,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		**/
 		private void retrieveDisciplinaryAction() {
 			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
+			Date today= new Date();
 
 			if(currSupp != null){
 				this.getManagedBean().setDisciplinaryAction(false);
@@ -6562,17 +6563,19 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				
 				if (resultList != null && CollectionUtils.isNotEmpty(resultList)){
 					for(SmDisciplinaryAction disciplinaryAction: resultList){
-						if(disciplinaryAction.isSuspendRegistration() || disciplinaryAction.isCancelRegistration() ||
-								disciplinaryAction.isBlacklistOwner() || disciplinaryAction.isBumiputeraCancel()){
-							getManagedBean().setDisciplinaryActionNotification(false);
-							getManagedBean().setDisciplinaryAction(true);
-						}else if(disciplinaryAction.isWarning() || disciplinaryAction.isCancelCategory() ||
-								disciplinaryAction.isManufacturerCancel()){
-							getManagedBean().setDisciplinaryActionNotification(true);
-							getManagedBean().setDisciplinaryAction(true);
+						if(!disciplinaryAction.getEndDate().before(today)){
+							if(disciplinaryAction.isSuspendRegistration() || disciplinaryAction.isCancelRegistration() ||
+									disciplinaryAction.isBlacklistOwner() || disciplinaryAction.isBumiputeraCancel()){
+								getManagedBean().setDisciplinaryActionNotification(false);
+								getManagedBean().setDisciplinaryAction(true);
+							}else if(disciplinaryAction.isWarning() || disciplinaryAction.isCancelCategory() ||
+									disciplinaryAction.isManufacturerCancel()){
+								getManagedBean().setDisciplinaryActionNotification(true);
+								getManagedBean().setDisciplinaryAction(true);
+							}
+							getManagedBean().setDisciplinaryActionStartDate(disciplinaryAction.getStartDate());
+							getManagedBean().setDisciplinaryActionEndDate(disciplinaryAction.getEndDate());
 						}
-						getManagedBean().setDisciplinaryActionStartDate(disciplinaryAction.getStartDate());
-						getManagedBean().setDisciplinaryActionEndDate(disciplinaryAction.getEndDate());
 					}
 				}
 			}
