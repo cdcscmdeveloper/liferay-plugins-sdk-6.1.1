@@ -978,9 +978,24 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 		contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);	
-		ContractResDTO resDTO = contractSO.saveContractVer(reqDTO);
+		ContractResDTO resDTO = contractSO.saveContractVer(reqDTO);		
+		
+		// Start Fix - #31740
+		if(ctBB.getManagedBean().getContractVer().getCtAgencies().size() >= 400 && ctBB.getManagedBean().getSelectedAgencyChanges() != null){
+		    if(ctBB.getManagedBean().getSelectedAgencyChanges().size()>0) {
+			   log.info(" getSelectedAgencyChanges ::::::::::::::::::::::: "+ctBB.getManagedBean().getSelectedAgencyChanges().size());
+			      for(CtAgency ctAgencysz : ctBB.getManagedBean().getSelectedAgencyChanges().values()) {		
+					  log.info(" agency org profile id :: "+ctAgencysz.getOrgProfile().getOrgProfileId());
+					  log.info(" agency name test :: "+ctAgencysz.getOrgProfile().getOrgValidity().getOrgName() );
+					  contractSO.updateAgencyCeilingAmount(ctAgencysz.getCeilingAmount(), ctAgencysz.getOrgProfile().getOrgProfileId(),resDTO.getCtContractVer().getContractVerId());
+
+				    }
+		      }
+		}
+        // End Fix - #31740
 
 		if (resDTO.isSuccessful()) {
+
 			log.debug("Record saved successfully");
 			String messageId = MessageConst.INFO_700005;
 			String nextRole = null;

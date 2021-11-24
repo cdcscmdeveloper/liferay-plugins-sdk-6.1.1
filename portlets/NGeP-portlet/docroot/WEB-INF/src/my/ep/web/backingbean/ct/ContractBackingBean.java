@@ -1578,12 +1578,14 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 						new String[] {nf.format(overallContractAmount)}); // Total ceiling value exceeded contract value. Please check your ceiling amount.
 			}
 			
-			
-		}
-		
-		//log.info("filtered value in list ==================== : "+getFilteredAgencies().size());
-		
+			// Start Fix - #31740
+			getManagedBean().getSelectedAgencyChanges().put(String.valueOf(agencyData.getOrgProfile().getOrgCode()),agencyData);
+			log.info("List of selected agency to update : "+getManagedBean().getSelectedAgencyChanges().size());
+			// End Fix - #31740
+		}		
 	}
+	
+	
 
 	/**
 	 * The method used to set status of agency.
