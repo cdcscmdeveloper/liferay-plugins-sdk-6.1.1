@@ -2571,7 +2571,7 @@ private String prepareOriginalText(SmSupplier smSupplier) {
 	    		}
 	    	}
 		}catch(Exception e){
-			e.printStackTrace();
+			throw e; // #25037
 		}
 	}	
 	
