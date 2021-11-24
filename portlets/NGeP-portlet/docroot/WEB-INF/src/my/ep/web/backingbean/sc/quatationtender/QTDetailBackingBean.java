@@ -7897,10 +7897,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		switch(StringUtils.substring(docNo, 0, 2)){
 			case ParameterConst.DOCUMENT_CATEGORY_DIRECT_LOA_FOR_QUOTATION_TENDER : returnVal = Boolean.TRUE;
 													break;
-			case ParameterConst.DOCTYPE_QUOTATION : if(statusId.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION) || statusId.equals(QTStatusConst.QT_CANCELLED)){
+		/*	ENABLE CODE WHEN 9019 going to SIT
+		 * 	case ParameterConst.DOCTYPE_QUOTATION : if(statusId.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION) || statusId.equals(QTStatusConst.QT_CANCELLED)){
 														returnVal = Boolean.TRUE;
 													}
 													break;
+													
+		*/
 		
 		}
 		
