@@ -858,14 +858,18 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 	}
 
 	public String submitDemoInvitation() {
+		IQTDemoSO qtDemoSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTDemoSO.class);
+		DemoReqDTO reqDto = new DemoReqDTO();
 		action = BpmOutcomeConst.BPM_SUBMIT;
 		DemoResDTO resDTO = saveDemoInvitation();
-		String outcome = BpmOutcomeConst.BPM_SUBMIT;
-		resDTO.setPmUser(new FacesScopes().getUserSessionBean());
-		resDTO.setOutcome(outcome);
-		resDTO.setScQt(this.getManagedBean().getQt());
-
 		if (resDTO.isSuccessful()) {
+			reqDto.setScQt(this.getManagedBean().getQt());
+			resDTO = qtDemoSO.retrieveScQtDemoByQtNo(reqDto);
+			String outcome = BpmOutcomeConst.BPM_SUBMIT;
+			resDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			resDTO.setOutcome(outcome);
+			resDTO.setScQt(this.getManagedBean().getQt());
 			resDTO = demoUpdateBpmTask(resDTO, outcome);
 			if (resDTO.isSuccessful()) {
 				resolveAcknowledgement(resDTO.getScQt(), resDTO);
