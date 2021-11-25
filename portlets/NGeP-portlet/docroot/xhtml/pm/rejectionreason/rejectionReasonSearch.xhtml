@@ -11,21 +11,38 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		<table class="ppTwoTable">
 			<tr>
 				<td><table style="width:600px;">
+						<!-- 8411 - START -->
 						<tr>
 							<th><p:outputLabel value="#{lbl['lbl.pm.reason.category']}" />
 								<p:outputLabel value="* " styleClass="mandatory" /></th>
 							<td><p:selectOneMenu id="somReasonCat"
 									label="#{lbl['lbl.pm.reason.category']}"
 									styleClass="ppDropDownWidthM"
+									value="#{rejectionReasonBackingBean.managedBean.reasonCategory}">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue=""/>
+									<f:selectItem itemLabel="#{lbl['lbl.pm.reason.justification']}" itemValue="#{rejectionReasonBackingBean.justification}"/>
+									<f:selectItem itemLabel="#{lbl['lbl.pm.reason.rejectionreason']}" itemValue="#{rejectionReasonBackingBean.rejectionReason}"/>
+									<p:ajax process="@this" event="change"
+											update="pRejectReasonSearch, dtRejectReasonResult"
+											listener ="#{rejectionReasonBackingBean.resetCategoryChange(true)}"/>
+								</p:selectOneMenu></td>
+						</tr>
+						<tr>
+							<th><p:outputLabel value="#{lbl['lbl.pm.reason.type']}" />
+								<p:outputLabel value="* " styleClass="mandatory" /></th>
+							<td><p:selectOneMenu id="somReasonType"
+									label="#{lbl['lbl.pm.reason.type']}"
+									styleClass="ppDropDownWidthM"
 									value="#{rejectionReasonBackingBean.managedBean.reasonSearchBean.reasonCategoryParam.parameterId}">
 									<f:selectItems
-										value="#{rejectionReasonBackingBean.reasonCategoryOptions()}" />
+										value="#{rejectionReasonBackingBean.reasonCategoryOptions(true)}" />
 									<p:ajax event="change"
 										listener="#{rejectionReasonBackingBean.reasonCategoryChange(true,
 							rejectionReasonBackingBean.managedBean.reasonSearchBean.reasonCategoryParam.parameterId)}"
 										update="pRejectReasonSearch" />
 								</p:selectOneMenu></td>
 						</tr>
+						<!-- 8411 - END -->
 						<!-- 12852 Start -->
 						<tr>
 							<th><p:outputLabel value="#{lbl['lbl.pm.reason.code']}" /></th>

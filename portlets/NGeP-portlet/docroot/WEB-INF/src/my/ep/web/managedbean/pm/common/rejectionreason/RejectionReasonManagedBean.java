@@ -46,6 +46,9 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 	private List <PmSupplierReason> deleteRestrictions;
 	private int selectedTabIndex;
 	private List<PmPIDReason> pmPidListOrigin = new ArrayList<PmPIDReason>();
+	//#8411 - START
+	private Integer reasonCategory;
+	//#8411 - END
 	
 	public RejectionReasonManagedBean(){}
 	
@@ -293,5 +296,21 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 		this.selectedSourceMethodId = selectedSourceMethodId;
 	}
 
+	//#8411 - START
+	/**
+	 * @return the reasonCategory
+	 */
+	public Integer getReasonCategory() {
+		return reasonCategory;
+	}
+
+	/**
+	 * @param reasonCategory
+	 *            the reasonCategory to set
+	 */
+	public void setReasonCategory(Integer reasonCategory) {
+		this.reasonCategory = reasonCategory;
+	}
+	//#8411 - END
 	
 }

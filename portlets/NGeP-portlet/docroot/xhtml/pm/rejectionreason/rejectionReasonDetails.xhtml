@@ -8,6 +8,7 @@
 
 	<p:outputPanel id="opRejectReasonCat">
 		<table class="ppOneTable">
+			<!-- 8411 - START -->
 			<tr>
 				<th><p:outputLabel value="#{lbl['lbl.pm.reason.category']}" />
 					<p:outputLabel value="* " styleClass="mandatory" /></th>
@@ -15,16 +16,33 @@
 						disabled="#{!rejectionReasonBackingBean.managedBean.selectedReason.brandNew}"
 						label="#{lbl['lbl.pm.reason.category']}"
 						styleClass="ppDropDownWidthM"
+						value="#{rejectionReasonBackingBean.managedBean.selectedReason.pmReasonCategory.categoryCode}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue=""/>
+						<f:selectItem itemLabel="#{lbl['lbl.pm.reason.justification']}" itemValue="#{rejectionReasonBackingBean.justification}"/>
+						<f:selectItem itemLabel="#{lbl['lbl.pm.reason.rejectionreason']}" itemValue="#{rejectionReasonBackingBean.rejectionReason}"/>
+						<p:ajax event="change" partialSubmit="true" process="@this"
+							listener="#{rejectionReasonBackingBean.resetCategoryChange(false)}"
+							update="somReasonType,:form:conditionTabId:cTabID,pRejectReasonDet,pReasonRestriction" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<th><p:outputLabel value="#{lbl['lbl.pm.reason.type']}" />
+					<p:outputLabel value="* " styleClass="mandatory" /></th>
+				<td><p:selectOneMenu id="somReasonType" required="true"
+						disabled="#{!rejectionReasonBackingBean.managedBean.selectedReason.brandNew or 
+									rejectionReasonBackingBean.managedBean.selectedReason.pmReasonCategory.categoryCode==null}"
+						label="#{lbl['lbl.pm.reason.type']}"
+						styleClass="ppDropDownWidthM"
 						value="#{rejectionReasonBackingBean.managedBean.selectedReason.reasonCategoryCode.parameterId}">
 						<f:selectItems
-							value="#{rejectionReasonBackingBean.reasonCategoryOptions()}" />
+							value="#{rejectionReasonBackingBean.reasonCategoryOptions(false)}" />
 						<p:ajax event="change" partialSubmit="true" process="@this"
 							listener="#{rejectionReasonBackingBean.reasonCategoryChange(false,
 						rejectionReasonBackingBean.managedBean.selectedReason.reasonCategoryCode.parameterId)}"
 							update=":form:conditionTabId:cTabID,pReasonRestriction,pRejectReasonDet" />
-					</p:selectOneMenu> <p:message id="somReasonCategoryMsg" for="somReasonCategory"
-						display="icon" /></td>
+					</p:selectOneMenu></td>
 			</tr>
+			<!-- 8411 - END -->
 		</table>
 
 		<p:panel id="pRejectReasonDet"
