@@ -3871,7 +3871,11 @@ public class SmApplicationBackingBean extends
 								{sbd.toString() });
 						}	
 					}
-				//#30444 --END--  --31072021	
+				//#30444 --END--  --31072021
+					//#30691 - START - 26112021
+					if (getManagedBean().isPoApproverChgBusiness()) {
+						throw new EpException(getManagedBean().getMsgChgBusiness());
+					}//#30691 - END - 26112021
 					//#31461-Start
 					SmApplicationUtil.validateEquityOwnerCount(getManagedBean(), -1,
 							SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
@@ -3918,6 +3922,10 @@ public class SmApplicationBackingBean extends
 						}	
 					}
 				//#30444 --END--  --31072021
+					//#30691 - START - 26112021
+					if (getManagedBean().isPoApproverChgBusiness()) {
+						throw new EpException(getManagedBean().getMsgChgBusiness());
+					}//#30691 - END - 26112021
 					//#31461-Start
 					SmApplicationUtil.validateEquityOwnerCount(getManagedBean(), -1,
 							SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
