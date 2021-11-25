@@ -9138,7 +9138,7 @@ public class SmApplicationBackingBean extends
 						.equals(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
 			validateSupportingDocs();
 		}
-		getManagedBean().getSmAppl().setResubmit(true);
+		//getManagedBean().getSmAppl().setResubmit(true);
 		getManagedBean().setPoInquiryRespond(true);
 		getManagedBean().getPoToSupplierInquiry().setResponseDate(new Date());
 		return submitSmApplToBpm(applType);
