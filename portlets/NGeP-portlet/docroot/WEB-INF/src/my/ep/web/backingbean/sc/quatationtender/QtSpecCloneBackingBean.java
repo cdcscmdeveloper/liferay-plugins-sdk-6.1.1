@@ -477,11 +477,11 @@ public class QtSpecCloneBackingBean extends
 					copy=retrieveScoreNValue(checklist,copy);
 					}
 					if (null != copy.getPmDocument()) {
-						if (!SourcingConstants.DOC_DEF_KEY_SERVICE_SCOPE
+						/*if (!SourcingConstants.DOC_DEF_KEY_SERVICE_SCOPE
 								.equalsIgnoreCase(checklist.getPmDocument()
-										.getDocDefinitionKey())) {
+										.getDocDefinitionKey())) {*///32120
 							localcheckList.add(copy);
-						}
+						//}//32120
 					} else {
 						if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
 								.equalsIgnoreCase(checklist.getDefinationType().getParameterCode())) {//21695&25635-start
