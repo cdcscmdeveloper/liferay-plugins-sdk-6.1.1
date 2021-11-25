@@ -620,9 +620,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean poApproverEquityErr;//#31461-start
 	private String msgEquityErr;//#31461-end
 	
-	// 26671 - Site Visit Grouping Enhancement -28775 START
-	private boolean showFacilityMachine;
-	// 26671 - Site Visit Grouping Enhancement -28775 END
+	//#30691 - START - 26112021
+	private boolean poApproverChgBusiness;
+	private String msgChgBusiness;
+	//#30691 - END - 26112021
 
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
@@ -4542,4 +4543,22 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.showDifferenceRejection = showDifferenceRejection;
 	}
 	// #30974 - END
+
+	//#30691 - START - 26112021
+	public boolean isPoApproverChgBusiness() {
+		return poApproverChgBusiness;
+	}
+
+	public void setPoApproverChgBusiness(boolean poApproverChgBusiness) {
+		this.poApproverChgBusiness = poApproverChgBusiness;
+	}
+
+	public String getMsgChgBusiness() {
+		return msgChgBusiness;
+	}
+
+	public void setMsgChgBusiness(String msgChgBusiness) {
+		this.msgChgBusiness = msgChgBusiness;
+	}
+	//#30691 - END - 26112021
 }

@@ -2125,6 +2125,7 @@ public class SmApplicationUtil {
 			String currentPageType) {
 		boolean validCount = true;
 		managedBean.setPoApproverEquityErr(false);//#31461
+		managedBean.setPoApproverChgBusiness(false); //#30691 - 26112021
 		// change by fahmi, log : 23858 13/03/2019 
 		if (managedBean.getBusinessTypeVal() != null
 				&& (managedBean.getBusinessTypeVal()
@@ -2144,7 +2145,8 @@ public class SmApplicationUtil {
 				} else {
 					// #30691 - Start
 					if(managedBean.isSiteVisitAfterApproval() && (managedBean.getSmSupplier().getSmAppl() != managedBean.getSmAppl())){
-						throw new EpException(MessageConst.ERROR_770270, new String[] { managedBean.getSmSupplier().getSmAppl().getApplNo().toString() });
+						managedBean.setPoApproverChgBusiness(true);
+						managedBean.setMsgChgBusiness(MessageConst.ERROR_770270);
 					} else { 
 					// #30691 - End
 						managedBean.setPoApproverEquityErr(true);
@@ -2192,7 +2194,8 @@ public class SmApplicationUtil {
 					} else {
 						// #30691 - Start
 						if(managedBean.isSiteVisitAfterApproval() && (managedBean.getSmSupplier().getSmAppl() != managedBean.getSmAppl())){
-							throw new EpException(MessageConst.ERROR_770270, new String[] { managedBean.getSmSupplier().getSmAppl().getApplNo().toString() });
+							managedBean.setPoApproverChgBusiness(true);
+							managedBean.setMsgChgBusiness(MessageConst.ERROR_770270);
 						} else { 
 						// #30691 - End
 							managedBean.setPoApproverEquityErr(true);
@@ -2220,7 +2223,8 @@ public class SmApplicationUtil {
 			} else {
 				// #30691 - Start
 				if(managedBean.isSiteVisitAfterApproval() && (managedBean.getSmSupplier().getSmAppl() != managedBean.getSmAppl())){
-					throw new EpException(MessageConst.ERROR_770270, new String[] { managedBean.getSmSupplier().getSmAppl().getApplNo().toString() });
+					managedBean.setPoApproverChgBusiness(true);
+					managedBean.setMsgChgBusiness(MessageConst.ERROR_770270);
 				} else { 
 				// #30691 - End
 					managedBean.setPoApproverEquityErr(true);
