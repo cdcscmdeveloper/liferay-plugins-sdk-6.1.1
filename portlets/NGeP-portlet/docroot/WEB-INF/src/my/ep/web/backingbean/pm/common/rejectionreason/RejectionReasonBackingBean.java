@@ -42,6 +42,7 @@ import my.ep.persistence.entity.pm.common.PmPIDReason;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
+import my.ep.persistence.entity.pm.common.PmReasonCategory;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmSupplierReason;
 import my.ep.persistence.logging.LogKey;
@@ -102,6 +103,12 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	public static final int RESTR_COMP = 2;
 	public static final int RESTR_SUPP = 3;
 
+	//#8411 - START
+	// Reason Category values
+	public static final int JUSTIFICATION = 1;
+	public static final int REJECTION_REASON = 2;
+	//#8411 - END
+	
 	/**
 	 * Pre Loading
 	 */
@@ -261,6 +268,10 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			pmReasonDesc.setPmLanguage(language);
 			pmReason.addPmReasonDescs(pmReasonDesc);
 		}
+		//#8411 - START
+		PmReasonCategory pmReasonCategory = new PmReasonCategory();
+		pmReason.addPmReasonCategory(pmReasonCategory);
+		//#8411 - END
 		this.getManagedBean().setSelectedReason(pmReason);
 		this.getManagedBean().setAppTypeRestrictions(null);
 		this.getManagedBean().setComTypeRestrictions(null);
@@ -663,6 +674,9 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		log.info("resetReasonSearchBean");
 		this.getManagedBean().setReasonSearchBean(new ReasonSearchBean());
 		this.getManagedBean().setSearchSuppReason(false);
+		//#8411 - START
+		this.getManagedBean().setReasonCategory(null);
+		//#8411 - END
 		pmReasonDescDataModel = new PmReasonPagingDataModel();
 	}
 	
@@ -943,9 +957,19 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 * 
 	 * @return SelectItem[]
 	 */
-	public SelectItem[] reasonCategoryOptions() {
+	public SelectItem[] reasonCategoryOptions(boolean isSearchBean) {
 		log.info("reasonCategoryOptions");
-		return getDropdownValuesBySearchBean(ParameterTypeConst.REASON_CATEGORY,getDocTypeSearchBean());
+		//#8411 - START
+		Integer reasonCategory = null;
+		Boolean isUpsAdmin = getFacesScopes().hasRoleUser("UPS_ADMIN");
+		if (isSearchBean){
+			reasonCategory = getManagedBean().getReasonCategory();
+		} else {
+			reasonCategory = getManagedBean().getSelectedReason().getPmReasonCategory().getCategoryCode();
+		}			
+		return getCategoryTypeDropdownValuesBySearchBean(reasonCategory, ParameterTypeConst.REASON_CATEGORY, 
+															isUpsAdmin, getDocTypeSearchBean());
+		//#8411 - END
 	}
 	
 	/**
@@ -1426,10 +1450,14 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 */
 	public void searchReason(){
 		log.info("searchReason - Start");
-		if(this.getManagedBean().getReasonSearchBean().getReasonCategoryParam()==null 
-				|| this.getManagedBean().getReasonSearchBean().getReasonCategoryParam().getParameterId()==null){
+		//#8411 - START
+		if(this.getManagedBean().getReasonCategory()==null){// if reason category is null
+			throw new EpException(MessageConst.ERROR_770303);
+		} else if(this.getManagedBean().getReasonSearchBean().getReasonCategoryParam()==null 
+				|| this.getManagedBean().getReasonSearchBean().getReasonCategoryParam().getParameterId()==null){// if reason type is null
 			throw new EpException(MessageConst.ERROR_770129);
 		}
+		//#8411 - END
 		
 		pmReasonDescDataModel.reloadData();
 		log.info("searchReason - End");
@@ -1503,8 +1531,10 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 */
 	public ISearchBean<PmParameterDesc> getDocTypeSearchBean() {
 		if (this.docTypeSearchBean == null) {
+			//#8411 - START
 			this.docTypeSearchBean = super.createSearchBean(
-					PmParameterDesc.class, "somReasonCat");
+					PmParameterDesc.class, "somReasonType");
+			//#8411 - END
 		}
 
 		return this.docTypeSearchBean;
@@ -1746,4 +1776,35 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			}
 		}
 	}
+	
+	//#8411 - START
+	/**
+	 * @return the justification
+	 */
+	public int getJustification() {
+		return JUSTIFICATION;
+	}
+
+	/**
+	 * @return the rejection reason
+	 */
+	public int getRejectionReason() {
+		return REJECTION_REASON;
+	}
+	
+	/**
+	 * remove suppReason component when changing reason category
+	 */
+	public void resetCategoryChange(boolean isSearchBean) {
+		log.info("resetOnCategoryChange");
+		if (isSearchBean){
+			this.getManagedBean().getReasonSearchBean().setReasonCategoryParam(new PmParameter());
+			this.getManagedBean().setSearchSuppReason(false);
+		} else {
+			this.getManagedBean().getSelectedReason().setReasonCategoryCode(new PmParameter());
+			this.getManagedBean().setSuppReason(false);
+		}
+	}
+	
+	//#8411 - END
 }
