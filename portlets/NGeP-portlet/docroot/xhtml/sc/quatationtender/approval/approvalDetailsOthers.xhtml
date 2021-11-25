@@ -73,8 +73,7 @@
 			                    <ac:iconTooltip value="#{lbl['lbl.sc.qt.approval.oth.supporting.document.tooltip']}" />
 			                   </c:if> 
 							</f:facet>
-					        <h:panelGroup id="otheruploadId">
-								<ac:scSingleFileUploadButton id="otherApprUploadBtn"
+								<ac:scSingleFileUploadButton id="otheruploadId"
 									popupWidgetVar="otherApprUploadDlg"
 									attachment="#{otherrequestdetails.approvalRequestAttachement}"
 									readonly="#{createQtBB.managedBean.readOnly}"
@@ -84,7 +83,6 @@
 										value="#{otherrequestdetails}"
 										target="#{approvalBackingBean.managedBean.scQtApprovalDtls}" />
 								</ac:scSingleFileUploadButton>
-							</h:panelGroup>
 					    </p:column>	
 				    </c:otherwise>
 				</c:choose>
