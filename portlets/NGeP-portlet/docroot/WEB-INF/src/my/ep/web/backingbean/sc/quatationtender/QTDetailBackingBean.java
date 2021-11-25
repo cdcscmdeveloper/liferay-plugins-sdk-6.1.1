@@ -3686,9 +3686,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				if(checkSettingPopUpBPKApprovalNeeded(qt)){
 					if(!this.getManagedBean().isResetBpkCurrentArea()){
 						checkingOtherApprovalFileAttachmentNeedDeleted(qt.getScQtApprovals(),ParameterConst.APPROVAL_CATEGORY_OTHERS);
-					    this.getManagedBean().setShowPopUpBPKApprovalNeeded(true);
-						RequestContext.getCurrentInstance().execute("bpkApprovalNeededDlgTemp.show()");
-						throw new EpException(" ");
+						if(skipPopUpBPKApprovalNeededOnceApproved(qt.getScQtApprovals(),ParameterConst.APPROVAL_CATEGORY_BPK)){
+					      this.getManagedBean().setShowPopUpBPKApprovalNeeded(true);
+						  RequestContext.getCurrentInstance().execute("bpkApprovalNeededDlgTemp.show()");
+						  throw new EpException(" ");
+						}
 					}
 				}
 				checkingOtherApprovalFileAttachmentNeedDeleted(qt.getScQtApprovals(),ParameterConst.APPROVAL_CATEGORY_OTHERS);
@@ -10276,6 +10278,34 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		} finally {
 			detailSO = null;
 		}
+	}
+	
+	private boolean skipPopUpBPKApprovalNeededOnceApproved(List<ScQtApproval> approval,String approvalCategory){
+		boolean skipPopUp = true;
+		if (CollectionUtils.isNotEmpty(approval)) {
+			for (int i = 0; i < approval.size(); i++) {
+				if (approvalCategory.equalsIgnoreCase(approval.get(i).getApprovalCategory().getParameterCode())) {
+					List<ScQtApprovalRequest> approvalRequestHistory = approval.get(i).getHistoryApprovalRequests();
+       				if (CollectionUtils.isNotEmpty(approvalRequestHistory)) {
+       					for (int j = 0; j < approvalRequestHistory.size(); j++) {
+       						PmParameter approvalAction = approvalRequestHistory.get(j).getApproverAction();
+       						PmParameter approvalType = approvalRequestHistory.get(j).getApprovalType();
+       						if(null!=approvalAction && null!=approvalType){
+       						    if(approvalAction.getParameterCode().equals(ParameterConst.APPROVAL_DECISION_TYPE_APPROVED)){
+       						    	if(approvalType.getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_OPEN_TO_BUMI) ||
+       						    	   approvalType.getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_BUMI_TO_OPEN) ||
+       						    	   approvalType.getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_REDUCE_PUBLISH_PERIOD) ||
+       						    	   approvalType.getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_REDUCE_PROPOSAL_VALIDITY_PERIOD)){
+       						    		   skipPopUp = false;
+       						    	}
+       						    }  
+       						}
+       					}
+       				}
+				}
+			}
+		}
+		return skipPopUp;
 	}
 	
 	public void resetBpkCurrentArea(boolean actionFlow){
