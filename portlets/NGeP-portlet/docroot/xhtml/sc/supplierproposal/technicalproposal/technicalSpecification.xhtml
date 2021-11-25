@@ -21,8 +21,8 @@
 				<h:outputText value=":"/>
 			</td>
 			<td>	
-				<h:outputText style="width:50px;" rendered="#{supplierProposalDetailBackingBean.managedBean.qt.zonal}" value="YES"/>
-				<h:outputText style="width:50px;" rendered="#{!supplierProposalDetailBackingBean.managedBean.qt.zonal}" value="NO"/>
+				<h:outputText style="width:50px;" rendered="#{supplierProposalDetailBackingBean.managedBean.qt.zonal}" value="#{lbl['lbl.txt.yes']}"/>
+				<h:outputText style="width:50px;" rendered="#{!supplierProposalDetailBackingBean.managedBean.qt.zonal}" value="#{lbl['lbl.txt.no']}"/>
 			</td>
 		</tr>
 	</table>
