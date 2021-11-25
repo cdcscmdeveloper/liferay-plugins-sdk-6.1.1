@@ -12,33 +12,33 @@
 	<p:panel header="#{lbl['lbl.sc.history']}" toggleable="true">
 		<p:dataTable
 		    value="#{approvalDtlsList.historyApprovalRequests}" 
-		    var="historyDtls" style="width:100%" rowIndexVar="index" editable="true"
+		    var="historyOthersDtls" style="width:100%" rowIndexVar="index" editable="true"
 		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			rowKey="#{historyDtls}">
+			rowKey="#{historyOthersDtls}">
 			<p:column headerText="#{lbl['lbl.sc.qt.type.reqdtls']}">
 				<h:outputText
-					value="#{approvalBackingBean.getParameterDesc(historyDtls.approvalType)}" />
+					value="#{approvalBackingBean.getParameterDesc(historyOthersDtls.approvalType)}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.qt.approval.history.approved.by']}">
-				<h:outputText value="#{historyDtls.approverId.userName}" />
+				<h:outputText value="#{historyOthersDtls.approverId.userName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.status']}">
 				<h:outputText
-					value="#{approvalBackingBean.getParameterDesc(historyDtls.approverAction)}" />
+					value="#{approvalBackingBean.getParameterDesc(historyOthersDtls.approverAction)}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.date']}">
-				<h:outputText value="#{historyDtls.approverActionDate}">
+				<h:outputText value="#{historyOthersDtls.approverActionDate}">
 					<f:convertDateTime
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 				</h:outputText>
 			</p:column>
-		     <c:if test="#{isOthersApprovalMandatoryForAttachment}">
+		     <c:if test="#{not empty approvalDtlsList.historyApprovalRequests and isOthersApprovalMandatoryForAttachment}">
 		               <c:choose>
 							    <c:when test="#{qTDetailBB.managedBean.maintanceFlow}">	
 							           <p:column headerText="#{lbl['lbl.sc.document']}">
 										  <p:dataGrid emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 												var="attachFile"
-												value="#{historyDtls.approvalRequestAttachement}"
+												value="#{historyOthersDtls.approvalRequestAttachement}"
 												rowIndexVar="attachFileIndex" columns="1" style="width:100%">
 												<h:commandLink value="#{attachFile.fileName}"
 																styleClass="blue_font" immediate="true"
@@ -55,12 +55,12 @@
 												</f:facet>
 											   <ac:scSingleFileUploadButton id="historyOtheruploadId"
 														popupWidgetVar="otherHistoryApprUploadDlg"
-														attachment="#{historyDtls.approvalRequestAttachement}"
+														attachment="#{historyOthersDtls.approvalRequestAttachement}"
 														readonly="#{createQtBB.managedBean.readOnly}"
 														deleteFileUploadListener="approvalBackingBean.deleteHistoryOthersApprovalFile"
 														rowIndex="#{index}">
 														<f:setPropertyActionListener for="actionEvent"
-															value="#{historyDtls}"
+															value="#{historyOthersDtls}"
 															target="#{approvalBackingBean.managedBean.historyApprovalRequests}" />
 											   </ac:scSingleFileUploadButton>
 										</p:column>
