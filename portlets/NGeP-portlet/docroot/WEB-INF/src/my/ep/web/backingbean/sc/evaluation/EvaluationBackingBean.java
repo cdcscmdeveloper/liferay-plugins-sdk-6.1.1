@@ -4600,6 +4600,11 @@ public void saveComplianceSample() {
 								}
 							});
 						}
+						//#31621 - condition if no supplier qualified to evaluate by package for particular zone - start 
+						else if(qtProposalAmountByZone.isEmpty()){
+							this.getManagedBean().setQtProposalAmounts(qtProposalAmountByZone);
+						}
+						//#31621 - end
 						//#31525 - end
 						if(qtProposalAmountByZone!=null && !qtProposalAmountByZone.isEmpty()){
 							this.getManagedBean().setQtProposalAmounts(null);
