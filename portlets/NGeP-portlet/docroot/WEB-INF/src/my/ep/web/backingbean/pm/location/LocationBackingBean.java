@@ -204,6 +204,17 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 							getManagedBean().getLocationSearchBean()
 									.getLocationName(), true));
 		}
+		//Enhancement29642 - Start
+		if (lSearchBean.getAdditionalLocationName() != null
+				&& lSearchBean.getAdditionalLocationName().trim().length() > 0) {
+
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("additionalLocationName",
+							SearchOperator.OPERATOR_LIKE.value(),
+							getManagedBean().getLocationSearchBean()
+									.getAdditionalLocationName(), true));
+		}
+		//Enhancement29642 - End
 		if (lSearchBean.getRecordStatus() != null
 				&& lSearchBean.getRecordStatus().trim().length() > 0) {
 		searchBean.getDataFilterBeans().add(
@@ -219,7 +230,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		//Enhancement29642 - Start
 		if (lSearchBean.getAdditionalLocationType() != null && lSearchBean.getRecordAdditional().trim().length() > 0) {
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("additionallocationType", SearchOperator.OPERATOR_EQUALS.value(), lSearchBean
+					new SearchFilterBean("additionalLocationType", SearchOperator.OPERATOR_EQUALS.value(), lSearchBean
 							.getAdditionalLocationType()));
 		} else {
 			searchBean.getDataFilterBeans().add(
