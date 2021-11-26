@@ -30,7 +30,7 @@
 				<p:outputLabel value="#{lbl['lbl.rpt.cmpName']}" />
 				<p:outputLabel value="*" styleClass="mandatory" />
 			</td>
-			<!-- #29712 & #30824 - start -->
+			<!-- #30824 & #29712 - start -->
 			<!-- 
 			<td class="tdContent">
 				<ac:smReportCompanyNameLOV bBean="#{profileOfRegCompanyRptBB}" required="true"
@@ -42,7 +42,7 @@
 				saveObj="profileOfRegCompanyRptBB.managedBean.selectedSupplier" />
 			</td>
 		</p:outputPanel>
-		<!-- #29712 & #30824 - end -->
+		<!-- #30824 & #29712 - end -->
 		
 		<p:outputPanel rendered="#{profileOfRegCompanyRptBB.managedBean.regType eq SmReportConst.SM_REG_TYPE_G2G}">
 			<td class="tdTitle">
@@ -63,14 +63,15 @@
 					label="#{lbl['lbl.rpt.mofRegNo']}"
 					value="#{profileOfRegCompanyRptBB.managedBean.agencyName}" style="width:290px;" />
 				</ui:remove>
-				
-				<ac:lov id="g2g" lovId="PM_ORG_PROFILE"
+				<!-- #30824 & #29712 - start -->
+				<ac:lov id="g2g" lovId="SM_RPT_G2G_ACCOUNT"
 					headerText="#{lbl['lbl.rpt.organization.list.lov']}"
 					value="#{profileOfRegCompanyRptBB.managedBean.selectedOrgProfile.pmOrgValidity.orgName}" 
 					saveObject="profileOfRegCompanyRptBB.managedBean.selectedOrgProfile"
 					conditionField="#{profileOfRegCompanyRptBB.constructConditionFields()}"
 					tooltip="#{lbl['lbl.sm.rpt.profile.tooltip']}" >
 				</ac:lov>
+				<!-- #30824 & #29712 - end -->
 			</td>
 		</p:outputPanel>
 		
@@ -85,8 +86,8 @@
 					label="#{lbl['lbl.rpt.mofRegNo']}"
 					value="#{profileOfRegCompanyRptBB.managedBean.mofNo}" style="width:290px;" />
 				</ui:remove>
-				
-				<ac:lov id="supplier" lovId="SM_RPT_MOF_SUPPLIER"
+				<!-- #30824 & #29712 - start -->
+				<ac:lov id="supplier" lovId="SM_RPT_MOF_ACCOUNT"
 					headerText="#{lbl['lbl.sm.supplov']}"
 					value="#{profileOfRegCompanyRptBB.managedBean.mofNo}" 
 					saveObject="profileOfRegCompanyRptBB.managedBean.smSupplier"
@@ -94,6 +95,7 @@
 					postUpdateListener="profileOfRegCompanyRptBB.populateMofNo"
 					tooltip="#{lbl['lbl.sm.rpt.profile.tooltip']}" >
 				</ac:lov>
+				<!-- #30824 & #29712 - end -->
 			</td>
 
 			<td class="tdTitle">
