@@ -1270,12 +1270,14 @@ public class ConsolidationReportBackingBean extends
 				Iterator<List<ScQtRecommend>> iterator = scQtRecommendsByZone.values().iterator();
 				while (iterator.hasNext()) {
 					List<ScQtRecommend> qtrecommendList = iterator.next();
+					List<ScQtRecommend> toberemoveList = new ArrayList<ScQtRecommend>();
 					if (CollectionUtils.isNotEmpty(qtrecommendList)) {
 						for (ScQtRecommend qtrecommend : qtrecommendList) {
 							if(qtrecommend.getOrderQty().compareTo(BigDecimal.ZERO) == 0){
-								iterator.remove();
+								toberemoveList.add(qtrecommend);
 							}
 						}
+						qtrecommendList.removeAll(toberemoveList);
 					}
 				}
 				/*for(List<ScQtRecommend> scQtRecommend: scQtRecommendsByZone.values()){
