@@ -15404,7 +15404,12 @@ public class SmApplicationBackingBean extends
 		}*/
 		
 		setReasonIdList();
-		verifySelectedRecommendRejectReasons();
+		
+		if(getManagedBean().isShowDifferenceRejection()){
+			verifySelectedRejectReasons();
+		}else{
+			verifySelectedRecommendRejectReasons();
+		}
 	}
 	//30974 - End
 	
