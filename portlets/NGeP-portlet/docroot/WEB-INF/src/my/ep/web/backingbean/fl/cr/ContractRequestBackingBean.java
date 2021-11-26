@@ -1146,7 +1146,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 			// 11076 - start
 			
-			if (getManagedBean().getOverallTotalItem()> 2|| getManagedBean().getSelectedContractedItemList().size() > 2) {
+			if (getManagedBean().getOverallTotalItem()> 450|| getManagedBean().getSelectedContractedItemList().size() > 450) {
 				messageId = MessageConst.ERROR_740070;
 				itemExceed = true;
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR, null, 
