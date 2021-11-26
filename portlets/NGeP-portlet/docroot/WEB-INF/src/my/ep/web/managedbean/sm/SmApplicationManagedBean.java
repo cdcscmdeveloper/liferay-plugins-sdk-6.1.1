@@ -606,6 +606,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean showDifferenceRejection;
 	// #30974 - END
 	
+	// 26671 - Site Visit Grouping Enhancement -28775 START
+	private boolean showFacilityMachine;
+	// 26671 - Site Visit Grouping Enhancement -28775 END
+	
 	//#31043 START
 	private boolean categoryCodeVerified;
 	private boolean documentVerified;
