@@ -1579,9 +1579,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 			
 			// Start Fix - #31740
-			getManagedBean().getSelectedAgencyChanges().put(String.valueOf(agencyData.getOrgProfile().getOrgCode()),agencyData);
+			getManagedBean().getSelectedAgencyChanges().put(agencyData.getOrgProfile().getOrgProfileId(),agencyData);
 			log.info("List of selected agency to update : "+getManagedBean().getSelectedAgencyChanges().size());
 			// End Fix - #31740
+		
 		}		
 	}
 	
@@ -2006,6 +2007,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 								getManagedBean().getUpdateAgencyMap().remove(agency.getOrgProfile().getOrgCode());
 							}
 							getManagedBean().getDeleteAgencyMap().put(agency.getOrgProfile().getOrgCode(), agency);
+							// Fix - #31740
+							getManagedBean().getAgencyDataDeletion().put(agency.getOrgProfile().getOrgProfileId(), agency);
 						}
 					}
 				}
