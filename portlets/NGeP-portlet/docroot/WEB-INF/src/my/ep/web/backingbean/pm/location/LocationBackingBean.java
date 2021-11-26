@@ -209,7 +209,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 				&& lSearchBean.getAdditionalLocationName().trim().length() > 0) {
 
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("additionalLocationName",
+					new SearchFilterBean("locationName",
 							SearchOperator.OPERATOR_LIKE.value(),
 							getManagedBean().getLocationSearchBean()
 									.getAdditionalLocationName(), true));
