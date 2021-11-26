@@ -2143,6 +2143,19 @@ public class SmApplicationBackingBean extends
 				          }
 				      }
 				}
+				
+				Map<String, SmApplRejectReason> removedDuplicateID = new HashMap<String, SmApplRejectReason>();
+				List<SmApplRejectReason> newListOfRejectID = new ArrayList<>();
+				for(SmApplRejectReason reason : latestRejectedAppl.getSmApplRejectReasons()){
+					removedDuplicateID.put(reason.getPmReason().getReasonId().toString(), reason);
+				}
+				Iterator itr = removedDuplicateID.keySet().iterator();
+				while (itr.hasNext()){
+					String id = itr.next().toString();
+					newListOfRejectID.add((SmApplRejectReason)removedDuplicateID.get(id));
+				}
+				latestRejectedAppl.setSmApplRejectReasons(newListOfRejectID);
+				
 				///end 30974
 				// Refs #15629 - End - 21/1/2021
 				getManagedBean()
