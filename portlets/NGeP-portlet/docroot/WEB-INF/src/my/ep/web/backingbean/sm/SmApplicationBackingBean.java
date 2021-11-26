@@ -9267,9 +9267,12 @@ public class SmApplicationBackingBean extends
 		if ((applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) || applType
 				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW))
 				&& !getManagedBean().getSmAppl().isResubmit()) {
-			msgConst = MessageConst.INFO_700053;
-			urlParam = SmApplicationUtil
-					.getMofApplicationSaveDraftUrl(getManagedBean().getSmAppl());
+			if (getManagedBean().isPoInquiryRespond()) {
+				msgConst = MessageConst.INFO_721225;
+			} else {
+				msgConst = MessageConst.INFO_700053;
+				urlParam = SmApplicationUtil.getMofApplicationSaveDraftUrl(getManagedBean().getSmAppl());
+			}
 		} else {
 			msgConst = MessageConst.INFO_721225;
 		}
