@@ -985,7 +985,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			log.debug("Record saved successfully");
 			String messageId = MessageConst.INFO_700005;
 			String nextRole = null;
-			
+		 
 			// Start Fix - #31740
 			if(ctBB.getManagedBean().getContractVer().getCtAgencies().size() >= 400 && ctBB.getManagedBean().getSelectedAgencyChanges() != null){
 			    if(ctBB.getManagedBean().getSelectedAgencyChanges().size()>0) {
@@ -1004,9 +1004,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				      }				   
 					   
 				   }
-				   log.info(" getSelectedAgencyChanges ::::::::::::::::::::::: "+ctBB.getManagedBean().getSelectedAgencyChanges().size());
 				}
-			      
+			    
+			    ctBB.getManagedBean().getSelectedAgencyChanges().clear();
+				   log.info(" getSelectedAgencyChanges after clear() ::::::::::::::::::::::: "+ctBB.getManagedBean().getSelectedAgencyChanges().size());
+
 			}
 	        // End Fix - #31740
 
