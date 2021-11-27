@@ -233,6 +233,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	private static final String CARET_SYMBOL = "^";
 	private static final String BRANCH_INFO_TITLE = "Branch Information";
 	private static final String MALAY_NA = "T/B";
+	private static final Locale myLocale = new Locale(SourcingConstants.MALAY_LANGUAGE_CODE,
+			  SourcingConstants.MALAYSIA_COUNTRY_CODE);//29007
 
 	/**
 	 * Instantiates a new LOA detail backing bean.
@@ -4156,6 +4158,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			} 
 			String prefixName = scLoaReport.getTitle().replaceAll(
 					SourcingConstants.REG_EXP_WHITE_SPACE, "");
+			if (StringUtils.isNotBlank(scLoaReport.getTitle()) && scLoaReport.getTitle().contains(lampiranA3SubStr)) {//29007-start
+				prefixName=prefixName.replaceAll(SourcingConstants.REG_EXP_BACK_SLASH, "");
+			}//29007-End
 			scLoaReportAttachmentGenerated.setTempFileName(prefixName);
 			scAttachments.add(scLoaReportAttachmentGenerated);
 		}
@@ -5201,9 +5206,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			reqDTO.setScActors(actorSO.retreiveActorByDocTypesDocIdUserId(actorReqDTO).getScActorList());
 			AwardSupplierResDTO resDTO = getQtAwardSO().reviseDocumentLOA(reqDTO);		
 			if(resDTO.isSuccessful()){
-				/*******************
-				 * ACKNOWLEDGE_PAGE
-				 *******************/
+			/******************** ACKNOWLEDGE_PAGE*******************/
 				String[] param = new String[3];
 				
 				param[0] = this.getManagedBean().getScLoa().getLoaNo();
@@ -9747,6 +9750,14 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		TemplateSpecReqDTO specReqDto=new TemplateSpecReqDTO();
 		ScLoiLoaItem loiLoaItem = new ScLoiLoaItem();
 		for(ScLoiLoaItem scloiloaitem : this.getManagedBean().getScLoa().getScLoiLoaItems()){
+		Long requestItemQuestionId=	scloiloaitem.getScRequestItem().getTplSpecQuestion().getSpecQuestionId();//29007-Start
+		Long specQuestionId=tplSpecQuestion1.getSpecQuestionId();
+		String requestItemQuestionName=scloiloaitem.getScRequestItem().getTplSpecQuestion().getClItem();
+		String specQuestionName=tplSpecQuestion1.getClItem();
+		log.info("==========searchSupplierSpecificationrequestItemQuestionId========="+requestItemQuestionId);
+		log.info("==========searchSupplierSpecificationspecQuestionId========="+specQuestionId);
+		log.info("==========searchSupplierSpecificationrequestItemQuestionName========="+requestItemQuestionName);
+		log.info("==========searchSupplierSpecificationspecQuestionName========="+specQuestionName);//29007-End
 			if(scloiloaitem.getScRequestItem().getTplSpecQuestion().getSpecQuestionId().equals(tplSpecQuestion1.getSpecQuestionId()) || scloiloaitem.getScRequestItem().getTplSpecQuestion().getSpecQuestionId()==tplSpecQuestion1.getSpecQuestionId() || scloiloaitem.getScRequestItem().getTplSpecQuestion().getClItem().trim()
 					.replaceAll("\\s", "").equals(tplSpecQuestion1.getClItem().trim()
 							.replaceAll("\\s", ""))){//29007&31423&31638
@@ -9995,7 +10006,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		List<ScLoiLoaItem> scLoiLoaItemsList = null; 
 		String dafaltValue = "T/B";
 		if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
-			dafaltValue = "N/A";
+			dafaltValue = "T/B";//29007
 		}
 		if(scLoa.getScLoiLoaItems().size() != 0){
 			scLoiLoaItemsList = new ArrayList<ScLoiLoaItem>();
@@ -10199,4 +10210,33 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		});
 	}
 	//29007 End
+	/**
+	 * 29007-start
+	 * Get Parameter description by parameter for report.
+	 * 
+	 * @param parameter
+	 *            the PmParameter instance.
+	 * @return parameter description
+	 */
+	public String getParameterDescForReport(PmParameter parameter) {
+		if (parameter != null
+				&& StringUtils.isNotBlank(parameter.getParameterType())) {
+			return getParameterDesc(
+					parameter,
+					myLocale);
+		} else {
+			return null;
+		}
+	} 
+	public String supplierRemarks(String supplierRemarks){
+	String remarks="T/B";;
+	if(null!=supplierRemarks && StringUtils.isNotBlank(supplierRemarks) && StringUtils.isNotEmpty(supplierRemarks)){
+	return supplierRemarks;	
+	}else{
+		if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
+			remarks = "N/A";
+		}	
+	}
+	return remarks;
+	}//29007-End
 }
