@@ -952,7 +952,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			
 			// 13847 - shaqimi end
 			reqDTO.setCtContractVer(ctContractVer);
+			// Start - #28292/#26475
 			reqDTO.setScLoa(ctContractVer.getCtContract().getLoa());
+			// End  - #28292/#26475
 			reqDTO.setAgreementContractVer(ctBB.getManagedBean().getAgreementContractVer());
 			reqDTO.setUserRole(getUserRole());
 			reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
@@ -978,6 +980,32 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				log.debug("Record saved successfully");
 				String messageId = MessageConst.INFO_700005;
 				String nextRole = null;
+
+			// Start Fix - #31740
+			if(ctBB.getManagedBean().getContractVer().getCtAgencies().size() >= 400 && ctBB.getManagedBean().getSelectedAgencyChanges() != null){
+			    if(ctBB.getManagedBean().getSelectedAgencyChanges().size()>0) {
+				   log.info(" getSelectedAgencyChanges ::::::::::::::::::::::: "+ctBB.getManagedBean().getSelectedAgencyChanges().size());
+				   for (CtAgency ctAgencysz : new ArrayList<CtAgency>(ctBB.getManagedBean().getSelectedAgencyChanges().values())){
+					   if(ctBB.getManagedBean().getAgencyDataDeletion().containsKey(ctAgencysz.getOrgProfile().getOrgProfileId())){
+						   ctBB.getManagedBean().getSelectedAgencyChanges().remove(ctAgencysz.getOrgProfile().getOrgProfileId());
+						   log.info("Deleted agency profile ID :: "+ctAgencysz.getOrgProfile().getOrgProfileId());
+						   log.info("Deleted agency name test :: "+ctAgencysz.getOrgProfile().getOrgValidity().getOrgName());
+
+					   }else{
+				    	    log.info(" agency org profile id :: "+ctAgencysz.getOrgProfile().getOrgProfileId());
+						    log.info(" agency name test :: "+ctAgencysz.getOrgProfile().getOrgValidity().getOrgName() );
+							contractSO.updateAgencyCeilingAmount(ctAgencysz.getCeilingAmount(), ctAgencysz.getOrgProfile().getOrgProfileId(),resDTO.getCtContractVer().getContractVerId());
+							    	  
+				      }				   
+					   
+				   }
+				}
+			    
+			    ctBB.getManagedBean().getSelectedAgencyChanges().clear();
+				   log.info(" getSelectedAgencyChanges after clear() ::::::::::::::::::::::: "+ctBB.getManagedBean().getSelectedAgencyChanges().size());
+
+			}
+	        // End Fix - #31740
 
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && !ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {
 					messageId = MessageConst.INFO_700021;
@@ -1230,8 +1258,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				String contractNO = ctBB.getManagedBean().getContractVer().getCtContract().getContractNo();
 				for (CtAgency ctAgency : ctBB.getManagedBean().getContractVer().getCtAgencies()) {
 					ceilingAmt = ceilingAmt + ctAgency.getCeilingAmount().doubleValue();
-					log.info(" Bug #31740 ceiling amount in contractdetailsbackingbean  :"+ctAgency.getCeilingAmount()+" and Contract NO : "+contractNO+" and agency_profile_id :  "+ctAgency.getOrgProfile().getOrgProfileId());
-
 				}
 				ceilingAmt = Double.valueOf(df.format(ceilingAmt));
 
@@ -3733,4 +3759,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 	}
 	// End Fix - #30856
+	
+	public void removeAgencychanges(CtAgency orgprofileid){
+		ctBB.getManagedBean().getSelectedAgencyChanges().remove(orgprofileid);
+	}
 }

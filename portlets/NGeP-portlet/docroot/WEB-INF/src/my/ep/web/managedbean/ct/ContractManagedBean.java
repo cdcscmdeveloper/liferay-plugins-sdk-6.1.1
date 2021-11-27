@@ -179,6 +179,12 @@ public class ContractManagedBean extends BaseManagedBean {
 	//#13847 - start
 	private boolean disableDeferment = false;
 
+	//Start Fix - #31740
+	private Map<Long, CtAgency> selectedAgencyChanges;
+	
+	private Map<Long, CtAgency> agencyDataDeletion;
+	//End Fix - #31740
+	
 	/**
 	 * @return the fileDirectory
 	 */
@@ -1457,4 +1463,33 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setDisableOriginalBond(boolean disableOriginalBond) {
 		this.disableOriginalBond = disableOriginalBond;
 	}
+	
+    // Start Fix - #31740
+	/**
+	 * Populate only changes related to agency
+	 */
+	public Map<Long, CtAgency> getSelectedAgencyChanges() {
+		if(selectedAgencyChanges==null) {
+			selectedAgencyChanges = new HashMap<Long, CtAgency>();
+		}
+		return selectedAgencyChanges;
+	}
+
+	public void setSelectedAgencyChanges(Map<Long, CtAgency> selectedAgencyChanges) {
+		this.selectedAgencyChanges = selectedAgencyChanges;
+	}
+	
+
+	public Map<Long, CtAgency> getAgencyDataDeletion() {
+		if(agencyDataDeletion==null) {
+			agencyDataDeletion = new HashMap<Long, CtAgency>();
+		}
+		return agencyDataDeletion;
+	}
+
+	public void setAgencyDataDeletion(Map<Long, CtAgency> agencyDataDeletion) {
+		this.agencyDataDeletion = agencyDataDeletion;
+	}
+
+	// End Fix - #31740
 }
