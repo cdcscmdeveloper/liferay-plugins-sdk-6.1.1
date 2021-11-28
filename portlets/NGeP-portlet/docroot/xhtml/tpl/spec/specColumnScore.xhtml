@@ -93,11 +93,12 @@
 		<c:otherwise>
 		<h:panelGroup rendered="#{!empty question.scoreTypeCode and !isScoring and !isRepeated}">
 			<!--#29908 -start -->
+			<ui:remove><!-- #28784 - start --></ui:remove>
 			<p:inputText id="userScore" style="min-width:0px !important;width:30px; text-align:right;"
 				value="#{tplSpecAnswer.userScore}"
 				required="false" maxlength="14"
 				label="#{lbl['lbl.tpl.spec.content.user.score']}"
-				rendered="#{isZonal and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 or !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 or tplSpecAnswer.tplSpecQuestion.questionType eq 'S'}"
+				rendered="#{tplSpecAnswer.tplSpecQuestion.maxScore ne null and (isZonal and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 or !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 or tplSpecAnswer.tplSpecQuestion.questionType eq 'S')}"
 				disabled="#{evaluationBackingBean.managedBean.readOnly or tplSpecAnswer.ratePerUom eq 0 or tplSpecAnswer.notOfferAll}">
 				<!--#29908-end -->
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="14" integerOnly="true" />
@@ -105,11 +106,12 @@
 				<f:attribute name="max" value="#{(tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)).toString()}" />
 				<p:ajax partialSubmit="true" process="@this" update="@this, userScoreMsg, @(.calcScore)" />
 			</p:inputText>
-			 <h:outputText value="/" rendered="#{tplSpecAnswer.tplSpecQuestion.questionType eq 'S' or tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 or !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0}"></h:outputText> 
+			 <h:outputText value="/" rendered="#{tplSpecAnswer.tplSpecQuestion.maxScore ne null and (tplSpecAnswer.tplSpecQuestion.questionType eq 'S' or tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 or !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0)}"></h:outputText> 
 			<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}"
-							rendered="#{isSpecTypeTechnical and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 or isSpecTypeTechnical and !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 or isSpecTypeTechnical and tplSpecAnswer.tplSpecQuestion.questionType eq 'S'}">
+							rendered="#{tplSpecAnswer.tplSpecQuestion.maxScore ne null and (isSpecTypeTechnical and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 or isSpecTypeTechnical and !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 or isSpecTypeTechnical and tplSpecAnswer.tplSpecQuestion.questionType eq 'S')}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 			</h:outputText>
+			<ui:remove><!-- #28784 - end --></ui:remove>
 			<!-- #25138 - start -->
 			<c:if test="#{isZonal and isSpecTypeFinancial and evaluationBackingBean.managedBean.speczonedtlReq}">
 				<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}"
@@ -132,7 +134,9 @@
 			</c:if>
 			<p:message id="userScoreMsg" for="userScore" display="icon" />
 			<ui:remove><!--#29021-start--></ui:remove>
-			<ac:toggleRate show="#{isSpecTypeTechnical}" disabled="#{evaluationBackingBean.managedBean.readOnly or tplSpecAnswer.ratePerUom eq 0 or tplSpecAnswer.notOfferAll}" value="#{tplSpecAnswer.rating}" tooltip="#{lbl['lbl.sc.tec.rating.tooltip']}" update="questionTbl"/>
+			<ui:remove><!--#28784 - Start--></ui:remove>
+			<ac:toggleRate show="#{isSpecTypeTechnical and tplSpecAnswer.tplSpecQuestion.maxScore ne null}" disabled="#{evaluationBackingBean.managedBean.readOnly or tplSpecAnswer.ratePerUom eq 0 or tplSpecAnswer.notOfferAll}" value="#{tplSpecAnswer.rating}" tooltip="#{lbl['lbl.sc.tec.rating.tooltip']}" update="questionTbl"/>
+			<ui:remove><!-- #28784 - end --></ui:remove>
 			<ui:remove><!--#29021-end--></ui:remove>
 		</h:panelGroup>
 		</c:otherwise>
