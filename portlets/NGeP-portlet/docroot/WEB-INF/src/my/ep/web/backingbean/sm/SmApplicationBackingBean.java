@@ -15956,7 +15956,12 @@ public class SmApplicationBackingBean extends
 		getManagedBean().getSelectedRecommendRejectReasonDescs().remove(reasonEvent);
 
 		setReasonIdList();
-		verifySelectedRecommendRejectReasons();
+		
+		if(getManagedBean().isShowDifferenceRejection()){
+			verifySelectedRejectReasons();
+		}else{
+			verifySelectedRecommendRejectReasons();
+		}
 	}
 	//30974 - End
 	
@@ -16004,7 +16009,11 @@ public class SmApplicationBackingBean extends
 		}*/
 		
 		setReasonIdList();
-		verifySelectedRecommendRejectReasons();
+		if(getManagedBean().isShowDifferenceRejection()){
+			verifySelectedRejectReasons();
+		}else{
+			verifySelectedRecommendRejectReasons();
+		}
 	}
 	//30974 - End
 	
