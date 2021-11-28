@@ -323,7 +323,7 @@ label.ui-button>span.ui-button-text {
 						</p:row>
 					</p:columnGroup>
 
-					<p:column rendered="#{question.selectable}">
+					<p:column rendered="#{question.selectable and isQuestionTypeItem}">
 						<h:outputText value="#{fn:replace(question.clItem,',',', ')}"
 							escape="false" />
 						<h:outputText
@@ -369,7 +369,7 @@ label.ui-button>span.ui-button-text {
 					<p:column style="width:130px;" rendered="#{question.selectable}">
 						<p:outputPanel id="demoPop">
 							<p:selectOneRadio value="#{question.itemReqDemo}"
-								rendered="#{!isQuestionTypeItem}">
+								rendered="#{isQuestionTypeItem}">
 								<f:selectItems
 									value="#{templateSpecBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 								<p:ajax event="change" partialSubmit="true" update="@form"></p:ajax>
@@ -383,7 +383,7 @@ label.ui-button>span.ui-button-text {
 										action="#{templateSpecBackingBean.scoringPopupAction(specificationBackingBean.managedBean.templateSpecBean)}"
 										oncomplete="scoringSetPopup.show();" partialSubmit="true"
 										process="@this" update="@all"
-										rendered="#{!isQuestionTypeItem and !empty question.answerTypeCode.parameterId and isScoringReq}">
+										rendered="#{isQuestionTypeItem and empty question.answerTypeCode.parameterId and isScoringReq}">
 										<f:setPropertyActionListener
 											target="#{specificationBackingBean.managedBean.templateSpecBean.selectedSpecQuestion}"
 											value="#{question}" />

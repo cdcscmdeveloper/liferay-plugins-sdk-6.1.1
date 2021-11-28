@@ -18827,6 +18827,17 @@ if(null!=allTechnicalChecklist){
 				if (null != templateresDTO) {
 					checkList.getScQtDoc().setTplSpecMaster(templateresDTO.getSpecMaster());
 				}
+				
+				if (checkList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions() != null) {
+					for (TplSpecQuestion tpl : checkList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions()) {
+						if (tpl.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
+							PmParameter scoreType = getParameterByTypeAndCode(ParameterTypeConst.SCORE_TYPE,
+									ParameterConst.SCORE_TYPE_USER);
+							tpl.setScoreTypeCode(scoreType);
+							
+						}
+					}					
+				}
 
 				checkList.getScQtDoc().getTplSpecMaster().setTechnicalSpecQuestionsToDelete(null);
 				templateSpecBean.setSpecMaster(checkList.getScQtDoc().getTplSpecMaster());
