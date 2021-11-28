@@ -44,7 +44,7 @@
 			<p:column headerText="#{lbl['lbl.sc.price.inquiry.item.name']}"
 				style="width:10%; white-space:normal; text-align:center;">
 
-				<h:outputText value="#{demoitemsupplier.scQtDemoItem.itemName}"></h:outputText>
+				<h:outputText value="#{demoitemsupplier.scQtDemoItem.tplSpecQuestion.clItem}"></h:outputText>
 
 
 			</p:column>
@@ -57,7 +57,7 @@
 				</p:inputText>
 				<p:spacer width="5"></p:spacer>
 				<h:outputText
-					value="/#{demoitemsupplier.scQtDemoItem.tplSpecQuestion.maxScore}" />
+					value="/#{demoitemsupplier.scQtDemoItem.tplSpecQuestion.demoScore}" />
 			</p:column>
 		</p:dataTable>
 		
