@@ -16602,8 +16602,12 @@ public class SpecificationBackingBean extends
 								BigDecimal indicativeUnitPrice = tplSpecEstimation.getIndicativeUnitPrice();
 								//#25138  - Allow indicativeUnitPrice & estimatedCost null if qty 0 - start
 								for(TplSpecZoneQty zoneQty : tplSpecQuestion.getTplSpecZoneQties()){
-									if(zoneQty.getQty().compareTo(BigDecimal.ZERO) > 0 && zoneQty.getTplSpecZoneDtl()
-											.equals(tplSpecEstimation.getTplSpecZoneDtl())){
+									if(zoneQty.getQty().compareTo(BigDecimal.ZERO) > 0 
+											// #25138 - Bug #32194 - Start.
+											&& zoneQty.getTplSpecZoneDtl().getSpecZoneId()
+											.equals(tplSpecEstimation.getTplSpecZoneDtl().getSpecZoneId())
+											// #25138 - Bug #32194 - End.
+											){
 										if (indicativeUnitPrice == null && !isSave) {
 											throw new EpException(MessageConst.ERROR_760520);
 										}
