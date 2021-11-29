@@ -247,7 +247,7 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.eclipse.persistence.indirection.IndirectList;
-import org.primefaces.component.menuitem.MenuItem;
+import org.primefaces.component.menuitem.MenuItem;//#25138 Reendorsed 
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -16569,8 +16569,12 @@ public class SpecificationBackingBean extends
 								BigDecimal indicativeUnitPrice = tplSpecEstimation.getIndicativeUnitPrice();
 								//#25138  - Allow indicativeUnitPrice & estimatedCost null if qty 0 - start
 								for(TplSpecZoneQty zoneQty : tplSpecQuestion.getTplSpecZoneQties()){
-									if(zoneQty.getQty().compareTo(BigDecimal.ZERO) > 0 && zoneQty.getTplSpecZoneDtl()
-											.equals(tplSpecEstimation.getTplSpecZoneDtl())){
+									if(zoneQty.getQty().compareTo(BigDecimal.ZERO) > 0 
+											// #25138 - Bug #32194 - Start.
+											&& zoneQty.getTplSpecZoneDtl().getSpecZoneId()
+											.equals(tplSpecEstimation.getTplSpecZoneDtl().getSpecZoneId())
+											// #25138 - Bug #32194 - End.
+											){
 										if (indicativeUnitPrice == null && !isSave) {
 											throw new EpException(MessageConst.ERROR_760520);
 										}
@@ -18478,11 +18482,11 @@ if(null!=allTechnicalChecklist){
 			//====#31913 bug related to #25138==== start
 			BigDecimal totalPoints = totalMaxScore;
 			//====#31913 bug related to #25138==== end
-			// #25638 - 31578 - Start.
+			// #25138 - 31578 - Start.
 			if (null != totalPoints) {
-			finalScorePoint = finalScorePoint + totalPoints.intValue();
+				finalScorePoint = finalScorePoint + totalPoints.intValue();
 			}
-			// #25638 - 31578 - End.
+			// #25138 - 31578 - End.
 			this.getManagedBean().setFinPoints(finalScorePoint);
 			System.out.println("totalFinalPoint===>"+finalScorePoint);
 			
@@ -18491,7 +18495,7 @@ if(null!=allTechnicalChecklist){
 		}
 	}
 	//#25138 Reendorsed - end
- 
+	
 	//#25138 Reendorsed - start
 	/**
 	 * To save total max score after accumulated from TplSpecQuestion 
@@ -18501,17 +18505,16 @@ if(null!=allTechnicalChecklist){
 	 *            
 	 */
 	//====#31913 bug related to #25138==== start
-		public void saveTotalMaxScoreItemZonal(List<ScQtScoreOfferPrice> scoreOfferPrice) {
+	public void saveTotalMaxScoreItemZonal(List<ScQtScoreOfferPrice> scoreOfferPrice) {
 
-			ITemplateSpecSO templateSpecSo = null;
-			try {
-				
-				templateSpecSo = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, ITemplateSpecSO.class);
-				int i = 0;
-				for(ScQtScoreOfferPrice offerprice : scoreOfferPrice){
-		//====#31913 bug related to #25138==== end				
-				
+		ITemplateSpecSO templateSpecSo = null;
+		try {
+			
+			templateSpecSo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, ITemplateSpecSO.class);
+			int i = 0;
+			for(ScQtScoreOfferPrice offerprice : scoreOfferPrice){
+	//====#31913 bug related to #25138==== end
 				BigDecimal totalMaxScore = new BigDecimal(0);
 				/*
 				 * Bug #31578 SHAFFUL START
@@ -18622,48 +18625,46 @@ if(null!=allTechnicalChecklist){
 	 */
 	public void retriveSpecQuestion() {
 
-		//IQTSpecSO specSo = null;
+		IQTSpecSO specSo = null;
 		ITemplateSpecSO templateSpecSo = null;
 		try {
 			
 			List<TplSpecQuestion> newSpecQuestions = new ArrayList<TplSpecQuestion>();
 			if(!this.getManagedBean().getScQtCheckSt2financeProposalList().isEmpty()){
-			for (ScQtCheckList maxScoreList : this
-					.getManagedBean().getScQtCheckSt2financeProposalList()) {
-				if(maxScoreList.getDefinationType().getParameterCode()
-						.equalsIgnoreCase(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION) &&
-						maxScoreList.getDocCategory().equalsIgnoreCase(QTConstants.FINANCIAL_DOC_TYPE)){
-					System.out.println("specmasterID=="+maxScoreList.getScQtDoc().getTplSpecMaster().getSpecMasterId());
-					System.out.println("checlistttddd-----"+maxScoreList.getQtChecklistId());
-					
-					templateSpecSo = BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.SUPPLIER_SELECTION, ITemplateSpecSO.class);
-					List<TplSpecQuestion> specQuestions = templateSpecSo.getSpecQuestionList(maxScoreList.getScQtDoc()
-							.getTplSpecMaster().getSpecMasterId());
-					newSpecQuestions.addAll(specQuestions);
-					
-					
+				for (ScQtCheckList maxScoreList : this
+						.getManagedBean().getScQtCheckSt2financeProposalList()) {
+					if(maxScoreList.getDefinationType().getParameterCode()
+							.equalsIgnoreCase(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION) &&
+							maxScoreList.getDocCategory().equalsIgnoreCase(QTConstants.FINANCIAL_DOC_TYPE)){
+						System.out.println("specmasterID=="+maxScoreList.getScQtDoc().getTplSpecMaster().getSpecMasterId());
+						System.out.println("checlistttddd-----"+maxScoreList.getQtChecklistId());
+						
+						templateSpecSo = BusinessDelegate.getInstance().getServiceObject(
+								ModuleCodeConst.SUPPLIER_SELECTION, ITemplateSpecSO.class);
+						List<TplSpecQuestion> specQuestions = templateSpecSo.getSpecQuestionList(maxScoreList.getScQtDoc()
+								.getTplSpecMaster().getSpecMasterId());
+						newSpecQuestions.addAll(specQuestions);
+						
+					}
 				}
-			}
-			this.getManagedBean().setSpecQuestionList(newSpecQuestions);
-			if(newSpecQuestions.size()<=1){
-				this.getManagedBean().setSingleItem(true);
-			}else{
-				this.getManagedBean().setSingleItem(false);
-			}
-			
+				this.getManagedBean().setSpecQuestionList(newSpecQuestions);
+				if(newSpecQuestions.size()<=1){
+					this.getManagedBean().setSingleItem(true);
+				}else{
+					this.getManagedBean().setSingleItem(false);
+				}
 			}
 			
 		} finally {
-			//specSo = null;
+			specSo = null;
 			templateSpecSo = null;
 		}
 
 		
 	
 	}
-	//#25138 Reendorsed - end	 
- 
+	//#25138 Reendorsed - end
+	
 	/**
 	 * Adds the technical check list if Tier 2 and Demonstration is true for Technical checklist
 	 * 
