@@ -6385,6 +6385,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			case 9:
 				if (!QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(getManagedBean().getQt().getQtStatus().getStatusId())) {
 					retrievePublicationApprovalTabDtl();
+					this.getManagedBean().setScQtApproval(this.getManagedBean().getPublicationApproval());
 				}
 				//#25692-start
 				 if(getUserTaskIsCommitteeAppointmentApprovalEcOcTecFec() && isApprovalScreen()){
