@@ -1,5 +1,20 @@
 #parse("templates/sm/ssm/shared/header.vm")
 
+<style media="all">
+@page {
+	size: A4 portrait;
+}
+
+@page { @bottom-center { content:"Page "counter(page)" / "counter(pages);	
+}
+p {
+	text-align: justify;
+}
+.break-after {
+	page-break-after:always;
+}
+</style>
+
 	<table width='100%'>
 		<tr align='center' style="background-color: #3366ff;">
 	        <td>
@@ -249,7 +264,7 @@
 			#end		
 		</table>
 	#end
-
+	<div style="page-break-after:always;"><br/></div>
 	<tr><td><br /></td></tr>
 	<table width='100%'>
 		<tr><td><br /></td></tr>
