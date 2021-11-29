@@ -1130,25 +1130,21 @@ public class ConsolidationReportBackingBean extends
 
 			List<ScQtFinalizationReport> finalizationReports = _scQtFinalization
 					.getScQtFinalizationReports();
-			List<String> reportTitleList = new ArrayList<>();
-			reportTitleList.add(SourcingConstants.LATAR_BELAKANG_REPORT);
-			reportTitleList.add(SourcingConstants.TUJUAN_REPORT);
-			reportTitleList.add(SourcingConstants.METODOLOGI_PENILAIAN_REPORT);
-			reportTitleList.add(SourcingConstants.UDPUP_REPORT);
-			checkKertasTaklimatReports(finalizationReports, reportTitleList, SourcingConstants.CONSOLIDATION_TASK);
+			// 18685 - START.
+			List<String> reportDocDefList = new ArrayList<>();
+			reportDocDefList.add(SourcingConstants.DOC_DEF_KEY_LATAR_BELAKANG_REPORT);
+			reportDocDefList.add(SourcingConstants.DOC_DEF_KEY_TUJUAN_REPORT);
+			reportDocDefList.add(SourcingConstants.DOC_DEF_KEY_METODOLOGI_PENILAIAN_REPORT);
+			reportDocDefList.add(SourcingConstants.DOC_DEF_KEY_UDPUP_REPORT);
+			checkKertasTaklimatReports(finalizationReports, reportDocDefList, SourcingConstants.CONSOLIDATION_TASK);
 			scQtFinalization.setScQtFinalizationReports(finalizationReports);
 
 			if (finalizationReports != null) {
 				populateEvolutionReports(finalizationReports, getManagedBean().getScQt());
 				this.getManagedBean().setFinalizationReports(finalizationReports);
 				if (CollectionUtils.isEmpty(getManagedBean().getNewBriefingPaperReportList())) {
-					saveNewBriefingPaperReportList(reportTitleList, _scQtFinalization, qtId);
+					saveNewBriefingPaperReportList(reportDocDefList, _scQtFinalization, qtId);
 				}
-			}
-			
-			//#28784
-			if(this.getManagedBean().getScQt().isDemoRequired()) {
-				this.getManagedBean().setDemoReq(true);
 			}
 			// 18685 - END.
 			//retrieveReportTabDtl(getManagedBean().getScQt(), "KT", SourcingConstants.CONSOLIDATION_TASK);
