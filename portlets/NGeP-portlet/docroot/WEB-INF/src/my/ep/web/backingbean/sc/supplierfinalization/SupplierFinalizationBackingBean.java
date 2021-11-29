@@ -128,6 +128,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
@@ -3572,8 +3573,10 @@ public class SupplierFinalizationBackingBean extends
 			List<ScQtFinalizationReport> finalizationReports 
 	        					= new ArrayList<ScQtFinalizationReport>(_scQtFinalization.getScQtFinalizationReports());
 			List<String> reportTitleList = new ArrayList<>();
-			reportTitleList.add(SourcingConstants.UDPUPBM_REPORT);
+			// 18685 - START.
+			reportTitleList.add(SourcingConstants.DOC_DEF_KEY_UDPUPBM_REPORT);
 			checkKertasTaklimatReports(finalizationReports, reportTitleList, SourcingConstants.SUPPLIER_FINALIZATION_TASK);
+			// 18685 - END.
 			int endorsementReportCount = 0;
 			ScQtFinalizationReport coverReport = null;
 			List<ScQtFinalizationReport> endorsementReports = 
@@ -10359,6 +10362,31 @@ public class SupplierFinalizationBackingBean extends
 			}
 			
 		}
+		// 18685 - END.
+		
+		
+	// #30567 - Start.
+	/**
+	 * @param scQtFinalizationReport
+	 * @return
+	 * @throws Exception
+	 */
+	public ScQtFinalizationReportAttachment downloadBriefingPaperReportForBidding(ScQtFinalizationReport scQtFinalizationReport) throws Exception {
+	    ScQtFinalizationReportAttachment reportAttachment = null;
+		if (null != getManagedBean().getCurrentStatusId() 
+				&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_BIDDING_FINALIZATION.longValue()
+						|| getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_BIDDING_FINALIZATION_REVISION.longValue()
+						)) {
+			reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
+		} else {
+			reportAttachment = scQtFinalizationReport.getScQtFinalizationReportAttachment();
+
+			if (reportAttachment == null) {
+				reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
+			}
+		}
+		return reportAttachment;
+	}
+	// #30567 - End.
 }
 // ***19336
-
