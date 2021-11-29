@@ -16,6 +16,7 @@
 						disabled="#{!rejectionReasonBackingBean.managedBean.selectedReason.brandNew}"
 						label="#{lbl['lbl.pm.reason.category']}"
 						styleClass="ppDropDownWidthM"
+						style="width:225px;"
 						value="#{rejectionReasonBackingBean.managedBean.selectedReason.pmReasonCategory.categoryCode}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue=""/>
 						<f:selectItem itemLabel="#{lbl['lbl.pm.reason.justification']}" itemValue="#{rejectionReasonBackingBean.justification}"/>
@@ -33,6 +34,7 @@
 									rejectionReasonBackingBean.managedBean.selectedReason.pmReasonCategory.categoryCode==null}"
 						label="#{lbl['lbl.pm.reason.type']}"
 						styleClass="ppDropDownWidthM"
+						style="width:225px;"
 						value="#{rejectionReasonBackingBean.managedBean.selectedReason.reasonCategoryCode.parameterId}">
 						<f:selectItems
 							value="#{rejectionReasonBackingBean.reasonCategoryOptions(false)}" />
