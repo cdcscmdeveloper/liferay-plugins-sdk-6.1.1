@@ -601,7 +601,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<ScQtDemoByItemScore> byItemDemoList;
 	private ScQtDemo scQtDemo;
 	private ScQtDemoSupplier scQtDemoSupplier;
-	private BigDecimal techScore;
+	private String demoScore;
 	private BigDecimal otherScore;
 	//#28784 - end
 
@@ -4086,17 +4086,17 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 	
 	/**
-	 * @return the techScore
+	 * @return the demoScore
 	 */
-	public BigDecimal getTechScore() {
-		return techScore;
+	public String getDemoScore() {
+		return demoScore;
 	}
 
 	/**
-	 * @param techScore the techScore to set
+	 * @param demoScore the demoScore to set
 	 */
-	public void setTechScore(BigDecimal techScore) {
-		this.techScore = techScore;
+	public void setDemoScore(String demoScore) {
+		this.demoScore = demoScore;
 	}
 
 	/**
