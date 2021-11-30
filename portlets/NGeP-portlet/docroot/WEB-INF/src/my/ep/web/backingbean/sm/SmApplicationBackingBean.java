@@ -2140,7 +2140,7 @@ public class SmApplicationBackingBean extends
 						if(this.getManagedBean().isDowngradeRole()==null || !this.getManagedBean().isDowngradeRole()){
 							personnelsRole.clear();
 						}
-						//end #29956
+
 						if (personnelsRole != null && personnelsRole.size() <= 0) {
 							for (SmPersonnel personnel : this.getManagedBean().getSmAppl().getSmPersonnels()) {
 								if (personnel.isEquityOwner() || personnel.isDirector()) {
@@ -2155,6 +2155,7 @@ public class SmApplicationBackingBean extends
 									}
 								}
 							}
+							// end #29956
 							// start #29956 smOwnerSsmPopup
 							String epRole = getEpRoleDowngradePopupByPersonnel(personnelsRole);
 
