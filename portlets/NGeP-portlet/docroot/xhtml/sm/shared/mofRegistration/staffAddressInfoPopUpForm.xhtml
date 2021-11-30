@@ -54,7 +54,7 @@
 					
 				</p:outputPanel></td>
 		</tr>
-		<!-- 30444-START 26112021-->
+		<!-- 30444-START 30112021-->
 		<tr>
 			<td valign="top" width="50%">
 				<p:outputPanel id="staffResiAddrPan" layout="block"
@@ -67,14 +67,15 @@
 					addrSameAsObj="#{backingBean.managedBean.shareHolderPermAddr.smAddress}"
 					addrObj="#{backingBean.managedBean.shareHolderResdAddr}" 
 					latestAddrObj="#{backingBean.managedBean.latestResdAddr}" 
-					addrPanelId="resiAddrPan" addrId="equiPersResiAddrLine" 
+					addrPanelId="staffResiAddrPan" addrId="staffEquiPersResiAddrLine" 
 					stateItems="#{backingBean.managedBean.shrHldrResdStates}"
 					divisionItems="#{backingBean.managedBean.shrHldrResdDivisions}"
 					districtItems="#{backingBean.managedBean.shrHldrResdDistricts}"
 					cityItems="#{backingBean.managedBean.shrHldrResdCities}"
-					countryId="equiPersResiCntry" stateId="shrResState" divisionId="shrResDivision" 
-					districtId="shrResDist" cityId="shrResCity" 
-					postCodeId="equiPersResdAddrPostCode" showTick="true" 
+					countryId="staffEquiPersResiCntry" stateId="staffEquiPersResiState" 
+					divisionId="staffEquiPersResiDivision" 
+					districtId="staffEquiPersResiDist" cityId="staffEquiPersResiCity" 
+					postCodeId="staffEquiPersResiAddrPostCode" showTick="true" 
 					tickLabel="#{lbl['lbl.sm.person.duplicateAddr']}" 
 					addressType="#{SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL}"/>
 					
@@ -89,19 +90,20 @@
 					addrSameAsObj="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress}"
 					addrObj="#{backingBean.managedBean.shareHolderOffAddr}" 
 					latestAddrObj="#{backingBean.managedBean.latestOffAddr}" 
-					addrPanelId="offcAddrPan" addrId="equiPersOffcAddrLine" 
+					addrPanelId="staffOffcAddrPan" addrId="staffEquiPersOffcAddrLine" 
 					stateItems="#{backingBean.managedBean.shrHldrOffStates}"
 					divisionItems="#{backingBean.managedBean.shrHldrOffDivisions}"
 					districtItems="#{backingBean.managedBean.shrHldrOffDistricts}"
 					cityItems="#{backingBean.managedBean.shrHldrOffCities}"
-					countryId="equiPersOffcCntry" stateId="shrOffState" divisionId="shrOffDivision" 
-					districtId="shrOffDist" cityId="shrOffCity" 
-					postCodeId="equiPersOffcAddrPostCode" showTick="true"
+					countryId="staffEquiPersOffcCntry" stateId="staffEquiPersOffcState" 
+					divisionId="staffEquiPersOffcDivision" 
+					districtId="staffEquiPersOffcDist" cityId="staffEquiPersOffcCity" 
+					postCodeId="staffEquiPersOffcAddrPostCode" showTick="true"
 					tickLabel="#{lbl['lbl.sm.person.duplicateCmpnyAddr']}"
 					addressType="#{SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL}"/>
 					
 				</p:outputPanel></td>
 		</tr>
-		<!-- 30444-END 26112021-->
+		<!-- 30444-END 30112021-->
     </table>
 </ui:composition>
