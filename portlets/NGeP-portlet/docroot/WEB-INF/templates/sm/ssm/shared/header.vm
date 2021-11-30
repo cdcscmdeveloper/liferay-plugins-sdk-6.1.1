@@ -18,14 +18,11 @@
 		 	border: 1px solid black;
 		}
 
-		.descTable1{
-		 	border-collapse: collapse;
+		
+		.avoidbreak{
 			page-break-inside: avoid;
 		}
-		
-		.descTable1 td, .descTable1 tr, .descTable1 th {
-		 	border: 1px solid black;
-		}
+
 		
 		body{
 			font-family: "Helvetica";
