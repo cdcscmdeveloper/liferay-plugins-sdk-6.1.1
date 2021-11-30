@@ -1211,6 +1211,14 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
 
 		SmSupplier smSupp = this.getManagedBean().getSmSupp();
+		
+		// start - #30964
+		if (smSupp.getSmAppl() != null) {
+			smSupp.setCompanyName(smSupp.getSmAppl().getSmCompanyBasic().getCompanyName());
+			smSupp.setEstablishDate(smSupp.getSmAppl().getSmCompanyBasic().getEstablishDate());
+		}
+		// end - #30964
+		
 		if(this.getManagedBean().getSmSupp().getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)){
 			
 			smSupp.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).setSmAddress(this.getManagedBean().getSmPermenantAdd());
