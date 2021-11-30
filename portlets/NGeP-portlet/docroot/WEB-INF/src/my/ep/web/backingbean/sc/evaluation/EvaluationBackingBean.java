@@ -15994,6 +15994,7 @@ private void retriveCommitteeRemarksList(){
 	
 	public String retrieveTotalTechnicalItemScore(ScQtEvaluationResultDtl propId) {
 		String totalTechScore = null;
+		String strDemoScore = null;
 		BigDecimal technicalScore = new BigDecimal(0);
 		BigDecimal totalNum = new BigDecimal(0);
 		BigDecimal demoScore = new BigDecimal(0);
@@ -16020,22 +16021,36 @@ private void retriveCommitteeRemarksList(){
 			//add demo weightage
 			totalNum = totalNum.add(this.getManagedBean().getDemoTotalScore());
 			
-			reqDTO.setQtproposalId(propId.getQtEvaluationResult().getScQtProposal().getQtProposalId());
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-			reqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);			
-			reqDTO.setDocDefinationKey(SourcingConstants.DOC_DEF_KEY_PRESENTATION_DEMO);
-			resDTO = evaluationSO.retrieveSpecScore(reqDTO);
-			//calculate demo total score
-			for(ScQtProposalChecklist specscore : resDTO.getSpecScoreBySupplier()){
-				demoScore = specscore.getTotalScore()
-						.multiply(this.getManagedBean().getOtherScore()).divide(totalNum, 2,
-						BigDecimal.ROUND_HALF_UP);
+			reqDTO.setRequestItemId(this.getManagedBean().getSinglesummaryItemList().getRequestNoteItemId());
+			resDTO = evaluationSO.excludePresentationDemo(reqDTO);
+			
+			if (resDTO.isGenerateSuppliers()) {
+				
+				reqDTO.setQtproposalId(propId.getQtEvaluationResult().getScQtProposal().getQtProposalId());
+				reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+				reqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);			
+				reqDTO.setDocDefinationKey(SourcingConstants.DOC_DEF_KEY_PRESENTATION_DEMO);
+				resDTO = evaluationSO.retrieveSpecScore(reqDTO);
+				//calculate demo total score
+				for(ScQtProposalChecklist specscore : resDTO.getSpecScoreBySupplier()){
+					demoScore = specscore.getTotalScore()
+							.multiply(this.getManagedBean().getOtherScore()).divide(totalNum, 2,
+							BigDecimal.ROUND_HALF_UP);
+					strDemoScore = String.valueOf(demoScore);
+				}
+				this.getManagedBean().setDemoScore(strDemoScore);
+				technicalScore = propId.getTotalScore().subtract(demoScore);
+				
+				totalTechScore = String.valueOf(technicalScore);
+			} else {
+				this.getManagedBean().setDemoScore(ResourceBundleUtils.getMessage(
+						"lbl.sc.qt.item.spec.null",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes()
+						.getUserLocale()));
+				totalTechScore = String.valueOf(propId.getTotalScore());
 			}
-			this.getManagedBean().setTechScore(demoScore);
-			technicalScore = propId.getTotalScore().subtract(demoScore);
-			
-			totalTechScore = String.valueOf(technicalScore);
-			
 		} finally {
 			evaluationSO = null;
 		}
