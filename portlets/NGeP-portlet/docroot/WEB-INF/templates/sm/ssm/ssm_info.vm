@@ -178,12 +178,7 @@
 			#end	
 		
 			</table>
-			
-	#if($ownerInfo.size() > 4)
-	<div style="page-break-after:always;"><br/></div>
-	#end 
-	
-	
+			<div style="page-break-inside: avoid;"><br/></div>
 		
 	#if($companyInfo.businessType == 'I' || $companyInfo.businessType == 'J' )
 		<table width='100%'>
@@ -215,10 +210,7 @@
 			#end	
 		
 		</table>
-			#if($equityCompanies.size() > 4)
-			<div style="page-break-after:always;"><br/></div>
-			#end 	
-		
+		<div style="page-break-inside: avoid;"><br/></div>
 		<table width='100%'>
 		<tr><td><br /></td></tr>
 		<tr align='center' style="background-color: #3366ff;">
@@ -256,11 +248,7 @@
 			#end		
 		</table>
 	#end
-
-	#if($personnelInfo.size() > 4)
-	<div style="page-break-after:always;"><br/></div>
-	#end 
-	
+	<div style="page-break-inside: avoid;"><br/></div>
 	<tr><td><br /></td></tr>
 	<table width='100%'>
 		<tr><td><br /></td></tr>
@@ -311,6 +299,7 @@
 			#end	
 		
 </table>
+<div style="break-inside: avoid"><br/></div>
 	<tr><td><br /></td></tr>
 	#if($companyInfo.businessType == 'C' || $companyInfo.businessType == 'F' )
 	<table width='100%'>
@@ -340,6 +329,7 @@
 			#end	
 		
 	</table>
+<div style="page-break-inside: avoid;"><br/></div>
 	<tr><td><br /></td></tr>
 	#end
 	<table>	
