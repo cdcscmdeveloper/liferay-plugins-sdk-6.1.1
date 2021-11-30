@@ -1,19 +1,5 @@
 #parse("templates/sm/ssm/shared/header.vm")
 
-<style media="all">
-@page {
-	size: A4 portrait;
-}
-
-@page { @bottom-center { content:"Page "counter(page)" / "counter(pages);	
-}
-p {
-	text-align: justify;
-}
-.break-after {
-	page-break-after:always;
-}
-</style>
 
 	<table width='100%'>
 		<tr align='center' style="background-color: #3366ff;">
@@ -192,6 +178,10 @@ p {
 			#end	
 		
 			</table>
+			
+	#if($ownerInfo.size() > 4)
+	<div style="page-break-after:always;"><br/></div>
+	#end 
 	
 	
 		
@@ -225,7 +215,9 @@ p {
 			#end	
 		
 		</table>
-			
+			#if($equityCompanies.size() > 4)
+			<div style="page-break-after:always;"><br/></div>
+			#end 	
 		
 		<table width='100%'>
 		<tr><td><br /></td></tr>
@@ -264,7 +256,11 @@ p {
 			#end		
 		</table>
 	#end
+
+	#if($personnelInfo.size() > 4)
 	<div style="page-break-after:always;"><br/></div>
+	#end 
+	
 	<tr><td><br /></td></tr>
 	<table width='100%'>
 		<tr><td><br /></td></tr>
