@@ -13,6 +13,8 @@ import java.util.Comparator;
 import java.util.Arrays;
 //start #12981 - no 2, comment #189
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
@@ -70,6 +72,7 @@ import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.userprofilemaintenance.SmPersonnelManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
@@ -3372,8 +3375,7 @@ public class SmPersonnelBackingBean extends
 						PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
 						PersonnelResDTO personnelRes = new PersonnelResDTO();
 						
-						if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PENDING_REQ
-								|| personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED) {
+						if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PENDING_REQ) {
 							personnel.setSoftcertFlg(SupplierManagementConst.RECORD_STATUS_SUSPENDED);
 						}
 						personnel.setContractSignerFlg(Integer.parseInt(ParameterConst.FLAG_NO));
@@ -3528,12 +3530,23 @@ public class SmPersonnelBackingBean extends
 		reqDTO1.setSmSupplier(getManagedBean().getBasicSmPersonnel().getSmAppl().getSmSupplier());
 		reqDTO1.setUserId(getManagedBean().getBasicSmPersonnel().getPmUser().getUserId());
 		SmSoftcertRequest softcertRequest = SmServiceLookup.getPersonnelSO().retrievePersonnelSoftcertRequestBySupplierIdAndUserId(reqDTO1).getSoftcertRequest();
-		if(softcertRequest == null){
-			value = SupplierManagementConst.SOFT_CERT_PENDING_REQ; 
-		}else if(softcertRequest != null && softcertRequest.getPmDigiCert() == null){
-			value = SupplierManagementConst.SOFT_CERT_PROCESSING; 
-		}else if(softcertRequest != null && softcertRequest.getPmDigiCert() != null){
-			value = SupplierManagementConst.SOFT_CERT_ISSUED; 
+		
+		if(softcertRequest != null){
+			if(softcertRequest.getPmDigiCert() != null && softcertRequest.getPmDigiCert().getValidTo() != null){
+				Calendar renewDate = Calendar.getInstance();
+				renewDate.setTime(softcertRequest.getPmDigiCert().getValidTo());
+				renewDate.add(Calendar.MONTH, -SmServiceLookup.getSmRuleSO().retrieveSoftCertRenewalPeriod().getSoftCertRenewalMonth());
+				if (DateUtils.isDateGreaterOrEqual(new Date(), renewDate.getTime())) {
+					value = SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL;
+				}else if (softcertRequest != null && softcertRequest.getPmDigiCert() != null) {
+					value = SupplierManagementConst.SOFT_CERT_ISSUED;
+				}	
+			}else if (softcertRequest != null && softcertRequest.getPmDigiCert() == null
+					&& softcertRequest.getReasonCode() != null){			
+				value = SupplierManagementConst.SOFT_CERT_REJECTED;
+			}else if (softcertRequest != null && softcertRequest.getPmDigiCert() == null){
+				value = SupplierManagementConst.SOFT_CERT_PROCESSING;
+			}	
 		}else{
 			value = getManagedBean().getBasicSmPersonnel().getSoftcertFlg(); 
 		}
