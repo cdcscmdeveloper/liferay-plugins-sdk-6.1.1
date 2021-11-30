@@ -3,13 +3,9 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc">
-	
-	<!-- #25077 Start -->
-	<ui:param name="isOthersApprovalMandatoryForAttachment" value="#{qTDetailBB.isOthersApprovalMandatoryForAttachment()}" />
-	<!-- #25077 End -->
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
+	
 	<p:panel header="#{lbl['lbl.sc.history']}" toggleable="true">
 		<p:dataTable var="historyDtls" style="width:100%"
 		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -18,7 +14,7 @@
 				<h:outputText
 					value="#{approvalBackingBean.getParameterDesc(historyDtls.approvalType)}" />
 			</p:column>
-			<p:column headerText="#{lbl[qTDetailBB.managedBean.selectedApprovalTabBean.tabType eq ParameterConst.approvalCategoryOthers ? 'lbl.sc.qt.approval.history.approved.by' : 'lbl.sc.approved.by']}">
+			<p:column headerText="#{lbl['lbl.sc.approved.by']}">
 				<h:outputText value="#{historyDtls.approverId.userName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.status']}">
@@ -31,46 +27,6 @@
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 				</h:outputText>
 			</p:column>
-			<!-- #25077 Start -->
-		     <c:if test="#{not empty approvalDtlsList.historyApprovalRequests and 
-		                qTDetailBB.managedBean.selectedApprovalTabBean.tabType eq ParameterConst.approvalCategoryOthers and isOthersApprovalMandatoryForAttachment}">
-		               <c:choose>
-							    <c:when test="#{qTDetailBB.managedBean.maintanceFlow}">	
-							           <p:column headerText="#{lbl['lbl.sc.document']}">
-										  <p:dataGrid emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-												var="attachFile"
-												value="#{historyDtls.approvalRequestAttachement}"
-												rowIndexVar="attachFileIndex" columns="1" style="width:100%">
-												<h:commandLink value="#{attachFile.fileName}"
-																styleClass="blue_font" immediate="true"
-																action="#{createQtBB.downloadFile(attachFile)}" />
-											</p:dataGrid>	
-										</p:column>
-							    </c:when>
-				                <c:otherwise>
-										<p:column>
-										      <f:facet name="header">
-											        <h:outputText value="* " styleClass="mandatory" />
-													<h:outputText value="#{lbl['lbl.sc.document']}" />
-								                    <ac:iconTooltip value="#{lbl['lbl.sc.qt.approval.oth.supporting.document.tooltip']}" />
-												</f:facet>
-											    <h:panelGroup id="historyOtheruploadId">
-													<ac:scSingleFileUploadButton id="otherHistoryApprUploadBtn"
-														popupWidgetVar="otherHistoryApprUploadDlg"
-														attachment="#{historyDtls.approvalRequestAttachement}"
-														readonly="#{createQtBB.managedBean.readOnly}"
-														deleteFileUploadListener="approvalBackingBean.deleteHistoryOthersApprovalFile"
-														rowIndex="#{index}">
-														<f:setPropertyActionListener for="actionEvent"
-															value="#{historyDtls}"
-															target="#{approvalBackingBean.managedBean.historyApprovalRequests}" />
-													</ac:scSingleFileUploadButton>
-												</h:panelGroup>
-										</p:column> 
-							    </c:otherwise>
-				     </c:choose>
-			 </c:if>
-			<!-- #25077 End -->
 		</p:dataTable>
 	</p:panel>
 </ui:composition>
