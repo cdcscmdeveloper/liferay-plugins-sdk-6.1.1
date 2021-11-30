@@ -118,7 +118,7 @@
 	#end
 	
 	
-	
+<div class="avoidbreak">	
 	<table width='100%'>
 	<tr><td><br /></td></tr>
 		<tr align='center' style="background-color: #3366ff;">
@@ -129,7 +129,7 @@
     	<tr><td><br /></td></tr>
 	</table>
 	
-		<table  class="descTable1" width="100%">
+		<table  class="descTable" width="100%">
 		<tr style="background-color:#99ccff;" align="center">
 			<th width="15%">$smVmUtil.getDescByLabel('lbl.sm.userprofile.name')</th>
 			#if($companyInfo.businessType == 'C' || $companyInfo.businessType == 'F' )
@@ -178,9 +178,10 @@
 			#end	
 		
 			</table>
-			<div style="page-break-inside: avoid;"><br/></div>
+<br/></div>
 		
 	#if($companyInfo.businessType == 'I' || $companyInfo.businessType == 'J' )
+<div class="avoidbreak">
 		<table width='100%'>
 		<tr><td><br /></td></tr>
 		<tr align='center' style="background-color: #3366ff;">
@@ -191,7 +192,7 @@
     	<tr><td><br /></td></tr>
 		</table>
 	
-		<table  class="descTable1" width="100%">
+		<table  class="descTable" width="100%">
 		<tr style="background-color:#99ccff;" align="center">
 			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.companyname')</th>
 			<th width="15%">$smVmUtil.getDescByLabel('lbl.sm.viewSsm.ShareholdingAmt')</th>
@@ -210,7 +211,8 @@
 			#end	
 		
 		</table>
-		<div style="page-break-inside: avoid;"><br/></div>
+<br/></div>
+<div class="avoidbreak">
 		<table width='100%'>
 		<tr><td><br /></td></tr>
 		<tr align='center' style="background-color: #3366ff;">
@@ -221,7 +223,7 @@
     	<tr><td><br /></td></tr>
 	</table>
 	
-		<table  class="descTable1" width="100%">
+		<table  class="descTable" width="100%">
 		<tr style="background-color:#99ccff;" align="center">
 			<th width="20%">$smVmUtil.getDescByLabel('lbl.sm.worker.name')</th>
 			<th width="20%">$smVmUtil.getDescByLabel('lbl.sm.identificationtype')</th>
@@ -248,8 +250,9 @@
 			#end		
 		</table>
 	#end
-	<div style="page-break-inside: avoid;"><br/></div>
-	<tr><td><br /></td></tr>
+<br/></div>
+<tr><td><br /></td></tr>
+<div class="avoidbreak">
 	<table width='100%'>
 		<tr><td><br /></td></tr>
 		<tr align='center' style="background-color: #3366ff;">
@@ -266,7 +269,7 @@
 		</tr>
 	</table>
 	
-		<table  class="descTable1" width="100%">
+		<table  class="descTable" width="100%">
 		<tr style="background-color:#99ccff;" align="center">
 			#if ($businessnature.ssmDataIssue != 'false')
 			<th width="15%">$smVmUtil.getDescByLabel('lbl.sm.businessnature.code')</th>
@@ -299,9 +302,10 @@
 			#end	
 		
 </table>
-<div style="break-inside: avoid"><br/></div>
+<br/></div>
 	<tr><td><br /></td></tr>
 	#if($companyInfo.businessType == 'C' || $companyInfo.businessType == 'F' )
+<div class="avoidbreak">
 	<table width='100%'>
 		<tr align='center' style="background-color: #3366ff;">
 	        <td>
@@ -312,7 +316,7 @@
     	<tr><td><br /></td></tr>
 	</table>
 	
-	<table  class="descTable1" width="100%">
+	<table  class="descTable" width="100%">
 		<tr style="background-color:#99ccff;" align="center">
 			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.branch.address')</th>
 		</tr>
@@ -329,7 +333,7 @@
 			#end	
 		
 	</table>
-<div style="page-break-inside: avoid;"><br/></div>
+<br/></div>
 	<tr><td><br /></td></tr>
 	#end
 	<table>	
