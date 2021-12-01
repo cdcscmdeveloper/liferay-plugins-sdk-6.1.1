@@ -199,6 +199,24 @@
 					<ac:paginator for="searchQTLoaLois" />
 			
 					<ui:param name="scQt" value="#{listItem.scLoiLoa.scQt}" />
+					
+					<!-- 25201 -start- -->					
+					<c:choose>
+						<c:when test="#{listType eq 'loiList'}">
+							<!-- 30418 -start- -->
+							<ui:param name="procurementMode" value="#{scQt.procurementMode}" />
+							<!-- 30418 -end- -->
+							<ui:param name="loiLoaStatus" value="#{listItem.scLoiWorkflowStatusesSize gt 0?qTDetailBB.getStatusIdToDisplay(listItem.scLoiWorkFlowStatuses):''}" />
+						</c:when>
+						<c:when test="#{listType eq 'loaList'}">
+							<!-- 30418 -start- -->						
+							<ui:param name="procurementMode" value="#{listItem.procurementMode}" />
+							<!-- 30418 -end- -->							
+							<ui:param name="loiLoaStatus" value="#{listItem.scLoaWorkflowStatusesSize gt 0?qTDetailBB.getStatusIdToDisplay(listItem.scLoaWorkFlowStatuses):''}" />
+						</c:when>
+					</c:choose>
+					<!-- 25201 -end- -->					
+					
 					<c:if test="#{listType eq 'loaList' or listType eq 'loiList'}">
 						<p:column headerText="#{itemNoHeader}" style="width:50px;">
 							<h:outputText value="#{listItem.docNo}" />
@@ -214,8 +232,10 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.procurement.mode']}"
 						style="width:100px;">
+						<!-- 30418 -start- -->						
 						<h:outputText
-							value="#{qTDetailBB.getParameterDesc(scQt.procurementMode)}" />
+							value="#{qTDetailBB.getParameterDesc(procurementMode)}" />
+						<!-- 30418 -end- -->
 					</p:column>
 			
 					<p:column headerText="#{lbl['lbl.sc.created.date']}" style="width:80px;">
