@@ -1262,7 +1262,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate
 					.getInstance().getServiceObject("sm", IRegistrationSO.class);			
 			RegistrationResDTO resDTO = reqSO.updateOnlineAcc(reqDTO);
-			if (resDTO.isSuccessful()) {
+			RegistrationResDTO ressDTO = reqSO.updateOnlineAccount(reqDTO); //#30964
+			if (ressDTO.isSuccessful() && resDTO.isSuccessful()) { //#30964
 				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
 				//#15016 - Start
 				//FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
