@@ -77,16 +77,16 @@
 						</ui:remove>
 					<h:outputText
 						value=" #{lbl['lbl.sc.notice.board.requirement.mof.expiry.date1']} "
-						rendered="#{qulificationBean.qtRequirementLabel and (lbl[criteriaLbL] eq 'MOF Registration' or lbl[criteriaLbL] eq 'Pendaftaran Kementerian Kewangan')}">
+						rendered="#{qulificationBean.qtRequirementLabel and (qulificationBean.criteria eq SourcingConstants.SUPPLIER_CRITERIA_TYPE_MOF_REGISTRATION)}">
 						</h:outputText>
 					<h:outputText
 						value="#{noticeBoardBackingBean.managedBean.supplierMofExpDate}"
-						rendered="#{qulificationBean.qtRequirementLabel and (lbl[criteriaLbL] eq 'MOF Registration' or lbl[criteriaLbL] eq 'Pendaftaran Kementerian Kewangan')}"> 
+						rendered="#{qulificationBean.qtRequirementLabel and (qulificationBean.criteria eq SourcingConstants.SUPPLIER_CRITERIA_TYPE_MOF_REGISTRATION)}"> 
 						<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 						</h:outputText>
 					<h:outputText
 						value="#{lbl['lbl.sc.notice.board.requirement.mof.expiry.date2']} "
-						rendered="#{qulificationBean.qtRequirementLabel and (lbl[criteriaLbL] eq 'MOF Registration' or lbl[criteriaLbL] eq 'Pendaftaran Kementerian Kewangan')}">
+						rendered="#{qulificationBean.qtRequirementLabel and (qulificationBean.criteria eq SourcingConstants.SUPPLIER_CRITERIA_TYPE_MOF_REGISTRATION)}">
 						</h:outputText>
 						<ui:remove>
 						<!-- #29560 - end -->
