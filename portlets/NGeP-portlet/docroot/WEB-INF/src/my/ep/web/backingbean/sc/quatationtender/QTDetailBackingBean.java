@@ -1876,6 +1876,16 @@ public class QTDetailBackingBean extends
 								Boolean.TRUE));
 			}*/
 			
+			//30418, #25201-START
+			//Special Case for LOA Doctype QT Maintenance Search, procurement mode is search against SC_LOA instead of SC_QT
+			if (StringUtils.isNotEmpty(qtnTenderSearchBean.getProcurementMode())) {
+				searchFilterBean.add(new SearchFilterBean(
+						"procurementMode.parameterCode",
+						SearchOperator.OPERATOR_EQUALS.value(),
+						qtnTenderSearchBean.getProcurementMode()));
+			}
+			//30418, #25201-END
+
 			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
 			
 			reqDTO.setLoaForQtSearchBean(qtSearchBean);
@@ -6455,7 +6465,10 @@ public class QTDetailBackingBean extends
 		
 		// procurement mode
 		String procurementMode = qtSearchBean.getProcurementMode();
-		if (!StringUtils.isBlank(procurementMode)) {
+
+		// #30418, #25201 -start-
+		if (!StringUtils.isBlank(procurementMode) && getManagedSearchBeanDocumentTypeIsLOI()) {
+			// #30418, #25201 -end-
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean(qtAccessPrefix+"procurementMode.parameterCode",
 							SearchOperator.OPERATOR_EQUALS.value(),
