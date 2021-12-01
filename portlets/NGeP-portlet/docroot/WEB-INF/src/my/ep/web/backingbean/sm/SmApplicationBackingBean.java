@@ -3716,6 +3716,41 @@ public class SmApplicationBackingBean extends
 
 			// init GST information
 			initGst();
+			
+			List<SmPersonnel> listPersonnel = getManagedBean().getSmAppl().getSmPersonnels();
+			log.info("============== checking .ser file value AFTER TWO ================");
+			for (SmPersonnel personnel : listPersonnel) {
+				log.info("======= NAME = "+personnel.getName());
+				log.info("======= isAttachHq = "+personnel.isAttachHq());
+				log.info("======= isAuthorized = "+personnel.isAuthorized());
+				log.info("======= isBlacklisted = "+personnel.isBlacklisted());
+				log.info("======= isBumi = "+personnel.isBumi());
+				log.info("======= isClerical = "+personnel.isClerical());
+				log.info("======= isSuspendRegistration = "+personnel.isSuspendRegistration());
+				log.info("======= isCancelRegistration = "+personnel.isCancelRegistration());
+				log.info("======= isContactPerson = "+personnel.isContactPerson());
+				log.info("======= isContractSigner = "+personnel.isContractSigner());
+				log.info("======= isDirector = "+personnel.isDirector());
+				log.info("======= isEquityOwner = "+personnel.isEquityOwner());
+				log.info("======= isHigherManagement = "+personnel.isHigherManagement());
+				log.info("======= isManagement = "+personnel.isManagement());
+				log.info("======= isMuslim = "+personnel.isMuslim());
+				log.info("======= isProf = "+personnel.isProf());
+				log.info("======= isSemiProf = "+personnel.isSemiProf());
+				log.info("======= isSoftcert = "+personnel.isSoftcert());
+				log.info("======= getMobileNo = "+personnel.getMobileNo());
+				log.info("======= getMobileArea = "+personnel.getMobileArea());
+				log.info("======= getMobileCountry = "+personnel.getMobileCountry());
+				log.info("======= getMobileTelcoId = "+personnel.getMobileTelcoId());
+				log.info("======= getRevNo = "+personnel.getRevNo());
+				log.info("======= getShareAmt = "+personnel.getShareAmt());
+				log.info("======= getSharePercentage = "+personnel.getSharePercentage());
+				log.info("======= isJustificationReqd = "+personnel.isJustificationReqd());
+				log.info("======= getAddnlPersonnelJustification = "+personnel.getAddnlPersonnelJustification());
+				log.info("======= getIdentityResponseCode = "+personnel.getIdentityResponseCode());
+				log.info("======= getTerminationReason = "+personnel.getTerminationReason());
+				log.info("======= getIdentityResidentStatus = "+personnel.getIdentityResidentStatus());
+			}
 		}
 
 	}
@@ -8894,6 +8929,42 @@ public class SmApplicationBackingBean extends
 		SmOutputMsgBackingBean backingBean = new SmOutputMsgBackingBean();
 		backingBean.getManagedBean().setSmAppl(getManagedBean().getSmAppl());
 		renewSesionObject();
+		
+		List<SmPersonnel> listPersonnel = getManagedBean().getSmAppl().getSmPersonnels();
+		log.info("============== checking .ser file value AFTER THREE ================");
+		for (SmPersonnel personnel : listPersonnel) {
+			log.info("======= NAME = "+personnel.getName());
+			log.info("======= isAttachHq = "+personnel.isAttachHq());
+			log.info("======= isAuthorized = "+personnel.isAuthorized());
+			log.info("======= isBlacklisted = "+personnel.isBlacklisted());
+			log.info("======= isBumi = "+personnel.isBumi());
+			log.info("======= isClerical = "+personnel.isClerical());
+			log.info("======= isSuspendRegistration = "+personnel.isSuspendRegistration());
+			log.info("======= isCancelRegistration = "+personnel.isCancelRegistration());
+			log.info("======= isContactPerson = "+personnel.isContactPerson());
+			log.info("======= isContractSigner = "+personnel.isContractSigner());
+			log.info("======= isDirector = "+personnel.isDirector());
+			log.info("======= isEquityOwner = "+personnel.isEquityOwner());
+			log.info("======= isHigherManagement = "+personnel.isHigherManagement());
+			log.info("======= isManagement = "+personnel.isManagement());
+			log.info("======= isMuslim = "+personnel.isMuslim());
+			log.info("======= isProf = "+personnel.isProf());
+			log.info("======= isSemiProf = "+personnel.isSemiProf());
+			log.info("======= isSoftcert = "+personnel.isSoftcert());
+			log.info("======= getMobileNo = "+personnel.getMobileNo());
+			log.info("======= getMobileArea = "+personnel.getMobileArea());
+			log.info("======= getMobileCountry = "+personnel.getMobileCountry());
+			log.info("======= getMobileTelcoId = "+personnel.getMobileTelcoId());
+			log.info("======= getRevNo = "+personnel.getRevNo());
+			log.info("======= getShareAmt = "+personnel.getShareAmt());
+			log.info("======= getSharePercentage = "+personnel.getSharePercentage());
+			log.info("======= isJustificationReqd = "+personnel.isJustificationReqd());
+			log.info("======= getAddnlPersonnelJustification = "+personnel.getAddnlPersonnelJustification());
+			log.info("======= getIdentityResponseCode = "+personnel.getIdentityResponseCode());
+			log.info("======= getTerminationReason = "+personnel.getTerminationReason());
+			log.info("======= getIdentityResidentStatus = "+personnel.getIdentityResidentStatus());
+		}
+		
 		return "/xhtml/sm/shared/mofRegistration/mofApplicationOutputMsg.xhtml";
 	}
 
