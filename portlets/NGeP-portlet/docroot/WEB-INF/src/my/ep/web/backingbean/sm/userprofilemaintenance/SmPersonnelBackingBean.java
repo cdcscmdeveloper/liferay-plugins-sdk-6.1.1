@@ -3375,7 +3375,8 @@ public class SmPersonnelBackingBean extends
 						PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
 						PersonnelResDTO personnelRes = new PersonnelResDTO();
 						
-						if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PENDING_REQ) {
+						if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PENDING_REQ
+								|| personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED) {
 							personnel.setSoftcertFlg(SupplierManagementConst.RECORD_STATUS_SUSPENDED);
 						}
 						personnel.setContractSignerFlg(Integer.parseInt(ParameterConst.FLAG_NO));
