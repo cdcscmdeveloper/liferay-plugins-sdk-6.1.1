@@ -16561,6 +16561,13 @@ public class SpecificationBackingBean extends
 			}
 		}
 	}
+	
+	// #32134 - start
+	private ITemplateSpecSO templateSpecSO() {
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, ITemplateSpecSO.class);
+	}
+	// #32134 - end
 
 	private void checkFinancialSpecEstimations(
 			List<ScQtCheckList> financialChecklist, ScQtCheckList qtChecklist,
@@ -16665,6 +16672,44 @@ public class SpecificationBackingBean extends
 								.format(indPriceThreshold) });
 				}
 			}
+			// #32134 - start
+			if(count == 1){
+				TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
+				reqDTO.setQtId(qt.getQtId());
+				TplSpecMaster tplSpecMaster = qtChecklist.getScQtDoc()
+						.getTplSpecMaster();
+				if (tplSpecMaster != null) {
+					reqDTO.setExcludeSpecMasterId(tplSpecMaster.getSpecMasterId());
+				}
+				BigDecimal newTotalSpecEstimatedAmount = templateSpecSO()
+						.retrieveTotalSpecEstimationsByQtIdAndZone(reqDTO)
+						.getEstimatedPrices();
+				if (newTotalSpecEstimatedAmount == null) {
+					newTotalSpecEstimatedAmount = BigDecimal.valueOf(0);
+				}
+				if (tplSpecMaster != null
+						&& tplSpecMaster.getTplSpecQuestions() != null) {
+					for (TplSpecQuestion tplSpecQuestion : tplSpecMaster
+							.getTplSpecQuestions()) {
+						for (TplSpecEstimation tplSpecEstimation : tplSpecQuestion
+								.getTplSpecEstimations()) {
+							if (tplSpecEstimation.getEstimatedCost() != null) {
+								newTotalSpecEstimatedAmount = newTotalSpecEstimatedAmount
+										.add(tplSpecEstimation.getEstimatedCost());
+							}
+						}
+					}
+				}
+				
+				newTotalSpecEstimatedAmount.setScale(2, BigDecimal.ROUND_UP);
+				if (newTotalSpecEstimatedAmount
+								.compareTo(indPriceThreshold) > 0) {
+					throw new EpException(MessageConst.ERROR_760504,
+							new String[] { SourcingConstants.DF_AMOUNT
+								.format(indPriceThreshold) });
+				}
+			}
+			// #32134 - end
 		}
 		//#25729 #142 end
 	}
