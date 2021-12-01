@@ -210,6 +210,22 @@
 			<p:commandLink value="#{lbl['lbl.fl.instruction.items.spec.click.here']}" ajax="false"
 				style="font-size:10px;font-style:italic" process="@this" 
 				action="#{contractRequestBackingBean.downloadFile('/shared/FL/Garis_Panduan_Item_dan_Spesifikasi.pdf')}"></p:commandLink>
+			<!-- Test start 11076-->
+			<br></br>
+			<h:form id="itemExistingForm">
+			<h:panelGrid columns="3" cellpadding="10"  cellspacing = "5">
+				<h:outputLabel value="#{lbl['lbl.fl.existing.item']}" style="float:left;font-weight:bold" escape="false"/>
+				<h:inputText id="textBox1" value="#{contractRequestBackingBean.managedBean.totalExistingItem}" size="3" readonly="true" style="text-align:center;font-weight:bold"/>
+				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.existing.item']}"/>
+				<h:outputLabel value="#{lbl['lbl.fl.item.added']}" escape="false" style="float:left;font-weight:bold"/>
+				<h:inputText id="textBox2" value="#{contractRequestBackingBean.managedBean.totalNewItemsAdded}" size="3" readonly="true" style="text-align:center;font-weight:bold"/>
+				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.item.added']}"/>
+				<h:outputLabel value="#{lbl['lbl.fl.overall.item']}" escape="false" style="float:left;font-weight:bold"/>
+				<h:inputText id="textBox3" value="#{contractRequestBackingBean.managedBean.overallTotalItem}" size="3" readonly="true" style="text-align:center;font-weight:bold"/>
+				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.overall.item']}"/>
+			</h:panelGrid>	
+			</h:form>
+			<!-- Test end 11076-->	
 			<p:dataTable id="itemDataTable" var="item"
 				rowIndexVar="index" rowKey="#{item}"
 				value="#{contractRequestBackingBean.managedBean.showItemAddrList}"
@@ -1097,9 +1113,21 @@
 		
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
+		<!-- #11076 START-->
+			<p:commandButton id="itemSelectAll" value = "#{lbl['lbl.fl.btn.addall']}" 
+				process="@this,itemListResultDt"
+				update="itemDataTable,messages,:form:itemExistingForm:textBox1,:form:itemExistingForm:textBox2,:form:itemExistingForm:textBox3"
+				onclick = "addItems.hide();"
+				onstart="blockWidget.show();"
+				disabled="#{contractRequestBackingBean.contractItemPagingDataModel.list == null 
+				or fn:length(contractRequestBackingBean.contractItemPagingDataModel.list)== 0}"
+				oncomplete="blockWidget.hide();"
+				action = "#{contractRequestBackingBean.checkAllItem}">
+			</p:commandButton>
+		<!-- #11076 END-->
 			<p:commandButton  value="#{lbl['lbl.btn.add']}" id="itemAddButton"
 				action="#{contractRequestBackingBean.updateContractedItemDt}"
-				oncomplete="addItems.hide();" update="itemDataTable,messages"
+				oncomplete="addItems.hide();" update="itemDataTable,messages,:form:itemExistingForm:textBox1,:form:itemExistingForm:textBox2,:form:itemExistingForm:textBox3"
 				disabled="#{contractRequestBackingBean.managedBean.selectedContractedItemList.size() == 0 }"
 				process="@this,itemListResultDt">
 			</p:commandButton>
