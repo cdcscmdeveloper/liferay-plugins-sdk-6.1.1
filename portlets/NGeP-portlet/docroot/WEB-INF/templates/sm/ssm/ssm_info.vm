@@ -98,6 +98,7 @@
 	</table>
 	
 	#if($companyInfo.businessType == 'I' || $companyInfo.businessType == 'J' )
+<div class="avoidbreak">
 	<table width='100%'>
 		<tr align='center' style="background-color: #3366ff;">
 	        <td>
@@ -115,6 +116,7 @@
 		</tr>
 		<tr><td><br /></td></tr>
 	</table>
+<br/></div>
 	#end
 	
 	
@@ -211,8 +213,6 @@
 			#end	
 		
 		</table>
-<br/></div>
-<div class="avoidbreak">
 		<table width='100%'>
 		<tr><td><br /></td></tr>
 		<tr align='center' style="background-color: #3366ff;">
@@ -249,8 +249,8 @@
 		 		</tr>
 			#end		
 		</table>
-	#end
 <br/></div>
+	#end
 <tr><td><br /></td></tr>
 <div class="avoidbreak">
 	<table width='100%'>
