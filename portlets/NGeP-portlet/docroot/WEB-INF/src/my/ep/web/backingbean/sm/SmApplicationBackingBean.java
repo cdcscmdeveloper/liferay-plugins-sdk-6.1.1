@@ -3889,13 +3889,13 @@ public class SmApplicationBackingBean extends
 					//#31461-Start
 					SmApplicationUtil.validateEquityOwnerCount(getManagedBean(), -1,
 							SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
-					if (getManagedBean().isPoApproverEquityErr()) {
-						throw new EpException(getManagedBean().getMsgEquityErr());
-					}//#31461-end
 					//#30691 - START - 26112021
 					if (getManagedBean().isPoApproverChgBusiness()) {
 						throw new EpException(getManagedBean().getMsgChgBusiness());
 					}//#30691 - END - 26112021
+					if (getManagedBean().isPoApproverEquityErr()) {
+						throw new EpException(getManagedBean().getMsgEquityErr());
+					}//#31461-end
 					SmApplicationUtil.checkAllowedToApprove(getManagedBean());
 					displayBumiRecommendNote();
 					getHqFacility();
@@ -3939,13 +3939,13 @@ public class SmApplicationBackingBean extends
 					//#31461-Start
 					SmApplicationUtil.validateEquityOwnerCount(getManagedBean(), -1,
 							SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
-					if (getManagedBean().isPoApproverEquityErr()) {
-						throw new EpException(getManagedBean().getMsgEquityErr());
-					}//#31461-End
 					//#30691 - START - 26112021
 					if (getManagedBean().isPoApproverChgBusiness()) {
 						throw new EpException(getManagedBean().getMsgChgBusiness());
 					}//#30691 - END - 26112021
+					if (getManagedBean().isPoApproverEquityErr()) {
+						throw new EpException(getManagedBean().getMsgEquityErr());
+					}//#31461-End
 					SmApplicationUtil.checkAllowedToApprove(getManagedBean());
 					displayBumiRecommendNote();
 					break;
