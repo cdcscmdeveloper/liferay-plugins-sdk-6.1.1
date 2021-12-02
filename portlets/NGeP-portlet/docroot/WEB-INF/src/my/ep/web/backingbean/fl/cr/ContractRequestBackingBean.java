@@ -1166,7 +1166,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 			}
 			messageId = MessageConst.ERROR_740070;
-			if (getManagedBean().getOverallTotalItem() > 3 || contractedItemList.size() > 3) {
+			if (getManagedBean().getOverallTotalItem() > FulfilmentConst.GFMAS_CHARGELINE_LIMIT || contractedItemList.size() > FulfilmentConst.GFMAS_CHARGELINE_LIMIT) {
 				itemExceed = true;
 				FacesContext.getCurrentInstance().addMessage(
 						null,
