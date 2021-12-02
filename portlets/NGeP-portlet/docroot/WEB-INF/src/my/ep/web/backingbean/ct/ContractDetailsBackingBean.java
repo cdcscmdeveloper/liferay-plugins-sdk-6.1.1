@@ -1259,6 +1259,16 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				DecimalFormat df = new DecimalFormat("#.00");
 				String contractNO = ctBB.getManagedBean().getContractVer().getCtContract().getContractNo();
 				for (CtAgency ctAgency : ctBB.getManagedBean().getContractVer().getCtAgencies()) {
+					// Start - #31740
+					  if(ctBB.getManagedBean().getSelectedAgencyChanges() != null){
+					       if(ctBB.getManagedBean().getSelectedAgencyChanges().containsKey(ctAgency.getOrgProfile().getOrgProfileId())){
+						       for(CtAgency ctagencyloop : ctBB.getManagedBean().getSelectedAgencyChanges().values()){
+							       ctAgency.setCeilingAmount(ctagencyloop.getCeilingAmount());
+							       log.info(" Bug #31740 Changes value after set from ContractDetailsBackingBean  :"+ctAgency.getCeilingAmount()+" and contract No : "+ctBB.getManagedBean().getContractVer().getCtContract().getContractNo()+" agency_profile_id  :"+ctAgency.getOrgProfile().getOrgProfileId());
+
+						          }	
+					       }
+					}
 					ceilingAmt = ceilingAmt + ctAgency.getCeilingAmount().doubleValue();
 				}
 				ceilingAmt = Double.valueOf(df.format(ceilingAmt));
