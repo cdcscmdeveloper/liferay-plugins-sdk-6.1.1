@@ -1736,7 +1736,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			if(this.getManagedBean().getSmSupplier() == null){
 				this.getManagedBean().setSmSupplier(reqDTO.getSupplier());
 			}
-			SLAUtils.getInstance().logSLAInfo("SM","DA","ProfilePersonalizationBackingBean.preRenderDisciplinaryAction", startTime);
+			SLAUtils.getInstance().logSLAInfo("SM","DA - 5","ProfilePersonalizationBackingBean.preRenderDisciplinaryAction", startTime);
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_INFO_DISC_ACTION);
 		} catch (Exception e) {
 			fc.addMessage(
