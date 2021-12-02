@@ -3955,23 +3955,25 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	
 	//#8411 - START
 	/**
-	 * Get parameter id select items by reason category, parameter type, registration admin and search bean for
+	 * Get parameter id select items by reason category, parameter type and search bean for
 	 * dropdown.
 	 * 
 	 * @param reasonCategory
 	 *            the reason category
 	 * @param parameterType
 	 *            the parameter type
-	 * @param isUpsAdmin           
-	 *            the registration admin
 	 * @param searchBean
 	 *            the search bean instance
 	 * @return array of SelectItem
 	 */
 	public SelectItem[] getCategoryTypeDropdownValuesBySearchBean(Integer reasonCategory, String parameterType, 
-													Boolean isUpsAdmin,	ISearchBean<PmParameterDesc> searchBean) {
+																  ISearchBean<PmParameterDesc> searchBean) {
 		SelectItem[] items = null;
 		FacesScopes face = new FacesScopes();
+		List<PmParameterDesc> parameterDescs = ParameterHelper
+				.getInstance().getParameterDescListBySearchBean(
+						parameterType, searchBean);
+		List<PmParameterDesc> newParameterDescs = new ArrayList<PmParameterDesc>();
 		try {
 			if(reasonCategory == null){
 				items = new SelectItem[1];
@@ -3979,61 +3981,29 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 						"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						face.getUserLocale()));
 			} else {
-				if(reasonCategory.equals(1)){
-					
-					List<PmParameterDesc> parameterDescs = ParameterHelper
-							.getInstance().getParameterDescListBySearchBean(
-									parameterType, searchBean);
-					List<PmParameterDesc> newParameterDescs = new ArrayList<PmParameterDesc>();
-					
-					for (PmParameterDesc parameterDesc: parameterDescs) {// filter for justification category
+				if(reasonCategory.equals(ParameterConst.JUSTIFICATION)){// filter for Justification category
+					for (PmParameterDesc parameterDesc: parameterDescs) {
 						if (!parameterDesc.getPmParameter().getParameterCode().equals(ReasonCategory.SOFTCERT_REJECTION_REASON.value()) 
 				        		&& !parameterDesc.getPmParameter().getParameterCode().equals(ReasonCategory.SUPPLIER_REJECTION_REASON.value())) {
 							newParameterDescs.add(parameterDesc);
 				        }
 				    }
-
-					items = new SelectItem[newParameterDescs.size() + 1];
-					items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
-							"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							face.getUserLocale()));
-					int i = 1;
-					for (PmParameterDesc parameterDesc : newParameterDescs) {
-						items[i++] = new SelectItem(parameterDesc.getPmParameter()
-								.getParameterId(), parameterDesc.getCodeName());
-					}
-					
-				} else if(reasonCategory.equals(2)){
-					
-					List<PmParameterDesc> parameterDescs = ParameterHelper
-							.getInstance().getParameterDescListBySearchBean(
-									parameterType, searchBean);
-					List<PmParameterDesc> newParameterDescs = new ArrayList<PmParameterDesc>();
-					
-					for (PmParameterDesc parameterDesc: parameterDescs) {// filter for rejection reason category
+				} else if(reasonCategory.equals(ParameterConst.REJECTION_REASON)){// filter for Rejection Reason category
+					for (PmParameterDesc parameterDesc: parameterDescs) {
 						if (parameterDesc.getPmParameter().getParameterCode().equals(ReasonCategory.SOFTCERT_REJECTION_REASON.value()) 
 				        		|| parameterDesc.getPmParameter().getParameterCode().equals(ReasonCategory.SUPPLIER_REJECTION_REASON.value())) {
 							newParameterDescs.add(parameterDesc);
 				        }
-				    }
-					
-					if(isUpsAdmin){// if UPS Admin, remove Softcert Rejection
-						for (int i = 0; i < newParameterDescs.size(); i++) {
-					        if (newParameterDescs.get(i).getPmParameter().getParameterCode().equals(ReasonCategory.SOFTCERT_REJECTION_REASON.value())) {
-					        	newParameterDescs.remove(i);
-					        }
-					    }
 					}
-
-					items = new SelectItem[newParameterDescs.size() + 1];
-					items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
-							"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							face.getUserLocale()));
-					int i = 1;
-					for (PmParameterDesc parameterDesc : newParameterDescs) {
-						items[i++] = new SelectItem(parameterDesc.getPmParameter()
-								.getParameterId(), parameterDesc.getCodeName());
-					}
+			    }
+				int i = 1;
+				items = new SelectItem[newParameterDescs.size() + 1];
+				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+						"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						face.getUserLocale()));
+				for (PmParameterDesc parameterDesc : newParameterDescs) {
+					items[i++] = new SelectItem(parameterDesc.getPmParameter()
+							.getParameterId(), parameterDesc.getCodeName());
 				}
 			}
 		} catch (Exception e) {
@@ -4043,7 +4013,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
 							e.getMessage()));
 		}
-
 		return items;
 	}
 	//#8411 - END

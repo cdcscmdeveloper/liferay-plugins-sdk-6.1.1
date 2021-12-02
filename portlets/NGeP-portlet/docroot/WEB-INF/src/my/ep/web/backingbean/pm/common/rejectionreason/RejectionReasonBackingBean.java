@@ -961,14 +961,13 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		log.info("reasonCategoryOptions");
 		//#8411 - START
 		Integer reasonCategory = null;
-		Boolean isUpsAdmin = getFacesScopes().hasRoleUser("UPS_ADMIN");
 		if (isSearchBean){
 			reasonCategory = getManagedBean().getReasonCategory();
 		} else {
 			reasonCategory = getManagedBean().getSelectedReason().getPmReasonCategory().getCategoryCode();
 		}			
 		return getCategoryTypeDropdownValuesBySearchBean(reasonCategory, ParameterTypeConst.REASON_CATEGORY, 
-															isUpsAdmin, getDocTypeSearchBean());
+														 getDocTypeSearchBean());
 		//#8411 - END
 	}
 	
@@ -1531,10 +1530,8 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 */
 	public ISearchBean<PmParameterDesc> getDocTypeSearchBean() {
 		if (this.docTypeSearchBean == null) {
-			//#8411 - START
 			this.docTypeSearchBean = super.createSearchBean(
-					PmParameterDesc.class, "somReasonType");
-			//#8411 - END
+					PmParameterDesc.class, "somReasonCat");
 		}
 
 		return this.docTypeSearchBean;
