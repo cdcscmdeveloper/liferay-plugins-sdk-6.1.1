@@ -390,7 +390,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 								.getManagedBean().getZoneGeneralTrees().isEmpty())) {
 
 					long startTime = System.currentTimeMillis();
-					tenderResDTO = QtDetailsSO.retriveQTDetails(tenderReqDTO);
+					tenderResDTO = QtDetailsSO.retriveDemoQTDetails(tenderReqDTO);
 					SLAUtils.getInstance().logHiExecInfo("QT", "QTDetailBackingBean.retrieveQuationTenderDetails",
 							startTime);
 
