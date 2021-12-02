@@ -2287,6 +2287,11 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					for(PmUserGroupUser groupUser : firstPmUserGroup) {
 						getManagedBean().getApproverList().add(groupUser.getPmUser().getUserId());
 					}
+					if(getManagedBean().getFlRequest().getPmUserGroup()==null || getManagedBean().getFlRequest().getPmUserGroup().getUserGroupId() == null){
+						PmUserGroup pmUserGroup = new PmUserGroup();
+						getManagedBean().getFlRequest().setPmUserGroup(pmUserGroup);
+						getManagedBean().getFlRequest().getPmUserGroup().setUserGroupId(getManagedBean().getUserGroupList().get(0).getUserGroupId());
+					}
 				}
 			}
 			if(getManagedBean().getFlRequest().getPmUserGroup()!=null && 
@@ -3053,6 +3058,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 */
 	public void onTabChange(int selectedTabIndex){	
 		initialize();
+		
+		if(selectedTabIndex==0){
+			initializeApproverGroup();
+		}
 		if(selectedTabIndex==1){
 			recalculateItem();//11076
 			if(!getManagedBean().isFlRequestLink()){
@@ -3883,6 +3892,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	public AgOfficeResDTO getAgAccount(BaseEntity entity){
 		checkPtjGroupAndInitialize();
 		getManagedBean().getFlRequest().setIssuedOrgProfile(getManagedBean().getFlRequest().getPreparedOrgProfile());
+		initializeApproverGroup();
 		initializeDelAddr();
 		getEspkbCommitmentNo();
 		getManagedBean().getFlRequest().setIssuedOrgProfile(getManagedBean().getFlRequest().getPreparedOrgProfile());
