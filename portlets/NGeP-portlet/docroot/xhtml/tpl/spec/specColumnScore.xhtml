@@ -15,12 +15,13 @@
 	</p:column>
 <!-- Farid start -->	
 <!-- #25138 #21695 - start -->
+<!--  Bug #32220  add lbl['lbl.sc.no.available']-->
 	<p:column style="width:50px; white-space:normal; text-align:right;"  rendered="#{isScoringReq}">
 		<h:panelGroup rendered="#{isScoring and !isRepeated}">
 			<h:outputText 
 			rendered="#{isSpecTypeFinancial and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty eq 0 or isSpecTypeFinancial and !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity eq 0}"
 			style="width:calc(100% - 15px);" 
-			value="#{isSpecTypeFinancial and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty eq 0 or isSpecTypeFinancial and !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity eq 0 ? 'N/A' : tplSpecAnswer.userRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);">
+			value="#{isSpecTypeFinancial and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty eq 0 or isSpecTypeFinancial and !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity eq 0 ? lbl['lbl.sc.no.available'] : tplSpecAnswer.userRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);">
 			</h:outputText>
 			
 			<h:outputText value="#{tplSpecAnswer.autoScore}" 
@@ -76,7 +77,11 @@
 		Bug #28312
 		ADDED : disabled="#{evaluationBackingBean.managedBean.readOnly}
 	</ui:remove>
-	
+	<ui:remove>
+		Bug #32220
+		ADDED : lbl['lbl.sc.no.available']
+	</ui:remove>
+	l
 	<p:column style="width:50px; white-space:normal; text-align:right;"  rendered="#{isScoringReq}">
 	
 
@@ -86,7 +91,7 @@
 			  	<h:outputText disabled="#{tplSpecAnswer.ratePerUom eq 0 or evaluationBackingBean.managedBean.readOnly}" 
 			  	rendered="#{tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty eq 0}"
 			  	style="width:calc(100% - 15px);" 
-				value="#{isSpecTypeFinancial and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty eq 0 or isSpecTypeFinancial and !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity eq 0 ? 'N/A' : tplSpecAnswer.userRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);">
+				value="#{isSpecTypeFinancial and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty eq 0 or isSpecTypeFinancial and !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity eq 0 ? lbl['lbl.sc.no.available'] : tplSpecAnswer.userRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);">
 				</h:outputText>
 		</h:panelGroup>
 		</c:when>
