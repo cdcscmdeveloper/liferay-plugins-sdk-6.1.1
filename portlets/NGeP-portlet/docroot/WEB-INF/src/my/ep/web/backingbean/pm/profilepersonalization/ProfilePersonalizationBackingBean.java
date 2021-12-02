@@ -1676,18 +1676,32 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 				retrieveDisciplinaryAction(srcAppl.getSmSupplier());
 				this.getManagedBean().setSmSupplier(srcAppl.getSmSupplier());
 				reqDTO.setSupplier(srcAppl.getSmSupplier());
-				
+
+				//start 32229
+				SLAUtils.getInstance().logSQLPerformanceInfo("SM","DA-1","ProfilePersonalizationBackingBean.preRenderDisciplinaryAction", startTime,"32229");
+				startTime = System.currentTimeMillis();
+				//end 32229
 			} else if(reqDTO.getSupplier() != null){ 
-				//logger.info("----------------------preRenderDisciplinaryAction from site visit----------------"); 
+				logger.info("----------------------preRenderDisciplinaryAction from site visit----------------"); 
 
 				retrieveDisciplinaryAction(reqDTO.getSupplier());
 				this.getManagedBean().setSmSupplier(reqDTO.getSupplier()); 
+
+				//start 32229
+				SLAUtils.getInstance().logSQLPerformanceInfo("SM","DA-2","ProfilePersonalizationBackingBean.preRenderDisciplinaryAction", startTime,"32229");
+				startTime = System.currentTimeMillis();
+				//end 32229
 			}else{
 				PmUser sUsers = facesScopes.getUserSessionBean();						
 				if (sUsers != null){
 					loadSupplierCommonDetails(sUsers.getUserId());
 				}
 				retrieveDisciplinaryAction(null);
+
+				//start 32229
+				SLAUtils.getInstance().logSQLPerformanceInfo("SM","DA-3","ProfilePersonalizationBackingBean.preRenderDisciplinaryAction", startTime,"32229");
+				startTime = System.currentTimeMillis();
+				//end 32229
 			}
 			Locale locale = new FacesScopes().getUserLocale();
 			if(this.getManagedBean().isDisciplinaryAction()){
@@ -1717,11 +1731,15 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 				} else {
 					this.getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
 				}
+				//start 32229
+				SLAUtils.getInstance().logSQLPerformanceInfo("SM","DA-4","ProfilePersonalizationBackingBean.preRenderDisciplinaryAction", startTime,"32229");
+				startTime = System.currentTimeMillis();
+				//end 32229
 			}
 			if(this.getManagedBean().getSmSupplier() == null){
 				this.getManagedBean().setSmSupplier(reqDTO.getSupplier());
 			}
-			SLAUtils.getInstance().logSLAInfo("SM","DA","ProfilePersonalizationBackingBean.preRenderDisciplinaryAction", startTime);
+			SLAUtils.getInstance().logSLAInfo("SM","DA - 5","ProfilePersonalizationBackingBean.preRenderDisciplinaryAction", startTime);
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_INFO_DISC_ACTION);
 		} catch (Exception e) {
 			fc.addMessage(
