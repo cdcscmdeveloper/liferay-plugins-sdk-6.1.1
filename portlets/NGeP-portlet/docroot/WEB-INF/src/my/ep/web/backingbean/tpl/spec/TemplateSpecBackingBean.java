@@ -3570,20 +3570,17 @@ public class TemplateSpecBackingBean extends
 		for(TplSpecAnswer retrieveAns : templateSpecBean.getSpecAnswerList()){
 			if(retrieveAns.getTplSpecZoneQty() != null && !retrieveAns.getTplSpecZoneQty().getQty().equals(new BigDecimal(0))
 					&& retrieveAns.getTplSpecQuestion().getQuestionType().equalsIgnoreCase("I")){
-				break;
+				return false;
 				
 			}
 			else if(retrieveAns.getTplSpecZoneQty() == null && retrieveAns.getTplSpecQuestion().getClQuantity() != null && !retrieveAns.getTplSpecQuestion().getClQuantity().equals(new BigDecimal(0))
 					&& retrieveAns.getTplSpecQuestion().getQuestionType().equalsIgnoreCase("I")){
-				break;
+				return false;
 				
-			}
-			else{
-				return true;
 			}
 			
 		}
-		return false;
+		return true;
 	}
 	//Bug #32110 related to #21695 Farid End 18/11/2021	
 }
