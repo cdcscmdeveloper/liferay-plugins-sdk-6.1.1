@@ -987,7 +987,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			String nextRole = null;
 		 
 			// Start Fix - #31740
-			if(ctBB.getManagedBean().getContractVer().getCtAgencies().size() >= 400 && ctBB.getManagedBean().getSelectedAgencyChanges() != null){
+			if(ctBB.getManagedBean().getSelectedAgencyChanges() != null){
 			    if(ctBB.getManagedBean().getSelectedAgencyChanges().size()>0) {
 				   log.info(" getSelectedAgencyChanges ::::::::::::::::::::::: "+ctBB.getManagedBean().getSelectedAgencyChanges().size());
 				   for (CtAgency ctAgencysz : new ArrayList<CtAgency>(ctBB.getManagedBean().getSelectedAgencyChanges().values())){
@@ -1007,10 +1007,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 			    
 			    ctBB.getManagedBean().getSelectedAgencyChanges().clear();
-				   log.info(" getSelectedAgencyChanges after clear() ::::::::::::::::::::::: "+ctBB.getManagedBean().getSelectedAgencyChanges().size());
+				  // log.info(" getSelectedAgencyChanges after clear() ::::::::::::::::::::::: "+ctBB.getManagedBean().getSelectedAgencyChanges().size());
 
 			}
-	        // End Fix - #31740
 
 			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && !ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {
 				messageId = MessageConst.INFO_700021;
