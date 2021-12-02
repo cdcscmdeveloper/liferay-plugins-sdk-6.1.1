@@ -2363,6 +2363,16 @@ public class SupplierFinalizationBackingBean extends
 			 if (QTStatusConst.SF_PENDING_SIGN_OFF.equals(currentStatusId) && CollectionUtils.isNotEmpty(scQtFinalization.getScQtFinalizationReports())) {
 				 String decisionTypeCode = scQtFinalization.getDecision()
 						  .getParameterCode();
+				  // #28834 - Start.
+				  if (ParameterConst.DECISION_RECOMMEND_SUPPLIER.equals(decisionTypeCode)) {
+						try {
+							debugLogger("Generating all reports...");
+							downloadAllReports();	
+						} catch(Exception e) {
+							e.printStackTrace();
+						}
+				  }
+				  // #28834 - End.
 				  if (ParameterConst.DECISION_RBP.equals(decisionTypeCode) && CollectionUtils.isNotEmpty(getManagedBean().getDocumentList()) && getManagedBean().getDocumentList().size() > 0) {
 					  // #28834 - Start. 
 					  addBriefingPaper(scQtFinalization);
@@ -3096,8 +3106,11 @@ return	remarksNotFound;
 				}
 
 				Long currentStatusId = getManagedBean().getCurrentStatusId();
-				if ( (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
-							.equals(currentStatusId) || 
+				if ( (
+						// #28834 - Start.
+						/*QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
+							.equals(currentStatusId) || */
+						// #28834 - End.
 						QTStatusConst.SF_PENDING_ESCALATION_TO_BPK
 							.equals(currentStatusId)) && 
 								ParameterConst.DECISION_RECOMMEND_SUPPLIER
@@ -3615,8 +3628,11 @@ return	remarksNotFound;
 			}
 			//#26169 - END
 			Long currentStatusId = getManagedBean().getCurrentStatusId();
-			if ( (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
-						.equals(currentStatusId) || 
+			if ( (
+					// #28834 - Start.
+					/*QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
+						.equals(currentStatusId) || */
+					// #28834 - End.
 					QTStatusConst.SF_PENDING_ESCALATION_TO_BPK
 						.equals(currentStatusId)) && 
 							ParameterConst.DECISION_RECOMMEND_SUPPLIER
