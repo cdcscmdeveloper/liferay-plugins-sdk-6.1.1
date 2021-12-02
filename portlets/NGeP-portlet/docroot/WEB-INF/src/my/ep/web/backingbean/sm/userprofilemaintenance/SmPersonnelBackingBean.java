@@ -3359,6 +3359,10 @@ public class SmPersonnelBackingBean extends
 							&& !ePStatus) {
 
 						int softcert = checkSoftCert();
+						if(softcert == 0){
+							softcert = 4;
+						}
+						
 						PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
 						PersonnelResDTO personnelRes = new PersonnelResDTO();
 
