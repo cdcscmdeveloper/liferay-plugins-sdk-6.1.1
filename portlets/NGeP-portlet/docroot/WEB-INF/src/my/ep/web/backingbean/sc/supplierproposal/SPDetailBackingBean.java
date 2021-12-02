@@ -1359,7 +1359,7 @@ public class SPDetailBackingBean extends
 				throw new EpException(MessageConst.ERROR_760479);
 			}
 //Bug #32164 related to #21695 - START 23/11/2021		
-			List<Long> ItemListTemp = new ArrayList<Long>();
+// #32202 bug related to #21695	 - START 30/11/2021		
 			for (TplSpecAnswer answer : answers) {
 				TplSpecQuestion tplSpecQuestion = answer.getTplSpecQuestion();
 				PmParameter answerType = tplSpecQuestion.getAnswerTypeCode();
@@ -1385,24 +1385,65 @@ public class SPDetailBackingBean extends
 										   ||(ParameterConst.ANSWER_TYPE_NUMERIC.equalsIgnoreCase(answerTypeCode) && answer.getAnswerNumeric() == null && answer.getOffer() == null))) {
 							throw new EpException(MessageConst.ERROR_760480);
 					}
-				}else if(getManagedBean().getQt().isPartial() && getManagedBean().getQt().isZonal()){
-					
-					for(TplSpecZoneQty specqty : answer.getTplSpecQuestion().getTplSpecZoneQties()){
-						if(specqty.getTplSpecZoneOffer() != null && !specqty.getTplSpecZoneOffer().isOffer()){
-							
-							ItemListTemp.add(specqty.getTplSpecZoneOffer().getTplSpecQuestion().getSpecQuestionId());		
-							
+				} else if (getManagedBean().getQt().isPartial()
+						&& getManagedBean().getQt().isZonal()) {
+					List<Long> ItemListTemp = new ArrayList<Long>();
+					for (TplSpecAnswer currentAnswers : getManagedBean()
+							.getTemplateSpecBean().getSpecAnswerList()) {
+
+						for (TplSpecZoneQty findqty : currentAnswers
+								.getTplSpecQuestion().getTplSpecZoneQties()) {
+							if (findqty.getTplSpecZoneOffer() != null
+									&& findqty.getQty().compareTo(
+											BigDecimal.ZERO) > 0
+									&& answer
+											.getTplSpecQuestion()
+											.getSpecQuestionId()
+											.equals(findqty
+													.getTplSpecZoneOffer()
+													.getTplSpecQuestion()
+													.getSpecQuestionId())
+									&& !findqty.getTplSpecZoneOffer().isOffer()) {
+
+								ItemListTemp.add(findqty.getTplSpecZoneOffer()
+										.getTplSpecQuestion()
+										.getSpecQuestionId());
+							}
+						}
+						if (currentAnswers.getTplSpecQuestion()
+								.getParentSpecQuestion() != null
+								&& currentAnswers.getTplSpecQuestion()
+										.getAnswerTypeCode() != null
+								&& ItemListTemp.contains(currentAnswers
+										.getTplSpecQuestion()
+										.getParentSpecQuestion()
+										.getSpecQuestionId())) {
+							if (ParameterConst.ANSWER_TYPE_DROPDOWN
+									.equalsIgnoreCase(currentAnswers
+											.getTplSpecQuestion()
+											.getAnswerTypeCode()
+											.getParameterCode())
+									&& currentAnswers.getAnswerCompliance() == null
+									|| ParameterConst.ANSWER_TYPE_TEXT
+											.equalsIgnoreCase(currentAnswers
+													.getTplSpecQuestion()
+													.getAnswerTypeCode()
+													.getParameterCode())
+									&& StringUtils.isEmpty(currentAnswers
+											.getAnswerText())
+									|| ParameterConst.ANSWER_TYPE_NUMERIC
+											.equalsIgnoreCase(currentAnswers
+													.getTplSpecQuestion()
+													.getAnswerTypeCode()
+													.getParameterCode())
+									&& currentAnswers.getAnswerNumeric() == null) {
+								throw new EpException(MessageConst.ERROR_760480);
+							}
 						}
 					}
-					if(answer.getTplSpecQuestion().getParentSpecQuestion() != null &&
-							ItemListTemp.contains(answer.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId())
-							&& (ParameterConst.ANSWER_TYPE_DROPDOWN.equalsIgnoreCase(answerTypeCode) && answer.getAnswerCompliance() == null
-							|| ParameterConst.ANSWER_TYPE_TEXT.equalsIgnoreCase(answerTypeCode) && StringUtils.isEmpty(answer.getAnswerText()))
-							|| ParameterConst.ANSWER_TYPE_NUMERIC.equalsIgnoreCase(answerTypeCode) && answer.getAnswerNumeric() == null){
-						throw new EpException(MessageConst.ERROR_760480);
-					}
 				}
-//Bug #32164 related to #21695 - end 23/11/2021
+// #32202 bug related to #21695	 - START 30/11/2021					
+//Bug #32164 related to #21695 - end 23/11/2021			
 			}
 		}
 	}
