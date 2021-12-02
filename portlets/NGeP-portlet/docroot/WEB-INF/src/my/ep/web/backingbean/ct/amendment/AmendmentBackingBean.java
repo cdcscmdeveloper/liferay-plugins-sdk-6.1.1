@@ -819,7 +819,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public String backAction() {
 		this.getManagedBean().setSecretaryList(null);
-		return CONTRACT_MAINT_PAGE;
+		//#15851
+		ctBackingBean.getManagedBean().setViewContract(true);
+		return (this.getManagedBean().getBackToPreviousPage() != null) ? this.getManagedBean().getBackToPreviousPage() : CONTRACT_MAINT_PAGE;
+		//return CONTRACT_MAINT_PAGE;
 	}
 
 	//#15851 - shaqimi start

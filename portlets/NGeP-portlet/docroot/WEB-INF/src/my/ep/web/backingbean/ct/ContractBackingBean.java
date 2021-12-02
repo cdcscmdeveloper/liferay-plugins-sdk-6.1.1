@@ -4003,10 +4003,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			//follow structure but for amendment
 			DirectLOABackingBean directLoaBackingBean = new DirectLOABackingBean();
 			FacesContext fc = FacesContext.getCurrentInstance();
-			directLoaBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
-			directLoaBackingBean.getManagedBean().setTrackingDairyView(true);
-			directLoaBackingBean.viewLOA(scLoa.getLoaId());
-			
+//			directLoaBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+//			directLoaBackingBean.getManagedBean().setTrackingDairyView(true);
+//			directLoaBackingBean.viewLOA(scLoa.getLoaId());
 			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
 			abb.getManagedBean().setTrackingDairyView(true);
 			abb.gotoAmendViewPage(contractId, scLoa.getLoaId());
