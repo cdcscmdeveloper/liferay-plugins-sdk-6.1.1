@@ -23,13 +23,13 @@
 						<f:selectItem itemLabel="#{lbl['lbl.pm.reason.rejectionreason']}" itemValue="#{rejectionReasonBackingBean.rejectionReason}"/>
 						<p:ajax event="change" partialSubmit="true" process="@this"
 							listener="#{rejectionReasonBackingBean.resetCategoryChange(false)}"
-							update="somReasonType,:form:conditionTabId:cTabID,pRejectReasonDet,pReasonRestriction" />
+							update="somReasonCat,:form:conditionTabId:cTabID,pRejectReasonDet,pReasonRestriction" />
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
 				<th><p:outputLabel value="#{lbl['lbl.pm.reason.type']}" />
 					<p:outputLabel value="* " styleClass="mandatory" /></th>
-				<td><p:selectOneMenu id="somReasonType" required="true"
+				<td><p:selectOneMenu id="somReasonCat" required="true"
 						disabled="#{!rejectionReasonBackingBean.managedBean.selectedReason.brandNew or 
 									rejectionReasonBackingBean.managedBean.selectedReason.pmReasonCategory.categoryCode==null}"
 						label="#{lbl['lbl.pm.reason.type']}"

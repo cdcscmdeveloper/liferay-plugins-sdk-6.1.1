@@ -15,7 +15,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						<tr>
 							<th><p:outputLabel value="#{lbl['lbl.pm.reason.category']}" />
 								<p:outputLabel value="* " styleClass="mandatory" /></th>
-							<td><p:selectOneMenu id="somReasonCat"
+							<td><p:selectOneMenu id="somReasonCategory"
 									label="#{lbl['lbl.pm.reason.category']}"
 									styleClass="ppDropDownWidthM"
 									value="#{rejectionReasonBackingBean.managedBean.reasonCategory}">
@@ -30,7 +30,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						<tr>
 							<th><p:outputLabel value="#{lbl['lbl.pm.reason.type']}" />
 								<p:outputLabel value="* " styleClass="mandatory" /></th>
-							<td><p:selectOneMenu id="somReasonType"
+							<td><p:selectOneMenu id="somReasonCat"
 									label="#{lbl['lbl.pm.reason.type']}"
 									styleClass="ppDropDownWidthM"
 									value="#{rejectionReasonBackingBean.managedBean.reasonSearchBean.reasonCategoryParam.parameterId}">
