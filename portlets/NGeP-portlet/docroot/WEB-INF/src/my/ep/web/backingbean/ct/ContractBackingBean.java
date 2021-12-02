@@ -1536,10 +1536,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			double ceilingAmt = 0.0;
 			DecimalFormat df = new DecimalFormat("#.00");
 			for (CtAgency ctAgency : agencyList) {
+				// Start Fix -#31740
 				if(ctAgency.getOrgProfile().getOrgProfileId().equals(agencyData.getOrgProfile().getOrgProfileId())){
-					log.info(" Bug #31740 Changes value using(ctAgency) in ContractBackingBean  :"+ctAgency.getCeilingAmount()+" and contract No : "+getManagedBean().getContractVer().getCtContract().getContractNo()+" agency_profile_id  :"+ctAgency.getOrgProfile().getOrgProfileId());
+					log.info(" Bug #31740 Changes value Before set using(ctAgency) in ContractBackingBean  :"+ctAgency.getCeilingAmount()+" and contract No : "+getManagedBean().getContractVer().getCtContract().getContractNo()+" agency_profile_id  :"+ctAgency.getOrgProfile().getOrgProfileId());
+					ctAgency.setCeilingAmount(agencyData.getCeilingAmount());
+					log.info(" Bug #31740 Changes value After set using(ctAgency) in ContractBackingBean  :"+ctAgency.getCeilingAmount()+" and contract No : "+getManagedBean().getContractVer().getCtContract().getContractNo()+" agency_profile_id  :"+ctAgency.getOrgProfile().getOrgProfileId());
+
 				}
-				ceilingAmt = ceilingAmt + ctAgency.getCeilingAmount().doubleValue();						
+				ceilingAmt = ceilingAmt + ctAgency.getCeilingAmount().doubleValue();
+				// End Fix -#31740
 		// End added log for  Bug #31740 			
 				
 			}
@@ -1580,9 +1585,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			
 			// Start Fix - #31740
 			getManagedBean().getSelectedAgencyChanges().put(agencyData.getOrgProfile().getOrgProfileId(),agencyData);
-			log.info("List of selected agency to update : "+getManagedBean().getSelectedAgencyChanges().size());
+//			log.info("List of selected agency to update : "+getManagedBean().getSelectedAgencyChanges().size());
 			// End Fix - #31740
-		
+			
+		  
 		}		
 	}
 	
