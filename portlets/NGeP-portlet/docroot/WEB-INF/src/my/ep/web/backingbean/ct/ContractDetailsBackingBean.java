@@ -982,7 +982,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				String nextRole = null;
 
 			// Start Fix - #31740
-			if(ctBB.getManagedBean().getContractVer().getCtAgencies().size() >= 400 && ctBB.getManagedBean().getSelectedAgencyChanges() != null){
+			if(ctBB.getManagedBean().getSelectedAgencyChanges() != null){
 			    if(ctBB.getManagedBean().getSelectedAgencyChanges().size()>0) {
 				   log.info(" getSelectedAgencyChanges ::::::::::::::::::::::: "+ctBB.getManagedBean().getSelectedAgencyChanges().size());
 				   for (CtAgency ctAgencysz : new ArrayList<CtAgency>(ctBB.getManagedBean().getSelectedAgencyChanges().values())){
