@@ -16,13 +16,34 @@
 	text-align: left;
 	position: running(header);
 }
-
+## #25025 -start
 .footer {
-	display: block;
-	text-align: left;
-	position: running(footer);
-}
-
+		   position: fixed;
+		   left: 0;
+		   bottom: 0;
+		   text-align: left;
+		}
+		
+		.standard{
+			font-family:Times New Roman;
+			font-size:11px;
+			font-weight:normal;
+			font-style:normal;
+			text-decoration:none;
+			color:#333333;
+		}
+		
+		.redText{
+			text-align:justify;
+			font-family:Arial;
+			font-size:12px;
+			font-weight:normal;
+			font-style:normal;
+			text-decoration:none;
+			color:red;
+		}
+		
+## #25025 - end
 p {text-align: justify;}
 
 .text_family {
@@ -103,9 +124,12 @@ p {text-align: justify;}
 			<td>$supplierSignDate</td>
 		</tr>
 		<tr>
+			## #25025 - start
 			<td colspan="3"><br />
-			<br /> Meterai atau Cop Syarikat <br /> *<i>potong mana yang tidak
+			
+			<br /> Meterai atau Cap Syarikat <br /> <br/> *<i>potong mana yang tidak
 				berkenaan</i></td>
+				## #25025 - end
 		</tr>
 	</table>
 
@@ -139,12 +163,16 @@ p {text-align: justify;}
 
 	</table>
 
-	<div class='footer'>
-		<span style='font-size: 11px; font-family: Times New Roman;'>Tandatangan
-			& Cop (Kerajaan) :__________________<br /> Tandatangan & Cop
-			(Syarikat ) : ___________________
-		</span>
-	</div>
-
+<section class="footer">
+	<span class="standard">
+	Tandatangan & Cap (Kerajaan) : .......................
+	<br/><br/>
+	Tandatangan & Cap (Syarikat) : .......................<br/>
+	</span>
+	<span class="redText">
+	Pihak Kerajaan : Pegawai yang diberi kuasa oleh Menteri di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani kontrak<br/>
+	Pihak Syarikat : Penama pada sijil pendaftaran untuk menandatangi Surat ini
+	</span>
+</section>
 </body>
 </html>
