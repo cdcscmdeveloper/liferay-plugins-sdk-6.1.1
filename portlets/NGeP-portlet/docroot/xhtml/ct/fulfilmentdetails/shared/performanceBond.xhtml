@@ -150,7 +150,7 @@
 					<p:commandButton oncomplete="uploadBondDlg.show();return false;" update=":form:uploadBondDlg"
 					   	process="@this" partialSubmit="true" actionListener="#{ctBackingBean.PerformanceBondValue(varBond)}"
 						rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting and varBond.fileName == null
-						and ctBackingBean.managedBean.ctContractAmount.bondReq and ctBackingBean.managedBean.disableOriginalBond}"
+						and ctBackingBean.managedBean.ctContractAmount.bondReq and !ctBackingBean.managedBean.disableOriginalBond}"
 						
 						style="float:left;" icon="ui-icon-upload">
 					</p:commandButton>
@@ -160,7 +160,7 @@
 						style="float:left;" styleClass="blue_font"
 						action="#{ctBackingBean.commonDownload(varBond.filePath, varBond.fileName)}" />
 					<p:commandLink rendered="#{varBond.fileName != null and (!ctBackingBean.managedBean.viewContract 
-						or !ctBackingBean.managedBean.ctContractAmount.bondReq) and !ctBackingBean.managedBean.disableOriginalBond and !ctBackingBean.managedBean.notificationSetting}" style="float:left;" 
+						or ctBackingBean.managedBean.ctContractAmount.bondReq) and !ctBackingBean.managedBean.disableOriginalBond and !ctBackingBean.managedBean.notificationSetting}" style="float:left;" 
 					  	action="#{ctBackingBean.setIndexProperty(index)}"
 					   	process="@this" partialSubmit="true"  onsuccess="deleteBondAttachmentDlg.show();">
 			   			<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
