@@ -49,9 +49,11 @@ import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
+import my.ep.persistence.entity.pm.common.PmParameter; // #31919 & 21692
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest; // #31919 & 21692
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.type.pm.RoleCode;
@@ -61,6 +63,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
+import org.apache.commons.collections.CollectionUtils; // #31919 & 21692
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
@@ -74,6 +77,7 @@ import org.primefaces.context.RequestContext;
 @RequestScoped
 public class QTScheduleDetailBackingBean extends
 		SourcingBaseBackingBean<QTDetailManagedBean> {
+	private static final long serialVersionUID = 1L;  // #31919 & 21692
 
 	/** The Constant log. */
 	private static final Logger log = EpLogger
@@ -574,6 +578,65 @@ public class QTScheduleDetailBackingBean extends
 			updatePublishClosingDate(scQt);
 		}
 	}
+	
+	// #31919 & 21692 - Start
+	public void handleChmnFinalizationDate(boolean validityDaysExpiredQt) {
+		ScQt scQt = this.getManagedBean().getQt();
+		Date chmnFinalizationDate = scQt.getChmnFinalizationDate();
+		if (chmnFinalizationDate != null) {
+			scQt.setChmnFinalizationDate(DateUtils.setDefaultDateTime(chmnFinalizationDate));
+		}
+		Boolean enableDateMOF = enableApprovalDateMOF(validityDaysExpiredQt);
+		scQt.setApprovalPBM(enableDateMOF);
+		resetDecisionCertPBM(enableDateMOF);
+	}
+
+	private void resetDecisionCertPBM(Boolean enableDateMOF) {
+		List<ScQtApprovalRequest> approvalRequests = getManagedBean().getScQtApprovalRequestList();
+		if (CollectionUtils.isNotEmpty(approvalRequests)) {
+			for (ScQtApprovalRequest approvalRequest : approvalRequests) {
+				PmParameter pmParameter = new PmParameter();
+				if (enableDateMOF) {
+					if (approvalRequest.getDecisionCertPBM() == null) {
+						approvalRequest.setDecisionCertPBM(pmParameter);
+					}
+				} else {
+					approvalRequest.setDecisionCertPBM(null);
+				}
+			}
+		}
+	}
+
+	public boolean enableApprovalDateMOF(boolean validityDaysExpiredQt) {
+		ScQt scQt = this.getManagedBean().getQt();
+		boolean enableApprovalDateMOF = Boolean.FALSE;
+		if (!validityDaysExpiredQt) {
+			log.info("Invalid");
+			Date proposalValidityEndDate = scQt.getProposalValidityEndDate();
+			Date chmnFinalizationDate = scQt.getChmnFinalizationDate();
+			if ((null != proposalValidityEndDate) && (null != chmnFinalizationDate)) {
+				log.info("proposalValidityEndDate: " + proposalValidityEndDate);
+				log.info("chmnFinalizationDate: " + chmnFinalizationDate);
+
+				long days = DateUtils.getDaysDifference(proposalValidityEndDate, chmnFinalizationDate);
+				int day = (int) days;
+				if (day >= 0) {
+					return Boolean.TRUE;
+				}
+			}
+		}
+
+		return enableApprovalDateMOF;
+	}
+
+	public void handleMofDate() {
+		ScQt scQt = this.getManagedBean().getQt();
+		Date mofDate = scQt.getMofDate();
+		if (mofDate != null) {
+			scQt.setMofDate(DateUtils.setDefaultDateTime(mofDate));
+		}
+	}
+	// #31919 & 21692 - End
 	
 	/**
 	 * To update publish date for reschedule

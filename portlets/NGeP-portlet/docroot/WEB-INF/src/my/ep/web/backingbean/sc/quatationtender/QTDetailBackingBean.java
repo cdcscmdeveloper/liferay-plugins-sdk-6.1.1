@@ -7762,6 +7762,27 @@ public class QTDetailBackingBean extends
 				) return true;
 			return false;
 	}
+	
+	// #31919 & 21692 - Start
+	public Timestamp getExtensionResponseDueDate(Long qtId) {
+		IScWorkFlowStatusSO workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+		ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+		reqDTO.setDocId(qtId);
+		reqDTO.setDocType(ParameterConst.APPROVAL_REQUEST_EXTEND_PROPOSAL_VALIDITY_PERIOD);
+
+		ScWorkFlowStatus status = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+		if(status!=null){
+			if(status.isCurrent() 
+					&& (status.getPmStatus().getStatusId().equals(QTStatusConst.EPV_APPROVED)
+					|| status.getPmStatus().getStatusId().equals(QTStatusConst.EPV_PENDING_SUPPLIER_ACCEPTANCE))){
+				Timestamp extensionRespDate = getQTDetailSO().getExtensionResponseDueDate(qtId);
+				return extensionRespDate;
+			}
+		}
+		return null;
+	}
+	// #31919 & 21692 - End
 
 	public String getProcurementMode(ScQt qt){
 		String method = null;

@@ -1,0 +1,157 @@
+<!-- ##31919 & 21692 Start -->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.sc.qt.req.dtls']}" toggleable="true"
+		id="requestDetailsId">
+		<table
+			style="width: 100%; font-family: arial, sans-serif; border-collapse: collapse;">
+			<tr
+				style="background-color: #E3E3E3; text-align: left; font-size: 12px; text-indent: 0.5em;">
+				<th
+					style="width: 28%; padding: 8px; font-weight: bold; border: 1px solid #dddddd;">
+					<h:outputText value="#{lbl['lbl.sc.qt.type.reqdtls']}" />
+				</th>
+				<th
+					style="width: 11%; padding: 8px; font-weight: bold; border: 1px solid #dddddd;">
+					<h:outputText value="#{lbl['lbl.sc.from.value']}" />
+				</th>
+				<th
+					style="width: 11%; padding: 8px; font-weight: bold; border: 1px solid #dddddd;">
+					<h:outputText value="#{lbl['lbl.sc.to.value']}" />
+				</th>
+				<th
+					style="width: 50%; padding: 8px; font-weight: bold; border: 1px solid #dddddd;">
+					<h:outputText value="* " styleClass="mandatory" /> <h:outputText
+						value="#{lbl['lbl.sc.decision']}" />
+				</th>
+			</tr>
+			<c:if
+				test="#{approvalBackingBean.managedBean.scQtApprovalRequestList.size() == 0}">
+				<tr style="text-align: left; font-size: 12px; text-indent: 0.5em;">
+					<td style="padding: 5px;"><h:outputText
+							value="#{lbl['lbl.datatable.msg.no.records.found']}" /></td>
+				</tr>
+			</c:if>
+			<c:if
+				test="#{approvalBackingBean.managedBean.scQtApprovalRequestList.size() > 0 }">
+				<c:forEach
+					items="#{approvalBackingBean.managedBean.scQtApprovalRequestList}"
+					var="requestdetails">
+					<c:if
+						test="#{approvalBackingBean.managedBean.qt.approvalPBM ne true}">
+						<tr style="text-align: left; font-size: 12px; text-indent: 0.1em;">
+							<td style="padding: 5px; border: 1px solid #dddddd;"><h:outputText
+									value="#{approvalBackingBean.getParameterDesc(ParameterConst.epvTypeRequest1, ParameterConst.approvalRequestExtendProposalValidityPeriod)}" />
+							</td>
+							<td style="padding: 5px; border: 1px solid #dddddd;"><c:if
+									test="#{requestdetails.originalValue eq ParameterConst.openForBumi or requestdetails.originalValue eq ParameterConst.openForAll}">
+									<h:outputText
+										value="#{approvalBackingBean.getParameterDesc(ParameterTypeConst.scOpenFor, requestdetails.originalValue)}" />
+								</c:if> <c:if
+									test="#{requestdetails.originalValue ne ParameterConst.openForBumi and requestdetails.originalValue ne ParameterConst.openForAll}">
+									<h:outputText value="#{requestdetails.originalValue}" />
+								</c:if></td>
+							<td style="padding: 5px; border: 1px solid #dddddd;"><c:if
+									test="#{requestdetails.changedValue eq ParameterConst.openForBumi or requestdetails.changedValue eq ParameterConst.openForAll}">
+									<h:outputText
+										value="#{approvalBackingBean.getParameterDesc(ParameterTypeConst.scOpenFor, requestdetails.changedValue)}" />
+								</c:if> <c:if
+									test="#{requestdetails.changedValue ne ParameterConst.openForBumi and requestdetails.changedValue ne ParameterConst.openForAll}">
+									<h:outputText value="#{requestdetails.changedValue}" />
+								</c:if></td>
+							<td style="padding: 5px; border: 1px solid #dddddd;"><p:selectOneMenu
+									id="decisiontypeid"
+									value="#{requestdetails.decessionType.parameterId}"
+									label="#{lbl['lbl.sc.decision']}"
+									disabled="#{approvalBackingBean.managedBean.readOnly}"
+									style="width: 178px;margin-bottom: 5px;">
+									<f:selectItems
+										value="#{approvalBackingBean.getDropdownValues(ParameterTypeConst.approvalDecisionTypeRequest1)}" />
+									<p:ajax event="change"
+										listener="#{approvalBackingBean.updateDecisionType(requestdetails)}" />
+								</p:selectOneMenu> <p:message id="decisiontypeidhMsg" for="decisiontypeid"
+									display="icon" /></td>
+						</tr>
+					</c:if>
+					<c:if
+						test="#{approvalBackingBean.managedBean.qt.approvalPBM eq true}">
+						<tr style="text-align: left; font-size: 12px; text-indent: 0.1em;">
+							<td style="padding: 5px; border: 1px solid #dddddd;"><h:outputText
+									value="#{approvalBackingBean.getParameterDesc(ParameterConst.epvTypeRequest2, ParameterConst.approvalRequestExtendProposalValidityPeriod)}" />
+							</td>
+							<td style="padding: 5px; border: 1px solid #dddddd;"><c:if
+									test="#{requestdetails.originalValue eq ParameterConst.openForBumi or requestdetails.originalValue eq ParameterConst.openForAll}">
+									<h:outputText
+										value="#{approvalBackingBean.getParameterDesc(ParameterTypeConst.scOpenFor, requestdetails.originalValue)}" />
+								</c:if> <c:if
+									test="#{requestdetails.originalValue ne ParameterConst.openForBumi and requestdetails.originalValue ne ParameterConst.openForAll}">
+									<h:outputText value="#{requestdetails.originalValue}" />
+								</c:if></td>
+							<td style="padding: 5px; border: 1px solid #dddddd;"><c:if
+									test="#{requestdetails.changedValue eq ParameterConst.openForBumi or requestdetails.changedValue eq ParameterConst.openForAll}">
+									<h:outputText
+										value="#{approvalBackingBean.getParameterDesc(ParameterTypeConst.scOpenFor, requestdetails.changedValue)}" />
+								</c:if> <c:if
+									test="#{requestdetails.changedValue ne ParameterConst.openForBumi and requestdetails.changedValue ne ParameterConst.openForAll}">
+									<h:outputText value="#{requestdetails.changedValue}" />
+								</c:if></td>
+							<td style="padding: 5px; border: 1px solid #dddddd;"><p:selectOneMenu
+									id="decisiontypeidRq2"
+									value="#{requestdetails.decisionCertPBM.parameterId}"
+									label="#{lbl['lbl.sc.decision']}"
+									disabled="#{approvalBackingBean.managedBean.readOnly}"
+									style="width: 178px;margin-bottom: 5px;">
+									<f:selectItems
+										value="#{approvalBackingBean.getDropdownValues(ParameterTypeConst.approvalDecisionTypeRequest2)}" />
+									<p:ajax event="change"
+										listener="#{approvalBackingBean.updateDecisionCertPBM(requestdetails)}" />
+								</p:selectOneMenu> <p:message id="decisiontypeidhMsgRq2" for="decisiontypeidRq2"
+									display="icon" /></td>
+						</tr>
+						<tr
+							style="background-color: #F3F3F3; text-align: left; font-size: 12px; text-indent: 0.1em;">
+							<td style="padding: 5px; border: 1px solid #dddddd;"><h:outputText
+									value="#{approvalBackingBean.getParameterDesc(ParameterConst.epvTypeRequest3, ParameterConst.approvalRequestExtendProposalValidityPeriod)}" />
+							</td>
+							<td style="padding: 5px; border: 1px solid #dddddd;"><c:if
+									test="#{requestdetails.originalValue eq ParameterConst.openForBumi or requestdetails.originalValue eq ParameterConst.openForAll}">
+									<h:outputText
+										value="#{approvalBackingBean.getParameterDesc(ParameterTypeConst.scOpenFor, requestdetails.originalValue)}" />
+								</c:if> <c:if
+									test="#{requestdetails.originalValue ne ParameterConst.openForBumi and requestdetails.originalValue ne ParameterConst.openForAll}">
+									<h:outputText value="#{requestdetails.originalValue}" />
+								</c:if></td>
+							<td style="padding: 5px; border: 1px solid #dddddd;"><c:if
+									test="#{requestdetails.changedValue eq ParameterConst.openForBumi or requestdetails.changedValue eq ParameterConst.openForAll}">
+									<h:outputText
+										value="#{approvalBackingBean.getParameterDesc(ParameterTypeConst.scOpenFor, requestdetails.changedValue)}" />
+								</c:if> <c:if
+									test="#{requestdetails.changedValue ne ParameterConst.openForBumi and requestdetails.changedValue ne ParameterConst.openForAll}">
+									<h:outputText value="#{requestdetails.changedValue}" />
+								</c:if></td>
+							<td style="padding: 5px; border: 1px solid #dddddd;"><p:selectOneMenu
+									id="decisiontypeidRq3"
+									value="#{requestdetails.decessionType.parameterId}"
+									label="#{lbl['lbl.sc.decision']}"
+									disabled="#{approvalBackingBean.managedBean.readOnly}"
+									style="width: 178px;margin-bottom: 5px;">
+									<f:selectItems
+										value="#{approvalBackingBean.getDropdownValues(ParameterTypeConst.approvalDecisionTypeRequest3)}" />
+									<p:ajax event="change"
+										listener="#{approvalBackingBean.updateDecisionType(requestdetails)}" />
+								</p:selectOneMenu> <p:message id="decisiontypeidhMsgRq3" for="decisiontypeidRq3"
+									display="icon" /></td>
+						</tr>
+					</c:if>
+				</c:forEach>
+			</c:if>
+		</table>
+	</p:panel>
+</ui:composition>
+<!-- ##31919 & 21692 End -->
