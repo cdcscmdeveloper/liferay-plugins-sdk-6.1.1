@@ -1268,12 +1268,18 @@ public class ConsolidationReportBackingBean extends
 					List<ScQtRecommend> qtrecommendList = iterator.next();
 					List<ScQtRecommend> toberemoveList = new ArrayList<ScQtRecommend>();
 					if (CollectionUtils.isNotEmpty(qtrecommendList)) {
+						//#32243 - add zone condition for item qty = 0 - start
 						for (ScQtRecommend qtrecommend : qtrecommendList) {
-							if(qtrecommend.getOrderQty().compareTo(BigDecimal.ZERO) == 0){
+							if(qtrecommend.getTplSpecZoneDtl().getSpecZoneId().equals(selectedZone.getSpecZoneId())
+									&& qtrecommend.getOrderQty().compareTo(BigDecimal.ZERO) == 0){
 								toberemoveList.add(qtrecommend);
 							}
 						}
-						qtrecommendList.removeAll(toberemoveList);
+						if(CollectionUtils.isNotEmpty(toberemoveList)){
+							qtrecommendList.removeAll(toberemoveList);	
+							
+						}
+						//#32243 - add zone condition for item qty = 0 - end
 					}
 				}
 				/*for(List<ScQtRecommend> scQtRecommend: scQtRecommendsByZone.values()){
