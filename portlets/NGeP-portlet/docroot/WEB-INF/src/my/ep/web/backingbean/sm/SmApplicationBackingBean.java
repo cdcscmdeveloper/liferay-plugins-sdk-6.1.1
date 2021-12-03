@@ -8033,7 +8033,7 @@ public class SmApplicationBackingBean extends
 					.getEntityBySinglePropertyFromList(shareHolderBean.getIdentificationNo(),
 							ssmResDTO.getSmPersonnelAll(), "identificationNo");
 			// start - #32014
-			if (personnelSSM.getIdentificationType() != null && this.getManagedBean().getSelectedShareHolder()!=null) {
+			if (personnelSSM!=null && personnelSSM.getIdentificationType() != null && this.getManagedBean().getSelectedShareHolder()!=null) {
 				log.debug(" #32014 - personnelSSM.getIdentificationType() - " + personnelSSM.getIdentificationType());
 				log.debug(" #32014 - personnelSSM.getIdentificationTypeId() - " + personnelSSM.getIdentificationTypeId());
 				this.getManagedBean().getSelectedShareHolder()
