@@ -168,15 +168,25 @@
 						<h:outputText value="#{lbl['lbl.sc.supplier.name']}" />
 					</f:facet>
 
-					<h:outputText value="#{Obj[3]}" rendered="#{Obj[4] eq DPStatusConstants.rnPendingItemCodification}"
-						style="white-space: normal;word-wrap: break-word;" />
+					<c:choose>
+						<c:when
+							test="#{directPurchaseBackingBean.managedBean.documentTypeDesc == ParameterConst.loaTitle}">
+							<h:outputText value="#{Obj[8]}"
+								style="white-space: normal;word-wrap: break-word;" />
+						</c:when>
+						<c:otherwise>
+							<h:outputText value="#{Obj[3]}" rendered="#{Obj[4] eq DPStatusConstants.rnPendingItemCodification}"
+								style="white-space: normal;word-wrap: break-word;" />
+						</c:otherwise>						
+					</c:choose>
+
 				</p:column>
 
 				<p:column width="12%">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.status']}" />
 					</f:facet>
-					#{directPurchaseBackingBean.getStatusDescById(Obj[4])}
+					#{directPurchaseBackingBean.getDocStatus(Obj)}
 				</p:column>
 
 				<p:column width="5%" style="text-align: center;">
@@ -189,6 +199,25 @@
 							icon="ui-icon-cancel"
 							action="#{directPurchaseBackingBean.viewMaintenance(Obj, true)}" />
 					</p:menuButton>
+					
+					<p:menuButton value="#{lbl['lbl.btn.option']}" rendered="#{Obj[4] eq DPStatusConstants.loaPendingSubmission
+					or Obj[4] eq DPStatusConstants.loaPendingApproval
+					or Obj[4] eq DPStatusConstants.loaPendingRevision
+					or Obj[4] eq DPStatusConstants.loaPendingRevisionApproval}">
+						<p:menuitem id="cancelLoaBtnIcon" value="#{lbl['lbl.btn.cancel']}"
+								icon="ui-icon-termination"
+								action="#{directPurchaseBackingBean.viewMaintenance(Obj, true)}" disabled="#{directPurchaseBackingBean.allowCancel(Obj)}"/>					
+					</p:menuButton>	
+					
+					<p:menuButton value="#{lbl['lbl.btn.option']}" rendered="#{Obj[4] eq QTStatusConst.loaCancelled}">
+						<p:menuitem id="viewCancelLoaDtl" value="#{lbl['lbl.btn.view']}"
+							icon="ui-icon-view"
+							action="#{directPurchaseBackingBean.performViewDoc(Obj)}" />
+					</p:menuButton>
+					
+					<p:tooltip for="cancelLoaBtnIcon">
+						<h:outputText value="#{lbl['lbl.sc.loa.cancel.btn.tooltip']}" escape="false" />
+					</p:tooltip>				
 				</p:column>
 
 			</p:dataTable>
