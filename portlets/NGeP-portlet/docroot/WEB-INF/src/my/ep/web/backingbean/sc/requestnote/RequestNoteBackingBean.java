@@ -1358,8 +1358,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 							ruleReqDTO.setRuleType(RuleTypeConst.ITEM_THRESHOLD);
 							List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
 
-							//#32038 - start comment out CR 26059
-							/*if (ruleValueList != null && ruleValueList.size() > 0) {
+							if (ruleValueList != null && ruleValueList.size() > 0) {
 								PmConfigRuleValue configRuleValue = ruleValueList.get(0);
 								//26059 - start
 								ScQuote quote = null;
@@ -1383,8 +1382,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 								//26059 - end
 							} else {
 								throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
-							}*/
-							//#32038 - end comment out CR 26059
+							}
 						}
 					}
 
@@ -2144,6 +2142,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 			getManagedBean().setRequestNoteDtls(requestNoteDtls);
 		} 
+		
+		//start -- 31689
+		for(ScRequestNoteDtl selectedReqDtl : getManagedBean().getRequestNoteDtls()) {
+			calculatePricePerItem(selectedReqDtl);
+		}
+		//end -- 31689
 
 
 		if(counter==0){
