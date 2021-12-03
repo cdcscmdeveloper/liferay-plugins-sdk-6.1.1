@@ -4795,7 +4795,7 @@ public class SmCommonUtil {
 			if (!StringUtils.isBlank(resDTO.getStatusCode())) {
 				pers.setIdentityResponseCode(resDTO.getStatusCode());
 				//31749 - start
-				if(resDTO.getResidentStatus().equalsIgnoreCase("null") || resDTO.getResidentStatus() == null){
+				if(resDTO.getResidentStatus() != null && resDTO.getResidentStatus().equalsIgnoreCase("null")){
 					pers.setIdentityResidentStatus(null);
 				}else{
 					pers.setIdentityResidentStatus(resDTO.getResidentStatus());
