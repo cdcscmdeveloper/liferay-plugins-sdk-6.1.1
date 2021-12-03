@@ -50,6 +50,10 @@ label>span.ui-button-text {
 label.ui-button>span.ui-button-text {
 	display: block !important;
 }
+
+.ui-datatable .ui-selectoneradio tbody td{
+	border: 0 !important;
+}
 </style>
 
 
@@ -331,42 +335,42 @@ label.ui-button>span.ui-button-text {
 							escape="false" style="white-space: normal;word-wrap: break-word;" />
 					</p:column>
 
-					<p:column style="width:120px;" rendered="#{question.selectable}">
+					<p:column style="width:120px;" rendered="#{question.selectable  and isQuestionTypeItem}">
 						<h:outputText value="#{question.clUom.uomName}" />
 					</p:column>
 
-					<p:column style="width:70px;white-space:normal;" rendered="#{question.selectable}">
+					<p:column style="width:70px;white-space:normal;" rendered="#{question.selectable and isQuestionTypeItem}">
 						<h:panelGroup id="freqUOMPG" style="white-space:nowrap;">
 							<h:outputText value="#{question.clUomFrequency}" />
 						</h:panelGroup>
 					</p:column>
 
-					<p:column style="width:60px;white-space:normal;" rendered="#{question.selectable}">
+					<p:column style="width:60px;white-space:normal;" rendered="#{question.selectable and isQuestionTypeItem}">
 						<h:panelGroup id="dayUOMPG" style="white-space:nowrap;">
 							<h:outputText value="#{question.clUomPerDay}" />
 						</h:panelGroup>
 					</p:column>
 
-					<p:column style="width:60px;white-space:normal;" rendered="#{question.selectable}">
+					<p:column style="width:60px;white-space:normal;" rendered="#{question.selectable and isQuestionTypeItem}">
 						<h:panelGroup id="monthUOMPG" style="white-space:nowrap;">
 							<h:outputText value="#{question.clUomPerMonth}" />
 						</h:panelGroup>
 					</p:column>
 
 					<p:column style="width:63px;white-space:normal;"
-						rendered="#{isDurationByItem and question.selectable}">
+						rendered="#{isDurationByItem and question.selectable and isQuestionTypeItem}">
 						<h:panelGroup id="durationPG" style="white-space:nowrap;">
 							<h:outputText value="#{question.clDurationMonth}" />
 						</h:panelGroup>
 					</p:column>
 
-					<p:column style="width:100px;white-space:normal" rendered="#{question.selectable}">
+					<p:column style="width:100px;white-space:normal" rendered="#{question.selectable and isQuestionTypeItem}">
 						<h:panelGroup id="qtyPG" rendered="#{isQuestionTypeItem}">
 							<h:outputText value="#{question.clQuantity}" />
 						</h:panelGroup>
 					</p:column>
 
-					<p:column style="width:130px;" rendered="#{question.selectable}">
+					<p:column style="width:130px;" rendered="#{question.selectable and isQuestionTypeItem}">
 						<p:outputPanel id="demoPop">
 							<p:selectOneRadio value="#{question.itemReqDemo}"
 								rendered="#{isQuestionTypeItem}">

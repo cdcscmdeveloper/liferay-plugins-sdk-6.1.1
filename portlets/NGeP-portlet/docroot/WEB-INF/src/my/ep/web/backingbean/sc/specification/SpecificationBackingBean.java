@@ -10881,7 +10881,6 @@ public class SpecificationBackingBean extends
 				 * }
 				 */
 			}
-			//scQt.setDemoRequired(demo);/** #28784*/
 			//scQt.setSampleReq(sample);//#11104
 			localChecklist.addAll(techCheckList);
 			scQt.setScQtChecklists(localChecklist);
@@ -19350,9 +19349,10 @@ if(null!=allTechnicalChecklist){
 								break;
 							}
 						}
-						if (result) {
-							break;
-						}
+						//#28784 - scoring bug
+//						if (result) {
+//							break;
+//						}
 					}
 				}
 			}
