@@ -8,15 +8,12 @@
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
 				<td width="10%">
-				<h:outputLabel
-						value="#{lbl['lbl.sc.loiloa.loa.no']}" />
+				<h:outputLabel value="#{lbl['lbl.sc.loiloa.loa.no']}" />
 				</td>
 				<td class="header-info-text">
-				<p:commandLink value="#{directLOABackingBean.managedBean.scLoa.brandNew ?
-					lbl['lbl.sc.system.generated'] :
-					directLOABackingBean.managedBean.scLoa.loaNo}" 
+				<p:commandLink value="#{ctBackingBean.managedBean.contractVer.ctContract.loa.loaNo}" 
 						process="@this" partialSubmit="true" styleClass="blue_font"
-						action="#{ctBackingBean.goToLoaView(ctBackingBean.managedBean.contractVer.ctContract.loa)}"/>
+						action="#{ctBackingBean.goToOriginalLoaView(ctBackingBean.managedBean.contractVer.ctContract.loa)}"/>
 				</td>
 				<td width="10%">
 				<h:outputLabel value="#{lbl['lbl.sc.ptj']}" />

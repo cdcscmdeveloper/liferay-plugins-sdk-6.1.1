@@ -4802,5 +4802,20 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 		}
 		//Enhancement 29418 - end
-
+		
+		//Enhancement 15851 - Start
+		/**
+		 * The method used to navigate to Original contract details screen
+		 * for view purpose.
+		 * 
+		 * @return the navigate URL 
+		 */
+		public void goToOriginalLoaView(ScLoa scLoa) {
+				LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
+				FacesContext fc = FacesContext.getCurrentInstance();
+				loaDetailBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+				loaDetailBackingBean.getManagedBean().setTrackingDairyView(true);
+				loaDetailBackingBean.viewLOA(scLoa.getLoaId());			
+		}
+		//Enhancement 15851 - End
 }  
