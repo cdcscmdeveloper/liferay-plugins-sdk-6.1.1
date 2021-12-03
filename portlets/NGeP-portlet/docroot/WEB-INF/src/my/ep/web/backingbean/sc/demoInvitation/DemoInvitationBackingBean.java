@@ -515,9 +515,23 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 					|| !savedData) {
 				if (this.getManagedBean().getDemoInvBy().equalsIgnoreCase(SourcingConstants.ALL_ITEM)) {
 					List<ScQtProposal> qualifiedSupp = new ArrayList<ScQtProposal>();
+					SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+					List<TplSpecQuestion> specQuestionList = new ArrayList<TplSpecQuestion>();
 					demoSuppList = new ArrayList<ScQtDemoSupplier>();
 					demoItemList = new ArrayList<ScQtDemoItem>();
 					qtDemo = new ScQtDemo();
+					
+					reqDTO.setScQt(this.getManagedBean().getQt());
+					reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
+					SpecificationResDTO resDTO = specSo.retrieveAllDemoCheckLists(reqDTO);
+					for (ScQtCheckList t : resDTO.getTechnicalCheckList()) {
+						TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
+						specReqDTO.setSpecMaster(t.getScQtDoc() != null ? t.getScQtDoc().getTplSpecMaster() : null);
+						specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
+						specReqDTO.setDemoSpecView(true);
+						TemplateSpecResDTO templateresDTO = templateSpecSO.getTemplateMaster(specReqDTO);
+						specQuestionList.addAll(templateresDTO.getSpecMaster().getTplSpecQuestions());
+					}
 
 					pmParam = getParameterByTypeAndCode(ParameterTypeConst.ALL_BY_ITEM, SourcingConstants.ALL_ITEM);
 
@@ -556,6 +570,18 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 					}
 
 					this.getManagedBean().setAllItemList(demoSuppList);
+					
+					if (savedData) {
+						demoItemList.addAll(resDto.getScQtDemo().getScQtDemoItemList());
+					} else {
+						for (TplSpecQuestion s : specQuestionList) {
+							demoItem = new ScQtDemoItem();
+							demoItem.setScQtDemo(qtDemo);
+							demoItem.setTplSpecQuestion(s);
+							demoItem.setItemName(s.getClSpecDetail());
+							demoItemList.add(demoItem);
+						}
+					}
 
 				} else if (this.getManagedBean().getDemoInvBy().equalsIgnoreCase(SourcingConstants.BY_ITEM)) {
 					List<ScQtDemoByItemScore> demoDemoByItemList = new ArrayList<ScQtDemoByItemScore>();
