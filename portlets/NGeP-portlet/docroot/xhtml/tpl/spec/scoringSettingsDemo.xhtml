@@ -6,27 +6,33 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 	
+	<style>
+	#labelId1, #labelId2, #scoreId1, #scoreId2{
+	border: 0 !important;
+}
+</style>
+	
 	<ui:param name="isQuestionTypeItem" value="#{specificationBackingBean.managedBean.templateSpecBean.selectedSpecQuestion.questionType == TplSpecConst.questionTypeItem}" />
 	
 	<table border="0" cellspacing="0" cellpadding="0" width="100%">
 	<ui:param name="itemSpecInfo" value="#{isQuestionTypeItem ? specificationBackingBean.managedBean.templateSpecBean.selectedSpecQuestion.clItem : specificationBackingBean.managedBean.templateSpecBean.selectedSpecQuestion.clSpecDetail}"></ui:param>
 	<tr>
-		<td><p:outputLabel value="#{lbl[isQuestionTypeItem ? 'lbl.tpl.spec.content.item' : 'lbl.tpl.spec.content.specification']}" /></td>
-		<td colspan="3" >
+		<td id="labelId1"><p:outputLabel value="#{lbl[isQuestionTypeItem ? 'lbl.tpl.spec.content.item' : 'lbl.tpl.spec.content.specification']}" /></td>
+		<td id="labelId2" colspan="3" >
 			<h:inputTextarea id="itemSpec" style="width:calc(100% - 50px);"
 			value="#{itemSpecInfo}" 
 			disabled="true" autoResize="false" rows="#{templateSpecBackingBean.getNumOfRows(itemSpecInfo)}"/>
 		</td>
 	</tr>
 	<tr>
-		<td>
+		<td id="scoreId1">
 			<h:panelGroup id="maxScoreLPG">
 				<p:outputLabel value="#{lbl['lbl.tpl.spec.content.scoring.settings.max.score']}" />
 					<p:outputLabel value="*" styleClass="mandatory" 
 					rendered="#{editable and specificationBackingBean.managedBean.templateSpecBean.selectedSpecQuestion.scoreTypeCode.parameterCode == ParameterConst.scoreTypeUser}" />
 			</h:panelGroup>
 		</td>
-		<td>
+		<td id="scoreId1">
 			<h:panelGroup id="maxScorePG">
 				<p:inputText id="maxScore" style="text-align:right;"
 					value="#{specificationBackingBean.managedBean.templateSpecBean.selectedSpecQuestion.demoScore}" 
