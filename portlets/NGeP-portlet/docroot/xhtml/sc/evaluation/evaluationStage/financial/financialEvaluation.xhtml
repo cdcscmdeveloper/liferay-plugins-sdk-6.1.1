@@ -62,8 +62,11 @@
 							process="@this" partialSubmit="true"
 							action="#{evaluationBackingBean.viewfinacialEvaluation(financialEval,index,'EF')}" />
 					</ui:fragment>
+					<!--#32187 -->
 					<ui:fragment rendered="#{financialEval.scoringReq ne 'false' and  (null ne financialEval.pmEvalStatus and financialEval.pmEvalStatus.statusId eq '60450')}">
-						<p:commandButton value="#{lbl['lbl.btn.evaluate']}"
+						<p:commandButton value="#{(financialEval.title eq 'Aset dan Liabiliti (Dari Kunci Kira-kira)' ||
+												   financialEval.title eq 'Kemudahan Kredit (Overdraf, Pinjaman Bank)')  
+												   ? lbl['lbl.btn.view'] : lbl['lbl.btn.evaluate']} "
 							process="@this" partialSubmit="true"
 							action="#{evaluationBackingBean.evaluatefinancialEvaluation(financialEval,index,'EF')}" />
 					</ui:fragment>
