@@ -4664,7 +4664,13 @@ public class SmCommonUtil {
 
 			if (!StringUtils.isBlank(resDTO.getStatusCode())) {
 				pers.setIdentityResponseCode(resDTO.getStatusCode());
-				pers.setIdentityResidentStatus(resDTO.getResidentStatus());
+				//31749 - start
+				if(resDTO.getResidentStatus() != null && resDTO.getResidentStatus().equalsIgnoreCase("null")){
+					pers.setIdentityResidentStatus(null);
+				}else{
+					pers.setIdentityResidentStatus(resDTO.getResidentStatus());
+				}
+				//31749 - end
 			}
 			log.info("**** My identiy output is *****" + resDTO.getStatusCode());
 			if (!resDTO.getSeverity().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.MYIDENTITY_SEVERITY_SUCC)) {
