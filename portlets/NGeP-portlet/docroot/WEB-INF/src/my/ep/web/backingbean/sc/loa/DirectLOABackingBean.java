@@ -9371,7 +9371,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				
 				return true;
 			} else {
-				if (!getManagedBean().getScLoa().isBondReq() && !isPk7Periodic()) {
+				// 17376 -start-
+				if (!getManagedBean().getScLoa().isBondReq() && !isPk7Periodic() && !this.getManagedBean().isReadOnly()) {
+				// 17376 -end-
 					setOverallCtAmount(getManagedBean().getScLoa().getLoaAmt());
 				}
 				
@@ -9471,7 +9473,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				
 				return true;
 			} else {
-				if (!getManagedBean().getScLoa().isAgreementReq() && !isPk7Periodic()) {
+				// 17376 -start-
+				if (!getManagedBean().getScLoa().isAgreementReq() && !isPk7Periodic() && !this.getManagedBean().isReadOnly()) {
+				// 17376 -end-
 					setOverallCtAmount(getManagedBean().getScLoa().getLoaAmt());
 				}
 			}
