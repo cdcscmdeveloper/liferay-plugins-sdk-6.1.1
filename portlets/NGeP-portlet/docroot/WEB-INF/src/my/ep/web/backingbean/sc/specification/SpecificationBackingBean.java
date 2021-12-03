@@ -20170,9 +20170,10 @@ if(null!=allTechnicalChecklist){
 								break;
 							}
 						}
-						if (result) {
-							break;
-						}
+						//#28784 - scoring bug
+//						if (result) {
+//							break;
+//						}
 					}
 				}
 			}
