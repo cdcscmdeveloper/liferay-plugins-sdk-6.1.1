@@ -1752,6 +1752,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		if(currSupp == null){
 			currSupp = SmApplicationUtil.getCurrentSupplier();
 		}
+		long startTime = System.currentTimeMillis();
 		this.getManagedBean().setSmSupplier(currSupp);
 		if(currSupp != null){
 			List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(currSupp);
@@ -1771,6 +1772,10 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 				getManagedBean().setDisciplinaryAction(false);
 				new FacesScopes().getUserSessionBean().setDisciplinaryAction(false);
 			}
+			//start 32229
+			SLAUtils.getInstance().logSQLPerformanceInfo("SM","IN DA-3","ProfilePersonalizationBackingBean.preRenderDisciplinaryAction", startTime,"32229");
+			startTime = System.currentTimeMillis();
+			//end 32229
 		}
 	}
 	//26238 -  END Disciplinary Action - 28111
