@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.sc.supplierfinalization;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -3500,6 +3501,27 @@ return	remarksNotFound;
 					e.printStackTrace();
 				}
 			}
+			
+			// #28834 - Start.
+			// To force latest briefing paper updated with the recent content during Endorsement or SignOff status.
+			ScQtFinalizationReport scQtFinalizationReport = null;
+			for (ScQtFinalizationReport report: getManagedBean().getDocumentList()) {
+				  if (report.getTitle().contains("Kertas Taklimat")) {
+					  scQtFinalizationReport = report; 
+				  }
+			}
+			if (null != scQtFinalizationReport && null != scQtFinalizationReport.getScQtFinalizationReportAttachment()
+					&& StringUtils.isNotEmpty(scQtFinalizationReport.getScQtFinalizationReportAttachment().getFilePath())) {
+				  String filePath = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR) 
+						  + CommonConstants.DOC_REPO_PATH_SEPARATOR 
+						  + scQtFinalizationReport.getScQtFinalizationReportAttachment().getFilePath();
+				  File file = new File(filePath);
+				  if (null != file && file.exists()) {
+					  file.delete();
+				  }
+				  scQtFinalizationReport.setScQtFinalizationReportAttachment(null);
+			}
+			// #28834 - End.
 			
 			// #27502 -- Start
 			QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
