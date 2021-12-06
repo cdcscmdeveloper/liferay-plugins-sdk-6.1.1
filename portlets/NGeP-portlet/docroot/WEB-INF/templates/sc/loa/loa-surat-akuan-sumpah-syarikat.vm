@@ -269,8 +269,10 @@
 </div>	
 <section class="footer">
 	<p class="standard">
-	Tandatangan & Cop (Kerajaan) : .......................<br/><br/>
-	Tandatangan & Cop (Syarikat) : .......................<br/>
+	## #25002-start
+	Tandatangan & Cap (Kerajaan) : .......................<br/><br/>
+	Tandatangan & Cap (Syarikat) : .......................<br/>
+	## #25002-end
 	</p>
 	<span class="redText">
 	Pihak Kerajaan : Pegawai yang diberi kuasa oleh Menteri di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani kontrak<br/>
