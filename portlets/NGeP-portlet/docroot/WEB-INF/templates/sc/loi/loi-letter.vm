@@ -159,7 +159,7 @@
 			<span style="font-family:Arial;font-size:12px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">" BERKHIDMAT UNTUK NEGARA "</span><br/><br/>
 			<span style="font-family:Arial;font-size:12px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Saya yang menurut perintah,</span><br/><br/><br/><br/><br/><br/>
 			<span>................................................</span><br/><br/>
-			<span style="font-family:Arial;font-size:12px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$loiSigner</span><br/><br/>
+			<span style="font-family:Arial;font-size:12px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$salutation $loiSigner</span><br/><br/>
 			<span style="font-family:Arial;font-size:12px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$loiSignerDesignation</span>
 		</td>
 	</tr>
