@@ -1090,13 +1090,12 @@ public class SmApplicationUtil {
 		if (facility != null) {
 			for (SmFacility fac : facility) {
 				if (fac.getSmAddress().getMapLatitude() != null || fac.getSmAddress().getMapLongitude() != null
-				 //#29718 --START--
+				 //#29718, #32237 --START--
 						&& managedBean.getSmAppl().getApplType().equals("R")
-						&& fac.getFacilityType() == "B" || fac.getFacilityType() == "H") {
+						&& fac.getFacilityType().equals("B") || fac.getFacilityType().equals("H")) {
 				//#29718 --END--
 					
-					//#32237 --START--
-					if (fac.getOwnershipType().equalsIgnoreCase("R") && (StringUtils.isBlank(fac.getSmAddress().getMapLatitude())
+					if (fac.getOwnershipType().equals("R") && (StringUtils.isBlank(fac.getSmAddress().getMapLatitude())
 							|| StringUtils.isBlank(fac.getSmAddress().getMapLongitude()))) {
 					//#32237 --END--
 						throw new EpException(SmCommonUtil.getMessage("lbl.sm.coordinate.required.msg",
