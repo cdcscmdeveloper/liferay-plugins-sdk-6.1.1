@@ -1950,6 +1950,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 			getManagedBean().setRequestNoteDtls(requestNoteDtls);
 		} 
+		
+		//start -- 31689
+		for(ScRequestNoteDtl selectedReqDtl : getManagedBean().getRequestNoteDtls()) {
+			calculatePricePerItem(selectedReqDtl);
+		}
+		//end -- 31689
 
 
 		if(counter==0){
