@@ -8,7 +8,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -22,7 +21,6 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
@@ -58,7 +56,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class DpLOABackingBean.
  *
@@ -167,12 +164,14 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 								.getStatusId();			
 						
 						if (QTStatusConst.LOA_REJECTED.equals(statusId)) {
-							isCancelled = true;							
+							isCancelled = true;
+							//#32021 - Start
 						} else if (!QTStatusConst.LOA_PENDING_VERIFICATION.equals(statusId) && 
 								!QTStatusConst.LOA_COMPLETED.equals(statusId) && 
 								!QTStatusConst.LOA_CANCELLED_DUE_TO_SIMPLE_QUOTE_VALIDITY_EXPIRED.equals(statusId) &&
-								!QTStatusConst.LOA_REJECTED_DUE_TO_SIMPLE_QUOTE_VALIDITY_EXPIRED.equals(statusId) ) {
-							
+								!QTStatusConst.LOA_REJECTED_DUE_TO_SIMPLE_QUOTE_VALIDITY_EXPIRED.equals(statusId) &&
+								!QTStatusConst.LOA_CANCELLED.equals(statusId)) {
+							//#32021 - End
 							continue;
 						}
 						
