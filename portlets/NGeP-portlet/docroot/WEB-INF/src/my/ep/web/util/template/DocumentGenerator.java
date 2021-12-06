@@ -50,6 +50,7 @@ import org.docx4j.wml.R;
 import org.docx4j.wml.RPr;
 import org.docx4j.wml.STFldCharType;
 import org.docx4j.wml.SectPr;
+import org.docx4j.wml.SectPr.PgMar;
 import org.docx4j.wml.Text;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -304,6 +305,7 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 			wordMLPackage.getContentTypeManager().addDefaultContentType("html","text/html");
 			createHeaderPart(wordMLPackage, docNo);
 			addFooterToDocument(wordMLPackage);
+			setMarginSpace(wordMLPackage);
 			wordMLPackage.save(new java.io.File(filePath));
 		} catch (InvalidFormatException e) {
 			e.printStackTrace();
@@ -374,14 +376,14 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 
 		// #26770 - Start.
 		Text t1 = factory.createText();
-		t1.setValue("Tandatangan & Cop (Kerajaan)  : _____________");
+		//#25025 -start
+		t1.setValue("Tandatangan & Cap (Kerajaan)  : _____________");
 		Br br = factory.createBr(); // this Br element is used break the current and go for next line
 		Text t2 = factory.createText();
-		t2.setValue("\r\n Tandatangan & Cop (Syarikat ) : _____________");
+		t2.setValue("\r\n Tandatangan & Cap (Syarikat ) : _____________");
 		Text t3 = factory.createText();
-		// 25025 - Start.
 		t3.setValue("\r\n  Pihak Kerajaan : Pegawai yang diberi kuasa oleh Menteri di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani kontrak");
-		// 25025 - End. 
+		// 25025 - End.
 		Text t4 = factory.createText();
 		t4.setValue("\r\n  Pihak Syarikat  : Penama pada sijil pendaftaran untuk menandatangani Surat ini.");
 		run.getContent().add(t1);
@@ -625,6 +627,16 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 		
 		
 	}
+	
+//#25025 -start
+	public static void setMarginSpace (WordprocessingMLPackage wordPackage) {
+		ObjectFactory factory = Context.getWmlObjectFactory ();
+		PgMar pg = factory.createSectPrPgMar ();
+		pg.setLeft (BigInteger.valueOf(1000));
+		pg.setRight (BigInteger.valueOf(1000));
+		wordPackage.getDocumentModel (). getSections (). get (0) .getSectPr (). setPgMar (pg);
+	}
+	//#25025 - end
 }
 
 
