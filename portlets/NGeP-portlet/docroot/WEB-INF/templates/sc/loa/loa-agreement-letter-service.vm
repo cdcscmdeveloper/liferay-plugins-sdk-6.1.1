@@ -232,27 +232,29 @@ u.underline {
 				</p>
 
 				<div class="text_indent">
-
-							<p>
-								<span class="text_family_red"> *(a)	suatu bon pelaksanaan yang tidak boleh dibatalkan yang berjumlah Ringgit Malaysia $bondAmtText (RM $bondAmt); </span>
-							</p>
-							
-							<p>
-								<span class="text_family_small">Bon Pelaksanaan hanya dikenakan kepada perolehan yang bernilai RM200,000 dan ke atas sahaja.</span>
-							</p>
-							<p>
-								<span class="text_family_red"> *(b)	  suatu polisi insurans yang tidak boleh dibatalkan yang berjumlah Ringgit Malaysia ______________ (______________) dan resit premium; </span>
-							</p>
-							
-							<p>
-								<span class="text_family_red"> (c) 	Nombor Kod Majikan di bawah Skim PERKESO dan/atau Polisi Pampasan Pekerja, </span>
-							</p>
 							## #25025-start
-							<p>
-								<span class="text_family_red">   (d) 	Nombor Pendaftaran Kumpulan Wang Simpanan Pekerja (KWSP), </span>
-							</p> 
-							## #25025- end
+							<table class="text_family_red">
+								<tr>
+									<td align="center" style="vertical-align: top;">*(a)</td>
+									<td>suatu bon pelaksanaan yang tidak boleh dibatalkan yang berjumlah Ringgit Malaysia $bondAmtText (RM $bondAmt);<br/>
+									<span class="text_family_small">Bon Pelaksanaan hanya dikenakan kepada perolehan yang bernilai RM200,000 dan ke atas sahaja.</span>
+									</td>
+								</tr>
+								<tr>
+									<td align="center" style="vertical-align: top;">*(b)</td>
+									<td>suatu polisi insurans yang tidak boleh dibatalkan yang berjumlah Ringgit Malaysia ______________ (______________) dan resit premium; </td>
+								</tr>	
+								<tr>
+									<td align="center" style="vertical-align: top;"> (c)</td>
+									<td>Nombor Kod Majikan di bawah Skim PERKESO dan/atau Polisi Pampasan Pekerja, </td>
+								</tr>
+								<tr>
+									<td align="center" style="vertical-align: top;"> (d)</td>
+									<td>Nombor Pendaftaran Kumpulan Wang Simpanan Pekerja (KWSP), </td>
+								</tr>
+							</table
 							
+							## #25025- end
 				</div>
 				
 				<p><span class="text_family_red">seperti yang ditetapkan dalam <b><i>Lampiran A</i></b> tidak melebihi <span class="text_family_red"> *14/30 </span> hari dari tarikh pengakuan penerimaan Surat ini oleh syarikat tuan. Apa-apa kegagalan dalam mematuhi kehendak di perenggan ini dalam tempoh masa yang ditetapkan, boleh mengakibatkan Surat ini terbatal dan Kerajaan tidaklah dengan apa-apa cara jua bertanggungan terhadap syarikat tuan <b>melainkan jika</b> penepian bertulis diberikan oleh orang yang diberi kuasa, bagi perkhidmatan yang perlu dibuat dengan segera atau serta-merta apabila kelewatan itu akan memudarat dan menjejaskan perkhidmatan dan kepentingan awam. </span></p>
@@ -383,7 +385,7 @@ u.underline {
 							</tr>
 							<tr>
 								<td align="center" style="vertical-align: top;">(e)</td>
-								<td>syarikat tuan terlibat dalam membuat pakatan harga dengan syarikat-syarikat lain atau apa-apa pakatan sepanjang proses pembelian terus (bermasa) sehingga dokumen kontrak ditandatangani; </td>
+								<td>syarikat tuan terlibat dalam membuat pakatan harga dengan syarikat-syarikat lain atau apa-apa pakatan sepanjang proses $subTitle sehingga dokumen kontrak ditandatangani; </td>
 							</tr>
 							<tr>
 								<td align="center" style="vertical-align: top;">(f)</td>
@@ -399,7 +401,7 @@ u.underline {
 							</tr>
 							<tr>
 								<td align="center" style="vertical-align: top;">(h)</td>
-								<td>syarikat tuan gagal mematuhi mana-mana terma/arahan di dalam dokumen pembelian terus (bermasa); </td>
+								<td>syarikat tuan gagal mematuhi mana-mana terma/arahan di dalam dokumen $subTitle; </td>
 							</tr>
 							<tr>
 								<td align="center" style="vertical-align: top;">(i)</td>
@@ -855,14 +857,20 @@ u.underline {
 					</td>
 				</tr>
 				<tr valign="top">
-					<td align="left" class="submenu_padding"><span
-						class="text_family_red">8.3 Nilai Polisi</span></td>
+				#if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")
+					<td align="left" class="submenu_padding"><span class="text_family_red">*8.3 Nilai Polisi</span></td>
+				#else
+					<td align="left" class="submenu_padding"><span class="text_family_red">8.3 Nilai Polisi</span></td>
+				#end	
 					<td class="text_family_red">:</td>
 					<td class="text_family_red">RM <span class="text_family_medium"><u class="underline">   Nilai dalam angka </u></span></td>
 				</tr>
 				<tr valign="top">
-					<td align="left" class="submenu_padding"><span
-						class="text_family_red">8.4	 Tempoh Perlindungan</span></td>
+				#if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")
+					<td align="left" class="submenu_padding"><span class="text_family_red">*8.4	 Tempoh Perlindungan</span></td>
+				#else
+					<td align="left" class="submenu_padding"><span class="text_family_red">8.4	 Tempoh Perlindungan</span></td>
+				#end	
 					<td class="text_family_red">:</td>
 					<td class="text_family_red">Meliputi tempoh kontrak</td>
 				</tr>
