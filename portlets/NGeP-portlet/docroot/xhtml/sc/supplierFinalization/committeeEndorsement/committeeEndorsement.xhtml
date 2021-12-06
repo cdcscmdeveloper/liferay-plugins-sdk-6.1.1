@@ -37,12 +37,14 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.status']}" style="width:20%">
+				<!-- 19287 -start- -->
 				<h:outputText value="#{lbl['lbl.sc.pending']}" 
-							  rendered="#{!endorsement.signedOff or isSupplierFinalization}" />
+							  rendered="#{!endorseStatus or isSupplierFinalization}" />
 				<!-- 25638 start -->
 				<h:outputText value="#{lbl['lbl.btn.complete']}" 
-							  rendered="#{endorsement.signedOff and !isSupplierFinalization}" />
+							  rendered="#{endorseStatus and !isSupplierFinalization}" />
 				<!-- 25638 end -->
+				<!-- 19287 -end- -->
 			</p:column>
 		</p:dataTable>
 		
