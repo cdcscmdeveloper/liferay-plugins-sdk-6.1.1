@@ -48,7 +48,9 @@
 				<ac:paginator for="cheque"></ac:paginator>
 				<p:column headerText="#{lbl['lbl.sc.spec.cheque.sign']}"
 					style="width : 25%;">
-					<h:outputText value="#{cheque.smPersonnel.name}"></h:outputText>
+					<!-- #30447 start -->
+					<h:outputText value="#{cheque.smPersonnel.title.salutationName.concat(' ').concat(cheque.smPersonnel.name)}"></h:outputText>
+					<!-- #30447 end -->
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.spec.passport.no']}"
 					style="width : 25%;">

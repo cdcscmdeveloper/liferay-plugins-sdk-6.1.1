@@ -86,6 +86,7 @@ import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmRemarkCategory;
+import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
@@ -3381,6 +3382,29 @@ public class NoticeBoardBackingBean extends
 		}
 		return isRenderRigisterBtn;
 	}
+	
+		//#30447 - start
+		public String supplierSalutation(String identificationNo){
+			PmSalutation salutation = null;
+			String salutationName = null;
+			IQTNoticeBoardSO supplierSO = null;		
+			
+			try{
+			supplierSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTNoticeBoardSO.class);			
+			salutation = supplierSO
+					.retrieveUserByIdentificationNo(identificationNo);
+			
+			if(salutation!=null){
+				salutationName = salutation.getSalutationName();
+			}
+			}finally {
+				supplierSO = null;
+			}
+			return salutationName;
+		}
+		//#30447 - end
 
 	public boolean isNewCategory() {
 		return newCategory;

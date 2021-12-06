@@ -105,9 +105,11 @@
 				<p:outputLabel value="#{lbl['lbl.sc.contact.person']}" />
 			</td>
 			<td>
+				<!-- #30447 start -->
 				<p:inputText size="50"
-					value="#{lOIDetailBackingBean.managedBean.scLoi.scSupplierAddress.contactPerson}"
+					value="#{lOIDetailBackingBean.managedBean.scLoi.scSupplierAddress.pmContactUserID.salutationCode.salutationName.concat(' ').concat(lOIDetailBackingBean.managedBean.scLoi.scSupplierAddress.contactPerson)}"
 					disabled="true" />
+				<!-- #30447 end -->
 			</td>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.email']}" />

@@ -4563,8 +4563,13 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		}
 
 		if (pmUser != null) {
+			//#30447 - start
+			if(pmUser.getSalutationCode()!=null){
+				context.put("salutation", pmUser.getSalutationCode().getSalutationName());
+			}
+			//#30447 - end
 			context.put("userName", pmUser.getUserName());
-			context.put("icNo", pmUser.getIdentificationNo());
+			context.put("icNo", pmUser.getIdentificationNo());			
 		}
 
 		if (smSupplier != null) {

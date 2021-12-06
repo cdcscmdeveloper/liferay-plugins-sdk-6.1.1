@@ -129,11 +129,13 @@
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.contact.person']}" />
 			</td>
-			<td>
+			<!-- #30447 start -->
+			<td>				
 				<p:inputText id="suppContact" size="50"
-					value="#{lOIDetailBackingBean.managedBean.scLoi.scSupplierAddress.contactPerson}"
+					value="#{lOIDetailBackingBean.managedBean.scLoi.scSupplierAddress.pmContactUserID.salutationCode.salutationName.concat(' ').concat(lOIDetailBackingBean.managedBean.scLoi.scSupplierAddress.contactPerson)}"
 					disabled="true" />
 			</td>
+			<!-- #30447 end -->
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.email']}" />
 			</td>
@@ -271,18 +273,22 @@
 							required="#{!lOIDetailBackingBean.managedBean.readOnly}"
 							label="#{lbl['lbl.sc.loiloa.loi.signer']}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+							<!-- #30447 start -->
 							<f:selectItems value="#{lOIDetailBackingBean.managedBean.contractSigners}"
-								var="contractUser" itemLabel="#{contractUser.userName}"
+								var="contractUser" itemLabel="#{contractUser.salutationCode.salutationName.concat(' ').concat(contractUser.userName)}"
 								itemValue="#{contractUser.userId}" />
+							<!-- #30447 end -->
 								<p:ajax event="change" listener="#{lOIDetailBackingBean.contractSignerEvent}"
 						    partialSubmit="true" process="@this" update="@this loiSignerId" />
 						</p:selectOneMenu>
 						<p:message id="contractSignerMsg" for="contractSigner" display="icon" />
 					</c:if>
 					<c:if test="#{!isEditableStatus or (!isPendingSubmissionStatus and !isPendingApprovalStatus and !isPendingRevisionStatus)}">
+						<!-- #30447 start -->
 						<p:inputText size="34"
-							value="#{lOIDetailBackingBean.managedBean.contractSignerUser.userName}"
+							value="#{lOIDetailBackingBean.managedBean.contractSignerUser.salutationCode.salutationName.concat(' ').concat(lOIDetailBackingBean.managedBean.contractSignerUser.userName)}"
 							disabled="true" />
+						<!-- #30447 end -->
 					</c:if>
 				</td>
 			</tr>
