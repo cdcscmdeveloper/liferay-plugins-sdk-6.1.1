@@ -1094,8 +1094,11 @@ public class SmApplicationUtil {
 						&& managedBean.getSmAppl().getApplType().equals("R")
 						&& fac.getFacilityType() == "B" || fac.getFacilityType() == "H") {
 				//#29718 --END--
-					if (StringUtils.isBlank(fac.getSmAddress().getMapLatitude())
-							|| StringUtils.isBlank(fac.getSmAddress().getMapLongitude())) {
+					
+					//#32237 --START--
+					if (fac.getOwnershipType().equalsIgnoreCase("R") && (StringUtils.isBlank(fac.getSmAddress().getMapLatitude())
+							|| StringUtils.isBlank(fac.getSmAddress().getMapLongitude()))) {
+					//#32237 --END--
 						throw new EpException(SmCommonUtil.getMessage("lbl.sm.coordinate.required.msg",
 								//#27853
 								new String[] { SmCommonUtil.getMessage("lbl.sm.coordinate.permise.type", null) }));
