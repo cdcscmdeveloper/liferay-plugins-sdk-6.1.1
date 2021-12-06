@@ -10,12 +10,9 @@ import javax.faces.validator.FacesValidator;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
-import my.ep.constant.MessageConst;
-import my.ep.exception.EpException;
-
 @FacesValidator("loginIdValidator")
 public class LoginIdValidator implements Validator{
-private static final String LOGIN_ID_PATTERN = "[a-zA-Z0-9._-]+";
+private static final String LOGIN_ID_PATTERN = "^[a-zA-Z0-9.-]+([_](?![_])|[a-zA-Z0-9._-](?![_]))+$";
 	
 	private Pattern pattern;
 	private Matcher matcher;
