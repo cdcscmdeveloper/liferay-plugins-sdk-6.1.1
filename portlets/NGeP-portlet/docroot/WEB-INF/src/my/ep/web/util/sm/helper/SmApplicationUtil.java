@@ -1089,15 +1089,12 @@ public class SmApplicationUtil {
 		}
 		if (facility != null) {
 			for (SmFacility fac : facility) {
-				if (fac.getSmAddress().getMapLatitude() != null || fac.getSmAddress().getMapLongitude() != null
+				if ((fac.getSmAddress().getMapLatitude() != null || fac.getSmAddress().getMapLongitude() != null)
 				 //#29718, #32237 --START--
-						&& managedBean.getSmAppl().getApplType().equals("R")
-						&& fac.getFacilityType().equals("B") || fac.getFacilityType().equals("H")) {
-				//#29718 --END--
-					
-					if (!fac.getOwnershipType().equals("O") && (StringUtils.isBlank(fac.getSmAddress().getMapLatitude())
-							|| StringUtils.isBlank(fac.getSmAddress().getMapLongitude()))) {
-					//#32237 --END--
+						&& (!fac.getOwnershipType().equals("O") || managedBean.getCurrentPageType().equalsIgnoreCase("FACTORYINFO"))) {
+				//#29718, #32237 --END--
+					if (StringUtils.isBlank(fac.getSmAddress().getMapLatitude())
+							|| StringUtils.isBlank(fac.getSmAddress().getMapLongitude())) {
 						throw new EpException(SmCommonUtil.getMessage("lbl.sm.coordinate.required.msg",
 								//#27853
 								new String[] { SmCommonUtil.getMessage("lbl.sm.coordinate.permise.type", null) }));
