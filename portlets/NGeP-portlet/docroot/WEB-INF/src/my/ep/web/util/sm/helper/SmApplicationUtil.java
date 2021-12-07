@@ -1095,7 +1095,7 @@ public class SmApplicationUtil {
 						&& fac.getFacilityType().equals("B") || fac.getFacilityType().equals("H")) {
 				//#29718 --END--
 					
-					if (fac.getOwnershipType().equals("R") && (StringUtils.isBlank(fac.getSmAddress().getMapLatitude())
+					if (!fac.getOwnershipType().equals("O") && (StringUtils.isBlank(fac.getSmAddress().getMapLatitude())
 							|| StringUtils.isBlank(fac.getSmAddress().getMapLongitude()))) {
 					//#32237 --END--
 						throw new EpException(SmCommonUtil.getMessage("lbl.sm.coordinate.required.msg",
