@@ -4515,8 +4515,21 @@ public class EvaluationBackingBean extends
 							zoneReqDto
 									.setEvalStage(QTConstants.PRESENTATION_DEMO_EVALUATION);
 						} else {
-							zoneReqDto
-									.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+							//#32245 - set 'TI' to qualified supplier FEC in financial item - start
+							if(this.getManagedBean().getScQt().isPartial()){
+								if(this.getManagedBean().getTabItemPackageIndex()==1){
+									zoneReqDto.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+								
+								}else{
+									zoneReqDto.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+									
+								}
+								
+							}else{
+								zoneReqDto.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+							
+							}
+							//#32245 - set 'TI' to qualified supplier FEC - end
 						}
 					}
 
