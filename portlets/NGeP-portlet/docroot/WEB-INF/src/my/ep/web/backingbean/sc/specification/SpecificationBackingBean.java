@@ -207,6 +207,7 @@ import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
+import my.ep.web.backingbean.sc.demoInvitation.DemoInvitationBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.CreateQtBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -4061,6 +4062,14 @@ public class SpecificationBackingBean extends
 		QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
 		qtBackingBean.retrieveQuationTenderDetails(qtId);
 	}
+	
+	//#28784 - start
+	public void retriveDemoSpecdetails(Long qtId) {
+
+		QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+		qtBackingBean.retrieveDemoQtDetails(qtId);
+	}
+	//#28784 - end
 
 	/**
 	 * Tier event.change Evaluation Type(OneTier/TwoTier) radion button in
@@ -18843,7 +18852,7 @@ if(null!=allTechnicalChecklist){
 				templateSpecBean.setSpecMaster(checkList.getScQtDoc().getTplSpecMaster());
 				if (this.getManagedBean().getQt().isZonal()
 						&& this.getManagedBean().getQt().getQtType().equals(ParameterConst.QUOTATION_TENDER_TYPE_OPEN)) {
-					retriveSpecdetails(this.getManagedBean().getQt().getQtId());
+					retriveDemoSpecdetails(this.getManagedBean().getQt().getQtId());//#28784
 					ScQtSupplierCriteria supplierCriteria = this.getManagedBean().getQt().getScQtSupplierCriteria();
 					List<TplSpecZoneDtl> businessOwnerZone = convertTreeNodesToZoneCriteria(this.getManagedBean()
 							.getZoneGeneralTrees(), null);
@@ -19038,7 +19047,7 @@ if(null!=allTechnicalChecklist){
 			//updatedCheckLists.add(qtCheckList);			
 			
 		} else {
-			if (this.getManagedBean().getSpecMaintenanceScreen().equalsIgnoreCase("SC")) {
+			if (this.getManagedBean().getSpecMaintenanceScreen().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)) {//#28784
 				checkFinancialSpecEstimations(this.getManagedBean().getScQtCheckSt2financeProposalList(),
 						scQtCheckList, scQt, false);// 20210205@haziq- Bug
 													// #30046
