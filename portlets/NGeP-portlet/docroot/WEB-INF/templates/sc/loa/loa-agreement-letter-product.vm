@@ -255,7 +255,7 @@ u.underline {
 				<div class="text_indent">
 				
 						## #25025-start
-							<table class="text_family_red" style="text-align:justify;">
+							<table class="text_family_red">
 								<tr>
 									<td align="center" style="vertical-align: top;">*(a)</td>
 									<td>suatu bon pelaksanaan yang tidak boleh dibatalkan yang berjumlah Ringgit Malaysia $bondAmtText (RM $bondAmt);<br/>
