@@ -183,7 +183,7 @@
 <br/></div>
 		
 	#if($companyInfo.businessType == 'I' || $companyInfo.businessType == 'J' )
-<div class="avoidbreak">
+	<div class="avoidbreak">
 		<table width='100%'>
 		<tr><td><br /></td></tr>
 		<tr align='center' style="background-color: #3366ff;">
@@ -213,6 +213,8 @@
 			#end	
 		
 		</table>
+	<br/></div>
+	<div class="avoidbreak">
 		<table width='100%'>
 		<tr><td><br /></td></tr>
 		<tr align='center' style="background-color: #3366ff;">
