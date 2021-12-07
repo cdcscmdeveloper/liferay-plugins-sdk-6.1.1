@@ -82,7 +82,7 @@ label.ui-button>span.ui-button-text {
 						rendered="#{((specificationBackingBean.isQTStatusChecklistScoring()) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.isQTStatusChecklistScoringRevision()) or(!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()))}"
 						style="float:right;" update="@all" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();"
-						action="#{specificationBackingBean.saveDemoTemplateSpecDetails('SC',1)}" />
+						action="#{specificationBackingBean.saveDemoTemplateSpecDetails(ParameterConst.committeeTypeSpecificationCommittee,1)}" />
 
 					<!-- <p:commandButton
 						value="#{lbl['lbl.btn.cancel']}"
