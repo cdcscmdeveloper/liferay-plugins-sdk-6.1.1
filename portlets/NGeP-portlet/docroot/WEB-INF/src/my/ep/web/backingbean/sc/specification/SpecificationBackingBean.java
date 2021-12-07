@@ -19776,7 +19776,14 @@ if(null!=allTechnicalChecklist){
 		reqDTO.setScQt(getManagedBean().getQt());
 		reqDTO.setSpecChanged(getSpecMaintenance().equalsIgnoreCase(this.getManagedBean().getSpecMaintenanceScreen()));
 		reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+		/*
+		 * Development #31066, Added SLA log to check saveOrUpdateDemoTemplateSpecs Performance
+		 * START
+		 */
+		long startTime = System.currentTimeMillis();
 		SpecificationResDTO resDTO = specSO.saveOrUpdateDemoTemplateSpecs(reqDTO);
+		SLAUtils.getInstance().logSQLPerformanceInfo("QT","DEMO INVITATION (SAVE)","SpecificationBackingBean.saveOrUpdateDemoTemplateSpecs", startTime,"#29305");
+		
 		if (resDTO.isSuccessful()) {
 			SpecificationResDTO resDTO1 = new SpecificationResDTO();
 			List<ScQtCheckList> updatedCheckListsDemo = new ArrayList<ScQtCheckList>();
@@ -19892,7 +19899,18 @@ if(null!=allTechnicalChecklist){
 		SpecificationResDTO resDTO = new SpecificationResDTO();
 		boolean result = validateRequiredDemo(this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions());
 		if(result){
+			/*
+			 * Development #31066, Added SLA log to check saveOrUpdateDemoTemplateSpecs Performance
+			 * START
+			 */
+			long startTime = System.currentTimeMillis();
 			resDTO = specSO.saveOrUpdateDemoTemplateSpecs(reqDTO);
+			SLAUtils.getInstance().logSQLPerformanceInfo("QT","DEMO INVITATION (COMPLETE)","SpecificationBackingBean.saveOrUpdateDemoTemplateSpecs", startTime,"#29305");
+			/*
+			 * Development #31066 
+			 * END
+			 */
+			
 			// Need to redirect particualr page..
 			if (resDTO.isSuccessful()) {
 				SpecificationReqDTO reqDTO1 = new SpecificationReqDTO();
