@@ -165,14 +165,12 @@
 			</table>
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
+				<!-- 32044  start -->
+				<p:commandButton value="#{lbl['lbl.btn.proceed']}" partialSubmit="true"
 					action="#{consolidationReportBackingBean.submitConsolidationReport}"
 					oncomplete="submissionPopupAndNewCom.hide();" update="@form">
 				</p:commandButton>
-
-				<p:commandButton value="#{lbl['lbl.btn.no']}" immediate="true"
-					oncomplete="submissionPopupAndNewCom.hide();" />
-
+				<!-- 32044  end -->
 			</div>
 		</p:dialog>
 	</ui:define>
