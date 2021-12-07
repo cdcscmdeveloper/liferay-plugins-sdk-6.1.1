@@ -4043,8 +4043,12 @@ public class TaskReassignmentBackingBean extends
 		BpmResponseDTO responseDTO = null;
 		TaskAssignmentResDTO resDTO = new TaskAssignmentResDTO();
 	
+		long totalTimeToDelete = 0;
+		long totalTimeToGeTData = 0;
 		
 		try {
+			Thread.sleep(600000);
+			
 			//SLA Monitoring
 			long startTime = System.currentTimeMillis();
 			
@@ -4115,8 +4119,9 @@ public class TaskReassignmentBackingBean extends
 								reqDTO.setUserIdList(assigneeUsers);
 								reqDTO.setClaimedBy(claimedBy);
 								
+								long timeToDelete = System.currentTimeMillis();
 								taskAssignmentSO.removeGroupOrOthersTask(reqDTO);
-
+								totalTimeToDelete = totalTimeToDelete+(System.currentTimeMillis() - timeToDelete);
 							}
 						}
 					} 
@@ -4126,7 +4131,9 @@ public class TaskReassignmentBackingBean extends
 				//end the loop if size is equal to zero
 				Thread.sleep(200);
 				
+				long timeToGeTData = System.currentTimeMillis();
 				responseDTO = bpmSO.getReassignedItems(bpmReqDTO);
+				totalTimeToGeTData = totalTimeToGeTData+(System.currentTimeMillis() - timeToGeTData);
 				
 			}while(responseDTO.getWorklistVO().getWorklistItem().size() > 0);
 			//end while
@@ -4139,9 +4146,13 @@ public class TaskReassignmentBackingBean extends
 			resDTO.setSuccessful(true);
 			return resDTO;
 		} catch (Exception e) {
+			e.printStackTrace();
 			resDTO.setSuccessful(false);
 			return resDTO;
 		} finally {
+			log.info("==============totalTimeToDelete============== "+totalTimeToDelete);
+			log.info("==============totalTimeToGeTData============== "+totalTimeToGeTData);
+			
 			bpmSO = null;
 			taskAssignmentSO = null;
 		}
@@ -4159,8 +4170,12 @@ public class TaskReassignmentBackingBean extends
 		BpmResponseDTO responseDTO = null;
 		TaskAssignmentResDTO resDTO = new TaskAssignmentResDTO();
 		
+		long totalTimeToDelete = 0;
+		long totalTimeToGeTData = 0;
 		
 		try {
+			Thread.sleep(600000);
+			
 			//SLA Monitoring
 			long startTime = System.currentTimeMillis();
 			
@@ -4231,8 +4246,9 @@ public class TaskReassignmentBackingBean extends
 								reqDTO.setUserIdList(assigneeUsers);
 								reqDTO.setClaimedBy(claimedBy);
 
+								long timeToDelete = System.currentTimeMillis();
 								taskAssignmentSO.removeGroupOrOthersTask(reqDTO);
-
+								totalTimeToDelete = totalTimeToDelete+(System.currentTimeMillis() - timeToDelete);
 							}
 						}
 					} 
@@ -4242,7 +4258,9 @@ public class TaskReassignmentBackingBean extends
 				//end the loop if size is equal to zero
 				Thread.sleep(200);
 				
+				long timeToGeTData = System.currentTimeMillis();
 				responseDTO = bpmSO.getGroupByOthersItems(bpmReqDTO);
+				totalTimeToGeTData = totalTimeToGeTData+(System.currentTimeMillis() - timeToGeTData);
 				
 			}while(responseDTO.getWorklistVO().getWorklistItem().size() > 0);
 			//end while
@@ -4255,9 +4273,13 @@ public class TaskReassignmentBackingBean extends
 			resDTO.setSuccessful(true);
 			return resDTO;
 		} catch (Exception e) {
+			e.printStackTrace();
 			resDTO.setSuccessful(false);
 			return resDTO;
 		} finally {
+			log.info("==============totalTimeToDelete============== "+totalTimeToDelete);
+			log.info("==============totalTimeToGeTData============== "+totalTimeToGeTData);
+			
 			bpmSO = null;
 			taskAssignmentSO = null;
 		}
