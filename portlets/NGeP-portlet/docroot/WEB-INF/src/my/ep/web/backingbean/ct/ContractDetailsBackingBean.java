@@ -311,7 +311,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				// End - Fix #29368
 				}
 			// End Fix - #30856
-					
 			return;
 		}
 
@@ -3870,7 +3869,4 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	}
 	// End Fix - #30856
 	
-	public void removeAgencychanges(CtAgency orgprofileid){
-		ctBB.getManagedBean().getSelectedAgencyChanges().remove(orgprofileid);
-	}
 }
