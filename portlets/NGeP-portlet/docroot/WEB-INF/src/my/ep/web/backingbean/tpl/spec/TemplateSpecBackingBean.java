@@ -5435,12 +5435,12 @@ public class TemplateSpecBackingBean extends
 	public boolean filterAllitemQtyZero(List<TplSpecAnswer> listSpecAnswer) {
 
 		for(TplSpecAnswer retrieveAns : listSpecAnswer){
-			if(retrieveAns != null && retrieveAns.getTplSpecZoneQty() != null && retrieveAns.getTplSpecZoneQty().getQty().equals(new BigDecimal(0))){
-				return false;
+			if(retrieveAns != null && retrieveAns.getTplSpecZoneQty() != null && !retrieveAns.getTplSpecZoneQty().getQty().equals(new BigDecimal(0))){
+				return true;
 				
 			}
 		}
-		return true;
+		return false;
 		
 	}
 	//Bug #32110 related to #21695 Farid Start 30/11/2021
