@@ -52,10 +52,10 @@
 			update=":form:deleteImageId, :form:btnDelete" disabled="#{catalogueBackingBean.managedBean.disableDeleteBtn}"
 			action="#{catalogueBackingBean.deleteCmImages()}" ></p:commandButton>
 	<!-- #14118 Allow multiple image deletion in delete image screen - End --> 
-		<p:commandButton value="#{lbl['lbl.cm.ok']}"
-			onclick="deleteImage.hide()" update=":form"></p:commandButton>
-		<p:commandButton value="#{lbl['lbl.cm.cancel']}" update=":form"
-			onclick="deleteImage.hide()"></p:commandButton>
+		<p:commandButton value="#{lbl['lbl.cm.ok']}" update=":form"
+			onclick="deleteImage.hide()" action="#{catalogueBackingBean.cancelDeleteImage()}"></p:commandButton>
+		<p:commandButton value="#{lbl['lbl.cm.cancel']}"
+			onclick="deleteImage.hide()" action="#{catalogueBackingBean.cancelDeleteImage()}"></p:commandButton>
 	</div>
 
 
