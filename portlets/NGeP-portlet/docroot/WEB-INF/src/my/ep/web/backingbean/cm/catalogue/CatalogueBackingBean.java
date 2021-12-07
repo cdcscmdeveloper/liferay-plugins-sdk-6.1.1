@@ -9596,15 +9596,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	}
 	
 	public void rowSelectImage() {
-		System.out.println(this.getManagedBean().getSelectedImage().getCmImages().size());
 		if (this.getManagedBean().getSelectedImage().getCmImages().size() > 0) {
 			this.getManagedBean().setDisableDeleteBtn(false);
-			System.out.println("Disable Delete Button: " + this.getManagedBean().isDisableDeleteBtn());
 		} else if (this.getManagedBean().getSelectedImage().getCmImages().size() == 0
 				|| this.getManagedBean().getSelectedImage().getCmImages().size() < 0) {
 			this.getManagedBean().setDisableDeleteBtn(true);
-			System.out.println("Disable Delete Button: " + this.getManagedBean().isDisableDeleteBtn());
 		}
+	}
+	
+	public void cancelDeleteImage() {
+		this.getManagedBean().setSelectedImage(null);
+		this.getManagedBean().setDisableDeleteBtn(true);
 	}
 	// 14118 - End
 
