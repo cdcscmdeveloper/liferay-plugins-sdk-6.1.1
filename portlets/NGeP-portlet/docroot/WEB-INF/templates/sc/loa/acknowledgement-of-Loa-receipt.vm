@@ -60,11 +60,13 @@ p {text-align: justify;}
 	font-size: 15px;
 }
 
+## #26770 -start
 .text_family_header {
 	font-weight: Arial;
-	font-size: 18px;
+	font-size: 14px;
 	font-weight: bold;
 }
+## #26770 -end
 </style>
 </head>
 <body>
