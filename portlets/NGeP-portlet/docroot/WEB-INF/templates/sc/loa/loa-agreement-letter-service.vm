@@ -904,7 +904,12 @@ u.underline {
 					<td class="text_family_red">
 					    <table border="0" cellpadding="0" cellspacing="0" width="100%">
 					      <tr> 
-					         <td class="text_family_red"><span class="text_family_small">Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara jelas kepada syarikat dalam dokumen pelawaan</span></td>
+					      #if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")
+					      <td class="text_family_red"><span class="text_family_small">Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara upfront kepada syarikat dalam dokumen pelawaan</span></td>
+					      #else
+					      	<td class="text_family_red"><span class="text_family_small">Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara jelas kepada syarikat dalam dokumen pelawaan</span></td>
+					      #end
+					         
 					      </tr>
 					      <tr> 
 					         <td class="text_family_red">......................................</td>
