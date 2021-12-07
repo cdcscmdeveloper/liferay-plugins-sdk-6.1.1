@@ -88,7 +88,7 @@
 						<ui:fragment
 								rendered="#{demoSpecTempList.pmDemoStatus.statusId eq QTStatusConst.TS_PENDING_SUBMISSION}">
 								<p:commandLink process="@this" styleClass="BtnSpacing"
-									action="#{specificationBackingBean.demoSpectechnicalChecklist(index,demoSpecTempList,'T')}"
+									action="#{specificationBackingBean.demoSpectechnicalChecklist(index,demoSpecTempList,ParameterConst.specificationTypeTechnical)}"
 									update="@([id$=questionTbl])" partialSubmit="true">
 									<h:graphicImage value="/css/images/design/edit.png" />
 								</p:commandLink>
@@ -97,7 +97,7 @@
 								rendered="#{demoSpecTempList.pmDemoStatus.statusId eq QTStatusConst.TS_COMPLETED}">
 								<p:commandButton value="#{lbl['lbl.btn.view']}" process="@this"
 									styleClass="BtnSpacing"
-									action="#{specificationBackingBean.demoSpectechnicalChecklist(index,demoSpecTempList,'T')}"
+									action="#{specificationBackingBean.demoSpectechnicalChecklist(index,demoSpecTempList,ParameterConst.specificationTypeTechnical)}"
 									update="@([id$=questionTbl])" partialSubmit="true" />
 							</ui:fragment>
 
