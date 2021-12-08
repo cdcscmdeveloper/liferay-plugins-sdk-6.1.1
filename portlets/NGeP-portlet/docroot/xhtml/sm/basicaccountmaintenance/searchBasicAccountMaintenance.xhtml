@@ -138,7 +138,8 @@
 					<tr>
 						<td><br/>
 							<p:graphicImage id="bidAlertImage" value="#{CommonUIConstant.imagePath}/priority.png" style="float:left; padding-right:3px"/>
-							<p:outputLabel value="#{lbl['lbl.sm.maintenance.note1']}" style="color: red;font-weight: bold;float:left; padding-right:3px" />
+							<!-- #32269 -->
+							<p:outputLabel value="#{lbl['lbl.sm.maintenance.basic.note1']}" style="color: red;font-weight: bold;float:left; padding-right:3px" />
 							<p:commandLink value="#{lbl['lbl.sm.maintenance.note2']}" onstart="blockWidget.show()"
 								oncomplete="blockWidget.hide()"
 								action="#{supplierDataMaintenanceBackingBean.onViewActiveApplList()}"
