@@ -7890,26 +7890,21 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	}
 	
 	/**
-	 * BUG 32050
-	 * Checks if QT/DL is submission or cancelled.
+	 * BUG 32050, BUG 32209
+	 * Checks if QT/DL is UPDATABLE or NOT.
 	 * 
-	 * @return true, if is submission or cancelled
+	 * @return true, if its not updatable
 	 */
-	public boolean isQtSubmission(Long statusId, String docNo) {
-		Boolean returnVal = Boolean.FALSE;
-		switch(StringUtils.substring(docNo, 0, 2)){
+	public boolean isUpdatable(Long statusId, String docNo) {
+		Boolean returnVal = Boolean.FALSE;		
+		switch(statusId.equals(QTStatusConst.QT_ARCHIVED)?StringUtils.substring(docNo, 0, 1):StringUtils.substring(docNo, 0, 2)){
 			case ParameterConst.DOCUMENT_CATEGORY_DIRECT_LOA_FOR_QUOTATION_TENDER : returnVal = Boolean.TRUE;
 													break;
-		/*	ENABLE CODE WHEN 9019 going to SIT
-		 * 	case ParameterConst.DOCTYPE_QUOTATION : if(statusId.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION) || statusId.equals(QTStatusConst.QT_CANCELLED)){
-														returnVal = Boolean.TRUE;
-													}
+			case ParameterConst.DOCTYPE_QUOTATION : returnVal = Arrays.asList(QTStatusConst.UNUPDATABLE_BUTTON_STATUSES).contains(statusId);
 													break;
-													
-		*/
-		
-		}
-		
+			case ParameterConst.DOCTYPE_ARCHIVED :  returnVal = Arrays.asList(QTStatusConst.UNUPDATABLE_BUTTON_STATUSES).contains(statusId);
+													break;
+		}		
 		return returnVal;
 	}
 	
