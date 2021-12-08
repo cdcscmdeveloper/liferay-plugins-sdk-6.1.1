@@ -130,7 +130,7 @@
 							</ui:remove>
 							<p:menuitem id="menuItem2" value="#{lbl['lbl.btn.update']}" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();" 
-								rendered="#{!qTDetailBB.isAuditor() and scQt.actionRender[1] and !qTDetailBB.isQtSubmission(scQt.qtStatus.statusId,scQt.qtNo)}"
+								rendered="#{!qTDetailBB.isAuditor() and scQt.actionRender[1] and !qTDetailBB.isUpdatable(scQt.qtStatus.statusId,scQt.qtNo)}"
 								icon="ui-icon-edit" action="#{qTDetailBB.editQuationTenderDetails(scQt, true)}" 
 								partialSubmit="true" process="@this"/>
 							<ui:remove>
