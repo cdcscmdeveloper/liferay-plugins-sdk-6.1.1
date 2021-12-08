@@ -127,6 +127,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
@@ -2745,7 +2746,7 @@ public class SupplierFinalizationBackingBean extends
 	        					= new ArrayList<ScQtFinalizationReport>(_scQtFinalization.getScQtFinalizationReports());
 			// #18685 -start-
 			List<String> reportTitleList = new ArrayList<>();
-			reportTitleList.add(SourcingConstants.UDPUPBM_REPORT);
+			reportTitleList.add(SourcingConstants.DOC_DEF_KEY_UDPUPBM_REPORT); // #32035, #18685
 			
 			checkKertasTaklimatReports(finalizationReports, reportTitleList, SourcingConstants.SUPPLIER_FINALIZATION_TASK);
 			// #18685 -end-
@@ -2837,8 +2838,23 @@ public class SupplierFinalizationBackingBean extends
 				if (CollectionUtils.isNotEmpty(getManagedBean().getNewBriefingPaperReportList())
 						&& getManagedBean().getNewBriefingPaperReportList().size() > 0
 						&& getManagedBean().isSecretaryUser()) {
-					getManagedBean().getNewBriefingPaperReportList().get(0)
-							.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
+					// #32035, #18685 -start-
+					IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
+							.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+					
+					UserReqDTO userReqDTO = new UserReqDTO();
+					userReqDTO.setLoginId(getFacesScopes().getUserScreenName());
+					
+					PmUser currentUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
+					
+					if (currentUser != null && null != currentUser.getUserId()) {
+						Long userLoginId = new LogKey(currentUser.getUserId()).getUserId();
+						
+						cif (null != userLoginId) {
+							getManagedBean().getNewBriefingPaperReportList().get(0).setChangedBy(userLoginId);
+						}
+					}
+					// #32035, #18685 -end-
 				}
 				// #18685 - End.
 			}
@@ -9835,6 +9851,130 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		return reqDTO;
 	}
 	// 28834 ends
+	
+	// 18685 - START.
+	protected void checkKertasTaklimatReports(List<ScQtFinalizationReport> finalizationReports, List<String> reportTitleList, String taskType) {
+		if (CollectionUtils.isNotEmpty(finalizationReports)) {
+			int count=0;
+			List<ScQtFinalizationReport> localListReport=new ArrayList<ScQtFinalizationReport>();
+			Iterator<ScQtFinalizationReport> iterator = finalizationReports.iterator();
+
+			while (iterator.hasNext()) {
+				ScQtFinalizationReport finalizationReport = iterator.next();
+				
+				if (null != finalizationReport.getPmDocument()) {
+					if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equalsIgnoreCase(finalizationReport.getPmDocument().getDocCategoryCode().getParameterCode())) {
+//						log.info("=======sourbasebackingBeanTitle===="+finalizationReport.getTitle());
+						if(finalizationReport.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED)){
+//							log.info("=======mangatitlecodesexecutes========"+ finalizationReport.getPmDocument().getDocName());
+							count++;
+							localListReport.add(finalizationReport);
+							continue;
+						}
+
+						if (null == getManagedBean().getNewBriefingPaperReportList()) {
+							List<ScQtFinalizationReport> newBriefingPaperReportList = new LinkedList<>();
+							getManagedBean().setNewBriefingPaperReportList(newBriefingPaperReportList);
+						}
+
+						if (reportTitleList.contains(finalizationReport.getPmDocument().getDocDefinitionKey())) {
+							getManagedBean().getNewBriefingPaperReportList().add(finalizationReport);
+
+							iterator.remove();
+							continue;
+						}
+					}
+					
+					if (taskType.equals(SourcingConstants.CONSOLIDATION_TASK)
+							&& finalizationReport.getPmDocument().getDocDefinitionKey()
+									.equals(SourcingConstants.DOC_DEF_KEY_UDPUPBM_REPORT)) {
+						if (null == getManagedBean().getSfBriefingPaperReportList()) {
+							List<ScQtFinalizationReport> sFBriefingPaperReportList = new ArrayList<>();
+							getManagedBean().setSfBriefingPaperReportList(sFBriefingPaperReportList );
+						}
+						
+						getManagedBean().getSfBriefingPaperReportList().add(finalizationReport);
+		
+						iterator.remove();
+						continue;
+					}
+					
+					if (taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK) && 
+							(finalizationReport.getPmDocument().getDocDefinitionKey().equals(SourcingConstants.DOC_DEF_KEY_LATAR_BELAKANG_REPORT)
+									|| finalizationReport.getPmDocument().getDocDefinitionKey().equals(SourcingConstants.DOC_DEF_KEY_TUJUAN_REPORT)
+									|| finalizationReport.getPmDocument().getDocDefinitionKey().equals(SourcingConstants.DOC_DEF_KEY_METODOLOGI_PENILAIAN_REPORT)
+									|| finalizationReport.getPmDocument().getDocDefinitionKey().equals(SourcingConstants.DOC_DEF_KEY_UDPUP_REPORT))) {
+						if (null == getManagedBean().getConsolidationBriefingPaperReportList()) {
+							List<ScQtFinalizationReport> consolidationBriefingPaperReportList = new ArrayList<>();
+							getManagedBean().setConsolidationBriefingPaperReportList(consolidationBriefingPaperReportList );
+						}
+						
+						getManagedBean().getConsolidationBriefingPaperReportList().add(finalizationReport);
+			
+						iterator.remove(); 
+						continue;						
+					}					
+				} 
+	
+				if ("UP".equals(finalizationReport.getDefinationType().getParameterCode()) 
+						&& !finalizationReport.getTitle().contains("Kertas Keputusan")) {
+					getManagedBean().getNewBriefingPaperReportList().add(finalizationReport);
+					iterator.remove();
+				}
+			}
+
+			if (taskType.equals(SourcingConstants.CONSOLIDATION_TASK) && CollectionUtils.isNotEmpty(getManagedBean().getNewBriefingPaperReportList())) {
+				List<ScQtFinalizationReport>  tempList = new ArrayList<>();
+				
+				for (String reportName : reportTitleList) {
+					for (ScQtFinalizationReport report : getManagedBean().getNewBriefingPaperReportList()) {
+						if (reportName.equals(report.getPmDocument().getDocDefinitionKey())) {
+							tempList.add(report);
+							break;
+						}
+					}
+				}
+
+				for (ScQtFinalizationReport report : getManagedBean().getNewBriefingPaperReportList()) {
+					if ("UP".equals(report.getDefinationType().getParameterCode())) {
+						tempList.add(report);
+					}
+				}
+
+				getManagedBean().getNewBriefingPaperReportList().clear();
+				getManagedBean().getNewBriefingPaperReportList().addAll(tempList);
+			}
+
+			if (count == 1) {
+//				log.info("enter count1"+count);
+				for(ScQtFinalizationReport finalizationReport:finalizationReports){
+					if (null != finalizationReport.getPmDocument()
+							&& SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equalsIgnoreCase(finalizationReport
+									.getPmDocument().getDocDefinitionKey())) {
+						finalizationReport.setKertasTaklimatUpload(Boolean.TRUE);	
+					}
+					
+				}	
+			} else if (count > 1) {
+//				log.info("enter countGreaterThan1"+count);
+				String SPACE = " ";
+				String reportTitle = ResourceBundleUtils.getMessage("lbl.sc.kertas.taklimat", 
+				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, SourcingConstants.MY_LOCALE) 
+				 			+ SPACE + "(" + (count-1) + ")";
+//				  log.info("reportTitle"+reportTitle);
+				for(ScQtFinalizationReport finalizationReport:finalizationReports){
+					if (null != finalizationReport.getPmDocument()
+							&& SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equalsIgnoreCase(finalizationReport
+									.getPmDocument().getDocDefinitionKey())
+							&& reportTitle.equalsIgnoreCase(finalizationReport.getTitle())) {
+						finalizationReport.setKertasTaklimatUpload(Boolean.TRUE);	
+						break;
+					}
+				}
+			}
+		}
+	}
+	// 18685 - END.
 
 	// #28834 - Strat.
 	/**
