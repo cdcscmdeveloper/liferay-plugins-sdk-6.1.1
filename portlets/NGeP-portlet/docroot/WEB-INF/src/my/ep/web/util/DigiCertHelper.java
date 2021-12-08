@@ -153,8 +153,11 @@ public class DigiCertHelper {
 			log.info("getPersonnelId:: " + resDTO.getSmPersonnel().getPersonnelId());
 			log.info("getSoftcertFlg:: " + resDTO.getSmPersonnel().getSoftcertFlg());
 			
-			reqDTO.setSmSupplierId(resDTO.getSmAppl().getSmSupplier().getSupplierId());//30425
-			if (!SmServiceLookup.getPersonnelSO().isNotExpiredSoftcertBySupplierIdAndUserId(reqDTO)) { //30425
+			//reqDTO.setSmSupplierId(resDTO.getSmAppl().getSmSupplier().getSupplierId());//30425
+			//if (!SmServiceLookup.getPersonnelSO().isNotExpiredSoftcertBySupplierIdAndUserId(reqDTO)) { //30425
+			//#30855 - START
+			if (!(resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED)) {
+			//#30855 - END
 				log.info("#25061 getSoftcertFlg:: if log 1");
 				if (resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ
 						|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING
