@@ -34,6 +34,7 @@
 		<!-- #29938 --> 
 			<div style="text-align: right; min-height: 40px;">
 			<p:commandLink value="#{lbl['lbl.cm.tracking.diary']}"
+					rendered="#{simpleQuoteBackingBean.managedBean.sqAuditFlg}"
 					action="#{pmTrackingDiaryBackingBean.redirectToSupplierTrackingDiary(ParameterConst.doctypeSimpleQuote,simpleQuoteBackingBean.managedBean.scQuote.quoteId, simpleQuoteBackingBean.isSupplier())}"></p:commandLink>
 			 
 			<div class="ppLeftBtn">
