@@ -2849,8 +2849,8 @@ public class SupplierFinalizationBackingBean extends
 					
 					if (currentUser != null && null != currentUser.getUserId()) {
 						Long userLoginId = new LogKey(currentUser.getUserId()).getUserId();
-						
-						cif (null != userLoginId) {
+
+						if (null != userLoginId) {
 							getManagedBean().getNewBriefingPaperReportList().get(0).setChangedBy(userLoginId);
 						}
 					}
