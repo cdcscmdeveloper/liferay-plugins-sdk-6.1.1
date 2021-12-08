@@ -3583,4 +3583,18 @@ public class TemplateSpecBackingBean extends
 		return true;
 	}
 	//Bug #32110 related to #21695 Farid End 18/11/2021	
+	
+	//Bug #32110 related to #21695 Farid Start 30/11/2021
+	public boolean filterAllitemQtyZero(List<TplSpecAnswer> listSpecAnswer) {
+
+		for(TplSpecAnswer retrieveAns : listSpecAnswer){
+			if(retrieveAns != null && retrieveAns.getTplSpecZoneQty() != null && !retrieveAns.getTplSpecZoneQty().getQty().equals(new BigDecimal(0))){
+				return true;
+				
+			}
+		}
+		return false;
+		
+	}
+	//Bug #32110 related to #21695 Farid Start 30/11/2021
 }

@@ -244,11 +244,15 @@
 			
 					
 			<c:if test="#{isContentTypeAnswer or isContentTypeScore or (isContentTypeUpdateSpec and isUpdateSpecByAnswers)}">
-				<ui:remove>#29021 Start	</ui:remove>
 				<h:outputText rendered="#{isContentTypeScore and isSpecTypeTechnical}" styleClass="instruction" value="#{lbl['lbl.sc.tec.rating.instruction']}" escape="false" />
-				<ui:remove>#29021 end	</ui:remove>
+				<ui:remove> #32110 related to #21695 Farid Start 30/11/2021</ui:remove>
+				<ui:param name="filterList" value="#{!isSqSpec and !templateSpecBackingBean.filterAllitemQtyZero(templateSpecBean.specAnswerList) and isSpecTypeFinancial and isContentTypeAnswer ? null : templateSpecBean.specAnswerList}">
+				
+				</ui:param>
+				<ui:remove> #32110 related to #21695 Farid End 30/11/2021</ui:remove>
+				<ui:remove> #32110 related to #21695 Farid Start 30/11/2021</ui:remove>
 				<p:dataTable id="questionTbl" var="tplSpecAnswer" rowIndexVar="row"
-					value="#{templateSpecBean.specAnswerList}" 	emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					value="#{filterList}" 	emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					scrollable1="true" scrollWidth1="#{scrollWidth}">
 					
 					<ui:param name="prevSpecQuestion" value="#{row > 0 ? templateSpecBean.specAnswerList[row-1].tplSpecQuestion : null}" />
