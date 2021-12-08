@@ -4753,7 +4753,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			return listAttachments;
 		}
 
-		public void downloadFile(ScAttachment scAttachment){
+		public void downloadScAttachmentFile(ScAttachment scAttachment){
 			LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
 			try {
 				loaDetailBackingBean.downloadFile(scAttachment);
