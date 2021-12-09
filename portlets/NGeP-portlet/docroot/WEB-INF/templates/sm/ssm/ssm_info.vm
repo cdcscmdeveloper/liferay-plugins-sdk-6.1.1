@@ -1,5 +1,6 @@
 #parse("templates/sm/ssm/shared/header.vm")
 
+
 	<table width='100%'>
 		<tr align='center' style="background-color: #3366ff;">
 	        <td>
@@ -97,6 +98,7 @@
 	</table>
 	
 	#if($companyInfo.businessType == 'I' || $companyInfo.businessType == 'J' )
+<div class="avoidbreak">
 	<table width='100%'>
 		<tr align='center' style="background-color: #3366ff;">
 	        <td>
@@ -114,10 +116,11 @@
 		</tr>
 		<tr><td><br /></td></tr>
 	</table>
+<br/></div>
 	#end
 	
 	
-	
+<div class="avoidbreak">	
 	<table width='100%'>
 	<tr><td><br /></td></tr>
 		<tr align='center' style="background-color: #3366ff;">
@@ -177,10 +180,10 @@
 			#end	
 		
 			</table>
-	
-	
+<br/></div>
 		
 	#if($companyInfo.businessType == 'I' || $companyInfo.businessType == 'J' )
+	<div class="avoidbreak">
 		<table width='100%'>
 		<tr><td><br /></td></tr>
 		<tr align='center' style="background-color: #3366ff;">
@@ -210,49 +213,8 @@
 			#end	
 		
 		</table>
-			
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
+	<br/></div>
+	<div class="avoidbreak">
 		<table width='100%'>
 		<tr><td><br /></td></tr>
 		<tr align='center' style="background-color: #3366ff;">
@@ -289,9 +251,10 @@
 		 		</tr>
 			#end		
 		</table>
+<br/></div>
 	#end
-
-	<tr><td><br /></td></tr>
+<tr><td><br /></td></tr>
+<div class="avoidbreak">
 	<table width='100%'>
 		<tr><td><br /></td></tr>
 		<tr align='center' style="background-color: #3366ff;">
@@ -341,8 +304,10 @@
 			#end	
 		
 </table>
+<br/></div>
 	<tr><td><br /></td></tr>
 	#if($companyInfo.businessType == 'C' || $companyInfo.businessType == 'F' )
+<div class="avoidbreak">
 	<table width='100%'>
 		<tr align='center' style="background-color: #3366ff;">
 	        <td>
@@ -370,6 +335,7 @@
 			#end	
 		
 	</table>
+<br/></div>
 	<tr><td><br /></td></tr>
 	#end
 	<table>	

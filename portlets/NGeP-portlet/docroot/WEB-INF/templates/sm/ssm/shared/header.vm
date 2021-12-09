@@ -17,6 +17,12 @@
 		.descTable td, .descTable tr, .descTable th {
 		 	border: 1px solid black;
 		}
+
+		
+		.avoidbreak{
+			page-break-inside: avoid;
+		}
+
 		
 		body{
 			font-family: "Helvetica";
