@@ -246,7 +246,7 @@
 			<c:if test="#{isContentTypeAnswer or isContentTypeScore or (isContentTypeUpdateSpec and isUpdateSpecByAnswers)}">
 				<h:outputText rendered="#{isContentTypeScore and isSpecTypeTechnical}" styleClass="instruction" value="#{lbl['lbl.sc.tec.rating.instruction']}" escape="false" />
 				<ui:remove> #32110 related to #21695 Farid Start 30/11/2021</ui:remove>
-				<ui:param name="filterList" value="#{!isSqSpec and !templateSpecBackingBean.filterAllitemQtyZero(templateSpecBean.specAnswerList) and isSpecTypeFinancial and isContentTypeAnswer ? null : templateSpecBean.specAnswerList}">
+				<ui:param name="filterList" value="#{!isSqSpec and isZonal and !templateSpecBackingBean.filterAllitemQtyZero(templateSpecBean.specAnswerList) and isSpecTypeFinancial and isContentTypeAnswer ? null : templateSpecBean.specAnswerList}">
 				
 				</ui:param>
 				<ui:remove> #32110 related to #21695 Farid End 30/11/2021</ui:remove>
