@@ -2862,10 +2862,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return "";
 	}
 	//25792 - end
-
+	
 	//27346 - start 
+	//FIXME : 16052019 - SSM INTEGRATION CR - start
 		public void redirectToViewSSMInfo(String regNo,String businesstype) {
-			//log.info("redirectToViewSSMInfo---------------------------------------------------Start");
+			log.info("redirectToViewSSMInfo---------------------------------------------------Start");
 			clearPersonnelList();
 			if (this.getManagedBean().getSmAppl() != null && !this.getManagedBean().getSmAppl().getApplType()
 					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
@@ -3003,10 +3004,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				retVal = true;
 			}
 		}
-																											   
-																							  
-															  
-														   
 		return retVal;
 	}	
 	public static void checkEquityOwnerUpdateAllowance(
@@ -3022,10 +3019,74 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	//27346- end
 	
 	
+	//27346 START PRINT REPORT
+	/**
+	 * download site visit template report in PDF
+	 * @param templateType
+	 * @throws Exception
+	 */
+	public void downloadViewSSMInfo() throws Exception{
+		printReportVM("ssm","SM_SSMInfo.pdf","/sm/ssm/ssm_info.vm",setDetail());
+	}
 	
-	//END 27239
+	public VelocityContext setDetail(){
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+		VelocityContext context = new VelocityContext();
+		FacesScopes face = new FacesScopes();		
+		
+		context.put("hostUrl", getLogoHeaderPath());
+		context.put("title", ResourceBundleUtils.getMessage("lbl.sm.view.ssm.infomation",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("companyInfoSec", ResourceBundleUtils.getMessage("lbl.sm.comp.info.hdr",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("capitalEquityInfolbl", ResourceBundleUtils.getMessage("lbl.sm.equiInfo.panHdr",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("branchInfolbl", ResourceBundleUtils.getMessage("lbl.sm.viewSsm.branch.details",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("ownerInfolbl", ResourceBundleUtils.getMessage("lbl.sm.viewSsm.equiOwner",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("directorInfolbl", ResourceBundleUtils.getMessage("lbl.sm.comp.director.info.hdr",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("capitalEquityCompanieslbl", ResourceBundleUtils.getMessage("lbl.sm.viewSsm.equiCompany",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("personnelInfolbl", ResourceBundleUtils.getMessage("lbl.sm.viewSsm.personnel",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("businessNaturelbl", ResourceBundleUtils.getMessage("lbl.sm.nature.of.biz.hdr",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("companyInfo", this.getManagedBean().getSmSupplierSsm());
+		context.put("companyBasic", this.getManagedBean().getSmCompanyBasicSsm());
+		context.put("smAddress", this.getManagedBean().getSmAddress());
+		context.put("ownerInfo", this.getManagedBean().getPersonnelsOwnerSsm());
+		context.put("directorInfo", this.getManagedBean().getSmPersonnelDirectorSsm());
+		context.put("businessNature", this.getManagedBean().getSmSupplierBusinessSsm());
+		context.put("branchInfo",this.getManagedBean().getSmSupplierBranchSsm());
+		context.put("equityCompanies",this.getManagedBean().getSmEquityCompaniesSsm());
+		context.put("personnelInfo",this.getManagedBean().getPersonnelsSsm());
+		context.put("businessNatureCode", this.getManagedBean().getSmSupplierBusinessSsm());
+		context.put("smVmUtil", VmUtil.getInstance());
+		context.put("establishdate", sdf.format(this.getManagedBean().getSmCompanyBasicSsm().getEstablishDate()));
+		if(this.getManagedBean().getSmSupplierSsm().getBusinessType().equalsIgnoreCase(SupplierManagementConst.BUSINESS_TYPE_ROB_SOLE_PROPRIETORSHIP)|| this.getManagedBean().getSmSupplierSsm().getBusinessType().equalsIgnoreCase(SupplierManagementConst.BUSINESS_TYPE_ROB_PARTNERSHIP)){
+		context.put("robexpdate", sdf.format(this.getManagedBean().getSmCompanyBasicSsm().getRobExpiryDate()));
+		}
+		return context;
+	}
 	
-	//27346 START PRINT REPORT	
+	public void printReportVM(String tmpFolder,String fileName,String vmFile,VelocityContext context){
+		String filePath = null;
+		filePath = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+		
+		filePath = filePath + "/" + tmpFolder;
+       
+		File file = new File(filePath);
+		if(!file.exists()) file.mkdirs();
+		AttachmentFormat attachmentFormat = null;
+		attachmentFormat = new AttachmentDateFormat();
+		String newName = attachmentFormat.format(fileName, null);
+		filePath = filePath + "/"+ newName;
+		OutputStream os1 = null;
+		File finalOutputFile = new File(filePath);
+		try{
+			os1 = new FileOutputStream(filePath);
+			DocumentGenerator.getInstance().generatePdfFromVelocity(vmFile, context, os1);		
+			os1.flush();
+			os1.close();
+			this.getManagedBean().setDownloadfile(commonDownload(tmpFolder+"/"+newName, fileName));
+			finalOutputFile.delete();
+		}catch(Exception e){
+			log.error("File: BaseBackingBean, printReportVM, Message: "+e.getMessage());
+		}
+	}
 	/**
 	 * get the template logo path 
 	 * @return String
@@ -3034,9 +3095,19 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return SmCommonUtil.getBasePortalUrl();
 	}
 	
+	//27346 END PRINT REPORT
 
+	
+	//27346 - Start
+   /* comment for design issue #27346
+	private String getLogoHeaderPath(){
+		return SmCommonUtil.getBasePortalUrl();
+	}
+	*/
+	
+	
 
-
+	 /* comment for design issue #27346
 	private String generateToPdf(String vm, VelocityContext context, String fileName) throws Exception{
 		String filePath = tmpPath + fileName;
 		
@@ -3048,8 +3119,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		os1.close();
 		
 		return filePath;
-	}
-	
+	}*/
+	 
+	 /* comment for design issue #27346
 	public static void doMerge(List<InputStream> list, OutputStream outputStream)
             throws DocumentException, IOException {
         Document document = new Document();
@@ -3156,7 +3228,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
         	 log.info("**********Failed to Delete***********");
         }
 	}
+	*/
 	
+	/* comment for design issue #27346
 	private String compInfoEquity() throws Exception{
 		VelocityContext context = new VelocityContext();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
@@ -3183,7 +3257,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		
 		return generateToPdf(vmCover, context, fileName);
 	}
-	
+	*/
+	/* comment for design issue #27346
 	private String CapitalEquityCompany() throws Exception{
 		VelocityContext context = new VelocityContext();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
@@ -3202,7 +3277,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		
 		return generateToPdf(vmCover, context, fileName);
 	}
+	*/
 	
+	/* comment for design issue #27346
 	private String PersonnalList() throws Exception{
 		VelocityContext context = new VelocityContext();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
@@ -3219,7 +3296,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		
 		return generateToPdf(vmCover, context, fileName);
 	}
+	*/
 	
+	/*  comment for design issue #27346
 	private String BusinessNature() throws Exception{
 		VelocityContext context = new VelocityContext();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
@@ -3258,7 +3337,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return generateToPdf(vmCover, context, fileName);
 	}
 	//27346 - End
-
+*/
 	
 	//27346 END PRINT REPORT
 	
