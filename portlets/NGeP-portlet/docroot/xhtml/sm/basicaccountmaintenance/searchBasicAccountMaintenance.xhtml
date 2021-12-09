@@ -82,8 +82,6 @@
 						<h:outputText value="#{lbl['lbl.sm.status.active']}"
 							rendered="#{smSupplier.recordStatusFlg eq 1 and empty smSupplier.typeDisciplinaryAction}" />
 						<!-- start bug #32291 = DA suspend detect as inactive account : cr 26238 -->	
-						<!--<h:outputText value="#{lbl['lbl.sm.status.inactive']}"
-							rendered="#{smSupplier.recordStatusFlg eq 0 and empty smSupplier.typeDisciplinaryAction or(smSupplier.recordStatusFlg eq 2)}" /> --!>
 						<!-- end bug #32291 = DA suspend detect as inactive account : cr 26238 -->	
 						<!-- bug #28278 -START -->
 						<h:outputText value="#{lbl['lbl.sm.status.deleted.with.transaction']} (#{lbl['lbl.sm.disciplinary.jktt.cancel.registration']})" rendered="#{smSupplier.typeDisciplinaryAction eq SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG and smSupplier.pendingCancel eq true}" />
