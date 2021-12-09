@@ -819,10 +819,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public String backAction() {
 		this.getManagedBean().setSecretaryList(null);
-		//#15851
-		ctBackingBean.getManagedBean().setViewContract(true);
-		return (this.getManagedBean().getBackToPreviousPage() != null) ? this.getManagedBean().getBackToPreviousPage() : CONTRACT_MAINT_PAGE;
-		//return CONTRACT_MAINT_PAGE;
+		return CONTRACT_MAINT_PAGE;
 	}
 
 	//#15851 - shaqimi start
@@ -832,8 +829,24 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @return the navigate URL 
 	 */
 	public String backAmendViewAction() {
-		this.getManagedBean().setSecretaryList(null);
-		return CONTRACT_MAINT_PAGE;
+		
+		if(!ctBackingBean.getManagedBean().isFromViewPage()){
+			ContractReqDTO reqDTO = new ContractReqDTO();
+			Long contractId = ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractId();
+			Long contractVerId = ctBackingBean.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId();
+			reqDTO.setContractId(contractId);
+			reqDTO.setContractVerId(contractVerId);
+			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
+			reqDTO.setUpdateAction(false);
+			getManagedBean().setSelectedTabIndex(0);
+			this.getManagedBean().setSecretaryList(null);
+			this.getManagedBean().setViewOnly(false);
+			setAmendmentContractVer(reqDTO);
+		}
+
+		ctBackingBean.getManagedBean().setViewContract(true);
+		ctBackingBean.getManagedBean().setHasAmendmentLoaNo(false);
+		return (this.getManagedBean().getBackToPreviousPage() != null) ? this.getManagedBean().getBackToPreviousPage() : CONTRACT_MAINT_PAGE;
 	}
 	//#15851 - shaqimi end
 
@@ -1305,8 +1318,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			
 			//Enhancement 15851 - Prefix for supplemental contract letter
 			//start
+			ctBackingBean.getManagedBean().setHasAmendmentLoaNo(false);
 			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa() != null){
-				if(StringUtils.isNotBlank(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getLoaNo())){
+				String slLoaNo = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getLoaNo();
+				if(StringUtils.isNotBlank(slLoaNo)
+						&& slLoaNo.substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)){
 					ctBackingBean.getManagedBean().setHasAmendmentLoaNo(true);
 				}
 			}

@@ -168,6 +168,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	// End - 28479	
 	
 	private boolean hasAmendmentLoaNo = false; //15851
+	private boolean fromViewPage = false;//15851
 
 	//#28854 - start
 	private List<String> itemSpecification;
@@ -1509,6 +1510,14 @@ public class ContractManagedBean extends BaseManagedBean {
 
 	public void setAgencyDataDeletion(Map<Long, CtAgency> agencyDataDeletion) {
 		this.agencyDataDeletion = agencyDataDeletion;
+	}
+
+	public boolean isFromViewPage() {
+		return fromViewPage;
+	}
+
+	public void setFromViewPage(boolean fromViewPage) {
+		this.fromViewPage = fromViewPage;
 	}
 
 	// End Fix - #31740
