@@ -4904,10 +4904,20 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if(isQTMaintenanceScreen() &&(QTStatusConst.LOA_PENDING_VERIFICATION.equals(scLoa
 				.getPmStatus().getStatusId().longValue()) ||
 				QTStatusConst.LOA_COMPLETED.equals(scLoa
-						.getPmStatus().getStatusId().longValue()))){
+						.getPmStatus().getStatusId().longValue()))){//29007&31423-start
 			getManagedBean().setIconForDL(true);
 			
 		}//29007&31423-End
+		// #32119 - Missing icon from Contract Maintenance
+		if(isCTMaintenanceScreen() &&(QTStatusConst.LOA_PENDING_VERIFICATION.equals(scLoa
+				.getPmStatus().getStatusId().longValue()) ||
+				QTStatusConst.LOA_COMPLETED.equals(scLoa
+						.getPmStatus().getStatusId().longValue()))){
+			getManagedBean().setIconForDL(true);
+			
+		}
+		//#32199 - end
+		
 		return QTConstants.SC_DIRECT_LOA_MAIN_PAGE;
 	}
 	
@@ -10075,6 +10085,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	public boolean isQTMaintenanceScreen() {
 		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId()) || QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());//29007&31423
 	}
+	
+	//#32119 - start	
+	public boolean isCTMaintenanceScreen() {				
+		return QTConstants.PORTLET_NAME_CT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId()) || QTConstants.PORTLET_NAME_CT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());		
+	}
+	//#32119 - end
+	
 	public void addNewOfferedSpec(TplSpecAnswer spec){
 		String specDet = spec.getTplSpecQuestion().getClSpecDetail();
 		for(TplSpecAnswer tplSpecAnswer : this.getManagedBean().getTplSpecAnswerList()){

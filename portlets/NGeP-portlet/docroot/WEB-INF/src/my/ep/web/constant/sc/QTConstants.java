@@ -224,6 +224,11 @@ public interface QTConstants {
 	public static final String GREATER_THEN = ">";
 	public static final String HTML_GREATER_THEN = "&#62;";
 	
+	//#32119 - start
+	public static final String PORTLET_NAME_CT_MAINTENANCE = "ctContractMaintenance_WAR_NGePportlet";
+	public static final String PORTLET_NAME_CT_SEARCH = "ctContractMaintenance_WAR_NGePportlet";
+	//#32199 - end
+	
 	public static final String PORTLET_NAME_QT_MAINTENANCE = "scQuotationTender_WAR_NGePportlet";
 	public static final String PORTLET_NAME_QT_SEARCH = "scQuotationTenderSearch_WAR_NGePportlet";
 	public static final String PORTLET_NAME_QT_TECHSUPP = "scQuotationTenderSearchTechSupp_WAR_NGePportlet";
