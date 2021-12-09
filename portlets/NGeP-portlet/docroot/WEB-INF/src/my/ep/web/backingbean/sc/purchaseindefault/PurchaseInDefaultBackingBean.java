@@ -2482,7 +2482,20 @@ public class PurchaseInDefaultBackingBean extends
 						purchaseInDefaultResDTO.getCircularPidReasonList());*/
 				justificationTypeEvent(purchaseInDefault.getReasonType(), purchaseInDefault.getReasonDesc());
 
-				getCurrentStatus(getPmStatusByStatusId(DPStatusConstants.PID_COMPLETED));
+				//start - 9133
+				if (purchaseInDefault.getCurrentStatus() != null) {
+					Long statusId = purchaseInDefault.getCurrentStatus().getPmStatus().getStatusId();
+
+					if (statusId.equals(DPStatusConstants.PID_EXPIRED)) {
+						getCurrentStatus(getPmStatusByStatusId(DPStatusConstants.PID_COMPLETED));
+					} else {
+						getCurrentStatus(getPmStatusByStatusId(statusId));
+					}
+
+				} else {
+					getCurrentStatus(getPmStatusByStatusId(DPStatusConstants.PID_COMPLETED));
+				}
+				//end - 9133
 				
 				// disable all for pid view
 				getManagedBean().setPidBtnFlag(Boolean.FALSE);
