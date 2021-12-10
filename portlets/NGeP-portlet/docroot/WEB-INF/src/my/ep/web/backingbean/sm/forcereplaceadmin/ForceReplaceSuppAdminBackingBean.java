@@ -429,8 +429,10 @@ public class ForceReplaceSuppAdminBackingBean extends
 					recordStatus = MessageUtils.getMessage(MessageConst.INFO_700109, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()); //Registration process in progress
 				}
 				
-				suppleirList.append(" <br> "+num+". " + supplier.getEpNo() + ": " + supplier.getCompanyName() + " (" + recordStatus + ") <br> ");
+				suppleirList.append(" <br> "+num+". " + supplier.getEpNo() + ": " + supplier.getCompanyName() + " (" + recordStatus + ") ");
 			}
+			
+			suppleirList.append(" <br> ");
 			
 			throw new EpException(MessageConst.ERROR_722692,
 					new String[] { suppleirList.toString() });
