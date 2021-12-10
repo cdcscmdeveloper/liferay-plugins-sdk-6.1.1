@@ -73,8 +73,8 @@ import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
-import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScRemark; //#31603
+import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus; //#31603
 import my.ep.persistence.entity.sc.directpurchase.ScPIDApprovalUser;
 import my.ep.persistence.entity.sc.directpurchase.ScPIDRemark;
@@ -2479,7 +2479,20 @@ public class PurchaseInDefaultBackingBean extends
 						purchaseInDefaultResDTO.getCircularPidReasonList());*/
 				justificationTypeEvent(purchaseInDefault.getReasonType(), purchaseInDefault.getReasonDesc());
 
+				//start - 9133
+				if (purchaseInDefault.getCurrentStatus() != null) {
+					Long statusId = purchaseInDefault.getCurrentStatus().getPmStatus().getStatusId();
+
+					if (statusId.equals(DPStatusConstants.PID_EXPIRED)) {
 				getCurrentStatus(getPmStatusByStatusId(DPStatusConstants.PID_COMPLETED));
+					} else {
+						getCurrentStatus(getPmStatusByStatusId(statusId));
+					}
+
+				} else {
+					getCurrentStatus(getPmStatusByStatusId(DPStatusConstants.PID_COMPLETED));
+				}
+				//end - 9133
 				
 				// disable all for pid view
 				getManagedBean().setPidBtnFlag(Boolean.FALSE);
