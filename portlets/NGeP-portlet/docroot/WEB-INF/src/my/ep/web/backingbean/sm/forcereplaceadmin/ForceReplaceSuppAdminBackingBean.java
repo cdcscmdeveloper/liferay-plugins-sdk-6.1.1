@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sm.forcereplaceadmin;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,43 +13,29 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.service.cm.catalogue.ICatalogueSO;
+import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.dto.cm.catalogue.CatalogueReqDTO;
+import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
+import my.ep.dto.sm.registration.RegistrationReqDTO;
+import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
-//#28765 - Start
-import my.ep.dto.sm.search.SupplierSearchResDTO;
-import java.util.Calendar;
-import java.util.Iterator;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
-import my.ep.biz.service.cm.catalogue.ICatalogueSO;
-import my.ep.biz.service.sm.personnel.IPersonnelSO;
-import my.ep.constant.ModuleCodeConst;
-import my.ep.dto.cm.catalogue.CatalogueReqDTO;
-import my.ep.dto.cm.catalogue.CatalogueResDTO;
-import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
-import my.ep.persistence.entity.sm.SmReplaceSupplierAdminDoc;
-import my.ep.persistence.entity.sm.SmReplaceSupplierAdminDocFile;
-import my.ep.persistence.entity.sm.SmSoftcertDoc;
-import my.ep.persistence.entity.sm.SmSoftcertDocFile;
-import my.ep.persistence.entity.sm.SmSupplierBank;
-import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.vo.SoftcertUploadSuppDocVO;
-import org.primefaces.event.CloseEvent;
-import org.primefaces.event.FileUploadEvent;
-//#28765 - End
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -61,13 +48,16 @@ import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
+import my.ep.persistence.entity.sm.SmReplaceSupplierAdminDoc;
+import my.ep.persistence.entity.sm.SmReplaceSupplierAdminDocFile;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.forcereplaceadmin.ForceReplaceSuppAdminManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
@@ -79,6 +69,9 @@ import my.ep.web.vo.ReactivateSupplierVO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
+//#28765 - Start
+//#28765 - End
 
 @ManagedBean(name = "forceReplaceSuppAdminBackingBean")
 @RequestScoped
@@ -398,6 +391,53 @@ public class ForceReplaceSuppAdminBackingBean extends
 		*/
 	}
 	
+	/**
+	 * Checking if have multiple supplier have same registration number
+	 * 
+	 */
+	//32208 - start
+	private void checkingSupplier(){
+		
+		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
+		
+		List<Integer> recStatusLs = new ArrayList<Integer>();
+		recStatusLs.add(DbValueConst.RECORD_STATUS_ACTIVE);
+		recStatusLs.add(DbValueConst.RECORD_STATUS_IN_PROGRESS);
+		
+		reqDTO.setRegNo(this.getManagedBean().getSmSupplier().getRegNo().trim());
+		reqDTO.setStatusLs(recStatusLs);
+		
+		RegistrationResDTO resDTO = SmServiceLookup.getRegistrationSO().retrieveSupplierByRegNoAndStatusLs(reqDTO);
+		
+		List<SmSupplier> supplierLs = resDTO.getSmSuppliers();
+		
+		if(supplierLs.size() > 1){
+			
+			StringBuilder suppleirList = new StringBuilder();
+			int num = 0;
+			
+			for (int i = 0; i < supplierLs.size(); i++) {
+				
+				num = i+1;
+				
+				SmSupplier supplier = supplierLs.get(i);
+				String recordStatus = "";
+				
+				if(supplier.getRecordStatusFlg().equals(1)){
+					recordStatus = MessageUtils.getMessage(MessageConst.INFO_700108, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()); //Active
+				}else if(supplier.getRecordStatusFlg().equals(5)){
+					recordStatus = MessageUtils.getMessage(MessageConst.INFO_700109, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()); //Registration process in progress
+				}
+				
+				suppleirList.append(" <br> "+num+". " + supplier.getEpNo() + ": " + supplier.getCompanyName() + " (" + recordStatus + ") <br> ");
+			}
+			
+			throw new EpException(MessageConst.ERROR_722692,
+					new String[] { suppleirList.toString() });
+		}
+	}
+	//32208 - end
+	
 
 	/**
 	 * Redirect back to Force Replace Admin first page from add new personnel
@@ -492,6 +532,9 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * Validate before proceed to force replace admin
 	 */
 	private void validate() {
+		//32208 - start
+		checkingSupplier();
+		//32208 - end
 		
 		//#25969
 		checkingAppl();
