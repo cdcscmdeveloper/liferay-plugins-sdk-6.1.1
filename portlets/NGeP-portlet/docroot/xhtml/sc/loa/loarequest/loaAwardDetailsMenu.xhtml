@@ -437,7 +437,7 @@
 					<c:if test=	"#{isSupplierAckStatus}">
 					<!-- #32280 - start -->
 						<c:if test="#{scLoiLoaItem.scRequestItem.requestNoteItemId ne lOADetailBackingBean.getScRequestSession(scLoiLoaItem.scRequestItem.requestNoteItemId,varStatus.index)}">
-							<td style="border: 1px solid #e8e8e8; border-collapse: collapse;"
+							<td style="border: 1px solid #e8e8e8; border-collapse: collapse;text-align: right;"
 							rowspan="#{lOADetailBackingBean.getScRequestRowCount(scLoiLoaItem.scRequestItem.requestNoteItemId)}">
 								<p:commandButton
 								value="#{lbl['lbl.btn.assign']}"
