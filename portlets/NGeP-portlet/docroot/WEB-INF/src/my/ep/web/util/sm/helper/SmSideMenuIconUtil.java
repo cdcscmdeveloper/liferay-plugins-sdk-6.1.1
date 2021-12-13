@@ -742,7 +742,11 @@ public class SmSideMenuIconUtil {
 					retVal = ICON_VIEW;
 					//#31043
 					bean.setCategoryCodeVerified(true);
-				} else {					
+				} else {
+					if(bean.isReviewSiteVisit()){
+						retVal = ICON_TICK;
+					}
+					
 					boolean isAllCatcodeVerified = true;
 					if (!EntityHelper.isCollectionEmpty(bean.getSmAppl()
 							.getSmSupplierCategories())) {
@@ -837,7 +841,7 @@ public class SmSideMenuIconUtil {
 				boolean licenseMandatoryDocVerified = false; 
 				
 				//#31043 start
-				if(bean.isApproverUser()){
+				if(bean.isApproverUser() || bean.isReviewSiteVisit()){
 					retVal = ICON_TICK;
 					bean.setDocumentVerified(true);
 					mandatoryDocVerified = true; 
