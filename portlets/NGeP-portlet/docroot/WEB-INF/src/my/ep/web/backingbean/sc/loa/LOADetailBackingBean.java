@@ -9814,6 +9814,20 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 	//27797 & 29006 end
 	
+	//#32280 - start
+	public Long getScRequestAssignButtonSession(Long reqItemId, int index) {
+		if(index == 0){
+			this.getManagedBean().setReqItemAssignButtonSession(reqItemId);
+			return 0L;
+		}else if(this.getManagedBean().getReqItemAssignButtonSession().equals(reqItemId)) {
+			return reqItemId;
+		}else{
+			this.getManagedBean().setReqItemAssignButtonSession(reqItemId);
+			return 0L;
+		}
+	}	
+	//#32280 - end
+	
 	/**
 	 * 29007-start
 	 * Get Parameter description by parameter for report.
