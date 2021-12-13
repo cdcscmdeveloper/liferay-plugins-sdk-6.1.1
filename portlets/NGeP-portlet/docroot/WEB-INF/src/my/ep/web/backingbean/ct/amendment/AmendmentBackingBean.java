@@ -186,6 +186,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(AmendmentBackingBean.class);
+	private static final String CONTRACT_PAGE = "/xhtml/ct/fulfilmentdetails/creation/fulfilment.xhtml?faces-redirect=true"; // #15851
 	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
 	private static final String CONTRACT_COMMON_PAGE = "/xhtml/ct/viewcontract/fulfilmentTab.xhtml?faces-redirect=true";
 	private static final String UPDATE_COMMITTEE_PAGE = "/xhtml/ct/fulfilmentdetails/amendment/pbqcc/committeeList.xhtml"; //#29403
@@ -563,31 +564,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * The method used to retrieve the information and render it on screen.
 	 */
 		
-	//#15851 - shaqimi start
+	//#15851 - shaqimi,putra start
 	public void preRenderAmendView() throws UnsupportedEncodingException {
-		IContractAmendmentSO contractAmendmentSO = null;
-		ContractReqDTO ctReqDTO = null;
-		ContractResDTO resDTO = null;
-		ContractBackingBean ctbb = new ContractBackingBean();
-		Long contractVerId = ctbb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();
-		
-		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
-		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
-		
-		if(contractVerId!=null) {
-			ctReqDTO = new ContractReqDTO();
-			ctReqDTO.setContractVerId(contractVerId);
-			ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
-			ctReqDTO.setUpdateAction(false);
-			setAmendmentContractVer(ctReqDTO);
+
 			ConstructAmendmentViewTabSideMenu();
-		
 			getManagedBean().setViewOnly(true);
 			
 			return;
-		}
 	}
-	//#15851 - shaqimi end
+	//#15851 - shaqimi,putra end
 	
 	public void preRenderView() throws UnsupportedEncodingException {
 
@@ -712,6 +697,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setPrepareLOA(false);
 			getManagedBean().setDecisionPbQcLOA(false);
 			getManagedBean().setSignOffDecision(false);
+			ctBackingBean.getManagedBean().setAmendFromViewPage(false); // #15851
 			
 //			getManagedBean().setViewOnly(false); /*#25956 notification setting*/
 
@@ -819,20 +805,31 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public String backAction() {
 		this.getManagedBean().setSecretaryList(null);
+		ctBackingBean.getManagedBean().setAmendFromViewPage(false); // #15851
 		return CONTRACT_MAINT_PAGE;
 	}
 
-	//#15851 - shaqimi start
+	//#15851 - shaqimi,putra start
 	/**
 	 * The method used to navigate to supplemental contract view screen.
 	 * 
 	 * @return the navigate URL 
 	 */
 	public String backAmendViewAction() {
+		ContractDetailsBackingBean ctDT =  new ContractDetailsBackingBean();
+		ContractReqDTO reqDTO = new ContractReqDTO();
+		Long contractId = ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractId();
 		
-		if(!ctBackingBean.getManagedBean().isFromViewPage()){
-			ContractReqDTO reqDTO = new ContractReqDTO();
-			Long contractId = ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractId();
+		if(ctBackingBean.getManagedBean().isFromViewPage()){
+			Long contractVerId = ctBackingBean.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();
+			ctDT.gotoViewPage(contractId, contractVerId);
+			
+			return CONTRACT_PAGE;
+		}else if(ctBackingBean.getManagedBean().isAmendFromViewPage()){
+			ctDT.gotoAmendPage(contractId);
+			
+			return PROCESS_AMEND_PAGE;
+		} else {
 			Long contractVerId = ctBackingBean.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId();
 			reqDTO.setContractId(contractId);
 			reqDTO.setContractVerId(contractVerId);
@@ -842,13 +839,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			this.getManagedBean().setSecretaryList(null);
 			this.getManagedBean().setViewOnly(false);
 			setAmendmentContractVer(reqDTO);
+	
+			ctBackingBean.getManagedBean().setViewContract(true);
+			ctBackingBean.getManagedBean().setHasAmendmentLoaNo(false);
+			return (this.getManagedBean().getBackToPreviousPage() != null) ? this.getManagedBean().getBackToPreviousPage() : CONTRACT_MAINT_PAGE;
 		}
-
-		ctBackingBean.getManagedBean().setViewContract(true);
-		ctBackingBean.getManagedBean().setHasAmendmentLoaNo(false);
-		return (this.getManagedBean().getBackToPreviousPage() != null) ? this.getManagedBean().getBackToPreviousPage() : CONTRACT_MAINT_PAGE;
 	}
-	//#15851 - shaqimi end
+	//#15851 - shaqimi,putra end
 
 	/**
 	 * The method used to set the contract amendment information while
@@ -955,6 +952,17 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getManagedBean().setSecretaryId(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary().getUserId());
 			}
 
+			//Enhancement 15851 - Prefix for supplemental contract letter
+			//start
+			ctBackingBean.getManagedBean().setHasAmendmentLoaNo(false);
+			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa() != null){
+				String slLoaNo = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getLoaNo();
+				if(StringUtils.isNotBlank(slLoaNo)
+						&& slLoaNo.substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)){
+					ctBackingBean.getManagedBean().setHasAmendmentLoaNo(true);
+				}
+			}
+			//Enhancement 15851 - end
 
 			// Retrieve agencies
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAgencies() != null 
@@ -1106,7 +1114,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)
 					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)
 					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME)))
-					&& (getManagedBean().getCtLetterOfAcceptance() == null || getManagedBean().getCtLetterOfAcceptance().isEmpty())) {
+					&& (getManagedBean().getCtLetterOfAcceptance() == null || getManagedBean().getCtLetterOfAcceptance().isEmpty())
+					|| ctBackingBean.getManagedBean().isHasAmendmentLoaNo()) {
+				// #15851
 				for (int j =0; j < 2; j++) {
 					CtLetterOfAcceptance ctloa = new CtLetterOfAcceptance();
 					if (j == 0) {
@@ -1315,18 +1325,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				//#29549 end
 			}
 			//#29403 end
-			
-			//Enhancement 15851 - Prefix for supplemental contract letter
-			//start
-			ctBackingBean.getManagedBean().setHasAmendmentLoaNo(false);
-			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa() != null){
-				String slLoaNo = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getLoaNo();
-				if(StringUtils.isNotBlank(slLoaNo)
-						&& slLoaNo.substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)){
-					ctBackingBean.getManagedBean().setHasAmendmentLoaNo(true);
-				}
-			}
-			//Enhancement 15851 - end
 			
 			log.info("Check Putra gotoAmendPage setAmendmentContractVer >END<");
 			
@@ -2860,7 +2858,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuSchedule);
 			}
 			
-			if ((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isBondReq() ||
+			if (((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa() != null 
+					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isBondReq()) ||
 					ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq())
 					&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
 					&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
@@ -7677,20 +7676,28 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				// #30879 - End
 				
 				
-				//Enhancement 15851 - shaqimi start
-				public void gotoAmendViewPage(Long contractId, long loaId) {		
+				//Enhancement 15851 - shaqimi,putra start
+				public void gotoAmendViewPage(Long contractId, long loaId) {
+				
+					ContractDetailsBackingBean ctDT =  new ContractDetailsBackingBean();
 					ContractReqDTO reqDTO = new ContractReqDTO();
 					IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-					reqDTO.setContractId(contractId);
-					Long contractVerId = contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId();
-					reqDTO.setContractVerId(contractVerId);
+					reqDTO.setContractId(contractId);					
 					reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
-					reqDTO.setUpdateAction(true);
+					if(ctDT.getManagedBean().getLoaContractVerId() !=null ){
+						reqDTO.setContractVerId(ctDT.getManagedBean().getLoaContractVerId());
+					}else{
+						reqDTO.setContractVerId( contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId());
+					}										
+					log.info("Check gotoAmendViewPage ContractverId :"+reqDTO.getContractVerId());
 
-//							ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
+					reqDTO.setViewOnly(true);
+					ctBackingBean.getManagedBean().setViewContract(true);
 					getManagedBean().setSelectedTabIndex(0);
-					getManagedBean().setViewOnly(true); /*#25956 notification setting*/
-					//log.info("Check Putra gotoAmendPage contractId "+contractId);
+					getManagedBean().setViewOnly(true);
+					if(getManagedBean().getCtLetterOfAcceptance() != null){
+						getManagedBean().getCtLetterOfAcceptance().clear();
+					}
 					setAmendmentContractVer(reqDTO);
 					
 					//for loa header
@@ -7703,5 +7710,5 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, PROCESS_AMEND_VIEW_PAGE);
 				}
-				//Enhancement 15851 - shaqimi end
+				//Enhancement 15851 - shaqimi,putra end
 	}
