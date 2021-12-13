@@ -745,7 +745,11 @@ public class SmSideMenuIconUtil {
 					retVal = ICON_VIEW;
 					//#31043
 					bean.setCategoryCodeVerified(true);
-				} else {					
+				} else {
+//					if(bean.isReviewSiteVisit()){
+//						retVal = ICON_TICK;
+//					}
+					
 					boolean isAllCatcodeVerified = true;
 					if (!EntityHelper.isCollectionEmpty(bean.getSmAppl()
 							.getSmSupplierCategories())) {
@@ -840,7 +844,7 @@ public class SmSideMenuIconUtil {
 				boolean licenseMandatoryDocVerified = false; 
 				
 				//#31043 start
-				if(bean.isApproverUser()){
+				if(bean.isApproverUser() || bean.isReviewSiteVisit()){
 					retVal = ICON_TICK;
 					bean.setDocumentVerified(true);
 					mandatoryDocVerified = true; 
@@ -909,9 +913,13 @@ public class SmSideMenuIconUtil {
 				//24964 & 31043 - end
 
 			} else if (sectionType
-					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)
-					&& rev.isSitevisitVerified()) {
-				retVal = ICON_TICK;
+					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)){
+				if(bean.isApproverUser())
+					rev.setSitevisitVerified(true);
+				
+				if(rev.isSitevisitVerified())
+					retVal = ICON_TICK;
+				
 			}
 		}
 		return retVal;
