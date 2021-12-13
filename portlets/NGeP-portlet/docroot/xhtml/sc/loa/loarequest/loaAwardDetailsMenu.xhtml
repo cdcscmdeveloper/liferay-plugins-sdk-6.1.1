@@ -435,11 +435,17 @@
 					</c:if>
 
 					<c:if test=	"#{isSupplierAckStatus}">
-						<td 
-							style="border: 1px solid #e8e8e8; border-collapse: collapse;"><p:commandButton
+					<!-- #32280 - start -->
+						<c:if test="#{scLoiLoaItem.scRequestItem.requestNoteItemId ne lOADetailBackingBean.getScRequestAssignButtonSession(scLoiLoaItem.scRequestItem.requestNoteItemId,varStatus.index)}">
+							<td style="border: 1px solid #e8e8e8; border-collapse: collapse;text-align: right;"
+							rowspan="#{lOADetailBackingBean.getScRequestRowCount(scLoiLoaItem.scRequestItem.requestNoteItemId)}">
+								<p:commandButton
 								value="#{lbl['lbl.btn.assign']}"
 								disabled="#{lOADetailBackingBean.managedBean.readOnly}"
-								action="#{lOADetailBackingBean.assignProductCode(scLoiLoaItem)}" /></td>
+								action="#{lOADetailBackingBean.assignProductCode(scLoiLoaItem)}" />
+							</td>
+						</c:if>
+					<!-- #32280 - end -->
 					</c:if>
 				</tr>
 			</c:forEach>

@@ -346,6 +346,10 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private Long reqItemSubTotalSession = 0L;
 	public BigDecimal totalZonePrice = new BigDecimal(0);
 	//#27797 - end
+	
+	//#32280 - start
+	private Long reqItemAssignButtonSession = 0L;
+	//#32280 - end	
     /**
      * Gets the spki backing bean.
      *
@@ -1991,6 +1995,17 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 		this.totalZonePrice = totalZonePrice;
 	}
 	//#27797 - end
+	
+	//#32280 - start
+	public Long getReqItemAssignButtonSession() {
+		return reqItemAssignButtonSession;
+	}
+
+	public void setReqItemAssignButtonSession(Long reqItemAssignButtonSession) {
+		this.reqItemAssignButtonSession = reqItemAssignButtonSession;
+	}	
+	//#32280 - end
+	
 }
 
 
