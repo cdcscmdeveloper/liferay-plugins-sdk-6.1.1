@@ -4108,8 +4108,6 @@ public class TaskReassignmentBackingBean extends
 		long totalTimeToGeTData = 0;
 		
 		try {
-			Thread.sleep(600000);
-			
 			//SLA Monitoring
 			long startTime = System.currentTimeMillis();
 			
@@ -4235,8 +4233,6 @@ public class TaskReassignmentBackingBean extends
 		long totalTimeToGeTData = 0;
 		
 		try {
-			Thread.sleep(600000);
-			
 			//SLA Monitoring
 			long startTime = System.currentTimeMillis();
 			
