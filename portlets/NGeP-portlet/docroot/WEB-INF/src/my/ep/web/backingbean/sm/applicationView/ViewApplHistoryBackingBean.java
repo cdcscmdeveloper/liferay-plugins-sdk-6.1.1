@@ -44,6 +44,8 @@ import my.ep.dto.sm.bulkApplication.SmBulkApplicationVO;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
 import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
+import my.ep.dto.sm.personnel.PersonnelReqDTO;
+import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
@@ -366,8 +368,11 @@ public class ViewApplHistoryBackingBean extends
 			Boolean dontShowDowngradePopup = false;
 			this.getManagedBean().setDisAllowOwnerEdit(isMofAccEffDateBefore6Months(this.getManagedBean().getSmSupplier()));
 			if (this.getManagedBean().isDisAllowOwnerEdit()) {
-				if (personnelsRole != null && personnelsRole.size() <= 0) {
-					for (SmPersonnel personnel : this.getManagedBean().getSmAppl().getSmPersonnels()) {
+				PersonnelReqDTO reqDto = new PersonnelReqDTO();
+				reqDto.setApplId(this.getManagedBean().getSmAppl().getApplId());
+				PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO().retrieveOwnerOrDirectorByApplId(reqDto);
+				if (resDto.getSmPersonnelList() != null && resDto.getSmPersonnelList().size() >= 0) {
+					for (SmPersonnel personnel : resDto.getSmPersonnelList()) {
 						if (personnel.getEpRole() == null
 								|| (personnel.getEpRole() != null && !my.ep.constant.sm.SupplierManagementConst.SUPPLIER_ADMIN_ROLES
 										.contains(personnel.getEpRole()))) {
@@ -382,7 +387,7 @@ public class ViewApplHistoryBackingBean extends
 							}
 						}
 					}
-					for (SmPersonnel personnel : this.getManagedBean().getSmAppl().getSmPersonnels()) {
+					for (SmPersonnel personnel : resDto.getSmPersonnelList()) {
 						if (personnel.getEpRole() != null
 								&& my.ep.constant.sm.SupplierManagementConst.SUPPLIER_ADMIN_ROLES
 										.contains(personnel.getEpRole())) {
@@ -399,18 +404,22 @@ public class ViewApplHistoryBackingBean extends
 					}
 				}
 			}
-			// end #29956
-			//end #29956
-			for(SmPersonnel personnel :  this.getManagedBean().getSmAppl().getSmPersonnels()){
-				if (personnel.isEquityOwner() || personnel.isDirector()) {
-						SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),this.getManagedBean().getSsmResDTO().getSmPersonnelOwners(),"identificationNo");
-						SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),this.getManagedBean().getSsmResDTO().getSmPersonnelDirector(),"identificationNo");
-						if(personnelDirectorSSM == null && personnelSSM == null){
-							personnelsRole.add(personnel);
+			
+			PersonnelReqDTO reqDto = new PersonnelReqDTO();
+			reqDto.setApplId(this.getManagedBean().getSmAppl().getApplId());
+			PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO().retrieveOwnerOrDirectorByApplId(reqDto);
+			if (resDto.getSmPersonnelList() != null && resDto.getSmPersonnelList().size() >= 0) {
+				for(SmPersonnel personnel : resDto.getSmPersonnelList()){
+					if (personnel.getRecordStatusFlg()== DbValueConst.RECORD_STATUS_ACTIVE) {
+							SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),this.getManagedBean().getSsmResDTO().getSmPersonnelOwners(),"identificationNo");
+							SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),this.getManagedBean().getSsmResDTO().getSmPersonnelDirector(),"identificationNo");
+							if(personnelDirectorSSM == null && personnelSSM == null){
+								personnelsRole.add(personnel);
+						}
 					}
 				}
 			}
-			
+			// end #29956
 			// start #29956 smOwnerSsmPopup
 			String epRole = getEpRoleDowngradePopupByPersonnel(personnelsRole);
 
