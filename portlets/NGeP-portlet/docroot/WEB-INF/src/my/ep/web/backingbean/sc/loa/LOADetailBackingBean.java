@@ -4297,10 +4297,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				Long tempRequestNoteItemId = 0L;
 				
 				for (ScLoiLoaItem scLoiLoaItem : getManagedBean().getNameZoneScLoiLoaItemList()) {
-					log.info("the Id :"+getManagedBean().getNameZoneScLoiLoaItemList().size());
 					if(scLoiLoaItem.getScRequestItem()!= null && 
 							null == scLoiLoaItem.getScRequestItem().getCmItem() && tempRequestNoteItemId.compareTo(scLoiLoaItem.getScRequestItem().getRequestNoteItemId()) != 0){
-						log.info("prob Id:"+scLoiLoaItem.getScRequestItem().getRequestNoteItemId());
 						throw new EpException(MessageConst.ERROR_760436);
 					}
 					tempRequestNoteItemId = scLoiLoaItem.getScRequestItem().getRequestNoteItemId();
