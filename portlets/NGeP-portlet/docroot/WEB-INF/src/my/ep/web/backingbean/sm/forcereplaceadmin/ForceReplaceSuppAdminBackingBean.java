@@ -28,8 +28,9 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
+import my.ep.dto.sm.registration.RegistrationReqDTO;
+import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
-//#28765 - End
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
@@ -51,6 +52,7 @@ import my.ep.persistence.entity.sm.SmReplaceSupplierAdminDoc;
 import my.ep.persistence.entity.sm.SmReplaceSupplierAdminDocFile;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.forcereplaceadmin.ForceReplaceSuppAdminManagedBean;
@@ -69,6 +71,7 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 //#28765 - Start
+//#28765 - End
 
 @ManagedBean(name = "forceReplaceSuppAdminBackingBean")
 @RequestScoped
@@ -388,6 +391,55 @@ public class ForceReplaceSuppAdminBackingBean extends
 		*/
 	}
 	
+	/**
+	 * Checking if have multiple supplier have same registration number
+	 * 
+	 */
+	//32208 - start
+	private void checkingSupplier(){
+		
+		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
+		
+		List<Integer> recStatusLs = new ArrayList<Integer>();
+		recStatusLs.add(DbValueConst.RECORD_STATUS_ACTIVE);
+		recStatusLs.add(DbValueConst.RECORD_STATUS_IN_PROGRESS);
+		
+		reqDTO.setRegNo(this.getManagedBean().getSmSupplier().getRegNo().trim());
+		reqDTO.setStatusLs(recStatusLs);
+		
+		RegistrationResDTO resDTO = SmServiceLookup.getRegistrationSO().retrieveSupplierByRegNoAndStatusLs(reqDTO);
+		
+		List<SmSupplier> supplierLs = resDTO.getSmSuppliers();
+		
+		if(supplierLs.size() > 1){
+			
+			StringBuilder suppleirList = new StringBuilder();
+			int num = 0;
+			
+			for (int i = 0; i < supplierLs.size(); i++) {
+				
+				num = i+1;
+				
+				SmSupplier supplier = supplierLs.get(i);
+				String recordStatus = "";
+				
+				if(supplier.getRecordStatusFlg().equals(1)){
+					recordStatus = MessageUtils.getMessage(MessageConst.INFO_700108, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()); //Active
+				}else if(supplier.getRecordStatusFlg().equals(5)){
+					recordStatus = MessageUtils.getMessage(MessageConst.INFO_700109, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()); //Registration process in progress
+				}
+				
+				suppleirList.append(" <br> "+num+". " + supplier.getEpNo() + ": " + supplier.getCompanyName() + " (" + recordStatus + ") ");
+			}
+			
+			suppleirList.append(" <br> ");
+			
+			throw new EpException(MessageConst.ERROR_722692,
+					new String[] { suppleirList.toString() });
+		}
+	}
+	//32208 - end
+	
 
 	/**
 	 * Redirect back to Force Replace Admin first page from add new personnel
@@ -482,6 +534,9 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * Validate before proceed to force replace admin
 	 */
 	private void validate() {
+		//32208 - start
+		checkingSupplier();
+		//32208 - end
 		
 		//#25969
 		checkingAppl();
