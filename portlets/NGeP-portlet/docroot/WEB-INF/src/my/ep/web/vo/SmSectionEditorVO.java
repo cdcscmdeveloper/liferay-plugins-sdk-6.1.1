@@ -59,9 +59,12 @@ public class SmSectionEditorVO implements Serializable {
 	private boolean poEditSiteVisit;
 	private boolean appEditSiteVisit;
 	private boolean suppEditSiteVisit;
+
+	//#31230
+	private boolean hasOverlapped;
 	//27641 : Disciplinary Action - #26238
 	private boolean disciplinary;
-
+	
 	public boolean isPoEditCompBasic() {
 		return poEditCompBasic;
 	}
@@ -309,6 +312,16 @@ public class SmSectionEditorVO implements Serializable {
 	public void setSuppEditSiteVisit(boolean suppEditSiteVisit) {
 		this.suppEditSiteVisit = suppEditSiteVisit;
 	}
+
+	//#31230 START
+	public boolean isHasOverlapped() {
+		return hasOverlapped;
+	}
+
+	public void setHasOverlapped(boolean hasOverlapped) {
+		this.hasOverlapped = hasOverlapped;
+	}
+	//#31230 END
 	
 	public boolean isDisciplinary() {
 		return disciplinary;

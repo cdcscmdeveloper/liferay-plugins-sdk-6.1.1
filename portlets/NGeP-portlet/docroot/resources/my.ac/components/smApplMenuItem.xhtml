@@ -14,6 +14,7 @@
 		<cc:attribute name="tabNo" required="true"/>
 		<cc:attribute name="label" required="true"/>
 		<cc:attribute name="validate" />
+		<cc:attribute name="hasOverlap" required="true"/>
 		<cc:attribute name="disciplinary" required="true"/>
 	</cc:interface>
 
@@ -30,6 +31,7 @@
 			<h:outputText value="S" rendered="#{cc.attrs.suppEdit}" title="#{lbl['tt.sm.edit.by.supp']}" style="color:red !important;"/>
 			<h:outputText value="P" rendered="#{cc.attrs.poEdit}" title="#{lbl['tt.sm.edit.by.po']}" style="color:red !important;"/>
 			<h:outputText value="A" rendered="#{cc.attrs.appEdit}" title="#{lbl['tt.sm.edit.by.app']}" style="color:red !important;"/>
+			<h:outputText value="O" rendered="#{cc.attrs.hasOverlap}" title="#{lbl['tt.sm.has.overlap']}" style="color:red !important;"/>
 			<ui:remove>
 				<p:outputPanel rendered="#{cc.attrs.backingBean.managedBean.smAppl.applType eq 'A' 
 					and cc.attrs.backingBean.managedBean.overLappedCategoryExists}">
