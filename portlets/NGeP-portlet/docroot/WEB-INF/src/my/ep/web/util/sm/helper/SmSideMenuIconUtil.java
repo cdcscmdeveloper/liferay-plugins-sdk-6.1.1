@@ -746,9 +746,9 @@ public class SmSideMenuIconUtil {
 					//#31043
 					bean.setCategoryCodeVerified(true);
 				} else {
-//					if(bean.isReviewSiteVisit()){
-//						retVal = ICON_TICK;
-//					}
+					if(bean.isReviewSiteVisit()){
+						retVal = ICON_TICK;
+					}
 					
 					boolean isAllCatcodeVerified = true;
 					if (!EntityHelper.isCollectionEmpty(bean.getSmAppl()
