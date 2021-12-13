@@ -630,13 +630,14 @@
 						<!-- 15391 -start- -->
 						<c:when
 							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_CONTRACT_DURATION) and !isReadOnly or isGenInfo}">
-						<!-- 15391 -end- -->	
+						<!-- 15391 -end- -->
 							<p:inputText id="contractBo" maxlength="3"
 								label="#{lbl['lbl.sc.spec.complete.period']}"
 								value="#{scQt.contractDuration}"
 								style="text-align:right;margin-bottom:5px; width:200px;"
 								required="#{qtStatusChecklistScoring or qtStatusAfterChecklistScoring}">
-								<p:ajax event="change" process="@this" partialSubmit="true" update="@this" />
+								<p:ajax event="change" process="@this" partialSubmit="true" update="@this" 
+								listener="#{createQtBB.ContractPeriodChange()}"/>
 							</p:inputText>
 							<p:message id="completionBo" for="contractBo" display="icon"></p:message>
 						</c:when>
@@ -654,7 +655,7 @@
 								style="text-align:right;margin-bottom:5px; width:200px;"
 								required="#{qtStatusChecklistScoring or qtStatusAfterChecklistScoring}">
 								<p:ajax event="change" process="@this" partialSubmit="true"
-									update="@this" />
+									update="@this" listener="#{createQtBB.ContractPeriodChange()}" />
 							</p:inputText>
 							<!-- 15391 -end- -->
 						</c:otherwise>
@@ -853,7 +854,6 @@
 			<ui:remove> #11104 - end </ui:remove>
 		</table>
 	</p:panel>
-
 	<ui:include src="viewCircularPanelItemsPopup.xhtml"></ui:include>
 	<h:panelGroup id="generalLocationList">
 		<ui:include

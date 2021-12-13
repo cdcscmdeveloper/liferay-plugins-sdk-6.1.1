@@ -67,7 +67,6 @@ import my.ep.dto.sc.quationtender.SpecificationReqDTO;
 import my.ep.dto.sc.quationtender.SpecificationResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
-import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
@@ -139,6 +138,10 @@ import org.primefaces.model.TreeNode;
 public class CreateQtBackingBean extends
 		SourcingBaseBackingBean<QTDetailManagedBean> {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/** The Constant log. */
 	private static final Logger log = EpLogger
 			.getLogger(CreateQtBackingBean.class);
@@ -450,6 +453,52 @@ public class CreateQtBackingBean extends
 		return ministrySpecApprovers;
 	}
 	
+	//20210615@asyrafahaziq - Bug #30891 - Start
+	public void ContractPeriodChange() {
+		try {			
+		if (null != this.getManagedBean().getLoginRoleType()
+					&& !"".equals(this.getManagedBean().getLoginRoleType())
+					&& "SC".equalsIgnoreCase(this.getManagedBean()
+							.getLoginRoleType())) {
+		 if (ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())){	
+			
+			 Long currentStatus = this.getManagedBean().getQt().getQtStatus()
+					.getStatusId();
+
+			if (currentStatus.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)  ||  
+				currentStatus.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION) ||
+				  isQTStatusGreaterThan(currentStatus,QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)){
+			
+			SpecificationBackingBean specificationBackingBean = new SpecificationBackingBean();
+			List<ScQtCheckList> financialSpecCheckList = this.getManagedBean()
+					.getScQtCheckSt2financeProposalList();
+			if (null == financialSpecCheckList
+					|| financialSpecCheckList.isEmpty()) {
+				specificationBackingBean.retriveFinancialCheckList();
+				financialSpecCheckList = this.getManagedBean()
+						.getScQtCheckSt2financeProposalList();
+			}
+			if (null != financialSpecCheckList
+					&& !financialSpecCheckList.isEmpty()) {
+				PmStatus status = getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+				for (ScQtCheckList financialchecklist : financialSpecCheckList) {
+					if (QTConstants.TEMPLETE_SPEC_CODE
+							.equalsIgnoreCase(financialchecklist.getDefinationType()
+									.getParameterCode())) {
+					financialchecklist.setPmStatus(status);
+				}
+			}
+			}
+		  }
+		}
+		}
+		} finally {
+
+		}
+		
+	}
+	//20210615@asyrafahaziq - Bug #30891 - End
+	
 	/**
 	 * Zone radio change.change zone location level radio in business owner.
 	 * 
@@ -697,14 +746,14 @@ public class CreateQtBackingBean extends
 			boolean isPanel = scQt.isPanel();
 	
 		
-		if (amount != null) {
-			// Bug #31605 -start-
-			if (scQt.getQtType() == null || (amount.intValue() <= 500000 && !isPanel) || isPanel) {
-			// Bug #31605 -end-
-				// QT Type
-				scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
-			// Bug #31605 -start-
-			}
+			if (amount != null) {
+				// Bug #31605 -start-
+				if (scQt.getQtType() == null || (amount.intValue() <= 500000 && !isPanel) || isPanel) {
+					// Bug #31605 -end-
+					// QT Type
+					scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
+					// Bug #31605 -start-
+				}
 
 			if (scQt.getQtType().equals(ParameterConst.QUOTATION_TENDER_TYPE_OPEN)) {
 			// Bug #31605 -end-
@@ -1103,6 +1152,11 @@ public class CreateQtBackingBean extends
 			removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT);
 			removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
 
+			//20210615@asyrafahaziq - Bug #30891 - Start
+			 if (!this.getManagedBean().getQt().getContractDuration().equals(null) ) {
+				 ContractPeriodChange();
+			 }
+			//20210615@asyrafahaziq - Bug #30891 - End
 		} finally {
 
 		}
