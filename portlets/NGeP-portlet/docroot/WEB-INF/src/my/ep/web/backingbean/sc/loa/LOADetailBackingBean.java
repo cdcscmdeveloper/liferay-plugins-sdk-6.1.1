@@ -4292,7 +4292,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				&& BpmOutcomeConst.BPM_ACCEPT.equals(outcome)) {
 
 			//#32280 - start
-			if(!getManagedBean().getNameZoneScLoiLoaItemList().isEmpty())
+			if(isZonalWithPaOrPs())
 			{
 				Long tempRequestNoteItemId = 0L;
 				
