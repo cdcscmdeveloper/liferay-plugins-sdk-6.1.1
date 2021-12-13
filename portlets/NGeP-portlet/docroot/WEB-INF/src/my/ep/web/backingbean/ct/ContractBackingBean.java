@@ -4007,12 +4007,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		if(slLoaNo.substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)){
 			AmendmentBackingBean abb = new AmendmentBackingBean();
 			//follow structure but for amendment
-			DirectLOABackingBean directLoaBackingBean = new DirectLOABackingBean();
 			FacesContext fc = FacesContext.getCurrentInstance();
-//			directLoaBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
-//			directLoaBackingBean.getManagedBean().setTrackingDairyView(true);
-//			directLoaBackingBean.viewLOA(scLoa.getLoaId());
-			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId()+"?faces-redirect=true");
 			abb.getManagedBean().setTrackingDairyView(true);
 			abb.gotoAmendViewPage(contractId, scLoa.getLoaId());
 		}
