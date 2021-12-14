@@ -8048,30 +8048,59 @@ public class SmApplicationBackingBean extends
 				this.getManagedBean().getSelectedShareHolder()
 						.setIdentificationTypeId(personnelSSM.getIdentificationTypeId());
 			}
-			// end - #32014
-			if (personnelSSM != null && personnelSSM.getSmPersonnelAddresses() != null  //#32014
+
+			if(shareHolderBean.getSmPersonnelAddresses()!=null && shareHolderBean.getSmPersonnelAddresses().size()>0){
+				for (SmPersonnelAddress smpersonAddress : shareHolderBean.getSmPersonnelAddresses()){
+					if (SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE.equals(smpersonAddress.getAddressType())) {
+						getManagedBean().getShareHolderOffAddr().setSmAddress(smpersonAddress.getSmAddress());
+						initializeSmAddressChilds(getManagedBean().getShareHolderOffAddr().getSmAddress());
+					} else if (SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES.equals(smpersonAddress
+							.getAddressType())) {
+						getManagedBean().getShareHolderResdAddr().setSmAddress(smpersonAddress.getSmAddress());
+						initializeSmAddressChilds(getManagedBean().getShareHolderResdAddr().getSmAddress());
+					} else if (SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL.equals(smpersonAddress
+							.getAddressType())) {
+						getManagedBean().getShareHolderMailAddr().setSmAddress(smpersonAddress.getSmAddress());
+						initializeSmAddressChilds(getManagedBean().getShareHolderMailAddr().getSmAddress());
+					} else if (SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM.equals(smpersonAddress
+							.getAddressType())) {
+						getManagedBean().getShareHolderPermAddr().setSmAddress(smpersonAddress.getSmAddress());
+						initializeSmAddressChilds(getManagedBean().getShareHolderPermAddr().getSmAddress());
+					}
+				}
+			}
+			if (personnelSSM != null && personnelSSM.getSmPersonnelAddresses() != null // #32014
 					&& personnelSSM.getSmPersonnelAddresses().size() > 0) {
-				for(SmPersonnelAddress smpersonAddress : personnelSSM.getSmPersonnelAddresses()){
-					if((smpersonAddress.getSmAddress()!=null && smpersonAddress.getSmAddress().getPmDistrict()==null)||
-							(smpersonAddress.getSmAddress()!=null && smpersonAddress.getSmAddress().getPmCity()==null)
-							||smpersonAddress.getSmAddress()==null){
-						if(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE.equals(smpersonAddress.getAddressType())){
-							getManagedBean().getShareHolderOffAddr().setSmAddress(smpersonAddress.getSmAddress());
-							initializeSmAddressChilds(getManagedBean().getShareHolderOffAddr().getSmAddress());
-						}else if(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES.equals(smpersonAddress.getAddressType())){
-							getManagedBean().getShareHolderResdAddr().setSmAddress(smpersonAddress.getSmAddress());
-							initializeSmAddressChilds(getManagedBean().getShareHolderResdAddr().getSmAddress());
-						}else if(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL.equals(smpersonAddress.getAddressType())){
-							getManagedBean().getShareHolderMailAddr().setSmAddress(smpersonAddress.getSmAddress());
-							initializeSmAddressChilds(getManagedBean().getShareHolderMailAddr().getSmAddress());
-						}else if(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM.equals(smpersonAddress.getAddressType())){
-							getManagedBean().getShareHolderPermAddr().setSmAddress(smpersonAddress.getSmAddress());
-							initializeSmAddressChilds(getManagedBean().getShareHolderPermAddr().getSmAddress());
-						}
+				for (SmPersonnelAddress smpersonAddress : personnelSSM.getSmPersonnelAddresses()) {
+					if (SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE.equals(smpersonAddress.getAddressType())
+							&& (getManagedBean().getShareHolderOffAddr().getSmAddress() == null ||
+									getManagedBean().getShareHolderOffAddr().getSmAddress().getAddressId() == null)) {
+						getManagedBean().getShareHolderOffAddr().setSmAddress(smpersonAddress.getSmAddress());
+						initializeSmAddressChilds(getManagedBean().getShareHolderOffAddr().getSmAddress());
+						onChangeState(smpersonAddress.getSmAddress(), SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL);
+					} else if (SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES.equals(smpersonAddress
+							.getAddressType()) && (getManagedBean().getShareHolderResdAddr().getSmAddress() == null ||
+									getManagedBean().getShareHolderResdAddr().getSmAddress().getAddressId() == null)) {
+						getManagedBean().getShareHolderResdAddr().setSmAddress(smpersonAddress.getSmAddress());
+						initializeSmAddressChilds(getManagedBean().getShareHolderResdAddr().getSmAddress());
+						onChangeState(smpersonAddress.getSmAddress(), SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
+					} else if (SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL.equals(smpersonAddress
+							.getAddressType()) && (getManagedBean().getShareHolderMailAddr().getSmAddress() == null ||
+									getManagedBean().getShareHolderMailAddr().getSmAddress().getAddressId() == null)) {
+						getManagedBean().getShareHolderMailAddr().setSmAddress(smpersonAddress.getSmAddress());
+						initializeSmAddressChilds(getManagedBean().getShareHolderMailAddr().getSmAddress());
+						onChangeState(smpersonAddress.getSmAddress(), SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL);
+					} else if (SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM.equals(smpersonAddress
+							.getAddressType()) && (getManagedBean().getShareHolderPermAddr().getSmAddress() == null ||
+									getManagedBean().getShareHolderPermAddr().getSmAddress().getAddressId() == null)) {
+						getManagedBean().getShareHolderPermAddr().setSmAddress(smpersonAddress.getSmAddress());
+						initializeSmAddressChilds(getManagedBean().getShareHolderPermAddr().getSmAddress());
+						onChangeState(smpersonAddress.getSmAddress(), SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL);
 					}
 				}
 			}
 		}
+		// end - #32014
 		//end #31479
 		
 		//START 27821
