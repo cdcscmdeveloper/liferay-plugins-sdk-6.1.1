@@ -2310,8 +2310,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return isQTStatusGreaterThanOrEquals(currentStatusId, QTStatusConst.QT_BRIEFING_SITE_VISIT);
 	}
 	
-	public boolean isQTStatusEvaluation(Long currentStatusId) {//#25037 //#30477#60
-		return isQTStatusGreaterThan(currentStatusId, QTStatusConst.QT_EVALUATION_PROPOSAL);
+	public boolean isQTStatusEvaluation(Long currentStatusId) {//#25037
+		return isQTStatusGreaterThanOrEquals(currentStatusId, QTStatusConst.QT_EVALUATION_PROPOSAL);
 	}
 	
 	/**
