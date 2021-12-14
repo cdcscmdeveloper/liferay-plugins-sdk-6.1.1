@@ -34,11 +34,14 @@
 				<br />
 				<h:outputText
 					value="#{aprvdCatBean.pmCategoryL3.categoryL3Code} -  #{empty aprvdCatBean.categoryL3Name ? aprvdCatBean.pmCategoryL3.categoryName : aprvdCatBean.categoryL3Name}" />
-				<!-- 30865 Start -->
-				<p:outputLabel rendered="#{aprvdCatBean.cancelCategory}" styleClass="warning" style="color:red !important; text-align:left;">
+				<!-- 30865,32298 Start -->
+				<p:outputLabel rendered="#{aprvdCatBean.cancelCategory and aprvdCatBean.typeDisciplinaryAction eq 'C'}" styleClass="warning" style="color:red !important; text-align:left;">
 					<h:outputText value="#{lbl['lbl.sm.cancellation.of.category.code.by.disciplinary.action']}"/>
 				</p:outputLabel>
-				<!-- 30865 End -->
+				<p:outputLabel rendered="#{aprvdCatBean.cancelCategory and aprvdCatBean.typeDisciplinaryAction eq 'M'}" styleClass="warning" style="color:red !important; text-align:left;">
+					<h:outputText value="#{lbl['lbl.sm.cancellation.manufacturer.category.code.by.disciplinary.action']}"/>
+				</p:outputLabel>
+				<!-- 30865,32298 End -->
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" style="white-space : normal">
 				<h:outputText value="#{lbl['lbl.sm.no.available']}"
