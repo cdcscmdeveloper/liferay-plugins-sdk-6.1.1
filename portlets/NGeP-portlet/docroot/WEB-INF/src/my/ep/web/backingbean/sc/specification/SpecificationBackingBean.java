@@ -19805,8 +19805,17 @@ if(null!=allTechnicalChecklist){
 			
 			reqDTO1.setCheckLists(updatedCheckListsDemo);
 			reqDTO1.setTobeRemoveList(updatedCheckListsOtherDemo);
+			/*
+			 * Development #29305, Added SLA log to check updateDemoScoreWeightage Performance
+			 * START
+			 */
+			startTime = System.currentTimeMillis();
 			resDTO1 = specSO.updateDemoScoreWeightage(reqDTO1);
-			
+			SLAUtils.getInstance().logSQLPerformanceInfo("QT","DEMO WEIGHTAGE","QTSpecSO.updateDemoScoreWeightage", startTime,"#29305");
+			/*
+			 * Development #29305, Added SLA log to check updateDemoScoreWeightage Performance
+			 * END
+			 */
 			List<ScQtCheckList> savedCheckListsDemo = resDTO1.getSavedCheckLists();
 			specCommitteeResetData();
 			// settemplateSpecList(savedCheckLists);
