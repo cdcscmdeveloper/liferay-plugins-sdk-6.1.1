@@ -4028,10 +4028,18 @@ public class SmApplicationUtil {
 				} else if (cat.getRecordStatusFlg().compareTo(DbValueConst.RECORD_STATUS_CANCELLED) == 0){
 					if(managedBean.getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)){
 						SmDisciplinaryAction smDisciplinaryAction = retrieveActiveSmDisciplinaryActionByDisciplinaryId(cat.getDisciplinaryActionId());
-						if(smDisciplinaryAction.getRecordStatusFlg() != null && smDisciplinaryAction.getRecordStatusFlg() == 1 && !smDisciplinaryAction.isBumiputeraCancel() && !smDisciplinaryAction.isManufacturerCancel()){
+
+						//#32298 DA cancel manufacture alert warning - start - <26238>
+						if(smDisciplinaryAction.getRecordStatusFlg() != null && smDisciplinaryAction.getRecordStatusFlg() == 1 && !smDisciplinaryAction.isBumiputeraCancel()){
 							cat.setCancelCategory(true);
+							if(smDisciplinaryAction.isCancelCategory()){
+								cat.setTypeDisciplinaryAction("C"); 
+							}else if(smDisciplinaryAction.isManufacturerCancel()){
+								cat.setTypeDisciplinaryAction("M"); 
+							}
 							apprvList.add(cat);
 						}
+						//#32298 DA cancel manufacture alert warning - end - <26238>
 					}
 				}
 				//30865, 30921  - Ends
