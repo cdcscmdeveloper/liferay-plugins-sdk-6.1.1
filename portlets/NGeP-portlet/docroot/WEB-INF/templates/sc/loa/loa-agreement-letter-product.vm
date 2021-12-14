@@ -1341,7 +1341,10 @@ u.underline {
 								#end
 							#end
 											
-							<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="2">$serviceScope</td>
+							#if ($rowCount == 0)
+								#set($rowCount = $rowCount + 1)
+								<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="$tplspecQuestion.specCount"></td>
+							#end
 							</tr>	
 							
 							<tr>
@@ -1373,7 +1376,10 @@ u.underline {
 								<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$bean.getParameterDescForReport($tplspecQuestion.clPriceTypeCode)</td>
 								<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clQuantity</td>
 								<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$serviceScope</td>	
-								<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="2">$serviceScope</td>
+								#if ($rowCount == 0)
+									#set($rowCount = $rowCount + 1)
+									<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="$tplspecQuestion.specCount"></td>
+								#end
 								</tr>	
 								
 								<tr>
@@ -1444,7 +1450,7 @@ u.underline {
 								<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px;">Kuantiti</th>
 								<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px;"><nobr>Kuantiti Berperingkat</nobr></th>
 								
-					            <th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Maklumbalas</th>
+					            <th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Maklum Bala</th>
 					         	<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Catatan</th>
 								<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Skop Perkhidmatan / SLA</th>
 							</tr>
@@ -1592,6 +1598,8 @@ u.underline {
 													<tr>
 														#if ($answerRemark) 
 															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$answerRemark</td>
+														#else
+															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$serviceScope</td>
 														#end
 													</tr>
 													</tbody>
@@ -1600,7 +1608,10 @@ u.underline {
 										#end
 									</td>
 									
-									<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="2">$serviceScope</td>
+									#if ($rowCount == 0)
+										#set($rowCount = $rowCount + 1)
+										<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$tplspecQuestion.specCount"></td>
+									#end
 									</tr>
 								
 									<tr>
@@ -1661,6 +1672,8 @@ u.underline {
 													<tr>
 														#if ($answerRemark) 
 															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$answerRemark</td>
+														#else
+															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$serviceScope</td>
 														#end
 													</tr>
 													</tbody>
@@ -1669,7 +1682,10 @@ u.underline {
 										#end
 									</td>
 													
-									<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="2">$serviceScope</td>
+									#if ($rowCount == 0)
+										#set($rowCount = $rowCount + 1)
+										<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$tplspecQuestion.specCount"></td>
+									#end
 									</tr>	
 									
 									<tr>
@@ -1883,7 +1899,10 @@ u.underline {
 											#end
 									#end
 									
-									<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="2">$serviceScope</td>
+									#if ($rowCount == 0)
+										#set($rowCount = $rowCount + 1)
+										<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$tplspecQuestion.specCount"></td>
+									#end
 									</tr>
 								
 									<tr>
@@ -1935,7 +1954,10 @@ u.underline {
 										
 										
 													
-									<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="2">$serviceScope</td>
+									#if ($rowCount == 0)
+										#set($rowCount = $rowCount + 1)
+										<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$tplspecQuestion.specCount"></td>
+									#end
 									</tr>	
 									
 									<tr>
@@ -2004,7 +2026,7 @@ u.underline {
 								#end
 									
 								<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Kuantiti</th>
-								<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Maklumbalas</th>
+								<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Maklum Bala</th>
 								<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Catatan</th>
 								<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Skop Perkhidmatan / SLA</th>
 							</tr>
@@ -2134,7 +2156,9 @@ u.underline {
 													<tbody>
 													<tr>
 														#if ($answerRemark) 
-														<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$answerRemark</td>
+															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$answerRemark</td>
+														#else
+															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$serviceScope</td>
 														#end
 													</tr>
 													</tbody>
@@ -2143,7 +2167,10 @@ u.underline {
 										#end
 									</td>
 									
-									<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="2">$serviceScope</td>
+									#if ($rowCount == 0)
+										#set($rowCount = $rowCount + 1)
+										<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$tplspecQuestion.specCount"></td>
+									#end
 									</tr>
 								
 									<tr>
@@ -2219,6 +2246,8 @@ u.underline {
 													<tr>
 														#if ($answerRemark) 
 															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$answerRemark</td>
+														#else
+															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$serviceScope</td>
 														#end
 													</tr>
 													</tbody>
@@ -2227,7 +2256,10 @@ u.underline {
 										#end
 									</td>
 													
-									<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="2">$serviceScope</td>
+									#if ($rowCount == 0)
+										#set($rowCount = $rowCount + 1)
+										<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$tplspecQuestion.specCount"></td>
+									#end
 									</tr>	
 									
 									<td bgcolor="#d0eaee" colspan="5">						
