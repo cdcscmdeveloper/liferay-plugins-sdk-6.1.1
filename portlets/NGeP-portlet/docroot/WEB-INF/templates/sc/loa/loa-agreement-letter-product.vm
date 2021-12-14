@@ -639,7 +639,7 @@ u.underline {
 						<table>
 								<tr>
 									<td align="center" style="vertical-align: top;" class="text_family_header">3. </td>
-									<td class="text_header_submenu">Pendaftaran Cukai Perkhidmatan dengan Jabatan	Kastam Diraja Malaysia (jika berdaftar), sekiranya berkaitan</td>
+									<td class="text_header_submenu">Pendaftaran Cukai Jualan dengan Jabatan	Kastam Diraja Malaysia (jika berdaftar), sekiranya berkaitan</td>
 								</tr>
 						</table>
 					</td>
@@ -771,7 +771,7 @@ u.underline {
 				</tr>
 				<tr>
 					<td align="left" style="padding-left: 8px;" colspan="3"><span
-						class="text_family_red">*Spesifikasi Pembekalan yang
+						class="text_family_red">*Spesifikasi pembekalan yang
 							ditetapkan seperti di <b><i>Lampiran A3</i></b>
 					</span></td>
 				</tr>
