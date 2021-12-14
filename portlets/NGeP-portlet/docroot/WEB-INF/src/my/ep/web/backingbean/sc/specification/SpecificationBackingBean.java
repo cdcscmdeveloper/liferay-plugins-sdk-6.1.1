@@ -207,7 +207,6 @@ import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
-import my.ep.web.backingbean.sc.demoInvitation.DemoInvitationBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.CreateQtBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -954,6 +953,7 @@ public class SpecificationBackingBean extends
 	 * @param activeIndex
 	 *            (int activeIndex).
 	 */
+	private int nextIndex = 0;//32204
 	public void qtChecklistTabChange(int activeIndex) {
 
 		int previousIndex = this.getManagedBean().getActiveIndex();
@@ -1015,6 +1015,7 @@ public class SpecificationBackingBean extends
 					
 				}
 				if(showFinSpecChangedAlert && this.getManagedBean().isTechnicalTemplateEdited() && !this.getManagedBean().isFromSubmit()){
+					nextIndex = activeIndex;//32204
 					RequestContext.getCurrentInstance().execute("alertFinancialTemplateIncompletePopup.show()");
 					this.getManagedBean().setTechnicalOtherCheckList(false);
 				}else{
@@ -18406,7 +18407,10 @@ if(null!=allTechnicalChecklist){
 			qtChecklistTabChange(3);
 			this.getManagedBean().setFromSubmit(false);
 		}else{
-			validateTechnicalStandardCheckList();
+			//32204 - start
+			boolean check = validateTechnicalStandardCheckList();
+			if(check) this.getManagedBean().setActiveIndex(nextIndex);	
+			//32204 - end
 		}
 	}
 	//#1873-end
