@@ -2326,10 +2326,12 @@ public class CommitteBackingBean extends
 		if (SCProcessNameConst.ASSIGN_FC_MEMBER.equalsIgnoreCase(this
 				.getManagedBean().getTaskName())) {
 			SCEvaluationDataType evaluationDataType = (SCEvaluationDataType) payLoad;
-			
-			retrieveCommitteDetails(Long.valueOf(evaluationDataType.getQtId()), evaluationDataType
-					.getCommitteeType());
-			
+			//#31870 - START
+			/*retrieveCommitteDetails(Long.valueOf(evaluationDataType.getQtId()), evaluationDataType
+					.getCommitteeType());*/
+			retrieveCommitteDetailsWithChecking(Long.valueOf(evaluationDataType.getQtId()), evaluationDataType
+					.getCommitteeType(),evaluationDataType.getFcSecretary());
+			//#31870 - END
 			getManagedBean().setPayLoad(evaluationDataType);
 		}
 
@@ -2358,12 +2360,12 @@ public class CommitteBackingBean extends
 					ParameterHelper.getInstance().getParameterDesc(
 							ParameterTypeConst.SC_COMMITTEE_TYPE,
 							qtCommittee.getScCommittee().getCommitteeType().getParameterCode()));
+			
 			this.getManagedBean().setScCommittee(qtCommittee.getScCommittee());
 			this.getManagedBean().setCommitteeType(committeeType);
 			this.getManagedBean().setQt(qtCommittee.getScQt());			
 			this.getManagedBean().setCommitteeQTDataModel(
 					new committeeQTPagingDataModel("qtDetailsId", getManagedBean().getScCommittee()));
-			
 		} finally {
 			committeSO = null;
 		}
@@ -2489,5 +2491,97 @@ public class CommitteBackingBean extends
 		history.setScCommittee(resDTO.getCommittee());
 	}
 	//#25037-end
+	
+	//#31870 - START
+	private void retrieveCommitteDetailsWithChecking(Long qtId, String committeeType, String loginId) {
+		ICommitteSO committeSO = null;
+		try {
+			log.info("USER_ID === "+loginId);
+			committeSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							ICommitteSO.class);
+			CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+			committeReqDTO.setQtId(qtId);
+			committeReqDTO.setCommitteeType(committeeType);
+			// committeReqDTO.setCommitteeType("QCA");
+			CommitteResDTO committeResDTO = committeSO
+					.retrieveCommitteByQtIdNCommType(committeReqDTO);
+			ScQtCommittee qtCommittee = committeResDTO.getScQtCommittee();
+			this.getManagedBean().setQtCommittee(qtCommittee);
+			this.getManagedBean().setHeaderTitle(
+					ParameterHelper.getInstance().getParameterDesc(
+							ParameterTypeConst.SC_COMMITTEE_TYPE,
+							qtCommittee.getScCommittee().getCommitteeType().getParameterCode()));
+			List<ScCommitteeMember> committeeMemberList = qtCommittee.getScCommittee().getScCommitteeMembers();
+			Boolean checkIsExistFCSecretary = Boolean.FALSE;
+			
+			if(isNotNullOREmpty(committeeMemberList)){
+				for(int a=0; a < committeeMemberList.size(); a++){
+					log.info("Member Role == "+committeeMemberList.get(a).getMemberRole().getParameterCode());
+					if("S".equalsIgnoreCase(committeeMemberList.get(a).getMemberRole().getParameterCode())){
+						checkIsExistFCSecretary = Boolean.TRUE;
+						break;
+					}
+				}
+			}
+			
+			if(!checkIsExistFCSecretary & !isNullOrEmpty(loginId)){
+				log.info("No FC Secretary is exist inside the FC Committee == ");
+				try{
+					//Insert record for FC Secretary, due to issued on
+					//FC Secretary record is missing inside table SC_COMMITTEE_MEMBER for selected QT
+					ScCommitteeMember secretaryMember = new ScCommitteeMember();
+					UserReqDTO userReqDTO = new UserReqDTO();
+					userReqDTO.setLoginId(loginId);
+					PmUser user = getUserSO().retrieveUserByLoginId(userReqDTO).getPmUser();
+					secretaryMember.setPmUser(user);
+					secretaryMember.setMemberName(user.getUserName());
+					secretaryMember.setIcPassport(user.getIdentificationNo());
+					secretaryMember.setGrade(user.getGrade());
+					if (null != user.getDesignation()) {
+						secretaryMember.setDesignation(user.getDesignation());
+					}
+					secretaryMember.setPNP(user.isPMP());
+					secretaryMember.setEmail(user.getEmail());
+					ParameterReqDTO roleReqDTO = new ParameterReqDTO();
+					roleReqDTO.setParameterCode(ParameterConst.COMMITTEE_ROLE_SECRETARY);
+					roleReqDTO.setParameterType(ParameterTypeConst.COMMITTEE_ROLE);
+					ParameterResDTO roleResDTO = getParameterSO().retrieveParameterByTypeAndCode(roleReqDTO);
+					secretaryMember.setMemberRole(roleResDTO.getPmParameter());
+					if (secretaryMember.getMemberRole() != null) {
+						secretaryMember.setMemberRoleId(secretaryMember.getMemberRole().getParameterId());	
+					}
+					secretaryMember.setAccessRight(SourcingConstants.ACCESS_RIGHT_EDITABLE);
+					PmOrgProfile pmOrgProfile = null;
+					OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+					reqDTO.setUserId(user.getUserId());
+					reqDTO.setOrgType(OrganizationType.DIVISION.value());
+					OrgProfileResDTO resDTO = getOrgProfileSO()
+							.retrieveOrgProfileListByOrgType(reqDTO);
+					List<PmOrgProfile> pmOrgProfiles = resDTO.getOrgProfileList();
+					if (pmOrgProfiles != null && pmOrgProfiles.size() > 0) {
+						pmOrgProfile = pmOrgProfiles.get(0);
+					}
+					
+					secretaryMember.setPmOrgProfile(pmOrgProfile);
+					secretaryMember.setScCommittee(qtCommittee.getScCommittee());
+					getCommitteeSO().saveCommitteeMember(secretaryMember);
+					
+					renewCommitteeSessionObject();
+					retrieveCommitteDetails(qtId,committeeType);
+				}catch(Exception e){
+					log.info("Error During Insert === ");
+				}
+			}
+			this.getManagedBean().setScCommittee(qtCommittee.getScCommittee());
+			this.getManagedBean().setCommitteeType(committeeType);
+			this.getManagedBean().setQt(qtCommittee.getScQt());			
+			this.getManagedBean().setCommitteeQTDataModel(
+					new committeeQTPagingDataModel("qtDetailsId", getManagedBean().getScCommittee()));
+		} finally {
+			committeSO = null;
+		}
+	}
+	//#31870 - END
 
 }
