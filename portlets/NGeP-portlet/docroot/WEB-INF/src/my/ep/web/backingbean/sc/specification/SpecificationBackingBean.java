@@ -966,6 +966,7 @@ public class SpecificationBackingBean extends
 	 * @param activeIndex
 	 *            (int activeIndex).
 	 */
+	private int nextIndex = 0;//32204
 	public void qtChecklistTabChange(int activeIndex) {
 
 		int previousIndex = this.getManagedBean().getActiveIndex();
@@ -1027,6 +1028,7 @@ public class SpecificationBackingBean extends
 					
 				}
 				if(showFinSpecChangedAlert && this.getManagedBean().isTechnicalTemplateEdited() && !this.getManagedBean().isFromSubmit()){
+					nextIndex = activeIndex;//32204
 					RequestContext.getCurrentInstance().execute("alertFinancialTemplateIncompletePopup.show()");
 					this.getManagedBean().setTechnicalOtherCheckList(false);
 				}else{
@@ -19182,7 +19184,10 @@ if(null!=allTechnicalChecklist){
 			qtChecklistTabChange(3);
 			this.getManagedBean().setFromSubmit(false);
 		}else{
-			validateTechnicalStandardCheckList();
+			//32204 - start
+			boolean check = validateTechnicalStandardCheckList();
+			if(check) this.getManagedBean().setActiveIndex(nextIndex);	
+			//32204 - end
 		}
 	}
 	//#1873-end
