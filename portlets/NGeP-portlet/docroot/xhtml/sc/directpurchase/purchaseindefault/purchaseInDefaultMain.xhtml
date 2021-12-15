@@ -100,12 +100,14 @@
 			test="#{purchaseInDefaultBackingBean.managedBean.taskId ne null and isPendingSubmissionStatus}">
 			<table style="width: 100%">
 				<tr>
-					<td align="right">						
-						<p:commandButton
+					<td align="right">
+						<!-- #9133 - start (hide button back on pending submission status)-->						
+						<!-- <p:commandButton
 							immediate="true" value="#{lbl['lbl.btn.back']}"
 							partialSubmit="true" process="@this" style="float:left;"
 							rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag}"
-							action="#{purchaseInDefaultBackingBean.backToPrevious}" />
+							action="#{purchaseInDefaultBackingBean.backToPrevious}" /> -->
+						<!-- #9133 - end (hide button back on pending submission status)-->	
 						<p:commandButton value="#{lbl['lbl.btn.save']}"
 							action="#{purchaseInDefaultBackingBean.submitPurchaseInDefault(draft)}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
