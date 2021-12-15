@@ -297,7 +297,10 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 								#end
 							#end
 											
-							<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="2">$serviceScope</td>
+							#if ($rowCount == 0)
+								#set($rowCount = $rowCount + 1)
+								<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
+							#end
 							</tr>	
 							
 							<tr>
@@ -329,7 +332,10 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 								<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$bean.getParameterDescForReport($tplspecQuestion.clPriceTypeCode)</td>
 								<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clQuantity</td>
 								<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$serviceScope</td>	
-								<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="2">$serviceScope</td>
+								#if ($rowCount == 0)
+										#set($rowCount = $rowCount + 1)
+										<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
+									#end
 								</tr>	
 								
 								<tr>
@@ -572,7 +578,10 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 										#end
 									</td>
 									
-									<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="2">$serviceScope</td>
+									#if ($rowCount == 0)
+										#set($rowCount = $rowCount + 1)
+										<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
+									#end
 									</tr>
 								
 									<tr>
@@ -643,7 +652,10 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 										#end
 									</td>
 													
-									<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="2">$serviceScope</td>
+									#if ($rowCount == 0)
+										#set($rowCount = $rowCount + 1)
+										<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
+									#end
 									</tr>	
 									
 									<tr>
@@ -877,7 +889,10 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 											#end
 									#end
 											
-							<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="2">$serviceScope</td>
+							#if ($rowCount == 0)
+										#set($rowCount = $rowCount + 1)
+										<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
+									#end
 							</tr>	
 							
 							<tr>
@@ -925,7 +940,10 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 									
 									
 												
-								<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="2">$serviceScope</td>
+								#if ($rowCount == 0)
+										#set($rowCount = $rowCount + 1)
+										<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
+									#end
 								</tr>		
 								
 								<tr>
@@ -1134,7 +1152,10 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 										#end
 									</td>
 									
-									<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="2">$serviceScope</td>
+									#if ($rowCount == 0)
+										#set($rowCount = $rowCount + 1)
+										<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
+									#end
 									</tr>
 								
 									<tr>
@@ -1215,7 +1236,10 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 										#end
 									</td>
 													
-									<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="2">$serviceScope</td>
+									#if ($rowCount == 0)
+										#set($rowCount = $rowCount + 1)
+										<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
+									#end
 									</tr>	
 									
 									<tr>
