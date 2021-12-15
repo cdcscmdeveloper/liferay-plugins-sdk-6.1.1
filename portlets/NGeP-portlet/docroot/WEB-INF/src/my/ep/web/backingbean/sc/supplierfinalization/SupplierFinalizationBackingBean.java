@@ -10797,5 +10797,49 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		}
 	}
 	// #28834 - End. 
+	
+	//#29562 - START
+		/**
+		 * Reset search field
+		 */
+		public void resetSelectedItemSupplierandRemarks() {
+			//reset select all item list
+			this.getManagedBean().setSelectAll(false);
+
+			//reset selected item list
+			for(int i = 0; i < this.getManagedBean().getItemList().size();){
+				if (this.getManagedBean().getItemList().get(i).isSelected()){
+					this.getManagedBean().getItemList().get(i).setSelected(false);
+					i++;
+				}
+				else{
+					break;
+				}
+			}
+			
+			//reset selected suppliers in supplier list table
+			for(int j = 0; j < this.getManagedBean().getShortlistedSuppliersByRecommendType().getList().size();){
+				if (this.getManagedBean().getShortlistedSuppliersByRecommendType().getList().get(j).isShortListed()){
+					this.getManagedBean().getShortlistedSuppliersByRecommendType().getList().get(j).setShortListed(false);
+					j++;
+				}
+				else{
+					break;
+				}
+			}
+
+			//reset remarks
+			for(int k = 0; k < this.getManagedBean().getScRemarks().size(); k++){
+				if (this.getManagedBean().getScRemarks().get(k).getRemark() != null){
+					this.getManagedBean().getScRemarks().get(k).setRemark(null);
+				}
+				else{
+					break;
+				}
+			}
+			
+		}
+		//#29562 - END
+		
 }
 // ***19336
