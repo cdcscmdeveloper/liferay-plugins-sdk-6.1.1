@@ -299,7 +299,7 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 											
 							#if ($rowCount == 0)
 								#set($rowCount = $rowCount + 1)
-								<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="$tplspecQuestion.specCount"></td>
+								<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
 							#end
 							</tr>	
 							
@@ -333,9 +333,9 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 								<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clQuantity</td>
 								<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$serviceScope</td>	
 								#if ($rowCount == 0)
-									#set($rowCount = $rowCount + 1)
-									<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="$tplspecQuestion.specCount"></td>
-								#end
+										#set($rowCount = $rowCount + 1)
+										<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
+									#end
 								</tr>	
 								
 								<tr>
@@ -424,7 +424,7 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 								<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px;">Kuantiti</th>
 								<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px;"><nobr>Kuantiti Berperingkat</nobr></th>
 								
-					            <th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Maklum Balas</th>
+					            <th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Maklumbalas</th>
 					         	<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Catatan</th>
 								<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Skop Perkhidmatan / SLA</th>
 							</tr>
@@ -580,7 +580,7 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 									
 									#if ($rowCount == 0)
 										#set($rowCount = $rowCount + 1)
-										<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="$tplspecQuestion.specCount"></td>
+										<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
 									#end
 									</tr>
 								
@@ -654,7 +654,7 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 													
 									#if ($rowCount == 0)
 										#set($rowCount = $rowCount + 1)
-										<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="$tplspecQuestion.specCount"></td>
+										<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
 									#end
 									</tr>	
 									
@@ -890,9 +890,9 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 									#end
 											
 							#if ($rowCount == 0)
-								#set($rowCount = $rowCount + 1)
-								<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="$tplspecQuestion.specCount"></td>
-							#end
+										#set($rowCount = $rowCount + 1)
+										<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
+									#end
 							</tr>	
 							
 							<tr>
@@ -941,9 +941,9 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 									
 												
 								#if ($rowCount == 0)
-									#set($rowCount = $rowCount + 1)
-									<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="$tplspecQuestion.specCount"></td>
-								#end
+										#set($rowCount = $rowCount + 1)
+										<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
+									#end
 								</tr>		
 								
 								<tr>
@@ -1012,7 +1012,7 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 								#end
 									
 								<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Kuantiti</th>
-								<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Maklum Balas</th>
+								<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Maklumbalas</th>
 								<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Catatan</th>
 								<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Skop Perkhidmatan / SLA</th>
 							</tr>
@@ -1154,7 +1154,7 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 									
 									#if ($rowCount == 0)
 										#set($rowCount = $rowCount + 1)
-										<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="$tplspecQuestion.specCount"></td>
+										<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
 									#end
 									</tr>
 								
@@ -1238,7 +1238,7 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 													
 									#if ($rowCount == 0)
 										#set($rowCount = $rowCount + 1)
-										<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="$tplspecQuestion.specCount"></td>
+										<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
 									#end
 									</tr>	
 									
