@@ -477,7 +477,8 @@ public class SupplierDataMaintenanceBackingBean extends
 				suppReqDTO.setSupplierId(getManagedBean().getSmSupplier().getSupplierId());
 				SupplierSearchResDTO suppResDTO = supplierSearchSO.retriveSupplierById(suppReqDTO);
 				
-				if(suppResDTO.getSmSupplier().getRecordStatusFlg().equals(9)){
+				//32329 - start
+				if(suppResDTO.getSmSupplier().getRecordStatusFlg().equals(0)){
 					for(SmDisciplinaryAction smDA: suppResDTO.getSmSupplier().getSmDisciplinaryActions()){
 						if(smDA.isCancelRegistration()){
 							suppResDTO.getSmSupplier().setTypeDisciplinaryAction("C");
@@ -489,8 +490,10 @@ public class SupplierDataMaintenanceBackingBean extends
 						}
 					}
 				}
+				//32329 - end
 				getManagedBean().setSmSupplier(suppResDTO.getSmSupplier());
 				getManagedBean().getBasicSupplierDataModel().getList().set(index, getManagedBean().getSmSupplier());
+				
 			}
 			//26238 - Disciplinary Action - 28798 - end
 			
