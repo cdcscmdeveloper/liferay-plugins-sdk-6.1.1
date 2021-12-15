@@ -147,12 +147,12 @@
 
 			</div>
 		</p:dialog>
-		
+		<!-- 32044  start -->
 		<p:dialog id="submissionPopupAndNewComId" widgetVar="submissionPopupAndNewCom"
 			header="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit.header']}"
-			resizable="false" width="325" height="100" closable="false"
+			resizable="false" width="325" height="130" closable="false"
 			modal="true">
-
+		<!-- 32044  end -->
 			<table>
 				<tr>
 					<td align="center"><h:graphicImage
@@ -162,14 +162,12 @@
 			</table>
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
+				<!-- 32044  start -->
+				<p:commandButton value="#{lbl['lbl.btn.proceed']}" partialSubmit="true"
 					action="#{consolidationReportBackingBean.submitConsolidationReport}"
 					oncomplete="submissionPopupAndNewCom.hide();" update="@form">
 				</p:commandButton>
-
-				<p:commandButton value="#{lbl['lbl.btn.no']}" immediate="true"
-					oncomplete="submissionPopupAndNewCom.hide();" />
-
+				<!-- 32044  end -->
 			</div>
 		</p:dialog>
 	</ui:define>
