@@ -3644,6 +3644,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				
 			}
 			question.setSpecList(specList);
+			// #26130 - Start
+			if (CollectionUtils.isNotEmpty(specList)) {
+				if (CollectionUtils.isNotEmpty(feedbackList)) {
+					feedbackList.add(0, "&nbsp;");
+				}
+				if (CollectionUtils.isNotEmpty(answerRemarkList)) {
+					answerRemarkList.add(0, "&nbsp;");
+				}
+			}
+			// #26130 - End
 			question.setFeedbackList(feedbackList);
 			question.setAnswerRemarkList(answerRemarkList);
 		}
@@ -5066,6 +5076,19 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		public void saveScQtFinalizationReport(ScQtFinalizationReport finalizationReport) {
 			IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 			try {
+				
+				if (null != finalizationReport && null != finalizationReport.getScQtFinalizationReportAttachment()
+						&& StringUtils.isNotEmpty(finalizationReport.getScQtFinalizationReportAttachment().getFilePath())) {
+					  String filePath = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR) 
+							  + CommonConstants.DOC_REPO_PATH_SEPARATOR 
+							  + finalizationReport.getScQtFinalizationReportAttachment().getFilePath();
+					  File file = new File(filePath);
+					  if (null != file && file.exists()) {
+						  file.delete();
+					  }
+					  finalizationReport.setScQtFinalizationReportAttachment(null);
+				}
+				
 				qtSuppFinalizationSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 								IQTSuppFinalizationSO.class);
