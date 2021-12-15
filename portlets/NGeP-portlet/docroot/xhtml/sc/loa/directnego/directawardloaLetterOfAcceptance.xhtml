@@ -108,8 +108,10 @@
 					rendered="#{empty scLoaReport.pmDocument}">
 					<p:ajax partialSubmit="true" process="@this" update="@this" />
 				</h:inputText>
-				<h:outputText value="#{scLoaReport.title}"
+				<!-- #26770 start -->
+				<h:outputText value="#{directLOABackingBean.setValueLowercase(scLoaReport.title,21)}"
 					rendered="#{!empty scLoaReport.pmDocument}" />
+				<!-- #26770-end -->	
 				<h:panelGroup id="SuratSetujuTerimaId"
 					rendered="#{(scLoaReport.pmDocument.docDefinitionTypeCode.parameterCode eq 'UD' or scLoaReport.pmDocument.docDefinitionTypeCode.parameterCode eq 'UP') and isPendingSubmissionStatus}">
 					<span style="color: red;">*</span>
