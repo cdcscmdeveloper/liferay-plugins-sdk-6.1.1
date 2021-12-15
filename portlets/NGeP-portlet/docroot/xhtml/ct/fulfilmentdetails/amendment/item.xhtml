@@ -716,18 +716,24 @@
                 currentPageReportTemplate="Page &#160; {currentPage}/{totalPages}">   
    					<p:column styleClass="column-align-center" style="white-space:normal;">    						  				
       					<f:facet name = "header">#{lbl['lbl.ct.specification']}</f:facet>      					
-      					<h:outputText value="#{item.itemSpec}" style="float:left;" rendered="#{item.itemSpec ne null}"></h:outputText>							
-      					<h:outputText value="#{lbl['lbl.sc.qt.item.spec.null']}" style="float:left;" rendered="#{item.itemSpec eq null}"></h:outputText> 									
+      					<!-- #31558 start - Aligning the content to the left -->
+      					<h:outputText value="#{item.itemSpec}" style="float:left;text-align:left;" rendered="#{item.itemSpec ne null}"></h:outputText>							
+      					<h:outputText value="#{lbl['lbl.sc.qt.item.spec.null']}" style="float:left;text-align:left;" rendered="#{item.itemSpec eq null}"></h:outputText> 									
+   						<!-- #31558 end -->
    					</p:column>   
    					<p:column styleClass="column-align-center" style="white-space:normal;">
      					<f:facet name = "header">#{lbl['lbl.ct.supp.offer']}</f:facet>     					
-     					<h:outputText value="#{item.supplierOffer}" style="float:left;" rendered="#{item.supplierOffer ne null}"></h:outputText>	      					
-      					<h:outputText value="#{lbl['lbl.sc.qt.item.spec.null']}" style="float:left;" rendered="#{item.supplierOffer eq null}"></h:outputText>     																											
+     					<!-- #31558 start - Aligning the content to the left -->
+     					<h:outputText value="#{item.supplierOffer}" style="float:left;text-align:left;" rendered="#{item.supplierOffer ne null}"></h:outputText>	      					
+      					<h:outputText value="#{lbl['lbl.sc.qt.item.spec.null']}" style="float:left;text-align:left;" rendered="#{item.supplierOffer eq null}"></h:outputText>     																											
+   						<!-- #31558 end -->
    					</p:column>   
    					<p:column styleClass="column-align-center" style="white-space:normal;">
       					<f:facet name = "header">#{lbl['lbl.ct.new.offer.spec']}</f:facet>     					
-      					<h:outputText value="#{item.newOfferSpec}" style="float:left;" rendered="#{item.newOfferSpec ne null}"></h:outputText>        					
-      					<h:outputText value="#{lbl['lbl.sc.qt.item.spec.null']}" style="float:left;" rendered="#{item.newOfferSpec eq null}"></h:outputText>    					   										
+      					<!-- #31558 start - Aligning the content to the left -->
+      					<h:outputText value="#{item.newOfferSpec}" style="float:left;text-align:left;" rendered="#{item.newOfferSpec ne null}"></h:outputText>        					
+      					<h:outputText value="#{lbl['lbl.sc.qt.item.spec.null']}" style="float:left;text-align:left;" rendered="#{item.newOfferSpec eq null}"></h:outputText>    					   										
+   						<!-- #31558 end -->
    					</p:column>  			
 				</p:dataTable>
 			</h:panelGrid>			
