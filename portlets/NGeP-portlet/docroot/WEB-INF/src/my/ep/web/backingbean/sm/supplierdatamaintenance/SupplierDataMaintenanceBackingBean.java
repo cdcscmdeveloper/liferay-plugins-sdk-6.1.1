@@ -1,8 +1,6 @@
 package my.ep.web.backingbean.sm.supplierdatamaintenance;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -92,8 +90,6 @@ import my.ep.web.vo.DisciplinaryActionVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.primefaces.context.RequestContext;
-
-import com.liferay.portal.model.Role;
 
 @ManagedBean(name = "supplierDataMaintenanceBackingBean")
 @RequestScoped
@@ -472,7 +468,8 @@ public class SupplierDataMaintenanceBackingBean extends
 				suppReqDTO.setSupplierId(getManagedBean().getSmSupplier().getSupplierId());
 				SupplierSearchResDTO suppResDTO = supplierSearchSO.retriveSupplierById(suppReqDTO);
 				
-				if(suppResDTO.getSmSupplier().getRecordStatusFlg().equals(9)){
+				//32329 - start
+				if(suppResDTO.getSmSupplier().getRecordStatusFlg().equals(0)){
 					for(SmDisciplinaryAction smDA: suppResDTO.getSmSupplier().getSmDisciplinaryActions()){
 						if(smDA.isCancelRegistration()){
 							suppResDTO.getSmSupplier().setTypeDisciplinaryAction("C");
@@ -484,6 +481,7 @@ public class SupplierDataMaintenanceBackingBean extends
 						}
 					}
 				}
+				//32329 - end
 				getManagedBean().setSmSupplier(suppResDTO.getSmSupplier());
 				getManagedBean().getBasicSupplierDataModel().getList().set(index, getManagedBean().getSmSupplier());
 			}
