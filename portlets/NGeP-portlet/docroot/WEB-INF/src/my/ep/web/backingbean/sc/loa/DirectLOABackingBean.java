@@ -374,7 +374,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if(scLoaReportAttachmentGenerated != null) {
 			String prefixName = scLoaReport.getTitle().replaceAll(
 					SourcingConstants.REG_EXP_WHITE_SPACE, "");
-			scLoaReportAttachmentGenerated.setTempFileName(prefixName);
+
+			//#26770-start
+				scLoaReportAttachmentGenerated.setTempFileName(setValueLowercase(prefixName, 18));
+			//26770-start
 		}
 		downloadFile(scLoaReportAttachmentGenerated);
 	}
@@ -4162,7 +4165,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			if (StringUtils.isNotBlank(scLoaReport.getTitle()) && scLoaReport.getTitle().contains(lampiranA3SubStr)) {//29007-start
 				prefixName=prefixName.replaceAll(SourcingConstants.REG_EXP_BACK_SLASH, "");
 			}//29007-End
-			scLoaReportAttachmentGenerated.setTempFileName(prefixName);
+
+			//#26770-start
+				scLoaReportAttachmentGenerated.setTempFileName(setValueLowercase(prefixName, 18));
+			//26770-start
 			scAttachments.add(scLoaReportAttachmentGenerated);
 		}
 
@@ -10272,4 +10278,19 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	}
 	return remarks;
 	}//29007-End
+	
+
+	//#26770 - start
+	//Change SuratSetujuterima(TermasukLampiranA) capital T to small t.
+		public String setValueLowercase(String text, int index){
+			 
+			if (text.replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE, "").equalsIgnoreCase("SuratSetujuterima(TermasukLampiranA)")){
+				char[] arr = text.toCharArray();
+				arr[index] = Character.toLowerCase(arr[index]);
+				String newPrefixName = new String(arr);
+				return newPrefixName;
+			}
+			return text;	
+		}
+	//26770 - end
 }
