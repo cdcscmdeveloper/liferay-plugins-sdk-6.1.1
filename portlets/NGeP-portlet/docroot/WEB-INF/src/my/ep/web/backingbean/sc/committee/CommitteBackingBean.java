@@ -2322,7 +2322,9 @@ public class CommitteBackingBean extends
 	 */
 	public void preRenderView() {
 		Object payLoad = getBpmTaskDetails(Object.class, null);
-		
+		//#31870(16122021)
+		FacesScopes facesScopes = new FacesScopes();
+		Long loggedInUserId = facesScopes.getUserSessionBean().getUserId();
 		if (SCProcessNameConst.ASSIGN_FC_MEMBER.equalsIgnoreCase(this
 				.getManagedBean().getTaskName())) {
 			SCEvaluationDataType evaluationDataType = (SCEvaluationDataType) payLoad;
@@ -2330,7 +2332,7 @@ public class CommitteBackingBean extends
 			/*retrieveCommitteDetails(Long.valueOf(evaluationDataType.getQtId()), evaluationDataType
 					.getCommitteeType());*/
 			retrieveCommitteDetailsWithChecking(Long.valueOf(evaluationDataType.getQtId()), evaluationDataType
-					.getCommitteeType(),evaluationDataType.getFcSecretary());
+					.getCommitteeType(),loggedInUserId);//#31870(16122021)
 			//#31870 - END
 			getManagedBean().setPayLoad(evaluationDataType);
 		}
@@ -2493,10 +2495,11 @@ public class CommitteBackingBean extends
 	//#25037-end
 	
 	//#31870 - START
-	private void retrieveCommitteDetailsWithChecking(Long qtId, String committeeType, String loginId) {
+	//Edit parameter datatype -#31870 (16122021)
+	private void retrieveCommitteDetailsWithChecking(Long qtId, String committeeType, Long userId) {
 		ICommitteSO committeSO = null;
 		try {
-			log.info("USER_ID === "+loginId);
+			log.info("USER_ID === "+userId);
 			committeSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							ICommitteSO.class);
@@ -2524,16 +2527,16 @@ public class CommitteBackingBean extends
 					}
 				}
 			}
-			
-			if(!checkIsExistFCSecretary & !isNullOrEmpty(loginId)){
+			//Edit condition #31870 (16122021)
+			if(!checkIsExistFCSecretary){
 				log.info("No FC Secretary is exist inside the FC Committee == ");
 				try{
 					//Insert record for FC Secretary, due to issued on
 					//FC Secretary record is missing inside table SC_COMMITTEE_MEMBER for selected QT
 					ScCommitteeMember secretaryMember = new ScCommitteeMember();
 					UserReqDTO userReqDTO = new UserReqDTO();
-					userReqDTO.setLoginId(loginId);
-					PmUser user = getUserSO().retrieveUserByLoginId(userReqDTO).getPmUser();
+					userReqDTO.setUserId(userId);//Edit #31870 (16122021)
+					PmUser user = getUserSO().retrieveUserByUserId(userReqDTO).getPmUser();
 					secretaryMember.setPmUser(user);
 					secretaryMember.setMemberName(user.getUserName());
 					secretaryMember.setIcPassport(user.getIdentificationNo());
@@ -2554,7 +2557,7 @@ public class CommitteBackingBean extends
 					secretaryMember.setAccessRight(SourcingConstants.ACCESS_RIGHT_EDITABLE);
 					PmOrgProfile pmOrgProfile = null;
 					OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-					reqDTO.setUserId(user.getUserId());
+					reqDTO.setUserId(userId);//Edit #31870 (16122021)
 					reqDTO.setOrgType(OrganizationType.DIVISION.value());
 					OrgProfileResDTO resDTO = getOrgProfileSO()
 							.retrieveOrgProfileListByOrgType(reqDTO);
