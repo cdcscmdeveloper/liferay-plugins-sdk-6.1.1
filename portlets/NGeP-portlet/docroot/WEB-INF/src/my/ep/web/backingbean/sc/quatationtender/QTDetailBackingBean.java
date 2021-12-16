@@ -2094,29 +2094,33 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				scQt.setScQtContactPersons(contactList);
 			}
 
-			ScQtApproval pubApproval = this.getManagedBean()
-					.getPublicationApproval();
-			if (null != pubApproval) {
-				List<ScQtApproval> approvals = scQt.getScQtApprovals();
-				removePTJApproval(approvals);
-				if (null != this.getManagedBean().getPublicationApprovals()) {
-					List<ScQtApproverSettings> approvalSettings = this
-							.getManagedBean().getPublicationApprovals()
-							.getTarget();
-					if (CollectionUtils.isNotEmpty(approvalSettings)) {
-						for (ScQtApproverSettings approverSettings : approvalSettings) {
-							approverSettings.setScQtApproval(pubApproval);
+			if(!(getUserTaskIsPublicationApproval() && isApprovalScreen())){ // #25077 - Start 
+				
+				ScQtApproval pubApproval = this.getManagedBean()
+						.getPublicationApproval();
+				if (null != pubApproval) {
+					List<ScQtApproval> approvals = scQt.getScQtApprovals();
+					removePTJApproval(approvals);
+					if (null != this.getManagedBean().getPublicationApprovals()) {
+						List<ScQtApproverSettings> approvalSettings = this
+								.getManagedBean().getPublicationApprovals()
+								.getTarget();
+						if (CollectionUtils.isNotEmpty(approvalSettings)) {
+							for (ScQtApproverSettings approverSettings : approvalSettings) {
+								approverSettings.setScQtApproval(pubApproval);
+							}
+							pubApproval.setApproverSettings(approvalSettings);
 						}
-						pubApproval.setApproverSettings(approvalSettings);
+	
 					}
-
+					/**List<ScQtApprovalRemark> remarks = pubApproval
+							.getScQtApprovalRemarks();
+					finalizeRemarks(remarks);**/
+					approvals.add(pubApproval);
+					scQt.setScQtApprovals(approvals);
 				}
-				/**List<ScQtApprovalRemark> remarks = pubApproval
-						.getScQtApprovalRemarks();
-				finalizeRemarks(remarks);**/
-				approvals.add(pubApproval);
-				scQt.setScQtApprovals(approvals);
-			}
+			
+			} // #25077 - End
 
 		}
 		scQt.setScQtStatus(null);
@@ -5975,6 +5979,21 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				detailSO = null;
 			}
 		}
+		if (null != approvalTabBean &&  StringUtils.isNotEmpty(approvalTabBean.getTabType())
+				&& ("BPK".equals(approvalTabBean.getTabType()) || "OTH".equals(approvalTabBean.getTabType()))) {
+			if(getUserTaskIsPublicationApproval() && isApprovalScreen()){
+				List<ScQtApprovalRemark> remarks = this.getManagedBean().getPublicationApproval().getScQtApprovalRemarks();
+				if (null != remarks) {
+					for (int i = 0; i < remarks.size(); i++) {
+						String userRemark = remarks.get(i).getRemark();
+						if(null == userRemark || "".equals(userRemark)) {
+							this.getManagedBean().getQt().setRemarksFirstValidation(true);
+						}
+					}
+				}			
+				
+			}
+		}
 		// #25077 - #80 - End.
 		this.getManagedBean().setSelectedApprovalTabIndex(
 				selectedApprovalTabIndex);
@@ -6385,7 +6404,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			case 9:
 				if (!QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(getManagedBean().getQt().getQtStatus().getStatusId())) {
 					retrievePublicationApprovalTabDtl();
-					this.getManagedBean().setScQtApproval(this.getManagedBean().getPublicationApproval());
+					// #25077 - Start
+					if(getUserTaskIsPublicationApproval() && isApprovalScreen()){
+					    this.getManagedBean().setScQtApproval(this.getManagedBean().getPublicationApproval());
+					    this.getManagedBean().getQt().setRemarksFirstValidation(false);
+					}
+					// #25077 - End
 				}
 				//#25692-start
 				 if(getUserTaskIsCommitteeAppointmentApprovalEcOcTecFec() && isApprovalScreen()){
@@ -6403,7 +6427,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			case 50: //BPK Approval
 				
 			}
-			
+			// #25077 - Start
+			if(getUserTaskIsPublicationApproval() && isApprovalScreen()){
+					this.getManagedBean().setPublicationApproval(this.getManagedBean().getScQtApproval());
+			}
+			// #25077 - End
 			this.getManagedBean().setActiveIndex(activeIndex);
 		}
 	}	
@@ -10281,23 +10309,28 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		if (CollectionUtils.isNotEmpty(approval)) {
 			for (int i = 0; i < approval.size(); i++) {
 				if (approvalCategory.equalsIgnoreCase(approval.get(i).getApprovalCategory().getParameterCode())) {
+					List<ScQtApprovalRequest> approvalRequest = approval.get(i).getScQtApprovalDtls();
 					List<ScQtApprovalRequest> approvalRequestHistory = approval.get(i).getHistoryApprovalRequests();
-       				if (CollectionUtils.isNotEmpty(approvalRequestHistory)) {
-       					for (int j = 0; j < approvalRequestHistory.size(); j++) {
-       						PmParameter approvalAction = approvalRequestHistory.get(j).getApproverAction();
-       						PmParameter approvalType = approvalRequestHistory.get(j).getApprovalType();
-       						if(null!=approvalAction && null!=approvalType){
-       						    if(approvalAction.getParameterCode().equals(ParameterConst.APPROVAL_DECISION_TYPE_APPROVED)){
-       						    	if(approvalType.getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_OPEN_TO_BUMI) ||
-       						    	   approvalType.getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_BUMI_TO_OPEN) ||
-       						    	   approvalType.getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_REDUCE_PUBLISH_PERIOD) ||
-       						    	   approvalType.getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_REDUCE_PROPOSAL_VALIDITY_PERIOD)){
-       						    		   skipPopUp = false;
-       						    	}
-       						    }  
-       						}
-       					}
-       				}
+					if (CollectionUtils.isNotEmpty(approvalRequest)) {
+						skipPopUp = true;
+					}else{
+	       				if (CollectionUtils.isNotEmpty(approvalRequestHistory)) {
+	       					for (int j = 0; j < approvalRequestHistory.size(); j++) {
+	       						PmParameter approvalAction = approvalRequestHistory.get(j).getApproverAction();
+	       						PmParameter approvalType = approvalRequestHistory.get(j).getApprovalType();
+	       						if(null!=approvalAction && null!=approvalType){
+	       						    if(approvalAction.getParameterCode().equals(ParameterConst.APPROVAL_DECISION_TYPE_APPROVED)){
+	       						    	if(approvalType.getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_OPEN_TO_BUMI) ||
+	       						    	   approvalType.getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_BUMI_TO_OPEN) ||
+	       						    	   approvalType.getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_REDUCE_PUBLISH_PERIOD) ||
+	       						    	   approvalType.getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_REDUCE_PROPOSAL_VALIDITY_PERIOD)){
+	       						    		   skipPopUp = false;
+	       						    	}
+	       						    }  
+	       						}
+	       					}
+	       				}
+				    }
 				}
 			}
 		}
