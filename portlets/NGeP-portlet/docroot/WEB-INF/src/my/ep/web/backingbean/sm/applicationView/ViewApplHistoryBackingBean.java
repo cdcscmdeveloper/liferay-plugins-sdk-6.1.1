@@ -729,6 +729,16 @@ public class ViewApplHistoryBackingBean extends
 
 				if (isPoUser) {
 					getManagedBean().setPoUserName(userName);
+					//30974 - start
+					if(this.getManagedBean().getSmAppl().getSmApplSectionReviews() != null
+							&& this.getManagedBean().getSmAppl().getSmApplSectionReviews().size() > 0){
+						for(SmApplSectionReview sectionreview : this.getManagedBean().getSmAppl().getSmApplSectionReviews()){
+							if(sectionreview.getRemarkToApprover() != null && !sectionreview.getRemarkToApprover().equalsIgnoreCase("")){
+								remark = "";
+							}
+						}
+					}
+					//30974 - end
 					setPORemarksInfo(docType, remark, remarkCreatedDate);
 				}
 				// 25930

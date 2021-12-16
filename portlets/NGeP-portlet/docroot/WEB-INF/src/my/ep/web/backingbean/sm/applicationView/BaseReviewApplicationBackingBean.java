@@ -2301,6 +2301,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		String baseUrl = "";
 		String baseUrlLabel = "";
 		String basePage = "";
+		//30974 - start
+		String poRemarks = "";
+		//30974 - end
 		log.info("View Application");
 		if (getManagedBean().isViewApplicationHistory()) {
 			basePage = "/xhtml/sm/revisionSmApplView/viewApplicationHistory/smViewApplHistorySideMenu_BasePage.xhtml";
@@ -2355,8 +2358,24 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					ReasonsByPO.add(reasonPO);
 				}
 			}
-			getManagedBean().setRejectReasonByPO( SmCommonUtil
-							.getHtmlApplicationRejectReasons(ReasonsByPO));
+		
+			//30974 - start
+			if (this.getManagedBean().getSmAppl().getSmApplSectionReviews() != null
+					&& this.getManagedBean().getSmAppl().getSmApplSectionReviews().size() > 0) {
+				for (SmApplSectionReview sectionreview : this.getManagedBean().getSmAppl().getSmApplSectionReviews()) {
+					if (sectionreview.getRemarkToApprover() != null
+							&& !sectionreview.getRemarkToApprover().equalsIgnoreCase("")) {
+						poRemarks = sectionreview.getRemarkToApprover();
+						getManagedBean().setRejectReasonByPO(
+								SmCommonUtil.getHtmlApplicationRejectReasonsByPo(ReasonsByPO, poRemarks));
+					}else{
+						getManagedBean().setRejectReasonByPO(SmCommonUtil.getHtmlApplicationRejectReasons(ReasonsByPO));
+					}
+				}
+			} else {
+				getManagedBean().setRejectReasonByPO(SmCommonUtil.getHtmlApplicationRejectReasons(ReasonsByPO));
+			}
+			//30974 - end
 		}
 		//30974
 		getManagedBean().setRejectReason(getApplicationRejectionReason());
