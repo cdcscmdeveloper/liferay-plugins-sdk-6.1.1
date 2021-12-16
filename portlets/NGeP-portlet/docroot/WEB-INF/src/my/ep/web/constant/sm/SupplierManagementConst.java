@@ -691,7 +691,7 @@ public class SupplierManagementConst {
 
 	public static final int MAX_PAYMENT_BANK = 35;
 
-	public static final String DELETED_BY_DISCIPLINARY_ACTION = "Dibatalkan kerana dikenakan Tindakan Tatatertib"; // 26238
+	public static final String DELETED_BY_DISCIPLINARY_ACTION = "Dihapuskan kerana dikenakan Tindakan Tatatertib"; // 26238, 32332
 	public static final long PM_STATUS_DELETED_BY_DISCIPLINARY_ACTION = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_DELETED_BY_DISCIPLINARY_ACTION; // 26238
 
 	// EXTERNAL CONTEXT SESSION KEY MAP
