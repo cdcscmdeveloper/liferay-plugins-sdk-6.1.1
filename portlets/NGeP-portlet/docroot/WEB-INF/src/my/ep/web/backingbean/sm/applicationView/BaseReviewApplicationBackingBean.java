@@ -2415,6 +2415,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						poRemarks = sectionreview.getRemarkToApprover();
 						getManagedBean().setRejectReasonByPO(
 								SmCommonUtil.getHtmlApplicationRejectReasonsByPo(ReasonsByPO, poRemarks));
+					}else{
+						getManagedBean().setRejectReasonByPO(SmCommonUtil.getHtmlApplicationRejectReasons(ReasonsByPO));
 					}
 				}
 			} else {
