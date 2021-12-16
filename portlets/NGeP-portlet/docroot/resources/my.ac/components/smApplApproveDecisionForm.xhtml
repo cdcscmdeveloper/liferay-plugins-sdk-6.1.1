@@ -203,13 +203,16 @@
 					<p:outputPanel id="recRejRemarksPanel">
 						<table style="width: 100%">
 							<tr>
+							<!--#30974 - Start  -->
 								<td style="vertical-align: top; width: 15%"><p:outputLabel
-										value="#{lbl['lbl.sm.remarks.rejection']}" id="recRejReasonLbl"/> 
+										value="#{lbl['lbl.sm.remarks.rejection']}" id="recRejReasonLbl"
+										rendered="#{cc.attrs.bean.recommendRejectReasonReqd}" /> 
 										<p:outputLabel
 										value="*" styleClass="mandatory" id="recRejReasonLblMndty"
 										rendered="#{cc.attrs.bean.recommendRejectReasonReqd}" /></td>
 								<td style="padding-top: 5px;"><p:inputTextarea cols="100"
 										style="width : auto;"
+										rendered="#{cc.attrs.bean.recommendRejectReasonReqd}"
 										value="#{cc.attrs.approvalRemarks}"
 										id="recRmrksForRejectTxtArea" rows="5"
 										validatorMessage="#{lbl['lbl.sm.remarks.rejection']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit.po']}"
@@ -220,6 +223,7 @@
 									</p:inputTextarea> <p:message id="recRmrksForRejectTxtAreaMsg"
 										for="recRmrksForRejectTxtArea" showSummary="true" showDetail="false"
 										display="icon" /></td>
+							<!--#30974 - End  -->
 							</tr>
 						</table>
 					</p:outputPanel>

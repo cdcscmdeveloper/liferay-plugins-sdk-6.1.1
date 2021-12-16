@@ -68,6 +68,7 @@ import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplInquiry;
+import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmApplSupportDocInquiry;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
@@ -737,6 +738,15 @@ public class ViewApplHistoryBackingBean extends
 
 				if (isPoUser) {
 					getManagedBean().setPoUserName(userName);
+					//30974 - start
+					if(getManagedBean().getCurrentStatus().equalsIgnoreCase("Rejected by Approver")){
+						for(SmApplSectionReview sectionreview : this.getManagedBean().getSmAppl().getSmApplSectionReviews()){
+							if(sectionreview.getRemarkToApprover() != null && !sectionreview.getRemarkToApprover().equalsIgnoreCase("")){
+								remark = "";
+							}
+						}
+					}
+					//30974 - end
 					setPORemarksInfo(docType, remark, remarkCreatedDate);
 				}
 				// 25930

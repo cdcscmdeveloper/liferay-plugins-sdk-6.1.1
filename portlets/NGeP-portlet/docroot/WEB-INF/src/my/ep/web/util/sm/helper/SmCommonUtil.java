@@ -5461,6 +5461,93 @@ public class SmCommonUtil {
 		}
 		return retVal;
 	}
+	
+	//30974 - start
+	/**
+	 * Get HTML reject reasons for PO as display purpose
+	 * 
+	 * @param SmAppl
+	 *            smAppl
+	 * @return String
+	 */
+	public static String getHtmlApplicationRejectReasonsByPo(
+			List<SmApplRejectReason> rejectReasons, String remarksByPo) {
+		String langCode = new FacesScopes().getUserLocale().getLanguage();
+		StringBuilder sbEng = new StringBuilder();
+		StringBuilder sbMs = new StringBuilder();
+		String retVal = StringUtils.EMPTY;
+		int i = 1;
+		sortRejectReason(rejectReasons);
+		
+		if (!EntityHelper.isCollectionEmpty(rejectReasons)) {
+			for (SmApplRejectReason rej : rejectReasons) {
+				if (rej.getPmReason() != null
+						&& rej.getPmReason().getPmReasonDescs() != null) {
+
+					try {
+						for (PmReasonDesc desc : rej.getPmReason()
+								.getPmReasonDescs()) {
+
+							String remark = null;
+							if (rej.getPmReason() != null
+									&& !StringUtils.isBlank(rej.getPmReason()
+											.getReasonCode())
+									&& SupplierManagementConst.DPA_REASON_OTHERS_LIST
+											.contains(rej.getPmReason()
+													.getReasonCode())) {
+
+								remark = remarksByPo;
+							}
+
+							if (desc.getPmLanguage() != null
+									&& desc.getPmLanguage().getLanguageCode()
+											.equalsIgnoreCase("en")) {
+								sbEng.append(i + ") " + desc.getReasonDesc());
+
+								if (remark != null) {
+									sbEng.append(" - ");
+									sbEng.append(remark);
+								}
+
+								sbEng.append("<br/>");
+							} else {
+								sbMs.append(i + ") " + desc.getReasonDesc());
+
+								if (remark != null) {
+									sbMs.append(" - ");
+									sbMs.append(remark);
+								}
+
+								sbMs.append("<br/>");
+							}
+						}
+						i++;
+					} catch (Exception ex) {
+						log.debug(">>>>ERROR INITIALIZE REJECT REASON:"
+								+ ex.getMessage() + "<<<<<<<");
+					}
+				}
+			}
+		}
+
+		// get reject reason by language but if selected language reason is
+		// empty then get the other reason language
+		if (langCode.equalsIgnoreCase("en")) {
+			if (sbEng.length() > 0) {
+				retVal = sbEng.toString();
+			} else {
+				retVal = sbMs.toString();
+			}
+		} else {
+			if (sbMs.length() > 0) {
+				retVal = sbMs.toString();
+			} else {
+				retVal = sbEng.toString();
+			}
+		}
+		return retVal;
+	}
+	//30974 - end
 
 	private static void sortRejectReason(List<SmApplRejectReason> rejectReasonList) {
 		Collections.sort(rejectReasonList, new Comparator<SmApplRejectReason>() {
