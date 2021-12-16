@@ -10782,6 +10782,62 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			}
 		}
 	}
+	
+	// 14921 - Start
+	public void saveDraftItemSupTemp(){
+		log.info("saveDraftItemSupTemp");
+		if(	this.getManagedBean().getDraftSearchDataModel() !=null){
+			List<CmSupplierItem> listToSave = new ArrayList<CmSupplierItem>();			
+			for(CmSupplierItem item: this.getManagedBean().getDraftSearchDataModel().getList()){
+				CatalogueReqDTO reqDTO = new CatalogueReqDTO();		
+				CatalogueResDTO resDTO = new CatalogueResDTO();
+				ICatalogueSO catalogueSO = null;
+
+				try {
+					catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
+					reqDTO.setSupplierItemId(item.getSupplierItemId());
+					resDTO = catalogueSO.retrieveSupplierItemById(reqDTO);
+
+					resDTO.getSupplierItem().getCmStandardPricing().setPrice(item.getCmStandardPricing().getPrice());
+					resDTO.getSupplierItem().getCmStandardPricing().setEndDate(item.getCmStandardPricing().getEndDate());
+					resDTO.getSupplierItem().getCmStandardPricing().setStartDate(item.getCmStandardPricing().getStartDate());
+
+					resDTO.getSupplierItem().setPmUom(item.getPmUom());
+					resDTO.getSupplierItem().setChangedDate(resDTO.getSupplierItem().getChangedDate());
+					listToSave.add(resDTO.getSupplierItem());
+				} finally {
+					catalogueSO = null;
+				}
+			}
+
+			if(listToSave!=null && listToSave.size()>0){
+				CatalogueReqDTO reqDTO = new CatalogueReqDTO();	
+				CatalogueResDTO resDTO = new CatalogueResDTO();
+				ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
+				reqDTO.setSaveSupplierItems(listToSave);
+				
+				try {
+					resDTO = catalogueSO.updateSupplierItem(reqDTO);
+					FacesContext facesContext = FacesContext.getCurrentInstance();
+					facesContext.addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									MessageUtils.getMessage(MessageConst.INFO_710026,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+					this.getManagedBean().setCloneCmSupplierItemLs(new ArrayList<CmSupplierItem>());
+					this.getManagedBean().setSupplierItemcheckBoxAll(false);
+					cloneAllSupplierItemSelection();				
+				} catch (Exception e) {
+					throw new EpException("Something happen.");
+				}finally{
+					catalogueSO = null;
+				}
+			}
+		}
+	}
+	// 14921 - End
+	
 	public Date  getNextTwoYear(Date startDate){
 		Calendar cal = Calendar.getInstance();
 		if(startDate!=null){
