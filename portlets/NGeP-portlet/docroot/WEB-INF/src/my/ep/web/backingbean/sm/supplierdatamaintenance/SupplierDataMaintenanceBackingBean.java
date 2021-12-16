@@ -469,7 +469,7 @@ public class SupplierDataMaintenanceBackingBean extends
 				SupplierSearchResDTO suppResDTO = supplierSearchSO.retriveSupplierById(suppReqDTO);
 				
 				//32329 - start
-				if(suppResDTO.getSmSupplier().getRecordStatusFlg().equals(0)){
+				if(suppResDTO.getSmSupplier().getRecordStatusFlg().equals(9)){
 					for(SmDisciplinaryAction smDA: suppResDTO.getSmSupplier().getSmDisciplinaryActions()){
 						if(smDA.isCancelRegistration()){
 							suppResDTO.getSmSupplier().setTypeDisciplinaryAction("C");
