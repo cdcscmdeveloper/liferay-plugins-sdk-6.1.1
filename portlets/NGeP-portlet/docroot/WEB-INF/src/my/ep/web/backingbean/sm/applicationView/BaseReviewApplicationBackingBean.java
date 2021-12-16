@@ -2407,17 +2407,18 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			}
 		
 			//30974 - start
-			if(getManagedBean().getCurrentStatus().equalsIgnoreCase("Rejected by Approver")){
-				for(SmApplSectionReview sectionreview : this.getManagedBean().getSmAppl().getSmApplSectionReviews()){
-					if(sectionreview.getRemarkToApprover() != null && !sectionreview.getRemarkToApprover().equalsIgnoreCase("")){
+			if (this.getManagedBean().getSmAppl().getSmApplSectionReviews() != null
+					&& this.getManagedBean().getSmAppl().getSmApplSectionReviews().size() > 0) {
+				for (SmApplSectionReview sectionreview : this.getManagedBean().getSmAppl().getSmApplSectionReviews()) {
+					if (sectionreview.getRemarkToApprover() != null
+							&& !sectionreview.getRemarkToApprover().equalsIgnoreCase("")) {
 						poRemarks = sectionreview.getRemarkToApprover();
-						getManagedBean().setRejectReasonByPO( SmCommonUtil
-								.getHtmlApplicationRejectReasonsByPo(ReasonsByPO, poRemarks));
+						getManagedBean().setRejectReasonByPO(
+								SmCommonUtil.getHtmlApplicationRejectReasonsByPo(ReasonsByPO, poRemarks));
 					}
 				}
-			}else{
-				getManagedBean().setRejectReasonByPO( SmCommonUtil
-						.getHtmlApplicationRejectReasons(ReasonsByPO));
+			} else {
+				getManagedBean().setRejectReasonByPO(SmCommonUtil.getHtmlApplicationRejectReasons(ReasonsByPO));
 			}
 			//30974 - end
 		}
