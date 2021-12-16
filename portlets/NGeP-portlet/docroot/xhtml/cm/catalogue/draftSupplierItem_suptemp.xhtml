@@ -13,7 +13,12 @@
 		}
 	</script>
 	<div style="text-align: right;">
-
+	
+		<!-- #14921 - enable the Save button - start -->
+		<p:commandButton value="#{lbl['lbl.cm.save']}"
+			action="#{catalogueBackingBean.saveDraftItemSupTemp()}" update="@form"></p:commandButton>
+		<!-- #14921 - enable the Save button -  end -->
+	
 		<p:commandButton id="submitLink" value="#{lbl['lbl.cm.publish']}"
 			disabled="#{fn:length(catalogueBackingBean.managedBean.cloneCmSupplierItemLs)&lt;1}"
 			action="#{catalogueBackingBean.submitToReviewItems}" update="@form"></p:commandButton>
