@@ -730,16 +730,23 @@ public class ViewApplHistoryBackingBean extends
 
 				if (isPoUser) {
 					getManagedBean().setPoUserName(userName);
-					//30974 - start
-					if(this.getManagedBean().getSmAppl().getSmApplSectionReviews() != null
-							&& this.getManagedBean().getSmAppl().getSmApplSectionReviews().size() > 0){
-						for(SmApplSectionReview sectionreview : this.getManagedBean().getSmAppl().getSmApplSectionReviews()){
-							if(sectionreview.getRemarkToApprover() != null && !sectionreview.getRemarkToApprover().equalsIgnoreCase("")){
+					// 30974 - start
+					if (this.getManagedBean().getSmAppl().getSmApplSectionReviews() != null
+							&& this.getManagedBean().getSmAppl().getSmApplSectionReviews().size() > 0) {
+						for (SmApplSectionReview sectionreview : this.getManagedBean().getSmAppl()
+								.getSmApplSectionReviews()) {
+							if (sectionreview.getRemarkToApprover() != null
+									&& !sectionreview.getRemarkToApprover().equalsIgnoreCase("")
+									&& !sectionreview.getRecommendation().equalsIgnoreCase("Approve")) {
 								remark = "";
 							}
 						}
 					}
-					//30974 - end
+
+					if (docType.equals(ParameterConst.SM_APPLN_RMRK_DECISION_REJECT)) {
+						remark = "";
+					}
+					// 30974 - end
 					setPORemarksInfo(docType, remark, remarkCreatedDate);
 				}
 				// 25930
