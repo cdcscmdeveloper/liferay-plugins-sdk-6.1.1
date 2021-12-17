@@ -9,7 +9,7 @@
 	<cc:interface>
 		<cc:attribute name="value" type="java.lang.Object" required="true"/>
 		<cc:attribute name="tooltip" required="true"/>
-		<cc:attribute name="update" required="true"/>
+		<cc:attribute name="update" default="@(.ep-toggle-rate)"/><ui:remove>#32334  for 29021</ui:remove>
 		<cc:attribute name="show" default="true"/>
 		<cc:attribute name="disabled" default="false"/>
 	</cc:interface>
@@ -46,10 +46,12 @@
 		</style>
 		<ui:fragment rendered="#{show}">
 			<div class="ui-single-rating-star">
-				<p:rating disabled="#{disabled}" converter="javax.faces.Integer" styleClass="#{value>0 ? 'toggleRateShow' : 'toggleRateHide'}" id="rating" value="#{value}" stars="1" cancel="true">
-					<p:ajax event="rate" update="@([id$=#{update}])"/>
-					<p:ajax event="cancel" update="@([id$=#{update}])"/>
+				<ui:remove>#32334  for 29021 start</ui:remove>
+				<p:rating disabled="#{disabled}" converter="javax.faces.Integer" styleClass="#{value>0 ? 'toggleRateShow' : 'toggleRateHide'} ep-toggle-rate" id="rating" value="#{value}" stars="1" cancel="true">
+					<p:ajax event="rate" update="#{update}"/>
+					<p:ajax event="cancel" update="#{update}"/>
 				</p:rating>
+				<ui:remove>#32334  for 29021 end</ui:remove>
 				<p:tooltip for="rating" value="#{tooltip}" position="top"/>
 			</div>
 		</ui:fragment>

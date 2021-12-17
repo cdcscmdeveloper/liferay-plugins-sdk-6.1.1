@@ -67,7 +67,7 @@
 				</h:outputText>
 			</c:if>
 			<ui:remove><!--#29021-start--></ui:remove>
-				<ac:toggleRate show="#{isSpecTypeTechnical}" disabled="#{evaluationBackingBean.managedBean.readOnly or tplSpecAnswer.notOfferAll}" value="#{tplSpecAnswer.rating}" tooltip="#{lbl['lbl.sc.tec.rating.tooltip']}" update="questionTbl"/>
+				<ac:toggleRate show="#{isSpecTypeTechnical}" disabled="#{evaluationBackingBean.managedBean.readOnly or tplSpecAnswer.notOfferAll}" value="#{tplSpecAnswer.rating}" tooltip="#{lbl['lbl.sc.tec.rating.tooltip']}"/><ui:remove>#32334  for 29021</ui:remove> 
 			<ui:remove><!--#29021-start--></ui:remove>
 			
 		</h:panelGroup>
@@ -140,7 +140,7 @@
 			<p:message id="userScoreMsg" for="userScore" display="icon" />
 			<ui:remove><!--#29021-start--></ui:remove>
 			<ui:remove><!--#28784 - Start--></ui:remove>
-			<ac:toggleRate show="#{isSpecTypeTechnical and tplSpecAnswer.tplSpecQuestion.maxScore ne null}" disabled="#{evaluationBackingBean.managedBean.readOnly or tplSpecAnswer.ratePerUom eq 0 or tplSpecAnswer.notOfferAll}" value="#{tplSpecAnswer.rating}" tooltip="#{lbl['lbl.sc.tec.rating.tooltip']}" update="questionTbl"/>
+			<ac:toggleRate show="#{isSpecTypeTechnical and tplSpecAnswer.tplSpecQuestion.maxScore ne null}" disabled="#{evaluationBackingBean.managedBean.readOnly or tplSpecAnswer.ratePerUom eq 0 or tplSpecAnswer.notOfferAll}" value="#{tplSpecAnswer.rating}" tooltip="#{lbl['lbl.sc.tec.rating.tooltip']}" /><ui:remove>#32334  for 29021</ui:remove>
 			<ui:remove><!-- #28784 - end --></ui:remove>
 			<ui:remove><!--#29021-end--></ui:remove>
 		</h:panelGroup>
