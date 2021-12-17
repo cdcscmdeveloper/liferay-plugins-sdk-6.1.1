@@ -23,6 +23,7 @@ import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.access.application.IAccessApplSO;
 import my.ep.biz.service.pm.common.kpi.IPmKpiSO;
 import my.ep.biz.service.sc.directpurchase.IPrInquirySO;
+import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO; //#9133
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
@@ -64,6 +65,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmKPIValue;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
+import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault; //#9133
 import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -410,6 +412,16 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	private IPrInquirySO getPrInquirySO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPrInquirySO.class);
 	}
+	
+	//#9133 - start
+	private ScPurchaseInDefault retrivePurchaseInDefaultByPdNo(String pdNo) {
+		return getPurchaseInDefaultSO().retrivePurchaseInDefaultByPdNo(pdNo);
+	}
+	
+	private IPurchaseInDefaultSO getPurchaseInDefaultSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
+	}
+	//#9133 - end
 
 	private int calculateFinalOffSet(int currentPage) {
 		//CR 28766: Static Code Analysis Start
@@ -1755,6 +1767,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 			   }
 	       }
 	       // 12177 - End
+	       //#9133 - start
+	       else if (worklistItemVO.getDocType().equals(ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT)) {
+				ScPurchaseInDefault scPurchaseInDefault = retrivePurchaseInDefaultByPdNo(worklistItemVO.getDocNumber());
+				if (scPurchaseInDefault != null) {
+					worklistItemVO.setTitle(scPurchaseInDefault.getTitle());
+				}
+	       }
+	       //#9133 - end
 	   	} else {
 	   		logger.info("DOCTYPE AND DOCSTATUSID NULL not meet condition = " + worklistItemVO.getTaskId() 
 	   				+ "| worklistItemVO.getDocType() = " + worklistItemVO.getDocType()
