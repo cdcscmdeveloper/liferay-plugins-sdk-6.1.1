@@ -69,7 +69,8 @@
 	                                   <c:when test="#{qTDetailBB.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_BPK_APPROVAL or 
 	                                                   qTDetailBB.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL or 
 	                                                   qTDetailBB.managedBean.currentStatusId eq QTStatusConst.QT_REVISION_PUBLICATION or
-	                                                   qTDetailBB.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_PUBLICATION}" >
+	                                                   qTDetailBB.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_PUBLICATION or 
+	                                                   qTDetailBB.isQTStatusPublished(qTDetailBB.managedBean.qt.qtStatus.statusId) }"> <ui:remove> #30477 </ui:remove>
 					                       <p:selectOneRadio label="#{lbl['lbl.sc.open.for']}" value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.openFor}" disabled="true" >
 												 <f:selectItems value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.scOpenFor)}" />
 												 <p:ajax event="change" process="@this" partialSubmit="true" update="@form" listener="#{createQtBB.openForChange}"></p:ajax>				

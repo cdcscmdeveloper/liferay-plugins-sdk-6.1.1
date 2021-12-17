@@ -26,6 +26,9 @@
 	<ui:param name="isQTStatusPendingScoringEndorsement" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT}" />
 	<!-- 25037 End -->
 	<ui:remove> 26095@hatta - end </ui:remove>
+	<ui:remove> #30477 Start </ui:remove>
+	<ui:param name="isCommitteeApprovalReviseTask" value="#{qTDetailBB.isCommitteeApprovalReviseTask(qTDetailBB.managedBean.taskName)}" />
+	<ui:remove> #30477 End </ui:remove>
 		<table width="100%">
 		<tr>
 		<td style="vertical-align: bottom;" align="right"><p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
@@ -116,6 +119,14 @@
 								onclick="blockWidget.show();"
 								oncomplete="blockWidget.hide();"
 								action="#{qTDetailBB.updateBpmTask(bpmAction)}" />
+							<ui:remove> #30477 Start </ui:remove>	
+							<p:commandButton value="#{lbl[buttonLabel]}"
+								styleClass="ui-button" onclick="blockWidget.show();"
+								oncomplete="blockWidget.hide();"
+								rendered="#{isClone2 and isCommitteeApprovalReviseTask}"
+								action="#{qTDetailBB.updateBpmTask(bpmAction)}">
+							</p:commandButton>
+							<ui:remove> #30477 End </ui:remove>
 						</ui:repeat>
 					</c:when>
 					<c:when test="#{qTDetailBB.managedBean.createQt or isQTStatusPendingQtSubmission}">

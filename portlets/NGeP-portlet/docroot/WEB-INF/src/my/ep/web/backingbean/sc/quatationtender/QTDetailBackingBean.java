@@ -235,7 +235,8 @@ import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.pm.helper.ParameterHelper;										   
+import my.ep.web.util.pm.helper.PmCommonUtil; // #30477											 
 import my.ep.web.util.sc.helper.ApproverSettings;
 import my.ep.web.util.sc.helper.LocationSingleton;
 import my.ep.web.util.sc.helper.QTFieldMapper;
@@ -3002,6 +3003,34 @@ public class QTDetailBackingBean extends
 			}
 
 			Long currentStatus = qt.getQtStatus().getStatusId();
+			//#30477 Start Vinod
+			if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
+				for(ScQtCommittee committee : this.getManagedBean().getQt().getScQtCommittees()){
+					if((committee.getScCommittee().getCommitteStatus().getStatusId().equals(QTStatusConst.CMT_PENDING_REVISION) 
+							|| currentStatus.equals(QTStatusConst.QT_RE_EVALUATION))
+							&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT)){
+						for(ScQtApproval approval : this.getManagedBean().getQt().getScQtApprovals()){
+							for(ScQtApproverSettings approverSetting : approval.getApproverSettings()){
+								if(isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId(),1)){
+									throw new EpException(MessageConst.ERROR_775171);
+								}
+							}
+						}
+					}
+				}
+			}
+			if(SCProcessNameConst.REVISE_QT_SCHEDULE.equalsIgnoreCase(taskName)) {
+				if((currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_REVISION)
+						|| currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION))
+						&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT))	{
+							for(ScQtApproverSettings approverSetting : this.getManagedBean().getPublicationApproval().getApproverSettings()){
+								if(isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId(),2)){
+									throw new EpException(MessageConst.ERROR_775172);
+								}
+							}
+				}
+			}
+			//#30477 End Vinod
 			
 			// #25077 Start
 			if (currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
@@ -8968,7 +8997,43 @@ public class QTDetailBackingBean extends
 		return !StringUtils.join(previousListArr, ",").equalsIgnoreCase(StringUtils.join(currentListArr, ","));
 	}
   	//#25037 - end
-    
+	  	
+    //#30477 - Start
+  	public boolean isInactiveCommiteeApproverRole(Long userId,int role) {
+		IQTDetailSO detailSO = null;
+		try {
+			detailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			
+			QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+			PmUserOrg pmUserOrgs = new PmUserOrg();
+			
+			quationTenderReqDTO.setUserId(userId);
+			pmUserOrgs = detailSO.retrievePmUserOrgByUserid(quationTenderReqDTO).getPmUserOrg();
+			
+			PmUserOrg pmUserOrg = PmCommonUtil.retrieveUserOrgByUserIdAndOrgId(userId, pmUserOrgs.getUserOrgId());
+			
+			boolean inactive = false;
+			for (PmUserRole roles : pmUserOrg.getPmUserRoles()) {	
+				if(RoleCode.COMMITTEE_APPROVER.value().equals(roles.getPmRole().getRoleCode()) && 
+						roles.getRecordStatusFlg().equals(0) && roles.isRecordStatus() == false && role == 1){
+					inactive = true;	
+				}else if(RoleCode.PUBLICATION_APPROVER.value().equals(roles.getPmRole().getRoleCode()) && 
+						roles.getRecordStatusFlg().equals(0) && roles.isRecordStatus() == false && role == 2){
+				    inactive = true;	
+				}
+			}
+			return inactive;
+			
+		} finally {
+			detailSO = null;
+		}
+	}
+  	
+    public boolean isCommitteeApprovalReviseTask(String taskName) {
+     	return (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName));
+    }
+    //#30477 - End   
 }
 
 // #Enhancement 9 CRs = #17376, #18685, #19287, #19336, #25142 #25201, #25627, #25692 & #26095   
