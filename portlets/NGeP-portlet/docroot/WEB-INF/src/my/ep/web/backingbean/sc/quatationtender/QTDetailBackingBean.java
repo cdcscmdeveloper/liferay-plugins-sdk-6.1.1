@@ -5960,7 +5960,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				.get(selectedApprovalTabIndex);
 		// #25077 - #80 - Start.
 		if (null != approvalTabBean &&  StringUtils.isNotEmpty(approvalTabBean.getTabType())
-				&& "OTH".equals(this.getManagedBean().getPreviousApprovalTabName()) && !"OTH".equals(approvalTabBean.getTabType())) {
+				&& ParameterConst.APPROVAL_CATEGORY_OTHERS.equals(this.getManagedBean().getPreviousApprovalTabName()) && !ParameterConst.APPROVAL_CATEGORY_OTHERS.equals(approvalTabBean.getTabType())) {
 			IQTDetailSO detailSO;
 			try {
 				this.getManagedBean().setSaveFlow(false);
@@ -5980,7 +5980,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 		}
 		if (null != approvalTabBean &&  StringUtils.isNotEmpty(approvalTabBean.getTabType())
-				&& ("BPK".equals(approvalTabBean.getTabType()) || "OTH".equals(approvalTabBean.getTabType()))) {
+				&& (ParameterConst.APPROVAL_CATEGORY_BPK.equals(approvalTabBean.getTabType()) || ParameterConst.APPROVAL_CATEGORY_OTHERS.equals(approvalTabBean.getTabType()))) {
 			if(getUserTaskIsPublicationApproval() && isApprovalScreen()){
 				List<ScQtApprovalRemark> remarks = this.getManagedBean().getPublicationApproval().getScQtApprovalRemarks();
 				if (null != remarks) {
@@ -6430,6 +6430,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			// #25077 - Start
 			if(getUserTaskIsPublicationApproval() && isApprovalScreen()){
 					this.getManagedBean().setPublicationApproval(this.getManagedBean().getScQtApproval());
+					this.getManagedBean().setFirstPagePA(false);
 			}
 			// #25077 - End
 			this.getManagedBean().setActiveIndex(activeIndex);
