@@ -757,6 +757,15 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 										worklistItemVO.setTitle(scPrInquiry.getTitle());
 									}
 								}
+								// #9133 - start
+								if (worklistItemVO.getDocType().equals(ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT)) {
+									ScPurchaseInDefault scPurchaseInDefault = retrivePurchaseInDefaultByPdNo(worklistItemVO
+											.getDocNumber());
+									if (scPurchaseInDefault != null) {
+										worklistItemVO.setTitle(scPurchaseInDefault.getTitle());
+									}
+								}
+								// #9133 - end
 								// s1 module
 								if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
 									worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
