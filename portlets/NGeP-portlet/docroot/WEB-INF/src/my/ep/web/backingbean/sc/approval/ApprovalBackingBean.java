@@ -872,6 +872,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				qtDetailBB.getManagedBean().addAdditionalPages(UserTasks.PublicationApproval.toString(), pageAppr);
 				qtDetailBB.getManagedBean().addUserTasks(UserTasks.PublicationApproval);
 				qtDetailBB.getManagedBean().setActiveIndex(9);
+				qtDetailBB.getManagedBean().setFirstPagePA(qtPageFirst); //#25077 
 				log.info("*********** preRenderView:userHasRole(PUBLICATION_APPROVER)");
 			}
 			else{
@@ -1457,6 +1458,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				// Bug #31759 - Start
 				checkApprovalAndRefreshDetails (qt.getQtId(),taskName, this.getManagedBean().getScQtApproval());
 				// Bug #31759 - End
+				invokeRemarksWhileExecuteReviseFlow(this.getManagedBean().getScQtApproval()); // 25077
 				ScQtApproval approval = this.getManagedBean().getScQtApproval();
 
 				String approvalCategoryCode = approval.getApprovalCategory().getParameterCode();
@@ -2825,6 +2827,32 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				list.get(i).setApprovalRequestAttachement(null);
 				this.getManagedBean().setScQtApprovalReqAttachementHistory(null);
 				this.getManagedBean().setFlagFileAttahmentDeleted(true);
+			}
+		}
+		
+		/**
+		 * insert remarks while doing revise process flow
+		 */
+		private void invokeRemarksWhileExecuteReviseFlow(ScQtApproval approval){
+			ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtId());
+			wfStatus = wfStatus==null ? new ScWorkFlowStatus(): wfStatus;
+			if(wfStatus.getPmStatus()!=null){
+				Long currentStatusId = wfStatus.getPmStatus().getStatusId();
+				if(currentStatusId.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL)){	
+					QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+					if(!qtBackingBean.getManagedBean().isFirstPagePA()){
+						ScQtApproval publication = this.getManagedBean().getPublicationApproval();
+						List<ScQtApprovalRemark> qtRemarks = initializeRemarks(publication, 
+								wfStatus,
+								publication.getScQtApprovalRemarks(), 
+								ScQtApprovalRemark.class);
+						for(ScQtApprovalRemark qtRemark : qtRemarks) {
+							qtRemark.setEditable(false);
+						}
+						publication.setScQtApprovalRemarks(qtRemarks);
+						this.getManagedBean().setScQtApproval(publication);
+					}    
+				}
 			}
 		}
 		//#25077 - End
