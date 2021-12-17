@@ -1685,7 +1685,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			String prefixName = scLoaReport.getTitle().contains(lampiranA3SubStr) ? scLoaReport.getTitle().replaceAll(
 					"/", "-") : scLoaReport.getTitle().replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE, "");
 			// #29006 - end
-			scLoaReportAttachmentGenerated.setTempFileName(prefixName);
+			//#25025 - start		
+			scLoaReportAttachmentGenerated.setTempFileName(setValueLowercase(prefixName,18));
+			//#25025 - end
 		}
 		
 		//#29006 - start
@@ -1978,7 +1980,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				if (Arrays.asList(QTStatusConst.LOA_PENDING_VERIFICATION).contains(this.getManagedBean().getScLoa().getPmStatus().getStatusId()) && scLoaReport.getTitle().contains(lampiranA3SubStr) && ParameterConst.DOCTYPE_QUOTATION.equals(this.getManagedBean().getScLoa().getScLoiLoa().getDocType()) && scLoaReportAttachmentGenerated.isBrandNew()){//29007-start
 					prefixName=prefixName.concat("1");	
 				}//29007-End
-				scLoaReportAttachmentGenerated.setTempFileName(prefixName);
+				//#25025-start
+				scLoaReportAttachmentGenerated.setTempFileName(setValueLowercase(prefixName,18));
+				//#25025 - end
 				scAttachments.add(scLoaReportAttachmentGenerated);
 			}
 			
@@ -9735,5 +9739,18 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		log.info("==============endcreateLampiranA3forQTVerification=============");
 	}//29007-End
+	
+	//#25025 - start
+	public String setValueLowercase(String text, int index){
+		//Change SuratSetujuterima(TermasukLampiranA) capital T to small t.
+		if (text.replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE, "").equalsIgnoreCase("SuratSetujuterima(TermasukLampiranA)")){
+			char[] arr = text.toCharArray();
+			arr[index] = Character.toLowerCase(arr[index]);
+			String newPrefixName = new String(arr);
+			return newPrefixName;
+		}
+		return text;	
+	}
+	//#25025 - end
 }
 
