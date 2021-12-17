@@ -8,8 +8,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.el.MethodExpression;
 import javax.faces.application.FacesMessage;
@@ -18,13 +20,18 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.dto.cm.codification.CodificationReqDTO;
+import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -40,6 +47,8 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.cm.CmConst;
 import my.ep.web.constant.cm.CmReportConst;
 import my.ep.web.constant.report.ReportConst;
@@ -59,6 +68,7 @@ import org.primefaces.context.RequestContext;
 // #29592 - end
 // #29592 - start
 // #29592 - end
+import org.primefaces.event.data.PageEvent;
 
 @ManagedBean(name = "cmReportsBackingBean")
 @ViewScoped
@@ -71,6 +81,17 @@ public class CMReportsBackingBean extends ReportBaseBackingBean<CMReportManagedB
 	// #29592 - start
 	private static final String CARET_CHAR = "^";
 	// #29592 - end
+	
+	private IPagingDataModel<Object[]> cmSupplierPendTaskDataModel = new cmSupplierPendTaskDataModel();
+	
+	public IPagingDataModel<Object[]> getCmSupplierPendTaskDataModel() {
+		return cmSupplierPendTaskDataModel;
+	}
+
+	public void setCmSupplierPendTaskDataModel(
+			IPagingDataModel<Object[]> cmSupplierPendTaskDataModel) {
+		this.cmSupplierPendTaskDataModel = cmSupplierPendTaskDataModel;
+	}
 
 	public void preRenderCmReport() {
 		log.info(".................preRenderCmReport................");
@@ -219,6 +240,7 @@ public class CMReportsBackingBean extends ReportBaseBackingBean<CMReportManagedB
 		//#29640 - Start
 		this.getManagedBean().setRequestType("");
 		this.getManagedBean().setDocStatus(null);
+		this.getManagedBean().setCompanyName(null);
 		//#29640 - End
 	}
 
@@ -1319,7 +1341,7 @@ public class CMReportsBackingBean extends ReportBaseBackingBean<CMReportManagedB
 	
 	// #29592 - end
 	
-	//#29640 - Start
+	// #29640 - Start
 	public SelectItem[] getDocStatus() {
 		SelectItem[] items = null;
 		FacesScopes face = new FacesScopes();
@@ -1370,76 +1392,173 @@ public class CMReportsBackingBean extends ReportBaseBackingBean<CMReportManagedB
 		}
 		return items;
 	}
-	
-	public void generateReportCM020(){
 
-		LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();
+	public void generateReportCM020() {
 
+		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
 
 		dateValidation(this.getManagedBean().getDateFrom(), this.getManagedBean().getDateTo());
-		
 
-		if(this.getManagedBean().getItemType()!=null && this.getManagedBean().getItemType().trim().length()>0){
+		if (this.getManagedBean().getItemType() != null && this.getManagedBean().getItemType().trim().length() > 0) {
 			log.info("ITEM_TYPE " + this.getManagedBean().getItemType());
 			params.put(CmReportConst.ITEM_TYPE, this.getManagedBean().getItemType());
 		}
 
-		if(this.getManagedBean().getSelectedOrgProfile()!=null &&
-				this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName().trim().length()>0){
-			log.info("COMP_NAME " + this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName());
-			params.put(CmReportConst.COMP_NAME, this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName());
+		if (this.getManagedBean().getCompanyName() != null
+				&& this.getManagedBean().getCompanyName().trim().length() > 0) {
+			log.info("COMP_NAME " + this.getManagedBean().getCompanyName());
+			params.put(CmReportConst.COMP_NAME, this.getManagedBean().getCompanyName());
 		}
-		
-		if(this.getManagedBean().getRequestType()!=null && this.getManagedBean().getRequestType().trim().length()>0){
+
+		if (this.getManagedBean().getRequestType() != null
+				&& this.getManagedBean().getRequestType().trim().length() > 0) {
 			log.info("REQUEST_TYPE " + this.getManagedBean().getRequestType());
 			params.put(CmReportConst.REQUEST_TYPE, this.getManagedBean().getRequestType());
 		}
-		
-		if(this.getManagedBean().getRegType()!=null && this.getManagedBean().getRegType().trim().length()>0){
+
+		if (this.getManagedBean().getRegType() != null && this.getManagedBean().getRegType().trim().length() > 0) {
 			log.info("REGISTRATION_TYPE " + this.getManagedBean().getRegType());
 			params.put(CmReportConst.REG_TYPE, this.getManagedBean().getRegType());
 		}
-		
-		if(this.getManagedBean().getRequestNo()!=null && this.getManagedBean().getRequestNo().trim().length()>0){
+
+		if (this.getManagedBean().getRequestNo() != null && this.getManagedBean().getRequestNo().trim().length() > 0) {
 			log.info("REQUEST_NO " + this.getManagedBean().getRequestNo());
 			params.put(CmReportConst.REQUEST_NO, this.getManagedBean().getRequestNo());
 		}
 
-		if(this.getManagedBean().getDocStatus()!=null && this.getManagedBean().getDocStatus().trim().length()>0){
+		if (this.getManagedBean().getDocStatus() != null && this.getManagedBean().getDocStatus().trim().length() > 0) {
 			log.info("REQUEST_NO " + this.getManagedBean().getDocStatus());
 			params.put(CmReportConst.DOCUMENT_STATUS, this.getManagedBean().getDocStatus());
 		}
 
-
 		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 
-		if(this.getManagedBean().getDateFrom()!=null ){
+		if (this.getManagedBean().getDateFrom() != null) {
 			params.put(CmReportConst.DATE_FROM, df.format(this.getManagedBean().getDateFrom()));
 		}
 
-		if(this.getManagedBean().getDateTo()!=null ){
+		if (this.getManagedBean().getDateTo() != null) {
 			params.put(CmReportConst.DATE_TO, df.format(this.getManagedBean().getDateTo()));
 		}
 
-		FacesScopes facesScopes =new FacesScopes();
+		FacesScopes facesScopes = new FacesScopes();
 		Long userId = facesScopes.getUserSessionBean().getUserId();
 
 		params.put(CmReportConst.REPORT_ID, this.getManagedBean().getReportCode());
 		params.put(CmReportConst.REPORT, this.getManagedBean().getReportName());
 		params.put(CmReportConst.USER, String.valueOf(userId));
 
-
 		preGenerateReportAPI(params);
-		
 
 		RequestContext.getCurrentInstance().execute("confirmationId.show()");
 	}
-	
-	public Date getMinDate(){
+
+	public Date getMinDate() {
 		Calendar cal = Calendar.getInstance();
-			cal.setTime(DateUtils.getCurrentDateWithoutTime());
-			cal.add(Calendar.YEAR, -7);
+		cal.setTime(DateUtils.getCurrentDateWithoutTime());
+		cal.add(Calendar.YEAR, -7);
 		return cal.getTime();
 	}
-	//#29640 - End
+
+	public void searchCMSuppPendTaskPopup() {
+		cmSupplierPendTaskDataModel.reloadData();
+	}
+
+	public void resetCMSuppPendTaskPopup() {
+		this.getManagedBean().setDropdownCompanyNameOrRegNo(null);
+		this.getManagedBean().setCompanyNameOrRegNo(null);
+		cmSupplierPendTaskDataModel.resetData();
+	}
+
+	public void selectCompanyName() {
+		Object[] objects = (Object[]) this.getManagedBean().getSelectSupplier();
+
+		this.getManagedBean().setCompanyName(String.valueOf(objects[1]));
+	}
+
+	public void rowSelectSupplier() {
+		if (this.getManagedBean().getSelectSupplier() != null && this.getManagedBean().getSelectSupplier().length > 0) {
+			this.getManagedBean().setDisableSelectBtn(false);
+		} else if (this.getManagedBean().getSelectSupplier() != null
+				&& this.getManagedBean().getSelectSupplier().length == 0) {
+			this.getManagedBean().setDisableSelectBtn(true);
+		}
+	}
+
+	public void onPageChangeSelectSupplier(PageEvent event) {
+		if (this.getManagedBean().getSelectSupplier() != null && this.getManagedBean().getSelectSupplier().length > 0) {
+			this.getManagedBean().setDisableSelectBtn(false);
+		} else if (this.getManagedBean().getSelectSupplier() != null
+				&& this.getManagedBean().getSelectSupplier().length == 0) {
+			this.getManagedBean().setDisableSelectBtn(true);
+		}
+	}
+
+	public void cmSupplierPendTaskpopupAction() {
+		this.getManagedBean().setDisableSelectBtn(true);
+	}
+
+	private class cmSupplierPendTaskDataModel extends PagingDataModel<Object[]> {
+
+		private static final long serialVersionUID = 1L;
+
+		public cmSupplierPendTaskDataModel() {
+			super("dtcmSuppierPendTasksearchresults");
+		}
+
+		@Override
+		protected ISearchResultBean<Object[]> pageChangeListener(ISearchBean<Object[]> searchBean) {
+
+			log.info("........search supplier.................");
+			log.info("companyNameOrRegNo:" + getManagedBean().getDropdownCompanyNameOrRegNo());
+
+			ICodificationSO codificationSO = null;
+			CodificationResDTO resDTO = null;
+			try {
+
+				codificationSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",
+						ICodificationSO.class);
+
+				CodificationReqDTO reqDTO = new CodificationReqDTO();
+
+				if (getManagedBean().getDropdownCompanyNameOrRegNo() != null
+						&& getManagedBean().getDropdownCompanyNameOrRegNo().equals("CompanyName")) {
+					reqDTO.setCompanyName(getManagedBean().getCompanyNameOrRegNo());
+				}
+				if (getManagedBean().getDropdownCompanyNameOrRegNo() != null
+						&& getManagedBean().getDropdownCompanyNameOrRegNo().equals("RegNo")) {
+					reqDTO.setRegNo(getManagedBean().getCompanyNameOrRegNo());
+				}
+
+				reqDTO.setSearchBeanSupp(searchBean);
+
+				log.info("*********Start********");
+
+				resDTO = codificationSO.SearchSupplierPendTaskInCMCD(reqDTO);
+
+				Map tempMap = new HashMap();
+				for (int i = 0; i < resDTO.getCompanyResultBean().getResultList().size(); i++) {
+					Object[] objects = (Object[]) resDTO.getCompanyResultBean().getResultList().get(i);
+
+					log.info(" objects " + String.valueOf(objects[0]) + String.valueOf(objects[1])
+							+ String.valueOf(objects[2]));
+
+					tempMap.put(objects, objects);
+				}
+
+				if (resDTO != null) {
+
+					log.info("*************End*****************");
+					getManagedBean().setDisableSelectBtn(true);
+					return resDTO.getCompanyResultBean();
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+	}
+	// #29640 - End
 }
