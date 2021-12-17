@@ -129,7 +129,7 @@
 		<p:remoteCommand name="resetAllData" partialSubmit="true" update="cmSupplierListPendTask, cmSupplierPendTask, dtcmSuppierPendTasksearchresults"
 		 action="#{cmReportsBackingBean.resetCMSuppPendTaskPopup}" process="@this" />
 		<p:dialog id="cmSupplierListPendTask" widgetVar="cmSupplierListPendTaskPopup" closable="true" modal="true" onHide="resetAllData();"
-			header="#{lbl['lbl.lov.listing']} - #{lbl['lbl.rpt.cmpName']}" width="1000" height="550">
+			header="#{lbl['lbl.lov.listing']} - #{lbl['lbl.rpt.cmpName']}" width="700" height="550">
 			<ui:include src="/resources/my.ac/components/cmSupplierPendTaskPopup.xhtml"></ui:include>
 		</p:dialog>
 
