@@ -31,7 +31,6 @@ p {
 	color: red;
 }
 
-
 .text_family_medium {
 	font-family: Arial;
 	font-weight: normal;
@@ -139,9 +138,9 @@ u.underline {
 
 <body>
 
-	<table border="0" cellpadding="5" cellspacing="5" width="100%">
+	<table border="0" cellpadding="2" cellspacing="2" width="100%">
 		<tr>
-			<td align="center"><span class="text_family_header">SURAT SETUJU TERIMA <br /> (Bagi $headerTitle Perkhidmatan) <br /><br /><br /></span></td>
+			<td align="center"><span class="text_family_header">SURAT SETUJU TERIMA <br /> (Bagi $headerTitle Bekalan) <br /><br /><br /></span></td>
 		</tr>
 		<tr>
 			<td align="right"><span class="text_family">Rujukan Kami : $fileNo <br />Tarikh :
@@ -199,49 +198,69 @@ u.underline {
 					</span>
 				</p>
 				## #25025 & #26770 -end
+
 				## #25025 & #26770 -start
 				<p>
-					<span class="text_family_red">*3. &#160;&#160;&#160;&#160;&#160;Harga kontrak adalah termasuk peruntukan Kerajaan sebanyak 0% cukai
-					perkhidmatan memandangkan perkhidmatan ini dikenakan cukai dan syarikat tuan telah berdaftar dengan Jabatan Kastam
-					Diraja Malaysia (JKDM). Pembayaran cukai perkhidmatan ini adalah dikira berdasarkan tuntutan sebenar dan tarikh kuat
-					kuasa pendaftaran syarikat tuan dengan JKDM.</span>
-				</p>
-				## #25025 & #26770 -end
-				
-				<p>
-					<span class="text_family_small">Perenggan 3 di atas adalah terpakai untuk perolehan dengan syarikat yang berdaftar di
-					bawah JKDM dan Perkhidmatan Dikenakan Cukai di bawah  Akta Cukai Perkhidmatan 2018 </span>
-				</p>
-				## #25025 & #26770 -start
-				<p>
-					<span class="text_family_red">*3. &#160;&#160;&#160;&#160;&#160;Harga kontrak adalah tidak termasuk peruntukan Kerajaan sebanyak 0% cukai
-					perkhidmatan memandangkan syarikat tuan tidak berdaftar dengan Jabatan Kastam Diraja Malaysia (JKDM). Sekiranya syarikat
-					tuan telah berdaftar dengan JKDM, tuan adalah dikehendaki untuk memaklumkan nombor pendaftaran dan tarikh kuat kuasanya
-					kepada Kerajaan untuk pelarasan harga kontrak dalam tempoh tujuh (7) hari dari tarikh surat kelulusan JKDM. Pembayaran
-					cukai perkhidmatan ini adalah dikira berdasarkan tuntutan sebenar dan tarikh kuat kuasa pendaftaran syarikat tuan dengan
-					JKDM.</span>
+					<span class="text_family_red">*3. &#160;&#160;&#160;&#160;&#160;Harga kontrak adalah tidak termasuk cukai
+					jualan selaras dengan pengecualian yang diberikan dibawah Perintah Cukai Jualan
+					(Orang Yang Dikecualikan Daripada Pembayaran Cukai) 2018 yang dengannya Sijil Di
+					Bawah Perintah Cukai Jualan (Orang Yang Dikecualikan Daripada Pembayaran Cukai)
+					2018 akan dikeluarkan sebelum sebarang pembayaran dibuat.</span>
 				</p>
 				## #25025 & #26770 -end
 
 				
 				<p>
-					<span class="text_family_small">Perenggan 3 di atas adalah terpakai untuk perolehan dengan syarikat yang tidak berdaftar
-					di bawah JKDM bagi Perkhidmatan Yang Dikenakan Cukai di bawah Akta Cukai Perkhidmatan 2018</span>
+					<span class="text_family_small">Perenggan 3 di atas adalah terpakai untuk perolehan
+					Bekalan yang diberi pengecualian cukai di bawah Perintah Cukai Jualan
+					(Orang Yang Dikecualikan Daripada Pembayaran Cukai) 2018.</span>
 				</p>
-				## #25025 & #26770 -start							
+
+				## #25025 & #26770 -start
 				<p>
-					<span class="text_family_red">4. &#160;&#160;&#160;&#160;&#160;Adalah dimaklumkan bahawa tiada perkhidmatan boleh dibuat <b>melainkan</b> jika syarikat tuan telah mengemukakan kepada Kerajaan dokumen-dokumen berikut:  </span>
+					<span class="text_family_red">*3. &#160;&#160;&#160;&#160;&#160;Harga kontrak adalah termasuk peruntukan
+					Kerajaan sebanyak 0% cukai jualan memandangkan barangan ini dikenakan
+					cukai dan syarikat tuan telah berdaftar dengan Jabatan Kastam Diraja Malaysia (JKDM).
+					Pembayaran cukai jualan ini adalah dikira berdasarkan tuntutan sebenar dan tarikh kuat
+					kuasa pendaftaran syarikat tuan dengan JKDM. </span>
+				</p>
+				## #25025 & #26770 -end
+				<p>
+					<span class="text_family_small">Perenggan 3 di atas adalah terpakai untuk syarikat yang
+					berdaftar dengan JKDM dan Barangan Dikenakan Cukai Dibawah Akta Cukai Jualan 2018</span>
+				</p>
+				
+				## #25025 & #26770 -start
+				<p>
+					<span class="text_family_red">*3. &#160;&#160;&#160;&#160;&#160;Harga kontrak adalah tidak termasuk peruntukan Kerajaan
+					sebanyak 0% cukai jualan memandangkan syarikat tuan tidak berdaftar dengan Jabatan
+					Kastam Diraja Malaysia (JKDM). Sekiranya syarikat tuan telah berdaftar dengan JKDM, tuan adalah
+					dikehendaki untuk memaklumkan nombor pendaftaran dan tarikh kuat kuasanya kepada Kerajaan untuk
+					pelarasan harga kontrak dalam tempoh tujuh (7) hari dari tarikh surat kelulusan JKDM. Pembayaran
+					cukai jualan ini adalah dikira berdasarkan tuntutan sebenar dan tarikh kuat kuasa pendaftaran
+					syarikat tuan dengan JKDM. </span>
+				</p>
+				## #25025 & #26770 -end
+				<p>
+					<span class="text_family_small">Perenggan 3 di atas adalah terpakai untuk syarikat yang tidak
+					berdaftar dengan JKDM dan Barangan Dikenakan Cukai dibawah Akta Cukai Jualan 2018.</span>
+				</p>
+				
+				## #25025 & #26770 -start
+				<p>
+					<span class="text_family_red">4. &#160;&#160;&#160;&#160;&#160;Adalah dimaklumkan bahawa tiada pembekalan barang boleh dibuat <b>melainkan</b> jika syarikat tuan telah mengemukakan kepada Kerajaan dokumen-dokumen berikut:  </span>
 				</p>
 				## #25025 & #26770 -end
 
 				<div class="text_indent">
-							## #25025-start
+				
+						## #25025-start
 							<table class="text_family_red">
 								<tr>
 									<td align="center" style="vertical-align: top;">*(a)</td>
 									<td>suatu bon pelaksanaan yang tidak boleh dibatalkan yang berjumlah Ringgit Malaysia $bondAmtText (RM $bondAmt);<br/>
-									<span class="text_family_small">Bon Pelaksanaan hanya dikenakan kepada perolehan yang bernilai RM200,000 dan ke atas sahaja.</span>
-									</td>
+									<span class="text_family_small">Bon Pelaksanaan hanya dikenakan kepada perolehan yang bernilai RM200,000 dan ke atas sahaja.</span></td>
+									
 								</tr>
 								<tr>
 									<td align="center" style="vertical-align: top;">*(b)</td>
@@ -260,28 +279,22 @@ u.underline {
 							## #25025- end
 				</div>
 				
-				<p><span class="text_family_red">seperti yang ditetapkan dalam <b><i>Lampiran A</i></b> tidak melebihi <span class="text_family_red"> *14/30 </span> hari dari tarikh pengakuan penerimaan Surat ini oleh syarikat tuan. Apa-apa kegagalan dalam mematuhi kehendak di perenggan ini dalam tempoh masa yang ditetapkan, boleh mengakibatkan Surat ini terbatal dan Kerajaan tidaklah dengan apa-apa cara jua bertanggungan terhadap syarikat tuan <b>melainkan jika</b> penepian bertulis diberikan oleh orang yang diberi kuasa, bagi perkhidmatan yang perlu dibuat dengan segera atau serta-merta apabila kelewatan itu akan memudarat dan menjejaskan perkhidmatan dan kepentingan awam. </span></p>
+				<p><span class="text_family_red">seperti yang ditetapkan dalam <b><i>Lampiran A</i></b> tidak melebihi <span class="text_family_red"> *14/30 </span> hari dari tarikh pengakuan penerimaan Surat ini oleh syarikat tuan. Apa-apa kegagalan dalam mematuhi kehendak di perenggan ini dalam tempoh masa yang ditetapkan, boleh mengakibatkan Surat ini terbatal dan Kerajaan tidaklah dengan apa-apa cara jua bertanggungan terhadap syarikat tuan <b>melainkan jika</b> penepian bertulis diberikan oleh orang yang diberi kuasa, bagi bekalan barang yang perlu dibuat dengan segera atau serta-merta apabila kelewatan itu akan memudarat dan menjejaskan perkhidmatan dan kepentingan awam. </span></p>
+				
 				## #25025 & #26770 -start
 				<p>
-					<span class="text_family">5.&#160;&#160;&#160;&#160;&#160;Setelah pesanan/arahan dikeluarkan oleh Kerajaan, syarikat tuan dikehendaki melaksanakan perkhidmatan dalam tempoh yang ditetapkan dan kualiti perkhidmatan tersebut hendaklah memuaskan hati serta memenuhi kehendak Kerajaan. Sekiranya syarikat tuan gagal melaksanakan perkhidmatan dalam tempoh dan/atau kualiti yang ditetapkan, Kerajaan berhak membatalkan pesanan/arahan yang dikeluarkan dan/atau mengenakan <span class="text_family_red">*Denda/ Tolakan/ <i>Liquidated & Ascertained Damages</i> (LAD)</span> seperti yang ditetapkan dalam <b><i>Lampiran A</i></b>.  </span>
+					<span class="text_family">5. &#160;&#160;&#160;&#160;&#160;Setelah pesanan/arahan dikeluarkan oleh Kerajaan, syarikat tuan dikehendaki melaksanakan pembekalan barang dalam tempoh yang ditetapkan dan kualiti bekalan tersebut hendaklah memuaskan hati serta memenuhi kehendak Kerajaan. Sekiranya syarikat tuan gagal melaksanakan pembekalan barang dalam tempoh dan/atau kualiti yang ditetapkan, Kerajaan berhak membatalkan pesanan/arahan yang dikeluarkan dan/atau mengenakan <span class="text_family_red">*Denda/ Tolakan/ <i>Liquidated & Ascertained Damages</i> (LAD)</span> seperti yang ditetapkan dalam <b><i>Lampiran A</i></b>.  </span>
 				</p>
 				## #25025 & #26770 -end
 				#if($isSL1M == "true")
+				## #25025 & #26770 -start
 					<p>
-						<span class="text_family">
-						#if ($scLoa.scLoiLoa.docType == "PR")
-								*6.&#160;&#160;&#160;Syarikat tuan juga adalah dikehendaki melaksanakan program <i>Professional Training
-									and Education for Growing Entrepreneurs </i> (PROT&Eacute;G&Eacute;) seperti yang ditetapkan oleh Kerajaan berdasarkan harga kontrak
-									dengan bilangan minimum peserta PROT&Eacute;G&Eacute; sebanyak ____________________________ orang tanpa sebarang kos kepada Kerajaan. Bilangan minimum
-									peserta yang diperlukan hendaklah dikira berdasarkan formula di bawah:</span>
-						#else
-								6.&#160;&#160;&#160;Syarikat tuan juga adalah dikehendaki melaksanakan program <i>Professional Training
-									and Education for Growing Entrepreneurs </i> (PROT&Eacute;G&Eacute;) seperti yang ditetapkan oleh Kerajaan berdasarkan harga kontrak
-									dengan bilangan minimum peserta PROT&Eacute;G&Eacute; sebanyak ____________________________ orang tanpa sebarang kos kepada Kerajaan. Bilangan minimum
-									peserta yang diperlukan hendaklah dikira berdasarkan formula di bawah:</span>
-						#end
-					
+						<span class="text_family">*6. &#160;&#160;&#160;&#160;&#160;Syarikat tuan juga adalah dikehendaki melaksanakan program <i>Professional Training
+						and Education for Growing Entrepreneurs </i> (PROT&Eacute;G&Eacute;) seperti yang ditetapkan oleh Kerajaan berdasarkan harga kontrak
+						dengan bilangan minimum peserta PROT&Eacute;G&Eacute; sebanyak .................................. orang tanpa sebarang kos kepada Kerajaan. Bilangan minimum
+						peserta yang diperlukan hendaklah dikira berdasarkan formula di bawah:</span>
 					</p>
+					## #25025 & #26770 -end
 					<p>
 						<table width="50%" align="center" style="border-collapse: collapse;">
 							<tr>
@@ -305,28 +318,23 @@ u.underline {
 							</tr>
 						</table>
 					</p>
-								
+					
 				#else
+				## #25025 & #26770 -start
 					<p>
-						<span class="text_family">
-						## #25025 & #26770 -start
-						#if ($scLoa.scLoiLoa.docType == "PR")
-							*6.&#160;&#160;&#160;&#160;&#160;Syarikat tuan juga adalah digalakkan melaksanakan program <i>Professional Training and Education for Growing Entrepreneurs </i> (PROT&Eacute;G&Eacute;) seperti yang ditetapkan oleh Kerajaan.</span>
-						#else
-							6.&#160;&#160;&#160;&#160;&#160;Syarikat tuan juga adalah digalakkan melaksanakan program <i>Professional Training
+						<span class="text_family">*6. &#160;&#160;&#160;&#160;&#160;Syarikat tuan juga adalah digalakkan melaksanakan program <i>Professional Training
 						and Education for Growing Entrepreneurs </i> (PROT&Eacute;G&Eacute;) seperti yang ditetapkan oleh Kerajaan.</span>
-						#end
-						## #25025 & #26770 -end
 					</p>
+				## #25025 & #26770 -end	
+					
 				#end
-				
 				<p>
 					<span class="text_family_small">Perenggan ini terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki
-					untuk melaksanakan Program PROT&Eacute;G&Eacute; berdasarkan PP/PK 1.2</span>
+					untuk melaksanakan Program PROT&Eacute;G&Eacute; berdasarkan PP//PK 1.2</span>
 				</p>
 				
 				<p>
-					<span class="text_family">7.Bagi tujuan program PROT&Eacute;G&Eacute; ini, syarikat tuan adalah dikehendaki untuk:</span>
+					<span class="text_family">7. Bagi tujuan program PROT&Eacute;G&Eacute; ini, syarikat tuan adalah dikehendaki untuk:</span>
 				</p>
 				
 				<div class="text_indent">
@@ -355,26 +363,25 @@ u.underline {
 						</table>
 						## #25025-end	
 				</div>
-					## #25025 & #26770 -start
+				## #25025 & #26770 -start
 					<p>
-						<span class="text_family">*8.&#160;&#160;&#160;&#160;&#160;Sekiranya syarikat tuan gagal mematuhi mana-mana terma di perenggan 6 dan 7 atau arahan oleh Kerajaan, Kerajaan berhak untuk tidak mempertimbangkan sebarang tawaran kontrak baharu atau pelanjutan kontrak pada masa hadapan kepada syarikat tuan.</span>
+						<span class="text_family">*8. &#160;&#160;&#160;&#160;&#160;Sekiranya syarikat tuan gagal mematuhi mana-mana terma di perenggan 6 dan 7 atau arahan oleh Kerajaan, Kerajaan berhak untuk tidak mempertimbangkan sebarang tawaran kontrak baharu atau pelanjutan kontrak pada masa hadapan kepada syarikat tuan.</span>
 					</p>
 					## #25025 & #26770 -end
 					<p>
-						<span class="text_family_small">Perenggan ini terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki untuk melaksanakan Program
-						PROT&Eacute;G&Eacute; berdasarkan PP/PK1.2. Bagi Harga Kontrak di bawah nilai ambang, perenggan ini hendaklah dipotong.</span>
+						<span class="text_family_small">Perenggan ini terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki untuk melaksanakan Program PROT&Eacute;G&Eacute; berdasarkan PP/PK1.2. Bagi Harga Kontrak di bawah nilai ambang, perenggan ini hendaklah dipotong.</span>
 					</p>
-									
+											
 					<p>
-					## #25025 & #26770 -start		
-						<span class="text_family">9.&#160;&#160;&#160;&#160;&#160;Syarikat tuan juga adalah diingatkan bahawa Kerajaan berhak untuk membatalkan Surat ini sekiranya:  </span></p>
-					## #25025 & #26770 -end			
+					## #25025 & #26770 -start
+						<span class="text_family">9. &#160;&#160;&#160;&#160;&#160;Syarikat tuan juga adalah diingatkan bahawa Kerajaan berhak untuk membatalkan Surat ini sekiranya:  </span></p>
+					## #25025 & #26770 -end
 					<div class="text_indent">
-						## 25025- start
+					## 25025- start
 						<table class="text_family" style="text-align:justify;">
 							<tr>
 								<td align="center" style="vertical-align: top;">(a)</td>
-								<td align="justify">syarikat tuan gagal mematuhi mana-mana terma di perenggan 4 dalam tempoh masa yang ditetapkan;</td>
+								<td>syarikat tuan gagal mematuhi mana-mana terma di perenggan 4 dalam tempoh masa yang ditetapkan;</td>
 							</tr>
 							<tr>
 								<td align="center" style="vertical-align: top;">(b)</td>
@@ -399,10 +406,11 @@ u.underline {
 							<tr>
 								<td align="center" style="vertical-align: top;">(g)</td>
 								#if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")	
-									<td>syarikat tuan gagal <span class="text_family_red"> *menyempurnakan perkhidmatan/membekalkan barang </span> dalam tempoh yang ditetapkan seperti di <b><i>Lampiran A</i></b>; </td>
+									<td>syarikat tuan gagal <span class="text_family_red"> *membekalkan barang/menyempurnakan perkhidmatan </span> dalam tempoh yang ditetapkan seperti di <b><i>Lampiran A</i></b>; </td>
 								#else
-									<td>syarikat tuan gagal <span class="text_family_red"> *menyempurnakan perkhidmatan/membekalkan barang </span> dalam tempoh yang ditetapkan seperti di <b><i>Lampiran A</i></b>; </td>
+									<td>syarikat tuan gagal <span class="text_family_red"> *membekalkan barang/menyempurnakan perkhidmatan </span> dalam tempoh yang ditetapkan seperti di <b><i>Lampiran A</i></b>; </td>
 								#end
+								
 							</tr>
 							<tr>
 								<td align="center" style="vertical-align: top;">(h)</td>
@@ -438,21 +446,20 @@ u.underline {
 						## #25025-end
 					</div>
 
-					## #25025 & #26770 -start		
+					## #25025 & #26770 -start
 					<p>
-						<span class="text_family">10.&#160;&#160;&#160;&#160;&#160;Sekiranya Surat ini dibatalkan atas alasan seperti yang ditetapkan di perenggan 9, Kerajaan tidak akan bertanggungan terhadap apa-apa kerugian syarikat tuan termasuk kerugian masa hadapan.  </span>
+						<span class="text_family">10. &#160;&#160;&#160;&#160;&#160;Sekiranya Surat ini dibatalkan atas alasan seperti yang ditetapkan di perenggan 9, Kerajaan tidak akan bertanggungan terhadap apa-apa kerugian syarikat tuan termasuk kerugian masa hadapan.  </span>
 					</p>
-
 					
 					<p>
-						<span class="text_family">11.&#160;&#160;&#160;&#160;&#160;Bersama-bersama Surat ini disertakan Surat Akuan Pembida Berjaya dan Surat Akuan Sumpah Syarikat seperti di <b><i>Lampiran B</i></b> dan <b><i>Lampiran C</i></b> untuk ditandatangani oleh syarikat tuan dan dikembalikan bersama-sama dengan Surat ini.  </span>
+						<span class="text_family">11. &#160;&#160;&#160;&#160;&#160;Bersama-bersama Surat ini disertakan Surat Akuan Pembida Berjaya dan Surat Akuan Sumpah Syarikat seperti di <b><i>Lampiran B</i></b> dan <b><i>Lampiran C </i></b> untuk ditandatangani oleh syarikat tuan dan dikembalikan bersama-sama dengan Surat ini.  </span>
 					</p>
-
+					
 					<p>
-						<span class="text_family">12.&#160;&#160;&#160;&#160;&#160;Surat ini dihantar kepada syarikat tuan dalam tiga (3) salinan. Sila kembalikan ke pejabat ini salinan asal dan kedua berserta lampiran yang berkaitan yang telah ditandatangani dengan sempurna oleh syarikat tuan dan saksi syarikat tuan tidak melebihi <span class="text_family_red">*3/7/14 </span> hari dari tarikh Surat ini diterima untuk tindakan kami selanjutnya. 
+						<span class="text_family">12. &#160;&#160;&#160;&#160;&#160;Surat ini dihantar kepada syarikat tuan dalam tiga (3) salinan. Sila kembalikan ke pejabat ini salinan asal dan kedua berserta lampiran yang berkaitan yang telah ditandatangani dengan sempurna oleh syarikat tuan dan saksi syarikat tuan tidak melebihi <span class="text_family_red">*3/7/14 </span> hari dari tarikh Surat ini diterima untuk tindakan kami selanjutnya. 
 						Apa-apa kegagalan dalam mematuhi kehendak di perenggan ini dalam tempoh masa yang ditetapkan boleh mengakibatkan Surat ini terbatal dan Kerajaan tidaklah dengan apa-apa jua bertanggungan terhadap syarikat tuan.</span>
 					</p>
-				## #25025 & #26770 -end		
+				## #25025 & #26770 -end
 			</td>
 		</tr>
 		
@@ -461,7 +468,7 @@ u.underline {
 		 <tr>
 			<td>
 				<p>
-					<span class="text_family">Sekian, terima kasih. <br /> <br /> </span>
+					<span class="text_family"><br />Sekian, terima kasih. <br /> <br /> </span>
 				</p>
 			</td>
 		</tr>
@@ -470,9 +477,9 @@ u.underline {
 			<td><span class="text_family_header">"BERKHIDMAT UNTUK NEGARA"</span> <br /> <br /></td>
 		</tr>
 		<tr>
-			## #25025 & #26770 -start		
+		## #25025 & #26770 -start
 			<td>Saya yang menurut perintah, <br /> <br />
-			## #25025 & #26770 -end		
+			## #25025 & #26770 -end
 				<p>
 					<span class="text_family_small">Tandatangan Pegawai yang diberi kuasa oleh Menteri di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani kontrak <br /> <br /> </span>
 				</p>
@@ -540,7 +547,7 @@ u.underline {
 			<td colspan="4">
 				<br/>
 				## #25025-start
-					<span class="text_family">Meterai atau Cap Syarikat</span><br/><br/>
+				<span class="text_family">Meterai atau Cap Syarikat</span><br/><br/>
 				## #25025-end
 				<span class="text_family_italic">*potong mana yang tidak berkenaan</span>
 			</td>
@@ -565,12 +572,12 @@ u.underline {
 			<table width="100%">
 				<tr>
 					<td colspan="3">
-						<table>
-								<tr>
-									<td align="center" style="vertical-align: top;" class="text_family_header">1. </td>
-									<td class="text_header_submenu">Pendaftaran dengan Suruhanjaya Syarikat Malaysia (SSM) Atau Pendaftaran Koperasi Dengan Suruhanjaya Koperasi Malaysia (SKM) (jika berkaitan)</td>
-								</tr>
-						</table>		
+						<table >
+									<tr>
+										<td align="center" style="vertical-align: top;" class="text_family_header">1. </td>
+										<td class="text_header_submenu">Pendaftaran dengan Suruhanjaya Syarikat Malaysia (SSM) Atau Pendaftaran Koperasi Dengan Suruhanjaya Koperasi Malaysia (SKM) (jika berkaitan)</td>
+									</tr>
+						</table>						
 					</td>
 				</tr>
 				<tr>
@@ -587,8 +594,8 @@ u.underline {
 				</tr>
 
 				<tr>
-					<td colspan="3">
-						<table>
+					<td colspan="3"><span class="text_header_submenu">
+					 	<table>
 								<tr>
 									<td align="center" style="vertical-align: top;" class="text_family_header">2. </td>
 									<td class="text_header_submenu">Pendaftaran dengan Kementerian Kewangan (jika berdaftar)</td>
@@ -629,12 +636,12 @@ u.underline {
 
 				<tr>
 					<td colspan="3">
-						<table >
+						<table>
 								<tr>
 									<td align="center" style="vertical-align: top;" class="text_family_header">3. </td>
 									<td class="text_header_submenu">Pendaftaran Cukai Jualan dengan Jabatan	Kastam Diraja Malaysia (jika berdaftar), sekiranya berkaitan</td>
 								</tr>
-						</table>		
+						</table>
 					</td>
 				</tr>
 				<tr>
@@ -663,24 +670,24 @@ u.underline {
 				</tr>
 				<tr>
 					<td align="left" class="submenu_padding">
-						## #25025-start
+					## #25025-start
 						<table class="text_family">
 							<td align="center" style="vertical-align: top;">4.1 </td>
 							<td>Harga $docType (Butiran harga seperti di <b>Lampiran A1</b>)</td>
 						</table>
-						## #25025-end	
+					## #25025-end	
 					</td>
 					<td>:</td>
 					<td>RM $offerPrice</td>
 				</tr>
 				<tr>
 					<td align="left" class="submenu_padding">
-						## #25025-start
+					## #25025-start
 						<table class="text_family">
 								<td align="center" style="vertical-align: top;">4.2 </td>
-								<td>Peruntukan Cukai Perkhidmatan (sekiranya berkaitan)</td>
+								<td>Peruntukan Cukai Jualan (sekiranya berkaitan)</td>
 						</table>
-						## #25025-end
+					## #25025-end		
 					</td>
 					<td>:</td>
 					<td>RM $sstAmt</td>
@@ -692,7 +699,7 @@ u.underline {
 								<td align="center" style="vertical-align: top;">4.3 </td>
 								<td>Fi Perkhidmatan ePerolehan (sekiranya berkaitan)</td>
 						</table>
-						## #25025-end
+						## #25025-end	
 					</td>
 					<td>:</td>
 					<td>$fiService </td>
@@ -714,49 +721,57 @@ u.underline {
 					<td align="left" class="submenu_padding"><span
 						class="text_family">4.6 Tarikh Mula Kontrak </span></td>
 					<td>:</td>
-					 <td>#if($!scLoa.contractEffDate) $dateSDF.format($scLoa.contractEffDate) #end </td> 
+					<td></td>
 				</tr>
 				<tr>
 					<td align="left" class="submenu_padding"><span
 						class="text_family">4.7 Tarikh Tamat Kontrak </span></td>
 					<td>:</td>
-					<td>$dateSDF.format($!scLoa.contractExpDate) </td>
+					<td> </td>
 				</tr>
 
 				<tr>
-					<td colspan="3">
+					<td colspan="3"> 
+					
 						<table>
 								<tr>
 									<td align="center" style="vertical-align: top;" class="text_sub_header_red">5. </td>
-									<td class="text_header_submenu_red">Tempoh dan Jadual Penyempurnaan Perkhidmatan</td>
+									<td class="text_header_submenu_red">Tempoh dan Jadual Pembekalan Barang</td>
 								</tr>
 						</table>
 					</td>
 				</tr>
 				<tr>
-					<td align="left" style="padding-left: 8px;" colspan="3"><span
-						class="text_family_red">*Senarai item, kuantiti, jenis
-							perkhidmatan dan/atau tempoh serta jadual penyempurnaan perkhidmatan yang
-							ditetapkan seperti di <b><i>Lampiran A2</i></b>
-					</span></td>
+					#if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")
+						<td align="left" style="padding-left: 8px;" colspan="3"><span
+							class="text_family_red">* Senarai item, kuantiti, dan/atau tempoh serta jadual
+							pembekalan yang ditetapkan seperti di <b><i>Lampiran A2</i></b>
+						</span></td>
+					#else
+						<td align="left" style="padding-left: 8px;" colspan="3"><span
+							class="text_family_red">*Senarai item, kuantiti dan/atau tempoh serta jadual
+							pembekalan yang ditetapkan seperti di <b><i>Lampiran A2</i></b>
+						</span></td>
+					#end
 				</tr>
 				<tr>
-					<td colspan="3"><span class="text_family_red"><b><i>Lampiran A2</i></b> adalah untuk menyatakan tempoh atau jadual perkhidmatan mengikut tawaran syarikat dan disediakan oleh Agensi</span></td>
+					<td colspan="3"><span class="text_family_red"><b><i>Lampiran A2</i></b> adalah untuk menyatakan tempoh atau jadual pembekalan mengikut tawaran syarikat dan disediakan oleh Agensi</span></td>
 				</tr>
 
 				<tr>
-					<td colspan="3">
+					<td colspan="3"> 
+						
 						<table>
 								<tr>
 									<td align="center" style="vertical-align: top;" class="text_sub_header_red">6. </td>
-									<td class="text_header_submenu_red">Skop Perkhidmatan/Service Level Agreement (SLA)(sekiranya berkaitan)</td>
+									<td class="text_header_submenu_red">Spesifikasi pembekalan (sekiranya berkaitan)</td>
 								</tr>
 						</table>
 					</td>
 				</tr>
 				<tr>
 					<td align="left" style="padding-left: 8px;" colspan="3"><span
-						class="text_family_red">*Skop Perkhidmatan/SLA yang
+						class="text_family_red">*Spesifikasi pembekalan yang
 							ditetapkan seperti di <b><i>Lampiran A3</i></b>
 					</span></td>
 				</tr>
@@ -765,14 +780,14 @@ u.underline {
 				</tr>
 
 				<tr>
-					<td colspan="3"> 
+					<td colspan="3">
 						<table>
 								<tr>
 									<td align="center" style="vertical-align: top;" class="text_sub_header_red">7. </td>
 									<td class="text_header_submenu_red">*Bon Pelaksanaan</td>
 								</tr>
-						</table>				
-						</td>
+						</table>
+					</td>
 				</tr>
 				
 				<tr>
@@ -819,9 +834,9 @@ u.underline {
 					<td align="left" class="submenu_padding" colspan="3"><span
 						class="text_family_small">Lampiran A4 akan disediakan oleh Agensi berdasarkan format PP/PK4</span></td>
 				</tr>
-				## #25025-start				
+				
+				## 25025-start				
 				<tr>
-					
 					<td colspan="3">
 						<table>
 								<tr>
@@ -846,12 +861,13 @@ u.underline {
 						      </tr>
 						</table>
 					</td>
-					
 				</tr>
+
 				<tr valign="top">
 					<td align="left" class="submenu_padding"><span
 						class="text_family_red">8.2	 No. Pendaftaran KWSP</span></td>
 					<td class="text_family_red">:</td>
+					
 					<td>
 						<table border="0" cellpadding="0" cellspacing="0" width="100%">
 							 <tr>
@@ -863,7 +879,7 @@ u.underline {
 						</table>
 					</td>
 				</tr>
-				<tr valign="top">
+				<tr>
 				#if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")
 					<td align="left" class="submenu_padding"><span class="text_family_red">*8.3 Nilai Polisi</span></td>
 				#else
@@ -874,27 +890,29 @@ u.underline {
 				</tr>
 				<tr valign="top">
 				#if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")
-					<td align="left" class="submenu_padding"><span class="text_family_red">*8.4	 Tempoh Perlindungan</span></td>
+					<td align="left" class="submenu_padding"><span class="text_family_red">*8.4	 Tempoh Perlindungan</span>
 				#else
-					<td align="left" class="submenu_padding"><span class="text_family_red">8.4	 Tempoh Perlindungan</span></td>
-				#end	
+					<td align="left" class="submenu_padding"><span class="text_family_red">8.4	 Tempoh Perlindungan</span>
+				#end		
+					</td>
 					<td class="text_family_red">:</td>
 					<td class="text_family_red">Meliputi tempoh kontrak</td>
 				</tr>
 				
-						## #25025 - end		
+				##250025 - end		
 
 				<tr>
-					<td colspan="3"> 
+					<td colspan="3">
+					
 						<table>
 								<tr>
 									<td align="center" style="vertical-align: top;" class="text_sub_header_red">9. </td>
-									<td class="text_header_submenu_red">Kadar *Denda/Tolakan/ <i>Liquidated & Ascertained Damages</i> (LAD)
-							<br/>
-							<span class="text_family_red"><span class="text_family_small">
-							(Lewat/Gagal bekal barang atau tidak menepati spesifikasi) </span></span></td>
+									<td class="text_header_submenu_red">Kenaan *Denda/Tolakan/ <i>Liquidated & Ascertained Damages</i> (LAD)<br/>
+												<span class="text_family_red"><span class="text_family_small">
+												(Lewat/Gagal bekal barang atau tidak menepati spesifikasi) </span></span>
+									</td>
 								</tr>
-						</table>
+						</table>	
 					</td>
 				</tr>
 				<tr>
@@ -904,7 +922,11 @@ u.underline {
 					<td class="text_family_red">
 					    <table border="0" cellpadding="0" cellspacing="0" width="100%">
 					      <tr> 
-					      <td class="text_family_red"><span class="text_family_small">Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara <i>upfront</i> kepada syarikat dalam dokumen pelawaan</span></td>
+					       #if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")
+					       <td class="text_family_red"><span class="text_family_small">Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara <i>upfront</i> kepada syarikat dalam dokumen pelawaan.</span></td>	
+					       #else
+					         	<td class="text_family_red"><span class="text_family_small">Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara <i>upfront</i> kepada syarikat dalam dokumen </span></td>
+					       #end 	
 					      </tr>
 					      <tr> 
 					         <td class="text_family_red">......................................</td>
@@ -917,8 +939,9 @@ u.underline {
 						class="text_family_red">9.2 Kadar Sehari</span></td>
 					<td class="text_family_red">:</td>
 					<td class="text_family_red">RM <span class="text_family_medium"><u class="underline">   Nilai dalam angka </u></span></td>
+					
 				</tr>
-			#if ($isSL1M == "true")
+			 #if ($isSL1M == "true")
 				<tr>
 					<td colspan="3">
 					<br/><br/>
@@ -973,9 +996,10 @@ u.underline {
 							</td>
 						</tr>
 					</table>
-					</td>
+					</td>		
+					
 				</tr>
-			 #end	
+			  #end	
 				<tr>
 					<td align="left" class="submenu_padding"><span
 						class="text_family_red"><i>*potong mana yang tidak berkenaan</i></span></td>
@@ -1009,8 +1033,8 @@ u.underline {
 						Ibu Pejabat Lembaga Hasil Dalam Negeri Malaysia<br/>
 						Menara Hasil<br/>
 						Aras 18, Persiaran Rimba Permai, Cyber 8<br/>
-						<b>63000 PUTRAJAYA</b><br/>
-						(u.p : Pengarah Jabatan Pematuhan Cukai)
+						<b>63000 CYBERJAYA</b><br/>
+						(u.p : Pengarah Jabatan Pematuhan Cukai) 
 					</span>
 				</p>
 				
@@ -1021,18 +1045,8 @@ u.underline {
 						Bahagian Cukai Dalam Negeri (SST)<br/>
 						Aras 3 -7, Blok A, Menara Tulus<br/>
 						No. 22, Persiaran Perdana , Presint 3<br/>
-						<b>61200 PUTRAJAYA</b><br/>
+						<b>61200 PUTRAJAYA</b>
 						(u.p.:Pengarah Bahagian Cukai Dalam Negeri (SST)) 
-					</span>
-				</p>
-				
-				<p style="text-align:left;">
-					<span class="text_family">
-						Sekretariat<br/>
-						Majlis Perundingan Gaji Negara<br/>
-						Kementerian Sumber Manusia<br/>
-						Aras 7, Blok D3, Kompleks D<br/>
-						<b>62530 PUTRAJAYA</b><br/>
 					</span>
 				</p>
 				
@@ -1043,7 +1057,7 @@ u.underline {
 						Kementerian Pembangunan Usahawan<br/>
 						Pusat Pentadbiran Kerajaan Persekutuan<br/>
 						<b>62668 PUTRAJAYA</b><br/>
-						(u.p.: Ketua Sekretariat PROT&Eacute;G&Eacute;) 
+						(u.p.: Ketua Sekretariat PROT&Eacute;G&Eacute;)
 					</span>
 				</p>
 				## #25025 - start
@@ -1057,7 +1071,7 @@ u.underline {
 						(u.p.: Ketua Unit Forensik Majikan dan Hubungan Luar, Seksyen Operasi)
 					</span
 				</p>
-				## #25025 - end		
+				## #25025 - end
 			</td>
 		</tr>
 	</table>
@@ -1073,10 +1087,10 @@ u.underline {
 	</table>
 	
 <div class="break-after"><br/></div>
-
-	
-#if($itemType =="1")
-
+#set($colSpan = 3) 
+	#if ($isZonal)
+		#set($colSpan = 4) 
+	#end	
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
 	<tr>
 		<td align="right" colspan="$colSpan"><span class="text_family"> <b><i>Lampiran
@@ -1091,15 +1105,15 @@ u.underline {
 	</tr>
 	
 	<tr align='left'>
-				<td><span style='font-size: 10px; font-family: Times New Roman;'>
+			<td><span style='font-weight: bold; font-size: 10px; font-family: Times New Roman;'>
 				<table width='100%' border="1">
 					<tr bgcolor="#6d839b">
 						#if ($isZonal)
 							<th>Zone</th> 
 						#end
-							<th style="text-align: center; padding-left: 5px; font-size:10px">Nama Item</th>
-							<th style="text-align: center; padding-left: 5px; font-size:10px">Kuantiti</th>
-							<th style="text-align: center; padding-left: 5px; font-size:10px">Jenis Perkhidmatan</th>
+						<th>Nama Item</th>
+						<th>Kuantiti</th>
+						<th>Jenis Perkhidmatan</th>
 					</tr>
 					#set($String = "formatter") 
 					#foreach($productBean in $jadualHargaItemBean.productItemBeans)
@@ -1126,7 +1140,6 @@ u.underline {
 		</td>
 	</tr>
 </table>
-#else
 <div class="break-after"><br/></div>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
 	<tr>
@@ -1149,8 +1162,8 @@ u.underline {
 							<th>Zone</th> 
 						#end
 						<th>Nama Item</th>
-						<th>Tempoh Bulan</th>
-						<th>Tempoh Penghantaran/Perkhidmatan</th>
+						<th>Kuantiti</th>
+						<th>Jenis Perkhidmatan</th>
 					</tr>
 					#set($String = "formatter") 
 					#foreach( $serviceBean in $jadualHargaItemBean.serviceItemBeans)
@@ -1163,22 +1176,13 @@ u.underline {
 							#end
 							<td class="standard border-bottom left">$serviceBean.item</td>
 							<td class="standard border-bottom left alignRight">
-									#if($serviceBean.clDurationMonth)
-									 $serviceBean.clDurationMonth
+								#if($serviceBean.tier)
+									$serviceBean.fromQty - $serviceBean.toQty
 								#else
-									 $serviceScope
+									$serviceBean.quantity 
 								#end
 							</td>
-							
-							
-								<td class="standard border-bottom left">
-									#if($serviceBean.clDeliveryTerm)
-										$serviceBean.clDeliveryTerm
-									#else	
-									$serviceScope
-									#end	
-								</td>
-							
+							<td class="standard border-bottom left"></td>
 						</tr>
 					#end
 				</table>
@@ -1186,7 +1190,7 @@ u.underline {
 		</td>
 	</tr>
 </table>
-#end
+
 
 #if ($scLoa.scLoiLoa.docType != "PR")
 <div class="break-after"><br/></div>
@@ -1199,17 +1203,16 @@ u.underline {
 					Perkhidmatan/Service Level Agreement (SLA) (sekiranya berkaitan)</u></span> <br />
 				<br /></td>
 		</tr>
-
 	</table>
-	
- #if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")
+
+#if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")
 	#set($rowCount = 0)	
-	#if ($scLoa.scLoiLoa.docType == "NG")
+#if ($scLoa.scLoiLoa.docType == "NG")
 		<table width="100%" border="1" cellpadding="0" cellspacing="0">
 		<tbody>
 			#foreach( $tplspecMaster in $masters )
 				#set($itemType = $bean.getParameterDescForReport($tplspecMaster.itemTypeCode)) 
-				#set($specType = $tplspecMaster.specTypeCode.parameterCode) 
+				#set($specType = $tplspecMaster.specTypeCode.parameterCode)
 				#if ($itemType == "Produk" || $itemType == "Product")
 					 #if ($rowCount == 0)
 						<tr>
@@ -1232,111 +1235,147 @@ u.underline {
 						</tr>
 					#end
 						
-						#foreach( $tplspecQuestion in $tplspecMaster.tplSpecQuestions )
-							
-						#if ($isZonal)
+					#foreach( $tplspecQuestion in $tplspecMaster.tplSpecQuestions )
+											
+					#if ($isZonal)
 
+						#if ($tplspecQuestion.questionType == "I")
+						 
+						<tr>							 
+							
+							<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
+							<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clUom.uomName</td>
+							<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$bean.getParameterDescForReport($tplspecQuestion.clPriceTypeCode)</td>
+							
+							#if ($specType == "F")
+								<td bgcolor="#d0eaee">
+									#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
+									<table width="100%" border="1" cellpadding="0" cellspacing="0">
+										<tbody>
+										<tr style="border-bottom: 1px solid black;" >
+											#if ($tplSpecAnswer.tplSpecZoneQty.tplSpecZoneDtl.zoneName) 
+												<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$tplSpecAnswer.tplSpecZoneQty.tplSpecZoneDtl.zoneName</td>
+											#else
+												<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+											#end
+										</tr>
+										</tbody>
+										</table>
+									#end
+								</td>
+								
+								<td bgcolor="#d0eaee">
+									#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
+									<table width="100%"  border="1" cellpadding="0" cellspacing="0">
+										<tbody>
+										<tr style="border-bottom: 1px solid black;" >
+											#if ($tplSpecAnswer.tplSpecZoneQty.qty) 
+												<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$tplSpecAnswer.tplSpecZoneQty.qty</td>
+											#else
+												<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+											#end
+										</tr>
+										</tbody>
+										</table>
+									#end
+								</td>
+								
+								<td bgcolor="#d0eaee">
+									#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
+									<table width="100%" border="1" cellpadding="0" cellspacing="0">
+										<tbody>
+										<tr style="border-bottom: 1px solid black;" >
+											#if ($tplSpecAnswer.answerNumeric) 
+												<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$tplSpecAnswer.answerNumeric</td>
+											#else
+												<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+											#end
+										</tr>
+										</tbody>
+										</table>
+									#end
+								</td>
+									
+							#else 
+							
+							  #if ($specType == "T")
+									<td bgcolor="#d0eaee">
+										#foreach( $tplSpecZoneQtie in $tplspecQuestion.tplSpecZoneQties )
+										<table width="100%" border="1" cellpadding="0" cellspacing="0">
+											<tbody>
+											<tr style="border-bottom: 1px solid black;" >
+												<td rowspan="$tplSpecZoneQtie.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$tplSpecZoneQtie.tplSpecZoneDtl.zoneName</td>
+											</tr>
+											</tbody>
+											</table>
+										#end
+									</td>
+									
+									<td bgcolor="#d0eaee">
+										#foreach( $tplSpecZoneQtie in $tplspecQuestion.tplSpecZoneQties )
+										<table width="100%" border="1"  cellpadding="0" cellspacing="0">
+											<tbody>
+											<tr style="border-bottom: 1px solid black;" >
+												<td rowspan="$tplSpecZoneQtie.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$tplSpecZoneQtie.qty</td>
+											</tr>
+											</tbody>
+											</table>
+										#end
+									</td>
+							
+									<td bgcolor="#d0eaee">
+										#foreach( $tplSpecZoneQtie in $tplspecQuestion.tplSpecZoneQties )
+										<table width="100%" border="1"  cellpadding="0" cellspacing="0">
+											<tbody>
+											<tr style="border-bottom: 1px solid black;" >
+												<td rowspan="$tplSpecZoneQtie.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+											</tr>
+											</tbody>
+											</table>
+										#end
+									</td>
+								#else
+									<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+									<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+									<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+								#end
+							#end
+											
+							#if ($rowCount == 0)
+								#set($rowCount = $rowCount + 1)
+								<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
+							#end
+							</tr>	
+							
+							<tr>
+							<td bgcolor="#d0eaee" colspan="5">						
+									#if ($tplspecQuestion.specList)
+										#foreach( $specVal in $tplspecQuestion.specList )
+											
+											<table width="100%">
+												<tbody>
+												<tr>
+													<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$specVal</td>
+												</tr>
+												</tbody>
+											</table>
+												
+										#end
+									#end
+							</td>
+							</tr>
+							#end	
+						#else
 							#if ($tplspecQuestion.questionType == "I")
-							 
-							<tr>							 
+											 
+								<tr>
+								
+								
 								<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
 								<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clUom.uomName</td>
 								<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$bean.getParameterDescForReport($tplspecQuestion.clPriceTypeCode)</td>
-								
-								#if ($specType == "F")
-									<td bgcolor="#d0eaee">
-										#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
-										<table width="100%" border="1" cellpadding="0" cellspacing="0">
-											<tbody>
-											<tr style="border-bottom: 1px solid black;" >
-												#if ($tplSpecAnswer.tplSpecZoneQty.tplSpecZoneDtl.zoneName) 
-													<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$tplSpecAnswer.tplSpecZoneQty.tplSpecZoneDtl.zoneName</td>
-												#else
-													<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
-												#end
-											</tr>
-											</tbody>
-											</table>
-										#end
-									</td>
-									
-									<td bgcolor="#d0eaee">
-										#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
-										<table width="100%"  border="1" cellpadding="0" cellspacing="0">
-											<tbody>
-											<tr style="border-bottom: 1px solid black;" >
-												#if ($tplSpecAnswer.tplSpecZoneQty.qty) 
-													<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$tplSpecAnswer.tplSpecZoneQty.qty</td>
-												#else
-													<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
-												#end
-											</tr>
-											</tbody>
-											</table>
-										#end
-									</td>
-									
-									<td bgcolor="#d0eaee">
-										#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
-										<table width="100%" border="1" cellpadding="0" cellspacing="0">
-											<tbody>
-											<tr style="border-bottom: 1px solid black;" >
-												#if ($tplSpecAnswer.answerNumeric) 
-													<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$tplSpecAnswer.answerNumeric</td>
-												#else
-													<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
-												#end
-											</tr>
-											</tbody>
-											</table>
-										#end
-									</td>
-										
-								#else 
-								
-								  #if ($specType == "T")
-										<td bgcolor="#d0eaee">
-											#foreach( $tplSpecZoneQtie in $tplspecQuestion.tplSpecZoneQties )
-											<table width="100%" border="1" cellpadding="0" cellspacing="0">
-												<tbody>
-												<tr style="border-bottom: 1px solid black;" >
-													<td rowspan="$tplSpecZoneQtie.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$tplSpecZoneQtie.tplSpecZoneDtl.zoneName</td>
-												</tr>
-												</tbody>
-												</table>
-											#end
-										</td>
-										
-										<td bgcolor="#d0eaee">
-											#foreach( $tplSpecZoneQtie in $tplspecQuestion.tplSpecZoneQties )
-											<table width="100%" border="1"  cellpadding="0" cellspacing="0">
-												<tbody>
-												<tr style="border-bottom: 1px solid black;" >
-													<td rowspan="$tplSpecZoneQtie.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$tplSpecZoneQtie.qty</td>
-												</tr>
-												</tbody>
-												</table>
-											#end
-										</td>
-								
-										<td bgcolor="#d0eaee">
-											#foreach( $tplSpecZoneQtie in $tplspecQuestion.tplSpecZoneQties )
-											<table width="100%" border="1"  cellpadding="0" cellspacing="0">
-												<tbody>
-												<tr style="border-bottom: 1px solid black;" >
-													<td rowspan="$tplSpecZoneQtie.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
-												</tr>
-												</tbody>
-												</table>
-											#end
-										</td>
-									#else
-										<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
-										<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
-										<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
-									#end
-								#end
-												
+								<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clQuantity</td>
+								<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$serviceScope</td>	
 								#if ($rowCount == 0)
 									#set($rowCount = $rowCount + 1)
 									<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
@@ -1344,7 +1383,7 @@ u.underline {
 								</tr>	
 								
 								<tr>
-								<td bgcolor="#d0eaee" colspan="5">						
+								<td bgcolor="#d0eaee" colspan="4">						
 										#if ($tplspecQuestion.specList)
 											#foreach( $specVal in $tplspecQuestion.specList )
 												
@@ -1361,42 +1400,7 @@ u.underline {
 								</td>
 								</tr>
 								#end	
-							#else
-								#if ($tplspecQuestion.questionType == "I")
-												 
-									<tr>
-									
-									
-									<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
-									<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clUom.uomName</td>
-									<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$bean.getParameterDescForReport($tplspecQuestion.clPriceTypeCode)</td>
-									<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clQuantity</td>
-									<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$serviceScope</td>	
-									#if ($rowCount == 0)
-										#set($rowCount = $rowCount + 1)
-										<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
-									#end
-									</tr>	
-									
-									<tr>
-									<td bgcolor="#d0eaee" colspan="4">						
-											#if ($tplspecQuestion.specList)
-												#foreach( $specVal in $tplspecQuestion.specList )
-													
-													<table width="100%">
-														<tbody>
-														<tr>
-															<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$specVal</td>
-														</tr>
-														</tbody>
-													</table>
-														
-												#end
-											#end
-									</td>
-									</tr>
-									#end	
-			
+							
 							#end
 
 						#end 
@@ -1461,73 +1465,29 @@ u.underline {
 						 
 						#foreach( $tplspecQuestion in $tplspecMaster.tplSpecQuestions )
 							
-						#if ($isZonal)
-
-							#if ($tplspecQuestion.questionType == "I")
-							 
-							<tr>							 
-								<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
-								<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clUom.uomName</td>
-								<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$bean.getParameterDescForReport($tplspecQuestion.clPriceTypeCode)</td>
+							#if ($isZonal)
+							
+								#if ($tplspecQuestion.questionType == "I")
+								 
+								<tr>							 
+									
+									<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
+									<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clUom.uomName</td>
 								
-								#if ($specType == "F")
-									<td bgcolor="#d0eaee">
-										#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
-										<table width="100%" border="1" cellpadding="0" cellspacing="0">
-											<tbody>
-											<tr style="border-bottom: 1px solid black;" >
-												#if ($tplSpecAnswer.tplSpecZoneQty.tplSpecZoneDtl.zoneName) 
-													<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$tplSpecAnswer.tplSpecZoneQty.tplSpecZoneDtl.zoneName</td>
-												#else
-													<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
-												#end
-											</tr>
-											</tbody>
-											</table>
-										#end
-									</td>
-									
-									<td bgcolor="#d0eaee">
-										#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
-										<table width="100%"  border="1" cellpadding="0" cellspacing="0">
-											<tbody>
-											<tr style="border-bottom: 1px solid black;" >
-												#if ($tplSpecAnswer.tplSpecZoneQty.qty) 
-													<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$tplSpecAnswer.tplSpecZoneQty.qty</td>
-												#else
-													<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
-												#end
-											</tr>
-											</tbody>
-											</table>
-										#end
-									</td>
-									
-									<td bgcolor="#d0eaee">
-										#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
-										<table width="100%" border="1" cellpadding="0" cellspacing="0">
-											<tbody>
-											<tr style="border-bottom: 1px solid black;" >
-												#if ($tplSpecAnswer.answerNumeric) 
-													<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$tplSpecAnswer.answerNumeric</td>
-												#else
-													<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
-												#end
-											</tr>
-											</tbody>
-											</table>
-										#end
-									</td>
 										
-								#else 
-								
-								  #if ($specType == "T")
+									<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$bean.getParameterDescForReport($tplspecQuestion.clPriceTypeCode)</td>
+									
+									#if ($specType == "F")
 										<td bgcolor="#d0eaee">
-											#foreach( $tplSpecZoneQtie in $tplspecQuestion.tplSpecZoneQties )
+											#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
 											<table width="100%" border="1" cellpadding="0" cellspacing="0">
 												<tbody>
 												<tr style="border-bottom: 1px solid black;" >
-													<td rowspan="$tplSpecZoneQtie.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$tplSpecZoneQtie.tplSpecZoneDtl.zoneName</td>
+													#if ($tplSpecAnswer.tplSpecZoneQty.tplSpecZoneDtl.zoneName) 
+														<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$tplSpecAnswer.tplSpecZoneQty.tplSpecZoneDtl.zoneName</td>
+													#else
+														<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+													#end
 												</tr>
 												</tbody>
 												</table>
@@ -1535,113 +1495,84 @@ u.underline {
 										</td>
 										
 										<td bgcolor="#d0eaee">
-											#foreach( $tplSpecZoneQtie in $tplspecQuestion.tplSpecZoneQties )
-											<table width="100%" border="1"  cellpadding="0" cellspacing="0">
+											#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
+											<table width="100%"  border="1" cellpadding="0" cellspacing="0">
 												<tbody>
 												<tr style="border-bottom: 1px solid black;" >
-													<td rowspan="$tplSpecZoneQtie.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$tplSpecZoneQtie.qty</td>
-												</tr>
-												</tbody>
-												</table>
-											#end
-										</td>
-								
-										<td bgcolor="#d0eaee">
-											#foreach( $tplSpecZoneQtie in $tplspecQuestion.tplSpecZoneQties )
-											<table width="100%" border="1"  cellpadding="0" cellspacing="0">
-												<tbody>
-												<tr style="border-bottom: 1px solid black;" >
-													<td rowspan="$tplSpecZoneQtie.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
-												</tr>
-												</tbody>
-												</table>
-											#end
-										</td>
-									#else
-										<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
-										<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
-										<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
-									#end
-								#end
-								
-								
-								<td bgcolor="#d0eaee" rowspan="2">
-								#if ($tplspecQuestion.feedbackList)
-									#if ($specType == "T")
-										#foreach( $feedback in $tplspecQuestion.feedbackList)
-											<table width="100%" border="1"  cellpadding="0" cellspacing="0">
-												<tbody>
-												<tr>
-												#if ($feedback) 
-													<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$feedback</td>
-												#end
-												</tr>
-												</tbody>
-											</table>
-										#end
-									#end
-								#end
-								</td>
-								
-								<td bgcolor="#d0eaee" rowspan="2">
-									#if ($tplspecQuestion.answerRemarkList)
-										#foreach( $answerRemark in $tplspecQuestion.answerRemarkList )
-											<table width="100%" border="1"  cellpadding="0" cellspacing="0">
-												<tbody>
-												<tr>
-													#if ($answerRemark) 
-														<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$answerRemark</td>
+													#if ($tplSpecAnswer.tplSpecZoneQty.qty) 
+														<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$tplSpecAnswer.tplSpecZoneQty.qty</td>
 													#else
-														<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+														<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
 													#end
 												</tr>
 												</tbody>
-											</table>
-										#end
-									#end
-								</td>
-								
-								#if ($rowCount == 0)
-									#set($rowCount = $rowCount + 1)
-									<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
-								#end
-								</tr>
-							
-								<tr>
-								<td valign="top" bgcolor="#d0eaee" colspan="5">						
-										#if ($tplspecQuestion.specList)
-										#foreach( $specVal in $tplspecQuestion.specList )
-											
-											<table width="100%">
+												</table>
+											#end
+										</td>
+										
+										<td bgcolor="#d0eaee">
+											#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
+											<table width="100%" border="1" cellpadding="0" cellspacing="0">
 												<tbody>
-												<tr>
-													<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$specVal</td>
+												<tr style="border-bottom: 1px solid black;" >
+													#if ($tplSpecAnswer.answerNumeric) 
+														<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$tplSpecAnswer.answerNumeric</td>
+													#else
+														<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+													#end
 												</tr>
 												</tbody>
-											</table>
-												
+												</table>
+											#end
+										</td>
+											
+									#else 
+									
+									  #if ($specType == "T")
+											<td bgcolor="#d0eaee">
+												#foreach( $tplSpecZoneQtie in $tplspecQuestion.tplSpecZoneQties )
+												<table width="100%" border="1" cellpadding="0" cellspacing="0">
+													<tbody>
+													<tr style="border-bottom: 1px solid black;" >
+														<td rowspan="$tplSpecZoneQtie.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$tplSpecZoneQtie.tplSpecZoneDtl.zoneName</td>
+													</tr>
+													</tbody>
+													</table>
+												#end
+											</td>
+											
+											<td bgcolor="#d0eaee">
+												#foreach( $tplSpecZoneQtie in $tplspecQuestion.tplSpecZoneQties )
+												<table width="100%" border="1"  cellpadding="0" cellspacing="0">
+													<tbody>
+													<tr style="border-bottom: 1px solid black;" >
+														<td rowspan="$tplSpecZoneQtie.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$tplSpecZoneQtie.qty</td>
+													</tr>
+													</tbody>
+													</table>
+												#end
+											</td>
+									
+											<td bgcolor="#d0eaee">
+												#foreach( $tplSpecZoneQtie in $tplspecQuestion.tplSpecZoneQties )
+												<table width="100%" border="1"  cellpadding="0" cellspacing="0">
+													<tbody>
+													<tr style="border-bottom: 1px solid black;" >
+														<td rowspan="$tplSpecZoneQtie.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+													</tr>
+													</tbody>
+													</table>
+												#end
+											</td>
+										#else
+											<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+											<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+											<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
 										#end
 									#end
-								</td>
-								</tr>
-							
-								
-							
-								#end
-								
-							
-						#else
-							#if ($tplspecQuestion.questionType == "I")
-						 
-								<tr>
-								
-								
-								<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
-								<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clUom.uomName</td>
-								<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$bean.getParameterDescForReport($tplspecQuestion.clPriceTypeCode)</td>
-								<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clQuantity</td>
-								<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$serviceScope</td>	
-								<td bgcolor="#d0eaee" rowspan="2">
+									
+									
+									<td bgcolor="#d0eaee" rowspan="2">
 									#if ($tplspecQuestion.feedbackList)
 										#if ($specType == "T")
 											#foreach( $feedback in $tplspecQuestion.feedbackList)
@@ -1657,35 +1588,35 @@ u.underline {
 											#end
 										#end
 									#end
-								</td>
-													
-								<td bgcolor="#d0eaee" rowspan="2">
-									#if ($tplspecQuestion.answerRemarkList)
-										#foreach( $answerRemark in $tplspecQuestion.answerRemarkList )
-											<table width="100%">
-												<tbody>
-												<tr>
-													#if ($answerRemark) 
-														<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$answerRemark</td>
-													#else
-														<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$serviceScope</td>
-													#end
-												</tr>
-												</tbody>
-											</table>
+									</td>
+									
+									<td bgcolor="#d0eaee" rowspan="2">
+										#if ($tplspecQuestion.answerRemarkList)
+											#foreach( $answerRemark in $tplspecQuestion.answerRemarkList )
+												<table width="100%">
+													<tbody>
+													<tr>
+														#if ($answerRemark) 
+															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$answerRemark</td>
+														#else
+															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+														#end
+													</tr>
+													</tbody>
+												</table>
+											#end
 										#end
+									</td>
+									
+									#if ($rowCount == 0)
+										#set($rowCount = $rowCount + 1)
+										<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
 									#end
-								</td>
-												
-								#if ($rowCount == 0)
-									#set($rowCount = $rowCount + 1)
-									<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
-								#end
-								</tr>	
+									</tr>
 								
-								<tr>
-								<td bgcolor="#d0eaee" colspan="4">						
-										#if ($tplspecQuestion.specList)
+									<tr>
+									<td valign="top" bgcolor="#d0eaee" colspan="5">						
+											#if ($tplspecQuestion.specList)
 											#foreach( $specVal in $tplspecQuestion.specList )
 												
 												<table width="100%">
@@ -1698,13 +1629,88 @@ u.underline {
 													
 											#end
 										#end
-								</td>
-								</tr>
-								#end	
+									</td>
+									</tr>
 								
-							#end
+									
+								
+									#end
+									
+								
+							#else
+								#if ($tplspecQuestion.questionType == "I")
+							 
+									<tr>
+									<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
+									<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clUom.uomName</td>
+									<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$bean.getParameterDescForReport($tplspecQuestion.clPriceTypeCode)</td>
+									<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clQuantity</td>
+									<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$serviceScope</td>	
+									<td bgcolor="#d0eaee" rowspan="2">
+										#if ($tplspecQuestion.feedbackList)
+											#if ($specType == "T")
+												#foreach( $feedback in $tplspecQuestion.feedbackList)
+													<table width="100%">
+														<tbody>
+														<tr>
+														#if ($feedback) 
+															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$feedback</td>
+														#end
+														</tr>
+														</tbody>
+													</table>
+												#end
+											#end
+										#end
+									</td>
+														
+									<td bgcolor="#d0eaee" rowspan="2">
+										#if ($tplspecQuestion.answerRemarkList)
+											#foreach( $answerRemark in $tplspecQuestion.answerRemarkList )
+												<table width="100%">
+													<tbody>
+													<tr>
+														#if ($answerRemark) 
+															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$answerRemark</td>
+														#else
+															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+														#end
+													</tr>
+													</tbody>
+												</table>
+											#end
+										#end
+									</td>
+													
+									#if ($rowCount == 0)
+										#set($rowCount = $rowCount + 1)
+										<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
+									#end
+									</tr>	
+									
+									<tr>
+									<td bgcolor="#d0eaee" colspan="4">						
+											#if ($tplspecQuestion.specList)
+												#foreach( $specVal in $tplspecQuestion.specList )
+													
+													<table width="100%">
+														<tbody>
+														<tr>
+															<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$specVal</td>
+														</tr>
+														</tbody>
+													</table>
+														
+												#end
+											#end
+									</td>
+									</tr>
+									#end	
+									
+									
+								#end
 
-						#end 
+							#end 
 						
 						#set($rowCount = $rowCount + 1)
 					#end
@@ -1755,9 +1761,9 @@ u.underline {
 #end
 	
 <div class="break-after"><br/></div>
-  
-  #if ($scLoa.scLoiLoa.docType == "PR")
-	  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+	 
+	 #if ($scLoa.scLoiLoa.docType == "PR")
+		 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 		  <tr>
 				<td align="right"> <span class="text_family"> <b><i>Lampiran A3</i></b></span></td>
 		  </tr>
@@ -1766,17 +1772,17 @@ u.underline {
 						Perkhidmatan/Service Level Agreement (SLA) (sekiranya berkaitan)</u></span> <br />
 					<br /></td>
 			</tr>
-	  </table>
-  #end
-		
-  #if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")	
+		</table>
+	 #end
+	 
+	 #if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")	
 		#set($rowCount = 0)
 		#if ($scLoa.scLoiLoa.docType == "NG")
 			<table width="100%" border="1" cellpadding="0" cellspacing="0">
 			<tbody>
 				#foreach( $tplspecMaster in $masters )
 					#set($itemType = $bean.getParameterDescForReport($tplspecMaster.itemTypeCode)) 
-					#set($specType = $tplspecMaster.specTypeCode.parameterCode) 
+					#set($specType = $tplspecMaster.specTypeCode.parameterCode)
 					#if ($itemType == "Perkhidmatan" || $itemType == "Service")
 							 #if ($rowCount == 0)
 								<tr>
@@ -1809,6 +1815,7 @@ u.underline {
 								#if ($tplspecQuestion.questionType == "I")
 								 
 								<tr>							 
+									
 									<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
 									<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clUom.uomName</td>
 										
@@ -1894,7 +1901,7 @@ u.underline {
 									
 									#if ($rowCount == 0)
 										#set($rowCount = $rowCount + 1)
-										<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
+										<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
 									#end
 									</tr>
 								
@@ -1916,13 +1923,15 @@ u.underline {
 									</td>
 									</tr>
 								
+									
+								
 									#end
+									
 								
 							#else
 								#if ($tplspecQuestion.questionType == "I")
 							 
 									<tr>
-									
 									
 									<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
 									 <td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clUom.uomName</td>
@@ -1943,9 +1952,11 @@ u.underline {
 									</td>
 									<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clQuantity</td>
 										
+										
+													
 									#if ($rowCount == 0)
 										#set($rowCount = $rowCount + 1)
-										<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
+										<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
 									#end
 									</tr>	
 									
@@ -1984,7 +1995,7 @@ u.underline {
 			<tbody>
 	  	#foreach( $tplspecMaster in $masters )
 			#set($itemType = $bean.getParameterDescForReport($tplspecMaster.itemTypeCode)) 
-			#set($specType = $tplspecMaster.specTypeCode.parameterCode) 
+			#set($specType = $tplspecMaster.specTypeCode.parameterCode)
 				#if ($itemType == "Perkhidmatan" || $itemType == "Service")
 						 #if ($rowCount == 0)
 							<tr>
@@ -2038,6 +2049,7 @@ u.underline {
 									
 									<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
 									<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clUom.uomName</td>
+								
 										
 									<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">
 										#if ($tplspecQuestion.clUomFrequency)
@@ -2157,7 +2169,7 @@ u.underline {
 									
 									#if ($rowCount == 0)
 										#set($rowCount = $rowCount + 1)
-										<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
+										<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
 									#end
 									</tr>
 								
@@ -2179,7 +2191,10 @@ u.underline {
 									</td>
 									</tr>
 								
+									
+								
 									#end
+									
 								
 							#else
 								#if ($tplspecQuestion.questionType == "I")
@@ -2187,7 +2202,7 @@ u.underline {
 									<tr>
 									
 									<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
-									<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clUom.uomName</td>
+									 <td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clUom.uomName</td>
 									<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">
 										#if ($tplspecQuestion.clUomFrequency)
 											$tplspecQuestion.clUomFrequency
@@ -2204,23 +2219,23 @@ u.underline {
 										#end
 									</td>
 									<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clQuantity</td>
-										
+									
 									<td bgcolor="#d0eaee" rowspan="2">
-									#if ($tplspecQuestion.feedbackList)
-										#if ($specType == "T")
-											#foreach( $feedback in $tplspecQuestion.feedbackList)
-												<table width="100%">
-													<tbody>
-													<tr>
-													#if ($feedback) 
-														<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$feedback</td>
-													#end
-													</tr>
-													</tbody>
-												</table>
+										#if ($tplspecQuestion.feedbackList)
+											#if ($specType == "T")
+												#foreach( $feedback in $tplspecQuestion.feedbackList)
+													<table width="100%">
+														<tbody>
+														<tr>
+														#if ($feedback) 
+															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$feedback</td>
+														#end
+														</tr>
+														</tbody>
+													</table>
+												#end
 											#end
 										#end
-									#end
 									</td>
 										
 									<td bgcolor="#d0eaee" rowspan="2">
@@ -2240,10 +2255,10 @@ u.underline {
 											#end
 										#end
 									</td>
-									
+													
 									#if ($rowCount == 0)
 										#set($rowCount = $rowCount + 1)
-										<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
+										<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
 									#end
 									</tr>	
 									
@@ -2300,12 +2315,12 @@ u.underline {
 									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Zon</th>
 									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Kuantiti</th>
 									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; font-size:10px;">Tawaran Pembekal</th>
-									#*-- comment out for 31552  <th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; font-size:10px;">Catatan</th> *#
+									#* -- comment out for 31552 <th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; font-size:10px;">Catatan</th> *#
 									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; font-size:10px;">Skop Perkhidmatan / SLA</th>
 								</tr>
 								
 								<tr>	
-									<td valign="top"  bgcolor="#6d839b" class="title border left" colspan="8" style="text-align: center; padding-left: 5px; font-size:10px;">Spesifikasi</td>
+									<td  bgcolor="#6d839b" class="title border left" colspan="8" style="text-align: center; padding-left: 5px; font-size:10px;">Spesifikasi</td>
 								</tr>
 							
 							#else
@@ -2328,7 +2343,7 @@ u.underline {
 								
 							  #end
 					#foreach( $tplspecQuestion in $tplspecMaster.tplSpecQuestions )
-						#set($specType = $tplspecMaster.specTypeCode.parameterCode) 
+						#set($specType = $tplspecMaster.specTypeCode.parameterCode)
 						
 						#if ($isZonal)
 						
@@ -2415,7 +2430,8 @@ u.underline {
 											#foreach( $scLoiLoaItem in $scLoiLoaItemList )												
 												#if($scLoiLoaItem.itemName.trim() == $tplspecQuestion.clItem.trim())
  											  		#set($currentValue = $scLoiLoaItem.itemQty)
-											  
+											
+							
 											   #if($currentValue == 0)
 												   	#if($tplspecQuestion.clQuantity)
 											   			#set($currentValue = $tplspecQuestion.clQuantity)												
@@ -2471,7 +2487,7 @@ u.underline {
 											#end
 										#else				
 											#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
-											#if($rowCount == 0)											
+											#if($rowCount == 0)
 												#if ($tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
 													<span>$tplSpecAnswer.answerRemark</span>
 												#else
@@ -2484,7 +2500,7 @@ u.underline {
 									
 								</td>
 								
-								#* -- comment out for  31552 <td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2"  style="text-align: left; padding-left: 5px; font-size:12px;">
+								#* --comment out for 31552 <td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2"  style="text-align: left; padding-left: 5px; font-size:12px;">
 										#if(($tplspecQuestion.clReviewRemark == "" ))
 										 $serviceScope 
 										#else
@@ -2500,7 +2516,7 @@ u.underline {
 								
 								
 								</tr>
-							
+
 								</tr>
 								<td valign="top" bgcolor="#d0eaee" colspan="8">
 										#if ($tplspecQuestion.specList)
@@ -2522,6 +2538,7 @@ u.underline {
 										    #set($specList = $uniquePosts)
 										#end
 																								
+										
 											#set($countSpecList = 1)
 											#foreach( $specVal in $specList )
 												
@@ -2542,11 +2559,10 @@ u.underline {
 										#end
 								</td>
 								</tr>
-							
 								
 							
 								#end
-								
+									
 							
 						#else
 							#if ($tplspecQuestion.questionType == "I")
@@ -2596,7 +2612,7 @@ u.underline {
 										#if($tplspecQuestion.clDurationMonth)
 											$tplspecQuestion.clDurationMonth
 										#else	
-											$serviceScope
+											$serviceScope 
 										#end
 									</td>
 									<td valign="top" bgcolor="#d0eaee" class="title border left"  style="text-align: left; padding-left: 5px; font-size:12px;">
@@ -2615,9 +2631,9 @@ u.underline {
 												   	#set($currentValue = $tplSpecZoneQtie.qty) 
 												#end
 											#end									   
-									  #end	
+									  	#end	
 										
-										$currentValue								
+										$currentValue
 									</td>
 									
 									<td valign="top" bgcolor="#d0eaee" class="title border left" rowspan="2"  style="text-align: left; padding-left: 5px; font-size:12px;">
@@ -2634,12 +2650,12 @@ u.underline {
 									</td>
 						
 								</tr>	
-								
+									
 								<td valign="top" bgcolor="#d0eaee" colspan="7">						
 										#if ($tplspecQuestion.specList)
 											#set($countSpecList = 1)
 											#foreach( $specVal in $tplspecQuestion.specList )
-												
+							
 												<table width="100%">
 													<tbody>
 													<tr>
@@ -2651,12 +2667,13 @@ u.underline {
 													</tr>
 													</tbody>
 												</table>
-											#set($countSpecList = $countSpecList + 1)			
+											#set($countSpecList = $countSpecList + 1)
+									
 											#end
 										#end
 								</td>
 								#end	
-								
+									
 								</tr>	
 						#end
 					    	
@@ -2717,4 +2734,4 @@ u.underline {
 		</tr>
 	</table>
 </body>
-</html>	
+</html>
