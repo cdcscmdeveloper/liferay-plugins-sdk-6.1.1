@@ -16647,7 +16647,8 @@ public class SpecificationBackingBean extends
 							new String[] { SourcingConstants.DF_AMOUNT
 								.format(indPriceThreshold) });
 				}
-			}
+			// #32275
+			//}
 			// #32134 - start
 			if(count == 1){
 				TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
@@ -16686,6 +16687,8 @@ public class SpecificationBackingBean extends
 				}
 			}
 			// #32134 - end
+			// #32275
+			}
 		}
 		//#25729 #142 end
 	}
