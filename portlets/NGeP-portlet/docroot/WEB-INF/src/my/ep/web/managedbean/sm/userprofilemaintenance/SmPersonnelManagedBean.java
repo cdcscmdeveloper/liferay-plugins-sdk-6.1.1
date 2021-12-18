@@ -157,6 +157,9 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private int spIEpRoleStatus;
 	private List<PmUserRole> personnelHistoryList;
 	// 9569 end
+	// #31710 - start
+	private String supplierType;
+	// #31710 - end
 
 	public SmPersonnelManagedBean() {
 		// TODO Auto-generated constructor stub
@@ -1110,4 +1113,15 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	public void setPersonnelHistoryList(List<PmUserRole> personnelHistoryList) {
 		this.personnelHistoryList = personnelHistoryList;
 	}
+	
+	// #31710 - start
+	public String getSupplierType() {
+		return supplierType;
+	}
+
+	public void setSupplierType(String supplierType) {
+		this.supplierType = supplierType;
+	}
+	// #31710 - end
+	
 }
