@@ -7653,58 +7653,76 @@ public class SmApplicationBackingBean extends
 				this.getManagedBean().getSelectedShareHolder()
 						.setIdentificationTypeId(personnelSSM.getIdentificationTypeId());
 			}
-
-			if(shareHolderBean.getSmPersonnelAddresses()!=null && shareHolderBean.getSmPersonnelAddresses().size()>0){
-				for (SmPersonnelAddress smpersonAddress : shareHolderBean.getSmPersonnelAddresses()){
-					if (SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE.equals(smpersonAddress.getAddressType())) {
-						getManagedBean().getShareHolderOffAddr().setSmAddress(smpersonAddress.getSmAddress());
-						initializeSmAddressChilds(getManagedBean().getShareHolderOffAddr().getSmAddress());
-					} else if (SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES.equals(smpersonAddress
-							.getAddressType())) {
+			if (personnelSSM != null && personnelSSM.getSmPersonnelAddresses() != null // #32014
+					&& personnelSSM.getSmPersonnelAddresses().size() > 0) {
+				for (SmPersonnelAddress smpersonAddress : personnelSSM.getSmPersonnelAddresses()) {
+					if (SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES.equals(smpersonAddress.getAddressType())
+							&& (getManagedBean().getShareHolderResdAddr().getSmAddress() == null || getManagedBean()
+									.getShareHolderResdAddr().getSmAddress().getAddressId() == null)) {
+						initializeSmAddressChilds(smpersonAddress.getSmAddress());
+						PmCountry defaultCountry = new PmCountry();
+						if ((smpersonAddress.getSmAddress().getPmCountry() == null || smpersonAddress.getSmAddress()
+								.getPmCountry().getCountryCode().equals(ParameterConst.COUNTRY_UNKNOWN_CODE))
+								&& shareHolderBean.getIdentificationType() != null
+								&& ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(shareHolderBean
+										.getIdentificationType().getParameterCode()) &&
+										smpersonAddress.getSmAddress().getPmState() == null) {
+							defaultCountry = SmCommonUtil
+									.retrieveCountryByCountryCode(ParameterConst.COUNTRY_UNKNOWN_CODE);
+						} else if (smpersonAddress.getSmAddress().getPmCountry() != null
+								&& shareHolderBean.getIdentificationType() != null
+								&& ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(shareHolderBean
+										.getIdentificationType().getParameterCode()) &&
+										smpersonAddress.getSmAddress().getPmState() == null) {
+							defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(smpersonAddress.getSmAddress()
+									.getPmCountry().getCountryCode());
+						} else {
+							defaultCountry = SmCommonUtil
+									.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+						}
+						smpersonAddress.getSmAddress().setPmCountry(defaultCountry);
+						if (smpersonAddress.getSmAddress().getPmCountry() != null) {
+							smpersonAddress.getSmAddress().setCountryId(
+									smpersonAddress.getSmAddress().getPmCountry().getCountryId());
+						}
+						onChangeCountry(smpersonAddress.getSmAddress(),
+								SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
+						if (smpersonAddress.getSmAddress().getPmState() != null) {
+							smpersonAddress.getSmAddress().setStateId(
+									smpersonAddress.getSmAddress().getPmState().getStateId());
+						}
+						onChangeState(smpersonAddress.getSmAddress(),
+								SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
 						getManagedBean().getShareHolderResdAddr().setSmAddress(smpersonAddress.getSmAddress());
-						initializeSmAddressChilds(getManagedBean().getShareHolderResdAddr().getSmAddress());
-					} else if (SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL.equals(smpersonAddress
-							.getAddressType())) {
-						getManagedBean().getShareHolderMailAddr().setSmAddress(smpersonAddress.getSmAddress());
-						initializeSmAddressChilds(getManagedBean().getShareHolderMailAddr().getSmAddress());
-					} else if (SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM.equals(smpersonAddress
-							.getAddressType())) {
-						getManagedBean().getShareHolderPermAddr().setSmAddress(smpersonAddress.getSmAddress());
-						initializeSmAddressChilds(getManagedBean().getShareHolderPermAddr().getSmAddress());
 					}
 				}
 			}
-			if (personnelSSM != null && personnelSSM.getSmPersonnelAddresses() != null  //#32014
-					&& personnelSSM.getSmPersonnelAddresses().size() > 0) {
-				for(SmPersonnelAddress smpersonAddress : personnelSSM.getSmPersonnelAddresses()){
-					if (SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE.equals(smpersonAddress.getAddressType())
-							&& (getManagedBean().getShareHolderOffAddr().getSmAddress() == null ||
-									getManagedBean().getShareHolderOffAddr().getSmAddress().getAddressId() == null)) {
-							getManagedBean().getShareHolderOffAddr().setSmAddress(smpersonAddress.getSmAddress());
-							initializeSmAddressChilds(getManagedBean().getShareHolderOffAddr().getSmAddress());
-						onChangeState(smpersonAddress.getSmAddress(), SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL);
-					} else if (SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES.equals(smpersonAddress
-							.getAddressType()) && (getManagedBean().getShareHolderResdAddr().getSmAddress() == null ||
-									getManagedBean().getShareHolderResdAddr().getSmAddress().getAddressId() == null)) {
-							getManagedBean().getShareHolderResdAddr().setSmAddress(smpersonAddress.getSmAddress());
-							initializeSmAddressChilds(getManagedBean().getShareHolderResdAddr().getSmAddress());
-						onChangeState(smpersonAddress.getSmAddress(), SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
-					} else if (SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL.equals(smpersonAddress
-							.getAddressType()) && (getManagedBean().getShareHolderMailAddr().getSmAddress() == null ||
-									getManagedBean().getShareHolderMailAddr().getSmAddress().getAddressId() == null)) {
-							getManagedBean().getShareHolderMailAddr().setSmAddress(smpersonAddress.getSmAddress());
-							initializeSmAddressChilds(getManagedBean().getShareHolderMailAddr().getSmAddress());
-						onChangeState(smpersonAddress.getSmAddress(), SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL);
-					} else if (SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM.equals(smpersonAddress
-							.getAddressType()) && (getManagedBean().getShareHolderPermAddr().getSmAddress() == null ||
-									getManagedBean().getShareHolderPermAddr().getSmAddress().getAddressId() == null)) {
-							getManagedBean().getShareHolderPermAddr().setSmAddress(smpersonAddress.getSmAddress());
-							initializeSmAddressChilds(getManagedBean().getShareHolderPermAddr().getSmAddress());
-						onChangeState(smpersonAddress.getSmAddress(), SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL);
+			if (shareHolderBean.getSmPersonnelAddresses() != null
+					&& shareHolderBean.getSmPersonnelAddresses().size() > 0) {
+				for (SmPersonnelAddress smpersonAddress : shareHolderBean.getSmPersonnelAddresses()) {
+					if (SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES.equals(smpersonAddress.getAddressType())) {
+						SmAddress smAddressRes = getManagedBean().getShareHolderResdAddr().getSmAddress();
+						initializeSmAddressChilds(smpersonAddress.getSmAddress());
+						if (smpersonAddress.getSmAddress().getPmDivision() != null) {
+							smAddressRes.setPmDivision(smpersonAddress.getSmAddress().getPmDivision());
+							smAddressRes.setDivisionId(smpersonAddress.getSmAddress().getPmDivision().getDivisionId());
+						}
+
+						if (smpersonAddress.getSmAddress().getPmDistrict() != null) {
+							onChangeDistrictByDivision(smAddressRes, SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
+							smAddressRes.setPmDistrict(smpersonAddress.getSmAddress().getPmDistrict());
+							smAddressRes.setDistrictId(smpersonAddress.getSmAddress().getPmDistrict().getDistrictId());
+						}
+							
+						onChangeDistrict(smAddressRes, SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
+						if (smpersonAddress.getSmAddress().getPmCity() != null) {
+							smAddressRes.setPmCity(smpersonAddress.getSmAddress().getPmCity());
+							smAddressRes.setCityId(smpersonAddress.getSmAddress().getPmCity().getCityId());
 						}
 					}
 				}
 			}
+		}
 		// end - #32014
 		//end #31479
 		
