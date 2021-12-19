@@ -10660,6 +10660,7 @@ public class SmApplicationBackingBean extends
 							//#29663 - START
 							if (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
 								reqDTO.setLastApprovedAppl(SmApplicationUtil.getLastApprovedApplictionForSupplier(getManagedBean(), res));
+								reqDTO.getLastApprovedAppl().setBumi(false);
 								getManagedBean().getSmAppl().setBumi(false);
 								getManagedBean().getSmAppl().setPmRegStatus(null);
 								getManagedBean().getSmAppl().getSmSupplier().setBumi(false);
