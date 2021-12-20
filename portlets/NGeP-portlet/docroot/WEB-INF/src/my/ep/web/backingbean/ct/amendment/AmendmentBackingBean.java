@@ -7574,14 +7574,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				ctAmendment.getAmendmentLoa().setContractAdmin(userSO.checkingcontractadminstatus(userReqDTO).getPmUser());
 				if(ctAmendment.getAmendmentLoa().getContractAdmin() == null){
 					reqLoadDTO = new UserReqDTO();
-					reqLoadDTO.setOrgProfileId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
-					if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-							ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-						userReqDTO.setRoleCode(RoleCode.MIN_CONTRACT_ADMIN.value());
-					} else if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-							ParameterConst.CONTRACT_TYPE_CENTRAL)) {
-						userReqDTO.setRoleCode(RoleCode.BPK_CCA.value());
-					}
+					reqLoadDTO.setOrgProfileId(userReqDTO.getOrgProfileId());
+					reqLoadDTO.setRoleCode(userReqDTO.getRoleCode());
 					userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,	IUserSO.class);		
 					ctAmendment.getAmendmentLoa().setContractAdmin(userSO.checkingcontractadminstatus(reqLoadDTO).getPmUser());
 					
