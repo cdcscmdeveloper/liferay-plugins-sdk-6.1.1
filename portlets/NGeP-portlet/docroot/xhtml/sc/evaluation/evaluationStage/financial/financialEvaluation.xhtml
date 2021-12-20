@@ -60,29 +60,15 @@
 							action="#{evaluationBackingBean.viewfinacialEvaluation(financialEval,index,'EF')}" />
 					</ui:fragment>
 					<ui:fragment rendered="#{financialEval.scoringReq ne 'false' and  (null ne financialEval.pmEvalStatus and financialEval.pmEvalStatus.statusId eq '60450')}">
-						<c:choose>
-						    <!-- #32187 Start -->
-						    <c:when test="#{financialEval.scQtCheckListScores ne null}">
-						        <p:commandButton value="#{financialEval.scQtCheckListScores[0].scoreType == 1 ? lbl['lbl.btn.evaluate'] : lbl['lbl.btn.view']}"
-								process="@this" partialSubmit="true"
-								action="#{evaluationBackingBean.evaluatefinancialEvaluation(financialEval,index,'EF')}" />
-						    </c:when>
-						    <c:otherwise>
-						        <p:commandButton value="#{lbl['lbl.btn.evaluate']}"
-								process="@this" partialSubmit="true"
-								action="#{evaluationBackingBean.evaluatefinancialEvaluation(financialEval,index,'EF')}" />
-						    </c:otherwise>
-						    <!-- #32187 End -->
-						</c:choose>
 						<p:commandButton value="#{lbl['lbl.btn.evaluate']}"
 							process="@this" partialSubmit="true"
 							action="#{evaluationBackingBean.evaluatefinancialEvaluation(financialEval,index,'EF')}" />
 					</ui:fragment>
 					
 					<ui:fragment rendered="#{financialEval.scoringReq ne 'false' and  (null ne financialEval.pmEvalStatus and financialEval.pmEvalStatus.statusId eq '60451')}">
-						<p:commandButton value="#{lbl['lbl.btn.view']}"
-							process="@this" partialSubmit="true"
-							action="#{evaluationBackingBean.evaluatefinancialEvaluation(financialEval,index,'EF')}" />
+						 <p:commandButton value="#{financialEval.scQtCheckListScores[0].scoreType == 1 ? lbl['lbl.btn.view'] : lbl['lbl.btn.evaluate']}"
+								process="@this" partialSubmit="true"
+								action="#{evaluationBackingBean.evaluatefinancialEvaluation(financialEval,index,'EF')}" />
 					</ui:fragment>
 
 
