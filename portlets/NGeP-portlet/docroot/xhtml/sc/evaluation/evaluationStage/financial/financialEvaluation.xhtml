@@ -25,10 +25,7 @@
 
 				<p:column headerText="#{lbl['lbl.sc.spec.checklist.title']}"
 					style="width:55%;white-space: normal;">
-
 					<h:outputText value="#{financialEval.title}"></h:outputText>
-
-
 				</p:column>
 				<p:column style="width:20%;white-space: normal;">
 					<f:facet name="header">
@@ -63,6 +60,20 @@
 							action="#{evaluationBackingBean.viewfinacialEvaluation(financialEval,index,'EF')}" />
 					</ui:fragment>
 					<ui:fragment rendered="#{financialEval.scoringReq ne 'false' and  (null ne financialEval.pmEvalStatus and financialEval.pmEvalStatus.statusId eq '60450')}">
+						<c:choose>
+						    <!-- #32187 Start -->
+						    <c:when test="#{financialEval.scQtCheckListScores ne null}">
+						        <p:commandButton value="#{financialEval.scQtCheckListScores[0].scoreType == 1 ? lbl['lbl.btn.evaluate'] : lbl['lbl.btn.view']}"
+								process="@this" partialSubmit="true"
+								action="#{evaluationBackingBean.evaluatefinancialEvaluation(financialEval,index,'EF')}" />
+						    </c:when>
+						    <c:otherwise>
+						        <p:commandButton value="#{lbl['lbl.btn.evaluate']}"
+								process="@this" partialSubmit="true"
+								action="#{evaluationBackingBean.evaluatefinancialEvaluation(financialEval,index,'EF')}" />
+						    </c:otherwise>
+						    <!-- #32187 End -->
+						</c:choose>
 						<p:commandButton value="#{lbl['lbl.btn.evaluate']}"
 							process="@this" partialSubmit="true"
 							action="#{evaluationBackingBean.evaluatefinancialEvaluation(financialEval,index,'EF')}" />
