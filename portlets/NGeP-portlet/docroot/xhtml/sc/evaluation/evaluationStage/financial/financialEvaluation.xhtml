@@ -25,10 +25,7 @@
 
 				<p:column headerText="#{lbl['lbl.sc.spec.checklist.title']}"
 					style="width:55%;white-space: normal;">
-
 					<h:outputText value="#{financialEval.title}"></h:outputText>
-
-
 				</p:column>
 				<p:column style="width:20%;white-space: normal;">
 					<f:facet name="header">
@@ -69,9 +66,9 @@
 					</ui:fragment>
 					
 					<ui:fragment rendered="#{financialEval.scoringReq ne 'false' and  (null ne financialEval.pmEvalStatus and financialEval.pmEvalStatus.statusId eq '60451')}">
-						<p:commandButton value="#{lbl['lbl.btn.view']}"
-							process="@this" partialSubmit="true"
-							action="#{evaluationBackingBean.evaluatefinancialEvaluation(financialEval,index,'EF')}" />
+						 <p:commandButton value="#{financialEval.scQtCheckListScores[0].scoreType == 1 ? lbl['lbl.btn.view'] : lbl['lbl.btn.evaluate']}"
+								process="@this" partialSubmit="true"
+								action="#{evaluationBackingBean.evaluatefinancialEvaluation(financialEval,index,'EF')}" />
 					</ui:fragment>
 
 
