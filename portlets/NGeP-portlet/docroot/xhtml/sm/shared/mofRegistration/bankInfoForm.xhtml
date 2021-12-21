@@ -48,7 +48,8 @@
 				id="poBankBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.bankVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.bankVerified : false)}" />
 			<!--#12492-START-->
-			<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.insertcmpnybank.instruction']}" escape="false" /><br />			
+			<h:outputText styleClass="instruction" value="1. #{lbl['lbl.sm.insertcmpnybank.instruction']}" escape="false" /><br />	
+			<h:outputText styleClass="instruction" value="2. #{lbl['lbl.sm.bankDtls.instruction']}" escape="false" /><br />					
 			<!--#12492-END-->
 			<!-- #17906 -->
 			<p:messages id="bankDeleteMsg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" for="bankDeleteMsg" escape="false"/>	
@@ -657,7 +658,7 @@
 			<p:messages id="bankDialogDuplicateMessagePanel" showSummary="false" showDetail="true"
 				autoUpdate="true" closable="true" />
 			<div align="center">
-				<p>#{lbl['lbl.sm.duplicateInfo']}</p>
+				<b>#{lbl['lbl.sm.duplicateInfo']}</b>
 			</div>
 			<div class="ppRightBtn">		    
 		 		<p:commandButton value="#{lbl['lbl.btn.close']}"  onclick="bankDialogDuplicate.hide();" type="button" />
