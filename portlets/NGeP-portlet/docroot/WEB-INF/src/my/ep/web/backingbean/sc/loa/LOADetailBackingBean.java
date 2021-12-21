@@ -3954,17 +3954,30 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		if(QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)
 				&& BpmOutcomeConst.BPM_ACCEPT.equals(outcome)) {
 
-			// check to assign UNSPSC code 
-			for (ScLoiLoaItem scLoiLoaItem : scLoa.getScLoiLoaItems()) {
-				if(scLoiLoaItem.getScRequestItem()!= null && 
-						null == scLoiLoaItem.getScRequestItem().getCmItem()){
-					throw new EpException(MessageConst.ERROR_760436);
+			//#32280 - start
+			if(isZonalWithPaOrPs())
+			{
+				Long tempRequestNoteItemId = 0L;
+				
+				for (ScLoiLoaItem scLoiLoaItem : getManagedBean().getNameZoneScLoiLoaItemList()) {
+					if(scLoiLoaItem.getScRequestItem()!= null && 
+							null == scLoiLoaItem.getScRequestItem().getCmItem() && tempRequestNoteItemId.compareTo(scLoiLoaItem.getScRequestItem().getRequestNoteItemId()) != 0){
+						throw new EpException(MessageConst.ERROR_760436);
+					}
+					tempRequestNoteItemId = scLoiLoaItem.getScRequestItem().getRequestNoteItemId();
 				}
 			}
-			//LOA CR to remove side menu
-			/*if (!getManagedBean().isAgreeWithTermsConditions()) {
-				throw new EpException(MessageConst.ERROR_750002);
-			}*/
+			
+			else{
+				// check to assign UNSPSC code 
+				for (ScLoiLoaItem scLoiLoaItem : scLoa.getScLoiLoaItems()) {
+					if(scLoiLoaItem.getScRequestItem()!= null && 
+							null == scLoiLoaItem.getScRequestItem().getCmItem()){
+						throw new EpException(MessageConst.ERROR_760436);
+					}
+				}
+			}
+			//#32280 - end
 		}
 		
 		// #11134 - Start
@@ -9393,5 +9406,19 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 	}
 	//27797 & 29006 end
+	
+	//#32280 - start
+	public Long getScRequestAssignButtonSession(Long reqItemId, int index) {
+		if(index == 0){
+			this.getManagedBean().setReqItemAssignButtonSession(reqItemId);
+			return 0L;
+		}else if(this.getManagedBean().getReqItemAssignButtonSession().equals(reqItemId)) {
+			return reqItemId;
+		}else{
+			this.getManagedBean().setReqItemAssignButtonSession(reqItemId);
+			return 0L;
+		}
+	}	
+	//#32280 - end
 }
   
