@@ -1130,16 +1130,12 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	 */
 	/*#25139-basri*/
 	public void selectFinancialAcc(){
-		//#30910 start
-		if(getManagedBean().getFactoring().getBankAccountNo()!=null && getManagedBean().getFactoring().getBankName()!=null){
-			String[] str = getManagedBean().getAccBankName().split("/");
-			this.getManagedBean().getFactoring().setBankAccountNo(str[0]);
-			this.getManagedBean().getFactoring().setBankName(str[1]);
-			
-			log.info(this.getManagedBean().getFactoring().getBankAccountNo()+" "+this.getManagedBean().getFactoring().getBankName());
-		}
-		//#30910 end
+
+		String[] str = getManagedBean().getAccBankName().split("/");
+		this.getManagedBean().getFactoring().setBankAccountNo(str[0]);
+		this.getManagedBean().getFactoring().setBankName(str[1]);
 		
+		log.info(this.getManagedBean().getFactoring().getBankAccountNo()+" "+this.getManagedBean().getFactoring().getBankName());
 	}
 	/*#25139-end*/
 
