@@ -12905,12 +12905,11 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setSelectedReasonDescs(new ArrayList<PmReasonDesc>());
 		} 
 		//		#15629 -- end - 25/1/2020
-
+		
 		// reset remark for other and remove remark required flag during search
 		getManagedBean().setReasonId(null);
 		// reset selected reject reason remarks during search
-		verifySelectedRejectReasons();
-
+		
 		getManagedBean().setReasonDescList(
 				SmApplicationUtil.getWildCardSearchRejectReason(
 						getManagedBean().getSearchRejectReason(),
@@ -12937,6 +12936,7 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setSelectedRecommendRejectReasonDescs(getManagedBean().getSelectedRejectReasonDescs());
 			setReasonIdList();
 		}
+		verifySelectedRejectReasons();
 		//30974 - end
 	}
 
