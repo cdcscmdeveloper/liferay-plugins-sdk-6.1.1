@@ -37,9 +37,7 @@
 
 		<h:panelGroup id="specDetails">
 			<p:panel header="#{lbl['lbl.sc.demo.spec.tech.list']}"
-				text-transform="uppercase" toggleable="true">
-				
-				<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.eva.technical.presentation.demo.instruction']}" escape="false"></h:outputText>
+				text-transform="uppercase" toggleable="true">				
 
 				<p:dataTable id="demoSpecTempId" var="demoSpecTempList"
 					value="#{specificationBackingBean.managedBean.demoSpecTemplateList}"
