@@ -13750,9 +13750,23 @@ public class SpecificationBackingBean extends
 
 		}
 		addDemoTechnicalCheckList();//#28784
+		resetDemoSpecStatus();//#28784
 		this.getManagedBean().setIndex(-1);
 		this.getManagedBean().setNewTemplateSpec(true);
 		return "/xhtml/sc/boSctemplatespec/technicalCommitteeTemplate.xhtml?faces-redirect=true";
+	}
+
+	//#28784
+	private void resetDemoSpecStatus() {		
+		List<ScQtCheckList> st2technicalproposalList = getManagedBean().getScQtCheckSt2techProposal();
+		for (ScQtCheckList t : st2technicalproposalList) {
+			if (t.getDefinationType().getParameterCode()
+					.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
+				t.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+				t.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));			
+				break;
+			}
+		}
 	}
 
 	/**
@@ -20214,10 +20228,6 @@ if(null!=allTechnicalChecklist){
 								break;
 							}
 						}
-						//#28784 - scoring bug
-//						if (result) {
-//							break;
-//						}
 					}
 				}
 			}
@@ -20267,7 +20277,6 @@ if(null!=allTechnicalChecklist){
 				this.getManagedBean().setOfferPricePackage(null);
 				this.getManagedBean().setPanelSpecExistedOrNot(false);
 				specCommitteeResetData();
-				// this.getManagedBean().setScQtCheckSt2techProposal(st2technicalproposalList);
 				return "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
 			}
 		} else {
