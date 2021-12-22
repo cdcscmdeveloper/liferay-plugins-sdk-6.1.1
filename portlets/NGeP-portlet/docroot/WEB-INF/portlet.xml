@@ -3944,7 +3944,7 @@
 <!-- 26238 -->
 <portlet>
 		<portlet-name>basicAccountMaintenance</portlet-name>
-		<display-name>Basic Account Maintenance Portlet 1</display-name>
+		<display-name>Basic Account Maintenance</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
 		</portlet-class>
@@ -3959,8 +3959,9 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
+		<resource-bundle>content/Language</resource-bundle>
 		<portlet-info>
-			<title>Basic Account Maintenance Portlet 2</title>
+			<title>sm.basic.acc.maintenance.title</title>
 			<short-title>NewJSFPortlet</short-title>
 			<keywords></keywords>
 		</portlet-info>
