@@ -5407,6 +5407,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						scQt.setDecExpectedIntendedPrice(tmpExpectedIntendedPrice);
 					}
 					// this.getManagedBean().setContractType(scQt.getContractType());
+					
+					//#28784
+					if(this.getManagedBean().getQt().isDemoRequired()){
+						this.getManagedBean().setDemoAction(true);
+						this.getManagedBean().setDemoType(true);
+					}
 				}
 			} finally {
 				QtDetailsSO = null;
