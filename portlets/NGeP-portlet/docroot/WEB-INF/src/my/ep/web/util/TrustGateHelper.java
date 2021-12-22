@@ -82,9 +82,10 @@ public class TrustGateHelper {
 			PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelByUserId(reqDTO);
 			log.info("getPersonnelId:: " + resDTO.getSmPersonnel().getPersonnelId());
 			log.info("getSoftcertFlg:: " + resDTO.getSmPersonnel().getSoftcertFlg());
+			log.info("getSmAppl.getSmSupplier.getSupplierId:: " + resDTO.getSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());
 
 			/*#29228 - Start*/
-			reqDTO.setSmSupplierId(resDTO.getSmAppl().getSmSupplier().getSupplierId());//30425
+			reqDTO.setSmSupplierId(resDTO.getSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());//30425
 			if (!SmServiceLookup.getPersonnelSO().isNotExpiredSoftcertBySupplierIdAndUserId(reqDTO)) { //30425
 			/*#29228 - End	*/
 				if (resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ
