@@ -3959,9 +3959,11 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
+		<supported-locale>en_US</supported-locale>
+		<supported-locale>ms_MY</supported-locale>
 		<resource-bundle>content/Language</resource-bundle>
 		<portlet-info>
-			<title>sm.basic.acc.maintenance.title</title>
+			<title>Basic Account Maintenance</title>
 			<short-title>NewJSFPortlet</short-title>
 			<keywords></keywords>
 		</portlet-info>
