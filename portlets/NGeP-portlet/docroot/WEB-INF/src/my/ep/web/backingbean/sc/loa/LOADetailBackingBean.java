@@ -9276,6 +9276,20 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			this.getManagedBean().setItemNamePopup(loiLoaItem.getScRequestItem().getItemName());
 			this.getManagedBean().setScLoiLoaItem(loiLoaItem);
 			this.getManagedBean().setNewSupplierJustification(loiLoaItem.getLoaSpecJustification());
+			if(this.getManagedBean().getScQt().isZonal() & mainSearch){//29007-start
+				log.info("===========zonalcodesexecuted=====");
+				List<ScLoiLoaItem> zonalItemList=new ArrayList<ScLoiLoaItem>();
+				for(ScLoiLoaItem loacalloiLoaItem:this.getManagedBean().getScLoa().getScLoiLoaItems()){
+					if(loiLoaItem.getLoiLoaItemId()== loacalloiLoaItem.getLoiLoaItemId() || loiLoaItem.getLoiLoaItemId().equals(loacalloiLoaItem.getLoiLoaItemId()) || loiLoaItem.getScRequestItem().getRequestNoteItemId()==loacalloiLoaItem.getScRequestItem().getRequestNoteItemId() || loiLoaItem.getScRequestItem().getRequestNoteItemId().equals(loacalloiLoaItem.getScRequestItem().getRequestNoteItemId())){//29007-start
+						zonalItemList.add(loacalloiLoaItem);
+					}
+				}
+				if(zonalItemList.size()>1){					
+					checkItemSorting(zonalItemList);				
+					ScLoiLoaItem latestChangedItem=zonalItemList.get(zonalItemList.size()-1);
+					this.getManagedBean().setNewSupplierJustification(latestChangedItem.getLoaSpecJustification());
+				}
+			}//29007-End
 			
 			specReqDto.setSupplier(this.getManagedBean().getScLoa().getScLoiLoa().getSmSupplier());
 			specReqDto.setScQt(this.getManagedBean().getScQt());
@@ -9365,6 +9379,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				scLoiLoaItem.setScLoa(null);
 			}//29007-End
 			scLoiLoaItem.setLoaSpecJustification(this.getManagedBean().getNewSupplierJustification());//29007
+			if(scLoiLoaItem.getLoaSpecJustification() != null && StringUtils.isNotBlank(scLoiLoaItem.getLoaSpecJustification()) && StringUtils.isNotEmpty(scLoiLoaItem.getLoaSpecJustification())){//29007-start
+				scLoiLoaItem.getLoaSpecJustification().trim();
+				StringBuilder builder=new StringBuilder();
+				builder.append(scLoiLoaItem.getLoaSpecJustification()).append(" ");
+				scLoiLoaItem.setLoaSpecJustification(builder.toString());
+				
+			}//29007-End
 			reqDTO.setTplSpecAnswerList(this.getManagedBean().getTplSpecAnswerList());
 			reqDTO.setScLoiLoaItem(scLoiLoaItem);
 						
@@ -9543,6 +9564,29 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");//29007
 				String date = df.format(scLoiLoaItem.getChangedDate());
 				StringBuilder finalMsg = new StringBuilder();//29007
+				if(this.getManagedBean().getScQt().isZonal()){//29007-start
+					log.info("===========zonalcodesexecuted=====");
+					List<ScLoiLoaItem> zonalItemList=new ArrayList<ScLoiLoaItem>();
+					for(ScLoiLoaItem loacalloiLoaItem:this.getManagedBean().getScLoa().getScLoiLoaItems()){
+						if(scLoiLoaItem.getLoiLoaItemId()== loacalloiLoaItem.getLoiLoaItemId() || scLoiLoaItem.getLoiLoaItemId().equals(loacalloiLoaItem.getLoiLoaItemId()) || scLoiLoaItem.getScRequestItem().getRequestNoteItemId()==loacalloiLoaItem.getScRequestItem().getRequestNoteItemId() || scLoiLoaItem.getScRequestItem().getRequestNoteItemId().equals(loacalloiLoaItem.getScRequestItem().getRequestNoteItemId())){//29007-start
+							zonalItemList.add(loacalloiLoaItem);
+						}
+					}
+					if(zonalItemList.size()>1){
+						checkItemSorting(zonalItemList);	
+						ScLoiLoaItem latestChangedItem=zonalItemList.get(zonalItemList.size()-1);
+						if(latestChangedItem.getLoaSpecJustification() != null && StringUtils.isNotBlank(latestChangedItem.getLoaSpecJustification()) && StringUtils.isNotEmpty(latestChangedItem.getLoaSpecJustification())){//29007
+							scLoiLoaItem.setLoaSpecJustification(latestChangedItem.getLoaSpecJustification());	
+							scLoiLoaItem.setLatestChangedDate(latestChangedItem.getChangedDate());
+							date = df.format(scLoiLoaItem.getLatestChangedDate());
+						}
+						//this.getManagedBean().setNewSupplierJustification(latestChangedItem.getLoaSpecJustification());
+					}else{
+						log.info("=====zonalitemlessthan1=======");
+						scLoiLoaItem.setLatestChangedDate(scLoiLoaItem.getChangedDate());
+						date = df.format(scLoiLoaItem.getLatestChangedDate());
+					}
+				}//29007-End
 				if(scLoiLoaItem.getLoaSpecJustification() != null && StringUtils.isNotBlank(scLoiLoaItem.getLoaSpecJustification()) && StringUtils.isNotEmpty(scLoiLoaItem.getLoaSpecJustification())){//29007
 					finalMsg.append("Dikemas kini atas sebab      ");
 					finalMsg.append(scLoiLoaItem.getLoaSpecJustification());
@@ -9587,6 +9631,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				scLoiLoaItem.setTplSpecAnswerList(templateSpecResDTO.getSpecAnswerList());
 				scLoiLoaItemsList.add(scLoiLoaItem);
 			}
+			if(this.getManagedBean().getScQt().isZonal() && scLoiLoaItemsList.size()>1){//29007-start
+				checkItemSortingLatest(scLoiLoaItemsList);
+			}//29007-End
 		}
 		
 		context.put("serviceScope", dafaltValue);
@@ -9987,5 +10034,22 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		return text;	
 	}
 	//#25025 - end
+	
+	/*29007 Start
+	 * sorting LoiItems
+	 */
+	private void checkItemSortingLatest(List<ScLoiLoaItem> loiLoaItem) {
+		Collections.sort(loiLoaItem, new Comparator<ScLoiLoaItem>() {
+			public int compare(ScLoiLoaItem loiItem1,
+					ScLoiLoaItem loiItem2) {
+
+				return new CompareToBuilder()
+						.append(loiItem1.getLatestChangedDate(),
+								loiItem2.getLatestChangedDate())
+						.toComparison();
+			}
+		});
+	}
+	//29007 End
 }
 
