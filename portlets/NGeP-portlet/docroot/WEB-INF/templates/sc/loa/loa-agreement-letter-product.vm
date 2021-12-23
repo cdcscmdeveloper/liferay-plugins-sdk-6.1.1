@@ -1220,7 +1220,7 @@ u.underline {
 				            <th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px;">UOM</th>
 							<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px;">Jenis Harga</th>
 			            	#if ($isZonal)
-			            		<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px;">Zon</th>
+			            		<th width="30%" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px;">Zon</th>
 							#end	
 							<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px;">Kuantiti</th>
 							<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px;">Kuantiti Berperingkat</th>
@@ -1444,14 +1444,14 @@ u.underline {
 								<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px;">Jenis Harga</th>
 					           
 					            #if ($isZonal)
-				            		<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px;">Zon</th>
+				            		<th width="30%" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px;">Zon</th>
 								#end
 								
 								<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px;">Kuantiti</th>
 								<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px;"><nobr>Kuantiti Berperingkat</nobr></th>
 								
 					            <th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Maklum Balas</th>
-					         	<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Catatan</th>
+					         	<th width="30%" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Catatan</th>
 								<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Skop Perkhidmatan / SLA</th>
 							</tr>
 							<tr>
@@ -1575,13 +1575,17 @@ u.underline {
 									<td bgcolor="#d0eaee" rowspan="2">
 									#if ($tplspecQuestion.feedbackList)
 										#if ($specType == "T")
+											#set($count = 1)
 											#foreach( $feedback in $tplspecQuestion.feedbackList)
 												<table width="100%">
 													<tbody>
 													<tr>
-													#if ($feedback) 
-														<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$feedback</td>
-													#end
+														#if ($feedback == "&nbsp;" && $tplspecQuestion.tplSpecZoneQties.size() != $count ) 
+															#set($count = $count + 1)
+															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$feedback</td>
+														#else
+															<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$feedback</td>
+														#end
 													</tr>
 													</tbody>
 												</table>
@@ -1596,10 +1600,14 @@ u.underline {
 												<table width="100%">
 													<tbody>
 													<tr>
-														#if ($answerRemark) 
+														#if ($answerRemark == "&nbsp;") 
 															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$answerRemark</td>
 														#else
-															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+															#if ($answerRemark)
+																<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$answerRemark</td>
+															#else 
+																<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$serviceScope</td>
+															#end
 														#end
 													</tr>
 													</tbody>
@@ -1653,9 +1661,11 @@ u.underline {
 													<table width="100%">
 														<tbody>
 														<tr>
-														#if ($feedback) 
-															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$feedback</td>
-														#end
+															#if ($feedback) 
+																<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$feedback</td>
+															#else
+																<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$serviceScope</td>
+															#end
 														</tr>
 														</tbody>
 													</table>
@@ -1669,13 +1679,13 @@ u.underline {
 											#foreach( $answerRemark in $tplspecQuestion.answerRemarkList )
 												<table width="100%">
 													<tbody>
-													<tr>
-														#if ($answerRemark) 
-															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$answerRemark</td>
-														#else
-															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$serviceScope</td>
-														#end
-													</tr>
+														<tr>
+															#if ($answerRemark) 
+																<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$answerRemark</td>
+															#else
+																<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$serviceScope</td>
+															#end
+														</tr>
 													</tbody>
 												</table>
 											#end
@@ -1787,7 +1797,7 @@ u.underline {
 							 #if ($rowCount == 0)
 								<tr>
 									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Item</th>
-									<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px;">UOM</th>
+									<th width="30%" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px;">UOM</th>
 									<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px;">Kekerapan / <br/>Unit Ukuran</th>
 									<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px;">Bil. Unit <br/>Ukuran Sehari</th>
 									<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px;">Bil. Unit <br/>Ukuran Sebulan</th>
@@ -2022,7 +2032,7 @@ u.underline {
 								<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px;">Bil. Unit <br/>Ukuran Sebulan</th>
 								
 								#if ($isZonal)
-									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Zon</th>
+									<th width="30%" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Zon</th>
 								#end
 									
 								<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Kuantiti</th>
@@ -2134,13 +2144,17 @@ u.underline {
 									<td bgcolor="#d0eaee" rowspan="2">
 									#if ($tplspecQuestion.feedbackList)
 										#if ($specType == "T")
+											#set($count = 1)
 											#foreach( $feedback in $tplspecQuestion.feedbackList)
 												<table width="100%">
 													<tbody>
 													<tr>
-													#if ($feedback) 
-														<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$feedback</td>
-													#end
+														#if ($feedback == "&nbsp;" && $tplspecQuestion.tplSpecZoneQties.size() != $count ) 
+															#set($count = $count + 1)
+															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$feedback</td>
+														#else
+															<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$feedback</td>
+														#end
 													</tr>
 													</tbody>
 												</table>
@@ -2155,10 +2169,14 @@ u.underline {
 												<table width="100%">
 													<tbody>
 													<tr>
-														#if ($answerRemark) 
+														#if ($answerRemark == "&nbsp;") 
 															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$answerRemark</td>
 														#else
-															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+															#if ($answerRemark)
+																<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$answerRemark</td>
+															#else 
+																<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$serviceScope</td>
+															#end
 														#end
 													</tr>
 													</tbody>
@@ -2226,11 +2244,13 @@ u.underline {
 												#foreach( $feedback in $tplspecQuestion.feedbackList)
 													<table width="100%">
 														<tbody>
-														<tr>
-														#if ($feedback) 
-															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$feedback</td>
-														#end
-														</tr>
+															<tr>
+																#if ($feedback) 
+																	<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$feedback</td>
+																#else
+																	<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$serviceScope</td>
+																#end
+															</tr>
 														</tbody>
 													</table>
 												#end
@@ -2245,9 +2265,9 @@ u.underline {
 													<tbody>
 													<tr>
 														#if ($answerRemark) 
-															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$answerRemark</td>
+															<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$answerRemark</td>
 														#else
-															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+															<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$serviceScope</td>
 														#end
 													</tr>
 													</tbody>

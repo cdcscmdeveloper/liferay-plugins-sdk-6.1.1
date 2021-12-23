@@ -3601,6 +3601,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			
 			for (TplSpecQuestion tplSpecQuestion : master.getTplSpecQuestions()) {
 				if (tplSpecQuestion.getSpecQuestionId() == question.getSpecQuestionId()) {
+					// #26130 - Start
+					if (answerRemarkList == null) {
+						answerRemarkList = new ArrayList<>();
+					}
+					answerRemarkList.add(tplSpecQuestion.getTplSpecAnswers().get(0).getAnswerRemark());
+					// #26130 - End
 					addSpecList = true;
 					continue;
 				}
@@ -3651,7 +3657,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						if (CollectionUtils.isNotEmpty(feedbackList)) {
 							feedbackList.add(i, "&nbsp;");
 						}
-						if (CollectionUtils.isNotEmpty(answerRemarkList)) {
+						if (CollectionUtils.isNotEmpty(answerRemarkList) && answerRemarkList.size() != (question.getTplSpecZoneQties().size() + specList.size())) {
 							answerRemarkList.add(i, "&nbsp;");
 						}
 					}
@@ -3659,9 +3665,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					if (CollectionUtils.isNotEmpty(feedbackList)) {
 						feedbackList.add(0, "&nbsp;");
 					}
-					if (CollectionUtils.isNotEmpty(answerRemarkList)) {
+					// #26130 - Start
+					/*if (CollectionUtils.isNotEmpty(answerRemarkList)) {
 						answerRemarkList.add(0, "&nbsp;");
-					}
+					}*/
+					// #26130 - End
 				}
 			}
 			// #26130 - End
