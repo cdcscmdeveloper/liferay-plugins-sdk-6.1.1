@@ -155,6 +155,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	private static List<String> rosRemoveWhiteSpaceList = Arrays.asList("O","M","P");
 	//16052019 - SSM INTEGRATION CR - Fahmi
 	boolean fromtncProceed = false;
+	boolean fromBankAccount = false;
 	
 	public RegistrationBackingBean() {	
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
@@ -770,7 +771,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			this.getManagedBean().getSmPersonnel().setTitle(new PmSalutation());
 		}
 		
-		return firstUserRegistration;
+		if(fromBankAccount){
+			RequestContext.getCurrentInstance().execute("bankDialogDuplicate.show()");
+			return null;
+		}else{
+			return firstUserRegistration;	
+		}
 	}
 
 	/**
@@ -2895,7 +2901,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 			String uniqBank = suppBank.getPmFinancialOrg().getFinancialOrgId().toString() + suppBank.getAccountNo();
 			if(bankList.contains(uniqBank)){
-				throw new EpException(MessageConst.ERROR_721012);
+//				throw new EpException(MessageConst.ERROR_721012);
+				fromBankAccount = true;
 			}
 			bankList.add(uniqBank);
 		}
