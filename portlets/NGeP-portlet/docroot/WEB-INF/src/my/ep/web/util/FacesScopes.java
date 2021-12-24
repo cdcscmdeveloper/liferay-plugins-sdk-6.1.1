@@ -224,7 +224,10 @@ public class FacesScopes implements Serializable {
 						if(user != null) {
 							reqDTO.setPmUser(resDTO.getPmUser());
 							userSO.updateUserLastLogin(reqDTO);
-						}					
+							log.info("HERE IS UPDATE USER LOGIN HISTORY");
+						}else{
+							log.info("NOT UPDATE USER LOGIN HISTORY");
+						}
 					} catch (Exception e) {
 						e.printStackTrace();
 						throw new EpException(e.getMessage());
