@@ -2846,9 +2846,9 @@ public class SmApplicationUtil {
 								.equals(supBank.getPmFinancialOrg()
 										.getFinancialOrgId())) {
 					validBank = false;
-					throw new EpException(MessageConst.ERROR_722543,
-							new String[] { bank.getAccountNo(),
-									bank.getPmFinancialOrg().getFinOrgName() });
+//					throw new EpException(MessageConst.ERROR_722543,
+//							new String[] { bank.getAccountNo(),
+//									bank.getPmFinancialOrg().getFinOrgName() });
 				}
 
 			}
