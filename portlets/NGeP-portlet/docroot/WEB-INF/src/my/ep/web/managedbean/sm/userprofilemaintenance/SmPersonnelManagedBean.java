@@ -15,6 +15,7 @@ import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
+import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
@@ -152,6 +153,9 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private List<SelectItem> raceSelectItems;
 	private boolean disableRoleSelection;
 	private boolean allowAccess;
+	private int spIsAuthorize;
+	private int spIEpRoleStatus;
+	private List<PmUserRole> personnelHistoryList;
 	// 9569 end
 
 	public SmPersonnelManagedBean() {
@@ -1082,4 +1086,30 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	public void setBasicSmPersonnelPrevAddress2(SmPersonnelAddress basicSmPersonnelPrevAddress2) {
 		this.basicSmPersonnelPrevAddress2 = basicSmPersonnelPrevAddress2;
 	}
+
+	public int getSpIsAuthorize() {
+		return spIsAuthorize;
+	}
+
+	public void setSpIsAuthorize(int spIsAuthorize) {
+		this.spIsAuthorize = spIsAuthorize;
+	}
+
+	public int getSpIEpRoleStatus() {
+		return spIEpRoleStatus;
+	}
+
+	public void setSpIEpRoleStatus(int spIEpRoleStatus) {
+		this.spIEpRoleStatus = spIEpRoleStatus;
+	}
+
+	public List<PmUserRole> getPersonnelHistoryList() {
+		return personnelHistoryList;
+	}
+
+	public void setPersonnelHistoryList(List<PmUserRole> personnelHistoryList) {
+		this.personnelHistoryList = personnelHistoryList;
+	}
+	
+	
 }

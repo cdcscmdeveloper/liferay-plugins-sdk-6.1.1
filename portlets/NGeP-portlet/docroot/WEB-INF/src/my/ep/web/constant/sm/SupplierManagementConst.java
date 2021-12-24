@@ -700,7 +700,15 @@ public class SupplierManagementConst {
 	// SUPP_SUSPEND_OR_TERMINATED
 	public static String SUSPENDED = my.ep.constant.sm.SupplierManagementConst.SUSPENDED;
 	public static String TERMINATED = my.ep.constant.sm.SupplierManagementConst.TERMINATED;
-
+	
+	//9569
+	public static final String EPROLE_DELETED = "Delete";
+	public static final String ROLE_CODE_SM_1 = "MOF_SUPPLIER_ADMIN";
+	public static final String ROLE_CODE_SM_2 = "MOF_SUPPLIER_USER";
+	public static final String ROLE_CODE_SM_3 = "CM_USER";
+	public static final String ROLE_CODE_SM_4 = "FL_USER";
+	public static final String ROLE_CODE_SM_5 = "SUPPLIER_TEMP";
+		
 	// Getters for panel info
 	public String getSUPP_TYPE_CONTRACTOR() {
 		return SUPP_TYPE_CONTRACTOR;
@@ -1291,4 +1299,28 @@ public class SupplierManagementConst {
 	}
 
 	// #12483 - END
+	//9569
+	public String getEPROLE_DELETED() {
+		return EPROLE_DELETED;
+	}
+
+	public String getROLE_CODE_SM_1() {
+		return ROLE_CODE_SM_1;
+	}
+
+	public String getROLE_CODE_SM_2() {
+		return ROLE_CODE_SM_2;
+	}
+
+	public String getROLE_CODE_SM_3() {
+		return ROLE_CODE_SM_3;
+	}
+
+	public String getROLE_CODE_SM_4() {
+		return ROLE_CODE_SM_4;
+	}
+
+	public String getROLE_CODE_SM_5() {
+		return ROLE_CODE_SM_5;
+	}
 }
