@@ -24,6 +24,7 @@ import my.ep.dto.sm.supplieruseractivation.SupplierUserActivationReqDTO;
 import my.ep.dto.sm.supplieruseractivation.SupplierUserActivationResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
