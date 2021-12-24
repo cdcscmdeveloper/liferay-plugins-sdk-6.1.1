@@ -152,11 +152,12 @@ public class DigiCertHelper {
 			PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelByUserId(reqDTO);
 			log.info("getPersonnelId:: " + resDTO.getSmPersonnel().getPersonnelId());
 			log.info("getSoftcertFlg:: " + resDTO.getSmPersonnel().getSoftcertFlg());
+			log.info("getSmAppl.getSmSupplier.getSupplierId:: " + resDTO.getSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());
 			
-			//reqDTO.setSmSupplierId(resDTO.getSmAppl().getSmSupplier().getSupplierId());//30425
-			//if (!SmServiceLookup.getPersonnelSO().isNotExpiredSoftcertBySupplierIdAndUserId(reqDTO)) { //30425
+			reqDTO.setSmSupplierId(resDTO.getSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());//30425
+			if (!SmServiceLookup.getPersonnelSO().isNotExpiredSoftcertBySupplierIdAndUserId(reqDTO)) { //30425
 			//#30855 - START
-			if (!(resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED)) {
+//			if (!(resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED)) {
 			//#30855 - END
 				log.info("#25061 getSoftcertFlg:: if log 1");
 				if (resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ
