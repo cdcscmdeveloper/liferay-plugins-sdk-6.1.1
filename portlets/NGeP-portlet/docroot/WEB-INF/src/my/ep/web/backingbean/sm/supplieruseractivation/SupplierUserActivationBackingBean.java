@@ -449,11 +449,19 @@ public class SupplierUserActivationBackingBean extends
 						supplierSearchReqDTO).getSmSupplier();
 				// means already MOF because have applNo
 				// change BASIC_SUPPLIER_USER to MOF_SUPPLIER_USER
+				//12981 & #31710 - START
 				if (smSupplierTmp.getSmAppl().getApplNo() != null
 						&& StringUtils.isNotBlank(smSupplierTmp.getSmAppl()
 								.getApplNo())) {
-					epRole = RoleCode.MOF_SUPPLIER_USER.value();
+					epRole = RoleCode.BASIC_SUPPLIER_USER.value();
+					for(SmMofAccount mofAcc : smSupplier.getSmMofAccounts()){
+						if(mofAcc.getRecordStatusFlg() == 1){
+							epRole = RoleCode.MOF_SUPPLIER_USER.value();
+							break;
+						}
+					}
 				}
+				//12981 & #31710 - END
 			} catch (Exception ex) {
 				log.info(ex.getMessage());
 			} finally {
