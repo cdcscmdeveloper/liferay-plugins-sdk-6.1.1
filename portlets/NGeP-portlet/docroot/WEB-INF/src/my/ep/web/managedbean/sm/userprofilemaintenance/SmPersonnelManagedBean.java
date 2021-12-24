@@ -108,6 +108,9 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private String userAddConfirmationMsg;
 	// 26050
 	private boolean hasActiveAppl = false;
+	// #31710 - start
+	private String supplierType;
+	// #31710 - end
 
 	public SmPersonnelManagedBean() {
 		// TODO Auto-generated constructor stub
@@ -747,4 +750,14 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 		this.mailDivisionBox = mailDivisionBox;
 	}
 	//#13320 - added division - end
+	
+	// #31710 - start
+	public String getSupplierType() {
+		return supplierType;
+	}
+
+	public void setSupplierType(String supplierType) {
+		this.supplierType = supplierType;
+	}
+	// #31710 - end
 }
