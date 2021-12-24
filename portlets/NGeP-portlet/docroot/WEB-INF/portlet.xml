@@ -4940,7 +4940,7 @@
 	 
 	 <portlet>
 	 	<portlet-name>scSupplierFinalization</portlet-name>
-	 	<display-name>Supplier Finalization</display-name>
+	 	<display-name>Meeting Decision</display-name>
 	 	<portlet-class>
 	 		org.portletfaces.bridge.GenericFacesPortlet
 	 	</portlet-class>
@@ -4956,8 +4956,8 @@
 	 		<portlet-mode>view</portlet-mode>
 	 	</supports>
 	 	<portlet-info>
-	 		<title>Supplier Finalization</title>
-	 		<short-title>Supplier Finalization</short-title>
+	 		<title>Meeting Decision</title>
+	 		<short-title>Meeting Decision</short-title>
 	 		<keywords></keywords>
 	 	</portlet-info>
 	 	<security-role-ref>
