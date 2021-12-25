@@ -6747,6 +6747,26 @@ public class QTDetailBackingBean extends
 				|| facesScopes.hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())
 				|| facesScopes.hasRoleUser(RoleCode.BPK_AUDITOR.value());
 	}
+
+	// BUG 32050 -start-
+	/**
+	 * BUG 32050
+	 * Checks if QT/DL is submission or cancelled.
+	 * 
+	 * @return true, if is submission or cancelled
+	 */
+	public boolean isQtSubmission(Long statusId, String docNo) {
+		Boolean returnVal = Boolean.FALSE;
+
+		switch (StringUtils.substring(docNo, 0, 2)) {
+		case ParameterConst.DOCUMENT_CATEGORY_DIRECT_LOA_FOR_QUOTATION_TENDER:
+			returnVal = Boolean.TRUE;
+			break;
+		}
+
+		return returnVal;
+	}
+	// BUG 32050 -end-
 	
 	private boolean isDeskOfficer() {
 		FacesScopes facesScopes = new FacesScopes();
