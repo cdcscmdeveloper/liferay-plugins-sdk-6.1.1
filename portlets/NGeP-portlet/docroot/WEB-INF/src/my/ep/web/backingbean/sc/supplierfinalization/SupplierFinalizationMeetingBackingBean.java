@@ -343,6 +343,25 @@ public class SupplierFinalizationMeetingBackingBean extends
 				}
 				// End #26189:PK2.1
 				if (CollectionUtils.isNotEmpty(membersList)) {
+					//#31870 - START
+					Boolean checkIsExistFCSecretary = Boolean.FALSE;
+					for (ScCommitteeMember members : membersList) {
+						if(ParameterConst.COMMITTEE_ROLE_SECRETARY.equals(members.getMemberRole().getParameterCode())){
+							checkIsExistFCSecretary = Boolean.TRUE;
+							break;
+						}
+					}
+					
+					FacesScopes facesScopes = new FacesScopes();
+					Long loggedInUserId = facesScopes.getUserSessionBean().getUserId();
+					if(!checkIsExistFCSecretary){
+						log.info("Has missing FC Secretary Data == ");
+						ScCommitteeMember member = addFCSecretary(loggedInUserId,scCommittee, ParameterConst.COMMITTEE_ROLE_SECRETARY);
+						if(member != null){
+							getCommitteeSO().saveCommitteeMember(member);
+						}
+					}
+					//#31870 - END
 					Collections.sort(membersList);
 					
 					getManagedBean().setCommitteeMembersList(
@@ -2104,4 +2123,53 @@ if (CollectionUtils.isNotEmpty(
 		return !StringUtils.join(previousListArr, ",").equalsIgnoreCase(StringUtils.join(currentListArr, ","));
 	}
 	//#25037-END
+	
+	//#31870 - START
+	private ScCommitteeMember addFCSecretary(Long userId,ScCommittee committee, String roleCode){
+		IUserSO iUserSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
+		IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IParameterSO.class);
+		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
+		ScCommitteeMember secretaryMember = null;
+		try{
+			secretaryMember = new ScCommitteeMember();
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(userId);
+			PmUser user = iUserSO.retrieveUserByUserId(userReqDTO).getPmUser();
+			secretaryMember.setPmUser(user);
+			secretaryMember.setMemberName(user.getUserName());
+			secretaryMember.setIcPassport(user.getIdentificationNo());
+			secretaryMember.setGrade(user.getGrade());
+			if (null != user.getDesignation()) {
+				secretaryMember.setDesignation(user.getDesignation());
+			}
+			secretaryMember.setPNP(user.isPMP());
+			secretaryMember.setEmail(user.getEmail());
+			ParameterReqDTO roleReqDTO = new ParameterReqDTO();
+			roleReqDTO.setParameterCode(ParameterConst.COMMITTEE_ROLE_SECRETARY);
+			roleReqDTO.setParameterType(ParameterTypeConst.COMMITTEE_ROLE);
+			ParameterResDTO roleResDTO = parameterSO.retrieveParameterByTypeAndCode(roleReqDTO);
+			secretaryMember.setMemberRole(roleResDTO.getPmParameter());
+			if (secretaryMember.getMemberRole() != null) {
+				secretaryMember.setMemberRoleId(secretaryMember.getMemberRole().getParameterId());	
+			}
+			secretaryMember.setAccessRight(SourcingConstants.ACCESS_RIGHT_EDITABLE);
+			PmOrgProfile pmOrgProfile = null;
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			reqDTO.setUserId(userId);
+			reqDTO.setOrgType(OrganizationType.DIVISION.value());
+			OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
+			List<PmOrgProfile> pmOrgProfiles = resDTO.getOrgProfileList();
+			if (pmOrgProfiles != null && pmOrgProfiles.size() > 0) {
+				pmOrgProfile = pmOrgProfiles.get(0);
+			}
+			
+			secretaryMember.setPmOrgProfile(pmOrgProfile);
+			secretaryMember.setScCommittee(committee);
+		}catch(Exception e){
+			log.info("Has Error == "+e.getMessage());
+			secretaryMember = null;
+		}	
+		return secretaryMember;
+	}
+	//#31870 - END
 }
