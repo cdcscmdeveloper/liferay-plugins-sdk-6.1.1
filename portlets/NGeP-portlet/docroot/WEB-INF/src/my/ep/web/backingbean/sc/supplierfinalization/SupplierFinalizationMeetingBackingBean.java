@@ -356,9 +356,14 @@ public class SupplierFinalizationMeetingBackingBean extends
 					Long loggedInUserId = facesScopes.getUserSessionBean().getUserId();
 					if(!checkIsExistFCSecretary){
 						log.info("Has missing FC Secretary Data == ");
+						log.info("loggedInUserId == "+loggedInUserId);
 						ScCommitteeMember member = addFCSecretary(loggedInUserId,scCommittee, ParameterConst.COMMITTEE_ROLE_SECRETARY);
 						if(member != null){
-							getCommitteeSO().saveCommitteeMember(member);
+							try{
+								getCommitteeSO().saveCommitteeMember(member);
+							}catch(Exception e){
+								log.info("Exception during save == "+e.getMessage());
+							}
 						}
 					}
 					//#31870 - END
@@ -2164,6 +2169,8 @@ if (CollectionUtils.isNotEmpty(
 			}
 			
 			secretaryMember.setPmOrgProfile(pmOrgProfile);
+			secretaryMember.setCreatedBy(userId);
+			secretaryMember.setChangedBy(userId);
 			secretaryMember.setScCommittee(committee);
 		}catch(Exception e){
 			log.info("Has Error == "+e.getMessage());
