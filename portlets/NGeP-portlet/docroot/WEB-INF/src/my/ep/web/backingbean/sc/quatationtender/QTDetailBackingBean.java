@@ -832,8 +832,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				successMessage(MessageConst.INFO_7000044, ParameterTypeConst.DOCUMENT_TYPES,
 						ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtNo(), Boolean.TRUE);
 			}else{
-				successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES,
+				//9019 Start - re-endorse change INFO_700004 
+				successMessage(MessageConst.INFO_7000108, ParameterTypeConst.DOCUMENT_TYPES,
 						ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtNo(), Boolean.FALSE);
+				//9019 Start
 			}
 			/* Bug 31610 END */
 			debugLogger("end of saveQtDetailsAction");
