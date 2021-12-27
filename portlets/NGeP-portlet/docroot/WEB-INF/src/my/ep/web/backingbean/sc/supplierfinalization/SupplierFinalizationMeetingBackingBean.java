@@ -2170,7 +2170,9 @@ if (CollectionUtils.isNotEmpty(
 			
 			secretaryMember.setPmOrgProfile(pmOrgProfile);
 			secretaryMember.setCreatedBy(userId);
+			secretaryMember.setCreatedDate(new Timestamp(System.currentTimeMillis()));//#31870#21
 			secretaryMember.setChangedBy(userId);
+			secretaryMember.setChangedDate(new Timestamp(System.currentTimeMillis()));//#31870#21
 			secretaryMember.setScCommittee(committee);
 		}catch(Exception e){
 			log.info("Has Error == "+e.getMessage());
