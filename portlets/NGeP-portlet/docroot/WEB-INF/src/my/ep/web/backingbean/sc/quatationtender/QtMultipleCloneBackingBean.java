@@ -113,10 +113,10 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 	
 	public void clonePopupAction(ScQt scQt){
 		debugLogger("clonePopupAction");
-		this.totalClone=1;
+		//this.totalClone=1; //#9019 - enable in confirmAddToClone method 
 		selectedScqt=scQt;
 		RequestContext.getCurrentInstance().execute("kklik.show()");
-		this.getManagedBean().setCloned(false);
+		//this.getManagedBean().setCloned(false); //#9019 - enable in confirmAddToClone method 
 	}
 	
 	public void addToClone(){
@@ -795,4 +795,14 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 		
 	}
 	//#29942-End
+	
+	//#9019 - Start
+	public void confirmAddToClone(){
+		debugLogger("confirmAddToClone");
+		log.info("confirmAddToClone");
+		this.totalClone=1;
+		RequestContext.getCurrentInstance().execute("confirmationClone.show()");
+		this.getManagedBean().setCloned(false);
+	}
+	//#9019 - End
 }
