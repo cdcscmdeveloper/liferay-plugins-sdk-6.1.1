@@ -20281,7 +20281,7 @@ if(null!=allTechnicalChecklist){
 			}
 		} else {
 			if (BooleanUtils.isTrue(checkTS)) {
-				throw new EpException("All Technical Template List need to be completed before can perform complete");
+				throw new EpException(MessageConst.ERROR_760534);//#28784
 			} else if (BooleanUtils.isFalse(result)) {
 				throw new EpException(MessageConst.ERROR_760525);
 			}
