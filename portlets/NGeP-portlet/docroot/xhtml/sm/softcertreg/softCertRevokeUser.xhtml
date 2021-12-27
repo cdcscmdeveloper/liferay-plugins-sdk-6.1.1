@@ -80,6 +80,7 @@
 				<p:column headerText="#{lbl['lbl.sm.userprofile.accountstatus']}">
 					<h:outputText value="#{lbl['lbl.sm.accountstatus.active']}" rendered="#{personnel.recordStatusFlg eq '1'}" />
 					<h:outputText value="#{lbl['lbl.sm.accountstatus.pendingactivation']}" rendered="#{personnel.recordStatusFlg eq '8'}" />
+					<h:outputText value="#{lbl['lbl.sm.accountstatus.inactive']}" rendered="#{personnel.recordStatusFlg eq '9'}" />
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sm.softcert.no']}">
