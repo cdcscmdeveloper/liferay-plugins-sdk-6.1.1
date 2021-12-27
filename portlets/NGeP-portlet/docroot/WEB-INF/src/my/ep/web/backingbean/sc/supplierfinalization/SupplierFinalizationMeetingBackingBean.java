@@ -361,10 +361,14 @@ public class SupplierFinalizationMeetingBackingBean extends
 						if(member != null){
 							try{
 								getCommitteeSO().saveCommitteeMember(member);
+								membersList.add(member);//#31870#21
 							}catch(Exception e){
 								log.info("Exception during save == "+e.getMessage());
 							}
 						}
+						//#31870#21
+						retriveMeetingDetails(qtId);
+						return;
 					}
 					//#31870 - END
 					Collections.sort(membersList);
