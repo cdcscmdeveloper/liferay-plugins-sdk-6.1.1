@@ -282,12 +282,15 @@ public class SmPersonnelBackingBean extends
 		if (!getManagedBean().isDisableRole()) {
 			roles.add(role);
 		}
-
-		role = new SelectItem();
-		role.setValue(RoleCode.CM_USER.value());
-		role.setLabel(getEpRoleDescByRoleCode(role.getValue().toString()));
-		roles.add(role);
-
+		// #31710 - start
+		if (!(getManagedBean().getSupplierType().isEmpty())
+				&& !(getManagedBean().getSupplierType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONSULTANT))) {
+			role = new SelectItem();
+			role.setValue(RoleCode.CM_USER.value());
+			role.setLabel(getEpRoleDescByRoleCode(role.getValue().toString()));
+			roles.add(role);
+		}
+		// #31710 - end
 		getManagedBean().setRoleList(roles);
 
 		if (getManagedBean().getBasicSmPersonnel() != null
@@ -357,6 +360,9 @@ public class SmPersonnelBackingBean extends
 		getManagedBean().setDeactivatePersonnel(false);
 		getManagedBean().setIdTypes(getPmIdTypeDropdownValues());
 		removeEPRole();
+		// #31710 - start
+		getManagedBean().setSupplierType(getManagedBean().getSmSupplier().getSmAppl().getSupplierType());
+		// #31710 - end
 		buildRoleList();
 
 		CountryReqDTO reqDTO = new CountryReqDTO();

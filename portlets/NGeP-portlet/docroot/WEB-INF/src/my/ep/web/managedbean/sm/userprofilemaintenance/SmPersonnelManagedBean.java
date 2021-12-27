@@ -141,6 +141,9 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private boolean suppInPunishment = false;
 	// 26050
 	private boolean hasActiveAppl = false;
+	// #31710 - start
+	private String supplierType;
+	// #31710 - end
 	// 9569 start
 	private String spName;
 	private Long spCountryId;
@@ -804,6 +807,16 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 		this.mailDivisionBox = mailDivisionBox;
 	}
 	//#13320 - added division - end
+	
+	// #31710 - start
+	public String getSupplierType() {
+		return supplierType;
+	}
+
+	public void setSupplierType(String supplierType) {
+		this.supplierType = supplierType;
+	}
+	// #31710 - end
 
 	// 9569 start
 	public String getSpName() {
