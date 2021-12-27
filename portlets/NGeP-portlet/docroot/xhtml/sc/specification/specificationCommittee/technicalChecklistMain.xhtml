@@ -159,7 +159,7 @@
 					</ui:fragment>
 					<!-- #28784 -->
 					<ui:fragment
-						rendered="#{stageTwoTechnical.definationType.parameterCode ne 'PD' and stageTwoTechnical.pmDocument eq null and (stageTwoTechnical.definationType.parameterCode ne 'TS' and stageTwoTechnical.definationType.parameterCode ne 'SP')}">
+						rendered="#{stageTwoTechnical.definationType.parameterCode ne ParameterConst.documentDefinitionTypePresentationDemo and stageTwoTechnical.pmDocument eq null and (stageTwoTechnical.definationType.parameterCode ne 'TS' and stageTwoTechnical.definationType.parameterCode ne 'SP')}">
 						<c:if test="#{specificationBackingBean.isQTStatusChecklistScoring() or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision())}">
 						<p:selectOneMenu style="width:170px;" required="true"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
@@ -287,12 +287,12 @@
 				<h:panelGroup id="scoreView">
 					<p:selectBooleanCheckbox value="#{stageTwoTechnical.scoringReq}"
 						disabled="true"
-						rendered="#{((stageTwoTechnical.definationType.parameterCode eq 'UP' and stageTwoTechnical.action.parameterCode  eq 'V') or(stageTwoTechnical.definationType.parameterCode eq 'TS' and stageTwoTechnical.action.parameterCode  eq 'I') or(stageTwoTechnical.definationType.parameterCode eq 'SP' and stageTwoTechnical.action.parameterCode  eq 'M') or stageTwoTechnical.definationType.parameterCode eq 'PD')}"> <!-- #28784 -->
+						rendered="#{((stageTwoTechnical.definationType.parameterCode eq 'UP' and stageTwoTechnical.action.parameterCode  eq 'V') or(stageTwoTechnical.definationType.parameterCode eq 'TS' and stageTwoTechnical.action.parameterCode  eq 'I') or(stageTwoTechnical.definationType.parameterCode eq 'SP' and stageTwoTechnical.action.parameterCode  eq 'M') or stageTwoTechnical.definationType.parameterCode eq ParameterConst.documentDefinitionTypePresentationDemo)}"> <!-- #28784 -->
 					</p:selectBooleanCheckbox>
 				
 					<p:selectBooleanCheckbox value="#{stageTwoTechnical.scoringReq}"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
-						rendered="#{(!(stageTwoTechnical.definationType.parameterCode eq 'UP' and stageTwoTechnical.action.parameterCode  eq 'V') and !(stageTwoTechnical.definationType.parameterCode eq 'TS' and stageTwoTechnical.action.parameterCode  eq 'I') and !(stageTwoTechnical.definationType.parameterCode eq 'SP' and stageTwoTechnical.action.parameterCode  eq 'M') and !(stageTwoTechnical.definationType.parameterCode eq 'PD'))}"> <!-- #28784 -->
+						rendered="#{(!(stageTwoTechnical.definationType.parameterCode eq 'UP' and stageTwoTechnical.action.parameterCode  eq 'V') and !(stageTwoTechnical.definationType.parameterCode eq 'TS' and stageTwoTechnical.action.parameterCode  eq 'I') and !(stageTwoTechnical.definationType.parameterCode eq 'SP' and stageTwoTechnical.action.parameterCode  eq 'M') and !(stageTwoTechnical.definationType.parameterCode eq ParameterConst.documentDefinitionTypePresentationDemo))}"> <!-- #28784 -->
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="technicalSpecificationStatus,technicalChecklistEditActionView"
 							listener="#{specificationBackingBean.technicalCheckListScoreReqChange(index,specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"></p:ajax>
@@ -356,7 +356,7 @@
 				
 				<!-- START #26784 -->
 				<p:commandLink
-					rendered="#{specificationBackingBean.managedBean.demoAction and stageTwoTechnical.definationType.parameterCode eq 'PD'}"
+					rendered="#{specificationBackingBean.managedBean.demoAction and stageTwoTechnical.definationType.parameterCode eq ParameterConst.documentDefinitionTypePresentationDemo}"
 					action="#{specificationBackingBean.demoTechnicalTemplatelist()}"
 					update="@([id$=demoSpecTempId])"
 					disabled="#{specificationBackingBean.isTSChecklistCompleted()}"> <!--#28784--> 		 			
@@ -442,6 +442,5 @@
 	
 	<ui:include src="medicineinstructionspopup.xhtml"></ui:include>
 	
-	<!-- comment for #28784 <ui:include src="demoSpecificationTechnicalList.xhtml"></ui:include>#26784 -->
 
 </ui:composition>
