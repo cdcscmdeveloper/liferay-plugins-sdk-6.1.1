@@ -4688,6 +4688,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				
 				if ("UP".equals(finalizationReport.getDefinationType().getParameterCode())
 						&& !finalizationReport.getTitle().contains("Kertas Keputusan")) {
+					if (null == getManagedBean().getNewBriefingPaperReportList()) {
+						List<ScQtFinalizationReport> newBriefingPaperReportList = new LinkedList<>();
+						
+						getManagedBean().setNewBriefingPaperReportList(newBriefingPaperReportList );
+					}					
+					
 					getManagedBean().getNewBriefingPaperReportList().add(finalizationReport);
 					
 					iterator.remove();
