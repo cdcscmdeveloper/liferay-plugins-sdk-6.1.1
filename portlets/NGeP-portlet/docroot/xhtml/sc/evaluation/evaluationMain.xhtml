@@ -32,7 +32,7 @@
 		<ac:confirmationPopup id="confirmUpdatePresentationDemoId"
 			widget="confirmUpdatePresentationDemoPopup" loadingWidget="blockWidget"
 			title="#{lbl['lbl.sc.eva.technical.presentation.demo.submit.message1']}"
-			okAction="evaluationBackingBean.submitPrepareEvaluationDetails('SUBMIT')"
+			okAction="evaluationBackingBean.submitPrepareEvaluationDetails(BpmOutcomeConst.bpmSubmit)"
 			content="#{lbl['lbl.sc.eva.technical.presentation.demo.submit.message1']} #{evaluationBackingBean.managedBean.scQt.qtNo} #{lbl['lbl.sc.eva.technical.presentation.demo.submit.message2']} #{evaluationBackingBean.managedBean.passingScore}% #{lbl['lbl.sc.eva.technical.presentation.demo.submit.message3']}" />
 
 
@@ -54,7 +54,7 @@
 			</ui:repeat>
 		</ui:fragment>
 		<ui:fragment
-			rendered="#{evaluationBackingBean.managedBean.tabActiveIndex eq 2 and evaluationBackingBean.managedBean.committeeType eq 'TEC' 
+			rendered="#{evaluationBackingBean.managedBean.tabActiveIndex eq 2 and evaluationBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeTechnicalEvaluationCommittee 
 			and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true' and !evaluationBackingBean.managedBean.afterDemoInv}"><!-- #28784 -->
 			<ui:repeat var="bpmAction"
 				value="#{evaluationBackingBean.managedBean.outComes}">
@@ -63,11 +63,11 @@
 				<ui:param name="validityDaysExpiredQt"
 					value="#{evaluationBackingBean.checkProposalValidityDateReach(evaluationBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
 				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
-					rendered="#{validityDaysExpiredQt and bpmAction != 'SUBMIT'}" onstart="blockWidget.show();"
+					rendered="#{validityDaysExpiredQt and bpmAction != BpmOutcomeConst.bpmSubmit}" onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();" style="float:right;"
 					process="@all" partialSubmit="true" 
 					action="#{evaluationBackingBean.submitPrepareEvaluationDetails(bpmAction)}" />
-				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button" rendered="#{validityDaysExpiredQt and bpmAction == 'SUBMIT'}"
+				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button" rendered="#{validityDaysExpiredQt and bpmAction == BpmOutcomeConst.bpmSubmit}"
 					disabled="#{evaluationBackingBean.managedBean.isEvalStatusComp()}" oncomplete="confirmUpdatePresentationDemoPopup.show();" style="float:right;"/>
 			</ui:repeat>
 		</ui:fragment>

@@ -75,7 +75,7 @@
 							update="@form" />
 					</c:if>
 					<c:if
-						test="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
+						test="#{evaluationBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeTechnicalEvaluationCommittee and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
 						<p:menuitem value="#{lbl['lbl.sc.eva.technical.presentation.demo']}" process="@this" partialSubmit="true" 
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{evaluationBackingBean.retrivePresentationOrDemoEvaluationStage}"
@@ -165,14 +165,14 @@
 					<ui:include src="TECSummary.xhtml" />
 
 				</c:if><c:if
-					test="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '2' 
+					test="#{evaluationBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeTechnicalEvaluationCommittee and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '2' 
 					and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
 
 					
 					<ui:include src="TECSummaryPresentationDemo.xhtml" />
 
 				</c:if><c:if
-					test="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '3'
+					test="#{evaluationBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeTechnicalEvaluationCommittee and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '3'
 					and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
 
 					
@@ -240,7 +240,7 @@
 
 
 				</ui:fragment><ui:fragment
-					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'
+					rendered="#{evaluationBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeTechnicalEvaluationCommittee and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'
 					and evaluationBackingBean.managedBean.tabTechnicalIndex eq '5'}">
 
 
