@@ -45,11 +45,11 @@
 					
 				</p:tree>
 				
-
+      		
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.ok']}" onstart="blockWidgetClone.show()" oncomplete="blockWidgetClone.hide()"
 						styleClass="BtnSpacing" id="cloneCommitteeTreeBtnOnId2" update="@all, qtList, qtsearchid"
-						action="#{qtMultipleCloneBackingBean.addToClone()}">
+						action="#{qtMultipleCloneBackingBean.confirmAddToClone()}"> <!--#9019 change from previous method addToClone()-->
 					 <f:param name="skipvalidation" value="1" />
 					</p:commandButton>
 					<p:commandButton value="#{lbl['lbl.btn.close']}"
@@ -61,4 +61,21 @@
 					</h:panelGroup>
 					
 				</p:dialog>
+				
+			
+			<!--#9019 Start - add new confirm message dialog for Clone-->	
+			<p:confirmDialog message="#{lbl['lbl.sc.qt.dialog.cofirm.clone.msg']}"
+				header="#{lbl['lbl.cm.dialog.cofirm.header']}"
+				widgetVar="confirmationClone">
+				<p:commandButton id="conf"
+					value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
+					actionListener="#{qtMultipleCloneBackingBean.addToClone()}"
+					update="@form" oncomplete="confirmationClone.hide()" />
+				<p:commandButton id="decline"
+					value="#{lbl['lbl.cm.dialog.cofirm.no']}"
+					onclick="confirmationClone.hide()" />
+				<h:inputHidden id="rowIndex"></h:inputHidden>
+			</p:confirmDialog>
+			<!--#9019 End - change from previous method addToClone()-->
+						
 </ui:composition>
