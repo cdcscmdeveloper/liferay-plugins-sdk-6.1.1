@@ -2521,6 +2521,13 @@ public class SmPersonnelBackingBean extends
 				throw new EpException(MessageConst.ERROR_770228, new String[] { fs.getUserSessionBean().getUserName() });
 			}
 			// #26050 - end
+
+			//#29616 -start
+			//check old admin have active softcert
+			if (getManagedBean().getUpdateSmPersonnel().getSoftcertFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+				throw new EpException(MessageConst.ERROR_722685, new String[] { getManagedBean().getUpdateSmPersonnel().getName() });
+			}// #29616 -end
+			
 			RequestContext.getCurrentInstance().execute("confirmDialog.show()");
 		}
 	}
