@@ -10837,7 +10837,16 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 					break;
 				}
 			}
-			
+
+			this.getManagedBean().setFinalizationMethodBefore(getManagedBean().getFinalizationMethod());
+		}
+		
+		/**
+		* Reset finalization method
+		*/
+		public void resetFinalizationMethod() {
+			this.getManagedBean().setFinalizationMethod(getManagedBean().getFinalizationMethodBefore());
+			finalizationMethodEvent(null);
 		}
 		//#29562 - END
 		
