@@ -27,68 +27,47 @@
 					#{ctBackingBean.getStatusDescById(ctBackingBean.managedBean.contractVer.status.statusId)}
 				</td>
 			</tr>
-			<tr>
-				<td width="10%"><h:outputLabel
-						value="#{lbl['lbl.sc.qtn.no']}" /></td>
-				<td class="header-info-text">
-					#{directLOABackingBean.managedBean.scQt.qtNo}</td>
-				<td width="10%"><h:outputLabel
-						value="#{lbl['lbl.sc.loiloa.loa.title']}" /></td>
-				<td class="header-info-text">
-					#{directLOABackingBean.managedBean.scLoa.scQt.qtTitle}</td>
+			
+			<tr>		
+			<c:if 
+			test="#{ctBackingBean.managedBean.contractVer.ctContract.loa.scQt != null 
+			and ctBackingBean.managedBean.contractVer.ctContract.loa.scLoiLoa.docType eq ParameterConst.doctypeDirectNego}">
+			<td width="10%">
+			<h:outputLabel value="#{lbl['lbl.sc.qtn.no']}" /></td>						
+			<td class="header-info-text">
+					#{ctBackingBean.managedBean.contractVer.ctContract.loa.scQt.qtNo}</td>
+			<td width="10%">
+				<h:outputLabel value="#{lbl['lbl.sc.loiloa.loa.title']}" /></td>
+			<td class="header-info-text">
+					#{ctBackingBean.managedBean.contractVer.ctContract.loa.scQt.qtTitle}</td>						
+			</c:if>
+			
+			<c:if 
+			test="#{ctBackingBean.managedBean.contractVer.ctContract.loa.scQt != null 
+			and !ctBackingBean.managedBean.contractVer.ctContract.loa.scLoiLoa.docType eq ParameterConst.doctypeDirectNego}">
+			<td width="10%">
+			<h:outputLabel value="#{lbl['lbl.sc.document.no']}" /></td>						
+			<td class="header-info-text">
+					#{ctBackingBean.managedBean.contractVer.ctContract.loa.scQt.qtNo}</td>
+			<td width="10%">
+				<h:outputLabel value="#{lbl['lbl.sc.loiloa.loa.title']}" /></td>
+			<td class="header-info-text">
+					#{ctBackingBean.managedBean.contractVer.ctContract.loa.scQt.qtTitle}</td>						
+			</c:if>
+			
+			<c:if
+			test="#{ctBackingBean.managedBean.contractVer.ctContract.loa.scQt == null}">
+			<td width="10%">
+			<h:outputLabel value="#{lbl['lbl.sc.document.no']}" /></td>	
+			<td class="header-info-text">
+					#{ctBackingBean.managedBean.contractVer.ctContract.loa.scQuote.quoteNo}</td>
 
+			<td width="10%">
+				<h:outputLabel value="#{lbl['lbl.sc.loiloa.loa.title']}" /></td>
+				<td class="header-info-text">
+					#{ctBackingBean.managedBean.contractVer.ctContract.loa.scLoiLoa.title}</td>
+			</c:if>
 			</tr>
 		</table>
-	   <!-- <table style="width: 100%">
-			<tr>
-				<td style="width: 15%">
-					<h:outputLabel value="#{lbl['lbl.ct.loa.no']}" />
-				</td>
-				<td style="width: 10%">
-				Enhancement 15851 - Prefix for supplemental contract letter
-				start
-					<p:commandLink value="#{ctBackingBean.managedBean.contractVer.ctContractValue.loaNo}" 
-						process="@this" partialSubmit="true" styleClass="blue_font"
-						rendered="#{!ctBackingBean.managedBean.hasAmendmentLoaNo}"
-						action="#{ctBackingBean.goToLoaView(ctBackingBean.managedBean.contractVer.ctContract.loa)}"/>
-						
-					<h:outputText value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.loaNo}"
-						rendered="#{ctBackingBean.managedBean.hasAmendmentLoaNo}" />
-				15851 end
-				</td>
-				<td style="width: 10%">
-					<h:outputLabel value="#{lbl['lbl.ct.contract.no']}" />
-				</td>
-				<td style="width: 15%">
-				  <p:commandLink value="#{ctBackingBean.managedBean.contractVer.ctContract.contractNo}" 
-				       process="@this" partialSubmit="true" styleClass="blue_font"
-				       action="#{amendmentBackingBean.gotoCommonViewPage(ctBackingBean.managedBean.contractVer.ctContract.contractId)}"/>
-				</td>
-			   <h:panelGroup rendered="#{amendmentBackingBean.managedBean.ackFA eq null}">
-				<td style="width: 10%">
-					<h:outputLabel value="#{lbl['lbl.ct.ptj.name']}" />
-				</td>
-				<td style="width: 15%" class="header-info-text">
-					#{ctBackingBean.managedBean.contractVer.ctContract.ownerOrgProfile.orgName}
-				</td>
-				</h:panelGroup>
-				  <h:panelGroup rendered="#{amendmentBackingBean.managedBean.ackFA ne null}">
-				<td style="width: 10%">
-					<h:outputLabel value="#{lbl['lbl.ct.ptj.name']}" />
-				</td>
-				<td style="width: 35%" class="header-info-text">
-					#{ctBackingBean.managedBean.contractVer.ctContract.ownerOrgProfile.orgName}
-				</td>
-				</h:panelGroup>
-				<h:panelGroup rendered="#{amendmentBackingBean.managedBean.ackFA eq null}">
-				<td style="width: 10%">
-					<h:outputLabel value="#{lbl['lbl.ct.fulfilment.details.status']}" />
-				</td>
-				<td style="width: 15%" class="header-info-text">
-					#{ctBackingBean.getStatusDescById(ctBackingBean.managedBean.contractVer.status.statusId)}
-				</td>
-				</h:panelGroup>				
-			</tr>
-		</table> -->
 	</div>
 </ui:composition>

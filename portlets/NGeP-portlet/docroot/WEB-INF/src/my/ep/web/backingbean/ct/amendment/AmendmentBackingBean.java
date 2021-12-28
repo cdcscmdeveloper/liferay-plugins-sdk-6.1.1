@@ -52,6 +52,7 @@ import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
+import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
@@ -83,6 +84,7 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
+import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
@@ -138,7 +140,6 @@ import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.ContractBaseBackingBean;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
-import my.ep.web.backingbean.sc.loa.DirectLOABackingBean;
 import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
 import my.ep.web.bean.ct.CtLetterOfAcceptance;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -7683,7 +7684,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					}else{
 						reqDTO.setContractVerId( contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId());
 					}										
-					log.info("Check gotoAmendViewPage ContractverId :"+reqDTO.getContractVerId());
 
 					reqDTO.setViewOnly(true);
 					ctBackingBean.getManagedBean().setViewContract(true);
@@ -7695,11 +7695,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					setAmendmentContractVer(reqDTO);
 					
 					//for loa header
-					DirectLOABackingBean dlbb = new DirectLOABackingBean();	
-					AwardSupplierReqDTO asReqDTO = new AwardSupplierReqDTO();
-					asReqDTO.setLoaId(loaId);
-					dlbb.retriveLoaDetails(loaId, this.getManagedBean().getBackToPreviousPage(), true);
-					
+					IQTAwardSO qtAwardSO = BusinessDelegate.getInstance()
+									.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+											IQTAwardSO.class);
+						AwardSupplierReqDTO reqQtDTO = new AwardSupplierReqDTO();
+						reqQtDTO.setLoaId(loaId);
+						reqQtDTO.setScLoa(ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa());
+						AwardSupplierResDTO resDTO = qtAwardSO.retrieveLOAHeader(reqQtDTO);
+						if(resDTO.getScLoa().getScQt() != null){
+							ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().setScQt(resDTO.getScLoa().getScQt());
+						}
+						
+						if(resDTO.getScLoa().getScQuote() != null){
+							ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().setScQuote(resDTO.getScLoa().getScQuote());
+						}						
+										
 					FacesContext fc = FacesContext.getCurrentInstance();
 					fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, PROCESS_AMEND_VIEW_PAGE);
