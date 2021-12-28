@@ -218,7 +218,9 @@ public class YearEndProcessBackingBean extends
 					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_CANCELLED)
 					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_CANCELLED_BY_YEP)
 					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_REVISION_INVOICE)
+					//32387 start
 					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_REVISION_INVOICE2)
+					//32387 end
 					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_PAYMENT_QUERY)
 					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_PAYMENT_QUERY)){
 					
@@ -551,7 +553,9 @@ public class YearEndProcessBackingBean extends
 				||statusId.equals(FulfilmentStatusConst.PO_PENDING_PAYMENT_QUERY)
 				||statusId.equals(FulfilmentStatusConst.CO_PENDING_PAYMENT_QUERY)
 				||statusId.equals(FulfilmentStatusConst.CO_PENDING_REVISION_INVOICE)
+				//32387 start
 				||statusId.equals(FulfilmentStatusConst.PO_PENDING_REVISION_INVOICE2)
+				//32387 end
 				||statusId.equals(FulfilmentStatusConst.CO_PENDING_FULFILMENT)){
 				
 				return true;
