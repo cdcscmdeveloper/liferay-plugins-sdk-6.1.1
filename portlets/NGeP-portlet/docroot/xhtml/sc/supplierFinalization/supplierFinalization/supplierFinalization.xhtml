@@ -167,10 +167,8 @@
 													or suppFinalizationBackingBean.managedBean.reversed}">
 									<f:selectItems value="#{suppFinalizationBackingBean.getFinalizationMethodDropDown()}" />
 									<!-- #29562 START -->
-									<p:ajax event="change" update="@([id$=recommendSupplierPanel],[id$=itemSupplierPanel], [id$=typeConfirmationId])" 
-										listener="#{suppFinalizationBackingBean.finalizationMethodEvent}" process="@this" 
-										oncomplete="typeConfirmation.show();" />
-									<!-- #29562 END -->
+									<p:ajax oncomplete="typeConfirmation.show();" listener="#{suppFinalizationBackingBean.finalizationMethodEvent}" process="@this"/>
+					   				<!-- #29562 END -->
 					   			</p:selectOneMenu>
 							</td>
 							<td style="margin-top: -3px">
@@ -478,9 +476,12 @@
 			<p:commandButton id="conf" value="#{lbl['lbl.txt.yes']}"
 				process="@this" partialSubmit="true" update="@form"
 				action="#{suppFinalizationBackingBean.resetSelectedItemSupplierandRemarks}"
-				oncomplete="typeConfirmation.hide()" />
+				oncomplete="typeConfirmation.hide()">
+				<p:ajax event="change" update="@([id$=recommendSupplierPanel],[id$=itemSupplierPanel], [id$=typeConfirmationId])" 
+										listener="#{suppFinalizationBackingBean.selectedFinalizationMethod}" process="@this"/>
+			</p:commandButton>
 			<p:commandButton id="decline" value="#{lbl['lbl.txt.no']}"
-				oncomplete="typeConfirmation.hide()" />
+				oncomplete="typeConfirmation.hide()" action="#{suppFinalizationBackingBean.resetFinalizationMethod}" update="recommendBy"/>
 		</div>
 	</p:confirmDialog>
 	<!-- #29562 END -->
