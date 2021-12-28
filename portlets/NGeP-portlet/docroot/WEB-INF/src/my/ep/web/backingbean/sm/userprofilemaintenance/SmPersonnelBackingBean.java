@@ -153,6 +153,9 @@ public class SmPersonnelBackingBean extends
 		getManagedBean().setDefaultCountryId(
 				resDTO.getPmCountry().getCountryId());
 		initUserPersonnelInfo();
+		// #9569 - start
+		getManagedBean().setSupplierType(getManagedBean().getSmSupplier().getSmAppl().getSupplierType());
+		// #9569 - end
 		buildRoleList();
 		getManagedBean().setIdTypes(getPmIdTypeDropdownValues());
 		SelectItem role = new SelectItem();
@@ -517,6 +520,9 @@ public class SmPersonnelBackingBean extends
 		getManagedBean().setEditMode(true);
 		getManagedBean().setIdTypes(getPmIdTypeDropdownValues());
 		getPersonnelInfoById(personnelId);
+		// #9569 - start
+		getManagedBean().setSupplierType(getManagedBean().getSmSupplier().getSmAppl().getSupplierType());
+		// #9569 - end
 		buildRoleList();
 		validateAccountStatus();
 		setDisabledActivateDeactivateRadioButton();
