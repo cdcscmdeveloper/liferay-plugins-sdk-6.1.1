@@ -124,7 +124,7 @@
 				<tr>
 					<td width="5%"><p:outputLabel
 							value="#{lbl['lbl.fl.report.all.accounting']}"></p:outputLabel></td>
-					<td width="95%"><h:selectOneRadio
+					<td width="10%"><h:selectOneRadio
 							value="#{tfRptBB.managedBean.isAllAgOff}">
 							<f:selectItem itemLabel="#{lbl['lbl.btn.yes']}" itemValue="true" />
 							<f:selectItem itemLabel="#{lbl['lbl.btn.no']}" itemValue="false" />
@@ -132,8 +132,9 @@
 								listener="#{tfRptBB.allAgOffChecked}"
 								update=":form:selectOffDropdown , :form:inputOfficeName , :form:slbtn"
 								partialSubmit="true" />
-						</h:selectOneRadio> <ac:iconTooltip value="#{lbl['lbl.fl.report.trans.tooltip']}" />
+						</h:selectOneRadio>
 					</td>
+					<td><ac:iconTooltip value="#{lbl['lbl.fl.report.trans.tooltip']}" /></td>
 				</tr>
 				<tr>
 					<td width="20%"><p:selectOneMenu
@@ -145,13 +146,13 @@
 							<f:selectItem itemLabel="#{lbl['lbl.fl.report.account.name']}"
 								itemValue="officeName" />
 						</p:selectOneMenu></td>
-					<td width="70%"><p:inputText id="inputOfficeName"
+					<td width="70%" colspan="2"><p:inputText id="inputOfficeName"
 							value="#{tfRptBB.managedBean.inputAgOff}"
 							disabled="#{tfRptBB.managedBean.isAllAgOff eq 'true'}" size="70"
 							onkeypress="if (event.keyCode == 13) { accCodeSearch.jq.click(); return false; }" /></td>
 				</tr>
 				<tr>
-					<td colspan="2" width="100%">
+					<td colspan="3" width="100%">
 						<div class="ppRightBtn">
 							<p:commandButton value="#{lbl['lbl.btn.search']}"
 								action="#{tfRptBB.searchAccountingOffice}"
