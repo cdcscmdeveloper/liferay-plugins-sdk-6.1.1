@@ -109,8 +109,8 @@
 			<table style="width: 100%">
 				<tr>
 					<td width="5%"><p:outputLabel
-							value="#{lbl['lbl.pm.accounting.office.code']}"></p:outputLabel></td>
-					<td width="95%"><h:selectOneRadio
+							value="#{lbl['lbl.fl.report.all.accounting']}"></p:outputLabel></td>
+					<td width="10%"><h:selectOneRadio
 							value="#{tfRptBB.managedBean.isAllAgOff}">
 							<f:selectItem itemLabel="#{lbl['lbl.btn.yes']}" itemValue="true" />
 							<f:selectItem itemLabel="#{lbl['lbl.btn.no']}" itemValue="false" />
@@ -118,7 +118,9 @@
 								listener="#{tfRptBB.allAgOffChecked}"
 								update=":form:selectOffDropdown , :form:inputOfficeName , :form:slbtn"
 								partialSubmit="true" />
-						</h:selectOneRadio></td>
+						</h:selectOneRadio>
+					</td>
+					<td><ac:iconTooltip value="#{lbl['lbl.fl.report.trans.tooltip']}" /></td>
 				</tr>
 				<tr>
 					<td width="20%"><p:selectOneMenu
@@ -127,16 +129,16 @@
 							style="width:205px">
 							<f:selectItem itemLabel="#{lbl['lbl.pm.accounting.office.code']}"
 								itemValue="officeCode" />
-							<f:selectItem itemLabel="#{lbl['lbl.pm.accounting.office.name']}"
+							<f:selectItem itemLabel="#{lbl['lbl.fl.report.account.name']}"
 								itemValue="officeName" />
 						</p:selectOneMenu></td>
-					<td width="70%"><p:inputText id="inputOfficeName"
+					<td width="70%" colspan="2"><p:inputText id="inputOfficeName"
 							value="#{tfRptBB.managedBean.inputAgOff}"
 							disabled="#{tfRptBB.managedBean.isAllAgOff eq 'true'}" size="70"
 							onkeypress="if (event.keyCode == 13) { accCodeSearch.jq.click(); return false; }" /></td>
 				</tr>
 				<tr>
-					<td colspan="2" width="100%">
+					<td colspan="3" width="100%">
 						<div class="ppRightBtn">
 							<p:commandButton value="#{lbl['lbl.btn.search']}"
 								action="#{tfRptBB.searchAccountingOffice}"
@@ -170,7 +172,7 @@
 					<h:outputText value="#{accountingList.officeCode}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.pm.accounting.name']}"
+				<p:column headerText="#{lbl['lbl.fl.report.account.name']}"
 					style="width:60%;white-space: normal;word-wrap: break-word;">
 					<h:outputText value="#{accountingList.pmAgValidity.officeName}" />
 				</p:column>
