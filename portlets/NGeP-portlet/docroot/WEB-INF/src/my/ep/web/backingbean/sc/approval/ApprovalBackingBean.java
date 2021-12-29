@@ -1171,6 +1171,11 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		} else {
 			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
 				showDialog = "reviceApprovalDlg.show()";
+				// #32376 - Start
+				if(SCProcessNameConst.APPROVE_PUBLICATION.equalsIgnoreCase(taskName)){
+					showDialog = "reviceApprovalDlgTemp.show()";
+				}
+				// #32376 - End
 			} else if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(action)) {
 				showDialog = "rejectApprovalDlg.show()";
 			} else {
