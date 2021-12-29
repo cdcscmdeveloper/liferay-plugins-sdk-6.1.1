@@ -10844,6 +10844,8 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				}
 			}
 			
+			//reset selected supplier for award
+			this.getManagedBean().setRecommendedSupplier(null);
 			this.getManagedBean().setFinalizationMethodBefore(getManagedBean().getFinalizationMethod());
 		}
 		
