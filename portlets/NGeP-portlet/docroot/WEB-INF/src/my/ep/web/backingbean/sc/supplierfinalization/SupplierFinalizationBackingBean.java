@@ -10810,6 +10810,12 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			for(int i = 0; i < this.getManagedBean().getItemList().size();){
 				if (this.getManagedBean().getItemList().get(i).isSelected()){
 					this.getManagedBean().getItemList().get(i).setSelected(false);
+					//reset selected suppliers
+					if (this.getManagedBean().getItemList().get(i).getSelectedSuppliers() != null){
+						this.getManagedBean().getItemList().get(i).getSelectedSuppliers().clear();
+						ScQtRecommend itemList = this.getManagedBean().getItemList().get(i);
+						getSupplierCodes(itemList);
+					}
 					i++;
 				}
 				else{
@@ -10837,7 +10843,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 					break;
 				}
 			}
-
+			
 			this.getManagedBean().setFinalizationMethodBefore(getManagedBean().getFinalizationMethod());
 		}
 		
