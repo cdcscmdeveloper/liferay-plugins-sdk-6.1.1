@@ -2064,7 +2064,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			List<ScQtContactPerson> deskOfficerAdminList = this.getManagedBean().getPmuserContactpersonList();
 			List<ScQtContactPerson> contactList = new ArrayList<ScQtContactPerson>();
 
-			if(this.getManagedBean().isMaintanceFlow()){
+			if(this.getManagedBean().isMaintanceFlow() && StringUtils.isEmpty(this.getManagedBean().getTaskName())){//25037 - 497
 				if (CollectionUtils.isNotEmpty(scQt.getRequestContents()) && this.getManagedBean().getRequestContent()!=null ) { 
 					ScQtRequestContent requestContent = this.getManagedBean().getRequestContent();
 					deskOfficerAdminList = deskOfficerAdminList==null? new ArrayList<ScQtContactPerson>(): deskOfficerAdminList;
@@ -4528,7 +4528,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 				if(this.isStatusGreaterThanOrEquals(statusId, QTStatusConst.QT_PROPOSAL_PREPARATION, QTStatusConst.QT_ORDERED_STATUSES)){
 					this.getManagedBean().setPmuserContactpersonList(resDTO.getDeskOfficers().getResultList());
-				}else if(this.getManagedBean().isMaintanceFlow()){
+				}else if(this.getManagedBean().isMaintanceFlow() && StringUtils.isEmpty(this.getManagedBean().getTaskName())){//25037 - 497
 					ScQtRequestContent requestContent = null;
 					if(CollectionUtils.isNotEmpty(scQt.getRequestContents())){
 						for(ScQtRequestContent r: scQt.getRequestContents()){
