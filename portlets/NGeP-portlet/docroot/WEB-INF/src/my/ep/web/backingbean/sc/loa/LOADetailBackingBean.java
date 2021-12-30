@@ -9233,6 +9233,15 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				}
 				index++;
 			}
+			if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
+				log.info("===========duringSaveSpecificationTimescodesexecuted=====");	
+				for(ScLoiLoaItem loacalloiLoaItem:this.getManagedBean().getScLoa().getScLoiLoaItems()){
+					if( resDTO.getScLoiLoaItem().getLoiLoaItemId()== loacalloiLoaItem.getLoiLoaItemId() ||  resDTO.getScLoiLoaItem().getLoiLoaItemId().equals(loacalloiLoaItem.getLoiLoaItemId()) ||  resDTO.getScLoiLoaItem().getScRequestItem().getRequestNoteItemId()==loacalloiLoaItem.getScRequestItem().getRequestNoteItemId() ||  resDTO.getScLoiLoaItem().getScRequestItem().getRequestNoteItemId().equals(loacalloiLoaItem.getScRequestItem().getRequestNoteItemId())){//29007-start
+						//zonalItemList.add(loacalloiLoaItem);
+						loacalloiLoaItem.setComplete(isComplete);
+					}
+				}
+			}//29007-End
 			}//29007-End
 			if(resDTO.isSuccessful()){
 				if(!getManagedBean().getScLoa().getPmStatus().getStatusId().
@@ -9408,6 +9417,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						if(latestChangedItem.getLoaSpecJustification() != null && StringUtils.isNotBlank(latestChangedItem.getLoaSpecJustification()) && StringUtils.isNotEmpty(latestChangedItem.getLoaSpecJustification())){//29007
 							scLoiLoaItem.setLoaSpecJustification(latestChangedItem.getLoaSpecJustification());	
 							scLoiLoaItem.setLatestChangedDate(latestChangedItem.getChangedDate());
+							scLoiLoaItem.setComplete(latestChangedItem.isComplete());//29007
 							date = df.format(scLoiLoaItem.getLatestChangedDate());
 						}
 						//this.getManagedBean().setNewSupplierJustification(latestChangedItem.getLoaSpecJustification());
@@ -9449,6 +9459,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							}
 							specAnswer.setFeedback(feedback);
 						}
+						if(!scLoiLoaItem.isComplete()){//29007-start
+							specAnswer.setNewSupplierOffer(null);	
+						}//29007-End
 						if(specAnswer.getNewSupplierOffer() != null && StringUtils.isNotBlank(specAnswer.getNewSupplierOffer()) && StringUtils.isNotEmpty(specAnswer.getNewSupplierOffer())){//29007-start
 							newOfferedSpecification=true;
 						}//29007-End
@@ -9679,7 +9692,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			return null;
 		}
 	} 
-
+	
 	public String supplierRemarks(String supplierRemarks){
 	String remarks="T/B";;
 	if(null!=supplierRemarks && StringUtils.isNotBlank(supplierRemarks) && StringUtils.isNotEmpty(supplierRemarks)){
