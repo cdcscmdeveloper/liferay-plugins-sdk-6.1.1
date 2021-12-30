@@ -583,6 +583,28 @@
 								<td>
 									<h:outputText style="float: left" value="#{lbl['lbl.sm.person.mngmt']}" />
 								</td>
+							<!--#30829-START-->
+							<c:if test="#{registrationBackingBean.managedBean.smAppl.supplierType == SupplierManagementConst.STYPE_CONSULTANT}">
+								<td>
+									<p:selectBooleanCheckbox disabled="#{registrationBackingBean.managedBean.disableProf}"  value="#{registrationBackingBean.managedBean.smPersonnel.prof}">
+									<p:ajax event="change" update="@([id$=pnlUsrInfo])" listener="#{registrationBackingBean.listenerChangeRole}"
+									partialSubmit="true" 
+									process="@form" /></p:selectBooleanCheckbox>
+								</td>
+								<td>
+									<h:outputText style="float: left"  value="#{lbl['lbl.sm.professional']}" />
+								</td>
+								<td>
+									<p:selectBooleanCheckbox disabled="#{registrationBackingBean.managedBean.disableSemiProf}"  value="#{registrationBackingBean.managedBean.smPersonnel.semiProf}">
+									<p:ajax event="change" update="@([id$=pnlUsrInfo])" listener="#{registrationBackingBean.listenerChangeRole}"
+									partialSubmit="true" 
+									process="@form" /></p:selectBooleanCheckbox>
+								</td>
+								<td>
+									<h:outputText style="float: left"  value="#{lbl['lbl.sm.professional.semi']}" />
+								</td>
+							</c:if>
+							<!--#30829-END-->
 								<td>
 									<p:selectBooleanCheckbox disabled="#{registrationBackingBean.managedBean.disableStaff}"  value="#{registrationBackingBean.managedBean.smPersonnel.clerical}">
 									<p:ajax event="change" update="@([id$=pnlUsrInfo])" listener="#{registrationBackingBean.listenerChangeRole}"
@@ -592,6 +614,7 @@
 								<td>
 									<h:outputText style="float: left"  value="#{lbl['lbl.sm.person.stf']}" />
 								</td>
+								
 							</tr>
 						</table>
 					</p:outputPanel>
