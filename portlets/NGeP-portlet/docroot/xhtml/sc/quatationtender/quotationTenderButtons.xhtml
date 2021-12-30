@@ -322,7 +322,7 @@
 		<!-- 15391 End  -->
 		<ui:remove>#25077 - Start</ui:remove>	
 		    <c:if test="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL}">
-				<p:dialog id="reviceApprovalDlg" widgetVar="reviceApprovalDlg"
+				<p:dialog id="reviceApprovalDlgTemp" widgetVar="reviceApprovalDlgTemp"
 					header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
 					resizable="false" width="360" height="90" modal="true"
 					closable="false">
@@ -335,15 +335,16 @@
 					</table>
 					<p:spacer height="1" />
 					<div class="ppRightBtn">
-						<p:commandButton widgetVar="reviseOKBtn" onclick="reviseOKBtn.disable(); reviseCANCELBtn.disable(); reviceApprovalDlg.hide(); blockWidget.show();" value="#{lbl['lbl.btn.yes']}"
-							oncomplete="reviceApprovalDlg.hide(); blockWidget.hide()"
+						<p:commandButton widgetVar="reviseOKBtnTemp" onclick="reviseOKBtnTemp.disable(); reviseCANCELBtnTemp.disable(); reviceApprovalDlgTemp.hide(); blockWidget.show();" value="#{lbl['lbl.btn.yes']}"
+							oncomplete="reviceApprovalDlgTemp.hide(); blockWidget.hide()"
 							action="#{approvalBackingBean.updateReviceBpmTask}" />
-						<p:commandButton widgetVar="reviseCANCELBtn" value="#{lbl['lbl.btn.no']}"
-							onclick="reviceApprovalDlg.hide();" type="button" />
+						<p:commandButton widgetVar="reviseCANCELBtnTemp" value="#{lbl['lbl.btn.no']}"
+							onclick="reviceApprovalDlgTemp.hide();" type="button" />
 					</div>
 				</p:dialog>
 			</c:if>	
 	    <ui:remove>#25077 - End</ui:remove>
+		
 		<ac:confirmationPopup id="confirmReendorseOnReassignmentId"
 			widget="confirmReendorseOnReassignmentPopup" loadingWidget="blockWidget"
 			title="#{lbl['lbl.sc.confirmation']}"
