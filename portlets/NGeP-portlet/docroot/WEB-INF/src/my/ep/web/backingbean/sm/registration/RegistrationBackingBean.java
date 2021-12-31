@@ -4543,9 +4543,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 								this.getManagedBean().getSmSupp().getBusinessType())|| SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK.equalsIgnoreCase(
 										this.getManagedBean().getSmSupp().getBusinessType())){
 					this.getManagedBean().setDisableStaff(false);
+					this.getManagedBean().setDisableProf(false);
+					this.getManagedBean().setDisableSemiProf(false);
 					this.getManagedBean().getSmPersonnel().setClerical(true);
 				} else {
 					this.getManagedBean().setDisableStaff(true);
+					this.getManagedBean().setDisableProf(true);
+					this.getManagedBean().setDisableSemiProf(true);
 					this.getManagedBean().getSmPersonnel().setClerical(false);
 				}
 				//30829 End  - 29/10/2021
@@ -4554,18 +4558,30 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				//30829 Start
 				if(getManagedBean().getSmPersonnel().isManagement()){
 					this.getManagedBean().setDisableStaff(true);
+					this.getManagedBean().setDisableProf(true);
+					this.getManagedBean().setDisableSemiProf(true);
 					this.getManagedBean().getSmPersonnel().setClerical(false);
 				} else if (getManagedBean().getSmPersonnel().isClerical()){
 					this.getManagedBean().setDisableManagement(true);
 					this.getManagedBean().getSmPersonnel().setManagement(false);
 				} else {
 					this.getManagedBean().setDisableStaff(false);
+					this.getManagedBean().setDisableProf(false);
+					this.getManagedBean().setDisableSemiProf(false);
 					this.getManagedBean().setDisableEquity(false);
 					this.getManagedBean().setDisableManagement(false);
 				}
 				//30829 End 
 
 			}
+			
+			//30829 start 
+			if(this.getManagedBean().getSmPersonnel().isProf()){
+				this.getManagedBean().setDisableSemiProf(true);
+			} else if(this.getManagedBean().getSmPersonnel().isSemiProf()) {
+				this.getManagedBean().setDisableProf(true);
+			}
+			//30829 End 
 			/*
 			else if(this.getManagedBean().getSmPersonnel().isClerical()){
 				this.getManagedBean().setDisableStaff(false);
@@ -4749,4 +4765,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		return smPersonnel;
 	}
 	//  #30829 - End 1/11/2021
+	
+	
 }
