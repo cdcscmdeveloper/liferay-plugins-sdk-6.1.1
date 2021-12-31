@@ -175,6 +175,8 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private List <SmSupplierOwner> supplierOwnerls = new ArrayList<SmSupplierOwner>(); // #27691
 	//#30829 Start
 	private boolean disableManagement=false;
+	private boolean disableProf=false;
+	private boolean disableSemiProf=false;
 	//#30829 end
 	
 	// 27691 - Add/Delete Supplier Owner
@@ -1082,6 +1084,21 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	public void setDisableManagement(boolean disableManagement) {
 		this.disableManagement = disableManagement;
 	}
+
+	public boolean isDisableProf() {
+		return disableProf;
+	}
+
+	public void setDisableProf(boolean disableProf) {
+		this.disableProf = disableProf;
+	}
+
+	public boolean isDisableSemiProf() {
+		return disableSemiProf;
+	}
+
+	public void setDisableSemiProf(boolean disableSemiProf) {
+		this.disableSemiProf = disableSemiProf;
+	}
 	//#30829 End
-	
 }
