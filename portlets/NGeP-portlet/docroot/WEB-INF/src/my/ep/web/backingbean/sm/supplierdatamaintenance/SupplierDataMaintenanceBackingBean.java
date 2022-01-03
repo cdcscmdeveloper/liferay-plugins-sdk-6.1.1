@@ -484,6 +484,7 @@ public class SupplierDataMaintenanceBackingBean extends
 				//32329 - end
 				getManagedBean().setSmSupplier(suppResDTO.getSmSupplier());
 				getManagedBean().getBasicSupplierDataModel().getList().set(index, getManagedBean().getSmSupplier());
+				
 			}
 			//26238 - Disciplinary Action - 28798 - end
 			
@@ -1613,6 +1614,10 @@ public class SupplierDataMaintenanceBackingBean extends
 			//28494
 			getManagedBean().setSelectedOwnerAndDirectorList(new ArrayList<SmPersonnel>());
 			//28281 - end
+			
+			//32386 - start
+			getManagedBean().setDisabledApprovedCategories(false);
+			//32386 - end
 		} else {
 			// 27815: Disciplinary Action - start - checking condition 
 			if (getManagedBean().isCancelCategoryCode() || getManagedBean().isManufacturerStatusCancel() 
@@ -1654,6 +1659,12 @@ public class SupplierDataMaintenanceBackingBean extends
 					} 
 				} 
 			}
+			//32386 - start
+			else if (!getManagedBean().isBumiputeraStatusCancel()){
+				getManagedBean().setDisabledApprovedCategories(false);
+ 
+			}
+			//32386 - end
 			//28281 - end
 			//26238: Disciplinary Action - end - 28324 ,28779
 			
@@ -3085,22 +3096,17 @@ public class SupplierDataMaintenanceBackingBean extends
 		}		
 		getManagedBean().setApprovedCategoryList(catList);
 		getManagedBean().setSelectedApprovedCategories(selectList);
-		// Start 27815,28324
-		if ((getManagedBean().isWarning() || getManagedBean().isCancelCategoryCode()
-				|| getManagedBean().isSuspendRegistration() || getManagedBean().isCancelRegistration()
-				|| getManagedBean().isBlacklistOwnerOrDirector() || getManagedBean().isManufacturerStatusCancel()) 
-				&& getManagedBean().isBumiputeraStatusCancel()) {
+		// Start 27815,28324, 32386
+		if (!getManagedBean().isBumiputeraStatusCancel()) {
 			log.info("---do nothing semua DA---");
 			if(getManagedBean().isDisabledApprovedCategories()){ 
 				getManagedBean().setDisabledApprovedCategories(CollectionUtils.isNotEmpty(selectList) ? false : true);
 			}
-		} else if(!getManagedBean().isWarning() && !getManagedBean().isCancelCategoryCode()
-				&& !getManagedBean().isSuspendRegistration() && !getManagedBean().isCancelRegistration()
-				&& !getManagedBean().isBlacklistOwnerOrDirector() && getManagedBean().isBumiputeraStatusCancel()
-				&& !getManagedBean().isManufacturerStatusCancel())
+		} else if(getManagedBean().isBumiputeraStatusCancel()){
 			getManagedBean().setDisabledApprovedCategories(CollectionUtils.isNotEmpty(selectList) ? true : false);
-		
-		// End 27815,28324
+
+		}
+		// End 27815,28324 32386
 	}
 	//28281 end
 	
