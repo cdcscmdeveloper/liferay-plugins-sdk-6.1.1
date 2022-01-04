@@ -2678,7 +2678,7 @@ public class QTCommitteBackingBean extends
 			if(!status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)){
 				if(status.equals(QTStatusConst.QT_REVISION_PUBLICATION)){//31954_Start
 				Long committeeStatusId=this.getManagedBean().getSelectedTabBean().getScQtCommittee().getScCommittee().getCommitteStatus().getStatusId();
-				if(null!=committeeStatusId && QTStatusConst.CMT_COMPLETED.equals(committeeStatusId)){
+				if(null!=committeeStatusId && (QTStatusConst.CMT_COMPLETED.equals(committeeStatusId) || QTStatusConst.CMT_PENDING_SUBMISSION.equals(committeeStatusId))){//31954
 				return true;	
 				}else{
 				return false;	
