@@ -5765,13 +5765,13 @@ public class SimpleQuoteBackingBean extends
 			// validate tpl spec - service before spki authenticate
 			if (CollectionUtils.isNotEmpty(specAnswerList)) {
 				isProduct = Boolean.FALSE;
-				//pali fix kan
+				//#21695 start
 				TplSpecMaster specMaster = specAnswerList.get(0).getTplSpecQuestion()
 						.getTplSpecMaster();
 						specMaster.setSpecCreatedBySQ(true);
 				isServiceContainPrice = getTemplateSpecSO().validateSpecAnwer(specMaster
 						, specAnswerList, locale);
-				//pali fix kan
+				//#21695 end
 			}
 			
 		
