@@ -1,0 +1,109 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:p="http://primefaces.org/ui"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+
+	<p:outputPanel id="priceTierPageID">
+		<p:dataTable id="pricingTierID" rowIndexVar="rowIndex" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			value="#{purchaseInquiryBackingBean.managedBean.supplierItemTierStandardPrices}"
+			width="100%" var="price" rowKey="#{price}">
+
+			<ac:paginator for="pricingTierID"></ac:paginator>
+			
+			<p:column style="width:2%" rendered="#{isPendingSupplierRespStatus}" >
+					<f:facet name="header">
+						<p:selectBooleanCheckbox id="selAllChk"
+							value="#{purchaseInquiryBackingBean.flagTierStandard}">
+							<p:ajax partialSubmit="true" process="@this"
+								update="@form"
+								listener="#{purchaseInquiryBackingBean.selectAllTierStandardPrice}"></p:ajax>
+						</p:selectBooleanCheckbox>
+					</f:facet>
+					<p:selectBooleanCheckbox value="#{price.selected}">
+						<p:ajax partialSubmit="true" process="@this"
+							update="@form"
+							listener="#{purchaseInquiryBackingBean.selectSingleRowTierStandardPrice}" />
+					</p:selectBooleanCheckbox>
+			</p:column>
+			
+			
+			
+			<p:column sortBy="#{price.fromQty}">
+				<f:facet name="header">
+					#{lbl['lbl.fl.from.qty']}
+				</f:facet>
+				<p:inputText disabled="#{!isPendingSupplierRespStatus or rowIndex ne '0'}" id="fromQty" value="#{price.fromQty}" size="5" style="text-align:right">
+                	<p:ajax event="change" update="@([id$=fromQty])" listener="#{purchaseInquiryBackingBean.onChangeFromQty(price.toQty)}"/>
+                	<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+                </p:inputText>
+
+			</p:column>
+			<p:column sortBy="#{price.toQty}">
+				<f:facet name="header">
+					#{lbl['lbl.fl.to.qty']}
+					<ac:iconTooltip  value="#{lbl['lbl.sc.tier.pricetype.tooltip']}" />
+				</f:facet>				
+				<p:inputText disabled="#{!isPendingSupplierRespStatus or rowIndex ne '0'}" id="toQty" value="#{price.toQty}" size="5" style="text-align:right">
+					<p:ajax event="change" update="@([id$=fromQty],[id$=toQty])" listener="#{purchaseInquiryBackingBean.onChangeToQty(price.toQty)}"/>
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				</p:inputText>				
+            </p:column>
+            <p:column>
+				<f:facet name="header">
+					#{lbl['lbl.sc.price.inquiry.price.published.per.unit']}
+				</f:facet>
+				<h:outputText value="#{price.pricing.price}" size="10" readonly="true" style="text-align:right">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+                </h:outputText>
+			</p:column>
+			 <p:column>
+				<f:facet name="header">
+					#{lbl['lbl.sc.price.inquiry.price.offered.per.unit']}
+				</f:facet>
+				<p:inputText disabled="#{!isPendingSupplierRespStatus or rowIndex ne '0'}" value="#{price.itemPrice}" size="10" style="text-align:right">
+					<p:ajax event="blur" process="@this" update="@this"></p:ajax>
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+                </p:inputText>
+			</p:column>
+
+
+		</p:dataTable>
+		<div class="ppRightBtn">
+					<p:commandButton rendered="#{isPendingSupplierRespStatus}" id="tierAddButtonId" value="#{lbl['lbl.btn.add']}"
+						title="#{lbl['lbl.sc.tier.add.tooltip']}"
+						partialSubmit="true" process="@this" update="priceTierPageID"
+						action="#{purchaseInquiryBackingBean.addSupplierItemTierStandardPrices}">
+					</p:commandButton>
+					<p:spacer width="2" />
+					<p:commandButton rendered="#{isPendingSupplierRespStatus}" value="#{lbl['lbl.btn.delete']}" process="@this"
+						
+						id="scReqItmTierDeleteBtnId"
+						
+						partialSubmit="true" onclick="deleteTierStandardConfirmationDlg.show();"
+						update="@([id$=#{deleteTierStandardConfirmDlg}])">
+					</p:commandButton>
+		</div>
+		<ui:param name="deleteTierStandardConfirmDlg"
+			value="deleteTierStandardConfirmDlg"></ui:param>
+
+		<ac:confirmationPopup id="#{deleteTierStandardConfirmDlg}"
+			widget="deleteTierStandardConfirmationDlg" width="400" height="100"
+			okAction="purchaseInquiryBackingBean.deleteSupplierItemTierStandardPrices"
+			title="#{lbl['lbl.msg.confirm.delete.header']}"
+			content="#{lbl['lbl.sc.dialog.confirm.delete.message']}"
+			update="@([id$=pricingTierID])" />
+
+		<div class="clear"></div>
+
+	</p:outputPanel>
+		
+
+</ui:composition>
