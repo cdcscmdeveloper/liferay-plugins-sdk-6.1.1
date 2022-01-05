@@ -2920,7 +2920,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				List<ScQtApproverSettings> approverSettings = publicationApproval.getApproverSettings();
 		        for(ScQtApproverSettings approverSetting : approverSettings ){
 		        	QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
-			  		if(qtBackingBean.isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId(), 2)){
+			  		if(qtBackingBean.isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId())){
 		  			   inactive=true;
 		  		    }
 		        }

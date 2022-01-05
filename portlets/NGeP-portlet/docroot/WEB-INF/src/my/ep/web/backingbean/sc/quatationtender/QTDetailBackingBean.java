@@ -3711,7 +3711,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT)){
 						for(ScQtApproval approval : this.getManagedBean().getQt().getScQtApprovals()){
 							for(ScQtApproverSettings approverSetting : approval.getApproverSettings()){
-								if(isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId(),1)){
+								if(isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId())){
 									throw new EpException(MessageConst.ERROR_775171);
 								}
 							}
@@ -3724,7 +3724,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						|| currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION))
 						&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT))	{
 							for(ScQtApproverSettings approverSetting : this.getManagedBean().getPublicationApproval().getApproverSettings()){
-								if(isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId(),2)){
+								if(isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId())){
 									throw new EpException(MessageConst.ERROR_775172);
 								}
 							}
@@ -10661,7 +10661,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
   	//#28784 - End
   	
     //#30477 - Start
-  	public boolean isInactiveCommiteeApproverRole(Long userId,int role) {
+  	public boolean isInactiveCommiteeApproverRole(Long userId) {
 		IQTDetailSO detailSO = null;
 		try {
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
@@ -10675,14 +10675,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			
 			PmUserOrg pmUserOrg = PmCommonUtil.retrieveUserOrgByUserIdAndOrgId(userId, pmUserOrgs.getUserOrgId());
 			
-			boolean inactive = false;
+			boolean inactive = DbValueConst.FLAG_YES;;
 			for (PmUserRole roles : pmUserOrg.getPmUserRoles()) {	
 				if(RoleCode.COMMITTEE_APPROVER.value().equals(roles.getPmRole().getRoleCode()) && 
-						roles.getRecordStatusFlg().equals(0) && roles.isRecordStatus() == false && role == 1){
-					inactive = true;	
+						roles.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
+					inactive = DbValueConst.FLAG_NO;	
 				}else if(RoleCode.PUBLICATION_APPROVER.value().equals(roles.getPmRole().getRoleCode()) && 
-						roles.getRecordStatusFlg().equals(0) && roles.isRecordStatus() == false && role == 2){
-				    inactive = true;	
+						roles.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
+				    inactive = DbValueConst.FLAG_NO;	
 				}
 			}
 			return inactive;
