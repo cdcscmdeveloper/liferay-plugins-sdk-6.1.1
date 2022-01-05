@@ -33,13 +33,13 @@
 				<h:outputText value="#{templateSpec.totalAutoScore}"></h:outputText>
 
 			</p:column>
-
+<!-- Bug #32380 Farid Start related to #21695-->
 			<p:column headerText="#{lbl['lbl.tpl.spec.content.user.score']}"
 				style="width:20%;text-align:right;"
 				rendered="#{evaluationBackingBean.managedBean.scQtChecklist.scoringReq}">
-				<h:outputText value="#{templateSpec.totalUserScore}"></h:outputText>
+				<h:outputText value="#{templateSpec.totalUserScore ne null ? templateSpec.totalUserScore : 0}"></h:outputText>
 			</p:column>
-
+<!-- Bug #32380 Farid End related to #21695-->
 			<p:column headerText="#{lbl['lbl.sc.total.score']}" style="width:20%;text-align:right;"
 				rendered="#{evaluationBackingBean.managedBean.scQtChecklist.scoringReq}">
 				<h:outputText value="#{templateSpec.totalScore}"></h:outputText>

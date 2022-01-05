@@ -44,10 +44,12 @@
 		        <h:outputText
 		        value="#{templateSpec[4]}"></h:outputText> 
 		    </p:column>
+		    <!-- Bug #32380 Farid Start related to #21695-->
 			 <p:column>  
 		        <h:outputText
-		        value="#{templateSpec[5]}"></h:outputText> 
+		        value="#{templateSpec[5] ne null ? templateSpec[5] : 0}"></h:outputText>
 		    </p:column>    
+		    <!-- Bug #32380 Farid end related to #21695-->
 		    <p:column>  
 		        <h:outputText value="#{templateSpec[3]}"></h:outputText> 
 		    </p:column>
