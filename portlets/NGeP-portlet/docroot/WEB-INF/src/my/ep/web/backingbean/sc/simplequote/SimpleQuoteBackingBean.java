@@ -5497,10 +5497,6 @@ public class SimpleQuoteBackingBean extends
 			QuoteResDTO quoteResDTO = getQuoteSO().saveSupplierResponse(reqDTO);
 			
 			//#30840 - Start
-			log.info("----------------------------------------------------------");
-			log.info("Bug 30840");
-			log.info("Method: supplierSave");
-			log.info("Outcome: " + reqDTO.getOutcome());
 			if(quote != null){
 				log.info("SQ No.: " + quote.getQuoteNo());
 			}
@@ -5522,7 +5518,6 @@ public class SimpleQuoteBackingBean extends
 					log.info("itemRespondCount: " + itemRespondCount);
 				}
 			}	
-			log.info("----------------------------------------------------------");
 			//#30840 - End
 			
 			if (quoteResDTO.isSuccessful()) {
@@ -5595,9 +5590,16 @@ public class SimpleQuoteBackingBean extends
 			// 30552 - start
 			getManagedBean().getServiceTemplateSpecBean().setBackupspecAnswerList(specAnswerList);
 			// 30552 - end
-			isServiceContainPrice = getTemplateSpecSO().validateSpecAnwer(
-					specAnswerList.get(0).getTplSpecQuestion()
-							.getTplSpecMaster(), specAnswerList, locale);
+			//#Newly add
+			///#21695 farid start
+			TplSpecMaster specMaster = specAnswerList.get(0).getTplSpecQuestion()
+			.getTplSpecMaster();
+			specMaster.setSpecCreatedBySQ(true);			
+			isServiceContainPrice = getTemplateSpecSO().validateSpecAnwer(specMaster
+					, specAnswerList, locale);
+			///#21695 farid end
+			//#Newly add
+
 		}
 		
 		if (!isServiceContainPrice && !isProdContainPrice) {
@@ -5653,9 +5655,13 @@ public class SimpleQuoteBackingBean extends
 			// validate tpl spec - service before spki authenticate
 			if (CollectionUtils.isNotEmpty(specAnswerList)) {
 				isProduct = Boolean.FALSE;
-				isServiceContainPrice = getTemplateSpecSO().validateSpecAnwer(
-						specAnswerList.get(0).getTplSpecQuestion()
-								.getTplSpecMaster(), specAnswerList, locale);
+				//#21695 start
+				TplSpecMaster specMaster = specAnswerList.get(0).getTplSpecQuestion()
+						.getTplSpecMaster();
+						specMaster.setSpecCreatedBySQ(true);
+				isServiceContainPrice = getTemplateSpecSO().validateSpecAnwer(specMaster
+						, specAnswerList, locale);
+				//#21695 end
 			}
 			
 		
@@ -5757,10 +5763,6 @@ public class SimpleQuoteBackingBean extends
 			log.info("Bug 30840 - end saveSupplierResponse");
 			
 			//#30840 - Start
-			log.info("----------------------------------------------------------");
-			log.info("Bug 30840");
-			log.info("Method: updateSupplierResponse");
-			log.info("Outcome: " + reqDTO.getOutcome());
 			if(quote != null){
 				log.info("SQ No.: " + quote.getQuoteNo());
 			}
@@ -5768,7 +5770,7 @@ public class SimpleQuoteBackingBean extends
 				if(reqDTO.getQuoteSupplier().getSmSupplier() != null){
 					log.info("Supplier ID: " + reqDTO.getQuoteSupplier().getSmSupplier().getSupplierId());
 				}
-				log.info("Supplier Name: " + reqDTO.getQuoteSupplier().getSupplierName());
+					
 				if(reqDTO.getSpecAnswers() != null){
 					int totalItemCount = 0;
 					int itemRespondCount = 0;
@@ -5782,11 +5784,9 @@ public class SimpleQuoteBackingBean extends
 					log.info("itemRespondCount: " + itemRespondCount);
 				}
 			}	
-			log.info("----------------------------------------------------------");
 			//#30840 - End
 			
 			if (quoteResDTO.isSuccessful()) {
-				log.info("Bug 30840 - isSuccessful");
 				ScQuote scQuote = getManagedBean().getScQuote();
 
 				FacesContext
