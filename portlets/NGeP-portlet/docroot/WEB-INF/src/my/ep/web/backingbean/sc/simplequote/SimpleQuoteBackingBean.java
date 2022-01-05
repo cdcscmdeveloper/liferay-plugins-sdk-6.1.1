@@ -5699,9 +5699,16 @@ public class SimpleQuoteBackingBean extends
 			// 30552 - start
 			getManagedBean().getServiceTemplateSpecBean().setBackupspecAnswerList(specAnswerList);
 			// 30552 - end
-			isServiceContainPrice = getTemplateSpecSO().validateSpecAnwer(
-					specAnswerList.get(0).getTplSpecQuestion()
-							.getTplSpecMaster(), specAnswerList, locale);
+			//#Newly add
+			///#21695 farid start
+			TplSpecMaster specMaster = specAnswerList.get(0).getTplSpecQuestion()
+			.getTplSpecMaster();
+			specMaster.setSpecCreatedBySQ(true);			
+			isServiceContainPrice = getTemplateSpecSO().validateSpecAnwer(specMaster
+					, specAnswerList, locale);
+			///#21695 farid end
+			//#Newly add
+
 		}
 		
 		if (!isServiceContainPrice && !isProdContainPrice) {
@@ -5758,9 +5765,13 @@ public class SimpleQuoteBackingBean extends
 			// validate tpl spec - service before spki authenticate
 			if (CollectionUtils.isNotEmpty(specAnswerList)) {
 				isProduct = Boolean.FALSE;
-				isServiceContainPrice = getTemplateSpecSO().validateSpecAnwer(
-						specAnswerList.get(0).getTplSpecQuestion()
-								.getTplSpecMaster(), specAnswerList, locale);
+				//pali fix kan
+				TplSpecMaster specMaster = specAnswerList.get(0).getTplSpecQuestion()
+						.getTplSpecMaster();
+						specMaster.setSpecCreatedBySQ(true);
+				isServiceContainPrice = getTemplateSpecSO().validateSpecAnwer(specMaster
+						, specAnswerList, locale);
+				//pali fix kan
 			}
 			
 		
