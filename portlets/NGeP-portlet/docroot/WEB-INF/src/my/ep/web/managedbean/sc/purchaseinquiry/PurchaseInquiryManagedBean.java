@@ -141,6 +141,52 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
      /** The supplier item prices. */
      private List<ScSupplierItemPrice>	supplierItemPrices;
      
+     //29557 - start
+     private ScSupplierItemPrice supplierItemStandardPrice;
+     
+     private ScSupplierItemPrice supplierItemPromotionPrice;
+     
+     private List<ScSupplierItemPrice>	supplierItemTierStandardPrices;
+     
+     private List<ScSupplierItemPrice>	supplierItemTierPromotionPrices;
+     
+     private List<ScSupplierItemPrice>	supplierItemZonalStandardPrices;
+     
+     private List<ScSupplierItemPrice>	supplierItemZonalPromotionPrices;
+     
+     private List<ScSupplierItemPrice>	supplierItemZonalTierStandardPrices;
+     
+     private List<ScSupplierItemPrice>	supplierItemZonalTierPromotionPrices;
+     
+ 	 private List<ScSupplierItemPrice>	deleteSupplierItemTierStandardPrices;
+     
+     private List<ScSupplierItemPrice>	deleteSupplierItemTierPromotionPrices;
+     
+     private List<ScSupplierItemPrice>	deleteSupplierItemZonalStandardPrices;
+     
+     private List<ScSupplierItemPrice>	deleteSupplierItemZonalPromotionPrices;
+     
+     private List<ScSupplierItemPrice>	deleteSupplierItemZonalTierStandardPrices;
+     
+     private List<ScSupplierItemPrice>	deleteSupplierItemZonalTierPromotionPrices;
+     
+     
+     /** The pricing tab index. */
+ 	private Integer pricingTabIndex = 0;
+
+ 	/** The normal pricing index. */
+ 	private Integer normalPricingIndex = 0;
+
+ 	/** The tier pricing index. */
+ 	private Integer tierPricingIndex = 0;
+
+ 	/** The zonal pricing index. */
+ 	private Integer zonalPricingIndex = 0;
+
+ 	/** The zonal tier pricing index. */
+ 	private Integer zonalTierPricingIndex = 0;
+     //29557 - end
+     
      /** The auto update. */
  	private boolean autoUpdate = Boolean.TRUE;
  	
@@ -767,4 +813,179 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	public void setDisProcTyp(boolean disProcTyp) {
 		this.disProcTyp = disProcTyp;
 	}
+	
+	//29557 - start
+	public ScSupplierItemPrice getSupplierItemStandardPrice() {
+		return supplierItemStandardPrice;
+	}
+
+	public void setSupplierItemStandardPrice(ScSupplierItemPrice supplierItemStandardPrice) {
+		this.supplierItemStandardPrice = supplierItemStandardPrice;
+	}
+
+	public ScSupplierItemPrice getSupplierItemPromotionPrice() {
+		return supplierItemPromotionPrice;
+	}
+
+	public void setSupplierItemPromotionPrice(ScSupplierItemPrice supplierItemPromotionPrice) {
+		this.supplierItemPromotionPrice = supplierItemPromotionPrice;
+	}
+
+	public List<ScSupplierItemPrice> getSupplierItemTierStandardPrices() {
+		if (supplierItemTierStandardPrices == null) 
+				supplierItemTierStandardPrices = new ArrayList<ScSupplierItemPrice>();
+		
+		return supplierItemTierStandardPrices;
+	}
+
+	public void setSupplierItemTierStandardPrices(List<ScSupplierItemPrice> supplierItemTierStandardPrices) {
+		this.supplierItemTierStandardPrices = supplierItemTierStandardPrices;
+	}
+
+	public List<ScSupplierItemPrice> getSupplierItemTierPromotionPrices() {
+		if (supplierItemTierPromotionPrices == null) 
+				supplierItemTierPromotionPrices = new ArrayList<ScSupplierItemPrice>();
+		
+		return supplierItemTierPromotionPrices;
+	}
+
+	public void setSupplierItemTierPromotionPrices(List<ScSupplierItemPrice> supplierItemTierPromotionPrices) {
+		this.supplierItemTierPromotionPrices = supplierItemTierPromotionPrices;
+	}
+
+	public List<ScSupplierItemPrice> getSupplierItemZonalStandardPrices() {
+		if (supplierItemZonalStandardPrices == null) 
+				supplierItemZonalStandardPrices = new ArrayList<ScSupplierItemPrice>();
+		
+		return supplierItemZonalStandardPrices;
+	}
+
+	public void setSupplierItemZonalStandardPrices(List<ScSupplierItemPrice> supplierItemZonalStandardPrices) {
+		this.supplierItemZonalStandardPrices = supplierItemZonalStandardPrices;
+	}
+
+	public List<ScSupplierItemPrice> getSupplierItemZonalPromotionPrices() {
+		if (supplierItemZonalPromotionPrices == null) 
+				supplierItemZonalPromotionPrices = new ArrayList<ScSupplierItemPrice>();
+		
+		return supplierItemZonalPromotionPrices;
+	}
+
+	public void setSupplierItemZonalPromotionPrices(List<ScSupplierItemPrice> supplierItemZonalPromotionPrices) {
+		this.supplierItemZonalPromotionPrices = supplierItemZonalPromotionPrices;
+	}
+
+	public List<ScSupplierItemPrice> getSupplierItemZonalTierStandardPrices() {
+		if (supplierItemZonalTierStandardPrices == null) 
+				supplierItemZonalTierStandardPrices = new ArrayList<ScSupplierItemPrice>();
+		
+		return supplierItemZonalTierStandardPrices;
+	}
+
+	public void setSupplierItemZonalTierStandardPrices(List<ScSupplierItemPrice> supplierItemZonalTierStandardPrices) {
+		this.supplierItemZonalTierStandardPrices = supplierItemZonalTierStandardPrices;
+	}
+
+	public List<ScSupplierItemPrice> getSupplierItemZonalTierPromotionPrices() {
+		if (supplierItemZonalTierPromotionPrices == null) 
+				supplierItemZonalTierPromotionPrices = new ArrayList<ScSupplierItemPrice>();
+		
+		return supplierItemZonalTierPromotionPrices;
+	}
+
+	public void setSupplierItemZonalTierPromotionPrices(List<ScSupplierItemPrice> supplierItemZonalTierPromotionPrices) {
+		this.supplierItemZonalTierPromotionPrices = supplierItemZonalTierPromotionPrices;
+	}
+
+	public Integer getPricingTabIndex() {
+		return pricingTabIndex;
+	}
+
+	public void setPricingTabIndex(Integer pricingTabIndex) {
+		this.pricingTabIndex = pricingTabIndex;
+	}
+
+	public Integer getNormalPricingIndex() {
+		return normalPricingIndex;
+	}
+
+	public void setNormalPricingIndex(Integer normalPricingIndex) {
+		this.normalPricingIndex = normalPricingIndex;
+	}
+
+	public Integer getTierPricingIndex() {
+		return tierPricingIndex;
+	}
+
+	public void setTierPricingIndex(Integer tierPricingIndex) {
+		this.tierPricingIndex = tierPricingIndex;
+	}
+
+	public Integer getZonalPricingIndex() {
+		return zonalPricingIndex;
+	}
+
+	public void setZonalPricingIndex(Integer zonalPricingIndex) {
+		this.zonalPricingIndex = zonalPricingIndex;
+	}
+
+	public Integer getZonalTierPricingIndex() {
+		return zonalTierPricingIndex;
+	}
+
+	public void setZonalTierPricingIndex(Integer zonalTierPricingIndex) {
+		this.zonalTierPricingIndex = zonalTierPricingIndex;
+	}
+
+	public List<ScSupplierItemPrice> getDeleteSupplierItemTierStandardPrices() {
+		return deleteSupplierItemTierStandardPrices;
+	}
+
+	public void setDeleteSupplierItemTierStandardPrices(List<ScSupplierItemPrice> deleteSupplierItemTierStandardPrices) {
+		this.deleteSupplierItemTierStandardPrices = deleteSupplierItemTierStandardPrices;
+	}
+
+	public List<ScSupplierItemPrice> getDeleteSupplierItemTierPromotionPrices() {
+		return deleteSupplierItemTierPromotionPrices;
+	}
+
+	public void setDeleteSupplierItemTierPromotionPrices(List<ScSupplierItemPrice> deleteSupplierItemTierPromotionPrices) {
+		this.deleteSupplierItemTierPromotionPrices = deleteSupplierItemTierPromotionPrices;
+	}
+
+	public List<ScSupplierItemPrice> getDeleteSupplierItemZonalStandardPrices() {
+		return deleteSupplierItemZonalStandardPrices;
+	}
+
+	public void setDeleteSupplierItemZonalStandardPrices(List<ScSupplierItemPrice> deleteSupplierItemZonalStandardPrices) {
+		this.deleteSupplierItemZonalStandardPrices = deleteSupplierItemZonalStandardPrices;
+	}
+
+	public List<ScSupplierItemPrice> getDeleteSupplierItemZonalPromotionPrices() {
+		return deleteSupplierItemZonalPromotionPrices;
+	}
+
+	public void setDeleteSupplierItemZonalPromotionPrices(List<ScSupplierItemPrice> deleteSupplierItemZonalPromotionPrices) {
+		this.deleteSupplierItemZonalPromotionPrices = deleteSupplierItemZonalPromotionPrices;
+	}
+
+	public List<ScSupplierItemPrice> getDeleteSupplierItemZonalTierStandardPrices() {
+		return deleteSupplierItemZonalTierStandardPrices;
+	}
+
+	public void setDeleteSupplierItemZonalTierStandardPrices(
+			List<ScSupplierItemPrice> deleteSupplierItemZonalTierStandardPrices) {
+		this.deleteSupplierItemZonalTierStandardPrices = deleteSupplierItemZonalTierStandardPrices;
+	}
+
+	public List<ScSupplierItemPrice> getDeleteSupplierItemZonalTierPromotionPrices() {
+		return deleteSupplierItemZonalTierPromotionPrices;
+	}
+
+	public void setDeleteSupplierItemZonalTierPromotionPrices(
+			List<ScSupplierItemPrice> deleteSupplierItemZonalTierPromotionPrices) {
+		this.deleteSupplierItemZonalTierPromotionPrices = deleteSupplierItemZonalTierPromotionPrices;
+	}
+	
+	//29557 - end	
 }
