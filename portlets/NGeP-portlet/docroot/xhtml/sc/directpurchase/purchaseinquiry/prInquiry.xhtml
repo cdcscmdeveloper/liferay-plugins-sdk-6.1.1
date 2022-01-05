@@ -150,7 +150,8 @@
 						value="*" styleClass="mandatory" /></td>
 				<td>
 					<table>
-						<tr>
+						<!--  #29557 start -->
+						<!-- <tr>
 							<td><c:if test="#{isPendingSubmissionStatus}">
 									<p:selectOneMenu required="true" id="priceType"
 										style="margin-bottom: 5px; width: 235px;"
@@ -179,7 +180,39 @@
 							<td style="margin-top: -3px"><p:message id="priceTypeMsg" rendered="#{isPendingSubmissionStatus}"
 									for="priceType" display="icon" />
 								<ac:iconTooltip value="#{lbl['lbl.sc.pricetype.tooltip']}" /></td>
+						</tr>-->
+						<tr>
+							<td><c:if test="#{isPendingSubmissionStatus or isPendingRnCreationStatus}">
+									<p:selectOneMenu required="true" id="priceType"
+										style="margin-bottom: 5px; width: 235px;"
+										label="#{lbl['lbl.sc.price.inquiry.price.type']}"
+										disabled="#{isPendingSubmissionStatus}"
+										value="#{purchaseInquiryBackingBean.managedBean.priceType}">
+										<f:selectItems
+											value="#{purchaseInquiryBackingBean.managedBean.priceTypes}" />
+										<p:ajax event="change"
+											listener="#{purchaseInquiryBackingBean.priceTypeChangeListener()}"
+											update="respDtl" process="@this" />
+									</p:selectOneMenu>
+									
+								</c:if> <c:if test="#{isPendingSupplierRespStatus}">
+									<p:inputText
+										value="#{purchaseInquiryBackingBean.managedBean.priceType}"
+										disabled="true" size="28" />
+								</c:if></td>
+							<td><p:spacer width="2px"></p:spacer> <h:commandLink
+									immediate="true" disabled="#{isPendingSubmissionStatus}"
+									action="#{requestNoteBackingBean.viewMarketResearch(purchaseInquiryBackingBean.managedBean.requestNoteDtl)}"
+									rendered="#{(isPendingSubmissionStatus and !isTrackingDairyView) or (isPendingRnCreationStatus and !isTrackingDairyView)}">
+									<p:graphicImage value="/css/images/design/ico-view.png"
+										title="#{lbl['lbl.sc.summary.searchresult.tooltip']}"></p:graphicImage>
+								</h:commandLink></td>
+							<td style="margin-top: -3px"><p:message id="priceTypeMsg" rendered="#{isPendingSubmissionStatus or isPendingRnCreationStatus}"
+									for="priceType" display="icon" />
+								<ac:iconTooltip rendered="#{isPendingSupplierRespStatus and !isTrackingDairyView}" value="#{lbl['lbl.sc.all.pricetype.tooltip']}" />
+								<ac:iconTooltip rendered="#{(isPendingSubmissionStatus and !isTrackingDairyView) or (isPendingRnCreationStatus and !isTrackingDairyView)}" value="#{lbl['lbl.sc.pricetype.pi.submission.tooltip']}" /></td>
 						</tr>
+						<!--  #29557 end -->
 					</table>
 
 				</td>
@@ -262,6 +295,11 @@
 	</p:panel>
 	<p:panel header="#{lbl['lbl.sc.price.inquiry.header.response.detail']}"
 		toggleable="true" id="resDetailId">
+	<!--  #29557 start -->	
+	<h:outputText rendered="#{isPendingSupplierRespStatus}" styleClass="instruction" 
+			value="#{lbl['lbl.sc.price.inquiry.supplier.response.instruction']}"
+			escape="false" />
+	<!--  #29557 end -->
 		<table>
 			<tr>
 				<td style="width: 220px;"><p:outputLabel
@@ -285,8 +323,8 @@
 						display="icon" /></td>
 			</tr>
 		</table>
-
-		<p:dataTable id="respDtl" var="supplierItemPrice"
+		<!-- #29557 - add rendered attribute to hide datatable-->
+		<p:dataTable id="respDtl" var="supplierItemPrice" rendered="false"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{purchaseInquiryBackingBean.managedBean.supplierItemPrices}"
 			rowKey="#{supplierItemPrice.pricing.pricingId}" rowIndexVar="index" preserveDataModel="true">
@@ -337,6 +375,66 @@
 			</p:column>
 
 		</p:dataTable>
+
+		<!-- #29557 start -->
+		<p:tabView id="headerTabId"
+			activeIndex="#{purchaseInquiryBackingBean.managedBean.pricingTabIndex}">
+
+			<p:tab title="#{lbl['lbl.cm.normal']}">
+				<p:tabView id="normalId"
+					activeIndex="#{purchaseInquiryBackingBean.managedBean.normalPricingIndex}">
+
+					<p:tab title="#{lbl['lbl.cm.standard']}">
+						<ui:include src="price/pricingTab.xhtml" />
+					</p:tab>
+					<p:tab disabled="#{purchaseInquiryBackingBean.managedBean.supplierItemPromotionPrice eq null and isPendingSubmissionStatus}" title="#{lbl['lbl.cm.promotion']}">
+						<ui:include src="price/promotionTab.xhtml" />
+					</p:tab>
+				</p:tabView>
+			</p:tab>
+
+
+			<p:tab title="#{lbl['lbl.cm.tier']}">
+				<p:tabView id="tierId"
+					activeIndex="#{purchaseInquiryBackingBean.managedBean.tierPricingIndex}">
+
+					<p:tab title="#{lbl['lbl.cm.standard']}">
+						<ui:include src="price/pricingTierTab.xhtml" />
+					</p:tab>
+					<p:tab disabled="#{purchaseInquiryBackingBean.managedBean.supplierItemTierPromotionPrices.size() == 0 and isPendingSubmissionStatus}" title="#{lbl['lbl.cm.promotion']}">
+						<ui:include src="price/pricingPromotionTierTab.xhtml" />
+					</p:tab>
+				</p:tabView>
+			</p:tab>
+
+			<p:tab title="#{lbl['lbl.cm.zonal']}">
+				<p:tabView id="zonalId"
+					activeIndex="#{purchaseInquiryBackingBean.managedBean.zonalPricingIndex}">
+
+					<p:tab disabled="#{purchaseInquiryBackingBean.managedBean.supplierItemZonalStandardPrices.size() == 0 and isPendingSubmissionStatus}" title="#{lbl['lbl.cm.standard']}">
+						<ui:include src="price/zonalStandardPricingTab.xhtml" />
+					</p:tab>
+					<p:tab disabled="#{purchaseInquiryBackingBean.managedBean.supplierItemZonalPromotionPrices.size() == 0 and isPendingSubmissionStatus}" title="#{lbl['lbl.cm.promotion']}">
+						<ui:include src="price/zonalPromotionPricingTab.xhtml" />
+					</p:tab>
+				</p:tabView>
+			</p:tab>
+
+			<p:tab title="#{lbl['lbl.cm.zonal.tier']}">
+				<p:tabView id="zonalTierId"
+					activeIndex="#{purchaseInquiryBackingBean.managedBean.zonalTierPricingIndex}">
+					<p:tab disabled="#{purchaseInquiryBackingBean.managedBean.supplierItemZonalTierStandardPrices.size() == 0 and isPendingSubmissionStatus}" title="#{lbl['lbl.cm.standard']}">
+						<ui:include src="price/zonalTierPricingTab.xhtml" />
+					</p:tab>
+					<p:tab disabled="#{purchaseInquiryBackingBean.managedBean.supplierItemZonalTierPromotionPrices.size() == 0 and isPendingSubmissionStatus}" title="#{lbl['lbl.cm.promotion']}">
+						<ui:include src="price/zonalPromotionTierPricingTab.xhtml" />
+					</p:tab>
+				</p:tabView>
+			</p:tab>
+
+		</p:tabView>
+		<!-- #29557 end -->
+
 	</p:panel>
 
 	<ac:scRemarkAndAttachment
