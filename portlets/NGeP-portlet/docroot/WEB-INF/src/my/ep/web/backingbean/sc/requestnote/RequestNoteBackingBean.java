@@ -5118,7 +5118,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 		}
 		if(isTierPrice && !isTierPriceMatched) {
-			throw new EpException(MessageConst.ERROR_760399, new String[] {itemName});
+			//#29557 - start
+			//throw new EpException(MessageConst.ERROR_760399, new String[] {itemName});
+			throw new EpException(MessageConst.ERROR_760527, new String[] {itemName});
+			//#29557 - end
 		} else {
 			if(CollectionUtils.isNotEmpty(groupedItemPrice)) {
 				topPricedItem = findMaxPriceItem(groupedItemPrice);

@@ -1,0 +1,107 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:p="http://primefaces.org/ui"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+
+	<p:outputPanel id="priceZonalTierPromotionPageID">
+		<p:dataTable id="pricingZonalTierPromotionID" rowIndexVar="rowIndex" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			value="#{purchaseInquiryBackingBean.managedBean.supplierItemZonalTierPromotionPrices}"
+			width="100%" var="price" rowKey="#{price}">
+
+			<ac:paginator for="pricingZonalTierPromotionID"></ac:paginator>
+			
+			<p:column style="width:2%" rendered="#{isPendingSupplierRespStatus}" >
+					<f:facet name="header">
+						<p:selectBooleanCheckbox id="selAllChk"
+							value="#{purchaseInquiryBackingBean.flagZonalTierPromotion}">
+							<p:ajax partialSubmit="true" process="@this"
+								update="@form"
+								listener="#{purchaseInquiryBackingBean.selectAllZonalTierPromotionPrice}"></p:ajax>
+						</p:selectBooleanCheckbox>
+					</f:facet>
+					<p:selectBooleanCheckbox value="#{price.selected}">
+						<p:ajax partialSubmit="true" process="@this"
+							update="@form"
+							listener="#{purchaseInquiryBackingBean.selectSingleRowZonalTierPromotionPrice}" />
+					</p:selectBooleanCheckbox>
+			</p:column>
+			<p:column sortBy="#{price.tplSpecZone.zoneName}">
+				<f:facet name="header">
+					#{lbl['lbl.pm.zone']}
+				</f:facet>
+				<p:inputText disabled="#{!isPendingSupplierRespStatus or rowIndex ne '0'}" value="#{price.tplSpecZone.zoneName}" size="20" style="text-align:left" />
+			</p:column>
+			<p:column sortBy="#{price.fromQty}">
+				<f:facet name="header">
+					#{lbl['lbl.fl.from.qty']}
+				</f:facet>
+				<p:inputText disabled="#{!isPendingSupplierRespStatus or rowIndex ne '0'}" id="fromQty" value="#{price.fromQty}" size="5" style="text-align:right">
+                </p:inputText>
+
+			</p:column>
+			<p:column sortBy="#{price.toQty}">
+				<f:facet name="header">
+					#{lbl['lbl.fl.to.qty']}
+					<ac:iconTooltip  value="#{lbl['lbl.sc.tier.pricetype.tooltip']}" />
+				</f:facet>
+				<p:inputText disabled="#{!isPendingSupplierRespStatus or rowIndex ne '0'}" value="#{price.toQty}" size="5" style="text-align:right">
+				</p:inputText>
+            </p:column>				
+            <p:column>
+				<f:facet name="header">
+					#{lbl['lbl.sc.price.inquiry.price.published.per.unit']}
+				</f:facet>
+				<h:outputText value="#{price.pricing.price}" size="10" readonly="true" style="text-align:right">
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+                </h:outputText>
+			</p:column>
+			 <p:column>
+				<f:facet name="header">
+					#{lbl['lbl.sc.price.inquiry.price.offered.per.unit']}
+				</f:facet>
+				<p:inputText disabled="#{!isPendingSupplierRespStatus or rowIndex ne '0'}" value="#{price.itemPrice}" size="10" style="text-align:right">
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+                </p:inputText>
+			</p:column>
+
+
+		</p:dataTable>
+		<div class="ppRightBtn">
+					<p:commandButton rendered="#{isPendingSupplierRespStatus}" id="zonalPromotionAddButtonId" value="#{lbl['lbl.btn.add']}"
+						title="#{lbl['lbl.sc.tier.add.tooltip']}"
+						partialSubmit="true" process="@this" update="priceZonalTierPromotionPageID"
+						action="#{purchaseInquiryBackingBean.addSupplierItemZonalTierPromotionPrices}">
+					</p:commandButton>
+					<p:spacer width="2" />
+					<p:commandButton rendered="#{isPendingSupplierRespStatus}" value="#{lbl['lbl.btn.delete']}" process="@this"
+						
+						id="scReqItmZonalTierPromotionDeleteBtnId"
+						
+						partialSubmit="true" onclick="deleteZonalTierPromotionConfirmationDlg.show();"
+						update="@([id$=#{deleteZonalTierPromotionConfirmDlg}])">
+					</p:commandButton>
+		</div>
+		<ui:param name="deleteZonalTierPromotionConfirmDlg"
+			value="deleteZonalTierPromotionConfirmDlg"></ui:param>
+
+		<ac:confirmationPopup id="#{deleteZonalTierPromotionConfirmDlg}"
+			widget="deleteZonalTierPromotionConfirmationDlg" width="400" height="100"
+			okAction="purchaseInquiryBackingBean.deleteSupplierItemZonalTierPromotionPrices"
+			title="#{lbl['lbl.msg.confirm.delete.header']}"
+			content="#{lbl['lbl.sc.dialog.confirm.delete.message']}"
+			update="@([id$=pricingZonalTierPromotionID])" />
+
+		<div class="clear"></div>
+
+	</p:outputPanel>
+		
+
+</ui:composition>
