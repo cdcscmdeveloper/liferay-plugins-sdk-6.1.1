@@ -3803,22 +3803,24 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	
 	
 	//12492 - START
-	public void CheckBankAccount() {
+	public void CheckBankAccount(String fromPage) {
 
 		HashSet<String> hsetAccountNo = new HashSet<String>();
 		HashSet<Long> hsetAccountName = new HashSet<Long>();
 
-		if (this.getManagedBean().getSmAppl().getSmSupplierBanks().size() > 1) {
-			for (SmSupplierBank bankName : this.getManagedBean().getSmAppl().getSmSupplierBanks()) {
-				if (bankName.getPmFinancialOrg().getFinancialOrgId() != null
-						&& hsetAccountName.add(bankName.getPmFinancialOrg().getFinancialOrgId()) == false) {
-					for (SmSupplierBank bank : this.getManagedBean().getSmAppl().getSmSupplierBanks()) {
-						if (hsetAccountNo.add(bank.getAccountNo()) == false) {
-							RequestContext.getCurrentInstance().execute("bankDialogDuplicate.show()");
+		if(fromPage.equalsIgnoreCase("fromBankInfo")){
+			if (this.getManagedBean().getSmAppl().getSmSupplierBanks().size() > 1) {
+				for (SmSupplierBank bankName : this.getManagedBean().getSmAppl().getSmSupplierBanks()) {
+					if (bankName.getPmFinancialOrg().getFinancialOrgId() != null
+							&& hsetAccountName.add(bankName.getPmFinancialOrg().getFinancialOrgId()) == false) {
+						for (SmSupplierBank bank : this.getManagedBean().getSmAppl().getSmSupplierBanks()) {
+							if (hsetAccountNo.add(bank.getAccountNo()) == false) {
+								RequestContext.getCurrentInstance().execute("bankDialogDuplicate.show()");
+							}
 						}
 					}
 				}
-			}
+			}	
 		}
 	}
 	//12492 - END
