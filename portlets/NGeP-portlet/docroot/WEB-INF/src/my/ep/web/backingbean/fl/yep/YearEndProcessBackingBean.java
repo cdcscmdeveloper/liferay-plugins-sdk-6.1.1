@@ -169,7 +169,9 @@ public class YearEndProcessBackingBean extends
 	public static List<SelectItem> getFinancialYearOpt() {
 		int years = 0;
 		List<SelectItem> financialYearOpt = new ArrayList<SelectItem>();
-		for (Integer i = 0; i < 2; i++) {
+		int year = Calendar.getInstance().get(Calendar.YEAR);
+		int TotalGap = year - 2018;
+		for (Integer i = 0; i < TotalGap+1; i++) {
 			years = CommonMethod.getYear(-i);
 			financialYearOpt
 					.add(new SelectItem(years, Integer.toString(years)));
@@ -257,6 +259,16 @@ public class YearEndProcessBackingBean extends
 
 		if(null ==getManagedBean().getSearchDocType()){ 
 			throw new EpException(MessageConst.ERROR_760444);
+		}
+		
+		if(null ==getManagedBean().getStatusDescId()){ 
+			throw new EpException(MessageConst.ERROR_780068);
+		}
+		
+		if(getManagedBean().getSearchDocType().equals(FulfilmentConst.DOC_TYPE_CO)){
+			if(null == getManagedBean().getSearchLoaNo() || getManagedBean().getSearchLoaNo() == ""){
+				throw new EpException(MessageConst.ERROR_780069);
+			}
 		}
 		
 		if(null == getManagedBean().getSearchStartDate() && null != getManagedBean().getSearchToDate()){
