@@ -14,11 +14,11 @@
 			<ui:include src="/xhtml/sm/shared/onlinereg/professionalBody.xhtml" />
 		</c:if>
 	</p:outputPanel>
-
+	
 	<br />
 	<c:if test="#{registrationBackingBean.managedBean.smSupp.brandNew}">
 		<div class="nav-wrapper" align="justify">
-				<p:commandButton value="#{lbl['lbl.sm.next']}" style="float:right;" oncomplete="scrollToTop();"
+				<p:commandButton value="#{lbl['lbl.sm.next']}" style="float:right;" oncomplete="scrollToTop();" actionListener="#{registrationBackingBean.CheckBankAccount('fromNext')}"
 					action="#{registrationBackingBean.proceedToFirstUserRegistration}" update="@([id$=Msg])">
 					<f:param name="disableValidation" value="true" />
 				</p:commandButton>

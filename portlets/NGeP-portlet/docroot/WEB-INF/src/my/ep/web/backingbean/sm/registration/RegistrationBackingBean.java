@@ -777,12 +777,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			this.getManagedBean().getSmPersonnel().setTitle(new PmSalutation());
 		}
 		
-		if(fromBankAccount){
-			RequestContext.getCurrentInstance().execute("bankDialogDuplicate.show()");
-			return null;
-		}else{
-			return firstUserRegistration;	
-		}
+		return firstUserRegistration;	
 	}
 
 	/**
@@ -2907,8 +2902,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 			String uniqBank = suppBank.getPmFinancialOrg().getFinancialOrgId().toString() + suppBank.getAccountNo();
 			if(bankList.contains(uniqBank)){
-//				throw new EpException(MessageConst.ERROR_721012);
-				fromBankAccount = true;
+				throw new EpException(MessageConst.ERROR_721012);
 			}
 			bankList.add(uniqBank);
 		}

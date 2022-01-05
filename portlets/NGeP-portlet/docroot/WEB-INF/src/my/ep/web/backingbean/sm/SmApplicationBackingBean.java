@@ -16578,24 +16578,26 @@ public class SmApplicationBackingBean extends
 	// END #29727
 	
 	//12492 - START
-	public void CheckBankAccountInfoForm() {
+	public void CheckBankAccountInfoForm(String fromPage) {
 
 		HashSet<String> hsetAccountNo = new HashSet<String>();
 		HashSet<Long> hsetAccountName = new HashSet<Long>();
 
-		if (this.getManagedBean().getSmAppl().getSmSupplierBanks().size() > 0) {
-			for (SmSupplierBank bankName : this.getManagedBean().getSmAppl().getSmSupplierBanks()) {
-				if (bankName.getPmFinancialOrg().getFinancialOrgId() != null) {
-					hsetAccountName.add(bankName.getPmFinancialOrg().getFinancialOrgId());
-					hsetAccountNo.add(bankName.getAccountNo());
+		if(fromPage.equalsIgnoreCase("fromBankInfo")){
+			if (this.getManagedBean().getSmAppl().getSmSupplierBanks().size() > 0) {
+				for (SmSupplierBank bankName : this.getManagedBean().getSmAppl().getSmSupplierBanks()) {
+					if (bankName.getPmFinancialOrg().getFinancialOrgId() != null) {
+						hsetAccountName.add(bankName.getPmFinancialOrg().getFinancialOrgId());
+						hsetAccountNo.add(bankName.getAccountNo());
+					}
 				}
 			}
-		}
 
-		if (hsetAccountName.add(getManagedBean().getSelectedBank().getPmFinancialOrg().getFinancialOrgId()) == false) {
-			if (hsetAccountNo.add(getManagedBean().getSelectedBank().getAccountNo()) == false) {
-				RequestContext.getCurrentInstance().execute("bankDialogDuplicate.show()");
-			}
+			if (hsetAccountName.add(getManagedBean().getSelectedBank().getPmFinancialOrg().getFinancialOrgId()) == false) {
+				if (hsetAccountNo.add(getManagedBean().getSelectedBank().getAccountNo()) == false) {
+					RequestContext.getCurrentInstance().execute("bankDialogDuplicate.show()");
+				}
+			}	
 		}
 	}
 	//12492 - END
