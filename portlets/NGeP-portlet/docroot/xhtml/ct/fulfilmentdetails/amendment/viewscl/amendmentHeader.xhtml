@@ -44,7 +44,7 @@
 			
 			<c:if 
 			test="#{ctBackingBean.managedBean.contractVer.ctContract.loa.scQt != null 
-			and !ctBackingBean.managedBean.contractVer.ctContract.loa.scLoiLoa.docType eq ParameterConst.doctypeDirectNego}">
+			and ctBackingBean.managedBean.contractVer.ctContract.loa.scLoiLoa.docType eq ParameterConst.doctypeQuotation}">
 			<td width="10%">
 			<h:outputLabel value="#{lbl['lbl.sc.document.no']}" /></td>						
 			<td class="header-info-text">
