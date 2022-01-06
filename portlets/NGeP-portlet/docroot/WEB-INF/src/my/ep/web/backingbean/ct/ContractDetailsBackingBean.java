@@ -2409,6 +2409,12 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		reqDTO.setUpdateAction(true);
 		ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
 		SuspensionBackingBean	suspBB = new SuspensionBackingBean();
+		
+		//Development #29214 -performance Hafiz start
+		suspBB.getManagedBean().getSuspensionProductListingPagingDataModel().resetData();
+		suspBB.getManagedBean().getAgencyPersistDataModel().resetData();
+		//Development #29214 -performance Hafiz end
+				
 		suspBB.getManagedBean().setViewOnly(false);
 		suspBB.setSuspensionContractVer(reqDTO);
 		return PROCESS_SUSPEND_PAGE;
