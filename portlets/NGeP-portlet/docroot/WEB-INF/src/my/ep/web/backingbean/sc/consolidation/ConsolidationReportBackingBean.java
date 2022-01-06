@@ -2464,14 +2464,15 @@ public class ConsolidationReportBackingBean extends
 				int totalQualifiedSuppliers) {
 			int totalRanksCount = 0;
 			int minRankCount = qualifiedSupplierBeans.size();
-			if (qualifiedSupplierBeans.size() == 1) {
+			//#32401 - start
+			if (totalQualifiedSuppliers == 1) {
 				minRankCount = 1;
-			}else if (qualifiedSupplierBeans.size() == 2) {
+			}else if (totalQualifiedSuppliers == 2) {
 				minRankCount = 1;
-			} else if (qualifiedSupplierBeans.size() > 2) {
+			} else if (totalQualifiedSuppliers > 2) {
 				minRankCount = 3;
 			}
-
+			//#32401 - end
 			int currentRank = 0;
 			EpException epException = null;
 			String expMsgForItem = StringUtils.EMPTY;
@@ -2551,11 +2552,13 @@ public class ConsolidationReportBackingBean extends
 				}
 			}
 
-			if (totalRanksCount < minRankCount) {
+			//#32401 - start
+			if (totalRanksCount < minRankCount || (totalQualifiedSuppliers > 0 && totalRanksCount == 0)) {
 				setZoneAndTabIndexOnException(isItemized, specZoneDtl);
 				throw new EpException(MessageConst.ERROR_760384, new String[] {
 						String.valueOf(minRankCount), expMsgForItem });
 			}
+			//#32401 - end
 		}
 		
 //-------------> HERE #31556 & #31555 related to #21695 Farid END				
