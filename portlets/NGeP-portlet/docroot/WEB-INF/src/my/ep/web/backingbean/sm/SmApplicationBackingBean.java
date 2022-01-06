@@ -8918,8 +8918,6 @@ public class SmApplicationBackingBean extends
 			}
 			getManagedBean().setPendingTransaction(false);
 			RequestContext.getCurrentInstance().execute("bankDialog.hide()");
-		}else{
-			RequestContext.getCurrentInstance().execute("bankDialogDuplicate.show()");
 		}
 	}
 
