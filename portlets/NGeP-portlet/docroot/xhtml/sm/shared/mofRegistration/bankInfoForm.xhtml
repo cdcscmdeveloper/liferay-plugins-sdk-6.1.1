@@ -297,7 +297,7 @@
 							label="#{lbl['lbl.sm.bankDtls.acctNo']}" id="smBankAcctNo"
 							value="#{backingBean.managedBean.selectedBank.accountNo}"
 							size="35">
-							<p:ajax event="blur" process="@this" update="@this" listener="#{backingBean.CheckBankAccountInfoForm()}"/>
+							<p:ajax event="blur" process="@this" update="@this" listener="#{backingBean.CheckBankAccountInfoForm('fromBankInfo')}"/>
 						</p:inputText> 
 						&#160;
 						<p:graphicImage id="banti" value="/css/images/design/tooltips.png" />
@@ -637,11 +637,14 @@
 			</table>
 		</p:outputPanel>
 		<div align="right">
+		<!--#12492-START-->
 			<p:commandButton id="save" value="#{lbl['lbl.sm.button.save']}"
 				partialSubmit="true" process=":form:tt:bankDialog"
+				actionListener="#{backingBean.CheckBankAccountInfoForm('fromNext')}"
 				action="#{backingBean.addOrUpdateBankInfoToSmAppl}"
 				onclick="bankDetailsPanelWidget.show();" oncomplete="bankDetailsPanelWidget.hide();"
 				update=":form:tt:bankDt , sfieldset, @([id$=Msg])" />
+		<!--#12492-END-->
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 				partialSubmit="true" process="@this"
 				action="#{backingBean.cancelSmBankFunctions}" />
