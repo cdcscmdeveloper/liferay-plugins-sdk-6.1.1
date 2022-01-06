@@ -367,6 +367,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
     private int totalExistingItem = 0;
     private int totalNewItemsAdded = 0;
     private int overallTotalItem = 0;
+    private int validateItem = 0;
   //11076 - end
     
 	private class ActiveContractPagingDataModel extends PagingDataModel<VCtActiveContract> {
@@ -3478,6 +3479,14 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 		public void setOverallTotalItem(int overallTotalItem) {
 			this.overallTotalItem = overallTotalItem;
+		}
+
+		public int getValidateItem() {
+			return validateItem;
+		}
+
+		public void setValidateItem(int validateItem) {
+			this.validateItem = validateItem;
 		}
 		//11076 - end
 }
