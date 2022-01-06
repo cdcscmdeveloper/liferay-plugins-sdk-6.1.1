@@ -18,11 +18,12 @@
 	<br />
 	<c:if test="#{registrationBackingBean.managedBean.smSupp.brandNew}">
 		<div class="nav-wrapper" align="justify">
+				<!--#12492-START-->
 				<p:commandButton value="#{lbl['lbl.sm.next']}" style="float:right;" oncomplete="scrollToTop();" actionListener="#{registrationBackingBean.CheckBankAccount('fromNext')}"
 					action="#{registrationBackingBean.proceedToFirstUserRegistration}" update="@([id$=Msg])">
 					<f:param name="disableValidation" value="true" />
 				</p:commandButton>
-				
+				<!--#12492-END-->
 				<p:commandButton value="#{lbl['lbl.sm.prev']}" style="left;"
 					action="#{registrationBackingBean.returnToTermAndCondition}">
 				</p:commandButton>

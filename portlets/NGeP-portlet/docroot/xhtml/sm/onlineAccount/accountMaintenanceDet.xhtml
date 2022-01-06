@@ -51,10 +51,12 @@
 		<h:outputText rendered="#{registrationBackingBean.managedBean.companyValidWithSSM}" value="#{lbl['lbl.sm.po.disclaimer2']}" styleClass="splNotesFonts" style="float: inherit" escape="false" />
 					
 			 <div align="right">
+			 <!--#12492-START-->
 				<p:commandButton value="#{lbl['lbl.btn.declare']}" actionListener="#{registrationBackingBean.CheckBankAccount('fromNext')}" action="#{registrationBackingBean.updateBasicSupplier}" update="@([id$=Msg])" 
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
 					<f:param name="disableValidation" value="true" />
 				</p:commandButton>
+			 <!--#12492-END-->
 			</div>
 		</p:outputPanel>
 		
