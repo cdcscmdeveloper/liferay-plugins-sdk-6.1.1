@@ -639,6 +639,7 @@
 		<div align="right">
 			<p:commandButton id="save" value="#{lbl['lbl.sm.button.save']}"
 				partialSubmit="true" process=":form:tt:bankDialog"
+				actionListener="#{backingBean.CheckBankAccountInfoForm('fromNext')}"
 				action="#{backingBean.addOrUpdateBankInfoToSmAppl}"
 				onclick="bankDetailsPanelWidget.show();" oncomplete="bankDetailsPanelWidget.hide();"
 				update=":form:tt:bankDt , sfieldset, @([id$=Msg])" />
