@@ -1,0 +1,65 @@
+<!-- #27565 BPKU: #28913 Start -->
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+	<p:panel header="#{lbl['lbl.sm.bumi.sec.header.compl']}"> <!-- Complaint From UPS to Withdraw Bumiputera Status -->
+		<table style="width: 78%;table-layout: fixed;">
+			<tr>
+				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.bumi.compl.curReg']}" /></td> <!-- Current Registration Status -->
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.currRegStatus}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.bumi.compl.detailsComp']}" /></td> <!-- Details of Complaints -->
+				<td>
+					<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.poApprOverlappedRemark}"
+						rendered="#{not empty viewSmApplBackingBean.managedBean.poApprOverlappedRemark}" />
+					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}"
+						rendered="#{empty viewSmApplBackingBean.managedBean.poApprOverlappedRemark}" />  <!-- N/A -->
+				</td>
+			</tr>
+
+		</table>
+	</p:panel>
+
+	<p:panel header="#{lbl['lbl.sm.bumi.sec.header.bumiAppRemark']}"> <!-- Bumiputera Approver Remarks -->
+		<table style="width: 78%;table-layout: fixed;">
+			<tr>
+				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.bumi.bumiAppRemark.name']}" /></td> <!-- Name -->
+				<td>
+					<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.poUserName}"
+						rendered="#{not empty viewSmApplBackingBean.managedBean.poUserName}" />
+					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}"
+						rendered="#{empty viewSmApplBackingBean.managedBean.poUserName}" />  <!-- N/A -->
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.bumi.bumiAppRemark.remark']}" /></td> <!-- Remark -->
+				<td>
+					<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.poRemark}"
+						rendered="#{not empty viewSmApplBackingBean.managedBean.poRemark}" />
+				    <p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}"
+						rendered="#{empty viewSmApplBackingBean.managedBean.poRemark}" /> <!-- N/A -->
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.bumi.bumiAppRemark.date']}" /></td> <!-- Date -->
+				<td><c:if test="#{not empty viewSmApplBackingBean.managedBean.poRemarkCreatedDate}" >
+					<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.poRemarkCreatedDate}" />
+					</c:if>
+					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}"
+						rendered="#{empty viewSmApplBackingBean.managedBean.poRemarkCreatedDate}" /> <!-- N/A -->
+				</td>
+			</tr>
+		</table>
+	</p:panel>
+
+</ui:composition>
+
+<!-- #27565 BPKU: #28913 End -->

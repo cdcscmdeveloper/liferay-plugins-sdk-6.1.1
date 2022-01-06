@@ -260,120 +260,65 @@
 				</p:selectOneMenu>
 				<p:message id="zoneCodeMsg" for="zoneCode" display="icon"/>
 			</p:column>
-			
-			<c:if test="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'PC'}">
-				<p:column width="16%" id="effDatePtjColumnId">
-					<f:facet name="header">
-						<h:outputText value="*" styleClass="mandatory"/>
-						<h:outputText value="#{lbl['lbl.pm.as.effdate']}"/>
-					</f:facet>
-	
-					<p:calendar navigator="true"
-						yearRange="#{DateUtils.getCalendarMaxYearRange(typeValueObj.effDate)}"
-						rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType != 1) or
-									(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 1 and typeValueObj.showFlag)}"
-						disabled="#{!(typeValueObj.brandNew)}"
-						showOn="button" id="ruleValeffDatePtjId"
-						mindate="#{ruleCatalogueBackingBean.managedBean.tomorrow}"
-						maxdate="#{ruleCatalogueBackingBean.managedBean.maxDate}"
-						required="true" label="#{lbl['lbl.pm.as.effdate']}"
-						readonlyInput="true"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-						value="#{typeValueObj.effDate}">
-						<p:ajax event="dateSelect" update="@this,ruleConfigexpDatePtjId" process="@this"/>
-						<p:ajax event="dateSelect" update="@([id$=cloneLink])"
-							listener="#{ruleCatalogueBackingBean.updateGroupChildDate(index)}"/>
-						<p:ajax event="change" update="@([id$=cloneLink])"
-							listener="#{ruleCatalogueBackingBean.updateGroupChildDate(index)}"/>
-					</p:calendar>
-				</p:column>
-				
-				<p:column width="16%">
-					<f:facet name="header">
-						#{lbl['lbl.pm.as.expdate']}
-					</f:facet>
-					<p:calendar  navigator="true"
-						yearRange="#{DateUtils.getCalendarMaxYearRange(typeValueObj.expDate)}"	
-						rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType != 1) or
-									(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 1 and typeValueObj.showFlag)}"
-						disabled="#{typeValueObj.expDate != null and !typeValueObj.brandNew}"
-						showOn="button" id="ruleConfigexpDatePtjId"
-						mindate="#{ruleCatalogueBackingBean.managedBean.tomorrow}"
-						maxdate="#{ruleCatalogueBackingBean.managedBean.maxDate}"
-						label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-						value="#{typeValueObj.expDate}"
-						validatorMessage="#{lbl['lbl.pm.as.expdate']} #{lbl['lbl.pm.date.range.validation']} #{lbl['lbl.pm.as.effdate']}">
-						<f:attribute name="startDate" value="#{typeValueObj.effDate}"/>
-						<f:validator validatorId="primeDateRangeValidatorPm"/>
-						<p:ajax event="dateSelect" update="@this" process="@this"/>
-						<p:ajax event="dateSelect" update="@([id$=cloneLink])"
-							listener="#{ruleCatalogueBackingBean.updateGroupChildDate(index)}"/>
-						<p:ajax event="change" update="@([id$=cloneLink])"
-							listener="#{ruleCatalogueBackingBean.updateGroupChildDate(index)}"/>
-					</p:calendar>
-				</p:column>
-			</c:if>
 			<!-- 27827 - END -->
 
-			<c:if test="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode != 'PC'}">
-				<p:column width="16%" id="effDateColumnId">
-					<f:facet name="header">
-						<h:outputText value="*" styleClass="mandatory" />
-						<h:outputText value="#{lbl['lbl.pm.as.effdate']}" />
-					</f:facet>
-	
-					<p:calendar  navigator="true"
-						yearRange="#{DateUtils.getCalendarMaxYearRange(typeValueObj.effDate)}"
-						rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 1 and typeValueObj.showFlag)}"
-						disabled="#{typeValueObj.effDate le DateUtils.getCurrentDateWithoutTime()}"
-						showOn="button" id="ruleValeffDateId"
-						mindate="#{ruleCatalogueBackingBean.managedBean.tomorrow}"
-						maxdate="#{ruleCatalogueBackingBean.managedBean.maxDate}"
-						required="true" label="#{lbl['lbl.pm.as.effdate']}"
-						readonlyInput="true"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-						value="#{typeValueObj.effDate}">
-						<p:ajax event="dateSelect" update="@this,ruleConfigexpDateId"
-							process="@this" />
-						<p:ajax event="dateSelect"
-							listener="#{ruleCatalogueBackingBean.updateGroupChildDate(index)}"
-							update="@([id$=cloneLink])" />
-						<p:ajax event="change"
-							listener="#{ruleCatalogueBackingBean.updateGroupChildDate(index)}"
-							update="@([id$=cloneLink])" />
-	
-					</p:calendar>
-				</p:column>
-				
-				<p:column width="16%">
-					<f:facet name="header">
-							#{lbl['lbl.pm.as.expdate']}
-				                	</f:facet>
-					 <p:calendar  navigator="true"
-						yearRange="#{DateUtils.getCalendarMaxYearRange(typeValueObj.expDate)}"	
-						rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 1 and typeValueObj.showFlag)}"
-						showOn="button" id="ruleConfigexpDateId"
-						mindate="#{ruleCatalogueBackingBean.managedBean.tomorrow}"
-						maxdate="#{ruleCatalogueBackingBean.managedBean.maxDate}"
-						label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-						value="#{typeValueObj.expDate}"
-						validatorMessage="#{lbl['lbl.pm.as.expdate']} #{lbl['lbl.pm.date.range.validation']} #{lbl['lbl.pm.as.effdate']}">
-						<f:attribute name="startDate" value="#{typeValueObj.effDate}" />
-						<f:validator validatorId="primeDateRangeValidatorPm" />
-						<p:ajax event="dateSelect" update="@this"
-							process="@this" />
-						<p:ajax event="dateSelect"
-							listener="#{ruleCatalogueBackingBean.updateGroupChildDate(index)}"
-							update="@([id$=cloneLink])" />
-						<p:ajax event="change"
-							listener="#{ruleCatalogueBackingBean.updateGroupChildDate(index)}"
-							update="@([id$=cloneLink])" />
-	
-					</p:calendar>
-				</p:column>
-			</c:if>
+			<p:column width="16%" id="effDateColumnId">
+				<f:facet name="header">
+					<h:outputText value="*" styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.pm.as.effdate']}" />
+				</f:facet>
+
+				<p:calendar  navigator="true"
+					yearRange="#{DateUtils.getCalendarMaxYearRange(typeValueObj.effDate)}"
+					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 1 and typeValueObj.showFlag)}"
+					disabled="#{typeValueObj.effDate le DateUtils.getCurrentDateWithoutTime()}"
+					showOn="button" id="ruleValeffDateId"
+					mindate="#{ruleCatalogueBackingBean.managedBean.tomorrow}"
+					maxdate="#{ruleCatalogueBackingBean.managedBean.maxDate}"
+					required="true" label="#{lbl['lbl.pm.as.effdate']}"
+					readonlyInput="true"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+					value="#{typeValueObj.effDate}">
+					<p:ajax event="dateSelect" update="@this,ruleConfigexpDateId"
+						process="@this" />
+					<p:ajax event="dateSelect"
+						listener="#{ruleCatalogueBackingBean.updateGroupChildDate(index)}"
+						update="@([id$=cloneLink])" />
+					<p:ajax event="change"
+						listener="#{ruleCatalogueBackingBean.updateGroupChildDate(index)}"
+						update="@([id$=cloneLink])" />
+
+				</p:calendar>
+			</p:column>
+			
+			<p:column width="16%">
+				<f:facet name="header">
+						#{lbl['lbl.pm.as.expdate']}
+			                	</f:facet>
+				 <p:calendar  navigator="true"
+					yearRange="#{DateUtils.getCalendarMaxYearRange(typeValueObj.expDate)}"	
+					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 1 and typeValueObj.showFlag)}"
+					disabled="#{typeValueObj.expDate lt DateUtils.getCurrentDateWithoutTime()}"
+					showOn="button" id="ruleConfigexpDateId"
+					mindate="#{ruleCatalogueBackingBean.managedBean.today}"
+					maxdate="#{ruleCatalogueBackingBean.managedBean.maxDate}"
+					label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+					value="#{typeValueObj.expDate}"
+					validatorMessage="#{lbl['lbl.pm.as.expdate']} #{lbl['lbl.pm.date.range.validation']} #{lbl['lbl.pm.as.effdate']}">
+					<f:attribute name="startDate" value="#{typeValueObj.effDate}" />
+					<f:validator validatorId="primeDateRangeValidatorPm" />
+					<p:ajax event="dateSelect" update="@this"
+						process="@this" />
+					<p:ajax event="dateSelect"
+						listener="#{ruleCatalogueBackingBean.updateGroupChildDate(index)}"
+						update="@([id$=cloneLink])" />
+					<p:ajax event="change"
+						listener="#{ruleCatalogueBackingBean.updateGroupChildDate(index)}"
+						update="@([id$=cloneLink])" />
+
+				</p:calendar>
+			</p:column>
 
 			<ui:remove>
 			<p:column width="10%">
@@ -410,9 +355,7 @@
 				</p:commandLink>
 				<p:commandLink
 					disabled="#{typeValueObj.effDate le DateUtils.getCurrentDateWithoutTime()}"
-					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode != 'PC') and
-								((ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 1 and typeValueObj.showFlag)) and
-								 (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType != 'BRBP')}"
+					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 1 and typeValueObj.showFlag)}"
 					id="deleteValue" partialSubmit="true" process="@this"
 					oncomplete="ruleValueDeletePopUp.show();"
 					update="@([id$=#{ruleValueDeleteId}])">
@@ -420,18 +363,6 @@
 					<f:setPropertyActionListener target="#{ruleCatalogueBackingBean.managedBean.deleteRowIndex}" 
 							value="#{index}" />
 				</p:commandLink>
-				<!-- 27827 - START -->
-				<p:commandLink
-					disabled="#{!(typeValueObj.brandNew)}"
-					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'PC') or
-							    (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType == 'BRBP')}"
-					id="deleteValuePtj" partialSubmit="true" process="@this"
-					oncomplete="ruleValueDeletePopUp.show();"
-					update="@([id$=#{ruleValueDeleteId}])">
-					<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
-					<f:setPropertyActionListener target="#{ruleCatalogueBackingBean.managedBean.deleteRowIndex}" value="#{index}"/>
-				</p:commandLink>
-				<!-- 27827 - END -->
 				<h:panelGroup id="errorLink">
 					<p:commandLink title="#{lbl['lbl.txt.error']}" process="@this"
 						partialSubmit="ture"

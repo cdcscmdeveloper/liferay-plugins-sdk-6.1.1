@@ -352,8 +352,13 @@
 		<portlet id="ApplicationPayment"></portlet>
 		<portlet id="viewSupplierProfile"></portlet>
 		<portlet id="viewApplicationHistory"></portlet>
+		<!-- 27843 BPKU : 27565 - START --> 
+		<portlet id="viewBumiputeraApplicationHistory"></portlet>
+		<!-- 27843 BPKU : 27565 - END -->
 		<portlet id="gstHistory"></portlet>
 		<portlet id="supplierDataMaintenance"></portlet>
+		<!-- 28912 - portlet for Bumiputera Supplier Data Maintainance -->
+		<portlet id="bumiputeraSupplierDataMaintenance"></portlet>
 		<portlet id="changeApplicationFlow"></portlet>
 		<portlet id="resendExpiredInquirySdo"></portlet>
 		<portlet id="SoftCertReg"></portlet>

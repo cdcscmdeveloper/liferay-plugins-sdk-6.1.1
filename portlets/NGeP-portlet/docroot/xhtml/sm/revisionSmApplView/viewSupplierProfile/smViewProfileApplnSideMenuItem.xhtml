@@ -51,7 +51,13 @@
 						update=":form" />
 					<p:menuitem value="#{lbl['lbl.sm.po.approver.decision']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 						actionListener="#{viewSmApplBackingBean.setTabValue('12',SupplierManagementConst.SM_APPL_PAGE_TYPE_PO_APPR_DEC)}"
+						update=":form" />	
+					<!-- #27565 BPKU: #28913 Start -->
+					<p:menuitem value="#{lbl['lbl.sm.bumi.approver.remark']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						actionListener="#{viewSmApplBackingBean.setTabValue('13',SupplierManagementConst.SM_APPL_PAGE_TYPE_PO_APPR_DEC)}"
 						update=":form" />
+					<!-- #27565 BPKU: #28913 End -->
+						
 				</c:when>
 				<c:otherwise>
 					<p:menuitem value="#{lbl['lbl.sm.virtual.cert']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"

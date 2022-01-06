@@ -44,24 +44,37 @@
 								</tr>
 							</table>
 						</p:outputPanel> 
-						<ui:include
-								src="/xhtml/sm/shared/mofRegistration/AccountInfoDetail.xhtml" />
-						<ui:include
-							src="/xhtml/sm/shared/mofRegistration/companyBasicInfoForm.xhtml" />
-						<ui:include
-							src="/xhtml/sm/shared/mofRegistration/staffInfoForm.xhtml" /> <ui:include
-							src="/xhtml/sm/shared/mofRegistration/officeFacilityTypeForm.xhtml" />
-						<ui:include
-							src="/xhtml/sm/shared/mofRegistration/certifacteInfoForm.xhtml" />
-						<ui:fragment
-							rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J'}">
-							<ui:include
-								src="/xhtml/sm/shared/mofRegistration/proffesionalBodyInfoForm.xhtml" />
-						</ui:fragment> <ui:fragment
-							rendered="#{backingBean.managedBean.smAppl.supplierType ne 'J'}">
-							<ui:include
-								src="/xhtml/sm/shared/mofRegistration/transactionNetworksForm.xhtml" />
-						</ui:fragment>
+						<!-- #28741 BPKU:#27565 - start-->
+						<c:choose>
+							<c:when test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi}">
+							<ui:include src="/xhtml/sm/shared/applViewOnlyPages/companyBasicInfoFormViewOnly.xhtml" />
+							<ui:include src="/xhtml/sm/shared/applViewOnlyPages/staffInfoFormViewOnly.xhtml" />
+							<ui:include src="/xhtml/sm/shared/applViewOnlyPages/officeFacilityTypeFormViewOnly.xhtml" />
+							<ui:include src="/xhtml/sm/shared/applViewOnlyPages/certificateInfoFormViewOnly.xhtml" />
+							<ui:fragment rendered="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq 'J'}">
+								<ui:include src="/xhtml/sm/shared/applViewOnlyPages/proffesionalBodyInfoFormViewOnly.xhtml" />
+							</ui:fragment>
+							<ui:fragment rendered="#{backingBean.managedBean.smAppl.supplierType ne 'J'}">
+								<ui:include src="/xhtml/sm/shared/applViewOnlyPages/transactionNetworksFormViewOnly.xhtml" />
+							</ui:fragment>
+							</c:when>
+							
+							<c:otherwise>
+							<ui:include src="/xhtml/sm/shared/mofRegistration/AccountInfoDetail.xhtml" />
+							<ui:include src="/xhtml/sm/shared/mofRegistration/companyBasicInfoForm.xhtml" />
+							<ui:include src="/xhtml/sm/shared/mofRegistration/staffInfoForm.xhtml" />
+							<ui:include src="/xhtml/sm/shared/mofRegistration/officeFacilityTypeForm.xhtml" />
+							<ui:include src="/xhtml/sm/shared/mofRegistration/certifacteInfoForm.xhtml" />
+							<ui:fragment rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J'}">
+								<ui:include src="/xhtml/sm/shared/mofRegistration/proffesionalBodyInfoForm.xhtml" />
+							</ui:fragment>
+							<ui:fragment rendered="#{backingBean.managedBean.smAppl.supplierType ne 'J'}">
+								<ui:include src="/xhtml/sm/shared/mofRegistration/transactionNetworksForm.xhtml" />
+							</ui:fragment>
+							
+							</c:otherwise>
+						</c:choose>
+						<!-- #28741 BPKU:#27565 - end -->
 						<div class="nav-wrapper">
 							<table style="width: 100%">
 								<tr>

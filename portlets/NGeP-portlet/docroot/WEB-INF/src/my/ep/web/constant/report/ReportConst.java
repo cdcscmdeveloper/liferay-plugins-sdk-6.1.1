@@ -324,6 +324,8 @@ public class ReportConst implements Serializable{
 	
 	//Tracking Diary - JSP
 	public static final String PM_TRACKING_DAIRY_REPORT_NAME = "TRACKING_DAIRY.jsp";
+	public static final String PM_TRACKING_DAIRY_REPORT_NAME_SP = "PM_TRACKING_DIARY_SP.jsp"; //#28727
+	public static final String PM_TRACKING_DIARY_REPORT_NAME_AS = "PM_TRACKING_DIARY_AS.jsp"; //#28740
 	public static final String DP_LOA_DTL_REPORT_NAME = "SC_S1_LOA.jsp";
 	public static final String DP_PID_DTL_REPORT_NAME = "SC_S1_PID_DTL.jsp";
 	public static final String DP_ITEM_INQUIRY_DTL_REPORT_NAME = "SC_S1_ITEM_INQUIRY_DTL.jsp";

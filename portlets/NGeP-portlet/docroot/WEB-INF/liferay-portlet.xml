@@ -2502,6 +2502,20 @@
 			viewApplicationhistory-portlet
 		</css-class-wrapper>
 	</portlet>
+	<!-- 27843 BPKU : 27565 - START --> 
+	<portlet>
+		<portlet-name>viewBumiputeraApplicationHistory</portlet-name>
+		<icon>/icon.png</icon>
+		<requires-namespaced-parameters>false</requires-namespaced-parameters>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>
+			viewBumiputeraApplicationhistory-portlet
+		</css-class-wrapper>
+	</portlet>
+	<!-- 27843 BPKU : 27565 - END -->
 	<portlet>
 		<portlet-name>supplierDataMaintenance</portlet-name>
 		<icon>/icon.png</icon>
@@ -2514,6 +2528,20 @@
 			supplierdatamaintenance-portlet
 		</css-class-wrapper>
 	</portlet>
+	<!-- 28912 start - portlet for Bumiputera Supplier Data Maintainance -->
+	<portlet>
+		<portlet-name>bumiputeraSupplierDataMaintenance</portlet-name>
+		<icon>/icon.png</icon>
+		<requires-namespaced-parameters>false</requires-namespaced-parameters>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>
+			bumiputeraSupplierDataMaintenance-portlet
+		</css-class-wrapper>
+	</portlet>
+	<!-- 28912 end -->
 	<portlet>
 		<portlet-name>changeApplicationFlow</portlet-name>
 		<icon>/icon.png</icon>

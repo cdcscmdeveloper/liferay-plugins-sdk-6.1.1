@@ -1069,6 +1069,8 @@ public class SmApplicationUtil {
 	
 	//#27356
 	public static void validateCoordinate(SmApplicationManagedBean managedBean){
+		//#28741 BPKU:#27565
+		if(managedBean.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) return;
 		SmCompanyBasic companyBasic = managedBean.getSmAppl().getSmCompanyBasic();
 		List<SmFacility> facility =managedBean.getSmAppl().getSmFacilities();
 		//START 27748 -  SM Disciplinary Action - 26238
@@ -4900,7 +4902,20 @@ public class SmApplicationUtil {
 				&& applType.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
 			descList = SmServiceLookup.getStatusSO()
 					.retrieveRegStatusListForBumi(reqDTO).getStatusDescList();
-		} else {
+		} 
+		// 28912 start 
+		else if(!StringUtils.isBlank(applType)
+				&& applType.equals(ParameterConst.SM_BUMI_SUPP_DATA_MAINTAINACE)){
+			descList = SmServiceLookup.getStatusSO()
+					.retrieveRegStatusList(reqDTO).getStatusDescList();
+			for (int i = 0; i < descList.size(); i++) {
+				if (descList.get(i).getStatusName().equalsIgnoreCase(ParameterConst.SM_REGISTRATION_STATUS_DESC_FOREIGN)){
+			    	descList.remove(i);
+				}
+			}
+		}
+		else {
+			// 28912 end 
 			List<String> consultantRegStatus = Arrays
 					.asList(new String[] {
 							SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED
@@ -4910,7 +4925,11 @@ public class SmApplicationUtil {
 			descList = SmServiceLookup.getStatusSO()
 					.retrieveRegStatusList(reqDTO).getStatusDescList();
 			if (!EntityHelper.isCollectionEmpty(descList)
-					&& !StringUtils.isBlank(suppType) && suppType.equals("J")) {
+					//#27565 BPKU : #28906 START
+					&& !StringUtils.isBlank(suppType) && (suppType.equals(SupplierManagementConst.STYPE_CONSULTANT)
+					|| suppType.equals(SupplierManagementConst.STYPE_CONTRACTOR))) 
+					//#27565 BPKU : #28906 END
+			{
 				List<PmStatusDesc> newList = new ArrayList<PmStatusDesc>();
 				for (PmStatusDesc statDesc : descList) {
 					if (statDesc.getPmStatus() != null

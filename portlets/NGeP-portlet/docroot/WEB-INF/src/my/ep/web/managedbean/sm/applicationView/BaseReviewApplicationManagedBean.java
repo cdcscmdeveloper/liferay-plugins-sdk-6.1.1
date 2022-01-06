@@ -315,6 +315,10 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	// #28278
 	private boolean flagShowButtonSubmit;
 	
+	
+	//28912 - variable to track Bumiputera Supplier Data Maintainance
+	private boolean bumiputeraDataMaintainance;
+	
 	public BaseReviewApplicationManagedBean() {
 		selectedCert = new SmSupplierCert();
 		selectedCert.setPmCertBody(new PmCertBody());
@@ -2207,4 +2211,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	public void setFlagShowButtonSubmit(boolean flagShowButtonSubmit) {
 		this.flagShowButtonSubmit = flagShowButtonSubmit;
 	}
+	
+	//28912 start - variable to track Bumiputera Supplier Data Maintainance
+	public boolean isBumiputeraDataMaintainance() {
+		return bumiputeraDataMaintainance;
+	}
+
+	public void setBumiputeraDataMaintainance(boolean bumiputeraDataMaintainance) {
+		this.bumiputeraDataMaintainance = bumiputeraDataMaintainance;
+	}
+	//28912 end
 }

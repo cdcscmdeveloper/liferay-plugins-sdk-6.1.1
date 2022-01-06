@@ -8258,6 +8258,43 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
+	<!-- 27843 BPKU : 27565 - START --> 
+	<portlet>
+		<portlet-name>viewBumiputeraApplicationHistory</portlet-name>
+		<display-name>View Bumiputera Application History</display-name>
+		<portlet-class>
+			org.portletfaces.bridge.GenericFacesPortlet
+		</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>
+				/xhtml/sm/revisionSmApplView/viewApplicationHistory/preRenderViewBumiputeraApplHistory.xhtml
+			</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>View Bumiputera Application History</title>
+			<short-title>NewJSFPortlet</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<!-- 27843 BPKU : 27565 - END -->
 	<portlet>
 		<portlet-name>gstHistory</portlet-name>
 		<display-name>GST Declaration History</display-name>
@@ -8328,6 +8365,43 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
+	<!-- 28912 start - portlet for Bumiputera Supplier Data Maintainance -->
+	<portlet>
+		<portlet-name>bumiputeraSupplierDataMaintenance</portlet-name>
+		<display-name>Bumiputera Supplier Data Maintenance</display-name>
+		<portlet-class>
+			org.portletfaces.bridge.GenericFacesPortlet
+		</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>
+				/xhtml/sm/supplierdatamaintenance/preRenderBumiputeraSupplierDataMaintenance.xhtml
+			</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Bumiputera Supplier Data Maintenance</title>
+			<short-title>NewJSFPortlet</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<!-- 28912 end -->
 	<portlet>
 		<portlet-name>changeApplicationFlow</portlet-name>
 		<display-name>Change Supplier Application Flow</display-name>

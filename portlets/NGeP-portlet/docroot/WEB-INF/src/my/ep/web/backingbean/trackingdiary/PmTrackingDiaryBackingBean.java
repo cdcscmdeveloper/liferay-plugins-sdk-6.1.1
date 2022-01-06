@@ -332,10 +332,21 @@ public class PmTrackingDiaryBackingBean extends
 		paramMap.put(ReportConst.PARAM_DOC_ID, docId);
 		paramMap.put(ReportConst.PARAM_DOC_TYPE, docType);
 		paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
-		String reportName = ReportConst.PM_TRACKING_DAIRY_REPORT_NAME;
-		
+		//20200910@Jacky - #28740 - Start		
 		if(docType !=null && docId !=null) {
 			try {
+				
+				String reportName = "";
+				if(docType.equalsIgnoreCase(ParameterConst.VIRTUAL_CERTIFICATE_PARAM_CODE)) {
+					reportName = ReportConst.PM_TRACKING_DIARY_REPORT_NAME_AS;
+				} /* 28727 - START */
+				 else if(docType.equalsIgnoreCase(ParameterConst.RULE_CONFIG_PARAM_CODE)){
+					reportName = ReportConst.PM_TRACKING_DAIRY_REPORT_NAME_SP;
+				} /* 28727 - END */
+				 else {
+					reportName = ReportConst.PM_TRACKING_DAIRY_REPORT_NAME;
+				}
+		//20200910@Jacky - #28740 - End
 				generateReport(reportName, paramMap);
 			} catch (IOException e) {
 				e.printStackTrace();

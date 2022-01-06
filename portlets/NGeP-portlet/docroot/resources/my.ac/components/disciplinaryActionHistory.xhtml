@@ -38,6 +38,15 @@
 				<p:outputLabel value="#{index + 1}"
 					style="float: left;white-space: normal !important;" />
 			</p:column>
+			<!-- 28912 start - display Action Date-->
+			<p:column
+				rendered="#{viewSmApplBackingBean.managedBean.bumiputeraDataMaintainance}"
+				headerText="#{lbl['lbl.sm.disciplinary.action.date.time']}"
+				style="width : 10% !important; vertical-align:top;">
+				<ac:labelDateTime styleClass="outputLabel-view"
+					value="#{disciplinaryAction.createdDate}" />
+			</p:column>
+			<!-- 28912 end -->
 			<p:column headerText="#{lbl['lbl.sm.disciplinary.jktt.punishment.type']}" style="width : 23% !important; vertical-align:top;white-space: normal !important;">
 				<p:outputLabel rendered="#{disciplinaryAction.warning}" styleClass="outputLabel-view">
 					<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.warning']}"/>
@@ -109,7 +118,9 @@
 				</h:dataTable>
 				<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty disciplinaryAction.categoryCodeList}"/>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.disciplinary.list.of.ic.no.blacklist']}" style="white-space: normal !important;width : 15% !important; vertical-align:top;">
+			<!-- 28912 add filter -->
+			<p:column headerText="#{lbl['lbl.sm.disciplinary.list.of.ic.no.blacklist']}" style="white-space: normal !important;width : 15% !important; vertical-align:top;"
+			 rendered="#{!viewSmApplBackingBean.managedBean.bumiputeraDataMaintainance}">
 				<h:dataTable value="#{disciplinaryAction.blacklistownerDirectorList}" var="personnel" 
 					rowIndexVar="indexPer" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" rendered="#{not empty disciplinaryAction.blacklistownerDirectorList}">
 					<p:column style="border: none !important;">
@@ -118,6 +129,14 @@
 				</h:dataTable>
 				<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty disciplinaryAction.blacklistownerDirectorList}" />
 			</p:column>
+			<!-- 28912 start - display Action By-->
+			<p:column headerText="#{lbl['lbl.sm.approvremark.actionby']}"
+				style="white-space: normal !important;width : 15% !important; vertical-align:top;" 
+				rendered="#{viewSmApplBackingBean.managedBean.bumiputeraDataMaintainance}">
+				<h:outputText
+					value="#{viewSmApplBackingBean.getUserNameByUserId(disciplinaryAction.createdBy)}" />
+			</p:column>
+			<!-- 28912 end -->
 			
 	/*  end : 27445 = Disciplinary Actions / history popup window*/
 		</p:dataTable>

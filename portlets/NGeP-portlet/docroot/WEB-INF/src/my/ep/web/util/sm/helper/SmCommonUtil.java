@@ -66,6 +66,7 @@ import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.division.IDivisionSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.pojobtyperatio.IPoJobTypeRatioSO;
+import my.ep.biz.service.pm.common.race.IRaceSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.calendar.ICalendarSO;
@@ -103,6 +104,8 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.pojobtyperatio.PoJobTypeRatioReqDTO;
 import my.ep.dto.pm.common.pojobtyperatio.PoJobTypeRatioResDTO;
 import my.ep.dto.pm.common.poroletask.PoRoleTaskReqDTO;
+import my.ep.dto.pm.common.race.RaceReqDTO;
+import my.ep.dto.pm.common.race.RaceResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -5945,4 +5948,28 @@ public class SmCommonUtil {
 			}
 		}
 		//13320-End
+		
+		//#28741 BPKU:27565 - start
+		public static PmRace getRaceWithMyIdentity(String identificationNo){
+			MyIdentityReqDTO reqDTO = new MyIdentityReqDTO();
+			IMyIdentitySO reqSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_MANAGEMENT, IMyIdentitySO.class);
+
+			reqDTO.setType(my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_ONLINE);
+			reqDTO.setNewIcNo(identificationNo);
+			try {
+				MyIdentityResDTO resDTO = reqSO.myIdentityRetrieveRace(reqDTO);
+				if (resDTO.getSeverity().equalsIgnoreCase(
+						my.ep.constant.sm.SupplierManagementConst.MYIDENTITY_SEVERITY_SUCC)) {
+					RaceReqDTO r = new RaceReqDTO();
+					r.setRaceCode(resDTO.getRace());
+					IRaceSO raceSO = (IRaceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRaceSO.class);
+					return raceSO.retrieveRacebyRaceCode(r).getRace();				
+				}
+			} catch (Exception ex){
+				log.info(ex.getMessage());
+			}
+			return null;
+		}
+		//#28741 BPKU:27565 - end
 }

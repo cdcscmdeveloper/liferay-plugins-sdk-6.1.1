@@ -505,6 +505,10 @@ public class SupplierManagementConst {
 	public static final String SM_APPL_BUTTON_TYPE_PREV = "PREV";
 	public static final String SM_APPL_BUTTON_TYPE_SAME = "SAME";
 	public static final String SM_APPL_BUTTON_TYPE_NEXT = "NEXT";
+	
+	//#27565 BPKU: #28913 Start
+	public static final String SM_APPL_PAGE_TYPE_BUMI_APPR_REMARK = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_BUMI_APPR_REMARK;
+	//#27565 BPKU: #28913 End
 
 	public static final String SM_MOF_CERT_SERIAL_SEQ = "SM_MOF_CERT_SERIAL_SEQ";
 	public static final String SM_MOF_465_SEQ = "SM_MOF_465_SEQ";
@@ -631,8 +635,8 @@ public class SupplierManagementConst {
 	public static final String SME_STATUS_BOTH = my.ep.constant.sm.SupplierManagementConst.SME_STATUS_BOTH;
 
 	// SUPPLIER TYPE
-	public static final String SUPP_TYPE_CONTRACTOR = my.ep.constant.sm.SupplierManagementConst.SUPP_TYPE_CONTRACTOR;
-	public static final String SUPP_TYPE_CONSULTANT = my.ep.constant.sm.SupplierManagementConst.SUPP_TYPE_CONSULTANT;
+	public static final String SUPP_TYPE_CONTRACTOR = "K";
+	public static final String SUPP_TYPE_CONSULTANT = "J";
 	public static final String SUPP_TYPE_BASIC = my.ep.constant.sm.SupplierManagementConst.SUPP_TYPE_BASIC;
 	public static final String SUPP_TYPE_GOVT_TO_GOVT = my.ep.constant.sm.SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT;
 
@@ -1188,6 +1192,12 @@ public class SupplierManagementConst {
 		return PM_STATUS_PO_REVIEW;
 	}
 
+	//#27565 BPKU: #28913 Start
+	public String getSM_APPL_PAGE_TYPE_BUMI_APPR_REMARK() {
+		return SM_APPL_PAGE_TYPE_BUMI_APPR_REMARK;
+	}
+	//#27565 BPKU: #28913 End
+	
 //25792 - start
 	public String getSmSupplierBusinessTypeIndividual() {
 		return SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL;

@@ -86,7 +86,9 @@
 	
 	<div align="right">
 
+		<!-- 28912 - add filter to remove delete button -->
 		<p:commandButton value="#{lbl['lbl.sm.button.delete']}" id="deletedApprBtnId" 
+			rendered = "#{!supplierDataMaintenanceBackingBean.managedBean.bumiputeraDataMaintainance}"
 			disabled="#{supplierDataMaintenanceBackingBean.managedBean.disableDeleteButtonAprrovedCategoryCodePanel or empty supplierDataMaintenanceBackingBean.managedBean.selectedApprovedCategories or 
 				!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}"
 			action="#{supplierDataMaintenanceBackingBean.deleteSelectedPendingApprovalCategoryCodes(supplierDataMaintenanceBackingBean.managedBean.selectedApprovedCategories)}" 

@@ -337,6 +337,13 @@ public class SupplierDataMaintenanceBackingBean extends
 			getManagedBean().setFlagShowButtonSubmit(true);
 		}
 		//#28278 - Disciplonary action - #28278 - end
+		// 28912 start - filter Registration Status List for bumi only
+		if (getManagedBean().isBumiputeraDataMaintainance()) {
+			getManagedBean().setRegStatusDescList(
+					SmApplicationUtil.getInstance().retrieveRegistrationStatusList(null,
+							ParameterConst.SM_BUMI_SUPP_DATA_MAINTAINACE));
+		}
+		// 28912 end
 		
 	}
 
@@ -368,6 +375,11 @@ public class SupplierDataMaintenanceBackingBean extends
 	}
 
 	public void search() {
+		// 28912 start - set supplier type to contractor
+		if(getManagedBean().isBumiputeraDataMaintainance()){
+			getManagedBean().setSearchSuppType(SupplierManagementConst.SUPP_TYPE_CONTRACTOR);
+		}
+		// 28912 end
 		getManagedBean().searchSupplier();
 	}
 	//26238 : Disciplinary action - start
@@ -511,11 +523,22 @@ public class SupplierDataMaintenanceBackingBean extends
 			reqDTO.setActiveAppl(activeAppl);
 			reqDTO.setSmAppl(getManagedBean().getSmAppl());
 			reqDTO.setNewlyAddedCategories(getManagedBean().getActiveCategoryList());
-			reqDTO.setDeletedCategories(getManagedBean()
-					.getDeleteApprovedCategories());
+			// 28912 start - set selected to deleted
+			if (getManagedBean().isBumiputeraDataMaintainance()) {
+				reqDTO.setDeletedCategories(getManagedBean().getSelectedApprovedCategories());
+			} else {
+				reqDTO.setDeletedCategories(getManagedBean().getDeleteApprovedCategories());
+			}
+			// 28912 end
 			reqDTO.setSmMofAccount(getManagedBean().getSmMofAccount());
 			reqDTO.setRemark(getManagedBean().getApplnApprovalRemarks());
-			reqDTO.setDocType(ParameterConst.SM_DATA_MAINTENANCE_RMRK_DECISION_APPROVE);
+			// 28912 start - set remark doc type to bumiputera
+			if (getManagedBean().isBumiputeraDataMaintainance()) {
+				reqDTO.setDocType(ParameterConst.SM_BUMI_DATA_MAINTENANCE_RMRK_DECISION_APPROVE);
+			} else {
+				reqDTO.setDocType(ParameterConst.SM_DATA_MAINTENANCE_RMRK_DECISION_APPROVE);
+			}
+			// 28912 end
 			reqDTO.setPortalBaseUrl(SmCommonUtil.getEpBaseUrl());
 			reqDTO.setOverlapCategoryRemarkDocType(ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY_APPROVER);
 			reqDTO.setRemarkId(getManagedBean().getRemarkId());
@@ -727,6 +750,12 @@ public class SupplierDataMaintenanceBackingBean extends
 			}
 			reqDTO.setSmTrackingDiaryVOList(listSmTrackingDiary);
 			
+			// 28912 start - set BumiputeraDataMaintainance for tracking
+			if(getManagedBean().isBumiputeraDataMaintainance()){
+				reqDTO.setBumiputeraDataMaintainance(getManagedBean().isBumiputeraDataMaintainance());
+			}
+			// 28912 end
+			
 			resDTO = SmServiceLookup.getSupplierDataMaintenanceSO()
 					.updateSupplierInfo(reqDTO);
 			getManagedBean().setSmAppl(resDTO.getSmAppl());
@@ -878,6 +907,11 @@ public class SupplierDataMaintenanceBackingBean extends
 	 * Back to search screen
 	 */
 	public void backToSearchSupplierMaintenance() {
+		if(getManagedBean().isBumiputeraDataMaintainance()){
+			getManagedBean().setRegStatusDescList(
+					SmApplicationUtil.getInstance().retrieveRegistrationStatusList(null,
+							ParameterConst.NEW_SM_APPLN_FOR_BUMI));
+		}
 		getManagedBean().setDisplaySearchPage(true);
 	}
 
@@ -1858,6 +1892,9 @@ public class SupplierDataMaintenanceBackingBean extends
 					discipline.getSmDiscplinaryAction().setEndDate(
 							disc.getEndDate());
 					discipline.setSuspend(true);
+					// 28912 - get Action By for Disciplinary Action popup
+					discipline.getSmDiscplinaryAction().setCreatedBy(
+							disc.getCreatedBy());
 					
 					break;
 				}
@@ -1893,7 +1930,13 @@ public class SupplierDataMaintenanceBackingBean extends
 	
 	private void initApproverRemarkInfo(){
 		SmRemarksReqDTO reqDTO = new SmRemarksReqDTO();
-		reqDTO.setDocType(ParameterConst.SM_DATA_MAINTENANCE_RMRK_DECISION_APPROVE);
+		// 28912 start - bumiputra approver remark
+		if(getManagedBean().isBumiputeraDataMaintainance()){
+			reqDTO.setDocType(ParameterConst.SM_BUMI_DATA_MAINTENANCE_RMRK_DECISION_APPROVE);
+		}else {
+			reqDTO.setDocType(ParameterConst.SM_DATA_MAINTENANCE_RMRK_DECISION_APPROVE);
+		}
+		// 28912 end
 		reqDTO.setDocId(getManagedBean().getSmAppl().getApplId());
 		
 		SmRemaksResDTO resDTO = SmServiceLookup.getSmRemarksSO().retrieveSmRemarksByDocument(
@@ -2104,10 +2147,19 @@ public class SupplierDataMaintenanceBackingBean extends
 	}
 
 	private void approvalHistoryRemarklist() {
-		SmRemaksResDTO resDTO = SmApplicationUtil.getRemarksByDoc(
-				ParameterConst.SM_DATA_MAINTENANCE_RMRK_DECISION_APPROVE, getManagedBean().getSmAppl().getApplId());
-		resDTO.getRemarksList();
-		getManagedBean().setApproverRemarkList(resDTO.getRemarksList());
+		// 28912 start - bumiputera approver remark
+		if(getManagedBean().isBumiputeraDataMaintainance()){
+			SmRemaksResDTO resDTO = SmApplicationUtil.getRemarksByDoc(
+					ParameterConst.SM_BUMI_DATA_MAINTENANCE_RMRK_DECISION_APPROVE, getManagedBean().getSmAppl().getApplId());
+			resDTO.getRemarksList();
+			getManagedBean().setApproverRemarkList(resDTO.getRemarksList());
+		}else {
+			SmRemaksResDTO resDTO = SmApplicationUtil.getRemarksByDoc(
+					ParameterConst.SM_DATA_MAINTENANCE_RMRK_DECISION_APPROVE, getManagedBean().getSmAppl().getApplId());
+			resDTO.getRemarksList();
+			getManagedBean().setApproverRemarkList(resDTO.getRemarksList());
+		}
+		// 28912 end
 	}
 
 	public String getUserNameByUserId(Long userId) {
@@ -2924,4 +2976,33 @@ public class SupplierDataMaintenanceBackingBean extends
 	}
 	//13320-end
 	
+	// 28912 start
+	/**
+	 * Pre-render and redirect to Search Page
+	 */
+	public void preRenderBumiputeraSupplierDataMaintenance() {
+		initDataForSearchBumiputeraSupplier();
+		SmCommonUtil.redirectToPage("/xhtml/sm/supplierdatamaintenance/searchBumiputeraSupplierDataMaintenance.xhtml",
+				"", null, null);
+	}
+
+	/**
+	 * Initialized data for search supplier
+	 */
+	private void initDataForSearchBumiputeraSupplier() {
+		renewSesionObject();
+		initLogin();
+		initLoginUserZone();
+		getManagedBean().setDisplaySearchPage(true);
+		getManagedBean().setViewSupplierProfile(true);
+		getManagedBean().setReviewApplicationExist(false);
+		getManagedBean().setViewApplicationHistory(false);
+		getManagedBean().setViewSupplierMaintenancePage(true);
+		getManagedBean().setRegStatusDescList(
+				SmApplicationUtil.getInstance().retrieveRegistrationStatusList(null,
+						ParameterConst.NEW_SM_APPLN_FOR_BUMI));
+		getManagedBean().setZoneList(SmServiceLookup.getZoneSO().retrieveActiveZoneList().getZoneList());
+		getManagedBean().setBumiputeraDataMaintainance(true);
+	}
+	// 28912 end
 }

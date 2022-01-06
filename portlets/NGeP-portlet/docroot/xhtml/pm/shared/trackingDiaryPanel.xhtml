@@ -29,14 +29,25 @@
 			</f:facet> 
 		   #{pmTrackingDiaryBackingBean.getRoleDescByRoleCode(trackingDiaryObj.roleCode)}
             	</p:column> 
+            
+           	<!-- 28727 - START -->
+           	<!-- # 2020/09/10 - 28740 - start -->
 			<p:column style="white-space: normal!important;" width="25%">
 				<f:facet name="header">
-			#{lbl['lbl.td.view.action.desc']}
+					#{lbl['lbl.td.view.action.desc']}
 				</f:facet>
-			<h:outputText value="#{trackingDiaryObj.actionDesc}" escape="false"/>
+				<c:if test="#{pmTrackingDiaryBackingBean.managedBean.selectedDocType != 'RT' and pmTrackingDiaryBackingBean.managedBean.selectedDocType != 'CER'}">
+					<h:outputText value="#{trackingDiaryObj.actionDesc}" escape="false"/>
+				</c:if>
+				<c:if test="#{pmTrackingDiaryBackingBean.managedBean.selectedDocType == 'RT'}">
+					#{ruleTypeDescObj.ruleDesc} #{lbl['lbl.td.action.desc.detail']} #{pmTrackingDiaryBackingBean.getUserName(trackingDiaryObj.actionedBy)}
+				</c:if>
+				<c:if test="#{pmTrackingDiaryBackingBean.managedBean.selectedDocType == 'CER'}">
+				 	#{lbl['lbl.pm.as.authorized']} #{authorizedsignatoryBackingBean.getAuthSignName(trackingDiaryObj.actionDesc)} #{lbl['lbl.pm.as.updatedby']} #{pmTrackingDiaryBackingBean.getUserName(trackingDiaryObj.actionedBy)}.
+				</c:if>
 			</p:column>
-			<!-- 28727 - START -->
-			<c:if test="#{pmTrackingDiaryBackingBean.managedBean.selectedDocType != 'RT'}">
+
+			<c:if test="#{pmTrackingDiaryBackingBean.managedBean.selectedDocType != 'RT' and pmTrackingDiaryBackingBean.managedBean.selectedDocType != 'CER'}">
 				<p:column width="15%">
 					<f:facet name="header">
 					#{lbl['lbl.td.view.status']}
@@ -44,6 +55,7 @@
 			  		#{pmTrackingDiaryBackingBean.getStatusDescById(trackingDiaryObj.statusId)}
 				</p:column>
 			</c:if>
+			<!-- # 2020/09/10 - 28740 - End -->
 			<!-- 28727 - END -->
 
 		</p:dataTable>

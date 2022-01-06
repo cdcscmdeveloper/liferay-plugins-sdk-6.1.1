@@ -22,12 +22,22 @@
 							update=":form" style="margin-bottom:5px;" />
 					</div>
 				</p:outputPanel> 
+				<!-- #28741 BPKU:#27565 - start-->
+				<c:choose>
+					<c:when test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi}">
+					<ui:include src="/xhtml/sm/shared/applViewOnlyPages/regCatCodesFormViewOnly.xhtml" />
+					</c:when>
+					
+					<c:otherwise>
 					<c:if test="#{backingBean.managedBean.smAppl.applType ne 'R'}">
 						<ui:include src="/xhtml/sm/shared/mofRegistration/regCatCodesForm.xhtml" />
 					</c:if>
 					<c:if test="#{backingBean.managedBean.smAppl.applType eq 'R'}">
 						<ui:include src="/xhtml/sm/shared/mofRegistration/regCatcodesExistingRenewalInfoForm.xhtml" />
 					</c:if>
+					</c:otherwise>
+				</c:choose>
+				<!-- #28741 BPKU:#27565 - end-->			
 				<div class="nav-wrapper">
 					<c:choose>
 						<c:when

@@ -5,9 +5,10 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<!-- # 2020/08/25 - 28739 - start -->	
 	<style>
 	.displayTextL {
-		width: 550px !important;
+		width: 500px !important;
 	}
 	
 	
@@ -28,27 +29,66 @@
 	}
 
 	</style>
-	<p:panel header="#{lbl['lbl.pm.authorizedsigntory']}" toggleable="true">
+	<!-- # 2020/08/25 - 28739 - End -->	
+	<!-- # 2020/08/25 - 28739 - start -->
+	<p:panel id="pAuthorizedSignatory" header="#{lbl['lbl.pm.authorizedsigntory']}" toggleable="true">
 		<p:spacer height="10"></p:spacer>
 
-		<table>
+		<table class="ppTwoTable">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.pm.as.search']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
+				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.as.search']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></th>
 				<td><p:selectOneMenu
 						value="#{authorizedsignatoryBackingBean.managedBean.zone.zoneId}"
-						style="width:178px;margin-bottom:5px;">
+						style="width:200px;margin-bottom:5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
 						<f:selectItems
 							value="#{authorizedsignatoryBackingBean.retrieveZones()}"
 							var="zone" itemLabel="#{zone.zoneName}"
 							itemValue="#{zone.zoneId}" />
-						<p:ajax event="change"
-							update="searchSignatoryResults, lovSignatory"
-							listener="#{authorizedsignatoryBackingBean.changeZone(authorizedsignatoryBackingBean.managedBean.zone.zoneId)}" />
 					</p:selectOneMenu></td>
 			</tr>
+					
+			<tr>
+				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.as.applicationtype']}" /></th>
+				<td><p:selectOneMenu
+					value = "#{authorizedsignatoryBackingBean.managedBean.applType}"
+					style="width:200px;margin-bottom:5px;">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+					<f:selectItem itemLabel="#{lbl['lbl.sm.appltype.newmof']}" itemValue="N" />
+					<f:selectItem itemLabel="#{lbl['lbl.sm.appltype.renewmof']}" itemValue="R" />
+					<f:selectItem itemLabel="#{lbl['lbl.sm.appltype.bumiputera']}" itemValue="B" />
+				</p:selectOneMenu></td>
+			</tr>
+			
+			<tr>
+				<th width="20%">
+					<p:outputLabel value="#{lbl['lbl.pm.as.name']}"/>
+				</th>
+				<td>
+					<p:inputText styleClass="ppDisplayTextM" size="38" value="#{authorizedsignatoryBackingBean.managedBean.signatoryName}" 
+					maxlength="80" style="width:160px;margin-bottom:5px;"/>
+				</td>
+				<th>&#160;</th>
+				<td>&#160;</td>
+			</tr>
+			
+			<tr>
+				<td colspan="4">
+					<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.btn.search']}" 
+							process="pAuthorizedSignatory"
+							action="#{authorizedsignatoryBackingBean.searchAuthorizedSignatory(authorizedsignatoryBackingBean.managedBean.zone.zoneId)}"
+							update="searchSignatoryResults, lovSignatory, authSignatoryTrack"/>
+						<p:commandButton value="#{lbl['lbl.btn.reset']}" 
+							action="#{authorizedsignatoryBackingBean.resetAuthorizedSignatorySearch}"
+							update="pAuthorizedSignatory, searchSignatoryResults" 
+							/>
+					</div>
+				</td>
+			</tr>
+			<!-- # 2020/08/25 - 28739 - End -->
 		</table>
 		
 		<ac:lovPopup />
@@ -73,6 +113,21 @@
 					disabled="#{!certSignatory.brandNew}" styleClass="displayTextL" />
 				<p:message id="asNameMsg" for="asName" display="icon" />
 			</p:column>
+			
+			<!-- # 2020/08/25 - 28739 - start -->
+			<p:column style="width :20%">
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.pm.as.applicationtype']}" />
+				</f:facet>
+      				<p:selectManyCheckbox id="asApplType" layout="pageDirection" styleClass="float-left" value="#{certSignatory.selectedApplType}"
+      					disabled="#{!certSignatory.brandNew}"> 
+						<f:selectItem itemLabel="#{lbl['lbl.sm.appltype.newmof']}" itemValue="N" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.appltype.renewmof']}" itemValue="R" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.appltype.bumiputera']}" itemValue="B" />
+					</p:selectManyCheckbox>
+			</p:column>
+			<!-- # 2020/08/25 - 28739 - End -->
 
 			<p:column headerText="#{lbl['lbl.pm.as.effdate']}" style="width :15%">
 				<p:calendar id="effDateId" value="#{certSignatory.effDate}"
