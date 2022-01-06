@@ -2218,13 +2218,19 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							if(smSuppOwner.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_DELETED
 									||smSuppOwner.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_SUSPENDED){
 								this.getManagedBean().getSupplierOwnerls().add(smSuppOwner);
+								}	
+							for (SmPersonnel smPersonnel: resDTO.getSmSupp().getSmAppl().getSmPersonnels()){
+								if(smSuppOwner.getIdentificationNo().equals(smPersonnel.getIdentificationNo())
+										&& smSuppOwner.getOwnerName().equals(smPersonnel.getName())){
+									smSuppOwner.setOwnerIsEquity(smPersonnel.isEquityOwner());
+									smSuppOwner.setOwnerIsDirector(smPersonnel.isDirector());
 								}
+							}
 						}
 						this.getManagedBean().setSmSuppOwner(resDTO.getSmSupp().getSmSupplierOwners().get(0));
 						this.getManagedBean().setSmSuppOwners(resDTO.getSmSupp().getSmSupplierOwners());
 						resDTO.getSmSupp().getSmSupplierOwners().removeAll(this.getManagedBean().getSupplierOwnerls());
 					}
-
 				// #27691 - End
 					this.getManagedBean().setSmSuppOwner(resDTO.getSmSupp().getSmSupplierOwners().get(0));
 					// start #29956
