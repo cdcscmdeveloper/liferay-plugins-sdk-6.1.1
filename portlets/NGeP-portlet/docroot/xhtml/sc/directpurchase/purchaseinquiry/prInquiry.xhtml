@@ -322,6 +322,11 @@
 					</p:selectOneRadio> <p:message id="stockAvailableMsg" for="stockAvailable"
 						display="icon" /></td>
 			</tr>
+			<!-- #29557 - start -->
+			<tr>
+				<ac:iconTooltip value="#{lbl['lbl.sc.all.pricetype.tooltip']}" />
+			</tr>
+			<!-- #29557 - end -->
 		</table>
 		<!-- #29557 - add rendered attribute to hide datatable-->
 		<p:dataTable id="respDtl" var="supplierItemPrice" rendered="false"
@@ -377,6 +382,10 @@
 		</p:dataTable>
 
 		<!-- #29557 start -->
+		<table>
+		<tr>
+		<td style="width: 220px;"></td>
+		<td>
 		<p:tabView id="headerTabId"
 			activeIndex="#{purchaseInquiryBackingBean.managedBean.pricingTabIndex}">
 
@@ -433,6 +442,9 @@
 			</p:tab>
 
 		</p:tabView>
+		</td>
+		</tr>
+		</table>
 		<!-- #29557 end -->
 
 	</p:panel>
