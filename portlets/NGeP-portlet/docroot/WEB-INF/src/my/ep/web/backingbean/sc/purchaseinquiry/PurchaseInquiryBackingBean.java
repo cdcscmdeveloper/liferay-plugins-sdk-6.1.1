@@ -2298,6 +2298,11 @@ public class PurchaseInquiryBackingBean extends
 			if(isSelectedALL){
 				setFlagZonalTierStandard(isSelectedALL);
 			}
+			this.getManagedBean().setEnableZonalTierNormalDel(true);
+		}
+		
+		if (scSupplierItemPrices.size() == 0) {
+			this.getManagedBean().setEnableZonalTierNormalDel(false);
 		}
 		
 		this.getManagedBean().setPricingTabIndex(3); 
@@ -2316,6 +2321,10 @@ public class PurchaseInquiryBackingBean extends
 					scSupplierItemPrice.setSelected(false);
 				}
 			}
+			this.getManagedBean().setEnableZonalTierNormalDel(true);
+		}
+		if (scSupplierItemPrices.size() == 0) {
+			this.getManagedBean().setEnableZonalTierNormalDel(false);
 		}
 
 		this.getManagedBean().setPricingTabIndex(3); 
@@ -2354,6 +2363,10 @@ public class PurchaseInquiryBackingBean extends
 		this.getManagedBean().setDeleteSupplierItemZonalTierStandardPrices(deleteScSupplierItemPrices);
 		deleteScSupplierItemPrices();
 		this.getManagedBean().setSupplierItemZonalTierStandardPrices(mainScSupplierItemPrices);
+		
+		if (this.getManagedBean().getSupplierItemZonalTierStandardPrices().size() == 0){
+			this.getManagedBean().setEnableZonalTierNormalDel(false);
+		}
 		
 		this.getManagedBean().setPricingTabIndex(3); 
 		this.getManagedBean().setZonalTierPricingIndex(0);	
@@ -2405,6 +2418,11 @@ public class PurchaseInquiryBackingBean extends
 			if (isSelectedALL) {
 				setFlagZonalTierPromotion(isSelectedALL);
 			}
+			this.getManagedBean().setEnableZonalTierPromoDel(true);
+		}
+		
+		if (scSupplierItemPrices.size() == 0) {
+			this.getManagedBean().setEnableZonalTierPromoDel(false);
 		}
 
 		this.getManagedBean().setPricingTabIndex(3);
@@ -2423,6 +2441,10 @@ public class PurchaseInquiryBackingBean extends
 					scSupplierItemPrice.setSelected(false);
 				}
 			}
+			this.getManagedBean().setEnableZonalTierPromoDel(true);
+		}
+		if (scSupplierItemPrices.size() == 0) {
+			this.getManagedBean().setEnableZonalTierPromoDel(false);
 		}
 
 		this.getManagedBean().setPricingTabIndex(3);
@@ -2461,6 +2483,10 @@ public class PurchaseInquiryBackingBean extends
 		this.getManagedBean().setDeleteSupplierItemZonalTierPromotionPrices(deleteScSupplierItemPrices);
 		deleteScSupplierItemPrices();
 		this.getManagedBean().setSupplierItemZonalTierPromotionPrices(mainScSupplierItemPrices);
+		
+		if (this.getManagedBean().getSupplierItemZonalTierPromotionPrices().size() == 0){
+			this.getManagedBean().setEnableZonalTierPromoDel(false);
+		}
 
 		this.getManagedBean().setPricingTabIndex(3);
 		this.getManagedBean().setZonalTierPricingIndex(1);
@@ -2735,6 +2761,10 @@ public class PurchaseInquiryBackingBean extends
 			if(isSelectedALL){
 				setFlagTierStandard(isSelectedALL);
 			}
+			this.getManagedBean().setEnableTierNormalDel(true);
+		}
+		if (scSupplierItemPrices.size() == 0){
+			this.getManagedBean().setEnableTierNormalDel(false);
 		}
 		
 		this.getManagedBean().setPricingTabIndex(1); 
@@ -2753,6 +2783,10 @@ public class PurchaseInquiryBackingBean extends
 					scSupplierItemPrice.setSelected(false);
 				}
 			}
+			this.getManagedBean().setEnableTierNormalDel(true);
+		}
+		if (scSupplierItemPrices.size() == 0){
+			this.getManagedBean().setEnableTierNormalDel(false);
 		}
 
 		this.getManagedBean().setPricingTabIndex(1); 
@@ -2791,6 +2825,10 @@ public class PurchaseInquiryBackingBean extends
 		this.getManagedBean().setDeleteSupplierItemTierStandardPrices(deleteScSupplierItemPrices);
 		deleteScSupplierItemPrices();
 		this.getManagedBean().setSupplierItemTierStandardPrices(mainScSupplierItemPrices);
+		
+		if (this.getManagedBean().getSupplierItemTierStandardPrices().size() == 0){
+			this.getManagedBean().setEnableTierNormalDel(false);
+		}
 		
 		this.getManagedBean().setPricingTabIndex(1); 
 		this.getManagedBean().setTierPricingIndex(0);	
@@ -2841,6 +2879,11 @@ public class PurchaseInquiryBackingBean extends
 			if (isSelectedALL) {
 				setFlagTierPromotion(isSelectedALL);
 			}
+			this.getManagedBean().setEnableTierPromoDel(true);
+		}
+		
+		if (scSupplierItemPrices.size() == 0){
+			this.getManagedBean().setEnableTierPromoDel(false);
 		}
 
 		this.getManagedBean().setPricingTabIndex(1);
@@ -2859,6 +2902,10 @@ public class PurchaseInquiryBackingBean extends
 					scSupplierItemPrice.setSelected(false);
 				}
 			}
+			this.getManagedBean().setEnableTierPromoDel(true);
+		}
+		if (scSupplierItemPrices.size() == 0){
+			this.getManagedBean().setEnableTierPromoDel(false);
 		}
 
 		this.getManagedBean().setPricingTabIndex(1);
@@ -2897,6 +2944,10 @@ public class PurchaseInquiryBackingBean extends
 		this.getManagedBean().setDeleteSupplierItemTierPromotionPrices(deleteScSupplierItemPrices);
 		deleteScSupplierItemPrices();
 		this.getManagedBean().setSupplierItemTierPromotionPrices(mainScSupplierItemPrices);
+		
+		if (this.getManagedBean().getSupplierItemTierPromotionPrices().size() == 0){
+			this.getManagedBean().setEnableTierPromoDel(false);
+		}
 
 		this.getManagedBean().setPricingTabIndex(1);
 		this.getManagedBean().setTierPricingIndex(1);
