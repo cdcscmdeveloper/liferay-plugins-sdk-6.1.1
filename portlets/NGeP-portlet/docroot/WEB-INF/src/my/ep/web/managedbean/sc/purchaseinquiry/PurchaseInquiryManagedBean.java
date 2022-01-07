@@ -170,6 +170,13 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
      
      private List<ScSupplierItemPrice>	deleteSupplierItemZonalTierPromotionPrices;
      
+     private boolean enableTierNormalDel = Boolean.FALSE;
+     
+     private boolean enableTierPromoDel = Boolean.FALSE;
+     
+     private boolean enableZonalTierNormalDel = Boolean.FALSE;
+     
+     private boolean enableZonalTierPromoDel = Boolean.FALSE;
      
      /** The pricing tab index. */
  	private Integer pricingTabIndex = 0;
@@ -986,6 +993,37 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 			List<ScSupplierItemPrice> deleteSupplierItemZonalTierPromotionPrices) {
 		this.deleteSupplierItemZonalTierPromotionPrices = deleteSupplierItemZonalTierPromotionPrices;
 	}
-	
+
+	public boolean isEnableTierNormalDel() {
+		return enableTierNormalDel;
+	}
+
+	public void setEnableTierNormalDel(boolean enableTierNormalDel) {
+		this.enableTierNormalDel = enableTierNormalDel;
+	}
+
+	public boolean isEnableTierPromoDel() {
+		return enableTierPromoDel;
+	}
+
+	public void setEnableTierPromoDel(boolean enableTierPromoDel) {
+		this.enableTierPromoDel = enableTierPromoDel;
+	}
+
+	public boolean isEnableZonalTierNormalDel() {
+		return enableZonalTierNormalDel;
+	}
+
+	public void setEnableZonalTierNormalDel(boolean enableZonalTierNormalDel) {
+		this.enableZonalTierNormalDel = enableZonalTierNormalDel;
+	}
+
+	public boolean isEnableZonalTierPromoDel() {
+		return enableZonalTierPromoDel;
+	}
+
+	public void setEnableZonalTierPromoDel(boolean enableZonalTierPromoDel) {
+		this.enableZonalTierPromoDel = enableZonalTierPromoDel;
+	}
 	//29557 - end	
 }

@@ -10,6 +10,12 @@
 	<ui:param name="uomCode"
 		value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.requestNoteItem.uom.uomCode}" />
 		<ui:param name="isStockAvailable" value="#{purchaseInquiryBackingBean.managedBean.stockAvailabilityFlag}" />
+		<!-- #29557 - start -->
+		<ui:param name="isEnableTierNormalDel" value="#{purchaseInquiryBackingBean.managedBean.enableTierNormalDel}" />
+		<ui:param name="isEnableTierPromoDel" value="#{purchaseInquiryBackingBean.managedBean.enableTierPromoDel}" />
+		<ui:param name="isEnableZonalTierNormalDel" value="#{purchaseInquiryBackingBean.managedBean.enableZonalTierNormalDel}" />
+		<ui:param name="isEnableZonalTierPromoDel" value="#{purchaseInquiryBackingBean.managedBean.enableZonalTierPromoDel}" />
+		<!-- #29557 - end -->
 
 	<p:panel header="#{lbl['lbl.sc.price.inquiry.header.inquiry.detail']}"
 		toggleable="true" id="addToCartId">
@@ -324,7 +330,9 @@
 			</tr>
 			<!-- #29557 - start -->
 			<tr>
-				<ac:iconTooltip value="#{lbl['lbl.sc.all.pricetype.tooltip']}" />
+				<td style="width: 220px;"><p:outputLabel
+							value="#{lbl['lbl.sc.price.inquiry.price.type']}" /></td>
+				<td><ac:iconTooltip value="#{lbl['lbl.sc.all.pricetype.tooltip']}" /></td>
 			</tr>
 			<!-- #29557 - end -->
 		</table>
