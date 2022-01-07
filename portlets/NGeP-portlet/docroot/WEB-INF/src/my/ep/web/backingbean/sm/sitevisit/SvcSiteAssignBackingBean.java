@@ -62,7 +62,6 @@ public class SvcSiteAssignBackingBean extends
 	private final String SVC_ACK_PAGE = "/xhtml/sm/svcassignment/svcAcknowledgement.xhtml";
 	private static String SVC_PRE_RENDER_XHTML = "/xhtml/sm/svcassignment/prerenderSvcTaskList.xhtml";
 	
-	//git test commit
 	
 	public SvcSiteAssignBackingBean() {
 		SmCommonUtil.setMDCUserId();
