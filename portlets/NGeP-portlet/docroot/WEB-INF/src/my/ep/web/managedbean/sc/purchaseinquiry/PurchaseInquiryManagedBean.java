@@ -178,6 +178,10 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
      
      private boolean enableZonalTierPromoDel = Boolean.FALSE;
      
+     private boolean enableZonalNormalDel = Boolean.FALSE;
+     
+     private boolean enableZonalPromoDel = Boolean.FALSE;
+     
      /** The pricing tab index. */
  	private Integer pricingTabIndex = 0;
 
@@ -1024,6 +1028,22 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 
 	public void setEnableZonalTierPromoDel(boolean enableZonalTierPromoDel) {
 		this.enableZonalTierPromoDel = enableZonalTierPromoDel;
+	}
+
+	public boolean isEnableZonalNormalDel() {
+		return enableZonalNormalDel;
+	}
+
+	public void setEnableZonalNormalDel(boolean enableZonalNormalDel) {
+		this.enableZonalNormalDel = enableZonalNormalDel;
+	}
+
+	public boolean isEnableZonalPromoDel() {
+		return enableZonalPromoDel;
+	}
+
+	public void setEnableZonalPromoDel(boolean enableZonalPromoDel) {
+		this.enableZonalPromoDel = enableZonalPromoDel;
 	}
 	//29557 - end	
 }

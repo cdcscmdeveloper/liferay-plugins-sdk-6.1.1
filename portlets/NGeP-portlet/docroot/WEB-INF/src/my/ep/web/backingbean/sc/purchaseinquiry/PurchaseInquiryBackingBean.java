@@ -2538,6 +2538,10 @@ public class PurchaseInquiryBackingBean extends
 			if(isSelectedALL){
 				setFlagZonalStandard(isSelectedALL);
 			}
+			this.getManagedBean().setEnableZonalNormalDel(true);
+		}
+		if (scSupplierItemPrices.size() == 0) {
+			this.getManagedBean().setEnableZonalNormalDel(false);
 		}
 		
 		this.getManagedBean().setPricingTabIndex(2); 
@@ -2556,6 +2560,10 @@ public class PurchaseInquiryBackingBean extends
 					scSupplierItemPrice.setSelected(false);
 				}
 			}
+			this.getManagedBean().setEnableZonalNormalDel(true);
+		}
+		if (scSupplierItemPrices.size() == 0) {
+			this.getManagedBean().setEnableZonalNormalDel(false);
 		}
 
 		this.getManagedBean().setPricingTabIndex(2); 
@@ -2594,6 +2602,10 @@ public class PurchaseInquiryBackingBean extends
 		this.getManagedBean().setDeleteSupplierItemZonalStandardPrices(deleteScSupplierItemPrices);
 		deleteScSupplierItemPrices();
 		this.getManagedBean().setSupplierItemZonalStandardPrices(mainScSupplierItemPrices);
+		
+		if (this.getManagedBean().getSupplierItemZonalStandardPrices().size() == 0){
+			this.getManagedBean().setEnableZonalNormalDel(false);
+		}
 		
 		this.getManagedBean().setPricingTabIndex(2); 
 		this.getManagedBean().setZonalPricingIndex(0);	
@@ -2645,6 +2657,10 @@ public class PurchaseInquiryBackingBean extends
 			if(isSelectedALL){
 				setFlagZonalPromotion(isSelectedALL);
 			}
+			this.getManagedBean().setEnableZonalPromoDel(true);
+		}
+		if (scSupplierItemPrices.size() == 0) {
+			this.getManagedBean().setEnableZonalPromoDel(false);
 		}
 		
 		this.getManagedBean().setPricingTabIndex(2); 
@@ -2663,6 +2679,10 @@ public class PurchaseInquiryBackingBean extends
 					scSupplierItemPrice.setSelected(false);
 				}
 			}
+			this.getManagedBean().setEnableZonalPromoDel(true);
+		}
+		if (scSupplierItemPrices.size() == 0) {
+			this.getManagedBean().setEnableZonalPromoDel(false);
 		}
 
 		this.getManagedBean().setPricingTabIndex(2); 
@@ -2701,6 +2721,10 @@ public class PurchaseInquiryBackingBean extends
 		this.getManagedBean().setDeleteSupplierItemZonalPromotionPrices(deleteScSupplierItemPrices);
 		deleteScSupplierItemPrices();
 		this.getManagedBean().setSupplierItemZonalPromotionPrices(mainScSupplierItemPrices);
+		
+		if (this.getManagedBean().getSupplierItemZonalPromotionPrices().size() == 0){
+			this.getManagedBean().setEnableZonalPromoDel(false);
+		}
 		
 		this.getManagedBean().setPricingTabIndex(2); 
 		this.getManagedBean().setZonalPricingIndex(1);	

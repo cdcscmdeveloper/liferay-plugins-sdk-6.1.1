@@ -66,7 +66,7 @@
 					</p:commandButton>
 					<p:spacer width="2" />
 					<p:commandButton rendered="#{isPendingSupplierRespStatus}" value="#{lbl['lbl.btn.delete']}" process="@this"
-						
+						disabled="#{!isEnableZonalPromoDel}"
 						id="scReqItmZonalPromotionDeleteBtnId"
 						
 						partialSubmit="true" onclick="deleteZonalPromotionConfirmationDlg.show();"
@@ -81,7 +81,7 @@
 			okAction="purchaseInquiryBackingBean.deleteSupplierItemZonalPromotionPrices"
 			title="#{lbl['lbl.msg.confirm.delete.header']}"
 			content="#{lbl['lbl.sc.dialog.confirm.delete.message']}"
-			update="@([id$=pricingZonalPromotionID])" />
+			update=":#{p:component('scReqItmZonalPromotionDeleteBtnId')}, @([id$=pricingZonalPromotionID])" />
 
 		<div class="clear"></div>
 
