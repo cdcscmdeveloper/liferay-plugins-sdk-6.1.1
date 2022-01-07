@@ -3551,7 +3551,8 @@ public class SmPersonnelBackingBean extends
 				renewDate.setTime(softcertRequest.getPmDigiCert().getValidTo());
 				renewDate.add(Calendar.MONTH, -SmServiceLookup.getSmRuleSO().retrieveSoftCertRenewalPeriod().getSoftCertRenewalMonth());
 				if (DateUtils.isDateGreaterOrEqual(new Date(), renewDate.getTime())) {
-					value = SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL;
+					value = SupplierManagementConst.SOFT_CERT_ISSUED;
+					//temp solution to handle with softcert management after payment
 				}else if (softcertRequest != null && softcertRequest.getPmDigiCert() != null) {
 					value = SupplierManagementConst.SOFT_CERT_ISSUED;
 				}	
