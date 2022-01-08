@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<ui:param name="isOtherApprovalDtlsEditable" value="#{!qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval)}" />
+	<!--  <ui:param name="isOtherApprovalDtlsEditable" value="#{!qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval)}" /> -->
 	<!-- #25077 Start -->
 	<ui:param name="isOthersApprovalForInstruction" value="#{qTDetailBB.isOthersApprovalForInstruction()}" />
 	<ui:param name="isOthersApprovalMandatoryForAttachment" value="#{qTDetailBB.isOthersApprovalMandatoryForAttachment()}" />
@@ -99,5 +99,5 @@
 			</p:column>
 		</p:dataTable>
 	</p:panel>
-	
+		
 </ui:composition>
