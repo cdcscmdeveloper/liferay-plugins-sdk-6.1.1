@@ -355,6 +355,8 @@ public class RuleCatalogueBackingBean extends
 	
 	private void initYearEndForProcessing(){
 		IFeeExemptionSO feeSO = null;
+		this.getManagedBean().setMinDate(null);//32333
+		
 		try {
 			feeSO = (IFeeExemptionSO) BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -4548,7 +4550,7 @@ public class RuleCatalogueBackingBean extends
 	
 	//[#22119]
 	public void saveYEPValues() {
-		
+		IFeeExemptionSO feeSO = (IFeeExemptionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IFeeExemptionSO.class);//32333
 		Calendar effectiveDt = null;
         Calendar expiryDt = null; 
         Calendar currentDt = Calendar.getInstance();         
@@ -4559,6 +4561,10 @@ public class RuleCatalogueBackingBean extends
 		PmFeeExemption p6_PATperiod = null;
 		String processname = null;
 		
+		//32333-start
+		FeeExemptionReqDTO reqFDTO = new FeeExemptionReqDTO();
+		FeeExemptionResDTO resFDTO = null;		
+		//32333-end
 		for(PmFeeExemption feeExemption : this.getManagedBean().getFeeExemptionsForYepProcessing()) {			
 			//Phase 2 and Phase 3 Period
 			if(feeExemption.getOrgTypeId().getParameterCode().equals("7")) {
@@ -4616,28 +4622,45 @@ public class RuleCatalogueBackingBean extends
 				}
 			}
 			
-			if(feeExemption.getEffDate() != null && effectiveDt.before(currentDt)) {
-				throw new EpException(MessageConst.ERR_900049, 
-						new String[] {ResourceBundleUtils.getMessage("lbl.pm.yep.effdate",
-      				  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()), processname});
+			//32333-start
+			reqFDTO.setParameterCode(feeExemption.getOrgTypeId().getParameterCode());
+			resFDTO = feeSO.retrieveYepByParamterCode(reqFDTO);
+					
+			if(resFDTO != null) {
+				if(feeExemption.getEffDate() != null && !feeExemption.getEffDate().equals(resFDTO.getFeeExemption().getEffDate())){
+					if(feeExemption.getEffDate() != null && effectiveDt.before(currentDt)) {
+						throw new EpException(MessageConst.ERR_900049, 
+								new String[] {ResourceBundleUtils.getMessage("lbl.pm.yep.effdate",
+		      				  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()), processname});
+					}
+					if(feeExemption.getExpDate() != null && expiryDt.before(effectiveDt)) {
+						throw new EpException(MessageConst.ERR_900050, 
+								new String[] {ResourceBundleUtils.getMessage("lbl.pm.yep.expdate",
+		      				  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()), 
+		      				  processname, 
+		      				  ResourceBundleUtils.getMessage("lbl.pm.yep.effdate", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					}
+				}
+				
+				if(feeExemption.getExpDate() != null && !feeExemption.getExpDate().equals(resFDTO.getFeeExemption().getExpDate())){
+					if(feeExemption.getExpDate() != null && expiryDt.before(currentDt)) {
+						throw new EpException(MessageConst.ERR_900049, 
+								new String[] {ResourceBundleUtils.getMessage("lbl.pm.yep.expdate",
+		      				  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()), processname});
+					}
+					
+					if(feeExemption.getExpDate() != null && expiryDt.before(effectiveDt)) {
+						throw new EpException(MessageConst.ERR_900050, 
+								new String[] {ResourceBundleUtils.getMessage("lbl.pm.yep.expdate",
+		      				  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()), 
+		      				  processname, 
+		      				  ResourceBundleUtils.getMessage("lbl.pm.yep.effdate", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					}
+				}
 			}
-			
-			if(feeExemption.getExpDate() != null && expiryDt.before(currentDt)) {
-				throw new EpException(MessageConst.ERR_900049, 
-						new String[] {ResourceBundleUtils.getMessage("lbl.pm.yep.expdate",
-      				  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()), processname});
-			}
-			
-			if(feeExemption.getExpDate() != null && expiryDt.before(effectiveDt)) {
-				throw new EpException(MessageConst.ERR_900050, 
-						new String[] {ResourceBundleUtils.getMessage("lbl.pm.yep.expdate",
-      				  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()), 
-      				  processname, 
-      				  ResourceBundleUtils.getMessage("lbl.pm.yep.effdate", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			}
-			
 			isValidDt =  true;
-		}
+			}
+			//32333-end
 		
 		if(isValidDt) {
 			for(PmFeeExemption feeExemption : this.getManagedBean().getFeeExemptionsForYepProcessing()) {
