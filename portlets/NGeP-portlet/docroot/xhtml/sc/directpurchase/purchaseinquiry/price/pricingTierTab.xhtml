@@ -41,7 +41,7 @@
 					#{lbl['lbl.fl.from.qty']}
 				</f:facet>
 				<p:inputText disabled="#{!isPendingSupplierRespStatus or rowIndex ne '0'}" id="fromQty" value="#{price.fromQty}" size="5" style="text-align:right">
-                	<p:ajax event="change" update="@([id$=fromQty])" listener="#{purchaseInquiryBackingBean.onChangeFromQty(price.toQty)}"/>
+                	<p:ajax event="change" update="@([id$=fromQty])" listener="#{purchaseInquiryBackingBean.onChangeFromQty('03')}"/>
                 	<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
                 </p:inputText>
 
@@ -51,8 +51,8 @@
 					#{lbl['lbl.fl.to.qty']}
 					<ac:iconTooltip  value="#{lbl['lbl.sc.tier.pricetype.tooltip']}" />
 				</f:facet>				
-				<p:inputText disabled="#{!isPendingSupplierRespStatus or rowIndex ne '0'}" id="toQty" value="#{price.toQty}" size="5" style="text-align:right">
-					<p:ajax event="change" update="@([id$=fromQty],[id$=toQty])" listener="#{purchaseInquiryBackingBean.onChangeToQty(price.toQty)}"/>
+				<p:inputText disabled="#{!isPendingSupplierRespStatus}" id="toQty" value="#{price.toQty}" size="5" style="text-align:right">
+					<p:ajax event="change" update="@([id$=fromQty],[id$=toQty])" listener="#{purchaseInquiryBackingBean.onChangeToQty('03')}"/>
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 				</p:inputText>				
             </p:column>
@@ -68,8 +68,8 @@
 				<f:facet name="header">
 					#{lbl['lbl.sc.price.inquiry.price.offered.per.unit']}
 				</f:facet>
-				<p:inputText disabled="#{!isPendingSupplierRespStatus or rowIndex ne '0'}" value="#{price.itemPrice}" size="10" style="text-align:right">
-					<p:ajax event="blur" process="@this" update="@this"></p:ajax>
+				<p:inputText disabled="#{!isPendingSupplierRespStatus}" id="newPrice" value="#{price.itemPrice}" size="10" style="text-align:right">
+					<p:ajax event="change" update="@([id$=newPrice])" listener="#{purchaseInquiryBackingBean.onChangeNewPrice('03', price.itemPrice, price.pricing.price)}"/>
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
                 </p:inputText>
 			</p:column>
