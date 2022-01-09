@@ -32,7 +32,7 @@
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 				</h:outputText>
 			</p:column>
-		<!--  <c:if test="#{not empty approvalDtlsList.historyApprovalRequests}">  -->
+		    <c:if test="#{not empty approvalDtlsList.historyApprovalRequests}">
 		               <c:choose>
 							    <c:when test="#{qTDetailBB.managedBean.maintanceFlow}">	
 							           <p:column headerText="#{lbl['lbl.sc.document']}">
@@ -66,7 +66,7 @@
 										</p:column>
 							    </c:otherwise>
 				     </c:choose>
-			<!--  </c:if>  -->
+			</c:if> 
 		</p:dataTable>
 	</p:panel>
 </ui:composition>
