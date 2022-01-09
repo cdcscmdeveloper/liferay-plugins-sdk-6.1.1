@@ -10,8 +10,8 @@
 
 	<p:panel header="#{lbl['lbl.sc.history']}" toggleable="true">
 		<p:dataTable
-		    value="#{approvalDtlsList.historyApprovalRequests}" 
-		    var="historyOthersDtls" style="width:100%" rowIndexVar="index" editable="true"
+		    value="#{othersApprovalDtlsList.historyApprovalRequests}" 
+		    var="historyOthersDtls" style="width:100%" rowIndexVar="indexHistory" editable="true"
 		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{historyOthersDtls}">
 			<p:column headerText="#{lbl['lbl.sc.qt.type.reqdtls']}">
@@ -57,7 +57,7 @@
 														attachment="#{historyOthersDtls.approvalRequestAttachement}"
 														readonly="#{createQtBB.managedBean.readOnly}"
 														deleteFileUploadListener="approvalBackingBean.deleteHistoryOthersApprovalFile"
-														rowIndex="#{index}">
+														rowIndex="#{indexHistory}">
 														<f:setPropertyActionListener for="actionEvent"
 															value="#{historyOthersDtls}"
 															target="#{approvalBackingBean.managedBean.historyApprovalRequests}" />
