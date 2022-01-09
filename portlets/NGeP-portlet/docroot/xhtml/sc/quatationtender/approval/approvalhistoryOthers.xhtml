@@ -32,7 +32,7 @@
 				</h:outputText>
 			</p:column>
 		
-		               <c:choose>
+		           <!--  <c:choose>
 							    <c:when test="#{qTDetailBB.managedBean.maintanceFlow}">	
 							           <p:column headerText="#{lbl['lbl.sc.document']}">
 										  <p:dataGrid emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -52,7 +52,7 @@
 													<h:outputText value="#{lbl['lbl.sc.document']}" />
 								                    <ac:iconTooltip value="#{lbl['lbl.sc.qt.approval.oth.supporting.document.tooltip']}" />
 												</f:facet>
-										      <!-- <ac:scSingleFileUploadButton id="historyOtheruploadId"
+										        <ac:scSingleFileUploadButton id="historyOtheruploadId"
 														popupWidgetVar="otherHistoryApprUploadDlg"
 														attachment="#{historyOthersDtls.approvalRequestAttachement}"
 														readonly="#{createQtBB.managedBean.readOnly}"
@@ -61,10 +61,10 @@
 														<f:setPropertyActionListener for="actionEvent"
 															value="#{historyOthersDtls}"
 															target="#{approvalBackingBean.managedBean.historyApprovalRequests}" />
-											   </ac:scSingleFileUploadButton>  -->
+											   </ac:scSingleFileUploadButton>  
 										</p:column>
 							    </c:otherwise>
-				     </c:choose>
+				     </c:choose>  -->
 			
 		</p:dataTable>
 	</p:panel>
