@@ -108,7 +108,8 @@
 						<h:outputText rendered="#{newItems.scRequestItem.cmItem!=null}" value="#{newItems.scRequestItem.cmItem.extensionCode}" style="float:left;"/>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;text-align:center">
-						<h:outputText value="#{newItems.scRequestItem.itemName}" id="itemDesc" style="text-align:left; float:left;" title="#{newItems.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : newItems.scRequestItem.itemDesc}"/>
+					<!--#21416 filter item name-->
+						<h:outputText value="#{purchaseRequestBackingBean.filterItemName(newItems.scRequestItem.itemName)}" id="itemDesc" style="text-align:left; float:left;" title="#{newItems.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : newItems.scRequestItem.itemDesc}"/>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.fl.uom']}" style="text-align:center">
 						<h:outputText value="#{newItems.scRequestItem.uom.uomName}" style="float:left;"/>
