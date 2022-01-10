@@ -1220,53 +1220,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().setAutoUpdate(true);
 	}
 	
-	//11076 Start
-		public void selectAll(){
-			IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
-			List<CtContractItem> contractedItemList = null;
-			
-
-			ContractItemReqDTO reqDTO = new ContractItemReqDTO();
-			
-			reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
-			try {
-				ISearchBean<CtContractItem> searchBean = new SearchBean<CtContractItem>();
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("ctContractVer.contractVerId", SearchOperator.OPERATOR_EQUALS.value(),
-								getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId()));
-				if (getManagedBean().getSearchItemCode() != null && getManagedBean().getSearchItemCode() != "") {
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("scRequestItem.cmItem.extensionCode",
-									SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getSearchItemCode(), true));
-					log.info("ItemCode");
-				}
-				if (getManagedBean().getSearchItemName() != null && getManagedBean().getSearchItemName() != "") {
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("scRequestItem.itemName", SearchOperator.OPERATOR_LIKE.value(),
-									getManagedBean().getSearchItemName(), true));
-					log.info("ItemName");
-				}
-				if (getManagedBean().getSearchItemType() != null) {
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("itemType.parameterCode", SearchOperator.OPERATOR_EQUALS.value(),
-									getManagedBean().getSearchItemType()));
-					log.info("ItemType");
-				}
-				// reqDTO.setContractItemSearchBean(searchBean);
-				reqDTO.setContractItemSearchBean(searchBean);
-				contractedItemList = contractItemSO.searchContractItem(reqDTO).getContractItemResultBean().getResultList();
-				log.info("=========TEST SEARCH ALL=========" + contractedItemList.size());
-				getManagedBean().setValidateItem(contractedItemList.size());
-				
-
-			} catch (Exception e) {
-				e.printStackTrace();
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
-			}
-		}
-	
 	// 11076 start
 		public void checkAllItem() {
 
@@ -1282,7 +1235,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			ContractItemReqDTO reqDTO = new ContractItemReqDTO();
 			ContractItemResDTO resDTO = new ContractItemResDTO();
 			reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
-			log.info("=======TEST CHECKALL========="+ getManagedBean().getValidateItem());
+			messageId = MessageConst.ERROR_740070;
 			if (getManagedBean().getValidateItem() > FulfilmentConst.GFMAS_CHARGELINE_LIMIT) {
 				itemExceed = true;
 				FacesContext.getCurrentInstance().addMessage(
@@ -1318,21 +1271,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				reqDTO.setContractItemSearchBean(searchBean);
 				contractedItemList = contractItemSO.searchContractItem(reqDTO).getContractItemResultBean().getResultList();
 				log.info("=========contractedItemList=========" + contractedItemList.size());
-
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 			}
-			messageId = MessageConst.ERROR_740070;
-			if (getManagedBean().getValidateItem() > FulfilmentConst.GFMAS_CHARGELINE_LIMIT || contractedItemList.size() > FulfilmentConst.GFMAS_CHARGELINE_LIMIT) {
-				itemExceed = true;
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(messageId,
-								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-			}
-			
 
 			for (CtContractItem contractedItem : contractedItemList) {
 				itemExisted = false;
@@ -4771,6 +4715,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("itemType.parameterCode",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchItemType()));
 			}
 			reqDTO.setContractItemSearchBean(searchBean);
+			
+			//11076 start
+			int contractedItemList = contractItemSO.searchContractItem(reqDTO).getContractItemResultBean().getTotalRecord();
+			log.info("========PAGE LISTENER ITEM==========="+contractedItemList);
+			getManagedBean().setValidateItem(contractedItemList);
+			//11076 end
+			
 			resDTO = contractItemSO.searchContractItem(reqDTO);
 			
 			PmParameter Pricetype = contractItemSO.searchContractItemPriceType(reqDTO);
@@ -4810,7 +4761,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				(getManagedBean().getSearchItemType() == null)){
 			throw new EpException(MessageConst.ERROR_100060);
 		}else{
-			selectAll();
+			//selectAll();
 			getContractItemPagingDataModel().reloadData();
 			
 		}
