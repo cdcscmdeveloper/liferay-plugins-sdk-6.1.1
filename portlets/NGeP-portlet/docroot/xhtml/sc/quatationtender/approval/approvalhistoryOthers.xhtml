@@ -10,7 +10,7 @@
 
 	<p:panel header="#{lbl['lbl.sc.history']}" toggleable="true">
 		<p:dataTable
-		    value="#{othersApprovalDtlsList.historyApprovalRequests}" 
+		    value="#{approvalDtlsList.historyApprovalRequests}" 
 		    var="historyOthersDtls" style="width:100%" rowIndexVar="indexHistory" editable="true"
 		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{historyOthersDtls}">
@@ -45,14 +45,14 @@
 											</p:dataGrid>	
 										</p:column>
 							    </c:when>
-				                <c:otherwise> -->
+				                <c:otherwise>
 								        <p:column>
 										      <f:facet name="header">
 											        <h:outputText value="* " styleClass="mandatory" />
 													<h:outputText value="#{lbl['lbl.sc.document']}" />
 								                    <ac:iconTooltip value="#{lbl['lbl.sc.qt.approval.oth.supporting.document.tooltip']}" />
 												</f:facet>
-										       <!--   <ac:scSingleFileUploadButton id="historyOtheruploadId"
+										        <ac:scSingleFileUploadButton id="historyOtheruploadId"
 														popupWidgetVar="otherHistoryApprUploadDlg"
 														attachment="#{historyOthersDtls.approvalRequestAttachement}"
 														readonly="#{createQtBB.managedBean.readOnly}"
@@ -61,9 +61,9 @@
 														<f:setPropertyActionListener for="actionEvent"
 															value="#{historyOthersDtls}"
 															target="#{approvalBackingBean.managedBean.historyApprovalRequests}" />
-											   </ac:scSingleFileUploadButton>  -->
+											   </ac:scSingleFileUploadButton> 
 										</p:column>
-							<!--  </c:otherwise>
+					            </c:otherwise>
 				     </c:choose>  -->
 			
 		</p:dataTable>
