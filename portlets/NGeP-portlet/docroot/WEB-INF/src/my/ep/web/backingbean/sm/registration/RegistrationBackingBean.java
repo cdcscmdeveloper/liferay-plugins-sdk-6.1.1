@@ -269,7 +269,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	
 	//16052019 - SSM INTEGRATION CR 
 	public void setHeaderName(){
-		if(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN.equalsIgnoreCase(this.getManagedBean().getSmSupp().getBusinessType())){
+		// 27691 - Start 
+		if(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN.equalsIgnoreCase(this.getManagedBean().getSmSupp().getBusinessType())
+				|| SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERSATUAN.equalsIgnoreCase(this.getManagedBean().getSmSupp().getBusinessType())
+				|| SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2.equalsIgnoreCase(this.getManagedBean().getSmSupp().getBusinessType())
+				|| SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI.equalsIgnoreCase(this.getManagedBean().getSmSupp().getBusinessType())
+				|| SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI_LAIN2.equalsIgnoreCase(this.getManagedBean().getSmSupp().getBusinessType())){
+		// 27691 - End
 			this.getManagedBean().setHeaderName(SmCommonUtil.getMessage("lbl.sm.directorinfo", null));
 		//#27691 - Start
 		//Display both director and owner
@@ -2204,6 +2210,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 									||smSuppOwner.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_SUSPENDED){
 								this.getManagedBean().getSupplierOwnerls().add(smSuppOwner);
 								}
+							for (SmPersonnel smPersonnel: resDTO.getSmSupp().getSmAppl().getSmPersonnels()){
+								if(smSuppOwner.getIdentificationNo().equals(smPersonnel.getIdentificationNo())
+										&& smSuppOwner.getOwnerName().equals(smPersonnel.getName())){
+									smSuppOwner.setOwnerIsEquity(smPersonnel.isEquityOwner());
+									smSuppOwner.setOwnerIsDirector(smPersonnel.isDirector());
+								}
+							}
 						}
 						this.getManagedBean().setSmSuppOwner(resDTO.getSmSupp().getSmSupplierOwners().get(0));
 						this.getManagedBean().setSmSuppOwners(resDTO.getSmSupp().getSmSupplierOwners());
@@ -2919,7 +2932,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 * reset Session Date
 	 */
 	public void resetSessionData() {
-		log.debug("renewing session object..");
 		renewSesionObject();
 		validateLoginSession();
 	}
