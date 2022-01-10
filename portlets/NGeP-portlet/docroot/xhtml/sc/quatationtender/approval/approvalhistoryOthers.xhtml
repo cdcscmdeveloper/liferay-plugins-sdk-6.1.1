@@ -44,12 +44,7 @@
 							  </p:column>  
 					 </c:if> 
 					 <c:if test="#{!qTDetailBB.managedBean.maintanceFlow}">
-				              <p:column>
-								        <f:facet name="header">
-									        <h:outputText value="* " styleClass="mandatory" />
-											<h:outputText value="#{lbl['lbl.sc.document']}" />
-						                    <ac:iconTooltip value="#{lbl['lbl.sc.qt.approval.oth.supporting.document.tooltip']}" />
-										</f:facet>
+				              <p:column headerText="#{lbl['lbl.sc.document']}">
 								        <!--  <ac:scSingleFileUploadButton id="historyOtheruploadId"
 												popupWidgetVar="otherHistoryApprUploadDlg"
 												attachment="#{historyOthersDtls.approvalRequestAttachement}"
