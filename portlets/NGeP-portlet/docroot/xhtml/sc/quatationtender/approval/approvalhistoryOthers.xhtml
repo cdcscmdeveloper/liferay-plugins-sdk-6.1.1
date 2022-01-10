@@ -45,7 +45,7 @@
 					 </c:if> 
 					 <c:if test="#{!qTDetailBB.managedBean.maintanceFlow}">
 		                      <p:column headerText="#{lbl['lbl.sc.document']}">
-						      <!--  <ac:scSingleFileUploadButton id="historyOtheruploadId"
+						          <ac:scSingleFileUploadButton id="historyOtheruploadId"
 										popupWidgetVar="otherHistoryApprUploadDlg"
 										attachment="#{historyOthersDtls.approvalRequestAttachement}"
 										deleteFileUploadListener="approvalBackingBean.deleteHistoryOthersApprovalFile"
@@ -53,10 +53,9 @@
 										<f:setPropertyActionListener for="actionEvent"
 											value="#{historyOthersDtls}"
 											target="#{approvalBackingBean.managedBean.historyApprovalRequests}" />
-							        </ac:scSingleFileUploadButton> -->
+							      </ac:scSingleFileUploadButton>
 					          </p:column> 
 					 </c:if> 
-				
 		</p:dataTable>
 	</p:panel>
 </ui:composition>
