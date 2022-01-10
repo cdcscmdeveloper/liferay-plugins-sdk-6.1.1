@@ -3956,7 +3956,19 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return the navigate URL 
 	 */
 	public void goToLoaView(ScLoa scLoa) {
-		if (scLoa.getScLoiLoa().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DIRECT_NEGO)) { //Direct Nego
+		//Enhancement 15851 - shaqimi start
+		String slLoaNo = this.getManagedBean().getContractVer().getCtContractValue().getLoaNo();
+		Long contractId = this.getManagedBean().getContractVer().getCtContract().getContractId();
+		if(slLoaNo.substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)){
+			AmendmentBackingBean abb = new AmendmentBackingBean();
+			//follow structure but for amendment
+			FacesContext fc = FacesContext.getCurrentInstance();
+			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId()+"?faces-redirect=true");
+			abb.getManagedBean().setTrackingDairyView(true);
+			abb.gotoAmendViewPage(contractId, scLoa.getLoaId());
+		}
+		//Enhancement 15851 - shaqimi end
+		else if (scLoa.getScLoiLoa().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DIRECT_NEGO)) { //Direct Nego
 			DirectLOABackingBean directLoaBackingBean = new DirectLOABackingBean();
 			FacesContext fc = FacesContext.getCurrentInstance();
 			directLoaBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
@@ -4671,4 +4683,20 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}
 			}
 	//#30428 - End	
+	
+	//Enhancement 15851 - Start
+			/**
+			 * The method used to navigate to Original contract details screen
+			 * for view purpose.
+			 * 
+			 * @return the navigate URL 
+			 */
+			public void goToOriginalLoaView(ScLoa scLoa) {
+					LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
+					FacesContext fc = FacesContext.getCurrentInstance();
+					loaDetailBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+					loaDetailBackingBean.getManagedBean().setTrackingDairyView(true);
+					loaDetailBackingBean.viewLOA(scLoa.getLoaId());			
+			}
+			//Enhancement 15851 - End
 }  
