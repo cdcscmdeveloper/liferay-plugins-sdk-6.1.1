@@ -55,6 +55,7 @@ import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
+import my.ep.persistence.entity.cm.catalog.CmSupplierZone; //#29557
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
@@ -75,6 +76,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.tpl.spec.TplSpecZone; //#29557
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
@@ -1400,6 +1402,27 @@ public class PurchaseInquiryBackingBean extends
 				getManagedBean().getSupplierItemZonalTierStandardPrices().clear();
 				getManagedBean().getSupplierItemZonalTierPromotionPrices().clear();
 				
+				CatalogueResDTO supplierResDTO = null;
+				CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+				reqDTO.setSupplierId(requestSupplierItem.getSmSupplier().getSupplierId());
+				
+				supplierResDTO = getICatalogueSO().retrieveSupplierZoneBySuppId(reqDTO);
+				List<CmSupplierZone> cmSupplierZoneList = supplierResDTO.getSupplierZoneLs();
+				
+				getManagedBean().getSupplierZoneList().clear();
+				TplSpecZone tplSpecZone = getPrInquirySO().getTplSpecZoneByDocTypeNDocId(
+						ParameterConst.DOCTYPE_PURCHASE_INQUIRY, prInquiry.getPrInquiryId());
+				if (!cmSupplierZoneList.isEmpty()) {
+					TplSpecZoneDtl tplSpecZoneDtl = null;
+					// to find tpl_spec_zone_dtl by spec_zone_id and supplier_zone_id
+					if(tplSpecZone != null){
+						for(CmSupplierZone cmSupplierZone :  cmSupplierZoneList){
+							tplSpecZoneDtl = getPrInquirySO().getTplZoneDtlByCmSupplierZoneNTplSpecZone(cmSupplierZone,tplSpecZone);
+							getManagedBean().getSupplierZoneList().add(tplSpecZoneDtl);
+						}												
+					}	
+				}			
+								
 				for (ScSupplierItemPrice scSupplierItemPrice : requestSupplierItem.getSupplierItemPrices()) {
 					/*if(scSupplierItemPrice.getPricing() == null){
 						scSupplierItemPrice.setPricing(null);
@@ -2233,7 +2256,7 @@ public class PurchaseInquiryBackingBean extends
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});}
 		}			
 		else if (i == 2 || i == 3){
-			if (addedScSupplierItemPrice.getTplSpecZone().getZoneName() == null || addedScSupplierItemPrice.getTplSpecZone().getZoneName().trim().isEmpty()){throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils.getMessage("lbl.pm.zone.name",
+			if (addedScSupplierItemPrice.getTplSpecZone() == null){throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils.getMessage("lbl.pm.zone.name",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});}
 			if (addedScSupplierItemPrice.getItemPrice() == null){throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils.getMessage("lbl.ss.item.detail.price.offered",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});}
@@ -2322,9 +2345,8 @@ public class PurchaseInquiryBackingBean extends
 					}
 					
 					if(i != 0 &&  i!= 1){
-						if (addedScSupplierItemPrice.getTplSpecZone() == null) {
-							addedScSupplierItemPrice.setTplSpecZone(null);
-						} else if (addedScSupplierItemPrice.getTplSpecZone().getZoneName() == null) {
+						if (addedScSupplierItemPrice.getTplSpecZone().getSpecZoneId() == null
+								|| addedScSupplierItemPrice.getTplSpecZone().getSpecZoneId() == 0) {
 							addedScSupplierItemPrice.setTplSpecZone(null);
 						}
 					}
