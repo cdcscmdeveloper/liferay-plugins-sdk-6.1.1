@@ -23,7 +23,8 @@
 			value="#{createDOBackingBean.managedBean.flDeliveryOrder.flDeliveryAddress.flFulfilmentItemAddr}">
 			<ac:paginator for="doItems" />
 			<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal">
-				<h:outputText value="#{doItems.scRequestItem.itemName}" id="itemDesc" 
+			<!--#21416 filter item name-->
+				<h:outputText value="#{createDOBackingBean.filterItemName(doItems.scRequestItem.itemName)}" id="itemDesc" 
 				 title="#{doItems.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : doItems.scRequestItem.itemDesc}"/>
 				<p:commandLink oncomplete="doItemInfo.show();" process="@this"
 					rendered="#{createDOBackingBean.managedBean.contractFlag}"  

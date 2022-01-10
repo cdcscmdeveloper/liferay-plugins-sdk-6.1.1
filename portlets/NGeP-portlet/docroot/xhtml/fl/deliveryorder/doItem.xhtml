@@ -104,7 +104,8 @@
 					rowKey="#{flItem}"
 					styleClass="itemsSelectedPanel show-column-names">
 					<p:column headerText="#{lbl['lbl.fl.item']}"   style="white-space:normal">
-						<h:outputText value="#{doItems.scRequestItem.itemName}" id="itemDesc"
+					<!--#21416 filter item name-->
+						<h:outputText value="#{createDOBackingBean.filterItemName(doItems.scRequestItem.itemName)}" id="itemDesc"
 						 title="#{doItems.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : doItems.scRequestItem.itemDesc}"/>
 							<p:commandLink oncomplete="doItemInfo.show();" process="@this"
 							rendered="#{createDOBackingBean.managedBean.contractFlag}"  
@@ -342,8 +343,9 @@
 				</td>
 				<td width="10px"></td>
 				<td width="100px"><p:outputLabel value="#{lbl['lbl.fl.item.name']}" /></td>
+				<!--#21416 filter item name-->
 				<td width="300px"><p:inputText disabled="true" style="width: 400px;"
-						value="#{createDOBackingBean.managedBean.selectedItemRow.scRequestItem.itemName}" />
+						value="#{createDOBackingBean.filterItemName(createDOBackingBean.managedBean.selectedItemRow.scRequestItem.itemName)}" />
 				</td>
 			</tr>
 		</table>
