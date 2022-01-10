@@ -1235,14 +1235,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			ContractItemReqDTO reqDTO = new ContractItemReqDTO();
 			ContractItemResDTO resDTO = new ContractItemResDTO();
 			reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
-			messageId = MessageConst.ERROR_740070;
-			if (getManagedBean().getValidateItem() > FulfilmentConst.GFMAS_CHARGELINE_LIMIT) {
-				itemExceed = true;
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(messageId,
-								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-			}
+			if(getManagedBean().getValidateItem() < FulfilmentConst.GFMAS_CHARGELINE_LIMIT){
 			try {
 				ISearchBean<CtContractItem> searchBean = new SearchBean<CtContractItem>();
 				itemAddrList = new ArrayList<FlFulfilmentItemAddr>();
@@ -1276,8 +1269,16 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				e.printStackTrace();
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+				}
+			}else{
+				messageId = MessageConst.ERROR_740070;
+					itemExceed = true;
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(messageId,
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				
 			}
-
 			for (CtContractItem contractedItem : contractedItemList) {
 				itemExisted = false;
 				for (FlFulfilmentItemAddr itemAddr : getManagedBean().getItemAddrList()) {
