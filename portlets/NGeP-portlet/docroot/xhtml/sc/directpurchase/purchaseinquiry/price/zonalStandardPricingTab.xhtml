@@ -37,9 +37,16 @@
 				<f:facet name="header">
 					#{lbl['lbl.pm.zone']}
 				</f:facet>
-				<p:inputText disabled="#{!isPendingSupplierRespStatus or rowIndex ne '0'}" value="#{price.tplSpecZone.zoneName}" size="20" style="text-align:left" />
-			</p:column>	
-            <p:column>
+				<p:selectOneMenu value="#{price.tplSpecZone.specZoneId}"
+					disabled="#{!isPendingSupplierRespStatus" style="width: 90%;">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
+					<f:selectItems
+						value="#{purchaseInquiryBackingBean.managedBean.supplierZoneList}"
+						var="zone" itemLabel="#{zone.zoneName}"
+						itemValue="#{zone.specZoneId}"></f:selectItems>
+				</p:selectOneMenu>
+			</p:column>
+			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.sc.price.inquiry.price.published.per.unit']}
 				</f:facet>
