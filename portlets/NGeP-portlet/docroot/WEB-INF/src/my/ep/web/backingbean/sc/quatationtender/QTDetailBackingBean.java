@@ -3862,6 +3862,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					updateApprovalRequestDtls(qt.getScQtApprovals(),
 							approvalCategory);
 				}
+				this.getManagedBean().setResetBpkCurrentArea(false); //#25077
 				qtResDTO = (QuationTenderResDTO) detailSO
 						.updateBPMAction(qtReqDTO);
 			}
