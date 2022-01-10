@@ -318,13 +318,17 @@
 							        	rendered="#{flDocument.isViewAction()}"
 							        	icon="ui-icon-view"
 							        	onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'isPendingDelivery', value:'fasle'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmView}'}, {name:'statusDesc', value:'#{flDocument.statusId}'}])"/>
+									<!-- start #21221 -->
 									<p:menuitem value="#{lbl['lbl.btn.print']}" ajax="false"
 										rendered="#{!((flDocument.docType==ParameterConst.doctypeFulfilmentNote and flDocument.statusId!=FulfilmentStatusCont.fnAcknowledged) ||
 														(flDocument.docType==ParameterConst.doctypeStopDelivery and flDocument.statusId!=FulfilmentStatusCont.sdApproved) ||
 														(flDocument.docType==ParameterConst.doctypeDebitAdjustmentNote and flDocument.statusId!=FulfilmentStatusCont.dnApproved) || 
-														(flDocument.docType==ParameterConst.doctypePaymentAdvice and flDocument.statusId!=FulfilmentStatusCont.paSubmitted) )}"
+														(flDocument.docType==ParameterConst.doctypePaymentAdvice and flDocument.statusId!=FulfilmentStatusCont.paSubmitted) ||
+														(flDocument.docType==ParameterConst.doctypePurchaseRequest and flDocument.statusId!=FulfilmentStatusCont.prApproved) ||
+														(flDocument.docType==ParameterConst.doctypeContractRequest and flDocument.statusId!=FulfilmentStatusCont.crComplete)  )}"
 										icon="ui-icon-print" 
-										action="#{flDocumentBackingBean.generateReport(flDocument.docType, flDocument.docNo, flDocument.taxable)}" />							        
+										action="#{flDocumentBackingBean.generateReport(flDocument.docType, flDocument.docNo, flDocument.taxable)}" />	
+									<!-- end #21221 -->							        
 									<p:menuitem value="#{lbl['lbl.btn.print.cogstr']}" ajax="false"
 										rendered="#{flDocument.coGSTR}"
 										icon="ui-icon-print" 
