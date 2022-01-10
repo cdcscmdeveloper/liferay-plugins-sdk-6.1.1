@@ -112,7 +112,9 @@
 						immediate="true" />
 					</td>		
 				</c:if>
-				<h:panelGroup id="printButtonPr">
+				<!-- #21221 -->
+				<h:panelGroup id="printButtonPr" 
+					rendered="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.status.statusId.longValue() == FulfilmentStatusCont.prApproved.longValue()}" >
 					<td style="text-align: right; width: 30px;"><p:commandLink
 						value="#{lbl['lbl.btn.print']}" ajax="false">
 							<p:fileDownload value="#{flDocumentBackingBean.generateReport(purchaseRequestBackingBean.managedBean.fulfilmentRequest.docType,purchaseRequestBackingBean.managedBean.fulfilmentRequest.docNo,flDocumentManagedBean.taxable)}" />

@@ -90,7 +90,9 @@
 						immediate="true" />
 					</td>		
 				</c:if>	
-				<h:panelGroup id="printButtonCr">
+				<!-- #21221 -->
+				<h:panelGroup id="printButtonCr" 
+					rendered="#{contractRequestBackingBean.managedBean.flRequest.status.statusId.longValue() == FulfilmentStatusCont.crComplete.longValue()}">
 				<td style="text-align: right; width: 30px;"><p:commandLink
 						value="#{lbl['lbl.btn.print']}" ajax="false">
 						<p:fileDownload
