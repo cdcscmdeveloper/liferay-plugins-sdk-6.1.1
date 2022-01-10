@@ -43,40 +43,24 @@
 									</p:dataGrid>	
 							  </p:column>  
 					 </c:if> 
-		           <!--  <c:choose>
-							    <c:when test="#{qTDetailBB.managedBean.maintanceFlow}">	
-							           <p:column headerText="#{lbl['lbl.sc.document']}">
-										  <p:dataGrid emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-												var="attachFile"
-												value="#{historyOthersDtls.approvalRequestAttachement}"
-												rowIndexVar="attachFileIndex" columns="1" style="width:100%">
-												<h:commandLink value="#{attachFile.fileName}"
-																styleClass="blue_font" immediate="true"
-																action="#{createQtBB.downloadFile(attachFile)}" />
-											</p:dataGrid>	
-										</p:column>
-							    </c:when>
-				                <c:otherwise>
-								        <p:column>
-										      <f:facet name="header">
-											        <h:outputText value="* " styleClass="mandatory" />
-													<h:outputText value="#{lbl['lbl.sc.document']}" />
-								                    <ac:iconTooltip value="#{lbl['lbl.sc.qt.approval.oth.supporting.document.tooltip']}" />
-												</f:facet>
-										        <ac:scSingleFileUploadButton id="historyOtheruploadId"
-														popupWidgetVar="otherHistoryApprUploadDlg"
-														attachment="#{historyOthersDtls.approvalRequestAttachement}"
-														readonly="#{createQtBB.managedBean.readOnly}"
-														deleteFileUploadListener="approvalBackingBean.deleteHistoryOthersApprovalFile"
-														rowIndex="#{indexHistory}">
-														<f:setPropertyActionListener for="actionEvent"
-															value="#{historyOthersDtls}"
-															target="#{approvalBackingBean.managedBean.historyApprovalRequests}" />
-											   </ac:scSingleFileUploadButton> 
-										</p:column>
-					            </c:otherwise>
-				     </c:choose>  -->
-			
+					 <c:if test="#{!qTDetailBB.managedBean.maintanceFlow}">
+				              <p:column>
+								        <f:facet name="header">
+									        <h:outputText value="* " styleClass="mandatory" />
+											<h:outputText value="#{lbl['lbl.sc.document']}" />
+						                    <ac:iconTooltip value="#{lbl['lbl.sc.qt.approval.oth.supporting.document.tooltip']}" />
+										</f:facet>
+								        <!--  <ac:scSingleFileUploadButton id="historyOtheruploadId"
+												popupWidgetVar="otherHistoryApprUploadDlg"
+												attachment="#{historyOthersDtls.approvalRequestAttachement}"
+												deleteFileUploadListener="approvalBackingBean.deleteHistoryOthersApprovalFile"
+												rowIndex="#{indexHistory}">
+												<f:setPropertyActionListener for="actionEvent"
+													value="#{historyOthersDtls}"
+													target="#{approvalBackingBean.managedBean.historyApprovalRequests}" />
+									    </ac:scSingleFileUploadButton> -->
+							  </p:column> 
+					 </c:if>
 		</p:dataTable>
 	</p:panel>
 </ui:composition>
