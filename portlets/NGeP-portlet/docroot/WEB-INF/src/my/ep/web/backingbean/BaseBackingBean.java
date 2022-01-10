@@ -3729,6 +3729,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		HashSet<Long> hsetAccountName = new HashSet<Long>();
 
 		if(fromPage.equalsIgnoreCase("fromBankInfo")){
+			log.info("masuk CheckBankAccount frombankinfo 12492");
 			if (this.getManagedBean().getSmAppl().getSmSupplierBanks().size() > 1) {
 				for (SmSupplierBank bankName : this.getManagedBean().getSmAppl().getSmSupplierBanks()) {
 					if (bankName.getPmFinancialOrg().getFinancialOrgId() != null

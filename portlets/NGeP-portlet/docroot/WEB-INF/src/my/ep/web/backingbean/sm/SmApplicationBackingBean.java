@@ -15783,6 +15783,8 @@ public class SmApplicationBackingBean extends
 		HashSet<Long> hsetAccountName = new HashSet<Long>();
 
 		if(fromPage.equalsIgnoreCase("fromBankInfo")){
+			log.info("masuk CheckBankAccountInfoForm from bank info 12492");
+
 			if (this.getManagedBean().getSmAppl().getSmSupplierBanks().size() > 0) {
 				for (SmSupplierBank bankName : this.getManagedBean().getSmAppl().getSmSupplierBanks()) {
 					if (bankName.getPmFinancialOrg().getFinancialOrgId() != null) {
@@ -15797,6 +15799,8 @@ public class SmApplicationBackingBean extends
 					RequestContext.getCurrentInstance().execute("bankDialogDuplicate.show()");
 				}
 			}	
+		}else if(fromPage.equalsIgnoreCase("fromNext")){
+			log.info("masuk CheckBankAccountInfoForm from next 12492");
 		}
 	}
 	//12492 - END
