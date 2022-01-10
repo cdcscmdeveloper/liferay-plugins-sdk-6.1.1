@@ -1566,6 +1566,37 @@ public class SmApplicationUtil {
 			}	
 		}
 	}//#30508-end
+	
+	//#32236-start
+			public static void validateSpecialCategoryCapital(boolean validSave, SmApplicationManagedBean managedBean,
+					int currentTab) {
+				int total = 0;
+				
+				StringBuilder totalvalue = new StringBuilder();
+				totalvalue.append("RM ");
+				
+				StringBuilder bf = new StringBuilder();
+				
+				if(managedBean.isSupplierUser() && managedBean.getSmAppl().isResubmit()){
+					for (SmSupplierCategory category : managedBean.getSmAppl().getSmSupplierCategories()) {
+						if (category.isSpecialCategory()) {
+							total = total + category.getPmCategoryL3().getPaidUpCapital().intValue();						
+						}
+						
+						bf.append(" "
+								+ category.getPmCategoryL1().getCategoryL1Code()
+								+ category.getPmCategoryL2().getCategoryL2Code()
+								+ category.getPmCategoryL3().getCategoryL3Code()
+								+ ",");
+					}
+					
+					totalvalue.append(total);
+					if(managedBean.getTotalShare().intValue() < (total)){
+						throw new EpException(MessageConst.ERROR_722693, new String[] { bf.toString(), totalvalue.toString()});
+					}	
+				}
+			}
+	//#32236-end
 	/**
 	 * Validate categories before saving application based on supplier type ,
 	 * personnel info and logged in user role.
@@ -1583,7 +1614,8 @@ public class SmApplicationUtil {
 		validateCategoryOtherDesc(validSave, managedBean, currentTab);
 		validateOverlapSuppDoc(validSave, managedBean, currentTab);
 		validateSpecialAndNormalCategory(validSave, managedBean, currentTab);//#30508
-
+		validateSpecialCategoryCapital(validSave, managedBean, currentTab);//#30508
+		
 		if (!managedBean.isSiteVisitAfterApproval()) {
 			//#11765
 			//Need to allow user to move to other categories even if didn't add codes.
