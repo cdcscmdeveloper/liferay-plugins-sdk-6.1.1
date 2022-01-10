@@ -181,6 +181,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
      private boolean enableZonalNormalDel = Boolean.FALSE;
      
      private boolean enableZonalPromoDel = Boolean.FALSE;
+          
+     private List<TplSpecZoneDtl> supplierZoneList;
      
      /** The pricing tab index. */
  	private Integer pricingTabIndex = 0;
@@ -1044,6 +1046,17 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 
 	public void setEnableZonalPromoDel(boolean enableZonalPromoDel) {
 		this.enableZonalPromoDel = enableZonalPromoDel;
+	}
+
+	public List<TplSpecZoneDtl> getSupplierZoneList() {
+		if (supplierZoneList == null)
+			supplierZoneList = new ArrayList<TplSpecZoneDtl>();
+
+		return supplierZoneList;
+	}
+	
+	public void setSupplierZoneList(List<TplSpecZoneDtl> supplierZoneList) {
+		this.supplierZoneList = supplierZoneList;
 	}
 	//29557 - end	
 }
