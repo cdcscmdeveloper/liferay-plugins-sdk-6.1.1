@@ -16582,7 +16582,7 @@ public class SmApplicationBackingBean extends
 		HashSet<Long> hsetAccountName = new HashSet<Long>();
 
 		if(fromPage.equalsIgnoreCase("fromBankInfo")){
-			System.out.println("masuk CheckBankAccountInfoForm from bank info");
+			log.info("masuk CheckBankAccountInfoForm from bank info");
 
 			if (this.getManagedBean().getSmAppl().getSmSupplierBanks().size() > 0) {
 				for (SmSupplierBank bankName : this.getManagedBean().getSmAppl().getSmSupplierBanks()) {
@@ -16599,7 +16599,7 @@ public class SmApplicationBackingBean extends
 				}
 			}	
 		}else if(fromPage.equalsIgnoreCase("fromNext")){
-			System.out.println("masuk CheckBankAccountInfoForm from next");
+			log.info("masuk CheckBankAccountInfoForm from next");
 		}
 	}
 	//12492 - END
