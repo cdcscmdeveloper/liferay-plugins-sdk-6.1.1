@@ -197,7 +197,7 @@
 
 				<tr>
 					<!-- #32014 - START -->
-					<p:outputPanel rendered="#{cc.attrs.addrObj.addressType eq 'R' and cc.attrs.bBean.managedBean.supplierUser}">
+					<p:outputPanel rendered="#{cc.attrs.addrObj.addressType eq 'R' and cc.attrs.addrObj.smAddress.pmState ne null and cc.attrs.bBean.managedBean.supplierUser}">
 				 		#{cc.attrs.bBean.onChangeState(cc.attrs.addrObj.smAddress,cc.attrs.addressType)}
 					</p:outputPanel>
 					<!-- #32014 - END -->
