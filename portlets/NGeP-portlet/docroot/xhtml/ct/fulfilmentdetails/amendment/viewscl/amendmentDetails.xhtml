@@ -1,0 +1,374 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<p:panel id="amend" header="#{lbl['lbl.ct.menu.amendment']}" toggleable="true" toggleSpeed="500">
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.amendment.type']}" escape="false"/> <br/>
+	<!-- #25002 - start added new instruction -->
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.amendment.with.supplement.process']}" escape="false"/><br/><br/>
+	<!-- #25002 - end added new instruction -->
+		<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth170">
+				<p:outputLabel value="#{lbl['lbl.ct.amendment.type']}"  styleClass="required"/>
+			<h:panelGrid columns="3">
+				<p:selectBooleanCheckbox
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend}"
+					disabled="true">
+					<p:ajax event="change" update=":form:typesOfAmend,:form:instruction,:form:itemId,:form:serviceId,:form:approvingAuthorityPanel"
+						process="@all" onstart="blockWidget.show();" 
+					   oncomplete="blockWidget.hide();"  listener="#{amendmentBackingBean.onContractExtensionChecked}" />
+				</p:selectBooleanCheckbox>
+				<p:spacer width="2" />
+				<h:panelGrid columns="2">
+					<p:outputLabel value="#{lbl['lbl.ct.contract.extension']}" style="width:230px; text-align:left" />
+					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.extension']}" />
+				</h:panelGrid>
+			</h:panelGrid>
+			<f:verbatim/>
+			<h:panelGrid columns="3">
+				<p:selectBooleanCheckbox
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange}"
+					disabled="true">
+					 <p:ajax event="change" update=":form"  process="@form" 
+					    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  listener="#{amendmentBackingBean.onItemPriceChecked}" /> 
+					 </p:selectBooleanCheckbox>
+				<p:spacer width="2" />
+				<h:panelGrid columns="2">
+					<p:outputLabel value="#{lbl['lbl.ct.change.item.price']}" style="width:230px; text-align:left" />
+					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.change.item.price']}" />
+				</h:panelGrid>
+			</h:panelGrid>
+			<f:verbatim/>
+		    <h:panelGrid columns="3">
+				<p:selectBooleanCheckbox
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.quantityChange}" 
+					disabled="true">
+					<p:ajax event="change" update=":form" process="@form"
+					    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  listener="#{amendmentBackingBean.onQuantityChecked}" /> 
+					</p:selectBooleanCheckbox>
+				<p:spacer width="2" />
+				<h:panelGrid columns="2">
+					<p:outputLabel value="#{lbl['lbl.ct.change.quantity']}" style="width:230px; text-align:left" />
+					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.change.quantity']}" />
+				</h:panelGrid>
+			</h:panelGrid>
+			<f:verbatim/>
+			<h:panelGrid columns="3">
+				<p:selectBooleanCheckbox disabled="true"
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChange}"  >
+					<p:ajax event="change"  update=":form:amend" process="@form"
+						listener="#{amendmentBackingBean.onChangeValueChecked}"
+					  	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  /> 
+					</p:selectBooleanCheckbox>
+				<p:spacer width="2" />
+				<h:panelGrid columns="2">
+					<p:outputLabel value="#{lbl['lbl.ct.change.contract.value']}" style="width:230px; text-align:left" />
+					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.change.contract.amount']}" />
+				</h:panelGrid>
+			</h:panelGrid>
+			<f:verbatim/>
+			<h:panelGrid columns="3">
+				<p:selectBooleanCheckbox disabled="true"
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.clauseChange}" >
+					<p:ajax event="change"  update=":form:typesOfAmend, :form:approvingAuthorityPanel" process="@form"
+					     onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  /> 
+				</p:selectBooleanCheckbox>
+				<p:spacer width="2" />
+				<h:panelGrid columns="2">
+					<p:outputLabel value="#{lbl['lbl.ct.change.clause']}" style="width:230px; text-align:left" />
+					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.change.clause']}" />
+				</h:panelGrid>
+			</h:panelGrid>
+			<f:verbatim/>
+			
+			<h:panelGrid columns="3">
+				<p:selectBooleanCheckbox disabled="true}"
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}" >
+					<p:ajax event="change" update=":form" process="@form"
+					    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  listener="#{amendmentBackingBean.onChangeValueByGstChecked}" /> 
+				</p:selectBooleanCheckbox>
+				<p:spacer width="2" />
+				<h:panelGrid columns="2">
+					<p:outputLabel value="#{lbl['lbl.ct.change.contract.value.gst']}" style="width:230px; text-align:left" />
+					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.change.value.by.gst']}" />
+				</h:panelGrid>
+			</h:panelGrid>
+			<f:verbatim/>
+			<h:panelGrid columns="2">
+			<p:spacer width="25" />
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.change.value.by.gst']}" escape="false"/>
+			</h:panelGrid>
+			<f:verbatim/>
+			<h:panelGrid columns="3">
+				<p:selectBooleanCheckbox disabled="true"
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.otherChange}" >
+					<p:ajax event="change" update=":form"  process="@form" listener="#{amendmentBackingBean.onChangeOther}"
+					    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  />
+				</p:selectBooleanCheckbox>
+				<p:spacer width="2" />
+				<h:panelGrid columns="2">
+				        <p:outputLabel value="#{lbl['lbl.ct.change.other']}" style="width:230px; text-align:left" />
+				         <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.change.other']}" />
+				    </h:panelGrid>
+		  	</h:panelGrid>
+		 </h:panelGrid>
+	    <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth170">
+				<p:outputLabel value="#{lbl['lbl.ct.file.ref.no']}" styleClass="required" />
+			<h:panelGrid columns="5">
+				<p:inputText id="txtfrno" style="width:650px;" label="#{lbl['lbl.ct.file.ref.no']}"
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.fileRefNo}" 
+					disabled="true" maxlength="100" />
+				<p:spacer width="1"/>
+			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.file.ref.no']}" />
+			    <p:spacer width="1"/>
+				<p:message for="txtfrno" display="icon" />
+			</h:panelGrid>			
+				<p:outputLabel value="#{lbl['lbl.ct.amendment.title']}"  styleClass="required"/>
+			<h:panelGrid columns="2">
+				<p:inputTextarea id="txtname" style="width:650px;margin-bottom:5px;"  label="#{lbl['lbl.ct.amendment.title']}" rows="3"
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.title}" maxlength="1000"
+					disabled="true" autoResize="false"
+					onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"  />
+				<p:message for="txtname" display="icon" />	
+			</h:panelGrid>
+		</h:panelGrid>
+		<h:panelGrid columns="3" style="width:100%"	columnClasses="columnWidth170">
+			<h:panelGroup>
+				<div style="float: right; vertical-align: top;">
+						<p:outputLabel value="#{lbl['lbl.ct.amendment.desc']}"  styleClass="required"/>
+				</div>
+			</h:panelGroup>
+			<h:panelGrid columns="2">
+				<p:inputTextarea id="txtdesc" rows="5"  label="#{lbl['lbl.ct.amendment.desc']}"
+					style="width:650px;margin-bottom: 5px;"  autoResize="false" maxlength="1000"
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.description}"
+					disabled="true"
+					onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"  />
+				<p:message for="txtdesc" display="icon" />	
+			</h:panelGrid>			
+		</h:panelGrid>
+		<h:panelGrid id="instruction"  columns="1" style="width:100%">
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.extension.period']}" escape="false"
+				rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend}"/><br/>
+		</h:panelGrid>
+		<h:panelGrid id="typesOfAmend"  columns="6" style="width:100%" columnClasses="columnWidth170">
+			<h:outputLabel value="#{lbl['lbl.ct.extension.period']}" styleClass="required"
+				rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend}" />
+			<h:panelGrid columns="3"
+				rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend}">
+				<p:inputText style="width:80px;" required="true" label="#{lbl['lbl.ct.extension.period']}"
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.extendPeriod}" maxlength="3"
+					disabled="true">
+					<p:ajax event="keyup" update="extStartDate, extEndDate, :form:itemId, :form:serviceId" listener="#{amendmentBackingBean.onExtensionPeriodChanged}"/>
+					</p:inputText>
+				<p:spacer width="2" />
+				<p:outputLabel value="#{lbl['lbl.ct.months']}" />
+			</h:panelGrid>
+		
+			<p:outputLabel value="#{lbl['lbl.ct.extension.start.date']}"
+				rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend}" />
+			<p:inputText id="extStartDate" value="#{ctBackingBean.managedBean.contractVer.ctAmendment.extendStartDate}" 
+			    disabled="true" style="width:90px;" rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend}">
+				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+			</p:inputText>
+			
+			<p:outputLabel value="#{lbl['lbl.ct.extension.end.date']}"
+				rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend}" />
+			<p:inputText id="extEndDate" value="#{ctBackingBean.managedBean.contractVer.ctAmendment.extendEndDate}" 
+			    disabled="true" style="width:90px;" rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend}">
+				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+			</p:inputText>
+		
+			<p:outputLabel value="#{lbl['lbl.ct.additional.contract.amt']}" rendered="#{amendmentBackingBean.getAmendValue(1)}"/>			
+			<h:panelGrid columns="5" rendered="#{amendmentBackingBean.getAmendValue(1)}" >
+				<p:inputText id="addValueTxt" styleClass="ppRightBtn" style="width:80px;"  
+				   value="#{ctBackingBean.managedBean.contractVer.ctAmendment.additionalAmount}" 
+				   disabled="true">
+					 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					 <p:ajax event="blur" update="addValueTxt, addValue, overallAmt" process="@this" listener="#{amendmentBackingBean.changeAdditionalValue}"
+					   onstart="blockWidget.show();"  oncomplete="blockWidget.hide();" />
+				</p:inputText>
+				<p:spacer width="1"/>
+			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.additional.contract.amount']}" />
+			    <p:spacer width="1"/>
+				<p:message for="addValueTxt" display="icon" />
+			</h:panelGrid>
+			
+			<p:outputLabel value="#{lbl['lbl.ct.new.contract.amt']}" rendered="#{amendmentBackingBean.getAmendValue(1)}"/>
+			<h:panelGrid columns="3" rendered="#{amendmentBackingBean.getAmendValue(1)}">
+				<p:inputText id="addValue" styleClass="ppRightBtn" style="width:90px;" disabled="true"
+					value="#{amendmentBackingBean.newContractAmt()}" >
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText>
+				<p:spacer width="1"/>
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.new.contract.amount']}" />
+			</h:panelGrid>			
+		
+			<h:panelGrid columns="2" rendered="#{amendmentBackingBean.getAmendValue(2)}"  style="float:right;">
+				<p:outputLabel value="*" styleClass="mandatory" />
+				<p:outputLabel value="#{lbl['lbl.ct.effective.date']}" style="float:left;" />
+			</h:panelGrid>
+			<h:panelGrid columns="5" rendered="#{amendmentBackingBean.getAmendValue(2)}" >
+				<p:calendar style="width:80px;" id="edateCal1" showOn="button"  readonlyInput="true" navigator="true"
+			    	required="true" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
+				    label="#{lbl['lbl.ct.effective.date']}" value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentEffDate}"
+				    maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}" 
+				    mindate="#{amendmentBackingBean.managedBean.newAmendmentEffDate}"
+				    rendered="#{!ctBackingBean.managedBean.disableAmendDetails}">
+				        <p:ajax event="dateSelect" process="@this" onstart="blockWidget.show();"  oncomplete="blockWidget.hide();"
+				            listener="#{amendmentBackingBean.changeAmendmentEffDate}"  update=":form:itemId,:form:serviceId"/> 
+				</p:calendar>
+				<p:inputText disabled="true" style="width:90px;"
+					rendered="#{ctBackingBean.managedBean.disableAmendDetails}"
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentEffDate}">
+					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+	  			</p:inputText>
+				<p:spacer width="1"/>
+			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.new.effective.date']}" />
+			    <p:spacer width="1"/>
+			   <p:message for="edateCal1" display="icon" />	
+			</h:panelGrid>
+			
+			<f:verbatim rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend and
+				!amendmentBackingBean.getAmendValue(2)}"/>
+			<f:verbatim rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend and
+				!amendmentBackingBean.getAmendValue(2)}"/>
+			
+			<p:outputLabel value="#{lbl['lbl.ct.new.gst.amt']}" rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}"/>	
+			<h:panelGrid columns="5" rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}" >
+				<p:inputText id="newGstAmtTxt" styleClass="ppRightBtn"  maxlength="18" style="width:80px;"
+				   value="#{ctBackingBean.managedBean.contractVer.ctAmendment.newGstAmount}" 
+				   disabled="true"
+				   rendered="#{ctBackingBean.managedBean.gstCheckingGUI}">
+					 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					 <p:ajax event="blur" update="newGstAmtTxt, overallAmt" process="@this" 
+					   onstart="blockWidget.show();"  oncomplete="blockWidget.hide();" />
+				</p:inputText>
+				<p:message for="newGstAmtTxt" display="icon" />
+				<p:inputText styleClass="ppRightBtn" style="width:80px;" disabled="true" 
+	   				 rendered="#{!ctBackingBean.managedBean.gstCheckingGUI}" value="#{lbl['lbl.txt.na']}">
+				</p:inputText>
+			</h:panelGrid>
+			
+							
+			<p:outputLabel value="#{lbl['lbl.ct.new.stax.amt']}" rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}"/>	
+			<h:panelGrid columns="5" rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}" >
+				<p:inputText id="newStaxAmtTxt" styleClass="ppRightBtn"  maxlength="18" style="width:80px;"
+				   disabled = "#{ctBackingBean.managedBean.disableAmendDetails
+				   		or ctBackingBean.managedBean.disableStaxAmount}"
+				   		rendered="#{ctBackingBean.managedBean.staxCheckingGUI}" 
+				   		value="#{ctBackingBean.managedBean.contractVer.ctAmendment.newStaxAmount}">
+					 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					 <p:ajax event="blur" update="newStaxAmtTxt, overallAmt" process="@this" 
+					   onstart="blockWidget.show();"  oncomplete="blockWidget.hide();" />
+				</p:inputText>
+				<p:message for="newStaxAmtTxt" display="icon" />
+			</h:panelGrid>
+			
+			<p:outputLabel value="#{lbl['lbl.ct.new.overall.contract.amt']}" rendered="#{amendmentBackingBean.getAmendValue(1)}"/>
+			<h:panelGrid columns="3" rendered="#{amendmentBackingBean.getAmendValue(1)}">
+				<p:inputText id="overallAmt" styleClass="ppRightBtn" style="width:90px;" disabled="true"
+					value="#{amendmentBackingBean.newOverallContractAmount()}" >
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText>
+			</h:panelGrid>	
+			
+			<f:verbatim rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend and
+				!amendmentBackingBean.getAmendValue(3)}"/>
+					
+		</h:panelGrid>
+		<h:panelGrid id="approvingAuthorityPanel" columns="2" style="width:100%" columnClasses="columnWidth170">
+				<p:outputLabel value="#{lbl['lbl.ct.approving.authority']}"  styleClass="required" rendered="#{amendmentBackingBean.getAmendValue(3)}"/>
+			<h:panelGrid columns="3" rendered="#{amendmentBackingBean.getAmendValue(3)}">
+				<p:selectBooleanCheckbox
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.mofAuthorityReq}"
+					disabled="true">
+				</p:selectBooleanCheckbox>
+				<p:spacer width="2" />
+				<p:outputLabel value="#{lbl['lbl.ct.mof']}" style="text-align:left" />
+			</h:panelGrid>
+			<f:verbatim rendered="#{amendmentBackingBean.getAmendValue(3)}" />
+			<h:panelGrid columns="3" rendered="#{amendmentBackingBean.getAmendValue(3)}">
+				<p:selectBooleanCheckbox
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.pbqcAuthorityReq}"
+					disabled="true}">
+					<p:ajax event="change" update=":form:secretryDropDownPanel" process="@all"
+					   onstart="blockWidget.show();" 
+					   oncomplete="blockWidget.hide();"/>
+				</p:selectBooleanCheckbox>
+				<p:spacer width="2" />
+				<p:outputLabel value="#{lbl['lbl.ct.pbqc']}" style="text-align:left" />
+			</h:panelGrid>
+			<f:verbatim rendered="#{amendmentBackingBean.getAmendValue(3)}" />
+			<h:panelGrid columns="3" rendered="#{amendmentBackingBean.getAmendValue(3)}">
+				<p:selectBooleanCheckbox
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.approverAuthorityReq}"
+					disabled="true" />
+				<p:spacer width="2" />
+				<p:outputLabel value="#{lbl['lbl.ct.contract.approval']}" style="text-align:left" />
+			</h:panelGrid>
+		</h:panelGrid>
+				
+		<h:panelGroup id="secretryDropDownPanel" rendered="#{!ctBackingBean.managedBean.disableAmendDetails}">
+			<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth170" rendered="#{amendmentBackingBean.getAmendValue(3) and ctBackingBean.managedBean.contractVer.ctAmendment.pbqcAuthorityReq}">
+				<p:outputLabel value="#{lbl['lbl.ct.secretary.committee']}" />
+				<p:selectOneMenu id="secretaryId" value="#{amendmentBackingBean.managedBean.secretaryId}" 
+					label="#{lbl['lbl.ct.secretary.committee']}" style="width:300px;">
+		           	<f:selectItems value="#{amendmentBackingBean.getSecretaryDropdownList()}" />
+		       	</p:selectOneMenu>
+		  	</h:panelGrid>
+		</h:panelGroup>
+		
+		<h:panelGroup id="approvalLetterPanel">
+			<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth170" rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}">
+				<p:outputLabel value="#{lbl['lbl.ct.approval.letter']}" styleClass="required" />
+				<h:panelGroup id="uploadApprovalLetter">
+			 		<p:commandButton oncomplete="uploadApprovalLetterDlg.show();return false;"
+						update="uploadApprovalLetter, uploadApprovalLetterDlg" icon="ui-icon-upload"
+						rendered="#{ctBackingBean.managedBean.contractVer.approvalLetterAttachement.filePath == null}"
+				 		disabled="true"/>	
+		     		<h:commandLink value="#{ctBackingBean.managedBean.contractVer.approvalLetterAttachement.fileName}" 
+		           		rendered="#{ctBackingBean.managedBean.contractVer.approvalLetterAttachement.filePath != null}"
+		          		styleClass="blue_font" action="#{ctBackingBean.commonDownload(ctBackingBean.managedBean.contractVer.approvalLetterAttachement.filePath, ctBackingBean.managedBean.contractVer.approvalLetterAttachement.fileName)}" />					
+		     		<p:spacer width="3"/>
+		         	<p:commandLink onclick="deleteApprovalLetterDlg.show();" 
+			           rendered="#{ctBackingBean.managedBean.contractVer.approvalLetterAttachement.filePath != null}"
+			           disabled="true">
+			   			<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
+			      	</p:commandLink>
+			      	<p:spacer width="1"/>
+					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.approval.letter']}" />
+				</h:panelGroup>
+    		</h:panelGrid> 
+  		</h:panelGroup>
+   		<p:confirmDialog id="deleteApprovalLetterDlg" widgetVar="deleteApprovalLetterDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
+    		severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+      		<div class="ppRightBtn">
+		 		<p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		   			update=":form:uploadApprovalLetter, :form:uploadApprovalLetterDlg" 
+		 			action="#{ctBackingBean.deleteAttachmentAction(ctBackingBean.managedBean.contractVer.approvalLetterAttachement)}" oncomplete="deleteApprovalLetterDlg.hide();"/>
+				<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteApprovalLetterDlg.hide();" type="button" />
+			</div>
+   		</p:confirmDialog>
+  		<p:dialog id="uploadApprovalLetterDlg" widgetVar="uploadApprovalLetterDlg" modal="true" resizable="false"
+	   		width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}"
+	   		onShow="singleUploadListener(approvalLetterUploadWV);">
+			<p:ajax event="close" />
+			<p:fileUpload style="display:inline;" mode="advanced" dragDropSupport="false" id="approvalLetterId"
+				fileUploadListener="#{ctBackingBean.fileUpload}"  showButtons="false"
+				sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" multiple="false"
+				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" widgetVar="approvalLetterUploadWV"
+				invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
+				update="uploadApprovalLetter" label="#{lbl['lbl.btn.choose']}" oncomplete="uploadApprovalLetterDlg.hide();" >
+			</p:fileUpload>
+			<f:facet name="footer">
+			<div class="ppRightBtn">
+		    	<p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadApprovalLetterDlg.hide();" />
+   			</div>
+   			</f:facet>
+		</p:dialog>
+	</p:panel>
+</ui:composition>
