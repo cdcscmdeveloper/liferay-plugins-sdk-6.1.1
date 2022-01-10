@@ -1273,11 +1273,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}else{
 				messageId = MessageConst.ERROR_740070;
 					itemExceed = true;
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(messageId,
-									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-				
+					throw new EpException(MessageConst.ERROR_740070);	
 			}
 			for (CtContractItem contractedItem : contractedItemList) {
 				itemExisted = false;
@@ -4718,7 +4714,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			reqDTO.setContractItemSearchBean(searchBean);
 			
 			//11076 start
-			int contractedItemList = contractItemSO.searchContractItem(reqDTO).getContractItemResultBean().getTotalRecord();
+			int contractedItemList = 0;
+			contractedItemList = contractItemSO.searchContractItem(reqDTO).getContractItemResultBean().getTotalRecord();
 			log.info("========PAGE LISTENER ITEM==========="+contractedItemList);
 			getManagedBean().setValidateItem(contractedItemList);
 			//11076 end
