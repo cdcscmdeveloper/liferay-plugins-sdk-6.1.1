@@ -1,9 +1,6 @@
 package my.ep.web.backingbean.fl.yep;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,10 +17,6 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
-
-import org.apache.log4j.Logger;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.UploadedFile;
 
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -50,7 +43,6 @@ import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
-import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmPtjReorg;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -70,6 +62,8 @@ import my.ep.web.managedbean.fl.yep.YearEndProcessManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.StatusHelper;
+
+import org.apache.log4j.Logger;
 
 /**
  * Backing bean for year end process
@@ -169,7 +163,9 @@ public class YearEndProcessBackingBean extends
 	public static List<SelectItem> getFinancialYearOpt() {
 		int years = 0;
 		List<SelectItem> financialYearOpt = new ArrayList<SelectItem>();
-		for (Integer i = 0; i < 2; i++) {
+		int year = Calendar.getInstance().get(Calendar.YEAR);
+		int TotalGap = year - 2018;
+		for (Integer i = 0; i < TotalGap+1; i++) {
 			years = CommonMethod.getYear(-i);
 			financialYearOpt
 					.add(new SelectItem(years, Integer.toString(years)));
@@ -257,6 +253,16 @@ public class YearEndProcessBackingBean extends
 
 		if(null ==getManagedBean().getSearchDocType()){ 
 			throw new EpException(MessageConst.ERROR_760444);
+		}
+		
+		if(null ==getManagedBean().getStatusDescId()){ 
+			throw new EpException(MessageConst.ERROR_780068);
+		}
+		
+		if(getManagedBean().getSearchDocType().equals(FulfilmentConst.DOC_TYPE_CO)){
+			if(null == getManagedBean().getSearchLoaNo() || getManagedBean().getSearchLoaNo() == ""){
+				throw new EpException(MessageConst.ERROR_780069);
+			}
 		}
 		
 		if(null == getManagedBean().getSearchStartDate() && null != getManagedBean().getSearchToDate()){
@@ -590,16 +596,12 @@ public class YearEndProcessBackingBean extends
 		String navgPage = "xhtml/fl/yep/search/searchYearEndProcess.xhtml";
 		String docType = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docType");
 		String flDocId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docId");
-		String buttonVal = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
-				.get("buttonVal");
-		String statusDesc = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
-				.get("statusDesc");
+		String buttonVal = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("buttonVal");
+		String statusDesc = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("statusDesc");
 		String taskId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("taskId");
 		String orderN = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("orderN");
-		String carryForward = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
-				.get("carryForward");
-		String progressStatus = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
-				.get("progressStatus");
+		String carryForward = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("carryForward");
+		String progressStatus = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("progressStatus");
 		String phase = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("phase");
 
 		if (docType.equals(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
