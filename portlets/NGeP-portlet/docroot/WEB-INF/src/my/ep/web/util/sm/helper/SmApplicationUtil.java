@@ -1570,7 +1570,7 @@ public class SmApplicationUtil {
 	//#32236-start
 			public static void validateSpecialCategoryCapital(boolean validSave, SmApplicationManagedBean managedBean,
 					int currentTab) {
-				int total = 0;
+				BigDecimal total = BigDecimal.ZERO;
 				
 				StringBuilder totalvalue = new StringBuilder();
 				totalvalue.append("RM ");
@@ -1580,7 +1580,7 @@ public class SmApplicationUtil {
 				if(managedBean.isSupplierUser() && managedBean.getSmAppl().isResubmit()){
 					for (SmSupplierCategory category : managedBean.getSmAppl().getSmSupplierCategories()) {
 						if (category.isSpecialCategory()) {
-							total = total + category.getPmCategoryL3().getPaidUpCapital().intValue();						
+							total = total.add(category.getPmCategoryL3().getPaidUpCapital());						
 						}
 						
 						bf.append(" "
@@ -1591,8 +1591,8 @@ public class SmApplicationUtil {
 					}
 					
 					totalvalue.append(total);
-					if(managedBean.getTotalShare().intValue() < (total)){
-						throw new EpException(MessageConst.ERROR_722693, new String[] { bf.toString(), totalvalue.toString()});
+					if(managedBean.getTotalShare().compareTo(total) < 0 ){ // paid up capital must less than paid-up capital of total value
+						throw new EpException(MessageConst.ERROR_722693, new String[] { bf.toString().substring(0, bf.length()-2), totalvalue.toString()});
 					}	
 				}
 			}
