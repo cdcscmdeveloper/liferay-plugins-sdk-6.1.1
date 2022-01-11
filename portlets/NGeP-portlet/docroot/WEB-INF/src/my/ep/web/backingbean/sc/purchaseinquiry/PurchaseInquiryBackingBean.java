@@ -755,6 +755,7 @@ public class PurchaseInquiryBackingBean extends
 		updatePricing(scRequestSupplierItem);
 		//#29236 CR 26129: Static Code Analysis Start A "NullPointerException" could be thrown; "scRequestSupplierItem" is nullable here.
 		if (scRequestSupplierItem != null) {
+			scRequestSupplierItem.getSupplierItemPrices().clear(); //#29557
 			prInquiry.setScRequestSupplierItems(Arrays.asList(scRequestSupplierItem));
 			prInquiry.setIsStockAvailable(stockAvailable);
 
@@ -2263,7 +2264,7 @@ public class PurchaseInquiryBackingBean extends
 		}
 
 		else if (i == 4 || i == 5){
-			if (addedScSupplierItemPrice.getTplSpecZone().getZoneName() == null || addedScSupplierItemPrice.getTplSpecZone().getZoneName().trim().isEmpty()){throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils.getMessage("lbl.pm.zone.name",
+			if (addedScSupplierItemPrice.getTplSpecZone() == null){throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils.getMessage("lbl.pm.zone.name",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});}
 			if (addedScSupplierItemPrice.getFromQty() == null){throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils.getMessage("lbl.sc.from.qty",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});}
