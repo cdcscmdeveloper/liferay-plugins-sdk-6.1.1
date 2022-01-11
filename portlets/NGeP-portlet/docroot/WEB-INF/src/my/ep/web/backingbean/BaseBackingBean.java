@@ -3822,6 +3822,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					}
 				}
 			}	
+		}else if(fromPage.equalsIgnoreCase("fromNext")){
+			RequestContext.getCurrentInstance().execute("bankDialogDuplicate.hide()");
+			log.info("masuk CheckBankAccountInfoForm from next");
 		}
 	}
 	//12492 - END
