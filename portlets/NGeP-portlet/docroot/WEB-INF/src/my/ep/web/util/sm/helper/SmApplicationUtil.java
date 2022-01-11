@@ -2847,6 +2847,7 @@ public class SmApplicationUtil {
 										.getFinancialOrgId())) {
 					validBank = false;
 					//#12492 start
+					RequestContext.getCurrentInstance().execute("bankDialogDuplicate.hide()");
 					throw new EpException(MessageConst.ERROR_722543,
 							new String[] { bank.getAccountNo(),
 							supBank.getPmFinancialOrg().getFinOrgName() });
