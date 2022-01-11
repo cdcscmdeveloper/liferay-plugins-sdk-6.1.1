@@ -2684,4 +2684,11 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		return approverList;
 	}
 	//13291 - end
+	//#21416 start
+	public String filterItemName(String itemName) {
+		String filteredItemName = itemName.replaceAll("\\s(NA|N/A|N A)", "");
+		return filteredItemName;
+				
+	}
+	//#21416 end
 }
