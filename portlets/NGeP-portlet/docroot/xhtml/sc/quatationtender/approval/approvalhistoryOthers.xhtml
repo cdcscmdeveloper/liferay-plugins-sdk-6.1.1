@@ -4,8 +4,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc">
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
 
 	<p:panel header="#{lbl['lbl.sc.history']}" toggleable="true">
@@ -44,7 +43,11 @@
 							  </p:column>  
 					 </c:if> 
 					 <c:if test="#{!qTDetailBB.managedBean.maintanceFlow}">
-		                      <p:column headerText="#{lbl['lbl.sc.document']}">
+		                       <p:column>
+							      <f:facet name="header">
+								        <h:outputText value="* " styleClass="mandatory" />
+										<h:outputText value="#{lbl['lbl.sc.document']}" />
+								  </f:facet>
 						          <ac:scSingleFileUploadButton id="historyOtheruploadId"
 										popupWidgetVar="otherHistoryApprUploadDlg"
 										attachment="#{historyOthersDtls.approvalRequestAttachement}"
