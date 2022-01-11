@@ -24,7 +24,8 @@
 			<f:facet name="footer">
 				<h:outputText value=""></h:outputText>			
 			</f:facet>
-				<h:outputText value="#{chargeLineNode.flInvoiceSummary.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.itemName}" id="itemDesc"
+			<!--#21416 filter item name-->
+				<h:outputText value="#{paymentMatchBackingBean.filterItemName(chargeLineNode.flInvoiceSummary.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.itemName)}" id="itemDesc"
 				rendered="#{chargeLineNode.level == 1}" style="text-align:left; float:left;" title="#{chargeLineNode.flInvoiceSummary.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : chargeLineNode.flInvoiceSummary.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.itemDesc}"/>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="white-space:normal;text-align:center">
