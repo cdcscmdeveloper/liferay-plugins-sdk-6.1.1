@@ -61,9 +61,11 @@
 						        <h:outputText value="#{lbl['lbl.sc.notice.board.criteria.briefing']}"></h:outputText>		       
 						    </f:facet>
 						    
-						    <p:column headerText="#{lbl['lbl.sc.description']}">
+						    <!-- Bug#32452 start -->
+						    <p:column headerText="#{lbl['lbl.sc.description']}" style="text-align: left;white-space: normal;width: 200px;">
 						        <h:outputText value="#{briefing.bsvDesc}" />
 						    </p:column>
+						    <!-- Bug#32452 end -->
 						
 						    <p:column headerText="#{lbl['lbl.sc.date']}">
 						        <h:outputText value="#{briefing.bsvDate}" >
@@ -83,11 +85,11 @@
 						    </f:facet>
 						    
 						    <!-- Bug#32452 start -->
-						    <p:column headerText="#{lbl['lbl.sc.description']}" style="text-align:left;white-space: normal;width: 200px;">
+						    <p:column headerText="#{lbl['lbl.sc.description']}" style="text-align: left;white-space: normal;width: 200px;">
 						        <h:outputText value="#{briefing.bsvDesc}" />
 						    </p:column>
 						    <!-- Bug#32452 end -->
-						
+						    
 						    <p:column headerText="#{lbl['lbl.sc.date']}">
 						        <h:outputText value="#{sitevisit.bsvDate}" >
 							        <f:convertDateTime
@@ -114,10 +116,11 @@
 						    </f:facet>
 						
 						    
-						    
-						    <p:column headerText="#{lbl['lbl.sc.description']}">
+						    <!-- Bug#32452 start -->
+						    <p:column headerText="#{lbl['lbl.sc.description']}" style="text-align: left;white-space: normal;width: 200px;">
 						        <h:outputText value="#{briefing.bsvDesc}" />
 						    </p:column>
+						    <!-- Bug#32452 end -->
 						
 						    <p:column headerText="#{lbl['lbl.sc.date']}">
 						        <h:outputText value="#{briefing.bsvDate}" >
@@ -136,9 +139,11 @@
 						        <h:outputText value="#{lbl['lbl.sc.notice.board.criteria.site.visit']}"></h:outputText>
 						    </f:facet>
 						    
-						    <p:column headerText="#{lbl['lbl.sc.description']}">
+						    <!-- Bug#32452 start -->
+						    <p:column headerText="#{lbl['lbl.sc.description']}" style="text-align: left;white-space: normal;width: 200px;">
 						        <h:outputText value="#{sitevisit.bsvDesc}" />
 						    </p:column>
+						    <!-- Bug#32452 end -->
 						
 						    <p:column headerText="#{lbl['lbl.sc.date']}">
 						        <h:outputText value="#{sitevisit.bsvDate}" >
