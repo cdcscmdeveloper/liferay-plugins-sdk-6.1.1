@@ -93,8 +93,6 @@
 				<p:row>
 					<p:column colspan="1">
 						<f:facet name="header">
-							<h:outputText value="* " styleClass="mandatory"
-								rendered="#{updateSpec}" />
 							<h:outputText value="#{lbl['lbl.tpl.spec.content.item']}" />
 						</f:facet>
 
@@ -103,7 +101,6 @@
 						style="width:98px;"
 						rendered="#{isItemTypeService and isFulfilmentTypeReq}">
 						<f:facet name="header">
-							<h:outputText value="* " styleClass="mandatory" />
 							<h:outputText
 								value="#{lbl['lbl.tpl.spec.content.fulfilment.type']}" />
 						</f:facet>
@@ -112,7 +109,6 @@
 					<p:column rowspan="#{specificationrequired ? 2 : 1}"
 						style="width:120px;">
 						<f:facet name="header">
-							<h:outputText value="* " styleClass="mandatory" />
 							<h:outputText value="#{lbl['lbl.tpl.spec.content.uom']}" />
 						</f:facet>
 
@@ -121,7 +117,6 @@
 					<p:column rowspan="#{specificationrequired ? 2 : 1}"
 						style="width:70px;white-space:normal;">
 						<f:facet name="header">
-							<h:outputText value="* " styleClass="mandatory" />
 							<h:outputText
 								value="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}" />
 						</f:facet>
@@ -130,7 +125,6 @@
 					<p:column rowspan="#{specificationrequired ? 2 : 1}"
 						style="width:60px;white-space:normal;">
 						<f:facet name="header">
-							<h:outputText value="* " styleClass="mandatory" />
 							<h:outputText
 								value="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}" />
 						</f:facet>
@@ -139,7 +133,6 @@
 					<p:column rowspan="#{specificationrequired ? 2 : 1}"
 						style="width:60px;white-space:normal;">
 						<f:facet name="header">
-							<h:outputText value="* " styleClass="mandatory" />
 							<h:outputText
 								value="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}" />
 						</f:facet>
@@ -149,7 +142,6 @@
 						style="width:63px;white-space:normal;"
 						rendered="#{isDurationByItem}">
 						<f:facet name="header">
-							<h:outputText value="* " styleClass="mandatory" />
 							<h:outputText
 								value="#{lbl['lbl.tpl.spec.content.duration.month']}" />
 						</f:facet>
@@ -161,7 +153,6 @@
 					<p:column rowspan="#{specificationrequired ? 2 : 1}"
 						style="width:170px;white-space:normal">
 						<f:facet name="header">
-							<h:outputText value="* " styleClass="mandatory" />
 							<h:outputText value="#{lbl['lbl.tpl.spec.content.quantity']}" />
 						</f:facet>
 					</p:column>
@@ -169,7 +160,6 @@
 					<p:column rowspan="#{specificationrequired ? 2 : 1}"
 						style="width:170px;white-space:normal">
 						<f:facet name="header">
-							<h:outputText value="* " styleClass="mandatory" />
 							<h:outputText value="#{lbl['lbl.tpl.req.spec.demo']}" />
 						</f:facet>
 					</p:column>
