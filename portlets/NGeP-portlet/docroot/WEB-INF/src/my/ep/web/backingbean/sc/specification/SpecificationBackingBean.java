@@ -16627,7 +16627,8 @@ public class SpecificationBackingBean extends
 						.getTplSpecQuestions()) {
 					for (TplSpecEstimation tplSpecEstimation : tplSpecQuestion
 							.getTplSpecEstimations()) {
-						if (tplSpecEstimation.getEstimatedCost() != null) {
+						// #25138 - Bug #32194 - Start.
+						/*if (tplSpecEstimation.getEstimatedCost() != null) {*/
 							//20201217@haziq- Bug #29806 - Start
 								BigDecimal estimatedCost = tplSpecEstimation.getEstimatedCost();
 								//20210205@haziq- Bug #30046 - Start
@@ -16643,7 +16644,7 @@ public class SpecificationBackingBean extends
 										if (indicativeUnitPrice == null && !isSave) {
 											throw new EpException(MessageConst.ERROR_760520);
 										}
-										else if ( indicativeUnitPrice != null  && estimatedCost.compareTo(BigDecimal.ZERO) == 0){
+										else if ( indicativeUnitPrice != null  && (estimatedCost==null || estimatedCost.compareTo(BigDecimal.ZERO) == 0)) {
 											throw new EpException(MessageConst.ERROR_760519, 
 													new String[]{ 
 													ResourceBundleUtils.getMessage(
@@ -16658,7 +16659,8 @@ public class SpecificationBackingBean extends
 								totalSpecEstimatedAmount = totalSpecEstimatedAmount
 										.add(estimatedCost.setScale(2, BigDecimal.ROUND_UP));
 								//20201217@haziq- Bug #29806 - End
-						}
+						/*}*/
+						// #25138 - Bug #32194 - End.
 					}
 				}
 			}
