@@ -1396,7 +1396,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
 		// temp: to monitor performance
-		MDC.put("taskId", taskId);
+		if (taskId != null) {
+			MDC.put("taskId", taskId);
+		}
 		log.info("start - getLoginUserOrg");
 		getLoginUserOrg();
 		log.info("end - getLoginUserOrg");
