@@ -38,7 +38,7 @@
 					#{lbl['lbl.pm.zone']}
 				</f:facet>
 				<p:selectOneMenu value="#{price.tplSpecZone.specZoneId}"
-					disabled="#{!isPendingSupplierRespStatus}" style="width: 90%;">
+					disabled="#{!isPendingSupplierRespStatus}" style="width: 128px;">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
 					<f:selectItems
 						value="#{purchaseInquiryBackingBean.managedBean.supplierZoneList}"
@@ -58,7 +58,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.sc.price.inquiry.price.offered.per.unit']}
 				</f:facet>
-				<p:inputText disabled="#{!isPendingSupplierRespStatus or rowIndex ne '0'}" value="#{price.itemPrice}" size="10" style="text-align:right">
+				<p:inputText disabled="#{!isPendingSupplierRespStatus}" value="#{price.itemPrice}" size="10" style="text-align:right">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
                 </p:inputText>
 			</p:column>
