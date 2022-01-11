@@ -19,7 +19,7 @@
 	<c:if test="#{registrationBackingBean.managedBean.smSupp.brandNew}">
 		<div class="nav-wrapper" align="justify">
 				<!--#12492-START-->
-				<p:commandButton value="#{lbl['lbl.sm.next']}" style="float:right;" oncomplete="scrollToTop();" actionListener="#{registrationBackingBean.CheckBankAccount('fromNext')}"
+				<p:commandButton value="#{lbl['lbl.sm.next']}" style="float:right;" oncomplete="scrollToTop();"
 					action="#{registrationBackingBean.proceedToFirstUserRegistration}" update="@([id$=Msg])">
 					<f:param name="disableValidation" value="true" />
 				</p:commandButton>

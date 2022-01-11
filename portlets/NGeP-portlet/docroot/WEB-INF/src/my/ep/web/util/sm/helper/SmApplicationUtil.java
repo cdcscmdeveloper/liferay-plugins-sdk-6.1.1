@@ -2899,6 +2899,8 @@ public class SmApplicationUtil {
 										.getFinancialOrgId())) {
 					validBank = false;
 					//#12492 start
+					System.out.println("masuk tutup account duplicate");
+					RequestContext.getCurrentInstance().execute("bankDialogDuplicate.hide()");
 					throw new EpException(MessageConst.ERROR_722543,
 							new String[] { bank.getAccountNo(),
 							supBank.getPmFinancialOrg().getFinOrgName() });

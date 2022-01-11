@@ -2910,6 +2910,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			String uniqBank = suppBank.getPmFinancialOrg().getFinancialOrgId().toString() + suppBank.getAccountNo();
 			if(bankList.contains(uniqBank)){
 				//12492 - START
+				RequestContext.getCurrentInstance().execute("bankDialogDuplicate.hide()");
 				throw new EpException(MessageConst.ERROR_721012);
 				//12492 - END
 			}
