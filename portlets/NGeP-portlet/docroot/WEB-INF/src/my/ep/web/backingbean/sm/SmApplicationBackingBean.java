@@ -15973,7 +15973,13 @@ public class SmApplicationBackingBean extends
 	public void verifySelectedRecommendRejectReasons() {
 		getManagedBean().setRecommendRejectReasonReqd(isRecommendDpaOthersSelected());
 		if (!getManagedBean().isRecommendRejectReasonReqd()) {
-			getManagedBean().setApplnRejectionRemarks(StringUtils.EMPTY);
+			//30974 - start
+			if(getManagedBean().isPoUser()){
+				getManagedBean().getPoSecReview().setRemarkToApprover(StringUtils.EMPTY);
+			}else{
+				getManagedBean().setApplnRejectionRemarks(StringUtils.EMPTY);
+			}
+			//30974 - end
 		}
 	}
 		
