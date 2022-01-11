@@ -249,7 +249,8 @@
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.bankDtls.bankName']}" id="smBankNameVal"
 							value="#{backingBean.managedBean.selectedBank.pmFinancialOrg.financialOrgId}" update="@([id$=save])"
-							style="width: 207px;margin-bottom: 5px;background-color:white;">
+							style="width: 207px;margin-bottom: 5px;background-color:white;"
+							oncomplete="scrollToTop();">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="finOrg"								
 								value="#{backingBean.managedBean.finOrgLs}"
@@ -640,7 +641,6 @@
 		<!--#12492-START-->
 			<p:commandButton id="save" value="#{lbl['lbl.sm.button.save']}"
 				partialSubmit="true" process=":form:tt:bankDialog"
-				actionListener="#{backingBean.CheckBankAccountInfoForm('fromNext')}"
 				action="#{backingBean.addOrUpdateBankInfoToSmAppl}"
 				onclick="bankDetailsPanelWidget.show();" oncomplete="bankDetailsPanelWidget.hide();"
 				update=":form:tt:bankDt , sfieldset, @([id$=Msg])" />
