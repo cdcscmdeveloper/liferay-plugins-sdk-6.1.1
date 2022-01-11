@@ -116,6 +116,9 @@
 									required="#{backingBean.managedBean.valueReqd and backingBean.managedBean.rejectReasonReqd}"
 									maxlength="4000">
 									<f:validateLength maximum="4000" />
+									<!-- 30974 - start -->
+									<p:ajax event="blur" process="@this" update="@this"/>
+									<!-- 30974 - end -->
 								</p:inputTextarea> <p:message id="rmrksForRejectTxtAreaMsg"
 									for="rmrksForRejectTxtArea" showSummary="true" showDetail="false"
 									display="icon" /></td>
@@ -146,6 +149,9 @@
 									required="#{backingBean.managedBean.valueReqd and backingBean.managedBean.rejectReasonReqd}"
 									maxlength="4000">
 									<f:validateLength maximum="4000" />
+									<!-- 30974 - start -->
+									<p:ajax event="blur" process="@this" update="@this"/>
+									<!-- 30974 - end -->
 							<!-- #15629 end 25/2/2021 -->
 							</p:inputTextarea> <p:message id="rmrksForApprovTxtAreaMsg" for="rmrksForApprovTxtArea"
 								showSummary="true" showDetail="false" display="icon" /></td>
