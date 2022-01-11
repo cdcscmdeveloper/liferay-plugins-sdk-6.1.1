@@ -106,7 +106,7 @@
  				style="background-color:transparent !important; border:0px none;"  
 				action="#{templateSpecBackingBean.zoneEstimationPopupAction(templateSpecBean)}"
 				oncomplete="#{zoneEstimationPopup}.show();"
-				partialSubmit="true" process="@this" update="@([id$=zoneEstimationPopup])"
+				partialSubmit="true" process="@this" update="@([id$=zoneEstimationPopup], [id$=scoringSetPopup])"
 				title="#{lbl['lbl.tpl.spec.content.estimate.cost.tooltip']}">
 				<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
 			</p:commandButton>

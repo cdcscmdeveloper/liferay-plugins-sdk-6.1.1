@@ -163,6 +163,11 @@ public class TemplateSpecBean implements Serializable {
 	 */
 	public void setSelectedSpecQuestion(TplSpecQuestion selectedSpecQuestion) {
 		this.selectedSpecQuestion = selectedSpecQuestion;
+		// #25138 - Bug #32194 - Start.
+		if (this.getSelectedScoreTypeId() == null && null != this.getSelectedSpecQuestion() && null != this.getSelectedSpecQuestion().getScoreTypeCode()) {
+			this.setSelectedScoreTypeId(this.getSelectedSpecQuestion().getScoreTypeCode().getParameterId());
+		}
+		// #25138 - Bug #32194 - End.
 	}
 
 	/**
