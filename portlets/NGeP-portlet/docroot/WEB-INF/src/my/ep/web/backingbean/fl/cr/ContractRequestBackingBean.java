@@ -1164,17 +1164,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				e.printStackTrace();
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+				}
+			}else{
+				messageId = MessageConst.ERROR_740070;
+					itemExceed = true;
+					throw new EpException(MessageConst.ERROR_740070);	
 			}
-			messageId = MessageConst.ERROR_740070;
-			if (getManagedBean().getOverallTotalItem() > FulfilmentConst.GFMAS_CHARGELINE_LIMIT || contractedItemList.size() > FulfilmentConst.GFMAS_CHARGELINE_LIMIT) {
-				itemExceed = true;
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(messageId,
-								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-			}
-			
-
 			for (CtContractItem contractedItem : contractedItemList) {
 				itemExisted = false;
 				for (FlFulfilmentItemAddr itemAddr : getManagedBean().getItemAddrList()) {
@@ -4571,6 +4566,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("itemType.parameterCode",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchItemType()));
 			}
 			reqDTO.setContractItemSearchBean(searchBean);
+			
+			//11076 start
+			int contractedItemList = 0;
+			contractedItemList = contractItemSO.searchContractItem(reqDTO).getContractItemResultBean().getTotalRecord();
+			log.info("========PAGE LISTENER ITEM==========="+contractedItemList);
+			getManagedBean().setValidateItem(contractedItemList);
+			//11076 end
+			
 			resDTO = contractItemSO.searchContractItem(reqDTO);
 			
 			PmParameter Pricetype = contractItemSO.searchContractItemPriceType(reqDTO);
@@ -4728,6 +4731,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			} 
 			getManagedBean().setTotalExistingItem(itemAddrList.size());// 11076
 			log.info("==========logInfo======== ITEM ADDR LIST" + itemAddrList.size());//11076
+			
 		} 
 	}
 
