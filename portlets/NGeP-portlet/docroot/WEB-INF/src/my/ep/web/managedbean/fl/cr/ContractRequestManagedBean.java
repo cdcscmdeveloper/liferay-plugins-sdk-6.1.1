@@ -3308,5 +3308,13 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		public void setOverallTotalItem(int overallTotalItem) {
 			this.overallTotalItem = overallTotalItem;
 		}
+
+		public int getValidateItem() {
+			return validateItem;
+		}
+
+		public void setValidateItem(int validateItem) {
+			this.validateItem = validateItem;
+		}
 		//11076 - end
 }
