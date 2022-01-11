@@ -81,10 +81,12 @@
 						    <f:facet name="header">
 						        <h:outputText value="#{lbl['lbl.sc.notice.board.criteria.site.visit']}"></h:outputText>
 						    </f:facet>
-						     
-						    <p:column headerText="#{lbl['lbl.sc.description']}">
-						        <h:outputText value="#{sitevisit.bsvDesc}" />
+						    
+						    <!-- Bug#32452 start -->
+						    <p:column headerText="#{lbl['lbl.sc.description']}" style="text-align:left;white-space: normal;width: 200px;">
+						        <h:outputText value="#{briefing.bsvDesc}" />
 						    </p:column>
+						    <!-- Bug#32452 end -->
 						
 						    <p:column headerText="#{lbl['lbl.sc.date']}">
 						        <h:outputText value="#{sitevisit.bsvDate}" >
