@@ -16607,6 +16607,7 @@ public class SmApplicationBackingBean extends
 				}
 			}	
 		}else if(fromPage.equalsIgnoreCase("fromNext")){
+			RequestContext.getCurrentInstance().execute("bankDialogDuplicate.hide()");
 			log.info("masuk CheckBankAccountInfoForm from next");
 		}
 	}
