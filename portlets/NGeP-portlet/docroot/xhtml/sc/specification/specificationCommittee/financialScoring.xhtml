@@ -380,6 +380,7 @@
 						value="#{lbl['lbl.sc.passing.score']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText style="text-align:right" maxlength="3"
+				label="#{lbl['lbl.sc.passing.score']}" id="numberFromValueId" 
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						value="#{specificationBackingBean.managedBean.finacialItemScoreSetting.passingScore}">
 						<p:ajax event="change" process="@this" partialSubmit="true" />
@@ -388,7 +389,7 @@
 							maxIntegerDigits="3" integerOnly="true" />
 						<f:attribute name="min" value="0"></f:attribute>
 						<f:attribute name="max" value="100"></f:attribute>
-					</p:inputText> <p:spacer width="5"></p:spacer></td>
+					</p:inputText><p:message id="numberFromValueMsg" for="numberFromValueId" display="icon" /><p:spacer width="5"></p:spacer></td>
 			</tr>
 		</table>
 	</p:panel>
