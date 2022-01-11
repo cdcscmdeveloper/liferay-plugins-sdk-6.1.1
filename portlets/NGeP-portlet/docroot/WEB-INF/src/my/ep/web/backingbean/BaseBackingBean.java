@@ -1960,27 +1960,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	//start #29956
 	/**
-	 * Compare all list in params with epRole
-	 * 
-	 * @param String
-	 *            roleCode
-        
-	 * @return String
-	 */
-	public Boolean compareSmPersonnelRoleAndStringRole(String[] params, String epRole) {
-		Boolean available = false;
-		String epRoleDesc = getEpRoleDescByRoleCode(epRole);
-		if (params != null && params.length > 0) {
-			for (int x=0; x<params.length; x++) {
-				if (params[x]!=null && params[x].equals(epRoleDesc)) {
-					available = true;
-				}
-			}
-		}
-		return available;
-	}
-	
-	/**
 	 * Get no eP Role by language
 	 * 
 	 * @param String
@@ -2043,8 +2022,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 								sb.append(getNoEpRoleDescByLanguage());
 								x++;
 								noEp = true;
-							} else if (smPersonnel.getEpRole() != null&& !roles.equals(getEpRoleDescByRoleCode(smPersonnel.getEpRole())) 
-									&& !compareSmPersonnelRoleAndStringRole(params, smPersonnel.getEpRole()) && !roles.equals("/ ")) {
+							} else if (smPersonnel.getEpRole() != null&& !roles.equals(getEpRoleDescByRoleCode(smPersonnel.getEpRole())) && !roles.equals("/ ")) {
 								params[x] = "/ ";
 								sb.append("/ ");
 								x++;
