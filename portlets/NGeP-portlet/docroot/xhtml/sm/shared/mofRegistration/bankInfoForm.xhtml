@@ -298,7 +298,7 @@
 							label="#{lbl['lbl.sm.bankDtls.acctNo']}" id="smBankAcctNo"
 							value="#{backingBean.managedBean.selectedBank.accountNo}"
 							size="35">
-							<p:ajax event="blur" process="@this" update="@this" listener="#{backingBean.CheckBankAccountInfoForm('fromBankInfo')}"/>
+							<p:ajax event="change" process="@this" update="@this" listener="#{backingBean.CheckBankAccountInfoForm('fromBankInfo')}"/>
 						</p:inputText> 
 						&#160;
 						<p:graphicImage id="banti" value="/css/images/design/tooltips.png" />
