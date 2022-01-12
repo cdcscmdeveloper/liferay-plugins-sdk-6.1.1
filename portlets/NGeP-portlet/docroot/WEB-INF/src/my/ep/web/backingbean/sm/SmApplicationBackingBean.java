@@ -13389,6 +13389,9 @@ public class SmApplicationBackingBean extends
 	 * Reset search rejected reason
 	 */
 	public void resetSearchRejectedReason() {
+		//#30974 - start
+		getManagedBean().setApplnRejectionRemarks(StringUtils.EMPTY);
+		//#30974 - end
 		getManagedBean().setSearchRejectReason(StringUtils.EMPTY);
 		//	#30974 -- start - 15/6/2020
 		getManagedBean().setSearchRecommendRejectReason(StringUtils.EMPTY);
@@ -15944,6 +15947,10 @@ public class SmApplicationBackingBean extends
 	 * Reset search recommend rejected reason
 	 */
 	public void resetSearchRecommendRejectedReason() {
+		//#30974 - start
+		getManagedBean().getPoSecReview().setRemarkToApprover(StringUtils.EMPTY);
+		//#30974 - end
+				
 		getManagedBean().setSearchRecommendRejectReason(StringUtils.EMPTY);
 		//30974 - start
 		//comment for changing method for set
