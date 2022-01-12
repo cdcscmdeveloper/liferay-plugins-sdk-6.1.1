@@ -714,9 +714,14 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 	//29599-end
 	//#21416 start
 	public String filterItemName(String itemName) {
-		String filteredItemName = itemName.replaceAll("\\s(NA|N/A|N A)", "");
-		return filteredItemName;
-		
+		if(this.getManagedBean().getAdjustment() != null){
+			if(this.getManagedBean().getAdjustment().getFlOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
+				String filteredItemName = itemName.replaceAll("\\s(NA|N/A|N A)", "");
+				return filteredItemName;
+			}
+		}
+		return itemName;
+				
 	}
 	//#21416 end
 }

@@ -1722,13 +1722,13 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	//28855 - end
 	//#21416 start
 	public String filterItemName(String itemName) {
-		if(this.getManagedBean().getFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
-			String filteredItemName = itemName.replaceAll("\\s(NA|N/A|N A)", "");
-			return filteredItemName;
-		}else{
-			return itemName;
+		if(this.getManagedBean().getFulfilmentOrder() != null){
+			if(this.getManagedBean().getFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
+				String filteredItemName = itemName.replaceAll("\\s(NA|N/A|N A)", "");
+				return filteredItemName;
+			}
 		}
-				
+		return itemName;		
 	}
 	//#21416 end
 }
