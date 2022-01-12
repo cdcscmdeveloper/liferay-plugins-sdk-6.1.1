@@ -342,8 +342,8 @@ public class ReportConst implements Serializable{
 	public static final String FL_NGEP_DEBIT_NOTE = "FL_NGEP_DEBIT_NOTE.jsp";
 	public static final String FL_NGEP_COGSTR = "FL_NGEP_COGSTR.jsp";
 	public static final String FL_NGEP_STOP_DELIVERY = "FL_NGEP_SDI.jsp";
-	public static final String FL_NGEP_PURCHASE_REQUEST = "FL_NGEP_PURCHASE_REQUEST.jsp";
-	public static final String FL_NGEP_CONTRACT_REQUEST = "FL_NGEP_CONTRACT_REQUEST.jsp";
+	public static final String FL_NGEP_PURCHASE_REQUEST = "FL_NGEP_PURCHASE_REQUEST.jsp"; //21221 
+	public static final String FL_NGEP_CONTRACT_REQUEST = "FL_NGEP_CONTRACT_REQUEST.jsp"; //21221
 
 	// FL Module reports end
 	// SM Module report start
@@ -959,7 +959,7 @@ public class ReportConst implements Serializable{
 	public static final String PARAM_KEY_USER_ID = "puser";
 	public static final String PARAM_KEY_NO_OF_DAYS = "noofdays";
 	public static final String PARAM_DOC_NO = "PNO"; 
-	public static final String PARAM_RUNNING_NO = "RNO"; 
+	public static final String PARAM_RUNNING_NO = "RNO";  //#21221
 	public static final String PARAM_USER_ID = "PUSER";
 	public static final String PARAM_QUOTE_ID_EQ = "qtid";
 	public static final String PARAM_KEY_REPORT_ID = "preportid";
