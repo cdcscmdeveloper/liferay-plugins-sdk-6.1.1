@@ -208,6 +208,9 @@
 										label="#{lbl['lbl.sm.remarks.rejection']}"
 										required="#{cc.attrs.bean.valueReqd and cc.attrs.bean.recommendRejectReasonReqd}"
 										maxlength="4000">
+										<!-- 30974 - start -->
+										<p:ajax event="blur" process="@this" update="@this"/>
+										<!-- 30974 - end -->
 										<f:validateLength maximum="4000" />
 									</p:inputTextarea> <p:message id="recRmrksForRejectTxtAreaMsg"
 										for="recRmrksForRejectTxtArea" showSummary="true" showDetail="false"
