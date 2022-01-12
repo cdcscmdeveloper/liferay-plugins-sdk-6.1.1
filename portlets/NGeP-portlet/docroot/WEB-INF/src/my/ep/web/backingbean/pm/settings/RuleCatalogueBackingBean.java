@@ -161,7 +161,6 @@ public class RuleCatalogueBackingBean extends
 	private static final String SETTING_CONFIG_MAIN = "settingConfig.xhtml?faces-redirect=true";
 	private static final String ERROR_PAGE = "/xhtml/pm/shared/outputMsg.xhtml";
 
-	// private List<SortMeta> preSortOrder = new ArrayList<SortMeta>();
 
 	public String getDupplicateOrgTypeName() {
 		return dupplicateOrgTypeName;
@@ -191,7 +190,6 @@ public class RuleCatalogueBackingBean extends
 	 *            the PmCategoryL3 instance
 	 */
 	public void selectCategoryAction(PmCategoryL3 pmCategoryL3) {
-		log.info("*****addNewRuleTypeValue*$$$****");
 		this.getManagedBean().setSelectedCategoryL3(pmCategoryL3);
 		PmConfigRule configRuleType = this.getManagedBean()
 				.getSelectedRuleDescType().getRuleType();
@@ -199,12 +197,8 @@ public class RuleCatalogueBackingBean extends
 		newRuleValue.setRuleType(configRuleType);
 		newRuleValue.setEffDate(this.getManagedBean().getTomorrow());
 
-		// if (this.getManagedBean().getSelectedRuleType().getRuleDataTypeId()
-		// .getParameterCode().equals("C")) {
-
 		newRuleValue.setCategoryL3Id(this.getManagedBean()
 				.getSelectedCategoryL3());
-		// }
 
 		if (configRuleType.getRangeType() == 1) {
 
@@ -228,7 +222,6 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	public void typeValueChgangeListener(PmFeeExemption feeExemption) {
-		log.info("................updateUnspscForFee...............");
 
 		log.info("......feeExemption.getTypeId().getTypeId()"
 				+ feeExemption.getTypeId().getTypeId());
@@ -256,9 +249,7 @@ public class RuleCatalogueBackingBean extends
 
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			unspscSO = null;
+			log.error(e);
 		}
 
 	}
@@ -279,7 +270,6 @@ public class RuleCatalogueBackingBean extends
 	 * 
 	 */
 	public SelectItem[] getOrgTypeDropdownValuesFOR() {
-		log.info("getOrgTypeDropdownValues for org type");
 		ISearchBean<PmParameterDesc> searchBean = null;
 		searchBean = getOrgTypeSearchBean("orgTypeSysParameter");
 		SelectItem[] items = null;
@@ -319,38 +309,12 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	public String getInactiveFeeOrgPopUpMsg() {
-		// log.info(".........getInactiveFeeOrgPopUpMsg.........");
 		return inactiveFeeOrgPopUpMsg;
 	}
 
 	public void setInactiveFeeOrgPopUpMsg(String inactiveFeeOrgPopUpMsg) {
 		this.inactiveFeeOrgPopUpMsg = inactiveFeeOrgPopUpMsg;
 	}
-
-	/*
-	 * method to build initial sort order for multisort
-	 */
-	// private void buildSortOrder() {
-	// log.info("...............buildSortOrder...............");
-	// UIViewRoot viewRoot = FacesContext.getCurrentInstance().getViewRoot();
-	// UIComponent column1 =
-	// viewRoot.findComponent("ruleTypeValueTableID:fromValueColumnId");
-	// UIComponent column2 =
-	// viewRoot.findComponent("ruleTypeValueTableID:effDateColumnId");
-	//
-	// SortMeta sm1 = new SortMeta();
-	// sm1.setSortBy((UIColumn) column1);
-	// sm1.setSortField("fromValueColumnId");
-	// sm1.setSortOrder(SortOrder.ASCENDING);
-	// preSortOrder.add(sm1);
-	//
-	// SortMeta sm2 = new SortMeta();
-	// sm2.setSortBy((UIColumn) column2);
-	// sm2.setSortField("effDateColumnId");
-	// sm2.setSortOrder(SortOrder.ASCENDING);
-	// preSortOrder.add(sm2);
-	// log.info(".............end of..buildSortOrder...............");
-	// }
 
 	public String getInactiveFeeComoPopUpMsg() {
 
@@ -400,6 +364,8 @@ public class RuleCatalogueBackingBean extends
 	
 	private void initYearEndForProcessing(){
 		IFeeExemptionSO feeSO = null;
+		this.getManagedBean().setMinDate(null);//32333
+		
 		try {
 			feeSO = (IFeeExemptionSO) BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -469,8 +435,7 @@ public class RuleCatalogueBackingBean extends
 			this.getManagedBean().getDeletedOrgAndItemFeeExemptions().clear();
 			resFDTO = feeSO.getFeeExemptionsForOrgAndItem(reqFDTO);
 			for (PmFeeExemption exemption : resFDTO.getFeeExemptions()) {
-				if (exemption.getItemId() == null) {// TODO: clear it before
-													// updating the fee list
+				if (exemption.getItemId() == null) {
 					exemption.setItemId(new CmItem());
 				}
 				this.getManagedBean().getFeeExemptionsForOrgAndItem()
@@ -514,14 +479,7 @@ public class RuleCatalogueBackingBean extends
 
 			for (PmFeeExemption exemption : resFDTO.getFeeExemptions()) {
 				if (exemption.getRequestItemId() == null) {
-					exemption.setRequestItemId(new ScRequestItem());// TODO:
-																	// clear
-																	// it
-																	// before
-																	// updating
-																	// the
-																	// fee
-																	// list
+					exemption.setRequestItemId(new ScRequestItem());
 				}
 				this.getManagedBean().getFeeExemptionsForContract()
 						.add(exemption);
@@ -610,15 +568,7 @@ public class RuleCatalogueBackingBean extends
 					.getLanguage();
 			reqRDTO.setLanguageCode(languageCode);
 			ISearchBean<PmConfigRuleDesc> searchBean = new SearchBean<PmConfigRuleDesc>();
-			//TODO - data restriction on next round (16/2/2017)
-//			ISearchBean<PmConfigRuleDesc> searchBean = super.createSearchBean(PmConfigRuleDesc.class,
-//					"ruleTypeTableID");
-			// Filter By - status
-//						searchBean.getDataFilterBeans().add(
-//								new SearchFilterBean("ruleType.ruleType",
-//										SearchOperator.OPERATOR_EQUALS.value(),
-//										"QT"));
-//			
+		
 			// Filter By - status
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("ruleType.recordStatus",
@@ -2116,8 +2066,7 @@ public class RuleCatalogueBackingBean extends
 			reqDTO = new FeeExemptionReqDTO();
 			resDTO = exemptionSO.getFeeExemptionsForOrgAndItem(reqDTO);
 			for (PmFeeExemption exemption : resDTO.getFeeExemptions()) {
-				if (exemption.getItemId() == null) {// TODO: clear it before
-													// updating the fee list
+				if (exemption.getItemId() == null) {
 					exemption.setItemId(new CmItem());
 				}
 				this.getManagedBean().getFeeExemptionsForOrgAndItem()
@@ -2421,14 +2370,7 @@ public class RuleCatalogueBackingBean extends
 
 			for (PmFeeExemption exemption : resDTO.getFeeExemptions()) {
 				if (exemption.getRequestItemId() == null) {
-					exemption.setRequestItemId(new ScRequestItem());// TODO:
-																	// clear
-																	// it
-																	// before
-																	// updating
-																	// the
-																	// fee
-																	// list
+					exemption.setRequestItemId(new ScRequestItem());
 				}
 				this.getManagedBean().getFeeExemptionsForContract()
 						.add(exemption);
@@ -2847,8 +2789,7 @@ public class RuleCatalogueBackingBean extends
 								.getThresholdId()));
 		// 1 - unplanned
 		// 2 - budget
-		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IStatusSO.class);
+		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject("pm", IStatusSO.class);
 		StatusReqDTO statusReqDTO = null;
 		if (type == 1) {
 
@@ -3662,11 +3603,6 @@ public class RuleCatalogueBackingBean extends
 		getManagedBean().getTaxableItemsForG2G().clear();
 		getManagedBean().getDeletedTaxableItemsForG2G().clear();
 
-		// TODO init exemption type tabs
-		// hide GstItemTabs
-		// for (int exemptionType : ProfileManagementConst.GST_EXEMPTION_LIST) {
-		// initGstTabsItems(exemptionType);
-		// }
 		// init DA
 		initDesignatedArea();
 	}
@@ -5173,18 +5109,22 @@ public class RuleCatalogueBackingBean extends
 	
 	//[#22119]
 	public void saveYEPValues() {
-		log.info("saveYEPValues");		
-		
+		IFeeExemptionSO feeSO = (IFeeExemptionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IFeeExemptionSO.class);//32333
 		Calendar effectiveDt = null;
         Calendar expiryDt = null; 
         Calendar currentDt = Calendar.getInstance();         
         currentDt.setTime(DateUtils.getCurrentDateWithoutTime());
 		boolean isValidDt = false;
-		PmFeeExemption p2Np3_period = null, p5_period = null, p6_PATperiod = null;
+		PmFeeExemption p2Np3_period = null;
+		PmFeeExemption p5_period = null;
+		PmFeeExemption p6_PATperiod = null;
 		String processname = null;
 		
+		//32333-start
+		FeeExemptionReqDTO reqFDTO = new FeeExemptionReqDTO();
+		FeeExemptionResDTO resFDTO = null;		
+		//32333-end
 		for(PmFeeExemption feeExemption : this.getManagedBean().getFeeExemptionsForYepProcessing()) {			
-			log.info("[#22119] FeeExemption Code: " + feeExemption.getOrgTypeId().getParameterCode());
 			//Phase 2 and Phase 3 Period
 			if(feeExemption.getOrgTypeId().getParameterCode().equals("7")) {
 				if(feeExemption.getEffDate() == null) {
@@ -5233,45 +5173,56 @@ public class RuleCatalogueBackingBean extends
 				if(feeExemption.getOrgTypeId().getParameterCode().equals("9")) {
 					processname = "Proses Akhir Tahun Period";
 				}
-				log.info("[#22119] Process name: " + processname);
 			} else if(this.getLanguage().equals("ms")) {
 				feeExemption.getOrgTypeId().getPmParameterDescs().get(1).getCodeName();
 				processname = feeExemption.getOrgTypeId().getPmParameterDescs().get(1).getCodeName();
 				if(feeExemption.getOrgTypeId().getParameterCode().equals("9")) {
 					processname = "Tempoh Proses Akhir Tahun";
 				}
-				log.info("[#22119] Process name: " + processname);
 			}
 			
-			log.info("[#22119] Current date: " + currentDt.getTime().toString());
-			log.info("[#22119] Effective date: " + effectiveDt.getTime().toString());
-			log.info("[#22119] Expiry date: " + expiryDt.getTime().toString());
-			if(feeExemption.getEffDate() != null && effectiveDt.before(currentDt)) {
-				throw new EpException(MessageConst.ERR_900049, 
-						new String[] {ResourceBundleUtils.getMessage("lbl.pm.yep.effdate",
-      				  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()), processname});
-			}
+			//32333-start
+			reqFDTO.setParameterCode(feeExemption.getOrgTypeId().getParameterCode());
+			resFDTO = feeSO.retrieveYepByParamterCode(reqFDTO);
+					
+			if(resFDTO != null) {
+				if(feeExemption.getEffDate() != null && !feeExemption.getEffDate().equals(resFDTO.getFeeExemption().getEffDate())){
+					if(feeExemption.getEffDate() != null && effectiveDt.before(currentDt)) {
+						throw new EpException(MessageConst.ERR_900049, 
+								new String[] {ResourceBundleUtils.getMessage("lbl.pm.yep.effdate",
+		      				  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()), processname});
+					}
+					if(feeExemption.getExpDate() != null && expiryDt.before(effectiveDt)) {
+						throw new EpException(MessageConst.ERR_900050, 
+								new String[] {ResourceBundleUtils.getMessage("lbl.pm.yep.expdate",
+		      				  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()), 
+		      				  processname, 
+		      				  ResourceBundleUtils.getMessage("lbl.pm.yep.effdate", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					}
+				}
 			
-			if(feeExemption.getExpDate() != null && expiryDt.before(currentDt)) {
-				throw new EpException(MessageConst.ERR_900049, 
-						new String[] {ResourceBundleUtils.getMessage("lbl.pm.yep.expdate",
-      				  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()), processname});
-			}
+				if(feeExemption.getExpDate() != null && !feeExemption.getExpDate().equals(resFDTO.getFeeExemption().getExpDate())){
+					if(feeExemption.getExpDate() != null && expiryDt.before(currentDt)) {
+						throw new EpException(MessageConst.ERR_900049, 
+								new String[] {ResourceBundleUtils.getMessage("lbl.pm.yep.expdate",
+		      				  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()), processname});
+					}
 			
-			if(feeExemption.getExpDate() != null && expiryDt.before(effectiveDt)) {
-				throw new EpException(MessageConst.ERR_900050, 
-						new String[] {ResourceBundleUtils.getMessage("lbl.pm.yep.expdate",
-      				  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()), 
-      				  processname, 
-      				  ResourceBundleUtils.getMessage("lbl.pm.yep.effdate", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					if(feeExemption.getExpDate() != null && expiryDt.before(effectiveDt)) {
+						throw new EpException(MessageConst.ERR_900050, 
+								new String[] {ResourceBundleUtils.getMessage("lbl.pm.yep.expdate",
+		      				  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()), 
+		      				  processname, 
+		      				  ResourceBundleUtils.getMessage("lbl.pm.yep.effdate", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					}
+				}
 			}
-			
 			isValidDt =  true;
-		}
+			}
+			//32333-end
 		
 		if(isValidDt) {
 			for(PmFeeExemption feeExemption : this.getManagedBean().getFeeExemptionsForYepProcessing()) {
-				log.info("[#22119] FeeExemption Code: " + feeExemption.getOrgTypeId().getParameterCode());
 				if(feeExemption.getOrgTypeId().getParameterCode().equals("9")) {
 					p6_PATperiod = feeExemption;
 					break;
@@ -5281,16 +5232,8 @@ public class RuleCatalogueBackingBean extends
 			for(PmFeeExemption feeExemption : this.getManagedBean().getFeeExemptionsForYepProcessing()) {				
 				if(feeExemption.getOrgTypeId().getParameterCode().equals("7")) {
 					p2Np3_period = feeExemption;
-					/*if(p6_PATperiod != null && p6_PATperiod.getEffDate() != null && p6_PATperiod.getExpDate() != null) {
-						//p2Np3_period = feeExemption;
-						isValidDt = validateP2AndP3PeriodDt(p2Np3_period, p6_PATperiod);
-					} */
 				} else if(feeExemption.getOrgTypeId().getParameterCode().equals("8")) {
 					p5_period = feeExemption;
-					/*if(p2Np3_period != null && p2Np3_period.getEffDate() != null && p2Np3_period.getExpDate() != null) {
-						//p5_period = feeExemption;
-						isValidDt = validateP5PeriodDt(p5_period, p2Np3_period, p6_PATperiod);
-					}*/
 				}
 			}
 			
