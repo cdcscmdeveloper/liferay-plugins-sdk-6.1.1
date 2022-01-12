@@ -16601,10 +16601,12 @@ public class SpecificationBackingBean extends
 								//#25138  - Allow indicativeUnitPrice & estimatedCost null if qty 0 - start
 								for(TplSpecZoneQty zoneQty : tplSpecQuestion.getTplSpecZoneQties()){
 									if(zoneQty.getQty().compareTo(BigDecimal.ZERO) > 0 
-											// #25138 - Bug #32194 - Start.
+											// #25138 - Bug #32194 - Start
+											&& null != zoneQty.getTplSpecZoneDtl()
+											&& null != tplSpecEstimation.getTplSpecZoneDtl()
 											&& zoneQty.getTplSpecZoneDtl().getSpecZoneId()
 											.equals(tplSpecEstimation.getTplSpecZoneDtl().getSpecZoneId())
-											// #25138 - Bug #32194 - End.
+											// #25138 - Bug #32194 - End
 											){
 										if (indicativeUnitPrice == null && !isSave) {
 											throw new EpException(MessageConst.ERROR_760520);
