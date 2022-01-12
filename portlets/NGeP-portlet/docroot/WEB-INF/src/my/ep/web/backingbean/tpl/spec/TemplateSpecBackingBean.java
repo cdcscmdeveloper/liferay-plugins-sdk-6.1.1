@@ -3298,7 +3298,11 @@ public class TemplateSpecBackingBean extends
 				.getSelectedSpecQuestion();
 		BigDecimal totalEstAmount = new BigDecimal(0);
 
-		if (oriSpecQuestion.getTplSpecEstimations() != null) {
+		if (
+			// #25138 - Bug #32194 - Start
+			null != oriSpecQuestion && 
+			// #25138 - Bug #32194 - End
+			oriSpecQuestion.getTplSpecEstimations() != null) {
 			if (oriSpecQuestion.getTplSpecEstimations().size() != 0){		
 				selectedSpecQuestion.setTplSpecEstimations(oriSpecQuestion.getTplSpecEstimations());
 				totalEstAmount = calcGrandTotalEstAmount(templateSpecBean);
