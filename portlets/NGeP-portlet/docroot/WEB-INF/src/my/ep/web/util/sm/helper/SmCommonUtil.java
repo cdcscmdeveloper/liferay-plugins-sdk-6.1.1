@@ -6309,6 +6309,7 @@ public class SmCommonUtil {
 	//SSM INTEGRATION
 	public String verifyWithMyIdentity(String name, String identificationNo,
 			String postCode, String type,boolean showSSMError) {
+		log.info(showSSMError);
 		this.showSSMError = showSSMError;
 		return verifyWithMyIdentity(name,identificationNo,
 				postCode,type) ;
