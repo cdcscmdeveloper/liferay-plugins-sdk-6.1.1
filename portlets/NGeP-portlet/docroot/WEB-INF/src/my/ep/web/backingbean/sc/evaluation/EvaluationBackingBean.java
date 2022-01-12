@@ -439,11 +439,13 @@ public class EvaluationBackingBean extends
 											summaryReqDTO.getAwardBy(),
 											summaryReqDTO.getResultStages()));
 				//#21695 -- 20200717@asyrafhaziq - Display not offer supplier - Start
+				//BUG #32453 & 32297 related to #21695 Start
 					this.getManagedBean()
 					.setNotOfferSupplierDM(
 							new SummaryNotOfferSupplierPagingDataModel(
 									"evaluationCommitteeSummaryNotOfferSupplier",
-									scQt.isZonal(), summaryReqDTO.getAwardBy()));
+									scQt.isZonal(), summaryReqDTO.getAwardBy(),summaryReqDTO.getResultStages().get(0).toString()));
+				//BUG #32453 & 32297 related to #21695 End
 				//#21695 -- 20200717@asyrafhaziq - Display not offer supplier - End
 				} else {
 					this.getManagedBean()
@@ -459,11 +461,13 @@ public class EvaluationBackingBean extends
 											false, scQt.isZonal(), null,
 											summaryReqDTO.getResultStages()));
 					//#21695 -- 20200717@asyrafhaziq - Display not offer supplier - Start
+					//BUG #32453 & 32297 related to #21695 Start
 					this.getManagedBean()
 					.setNotOfferSupplierDM(
 							new SummaryNotOfferSupplierPagingDataModel(
 									"evaluationCommitteeSummaryNotOfferSupplier",
-									scQt.isZonal(), summaryReqDTO.getAwardBy()));
+									scQt.isZonal(), summaryReqDTO.getAwardBy(),summaryReqDTO.getResultStages().get(0).toString()));
+					//BUG #32453 & 32297 related to #21695 End
 					//#21695 -- 20200717@asyrafhaziq - Display not offer supplier - End
 				}
 
@@ -2897,11 +2901,13 @@ public void saveComplianceSample() {
 						new SummarySupplierPagingDataModel(
 								"oneTierDisQualifiedSupplier", false, false,
 								null, summaryReqDTO.getResultStages()));
+				//BUG #32453 & 32297 related to #21695 Start
 				this.getManagedBean()
 						.setNotOfferSupplierDM(
 								new SummaryNotOfferSupplierPagingDataModel(
 										"evaluationCommitteeSummaryNotOfferSupplierTechPackage",
-										scQt.isZonal(), null));
+										scQt.isZonal(), null,summaryReqDTO.getResultStages().toString()));
+				//BUG #32453 & 32297 related to #21695 End
 			}
 
 		} finally {
@@ -12657,14 +12663,22 @@ private void retriveCommitteeRemarksList(){
 		
 		private boolean isZonal;
 		private String awardBy;
+		//BUG #32453 & 32297 related to #21695 Start
+		private String evalStage;
+		//BUG #32453 & 32297 related to #21695 End
+		
 		/**
 		 * Constructor for Summary Not Offer Supplier Paging Data Model
 		 */
+		//BUG #32453 & 32297 related to #21695 Start
 		public SummaryNotOfferSupplierPagingDataModel(String componentId,
-				boolean isZonal, String awardBy) {
+				boolean isZonal, String awardBy,  String evalStage) {
 			super(componentId);
 			this.isZonal = isZonal;
 			this.awardBy = awardBy;
+			//BUG #32453 & 32297 related to #21695 Start
+			this.evalStage = evalStage;
+			//BUG #32453 & 32297 related to #21695 End
 		}
 		/*
 		 * (non-Javadoc)
@@ -12691,6 +12705,9 @@ private void retriveCommitteeRemarksList(){
 				reqDTO.setQtId(scQt.getQtId());
 				reqDTO.setZonal(isZonal);
 				reqDTO.setNotOfferSupplierSearchBean(searchBean);
+				//BUG #32453 & 32297 related to #21695 Start
+				reqDTO.setEvalStage(evalStage);
+				//BUG #32453 & 32297 related to #21695 End
 				if (getManagedBean().getSelectedZone() != null && isZonal) {
 					System.out.println("masuk gila zonal");
 					reqDTO.setSpeZoneId(getManagedBean().getSelectedZone()
@@ -12716,8 +12733,15 @@ private void retriveCommitteeRemarksList(){
 //#21695 Farid Start 19/11/2020				
 				if(isZonal){
 					if(SourcingConstants.AWARD_BY_ITEM.equals(awardBy)){
-						return evaluationSO.retrieveSummaryNotOfferSuppliers(reqDTO)
-								.getNotOfferSupplierResultBean();
+						//BUG #32453 & 32297 related to #21695 Start
+						if(evalStage.equalsIgnoreCase("TI")){
+							return evaluationSO.retrieveSummaryNotOfferSuppliersItem(reqDTO)
+									.getNotOfferSupplierResultBean();
+						}else{
+							return evaluationSO.retrieveSummaryNotOfferSuppliers(reqDTO)
+									.getNotOfferSupplierResultBean();
+						}
+						//BUG #32453 & 32297 related to #21695 End
 					}else{
 						return evaluationSO.retrieveSummaryNotOfferSuppliersPackageTech(reqDTO)
 								.getNotOfferSupplierResultBean();
@@ -15624,11 +15648,13 @@ private void retriveCommitteeRemarksList(){
 											summaryReqDTO.getAwardBy(),
 											summaryReqDTO.getResultStages()));
 					//20200717@asyrafhaziq - Display not offer supplier - Start
+					//BUG #32453 & 32297 related to #21695 Start
 					this.getManagedBean()
 					.setNotOfferSupplierDM(
 							new SummaryNotOfferSupplierPagingDataModel(
 									"evaluationCommitteeSummaryNotOfferSupplier",
-									scQt.isZonal(), summaryReqDTO.getAwardBy()));
+									scQt.isZonal(), summaryReqDTO.getAwardBy(),summaryReqDTO.getResultStages().get(0).toString()));
+					//BUG #32453 & 32297 related to #21695 End
 					//20200717@asyrafhaziq - Display not offer supplier - End	
 				}else{
 					this.getManagedBean().setQualifiedSuppliersDM(
@@ -15640,11 +15666,13 @@ private void retriveCommitteeRemarksList(){
 									"oneTierDisQualifiedSupplier", false,
 									false, null, summaryReqDTO.getResultStages()));
 					//20200717@asyrafhaziq - Display not offer supplier - End
+					//BUG #32453 & 32297 related to #21695 Start
 					this.getManagedBean()
 					.setNotOfferSupplierDM(
 							new SummaryNotOfferSupplierPagingDataModel(
 									"evaluationCommitteeSummaryNotOfferSupplierTechPackage",
-									scQt.isZonal(), null));
+									scQt.isZonal(), null,summaryReqDTO.getResultStages().get(0).toString()));
+					//BUG #32453 & 32297 related to #21695 End
 					if (this.getManagedBean().isDemo()) {
 						retrivePresentationDemoSummary();
 					}
