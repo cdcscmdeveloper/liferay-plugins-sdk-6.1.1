@@ -77,7 +77,7 @@
 				</f:facet>
 			<!--#12492-START-->
 				<p:inputText id="bankAccNoId" value="#{bankInfo.accountNo}" maxlength="18" disabled="#{registrationBackingBean.managedBean.viewMode or bankInfo.hasActiveTransactionContractManagement or bankInfo.hasActiveTransactionFulfilment}">
-					<p:ajax event="blur" process="@this" update="@this" listener="#{registrationBackingBean.CheckBankAccount('fromBankInfo')}"/>
+					<p:ajax event="change" process="@this" update="@this" listener="#{registrationBackingBean.CheckBankAccount('fromBankInfo')}"/>
 				</p:inputText>
 			<!--#12492-END-->
 				<p:message id="bankAccNoIdMsg" for="bankAccNoId" display="icon" />
