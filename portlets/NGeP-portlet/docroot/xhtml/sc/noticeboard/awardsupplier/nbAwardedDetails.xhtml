@@ -20,14 +20,14 @@
 				<p:columnGroup type="header">
 					<p:row>
 						<p:column rowspan="2" style="text-align:center; width : 3%" headerText="#{lbl['lbl.sc.no']}" />
-						<p:column rowspan="2" style="text-align:center; width : 42%" headerText="#{lbl['lbl.sc.item']}" />
+						<p:column rowspan="2" style="text-align:center; width : 47%" headerText="#{lbl['lbl.sc.item']}" />
 						<p:column rowspan="2" style="text-align:center; width : 25%" headerText="#{lbl['lbl.sc.supplier.name']}" />
-						<p:column colspan="3" style="text-align:center; width : 30%" headerText="#{lbl['lbl.sc.offered.price']}" />
-					</p:row>
-					<p:row>
-						<p:column style="text-align:center" headerText="#{lbl['lbl.sc.notice.board.by.loa']}" />
-						<p:column style="text-align:center"  headerText="#{lbl['lbl.sc.notice.board.by.proposal']}" />
-						<p:column style="text-align:center"  headerText="#{lbl['lbl.sc.notice.board.by.bidding']}" />
+						<p:column rowspan="2" style="text-align:center; width : 25%">
+							<f:facet name="header" style="white-space:normal;">
+								<h:outputText value="#{lbl['lbl.sc.offered.price']}" />
+								<ac:iconTooltip value="#{lbl['lbl.sc.notice.board.offered.price.tooltip']}"/>
+							</f:facet>
+						</p:column>
 					</p:row>
 				</p:columnGroup>
 				<p:column>
@@ -40,39 +40,58 @@
 					<h:outputText style="white-space : normal;" value="#{awardedItem.supplierName}" />
 				</p:column>
 				<p:column>
-					<h:outputText value="#{awardedItem.priceByLoa}" style="float:right;">
+					<h:outputText value="#{awardedItem.loaAmount}" style="float:center;">
 					<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				 </h:outputText>
-				</p:column>
-				<p:column>
-					<h:outputText value="#{awardedItem.priceByProposal}" style="float:right;">
-					<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</h:outputText>
-				</p:column>
-				<p:column>
-					<h:outputText value="#{awardedItem.priceByBidding}" style="float:right;">
-					<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</h:outputText>
 				</p:column>
 
 			</p:dataTable>
 
 		</ui:fragment>
 
-		<ui:fragment
-			rendered="#{noticeBoardBackingBean.managedBean.scQt.finalization.recommendedTypeId.parameterCode eq ParameterConst.recommendTypePackage}">
-			
-			<h:panelGrid columns="2" width="100%" border="0"  columnClasses="columnWidth20">
-				<p:outputLabel value="#{lbl['lbl.sc.award.type']}" ></p:outputLabel>
-				<h:outputText
-					value="#{noticeBoardBackingBean.managedBean.awardType}"></h:outputText>
-				<p:outputLabel value="#{lbl['lbl.sc.supplier.name']}" style="width:130px"></p:outputLabel>
-				<h:outputText
-					value="#{noticeBoardBackingBean.managedBean.supplierName}"></h:outputText>
-			</h:panelGrid>
-		</ui:fragment>
-	
+	<ui:fragment
+		rendered="#{noticeBoardBackingBean.managedBean.scQt.finalization.recommendedTypeId.parameterCode eq ParameterConst.recommendTypePackage}">
+
+		<h:panelGrid columns="2" width="100%" border="0"
+			columnClasses="columnWidth20">
+			<p:outputLabel value="#{lbl['lbl.sc.award.type']}"></p:outputLabel>
+			<h:outputText value="#{noticeBoardBackingBean.managedBean.awardType}"></h:outputText>
+		</h:panelGrid>
+		<p:dataTable id="packagedtbl" var="awardedPackaged" style="width:75%"
+			value="#{noticeBoardBackingBean.managedBean.scLoaList}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			rowIndexVar="index">
+			<p:columnGroup type="header">
+				<p:row>
+					<p:column rowspan="2" style="text-align:center; width : 4%"
+						headerText="#{lbl['lbl.sc.no']}" />
+					<p:column rowspan="2" style="text-align:center; width : 48%"
+						headerText="#{lbl['lbl.sc.supplier.name']}" />
+					<p:column rowspan="2" style="text-align:center; width : 48%">
+						<f:facet name="header" style="white-space:normal;">
+							<h:outputText value="#{lbl['lbl.sc.offered.price']}" />
+							<ac:iconTooltip
+								value="#{lbl['lbl.sc.notice.board.offered.price.tooltip']}" />
+						</f:facet>
+					</p:column>
+				</p:row>
+			</p:columnGroup>
+			<p:column>
+				<h:outputText value="#{index+1}" />
+			</p:column>
+			<p:column>
+				<h:outputText style="white-space : normal;"
+					value="#{awardedPackaged.scLoiLoa.supplierName}" />
+			</p:column>
+			<p:column>
+				<h:outputText value="#{awardedPackaged.loaAmt}" style="float:center;">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+
+		</p:dataTable>
+	</ui:fragment>
+
 </ui:composition>
