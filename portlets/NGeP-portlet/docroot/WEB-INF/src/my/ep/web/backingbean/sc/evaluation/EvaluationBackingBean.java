@@ -2413,23 +2413,30 @@ public class EvaluationBackingBean extends
 						.getCheckListResultBean().getResultList();
 				for (ScQtCheckList proposalCheckList : proposalChecklistList) {
 
-					if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
-							.equalsIgnoreCase(proposalCheckList
-									.getDefinationType().getParameterCode())
-							&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION
-									.equalsIgnoreCase(proposalCheckList
-											.getDefinationType()
-											.getParameterCode())//#25138 - start
-											&& proposalCheckList.isScoringReq()) {//#25138 - end
-						localCheckList.add(proposalCheckList);
-					} else {
+					//32426 - start
 						if (proposalCheckList.isScoringReq()) {
-							// localCheckList.add(proposalCheckList);
 							localCheckList
 									.add(checkStausForUploadNoActionCheckLists(
 											proposalCheckList, evalstage.get(0)));
 						}
-					}
+//					if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
+//							.equalsIgnoreCase(proposalCheckList
+//									.getDefinationType().getParameterCode())
+//							&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION
+//									.equalsIgnoreCase(proposalCheckList
+//											.getDefinationType()
+//											.getParameterCode())//#25138 - start
+//											&& proposalCheckList.isScoringReq()) {//#25138 - end
+//						localCheckList.add(proposalCheckList);
+//					} else {
+//						if (proposalCheckList.isScoringReq()) {
+//							// localCheckList.add(proposalCheckList);
+//							localCheckList
+//									.add(checkStausForUploadNoActionCheckLists(
+//											proposalCheckList, evalstage.get(0)));
+//						}
+//					}
+					//32426 - end
 					//#25138 - get zones to pass to summary tab directly - start
 					if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
 							.equalsIgnoreCase(proposalCheckList
