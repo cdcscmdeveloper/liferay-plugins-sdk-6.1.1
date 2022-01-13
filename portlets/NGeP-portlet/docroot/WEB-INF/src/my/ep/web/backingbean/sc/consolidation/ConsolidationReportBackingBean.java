@@ -753,15 +753,21 @@ public class ConsolidationReportBackingBean extends
 	public void submitAction() {
 		// Validate Desk officer ranking
 		// #30874 - Start.
+		//#32401 - start comment to enable validation for pending recommendation (revise)
 		//28834 start
-		if (null != getManagedBean().getCurrentStatusId() 
-				&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER.longValue())) {
-			
-		} else {
-		         validateConsolidationReport();
-			
-		}
+		  /*if (null != getManagedBean().getCurrentStatusId() 
+					&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER.longValue())) {
+				
+			} else {
+			     validateConsolidationReport();    
+					
+			}*/
 		//28834 end
+		//#32401 - end comment
+				
+		//#32401 - start replace comment above with this.
+			validateConsolidationReport();
+		//#32401 - end
 	   
 	    // #30874 - End.
 		RequestContext.getCurrentInstance().execute("submissionPopup.show()");
