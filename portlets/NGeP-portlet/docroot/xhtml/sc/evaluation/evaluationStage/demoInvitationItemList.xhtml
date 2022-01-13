@@ -39,11 +39,13 @@
 		<p:panel header="#{lbl['lbl.sc.mr.specification']}" toggleable="true">
 
 		<p:dataTable id="questionTbl" converter="PositionMetricConverter"
+			rows="10"
 			value="#{evaluationBackingBean.managedBean.templateSpecBean.specMaster.tplSpecQuestions}"
 			widgetVar="#{templateSpecId}questionTblWidget" var="question"
 			rowIndexVar="row"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			scrollable1="true" scrollWidth1="#{scrollWidth}">
+			<ac:paginator for="questionTbl" />
 
 			<ui:param name="isFulfilmentTypeOneOff"
 				value="#{question.clFulfilmentTypeCode.parameterCode == ParameterConst.fulfilmentTypeOneOff}" />
