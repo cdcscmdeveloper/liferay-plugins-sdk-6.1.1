@@ -73,7 +73,7 @@
 					style="text-align:right">
 					<h:outputText value="#{summaryqualSup.totalScore}"></h:outputText>
 				</p:column>
-				<ui:remove> #21695 #29021 Start </ui:remove>
+				
 				<p:column style="width:25%;white-space: normal;text-align:center;">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.rating']}" />
@@ -81,7 +81,7 @@
 					</f:facet>
 					<h:outputText value="#{empty summaryqualSup.totalRating? 0: summaryqualSup.totalRating}"/>
 				</p:column>
-				<ui:remove> #21695 #29021 end </ui:remove>
+
 			</p:dataTable>
 			<p:spacer height="10px" />
 			<table>
@@ -139,7 +139,6 @@
 					<h:outputText value="#{disQualifiedSupplier.totalScore}"></h:outputText>
 				</p:column>
 
-				<ui:remove> #21695 #29021 Start </ui:remove>
 				<p:column style="width:25%;white-space: normal;text-align:center;">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.rating']}" />
@@ -147,7 +146,6 @@
 					</f:facet>
 					<h:outputText value="#{empty disQualifiedSupplier.totalRating? 0: disQualifiedSupplier.totalRating}"/>
 				</p:column>
-				<ui:remove> #21695 #29021 end </ui:remove>
 
 			</p:dataTable>
 			<p:spacer height="10px" />
@@ -178,8 +176,9 @@
 			<ac:iconTooltip
 				value="#{lbl['lbl.sc.eva.not.offer.supplier.list.tec.evaluation.item.stage.tooltip']}" />
 		   </f:facet>
+		   <!-- #32297 related to #21695 COMMAND START-->
            <c:if test ="#{evaluationBackingBean.managedBean.scQt.zonal ne 'false'}">
-				<p:accordionPanel dynamic="true"
+				<!--  <p:accordionPanel dynamic="true"
 					value="#{evaluationBackingBean.managedBean.evaluationStageZonesSummary}"
 					var="zonePnlList">
 					<p:ajax event="tabChange"
@@ -190,7 +189,11 @@
 							<ui:include src="notOfferSupplierSummary.xhtml"></ui:include>
 						</h:panelGroup>
 					</p:tab>
-				</p:accordionPanel>
+				</p:accordionPanel> -->
+				 <!-- #32297 related to #21695 COMMAND END-->
+				<h:panelGroup styleClass="evaluationStageSummaryItemtab">
+							<ui:include src="notOfferSupplierSummary.xhtml"></ui:include>
+				</h:panelGroup>
 			</c:if>
 			<c:if test="#{evaluationBackingBean.managedBean.scQt.zonal eq 'null'}">				
 				<ui:include src="notOfferSupplierSummary.xhtml"></ui:include>
