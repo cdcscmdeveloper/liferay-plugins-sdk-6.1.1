@@ -3125,17 +3125,17 @@ public class TemplateSpecBackingBean extends
 			if (!isItemTypeService)  //Product - input indicative unit price and autocalculate estimated cost
 			{
 				totalIndicativePrice = totalIndicativePrice.add(clQuantity
-						.multiply(RoundIndicativePrice)
-						.setScale(2, BigDecimal.ROUND_UP)); // bugs #26234 add decimal point //Bug #29808
-			} else {
+						.multiply(RoundIndicativePrice).setScale(2, BigDecimal.ROUND_UP)); // bugs #26234 add decimal point //Bug #29808
+			} 
+			else {
 				if (isItemTypeService && !isFulfilmentTypeScheduled) //Service with non periodic Fulfillment Type(OneOff & As and When)  - input indicative unit price and autocalculate estimated cost
 				{		totalIndicativePrice = totalIndicativePrice.add(clQuantity
 						.multiply(clUomFrequency)
 						.multiply(clUomPerDay)
 						.multiply(clUomPerMonth)
-						.multiply(RoundIndicativePrice)
-						.setScale(2, BigDecimal.ROUND_UP)); // bugs #26234 add decimal point //Bug #29808
-				} else {
+						.multiply(RoundIndicativePrice).setScale(2, BigDecimal.ROUND_UP)); // bugs #26234 add decimal point //Bug #29808
+				} 
+				else {
 					if (isItemTypeService && isFulfilmentTypeScheduled) //Service with periodic Fulfillment Type - input indicative unit price and autocalculate estimated cost
 					{
 						totalIndicativePrice = totalIndicativePrice.add(clQuantity
@@ -3143,8 +3143,7 @@ public class TemplateSpecBackingBean extends
 								.multiply(clUomFrequency)
 								.multiply(clUomPerDay)
 								.multiply(clUomPerMonth)
-								.multiply(RoundIndicativePrice)
-								.setScale(2, BigDecimal.ROUND_UP)); // bugs #26234 add decimal point //Bug #29808
+								.multiply(RoundIndicativePrice).setScale(2, BigDecimal.ROUND_UP)); // bugs #26234 add decimal point //Bug #29808
 					}
 				}
 			}
@@ -3280,11 +3279,13 @@ public class TemplateSpecBackingBean extends
 	 * @param event
 	 *            (Long itemType)
 	 */
+	//#32390 related to #21695 Farid - Start 13/1/2022 All method
 	public void offerTypeChange(boolean offerType,Long parentQuestionId, int rowindex) {
 		List<TplSpecAnswer> returnSpec = new ArrayList<>();
 		TemplateSpecBean templateSpecBean = new TemplateSpecBean();
 		Long Auto = 323L;
 		Long User = 324L;
+		boolean flagnonZonal = false;
 		if(this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()!=null && this.getManagedBean().getTemplateSpecBean().getSpecAnswerList().size()>0){
 			for(TplSpecAnswer tplSpecAnswer: this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
 				if(tplSpecAnswer.getTplSpecQuestion().getParentSpecQuestion()!=null){
@@ -3295,24 +3296,41 @@ public class TemplateSpecBackingBean extends
 					if(tplSpecAnswer.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId().equals(parentQuestionId)){
 						tplSpecAnswer.setOffer(offerType);
 						// Bug #32015 Farid start 5/11/2021						
-						if(offerType){
-							if(tplSpecAnswer.getTplSpecQuestion().getScoreTypeCode() != null && tplSpecAnswer.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals(new Long(User))){
-								tplSpecAnswer.setUserScore(null);
-							}
-							else if(tplSpecAnswer.getTplSpecQuestion().getScoreTypeCode() != null && 
-									tplSpecAnswer.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals(new Long(Auto))){
-								tplSpecAnswer.setAutoScore(null);
-							}
-						}else{
-							if(tplSpecAnswer.getTplSpecQuestion().getScoreTypeCode() != null && 
-									tplSpecAnswer.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals(new Long(User))){
-								tplSpecAnswer.setUserScore(new BigDecimal(0));
-							}
-							else if(tplSpecAnswer.getTplSpecQuestion().getScoreTypeCode() != null && 
-									tplSpecAnswer.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals(new Long(Auto))){
-								tplSpecAnswer.setAutoScore(new BigDecimal(0));
-							}
+						if(!this.getManagedBean().getScQt().isZonal()){
+							flagnonZonal = true;
+						}
+						for(TplSpecAnswer specAns : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
 							
+							if (specAns != null && specAns.getTplSpecQuestion().getParentSpecQuestion()!=null){
+								if(specAns.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId().equals(tplSpecAnswer.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId())){
+									if(offerType && !flagnonZonal || !offerType && flagnonZonal){
+										specAns.setAnswerText("");
+										specAns.setAnswerNumeric(null);
+										specAns.setAnswerRemark(null);
+										specAns.setAnswerCompliance(null);
+									// Bug #32015 Farid start 5/11/2021
+										if(specAns.getTplSpecQuestion().getScoreTypeCode() != null &&
+												specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals(new Long(User))){
+											specAns.setUserScore(new BigDecimal(0));
+										}else if(specAns.getTplSpecQuestion().getScoreTypeCode() != null && 
+												specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals(new Long(Auto))){
+											specAns.setAutoScore(new BigDecimal(0));
+										}
+										
+									}
+									else{
+										if(specAns.getTplSpecQuestion().getScoreTypeCode() != null && 
+												specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals(new Long(User))){
+											specAns.setUserScore(null);
+										}else if(specAns.getTplSpecQuestion().getScoreTypeCode() != null && 
+												specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals(new Long(Auto))){
+											specAns.setUserScore(null);
+										}
+							
+									}
+									// Bug #32015 Farid end 5/11/2021
+								}
+							}
 						}
 					}
 					
@@ -3334,6 +3352,7 @@ public class TemplateSpecBackingBean extends
 		this.getManagedBean().getTemplateSpecBean().setSpecAnswerList(returnSpec);
 
 	}
+	//#32390 related to #21695 Farid - End
 			
 /**	#21695 FARID END */		
 
