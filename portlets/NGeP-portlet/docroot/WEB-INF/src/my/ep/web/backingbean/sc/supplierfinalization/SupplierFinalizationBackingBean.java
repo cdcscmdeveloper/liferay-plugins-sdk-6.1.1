@@ -137,6 +137,7 @@ import my.ep.util.CustomUtils;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
@@ -7622,8 +7623,19 @@ return	remarksNotFound;
 			reqDTO.setFilterByRecommendedSuppliers(true);
 			reqDTO.setSearchBean(searchBean);
 			
-			return qtSuppFinalizationSO.retrieveQualifiedSuppliersInfoByEvalStage(reqDTO)
-					.getQualifiedSuppliersByEvalStage().getResultList();
+			/*
+			 * Development 32311: SLA LOG START
+			 */
+			long startTime = System.currentTimeMillis();
+			List<ScQtEvaluationResultDtl> scQtEvalResultDtlList = new ArrayList<>();
+			scQtEvalResultDtlList = qtSuppFinalizationSO.retrieveQualifiedSuppliersInfoByEvalStage(reqDTO).getQualifiedSuppliersByEvalStage().getResultList();
+			SLAUtils.getInstance().logSQLPerformanceInfo("QT","32311(E)-"+this.getManagedBean().getScQt().getQtId(),"QTSuppFinalizationSO.retrieveQualifiedSuppliersInfoByEvalStage", startTime,"#32311");
+			/*
+			 * Development 32311: SLA LOG END
+			 */
+			
+			return scQtEvalResultDtlList;
+			
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
@@ -8168,8 +8180,16 @@ return	remarksNotFound;
 				reqDTO.setRequestItemId(selectedItemId);
 				reqDTO.setEvaluationStage(evaluationStage);
 				reqDTO.setSearchBean(searchBean);
+				/*
+				 * Development 32311: SLA LOG START
+				 */
+				long startTime = System.currentTimeMillis();
 				SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 							.retrieveQualifiedSuppliersInfoByEvalStage(reqDTO);
+				SLAUtils.getInstance().logSQLPerformanceInfo("QT","32311(C)-"+qtId,"QTSuppFinalizationSO.retrieveQualifiedSuppliersInfoByEvalStage", startTime,"#32311");
+				/*
+				 * Development 32311: SLA LOG END
+				 */
 				if (resDTO.isSuccessful()) {
 					resultBean = resDTO.getQualifiedSuppliersByEvalStage();
 				}
@@ -8357,8 +8377,16 @@ return	remarksNotFound;
 				} 
 				reqDTO.setSearchBean(searchBean);
 				
+				/*
+				 * Development 32311: SLA LOG START
+				 */
+				long startTime = System.currentTimeMillis();
 				SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 							.retrieveQualifiedSuppliersInfoByEvalStage(reqDTO);
+				SLAUtils.getInstance().logSQLPerformanceInfo("QT","32311(D)-"+qtId,"QTSuppFinalizationSO.retrieveQualifiedSuppliersInfoByEvalStage", startTime,"#32311");
+				/*
+				 * Development 32311: SLA LOG END
+				 */
 				if (resDTO.isSuccessful()) {
 					resultBean = resDTO.getQualifiedSuppliersByEvalStage();
 					List<ScQtEvaluationResultDtl> qualifiedSuppliers = 
@@ -9702,8 +9730,16 @@ return	remarksNotFound;
 							reqDTO.setEvaluationStage("RI");
 							reqDTO.setRequestItemId(itemId);
 							reqDTO.setSearchBean(searchBean);
+							/*
+							 * Development 32311: SLA LOG START
+							 */
+							long startTime = System.currentTimeMillis();
 							SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 									.retrieveQualifiedSuppliersInfoByEvalStage(reqDTO);
+							SLAUtils.getInstance().logSQLPerformanceInfo("QT","32311(A)-"+scQt.getQtId(),"QTSuppFinalizationSO.retrieveQualifiedSuppliersInfoByEvalStage", startTime,"#32311");
+							/*
+							 * Development 32311: SLA LOG END
+							 */
 							if (resDTO.isSuccessful()) {
 								resultBean = resDTO.getQualifiedSuppliersByEvalStage();
 								List<ScQtEvaluationResultDtl> qualifiedSuppliers = resultBean.getResultList();

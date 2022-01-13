@@ -71,6 +71,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean;
@@ -98,9 +99,9 @@ import org.primefaces.model.MenuModel;
 
 /**
  * ConsolidationReport Detail Backing Bean.
- * 
+ *
  * @author Praneeth
- * 
+ *
  * @version 1.1
  * @since 14.01.2016
  */
@@ -110,7 +111,7 @@ public class ConsolidationReportBackingBean extends
 		SourcingBaseBackingBean<ConsolidationReportManagedBean> {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -161,7 +162,7 @@ public class ConsolidationReportBackingBean extends
 
 	/**
 	 * To navigate to the selected tab
-	 * 
+	 *
 	 * @param tabIndex
 	 *            the index of the selected tab
 	 */
@@ -205,7 +206,7 @@ public class ConsolidationReportBackingBean extends
 		case 2:
 			navigateToItemizedTab();
 			break;
-		case 3: 
+		case 3:
 			navigateToBriefingPaperTab();
 			break;
 		}
@@ -213,7 +214,7 @@ public class ConsolidationReportBackingBean extends
 
 	/**
 	 * To navigate to the selected zone tab, under Supplier Finalization tab
-	 * 
+	 *
 	 * @param zoneTabIndex
 	 *            the selected zone tab index
 	 */
@@ -282,7 +283,7 @@ public class ConsolidationReportBackingBean extends
 	/**
 	 * Event to select an item where Recommend Type is Itemized under Supplier
 	 * Finalization tab
-	 * 
+	 *
 	 * @param scQtRecommend
 	 *            the scQtRecommend to set
 	 */
@@ -422,7 +423,7 @@ public class ConsolidationReportBackingBean extends
 	/**
 	 * Rowselect event to select Supplier Finalization Report under Briefing
 	 * Paper tab
-	 * 
+	 *
 	 * @param ScQtFinalizationReport
 	 *            the ScQtFinalizationReport to set
 	 */
@@ -439,7 +440,7 @@ public class ConsolidationReportBackingBean extends
 	/**
 	 * Checkbox event to select Supplier Finalization Report under Briefing
 	 * Paper tab
-	 * 
+	 *
 	 * @param ScQtFinalizationReport
 	 *            the ScQtFinalizationReport to set
 	 */
@@ -462,7 +463,7 @@ public class ConsolidationReportBackingBean extends
 
 	/**
 	 * Handle file upload.
-	 * 
+	 *
 	 * @param event
 	 *            the event
 	 * @throws FileNotFoundException
@@ -498,7 +499,7 @@ public class ConsolidationReportBackingBean extends
 
 	/**
 	 * To download a report under Briefing Paper/Kertas Taklimat tab
-	 * 
+	 *
 	 * @param scQtFinalizationReport
 	 *            selected report which would be downloaded
 	 * @throws Exception
@@ -525,13 +526,13 @@ public class ConsolidationReportBackingBean extends
 		}
 		downloadFile(reportAttachment);
 	}
-	
+
 	// #18685 - Start
 	/**
 	 * @throws Exception
 	 */
 	public void downloadAllBriefingPaperReports() throws Exception {
-		
+
 		// #18685 - Start.
 		debugLogger("downloadAllReports");
 		// #28834 - Start.
@@ -550,7 +551,7 @@ public class ConsolidationReportBackingBean extends
 				  decisionPaperList.add(report);
 			  }
 		}
-		
+
 		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<ScQtFinalizationReportAttachment>();
 
 		if (CollectionUtils.isNotEmpty(briefingPaperList)
@@ -564,7 +565,7 @@ public class ConsolidationReportBackingBean extends
 				scAttachments.add(attachment);
 			}
 		}
-		
+
 		if (CollectionUtils.isNotEmpty(decisionPaperList)
 				&& decisionPaperList.size() > 0) {
 			for (ScQtFinalizationReport finalizationReport : decisionPaperList) {
@@ -584,14 +585,14 @@ public class ConsolidationReportBackingBean extends
 				}
 			}
 		}
-		
+
 		// Generate all the reports before submission
 		if (!getManagedBean().isSubmit()) {
 			downloadAllFiles("NGeP-Finalization-Report", scAttachments);
 		}
 		// #18685 - End.
 	}
-	
+
 	/**
 	 * @param scQtFinalizationReport
 	 * @throws Exception
@@ -617,7 +618,7 @@ public class ConsolidationReportBackingBean extends
           }
         }
         // #28834 - End.
-		if (null != getManagedBean().getCurrentStatusId() 
+		if (null != getManagedBean().getCurrentStatusId()
 				&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_CONSOLIDATION_REPORT.longValue() ||
 						getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER.longValue()) && latestBriefingPaper) {
 			reportAttachment = generateDocumentAttachment(scQtFinalizationReport);
@@ -634,10 +635,10 @@ public class ConsolidationReportBackingBean extends
 		downloadFile(reportAttachment);
 	}
 	// #18685 - End
-	
+
 	/**
 	 * To download all reports under Evaluation Report tab.
-	 * 
+	 *
 	 * @throws Exception
 	 *             the exception that would be thrown in case of any error while
 	 *             downloading the report(s)
@@ -665,11 +666,11 @@ public class ConsolidationReportBackingBean extends
 			downloadAllFiles("NGeP-Evaluation-Report", scAttachments);
 		}
 	}
-	
+
 	/**
 	 * save consolidationReport Details.
-	 * 
-	 * 
+	 *
+	 *
 	 */
 	public void saveAction() {
 		SuppFinalizationReqDTO reqDTO = prepareDataToSave();
@@ -690,14 +691,14 @@ public class ConsolidationReportBackingBean extends
 						getManagedBean().getSfBriefingPaperReportList());
 			}
 			// #18685 - End
-			
+
 			// #18685 - Start.
 			reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
 			if (CollectionUtils.isNotEmpty(getManagedBean().getFinalizationItemizedRemarks())) {
 				reqDTO.setFinalizationItemizedRemarks(getManagedBean().getFinalizationItemizedRemarks());
 			}
 	         // #18685 - End.
-			
+
 			if (CollectionUtils.isNotEmpty(getManagedBean().getFinalizationUlasanremarks())) {
               for (ScQtRecommendationUlasanRemarks remark : getManagedBean().getFinalizationUlasanremarks()) {
                   if (StringUtils.isNotEmpty(remark.getRemark())) {
@@ -705,11 +706,11 @@ public class ConsolidationReportBackingBean extends
                   }
               }
 			}
-			// #18685 - End 
+			// #18685 - End
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 					.saveConsolidationReport(reqDTO);
 			//saveEvaluationReportsDetaills();
-			
+
             // #18685 - Start
             /*for (ScQtFinalizationRemarks updatedRemark : resDTO.getScQtFinalization().getScQtFinalizationRemarks()) {
               for (ScQtFinalizationRemarks remark : getManagedBean().getFinalizationItemizedRemarks()) {
@@ -719,7 +720,7 @@ public class ConsolidationReportBackingBean extends
               }
             }*/
             // #18685 - End
-            
+
 			if (resDTO.isSuccessful()) {
 				renewSessionAndRetrieve(getManagedBean().getActiveIndex());
 
@@ -734,42 +735,42 @@ public class ConsolidationReportBackingBean extends
 
 	/**
 	 * submit Action Details.
-	 * 
-	 * 
+	 *
+	 *
 	 */
 	public void submitAction() {
 		// Validate Desk officer ranking
 		// #30874 - Start.
 		//28834 start
-		if (null != getManagedBean().getCurrentStatusId() 
+		if (null != getManagedBean().getCurrentStatusId()
 				&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER.longValue())) {
-			
+
 		} else {
 		         validateConsolidationReport();
-			
+
 		}
 		//28834 end
-	   
+
 	    // #30874 - End.
 		RequestContext.getCurrentInstance().execute("submissionPopup.show()");
 
 	}
-	
+
 	//haziq -Bug #31364 - start
 	public void preSubmitConsolidationReport() {
 		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTSuppFinalizationSO.class);
-	
+
 		SuppFinalizationReqDTO  reqDTO  = new SuppFinalizationReqDTO ();
-	
+
 		reqDTO.setScQt(this.getManagedBean().getScQt());
 		System.out.println("getFinalizationCommitte " + this.getManagedBean().getScQt().getFinalizationCommitte() );
 		System.out.println("getFinalizationSecratery " + this.getManagedBean().getScQt().getFinalizationSecratery() );
-	
-		
+
+
 		SuppFinalizationResDTO  suppFinalizationResDTO = qtSuppFinalizationSO.checkNonActiveComAndsetNull(reqDTO, false);
-		
+
 		if (suppFinalizationResDTO.isSetNull()){
 			this.getManagedBean().setSetNull(true);
 			//this.getManagedBean().setScQt(suppFinalizationResDTO.getScQt());
@@ -784,8 +785,8 @@ public class ConsolidationReportBackingBean extends
 
 	/**
 	 * submit consolidationReport Details.
-	 * 
-	 * 
+	 *
+	 *
 	 */
 	//28834 starts
 	public void submitConsolidationReport() {
@@ -796,15 +797,15 @@ public class ConsolidationReportBackingBean extends
 		try {
 			// #27502 -- Start
 			qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, //haziq -Bug #31364
-					IQTSuppFinalizationSO.class);	
+					IQTSuppFinalizationSO.class);
 			ScQt scQt = this.getManagedBean().getScQt();
-			
+
 			if  (this.getManagedBean().isSetNull()){ ////haziq -Bug #31364
-				reqDTO.setScQt(scQt);	
+				reqDTO.setScQt(scQt);
 				SuppFinalizationResDTO  suppFinalizationResDTO = qtSuppFinalizationSO.checkNonActiveComAndsetNull(reqDTO, true);
 				scQt = suppFinalizationResDTO.getScQt();
 			}
-			
+
 			QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
 			qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
 
@@ -825,12 +826,12 @@ public class ConsolidationReportBackingBean extends
 				getManagedBean().getNewBriefingPaperReportList().addAll(
 						getManagedBean().getSfBriefingPaperReportList());
 			}
-			
+
 			for (ScQtFinalizationReport scQtFinalizationReport : getManagedBean().getNewBriefingPaperReportList()) {
 				scQtFinalizationReport.setPreviousReportContent(scQtFinalizationReport.getReportContent());
 			}
 			// #18685 - End
-			
+
 			// #18685 - Start.
 			reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
 			if (CollectionUtils.isNotEmpty(getManagedBean().getFinalizationItemizedRemarks())) {
@@ -949,7 +950,7 @@ public class ConsolidationReportBackingBean extends
 	 * Loads ScQt details corresponding to the selected quotation/tender and
 	 * sets the data in the managed bean associated with the current user
 	 * session
-	 * 
+	 *
 	 * @param qtId
 	 *            The id of the quotation/tender to be loaded
 	 */
@@ -995,65 +996,65 @@ public class ConsolidationReportBackingBean extends
 		IQTEvaluationSO evaluationSO = null;
 
 		try {
-			
+
 			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION,
 					IQTEvaluationSO.class);
 
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			reqDTO.setQtId(scQt.getQtId());
-			ISearchBean<Object[]> searchBean = new SearchBean<Object[]>(); 
+			ISearchBean<Object[]> searchBean = new SearchBean<Object[]>();
 			reqDTO.setNotOfferSupplierSearchBean(searchBean);
-			boolean isOfferAll = false;	 
-			
-			
+			boolean isOfferAll = false;
+
+
 			if (getManagedBean().getScQt()
 					.getEvaluateBy().equalsIgnoreCase(SourcingConstants.EVALUATE_BY__ITEM)){
-				isOfferAll = true;	 
+				isOfferAll = true;
 			}
-//#21695 Farid Start 18/8/2020			
+//#21695 Farid Start 18/8/2020
 			else if (getManagedBean().getScQt()
 					.getEvaluateBy().equalsIgnoreCase(SourcingConstants.EVALUATE_BY_BOTH_PACKAGE_ITEM)){
-	
+
 				 List <Object[]> allSuppliers = evaluationSO.retrieveOfferOrNotOfferSuppliers(reqDTO)
 							.getOfferOrNotOfferSupplierResultBean().getResultList();
-						 
+
 				 List <Object[]> suppliersNotOffer = evaluationSO.retrieveSummaryNotOfferSuppliers(reqDTO)
 								.getNotOfferSupplierResultBean().getResultList();
-					
+
 				 log.info("allSuppliers size " +  allSuppliers.size());
 				 log.info("suppliersNotOffer size " +  suppliersNotOffer.size());
-						
+
 				 if ( allSuppliers.size() == suppliersNotOffer.size() && allSuppliers.size() != 0 && suppliersNotOffer.size() != 0 ){
-						isOfferAll = true;	 
+						isOfferAll = true;
 					}
 			}
-			
+
 //#21695 Farid End 18/8/2020
-			 
+
 //             for (  Object[] paramsObjallSupplier : allSuppliers){
 //	              Long supplierId = ((BigDecimal) paramsObjallSupplier[0]).longValue();
-//	              
+//
 //	              for (  Object[] paramsObjsuppliersNotOffer : suppliersNotOffer){
-//	            	  
+//
 //		              Long notOfferSupplierId = ((BigDecimal) paramsObjsuppliersNotOffer[0]).longValue();
-//		              
+//
 //		              if (supplierId == notOfferSupplierId){
-//		            	  
+//
 //		            	  isAllOffer = false;
-//		            	  
+//
 //		              }
 //				 }
-//	         
+//
 //			 }
-			
+
 			 getManagedBean().setOfferAll(isOfferAll);
 		} finally {
 			evaluationSO = null;
 		}
 	}
 //#21695 Farid end
-	
+
 	private void retrieveSupplierFinalizationDtls() {
 		ScQt scQt = getManagedBean().getScQt();
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
@@ -1276,8 +1277,8 @@ public class ConsolidationReportBackingBean extends
 							}
 						}
 						if(CollectionUtils.isNotEmpty(toberemoveList)){
-							qtrecommendList.removeAll(toberemoveList);	
-							
+							qtrecommendList.removeAll(toberemoveList);
+
 						}
 						//#32243 - add zone condition for item qty = 0 - end
 					}
@@ -1287,7 +1288,7 @@ public class ConsolidationReportBackingBean extends
 						if(qtrecommend.getOrderQty().compareTo(BigDecimal.ZERO) == 0){
 							scQtRecommend.remove(qtrecommend);
 						}
-					}	
+					}
 				}*/
 			}
 			//#32009 - related to #21695 - end
@@ -1338,7 +1339,7 @@ public class ConsolidationReportBackingBean extends
 	private void initializeRemarks() {
 		ScQtFinalization scQtFinalization = getManagedBean()
 				.getScQtFinalization();
-		
+
 		// #18685 - Start
 		if (null != scQtFinalization && CollectionUtils.isNotEmpty(scQtFinalization.getScQtFinalizationRemarks())) {
 			Iterator<ScQtFinalizationRemarks> iterator = scQtFinalization.getScQtFinalizationRemarks().iterator();
@@ -1356,7 +1357,7 @@ public class ConsolidationReportBackingBean extends
 				}
 			}
 		}
-		
+
 
 		// Retrieve finalization remarks for Package Wise
 		List<ScQtFinalizationRemarks> remarks = initializeRemarks(
@@ -1376,7 +1377,7 @@ public class ConsolidationReportBackingBean extends
 		scQtFinalization.setScQtFinalizationRemarks(remarks);
 		// Finalization Remarks list
 		getManagedBean().setFinalizationRemars(remarks);
-		
+
 		// Retrieve finalization remarks for Itemized
 		List<ScQtFinalizationRemarks> itemizedRemarks = initializeRemarks(
 				scQtFinalization, getManagedBean().getScQt()
@@ -1462,7 +1463,7 @@ public class ConsolidationReportBackingBean extends
 			List<ScQtRecommend> items) {
 		List<ScQtEvaluationResultDtl> qualifiedSuppliers = null;
 		List<QtEvaluationResultDtlBean> qualifiedSupplierBeans = null;
-		// #31443 Farid Start 
+		// #31443 Farid Start
 		ScQt scQt = getManagedBean().getScQt();
 		// #31443 Farid End
 		SuppFinalizationResDTO resDTO = getQualifiedSuppliersWithDORank(
@@ -1491,8 +1492,8 @@ public class ConsolidationReportBackingBean extends
 					excludeValidatePartialRanking(specZoneDtl,items);
 				}
 		// farid End bug #31556 related to #21695
-		// exclude validation ranking if has not offer	
-				
+		// exclude validation ranking if has not offer
+
 		// Item wise validation
 		List<ScQtEvaluationResultDtl> itemQualifiedSuppliers = null;
 		if (CollectionUtils.isNotEmpty(items)) {
@@ -1509,7 +1510,7 @@ public class ConsolidationReportBackingBean extends
 				qualifiedSupplierBeans = getQtEvaluationResultDtlBeansWithRank(
 						specZoneDtl, item.getRequestItem(),
 						itemQualifiedSuppliers);
-				// #31443 Start -exclude validate if quantity 0					
+				// #31443 Start -exclude validate if quantity 0
 				if(scQt!=null && !scQt.isPartial() && item.getOrderQty() != null && item.getOrderQty().compareTo(BigDecimal.ZERO) > 0){
 					validateRanking(qualifiedSupplierBeans, true, item,
 							specZoneDtl, totalQualifiedSuppliers);
@@ -1517,7 +1518,7 @@ public class ConsolidationReportBackingBean extends
 				else if(scQt!=null && scQt.isPartial()){
 					excludeValidatePartialRanking(specZoneDtl,items);
 				}
-				// #31443 End 	
+				// #31443 End
 			}
 		}
 
@@ -1844,7 +1845,7 @@ public class ConsolidationReportBackingBean extends
 
 	/**
 	 * Get briefingPaerTabIndex.
-	 * 
+	 *
 	 * @return the BRIEFING_PAPER_TAB_INDEX
 	 */
 	public static int getBRIEFING_PAPER_TAB_INDEX() {
@@ -1853,7 +1854,7 @@ public class ConsolidationReportBackingBean extends
 
 	/**
 	 * Get ItemizedTypeTabIndex.
-	 * 
+	 *
 	 * @return the ITEMIZED_TYPE_TAB_INDEX
 	 */
 	public static int getITEMIZED_TYPE_TAB_INDEX() {
@@ -1862,7 +1863,7 @@ public class ConsolidationReportBackingBean extends
 
 	/**
 	 * Get PackageTypeTabIndex.
-	 * 
+	 *
 	 * @return the PACKAGE_TYPE_TAB_INDEX
 	 */
 	public static int getPACKAGE_TYPE_TAB_INDEX() {
@@ -1927,7 +1928,7 @@ public class ConsolidationReportBackingBean extends
 
 	/**
 	 * Qualified Suppliers Paging Data Model
-	 * 
+	 *
 	 * @author Praneeth
 	 * @since 04.08.2016
 	 */
@@ -1958,7 +1959,7 @@ public class ConsolidationReportBackingBean extends
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see
 		 * my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep
 		 * .biz.bean.search.ISearchBean)
@@ -1995,9 +1996,16 @@ public class ConsolidationReportBackingBean extends
 							.getRequestNoteItemId();
 					reqDTO.setRequestItemId(selectedItemId);
 				}
-
+				/*
+				 * Development 32311: SLA LOG START
+				 */
+				long startTime = System.currentTimeMillis();
 				SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 						.retrieveQualifiedSuppliersInfoByEvalStage(reqDTO);
+				SLAUtils.getInstance().logSQLPerformanceInfo("QT","32311(B)","QTSuppFinalizationSO.retrieveQualifiedSuppliersInfoByEvalStage", startTime,"#32311");
+				/*
+				 * Development 32311: SLA LOG END
+				 */
 				if (resDTO.isSuccessful()) {
 					resultBean = resDTO.getQualifiedSuppliersByEvalStage();
 					List<ScQtEvaluationResultDtl> qualifiedSuppliers = resultBean
@@ -2258,18 +2266,18 @@ public class ConsolidationReportBackingBean extends
 		}
 		newBPReportList.add(report);
 	}
-	
+
 	/**
 	 * @return the evaluationReportTabIndex
 	 */
 	public static int getEvaluationReportTabIndex() {
 		return EVALUATION_REPORT_TAB_INDEX;
 	}
-	
+
 	private void navigateToEvaluationReport() {
 		getManagedBean().setActiveIndex(EVALUATION_REPORT_TAB_INDEX);
 	}
-	
+
 	//#31443 here to exclude validation for not offer entry supplier ranking
 		@SuppressWarnings("unused")
 		private void excludeValidatePartialRanking(TplSpecZoneDtl specZoneDtl,
@@ -2289,7 +2297,7 @@ public class ConsolidationReportBackingBean extends
 		// farid start bug #31556 related to #21695
 		// exclude validation ranking if has not offer
 		// Package wise validation for partial offer
-//-------------> HERE #31556 & #31555 related to #21695 Farid START				
+//-------------> HERE #31556 & #31555 related to #21695 Farid START
 		if (SourcingConstants.EVALUATE_BY_BOTH_PACKAGE_ITEM
 				.equalsIgnoreCase(this.getManagedBean().getScQt()
 						.getEvaluateBy()) && !this.getManagedBean().isOfferAll()) {
@@ -2298,7 +2306,7 @@ public class ConsolidationReportBackingBean extends
 			validateRankingPO(qualifiedSupplierBeans, false, null, specZoneDtl,
 					totalQualifiedSuppliers);
 		}
-//-------------> HERE #31556 & #31555 related to #21695 Farid END			
+//-------------> HERE #31556 & #31555 related to #21695 Farid END
 		// farid start bug #31556 related to #21695
 		// exclude validation ranking if has not offer
 		// End of // Package wise validation for partial offer
@@ -2319,8 +2327,8 @@ public class ConsolidationReportBackingBean extends
 					qualifiedSupplierBeans = getQtEvaluationResultDtlBeansWithRank(
 							specZoneDtl, item.getRequestItem(),
 							itemQualifiedSuppliers);
-		// #31443 Start -exclude validate if quantity 0					
-//-------------> HERE #31556 & #31555 related to #21695 Farid START	
+		// #31443 Start -exclude validate if quantity 0
+//-------------> HERE #31556 & #31555 related to #21695 Farid START
 					 if(specZoneDtl != null){
 						for(TplSpecZoneQty finditemOfferZone : item.getRequestItem().getTplSpecQuestion().getTplSpecZoneQties()){
 							if(finditemOfferZone != null && !finditemOfferZone.getTplSpecZoneOffer().isOffer()
@@ -2331,12 +2339,12 @@ public class ConsolidationReportBackingBean extends
 							}
 						}
 					}
-//-------------> HERE #31556 & #31555 related to #21695 Farid END						 
-//-------------> HERE #31556 & #31555 related to #21695 Farid START				 
+//-------------> HERE #31556 & #31555 related to #21695 Farid END
+//-------------> HERE #31556 & #31555 related to #21695 Farid START
 					else {
 						for(TplSpecAnswer finditemOfferNonZonal : item.getRequestItem().getTplSpecQuestion().getTplSpecAnswers()){
 							if(finditemOfferNonZonal != null && finditemOfferNonZonal.getRatePerUom().compareTo(BigDecimal.ZERO) > 0
-									&& item.getRequestItem().getQuantity() != null 
+									&& item.getRequestItem().getQuantity() != null
 										&& item.getRequestItem().getQuantity().compareTo(BigDecimal.ZERO) > 0){
 								log.info("validate nonzonal offer");
 								validateRankingPO(qualifiedSupplierBeans, true, item,
@@ -2344,14 +2352,14 @@ public class ConsolidationReportBackingBean extends
 							}
 						}
 					}
-//-------------> HERE #31556 & #31555 related to #21695 Farid END				
+//-------------> HERE #31556 & #31555 related to #21695 Farid END
 				}
 			}
 
 			// End of item wise validation
 		}
-//#31556 & #31555 related to #21695 Farid END				
-//-------------> HERE #31556 & #31555 related to #21695 Farid START		
+//#31556 & #31555 related to #21695 Farid END
+//-------------> HERE #31556 & #31555 related to #21695 Farid START
 		private void validateRankingPO(
 				List<QtEvaluationResultDtlBean> qualifiedSupplierBeans,
 				boolean isItemized, ScQtRecommend item, TplSpecZoneDtl specZoneDtl,
@@ -2454,6 +2462,6 @@ public class ConsolidationReportBackingBean extends
 			}
 			//#32401 - end
 		}
-		
-//-------------> HERE #31556 & #31555 related to #21695 Farid END				
+
+//-------------> HERE #31556 & #31555 related to #21695 Farid END
 }
