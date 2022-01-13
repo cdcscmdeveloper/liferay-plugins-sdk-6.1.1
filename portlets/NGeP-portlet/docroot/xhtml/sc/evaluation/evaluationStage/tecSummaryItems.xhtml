@@ -177,8 +177,9 @@
 			<ac:iconTooltip
 				value="#{lbl['lbl.sc.eva.not.offer.supplier.list.tec.evaluation.item.stage.tooltip']}" />
 		   </f:facet>
+		   <!-- #32297 related to #21695 COMMAND START-->
            <c:if test ="#{evaluationBackingBean.managedBean.scQt.zonal ne 'false'}">
-				<p:accordionPanel dynamic="true"
+				<!--  <p:accordionPanel dynamic="true"
 					value="#{evaluationBackingBean.managedBean.evaluationStageZonesSummary}"
 					var="zonePnlList">
 					<p:ajax event="tabChange"
@@ -189,7 +190,11 @@
 							<ui:include src="notOfferSupplierSummary.xhtml"></ui:include>
 						</h:panelGroup>
 					</p:tab>
-				</p:accordionPanel>
+				</p:accordionPanel> -->
+				 <!-- #32297 related to #21695 COMMAND END-->
+				<h:panelGroup styleClass="evaluationStageSummaryItemtab">
+							<ui:include src="notOfferSupplierSummary.xhtml"></ui:include>
+				</h:panelGroup>
 			</c:if>
 			<c:if test="#{evaluationBackingBean.managedBean.scQt.zonal eq 'null'}">				
 				<ui:include src="notOfferSupplierSummary.xhtml"></ui:include>
