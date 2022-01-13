@@ -12954,6 +12954,9 @@ public class SmApplicationBackingBean extends
 	 * Reset search rejected reason
 	 */
 	public void resetSearchRejectedReason() {
+		//#30974 - start
+		getManagedBean().setApplnRejectionRemarks(StringUtils.EMPTY);
+		//#30974 - end
 		getManagedBean().setSearchRejectReason(StringUtils.EMPTY);
 		//	#30974 -- start - 15/6/2020
 		getManagedBean().setSearchRecommendRejectReason(StringUtils.EMPTY);
@@ -15480,11 +15483,12 @@ public class SmApplicationBackingBean extends
 			for (PmReasonDesc reason : getManagedBean().getSelectedRecommendRejectReasonDescs()) {
 				if (getManagedBean().getSearchRecommendRejectReason() != null
 						&& !StringUtils.upperCase(reason.getReasonDesc()).contains(
-						StringUtils.upperCase(getManagedBean().getSearchRecommendRejectReason()))) {
+								StringUtils.upperCase(getManagedBean().getSearchRecommendRejectReason()))) {
 					getManagedBean().getRecommendReasonDescList().add(reason);
 				}
 			}
 		}
+		
 		setReasonIdList();
 		verifySelectedRecommendRejectReasons();
 		//30974 - end
@@ -15494,6 +15498,10 @@ public class SmApplicationBackingBean extends
 	 * Reset search recommend rejected reason
 	 */
 	public void resetSearchRecommendRejectedReason() {
+		//#30974 - start
+		getManagedBean().getPoSecReview().setRemarkToApprover(StringUtils.EMPTY);
+		//#30974 - end
+				
 		getManagedBean().setSearchRecommendRejectReason(StringUtils.EMPTY);
 		//30974 - start
 		//comment for changing method for set
@@ -15522,7 +15530,13 @@ public class SmApplicationBackingBean extends
 	public void verifySelectedRecommendRejectReasons() {
 		getManagedBean().setRecommendRejectReasonReqd(isRecommendDpaOthersSelected());
 		if (!getManagedBean().isRecommendRejectReasonReqd()) {
-			getManagedBean().setApplnRejectionRemarks(StringUtils.EMPTY);
+			//30974 - start
+			if(getManagedBean().isPoUser()){
+				getManagedBean().getPoSecReview().setRemarkToApprover(StringUtils.EMPTY);
+			}else{
+				getManagedBean().setApplnRejectionRemarks(StringUtils.EMPTY);
+			}
+			//30974 - end
 		}
 	}
 		
@@ -15590,7 +15604,6 @@ public class SmApplicationBackingBean extends
 		}else{
 			getManagedBean().setRecommendReasonId(null);
 		}*/
-		
 		setReasonIdList();
 		
 		if(getManagedBean().isShowDifferenceRejection()){
@@ -15598,6 +15611,7 @@ public class SmApplicationBackingBean extends
 		}else{
 			verifySelectedRecommendRejectReasons();
 		}
+		
 	}
 	//30974 - End
 	
@@ -15610,6 +15624,7 @@ public class SmApplicationBackingBean extends
 		getManagedBean().getSelectedRecommendRejectReasonDescs().remove(reasonEvent);
 
 		setReasonIdList();
+		
 		if(getManagedBean().isShowDifferenceRejection()){
 			verifySelectedRejectReasons();
 		}else{
@@ -15662,7 +15677,11 @@ public class SmApplicationBackingBean extends
 		}*/
 		
 		setReasonIdList();
-		verifySelectedRecommendRejectReasons();
+		if(getManagedBean().isShowDifferenceRejection()){
+			verifySelectedRejectReasons();
+		}else{
+			verifySelectedRecommendRejectReasons();
+		}
 	}
 	//30974 - End
 	
@@ -15845,6 +15864,7 @@ public class SmApplicationBackingBean extends
 	//30974 - Start
 	public void setReasonIdList(){
 		List<Long> reasonIdList = new ArrayList<Long>();
+		
 		if (!EntityHelper.isCollectionEmpty(getManagedBean()
 				.getSelectedRecommendRejectReasonDescs())) {
 			for (PmReasonDesc reason : getManagedBean().getSelectedRecommendRejectReasonDescs()) {
