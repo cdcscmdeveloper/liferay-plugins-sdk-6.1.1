@@ -83,6 +83,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean;
@@ -2012,9 +2013,16 @@ public class ConsolidationReportBackingBean extends
 							.getRequestNoteItemId();
 					reqDTO.setRequestItemId(selectedItemId);
 				}
-
+				/*
+				 * Development 32311: SLA LOG START
+				 */
+				long startTime = System.currentTimeMillis();
 				SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 						.retrieveQualifiedSuppliersInfoByEvalStage(reqDTO);
+				SLAUtils.getInstance().logSQLPerformanceInfo("QT","32311(B)","QTSuppFinalizationSO.retrieveQualifiedSuppliersInfoByEvalStage", startTime,"#32311");
+				/*
+				 * Development 32311: SLA LOG END
+				 */
 				if (resDTO.isSuccessful()) {
 					resultBean = resDTO.getQualifiedSuppliersByEvalStage();
 					List<ScQtEvaluationResultDtl> qualifiedSuppliers = resultBean
