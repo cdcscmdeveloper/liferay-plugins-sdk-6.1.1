@@ -642,7 +642,7 @@
 			<p:commandButton id="save" value="#{lbl['lbl.sm.button.save']}"
 				partialSubmit="true" process=":form:tt:bankDialog"
 				action="#{backingBean.addOrUpdateBankInfoToSmAppl}"
-				onclick="bankDetailsPanelWidget.show();" oncomplete="bankDetailsPanelWidget.hide();"
+				onclick="bankDetailsPanelWidget.show();" oncomplete="scrollToTop();bankDetailsPanelWidget.hide();"
 				update=":form:tt:bankDt , sfieldset, @([id$=Msg])" />
 		<!--#12492-END-->
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"

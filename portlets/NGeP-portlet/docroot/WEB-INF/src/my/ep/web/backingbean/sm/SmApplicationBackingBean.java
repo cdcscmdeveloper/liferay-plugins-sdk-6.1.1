@@ -254,6 +254,7 @@ public class SmApplicationBackingBean extends
 	//SSM CHANGES #27214
 	//TO HANDLE, IF KN IS SIGN UP NEW SUPPLIER NO NEED TO CHECK WITH SSM AGAIN. IF UPGRADE NEED TO CHECK WITH SSM
 	public boolean fromPrerenderNewReg = false;
+	public boolean fromAddBankInfo = false;
 
 	//#11641 - START
 	private int mandatoryCounter = 1;
@@ -9127,6 +9128,7 @@ public class SmApplicationBackingBean extends
 	 * Add or create a new SmSupplier bank object
 	 */
 	public void assignNewBank() {
+		fromAddBankInfo = true;
 		getManagedBean().setPendingTransaction(false);
 		getManagedBean().setChequeSingPerId(null);
 		getManagedBean().setSelBankBranchId(null);
@@ -15043,6 +15045,7 @@ public class SmApplicationBackingBean extends
 	}
 	
 	public void assignSelBankWithPendingTransaction(SmSupplierBank shareBankBean) {
+		fromAddBankInfo = false;
 		getManagedBean().setChequeSingPerId(null);
 		getManagedBean().setSelectedBankBranchIds(null);
 		
@@ -16595,27 +16598,29 @@ public class SmApplicationBackingBean extends
 
 		HashSet<String> hsetAccountNo = new HashSet<String>();
 		HashSet<Long> hsetAccountName = new HashSet<Long>();
+		
+		if(fromAddBankInfo){
+			if(fromPage.equalsIgnoreCase("fromBankInfo")){
+				log.info("masuk CheckBankAccountInfoForm from bank info");
 
-		if(fromPage.equalsIgnoreCase("fromBankInfo")){
-			log.info("masuk CheckBankAccountInfoForm from bank info");
-
-			if (this.getManagedBean().getSmAppl().getSmSupplierBanks().size() > 0) {
-				for (SmSupplierBank bankName : this.getManagedBean().getSmAppl().getSmSupplierBanks()) {
-					if (bankName.getPmFinancialOrg().getFinancialOrgId() != null) {
-						hsetAccountName.add(bankName.getPmFinancialOrg().getFinancialOrgId());
-						hsetAccountNo.add(bankName.getAccountNo());
+				if (this.getManagedBean().getSmAppl().getSmSupplierBanks().size() > 0) {
+					for (SmSupplierBank bankName : this.getManagedBean().getSmAppl().getSmSupplierBanks()) {
+						if (bankName.getPmFinancialOrg().getFinancialOrgId() != null) {
+							hsetAccountName.add(bankName.getPmFinancialOrg().getFinancialOrgId());
+							hsetAccountNo.add(bankName.getAccountNo());
+						}
 					}
 				}
-			}
 
-			if (hsetAccountName.add(getManagedBean().getSelectedBank().getPmFinancialOrg().getFinancialOrgId()) == false) {
-				if (hsetAccountNo.add(getManagedBean().getSelectedBank().getAccountNo()) == false) {
-					RequestContext.getCurrentInstance().execute("bankDialogDuplicate.show()");
-				}
+				if (hsetAccountName.add(getManagedBean().getSelectedBank().getPmFinancialOrg().getFinancialOrgId()) == false) {
+					if (hsetAccountNo.add(getManagedBean().getSelectedBank().getAccountNo()) == false) {
+						RequestContext.getCurrentInstance().execute("bankDialogDuplicate.show()");
+					}
+				}	
+			}else if(fromPage.equalsIgnoreCase("fromNext")){
+				RequestContext.getCurrentInstance().execute("bankDialogDuplicate.hide()");
+				log.info("masuk CheckBankAccountInfoForm from next");
 			}	
-		}else if(fromPage.equalsIgnoreCase("fromNext")){
-			RequestContext.getCurrentInstance().execute("bankDialogDuplicate.hide()");
-			log.info("masuk CheckBankAccountInfoForm from next");
 		}
 	}
 	//12492 - END
