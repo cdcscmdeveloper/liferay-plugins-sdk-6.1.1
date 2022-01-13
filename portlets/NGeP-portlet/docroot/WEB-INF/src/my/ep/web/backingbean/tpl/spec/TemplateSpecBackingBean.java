@@ -3337,7 +3337,7 @@ public class TemplateSpecBackingBean extends
 					if(tplSpecAnswer.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId().equals(parentQuestionId)){
 						tplSpecAnswer.setOffer(offerType);
 						// Bug #32015 Farid start 5/11/2021	
-						if(tplSpecAnswer.getTplSpecZoneQty() == null){
+						if(!this.getManagedBean().getScQt().isZonal()){
 							flagnonZonal = true;
 						}
 						for(TplSpecAnswer specAns : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
