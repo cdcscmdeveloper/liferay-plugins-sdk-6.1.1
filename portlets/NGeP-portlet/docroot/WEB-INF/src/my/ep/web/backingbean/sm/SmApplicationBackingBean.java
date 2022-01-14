@@ -254,7 +254,6 @@ public class SmApplicationBackingBean extends
 	//SSM CHANGES #27214
 	//TO HANDLE, IF KN IS SIGN UP NEW SUPPLIER NO NEED TO CHECK WITH SSM AGAIN. IF UPGRADE NEED TO CHECK WITH SSM
 	public boolean fromPrerenderNewReg = false;
-	public boolean fromAddBankInfo = false;
 
 	//#11641 - START
 	private int mandatoryCounter = 1;
@@ -9128,7 +9127,9 @@ public class SmApplicationBackingBean extends
 	 * Add or create a new SmSupplier bank object
 	 */
 	public void assignNewBank() {
-		fromAddBankInfo = true;
+		//#12492 - start
+		getManagedBean().setShowDifferenceBankInfoAction(true);
+		//#12492 - end
 		getManagedBean().setPendingTransaction(false);
 		getManagedBean().setChequeSingPerId(null);
 		getManagedBean().setSelBankBranchId(null);
@@ -15045,7 +15046,9 @@ public class SmApplicationBackingBean extends
 	}
 	
 	public void assignSelBankWithPendingTransaction(SmSupplierBank shareBankBean) {
-		fromAddBankInfo = false;
+		//#12492 - start
+		getManagedBean().setShowDifferenceBankInfoAction(false);
+		//#12492 - end
 		getManagedBean().setChequeSingPerId(null);
 		getManagedBean().setSelectedBankBranchIds(null);
 		
@@ -16599,7 +16602,7 @@ public class SmApplicationBackingBean extends
 		HashSet<String> hsetAccountNo = new HashSet<String>();
 		HashSet<Long> hsetAccountName = new HashSet<Long>();
 		
-		if(fromAddBankInfo){
+		if(getManagedBean().isShowDifferenceBankInfoAction()){
 			if(fromPage.equalsIgnoreCase("fromBankInfo")){
 				log.info("masuk CheckBankAccountInfoForm from bank info");
 
