@@ -1235,7 +1235,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			ContractItemReqDTO reqDTO = new ContractItemReqDTO();
 			ContractItemResDTO resDTO = new ContractItemResDTO();
 			reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
-			if(getManagedBean().getValidateItem() < FulfilmentConst.GFMAS_CHARGELINE_LIMIT){	//11076
+			//start 11076
+			if(getManagedBean().getValidateItem() > FulfilmentConst.GFMAS_CHARGELINE_LIMIT){	
+				messageId = MessageConst.ERROR_740070;					
+				itemExceed = true;									
+				throw new EpException(MessageConst.ERROR_740070);	
+			} //end 11076
+			
 			try {
 				ISearchBean<CtContractItem> searchBean = new SearchBean<CtContractItem>();
 				itemAddrList = new ArrayList<FlFulfilmentItemAddr>();
@@ -1270,11 +1276,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 				}
-			}else{
-				messageId = MessageConst.ERROR_740070;					//11076
-					itemExceed = true;									//11076
-					throw new EpException(MessageConst.ERROR_740070);	//11076
-			}
+			
 			for (CtContractItem contractedItem : contractedItemList) {
 				itemExisted = false;
 				for (FlFulfilmentItemAddr itemAddr : getManagedBean().getItemAddrList()) {
