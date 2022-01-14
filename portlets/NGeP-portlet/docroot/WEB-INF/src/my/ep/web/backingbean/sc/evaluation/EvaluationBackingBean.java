@@ -14543,6 +14543,7 @@ private void retriveCommitteeRemarksList(){
 								ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION);
 				this.getManagedBean().setUserScoreSchemaType(QTConstants.AUTO_SCORE);//test-25138
 				this.getManagedBean().setDummyScoreType(QTConstants.AUTO_SCORE);//test-25138
+				//#bug 32468 related to #21695 start
 				IPagingDataModel<Object[]> pagingModelDataPackage = new ComplianceSupplierPagingDataModelPackage(
 						"templateSpecIdPackage", newlist, reqDTO
 						.getCompliance(), this
@@ -14550,7 +14551,8 @@ private void retriveCommitteeRemarksList(){
 						.getQtId(), reqDTO
 						.getEvalStage(),reqDTO
 						.getDocCategory(),reqDTO
-						.getPmCode());
+						.getPmCode(),this.getManagedBean().getScQt().isZonal());
+				//#bug 32468 related to #21695 end
 					
 				this.getManagedBean()
 					.setComplianceTechnicalProposalCheckListDMPackage(pagingModelDataPackage);
@@ -14715,13 +14717,16 @@ private void retriveCommitteeRemarksList(){
 		private String evalStage;
 		private String docType;
 		private String pmCode;
+		//#bug 32468 related to #21695 start
+		private Boolean isZonal;
+		//#bug 32468 related to #21695 start
 
 		/**
 		 * Constructor for Compliance Supplier Paging Data Model
 		 */
 		public ComplianceSupplierPagingDataModelPackage(String componentId,
 				List<ScQtCheckList> checklist, Boolean compliance, Long qtId,
-				String evalStage, String docType, String pmCode) {
+				String evalStage, String docType, String pmCode, Boolean isZonal) {
 			
 			super(componentId);
 			this.checkList = checkList;
@@ -14730,6 +14735,9 @@ private void retriveCommitteeRemarksList(){
 			this.evalStage = evalStage;
 			this.docType = docType;
 			this.pmCode = pmCode;
+			//#bug 32468 related to #21695 start
+			this.isZonal = isZonal;
+			//#bug 32468 related to #21695 start
 
 		}
 
@@ -14761,6 +14769,9 @@ private void retriveCommitteeRemarksList(){
 				reqDTO.setDocCategory(docType);
 				reqDTO.setPmCode(pmCode);
 				reqDTO.setObjectSearchBean(searchBean);
+				//#bug 32468 related to #21695 start
+				reqDTO.setZonal(isZonal);
+				//#bug 32468 related to #21695 start
 				
 				return  evaluationSO.retrieveComplianceDtlsByCheckListPackage(reqDTO).getScoreObjResultBean();
 
