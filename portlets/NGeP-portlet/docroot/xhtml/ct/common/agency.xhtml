@@ -30,7 +30,8 @@
 			selectionMode="single" rowKey="#{agencyData}"
 			selection="#{ctBackingBean.managedBean.selectedAgency}"
 			rowIndexVar="indexVar"
-			rowStyleClass="#{agencyData.chkStatusPmOrgValidity == false ? 'ui-helper-hidden' : ''}" >
+			rowStyleClass="#{agencyData.chkStatusPmOrgValidity == false ? 'ui-helper-hidden' : ''}"
+			paginatorAlwaysVisible="true" >
 			<ac:paginator for="tableAgencyDetails" />
 			<p:ajax event="rowSelect" onstart="blockWidget.show();"
 				oncomplete="blockWidget.hide();"
