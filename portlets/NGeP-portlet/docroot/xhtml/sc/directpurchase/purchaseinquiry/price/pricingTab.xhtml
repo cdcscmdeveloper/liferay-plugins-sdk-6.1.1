@@ -6,48 +6,30 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-
-	<p:panelGrid styleClass="tablePanel" style="width:100%;">
-		<f:facet name="header">
-			<p:row>
-				<p:column>
-						#{lbl['lbl.sc.price.inquiry.price.published.per.unit']}
-				</p:column>
-				<p:column>
-						#{lbl['lbl.sc.price.inquiry.price.offered.per.unit']}
-				</p:column>
-			</p:row>
-
-		</f:facet>
-
-		<p:row rendered="#{purchaseInquiryBackingBean.managedBean.supplierItemStandardPrice ne null}" >
-			<p:column>
-				<h:outputText value="#{purchaseInquiryBackingBean.managedBean.supplierItemStandardPrice.pricing.price}"
-					style="float:right">
-					<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</h:outputText>
+	<p:outputPanel>
+		<p:dataTable rowIndexVar="rowIndex" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+			value="#{purchaseInquiryBackingBean.managedBean.supplierItemNormalPrices}"
+			width="100%" var="price" rowKey="#{price}">
+            <p:column>
+				<f:facet name="header">
+					#{lbl['lbl.sc.price.inquiry.price.published.per.unit']}
+				</f:facet>
+				<h:outputText value="#{price.pricing.price}" size="10" readonly="true" style="text-align:right">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+                </h:outputText>
 			</p:column>
-			<p:column>
-				<p:inputText style="text-align:right" disabled="#{!isStockAvailable or !isPendingSupplierRespStatus}"
-					required="#{isStockAvailable}" id="itemPriceNormal" maxlength="23" size="30"
-					value="#{purchaseInquiryBackingBean.managedBean.supplierItemStandardPrice.itemPrice}">
-				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</p:inputText>
-				<p:message id="itemPriceNormalMsg" for="itemPriceNormal" display="icon" />
+			 <p:column>
+				<f:facet name="header">
+					#{lbl['lbl.sc.price.inquiry.price.offered.per.unit']}
+				</f:facet>
+				<p:inputText disabled="#{!isStockAvailable or !isPendingSupplierRespStatus}" required="#{isStockAvailable}" id="itemPriceNormal" value="#{price.itemPrice}" size="10" style="text-align:right">
+					<p:ajax event="change" update="@([id$=itemPriceNormal])"/>
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+                </p:inputText>
 			</p:column>
-	
-		</p:row>
-
-
-	</p:panelGrid>
-
-
-
-
-
-
-
+		</p:dataTable>
+	</p:outputPanel>
 </ui:composition>
