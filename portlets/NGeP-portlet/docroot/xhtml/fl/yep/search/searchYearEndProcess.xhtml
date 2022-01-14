@@ -199,7 +199,8 @@
 						</td>
 						<!-- po status -->
 						<td width="20%"><p:outputLabel
-							value="#{lbl['lbl.fl.purchaseorder.status']}" /></td>
+							value="#{lbl['lbl.fl.purchaseorder.status']}" /><p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 						<td width="30%">
 							<p:selectOneMenu id="postatus"
 								style="width: 200px;"
@@ -293,7 +294,7 @@
 							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.treasury.circular']}"/></td>
 						</tr>
 						<tr>
-							<td  width="20%"><p:outputLabel value="#{lbl['lbl.ct.loa.no']}"/></td>
+							<td  width="20%"><p:outputLabel value="#{lbl['lbl.ct.loa.no']}"/><p:outputLabel value="*" styleClass="mandatory" /></td>
 							<td width="30%"><p:inputText  maxlength="17" value="#{yearEndProcessBackingBean.managedBean.searchLoaNo}"/>	
 				         		  <p:spacer width="2"/>
 				          		<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.loa']}"  /></td>
