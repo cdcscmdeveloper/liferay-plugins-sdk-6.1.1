@@ -292,6 +292,8 @@ public class PurchaseInquiryBackingBean extends
 		}
 		
 		//#29557 - start
+		getManagedBean().getSupplierItemNormalPrices().clear();
+		getManagedBean().getSupplierItemPromoPrices().clear();
 		getManagedBean().getSupplierItemTierStandardPrices().clear();
 		getManagedBean().getSupplierItemTierPromotionPrices().clear();
 		getManagedBean().getSupplierItemZonalStandardPrices().clear();
@@ -330,9 +332,11 @@ public class PurchaseInquiryBackingBean extends
 			if (scSupplierItemPrice.getPriceType().getParameterId()
 					.equals(PriceTypeConstants.NORMAL_STANDARD_PRICE) && scSupplierItemPrice.isRecordStatus()) {				
 				getManagedBean().setSupplierItemStandardPrice(scSupplierItemPrice);
+				getManagedBean().getSupplierItemNormalPrices().add(scSupplierItemPrice);
 			} else if (scSupplierItemPrice.getPriceType().getParameterId()
 					.equals(PriceTypeConstants.NORMAL_PROMOTION_PRICE) && scSupplierItemPrice.isRecordStatus()) {
 				getManagedBean().setSupplierItemPromotionPrice(scSupplierItemPrice);
+				getManagedBean().getSupplierItemPromoPrices().add(scSupplierItemPrice);
 			} else if (scSupplierItemPrice.getPriceType().getParameterId()
 					.equals(PriceTypeConstants.TIER_STANDARD_PRICE) && scSupplierItemPrice.isRecordStatus()) {
 				if(scSupplierItemPrice.getPricing() == null)
@@ -1480,6 +1484,8 @@ public class PurchaseInquiryBackingBean extends
 				getManagedBean().setSupplierItemPrices(requestSupplierItem.getSupplierItemPrices());
 				
 				//#29557 - start
+				getManagedBean().getSupplierItemNormalPrices().clear();
+				getManagedBean().getSupplierItemPromoPrices().clear();
 				getManagedBean().getSupplierItemTierStandardPrices().clear();
 				getManagedBean().getSupplierItemTierPromotionPrices().clear();
 				getManagedBean().getSupplierItemZonalStandardPrices().clear();
@@ -1515,9 +1521,11 @@ public class PurchaseInquiryBackingBean extends
 					if (scSupplierItemPrice.getPriceType().getParameterId()
 							.equals(PriceTypeConstants.NORMAL_STANDARD_PRICE) && scSupplierItemPrice.isRecordStatus()) {				
 						getManagedBean().setSupplierItemStandardPrice(scSupplierItemPrice);
+						getManagedBean().getSupplierItemNormalPrices().add(scSupplierItemPrice);
 					} else if (scSupplierItemPrice.getPriceType().getParameterId()
 							.equals(PriceTypeConstants.NORMAL_PROMOTION_PRICE) && scSupplierItemPrice.isRecordStatus()) {
 						getManagedBean().setSupplierItemPromotionPrice(scSupplierItemPrice);
+						getManagedBean().getSupplierItemPromoPrices().add(scSupplierItemPrice);
 					} else if (scSupplierItemPrice.getPriceType().getParameterId()
 							.equals(PriceTypeConstants.TIER_STANDARD_PRICE) && scSupplierItemPrice.isRecordStatus()) {
 						if(scSupplierItemPrice.getPricing() == null)
@@ -2301,12 +2309,14 @@ public class PurchaseInquiryBackingBean extends
 		}
 	}
 	
-	private void validateScSupplierItemPrice(ScSupplierItemPrice scSupplierItemPrice) {
+	private void validateScSupplierItemPrice(List<ScSupplierItemPrice> scSupplierItemPrices) {
 		FacesScopes facesScopes = new FacesScopes();
-		if (scSupplierItemPrice.getItemPrice() == null) {
-			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
-					"lbl.sc.price.inquiry.price.offered.per.unit", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					facesScopes.getUserLocale()) });
+		for (ScSupplierItemPrice scSupplierItemPrice : scSupplierItemPrices) {
+			if (scSupplierItemPrice.getItemPrice() == null) {
+				throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+						"lbl.sc.price.inquiry.price.offered.per.unit", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						facesScopes.getUserLocale()) });
+			}
 		}
 
 	}
@@ -2377,9 +2387,8 @@ public class PurchaseInquiryBackingBean extends
 				.getSupplierItemZonalTierPromotionPrices());
 
 		// save for type 01
-		if (this.getManagedBean().getSupplierItemStandardPrice() != null) {
-			List<ScSupplierItemPrice> tempScSupplierItemPrices = new ArrayList<ScSupplierItemPrice>();
-			tempScSupplierItemPrices.add(this.getManagedBean().getSupplierItemStandardPrice());
+		if (this.getManagedBean().getSupplierItemNormalPrices().size() != 0 && !this.getManagedBean().getSupplierItemNormalPrices().isEmpty()) {
+			List<ScSupplierItemPrice> tempScSupplierItemPrices = this.getManagedBean().getSupplierItemNormalPrices();
 
 			for (ScSupplierItemPrice addedScSupplierItemPrice : tempScSupplierItemPrices) {
 				if (addedScSupplierItemPrice.getPricing() == null) {
@@ -2392,15 +2401,15 @@ public class PurchaseInquiryBackingBean extends
 			List<ScSupplierItemPrice> addedScSupplierItemPrice = getPrInquirySO().saveSupplierItemPrices(
 					tempScSupplierItemPrices);
 
-			this.getManagedBean().setSupplierItemStandardPrice(addedScSupplierItemPrice.get(0));			
-			validateScSupplierItemPrice(this.getManagedBean().getSupplierItemStandardPrice());
+			this.getManagedBean().getSupplierItemNormalPrices().clear();
+            this.getManagedBean().getSupplierItemNormalPrices().add(addedScSupplierItemPrice.get(0));
+			validateScSupplierItemPrice(this.getManagedBean().getSupplierItemNormalPrices());
 
 		}
 
 		// save for type 02
-		if (this.getManagedBean().getSupplierItemPromotionPrice() != null) {
-			List<ScSupplierItemPrice> tempScSupplierItemPrices = new ArrayList<ScSupplierItemPrice>();
-			tempScSupplierItemPrices.add(this.getManagedBean().getSupplierItemPromotionPrice());
+		if (this.getManagedBean().getSupplierItemPromoPrices().size() != 0 && !this.getManagedBean().getSupplierItemPromoPrices().isEmpty()) {
+			List<ScSupplierItemPrice> tempScSupplierItemPrices = this.getManagedBean().getSupplierItemPromoPrices();
 
 			for (ScSupplierItemPrice addedScSupplierItemPrice : tempScSupplierItemPrices) {
 				if (addedScSupplierItemPrice.getPricing() == null) {
@@ -2413,7 +2422,9 @@ public class PurchaseInquiryBackingBean extends
 			List<ScSupplierItemPrice> addedScSupplierItemPrice = getPrInquirySO().saveSupplierItemPrices(
 					tempScSupplierItemPrices);
 
-			this.getManagedBean().setSupplierItemPromotionPrice(addedScSupplierItemPrice.get(0));
+			this.getManagedBean().getSupplierItemPromoPrices().clear();
+			this.getManagedBean().getSupplierItemPromoPrices().add(addedScSupplierItemPrice.get(0));
+			//validateScSupplierItemPrice(this.getManagedBean().getSupplierItemPromoPrices());
 
 		}
 

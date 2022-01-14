@@ -324,7 +324,7 @@
 							itemValue="1" />
 						<f:selectItem itemLabel="#{lbl['lbl.sc.price.inquiry.no']}"
 							itemValue="0" />
-						<p:ajax event="change" update="respDtl" process="@this"
+						<p:ajax event="change" update=":#{p:component('itemPriceNormal')},:#{p:component('itemPricePromo')}, @([id$=headerTabId])" process="@this"
 							listener="#{purchaseInquiryBackingBean.stockAvailabilityEvent}"
 							partialSubmit="true" />
 					</p:selectOneRadio> <p:message id="stockAvailableMsg" for="stockAvailable"
@@ -406,8 +406,10 @@
 					<p:tab title="#{lbl['lbl.cm.standard']}">
 						<ui:include src="price/pricingTab.xhtml" />
 					</p:tab>
-					<p:tab disabled="#{purchaseInquiryBackingBean.managedBean.supplierItemPromotionPrice eq null and isPendingSubmissionStatus}" title="#{lbl['lbl.cm.promotion']}">
-						<ui:include src="price/promotionTab.xhtml" />
+					<p:tab disabled="#{(purchaseInquiryBackingBean.managedBean.supplierItemPromotionPrice eq null and isPendingSubmissionStatus) or !isStockAvailable}" title="#{lbl['lbl.cm.promotion']}">
+						<c:if test="#{(purchaseInquiryBackingBean.managedBean.supplierItemTierPromotionPrices.size() != 0 and !isPendingSubmissionStatus) or isStockAvailable}">
+							<ui:include src="price/promotionTab.xhtml" />
+						</c:if>
 					</p:tab>
 				</p:tabView>
 			</p:tab>
@@ -420,8 +422,10 @@
 					<p:tab title="#{lbl['lbl.cm.standard']}">
 						<ui:include src="price/pricingTierTab.xhtml" />
 					</p:tab>
-					<p:tab disabled="#{purchaseInquiryBackingBean.managedBean.supplierItemTierPromotionPrices.size() == 0 and isPendingSubmissionStatus}" title="#{lbl['lbl.cm.promotion']}">
-						<ui:include src="price/pricingPromotionTierTab.xhtml" />
+					<p:tab disabled="#{(purchaseInquiryBackingBean.managedBean.supplierItemTierPromotionPrices.size() == 0 and isPendingSubmissionStatus) or !isStockAvailable}" title="#{lbl['lbl.cm.promotion']}">
+						<c:if test="#{(purchaseInquiryBackingBean.managedBean.supplierItemTierPromotionPrices.size() != 0 and !isPendingSubmissionStatus) or isStockAvailable}">
+							<ui:include src="price/pricingPromotionTierTab.xhtml" />
+						</c:if> 
 					</p:tab>
 				</p:tabView>
 			</p:tab>
@@ -430,11 +434,15 @@
 				<p:tabView id="zonalId"
 					activeIndex="#{purchaseInquiryBackingBean.managedBean.zonalPricingIndex}">
 
-					<p:tab disabled="#{purchaseInquiryBackingBean.managedBean.supplierItemZonalStandardPrices.size() == 0 and isPendingSubmissionStatus}" title="#{lbl['lbl.cm.standard']}">
-						<ui:include src="price/zonalStandardPricingTab.xhtml" />
+					<p:tab disabled="#{(purchaseInquiryBackingBean.managedBean.supplierItemTierPromotionPrices.size() == 0 and isPendingSubmissionStatus) or !isStockAvailable}" title="#{lbl['lbl.cm.standard']}">
+						<c:if test="#{(purchaseInquiryBackingBean.managedBean.supplierItemTierPromotionPrices.size() != 0 and !isPendingSubmissionStatus) or isStockAvailable}">
+							<ui:include src="price/zonalStandardPricingTab.xhtml" />
+						</c:if> 
 					</p:tab>
-					<p:tab disabled="#{purchaseInquiryBackingBean.managedBean.supplierItemZonalPromotionPrices.size() == 0 and isPendingSubmissionStatus}" title="#{lbl['lbl.cm.promotion']}">
-						<ui:include src="price/zonalPromotionPricingTab.xhtml" />
+					<p:tab disabled="#{(purchaseInquiryBackingBean.managedBean.supplierItemTierPromotionPrices.size() == 0 and isPendingSubmissionStatus) or !isStockAvailable}" title="#{lbl['lbl.cm.promotion']}">
+						<c:if test="#{(purchaseInquiryBackingBean.managedBean.supplierItemTierPromotionPrices.size() != 0 and !isPendingSubmissionStatus) or isStockAvailable}">
+							<ui:include src="price/zonalPromotionPricingTab.xhtml" />
+						</c:if> 
 					</p:tab>
 				</p:tabView>
 			</p:tab>
@@ -442,11 +450,15 @@
 			<p:tab title="#{lbl['lbl.cm.zonal.tier']}">
 				<p:tabView id="zonalTierId"
 					activeIndex="#{purchaseInquiryBackingBean.managedBean.zonalTierPricingIndex}">
-					<p:tab disabled="#{purchaseInquiryBackingBean.managedBean.supplierItemZonalTierStandardPrices.size() == 0 and isPendingSubmissionStatus}" title="#{lbl['lbl.cm.standard']}">
-						<ui:include src="price/zonalTierPricingTab.xhtml" />
+					<p:tab disabled="#{(purchaseInquiryBackingBean.managedBean.supplierItemTierPromotionPrices.size() == 0 and isPendingSubmissionStatus) or !isStockAvailable}" title="#{lbl['lbl.cm.standard']}">
+						<c:if test="#{(purchaseInquiryBackingBean.managedBean.supplierItemTierPromotionPrices.size() != 0 and !isPendingSubmissionStatus) or isStockAvailable}">
+							<ui:include src="price/zonalTierPricingTab.xhtml" />
+						</c:if> 
 					</p:tab>
-					<p:tab disabled="#{purchaseInquiryBackingBean.managedBean.supplierItemZonalTierPromotionPrices.size() == 0 and isPendingSubmissionStatus}" title="#{lbl['lbl.cm.promotion']}">
-						<ui:include src="price/zonalPromotionTierPricingTab.xhtml" />
+					<p:tab disabled="#{(purchaseInquiryBackingBean.managedBean.supplierItemTierPromotionPrices.size() == 0 and isPendingSubmissionStatus) or !isStockAvailable}" title="#{lbl['lbl.cm.promotion']}">
+						<c:if test="#{(purchaseInquiryBackingBean.managedBean.supplierItemTierPromotionPrices.size() != 0 and !isPendingSubmissionStatus) or isStockAvailable}">
+							<ui:include src="price/zonalPromotionTierPricingTab.xhtml" />
+						</c:if> 
 					</p:tab>
 				</p:tabView>
 			</p:tab>
