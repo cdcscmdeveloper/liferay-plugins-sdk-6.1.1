@@ -146,6 +146,10 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
      
      private ScSupplierItemPrice supplierItemPromotionPrice;
      
+     private List<ScSupplierItemPrice>	supplierItemNormalPrices;
+     
+     private List<ScSupplierItemPrice>	supplierItemPromoPrices;
+     
      private List<ScSupplierItemPrice>	supplierItemTierStandardPrices;
      
      private List<ScSupplierItemPrice>	supplierItemTierPromotionPrices;
@@ -1057,6 +1061,28 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	
 	public void setSupplierZoneList(List<TplSpecZoneDtl> supplierZoneList) {
 		this.supplierZoneList = supplierZoneList;
+	}
+
+	public List<ScSupplierItemPrice> getSupplierItemNormalPrices() {
+		if (supplierItemNormalPrices == null)
+			supplierItemNormalPrices = new ArrayList<ScSupplierItemPrice>();
+
+		return supplierItemNormalPrices;
+	}
+
+	public void setSupplierItemNormalPrices(List<ScSupplierItemPrice> supplierItemNormalPrices) {
+		this.supplierItemNormalPrices = supplierItemNormalPrices;
+	}
+
+	public List<ScSupplierItemPrice> getSupplierItemPromoPrices() {
+		if (supplierItemPromoPrices == null)
+			supplierItemPromoPrices = new ArrayList<ScSupplierItemPrice>();
+
+		return supplierItemPromoPrices;
+	}
+
+	public void setSupplierItemPromoPrices(List<ScSupplierItemPrice> supplierItemPromoPrices) {
+		this.supplierItemPromoPrices = supplierItemPromoPrices;
 	}
 	//29557 - end	
 }
