@@ -641,7 +641,11 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean poApproverChgBusiness;
 	private String msgChgBusiness;
 	//#30691 - END - 26112021
-
+	
+	//#12492 - start
+	private boolean showDifferenceBankInfoAction;
+	//#12492 - end
+	
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
 		 * 
@@ -4527,4 +4531,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.msgChgBusiness = msgChgBusiness;
 	}
 	//#30691 - END - 26112021
+
+	//#12492 - start
+	public boolean isShowDifferenceBankInfoAction() {
+		return showDifferenceBankInfoAction;
+	}
+
+	public void setShowDifferenceBankInfoAction(boolean showDifferenceBankInfoAction) {
+		this.showDifferenceBankInfoAction = showDifferenceBankInfoAction;
+	}
+	//#12492 - end
 }
