@@ -324,7 +324,7 @@
 							itemValue="1" />
 						<f:selectItem itemLabel="#{lbl['lbl.sc.price.inquiry.no']}"
 							itemValue="0" />
-						<p:ajax event="change" update=":#{p:component('itemPriceNormal')},:#{p:component('itemPricePromo')}, @([id$=headerTabId])" process="@this"
+						<p:ajax event="change" update="@([id$=headerTabId])" process="@this"
 							listener="#{purchaseInquiryBackingBean.stockAvailabilityEvent}"
 							partialSubmit="true" />
 					</p:selectOneRadio> <p:message id="stockAvailableMsg" for="stockAvailable"
