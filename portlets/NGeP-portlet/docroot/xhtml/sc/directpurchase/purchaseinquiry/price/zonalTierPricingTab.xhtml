@@ -39,7 +39,7 @@
 				</f:facet>
 				<p:selectOneMenu value="#{price.tplSpecZone.specZoneId}"
 					disabled="#{!isPendingSupplierRespStatus}" style="width: 128px;">
-					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" itemDisabled="#{price.tplSpecZone.specZoneId != null}"/>
 					<f:selectItems
 						value="#{purchaseInquiryBackingBean.managedBean.supplierZoneList}"
 						var="zone" itemLabel="#{zone.zoneName}"
