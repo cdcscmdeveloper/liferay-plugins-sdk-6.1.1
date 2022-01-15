@@ -1153,10 +1153,10 @@ public class PurchaseInquiryBackingBean extends
 	 */
 	public String requisitionerAction(String action) {
 		log.info("requisitionerAction");
-		validateFinalOrderQty(); //#29557
+		
 		ScPrInquiry prInquiry = getManagedBean().getScPrInquiry();
 		if(StringUtils.equalsIgnoreCase("PROCESSED", action)) {
-
+			validateFinalOrderQty(); //#29557
 			// get RequestNote Backing bean and manage bean and set Request Note
 			// to RequestNote manage bean
 			PortletSession portletSession = (PortletSession) FacesContext
@@ -2338,15 +2338,19 @@ public class PurchaseInquiryBackingBean extends
 		}
 	}
 
-	private void validateScSupplierItemPriceList(Integer priceTypeList,ScSupplierItemPrice addedScSupplierItemPrice) {
+	private void validateScSupplierItemPriceList(Integer priceTypeList,ScSupplierItemPrice addedScSupplierItemPrice,Boolean ignoreLastTier) {
 		int i = priceTypeList;
 		FacesScopes facesScopes = new FacesScopes();
 		
 		if (i == 0 || i == 1){
 			if (addedScSupplierItemPrice.getFromQty() == null){throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils.getMessage("lbl.sc.from.qty",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});}
-			if (addedScSupplierItemPrice.getToQty() == null){throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils.getMessage("lbl.sc.to.qty",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});}
+			if (addedScSupplierItemPrice.getToQty() == null) {
+				if (!ignoreLastTier) {
+					throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+							"lbl.sc.to.qty", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()) });
+				}
+			}
 			if (addedScSupplierItemPrice.getItemPrice() == null){throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils.getMessage("lbl.ss.item.detail.price.offered",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});}
 		}			
@@ -2362,8 +2366,12 @@ public class PurchaseInquiryBackingBean extends
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});}
 			if (addedScSupplierItemPrice.getFromQty() == null){throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils.getMessage("lbl.sc.from.qty",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});}
-			if (addedScSupplierItemPrice.getToQty() == null){throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils.getMessage("lbl.sc.to.qty",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});}
+			if (addedScSupplierItemPrice.getToQty() == null){
+				if (!ignoreLastTier) {
+					throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+							"lbl.sc.to.qty", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()) });
+				}
+			}
 			if (addedScSupplierItemPrice.getItemPrice() == null){throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils.getMessage("lbl.ss.item.detail.price.offered",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});}
 		}
@@ -2433,6 +2441,8 @@ public class PurchaseInquiryBackingBean extends
 			Object currentKey = scSupplierItemPriceListing.keySet().toArray()[i];
 			
 			if (scSupplierItemPriceListing.get(currentKey).size() != 0 && !scSupplierItemPriceListing.get(currentKey).isEmpty()) {
+				int index = 0;
+				Boolean ignoreLastTier = false;
 				for (ScSupplierItemPrice addedScSupplierItemPrice : scSupplierItemPriceListing.get(currentKey)) {
 					if (addedScSupplierItemPrice.getPricing() == null) {
 						addedScSupplierItemPrice.setPricing(null);
@@ -2447,7 +2457,12 @@ public class PurchaseInquiryBackingBean extends
 						}
 					}
 					
-					validateScSupplierItemPriceList(i ,addedScSupplierItemPrice);
+					if(index == scSupplierItemPriceListing.get(currentKey).size() - 1){
+						ignoreLastTier = true;						
+					}
+					
+					validateScSupplierItemPriceList(i ,addedScSupplierItemPrice,ignoreLastTier);					
+					index++;
 				}
 				
 				PrInquiryReqDTO prInquiryReqDTO = new PrInquiryReqDTO();
