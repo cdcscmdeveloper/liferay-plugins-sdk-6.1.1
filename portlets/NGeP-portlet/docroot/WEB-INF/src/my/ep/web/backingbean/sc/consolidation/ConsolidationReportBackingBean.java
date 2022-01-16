@@ -1178,10 +1178,18 @@ public class ConsolidationReportBackingBean extends
 	}
 
 	private void calculateOfferedPrice(ScQtEvaluationResultDtl evalResultDtl,
-			ScQtRecommend scQtRecommend) {
+			ScQtRecommend scQtRecommend
+			// #21695 - #32446 - Start.
+			, Long zoneId
+			// #21695 - #32446 - End.
+			) {
 		ScRequestItem requestItem = scQtRecommend.getRequestItem();
 		ScQtProposalItem proposalItem = fetchQtProposalItem(scQtRecommend,
-				evalResultDtl);
+				evalResultDtl
+				// #21695 - #32446 - Start.
+				, zoneId
+				// #21695 - #32446 - End.
+				);
 		if (proposalItem != null) {
 			BigDecimal offeredPrice = TemplateSpecHelper.getInstance()
 					.calculateTotalAmount(requestItem.getTplSpecQuestion(),
@@ -1193,7 +1201,11 @@ public class ConsolidationReportBackingBean extends
 	}
 
 	private ScQtProposalItem fetchQtProposalItem(ScQtRecommend scQtRecommend,
-			ScQtEvaluationResultDtl recommendedSupplier) {
+			ScQtEvaluationResultDtl recommendedSupplier
+			// #21695 - #32446 - Start.
+			, Long zoneId
+			// #21695 - #32446 - End.
+			) {
 		ScQtProposalItem qtProposalItem = null;
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		try {
@@ -1201,10 +1213,11 @@ public class ConsolidationReportBackingBean extends
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTSuppFinalizationSO.class);
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
-			if (scQtRecommend.getTplSpecZoneDtl() != null) {
-				reqDTO.setSpecZoneId(scQtRecommend.getTplSpecZoneDtl()
-						.getSpecZoneId());
+			// #21695 - #32446 - Start.
+			if (zoneId != null) {
+				reqDTO.setSpecZoneId(zoneId);
 			}
+			// #21695 - #32446 - End.
 			reqDTO.setScQtProposalAmount(recommendedSupplier
 					.getProposalAmount());
 			reqDTO.setRequestItemId(scQtRecommend.getRequestItem()
@@ -2044,7 +2057,11 @@ public class ConsolidationReportBackingBean extends
 						for (ScQtEvaluationResultDtl qualSupplier : qualifiedSuppliers) {
 							if (selectedItem != null) {
 								calculateOfferedPrice(qualSupplier,
-										selectedItem);
+										selectedItem
+										// #21695 - #32446 - Start.
+										, zoneId
+										// #21695 - #32446 - End.
+										);
 							}
 							if (CollectionUtils.isNotEmpty(cachedSuppliers)) {
 								QtEvaluationResultDtlBean recommendationBean = getCachedBeanFromList(
