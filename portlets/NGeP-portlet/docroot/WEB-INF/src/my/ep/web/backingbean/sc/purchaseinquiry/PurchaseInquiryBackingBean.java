@@ -2478,8 +2478,10 @@ public class PurchaseInquiryBackingBean extends
 					for(ScSupplierItemPrice scSupplierItemPrice : prInquiryReqDTO.getSupplierItemPrices()){
 						onChangeFromQty(scSupplierItemPrice.getPriceType().getParameterCode());
 						onChangeToQty(scSupplierItemPrice.getPriceType().getParameterCode());
-						onChangeNewPrice(scSupplierItemPrice.getPriceType().getParameterCode(),
-								scSupplierItemPrice.getItemPrice(), scSupplierItemPrice.getPricing().getPrice());
+						
+						if (scSupplierItemPrice.getPricing() != null)
+							onChangeNewPrice(scSupplierItemPrice.getPriceType().getParameterCode(),
+									scSupplierItemPrice.getItemPrice(), scSupplierItemPrice.getPricing().getPrice());
 					}
 				}				
 				
