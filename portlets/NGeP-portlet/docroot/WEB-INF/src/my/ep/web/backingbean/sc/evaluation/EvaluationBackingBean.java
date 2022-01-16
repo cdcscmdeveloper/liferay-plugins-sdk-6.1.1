@@ -2131,10 +2131,18 @@ public class EvaluationBackingBean extends
 				reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
 				if (this.getManagedBean().getScQt().isDemoRequired()) {
 					reqDTO.setEvalStage(QTConstants.PRESENTATION_DEMO_EVALUATION);
+				} 
+				// #25138 - #32437 - Start.
+				else if (this.getManagedBean().getScQt().isPartial()) {
+						List<String> evalstage = new ArrayList<String>();
+						evalstage.add(QTConstants.TECHNICAL_EVALUATION);
+						evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+						reqDTO.setResultStages(evalstage);
+						reqDTO.setPartial(this.getManagedBean().getScQt().isPartial());
 				} else {
 					reqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
 				}
-
+				// #25138 - #32437 - End.
 				evaluationSO.generateEvaluationSheet(reqDTO);
 			}
 
