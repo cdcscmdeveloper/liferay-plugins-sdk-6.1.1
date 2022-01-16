@@ -16601,11 +16601,11 @@ public class SmApplicationBackingBean extends
 
 		HashSet<String> hsetAccountNo = new HashSet<String>();
 		HashSet<Long> hsetAccountName = new HashSet<Long>();
+			
+		boolean bankInfo = false;
 		
-		if(getManagedBean().isShowDifferenceBankInfoAction()){
-			if(fromPage.equalsIgnoreCase("fromBankInfo")){
-				log.info("masuk CheckBankAccountInfoForm from bank info");
-
+		if(getManagedBean().isShowDifferenceBankInfoAction()){	
+			if (fromPage.equalsIgnoreCase("fromBankInfo")) {
 				if (this.getManagedBean().getSmAppl().getSmSupplierBanks().size() > 0) {
 					for (SmSupplierBank bankName : this.getManagedBean().getSmAppl().getSmSupplierBanks()) {
 						if (bankName.getPmFinancialOrg().getFinancialOrgId() != null) {
@@ -16619,11 +16619,20 @@ public class SmApplicationBackingBean extends
 					if (hsetAccountNo.add(getManagedBean().getSelectedBank().getAccountNo()) == false) {
 						RequestContext.getCurrentInstance().execute("bankDialogDuplicate.show()");
 					}
-				}	
-			}else if(fromPage.equalsIgnoreCase("fromNext")){
-				RequestContext.getCurrentInstance().execute("bankDialogDuplicate.hide()");
-				log.info("masuk CheckBankAccountInfoForm from next");
-			}	
+				}
+			}
+		}else{
+			for (SmSupplierBank supBank : getManagedBean().getSmAppl().getSmSupplierBanks()){
+				if(getManagedBean().getSelectedBank().getSupplierBankId() != null && 
+						getManagedBean().getSelectedBank().getSupplierBankId().equals(supBank.getSupplierBankId())){
+					log.debug("**** Same Bank object edit with exisiting id ******");
+				}else{
+					if(getManagedBean().getSelectedBank().getAccountNo().equalsIgnoreCase(supBank.getAccountNo())){
+						bankInfo = true;
+						RequestContext.getCurrentInstance().execute("bankDialogDuplicate.show()");
+					}
+				}
+			}
 		}
 	}
 	//12492 - END
