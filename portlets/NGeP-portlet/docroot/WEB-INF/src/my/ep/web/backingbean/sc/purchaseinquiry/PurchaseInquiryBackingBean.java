@@ -1405,16 +1405,21 @@ public class PurchaseInquiryBackingBean extends
 		ScRequestSupplierItem scRequestSupplierItem = getManagedBean().getScRequestSupplierItem();
 		BigDecimal  minTierQty = BigDecimal.ZERO;
 		BigDecimal  maxTierQty = BigDecimal.ZERO;
+		Boolean gotBlankToQty = false;
 		
 		if (scRequestSupplierItem.getRequestNoteItem().getQuantity() != null) {			
 			ScSupplierItemPrice scSupplierItemPrice = getManagedBean().getSupplierItemPrices().get(0);
 			
 			minTierQty = getPrInquirySO().getMinimumTierQuantity(scSupplierItemPrice.getScRequestSupplierItem().getRequestSupplierItemId());
-			maxTierQty = getPrInquirySO().getMaximumTierQuantity(scSupplierItemPrice.getScRequestSupplierItem().getRequestSupplierItemId());
+			gotBlankToQty = getPrInquirySO().isToQtyLeftEmpty(scSupplierItemPrice.getScRequestSupplierItem().getRequestSupplierItemId());
 			
-			if ((minTierQty != null && scRequestSupplierItem.getRequestNoteItem().getQuantity().compareTo(minTierQty) < 0)
-					|| (maxTierQty != null && scRequestSupplierItem.getRequestNoteItem().getQuantity().compareTo(maxTierQty) > 0)) {
-				throw new EpException(MessageConst.ERROR_745055);
+			if (!gotBlankToQty){
+				maxTierQty = getPrInquirySO().getMaximumTierQuantity(scSupplierItemPrice.getScRequestSupplierItem().getRequestSupplierItemId());
+				
+				if ((minTierQty != null && scRequestSupplierItem.getRequestNoteItem().getQuantity().compareTo(minTierQty) < 0)
+						|| (maxTierQty != null && scRequestSupplierItem.getRequestNoteItem().getQuantity().compareTo(maxTierQty) > 0)) {
+					throw new EpException(MessageConst.ERROR_745055);
+				}
 			}
 		}	
 	}
