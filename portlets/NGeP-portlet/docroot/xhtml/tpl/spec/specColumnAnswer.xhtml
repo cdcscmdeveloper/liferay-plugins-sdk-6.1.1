@@ -142,7 +142,8 @@
 			tplSpecAnswer ne null 
 			and tplSpecAnswer.tplSpecZoneQty ne null 
 			and tplSpecAnswer.tplSpecZoneQty.qty eq 0 
-			or tplSpecAnswer.notOfferSingle}">
+			or tplSpecAnswer.notOfferSingle}"
+			onkeypress="if (event.keyCode == 13) { return false; }"> <!-- #32362 -->
 			<p:ajax event="change" partialSubmit="true" process="@this" update="@this, ratePerUomMsg, ansYearPG, ansPG, @(.calcAmount)" listener="#{templateSpecBackingBean.calcTotalAmount(templateSpecBean, tplSpecAnswer, isItemTypeService)}" />
 			<!-- FARID START -->
 		<c:if test="#{!isSqSpec and tplSpecAnswer.ratePerUom eq null}">
