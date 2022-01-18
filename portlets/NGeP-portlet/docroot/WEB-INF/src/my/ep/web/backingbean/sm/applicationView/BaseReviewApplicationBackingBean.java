@@ -150,6 +150,8 @@ import com.liferay.compat.portal.util.PortalUtil;
 
 public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewApplicationManagedBean>
 		extends BaseBackingBean<T> {
+	
+	//#28741 - git commit 1
 
 	/**
 	 * 
