@@ -152,6 +152,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		extends BaseBackingBean<T> {
 	
 	//#28741 - git commit 1
+	//#28741 - git commit 2
 
 	/**
 	 * 
