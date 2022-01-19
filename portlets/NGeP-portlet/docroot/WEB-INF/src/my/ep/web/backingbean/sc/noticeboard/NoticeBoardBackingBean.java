@@ -2195,6 +2195,15 @@ public class NoticeBoardBackingBean extends
 		Date closingDate = DateUtils.convertStringToDate(
 				"yyyy-MM-dd HH:mm:ss.S", clsDate);
 
+		// #15934 - start
+		String strDays = null;
+
+		for (String newStr : new String[] { ResourceBundleUtils.getMessage("lbl.cm.days",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) }) {
+			strDays = newStr;
+		}
+		// #15934 - end
+
 		if (new Date(System.currentTimeMillis()).after(closingDate)) {
 			// closed
 		} else {
@@ -2211,6 +2220,17 @@ public class NoticeBoardBackingBean extends
 							.longValue());
 				}
 			}
+			
+			// #15934 - start
+			if (days > 0) {
+				Long durationInMills = DateUtils.getDateDiffInMillis(DateUtils.getCurrentDate(), closingDate);
+
+				if (durationInMills > 0) {
+					closingDays = df.format(days) + " " + strDays + " "
+							+ DateUtils.durationFormatter(durationInMills.longValue());
+				}
+			}
+			// #15934 - end
 		}
 		return closingDays;
 	}
