@@ -635,7 +635,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 							demoItem = new ScQtDemoItem();
 							demoItem.setScQtDemo(qtDemo);
 							demoItem.setTplSpecQuestion(s);
-							demoItem.setItemName(s.getClSpecDetail());
+							demoItem.setItemName(s.getClItem());
 							demoItemList.add(demoItem);
 						}
 					}
@@ -939,6 +939,10 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 
 			DemoResDTO resNewDTO = qtDemoSO.prepareCommiteeDtls(demoReqDTO);
 			ScQtCommittee qtCommittee = resNewDTO.getQtCommittee();
+			
+			if(this.getManagedBean().getPayLoad() == null){				
+				this.getManagedBean().setPayLoad(resDTO.getPayLoad());
+			}
 
 			if (null != qtCommittee) {
 				this.getManagedBean().setScQtCommittee(qtCommittee);

@@ -1440,8 +1440,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				resDTO.setScQt(qt);
 				resDTO.setPmUser(new FacesScopes().getUserSessionBean());				
 				resDTO.setOutcome(BpmOutcomeConst.BPM_APPROVE);
+				resDTO.setPayLoad(this.getManagedBean().getPayLoad());
 				resDTO = demoBB.demoUpdateBpmTask(resDTO, outcome);
-				tenderResDTO.setSuccessful(true);
+				tenderResDTO.setSuccessful(resDTO.isSuccessful());
 				tenderResDTO.setQtDetail(qt);			
 				
 			} else {

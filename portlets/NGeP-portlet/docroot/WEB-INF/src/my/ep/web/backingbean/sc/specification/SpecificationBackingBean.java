@@ -65,6 +65,7 @@ import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
@@ -112,6 +113,8 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
@@ -155,6 +158,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScAddress;
@@ -13499,6 +13503,7 @@ public class SpecificationBackingBean extends
 			}
 			saveSpecMaintenanceWorkFlowStatus();
 			addDemoTechnicalCheckList();//#28784
+			resetDemoSpecStatus();//#28784
 			return "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
 		}
 		return null;
@@ -19675,6 +19680,7 @@ if(null!=allTechnicalChecklist){
 		try {
 
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+			List<TplSpecQuestion> newSpecItemList = new ArrayList<>();
 			specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 					IQTSpecSO.class);
 
@@ -19702,9 +19708,11 @@ if(null!=allTechnicalChecklist){
 							PmParameter scoreType = getParameterByTypeAndCode(ParameterTypeConst.SCORE_TYPE,
 									ParameterConst.SCORE_TYPE_USER);
 							tpl.setScoreTypeCode(scoreType);
+							newSpecItemList.add(tpl);
 							
-						}
-					}					
+						} 
+					}
+					checkList.getScQtDoc().getTplSpecMaster().setTplSpecQuestions(newSpecItemList);
 				}
 
 				checkList.getScQtDoc().getTplSpecMaster().setTechnicalSpecQuestionsToDelete(null);
@@ -20303,6 +20311,45 @@ if(null!=allTechnicalChecklist){
 			}
 		}
 		return null;
+	}
+	
+	public String getDemoStatusDescById(long statusId) {
+		debugLogger("getStatusDescById.statusId: " + statusId);
+		String KEY_SEPARATOR = "_";
+		Map<String, String> statusMap = new HashMap<String, String>();
+		String languageCode = new FacesScopes().getUserLocale().getLanguage();
+		String key = new StringBuilder().append(statusId).append(KEY_SEPARATOR).append(languageCode).toString();
+
+		// Get the status description list from map.
+		String statusDesc = statusMap.get(key);
+
+		if (statusDesc == null) {
+
+			try {
+				StatusReqDTO reqDTO = new StatusReqDTO();
+				reqDTO.setStatusId(statusId);
+				reqDTO.setLanguageCode(languageCode);
+
+				if (reqDTO.getStatusId().equals(QTStatusConst.TS_COMPLETED)) {
+					statusDesc = ResourceBundleUtils.getMessage("lbl.spec.verified",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+				} else if (reqDTO.getStatusId().equals(QTStatusConst.TS_PENDING_SUBMISSION)) {
+					statusDesc = ResourceBundleUtils.getMessage("lbl.spec.pending.verified",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+				}
+
+				// Put status description into map.
+				statusMap.put(key, statusDesc);
+
+				debugLogger("put into list: " + statusDesc);
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new EpException(e.getMessage());
+			} finally {
+			}
+		}
+
+		return statusDesc;
 	}
 	//#28784 - End
 }
