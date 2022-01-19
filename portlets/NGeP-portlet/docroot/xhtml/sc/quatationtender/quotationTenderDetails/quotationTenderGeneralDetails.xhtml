@@ -31,6 +31,8 @@
 		value="#{createQtBB.isStatusInQTReviseGroupStatus(scQt.qtStatus.statusId)}" />
 	<ui:param name="isMaintenanceFlow"  
 		value="#{qTDetailBB.managedBean.maintanceFlow}" />	
+	<ui:param name="isDemoDisabled"  
+		value="#{qTDetailBB.managedBean.demoDisabled}" />	
 	<ac:lovPopup />
 
 	<p:panel id="qtdetailsid" header="#{lbl['lbl.sc.general.info']}" toggleable="true">
@@ -423,7 +425,7 @@
 							<tr>
 								<td><c:choose>
 										<c:when
-											test="#{!scQt.panel and !isReadOnly}">
+											test="#{!scQt.panel and !isReadOnly and !isDemoDisabled}">
 											<p:outputPanel id="demoPop">
 												<p:selectOneRadio value="#{scQt.demoRequired}" disabled="#{scQt.partial}">
 													<f:selectItems
