@@ -16611,7 +16611,10 @@ public class SpecificationBackingBean extends
 										if (indicativeUnitPrice == null && !isSave) {
 											throw new EpException(MessageConst.ERROR_760520);
 										}
-										else if ( indicativeUnitPrice != null  && (estimatedCost==null || estimatedCost.compareTo(BigDecimal.ZERO) == 0)) {
+										//Bug #32477 related to #25138
+										//comment code replace new condition
+										else if ( indicativeUnitPrice != null  && (estimatedCost==null || estimatedCost == null)) {
+											//else if ( indicativeUnitPrice != null  && (estimatedCost==null || estimatedCost.compareTo(BigDecimal.ZERO) == 0)) {
 											throw new EpException(MessageConst.ERROR_760519, 
 													new String[]{ 
 													ResourceBundleUtils.getMessage(
@@ -16620,6 +16623,12 @@ public class SpecificationBackingBean extends
 															new FacesScopes().getUserLocale()) });		
 										
 										}	
+									}
+									//Bug #32477 related to #25138
+									//add new condition
+									else if(zoneQty.getQty().compareTo(BigDecimal.ZERO) == 0){
+										estimatedCost = BigDecimal.valueOf(0);
+										indicativeUnitPrice = BigDecimal.valueOf(0);
 									}
 								}//#25138  - Allow indicativeUnitPrice & estimatedCost null if qty 0 - end
 								//20210205@haziq- Bug #30046 - End
@@ -16645,7 +16654,10 @@ public class SpecificationBackingBean extends
 										.format(panelThreshold) });
 					}
 				} else {
-					if (null == totalSpecEstimatedAmount || (totalSpecEstimatedAmount.compareTo(BigDecimal.ZERO) <= 0)) {
+					//Bug #32477 related to #25138
+					//comment code replace new condition
+					//if (null == totalSpecEstimatedAmount || (totalSpecEstimatedAmount.compareTo(BigDecimal.ZERO) <= 0)) {
+					if (null == totalSpecEstimatedAmount) {
 						throw new EpException(MessageConst.ERROR_760024,
 								new String[] { SourcingConstants.DF_AMOUNT.format(BigDecimal.ZERO) });
 					}
