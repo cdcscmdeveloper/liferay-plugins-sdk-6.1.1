@@ -1146,14 +1146,11 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 			// 11076 - start
 			
-			if (getManagedBean().getOverallTotalItem()> FulfilmentConst.GFMAS_CHARGELINE_LIMIT || getManagedBean().getSelectedContractedItemList().size() > FulfilmentConst.GFMAS_CHARGELINE_LIMIT) {
+			if (getManagedBean().getOverallTotalItem()>= FulfilmentConst.GFMAS_CHARGELINE_LIMIT || getManagedBean().getSelectedContractedItemList().size() > FulfilmentConst.GFMAS_CHARGELINE_LIMIT) {
 				messageId = MessageConst.ERROR_740070;
 				itemExceed = true;
-				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR, null, 
-						MessageUtils.getMessage(messageId,
-								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				throw new EpException(MessageConst.ERROR_740070);
 			}
-				
 			// 11076 - end
 			if(!itemExisted && !itemExceed){
 				flItemAddr = new FlFulfilmentItemAddr();
@@ -1447,7 +1444,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 				ContractReqDTO contractReqDTO = new ContractReqDTO();
 				contractReqDTO.setContractId(resDTO.getFlFulfilmentRequest().getCtContract().getContractId());
-			
+				
 				resDTO.getFlFulfilmentRequest().setCtContract(contractSO.retrieveContract(contractReqDTO).getContract());
 				ContractResDTO ctResDTO = contractSO.retrieveContractByLoaId(contractReqDTO);
 				
@@ -1705,7 +1702,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			// No schedule no is defined if this is coming from Search Catalogue. Need to assign available scheduleNo for it.
 			reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
 			reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
-		
+			
 			if(scheduleNo==null && contractResDTO.getContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
 				if(contractResDTO.getContract().isFrequencySchedule() && contractResDTO.getContract().getLatestContractVer().getCtSchedules()!=null) {
 					for(CtSchedule ctSchedule : contractResDTO.getContract().getLatestContractVer().getCtSchedules()) {
@@ -4802,7 +4799,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			ContractItemResDTO resDTO = new ContractItemResDTO();		
 			reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
 			
-			List<FlTempItem> suspendedItem = new ArrayList<FlTempItem>();
+			List<FlTempItem> suspendedItem = new ArrayList<FlTempItem>();			
 			for(FlTempItem flTempItem : flRequest.getFlTempItems()) {
 				flItemAddr = new FlFulfilmentItemAddr();
 				ContractItemReqDTO contractItemReqDTO = new ContractItemReqDTO();
@@ -4877,15 +4874,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				getManagedBean().getShowItemAddrList().addAll(itemAddrList);
 				if(getManagedBean().getSelectedDelAddr()!=null) {
 					populateItemsForSelectedAddress();
-					
-					
-			
-			}
+				}
 		} 
 			getManagedBean().setTotalExistingItem(itemAddrList.size());// 11076
 			log.info("==========logInfo======== ITEM ADDR LIST" + itemAddrList.size());//11076
 			
-		} 
+		}
+				
+
 	}
 
 	/**
