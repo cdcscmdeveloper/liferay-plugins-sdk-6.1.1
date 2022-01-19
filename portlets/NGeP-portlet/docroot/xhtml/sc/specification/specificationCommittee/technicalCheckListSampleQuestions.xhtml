@@ -42,8 +42,13 @@
 						<td><h:outputLabel value="#{lbl['lbl.sc.spec.local.goods']}" /></td>
 						<td>
 						<!-- value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.sampleCheckList.scQtDoc.tplSpecMaster.itemOriginCode)}" -->
-						<p:inputText disabled="true" size="30" value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.sampleCheckList.scQtDoc.tplSpecMaster.itemOriginCode)}"
-								></p:inputText></td>
+						<p:inputText disabled="true" size="30" value="#{lbl['lbl.sc.qt.sample.type.of.goods.local']}" rendered="#{specificationBackingBean.managedBean.sampleCheckList.scQtDoc.tplSpecMaster.itemOriginCode.parameterCode eq ParameterConst.LOCAL_GOODS}"
+								></p:inputText>
+								
+								<p:inputText disabled="true" size="30" value="#{lbl['lbl.sc.qt.sample.type.of.goods.import']}" rendered="#{specificationBackingBean.managedBean.sampleCheckList.scQtDoc.tplSpecMaster.itemOriginCode.parameterCode eq ParameterConst.IMPORTED_GOODS}"
+								></p:inputText>
+					
+								</td>
 					</tr>
 
 					
@@ -77,7 +82,7 @@
 			</p:column>
 			    	<p:column colspan="2" headerText="#{lbl['lbl.sc.qt.sampel']}" style="width:15%; text-align:center;" />
 			
-				<p:column rowspan="2" headerText="#{lbl['lbl.tpl.spec.content.scoring.settings.title']}" style="width:10%; text-align:center;" />
+				<p:column rowspan="2" headerText="#{lbl['lbl.tpl.spec.content.scoring.settings.max.score']}" style="width:10%; text-align:center;" />
 			</p:row>
 			 	<p:row>
 		             
@@ -149,7 +154,7 @@
 			<p:column>
 			
 			<h:panelGroup id="technicalChecklistSampleScoreSetting">
-			<h:selectOneMenu id="sampleScoreTypeId" rendered="#{technicalSampleQuestion.sampleReq}"
+			<!-- <h:selectOneMenu id="sampleScoreTypeId" rendered="#{technicalSampleQuestion.sampleReq}"
 			disabled="#{specificationBackingBean.managedBean.readOnly}"
 			value="#{technicalSampleQuestion.sampleScoreTypeCode.parameterId}" >
 				
@@ -166,8 +171,20 @@
 				oncomplete="samplescoringSetPopup.show();" partialSubmit="true"
 				process="@this" update="@([id$=samplescoringSetPopup])">
 				<f:setPropertyActionListener target="#{specificationBackingBean.managedBean.sampleSpecQuestion}" value="#{technicalSampleQuestion}" />	
-			</p:commandButton>
-		
+			</p:commandButton> -->
+		<p:inputText id="sampletechnicalmaxScoresampleId"  rendered="#{technicalSampleQuestion.sampleReq}"
+								style="text-align:right;"
+								onkeypress="if (event.keyCode == 46) { return false; }"
+								disabled="#{specificationBackingBean.managedBean.readOnly}"
+								value="#{technicalSampleQuestion.sampleScore}"
+								size="15" maxlength="3" required="false"
+								label="#{lbl['lbl.tpl.spec.content.scoring.settings.max.score']}">
+								<ac:validateNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
+									maxIntegerDigits="3" integerOnly="true" />
+									<p:ajax event="change" partialSubmit="true" process="@this" update="@this,@([id$=sampleTechnicalmaxScoresampleMsg],[id$=sampleTotalscoreId])" listener="#{specificationBackingBean.scoringPopUpAction(null)}" />
+							</p:inputText> <p:message id="sampleTechnicalmaxScoresampleMsg" for="sampletechnicalmaxScoresampleId"
+								display="icon" />
 		
 			</h:panelGroup>
 			

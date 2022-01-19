@@ -18173,9 +18173,9 @@ private void validateSampleItems(List<TplSpecQuestion> specQuestions){
 			}
 			}*/
 			if(null==question.getSampleScore()){
-				String message=	ResourceBundleUtils.getMessage("lbl.tpl.spec.content.scoring.settings.title",
+				String message=	ResourceBundleUtils.getMessage("lbl.tpl.spec.content.scoring.settings.max.score",
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale());	
+						new FacesScopes().getUserLocale());	//11104
 				String errorMessage=question.getClItem().concat("   ").concat(message);
 				throw new EpException(MessageConst.ERROR_100022,
 						new String[] {errorMessage });	

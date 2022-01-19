@@ -34,8 +34,8 @@
 
 					<p:column headerText="#{lbl['lbl.sc.spec.local.goods']}"
 						style="width:15%;">
-						<h:outputText
-							value="#{evaluationBackingBean.getParameterDesc(sampleItem.scRequestItem.tplSpecQuestion.tplSpecMaster.itemOriginCode)}"></h:outputText>
+								<h:outputText value="#{lbl['lbl.sc.qt.sample.type.of.goods.local']}" rendered="#{sampleItem.scRequestItem.tplSpecQuestion.tplSpecMaster.itemOriginCode.parameterCode eq ParameterConst.LOCAL_GOODS}"></h:outputText>
+			                    <h:outputText value="#{lbl['lbl.sc.qt.sample.type.of.goods.import']}" rendered="#{sampleItem.scRequestItem.tplSpecQuestion.tplSpecMaster.itemOriginCode.parameterCode eq ParameterConst.IMPORTED_GOODS}"></h:outputText>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.sp.extensionno']}"
 						style="width:15%">
