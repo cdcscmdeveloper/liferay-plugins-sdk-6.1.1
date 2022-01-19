@@ -691,8 +691,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			log.info("getColorList:" + codeResDTO.getColorList().size());
 
 			item.setCmColor(codeResDTO.getColorList().get(0));
+			//#21416 start
 			item.setItemName(bb.getManagedBean().getRequestCode().getCmRecommendCodes().get(0).getUnspscTitle()
-					.replaceAll("N/A", ""));
+					.replaceAll("\\s(NA|N/A|N A)", ""));
+			//#21416 end
 			item.setExtensionCode(bb.getManagedBean().getRequestCode().getCmRecommendCodes().get(0).getUnspscCode());
 			codeReqDTO.setCmItem(item);
 			codeResDTO = codificationSO.saveNewItem(codeReqDTO);
@@ -888,8 +890,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				String extensionCode = code.getTempCode() + type + brand + measurement + color;
 				String itemName = this.getManagedBean().getUnspscObj().getUnspscTitle() + " " + typeName + " "
 						+ brandName + " " + measurementName + " " + colorName;
-
-				itemName = itemName.replaceAll("N/A", "");
+				
+				//#21416 start
+				itemName = itemName.replaceAll("\\s(NA|N/A|N A)", "");
+				//#21416 end
 
 				item.setCmColor(colorCodeResDTO.getColorList().get(0));
 				item.setItemName(itemName);
@@ -1065,11 +1069,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						item.setCmBrand(brandObj);
 						item.setCmMeasurement(meaObj);
 						item.setCmColor(colorObj);
+						//#21416 start
 						item.setItemName(bb.getManagedBean().getSelectedUNSPSCObj().getUnspscTitle()
-								+ (typeObj.getTypeName().equals("N/A") ? "" : " " + typeObj.getTypeName())
-								+ (brandObj.getBrandName().equals("N/A") ? "" : " " + brandObj.getBrandName())
-								+ (meaObj.getMeasurementName().equals("N/A") ? "" : " " + meaObj.getMeasurementName())
-								+ (colorObj.getColorName().equals("N/A") ? "" : " " + colorObj.getColorName()));
+								+ ((typeObj.getTypeName().equals("N/A") || typeObj.getTypeName().equals("NA") || typeObj.getTypeName().equals("N A")) ? "" : " " + typeObj.getTypeName())
+								+ ((brandObj.getBrandName().equals("N/A") || brandObj.getBrandName().equals("NA") || brandObj.getBrandName().equals("N A")) ? "" : " " + brandObj.getBrandName())
+								+ ((meaObj.getMeasurementName().equals("N/A") || meaObj.getMeasurementName().equals("NA") || meaObj.getMeasurementName().equals("N A")) ? "" : " " + meaObj.getMeasurementName())
+								+ ((colorObj.getColorName().equals("N/A") || colorObj.getColorName().equals("NA") || colorObj.getColorName().equals("N A")) ? "" : " " + colorObj.getColorName()));
+						//#21416 end
 						item.setExtensionCode(bb.getManagedBean().getSelectedUNSPSCObj().getUnspscCode()
 								+ typeObj.getTypeCode() + brandObj.getBrandCode() + meaObj.getMeasurementCode()
 								+ colorObj.getColorCode());
@@ -1967,8 +1973,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				// 200921@akmal - Enhancement27627 - End
 
 				// remove N/A from Item name if any
+				//#21416 start
 				String itemNameForView = this.getManagedBean().getSelectedMaintainItem().getCmItem().getItemName()
-						.replaceAll("N/A", "");
+						.replaceAll("\\s(NA|N/A|N A)", "");
+				//#21416 end
 				this.getManagedBean().getSelectedMaintainItem().getCmItem().setItemName(itemNameForView);
 			}
 			log.info("*****************end********************");
@@ -10473,11 +10481,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						item.setCmBrand(brandObj);
 						item.setCmMeasurement(meaObj);
 						item.setCmColor(colorObj);
+						//#21416 start
 						item.setItemName(bb.getManagedBean().getSelectedUNSPSCObj().getUnspscTitle()
-								+ (typeObj.getTypeName().equals("N/A") ? "" : " " + typeObj.getTypeName())
-								+ (brandObj.getBrandName().equals("N/A") ? "" : " " + brandObj.getBrandName())
-								+ (meaObj.getMeasurementName().equals("N/A") ? "" : " " + meaObj.getMeasurementName())
-								+ (colorObj.getColorName().equals("N/A") ? "" : " " + colorObj.getColorName()));
+								+ ((typeObj.getTypeName().equals("N/A") || typeObj.getTypeName().equals("NA") || typeObj.getTypeName().equals("N A")) ? "" : " " + typeObj.getTypeName())
+								+ ((brandObj.getBrandName().equals("N/A") || brandObj.getBrandName().equals("NA") || brandObj.getBrandName().equals("N A")) ? "" : " " + brandObj.getBrandName())
+								+ ((meaObj.getMeasurementName().equals("N/A") || meaObj.getMeasurementName().equals("NA") || meaObj.getMeasurementName().equals("N A")) ? "" : " " + meaObj.getMeasurementName())
+								+ ((colorObj.getColorName().equals("N/A") || colorObj.getColorName().equals("NA") || colorObj.getColorName().equals("N A")) ? "" : " " + colorObj.getColorName()));
+						//#21416 end
 						item.setExtensionCode(bb.getManagedBean().getSelectedUNSPSCObj().getUnspscCode()
 								+ typeObj.getTypeCode() + brandObj.getBrandCode() + meaObj.getMeasurementCode()
 								+ colorObj.getColorCode());
