@@ -363,6 +363,10 @@ public class SPDetailBackingBean extends
 		long days = DateUtils.getDaysDifference(today,getManagedBean().getQt().getClosingDate());
 		
 		DecimalFormat dF = new DecimalFormat("#00");
+
+		// #15934 - start
+		long durationInMills = DateUtils.getDateDiffInMillis(DateUtils.getCurrentDate(), getManagedBean().getQt()
+				.getClosingDate());
 	
 		getManagedBean()
 				.setClosingTime(dF.format(days)+" "
@@ -371,12 +375,13 @@ public class SPDetailBackingBean extends
 												"lbl.sc.days",
 												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 												new FacesScopes()
-														.getUserLocale()));
+														.getUserLocale()) + " " + formattedDurationBasedOnLocale(
+																						durationInMills,
+																						getDisplayLanguage()));
 		
 		if (days == 0) {
-			long durationInMills = DateUtils.getDateDiffInMillis(
-					DateUtils.getCurrentDate(), getManagedBean()
-							.getQt().getClosingDate());
+			//#15934 - end
+
 			if (durationInMills > 0) {
 				getManagedBean().setClosingTime(
 						formattedDurationBasedOnLocale(
