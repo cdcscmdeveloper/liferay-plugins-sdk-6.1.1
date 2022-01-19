@@ -8731,6 +8731,9 @@ public class SmApplicationBackingBean extends
 	 * Add or create a new SmSupplier bank object
 	 */
 	public void assignNewBank() {
+		//#12492 - start
+		getManagedBean().setShowDifferenceBankInfoAction(true);
+		//#12492 - end
 		getManagedBean().setPendingTransaction(false);
 		getManagedBean().setChequeSingPerId(null);
 		getManagedBean().setSelBankBranchId(null);
@@ -14593,6 +14596,10 @@ public class SmApplicationBackingBean extends
 	}
 	
 	public void assignSelBankWithPendingTransaction(SmSupplierBank shareBankBean) {
+		//#12492 - start
+		getManagedBean().setShowDifferenceBankInfoAction(false);
+		//#12492 - end
+		
 		getManagedBean().setChequeSingPerId(null);
 		getManagedBean().setSelectedBankBranchIds(null);
 		
@@ -15802,9 +15809,10 @@ public class SmApplicationBackingBean extends
 		HashSet<String> hsetAccountNo = new HashSet<String>();
 		HashSet<Long> hsetAccountName = new HashSet<Long>();
 
+		boolean bankInfo = false;
+		
+		if(getManagedBean().isShowDifferenceBankInfoAction()){	
 		if(fromPage.equalsIgnoreCase("fromBankInfo")){
-			log.info("masuk CheckBankAccountInfoForm from bank info 12492");
-
 			if (this.getManagedBean().getSmAppl().getSmSupplierBanks().size() > 0) {
 				for (SmSupplierBank bankName : this.getManagedBean().getSmAppl().getSmSupplierBanks()) {
 					if (bankName.getPmFinancialOrg().getFinancialOrgId() != null) {
@@ -15819,8 +15827,19 @@ public class SmApplicationBackingBean extends
 					RequestContext.getCurrentInstance().execute("bankDialogDuplicate.show()");
 				}
 			}	
-		}else if(fromPage.equalsIgnoreCase("fromNext")){
-			log.info("masuk CheckBankAccountInfoForm from next 12492");
+		}
+		}else{
+			for (SmSupplierBank supBank : getManagedBean().getSmAppl().getSmSupplierBanks()){
+				if(getManagedBean().getSelectedBank().getSupplierBankId() != null && 
+						getManagedBean().getSelectedBank().getSupplierBankId().equals(supBank.getSupplierBankId())){
+					log.debug("**** Same Bank object edit with exisiting id ******");
+				}else{
+					if(getManagedBean().getSelectedBank().getAccountNo().equalsIgnoreCase(supBank.getAccountNo())){
+						bankInfo = true;
+						RequestContext.getCurrentInstance().execute("bankDialogDuplicate.show()");
+					}
+				}
+			}
 		}
 	}
 	//12492 - END
