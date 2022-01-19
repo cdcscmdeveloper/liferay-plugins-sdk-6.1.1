@@ -1231,6 +1231,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			
 			smSupp.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).setSmAddress(this.getManagedBean().getSmPermenantAdd());
 		}else{
+			//start - #30964
 			SmAddress smAddress = this.getManagedBean().getSmBusinessAdd();
 			if(smAddress.getPmCountry()!=null){
 				smAddress.getPmCountry().getCountryId();
@@ -1248,6 +1249,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				smAddress.getPmDivision();
 			}
 			smSupp.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).setSmAddress(smAddress);
+			// end - #30964
 		}
 		smSupp.setEstablishDate(smSupp.getSmAppl().getSmCompanyBasic().getEstablishDate());
 		getManagedBean().setSmSupp(smSupp);  //#30964
