@@ -62,7 +62,6 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
-import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
@@ -127,8 +126,6 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
-import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
-import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
@@ -1130,6 +1127,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			ContractItemReqDTO reqDTO = new ContractItemReqDTO();
 			ContractItemResDTO resDTO = new ContractItemResDTO();
 			reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
+			//start 11076
+			if(getManagedBean().getValidateItem() > FulfilmentConst.GFMAS_CHARGELINE_LIMIT){	
+				messageId = MessageConst.ERROR_740070;					
+				itemExceed = true;									
+				throw new EpException(MessageConst.ERROR_740070);	
+			} //end 11076
 
 			try {
 				ISearchBean<CtContractItem> searchBean = new SearchBean<CtContractItem>();
