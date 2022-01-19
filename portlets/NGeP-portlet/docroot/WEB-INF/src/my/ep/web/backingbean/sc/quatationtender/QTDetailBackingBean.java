@@ -5300,6 +5300,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							if(null != status && (!status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION))) {
 								this.getManagedBean().setDemoType(true);
 							}
+							if(null != status && (status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT))){
+								this.getManagedBean().setDemoDisabled(true);
+							}
 						}
 					}
 
