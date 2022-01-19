@@ -1762,6 +1762,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean demoType;
 	private boolean demoAction;
 	private List<ScQtCheckList> demoSpecTemplateList;
+	private boolean demoDisabled;
 
 	// #30451-Start.
 	private boolean isBdSfFlow;
@@ -11099,6 +11100,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			this.sampleAddressBean = sampleAddressBean;
 		}
 		//11104-End
+
+		public boolean isDemoDisabled() {
+			return demoDisabled;
+		}
+
+		public void setDemoDisabled(boolean demoDisabled) {
+			this.demoDisabled = demoDisabled;
+		}
 }
 
 // ***25201
