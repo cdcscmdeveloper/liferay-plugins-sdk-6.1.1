@@ -3169,6 +3169,22 @@ public class TemplateSpecBackingBean extends
 				.getTplSpecZone();
 		List<TplSpecZoneDtl> specZoneDtls = null;
 		
+		// #32130 - Start.
+		if (CollectionUtils.isNotEmpty(specEstimations)) {
+			Iterator<TplSpecEstimation> iterator = specEstimations.iterator();
+			while (iterator.hasNext()) {
+				TplSpecEstimation tplSpecEstimation = iterator.next();
+				if (tplSpecEstimation.getTplSpecZoneDtl() == null) {
+					iterator.remove();
+				}
+			}
+		} else {
+			if (null != templateSpecBean.getOriSpecQuestion()) {
+				templateSpecBean.getOriSpecQuestion().setTplSpecEstimations(null);
+			}
+		}
+		// #32130 - End.
+		
 		TplSpecQuestion oriSpecQuestion = new TplSpecQuestion();
 		List<TplSpecEstimation> oriSpecEstimations =TemplateSpecHelper.getInstance().cloneTplSpecEstimation(
 				oriSpecQuestion, specEstimations);
@@ -3208,8 +3224,10 @@ public class TemplateSpecBackingBean extends
 		
 		if (specEstimations == null
 				|| specEstimations.size() == 0
-				|| (specZoneDtls != null && specEstimations.size() != specZoneDtls
-						.size())
+				|| (specZoneDtls != null && 
+				// #32130 - Start.
+				specEstimations.size() < specZoneDtls.size())
+				// #32130 - End.
 				|| !compareZoneDtlsWithEstimations(specZoneDtls, specEstimations)) {
 
 			specEstimations = new ArrayList<TplSpecEstimation>();
