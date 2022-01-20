@@ -366,9 +366,9 @@ public class SmPersonnelBackingBean extends
 		getManagedBean().setDeactivatePersonnel(false);
 		getManagedBean().setIdTypes(getPmIdTypeDropdownValues());
 		removeEPRole();
-		// #31710 - start
+		// #32515 - start
 		getManagedBean().setSupplierType(getManagedBean().getSmSupplier().getSmAppl().getSupplierType());
-		// #31710 - end
+		// #32515 - end
 		buildRoleList();
 
 		CountryReqDTO reqDTO = new CountryReqDTO();
