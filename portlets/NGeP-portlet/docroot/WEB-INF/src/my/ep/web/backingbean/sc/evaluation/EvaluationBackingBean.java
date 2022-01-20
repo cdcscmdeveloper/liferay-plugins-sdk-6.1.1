@@ -2731,6 +2731,7 @@ public void saveComplianceSample() {
 					 * );
 					 */
 					//#25138 - start
+					financialCheckListStatusCheck();//32426
 					if(!this.getManagedBean().getSingleSpecQuestion()){
 						financialCheckListStatusCheckPackage();//#25138 
 					}
@@ -2741,6 +2742,7 @@ public void saveComplianceSample() {
 				
 				}else{
 					//#25138 - start
+					financialCheckListStatusCheck();//32426
 					if(!this.getManagedBean().getSingleSpecQuestion()){
 						financialCheckListStatusCheckPackage();//#25138 
 					}
@@ -3077,11 +3079,13 @@ public void saveComplianceSample() {
 					 * .prepareEvaluationResultsSummaryForTwoTier(summaryReqDTO
 					 * );
 					 */
+					financialCheckListStatusCheck();//32426
 					financialCheckListStatusCheckPackage();//#25138 
 					evaluationSo
 							.prepareFinancialEvaluationSummary(summaryReqDTO);
 					getManagedBean().setFinancialSummaryGenerated(true);
 				}else{//#25138-start
+					financialCheckListStatusCheck();//32426
 					financialCheckListStatusCheckPackage();//#25138 
 					evaluationSo
 							.prepareFinancialEvaluationSummary(summaryReqDTO);
@@ -4412,7 +4416,7 @@ public void saveComplianceSample() {
 												.getCompliance(), this
 												.getManagedBean().getScQt()
 												.getQtId(), reqDTO
-												.getEvalStage()));
+												.getEvalStage(), checklist.isScoringReq()));//32426
 				return "/xhtml/sc/evaluation/evaluationStage/financial/financialOtherListSuppliersMain.xhtml";
 
 			}
@@ -8053,7 +8057,9 @@ public void saveComplianceSample() {
 								.getCommitteeType())) {
 					log.debug("elseTwoExcutedCommitteeType"+this.getManagedBean()
 							.getCommitteeType());
+					int currentEvaluationStageActiveIndex = this.getManagedBean().getEvaluatioStageActiveIndex();//32426
 					retriveFinancialEvaluationStage();
+					this.getManagedBean().setEvaluatioStageActiveIndex(currentEvaluationStageActiveIndex);//32426
 				}
 			}
 			else if(currentTab==3){
@@ -8063,7 +8069,13 @@ public void saveComplianceSample() {
 										.getCommitteeType())) {
 					log.debug("ifThreeExcutedCommitteeType"+this.getManagedBean()
 							.getCommitteeType());
+			    //32426 - start
+				int currentOneTierFinancialActiveIndex = this.getManagedBean().getOneTierFinancialActiveIndex();
+				int currentTabItemPackageIndex = this.getManagedBean().getTabItemPackageIndex();
 				retriveFinancialEvaluationStage();
+				this.getManagedBean().setOneTierFinancialActiveIndex(currentOneTierFinancialActiveIndex);
+				this.getManagedBean().setTabItemPackageIndex(currentTabItemPackageIndex);
+				//32426 - end
 				}
 				else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
 						.equalsIgnoreCase(this.getManagedBean()
@@ -12793,6 +12805,7 @@ private void retriveCommitteeRemarksList(){
 		private Long checkListId;
 		private Boolean compliance;
 		private String evalStage;
+		private Boolean scoringReq;//32426
 
 		/**
 		 * Constructor for Compliance Supplier Paging Data Model
@@ -12808,6 +12821,14 @@ private void retriveCommitteeRemarksList(){
 			this.evalStage = evalStage;
 
 		}
+		//32426 -start
+		public ComplianceSupplierPagingDataModel(String componentId,
+				Long checkListId, Boolean compliance, Long qtId,
+				String evalStage, Boolean scoringReq) {
+			this(componentId, checkListId, compliance, qtId, evalStage);
+			this.scoringReq = scoringReq;
+		}
+		//32426 -end
 
 		/*
 		 * (non-Javadoc)
@@ -12838,8 +12859,15 @@ private void retriveCommitteeRemarksList(){
 	//Bug #31551 Farid start 23/9/2021
 				reqDTO.setCheckZonal(getManagedBean().getScQt().isZonal());
 	//Bug #31551 Farid end 23/9/2021
-				return evaluationSO.retrieveComplianceDtlsByCheckList(reqDTO)
-						.getComplianceResultBean();
+				//32426-start
+				ISearchResultBean<ScQtProposalChecklist> resultBean = evaluationSO.retrieveComplianceDtlsByCheckList(reqDTO).getComplianceResultBean();
+				if(scoringReq != null && !scoringReq && CollectionUtils.isNotEmpty(resultBean.getResultList())){
+					for(ScQtProposalChecklist pChecklist: resultBean.getResultList()){
+						pChecklist.setEvaluationStatus(getPmStatusByStatusId(QTStatusConst.PR_COMPLETED));
+					}
+				}
+				return resultBean;
+				//32426-end
 
 			} finally {
 				evaluationSO = null;
@@ -14464,62 +14492,30 @@ private void retriveCommitteeRemarksList(){
 								.getDefinationType().getParameterCode())) {
 					if (SourcingConstants.FINANCIAL_DOCTYPE
 							.equalsIgnoreCase(singleChecklist.getDocCategory())){
-						
-						EvaluationReqDTO reqDTO2 = new EvaluationReqDTO();
-						EvaluationResDTO resDTO2 = new EvaluationResDTO();
-			//Bug #31553 - related to 25138 (FARID)			
-						reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-						reqDTO.setNotOfferSupplierSearchBean(new SearchBean<Object[]>());
-			//Bug #31553 - related to 25138 (FARID)
-						reqDTO2.setCheckListId(singleChecklist.getQtChecklistId());
-						reqDTO2.setQtId(this.getManagedBean().getScQt().getQtId());
-						reqDTO2.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
-						if(this.getManagedBean().getScQt().isZonal()){
-							for(TplSpecZoneDtl tplSpecZoneDtl: this.getManagedBean().getSpecZoneDtls()){
-								reqDTO2.setSpeZoneId(tplSpecZoneDtl.getSpecZoneId());
-							} 
-						}
-						resDTO2 = evaluationSO.retrievProposalCheckListByCheckListNZone(reqDTO2);
-						//#32007 - checking for partial qualified suppliers - start
+						//32426 - start
 						List<ScQtProposalAmount> amounts = new ArrayList<ScQtProposalAmount>();						
-						if(this.getManagedBean().getScQt().isPartial()){	
-							EvaluationReqDTO amountReqDto = new EvaluationReqDTO();
-							EvaluationResDTO amountResDto = new EvaluationResDTO();
-							amountReqDto.setQtId(this.getManagedBean().getScQt().getQtId());
-							amountResDto= evaluationSO.retrieveProposals(amountReqDto); 
-							for(ScQtProposal amtbyproposal : amountResDto.getProposalList()){
-								amountReqDto.setScQt(this.getManagedBean().getScQt());//#31525
-								amountReqDto.setProposalId(amtbyproposal.getQtProposalId());
-								amountResDto = evaluationSO.retrieveProposalAmountbyProposal(amountReqDto); 
-								amounts.addAll(amountResDto.getProposalAmountListbyProposal());
-							}
-							
-						}else{
-							for(ScQtProposalChecklist proposalChecklist:resDTO2.getComplianceResultBean().getResultList()){
-								amounts.addAll(proposalChecklist.getScQtProposal().getScQtProposalAmounts()) ;
-								
-							}
+						EvaluationReqDTO amountReqDto = new EvaluationReqDTO();
+						EvaluationResDTO amountResDto = new EvaluationResDTO();
+						amountReqDto.setQtId(this.getManagedBean().getScQt().getQtId());
+						amountResDto= evaluationSO.retrieveProposals(amountReqDto); 
+						for(ScQtProposal amtbyproposal : amountResDto.getProposalList()){
+							amountReqDto.setScQt(this.getManagedBean().getScQt());//#31525
+							amountReqDto.setProposalId(amtbyproposal.getQtProposalId());
+							amountResDto = evaluationSO.retrieveProposalAmountbyProposal(amountReqDto); 
+							amounts.addAll(amountResDto.getProposalAmountListbyProposal());
 						}
 						for(ScQtProposalAmount amountStatus: amounts){
-							if(amountStatus.getPmEvalStatus()==null) {
+							this.getManagedBean().setEvalStatus(QTStatusConst.TS_COMPLETED);
+							if(amountStatus.getPmEvalStatus()==null || amountStatus.getPmEvalStatus().getStatusId().equals(QTStatusConst.TS_PENDING_SUBMISSION)) {
 								this.getManagedBean().setEvalStatus(QTStatusConst.TS_PENDING_SUBMISSION);
-								break;
-							
-							}
-							else{
-								this.getManagedBean().setEvalStatus(QTStatusConst.TS_COMPLETED);
-							
+								break;				
 							}
 						}
 						this.getManagedBean().setQtProposalAmountByProposal(amounts);
 						break;
-						//#32007 - checking for partial qualified suppliers - end
+						//32426 - end
 					}
-					
-					
-					
 				}
-				
 			}
 			//#25138 - evaluate/view status - end
 			innerCheckList=null;
@@ -15345,49 +15341,31 @@ private void retriveCommitteeRemarksList(){
 								.getDefinationType().getParameterCode())) {
 					if (SourcingConstants.FINANCIAL_DOCTYPE
 							.equalsIgnoreCase(newList.getDocCategory())){
-						
-						EvaluationReqDTO reqDTO2 = new EvaluationReqDTO();
-						EvaluationResDTO resDTO2 = new EvaluationResDTO();
-			//Bug #31553 - related to 25138 (FARID)			
-						reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-						reqDTO.setNotOfferSupplierSearchBean(new SearchBean<Object[]>());
-			//Bug #31553 - related to 25138 (FARID)
-						reqDTO2.setCheckListId(newList.getQtChecklistId());
-						reqDTO2.setQtId(this.getManagedBean().getScQt().getQtId());
-						reqDTO2.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
-						if(this.getManagedBean().getScQt().isZonal()){
-							for(TplSpecZoneDtl tplSpecZoneDtl: this.getManagedBean().getSpecZoneDtls()){
-								reqDTO2.setSpeZoneId(tplSpecZoneDtl.getSpecZoneId());
-							} 
-						}
-						resDTO2 = evaluationSO.retrievProposalCheckListByCheckListNZone(reqDTO2);
 						//#32007 related to #25138 - validation for partial and non partial in proposalamount evalstatus - start 
 						List<ScQtProposalAmount> amounts = new ArrayList<ScQtProposalAmount>();
-						if(this.getManagedBean().getScQt().isPartial()){	
-							EvaluationReqDTO amountReqDto = new EvaluationReqDTO();
-							EvaluationResDTO amountResDto = new EvaluationResDTO();
-							amountReqDto.setQtId(this.getManagedBean().getScQt().getQtId());
-							amountResDto= evaluationSO.retrieveProposals(amountReqDto); 
-							for(ScQtProposal amtbyproposal : amountResDto.getProposalList()){
-								amountReqDto.setScQt(this.getManagedBean().getScQt());//#31525
-								amountReqDto.setProposalId(amtbyproposal.getQtProposalId());
-								amountResDto = evaluationSO.retrieveProposalAmountbyProposal(amountReqDto); 
-								amounts.addAll(amountResDto.getProposalAmountListbyProposal());
-							}
-						}else{
-							for(ScQtProposalChecklist proposalChecklist:resDTO2.getComplianceResultBean().getResultList()){
-								amounts.addAll(proposalChecklist.getScQtProposal().getScQtProposalAmounts()) ;
-								
-							}
+						//32426 - start
+						EvaluationReqDTO amountReqDto = new EvaluationReqDTO();
+						EvaluationResDTO amountResDto = new EvaluationResDTO();
+						amountReqDto.setQtId(this.getManagedBean().getScQt().getQtId());
+						amountResDto= evaluationSO.retrieveProposals(amountReqDto); 
+						for(ScQtProposal amtbyproposal : amountResDto.getProposalList()){
+							amountReqDto.setScQt(this.getManagedBean().getScQt());//#31525
+							amountReqDto.setProposalId(amtbyproposal.getQtProposalId());
+							amountResDto = evaluationSO.retrieveProposalAmountbyProposal(amountReqDto); 
+							amounts.addAll(amountResDto.getProposalAmountListbyProposal());
 						}
 						for(ScQtProposalAmount amountStatus: amounts){
-							if (null == amountStatus.getPmEvalStatus()) {
-								this.getManagedBean()
-										.getOneTierFinancialActiveIndex();
+							if(amountStatus.getPmEvalStatus() == null || amountStatus.getPmEvalStatus().getStatusId().equals(QTStatusConst.TS_PENDING_SUBMISSION)) {
+								if(StringUtils.equals(ParameterConst.EVALUATION_TYPES_ONE_TIER, this.getManagedBean().getScQt().getEvaluationType())){
+									this.getManagedBean().setTabItemPackageIndex(2);
+									this.getManagedBean().setOneTierFinancialActiveIndex(1);
+								}else{
+									this.getManagedBean().setEvaluatioStageActiveIndex(1);
+								}
 								retriveFinancialEvaluationStagePackage();
-								throw new EpException(
-										MessageConst.ERROR_760241);
+								throw new EpException(MessageConst.ERROR_760241);
 							}
+						//32426 - end
 						//#32007 related to #25138 - validation for partial and non partial in proposalamount evalstatus - end
 						}
 					}
