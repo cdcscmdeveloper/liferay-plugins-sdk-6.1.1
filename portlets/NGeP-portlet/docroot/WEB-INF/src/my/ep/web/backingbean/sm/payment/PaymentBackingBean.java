@@ -1003,7 +1003,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 	//26307
 	private String getPaymentGateUrlByMerchantId(String merchantId,String billType){
 		if (billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) {
-			return EpPropertiesUtils.getInstance().getProperty("molpay.url") + merchantId + EpPropertiesUtils.getInstance().getProperty("molpay.url.exts");	//temp add ext	
+			return EpPropertiesUtils.getInstance().getProperty("molpay.url") + merchantId + EpPropertiesUtils.getInstance().getProperty("molpay.url.exts");	//temp add ext	for testing purpose.. do not merge to prd
 		}else{
 			// #26307 - payment gateway change 
 			return EpPropertiesUtils.getInstance().getProperty("molpay.url") + merchantId + EpPropertiesUtils.getInstance().getProperty("molpay.url.ext");
