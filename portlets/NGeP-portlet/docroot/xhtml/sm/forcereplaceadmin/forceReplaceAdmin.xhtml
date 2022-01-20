@@ -169,15 +169,16 @@
 							</p:inputText>
 							<p:message id="newAdminIcNoMsg" for="newAdminIcNo"
 									showSummary="true" showDetail="false" display="icon" />
-							
+							<!-- #32445 start -->
 							<p:inputText
 								label="#{lbl['lbl.sm.userprofile.idno']}"
 								required="true" id="newAdminPasptNo"
-								rendered="#{forceReplaceSuppAdminBackingBean.managedBean.identificationType.parameterCode ne 'I'}"
+								rendered="#{forceReplaceSuppAdminBackingBean.managedBean.identificationType.parameterCode eq 'P'}"
 								value="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.newIdentificationNo}"
 								size="35" maxlength="15">
 								<p:ajax event="blur" process="@this" partialSubmit="true"/>
 							</p:inputText>
+							<!-- #32445 end -->
 							<p:message id="newAdminPasptNoMsg" for="newAdminPasptNo"
 								showSummary="true" showDetail="false" display="icon" />
 						</p:outputPanel>

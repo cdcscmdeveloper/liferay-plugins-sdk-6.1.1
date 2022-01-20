@@ -747,6 +747,15 @@ public class ForceReplaceSuppAdminBackingBean extends
 				ParameterTypeConst.IDENTIFICATION_TYPES,
 				SupplierManagementConst.NEW_IC, StringUtils.EMPTY);
 		vo.setNewIdentificationType(ic.getParameterId());
+		
+		//#32445 - start
+		if (getManagedBean().getReactivateBasic().getNewIdentificationType() != null) {
+			getManagedBean().setIdentificationType(
+					SmApplicationUtil.retrievePmParameterById(getManagedBean()
+							.getReactivateBasic().getNewIdentificationType()));
+			getManagedBean().getReactivateBasic().setNewIdentificationNo("");
+	}
+		//#32445 - end
 	}
 
 	/**
@@ -1123,6 +1132,9 @@ public class ForceReplaceSuppAdminBackingBean extends
 			getManagedBean().setIdentificationType(
 					SmApplicationUtil.retrievePmParameterById(getManagedBean()
 							.getReactivateBasic().getNewIdentificationType()));
+			//#32445 - start
+			getManagedBean().getReactivateBasic().setNewIdentificationNo("");
+			//#32445 - end
 		}
 	}
 
