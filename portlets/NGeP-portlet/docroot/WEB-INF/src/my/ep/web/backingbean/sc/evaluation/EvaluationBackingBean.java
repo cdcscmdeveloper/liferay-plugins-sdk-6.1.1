@@ -16406,5 +16406,14 @@ private void retriveCommitteeRemarksList(){
 	}
 	// #28784 - end
 	
+	//32089
+	public void manualScoringHideSchema(BigDecimal userScore) {
 
+		if (userScore != null) {
+			getManagedBean().setShowSchema(false);
+		} else {
+			getManagedBean().setShowSchema(true);	
+		}
+	}
+	//32089
 }
