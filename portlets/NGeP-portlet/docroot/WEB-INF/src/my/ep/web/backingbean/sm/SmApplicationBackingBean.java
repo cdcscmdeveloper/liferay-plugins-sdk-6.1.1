@@ -10027,7 +10027,9 @@ public class SmApplicationBackingBean extends
 		assignValReqdToFalse();
 
 		//		#15629 -- start - 27/1/2020
-		if(!SmCommonUtil.isCollectionEmpty(getManagedBean().getSelectedReasonDescs())){
+		// 		#30974 - start
+		if(!SmCommonUtil.isCollectionEmpty(getManagedBean().getSelectedReasonDescs())
+				&& !getManagedBean().getPoSecReview().getRecommendation().equalsIgnoreCase("APPROVE")){
 				List<Long> reasonIdList = new ArrayList<Long>();
 				for(PmReasonDesc pmReasonDesc : getManagedBean().getSelectedReasonDescs()){
 						reasonIdList.add(pmReasonDesc.getPmReason().getReasonId());
@@ -10044,11 +10046,14 @@ public class SmApplicationBackingBean extends
 		
 		// #3460 - start
 		if (!SmCommonUtil.isCollectionEmpty(getManagedBean().getSelectedReasonDescs())
-				&& dialog.equalsIgnoreCase("rejectDialog")) {
+				&& dialog.equalsIgnoreCase("rejectDialog")
+				&& !getManagedBean().getPoSecReview().getRecommendation().equalsIgnoreCase("APPROVE")) {
 			getManagedBean().setSelectedReasonDescs(new ArrayList<PmReasonDesc>());
 			resetSearchRejectedReason();
 			getManagedBean().setReasonId(null);
 		}
+			
+		//30974 - end
 			
 			if(dialog.equalsIgnoreCase("approverRejDialog")){
 				if(!EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl().getSmApplRejectReasons())) {
