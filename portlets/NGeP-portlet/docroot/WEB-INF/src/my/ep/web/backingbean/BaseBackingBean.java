@@ -23,7 +23,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,7 +32,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -52,6 +50,7 @@ import javax.faces.model.SelectItem;
 import javax.faces.validator.ValidatorException;
 import javax.imageio.ImageIO;
 import javax.portlet.PortletResponse;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -170,12 +169,6 @@ import com.liferay.portal.model.User;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.pdf.PdfContentByte;
-import com.lowagie.text.pdf.PdfImportedPage;
-import com.lowagie.text.pdf.PdfReader;
-import com.lowagie.text.pdf.PdfWriter;
 
 /**
  * @author siew mei
@@ -3946,10 +3939,14 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		response.setHeader("Content-Disposition",
 				"attachment; filename="+ contractNo + "_Amendment Update.zip");
 		
+		Cookie myCookie = new Cookie("downloadStatus", "true");
+		response.addCookie(myCookie);
+		
 		Map<String, String> paramMap;
 		
 		ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(
 				response.getOutputStream()));
+		
 		for(String reportFile : reportFiles){
 			String fileType = "";
 
@@ -3999,7 +3996,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 		zos.closeEntry();
 		zos.close();
-		response.flushBuffer();
+		response.flushBuffer();		
 		FacesContext.getCurrentInstance().responseComplete();
 	}
 	//Enhancement 29418 - end
