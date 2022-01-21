@@ -693,7 +693,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			item.setCmColor(codeResDTO.getColorList().get(0));
 			//#21416 start
 			item.setItemName(bb.getManagedBean().getRequestCode().getCmRecommendCodes().get(0).getUnspscTitle()
-					.replaceAll("\\s(NA|N/A|N A)", ""));
+					.replaceAll("\\s(NA|N/A|N A)\\b", ""));
 			//#21416 end
 			item.setExtensionCode(bb.getManagedBean().getRequestCode().getCmRecommendCodes().get(0).getUnspscCode());
 			codeReqDTO.setCmItem(item);
@@ -892,7 +892,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						+ brandName + " " + measurementName + " " + colorName;
 				
 				//#21416 start
-				itemName = itemName.replaceAll("\\s(NA|N/A|N A)", "");
+				itemName = itemName.replaceAll("\\s(NA|N/A|N A)\\b", "");
 				//#21416 end
 
 				item.setCmColor(colorCodeResDTO.getColorList().get(0));
@@ -1975,7 +1975,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				// remove N/A from Item name if any
 				//#21416 start
 				String itemNameForView = this.getManagedBean().getSelectedMaintainItem().getCmItem().getItemName()
-						.replaceAll("\\s(NA|N/A|N A)", "");
+						.replaceAll("\\s(NA|N/A|N A)\\b", "");
 				//#21416 end
 				this.getManagedBean().getSelectedMaintainItem().getCmItem().setItemName(itemNameForView);
 			}
