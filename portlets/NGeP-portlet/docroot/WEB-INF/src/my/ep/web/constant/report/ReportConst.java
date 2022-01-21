@@ -971,7 +971,7 @@ public class ReportConst implements Serializable{
 	public static final String PARAM_RECOM = "PRECOM";
 	public static final String PARAM_REPORT_OUTPUT_FORMAT = "desformat";
 	//Enhancement 29418 - shaqimi
-	public static final String PARAM_CONTRACT_VER_ID = "CONTRACTVERID";
+	public static final String PARAM_CONTRACT_VER_ID = "PCONTRECTVERID";
 	//Enhancement 29418 - shaqimi
 	
 
@@ -1140,7 +1140,8 @@ public class ReportConst implements Serializable{
 	public static final String CT_AMENDMENT_UPDATE_RPT_AMENDMENT_DETAIL = "CT_AMENDMENT_UPDATE_RPT_AMENDMENT_DETAIL.jsp";
 	public static final String CT_AMENDMENT_UPDATE_RPT_ZONE = "CT_AMENDMENT_UPDATE_RPT_ZONE.jsp";
 	public static final String CT_AMENDMENT_UPDATE_RPT_AGENCY = "CT_AMENDMENT_UPDATE_RPT_AGENCY.jsp";
-	public static final String CT_AMENDMENT_UPDATE_RPT_ITEM = "CT_AMENDMENT_UPDATE_RPT_ITEM.jsp";
+	public static final String CT_AMENDMENT_UPDATE_RPT_ITEM_ZONAL = "CT_AMENDMENT_UPDATE_RPT_ITEM_ZONAL.jsp";
+	public static final String CT_AMENDMENT_UPDATE_RPT_ITEM_NO_ZONAL = "CT_AMENDMENT_UPDATE_RPT_ITEM_NO_ZONAL.jsp";
 	public static final String CT_AMENDMENT_UPDATE_RPT_DEDUCTION = "CT_AMENDMENT_UPDATE_RPT_DEDUCTION.jsp";
 	public static final String CT_AMENDMENT_UPDATE_RPT_SCHEDULE = "CT_AMENDMENT_UPDATE_RPT_SCHEDULE.jsp";
 	//Enhancement 29418 - shaqimi
