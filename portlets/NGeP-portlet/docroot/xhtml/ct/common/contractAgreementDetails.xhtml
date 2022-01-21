@@ -6,6 +6,24 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<ui:param name="language" value="#{ctBackingBean.getLanguage()}"></ui:param>
+	
+	<!-- Enhancement 29418- shaqimi start -->
+	<script>
+		function generateReport(){
+			blockWidget.show();
+			const interval = setInterval(function(){
+				if($.cookie("downloadStatus")){
+					blockWidget.hide();
+					$.cookie("downloadStatus", null, {
+						path : '/web/dashboard'
+					});
+					clearInterval(interval);
+				}
+			}, 1000);
+		}
+	</script>
+	<!-- Enhancement 29418- shaqimi end -->
+	
 	<p:panel id="fd2" toggleable="true" toggleSpeed="500"
 		rendered="#{ctBackingBean.managedBean.ctContractAmount.agreement}">
 		<f:facet name="header">
@@ -124,7 +142,7 @@
 				<!-- Enhancement 29418- shaqimi start -->
 				<p:commandButton
 					rendered="#{agreement.status.statusId == CtStatusConst.saComplete}" ajax="false"
-					value="#{lbl['lbl.btn.download']}" onclick="blockWidget.show()">
+					value="#{lbl['lbl.btn.download']}" onclick="generateReport()">
 					<p:fileDownload
 						value="#{ctBackingBean.generateReportPDF(agreement)}" />
 				</p:commandButton>
@@ -132,15 +150,5 @@
 			<!-- Enhancement 29418- shaqimi end -->
 		</p:dataTable>
 	</p:panel>
-	<!-- Enhancement 29418- shaqimi start -->
-	<script>
-		setInterval(function(){
-			if(document.cookie.indexOf('downloadStatus=true')>=0){
-				blockWidget.hide();
-				document.cookie = "downloadStatus=; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
-			}
-		}, 1000);
-	</script>
-	<!-- Enhancement 29418- shaqimi end -->
 	
 </ui:composition>
