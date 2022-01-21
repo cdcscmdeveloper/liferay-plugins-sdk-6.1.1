@@ -23,6 +23,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,12 +33,15 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -3931,53 +3935,72 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @param paramMap the param map
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	protected void generateReportPDF(String reportFile,
-			Map<String, String> paramMap) throws IOException {
-		String reportUrl = generateReportURL(reportFile, paramMap);
-
-		HttpURLConnection urlConnection = null;
-		URL obj = new URL(reportUrl);
-		urlConnection = (HttpURLConnection) obj.openConnection();
-
-		BufferedInputStream buf = new BufferedInputStream(
-				urlConnection.getInputStream());
-
-		PortletResponse portletResponse = (PortletResponse) FacesContext
+	protected void generateReportPDF(String contractNo, List<String> reportFiles,
+			Map<String, Map<String, String>> paramMaps) throws IOException { 
+		
+		PortletResponse portalresponse = (PortletResponse) FacesContext
 				.getCurrentInstance().getExternalContext().getResponse();
-		HttpServletResponse res = PortalUtil
-				.getHttpServletResponse(portletResponse);
-		int position = reportFile.lastIndexOf(".jsp");
-		if (position != -1) {
-			reportFile = reportFile.substring(0, position);
-		}
-
-		if(paramMap.containsKey(ReportConst.DOC_TYPE_RTF)){
-			res.setHeader("Content-Disposition",
-					"attachment; filename=\"" + reportFile + "_"
-							+ ReportConst.REPORT_DATE_TIME.format(new Date())
-							+ ".rtf\"");//
-			res.setContentType("application/octet-stream");
-		}else{
-			res.setHeader("Content-Disposition",
-					"attachment; filename=\"" + reportFile + "_"
-							+ ReportConst.REPORT_DATE_TIME.format(new Date())
-							+ ".pdf\"");//
-			res.setContentType("application/pdf");
-		}
+		HttpServletResponse response = PortalUtil
+				.getHttpServletResponse(portalresponse);
+		response.setContentType("Content-type: text/zip");
+		response.setHeader("Content-Disposition",
+				"attachment; filename="+ contractNo + "_Amendment Update.zip");
 		
-		res.setHeader("Content-Transfer-Encoding", "binary");
+		Map<String, String> paramMap;
 		
-		res.flushBuffer();
+		ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(
+				response.getOutputStream()));
+		for(String reportFile : reportFiles){
+			String fileType = "";
 
-		OutputStream out = res.getOutputStream();
-
-		byte[] b = new byte[128];
-		int size;
-		while ((size = buf.read(b, 0, b.length)) != -1) {
-			out.write(b, 0, size);
+			paramMap = paramMaps.get(reportFile);
+			switch(reportFile){
+			case ReportConst.CT_AMENDMENT_UPDATE_RPT_AMENDMENT_DETAIL:
+				fileType = "_Amendment Detail";
+				break;
+			case ReportConst.CT_AMENDMENT_UPDATE_RPT_ZONE:
+				fileType = "_Zone";
+				break;
+			case ReportConst.CT_AMENDMENT_UPDATE_RPT_AGENCY:
+				fileType = "_Agency";
+				break;
+			case ReportConst.CT_AMENDMENT_UPDATE_RPT_ITEM_ZONAL:
+				fileType = "_Item Zonal";
+				break;
+			case ReportConst.CT_AMENDMENT_UPDATE_RPT_ITEM_NO_ZONAL:
+				fileType = "_Item Non Zonal";
+				break;
+			case ReportConst.CT_AMENDMENT_UPDATE_RPT_DEDUCTION:
+				fileType = "_Deduction";
+				break;
+			case ReportConst.CT_AMENDMENT_UPDATE_RPT_SCHEDULE:
+				fileType = "_Schedule";
+				break;
+			default:
+				break;
+			}
+			
+			zos.putNextEntry(new ZipEntry(contractNo + fileType + ".pdf"));
+			
+			String reportUrl = generateReportURL(reportFile, paramMap);
+	
+			HttpURLConnection urlConnection = null;
+			URL obj = new URL(reportUrl);
+			urlConnection = (HttpURLConnection) obj.openConnection();
+	
+			BufferedInputStream buf = new BufferedInputStream(
+					urlConnection.getInputStream());
+			
+			int size = 0;
+			while ((size = buf.read()) != -1) {
+				zos.write(size);
+			}
+			buf.close();
 		}
-		buf.close();
-		out.close();
+		zos.closeEntry();
+		zos.close();
+		response.flushBuffer();
+		FacesContext.getCurrentInstance().responseComplete();
 	}
 	//Enhancement 29418 - end
 	
