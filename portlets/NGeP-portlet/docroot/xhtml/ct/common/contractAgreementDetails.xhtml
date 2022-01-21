@@ -8,20 +8,20 @@
 	<ui:param name="language" value="#{ctBackingBean.getLanguage()}"></ui:param>
 	
 	<!-- Enhancement 29418- shaqimi start -->
-	<script>
+	<!-- <script>
 		function generateReport(){
 			blockWidget.show();
 			const interval = setInterval(function(){
-				if($.cookie("downloadStatus")){
+				if(true){
 					blockWidget.hide();
 					$.cookie("downloadStatus", null, {
-						path : '/web/dashboard'
+						path : '/web/epapp'
 					});
 					clearInterval(interval);
 				}
 			}, 1000);
 		}
-	</script>
+	</script> -->
 	<!-- Enhancement 29418- shaqimi end -->
 	
 	<p:panel id="fd2" toggleable="true" toggleSpeed="500"
