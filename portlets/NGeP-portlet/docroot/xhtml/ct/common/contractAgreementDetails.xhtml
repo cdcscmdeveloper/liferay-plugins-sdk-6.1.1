@@ -114,7 +114,8 @@
 					<br />
 				</ui:repeat>
 			</p:column>
-			<p:column>
+			<!-- Enhancement 29418- shaqimi start -->
+			<p:column style="text-align: center;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.ct.menu.view.amendment.details']}" />
 					<ac:iconTooltip
@@ -123,25 +124,23 @@
 				<!-- Enhancement 29418- shaqimi start -->
 				<p:commandButton
 					rendered="#{agreement.status.statusId == CtStatusConst.saComplete}" ajax="false"
-					value="#{lbl['lbl.btn.download']}">
+					value="#{lbl['lbl.btn.download']}" onclick="blockWidget.show()">
 					<p:fileDownload
 						value="#{ctBackingBean.generateReportPDF(agreement)}" />
 				</p:commandButton>
-				<!-- Enhancement 29418- shaqimi end -->
 			</p:column>
+			<!-- Enhancement 29418- shaqimi end -->
 		</p:dataTable>
 	</p:panel>
-
-	<!-- Enhancement 29418 - shaqimi start -->
-	<script type="text/javascript">
-
-	function start() {
-		blockWidget.show();
-	}
-
-	function stop() {
-		blockWidget.hide();
-	}
+	<!-- Enhancement 29418- shaqimi start -->
+	<script>
+		setInterval(function(){
+			if(document.cookie.indexOf('downloadStatus=true')>=0){
+				blockWidget.hide();
+				document.cookie = "downloadStatus=; expires=Thu, 01 Jan 1970 00:00:00 UTC;"
+			}
+		}, 1000);
 	</script>
-	<!-- Enhancement 29418 - shaqimi end -->
+	<!-- Enhancement 29418- shaqimi end -->
+	
 </ui:composition>
