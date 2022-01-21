@@ -5602,7 +5602,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		//13291 - end
 		//#21416 start
 		public String filterItemName(String itemName) {
-			String filteredItemName = itemName.replaceAll("\\s(NA|N/A|N A)", "");
+			String filteredItemName = filterItemNameNA(itemName);
 			return filteredItemName;
 			
 		}

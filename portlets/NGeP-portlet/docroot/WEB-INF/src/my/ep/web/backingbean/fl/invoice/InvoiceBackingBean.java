@@ -2688,7 +2688,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 	public String filterItemName(String itemName) {
 		if(this.getManagedBean().getInvoice() != null){
 			if(this.getManagedBean().getInvoice().getFlFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
-				String filteredItemName = itemName.replaceAll("\\s(NA|N/A|N A)", "");
+				String filteredItemName = filterItemNameNA(itemName);
 				return filteredItemName;
 			}
 		}

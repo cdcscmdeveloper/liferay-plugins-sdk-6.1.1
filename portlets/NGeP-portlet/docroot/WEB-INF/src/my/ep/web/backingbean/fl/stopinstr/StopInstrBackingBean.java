@@ -1004,7 +1004,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 	public String filterItemName(String itemName) {
 		if(this.getManagedBean().getStopInstr() != null){
 			if(this.getManagedBean().getStopInstr().getFlRequest().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)){
-				String filteredItemName = itemName.replaceAll("\\s(NA|N/A|N A)", "");
+				String filteredItemName = filterItemNameNA(itemName);
 				return filteredItemName;
 			}
 		}

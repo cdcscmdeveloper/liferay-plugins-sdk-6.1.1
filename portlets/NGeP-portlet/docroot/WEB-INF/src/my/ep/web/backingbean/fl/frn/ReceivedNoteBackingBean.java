@@ -1899,7 +1899,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	public String filterItemName(String itemName) {
 		if(this.getManagedBean().getFulfilmentRequest() != null){
 			if(this.getManagedBean().getFulfilmentRequest().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)){
-				String filteredItemName = itemName.replaceAll("\\s(NA|N/A|N A)", "");
+				String filteredItemName = filterItemNameNA(itemName);
 				return filteredItemName;
 			}
 		}
