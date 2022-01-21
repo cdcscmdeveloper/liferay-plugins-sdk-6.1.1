@@ -40,6 +40,7 @@ import my.ep.biz.service.sc.document.IQTDocumentSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
+import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.constant.EpPropertiesConst;
@@ -69,6 +70,7 @@ import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
+import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
@@ -2948,7 +2950,21 @@ public class NoticeBoardBackingBean extends
 		
 		List<AwardedItemsBean> awardedItemList = new ArrayList<>();
 		List<ScLoa> tempScLoaList = new ArrayList<>(); // #29624
+		
+		//Bug #32512 start
+		boolean isLoaRejected = false; 
+		this.getManagedBean().setSupplierName(null);
+		//Bug #32512 end
+		
 		for (ScLoa scLoa : scLoalist) {
+			//Bug #32512 start
+			try{
+				isLoaRejected = isLOARejected(ParameterConst.DOCTYPE_LETTER_OF_AWARD , scLoa.getLoaId());
+			}catch(Exception e){
+				log.error("Exception occured while get LOA status completed for "+scLoa.getLoaNo());
+			}
+			
+			if (!isLoaRejected){
 			if (ParameterConst.RECOMMEND_TYPE_PACKAGE
 					.equalsIgnoreCase(pmParameter.getParameterCode())) {
 				// #29624 - start
@@ -2995,24 +3011,39 @@ public class NoticeBoardBackingBean extends
 				}
 			}
 		}
+			//Bug #32512 end
+		}
+		
    return awardedItemList;
 	}
 	
-	/**
-	 * Will be called up on tab change of show Award Details  screen.
-	 * 
-	 * @param changeEvent
-	 *        the instance of TabChangeEvent
-	 */
-	public void awardSupplierTabChange(TabChangeEvent changeEvent) {
-
-		TplSpecZoneDtl zoneDtl = (TplSpecZoneDtl) changeEvent.getData();
-		Long qtId = this.getManagedBean().getScQt().getQtId();
-		List<ScLoa> scLoaList = retrieveLOA(qtId, zoneDtl.getSpecZoneId());
-		this.getManagedBean().setAwardedItems(
-				getAwardedItemDetails(scLoaList, qtId));
-
+	//Bug #32512 start
+	public boolean isLOARejected(String docType, Long docId) throws Exception {
+		ScWorkFlowStatus currentWorkFlowStatus = retrieveStatusByTypeAndId(docType, docId);
+		if(currentWorkFlowStatus != null && currentWorkFlowStatus.getPmStatus() != null &&
+				currentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.LOA_REJECTED)) {
+			return true;
+		}else{
+			return false;
+		}
 	}
+	
+	private ScWorkFlowStatus retrieveStatusByTypeAndId(String docType, Long docId) {
+		IScWorkFlowStatusSO workFlowStatusSO;
+		try {
+			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+			ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+			reqDTO.setDocType(docType);
+			reqDTO.setDocId(docId);
+			
+			return workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+		} finally {
+			workFlowStatusSO = null;
+		}
+	}
+	
+	//Bug #32512 end	
 	
 	/**
 	 * Download the documents from repository on click of download all button
