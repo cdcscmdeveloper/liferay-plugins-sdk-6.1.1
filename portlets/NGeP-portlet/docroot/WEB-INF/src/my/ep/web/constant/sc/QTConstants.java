@@ -280,5 +280,7 @@ public interface QTConstants {
 	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE="scSpecCommitteeMaintenance_WAR_NGePportlet";
 	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_TASKLIT="scSpecificationCommitteeEndorsement_WAR_NGePportlet";
 	
+	public static final String PORTLET_NAME_QT_LOI_LIST="scLoiList_WAR_NGePportlet";//29007-start
+	
 	
 }
