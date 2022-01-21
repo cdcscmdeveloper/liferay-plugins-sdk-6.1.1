@@ -1435,21 +1435,20 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				newItem.setCmBrand(brandObj);
 				newItem.setCmMeasurement(meaObj);
 				newItem.setCmColor(colorObj);
-				//#21416 start
 				newItem.setItemName(codeResDTO.getCommodityObj().getUnspscTitle()
 						+ ((typeObj.getTypeName().equals("N/A") || typeObj
-								.getTypeName().equals("NA") || typeObj.getTypeName().equals("N A") ) ? "" : " "
+								.getTypeName().equals("NA")) ? "" : " "
 								+ typeObj.getTypeName())
 								+ ((brandObj.getBrandName().equals("N/A") || brandObj
-										.getBrandName().equals("NA") || brandObj.getBrandName().equals("N A")) ? "" : " "
+										.getBrandName().equals("NA")) ? "" : " "
 										+ brandObj.getBrandName())
 										+ ((meaObj.getMeasurementName().equals("N/A") || meaObj
-												.getMeasurementName().equals("NA") || meaObj.getMeasurementName().equals("N A")) ? "" : " "
+												.getMeasurementName().equals("NA")) ? "" : " "
 												+ meaObj.getMeasurementName())
 												+ ((colorObj.getColorName().equals("N/A") || colorObj
-														.getColorName().equals("NA")  || colorObj.getColorName().equals("N A")) ? "" : " "
+														.getColorName().equals("NA")) ? "" : " "
 														+ colorObj.getColorName()));
-				//#21416 end
+
 				newItem.setExtensionCode(codeResDTO.getCommodityObj().getUnspscCode()
 						+ typeObj.getTypeCode()
 						+ brandObj.getBrandCode()
