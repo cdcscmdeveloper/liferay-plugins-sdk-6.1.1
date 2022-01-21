@@ -23,6 +23,7 @@ import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
@@ -888,4 +889,11 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		return false;
 	}
 	//29728 - end
+	
+	//21416 start
+	public String filterItemNameNA(String itemName) {
+		String filteredItemName = itemName.replaceAll("\\s(NA|N/A|N A)\\b", "");
+		return filteredItemName;
+	}
+	//21416 end
 }

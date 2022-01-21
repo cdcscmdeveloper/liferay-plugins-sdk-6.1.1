@@ -2726,7 +2726,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 	public String filterItemName(String itemName) {
 		if( getManagedBean().getPaymentAdvice() != null ){
 			if(getManagedBean().getPaymentAdvice().getFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
-				String filteredItemName = itemName.replaceAll("\\s(NA|N/A|N A)", "");
+				String filteredItemName = filterItemNameNA(itemName);
 				return filteredItemName;
 			}
 		}
