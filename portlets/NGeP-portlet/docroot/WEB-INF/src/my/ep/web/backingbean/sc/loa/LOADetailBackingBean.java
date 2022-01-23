@@ -343,11 +343,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 			//#32497 - start
 			if (scLoa != null && ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType())){
-				if(!isSupplier()){
-					awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER);
-					awardDataType.setDeskOfficer(currentUser);
-					awardDataType.setRequisitioner(null);
-				}
+				awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER);
+				awardDataType.setDeskOfficer(currentUser);
+				awardDataType.setRequisitioner(null);
 			}
 			//#32497 - end
 		}
