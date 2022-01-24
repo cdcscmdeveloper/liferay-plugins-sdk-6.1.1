@@ -7,23 +7,6 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<ui:param name="language" value="#{ctBackingBean.getLanguage()}"></ui:param>
 	
-	<!-- Enhancement 29418- shaqimi start -->
-	<!-- <script>
-		function generateReport(){
-			blockWidget.show();
-			const interval = setInterval(function(){
-				if(true){
-					blockWidget.hide();
-					$.cookie("downloadStatus", null, {
-						path : '/web/epapp'
-					});
-					clearInterval(interval);
-				}
-			}, 1000);
-		}
-	</script> -->
-	<!-- Enhancement 29418- shaqimi end -->
-	
 	<p:panel id="fd2" toggleable="true" toggleSpeed="500"
 		rendered="#{ctBackingBean.managedBean.ctContractAmount.agreement}">
 		<f:facet name="header">
@@ -142,7 +125,7 @@
 				<!-- Enhancement 29418- shaqimi start -->
 				<p:commandButton
 					rendered="#{agreement.status.statusId == CtStatusConst.saComplete}" ajax="false"
-					value="#{lbl['lbl.btn.download']}" onclick="generateReport()">
+					value="#{lbl['lbl.btn.download']}">
 					<p:fileDownload
 						value="#{ctBackingBean.generateReportPDF(agreement)}" />
 				</p:commandButton>
