@@ -571,8 +571,14 @@ public class SupplierFinalizationBackingBean extends
 			createZoneMenuModel();
 			populateScQtRecommendsByZone();
 		} else {
-			this.getManagedBean().setItemList(
-					scQtFinalization.getScQtRecommends());
+			//this.getManagedBean().setItemList(
+			//		scQtFinalization.getScQtRecommends());
+			//#32400 - Start
+			List<ScQtRecommend> itemList = null;
+			itemList = scQtFinalization.getScQtRecommends();
+			sortingItemizedFollowedOrderByItemName(itemList);
+			this.getManagedBean().setItemList(itemList);
+			//#32400 - End
 		}
 		this.getManagedBean().setJustification(
 				scQtFinalization.getJustification());
@@ -6601,9 +6607,15 @@ return	remarksNotFound;
 		// #28250 - Start - Added Null check
 		if (selectedZone != null && null != scQtFinalization && null != scQtFinalization.getScQtRecommendsByZone()) {
 		// #28250 - End
-			this.getManagedBean().setItemList(
-					scQtFinalization.getScQtRecommendsByZone()
-							.get(selectedZone.getSpecZoneId()));
+			//this.getManagedBean().setItemList(
+			//		scQtFinalization.getScQtRecommendsByZone()
+			//				.get(selectedZone.getSpecZoneId()));
+			//#32400 - Start
+			List<ScQtRecommend> itemList = null;
+			itemList = scQtFinalization.getScQtRecommendsByZone().get(selectedZone.getSpecZoneId());
+			sortingItemizedFollowedOrderByItemName(itemList);
+			this.getManagedBean().setItemList(itemList);
+			//#32400 - End
 		}
 	}
 
@@ -6723,8 +6735,14 @@ return	remarksNotFound;
 			if (isZonal) {
 				populateScQtRecommendsByZone();
 			} else {
-				this.getManagedBean().setItemList(
-						scQtFinalization.getScQtRecommends());
+				//this.getManagedBean().setItemList(
+				//		scQtFinalization.getScQtRecommends());
+				//#32400 - Start
+				List<ScQtRecommend> itemList = null;
+				itemList = scQtFinalization.getScQtRecommends();
+				sortingItemizedFollowedOrderByItemName(itemList);
+				this.getManagedBean().setItemList(itemList);
+				//#32400 - End
 			}
 			setSelectedSupplierCodesByItem();
 			
@@ -10465,6 +10483,57 @@ return	remarksNotFound;
 		}
 		// 18685 - END.
 		
+		//#32400 - Start
+		public void sortingItemizedFollowedOrderByItemName(List<ScQtRecommend> itemsList){
+			Collections.sort(itemsList, new Comparator<ScQtRecommend>() {
+					
+				public int compare(ScQtRecommend itemsList1, ScQtRecommend itemsList2) {
+		           
+				    String s1 = itemsList1.getRequestItem().getItemName();
+				    String s2 = itemsList2.getRequestItem().getItemName();
+		
+					String[] s1Parts = s1.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");
+		            String[] s2Parts = s2.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");
+		
+		            int i = 0;
+		            while(i < s1Parts.length && i < s2Parts.length){
+		
+		                //if parts are the same
+		                if(s1Parts[i].compareTo(s2Parts[i]) == 0){
+		                    ++i;
+		                }else{
+		                    try{
+		
+		                        int intS1 = Integer.parseInt(s1Parts[i]);
+		                        int intS2 = Integer.parseInt(s2Parts[i]);
+		
+		                        //if the parse works
+		
+		                        int diff = intS1 - intS2; 
+		                        if(diff == 0){
+		                            ++i;
+		                        }else{
+		                            return diff;
+		                        }
+		                    }catch(Exception ex){
+		                        return s1.compareTo(s2);
+		                    }
+		                }//end else
+		            }//end while
+		
+		            //Handle if one string is a prefix of the other.
+		            // nothing comes before something.
+		            if(s1.length() < s2.length()){
+		                return -1;
+		            }else if(s1.length() > s2.length()){
+		                return 1;
+		            }else{
+		                return 0;
+		            }
+	            }
+			});
+		}
+		//#32400 - End
 		
 	// #30567 - Start.
 	/**
