@@ -1062,6 +1062,12 @@ public class OrganisationBackingBean extends
 				addressType.setPmOrgProfile(orgProfile);
 				orgProfile.setPmAddressTypes(pmAddressTypes);
 				orgValidity.setPmOrgProfile(orgProfile);
+				
+				//start #3790 assign new code
+				if(this.getManagedBean().getOrgCategory() == OTHERS)
+					orgValidity.setOrgCode(generateOrgCode(this.getManagedBean()));
+				//end #3790
+				
 				orgProfile.setPmOrgValidity(orgValidity);
 			}
 			//#30651 - start
@@ -1716,8 +1722,6 @@ public class OrganisationBackingBean extends
 
 		boolean addrExist = false;
 		if (address != null) {
-			log.info("test editDeliveryAddress NOT null+++++pencil");
-
 			if (address.getAddressType().equalsIgnoreCase(
 					AddressType.DELIVERY_ADDRESS.value())) {
 				if (address.getPmAddress().getPmState() != null
@@ -1729,23 +1733,8 @@ public class OrganisationBackingBean extends
 				this.getManagedBean().setDeliveryAddress(address);
 				addrExist = true;
 			}
-
-			/*
-			 * if (address.getPmContacts() != null &&
-			 * !address.getPmContacts().isEmpty()) {
-			 * this.getManagedBean().setOfficeContactPerson
-			 * (address.getPmContacts().get(0)); } else{ List<PmContact>
-			 * contactLst = new ArrayList<PmContact>();
-			 * this.getManagedBean().setDeliveryContactPerson(new PmContact());
-			 * PmContact contact =
-			 * this.getManagedBean().getOfficeContactPerson();
-			 * contact.setPmAddressType(address); contactLst.add(contact);
-			 * address.setPmContacts(contactLst); }
-			 */
-
-		} else {
-			log.info("test editDeliveryAddress null");
 		}
+		
 		if (!addrExist) {
 
 			List<PmAddressType> orgAddressTypes = this.getManagedBean()
@@ -3939,4 +3928,47 @@ public class OrganisationBackingBean extends
 	}
 	//20201105@Jacky - Enhancement#28836 - End
 	
+	//START #3790
+	public String generateOrgCode(OrganisationManagedBean mb){
+		String newOrgCode = "";
+		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
+		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IStateSO.class);
+		Long orgType = PmCommonUtil.retrievePmParameter(ParameterTypeConst.ORGANISATION_TYPES, mb.getOrgType()).getParameterId();
+		if(mb.getOrgType().equalsIgnoreCase(OrganizationType.STATE_GOVERNMENT.value())){
+			newOrgCode = orgProfileSO.generateOrgCode(ProfileManagementConst.ORGCODE_SG,3,5,3,orgType); //code,from,to,digit,type
+		}
+		else if(mb.getOrgType().equalsIgnoreCase(OrganizationType.STATUTORY_BODIES.value())){
+			newOrgCode = orgProfileSO.generateOrgCode(ProfileManagementConst.ORGCODE_FSB,3,5,3,orgType);//code,from,to,digit,type
+		}
+		else if(mb.getOrgType().equalsIgnoreCase(OrganizationType.STATUTORY_BODIES_STATE.value())){
+			StateReqDTO reqstate = new StateReqDTO();
+			reqstate.setStateId(mb.getSelectedStateId());
+			StateResDTO res = stateSO.retriveStateByID(reqstate);
+			newOrgCode = orgProfileSO.generateOrgCode(res.getPmState().getStateCode(),3,4,2,orgType);//code,from,to,digit,type
+		}
+		else if( mb.getOrgType().equalsIgnoreCase(OrganizationType.LOCAL_AUTHORITY.value())){
+			StateReqDTO reqstate = new StateReqDTO();
+			reqstate.setStateId(mb.getSelectedStateId());
+			StateResDTO res = stateSO.retriveStateByID(reqstate);
+			if(res.getPmState().getStateCode().equalsIgnoreCase(ProfileManagementConst.STATE_CODE_SABAH)
+					|| res.getPmState().getStateCode().equalsIgnoreCase(ProfileManagementConst.STATE_CODE_LABUAN))
+				newOrgCode = orgProfileSO.generateOrgCode(ProfileManagementConst.ORGCODE_LATSBH,4,6,3,orgType); //code,from,to,digit,type
+			else if(res.getPmState().getStateCode().equalsIgnoreCase(ProfileManagementConst.STATE_CODE_SARAWAK)){
+				newOrgCode = orgProfileSO.generateOrgCode(ProfileManagementConst.ORGCODE_LATSRWK,4,6,3,orgType); //code,from,to,digit,type
+			}else{
+				newOrgCode = orgProfileSO.generateOrgCode(ProfileManagementConst.ORGCODE_LATPENI,4,6,3,orgType); //code,from,to,digit,type
+			}
+		}
+		else if(mb.getOrgType().equalsIgnoreCase(OrganizationType.GOVERNMENT_LINK_COMPANIES.value())){
+			newOrgCode = orgProfileSO.generateOrgCode(ProfileManagementConst.ORGCODE_GLC,3,5,3,orgType);//code,from,to,digit,type
+		}
+		else if(mb.getOrgType().equalsIgnoreCase(OrganizationType.OTHERS.value())){
+			newOrgCode = orgProfileSO.generateOrgCode(ProfileManagementConst.ORGCODE_OTH,4,5,2,orgType);//code,from,to,digit,type
+		}
+		
+		return newOrgCode;
+	}
+	
+	//END #3790
+
 }
