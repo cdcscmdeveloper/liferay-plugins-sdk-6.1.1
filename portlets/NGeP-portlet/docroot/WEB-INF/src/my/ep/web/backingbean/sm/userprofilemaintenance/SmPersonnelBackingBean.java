@@ -523,9 +523,9 @@ public class SmPersonnelBackingBean extends
 		getManagedBean().setEditMode(true);
 		getManagedBean().setIdTypes(getPmIdTypeDropdownValues());
 		getPersonnelInfoById(personnelId);
-		// #9569 - start
+		// #32515 - start
 		getManagedBean().setSupplierType(getManagedBean().getSmSupplier().getSmAppl().getSupplierType());
-		// #9569 - end
+		// #32515 - end
 		buildRoleList();
 		validateAccountStatus();
 		setDisabledActivateDeactivateRadioButton();
