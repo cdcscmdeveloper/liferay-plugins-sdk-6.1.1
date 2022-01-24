@@ -3004,15 +3004,16 @@ public class QTDetailBackingBean extends
 			}
 
 			Long currentStatus = qt.getQtStatus().getStatusId();
+			
 			//#30477 Start Vinod
 			if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
-				for(ScQtCommittee committee : this.getManagedBean().getQt().getScQtCommittees()){
-					if((committee.getScCommittee().getCommitteStatus().getStatusId().equals(QTStatusConst.CMT_PENDING_REVISION) 
-							|| currentStatus.equals(QTStatusConst.QT_RE_EVALUATION))
-							&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT)){
-						for(ScQtApproval approval : this.getManagedBean().getQt().getScQtApprovals()){
-							for(ScQtApproverSettings approverSetting : approval.getApproverSettings()){
-								if(isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId(),1)){
+				for (ScQtCommittee committee : this.getManagedBean().getQt().getScQtCommittees()) {
+					if ((committee.getScCommittee().getCommitteStatus().getStatusId()
+							.equals(QTStatusConst.CMT_PENDING_REVISION) || currentStatus
+							.equals(QTStatusConst.QT_RE_EVALUATION)) && outcome.equals(BpmOutcomeConst.BPM_SUBMIT)) {
+						for (ScQtApproval approval : this.getManagedBean().getQt().getScQtApprovals()) {
+							for (ScQtApproverSettings approverSetting : approval.getApproverSettings()) {
+								if (isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId())) {
 									throw new EpException(MessageConst.ERROR_775171);
 								}
 							}
@@ -3020,15 +3021,15 @@ public class QTDetailBackingBean extends
 					}
 				}
 			}
-			if(SCProcessNameConst.REVISE_QT_SCHEDULE.equalsIgnoreCase(taskName)) {
-				if((currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_REVISION)
-						|| currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION))
-						&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT))	{
-							for(ScQtApproverSettings approverSetting : this.getManagedBean().getPublicationApproval().getApproverSettings()){
-								if(isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId(),2)){
-									throw new EpException(MessageConst.ERROR_775172);
-								}
-							}
+
+			if (SCProcessNameConst.REVISE_QT_SCHEDULE.equalsIgnoreCase(taskName)) {
+				if ((currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_REVISION) || currentStatus
+						.equals(QTStatusConst.QT_REVISION_PUBLICATION)) && outcome.equals(BpmOutcomeConst.BPM_SUBMIT)) {
+					for (ScQtApproverSettings approverSetting : this.getManagedBean().getPublicationApproval().getApproverSettings()) {
+						if (isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId())) {
+							throw new EpException(MessageConst.ERROR_775172);
+						}
+					}
 				}
 			}
 			//#30477 End Vinod
@@ -9026,11 +9027,11 @@ public class QTDetailBackingBean extends
   	//#25037 - end
 	  	
     //#30477 - Start
-  	public boolean isInactiveCommiteeApproverRole(Long userId,int role) {
+  	public boolean isInactiveCommiteeApproverRole(Long userId) {
 		IQTDetailSO detailSO = null;
+		
 		try {
-			detailSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			
 			QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
 			PmUserOrg pmUserOrgs = new PmUserOrg();
@@ -9040,14 +9041,15 @@ public class QTDetailBackingBean extends
 			
 			PmUserOrg pmUserOrg = PmCommonUtil.retrieveUserOrgByUserIdAndOrgId(userId, pmUserOrgs.getUserOrgId());
 			
-			boolean inactive = false;
+			boolean inactive = DbValueConst.FLAG_YES;
+
 			for (PmUserRole roles : pmUserOrg.getPmUserRoles()) {	
-				if(RoleCode.COMMITTEE_APPROVER.value().equals(roles.getPmRole().getRoleCode()) && 
-						roles.getRecordStatusFlg().equals(0) && roles.isRecordStatus() == false && role == 1){
-					inactive = true;	
-				}else if(RoleCode.PUBLICATION_APPROVER.value().equals(roles.getPmRole().getRoleCode()) && 
-						roles.getRecordStatusFlg().equals(0) && roles.isRecordStatus() == false && role == 2){
-				    inactive = true;	
+				if (RoleCode.COMMITTEE_APPROVER.value().equals(roles.getPmRole().getRoleCode())
+						&& roles.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
+					inactive = DbValueConst.FLAG_NO;
+				} else if (RoleCode.PUBLICATION_APPROVER.value().equals(roles.getPmRole().getRoleCode())
+						&& roles.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
+					inactive = DbValueConst.FLAG_NO;	
 				}
 			}
 			return inactive;
