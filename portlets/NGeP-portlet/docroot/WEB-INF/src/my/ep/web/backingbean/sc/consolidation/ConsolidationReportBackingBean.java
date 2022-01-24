@@ -909,6 +909,9 @@ public class ConsolidationReportBackingBean extends
 				itemList = getManagedBean().getScQtFinalization()
 						.getScQtRecommends();
 			}
+			//#32398 - Start
+			sortingItemizedFollowedOrderByItemName(itemList);
+			//#32398 - End
 			getManagedBean().setItemsList(itemList);
 		}
 
@@ -1096,8 +1099,14 @@ public class ConsolidationReportBackingBean extends
 				createZoneMenuModel();
 				populateScQtRecommendsByZone();
 			} else {
-				getManagedBean().setItemsList(
-						scQtFinalization.getScQtRecommends());
+				//getManagedBean().setItemsList(
+				//		scQtFinalization.getScQtRecommends());
+				//#32398 - Start
+				List<ScQtRecommend> itemList = null;
+				itemList = scQtFinalization.getScQtRecommends();
+				sortingItemizedFollowedOrderByItemName(itemList);
+				getManagedBean().setItemsList(itemList);
+				//#32398 - End
 			}
 
 			initializeRemarks();
@@ -1314,8 +1323,14 @@ public class ConsolidationReportBackingBean extends
 			//#32092 - End.
 			if (selectedZone != null && scQtRecommendsByZone != null
 					&& scQtRecommendsByZone.size() > 0) {
-				getManagedBean().setItemsList(
-						scQtRecommendsByZone.get(selectedZone.getSpecZoneId()));
+				//getManagedBean().setItemsList(
+				//		scQtRecommendsByZone.get(selectedZone.getSpecZoneId()));
+				//#32398 - Start
+				List<ScQtRecommend> itemList = null;
+				itemList = scQtRecommendsByZone.get(selectedZone.getSpecZoneId());
+				sortingItemizedFollowedOrderByItemName(itemList);
+				getManagedBean().setItemsList(itemList);
+				//#32398 - End
 			}
 		}
 	}
@@ -2493,6 +2508,59 @@ public class ConsolidationReportBackingBean extends
 			
 			
 		}
+		
+		//#32398 - Start
+		public void sortingItemizedFollowedOrderByItemName(List<ScQtRecommend> itemsList){
+			Collections.sort(itemsList, new Comparator<ScQtRecommend>() {
+					
+				public int compare(ScQtRecommend itemsList1, ScQtRecommend itemsList2) {
+		           
+				    String s1 = itemsList1.getRequestItem().getItemName();
+				    String s2 = itemsList2.getRequestItem().getItemName();
+		
+					String[] s1Parts = s1.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");
+		            String[] s2Parts = s2.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");
+		
+		            int i = 0;
+		            while(i < s1Parts.length && i < s2Parts.length){
+		
+		                //if parts are the same
+		                if(s1Parts[i].compareTo(s2Parts[i]) == 0){
+		                    ++i;
+		                }else{
+		                    try{
+		
+		                        int intS1 = Integer.parseInt(s1Parts[i]);
+		                        int intS2 = Integer.parseInt(s2Parts[i]);
+		
+		                        //if the parse works
+		
+		                        int diff = intS1 - intS2; 
+		                        if(diff == 0){
+		                            ++i;
+		                        }else{
+		                            return diff;
+		                        }
+		                    }catch(Exception ex){
+		                        return s1.compareTo(s2);
+		                    }
+		                }//end else
+		            }//end while
+		
+		            //Handle if one string is a prefix of the other.
+		            // nothing comes before something.
+		            if(s1.length() < s2.length()){
+		                return -1;
+		            }else if(s1.length() > s2.length()){
+		                return 1;
+		            }else{
+		                return 0;
+		            }
+	        }
+
+			});
+		}
+		//#32398 - End
 		
 		public void PackageWiseRemarkMandatory(int totalQualifiedSuppliers, TplSpecZoneDtl specZoneDtl){
 			if (totalQualifiedSuppliers == 0) {
