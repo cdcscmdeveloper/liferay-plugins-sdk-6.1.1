@@ -147,7 +147,8 @@
 					value="#{question.clUomFrequency}"
 					rendered="#{isQuestionTypeItem and isShowService}"
 					required="#{isValidationReq}" maxlength="5"
-					label="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}">
+					label="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}"
+					onkeypress="if (event.keyCode == 13) { return false; }"> <!-- #32362 -->
 					<ac:validateNumber maxIntegerDigits="7"
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 					<p:ajax partialSubmit="true" process="@this"
@@ -204,7 +205,8 @@
 					value="#{question.clDurationMonth}"
 					rendered="#{isQuestionTypeItem and isShowService}"
 					required="#{isValidationReq}" maxlength="4"
-					label="#{lbl['lbl.tpl.spec.content.duration.month']}">
+					label="#{lbl['lbl.tpl.spec.content.duration.month']}"
+					onkeypress="if (event.keyCode == 13) { return false; }"> <!-- #32362 -->
 					<ac:validateNumber maxIntegerDigits="4" integerOnly="true" />
 					<p:ajax partialSubmit="true" process="@this"
 						update="@this, durationMsg" />
