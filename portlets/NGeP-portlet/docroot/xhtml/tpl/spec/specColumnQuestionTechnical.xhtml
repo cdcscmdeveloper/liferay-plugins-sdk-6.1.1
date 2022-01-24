@@ -171,7 +171,8 @@
 				value="#{question.clQuantity}" required="#{isValidationReq}"
 				disabled = "#{simpleQuoteBackingBean.managedBean.qtyNonEditable}"
 				maxlength="14" label="#{lbl['lbl.tpl.spec.content.quantity']}"
-				rendered="#{empty templateSpecBean.specMaster.tplSpecZone or !templateSpecBean.specMaster.qtyByZone}">
+				rendered="#{empty templateSpecBean.specMaster.tplSpecZone or !templateSpecBean.specMaster.qtyByZone}"
+				onkeypress="if (event.keyCode == 13) { return false; }"> <!-- #32362 -->
 				<p:ajax partialSubmit="true" process="@this"
 					update="@this, qtyMsg, @(.calcAmount)" />
 				<ac:validateNumber maxIntegerDigits="10" />
@@ -218,7 +219,8 @@
 			style="min-width:0px !important;width:calc(100% - 40px); text-align:right;"
 			value="#{question.clDeliveryTerm}" rendered="#{isQuestionTypeItem}"
 			required="#{isValidationReq}" maxlength="4" validator="#{webappBean.validateInteger}"
-			label="#{lbl['lbl.tpl.spec.content.delivery.term']}">
+			label="#{lbl['lbl.tpl.spec.content.delivery.term']}"
+			onkeypress="if (event.keyCode == 13) { return false; }"> <!-- #32362 -->
 			<p:ajax partialSubmit="true" process="@this"
 				update="@this, deliveryTermMsg" />
 		</p:inputText>
@@ -235,7 +237,8 @@
 			style="min-width:0px !important;width:calc(100% - 40px); text-align:right;"
 			value="#{question.clDeliveryTerm}" rendered="#{isQuestionTypeItem}"
 			required="#{isValidationReq}" maxlength="4" validator="#{webappBean.validateInteger}"
-			label="#{lbl['lbl.tpl.spec.content.service.term']}">
+			label="#{lbl['lbl.tpl.spec.content.service.term']}"
+			onkeypress="if (event.keyCode == 13) { return false; }"> <!-- #32362 -->
 			<p:ajax partialSubmit="true" process="@this"
 				update="@this, serviceTermMsg" />
 		</p:inputText>
