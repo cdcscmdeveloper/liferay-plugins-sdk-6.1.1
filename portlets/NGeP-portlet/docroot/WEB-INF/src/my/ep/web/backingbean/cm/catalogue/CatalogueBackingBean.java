@@ -2599,10 +2599,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 											.getCmStandardPricing();
 								}
 
-								//System.out
-								//.println("cmStandardPricing.getPricingType()"
-									//	+ cmStandardPricing
-									//	.getPricingType());
+								//System.out.println("cmStandardPricing.getPricingType()"+ cmStandardPricing.getPricingType());
+								cmStandardPricing.getPricingType();
 								if (cmStandardPricing.getPricingType() == null) {
 									cmStandardPricing = new CmStandardPricing();
 									cmStandardPricing
@@ -3456,10 +3454,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				promotion.setCmSupplierItem(this.getManagedBean()
 						.getSelectedMaintainItem());
 			}
-			//System.out
-			//.println("this.getManagedBean().getSelectedMaintainItem().getCmTierPricings():"
-					//+ this.getManagedBean().getSelectedMaintainItem()
-					//.getCmTierPricings().size());
+			//System.out.println("this.getManagedBean().getSelectedMaintainItem().getCmTierPricings():"+ this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().size());
+			this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().size();
 			for (CmTierPricing promotion : this.getManagedBean()
 					.getSelectedMaintainItem().getCmTierPricings()) {
 				promotion.setCmSupplierItem(this.getManagedBean()
@@ -6302,9 +6298,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 */
 	public void compareViewItem() {
 
-		//System.out
-		//.println("this.getManagedBean().getSelectViewItems().length():"
-			//	+ this.getManagedBean().getSelectViewItems());
+		//System.out.println("this.getManagedBean().getSelectViewItems().length():"+ this.getManagedBean().getSelectViewItems());
+		this.getManagedBean().getSelectViewItems();
 	}
 
 	/**
@@ -7491,13 +7486,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				.getSelectedMaintainItem().getCmZonalTierPricings().get(index);
 		if (tier.getStartDate() != null && tier.getEndDate() != null) {
 			for (CmZonalTierPricing cmPricing : previousList) {
-				log.info("tier.getCmSupplierZone().getSuppZoneId()"
-						+ tier.getCmSupplierZone().getSuppZoneId());
-				//System.out
-				//.println("cmPricing.getCmSupplierZone().getSuppZoneId()"
-					//	+ cmPricing.getCmSupplierZone().getSuppZoneId());
-				if (tier.getCmSupplierZone().getSuppZoneId() == cmPricing
-						.getCmSupplierZone().getSuppZoneId()) {
+				log.info("tier.getCmSupplierZone().getSuppZoneId()" + tier.getCmSupplierZone().getSuppZoneId());
+				//System.out.println("cmPricing.getCmSupplierZone().getSuppZoneId()" + cmPricing.getCmSupplierZone().getSuppZoneId());
+				if (tier.getCmSupplierZone().getSuppZoneId() == cmPricing.getCmSupplierZone().getSuppZoneId()) {
 					log.info("*******in********");
 					if ((tier.getStand_group_id() != cmPricing.getStand_group_id()) && ((tier.getStartDate()
 							.compareTo(cmPricing.getStartDate()) >= 0 && tier

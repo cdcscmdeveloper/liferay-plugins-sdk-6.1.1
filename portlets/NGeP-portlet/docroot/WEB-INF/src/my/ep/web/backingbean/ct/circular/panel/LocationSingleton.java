@@ -349,6 +349,7 @@ public class LocationSingleton {
 						}
 					}else {
 						//System.out.println("======display state name==="+state.getStateName());
+						state.getStateName();
 						CtPanelZoneDtl locCriteria = locClass.newInstance();
 						locCriteria.setStateId(state);
 						TreeNode stateNode = new DefaultTreeNode("state",locCriteria, rootLocationTree);

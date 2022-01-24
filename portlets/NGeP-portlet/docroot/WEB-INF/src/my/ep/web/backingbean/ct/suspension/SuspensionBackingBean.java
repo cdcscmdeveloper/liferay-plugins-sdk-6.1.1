@@ -318,10 +318,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			resDTO = null;
 		}
 	}
-	
-	
 
-	
 	/**
 	 * The method used to validate the entered Effective and Expiary Date of contract item .
 	 * 
