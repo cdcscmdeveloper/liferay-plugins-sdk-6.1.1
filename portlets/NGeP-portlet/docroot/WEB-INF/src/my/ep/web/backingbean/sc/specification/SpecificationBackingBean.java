@@ -16595,6 +16595,19 @@ public class SpecificationBackingBean extends
 				for (TplSpecQuestion tplSpecQuestion : qtChecklist
 						.getScQtDoc().getTplSpecMaster()
 						.getTplSpecQuestions()) {
+					// #32130 - Start.
+					if (qt.isZonal() && CollectionUtils.isNotEmpty(tplSpecQuestion.getTplSpecEstimations()) 
+							&& CollectionUtils.isNotEmpty(tplSpecQuestion.getTplSpecZoneQties())) {
+							Iterator<TplSpecEstimation> iterator = tplSpecQuestion.getTplSpecEstimations().iterator();
+							while (iterator.hasNext()) {
+								TplSpecEstimation tplSpecEstimation = iterator.next();
+								if (tplSpecEstimation.getTplSpecZoneDtl() == null) {
+									iterator.remove();
+								}
+							}
+					}
+					
+					if (CollectionUtils.isNotEmpty(tplSpecQuestion.getTplSpecEstimations())) {
 					for (TplSpecEstimation tplSpecEstimation : tplSpecQuestion
 							.getTplSpecEstimations()) {
 						// #25138 - Bug #32194 - Start.
@@ -16604,6 +16617,7 @@ public class SpecificationBackingBean extends
 								//20210205@haziq- Bug #30046 - Start
 								BigDecimal indicativeUnitPrice = tplSpecEstimation.getIndicativeUnitPrice();
 								//#25138  - Allow indicativeUnitPrice & estimatedCost null if qty 0 - start
+							if (CollectionUtils.isNotEmpty(tplSpecQuestion.getTplSpecZoneQties())) {
 								for(TplSpecZoneQty zoneQty : tplSpecQuestion.getTplSpecZoneQties()){
 									if(zoneQty.getQty().compareTo(BigDecimal.ZERO) > 0 
 											// #25138 - Bug #32194 - Start
@@ -16636,14 +16650,21 @@ public class SpecificationBackingBean extends
 										indicativeUnitPrice = BigDecimal.valueOf(0);
 									}
 								}//#25138  - Allow indicativeUnitPrice & estimatedCost null if qty 0 - end
+							}
 								//20210205@haziq- Bug #30046 - End
+							if (null != estimatedCost) {
 								totalSpecEstimatedAmount = totalSpecEstimatedAmount
 										.add(estimatedCost.setScale(2, BigDecimal.ROUND_UP));
+							}
 								//20201217@haziq- Bug #29806 - End
 						/*}*/
 						// #25138 - Bug #32194 - End.
 					}
+					} else {
+						throw new EpException(MessageConst.ERROR_760520);
 				}
+					// #32130 - End.
+			}
 			}
 			log.debug("totalSpecEstimatedAmount" + totalSpecEstimatedAmount);
 			if (count == 0) { //Bug #29806
