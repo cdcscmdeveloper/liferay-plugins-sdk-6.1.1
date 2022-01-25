@@ -305,7 +305,12 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 							localcheckList.add(checklist);
 						}
 					} else {
-						localcheckList.add(checklist);
+						for (TplSpecQuestion q : checklist.getScQtDoc().getTplSpecMaster().getTplSpecQuestions()) {
+							if (q.isItemReqDemo()) {
+								localcheckList.add(checklist);
+								break;
+							}
+						}
 					}
 				}
 			}
@@ -520,7 +525,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 					demoSuppList = new ArrayList<ScQtDemoSupplier>();
 					demoItemList = new ArrayList<ScQtDemoItem>();
 					qtDemo = new ScQtDemo();
-					
+
 					reqDTO.setScQt(this.getManagedBean().getQt());
 					reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
 					SpecificationResDTO resDTO = specSo.retrieveAllDemoCheckLists(reqDTO);
@@ -570,7 +575,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 					}
 
 					this.getManagedBean().setAllItemList(demoSuppList);
-					
+
 					if (savedData) {
 						demoItemList.addAll(resDto.getScQtDemo().getScQtDemoItemList());
 					} else {
@@ -939,8 +944,8 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 
 			DemoResDTO resNewDTO = qtDemoSO.prepareCommiteeDtls(demoReqDTO);
 			ScQtCommittee qtCommittee = resNewDTO.getQtCommittee();
-			
-			if(this.getManagedBean().getPayLoad() == null){				
+
+			if (this.getManagedBean().getPayLoad() == null) {
 				this.getManagedBean().setPayLoad(resDTO.getPayLoad());
 			}
 
