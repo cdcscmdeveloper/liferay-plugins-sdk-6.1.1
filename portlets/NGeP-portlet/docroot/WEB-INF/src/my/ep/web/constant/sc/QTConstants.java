@@ -282,5 +282,7 @@ public interface QTConstants {
 	
 	public static final String PORTLET_NAME_QT_LOI_LIST="scLoiList_WAR_NGePportlet";//29007-start
 	
+	public static final String FINANCIAL_ITEM_SPEC_ANSWER="FISA";//32453
+	
 	
 }
