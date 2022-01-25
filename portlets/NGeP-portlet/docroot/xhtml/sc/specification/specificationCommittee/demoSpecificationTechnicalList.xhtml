@@ -37,8 +37,10 @@
 
 		<h:panelGroup id="specDetails">
 			<p:panel header="#{lbl['lbl.sc.demo.spec.tech.list']}"
-				text-transform="uppercase" toggleable="true">				
-
+				text-transform="uppercase" toggleable="true">
+				<h:outputText styleClass="instruction"
+					value="#{lbl['lbl.sc.eva.technical.presentation.demo.instruction']}"
+					escape="false"></h:outputText>
 				<p:dataTable id="demoSpecTempId" var="demoSpecTempList"
 					value="#{specificationBackingBean.managedBean.demoSpecTemplateList}"
 					rowIndexVar="index"
@@ -83,7 +85,7 @@
 							<h:outputText value="#{lbl['lbl.sc.action']}" />
 						</f:facet>
 						<h:panelGroup id="technicalChecklistEditActionView">
-						<ui:fragment
+							<ui:fragment
 								rendered="#{demoSpecTempList.pmDemoStatus.statusId eq QTStatusConst.TS_PENDING_SUBMISSION}">
 								<p:commandLink process="@this" styleClass="BtnSpacing"
 									action="#{specificationBackingBean.demoSpectechnicalChecklist(index,demoSpecTempList,ParameterConst.specificationTypeTechnical)}"

@@ -174,6 +174,10 @@ public class TemplateSpecHelper {
 								newSpecQuestion.setTplSpecAnswers(null);
 								newSpecQuestion.setTplSpecEstimations(null);
 								newSpecQuestion.setTplSpecScorings(null);
+								//#28784 Reset clone value for demo
+								newSpecQuestion.setItemReqDemo(false);
+								newSpecQuestion.setDemoScore(null);
+								
 								
 								if (isTechnicalSpec) {
 									if(TemplateSpecConst.QUESTION_TYPE_ITEM.equals(quesType)){

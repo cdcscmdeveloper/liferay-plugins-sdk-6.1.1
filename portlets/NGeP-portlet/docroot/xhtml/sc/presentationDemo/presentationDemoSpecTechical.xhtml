@@ -78,7 +78,7 @@ label.ui-button>span.ui-button-text {
 						value="#{lbl['lbl.btn.back']}" style="float:left;"
 						immediate="true"
 						action="#{specificationBackingBean.demoBackAction}" /> <p:commandButton
-						value="#{lbl['lbl.btn.verify']}"
+						value="#{lbl['lbl.btn.save']}"
 						rendered="#{((specificationBackingBean.isQTStatusChecklistScoring()) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.isQTStatusChecklistScoringRevision()) or(!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()))}"
 						style="float:right;" update="@all" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();"
@@ -174,7 +174,7 @@ label.ui-button>span.ui-button-text {
 		<h:panelGroup id="specTable">
 			<p:panel header="#{lbl['lbl.tpl.req.spec.list.item']}"
 				text-transform="uppercase" toggleable="true">
-				<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.eva.technical.presentation.demo.instruction']}" escape="false"></h:outputText>
+				
 				<p:remoteCommand name="#{templateSpecId}addedQuestionsTechnical"
 					actionListener="#{templateSpecBackingBean.addQuestion(templateSpecBean, templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,-1,TplSpecConst.questionTypeItem)}"
 					update="@([id$=questionTbl])" partialSubmit="true"
