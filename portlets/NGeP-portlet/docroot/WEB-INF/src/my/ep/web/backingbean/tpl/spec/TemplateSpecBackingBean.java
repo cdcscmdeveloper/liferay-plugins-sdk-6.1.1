@@ -3396,7 +3396,7 @@ public class TemplateSpecBackingBean extends
 									// Bug #32015 Farid start 5/11/2021
 										if(specAns.getTplSpecQuestion().getScoreTypeCode() != null &&
 												specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals(new Long(User))){
-											// Bug #32390 Farid start 5/11/2021
+											// Bug #32390 Farid start 25/1/2021
 											specAns.setUserScore(null);
 										}else if(specAns.getTplSpecQuestion().getScoreTypeCode() != null && 
 												specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals(new Long(Auto))){
