@@ -305,7 +305,12 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 							localcheckList.add(checklist);
 						}
 					} else {
+						for (TplSpecQuestion q : checklist.getScQtDoc().getTplSpecMaster().getTplSpecQuestions()) {
+							if (q.isItemReqDemo()) {
 						localcheckList.add(checklist);
+								break;
+							}
+						}
 					}
 				}
 			}
