@@ -38,7 +38,7 @@
 			
 			<p:column sortBy="#{price.fromQty}">
 				<f:facet name="header">
-					#{lbl['lbl.fl.from.qty']}
+					#{lbl['lbl.sc.price.inquiry.from.qty']}
 				</f:facet>
 				<p:inputText disabled="#{(!isPendingSupplierRespStatus or rowIndex ne '0') or !isStockAvailable}" id="fromQty" value="#{price.fromQty}" size="5" style="text-align:right">
                 	<p:ajax event="change" update="@([id$=fromQty])" listener="#{purchaseInquiryBackingBean.onChangeFromQty('04')}"/>
@@ -48,7 +48,7 @@
 			</p:column>
 			<p:column sortBy="#{price.toQty}">
 				<f:facet name="header">
-					#{lbl['lbl.fl.to.qty']}
+					#{lbl['lbl.sc.price.inquiry.to.qty']}
 					<ac:iconTooltip  value="#{lbl['lbl.sc.tier.pricetype.tooltip']}" />
 				</f:facet>
 				<p:inputText disabled="#{!isPendingSupplierRespStatus  or !isStockAvailable}" id="toQty" value="#{price.toQty}" size="5" style="text-align:right">
