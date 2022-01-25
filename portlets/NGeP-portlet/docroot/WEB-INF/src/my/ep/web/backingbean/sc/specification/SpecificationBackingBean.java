@@ -19058,6 +19058,12 @@ if(null!=allTechnicalChecklist){
 		scQtCheckList.setPmDemoStatus(completeStatus);
 		scQtCheckList.setPmEvalStatus(completeStatus);
 
+		for (TplSpecQuestion q : scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions()) {
+			if (!q.isItemReqDemo()) {
+				q.setDemoScore(null);
+			}
+		}
+
 		List<ScQtCheckList> updatedCheckLists = new ArrayList<ScQtCheckList>();
 		updatedCheckLists.add(scQtCheckList);
 
@@ -19548,10 +19554,10 @@ if(null!=allTechnicalChecklist){
 				reqDTO.setLanguageCode(languageCode);
 
 				if (reqDTO.getStatusId().equals(QTStatusConst.TS_COMPLETED)) {
-					statusDesc = ResourceBundleUtils.getMessage("lbl.spec.verified",
+					statusDesc = ResourceBundleUtils.getMessage("lbl.sc.eva.compliance.stage.completed",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 				} else if (reqDTO.getStatusId().equals(QTStatusConst.TS_PENDING_SUBMISSION)) {
-					statusDesc = ResourceBundleUtils.getMessage("lbl.spec.pending.verified",
+					statusDesc = ResourceBundleUtils.getMessage("lbl.ct.incomplete",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 				}
 

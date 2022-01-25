@@ -115,15 +115,15 @@ label.ui-button>span.ui-button-text {
 								value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specName}" />
 						</td>
 
-						<td valign="top"><h:outputLabel
-								value="#{lbl['lbl.sc.description']}"></h:outputLabel></td>
-						<td colspan="3"><p:inputTextarea rows="2" cols="95"
-								disabled="true" style="margin-bottom:5px;width:83%;"
-								maxlength="200" onkeyup="limitTextArea(this,200);"
-								onkeydown="limitTextArea(this,200);"
-								onmouseout="limitTextArea(this,200);"
-								value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specDesc}" />
-						</td>
+<!-- 						<td valign="top"><h:outputLabel -->
+<!-- 								value="#{lbl['lbl.sc.description']}"></h:outputLabel></td> -->
+<!-- 						<td colspan="3"><p:inputTextarea rows="2" cols="95" -->
+<!-- 								disabled="true" style="margin-bottom:5px;width:83%;" -->
+<!-- 								maxlength="200" onkeyup="limitTextArea(this,200);" -->
+<!-- 								onkeydown="limitTextArea(this,200);" -->
+<!-- 								onmouseout="limitTextArea(this,200);" -->
+<!-- 								value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specDesc}" /> -->
+<!-- 						</td> -->
 					</tr>
 				</table>
 
@@ -174,7 +174,7 @@ label.ui-button>span.ui-button-text {
 		<h:panelGroup id="specTable">
 			<p:panel header="#{lbl['lbl.tpl.req.spec.list.item']}"
 				text-transform="uppercase" toggleable="true">
-
+				
 				<p:remoteCommand name="#{templateSpecId}addedQuestionsTechnical"
 					actionListener="#{templateSpecBackingBean.addQuestion(templateSpecBean, templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,-1,TplSpecConst.questionTypeItem)}"
 					update="@([id$=questionTbl])" partialSubmit="true"
@@ -188,9 +188,9 @@ label.ui-button>span.ui-button-text {
 					widgetVar="#{templateSpecId}questionTblWidget" var="question"
 					rowIndexVar="row"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-					scrollable1="true" scrollWidth1="#{scrollWidth}">
+					scrollable1="true" scrollWidth1="#{scrollWidth}" rows="10">
 					
-					<ac:paginator for="questionTblPaging" />
+					<ac:paginator for="questionTbl" />
 
 					<ui:param name="isFulfilmentTypeOneOff"
 						value="#{question.clFulfilmentTypeCode.parameterCode == ParameterConst.fulfilmentTypeOneOff}" />
@@ -262,8 +262,7 @@ label.ui-button>span.ui-button-text {
 							</p:column>
 							<p:column rowspan="#{specificationrequired ? 2 : 1}"
 								style="width:120px;">
-								<f:facet name="header">
-									<h:outputText value="* " styleClass="mandatory" />
+								<f:facet name="header">									
 									<h:outputText value="#{lbl['lbl.tpl.spec.content.uom']}" />
 								</f:facet>
 
@@ -271,8 +270,7 @@ label.ui-button>span.ui-button-text {
 							</p:column>
 							<p:column rowspan="#{specificationrequired ? 2 : 1}"
 								style="width:70px;white-space:normal;">
-								<f:facet name="header">
-									<h:outputText value="* " styleClass="mandatory" />
+								<f:facet name="header">								
 									<h:outputText
 										value="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}" />
 								</f:facet>
@@ -280,8 +278,7 @@ label.ui-button>span.ui-button-text {
 							</p:column>
 							<p:column rowspan="#{specificationrequired ? 2 : 1}"
 								style="width:60px;white-space:normal;">
-								<f:facet name="header">
-									<h:outputText value="* " styleClass="mandatory" />
+								<f:facet name="header">									
 									<h:outputText
 										value="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}" />
 								</f:facet>
@@ -289,8 +286,7 @@ label.ui-button>span.ui-button-text {
 							</p:column>
 							<p:column rowspan="#{specificationrequired ? 2 : 1}"
 								style="width:60px;white-space:normal;">
-								<f:facet name="header">
-									<h:outputText value="* " styleClass="mandatory" />
+								<f:facet name="header">								
 									<h:outputText
 										value="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}" />
 								</f:facet>
@@ -299,8 +295,7 @@ label.ui-button>span.ui-button-text {
 							<p:column rowspan="#{specificationrequired ? 2 : 1}"
 								style="width:63px;white-space:normal;"
 								rendered="#{isDurationByItem}">
-								<f:facet name="header">
-									<h:outputText value="* " styleClass="mandatory" />
+								<f:facet name="header">									
 									<h:outputText
 										value="#{lbl['lbl.tpl.spec.content.duration.month']}" />
 								</f:facet>
@@ -311,8 +306,7 @@ label.ui-button>span.ui-button-text {
 								value="#{(isSpecificationReq and !isItemTypeService)?'100px':'85px'}" />
 							<p:column rowspan="#{specificationrequired ? 2 : 1}"
 								style="width:170px;white-space:normal">
-								<f:facet name="header">
-									<h:outputText value="* " styleClass="mandatory" />
+								<f:facet name="header">								
 									<h:outputText value="#{lbl['lbl.tpl.spec.content.quantity']}" />
 								</f:facet>
 							</p:column>
