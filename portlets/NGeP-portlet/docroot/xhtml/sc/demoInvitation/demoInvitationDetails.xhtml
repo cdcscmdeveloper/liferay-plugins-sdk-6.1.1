@@ -37,8 +37,12 @@
 							<c:choose>
 								<c:when test="#{demoInvBB.managedBean.demoInvBy eq 'AI'}">
 									<tr>
-										<td style="padding-right: 392px;"><p:outputLabel
-												value="#{lbl['lbl.demo.instruction.all']}" /></td>
+										<td style="padding-right: 392px;"><h:outputText
+												styleClass="instruction"
+												value="#{lbl['lbl.demo.instruction.all']}" escape="false" /></td>
+									</tr>
+									<tr>
+										<td><br /></td>
 									</tr>
 									<tr>
 										<td><ui:include src="demoSubTableAllItemList.xhtml" /></td>
@@ -49,8 +53,12 @@
 								</c:when>
 								<c:when test="#{demoInvBB.managedBean.demoInvBy eq 'BI'}">
 									<tr>
-										<td style="padding-right: 392px;"><p:outputLabel
-												value="#{lbl['lbl.demo.instruction.item']}" /></td>
+										<td style="padding-right: 392px;"><h:outputText
+												styleClass="instruction"
+												value="#{lbl['lbl.demo.instruction.item']}" escape="false" /></td>
+									</tr>
+									<tr>
+										<td><br /></td>
 									</tr>
 									<tr>
 										<td><ui:include src="demoSubTableItemList.xhtml" /></td>
@@ -61,7 +69,8 @@
 								</c:when>
 								<c:otherwise>
 									<tr>
-										<td><p:outputLabel value="#{lbl['lbl.demo.instruction']}" /></td>
+										<td><h:outputText styleClass="instruction"
+												value="#{lbl['lbl.demo.instruction']}" escape="false" /></td>
 									</tr>
 								</c:otherwise>
 							</c:choose>
