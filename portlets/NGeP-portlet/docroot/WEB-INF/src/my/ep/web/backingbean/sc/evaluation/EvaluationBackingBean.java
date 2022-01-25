@@ -5516,7 +5516,10 @@ public void saveComplianceSample() {
 						.setContentType(TemplateSpecConst.CONTENT_TYPE_SCORE);
 				templateSpecBean.setSpecMaster(proposalCheckList
 						.getScQtCheckList().getScQtDoc().getTplSpecMaster());
-
+				templateSpecBean.setAnswerRemove(QTConstants.FINANCIAL_ITEM_SPEC_ANSWER);//32453-start
+				templateSpecBean.setQtProposalChecklist(proposalCheckList);
+				templateSpecBean.setQt(this.getManagedBean().getScQt());
+				templateSpecBean.setHideanswerList(null);//32453-End
 				if (null != this.getManagedBean().getScQt()
 						&& this.getManagedBean().getScQt().isZonal()) {
 					if (null != this.getManagedBean().getSelectedZone()) {
@@ -9568,6 +9571,17 @@ private void retriveCommitteeRemarksList(){
 
 				qtCheckLists = getManagedBean()
 						.getEvaluationStgfinancialCheckList();
+				List<TplSpecAnswer> hideansList= getManagedBean()
+					.getTemplateSpecBean().getHideanswerList();//32453-start
+				if(CollectionUtils.isNotEmpty(hideansList)){
+					for(TplSpecAnswer hideanswer:hideansList){
+						hideanswer.setUserScore(new BigDecimal(0));
+						hideanswer.getTplSpecSuppAnswer().setTplSpecZoneDtl(
+								getManagedBean().getSelectedZone());
+						answers.add(hideanswer);
+					}
+					evalReqDTO.setAnswersList(answers);
+				}//32453-End
 			}
 			evalResDTO = evaluationSO.saveSpecDetails(evalReqDTO);
 
@@ -14944,6 +14958,21 @@ private void retriveCommitteeRemarksList(){
 		BigDecimal totalUserScore= BigDecimal.valueOf(0);
 		BigDecimal totalAutoScore= BigDecimal.valueOf(0);
 		BigDecimal totalScore= BigDecimal.valueOf(0);
+		if(CollectionUtils.isNotEmpty(specresDTO1
+				.getSpecAnswerList())){//32453-start
+			IQTEvaluationSO	evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			EvaluationReqDTO evalReqDTO=new EvaluationReqDTO();
+			evalReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+			evalReqDTO.setProposalChecklist(qtProposalChecklist);
+			evalReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+			//evalReqDTO.setFinSpecAnswer(specAnswer);
+			evalReqDTO.setFinSpecAnswerList(specresDTO1
+					.getSpecAnswerList());
+		EvaluationResDTO evalResDTO=evaluationSO.technicalItemSupplierQualified(evalReqDTO);
+		specresDTO1
+		.setSpecAnswerList(evalResDTO.getSpecAnswers());
+		}//32453-End
 		for(TplSpecAnswer specAnswer:specresDTO1
 				.getSpecAnswerList()){
 			log.info("===========speanswerUserScore======"+specAnswer.getUserScore());

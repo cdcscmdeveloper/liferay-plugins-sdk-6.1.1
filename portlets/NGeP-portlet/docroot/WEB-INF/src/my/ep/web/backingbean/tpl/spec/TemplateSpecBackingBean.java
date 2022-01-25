@@ -44,6 +44,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
+import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.tpl.spec.ISpecZoneLocSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.MessageConst;
@@ -57,6 +58,8 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
+import my.ep.dto.sc.quationtender.EvaluationReqDTO;
+import my.ep.dto.sc.quationtender.EvaluationResDTO;
 import my.ep.dto.tpl.spec.SpecZoneLocReqDTO;
 import my.ep.dto.tpl.spec.SpecZoneLocResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
@@ -64,8 +67,8 @@ import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
@@ -78,7 +81,6 @@ import my.ep.persistence.entity.tpl.spec.TplSpecScoring;
 import my.ep.persistence.entity.tpl.spec.TplSpecTierQty;
 import my.ep.persistence.entity.tpl.spec.TplSpecZone;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
-import my.ep.persistence.entity.tpl.spec.TplSpecZoneOffer;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
@@ -89,9 +91,9 @@ import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
-import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.report.ReportConst;
+import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.tpl.spec.TemplateSpecManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -257,7 +259,31 @@ public class TemplateSpecBackingBean extends
 				}
 
 				templateSpecBean.setSpecMaster(specMaster);
+				if(QTConstants.FINANCIAL_ITEM_SPEC_ANSWER.equalsIgnoreCase(templateSpecBean.getAnswerRemove())){//32453-start
+					
+					if(CollectionUtils.isNotEmpty(resDTO.getSpecAnswerList())){
+						//for(TplSpecAnswer specAnswer: resDTO.getSpecAnswerList()){
+						
+							IQTEvaluationSO	evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+									ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+							EvaluationReqDTO evalReqDTO=new EvaluationReqDTO();
+							evalReqDTO.setQtId(templateSpecBean.getQt().getQtId());
+							evalReqDTO.setProposalChecklist(templateSpecBean.getQtProposalChecklist());
+							evalReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+							//evalReqDTO.setFinSpecAnswer(specAnswer);
+							evalReqDTO.setFinSpecAnswerList(resDTO.getSpecAnswerList());
+						EvaluationResDTO evalResDTO=evaluationSO.technicalItemSupplierQualified(evalReqDTO);
+							
+						//}
+						
+						templateSpecBean.setSpecAnswerList(evalResDTO.getSpecAnswers());
+						templateSpecBean.setHideanswerList(evalResDTO.getHideanswerList());
+					}
+					//templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());	
+				}else{//32453-End
+					
 				templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
+				}//32453-End
 				templateSpecBean.setSelectedSpecQuestion(null);
 				templateSpecBean.setSpecAnswersToDelete(null);
 				this.getManagedBean().setTemplateSpecBean(templateSpecBean);
