@@ -1592,6 +1592,8 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		this.disableDecisionDetails = disableDecisionDetails;
 	}
 	//#29549 end
+	
+	//15851 - shaqimi start
 	public String getBackToPreviousPage() {
 		return backToPreviousPage;
 	}
@@ -1610,4 +1612,5 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	public void setIndexing(Map<String, Integer> indexing) {
 		this.indexing = indexing;
 	}
+	//15851 - shaqimi end
 }
