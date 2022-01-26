@@ -342,6 +342,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				} 
 			}
 			//#32497 - start
+			log.info(">> hasRoleUser DESK OFFICER :"+ new FacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value()));
+			log.info(">> Letter Creator Value :"+ awardDataType.getLetterCreator());			
+			
 			if (scLoa != null && ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType())){
 				awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER);
 				awardDataType.setDeskOfficer(currentUser);
