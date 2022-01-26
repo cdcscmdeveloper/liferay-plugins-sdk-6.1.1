@@ -232,25 +232,6 @@
 					onclick="revicespecMaintenanceEndorsmentDlgs.hide();" type="button" />
 			</div>
 		</p:dialog>
-
-		<p:dialog id="alertFinancialTemplateIncompleteId" widgetVar="alertFinancialTemplateIncompletePopup"
-			header="#{lbl['lbl.sc.confirmation']}"
-			resizable="false" width="400" closable="false">
-			<table>
-				<tr>
-					<td align="center"><h:graphicImage
-							value="/css/images/design/exclamation.png" /> <p:outputLabel
-							value="#{lbl['lbl.sc.popup.technicalSpecUpdated']}" /></td>
-				</tr>
-			</table>
-			<p:spacer height="1" />
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.ok']}" 
-					action="#{specificationBackingBean.getMethodHandlerOnConfirmation()}"
-					oncomplete="alertFinancialTemplateIncompletePopup.hide();"
-					update="@form"/>
-			</div>
-		</p:dialog>
 	</h:panelGroup>
 
 </ui:composition>
