@@ -3326,6 +3326,10 @@ public void saveComplianceSample() {
 												.getCommitteeType())) {
 									this.getManagedBean()
 											.setOneTierFinancialActiveIndex(0);
+									
+									// #25138 - #32392 - Start.
+									this.getManagedBean().setTabItemPackageIndex(1);
+									// #25138 - #32392 - End.
 								}
 								if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
 										.equalsIgnoreCase(this.getManagedBean()
