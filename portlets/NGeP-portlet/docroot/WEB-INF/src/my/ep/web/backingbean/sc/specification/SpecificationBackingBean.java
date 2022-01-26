@@ -981,7 +981,7 @@ public class SpecificationBackingBean extends
 						IQTSpecSO.class);
 		SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
 		specReqDTO.setUserLocale(new FacesScopes().getUserLocale());
-		this.getManagedBean().setTechnicalOtherCheckList(true);
+		boolean technicalOtherCheckList = true;//1873 - remove popup(rollback to previous implementation)
 		boolean financialOtherCheckList = true;
 
 		switch (previousIndex) {
@@ -1018,27 +1018,7 @@ public class SpecificationBackingBean extends
 			specSo.validateCheckList(constructSpecCommitteDtls());
 			// checktemplateSpecStatus(scQtTechChecklist);
 			if (!this.getManagedBean().isReadOnly()) {
-				//#1873 -start
-				List<ScQtCheckList> financialCheckList = this.getManagedBean().getScQtCheckSt2financeProposalList();
-				boolean showFinSpecChangedAlert = false;
-				if(CollectionUtils.isNotEmpty(financialCheckList)){
-					for(ScQtCheckList financialCL: financialCheckList){
-						if(financialCL.getDefinationType().getParameterCode().equals(QTConstants.TEMPLETE_SPEC_CODE)
-								&& financialCL.getPmStatus().getStatusId().equals(QTStatusConst.TS_PENDING_SUBMISSION)){
-							showFinSpecChangedAlert=true;
-							break;
-						}
-					}
-					
-				}
-				if(showFinSpecChangedAlert && this.getManagedBean().isTechnicalTemplateEdited() && !this.getManagedBean().isFromSubmit()){
-					nextIndex = activeIndex;//32204
-					RequestContext.getCurrentInstance().execute("alertFinancialTemplateIncompletePopup.show()");
-					this.getManagedBean().setTechnicalOtherCheckList(false);
-				}else{
-					this.getManagedBean().setTechnicalOtherCheckList(validateTechnicalStandardCheckList());
-				}
-				//#1873 -end
+				technicalOtherCheckList = validateTechnicalStandardCheckList();//1873 - remove popup(rollback to previous implementation)
 			}
 			specReqDTO.setScQt(constructSpecCommitteDtls().getScQt());
 			specSo.validateCheckList(specReqDTO);
@@ -1259,7 +1239,7 @@ public class SpecificationBackingBean extends
 
 		if (this.getManagedBean().getActiveIndex() == 2
 				|| this.getManagedBean().getActiveIndex() == 3) {
-			if ((this.getManagedBean().getActiveIndex() == 2 && this.getManagedBean().isTechnicalOtherCheckList())//#1873
+			if ((this.getManagedBean().getActiveIndex() == 2 && technicalOtherCheckList == true)//1873 - remove popup(rollback to previous implementation)
 					|| (this.getManagedBean().getActiveIndex() == 3 && financialOtherCheckList == true)) {
 				this.getManagedBean().setActiveIndex(activeIndex);
 			}
@@ -14814,7 +14794,6 @@ public class SpecificationBackingBean extends
 	 * 
 	 */
 	public void checkListYesConfirmation(String stage) {
-		this.getManagedBean().setTechnicalTemplateEdited(false);//#1873
 		this.getManagedBean().setStandardTemplate(
 				ParameterConst.TPL_DOC_PROCESS_TYPE_STANDARD);
 		if (this.getManagedBean().getCheckListYesIndex() == 4
@@ -14939,7 +14918,6 @@ public class SpecificationBackingBean extends
 	 */
 	public String checkListYesConfirmationSubmit(String stage) {
 		String checklistSubmit = CommonUIConst.ACKNOWLEDGE_PAGE;
-		this.getManagedBean().setTechnicalTemplateEdited(false);//#1873
 		if (ParameterConst.SPECIFICATION_TYPE_TECHNICAL.equalsIgnoreCase(stage)) {
 			this.getManagedBean().setTechnicalOtherChecklistSubmit(true);
 			boolean financial = validateFinancialStandardCheckListSubmit();
@@ -15909,16 +15887,15 @@ public class SpecificationBackingBean extends
 		log.debug("start submitSpecMaintenanceDtls" + action);
 		this.getManagedBean().setLocalOutCome(action);
 		log.debug("end submitSpecMaintenanceDtls" + action);
-		boolean popupShown = assertPendingFinancialSubmission(); 
-		if(!popupShown){
-			SpecificationResDTO resDTO = updateSpecCommitteMaintenaceDtls(action,
-					null);
-			resDTO.setSuccessful(Boolean.TRUE);
-			if (resDTO.isSuccessful()) {
-				ScQt qt = resDTO.getScQt();
-				successMessage(getMessgeConstant(action),
-						getMessageCommon("lbl.sc.specification.preparation.and.scoring.for"), qt.getQtNo(), Boolean.TRUE);
-			}
+		//1873 - remove popup(rollback to previous implementation) - start
+		SpecificationResDTO resDTO = updateSpecCommitteMaintenaceDtls(action,
+				null);
+		resDTO.setSuccessful(Boolean.TRUE);
+		if (resDTO.isSuccessful()) {
+			ScQt qt = resDTO.getScQt();
+			successMessage(getMessgeConstant(action),
+					getMessageCommon("lbl.sc.specification.preparation.and.scoring.for"), qt.getQtNo(), Boolean.TRUE);
+		//1873 - remove popup(rollback to previous implementation) - end
 		}
 	}
 
@@ -19012,10 +18989,7 @@ if(null!=allTechnicalChecklist){
 	public void submitAction(String outcome){
 		assertConcurrentComittteeChangesApproval();
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
-			//#1873 - start
-			if(!assertPendingFinancialSubmission()){ 
-				RequestContext.getCurrentInstance().execute("submitConfirmPopUp2.show()"); 
-			} //#1873 - end
+			RequestContext.getCurrentInstance().execute("submitConfirmPopUp2.show()");//1873 - remove popup(rollback to previous implementation)
 		} else {
 			specCommitteBpmTask(outcome);
 		}
@@ -19179,7 +19153,6 @@ if(null!=allTechnicalChecklist){
 				if(q.getSpecQuestionId()==null){
 					if(type.equals(TemplateSpecConst.QUESTION_TYPE_ITEM) && !changesFlag.get("itemAdded")){
 						changesFlag.put("itemAdded", true);
-						this.getManagedBean().setTechnicalTemplateEdited(true && isOriginallyCompleted);
 					}
 					if(type.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC) && !changesFlag.get("specificationAdded")){
 						changesFlag.put("specificationAdded", true);
@@ -19198,9 +19171,6 @@ if(null!=allTechnicalChecklist){
 						String localQuestionStr = buildQuestionCompareString(q);					
 						if(type.equals(TemplateSpecConst.QUESTION_TYPE_ITEM) && !changesFlag.get("itemUpdated")){
 							changesFlag.put("itemUpdated", !currentQuestionStr.equalsIgnoreCase(localQuestionStr));
-							if(changesFlag.get("itemUpdated")){
-								this.getManagedBean().setTechnicalTemplateEdited(true && isOriginallyCompleted);
-							}
 						}
 						if(type.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC) && !changesFlag.get("specificationUpdated")){
 							changesFlag.put("specificationUpdated", !currentQuestionStr.equalsIgnoreCase(localQuestionStr));
@@ -19208,46 +19178,10 @@ if(null!=allTechnicalChecklist){
 					}
 				}
 			}
-//				for(String s: new String[]{"itemAdded", "specificationAdded", "itemDeleted", "specificationDeleted", "itemUpdated", "specificationUpdated"}){
-//					log.info("---> " + s +" --> " + changesFlag.get(s));
-//				}
 			boolean specQuestionModified = (changesFlag.get("itemAdded") || changesFlag.get("itemUpdated") || changesFlag.get("itemDeleted"));
 			return  specQuestionModified || (!specQuestionModified && !isOriginallyCompleted);
 		}
 		return false;
-	}
-	
-	private boolean assertPendingFinancialSubmission(){
-		List<ScQtCheckList> financialCheckList = this.getManagedBean().getScQtCheckSt2financeProposalList();
-		boolean showFinSpecChangedAlert = false;
-		if(CollectionUtils.isNotEmpty(financialCheckList)){
-			for(ScQtCheckList financialCL: financialCheckList){
-				if(financialCL.getDefinationType().getParameterCode().equals(QTConstants.TEMPLETE_SPEC_CODE)
-						&& financialCL.getPmStatus().getStatusId().equals(QTStatusConst.TS_PENDING_SUBMISSION)){
-					showFinSpecChangedAlert=true;
-					break;
-				}
-			}
-		}
-		
-		if(showFinSpecChangedAlert && this.getManagedBean().isTechnicalTemplateEdited()){
-			this.getManagedBean().setFromSubmit(true);
-			RequestContext.getCurrentInstance().execute("alertFinancialTemplateIncompletePopup.show()");
-			return true;
-		}
-		return false;
-	}
-	
-	public void getMethodHandlerOnConfirmation(){
-		if(this.getManagedBean().isFromSubmit()){
-			qtChecklistTabChange(3);
-			this.getManagedBean().setFromSubmit(false);
-		}else{
-			//32204 - start
-			boolean check = validateTechnicalStandardCheckList();
-			if(check) this.getManagedBean().setActiveIndex(nextIndex);	
-			//32204 - end
-		}
 	}
 	//#1873-end
 
