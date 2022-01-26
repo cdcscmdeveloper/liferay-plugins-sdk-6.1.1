@@ -12726,6 +12726,8 @@ private void retriveCommitteeRemarksList(){
 						ScRequestItem freshRequestItem = getRequestItemSO().retrieveItemByRequestItemId(reqRequestItemDTO).getRequestItem();	
 						if (freshRequestItem.getTplSpecQuestion().getParentSpecQuestion() != null ){
 							reqDTO.setSpecQuestionId(freshRequestItem.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId());
+							reqDTO.setRequestItemId(freshRequestItem.getRequestNoteItemId());
+							//#21695 27/1/2022 added reqDTO.setRequestItemId(freshRequestItem.getRequestNoteItemId());
 						}
 								
 					} else {
