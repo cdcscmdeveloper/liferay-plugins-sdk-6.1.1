@@ -19830,10 +19830,10 @@ if(null!=allTechnicalChecklist){
 		scQtCheckList.getScQtDoc().getTplSpecMaster().setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 
-		//PmStatus pendingStatus = getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+		PmStatus pendingStatus = getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
 		PmStatus completeStatus = getPmStatusByStatusId(QTStatusConst.TS_COMPLETED);
 		scQtCheckList.setPmDemoStatus(completeStatus);
-		scQtCheckList.setPmEvalStatus(completeStatus);
+		scQtCheckList.setPmEvalStatus(pendingStatus);
 
 		for (TplSpecQuestion q : scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions()) {
 			if (!q.isItemReqDemo()) {
