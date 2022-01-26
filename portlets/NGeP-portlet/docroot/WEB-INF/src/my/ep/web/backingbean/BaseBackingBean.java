@@ -3939,9 +3939,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		response.setHeader("Content-Disposition",
 				"attachment; filename="+ contractNo + "_Amendment Update.zip");
 		
-		Cookie myCookie = new Cookie("downloadStatus", "true");
-		response.addCookie(myCookie);
-		
 		Map<String, String> paramMap;
 		
 		ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(
@@ -3951,30 +3948,20 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			String fileType = "";
 
 			paramMap = paramMaps.get(reportFile);
-			switch(reportFile){
-			case ReportConst.CT_AMENDMENT_UPDATE_RPT_AMENDMENT_DETAIL:
+			
+			if(reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_AMENDMENT_DETAIL)){
 				fileType = "_Amendment Detail";
-				break;
-			case ReportConst.CT_AMENDMENT_UPDATE_RPT_ZONE:
+			} else if(reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_ZONE)){
 				fileType = "_Zone";
-				break;
-			case ReportConst.CT_AMENDMENT_UPDATE_RPT_AGENCY:
+			} else if(reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_AGENCY)){
 				fileType = "_Agency";
-				break;
-			case ReportConst.CT_AMENDMENT_UPDATE_RPT_ITEM_ZONAL:
-				fileType = "_Item Zonal";
-				break;
-			case ReportConst.CT_AMENDMENT_UPDATE_RPT_ITEM_NO_ZONAL:
-				fileType = "_Item Non Zonal";
-				break;
-			case ReportConst.CT_AMENDMENT_UPDATE_RPT_DEDUCTION:
+			} else if(reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_ITEM_ZONAL) ||
+					reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_ITEM_NO_ZONAL)){
+				fileType = "_Item";
+			} else if(reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_DEDUCTION)){
 				fileType = "_Deduction";
-				break;
-			case ReportConst.CT_AMENDMENT_UPDATE_RPT_SCHEDULE:
+			} else if(reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_SCHEDULE)){
 				fileType = "_Schedule";
-				break;
-			default:
-				break;
 			}
 			
 			zos.putNextEntry(new ZipEntry(contractNo + fileType + ".pdf"));
