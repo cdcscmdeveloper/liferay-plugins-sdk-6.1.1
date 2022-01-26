@@ -2260,24 +2260,14 @@ public void saveComplianceSample() {
 				List<ScQtCheckList> proposalChecklistList = resDTO
 						.getCheckListResultBean().getResultList();
 				for (ScQtCheckList proposalCheckList : proposalChecklistList) {
-					if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
-							.equalsIgnoreCase(proposalCheckList
-									.getDefinationType().getParameterCode())
-							&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION
-									.equalsIgnoreCase(proposalCheckList
-											.getDefinationType()
-											.getParameterCode())//#25138 - start
-											&& proposalCheckList.isScoringReq()) {//#25138 - end						
-						localCheckList.add(proposalCheckList);
-					} else {
+					//#28784 - reopen start
 						if (proposalCheckList.isScoringReq()) {
 							// localCheckList.add(proposalCheckList);
 							localCheckList
 									.add(checkStausForUploadNoActionCheckLists(
 											proposalCheckList,
 											QTConstants.COMPLIANCE_CHECK));
-						}
-					}
+						}//#28784 - reopen end
 
 				}
 
