@@ -2155,15 +2155,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		// save.
        
        //9019 for prevent null insert for remark
-        if (null != scQt.getScQtRemarks() && CollectionUtils.isNotEmpty(scQt.getScQtRemarks())) {
-		
-					for (int i = 0; i < scQt.getScQtRemarks().size(); i++) {
-						String userRemark = scQt.getScQtRemarks().get(i).getRemark();
-						if (null == userRemark || "".equals(userRemark)) {
-							scQt.getScQtRemarks().remove(i);
-						}
-					}
-		}//9019 end
+		if (null != scQt.getScQtRemarks() && CollectionUtils.isNotEmpty(scQt.getScQtRemarks())) {
+			for (int i = 0; i < scQt.getScQtRemarks().size(); i++) {
+				String userRemark = scQt.getScQtRemarks().get(i).getRemark();
+				if (null == userRemark || "".equals(userRemark)) {
+					scQt.getScQtRemarks().remove(i);
+				}
+			}
+		}// 9019 end
 
 		QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
 		quationTenderReqDTO.setQtdetail(scQt);
@@ -3542,7 +3541,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				this.getManagedBean().getQt().setContractType(new PmParameter());	
 			}
 			
-			//9019 initializing remark for cancel or subsequent save start 
+			//9019 initializing remark for cancel or subsequent save start
 			if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
 				ScQt scQt = this.getManagedBean().getQt();
 				List<ScQtRemark> qtRemarks = initializeRemarks(scQt, this.getManagedBean().getQt()
@@ -6245,6 +6244,24 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		this.getManagedBean().setPanel(isPanel);
 		this.getManagedBean().setProcMethodDropdownPresent(isdropdownPresent);
 		this.getManagedBean().setSubStatusId(subStatus); //#25692
+	
+		//9019 - Start (Harun) initializing remark for cancel or subsequent save start
+		if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
+			ScQt scQt = this.getManagedBean().getQt();
+			List<ScQtRemark> qtRemarks = initializeRemarks(scQt, this.getManagedBean().getQt()
+					.getCurrentWorkFlowStatus(), scQt.getScQtRemarks(), ScQtRemark.class);
+
+			for (ScQtRemark qtRemark : qtRemarks) {
+				qtRemark.setEditable(true);
+			}
+			this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
+
+		} else{
+			ScQt scQt = this.getManagedBean().getQt();
+			this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
+		}
+		//9019 - End (Harun)
+		
 		if (isCreateQt) {
 			this.getManagedBean().setOutComes(
 					new String[] { ResourceBundleUtils.getMessage(
