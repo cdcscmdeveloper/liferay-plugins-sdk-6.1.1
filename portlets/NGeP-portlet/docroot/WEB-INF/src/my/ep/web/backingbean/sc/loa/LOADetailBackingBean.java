@@ -309,16 +309,24 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				if(StringUtils.isBlank(letterCreator)) {
 					if (new FacesScopes()
 					.hasRoleUser(RoleCode.DESK_OFFICER.value())) {
+						log.info("1");
+						log.info("letterCreator :"+letterCreator);
 						awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER);
 						awardDataType.setDeskOfficer(currentUser);
 					} else {
+						log.info("2");
+						log.info("letterCreator :"+letterCreator);
 						awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_REQUISITIONER);
 						awardDataType.setRequisitioner(currentUser);
 					}
 				} else {
 					if(letterCreator.equals(SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER)) {
+						log.info("3");
+						log.info("letterCreator :"+letterCreator);
 						awardDataType.setDeskOfficer(currentUser);
 					} else {
+						log.info("4");
+						log.info("letterCreator :"+letterCreator);
 						awardDataType.setRequisitioner(currentUser);
 					}
 				} 
@@ -327,16 +335,24 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				if(StringUtils.isBlank(letterCreator)) { 
 					if (new FacesScopes()
 					.hasRoleUser(RoleCode.DESK_OFFICER.value())) {
+						log.info("5");
+						log.info("letterCreator :"+letterCreator);
 						awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER);
 						awardDataType.setDeskOfficer(currentUser);
 					} else {
+						log.info("6");
+						log.info("letterCreator :"+letterCreator);
 						awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_SECRETARY);
 						awardDataType.setSecretary(currentUser);
 					}
 				} else {
 					if(letterCreator.equals(SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER)) {
+						log.info("7");
+						log.info("letterCreator :"+letterCreator);
 						awardDataType.setDeskOfficer(currentUser);
 					} else {
+						log.info("8");
+						log.info("letterCreator :"+letterCreator);
 						awardDataType.setSecretary(currentUser);
 					}
 				} 
