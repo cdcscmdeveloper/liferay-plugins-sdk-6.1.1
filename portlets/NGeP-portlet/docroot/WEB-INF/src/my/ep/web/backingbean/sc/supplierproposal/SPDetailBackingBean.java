@@ -1055,18 +1055,72 @@ public class SPDetailBackingBean extends
 		scQtProposalChecklist.setSubmitted(isCompleted);
 
 		ProposalResDTO proposalResDTO = saveTechTemplateSpecDtls(isCompleted);
+		//Bug #31725 Start
+		/*
 		//Bug #30073 Start
 		if (isCompleted){
 			checkDuplicateSupplierAnswerItemSpec(scQtProposalChecklist, proposalResDTO.getProposalChecklist());
 		}
 		//Bug #30073 End
+		*/
+		//Bug #31725 End
 		if (proposalResDTO.isSuccessful()) {
+			//Bug #31725 Start
+			encryptTechFinTemplateSpecDtls(scQtProposalChecklist, proposalResDTO.getProposalChecklist(), isCompleted);
+			//Bug #31725 End
 			return navigatePrepareTecProposalCheckList(scQtProposalChecklist,
 					proposalResDTO.getProposalChecklist(), isCompleted);
 		}
 
 		return null;
 	}
+	
+	//Bug #31725 Start
+	public void encryptTechFinTemplateSpecDtls(ScQtProposalChecklist currProposalChecklist, ScQtProposalChecklist newProposalChecklist, boolean isCompleted){
+		
+		IQTProposalSO proposalSO = null;
+		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean().getTechnicalQtProposalChecklist();
+		ProposalResDTO resDTO = new ProposalResDTO();
+		ProposalReqDTO reqDTO = new ProposalReqDTO();
+		
+		try {
+			proposalSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+			
+			Long qtId = this.getManagedBean().getQt().getQtId();
+			Long qtProposalChecklistId = newProposalChecklist.getQtProposalChecklistId();
+			reqDTO.setQtId(qtId);
+			reqDTO.setQtProposalCheckListId(qtProposalChecklistId);
+			reqDTO.setScQtProposalChecklist(newProposalChecklist); 
+
+			resDTO = proposalSO.encryptSpecSupplierAnswer(reqDTO);
+				
+			if(isCompleted  && resDTO.getTotalDuplicate()>0){
+				newProposalChecklist = resDTO.getProposalChecklist();
+				if (newProposalChecklist.getScQtCheckList().getDocCategory().
+							equals(QTConstants.TECHNICAL_DOC_TYPE)){
+						updateQtTechProposalCheckList(currProposalChecklist,	newProposalChecklist);
+						prepareTechnicalAction(newProposalChecklist);
+					}else{
+						updateQtFinNdTechProposalCheckList(
+								currProposalChecklist,
+								newProposalChecklist,
+								SourcingConstants.DOC_DEF_KEY_FIN_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV);
+						prepareFinancialAction(newProposalChecklist);
+					}
+					throw new EpException(MessageConst.ERROR_760524); 
+			}	
+		} catch (EpException e) {
+			scQtProposalChecklist.setSubmitted(false);
+			throw e;
+		} catch (Exception e) {
+			scQtProposalChecklist.setSubmitted(false);
+			throw new EpException(e.getMessage());
+		}finally {
+			proposalSO = null;
+		}
+	}
+	//Bug #31725 end	
 
 	/**
 	 * Method to save financial specification details
@@ -1093,12 +1147,19 @@ public class SPDetailBackingBean extends
 		scQtProposalChecklist.setSubmitted(isCompleted);
 
 		ProposalResDTO proposalResDTO = saveTemplateSpecDtls(completedFinSpec, isCompleted);
+		//Bug #31725 Start 
+		/*
 		//Bug #30073 Start 
 		if (isCompleted){
 			checkDuplicateSupplierAnswerItemSpec(scQtProposalChecklist, proposalResDTO.getProposalChecklist());
 		}
-		//Bug #30073 End		
+		//Bug #30073 End
+		 */
+		//Bug #31725 End		
 		if (proposalResDTO.isSuccessful()) {
+			//Bug #31725 Start 
+			encryptTechFinTemplateSpecDtls(scQtProposalChecklist, proposalResDTO.getProposalChecklist(), isCompleted);
+			//Bug #31725 End 
 			return navigatePrepareFinProposalCheckList(scQtProposalChecklist,
 					proposalResDTO.getProposalChecklist(), isCompleted);
 		}
