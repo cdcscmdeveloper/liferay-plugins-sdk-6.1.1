@@ -1271,7 +1271,8 @@ public class OrganisationBackingBean extends
 
 	private void validateOrgProfile(PmOrgProfile orgProfile) {
 
-		if (StringUtils.isBlank(orgProfile.getPmOrgValidity().getOrgCode())) {
+		if (StringUtils.isBlank(orgProfile.getPmOrgValidity().getOrgCode())
+				&& this.getManagedBean().getOrgCategory() == FEDERAL_GOVT) {
 			throw new EpException(MessageConst.ERROR_775105);
 		}
 		if (StringUtils.isBlank(orgProfile.getPmOrgValidity().getOrgName())) {
