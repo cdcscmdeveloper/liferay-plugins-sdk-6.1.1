@@ -74,7 +74,7 @@
 						or (techList.scQtCheckList.definationType.parameterCode eq 'WF' and techList.scQtCheckList.pmDocument.docDefinitionKey eq 'NE' and !techList.scQtCheckList.scQtCheckListValue.allEmployee)}">
 					<p:commandButton
 						action="#{supplierProposalDetailBackingBean.prepareTechnicalAction(techList)}"
-						value="#{supplierProposalDetailBackingBean.managedBean.readOnly ? lbl['lbl.btn.view']:lbl['lbl.btn.prepare']}" style="width:101px;" />
+						value="#{supplierProposalDetailBackingBean.managedBean.readOnly ? lbl['lbl.btn.view']:lbl['lbl.btn.prepare']}" style="width:101px;" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
 				</ui:fragment>
 
 				<ui:fragment
