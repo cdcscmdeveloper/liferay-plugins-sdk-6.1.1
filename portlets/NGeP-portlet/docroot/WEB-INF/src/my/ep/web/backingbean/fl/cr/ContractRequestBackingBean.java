@@ -3241,9 +3241,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				validatePreparedOrgAndAgencies();
 				getApproverList();
 			}
-			initializeApproverGroup();	
 			//13291 - start
 			initializeApproverPTJNameDropdown();
+			initializeApproverGroup();	
 			//13291 - end
 		}
 			
@@ -4058,7 +4058,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			if(getManagedBean().getShowItemAddrList()!=null) {
 				getManagedBean().getShowItemAddrList().clear();
 			}
-			getManagedBean().setCurrentPreparedOrgId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());//13291
+			//getManagedBean().setCurrentPreparedOrgId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());//13291
 		}
 		
 	}
