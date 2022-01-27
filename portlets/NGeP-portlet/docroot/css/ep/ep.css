@@ -1602,6 +1602,9 @@ important;
 .ui-messages-error-detail {
 	font-size: 12px;
 	font-weight: bold;
+	/* 20220127@syazani - Enhancement #3657 - specific error message - Start  */
+	white-space: pre-line;
+	/* 20220127@syazani - Enhancement #3657 - specific error message - End  */
 }
 
 /* --------------------------       Ends Error Messages       ------------------------------ */
