@@ -1278,40 +1278,72 @@ public class SPDetailBackingBean extends
 //farid end #21695 7/10/2021
             		  }
             		} else {
-            		   for(TplSpecAnswer answer:answers){
-            			if (isCompleted) {
+				// 20220127@syazani - Enhancement #3657 - specific error message - Start
+				List<String> errorLst = null;
+				boolean isThrow = false;
+				for (TplSpecAnswer answer : answers) {
+					if (isCompleted) {
 // #21695 7/10/2021	START
 //farid start #21695 to allow item has 0 qty and 0 price
-            		// bug #31733 add condition 5/11/2021
-            			if (answer.getRatePerUom() == null && answer.getTplSpecZoneQty()!= null && answer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0
-            					|| answer.getRatePerUom() == null && answer.getTplSpecZoneQty() == null) {
-            				throw new EpException(MessageConst.ERROR_760464);
-            			}
-            		// bug #31733 add condition 5/11/2021
-//farid end #21695 7/10/2021
-            		}
-            		//added because of Bug #17772, please do not remove or change the order of if statements
-            		if(answer.getAnswerNumeric() == null || answer.getAnswerNumeric().equals(0)){
-            			boolean isItemTypeService = false; 
-            			if(getManagedBean().getTemplateSpecBean().getSpecMaster().getItemTypeCode().getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE)){
-            				isItemTypeService = true;
-            			}
-            			this.getManagedBean().getTemplateSpecBackingBean()
-            			  .calcTotalAmount(getManagedBean().getTemplateSpecBean(),answer,isItemTypeService);
-            		}
-            		//20210419@asyrafhaziq - Bug #30061 - start
-            		if ((answer.getRatePerUom() != null  && !answer.getRatePerUom().equals(0))&& 
-            			(answer.getAnswerNumeric() != null && !answer.getAnswerNumeric().equals(0))) { // update for Bug #Bug #31134 
-        				boolean isItemTypeService = false; 
-            			if(getManagedBean().getTemplateSpecBean().getSpecMaster().getItemTypeCode().getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE)){
-            				isItemTypeService = true;
-            			}	
-        			   this.getManagedBean().getTemplateSpecBackingBean()
-        			  .CheckAndUpdateCalcTotalAmount(getManagedBean().getTemplateSpecBean(),answer,isItemTypeService);
-				     }
-            		//20210419@asyrafhaziq - Bug #30061 - End
-            		super.setUserDetails(answer);
-            	}
+					// bug #31733 add condition 5/11/2021
+						if (answer.getRatePerUom() == null && answer.getTplSpecZoneQty() != null
+								&& answer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0
+								|| answer.getRatePerUom() == null && answer.getTplSpecZoneQty() == null) {
+							if (errorLst == null) {
+								errorLst = new ArrayList<String>();
+							}
+
+							String zone = answer.getTplSpecZoneQty() != null
+									&& answer.getTplSpecZoneQty().getTplSpecZoneDtl() != null
+									&& answer.getTplSpecZoneQty().getTplSpecZoneDtl().getZoneName() != null ? answer
+									.getTplSpecZoneQty().getTplSpecZoneDtl().getZoneName() : "";
+							if (!duplicateErrorZoneCheck(zone, errorLst))
+								errorLst.add(zone);
+							isThrow = true;
+						}
+						// bug #31733 add condition 5/11/2021
+						// farid end #21695 7/10/2021
+					}
+					
+					if (!isThrow) {
+						// added because of Bug #17772, please do not remove or
+						// change the order of if statements
+						if (answer.getAnswerNumeric() == null || answer.getAnswerNumeric().equals(0)) {
+							boolean isItemTypeService = false;
+							if (getManagedBean().getTemplateSpecBean().getSpecMaster().getItemTypeCode().getParameterCode()
+									.equals(ParameterConst.ITEM_TYPE_SERVICE)) {
+								isItemTypeService = true;
+							}
+							this.getManagedBean().getTemplateSpecBackingBean()
+									.calcTotalAmount(getManagedBean().getTemplateSpecBean(), answer, isItemTypeService);
+						}
+						// 20210419@asyrafhaziq - Bug #30061 - start
+						if ((answer.getRatePerUom() != null && !answer.getRatePerUom().equals(0))
+								&& (answer.getAnswerNumeric() != null && !answer.getAnswerNumeric().equals(0))) { // update for Bug #Bug #31134
+							boolean isItemTypeService = false;
+							if (getManagedBean().getTemplateSpecBean().getSpecMaster().getItemTypeCode().getParameterCode()
+									.equals(ParameterConst.ITEM_TYPE_SERVICE)) {
+								isItemTypeService = true;
+							}
+							this.getManagedBean()
+									.getTemplateSpecBackingBean()
+									.CheckAndUpdateCalcTotalAmount(getManagedBean().getTemplateSpecBean(), answer,
+											isItemTypeService);
+						}
+						// 20210419@asyrafhaziq - Bug #30061 - End
+						super.setUserDetails(answer);
+					}
+				}
+				
+				if (isThrow && errorLst != null && errorLst.size() > 0) {
+					StringBuffer strB = new StringBuffer();
+					String unitPrice = ResourceBundleUtils.getMessage("lbl.tpl.spec.content.unit.price", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+					for (String zone : errorLst) {
+						strB.append(getErrorMessageFinancialPropUnitPrice(true, zone, unitPrice));
+					}
+					throw new EpException(strB.toString());
+				}
+				// 20220127@syazani - Enhancement #3657 - specific error message - End
             }
 			TemplateSpecHelper tplHelper = TemplateSpecHelper.getInstance();
 			boolean isPriceTypeTier = tplHelper.isPriceTypeTier(answers.get(0)
@@ -6265,5 +6297,28 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 		}
 		return false;
 	}
-//#21695 Farid end 2/4/2021	
+//#21695 Farid end 2/4/2021
+	
+	// 20220127@syazani - Enhancement #3657 - specific error message - Start
+	private boolean duplicateErrorZoneCheck(String str, List<String> errorLst) {
+		if (errorLst.size() > 0) {
+			for (String err : errorLst) {
+				if (err.equalsIgnoreCase(str)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public String getErrorMessageFinancialPropUnitPrice(boolean isZone, String zone, String unitPriceLabel) {
+		String msg = "";
+		if (isZone) {
+			msg = MessageUtils.getMessage(MessageConst.ERROR_760538, new String[] {unitPriceLabel,zone}, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
+		} else {
+			msg = MessageUtils.getMessage(MessageConst.ERROR_760464, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
+		}
+		return msg;
+	}
+	// 20220127@syazani - Enhancement #3657 - specific error message - End
 }

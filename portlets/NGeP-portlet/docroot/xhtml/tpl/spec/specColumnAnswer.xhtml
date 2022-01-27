@@ -131,28 +131,37 @@
 			<h:outputText value="#{lbl['lbl.tpl.spec.specification.total']}" rendered="#{isAllPriceTypesStandard and !(isZonal and isSqSpec) and !templateSpecBackingBean.checkItemAllQtyZero(templateSpecBean)}" />
 			<h:outputText value="#{lbl['lbl.tpl.spec.specification.total']}" rendered="#{isAllPriceTypesStandard and isZonal and isSqSpec}" /><!-- #31789  -->
 		</f:facet>
+		<!-- 20220127@syazani - Enhancement #3657 - specific error message - Start -->
 <!-- Bug #32110 Related to #21695 18/11/2021 END-->
 <!-- FARID START #28673 fix bug #21695 -->
 		<!-- FARID START  add disable tplSpecAnswer.tplSpecZoneQty.qty eq 0-->
-		<p:inputText id="ratePerUom" style="min-width:0px !important; width:calc(100% - 40px); text-align:right;"
-			value="#{tplSpecAnswer.ratePerUom}" required="false"
-			rendered="#{isQuestionTypeItem}"  maxlength="19"
+		<p:inputText id="ratePerUom"
+			style="min-width:0px !important; width:calc(100% - 40px); text-align:right;"
+			value="#{tplSpecAnswer.ratePerUom}" required="true"
+			rendered="#{isQuestionTypeItem}" maxlength="19"
 			label="#{lbl['lbl.tpl.spec.content.unit.price']}"
+			requiredMessage="#{isZonal ? supplierProposalDetailBackingBean.getErrorMessageFinancialPropUnitPrice(true, tplSpecAnswer.tplSpecSuppAnswer.tplSpecZoneDtl.zoneName, lbl['lbl.tpl.spec.content.unit.price']) : supplierProposalDetailBackingBean.getErrorMessageFinancialPropUnitPrice(false, '', lbl['lbl.tpl.spec.content.unit.price'])}"
 			disabled="#{!editable or 
 			tplSpecAnswer ne null 
 			and tplSpecAnswer.tplSpecZoneQty ne null 
 			and tplSpecAnswer.tplSpecZoneQty.qty eq 0 
 			or tplSpecAnswer.notOfferSingle}"
-			onkeypress="if (event.keyCode == 13) { return false; }"> <!-- #32362 -->
-			<p:ajax event="change" partialSubmit="true" process="@this" update="@this, ratePerUomMsg, ansYearPG, ansPG, @(.calcAmount)" listener="#{templateSpecBackingBean.calcTotalAmount(templateSpecBean, tplSpecAnswer, isItemTypeService)}" />
+			onkeypress="if (event.keyCode == 13) { return false; }">
+			<!-- #32362 -->
+			<!-- 20220127@syazani - Enhancement #3657 - specific error message - End -->
+			<p:ajax event="change" partialSubmit="true" process="@this"
+				update="@this, ratePerUomMsg, ansYearPG, ansPG, @(.calcAmount)"
+				listener="#{templateSpecBackingBean.calcTotalAmount(templateSpecBean, tplSpecAnswer, isItemTypeService)}" />
 			<!-- FARID START -->
-		<c:if test="#{!isSqSpec and tplSpecAnswer.ratePerUom eq null}">
-			<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
-			<f:validateDoubleRange minimum="0.01" maximum="99999999999.99" />
-		</c:if>
-		<!-- FARID END -->
+			<c:if test="#{!isSqSpec and tplSpecAnswer.ratePerUom eq null}">
+				<ac:validateNumber
+					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"
+					maxIntegerDigits="14" />
+				<f:validateDoubleRange minimum="0.01" maximum="99999999999.99" />
+			</c:if>
+			<!-- FARID END -->
 		</p:inputText>
-		
+
 		<p:message id="ratePerUomMsg" for="ratePerUom" display="icon" />
 	</p:column>
 
