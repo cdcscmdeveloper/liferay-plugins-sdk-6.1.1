@@ -74,10 +74,13 @@
 		header=""/>
 	</p:panel>
 	<ui:remove>
-		#31061 - SHAFFUL 
+		#31061 #32560- SHAFFUL 
 	</ui:remove>
-	<ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}"  btnView="true" />
+	<ac:disciplinaryActionActiveQT voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}"  btnView="true" 
+				startDate="#{viewSuppProfileBackingBean.managedBean.startDate}"
+				endDate="#{viewSuppProfileBackingBean.managedBean.endDate}"
+				isWarning="#{viewSuppProfileBackingBean.managedBean.warning}"/>
 	<ui:remove>
-		#31061 - END
+		#31061 #32560- END
 	</ui:remove>
 </ui:composition>
