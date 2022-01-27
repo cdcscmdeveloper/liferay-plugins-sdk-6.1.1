@@ -144,9 +144,12 @@
 			</h:panelGroup>
 		</p:panel>
 		<ui:include src="qtItemDetailPopUp.xhtml" />
-		<!-- Bug #31033 Start -->
-		<ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" btnView="true" />
-		<!-- Bug #31033 End -->
+		<!-- Bug #31033 #32566 Start -->
+		<ac:disciplinaryActionActiveQT voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}"  btnView="true" 
+				startDate="#{viewSuppProfileBackingBean.managedBean.startDate}"
+				endDate="#{viewSuppProfileBackingBean.managedBean.endDate}"
+				isWarning="#{viewSuppProfileBackingBean.managedBean.warning}"/>
+		<!-- Bug #31033 #32566 End -->
 	</ui:define>
 </ui:composition>
 
