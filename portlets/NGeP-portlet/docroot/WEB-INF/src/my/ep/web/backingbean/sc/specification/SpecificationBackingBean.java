@@ -1604,7 +1604,28 @@ public class SpecificationBackingBean extends
 						.updateItemWeightageReq(templateSpecBean);
 
 			} else {
+				//#21695 fix panel disable weightage 27/1/2022 start
+				if (this.getManagedBean().getQt().isPartial() == true){
+					this.getManagedBean().setSpecItemWeightageRequired(true);
+					if(this.getManagedBean().getTemplateSpecBean() != null){
+						if(this.getManagedBean().getTemplateSpecBean().getSpecMaster() != null){
+							this.getManagedBean().getTemplateSpecBean().getSpecMaster().setWeightageReq(false);
+							this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions();
+							if(this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions() != null){
+								for(TplSpecQuestion specQuestWeightage : this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions()){
+									if(specQuestWeightage!=null){
+										specQuestWeightage.setWeightageReq(false);
+										this.getManagedBean().setSpecItemWeightageRequired(true);
+									}
+								}
+							}
+							
+						}
+					}
+				}else{
 				this.getManagedBean().setSpecItemWeightageRequired(false);
+			}
+				//#21695 fix panel disable weightage 27/1/2022 end
 			}
 			templateSpecBean.setSpecMaster(specMaster);
 			if (this.getManagedBean().getQt().isZonal()
