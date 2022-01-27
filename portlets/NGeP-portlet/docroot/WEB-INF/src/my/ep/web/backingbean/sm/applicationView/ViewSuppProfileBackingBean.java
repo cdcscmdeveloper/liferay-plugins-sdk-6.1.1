@@ -254,7 +254,7 @@ public class ViewSuppProfileBackingBean extends
 	} 
 	
 	/**
-	 * 32566 - Added Checking to Get Active DA from the list
+	 * 32560 - Added Checking to Get Active DA from the list
 	 * CHECKING TO SET START / END DATE FOR DISCIPLINARY ACTION POPUP
 	 * @return void
 	 */
@@ -282,7 +282,7 @@ public class ViewSuppProfileBackingBean extends
 		List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(smSupplier);
 		
 		/*
-		 * 32566 - Added Checking Active DA
+		 * 32560 - Added Checking Active DA
 		 */
 		findActiveDA(voList);	
 
