@@ -14820,6 +14820,17 @@ private void retriveCommitteeRemarksList(){
 						.getQtProposalAmountByProposal();
 				List<ScQtProposalAmount> scoreDtlsByZone = this.getManagedBean()
 						.getQtProposalAmounts();
+				if(scoreDtls != null && !scoreDtls.isEmpty()){//32458-start
+					for(ScQtProposalAmount amountScore : scoreDtls){
+
+						if(amountScore.getTotalScore()!=null && null!= amountScore.getTplSpecZoneDtl()  && null!=amountScore.getTplSpecZoneDtl().getTotalMaxScore()){
+							if(amountScore.getTotalScore().intValue() > amountScore.getTplSpecZoneDtl().getTotalMaxScore().intValue()){
+								this.getManagedBean().setFinPackageScore(false);
+								throw new EpException(MessageConst.ERROR_760201);
+							}
+						}	
+				}
+				}//32458-End
 				evalReqDTO.setProposalAmounts(scoreDtls);
 				evalReqDTO.setProposalAmountByZone(scoreDtlsByZone);
 			}else{
