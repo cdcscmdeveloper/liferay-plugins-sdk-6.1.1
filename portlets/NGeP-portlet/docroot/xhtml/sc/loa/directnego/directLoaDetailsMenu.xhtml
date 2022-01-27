@@ -977,7 +977,6 @@
 				endDate="#{viewSuppProfileBackingBean.managedBean.endDate}"
 				isWarning="#{viewSuppProfileBackingBean.managedBean.warning}" 
 				rendered="#{isHiddenDownloadButtonDAHistory}"/>
-	 <ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" btnView="true" rendered="#{isHiddenDownloadButtonDAHistory}"  />
-	      <ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" rendered="#{!isHiddenDownloadButtonDAHistory}" />
+	    <ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" rendered="#{!isHiddenDownloadButtonDAHistory}" />
 	      <!-- #31033 #32560 Ends -->
 </ui:composition>
