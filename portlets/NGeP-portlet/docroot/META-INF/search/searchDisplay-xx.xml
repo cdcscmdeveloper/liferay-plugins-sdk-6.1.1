@@ -182,7 +182,7 @@
 		</property>
 	</bean>
 
-	<!-- #30824 & #29712 - start -->
+	<!-- #30824 & #29712, #32564 - start -->
 	<bean id="SM_RPT_MOF_ACCOUNT" class="my.ep.web.bean.LovBean">
 		<property name="pk" value="supplierId" />
 
@@ -295,7 +295,7 @@
 			</list>
 		</property>
 	</bean>
-	<!-- #30824 & #29712 - end -->
+	<!-- #30824 & #29712, #32564 - end -->
 
 	<bean id="PM_ORG_PROFILE_WITH_SUPPLIER" class="my.ep.web.bean.LovBean">
 		<property name="pk" value="orgProfileId" />
