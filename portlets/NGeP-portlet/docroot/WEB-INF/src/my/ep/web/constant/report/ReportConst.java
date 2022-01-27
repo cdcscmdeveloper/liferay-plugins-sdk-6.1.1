@@ -967,6 +967,9 @@ public class ReportConst implements Serializable{
 	public static final String PARAM_REMARK = "PREMARK";
 	public static final String PARAM_RECOM = "PRECOM";
 	public static final String PARAM_REPORT_OUTPUT_FORMAT = "desformat";
+	//Enhancement 29418 - shaqimi
+	public static final String PARAM_CONTRACT_VER_ID = "PCONTRECTVERID";
+	//Enhancement 29418 - shaqimi
 	
 
 	// Report parameter key for s1 market research report
@@ -1129,6 +1132,16 @@ public class ReportConst implements Serializable{
 	public static final String SM_APPL_TRACKING_DIARY = "SM_APPLICATION_TRACKING_DIARY.jsp";
 	public static final String SM_PROFILE_TRACKING_DIARY = "SM_PROFILE_TRACKING_DIARY.jsp";
 	//#Bug:28933,#Bug:28934,#Bug:28985,#Bug:28983 - END
+	
+	//Enhancement 29418 - shaqimi
+	public static final String CT_AMENDMENT_UPDATE_RPT_AMENDMENT_DETAIL = "CT_AMENDMENT_UPDATE_RPT_AMENDMENT_DETAIL.jsp";
+	public static final String CT_AMENDMENT_UPDATE_RPT_ZONE = "CT_AMENDMENT_UPDATE_RPT_ZONE.jsp";
+	public static final String CT_AMENDMENT_UPDATE_RPT_AGENCY = "CT_AMENDMENT_UPDATE_RPT_AGENCY.jsp";
+	public static final String CT_AMENDMENT_UPDATE_RPT_ITEM_ZONAL = "CT_AMENDMENT_UPDATE_RPT_ITEM_ZONAL.jsp";
+	public static final String CT_AMENDMENT_UPDATE_RPT_ITEM_NO_ZONAL = "CT_AMENDMENT_UPDATE_RPT_ITEM_NO_ZONAL.jsp";
+	public static final String CT_AMENDMENT_UPDATE_RPT_DEDUCTION = "CT_AMENDMENT_UPDATE_RPT_DEDUCTION.jsp";
+	public static final String CT_AMENDMENT_UPDATE_RPT_SCHEDULE = "CT_AMENDMENT_UPDATE_RPT_SCHEDULE.jsp";
+	//Enhancement 29418 - shaqimi
 	
 	public ReportConst(){}
 	

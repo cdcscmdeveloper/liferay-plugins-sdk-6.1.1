@@ -4684,7 +4684,94 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}
 			}
 	//#30428 - End	
+			
+	//Enhancement 29418 - shaqimi start
 	
+	private FacesScopes getFacesScopes() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
+	}
+	
+	/**
+	 * Generate report.
+	 *
+	 * @param dpObj the dp obj
+	 */
+	public void generateReportPDF(CtAgreement agreement){
+		log.info("generateReportPDF");
+		
+		String contractVerId = agreement.getCtAmendment().getCtContractVer().getContractVerId().toString();
+		
+		String contractNo = agreement.getCtContract().getContractNo();
+		//String slNo = agreement.getCtAmendment().getCtContractVer().getCtContractValue().getLoaNo();
+		Map<String, Map<String, String>> paramMaps = new HashMap<String, Map<String, String>>();
+		Map<String, String> paramMap = new HashMap<String, String>();
+		List<String> reportNames = new ArrayList<String>();
+		String reportName = null;
+		
+		//main report. must have
+		reportName = ReportConst.CT_AMENDMENT_UPDATE_RPT_AMENDMENT_DETAIL;
+		paramMap.put(ReportConst.PARAM_CONTRACT_VER_ID, contractVerId);
+		paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+		paramMaps.put(reportName, paramMap);
+		reportNames.add(reportName);
+
+		if (agreement.getCtAmendment().isOtherChange()) {
+			if(getManagedBean().getContractVer().getCtContract().isZonalPricing()){
+				reportName = ReportConst.CT_AMENDMENT_UPDATE_RPT_ZONE;
+				paramMap.put(ReportConst.PARAM_CONTRACT_VER_ID, contractVerId);
+				paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+				paramMaps.put(reportName, paramMap);
+				reportNames.add(reportName);
+			}
+
+			reportName = ReportConst.CT_AMENDMENT_UPDATE_RPT_AGENCY;
+			paramMap.put(ReportConst.PARAM_CONTRACT_VER_ID, contractVerId);
+			paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+			paramMaps.put(reportName, paramMap);
+			reportNames.add(reportName);
+
+			reportName = ReportConst.CT_AMENDMENT_UPDATE_RPT_DEDUCTION;
+			paramMap.put(ReportConst.PARAM_CONTRACT_VER_ID, contractVerId);
+			paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+			paramMaps.put(reportName, paramMap);
+			reportNames.add(reportName);
+			
+			reportName = ReportConst.CT_AMENDMENT_UPDATE_RPT_SCHEDULE;
+			paramMap.put(ReportConst.PARAM_CONTRACT_VER_ID, contractVerId);
+			paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+			paramMaps.put(reportName, paramMap);
+			reportNames.add(reportName);
+		} else if (agreement.getCtAmendment().isItemPriceChange() || agreement.getCtAmendment().isQuantityChange()){
+			if(getManagedBean().getContractVer().getCtContract().isZonalPricing()){
+				reportName = ReportConst.CT_AMENDMENT_UPDATE_RPT_ITEM_ZONAL;
+				paramMap.put(ReportConst.PARAM_CONTRACT_VER_ID, contractVerId);
+				paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+				paramMaps.put(reportName, paramMap);
+				reportNames.add(reportName);
+			} else {
+				reportName = ReportConst.CT_AMENDMENT_UPDATE_RPT_ITEM_NO_ZONAL;
+				paramMap.put(ReportConst.PARAM_CONTRACT_VER_ID, contractVerId);
+				paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+				paramMaps.put(reportName, paramMap);
+				reportNames.add(reportName);
+			}
+		}
+		
+		if(reportName!=null) {
+			try {
+				generateReportPDF(contractNo, reportNames, paramMaps);
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				FacesContext.getCurrentInstance().responseComplete();
+			}
+		} else {
+			throw new EpException("Report is not available for this document.");
+		}
+	}
+	//Enhancement 29418 - shaqimi end
+		
 	//Enhancement 15851 - Start
 			/**
 			 * The method used to navigate to Original contract details screen
