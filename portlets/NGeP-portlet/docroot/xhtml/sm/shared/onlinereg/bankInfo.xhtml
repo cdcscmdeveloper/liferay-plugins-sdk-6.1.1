@@ -17,6 +17,10 @@
 }
 </style>
 	<p:panel header="#{lbl['lbl.sm.bankinformation']}" toggleable="true" id="pnlBankInfo">
+<!--#12492-START TASHA-->
+	<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.insertcmpnybank.instruction']}" escape="false">
+		</h:outputText>
+<!--#12492-END TASHA-->
 		<p:dataTable var="bankInfo" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{registrationBackingBean.managedBean.smAppl.smSupplierBanks}"
 			selection="#{registrationBackingBean.managedBean.selectedSuppBanks}" 
@@ -63,10 +67,11 @@
 						<p:outputLabel escape="false" value="#{lbl['tt.sm.account.no']}"  />
 					</p:tooltip>
 				</f:facet>
-			
+			<!--#12492-START-->
 				<p:inputText id="bankAccNoId" value="#{bankInfo.accountNo}" maxlength="18" disabled="#{registrationBackingBean.managedBean.viewMode or bankInfo.hasActiveTransactionContractManagement or bankInfo.hasActiveTransactionFulfilment}">
-					<p:ajax event="blur" process="@this" update="@this" />
+					<p:ajax event="change" process="@this" update="@this" listener="#{registrationBackingBean.CheckBankAccount('fromBankInfo')}"/>
 				</p:inputText>
+			<!--#12492-END-->
 				<p:message id="bankAccNoIdMsg" for="bankAccNoId" display="icon" />
 			</p:column>
 			<p:column rendered="#{registrationBackingBean.managedBean.applType eq 'G'}" style="width : 30% !important;">
@@ -118,6 +123,22 @@
 		</p:outputPanel>
 	</p:panel>
 	
+	<!--#12492-START-->
+	<p:dialog style="width: 20px; height: auto;top: 261px; align:center" widgetVar="bankDialogDuplicate"
+		id="bankDialogDuplicateId" resizable="false" modal="true" closable="false">
+		
+		<p:outputPanel layout="block" id="bankDialogDuplicatePanel">
+			<p:messages id="bankDialogDuplicateMessagePanel" showSummary="false" showDetail="true"
+				autoUpdate="true" closable="true" />
+			<div align="center">
+				<b>#{lbl['lbl.sm.duplicateInfo']}</b>
+			</div>
+			<div class="ppRightBtn">		    
+		 		<p:commandButton value="#{lbl['lbl.btn.close']}"  onclick="bankDialogDuplicate.hide();" type="button" />
+			</div>
+		</p:outputPanel>
+	</p:dialog>
+	<!--#12492-END-->
 	<ac:confirmationPopup id="bankDeletePopUpId"
 		widget="bankDeletePopUp"
 		okAction="registrationBackingBean.removeSupplierBank()"

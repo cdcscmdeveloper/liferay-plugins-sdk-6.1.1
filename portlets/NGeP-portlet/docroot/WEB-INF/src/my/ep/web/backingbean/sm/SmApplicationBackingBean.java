@@ -19,6 +19,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -8094,6 +8095,9 @@ public class SmApplicationBackingBean extends
 	 * Add or create a new SmSupplier bank object
 	 */
 	public void assignNewBank() {
+		//#12492 - start
+		getManagedBean().setShowDifferenceBankInfoAction(true);
+		//#12492 - end
 		getManagedBean().setPendingTransaction(false);
 		getManagedBean().setChequeSingPerId(null);
 		getManagedBean().setSelBankBranchId(null);
@@ -13619,6 +13623,10 @@ public class SmApplicationBackingBean extends
 	}
 	
 	public void assignSelBankWithPendingTransaction(SmSupplierBank shareBankBean) {
+		//#12492 - start
+		getManagedBean().setShowDifferenceBankInfoAction(false);
+		//#12492 - end
+		
 		getManagedBean().setChequeSingPerId(null);
 		getManagedBean().setSelectedBankBranchIds(null);
 		
@@ -14472,6 +14480,47 @@ public class SmApplicationBackingBean extends
 		return currReason;
 	}
 	
+	//12492 - START
+	public void CheckBankAccountInfoForm(String fromPage) {
+
+		HashSet<String> hsetAccountNo = new HashSet<String>();
+		HashSet<Long> hsetAccountName = new HashSet<Long>();
+
+		boolean bankInfo = false;
+		
+		if(getManagedBean().isShowDifferenceBankInfoAction()){	
+		if(fromPage.equalsIgnoreCase("fromBankInfo")){
+			if (this.getManagedBean().getSmAppl().getSmSupplierBanks().size() > 0) {
+				for (SmSupplierBank bankName : this.getManagedBean().getSmAppl().getSmSupplierBanks()) {
+					if (bankName.getPmFinancialOrg().getFinancialOrgId() != null) {
+						hsetAccountName.add(bankName.getPmFinancialOrg().getFinancialOrgId());
+						hsetAccountNo.add(bankName.getAccountNo());
+					}
+				}
+			}
+
+			if (hsetAccountName.add(getManagedBean().getSelectedBank().getPmFinancialOrg().getFinancialOrgId()) == false) {
+				if (hsetAccountNo.add(getManagedBean().getSelectedBank().getAccountNo()) == false) {
+					RequestContext.getCurrentInstance().execute("bankDialogDuplicate.show()");
+				}
+			}	
+		}
+		}else{
+			for (SmSupplierBank supBank : getManagedBean().getSmAppl().getSmSupplierBanks()){
+				if(getManagedBean().getSelectedBank().getSupplierBankId() != null && 
+						getManagedBean().getSelectedBank().getSupplierBankId().equals(supBank.getSupplierBankId())){
+					log.debug("**** Same Bank object edit with exisiting id ******");
+				}else{
+					if(getManagedBean().getSelectedBank().getAccountNo().equalsIgnoreCase(supBank.getAccountNo())){
+						bankInfo = true;
+						RequestContext.getCurrentInstance().execute("bankDialogDuplicate.show()");
+					}
+				}
+			}
+		}
+	}
+	//12492 - END
+		
 	public boolean checkSpecialCat(SmAppl smAppl){
 		if(!smAppl.getSmSupplierCategories().isEmpty()){
 			if(smAppl.getSmSupplierCategories().get(0).isSpecialCategory()){
