@@ -33,19 +33,29 @@
 							listener="#{purchaseInquiryBackingBean.selectSingleRowZonalTierPromotionPrice}" />
 					</p:selectBooleanCheckbox>
 			</p:column>
-			<p:column sortBy="#{price.tplSpecZone.zoneName}">
-				<f:facet name="header">
+			<c:if test="#{!isPendingSubmissionStatus}">
+				<p:column sortBy="#{price.tplSpecZone.zoneName}">
+					<f:facet name="header">
+						#{lbl['lbl.pm.zone']}
+					</f:facet>
+					<p:selectOneMenu value="#{price.tplSpecZone.specZoneId}"
+						disabled="#{!isPendingSupplierRespStatus}" style="width: 128px;">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" itemDisabled="#{price.tplSpecZone.specZoneId != null}"/>
+						<f:selectItems
+							value="#{purchaseInquiryBackingBean.managedBean.supplierZoneList}"
+							var="zone" itemLabel="#{zone.zoneName}"
+							itemValue="#{zone.specZoneId}"></f:selectItems>
+					</p:selectOneMenu>
+				</p:column>			
+			</c:if>
+			<c:if test="#{isPendingSubmissionStatus}">
+				<p:column sortBy="#{price.tplSpecZone.zoneName}">
+					<f:facet name="header">
 					#{lbl['lbl.pm.zone']}
-				</f:facet>
-				<p:selectOneMenu value="#{price.tplSpecZone.specZoneId}"
-					disabled="#{!isPendingSupplierRespStatus}" style="width: 128px;">
-					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" itemDisabled="#{price.tplSpecZone.specZoneId != null}" />
-					<f:selectItems
-						value="#{purchaseInquiryBackingBean.managedBean.supplierZoneList}"
-						var="zone" itemLabel="#{zone.zoneName}"
-						itemValue="#{zone.specZoneId}"></f:selectItems>
-				</p:selectOneMenu>
-			</p:column>
+					</f:facet>
+						<h:outputText value="#{price.tplSpecZone.zoneName}" size="10" readonly="true" style="text-align:right"></h:outputText>
+				</p:column>	
+			</c:if>
 			<p:column sortBy="#{price.fromQty}">
 				<f:facet name="header">
 					#{lbl['lbl.sc.price.inquiry.from.qty']}
