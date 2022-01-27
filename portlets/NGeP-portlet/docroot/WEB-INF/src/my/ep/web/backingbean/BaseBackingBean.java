@@ -38,8 +38,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -104,7 +102,6 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pp.procurementplan.PpAddress;
 import my.ep.persistence.entity.sc.common.ScAddress;
-import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmEquityCompany;
@@ -3718,89 +3715,4 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 	}
 	//12492 - END
-	
-	//Enhancement 29418 -start
-
-	/**
-	 * To get Actual file path for attachement.
-	 * 
-	 * @param attachment
-	 * @return filePath.
-	 */
-	protected String getActualFilePath(ScAttachment attachment) {
-		String docRepoBaseDir = EpPropertiesUtils.getInstance().getProperty(
-				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
-		StringBuilder actualFilePath = new StringBuilder(docRepoBaseDir);
-		actualFilePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
-		actualFilePath.append(attachment.getFilePath());
-
-		return actualFilePath.toString();
-	}
-
-	/**
-	 * Generate report.
-	 *
-	 * @param reportFile the report file
-	 * @param paramMap the param map
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	protected void generateReportPDF(String contractNo, List<String> reportFiles,
-			Map<String, Map<String, String>> paramMaps) throws IOException { 
-		
-		PortletResponse portalresponse = (PortletResponse) FacesContext
-				.getCurrentInstance().getExternalContext().getResponse();
-		HttpServletResponse response = PortalUtil
-				.getHttpServletResponse(portalresponse);
-		response.setContentType("Content-type: text/zip");
-		response.setHeader("Content-Disposition",
-				"attachment; filename="+ contractNo + "_Amendment Update.zip");
-		
-		Map<String, String> paramMap;
-		
-		ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(
-				response.getOutputStream()));
-		
-		for(String reportFile : reportFiles){
-			String fileType = "";
-
-			paramMap = paramMaps.get(reportFile);
-			
-			if(reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_AMENDMENT_DETAIL)){
-				fileType = "_Amendment Detail";
-			} else if(reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_ZONE)){
-				fileType = "_Zone";
-			} else if(reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_AGENCY)){
-				fileType = "_Agency";
-			} else if(reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_ITEM_ZONAL) ||
-					reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_ITEM_NO_ZONAL)){
-				fileType = "_Item";
-			} else if(reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_DEDUCTION)){
-				fileType = "_Deduction";
-			} else if(reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_SCHEDULE)){
-				fileType = "_Schedule";
-			}
-			
-			zos.putNextEntry(new ZipEntry(contractNo + fileType + ".pdf"));
-			
-			String reportUrl = generateReportURL(reportFile, paramMap);
-	
-			HttpURLConnection urlConnection = null;
-			URL obj = new URL(reportUrl);
-			urlConnection = (HttpURLConnection) obj.openConnection();
-	
-			BufferedInputStream buf = new BufferedInputStream(
-					urlConnection.getInputStream());
-			
-			int size = 0;
-			while ((size = buf.read()) != -1) {
-				zos.write(size);
-			}
-			buf.close();
-		}
-		zos.closeEntry();
-		zos.close();
-		response.flushBuffer();		
-		FacesContext.getCurrentInstance().responseComplete();
-	}
-	//Enhancement 29418 - end
 }
