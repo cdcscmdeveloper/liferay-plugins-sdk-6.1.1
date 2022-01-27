@@ -4044,7 +4044,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						retVal.setBlacklistOwnerDirector(true);
 					
 					/*
-					 * Bug #32566 ADDED INDICATOR RECORD STATUS, TO SHOW WHICH DA IS ACTIVE 
+					 * Bug #32560 ADDED INDICATOR RECORD STATUS, TO SHOW WHICH DA IS ACTIVE 
 					 */
 					retVal.setActiveRecordStatus(disciplinaryAction.isRecordStatus());
 					

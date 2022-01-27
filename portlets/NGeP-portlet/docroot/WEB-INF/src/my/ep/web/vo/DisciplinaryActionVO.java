@@ -29,11 +29,11 @@ public class DisciplinaryActionVO implements Serializable {
 	private List<BlacklistOwnerDirectorVO> blacklistownerDirectorList;
 	private boolean mofNoExist;
 	/*
-	 * 32566 START
+	 * 32560 START
 	 */
 	private boolean isActiveRecordStatus;
 	/*
-	 * 32566 END
+	 * 32560 END
 	 */
 	
 	

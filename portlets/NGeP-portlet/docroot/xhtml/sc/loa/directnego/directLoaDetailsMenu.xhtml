@@ -971,7 +971,7 @@
 			showAttachment="false" 
 			readonly="true" />
 	</p:outputPanel>
-	<!-- #31033 #32566 starts -->
+	<!-- #31033 #32560 starts -->
 	<ac:disciplinaryActionActiveQT voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}"  btnView="true" 
 				startDate="#{viewSuppProfileBackingBean.managedBean.startDate}"
 				endDate="#{viewSuppProfileBackingBean.managedBean.endDate}"
@@ -979,5 +979,5 @@
 				rendered="#{isHiddenDownloadButtonDAHistory}"/>
 	 <ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" btnView="true" rendered="#{isHiddenDownloadButtonDAHistory}"  />
 	      <ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" rendered="#{!isHiddenDownloadButtonDAHistory}" />
-	      <!-- #31033 #32566 Ends -->
+	      <!-- #31033 #32560 Ends -->
 </ui:composition>
