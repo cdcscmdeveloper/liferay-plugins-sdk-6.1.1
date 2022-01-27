@@ -2346,6 +2346,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						ssmReqDTO.setBasicAcc(false);
 					}
 					*/
+					//#30964
+					this.getManagedBean().setSmBusinessAdd(resDTO.getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress());
 					ssmReqDTO.setBasicAcc(SupplierManagementConst.ACC_BASIC.equalsIgnoreCase(this.getManagedBean().getSmAppl().getApplType()));
 					//#29114, CR 27382: Static Code Analysis End
 					SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
@@ -2353,17 +2355,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					this.getManagedBean().setShowOwnerPersonnel(false);
 					this.getManagedBean().setValidateWithSSM(true);
 					if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
-						// start #30964
-						this.getManagedBean().getSmBusinessAdd().setSsmData(ssmResDTO.getSmAddress().isSsmData());
-						this.getManagedBean().getSmBusinessAdd()
-								.setAddressSsmNull(ssmResDTO.getSmAddress().isAddressSsmNull());
-						String[] copyPropAddresss = { "address1", "address2", "address3", "addressSsmNull",
-								"postcodeSsmNull", "stateSsmNull", "countrySsmNull", "ssmData", "postcode", "pmState",
-								"stateId" };
-						EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmAddress(), this.getManagedBean()
-								.getSmBusinessAdd(), copyPropAddresss);
-						// end #30964
-						
 						//POPUP USER NOT SSM OWNER #26734  START			
 						//START #27239
 						//START NEW CHANGES POPUP OWNER UPDATE ROLE		
@@ -2461,44 +2452,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						//START 27488 
 						if(ssmResDTO.getSmAddress().getPmState()!= null){
 							this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setStateId(ssmResDTO.getSmAddress().getPmState().getStateId());
-							this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setDistrictId((long) 0);
-
-//							this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPmDistrict(new PmDistrict());
-											
-							// start #30964
-							if (ssmResDTO.getSmAddress().getPmDistrict() != null) {
-								this.getManagedBean().setBusinessCityLs(
-										SmCommonUtil.getCityList(ssmResDTO.getSmAddress().getPmDistrict()
-												.getDistrictId()));
-							} else if (this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic()
-									.getSmCompanyAddresses().get(0).getSmAddress().getPmDistrict() != null) {
-								this.getManagedBean().setBusinessCityLs(
-										SmCommonUtil.getCityList(this.getManagedBean().getSmSupp().getSmAppl()
-												.getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress()
-												.getPmDistrict().getDistrictId()));
-							} else {
-								this.getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
-							}
-							
-							if (ssmResDTO.getSmAddress().getPmState() != null
-									&& ssmResDTO.getSmAddress().getPmState().getStateCode()
-											.equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
-								this.getManagedBean().setBusinessDivisionLs(
-										SmCommonUtil
-												.getDivisionList(ssmResDTO.getSmAddress().getPmState().getStateId()));
-							} else if (this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic()
-									.getSmCompanyAddresses().get(0).getSmAddress().getPmState() != null
-									&& this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic()
-											.getSmCompanyAddresses().get(0).getSmAddress().getPmState().getStateCode()
-											.equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
-								this.getManagedBean().setBusinessCityLs(
-										SmCommonUtil.getCityList(this.getManagedBean().getSmSupp().getSmAppl()
-												.getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress()
-												.getPmDistrict().getDistrictId()));
-							} else {
-								this.getManagedBean().setBusinessDivisionLs(new ArrayList<SelectItem>());
-							}
-							// end #30964
+							this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setDistrictId(new Long (0));
+							this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPmDistrict(new PmDistrict());
+							this.getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
+							this.getManagedBean().setBusinessDivisionLs(new ArrayList<SelectItem>());
 							this.getManagedBean().setBusinessDistrictLs(SmCommonUtil.getDistrictList(ssmResDTO.getSmAddress().getPmState().getStateId()));
 						}
 						//END 27488
@@ -2652,11 +2609,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					SmAddress smAddress = supplierSearchSO.retrieveSmAddressByAddressId(resDTO.getSmSupp().getSmAppl()
 							.getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getAddressId());
 					
-					// start #30964
-					if (smAddress.getPmDivision() == null) {
-						smAddress.setPmDivision(new PmDivision());
-					}
-					// end #30964
 					this.getManagedBean().setSmBusinessAdd(smAddress);
 				}
 				// end - #30483
