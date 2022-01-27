@@ -72,9 +72,9 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	public List<SelectItem> agencyTypeItems;
 	public String searchDate;
 	
-	// #29712 - start
+	// #29712, #32564 - start
 	private SmSupplier selectedSupplier;
-	// #29712 - end
+	// #29712, #32564 - end
 
 
 	public String getDocumentType() {
@@ -477,7 +477,7 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 		this.searchDate = searchDate;
 	}
 	
-	// #29712 - start
+	// #29712, #32564 - start
 	public SmSupplier getSelectedSupplier() {
 		return selectedSupplier;
 	}
@@ -485,5 +485,5 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	public void setSelectedSupplier(SmSupplier selectedSupplier) {
 		this.selectedSupplier = selectedSupplier;
 	}
-	// #29712 - end
+	// #29712, #32564 - end
 }

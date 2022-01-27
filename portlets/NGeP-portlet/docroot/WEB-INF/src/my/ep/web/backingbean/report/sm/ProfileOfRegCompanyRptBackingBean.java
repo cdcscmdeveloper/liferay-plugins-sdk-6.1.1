@@ -43,14 +43,14 @@ public class ProfileOfRegCompanyRptBackingBean extends
 			getManagedBean().setReportCode(SmReportConst.SM_REG_COMPANY_IN_BASIC_G2G);
 			if (getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.SM_REG_TYPE_BASIC)) {
 				params.put(SmReportConst.PARAM_REG_TYPE, SmReportConst.REG_ACC_TYPE_BASIC);
-				// #29712 & #30824 - start
+				// #29712 & #30824, #32564 - start
 				params.put(SmReportConst.PARAM_COMPANY_NAME, getManagedBean().getSelectedSupplier().getCompanyName());
-				// #29712 & #30824 - end
+				// #29712 & #30824, #32564 - end
 			} else {
 				params.put(SmReportConst.PARAM_REG_TYPE, SmReportConst.REG_ACC_TYPE_G2G);
-				// #29712 & #30824 - start
+				// #29712 & #30824, #32564 - start
 				params.put(SmReportConst.PARAM_COMPANY_NAME, getManagedBean().getSelectedOrgProfile().getPmOrgValidity().getOrgName());
-				// #29712 & #30824 - end
+				// #29712 & #30824, #32564 - end
 			}
 		} else {
 			params.put(SmReportConst.PARAM_MOF_NO, getManagedBean().getMofNo());
@@ -75,9 +75,9 @@ public class ProfileOfRegCompanyRptBackingBean extends
 		this.getManagedBean().setOrgTypeCode(null);
 		this.getManagedBean().setSelectedOrgProfile(null);
 		// #23080 - end
-		// #29712 & #30824 - start
+		// #29712 & #30824, #32564 - start
 		this.getManagedBean().setSelectedSupplier(null);
-		// #29712 & #30824 - end
+		// #29712 & #30824, #32564 - end
 	}
 	
 	public void populateMofNo(BaseEntity entity) {
@@ -85,7 +85,7 @@ public class ProfileOfRegCompanyRptBackingBean extends
 		this.getManagedBean().setMofNo(selectedSupplier.getMofNo());
 	}
 	
-	// #29712 - start
+	// #29712, #32564 - start
 	public String constructConditionFields() {
 		StringBuilder sb = new StringBuilder();
 
@@ -145,6 +145,6 @@ public class ProfileOfRegCompanyRptBackingBean extends
 		}
 		return sb.toString();
 	}
-	// #29712 - end
+	// #29712, #32564 - end
 	
 }
