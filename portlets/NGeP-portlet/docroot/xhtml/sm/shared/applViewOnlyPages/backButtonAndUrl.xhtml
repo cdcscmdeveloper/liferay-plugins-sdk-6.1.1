@@ -22,10 +22,20 @@
 					and viewSmApplBackingBean.managedBean.smAppl.pmStatus.statusId ne SupplierMgmtConst.pmStatusRejectedBySystemProcessingFee
 					and ((viewSmApplBackingBean.managedBean.smAppl.applType eq 'B' and viewSmApplBackingBean.managedBean.smMofAccount!=null and viewSmApplBackingBean.managedBean.smMofAccount.expDate gt CommonConstants.THREE_MONTHS_LATER_DATE
 					) or (viewSmApplBackingBean.managedBean.smAppl.applType ne 'B'))}">
-					<p:commandLink onclick="blockWidget.show()"
-						action="#{viewSmApplBackingBean.redirectToResubmit()}"
-						process="@this" partialSubmit="true" update=":form"
-						value="#{lbl['lbl.sm.resubmit']}" />&#160;&#160;
+					<!-- START 29823 -->
+					<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'N'}">
+					<p:commandLink onclick="blockWidget.show()" rendered="#{viewSmApplBackingBean.isApplPORejectedAfterApprovelSV()}"
+							action="#{viewSmApplBackingBean.redirectToResubmit()}"
+							process="@this" partialSubmit="true" update=":form"
+							value="#{lbl['lbl.sm.resubmit']}" />&#160;&#160;
+				</p:outputPanel>
+				<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.smAppl.applType ne 'N'}">
+					<p:commandLink onclick="blockWidget.show()" rendered="#{viewSmApplBackingBean.isApplPORejectedAfterApprovelSV()}"
+							action="#{viewSmApplBackingBean.redirectToResubmit()}"
+							process="@this" partialSubmit="true" update=":form"
+							value="#{lbl['lbl.sm.resubmit']}" />&#160;&#160;
+				</p:outputPanel>
+				<!-- END 29823 -->
 					</p:outputPanel> <p:commandLink onstart="blockWidget.show()"
 					oncomplete="blockWidget.hide()"
 					rendered="#{viewSmApplBackingBean.managedBean.smSupplier.smAppl.supplierType eq 'J' 

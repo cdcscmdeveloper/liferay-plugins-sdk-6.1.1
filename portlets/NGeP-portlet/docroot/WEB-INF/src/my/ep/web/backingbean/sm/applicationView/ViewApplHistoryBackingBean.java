@@ -1600,4 +1600,34 @@ public class ViewApplHistoryBackingBean extends
 		return null;
 	}
 	//11641 - END
+	
+	//#29823 - START
+	public boolean isApplPORejectedAfterApprovelSV(){
+		boolean isRejected = false;
+		boolean isHasBasic = false;
+		if(this.getManagedBean().getSmAppl().getPmStatus().getStatusId() == 20112){
+			for(SmWorkflowStatus smWorkflowStatus : this.getManagedBean().getSmAppl().getSmWorkflowStatuses()){
+				if(smWorkflowStatus.getPmStatus().getStatusId() == 20116 || smWorkflowStatus.getPmStatus().getStatusId() == 20117){
+					isRejected = true;
+					break;
+				}
+			}
+		}
+		
+		for(SmAppl previousSmAppl : this.getManagedBean().getSmAppl().getSmSupplier().getSmAppls()){
+			if(previousSmAppl.getSupplierType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_BASIC)){
+				isHasBasic = true;
+				break;
+			}
+		}
+		
+		if(this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_MOF) && isRejected && !isHasBasic){
+			return false;
+		}else if(this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_CATEGORY) && isRejected){
+			return false;
+		}
+		
+		return true;
+	}
+	//#29823 - END
 }

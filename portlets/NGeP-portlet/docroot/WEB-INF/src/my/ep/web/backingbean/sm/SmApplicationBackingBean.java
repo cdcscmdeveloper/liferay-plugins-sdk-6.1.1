@@ -9887,9 +9887,40 @@ public class SmApplicationBackingBean extends
 									.getBpmTaskName()
 									.equalsIgnoreCase(
 											SupplierManagementConst.BPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE)) {
-						reqDTO.setLastApprovedAppl(SmApplicationUtil
-								.getLastApprovedApplictionForSupplier(getManagedBean()));
+						//#29823 - Start
+						if(this.getManagedBean().getSmAppl() != null){
+							//#29663 - START
+							if (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
+								reqDTO.setLastApprovedAppl(SmApplicationUtil.getLastApprovedApplictionForSupplier(getManagedBean(), res));
+								reqDTO.getLastApprovedAppl().setBumi(false);
+								getManagedBean().getSmAppl().setBumi(false);
+								getManagedBean().getSmAppl().setPmRegStatus(null);
+								getManagedBean().getSmAppl().getSmSupplier().setBumi(false);
+							}else{
+								SmAppl lastApplAppr = SmApplicationUtil.getLastApprovedApplictionForSupplier(getManagedBean(), res);
+								reqDTO.setLastApprovedAppl(lastApplAppr);
+							}
+							//#29663 - END
+						}else{
+							reqDTO.setApplId(getManagedBean().getSmAppl().getApplId());
+						}
+						/*	if (getManagedBean().getSmAppl() == null){
+							reqDTO.setApplId(getManagedBean().getSmAppl().getApplId());
+						}*/
+						//#29823 - end
+						/*reqDTO.setLastApprovedAppl(SmApplicationUtil
+								.getLastApprovedApplictionForSupplier(getManagedBean()));*/
+						
 					}
+					
+					// #29823 - start
+					//For NEW_SM_APPLN_FOR_MOF 
+					if (getManagedBean().getSmAppl()== null) {
+						reqDTO.setApplId(getManagedBean().getSmAppl().getApplId());
+						getManagedBean().getSmAppl().getSmSupplier().setSmAppl(null);
+					}
+					// #29823 - end
+					
 					if (StringUtils.isNotBlank(mofNo)) {
 						successMsg = SmCommonUtil.getOutputMsgBundle(
 								MessageConst.INFO_700028, new String[] {
