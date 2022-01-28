@@ -56,10 +56,14 @@ public class ProfileOfRegCompanyRptBackingBean extends
 			getManagedBean().setReportCode(SmReportConst.SM_REG_COMPANY_IN_BASIC_G2G);
 			if (getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.SM_REG_TYPE_BASIC)) {
 				params.put(SmReportConst.PARAM_REG_TYPE, SmReportConst.REG_ACC_TYPE_BASIC);
-				params.put(SmReportConst.PARAM_COMPANY_NAME, getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName());
+				// #29712 & #30824, #32564 - start
+				params.put(SmReportConst.PARAM_COMPANY_NAME, getManagedBean().getSelectedSupplier().getCompanyName());
+				// #29712 & #30824, #32564 - end
 			} else {
 				params.put(SmReportConst.PARAM_REG_TYPE, SmReportConst.REG_ACC_TYPE_G2G);
+				// #29712 & #30824, #32564 - start
 				params.put(SmReportConst.PARAM_COMPANY_NAME, getManagedBean().getSelectedOrgProfile().getPmOrgValidity().getOrgName());
+				// #29712 & #30824, #32564 - end
 			}
 		} else {
 			params.put(SmReportConst.PARAM_MOF_NO, getManagedBean().getMofNo());
@@ -84,6 +88,9 @@ public class ProfileOfRegCompanyRptBackingBean extends
 		this.getManagedBean().setOrgTypeCode(null);
 		this.getManagedBean().setSelectedOrgProfile(null);
 		// #23080 - end
+		// #29712 & #30824, #32564 - start
+		this.getManagedBean().setSelectedSupplier(null);
+		// #29712 & #30824, #32564 - end
 	}
 	
 	public void populateMofNo(BaseEntity entity) {
@@ -103,45 +110,67 @@ public class ProfileOfRegCompanyRptBackingBean extends
 	}
 	
 	// #23080 - start
+	// #29712, #32564 - start
 	public String constructConditionFields() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("recordStatus^1");
-		sb.append("|pmOrgValidity.recordStatus^1");
-		sb.append("|orgTypeCode.parameterType^");
-		sb.append(ParameterTypeConst.ORGANISATION_TYPES);
-		
-		if (this.getManagedBean().getOrgTypeCode() != null) {
-			if (this.getManagedBean().getOrgTypeCode().equalsIgnoreCase(OrganizationType.STATUTORY_BODIES.value())) {
-				sb.append("|orgTypeCode.parameterCode^");
-				sb.append(OrganizationType.STATUTORY_BODIES.value());
+
+		if (StringUtils.isNotEmpty(getManagedBean().getRegType()) || getManagedBean().getRegType() != null) {
+			if (getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.REG_ACC_TYPE_G2G)) {
+				sb.append("recordStatus^1");
+				sb.append("|pmOrgValidity.recordStatus^1");
+				sb.append("|orgTypeCode.parameterType^");
+				sb.append(ParameterTypeConst.ORGANISATION_TYPES);
+
+				if (this.getManagedBean().getOrgTypeCode() != null) {
+					if (this.getManagedBean().getOrgTypeCode().equalsIgnoreCase(OrganizationType.STATUTORY_BODIES.value())) {
+						sb.append("|orgTypeCode.parameterCode^");
+						sb.append(OrganizationType.STATUTORY_BODIES.value());
+					}
+					if (this.getManagedBean().getOrgTypeCode().equalsIgnoreCase(OrganizationType.STATUTORY_BODIES_STATE.value())) {
+						sb.append("|orgTypeCode.parameterCode^");
+						sb.append(OrganizationType.STATUTORY_BODIES_STATE.value());
+					}
+					if (this.getManagedBean().getOrgTypeCode().equalsIgnoreCase(OrganizationType.STATE_GOVERNMENT.value())) {
+						sb.append("|orgTypeCode.parameterCode^");
+						sb.append(OrganizationType.STATE_GOVERNMENT.value());
+					}
+					if (this.getManagedBean().getOrgTypeCode().equalsIgnoreCase(OrganizationType.LOCAL_AUTHORITY.value())) {
+						sb.append("|orgTypeCode.parameterCode^");
+						sb.append(OrganizationType.LOCAL_AUTHORITY.value());
+					}
+				} else {
+					sb.append("|orgTypeCode.parameterCode^");
+					sb.append(OrganizationType.STATUTORY_BODIES.value());
+					sb.append(",");
+					sb.append(OrganizationType.STATUTORY_BODIES_STATE.value());
+					sb.append(",");
+					sb.append(OrganizationType.STATE_GOVERNMENT.value());
+					sb.append(",");
+					sb.append(OrganizationType.LOCAL_AUTHORITY.value());
+					sb.append("^9");
+				}
+			} else if (getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.SM_REG_TYPE_MOF)) {
+				if (this.getManagedBean().getZone() != null) {
+					if (getManagedBean().getZone().toUpperCase().equalsIgnoreCase("SEMENANJUNG")) {
+						sb.append("smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneId^1");
+					} else if (getManagedBean().getZone().toUpperCase().equalsIgnoreCase("SABAH")) {
+						sb.append("smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneId^2");
+					} else if (getManagedBean().getZone().toUpperCase().equalsIgnoreCase("SARAWAK")) {
+						sb.append("smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneId^3");
+					}
+				} else {
+					if (this.getManagedBean().getSupplierType() != null) {
+						sb.append("smMofAccounts.supplierType^" + this.getManagedBean().getSupplierType());
+					}
+				}
+				if (this.getManagedBean().getSupplierType() != null) {
+					sb.append("|smMofAccounts.supplierType^" + this.getManagedBean().getSupplierType());
+				}
 			}
-			if (this.getManagedBean().getOrgTypeCode().equalsIgnoreCase(OrganizationType.STATUTORY_BODIES_STATE.value())) {
-				sb.append("|orgTypeCode.parameterCode^");
-				sb.append(OrganizationType.STATUTORY_BODIES_STATE.value());
-			}
-			if (this.getManagedBean().getOrgTypeCode().equalsIgnoreCase(OrganizationType.STATE_GOVERNMENT.value())) {
-				sb.append("|orgTypeCode.parameterCode^");
-				sb.append(OrganizationType.STATE_GOVERNMENT.value());
-			}
-			if (this.getManagedBean().getOrgTypeCode().equalsIgnoreCase(OrganizationType.LOCAL_AUTHORITY.value())) {
-				sb.append("|orgTypeCode.parameterCode^");
-				sb.append(OrganizationType.LOCAL_AUTHORITY.value());
-			}
-		} else {
-			sb.append("|orgTypeCode.parameterCode^");			
-			sb.append(OrganizationType.STATUTORY_BODIES.value());
-			sb.append(",");
-			sb.append(OrganizationType.STATUTORY_BODIES_STATE.value());
-			sb.append(",");
-			sb.append(OrganizationType.STATE_GOVERNMENT.value());
-			sb.append(",");
-			sb.append(OrganizationType.LOCAL_AUTHORITY.value());
-			sb.append("^9");
 		}
-		
-		System.out.println("sb.toString ==> " + sb.toString());
 		return sb.toString();
 	}
+	// #29712, #32564 - end
 	// #23080 - end
 	
 }

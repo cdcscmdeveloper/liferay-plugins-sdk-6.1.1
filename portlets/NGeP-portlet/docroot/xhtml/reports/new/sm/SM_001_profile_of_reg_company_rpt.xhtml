@@ -30,11 +30,19 @@
 				<p:outputLabel value="#{lbl['lbl.rpt.cmpName']}" />
 				<p:outputLabel value="*" styleClass="mandatory" />
 			</td>
+			<!-- #30824 & #29712, #32564 - start -->
+			<!-- 
 			<td class="tdContent">
 				<ac:smReportCompanyNameLOV bBean="#{profileOfRegCompanyRptBB}" required="true"
 				saveObj="profileOfRegCompanyRptBB.managedBean.selectedOrgProfile" />
 			</td>
+			 -->
+			<td class="tdContent">
+				<ac:smReportBasicSupplier bBean="#{profileOfRegCompanyRptBB}" required="true"
+				saveObj="profileOfRegCompanyRptBB.managedBean.selectedSupplier" />
+			</td>
 		</p:outputPanel>
+		<!-- #30824 & #29712, #32564 - end -->
 		
 		<p:outputPanel rendered="#{profileOfRegCompanyRptBB.managedBean.regType eq SmReportConst.SM_REG_TYPE_G2G}">
 			<td class="tdTitle">
@@ -55,48 +63,48 @@
 					label="#{lbl['lbl.rpt.mofRegNo']}"
 					value="#{profileOfRegCompanyRptBB.managedBean.agencyName}" style="width:290px;" />
 				</ui:remove>
-				
-				<ac:lov id="g2g" lovId="PM_ORG_PROFILE"
+				<!-- #30824 & #29712, #32564 - start -->
+				<ac:lov id="g2g" lovId="SM_RPT_G2G_ACCOUNT"
 					headerText="#{lbl['lbl.rpt.organization.list.lov']}"
 					value="#{profileOfRegCompanyRptBB.managedBean.selectedOrgProfile.pmOrgValidity.orgName}" 
 					saveObject="profileOfRegCompanyRptBB.managedBean.selectedOrgProfile"
 					conditionField="#{profileOfRegCompanyRptBB.constructConditionFields()}"
 					tooltip="#{lbl['lbl.sm.rpt.profile.tooltip']}" >
 				</ac:lov>
+				<!-- #30824 & #29712, #32564 - end -->
 			</td>
 		</p:outputPanel>
 		
 		<p:outputPanel rendered="#{profileOfRegCompanyRptBB.managedBean.regType eq SmReportConst.SM_REG_TYPE_MOF}">
-			<tr>
-				<td class="tdTitle">
-					<p:outputLabel value="#{lbl['lbl.rpt.mofRegNo']}" />
-					<p:outputLabel value="*" styleClass="mandatory" />
-				</td>
-				<td class="tdContent">
-					<ui:remove>
-						<p:inputText maxlength="20" required="true" 
-						label="#{lbl['lbl.rpt.mofRegNo']}"
-						value="#{profileOfRegCompanyRptBB.managedBean.mofNo}" style="width:290px;" />
-					</ui:remove>
-			
-					<ac:lov id="supplier" lovId="SM_SUPPLIER_RPT" 
-						headerText="#{lbl['lbl.sm.supplov']}" 
-						saveObject="profileOfRegCompanyRptBB.managedBean.smSupplier"
-						value="#{profileOfRegCompanyRptBB.managedBean.mofNo}"
-						conditionField="#{profileOfRegCompanyRptBB.mofNoCriteria}"
-						postUpdateListener="profileOfRegCompanyRptBB.populateMofNo"
-						tooltip="#{lbl['lbl.sm.rpt.profile.tooltip']}" >
-					</ac:lov>
-				</td>
-				
-				<td class="tdTitle">
-					<p:outputLabel value="#{lbl['lbl.rpt.supplierType']}" /> 
-					<p:outputLabel value="*" styleClass="mandatory" />
-				</td>
-				<td class="tdContent">
-					<ac:smReportSupplierType bBean="#{profileOfRegCompanyRptBB}" required="true" allValue="all" />
-				</td>
-			</tr>
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.mofRegNo']}" />
+				<p:outputLabel value="*" styleClass="mandatory" />
+			</td>
+			<td class="tdContent">
+				<ui:remove>
+					<p:inputText maxlength="20" required="true" size="150"
+					label="#{lbl['lbl.rpt.mofRegNo']}"
+					value="#{profileOfRegCompanyRptBB.managedBean.mofNo}" style="width:290px;" />
+				</ui:remove>
+				<!-- #30824 & #29712, #32564 - start -->
+				<ac:lov id="supplier" lovId="SM_RPT_MOF_ACCOUNT"
+					headerText="#{lbl['lbl.sm.supplov']}"
+					value="#{profileOfRegCompanyRptBB.managedBean.mofNo}" 
+					saveObject="profileOfRegCompanyRptBB.managedBean.smSupplier"
+					conditionField="#{profileOfRegCompanyRptBB.constructConditionFields()}"
+					postUpdateListener="profileOfRegCompanyRptBB.populateMofNo"
+					tooltip="#{lbl['lbl.sm.rpt.profile.tooltip']}" >
+				</ac:lov>
+				<!-- #30824 & #29712, #32564 - end -->
+			</td>
+
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.supplierType']}" />
+				<p:outputLabel value="*" styleClass="mandatory" />
+			</td>
+			<td class="tdContent">
+				<ac:smReportSupplierType bBean="#{profileOfRegCompanyRptBB}" required="true" allValue="all" />
+			</td>
 		</p:outputPanel>
 	</table>
 	
