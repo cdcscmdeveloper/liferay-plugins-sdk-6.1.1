@@ -2931,8 +2931,8 @@ public class EvaluationBackingBean extends
 
 	public void retrivePresentationOrDemoEvaluationStage() {
 
-		IQTEvaluationSO evaluationSO = null;
-		EvaluationResDTO resDTO = new EvaluationResDTO();
+		IQTSpecSO specSo = null;
+		SpecificationResDTO resDTO = null;
 		this.getManagedBean().setTabTechnicalIndex(5);
 		evaluationStageStatusCheck();
 		try {
@@ -2945,64 +2945,33 @@ public class EvaluationBackingBean extends
 				this.getManagedBean().setEvaluatioStageActiveIndex(3);
 				this.getManagedBean().setTabTechnicalIndex(5);
 			}
-			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
-			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			List<ScQtCheckList> localcheckList = new ArrayList<ScQtCheckList>();
+			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+			specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTSpecSO.class);
+			reqDTO.setScQt(this.getManagedBean().getScQt());
+			reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
+			resDTO = specSo.retrieveAllDemoCheckLists(reqDTO);
 
-			List<String> evalstage = new ArrayList<String>();
-			evalstage.add(QTConstants.COMPLIANCE_CHECK);
-			reqDTO.setResultStages(evalstage);
-
-			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-			reqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);
-			reqDTO.setCompliance(null);
-			resDTO = evaluationSO.retrieveCheckListsByCategory(reqDTO);
-			List<ScQtCheckList> localCheckList = new ArrayList<ScQtCheckList>();
-			this.getManagedBean().setCheckQualifiedSuppliers(
-					resDTO.isCheckQualifiedSuppliers());
-			if (null != resDTO
-					&& null != resDTO.getCheckListResultBean().getResultList()
-					&& !resDTO.getCheckListResultBean().getResultList()
-							.isEmpty()) {
-
-				List<ScQtCheckList> proposalChecklistList = resDTO
-						.getCheckListResultBean().getResultList();
-				for (ScQtCheckList proposalCheckList : proposalChecklistList) {
-					if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
-							.equalsIgnoreCase(proposalCheckList
-									.getDefinationType().getParameterCode())
-							&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION
-									.equalsIgnoreCase(proposalCheckList
-											.getDefinationType()
-											.getParameterCode())
-											&& proposalCheckList.isScoringReq()) {					
-						localCheckList.add(proposalCheckList);
-					} else {
-						if (proposalCheckList.isScoringReq()) {
-							localCheckList
-									.add(checkStausForUploadNoActionCheckLists(
-											proposalCheckList,
-											QTConstants.COMPLIANCE_CHECK));
+			if (null != resDTO.getTechnicalCheckList()) {
+				for (ScQtCheckList checklist : resDTO.getTechnicalCheckList()) {
+					for (TplSpecQuestion q : checklist.getScQtDoc()
+							.getTplSpecMaster().getTplSpecQuestions()) {
+						if (q.isItemReqDemo()) {
+							localcheckList.add(checklist);
+							break;
 						}
 					}
 
 				}
 			}
-
-			this.getManagedBean().setEvalStatusComp(true);//#28784
-			
-			this.getManagedBean().setEvaluationStgTechnicalCheckList(
-					localCheckList);
+			this.getManagedBean().setEvaluationStgTechnicalCheckList(localcheckList);
 			if(CollectionUtils.isNotEmpty(this.getManagedBean().getEvaluationStgTechnicalCheckList())){
 				checklistSorting(this.getManagedBean().getEvaluationStgTechnicalCheckList());
 				}
-			checkTechnicalSuppliersQualified();//#28784
-			localCheckList=null;
-			evalstage=null;
-		} finally {
-			evaluationSO = null;
-			resDTO = null;
 
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	// #28784 - end
