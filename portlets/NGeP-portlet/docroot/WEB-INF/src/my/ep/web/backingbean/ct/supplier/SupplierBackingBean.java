@@ -391,8 +391,24 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 				getManagedBean().setRemoveFactoring(true);
 				getManagedBean().setDocType(reqDTO.getDocType());
 			} else {
-				getManagedBean().setRemoveFactoring(false);
-				getManagedBean().setDocType(reqDTO.getDocType());
+				
+				//#32555 start
+				
+				 if(reqDTO.getDocType().equals("UF")){
+						getManagedBean().setRemoveFactoring(false);
+						getManagedBean().setUpdateFactoring(true);
+						getManagedBean().setDocType(ParameterConst.DOCTYPE_UPDATE_FACTORING);
+						
+				 }else {
+						getManagedBean().setRemoveFactoring(false);
+						getManagedBean().setUpdateFactoring(false);
+						getManagedBean().setDocType(ParameterConst.DOCTYPE_REQUEST_FACTORING);
+						getManagedBean().setFcRequestType("A");
+						
+				 }
+				 
+				//#32555 end
+				
 			}
 
 			if (getManagedBean().getUserMap().size() == 0) {
