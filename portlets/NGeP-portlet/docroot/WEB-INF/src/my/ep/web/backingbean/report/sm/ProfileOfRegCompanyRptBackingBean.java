@@ -168,6 +168,8 @@ public class ProfileOfRegCompanyRptBackingBean extends
 				}
 			}
 		}
+		//32564
+		log.info("32564- constructConditionFields():"+sb.toString());
 		return sb.toString();
 	}
 	// #29712, #32564 - end
