@@ -1079,7 +1079,6 @@ public class SPDetailBackingBean extends
 	public void encryptTechFinTemplateSpecDtls(ScQtProposalChecklist currProposalChecklist, ScQtProposalChecklist newProposalChecklist, boolean isCompleted){
 		
 		IQTProposalSO proposalSO = null;
-		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean().getTechnicalQtProposalChecklist();
 		ProposalResDTO resDTO = new ProposalResDTO();
 		ProposalReqDTO reqDTO = new ProposalReqDTO();
 		
@@ -1110,11 +1109,7 @@ public class SPDetailBackingBean extends
 					}
 					throw new EpException(MessageConst.ERROR_760524); 
 			}	
-		} catch (EpException e) {
-			scQtProposalChecklist.setSubmitted(false);
-			throw e;
 		} catch (Exception e) {
-			scQtProposalChecklist.setSubmitted(false);
 			throw new EpException(e.getMessage());
 		}finally {
 			proposalSO = null;
