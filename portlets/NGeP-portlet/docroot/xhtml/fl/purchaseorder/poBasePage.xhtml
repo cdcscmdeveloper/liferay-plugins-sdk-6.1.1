@@ -74,7 +74,7 @@
 			<tr>
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"  
 					action="#{flOrderBB.backToPervious}"
-					rendered="#{flOrderBB.managedBean.taskId==null || flOrderBB.managedBean.taskId!=null}" />
+					rendered="#{flOrderBB.managedBean.taskId==null}" />
 				</td>
 				<c:if test='#{flOrderBB.managedBean.outComes ne "null"}'>
 				<td colspan="4" style="text-align: right">
