@@ -91,7 +91,7 @@
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.remark']}" />
 				</f:facet>
-				<p:inputTextarea id="remarkid" maxlength="1000"
+				<p:inputTextarea id="remarkid" maxlength="1000" disabled="#{createQtBB.managedBean.readOnly}"
 				onkeyup="limitTextArea(this,1000);" valueChangeListener="#{createQtBB.otherAppValueChanged}" onkeydown="limitTextArea(this,1000);" onmouseout="limitTextArea(this,100);"
 					value="#{otherrequestdetails.appRequestRemark.remark}" cols="30"
 					rows="3" ><f:ajax></f:ajax></p:inputTextarea><!-- bug #30435 -->
