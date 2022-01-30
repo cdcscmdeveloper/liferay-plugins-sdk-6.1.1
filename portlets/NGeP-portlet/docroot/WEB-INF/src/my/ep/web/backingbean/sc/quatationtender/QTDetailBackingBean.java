@@ -10496,6 +10496,15 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			} 
 		}
 	}
+	
+	/**
+	 * Listener method to handle Others Approval file download event
+	 * @param scQtApprovalRequest
+	 * @throws Exception
+	 */
+	public void downloadOthersApprovalFile(ScQtApprovalRequest scQtApprovalRequest) throws Exception {
+		downloadFile(scQtApprovalRequest.getApprovalRequestAttachement());
+	}
 	// 25077 - End
 	
     //#13344 start
