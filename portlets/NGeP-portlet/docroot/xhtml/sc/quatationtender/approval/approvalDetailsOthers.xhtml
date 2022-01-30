@@ -52,14 +52,13 @@
 				<c:choose>
 				    <c:when test="#{createQtBB.managedBean.maintanceFlow}">	
 				        <p:column headerText="#{lbl['lbl.sc.document']}">
-							 <p:dataGrid emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-									var="attachFile"
-									value="#{otherrequestdetails.approvalRequestAttachement}"
-									rowIndexVar="attachFileIndex" columns="1" style="width:100%">
-									<h:commandLink value="#{attachFile.fileName}"
-													styleClass="blue_font" immediate="true"
-													action="#{createQtBB.downloadFile(attachFile)}" />
-								</p:dataGrid>
+                                <h:outputText style="font-weight: bold;" value="#{otherrequestdetails.approvalRequestAttachement.fileName}" />
+							    <p:commandButton id="download" icon="ui-icon-download"
+									style="background-color:transparent !important; border:0px none;"
+									ajax="false" immediate="true"
+									action="#{qTDetailBB.downloadOthersApprovalFile(otherrequestdetails)}"
+									rendered="#{otherrequestdetails.approvalRequestAttachement ne null}" disabled="#{createQtBB.managedBean.readOnly}"/>
+								<h:outputText value="#{lbl['lbl.datatable.msg.no.records.found']}" rendered="#{otherrequestdetails.approvalRequestAttachement eq null}" />	
 						</p:column>	
 				    </c:when>
 				    <c:otherwise> 
