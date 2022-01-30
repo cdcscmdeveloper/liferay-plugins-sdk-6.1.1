@@ -487,9 +487,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 */
 	public File downloadFile(String filePath, String fileName)
 			throws IOException {
-		
-		log.info(" filePath  :"+filePath);
-		log.info(" fileName  :"+fileName);
 
 		if (filePath != null) {
 			InputStream input = null;
