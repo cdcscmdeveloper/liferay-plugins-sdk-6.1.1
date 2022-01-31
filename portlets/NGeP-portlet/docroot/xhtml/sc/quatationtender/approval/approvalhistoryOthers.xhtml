@@ -36,32 +36,13 @@
 					    <c:when test="#{qTDetailBB.managedBean.maintanceFlow}">	
 				              <p:column headerText="#{lbl['lbl.sc.document']}">
 				                  <c:if test="#{qTDetailBB.isApprovalScreen() and qTDetailBB.userTaskIsCommitteeAppointmentApproval}">
-										<h:outputText style="font-weight: bold;" value="#{historyOthersDtls.approvalRequestAttachement.fileName}" 
-										    rendered="#{historyOthersDtls.approvalRequestAttachement ne null}"/>
-										<p:commandButton icon="ui-icon-download"
-											style="background-color:transparent !important; border:0px none;"
-											ajax="false" immediate="true"
-											action="#{qTDetailBB.downloadOthersApprovalFile(historyOthersDtls)}"
-											rendered="#{historyOthersDtls.approvalRequestAttachement ne null}" />
-										<h:outputText value="#{lbl['lbl.datatable.msg.no.records.found']}" rendered="#{historyOthersDtls.approvalRequestAttachement eq null}" />
+										<ui:include src="downloadOthersFile.xhtml" />
 				                  </c:if>
 				                  <c:if test="#{qTDetailBB.isApprovalScreen() and qTDetailBB.userTaskIsPublicationApproval}">
-				                        <h:outputText style="font-weight: bold;" value="#{historyOthersDtls.approvalRequestAttachement.fileName}" />
-										<p:commandButton icon="ui-icon-download"
-											style="background-color:transparent !important; border:0px none;"
-											ajax="false" immediate="true"
-											action="#{qTDetailBB.downloadOthersApprovalFile(historyOthersDtls)}"
-											rendered="#{historyOthersDtls.approvalRequestAttachement ne null}" />
-										<h:outputText value="#{lbl['lbl.datatable.msg.no.records.found']}" rendered="#{historyOthersDtls.approvalRequestAttachement eq null}" />	
+				                        <ui:include src="downloadOthersFile.xhtml" /> 
 				                  </c:if>
 				                  <c:if test="#{!qTDetailBB.isApprovalScreen()}">
-								        <h:outputText style="font-weight: bold;" value="#{historyOthersDtls.approvalRequestAttachement.fileName}" />
-									    <p:commandButton icon="ui-icon-download"
-											style="background-color:transparent !important; border:0px none;"
-											ajax="false" immediate="true"
-											action="#{qTDetailBB.downloadOthersApprovalFile(historyOthersDtls)}"
-											rendered="#{historyOthersDtls.approvalRequestAttachement ne null}" />
-										<h:outputText value="#{lbl['lbl.datatable.msg.no.records.found']}" rendered="#{historyOthersDtls.approvalRequestAttachement eq null}" />	
+								        <ui:include src="downloadOthersFile.xhtml" />
 				                  </c:if>
 							  </p:column>  
 				        </c:when>
