@@ -12758,18 +12758,20 @@ private void retriveCommitteeRemarksList(){
 					}
 				}
 				
-//#21695 Farid Start 19/11/2020				
+//#21695 Farid Start 19/11/2020
+//#21695 31/1/2022 UPDATED CHANGES FOR FINANCIAL SUMMARY START
 				if(isZonal){
-					if(SourcingConstants.AWARD_BY_ITEM.equals(awardBy)){
+					if(SourcingConstants.AWARD_BY_ITEM.equals(awardBy) && evalStage.equalsIgnoreCase("TI")){
 						//BUG #32453 & 32297 related to #21695 Start
-						if(evalStage.equalsIgnoreCase("TI")){
 							return evaluationSO.retrieveSummaryNotOfferSuppliersItem(reqDTO)
 									.getNotOfferSupplierResultBean();
-						}else{
-							return evaluationSO.retrieveSummaryNotOfferSuppliers(reqDTO)
-									.getNotOfferSupplierResultBean();
-						}
+//#21695 31/1/2022 UPDATED CHANGES FOR FINANCIAL SUMMARY (REMOVE)					
+//						else{
+//							return evaluationSO.retrieveSummaryNotOfferSuppliers(reqDTO)
+//									.getNotOfferSupplierResultBean();
+//						}
 						//BUG #32453 & 32297 related to #21695 End
+//#21695 31/1/2022 UPDATED CHANGES FOR FINANCIAL SUMMARY END
 					}else{
 						return evaluationSO.retrieveSummaryNotOfferSuppliersPackageTech(reqDTO)
 								.getNotOfferSupplierResultBean();
