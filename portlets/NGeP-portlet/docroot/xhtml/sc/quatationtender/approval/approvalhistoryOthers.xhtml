@@ -38,7 +38,7 @@
 				                  <c:if test="#{qTDetailBB.isApprovalScreen() and qTDetailBB.userTaskIsCommitteeAppointmentApproval}">
 										<h:outputText style="font-weight: bold;" value="#{historyOthersDtls.approvalRequestAttachement.fileName}" 
 										    rendered="#{historyOthersDtls.approvalRequestAttachement ne null}"/>
-										<p:commandButton id="download" icon="ui-icon-download"
+										<p:commandButton id="downloadCA" icon="ui-icon-download"
 											style="background-color:transparent !important; border:0px none;"
 											ajax="false" immediate="true"
 											action="#{qTDetailBB.downloadOthersApprovalFile(historyOthersDtls)}"
@@ -47,7 +47,7 @@
 				                  </c:if>
 				                  <c:if test="#{qTDetailBB.isApprovalScreen() and qTDetailBB.userTaskIsPublicationApproval}">
 				                        <h:outputText style="font-weight: bold;" value="#{historyOthersDtls.approvalRequestAttachement.fileName}" />
-										<p:commandButton id="download" icon="ui-icon-download"
+										<p:commandButton id="downloadPA" icon="ui-icon-download"
 											style="background-color:transparent !important; border:0px none;"
 											ajax="false" immediate="true"
 											action="#{qTDetailBB.downloadOthersApprovalFile(historyOthersDtls)}"
@@ -56,7 +56,7 @@
 				                  </c:if>
 				                  <c:if test="#{qTDetailBB.isApprovalScreen()}">
 								        <h:outputText style="font-weight: bold;" value="#{historyOthersDtls.approvalRequestAttachement.fileName}" />
-									    <p:commandButton id="download" icon="ui-icon-download"
+									    <p:commandButton id="downloadHistory" icon="ui-icon-download"
 											style="background-color:transparent !important; border:0px none;"
 											ajax="false" immediate="true"
 											action="#{qTDetailBB.downloadOthersApprovalFile(historyOthersDtls)}"

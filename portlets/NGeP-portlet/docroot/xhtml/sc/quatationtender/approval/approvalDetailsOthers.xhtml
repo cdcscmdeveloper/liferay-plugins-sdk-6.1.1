@@ -53,7 +53,7 @@
 				    <c:when test="#{createQtBB.managedBean.maintanceFlow}">	
 				        <p:column headerText="#{lbl['lbl.sc.document']}">
                                 <h:outputText style="font-weight: bold;" value="#{otherrequestdetails.approvalRequestAttachement.fileName}" />
-							    <p:commandButton id="download" icon="ui-icon-download"
+							    <p:commandButton id="downloadOthers" icon="ui-icon-download"
 									style="background-color:transparent !important; border:0px none;"
 									ajax="false" immediate="true"
 									action="#{qTDetailBB.downloadOthersApprovalFile(otherrequestdetails)}"
