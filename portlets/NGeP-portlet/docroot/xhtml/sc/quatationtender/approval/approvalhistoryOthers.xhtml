@@ -38,6 +38,12 @@
 				                  <c:if test="#{qTDetailBB.isApprovalScreen() and qTDetailBB.userTaskIsCommitteeAppointmentApproval}">
 										<ui:include src="downloadOthersFile.xhtml" />
 				                  </c:if>
+				                  <c:if test="#{qTDetailBB.isApprovalScreen() and qTDetailBB.userTaskIsBPKApproval}">
+				                        <ui:include src="downloadOthersFile.xhtml" /> 
+				                  </c:if>
+				                  <c:if test="#{qTDetailBB.isApprovalScreen() and qTDetailBB.userTaskIsCommitteeAppointmentApprovalEcOcTecFec}">
+				                        <ui:include src="downloadOthersFile.xhtml" /> 
+				                  </c:if>
 				                  <c:if test="#{qTDetailBB.isApprovalScreen() and qTDetailBB.userTaskIsPublicationApproval}">
 				                        <ui:include src="downloadOthersFile.xhtml" /> 
 				                  </c:if>
