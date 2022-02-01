@@ -598,10 +598,16 @@ public class SmPersonnelBackingBean extends
 				// set contract signer flag to no
 				getManagedBean().getBasicSmPersonnel().setContractSignerFlg(
 						Integer.parseInt(ParameterConst.FLAG_NO));
-
+				
+				//#9569 - Start
+				//Since for MOF appliation, CM_USER Must be an authorized personnel.
 				// set authorized flag to no
+				/*getManagedBean().getBasicSmPersonnel().setAuthorizedFlg(
+						Integer.parseInt(ParameterConst.FLAG_NO));*/
+				
 				getManagedBean().getBasicSmPersonnel().setAuthorizedFlg(
-						Integer.parseInt(ParameterConst.FLAG_NO));
+						Integer.parseInt(ParameterConst.FLAG_YES));
+				//#9569 - End 
 			} else {
 				// newly added personnel, set softcert flag to pending request
 				if (getManagedBean().getBasicSmPersonnel().getPersonnelId() == null) {
@@ -2023,6 +2029,9 @@ public class SmPersonnelBackingBean extends
 		}
 		//End 13320
 		if (getManagedBean().getBasicSmPersonnel().getPersonnelId() == null) {
+			//#9569 - Start
+			getManagedBean().getBasicSmPersonnel().setFromBasicUserMaintenane(true);
+			//#9569 - End
 			getManagedBean().setBasicSmPersonnel(
 					saveNewUser(getManagedBean().getBasicSmPersonnel()));
 			initAuthorizedPersonnels(getManagedBean().getSmSupplier());
