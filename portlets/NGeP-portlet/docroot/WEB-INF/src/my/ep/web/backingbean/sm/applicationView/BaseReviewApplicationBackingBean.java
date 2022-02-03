@@ -4570,6 +4570,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						retVal.setManufacturerCancel(true);
 					if (disciplinaryAction.isBlacklistOwner())
 						retVal.setBlacklistOwnerDirector(true);
+					
+					/*
+					 * Bug #32560 ADDED INDICATOR RECORD STATUS, TO SHOW WHICH DA IS ACTIVE 
+					 */
+					retVal.setActiveRecordStatus(disciplinaryAction.isRecordStatus());
 
 					// 28281 (bumi cat code) start
 					if (disciplinaryAction.isCancelCategory() || disciplinaryAction.isManufacturerCancel()
