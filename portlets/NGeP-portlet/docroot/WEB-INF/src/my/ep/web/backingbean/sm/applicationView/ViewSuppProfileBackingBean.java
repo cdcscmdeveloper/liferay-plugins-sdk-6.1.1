@@ -240,6 +240,23 @@ public class ViewSuppProfileBackingBean extends
 	} 
 	
 	/**
+	 * 32560 - Added Checking to Get Active DA from the list
+	 * CHECKING TO SET START / END DATE FOR DISCIPLINARY ACTION POPUP
+	 * @return void
+	 */
+	public void findActiveDA(List<DisciplinaryActionVO> listDA) {
+			    Iterator<DisciplinaryActionVO> iterator = listDA.iterator();
+			    while (iterator.hasNext()) {
+			    	DisciplinaryActionVO daVO = iterator.next();
+			        if (daVO.isActiveRecordStatus()) {
+			            this.getManagedBean().setStartDate(daVO.getStartDate());
+			            this.getManagedBean().setEndDate(daVO.getEndDate());
+			            this.getManagedBean().setWarning(daVO.isWarning());
+			        }
+			    }
+			}
+	
+	/**
 	 * @param smSupplier
 	 */
 	public void onViewDisciplinaryAction(SmSupplier smSupplier) {
@@ -249,6 +266,12 @@ public class ViewSuppProfileBackingBean extends
 		//27876: Disciplinary Action - start - <27876>
 		
 		List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(smSupplier);
+		
+		/*
+		 * 32560 - Added Checking Active DA
+		 */
+		findActiveDA(voList);	
+
 		if(!EntityHelper.isCollectionEmpty(voList)
 				&& voList.size() > 0){
 			getManagedBean().setDisciplineVOs(voList);
@@ -559,6 +582,11 @@ public class ViewSuppProfileBackingBean extends
 		// 27876: Disciplinary Action - start - <27876>
 
 		List<DisciplinaryActionVO> voList = getActiveDisciplinaryActionVO(smSupplier);
+		/*
+		 * 32560 - Added Checking Active DA
+		 */
+		findActiveDA(voList);	
+		
 		if (!EntityHelper.isCollectionEmpty(voList) && voList.size() > 0) {
 			getManagedBean().setDisciplineVOs(voList);
 			// #-29771 - Start.
