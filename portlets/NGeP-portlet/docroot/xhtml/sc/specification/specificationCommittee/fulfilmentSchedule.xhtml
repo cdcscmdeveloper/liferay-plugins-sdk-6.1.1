@@ -19,7 +19,7 @@
 							value="#{lbl['lbl.sc.periodic.fullfillent.type']}" /></td>
 					<td><p:selectOneRadio
 							disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.genInfo}"
-							value="#{specificationBackingBean.managedBean.qt.scheduleType}"><p:remove>#29474</p:remove>
+							value="#{specificationBackingBean.managedBean.qt.scheduleType}">
 							<f:selectItems
 								value="#{specificationBackingBean.getSelectRadioButtonCodeValues(ParameterTypeConst.periodicScheduleType)}" />
 							<p:ajax event="change" process="@this" partialSubmit="true"
@@ -36,7 +36,7 @@
 		<h:panelGroup id="schedule">
 			<p:panel header="#{lbl['lbl.sc.spec.freq.schedule']} "
 				toggleable="true"
-				rendered="#{(specificationBackingBean.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeScheduled or specificationBackingBean.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeNonPeriodicScheduled) and  specificationBackingBean.managedBean.qt.scheduleType eq ParameterConst.periodicScheduleTypeFrequencySchedule}"><p:remove>#29474</p:remove>
+				rendered="#{(specificationBackingBean.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeScheduled or specificationBackingBean.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeNonPeriodicScheduled) and  specificationBackingBean.managedBean.qt.scheduleType eq ParameterConst.periodicScheduleTypeFrequencySchedule}">
 
 				<h:outputText styleClass="instruction"
 					value="#{lbl['lbl.sc.spec.instruction']}"
@@ -50,7 +50,7 @@
 					rendered="#{(specificationBackingBean.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeScheduled or specificationBackingBean.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeNonPeriodicScheduled)  and  specificationBackingBean.managedBean.qt.scheduleType eq ParameterConst.periodicScheduleTypeFrequencySchedule}"
 					rowIndexVar="index" widgetVar="freqScheduleWidget"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-					value="#{specificationBackingBean.managedBean.scheduleList}"><p:remove>#29474</p:remove>
+					value="#{specificationBackingBean.managedBean.scheduleList}">
 					<ac:paginator for="frequencySchedule" />
 					<p:column style="width:2%;">
 						<f:facet name="header">
@@ -81,7 +81,7 @@
 							disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.genInfo}"
 							style="text-align:right;" maxlength="3"
 							label="#{lbl['lbl.sc.spec.schedule.no']}" size="3"
-							id="scheduleNum"><p:remove>#29474</p:remove>
+							id="scheduleNum">
 							<p:ajax partialSubmit="true" update=":form:frequencySchedule, :form:addButtonId" process="@form" />
 							<ac:validateNumber integerOnly="true" maxIntegerDigits="3"></ac:validateNumber>
 						</p:inputText>
@@ -94,7 +94,7 @@
 						</f:facet>
 						<p:selectOneMenu style="width:140px;"
 							disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.genInfo}"
-							value="#{frequency.startMonth}"><p:remove>#29474</p:remove>
+							value="#{frequency.startMonth}">
 
 							<f:selectItems
 								value="#{specificationBackingBean.monthDropDownValues}"></f:selectItems>
@@ -113,7 +113,7 @@
 						</f:facet>
 						<p:selectOneMenu value="#{frequency.startYear}"
 							disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.genInfo}"
-							style="width:110px;"><p:remove>#29474</p:remove>
+							style="width:110px;">
 							<f:selectItems
 								value="#{specificationBackingBean.yearsDisplayDtls}"></f:selectItems>
 							<p:ajax event="change" update=":form:frequencySchedule, :form:addButtonId" process="@form" 
@@ -132,7 +132,7 @@
 						</f:facet>
 						<p:selectOneMenu style="width:140px;" id="scheduleendMonth"
 							disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.genInfo}"
-							value="#{frequency.endMonth}"><p:remove>#29474</p:remove>
+							value="#{frequency.endMonth}">
 
 							<f:selectItems
 								value="#{specificationBackingBean.monthDropDownValues}"></f:selectItems>
@@ -150,7 +150,7 @@
 						</f:facet>
 						<p:selectOneMenu value="#{frequency.endYear}"
 							disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.genInfo}"
-							style="width:110px;"><p:remove>#29474</p:remove>
+							style="width:110px;">
 							<f:selectItems
 								value="#{specificationBackingBean.yearsDisplayDtls}"></f:selectItems>
 							<p:ajax event="change" update=":form:frequencySchedule, :form:addButtonId" process="@form" 
@@ -186,13 +186,13 @@
 					disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.genInfo}"
 						partialSubmit="true" process="@this" update="frequencySchedule"
 						action="#{specificationBackingBean.addScheduleDetails}"
-						oncomplete="freqScheduleWidget.paginator.endLink.click();"><p:remove>#29474</p:remove>
+						oncomplete="freqScheduleWidget.paginator.endLink.click();">
 					</p:commandButton>
 					<p:spacer width="2" />
 					<p:commandButton id="deleteButtonId"
 						value="#{lbl['lbl.ct.delete']}" partialSubmit="true"
 						disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.genInfo}"
-						process="@this" onsuccess="freqScheduleObj.show()"><p:remove>#29474</p:remove>
+						process="@this" onsuccess="freqScheduleObj.show()">
 					</p:commandButton>
 				</div>
 				<p:confirmDialog id="freqScheduleObj" widgetVar="freqScheduleObj"
@@ -261,7 +261,7 @@
 							style="text-align:right;"
 							disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.genInfo}"
 							label="#{lbl['lbl.sc.spec.phase']}" id="progressivePhase"
-							maxlength="3" size="3"><p:remove>#29474</p:remove>
+							maxlength="3" size="3">
 
 							<p:ajax event="change" update=":form:progressivePayment, :form:progPayAddButtonId" process="@form" 
 			                    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
@@ -277,7 +277,7 @@
 						<p:inputText value="#{payment.phaseDesc}" maxlength="50"
 							disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.genInfo}"
 							required="true" id="progressivePhasedesc" style="width:130px;"
-							label="#{lbl['lbl.sc.description']}"><p:remove>#29474</p:remove>
+							label="#{lbl['lbl.sc.description']}">
 							<p:ajax event="change" update=":form:progressivePayment, :form:progPayAddButtonId" process="@form" 
 			                    onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 						</p:inputText>
@@ -292,7 +292,7 @@
 						</f:facet>
 						<p:selectOneMenu style="width:130px;"
 							disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.genInfo}"
-							value="#{payment.startMonth}"><p:remove>#29474</p:remove>
+							value="#{payment.startMonth}">
 
 							<f:selectItems
 								value="#{specificationBackingBean.monthDropDownValues}"></f:selectItems>
@@ -310,7 +310,7 @@
 
 						<p:selectOneMenu value="#{payment.startYear}"
 							disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.genInfo}"
-							style="width:130px;"><p:remove>#29474</p:remove>
+							style="width:130px;">
 							<f:selectItems
 								value="#{specificationBackingBean.yearsDisplayDtls}"></f:selectItems>
 							<p:ajax event="change" update=":form:progressivePayment, :form:progPayAddButtonId" process="@form" 
@@ -327,7 +327,7 @@
 						</f:facet>
 						<p:selectOneMenu style="width:130px;" id="paymentEndMonth"
 							disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.genInfo}"
-							value="#{payment.endMonth}"><p:remove>#29474</p:remove>
+							value="#{payment.endMonth}">
 
 							<f:selectItems
 								value="#{specificationBackingBean.monthDropDownValues}">
@@ -339,7 +339,7 @@
 					<p:column headerText="#{lbl['lbl.sc.end.year']}" style="width:15%">
 						<p:selectOneMenu value="#{payment.endYear}"
 							disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.genInfo}"
-							style="width:130px;"><p:remove>#29474</p:remove>
+							style="width:130px;">
 							<f:selectItems
 								value="#{specificationBackingBean.yearsDisplayDtls}"></f:selectItems>
 							<p:ajax event="change" update=":form:progressivePayment, :form:progPayAddButtonId" process="@form" 
@@ -358,7 +358,7 @@
 						<p:inputText value="#{payment.percentage}" required="true"
 							disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.genInfo}"
 							id="progressivePercentage" style="width:100px;text-align:right;"
-							label="#{lbl['lbl.sc.percentage']}" maxlength="18"><p:remove>#29474</p:remove>
+							label="#{lbl['lbl.sc.percentage']}" maxlength="18">
 							<p:ajax event="change" update=":form:progressivePayment, :form:progPayAddButtonId" process="@form" 
 			                    onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 							<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
@@ -372,12 +372,12 @@
 					<p:commandButton id="progPayAddButtonId" value="#{lbl['lbl.btn.add']}"
 					partialSubmit="true" process="@this"  disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.genInfo}"
 					update="progressivePayment" action="#{specificationBackingBean.addProgressiveDetails}"
-					 oncomplete="progPaymentWidget.paginator.endLink.click();"><p:remove>#29474</p:remove>
+					 oncomplete="progPaymentWidget.paginator.endLink.click();">
 					</p:commandButton>
 					<p:spacer width="2" />
 					<p:commandButton id="progPayDeleteButtonId" value="#{lbl['lbl.ct.delete']}" partialSubmit="true" 
 					disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.genInfo}"
-					process="@this"  onsuccess="progPayObj.show()"><p:remove>#29474</p:remove>
+					process="@this"  onsuccess="progPayObj.show()">
 					</p:commandButton>
 				</div>
 				<p:confirmDialog id="progPayObj" widgetVar="progPayObj" message="#{lbl['lbl.msg.confirm.delete']}" 	
