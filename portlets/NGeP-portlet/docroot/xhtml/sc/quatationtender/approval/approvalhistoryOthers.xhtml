@@ -31,19 +31,28 @@
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 				</h:outputText>
 			</p:column>
-	                 <c:if test="#{qTDetailBB.managedBean.maintanceFlow}">
+			     <c:if test="#{not empty approvalDtlsList.historyApprovalRequests}">
+	                <c:choose>
+					    <c:when test="#{qTDetailBB.managedBean.maintanceFlow}">	
 				              <p:column headerText="#{lbl['lbl.sc.document']}">
-								  <p:dataGrid emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-										var="attachFile"
-										value="#{historyOthersDtls.approvalRequestAttachement}"
-										rowIndexVar="attachFileIndex" columns="1" style="width:100%">
-										<h:commandLink value="#{attachFile.fileName}"
-														styleClass="blue_font" immediate="true"
-														action="#{createQtBB.downloadFile(attachFile)}" />
-									</p:dataGrid>	
+				                  <c:if test="#{qTDetailBB.isApprovalScreen() and qTDetailBB.userTaskIsCommitteeAppointmentApproval}">
+										<ui:include src="downloadOthersFile.xhtml" />
+				                  </c:if>
+				                  <c:if test="#{qTDetailBB.isApprovalScreen() and qTDetailBB.userTaskIsBPKApproval}">
+				                        <ui:include src="downloadOthersFile.xhtml" /> 
+				                  </c:if>
+				                  <c:if test="#{qTDetailBB.isApprovalScreen() and qTDetailBB.userTaskIsCommitteeAppointmentApprovalEcOcTecFec}">
+				                        <ui:include src="downloadOthersFile.xhtml" /> 
+				                  </c:if>
+				                  <c:if test="#{qTDetailBB.isApprovalScreen() and qTDetailBB.userTaskIsPublicationApproval}">
+				                        <ui:include src="downloadOthersFile.xhtml" /> 
+				                  </c:if>
+				                  <c:if test="#{!qTDetailBB.isApprovalScreen()}">
+								        <ui:include src="downloadOthersFile.xhtml" />
+				                  </c:if>
 							  </p:column>  
-					 </c:if> 
-					 <c:if test="#{!qTDetailBB.managedBean.maintanceFlow}">
+				        </c:when>
+				        <c:otherwise>
 		                       <p:column>
 							      <f:facet name="header">
 								        <h:outputText value="* " styleClass="mandatory" />
@@ -59,7 +68,9 @@
 											target="#{approvalBackingBean.managedBean.historyApprovalRequests}" />
 							      </ac:scSingleFileUploadButton>
 					          </p:column> 
-					 </c:if> 
+					    </c:otherwise>
+				    </c:choose>
+			     </c:if>	
 		</p:dataTable>
 	</p:panel>
 </ui:composition>
