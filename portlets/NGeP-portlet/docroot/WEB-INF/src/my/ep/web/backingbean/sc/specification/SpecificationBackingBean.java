@@ -175,6 +175,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCheckListScore;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListValue;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
+import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
@@ -1139,24 +1140,30 @@ public class SpecificationBackingBean extends
 
 			break;
 
-		case 8:
+			//#29474 - start
+			case 8:
+				specReqDTO.setScQt(constructSpecCommitteDtls().getScQt());
+				specSo.validateDeductionDtls(specReqDTO);
+				break;
 
-			ScQt fulfilMentDtls = constructSpecCommitteDtls().getScQt();
-			// checktemplateSpecStatus(fulfilMentDtls);
-			// checkFinancialSpecStatus(fulfilMentDtls);
+			case 9:
 
-			if (ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(this
-					.getManagedBean().getFulfilmentType())
-					|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
-							.equalsIgnoreCase(this.getManagedBean()
-									.getFulfilmentType())) {
-				specReqDTO.setScQt(fulfilMentDtls);
-				specSo.validateSCFulfillmentSchedules(specReqDTO);
-			}
+				ScQt fulfilMentDtls = constructSpecCommitteDtls().getScQt();
+				// checktemplateSpecStatus(fulfilMentDtls);
+				// checkFinancialSpecStatus(fulfilMentDtls);
 
-			break;
+				if (ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(this
+						.getManagedBean().getFulfilmentType())
+						|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
+								.equalsIgnoreCase(this.getManagedBean()
+										.getFulfilmentType())) {
+					specReqDTO.setScQt(fulfilMentDtls);
+					specSo.validateSCFulfillmentSchedules(specReqDTO);
+				}
 
-		case 9:
+				break;
+
+			case 10://#29474 - end
 			constructSpecCommitteDtls().getScQt();
 			// checktemplateSpecStatus(committeeEndorsment);
 			// checkFinancialSpecStatus(committeeEndorsment);
@@ -1211,7 +1218,12 @@ public class SpecificationBackingBean extends
 			// checkFinancialSpecStatus(this.getManagedBean().getQt());
 			break;
 
+			//#29474 - start
 		case 8:
+			retrieveDeductionPaymentTabDtl();
+			break;
+
+		case 9:
 			if (ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(this
 					.getManagedBean().getFulfilmentType())
 					|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
@@ -1226,7 +1238,7 @@ public class SpecificationBackingBean extends
 			}
 			break;
 
-		case 9:
+		case 10:// #29474 - end
 			retriveCommitteeEndorsment();
 			// checktemplateSpecStatus(this.getManagedBean().getQt());
 			// checkFinancialSpecStatus(this.getManagedBean().getQt());
@@ -11184,6 +11196,17 @@ public class SpecificationBackingBean extends
 			}
 			scQt.setScQtSpecificationRemarks(remarks);
 		}
+		
+		// #29474 - start Setting the Deductions to specification.
+		List<ScQtDeduction> deductionList = this.getManagedBean()
+				.getScQtDeductionList();
+		if (null != deductionList && !deductionList.isEmpty()) {
+			for (ScQtDeduction deduction : deductionList) {
+				deduction.setScQt(this.getManagedBean().getQt());
+			}
+			scQt.setScQtDeductions(deductionList);
+		}
+		// #29474 - end
 
 		if (null != localChecklist && localChecklist.size() > 0) {
 
@@ -11340,6 +11363,17 @@ public class SpecificationBackingBean extends
 			specReqDTO.setToBeRemoveScoreSettingList(toBeRemoveScoreSettings);
 			//#25635 danial end
 			
+			//#29474 - start			
+			List<ScQtDeduction> deductionRemoveList = this.getManagedBean()
+					.getRemoveDeductions();
+			if (null != deductionRemoveList && !deductionRemoveList.isEmpty()) {
+				for (int i = 0; i < deductionRemoveList.size(); i++) {
+					if (null == deductionRemoveList.get(i).getQtDeductionId()) {
+						deductionRemoveList.remove(i);
+					}
+				}
+			}
+			specReqDTO.setRemoveDeductions(deductionRemoveList);//#29474 - end
 			specReqDTO.setTobeRemoveList(checklistRemoveList);
 			specReqDTO.setTobeRemoveDeliveryLocs(deliveryRemoveList);
 			specReqDTO.setToBeRemoveSchedulesList(this.getManagedBean()
@@ -11596,7 +11630,22 @@ public class SpecificationBackingBean extends
 				retriveDeliveryDetails();
 				break;
 
+			//#29474 - start
 			case 8:
+				ScQt paymentDeductions = constructSpecCommitteDtls().getScQt();
+				specReqDTO.setScQt(paymentDeductions);
+				specSO.validateDeductionDtls(specReqDTO);
+				resDTO = specSO.saveQTDtl(specReqDTO);
+				renewSesionObject();
+				this.getManagedBean().setQt(resDTO.getScQt());
+				getfulfilmentDtls(resDTO.getScQt());
+				retriveSpecdetails(resDTO.getScQt().getQtId());
+				this.getManagedBean().setReadOnly(readonly);
+				this.getManagedBean().setCurrentStatusId(statusId);
+				retrieveDeductionPaymentTabDtl();
+				break;
+
+			case 9:
 				ScQt fulfilMentdtls = constructSpecCommitteDtls().getScQt();
 				if (ParameterConst.FULFILMENT_TYPE_SCHEDULED
 						.equalsIgnoreCase(this.getManagedBean()
@@ -11630,7 +11679,7 @@ public class SpecificationBackingBean extends
 				}
 				break;
 
-			case 9:
+			case 10://#29474 - end
 
 				ScQt endorsment = constructSpecCommitteDtls().getScQt();
 				specReqDTO.setScQt(endorsment);
@@ -12164,6 +12213,17 @@ public class SpecificationBackingBean extends
 		 * validateFinancialStandardCheckListSubmit(); }
 		 */
 
+		// #29474 - start
+		List<ScQtDeduction> deductionRemoveList = this.getManagedBean()
+				.getRemoveDeductions();
+		if (null != deductionRemoveList && !deductionRemoveList.isEmpty()) {
+			for (int i = 0; i < deductionRemoveList.size(); i++) {
+				if (null == deductionRemoveList.get(i).getQtDeductionId()) {
+					deductionRemoveList.remove(i);
+				}
+			}
+		}
+		spReqDTO.setRemoveDeductions(deductionRemoveList);// #29474 - end
 		spReqDTO.setTobeRemoveDeliveryLocs(deliveryRemoveList);
 		spReqDTO.setTobeRemoveList(checklistRemoveList);
 		spReqDTO.setTobeRemoveCategoryCodes(this.getManagedBean()
@@ -15962,6 +16022,17 @@ public class SpecificationBackingBean extends
 					scQt.getQtId(), scQt.getQtNo());
 		}
 		
+		// #29474 - start
+		List<ScQtDeduction> deductionRemoveList = this.getManagedBean()
+				.getRemoveDeductions();
+		if (null != deductionRemoveList && !deductionRemoveList.isEmpty()) {
+			for (int i = 0; i < deductionRemoveList.size(); i++) {
+				if (null == deductionRemoveList.get(i).getQtDeductionId()) {
+					deductionRemoveList.remove(i);
+				}
+			}
+		}
+		spReqDTO.setRemoveDeductions(deductionRemoveList);// #29474 - end
 		spReqDTO.setTobeRemoveList(checklistRemoveList);
 		spReqDTO.setTobeRemoveDeliveryLocs(deliveryRemoveList);//#15391 - end
 		spReqDTO.setDigiSignData(digiSign);
@@ -16390,6 +16461,17 @@ public class SpecificationBackingBean extends
 					scQt.getQtId(), scQt.getQtNo());
 		}
 
+		// #29474 - start
+		List<ScQtDeduction> deductionRemoveList = this.getManagedBean()
+				.getRemoveDeductions();
+		if (null != deductionRemoveList && !deductionRemoveList.isEmpty()) {
+			for (int i = 0; i < deductionRemoveList.size(); i++) {
+				if (null == deductionRemoveList.get(i).getQtDeductionId()) {
+					deductionRemoveList.remove(i);
+				}
+			}
+		}
+		spReqDTO.setRemoveDeductions(deductionRemoveList);// #29474 - end
 		spReqDTO.setTobeRemoveList(checklistRemoveList);
 		spReqDTO.setTobeRemoveDeliveryLocs(deliveryRemoveList);//#15391 - end
 		spReqDTO.setDigiSignData(digiSign);
@@ -20334,4 +20416,57 @@ if(null!=allTechnicalChecklist){
 		return statusDesc;
 	}
 	//#28784 - End
+	
+	// #29474 - start
+	/**
+	 * Retrieve deduction payment tab dtl.
+	 */
+	public void retrieveDeductionPaymentTabDtl() {
+
+		ScQt scQt = getManagedBean().getQt();
+		debugLogger("retrieveDeductionPaymentTabDtl");
+		if (this.getManagedBean().getScQtDeductionList() == null
+				|| this.getManagedBean().getScQtDeductionList().isEmpty()) {
+			IQTDetailSO detailSO;
+			try {
+				detailSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+				reqDTO.setQtId(scQt.getQtId());
+				QuationTenderResDTO resDTO = detailSO
+						.retriveQTDeductionPaymentDetails(reqDTO);
+				List<ScQtDeduction> deductionList = resDTO
+						.getDeductionResultBean().getResultList();
+				if (null != this.getManagedBean().getRemoveDeductions()
+						&& CollectionUtils.isNotEmpty(this.getManagedBean()
+								.getRemoveDeductions())) {
+
+				} else {
+					this.getManagedBean().setScQtDeductionList(deductionList);
+					this.getManagedBean().getQt()
+							.setScQtDeductions(deductionList);
+					getManagedBean().setSelectedScQtDeduction(null);
+				}
+			} finally {
+				detailSO = null;
+			}
+		}
+	}
+
+	public boolean isSpecStage() {
+		Long currentStatusId = this.getManagedBean().getCurrentStatusId();
+		boolean isSpec = false;
+		if (QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING
+				.equals(currentStatusId)
+				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT
+						.equals(currentStatusId)
+				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF
+						.equals(currentStatusId)
+				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION
+						.equals(currentStatusId)) {
+			return isSpec;
+		}
+		return !isSpec;
+	}
+	// #29474 - end
 }
