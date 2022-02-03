@@ -1929,7 +1929,8 @@ public class SmApplicationUtil {
 		// end #30076
 
 		//16052019 - SSM INTEGRATION CR #27219
-		if (showerror && appl.isApplValidWithSsm() && managedBean.isSupplierUser() && appl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+		//31130
+		if (showerror && managedBean.isSupplierUser() && !managedBean.isDisAllowOwnerEdit()) {
 			if (currentTab != -1) {
 				setNavigationBackToCurrentPage(currentTab, managedBean);
 			}
@@ -3865,8 +3866,6 @@ public class SmApplicationUtil {
 						+ s2.getPmCategoryL3().getCategoryL3Code());
 			}
 		});
-		
-		
 	}
 	
 	/**
