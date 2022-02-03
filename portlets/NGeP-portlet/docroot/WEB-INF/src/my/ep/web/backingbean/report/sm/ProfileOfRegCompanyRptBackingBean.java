@@ -31,9 +31,9 @@ public class ProfileOfRegCompanyRptBackingBean extends
 	}
 
 	public void generateReport() {
-		// #29712 - start
+		// #29712, #32564 - start
 		validateParameterValue(getManagedBean().getReportCode());
-		// #29712 - end
+		// #29712, #32564 - end
 		
 		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
 

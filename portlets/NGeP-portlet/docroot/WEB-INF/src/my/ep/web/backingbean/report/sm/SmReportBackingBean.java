@@ -207,7 +207,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	// #21331 - start
 	public void validateParameterValue(String reportCode) {
 		log.info("************** SmReportBackingBean.validateParameterValue() | reportCode: " + reportCode);
-		// #29712 & #30824 - start
+		// #29712 & #30824, #32564 - start
 		// SM_001
 		if (StringUtils.isNotEmpty(reportCode) && (reportCode.trim().equalsIgnoreCase(ReportConst.SM_REG_COMPANY_IN_MOF_RPT_VAL))) {
 			if (StringUtils.isEmpty(getManagedBean().getRegType())) {
@@ -226,7 +226,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 				}
 			}
 		}
-		// #29712 & #30824 - end
+		// #29712 & #30824, #32564 - end
 		
 		// SM_048
 		if (StringUtils.isNotEmpty(reportCode) && (reportCode.trim().equalsIgnoreCase(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL))) {
