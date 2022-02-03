@@ -33,6 +33,9 @@ public class ProfileOfRegCompanyRptBackingBean extends
 	}
 
 	public void generateReport() {
+		// #29712, #32564 - start
+		validateParameterValue(getManagedBean().getReportCode());
+		// #29712, #32564 - end
 		
 		// #27544 : Disciplinary Action - start #23080
 		if(getManagedBean().getRegType() != null ){
@@ -162,11 +165,11 @@ public class ProfileOfRegCompanyRptBackingBean extends
 				//#32564 - start - ac:smReportSupplierType
 				if (getManagedBean().getSupplierType() != null && !getManagedBean().getSupplierType().equals("all")){
 					if(sb.length() != 0) sb.append("|");
-						sb.append("smMofAccounts.supplierType^" + this.getManagedBean().getSupplierType());
-					}
+					sb.append("smMofAccounts.supplierType^" + this.getManagedBean().getSupplierType());
+				}
 				//#32564 - end
-				}
-				}
+			}
+		}
 		//32564
 		log.info("32564- constructConditionFields():"+sb.toString());
 		return sb.toString();
