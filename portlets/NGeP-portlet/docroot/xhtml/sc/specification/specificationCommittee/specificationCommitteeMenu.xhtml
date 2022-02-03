@@ -64,24 +64,31 @@
 							actionListener="#{specificationBackingBean.qtChecklistTabChange(7)}"
 							update="@form" 
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+							
+						<ui:remove>#29474 - start</ui:remove>
+						<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}"
+							actionListener="#{specificationBackingBean.qtChecklistTabChange(8)}"
+							update="@form" 
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+						<ui:remove>#29474 - end</ui:remove>
 
 						<c:if
 							test="#{specificationBackingBean.managedBean.fulfilmentType eq null or specificationBackingBean.managedBean.fulfilmentType eq 'PS' or specificationBackingBean.managedBean.fulfilmentType eq 'PA' or specificationBackingBean.managedBean.fulfilmentType eq 'OF'}">
 							<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
 								disabled="#{specificationBackingBean.managedBean.fulfilmentType eq null or specificationBackingBean.managedBean.fulfilmentType eq 'PA' 
 								 or specificationBackingBean.managedBean.fulfilmentType eq 'OF'}"
-								actionListener="#{specificationBackingBean.qtChecklistTabChange(8)}"
+								actionListener="#{specificationBackingBean.qtChecklistTabChange(9)}"
 								update="@form" 
-								onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+								onstart="blockWidget.show();" oncomplete="blockWidget.hide();" /><ui:remove>#29474</ui:remove>
 
 						</c:if>
 
 
 						<p:menuitem
 							value="#{lbl['lbl.sc.committee.endorsement.specification']}"
-							actionListener="#{specificationBackingBean.qtChecklistTabChange(9)}"
+							actionListener="#{specificationBackingBean.qtChecklistTabChange(10)}"
 							update="@form"
-							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  />
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  /><ui:remove>#29474</ui:remove>
 
 
 					</p:tabMenu></td>
@@ -130,8 +137,16 @@
 
 						<ui:include
 							src="/xhtml/sc/specification/specificationCommittee/deliveryAddressMain.xhtml" />
-					</c:if> <c:if
+					</c:if> 
+					<ui:remove>#29474 - start</ui:remove><c:if
 						test="#{specificationBackingBean.managedBean.activeIndex eq '8'}">
+
+						<ui:include
+							src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderPaymentDeduction.xhtml" />
+					</c:if>
+					<ui:remove>#29474 - end</ui:remove>
+					<c:if
+						test="#{specificationBackingBean.managedBean.activeIndex eq '9'}"><ui:remove>#29474</ui:remove>
 
 						<c:if
 							test="#{specificationBackingBean.managedBean.fulfilmentType eq null or specificationBackingBean.managedBean.fulfilmentType eq 'PS' or specificationBackingBean.managedBean.fulfilmentType eq 'PA' or specificationBackingBean.managedBean.fulfilmentType eq 'OF'}">
@@ -142,7 +157,7 @@
 
 
 					</c:if> <c:if
-						test="#{specificationBackingBean.managedBean.activeIndex eq '9'}">
+						test="#{specificationBackingBean.managedBean.activeIndex eq '10'}"><ui:remove>#29474</ui:remove>
 						<ui:param name="committeeActivityList"
 							value="#{specificationBackingBean.managedBean.committeeActivities}"></ui:param>
 						<ui:include
