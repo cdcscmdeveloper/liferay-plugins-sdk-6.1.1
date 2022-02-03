@@ -70,7 +70,6 @@
 									process="@form"
 									rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemPaymentDeduction)}"
 									/>
-									<p:remove>#29474 - start</p:remove>
 								<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
 									disabled="#{qTDetailBB.managedBean.fulfilmentType eq null or qTDetailBB.managedBean.fulfilmentType eq 'PA' 
 										or qTDetailBB.managedBean.fulfilmentType eq 'OF' or qTDetailBB.managedBean.fulfilmentType eq 'NPA'}"
@@ -88,7 +87,6 @@
 									process="@form"
 									rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemActivities)}"
 									/>
-									<p:remove>#29474 - end</p:remove>
 							</c:when>
 							<c:when test="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemCommitteeApproval)}" >
 								<p:menuitem value="#{lbl['lbl.sc.activities']}"
@@ -118,7 +116,6 @@
 						action="#{qTDetailBB.qtDetailsTabChange(5)}" update="@form"
 						style="white-space: normal;" process="@form"
 						rendered="#{isQTStatusScheduleDocAndAfter and qTDetailBB.displayMenuItem(qTDetailBB.menuItemPublishDetail)}" />
-					<p:remove>#29474 - start</p:remove>
 					<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
 						disabled="#{qTDetailBB.managedBean.fulfilmentType eq null or qTDetailBB.managedBean.fulfilmentType eq 'PA' 
 							or qTDetailBB.managedBean.fulfilmentType eq 'OF' or qTDetailBB.managedBean.fulfilmentType eq 'NPA'}"
@@ -177,7 +174,6 @@
 						action="#{qTDetailBB.qtDetailsTabChange(5, 10, isQTStatusSCApprovalAndBefore)}" update="@form"
 						process="@form"
 						rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemCommitteeApprovalEcOcTecFec)}" />
-					<p:remove>#29474 - end</p:remove>
 					<!-- ***25692#31 - start -->
 					<p:menuitem value="#{lbl['lbl.sc.qt.approval.committeeappointment']}" 
 						action="#{qTDetailBB.qtDetailsTabChange(5)}" update="@form"
@@ -222,7 +218,6 @@
 								<c:if test="#{qTDetailBB.managedBean.activeIndex eq '6' and qTDetailBB.displayMenuItem(qTDetailBB.menuItemPaymentDeduction)}">
 									<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderPaymentDeduction.xhtml" />
 								</c:if>
-								<p:remove>#29474 - start</p:remove>
 								<c:if test="#{qTDetailBB.managedBean.activeIndex eq '7' and qTDetailBB.displayMenuItem(qTDetailBB.menuItemFulfilmentSchhedule)}">
 									<ui:include src="/xhtml/sc/specification/specificationCommittee/fulfilmentSchedule.xhtml" />
 								</c:if>
@@ -235,7 +230,6 @@
 								<!-- 31991@farhan - start -->
 								<c:if test="#{qTDetailBB.managedBean.activeIndex eq '10' and qTDetailBB.userTaskIsCommitteeAppointmentApprovalEcOcTecFec}">
 									<ui:include src="#{qTDetailBB.committeeAppointmentApprovalPage}" />
-								<p:remove>#29474 - end</p:remove>
 								<!-- 31991@farhan - end -->
 								</c:if>
 							</c:when>
@@ -281,7 +275,6 @@
 							<c:if test="#{qTDetailBB.managedBean.activeIndex eq '6'}">
 								<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderPaymentDeduction.xhtml" />
 							</c:if>
-							<p:remove>#29474 - start</p:remove>
 							<c:if test="#{qTDetailBB.managedBean.activeIndex eq '7'}">
 								<ui:include src="/xhtml/sc/specification/specificationCommittee/fulfilmentSchedule.xhtml" />
 							</c:if>
@@ -314,7 +307,6 @@
 								<!-- 31991@farhan - start -->
 								<c:when test="#{qTDetailBB.managedBean.activeIndex eq '10' and isQTStatusBtwScheduleDocAndPendingPublication and qTDetailBB.displayMenuItem(qTDetailBB.menuItemPublicationApproverAssignment)}">
 									<ui:include src="/xhtml/sc/quatationtender/approval/qtpublicationapproval.xhtml" />
-								<p:remove>#29474 - end</p:remove>
 								<!-- 31991@farhan - end -->
 								</c:when>
 							</c:choose>
@@ -357,7 +349,6 @@
 							 		<ui:include src="#{qTDetailBB.committeeAppointmentApprovalPage}" />
 								<!-- 31991@farhan - end -->
 								</c:when>
-								<p:remove>#29474 - start</p:remove>
 								<c:otherwise>
 									<ui:include src="/xhtml/sc/specification/specificationCommittee/fulfilmentSchedule.xhtml" />
 								</c:otherwise>
@@ -369,7 +360,7 @@
 						<c:if test="#{qTDetailBB.managedBean.activeIndex eq '7'}">
 								<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderActivitiesTracking.xhtml" />
 						</c:if>
-						<p:remove>#29474 - end</p:remove>
+						
 					 </c:if>
 					</c:otherwise>
 					</c:choose>
