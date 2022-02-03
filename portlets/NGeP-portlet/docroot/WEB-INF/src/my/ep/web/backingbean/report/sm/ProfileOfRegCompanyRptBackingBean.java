@@ -158,16 +158,15 @@ public class ProfileOfRegCompanyRptBackingBean extends
 					} else if (getManagedBean().getZone().toUpperCase().equalsIgnoreCase("SARAWAK")) {
 						sb.append("smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneId^3");
 					}
-				} else {
-					if (this.getManagedBean().getSupplierType() != null) {
+				}
+				//#32564 - start - ac:smReportSupplierType
+				if (getManagedBean().getSupplierType() != null && !getManagedBean().getSupplierType().equals("all")){
+					if(sb.length() != 0) sb.append("|");
 						sb.append("smMofAccounts.supplierType^" + this.getManagedBean().getSupplierType());
 					}
+				//#32564 - end
 				}
-				if (this.getManagedBean().getSupplierType() != null) {
-					sb.append("|smMofAccounts.supplierType^" + this.getManagedBean().getSupplierType());
 				}
-			}
-		}
 		//32564
 		log.info("32564- constructConditionFields():"+sb.toString());
 		return sb.toString();
