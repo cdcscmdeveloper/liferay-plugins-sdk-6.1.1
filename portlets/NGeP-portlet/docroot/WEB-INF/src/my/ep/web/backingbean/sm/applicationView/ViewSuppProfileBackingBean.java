@@ -631,6 +631,11 @@ public class ViewSuppProfileBackingBean extends
 		// 27876: Disciplinary Action - start - <27876>
 
 		List<DisciplinaryActionVO> voList = getActiveDisciplinaryActionVO(smSupplier);
+		/*
+		 * 32560 - Added Checking Active DA
+		 */
+		findActiveDA(voList);	
+		
 		if (!EntityHelper.isCollectionEmpty(voList) && voList.size() > 0) {
 			getManagedBean().setDisciplineVOs(voList);
 			// #-29771 - Start.
