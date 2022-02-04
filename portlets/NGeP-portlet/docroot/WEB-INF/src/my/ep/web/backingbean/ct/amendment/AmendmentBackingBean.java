@@ -141,7 +141,6 @@ import my.ep.web.bean.ct.CtLetterOfAcceptance;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
-import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
@@ -151,7 +150,6 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
-import my.ep.web.util.NumberWordUtilEn;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.RoleHelper;
@@ -2757,10 +2755,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}			
 			//24333 - Start
 			if ((ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
-					&& ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()
+					|| ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq())
 					&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
 					&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
-							ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))){
+							ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)){
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithBond);
 			}
 			//24333 - End
@@ -2884,7 +2882,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			// 24333
 			if (outputValue.equalsIgnoreCase("PB") 
-					&& ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()
+					&& (ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()
+							|| ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq())
 							&& (!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
 									|| !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()
 									|| !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange())){
@@ -2956,7 +2955,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						
 					}else if(outputValue.equalsIgnoreCase(ContractConst.DEDUCTION_DETAIL)){
 						getManagedBean().setSelectedTabIndex(3);
-					}else if(outputValue.equalsIgnoreCase("PB") && ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq() ){
+					}else if(outputValue.equalsIgnoreCase("PB") && (ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq() 
+							|| ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq())){
 					getManagedBean().setSelectedTabIndex(3);
 				}
 					// 24333
