@@ -3617,6 +3617,101 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			// #26130 - End
 			question.setFeedbackList(feedbackList);
 			question.setAnswerRemarkList(answerRemarkList);
+
+//#26130 - zaim start
+			
+			List<HashMap<String, String>> listCombine = null;
+		
+		if (listCombine == null){
+			listCombine = new ArrayList<HashMap<String, String>>();
+		}
+		
+		if (specList != null){
+			int tempFeedbackIndex = 0;
+			int tempRemarkIndex = 0;
+			int tempSpecZoneQty = 0;
+			int indexFeedbackStore = 0;
+			int indexRemarkStore = 0;
+			if (CollectionUtils.isNotEmpty(question.getTplSpecZoneQties())){
+				tempSpecZoneQty = question.getTplSpecZoneQties().size();
+			}
+			
+			for(String tempSpecVal: specList){
+				HashMap<String, String> map = new HashMap<String, String>();
+				map.put("specVal", tempSpecVal);
+				
+					for(String tempFeedback: feedbackList){
+						if (tempSpecZoneQty > 0){
+							if (tempFeedbackIndex >= tempSpecZoneQty){
+								if (indexFeedbackStore == 0){
+									map.put("feedback", tempFeedback);
+									indexFeedbackStore = tempFeedbackIndex;
+									break;
+								}else if (tempFeedbackIndex > indexFeedbackStore){
+									map.put("feedback", tempFeedback);
+									indexFeedbackStore = tempFeedbackIndex;
+									break;
+								}
+								
+							}
+							tempFeedbackIndex++;
+						}else {
+							if (tempFeedbackIndex > 0 && tempFeedbackIndex > indexFeedbackStore){
+								map.put("feedback", tempFeedback);
+								indexFeedbackStore = tempFeedbackIndex;
+								break;
+							}
+							tempFeedbackIndex++;
+							
+						}
+						
+						
+					}
+					
+					for (String tempRemark: answerRemarkList){
+						
+						if (tempRemark == null){
+							tempRemark = getDefaultValue();
+						}else{
+							if (tempSpecZoneQty > 0){
+								if (tempRemarkIndex >= tempSpecZoneQty){
+									if (indexRemarkStore == 0){
+										map.put("remark", tempRemark);
+										indexRemarkStore = tempRemarkIndex;
+										break;
+									}else if (tempRemarkIndex > indexRemarkStore){
+										map.put("remark", tempRemark);
+										indexRemarkStore = tempRemarkIndex;
+										break;
+									}
+									
+								}
+								tempRemarkIndex++;
+							}else {
+								if (indexRemarkStore >= 0 && tempRemarkIndex > indexRemarkStore){
+									map.put("remark", tempRemark);
+									indexRemarkStore = tempRemarkIndex;
+									break;
+								}
+								tempRemarkIndex++;
+							}
+						}
+						
+						
+						
+					}
+					tempFeedbackIndex = 0;
+					tempRemarkIndex = 0;
+				listCombine.add(map);	
+				
+			}
+			question.setListCombineSpec(listCombine);
+		}
+		
+		
+			
+			//#26130 - zaim end
+
 		}
 	}
 	// #26130 - End
@@ -5547,5 +5642,20 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
   		return CheckStatus.contains(currentStatusId);
  
   	}//11104-End
+
+	//#26130 - zaim start 
+		private String getDefaultValue(){
+			String defaultValue = "";
+			if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
+				defaultValue = "N/A";
+			}else {
+				defaultValue = "T/B";
+			}
+			
+			return defaultValue;
+			
+		}
+		//#26130 - zaim end
+
 
 }
