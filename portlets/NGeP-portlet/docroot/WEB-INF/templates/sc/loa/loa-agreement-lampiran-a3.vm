@@ -311,7 +311,7 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 											<table width="100%">
 												<tbody>
 												<tr>
-													<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$specVal</td>
+													<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:16.5px;">$specVal</td>
 												</tr>
 												</tbody>
 											</table>
@@ -346,7 +346,7 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 												<table width="100%">
 													<tbody>
 													<tr>
-														<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$specVal</td>
+														<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:16.5px;">$specVal</td>
 													</tr>
 													</tbody>
 												</table>
@@ -592,7 +592,7 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 												<table width="100%">
 													<tbody>
 													<tr>
-														<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$specVal</td>
+														<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:16.5px;">$specVal</td>
 													</tr>
 													</tbody>
 												</table>
@@ -666,7 +666,7 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 													<table width="100%">
 														<tbody>
 														<tr>
-															<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$specVal</td>
+															<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:16.5px;">$specVal</td>
 														</tr>
 														</tbody>
 													</table>
@@ -903,7 +903,7 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 											<table width="100%">
 												<tbody>
 												<tr>
-													<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$specVal</td>
+													<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:16.5px;">$specVal</td>
 												</tr>
 												</tbody>
 											</table>
@@ -954,7 +954,7 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 												<table width="100%">
 													<tbody>
 													<tr>
-														<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$specVal</td>
+														<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:16.5px;">$specVal</td>
 													</tr>
 													</tbody>
 												</table>
@@ -1166,7 +1166,7 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 												<table width="100%">
 													<tbody>
 													<tr>
-														<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$specVal</td>
+														<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:16.5px;">$specVal</td>
 													</tr>
 													</tbody>
 												</table>
@@ -1250,7 +1250,7 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 													<table width="100%">
 														<tbody>
 														<tr>
-															<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$specVal</td>
+															<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:16.5px;">$specVal</td>
 														</tr>
 														</tbody>
 													</table>
