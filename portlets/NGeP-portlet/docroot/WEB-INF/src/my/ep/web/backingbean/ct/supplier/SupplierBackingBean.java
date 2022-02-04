@@ -398,12 +398,13 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 						getManagedBean().setRemoveFactoring(false);
 						getManagedBean().setUpdateFactoring(true);
 						getManagedBean().setDocType(ParameterConst.DOCTYPE_UPDATE_FACTORING);
+						getManagedBean().setFcRequestType(ParameterConst.UPDATE_TYPE_FACTORING);
 						
 				 }else {
 						getManagedBean().setRemoveFactoring(false);
 						getManagedBean().setUpdateFactoring(false);
 						getManagedBean().setDocType(ParameterConst.DOCTYPE_REQUEST_FACTORING);
-						getManagedBean().setFcRequestType("A");
+						getManagedBean().setFcRequestType(ParameterConst.REQUEST_TYPE_FACTORING);
 						
 				 }
 				 
