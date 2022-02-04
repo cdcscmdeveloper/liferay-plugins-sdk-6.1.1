@@ -2046,7 +2046,10 @@ u.underline {
 								 
 								<tr>							 
 									
-									<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
+									##26130- zaim start
+									#set($rowSpanSize = $tplspecQuestion.specList.size()+1)
+									<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize"><strong>$tplspecQuestion.clItem</strong></td>
+									##26130- zaim end
 									<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clUom.uomName</td>
 										
 									<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">
@@ -2129,49 +2132,58 @@ u.underline {
 											#end
 									#end
 									
-									<td bgcolor="#d0eaee" rowspan="2">
+									##26130 - zaim start
+									#set($varA = $tplspecQuestion.tplSpecZoneQties.size())
+									<td bgcolor="#d0eaee">
 									#if ($tplspecQuestion.feedbackList)
 										#if ($specType == "T")
 											#set($count = 1)
 											#foreach( $feedback in $tplspecQuestion.feedbackList)
-												<table width="100%">
-													<tbody>
-													<tr>
-														#if ($feedback == "&nbsp;" && $tplspecQuestion.tplSpecZoneQties.size() != $count ) 
-															#set($count = $count + 1)
-															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$feedback</td>
-														#else
-															<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$feedback</td>
-														#end
-													</tr>
-													</tbody>
-												</table>
+											#set($varB = $velocityCount)
+												#if($varB <= $varA)
+													<table width="100%">
+														<tbody>
+														<tr>
+															#if ($feedback == "&nbsp;" && $tplspecQuestion.tplSpecZoneQties.size() != $count ) 
+																#set($count = $count + 1)
+																<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$feedback</td>
+															#else
+																<td bgcolor="#d0eaee"  class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$feedback</td>
+															#end
+														</tr>
+														</tbody>
+													</table>
+												#end	
 											#end
 										#end
 									#end
 									</td>
 									
-									<td bgcolor="#d0eaee" rowspan="2">
+									<td bgcolor="#d0eaee" >
 										#if ($tplspecQuestion.answerRemarkList)
 											#foreach( $answerRemark in $tplspecQuestion.answerRemarkList )
-												<table width="100%">
-													<tbody>
-													<tr>
-														#if ($answerRemark == "&nbsp;") 
-															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$answerRemark</td>
-														#else
-															#if ($answerRemark)
-																<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$answerRemark</td>
-															#else 
-																<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$serviceScope</td>
+											#set($varB = $velocityCount)
+												#if($varB <= $varA)
+													<table width="100%">
+														<tbody>
+														<tr>
+															#if ($answerRemark == "&nbsp;") 
+																<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$answerRemark</td>
+															#else
+																#if ($answerRemark)
+																	<td bgcolor="#d0eaee"  class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$answerRemark</td>
+																#else 
+																	<td bgcolor="#d0eaee"  class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$serviceScope</td>
+																#end
 															#end
-														#end
-													</tr>
-													</tbody>
-												</table>
+														</tr>
+														</tbody>
+													</table>
+												#end	
 											#end
 										#end
 									</td>
+									##26130 zaim end
 									
 									#if ($rowCount == 0)
 										#set($rowCount = $rowCount + 1)
@@ -2179,32 +2191,55 @@ u.underline {
 									#end
 									</tr>
 								
-									<tr>
-									<td valign="top" bgcolor="#d0eaee" colspan="6">						
-											#if ($tplspecQuestion.specList)
-											#foreach( $specVal in $tplspecQuestion.specList )
+									##26130 - zaim start
 												
-												<table width="100%">
-													<tbody>
-													<tr>
-														<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$specVal</td>
-													</tr>
-													</tbody>
-												</table>
-													
-											#end
-										#end
-									</td>
-									</tr>
-								
+												##specval
+												#foreach($combine in $tplspecQuestion.listCombineSpec)
+														<tr style="border-bottom: 1px solid black;">
+												<td valign="top" bgcolor="#d0eaee" colspan="6" class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$combine.specVal</td>
+											
+														##feedback
+														
+															#if ($specType == "T")
+																#set($count = 1)
+
+																	#if ($combine.feedback == "&nbsp;" && $tplspecQuestion.tplSpecZoneQties.size() != $count ) 
+																			#set($count = $count + 1)
+																			<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$combine.feedback</td>
+																			
+																	#else
+																			<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$combine.feedback</td>
+																		
+																	#end
+																		
+															#end
+														
+														##remark
+														#if ($combine.remark == "&nbsp;" || $combine.remark == " ") 
+																	<td bgcolor="#d0eaee"  style="text-align: left; padding-left: 5px;">$combine.remark</td>		
+														#else
+															#if ($combine.remark)
+																<td bgcolor="#d0eaee"  class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$combine.remark</td>
+																
+															#else 
+																<td bgcolor="#d0eaee"  class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$serviceScope</td>
+															#end
+														#end
+												#end
+											</tr>
+									
 									#end
+									##26130 - zaim end
 								
 							#else
 								#if ($tplspecQuestion.questionType == "I")
 							 
 									<tr>
 									
-									<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
+									##26130- zaim start
+									#set($rowSpanSize = $tplspecQuestion.specList.size()+1)
+									<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize"><strong>$tplspecQuestion.clItem</strong></td>
+									##26130 - zaim end
 									<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clUom.uomName</td>
 									<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">
 										#if ($tplspecQuestion.clUomFrequency)
@@ -2223,43 +2258,56 @@ u.underline {
 									</td>
 									<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clQuantity</td>
 										
-									<td bgcolor="#d0eaee" rowspan="2">
+									##26130 - zaim start
+
+									#set($varA = 1)
+									<td bgcolor="#d0eaee">
 									#if ($tplspecQuestion.feedbackList)
 										#if ($specType == "T")
 											#foreach( $feedback in $tplspecQuestion.feedbackList)
-												<table width="100%">
-													<tbody>
-													<tr>
-														#if ($feedback) 
-															<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$feedback</td>
-														#else
-															<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$serviceScope</td>
-														#end
-													</tr>
-													</tbody>
-												</table>
+											#set($varB = $velocityCount)
+												#if($varB <= $varA)
+													<table width="100%">
+														<tbody>
+														<tr>
+															#if ($feedback)
+																<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$feedback</td>
+															#else
+																<td bgcolor="#d0eaee"  class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$serviceScope</td>
+															#end
+														</tr>
+														</tbody>
+													</table>
+												#end	
 											#end
 										#end
 									#end
 									</td>
-										
-									<td bgcolor="#d0eaee" rowspan="2">
+									<td bgcolor="#d0eaee">
 										#if ($tplspecQuestion.answerRemarkList)
 											#foreach( $answerRemark in $tplspecQuestion.answerRemarkList )
+												#set($varB = $velocityCount)
+														#if($varB <= $varA)
 												<table width="100%">
 													<tbody>
 													<tr>
-														#if ($answerRemark) 
-															<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$answerRemark</td>
+														#if ($answerRemark == "&nbsp;" || $answerRemark == " ") 
+															<td bgcolor="#d0eaee"  style="text-align: left; padding-left: 5px;">$answerRemark</td>
 														#else
-															<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$serviceScope</td>
+															#if ($answerRemark)
+																<td bgcolor="#d0eaee"  class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$answerRemark</td>
+															#else 
+																<td bgcolor="#d0eaee"  class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$serviceScope</td>
+															#end
 														#end
 													</tr>
 													</tbody>
 												</table>
+												#end
 											#end
 										#end
 									</td>
+									##26130 - zaim end
 									
 									#if ($rowCount == 0)
 										#set($rowCount = $rowCount + 1)
@@ -2267,24 +2315,45 @@ u.underline {
 									#end
 									</tr>	
 									
-									<td bgcolor="#d0eaee" colspan="5">						
-											#if ($tplspecQuestion.specList)
-												#foreach( $specVal in $tplspecQuestion.specList )
-													
-													<table width="100%">
-														<tbody>
-														<tr>
-															<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$specVal</td>
-														</tr>
-														</tbody>
-													</table>
+									##26130 - zaim start
+												
+												##specval
+												#foreach($combine in $tplspecQuestion.listCombineSpec)
+														<tr style="border-bottom: 1px solid black;">
+												<td valign="top" bgcolor="#d0eaee" colspan="5" class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$combine.specVal</td>
+											
+														##feedback
 														
+															#if ($specType == "T")
+																#set($count = 1)
+
+																	#if ($combine.feedback == "&nbsp;" && $tplspecQuestion.tplSpecZoneQties.size() != $count ) 
+																			#set($count = $count + 1)
+																			<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$combine.feedback</td>
+																			
+																	#else
+																			<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$combine.feedback</td>
+																		
+																	#end
+																		
+															#end
+														
+														##remark
+														#if ($combine.remark == "&nbsp;" || $combine.remark == " ") 
+																	<td bgcolor="#d0eaee" style="text-align: left; padding-left: 5px;">$combine.remark</td>		
+														#else
+															#if ($combine.remark)
+																<td bgcolor="#d0eaee"  class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$combine.remark</td>
+																
+															#else 
+																<td bgcolor="#d0eaee"  class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$serviceScope</td>
+															#end
+														#end
 												#end
-											#end
-									</td>
-									#end	
+											</tr>
 									
-									</tr>	
+									#end
+									##26130 - zaim end	
 								#end
 
 							#end 
