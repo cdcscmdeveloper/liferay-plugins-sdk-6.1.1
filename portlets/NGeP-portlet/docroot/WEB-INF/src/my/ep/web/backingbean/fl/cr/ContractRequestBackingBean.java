@@ -7238,7 +7238,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		if (schInfo == null)
 			schInfo = new ArrayList<ScheduleInfo>();
 		
-        log.info("schInfo is,ln5983 : "+schInfo);
+//        log.info("schInfo is,ln5983 : "+schInfo);
 		return schInfo;
 	}
 	public void setSchInfo(List<ScheduleInfo> schInfo) {
