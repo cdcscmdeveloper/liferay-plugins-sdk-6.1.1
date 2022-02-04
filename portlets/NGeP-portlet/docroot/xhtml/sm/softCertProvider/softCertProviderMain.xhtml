@@ -9,10 +9,11 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" escape="false"/>
-		<p:panel header="Soft Certificate Provider" toggleable="true">
+	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" escape="false"/>
+		<!-- #32587 start -->
+		<p:panel header="#{lbl['lbl.sm.softcert.provider']}" toggleable="true">
 			<div align="right">
-				<p:commandButton id="btnSave" value="Save" update="dtRuleValue"
+				<p:commandButton id="btnSave" value="#{lbl['lbl.btn.save']}" update="dtRuleValue"
 					action="#{softCertProviderBB.saveSoftCertProvider()}" />
 			</div>
 
@@ -22,7 +23,7 @@
 
 				<ac:paginator for="dtRuleValue" />
 
-				<p:column headerText="Provider">
+				<p:column headerText="#{lbl['lbl.sm.softcert.provider.column']}">
 					<p:selectOneMenu value="#{ruleValue.ruleValue}"
 						disabled="#{!ruleValue.brandNew}">
 						<f:selectItems var="certProvider" 
@@ -33,7 +34,7 @@
 					</p:selectOneMenu>
 				</p:column>
 
-				<p:column headerText="Effective Date">
+				<p:column headerText="#{lbl['lbl.sm.softcert.effDate.column']}">
 					<p:calendar label="#{lbl['lbl.rpt.frmdate']}" id="calEffDate"
 						showOn="button" navigator="true" disabled="#{!ruleValue.brandNew}"
 						display="inline" readonlyInput="true" size="9" update="calExpDate"
@@ -45,7 +46,7 @@
 					<p:message id="effDateMsg" for="calEffDate" display="icon" />	
 				</p:column>
 
-				<p:column headerText="End Date">
+				<p:column headerText="#{lbl['lbl.sm.softcert.endDate.column']}">
 					<p:calendar label="#{lbl['lbl.rpt.frmdate']}"
 						disabled="#{empty ruleValue.effDate || ruleValue.expDate lt CommonConstants.CURRENT_DATE}" id="calExpDate" showOn="button"
 						navigator="true" display="inline" readonlyInput="true" size="9"
@@ -56,7 +57,7 @@
 					</p:calendar>
 				</p:column>
 
-				<p:column headerText="Action">
+				<p:column headerText="#{lbl['lbl.sm.softcert.action.column']}">
 					<p:commandLink disabled="#{ruleValue.effDate le DateUtils.getCurrentDateWithoutTime() or !ruleValue.brandNew}" 
 					id="btnDeleteId" partialSubmit="true" process="@this" oncomplete="ruleValueDeletePopUp.show();">
 						<p:graphicImage id="trashImgId" value="/css/images/design/trash.png"></p:graphicImage>
@@ -66,10 +67,11 @@
 			</p:dataTable>
 
 			<div align="right">
-			<p:commandButton id="btnAdd" value="Add" update="dtRuleValue" partialSubmit="true" process="@this"
+			<p:commandButton id="btnAdd" value="#{lbl['lbl.btn.add']}" update="dtRuleValue" partialSubmit="true" process="@this"
 				action="#{softCertProviderBB.addSoftCertProviderRule()}" />
 			</div>
 		</p:panel>
+		<!-- #32587 end -->
 
 		<ac:confirmationPopup id="ruleValueDeleteId"
 			widget="ruleValueDeletePopUp"
