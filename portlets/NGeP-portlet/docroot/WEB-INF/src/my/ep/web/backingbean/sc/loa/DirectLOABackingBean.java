@@ -44,6 +44,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
+import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.actor.IScActorSO;
@@ -74,6 +75,8 @@ import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
+import my.ep.dto.pm.common.document.DocumentReqDTO;
+import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
@@ -7582,8 +7585,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				scLoaReport.setDefinationType(resDTO.getPmParameter());
 				String docCategory = ParameterConst.DOCUMENT_CATEGORY_DIRECT_LOA_FOR_QUOTATION_TENDER; // DL
 				scLoaReport.setDocCategory(docCategory);
-				//scLoaReport.setPmDocument(getDocumentDtls(docCategory)); // PM
+				//Bug #32188 - start
+				scLoaReport.setPmDocument(getDocumentDtls(docCategory)); // PM
 																			// document
+				//Bug #32188 - end
 
 			} finally {
 				parameterSO = null;
@@ -7609,7 +7614,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 	}
 
-	/*
+	//Bug #32188 - start
 	private PmDocument getDocumentDtls(String docCategoryCode) {
 
 		IDocumentSO documentSO = null;
@@ -7635,7 +7640,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			documentSO = null;
 		}
 	}
-	*/
+	//Bug #32188 - end
+	
 
 	/**
 	 * Sets the overall ct amount.
