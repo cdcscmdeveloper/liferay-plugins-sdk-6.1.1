@@ -664,13 +664,28 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			// Setting BI Report
 			List<ScLoaReport> scLoaReports = scLoa.getScLoaReports();
 			if (scLoaReports != null && !scLoaReports.isEmpty()) {
+				//Bug #32188 - start
+				if (ParameterConst.DOCTYPE_DIRECT_NEGO
+						.equalsIgnoreCase(scLoa.getScLoiLoa().getDocType())) {
 				for (ScLoaReport report : scLoaReports) {
+						if (null != report.getPmDocument()) {
+							if (SourcingConstants.DOC_DEF_KEY_BRANCH_INFORMATION
+									.equalsIgnoreCase(report.getPmDocument().getDocDefinitionKey())) {
+								getManagedBean().setBranchInfoReport(report);
+								break;
+							}
+						}
+					}
+				}else{
+					for (ScLoaReport report : scLoaReports) {
 					// Check whether Branch Info attachment is existed or not
 					if (null == report.getPmDocument()) {
 						getManagedBean().setBranchInfoReport(report);
 						break;
 					}
 				}
+			}
+				//Bug #32188 - end
 			}
 
 			// Supplier Witness
@@ -6537,6 +6552,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						.equalsIgnoreCase(scLoa.getScLoiLoa().getDocType())) {
 					docCategory = ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_DIRECT_PURCHASE; // AD
 				}
+				//Bug #32188 - start
+				else if(ParameterConst.DOCTYPE_DIRECT_NEGO
+						.equalsIgnoreCase(scLoa.getScLoiLoa().getDocType())) {
+					docCategory = ParameterConst.DOCUMENT_CATEGORY_DIRECT_LOA_FOR_QUOTATION_TENDER; // DL
+					scLoaReport.setPmDocument(getDocumentDtls(docCategory));
+				}
+				//Bug #32188 - end
 				scLoaReport.setDocCategory(docCategory); 
 				//scLoaReport.setPmDocument(getDocumentDtls(docCategory)); // PM document
 
