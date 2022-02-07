@@ -28,6 +28,13 @@ public class DisciplinaryActionVO implements Serializable {
 	private List<DisciplinaryActionCategoryVO> categoryCodeList;
 	private List<BlacklistOwnerDirectorVO> blacklistownerDirectorList;
 	private boolean mofNoExist;
+	/*
+	 * 32560, 26247 START
+	 */
+	private boolean isActiveRecordStatus;
+	/*
+	 * 32560, 26247 END
+	 */
 	
 	//27796: Disciplinary Action - start - 26238
 	private List<DisciplinaryActionVO> remarksList;
@@ -194,5 +201,21 @@ public class DisciplinaryActionVO implements Serializable {
 		this.remarksList = remarksList;
 	}
 	//27796: Disciplinary Action - end - 26238
+
+	// 32560, 26247 -start-
+	/**
+	 * @return the isActiveRecordStatus
+	 */
+	public boolean isActiveRecordStatus() {
+		return isActiveRecordStatus;
+	}
+
+	/**
+	 * @param isActiveRecordStatus the isActiveRecordStatus to set
+	 */
+	public void setActiveRecordStatus(boolean isActiveRecordStatus) {
+		this.isActiveRecordStatus = isActiveRecordStatus;
+	}
+	// 32560, 26247 -end-
 
 }
