@@ -307,7 +307,10 @@
 			rendered="#{not empty lOIDetailBackingBean.managedBean.supplierRemarks}" />
 	</p:outputPanel>
 	<!-- 11134 -end- -->
-	<ui:remove> Bug #30600, #31033 Start </ui:remove>
-	<ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" btnView="true" />
-	<ui:remove> Bug #30600, #31033 End </ui:remove>
+	<!-- Bug #30600 , #31033, #32560, #26247 Start -->
+	<ac:disciplinaryActionActiveQT voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}"  btnView="true" 
+				startDate="#{viewSuppProfileBackingBean.managedBean.startDate}"
+				endDate="#{viewSuppProfileBackingBean.managedBean.endDate}"
+				isWarning="#{viewSuppProfileBackingBean.managedBean.warning}"/>
+	<!-- Bug #30600 , #31033, #32560, #26247 End -->
 </ui:composition>

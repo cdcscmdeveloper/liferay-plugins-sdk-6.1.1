@@ -196,8 +196,11 @@
 			</h:panelGroup>
 		</p:panel>
 		<ui:include src="loiItemDetailPopup.xhtml" />
-		<ui:remove> #31033 - start </ui:remove>	
-		<ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" btnView="true" />
-		<ui:remove> #31033 - end </ui:remove>	
+		<!-- Bug #31033 #32560 #26247 Start -->
+		<ac:disciplinaryActionActiveQT voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}"  btnView="true" 
+				startDate="#{viewSuppProfileBackingBean.managedBean.startDate}"
+				endDate="#{viewSuppProfileBackingBean.managedBean.endDate}"
+				isWarning="#{viewSuppProfileBackingBean.managedBean.warning}"/>
+		<!-- Bug #31033 #32560 #26247 end -->
 	</ui:define>
 </ui:composition>
