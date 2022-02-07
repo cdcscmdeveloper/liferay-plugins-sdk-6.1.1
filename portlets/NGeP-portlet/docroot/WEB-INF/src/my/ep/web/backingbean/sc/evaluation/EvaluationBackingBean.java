@@ -12935,9 +12935,17 @@ private void retriveCommitteeRemarksList(){
 				EvaluationResDTO resDTO=evaluationSO.retrievProposalCheckListByCheckListNZone(
 						reqDTO);
 				//Calculate totalitemscore
+				List<ScQtProposalChecklist> removesupplier=new ArrayList<ScQtProposalChecklist>();//32453
 				for(int i=0;i<resDTO.getComplianceResultBean().getResultList().size();i++){
+					getManagedBean().setSupplierItemExist(Boolean.FALSE);//32453
 					calculateItemScores(resDTO.getComplianceResultBean().getResultList().get(i));
+					if(!getManagedBean().isSupplierItemExist()){//32453
+						removesupplier.add(resDTO.getComplianceResultBean().getResultList().get(i));
+					}//32453
 				}
+				if(removesupplier.size()>0){//32453
+					resDTO.getComplianceResultBean().getResultList().removeAll(removesupplier);	
+				}//32453
 				return resDTO.getComplianceResultBean();
 				
 				
@@ -13006,9 +13014,17 @@ private void retriveCommitteeRemarksList(){
 				EvaluationResDTO resDTO=evaluationSO.retrievProposalCheckListByCheckListNZone(
 						reqDTO);
 				if(null!=speZoneId){
+					List<ScQtProposalChecklist> removesupplier=new ArrayList<ScQtProposalChecklist>();//32453
 					for(int i=0;i<resDTO.getComplianceResultBean().getResultList().size();i++){
+						getManagedBean().setSupplierItemExist(Boolean.FALSE);//32453
 						calculateItemScores(resDTO.getComplianceResultBean().getResultList().get(i));
+						if(!getManagedBean().isSupplierItemExist()){//32453
+							removesupplier.add(resDTO.getComplianceResultBean().getResultList().get(i));
+						}//32453
 					}
+					if(removesupplier.size()>0){//32453
+						resDTO.getComplianceResultBean().getResultList().removeAll(removesupplier);	
+					}//32453
 				}
 				return resDTO.getComplianceResultBean();
 
@@ -14992,6 +15008,10 @@ private void retriveCommitteeRemarksList(){
 		log.info("===========totalScore======"+qtProposalChecklist.getSpecTotalScore());
 		log.info("===========endcalculateItemScores======"+specresDTO1
 				.getSpecAnswerList().size());
+		if(CollectionUtils.isNotEmpty(specresDTO1
+				.getSpecAnswerList())){//32453-start
+			this.getManagedBean().setSupplierItemExist(Boolean.TRUE);	
+		}//32453-End
 				return 0;
 			}
 	return 0;
