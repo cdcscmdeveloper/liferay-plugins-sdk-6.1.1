@@ -3517,6 +3517,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE); // View purpose, FU or FW also fine
 			reqDTO.setViewOnly(true);
 			reqDTO.setContractVerId(getManagedBean().getLoaContractVerId());
+			log.info(getManagedBean().getLoaContractVerId());
 			ctBB.getManagedBean().setViewContract(true);
 			getManagedBean().setAsAtDate(null);
 			setValidateContractField(reqDTO);
