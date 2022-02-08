@@ -8914,6 +8914,22 @@ private void retriveCommitteeRemarksList(){
 			if (save == true) {
 				successMessage(MessageConst.INFO_700004, getMessageCommon("lbl.sc.prepare.evaluation"), QtNum,
 						Boolean.FALSE);
+				
+				//#10542 - start
+				EvaluationReqDTO qtReqDTO = new EvaluationReqDTO();
+				EvaluationResDTO qtResDTO = new EvaluationResDTO();
+
+				qtReqDTO.setQtId(qtId);
+				qtResDTO = evaluationSO.retriveQtDtlsById(qtReqDTO);
+				ScQt scQt = qtResDTO.getScQt();
+
+				if (scQt != null) {
+					if (scQt.getCurrentActiveTab() == null || scQt.getCurrentActiveTab() < tabindex) {
+						evaluationSO.updateScQtCurrentActiveTab(scQt, tabindex);
+					}
+				}
+				//#10542 - end
+				
 			}
 		} finally {
 			evaluationSO=null;
@@ -10052,6 +10068,18 @@ private void retriveCommitteeRemarksList(){
 				// 28834 ends
 
 		this.getManagedBean().setPrepareActiveIndex(0);
+		//#10542 - start
+		if (this.getManagedBean().getScQt() != null && this.getManagedBean().getScQt().getCurrentActiveTab() != null) {
+			try {
+				int currentActiveTab = this.getManagedBean().getScQt().getCurrentActiveTab().intValue();
+				this.getManagedBean().setTabActiveIndex(currentActiveTab);
+				this.getManagedBean().setTempTab(currentActiveTab);
+				evaluationMaintainPreviousNextTabIndex(currentActiveTab, currentActiveTab);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		//#10542 - end
 		if (SCProcessNameConst.FINALISE_EC_EVALUATION
 				.equalsIgnoreCase(taskName)
 				|| SCProcessNameConst.UPDATE_EC_EVALUATION
