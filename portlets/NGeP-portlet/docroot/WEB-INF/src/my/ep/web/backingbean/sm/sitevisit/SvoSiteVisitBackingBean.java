@@ -2688,11 +2688,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			if(smSvTask.getPmCategoryL3() != null){
 				List<SmSupplierCategory> suppCatLs = retrieveSupplierCategoryByApplIdAndCategoryL3Id(
 					appl.getApplId(), smSvTask.getPmCategoryL3().getCategoryL3Id());
-				smSvTask.getSmSvTemplate().setSuppCategory(suppCatLs.get(0));
+				if(suppCatLs != null && suppCatLs.size() > 0)
+					smSvTask.getSmSvTemplate().setSuppCategory(suppCatLs.get(0));
 				for(SmSvTaskGroup svTGroup : smSvTask.getSmSvTaskGroups()){
 					suppCatLs = retrieveSupplierCategoryByApplIdAndCategoryL3Id(
 						appl.getApplId(), svTGroup.getPmCategoryL3().getCategoryL3Id());
-					svTGroup.getSmSvTemplate().setSuppCategory(suppCatLs.get(0));
+					if(suppCatLs != null && suppCatLs.size() > 0)
+						svTGroup.getSmSvTemplate().setSuppCategory(suppCatLs.get(0));
 				}
 			}
 			//28775 - Site Visit Grouping Enhancement - 28775 - end
@@ -3710,6 +3712,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				return;
 		
 		for(SmSvTemplate template : getManagedBean().getTemplates()){
+			//28775 - Site Visit Grouping Enhancement - 28775
+			if(template.getSuppCategory() == null) continue;
 			template.setSmSvWorkers(new ArrayList<SmSvWorker>());
 			for(SmFacility fac : svTask.getSmAppl().getSmFacilities()){
 				for(SmSupplierCategoryFacility catFac : fac.getSmSupplierCategoryFacilities()){
