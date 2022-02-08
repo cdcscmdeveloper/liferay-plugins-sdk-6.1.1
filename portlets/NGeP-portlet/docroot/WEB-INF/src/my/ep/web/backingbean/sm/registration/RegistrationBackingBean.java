@@ -932,16 +932,20 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			smPersonnel.setBumiFlg(getManagedBean().getUserBumiFlg());
 			smPersonnel.setMuslimFlg(getManagedBean().getUserMuslimFlg());
 		}
-		
-		//check if supplier admin is supplier owner set clerical false and equityOwner true
-		if(smPersonnel.isEquityOwner() || smPersonnel.isDirector()){
-			smPersonnel.setClerical(false);
-		}		
+		// #30829 - start
+		if (!SupplierManagementConst.LIST_OF_BUSINESS_TYPE_FOR_ROLE_IN_COMPANY.contains(this.getManagedBean().getSmSupp().getBusinessType())) {
+			// check if supplier admin is supplier owner set clerical false and equityOwner true
+			if (smPersonnel.isEquityOwner() || smPersonnel.isDirector()) {
+				smPersonnel.setClerical(false);
+			}
+		}
+		// #30829 - end
+				
 		//#16052019 - SSM INTEGRATION CR
 		
 		for(SmSupplierOwner smSupplierOwner:this.getManagedBean().getSmSuppOwners()){
 			if(smSupplierOwner!=null && smSupplierOwner.getIdentificationNo().equals(smPersonnel.getIdentificationNo())){
-				smPersonnel.setClerical(false);
+				// smPersonnel.setClerical(false); // #30829
 				//#30829 START
 				SmSupplier sup = this.getManagedBean().getSmSupp();
 				log.info("----Supplier Buss Type: "+sup.getBusinessType());
@@ -4272,7 +4276,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			personnel.setEquityOwner(false);
 			personnel.setDirector(false);
 			personnel.setClerical(false);
-			listenerChangeRole();
+			// #30829 - start
+			// listenerChangeRole();
+			personnel.setHigherManagement(false);
+			personnel.setManagement(false);
+			personnel.setProf(false);
+			personnel.setSemiProf(false);
+			// #30829 - end
 			//END 27609
 			this.getManagedBean().setSmPersonnelSelected(new SmPersonnel());
 			//#16052019 - SSM INTEGRATION CR
@@ -4283,6 +4293,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			//address.setPmState(new PmState());
 			//this.getManagedBean().setSmPermenantAdd(address);
 		}
+		// #30829 - start
+		listenerChangeRole();
+		// #30829 - end
 		getManagedBean().setSmPersonnel(personnel);
 		personnelNationalityOnChange();
 	}
@@ -4518,60 +4531,60 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	//16052019 - SSM INTEGRATION CR => START
 	public void listenerChangeRole(){
 		if(this.getManagedBean().getSmPersonnel()!=null){
-			if(this.getManagedBean().getSmPersonnel().isEquityOwner()){
-				//30829 Start - 29/10/2021
-				if (SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG.equalsIgnoreCase(
-						this.getManagedBean().getSmSupp().getBusinessType()) || SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH.equalsIgnoreCase(
-								this.getManagedBean().getSmSupp().getBusinessType())|| SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK.equalsIgnoreCase(
-										this.getManagedBean().getSmSupp().getBusinessType())){
-					this.getManagedBean().setDisableStaff(false);
-					this.getManagedBean().setDisableProf(false);
-					this.getManagedBean().setDisableSemiProf(false);
-					this.getManagedBean().getSmPersonnel().setClerical(true);
-				} else {
-					this.getManagedBean().setDisableStaff(true);
-					this.getManagedBean().setDisableProf(true);
-					this.getManagedBean().setDisableSemiProf(true);
-					this.getManagedBean().getSmPersonnel().setClerical(false);
-				}
-				//30829 End  - 29/10/2021
-
-			}else if(!this.getManagedBean().getSmPersonnel().isEquityOwner() || this.getManagedBean().getSmPersonnel().isClerical()){
-				//30829 Start
-				if(getManagedBean().getSmPersonnel().isManagement()){
-					this.getManagedBean().setDisableStaff(true);
-					this.getManagedBean().setDisableProf(true);
-					this.getManagedBean().setDisableSemiProf(true);
-					this.getManagedBean().getSmPersonnel().setClerical(false);
-				} else if (getManagedBean().getSmPersonnel().isClerical()){
-					this.getManagedBean().setDisableManagement(true);
-					this.getManagedBean().getSmPersonnel().setManagement(false);
-				} else {
-					this.getManagedBean().setDisableStaff(false);
-					this.getManagedBean().setDisableProf(false);
-					this.getManagedBean().setDisableSemiProf(false);
-					this.getManagedBean().setDisableEquity(false);
-					this.getManagedBean().setDisableManagement(false);
-				}
-				//30829 End 
-
-			}
-			
-			//30829 start 
-			if(this.getManagedBean().getSmPersonnel().isProf()){
+			if (this.getManagedBean().getSmPersonnel().isEquityOwner()) {
+				// #30829 - start
 				this.getManagedBean().setDisableSemiProf(true);
-			} else if(this.getManagedBean().getSmPersonnel().isSemiProf()) {
-				this.getManagedBean().setDisableProf(true);
-			}
-			//30829 End 
-			/*
-			else if(this.getManagedBean().getSmPersonnel().isClerical()){
+				if (SupplierManagementConst.LIST_OF_BUSINESS_TYPE_FOR_ROLE_IN_COMPANY.contains(this.getManagedBean()
+						.getSmSupp().getBusinessType())) {
+					this.getManagedBean().setDisableStaff(false);
+					this.getManagedBean().setDisableProf(false);
+				} else {
+					this.getManagedBean().setDisableStaff(true);
+					this.getManagedBean().setDisableProf(false);
+				}
+				// #30829 - end
+			} else if (!this.getManagedBean().getSmPersonnel().isEquityOwner()) {
+				// #30829 - start
+				this.getManagedBean().setDisableHigherManagement(false);
+				this.getManagedBean().setDisableManagement(false);
+				this.getManagedBean().setDisableProf(false);
+				this.getManagedBean().setDisableSemiProf(false);
 				this.getManagedBean().setDisableStaff(false);
-				this.getManagedBean().setDisableEquity(false);
+
+				if (this.getManagedBean().getSmPersonnel().isDirector()
+						|| this.getManagedBean().getSmPersonnel().isHigherManagement()
+						|| this.getManagedBean().getSmPersonnel().isManagement()) {
+					this.getManagedBean().setDisableSemiProf(true);
+					this.getManagedBean().setDisableStaff(true);
+				}
+				if (this.getManagedBean().getSmPersonnel().isProf()) {
+					this.getManagedBean().setDisableSemiProf(true);
+					if (!SupplierManagementConst.LIST_OF_BUSINESS_TYPE_FOR_ROLE_IN_COMPANY.contains(this
+							.getManagedBean().getSmSupp().getBusinessType())) {
+						this.getManagedBean().setDisableStaff(true);
+					}
+				}
+				if (this.getManagedBean().getSmPersonnel().isSemiProf()) {
+					this.getManagedBean().setDisableHigherManagement(true);
+					this.getManagedBean().setDisableManagement(true);
+					this.getManagedBean().setDisableProf(true);
+					this.getManagedBean().setDisableStaff(true);
+				}
+
+				if (this.getManagedBean().getSmPersonnel().isClerical()) {
+					this.getManagedBean().setDisableHigherManagement(true);
+					this.getManagedBean().setDisableManagement(true);
+					this.getManagedBean().setDisableSemiProf(true);
+					if (!SupplierManagementConst.LIST_OF_BUSINESS_TYPE_FOR_ROLE_IN_COMPANY.contains(this
+							.getManagedBean().getSmSupp().getBusinessType())) {
+						this.getManagedBean().setDisableProf(true);
+					}
+				}
 			}
-			*/
+			// #30829 - end
 		}
 	}
+	
 	//SSM INTEGRATION CR
 	public void setOwnerNationality(SmSupplierOwner owner,boolean updatePersonnel){
 		getUnknownCountry();
@@ -4756,7 +4769,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		smPersonnel.setContractSignerFlg(0);
 		smPersonnel.setBumiFlg(0);
 		smPersonnel.setMuslimFlg(0);
-		smPersonnel.setClerical(false);
+//		smPersonnel.setClerical(false);
 		smPersonnel.setEquityOwner(true);
 		
 		//to set the softcert Flag
