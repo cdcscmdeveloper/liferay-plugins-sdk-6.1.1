@@ -133,11 +133,16 @@ public class QuestionnaireBackingBean extends
 		filePath = filePath + "/"+ newName;
 		OutputStream os1 = null;
 		try{
+			log.info("VelocityIssue : Create File");
 			os1 = new FileOutputStream(filePath);
-			DocumentGenerator.getInstance().generatePdfFromVelocity(vmFile, context, os1);		
+			log.info("VelocityIssue : start generete File");
+			DocumentGenerator.getInstance().generatePdfFromVelocity(vmFile, context, os1);	
+			log.info("VelocityIssue : end generate File");
 			os1.flush();
 			os1.close();
+			log.info("VelocityIssue : Start download File");
 			this.getManagedBean().setDownloadfile(commonDownload(tmpFolder+"/"+newName, fileName));
+			log.info("VelocityIssue : end download File");
 		}catch(Exception e){
 			log.error("File: QuestionnaireBaseBackingBean, printReportVM, Message: "+e.getMessage());
 		}
