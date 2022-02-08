@@ -173,7 +173,7 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 	
 	public void generatePdf(OutputStream os, String html) throws Exception {
 		debugLogger("generatePdf");
-		
+		log.info("Velocity Issue : Generate PDF");
 		ITextRenderer render = new ITextRenderer();
 		try{
 			//#26180
@@ -203,7 +203,9 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 			//#25142 - end
 				render.setDocumentFromString(html);
 				render.layout();
+				log.info("Velocity Issue : Create PDF");
 				render.createPDF(os);
+				log.info("Velocity Issue : PDF Created");
 			}
 
 			os.flush();
