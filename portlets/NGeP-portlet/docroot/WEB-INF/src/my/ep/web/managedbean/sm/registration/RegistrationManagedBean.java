@@ -174,6 +174,7 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private Long divisionId;//13320
 	private List <SmSupplierOwner> supplierOwnerls = new ArrayList<SmSupplierOwner>(); // #27691
 	//#30829 Start
+	private boolean disableHigherManagement = false;
 	private boolean disableManagement=false;
 	private boolean disableProf=false;
 	private boolean disableSemiProf=false;
@@ -1099,6 +1100,14 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	public void setDisableSemiProf(boolean disableSemiProf) {
 		this.disableSemiProf = disableSemiProf;
+	}
+
+	public boolean isDisableHigherManagement() {
+		return disableHigherManagement;
+	}
+
+	public void setDisableHigherManagement(boolean disableHigherManagement) {
+		this.disableHigherManagement = disableHigherManagement;
 	}
 	//#30829 End
 }
