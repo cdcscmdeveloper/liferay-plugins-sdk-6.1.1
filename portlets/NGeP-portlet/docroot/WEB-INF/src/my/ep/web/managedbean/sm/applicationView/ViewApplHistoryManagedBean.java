@@ -156,7 +156,7 @@ public class ViewApplHistoryManagedBean extends	BaseReviewApplicationManagedBean
 				} else if(getSearchSupplier().getSmAppl() != null && SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT.equalsIgnoreCase(getSearchSupplier().getSmAppl().getSupplierType())) {
 					reqDTO.setAccountType(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT);					
 				} else {
-					reqDTO.setAccountType("M");
+					reqDTO.setAccountType("J");
 				}
 				//#25792 END Changes Fix error Null Pointer
 				reqDTO.setEpNo(getSearchSupplier().getEpNo());
