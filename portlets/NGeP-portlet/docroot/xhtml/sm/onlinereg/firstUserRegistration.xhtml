@@ -529,6 +529,12 @@
 					<p:outputPanel>
 						<table>
 							<tr>
+							<!-- 30829 - start -->
+							<c:if test="#{registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN and 
+											registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI and 
+											registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERSATUAN and 
+											registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2}" >
+							<!-- 30829 - end -->				
 								<td><!-- 27609 -->
 									<p:selectBooleanCheckbox disabled="#{registrationBackingBean.managedBean.disableEquity or registrationBackingBean.managedBean.smPersonnel.equityOwnerSsm or !registrationBackingBean.managedBean.smPersonnel.equityOwnerSsm}" value="#{registrationBackingBean.managedBean.smPersonnel.equityOwner}">
 									<p:ajax event="change" update="@([id$=pnlUsrInfo])" listener="#{registrationBackingBean.listenerChangeRole}"
@@ -540,7 +546,16 @@
 								<td>
 									<h:outputText style="float: left" value="#{lbl['lbl.sm.person.equiOwner']}" />
 								</td>
-								<c:if test="#{registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG and registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG and registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK and registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH and registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK and registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH}">
+							</c:if>
+								<!-- 30829 - start -->
+								<c:if test="#{registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG 
+												and registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG 
+												and registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK 
+												and registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH 
+												and registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK 
+												and registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH
+												and registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_PROFESSIONAL_BODY}">
+								<!-- 30829 - end -->
 									<td><!-- 27609 -->
 										<p:selectBooleanCheckbox disabled="true" value="#{registrationBackingBean.managedBean.smPersonnel.director}"/>
 									</td>
@@ -548,7 +563,13 @@
 										<h:outputText style="float: left" value="#{lbl['lbl.sm.person.dir']}" />
 									</td>
 									<td>
-										<p:selectBooleanCheckbox disabled="" value="#{registrationBackingBean.managedBean.smPersonnel.higherManagement}"/>
+										<!-- 30829 - start -->
+										<p:selectBooleanCheckbox disabled="#{registrationBackingBean.managedBean.disableHigherManagement}" value="#{registrationBackingBean.managedBean.smPersonnel.higherManagement}" >
+										<p:ajax event="change" update="@([id$=pnlUsrInfo])" listener="#{registrationBackingBean.listenerChangeRole}"
+										partialSubmit="true" 
+										process="@form" />
+										</p:selectBooleanCheckbox>
+										<!-- 30829 - end -->
 									</td>
 									<td>
 										<h:outputText style="float: left" value="#{lbl['lbl.sm.person.hghMngmt']}" />
