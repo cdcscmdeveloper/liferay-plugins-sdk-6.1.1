@@ -2758,7 +2758,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					supplierBB.getManagedBean().setRemoveFactoring(false);
 					supplierBB.getManagedBean().setUpdateFactoring(false);
 					supplierBB.getManagedBean().setDocType(ParameterConst.DOCTYPE_REQUEST_FACTORING);
-					supplierBB.getManagedBean().setFcRequestType("A");
+					//#32555 start
+					supplierBB.getManagedBean().setFcRequestType(ParameterConst.REQUEST_TYPE_FACTORING);
+					//#32555 end
 				}
 				supplierBB.getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, supplierBB.getManagedBean().getDocType(), supplierBB.getManagedBean().getCtContract().getContractNo()));
 				supplierBB.setCtBB(new ContractBackingBean(supplierBB.getManagedBean().getFileDirectory()));
