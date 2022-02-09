@@ -85,7 +85,7 @@ public class QuestionnaireBackingBean extends
 		List<SmSupplierAnswer> smSuppAnswerLs = new ArrayList<SmSupplierAnswer>();
 		smSuppAnswerLs = getManagedBean().getSmSuppAnswerLs();
 
-		printReportVM("2022","SM_QUESTIONNAIRE_FORM.pdf","/sm/questionnaire/questionnaire_form.vm",setDetail());
+		printReportVM("questionnaire","SM_QUESTIONNAIRE_FORM.pdf","/sm/questionnaire/questionnaire_form.vm",setDetail());
 		
 	}
 	
