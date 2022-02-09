@@ -155,8 +155,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	private final static Logger log = Logger.getLogger(SvoSiteVisitManagedBean.class);
 
 	private String tmpPath = null;
-	//private String tmpFolder = "SiteVistTemplate" + "/";
-	private String tmpFolder = "2022" + "/";
+	private String tmpFolder = "SiteVistTemplate" + "/";
 	private String fileInitName;
 	private String templateDesc;
 	//28775 - Site Visit Grouping Enhancement - 28775 - start
