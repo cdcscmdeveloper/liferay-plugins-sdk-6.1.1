@@ -4401,7 +4401,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				log.info(" tempCtAgreement ################################# "+tempCtAgreement.getAgreementId());
 				log.info("getManagedBean().getCtContractAmount().getCtAgreement().getAgreementId() ################ "+getManagedBean().getCtContractAmount().getCtAgreement().getAgreementId());
 				log.info("index check before :::: "+index);
-				if(tempCtAgreement.getAgreementId() == getManagedBean().getCtContractAmount().getCtAgreement().getAgreementId())
+				//if(tempCtAgreement.getAgreementId() == getManagedBean().getCtContractAmount().getCtAgreement().getAgreementId())
+				if(tempCtAgreement.getAgreementId().equals(getManagedBean().getCtContractAmount().getCtAgreement().getAgreementId())) // test
 				{
 					log.info("tempCtAgreement ################ after "+tempCtAgreement.getAgreementId());
 					log.info("getManagedBean().getCtContractAmount().getCtAgreement().getAgreementId() ################ "+getManagedBean().getCtContractAmount().getCtAgreement().getAgreementId());
