@@ -14,6 +14,8 @@ import java.io.Serializable;
 import java.util.List;
 
 import my.ep.constant.tpl.TemplateSpecConst;
+import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecEstimation; //#25039 
