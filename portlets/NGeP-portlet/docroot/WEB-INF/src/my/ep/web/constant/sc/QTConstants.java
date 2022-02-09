@@ -280,5 +280,6 @@ public interface QTConstants {
 	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE="scSpecCommitteeMaintenance_WAR_NGePportlet";
 	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_TASKLIT="scSpecificationCommitteeEndorsement_WAR_NGePportlet";
 	
+	public static final String FINANCIAL_ITEM_SPEC_ANSWER="FISA";//32453
 	
 }

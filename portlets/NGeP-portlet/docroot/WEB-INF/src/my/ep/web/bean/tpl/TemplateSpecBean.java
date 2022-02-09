@@ -51,6 +51,10 @@ public class TemplateSpecBean implements Serializable {
 	// #30552 - start
 	private List<TplSpecAnswer> BackupspecAnswerList;
 	//#30552 - end
+	private String answerRemove;//32453-start
+	private ScQtProposalChecklist qtProposalChecklist;
+	private ScQt qt;
+	private List<TplSpecAnswer> hideanswerList;//32453-End
 	/**
 	 * Constructor for template specification bean
 	 */
@@ -296,5 +300,64 @@ public class TemplateSpecBean implements Serializable {
 		BackupspecAnswerList = backupspecAnswerList;
 	}
 	// #30552 - end
+	
+	/**
+	 * //32453-start
+	 * @return the answerRemove
+	 */
+	public String getAnswerRemove() {
+		return answerRemove;
+	}
+
+	/**
+	 * @param answerRemove the answerRemove to set
+	 */
+	public void setAnswerRemove(String answerRemove) {
+		this.answerRemove = answerRemove;
+	}
+
+	/**
+	 * @return the qtProposalChecklist
+	 */
+	public ScQtProposalChecklist getQtProposalChecklist() {
+		return qtProposalChecklist;
+	}
+
+	/**
+	 * @param qtProposalChecklist the qtProposalChecklist to set
+	 */
+	public void setQtProposalChecklist(ScQtProposalChecklist qtProposalChecklist) {
+		this.qtProposalChecklist = qtProposalChecklist;
+	}
+
+	/**
+	 * @return the qt
+	 */
+	public ScQt getQt() {
+		return qt;
+	}
+
+	/**
+	 * @param qt the qt to set
+	 */
+	public void setQt(ScQt qt) {
+		this.qt = qt;
+	}
+
+	/**
+	 * @return the hideanswerList
+	 */
+	public List<TplSpecAnswer> getHideanswerList() {
+		return hideanswerList;
+	}
+
+	/**
+	 * @param hideanswerList the hideanswerList to set
+	 */
+	public void setHideanswerList(List<TplSpecAnswer> hideanswerList) {
+		this.hideanswerList = hideanswerList;
+	}
+	//32453-End
+	
 	
 }

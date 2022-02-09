@@ -635,6 +635,9 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<ScQtCheckList> techStgPkgOterList;
 	//#31485 - end
 	private boolean showSchema;//#32089
+	
+	private boolean isSupplierItemExist;//32453
+	
 	/**tabIndex
 	 * Gets the today.
 	 * 
@@ -4157,4 +4160,20 @@ public class EvaluationManagedBean extends BaseManagedBean {
 			this.showSchema = showSchema;
 	}
 	//#32089 - End
+
+	/**32453-start
+	 * @return the isSupplierItemExist
+	 */
+	public boolean isSupplierItemExist() {
+		return isSupplierItemExist;
+	}
+
+	/**
+	 * @param isSupplierItemExist the isSupplierItemExist to set
+	 */
+	public void setSupplierItemExist(boolean isSupplierItemExist) {
+		this.isSupplierItemExist = isSupplierItemExist;
+	}//32453-End
+	
+	
 }
