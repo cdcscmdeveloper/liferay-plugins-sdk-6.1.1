@@ -11,7 +11,10 @@ import java.io.StringWriter;
 import java.math.BigInteger;
 import java.util.List;
 
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.portlet.PortletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.Template;
@@ -59,7 +62,9 @@ import org.jsoup.safety.Whitelist;
 import org.jsoup.select.Elements;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
+import com.liferay.portal.util.PortalUtil;
 import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.BaseFont;
 
 import my.ep.factory.EpLogger;
 
@@ -201,6 +206,10 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 				/*html = html.replaceAll("&amp;lt", "&#60");
 				html = html.replaceAll("&amp;gt", "&#62");*/					
 			//#25142 - end
+				//#26130 - start
+				String fontPath = getServerUrl()+"NGeP-portlet/resources/fonts/Arial.ttf";
+		        render.getFontResolver().addFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+		        //#26130 - end
 				render.setDocumentFromString(html);
 				render.layout();
 				log.info("Velocity Issue : Create PDF");
@@ -639,6 +648,17 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 		wordPackage.getDocumentModel (). getSections (). get (0) .getSectPr (). setPgMar (pg);
 	}
 	//#25025 - end
+	
+	//#26130 - start
+		private String getServerUrl() {
+			ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
+			PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
+			HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
+			String requestURL = httpServletRequest.getRequestURL().toString();
+			String url = requestURL.substring(0, requestURL.length() - httpServletRequest.getRequestURI().length()) +  httpServletRequest.getContextPath() + "/";
+			return url;
+		}
+		//#26130-end
 }
 
 
