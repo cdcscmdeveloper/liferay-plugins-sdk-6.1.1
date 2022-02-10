@@ -8,6 +8,10 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.portlet.PortletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import my.ep.constant.EpPropertiesConst;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
@@ -35,6 +39,8 @@ import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
+
+import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean(name = "questionnaireBackingBean")
 @RequestScoped
@@ -100,8 +106,8 @@ public class QuestionnaireBackingBean extends
 		FacesScopes face = new FacesScopes();
 		
 		String lblApplType = getsupplierApplTypeDesc(this.getManagedBean().getSmAppl().getApplType());
-
-		context.put("hostUrl", getLogoHeaderPath());
+		log.info("Server URL DEV:"+getServerUrl());
+		context.put("hostUrl", getServerUrl());
 		context.put("title",  ResourceBundleUtils.getMessage("lbl.sm.questionaire.answer.header",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
 		context.put("feedbacknote1",  ResourceBundleUtils.getMessage("lbl.sm.questionaire.feedback.note1",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
 		context.put("feedbacknote2",  ResourceBundleUtils.getMessage("lbl.sm.questionaire.feedback.note2",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
@@ -114,7 +120,20 @@ public class QuestionnaireBackingBean extends
 		
 		return context;
 	}
-	
+	/**
+	 * Gets the server url.
+	 *
+	 * @return the server url
+	 */
+	private String getServerUrl() {
+		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
+		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
+		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
+		String requestURL = httpServletRequest.getRequestURL().toString();
+		String url = requestURL.substring(0, requestURL.length()- httpServletRequest.getRequestURI().length())+ httpServletRequest.getContextPath() + "/";
+
+		return url;
+	}
 	/**
 	 * get the printReportVM
 	 * @return String
