@@ -15,11 +15,13 @@
 
 	<c:if test="#{!supplierProposalDetailBackingBean.managedBean.readOnly}">
 
+		<!-- 20220204@syazani - Enhancement #3657 - specific error message - Start -->
 		<c:if test="#{'TS' eq docDefinationKey}">
 			<p:commandButton value="#{lbl['lbl.btn.save']}"
 				styleClass="BtnSpacing"
 				action="#{supplierProposalDetailBackingBean.saveFinancialSpecificationAction(false)}"
 				process="@all" partialSubmit="true" update="@all"
+				immediate="true"
 				onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
 				disabled="#{supplierProposalDetailBackingBean.managedBean.disableUpdateProposal}" />
 			<p:commandButton value="#{lbl['lbl.btn.complete']}"
@@ -29,6 +31,7 @@
 				process="@all" partialSubmit="true" update="@all"
 				disabled="#{supplierProposalDetailBackingBean.managedBean.disableUpdateProposal}" />
 		</c:if>
+		<!-- 20220204@syazani - Enhancement #3657 - specific error message - End -->
 
 		<c:if test="#{'WF' eq docDefinationKey}">
 			<c:if test="#{'FN' eq chkDefinationKey}">
