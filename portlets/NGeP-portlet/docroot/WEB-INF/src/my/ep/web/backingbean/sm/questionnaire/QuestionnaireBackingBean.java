@@ -8,10 +8,6 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.portlet.PortletRequest;
-import javax.servlet.http.HttpServletRequest;
 
 import my.ep.constant.EpPropertiesConst;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
@@ -39,8 +35,6 @@ import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
-
-import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean(name = "questionnaireBackingBean")
 @RequestScoped
@@ -106,8 +100,8 @@ public class QuestionnaireBackingBean extends
 		FacesScopes face = new FacesScopes();
 		
 		String lblApplType = getsupplierApplTypeDesc(this.getManagedBean().getSmAppl().getApplType());
-		log.info("Server URL DEV:"+getServerUrl());
-		context.put("hostUrl", getServerUrl());
+
+		context.put("hostUrl", getLogoHeaderPath());
 		context.put("title",  ResourceBundleUtils.getMessage("lbl.sm.questionaire.answer.header",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
 		context.put("feedbacknote1",  ResourceBundleUtils.getMessage("lbl.sm.questionaire.feedback.note1",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
 		context.put("feedbacknote2",  ResourceBundleUtils.getMessage("lbl.sm.questionaire.feedback.note2",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
@@ -120,20 +114,7 @@ public class QuestionnaireBackingBean extends
 		
 		return context;
 	}
-	/**
-	 * Gets the server url.
-	 *
-	 * @return the server url
-	 */
-	private String getServerUrl() {
-		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
-		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
-		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
-		String requestURL = httpServletRequest.getRequestURL().toString();
-		String url = requestURL.substring(0, requestURL.length()- httpServletRequest.getRequestURI().length())+ httpServletRequest.getContextPath() + "/";
-
-		return url;
-	}
+	
 	/**
 	 * get the printReportVM
 	 * @return String
@@ -152,16 +133,11 @@ public class QuestionnaireBackingBean extends
 		filePath = filePath + "/"+ newName;
 		OutputStream os1 = null;
 		try{
-			log.info("VelocityIssue : Create File");
 			os1 = new FileOutputStream(filePath);
-			log.info("VelocityIssue : start generete File");
-			DocumentGenerator.getInstance().generatePdfFromVelocity(vmFile, context, os1);	
-			log.info("VelocityIssue : end generate File");
+			DocumentGenerator.getInstance().generatePdfFromVelocity(vmFile, context, os1);		
 			os1.flush();
 			os1.close();
-			log.info("VelocityIssue : Start download File");
 			this.getManagedBean().setDownloadfile(commonDownload(tmpFolder+"/"+newName, fileName));
-			log.info("VelocityIssue : end download File");
 		}catch(Exception e){
 			log.error("File: QuestionnaireBaseBackingBean, printReportVM, Message: "+e.getMessage());
 		}
