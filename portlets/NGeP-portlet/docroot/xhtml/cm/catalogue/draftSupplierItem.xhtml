@@ -50,7 +50,6 @@
 		</table>
 		
 		<ui:include src="/xhtml/common/uompopup.xhtml"></ui:include>
-		<p:spacer height="2" />
 		
 		
 
@@ -75,7 +74,8 @@
 									
 								</tr>
 							</table>
-							<div style="text-align: left;">
+							<!-- 569 start -->
+							<div style="text-align: right;">
 								<p:commandButton value="#{lbl['lbl.cm.search']}"
 									action="#{catalogueBackingBean.managedBean.searchCatalogueMaintenance}" update="draftSupplierItemID" id="searchButtonId">
 
@@ -85,6 +85,7 @@
 									update="catMainItemViewID">
 								</p:commandButton>
 							</div>
+							<!-- 569 end -->
 						</p:panel>
 					</td>
 				</tr>
@@ -144,7 +145,14 @@
 					<f:converter converterId="bigDecimalConverter" />
 					<p:ajax event="blur" update="stdPrice" />
 				</p:inputText>
-	
+				<!-- #569-start -->
+				<p:graphicImage
+					rendered="#{selectedSuppCat.selected and selectedSuppCat.cmStandardPricing.price==null
+						or (selectedSuppCat.selected and selectedSuppCat.cmStandardPricing.price le 0)}"
+					value="#{selectedSuppCat.selected and selectedSuppCat.cmStandardPricing.price==null
+						or (selectedSuppCat.selected and selectedSuppCat.cmStandardPricing.price le 0) ? '/css/images/design/ico-termination.png' : ''}"
+					update="@form" />	
+				<!-- #569-End -->
 			</p:column>
 			<p:column width="5%">
 				<f:facet name="header">
@@ -158,7 +166,27 @@
 								value="#{selectedSuppCat.pmUom}"
 								completeMethod="#{catalogueBackingBean.autoCompleteUom}"
 								maxResults="50" dropdown="false" forceSelection="true" />
-				
+								<!-- #569 - start -->
+				<p:graphicImage
+				    rendered="#{catalogueBackingBean.managedBean.publish and selectedSuppCat.selected and selectedSuppCat.pmUom.uomId==null}"
+				    value="#{catalogueBackingBean.managedBean.publish and selectedSuppCat.selected
+						and selectedSuppCat.pmUom.uomId==null ? '/css/images/design/ico-termination.png' : ''}"
+					update="@form" />
+				 <!-- #569 - end -->				
+			</p:column>
+			<p:column  style="text-align: center;" width="2%">
+				<!-- 569 Start -->
+				<p:graphicImage
+				    rendered="#{catalogueBackingBean.managedBean.publish and selectedSuppCat.selected 
+				    	and catalogueBackingBean.managedBean.selectedMaintainItem.cmImages==null 
+				    	or (catalogueBackingBean.managedBean.publish and selectedSuppCat.selected 
+				    	and catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc==null)}"
+				    value="#{catalogueBackingBean.managedBean.publish and selectedSuppCat.selected
+						and catalogueBackingBean.managedBean.selectedMaintainItem.cmImages==null 
+				    	or (catalogueBackingBean.managedBean.publish and selectedSuppCat.selected 
+				    	and catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc==null) ? '/css/images/design/ico-termination.png' : ''}"
+					update="@form" />
+				<!-- 569 End -->
 			</p:column>
 			<!-- START SSM INTEGRATION #27089 -->
 			<p:column width="2%">
@@ -172,7 +200,14 @@
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					<p:ajax event="dateSelect" listener="#{catalogueBackingBean.getMinDate(selectedSuppCat.cmStandardPricing.startDate,selectedSuppCat.cmStandardPricing)}" update="standardEndDateId"/>
 				</p:calendar>
-	
+				<!-- #569 - start -->
+				<p:graphicImage
+				    rendered="#{catalogueBackingBean.managedBean.publish and selectedSuppCat.selected and selectedSuppCat.cmStandardPricing.startDate==null 
+						or (catalogueBackingBean.managedBean.publish and selectedSuppCat.selected and selectedSuppCat.cmStandardPricing.startDate gt selectedSuppCat.cmStandardPricing.endDate)}"
+				    value="#{catalogueBackingBean.managedBean.publish and selectedSuppCat.selected and selectedSuppCat.cmStandardPricing.startDate==null 
+				     	or (catalogueBackingBean.managedBean.publish and selectedSuppCat.selected and selectedSuppCat.cmStandardPricing.startDate gt selectedSuppCat.cmStandardPricing.endDate) ? '/css/images/design/ico-termination.png' : ''}"
+					update="@form" />
+			 	<!-- #569 - end -->
 			</p:column>
 			<p:column width="2%">
 				<f:facet name="header">
@@ -185,7 +220,14 @@
 					disabled="#{selectedSuppCat.cmStandardPricing.startDate==null}"
 					mindate="#{catalogueBackingBean.managedBean.minDate}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
-	
+				<!-- #569 - start -->
+				<p:graphicImage
+					rendered="#{catalogueBackingBean.managedBean.publish and selectedSuppCat.selected and selectedSuppCat.cmStandardPricing.startDate==null and selectedSuppCat.cmStandardPricing.endDate==null
+						or (catalogueBackingBean.managedBean.publish and selectedSuppCat.selected and selectedSuppCat.cmStandardPricing.startDate gt selectedSuppCat.cmStandardPricing.endDate)}"
+					value="#{catalogueBackingBean.managedBean.publish and selectedSuppCat.selected and selectedSuppCat.cmStandardPricing.startDate==null and selectedSuppCat.cmStandardPricing.endDate==null 
+						or (catalogueBackingBean.managedBean.publish and selectedSuppCat.selected and selectedSuppCat.cmStandardPricing.startDate gt selectedSuppCat.cmStandardPricing.endDate)? '/css/images/design/ico-termination.png' : ''}"
+					update="@form" />
+				<!-- #569 - end -->
 			</p:column>
 			<!-- END SSM INTEGRATION #27089 -->
 			<p:column width="2%">
