@@ -3045,13 +3045,25 @@ public class EvaluationBackingBean extends
 					 * );
 					 */
 					financialCheckListStatusCheck();//32426
+					/*
+					 * 32066 
+					 * FIX BUG REGARDING TAB PACKAGE IS SELECTED EVEN THOUGHT THE ITEM ONLY SINGLE
+					 */
+					if(!this.getManagedBean().getSingleSpecQuestion()){
 					financialCheckListStatusCheckPackage();//#25138 
+					} 
 					evaluationSo
 							.prepareFinancialEvaluationSummary(summaryReqDTO);
 					getManagedBean().setFinancialSummaryGenerated(true);
 				}else{//#25138-start
 					financialCheckListStatusCheck();//32426
+					/*
+					 * 32066 
+					 * FIX BUG REGARDING TAB PACKAGE IS SELECTED EVEN THOUGHT THE ITEM ONLY SINGLE
+					 */
+					if(!this.getManagedBean().getSingleSpecQuestion()){
 					financialCheckListStatusCheckPackage();//#25138 
+					}
 					evaluationSo
 							.prepareFinancialEvaluationSummary(summaryReqDTO);
 					getManagedBean().setFinancialSummaryGenerated(true);
