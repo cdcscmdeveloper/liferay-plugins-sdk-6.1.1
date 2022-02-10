@@ -479,6 +479,13 @@ public class SupplierDataMaintenanceBackingBean extends
 							suppResDTO.getSmSupplier().setTypeDisciplinaryAction("B");
 							break;
 						}
+						// 26238: Disciplinary Action - start -32590 --> 
+						else if(smDA.isSuspendRegistration()){
+							suppResDTO.getSmSupplier().setTypeDisciplinaryAction("S");
+							break;
+						}
+						// 26238: Disciplinary Action - end -32590 -->
+						
 					}
 				}
 				//32329 - end
@@ -1592,6 +1599,11 @@ public class SupplierDataMaintenanceBackingBean extends
 						getManagedBean().setEditDisciplinaryAction(true);
 						break;
 					}else{
+						// 26238: Disciplinary Action - start -32590 --> 
+						getManagedBean().getDisciplineVO().getSmDiscplinaryAction().setStartDate(null);
+						getManagedBean().getDisciplineVO().getSmDiscplinaryAction().setEndDate(null); 
+						// 26238: Disciplinary Action - end -32590 -->
+						
 						getManagedBean().setEditDisciplinaryActionCheckBox(false);
 						getManagedBean().setEditDisciplinaryAction(false);
 						//29181: Disciplinary Action - end - 26238
