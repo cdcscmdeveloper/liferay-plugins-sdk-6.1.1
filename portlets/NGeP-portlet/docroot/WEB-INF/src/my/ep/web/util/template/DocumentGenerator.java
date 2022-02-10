@@ -11,7 +11,10 @@ import java.io.StringWriter;
 import java.math.BigInteger;
 import java.util.List;
 
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.portlet.PortletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.Template;
@@ -59,7 +62,9 @@ import org.jsoup.safety.Whitelist;
 import org.jsoup.select.Elements;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
+import com.liferay.portal.util.PortalUtil;
 import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.BaseFont;
 
 import my.ep.factory.EpLogger;
 
