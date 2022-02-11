@@ -2399,6 +2399,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		try {
 			if(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId() != getManagedBean().getCurrentPreparedOrgId()){
 				//13291 - start
+				if(CollectionUtils.isEmpty(getManagedBean().getApproverPTJOrgList()) || !getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId().equals(getManagedBean().getCurrentPreparedOrgId())) {
+					if(getManagedBean().getFlRequest().getCreatedOrgProfile().getOrgProfileId() == null) {
+						Long orgProfileId = getUserOrg();
+						getManagedBean().getFlRequest().getCreatedOrgProfile().setOrgProfileId(orgProfileId);
+						getManagedBean().setSelectedApproverPTJ(orgProfileId);
+					}	
+				}
+				
 				if(getManagedBean().getFlRequest().getApproverOrgProfile() != null && getManagedBean().getFlRequest().getApproverOrgProfile().getOrgProfileId() != null) {
 					reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getApproverOrgProfile().getOrgProfileId());
 				} else {
@@ -3241,9 +3249,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				validatePreparedOrgAndAgencies();
 				getApproverList();
 			}
+			initializeApproverGroup();	
 			//13291 - start
 			initializeApproverPTJNameDropdown();
-			initializeApproverGroup();	
 			//13291 - end
 		}
 			
