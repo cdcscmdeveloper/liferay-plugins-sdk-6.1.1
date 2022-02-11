@@ -207,7 +207,7 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 				html = html.replaceAll("&amp;gt", "&#62");*/					
 			//#25142 - end
 				//#26130 - start
-				String fontPath = getServerUrl()+"NGeP-portlet/resources/fonts/Arial.ttf";
+				String fontPath = getServerUrl()+"resources/fonts/Arial.ttf";
 		        render.getFontResolver().addFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
 		        //#26130 - end
 				render.setDocumentFromString(html);
