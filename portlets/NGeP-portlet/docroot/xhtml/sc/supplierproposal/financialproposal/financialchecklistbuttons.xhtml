@@ -21,10 +21,9 @@
 				styleClass="BtnSpacing"
 				action="#{supplierProposalDetailBackingBean.saveFinancialSpecificationAction(false)}"
 				process="@all" partialSubmit="true" update="@all"
-				immediate="true"
 				onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
 				disabled="#{supplierProposalDetailBackingBean.managedBean.disableUpdateProposal}" />
-			<p:commandButton value="#{lbl['lbl.btn.complete']}"
+			<p:commandButton id="completeTS" value="#{lbl['lbl.btn.complete']}"
 				styleClass="BtnSpacing" onclick="blockWidget.show()"
 				oncomplete="blockWidget.hide()" 
 				action="#{supplierProposalDetailBackingBean.saveFinancialSpecificationAction(true)}"
