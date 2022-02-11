@@ -3755,7 +3755,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
 		String requestURL = httpServletRequest.getRequestURL().toString();
 		String url = requestURL.substring(0, requestURL.length()- httpServletRequest.getRequestURI().length())+ httpServletRequest.getContextPath() + "/";
-
+		log.info("portletRequest : "+portletRequest);
+		log.info("requestURL : "+requestURL);
+		log.info("httpServletRequest.getContextPath() : "+httpServletRequest.getContextPath());
 		return url;
 	}
 }
