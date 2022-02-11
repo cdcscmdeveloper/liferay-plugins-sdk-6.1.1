@@ -861,7 +861,10 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			
 			BigDecimal cdcCharge = SmServiceLookup.getSmRuleSO().retrieveMofAmountPaidToCDC().getMofAmountPaidToCDC();			
 			BigDecimal govCharge = paymentDtl.getPyBillDtl().getItemPrice().subtract(cdcCharge);
-			
+			log.info("Ini tolak==paymentDtl.getPyBillDtl().getItemPrice() : "+paymentDtl.getPyBillDtl().getItemPrice());
+			log.info("paymentDtl.getPyBillDtl().getBillDtlId()----"+paymentDtl.getPyBillDtl().getBillDtlId());
+			log.info("cdcCharge----"+cdcCharge);
+			log.info("govCharge----"+govCharge);
 			ConfigGeneralReqDTO reqDTO =  new ConfigGeneralReqDTO();
 			ConfigGeneralResDTO resDTO = SmServiceLookup.getConfigGeneralSO().getConfigGeneral(reqDTO);
 			
