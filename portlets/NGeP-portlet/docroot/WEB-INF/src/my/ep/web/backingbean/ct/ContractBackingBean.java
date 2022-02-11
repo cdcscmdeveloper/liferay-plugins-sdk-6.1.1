@@ -4384,10 +4384,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 	
 	public List<CtAgreement> filterAgreementList() {
-		log.info("Bob Test ####################################### filterAgreementList()");
 		List<CtAgreement> newCtAgreementList = new ArrayList<CtAgreement>();
 		List<CtAgreement> currentCtAgreementList = getManagedBean().getCtAgreementList();
-		log.info("Bob Test ####################################### currentCtAgreementList "+currentCtAgreementList.size());
 
 		CtAgreement tempCtAgreement = null;
 		int index = 0;
@@ -4398,16 +4396,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			for(index = 0; index < currentCtAgreementList.size(); index++)
 			{
 				tempCtAgreement = currentCtAgreementList.get(index);
-				log.info(" tempCtAgreement ################################# "+tempCtAgreement.getAgreementId());
-				log.info("getManagedBean().getCtContractAmount().getCtAgreement().getAgreementId() ################ "+getManagedBean().getCtContractAmount().getCtAgreement().getAgreementId());
-				log.info("index check before :::: "+index);
-				//if(tempCtAgreement.getAgreementId() == getManagedBean().getCtContractAmount().getCtAgreement().getAgreementId())
-				if(tempCtAgreement.getAgreementId().equals(getManagedBean().getCtContractAmount().getCtAgreement().getAgreementId())) // test
+				if(tempCtAgreement.getAgreementId().equals(getManagedBean().getContractVer().getCtContractAmount().getCtAgreement().getAgreementId())) // Fix - #32622
 				{
-					log.info("tempCtAgreement ################ after "+tempCtAgreement.getAgreementId());
-					log.info("getManagedBean().getCtContractAmount().getCtAgreement().getAgreementId() ################ "+getManagedBean().getCtContractAmount().getCtAgreement().getAgreementId());
-					log.info("index check after :::: "+index);
-
 					while(index >= 0)
 					{
 						//sort agreementList in ascending order starting from the selected Reference File No.
@@ -4420,9 +4410,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 			if(newCtAgreementList.isEmpty())
 			{ 
-				log.info("index before #########################");
 				index = currentCtAgreementList.size() - 1;
-				log.info("index after #########################");
 				while(index >= 0)
 				{
 					//sort agreementList in ascending order
