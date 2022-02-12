@@ -2442,6 +2442,11 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					for(PmUserGroupUser groupUser : firstPmUserGroup) {
 						getManagedBean().getApproverList().add(groupUser.getPmUser().getUserId());
 					}
+					if(getManagedBean().getFlRequest().getPmUserGroup()==null || getManagedBean().getFlRequest().getPmUserGroup().getUserGroupId() == null){
+						PmUserGroup pmUserGroup = new PmUserGroup();
+						getManagedBean().getFlRequest().setPmUserGroup(pmUserGroup);
+						getManagedBean().getFlRequest().getPmUserGroup().setUserGroupId(getManagedBean().getUserGroupList().get(0).getUserGroupId());
+					}
 				}
 			}
 			if(getManagedBean().getFlRequest().getPmUserGroup()!=null && 
@@ -7631,6 +7636,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().getApproverList().clear();
 		if(CollectionUtils.isNotEmpty(resDTO.getUserGroupList())) {
 			getManagedBean().getUserGroupList().addAll(resDTO.getUserGroupList());
+			
+			if(getManagedBean().getFlRequest().getPmUserGroup()==null || getManagedBean().getFlRequest().getPmUserGroup().getUserGroupId() == null){
+				PmUserGroup pmUserGroup = new PmUserGroup();
+				getManagedBean().getFlRequest().setPmUserGroup(pmUserGroup);
+				getManagedBean().getFlRequest().getPmUserGroup().setUserGroupId(getManagedBean().getUserGroupList().get(0).getUserGroupId());
+			}
+			
 		} else {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 					MessageUtils.getMessage(MessageConst.ERROR_745070, 
