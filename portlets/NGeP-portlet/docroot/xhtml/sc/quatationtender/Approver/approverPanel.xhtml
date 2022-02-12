@@ -62,31 +62,41 @@
 			<ui:include src="FinalaizationCommitteeApproval.xhtml" />
 			<ui:include src="approveremarksdetails.xhtml" />
 		</c:if>
-		
-		
-		<!-- 25037 start -->
-		<p:dialog id="reviceApprovalDlg" widgetVar="reviceApprovalDlg"
-			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
-			resizable="false" width="360" height="90" modal="true" closable="false">
-		<!-- 25037 end -->
-			<table>
-				<tr>
-					<td align="center"><p:outputLabel
-							value="#{lbl['lbl.sc.dialog.confirm.revise']}" /></td>
-				</tr>
-			</table>
-			<p:spacer height="1" />
-			<div class="ppRightBtn"> 
-				<!-- 25037 start -->
-				<p:commandButton widgetVar="reviseOKBtn" onclick="reviseOKBtn.disable(); reviseCANCELBtn.disable(); reviceApprovalDlg.hide(); blockWidget.show();" value="#{lbl['lbl.btn.yes']}"
-					oncomplete="reviceApprovalDlg.hide(); blockWidget.hide()"
-					action="#{approvalBackingBean.updateReviceBpmTask}" />
-				<p:commandButton widgetVar="reviseCANCELBtn" value="#{lbl['lbl.btn.no']}"
-					onclick="reviceApprovalDlg.hide();" type="button" />
+
+		<ui:remove>#25077 - Start</ui:remove>
+		<c:if
+			test="#{approvalBackingBean.managedBean.currentStatusId ne QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL}">
+			<ui:remove>#25077 - End</ui:remove>
+			<!-- 25037 start -->
+			<p:dialog id="reviceApprovalDlg" widgetVar="reviceApprovalDlg"
+				header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
+				resizable="false" width="360" height="90" modal="true"
+				closable="false">
 				<!-- 25037 end -->
-			</div>
-		</p:dialog>
-		
+				<table>
+					<tr>
+						<td align="center"><p:outputLabel
+								value="#{lbl['lbl.sc.dialog.confirm.revise']}" /></td>
+					</tr>
+				</table>
+				<p:spacer height="1" />
+				<div class="ppRightBtn">
+					<!-- 25037 start -->
+					<p:commandButton widgetVar="reviseOKBtn"
+						onclick="reviseOKBtn.disable(); reviseCANCELBtn.disable(); reviceApprovalDlg.hide(); blockWidget.show();"
+						value="#{lbl['lbl.btn.yes']}"
+						oncomplete="reviceApprovalDlg.hide(); blockWidget.hide()"
+						action="#{approvalBackingBean.updateReviceBpmTask}" />
+					<p:commandButton widgetVar="reviseCANCELBtn"
+						value="#{lbl['lbl.btn.no']}" onclick="reviceApprovalDlg.hide();"
+						type="button" />
+					<!-- 25037 end -->
+				</div>
+			</p:dialog>
+			<ui:remove>#25077 - Start</ui:remove>
+		</c:if>
+		<ui:remove>#25077 - End</ui:remove>
+
 		<p:dialog id="rejectApprovalDlg" widgetVar="rejectApprovalDlg"
 			header="#{lbl['lbl.sc.dialog.confirm.header.reject']}"
 			resizable="false" width="350" height="90" modal="true">

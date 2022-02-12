@@ -1660,7 +1660,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private String previousApprovalTabName;
 	private ScQtApprovalReqAttachement scQtApprovalReqAttachementHistory;
 	private boolean flagFileAttahmentDeleted = false;
+	private boolean firstPagePA = false;
 	// #25077 - End
+
 	// bug #30435, Enhancement #25077 -start-
 	private PmParameter pmParam;
 	private ScQtApprovalReqAttachement scQtApprovalReqAttachement;
@@ -10532,6 +10534,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setFlagFileAttahmentDeleted(boolean flagFileAttahmentDeleted) {
 		this.flagFileAttahmentDeleted = flagFileAttahmentDeleted;
+	}
+	
+	public boolean isFirstPagePA() {
+		return firstPagePA;
+	}
+
+	public void setFirstPagePA(boolean firstPagePA) {
+		this.firstPagePA = firstPagePA;
 	}
 	// #25077 - End
 
