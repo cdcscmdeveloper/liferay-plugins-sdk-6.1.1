@@ -247,8 +247,37 @@
 			</div>
 		</p:dialog>
 		<!-- 15391 End  -->
-		
-		<!-- 25037 Start -->
+
+	<!-- 25077, 32376 - Start -->
+	<c:if
+		test="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL}">
+		<p:dialog id="reviceApprovalDlgTemp" widgetVar="reviceApprovalDlgTemp"
+			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
+			resizable="false" width="360" height="90" modal="true"
+			closable="false">
+
+			<table>
+				<tr>
+					<td align="center"><p:outputLabel
+							value="#{lbl['lbl.sc.dialog.confirm.revise']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton widgetVar="reviseOKBtnTemp"
+					onclick="reviseOKBtnTemp.disable(); reviseCANCELBtnTemp.disable(); reviceApprovalDlgTemp.hide(); blockWidget.show();"
+					value="#{lbl['lbl.btn.yes']}"
+					oncomplete="reviceApprovalDlgTemp.hide(); blockWidget.hide()"
+					action="#{approvalBackingBean.updateReviceBpmTask}" />
+				<p:commandButton widgetVar="reviseCANCELBtnTemp"
+					value="#{lbl['lbl.btn.no']}"
+					onclick="reviceApprovalDlgTemp.hide();" type="button" />
+			</div>
+		</p:dialog>
+	</c:if>
+	<!-- 25077, 32376 - End -->
+
+	<!-- 25037 Start -->
 		<ac:confirmationPopup id="confirmReendorseOnReassignmentId"
 			widget="confirmReendorseOnReassignmentPopup" loadingWidget="blockWidget"
 			title="#{lbl['lbl.sc.confirmation']}"
