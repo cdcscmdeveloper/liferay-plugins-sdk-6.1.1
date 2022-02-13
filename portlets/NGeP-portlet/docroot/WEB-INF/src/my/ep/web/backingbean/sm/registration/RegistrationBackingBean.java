@@ -270,18 +270,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	//16052019 - SSM INTEGRATION CR 
 	public void setHeaderName(){
 		// 27691 - Start 
-		if(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN.equalsIgnoreCase(this.getManagedBean().getSmSupp().getBusinessType())
-				|| SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERSATUAN.equalsIgnoreCase(this.getManagedBean().getSmSupp().getBusinessType())
-				|| SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2.equalsIgnoreCase(this.getManagedBean().getSmSupp().getBusinessType())
-				|| SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI.equalsIgnoreCase(this.getManagedBean().getSmSupp().getBusinessType())
-				|| SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI_LAIN2.equalsIgnoreCase(this.getManagedBean().getSmSupp().getBusinessType())){
+		if(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN.equalsIgnoreCase(this.getManagedBean().getSmSupp().getBusinessType())){
 		// 27691 - End
 			this.getManagedBean().setHeaderName(SmCommonUtil.getMessage("lbl.sm.directorinfo", null));
 		//#27691 - Start
 		//Display both director and owner
-		}else if(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP.equalsIgnoreCase(this.getManagedBean().getSmSupp().getBusinessType())
-				|| SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD.equalsIgnoreCase(this.getManagedBean().getSmSupp().getBusinessType())
-						|| SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD.equalsIgnoreCase(this.getManagedBean().getSmSupp().getBusinessType())){
+		}else if(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP.equalsIgnoreCase(this.getManagedBean().getSmSupp().getBusinessType())){
 			this.getManagedBean().setHeaderName(SmCommonUtil.getMessage("lbl.sm.llp.ownerinfo", null));
 			this.getManagedBean().setShowDirectorInOwner(true);
 		//#27691 - End
@@ -2260,12 +2254,23 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 									for (SmSupplierOwner smSuppOwner : resDTO.getSmSupp().getSmSupplierOwners()) {
 										if (personnel.getName().equals(smSuppOwner.getOwnerName())) {
 											this.getManagedBean().getSmSuppOwners().add(smSuppOwner);
+											// 27691 - Start
+											smSuppOwner.setOwnerIsEquity(personnel.isEquityOwner());
+											// 27691 - End
 										}
 									}
 								}
 								// end #29956
 								this.getManagedBean().getSmPersonnelOwners().add(personnel);
 							}
+							// 27691 - Start
+							if (smSupp.getBusinessType().equals("J")
+									|| smSupp.getBusinessType().equals("I")){
+								if (personnel.isDirector()){
+									this.getManagedBean().getSmPersonnelDirector().add(personnel);
+								}
+							}
+							// 27691 - End
 						}
 					}
 				}
