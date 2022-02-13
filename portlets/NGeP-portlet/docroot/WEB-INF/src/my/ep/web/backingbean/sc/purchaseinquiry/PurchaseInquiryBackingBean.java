@@ -2161,6 +2161,72 @@ public class PurchaseInquiryBackingBean extends
 	// End - #26129
 	
 	// Start - #29557
+	public void toDetermineToQty(Long specZoneId, String priceType,ScSupplierItemPrice itemPrice){		
+		List<ScSupplierItemPrice> scSupplierItemPrices = new ArrayList<ScSupplierItemPrice>();
+		switch (priceType) {
+		case "07":
+			scSupplierItemPrices = this.getManagedBean().getSupplierItemZonalTierStandardPrices();
+			break;
+		case "08":
+			scSupplierItemPrices = this.getManagedBean().getSupplierItemZonalTierPromotionPrices();
+			break;
+		default:
+			// do nothing
+			break;
+		}
+		
+		if(specZoneId != null){
+			int countZone = 0;
+			for (ScSupplierItemPrice scSupplierItemPrice : scSupplierItemPrices) {
+				
+				if(scSupplierItemPrice.getTplSpecZone().getSpecZoneId() != null){
+					if (specZoneId.compareTo(scSupplierItemPrice.getTplSpecZone().getSpecZoneId()) == 0 ){
+							countZone++;				
+					}
+				}
+			}
+			
+			if(countZone == 1){
+				itemPrice.setFromQty(BigDecimal.valueOf(1));	
+			}else{
+				itemPrice.setFromQty(null);
+			}
+		}
+	}	
+	
+	public Boolean checkZoneLimitTwoRow(Long specZoneId, String priceType){
+		Boolean disAllowZone = false;
+		List<ScSupplierItemPrice> scSupplierItemPrices = new ArrayList<ScSupplierItemPrice>();
+		
+		switch (priceType) {
+		case "07":
+			scSupplierItemPrices = this.getManagedBean().getSupplierItemZonalTierStandardPrices();
+			break;
+		case "08":
+			scSupplierItemPrices = this.getManagedBean().getSupplierItemZonalTierPromotionPrices();
+			break;
+		default:
+			// do nothing
+			break;
+		}
+		
+		if(specZoneId != null){
+			int countZoneId = 0;
+			for (ScSupplierItemPrice scSupplierItemPrice : scSupplierItemPrices) {
+				
+				if(scSupplierItemPrice.getTplSpecZone().getSpecZoneId() != null){
+					if (specZoneId.compareTo(scSupplierItemPrice.getTplSpecZone().getSpecZoneId()) == 0 ){
+						countZoneId++;
+					}
+				}
+			}
+			
+			if(countZoneId > 1)
+				disAllowZone = true;		
+		}
+		return disAllowZone;
+	}
+
 	public void onChangeToQty(String priceType){
 		FacesScopes facesScopes = new FacesScopes();
 		List<ScSupplierItemPrice> scSupplierItemPrices = new ArrayList<ScSupplierItemPrice>();
@@ -2204,7 +2270,7 @@ public class PurchaseInquiryBackingBean extends
 		if(scSupplierItemPrices.size() > 1) {
 			for (ScSupplierItemPrice scSupplierItemPrice : scSupplierItemPrices) {
 				
-				if(index == 0){
+				if(index == 0 || (scSupplierItemPrice.getFromQty() != null && scSupplierItemPrice.getFromQty().compareTo(BigDecimal.valueOf(1)) == 0)){
 					if (scSupplierItemPrice.getToQty() == null) {
 						throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
 								"lbl.sc.to.qty", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()) });
@@ -2301,13 +2367,29 @@ public class PurchaseInquiryBackingBean extends
 			if(index != 0){
 				ScSupplierItemPrice prevScSupplierItemPrice = scSupplierItemPrices.get(index - 1);
 				
-				if (scSupplierItemPrice.getItemPrice().compareTo(prevScSupplierItemPrice.getItemPrice()) > 0) {
-					throw new EpException(MessageConst.ERROR_760536, new String[] {
-							this.getManagedBean().getScRequestSupplierItem().getRequestNoteItem().getCmItem()
-									.getItemName(),
-							scSupplierItemPrice.getFromQty().toString().concat("-")
-									.concat(scSupplierItemPrice.getToQty() != null ? scSupplierItemPrice.getToQty().toString() : ""),
-							prevScSupplierItemPrice.getItemPrice().toString() });
+				if (prevScSupplierItemPrice.getTplSpecZone() != null) {
+					if (scSupplierItemPrice.getTplSpecZone().getSpecZoneId() == prevScSupplierItemPrice
+							.getTplSpecZone().getSpecZoneId()) {
+						if (scSupplierItemPrice.getItemPrice().compareTo(prevScSupplierItemPrice.getItemPrice()) > 0) {
+							throw new EpException(MessageConst.ERROR_760536, new String[] {
+									this.getManagedBean().getScRequestSupplierItem().getRequestNoteItem().getCmItem()
+											.getItemName(),
+									scSupplierItemPrice.getFromQty().toString().concat("-")
+											.concat(scSupplierItemPrice.getToQty() != null ? scSupplierItemPrice.getToQty().toString() : ""),
+									prevScSupplierItemPrice.getItemPrice().toString() });
+						}
+					}
+				}
+				
+				else{
+					if (scSupplierItemPrice.getItemPrice().compareTo(prevScSupplierItemPrice.getItemPrice()) > 0) {
+						throw new EpException(MessageConst.ERROR_760536, new String[] {
+								this.getManagedBean().getScRequestSupplierItem().getRequestNoteItem().getCmItem()
+										.getItemName(),
+								scSupplierItemPrice.getFromQty().toString().concat("-")
+										.concat(scSupplierItemPrice.getToQty() != null ? scSupplierItemPrice.getToQty().toString() : ""),
+								prevScSupplierItemPrice.getItemPrice().toString() });
+					}
 				}
 			}
 			index++;
@@ -2542,9 +2624,16 @@ public class PurchaseInquiryBackingBean extends
 	}
 	
 	// ZonalTierStandardPrice -- start
-	public void addSupplierItemZonalTierStandardPrices() {	
+	public void addSupplierItemZonalTierStandardPrices(List<ScSupplierItemPrice> getSupplierItemZonalTierStandardPrices) {
 		FacesScopes facesScopes = new FacesScopes();
 		
+		for (ScSupplierItemPrice scSupplierItemPrice : getSupplierItemZonalTierStandardPrices) {
+			if (scSupplierItemPrice.getTplSpecZone().getSpecZoneId() == null || scSupplierItemPrice.getTplSpecZone().getSpecZoneId() == 0) {
+				throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+						"lbl.pm.zone.name", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()) });
+			}
+		}
+
 		if(getManagedBean().getSupplierItemZonalTierStandardPrices() == null){
 			this.getManagedBean().setSupplierItemZonalTierStandardPrices(new ArrayList<ScSupplierItemPrice>());
 		}
@@ -2562,9 +2651,25 @@ public class PurchaseInquiryBackingBean extends
 			if (prevScSupplierItemPrice.getToQty() == null) {
 				throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
 						"lbl.sc.to.qty", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()) });
+			} else if (prevScSupplierItemPrice.getTplSpecZone() == null) {
+				prevScSupplierItemPrice.setTplSpecZone(new TplSpecZoneDtl());
+				throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+						"lbl.pm.zone.name", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()) });
 			}
 
-			scSupplierItemPrice.setFromQty(prevScSupplierItemPrice.getToQty().add(BigDecimal.valueOf(1)));
+			for (ScSupplierItemPrice itemPrice : this.getManagedBean().getSupplierItemZonalTierStandardPrices()){
+				if(itemPrice.getPricing() == null){
+					itemPrice.setPricing(null);
+				}
+				else if(itemPrice.getPricing().getCmSupplierItem() == null){
+					itemPrice.setPricing(null);
+				}
+			}
+			
+			if(checkZoneLimitTwoRow(prevScSupplierItemPrice.getTplSpecZone().getSpecZoneId(),"07"))
+				scSupplierItemPrice.setFromQty(BigDecimal.valueOf(1));
+			else
+				scSupplierItemPrice.setFromQty(prevScSupplierItemPrice.getToQty().add(BigDecimal.valueOf(1)));
 		}
 		
 		scSupplierItemPrice.setScRequestSupplierItem(requestSupplierItem);
@@ -2679,8 +2784,14 @@ public class PurchaseInquiryBackingBean extends
 	// ZonalTierStandardPrice -- end
 	
 	// ZonalTierPromotionPrice -- start
-	public void addSupplierItemZonalTierPromotionPrices() {
+	public void addSupplierItemZonalTierPromotionPrices(List<ScSupplierItemPrice> getSupplierItemZonalTierPromotionPrices) {
 		FacesScopes facesScopes = new FacesScopes();
+		for (ScSupplierItemPrice scSupplierItemPrice : getSupplierItemZonalTierPromotionPrices) {
+			if (scSupplierItemPrice.getTplSpecZone().getSpecZoneId() == null || scSupplierItemPrice.getTplSpecZone().getSpecZoneId() == 0) {
+				throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+						"lbl.pm.zone.name", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()) });
+			}
+		}		
 		
 		if (getManagedBean().getSupplierItemZonalTierPromotionPrices() == null) {
 			this.getManagedBean().setSupplierItemZonalTierPromotionPrices(new ArrayList<ScSupplierItemPrice>());
@@ -2699,9 +2810,25 @@ public class PurchaseInquiryBackingBean extends
 			if (prevScSupplierItemPrice.getToQty() == null) {
 				throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
 						"lbl.sc.to.qty", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()) });
+			} else if (prevScSupplierItemPrice.getTplSpecZone() == null) {
+				prevScSupplierItemPrice.setTplSpecZone(new TplSpecZoneDtl());
+				throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+						"lbl.pm.zone.name", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()) });
 			}
 
-			scSupplierItemPrice.setFromQty(prevScSupplierItemPrice.getToQty().add(BigDecimal.valueOf(1)));
+			for (ScSupplierItemPrice itemPrice : this.getManagedBean().getSupplierItemZonalTierPromotionPrices()){
+				if(itemPrice.getPricing() == null){
+					itemPrice.setPricing(null);
+				}
+				else if(itemPrice.getPricing().getCmSupplierItem() == null){
+					itemPrice.setPricing(null);
+				}
+			}
+			
+			if(checkZoneLimitTwoRow(prevScSupplierItemPrice.getTplSpecZone().getSpecZoneId(),"08"))
+				scSupplierItemPrice.setFromQty(BigDecimal.valueOf(1));
+			else
+				scSupplierItemPrice.setFromQty(prevScSupplierItemPrice.getToQty().add(BigDecimal.valueOf(1)));
 		}
 		
 		scSupplierItemPrice.setScRequestSupplierItem(requestSupplierItem);
