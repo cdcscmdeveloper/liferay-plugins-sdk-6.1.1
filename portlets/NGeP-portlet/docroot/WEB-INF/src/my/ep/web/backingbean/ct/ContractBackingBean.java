@@ -3251,9 +3251,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public void onSelectProductItem() {
 		try{
-			//ContractItemSearchBackingBean cisbb = new ContractItemSearchBackingBean();
-			//log.info("Selected Item ***"+getManagedBean().getSelectedItem());
-			//log.info("Show Item ****"+getManagedBean().getShowItem());
+			ContractItemSearchBackingBean cisbb = new ContractItemSearchBackingBean();
+			log.info("Selected Item ***"+getManagedBean().getSelectedItem());
+			log.info("Show Item ****"+getManagedBean().getShowItem());
 			if (getManagedBean().getSelectedItem() != null || getManagedBean().getServiceselectedItem()!=null) {
 
 				if (getManagedBean().getShowItem() != null
@@ -3289,9 +3289,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public void onSelectServiceItem() {
 		try{
-			//ContractItemSearchBackingBean cisbb = new ContractItemSearchBackingBean();
-			//log.info("Selected Item onSelectServiceItem ***"+getManagedBean().getServiceselectedItem());
-			//log.info("Show Item  onSelectServiceItem ****"+getManagedBean().getShowItem());
+			ContractItemSearchBackingBean cisbb = new ContractItemSearchBackingBean();
+			log.info("Selected Item onSelectServiceItem ***"+getManagedBean().getServiceselectedItem());
+			log.info("Show Item  onSelectServiceItem ****"+getManagedBean().getShowItem());
 			if (getManagedBean().getSelectedItem() != null || getManagedBean().getServiceselectedItem()!=null) {
 				//cisbb.getManagedBean().setItemProductExist(false);
 				if (getManagedBean().getShowServiceItem() != null
@@ -4349,8 +4349,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			for(index = 0; index < currentCtAgreementList.size(); index++)
 			{
 				tempCtAgreement = currentCtAgreementList.get(index);
-				
-				if(tempCtAgreement.getAgreementId() == getManagedBean().getCtContractAmount().getCtAgreement().getAgreementId())
+				if(tempCtAgreement.getAgreementId().equals(getManagedBean().getContractVer().getCtContractAmount().getCtAgreement().getAgreementId())) // Fix - #32622
 				{
 					while(index >= 0)
 					{
@@ -4686,18 +4685,18 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	//#30428 - End	
 			
 	//Enhancement 15851 - Start
-			/**
-			 * The method used to navigate to Original contract details screen
-			 * for view purpose.
-			 * 
-			 * @return the navigate URL 
-			 */
-			public void goToOriginalLoaView(ScLoa scLoa) {
-					LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
-					FacesContext fc = FacesContext.getCurrentInstance();
-					loaDetailBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
-					loaDetailBackingBean.getManagedBean().setTrackingDairyView(true);
-					loaDetailBackingBean.viewLOA(scLoa.getLoaId());			
-			}
-			//Enhancement 15851 - End
+	/**
+	 * The method used to navigate to Original contract details screen
+	 * for view purpose.
+	 * 
+	 * @return the navigate URL 
+	 */
+	public void goToOriginalLoaView(ScLoa scLoa) {
+			LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
+			FacesContext fc = FacesContext.getCurrentInstance();
+			loaDetailBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+			loaDetailBackingBean.getManagedBean().setTrackingDairyView(true);
+			loaDetailBackingBean.viewLOA(scLoa.getLoaId());			
+	}
+	//Enhancement 15851 - End
 }  
