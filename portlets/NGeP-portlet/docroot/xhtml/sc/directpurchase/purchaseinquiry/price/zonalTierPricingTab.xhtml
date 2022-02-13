@@ -41,11 +41,12 @@
 					<p:selectOneMenu value="#{price.tplSpecZone.specZoneId}"
 						disabled="#{!isPendingSupplierRespStatus}" style="width: 128px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" itemDisabled="#{price.tplSpecZone.specZoneId != null}"/>
-						<f:selectItems
-							value="#{purchaseInquiryBackingBean.managedBean.supplierZoneList}"
-							var="zone" itemLabel="#{zone.zoneName}"
-							itemValue="#{zone.specZoneId}"></f:selectItems>
+						<c:forEach items="#{purchaseInquiryBackingBean.managedBean.supplierZoneList}" var="zone" varStatus="varStatus">
+							<f:selectItem itemLabel="#{zone.zoneName}" itemValue="#{zone.specZoneId}" itemDisabled="#{purchaseInquiryBackingBean.checkZoneLimitTwoRow(zone.specZoneId ,'07')}"/>
+						</c:forEach>
+						<p:ajax update="hideZoneNormal,fromQty" listener="#{purchaseInquiryBackingBean.toDetermineToQty(price.tplSpecZone.specZoneId ,'07',price)}"/>
 					</p:selectOneMenu>
+					<p:inputText value="#{price.tplSpecZone.specZoneId}" id="hideZoneNormal" type="hidden" />
 				</p:column>			
 			</c:if>
 			<c:if test="#{isPendingSubmissionStatus}">
@@ -60,7 +61,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.sc.price.inquiry.from.qty']}
 				</f:facet>
-				<p:inputText disabled="#{!isPendingSupplierRespStatus or rowIndex ne '0'}" id="fromQty" value="#{price.fromQty}" size="5" style="text-align:right">
+				<p:inputText disabled="#{!isPendingSupplierRespStatus or price.fromQty eq '1'}" id="fromQty" value="#{price.fromQty}" size="5" style="text-align:right">
                 	<p:ajax event="change" update="@([id$=fromQty])" listener="#{purchaseInquiryBackingBean.onChangeFromQty('07')}"/>
                 	<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
                 </p:inputText>
@@ -99,7 +100,7 @@
 					<p:commandButton rendered="#{isPendingSupplierRespStatus}" id="zonalTierAddButtonId" value="#{lbl['lbl.btn.add']}"
 						title="#{lbl['lbl.sc.tier.add.tooltip']}"
 						partialSubmit="true" process="@this" update="priceZonalTierPageID"
-						action="#{purchaseInquiryBackingBean.addSupplierItemZonalTierStandardPrices}">
+						action="#{purchaseInquiryBackingBean.addSupplierItemZonalTierStandardPrices(purchaseInquiryBackingBean.managedBean.supplierItemZonalTierStandardPrices)}">
 					</p:commandButton>
 					<p:spacer width="2" />
 					<p:commandButton rendered="#{isPendingSupplierRespStatus}" value="#{lbl['lbl.btn.delete']}" process="@this"
