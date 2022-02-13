@@ -1740,10 +1740,9 @@ public class SmApplicationUtil {
 						}
 					}
 				}
-		}
+			}
 			//31043 end
-
-		if (!managedBean.isSupplierUser()) {
+			
 			if (!SmCommonUtil.isCollectionEmpty(managedBean
 					.getActiveCategoryList())) {
 				for (SmSupplierCategory cat : managedBean
