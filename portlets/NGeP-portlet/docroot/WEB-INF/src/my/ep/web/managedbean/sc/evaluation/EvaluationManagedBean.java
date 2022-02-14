@@ -638,6 +638,10 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	
 	private boolean isSupplierItemExist;//32453
 	
+	//#10542 - start
+	private String downloadBy;
+	//#10542 - end
+	
 	/**tabIndex
 	 * Gets the today.
 	 * 
@@ -4174,6 +4178,19 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setSupplierItemExist(boolean isSupplierItemExist) {
 		this.isSupplierItemExist = isSupplierItemExist;
 	}//32453-End
+	
+	
+	//#10542 - start
+	public void setDownloadBy(String downloadBy){
+		this.downloadBy = downloadBy;
+	}
+	
+	public String getDownloadBy(){
+		return downloadBy;
+	}
+	
+	//#10542 - end
+	
 	
 	
 }
