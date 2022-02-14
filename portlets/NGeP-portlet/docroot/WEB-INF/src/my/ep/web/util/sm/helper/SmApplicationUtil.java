@@ -4745,7 +4745,7 @@ public class SmApplicationUtil {
 						if (!applicationType
 								.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
 							Date today = new Date();
-							if (!(today.compareTo(account.getExpDate()) < 0)) {
+							if (!(today.compareTo(account.getExpDate()) < 0) || (diffDays >= 0 && diffDays < 90)) {
 								result = true;
 								throw new EpException(MessageConst.ERROR_722564);
 							}
