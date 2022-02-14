@@ -3,6 +3,7 @@
  */
 package my.ep.web.util.template;
 
+import java.awt.Font;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -66,7 +67,9 @@ import com.liferay.portal.util.PortalUtil;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.BaseFont;
 
+import my.ep.constant.EpPropertiesConst;
 import my.ep.factory.EpLogger;
+import my.ep.util.EpPropertiesUtils;
 
 /**
  * Singleton Helper For Document Generator.
@@ -210,11 +213,15 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 				String fontPath ="";
 				if (getServerUrl().contains("NGeP-portlet/")){
 					 fontPath = getServerUrl()+"resources/fonts/Arial.ttf";
-				}else {
+				}else if(getServerUrl().contains("http://192.168.62.110:8621")){
+					fontPath="/usr/share/fonts/msttcore/arial.ttf";
+				}
+				else {
 					fontPath = getServerUrl()+"NGeP-portlet/resources/fonts/Arial.ttf";
 				}
-				
-				log.info("zaim font"+fontPath);
+				EpPropertiesUtils propertiesUtils = EpPropertiesUtils.getInstance();
+				String test1 = propertiesUtils.getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL);
+				log.info("zaim font"+test1);
 		        render.getFontResolver().addFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
 		        //#26130 - end
 				render.setDocumentFromString(html);
