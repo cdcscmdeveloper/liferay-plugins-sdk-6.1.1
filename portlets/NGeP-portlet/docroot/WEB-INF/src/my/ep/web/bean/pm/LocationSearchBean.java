@@ -19,7 +19,11 @@ public class LocationSearchBean implements Serializable{
 	private String locationType;
 	private String locationName;
 	private String recordStatus;
-	
+	//Enhancement29642 - Start
+	private String additionalLocationType;
+	private String additionalLocationName;
+	private String recordAdditional;
+	//Enhancement29642 - End
 	public LocationSearchBean(){}
 	
 	/**
@@ -94,5 +98,46 @@ public class LocationSearchBean implements Serializable{
 	public void setCountryId(Long countryId) {
 		this.countryId = countryId;
 	}
+	//Enhancement29642 - Start
+	/**
+	 * @return the additionalLocationType
+	 */
+	public String getAdditionalLocationType() {
+		return additionalLocationType;
+	}
 
+	/**
+	 * @param additionalLocationType the additionalLocationType to set
+	 */
+	public void setAdditionalLocationType(String additionalLocationType) {
+		this.additionalLocationType = additionalLocationType;
+	}
+
+	/**
+	 * @return the additionallocationName
+	 */
+	public String getAdditionalLocationName() {
+		return additionalLocationName;
+	}
+
+	/**
+	 * @param additionallocationName the additionallocationName to set
+	 */
+	public void setAdditionalLocationName(String additionalLocationName) {
+		this.additionalLocationName = additionalLocationName;
+	}
+	/**
+	 * @return the recordAdditional
+	 */
+	public String getRecordAdditional() {
+		return recordAdditional;
+	}
+	
+	/**
+	 * @param setRecordAdditional the setRecordAdditional to set
+	 */
+	public void setRecordAdditional(String recordAdditional) {
+		this.recordAdditional= recordAdditional;
+	}
+	//Enhancement29642 - End
 }
