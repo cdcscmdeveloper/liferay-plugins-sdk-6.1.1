@@ -1723,6 +1723,11 @@ public void saveComplianceSample() {
 		// this.getManagedBean().setCheckListType(checklistType);
 		this.getManagedBean().setComplianceCheckListIndex(-1);
 		this.getManagedBean().setCheckListType("");
+		
+		//#10542 - start
+		this.getManagedBean().setDownloadBy(null);
+		//#10542 - end
+		
 		//#32007 - checking view/evaluate button if not save package score - start
 		if(ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equalsIgnoreCase(this.getManagedBean().getCommitteeType())
 				|| ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equalsIgnoreCase(this.getManagedBean().getCommitteeType())){
@@ -16525,6 +16530,160 @@ private void retriveCommitteeRemarksList(){
 				Boolean.FALSE);
 	}
 	// #28784 - end
+	
+	// #10542 - start
+	public String complianceTechnicalDownload() {
+		if (this.getManagedBean().getComplianceActiveIndex() < 1) {
+			return "/xhtml/sc/evaluation/compliance/complianceTechnicalDownload.xhtml";
+		} else if (this.getManagedBean().getComplianceActiveIndex() == 1) {
+			return "/xhtml/sc/evaluation/compliance/complianceFinancialDownload.xhtml";
+		} else {
+			return null;
+		}
+	}
+	
+	/**
+	 * this method is used to get the download by dropdown values.
+	 * @return List<SelectItem>
+	 */
+	public List<SelectItem> downloadByDropDownValues(){
+		List<SelectItem> selectItems = new ArrayList<SelectItem>();
+		selectItems.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())));
+	
+		selectItems.add(new SelectItem("Document", ResourceBundleUtils
+				.getMessage("lbl.sc.eva.compliance.download.by.document",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale())));
+		selectItems.add(new SelectItem("Supplier", ResourceBundleUtils
+				.getMessage("lbl.sc.eva.compliance.download.by.supplier",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale())));
+		return selectItems;
+	}
+	
+	public void downloadAllFinancialDocumentCompliance() throws Exception {
+		List<ScQtCheckList> list = this.getManagedBean().getCompliancefinancialCheckList();
+
+		IQTEvaluationSO evaluationSO = null;
+
+		EvaluationResDTO resDTO = new EvaluationResDTO();
+		EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+
+		List<EvaluationReqDTO> listScAttachment = new ArrayList<EvaluationReqDTO>();
+
+		try {
+			evaluationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTEvaluationSO.class);
+
+			String downloadBy = this.getManagedBean().getDownloadBy();
+			String mainFolderTitle = "";
+
+			for (int i = 0; i < list.size(); i++) {
+				ScQtCheckList scQtCheckList = list.get(i);
+
+				reqDTO.setCheckListId(scQtCheckList.getQtChecklistId());
+				reqDTO.setCompliance(null);
+				reqDTO.setQtId(scQtCheckList.getScQt().getQtId());
+				reqDTO.setEvalStage(null);
+				reqDTO.setProposalChecklistSearchBean(null);
+
+				resDTO = evaluationSO.retrieveComplianceDtlsByCheckList(reqDTO);
+				List<ScQtProposalChecklist> listFinancial = resDTO.getComplianceResultBean().getResultList();
+				for (int j = 0; j < listFinancial.size(); j++) {
+					EvaluationReqDTO attachmentToDownload = new EvaluationReqDTO();
+					ScQtProposalChecklist scQtProposalChecklist = listFinancial.get(j);
+
+					if (downloadBy.equalsIgnoreCase("Supplier")) {
+						attachmentToDownload.setScAttachment(scQtProposalChecklist.getScQtProposalChecklistAttachment());
+						attachmentToDownload.setSupplierNo(scQtProposalChecklist.getScQtProposal().getSupplierNo());
+					} else if (downloadBy.equalsIgnoreCase("Document")) {
+						attachmentToDownload.setScAttachment(scQtProposalChecklist.getScQtProposalChecklistAttachment());
+						attachmentToDownload.setSupplierNo(scQtProposalChecklist.getScQtProposal().getSupplierNo());
+						attachmentToDownload.setScQtChecklistName(scQtCheckList.getTitle());
+					}
+
+					listScAttachment.add(attachmentToDownload);
+
+				}
+			}
+			
+			if (downloadBy.equalsIgnoreCase("Supplier")) {
+				mainFolderTitle = "Supplier";
+			} else if (downloadBy.equalsIgnoreCase("Document")) {
+				mainFolderTitle = "TitleDocument";
+			}
+
+			downloadAllFilesWithSpecificFolder("NGEP-Financial-By" + mainFolderTitle, listScAttachment, downloadBy);
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		} finally {
+			evaluationSO = null;
+		}
+	}
+	
+	public void downloadAllTechnicallDocumentCompliance() throws Exception {
+		List<ScQtCheckList> list = this.getManagedBean().getComplianceTechnicalCheckList();
+
+		IQTEvaluationSO evaluationSO = null;
+
+		EvaluationResDTO resDTO = new EvaluationResDTO();
+		EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+
+		List<EvaluationReqDTO> listScAttachment = new ArrayList<EvaluationReqDTO>();
+
+		try {
+			evaluationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTEvaluationSO.class);
+
+			String downloadBy = this.getManagedBean().getDownloadBy();
+			String mainFolderTitle = "";
+
+			for (int i = 0; i < list.size(); i++) {
+				ScQtCheckList scQtCheckList = list.get(i);
+
+				reqDTO.setCheckListId(scQtCheckList.getQtChecklistId());
+				reqDTO.setCompliance(null);
+				reqDTO.setQtId(scQtCheckList.getScQt().getQtId());
+				reqDTO.setEvalStage(null);
+				reqDTO.setProposalChecklistSearchBean(null);
+
+				resDTO = evaluationSO.retrieveComplianceDtlsByCheckList(reqDTO);
+				List<ScQtProposalChecklist> listFinancial = resDTO.getComplianceResultBean().getResultList();
+				for (int j = 0; j < listFinancial.size(); j++) {
+					EvaluationReqDTO attachmentToDownload = new EvaluationReqDTO();
+					ScQtProposalChecklist scQtProposalChecklist = listFinancial.get(j);
+
+					if (downloadBy.equalsIgnoreCase("Supplier")) {
+						attachmentToDownload.setScAttachment(scQtProposalChecklist.getScQtProposalChecklistAttachment());
+						attachmentToDownload.setSupplierNo(scQtProposalChecklist.getScQtProposal().getSupplierNo());
+					} else if (downloadBy.equalsIgnoreCase("Document")) {
+						attachmentToDownload.setScAttachment(scQtProposalChecklist.getScQtProposalChecklistAttachment());
+						attachmentToDownload.setSupplierNo(scQtProposalChecklist.getScQtProposal().getSupplierNo());
+						attachmentToDownload.setScQtChecklistName(scQtCheckList.getTitle());
+					}
+
+					listScAttachment.add(attachmentToDownload);
+
+				}
+			}
+			
+			if (downloadBy.equalsIgnoreCase("Supplier")) {
+				mainFolderTitle = "Supplier";
+			} else if (downloadBy.equalsIgnoreCase("Document")) {
+				mainFolderTitle = "TitleDocument";
+			}
+
+			downloadAllFilesWithSpecificFolder("NGEP-Technical-By" + mainFolderTitle, listScAttachment, downloadBy);
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		} finally {
+			evaluationSO = null;
+		}
+	}
+	
+	// #10542 - end
 	
 
 }
