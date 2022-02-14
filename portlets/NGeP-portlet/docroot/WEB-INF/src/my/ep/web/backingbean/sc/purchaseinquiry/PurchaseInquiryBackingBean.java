@@ -2561,18 +2561,14 @@ public class PurchaseInquiryBackingBean extends
 				prInquiryReqDTO.setSupplierItemPrices(scSupplierItemPriceListing.get(currentKey));
 				prInquiryReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 				
-				
 				for (ScSupplierItemPrice scSupplierItemPrice : prInquiryReqDTO.getSupplierItemPrices()) {
-					if (i == 0 || i == 1 || i == 4 || i == 5) {
-						onChangeFromQty(scSupplierItemPrice.getPriceType().getParameterCode());
-						onChangeToQty(scSupplierItemPrice.getPriceType().getParameterCode());
-					}
+					onChangeFromQty(scSupplierItemPrice.getPriceType().getParameterCode());
+					onChangeToQty(scSupplierItemPrice.getPriceType().getParameterCode());
 
 					if (scSupplierItemPrice.getPricing() != null)
 						onChangeNewPrice(scSupplierItemPrice.getPriceType().getParameterCode(),
 								scSupplierItemPrice.getItemPrice(), scSupplierItemPrice.getPricing().getPrice());
 				}
-								
 				
 				List<ScSupplierItemPrice> addedScSupplierItemPrice = getPrInquirySO().saveSupplierItemPrices(prInquiryReqDTO);
 
