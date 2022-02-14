@@ -1,6 +1,5 @@
 package my.ep.web.managedbean.bpm.tasklist;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -34,7 +33,6 @@ import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractStatusConst;
-import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.KPICodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -68,7 +66,6 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault; //#9133
 import my.ep.type.pm.RoleCode;
-import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -86,14 +83,14 @@ import org.apache.log4j.Logger;
 public class BPMTaskListManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 	private static Logger logger = Logger.getLogger(BPMTaskListManagedBean.class);
-	// Refactor: To make sqTimeValidity to read only once - Start.
-	private static final Integer SQ_TIME_VALIDITY = Integer.valueOf(EpPropertiesUtils.getInstance()
-			.getProperty("sqTimeValidity"));
-	// Refactor: To make sqTimeValidity to read only once - End.
+	// Refactor: #12177 - Start
+	/*private static final Integer SQ_TIME_VALIDITY = Integer.valueOf(EpPropertiesUtils.getInstance()
+			.getProperty("sqTimeValidity"));*/
+	// Refactor: #12177 - End
 	
 	private List<WorklistItemVO> taskList;
 	private List<FlFulfilmentOrder> flFulfilmentOrderList;
-	private static Map bpmMap = null;
+	private Map<?, ?> bpmMap = null;
 	private String processName;
 	private String[] action;
 	private String taskId;
@@ -258,14 +255,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		return taskListDataModel;
 	}
 
-	public void setTaskListDataModel(
-			PagingDataModel<WorklistItemVO> taskListDataModel) {
+	public void setTaskListDataModel(PagingDataModel<WorklistItemVO> taskListDataModel) {
 		this.taskListDataModel = taskListDataModel;
 	}
 
 	private class taskPagingDataModel extends PagingDataModel<WorklistItemVO> {
 
 		private static final long serialVersionUID = 1L;
+		@SuppressWarnings("unused")
 		private final Logger log = EpLogger.getLogger(taskPagingDataModel.class);
 		
 		public taskPagingDataModel() {
@@ -362,15 +359,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		IPmKpiSO pmKpiSO = null;
 
 		try {
-			pmKpiSO = BusinessDelegate
-					.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IPmKpiSO.class);
+			pmKpiSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IPmKpiSO.class);
 			KpiReqDTO reqDTO = new KpiReqDTO();
 			reqDTO.setModuleCode(moduleCode);
 			reqDTO.setKpiCode(kpiCode);
-			PmKPIValue pmKPIValue = pmKpiSO
-					.retrieveKpiValueByModuleCodeAndKpiCode(reqDTO)
-					.getKpiValue();
+			PmKPIValue pmKPIValue = pmKpiSO.retrieveKpiValueByModuleCodeAndKpiCode(reqDTO).getKpiValue();
 			if (pmKPIValue != null) {
 				return pmKPIValue.getKpiValue();
 			}
@@ -386,13 +379,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		IMofRegistrationSO mofRegistrationSO = null;
 
 		try {
-			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
-					.getInstance().getServiceObject("sm",
-							IMofRegistrationSO.class);
+			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
 			reqDto.setApplId(applId);
-			MofRegistrationResDTO resDTO = mofRegistrationSO
-					.retrieveCompanyNameByApplId(reqDto);
+			MofRegistrationResDTO resDTO = mofRegistrationSO.retrieveCompanyNameByApplId(reqDto);
 			return resDTO;
 
 		} catch (Exception e) {
@@ -453,8 +443,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		}
 
 		@Override
-		protected ISearchResultBean<WorklistItemVO> pageChangeListener(
-				ISearchBean<WorklistItemVO> searchBean) {
+		protected ISearchResultBean<WorklistItemVO> pageChangeListener(ISearchBean<WorklistItemVO> searchBean) {
 		
 			IBpmSO bpmSO = null;
 			try {
@@ -573,8 +562,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		return taskListMyTaskDataModel;
 	}
 
-	public void setTaskListMyTaskDataModel(
-			PagingDataModel<WorklistItemVO> taskListMyTaskDataModel) {
+	public void setTaskListMyTaskDataModel(PagingDataModel<WorklistItemVO> taskListMyTaskDataModel) {
 		this.taskListMyTaskDataModel = taskListMyTaskDataModel;
 	}
 
@@ -588,14 +576,12 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		}
 
 		@Override
-		protected ISearchResultBean<WorklistItemVO> pageChangeListener(
-				ISearchBean<WorklistItemVO> searchBean) {
+		protected ISearchResultBean<WorklistItemVO> pageChangeListener(ISearchBean<WorklistItemVO> searchBean) {
 		
 			IBpmSO bpmSO = null;
 			try {
 
-				bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-						.getServiceObject(IBpmSO.class);
+				bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 
 				// String token = bpmSO.authenticate("roslan", "welcome1");
 				FacesScopes face = new FacesScopes();
@@ -649,8 +635,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 								}
 
 								if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE_DRAFT)) {
-									ScPrInquiry scPrInquiry = retrivePrInquiryByPrInquiryNo(worklistItemVO
-											.getDocNumber());
+									ScPrInquiry scPrInquiry = retrivePrInquiryByPrInquiryNo(worklistItemVO.getDocNumber());
 									if (scPrInquiry != null) {
 										worklistItemVO.setTitle(scPrInquiry.getTitle());
 									}
@@ -666,17 +651,13 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 								// #9133 - end
 								// s1 module
 								if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
-									worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note",
-											ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+									worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 								}
 								if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE)) {
-									worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.pr.inquiry",
-											ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+									worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.pr.inquiry", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 								}
 								if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PD_TITLE)) {
-									worklistItemVO.setTitle(ResourceBundleUtils.getMessage(
-											"lbl.sc.purchase.in.default", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-											face.getUserLocale()));
+									worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 								}
 								processTitleWithDocStatus(worklistItemVO, face);
 
@@ -710,10 +691,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						       }
 						       
 						       if(worklistItemVO.getTitle().startsWith("lbl.pm")) {
-						    	   AccessApplResDTO accessApplResDTO = 
-						    			   retrieveAccessApplByDocNo(worklistItemVO.getDocNumber());
-						    	   if(accessApplResDTO.isSuccessful() && 
-						    			   accessApplResDTO.getAccessAppl() != null){
+						    	   AccessApplResDTO accessApplResDTO = retrieveAccessApplByDocNo(worklistItemVO.getDocNumber());
+						    	   if(accessApplResDTO.isSuccessful() && accessApplResDTO.getAccessAppl() != null){
 						    		  
 							    	   StringBuilder sb = new StringBuilder();
 							    	   if(ParameterConst.DOCTYPE_MARKET_RESEARCH.equalsIgnoreCase(worklistItemVO.getDocType())){
@@ -757,8 +736,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		return taskListGroupDataModel;
 	}
 
-	public void setTaskListGroupDataModel(
-			PagingDataModel<WorklistItemVO> taskListGroupDataModel) {
+	public void setTaskListGroupDataModel(PagingDataModel<WorklistItemVO> taskListGroupDataModel) {
 		this.taskListGroupDataModel = taskListGroupDataModel;
 	}
 	
@@ -770,12 +748,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 
 		public taskPagingBothDataModel() {
 			super("taskListBothTaskId"); // Datatables ID
-			// TODO Auto-generated constructor stub
 		}
 
 		@Override
-		protected ISearchResultBean<WorklistItemVO> pageChangeListener(
-				ISearchBean<WorklistItemVO> searchBean) {
+		protected ISearchResultBean<WorklistItemVO> pageChangeListener(ISearchBean<WorklistItemVO> searchBean) {
 			IBpmSO bpmSO = null;
 			try {
 				bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
@@ -787,7 +763,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				BpmRequestDTO reqDTO = new BpmRequestDTO();
 				reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
 				reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
-				reqDTO.setState("ASSIGNED"); // TODO : ADD filter for state and set do variable
+				reqDTO.setState("ASSIGNED"); 
 				
 				reqDTO.setDocType(getDocType());
 
@@ -821,8 +797,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						//	boolean viewGlpFlag = viewGlpFlag();
 			    	   //	Enhancement #28766 - End
 						
-						java.util.Collections.sort(responseDTO.getWorklistVO().getWorklistItem(), 
-								new java.util.Comparator<WorklistItemVO>() {
+						java.util.Collections.sort(responseDTO.getWorklistVO().getWorklistItem(), new java.util.Comparator<WorklistItemVO>() {
 						  @Override
 						  public int compare(WorklistItemVO w1, WorklistItemVO w2) {
 							  return w1.getTaskType().compareTo(w2.getTaskType());
@@ -962,15 +937,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		this.selectedStatusDescAdvance = selectedStatusDescAdvance;
 	}
 
-	public static Map getBpmMap() {
-
+	public Map<?, ?> getBpmMap() {
 		return bpmMap;
 	}
 
-	public static void setBpmMap(Map bpmMap) {
-		BPMTaskListManagedBean.bpmMap = bpmMap;
+	public void setBpmMap(Map<?, ?> bpmMap) {
+		this.bpmMap = bpmMap;
 	}
-
+	
 	private AccessApplResDTO retrieveAccessApplByDocNo(String docNo){
 		IAccessApplSO accessApplSO = null;
 		try{
@@ -1797,5 +1771,5 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		return taskIdPair;
 	}
 	/*#31422-basri 190821*/
-	
+
 }

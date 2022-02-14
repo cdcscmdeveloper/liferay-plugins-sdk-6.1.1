@@ -21,6 +21,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
+import my.ep.bean.application.NgepApplicationBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -1188,6 +1189,15 @@ public class RuleCatalogueBackingBean extends
 		List<PmConfigRuleValue> removeList = new ArrayList<PmConfigRuleValue>();
 		PmConfigRule configRuleType = this.getManagedBean()
 				.getSelectedRuleDescType().getRuleType();
+		
+		//#12177 - Start
+		if(configRuleType != null){
+			if(configRuleType.getRuleType().equals(RuleTypeConst.SIMPLE_QUOTE_VALIDITY_PERIOD)){
+				NgepApplicationBean.resetSqTimeValidity();
+			}
+		}
+		//#12177 - End
+		
 		PmConfigRuleValue selectedValueToDel = configRuleType
 				.getConfigRuleValues().get(rowIndex.intValue());
 
@@ -3100,8 +3110,7 @@ public class RuleCatalogueBackingBean extends
 			newRuleValue.setRuleType(configRuleType);
 						
 			//#22113
-			String ruleType = this.getManagedBean()
-					.getSelectedRuleDescType().getRuleType().getRuleType();
+			String ruleType = this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType();
 			/*Calendar forwardedEffDate = Calendar.getInstance();
 			Date nextDay;*/
 			BigDecimal lopoDefaultValue = new BigDecimal(14);
@@ -3127,6 +3136,14 @@ public class RuleCatalogueBackingBean extends
 			// log.info("*2****addNewRuleTypeValue*****");
 			// newRuleValue.setCategoryL3Id(this.getManagedBean().getCategoryL3());
 			// }
+			
+			//#12177 - Start
+			if(configRuleType != null){
+				if(configRuleType.getRuleType().equals(RuleTypeConst.SIMPLE_QUOTE_VALIDITY_PERIOD)){
+					NgepApplicationBean.resetSqTimeValidity();
+				}
+			}
+			//#12177 - End
 
 			if (configRuleType.getRangeType() == 1) {
 
