@@ -3647,16 +3647,16 @@ public class CreateQtBackingBean extends
 						new ArrayList<ScQtCheckList>());
 			}
 		//	List<ScQtCheckList> qtTechncialcheckList= this.getManagedBean().getScQtCheckSt2techProposal();
-			if(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION
+			/*if(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION
 				.equals(this.getManagedBean().getCurrentStatusId()) || QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION
 				==this.getManagedBean().getCurrentStatusId()){//11104-start
-				log.info("=========sampleRevisioncodesexecuted=========");
-			if(null==st2technicalproposalList || CollectionUtils.isEmpty(st2technicalproposalList)){
+				log.info("=========sampleRevisioncodesexecuted=========");*/
+			if(null==st2technicalproposalList || CollectionUtils.isEmpty(st2technicalproposalList)){//11104-start
 				SpecificationBackingBean spBB=new SpecificationBackingBean();
 				spBB.retriveTechnicalCheckList();
 				st2technicalproposalList= this.getManagedBean().getScQtCheckSt2techProposal();
-			}
 			}//11104-End
+			//}//11104-End
 			if(CollectionUtils.isNotEmpty(st2technicalproposalList)){
 				for(ScQtCheckList checklist:st2technicalproposalList){
 					if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checklist
