@@ -285,7 +285,7 @@
 						<ui:decorate template="specColumnQuestionView.xhtml" />
 					</c:if>
 				</p:dataTable>
-				
+			<!--  #21695 REMOVE TOTAL SCORE START	
 				<c:if test="#{isContentTypeScore and isSpecTypeFinancial}">
 					<p:spacer height="10" />
 					<table style="width:100%">
@@ -300,8 +300,9 @@
 						</td>
 					</tr>
 					</table>
-				</c:if>
+				</c:if>-->
 				<!--#25138 total score for technical -start-->
+				<!-- 
 				<c:if test="#{isContentTypeScore and isSpecTypeTechnical}">
 					<p:spacer height="10" />
 					<table style="width:100%">
@@ -316,7 +317,8 @@
 						</td>
 					</tr>
 					</table>
-				</c:if>
+				</c:if> 
+				 #21695 REMOVE TOTAL SCORE START END-->
 				<!--#25138 - total score for technical - end -->
 				<c:if test="#{isContentTypeUpdateSpec}">
 					<ui:include src="tierQtyPopup.xhtml" />
