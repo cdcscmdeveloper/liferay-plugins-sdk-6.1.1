@@ -438,15 +438,15 @@ public class EvaluationBackingBean extends
 											false, scQt.isZonal(),
 											summaryReqDTO.getAwardBy(),
 											summaryReqDTO.getResultStages()));
-				//#21695 -- 20200717@asyrafhaziq - Display not offer supplier - Start
+				//#21695 UPDATED CHANGES FOR FINANCIAL SUMMARY Start
 				//BUG #32453 & 32297 related to #21695 Start
-					this.getManagedBean()
-					.setNotOfferSupplierDM(
-							new SummaryNotOfferSupplierPagingDataModel(
-									"evaluationCommitteeSummaryNotOfferSupplier",
-									scQt.isZonal(), summaryReqDTO.getAwardBy(),summaryReqDTO.getResultStages().get(0).toString()));
+//					this.getManagedBean()
+//					.setNotOfferSupplierDM(
+//							new SummaryNotOfferSupplierPagingDataModel(
+//									"evaluationCommitteeSummaryNotOfferSupplier",
+//									scQt.isZonal(), summaryReqDTO.getAwardBy(),summaryReqDTO.getResultStages().get(0).toString()));
 				//BUG #32453 & 32297 related to #21695 End
-				//#21695 -- 20200717@asyrafhaziq - Display not offer supplier - End
+				//#21695 UPDATED CHANGES FOR FINANCIAL SUMMARY End
 				} else {
 					this.getManagedBean()
 							.setQualifiedSuppliersDM(
@@ -460,15 +460,15 @@ public class EvaluationBackingBean extends
 											"evaluationSummaryPreferencemarginDisQualifiedSuppliers",
 											false, scQt.isZonal(), null,
 											summaryReqDTO.getResultStages()));
-					//#21695 -- 20200717@asyrafhaziq - Display not offer supplier - Start
+					//#21695 UPDATED CHANGES FOR FINANCIAL SUMMARY- Start
 					//BUG #32453 & 32297 related to #21695 Start
-					this.getManagedBean()
-					.setNotOfferSupplierDM(
-							new SummaryNotOfferSupplierPagingDataModel(
-									"evaluationCommitteeSummaryNotOfferSupplier",
-									scQt.isZonal(), summaryReqDTO.getAwardBy(),summaryReqDTO.getResultStages().get(0).toString()));
+//					this.getManagedBean()
+//					.setNotOfferSupplierDM(
+//							new SummaryNotOfferSupplierPagingDataModel(
+//									"evaluationCommitteeSummaryNotOfferSupplier",
+//									scQt.isZonal(), summaryReqDTO.getAwardBy(),summaryReqDTO.getResultStages().get(0).toString()));
 					//BUG #32453 & 32297 related to #21695 End
-					//#21695 -- 20200717@asyrafhaziq - Display not offer supplier - End
+					//#21695 UPDATED CHANGES FOR FINANCIAL SUMMARY - End
 				}
 
 			}
@@ -791,9 +791,9 @@ public class EvaluationBackingBean extends
 
 			this.getManagedBean().getQualifiedSuppliersDM().reloadData();
 			this.getManagedBean().getDisqualifiedSuppliersDM().reloadData();
-			//20200717@asyrafhaziq - Display not offer supplier - Start
-			this.getManagedBean().getNotOfferSupplierDM().reloadData();
-			//20200717@asyrafhaziq - Display not offer supplier - End
+			//#21695 UPDATED CHANGES FOR FINANCIAL SUMMARY - Start
+//			this.getManagedBean().getNotOfferSupplierDM().reloadData();
+			//#21695 UPDATED CHANGES FOR FINANCIAL SUMMARY - End
 		} finally {
 
 		}
@@ -12775,7 +12775,6 @@ private void retriveCommitteeRemarksList(){
 				evaluationSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTEvaluationSO.class);
-				System.out.println("masuk gila 1");
 				ScQt scQt = getManagedBean().getScQt();
 				EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 				reqDTO.setQtId(scQt.getQtId());
@@ -12785,7 +12784,6 @@ private void retriveCommitteeRemarksList(){
 				reqDTO.setEvalStage(evalStage);
 				//BUG #32453 & 32297 related to #21695 End
 				if (getManagedBean().getSelectedZone() != null && isZonal) {
-					System.out.println("masuk gila zonal");
 					reqDTO.setSpeZoneId(getManagedBean().getSelectedZone()
 							.getSpecZoneId());
 					reqDTO.setSpecZoneDtls(getManagedBean().getSpecZoneDtls());
