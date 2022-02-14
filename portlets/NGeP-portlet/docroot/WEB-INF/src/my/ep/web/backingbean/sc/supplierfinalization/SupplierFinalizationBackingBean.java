@@ -37,6 +37,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.sc.actor.IScActorSO;
@@ -67,6 +68,8 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.document.DocumentReqDTO;
+import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
@@ -97,6 +100,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
@@ -2535,13 +2539,49 @@ public class SupplierFinalizationBackingBean extends
 		  // #28834 - End.
 		  ScQtFinalizationReport report = new ScQtFinalizationReport();
 		  report.setScQtFinalization(scQtFinalization);
-		  report.setDocCategory(scQtFinalizationReport.getPmDocument().getDocCategoryCode().getParameterCode());
-		  report.setPmDocument(scQtFinalizationReport.getPmDocument());
 		  String reportTitle = ResourceBundleUtils.getMessage("lbl.sc.kertas.taklimat", 
 				  ResourceBundleUtils.BUNDLE_COMMON_LABELS, SourcingConstants.MY_LOCALE) 
 				  + SPACE + "(" + count + ")";
 		  report.setTitle(reportTitle);
-		  report.setDefinationType(scQtFinalizationReport.getPmDocument().getDocDefinitionTypeCode());
+		  if(scQtFinalizationReport.getPmDocument()!=null){
+			  report.setDocCategory(scQtFinalizationReport.getPmDocument().getDocCategoryCode().getParameterCode());
+			  report.setPmDocument(scQtFinalizationReport.getPmDocument());
+			  report.setDefinationType(scQtFinalizationReport.getPmDocument().getDocDefinitionTypeCode()); 
+		  }else{
+				IParameterSO parameterSO = null;
+				IDocumentSO  documentSO = null;
+				try {
+					documentSO  = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IDocumentSO.class);
+					parameterSO = BusinessDelegate.getInstance().getServiceObject(
+					        ModuleCodeConst.PROFILE_MANAGEMENT,IParameterSO.class);
+					
+					DocumentReqDTO docReqDTO = new DocumentReqDTO();
+					docReqDTO.setDocCategoryCode(ParameterConst.DOCUMENT_CATEGORY_BRIEFING_PAPER);
+					DocumentResDTO docResDTO = documentSO.retrieveDocumentCheckList(docReqDTO);
+					List<PmDocument> pmDocumentList = docResDTO.getDocumentList();
+					
+					ParameterReqDTO reqDTO = new ParameterReqDTO();
+					reqDTO.setParameterType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
+					reqDTO.setParameterCode(ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED);
+					ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
+					
+					if (CollectionUtils.isNotEmpty(pmDocumentList) && null != docResDTO && null != resDTO) {
+						for(PmDocument pmDocumentKT :pmDocumentList){
+							if(null != pmDocumentKT.getDocDefinitionKey() && pmDocumentKT.getDocDefinitionKey().equals(SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT)){
+								PmDocument pmDocument = pmDocumentKT;
+								report.setDocCategory(pmDocument.getDocCategoryCode().getParameterCode());
+								report.setPmDocument(pmDocument);
+								report.setDefinationType(resDTO.getPmParameter());
+							}
+						}
+					}
+					
+				} finally {
+					documentSO = null;
+					parameterSO = null;
+				} 
+		  }
 		  report.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		  scQtFinalization.getScQtFinalizationReports().add(report);
 	}
