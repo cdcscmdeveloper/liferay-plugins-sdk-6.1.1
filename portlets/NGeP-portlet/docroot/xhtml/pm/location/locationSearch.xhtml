@@ -27,17 +27,21 @@
 				<td><p:message for="dCountry" id="dCountryMsg" display="icon" /></td>
 				<td>&#160;</td>
 			</tr>
+			<!-- Enhancement29642 - Start -->
 			<tr>
 				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.location.type']}" /><h:outputLabel
 							value="*" styleClass="mandatory" /></th>
 				<td><p:selectOneMenu id="locationSearchType" styleClass="ppDropDownWidthM" style="width: 135px;margin-bottom: 5px;"
-				required="true" label="#{lbl['lbl.pm.location.type']}"
+				        label="#{lbl['lbl.pm.location.type']}"
 						value="#{locationBackingBean.managedBean.locationSearchBean.locationType}" >
 						<f:selectItems value="#{locationBackingBean.getDropdownCodeValues(ParameterTypeConst.locationLevel)}" />
+						<p:ajax event="change" update="locationType,locationName"
+						listener="#{locationBackingBean.changeLocationType()}"/>		
 					</p:selectOneMenu></td>
 				<th>&#160;</th>
 				<td>&#160;</td>
 			</tr>
+			<!-- Enhancement29642 - End -->
 			<!-- 12852 Start -->
 			<tr>
 				<th width="20%"><p:outputLabel
@@ -60,7 +64,26 @@
 				<td>&#160;</td>
 
 			</tr>
+			<!-- Enhancement29642 - Start -->
+			<tr>
+				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.additional.location.type']}" /></th>
+				<td><p:selectOneMenu id="locationType" styleClass="ppDropDownWidthM" style="width: 135px;margin-bottom: 5px;"
+						value="#{locationBackingBean.managedBean.locationSearchBean.recordAdditional}"
+						disabled="#{locationBackingBean.managedBean.locationSearchBean.locationType eq 'ST' or locationBackingBean.managedBean.locationSearchBean.locationType eq null}">
+						<f:selectItems value="#{locationBackingBean.getDropdownCodeValuesAdditionalLocation(ParameterTypeConst.locationLevel,locationBackingBean.managedBean.locationSearchBean.locationType)}" />
+						<p:ajax event="change" immediate="true" update="locationName"/>
+					</p:selectOneMenu></td>
+			</tr>
 			
+			<tr>
+				<th width="20%"><p:outputLabel
+						value="#{lbl['lbl.pm.additional.location.name']}" /></th>
+				<td><p:inputText id="locationName" styleClass="ppDisplayTextM"
+						value="#{locationBackingBean.managedBean.locationSearchBean.additionalLocationName}"
+					    disabled="#{locationBackingBean.managedBean.locationSearchBean.recordAdditional eq null}"
+						cols="50" rows="5" maxlength="50" autoResize="false" /></td>
+			</tr>
+			<!-- Enhancement29642 - End -->
 			<tr>
 				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.status']}" /></th>
 				<td><p:selectOneMenu styleClass="ppDropDownWidthM"
