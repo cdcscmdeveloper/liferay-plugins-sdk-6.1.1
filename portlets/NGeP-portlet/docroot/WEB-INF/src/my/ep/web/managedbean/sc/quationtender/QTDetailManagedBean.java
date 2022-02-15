@@ -1774,10 +1774,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean committeeAppointmentMenuTab = true;
 	//29464-end
 	
-	// 29732 Start
-	private String hisCatCode;
-	private List<PmRemarkCategory> historyList;
-	// 29732 Start
+	//#29732
+	private boolean newCategory = false;
+	
+	private PmCategoryL3 pmCategoryL3;
+	
+	private String remarkCategory;
+	
+	private List<PmRemarkCategory> remarkHistoryList;
 	
 	// #29732 End
 	
@@ -11038,23 +11042,38 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		}
 		//#25037-end
 
-		// 29732 Start
-		public String getHisCatCode() {
-			return hisCatCode;
+		//#29732- start
+		public boolean isNewCategory() {
+			return newCategory;
 		}
 
-		public void setHisCatCode(String hisCatCode) {
-			this.hisCatCode = hisCatCode;
+		public void setNewCategory(boolean newCategory) {
+			this.newCategory = newCategory;
 		}
 
-		public List<PmRemarkCategory> getHistoryList() {
-			return historyList;
+		public PmCategoryL3 getPmCategoryL3() {
+			return pmCategoryL3;
 		}
 
-		public void setHistoryList(List<PmRemarkCategory> historyList) {
-			this.historyList = historyList;
+		public void setPmCategoryL3(PmCategoryL3 pmCategoryL3) {
+			this.pmCategoryL3 = pmCategoryL3;
 		}
-		// 29732 End
+
+		public String getRemarkCategory() {
+			return remarkCategory;
+		}
+
+		public void setRemarkCategory(String remarkCategory) {
+			this.remarkCategory = remarkCategory;
+		}
+
+		public List<PmRemarkCategory> getRemarkHistoryList() {
+			return remarkHistoryList;
+		}
+
+		public void setRemarkHistoryList(List<PmRemarkCategory> remarkHistoryList) {
+			this.remarkHistoryList = remarkHistoryList;
+		}
 
 		//====#31913 bug related to #25138==== start
 		public BigDecimal getTotalmaxscore() {
