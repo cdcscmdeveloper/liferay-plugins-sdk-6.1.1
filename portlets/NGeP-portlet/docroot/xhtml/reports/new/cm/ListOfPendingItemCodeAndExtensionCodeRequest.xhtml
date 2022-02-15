@@ -1,0 +1,143 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+	<p:panel style="width: 100%;" header="#{lbl['lbl.rpt.rptcriteria']}"
+		toggleable="true" id="cm020Id">
+
+		<table style="width: 100%;">
+			<tr>
+				<td width="100%"><h:outputText styleClass="instruction"
+						style="float:left;margin-left:5px;"
+						value="#{lbl['lbl.rpt.search.criteria.PLZ_ENTER_ONE_RPT_CRITERIA_SEARCH']}" /></td>
+			</tr>
+		</table>
+
+
+		<table style="margin-top: 5px; width: 100%;">
+
+
+			<tr>
+				<td width="15%"><p:outputLabel value="#{lbl['lbl.cm.item.table.type']}" /></td>
+				<td width="35%"><p:selectOneMenu
+						value="#{cmReportsBackingBean.managedBean.itemType}"
+						style="width:90%">
+						<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}" itemValue=""></f:selectItem>
+						<f:selectItem itemValue="Product"
+							itemLabel="#{lbl['lbl.txt.product']}" />
+						<f:selectItem itemValue="Services"
+							itemLabel="#{lbl['lbl.txt.service']}" />
+
+					</p:selectOneMenu></td>
+				<td width="15%"><p:outputLabel value="#{lbl['lbl.cm.company.name']}" /></td>
+				<td width="35%">
+				
+				
+	        	<p:inputText 
+	        	        style="width:262px;"
+						size="40"
+						id="itSelectCompany" 
+						value="#{cmReportsBackingBean.managedBean.companyName}" 
+						readonly="true"
+						/>
+					&#160;	
+					<p:commandLink id="cmCompanyName" 
+						partialSubmit="true"
+						readonly="true" 
+						action="#{cmReportsBackingBean.cmSupplierPendTaskpopupAction}"
+						oncomplete="cmSupplierListPendTaskPopup.show()"
+						update="cmSupplierListPendTask, cmSupplierPendTask, dtcmSuppierPendTasksearchresults">
+						<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
+				   </p:commandLink>
+				</td>
+			</tr>
+			
+			
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.cm.rpt.request.type']}" /></td>
+				<td><p:selectOneMenu
+						value="#{cmReportsBackingBean.managedBean.requestType}"
+						style="width:90%">
+						<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}" itemValue=""></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.cm.rpt.drpdown.request.type.RNE']}"
+							itemValue="#{CmConst.RNE}"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.cm.rpt.drpdown.request.type.RNC']}"
+							itemValue="#{CmConst.RNC}"></f:selectItem>
+					</p:selectOneMenu></td>
+				<td><p:outputLabel value="#{lbl['lbl.rpt.rgstType']}" /></td>
+				<td><p:selectOneMenu
+						value="#{cmReportsBackingBean.managedBean.regType}"
+						style="width:90%">
+						<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}" itemValue=""></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.cm.rpt.drpdown.reg.type.basicAccount']}"
+							itemValue="#{CmConst.basic}"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.cm.rpt.drpdown.reg.type.MOFAccount']}"
+							itemValue="#{CmConst.mof}"></f:selectItem>
+					</p:selectOneMenu></td>
+
+			</tr>
+
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.cm.rpt.request.no']}" /></td>
+				<td><p:inputText style="width:90%;"
+						value="#{cmReportsBackingBean.managedBean.requestNo}" />
+					<ac:iconTooltip value="#{lbl['lbl.cm.rpt.tooltip.request.no']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.cm.rpt.document.status']}" /></td>
+				<td><p:selectOneMenu
+						value="#{cmReportsBackingBean.managedBean.docStatus}"
+						style="width:90%">
+						<f:selectItems value="#{cmReportsBackingBean.getDocStatus()}"/>
+					</p:selectOneMenu></td>
+
+			</tr>
+
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.cm.rpt.request.dtFrom']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:calendar showOn="button" navigator="true"
+						readonlyInput="true" size="9"
+						mindate="#{cmReportsBackingBean.getMinDate()}"
+						value="#{cmReportsBackingBean.managedBean.dateFrom}"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+					</p:calendar></td>
+				<td><p:outputLabel value="#{lbl['lbl.cm.rpt.request.dtTo']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:calendar showOn="button" navigator="true"
+						readonlyInput="true" size="9"
+						mindate="#{cmReportsBackingBean.getMinDate()}"
+						value="#{cmReportsBackingBean.managedBean.dateTo}"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+					</p:calendar></td>
+			</tr>
+
+
+		</table>
+
+
+		<ac:generateButton
+			generateAction="cmReportsBackingBean.generateReportCM020()"
+			resetAction="cmReportsBackingBean.resetReport" />
+			
+			
+		<p:remoteCommand name="resetAllData" partialSubmit="true" update="cmSupplierListPendTask, cmSupplierPendTask, dtcmSuppierPendTasksearchresults"
+		 action="#{cmReportsBackingBean.resetCMSuppPendTaskPopup}" process="@this" />
+		<p:dialog id="cmSupplierListPendTask" widgetVar="cmSupplierListPendTaskPopup" closable="true" modal="true" onHide="resetAllData();"
+			header="#{lbl['lbl.lov.listing']} - #{lbl['lbl.rpt.cmpName']}" width="700" height="550">
+			<ui:include src="/resources/my.ac/components/cmSupplierPendTaskPopup.xhtml"></ui:include>
+		</p:dialog>
+
+
+
+	</p:panel>
+
+
+
+
+</ui:composition>
