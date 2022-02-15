@@ -3162,4 +3162,32 @@ public class SupplierDataMaintenanceBackingBean extends
 	
 	//26238 -  Disciplinary action - 30720 - End
 	
+	//32618 - Start
+	/**
+	 * Removed selected cancel bumi categories from the list.
+	 * 
+	 * @param e
+	 *            -AjaxBehaviorEvent
+	 */
+	public void unSelectCancelBumiCategories(AjaxBehaviorEvent e) {
+		if (getManagedBean().getSelectedPendingApprovedCategories() != null) {
+			List<Long> bumiList = getManagedBean().getBumiCodeList();
+			if(bumiList == null || bumiList.isEmpty()){
+				bumiList = SmApplicationUtil.retrieveBumiCodeList();
+				getManagedBean().setBumiCodeList(bumiList);
+			}
+
+			List<SmSupplierCategory> selectList = new ArrayList<SmSupplierCategory>();
+			Iterator<SmSupplierCategory> iterator = getManagedBean().getApprovedCategoryList().iterator();
+			while (iterator.hasNext()) {
+				SmSupplierCategory cat = iterator.next();
+				if(bumiList.contains(cat.getPmCategoryL3().getCategoryL3Id())){
+					selectList.add(cat);
+				}
+			}
+			getManagedBean().setSelectedApprovedCategories(selectList);
+		}
+	}
+	//32618 - End
+	
 }
