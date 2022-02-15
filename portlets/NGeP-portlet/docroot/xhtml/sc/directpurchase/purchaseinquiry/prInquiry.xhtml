@@ -406,8 +406,8 @@
 					<p:tab title="#{lbl['lbl.cm.standard']}">
 						<ui:include src="price/pricingTab.xhtml" />
 					</p:tab>
-					<p:tab disabled="#{purchaseInquiryBackingBean.managedBean.supplierItemPromoPrices.size() == 0 or !isStockAvailable}" title="#{lbl['lbl.cm.promotion']}">
-						<c:if test="#{!(purchaseInquiryBackingBean.managedBean.supplierItemPromoPrices.size() == 0) and isStockAvailable}">
+					<p:tab disabled="#{purchaseInquiryBackingBean.managedBean.supplierItemPromoPrices.size() == 0}" title="#{lbl['lbl.cm.promotion']}">
+						<c:if test="#{purchaseInquiryBackingBean.managedBean.supplierItemPromoPrices.size() > 0}">
 							<ui:include src="price/promotionTab.xhtml" />
 						</c:if>
 					</p:tab>
@@ -422,8 +422,8 @@
 					<p:tab title="#{lbl['lbl.cm.standard']}">
 						<ui:include src="price/pricingTierTab.xhtml" />
 					</p:tab>
-					<p:tab disabled="#{purchaseInquiryBackingBean.managedBean.supplierItemTierPromotionPrices.size() == 0 or !isStockAvailable}" title="#{lbl['lbl.cm.promotion']}">
-						<c:if test="#{!(purchaseInquiryBackingBean.managedBean.supplierItemTierPromotionPrices.size() == 0) and isStockAvailable}">
+					<p:tab disabled="#{purchaseInquiryBackingBean.managedBean.supplierItemTierPromotionPrices.size() == 0}" title="#{lbl['lbl.cm.promotion']}">
+						<c:if test="#{purchaseInquiryBackingBean.managedBean.supplierItemTierPromotionPrices.size() > 0}">
 							<ui:include src="price/pricingPromotionTierTab.xhtml" />
 						</c:if> 
 					</p:tab>
@@ -434,13 +434,13 @@
 				<p:tabView id="zonalId"
 					activeIndex="#{purchaseInquiryBackingBean.managedBean.zonalPricingIndex}">
 
-					<p:tab disabled="#{purchaseInquiryBackingBean.managedBean.supplierItemZonalStandardPrices.size() == 0 or !isStockAvailable}" title="#{lbl['lbl.cm.standard']}">
-						<c:if test="#{!(purchaseInquiryBackingBean.managedBean.supplierItemZonalStandardPrices.size() == 0) and isStockAvailable}">
+					<p:tab disabled="#{purchaseInquiryBackingBean.managedBean.supplierItemZonalStandardPrices.size() == 0}" title="#{lbl['lbl.cm.standard']}">
+						<c:if test="#{purchaseInquiryBackingBean.managedBean.supplierItemZonalStandardPrices.size() > 0}">
 							<ui:include src="price/zonalStandardPricingTab.xhtml" />
 						</c:if> 
 					</p:tab>
-					<p:tab disabled="#{purchaseInquiryBackingBean.managedBean.supplierItemZonalPromotionPrices.size() == 0 or !isStockAvailable}" title="#{lbl['lbl.cm.promotion']}">
-						<c:if test="#{!(purchaseInquiryBackingBean.managedBean.supplierItemZonalPromotionPrices.size() == 0) and isStockAvailable}">
+					<p:tab disabled="#{purchaseInquiryBackingBean.managedBean.supplierItemZonalPromotionPrices.size() == 0}" title="#{lbl['lbl.cm.promotion']}">
+						<c:if test="#{purchaseInquiryBackingBean.managedBean.supplierItemZonalPromotionPrices.size() > 0}">
 							<ui:include src="price/zonalPromotionPricingTab.xhtml" />
 						</c:if> 
 					</p:tab>
@@ -450,13 +450,13 @@
 			<p:tab title="#{lbl['lbl.cm.zonal.tier']}">
 				<p:tabView id="zonalTierId"
 					activeIndex="#{purchaseInquiryBackingBean.managedBean.zonalTierPricingIndex}">
-					<p:tab disabled="#{purchaseInquiryBackingBean.managedBean.supplierItemZonalTierStandardPrices.size() == 0 or !isStockAvailable}" title="#{lbl['lbl.cm.standard']}">
-						<c:if test="#{!(purchaseInquiryBackingBean.managedBean.supplierItemZonalTierStandardPrices.size() == 0) and isStockAvailable}">
+					<p:tab disabled="#{purchaseInquiryBackingBean.managedBean.supplierItemZonalTierStandardPrices.size() == 0}" title="#{lbl['lbl.cm.standard']}">
+						<c:if test="#{purchaseInquiryBackingBean.managedBean.supplierItemZonalTierStandardPrices.size() > 0}">
 							<ui:include src="price/zonalTierPricingTab.xhtml" />
 						</c:if> 
 					</p:tab>
-					<p:tab disabled="#{purchaseInquiryBackingBean.managedBean.supplierItemZonalTierPromotionPrices.size() == 0 or !isStockAvailable}" title="#{lbl['lbl.cm.promotion']}">
-						<c:if test="#{!(purchaseInquiryBackingBean.managedBean.supplierItemZonalTierPromotionPrices.size() == 0) and isStockAvailable}">
+					<p:tab disabled="#{purchaseInquiryBackingBean.managedBean.supplierItemZonalTierPromotionPrices.size() == 0}" title="#{lbl['lbl.cm.promotion']}">
+						<c:if test="#{purchaseInquiryBackingBean.managedBean.supplierItemZonalTierPromotionPrices.size() > 0}">
 							<ui:include src="price/zonalPromotionTierPricingTab.xhtml" />
 						</c:if> 
 					</p:tab>
