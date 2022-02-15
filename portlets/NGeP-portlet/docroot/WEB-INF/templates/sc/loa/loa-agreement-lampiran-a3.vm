@@ -139,8 +139,8 @@ u {
 </head>
 
 <body>
-<div>
-No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text-decoration: underline;">$scLoa.loaNo</span>
+<div style="font-family: Arial; -fs-pdf-font-embed">
+No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-decoration: underline; -fs-pdf-font-embed;">$scLoa.loaNo</span>
 </div>
 
 <br/><br/>
