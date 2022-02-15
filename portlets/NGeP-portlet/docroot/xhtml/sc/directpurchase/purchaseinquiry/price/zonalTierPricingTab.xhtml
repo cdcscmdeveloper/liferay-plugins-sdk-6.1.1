@@ -33,7 +33,7 @@
 							listener="#{purchaseInquiryBackingBean.selectSingleRowZonalTierStandardPrice}" />
 					</p:selectBooleanCheckbox>
 			</p:column>
-			<c:if test="#{!isPendingSubmissionStatus}">
+			<c:if test="#{isPendingSupplierRespStatus and isStockAvailable}">
 				<p:column sortBy="#{price.tplSpecZone.zoneName}">
 					<f:facet name="header">
 						#{lbl['lbl.pm.zone']}
@@ -49,7 +49,7 @@
 					<p:inputText value="#{price.tplSpecZone.specZoneId}" id="hideZoneNormal" type="hidden" />
 				</p:column>			
 			</c:if>
-			<c:if test="#{isPendingSubmissionStatus}">
+			<c:if test="#{!isPendingSupplierRespStatus or !isStockAvailable}">
 				<p:column sortBy="#{price.tplSpecZone.zoneName}">
 					<f:facet name="header">
 					#{lbl['lbl.pm.zone']}
@@ -61,7 +61,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.sc.price.inquiry.from.qty']}
 				</f:facet>
-				<p:inputText disabled="#{!isPendingSupplierRespStatus or price.fromQty ne '1'}" id="fromQty" value="#{price.fromQty}" size="5" style="text-align:right">
+				<p:inputText disabled="#{!isPendingSupplierRespStatus or price.fromQty ne '1' or !isStockAvailable}" id="fromQty" value="#{price.fromQty}" size="5" style="text-align:right">
                 	<p:ajax event="change" update="@([id$=fromQty])" listener="#{purchaseInquiryBackingBean.onChangeFromQty('07')}"/>
                 	<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
                 </p:inputText>
@@ -71,7 +71,7 @@
 					#{lbl['lbl.sc.price.inquiry.to.qty']}
 					<ac:iconTooltip  value="#{lbl['lbl.sc.tier.pricetype.tooltip']}" />
 				</f:facet>
-				<p:inputText disabled="#{!isPendingSupplierRespStatus}" id="toQty" value="#{price.toQty}" size="5" style="text-align:right">
+				<p:inputText disabled="#{!isPendingSupplierRespStatus or !isStockAvailable}" id="toQty" value="#{price.toQty}" size="5" style="text-align:right">
 					<p:ajax event="change" update="@([id$=fromQty],[id$=toQty])" listener="#{purchaseInquiryBackingBean.onChangeToQty('07')}"/>
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 				</p:inputText>
@@ -88,7 +88,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.sc.price.inquiry.price.offered.per.unit']}
 				</f:facet>
-				<p:inputText disabled="#{!isPendingSupplierRespStatus}" id="newPrice" value="#{price.itemPrice}" size="10" style="text-align:right">
+				<p:inputText disabled="#{!isPendingSupplierRespStatus or !isStockAvailable}" id="newPrice" value="#{price.itemPrice}" size="10" style="text-align:right">
 					<p:ajax event="change" update="@([id$=newPrice])" listener="#{purchaseInquiryBackingBean.onChangeNewPrice('07', price.itemPrice, price.pricing.price)}"/>
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
                 </p:inputText>
@@ -98,13 +98,14 @@
 		</p:dataTable>
 		<div class="ppRightBtn">
 					<p:commandButton rendered="#{isPendingSupplierRespStatus}" id="zonalTierAddButtonId" value="#{lbl['lbl.btn.add']}"
+						disabled="#{!isStockAvailable}"
 						title="#{lbl['lbl.sc.tier.add.tooltip']}"
 						partialSubmit="true" process="@this" update="priceZonalTierPageID"
 						action="#{purchaseInquiryBackingBean.addSupplierItemZonalTierStandardPrices(purchaseInquiryBackingBean.managedBean.supplierItemZonalTierStandardPrices)}">
 					</p:commandButton>
 					<p:spacer width="2" />
 					<p:commandButton rendered="#{isPendingSupplierRespStatus}" value="#{lbl['lbl.btn.delete']}" process="@this"
-						disabled="#{!isEnableZonalTierNormalDel}"
+						disabled="#{!isEnableZonalTierNormalDel or !isStockAvailable}"
 						id="scReqItmZonalTierDeleteBtnId"
 						
 						partialSubmit="true" onclick="deleteZonalTierStandardConfirmationDlg.show();"
