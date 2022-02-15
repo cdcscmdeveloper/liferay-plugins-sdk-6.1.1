@@ -23,9 +23,9 @@
 					<!-- Technical package tab -->
 					<c:if
 						test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' or evaluationBackingBean.managedBean.committeeType eq 'TEC'}">
-						<p:menuitem value="#{lbl['lbl.sc.eva.technical.package']}"
+						<p:menuitem value="#{lbl['lbl.sc.eva.technical.package']}" disabled="#{evaluationBackingBean.managedBean.scQt.evaluateBy eq SourcingConstants.EVALUATE_BY__ITEM}"
 							action="#{evaluationBackingBean.retriveTechnicalEvaluationStagePackage}"
-							update="@form" />
+							update="@form" /><!-- 32453 -->
 					</c:if>
 					<!-- Financial item tab -->
 					<c:if
