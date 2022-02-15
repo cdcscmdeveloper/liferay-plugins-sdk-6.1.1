@@ -5888,7 +5888,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					.getCurrentInstance().getExternalContext().getResponse();
 			HttpServletResponse response = PortalUtil
 					.getHttpServletResponse(portalresponse);
-			response.setContentType("Content-type: application/zip");
+			response.setContentType("application/zip");
 			response.setHeader("Content-Disposition", "attachment; filename="
 					+ zipFileName + ".zip");
 			ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(
