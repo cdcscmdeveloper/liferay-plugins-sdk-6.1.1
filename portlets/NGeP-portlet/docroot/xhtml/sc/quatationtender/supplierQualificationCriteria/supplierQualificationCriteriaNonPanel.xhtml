@@ -34,44 +34,50 @@
 			<p:column headerText="#{lbl['lbl.sc.main.category']}"
 				style="white-space: normal;">
 				<h:outputText value="#{cateGory.pmCategoryL1Name}" />
+				<!-- 29732 Start -->
 				<p:spacer width="5" />
-			<p:commandLink onclick="historypop.show()" immediate="true">
-							<p:graphicImage value="/css/images/design/ico-view.png" /> 
-						</p:commandLink> 
-						
-						<c:if test="#{!qTSupplierQulCriteriaBackingBean.managedBean.newCategory}">
-			<ac:qtCategoryHistoryPopup catCode="#{qTSupplierQulCriteriaBackingBean.managedBean.pmCategoryL3.categoryL3Code}" 
-			historyLis="#{qTSupplierQulCriteriaBackingBean.managedBean.remarkHistoryList}" widget="historypop"/>
-		</c:if> 
+				<p:commandLink
+					onclick="#{qTSupplierQulCriteriaBackingBean.onClickHistoryIcon(cateGory.pmCategoryL1.categoryL1Code,1,cateGory.pmCategoryL1.categoryL1Id)}"
+					update="@form">
+					<p:graphicImage id="mainHisIcon" value="/css/images/design/ico-view.png" />
+					<p:tooltip for="mainHisIcon">
+						<p:outputLabel escape="false" value="#{lbl['lbl.sc.main.category.icon.tooltip']}"  />
+					</p:tooltip>
+				</p:commandLink>
+				<!-- 29732 End -->
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.sub.category']}"
 				style="white-space: normal;">
 				<h:outputText value="#{cateGory.pmCategoryL2Name}" />
+				<!-- 29732 Start -->
 				<p:spacer width="5" />
-			<p:commandLink onclick="historypop.show()" immediate="true">
-							<p:graphicImage value="/css/images/design/ico-view.png" /> 
-						</p:commandLink> 
-							
-							<c:if test="#{!qTSupplierQulCriteriaBackingBean.managedBean.newCategory}">
-			<ac:qtCategoryHistoryPopup catCode="#{qTSupplierQulCriteriaBackingBean.managedBean.pmCategoryL3.categoryL3Code}" 
-			historyLis="#{qTSupplierQulCriteriaBackingBean.managedBean.remarkHistoryList}" widget="historypop"/>
-		</c:if> 
+				<p:commandLink
+					onclick="#{qTSupplierQulCriteriaBackingBean.onClickHistoryIcon(cateGory.pmCategoryL2.categoryL2Code,2,cateGory.pmCategoryL2.categoryL2Id)}"
+					update="@form">
+					<p:graphicImage id="subHisIcon" value="/css/images/design/ico-view.png" />
+					<p:tooltip for="subHisIcon">
+						<p:outputLabel escape="false" value="#{lbl['lbl.sc.sub.category.icon.tooltip']}"  />
+					</p:tooltip>
+				</p:commandLink>
+				<!-- 29732 End -->				
 						
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.sub.category.division']}"
 				style="white-space: normal;">
 				<h:outputText value="#{cateGory.pmCategoryL3Name}" />
+				<!-- 29732 Start -->
 				<p:spacer width="5" />
-			<p:commandLink onclick="historypop.show()" immediate="true">
-							<p:graphicImage value="/css/images/design/ico-view.png" /> 
-						</p:commandLink> 
-						
-						<c:if test="#{!qTSupplierQulCriteriaBackingBean.managedBean.newCategory}">
-			<ac:qtCategoryHistoryPopup catCode="#{qTSupplierQulCriteriaBackingBean.managedBean.pmCategoryL3.categoryL3Code}" 
-			historyLis="#{qTSupplierQulCriteriaBackingBean.managedBean.remarkHistoryList}" widget="historypop"/>
-		</c:if> 
+				<p:commandLink
+					onclick="#{qTSupplierQulCriteriaBackingBean.onClickHistoryIcon(cateGory.pmCategoryL3.categoryL3Code,3,cateGory.pmCategoryL3.categoryL3Id)}"
+					update="@form">
+					<p:graphicImage id="subDivHisIcon" value="/css/images/design/ico-view.png" />
+					<p:tooltip for="subDivHisIcon">
+						<p:outputLabel escape="false" value="#{lbl['lbl.sc.sub.category.division.icon.tooltip']}"  />
+					</p:tooltip>
+				</p:commandLink>
+				<!-- 29732 End -->
 						
 			</p:column>
 
@@ -160,7 +166,10 @@
 							
 							
 	</p:panel>
-
+	<!-- 29732 Start -->
+	<ac:qtCategoryHistoryPopup catCode="#{qTSupplierQulCriteriaBackingBean.managedBean.hisCatCode}"
+			historyList="#{qTSupplierQulCriteriaBackingBean.managedBean.historyList}" widget="hisPopup"/>
+	<!-- 29732 End -->
 	<ui:param name="isQuotationThresHold"
 		value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.procurementMode.parameterCode == ParameterConst.procurementModeQuotation}" />
 
