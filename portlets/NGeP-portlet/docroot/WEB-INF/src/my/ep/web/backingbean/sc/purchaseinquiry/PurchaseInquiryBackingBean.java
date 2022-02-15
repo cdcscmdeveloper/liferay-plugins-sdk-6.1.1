@@ -2189,7 +2189,7 @@ public class PurchaseInquiryBackingBean extends
 			if(countZone == 1){
 				itemPrice.setFromQty(BigDecimal.valueOf(1));	
 			}else{
-				itemPrice.setFromQty(null);
+				//itemPrice.setFromQty(null);
 			}
 		}
 	}	
@@ -2221,8 +2221,8 @@ public class PurchaseInquiryBackingBean extends
 				}
 			}
 			
-			if(countZoneId > 1)
-				disAllowZone = true;		
+			/*if(countZoneId > 1)
+				disAllowZone = true;*/		
 		}
 		return disAllowZone;
 	}
