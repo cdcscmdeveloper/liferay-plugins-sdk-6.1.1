@@ -16615,7 +16615,7 @@ private void retriveCommitteeRemarksList(){
 				mainFolderTitle = "TitleDocument";
 			}
 
-			downloadAllFilesWithSpecificFolder("NGEP-Financial-By" + mainFolderTitle, listScAttachment, downloadBy);
+			downloadAllFilesWithSpecificFolder("NGEP-Financial-By" + mainFolderTitle, listScAttachment, downloadBy, getEncryptionKey());
 		} catch (Exception e) {
 			e.printStackTrace();
 
@@ -16676,7 +16676,7 @@ private void retriveCommitteeRemarksList(){
 				mainFolderTitle = "TitleDocument";
 			}
 
-			downloadAllFilesWithSpecificFolder("NGEP-Technical-By" + mainFolderTitle, listScAttachment, downloadBy);
+			downloadAllFilesWithSpecificFolder("NGEP-Technical-By" + mainFolderTitle, listScAttachment, downloadBy, getEncryptionKey());
 		} catch (Exception e) {
 			e.printStackTrace();
 
