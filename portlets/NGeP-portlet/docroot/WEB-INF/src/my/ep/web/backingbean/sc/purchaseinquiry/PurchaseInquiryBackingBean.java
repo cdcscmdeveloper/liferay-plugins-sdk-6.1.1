@@ -2568,6 +2568,9 @@ public class PurchaseInquiryBackingBean extends
 					if (scSupplierItemPrice.getPricing() != null)
 						onChangeNewPrice(scSupplierItemPrice.getPriceType().getParameterCode(),
 								scSupplierItemPrice.getItemPrice(), scSupplierItemPrice.getPricing().getPrice());
+					else
+						onChangeNewPrice(scSupplierItemPrice.getPriceType().getParameterCode(),
+								scSupplierItemPrice.getItemPrice(), BigDecimal.ZERO);
 				}
 				
 				List<ScSupplierItemPrice> addedScSupplierItemPrice = getPrInquirySO().saveSupplierItemPrices(prInquiryReqDTO);
