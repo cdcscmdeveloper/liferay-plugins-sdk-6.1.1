@@ -200,6 +200,7 @@ import my.ep.util.CustomUtils;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.encrypt.BouncyCastleProvider_AES_CBC;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.shared.PerformanceBondUtil;
@@ -5882,7 +5883,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		 * @throws IOException
 		 */
 		protected <ATTACHMENT extends ScAttachment> void downloadAllFilesWithSpecificFolder(
-				String zipFileName, List<EvaluationReqDTO> listScAttachment, String downloadBy)
+				String zipFileName, List<EvaluationReqDTO> listScAttachment, String downloadBy, String encryptionKey)
 				throws IOException {
 			PortletResponse portalresponse = (PortletResponse) FacesContext
 					.getCurrentInstance().getExternalContext().getResponse();
@@ -5895,7 +5896,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					response.getOutputStream()));
 			
 			try {
-				downloadAllFilesAsZipFileWithSpecificFolder(zos,listScAttachment, downloadBy);
+				downloadAllFilesAsZipFileWithSpecificFolder(zos,listScAttachment, downloadBy, encryptionKey);
 				
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -5906,7 +5907,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 		}
 		
-		protected <ATTACHMENT extends ScAttachment> void downloadAllFilesAsZipFileWithSpecificFolder(ZipOutputStream zos,List<EvaluationReqDTO> listScAttachment, String downloadBy) throws IOException{
+		protected <ATTACHMENT extends ScAttachment> void downloadAllFilesAsZipFileWithSpecificFolder(ZipOutputStream zos,List<EvaluationReqDTO> listScAttachment, String downloadBy,String encryptionKey) throws IOException{
 			for (EvaluationReqDTO scAttachmentReq : listScAttachment) {
 				// Get the file
 				FileInputStream fis = null;
@@ -5919,7 +5920,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					if (null != scAttachment
 							&& StringUtils.isNotBlank(scAttachment.getFilePath())) {
 						File file = new File(getActualFilePath(scAttachment));
-
 						
 						if(downloadBy.equalsIgnoreCase("Supplier")){
 							if(StringUtils.isNotBlank(scAttachment.getTempFileName())) {
@@ -5947,11 +5947,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							continue;
 						}
 						 fif = new BufferedInputStream(fis);
+						
 						// Write the contents of the file
-						int data = 0;
-						while ((data = fif.read()) != -1) {
-							zos.write(data);
-						}
+						BouncyCastleProvider_AES_CBC bc = new BouncyCastleProvider_AES_CBC(encryptionKey);
+						bc.InitDecryptCipher();
+						bc.CBCDecryptFileZip(fif, zos);
+
+					// zos.write(data);
 					}
 				}
 				finally{
