@@ -667,7 +667,7 @@
 								autoUpdateValue="createQtBB.managedBean.autoUpdate"
 								update=":form:qtdetailsid"
 								saveObject="createQtBB.managedBean.ctContract"
-								value="#{createQtBB.managedBean.ctContract.contractNo}"
+								value="#{createQtBB.managedBean.ctContract.contractNo}" 
 								size="25"
 								conditionField="#{createQtBB.constuctConditionFields()}" />
 						</c:when>
@@ -682,7 +682,11 @@
 			<tr>
 				<td><p:outputLabel value=" #{lbl['lbl.sc.fullfillent.type']}" />
 					<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel></td>
-				<td><c:choose>
+				<td>
+				<table>
+				<tr>
+				<td>
+				<c:choose>
 						<c:when
 							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_FULFILMENT_TYPE) and !isReadOnly or isGenInfo}">
 							<p:selectOneMenu required="#{empty param['skipvalidation']}" id="fulfilId"
@@ -714,7 +718,15 @@
 							</p:selectOneMenu>
 							<p:message id="fulfilType" for="fulfilId" display="icon" />
 						</c:otherwise>
-					</c:choose></td>
+					</c:choose>
+					</td>
+					<!-- #25726 start -->
+					<td style="margin-top: -3px">
+						<ac:iconTooltip value="#{lbl['lbl.sc.fulfilment.type.qt.tooltip']}" />
+					</td>
+					</tr></table></td>
+					<!-- #25726 end -->
+										
 				<td style="white-space: nowrap;"><p:outputLabel
 						value="#{lbl['lbl.sc.spec.complete.period']}" escape="false" /> <p:outputLabel
 						value="*" styleClass="mandatory"
