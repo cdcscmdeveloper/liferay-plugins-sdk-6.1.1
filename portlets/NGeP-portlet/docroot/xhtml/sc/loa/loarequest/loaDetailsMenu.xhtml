@@ -332,7 +332,14 @@
 				</p:inputText>				
 			</td>
 			<td>
-				<ac:iconTooltip value="#{lbl['lbl.sc.fulfilment.type.tooltip']}" />
+				<!-- #25726 START -->
+				<c:if test="#{isDocTypeQuotation}">
+					<ac:iconTooltip value="#{lbl['lbl.sc.fulfilment.type.qt.tooltip']}" />
+				</c:if>
+				<c:if test="#{!isDocTypeQuotation}">
+					<ac:iconTooltip value="#{lbl['lbl.sc.fulfilment.type.tooltip']}" />
+				</c:if>
+				<!-- #25726 END -->
 			</td>
 		</tr>
 		<!-- #25725 end -->
@@ -661,7 +668,14 @@
 							<!--#25725 end-->	
 							</td>
 							<td style="margin-top: -3px">
-								<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.req.agree.tooltip']}" />
+								<!-- #25726 START -->
+								<c:if test="#{isDocTypeQuotation}">
+									<ac:iconTooltip value="#{lbl['lbl.sc.required.agreement.qt.tooltip']}" />
+								</c:if>
+								<c:if test="#{!isDocTypeQuotation}">
+									<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.req.agree.tooltip']}" />
+								</c:if>
+								<!-- #25726 END -->
 							</td>							
 						</tr>
 					</table>
@@ -682,9 +696,11 @@
 				<!-- #25725 start -->
 				<tr>				
 					<td colspan="3">
-						<p:outputPanel id="uploadApprovalLetterPg"> 													
-							<h:panelGroup  rendered="#{((lOADetailBackingBean.managedBean.agreementReqChange) and (!lOADetailBackingBean.managedBean.scLoa.agreementReq) and (isNonPeriodic and !isPK7) and (lOADetailBackingBean.managedBean.above500K))}" 
-							required="true">							
+						<p:outputPanel id="uploadApprovalLetterPg"> 
+							<!-- #25726 START -->													
+							<h:panelGroup  rendered="#{((lOADetailBackingBean.managedBean.agreementReqChange and !lOADetailBackingBean.managedBean.scLoa.agreementReq and lOADetailBackingBean.managedBean.above500K and isNonPeriodic and !isPK7  and !isDocTypeQuotation) || (((isNonPeriodic || isOneOff) and !isPK7)  and isDocTypeQuotation and lOADetailBackingBean.managedBean.agreementReqChange and !lOADetailBackingBean.managedBean.scLoa.agreementReq))}" 
+							required="true">
+							<!-- #25726 END -->
 								<table>
 									<tr>
 										<td width="300">
@@ -795,7 +811,7 @@
 							<h:graphicImage value="/css/images/design/exclamation.png" style="margin-top: 3px" />
 							<p:spacer width="10"></p:spacer>
 							<ui:fragment>
-								<h:outputText value="#{lbl['lbl.sc.approval.letter.alert']}" style="margin-top: 3px"/>
+								<h:outputText value="#{lbl['lbl.sc.approval.letter.alert']}" style="margin-top: 3px" escape="false"/>								
 								<br />
 								<br />
 							</ui:fragment> 							

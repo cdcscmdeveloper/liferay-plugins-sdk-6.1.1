@@ -10772,13 +10772,18 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setPanelZone(true);
 		}
 		/*end*/
+		// #25726 Add Non Periodic As And When
 		if (null != this.getManagedBean().getFulfilmentType()
 				&& !"".equalsIgnoreCase(this.getManagedBean()
 						.getFulfilmentType())
-				&& this.getManagedBean()
+				&& (this.getManagedBean()
 						.getFulfilmentType()
 						.equalsIgnoreCase(
-								ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)) {
+								ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN) 
+								|| (this.getManagedBean()
+										.getFulfilmentType()
+										.equalsIgnoreCase(
+												ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN)))) {
 			scQt.setScheduleType(ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT);
 		}
 		if (null != this.getManagedBean().getFulfilmentType()
@@ -10794,10 +10799,14 @@ public class SpecificationBackingBean extends
 		if (null != this.getManagedBean().getFulfilmentType()
 				&& !"".equalsIgnoreCase(this.getManagedBean()
 						.getFulfilmentType())
-				&& this.getManagedBean()
+				&& (this.getManagedBean()
 						.getFulfilmentType()
 						.equalsIgnoreCase(
-								ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+								ParameterConst.FULFILMENT_TYPE_SCHEDULED)) 
+								|| this.getManagedBean()
+								.getFulfilmentType()
+								.equalsIgnoreCase(
+										ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)) {
 			if (null == scQt.getScheduleType()) {
 				scQt.setScheduleType(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
 			}
@@ -17915,10 +17924,11 @@ public class SpecificationBackingBean extends
 		} 
 
 		// #25039#67#92 - start
-		if (this.getManagedBean().getFulfilmentType().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+		// #25726 START
+		if (this.getManagedBean().getFulfilmentType().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED) || this.getManagedBean().getFulfilmentType().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)) {
 			isFulfilmentTypeScheduled = true;
 		} 
-
+		//#25726 END
 		if(getManagedBean().getTemplateSpecBean().getSpecMaster().getItemTypeCode().getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE)){
 			isItemTypeService = true;
 		}
