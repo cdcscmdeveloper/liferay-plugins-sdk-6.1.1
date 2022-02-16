@@ -2320,6 +2320,7 @@ public class PurchaseInquiryBackingBean extends
 					&& StringUtils.isNotBlank(scSupplierItemPrice.getToQty().toString())) {
 
 				if (scSupplierItemPrice.getFromQty().compareTo(scSupplierItemPrice.getToQty()) >= 0) {
+					scSupplierItemPrice.setFromQty(null);
 					throw new EpException(MessageConst.ERROR_760532, new String[] {
 							ResourceBundleUtils.getMessage("lbl.sc.price.inquiry.from.qty",
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()),
