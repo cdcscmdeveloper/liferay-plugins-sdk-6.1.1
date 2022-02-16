@@ -219,24 +219,22 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 				else {
 					fontPath = "http://ngepsit.eperolehan.com.my/NGeP-portlet/resources/fonts/Arial.ttf";
 				}*/
-				
-			/*	EpPropertiesUtils propertiesUtils = EpPropertiesUtils.getInstance();
+				String fontPath ="";
+				EpPropertiesUtils propertiesUtils = EpPropertiesUtils.getInstance();
 				String getPortalBaseURL = propertiesUtils.getProperty(EpPropertiesConst.PORTAL_BASE_URL);
-				
-				String urlString = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_BASE_URL) +"NGeP-portlet/resources/fonts/Arial.ttf";
 					try {
-						if (!urlString.contains(null)){
-							log.info("font path: "+urlString);
+						if (!getPortalBaseURL.equals(null)){
+							fontPath = getPortalBaseURL+"NGeP-portlet/resources/fonts/Arial.ttf";
+							log.info("font path: "+fontPath);
 							log.info("zaim font"+getPortalBaseURL);
-							
+							render.getFontResolver().addFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
 						}
 					} catch (Exception e) {
-						log.info("font path: "+urlString);
+						log.info("font path catch: "+fontPath);
 						log.info("zaim font"+getPortalBaseURL);
-					}*/
-				String fontPath ="http://ngepsit.eperolehan.com.my/NGeP-portlet/resources/fonts/Arial.ttf";
-				log.info("font path: "+fontPath);
-				render.getFontResolver().addFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+					}
+				
+				
 				
 		        
 		        //#26130 - end
