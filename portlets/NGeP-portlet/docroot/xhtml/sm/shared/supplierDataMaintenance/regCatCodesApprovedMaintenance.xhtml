@@ -26,6 +26,23 @@
 				update=":form:catCodeInfPan,@([id$=deletedApprBtnId])"></p:ajax>
 			<p:ajax event="rowDblselect"
 				update=":form:catCodeInfPan,@([id$=deletedApprBtnId])"></p:ajax>
+			<!-- 32618 - START -->	
+			<p:ajax event="rowSelect" partialSubmit="true" process="@this"
+				listener="#{supplierDataMaintenanceBackingBean.unSelectCancelBumiCategories}"
+				update=":#{p:component('catcodeMainPanelId')},@([id$=deletedApprBtnId])"></p:ajax>
+			<p:ajax event="rowUnselect"
+				listener="#{supplierDataMaintenanceBackingBean.unSelectCancelBumiCategories}"
+				update=":#{p:component('catcodeMainPanelId')},@([id$=deletedApprBtnId])"></p:ajax>
+			<p:ajax event="rowSelectCheckbox"
+				listener="#{supplierDataMaintenanceBackingBean.unSelectCancelBumiCategories}"
+				update=":#{p:component('catcodeMainPanelId')},@([id$=deletedApprBtnId])"></p:ajax>
+			<p:ajax event="rowUnselectCheckbox"
+				listener="#{supplierDataMaintenanceBackingBean.unSelectCancelBumiCategories}"
+				update=":#{p:component('catcodeMainPanelId')},@([id$=deletedApprBtnId])"></p:ajax>
+			<p:ajax event="rowDblselect"
+				listener="#{supplierDataMaintenanceBackingBean.unSelectCancelBumiCategories}"
+				update=":#{p:component('catcodeMainPanelId')},@([id$=deletedApprBtnId])"></p:ajax>
+			<!-- 32618 - END -->
 		<p:columnGroup type="header">
 			<p:row>
 				<p:column style="width:2%" />
@@ -43,7 +60,9 @@
 			<p:outputLabel value="#{index + 1}"
 				style="float: left;white-space: normal;" />
 		</p:column>
-		<p:column style="width :350px;white-space : normal">
+		<!-- 32618 - START -->	
+		<p:column disabledSelection="#{supplierDataMaintenanceBackingBean.managedBean.disabledApprovedCategories}" style="width :350px;white-space : normal">
+		<!-- 32618 - END -->
 			<h:outputText
 				value="#{aprvdCatBean.pmCategoryL1.categoryL1Code} -  #{aprvdCatBean.pmCategoryL1.categoryName}" />
 			<br />
@@ -53,13 +72,17 @@
 			<h:outputText
 				value="#{aprvdCatBean.pmCategoryL3.categoryL3Code} -  #{aprvdCatBean.pmCategoryL3.categoryName}" />
 		</p:column>
-		<p:column style="width : 10% !important;">
+		<!-- 32618 - START -->
+		<p:column disabledSelection="#{supplierDataMaintenanceBackingBean.managedBean.disabledApprovedCategories}" style="width : 10% !important;">
+		<!-- 32618 - END -->
 			<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
 				rendered="#{!aprvdCatBean.specialCategory}" />
 			<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
 				rendered="#{aprvdCatBean.specialCategory}" />
 		</p:column>
-		<p:column style="width : 25% !important;">
+		<!-- 32618 - START -->
+		<p:column disabledSelection="#{supplierDataMaintenanceBackingBean.managedBean.disabledApprovedCategories}" style="width : 25% !important;">
+		<!-- 32618 - END -->
 			<p:inputTextarea id="otherDescMaintenance" maxlength="100"
 				style="width : auto;" label="#{lbl['lbl.sm.catCodes.othDesc']}"
 				value="#{aprvdCatBean.otherDesc}" rows="5" cols="40"
