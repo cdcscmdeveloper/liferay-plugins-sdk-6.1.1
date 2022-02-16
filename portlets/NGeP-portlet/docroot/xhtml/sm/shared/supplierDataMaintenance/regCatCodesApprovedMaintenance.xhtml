@@ -79,7 +79,9 @@
 			<p:message for="otherDescMaintenance" showDetail="false" showSummary="true"
 				display="icon" />
 		</p:column>
-		<p:column>
+		<!-- 32618 - START -->
+		<p:column disabledSelection="#{supplierDataMaintenanceBackingBean.managedBean.disabledApprovedCategories}">
+		<!-- 32618 - END -->
 			<h:outputText value="#{lbl['lbl.sm.catCodes.registered']}" />
 		</p:column>
 	</p:dataTable>
