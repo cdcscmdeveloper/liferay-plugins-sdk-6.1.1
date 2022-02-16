@@ -39,6 +39,10 @@
 		<ui:include src="loaButtons.xhtml" />
 		<ui:include src="loaHeader.xhtml" />
 		
+		<!-- #25726 START -->
+		<ui:param name="isfulfilmentTypeNonPeriodicScheduled" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeNonPeriodicScheduled}"></ui:param>
+		<!-- #25726 END -->
+		
 			<!-- 20190405@asyrafhaziq - CR(25062)- Start -->
 		<ui:param name="bpmAction" value="APPROVE" />
 		<ui:param name="committeeApprovalConsentSigner"
@@ -90,7 +94,7 @@
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="4" />
 					</p:menuitem>
 					<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}" update="@form" 
-					  disabled="#{!isFulfilmentTypeScheduled}">	
+					  disabled="#{!(isFulfilmentTypeScheduled or isfulfilmentTypeNonPeriodicScheduled)}">	
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="5" />
 					</p:menuitem>
 					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.perform.bond']}" update="@form" rendered="#{isDocTypeQuotation}" disabled="#{!lOADetailBackingBean.managedBean.scLoa.bondReq}">
