@@ -63,8 +63,15 @@ public class CmConst {
 	
 	public static final String REPORT_CODE_CM014 = "CM_014";
 	
-
+	//#29640 - Start
+	public static final String REPORT_CODE_CM020 = "CM_020";
 	
+	public static final String REQUEST_TYPE_UNSPSC_CODE = "RNC";
+	
+	public static final String REQUEST_TYPE_EXTENSION_CODE = "RNE";
+	//#29640 - End
+	
+
 	/**
 	 * @return the reportCodeCm013
 	 */
@@ -184,10 +191,26 @@ public class CmConst {
 		return MOF;
 	}
 	
+	//#29640 - Start
+	/**
+	 * @return the reportCodeCm020
+	 */
+	public String getReportCodeCm020() {
+		return REPORT_CODE_CM020;
+	}
 	
-	
-	
-	
-	
+	/**
+	 * @return the RNC
+	 */
+	public String getRNC() {
+		return REQUEST_TYPE_UNSPSC_CODE;
+	}
 
+	/**
+	 * @return the RNE
+	 */
+	public String getRNE() {
+		return REQUEST_TYPE_EXTENSION_CODE;
+	}
+	//#29640 - End
 }

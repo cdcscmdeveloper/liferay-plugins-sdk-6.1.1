@@ -84,6 +84,12 @@
 				<ui:include src="cm/totalCatItemApproveReject.xhtml"></ui:include>
 			</c:when>
 			
+			<!-- #29640 - start -->
+			<c:when
+				test="#{cmReportsBackingBean.managedBean.reportCode == CmConst.reportCodeCm020}">
+				<ui:include src="cm/ListOfPendingItemCodeAndExtensionCodeRequest.xhtml"></ui:include>
+			</c:when>
+			<!-- #29640 - end -->
 			
 		</c:choose>
 	</h:panelGroup>

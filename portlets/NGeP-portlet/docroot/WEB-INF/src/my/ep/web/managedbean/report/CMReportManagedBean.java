@@ -10,34 +10,17 @@
  */
 package my.ep.web.managedbean.report;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
-import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmParameter;
-import my.ep.persistence.entity.pm.common.PmStatus;
-import my.ep.persistence.entity.sc.loaloi.ScLoa;
-import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
-import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
-import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.persistence.entity.sm.SmSupplier;
 // #29592 - start
 import my.ep.web.bean.pm.ProfileManagementSearchBean;
 // #29592 - end
-import my.ep.web.bean.pm.UserProfilesSearchBean;
-import my.ep.web.bean.report.ReportsGenerateBean;
-import my.ep.web.managedbean.BaseManagedBean;
 
 
 @ManagedBean(name = "cmReportManagedBean")
@@ -67,6 +50,16 @@ public class CMReportManagedBean extends ReportBaseManagedBean {
 	private String docNoSearchInput;
 	// #29592 - end	
 
+	//#29640 - Start
+	private String requestType;
+	private String docStatus;
+	private Date minDate;
+	private String dropdownCompanyNameOrRegNo;
+	private String companyNameOrRegNo;
+	private Object[] selectSupplier;	
+	private Boolean disableSelectBtn = true;
+	private String companyName;
+	//#29640 - End
 	
 	
 	
@@ -304,8 +297,101 @@ public class CMReportManagedBean extends ReportBaseManagedBean {
 	}
 	// #29592 - end
 	
+	//#29640 - Start
+	/**
+	 * @return the requestType
+	 */
+	public String getRequestType() {
+		return requestType;
+	}
+
+	/**
+	 * @param requestType the requestType to set
+	 */
+	public void setRequestType(String requestType) {
+		this.requestType = requestType;
+	}
+
+	/**
+	 * @return the docStatus
+	 */
+	public String getDocStatus() {
+		return docStatus;
+	}
 	
+	/**
+	 * @param docStatus the docStatus to set
+	 */
+	public void setDocStatus(String docStatus) {
+		this.docStatus = docStatus;
+	}
 	
+	public Date getMinDate() {
+		return minDate;
+	}
 	
+	public void setMinDate(Date minDate) {
+		this.minDate = minDate;
+	}
+	
+	/**
+	 * @return the dropdownCompanyNameOrRegNo
+	 */
+	public String getDropdownCompanyNameOrRegNo() {
+		return dropdownCompanyNameOrRegNo;
+	}
+
+	/**
+	 * @param dropdownCompanyNameOrRegNo the dropdownCompanyNameOrRegNo to set
+	 */
+	public void setDropdownCompanyNameOrRegNo(String dropdownCompanyNameOrRegNo) {
+		this.dropdownCompanyNameOrRegNo = dropdownCompanyNameOrRegNo;
+	}
+	
+	/**
+	 * @return the companyNameOrRegNo
+	 */
+	public String getCompanyNameOrRegNo() {
+		return companyNameOrRegNo;
+	}
+
+	/**
+	 * @param companyNameOrRegNo the companyNameOrRegNo to set
+	 */
+	public void setCompanyNameOrRegNo(String companyNameOrRegNo) {
+		this.companyNameOrRegNo = companyNameOrRegNo;
+	}
+	
+	public Object[] getSelectSupplier() {
+		return selectSupplier;
+	}
+
+	public void setSelectSupplier(Object[] selectSupplier) {
+		this.selectSupplier = selectSupplier;
+	}
+	    
+	public boolean isDisableSelectBtn() {
+		return disableSelectBtn;
+	}
+	
+	public void setDisableSelectBtn(boolean disableSelectBtn) {
+		this.disableSelectBtn = disableSelectBtn;
+	}
+	
+	/**
+	 * @return the companyName
+	 */
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	/**
+	 * @param companyName the companyName to set
+	 */
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+	
+	//#29640 - End
 }
 
