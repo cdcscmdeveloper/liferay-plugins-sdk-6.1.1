@@ -3170,6 +3170,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	 *            -AjaxBehaviorEvent
 	 */
 	public void unSelectCancelBumiCategories(AjaxBehaviorEvent e) {
+		if (getManagedBean().getSmSupplier().isBumi() && getManagedBean().isBumiputeraStatusCancel()){
 		if (getManagedBean().getSelectedPendingApprovedCategories() != null) {
 			List<Long> bumiList = getManagedBean().getBumiCodeList();
 			if(bumiList == null || bumiList.isEmpty()){
@@ -3187,6 +3188,7 @@ public class SupplierDataMaintenanceBackingBean extends
 			}
 			getManagedBean().setSelectedApprovedCategories(selectList);
 		}
+	}
 	}
 	//32618 - End
 	
