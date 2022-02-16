@@ -7933,8 +7933,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		 * Fulfillment type : Periodic more than RM500k is mandatory less than
 		 * RM500k is mandatory
 		 */
-		boolean isAgreementMandatory = false;
-		boolean isOneOffFulfilment = false;
+		// #25726 START
+		boolean isAgreementMandatory = false;		
+		boolean isPeriodic = false;
 		ScLoa loa = getManagedBean().getScLoa();
 		BigDecimal overallContractAmtOrLoaAmt = getManagedBean().getOverallContractAmt();
 
@@ -7942,19 +7943,20 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				&& !isPk7Periodic()) {
 			String fulfilmentType = loa.getScLoiLoa().getFulfilmentTypeCode()
 					.getParameterCode();
-
-			isOneOffFulfilment = ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fulfilmentType);
-			if (!isOneOffFulfilment) {
+			
+			isPeriodic = ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(fulfilmentType) || ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equals(fulfilmentType);
+			
+			if (isPeriodic && !isPk7Periodic()) {
 				isAgreementMandatory = true;
 				loa.setAgreementReq(isAgreementMandatory);
-			} else if (isOneOffFulfilment && !isQuotationThresHold(overallContractAmtOrLoaAmt)) {
+			} else{
 				//Bug #24065 
 				//isAgreementMandatory = false;
-				isAgreementMandatory = true;
+				isAgreementMandatory = false;
 				loa.setAgreementReq(isAgreementMandatory);
 			}
 		}
-		
+		// #25726 END
 		return isAgreementMandatory;
 	}
 
@@ -8310,6 +8312,28 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			reqDTO.setParameterId(parameterId);
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 			scLoa.setQtType(resDTO.getPmParameter());
+			
+			// #25726 START									
+			
+			Boolean isNonPeriodic = (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)) || (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN));
+			Boolean isPK7 = ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(this.getManagedBean().getScLoa().getQtType().getParameterType()) && ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(this.getManagedBean().getScLoa().getQtType().getParameterCode());		
+			Boolean isOneOff = this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+						
+			//To check the contract amount
+			if(over500K(scLoa)){			
+				this.getManagedBean().setAbove500K(true);
+			}else{			
+				this.getManagedBean().setAbove500K(false);
+			}			
+			
+			//Set to default value if there is changes in qt type
+			if((isOneOff || isNonPeriodic) && !this.getManagedBean().isAbove500K() &&!isPK7){
+				getManagedBean().setAgreemetSelectedVal(getManagedBean().getNoParameterId());
+			}else{
+				getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());
+			}
+			
+			// #25726 END
 		} finally {
 			parameterSO = null;
 		}
@@ -9495,11 +9519,16 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 		}
 		
+		//#25726 START
+		//set for PK7 and one off default agreementreq is false.
 		if (null != qtType && null != fulfilmentType 
 				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType()) 
-				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode())
+				&& !ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode())
 				&& ParameterTypeConst.FULFILMENT_TYPE.equals(fulfilmentType.getParameterType()) 
-				&& ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fulfilmentType.getParameterCode())) {
+				&& (ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED.equals(fulfilmentType.getParameterCode()) 
+				|| ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN.equals(fulfilmentType.getParameterCode()) 
+				|| ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fulfilmentType.getParameterCode()))
+				&& over500K(getManagedBean().getScLoa())){
 			if (null == getManagedBean().getAgreemetSelectedVal()) {
 				getManagedBean().getScLoa().setAgreementReq(false);
 			} else if (getManagedBean().getNoParameterId().equals(getManagedBean().getAgreemetSelectedVal())) {
@@ -9517,8 +9546,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			if (!getManagedBean().getScLoa().isAgreementReq() && !isPk7Periodic() && !this.getManagedBean().isReadOnly()) {
 				setOverallCtAmount(getManagedBean().getScLoa().getLoaAmt());
 			}
+			getManagedBean().getScLoa().setAgreementReq(true);
 		}
 		return false;
+		// #25726 END
 	}
 	
 	/**
@@ -10379,6 +10410,82 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 				}
 			});
 		}
-		//29007 End		
+		//29007 End	
+		
+		// #25726 START
+		private boolean over500K (ScLoa loa){
+			BigDecimal contractAmt = loa.getLoaAmt();
+			BigDecimal limit = this.getManagedBean().getLimit();		
+			
+			log.info(contractAmt.compareTo(limit));
+			if(contractAmt.compareTo(limit) == 0){
+				return false;
+			}else if(contractAmt.compareTo(limit) == 1){
+				return true;
+			}else{
+				return false;
+			}		
+		}
+		
+		public void onChangeAgreementReqType(AjaxBehaviorEvent event){
+			/**Get parameter id
+			 * 
+			 * 207 - TRUE
+			 * 208 - FALSE
+			 *  
+			 * **/
+			String agreementReqChoice = String.valueOf(event.getComponent().getAttributes()
+					.get("value"));
+			Boolean isPeriodic = (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) || (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN));
+			Boolean isNonPeriodic = (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)) || (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN));
+			Boolean isPK7 = ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(this.getManagedBean().getScLoa().getQtType().getParameterType()) && ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(this.getManagedBean().getScLoa().getQtType().getParameterCode());
+			ScLoa scLoa = this.getManagedBean().getScLoa();			
+			Boolean isOneOff = this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+			Boolean agreementReqCheck = false;
+			
+			//To check the value change to NO
+			if(agreementReqChoice != null){
+				if(agreementReqChoice.equalsIgnoreCase(ParameterConst.NO_ID)){
+					agreementReqCheck = true;
+				}
+			}
+			
+			//To check the contract amount
+			if(over500K(scLoa)){			
+				this.getManagedBean().setAbove500K(true);
+			}else{			
+				this.getManagedBean().setAbove500K(false);
+			}
+			
+			//To display confirmation box
+			if(isPK7 && (((isOneOff || isNonPeriodic)&& this.getManagedBean().isAbove500K()) || isPeriodic) && agreementReqCheck){
+				this.getManagedBean().setAgreementReqChange(true);
+				RequestContext.getCurrentInstance().execute("qtChangeAgreementReqDlg.show()");			
+			}else{
+				//To set the changes for no confirmation box
+				if(agreementReqChoice.equalsIgnoreCase(ParameterConst.YES_ID)){
+					getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());
+					this.getManagedBean().setAgreementReqChange(true);
+					RequestContext.getCurrentInstance().update("agreementReqPG");
+				}else{
+					getManagedBean().setAgreemetSelectedVal(getManagedBean().getNoParameterId());
+					this.getManagedBean().setAgreementReqChange(true);
+					RequestContext.getCurrentInstance().update("agreementReqPG");
+				}
+			}				
+		}
+		
+		//Proceed with changes and set new value for required agreement
+		public void agreementReqYes(){
+			getManagedBean().setAgreemetSelectedVal(getManagedBean().getNoParameterId());
+			RequestContext.getCurrentInstance().update("agreementReqPG");
+		}
+		
+		//Cancel changes and reset the value for required agreement
+		public void agreementReqNo(){			
+			getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());
+			RequestContext.getCurrentInstance().update("agreementReqPG");
+		}		
+		// #25726 END
 		
 }

@@ -880,9 +880,10 @@
 														label="#{lbl['lbl.sc.loiloa.loa.req.agree']}">
 														<f:selectItems
 															value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.yesNoFlag)}" />
-															
-														 <p:ajax partialSubmit="true" process="@this" update="menuTab" 
-														 listener="#{directLOABackingBean.agreementChanged(directLOABackingBean.managedBean.agreemetSelectedVal)}"/>
+														<!-- #25726 START -->
+														 <p:ajax partialSubmit="true" update="agreementReqPG" 
+														 listener="#{directLOABackingBean.onChangeAgreementReqType}"/>
+														<!-- #25726 END -->
 													</p:selectOneMenu>
 												</c:when>
 												<c:otherwise>
@@ -891,6 +892,10 @@
 														label="#{lbl['lbl.sc.loiloa.loa.req.agree']}">
 														<f:selectItems
 															value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+															<!-- #25726 START -->
+															<p:ajax partialSubmit="true" update="agreementReqPG" 
+														 	listener="#{directLOABackingBean.onChangeAgreementReqType}"/>
+															<!-- #25726 END -->
 													</p:selectOneRadio> 
 													<p:message id="agreementReqMsg" for="agreementReq" display="icon" />
 												</c:otherwise>
@@ -914,9 +919,10 @@
 																label="#{lbl['lbl.sc.loiloa.loa.req.agree']}">
 																<f:selectItems
 																	value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.yesNoFlag)}" />
-																	
-																 <p:ajax partialSubmit="true" process="@this" update="menuTab" 
-																 listener="#{directLOABackingBean.agreementChanged(directLOABackingBean.managedBean.agreemetSelectedVal)}"/>
+																<!-- #25726 START -->
+																 <p:ajax partialSubmit="true" update="agreementReqPG" 
+																 listener="#{directLOABackingBean.onChangeAgreementReqType}"/>
+																<!-- #25726 END -->
 															</p:selectOneMenu>
 															</c:otherwise>
 															</c:choose>
@@ -943,9 +949,10 @@
 														disabled="#{directLOABackingBean.managedBean.disableFields}">
 														<f:selectItems
 															value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.yesNoFlag)}" />
-															
-														 <p:ajax partialSubmit="true" process="@this" update="menuTab" 
-														 listener="#{directLOABackingBean.agreementChanged(directLOABackingBean.managedBean.agreemetSelectedVal)}"/>
+															<!-- #25726 START -->
+														 <p:ajax partialSubmit="true" update="agreementReqPG" 
+														 listener="#{directLOABackingBean.onChangeAgreementReqType}"/>
+														<!-- #25726 END -->
 													</p:selectOneMenu>
 													</c:otherwise>
 													</c:choose>
@@ -956,8 +963,10 @@
 								</h:panelGroup>
 							</td>
 							<td style="margin-top: -3px">
+								<!-- #25726 START -->
 								<ac:iconTooltip
-									value="#{lbl['lbl.sc.loiloa.loa.req.agree.tooltip']}" />
+									value="#{lbl['lbl.sc.required.agreement.qt.tooltip']}" />
+								<!-- #25726 END -->
 							</td>
 						</tr>
 					</table>
@@ -979,4 +988,16 @@
 				rendered="#{isHiddenDownloadButtonDAHistory}"/>
 	    <ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" rendered="#{!isHiddenDownloadButtonDAHistory}" />
 	      <!-- #31033 #32560 Ends -->
+	      
+	<!-- #25726 START -->
+	<p:confirmDialog id="qtChangeAgreementReqDlg" widgetVar="qtChangeAgreementReqDlg"  appendToBody="true" 
+		message="#{lbl['lbl.msg.confirm.change']}" 	severity="alert"  closable="false">
+		<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"  update="agreementReqPG" process="@this"
+				partialSubmit="true" oncomplete="qtChangeAgreementReqDlg.hide();" action="#{directLOABackingBean.agreementReqYes}"/>
+				<p:commandButton value="#{lbl['lbl.btn.no']}" update="agreementReqPG" onclick="qtChangeAgreementReqDlg.hide();"
+				process="@this" partialSubmit="true" action="#{directLOABackingBean.agreementReqNo}"/>					
+		</div>
+	</p:confirmDialog>
+	<!-- #25726 END -->
 </ui:composition>

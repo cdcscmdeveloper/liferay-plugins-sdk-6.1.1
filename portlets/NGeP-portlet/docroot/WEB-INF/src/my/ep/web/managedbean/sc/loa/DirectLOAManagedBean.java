@@ -320,6 +320,12 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	private List<TplSpecAnswer> tplSpecAnswerList;
 	/*#29007 End Vinod*/
 	
+	// #25726 START
+	public BigDecimal limit = new BigDecimal(500000);
+	public boolean AgreementReqChange = false;
+	public boolean above500K = true;
+	// #25726 END
+	
 	/**
 	 * Gets the spki backing bean.
 	 * 
@@ -1981,5 +1987,31 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	public void setSpace(String space) {
 		this.space = space;
 	}
+
+	// #25726 START
+	public BigDecimal getLimit() {
+		return limit;
+	}
+
+	public void setLimit(BigDecimal limit) {
+		this.limit = limit;
+	}	
+
+	public boolean isAgreementReqChange() {
+		return AgreementReqChange;
+	}
+
+	public void setAgreementReqChange(boolean agreementReqChange) {
+		AgreementReqChange = agreementReqChange;
+	}
+
+	public boolean isAbove500K() {
+		return above500K;
+	}
+
+	public void setAbove500K(boolean above500k) {
+		above500K = above500k;
+	}
 	
+	// #25726 END
 }
