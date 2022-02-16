@@ -225,13 +225,14 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 				
 					try {
 						if (!getPortalBaseURL.equals(null)){
-							fontPath = getPortalBaseURL+"/NGeP-portlet/resources/fonts/Arial.ttf";
-		        render.getFontResolver().addFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+							fontPath = getPortalBaseURL+"NGeP-portlet/resources/fonts/Arial.ttf";
 							log.info("font path: "+fontPath);
 							log.info("zaim font"+getPortalBaseURL);
+							render.getFontResolver().addFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
 						}
 					} catch (Exception e) {
-						
+						log.info("font path catch: "+fontPath);
+						log.info("zaim font"+getPortalBaseURL);
 					}
 				
 				
