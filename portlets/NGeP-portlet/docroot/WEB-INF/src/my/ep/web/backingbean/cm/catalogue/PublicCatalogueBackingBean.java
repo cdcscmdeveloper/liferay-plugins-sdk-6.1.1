@@ -32,8 +32,11 @@ import my.ep.persistence.entity.cm.catalog.CmBrand;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.cm.catalog.VCmPubSuppItem;
+import my.ep.util.MessageUtils;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.cm.catalogue.PublicCatalogueManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -141,8 +144,6 @@ BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 			}
 		}
 		
-
-
 		this.getManagedBean().setCatalogueList(null);
 		this.getManagedBean().setFamilyList(null);
 		this.getManagedBean().setFrontPage(false);
@@ -176,14 +177,22 @@ BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 	 * Pre render public cat view.
 	 */
 	public void preRenderPublicCatView() {
-
+		//#10747 - Soo - Start
+		log.info("prerender here");
+		
 		this.getManagedBean().setFrontPage(true);
 		this.getManagedBean().setItemName(null);
+		this.getManagedBean().setItemPerPage(15);
+		this.getManagedBean().setSortBy(0);
+		this.getManagedBean().setVisible(true);
 		findPopularCommodity();
 
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 		.handleNavigation(fc, null, "publicCatalogueView");
+		
+		this.getManagedBean().getSearchDataModel().reloadData();
+		// #10747 - Soo - End
 	}
 
 	/**
@@ -315,9 +324,30 @@ BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 
 		this.getManagedBean().setPriceForm(null);
 		this.getManagedBean().setPriceTo(null);
+		// #10747 - Soo - Start
+		this.getManagedBean().setDeliveryFrom((Integer) null);
+		this.getManagedBean().setDeliveryTo((Integer) null);
+		// #10747 - Soo - End
 		this.getManagedBean().setBrandId(0L);
 	}
 
+	// #10747 - Soo - Start	
+	public void itemPerPage(int itemPerPage){
+		log.info("itemPerPage" + this.getManagedBean().getItemPerPage());
+		this.getManagedBean().getSearchDataModel().reloadData();
+	}
+	
+	public void sortOrderBy(int sortBy){
+		log.info("sortBy" + sortBy);
+		this.getManagedBean().getSearchDataModel().reloadData();
+	}
+	
+	public void thumbnailView(boolean thumbnailView){
+		log.info("thumbnailView" + thumbnailView);
+		this.getManagedBean().setVisible(thumbnailView);
+	}
+	// #10747 - Soo - End
+	
 	/**
 	 * Back to list.
 	 */
