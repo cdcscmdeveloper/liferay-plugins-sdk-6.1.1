@@ -31,7 +31,8 @@
 									
 								</tr>
 							</table>
-							<div style="text-align: left;">
+							<!-- #569 start -->
+							<div style="text-align: right;">
 								<p:commandButton value="#{lbl['lbl.cm.search']}"
 									action="#{catalogueBackingBean.managedBean.searchCatalogueMaintenance}" update="approvalSupplierItemID" id="searchButtonApprvlId">
 								
@@ -41,6 +42,7 @@
 									update="catMainItemViewID">
 								</p:commandButton>
 							</div>
+							<!-- #569 end -->
 						</p:panel>
 					</td>
 				</tr>

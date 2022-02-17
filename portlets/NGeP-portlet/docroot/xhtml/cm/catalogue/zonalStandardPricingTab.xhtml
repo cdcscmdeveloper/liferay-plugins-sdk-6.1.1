@@ -45,7 +45,12 @@
 					action="#{catalogueBackingBean.viewAllZone(standard.cmSupplierZone.suppZoneId)}">
 					<p:graphicImage value="/css/images/design/document.png"></p:graphicImage>
 				</p:commandLink>
-
+				<!-- #569-start -->
+				<p:graphicImage
+					rendered="#{catalogueBackingBean.managedBean.publish and standard.cmSupplierZone.suppZoneId==0}"
+					value="#{catalogueBackingBean.managedBean.publish and standard.cmSupplierZone.suppZoneId==0 ? '/css/images/design/ico-termination.png' : ''}" 
+					update="@form" />
+				<!-- #569-End -->
 			</p:column>
 
 
@@ -58,6 +63,12 @@
 					<p:ajax process="@this" update="zonalStanErrorLink zPromoLink zonalStandPriceId" />
 					<f:converter converterId="bigDecimalConverter" />
 				</p:inputText>
+				<!-- #569-start -->
+				<p:graphicImage
+					rendered="#{catalogueBackingBean.managedBean.publish and standard.price==null or standard.price le 0}"
+				    value="#{catalogueBackingBean.managedBean.publish and standard.price==null or standard.price le 0 ? '/css/images/design/ico-termination.png' : ''}" 
+				    update="@form" />
+				<!-- #569-End -->
 			</p:column>
 
 
@@ -75,9 +86,21 @@
 					<p:ajax event="dateSelect"
 						listener="#{catalogueBackingBean.validateZonalStandardDateOverlap(rowIndex)}"
 						update="zonalStanErrorLink zPromoLink" />
+				
 				</p:calendar>
-
-			</p:column>
+				<!-- #569-start -->
+				<p:graphicImage 
+					rendered="#{catalogueBackingBean.managedBean.publish and standard.startDate==null
+						or (catalogueBackingBean.managedBean.publish and standard.startDate gt standard.endDate) 
+						or (catalogueBackingBean.managedBean.publish and standard.startDate lt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate) 
+						or (catalogueBackingBean.managedBean.publish and standard.startDate gt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate)}"
+					value="#{catalogueBackingBean.managedBean.publish and standard.startDate==null 
+						or (catalogueBackingBean.managedBean.publish and standard.startDate gt standard.endDate) 
+						or (catalogueBackingBean.managedBean.publish and standard.startDate lt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate) 
+						or (catalogueBackingBean.managedBean.publish and standard.startDate gt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate) ? '/css/images/design/ico-termination.png' : ''}" 
+					update="@form" />
+				<!-- #569-End -->
+				</p:column>
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.cm.end.date']}
@@ -93,7 +116,20 @@
 						listener="#{catalogueBackingBean.validateZonalStandardDateOverlap(rowIndex)}"
 						update="zonalStanErrorLink zPromoLink" />
 				</p:calendar>
-
+				<!-- #569-start -->
+				<p:graphicImage
+				    rendered="#{catalogueBackingBean.managedBean.publish and standard.startDate==null and standard.endDate==null 
+				    	or (catalogueBackingBean.managedBean.publish and standard.startDate gt standard.endDate) 
+				    	or (catalogueBackingBean.managedBean.publish and standard.endDate lt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate) 
+				    	or (catalogueBackingBean.managedBean.publish and standard.endDate gt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate)
+				    	or (catalogueBackingBean.managedBean.publish and standard.endDate le catalogueBackingBean.managedBean.currentDate)}"
+				    value="#{catalogueBackingBean.managedBean.publish and standard.startDate==null and standard.endDate==null 
+				    	or (catalogueBackingBean.managedBean.publish and standard.startDate gt standard.endDate) 
+				    	or (catalogueBackingBean.managedBean.publish and standard.endDate lt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate) 
+				    	or (catalogueBackingBean.managedBean.publish and standard.endDate gt catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate) 
+				    	or (catalogueBackingBean.managedBean.publish and standard.endDate le catalogueBackingBean.managedBean.currentDate) ? '/css/images/design/ico-termination.png' : ''}" 
+				    update="@form" />
+				<!-- #569-End -->
 			</p:column>
 
 			<p:column>
@@ -128,7 +164,7 @@
 						actionListener="#{catalogueBackingBean.updateZonalStandardErrorDialog(rowIndex)}"
 						update=":form" oncomplete="errorDialog.show();"
 						rendered="#{(standard.price eq null or standard.startDate eq null or standard.endDate eq null or standard.startDate >= standard.endDate or standard.cmSupplierZone.suppZoneId == 0 or !standard.displayAction)}">
-						<p:graphicImage value="/css/images/design/icon_error.png"></p:graphicImage>
+						<p:graphicImage value="/css/images/design/ico-termination.png"></p:graphicImage>
 					</p:commandLink>
 					<p:graphicImage value="/css/images/design/icon_success.png"
 						rendered="#{!(standard.price eq null or standard.startDate eq null or standard.endDate eq null or standard.startDate >= standard.endDate or standard.cmSupplierZone.suppZoneId == 0 or !standard.displayAction)}"></p:graphicImage>

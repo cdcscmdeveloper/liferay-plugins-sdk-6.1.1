@@ -560,6 +560,10 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private boolean isPromoPriceExist = false;
 	//201002@akmal - Bug29265 - End
 	
+	//#569 - start
+	private boolean publish = false;
+	//#569 - end
+
 	//SSM integration
 	/** The current date. */
 	private Date minDate = new Date();
@@ -4462,4 +4466,14 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.isPromoPriceExist = isPromoPriceExist;
 	}
 	//201002@akmal - Bug29265 - End
+	
+	//#569 - start
+	public boolean isPublish() {
+		return publish;
+	}
+
+	public void setPublish(boolean publish) {
+		this.publish = publish;
+	}
+	//#569 - end
 }

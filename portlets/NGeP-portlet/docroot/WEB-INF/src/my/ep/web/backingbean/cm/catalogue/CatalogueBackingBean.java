@@ -76,7 +76,6 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.cm.CmConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constant.pm.RuleTypeConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.cm.catalogue.CmTrackingDairyVO;
@@ -228,8 +227,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	/*13984 Schedule/ Phase Information*/
     private static List<ScheduleInfo> schInfo;
-    private static String orgCode;
-    private static String orgName;
+    private String orgCode;
+    private String orgName;
     private static List<VCmSupplierItem> ctRequestListCR;
     private static List<String> availableNoListCR;
     private static IPagingDataModel<VCmSupplierItem> searchDataModelCR;
@@ -2349,13 +2348,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		price.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 		this.getManagedBean().getSelectedMaintainItem().getzStdPrices().add(price);
-
-
-
-
-
-
-
 
 	}
 
@@ -10322,11 +10314,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",
 				ICodificationSO.class);
 
-
-
 		try{
-
-
 
 			CodificationReqDTO codeReqDTO = new CodificationReqDTO();
 
