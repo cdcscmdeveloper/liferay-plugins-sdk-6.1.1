@@ -2161,9 +2161,12 @@ public class PurchaseInquiryBackingBean extends
 	// End - #26129
 	
 	// Start - #29557
-	public Long currentUser(){
-		PmUser pmUser = new FacesScopes().getUserSessionBean();		
-		return pmUser.getUserId();
+	public boolean isCurrentUser(Long userId){
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		if (userId != null && userId.compareTo(pmUser.getUserId()) == 0 ){
+			return true;
+		}
+		return false;
 	}
 
 	public void toDetermineToQty(Long specZoneId, String priceType,ScSupplierItemPrice itemPrice){		
