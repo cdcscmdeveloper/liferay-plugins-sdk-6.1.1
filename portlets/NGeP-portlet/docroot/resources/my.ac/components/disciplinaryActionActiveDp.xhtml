@@ -21,8 +21,8 @@
 	<p:dialog id="disciplinaryActionActiveDpDlgId" closable="true"
 		widgetVar="disciplinaryActionActiveDpDlg" modal="true" width="#{cc.attrs.dialogWidth}" height="#{cc.attrs.dialogHeight}"
 		resizable="true">
-		
-		<table style="width: 100%">
+		<!-- #32642 -->
+		<table style="table-layout: fixed;">
 			<tr>
 				<td>
 					<h:outputText value="#{lbl['lbl.sc.company.has.been.imposed']}" 
