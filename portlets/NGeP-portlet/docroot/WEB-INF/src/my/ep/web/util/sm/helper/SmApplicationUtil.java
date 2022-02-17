@@ -12762,6 +12762,7 @@ public class SmApplicationUtil {
 	    		if (!bean.getSelectedShareHolder().isEquityOwner()
 						&& (bean.getSelectedShareHolder().isManagement()
 						|| bean.getSelectedShareHolder().isProf())) {
+	    			bean.getSelectedShareHolder().setClerical(false); //#30444 --17022022--
 					bean.getSelectedShareHolder().setDisableStaff(true);
 	    		}else{
 		    		bean.getSelectedShareHolder().setDisableStaff(false);
