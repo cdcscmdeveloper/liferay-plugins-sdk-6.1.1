@@ -30,8 +30,7 @@
 			</table>
 
 			<p:panel id="financialDocumentCompliance"
-				header="#{lbl['lbl.sc.eva.compliance.financial.document.compliance']}"
-				toggleable="true">
+				header="#{lbl['lbl.sc.eva.compliance.financial.document.compliance']}">
 
 				<table>
 					<tr>
@@ -55,7 +54,7 @@
 				</table>
 			</p:panel>
 
-			<h:panelGroup id="downloadButtonComplianceFinancial">
+			<h:panelGroup id="downloadButtonComplianceFinancial" style="display: inline-block; width: 16.5%;">
 				<table width="100%" class="BtnSpacing">
 					<c:if
 						test="#{evaluationBackingBean.managedBean.downloadBy ne null}">
