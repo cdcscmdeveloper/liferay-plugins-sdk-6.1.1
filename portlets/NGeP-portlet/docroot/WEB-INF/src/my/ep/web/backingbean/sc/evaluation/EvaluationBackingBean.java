@@ -33,8 +33,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -75,7 +73,6 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
-import my.ep.constants.BpmConstants;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
@@ -103,7 +100,7 @@ import my.ep.dto.tpl.doc.TemplateDocResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
-import my.ep.helper.Paginator;//25138
+import my.ep.helper.Paginator;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
@@ -123,14 +120,12 @@ import my.ep.persistence.entity.sc.quationtender.ScEvaluationCommitteeReportAtta
 import my.ep.persistence.entity.sc.quationtender.ScFinancialEvaluationReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScOpenCommitteeReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListScore;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
-import my.ep.persistence.entity.sc.quationtender.ScQtDemoByItemScore;
 import my.ep.persistence.entity.sc.quationtender.ScQtDemoSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScQtDemoSupplierAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationCommitteeRemark;
@@ -187,12 +182,10 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.template.DocumentGenerator;
 
-import org.apache.batik.apps.svgbrowser.StatusBar;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
-import org.docx4j.docProps.variantTypes.Array;
 import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -203,7 +196,7 @@ import org.primefaces.model.MenuModel;
 
 import com.liferay.portal.util.PortalUtil;
 //25138
-import com.sun.faces.util.CollectionsUtils;
+//25138
 
 /**
  * The Class EvaluationBackingBean.
@@ -1921,6 +1914,7 @@ public void saveComplianceSample() {
 			if(CollectionUtils.isNotEmpty(this.getManagedBean().getComplianceTechnicalCheckList())){
 			checklistSorting(this.getManagedBean().getComplianceTechnicalCheckList());
 			}
+			
 		} finally {
 			evaluationSO = null;
 		}
@@ -16537,7 +16531,7 @@ private void retriveCommitteeRemarksList(){
 	public String complianceTechnicalDownload() {
 		if (this.getManagedBean().getComplianceActiveIndex() < 1) {
 			return "/xhtml/sc/evaluation/compliance/complianceTechnicalDownload.xhtml";
-		} else if (this.getManagedBean().getComplianceActiveIndex() == 1) {
+		} else if (this.getManagedBean().getComplianceActiveIndex() >= 1) {
 			return "/xhtml/sc/evaluation/compliance/complianceFinancialDownload.xhtml";
 		} else {
 			return null;
