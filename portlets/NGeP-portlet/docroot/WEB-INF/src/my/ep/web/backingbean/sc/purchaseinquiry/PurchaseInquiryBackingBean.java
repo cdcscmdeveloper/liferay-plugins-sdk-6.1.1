@@ -2163,7 +2163,7 @@ public class PurchaseInquiryBackingBean extends
 	// Start - #29557
 	public boolean isCurrentUser(Long userId){
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
-		if (userId != null && userId.compareTo(pmUser.getUserId()) == 0 ){
+		if ((userId != null && userId.compareTo(pmUser.getUserId()) == 0) || userId == 0){
 			return true;
 		}
 		return false;
