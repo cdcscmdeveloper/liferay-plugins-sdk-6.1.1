@@ -3064,29 +3064,6 @@ public class QTDetailBackingBean extends
 				}
 			}
 			//#30477 End Vinod
-			
-			// #25077 Start
-			if (currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
-					|| currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION)
-					&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT)) {
-				if (checkSettingPopUpBPKApprovalNeeded(qt)) {
-					
-					if (!this.getManagedBean().isResetBpkCurrentArea()) {
-						checkingOtherApprovalFileAttachmentNeedDeleted(qt.getScQtApprovals(),ParameterConst.APPROVAL_CATEGORY_OTHERS);
-						
-						this.getManagedBean().setShowPopUpBPKApprovalNeeded(true);
-						
-						RequestContext.getCurrentInstance().execute("bpkApprovalNeededDlgTemp.show()");
-						
-						throw new EpException(" ");
-					}
-				}
-				
-				checkingOtherApprovalFileAttachmentNeedDeleted(qt.getScQtApprovals(),ParameterConst.APPROVAL_CATEGORY_OTHERS);
-				
-				checkValidationForStatusAndFileAttachment(qt.getScQtApprovals(),ParameterConst.APPROVAL_CATEGORY_OTHERS);
-			}
-			// #25077 End
 
 			if (currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
 					|| currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION)
