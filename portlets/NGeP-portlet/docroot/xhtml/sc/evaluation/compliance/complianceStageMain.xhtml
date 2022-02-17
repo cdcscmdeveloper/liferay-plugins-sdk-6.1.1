@@ -114,11 +114,19 @@
 				
 				<!--  10542 start -->
 				<c:if
-					test="#{(evaluationBackingBean.managedBean.complianceActiveIndex eq '0') or (evaluationBackingBean.managedBean.complianceActiveIndex eq '1')}">
+					test="#{evaluationBackingBean.managedBean.complianceActiveIndex eq '0' and not empty evaluationBackingBean.managedBean.complianceTechnicalCheckList}">
 					<ui:fragment>
 						<p:commandButton value="#{lbl['lbl.btn.download.all']}"
-							style="float:right;" process="@this" partialSubmit="true"
-							action="#{evaluationBackingBean.complianceTechnicalDownload()}" />
+							styleClass="BtnSpacing" style="float:right;" process="@this" partialSubmit="true"
+							action="#{evaluationBackingBean.complianceTechnicalDownload()}"/>
+					</ui:fragment>
+				</c:if> 
+				<c:if
+					test="#{evaluationBackingBean.managedBean.complianceActiveIndex eq '1' and not empty evaluationBackingBean.managedBean.compliancefinancialCheckList}">
+					<ui:fragment>
+						<p:commandButton value="#{lbl['lbl.btn.download.all']}"
+							styleClass="BtnSpacing" style="float:right;" process="@this" partialSubmit="true"
+							action="#{evaluationBackingBean.complianceTechnicalDownload()}"/>
 					</ui:fragment>
 				</c:if> 
 				<!--  10542 end -->
