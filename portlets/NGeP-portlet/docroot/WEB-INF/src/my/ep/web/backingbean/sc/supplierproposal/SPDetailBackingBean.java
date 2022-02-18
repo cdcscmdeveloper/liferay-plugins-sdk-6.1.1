@@ -1331,12 +1331,16 @@ public class SPDetailBackingBean extends
 				}
 				
 				if (isThrow && errorLst != null && errorLst.size() > 0) {
-					StringBuffer strB = new StringBuffer();
-					String unitPrice = ResourceBundleUtils.getMessage("lbl.tpl.spec.content.unit.price", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-					for (String zone : errorLst) {
-						strB.append(MessageUtils.getMessage(MessageConst.ERROR_760538, new String[] {unitPrice,zone}, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()));
+					if (getManagedBean().getQt().isZonal()) {
+						StringBuffer strB = new StringBuffer();
+						String unitPrice = ResourceBundleUtils.getMessage("lbl.tpl.spec.content.unit.price", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+						for (String zone : errorLst) {
+							strB.append(MessageUtils.getMessage(MessageConst.ERROR_760538, new String[] {unitPrice,zone}, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()));
+						}
+						throw new EpException(strB.toString());
+					} else {
+						throw new EpException(MessageConst.ERROR_760464);
 					}
-					throw new EpException(strB.toString());
 				}
 				// 20220127@syazani - Enhancement #3657 - specific error message - End
             }
