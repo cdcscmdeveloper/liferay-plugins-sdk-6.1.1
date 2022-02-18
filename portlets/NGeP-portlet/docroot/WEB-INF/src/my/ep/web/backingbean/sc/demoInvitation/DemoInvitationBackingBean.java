@@ -693,6 +693,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 			qtDemo.setScQtDemoSupplierList(demoSuppList);
 			qtDemo.setScQtDemoItemList(demoItemList);
 			qtDemo.setScQtDemoContactList(demoContactList);
+			qtDemo.setDemoCategoryId(pmParam);
 			this.getManagedBean().setScQtDemo(qtDemo);
 
 		} catch (Exception e) {
@@ -854,7 +855,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 				scQtDemo.setScQtDemoSupplierList(null);
 			}
 
-			if (!resDto.getScQtDemo().getDemoCategoryId().getParameterCode()
+			if (scQtDemo.getDemoCategoryId() != null && !resDto.getScQtDemo().getDemoCategoryId().getParameterCode()
 					.equalsIgnoreCase(scQtDemo.getDemoCategoryId().getParameterCode())) {
 				if (resDto.getScQtDemo().getDemoCategoryId().getParameterCode()
 						.equalsIgnoreCase(SourcingConstants.BY_ITEM)) {
@@ -926,6 +927,8 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 	public DemoResDTO demoUpdateBpmTask(DemoResDTO resDTO, String outcome) {
 		try {
 			FacesScopes facesScopes = new FacesScopes();
+			String languageCode = new FacesScopes().getUserLocale().getLanguage();
+			resDTO.setLanguageCode(languageCode);
 			IQTDemoSO qtDemoSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDemoSO.class);
 			QuationTenderReqDTO qtResDTO = new QuationTenderReqDTO();

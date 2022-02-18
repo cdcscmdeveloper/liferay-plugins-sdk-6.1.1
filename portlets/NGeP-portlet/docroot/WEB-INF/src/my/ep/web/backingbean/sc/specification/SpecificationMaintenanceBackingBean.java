@@ -470,6 +470,8 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable){
     /* ***25692#95 - end */
     this.getManagedBean().setGenInfo(false);
     this.getManagedBean().setChecklist(false);
+	//#28784		
+	this.getManagedBean().setQtSpecMaintanance(true);	
    
  /* boolean isStatusPublish=  isQTStatusPublished(scQt
 			.getQtStatus().getStatusId());*/
