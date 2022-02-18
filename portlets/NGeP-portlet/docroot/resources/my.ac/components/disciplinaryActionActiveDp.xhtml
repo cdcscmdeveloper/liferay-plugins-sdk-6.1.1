@@ -8,8 +8,6 @@
 	xmlns:cc="http://java.sun.com/jsf/composite">
 	
 	<cc:interface>
-		<cc:attribute name="dialogWidth" default="1100px" />
-		<cc:attribute name="dialogHeight" default="500px" />
 		<cc:attribute name="voList" type="java.util.List" required="true" />
 		<cc:attribute name="mofView" default="true" />
 		<cc:attribute name="startDate" default="" />
@@ -19,10 +17,9 @@
 	
 	<cc:implementation>
 	<p:dialog id="disciplinaryActionActiveDpDlgId" closable="true"
-		widgetVar="disciplinaryActionActiveDpDlg" modal="true" width="#{cc.attrs.dialogWidth}" height="#{cc.attrs.dialogHeight}"
-		resizable="true">
+		widgetVar="disciplinaryActionActiveDpDlg" modal="true" resizable="false">
 		<!-- #32642 -->
-		<table style="table-layout: fixed;">
+		<table style="width:100%">
 			<tr>
 				<td>
 					<h:outputText value="#{lbl['lbl.sc.company.has.been.imposed']}" 
