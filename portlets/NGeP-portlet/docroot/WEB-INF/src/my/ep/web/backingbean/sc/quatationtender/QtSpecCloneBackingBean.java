@@ -940,6 +940,7 @@ public class QtSpecCloneBackingBean extends
 		ELContext elContext = context.getELContext();
 		SpecificationBackingBean specificationBackingBean = (SpecificationBackingBean) elContext.getELResolver().getValue(elContext, null, "specificationBackingBean");
 		//25635-start
+		 this.getManagedBean().setTobeRemoveCategoryCodes(null);//32453
 		this.getManagedBean().setMarkDeletedScQtScoreSettingTechnical(null);
 		this.getManagedBean().setMarkDeletedScQtScoreSettingFinancial(null);
 		this.getManagedBean().setMarkDeletedScQtScoreSettingOverall(null);
