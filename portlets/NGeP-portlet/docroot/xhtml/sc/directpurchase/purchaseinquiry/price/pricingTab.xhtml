@@ -26,7 +26,7 @@
 					#{lbl['lbl.sc.price.inquiry.price.offered.per.unit']}
 				</f:facet>
 				<p:inputText disabled="#{!isStockAvailable or !isPendingSupplierRespStatus}" required="#{isStockAvailable}" id="itemPriceNormal" value="#{price.itemPrice}" size="10" style="text-align:right">
-					<p:ajax event="change" update="@([id$=itemPriceNormal])"/>
+					<p:ajax event="change" update="@([id$=itemPriceNormal])" listener="#{purchaseInquiryBackingBean.onChangeNewPrice('01', price.itemPrice, price.pricing.price)}"/>
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
                 </p:inputText>
 			</p:column>
