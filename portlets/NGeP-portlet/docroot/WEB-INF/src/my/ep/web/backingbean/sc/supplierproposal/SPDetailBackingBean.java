@@ -1334,7 +1334,7 @@ public class SPDetailBackingBean extends
 					StringBuffer strB = new StringBuffer();
 					String unitPrice = ResourceBundleUtils.getMessage("lbl.tpl.spec.content.unit.price", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 					for (String zone : errorLst) {
-						strB.append(getErrorMessageFinancialPropUnitPrice(true, zone, unitPrice));
+						strB.append(MessageUtils.getMessage(MessageConst.ERROR_760538, new String[] {unitPrice,zone}, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()));
 					}
 					throw new EpException(strB.toString());
 				}
@@ -6304,16 +6304,6 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 			}
 		}
 		return false;
-	}
-	
-	public String getErrorMessageFinancialPropUnitPrice(boolean isZone, String zone, String unitPriceLabel) {
-		String msg = "";
-		if (isZone) {
-			msg = MessageUtils.getMessage(MessageConst.ERROR_760538, new String[] {unitPriceLabel,zone}, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
-		} else {
-			msg = MessageUtils.getMessage(MessageConst.ERROR_760464, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
-		}
-		return msg;
 	}
 	// 20220127@syazani - Enhancement #3657 - specific error message - End
 }

@@ -5513,4 +5513,16 @@ public class TemplateSpecBackingBean extends
 		
 	}
 	//Bug #32110 related to #21695 Farid Start 30/11/2021
+	
+	// 20220127@syazani - Enhancement #3657 - specific error message - Start
+	public String getErrorMessageFinancialPropUnitPrice(boolean isZone, String zone, String unitPriceLabel) {
+		String msg = "";
+		if (isZone) {
+			msg = MessageUtils.getMessage(MessageConst.ERROR_760538, new String[] {unitPriceLabel,zone}, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
+		} else {
+			msg = MessageUtils.getMessage(MessageConst.ERROR_760464, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
+		}
+		return msg;
+	}
+	// 20220127@syazani - Enhancement #3657 - specific error message - End
 }
