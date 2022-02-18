@@ -1763,6 +1763,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean demoAction;
 	private List<ScQtCheckList> demoSpecTemplateList;
 	private boolean demoDisabled;
+	private boolean qtSpecMaintanance;
+	private boolean demoEvalDisabled;
+	private boolean demoSpecialCase;
 
 	// #30451-Start.
 	private boolean isBdSfFlow;
@@ -11107,6 +11110,30 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 		public void setDemoDisabled(boolean demoDisabled) {
 			this.demoDisabled = demoDisabled;
+		}
+
+		public boolean isQtSpecMaintanance() {
+			return qtSpecMaintanance;
+		}
+
+		public void setQtSpecMaintanance(boolean qtSpecMaintanance) {
+			this.qtSpecMaintanance = qtSpecMaintanance;
+		}
+
+		public boolean isDemoEvalDisabled() {
+			return demoEvalDisabled;
+		}
+
+		public void setDemoEvalDisabled(boolean demoEvalDisabled) {
+			this.demoEvalDisabled = demoEvalDisabled;
+		}
+
+		public boolean isDemoSpecialCase() {
+			return demoSpecialCase;
+		}
+
+		public void setDemoSpecialCase(boolean demoSpecialCase) {
+			this.demoSpecialCase = demoSpecialCase;
 		}
 }
 

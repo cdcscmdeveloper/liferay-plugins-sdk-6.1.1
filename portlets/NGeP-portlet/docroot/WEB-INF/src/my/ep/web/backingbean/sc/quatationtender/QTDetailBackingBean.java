@@ -1077,6 +1077,32 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if(!isApprovalScreen() || this.getManagedBean().getQt() == null){
 				this.getManagedBean().setQt(selectedScQt);
 			}
+			
+			//#28784
+			boolean demoRequired = this.getManagedBean().getQt().isDemoRequired();
+			Long status = this.getManagedBean().getQt().getQtStatus() != null ? this.getManagedBean()
+					.getQt().getQtStatus().getStatusId() : null;
+			if(null != status && !status.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) && 
+					!status.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION) && this.getManagedBean().isMaintanceFlow() && 
+					!demoRequired && !status.equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)){
+					this.getManagedBean().setDemoEvalDisabled(true);
+			} 
+			
+			if (null != status && !status.equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL) && 
+					!status.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) && 
+							!status.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION) && this.getManagedBean().isMaintanceFlow()) {
+				this.getManagedBean().setDemoDisabled(false);
+				this.getManagedBean().setDemoType(true);
+				this.getManagedBean().setDemoAction(true);
+			}
+			
+//			if(this.getManagedBean().isMaintanceFlow() && demoRequired){
+//				this.getManagedBean().setDemoDisabled(false);
+//				this.getManagedBean().setDemoType(true);
+//				this.getManagedBean().setDemoAction(true);
+//			}
+			
+			
 
 			if ( QTStatusConst.QT_CANCELLED.equals(currentStatus) && null == selectedScQt
 							.getQtType()) {
@@ -5501,16 +5527,58 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						}
 						
 						//#28784
-						if (scQt.getEvaluationType() != null && scQt.getEvaluationType().equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER)) {
-							Long status = this.getManagedBean().getQt().getQtStatus() !=null? 
-									this.getManagedBean().getQt().getQtStatus().getStatusId(): null;
-							if(null != status && (!status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION))) {
-								this.getManagedBean().setDemoType(true);								
+						Long status = this.getManagedBean().getQt().getQtStatus() != null ? this.getManagedBean()
+								.getQt().getQtStatus().getStatusId() : null;
+						boolean demoRequired = this.getManagedBean().getQt().isDemoRequired();
+						if (scQt.getEvaluationType() != null
+								&& scQt.getEvaluationType().equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER)) {
+							
+							if (null != status && (!status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION))
+									|| !status.equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)) {
+								this.getManagedBean().setDemoType(true);
+								this.getManagedBean().setDemoAction(true);
 							}
-							if(null != status && (status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT))){
-								this.getManagedBean().setDemoDisabled(true);
+
+							if (null != status && (status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT))
+									&& !this.getManagedBean().isQtSpecMaintanance()) {
+								this.getManagedBean().setDemoDisabled(false);
 							}
+							if (null != status && (status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT))
+									&& this.getManagedBean().isQtSpecMaintanance() && !demoRequired) {
+								this.getManagedBean().setDemoEvalDisabled(true);
+							}
+
+							if (null != status
+									&& (status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
+											&& !this.getManagedBean().isQtSpecMaintanance() && !this.getManagedBean()
+											.isMaintanceFlow()) && demoRequired) {
+								this.getManagedBean().setDemoSpecialCase(true);
+								this.getManagedBean().setDemoEvalDisabled(false);
+							}
+
+							if (null != status
+									&& (status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
+											&& !this.getManagedBean().isQtSpecMaintanance() && !this.getManagedBean()
+											.isMaintanceFlow()) && !demoRequired) {
+								this.getManagedBean().setDemoSpecialCase(true);
+								this.getManagedBean().setDemoEvalDisabled(true);
+							}
+							
+							if(this.getManagedBean().isMaintanceFlow() && (status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)) && !demoRequired){
+								this.getManagedBean().setDemoDisabled(false);
+								this.getManagedBean().setDemoEvalDisabled(true);	
+							}
+						} else if(this.getManagedBean().isMaintanceFlow() && (status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)) && !demoRequired){
+							this.getManagedBean().setDemoDisabled(true);
+							this.getManagedBean().setDemoEvalDisabled(true);							
+						} else if (this.getManagedBean().isMaintanceFlow() && status.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL) && !demoRequired){
+							this.getManagedBean().setDemoDisabled(true);
+							this.getManagedBean().setDemoEvalDisabled(true);								
+						} else if (this.getManagedBean().isMaintanceFlow() && status.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL) && !demoRequired){
+							this.getManagedBean().setDemoDisabled(true);
+							this.getManagedBean().setDemoEvalDisabled(true);								
 						}
+				
 					}
 
 					this.getManagedBean().setAmendMentBean(
