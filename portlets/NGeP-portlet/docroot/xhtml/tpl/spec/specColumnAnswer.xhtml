@@ -137,7 +137,7 @@
 		<!-- FARID START  add disable tplSpecAnswer.tplSpecZoneQty.qty eq 0-->
 		<p:inputText id="ratePerUom"
 			style="min-width:0px !important; width:calc(100% - 40px); text-align:right;"
-			value="#{tplSpecAnswer.ratePerUom}" required="#{param[p:component('completeTS')]!=null}" 
+			value="#{tplSpecAnswer.ratePerUom}" required="#{isZonal and !isSqSpec ? param[p:component('completeTS')]!=null : false}" 
 			rendered="#{isQuestionTypeItem}" maxlength="19"
 			label="#{lbl['lbl.tpl.spec.content.unit.price']}"
 			requiredMessage="#{isZonal ? templateSpecBackingBean.getErrorMessageFinancialPropUnitPrice(true, tplSpecAnswer.tplSpecSuppAnswer.tplSpecZoneDtl.zoneName, lbl['lbl.tpl.spec.content.unit.price']) : templateSpecBackingBean.getErrorMessageFinancialPropUnitPrice(false, '', lbl['lbl.tpl.spec.content.unit.price'])}"
