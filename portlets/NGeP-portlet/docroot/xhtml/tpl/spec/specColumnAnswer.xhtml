@@ -146,8 +146,7 @@
 			and tplSpecAnswer.tplSpecZoneQty ne null 
 			and tplSpecAnswer.tplSpecZoneQty.qty eq 0 
 			or tplSpecAnswer.notOfferSingle}"
-			onkeypress="if (event.keyCode == 13) { return false; }">
-			<!-- #32362 -->
+			onkeypress="if (event.keyCode == 13) { return false; }"> <!-- #32362 -->
 			<!-- 20220127@syazani - Enhancement #3657 - specific error message - End -->
 			<p:ajax event="change" partialSubmit="true" process="@this"
 				update="@this, ratePerUomMsg, ansYearPG, ansPG, @(.calcAmount)"
