@@ -118,7 +118,7 @@
 					<c:if
 						test="#{evaluationBackingBean.managedBean.complianceActiveIndex eq '0' and not empty evaluationBackingBean.managedBean.complianceTechnicalCheckList}">
 						<ui:fragment>
-							<p:commandButton value="#{lbl['lbl.btn.download.all']}"
+							<p:commandButton value="#{lbl['lbl.sc.eva.compliance.download.all.document']}"
 								styleClass="BtnSpacing" style="float:right;" process="@this"
 								partialSubmit="true"
 								action="#{evaluationBackingBean.complianceTechnicalDownload()}" />
@@ -127,7 +127,7 @@
 					<c:if
 						test="#{evaluationBackingBean.managedBean.complianceActiveIndex eq '2' and not empty evaluationBackingBean.managedBean.compliancefinancialCheckList}">
 						<ui:fragment>
-							<p:commandButton value="#{lbl['lbl.btn.download.all']}"
+							<p:commandButton value="#{lbl['lbl.sc.eva.compliance.download.all.document']}"
 								styleClass="BtnSpacing" style="float:right;" process="@this"
 								partialSubmit="true"
 								action="#{evaluationBackingBean.complianceTechnicalDownload()}" />
@@ -138,7 +138,7 @@
 					<c:if
 						test="#{evaluationBackingBean.managedBean.complianceActiveIndex eq '0' and not empty evaluationBackingBean.managedBean.complianceTechnicalCheckList}">
 						<ui:fragment>
-							<p:commandButton value="#{lbl['lbl.btn.download.all']}"
+							<p:commandButton value="#{lbl['lbl.sc.eva.compliance.download.all.document']}"
 								styleClass="BtnSpacing" style="float:right;" process="@this"
 								partialSubmit="true"
 								action="#{evaluationBackingBean.complianceTechnicalDownload()}" />
@@ -147,7 +147,7 @@
 					<c:if
 						test="#{evaluationBackingBean.managedBean.complianceActiveIndex eq '1' and not empty evaluationBackingBean.managedBean.compliancefinancialCheckList}">
 						<ui:fragment>
-							<p:commandButton value="#{lbl['lbl.btn.download.all']}"
+							<p:commandButton value="#{lbl['lbl.sc.eva.compliance.download.all.document']}"
 								styleClass="BtnSpacing" style="float:right;" process="@this"
 								partialSubmit="true"
 								action="#{evaluationBackingBean.complianceTechnicalDownload()}" />
