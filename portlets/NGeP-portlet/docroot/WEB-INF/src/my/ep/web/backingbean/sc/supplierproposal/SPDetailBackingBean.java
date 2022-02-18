@@ -1064,6 +1064,18 @@ public class SPDetailBackingBean extends
 		//Bug #30073 End
 		*/
 		//Bug #31725 End
+		//#21695 - Start - fix completed financial proposal still ticked after technical proposal updated
+		if(CollectionUtils.isNotEmpty(getManagedBean().getFinanceCheckDetailsList())){
+			for (ScQtProposalChecklist finProposalChecklist : getManagedBean().getFinanceCheckDetailsList()) {
+				if(finProposalChecklist.getScQtCheckList().getTitle().equalsIgnoreCase(scQtProposalChecklist.getScQtCheckList().getTitle())
+						&& finProposalChecklist.getScQtCheckList().getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)){
+					prepareFinancialAction(finProposalChecklist);
+					saveFinancialSpecificationAction(false, true);
+					break;
+				}
+			}
+		}
+		//#21695 - End - fix completed financial proposal still ticked after technical proposal updated
 		if (proposalResDTO.isSuccessful()) {
 			//Bug #31725 Start
 			encryptTechFinTemplateSpecDtls(scQtProposalChecklist, proposalResDTO.getProposalChecklist(), isCompleted);
@@ -1123,7 +1135,14 @@ public class SPDetailBackingBean extends
 	 * @param isCompleted
 	 * @return navigation path
 	 */
-	public String saveFinancialSpecificationAction(boolean isCompleted) {
+	//#21695 - Start - fix completed financial proposal still ticked after technical proposal updated
+	public String saveFinancialSpecificationAction(boolean isCompleted) { 
+		return saveFinancialSpecificationAction(isCompleted, false);
+	}
+
+	public String saveFinancialSpecificationAction(boolean isCompleted, boolean ignoreNav) {
+	//#21695 - End - fix completed financial proposal still ticked after technical proposal updated
+
 		debugLogger("saveFinancialSpecificationAction supplierId::::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		validateProposalCloseTime(this.getManagedBean().getQt());
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
@@ -1155,8 +1174,12 @@ public class SPDetailBackingBean extends
 			//Bug #31725 Start 
 			encryptTechFinTemplateSpecDtls(scQtProposalChecklist, proposalResDTO.getProposalChecklist(), isCompleted);
 			//Bug #31725 End 
-			return navigatePrepareFinProposalCheckList(scQtProposalChecklist,
-					proposalResDTO.getProposalChecklist(), isCompleted);
+			
+			//#21695 - Start - fix completed financial proposal still ticked after technical proposal updated
+			return navigatePrepareFinProposalCheckList(scQtProposalChecklist, 
+					proposalResDTO.getProposalChecklist(), isCompleted, ignoreNav);
+			//#21695 - End - fix completed financial proposal still ticked after technical proposal updated
+
 		}
 
 		return null;
@@ -4827,10 +4850,18 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 	 *            the is completed
 	 * @return the string
 	 */
-	private String navigatePrepareFinProposalCheckList(
-			ScQtProposalChecklist currProposalChecklist,
-			ScQtProposalChecklist newProposalChecklist, boolean isCompleted) {
-		
+	//#21695 - Start - fix completed financial proposal still ticked after technical proposal updated
+	private String navigatePrepareFinProposalCheckList( 
+			ScQtProposalChecklist currProposalChecklist, 
+			ScQtProposalChecklist newProposalChecklist, boolean isCompleted){
+		return navigatePrepareFinProposalCheckList(currProposalChecklist, newProposalChecklist, isCompleted, false);
+	}
+	
+	private String navigatePrepareFinProposalCheckList( 
+			ScQtProposalChecklist currProposalChecklist, 
+			ScQtProposalChecklist newProposalChecklist, boolean isCompleted, boolean ignoreNav) {
+	//#21695 - End - fix completed financial proposal still ticked after technical proposal updated
+	
 		updateQtFinNdTechProposalCheckList(
 				currProposalChecklist,
 				newProposalChecklist,
@@ -4840,7 +4871,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 
 		if (isCompleted) {
 			return NAV_TO_PROPOSAL_MAIN_PAGE + "?faces-redirect=true";
-		} else {
+		} else if(!ignoreNav){	//#21695 - fix completed financial proposal still ticked after financial proposal updated
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
@@ -4850,6 +4881,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 
 			return null;
 		}
+		return null; 	//#21695 - fix completed financial proposal still ticked after financial proposal updated
 	}
 
 	/**
