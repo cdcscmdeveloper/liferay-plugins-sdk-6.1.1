@@ -2511,6 +2511,8 @@ public class PurchaseInquiryBackingBean extends
 
 			this.getManagedBean().getSupplierItemNormalPrices().clear();
             this.getManagedBean().getSupplierItemNormalPrices().add(addedScSupplierItemPrice.get(0));
+			onChangeNewPrice(this.getManagedBean().getSupplierItemNormalPrices().get(0).getPriceType().getParameterCode(),
+					this.getManagedBean().getSupplierItemNormalPrices().get(0).getItemPrice(), this.getManagedBean().getSupplierItemNormalPrices().get(0).getPricing().getPrice());
 			validateScSupplierItemPrice(this.getManagedBean().getSupplierItemNormalPrices());
 
 		}
@@ -2532,7 +2534,9 @@ public class PurchaseInquiryBackingBean extends
 
 			this.getManagedBean().getSupplierItemPromoPrices().clear();
 			this.getManagedBean().getSupplierItemPromoPrices().add(addedScSupplierItemPrice.get(0));
-			//validateScSupplierItemPrice(this.getManagedBean().getSupplierItemPromoPrices());
+			onChangeNewPrice(this.getManagedBean().getSupplierItemPromoPrices().get(0).getPriceType().getParameterCode(),
+					this.getManagedBean().getSupplierItemPromoPrices().get(0).getItemPrice(), this.getManagedBean().getSupplierItemPromoPrices().get(0).getPricing().getPrice());
+			validateScSupplierItemPrice(this.getManagedBean().getSupplierItemPromoPrices());
 
 		}
 
