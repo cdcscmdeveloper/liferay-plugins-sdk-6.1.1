@@ -1264,15 +1264,10 @@ public class SPDetailBackingBean extends
 						.getSpecAnswerList();
 			}
             if(answers == null || answers.size() == 0){
-            	for(TplSpecAnswer answer:answers){
-// #21695 7/10/2021	START	            		
-//farid start #21695 to allow item has 0 qty and 0 price
-            		if(answer.getRatePerUom().equals(0) && answer.getTplSpecZoneQty()!= null || answer.getRatePerUom().equals(0) && answer.getTplSpecZoneQty() == null){
-            			throw new EpException(MessageConst.ERROR_760463);
-            		   }
-//farid end #21695 7/10/2021
-            		  }
-            		} else {
+            	
+            	//REMOVE NOT USING #21695
+            	//#21695 Farid Start - fix proposal checking 18/2/2022
+            	
 				// 20220127@syazani - Enhancement #3657 - specific error message - Start
 				List<String> errorLst = null;
 				boolean isThrow = false;
@@ -2835,7 +2830,9 @@ public class SPDetailBackingBean extends
 		List<TplSpecZoneDtl> zones = resDTO.getZones();
 		if (CollectionUtils.isNotEmpty(zones)) {
 			this.getManagedBean().setZones(zones);
-			
+			//#21695 Farid Start - fix proposal checking 18/2/2022
+			disableDefaultSelected();
+			//#21695 Farid End - fix proposal checking 18/2/2022
 			}
 		}
 //#21695 Farid end 2/4/2021
@@ -6275,8 +6272,8 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 //#21695 Farid start 2/4/2021	
 	public boolean evaluateZonelistSupp(TplSpecZoneQty specQties) {
 		if(specQties!=null){
-			log.info("--->specQties " + specQties.getTplSpecZoneOffer().getSpecZoneOfferId());
-
+			//remove log
+			//#21695 Farid Start - fix proposal checking 18/2/2022
 			if (CollectionUtils.isNotEmpty(this.getManagedBean().getZones())) {
 				for (TplSpecZoneDtl specZones : this.getManagedBean().getZones()) {
 					if (specQties.getTplSpecZoneDtl() != null) {
@@ -6310,4 +6307,26 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 		return false;
 	}
 	// 20220127@syazani - Enhancement #3657 - specific error message - End
+	
+	//#21695 Farid Start - fix proposal checking 18/2/2022
+	public void disableDefaultSelected() {
+		for(TplSpecAnswer retrieveAns : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
+			if(retrieveAns != null){
+				for(TplSpecZoneDtl specZonedtl : this.getManagedBean().getZones()){
+					if(specZonedtl != null){
+						for(TplSpecZoneQty specZoneQty : retrieveAns.getTplSpecQuestion().getTplSpecZoneQties()){
+							if(specZoneQty!= null && specZoneQty.getTplSpecQuestion().getSpecQuestionId().equals(retrieveAns.getTplSpecQuestion().getSpecQuestionId())
+									&& specZoneQty.getQty().equals(new BigDecimal(0)) 
+									&& specZonedtl.getSpecZoneId().equals(specZoneQty.getTplSpecZoneDtl().getSpecZoneId())){
+								retrieveAns.setOffer(false);
+								retrieveAns.setDisableRow(true);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	//#21695 Farid End - fix proposal checking 18/2/2022
+	
 }
