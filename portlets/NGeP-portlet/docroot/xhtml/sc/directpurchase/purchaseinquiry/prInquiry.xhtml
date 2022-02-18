@@ -191,7 +191,7 @@
 						</tr>-->
 						<tr>
 							<td><c:if test="#{isPendingSubmissionStatus or isPendingRnCreationStatus}">
-									<!-- #29557 disabled required="true" --><p:selectOneMenu required="true" id="priceType"
+									<!-- #29557 remove required="true" --><p:selectOneMenu id="priceType"
 										style="margin-bottom: 5px; width: 235px;"
 										label="#{lbl['lbl.sc.price.inquiry.price.type']}"
 										disabled="#{isPendingSubmissionStatus}"

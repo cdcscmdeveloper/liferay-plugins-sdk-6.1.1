@@ -1154,6 +1154,12 @@ public class PurchaseInquiryBackingBean extends
 	public String requisitionerAction(String action) {
 		log.info("requisitionerAction");
 		
+		//#29557 - start
+		if(this.getManagedBean().getPriceType() == null){
+			throw new EpException(MessageConst.ERROR_760539);
+		}
+		//#29557 - end
+		
 		ScPrInquiry prInquiry = getManagedBean().getScPrInquiry();
 		if(StringUtils.equalsIgnoreCase("PROCESSED", action)) {
 			validateFinalOrderQty(); //#29557
