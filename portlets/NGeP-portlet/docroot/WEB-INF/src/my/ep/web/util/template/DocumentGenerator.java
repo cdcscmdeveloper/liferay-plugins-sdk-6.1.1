@@ -222,15 +222,16 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 				String fontPath ="";
 				EpPropertiesUtils propertiesUtils = EpPropertiesUtils.getInstance();
 				String getPortalBaseURL = propertiesUtils.getProperty(EpPropertiesConst.PORTAL_BASE_URL);
+				
 					try {
 						if (!getPortalBaseURL.equals(null)){
-							fontPath = getPortalBaseURL+"NGeP-portlet/resources/fonts/Arial.ttf";
+							fontPath = getPortalBaseURL+"/NGeP-portlet/resources/fonts/Arial.ttf";
 							log.info("font path: "+fontPath);
 							log.info("zaim font"+getPortalBaseURL);
 							render.getFontResolver().addFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
 						}
 					} catch (Exception e) {
-						log.info("font path catch: "+fontPath);
+						log.info("font path: "+fontPath);
 						log.info("zaim font"+getPortalBaseURL);
 					}
 				
