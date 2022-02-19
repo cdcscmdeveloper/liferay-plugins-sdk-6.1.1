@@ -431,8 +431,23 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    		getManagedBean().setAssignedState(isAssignedState);
 	    		reloadRequestNote(scRequestNote);
 	    		
-	    		successMessage(MessageConst.INFO_700025,ParameterTypeConst.DOCUMENT_TYPES,
-	    				ParameterConst.DOCTYPE_REQUEST_NOTE,scRequestNote.getRequestNoteNo(), Boolean.FALSE);
+	    		//#29557 - start
+	    		Boolean PIcontinuity = false;
+	    		for (ScRequestNoteDtl scRequestNoteDtl : scRequestNote.getRequestNoteDtls()) {
+	    			if(scRequestNoteDtl.isShowPurchaseInquiry()){
+	    				PIcontinuity = true;
+	    				break;
+	    			}
+	    		}
+
+	    		if(PIcontinuity){
+	    			successMessage(MessageConst.INFO_700004,ParameterTypeConst.DOCUMENT_TYPES,
+		    				ParameterConst.DOCTYPE_REQUEST_NOTE,scRequestNote.getRequestNoteNo(), Boolean.FALSE);
+	    		}else{
+	    			successMessage(MessageConst.INFO_700025,ParameterTypeConst.DOCUMENT_TYPES,
+		    				ParameterConst.DOCTYPE_REQUEST_NOTE,scRequestNote.getRequestNoteNo(), Boolean.FALSE);
+	    		}
+	    		//#29557 - else	    		
 	    	} else{
 	    		successMessage(MessageConst.INFO_700024,ParameterTypeConst.DOCUMENT_TYPES,
 	    				ParameterConst.DOCTYPE_REQUEST_NOTE,scRequestNote.getRequestNoteNo(), Boolean.TRUE);
