@@ -33,7 +33,7 @@
 							listener="#{purchaseInquiryBackingBean.selectSingleRowZonalTierPromotionPrice}" />
 					</p:selectBooleanCheckbox>
 			</p:column>
-				<p:column sortBy="#{price.tplSpecZone.zoneName}">
+				<p:column sortBy="#{price.tplSpecZone.zoneName}" rendered="#{!isPendingSubmissionStatus}">
 					<f:facet name="header">
 						#{lbl['lbl.pm.zone']}
 					</f:facet>
@@ -46,6 +46,12 @@
 						<p:ajax update="hideZonePromo,fromQty" listener="#{purchaseInquiryBackingBean.toDetermineToQty(price.tplSpecZone.specZoneId ,'08',price)}"/>
 					</p:selectOneMenu>
 					<p:inputText value="#{price.tplSpecZone.specZoneId}" id="hideZonePromo" type="hidden" />		
+				</p:column>
+				<p:column sortBy="#{price.tplSpecZone.zoneName}" rendered="#{isPendingSubmissionStatus}">>
+					<f:facet name="header">
+					#{lbl['lbl.pm.zone']}
+					</f:facet>
+						<h:outputText value="#{price.tplSpecZone.zoneName}" size="10" readonly="true" style="text-align:right"></h:outputText>
 				</p:column>			
 			<p:column sortBy="#{price.fromQty}">
 				<f:facet name="header">
