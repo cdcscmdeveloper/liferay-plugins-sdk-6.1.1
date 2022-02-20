@@ -2530,12 +2530,12 @@ public class PurchaseInquiryBackingBean extends
 		FacesScopes facesScopes = new FacesScopes();
 		
 		if (i == 0 || i == 1){
-			if (addedScSupplierItemPrice.getFromQty() == null){throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils.getMessage("lbl.sc.from.qty",
+			if (addedScSupplierItemPrice.getFromQty() == null){throw new EpException(MessageConst.ERROR_760540, new String[] {ResourceBundleUtils.getMessage("lbl.sc.price.inquiry.from.qty",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});}
 			if (addedScSupplierItemPrice.getToQty() == null) {
 				if (!ignoreLastTier) {
 					throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
-							"lbl.sc.to.qty", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()) });
+							"lbl.sc.price.inquiry.to.qty", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()) });
 				}
 			}
 			if (addedScSupplierItemPrice.getItemPrice() == null){throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils.getMessage("lbl.ss.item.detail.price.offered",
@@ -2555,12 +2555,12 @@ public class PurchaseInquiryBackingBean extends
 				addedScSupplierItemPrice.setTplSpecZone(new TplSpecZoneDtl());
 				throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils.getMessage("lbl.pm.zone.name",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});}
-			if (addedScSupplierItemPrice.getFromQty() == null){throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils.getMessage("lbl.sc.from.qty",
+			if (addedScSupplierItemPrice.getFromQty() == null){throw new EpException(MessageConst.ERROR_760540, new String[] {ResourceBundleUtils.getMessage("lbl.sc.price.inquiry.from.qty",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});}
 			if (addedScSupplierItemPrice.getToQty() == null){
 				if (!ignoreLastTier) {
 					throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
-							"lbl.sc.to.qty", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()) });
+							"lbl.sc.price.inquiry.to.qty", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()) });
 				}
 			}
 			if (addedScSupplierItemPrice.getItemPrice() == null){throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils.getMessage("lbl.ss.item.detail.price.offered",
