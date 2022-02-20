@@ -25,7 +25,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.sc.price.inquiry.price.offered.per.unit']}
 				</f:facet>
-				<p:inputText disabled="#{!isStockAvailable or !isPendingSupplierRespStatus}" required="#{isStockAvailable}" id="itemPricePromo" value="#{price.itemPrice}" size="10" style="text-align:right">
+				<p:inputText requiredMessage="#{lbl['lbl.sc.price.inquiry.new.price.required']}" disabled="#{!isStockAvailable or !isPendingSupplierRespStatus}" required="#{isStockAvailable}" id="itemPricePromo" value="#{price.itemPrice}" size="10" style="text-align:right">
 					<p:ajax event="change" update="@([id$=itemPricePromo])" listener="#{purchaseInquiryBackingBean.onChangeNewPrice('02', price.itemPrice, price.pricing.price)}"/>
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
                 </p:inputText>
