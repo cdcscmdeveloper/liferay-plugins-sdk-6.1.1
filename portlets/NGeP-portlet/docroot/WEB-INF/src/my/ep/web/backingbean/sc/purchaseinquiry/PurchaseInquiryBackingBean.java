@@ -2470,6 +2470,10 @@ public class PurchaseInquiryBackingBean extends
 				if (prevScSupplierItemPrice.getTplSpecZone() != null) {
 					if (scSupplierItemPrice.getTplSpecZone().getSpecZoneId() == prevScSupplierItemPrice
 							.getTplSpecZone().getSpecZoneId()) {
+						if(prevScSupplierItemPrice.getItemPrice() == null){
+							throw new EpException(MessageConst.ERROR_760540, new String[] {ResourceBundleUtils.getMessage("lbl.sc.price.inquiry.price.offered.per.unit",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});	
+						}
 						if (scSupplierItemPrice.getItemPrice().compareTo(prevScSupplierItemPrice.getItemPrice()) > 0) {
 							throw new EpException(MessageConst.ERROR_760536, new String[] {
 									this.getManagedBean().getScRequestSupplierItem().getRequestNoteItem().getCmItem()
@@ -2482,6 +2486,10 @@ public class PurchaseInquiryBackingBean extends
 				}
 				
 				else{
+					if(prevScSupplierItemPrice.getItemPrice() == null){
+						throw new EpException(MessageConst.ERROR_760540, new String[] {ResourceBundleUtils.getMessage("lbl.sc.price.inquiry.price.offered.per.unit",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});	
+					}
 					if (scSupplierItemPrice.getItemPrice().compareTo(prevScSupplierItemPrice.getItemPrice()) > 0) {
 						throw new EpException(MessageConst.ERROR_760536, new String[] {
 								this.getManagedBean().getScRequestSupplierItem().getRequestNoteItem().getCmItem()
