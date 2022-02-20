@@ -237,17 +237,15 @@
 			</h:selectOneMenu>
 			<p:message id="answerComplianceMsg" for="answerCompliance" display="icon" rendered="#{isAnswerTypeDropdown}" />
 <!-- #21695 Farid end 1/4/2021-->				
-<!-- #21695 Farid start 3/8/2021-->	
-			<h:panelGroup layout="div" rendered="#{!isSqSpec and 
-														
-												   !isSpecTypeFinancial}">
+<!-- #21695 Farid Start - fix proposal checking 18/2/2022-->	
+			<h:panelGroup layout="div" rendered="#{!isSqSpec and !isSpecTypeFinancial}">
 				<h:selectOneMenu id="answerOffer" style="width:calc(100% - 30px);" 
 						value="#{tplSpecAnswer.offer}"
 						rendered="#{!isSqSpec and templateSpecBean.specMaster.scQtDoc.scQt.partial ne null and 
 						templateSpecBean.specMaster.scQtDoc.scQt.partial eq true and
 						!isSpecTypeFinancial and isQuestionTypeItem}" 
 						label="#{lbl[answerlbl]}"
-						disabled="#{!editable}">
+						disabled="#{isZonal and tplSpecAnswer.disableRow or !editable}">
 					<f:selectItems value="#{templateSpecBackingBean.offerDetails}"></f:selectItems>
 									  
 					<p:ajax event="change" partialSubmit="true" process="@form" update="@form"
@@ -255,7 +253,7 @@
 					     		listener="#{templateSpecBackingBean.offerTypeChange(tplSpecAnswer.offer,tplSpecAnswer.tplSpecQuestion.specQuestionId,row)}"/>					  							  	
 	   
 				</h:selectOneMenu>
-<!-- #21695 Farid start 3/8/2021-->					
+<!-- #21695 Farid End - fix proposal checking 18/2/2022-->				
 		<c:if test="#{isZonal}">		
 			<h:panelGroup layout="div" 
 			rendered="#{!tplSpecAnswer.offer and tplSpecAnswer.offer ne null and
