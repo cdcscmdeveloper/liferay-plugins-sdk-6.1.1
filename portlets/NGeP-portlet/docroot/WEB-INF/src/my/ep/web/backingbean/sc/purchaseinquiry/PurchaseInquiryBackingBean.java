@@ -827,8 +827,9 @@ public class PurchaseInquiryBackingBean extends
 
 	public String supplierSave() {
 		debugLogger("supplierSave");
-		//#29557 - start	
-		savePriceTab("SAVE");
+		//#29557 - start
+		if (getManagedBean().getStockAvailable() == ParameterConst.PI_STOCK_AVAILABILITY) 
+			savePriceTab("SAVE");
 		//#29557 - end
 		Integer stockAvailable = getManagedBean().getStockAvailable();
 		validateSupplierSave(stockAvailable);
@@ -1074,7 +1075,8 @@ public class PurchaseInquiryBackingBean extends
 		debugLogger("supplierSubmit");
 		
 		// #29557 - start
-		savePriceTab("SUBMIT");
+		if (getManagedBean().getStockAvailable() == ParameterConst.PI_STOCK_AVAILABILITY) 
+			savePriceTab("SUBMIT");
 		// #29557 - end
 
 		//gpki for only govt seller
