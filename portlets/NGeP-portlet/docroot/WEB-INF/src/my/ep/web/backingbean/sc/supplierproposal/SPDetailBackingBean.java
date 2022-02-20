@@ -1058,6 +1058,18 @@ public class SPDetailBackingBean extends
 		//Bug #30073 End
 		*/
 		//Bug #31725 End
+		//#21695 - Start - fix completed financial proposal still ticked after technical proposal updated
+		if(CollectionUtils.isNotEmpty(getManagedBean().getFinanceCheckDetailsList())){
+			for (ScQtProposalChecklist finProposalChecklist : getManagedBean().getFinanceCheckDetailsList()) {
+				if(finProposalChecklist.getScQtCheckList().getTitle().equalsIgnoreCase(scQtProposalChecklist.getScQtCheckList().getTitle())
+						&& finProposalChecklist.getScQtCheckList().getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)){
+					prepareFinancialAction(finProposalChecklist);
+					saveFinancialSpecificationAction(false, true);
+					break;
+				}
+			}
+		}
+		//#21695 - End - fix completed financial proposal still ticked after technical proposal updated
 		if (proposalResDTO.isSuccessful()) {
 			//Bug #31725 Start
 			encryptTechFinTemplateSpecDtls(scQtProposalChecklist, proposalResDTO.getProposalChecklist(), isCompleted);
@@ -1117,7 +1129,14 @@ public class SPDetailBackingBean extends
 	 * @param isCompleted
 	 * @return navigation path
 	 */
+	//#21695 - Start - fix completed financial proposal still ticked after technical proposal updated
 	public String saveFinancialSpecificationAction(boolean isCompleted) {
+		return saveFinancialSpecificationAction(isCompleted, false);
+	}
+
+	public String saveFinancialSpecificationAction(boolean isCompleted, boolean ignoreNav) {
+	//#21695 - End - fix completed financial proposal still ticked after technical proposal updated
+
 		debugLogger("saveFinancialSpecificationAction supplierId::::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		validateProposalCloseTime(this.getManagedBean().getQt());
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
@@ -1149,8 +1168,12 @@ public class SPDetailBackingBean extends
 			//Bug #31725 Start 
 			encryptTechFinTemplateSpecDtls(scQtProposalChecklist, proposalResDTO.getProposalChecklist(), isCompleted);
 			//Bug #31725 End 
+			
+			//#21695 - Start - fix completed financial proposal still ticked after technical proposal updated
 			return navigatePrepareFinProposalCheckList(scQtProposalChecklist,
-					proposalResDTO.getProposalChecklist(), isCompleted);
+					proposalResDTO.getProposalChecklist(), isCompleted, ignoreNav);
+			//#21695 - End - fix completed financial proposal still ticked after technical proposal updated
+
 		}
 
 		return null;
@@ -1257,46 +1280,46 @@ public class SPDetailBackingBean extends
 				answers = getManagedBean().getTemplateSpecBean()
 						.getSpecAnswerList();
 			}
-            if(answers == null || answers.size() == 0){
-            	for(TplSpecAnswer answer:answers){
-// #21695 7/10/2021	START	            		
-//farid start #21695 to allow item has 0 qty and 0 price
-            		if(answer.getRatePerUom().equals(0) && answer.getTplSpecZoneQty()!= null || answer.getRatePerUom().equals(0) && answer.getTplSpecZoneQty() == null){
-            			throw new EpException(MessageConst.ERROR_760463);
-            		   }
-//farid end #21695 7/10/2021
-            		  }
-            		} else {
-            		   for(TplSpecAnswer answer:answers){
-            			if (isCompleted) {
+            if(answers == null || answers.size() == 0) {
+            	
+            	//REMOVE NOT USING #21695
+            	//#21695 Farid Start - fix proposal checking 18/2/2022
+    		   for(TplSpecAnswer answer:answers){
+    			   if (isCompleted) {
 // #21695 7/10/2021	START
 //farid start #21695 to allow item has 0 qty and 0 price
             		// bug #31733 add condition 5/11/2021
-            			if (answer.getRatePerUom() == null && answer.getTplSpecZoneQty()!= null && answer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0
+            			if (answer.getRatePerUom() == null && answer.getTplSpecZoneQty() != null 
+            					&& answer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0
             					|| answer.getRatePerUom() == null && answer.getTplSpecZoneQty() == null) {
             				throw new EpException(MessageConst.ERROR_760464);
             			}
             		// bug #31733 add condition 5/11/2021
 //farid end #21695 7/10/2021
             		}
-            		//added because of Bug #17772, please do not remove or change the order of if statements
+            		// added because of Bug #17772, please do not remove or 
+    			    // change the order of if statements
             		if(answer.getAnswerNumeric() == null || answer.getAnswerNumeric().equals(0)){
             			boolean isItemTypeService = false; 
-            			if(getManagedBean().getTemplateSpecBean().getSpecMaster().getItemTypeCode().getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE)){
+            			if (getManagedBean().getTemplateSpecBean().getSpecMaster().getItemTypeCode().getParameterCode()
+            					.equals(ParameterConst.ITEM_TYPE_SERVICE)) {
             				isItemTypeService = true;
             			}
             			this.getManagedBean().getTemplateSpecBackingBean()
             			  .calcTotalAmount(getManagedBean().getTemplateSpecBean(),answer,isItemTypeService);
             		}
             		//20210419@asyrafhaziq - Bug #30061 - start
-            		if ((answer.getRatePerUom() != null  && !answer.getRatePerUom().equals(0))&& 
-            			(answer.getAnswerNumeric() != null && !answer.getAnswerNumeric().equals(0))) { // update for Bug #Bug #31134 
+            		if ((answer.getRatePerUom() != null && !answer.getRatePerUom().equals(0))
+            				&& (answer.getAnswerNumeric() != null && !answer.getAnswerNumeric().equals(0))) { // update for Bug #Bug #31134 
         				boolean isItemTypeService = false; 
-            			if(getManagedBean().getTemplateSpecBean().getSpecMaster().getItemTypeCode().getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE)){
+            			if (getManagedBean().getTemplateSpecBean().getSpecMaster().getItemTypeCode().getParameterCode()
+            					.equals(ParameterConst.ITEM_TYPE_SERVICE)) {
             				isItemTypeService = true;
             			}	
-        			   this.getManagedBean().getTemplateSpecBackingBean()
-        			  .CheckAndUpdateCalcTotalAmount(getManagedBean().getTemplateSpecBean(),answer,isItemTypeService);
+            			this.getManagedBean()
+            					.getTemplateSpecBackingBean()
+            					.CheckAndUpdateCalcTotalAmount(getManagedBean().getTemplateSpecBean(), answer,
+            							isItemTypeService);
 				     }
             		//20210419@asyrafhaziq - Bug #30061 - End
             		super.setUserDetails(answer);
@@ -1652,7 +1675,8 @@ public class SPDetailBackingBean extends
 						}
 						// #28398 BUG - 26339 CR - End
 						// #26339 - End
-						ProposalResDTO resDto = proposalSO.saveProposalDetails(reqDTO);
+						ProposalResDTO resDto = proposalSO
+								.saveProposalDetails(reqDTO);
 						
 						// #26339 - Start
 						/*getManagedBean().getFinanceCheckDetailsList().set(index,
@@ -2164,7 +2188,7 @@ public class SPDetailBackingBean extends
 							assetProposalChecklist.setSubmitted(false);
 							assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
 						}
-					}
+					}//end Bug #28887
 				}
 			}      	// #26339 Venkat End
 			// #26339 - End
@@ -2178,7 +2202,8 @@ public class SPDetailBackingBean extends
 			currentAsset.setColumnName(EncryptColumnName.CURRENT_ASSETS
 					.toString());
 			if (null != scQtPRPAssetLiability.getCurrentAssets()) {
-				currentAsset.setValue(scQtPRPAssetLiability.getCurrentAssets().toString());
+				currentAsset.setValue(scQtPRPAssetLiability.getCurrentAssets()
+						.toString());
 			} else {
 				currentAsset.setValue(null);
 			}
@@ -2248,7 +2273,8 @@ public class SPDetailBackingBean extends
 						}
 						// #28398 BUG - 26339 CR - End
 						// #26339 - End
-						ProposalResDTO resDto = proposalSO.saveProposalDetails(reqDTO);
+						ProposalResDTO resDto = proposalSO
+								.saveProposalDetails(reqDTO);
 						// #26339 - Start
 						/*getManagedBean().getFinanceCheckDetailsList().set(index,
 								resDto.getProposalChecklist());*/
@@ -2788,7 +2814,9 @@ public class SPDetailBackingBean extends
 		List<TplSpecZoneDtl> zones = resDTO.getZones();
 		if (CollectionUtils.isNotEmpty(zones)) {
 			this.getManagedBean().setZones(zones);
-			
+			//#21695 Farid Start - fix proposal checking 18/2/2022
+			disableDefaultSelected();
+			//#21695 Farid End - fix proposal checking 18/2/2022
 			}
 		}
 //#21695 Farid end 2/4/2021
@@ -4769,9 +4797,17 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 	 *            the is completed
 	 * @return the string
 	 */
+	//#21695 - Start - fix completed financial proposal still ticked after technical proposal updated
 	private String navigatePrepareFinProposalCheckList(
 			ScQtProposalChecklist currProposalChecklist,
 			ScQtProposalChecklist newProposalChecklist, boolean isCompleted) {
+		return navigatePrepareFinProposalCheckList(currProposalChecklist, newProposalChecklist, isCompleted, false);
+	}
+	
+	private String navigatePrepareFinProposalCheckList( 
+			ScQtProposalChecklist currProposalChecklist, 
+			ScQtProposalChecklist newProposalChecklist, boolean isCompleted, boolean ignoreNav) {
+	//#21695 - End - fix completed financial proposal still ticked after technical proposal updated
 		
 		updateQtFinNdTechProposalCheckList(
 				currProposalChecklist,
@@ -4782,7 +4818,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 
 		if (isCompleted) {
 			return NAV_TO_PROPOSAL_MAIN_PAGE + "?faces-redirect=true";
-		} else {
+		} else if(!ignoreNav){	//#21695 - fix completed financial proposal still ticked after financial proposal updated
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
@@ -4792,6 +4828,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 
 			return null;
 		}
+		return null; 	//#21695 - fix completed financial proposal still ticked after financial proposal updated
 	}
 
 	/**
@@ -6160,8 +6197,8 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 //#21695 Farid start 2/4/2021	
 	public boolean evaluateZonelistSupp(TplSpecZoneQty specQties) {
 		if(specQties!=null){
-			log.info("--->specQties " + specQties.getTplSpecZoneOffer().getSpecZoneOfferId());
-
+			//remove log
+			//#21695 Farid Start - fix proposal checking 18/2/2022
 			if (CollectionUtils.isNotEmpty(this.getManagedBean().getZones())) {
 				for (TplSpecZoneDtl specZones : this.getManagedBean().getZones()) {
 					if (specQties.getTplSpecZoneDtl() != null) {
@@ -6182,4 +6219,25 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 		return false;
 	}
 //#21695 Farid end 2/4/2021	
+	
+	//#21695 Farid Start - fix proposal checking 18/2/2022
+	public void disableDefaultSelected() {
+		for(TplSpecAnswer retrieveAns : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
+			if(retrieveAns != null){
+				for(TplSpecZoneDtl specZonedtl : this.getManagedBean().getZones()){
+					if(specZonedtl != null){
+						for(TplSpecZoneQty specZoneQty : retrieveAns.getTplSpecQuestion().getTplSpecZoneQties()){
+							if(specZoneQty!= null && specZoneQty.getTplSpecQuestion().getSpecQuestionId().equals(retrieveAns.getTplSpecQuestion().getSpecQuestionId())
+									&& specZoneQty.getQty().equals(new BigDecimal(0)) 
+									&& specZonedtl.getSpecZoneId().equals(specZoneQty.getTplSpecZoneDtl().getSpecZoneId())){
+								retrieveAns.setOffer(false);
+								retrieveAns.setDisableRow(true);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	//#21695 Farid End - fix proposal checking 18/2/2022
 }
