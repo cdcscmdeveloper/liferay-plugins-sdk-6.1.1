@@ -128,9 +128,12 @@
 							<tr>
 								<c:if test="#{backingBean.managedBean.validEquityLimit or backingBean.managedBean.smSupplier.businessType eq 'R'}"> <!--  change by fahmi, log : 23858 13/03/2019 -->
 									<td style="width: 20px">
-										<p:selectBooleanCheckbox disabled="#{backingBean.managedBean.currentPageType eq SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY
-										|| backingBean.managedBean.selectedShareHolder.disableEquityOwner}"
-											value="#{backingBean.managedBean.selectedShareHolder.equityOwner}"><!--#30444 -07052021 add disabled-->
+										<p:selectBooleanCheckbox value="#{backingBean.managedBean.selectedShareHolder.equityOwner}"
+										disabled="#{(backingBean.managedBean.currentPageType eq SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY) 
+									        or (backingBean.managedBean.selectedShareHolder.ssmData and backingBean.managedBean.selectedShareHolder.equityOwnerSsm) 
+									        or (backingBean.managedBean.smAppl.applValidWithSsm 
+									        	and (backingBean.managedBean.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG or backingBean.managedBean.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG))
+									        	or (backingBean.managedBean.selectedShareHolder.disableEquityOwner)}"><!--#30444 -17022022 add condition in disabled-->
 											<p:ajax event="change" update=":#{p:component('shrRolesPanel')}, @([id$=shareHolderAddrDialog]),:#{p:component('equiShrHldrJbFnc')}"
 												process=":#{p:component('shrRolesPanel')}" partialSubmit="true"
 												listener="#{backingBean.managePersonnelRoles('Y')}" />
@@ -154,7 +157,7 @@
 											<td style="width: 20px">
 												<p:selectBooleanCheckbox
 													value="#{backingBean.managedBean.selectedShareHolder.director}" 
-													disabled="#{backingBean.managedBean.selectedShareHolder.disableEquityOwner}" ><!--#30444 -25082021 add disabled-->
+													disabled="#{backingBean.managedBean.selectedShareHolder.directorSsm || backingBean.managedBean.selectedShareHolder.disableEquityOwner}" > <!--#30444 -17022022 add condition in disabled-->
 													<p:ajax event="change" update=":#{p:component('shrRolesPanel')}, @([id$=shareHolderAddrDialog])"
 														process=":#{p:component('shrRolesPanel')}" partialSubmit="true"
 														listener="#{backingBean.managePersonnelRoles('Y')}" />
