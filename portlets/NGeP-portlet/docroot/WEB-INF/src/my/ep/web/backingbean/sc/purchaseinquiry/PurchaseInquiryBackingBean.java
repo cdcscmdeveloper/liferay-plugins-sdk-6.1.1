@@ -2538,7 +2538,7 @@ public class PurchaseInquiryBackingBean extends
 							"lbl.sc.price.inquiry.to.qty", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()) });
 				}
 			}
-			if (addedScSupplierItemPrice.getItemPrice() == null){throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils.getMessage("lbl.ss.item.detail.price.offered",
+			if (addedScSupplierItemPrice.getItemPrice() == null){throw new EpException(MessageConst.ERROR_760540, new String[] {ResourceBundleUtils.getMessage("lbl.sc.price.inquiry.price.offered.per.unit",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});}
 		}			
 		else if (i == 2 || i == 3){
@@ -2546,7 +2546,7 @@ public class PurchaseInquiryBackingBean extends
 				addedScSupplierItemPrice.setTplSpecZone(new TplSpecZoneDtl());
 				throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils.getMessage("lbl.pm.zone.name",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});}
-			if (addedScSupplierItemPrice.getItemPrice() == null){throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils.getMessage("lbl.ss.item.detail.price.offered",
+			if (addedScSupplierItemPrice.getItemPrice() == null){throw new EpException(MessageConst.ERROR_760540, new String[] {ResourceBundleUtils.getMessage("lbl.sc.price.inquiry.price.offered.per.unit",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});}
 		}
 
@@ -2563,7 +2563,7 @@ public class PurchaseInquiryBackingBean extends
 							"lbl.sc.price.inquiry.to.qty", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()) });
 				}
 			}
-			if (addedScSupplierItemPrice.getItemPrice() == null){throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils.getMessage("lbl.ss.item.detail.price.offered",
+			if (addedScSupplierItemPrice.getItemPrice() == null){throw new EpException(MessageConst.ERROR_760540, new String[] {ResourceBundleUtils.getMessage("lbl.sc.price.inquiry.price.offered.per.unit",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});}
 		}
 			
