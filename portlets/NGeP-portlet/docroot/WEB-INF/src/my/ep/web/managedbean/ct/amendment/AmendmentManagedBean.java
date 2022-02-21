@@ -188,6 +188,23 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private boolean trackingDairyView;
 	
 	private Map<String, Integer> indexing;
+	
+	private boolean viewSCL = false;
+	
+	private boolean hasTaskIdFromAgreement = false;
+	
+	private String taskIdFromAgreement;
+	
+	private boolean viewSclFromAgreement;
+	
+	private boolean backFromSCL = false;
+	
+	private String taskIdFromTaskList = null;
+	private Long contractIdFromTaskList = null;
+	private Long contractVerIdFromTaskList = null;
+	private Long contractIdFromAgreement = null;
+	private Long docIdFromAgreement = null;
+	private Long agreementIdFromAgreement = null;
 	//Enhancement 15851 - shaqimi end
 	
 	public void reassignValue(boolean value) 
@@ -1611,6 +1628,80 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	}
 	public void setIndexing(Map<String, Integer> indexing) {
 		this.indexing = indexing;
+	}
+	public boolean isViewSCL() {
+		return viewSCL;
+	}
+	public void setViewSCL(boolean viewSCL) {
+		this.viewSCL = viewSCL;
+	}
+
+	public boolean isViewSclFromAgreement() {
+		return viewSclFromAgreement;
+	}
+	public void setViewSclFromAgreement(boolean viewSclFromAgreement) {
+		this.viewSclFromAgreement = viewSclFromAgreement;
+	}
+
+	public boolean isBackFromSCL() {
+		return backFromSCL;
+	}
+	public void setBackFromSCL(boolean backFromSCL) {
+		this.backFromSCL = backFromSCL;
+	}
+
+	public String getTaskIdFromTaskList() {
+		return taskIdFromTaskList;
+	}
+
+	public void setTaskIdFromTaskList(String taskIdFromTaskList) {
+		this.taskIdFromTaskList = taskIdFromTaskList;
+	}
+
+	public Long getContractIdFromTaskList() {
+		return contractIdFromTaskList;
+	}
+
+	public void setContractIdFromTaskList(Long contractIdFromTaskList) {
+		this.contractIdFromTaskList = contractIdFromTaskList;
+	}
+
+	public Long getContractVerIdFromTaskList() {
+		return contractVerIdFromTaskList;
+	}
+
+	public void setContractVerIdFromTaskList(Long contractVerIdFromTaskList) {
+		this.contractVerIdFromTaskList = contractVerIdFromTaskList;
+	}	
+	public boolean isHasTaskIdFromAgreement() {
+		return hasTaskIdFromAgreement;
+	}
+	public void setHasTaskIdFromAgreement(boolean hasTaskIdFromAgreement) {
+		this.hasTaskIdFromAgreement = hasTaskIdFromAgreement;
+	}
+	public String getTaskIdFromAgreement() {
+		return taskIdFromAgreement;
+	}
+	public void setTaskIdFromAgreement(String taskIdFromAgreement) {
+		this.taskIdFromAgreement = taskIdFromAgreement;
+	}
+	public Long getContractIdFromAgreement() {
+		return contractIdFromAgreement;
+	}
+	public void setContractIdFromAgreement(Long contractIdFromAgreement) {
+		this.contractIdFromAgreement = contractIdFromAgreement;
+	}
+	public Long getDocIdFromAgreement() {
+		return docIdFromAgreement;
+	}
+	public void setDocIdFromAgreement(Long docIdFromAgreement) {
+		this.docIdFromAgreement = docIdFromAgreement;
+	}
+	public Long getAgreementIdFromAgreement() {
+		return agreementIdFromAgreement;
+	}
+	public void setAgreementIdFromAgreement(Long agreementIdFromAgreement) {
+		this.agreementIdFromAgreement = agreementIdFromAgreement;
 	}
 	//15851 - shaqimi end
 }

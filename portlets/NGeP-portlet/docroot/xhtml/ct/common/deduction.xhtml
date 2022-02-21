@@ -28,8 +28,9 @@
 							</p:selectBooleanCheckbox>
 						</f:facet>
 		           
-		                   <p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.disableAmendDetails or datas.fromDpQt}"
-		                          value="#{datas.selectedCheckBox}" styleClass="myCustomChekBox">
+		                   <p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.disableAmendDetails or datas.fromDpQt
+		                   		  or amendmentBackingBean.managedBean.viewSCL}"
+		                          value="#{datas.selectedCheckBox}" styleClass="myCustomChekBox"><!-- Enhancement 15851 - shaqimi -->
 		           		          <p:ajax event="change" update=":form:tableDeduction,:form:delDeductionBtn" listener="#{ctBackingBean.selectOneDeductCheckboxSelect}"></p:ajax>
 			               </p:selectBooleanCheckbox>
 		            </p:column>
@@ -41,9 +42,9 @@
 	           		     </f:facet>
 	           		   
 	           		     <p:selectOneMenu value="#{datas.deductionType.parameterId}" style="width:170px;float:left;text-align:left;"
-			      		     disabled="#{ctBackingBean.managedBean.disableAmendDetails}"  
+			      		     disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}"  
 			      		     rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting and
-			      		          datas.deductionType.parameterCode != ParameterConst.deductionTypeAdvancePayment}">
+			      		          datas.deductionType.parameterCode != ParameterConst.deductionTypeAdvancePayment}"><!-- Enhancement 15851 - shaqimi -->
 			                    <f:selectItems value="#{ctBackingBean.retrieveParameterDescListByType()}" />
 			                    <p:ajax event="change" update=":form:tableDeduction, :form:clauseDescp,:form:messages" 
 			                         process="@this"  partialSubmit="true"
@@ -64,11 +65,12 @@
 						<p:spacer width="15"/>
 						<!--Start Fix #32123 -->
 						<p:inputText  value="#{datas.deductionDesc}"  style="width:400px;float:left;" maxlength="255"
-							disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.notificationSetting}"  
+							disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.notificationSetting
+								or amendmentBackingBean.managedBean.viewSCL}"  
 							rendered="#{!ctBackingBean.managedBean.viewContract and  !ctBackingBean.managedBean.notificationSetting and 
 								(ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeOthers
 								or ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeFixed
-								or ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeNonFixed)}" required="true" label="#{lbl['lbl.ct.deduction.description']}">
+								or ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeNonFixed)}" required="true" label="#{lbl['lbl.ct.deduction.description']}"><!-- Enhancement 15851 - shaqimi -->
 							</p:inputText>
 							<h:outputText rendered="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting}"
 								value="#{datas.deductionDesc}" style="float:left;" />
@@ -84,9 +86,9 @@
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 						<p:inputText  value="#{datas.amount}" styleClass="ppRightBtn" style="width:100px;" 
-							disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
+							disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}"
 							rendered="#{!ctBackingBean.managedBean.viewContract and  !ctBackingBean.managedBean.notificationSetting and
-							ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeFixed}" required="true" label="#{lbl['lbl.ct.amount']}">
+							ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeFixed}" required="true" label="#{lbl['lbl.ct.amount']}"><!-- Enhancement 15851 - shaqimi -->
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							<p:ajax process="@this"></p:ajax>
 						</p:inputText>  
@@ -100,11 +102,11 @@
 		   <c:if test="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}">
 		   <div class="ppRightBtn">
                     <p:commandButton id="addDeductionBtn" value="#{lbl['lbl.btn.add']}" 
-                       disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
+                       disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}"
                        process="@form"  partialSubmit="true" action="#{ctBackingBean.addDeduction()}" update="tableDeduction"
-                       oncomplete="tableDeductionObj.paginator.endLink.click();"/>
+                       oncomplete="tableDeductionObj.paginator.endLink.click();"/><!-- Enhancement 15851 - shaqimi -->
 		  	        <p:commandButton id="delDeductionBtn" value="#{lbl['lbl.ct.delete']}" process="@this" partialSubmit="true"
-		  	            disabled="#{ctBackingBean.managedBean.buttonHideDedActive or ctBackingBean.managedBean.disableAmendDetails}"  onsuccess="dlgDeduction.show()"/>
+		  	            disabled="#{ctBackingBean.managedBean.buttonHideDedActive or ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}"  onsuccess="dlgDeduction.show()"/><!-- Enhancement 15851 - shaqimi -->
 		  	</div>
 		  	<p:confirmDialog id="dlgDeduction" widgetVar="dlgDeduction" message="#{lbl['lbl.msg.confirm.delete']}" 	
                            severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}"> 
@@ -130,10 +132,10 @@
 							                 </p:selectBooleanCheckbox>
 						                 </f:facet>
 		           
-		                                <p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
+		                                <p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}"
 		                                       value="#{data.selectedCheckBox}" styleClass="myCustomChekBox"
 		                                          rendered="#{(!ctBackingBean.managedBean.viewContract  and !ctBackingBean.managedBean.notificationSetting) and 
-                                                     ctBackingBean.managedBean.selectedDeduction.deductionType.parameterCode != ParameterConst.deductionTypeAdvancePayment }">
+                                                     ctBackingBean.managedBean.selectedDeduction.deductionType.parameterCode != ParameterConst.deductionTypeAdvancePayment }"><!-- Enhancement 15851 - shaqimi -->
 		           		                            <p:ajax event="change" 
 		           		                                update=":form:tableClause,:form:delDeductionClauseBtn" listener="#{ctBackingBean.selectOneClauseCheckboxSelect}"></p:ajax>
 			                           </p:selectBooleanCheckbox>
@@ -146,7 +148,7 @@
 				               	          </f:facet>
                                           <p:inputTextarea value="#{data.clauseDescription}" maxlength="500" rows="4" style="width:97%;" autoResize="false"
                                                rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}"
-                                               disabled="#{ctBackingBean.managedBean.disableAmendDetails}" styleClass="ui-inputtextarea">
+                                               disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}" styleClass="ui-inputtextarea"><!-- Enhancement 15851 - shaqimi -->
         	                                  <p:ajax process="@this"/>
         	                              </p:inputTextarea>
         	                              
@@ -159,17 +161,18 @@
 	                          <h:panelGroup  rendered="#{ctBackingBean.managedBean.selectedDeduction != null and  (!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting)}">
 	        	                
 	        	                <p:commandButton id="addDeductionClauseBtn" value="#{lbl['lbl.btn.add']}" process="@form" 
-	        	                    disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
+	        	                    disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}"
 	        	                    action="#{ctBackingBean.addDeductionClause()}" update=":form:tableClause"
-	        	                    oncomplete="tableClauseWidget.paginator.endLink.click();">
+	        	                    oncomplete="tableClauseWidget.paginator.endLink.click();"><!-- Enhancement 15851 - shaqimi -->
 	        	                  	<p:tooltip for="addDeductionClauseBtn">
 								    	<h:outputText value="#{lbl['lbl.ct.tooltip.add.clause']}" escape="false" />
 									</p:tooltip>
 								</p:commandButton>
 			  	                
 			  	                <p:commandButton id="delDeductionClauseBtn"  
-			  	                       disabled="#{ctBackingBean.managedBean.buttonHideDedActive or ctBackingBean.managedBean.disableAmendDetails}"
-			  	                      value="#{lbl['lbl.ct.delete']}" process="@this" partialSubmit="true" onsuccess="dlgDeductionClause.show()">
+			  	                       disabled="#{ctBackingBean.managedBean.buttonHideDedActive or ctBackingBean.managedBean.disableAmendDetails
+			  	                       or amendmentBackingBean.managedBean.viewSCL}"
+			  	                      value="#{lbl['lbl.ct.delete']}" process="@this" partialSubmit="true" onsuccess="dlgDeductionClause.show()"><!-- Enhancement 15851 -->
 								</p:commandButton>
 								
 								<p:confirmDialog id="dlgDeductionClause" widgetVar="dlgDeductionClause" message="#{lbl['lbl.msg.confirm.delete']}" 	
@@ -186,7 +189,7 @@
                 </h:panelGroup>
              </p:outputPanel>
          </p:panel>      
-	    <p:panel header="#{lbl['lbl.ct.panel.remarks.attachment']}" toggleable="true" rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}">
+	    <p:panel header="#{lbl['lbl.ct.panel.remarks.attachment']}" toggleable="true" rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting and !amendmentBackingBean.managedBean.viewSCL}">
 		  <table style="width: 100%">
 			<tr>
 				<td width="50%" valign="top">

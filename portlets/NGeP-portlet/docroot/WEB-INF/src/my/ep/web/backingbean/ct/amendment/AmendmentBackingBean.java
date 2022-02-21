@@ -192,7 +192,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	private static final String CONTRACT_COMMON_PAGE = "/xhtml/ct/viewcontract/fulfilmentTab.xhtml?faces-redirect=true";
 	private static final String UPDATE_COMMITTEE_PAGE = "/xhtml/ct/fulfilmentdetails/amendment/pbqcc/committeeList.xhtml"; //#29403
 	private static final String PROCESS_AMEND_PAGE = "/xhtml/ct/fulfilmentdetails/amendment/amendmentTab.xhtml?faces-redirect=true"; //#29403
-	private static final String PROCESS_AMEND_VIEW_PAGE = "/xhtml/ct/fulfilmentdetails/amendment/viewscl/amendmentTab.xhtml?faces-redirect=true"; //#15851
+	private static final String PROCESS_AMEND_AGREEMENT_PAGE = "/xhtml/ct/agreement/shared/sidemenu/agreementTab.xhtml?faces-redirect=true"; //#15851
 	private ContractBackingBean ctBackingBean = null;
 	private CtMeeting[] selectedMeetingUser;
 	private CtPerformanceBond[] selectedBondList;
@@ -568,8 +568,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	//#15851 - shaqimi,putra start
 	public void preRenderAmendView() throws UnsupportedEncodingException {
 
-			ConstructAmendmentViewTabSideMenu();
-			getManagedBean().setViewOnly(true);
+			ConstructTabSideMenu();
+			
+//			ctBackingBean.getManagedBean().setDisableAmendDetails(true);
+			ctBackingBean.getManagedBean().setViewContract(true);
+//			getManagedBean().setDisableFinalAmendDetails(true);
+//			getManagedBean().setViewOnly(true);
+//			getManagedBean().setDisableFields(true);
 			
 			return;
 	}
@@ -588,6 +593,19 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			String contractVerId = originalServletRequest.getParameter(ContractConst.PARAMETER_ID);
 			log.info("Check Putra Amendment preRenderView taskId*******"+taskId);
 			log.info("Check Putra Amendment preRenderView contractVerId*******"+contractVerId);
+			
+			//Enhancement 15851 - shaqimi start
+			ctReqDTO = new ContractReqDTO();
+			if(getManagedBean().isBackFromSCL()){
+				taskId = getManagedBean().getTaskIdFromTaskList();
+				ctReqDTO.setContractId(getManagedBean().getContractIdFromTaskList());
+				ctReqDTO.setContractVerId(getManagedBean().getContractVerIdFromTaskList());
+				
+				getManagedBean().setTaskIdFromTaskList(null);
+				getManagedBean().setContractIdFromTaskList(null);
+				getManagedBean().setContractVerIdFromTaskList(null);
+			}
+			//Enhancement 15851 - shaqimi end
 			
 			if(contractVerId!=null) {
 				ctReqDTO = new ContractReqDTO();
@@ -639,7 +657,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			
 			/*Retrieve bpm details*/
-			getManagedBean().setSelectedTabIndex(0);
+			getManagedBean().setSelectedTabIndex(0);			
+			if(!getManagedBean().isBackFromSCL()){	//Enhancement 15851			
 			CTContractAmendmentDataType dataType =  super.getBpmTaskDetails(CTContractAmendmentDataType.class, null);
 			
 			//#25956 - Start
@@ -678,12 +697,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				outcome[i++] = action;
 			}
 			getManagedBean().setOutComes(outcome);
-
-			/*Retrieve contract amendment details*/
-			ctReqDTO = new ContractReqDTO();
-			ctReqDTO.setUpdateAction(false);
+			
 			ctReqDTO.setContractId(new Long(dataType.getContractId()));
 			ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
+			}
+			
+			/*Retrieve contract amendment details*/
+			
+			ctReqDTO.setUpdateAction(false);
 			ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
 			ctReqDTO.setTaskName(getManagedBean().getTaskName());
 			setAmendmentContractVer(ctReqDTO);
@@ -699,6 +720,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setDecisionPbQcLOA(false);
 			getManagedBean().setSignOffDecision(false);
 			ctBackingBean.getManagedBean().setAmendFromViewPage(false); // #15851
+			getManagedBean().setBackFromSCL(false); // #15851
 			
 //			getManagedBean().setViewOnly(false); /*#25956 notification setting*/
 
@@ -789,7 +811,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			//Enhancement #26186/#29793 end - retrieve disciplinary info
 			
 			ConstructTabSideMenu();
-			
 		}catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -805,9 +826,54 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @return the navigate URL 
 	 */
 	public String backAction() {
-		this.getManagedBean().setSecretaryList(null);
-		ctBackingBean.getManagedBean().setAmendFromViewPage(false); // #15851
+		//Enhancement 15851 - shaqimi start
+		ContractDetailsBackingBean ctDT =  new ContractDetailsBackingBean();
+		Long contractId = ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractId();
+		Long contractVerId = ctBackingBean.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();
+		
+		if(ctBackingBean.getManagedBean().isFromViewPage() && getManagedBean().isViewSCL()){//contmaintenance > view
+			ctBackingBean.getManagedBean().setViewContract(false);
+			getManagedBean().setViewSCL(false);
+			getManagedBean().setDisableFinalAmendDetails(false);
+			getManagedBean().setDisableFields(false);
+			
+			return ctDT.gotoViewPage(contractId, contractVerId);
+		} else if(ctBackingBean.getManagedBean().isAmendFromViewPage() && getManagedBean().isViewSCL()){ //contractmaintenance > amendment
+			ctBackingBean.getManagedBean().setViewContract(false);
+			getManagedBean().setViewSCL(false);
+			getManagedBean().setDisableFinalAmendDetails(false);
+			getManagedBean().setDisableFields(false);
+			
+			return ctDT.gotoAmendPage(contractId);
+		} else if(ctBackingBean.getManagedBean().isAmendFromTaskList() && getManagedBean().isViewSCL()){//tasklist
+			
+			if(!getManagedBean().isViewSclFromAgreement()){
+				ctBackingBean.getManagedBean().setViewContract(false);
+				this.getManagedBean().setViewOnly(false);
+				ctBackingBean.getManagedBean().setHasAmendmentLoaNo(false);
+				getManagedBean().setBackFromSCL(true);
+				
+				if(getManagedBean().getCtLetterOfAcceptance() != null){
+					getManagedBean().getCtLetterOfAcceptance().clear();
+				}
+			} else {
+				HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+				HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+				originalServletRequest.setAttribute("contractIdFromAgreement", getManagedBean().getContractIdFromAgreement());
+				originalServletRequest.setAttribute("docIdFromAgreement", getManagedBean().getDocIdFromAgreement());
+				originalServletRequest.setAttribute("agreementIdFromAgreement", getManagedBean().getAgreementIdFromAgreement());
+				
+				getManagedBean().setContractIdFromAgreement(null);
+				getManagedBean().setDocIdFromAgreement(null);
+				getManagedBean().setAgreementIdFromAgreement(null);
+			}
+
+			getManagedBean().setViewSCL(false);		
+			getManagedBean().setViewSclFromAgreement(false);
+			return this.getManagedBean().getBackToPreviousPage();					
+		} 
 		return CONTRACT_MAINT_PAGE;
+		//Enhancement 15851 - shaqimi end
 	}
 
 	//#15851 - shaqimi,putra start
@@ -959,7 +1025,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa() != null){
 				String slLoaNo = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getLoaNo();
 				if(StringUtils.isNotBlank(slLoaNo)
-						&& slLoaNo.substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)){
+						&& slLoaNo.substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)
+						&& !getManagedBean().isViewSCL()){
 					ctBackingBean.getManagedBean().setHasAmendmentLoaNo(true);
 				}
 			}
@@ -1110,14 +1177,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					getManagedBean().getApproverModel().setTarget(new ArrayList<PmUser>());
 				} 
 			}
-
-			if ((getManagedBean().getTaskName() != null && (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) 
+			// Enhancement 15851 - shaqimi start
+			if (((getManagedBean().getTaskName() != null && (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) 
 					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)
 					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)
 					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME)))
-					&& (getManagedBean().getCtLetterOfAcceptance() == null || getManagedBean().getCtLetterOfAcceptance().isEmpty())
-					|| ctBackingBean.getManagedBean().isHasAmendmentLoaNo()) {
-				// #15851
+					&& (getManagedBean().getCtLetterOfAcceptance() == null || getManagedBean().getCtLetterOfAcceptance().isEmpty()))
+					|| getManagedBean().isViewSCL()) {
+				// Enhancement 15851 - shaqimi end
 				for (int j =0; j < 2; j++) {
 					CtLetterOfAcceptance ctloa = new CtLetterOfAcceptance();
 					if (j == 0) {
@@ -1152,7 +1219,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				ctBackingBean.getManagedBean().getContractVer().getLoaFileAttachments().clear();
 			}
 
-			initializeRemarks();
+ 			initializeRemarks();
 			getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(
 					ModuleCodeConst.CONTRACT_MANAGEMENT, ctBackingBean.getManagedBean().getContractVer().getDocType(), ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo()));
 
@@ -2752,7 +2819,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)){
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuSchedule);
 			}
-			if (getManagedBean().isPrepareLOA()) {
+			//Enhancement 15851 - shaqimi start
+			if (getManagedBean().isPrepareLOA() || getManagedBean().isViewSCL()) {
+			//Enhancement 15851 - shaqimi end
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareLoa);					 
 				if (((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isBondReq()
 						|| ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()) //24333
@@ -2769,7 +2838,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithMeetings);
 			}			
 			//24333 - Start
-			if (!getManagedBean().isPrepareLOA() && (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
+			if ((ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
 					|| ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq())
 					&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
 					&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
@@ -3006,7 +3075,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						
 					}		
 			}
-				if (getManagedBean().isPrepareLOA()) {
+				if (getManagedBean().isPrepareLOA() || getManagedBean().isViewSCL()) { // Enhancement 15851 - shaqimi
 					if (outputValue.equalsIgnoreCase("LOD")) {
 						if(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL) && ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange())
 							getManagedBean().setSelectedTabIndex(index + 2);
@@ -3202,7 +3271,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				} else {
 					index = 4;
 				}
-				if (getManagedBean().isPrepareLOA()) {
+				if (getManagedBean().isPrepareLOA() || getManagedBean().isViewSCL()) { //Enhancement 15851 - shaqimi
 					if (outputValue.equalsIgnoreCase("LOD")) {
 						getManagedBean().setSelectedTabIndex(index + 1);
 					}
@@ -7717,7 +7786,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 										
 					FacesContext fc = FacesContext.getCurrentInstance();
 					fc.getApplication().getNavigationHandler()
-					.handleNavigation(fc, null, PROCESS_AMEND_VIEW_PAGE);
+					.handleNavigation(fc, null, PROCESS_AMEND_PAGE);
 				}
 				//Enhancement 15851 - shaqimi,putra end
 	}
