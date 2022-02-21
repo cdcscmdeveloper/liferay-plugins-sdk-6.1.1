@@ -211,12 +211,12 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 			//#25142 - end
 				//#26130 - start
 				String fontPath ="";
-				/*if(getServerUrl().contains("http://192.168.62.110:8621")){
-					
+				if(getServerUrl().contains("http://192.168.62.110:8621")){
+					fontPath = "http://192.168.62.110:8621/NGeP-portlet/resources/fonts/Arial.ttf";
 				}
 				else {
 					fontPath = getServerUrl()+"NGeP-portlet/resources/fonts/Arial.ttf";
-				}*/
+				}
 				
 				/*EpPropertiesUtils propertiesUtils = EpPropertiesUtils.getInstance();
 				String getPortalBaseURL = propertiesUtils.getProperty(EpPropertiesConst.PORTAL_BASE_URL);
@@ -234,7 +234,6 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 					}
 				
 				*/
-				fontPath = "http://192.168.62.110:8621/NGeP-portlet/resources/fonts/Arial.ttf";
 				log.info("font path: "+fontPath);
 				render.getFontResolver().addFont(fontPath, true);
 		        //#26130 - end
