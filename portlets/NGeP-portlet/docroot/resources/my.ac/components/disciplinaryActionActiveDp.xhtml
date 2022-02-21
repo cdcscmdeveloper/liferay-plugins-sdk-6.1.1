@@ -72,7 +72,8 @@
 						<p:column headerText="#{lbl['lbl.sm.disciplinary.jktt.remarks']}" style="width : 25% !important; vertical-align:top;word-break: break-all;">
 							<h:outputText value="#{disciplinaryAction.remarks}"/>
 						</p:column>
-						<p:column headerText="#{lbl['lbl.sm.disciplinary.list.cancel.category.code']}" 
+						<!-- #32643 -->
+						<p:column headerText="#{lbl['lbl.sc.disciplinary.list.cancel.category.code']}" 
 							rendered="#{cc.attrs.mofView}"
 							style="width : 15% !important; vertical-align:top;">
 							<h:dataTable value="#{disciplinaryAction.categoryCodeList}" var="suppCat" rendered="#{not empty disciplinaryAction.categoryCodeList}"
@@ -83,7 +84,8 @@
 							</h:dataTable>
 							<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty disciplinaryAction.categoryCodeList}"/>
 						</p:column>
-						<p:column headerText="#{lbl['lbl.sm.disciplinary.list.of.ic.no.blacklist']}" style="width : 15% !important; vertical-align:top;">
+						<!-- #32643 -->
+						<p:column headerText="#{lbl['lbl.sc.disciplinary.list.of.ic.no.blacklist']}" style="width : 15% !important; vertical-align:top;">
 							<h:dataTable value="#{disciplinaryAction.blacklistownerDirectorList}" var="personnel" 
 								rowIndexVar="indexPer" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" rendered="#{not empty disciplinaryAction.blacklistownerDirectorList}">
 								<p:column style="border: none !important;">
