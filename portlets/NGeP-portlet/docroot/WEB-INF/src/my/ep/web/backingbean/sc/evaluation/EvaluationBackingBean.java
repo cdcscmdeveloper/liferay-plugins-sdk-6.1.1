@@ -6563,7 +6563,13 @@ public void saveComplianceSample() {
 							.equals(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL)
 							|| this.getManagedBean()
 							.getCurrentStatusId()
-							.equals(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_REVISION))
+							.equals(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_REVISION)
+							|| this.getManagedBean()
+							.getCurrentStatusId()
+							.equals(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_DEMO)
+							|| this.getManagedBean()
+							.getCurrentStatusId()
+							.equals(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_DEMO_REVISION))
 					&& !this.getManagedBean().isReadOnly()) {
 				if (this.getManagedBean().getScQt().isDemoRequired()) {
 					saveMeetingDtls(false);
@@ -6592,7 +6598,13 @@ public void saveComplianceSample() {
 			if ((this.getManagedBean().getCurrentStatusId()
 					.equals(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL)
 					|| this.getManagedBean().getCurrentStatusId()
-					.equals(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_REVISION))
+					.equals(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_REVISION)
+					|| this.getManagedBean()
+					.getCurrentStatusId()
+					.equals(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_DEMO)
+					|| this.getManagedBean()
+					.getCurrentStatusId()
+					.equals(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_DEMO_REVISION))
 					&& !this.getManagedBean().isReadOnly()
 					&& !getManagedBean().isPresentationDemoSummaryGenerated()) {
 				evaluationSo.prepareTechnicalEvaluationSummary(evalReqDTO);
@@ -16134,9 +16146,7 @@ private void retriveCommitteeRemarksList(){
 				if (null == totalScore) {
 					totalScore = BigDecimal.valueOf(0);
 				}
-				divNum = divNum.add(totalScore
-						.multiply(BigDecimal.valueOf(100)).divide(totalNum, 2,
-								BigDecimal.ROUND_HALF_UP));
+				divNum = divNum.add(totalScore);
 			}
 			totalTechScore = String.valueOf(divNum);
 			
@@ -16174,9 +16184,7 @@ private void retriveCommitteeRemarksList(){
 			resDTO = evaluationSO.retrieveSpecScore(reqDTO);
 			//calculate demo total score
 			for(ScQtProposalChecklist specscore : resDTO.getSpecScoreBySupplier()){
-				divNum = specscore.getTotalScore()
-						.multiply(BigDecimal.valueOf(100)).divide(totalNum, 2,
-						BigDecimal.ROUND_HALF_UP);
+				divNum = specscore.getTotalScore();
 				totalDemoScore = String.valueOf(divNum);
 			}
 			
@@ -16199,27 +16207,44 @@ private void retriveCommitteeRemarksList(){
 		try {
 			
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+			EvaluationReqDTO reqDTO1 = new EvaluationReqDTO();
 			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 			
 			
 			//add other technical weightage
-			for(ScQtCheckList specscore : this.getManagedBean().getEvaluationStgTechnicalCheckList()){
-				if (SourcingConstants.DOC_DEF_KEY_TEMPLATE_SPECIFICATION
-						.equalsIgnoreCase(specscore
-								.getDefinationType().getParameterCode())) {
+//			for(ScQtCheckList specscore : this.getManagedBean().getEvaluationStgTechnicalCheckList()){
+//				if (SourcingConstants.DOC_DEF_KEY_TEMPLATE_SPECIFICATION
+//						.equalsIgnoreCase(specscore
+//								.getDefinationType().getParameterCode())) {
 					//skip TS
+//				} else {
+//					totalNum = totalNum.add(specscore.getQtScoreWeightage().getScore());
+//				}
+//			}
+			//add demo weightage
+//			totalNum = totalNum.add(this.getManagedBean().getDemoTotalScore());
+			
+			reqDTO1.setQtproposalId(propId.getQtEvaluationResult().getScQtProposal().getQtProposalId());
+			reqDTO1.setQtId(this.getManagedBean().getScQt().getQtId());
+			reqDTO1.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);			
+			reqDTO1.setDocDefinationKey(null);
+			resDTO = evaluationSO.retrieveSpecScore(reqDTO1);
+			for(ScQtProposalChecklist specscore : resDTO.getSpecScoreBySupplier()){
+				if (specscore.getScQtCheckList().getDefinationType().getParameterCode().equals(SourcingConstants.DOC_DEF_KEY_PRESENTATION_DEMO)
+						|| specscore.getScQtCheckList().getDefinationType().getParameterCode().equals(SourcingConstants.DOC_DEF_KEY_TEMPLATE_SPECIFICATION)) {
+					//skip demo and technical spec
 				} else {
-					totalNum = totalNum.add(specscore.getQtScoreWeightage().getScore());
+					totalNum = totalNum.add(specscore.getTotalScore());
 				}
 			}
-			//add demo weightage
-			totalNum = totalNum.add(this.getManagedBean().getDemoTotalScore());
 			
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			reqDTO.setRequestItemId(this.getManagedBean().getSinglesummaryItemList().getRequestNoteItemId());
+			reqDTO.setQtproposalId(propId.getQtEvaluationResult().getScQtProposal().getQtProposalId());
 			resDTO = evaluationSO.excludePresentationDemo(reqDTO);
-			
+			technicalScore = resDTO.getTechScore().add(totalNum);
+			totalTechScore = String.valueOf(technicalScore);
 			if (resDTO.isGenerateSuppliers()) {
 				
 				reqDTO.setQtproposalId(propId.getQtEvaluationResult().getScQtProposal().getQtProposalId());
@@ -16229,22 +16254,20 @@ private void retriveCommitteeRemarksList(){
 				resDTO = evaluationSO.retrieveSpecScore(reqDTO);
 				//calculate demo total score
 				for(ScQtProposalChecklist specscore : resDTO.getSpecScoreBySupplier()){
-					demoScore = specscore.getTotalScore()
-							.multiply(this.getManagedBean().getOtherScore()).divide(totalNum, 2,
-							BigDecimal.ROUND_HALF_UP);
+					demoScore = specscore.getTotalScore();
 					strDemoScore = String.valueOf(demoScore);
 				}
 				this.getManagedBean().setDemoScore(strDemoScore);
-				technicalScore = propId.getTotalScore().subtract(demoScore);
+//				technicalScore = propId.getTotalScore().subtract(demoScore);
 				
-				totalTechScore = String.valueOf(technicalScore);
+//				totalTechScore = String.valueOf(technicalScore);
 			} else {
 				this.getManagedBean().setDemoScore(ResourceBundleUtils.getMessage(
 						"lbl.sc.qt.item.spec.null",
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						new FacesScopes()
 						.getUserLocale()));
-				totalTechScore = String.valueOf(propId.getTotalScore());
+//				totalTechScore = String.valueOf(propId.getTotalScore());
 			}
 		} finally {
 			evaluationSO = null;
@@ -16341,6 +16364,7 @@ private void retriveCommitteeRemarksList(){
 				this.getManagedBean().setReadOnly(true);
 			} else {
 				this.getManagedBean().setTabActiveIndex(3);
+				getManagedBean().setTempTab(3);
 				retrivePresentationDemo();
 				this.getManagedBean().setPresentationDemoActiveIndex(0);
 				retrieveReportTabDtl();

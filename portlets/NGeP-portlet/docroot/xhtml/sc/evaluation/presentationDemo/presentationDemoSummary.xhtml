@@ -49,8 +49,11 @@
 				<h:outputText value="#{evaluationBackingBean.retriveTotalDemolScore(finEvaluationqualifiedSupplier)}"></h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.demo.overall.score']}"
-				style="text-align:right">
+			<p:column style="text-align:right">
+				<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.demo.overall.score']}" />
+						<ac:iconTooltip value="#{lbl['lbl.demo.overall.score.tooltips']}" />
+					</f:facet>
 				<h:outputText value="#{finEvaluationqualifiedSupplier.totalScore}"></h:outputText>
 			</p:column>
 			<ui:remove>28784 - note 122 - add column rating - start</ui:remove>
@@ -127,8 +130,11 @@
 				<h:outputText value="#{evaluationBackingBean.retriveTotalDemolScore(disQualifiedSupplier)}"></h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.demo.overall.score']}"
-				style="text-align:right">
+			<p:column style="text-align:right">
+				<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.demo.overall.score']}" />
+						<ac:iconTooltip value="#{lbl['lbl.demo.overall.score.tooltips']}" />
+					</f:facet>
 				<h:outputText value="#{disQualifiedSupplier.totalScore}"></h:outputText>
 			</p:column>
 			
