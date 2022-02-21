@@ -10,9 +10,7 @@
 	<table style="width: 100%">
 		<tr>
 			<TD width="16%"  class="sidemenutd"  valign="top" >
-				<!-- 20220204@syazani - Enhancement #3657 - specific error message - Start -->
-				<p:remoteCommand id="zoneRemote" name="zoneTabChange" update="@form" partialSubmit="true" process="@form" action="#{supplierProposalDetailBackingBean.zoneTabChange}" />
-				<!-- 20220204@syazani - Enhancement #3657 - specific error message - End -->
+				<p:remoteCommand id="zoneRemote" name="zoneTabChange" update="@form" partialSubmit="true" process="@this" action="#{supplierProposalDetailBackingBean.zoneTabChange}" />
 				
 				<p:tabMenu styleClass="sidemenu"
 					id="zonalMenu"
