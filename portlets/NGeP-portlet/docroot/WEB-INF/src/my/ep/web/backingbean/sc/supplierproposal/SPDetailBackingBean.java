@@ -2814,9 +2814,11 @@ public class SPDetailBackingBean extends
 		List<TplSpecZoneDtl> zones = resDTO.getZones();
 		if (CollectionUtils.isNotEmpty(zones)) {
 			this.getManagedBean().setZones(zones);
-			//#21695 Farid Start - fix proposal checking 18/2/2022
+			//#21695 Farid Start - add condition 21/2/2022 
+			if(this.getManagedBean().getQt().isPartial()){
 			disableDefaultSelected();
-			//#21695 Farid End - fix proposal checking 18/2/2022
+			}
+			//#21695 Farid End - add condition 21/2/2022
 			}
 		}
 //#21695 Farid end 2/4/2021
