@@ -3309,7 +3309,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
 		String requestURL = httpServletRequest.getRequestURL().toString();
 		String url = requestURL.substring(0, requestURL.length()- httpServletRequest.getRequestURI().length())+ httpServletRequest.getContextPath() + "/";
-
-		return url;
+		log.info("portletRequest 1 : "+portletRequest);
+		log.info("requestURL 2 : "+requestURL);
+		log.info("httpServletRequest.getContextPath() 3 : "+httpServletRequest.getContextPath());
+		return "http://192.168.62.33:8621/";
 	}
 }
