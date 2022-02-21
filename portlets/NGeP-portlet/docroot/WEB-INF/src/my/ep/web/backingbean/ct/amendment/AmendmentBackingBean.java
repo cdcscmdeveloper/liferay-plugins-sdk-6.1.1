@@ -3049,26 +3049,30 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						
 					}else if(outputValue.equalsIgnoreCase(ContractConst.DEDUCTION_DETAIL)){
 						getManagedBean().setSelectedTabIndex(3);
-					}else if(outputValue.equalsIgnoreCase("PB") && (ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq() 
-							|| ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq())){
+					}else if(outputValue.equalsIgnoreCase("PB")) {// 24333
+							if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
+							&& (!ctBackingBean.getManagedBean().getContractVer().getCtDeductions().isEmpty()
+							|| ctBackingBean.getManagedBean().getContractVer().getCtDeductions().size() > 0
+							|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange())){
+					getManagedBean().setSelectedTabIndex(4);
+				}else{
 					getManagedBean().setSelectedTabIndex(3);
 				}
+			}
 					// 24333
 					if(isApproverSetting() && !getManagedBean().isPrepareLOA() && outputValue.equalsIgnoreCase("SE")){
 						if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()
 								&& ( ctBackingBean.getManagedBean().getContractVer().getCtDeductions()!= null
 										&& ctBackingBean.getManagedBean().getContractVer().getCtDeductions().size() > 0)
-								&& ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()){ 
+								&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){ 
 						getManagedBean().setSelectedTabIndex(index + 2);
 						}else{
 						getManagedBean().setSelectedTabIndex(index + 1);	
 						}
 						if (!ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()
-								&& ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()
+								&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
 								&& (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
-								|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange() || ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange())
-								&& ( ctBackingBean.getManagedBean().getContractVer().getCtDeductions()!= null
-								&& ctBackingBean.getManagedBean().getContractVer().getCtDeductions().size() > 0)){ 
+								|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange() || ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange())){ 
 						getManagedBean().setSelectedTabIndex(index + 3);
 						}
 						
