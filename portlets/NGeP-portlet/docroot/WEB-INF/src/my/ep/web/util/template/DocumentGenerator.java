@@ -421,7 +421,7 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 		Text t4 = factory.createText();
 		t4.setValue("\r\n  Pihak Syarikat  : Penama pada sijil pendaftaran untuk menandatangani Surat ini.");
 		run.getContent().add(t1);
-//		run.getContent().add(br);
+		run.getContent().add(br);
 		run.getContent().add(br);
 		run.getContent().add(br);
 		// #26770 - End.
