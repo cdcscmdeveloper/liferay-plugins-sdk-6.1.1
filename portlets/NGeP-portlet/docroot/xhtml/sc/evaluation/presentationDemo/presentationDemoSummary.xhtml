@@ -31,7 +31,7 @@
 
 
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
-				style="width:30%; text-align:center;">
+				style="width:25%; text-align:center;">
 
 				<h:outputText
 					value="#{finEvaluationqualifiedSupplier.qtEvaluationResult.scQtProposal.supplierNo}"></h:outputText>
@@ -49,7 +49,7 @@
 				<h:outputText value="#{evaluationBackingBean.retriveTotalDemolScore(finEvaluationqualifiedSupplier)}"></h:outputText>
 			</p:column>
 
-			<p:column style="text-align:right">
+			<p:column style="width:15%;text-align:right">
 				<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.demo.overall.score']}" />
 						<ac:iconTooltip value="#{lbl['lbl.demo.overall.score.tooltips']}" />
@@ -57,7 +57,7 @@
 				<h:outputText value="#{finEvaluationqualifiedSupplier.totalScore}"></h:outputText>
 			</p:column>
 			<ui:remove>28784 - note 122 - add column rating - start</ui:remove>
-			<p:column style="width:25%;white-space: normal;text-align:center;">
+			<p:column style="width:15%;white-space: normal;text-align:center;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.rating']}" />
 					<ac:iconTooltip value="#{lbl['lbl.sc.tec.rating.tooltip']}" />
@@ -112,7 +112,7 @@
 
 
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
-				style="width:30%; text-align:center;">
+				style="width:25%; text-align:center;">
 
 				<h:outputText
 					value="#{disQualifiedSupplier.qtEvaluationResult.scQtProposal.supplierNo}"></h:outputText>
@@ -130,7 +130,7 @@
 				<h:outputText value="#{evaluationBackingBean.retriveTotalDemolScore(disQualifiedSupplier)}"></h:outputText>
 			</p:column>
 
-			<p:column style="text-align:right">
+			<p:column style="width:15%;text-align:right">
 				<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.demo.overall.score']}" />
 						<ac:iconTooltip value="#{lbl['lbl.demo.overall.score.tooltips']}" />
@@ -139,7 +139,7 @@
 			</p:column>
 			
 			<ui:remove>28784 - note 122 - add column rating - start</ui:remove>
-			<p:column style="width:25%;white-space: normal;text-align:center;">
+			<p:column style="width:15%;white-space: normal;text-align:center;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.rating']}" />
 					<ac:iconTooltip value="#{lbl['lbl.sc.tec.rating.tooltip']}" />
