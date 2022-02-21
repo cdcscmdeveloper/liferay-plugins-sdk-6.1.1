@@ -972,6 +972,7 @@ public class ReportConst implements Serializable{
 	public static final String PARAM_REPORT_OUTPUT_FORMAT = "desformat";
 	//Enhancement 29418 - shaqimi
 	public static final String PARAM_CONTRACT_VER_ID = "PCONTRECTVERID";
+	public static final String PARAM_AMENDMENT_ID = "PCONTAMENDID";
 	//Enhancement 29418 - shaqimi
 	
 
