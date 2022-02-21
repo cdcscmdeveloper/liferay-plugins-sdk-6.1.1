@@ -108,6 +108,7 @@ import my.ep.persistence.entity.sm.SmSvPrintwork;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.entity.sm.SmSvTemplate;
 import my.ep.persistence.entity.sm.SmSvWorker;
+import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
@@ -370,15 +371,16 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			
 			retrievUploadedSiteVisitReport(getManagedBean().getSmSvTask().getSmSvTemplate());
 			
-			log.info("ref Type>>>>>>>>." + smSvTask.getSmSvAddress().getSiteRefId());
-			log.info("ref id>>>>>>>>." + smSvTask.getSmSvAddress().getSiteType());
-			log.info("SV address id>>>>>>>>." + smSvTask.getSmSvAddress().getSvAddressId());
-			
 			SmCommonUtil.getInstance().setSmSvAddressInfoBySiteTypeAndRefId(smSvTask.getSmSvAddress().getSiteType(),
 					smSvTask.getSmSvAddress().getSiteRefId(),smSvTask.getSmSvAddress(), smSvTask.getSmAppl().getApplId());
-			//smSvTask.getSmSvAddress().setAddress(getSmAddressById(smSvTask.getSmSvAddress().getSiteRefId()));
+			//#28774 - start
+			SmWorkflowStatus sts = SmCommonUtil.getCurrentActiveWokFlowStatus(
+					getManagedBean().getSmSvTask().getSmAppl().getApplId());
+			if (sts != null && sts.getPmStatus() != null){
+				getManagedBean().getSmSvTask().getSmAppl().setPmStatus(sts.getPmStatus());
+			}
+			//#28774 - end
 		}
-		
 	}
 	
 	/**
@@ -1448,7 +1450,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}else{
 			sb.append("");
 		}
-		//#28774 - Start
+		//#28774 - Start - Display names of Site Visit Officers
 		StringBuilder assistantOfficer = new StringBuilder();
 		int aOfficer = 0;
 		if(svTask.getSmSvAssistantOfficers() != null  && !svTask.getSmSvAssistantOfficers().isEmpty()){
@@ -2384,57 +2386,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	}
 	
 	/**
-	 * set the selectedMachine to SmSvMachine
-	 */
-	/*private void setSelectedMachineToSmSvMachineLs(SmSvTemplate svTemplate){
-		if(svTemplate.getSmSvMachines().size() > 0){
-			log.info("====Start Size=====" + svTemplate.getSmSvMachines().size());
-			// put existing smSvMachine to Map
-			Map<Long, SmSvMachine> svMachineMap = new HashMap<Long, SmSvMachine>();
-			Map<Long, SmMachineDtl> selectedMachineMap = new HashMap<Long, SmMachineDtl>();
-			List<SmSvMachine> machineRemoveLs = new ArrayList<SmSvMachine>();
-
-			for(SmSvMachine machine : svTemplate.getSmSvMachines()){
-				svMachineMap.put(machine.getSmMachineDtl().getMachineDtlId(), machine);
-			}
-
-			for(SmMachineDtl selectedMachine : svTemplate.getSelectedSmMachine()){
-				if(!svMachineMap.containsKey(selectedMachine.getMachineDtlId())){
-					SmSvMachine svMachine = new SmSvMachine();
-					svMachine.setSmSvTemplate(svTemplate);
-					svMachine.setSmMachineDtl(selectedMachine);
-					svTemplate.getSmSvMachines().add(svMachine);
-				}
-
-				selectedMachineMap.put(selectedMachine.getMachineDtlId(), selectedMachine);
-			}
-
-			//remove the unselected Machine from List
-			for(SmSvMachine svMachine : svTemplate.getSmSvMachines()){
-				if(!selectedMachineMap.containsKey(svMachine.getSmMachineDtl().getMachineDtlId())){
-					machineRemoveLs.add(svMachine);
-					log.info("remove machine - template ID ====" + svTemplate.getSvTemplateId());
-					log.info("remove machine - SmMachineDt ID ====" + svMachine.getSmMachineDtl().getMachineDtlId());
-					log.info("remove machine - SmSvMachine ID ====" + svMachine.getSvMachineId());
-				}
-			}
-
-			svTemplate.getSmSvMachines().removeAll(machineRemoveLs);
-			log.info("====end Size=====" + svTemplate.getSmSvMachines().size());
-		}else{
-			if(svTemplate.getSelectedSmMachine() != null && svTemplate.getSelectedSmMachine().length > 0){
-				log.info("selected Machine is not null>>>>>");
-				for(SmMachineDtl smMachineDtl : svTemplate.getSelectedSmMachine()){
-					SmSvMachine svMachine = new SmSvMachine();
-					svMachine.setSmSvTemplate(svTemplate);
-					svMachine.setSmMachineDtl(smMachineDtl);
-					svTemplate.getSmSvMachines().add(svMachine);
-				}
-			}
-		}
-	}*/
-	
-	/**
 	 * Validate duplicate Worker
 	 */
 	private void validateDuplicateWorker(List<SmSvWorker> svWorkers){
@@ -3078,16 +3029,14 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 */
 	public boolean checkUserRole() {
 		FacesScopes fs = new FacesScopes();
-		//#24964 - start
-		if(fs.hasRoleUser(RoleCode.UPS_PO.value())){
-			log.info("TR Troubleshoot #24964 === 1");
-			if(getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED 
-				|| getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_PENDING_REVIEW_SITE_VISIT_REPORT)) {
-					log.info("TR Troubleshoot #24964 === 2");
-					return false;
-			}
+		//#24964, #28774 - start
+		log.info("TR Troubleshoot #24964 === "+getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId());
+		if(getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED 
+			|| getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_PENDING_REVIEW_SITE_VISIT_REPORT)) {
+				log.info("TR Troubleshoot #24964 === 2");
+				return true;
 		}
-		//#24964 - end
+		//#24964, #28774 - end
 		if(this.getManagedBean().isViewMode()){
 			log.info("TR Troubleshoot #24964 === 3");
 			if(fs.hasRoleUser(RoleCode.UPS_APPROVER.value()) && 
