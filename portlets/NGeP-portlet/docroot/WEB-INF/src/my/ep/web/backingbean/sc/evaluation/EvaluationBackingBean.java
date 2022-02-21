@@ -810,7 +810,8 @@ public class EvaluationBackingBean extends
 		this.getManagedBean().getQualifiedSuppliersDM().reloadData();
 		this.getManagedBean().getDisqualifiedSuppliersDM().reloadData();
 		//20200717@asyrafhaziq - Display not offer supplier - Start
-		this.getManagedBean().getNotOfferSupplierDM().reloadData();
+// #21695 Remove Not use anymore
+//		this.getManagedBean().getNotOfferSupplierDM().reloadData();
 		//20200717@asyrafhaziq - Display not offer supplier - End
 	}
 
