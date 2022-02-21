@@ -423,10 +423,12 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			SmCommonUtil.getInstance().setSmSvAddressInfoBySiteTypeAndRefId(smSvTask.getSmSvAddress().getSiteType(),
 					smSvTask.getSmSvAddress().getSiteRefId(),smSvTask.getSmSvAddress(), smSvTask.getSmAppl().getApplId());
 			//#28774 - start
+			log.info("28774---appl status 1:"+getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId());
 			SmWorkflowStatus sts = SmCommonUtil.getCurrentActiveWokFlowStatus(
 					getManagedBean().getSmSvTask().getSmAppl().getApplId());
 			if (sts != null && sts.getPmStatus() != null){
 				getManagedBean().getSmSvTask().getSmAppl().setPmStatus(sts.getPmStatus());
+				log.info("28774---appl status 2:"+getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId());
 			}
 			//#28774 - end
 		}
