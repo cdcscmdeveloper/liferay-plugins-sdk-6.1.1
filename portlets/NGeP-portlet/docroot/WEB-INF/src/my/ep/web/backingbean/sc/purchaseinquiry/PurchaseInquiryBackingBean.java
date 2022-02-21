@@ -2252,6 +2252,37 @@ public class PurchaseInquiryBackingBean extends
 	// End - #26129
 	
 	// Start - #29557
+	public boolean isLastRowOfTier(Long specZoneId, BigDecimal fromQty, Long userId , String priceType){
+		ScSupplierItemPrice scSupplierItemPrice = getManagedBean().getSupplierItemPrices().get(0);
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		Long priceTypeId = 0L;
+		
+		if(fromQty == null)
+			return false;
+		
+		switch (priceType) {
+		case "03":
+			priceTypeId = PriceTypeConstants.TIER_STANDARD_PRICE;
+			break;
+		case "04":
+			priceTypeId = PriceTypeConstants.TIER_PROMOTION_PRICE;
+			break;
+		case "07":
+			priceTypeId = PriceTypeConstants.ZONAL_TIER_STANDARD_PRICE;
+			break;
+		case "08":
+			priceTypeId = PriceTypeConstants.ZONAL_TIER_PROMOTION_PRICE;
+			break;
+		default:
+			// do nothing
+			break;
+		}
+		
+		return getPrInquirySO().isLastRowOfTier(specZoneId, fromQty,
+				scSupplierItemPrice.getScRequestSupplierItem().getRequestSupplierItemId(), priceTypeId,
+				pmUser.getUserId());
+	}
+	
 	public boolean isCurrentUser(Long userId){
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		if ((userId != null && userId.compareTo(pmUser.getUserId()) == 0) || userId == 0){
