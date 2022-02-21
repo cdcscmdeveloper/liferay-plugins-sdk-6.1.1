@@ -15,8 +15,8 @@
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend}"
-					disabled="#{ctBackingBean.managedBean.disableAmendDetails or !amendmentBackingBean.validExtensionDate() or ctBackingBean.managedBean.contractExpired
-					or amendmentBackingBean.isContractAmountAmend()}">
+					disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL or !amendmentBackingBean.validExtensionDate() or ctBackingBean.managedBean.contractExpired
+					or amendmentBackingBean.isContractAmountAmend()}"><!-- Enhancement 15851 - shaqimi -->
 					<p:ajax event="change" update=":form:typesOfAmend,:form:instruction,:form:itemId,:form:serviceId,:form:approvingAuthorityPanel"
 						process="@all" onstart="blockWidget.show();" 
 					   oncomplete="blockWidget.hide();"  listener="#{amendmentBackingBean.onContractExtensionChecked}" />
@@ -31,9 +31,9 @@
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange}"
-					disabled="#{ctBackingBean.managedBean.disableAmendDetails
+					disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL
 						or (!amendmentBackingBean.managedBean.itemProductExist and !amendmentBackingBean.managedBean.itemServiceExist)
-						or amendmentBackingBean.isContractAmountAmend()}">
+						or amendmentBackingBean.isContractAmountAmend()}"><!-- Enhancement 15851 - shaqimi -->
 					 <p:ajax event="change" update=":form"  process="@form" 
 					    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  listener="#{amendmentBackingBean.onItemPriceChecked}" /> 
 					 </p:selectBooleanCheckbox>
@@ -47,10 +47,10 @@
 		    <h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.quantityChange}" 
-					disabled="#{ctBackingBean.managedBean.disableAmendDetails
+					disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL
 					or !amendmentBackingBean.managedBean.itemProductExist
 					or  ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral
-					or amendmentBackingBean.isContractAmountAmend()}">
+					or amendmentBackingBean.isContractAmountAmend()}"><!-- Enhancement 15851 - shaqimi -->
 					<p:ajax event="change" update=":form" process="@form"
 					    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  listener="#{amendmentBackingBean.onQuantityChecked}" /> 
 					</p:selectBooleanCheckbox>
@@ -65,11 +65,11 @@
 				<p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange 
 				    or ctBackingBean.managedBean.contractVer.ctAmendment.quantityChange
 				    or ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst
-				    or ctBackingBean.managedBean.disableAmendDetails
+				    or ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL
 				    or (ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral
 				    	and !ctBackingBean.managedBean.contractVer.ctContractValue.followLoaAmt)
 				    	or amendmentBackingBean.isContractAmountAmend()}"
-					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChange}"  >
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChange}"  ><!-- Enhancement 15851 - shaqimi -->
 					<p:ajax event="change"  update=":form:amend" process="@form"
 						listener="#{amendmentBackingBean.onChangeValueChecked}"
 					  	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  /> 
@@ -82,8 +82,8 @@
 			</h:panelGrid>
 			<f:verbatim/>
 			<h:panelGrid columns="3">
-				<p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
-					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.clauseChange}" >
+				<p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}"
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.clauseChange}" ><!-- Enhancement 15851 - shaqimi -->
 					<p:ajax event="change"  update=":form:typesOfAmend, :form:approvingAuthorityPanel" process="@form"
 					     onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  /> 
 				</p:selectBooleanCheckbox>
@@ -96,8 +96,8 @@
 			<f:verbatim/>
 			
 			<h:panelGrid columns="3">
-				<p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.isContractAmountAmend()}"
-					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}" >
+				<p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL or amendmentBackingBean.isContractAmountAmend()}"
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}" ><!-- Enhancement 15851 - shaqimi -->
 					<p:ajax event="change" update=":form" process="@form"
 					    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  listener="#{amendmentBackingBean.onChangeValueByGstChecked}" /> 
 				</p:selectBooleanCheckbox>
@@ -114,8 +114,8 @@
 			</h:panelGrid>
 			<f:verbatim/>
 			<h:panelGrid columns="3">
-				<p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.isContractAmountAmend()}"
-					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.otherChange}" >
+				<p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL or amendmentBackingBean.isContractAmountAmend()}"
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.otherChange}" ><!-- Enhancement 15851 - shaqimi -->
 					<p:ajax event="change" update=":form"  process="@form" listener="#{amendmentBackingBean.onChangeOther}"
 					    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  />
 				</p:selectBooleanCheckbox>
@@ -131,7 +131,7 @@
 			<h:panelGrid columns="5">
 				<p:inputText id="txtfrno" style="width:650px;" label="#{lbl['lbl.ct.file.ref.no']}"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.fileRefNo}" 
-					disabled="#{ctBackingBean.managedBean.disableAmendDetails}" maxlength="100" />
+					disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}" maxlength="100" /><!-- Enhancement 15851 - shaqimi -->
 				<p:spacer width="1"/>
 			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.file.ref.no']}" />
 			    <p:spacer width="1"/>
@@ -141,8 +141,8 @@
 			<h:panelGrid columns="2">
 				<p:inputTextarea id="txtname" style="width:650px;margin-bottom:5px;"  label="#{lbl['lbl.ct.amendment.title']}" rows="3"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.title}" maxlength="1000"
-					disabled="#{ctBackingBean.managedBean.disableAmendDetails}" autoResize="false"
-					onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"  />
+					disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}" autoResize="false"
+					onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"  /><!-- Enhancement 15851 - shaqimi -->
 				<p:message for="txtname" display="icon" />	
 			</h:panelGrid>
 		</h:panelGrid>
@@ -156,8 +156,8 @@
 				<p:inputTextarea id="txtdesc" rows="5"  label="#{lbl['lbl.ct.amendment.desc']}"
 					style="width:650px;margin-bottom: 5px;"  autoResize="false" maxlength="1000"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.description}"
-					disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
-					onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"  />
+					disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}"
+					onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"  /><!-- Enhancement 15851 - shaqimi -->
 				<p:message for="txtdesc" display="icon" />	
 			</h:panelGrid>			
 		</h:panelGrid>
@@ -172,7 +172,7 @@
 				rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend}">
 				<p:inputText style="width:80px;" required="true" label="#{lbl['lbl.ct.extension.period']}"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.extendPeriod}" maxlength="3"
-					disabled="#{ctBackingBean.managedBean.disableAmendDetails}">
+					disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
 					<p:ajax event="keyup" update="extStartDate, extEndDate, :form:itemId, :form:serviceId" listener="#{amendmentBackingBean.onExtensionPeriodChanged}"/>
 					</p:inputText>
 				<p:spacer width="2" />
@@ -197,7 +197,7 @@
 			<h:panelGrid columns="5" rendered="#{amendmentBackingBean.getAmendValue(1)}" >
 				<p:inputText id="addValueTxt" styleClass="ppRightBtn" style="width:80px;"  
 				   value="#{ctBackingBean.managedBean.contractVer.ctAmendment.additionalAmount}" 
-				   disabled="#{ctBackingBean.managedBean.disableAmendDetails}">
+				   disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
 					 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					 <p:ajax event="blur" update="addValueTxt, addValue, overallAmt" process="@this" listener="#{amendmentBackingBean.changeAdditionalValue}"
 					   onstart="blockWidget.show();"  oncomplete="blockWidget.hide();" />
@@ -228,12 +228,12 @@
 				    label="#{lbl['lbl.ct.effective.date']}" value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentEffDate}"
 				    maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}" 
 				    mindate="#{amendmentBackingBean.managedBean.newAmendmentEffDate}"
-				    rendered="#{!ctBackingBean.managedBean.disableAmendDetails}">
+				    rendered="#{!ctBackingBean.managedBean.disableAmendDetails and !amendmentBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
 				        <p:ajax event="dateSelect" process="@this" onstart="blockWidget.show();"  oncomplete="blockWidget.hide();"
 				            listener="#{amendmentBackingBean.changeAmendmentEffDate}"  update=":form:itemId,:form:serviceId"/> 
 				</p:calendar>
 				<p:inputText disabled="true" style="width:90px;"
-					rendered="#{ctBackingBean.managedBean.disableAmendDetails}"
+					rendered="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentEffDate}">
 					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 	  			</p:inputText>
@@ -252,9 +252,9 @@
 			<h:panelGrid columns="5" rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}" >
 				<p:inputText id="newGstAmtTxt" styleClass="ppRightBtn"  maxlength="18" style="width:80px;"
 				   value="#{ctBackingBean.managedBean.contractVer.ctAmendment.newGstAmount}" 
-				   disabled="#{ctBackingBean.managedBean.disableAmendDetails
+				   disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL
 				   		or ctBackingBean.managedBean.disableGstAmount}"
-				   rendered="#{ctBackingBean.managedBean.gstCheckingGUI}">
+				   rendered="#{ctBackingBean.managedBean.gstCheckingGUI}"><!-- Enhancement 15851 - shaqimi -->
 					 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					 <p:ajax event="blur" update="newGstAmtTxt, overallAmt" process="@this" 
 					   onstart="blockWidget.show();"  oncomplete="blockWidget.hide();" />
@@ -269,10 +269,10 @@
 			<p:outputLabel value="#{lbl['lbl.ct.new.stax.amt']}" rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}"/>	
 			<h:panelGrid columns="5" rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}" >
 				<p:inputText id="newStaxAmtTxt" styleClass="ppRightBtn"  maxlength="18" style="width:80px;"
-				   disabled = "#{ctBackingBean.managedBean.disableAmendDetails
+				   disabled = "#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL
 				   		or ctBackingBean.managedBean.disableStaxAmount}"
 				   		rendered="#{ctBackingBean.managedBean.staxCheckingGUI}" 
-				   		value="#{ctBackingBean.managedBean.contractVer.ctAmendment.newStaxAmount}">
+				   		value="#{ctBackingBean.managedBean.contractVer.ctAmendment.newStaxAmount}"><!-- Enhancement 15851 - shaqimi -->
 					 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					 <p:ajax event="blur" update="newStaxAmtTxt, overallAmt" process="@this" 
 					   onstart="blockWidget.show();"  oncomplete="blockWidget.hide();" />
@@ -297,8 +297,8 @@
 			<h:panelGrid columns="3" rendered="#{amendmentBackingBean.getAmendValue(3)}">
 				<p:selectBooleanCheckbox
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.mofAuthorityReq}"
-					disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.isContractAmountAmend()}">
-				</p:selectBooleanCheckbox>
+					disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL or amendmentBackingBean.isContractAmountAmend()}">
+				</p:selectBooleanCheckbox><!-- Enhancement 15851 - shaqimi -->
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.mof']}" style="text-align:left" />
 			</h:panelGrid>
@@ -306,11 +306,11 @@
 			<h:panelGrid columns="3" rendered="#{amendmentBackingBean.getAmendValue(3)}">
 				<p:selectBooleanCheckbox
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.pbqcAuthorityReq}"
-					disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.isContractAmountAmend()}">
+					disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL or amendmentBackingBean.isContractAmountAmend()}">
 					<p:ajax event="change" update=":form:secretryDropDownPanel" process="@all"
 					   onstart="blockWidget.show();" 
 					   oncomplete="blockWidget.hide();"/>
-				</p:selectBooleanCheckbox>
+				</p:selectBooleanCheckbox><!-- Enhancement 15851 - shaqimi -->
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.pbqc']}" style="text-align:left" />
 			</h:panelGrid>
@@ -318,13 +318,13 @@
 			<h:panelGrid columns="3" rendered="#{amendmentBackingBean.getAmendValue(3)}">
 				<p:selectBooleanCheckbox
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.approverAuthorityReq}"
-					disabled="#{!amendmentBackingBean.isContractAmountAmend()}" />
+					disabled="#{!amendmentBackingBean.isContractAmountAmend() or amendmentBackingBean.managedBean.viewSCL}" /><!-- Enhancement 15851 - shaqimi -->
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.contract.approval']}" style="text-align:left" />
 			</h:panelGrid>
 		</h:panelGrid>
 				
-		<h:panelGroup id="secretryDropDownPanel" rendered="#{!ctBackingBean.managedBean.disableAmendDetails}">
+		<h:panelGroup id="secretryDropDownPanel" rendered="#{!ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}">
 			<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth170" rendered="#{amendmentBackingBean.getAmendValue(3) and ctBackingBean.managedBean.contractVer.ctAmendment.pbqcAuthorityReq}">
 				<p:outputLabel value="#{lbl['lbl.ct.secretary.committee']}" />
 				<p:selectOneMenu id="secretaryId" value="#{amendmentBackingBean.managedBean.secretaryId}" 
@@ -341,14 +341,14 @@
 			 		<p:commandButton oncomplete="uploadApprovalLetterDlg.show();return false;"
 						update="uploadApprovalLetter, uploadApprovalLetterDlg" icon="ui-icon-upload"
 						rendered="#{ctBackingBean.managedBean.contractVer.approvalLetterAttachement.filePath == null}"
-				 		disabled="#{ctBackingBean.managedBean.disableAmendDetails}"/>	
+				 		disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}"/>	<!-- Enhancement 15851 - shaqimi -->
 		     		<h:commandLink value="#{ctBackingBean.managedBean.contractVer.approvalLetterAttachement.fileName}" 
 		           		rendered="#{ctBackingBean.managedBean.contractVer.approvalLetterAttachement.filePath != null}"
 		          		styleClass="blue_font" action="#{ctBackingBean.commonDownload(ctBackingBean.managedBean.contractVer.approvalLetterAttachement.filePath, ctBackingBean.managedBean.contractVer.approvalLetterAttachement.fileName)}" />					
 		     		<p:spacer width="3"/>
 		         	<p:commandLink onclick="deleteApprovalLetterDlg.show();" 
 			           rendered="#{ctBackingBean.managedBean.contractVer.approvalLetterAttachement.filePath != null}"
-			           disabled="#{ctBackingBean.managedBean.disableAmendDetails}">
+			           disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
 			   			<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
 			      	</p:commandLink>
 			      	<p:spacer width="1"/>

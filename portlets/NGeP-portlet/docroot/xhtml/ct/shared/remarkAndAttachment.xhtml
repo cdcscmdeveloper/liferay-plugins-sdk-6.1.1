@@ -7,7 +7,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
 	<p:panel header="#{lbl['lbl.ct.panel.remarks.attachment']}" toggleable="true" 
-	    rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}">
+	    rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting and !amendmentBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
 		<table style="width: 100%">
 			<tr>
 				<td width="50%" valign="top"><ui:include src="remark.xhtml" /></td>
@@ -17,7 +17,7 @@
 	</p:panel>		
 	<!-- Bug #29446 - start -->
 	<p:panel header="#{lbl['lbl.ct.panel.remarks.attachment']}" toggleable="true" 
-	    rendered="#{ctBackingBean.managedBean.viewContract}">
+	    rendered="#{ctBackingBean.managedBean.viewContract or amendmentBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
 		<table style="width: 100%">
 			<tr>
 				<td width="50%" valign="top" style="text-align:center"><h:outputLabel value="#{lbl['lbl.txt.remarks']}" style="float:none;text-align:center"/></td>
