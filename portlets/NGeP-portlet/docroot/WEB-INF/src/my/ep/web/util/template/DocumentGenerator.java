@@ -3,9 +3,7 @@
  */
 package my.ep.web.util.template;
 
-import java.awt.Font;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
@@ -16,6 +14,8 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
+
+import my.ep.factory.EpLogger;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.Template;
@@ -65,11 +65,6 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import com.liferay.portal.util.PortalUtil;
 import com.lowagie.text.DocumentException;
-import com.lowagie.text.pdf.BaseFont;
-
-import my.ep.constant.EpPropertiesConst;
-import my.ep.factory.EpLogger;
-import my.ep.util.EpPropertiesUtils;
 
 /**
  * Singleton Helper For Document Generator.
@@ -210,34 +205,33 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 				html = html.replaceAll("&amp;gt", "&#62");*/					
 			//#25142 - end
 				//#26130 - start
-				
-				/*if (getServerUrl().contains("NGeP-portlet/")){
-					 fontPath = getServerUrl()+"resources/fonts/Arial.ttf";
-				}else if(getServerUrl().contains("http://192.168.62.110:8621")){
-					fontPath="/usr/share/fonts/msttcore/arial.ttf";
+				String fontPath ="";
+				/*if(getServerUrl().contains("http://192.168.62.110:8621")){
+					
 				}
 				else {
-					fontPath = "http://ngepsit.eperolehan.com.my/NGeP-portlet/resources/fonts/Arial.ttf";
+					fontPath = getServerUrl()+"NGeP-portlet/resources/fonts/Arial.ttf";
 				}*/
-				String fontPath ="";
-				EpPropertiesUtils propertiesUtils = EpPropertiesUtils.getInstance();
+				
+				/*EpPropertiesUtils propertiesUtils = EpPropertiesUtils.getInstance();
 				String getPortalBaseURL = propertiesUtils.getProperty(EpPropertiesConst.PORTAL_BASE_URL);
 				
 					try {
 						if (!getPortalBaseURL.equals(null)){
-							fontPath = getPortalBaseURL+"NGeP-portlet/resources/fonts/Arial.ttf";
+							fontPath = "http://192.168.62.110:8621/NGeP-portlet/resources/fonts/Arial.ttf";
 							log.info("font path: "+fontPath);
 							log.info("zaim font"+getPortalBaseURL);
-							render.getFontResolver().addFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+							
 						}
 					} catch (Exception e) {
-						log.info("font path catch: "+fontPath);
+						log.info("font path: "+fontPath);
 						log.info("zaim font"+getPortalBaseURL);
 					}
 				
-				
-				
-		        
+				*/
+				fontPath = "http://192.168.62.110:8621/NGeP-portlet/resources/fonts/Arial.ttf";
+				log.info("font path: "+fontPath);
+				render.getFontResolver().addFont(fontPath, true);
 		        //#26130 - end
 				render.setDocumentFromString(html);
 				render.layout();
@@ -427,7 +421,7 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 		Text t4 = factory.createText();
 		t4.setValue("\r\n  Pihak Syarikat  : Penama pada sijil pendaftaran untuk menandatangani Surat ini.");
 		run.getContent().add(t1);
-		run.getContent().add(br);
+//		run.getContent().add(br);
 		run.getContent().add(br);
 		run.getContent().add(br);
 		// #26770 - End.
