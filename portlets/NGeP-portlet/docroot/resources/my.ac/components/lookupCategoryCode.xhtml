@@ -155,25 +155,50 @@
 	
 					<ac:paginator for="catDescrTbl" />
 		
-					<p:column>
+					<!-- 32629 - START -->	
+					<p:ajax event="rowSelect" partialSubmit="true" process="@this"
+						listener="#{categoryCodeSearchBackingBean.unSelectDACategories}"
+						update="catDescrTbl" ></p:ajax>
+					<p:ajax event="rowUnselect"
+						listener="#{categoryCodeSearchBackingBean.unSelectDACategories}"
+						update="catDescrTbl" ></p:ajax>
+					<p:ajax event="rowSelectCheckbox"
+						listener="#{categoryCodeSearchBackingBean.unSelectDACategories}"
+						update="catDescrTbl" ></p:ajax>
+					<p:ajax event="rowUnselectCheckbox"
+						listener="#{categoryCodeSearchBackingBean.unSelectDACategories}"
+						update="catDescrTbl" ></p:ajax>
+					<p:ajax event="rowDblselect"
+						listener="#{categoryCodeSearchBackingBean.unSelectDACategories}"
+						update="catDescrTbl" ></p:ajax>
+					
+			
+					<p:column disabledSelection="#{categoryCodeSearchBackingBean.managedBean.disabledDACategories}">
+					<!-- 32629 - END -->
 						<f:facet name="header">
 							<h:outputText value="#{lbl['lbl.sc.category.code']}" />
 						</f:facet>
 						#{pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}#{pmCategoryL3.pmCategoryL2.categoryL2Code}#{pmCategoryL3.categoryL3Code}
 					</p:column>
-					<p:column>
+					<!-- 32629 - START -->	
+					<p:column disabledSelection="#{categoryCodeSearchBackingBean.managedBean.disabledDACategories}">
+					<!-- 32629 - END -->
 						<f:facet name="header">
 							<h:outputText value="#{lbl['lbl.sc.main.category']}" />
 						</f:facet>
 						#{pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName}
 					</p:column>
-					<p:column>
+					<!-- 32629 - START -->	
+					<p:column disabledSelection="#{categoryCodeSearchBackingBean.managedBean.disabledDACategories}">
+					<!-- 32629 - END -->
 						<f:facet name="header">
 							<h:outputText value="#{lbl['lbl.sc.sub.category']}" />
 						</f:facet>
 						#{pmCategoryL3.pmCategoryL2.categoryName}
 					</p:column>
-					<p:column>
+					<!-- 32629 - START -->	
+					<p:column disabledSelection="#{categoryCodeSearchBackingBean.managedBean.disabledDACategories}">
+					<!-- 32629 - END -->
 						<f:facet name="header">
 							<h:outputText
 								value="#{lbl['lbl.sc.sub.category.division']}" />
