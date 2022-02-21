@@ -1599,10 +1599,11 @@ public class SupplierDataMaintenanceBackingBean extends
 						getManagedBean().setEditDisciplinaryAction(true);
 						break;
 					}else{
-						// 26238: Disciplinary Action - start -32590 --> 
+						// 26238: Disciplinary Action - start -32590 - Reopen--> 
 						getManagedBean().getDisciplineVO().getSmDiscplinaryAction().setStartDate(null);
 						getManagedBean().getDisciplineVO().getSmDiscplinaryAction().setEndDate(null); 
-						// 26238: Disciplinary Action - end -32590 -->
+						getManagedBean().getDisciplineVO().getSmDiscplinaryAction().setRemark(null); 
+						// 26238: Disciplinary Action - end -32590 - Reopen -->
 						
 						getManagedBean().setEditDisciplinaryActionCheckBox(false);
 						getManagedBean().setEditDisciplinaryAction(false);
