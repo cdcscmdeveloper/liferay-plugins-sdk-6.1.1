@@ -108,6 +108,7 @@ import my.ep.persistence.entity.sm.SmSvPrintwork;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.entity.sm.SmSvTemplate;
 import my.ep.persistence.entity.sm.SmSvWorker;
+import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
@@ -338,6 +339,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			
 			SmCommonUtil.getInstance().setSmSvAddressInfoBySiteTypeAndRefId(smSvTask.getSmSvAddress().getSiteType(),
 					smSvTask.getSmSvAddress().getSiteRefId(),smSvTask.getSmSvAddress(), smSvTask.getSmAppl().getApplId());
+			//#28774 - start
+			SmWorkflowStatus sts = SmCommonUtil.getCurrentActiveWokFlowStatus(
+					getManagedBean().getSmSvTask().getSmAppl().getApplId());
+			if (sts != null && sts.getPmStatus() != null){
+				getManagedBean().getSmSvTask().getSmAppl().setPmStatus(sts.getPmStatus());
+			}
+			//#28774 - end
 		}
 	}
 	
@@ -2835,16 +2843,14 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 */
 	public boolean checkUserRole() {
 		FacesScopes fs = new FacesScopes();
-		//#24964 - start
-		if(fs.hasRoleUser(RoleCode.UPS_PO.value())){
-			log.info("TR Troubleshoot #24964 === 1");
-			if(getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED 
-				|| getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_PENDING_REVIEW_SITE_VISIT_REPORT)) {
-					log.info("TR Troubleshoot #24964 === 2");
-					return false;
-			}
+		//#24964, #28774 - start
+		log.info("TR Troubleshoot #24964 === "+getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId());
+		if(getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED
+			|| getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_PENDING_REVIEW_SITE_VISIT_REPORT)) {
+				log.info("TR Troubleshoot #24964 === 2");
+				return true;
 		}
-		//#24964 - end
+		//#24964, #28774 - end
 		if(this.getManagedBean().isViewMode()){
 			log.info("TR Troubleshoot #24964 === 3");
 			if(fs.hasRoleUser(RoleCode.UPS_APPROVER.value()) && 
