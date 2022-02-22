@@ -970,10 +970,10 @@ public class ReportConst implements Serializable{
 	public static final String PARAM_REMARK = "PREMARK";
 	public static final String PARAM_RECOM = "PRECOM";
 	public static final String PARAM_REPORT_OUTPUT_FORMAT = "desformat";
-	//Enhancement 29418 - shaqimi
+	//Enhancement 29418/15851 - shaqimi
 	public static final String PARAM_CONTRACT_VER_ID = "PCONTRECTVERID";
 	public static final String PARAM_AMENDMENT_ID = "PCONTAMENDID";
-	//Enhancement 29418 - shaqimi
+	//Enhancement 29418/15851 - shaqimi
 	
 
 	// Report parameter key for s1 market research report
