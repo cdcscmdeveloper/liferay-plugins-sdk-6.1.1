@@ -58,13 +58,11 @@ import my.ep.biz.service.pm.common.object.IObjectSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
-import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.document.IQTDocumentSO;
-import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
@@ -117,7 +115,6 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.actor.ScActorReqDTO;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.dto.sc.bidding.BiddingResDTO;
@@ -10425,6 +10422,31 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
   	public Boolean isDisabledGroupPtj(){
   		return !isGroupPTJRuleSet();
   	}
+  	//#29472 - start
+  	public void reviseQtDocument() {
+  	
+		IQTDetailSO detailSO;
+		try {
+			ScQt scQt = this.getManagedBean().getQt();
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			reqDTO.setQtdetail(this.getManagedBean().getQt());
+			reqDTO.setOutcome(BpmOutcomeConst.BPM_REVISE);
+			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			detailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			detailSO.qtReviseDocument(reqDTO);
+			
+			if (scQt.getProcurementMode().getParameterCode().equals(ParameterConst.PROCUREMENT_MODE_TENDER)) {
+				successMessage(MessageConst.INFO_700107, getMessageCommon("lbl.qt.maintenance.tender"), scQt.getQtNo(), Boolean.TRUE);
+			} else {
+				successMessage(MessageConst.INFO_700107, getMessageCommon("lbl.qt.maintenance.quotation"), scQt.getQtNo(), Boolean.TRUE);
+			}
+		} finally {
+			detailSO = null;
+		}
+	
+  	}
+  	//#29472 - end
   	
   	/**11104-start
 	 * Retrieve pm state by id.
