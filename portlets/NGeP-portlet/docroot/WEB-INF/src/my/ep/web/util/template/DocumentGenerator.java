@@ -70,6 +70,7 @@ import com.lowagie.text.pdf.BaseFont;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.factory.EpLogger;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 
 /**
  * Singleton Helper For Document Generator.
@@ -211,7 +212,9 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 			//#25142 - end
 				//#26130 - start
 				String fontPath ="";
-				fontPath = getServerUrl()+"resources/fonts/Arial.ttf";
+				String  getPortalBaseURL = SmCommonUtil.getBasePortalUrl();
+				fontPath = getPortalBaseURL+"/NGeP-portlet/resources/fonts/Arial.ttf";
+				
 				log.info("font path: "+fontPath);
 				render.getFontResolver().addFont(fontPath, true);
 		        //#26130 - end
