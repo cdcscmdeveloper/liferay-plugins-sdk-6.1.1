@@ -2402,7 +2402,13 @@ public void saveComplianceSample() {
 						evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM); 
 					}
 					else{
-						evalstage.add(QTConstants.TECHNICAL_EVALUATION);
+						//#32453-start
+						if(this.getManagedBean().getTabItemPackageIndex() == 1){
+							evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+						}else{
+							evalstage.add(QTConstants.TECHNICAL_EVALUATION);
+						}
+						//#32453-end
 					}
 					//#25138 - 040621 - end
 				}
