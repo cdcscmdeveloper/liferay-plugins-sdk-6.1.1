@@ -2868,16 +2868,17 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendSetting);
 			}
 
-		} else if (getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)) {
+		} else if (getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)) { //24333
 			getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendSupplier);
-			if ((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isBondReq()
-					&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
 					&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
-							ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))) {
+							ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareBond);
 			}
 			getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithDeclaration);
 		}
+		log.info("Check getFinalListOfSideMenu Size"+getManagedBean().getFinalListOfSideMenu().size());
+		log.info("Check getFinalListOfSideMenu "+getManagedBean().getFinalListOfSideMenu().toString());
 	}
 	
 	//#Enhancement 15851 - shaqimi start
@@ -3359,10 +3360,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (outputValue.equalsIgnoreCase("SLOA")) {
 				getManagedBean().setSelectedTabIndex(2);
 			}
-			if ((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isBondReq()
-					&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
+			//#24333
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
 					&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
-							ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))) {				
+							ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {				
 				if (outputValue.equalsIgnoreCase("PB")) {
 					getManagedBean().setSelectedTabIndex(3);
 				}
@@ -3375,6 +3376,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 			}
 		}
+		log.info("Check index "+getManagedBean().getSelectedTabIndex());
+		log.info("Check Output "+outputValue.toString());
 	}
 
 	/**
