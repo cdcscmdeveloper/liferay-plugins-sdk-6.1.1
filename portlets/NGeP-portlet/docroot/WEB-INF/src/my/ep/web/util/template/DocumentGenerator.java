@@ -16,6 +16,7 @@ import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.factory.EpLogger;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.Template;
@@ -206,7 +207,9 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 			//#25142 - end
 				//#26130 - start
 				String fontPath ="";
-				fontPath = getServerUrl()+"resources/fonts/Arial.ttf";
+				String  getPortalBaseURL = SmCommonUtil.getBasePortalUrl();
+				fontPath = getPortalBaseURL+"/NGeP-portlet/resources/fonts/Arial.ttf";
+				
 						log.info("font path: "+fontPath);
 				render.getFontResolver().addFont(fontPath, true);
 		        //#26130 - end
