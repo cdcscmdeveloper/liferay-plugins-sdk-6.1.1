@@ -2216,9 +2216,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 */
 	private String getLogoHeaderPath(){
 		//CR 28774: Static Code Analysis
-		log.info("getServerUrl()--:"+ getServerUrl());
-		return getServerUrl();
-		//return SmCommonUtil.getBasePortalUrl();
+		return SmCommonUtil.getBasePortalUrl();
 	}
 	
 	/**
@@ -3111,19 +3109,4 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		log.info("=============#24964 - finished mapSmSvIntervieweesSVOWithPO=======================");
 	}
 	//#24964 - end
-	
-	/**
-	 * Gets the server url.
-	 *
-	 * @return the server url
-	 */
-	private String getServerUrl() {
-		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
-		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
-		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
-		String requestURL = httpServletRequest.getRequestURL().toString();
-		String url = requestURL.substring(0, requestURL.length()- httpServletRequest.getRequestURI().length())+ httpServletRequest.getContextPath() + "/";
-
-		return url;
-	}
 }
