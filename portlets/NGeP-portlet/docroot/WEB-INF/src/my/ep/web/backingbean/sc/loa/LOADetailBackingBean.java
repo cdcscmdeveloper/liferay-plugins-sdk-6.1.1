@@ -1066,7 +1066,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 *
 	 * @param scQtSchedule the sc qt schedule
 	 */
-	private void freqScheduleValidation(ScQtSchedule scQtSchedule) {
+	private void freqScheduleValidation(ScQtSchedule scQtSchedule, String docType) {
 		debugLogger("frequencyScheduleValidation");
 		FacesScopes facesScopes = new FacesScopes();
 		Calendar startDate = null;
@@ -1135,7 +1135,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 			if (!(startDate.getTime().after(contractEffDate)
 					&& (startDate.getTime().before(contractExpDate)) || contractEffDate.equals(startDate.getTime()))) {
-				throw new EpException(MessageConst.ERROR_760347);
+				//#29474 - start
+				if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(docType)) {
+					throw new EpException(MessageConst.ERROR_760347);
+				}
+				//#29474 - end
 			}
 
 			if (!(endDate.getTime().after(contractEffDate)
@@ -4437,7 +4441,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					//#29173 - change size()>0 to !isEmpty()
 					if(scLoa.getScQtProgPayments() != null && !scLoa.getScQtProgPayments().isEmpty()){
 						for (ScQtProgressivePayment progressivePayment : scLoa.getScQtProgPayments()) {
-							progressivePayValidation(progressivePayment);
+							progressivePayValidation(progressivePayment, scLoa.getScLoiLoa().getDocType());
 						}
 					}
 					//#29173 - merged if statements
@@ -4445,7 +4449,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				} else if (("F").equals(getManagedBean().getScQt().getScheduleType()) &&
 						scLoa.getScQtSchedules() != null && !scLoa.getScQtSchedules().isEmpty()) {
 					for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
-						freqScheduleValidation(scQtSchedule);
+						freqScheduleValidation(scQtSchedule, scLoa.getScLoiLoa().getDocType());
 					}
 				}
 			} else{
@@ -4453,7 +4457,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				//#29173 - change size()>0 to !isEmpty()
 				if(scLoa.getScQtSchedules() != null && !scLoa.getScQtSchedules().isEmpty()){
 					for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
-						freqScheduleValidation(scQtSchedule);
+						freqScheduleValidation(scQtSchedule, scLoa.getScLoiLoa().getDocType());
 					}
 				}
 			}
@@ -6439,7 +6443,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 *
 	 * @param progressivePayment the progressive payment
 	 */
-	private void progressivePayValidation(ScQtProgressivePayment progressivePayment) {
+	private void progressivePayValidation(ScQtProgressivePayment progressivePayment, String docType) {
 		debugLogger("progressivePayValidation");
 		FacesScopes facesScopes = new FacesScopes();
 		Calendar startDate = null;
@@ -6498,7 +6502,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 			if (!(startDate.getTime().after(contractEffDate)
 					&& (startDate.getTime().before(contractExpDate)) || contractEffDate.equals(startDate.getTime()))) {
-				throw new EpException(MessageConst.ERROR_760347);
+				//#29474 - start
+				if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(docType)) {
+					throw new EpException(MessageConst.ERROR_760347);
+				}
+				//#29474 - end
 			}
 
 			if (!(endDate.getTime().after(contractEffDate)
