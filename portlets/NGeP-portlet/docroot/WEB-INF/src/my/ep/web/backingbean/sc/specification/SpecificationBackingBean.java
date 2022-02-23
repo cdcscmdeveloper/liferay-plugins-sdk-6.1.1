@@ -15947,6 +15947,7 @@ public class SpecificationBackingBean extends
 		//#25138 - start
 		spReqDTO.setOfferScoreType(this.getManagedBean().getOfferScoreType());
 		//#25138 - end
+		spReqDTO.setSingleItem(this.getManagedBean().isSingleItem());//32453
 		IQTSpecSO specSO = getSpecSO();
 		try {
 			resDTO = specSO.updateSpecMaintananceDetails(spReqDTO);
@@ -16368,6 +16369,7 @@ public class SpecificationBackingBean extends
 				.getCurrentStatusId());
 		spReqDTO.setUserLocale(facesScopes.getUserLocale());
 		spReqDTO.setOfferScoreType(this.getManagedBean().getOfferScoreType());//#25138
+		spReqDTO.setSingleItem(this.getManagedBean().isSingleItem());//32453
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)){
 			//Bug #26214
 			spReqDTO.setAllowZeroVariance(true);
