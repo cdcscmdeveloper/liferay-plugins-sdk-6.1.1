@@ -5,9 +5,9 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<ui:remove>#29474 - start</ui:remove>
-	<ui:param name="isDeductionPaymentReadOnly" value="#{(qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_DEDUCTIONPAYMENT) or qTDetailBB.managedBean.readOnly) and ((specificationBackingBean.managedBean.readOnly or specificationBackingBean.isSpecStage()) and !specificationBackingBean.managedBean.checklist)}" />
-	<ui:remove>#29474 - end	 </ui:remove>
+	
+	<ui:param name="isDeductionPaymentReadOnly" value="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_DEDUCTIONPAYMENT) or qTDetailBB.managedBean.readOnly}" />
+
 	<p:panel header="#{lbl['lbl.sc.deduction.payment']}" id="deductionPayid" toggleable="true">
 		<p:dataTable id="deductPaymentTblId" widgetVar="deductPaymentTblWidget" 
 			var="scQtDeduction"

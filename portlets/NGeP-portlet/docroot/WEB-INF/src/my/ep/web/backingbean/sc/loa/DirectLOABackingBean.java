@@ -859,7 +859,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			if (!((startDate.after(contractEffDate) || startDate
 					.equals(contractEffDate)) && startDate
 					.before(contractExpDate))) {
-				throw new EpException(MessageConst.ERROR_760347);
+				//#29474 - throw new EpException(MessageConst.ERROR_760347);
 			}
 
 			if (!(endDate.after(contractEffDate) && (endDate
@@ -1475,7 +1475,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			if (!(startDate.getTime().after(contractEffDate)
 					&& (startDate.getTime().before(contractExpDate)) || contractEffDate
 						.equals(startDate.getTime()))) {
-				throw new EpException(MessageConst.ERROR_760347);
+				//#29474 - throw new EpException(MessageConst.ERROR_760347);
 			}
 
 			if (!(endDate.getTime().after(contractEffDate)
