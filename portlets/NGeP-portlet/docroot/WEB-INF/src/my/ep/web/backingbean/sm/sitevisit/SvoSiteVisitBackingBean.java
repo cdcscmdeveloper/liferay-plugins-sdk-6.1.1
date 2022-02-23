@@ -2552,11 +2552,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 */
 	private String getLogoHeaderPath(){
 		//CR 28774: Static Code Analysis
-		//BELOW CHANGES IS TEMPORARY BECAUSE OF TECH REFRESH, CANNOT READ URL IMAGE IN VM REPORT SM
-		// FUNCTION INVOLVED IS getLogoHeaderPath && getServerUrl
-		log.info("DEV URL SERVER :"+getServerUrl());
-		return getServerUrl();
-		//return SmCommonUtil.getBasePortalUrl();
+		return SmCommonUtil.getBasePortalUrl();
 	}
 	
 	/**
@@ -3756,23 +3752,4 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 	}
 	//29379 - Site Visit Grouping Enhancement - 28775 - end
-	
-	//BELOW CHANGES IS TEMPORARY BECAUSE OF TECH REFRESH, CANNOT READ URL IMAGE IN VM REPORT SM
-	// FUNCTION INVOLVED IS getLogoHeaderPath && getServerUrl
-	/**
-	 * Gets the server url.
-	 *
-	 * @return the server url
-	 */
-	private String getServerUrl() {
-		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
-		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
-		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
-		String requestURL = httpServletRequest.getRequestURL().toString();
-		String url = requestURL.substring(0, requestURL.length()- httpServletRequest.getRequestURI().length())+ httpServletRequest.getContextPath() + "/";
-		log.info("portletRequest : "+portletRequest);
-		log.info("requestURL : "+requestURL);
-		log.info("httpServletRequest.getContextPath() : "+httpServletRequest.getContextPath());
-		return url;
-	}
 }
