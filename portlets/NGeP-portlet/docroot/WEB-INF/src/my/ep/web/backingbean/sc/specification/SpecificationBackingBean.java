@@ -683,6 +683,16 @@ public class SpecificationBackingBean extends
 					count++;
 				}
 			}
+			//#28784
+			if(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO
+					.equalsIgnoreCase(checkList.getDefinationType()
+							.getParameterCode())){
+				if (checkList.getPmStatus().getStatusId()
+						.equals(QTStatusConst.TS_PENDING_SUBMISSION)) {
+					count++;
+				}
+				
+			}
 			else if(ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
 					.equalsIgnoreCase(checkList.getDefinationType()
 							.getParameterCode())) {//#11104-start
@@ -19534,5 +19544,16 @@ if(null!=allTechnicalChecklist){
 
 		return statusDesc;
 	}
+	
+	public void resetDemoTechSpecListAfterDelete(){
+		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+		IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTSpecSO.class);
+		reqDTO.setScQt(this.getManagedBean().getQt());
+		reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
+		SpecificationResDTO resDTO = specSo.retrieveCheckLists(reqDTO);
+		getManagedBean().setScQtCheckSt2techProposal(resDTO.getTechnicalCheckList());
+	}
 	//#28784 - End
+
 }
