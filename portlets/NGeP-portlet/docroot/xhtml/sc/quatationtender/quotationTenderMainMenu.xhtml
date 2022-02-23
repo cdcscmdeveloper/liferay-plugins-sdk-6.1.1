@@ -224,7 +224,7 @@
 								</c:if>
 								<ui:remove>#29474 - start</ui:remove>
 								<c:if test="#{qTDetailBB.managedBean.activeIndex eq '7' and qTDetailBB.displayMenuItem(qTDetailBB.menuItemFulfilmentSchhedule)}">
-									<ui:include src="/xhtml/sc/specification/specificationCommittee/fulfilmentSchedule.xhtml" />
+									<ui:include src="/xhtml/sc/specification/specificationCommittee/qtFulfilmentSchedule.xhtml" />
 								</c:if>
 								<c:if test="#{qTDetailBB.managedBean.activeIndex eq '8' and qTDetailBB.displayMenuItem(qTDetailBB.menuItemDocuments)}">
 									<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderDocuments.xhtml" />
@@ -283,7 +283,7 @@
 							</c:if>
 							<ui:remove>#29474 - start</ui:remove>
 							<c:if test="#{qTDetailBB.managedBean.activeIndex eq '7'}">
-								<ui:include src="/xhtml/sc/specification/specificationCommittee/fulfilmentSchedule.xhtml" />
+								<ui:include src="/xhtml/sc/specification/specificationCommittee/qtFulfilmentSchedule.xhtml" />
 							</c:if>
 							<c:if test="#{qTDetailBB.managedBean.activeIndex eq '8'}">
 								<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderDocuments.xhtml" />
@@ -359,7 +359,7 @@
 								</c:when>
 								<ui:remove>#29474 - start</ui:remove>
 								<c:otherwise>
-									<ui:include src="/xhtml/sc/specification/specificationCommittee/fulfilmentSchedule.xhtml" />
+									<ui:include src="/xhtml/sc/specification/specificationCommittee/qtFulfilmentSchedule.xhtml" />
 								</c:otherwise>
 							</c:choose>
 						</c:if>
