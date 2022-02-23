@@ -2399,7 +2399,13 @@ public class EvaluationBackingBean extends
 						evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM); 
 					}
 					else{
+						//#32453-start
+						if(this.getManagedBean().getTabItemPackageIndex() == 1){
+							evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+						}else{
 						evalstage.add(QTConstants.TECHNICAL_EVALUATION);
+					}
+						//#32453-end
 					}
 					//#25138 - 040621 - end
 				}
@@ -15860,10 +15866,12 @@ private void retriveCommitteeRemarksList(){
 		
 	//this is to cater wip data only show tech package score for wip.
 		if(maxSet == 7){
+			if(SourcingConstants.EVALUATE_BY_BOTH_PACKAGE_ITEM.equalsIgnoreCase(this.getManagedBean().getScQt().getEvaluateBy())){//32453
 			selectItems.add(new SelectItem(QTConstants.TECHNICAL_SUMMARY_PACKAGE_MARGIN, ResourceBundleUtils
 					.getMessage("lbl.sc.evaluation.view.by.tech.package.score",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale())));
+			}//32453
 		
 			selectItems.add(new SelectItem(QTConstants.TECHNICAL_SUMMARY_ITEM, ResourceBundleUtils
 					.getMessage("lbl.sc.evaluation.view.by.item.preference.margin",
