@@ -469,10 +469,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().setTabActiveIndex(outputTab);
 		getManagedBean().setRedirectToPersonPage(false);
 		getManagedBean().setCurrentPageType(outputPageType);
+		log.info("START ----------screen ini tab : " +outputTab +"-------outputPageType: " +outputPageType);
 		if (getManagedBean().getSmAppl() != null) {
 			getManagedBean().getSmAppl().setCurrentActiveTab(outputTab);
+			log.info("----------setCurrentActiveTab : " +outputTab );
 		}
-
+		log.info("END  ----------screen ini tab : " +outputTab +"-------outputPageType: " +outputPageType);
 	}
 
 	/**
