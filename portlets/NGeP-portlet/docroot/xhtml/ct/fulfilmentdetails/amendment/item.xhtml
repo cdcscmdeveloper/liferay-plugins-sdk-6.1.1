@@ -156,7 +156,7 @@
 	               	<p:inputText value="#{ctItemVar.minimumOrderQty}" styleClass="ppRightBtn" style="float:right;width:130px;" label="#{lbl['lbl.ct.min.order.qty']}"
 		        		maxlength="#{ctItemVar.scRequestItem.uom.decimalScale == 0 ? 13 : 14}"
 		        		disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.getValueFromAmendment() 
-		        			or ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}"><!--  Enhancement 15851 - shaqimi -->
+		        			or ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}"><!--  Enhancement 15851 - shaqimi -->
 						<f:converter converterId="dynamicNumberConverter" />
 						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItemVar.scRequestItem.uom.uomCode)}" />
 						<p:ajax event="change" update="@this" listener="#{ctBackingBean.onChangeMinimumQty(ctItemVar)}"/>
@@ -252,7 +252,7 @@
 								<p:column headerText="#{lbl['lbl.ct.price']}" style="width:10%; white-space:normal;" styleClass="column-align-center">
 								  <h:panelGroup style="float:right;" rendered="#{itemPriceVar.changePrice}">
 								   	<p:inputText value="#{itemPriceVar.unitPrice}" styleClass="ppRightBtn" style="width:100px;" label="#{lbl['lbl.ct.price']}"
-								   		disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}" required="true"><!-- Enhancement 15851 - shaqimi -->
+								   		disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}" required="true"><!-- Enhancement 15851 - shaqimi -->
 										<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 										<p:ajax process="@this"/>
 									</p:inputText>
@@ -276,7 +276,7 @@
 								
 								<p:column headerText="#{lbl['lbl.ct.action']}"  styleClass="column-align-center"
 									rendered="#{!ctBackingBean.managedBean.disableAmendDetails and 
-						           		amendmentBackingBean.managedBean.selectedItem.recordStatusFlg == 1 and !amendmentBackingBean.managedBean.viewSCL}"
+						           		amendmentBackingBean.managedBean.selectedItem.recordStatusFlg == 1 and !ctBackingBean.managedBean.viewSCL}"
 								     style="width:10%; white-space:normal;"><!-- Enhancement 15851 - shaqimi -->
 									<p:commandLink update=":form:itemId" process="@form" 
 										disabled="#{itemPriceVar.chkIndexOfRow or 
@@ -335,7 +335,7 @@
 						  <p:inputText value="#{itemCeilingQtiesVar.ceilingQuantity}" 
 						      styleClass="ppRightBtn" style="width:100px;" label="#{lbl['lbl.ct.ceiling.qty']}"
 						  	  maxlength="#{amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.decimalScale == 0 ? 13 : 14}"
-						  	  disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}" ><!-- Enhancement 15851 - shaqimi -->
+						  	  disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}" ><!-- Enhancement 15851 - shaqimi -->
 							<f:converter converterId="dynamicNumberConverter" />
 							<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
 							<p:ajax event="change" update="@this" listener="#{amendmentBackingBean.onChangeCeilingQty(itemCeilingQtiesVar)}"/>
@@ -407,7 +407,7 @@
 							
 							<p:column headerText="#{lbl['lbl.ct.max.order.qty']}" styleClass="column-align-center">							  								
 								<p:inputText value="#{itemMaxQtyVar.maxQuantity}" styleClass="ppRightBtn" style="float:right;" required="true" rendered="#{itemMaxQtyVar.changeQuantity}" label="#{lbl['lbl.ct.max.order.qty']}"
-					        		maxlength="#{amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.decimalScale == 0 ? 13 : 14}" disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
+					        		maxlength="#{amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.decimalScale == 0 ? 13 : 14}" disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
 									<f:converter converterId="dynamicNumberConverter" />
 									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
 									<p:ajax event="blur" update="@this"/>
@@ -518,7 +518,7 @@
 	               	<p:inputText value="#{serviceItemVar.minimumOrderQty}" styleClass="ppRightBtn" style="float:right;width:130px;" label="#{lbl['lbl.ct.min.order.qty']}"
 		        		maxlength="#{serviceItemVar.scRequestItem.uom.decimalScale == 0 ? 13 : 14}"
 		        		disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.getValueFromAmendment() 
-		        		or ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
+		        		or ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
 						<f:converter converterId="dynamicNumberConverter" />
 						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, serviceItemVar.scRequestItem.uom.uomCode)}" />
 						<p:ajax event="change" update="@this" listener="#{ctBackingBean.onChangeMinimumQty(serviceItemVar)}"/>
@@ -563,7 +563,7 @@
 					<p:column headerText="#{lbl['lbl.ct.price']}" style="width:10%; white-space:normal;" styleClass="column-align-center">
 					     <h:panelGroup style="float:right;"  rendered="#{ItemPricesVar.changePrice}">
 					    	<p:inputText value="#{ItemPricesVar.unitPrice}" styleClass="ppRightBtn" style="width:100px;" label="#{lbl['lbl.ct.price']}"
-					    		disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}" ><!-- Enhancement 15851 - shaqimi -->
+					    		disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}" ><!-- Enhancement 15851 - shaqimi -->
 								<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 								<p:ajax process="@this"/>
 						</p:inputText>
@@ -593,7 +593,7 @@
 							<p:graphicImage value="/css/images/design/ico-edit.png" title="#{lbl['lbl.ct.edit']}" />
 						</p:commandLink>
 						<p:commandLink rendered="#{ItemPricesVar.changePrice}" oncomplete="dlgSvcItemPrices.show();return false;"
-						 disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}" ><!-- Enhancement 15851 - shaqimi -->
+						 disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}" ><!-- Enhancement 15851 - shaqimi -->
 							<f:setPropertyActionListener value="#{ItemPricesVar}" target="#{amendmentBackingBean.managedBean.ctServiceItemPrices}" />
 							<p:graphicImage value="/css/images/design/delete.png" title="#{lbl['lbl.ct.delete']}" />
 						</p:commandLink>
@@ -750,7 +750,7 @@
    		</f:facet>
   	</p:dialog>
 	
-	<p:panel header="#{lbl['lbl.ct.panel.remarks.attachment']}" toggleable="true" rendered="#{!ctBackingBean.managedBean.viewContract or !amendmentBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
+	<p:panel header="#{lbl['lbl.ct.panel.remarks.attachment']}" toggleable="true" rendered="#{!ctBackingBean.managedBean.viewContract or !ctBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
 		<table style="width: 100%">
 			<tr>
 				<td width="50%" valign="top">

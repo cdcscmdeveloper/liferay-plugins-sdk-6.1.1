@@ -50,7 +50,7 @@
 				</f:facet>
 
 				<p:selectBooleanCheckbox value="#{agencyData.selectedCheckBox}"
-					disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
+					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
 					<p:ajax event="change"
 						update=":form:tableAgencyDetails,:form:delBtn"
 						listener="#{ctBackingBean.selectOneAgencyCheckboxSelect}"
@@ -102,7 +102,7 @@
                     <p:inputText id="modelInput" value="#{agencyData.ceilingAmount}" style="width:80px" maxlength="23" label="#{lbl['lbl.ct.ceiling.amount']}"			
 				     disabled="#{ctBackingBean.managedBean.disableAmendDetails
            		        or (ctBackingBean.managedBean.contractVer.ctAgencies ne null and ctBackingBean.managedBean.contractVer.ctAgencies.size() eq 1)
-           		        or amendmentBackingBean.managedBean.viewSCL}" 
+           		        or ctBackingBean.managedBean.viewSCL}" 
 					 styleClass="ppRightBtn"
 					 rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}" > <!-- Enhancement 15851 - shaqimi -->
 					  <p:ajax event="change" update=":form:tableAgencyDetails,:form:messages" listener="#{ctBackingBean.validateCeilingAmount(agencyData)}" />
@@ -113,7 +113,7 @@
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />															  
 					   </h:outputText></f:facet>					  	
                </p:cellEditor> 
-                    <ui:fragment  rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting and !amendmentBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
+                    <ui:fragment  rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting and !ctBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
                          <div style="text-align:center;">
                           <h:graphicImage value="/css/images/design/icon-edit.png" />  <!--Fix #31740 -->           
                          </div>
@@ -136,7 +136,7 @@
 					           maxdate="#{agencyData.expDate}"
 					           rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}"
 				               showOn="button"
-					           disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}"
+					           disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}"
 					           pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"><!-- Enhancement 15851 - shaqimi -->
 					           <p:ajax event="dateSelect" update="agenyStatus"
 						       listener="#{ctBackingBean.checkAgencyStatus(agencyData)}" />
@@ -191,7 +191,7 @@
 			<p:commandButton id="addBtn" value="#{lbl['lbl.btn.add']}"
 				oncomplete="dlgAgency.show();" partialSubmit="true" process="@this"
 				action="#{ctBackingBean.resetAgencyDetails}"
-				disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}"
+				disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}"
 				update=":form:agencyies"
 				rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}"><!-- Enhancement 15851 - shaqimi -->
 				<p:tooltip for="addBtn">
@@ -202,7 +202,7 @@
 			<p:commandButton id="delBtn" value="#{lbl['lbl.ct.delete']}"
 				process="@this" onsuccess="dlgAgenyDel.show()" partialSubmit="true"
 				disabled="#{ctBackingBean.managedBean.buttonHideActive or ctBackingBean.managedBean.disableAmendDetails
-					or amendmentBackingBean.managedBean.viewSCL}"
+					or ctBackingBean.managedBean.viewSCL}"
 				rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}"><!-- Enhancement 15851 - shaqimi -->
 				<p:tooltip for="delBtn">
 					<h:outputText value="#{lbl['lbl.ct.tooltip.delete.agency']}"
@@ -234,7 +234,7 @@
 								value="#{ctBackingBean.managedBean.contractVer.ctContractValue.ap178RefNo}"
 								rendered="#{!ctBackingBean.managedBean.disableAgent}"
 								disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting
-									or amendmentBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
+									or ctBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
 								<p:ajax process="@this" />
 							</p:inputText>
 							<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.sharing.agency.file.reference']}" rendered="#{!ctBackingBean.managedBean.disableAgent}"/>
@@ -255,7 +255,7 @@
 									style="width:98%;" value="#{attachFile.fileDescription}"
 									rendered="#{!ctBackingBean.managedBean.disableAgent}"
 									disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewContract  or ctBackingBean.managedBean.notificationSetting
-										or amendmentBackingBean.managedBean.viewSCL}" /><!-- Enhancement 15851 - shaqimi -->
+										or ctBackingBean.managedBean.viewSCL}" /><!-- Enhancement 15851 - shaqimi -->
 					</p:column>
 					<p:column width="50%">
 						<f:facet name="header">
@@ -271,7 +271,7 @@
 						<p:commandLink onsuccess="delCtSharingAttachDlg.show();"
 							action="#{ctBackingBean.setAttachFileIndex(index)}"
 							disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails 
-								or ctBackingBean.managedBean.notificationSetting or amendmentBackingBean.managedBean.viewSCL}"
+								or ctBackingBean.managedBean.notificationSetting or ctBackingBean.managedBean.viewSCL}"
 							rendered="#{!ctBackingBean.managedBean.disableAgent}"><!-- Enhancement 15851 - shaqimi -->
 							<h:graphicImage value="/css/images/design/icon_trash.png"
 								styleClass="tasklist_title1" />
@@ -282,7 +282,7 @@
 					oncomplete="ctSharingAttachDlg.show();return false;"
 					value="#{lbl['lbl.txt.upload']}"
 					disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting 
-						or ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}"
+						or ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}"
 					rendered="#{!ctBackingBean.managedBean.disableAgent}"
 					process="@this" partialSubmit="true"
 					update="lampiranCtSharing, ctSharingAttachDlg" immediate="true" /><!-- Enhancement 15851 - shaqimi -->
@@ -325,7 +325,7 @@
 					<p:ajax event="rowUnselectCheckbox" listener="#{ctBackingBean.onRowUnselect}" update=":form:delAddressBtn" />
 					<p:column selectionMode="multiple" style="width:3%"
 						disabledSelection="#{ctBackingBean.managedBean.disableAmendDetails
-							or amendmentBackingBean.managedBean.viewSCL}"
+							or ctBackingBean.managedBean.viewSCL}"
 						rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}" /> <!-- Enhancement 15851 - shaqimi -->
 					<p:column headerText="#{lbl['lbl.ct.delivery.address']}"
 						style="width:100%; white-space:normal;">
@@ -341,13 +341,13 @@
 						saveObject="ctBackingBean.managedBean.addressTypeList"
 						conditionField="#{ctBackingBean.getDeliveryAddressCondition()}"
 						update=":form:deliveryAddressTbl"
-						disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}"
+						disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}"
 						rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}" /><!-- Enhancement 15851 - shaqimi -->
 					<p:commandButton id="delAddressBtn" value="#{lbl['lbl.ct.delete']}"
 						process="@this" onsuccess="delAddressDlg.show()"
 						partialSubmit="true"
 						disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.buttonHideActive
-							or amendmentBackingBean.managedBean.viewSCL}"
+							or ctBackingBean.managedBean.viewSCL}"
 						rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}" /><!-- Enhancement 15851 - shaqimi -->
 				</div>
 
@@ -496,7 +496,7 @@
 	<p:panel id="agencyRemarksAttachmentPnl"
 		header="#{lbl['lbl.ct.panel.remarks.attachment']}" toggleable="true"
 		rendered="#{!ctBackingBean.managedBean.viewContract  and !ctBackingBean.managedBean.notificationSetting
-			and !amendmentBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi start -->
+			and !ctBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi start -->
 		<table style="width: 100%">
 			<tr>
 				<td width="50%" valign="top">

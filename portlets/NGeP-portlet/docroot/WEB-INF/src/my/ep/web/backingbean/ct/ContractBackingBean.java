@@ -4007,7 +4007,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			log.info("taskids shaqimon = " + originalServletRequest.getAttribute("taskIds"));
 			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId()+"?faces-redirect=true");
 			abb.getManagedBean().setTrackingDairyView(true);
-			abb.getManagedBean().setViewSCL(true);
+			getManagedBean().setViewSCL(true);
 			if(abb.getManagedBean().getTaskId() != null){
 				abb.getManagedBean().setTaskIdFromTaskList(abb.getManagedBean().getTaskId());
 				abb.getManagedBean().setContractIdFromTaskList(new Long(getManagedBean().getContractVer().getCtContract().getContractId()));
