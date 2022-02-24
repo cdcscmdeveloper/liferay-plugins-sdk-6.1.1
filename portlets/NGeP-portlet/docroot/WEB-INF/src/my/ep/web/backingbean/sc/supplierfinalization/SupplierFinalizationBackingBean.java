@@ -578,10 +578,9 @@ public class SupplierFinalizationBackingBean extends
 			//this.getManagedBean().setItemList(
 			//		scQtFinalization.getScQtRecommends());
 			//#32400 - Start
-			List<ScQtRecommend> itemList = null;
-			itemList = scQtFinalization.getScQtRecommends();
-			sortingItemizedFollowedOrderByItemName(itemList);
-			this.getManagedBean().setItemList(itemList);
+			this.getManagedBean().setItemList(
+					sortingItemizedFollowedOrderByQtId(
+							scQtFinalization.getScQtRecommends(),scQt));
 			//#32400 - End
 		}
 		this.getManagedBean().setJustification(
@@ -6651,10 +6650,10 @@ return	remarksNotFound;
 			//		scQtFinalization.getScQtRecommendsByZone()
 			//				.get(selectedZone.getSpecZoneId()));
 			//#32400 - Start
-			List<ScQtRecommend> itemList = null;
-			itemList = scQtFinalization.getScQtRecommendsByZone().get(selectedZone.getSpecZoneId());
-			sortingItemizedFollowedOrderByItemName(itemList);
-			this.getManagedBean().setItemList(itemList);
+			this.getManagedBean().setItemList(
+					sortingItemizedFollowedOrderByQtId(
+							scQtFinalization.getScQtRecommendsByZone().get(
+									selectedZone.getSpecZoneId()),this.getManagedBean().getScQt()));
 			//#32400 - End
 		}
 	}
@@ -6778,10 +6777,9 @@ return	remarksNotFound;
 				//this.getManagedBean().setItemList(
 				//		scQtFinalization.getScQtRecommends());
 				//#32400 - Start
-				List<ScQtRecommend> itemList = null;
-				itemList = scQtFinalization.getScQtRecommends();
-				sortingItemizedFollowedOrderByItemName(itemList);
-				this.getManagedBean().setItemList(itemList);
+				this.getManagedBean().setItemList(
+						sortingItemizedFollowedOrderByQtId(
+								scQtFinalization.getScQtRecommends(),this.getManagedBean().getScQt()));
 				//#32400 - End
 			}
 			setSelectedSupplierCodesByItem();
@@ -10376,6 +10374,43 @@ return	remarksNotFound;
 			return reqDTO;
 		}
 		//28834 ends
+		
+		//#32400 - Start
+		private List<ScQtRecommend> sortingItemizedFollowedOrderByQtId(List<ScQtRecommend> oldRequestItemsRecommend,ScQt scQt){
+			
+			SuppFinalizationReqDTO reqDTORecommend = new SuppFinalizationReqDTO();
+			reqDTORecommend.setQtId(scQt.getQtId());
+			List<ScQtRecommend> newRequestItemsRecommend = findScRequestItemizedByReqDTO(reqDTORecommend);
+			final List<Long> sortingOrderRecommendIds = new ArrayList<>();
+			
+			if(CollectionUtils.isNotEmpty(newRequestItemsRecommend)){
+				for(ScQtRecommend recommendIds :newRequestItemsRecommend){
+					sortingOrderRecommendIds.add(recommendIds.getQtRecommendId());
+				}
+			}
+			
+			Collections.sort(oldRequestItemsRecommend, new Comparator<ScQtRecommend>() {
+				public int compare(ScQtRecommend o1, ScQtRecommend o2) {
+							return Integer.valueOf(
+									sortingOrderRecommendIds.indexOf(o1.getQtRecommendId().longValue())).compareTo(
+									Integer.valueOf(sortingOrderRecommendIds.indexOf(o2.getQtRecommendId().longValue())));
+				}
+			});	
+			
+			return oldRequestItemsRecommend;
+		}
+		
+		public List<ScQtRecommend> findScRequestItemizedByReqDTO(SuppFinalizationReqDTO reqDTO) {
+			IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+			try {
+				qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);	
+				return qtSuppFinalizationSO.findScRequestItemizedByQtId(reqDTO).getScQtRecommendList();
+			} finally {
+				qtSuppFinalizationSO = null;
+			}
+		}
+		//#32400 - End
 		
 		// 18685 - START.
 		protected void checkKertasTaklimatReports(List<ScQtFinalizationReport> finalizationReports, List<String> reportTitleList, String taskType){
