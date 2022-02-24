@@ -20424,7 +20424,7 @@ if(null!=allTechnicalChecklist){
 				reqDTO.setLanguageCode(languageCode);
 
 				if (reqDTO.getStatusId().equals(QTStatusConst.TS_COMPLETED)) {
-					statusDesc = ResourceBundleUtils.getMessage("lbl.sc.eva.compliance.stage.completed",
+					statusDesc = ResourceBundleUtils.getMessage("lbl.btn.complete",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 				} else if (reqDTO.getStatusId().equals(QTStatusConst.TS_PENDING_SUBMISSION)) {
 					statusDesc = ResourceBundleUtils.getMessage("lbl.demo.incomplete",
