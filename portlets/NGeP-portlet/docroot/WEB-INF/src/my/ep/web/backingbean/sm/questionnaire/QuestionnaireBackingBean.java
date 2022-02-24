@@ -8,10 +8,6 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.portlet.PortletRequest;
-import javax.servlet.http.HttpServletRequest;
 
 import my.ep.constant.EpPropertiesConst;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
@@ -39,8 +35,6 @@ import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
-
-import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean(name = "questionnaireBackingBean")
 @RequestScoped
@@ -154,11 +148,7 @@ public class QuestionnaireBackingBean extends
 	 * @return String
 	 */
 	private String getLogoHeaderPath(){
-		//BELOW CHANGES IS TEMPORARY BECAUSE OF TECH REFRESH, CANNOT READ URL IMAGE IN VM REPORT SM
-		// FUNCTION INVOLVED IS getLogoHeaderPath && getServerUrl
-		log.info("DEV URL SERVER :"+getServerUrl());
-		return getServerUrl();
-		//return SmCommonUtil.getBasePortalUrl();
+		return SmCommonUtil.getBasePortalUrl();
 	}
 	//<-- END #12768 -->
 
@@ -290,24 +280,6 @@ public class QuestionnaireBackingBean extends
 			}
 		}
 		return smAnswer;
-	}
-	
-
-	//BELOW CHANGES IS TEMPORARY BECAUSE OF TECH REFRESH, CANNOT READ URL IMAGE IN VM REPORT SM
-	// FUNCTION INVOLVED IS getLogoHeaderPath && getServerUrl
-	/**
-	 * Gets the server url.
-	 *
-	 * @return the server url
-	 */
-	private String getServerUrl() {
-		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
-		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
-		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
-		String requestURL = httpServletRequest.getRequestURL().toString();
-		String url = requestURL.substring(0, requestURL.length()- httpServletRequest.getRequestURI().length())+ httpServletRequest.getContextPath() + "/";
-
-		return url;
 	}
 
 }
