@@ -731,6 +731,8 @@ public class SupplierDataMaintenanceBackingBean extends
 						getManagedBean().getSmAppl(),
 						getTrackingActionDesc(reqDTO,"RS"));
 				listSmTrackingDiary.add(smTrackingDairyVO);
+				//#32614
+				log.info("32614-diary: "+smTrackingDairyVO.getDocNo()+" -- "+smTrackingDairyVO.getActionedBy());
 			}
 			//set tracking diary for MOF Expiry Date
 			if(getManagedBean().isHasMofExpiryDateChanged()) {				
