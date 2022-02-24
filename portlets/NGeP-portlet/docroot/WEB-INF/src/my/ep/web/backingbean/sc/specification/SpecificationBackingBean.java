@@ -13590,7 +13590,9 @@ public class SpecificationBackingBean extends
 			}
 			saveSpecMaintenanceWorkFlowStatus();
 			addDemoTechnicalCheckList();//#28784
-			resetDemoSpecStatus();//#28784
+			if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
+				resetDemoSpecStatus();// #28784
+			}
 			return "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
 		}
 		return null;
@@ -19800,6 +19802,7 @@ if(null!=allTechnicalChecklist){
 						} 
 					}
 					checkList.getScQtDoc().getTplSpecMaster().setTplSpecQuestions(newSpecItemList);
+					this.getManagedBean().setDemoOriSpecQuestionTemplateList(newSpecItemList);
 				}
 
 				checkList.getScQtDoc().getTplSpecMaster().setTechnicalSpecQuestionsToDelete(null);
@@ -19905,7 +19908,7 @@ if(null!=allTechnicalChecklist){
 			if (!q.isItemReqDemo()) {
 				q.setDemoScore(null);
 			}
-		}
+		}		
 
 		List<ScQtCheckList> updatedCheckLists = new ArrayList<ScQtCheckList>();
 		updatedCheckLists.add(scQtCheckList);
@@ -19940,6 +19943,21 @@ if(null!=allTechnicalChecklist){
 				}else if(t.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)){
 					updatedCheckListsOtherDemo.add(t);
 				}
+			}
+			//#28784
+			List<TplSpecQuestion> newSpecItemList = new ArrayList<>();
+			//List<TplSpecMaster> templateSpecBean = getManagedBean().getTemplateSpecBean().getSpecMasterList().get;
+			if (savedCheckLists.get(0).getScQtDoc().getTplSpecMaster().getTplSpecQuestions() != null) {
+				for (TplSpecQuestion tpl : scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions()) {
+					if (tpl.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
+						PmParameter scoreType = getParameterByTypeAndCode(ParameterTypeConst.SCORE_TYPE,
+								ParameterConst.SCORE_TYPE_USER);
+						tpl.setScoreTypeCode(scoreType);
+						newSpecItemList.add(tpl);
+						
+					} 
+				}
+				savedCheckLists.get(0).getScQtDoc().getTplSpecMaster().setTplSpecQuestions(newSpecItemList);
 			}
 			
 			reqDTO1.setCheckLists(updatedCheckListsDemo);
@@ -20454,6 +20472,47 @@ if(null!=allTechnicalChecklist){
 		SpecificationResDTO resDTO = specSo.retrieveCheckLists(reqDTO);
 		getManagedBean().setScQtCheckSt2techProposal(resDTO.getTechnicalCheckList());
 	}
+	
+	public void actionSearchPresentationDemo(){
+  		if(CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions())){
+  			List<TplSpecQuestion> list = this.getManagedBean().getDemoOriSpecQuestionTemplateList();  		
+  			List<TplSpecQuestion> listNew = new ArrayList<>();
+  			if(StringUtils.isNotBlank(this.getManagedBean().getItemName())){
+  	  			String itemName = this.getManagedBean().getItemName().toLowerCase();
+  	  			for(TplSpecQuestion obj : list){
+  	  				if(StringUtils.isNotBlank(obj.getClItem())){
+  	  					if(obj.getClItem().toLowerCase().contains(itemName)){
+  	  						obj.setSelectable(true);
+  	  						listNew.add(obj);
+  	  					}else{
+  	  						obj.setSelectable(false);
+  	  					}
+  	  				}
+  	  			}
+  	  		}else{
+  	  			for(TplSpecQuestion obj : list){
+  	  	  			obj.setSelectable(true);
+  	  	  		}
+  	  		}
+  			this.getManagedBean().getTemplateSpecBean().getSpecMaster().setTplSpecQuestions(listNew);
+  		}
+  	}
+
+  	public void resetSearchPresentationDemo(){
+  		if(CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions())){
+  			List<TplSpecQuestion> list = this.getManagedBean().getDemoOriSpecQuestionTemplateList();
+  			for(TplSpecQuestion obj : list){
+  				obj.setSelectable(true);
+  			}
+  			this.getManagedBean().getTemplateSpecBean().getSpecMaster().setTplSpecQuestions(list);
+  		}
+  		this.getManagedBean().setItemName(null);
+  		
+  	}
+	
+	
+	
+	
 	//#28784 - End
 	
 	// #29474 - start
