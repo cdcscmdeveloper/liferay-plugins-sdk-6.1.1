@@ -15,7 +15,7 @@
            <p:selectOneRadio id="radiOptions"  required="true"   value="#{ctBackingBean.managedBean.frequencySchedule}" 
                      disabled="#{ctBackingBean.managedBean.disableScheduleRadio or 
                       ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting or ctBackingBean.managedBean.disableAmendDetails
-                      or amendmentBackingBean.managedBean.viewSCL}"  ><!-- Enhancement 15851 - shaqimi -->  
+                      or ctBackingBean.managedBean.viewSCL}"  ><!-- Enhancement 15851 - shaqimi -->  
                           <f:selectItems value="#{ctBackingBean.managedBean.radioButtonSchedule}" />
                           <p:ajax event="change"  update=":form:paymentSchedule"  process="@form"
                                listener="#{ctBackingBean.changeScheduleTypeListener}"  onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/> 
@@ -32,7 +32,7 @@
 		                                   <f:facet name="header">
 							                    <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.selectAll}"
 							                    disabled="#{payScheduleObj.useInFulfilment or ctBackingBean.managedBean.disableAmendDetails
-							                    	or amendmentBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
+							                    	or ctBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
 								                    <p:ajax partialSubmit="true" process="@this"
 									                      update=":form:payScheduleTableId,:form:deleteScheduleBtn" listener="#{ctBackingBean.selectAllScheduleDtl}" />
 							                 </p:selectBooleanCheckbox>
@@ -40,7 +40,7 @@
 		           
 		                                <p:selectBooleanCheckbox 
 		                                    disabled="#{payScheduleObj.useInFulfilment or ctBackingBean.managedBean.disableAmendDetails
-		                                    	or amendmentBackingBean.managedBean.viewSCL}"
+		                                    	or ctBackingBean.managedBean.viewSCL}"
 		                                       value="#{payScheduleObj.selectedCheckBox}" styleClass="myCustomChekBox"><!-- Enhancement 15851 - shaqimi -->
 		           		                            <p:ajax event="change" 
 		           		                                update=":form:payScheduleTableId,:form:deleteScheduleBtn" listener="#{ctBackingBean.selectOneScheCheckboxSelect}"></p:ajax>
@@ -64,7 +64,7 @@
 		                                  </f:facet>
 						                  <p:selectOneMenu id="fromMonth" value="#{payScheduleObj.startMonth}" 
 						                           rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}"
-							                      disabled="#{payScheduleObj.useInFulfilment or ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}" style="width:110px;"><!-- Enhancement 15851 - shaqimi -->
+							                      disabled="#{payScheduleObj.useInFulfilment or ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}" style="width:110px;"><!-- Enhancement 15851 - shaqimi -->
 					                               <f:selectItems value="#{ctBackingBean.retrieveStartMonthList(payScheduleObj.startYear)}"/>  
 					                               <p:ajax event="change" update=":form:payScheduleTableId,:form:addScheduleBtn, :form:messages"  process="@form" 
 					                                    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  listener="#{ctBackingBean.validateScheduleDate(payScheduleObj, index)}"/> 
@@ -72,7 +72,7 @@
 				                          <p:spacer width="1"  rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}"/>
 				                          <p:selectOneMenu id="fromYear" value="#{payScheduleObj.startYear}" 
 				                                  rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}"
-					                              disabled="#{payScheduleObj.useInFulfilment or ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}" style="width:100px;"><!-- Enhancement 15851 - shaqimi -->
+					                              disabled="#{payScheduleObj.useInFulfilment or ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}" style="width:100px;"><!-- Enhancement 15851 - shaqimi -->
 					                               <f:selectItems value="#{ctBackingBean.yearList}" var="year" itemValue="#{year}" itemLabel="#{year}"  />  
 					                               <p:ajax event="change" update=":form:payScheduleTableId,:form:addScheduleBtn,:form:messages" process="@form" 
 					                                  onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  listener="#{ctBackingBean.validateScheduleDate(payScheduleObj, index)}"/> 
@@ -88,14 +88,14 @@
 				                  
 				                    <h:panelGroup rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}">
 				                        <p:selectOneMenu id="toMonth" value="#{payScheduleObj.endMonth}" 
-				                            disabled="#{payScheduleObj.useInFulfilment  or ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}" style="width:110px;" ><!-- Enhancement 15851 - shaqii -->
+				                            disabled="#{payScheduleObj.useInFulfilment  or ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}" style="width:110px;" ><!-- Enhancement 15851 - shaqii -->
 		                                   <f:selectItems value="#{ctBackingBean.retrieveEndMonthList(payScheduleObj.endYear)}" />  
 		                                   <p:ajax event="change" update=":form:payScheduleTableId,:form:addScheduleBtn,:form:messages" process="@form" 
 		                                      onstart="blockWidget.show();" oncomplete="blockWidget.hide();" listener="#{ctBackingBean.validateScheduleDate(payScheduleObj, index)}" />
 		                                </p:selectOneMenu>
 		                                <p:spacer width="1"/>
 		                                <p:selectOneMenu id="toYear" value="#{payScheduleObj.endYear}" 
-		                            	    disabled="#{payScheduleObj.useInFulfilment or ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting or ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}" style="width:100px;" ><!--Enhancement 15851 - shaqimi-->
+		                            	    disabled="#{payScheduleObj.useInFulfilment or ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting or ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}" style="width:100px;" ><!--Enhancement 15851 - shaqimi-->
 		                                    <f:selectItems value="#{ctBackingBean.yearList}" />
 		                                    <p:ajax event="change" update=":form:payScheduleTableId,:form:addScheduleBtn,:form:messages"  process="@form" 
 		                                       onstart="blockWidget.show();" oncomplete="blockWidget.hide();" listener="#{ctBackingBean.validateScheduleDate(payScheduleObj, index)}"/> 
@@ -118,7 +118,7 @@
 						              </f:facet>
 				                      <p:selectOneMenu  value="#{payScheduleObj.fulfilmentTypeId}" style="width:180px;" 
 				               		       id="scheduleTypeid"  rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}"
-				               		       disabled="#{payScheduleObj.useInFulfilment or ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi --> 
+				               		       disabled="#{payScheduleObj.useInFulfilment or ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi --> 
 		                                   <f:selectItems value="#{ctBackingBean.getScheduleTypeDropDown()}"/>
 		                                 <p:ajax process="@this" partialSubmit="true"/>
 		                               </p:selectOneMenu> 
@@ -131,7 +131,7 @@
 		               <div class="ppRightBtn"> 
 		                   <p:commandButton id="addScheduleBtn" value="#{lbl['lbl.btn.add']}"  update=":form:payScheduleTableId"
 			                        action="#{ctBackingBean.addScheduleDetails}" rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}"
-			                        disabled="#{ctBackingBean.managedBean.progSchedButtonDeactive or ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}"
+			                        disabled="#{ctBackingBean.managedBean.progSchedButtonDeactive or ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}"
 			                        oncomplete="frequencyScheduleWidget.paginator.endLink.click();" ><!-- Enhancement 15851 - shaqimi -->
 			                      <p:tooltip for="addScheduleBtn">
 							         <h:outputText value="#{lbl['lbl.ct.tooltip.add.schedule']}" escape="false" />
@@ -139,7 +139,7 @@
 		       		       </p:commandButton>
 		 	               <p:commandButton id="deleteScheduleBtn" value="#{lbl['lbl.ct.delete']}" process="@this"  partialSubmit="true"
 			 	        	       rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}" onsuccess="dlgSchedule.show()"
-			 	        	       disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.buttonHideSchActive or amendmentBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
+			 	        	       disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.buttonHideSchActive or ctBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
 			 	        	       <p:tooltip for="deleteScheduleBtn">
 							            <h:outputText value="#{lbl['lbl.ct.tooltip.delete.schedule']}" escape="false" />
 							       </p:tooltip>
@@ -165,14 +165,14 @@
 		                         <p:column style="width:2%;" rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}">
 		                                   <f:facet name="header">
 							                    <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.selectAll}"
-							                    disabled="#{progPaymentObj.useInFulfilment or ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
+							                    disabled="#{progPaymentObj.useInFulfilment or ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
 								                    <p:ajax partialSubmit="true" process="@this"
 									                      update=":form:progPaymentTableId,:form:delProgressiveBtn" listener="#{ctBackingBean.selectAllProPaymentDtl}" />
 							                 </p:selectBooleanCheckbox>
 						                 </f:facet>
 		           
 		                                <p:selectBooleanCheckbox 
-		                                    disabled="#{progPaymentObj.useInFulfilment or ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}"
+		                                    disabled="#{progPaymentObj.useInFulfilment or ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}"
 		                                       value="#{progPaymentObj.selectedCheckBox}" styleClass="myCustomChekBox"><!-- Enhancement 15851 - shaqimi -->
 		           		                            <p:ajax event="change" 
 		           		                                update=":form:progPaymentTableId,:form:delProgressiveBtn" listener="#{ctBackingBean.selectOneProPaymentCheckboxSelect}"></p:ajax>
@@ -193,7 +193,7 @@
 						                        <h:outputText value="#{lbl['lbl.ct.description']}" styleClass="required"/>
 						                   </f:facet>
 						                    <p:inputText value="#{progPaymentObj.phaseDesc}"  maxlength="50" style="width:200px;" 
-						                         disabled="#{progPaymentObj.useInFulfilment or ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting or ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}" label="#{lbl['lbl.ct.description']}"><!-- Enhancement 15851 - shaqimi -->
+						                         disabled="#{progPaymentObj.useInFulfilment or ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting or ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}" label="#{lbl['lbl.ct.description']}"><!-- Enhancement 15851 - shaqimi -->
 						                    </p:inputText>
 						               </p:column>
               
@@ -203,7 +203,7 @@
 						                 	 </f:facet>
 						                    
 						                    <p:selectOneMenu id="fromProMonth" value="#{progPaymentObj.startMonth}"  style="width:110px;" 
-						                        disabled="#{progPaymentObj.useInFulfilment or ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting or ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
+						                        disabled="#{progPaymentObj.useInFulfilment or ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting or ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
 				                                <f:selectItems value="#{ctBackingBean.retrieveStartMonthList(progPaymentObj.startYear)}" />  
 				                               <p:ajax event="change" update=":form:progPaymentTableId, :form:proAddButtionId,:form:messages" process="@form" 
 				                                 onstart="blockWidget.show();" oncomplete="blockWidget.hide();" listener="#{ctBackingBean.validateProgressiveDate(progPaymentObj, index)}"/>
@@ -211,7 +211,7 @@
 				                             <p:spacer width="1"/>
 				                           
 				                              <p:selectOneMenu id="fromProYear" value="#{progPaymentObj.startYear}"  style="width:70px;"  
-				                                  disabled="#{progPaymentObj.useInFulfilment or ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting or ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
+				                                  disabled="#{progPaymentObj.useInFulfilment or ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting or ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
 				                                   <f:selectItems value="#{ctBackingBean.yearList}"/>  
 				                                 <p:ajax event="change" update=":form:progPaymentTableId,:form:proAddButtionId,:form:messages"  process="@form" 
 				                                    onstart="blockWidget.show();" oncomplete="blockWidget.hide();" listener="#{ctBackingBean.validateProgressiveDate(progPaymentObj, index)}"/>
@@ -225,7 +225,7 @@
 						                      
 						                      <h:panelGroup columns="5">
 						                          <p:selectOneMenu id="toProMonth" value="#{progPaymentObj.endMonth}"  style="width:110px;"
-						                               disabled="#{progPaymentObj.useInFulfilment or ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting or ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
+						                               disabled="#{progPaymentObj.useInFulfilment or ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting or ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
 				                                      <f:selectItems value="#{ctBackingBean.retrieveEndMonthList(progPaymentObj.endYear)}" />  
 				                                     <p:ajax event="change" update=":form:progPaymentTableId,:form:proAddButtionId,:form:messages" process="@form" 
 				                                      onstart="blockWidget.show();" oncomplete="blockWidget.hide();" listener="#{ctBackingBean.validateProgressiveDate(progPaymentObj, index)}"/>
@@ -234,7 +234,7 @@
 				                                
 				                                  <p:selectOneMenu id="toProYear" value="#{progPaymentObj.endYear}" 
 				                                       style="width:70px;" 
-				                                       disabled="#{progPaymentObj.useInFulfilment or ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting or ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
+				                                       disabled="#{progPaymentObj.useInFulfilment or ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting or ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
 				                                       <f:selectItems value="#{ctBackingBean.yearList}" />  
 				                                      <p:ajax event="change" update=":form:progPaymentTableId,:form:proAddButtionId,:form:messages"  process="@form" 
 				                                        onstart="blockWidget.show();" oncomplete="blockWidget.hide();" listener="#{ctBackingBean.validateProgressiveDate(progPaymentObj, index)}"/> 
@@ -254,7 +254,7 @@
 					                          </f:facet>
 			                                 <h:panelGroup>
 			                                     <p:inputText value="#{progPaymentObj.percentage}" style="width:50px;" styleClass="ppRightBtn" 
-			                         	            disabled="#{progPaymentObj.useInFulfilment or ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting or ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}" label="#{lbl['lbl.ct.percentage']}"><!--Enhancement 15851 - shaqimi -->
+			                         	            disabled="#{progPaymentObj.useInFulfilment or ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting or ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}" label="#{lbl['lbl.ct.percentage']}"><!--Enhancement 15851 - shaqimi -->
 			                                        <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" /> 
 			                                       <p:ajax event="blur" update=":form:progPaymentTableId, :form:proAddButtionId" process="@form" 
 			                                         onstart="blockWidget.show();" oncomplete="blockWidget.hide();" listener="#{ctBackingBean.calculatePercentage(progPaymentObj)}"/>
@@ -269,13 +269,13 @@
 		        <div class="ppRightBtn"> 
 		           <p:commandButton id="proAddButtionId" value="#{lbl['lbl.btn.add']}" 
 		                partialSubmit="true" rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}" process="@this"  
-		                disabled="#{ctBackingBean.managedBean.progSchedButtonDeactive or ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.managedBean.viewSCL}"
+		                disabled="#{ctBackingBean.managedBean.progSchedButtonDeactive or ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}"
 			            update="progPaymentTableId" action="#{ctBackingBean.addFrequencyDetails()}"
 			             oncomplete="progPaymentWidget.paginator.endLink.click();" ><!-- Enhancement 15851 - shaqimi -->
 			       </p:commandButton>
 		           <p:spacer width="2"/>
 		           <p:commandButton id="delProgressiveBtn" value="#{lbl['lbl.ct.delete']}" partialSubmit="true" 
-		                 disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.buttonHideSchActive or amendmentBackingBean.managedBean.viewSCL}"
+		                 disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.buttonHideSchActive or ctBackingBean.managedBean.viewSCL}"
 			             rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}" process="@this"  onsuccess="progDlgObj.show()"><!-- Enhancement 15851 - shaqimi -->
 			       </p:commandButton>
 		        </div>
@@ -292,7 +292,7 @@
 	       </h:panelGroup>    
 	</p:outputPanel>
    </p:panel>
-    <p:panel header="#{lbl['lbl.ct.panel.remarks.attachment']}" toggleable="true" rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting and !amendmentBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
+    <p:panel header="#{lbl['lbl.ct.panel.remarks.attachment']}" toggleable="true" rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting and !ctBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
 		 <table style="width: 100%">
 			<tr>
 				<td width="50%" valign="top">

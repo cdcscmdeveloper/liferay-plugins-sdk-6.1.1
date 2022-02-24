@@ -189,8 +189,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	
 	private Map<String, Integer> indexing;
 	
-	private boolean viewSCL = false;
-	
 	private boolean hasTaskIdFromAgreement = false;
 	
 	private String taskIdFromAgreement;
@@ -202,9 +200,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private String taskIdFromTaskList = null;
 	private Long contractIdFromTaskList = null;
 	private Long contractVerIdFromTaskList = null;
-	private Long contractIdFromAgreement = null;
-	private Long docIdFromAgreement = null;
-	private Long agreementIdFromAgreement = null;
 	//Enhancement 15851 - shaqimi end
 	
 	public void reassignValue(boolean value) 
@@ -1629,12 +1624,6 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	public void setIndexing(Map<String, Integer> indexing) {
 		this.indexing = indexing;
 	}
-	public boolean isViewSCL() {
-		return viewSCL;
-	}
-	public void setViewSCL(boolean viewSCL) {
-		this.viewSCL = viewSCL;
-	}
 
 	public boolean isViewSclFromAgreement() {
 		return viewSclFromAgreement;
@@ -1684,24 +1673,6 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	}
 	public void setTaskIdFromAgreement(String taskIdFromAgreement) {
 		this.taskIdFromAgreement = taskIdFromAgreement;
-	}
-	public Long getContractIdFromAgreement() {
-		return contractIdFromAgreement;
-	}
-	public void setContractIdFromAgreement(Long contractIdFromAgreement) {
-		this.contractIdFromAgreement = contractIdFromAgreement;
-	}
-	public Long getDocIdFromAgreement() {
-		return docIdFromAgreement;
-	}
-	public void setDocIdFromAgreement(Long docIdFromAgreement) {
-		this.docIdFromAgreement = docIdFromAgreement;
-	}
-	public Long getAgreementIdFromAgreement() {
-		return agreementIdFromAgreement;
-	}
-	public void setAgreementIdFromAgreement(Long agreementIdFromAgreement) {
-		this.agreementIdFromAgreement = agreementIdFromAgreement;
 	}
 	//15851 - shaqimi end
 }

@@ -54,7 +54,7 @@
 	                     style="width:40px;" styleClass="ppRightBtn"  label="#{lbl['lbl.ct.delivery.term']}"
 	                     disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting or
 	                      ctBackingBean.getValueFromAmendment() or ctBackingBean.managedBean.disableAmendDetails
-	                      or amendmentBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
+	                      or ctBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
 	                     <p:ajax event="change" update="@this" listener="#{ctBackingBean.onChangeDeliveryTerm(zoneTree)}"/>
 	                </p:inputText>
 	                <h:outputText rendered="#{zoneTree.zone != null}" value="#{lbl['lbl.ct.days']}" ></h:outputText>
@@ -66,7 +66,7 @@
 	</p:panel>
 	<p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true"
 	      rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting
-	      and !amendmentBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
+	      and !ctBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
 		<table style="width: 100%">
 			<tr>
 				<td width="50%" valign="top">

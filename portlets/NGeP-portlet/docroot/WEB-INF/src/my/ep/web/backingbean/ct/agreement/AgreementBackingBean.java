@@ -240,12 +240,9 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 			String taskId = originalServletRequest.getParameter("taskId");
-			Object contractIdFromAgreement = originalServletRequest.getAttribute("contractIdFromAgreement");
-			Object docIdFromAgreement = originalServletRequest.getAttribute("docIdFromAgreement");
-			Object agreementIdFromAgreement = originalServletRequest.getAttribute("agreementIdFromAgreement");
 			if (taskId == null) {
 				//Enhancement 15851 - shaqimi start
-				if(contractIdFromAgreement == null && docIdFromAgreement == null && agreementIdFromAgreement == null){
+				if(!getManagedBean().isFromViewSCL()){
 					return;
 				} else {
 					agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
@@ -253,13 +250,10 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 					resDTO = new ContractAgreementResDTO();
 					
 					ctReqDTO = new ContractAgreementReqDTO();
-					ctReqDTO.setContractId(Long.parseLong(contractIdFromAgreement.toString()));
-					ctReqDTO.setDocId(Long.parseLong(docIdFromAgreement.toString()));
-					ctReqDTO.setAgreementId(Long.parseLong(agreementIdFromAgreement.toString()));
-					ctReqDTO.setDocType(ParameterConst.DOCTYPE_SUPPLEMENTAL_AGREEMENT);	
-					originalServletRequest.removeAttribute("contractIdFromAgreement");
-					originalServletRequest.removeAttribute("docIdFromAgreement");
-					originalServletRequest.removeAttribute("agreementIdFromAgreement");
+					ctReqDTO.setContractId(getManagedBean().getCtContract().getContractId());
+					ctReqDTO.setDocId(getManagedBean().getContractVer().getContractVerId());
+					ctReqDTO.setAgreementId(getManagedBean().getCtAgreement().getAgreementId());
+					ctReqDTO.setDocType(ParameterConst.DOCTYPE_SUPPLEMENTAL_AGREEMENT);
 
 					resDTO = agreementSO.retrieveAgreement(ctReqDTO); 
 					setCtAgreementDetails(resDTO);
@@ -274,6 +268,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 						getManagedBean().setApproveFinalAgreement(true);
 					}
 					
+					getManagedBean().setFromViewSCL(false);
 					return;
 				}
 				//Enhancement 15851 - shaqimi end
@@ -1267,14 +1262,12 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		if(slLoaNo.substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)){
 			AmendmentBackingBean abb = new AmendmentBackingBean();
 			FacesContext fc = FacesContext.getCurrentInstance();
-
-			abb.getManagedBean().setContractIdFromAgreement(getManagedBean().getCtContract().getContractId());
-			abb.getManagedBean().setDocIdFromAgreement(getManagedBean().getContractVer().getContractVerId());
-			abb.getManagedBean().setAgreementIdFromAgreement(getManagedBean().getCtAgreement().getAgreementId());
+			
+			getManagedBean().setFromViewSCL(true);
 			
 			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
 			abb.getManagedBean().setTrackingDairyView(true);
-			abb.getManagedBean().setViewSCL(true);
+			ctBB.getManagedBean().setViewSCL(true);
 			abb.getManagedBean().setViewSclFromAgreement(true);
 			abb.gotoAmendViewPage(contractId, scLoa.getLoaId());
 		}
