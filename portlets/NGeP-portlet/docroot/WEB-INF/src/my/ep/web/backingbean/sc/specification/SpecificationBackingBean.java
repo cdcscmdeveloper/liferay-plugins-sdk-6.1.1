@@ -11749,6 +11749,13 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setSpecMaintenanceWorkFlowStatus(
 					scWorkFlowStatus);
 			System.out.println("after prepare...");
+			
+			//#28784
+			Long status = this.getManagedBean().getQt().getQtStatus().getStatusId();
+			if (status.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)) {
+				this.getManagedBean().setDemoType(true);
+			}
+			
 
 		} /*
 		 * catch (Exception e) { e.printStackTrace(); }
@@ -20420,7 +20427,7 @@ if(null!=allTechnicalChecklist){
 					statusDesc = ResourceBundleUtils.getMessage("lbl.sc.eva.compliance.stage.completed",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 				} else if (reqDTO.getStatusId().equals(QTStatusConst.TS_PENDING_SUBMISSION)) {
-					statusDesc = ResourceBundleUtils.getMessage("lbl.ct.incomplete",
+					statusDesc = ResourceBundleUtils.getMessage("lbl.demo.incomplete",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 				}
 
