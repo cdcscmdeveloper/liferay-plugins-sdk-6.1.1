@@ -910,7 +910,7 @@ public class ConsolidationReportBackingBean extends
 						.getScQtRecommends();
 			}
 			//#32398 - Start
-			sortingItemizedFollowedOrderByItemName(itemList);
+			sortingItemizedFollowedOrderByQtId(itemList,this.getManagedBean().getScQt());
 			//#32398 - End
 			getManagedBean().setItemsList(itemList);
 		}
@@ -1102,10 +1102,9 @@ public class ConsolidationReportBackingBean extends
 				//getManagedBean().setItemsList(
 				//		scQtFinalization.getScQtRecommends());
 				//#32398 - Start
-				List<ScQtRecommend> itemList = null;
-				itemList = scQtFinalization.getScQtRecommends();
-				sortingItemizedFollowedOrderByItemName(itemList);
-				getManagedBean().setItemsList(itemList);
+				getManagedBean().setItemsList(
+						sortingItemizedFollowedOrderByQtId(
+								scQtFinalization.getScQtRecommends(),scQt));
 				//#32398 - End
 			}
 
@@ -1326,10 +1325,9 @@ public class ConsolidationReportBackingBean extends
 				//getManagedBean().setItemsList(
 				//		scQtRecommendsByZone.get(selectedZone.getSpecZoneId()));
 				//#32398 - Start
-				List<ScQtRecommend> itemList = null;
-				itemList = scQtRecommendsByZone.get(selectedZone.getSpecZoneId());
-				sortingItemizedFollowedOrderByItemName(itemList);
-				getManagedBean().setItemsList(itemList);
+				getManagedBean().setItemsList(
+						sortingItemizedFollowedOrderByQtId(
+								scQtRecommendsByZone.get(selectedZone.getSpecZoneId()),this.getManagedBean().getScQt()));
 				//#32398 - End
 			}
 		}
@@ -2316,6 +2314,43 @@ public class ConsolidationReportBackingBean extends
 		getManagedBean().setActiveIndex(EVALUATION_REPORT_TAB_INDEX);
 	}
 
+	//#32398 - Start
+	private List<ScQtRecommend> sortingItemizedFollowedOrderByQtId(List<ScQtRecommend> oldRequestItemsRecommend,ScQt scQt){
+		
+		SuppFinalizationReqDTO reqDTORecommend = new SuppFinalizationReqDTO();
+		reqDTORecommend.setQtId(scQt.getQtId());
+		List<ScQtRecommend> newRequestItemsRecommend = findScRequestItemizedByReqDTO(reqDTORecommend);
+		final List<Long> sortingOrderRecommendIds = new ArrayList<>();
+		
+		if(CollectionUtils.isNotEmpty(newRequestItemsRecommend)){
+			for(ScQtRecommend recommendIds :newRequestItemsRecommend){
+				sortingOrderRecommendIds.add(recommendIds.getQtRecommendId());
+			}
+		}
+		
+		Collections.sort(oldRequestItemsRecommend, new Comparator<ScQtRecommend>() {
+			public int compare(ScQtRecommend o1, ScQtRecommend o2) {
+						return Integer.valueOf(
+								sortingOrderRecommendIds.indexOf(o1.getQtRecommendId().longValue())).compareTo(
+								Integer.valueOf(sortingOrderRecommendIds.indexOf(o2.getQtRecommendId().longValue())));
+			}
+		});	
+		
+		return oldRequestItemsRecommend;
+	}
+	
+	public List<ScQtRecommend> findScRequestItemizedByReqDTO(SuppFinalizationReqDTO reqDTO) {
+		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+		try {
+			qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);	
+			return qtSuppFinalizationSO.findScRequestItemizedByQtId(reqDTO).getScQtRecommendList();
+		} finally {
+			qtSuppFinalizationSO = null;
+		}
+	}
+	//#32398 - End
+	
 	//#31443 here to exclude validation for not offer entry supplier ranking
 		@SuppressWarnings("unused")
 		private void excludeValidatePartialRanking(TplSpecZoneDtl specZoneDtl,
