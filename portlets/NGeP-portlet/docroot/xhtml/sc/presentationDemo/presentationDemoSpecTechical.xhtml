@@ -161,11 +161,11 @@ label.ui-button>span.ui-button-text {
 			</h:panelGrid>
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
-					action="#{qTDetailBB.actionSearchPresentationDemo}"
+					action="#{specificationBackingBean.actionSearchPresentationDemo}"
 					update="specTable, questionTbl" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 					
 				<p:commandButton value="#{lbl['lbl.btn.reset']}"
-					action="#{qTDetailBB.resetSearchPresentationDemo}"
+					action="#{specificationBackingBean.resetSearchPresentationDemo}"
 					process="@this" update="specTable, questionTbl, itemSearchPanel" />
 			</div>
 			<br />
