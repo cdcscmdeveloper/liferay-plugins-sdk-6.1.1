@@ -19944,22 +19944,8 @@ if(null!=allTechnicalChecklist){
 					updatedCheckListsOtherDemo.add(t);
 				}
 			}
-			//#28784
-			List<TplSpecQuestion> newSpecItemList = new ArrayList<>();
-			//List<TplSpecMaster> templateSpecBean = getManagedBean().getTemplateSpecBean().getSpecMasterList().get;
-			if (savedCheckLists.get(0).getScQtDoc().getTplSpecMaster().getTplSpecQuestions() != null) {
-				for (TplSpecQuestion tpl : scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions()) {
-					if (tpl.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
-						PmParameter scoreType = getParameterByTypeAndCode(ParameterTypeConst.SCORE_TYPE,
-								ParameterConst.SCORE_TYPE_USER);
-						tpl.setScoreTypeCode(scoreType);
-						newSpecItemList.add(tpl);
-						
-					} 
-				}
-				savedCheckLists.get(0).getScQtDoc().getTplSpecMaster().setTplSpecQuestions(newSpecItemList);
-			}
 			
+			repopulateDemoQuestionList(savedCheckLists);			
 			reqDTO1.setCheckLists(updatedCheckListsDemo);
 			reqDTO1.setTobeRemoveList(updatedCheckListsOtherDemo);
 			/*
@@ -19984,6 +19970,23 @@ if(null!=allTechnicalChecklist){
 			updatedCheckLists = null;
 			successMessage(MessageConst.INFO_700004, getMessageCommon("lbl.sc.template.spec"), "", Boolean.FALSE);
 		}
+	}
+	
+	public void repopulateDemoQuestionList(List<ScQtCheckList> savedCheckLists){
+		List<TplSpecQuestion> newSpecItemList = new ArrayList<>();
+		if (savedCheckLists.get(0).getScQtDoc().getTplSpecMaster().getTplSpecQuestions() != null) {
+			for (TplSpecQuestion tpl : savedCheckLists.get(0).getScQtDoc().getTplSpecMaster().getTplSpecQuestions()) {
+				if (tpl.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
+					PmParameter scoreType = getParameterByTypeAndCode(ParameterTypeConst.SCORE_TYPE,
+							ParameterConst.SCORE_TYPE_USER);
+					tpl.setScoreTypeCode(scoreType);
+					newSpecItemList.add(tpl);
+					
+				} 
+			}
+			savedCheckLists.get(0).getScQtDoc().getTplSpecMaster().setTplSpecQuestions(newSpecItemList);
+		}
+		
 	}
 	
 	/**
