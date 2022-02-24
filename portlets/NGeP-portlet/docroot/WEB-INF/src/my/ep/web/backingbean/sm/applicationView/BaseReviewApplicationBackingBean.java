@@ -469,12 +469,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().setTabActiveIndex(outputTab);
 		getManagedBean().setRedirectToPersonPage(false);
 		getManagedBean().setCurrentPageType(outputPageType);
-		log.info("START ----------screen ini tab : " +outputTab +"-------outputPageType: " +outputPageType);
 		if (getManagedBean().getSmAppl() != null) {
 			getManagedBean().getSmAppl().setCurrentActiveTab(outputTab);
-			log.info("----------setCurrentActiveTab : " +outputTab );
 		}
-		log.info("END  ----------screen ini tab : " +outputTab +"-------outputPageType: " +outputPageType);
 	}
 
 	/**
@@ -4165,6 +4162,16 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		//27915: Disciplinary Action - start - 26238
 		PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelDABySupplierId(perReqDTO);
 		//27915: Disciplinary Action - end - 26238
+		
+		//32660 - start
+		List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(supplier);
+		if(!EntityHelper.isCollectionEmpty(voList)
+				&& voList.size() > 0){
+			getManagedBean().setDisciplineVOs(voList);
+		} else {
+			getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
+		}
+		//32660 - end
 		
 		if(discList != null && discList.size() > 0){
 			for(SmDisciplinaryAction disc : discList){
