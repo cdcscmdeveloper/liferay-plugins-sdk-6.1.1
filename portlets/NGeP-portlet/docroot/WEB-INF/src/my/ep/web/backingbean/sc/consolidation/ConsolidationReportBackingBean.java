@@ -2349,7 +2349,7 @@ public class ConsolidationReportBackingBean extends
 			qtSuppFinalizationSO = null;
 		}
 	}
-	//#32398 - End
+	//#32398 - End 
 	
 	//#31443 here to exclude validation for not offer entry supplier ranking
 		@SuppressWarnings("unused")
