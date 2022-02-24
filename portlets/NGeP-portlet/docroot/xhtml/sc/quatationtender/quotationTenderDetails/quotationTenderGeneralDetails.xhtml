@@ -33,6 +33,12 @@
 		value="#{qTDetailBB.managedBean.maintanceFlow}" />	
 	<ui:param name="isDemoDisabled"  
 		value="#{qTDetailBB.managedBean.demoDisabled}" />	
+	<ui:param name="isDemoReqDisabled"  
+		value="#{qTDetailBB.managedBean.qt.demoRequired}" />
+	<ui:param name="isDemoEvalDisabled"  
+		value="#{qTDetailBB.managedBean.demoEvalDisabled}" />	
+	<ui:param name="isDemoSpecialCase"  
+		value="#{qTDetailBB.managedBean.demoSpecialCase}" />			
 	<ac:lovPopup />
 
 	<p:panel id="qtdetailsid" header="#{lbl['lbl.sc.general.info']}" toggleable="true">
@@ -424,16 +430,27 @@
 						<table>
 							<tr>
 								<td><c:choose>
-										<c:when
-											test="#{!scQt.panel and !isReadOnly and !isDemoDisabled}">
+										<c:when	test="#{(!scQt.panel and !isReadOnly) and (!isDemoDisabled and !isMaintenanceFlow and !isDemoSpecialCase)}">
 											<p:outputPanel id="demoPop">
 												<p:selectOneRadio value="#{scQt.demoRequired}" disabled="#{scQt.partial}">
 													<f:selectItems
 														value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-<!-- 													<p:ajax event="change" partialSubmit="true" -->
-<!-- 														update="generalLocationList" process="@this" -->
-<!-- 														listener="#{createQtBB.partialChange}"> -->
-<!-- 													</p:ajax> -->
+													<p:ajax event="change" update="@form" partialSubmit="true" process="@this"
+														listener="#{createQtBB.validateDemoTechList}">
+													</p:ajax>
+													<p:ajax render="confirmDialog" ></p:ajax>
+												</p:selectOneRadio>
+											</p:outputPanel>
+										</c:when>
+										<c:when	test="#{isDemoDisabled}">
+											<p:outputPanel id="demoPop">
+												<p:selectOneRadio value="#{scQt.demoRequired}" disabled="#{scQt.partial}">
+													<f:selectItems
+														value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+													<p:ajax event="change" update="@form" partialSubmit="true" process="@this"
+														listener="#{createQtBB.validateDemoTechList}">
+													</p:ajax>
+													<p:ajax render="confirmDialog" ></p:ajax>
 												</p:selectOneRadio>
 											</p:outputPanel>
 										</c:when>
@@ -457,9 +474,9 @@
 				<td> <!-- START #21695 farid remove colspan="3"-->
 					<table>
 						<tr>
-							<td><c:choose>
+							<td><c:choose><!-- #28784 Disable zonal for qt maintanance-->
 									<c:when
-										test="#{!zoneCoverageReadonly and scQt.qtType == ParameterConst.quotationTenderTypeOpen and !scQt.panel and !isReadOnly}">
+										test="#{!isMaintenanceFlow and !zoneCoverageReadonly and scQt.qtType == ParameterConst.quotationTenderTypeOpen and !scQt.panel and !isReadOnly}">
 										<p:selectOneRadio value="#{scQt.zonal}">
 											<f:selectItems
 												value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
@@ -597,9 +614,29 @@
 					<p:outputLabel value="*" styleClass="mandatory"
 						rendered="#{scQt.qtStatus.statusId != QTStatusConst.QT_PENDING_QT_SUBMISSION}" />
 				</td>
-				<td><c:choose>
+				<td><c:choose><!-- START #28784 -->
 						<c:when
-							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_EVALUATION_TYPE) and !isReadOnly}">
+							test="#{(!isDemoEvalDisabled and !isMaintenanceFlow and !isDemoSpecialCase) and 
+							(!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_EVALUATION_TYPE) and !isReadOnly)}">
+							<table>
+								<tr>
+									<td><p:selectOneRadio id="evalType"
+											label=" #{lbl['lbl.sc.evaluation.type']}"
+											value="#{scQt.evaluationType}"
+											required="#{scQt.qtStatus.statusId != QTStatusConst.QT_PENDING_QT_SUBMISSION}">
+											<f:selectItems
+												value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.scEvaluationType)}" />												
+											<p:ajax event="change" process="@this" partialSubmit="true"
+												listener="#{createQtBB.renderDemoRadioButton}"
+												update="@form"></p:ajax><!-- END #26784 -->
+										</p:selectOneRadio></td>
+									<td><p:message id="evalMsg" for="evalType" display="icon" /></td>
+									<td style="margin-top: -3px"><ac:iconTooltip
+											value="#{lbl['lbl.sc.evaluation.type.tooltip']}" /></td>
+								</tr>
+							</table>
+						</c:when>
+						<c:when	test="#{isDemoEvalDisabled}">
 							<table>
 								<tr>
 									<td><p:selectOneRadio id="evalType"
@@ -608,7 +645,6 @@
 											required="#{scQt.qtStatus.statusId != QTStatusConst.QT_PENDING_QT_SUBMISSION}">
 											<f:selectItems
 												value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.scEvaluationType)}" />
-												<!-- START #28784 -->
 											<p:ajax event="change" process="@this" partialSubmit="true"
 												listener="#{createQtBB.renderDemoRadioButton}"
 												update="@form"></p:ajax><!-- END #26784 -->
@@ -1052,5 +1088,46 @@
 		</div>
 	</p:confirmDialog> 	
 <!-- #25729 #174 END -->
+ 	
+<!-- #28784 Start -->
+<p:confirmDialog id="demoDialogConfirm" widgetVar="demoDialogConfirm"
+ 		header="#{lbl['lbl.sc.confirmation']}"
+		message="#{lbl['lbl.demo.validate.tech.spec']}"
+		resizable="false" closable="false">
+		<div align="right">
+			<p:commandButton id="demoYes" 
+				value="#{lbl['lbl.btn.yes']}" 
+				action="#{createQtBB.yesDeleteExistingDemoTechChecklist}"
+				oncomplete="demoDialogConfirm.hide()"
+				update="@form"
+				process="@this"/>
+			<p:commandButton id="demoNo" 
+				value="#{lbl['lbl.btn.no']}" 	
+				action="#{createQtBB.noDeleteExistingDemoTechChecklist}"			
+				oncomplete="demoDialogConfirm.hide()"
+				process="@this"
+				update="@form"/>
+		</div>
+	</p:confirmDialog> 
+	<p:confirmDialog id="demoEvalDialogConfirm" widgetVar="demoEvalDialogConfirm"
+ 		header="#{lbl['lbl.sc.confirmation']}"
+		message="#{lbl['lbl.demo.validate.eval.tech.spec']}"
+		resizable="false" closable="false">
+		<div align="right">
+			<p:commandButton id="demoEvalYes" 
+				value="#{lbl['lbl.btn.yes']}" 
+				action="#{createQtBB.yesDeleteExistingDemoTechChecklist}"
+				oncomplete="demoEvalDialogConfirm.hide()"
+				update="@form"
+				process="@this"/>
+			<p:commandButton id="demoEvalNo" 
+				value="#{lbl['lbl.btn.no']}" 	
+				action="#{createQtBB.noDeleteExistingDemoTechChecklist}"			
+				oncomplete="demoEvalDialogConfirm.hide()"
+				update="@form"
+				process="@this"/>
+		</div>
+	</p:confirmDialog> 
+<!-- #28784 End -->
  	
 </ui:composition>
