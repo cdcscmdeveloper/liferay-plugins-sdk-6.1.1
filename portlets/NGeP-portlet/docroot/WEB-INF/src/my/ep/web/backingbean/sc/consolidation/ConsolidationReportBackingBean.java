@@ -922,7 +922,7 @@ public class ConsolidationReportBackingBean extends
 						.getScQtRecommends();
 			}
 			//#32398 - Start
-			sortingItemizedFollowedOrderByItemName(itemList);
+			sortingItemizedFollowedOrderByQtId(itemList,this.getManagedBean().getScQt());
 			//#32398 - End
 			getManagedBean().setItemsList(itemList);
 		}
@@ -1114,10 +1114,9 @@ public class ConsolidationReportBackingBean extends
 				//getManagedBean().setItemsList(
 				//		scQtFinalization.getScQtRecommends());
 				//#32398 - Start
-				List<ScQtRecommend> itemList = null;
-				itemList = scQtFinalization.getScQtRecommends();
-				sortingItemizedFollowedOrderByItemName(itemList);
-				getManagedBean().setItemsList(itemList);
+				getManagedBean().setItemsList(
+						sortingItemizedFollowedOrderByQtId(
+								scQtFinalization.getScQtRecommends(),scQt));
 				//#32398 - End
 			}
 
@@ -1343,10 +1342,9 @@ public class ConsolidationReportBackingBean extends
 				//getManagedBean().setItemsList(
 				//		scQtRecommendsByZone.get(selectedZone.getSpecZoneId()));
 				//#32398 - Start
-				List<ScQtRecommend> itemList = null;
-				itemList = scQtRecommendsByZone.get(selectedZone.getSpecZoneId());
-				sortingItemizedFollowedOrderByItemName(itemList);
-				getManagedBean().setItemsList(itemList);
+				getManagedBean().setItemsList(
+						sortingItemizedFollowedOrderByQtId(
+								scQtRecommendsByZone.get(selectedZone.getSpecZoneId()),this.getManagedBean().getScQt()));
 				//#32398 - End
 			}
 		}
@@ -2422,55 +2420,39 @@ public class ConsolidationReportBackingBean extends
 	//#27927 - End
 	
 	//#32398 - Start
-	public void sortingItemizedFollowedOrderByItemName(List<ScQtRecommend> itemsList){
-		Collections.sort(itemsList, new Comparator<ScQtRecommend>() {
-				
-			public int compare(ScQtRecommend itemsList1, ScQtRecommend itemsList2) {
-	           
-			    String s1 = itemsList1.getRequestItem().getItemName();
-			    String s2 = itemsList2.getRequestItem().getItemName();
+	private List<ScQtRecommend> sortingItemizedFollowedOrderByQtId(List<ScQtRecommend> oldRequestItemsRecommend,ScQt scQt){
+		
+		SuppFinalizationReqDTO reqDTORecommend = new SuppFinalizationReqDTO();
+		reqDTORecommend.setQtId(scQt.getQtId());
+		List<ScQtRecommend> newRequestItemsRecommend = findScRequestItemizedByReqDTO(reqDTORecommend);
+		final List<Long> sortingOrderRecommendIds = new ArrayList<>();
+		
+		if(CollectionUtils.isNotEmpty(newRequestItemsRecommend)){
+			for(ScQtRecommend recommendIds :newRequestItemsRecommend){
+				sortingOrderRecommendIds.add(recommendIds.getQtRecommendId());
+			}
+		}
+		
+		Collections.sort(oldRequestItemsRecommend, new Comparator<ScQtRecommend>() {
+			public int compare(ScQtRecommend o1, ScQtRecommend o2) {
+						return Integer.valueOf(
+								sortingOrderRecommendIds.indexOf(o1.getQtRecommendId().longValue())).compareTo(
+								Integer.valueOf(sortingOrderRecommendIds.indexOf(o2.getQtRecommendId().longValue())));
+			}
+		});	
+		
+		return oldRequestItemsRecommend;
+	}
 	
-				String[] s1Parts = s1.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");
-	            String[] s2Parts = s2.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");
-	
-	            int i = 0;
-	            while(i < s1Parts.length && i < s2Parts.length){
-	
-	                //if parts are the same
-	                if(s1Parts[i].compareTo(s2Parts[i]) == 0){
-	                    ++i;
-	                }else{
-	                    try{
-	
-	                        int intS1 = Integer.parseInt(s1Parts[i]);
-	                        int intS2 = Integer.parseInt(s2Parts[i]);
-	
-	                        //if the parse works
-	
-	                        int diff = intS1 - intS2; 
-	                        if(diff == 0){
-	                            ++i;
-	                        }else{
-	                            return diff;
-	                        }
-	                    }catch(Exception ex){
-	                        return s1.compareTo(s2);
-	                    }
-	                }//end else
-	            }//end while
-	
-	            //Handle if one string is a prefix of the other.
-	            // nothing comes before something.
-	            if(s1.length() < s2.length()){
-	                return -1;
-	            }else if(s1.length() > s2.length()){
-	                return 1;
-	            }else{
-	                return 0;
-	            }
-        }
-
-		});
+	public List<ScQtRecommend> findScRequestItemizedByReqDTO(SuppFinalizationReqDTO reqDTO) {
+		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+		try {
+			qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);	
+			return qtSuppFinalizationSO.findScRequestItemizedByQtId(reqDTO).getScQtRecommendList();
+		} finally {
+			qtSuppFinalizationSO = null;
+		}
 	}
 	//#32398 - End
 		
