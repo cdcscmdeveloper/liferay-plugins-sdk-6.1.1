@@ -8,8 +8,7 @@
 	xmlns:cc="http://java.sun.com/jsf/composite">
 	
 	<cc:interface>
-		<cc:attribute name="dialogWidth" default="1100px" />
-		<cc:attribute name="dialogHeight" default="500px" />
+	    <!-- #32642 remove dialogWidth & dialogHeight -->
 		<cc:attribute name="voList" type="java.util.List" required="true" />
 		<cc:attribute name="mofView" default="true" />
 		<cc:attribute name="startDate" default="" />
@@ -19,9 +18,8 @@
 	
 	<cc:implementation>
 	<p:dialog id="disciplinaryActionActiveDpDlgId" closable="true"
-		widgetVar="disciplinaryActionActiveDpDlg" modal="true" width="#{cc.attrs.dialogWidth}" height="#{cc.attrs.dialogHeight}"
-		resizable="true">
-		
+		widgetVar="disciplinaryActionActiveDpDlg" modal="true" resizable="false">
+		<!-- #32642 -->
 		<table style="width: 100%">
 			<tr>
 				<td>
@@ -75,7 +73,8 @@
 						<p:column headerText="#{lbl['lbl.sm.disciplinary.jktt.remarks']}" style="width : 25% !important; vertical-align:top;word-break: break-all;">
 							<h:outputText value="#{disciplinaryAction.remarks}"/>
 						</p:column>
-						<p:column headerText="#{lbl['lbl.sm.disciplinary.list.cancel.category.code']}" 
+						<!-- #32643 -->
+						<p:column headerText="#{lbl['lbl.sc.disciplinary.list.cancel.category.code']}" 
 							rendered="#{cc.attrs.mofView}"
 							style="width : 15% !important; vertical-align:top;">
 							<h:dataTable value="#{disciplinaryAction.categoryCodeList}" var="suppCat" rendered="#{not empty disciplinaryAction.categoryCodeList}"
@@ -86,7 +85,8 @@
 							</h:dataTable>
 							<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty disciplinaryAction.categoryCodeList}"/>
 						</p:column>
-						<p:column headerText="#{lbl['lbl.sm.disciplinary.list.of.ic.no.blacklist']}" style="width : 15% !important; vertical-align:top;">
+						<!-- #32643 -->
+						<p:column headerText="#{lbl['lbl.sc.disciplinary.list.of.ic.no.blacklist']}" style="width : 15% !important; vertical-align:top;">
 							<h:dataTable value="#{disciplinaryAction.blacklistownerDirectorList}" var="personnel" 
 								rowIndexVar="indexPer" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" rendered="#{not empty disciplinaryAction.blacklistownerDirectorList}">
 								<p:column style="border: none !important;">
