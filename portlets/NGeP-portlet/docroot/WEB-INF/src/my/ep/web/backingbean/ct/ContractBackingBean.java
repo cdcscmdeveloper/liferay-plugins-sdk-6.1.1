@@ -4015,9 +4015,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			getManagedBean().setAmendFromTaskList(true);
 			//follow structure but for amendment
 			FacesContext fc = FacesContext.getCurrentInstance();
-			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
-			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
-			log.info("taskids shaqimon = " + originalServletRequest.getAttribute("taskIds"));
 			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId()+"?faces-redirect=true");
 			abb.getManagedBean().setTrackingDairyView(true);
 			getManagedBean().setViewSCL(true);
