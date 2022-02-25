@@ -87,6 +87,7 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private List<CtAgreementParty> selectedAgencySigner;
 	private List<CtAgreementParty> selectedSupplierWitnes;
 	private List<CtAgreementParty> selectedSupplierSigner;
+	private boolean fromViewSCL = false;//15851
 	/**
 	 * @return the action
 	 */
@@ -784,4 +785,19 @@ public class AgreementManagedBean extends BaseManagedBean {
 	public void setBondReq(boolean bondReq) {
 		this.bondReq = bondReq;
 	}	
+
+	// Enhancement 15851 - shaqimi start
+	/**
+	 * @return buttonProcess the buttonProcess
+	 */
+	public boolean isFromViewSCL() {
+		return fromViewSCL;
+}
+	/**
+	 * @param buttonProcess the buttonProcess to set
+	 */
+	public void setFromViewSCL(boolean fromViewSCL) {
+		this.fromViewSCL = fromViewSCL;
+	}
+	// Enhancement 15851 - shaqimi end
 }

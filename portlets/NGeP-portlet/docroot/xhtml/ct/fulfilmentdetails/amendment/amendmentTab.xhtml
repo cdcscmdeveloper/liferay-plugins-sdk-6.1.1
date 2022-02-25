@@ -76,7 +76,14 @@
 		<h:panelGroup id="panelHeaderException">
 		  	 <p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="#{amendmentBackingBean.managedBean.autoUpdate}" closable="true" severity="error, info, warn" />
 			 <ui:include src="amendmentButtons.xhtml" />
+			 <!-- Enhancement 15851 - shaqimi start -->
+			 <ui:fragment rendered="#{!ctBackingBean.managedBean.viewSCL}">
 		     <ui:include src="amendmentHeader.xhtml" />
+			 </ui:fragment>
+			 <ui:fragment rendered="#{ctBackingBean.managedBean.viewSCL}">
+			 	<ui:include src="viewscl/amendmentHeader.xhtml"/>
+			 </ui:fragment>
+		     <!-- Enhancement 15851 - shaqimi end -->
 		  </h:panelGroup>
 		 
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -130,20 +137,23 @@
 		    and amendmentBackingBean.managedBean.ackFA eq null}"
 			actionListener="#{amendmentBackingBean.setTabValue('SC')}" update=":form" />
 		
+	 		<!--  Enhancement 15851 - shaqimi start -->
 		<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.loa.details']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			rendered="#{amendmentBackingBean.managedBean.prepareLOA or amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa}"
+			rendered="#{amendmentBackingBean.managedBean.prepareLOA or amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa or ctBackingBean.managedBean.viewSCL}"
 			actionListener="#{amendmentBackingBean.setTabValue('LOD')}" update=":form" />
 	 
 		  <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.loa.content']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			rendered="#{amendmentBackingBean.managedBean.prepareLOA or amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa}"
+			rendered="#{amendmentBackingBean.managedBean.prepareLOA or amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa or ctBackingBean.managedBean.viewSCL}" 
 			actionListener="#{amendmentBackingBean.setTabValue('CNT')}" update=":form" />
+			<!--  Enhancement 15851 - shaqimi end -->
 			
 			<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.view.loa']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa}"
 			actionListener="#{amendmentBackingBean.setTabValue('SLOA')}" update=":form" />
+			<!--  Enhancement 15851 - shaqimi end -->
 			
 			<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.meeting']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
@@ -165,15 +175,18 @@
 			rendered="#{amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa}"
 			actionListener="#{amendmentBackingBean.setTabValue('SDEC')}" update=":form" />
 				
+			<!--  Enhancemet 15851 - shaqimi start -->	
 		 <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.decision']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			rendered="#{amendmentBackingBean.managedBean.signUpdateDecision or amendmentBackingBean.managedBean.signOffDecision
-			or amendmentBackingBean.managedBean.decisionPbQcLOA}"
+			rendered="#{(amendmentBackingBean.managedBean.signUpdateDecision or amendmentBackingBean.managedBean.signOffDecision
+			or amendmentBackingBean.managedBean.decisionPbQcLOA or (amendmentBackingBean.managedBean.disableMeetingDetails and amendmentBackingBean.managedBean.disableDecisionDetails))
+			and !ctBackingBean.managedBean.viewSCL}"
 			actionListener="#{amendmentBackingBean.setTabValue('DCN')}" update=":form" />
+			<!--  Enhancemet 15851 - shaqimi end -->
 	
 	        <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.approver.setting']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			rendered="#{amendmentBackingBean.isApproverSetting() and !amendmentBackingBean.managedBean.prepareLOA}"
+			rendered="#{amendmentBackingBean.isApproverSetting() and !amendmentBackingBean.managedBean.prepareLOA and !ctBackingBean.managedBean.viewSCL}"
 			actionListener="#{amendmentBackingBean.setTabValue('SE')}" update=":form" />
 	
 		</p:tabMenu>
@@ -264,16 +277,18 @@
 					<ui:include src="pbqcc/committe.xhtml"/>
 				</p:outputPanel>
 				
-				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.decision'] 
-					and !amendmentBackingBean.managedBean.signOffDecision}">
+				<!--  Enhancemet 15851 - shaqimi start -->
+				<p:outputPanel rendered="#{(amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.decision'] 
+					and !amendmentBackingBean.managedBean.signOffDecision) and !ctBackingBean.managedBean.viewSCL}">
 					<ui:include src="pbqcc/signOffpbqcc.xhtml"/>
 					<ui:include src="pbqcc/attachment.xhtml"/>
 				</p:outputPanel>
 				
-				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.decision']
-				     and amendmentBackingBean.managedBean.signOffDecision}">
+				<p:outputPanel rendered="#{(amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.decision']
+				     and amendmentBackingBean.managedBean.signOffDecision) and !ctBackingBean.managedBean.viewSCL}">
 					<ui:include src="pbqcc/signOffMember.xhtml"/>
 				</p:outputPanel>
+				<!--  Enhancemet 15851 - shaqimi start -->
 				
 				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.setting'] }">
 					<ui:include	src="approverSetting.xhtml" />

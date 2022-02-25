@@ -214,6 +214,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	 */
 	public void preRenderAgreement() {
 		renewSesionObject();
+		ctBB.getManagedBean().setAmendFromTaskList(true);//Enhancement 15851 - shaqimi
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"agreementTab.xhtml?faces-redirect=true");
 	}
@@ -233,7 +234,36 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 			String taskId = originalServletRequest.getParameter("taskId");
 			if (taskId == null) {
-				return;
+				//Enhancement 15851 - shaqimi start
+				if(!getManagedBean().isFromViewSCL()){
+					return;
+				} else {
+					agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
+					ctReqDTO = new ContractAgreementReqDTO();
+					resDTO = new ContractAgreementResDTO();
+					
+					ctReqDTO.setContractId(getManagedBean().getCtContract().getContractId());
+					ctReqDTO.setDocId(getManagedBean().getContractVer().getContractVerId());
+					ctReqDTO.setAgreementId(getManagedBean().getCtAgreement().getAgreementId());
+					ctReqDTO.setDocType(ParameterConst.DOCTYPE_SUPPLEMENTAL_AGREEMENT);
+
+					resDTO = agreementSO.retrieveAgreement(ctReqDTO); 
+					setCtAgreementDetails(resDTO);
+					
+					if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_DRAFT_AGREEMENT_HT_NAME)
+							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_AGREEMENT_HT_NAME)
+							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_AGREEMENT_HT_NAME)
+							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_AC_HT_NAME)) {
+						getManagedBean().setFinalAgreement(true);
+					}
+					if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_AGREEMENT_HT_NAME)) {
+						getManagedBean().setApproveFinalAgreement(true);
+					}
+					
+					getManagedBean().setFromViewSCL(false);
+					return;
+				}
+				//Enhancement 15851 - shaqimi end
 			}
 			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
 			ctReqDTO = new ContractAgreementReqDTO();
@@ -1155,8 +1185,12 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			AmendmentBackingBean abb = new AmendmentBackingBean();
 			FacesContext fc = FacesContext.getCurrentInstance();
 			
+			getManagedBean().setFromViewSCL(true);
+			
 			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
 			abb.getManagedBean().setTrackingDairyView(true);
+			ctBB.getManagedBean().setViewSCL(true);
+			abb.getManagedBean().setViewSclFromAgreement(true);
 			abb.gotoAmendViewPage(contractId, scLoa.getLoaId());
 		}
 		//#15851 - end

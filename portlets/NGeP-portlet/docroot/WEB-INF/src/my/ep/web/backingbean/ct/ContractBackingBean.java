@@ -3962,10 +3962,17 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		Long contractId = this.getManagedBean().getContractVer().getCtContract().getContractId();
 		if(slLoaNo.substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)){
 			AmendmentBackingBean abb = new AmendmentBackingBean();
+			getManagedBean().setAmendFromTaskList(true);
 			//follow structure but for amendment
 			FacesContext fc = FacesContext.getCurrentInstance();
 			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId()+"?faces-redirect=true");
 			abb.getManagedBean().setTrackingDairyView(true);
+			getManagedBean().setViewSCL(true);
+			if(abb.getManagedBean().getTaskId() != null){
+				abb.getManagedBean().setTaskIdFromTaskList(abb.getManagedBean().getTaskId());
+				abb.getManagedBean().setContractIdFromTaskList(new Long(getManagedBean().getContractVer().getCtContract().getContractId()));
+				abb.getManagedBean().setContractVerIdFromTaskList(getManagedBean().getContractVer().getContractVerId());
+			}
 			abb.gotoAmendViewPage(contractId, scLoa.getLoaId());
 		}
 		//Enhancement 15851 - shaqimi end
@@ -4682,21 +4689,21 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					}
 				}
 			}
-	//#30428 - End	
-			
-	//Enhancement 15851 - Start
-	/**
-	 * The method used to navigate to Original contract details screen
-	 * for view purpose.
-	 * 
-	 * @return the navigate URL 
-	 */
-	public void goToOriginalLoaView(ScLoa scLoa) {
-			LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
-			FacesContext fc = FacesContext.getCurrentInstance();
-			loaDetailBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
-			loaDetailBackingBean.getManagedBean().setTrackingDairyView(true);
-			loaDetailBackingBean.viewLOA(scLoa.getLoaId());			
-	}
-	//Enhancement 15851 - End
+	//#30428 - End
+				
+		//Enhancement 15851 - Start
+		/**
+		 * The method used to navigate to Original contract details screen
+		 * for view purpose.
+		 * 
+		 * @return the navigate URL 
+		 */
+		public void goToOriginalLoaView(ScLoa scLoa) {
+				LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
+				FacesContext fc = FacesContext.getCurrentInstance();
+				loaDetailBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+				loaDetailBackingBean.getManagedBean().setTrackingDairyView(true);
+				loaDetailBackingBean.viewLOA(scLoa.getLoaId());			
+		}
+		//Enhancement 15851 - End
 }  

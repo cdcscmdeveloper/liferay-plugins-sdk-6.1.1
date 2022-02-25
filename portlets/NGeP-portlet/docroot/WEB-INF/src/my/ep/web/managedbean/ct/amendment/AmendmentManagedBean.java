@@ -177,6 +177,18 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private boolean trackingDairyView;
 	
 	private Map<String, Integer> indexing;
+	
+	private boolean hasTaskIdFromAgreement = false;
+	
+	private String taskIdFromAgreement;
+	
+	private boolean viewSclFromAgreement;
+	
+	private boolean backFromSCL = false;
+	
+	private String taskIdFromTaskList = null;
+	private Long contractIdFromTaskList = null;
+	private Long contractVerIdFromTaskList = null;
 	//Enhancement 15851 - shaqimi end
 	
 	public void reassignValue(boolean value) 
@@ -1566,7 +1578,7 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		this.viewOnly = viewOnly;
 	}
 	
-    //15851 - start
+	//15851 - shaqimi start
 	public String getBackToPreviousPage() {
 		return backToPreviousPage;
 	}
@@ -1585,5 +1597,55 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	public void setIndexing(Map<String, Integer> indexing) {
 		this.indexing = indexing;
 	}
-	//15851 - end
+
+	public boolean isViewSclFromAgreement() {
+		return viewSclFromAgreement;
+	}
+	public void setViewSclFromAgreement(boolean viewSclFromAgreement) {
+		this.viewSclFromAgreement = viewSclFromAgreement;
+	}
+
+	public boolean isBackFromSCL() {
+		return backFromSCL;
+	}
+	public void setBackFromSCL(boolean backFromSCL) {
+		this.backFromSCL = backFromSCL;
+	}
+
+	public String getTaskIdFromTaskList() {
+		return taskIdFromTaskList;
+	}
+
+	public void setTaskIdFromTaskList(String taskIdFromTaskList) {
+		this.taskIdFromTaskList = taskIdFromTaskList;
+	}
+
+	public Long getContractIdFromTaskList() {
+		return contractIdFromTaskList;
+	}
+
+	public void setContractIdFromTaskList(Long contractIdFromTaskList) {
+		this.contractIdFromTaskList = contractIdFromTaskList;
+	}
+
+	public Long getContractVerIdFromTaskList() {
+		return contractVerIdFromTaskList;
+	}
+
+	public void setContractVerIdFromTaskList(Long contractVerIdFromTaskList) {
+		this.contractVerIdFromTaskList = contractVerIdFromTaskList;
+	}	
+	public boolean isHasTaskIdFromAgreement() {
+		return hasTaskIdFromAgreement;
+	}
+	public void setHasTaskIdFromAgreement(boolean hasTaskIdFromAgreement) {
+		this.hasTaskIdFromAgreement = hasTaskIdFromAgreement;
+	}
+	public String getTaskIdFromAgreement() {
+		return taskIdFromAgreement;
+	}
+	public void setTaskIdFromAgreement(String taskIdFromAgreement) {
+		this.taskIdFromAgreement = taskIdFromAgreement;
+	}
+	//15851 - shaqimi end
 }

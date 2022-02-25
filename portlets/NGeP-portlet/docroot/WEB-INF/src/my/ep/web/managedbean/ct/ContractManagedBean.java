@@ -170,6 +170,8 @@ public class ContractManagedBean extends BaseManagedBean {
 	private boolean hasAmendmentLoaNo = false; //15851
 	private boolean fromViewPage = false;//15851
 	private boolean amendFromViewPage = false;//15851
+	private boolean amendFromTaskList = false;//15851
+	private boolean viewSCL = false;//15851
 
 	//#28854 - start
 	private List<String> itemSpecification;
@@ -1493,6 +1495,7 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.agencyDataDeletion = agencyDataDeletion;
 	}
 
+	//Enhancement 15851 - shaqimi start
 	public boolean isFromViewPage() {
 		return fromViewPage;
 	}
@@ -1509,7 +1512,21 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.amendFromViewPage = amendFromViewPage;
 	}
 
-	// End Fix - #31740
+	public boolean isAmendFromTaskList() {
+		return amendFromTaskList;
+	}
 
+	public void setAmendFromTaskList(boolean amendFromTaskList) {
+		this.amendFromTaskList = amendFromTaskList;
+	}
+
+	public boolean isViewSCL() {
+		return viewSCL;
+	}
 		
+	public void setViewSCL(boolean viewSCL) {
+		this.viewSCL = viewSCL;
+	}
+	//Enhancement 15851 - shaqimi end
+	// End Fix - #31740
 }
