@@ -9675,6 +9675,11 @@ private void retriveCommitteeRemarksList(){
 			successMessage(MessageConst.INFO_776043,
 					getMessageCommon("lbl.sc.quotation.tender"), qtCommittee.getScQt().getQtNo(), Boolean.TRUE);
 		// #25638 - End.
+			
+		// #10542 - start
+		// reset station
+			resetCurrentStationQt();
+		// #10542 - end
 		}
 	}
 
@@ -9719,6 +9724,12 @@ private void retriveCommitteeRemarksList(){
 				RequestContext.getCurrentInstance().execute("reviseApprovalDlgs.show()");
 			} else {
 				getManagedBean().setAutoUpdate(false);
+				
+				// #10542 - start
+				// reset station
+				resetCurrentStationQt();
+				// #10542 - end
+				
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			}
 			//25638 - End
@@ -9749,6 +9760,12 @@ private void retriveCommitteeRemarksList(){
 					} else {
 						messageCode = getMessgeConstant(outCome);
 					}
+					
+					// #10542 - start
+					// reset station
+					resetCurrentStationQt();
+					// #10542 - end
+					
 					successMessage(messageCode, getMessageCommon("lbl.sc.prepare.secretary.evaluation"), qtCommittee
 							.getScQt().getQtNo(), Boolean.TRUE);
 				}
@@ -16710,6 +16727,31 @@ private void retriveCommitteeRemarksList(){
 		}
 	}
 	
+	private void resetCurrentStationQt(){
+		// #10542 - start
+		// reset station
+		IQTEvaluationSO evaluationSO = null;
+		try{
+			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+
+			EvaluationReqDTO qtReqDTO = new EvaluationReqDTO();
+			EvaluationResDTO qtResDTO = new EvaluationResDTO();
+
+			qtReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+			qtResDTO = evaluationSO.retriveQtDtlsById(qtReqDTO);
+			ScQt scQt = qtResDTO.getScQt();
+
+			if (scQt != null) {
+				evaluationSO.updateScQtCurrentActiveTab(scQt, null);
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			evaluationSO = null;
+		}
+		// #10542 - end
+	}
 	// #10542 - end
 	
 
