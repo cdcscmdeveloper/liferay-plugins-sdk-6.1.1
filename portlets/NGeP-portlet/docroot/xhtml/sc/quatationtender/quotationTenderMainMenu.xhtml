@@ -305,7 +305,7 @@
 							<!-- 31991@farhan - end -->
 							</c:when>		
 							<ui:remove>29464-start</ui:remove>
-							<c:when test="#{qTDetailBB.managedBean.activeIndex eq '5'}">
+							<c:when test="#{qTDetailBB.managedBean.activeIndex eq '5' and !isQTClosePermanently}"> <ui:remove>32577-start</ui:remove>
 								<ui:include src="/xhtml/sc/quatationtender/committeeappointment/qtcommitteeappointment.xhtml" />							</c:when>
 							<ui:remove>29464-end</ui:remove>		
 							</c:choose>				
