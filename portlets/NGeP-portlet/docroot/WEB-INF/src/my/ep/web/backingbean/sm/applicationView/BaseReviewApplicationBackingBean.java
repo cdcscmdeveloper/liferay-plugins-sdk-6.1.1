@@ -4166,8 +4166,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						|| disc.isManufacturerCancel() 
 							|| disc.isBumiputeraCancel()){
 						List<DisciplinaryActionCategoryVO> catVoList = new ArrayList<DisciplinaryActionCategoryVO>();
-						List<Object[]> catList = SmApplicationUtil.retrieveCancelCategory();
-						
+						//32660 - start
+						List<Object[]> catList = SmApplicationUtil.retrieveCancelCategoryByDisciplinaryActionId(disc.getDisciplinaryActionId());
+						//32660 - end						
 						if(catList != null
 								&& catList.size() > 0){
 							for(Object[] arr : catList){
