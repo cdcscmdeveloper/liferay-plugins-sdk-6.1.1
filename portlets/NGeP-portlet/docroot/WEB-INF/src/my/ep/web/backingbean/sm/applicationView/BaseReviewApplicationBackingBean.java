@@ -4206,7 +4206,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						|| disc.isManufacturerCancel() 
 							|| disc.isBumiputeraCancel()){
 						List<DisciplinaryActionCategoryVO> catVoList = new ArrayList<DisciplinaryActionCategoryVO>();
-						List<Object[]> catList = SmApplicationUtil.retrieveCancelCategory();
+						//32660 - start
+						List<Object[]> catList = SmApplicationUtil.retrieveCancelCategoryByDisciplinaryActionId(disc.getDisciplinaryActionId());
+						//32660 - end
 						
 						if(catList != null
 								&& catList.size() > 0){
@@ -4216,7 +4218,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 								catCode = arr[3].toString() + arr[4].toString() + arr[5].toString() ;
 								catVo.setCategoryCode(catCode);	
 								catVoList.add(catVo);
-							}						
+							}	
+							
 							this.getManagedBean().setCategoryCodeList(catVoList);
 						}
 					}
