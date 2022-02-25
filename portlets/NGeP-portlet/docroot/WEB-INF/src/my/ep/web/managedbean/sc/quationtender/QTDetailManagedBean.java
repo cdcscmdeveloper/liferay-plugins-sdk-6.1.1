@@ -1754,6 +1754,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean demoType;
 	private boolean demoAction;
 	private List<ScQtCheckList> demoSpecTemplateList;
+	private List<TplSpecQuestion> demoOriSpecQuestionTemplateList;
 	private boolean demoDisabled;
 	private boolean qtSpecMaintanance;
 	private boolean demoEvalDisabled;
@@ -11057,6 +11058,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 		public void setDemoSpecialCase(boolean demoSpecialCase) {
 			this.demoSpecialCase = demoSpecialCase;
+		}
+
+		public List<TplSpecQuestion> getDemoOriSpecQuestionTemplateList() {
+			return demoOriSpecQuestionTemplateList;
+		}
+
+		public void setDemoOriSpecQuestionTemplateList(List<TplSpecQuestion> demoOriSpecQuestionTemplateList) {
+			this.demoOriSpecQuestionTemplateList = demoOriSpecQuestionTemplateList;
 		}
 }
 
