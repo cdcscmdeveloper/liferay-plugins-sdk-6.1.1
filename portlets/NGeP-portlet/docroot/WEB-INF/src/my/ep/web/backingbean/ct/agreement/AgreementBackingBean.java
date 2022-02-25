@@ -221,7 +221,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	 */
 	public void preRenderAgreement() {
 		renewSesionObject();
-		ctBB.getManagedBean().setAmendFromTaskList(true);
+		ctBB.getManagedBean().setAmendFromTaskList(true);//Enhancement 15851 - shaqimi
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"agreementTab.xhtml?faces-redirect=true");
 	}
@@ -249,7 +249,6 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 					ctReqDTO = new ContractAgreementReqDTO();
 					resDTO = new ContractAgreementResDTO();
 					
-					ctReqDTO = new ContractAgreementReqDTO();
 					ctReqDTO.setContractId(getManagedBean().getCtContract().getContractId());
 					ctReqDTO.setDocId(getManagedBean().getContractVer().getContractVerId());
 					ctReqDTO.setAgreementId(getManagedBean().getCtAgreement().getAgreementId());
