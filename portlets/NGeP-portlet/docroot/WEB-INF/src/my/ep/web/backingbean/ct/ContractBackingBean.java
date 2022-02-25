@@ -2692,14 +2692,52 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 		// Recalculate the performance bond amount
 		//#24333
-//		if (!getManagedBean().isDirectPurchase() && !getManagedBean().getCtContractAmount().isBondExempted()) {
-//			calculateNewBondAmount();
-//		}		    	
+		// Start - Fix - #32663
+		String proc_type = getManagedBean().getContractVer().getCtContract().getLoa().getQtType().getParameterCode();
+
+		if (!getManagedBean().isDirectPurchase() && !getManagedBean().getCtContractAmount().isBondExempted()) {
+			
+				if( proc_type != null ){
+					if( proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7) && getManagedBean().getContractVer().getCtContract().getLoa().isBondReq() ) {
+						//pk7 contract with bond from LOA
+						calculateNewBondAmount();
+					  } else if( !proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7) ) {
+						// except pk7 and DP
+						calculateNewBondAmount();
+					  }
+			}
+		   }
+		// End - Fix - #32663
 	}
 
 	/**
 	 * The method used to calculate the new performance bond amount.
 	 */
+//	private void calculateNewBondAmount() {
+//		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
+//				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+//
+//		ContractReqDTO reqDTO = new ContractReqDTO();
+//		reqDTO.setOverallContractAmt(getManagedBean().getGstTotalAmount());
+//		reqDTO.setContractPeriod(new BigDecimal(getManagedBean().getContractVer().getCtContractValue().getContractPeriod()));
+//		reqDTO.setScLoa(getManagedBean().getContractVer().getCtContract().getLoa());
+//
+//		ContractResDTO resDTO = contractSO.retrievePerformanceBondAmt(reqDTO);
+//		//#24333 - Start
+//		if(resDTO.isBondReq() == reqDTO.getScLoa().isBondReq()){
+//			getManagedBean().getCtContractAmount().setBondReq(resDTO.isBondReq());
+//		}else{
+//			getManagedBean().getCtContractAmount().setBondReq(false);
+//		}
+//		
+//		if (resDTO.isBondReq() == reqDTO.getScLoa().isBondReq()) {				 
+//			getManagedBean().getCtContractAmount().setTotalBondAmt(resDTO.getBondAmount());
+//		} else {
+//			getManagedBean().getCtContractAmount().setTotalBondAmt(null);
+//		}
+//		//#24333 - End
+//	}
+	// revert
 	private void calculateNewBondAmount() {
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
@@ -2709,20 +2747,13 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		reqDTO.setContractPeriod(new BigDecimal(getManagedBean().getContractVer().getCtContractValue().getContractPeriod()));
 		reqDTO.setScLoa(getManagedBean().getContractVer().getCtContract().getLoa());
 
-		ContractResDTO resDTO = contractSO.retrievePerformanceBondAmt(reqDTO);
-		//#24333 - Start
-		if(resDTO.isBondReq() == reqDTO.getScLoa().isBondReq()){
-			getManagedBean().getCtContractAmount().setBondReq(resDTO.isBondReq());
-		}else{
-			getManagedBean().getCtContractAmount().setBondReq(false);
-		}
-		
-		if (resDTO.isBondReq() == reqDTO.getScLoa().isBondReq()) {				 
+		ContractResDTO resDTO = contractSO.retrievePerformanceBondAmt(reqDTO);			 
+		getManagedBean().getCtContractAmount().setBondReq(resDTO.isBondReq());
+		if (resDTO.isBondReq()) {				 
 			getManagedBean().getCtContractAmount().setTotalBondAmt(resDTO.getBondAmount());
 		} else {
 			getManagedBean().getCtContractAmount().setTotalBondAmt(null);
 		}
-		//#24333 - End
 	}
 
 	/**
@@ -4320,9 +4351,24 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return true, if performance bond is required
 	 *         false, if performance bond is not required
 	 * */
+//	public boolean isPerformanceBond(){
+//		//#24333
+//		if(getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
+//						&& (!getManagedBean().isDirectPurchase() || getManagedBean().isNewPk7())
+//						&& !getManagedBean().getCtContractAmount().isBondExempted()
+//						&& (!getManagedBean().isCommonView()
+//								|| getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().
+//								equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY))){
+//								
+//			return  true;
+//		}
+//		return false;
+//	}
+	// revert
 	public boolean isPerformanceBond(){
-		//#24333
-		if(getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
+		if(getManagedBean().getCtContractAmount() != null
+				&&(getManagedBean().getCtContractAmount().isBondReq()
+						|| getManagedBean().getCtContractAmount().getTotalBondAmt() != null)
 						&& (!getManagedBean().isDirectPurchase() || getManagedBean().isNewPk7())
 						&& !getManagedBean().getCtContractAmount().isBondExempted()
 						&& (!getManagedBean().isCommonView()
