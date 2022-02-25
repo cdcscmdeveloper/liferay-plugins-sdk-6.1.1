@@ -2713,31 +2713,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * The method used to calculate the new performance bond amount.
 	 */
-//	private void calculateNewBondAmount() {
-//		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
-//				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-//
-//		ContractReqDTO reqDTO = new ContractReqDTO();
-//		reqDTO.setOverallContractAmt(getManagedBean().getGstTotalAmount());
-//		reqDTO.setContractPeriod(new BigDecimal(getManagedBean().getContractVer().getCtContractValue().getContractPeriod()));
-//		reqDTO.setScLoa(getManagedBean().getContractVer().getCtContract().getLoa());
-//
-//		ContractResDTO resDTO = contractSO.retrievePerformanceBondAmt(reqDTO);
-//		//#24333 - Start
-//		if(resDTO.isBondReq() == reqDTO.getScLoa().isBondReq()){
-//			getManagedBean().getCtContractAmount().setBondReq(resDTO.isBondReq());
-//		}else{
-//			getManagedBean().getCtContractAmount().setBondReq(false);
-//		}
-//		
-//		if (resDTO.isBondReq() == reqDTO.getScLoa().isBondReq()) {				 
-//			getManagedBean().getCtContractAmount().setTotalBondAmt(resDTO.getBondAmount());
-//		} else {
-//			getManagedBean().getCtContractAmount().setTotalBondAmt(null);
-//		}
-//		//#24333 - End
-//	}
-	// revert
 	private void calculateNewBondAmount() {
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
@@ -2747,13 +2722,20 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		reqDTO.setContractPeriod(new BigDecimal(getManagedBean().getContractVer().getCtContractValue().getContractPeriod()));
 		reqDTO.setScLoa(getManagedBean().getContractVer().getCtContract().getLoa());
 
-		ContractResDTO resDTO = contractSO.retrievePerformanceBondAmt(reqDTO);			 
-		getManagedBean().getCtContractAmount().setBondReq(resDTO.isBondReq());
-		if (resDTO.isBondReq()) {				 
+		ContractResDTO resDTO = contractSO.retrievePerformanceBondAmt(reqDTO);
+		//#24333 - Start
+		if(resDTO.isBondReq() == reqDTO.getScLoa().isBondReq()){
+			getManagedBean().getCtContractAmount().setBondReq(resDTO.isBondReq());
+		}else{
+			getManagedBean().getCtContractAmount().setBondReq(false);
+		}
+		
+		if (resDTO.isBondReq() == reqDTO.getScLoa().isBondReq()) {				 
 			getManagedBean().getCtContractAmount().setTotalBondAmt(resDTO.getBondAmount());
 		} else {
 			getManagedBean().getCtContractAmount().setTotalBondAmt(null);
 		}
+		//#24333 - End
 	}
 
 	/**
@@ -4351,24 +4333,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return true, if performance bond is required
 	 *         false, if performance bond is not required
 	 * */
-//	public boolean isPerformanceBond(){
-//		//#24333
-//		if(getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
-//						&& (!getManagedBean().isDirectPurchase() || getManagedBean().isNewPk7())
-//						&& !getManagedBean().getCtContractAmount().isBondExempted()
-//						&& (!getManagedBean().isCommonView()
-//								|| getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().
-//								equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY))){
-//								
-//			return  true;
-//		}
-//		return false;
-//	}
-	// revert
 	public boolean isPerformanceBond(){
-		if(getManagedBean().getCtContractAmount() != null
-				&&(getManagedBean().getCtContractAmount().isBondReq()
-						|| getManagedBean().getCtContractAmount().getTotalBondAmt() != null)
+		//#24333
+		if(getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
 						&& (!getManagedBean().isDirectPurchase() || getManagedBean().isNewPk7())
 						&& !getManagedBean().getCtContractAmount().isBondExempted()
 						&& (!getManagedBean().isCommonView()
