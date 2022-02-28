@@ -1613,6 +1613,13 @@ public class SupplierDataMaintenanceBackingBean extends
 					}
 				}
 			} else {
+
+				// 26238: Disciplinary Action - start -32590 - Reopen--> 
+				getManagedBean().getDisciplineVO().getSmDiscplinaryAction().setStartDate(null);
+				getManagedBean().getDisciplineVO().getSmDiscplinaryAction().setEndDate(null); 
+				getManagedBean().getDisciplineVO().getSmDiscplinaryAction().setRemark(null); 
+				// 26238: Disciplinary Action - end -32590 - Reopen -->
+				
 				//29181: Disciplinary Action - start - 26238
 				getManagedBean().setEditDisciplinaryActionCheckBox(false);
 				getManagedBean().setEditDisciplinaryAction(false);
