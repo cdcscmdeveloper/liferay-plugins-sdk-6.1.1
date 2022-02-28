@@ -678,7 +678,7 @@
 	</p:panel>
 	<!-- Bug #29446 - start -->
 	<p:panel header="#{lbl['lbl.ct.panel.remarks.attachment']}" toggleable="true" 
-	    rendered="#{ctBackingBean.managedBean.viewContract}">
+	    rendered="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.viewSCL}">
 		<table style="width: 100%">
 			<tr>
 				<td width="50%" valign="top" style="text-align:center"><h:outputLabel value="#{lbl['lbl.txt.remarks']}" style="float:none;text-align:center"/></td>
