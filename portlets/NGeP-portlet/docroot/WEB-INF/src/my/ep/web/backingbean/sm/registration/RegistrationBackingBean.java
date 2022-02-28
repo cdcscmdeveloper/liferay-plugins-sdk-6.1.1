@@ -2468,8 +2468,27 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setDistrictId(new Long (0));
 							this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPmDistrict(new PmDistrict());
 							this.getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
-							this.getManagedBean().setBusinessDivisionLs(new ArrayList<SelectItem>());
-							this.getManagedBean().setBusinessDistrictLs(SmCommonUtil.getDistrictList(ssmResDTO.getSmAddress().getPmState().getStateId()));
+							//START #30964
+							if (getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic() != null) {
+								if (getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses() != null
+										&& !getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses()
+												.isEmpty()) {
+									SmCompanyAddress comAdd = getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic()
+											.getSmCompanyAddresses().get(0);
+									SmAddress addr = comAdd.getSmAddress();
+									
+									
+									if(addr.getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)){
+									
+										List<SelectItem> divisionLs = SmCommonUtil.getDivisionList(addr.getPmState().getStateId());
+										this.getManagedBean().setBusinessDivisionLs(divisionLs);
+										this.getManagedBean().setBusinessDistrictLs(SmCommonUtil.getDistrictListByID(this.getManagedBean().getSmBusinessAdd().getPmDivision().getDivisionId()));
+										this.getManagedBean().getSmBusinessAdd().setPmDistrict(new PmDistrict());
+									}else{
+										this.getManagedBean().setBusinessDistrictLs(SmCommonUtil.getDistrictList(addr.getPmState().getStateId()));
+									}									
+								}
+							}//END #30964
 						}
 						//END 27488
 						this.getManagedBean().getSmSupp().getSmAppl().setApplValidWithSsm(true);
@@ -2625,7 +2644,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					this.getManagedBean().setSmBusinessAdd(smAddress);
 				}
 				// end - #30483
-				
+				//START #30964
+				if (this.getManagedBean().isCompanyValidWithSSM()){
+					this.getManagedBean().getSmBusinessAdd().setPmDistrict(new PmDistrict());
+				}//END #30964
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlineAccount/accountMaintenanceDet.xhtml");
 			}
 			
