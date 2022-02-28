@@ -1620,6 +1620,8 @@ public class ViewApplHistoryBackingBean extends
 		getManagedBean().setAgencyName(StringUtils.EMPTY);
 		getManagedBean().setSearchEpNo(StringUtils.EMPTY);
 		super.resetSearch();
+		//#32598
+		getManagedBean().getSmSupplierDataModel().resetData();
 	}
 	// 25792 - end
 	
