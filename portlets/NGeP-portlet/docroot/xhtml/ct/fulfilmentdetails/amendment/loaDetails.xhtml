@@ -96,7 +96,7 @@
 						disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails or ctBackingBean.managedBean.viewSCL}"
 						update=":form:contractSigner" readonly="true"
 						headerText="#{lbl['lbl.ct.signer']}"
-						value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractSigner.salutationCode.salutationName.concat(' ').concat(ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractSigner.userName)}"
+						value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractSigner.userName}"
 						saveObject="ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractSigner"
 						conditionField="#{amendmentBackingBean.constructSignerConditionFields()}"
 						postUpdateListener="amendmentBackingBean.contractSignerChange()" /><!-- Enhancement 15851 - shaqimi -->
