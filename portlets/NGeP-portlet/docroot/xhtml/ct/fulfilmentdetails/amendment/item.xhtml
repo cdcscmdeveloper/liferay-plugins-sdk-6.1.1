@@ -776,8 +776,8 @@
 											<td></td>
 											<td>
 												<p:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0 and !ctBackingBean.managedBean.viewSCL}" 
-												   maxlength="1000" style="width:70%;" autoResize="false" /> 
-												<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.remark']}" rendered="#{remarkIndex==0 and !ctBackingBean.managedBean.viewSCL}" />
+												   maxlength="1000" style="width:70%;" autoResize="false" /> <!-- Enhancement 15851 - shaqimi -->
+												<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.remark']}" rendered="#{remarkIndex==0 and !ctBackingBean.managedBean.viewSCL}" /><!-- Enhancement 15851 - shaqimi -->
 												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
 											</td>
 										</tr>
@@ -795,8 +795,8 @@
 			<td class="TableFieldRight">
 				<p:commandButton oncomplete="uploadItemDlg.show();return false;"
 					update="lampiranItem, uploadItemDlg" value="#{lbl['lbl.txt.attach.files']}"
-					disabled="#{ctBackingBean.managedBean.viewContract
-						or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}" />
+					disabled="#{(ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.viewSCL)
+						or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}" /><!-- Enhancement 15851 - shaqimi -->
 			</td>
 		</tr>
 		<tr>
@@ -823,8 +823,8 @@
 									styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
 								<p:commandLink onsuccess="deleteItemAttachmentDlg.show();" action="#{ctBackingBean.setAttachFileIndex(attachFileIndex)}"
 									rendered="#{!ctBackingBean.managedBean.viewContract}"
-									disabled="#{ctBackingBean.managedBean.viewContract
-										or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}">
+									disabled="#{(ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.viewSCL)
+										or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}"><!-- Enhancement 15851 - shaqimi -->
 			   						<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
 			 	 				</p:commandLink>
 			 	 			</td>
