@@ -28,7 +28,6 @@ public class SupplierManagementConst {
 		tmp.put("B", "/xhtml/sm/bumiPuteraApplication/smBumiSideMenu_BasePage.xhtml");
 		tmp.put("U", "/xhtml/sm/updateMofDetails/smUpdateMofSideMenu_BasePage.xhtml");
 		tmp.put("R", "/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
-		tmp.put("RE", "/xhtml/sm/NewMofApplication/mofRegSmUser_BaseWizardPage.xhtml");
 		APPLICATION_BASE_PAGE_BY_TYPE = Collections.unmodifiableMap(tmp);
 	}
 	// Navigation
