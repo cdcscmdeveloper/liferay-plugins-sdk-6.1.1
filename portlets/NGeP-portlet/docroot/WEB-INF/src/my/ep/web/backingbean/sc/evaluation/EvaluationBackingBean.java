@@ -9738,7 +9738,7 @@ private void retriveCommitteeRemarksList(){
 				
 				// #10542 - start
 				// reset station
-				resetCurrentStationQt();
+//				resetCurrentStationQt();
 				// #10542 - end
 				
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
