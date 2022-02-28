@@ -328,7 +328,7 @@
 			<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth170" rendered="#{amendmentBackingBean.getAmendValue(3) and ctBackingBean.managedBean.contractVer.ctAmendment.pbqcAuthorityReq}">
 				<p:outputLabel value="#{lbl['lbl.ct.secretary.committee']}" />
 				<p:selectOneMenu id="secretaryId" value="#{amendmentBackingBean.managedBean.secretaryId}" 
-					label="#{lbl['lbl.ct.secretary.committee']}" style="width:300px;">
+					label="#{lbl['lbl.ct.secretary.committee']}" style="width:300px;" disabled="#{ctBackingBean.managedBean.viewSCL}">
 		           	<f:selectItems value="#{amendmentBackingBean.getSecretaryDropdownList()}" />
 		       	</p:selectOneMenu>
 		  	</h:panelGrid>
