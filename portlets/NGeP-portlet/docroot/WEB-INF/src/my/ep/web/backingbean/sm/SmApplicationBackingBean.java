@@ -11286,7 +11286,19 @@ public class SmApplicationBackingBean extends
 									getManagedBean().getSmAppl().getApplType(),
 									getManagedBean().getSmAppl()
 											.getApplCategoryType());
-					reqDTO.setApproverLoginIds(approverLoginIds);
+					//#12483 - START
+					if(this.getManagedBean().getCurrentStatus().equalsIgnoreCase(SupplierManagementConst.STATUS_REVISE_BM) || this.getManagedBean().getCurrentStatus().equalsIgnoreCase(SupplierManagementConst.STATUS_REVISE_ENG)){
+						PmUser approver = PpCommonUtil.retrieveUserByLoginIdOrUserId(null, SmServiceLookup.getUserSO().retrieveLastPoOrApprover(this.getManagedBean().getSmAppl().getApplNo(), SupplierManagementConst.APPROVER_HQ));
+						
+						if(approver.getRecordStatusFlg() == 1){
+							reqDTO.setPoLoginId(approver.getLoginId());
+						} else {
+							reqDTO.setApproverLoginIds(approverLoginIds);
+						}
+					}else{
+						reqDTO.setApproverLoginIds(approverLoginIds);
+					}
+					//#12483 - END
 				}
 				reqDTO.setChangedBy(new FacesScopes().getUserSessionBean()
 						.getUserId());
