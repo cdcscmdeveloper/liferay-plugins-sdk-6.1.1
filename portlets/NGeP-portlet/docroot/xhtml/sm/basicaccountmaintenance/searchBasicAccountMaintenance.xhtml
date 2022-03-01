@@ -858,7 +858,7 @@
 						<h:outputText value="#{lbl['lbl.sm.appltype.cancelmof']}" rendered="#{smAppl[1] eq 'C'}" />
 						<h:outputText value="#{lbl['lbl.sm.appltype.renewmof']}" rendered="#{smAppl[1] eq 'R'}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sm.applicationstatus']}" style="text-align:center">
+					<p:column headerText="#{lbl['lbl.sm.applicationstatus']}" style="text-align:center;white-space:normal;word-break:break-all;">
 						<h:outputText value="#{smAppl[2]}" rendered="#{not empty smAppl[2]}"/>
 						<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty smAppl[2]}"/>
 					</p:column>
