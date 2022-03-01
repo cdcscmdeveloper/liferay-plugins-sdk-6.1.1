@@ -16324,7 +16324,9 @@ private void retriveCommitteeRemarksList(){
 				if (byItem.getScQtDemoItem().getTplSpecQuestion().getSpecQuestionId() == 
 						resDto.getRequestItemId()) {
 					this.getManagedBean().setDemoScore(byItem.getDemoEvalScore());
+					log.info("Request Item Id = " + resDto.getRequestItemId());
 				}
+				log.info("By Item Id = " + byItem.getScQtDemoItem().getTplSpecQuestion().getSpecQuestionId());
 			}
 		}
 		finally {
