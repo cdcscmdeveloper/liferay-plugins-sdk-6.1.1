@@ -19600,10 +19600,11 @@ if(null!=allTechnicalChecklist){
 	}
 	
 	public void actionSearchPresentationDemo(){
-  		if(CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions())){
+		List<TplSpecQuestion> listNew = new ArrayList<>();
   			List<TplSpecQuestion> list = this.getManagedBean().getDemoOriSpecQuestionTemplateList();  		
-  			List<TplSpecQuestion> listNew = new ArrayList<>();
   			if(StringUtils.isNotBlank(this.getManagedBean().getItemName())){
+			if (CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecBean().getSpecMaster()
+					.getTplSpecQuestions())) {
   	  			String itemName = this.getManagedBean().getItemName().toLowerCase();
   	  			for(TplSpecQuestion obj : list){
   	  				if(StringUtils.isNotBlank(obj.getClItem())){
