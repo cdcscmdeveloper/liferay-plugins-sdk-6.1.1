@@ -7598,7 +7598,12 @@ public class EvaluationBackingBean extends
 
 							if (this.getManagedBean()
 									.getEvaluatioStageActiveIndex() < 1 ) {
+								if(SourcingConstants.EVALUATE_BY_BOTH_PACKAGE_ITEM.equals(this.getManagedBean().getScQt().getEvaluateBy())){//32453-start
 								retriveTechnicalEvaluationStagePackage();
+								}else{
+									retriveSummaryEvaluationStage();	
+								}//32453-End
+								
 								this.getManagedBean().setTabTechnicalIndex(2);
 								outputTab = 2;
 								
@@ -7694,10 +7699,16 @@ public class EvaluationBackingBean extends
 							if (this.getManagedBean()
 									.getEvaluatioStageActiveIndex() < 1) {
 								evaluationStageStatusCheck();//#25138-Ahmaa
+								if(SourcingConstants.EVALUATE_BY_BOTH_PACKAGE_ITEM.equals(this.getManagedBean().getScQt().getEvaluateBy())){//32453-start
 								retriveTechnicalEvaluationStagePackage();//#25138-Ahmaa
 								// this.getManagedBean().setComplianceActiveIndex(2);
 								outputTab = 2;
 								this.getManagedBean().setTabTechnicalIndex(2);
+								}else{
+									retriveSummaryEvaluationStage();
+									outputTab = 2;
+									this.getManagedBean().setTabTechnicalIndex(2);
+								}//32453-End
 
 							}else{
 								retriveSummaryEvaluationStage();
