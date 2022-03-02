@@ -128,10 +128,12 @@
 				</tr>
 				<tr>
 					<td colspan="2" class="ppRightBtn">
+						<!-- 32629 - Start -->
 						<p:commandButton
 							value="#{lbl['lbl.btn.search']}"
-							action="#{categoryCodeSearchBackingBean.categorySearchAction(cc.attrs.supplierType,cc.attrs.facilityType,cc.attrs.paidUpCapital,cc.attrs.bumiPercentage,cc.attrs.categoryType,cc.attrs.businessTypeCode,cc.attrs.catcodeL1)}" 
+							action="#{categoryCodeSearchBackingBean.categorySearchAction(cc.attrs.supplierType,cc.attrs.facilityType,cc.attrs.paidUpCapital,cc.attrs.bumiPercentage,cc.attrs.categoryType,cc.attrs.businessTypeCode,cc.attrs.catcodeL1, cc.attrs.supplierId)}" 
 							process="catCodePnl" update="catDescrTbl" />
+						<!-- 32629 - End -->
 						<p:commandButton value="#{lbl['lbl.btn.reset']}"
 							action="#{categoryCodeSearchBackingBean.categoryResetAction}" 
 							resetValues="true" 
