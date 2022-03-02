@@ -11291,7 +11291,7 @@ public class SmApplicationBackingBean extends
 						PmUser approver = PpCommonUtil.retrieveUserByLoginIdOrUserId(null, SmServiceLookup.getUserSO().retrieveLastPoOrApprover(this.getManagedBean().getSmAppl().getApplNo(), SupplierManagementConst.APPROVER_HQ));
 						
 						if(approver.getRecordStatusFlg() == 1){
-							reqDTO.setPoLoginId(approver.getLoginId());
+							reqDTO.setApproverLoginIds(approver.getLoginId());
 						} else {
 							reqDTO.setApproverLoginIds(approverLoginIds);
 						}
