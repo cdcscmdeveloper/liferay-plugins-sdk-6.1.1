@@ -46,6 +46,10 @@ public class CategoryCodeSearchManagedBean extends BaseManagedBean {
 	private String businessTypeCode = null;
 	private String catcodeL1;
 	
+	//32629 - Start
+	private Long supplierId;
+	//32629 - End
+
 	public CategoryCodeSearchManagedBean() {
 	}
 
@@ -233,4 +237,14 @@ public class CategoryCodeSearchManagedBean extends BaseManagedBean {
 			List<SmSupplierCategory> approvedCategoryList) {
 		this.approvedCategoryList = approvedCategoryList;
 	}
+	
+	//32629 - Start
+	public Long getSupplierId() {
+		return supplierId;
+	}
+
+	public void setSupplierId(Long supplierId) {
+		this.supplierId = supplierId;
+	}
+	//32629 - End
 }

@@ -94,7 +94,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		getCategoryDescrDataModel().resetData();
 	}
 	
-	public void categorySearchAction(String supplierType, String facilityType, String paidUpCapital, String bumiPercentage, String categoryType, String businessTypeCode,String catcodeL1) {
+	public void categorySearchAction(String supplierType, String facilityType, String paidUpCapital, String bumiPercentage, String categoryType, String businessTypeCode,String catcodeL1, Long supplierId) {
 		debugLogger("searchAction");
 		
 		log.info("supplierType: " + supplierType);
@@ -111,6 +111,10 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		this.getManagedBean().setCategoryType(categoryType);
 		this.getManagedBean().setBusinessTypeCode(businessTypeCode);
 		this.getManagedBean().setCatcodeL1(catcodeL1);
+		
+		//32629 - Start
+		this.getManagedBean().setSupplierId(supplierId);
+		//32629 - End
 		
 		getCategoryDataModel().reloadData();
 	}
@@ -1343,8 +1347,10 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 				}
 				//27738 end 
 			} else { 
-				//27859,30720 Start - 3rd level category didnot appear
-				SupplierDataMaintenanceResDTO updateDAList = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionBySupplierId(getManagedBean().getSmSupplier().getSupplierId());
+				//27859,30720 Start - 3rd level category did not appear
+				//27859,30720,32629 - Start
+				SupplierDataMaintenanceResDTO updateDAList = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionBySupplierId(getManagedBean().getSupplierId());
+				//32629 End
 				if(updateDAList != null && updateDAList.getSmDisciplinaryActions().size() > 0){
 
 					for(SmDisciplinaryAction disc: updateDAList.getSmDisciplinaryActions()){
