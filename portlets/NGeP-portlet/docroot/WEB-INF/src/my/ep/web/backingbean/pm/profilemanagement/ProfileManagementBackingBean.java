@@ -3578,11 +3578,13 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				checkIdentificationNumber1();
 
 				// MyIdentity Checking
+				//Redmine Bug #32423 & #32032 - START
 				if (getManagedBean().getSelectedUser().getIdentificationCode().getParameterCode()
 						.equals(ProfileManagementConst.DEFAULT_IDENTIFY_TYPE)) {
 					SmCommonUtil.getInstance().verifyWithMyIdentity(user.getUserName(), user.getIdentificationNo(),
-							null, my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN);
+							null, my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN, false);
 				}
+				//Redmine Bug #32423 & #32032 - END
 			}
 			validateUser(user, userOrg);
 			// addressEntered = validateUserAddress(this.getManagedBean()
