@@ -1354,12 +1354,12 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 				if(updateDAList != null && updateDAList.getSmDisciplinaryActions().size() > 0){
 
 					for(SmDisciplinaryAction disc: updateDAList.getSmDisciplinaryActions()){
-
+						//32629 - Start
+						item = new SelectItem(getManagedBean().getSelectedCategoryL3().getCategoryL3Id(),
+								getManagedBean().getSelectedCategoryL3().getCategoryL3Code() + " - " + getManagedBean().getSelectedCategoryL3().getCategoryName());
+						//32629 End
 						List<Object[]> cancelDA = SmApplicationUtil.retrieveCancelCategoryBySupplier(disc.getSmSupplier());
 						for (PmCategoryL3 pmCategoryL3 : resDTO.getCategoryL3List()) {
-							item = new SelectItem(pmCategoryL3.getCategoryL3Id(),
-									pmCategoryL3.getCategoryL3Code() + " - " + pmCategoryL3.getCategoryName());
-							
 							if(disc.isCancelCategory() || disc.isManufacturerCancel()){								
 								if(cancelDA != null
 										&& cancelDA.size() > 0){
