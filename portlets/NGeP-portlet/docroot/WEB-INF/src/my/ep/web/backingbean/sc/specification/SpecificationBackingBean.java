@@ -20476,30 +20476,31 @@ if(null!=allTechnicalChecklist){
 		getManagedBean().setScQtCheckSt2techProposal(resDTO.getTechnicalCheckList());
 	}
 	
-	public void actionSearchPresentationDemo(){
-  		if(CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions())){
-  			List<TplSpecQuestion> list = this.getManagedBean().getDemoOriSpecQuestionTemplateList();  		
-  			List<TplSpecQuestion> listNew = new ArrayList<>();
-  			if(StringUtils.isNotBlank(this.getManagedBean().getItemName())){
-  	  			String itemName = this.getManagedBean().getItemName().toLowerCase();
-  	  			for(TplSpecQuestion obj : list){
-  	  				if(StringUtils.isNotBlank(obj.getClItem())){
-  	  					if(obj.getClItem().toLowerCase().contains(itemName)){
-  	  						obj.setSelectable(true);
-  	  						listNew.add(obj);
-  	  					}else{
-  	  						obj.setSelectable(false);
-  	  					}
-  	  				}
-  	  			}
-  	  		}else{
-  	  			for(TplSpecQuestion obj : list){
-  	  	  			obj.setSelectable(true);
-  	  	  		}
-  	  		}
-  			this.getManagedBean().getTemplateSpecBean().getSpecMaster().setTplSpecQuestions(listNew);
-  		}
-  	}
+	public void actionSearchPresentationDemo() {
+		List<TplSpecQuestion> listNew = new ArrayList<>();
+		List<TplSpecQuestion> list = this.getManagedBean().getDemoOriSpecQuestionTemplateList();
+		if (StringUtils.isNotBlank(this.getManagedBean().getItemName())) {
+			if (CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecBean().getSpecMaster()
+					.getTplSpecQuestions())) {
+				String itemName = this.getManagedBean().getItemName().toLowerCase();
+				for (TplSpecQuestion obj : list) {
+					if (StringUtils.isNotBlank(obj.getClItem())) {
+						if (obj.getClItem().toLowerCase().contains(itemName)) {
+							obj.setSelectable(true);
+							listNew.add(obj);
+						} else {
+							obj.setSelectable(false);
+						}
+					}
+				}
+			} else {
+				for (TplSpecQuestion obj : list) {
+					obj.setSelectable(true);
+				}
+			}
+			this.getManagedBean().getTemplateSpecBean().getSpecMaster().setTplSpecQuestions(listNew);
+		}
+	}
 
   	public void resetSearchPresentationDemo(){
   		if(CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions())){
