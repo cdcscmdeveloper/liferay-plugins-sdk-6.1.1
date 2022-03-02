@@ -51,7 +51,7 @@ label.ui-button>span.ui-button-text {
 	display: block !important;
 }
 
-.ui-datatable .ui-selectoneradio tbody td{
+.ui-datatable .ui-selectoneradio tbody td {
 	border: 0 !important;
 }
 </style>
@@ -61,7 +61,8 @@ label.ui-button>span.ui-button-text {
 	</ui:define>
 
 	<ui:define name="contentSection">
-
+		<ui:param name="isMaintenanceFlow" value="#{qTDetailBB.managedBean.maintanceFlow}" />
+		<ui:param name="isReadOnly" value="#{createQtBB.managedBean.readOnly}" />	
 
 		<ui:include src="/xhtml/common/uompopinclude.xhtml"></ui:include>
 		<!-- <ac:title value="#{lbl['lbl.sc.spec.specification.committee']}"></ac:title> -->
@@ -95,8 +96,7 @@ label.ui-button>span.ui-button-text {
 						style="float:right;" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();"
 						action="#{specificationBackingBean.completeDemoTemplateSpecDetails('SC',1)}"
-						update="@all" /> -->
-				</td>
+						update="@all" /> --></td>
 			</tr>
 		</table>
 
@@ -115,15 +115,15 @@ label.ui-button>span.ui-button-text {
 								value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specName}" />
 						</td>
 
-<!-- 						<td valign="top"><h:outputLabel -->
-<!-- 								value="#{lbl['lbl.sc.description']}"></h:outputLabel></td> -->
-<!-- 						<td colspan="3"><p:inputTextarea rows="2" cols="95" -->
-<!-- 								disabled="true" style="margin-bottom:5px;width:83%;" -->
-<!-- 								maxlength="200" onkeyup="limitTextArea(this,200);" -->
-<!-- 								onkeydown="limitTextArea(this,200);" -->
-<!-- 								onmouseout="limitTextArea(this,200);" -->
-<!-- 								value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specDesc}" /> -->
-<!-- 						</td> -->
+						<!-- 						<td valign="top"><h:outputLabel -->
+						<!-- 								value="#{lbl['lbl.sc.description']}"></h:outputLabel></td> -->
+						<!-- 						<td colspan="3"><p:inputTextarea rows="2" cols="95" -->
+						<!-- 								disabled="true" style="margin-bottom:5px;width:83%;" -->
+						<!-- 								maxlength="200" onkeyup="limitTextArea(this,200);" -->
+						<!-- 								onkeydown="limitTextArea(this,200);" -->
+						<!-- 								onmouseout="limitTextArea(this,200);" -->
+						<!-- 								value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specDesc}" /> -->
+						<!-- 						</td> -->
 					</tr>
 				</table>
 
@@ -162,8 +162,9 @@ label.ui-button>span.ui-button-text {
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
 					action="#{specificationBackingBean.actionSearchPresentationDemo}"
-					update="specTable, questionTbl" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-					
+					update="specTable, questionTbl" onstart="blockWidget.show()"
+					oncomplete="blockWidget.hide()" />
+
 				<p:commandButton value="#{lbl['lbl.btn.reset']}"
 					action="#{specificationBackingBean.resetSearchPresentationDemo}"
 					process="@this" update="specTable, questionTbl, itemSearchPanel" />
@@ -174,7 +175,7 @@ label.ui-button>span.ui-button-text {
 		<h:panelGroup id="specTable">
 			<p:panel header="#{lbl['lbl.tpl.req.spec.list.item']}"
 				text-transform="uppercase" toggleable="true">
-				
+
 				<p:remoteCommand name="#{templateSpecId}addedQuestionsTechnical"
 					actionListener="#{templateSpecBackingBean.addQuestion(templateSpecBean, templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,-1,TplSpecConst.questionTypeItem)}"
 					update="@([id$=questionTbl])" partialSubmit="true"
@@ -189,7 +190,7 @@ label.ui-button>span.ui-button-text {
 					rowIndexVar="row"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					scrollable1="true" scrollWidth1="#{scrollWidth}" rows="10">
-					
+
 					<ac:paginator for="questionTbl" />
 
 					<ui:param name="isFulfilmentTypeOneOff"
@@ -234,9 +235,12 @@ label.ui-button>span.ui-button-text {
 					<ui:param name="isValidationReq"
 						value="#{param[p:component(delBtnClientId)]==null}" />
 					<ui:param name="isQuestion" value="true" />
-					<ui:param name="isScoringReq" value="#{specificationBackingBean.managedBean.templateSpecBean.specMaster.scoringReq}" />
-					<ui:param name="isQuestionTypeItem" value="#{question.questionType == TplSpecConst.questionTypeItem}" />
-					<ui:param name="isValidation" value="#{!empty processValidationId ? param[p:component(processValidationId)]==null : true}" />
+					<ui:param name="isScoringReq"
+						value="#{specificationBackingBean.managedBean.templateSpecBean.specMaster.scoringReq}" />
+					<ui:param name="isQuestionTypeItem"
+						value="#{question.questionType == TplSpecConst.questionTypeItem}" />
+					<ui:param name="isValidation"
+						value="#{!empty processValidationId ? param[p:component(processValidationId)]==null : true}" />
 					<ui:param name="editable" value="true" />
 
 					<f:attribute name="rows" value="#{rowsPerPage}" />
@@ -262,7 +266,7 @@ label.ui-button>span.ui-button-text {
 							</p:column>
 							<p:column rowspan="#{specificationrequired ? 2 : 1}"
 								style="width:120px;">
-								<f:facet name="header">									
+								<f:facet name="header">
 									<h:outputText value="#{lbl['lbl.tpl.spec.content.uom']}" />
 								</f:facet>
 
@@ -270,7 +274,7 @@ label.ui-button>span.ui-button-text {
 							</p:column>
 							<p:column rowspan="#{specificationrequired ? 2 : 1}"
 								style="width:70px;white-space:normal;">
-								<f:facet name="header">								
+								<f:facet name="header">
 									<h:outputText
 										value="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}" />
 								</f:facet>
@@ -278,7 +282,7 @@ label.ui-button>span.ui-button-text {
 							</p:column>
 							<p:column rowspan="#{specificationrequired ? 2 : 1}"
 								style="width:60px;white-space:normal;">
-								<f:facet name="header">									
+								<f:facet name="header">
 									<h:outputText
 										value="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}" />
 								</f:facet>
@@ -286,7 +290,7 @@ label.ui-button>span.ui-button-text {
 							</p:column>
 							<p:column rowspan="#{specificationrequired ? 2 : 1}"
 								style="width:60px;white-space:normal;">
-								<f:facet name="header">								
+								<f:facet name="header">
 									<h:outputText
 										value="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}" />
 								</f:facet>
@@ -295,7 +299,7 @@ label.ui-button>span.ui-button-text {
 							<p:column rowspan="#{specificationrequired ? 2 : 1}"
 								style="width:63px;white-space:normal;"
 								rendered="#{isDurationByItem}">
-								<f:facet name="header">									
+								<f:facet name="header">
 									<h:outputText
 										value="#{lbl['lbl.tpl.spec.content.duration.month']}" />
 								</f:facet>
@@ -306,7 +310,7 @@ label.ui-button>span.ui-button-text {
 								value="#{(isSpecificationReq and !isItemTypeService)?'100px':'85px'}" />
 							<p:column rowspan="#{specificationrequired ? 2 : 1}"
 								style="width:170px;white-space:normal">
-								<f:facet name="header">								
+								<f:facet name="header">
 									<h:outputText value="#{lbl['lbl.tpl.spec.content.quantity']}" />
 								</f:facet>
 							</p:column>
@@ -329,23 +333,27 @@ label.ui-button>span.ui-button-text {
 							escape="false" style="white-space: normal;word-wrap: break-word;" />
 					</p:column>
 
-					<p:column style="width:120px;" rendered="#{question.selectable  and isQuestionTypeItem}">
+					<p:column style="width:120px;"
+						rendered="#{question.selectable  and isQuestionTypeItem}">
 						<h:outputText value="#{question.clUom.uomName}" />
 					</p:column>
 
-					<p:column style="width:70px;white-space:normal;" rendered="#{question.selectable and isQuestionTypeItem}">
+					<p:column style="width:70px;white-space:normal;"
+						rendered="#{question.selectable and isQuestionTypeItem}">
 						<h:panelGroup id="freqUOMPG" style="white-space:nowrap;">
 							<h:outputText value="#{question.clUomFrequency}" />
 						</h:panelGroup>
 					</p:column>
 
-					<p:column style="width:60px;white-space:normal;" rendered="#{question.selectable and isQuestionTypeItem}">
+					<p:column style="width:60px;white-space:normal;"
+						rendered="#{question.selectable and isQuestionTypeItem}">
 						<h:panelGroup id="dayUOMPG" style="white-space:nowrap;">
 							<h:outputText value="#{question.clUomPerDay}" />
 						</h:panelGroup>
 					</p:column>
 
-					<p:column style="width:60px;white-space:normal;" rendered="#{question.selectable and isQuestionTypeItem}">
+					<p:column style="width:60px;white-space:normal;"
+						rendered="#{question.selectable and isQuestionTypeItem}">
 						<h:panelGroup id="monthUOMPG" style="white-space:nowrap;">
 							<h:outputText value="#{question.clUomPerMonth}" />
 						</h:panelGroup>
@@ -358,71 +366,84 @@ label.ui-button>span.ui-button-text {
 						</h:panelGroup>
 					</p:column>
 
-					<p:column style="width:100px;white-space:normal" rendered="#{question.selectable and isQuestionTypeItem}">
+					<p:column style="width:100px;white-space:normal"
+						rendered="#{question.selectable and isQuestionTypeItem}">
 						<h:panelGroup id="qtyPG" rendered="#{isQuestionTypeItem}">
 							<h:outputText value="#{question.clQuantity}" />
 						</h:panelGroup>
 					</p:column>
 
-					<p:column style="width:130px;" rendered="#{question.selectable and isQuestionTypeItem}">
-						<p:outputPanel id="demoPop">
-							<p:selectOneRadio value="#{question.itemReqDemo}"
-								rendered="#{isQuestionTypeItem}">
-								<f:selectItems
-									value="#{templateSpecBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-								<p:ajax event="change" partialSubmit="true" update="@form"></p:ajax>
-							</p:selectOneRadio>
-							<ui:fragment rendered="#{question.selectable and question.itemReqDemo}">
-								<h:panelGroup id="scoringBtnPG">
-									<p:commandButton id="scoringBtn"
-										icon="#{empty question.demoScore ? 'ui-icon-pencil' : 'ui-icon-evaluate'}"
-										style="background-color:transparent !important; border:0px none;"
-										styleClass="scoringBtn"
-										action="#{templateSpecBackingBean.scoringPopupAction(specificationBackingBean.managedBean.templateSpecBean)}"
-										oncomplete="scoringSetPopup.show();" partialSubmit="true"
-										process="@this" update="@all"
-										rendered="#{isQuestionTypeItem and empty question.answerTypeCode.parameterId and isScoringReq}">
-										<f:setPropertyActionListener
-											target="#{specificationBackingBean.managedBean.templateSpecBean.selectedSpecQuestion}"
-											value="#{question}" />
-									</p:commandButton>
-								</h:panelGroup>
-							</ui:fragment>
-							
-							<p:dialog id="scoringSetPopup"
-							header="#{lbl['lbl.tpl.spec.content.scoring.settings.title']}"
-							widgetVar="scoringSetPopup" modal="true" width="800"
-							height="auto" rendered="#{isScoringReq}" closable="false"
-							position="top" dynamic="true">
+					<p:column style="width:130px;"
+						rendered="#{question.selectable and isQuestionTypeItem}">
+						<c:choose>
+							<c:when test="#{!isMaintenanceFlow and !isReadOnly }">
+								<p:outputPanel id="demoPop">
+									<p:selectOneRadio value="#{question.itemReqDemo}"
+										rendered="#{isQuestionTypeItem}">
+										<f:selectItems
+											value="#{templateSpecBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+										<p:ajax event="change" partialSubmit="true" update="@form"></p:ajax>
+									</p:selectOneRadio>
+									<ui:fragment
+										rendered="#{question.selectable and question.itemReqDemo}">
+										<h:panelGroup id="scoringBtnPG">
+											<p:commandButton id="scoringBtn"
+												icon="#{empty question.demoScore ? 'ui-icon-pencil' : 'ui-icon-evaluate'}"
+												style="background-color:transparent !important; border:0px none;"
+												styleClass="scoringBtn"
+												action="#{templateSpecBackingBean.scoringPopupAction(specificationBackingBean.managedBean.templateSpecBean)}"
+												oncomplete="scoringSetPopup.show();" partialSubmit="true"
+												process="@this" update="@all"
+												rendered="#{isQuestionTypeItem and empty question.answerTypeCode.parameterId and isScoringReq}">
+												<f:setPropertyActionListener
+													target="#{specificationBackingBean.managedBean.templateSpecBean.selectedSpecQuestion}"
+													value="#{question}" />
+											</p:commandButton>
+										</h:panelGroup>
+									</ui:fragment>
 
-							<c:if
-								test="#{!empty specificationBackingBean.managedBean.templateSpecBean.selectedSpecQuestion}">
-								<h:panelGroup id="scoreSettPnl">
-									<p:messages id="scorePopupMsg" showDetail="true"
-										autoUpdate="true" closable="true" showSummary="false"
-										severity="error, info" />
+									<p:dialog id="scoringSetPopup"
+										header="#{lbl['lbl.tpl.spec.content.scoring.settings.title']}"
+										widgetVar="scoringSetPopup" modal="true" width="800"
+										height="auto" rendered="#{isScoringReq}" closable="false"
+										position="top" dynamic="true">
 
-									<ui:include src="/xhtml/tpl/spec/scoringSettingsDemo.xhtml" />
-								</h:panelGroup>
+										<c:if
+											test="#{!empty specificationBackingBean.managedBean.templateSpecBean.selectedSpecQuestion}">
+											<h:panelGroup id="scoreSettPnl">
+												<p:messages id="scorePopupMsg" showDetail="true"
+													autoUpdate="true" closable="true" showSummary="false"
+													severity="error, info" />
 
-								<div class="ppRightBtn">
-									<p:commandButton value="#{lbl['lbl.btn.ok']}"
-										action="#{templateSpecBackingBean.scoringOkActionDemo(specificationBackingBean.managedBean.templateSpecBean)}"
-										partialSubmit="true" process="@this, scoreSettPnl"
-										oncomplete="scoringSetPopup.hide()"
-										update="scoreSettPnl, @(.scoringBtn)">
-										<f:setPropertyActionListener
-											target="#{specificationBackingBean.managedBean.templateSpecBean.specComponentId}"
-											value="#{templateSpecId}" />
-									</p:commandButton>
-									<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-										partialSubmit="true" process="@this" update="@this"
-										action="#{templateSpecBackingBean.scoringCancelActionDemo(specificationBackingBean.managedBean.templateSpecBean)}"
-										oncomplete="scoringSetPopup.hide()" rendered="#{editable}" />
-								</div>
-							</c:if>
-						</p:dialog>
-						</p:outputPanel>
+												<ui:include src="/xhtml/tpl/spec/scoringSettingsDemo.xhtml" />
+											</h:panelGroup>
+
+											<div class="ppRightBtn">
+												<p:commandButton value="#{lbl['lbl.btn.ok']}"
+													action="#{templateSpecBackingBean.scoringOkActionDemo(specificationBackingBean.managedBean.templateSpecBean)}"
+													partialSubmit="true" process="@this, scoreSettPnl"
+													oncomplete="scoringSetPopup.hide()"
+													update="scoreSettPnl, @(.scoringBtn)">
+													<f:setPropertyActionListener
+														target="#{specificationBackingBean.managedBean.templateSpecBean.specComponentId}"
+														value="#{templateSpecId}" />
+												</p:commandButton>
+												<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+													partialSubmit="true" process="@this" update="@this"
+													action="#{templateSpecBackingBean.scoringCancelActionDemo(specificationBackingBean.managedBean.templateSpecBean)}"
+													oncomplete="scoringSetPopup.hide()" rendered="#{editable}" />
+											</div>
+										</c:if>
+									</p:dialog>
+								</p:outputPanel>
+							</c:when>
+							<c:otherwise>
+								<p:inputText id="demoPopTxt"
+									value="#{question.itemReqDemo}"
+									style="width:195px;" disabled="true" />
+
+							</c:otherwise>
+						</c:choose>
 					</p:column>
 
 					<!-- <p:column style="width:125px;" rendered="#{question.selectable and question.itemReqDemo}">
