@@ -8227,6 +8227,18 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		return returnVal;
 	}
 	
+	// Bug #32425 - Start
+		private boolean isQcaSecretary(){
+			FacesScopes facesScopes = new FacesScopes();
+			return  facesScopes.hasRoleUser(RoleCode.QCA_SECRETARY.value());  
+		}
+		
+	    private boolean isQcbSecretary(){
+	    	FacesScopes facesScopes = new FacesScopes();
+			return  facesScopes.hasRoleUser(RoleCode.QCB_SECRETARY.value()); 
+		}
+	    // Bug #32425 - End
+	
 	/**
 	 * BUG 31120
 	 * Added MOF Desk Officer
@@ -8873,6 +8885,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		//filter document type search by role.
 		//26259
 		boolean pbbSecretaryOnly = false; 
+		boolean qcSecretaryOnly = false; //#32425
 		if (isPbbSecretary() && !(isDeskOfficer() || isAuditor() || isMofSupplier())){
 			pbbSecretaryOnly = true;
 		}else if(isFpbSecretary() && !(isDeskOfficer() || isAuditor() || isMofSupplier())){
@@ -8881,14 +8894,27 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			 * TO CATER FPB SECRETARY DROPDOWN LIST
 			 */
 			pbbSecretaryOnly = true;
-		}
+		}// Bug #32425 - Start
+		else if(isQcaSecretary() || isQcbSecretary()){
+			if(!(isDeskOfficer() || isAuditor() || isMofSupplier())){
+				qcSecretaryOnly = true;
+			}
+		}// Bug #32425 - End
 		
 		if (pbbSecretaryOnly) {
 			log.info(":::getDocTypeQtLOADropdownValues() -in true- pbbSecretaryOnly = "+ pbbSecretaryOnly +" :::");
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION);
-		}else if(isMofSupplier()){
+		}
+		// Bug #32425 - Start
+		else if(qcSecretaryOnly){
+			log.info(":::getDocTypeQtLOADropdownValues() -in true- qcSecretaryOnly = "+ qcSecretaryOnly +" :::");
+			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
+			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
+			qtLoaDoctypes.add(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION);
+	    }// Bug #32425 - End
+		else if(isMofSupplier()){
 			/*Bug #27412 START*/
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
