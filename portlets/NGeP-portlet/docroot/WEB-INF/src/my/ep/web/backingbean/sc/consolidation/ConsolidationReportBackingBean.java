@@ -1842,7 +1842,10 @@ public class ConsolidationReportBackingBean extends
 		getManagedBean().setItemized(true);
 		getManagedBean().setActiveIndex(ITEMIZED_TYPE_TAB_INDEX);
 		getManagedBean().setQualifiedSuppliersDataModel(null);
-	}
+		//#21695 START - Fix bug reload data changing tab package and item
+		loadInitialData();
+		// #21695 END
+		}
 
 	private void navigateToPackagewiseTab() {
 		getManagedBean().setItemized(false);
@@ -2551,16 +2554,18 @@ public class ConsolidationReportBackingBean extends
 				int totalQualifiedSuppliers) {
 			int totalRanksCount = 0;
 			int minRankCount = qualifiedSupplierBeans.size();
+//#21695 Fix Bug validation - START			
 			//#32401 - start
-			if (totalQualifiedSuppliers == 1) {
-				minRankCount = 1;
+			
+			 if (totalQualifiedSuppliers == 1) {
+				minRankCount = 0;
 			}else if (totalQualifiedSuppliers == 2) {
-				minRankCount = 2;
+				minRankCount = 0;
 			} else if (totalQualifiedSuppliers >= 3) {
 				minRankCount = 3;
 			}
-			
 			//#32401 - end
+			//#21695 Fix Bug validation - END	
 			int currentRank = 0;
 			EpException epException = null;
 			String expMsgForItem = StringUtils.EMPTY;
@@ -2647,6 +2652,12 @@ public class ConsolidationReportBackingBean extends
 				throw new EpException(MessageConst.ERROR_760384, new String[] {
 						String.valueOf(minRankCount), expMsgForItem });
 			}
+			//#21695 Fix Bug validation - START	
+			else if (totalRanksCount == 0 && minRankCount == 0){
+				throw new EpException(MessageConst.ERROR_760384, new String[] {
+						String.valueOf(minRankCount), expMsgForItem });
+			}
+			//#21695 Fix Bug validation - End	
 			
 			
 			
