@@ -91,7 +91,7 @@
 							</p:menuitem>
 							<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
 								update="@form"
-								disabled="#{directLOABackingBean.managedBean.scQt.fulfilmentType.parameterCode ne ParameterConst.fulfilmentTypeScheduled}">
+								disabled="#{!(directLOABackingBean.managedBean.scQt.fulfilmentType.parameterCode eq ParameterConst.fulfilmentTypeScheduled || directLOABackingBean.managedBean.scQt.fulfilmentType.parameterCode eq ParameterConst.fulfilmentTypeNonPeriodicScheduled)}">
 								<f:setPropertyActionListener
 									target="#{directLOABackingBean.managedBean.selectedTabIndex}"
 									value="5" />
