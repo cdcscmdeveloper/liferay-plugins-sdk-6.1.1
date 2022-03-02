@@ -627,6 +627,8 @@ public class SupplierManagementConst {
 	public static final String SUPP_ACCOUNT_ACTIVATION = "Pengaktifan Akaun Pendaftaran";
 	// #12483 - START
 	public static final String APPROVER_SEND_REVISE_APPL = "Pelulus hantar permohonan kaji semula";
+	public static final String STATUS_REVISE_ENG = "Pending Revise Application";
+	public static final String STATUS_REVISE_BM = "Menunggu Kaji Semula Permohonan";
 	// #12483 - END
 
 	public static final String SDO_SUBMIT_APPL = "SDO hantar senarai dokumen sokongan";
@@ -1300,6 +1302,13 @@ public class SupplierManagementConst {
 		return Long.parseLong(PM_STATUS_PENDING_REVISE_APPLICATION);
 	}
 
+	public String getSTATUS_REVISE_ENG(){
+		return STATUS_REVISE_ENG;
+	}
+	
+	public String getSTATUS_REVISE_BM(){
+		return STATUS_REVISE_BM;
+	}
 	// #12483 - END
 	
 	//14530 - START
