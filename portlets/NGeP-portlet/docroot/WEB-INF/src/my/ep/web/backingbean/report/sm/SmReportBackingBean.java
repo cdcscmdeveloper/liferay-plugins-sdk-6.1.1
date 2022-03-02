@@ -212,7 +212,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					}
 				} else if (getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.SM_REG_TYPE_G2G)) {
 					if (getManagedBean().getSelectedOrgProfile() == null) {
-						throw new EpException(MessageConst.ERROR_REPORT_780044);
+						throw new EpException(MessageConst.ERROR_REPORT_780070);
 					}
 				}
 			}
