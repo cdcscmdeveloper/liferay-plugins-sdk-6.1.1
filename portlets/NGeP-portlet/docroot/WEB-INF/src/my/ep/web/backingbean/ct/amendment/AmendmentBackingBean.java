@@ -1032,7 +1032,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					}
 				}
 			}
-			
+			ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgName();
 			// Retrieve Items
 			ctBackingBean.getManagedBean().getCtItemList().clear();
 			ctBackingBean.getManagedBean().getCtItemServiceList().clear();
@@ -2964,6 +2964,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						if(outputValue.equalsIgnoreCase(ContractConst.DEDUCTION_DETAIL)){
 							getManagedBean().setSelectedTabIndex(4);
 						}
+						//#24333
+						if(outputValue.equalsIgnoreCase("PB") && (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
+								&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange())){
+								getManagedBean().setSelectedTabIndex(5);
+								}else{
+								getManagedBean().setSelectedTabIndex(4);
+							}
 					} else if(outputValue.equalsIgnoreCase("IT")) {
 						getManagedBean().setSelectedTabIndex(2);
 						searchReset(); // Fix - #31042
