@@ -61,6 +61,8 @@ label.ui-button>span.ui-button-text {
 	</ui:define>
 
 	<ui:define name="contentSection">
+		<ui:param name="isMaintenanceFlow" value="#{qTDetailBB.managedBean.maintanceFlow}" />
+		<ui:param name="isReadOnly" value="#{createQtBB.managedBean.readOnly}" />	
 
 
 		<ui:include src="/xhtml/common/uompopinclude.xhtml"></ui:include>
@@ -95,8 +97,7 @@ label.ui-button>span.ui-button-text {
 						style="float:right;" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();"
 						action="#{specificationBackingBean.completeDemoTemplateSpecDetails('SC',1)}"
-						update="@all" /> -->
-				</td>
+						update="@all" /> --></td>
 			</tr>
 		</table>
 
@@ -162,7 +163,8 @@ label.ui-button>span.ui-button-text {
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
 					action="#{specificationBackingBean.actionSearchPresentationDemo}"
-					update="specTable, questionTbl" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+					update="specTable, questionTbl" onstart="blockWidget.show()"
+					oncomplete="blockWidget.hide()" />
 					
 				<p:commandButton value="#{lbl['lbl.btn.reset']}"
 					action="#{specificationBackingBean.resetSearchPresentationDemo}"
@@ -234,9 +236,12 @@ label.ui-button>span.ui-button-text {
 					<ui:param name="isValidationReq"
 						value="#{param[p:component(delBtnClientId)]==null}" />
 					<ui:param name="isQuestion" value="true" />
-					<ui:param name="isScoringReq" value="#{specificationBackingBean.managedBean.templateSpecBean.specMaster.scoringReq}" />
-					<ui:param name="isQuestionTypeItem" value="#{question.questionType == TplSpecConst.questionTypeItem}" />
-					<ui:param name="isValidation" value="#{!empty processValidationId ? param[p:component(processValidationId)]==null : true}" />
+					<ui:param name="isScoringReq"
+						value="#{specificationBackingBean.managedBean.templateSpecBean.specMaster.scoringReq}" />
+					<ui:param name="isQuestionTypeItem"
+						value="#{question.questionType == TplSpecConst.questionTypeItem}" />
+					<ui:param name="isValidation"
+						value="#{!empty processValidationId ? param[p:component(processValidationId)]==null : true}" />
 					<ui:param name="editable" value="true" />
 
 					<f:attribute name="rows" value="#{rowsPerPage}" />
@@ -329,23 +334,27 @@ label.ui-button>span.ui-button-text {
 							escape="false" style="white-space: normal;word-wrap: break-word;" />
 					</p:column>
 
-					<p:column style="width:120px;" rendered="#{question.selectable  and isQuestionTypeItem}">
+					<p:column style="width:120px;"
+						rendered="#{question.selectable  and isQuestionTypeItem}">
 						<h:outputText value="#{question.clUom.uomName}" />
 					</p:column>
 
-					<p:column style="width:70px;white-space:normal;" rendered="#{question.selectable and isQuestionTypeItem}">
+					<p:column style="width:70px;white-space:normal;"
+						rendered="#{question.selectable and isQuestionTypeItem}">
 						<h:panelGroup id="freqUOMPG" style="white-space:nowrap;">
 							<h:outputText value="#{question.clUomFrequency}" />
 						</h:panelGroup>
 					</p:column>
 
-					<p:column style="width:60px;white-space:normal;" rendered="#{question.selectable and isQuestionTypeItem}">
+					<p:column style="width:60px;white-space:normal;"
+						rendered="#{question.selectable and isQuestionTypeItem}">
 						<h:panelGroup id="dayUOMPG" style="white-space:nowrap;">
 							<h:outputText value="#{question.clUomPerDay}" />
 						</h:panelGroup>
 					</p:column>
 
-					<p:column style="width:60px;white-space:normal;" rendered="#{question.selectable and isQuestionTypeItem}">
+					<p:column style="width:60px;white-space:normal;"
+						rendered="#{question.selectable and isQuestionTypeItem}">
 						<h:panelGroup id="monthUOMPG" style="white-space:nowrap;">
 							<h:outputText value="#{question.clUomPerMonth}" />
 						</h:panelGroup>
@@ -358,13 +367,17 @@ label.ui-button>span.ui-button-text {
 						</h:panelGroup>
 					</p:column>
 
-					<p:column style="width:100px;white-space:normal" rendered="#{question.selectable and isQuestionTypeItem}">
+					<p:column style="width:100px;white-space:normal"
+						rendered="#{question.selectable and isQuestionTypeItem}">
 						<h:panelGroup id="qtyPG" rendered="#{isQuestionTypeItem}">
 							<h:outputText value="#{question.clQuantity}" />
 						</h:panelGroup>
 					</p:column>
 
-					<p:column style="width:130px;" rendered="#{question.selectable and isQuestionTypeItem}">
+					<p:column style="width:130px;"
+						rendered="#{question.selectable and isQuestionTypeItem}">
+						<c:choose>
+							<c:when test="#{!isMaintenanceFlow and !isReadOnly }">
 						<p:outputPanel id="demoPop">
 							<p:selectOneRadio value="#{question.itemReqDemo}"
 								rendered="#{isQuestionTypeItem}">
@@ -372,7 +385,8 @@ label.ui-button>span.ui-button-text {
 									value="#{templateSpecBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 								<p:ajax event="change" partialSubmit="true" update="@form"></p:ajax>
 							</p:selectOneRadio>
-							<ui:fragment rendered="#{question.selectable and question.itemReqDemo}">
+									<ui:fragment
+										rendered="#{question.selectable and question.itemReqDemo}">
 								<h:panelGroup id="scoringBtnPG">
 									<p:commandButton id="scoringBtn"
 										icon="#{empty question.demoScore ? 'ui-icon-pencil' : 'ui-icon-evaluate'}"
@@ -423,6 +437,14 @@ label.ui-button>span.ui-button-text {
 							</c:if>
 						</p:dialog>
 						</p:outputPanel>
+							</c:when>
+							<c:otherwise>
+								<p:inputText id="demoPopTxt"
+									value="#{question.itemReqDemo}"
+									style="width:195px;" disabled="true" />
+
+							</c:otherwise>
+						</c:choose>
 					</p:column>
 
 					<!-- <p:column style="width:125px;" rendered="#{question.selectable and question.itemReqDemo}">
