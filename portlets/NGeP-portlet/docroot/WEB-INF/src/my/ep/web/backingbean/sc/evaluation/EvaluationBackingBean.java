@@ -16216,10 +16216,11 @@ private void retriveCommitteeRemarksList(){
 			resDto = qtDemoSO.retrieveByItemListBySupplierId(demoReqDTO);
 			this.getManagedBean().setByItemDemoList(resDto.getByItemList());
 			for (ScQtDemoByItemScore byItem : resDto.getByItemList()) {
-				if (byItem.getScQtDemoItem().getTplSpecQuestion().getSpecQuestionId() == 
-						resDto.getRequestItemId()) {
+				if (byItem.getScQtDemoItem().getTplSpecQuestion().getSpecQuestionId().equals(resDto.getRequestItemId())) {
 					this.getManagedBean().setDemoScore(byItem.getDemoEvalScore());
+					log.info("Request Item Id = " + resDto.getRequestItemId());
 				}
+				log.info("By Item Id = " + byItem.getScQtDemoItem().getTplSpecQuestion().getSpecQuestionId());
 			}
 		}
 		finally {
