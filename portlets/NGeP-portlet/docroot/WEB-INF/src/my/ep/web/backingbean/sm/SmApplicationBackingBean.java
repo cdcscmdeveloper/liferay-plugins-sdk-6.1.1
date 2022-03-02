@@ -11227,10 +11227,29 @@ public class SmApplicationBackingBean extends
 					}
 
 					actionDesc = SupplierManagementConst.PO_ESCALATE_APPROVER;
-					successMsg = SmCommonUtil.getOutputMsgBundle(
-							MessageConst.INFO_700014,
-							new String[] { applNo, statusDesc,
-									getApproverListForSuccessMsg() });
+					//#12483 - START
+					if(this.getManagedBean().getCurrentStatus().equalsIgnoreCase(SupplierManagementConst.STATUS_REVISE_BM) || this.getManagedBean().getCurrentStatus().equalsIgnoreCase(SupplierManagementConst.STATUS_REVISE_ENG)){
+						PmUser approver = PpCommonUtil.retrieveUserByLoginIdOrUserId(null, SmServiceLookup.getUserSO().retrieveLastPoOrApprover(this.getManagedBean().getSmAppl().getApplNo(), SupplierManagementConst.APPROVER_HQ));
+						if(approver.getRecordStatusFlg() == 1){
+							this.getManagedBean().setReviseApprover(approver);
+							successMsg = SmCommonUtil.getOutputMsgBundle(
+									MessageConst.INFO_700014,
+									new String[] { applNo, statusDesc,
+											"<tr><td>1)</td><td>"+PpCommonUtil.retrieveUserByLoginIdOrUserId(approver.getLoginId(), null).getUserName()+"</td></tr>" });
+							
+						} else {
+							successMsg = SmCommonUtil.getOutputMsgBundle(
+									MessageConst.INFO_700014,
+									new String[] { applNo, statusDesc,
+											getApproverListForSuccessMsg() });
+						}
+					}else{
+						successMsg = SmCommonUtil.getOutputMsgBundle(
+								MessageConst.INFO_700014,
+								new String[] { applNo, statusDesc,
+										getApproverListForSuccessMsg() });
+					}
+					//#12483 - END
 				} else if (res
 						.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.INQUIRY)) {
 					successMsg = SmCommonUtil.getOutputMsgBundle(
@@ -11288,10 +11307,8 @@ public class SmApplicationBackingBean extends
 											.getApplCategoryType());
 					//#12483 - START
 					if(this.getManagedBean().getCurrentStatus().equalsIgnoreCase(SupplierManagementConst.STATUS_REVISE_BM) || this.getManagedBean().getCurrentStatus().equalsIgnoreCase(SupplierManagementConst.STATUS_REVISE_ENG)){
-						PmUser approver = PpCommonUtil.retrieveUserByLoginIdOrUserId(null, SmServiceLookup.getUserSO().retrieveLastPoOrApprover(this.getManagedBean().getSmAppl().getApplNo(), SupplierManagementConst.APPROVER_HQ));
-						
-						if(approver.getRecordStatusFlg() == 1){
-							reqDTO.setApproverLoginIds(approver.getLoginId());
+						if(this.getManagedBean().getReviseApprover().getRecordStatusFlg() == 1){
+							reqDTO.setApproverLoginIds(this.getManagedBean().getReviseApprover().getLoginId());
 						} else {
 							reqDTO.setApproverLoginIds(approverLoginIds);
 						}
