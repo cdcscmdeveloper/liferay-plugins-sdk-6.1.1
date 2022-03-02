@@ -120,7 +120,17 @@ public class MolPayServlet extends HttpServlet {
 			e.printStackTrace(); 
 		} 
 		// #26307 end  
-
+		// #32422 START 
+		String date1 = null;
+		String extraP1 = req.getParameter("extraP");;
+		JSONObject obj1;
+		try { 
+			obj1 = new JSONObject(extraP1); 
+			date1 = obj1.getString("bank_datetime") != null ? obj1.getString("bank_datetime") : null;
+		} catch (JSONException e) { 
+			e.printStackTrace(); 
+		}
+		// #32422 END
 		if(nbcb != null){
 			Long ordId = Long.valueOf(orderId);
 			IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
@@ -224,12 +234,35 @@ public class MolPayServlet extends HttpServlet {
 					}
 					//END THIS LINE OF CODE DO NOT MERGE TO PRODUCTION
 					// #26307 end
+					//32422 START
+					Date bankDate = null;
+					try {
+						if(date1 != null){
+							log.info("Bank Date&Time ==== "+date1);
+							bankDate = DateUtils.convertStringToDate("yyyy-MM-dd HH:mm:ss", date1);
+							pymtReqDTO.setBankDate(bankDate);
+							smPayment.setPaymentDate(bankDate);
+						}else{
+							log.info("payDate ==== "+paydate);
+							bankDate = DateUtils.convertStringToDate("yyyy-MM-dd HH:mm:ss", paydate);
+							pymtReqDTO.setBankDate(bankDate);
+							smPayment.setPaymentDate(bankDate);
+						}
+					} catch (Exception e) {
+						log.info("bankDate and paydate is null");
+						e.printStackTrace();
+					}
+					//32422 END
+
 					log.info("channel---------"+channel);
 					paymentOrder.setChannelName(channel);
 					smPaymentRes.setTransactionId(tranID);
 					smPaymentRes.setErrorCode(errorCode);
 					smPaymentRes.setErrorDesc(errorDesc);
-					smPaymentRes.setTransactionDate(txDate);
+					//32422 START
+					//smPaymentRes.setTransactionDate(txDate);
+					smPaymentRes.setTransactionDate(bankDate);
+					//32422 END
 					smPaymentRes.setPyPaymentOrder(paymentOrder);
 					smPaymentRes.setPaymentStatus(status);
 					smPaymentRes.setPaidAmt(txAmount);
