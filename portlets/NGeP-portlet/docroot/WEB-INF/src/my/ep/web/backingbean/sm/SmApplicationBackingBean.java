@@ -1328,6 +1328,10 @@ public class SmApplicationBackingBean extends
 				}
 			}
 		}
+		
+		// 32064 - Start
+		initBusinessPremise();
+		// 32064 - End
 
 		// init downgradeMofToBasic
 		MofAccountReqDTO reqDTO = new MofAccountReqDTO();
@@ -3693,7 +3697,10 @@ public class SmApplicationBackingBean extends
 					SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
 		}
 		setFacilityDefaultPrices(getManagedBean().getBasicCompanyFacility());
-		initBusinessPremise();
+		
+		// 32064 - Start
+		//initBusinessPremise(); 
+		// 32064 - End
 	}
 
 	/**
