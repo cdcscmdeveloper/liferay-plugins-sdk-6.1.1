@@ -16212,32 +16212,26 @@ private void retriveCommitteeRemarksList(){
 		
 		return totalTechScore;
 	}
-	
+	//#28784 summary bug - start
 	private void presentationDemoItemScore(String supplierNo, Long requestItem) {
-		
-		retrieveDemoSupplierNo(supplierNo);
-		
 		DemoResDTO resDto = new DemoResDTO();
+		
 		try {
 			IQTDemoSO qtDemoSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDemoSO.class);
 			DemoReqDTO demoReqDTO = new DemoReqDTO();
 			demoReqDTO.setDemoSupplierNo(this.getManagedBean().getDemoSupplierNo());
-			demoReqDTO.setRequestItemId(requestItem);
-			resDto = qtDemoSO.retrieveByItemListBySupplierId(demoReqDTO);
-			this.getManagedBean().setByItemDemoList(resDto.getByItemList());
-			for (ScQtDemoByItemScore byItem : resDto.getByItemList()) {
-				if (byItem.getScQtDemoItem().getTplSpecQuestion().getSpecQuestionId().equals(resDto.getRequestItemId())) {
-					this.getManagedBean().setDemoScore(byItem.getDemoEvalScore());
-					log.info("Request Item Id = " + resDto.getRequestItemId());
+			demoReqDTO.setSpecQuestionId(requestItem);
+			resDto = qtDemoSO.retrieveByItemScoreBySuppppierIdAndSpecQuestionId(demoReqDTO);
+			for (ScQtDemoByItemScore score : resDto.getByItemList()) {
+				this.getManagedBean().setDemoScore(score.getDemoEvalScore());
 				}
-				log.info("By Item Id = " + byItem.getScQtDemoItem().getTplSpecQuestion().getSpecQuestionId());
 			}
-		}
 		finally {
 
 		}
 	}
+	//#28784 summary bug - end
 	
 	public void demoSupplierListFileUpload(FileUploadEvent event)
 			throws FileNotFoundException, IOException {
