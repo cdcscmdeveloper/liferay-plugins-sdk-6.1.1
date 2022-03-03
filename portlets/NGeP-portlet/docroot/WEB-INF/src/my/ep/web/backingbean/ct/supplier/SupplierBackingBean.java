@@ -1473,7 +1473,8 @@ public void selectFinancialAcc(){
 		UserReqDTO userReqDTO = null;
 		UserReqDTO reqDTO = null;
 		try{
-			if (getManagedBean().getContractAdminlist() == null) {
+	// Start Fix - #32186
+    // 		if (getManagedBean().getContractAdminlist() == null) {
 				getManagedBean().setContractAdminlist(new ArrayList<PmUser>());
 
 				String roleCode = (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
@@ -1528,7 +1529,9 @@ public void selectFinancialAcc(){
 									//End Fix - #31962
 
 								}
-			}
+
+	//		     }
+	// End Fix - #32186
 		} finally {
 			userSO = null;
 		}	
