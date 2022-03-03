@@ -46,8 +46,6 @@ import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
-import my.ep.persistence.entity.sm.SmReplaceSupplierAdminDoc;
-import my.ep.persistence.entity.sm.SmReplaceSupplierAdminDocFile;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -266,6 +264,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 					}
 				}
 			}
+		}
 	}
 	
 	/**
