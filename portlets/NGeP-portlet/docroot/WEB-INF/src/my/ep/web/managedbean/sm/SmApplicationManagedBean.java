@@ -20,6 +20,7 @@ import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -590,6 +591,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmApplRevise smApplRevise;
 	private String reviseReason;
 	private boolean reviseMandatory;
+	private PmUser reviseApprover;
 	// #12483 - END
 
 	// #15629 - START
@@ -4467,6 +4469,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setReviseMandatory(boolean reviseMandatory) {
 		this.reviseMandatory = reviseMandatory;
+	}
+	
+	public void setReviseApprover(PmUser reviseApprover) {
+		this.reviseApprover = reviseApprover;
+	}
+	
+	public PmUser getReviseApprover() {
+		return reviseApprover;
 	}
 	// #12483 - END
 
