@@ -62,6 +62,9 @@
 			<!-- need to change all because when used multiple <ac:confirmationPopup , only one loading gif will popup (the last ac:) -->
 			<!-- because of same name of widget -->
 			
+			<p:ajax event="close" listener="#{cofirmationPopUpBackingBean.logConfirmationPopUpOnClose()}" 
+			oncomplete="console.log('dialog is completed');" />
+			
 			<p:blockUI block="#{cc.attrs.id}Popup" widgetVar="#{cc.attrs.id}confirmPopupBlockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
