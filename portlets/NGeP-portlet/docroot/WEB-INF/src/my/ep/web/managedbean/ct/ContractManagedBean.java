@@ -149,6 +149,12 @@ public class ContractManagedBean extends BaseManagedBean {
 	private boolean minQtyCheck = false;
 	// End - 28479	
 
+	//Start Fix - #31740
+	private Map<Long, CtAgency> selectedAgencyChanges;
+	
+	private Map<Long, CtAgency> agencyDataDeletion;
+	//End Fix - #31740
+	
 	/**
 	 * @return the fileDirectory
 	 */
@@ -1266,5 +1272,31 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.minQtyCheck = minQtyCheck;
 	}	
 	// End - 28479
+	
+		// Start Fix - #31740
+		/**
+		 * Populate only changes related to agency
+		 */
+		public Map<Long, CtAgency> getSelectedAgencyChanges() {
+			if(selectedAgencyChanges==null) {
+				selectedAgencyChanges = new HashMap<Long, CtAgency>();
+			}
+			return selectedAgencyChanges;
+		}
 
+		public void setSelectedAgencyChanges(Map<Long, CtAgency> selectedAgencyChanges) {
+			this.selectedAgencyChanges = selectedAgencyChanges;
+		}
+		
+		public Map<Long, CtAgency> getAgencyDataDeletion() {
+			if(agencyDataDeletion==null) {
+				agencyDataDeletion = new HashMap<Long, CtAgency>();
+			}
+			return agencyDataDeletion;
+		}
+
+		public void setAgencyDataDeletion(Map<Long, CtAgency> agencyDataDeletion) {
+			this.agencyDataDeletion = agencyDataDeletion;
+		}
+		// End Fix - #31740
 }
