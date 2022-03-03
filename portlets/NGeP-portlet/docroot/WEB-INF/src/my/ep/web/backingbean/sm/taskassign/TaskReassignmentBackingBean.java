@@ -2251,6 +2251,9 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 			resDTO.setSuccessful(true);
 			return resDTO;
 		} catch (Exception e) {
+			log.info("==============totalTimeToDelete trace============== "+totalTimeToDelete);
+			log.info("==============totalTimeToGeTData trace============== "+totalTimeToGeTData);
+			
 			e.printStackTrace();
 			resDTO.setSuccessful(false);
 			return resDTO;
@@ -2376,6 +2379,9 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 			resDTO.setSuccessful(true);
 			return resDTO;
 		} catch (Exception e) {
+			log.info("==============totalTimeToDelete trace============== "+totalTimeToDelete);
+			log.info("==============totalTimeToGeTData trace============== "+totalTimeToGeTData);
+			
 			e.printStackTrace();
 			resDTO.setSuccessful(false);
 			return resDTO;
