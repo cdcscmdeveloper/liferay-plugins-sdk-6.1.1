@@ -62,15 +62,17 @@
 							<h:outputText value="#{lbl['lbl.ct.deduction.description']}" styleClass="required"/>
 						</f:facet>
 						<p:spacer width="15"/>
+						<!--Start Fix #32123 -->
 						<p:inputText  value="#{datas.deductionDesc}"  style="width:400px;float:left;" maxlength="255"
-							disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
+							disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.notificationSetting}"  
 							rendered="#{!ctBackingBean.managedBean.viewContract and  !ctBackingBean.managedBean.notificationSetting and 
 								(ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeOthers
 								or ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeFixed
 								or ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeNonFixed)}" required="true" label="#{lbl['lbl.ct.deduction.description']}">
 							</p:inputText>
-							<h:outputText rendered="#{ctBackingBean.managedBean.viewContract}"
+							<h:outputText rendered="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting}"
 								value="#{datas.deductionDesc}" style="float:left;" />
+						 <!--End Fix #32123 -->		
 					</p:column> 
 
 					<p:column style="width:150px;text-align:right;">
