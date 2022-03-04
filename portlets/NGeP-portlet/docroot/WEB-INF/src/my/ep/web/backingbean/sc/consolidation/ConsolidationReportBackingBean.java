@@ -2549,6 +2549,7 @@ public class ConsolidationReportBackingBean extends
 				throw new EpException(MessageConst.ERROR_760384, new String[] {
 						String.valueOf(minRankCount), expMsgForItem });
 		}
+	}
 			//#21695 Fix Bug validation - End	
 		
 		//#32398 - Start
