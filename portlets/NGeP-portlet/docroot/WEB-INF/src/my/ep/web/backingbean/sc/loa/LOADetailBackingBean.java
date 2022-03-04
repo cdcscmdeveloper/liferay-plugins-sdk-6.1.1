@@ -717,6 +717,18 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							}
 						}
 					}
+				}else if (ParameterConst.DOCTYPE_QUOTATION
+						.equalsIgnoreCase(scLoa.getScLoiLoa().getDocType())){
+					for (ScLoaReport report : scLoaReports) {
+						if (null != report.getPmDocument()) {
+							if (SourcingConstants.DOC_DEF_KEY_BRANCH_INFORMATION
+									.equalsIgnoreCase(report.getPmDocument().getDocDefinitionKey())
+									&& BRANCH_INFO_TITLE.equalsIgnoreCase(report.getTitle())) {
+								getManagedBean().setBranchInfoReport(report);
+								break;
+							}
+						}
+					}
 				}else{
 					for (ScLoaReport report : scLoaReports) {
 						// Check whether Branch Info attachment is existed or not
@@ -6761,6 +6773,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						.equalsIgnoreCase(scLoa.getScLoiLoa().getDocType())) {
 					docCategory = ParameterConst.DOCUMENT_CATEGORY_DIRECT_LOA_FOR_QUOTATION_TENDER; // DL
 					scLoaReport.setPmDocument(getDocumentDtls(docCategory));
+				}else if(ParameterConst.DOCTYPE_QUOTATION
+						.equalsIgnoreCase(scLoa.getScLoiLoa().getDocType())) {
+					scLoaReport.setPmDocument(getDocumentDtls(docCategory)); // AQ
 				}
 				//Bug #32188 - end
 				scLoaReport.setDocCategory(docCategory); 
