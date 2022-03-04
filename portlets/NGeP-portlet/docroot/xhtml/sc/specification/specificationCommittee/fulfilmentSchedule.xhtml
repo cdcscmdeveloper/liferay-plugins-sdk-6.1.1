@@ -176,10 +176,8 @@
 						<f:facet name="header">
 							<h:outputText value="* " styleClass="mandatory" />
 							<h:outputText value="#{lbl['lbl.sc.schedule.type']}" />
-							<ui:remove>#29474 - start</ui:remove>
 							<ac:iconTooltip id="frequencyScheduleType#{index}Sc"
-								value="#{lbl['lbl.sc.schedule.type.tooltip.doc.prepare']}" />
-							<ui:remove>#29474 - end</ui:remove>
+								value="#{lbl['lbl.sc.schedule.type.tooltip']}" />
 						</f:facet>
 
 						<h:outputText value="#{specificationBackingBean.getParameterDesc(frequency.scheduleType)}"/>
