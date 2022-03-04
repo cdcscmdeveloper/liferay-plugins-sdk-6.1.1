@@ -3520,6 +3520,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			reqDTO.setQtId(scLoa.getScLoiLoa().getDocId());
 			reqDTO.setSpecType(ParameterConst.SPECIFICATION_TYPE_TECHNICAL);
 			reqDTO.setPrepareSpec(true);
+			// #21695 - Start.
+			reqDTO.setLoaId(scLoa.getLoaId());
+			// #21695 - End.
 			SpecificationResDTO resDto = specSO.retrieveSpecDetails(reqDTO);
 			String dafaltValue = "T/B";
 			if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
