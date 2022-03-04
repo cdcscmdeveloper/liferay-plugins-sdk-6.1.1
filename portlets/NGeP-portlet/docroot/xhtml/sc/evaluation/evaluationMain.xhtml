@@ -63,7 +63,7 @@
 				<ui:param name="validityDaysExpiredQt"
 					value="#{evaluationBackingBean.checkProposalValidityDateReach(evaluationBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
 				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
-					rendered="#{validityDaysExpiredQt and bpmAction != 'SUBMIT'}" onstart="blockWidget.show();"
+					rendered="#{validityDaysExpiredQt and bpmAction != 'SUBMIT' and bpmAction != 'REVISEBP'}" onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();" style="float:right;"
 					process="@all" partialSubmit="true" 
 					action="#{evaluationBackingBean.submitPrepareEvaluationDetails(bpmAction)}" />
