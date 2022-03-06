@@ -6345,15 +6345,15 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 	//#21695 Farid Start - fix proposal checking 18/2/2022
 	public void disableDefaultSelected() {
 		for(TplSpecAnswer retrieveAns : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
-			if(retrieveAns != null){
+			if(retrieveAns != null && this.getManagedBean().getZones().size() == 1){
 				for(TplSpecZoneDtl specZonedtl : this.getManagedBean().getZones()){
 					if(specZonedtl != null){
 						for(TplSpecZoneQty specZoneQty : retrieveAns.getTplSpecQuestion().getTplSpecZoneQties()){
 							if(specZoneQty!= null && specZoneQty.getTplSpecQuestion().getSpecQuestionId().equals(retrieveAns.getTplSpecQuestion().getSpecQuestionId())
 									&& specZoneQty.getQty().equals(new BigDecimal(0)) 
 									&& specZonedtl.getSpecZoneId().equals(specZoneQty.getTplSpecZoneDtl().getSpecZoneId())){
-								retrieveAns.setOffer(false);
-								retrieveAns.setDisableRow(true);
+									retrieveAns.setOffer(false);
+									retrieveAns.setDisableRow(true);								
 							}
 						}
 					}
