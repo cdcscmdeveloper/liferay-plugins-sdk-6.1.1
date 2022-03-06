@@ -80,13 +80,36 @@
 					<ui:param name="statusId" value="#{scQt.qtStatus.statusId}"/>
 					<p:column headerText="#{lbl['lbl.sc.action']}"
 						style="width:6%;text-align: center;">
-						<p:commandLink id="editSMIcon" action="#{specMaintenanceBB.editSpecificationMaintenance(scQt,true)}" style="margin-right:20px;"
-							partialSubmit="true" process="@this" rendered="#{specMaintenanceBB.renderIcon(statusId)}">
+						<ui:remove><!-- 25037 - start - note 510--></ui:remove>
+						<p:dialog id="inactiveSCMembersPopupId#{scQt.qtId}"
+							widgetVar="inactiveSCMembersPopup#{scQt.qtId}"
+							header="#{lbl['lbl.sc.dialog.confirmation']}" resizable="false"
+							style="max-width: 400px !important; border: 0 !important"
+							closable="true">
+							<table>
+								<tr>
+									<td align="center" style="border: 0 !important"><p:outputLabel
+											style="padding: 0 !important; text-align:justify !important;white-space: break-spaces !important; color: red;"
+											value="#{specMaintenanceBB.managedBean.inactiveSCMemberStr.concat(' ').concat(lbl['lbl.sc.popup.spec.confirmCheckInactive'])}" /></td>
+								</tr>
+							</table>
+							<p:spacer height="1" />
+							<div class="ppRightBtn">
+								<p:commandButton value="#{lbl['lbl.btn.ok']}"
+									action="#{specMaintenanceBB.editSpecificationMaintenance(scQt, true)}"
+									partialSubmit="true" process="@this" />
+							</div>
+						</p:dialog>
+						<p:commandLink id="editSMIcon"
+							action="#{specMaintenanceBB.editSpecificationMaintenance(scQt, true, true)}"
+							style="margin-right:20px;" partialSubmit="true" update="@form"
+							rendered="#{specMaintenanceBB.renderIcon(statusId)}">
 							<h:graphicImage
 								value="#{CommonUIConstant.imagePathUptoDesign}/edit.png"
 								styleClass="tasklist_title1"
 								title="#{lbl['lbl.sc.qt.search.edit.tooltip']}" />
 						</p:commandLink>
+						<ui:remove><!-- 25037 - end - note 510--></ui:remove>
 
 						<p:commandLink id="viewSMIcon" style="margin-right:20px;" action="#{specMaintenanceBB.editSpecificationMaintenance(scQt,false)}"
 							partialSubmit="true" process="@this" rendered="#{!specMaintenanceBB.renderIcon(statusId)}">

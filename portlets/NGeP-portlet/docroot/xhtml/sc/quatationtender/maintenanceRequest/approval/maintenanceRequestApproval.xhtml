@@ -29,7 +29,8 @@
 					<ui:define name="outComeSection">
 						<ui:repeat var="bpmAction" value="#{approvalBackingBean.managedBean.outComes}">
 							<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-							<p:commandButton value="#{bpmAction eq 'REJECT' ? lbl['lbl.btn.cancel']: lbl[buttonLabel]}"
+							<ui:remove><!-- 25037 - note 510--></ui:remove>
+							<p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();"
 								action="#{approvalBackingBean.preSubmitGenericApprovalTask(bpmAction)}"/>
