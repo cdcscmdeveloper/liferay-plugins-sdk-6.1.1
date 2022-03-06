@@ -15892,6 +15892,13 @@ public class SpecificationBackingBean extends
 		log.debug("start submitSpecMaintenanceDtls" + action);
 		this.getManagedBean().setLocalOutCome(action);
 		log.debug("end submitSpecMaintenanceDtls" + action);
+		//25037 - start - note 510
+		assertSpecCommitteeMaintenanceInProgress(this.getManagedBean().getQt());//#25037
+		if(this.getManagedBean().getInactiveSCMemberStr().length()>0){
+			RequestContext.getCurrentInstance().execute("inactiveSCMembersPopup.show()");
+			return;
+		}
+		//25037 - end - note 510
 		//1873 - remove popup(rollback to previous implementation) - start
 			SpecificationResDTO resDTO = updateSpecCommitteMaintenaceDtls(action,
 					null);
@@ -15909,8 +15916,6 @@ public class SpecificationBackingBean extends
 		log.debug("start updateSpecCommitteMaintenaceDtls" + action);
 		SpecificationResDTO resDTO = new SpecificationResDTO();
 		ScQt scQt = this.getManagedBean().getQt();
-		
-		assertSpecCommitteeMaintenanceInProgress(scQt);//#25037
 		
 		loadPrepareSpecCommitteeMaintenanceDetails(scQt.getQtId());
 		SpecificationReqDTO spReqDTO = constructSpecCommitteDtls();
@@ -18299,29 +18304,6 @@ if(null!=allTechnicalChecklist){
 		}	
 	}
 	
-	private void assertSpecCommitteeMaintenanceInProgress(ScQt qt){
-		//specification maintenance cannot be concurrent to spec committee maintenance
-		CommitteReqDTO reqDTO = new CommitteReqDTO();
-		ICommitteSO committeSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
-		reqDTO.setQtId(qt.getQtId());
-		reqDTO.setCommitteeType(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE);
-		ScQtCommittee qtCommittee = committeSO.retrieveCommitteByQtIdNCommType(reqDTO).getScQtCommittee();
-		if(qtCommittee!=null){
-			ScCommittee scCommittee = qtCommittee.getScCommittee();
-			if(scCommittee!=null){
-				Long statusId = scCommittee.getCommitteStatus().getStatusId();
-				statusId = statusId==null ? 0L: statusId;
-				if (!Arrays
-						.asList(new Long[] {
-								QTStatusConst.CMT_COMPLETED,
-								QTStatusConst.CMT_PENDING_SUBMISSION})
-						.contains(statusId)) {
-					throw new EpException(getMessage("lbl.sc.popup.cannotSubmitWaitingCMT", null));
-				}
-			}
-		}
-	}
 	//#25037-end
 	
 	//#1873-start
