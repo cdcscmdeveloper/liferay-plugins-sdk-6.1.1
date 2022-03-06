@@ -58,6 +58,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 /**
  * The Class SpecificationBackingBean.
@@ -423,7 +424,22 @@ public void editSpecificationMaintenanceNewManagedBean(ScQt scQt, boolean isEdit
  * @param ScQt scQt.
  * @param Boolean true/false.
  */
-public void editSpecificationMaintenance(ScQt scQt,boolean isEditable){
+//25037 - start - note 510
+public void editSpecificationMaintenance(ScQt scQt, boolean isEditable){
+	editSpecificationMaintenance(scQt, isEditable, false);
+}
+
+
+public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean popup){
+	if(popup){
+		this.assertSpecCommitteeMaintenanceInProgress(scQt);
+		if(this.getManagedBean().getInactiveSCMemberStr().length()>0){
+			RequestContext.getCurrentInstance().execute("inactiveSCMembersPopup"+scQt.getQtId()+".show()");
+			return;
+		}
+	}
+	//25037 - end - note 510
+
 	editSpecificationMaintenance(scQt, isEditable, true,false, null);
 }
 
