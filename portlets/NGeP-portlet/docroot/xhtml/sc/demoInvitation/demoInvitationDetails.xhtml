@@ -17,7 +17,6 @@
 							<tr>
 								<td><p:outputLabel value="#{lbl['lbl.invitation.by']}" /></td>
 								<td><p:selectOneRadio id="invById"
-										required="#{empty param['skipvalidation']}"
 										label="#{lbl['lbl.invitation.by']}"
 										value="#{demoInvBB.managedBean.demoInvBy}">
 										<f:selectItems value="#{demoInvBB.getAllByItemDropDown()}" />
@@ -69,8 +68,9 @@
 								</c:when>
 								<c:otherwise>
 									<tr>
-										<td><h:outputText styleClass="instruction"
-												value="#{lbl['lbl.demo.instruction']}" escape="false" /></td>
+										<td>
+<!-- 										<h:outputText styleClass="instruction" value="#{lbl['lbl.demo.instruction']}" escape="false" /> -->
+										</td>
 									</tr>
 								</c:otherwise>
 							</c:choose>
