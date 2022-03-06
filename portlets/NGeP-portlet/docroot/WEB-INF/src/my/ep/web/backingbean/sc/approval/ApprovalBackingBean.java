@@ -2587,7 +2587,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		if(wfStatus.getPmStatus()!=null){
 			Long currentStatusId = wfStatus.getPmStatus().getStatusId();
 			if (this.isStatusGreaterThanOrEquals(currentStatusId, QTStatusConst.QT_PROPOSAL_PREPARATION, QTStatusConst.QT_ORDERED_STATUSES)){
-				this.getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_REJECT}); 
+				this.getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_CANCEL}); //25037 - note 510
 				FacesContext.getCurrentInstance().addMessage(null,  new FacesMessage(FacesMessage.SEVERITY_ERROR, null, getMessage("lbl.sc.doaRequestExpired", null)));
 			}
 		}
