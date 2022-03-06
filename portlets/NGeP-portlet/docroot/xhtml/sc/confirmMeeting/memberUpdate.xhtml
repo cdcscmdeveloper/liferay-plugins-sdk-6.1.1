@@ -188,10 +188,11 @@
 			<p:commandButton process="@this" onclick="blockWidget.show();" oncomplete="blockWidget.hide();" value="#{lbl['lbl.btn.cancel']}" disabled="#{!isCommitteeUpdatable}" action="#{evaluationMeetingBackingBean.navigateToUpdateMember('back')}" />
 		</div>
 		<ui:include src="addexistingcommittee.xhtml" />
+		<ui:param name="sendToCommitteeStr" value="#{fn:containsIgnoreCase(evaluationMeetingBackingBean.managedBean.taskName, 'COORDINATE') ? lbl['lbl.sc.popup.needcommitteeapprover']: lbl['lbl.sc.popup.needcommitteeapproverEval']}"></ui:param><ui:remove><!-- 25037 - note 510--></ui:remove>
 		<ac:confirmationPopup id="confirmChangeMemberListId"
 			widget="confirmChangeMemberListPopup" loadingWidget="blockWidget"
 			title="#{lbl['lbl.sc.confirmation']}"
 			okAction= "evaluationMeetingBackingBean.navigateToUpdateMember('confirm')"
-			content="#{lbl['lbl.sc.popup.needcommitteeapprover']}" />
+			content="#{sendToCommitteeStr}" /><ui:remove><!-- 25037 - note 510--></ui:remove>
 	</ui:define>
 </ui:composition>
