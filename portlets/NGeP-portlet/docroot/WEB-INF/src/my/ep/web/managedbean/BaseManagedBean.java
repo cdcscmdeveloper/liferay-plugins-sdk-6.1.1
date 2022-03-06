@@ -119,7 +119,9 @@ public abstract class BaseManagedBean implements Serializable {
 	private boolean displayReviseInstrn;
 	// #25638 - End
 	// #25037-start
-	private boolean validFor25037;//FLAG TO IDENTIFY SUPPORTED ACTION FOR WIP DATA. PLEASE REFER 25037 PMCOMPOSITEVALIDITY
+	private boolean validFor25037;// FLAG TO IDENTIFY SUPPORTED ACTION FOR WIP
+									// DATA. PLEASE REFER 25037
+									// PMCOMPOSITEVALIDITY
 	private boolean committeModified;
 	// #25037-end
 
@@ -155,6 +157,7 @@ public abstract class BaseManagedBean implements Serializable {
 	
 	// 27346
 	private StreamedContent downloadfile;
+	private String inactiveSCMemberStr; //25037 - note 510
 
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
@@ -994,6 +997,15 @@ public abstract class BaseManagedBean implements Serializable {
 		this.isDowngradeRole = isDowngradeRole;
 	}
 	//end #29956
+	//25037 - start - note 510
+	public String getInactiveSCMemberStr() {
+		return inactiveSCMemberStr;
+	}
+
+	public void setInactiveSCMemberStr(String inactiveSCMemberStr) {
+		this.inactiveSCMemberStr = inactiveSCMemberStr;
+	}
+	//25037 - end - note 510
 }
 
 // ***25201
