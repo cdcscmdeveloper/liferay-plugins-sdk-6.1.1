@@ -10879,7 +10879,7 @@ public class SmApplicationBackingBean extends
 											.getApplCategoryType());
 					//#12483 - START
 					if(this.getManagedBean().getCurrentStatus().equalsIgnoreCase(SupplierManagementConst.STATUS_REVISE_BM) || this.getManagedBean().getCurrentStatus().equalsIgnoreCase(SupplierManagementConst.STATUS_REVISE_ENG)){
-						if(this.getManagedBean().getReviseApprover() != null && this.getManagedBean().getReviseApprover().getRecordStatusFlg() == 1){
+						if(this.getManagedBean().getReviseApprover().getRecordStatusFlg() == 1){
 							reqDTO.setApproverLoginIds(this.getManagedBean().getReviseApprover().getLoginId());
 						} else {
 							reqDTO.setApproverLoginIds(approverLoginIds);
