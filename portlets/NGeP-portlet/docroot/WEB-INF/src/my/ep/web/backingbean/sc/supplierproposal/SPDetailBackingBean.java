@@ -6225,7 +6225,7 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 	//#21695 Farid Start - fix proposal checking 18/2/2022
 	public void disableDefaultSelected() {
 		for(TplSpecAnswer retrieveAns : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
-			if(retrieveAns != null && this.getManagedBean().getZones().size() == 1){
+			if(retrieveAns != null){
 				for(TplSpecZoneDtl specZonedtl : this.getManagedBean().getZones()){
 					if(specZonedtl != null){
 						for(TplSpecZoneQty specZoneQty : retrieveAns.getTplSpecQuestion().getTplSpecZoneQties()){
