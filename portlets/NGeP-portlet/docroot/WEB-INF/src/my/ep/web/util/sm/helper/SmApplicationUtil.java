@@ -1100,11 +1100,12 @@ public class SmApplicationUtil {
 		}
 		if (facility != null) {
 			for (SmFacility fac : facility) {
-				if (fac.getSmAddress().getMapLatitude() != null || fac.getSmAddress().getMapLongitude() != null
+				// #32237 --START--
+				if ((fac.getSmAddress().getMapLatitude() != null || fac.getSmAddress().getMapLongitude() != null)
 				 //#29718 --START--
-						&& managedBean.getSmAppl().getApplType().equals("R")
-						&& fac.getFacilityType() == "B" || fac.getFacilityType() == "H") {
-				//#29718 --END--
+					&& ((!fac.getOwnershipType().equals("O") && (fac.getFacilityType().equals("H") || fac.getFacilityType().equals("B")) && managedBean.getCurrentPageType().equalsIgnoreCase("BASICINFO")) //Basic Info
+						|| ((fac.getFacilityType().equals("F") || fac.getFacilityType().equals("W") || fac.getFacilityType().equals("D") || fac.getFacilityType().equals("S")) && managedBean.getCurrentPageType().equalsIgnoreCase("FACTORYINFO")))) { //Factory Info
+				//#29718, #32237 --END-- 
 					if (StringUtils.isBlank(fac.getSmAddress().getMapLatitude())
 							|| StringUtils.isBlank(fac.getSmAddress().getMapLongitude())) {
 						throw new EpException(SmCommonUtil.getMessage("lbl.sm.coordinate.required.msg",
@@ -10534,18 +10535,13 @@ public class SmApplicationUtil {
 		return retVal;
 	}
 
-	private static VelocityContext setSignatories(VelocityContext context,
-			List<SmChequeSignatory> smChequeSignatories) {
+	private static VelocityContext setSignatories(VelocityContext context, List<SmChequeSignatory> smChequeSignatories) {
 		for (int i = 0; i < smChequeSignatories.size(); i++) {
 			SmChequeSignatory smChequeSignatory = smChequeSignatories.get(i);
 			context.put("csNo" + i, i + 1);
-			context.put("csName" + i, smChequeSignatory.getSmPersonnel()
-					.getName());
-			context.put("csIc" + i, smChequeSignatory.getSmPersonnel()
-					.getIdentificationNo());
-			//System.out.println("Signatory " + i + ": "
-					//+ smChequeSignatory.getSmPersonnel().getName() + " : "
-					//+ smChequeSignatory.getSmPersonnel().getIdentificationNo());
+			context.put("csName" + i, smChequeSignatory.getSmPersonnel().getName());
+			context.put("csIc" + i, smChequeSignatory.getSmPersonnel().getIdentificationNo());
+			//System.out.println("Signatory " + i + ": "+ smChequeSignatory.getSmPersonnel().getName() + " : " + smChequeSignatory.getSmPersonnel().getIdentificationNo());
 		}
 		return context;
 	}
@@ -13639,6 +13635,19 @@ public class SmApplicationUtil {
 		}
 		
 	}
+	
+	public static void removeEquityCompanyFromList(
+			List<SmEquityCompany> equityCompanyList) {
+		if (equityCompanyList != null) {
+			Iterator<SmEquityCompany> iterator = equityCompanyList.iterator();
+			while (iterator.hasNext()) {
+				SmEquityCompany equityCompany = iterator.next();
+				if (equityCompany.isSsmData()) {
+					iterator.remove();
+				}
+			}
+		}
+	}
 	//26238 - start
 	/**
 	 * Retrieve sm disciplinary action
@@ -13767,18 +13776,7 @@ public class SmApplicationUtil {
 	} 
 	//27617 : Disciplinary Action - 26238 - end
 	
-	public static void removeEquityCompanyFromList(
-			List<SmEquityCompany> equityCompanyList) {
-		if (equityCompanyList != null) {
-			Iterator<SmEquityCompany> iterator = equityCompanyList.iterator();
-			while (iterator.hasNext()) {
-				SmEquityCompany equityCompany = iterator.next();
-				if (equityCompany.isSsmData()) {
-					iterator.remove();
-				}
-			}
-		}
-	}
+
 	
 	//27796: Disciplinary Action - start - 26238
 	public static List<SmDisciplinaryAction> retrieveDisciplinaryActionHistoryBySupplier(SmSupplier supplier) {
