@@ -1478,7 +1478,18 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			double ceilingAmt = 0.0;
 			DecimalFormat df = new DecimalFormat("#.00");
 			for (CtAgency ctAgency : agencyList) {
+				// Start Fix -#31740
+				if(ctAgency.getOrgProfile().getOrgProfileId().equals(agencyData.getOrgProfile().getOrgProfileId())){
+					//log.info(" Bug #31740 Changes value Before set using(ctAgency) in ContractBackingBean  :"+ctAgency.getCeilingAmount()+" and contract No : "+getManagedBean().getContractVer().getCtContract().getContractNo()+" agency_profile_id  :"+ctAgency.getOrgProfile().getOrgProfileId());
+					ctAgency.setCeilingAmount(agencyData.getCeilingAmount());
+					//log.info(" Bug #31740 Changes value After set using(ctAgency) in ContractBackingBean  :"+ctAgency.getCeilingAmount()+" and contract No : "+getManagedBean().getContractVer().getCtContract().getContractNo()+" agency_profile_id  :"+ctAgency.getOrgProfile().getOrgProfileId());
+
+				}
 				ceilingAmt = ceilingAmt + ctAgency.getCeilingAmount().doubleValue();
+				log.info("In validateCeilingAmount - Changes value in ContractBackingBean : "+ctAgency.getCeilingAmount().doubleValue());
+				// End Fix -#31740
+		// End added log for  Bug #31740 			
+				
 			}
 			ceilingAmt = Double.valueOf(df.format(ceilingAmt));
 
@@ -1513,7 +1524,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				throw new EpException(MessageConst.ERROR_750007,
 						new String[] {nf.format(overallContractAmount)}); // Total ceiling value exceeded contract value. Please check your ceiling amount.
 			}
-		}
+			
+			// Start Fix - #31740
+			getManagedBean().getSelectedAgencyChanges().put(agencyData.getOrgProfile().getOrgProfileId(),agencyData);
+			// End Fix - #31740
+		}		
 	}
 
 	/**
@@ -1929,6 +1944,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 								getManagedBean().getUpdateAgencyMap().remove(agency.getOrgProfile().getOrgCode());
 							}
 							getManagedBean().getDeleteAgencyMap().put(agency.getOrgProfile().getOrgCode(), agency);
+							// Fix - #31740
+							getManagedBean().getAgencyDataDeletion().put(agency.getOrgProfile().getOrgProfileId(), agency);
 						}
 					}
 				}

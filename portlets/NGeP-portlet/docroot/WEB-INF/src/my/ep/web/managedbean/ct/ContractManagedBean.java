@@ -9,9 +9,10 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import org.primefaces.model.TreeNode;
+
 import my.ep.constant.ct.ContractConst;
 import my.ep.persistence.entity.ct.CtAddress;
 import my.ep.persistence.entity.ct.CtAttachment;
@@ -29,10 +30,11 @@ import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
-import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
+
+import org.primefaces.model.TreeNode;
 
 /**
  * Managed Bean For Contract
@@ -150,6 +152,12 @@ public class ContractManagedBean extends BaseManagedBean {
 	private boolean isErr100034 = false;
 	private boolean minQtyCheck = false;
 	// End - 28479	
+
+	//Start Fix - #31740
+	private Map<Long, CtAgency> selectedAgencyChanges;
+	
+	private Map<Long, CtAgency> agencyDataDeletion;
+	//End Fix - #31740
 	
 	private boolean hasAmendmentLoaNo = false; //15851
 
@@ -1277,6 +1285,33 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.minQtyCheck = minQtyCheck;
 	}	
 	// End - 28479
+	
+		// Start Fix - #31740
+		/**
+		 * Populate only changes related to agency
+		 */
+		public Map<Long, CtAgency> getSelectedAgencyChanges() {
+			if(selectedAgencyChanges==null) {
+				selectedAgencyChanges = new HashMap<Long, CtAgency>();
+			}
+			return selectedAgencyChanges;
+		}
+
+		public void setSelectedAgencyChanges(Map<Long, CtAgency> selectedAgencyChanges) {
+			this.selectedAgencyChanges = selectedAgencyChanges;
+		}
+		
+		public Map<Long, CtAgency> getAgencyDataDeletion() {
+			if(agencyDataDeletion==null) {
+				agencyDataDeletion = new HashMap<Long, CtAgency>();
+			}
+			return agencyDataDeletion;
+		}
+
+		public void setAgencyDataDeletion(Map<Long, CtAgency> agencyDataDeletion) {
+			this.agencyDataDeletion = agencyDataDeletion;
+		}
+		// End Fix - #31740
 	
 	//#15851 - start
 	public boolean isHasAmendmentLoaNo() {
