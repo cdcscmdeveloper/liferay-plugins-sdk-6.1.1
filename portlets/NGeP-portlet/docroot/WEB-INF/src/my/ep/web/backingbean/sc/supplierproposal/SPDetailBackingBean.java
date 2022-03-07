@@ -6305,30 +6305,25 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 
 //#21695 Farid start 2/4/2021	
 	public boolean evaluateZonelistSupp(TplSpecZoneQty specQties) {
-		try{
-			if(specQties!=null){
-				//remove log
-				//#21695 Farid Start - fix proposal checking 18/2/2022
-				if (CollectionUtils.isNotEmpty(this.getManagedBean().getZones())) {
-					for (TplSpecZoneDtl specZones : this.getManagedBean().getZones()) {
-						if (specQties.getTplSpecZoneDtl() != null) {
-							if (specZones.getSpecZoneId().equals(
-									specQties.getTplSpecZoneDtl().getSpecZoneId())) {
-									for(TplSpecZoneQty specQtyZoneOffer : specQties.getTplSpecZoneOffer().getTplSpecQuestion().getTplSpecZoneQties()){
-										if(specQties.getSpecZoneQtyId().equals(specQtyZoneOffer.getSpecZoneQtyId())){
-											specQtyZoneOffer.setOffer(false);
-										}
+		if(specQties!=null){
+			//remove log
+			//#21695 Farid Start - fix proposal checking 18/2/2022
+			if (CollectionUtils.isNotEmpty(this.getManagedBean().getZones())) {
+				for (TplSpecZoneDtl specZones : this.getManagedBean().getZones()) {
+					if (specQties.getTplSpecZoneDtl() != null) {
+						if (specZones.getSpecZoneId().equals(
+								specQties.getTplSpecZoneDtl().getSpecZoneId())) {
+								for(TplSpecZoneQty specQtyZoneOffer : specQties.getTplSpecZoneOffer().getTplSpecQuestion().getTplSpecZoneQties()){
+									if(specQties.getSpecZoneQtyId().equals(specQtyZoneOffer.getSpecZoneQtyId())){
+										specQtyZoneOffer.setOffer(false);
 									}
-								return true;
-							}
+								}
+							return true;
 						}
 					}
 				}
-				specQties.getTplSpecZoneOffer().setOffer(true);
 			}
-			return false;
-		}catch(Exception e){
-			log.info("troubleshoot===="+e);
+			specQties.getTplSpecZoneOffer().setOffer(true);
 		}
 		return false;
 	}
