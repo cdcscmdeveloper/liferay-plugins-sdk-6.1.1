@@ -6640,7 +6640,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				break;
 			case 3:
 				// detailSO.validateApprovalDetails(reqDTO);
-				retrieveApprovalTabDtl();
+				if (!getManagedBean().isApproverTabLoaded()){// #11104 - Start 
+				   retrieveApprovalTabDtl();
+				}// #11104 - End
 				break;
 
 			case 4:
