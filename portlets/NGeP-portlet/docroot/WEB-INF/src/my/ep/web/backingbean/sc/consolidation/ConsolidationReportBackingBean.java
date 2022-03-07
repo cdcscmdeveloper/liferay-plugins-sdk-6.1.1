@@ -1826,7 +1826,7 @@ public class ConsolidationReportBackingBean extends
 		getManagedBean().setActiveIndex(ITEMIZED_TYPE_TAB_INDEX);
 		getManagedBean().setQualifiedSuppliersDataModel(null);
 		//#21695 START - Fix bug reload data changing tab package and item
-		loadInitialData();
+		retrieveSupplierFinalizationDtls();
 		// #21695 END
 	}
 

@@ -30,8 +30,8 @@
 			value="#{consolidationReportBackingBean.managedBean.scQt.evaluationType eq ParameterConst.evaluationTypesTwoTier}" />
 		<ui:param name="hasPresentationDemo"
 			value="#{consolidationReportBackingBean.managedBean.scQt.demoRequired}" />
-		<ui:param name="isNoAllOffer"
-			value="#{consolidationReportBackingBean.managedBean.offerAll}" />
+		<!-- #21695 REMOVE <ui:param name="isNoAllOffer"
+			value="#{consolidationReportBackingBean.managedBean.offerAll}" />-->
 		<p:messages id="consolidationReportErr" showDetail="true"
 			showSummary="false" autoUpdate="true" closable="true"
 			severity="error, info" />
@@ -70,11 +70,13 @@
 				process="@form" update="@form" partialSubmit="true"
 				style="width:150px;">
 			</p:menuitem>
+			<!-- #21695 remove disable Start-->
 			<p:menuitem value="#{lbl['lbl.sc.consolidation.report.packagewise']}"
 				actionListener="#{consolidationReportBackingBean.onTabMenuChangeAction(1)}"
 				process="@form" update="@form" partialSubmit="true"
-				style="width:150px;" disabled="#{isNoAllOffer}">
+				style="width:150px;">
 			</p:menuitem>
+			<!-- #21695 remove disable End-->
 			<p:menuitem value="#{lbl['lbl.sc.consolidation.report.itemized']}"
 				actionListener="#{consolidationReportBackingBean.onTabMenuChangeAction(2)}"
 				process="@form" update="@form" partialSubmit="true"
