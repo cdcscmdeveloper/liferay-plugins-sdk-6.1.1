@@ -1073,16 +1073,23 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				}
 			}	
 		}
-		
+		//#32362 - Start
+		log.info("Bug 32362: outcome (" + outcome + ")");
 		if(outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || 
 				outcome.isEmpty() || 
 				outcome.equals(BpmOutcomeConst.BPM_APPROVE)){
-
+			log.info("Bug 32362: in validate");
 			//#31689 - start
+			log.info("Bug 32362: validateReqNoteIgnoreProcurement Start");
 			validateReqNoteIgnoreProcurement(scRequestNote);
+			log.info("Bug 32362: validateReqNoteIgnoreProcurement End");
 			//#31689 - end
+			
 			// validate RN
-			validateRequestNote(scRequestNote);
+			log.info("Bug 32362: validateRequestNote Start");
+			validateRequestNote(scRequestNote);	
+			log.info("Bug 32362: validateRequestNote End");
+			//#32362 - End
 			
 			// remarks
 			if(!(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome) 
@@ -1286,9 +1293,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		// show message for first submission, skip the message for second time submission
 		if(requestNote.getRequestNoteDtls() != null && !requestNote.getRequestNoteDtls().isEmpty()){
 			for (ScRequestNoteDtl requestNoteDtl : requestNote.getRequestNoteDtls()) {
+				//#32362 - Start
+				log.info("Bug 32362: requestNoteDtlId (" + requestNoteDtl.getRequestNoteDtlId() + ")");
+				log.info("Bug 32362: isDeleted (" + requestNoteDtl.isDeleted() + ")");
 				if(!requestNoteDtl.isDeleted()) {
 					String pType = requestNoteDtl.getProcurementType()
 							.getParameterCode();
+					log.info("Bug 32362: pType (" + pType + ")");
+					//#32362 - End
 					if ((!pType.equals(ParameterConst.PROC_TYPE_G2G) && 
 							!pType.equals(ParameterConst.PROC_TYPE_EMERGENCY)) && 
 							!pType.equals(ParameterConst.PROC_TYPE_PK7)) {
@@ -1314,10 +1326,19 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						}
 
 						// validate recommended supplier
+						//#32362 - Start
+						if(requestNoteDtl.getScRequestSupplierItem() != null){
+							log.info("Bug 32362: RequestSupplierItemId (" + requestNoteDtl.getScRequestSupplierItem().getRequestSupplierItemId() + ")");
+							if(requestNoteDtl.getScRequestSupplierItem().getSmSupplier() != null){
+								log.info("Bug 32362: SmSupplierId (" + requestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId() + ")");
+							}
+						}										
 						if(null == requestNoteDtl.getScRequestSupplierItem() || null == requestNoteDtl.getScRequestSupplierItem().getSmSupplier() 
 								|| null == requestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId() ){
+							log.info("Bug 32362: ERROR_760356");
 							throw new EpException(MessageConst.ERROR_760356, new String[]{requestNoteDtl.getRequestItem().getItemName()});
 						}
+						//#32362 - End
 
 						// quantity
 						if( null != requestNoteDtl.getRequestItem() && null == requestNoteDtl.getRequestItem().getQuantity() ){
@@ -1471,8 +1492,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		debugLogger("validateReqNoteIgnoreProcurement");
 		if (requestNote.getRequestNoteDtls() != null && !requestNote.getRequestNoteDtls().isEmpty()) {
 			for (ScRequestNoteDtl requestNoteDtl : requestNote.getRequestNoteDtls()) {
+				log.info("Bug 32362: requestNoteDtlId (" + requestNoteDtl.getRequestNoteDtlId() + ")");
+				log.info("Bug 32362: isDeleted (" + requestNoteDtl.isDeleted() + ")");
 				if (!requestNoteDtl.isDeleted()) {
 					String pType = requestNoteDtl.getProcurementType().getParameterCode();
+					log.info("Bug 32362: pType (" + pType + ")");
 					if ((!pType.equals(ParameterConst.PROC_TYPE_G2G) && !pType
 							.equals(ParameterConst.PROC_TYPE_EMERGENCY)) && !pType.equals(ParameterConst.PROC_TYPE_PK7)) {
 						// title validation
@@ -1499,12 +1523,21 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						}
 
 						// validate recommended supplier
+						//#32362 - Start
+						if(requestNoteDtl.getScRequestSupplierItem() != null){
+							log.info("Bug 32362: RequestSupplierItemId (" + requestNoteDtl.getScRequestSupplierItem().getRequestSupplierItemId() + ")");
+							if(requestNoteDtl.getScRequestSupplierItem().getSmSupplier() != null){
+								log.info("Bug 32362: SmSupplierId (" + requestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId() + ")");
+							}
+						}
 						if (null == requestNoteDtl.getScRequestSupplierItem()
 								|| null == requestNoteDtl.getScRequestSupplierItem().getSmSupplier()
 								|| null == requestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId()) {
+							log.info("Bug 32362: ERROR_760356");
 							throw new EpException(MessageConst.ERROR_760356, new String[] { requestNoteDtl
 									.getRequestItem().getItemName() });
 						}
+						//#32362 - End
 
 						// quantity
 						if (null != requestNoteDtl.getRequestItem()
@@ -1589,7 +1622,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNote = requestNoteResDTO.getRequestNoteDetail();
 		}
 
-		if(requestNote != null){	
+		if(requestNote != null){
 			
 			if (requestNote.getScRNZone() != null) {
 				getManagedBean().setScRNZone(requestNote.getScRNZone());	
@@ -1608,6 +1641,43 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			//12177,12183 - End
 
 		}
+		
+		//#31679 - Start	  		 	  	   	
+  	   	if(requestNote != null){
+  	   		
+  	   		log.info("--- Bug 31679 (" + requestNote.getRequestNoteNo() + ")" + "- Method: preRenderView Start ---");
+  	   		
+	  	   	if(getManagedBean().getSmSupplier() != null){
+	  	   		log.info("Supplier ID (" + getManagedBean().getSmSupplier().getSupplierId() + ") "
+	  	   				+ "Company Name (" + getManagedBean().getSmSupplier().getCompanyName() + ") "
+	  	   				+ "RN No.(" + requestNote.getRequestNoteNo()+ ")");
+	  	   	}
+  	   		
+	  	  	if(getManagedBean().getCurrentStatusId() != null){
+	  	   		log.info("StatusId (" + getManagedBean().getCurrentStatusId() + ") "
+	  	   				+ "RN No.(" + requestNote.getRequestNoteNo()+ ")");
+	  	   	}
+	  	  	
+  	   		if(requestNote.getQuote() != null){
+	  	   		log.info("RN No.(" + requestNote.getRequestNoteNo()+ ") " 
+	  	   				+ "SQ No.(" + requestNote.getQuote().getQuoteNo() + ") "
+	  	   				+ "Zonal(" + requestNote.getQuote().isZonal() + ")");
+  	   		}	  	   		 		
+  	   		
+  	   		if(requestNote.getRequestNoteDtls()  != null && requestNote.getRequestNoteDtls().size() >0){
+  		    		for(ScRequestNoteDtl rnDtl : requestNote.getRequestNoteDtls()){		    			
+  		    			if(rnDtl.getRequestItem() != null 
+  		    					&& rnDtl.getScRequestSupplierItem() != null){	  		    				
+  		    				log.info("RnDtlId (" + rnDtl.getRequestNoteDtlId() + ") " 
+  		    						+ "ReqItemId (" + rnDtl.getRequestItem().getRequestNoteItemId() + ") " 
+  		    						+ "ReqSupItemId (" + rnDtl.getScRequestSupplierItem().getRequestSupplierItemId() + ") "
+  		    						+ "RnNo (" + requestNote.getRequestNoteNo() + ")"); 
+  		    			}
+  		    		}
+  		    }
+  	   	log.info("--- Bug 31679 (" + requestNote.getRequestNoteNo() + ")" + "- Method: preRenderView End ---");
+  	   	}  
+  	   	//#31679 - End
 		
 		//Redmine Enhancement #12177
 		log.info("Temp5: start performance - addButton");
