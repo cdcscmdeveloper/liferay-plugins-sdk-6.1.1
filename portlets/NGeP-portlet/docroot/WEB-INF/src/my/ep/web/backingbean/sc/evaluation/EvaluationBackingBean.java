@@ -33,8 +33,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -55,13 +53,11 @@ import my.ep.biz.bean.search.SearchFilterBean; // #11104
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
-import my.ep.biz.service.sc.document.IQTDocumentSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationReportSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
-import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTTemplateSO;
 import my.ep.biz.service.tpl.doc.ITemplateDocSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
@@ -78,8 +74,6 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
-import my.ep.dto.sc.document.QTDocumentReqDTO;
-import my.ep.dto.sc.document.QTDocumentResDTO;
 import my.ep.dto.sc.quationtender.EvaluationReportReqDTO;
 import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.EvaluationResDTO;
@@ -90,8 +84,6 @@ import my.ep.dto.sc.quationtender.QTTemplateDocReqDTO;
 import my.ep.dto.sc.quationtender.QTTemplateDocResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
-import my.ep.dto.sc.quationtender.SpecificationReqDTO;
-import my.ep.dto.sc.quationtender.SpecificationResDTO;
 import my.ep.dto.tpl.doc.TemplateDocReqDTO;
 import my.ep.dto.tpl.doc.TemplateDocResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
@@ -134,7 +126,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtOpeningCommitteeRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtScoreOfferPrice;
-import my.ep.persistence.entity.sc.quationtender.ScQtScoreSetting;
 import my.ep.persistence.entity.sc.quationtender.ScQtTechnicalCommitteeRemark;
 import my.ep.persistence.entity.sc.quationtender.ScTechnicalEvaluationReportAttachment;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalScore;
@@ -169,7 +160,6 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
-import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
@@ -192,8 +182,12 @@ import com.liferay.portal.util.PortalUtil;
  */
 @ManagedBean(name = "evaluationBackingBean")
 @RequestScoped
-public class EvaluationBackingBean extends
-		SourcingBaseBackingBean<EvaluationManagedBean> {
+public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationManagedBean> {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/** The skip. */
 	private boolean skip;
@@ -1833,10 +1827,10 @@ public class EvaluationBackingBean extends
 	 * Generate evaluation stage.display all the scores for supplies in
 	 * evaluation stage
 	 */
-	private void generateEvaluationStage() {
+	private boolean generateEvaluationStage() { //Bug #31751
 
 		IQTEvaluationSO evaluationSO = null;
-
+		boolean isSuccess = false; //Bug #31751
 		try {
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
@@ -1889,16 +1883,21 @@ public class EvaluationBackingBean extends
 			 * resDTO.isGenerateSuppliers());
 			 */
 			this.getManagedBean().setGenerateEvaluationButton(true);
-
+			//Bug #31751 - start
+			isSuccess = true; 
+		}catch(Exception e){
+			log.info("Error while decrypt data redmine:31751::qtId:"+this.getManagedBean().getScQt().getQtId() +"::committeeType:"+this.getManagedBean().getCommitteeType());
+			//Bug #31751 - end
 		} finally {
 			evaluationSO = null;
 
 		}
+		return isSuccess; //Bug #31751
 	}
 
-	private void generateFinancialEvaluationresults() {
+	private boolean generateFinancialEvaluationresults() { //Bug #31751
 		IQTEvaluationSO evaluationSO = null;
-
+		boolean isSuccess = false; //Bug #31751
 		try {
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
@@ -1907,10 +1906,15 @@ public class EvaluationBackingBean extends
 			reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
 			reqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
 			evaluationSO.generateEvaluationSheet(reqDTO);
+			//Bug #31751 - start
+			isSuccess = true; 
+		}catch(Exception e){
+				log.info("Error while decrypt data redmine:31751::qtId:"+this.getManagedBean().getScQt().getQtId() +"::committeeType:"+this.getManagedBean().getCommitteeType());
+			//Bug #31751 - end
 		} finally {
 			evaluationSO = null;
 		}
-
+		return  isSuccess; //Bug #31751
 	}
 
 	/**
@@ -3930,7 +3934,7 @@ public class EvaluationBackingBean extends
 					resDTO = evaluationSO
 							.retrieveCheckListScoreNProposalScores(reqDTO);
 					List<ScQtCheckListScore> noOfContracts = new ArrayList<ScQtCheckListScore>();
-					List<ScQtCheckListScore> noOfYears = new ArrayList<ScQtCheckListScore>();
+					//List<ScQtCheckListScore> noOfYears = new ArrayList<ScQtCheckListScore>();
 
 					if (resDTO.getScoreResultBean().getTotalRecord() > 0) {
 						for (ScQtCheckListScore checklistScore : resDTO
@@ -4080,7 +4084,7 @@ public class EvaluationBackingBean extends
 					resDTO = evaluationSO
 							.retrieveCheckListScoreNProposalScores(reqDTO);
 					List<ScQtCheckListScore> noOfContracts = new ArrayList<ScQtCheckListScore>();
-					List<ScQtCheckListScore> noOfYears = new ArrayList<ScQtCheckListScore>();
+					//List<ScQtCheckListScore> noOfYears = new ArrayList<ScQtCheckListScore>();
 
 					if (resDTO.getScoreResultBean().getTotalRecord() > 0) {
 						for (ScQtCheckListScore checklistScore : resDTO
@@ -4462,7 +4466,7 @@ public class EvaluationBackingBean extends
 			this.getManagedBean().setTechnicalOrFinancialReEvaluateRequired(
 					false);
 		}
-		ITemplateSpecSO templateSpecSO = null;
+		//ITemplateSpecSO templateSpecSO = null;
 		try {
 			// this.getManagedBean().setTechindex(index);
 			this.getManagedBean().setUserScores(null);
@@ -4526,9 +4530,7 @@ public class EvaluationBackingBean extends
 				 */
 				//TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
 				TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
-				templateSpecSO = (ITemplateSpecSO) BusinessDelegate
-						.getInstance().getServiceObject("cc",
-								ITemplateSpecSO.class);
+				//templateSpecSO = (ITemplateSpecSO) BusinessDelegate.getInstance().getServiceObject("cc", ITemplateSpecSO.class);
 
 				TemplateSpecBean templateSpecBean = getManagedBean()
 						.getTemplateSpecBean();
@@ -5394,7 +5396,7 @@ public class EvaluationBackingBean extends
 				}
 			}
 		} finally {
-          templateSpecSO=null;
+          //templateSpecSO=null;
           evaluationSO=null;
 		}
 		this.getManagedBean().setProposalPage(proposalPage);
@@ -6395,7 +6397,12 @@ public class EvaluationBackingBean extends
 							if (null == this.getManagedBean().getScQt()
 									.getFecEvaluationCheck()) {
 
-								generateEvaluationStage();
+								//Bug #31751 - start1	
+								boolean isSuccess = generateEvaluationStage();
+								if(!isSuccess){
+									throw new EpException(MessageConst.ERROR_760530);
+								}
+								//Bug #31751 - end1
 								this.getManagedBean().getScQt()
 										.setFecEvaluationCheck(2);
 
@@ -6418,7 +6425,12 @@ public class EvaluationBackingBean extends
 							if (null == this.getManagedBean().getScQt()
 									.getTecEvaluationCheck()) {
 
-								generateEvaluationStage();
+								//Bug #31751 - start2
+								boolean isSuccess = generateEvaluationStage();
+								if(!isSuccess){
+									throw new EpException(MessageConst.ERROR_760530);
+								}
+								//Bug #31751 - end2
 								EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 								this.getManagedBean().getScQt()
 										.setTecEvaluationCheck(1);
@@ -6471,7 +6483,12 @@ public class EvaluationBackingBean extends
 						if (null == this.getManagedBean().getScQt()
 								.getTecEvaluationCheck()) {
 
-							generateEvaluationStage();
+							//Bug #31751 - start3
+							boolean isSuccess = generateEvaluationStage();
+							if(!isSuccess){
+								throw new EpException(MessageConst.ERROR_760530);
+							}
+							//Bug #31751 - end3
 							EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 							this.getManagedBean().getScQt()
 									.setTecEvaluationCheck(1);
@@ -6505,7 +6522,12 @@ public class EvaluationBackingBean extends
 						if (null == this.getManagedBean().getScQt()
 								.getFecEvaluationCheck()) {
 
-							generateEvaluationStage();
+							//Bug #31751 - start4
+							boolean isSuccess = generateEvaluationStage();
+							if(!isSuccess){
+								throw new EpException(MessageConst.ERROR_760530);
+							}
+							//Bug #31751 - end4
 							this.getManagedBean().getScQt()
 									.setFecEvaluationCheck(2);
 
@@ -6602,7 +6624,12 @@ public class EvaluationBackingBean extends
 						if (null == this.getManagedBean().getScQt()
 								.getFecEvaluationCheck()) {
 
-							generateFinancialEvaluationresults();
+							//Bug #31751 - start5
+							boolean isSuccess = generateFinancialEvaluationresults();						
+							if(!isSuccess){
+								throw new EpException(MessageConst.ERROR_760530);
+							}
+							//Bug #31751 - end5
 							this.getManagedBean().getScQt()
 									.setFecEvaluationCheck(2);
 							EvaluationReqDTO reqDTO = new EvaluationReqDTO();
@@ -8227,7 +8254,6 @@ private void retriveCommitteeRemarksList(){
 
 			downloadFile(proposalCheckList.getScQtProposalChecklistAttachment());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -8855,8 +8881,8 @@ private void retriveCommitteeRemarksList(){
 	 * @throws Exception
 	 *             the exception
 	 */
-	private ScQtEvaluationReportAttachment generateDocumentAttachment(
-			ScQtEvaluationReport scQtEvaluationReport) throws Exception {
+	/*
+	private ScQtEvaluationReportAttachment generateDocumentAttachment(ScQtEvaluationReport scQtEvaluationReport) throws Exception {
 		debugLogger("generateDocumentAttachment");
 		String definitionType = scQtEvaluationReport.getDefinationType()
 				.getParameterCode();
@@ -9046,6 +9072,7 @@ private void retriveCommitteeRemarksList(){
 		}
 		return scQtEvaluationReportAttachment;
 	}
+	*/
 	
 	private ScAttachment generateDocumentAttachment() throws Exception {
 		debugLogger("generateDocumentAttachment");
@@ -9083,6 +9110,7 @@ private void retriveCommitteeRemarksList(){
 	 * @param scQtEvaluationReportAttachment
 	 * @param scQt
 	 */
+	/*
 	private void generateFinancialKaedah2Pdf(ScAttachment attachment, ScQt qt)
 			throws Exception {
 		debugLogger("generateFinancialKaedah2Pdf");
@@ -9106,6 +9134,7 @@ private void retriveCommitteeRemarksList(){
 		generatePdfFromOracle(reportName, paramMap, attachment, this
 				.getManagedBean().isCheckReportDownload());
 	}
+	*/
 
 	/**
 	 * Generate maklumat tender pdf from velocity.
@@ -9117,6 +9146,7 @@ private void retriveCommitteeRemarksList(){
 	 * @throws Exception
 	 *             the exception
 	 */
+	/*
 	private void generateSebutHargaPdfFromVelocity(ScAttachment attachment,
 			ScQtEvaluationReport scQtEvaluationReport) throws Exception {
 		debugLogger("generateSebutHargaPdfFromVelocity");
@@ -9145,15 +9175,12 @@ private void retriveCommitteeRemarksList(){
 		backingBean.previewAction();
 		String html = backingBean.getManagedBean().getPreviewValue();
 
-		/*
-		 * String html = generateSebutHargaFromVelocity(scQtEvaluationReport,
-		 * getManagedBean().getScQt());
-		 */
 		populateAttachmentDetails(attachment);
 
 		DocumentGenerator.getInstance().generatePdf(
 				new FileOutputStream(getActualFilePath(attachment)), html);
 	}
+	*/
 
 	/**
 	 * Generate maklumat tender from velocity.
@@ -9223,6 +9250,7 @@ private void retriveCommitteeRemarksList(){
 	 * @param scQtEvaluationReportAttachment
 	 * @param scQt
 	 */
+	/*
 	private void generateOverallTechnicalResultPdf(ScAttachment attachment,
 			ScQt qt) throws Exception {
 		debugLogger("generateFinancialEvaluationReportPdf");
@@ -9254,6 +9282,7 @@ private void retriveCommitteeRemarksList(){
 		generatePdfFromOracle(reportName, paramMap, attachment, this
 				.getManagedBean().isCheckReportDownload());
 	}
+	*/
 
 	/*
 	 * private void generateFinancialEvaluationReportPdf(ScAttachment
@@ -9283,6 +9312,7 @@ private void retriveCommitteeRemarksList(){
 	 * @param scQtEvaluationReportAttachment
 	 * @param scQt
 	 */
+	/*
 	private void generateOverallFinancialResultPdf(ScAttachment attachment,
 			ScQt qt) throws Exception {
 		debugLogger("generateOverallFinancialResultPdf");
@@ -9313,11 +9343,13 @@ private void retriveCommitteeRemarksList(){
 		generatePdfFromOracle(reportName, paramMap, attachment, this
 				.getManagedBean().isCheckReportDownload());
 	}
+	*/
 
 	/**
 	 * @param scQtEvaluationReportAttachment
 	 * @param scQt
 	 */
+	/*
 	private void generateHargaTawaranPdf(ScAttachment attachment, ScQt qt)
 			throws Exception {
 		debugLogger("generateHargaTawaranPdf");
@@ -9347,6 +9379,7 @@ private void retriveCommitteeRemarksList(){
 		generatePdfFromOracle(reportName, paramMap, attachment, this
 				.getManagedBean().isCheckReportDownload());
 	}
+	*/
 
 	/**
 	 * @param scQtEvaluationReportAttachment
@@ -9434,6 +9467,7 @@ private void retriveCommitteeRemarksList(){
 	 * @param scQtEvaluationReportAttachment
 	 * @param scQt
 	 */
+	/*
 	private void generateTeknikalSpecificationPdf(ScAttachment attachment,
 			ScQt qt) throws Exception {
 		debugLogger("generateTeknikalSpecificationPdf");
@@ -9466,30 +9500,18 @@ private void retriveCommitteeRemarksList(){
 
 		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(this
 				.getManagedBean().getCommitteeType())) {
-			/* for (ScQtScoreSetting qtScoreSetting : list) { */
-			/* if (qtScoreSetting.isWeightageReq()) { */
-			// with weightage
+
 			reportName = ReportConst.SC_EC_TECH_SPEC_WEI;
 			reportId = ReportConst.PSDABK_BILANGAN_KONTRAK_EC_RPT_VAL; // SC_029
-			/*
-			 * } else { // without weightage reportName =
-			 * ReportConst.SC_EC_TECH_SPEC; reportId =
-			 * ReportConst.PSDAK_BILANGAN_KONTRAK_EC_RPT_VAL; // SC_028 }
-			 */
-			/* } */
+
 		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
 				.equals(this.getManagedBean().getCommitteeType())) {
 			for (ScQtScoreSetting qtScoreSetting : list) {
 				if (qtScoreSetting.getSettingType() == 1) {
-					/* if (qtScoreSetting.isWeightageReq()) { */
-					// with weightage
+
 					reportName = ReportConst.SC_TEC_TECH_SPEC_WEI;
 					reportId = ReportConst.PSDAK_TEC_RPT_VAL; // SC_009
-					/*
-					 * } else { // without weightage reportName =
-					 * ReportConst.SC_TEC_TECH_SPEC; reportId =
-					 * ReportConst.TECSPEC_TEC_RPT_VAL; // SC_008 }
-					 */
+	
 				}
 			}
 		}
@@ -9509,6 +9531,7 @@ private void retriveCommitteeRemarksList(){
 
 		log.debug("end generateTeknikalSpecificationPdf");
 	}
+	*/
 
 	/**
 	 * Generate analisis keputusan penilaian teknikal pdf.
@@ -9520,6 +9543,7 @@ private void retriveCommitteeRemarksList(){
 	 * @throws Exception
 	 *             the exception
 	 */
+	/*
 	private void generateAnalisisKeputusanPenilaianTeknikalPdf(
 			ScAttachment attachment, ScQt qt) throws Exception {
 		debugLogger("generateAnalisisKeputusanPenilaianTeknikalPdf");
@@ -9552,6 +9576,7 @@ private void retriveCommitteeRemarksList(){
 		generatePdfFromOracle(reportName, paramMap, attachment, this
 				.getManagedBean().isCheckReportDownload());
 	}
+	*/
 
 	/**
 	 * Generate kaedah2 pdf.
@@ -9563,6 +9588,7 @@ private void retriveCommitteeRemarksList(){
 	 * @throws Exception
 	 *             the exception
 	 */
+	/*
 	private void generateKaedah2Pdf(ScAttachment attachment, ScQt qt)
 			throws Exception {
 		debugLogger("generateKaedah2Pdf");
@@ -9595,6 +9621,7 @@ private void retriveCommitteeRemarksList(){
 		generatePdfFromOracle(reportName, paramMap, attachment, this
 				.getManagedBean().isCheckReportDownload());
 	}
+	*/
 
 	/**
 	 * Generate pematuhan2 pdf.
@@ -9606,6 +9633,7 @@ private void retriveCommitteeRemarksList(){
 	 * @throws Exception
 	 *             the exception
 	 */
+	/*
 	private void generatePematuhan2Pdf(ScAttachment attachment, ScQt qt)
 			throws Exception {
 		debugLogger("generatePematuhan2Pdf");
@@ -9638,6 +9666,7 @@ private void retriveCommitteeRemarksList(){
 		generatePdfFromOracle(reportName, paramMap, attachment, this
 				.getManagedBean().isCheckReportDownload());
 	}
+	*/
 
 	/**
 	 * Generate kaedah1 pdf.
@@ -9649,6 +9678,7 @@ private void retriveCommitteeRemarksList(){
 	 * @throws Exception
 	 *             the exception
 	 */
+	/*
 	private void generateKaedah1Pdf(ScAttachment attachment, ScQt qt)
 			throws Exception {
 		debugLogger("generateKaedah1Pdf");
@@ -9677,6 +9707,7 @@ private void retriveCommitteeRemarksList(){
 		generatePdfFromOracle(reportName, paramMap, attachment, this
 				.getManagedBean().isCheckReportDownload());
 	}
+	*/
 
 	/**
 	 * Generate pematuhan1 pdf.
@@ -9688,6 +9719,7 @@ private void retriveCommitteeRemarksList(){
 	 * @throws Exception
 	 *             the exception
 	 */
+	/*
 	private void generatePematuhan1Pdf(ScAttachment attachment, ScQt qt)
 			throws Exception {
 		debugLogger("generatePematuhan1Pdf");
@@ -9716,6 +9748,7 @@ private void retriveCommitteeRemarksList(){
 		generatePdfFromOracle(reportName, paramMap, attachment, this
 				.getManagedBean().isCheckReportDownload());
 	}
+	*/
 
 	/**
 	 * Generate committee details pdf from velocity.
@@ -10525,6 +10558,7 @@ private void retriveCommitteeRemarksList(){
 	 *            the sc qt evaluation report
 	 * @return the sc qt evaluation report
 	 */
+	/*
 	private ScQtEvaluationReport saveScQtReportList(
 			ScQtEvaluationReport scQtEvaluationReport) {
 		debugLogger("ScQtEvaluationReport");
@@ -10537,6 +10571,7 @@ private void retriveCommitteeRemarksList(){
 			return null;
 		}
 	}
+	*/
 
 	/**
 	 * Save qt report dtls.
@@ -10581,6 +10616,7 @@ private void retriveCommitteeRemarksList(){
 	 *            the sc qt evaluation report
 	 * @return the sc qt evaluation report
 	 */
+	/*
 	private ScQtEvaluationReport retriveRulesAndRegulationReport(
 			ScQtEvaluationReport scQtEvaluationReport) {
 		debugLogger("retriveRulesAndRegulationReport");
@@ -10604,6 +10640,7 @@ private void retriveCommitteeRemarksList(){
 			qtDocumentSO = null;
 		}
 	}
+	*/
 
 	/**
 	 * Gets the pm parameter.
@@ -12467,9 +12504,9 @@ private void retriveCommitteeRemarksList(){
 		}
 		reqDTO.setToBeRemovedReportList(localReports);
 		}
-		EvaluationResDTO resDto=evaluationSO.saveReportsDtls(reqDTO);
-		getManagedBean()
-		.setReportsToBeRemovedList(null);
+		//EvaluationResDTO resDto=evaluationSO.saveReportsDtls(reqDTO);
+		evaluationSO.saveReportsDtls(reqDTO);
+		getManagedBean().setReportsToBeRemovedList(null);
 		}finally{
 			evaluationSO = null;
 		}
@@ -12484,40 +12521,30 @@ private void retriveCommitteeRemarksList(){
 	* the item type
 	* @return the Status values
 	*/
-	@SuppressWarnings("unused")
 	public SelectItem[] statusDropdownCodeValues(String itemType,ScQtProposalChecklistAttachment scQtProposalChecklistAttachment) {
 		List<Integer> types = new ArrayList<Integer>();
 	
 		PmDocument pmdoc = this.getManagedBean().getScQtChecklist().getPmDocument();
 		
 		if(pmdoc != null && pmdoc.getDocGroupId()!=null ) {
-			if(pmdoc.getDocGroupId().toString().equals(ParameterConst.ASSET_LIABILITIES_GROUP_ID)) 
-			{
+			if(pmdoc.getDocGroupId().toString().equals(ParameterConst.ASSET_LIABILITIES_GROUP_ID)) {
 				this.getManagedBean().setFP_Compliance(true);
-			}
-			else if(pmdoc.getDocGroupId().toString().equals(ParameterConst.CREDIT_FACILITIES_GROUP_ID)) 
-			{
+			} else if(pmdoc.getDocGroupId().toString().equals(ParameterConst.CREDIT_FACILITIES_GROUP_ID)) {
 				this.getManagedBean().setFP_Compliance(true);
-			}
-			else if(pmdoc.getDocGroupId().toString().equals(ParameterConst.BANK_STATEMENT_GROUP_ID))
-			{
+			} else if(pmdoc.getDocGroupId().toString().equals(ParameterConst.BANK_STATEMENT_GROUP_ID)) {
 				this.getManagedBean().setFP_Compliance(true);
-			}
-			else{
+			} else{
 				this.getManagedBean().setFP_Compliance(false);
 			}		
 		}		
 		 
-		if(null!=scQtProposalChecklistAttachment && scQtProposalChecklistAttachment.getAttachmentId()!=null)
-		{
+		if(null!=scQtProposalChecklistAttachment && scQtProposalChecklistAttachment.getAttachmentId()!=null) {
 			types.add(ParameterConst.COMPLIANCE_STATUS_NONCOMPLIANCE);
 			types.add(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
-		} else if(null==scQtProposalChecklistAttachment && this.getManagedBean().isFP_Compliance())
-		{
+		} else if(null==scQtProposalChecklistAttachment && this.getManagedBean().isFP_Compliance()) {
 			// #28308 Fix - Start (#26339)
 			// #28703 (#26339) - Start.
-			for (ScQtProposalChecklist proposalChecklist : getManagedBean().getComplianceTechnicalProposalCheckListDM()
-					.getList()) {
+			for (ScQtProposalChecklist proposalChecklist : getManagedBean().getComplianceTechnicalProposalCheckListDM().getList()) {
 				if (proposalChecklist.getScQtProposalChecklistAttachment() == null) {
 					proposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
 				}
@@ -12537,14 +12564,11 @@ private void retriveCommitteeRemarksList(){
 		try {
 			items = new SelectItem[types.size() + 1];
 			
-			if(null==scQtProposalChecklistAttachment && !this.getManagedBean().isFP_Compliance())
-			{  //lbl.ct.not.applicable 
-				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
-						"lbl.ct.not.applicable", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale()));
+			if(null==scQtProposalChecklistAttachment && !this.getManagedBean().isFP_Compliance()) {  
+				//lbl.ct.not.applicable 
+				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.ct.not.applicable", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 			} else {
-				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
-					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 				new FacesScopes().getUserLocale()));
 			}
 			
@@ -12556,11 +12580,8 @@ private void retriveCommitteeRemarksList(){
 				for (PmParameterDesc paramDesc : localParamDesc) {
 					log.info("ParamerterDesc Code "+paramDesc.getPmParameter().getParameterCode());
 				
-					if (paramDesc.getPmParameter().getParameterCode()
-							.equals(String.valueOf(location.intValue()))) {   
-	
-						items[i++] = new SelectItem(paramDesc.getPmParameter()
-								.getParameterCode(), paramDesc.getCodeName());
+					if (paramDesc.getPmParameter().getParameterCode().equals(String.valueOf(location.intValue()))) {   
+						items[i++] = new SelectItem(paramDesc.getPmParameter().getParameterCode(), paramDesc.getCodeName());
 					}
 				}
 			}
