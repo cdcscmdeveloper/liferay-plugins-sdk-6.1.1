@@ -1038,12 +1038,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 			// 11076 - start
 			
-			if (getManagedBean().getOverallTotalItem()> FulfilmentConst.GFMAS_CHARGELINE_LIMIT || getManagedBean().getSelectedContractedItemList().size() > FulfilmentConst.GFMAS_CHARGELINE_LIMIT) {
+			if (getManagedBean().getOverallTotalItem()>= FulfilmentConst.GFMAS_CHARGELINE_LIMIT || getManagedBean().getSelectedContractedItemList().size() > FulfilmentConst.GFMAS_CHARGELINE_LIMIT) {
 				messageId = MessageConst.ERROR_740070;
 				itemExceed = true;
-				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR, null, 
-						MessageUtils.getMessage(messageId,
-								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				throw new EpException(MessageConst.ERROR_740070);
 			}
 				
 			// 11076 - end
