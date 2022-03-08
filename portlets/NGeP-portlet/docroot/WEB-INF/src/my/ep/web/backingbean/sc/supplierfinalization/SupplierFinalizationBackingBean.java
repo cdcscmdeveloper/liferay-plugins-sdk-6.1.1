@@ -8703,9 +8703,12 @@ return	remarksNotFound;
 							 * BUG #31128 - UNSELECT & DIM RADIOBUTTON WHEN THE SAID SUPPLIER IS IMPOSE OF DISCIPLINARY ACTION
 							 * SHAFFUL
 							 */
-							if (recommendationBean.isAwarded() && !recommendationBean.getScQtProposal().getScQtSupplier().getSmSupplier().isDisciplinaryActions()) {
+							// #32699 - Start.
+							if (recommendationBean.isAwarded() && (!recommendationBean.getScQtProposal().getScQtSupplier().getSmSupplier().isDisciplinaryActions()
+							    || recommendationBean.getScQtProposal().getScQtSupplier().getSmSupplier().isWarningDA())) {
 								getManagedBean().setRecommendedSupplier(qualSupplier);
 							}
+							// #32699 - End.
 							/*
 							 * END BUG #31128
 							 */
