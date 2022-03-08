@@ -2491,9 +2491,12 @@ public class ConsolidationReportBackingBean extends
 					specZoneDtl, null, qualifiedSuppliers);
 			validateRankingPO(qualifiedSupplierBeans, false, null, specZoneDtl,
 					totalQualifiedSuppliers);
+			
+			//#21695 Fix bug 32401 add param start
 			//#32401 start
-			PackageWiseRemarkMandatory(totalQualifiedSuppliers, specZoneDtl);
+			PackageWiseRemarkMandatory(qualifiedSupplierBeans,totalQualifiedSuppliers, specZoneDtl);
 			//#32401 end
+			//#21695 Fix bug 32401 add param end
 		}
 //-------------> HERE #31556 & #31555 related to #21695 Farid END			
 		// farid start bug #31556 related to #21695
@@ -2545,7 +2548,7 @@ public class ConsolidationReportBackingBean extends
 					 
 				}
 				//#32401 start
-				ItemWiseRemarkMandatory(totalQualifiedSuppliers, specZoneDtl);
+				ItemWiseRemarkMandatory(qualifiedSupplierBeans,totalQualifiedSuppliers, specZoneDtl);
 				//#32401 end
 			}
 
@@ -2665,39 +2668,43 @@ public class ConsolidationReportBackingBean extends
 				}
 			}
 			//#21695 Fix Bug validation - End	
-			
-			
-			
 		}
-		
-		public void PackageWiseRemarkMandatory(int totalQualifiedSuppliers, TplSpecZoneDtl specZoneDtl){
+//-------------> HERE #31556 & #31555 related to #21695 Farid END	
+
+		//#21695 Fix bug 32401 add qualifiedSupplierBeans start
+		public void PackageWiseRemarkMandatory(List<QtEvaluationResultDtlBean> qualifiedSupplierBeans,int totalQualifiedSuppliers, TplSpecZoneDtl specZoneDtl){
 			if (totalQualifiedSuppliers == 0) {
 				
 				if (getManagedBean().getFinalizationRemars() != null){
 					for (ScQtFinalizationRemarks qtFinalizationRemarks: getManagedBean().getFinalizationRemars()){
 						if (qtFinalizationRemarks.getRemark() == null || StringUtils.isEmpty(qtFinalizationRemarks.getRemark())){
 							//set false for packagewise
-							setZoneAndTabIndexOnException(false, specZoneDtl);
-							throw new EpException(MessageConst.ERROR_775165);
+							if(!qualifiedSupplierBeans.isEmpty()){
+								setZoneAndTabIndexOnException(false, specZoneDtl);
+								throw new EpException(MessageConst.ERROR_775165);
+							}
+							
 						}
 					}
 				}
 			}
 		}
 		
-		public void ItemWiseRemarkMandatory(int totalQualifiedSuppliers, TplSpecZoneDtl specZoneDtl){
+		public void ItemWiseRemarkMandatory(List<QtEvaluationResultDtlBean> qualifiedSupplierBeans,int totalQualifiedSuppliers, TplSpecZoneDtl specZoneDtl){
 			if (totalQualifiedSuppliers == 0) {
 				if (getManagedBean().getFinalizationItemizedRemarks() != null){
 					for (ScQtFinalizationRemarks finalizationRemarks: getManagedBean().getFinalizationItemizedRemarks()){
 						if (finalizationRemarks.getRemark() == null || StringUtils.isEmpty(finalizationRemarks.getRemark())){
 							//set true for itemized tab
+							if(!qualifiedSupplierBeans.isEmpty()){
 							setZoneAndTabIndexOnException(true, specZoneDtl);
 							throw new EpException(MessageConst.ERROR_775165);
+							}
 						}
 					}
 				}
 			}	
 		}
 		//#32401 - end
-//-------------> HERE #31556 & #31555 related to #21695 Farid END				
+		//#21695 Fix bug 32401 add qualifiedSupplierBeans end	
 }
