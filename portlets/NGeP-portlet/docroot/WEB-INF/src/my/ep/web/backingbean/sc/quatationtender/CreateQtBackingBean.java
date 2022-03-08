@@ -2709,7 +2709,9 @@ public class CreateQtBackingBean extends
 		//#29425 - start
 		QTDetailBackingBean qtDtl = new QTDetailBackingBean();
 		if (field.equalsIgnoreCase("QT_VALIDITY_PERIOD")) {
-			qtDtl.validateNewValueForValidityDays((int) newValue);
+			if (null != newValue) {
+				qtDtl.validateNewValueForValidityDays((int) newValue);
+			}
 		}
 		//#29425 - end
 		
