@@ -2442,7 +2442,7 @@ public class ConsolidationReportBackingBean extends
 //-------------> HERE #31556 & #31555 related to #21695 Farid END
 				}
 				//#32401 start
-				ItemWiseRemarkMandatory(totalQualifiedSuppliers, specZoneDtl);
+				ItemWiseRemarkMandatory(qualifiedSupplierBeans,totalQualifiedSuppliers, specZoneDtl);
 				//#32401 end
 			}
 
