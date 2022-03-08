@@ -212,8 +212,9 @@ public class DisciplinaryActionRest {
 								if (disciplinaryActionId != null) {
 									SmDisciplinaryAction completedPendingSmDa = SmServiceLookup.getSupplierDataMaintenanceSO()
 											.retrieveActiveDisciplinaryActionByDisciplinaryId(disciplinaryActionId);
-									
-									if (completedPendingSmDa.isSuspendRegistration() && !completedPendingSmDa.isPendingSuspend()) {
+
+									//26238 - 32558 -  skipped scheduler due to fail release da
+									if (completedPendingSmDa.isSuspendRegistration() && !completedPendingSmDa.isPendingSuspend() && completedPendingSmDa.getEndDate().compareTo(todayWithZeroTime) < 0) {
 										completedPendingSmDa.getSmSupplier();
 										SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(completedPendingSmDa);
 									}
@@ -245,8 +246,9 @@ public class DisciplinaryActionRest {
 									if (disciplinaryActionId != null) {
 										SmDisciplinaryAction completedPendingSmDa = SmServiceLookup.getSupplierDataMaintenanceSO()
 												.retrieveActiveDisciplinaryActionByDisciplinaryId(disciplinaryActionId);
-										
-										if (completedPendingSmDa.isSuspendRegistration() && !completedPendingSmDa.isPendingSuspend()) {
+
+										//26238 - 32558 -  skipped scheduler due to fail release da
+										if (completedPendingSmDa.isSuspendRegistration() && !completedPendingSmDa.isPendingSuspend() && completedPendingSmDa.getEndDate().compareTo(todayWithZeroTime) < 0) {
 											completedPendingSmDa.getSmSupplier();
 											SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(completedPendingSmDa);
 										}
