@@ -2386,9 +2386,12 @@ public class ConsolidationReportBackingBean extends
 					specZoneDtl, null, qualifiedSuppliers);
 			validateRankingPO(qualifiedSupplierBeans, false, null, specZoneDtl,
 					totalQualifiedSuppliers);
+			
+			//#21695 Fix bug 32401 add param start
 			//#32401 start
-			PackageWiseRemarkMandatory(totalQualifiedSuppliers, specZoneDtl);
+			PackageWiseRemarkMandatory(qualifiedSupplierBeans,totalQualifiedSuppliers, specZoneDtl);
 			//#32401 end
+			//#21695 Fix bug 32401 add param end
 		}
 //-------------> HERE #31556 & #31555 related to #21695 Farid END
 		// farid start bug #31556 related to #21695
@@ -2551,86 +2554,41 @@ public class ConsolidationReportBackingBean extends
 			}
 			//#21695 Fix Bug validation - START	
 			else if (totalRanksCount == 0 && minRankCount == 0){
+				if(CollectionUtils.isNotEmpty(qualifiedSupplierBeans)){
 				throw new EpException(MessageConst.ERROR_760384, new String[] {
 						String.valueOf(minRankCount), expMsgForItem });
 			}
 		}
 			//#21695 Fix Bug validation - End	
-		
-		//#32398 - Start
-		public void sortingItemizedFollowedOrderByItemName(List<ScQtRecommend> itemsList){
-			Collections.sort(itemsList, new Comparator<ScQtRecommend>() {
-					
-				public int compare(ScQtRecommend itemsList1, ScQtRecommend itemsList2) {
-		           
-				    String s1 = itemsList1.getRequestItem().getItemName();
-				    String s2 = itemsList2.getRequestItem().getItemName();
-		
-					String[] s1Parts = s1.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");
-		            String[] s2Parts = s2.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");
-		
-		            int i = 0;
-		            while(i < s1Parts.length && i < s2Parts.length){
-		
-		                //if parts are the same
-		                if(s1Parts[i].compareTo(s2Parts[i]) == 0){
-		                    ++i;
-		                }else{
-		                    try{
-		
-		                        int intS1 = Integer.parseInt(s1Parts[i]);
-		                        int intS2 = Integer.parseInt(s2Parts[i]);
-		
-		                        //if the parse works
-		
-		                        int diff = intS1 - intS2; 
-		                        if(diff == 0){
-		                            ++i;
-		                        }else{
-		                            return diff;
 		                        }
-		                    }catch(Exception ex){
-		                        return s1.compareTo(s2);
-		                    }
-		                }//end else
-		            }//end while
+//-------------> HERE #31556 & #31555 related to #21695 Farid END	
 		
-		            //Handle if one string is a prefix of the other.
-		            // nothing comes before something.
-		            if(s1.length() < s2.length()){
-		                return -1;
-		            }else if(s1.length() > s2.length()){
-		                return 1;
-		            }else{
-		                return 0;
-		            }
-	        }
-
-			});
-		}
-		//#32398 - End
-		
-		public void PackageWiseRemarkMandatory(int totalQualifiedSuppliers, TplSpecZoneDtl specZoneDtl){
+		//#21695 Fix bug 32401 add qualifiedSupplierBeans start
+		public void PackageWiseRemarkMandatory(List<QtEvaluationResultDtlBean> qualifiedSupplierBeans,int totalQualifiedSuppliers, TplSpecZoneDtl specZoneDtl){
 			if (totalQualifiedSuppliers == 0) {
 				
 				if (getManagedBean().getFinalizationRemars() != null){
 					for (ScQtFinalizationRemarks qtFinalizationRemarks: getManagedBean().getFinalizationRemars()){
 						if (qtFinalizationRemarks.getRemark() == null || StringUtils.isEmpty(qtFinalizationRemarks.getRemark())){
 							//set false for packagewise
+							if(!qualifiedSupplierBeans.isEmpty()){
 							setZoneAndTabIndexOnException(false, specZoneDtl);
 							throw new EpException(MessageConst.ERROR_775165);
+						}
+							
 						}
 					}
 				}
 			}
 		}
 
-		public void ItemWiseRemarkMandatory(int totalQualifiedSuppliers, TplSpecZoneDtl specZoneDtl){
+		public void ItemWiseRemarkMandatory(List<QtEvaluationResultDtlBean> qualifiedSupplierBeans,int totalQualifiedSuppliers, TplSpecZoneDtl specZoneDtl){
 			if (totalQualifiedSuppliers == 0) {
 				if (getManagedBean().getFinalizationItemizedRemarks() != null){
 					for (ScQtFinalizationRemarks finalizationRemarks: getManagedBean().getFinalizationItemizedRemarks()){
 						if (finalizationRemarks.getRemark() == null || StringUtils.isEmpty(finalizationRemarks.getRemark())){
 							//set true for itemized tab
+							if(!qualifiedSupplierBeans.isEmpty()){
 							setZoneAndTabIndexOnException(true, specZoneDtl);
 							throw new EpException(MessageConst.ERROR_775165);
 						}
@@ -2638,6 +2596,7 @@ public class ConsolidationReportBackingBean extends
 				}
 			}	
 		}
+		}
 		//#32401 - end
-//-------------> HERE #31556 & #31555 related to #21695 Farid END
+		//#21695 Fix bug 32401 add qualifiedSupplierBeans end	
 }
