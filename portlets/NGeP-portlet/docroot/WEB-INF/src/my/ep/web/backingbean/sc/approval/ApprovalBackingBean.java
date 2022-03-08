@@ -797,7 +797,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					qtDetailBB.getManagedBean().setActiveIndex(9);
 				}
 				if(isQTStatusBtwScheduleDocAndPendingPublication){
-					qtDetailBB.getManagedBean().setActiveIndex(9);
+					qtDetailBB.getManagedBean().setActiveIndex(10);//#29474
 				}
 				if(isQTStatusSCApprovalAndBefore){
 					qtDetailBB.getManagedBean().setActiveIndex(5);
