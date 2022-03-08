@@ -1843,7 +1843,12 @@ public class ConsolidationReportBackingBean extends
 		getManagedBean().setActiveIndex(ITEMIZED_TYPE_TAB_INDEX);
 		getManagedBean().setQualifiedSuppliersDataModel(null);
 		//#21695 START - Fix bug reload data changing tab package and item
-		retrieveSupplierFinalizationDtls();
+		if(getManagedBean().getScQt().isZonal()){
+			TplSpecZoneDtl selectedZone = getManagedBean().getZoneDetails().get(0);
+			getManagedBean().setSelectedZone(selectedZone);
+			getManagedBean().setZoneActiveIndex(0);
+			populateScQtRecommendsByZone();
+		}
 		// #21695 END
 		}
 
