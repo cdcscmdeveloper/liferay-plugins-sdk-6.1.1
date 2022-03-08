@@ -2659,8 +2659,10 @@ public class ConsolidationReportBackingBean extends
 			}
 			//#21695 Fix Bug validation - START	
 			else if (totalRanksCount == 0 && minRankCount == 0){
-				throw new EpException(MessageConst.ERROR_760384, new String[] {
-						String.valueOf(minRankCount), expMsgForItem });
+				if(CollectionUtils.isNotEmpty(qualifiedSupplierBeans)){
+					throw new EpException(MessageConst.ERROR_760384, new String[] {
+							String.valueOf(minRankCount), expMsgForItem });
+				}
 			}
 			//#21695 Fix Bug validation - End	
 			
