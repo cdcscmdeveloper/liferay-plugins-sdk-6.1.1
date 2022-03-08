@@ -17939,6 +17939,9 @@ public class SpecificationBackingBean extends
 		Boolean isItemTypeService = false;
 		Boolean isFulfilmentTypeScheduled = false;	
 		Boolean isZonal = false;
+		// #25726 START
+		Boolean isFulfilmentTypeNonPeriodicScheduled = false;	
+		// #25726 END
 		
 		if (templateSpecBean.getSpecMaster().getTplSpecZone() != null) {
 			isZonal = true;
@@ -17949,9 +17952,12 @@ public class SpecificationBackingBean extends
 
 		// #25039#67#92 - start
 		// #25726 START
-		if (this.getManagedBean().getFulfilmentType().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED) || this.getManagedBean().getFulfilmentType().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)) {
+		if (this.getManagedBean().getFulfilmentType().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
 			isFulfilmentTypeScheduled = true;
-		} 
+		}
+		if(this.getManagedBean().getFulfilmentType().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)){
+			isFulfilmentTypeNonPeriodicScheduled = true;
+		}
 		//#25726 END
 		if(getManagedBean().getTemplateSpecBean().getSpecMaster().getItemTypeCode().getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE)){
 			isItemTypeService = true;
@@ -18046,7 +18052,8 @@ public class SpecificationBackingBean extends
 									isItemTypeService,
 									isFulfilmentTypeScheduled, 
 									specZoneId, 
-									questionId); 
+									questionId,
+									isFulfilmentTypeNonPeriodicScheduled); 
 						}//#25039 end 21-3-2020
 					}
 				}
