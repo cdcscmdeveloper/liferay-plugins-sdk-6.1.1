@@ -1155,7 +1155,7 @@ public class CreateQtBackingBean extends
 					break;
 				}
 			}
-
+			// #25726 START
 			if (ParameterConst.FULFILMENT_TYPE_ONE_OFF.equalsIgnoreCase(this
 					.getManagedBean().getFulfilmentType())) {
 				this.getManagedBean()
@@ -1163,16 +1163,18 @@ public class CreateQtBackingBean extends
 						.setScheduleType(
 								ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
 
-			} else if (ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
-					.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())) {
+			} else if ((ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
+					.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())) || (ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN
+							.equalsIgnoreCase(this.getManagedBean().getFulfilmentType()))) {
 				this.getManagedBean()
 						.getQt()
 						.setScheduleType(
 								ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT);
 				this.getManagedBean().setTotalProgressivePayment(0);
 
-			} else if (ParameterConst.FULFILMENT_TYPE_SCHEDULED
-					.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())) {
+			} else if ((ParameterConst.FULFILMENT_TYPE_SCHEDULED
+					.equalsIgnoreCase(this.getManagedBean().getFulfilmentType()) || (ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED
+							.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())))) {
 				this.getManagedBean()
 						.getQt()
 						.setScheduleType(
@@ -1181,6 +1183,7 @@ public class CreateQtBackingBean extends
 				this.getManagedBean().setTotalProgressivePayment(0);
 
 			}
+			// #25726 END
 			this.getManagedBean().getQt().setScQtSchedules(null);
 			this.getManagedBean().getQt().setScQtProgressivePayments(null);
 			removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT);
