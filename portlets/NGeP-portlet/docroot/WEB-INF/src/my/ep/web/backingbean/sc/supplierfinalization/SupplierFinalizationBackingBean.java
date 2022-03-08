@@ -8112,7 +8112,12 @@ return	remarksNotFound;
 				throw new EpException(MessageConst.ERROR_760243,
 						new String[] { recommendByDesc });
 			} else {
-				throw new EpException(MessageConst.ERROR_760206);
+				//#21695 allow no records validation start
+				if(CollectionUtils.isNotEmpty(
+						scQtRecommend.getRecommendDtls())){
+					throw new EpException(MessageConst.ERROR_760206);
+				}
+				//#21695 allow no records validation end
 			}
 		}		
 	}
