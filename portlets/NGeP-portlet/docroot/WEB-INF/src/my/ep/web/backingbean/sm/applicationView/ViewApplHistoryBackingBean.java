@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sm.vendorcode.IVendorCodeSO;
+import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -46,6 +47,8 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
+import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
+import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
@@ -474,6 +477,8 @@ public class ViewApplHistoryBackingBean extends
 		log.info("Appl Id: " + smAppl.getApplId());		
 		log.info("Supplier type: " + smAppl.getSupplierType());
 		getManagedBean().setTabActiveIndex(0);
+		//#31248 - START
+		getManagedBean().setDisplayResubmitButton(setResubmitButton(smAppl)) ; //#31248  - END
 		viewApplication(smAppl);
 		initWorkflowStatus(getManagedBean().getSmAppl(), status);	
 		if (!SupplierManagementConst.SUPP_TYPE_BASIC.equalsIgnoreCase(smAppl
@@ -1324,4 +1329,34 @@ public class ViewApplHistoryBackingBean extends
 	}
 	//28771 - end 
 	
+	//#31248 - START
+	public Boolean setResubmitButton(SmAppl smAppl){
+		ISmWorkFlowStatusSO workFlowStatusSO = SmServiceLookup.getSmWorkFlowStatusSO();
+		SmWorkFlowStatusReqDTO smWorkFlowStatusReqDTO = new SmWorkFlowStatusReqDTO();
+		smWorkFlowStatusReqDTO.setApplId(smAppl.getApplId());
+		
+		SmWorkFlowStatusResDTO smWorkFlowStatusResDTO = workFlowStatusSO.retrieveCurrentWorkFlowStatusByDocId(smWorkFlowStatusReqDTO);
+		Boolean button = false;
+		if(smWorkFlowStatusResDTO != null 
+				&& smWorkFlowStatusResDTO.getWorkflowStatus() != null 
+				&& smWorkFlowStatusResDTO.getWorkflowStatus().getSmAppl() != null
+				&& !smWorkFlowStatusResDTO.getWorkflowStatus().getSmAppl().isActiveAppl()){
+			button = true;
+			if(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus() != null){
+				if(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_DELETE_PENDING_APPL_CONTRACTOR)){
+					button = false;
+				} else if(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_DELETE_PENDING_APPL_CONSULTANT)){
+					button = false;
+				} else if(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(Long.parseLong(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM_PAYMENT))){
+					button = false;
+				} else if(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(Long.parseLong(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM_PROCESSING_FEE))){
+					button = false;
+				}else if(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_REGISTERED)){
+					button = false;
+				}
+			}
+		}
+		return button;
+	}
+	//#31248 - END
 }
