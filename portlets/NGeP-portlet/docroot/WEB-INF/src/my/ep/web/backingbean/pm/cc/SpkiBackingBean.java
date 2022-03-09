@@ -98,6 +98,8 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	private PmUser loginUser;
 	private String certIssuer;
 	private static final Logger logger = EpLogger.getLogger(SpkiBackingBean.class);
+	//test #30425
+	public static Logger log = Logger.getLogger(SpkiBackingBean.class);
 
 	public SpkiBackingBean() {
 	}
@@ -129,19 +131,24 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 		}
 	}
-
+	
+	//test #30425
 	public void getChallengeQuestions(String identificationNo) {
 		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
 			if (getCertIssuer(identificationNo).equals(SupplierManagementConst.CERT_TRUSTGATE)) {
 				logger.info("getChallengeQuestions(icNo) || getCertIssuer-TG : " + getCertIssuer());
+				log.info(">>>>>>>>>>>>>>> masuk dalam trust gate <<<<<<<<<<<<<");
 				challs = TrustGateHelper.getInstance().getChallengeQuestion(
 						identificationNo, getSupplier().getEpNo(),
 						challengeQues1);
 			} else {
 				logger.info("getChallengeQuestions(icNo) || getCertIssuer-TG : " + getCertIssuer());
+				log.info(">>>>>>>>>>>>>>> masuk dalam certIssuer gate <<<<<<<<<");
 				challs = DigiCertHelper.getInstance().getChallengeQuestion(
 						identificationNo);
 			}
+			log.info("The properties of challs >>>>>>>>>>" + challs);
+			log.info("challs size >>>>>>>>>>>>>>>>>>>>>>>" + challs.size());
 			setChallengeQues1(challs.get(0));
 			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 		}
