@@ -5310,7 +5310,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					for (ScQtCommitteeActivity committeeActivity : committeeList) {
 						if (null != committeeActivity && null != committeeActivity.getScCommitteeMember()
 								&& null != committeeActivity.getScCommitteeMember().getMemberRole()
-								&& "S".equalsIgnoreCase(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())) {
+								&& ParameterConst.COMMITTEE_ROLE_SECRETARY.equalsIgnoreCase(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())) {
 							PmUser secretaryUser = committeeActivity.getScCommitteeMember().getPmUser();
 							if (secretaryUser.getUserId().longValue() != new FacesScopes().getUserSessionBean().getUserId()) {
 								getManagedBean().setDisplayReviseInstrn(true);
