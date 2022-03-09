@@ -578,26 +578,29 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			}
 			//#30783  basri CT - Performance Fulfillment update
 			////////////////////////////to run bulk insert for data more than 1000//////////
-			contractSuspensionSO.runbulksaveCtContractVer(reqDTO);
 			
-			contractSuspensionSO.runbulksaveContractItems(reqDTO);
 			
-			contractSuspensionSO.runbulksaveAgencies(reqDTO);
-			
-			contractSuspensionSO.runbunlsaveContractAmount(reqDTO);
-			
-			contractSuspensionSO.runbulksaveContractValue(reqDTO);
-			
-			contractSuspensionSO.runbulksaveCtSetting(reqDTO);
-			
-			contractSuspensionSO.runbulksaveCtItemCeilingQuantity(reqDTO);
-			
-			contractSuspensionSO.runbulksaveCtItemMaxQuantity(reqDTO);
-			
-			contractSuspensionSO.runbulksaveCtItemPrice(reqDTO);
-			
-			contractSuspensionSO.runbulkUpdateCtContract(reqDTO);
-						
+			if(reqDTO.getCtContractVer().isBrandNew()){
+				contractSuspensionSO.runbulksaveCtContractVer(reqDTO);
+				
+				contractSuspensionSO.runbulksaveContractItems(reqDTO);
+				
+				contractSuspensionSO.runbulksaveAgencies(reqDTO);
+				
+				contractSuspensionSO.runbunlsaveContractAmount(reqDTO);
+				
+				contractSuspensionSO.runbulksaveContractValue(reqDTO);
+				
+				contractSuspensionSO.runbulksaveCtSetting(reqDTO);
+				
+				contractSuspensionSO.runbulksaveCtItemCeilingQuantity(reqDTO);
+				
+				contractSuspensionSO.runbulksaveCtItemMaxQuantity(reqDTO);
+				
+				contractSuspensionSO.runbulksaveCtItemPrice(reqDTO);
+				
+				contractSuspensionSO.runbulkUpdateCtContract(reqDTO);
+			}			
 			
 			resDTO = contractSuspensionSO.saveContractSuspensionDetails(reqDTO);
 			if(resDTO.isSuccessful()) {
