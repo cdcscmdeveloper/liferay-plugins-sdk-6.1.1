@@ -2081,6 +2081,7 @@ public class SmApplicationUtil {
 			SmApplicationManagedBean managedBean, int currentTab,
 			String currentPageType) {
 		boolean validCount = true;
+		managedBean.setPoApproverEquityErr(false);//#31461
 		// change by fahmi, log : 23858 13/03/2019 
 		if (managedBean.getBusinessTypeVal() != null
 				&& (managedBean.getBusinessTypeVal()
@@ -2090,10 +2091,16 @@ public class SmApplicationUtil {
 					|| (managedBean.getSmapplShareHolders().size() != 1)) {
 
 				validCount = false;
-				if (currentTab != -1) {
-					setNavigationBackToCurrentPage(currentTab, managedBean);
-				}
-				throw new EpException(MessageConst.ERROR_722507);
+				//#31461-start
+				if (managedBean.isSupplierUser()){
+					if (currentTab != -1) {
+						setNavigationBackToCurrentPage(currentTab, managedBean);
+					}
+					throw new EpException(MessageConst.ERROR_722507);
+				}else {
+					managedBean.setPoApproverEquityErr(true);
+					managedBean.setMsgEquityErr(MessageConst.ERROR_722507);
+				}//#31461-end
 			}
 		} else  if (managedBean.getBusinessTypeVal() != null
 				&& (managedBean
@@ -2126,10 +2133,16 @@ public class SmApplicationUtil {
 				}
 				if (perShrCnt + compShrCnt < minCount) {
 					validCount = false;
-					if (currentTab != -1) {
-						setNavigationBackToCurrentPage(currentTab, managedBean);
-					}
-					throw new EpException(messageKey);
+					//#31461-start
+					if (managedBean.isSupplierUser()) {
+						if (currentTab != -1) {
+							setNavigationBackToCurrentPage(currentTab, managedBean);
+						}
+						throw new EpException(messageKey);
+					} else {
+						managedBean.setPoApproverEquityErr(true);
+						managedBean.setMsgEquityErr(messageKey);
+					}//#31461-end
 				}
 			}
 		} else if (managedBean.getBusinessTypeVal() != null
@@ -2142,11 +2155,16 @@ public class SmApplicationUtil {
 						.getSmapplShareHolders().size() > 20 || managedBean
 						.getSmapplShareHolders().size() < 2))) {
 			validCount = false;
-			if (currentTab != -1) {
-				setNavigationBackToCurrentPage(currentTab, managedBean);
-			}
-			throw new EpException(MessageConst.ERROR_722508);
-
+			//#31461-start
+			if (managedBean.isSupplierUser()) {
+				if (currentTab != -1) {
+					setNavigationBackToCurrentPage(currentTab, managedBean);
+				}
+				throw new EpException(MessageConst.ERROR_722508);
+			} else {
+				managedBean.setPoApproverEquityErr(true);
+				managedBean.setMsgEquityErr(MessageConst.ERROR_722508);
+			}//#31461-end
 		}
 		return validCount;
 	}
