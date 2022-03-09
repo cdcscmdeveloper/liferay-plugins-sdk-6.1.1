@@ -1588,12 +1588,20 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		String contractType = scLoa.getContractType().getParameterCode();
 
 		if (ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType)) {
-			scLoa.getScLoiLoa().setPmOrgProfile(scLoa.getContractAgency());
+			/*
+			 * BUG 31723 START
+			 */
+			if(null!=scLoa.getContractAgency() && null!=scLoa.getContractAgency().getOrgProfileId()){
+				scLoa.getScLoiLoa().setPmOrgProfile(scLoa.getContractAgency());
+			}
+			/*
+			 * END
+			 */
 			scLoa.getScQt().setFulfilmentType(
 					getParameterByTypeAndCode(ParameterTypeConst.FULFILMENT_TYPE,
 							ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN));
-			}	
 		}
+	}
 
 	/**
 	 * Contract agency changed. shows Contract Administrator based on agency
