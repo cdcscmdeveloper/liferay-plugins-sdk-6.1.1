@@ -1576,7 +1576,7 @@ public class SmApplicationUtil {
 			for (SmSupplierCategory category : managedBean.getSmAppl().getSmSupplierCategories()) {
 				// paid up capital must less than paid-up capital of category code
 				if(managedBean.getSmAppl().getSmCompanyBasic().getPaidUpCapital().compareTo(category.getPmCategoryL3().getPaidUpCapital()) < 0){
-					bf.append(index++ +". "
+					bf.append("<br>" + index++ +". "
 							+ category.getPmCategoryL1().getCategoryL1Code()
 							+ category.getPmCategoryL2().getCategoryL2Code()
 							+ category.getPmCategoryL3().getCategoryL3Code()
