@@ -62,6 +62,8 @@ public class ViewApplHistoryManagedBean extends
 	
 	//28771
 	private String SearchDocumentMode;
+	
+	private Boolean displayResubmitButton; //#31248
 
 	public ViewApplHistoryManagedBean() {
 
@@ -392,4 +394,11 @@ public class ViewApplHistoryManagedBean extends
 		this.SearchDocumentMode = SearchDocumentMode;
 	}
 	//28771 - end
+	
+	public Boolean getDisplayResubmitButton() {
+		return displayResubmitButton;
+	}
+	public void setDisplayResubmitButton(Boolean displayResubmitButton) {
+		this.displayResubmitButton = displayResubmitButton;
+	}
 }
