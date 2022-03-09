@@ -2122,11 +2122,16 @@ public class LOIDetailBackingBean extends
 
 		UserReqDTO userReqDTO = new UserReqDTO();
 		userReqDTO.setRoleCode(RoleCode.CONTRACT_SIGNER.value());
+		//20210406@asyrafhaziq - Bug #30662 - Start
 		if (scLoi.getLoiAmt() != null) {
-			userReqDTO.setApprovalLimit(scLoi.getLoiAmt());
+		//	userReqDTO.setApprovalLimit(scLoi.getLoiAmt());
+		//}
 		}
-		userReqDTO.setOrgProfileId(scLoi.getScLoiLoa().getPmOrgProfile()
-				.getOrgProfileId());
+		//	.getOrgProfileId());
+		userReqDTO.setMinisterOrgProfileId(retrieveMinistryOrgProfile(
+											scLoi.getScLoiLoa().getPmOrgProfile()
+						.getOrgProfileId()).getOrgProfileId());
+		//20210406@asyrafhaziq - Bug #30662 - End
 		UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
 
 		getManagedBean().setContractSignerUser(contractSignerUser);
