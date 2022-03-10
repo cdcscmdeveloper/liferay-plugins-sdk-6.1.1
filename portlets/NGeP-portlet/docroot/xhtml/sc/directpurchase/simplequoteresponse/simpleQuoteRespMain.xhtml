@@ -27,15 +27,21 @@
 
 		</p:outputPanel>
 		
-		<div class="ppLeftBtn">
-			<p:outputPanel id="backBtnPanel" >
+		<p:outputPanel id="backBtnPanel" >
+		<!-- #29938 --> 
+			<div style="text-align: right; min-height: 40px;">
+			<p:commandLink value="#{lbl['lbl.cm.tracking.diary']}"
+					rendered="#{simpleQuoteBackingBean.managedBean.sqAuditFlg}"
+					action="#{pmTrackingDiaryBackingBean.redirectToSupplierTrackingDiary(ParameterConst.doctypeSimpleQuote,simpleQuoteBackingBean.managedBean.scQuote.quoteId, simpleQuoteBackingBean.isSupplier())}"></p:commandLink>
+			 
+			<div class="ppLeftBtn">
 				<p:commandButton
 					immediate="true" value="#{lbl['lbl.btn.back']}" style="float:left;"
 					rendered="#{simpleQuoteBackingBean.managedBean.sqAuditFlg}"
 					action="#{simpleQuoteBackingBean.backMenuToPrevious}" />
-			</p:outputPanel>
-		</div>	
-			
+			</div>	
+			</div>
+	</p:outputPanel>
 		<div class="ppRightBtn">
 			<p:outputPanel autoUpdate="true">
 				<p:commandButton value="#{lbl['lbl.btn.save']}" process="@form"
