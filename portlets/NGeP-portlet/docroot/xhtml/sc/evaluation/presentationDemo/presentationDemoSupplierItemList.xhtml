@@ -41,6 +41,7 @@
 			rows="10" lazy="true"
 			value="#{evaluationBackingBean.managedBean.byItemDemoList}"
 			rowIndexVar="index" rowKey="#{demoitemsupplier}">
+			<ac:paginator for="questionTbl" />
 			<p:column headerText="#{lbl['lbl.sc.price.inquiry.item.name']}"
 				style="width:10%; white-space:normal; text-align:center;">
 
