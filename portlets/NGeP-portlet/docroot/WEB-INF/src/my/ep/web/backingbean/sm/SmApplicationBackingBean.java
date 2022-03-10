@@ -10800,7 +10800,7 @@ public class SmApplicationBackingBean extends
 
 					actionDesc = SupplierManagementConst.PO_ESCALATE_APPROVER;
 					//#12483 - START
-					if(this.getManagedBean().getCurrentStatus().equalsIgnoreCase(SupplierManagementConst.STATUS_REVISE_BM) || this.getManagedBean().getCurrentStatus().equalsIgnoreCase(SupplierManagementConst.STATUS_REVISE_ENG)){
+					if(this.getManagedBean().isPoUser() && currentReviseReason() != null){
 						PmUser approver = PpCommonUtil.retrieveUserByLoginIdOrUserId(null, SmServiceLookup.getUserSO().retrieveLastPoOrApprover(this.getManagedBean().getSmAppl().getApplNo(), SupplierManagementConst.APPROVER_HQ));
 						if(approver.getRecordStatusFlg() == 1){
 							this.getManagedBean().setReviseApprover(approver);
@@ -10878,7 +10878,7 @@ public class SmApplicationBackingBean extends
 									getManagedBean().getSmAppl()
 											.getApplCategoryType());
 					//#12483 - START
-					if(this.getManagedBean().getCurrentStatus().equalsIgnoreCase(SupplierManagementConst.STATUS_REVISE_BM) || this.getManagedBean().getCurrentStatus().equalsIgnoreCase(SupplierManagementConst.STATUS_REVISE_ENG)){
+					if(this.getManagedBean().isPoUser() && currentReviseReason() != null){
 						if(this.getManagedBean().getReviseApprover() != null && this.getManagedBean().getReviseApprover().getRecordStatusFlg() == 1){
 							reqDTO.setApproverLoginIds(this.getManagedBean().getReviseApprover().getLoginId());
 						} else {
