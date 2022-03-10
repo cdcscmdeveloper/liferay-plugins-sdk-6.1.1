@@ -6340,6 +6340,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		case 4:
 			if (isinvokeValidations(getManagedBean().getQt())) {
 				detailSO.validateBsvDetails(reqDTO);
+				detailSO.removeSchedule(reqDTO);//#29474
 				resDTO = detailSO.saveQTDtl(reqDTO);
 				renewQTSesionObject();
 				this.getManagedBean().setQt(resDTO.getQtDetail());
@@ -6348,6 +6349,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			} else if(super.isQTStatusLessThanOrEquals(currentStatus, QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)){
 				// save scQt info onclick of Activites tab
 				detailSO.validateQTDetails(reqDTO);
+				detailSO.removeSchedule(reqDTO);//#29474
 				resDTO = detailSO.saveQTDtl(reqDTO);
 				renewSesionObject();
 				this.getManagedBean().setTaskName(taskName);
@@ -6361,6 +6363,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		case 5:
 			if (isinvokeValidations(getManagedBean().getQt())) {
 				detailSO.validateScheduleDetails(reqDTO);
+				detailSO.removeSchedule(reqDTO);//#29474
 				resDTO = detailSO.saveQTDtl(reqDTO);
 				renewQTSesionObject();
 				this.getManagedBean().setQt(resDTO.getQtDetail());
@@ -6370,6 +6373,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}else if(super.isQTStatusLessThanOrEquals(currentStatus, QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)){//#13344-start
 				// save scQt info onclick of Activites tab
 				//detailSO.validateQTDetails(reqDTO);
+				detailSO.removeSchedule(reqDTO);//#29474
 				resDTO = detailSO.saveQTDtl(reqDTO);
 				renewSesionObject();
 				this.getManagedBean().setTaskName(taskName);
@@ -6383,6 +6387,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		case 6:
 			if (isinvokeValidations(getManagedBean().getQt())||isMaintancePendingChklistStatus()) {
 				detailSO.validateDeductionDtls(reqDTO);
+				detailSO.removeSchedule(reqDTO);//#29474
 				resDTO = detailSO.saveQTDtl(reqDTO);
 				renewQTSesionObject();
 				this.getManagedBean().setQt(resDTO.getQtDetail());
@@ -6394,7 +6399,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			break;
 		case 7://#29474 - start
 			detailSO.validateSCFulfillmentSchedules(reqDTO);
-			resDTO = detailSO.saveQTDtl(reqDTO);
+			resDTO = detailSO.saveFulfilmentQTDtl(reqDTO);//#29474
 			renewSesionObject();
 			this.getManagedBean().setQt(resDTO.getQtDetail());
 			this.getManagedBean().setCurrentStatusId(currentStatus);
@@ -6404,6 +6409,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			break;
 		case 8:
 			if (isinvokeValidations(getManagedBean().getQt())||isMaintancePendingChklistStatus()) {
+				detailSO.removeSchedule(reqDTO);//#29474
 				resDTO = detailSO.saveQTDtl(reqDTO);
 				renewQTSesionObject();
 				this.getManagedBean().setQt(resDTO.getQtDetail());
@@ -6421,6 +6427,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				reqDTO.getQtdetail().setModified(true);
 				reqDTO.getQtdetail().setFCApproval(true);
 				detailSO.validateApprovalDetails(reqDTO);
+				detailSO.removeSchedule(reqDTO);//#29474
 				resDTO = detailSO.saveQTDtl(reqDTO);
 				renewQTSesionObject();
 				this.getManagedBean().setQt(resDTO.getQtDetail());
