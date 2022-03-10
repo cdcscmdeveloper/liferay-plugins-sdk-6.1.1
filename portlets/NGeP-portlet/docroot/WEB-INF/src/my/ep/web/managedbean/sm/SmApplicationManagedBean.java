@@ -628,6 +628,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	//#31043 START
 	private boolean categoryCodeVerified;
 	private boolean documentVerified;
+	private boolean updateSuppDoc;
 	//#31043 END
 	
 	//#11641 - START
@@ -4469,6 +4470,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setDocumentVerified(boolean documentVerified) {
 		this.documentVerified = documentVerified;
+	}
+	
+	public boolean isUpdateSuppDoc() {
+		return updateSuppDoc;
+	}
+
+	public void setUpdateSuppDoc(boolean updateSuppDoc) {
+		this.updateSuppDoc = updateSuppDoc;
 	}
 	//#31043 END
 	//#11641 - START
