@@ -3113,7 +3113,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
 						getManagedBean().setSelectedTabIndex(index + 2);
 							} else {
-						getManagedBean().setSelectedTabIndex(index + 1);
+						getManagedBean().setSelectedTabIndex(3);
 					}
 				}else{
 							
@@ -3131,7 +3131,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
 						getManagedBean().setSelectedTabIndex(index + 2);
 							} else {
-						getManagedBean().setSelectedTabIndex(index + 1);
+						getManagedBean().setSelectedTabIndex(3);
 							}
 							
 						}
