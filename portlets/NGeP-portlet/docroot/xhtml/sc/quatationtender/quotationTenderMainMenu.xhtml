@@ -72,8 +72,8 @@
 									/>
 									<ui:remove>#29474 - start</ui:remove>
 								<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
-									disabled="#{qTDetailBB.managedBean.fulfilmentType eq null or qTDetailBB.managedBean.fulfilmentType eq 'PA' 
-										or qTDetailBB.managedBean.fulfilmentType eq 'OF' or qTDetailBB.managedBean.fulfilmentType eq 'NPA'}"
+									disabled="#{qTDetailBB.managedBean.fulfilmentType eq null or qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeAsAndWhen 
+										or qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeOneOff or qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeNonPeriodicAsAndWhen}"
 									action="#{qTDetailBB.qtDetailsTabChange(7)}" update="@form"
 									process="@form"
 									rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemFulfilmentSchhedule)}"
@@ -120,8 +120,8 @@
 						rendered="#{isQTStatusScheduleDocAndAfter and qTDetailBB.displayMenuItem(qTDetailBB.menuItemPublishDetail)}" />
 					<ui:remove>#29474 - start</ui:remove>
 					<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
-						disabled="#{qTDetailBB.managedBean.fulfilmentType eq null or qTDetailBB.managedBean.fulfilmentType eq 'PA' 
-							or qTDetailBB.managedBean.fulfilmentType eq 'OF' or qTDetailBB.managedBean.fulfilmentType eq 'NPA'}"
+						disabled="#{qTDetailBB.managedBean.fulfilmentType eq null or qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeAsAndWhen 
+										or qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeOneOff or qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeNonPeriodicAsAndWhen}"
 						action="#{qTDetailBB.qtDetailsTabChange(5)}" update="@form"
 						process="@form"
 						rendered="#{isMaintancePendingChklistStatus and qTDetailBB.displayMenuItem(qTDetailBB.menuItemFulfilmentSchhedule)}"
@@ -142,8 +142,8 @@
 						process="@form"
 						rendered="#{isMaintancePendingChklistStatus and qTDetailBB.displayMenuItem(qTDetailBB.menuItemDocuments)}" />
 					<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
-						disabled="#{qTDetailBB.managedBean.fulfilmentType eq null or qTDetailBB.managedBean.fulfilmentType eq 'PA' 
-							or qTDetailBB.managedBean.fulfilmentType eq 'OF' or qTDetailBB.managedBean.fulfilmentType eq 'NPA'}"
+						disabled="#{qTDetailBB.managedBean.fulfilmentType eq null or qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeAsAndWhen 
+										or qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeOneOff or qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeNonPeriodicAsAndWhen}"
 						action="#{qTDetailBB.qtDetailsTabChange(7)}" update="@form"
 						process="@form"
 						rendered="#{isQTStatusScheduleDocAndAfter and qTDetailBB.displayMenuItem(qTDetailBB.menuItemFulfilmentSchhedule)}"
