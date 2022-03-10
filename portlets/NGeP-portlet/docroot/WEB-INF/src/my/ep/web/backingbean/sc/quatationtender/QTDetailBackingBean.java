@@ -58,6 +58,7 @@ import my.ep.biz.service.pm.common.object.IObjectSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.bidding.IBiddingSO;
@@ -115,6 +116,7 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.actor.ScActorReqDTO;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.dto.sc.bidding.BiddingResDTO;
@@ -8854,15 +8856,15 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						MessageConst.ERROR_770222,
 						new String[] { getRuleTypeDesc(scQt.isPanel() ? RuleTypeConst.PANEL_PUBLISHING_PERIOD_DAYS
 								: RuleTypeConst.QT_PUBLISHING_PERIOD_DAYS) });
-			}
-			if (null == scQt.getQtValidityPeriod()) {
-				
-				addFacesMessage(fc,
-						MessageConst.ERROR_770222,
-						new String[] { getRuleTypeDesc(RuleTypeConst.QT_PROPOSAL_VALIDITY_DAYS) });
+			}//29425 - start
+//			if (null == scQt.getQtValidityPeriod()) {
+//				
+//				addFacesMessage(fc,
+//						MessageConst.ERROR_770222,
+//						new String[] { getRuleTypeDesc(RuleTypeConst.QT_PROPOSAL_VALIDITY_DAYS) });
+//			}//#29425 - end
 			}
 		}
-	}
 	
 	
 	
@@ -9892,6 +9894,89 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		
 	}
 	
+	//#29425 - start
+	public void validateNewValueForValidityDays(int newValue) {
+		PmParameter procureMentMode = this.getManagedBean().getQt().getProcurementMode();
+		if (newValue == 0) {
+			this.getManagedBean().setNewValidityDays(newValue);
+			this.getManagedBean().setNewValueValidity(true);
+		}
+		if (ParameterConst.PROCUREMENT_MODE_QUOTATION
+				.equalsIgnoreCase(procureMentMode.getParameterCode())
+					&& newValue > 90) {
+			this.getManagedBean().setNewValueValidity(true);
+		}
+		validateValidityDays(newValue);
+		if (ParameterConst.PROCUREMENT_MODE_TENDER
+				.equalsIgnoreCase(procureMentMode.getParameterCode())
+					&& newValue != 0
+						&& newValue < 90) {
+			this.getManagedBean().setNewValueValidity(true);
+		}
+		if (ParameterConst.PROCUREMENT_MODE_TENDER
+				.equalsIgnoreCase(procureMentMode.getParameterCode())
+						&& newValue >= 90) {
+			this.getManagedBean().setNewValueValidity(false);
+		}
+		this.getManagedBean().setNewValidityDays(newValue);
+	}
+	
+	public void validateValidityDays(int validityDays) {
+		PmParameter procureMentMode = this.getManagedBean().getQt().getProcurementMode();
+		if (validityDays == 0) {
+			throw new EpException(MessageConst.ERROR_100022,
+					new String[] { 
+							ResourceBundleUtils.getMessage(
+									"lbl.sc.qt.proposal.validity", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale()) });
+		}
+		if (ParameterConst.PROCUREMENT_MODE_QUOTATION
+				.equalsIgnoreCase(procureMentMode.getParameterCode())) {
+			int valDay = getProposalValidityDays(this.getManagedBean().getQt().getEstimatedAmount());
+			if (null != this.getManagedBean().getQt().getQtValidityPeriod() && valDay < validityDays) {
+				throw new EpException(MessageConst.ERROR_760044,
+						new String[] { String.valueOf(valDay)});
+			}
+		}
+	}
+	
+	private int getProposalValidityDays(BigDecimal estimatedAmount) {
+
+		if (estimatedAmount != null) {
+			IRuleSO ruleSO = null;
+			try {
+				RuleReqDTO reqDTO = new RuleReqDTO();
+				reqDTO.setRuleType(RuleTypeConst.QT_PROPOSAL_VALIDITY_DAYS);
+				reqDTO.setCompareValue(estimatedAmount.toString());
+				ruleSO = EpEjbBusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IRuleSO.class);
+				List<String> ruleValueStrList = ruleSO
+						.getRuleValuesByTypeAndCurrentDateRange(reqDTO)
+						.getRuleValueStrList();
+
+				if (ruleValueStrList != null && ruleValueStrList.size() > 0) {
+					return Integer.valueOf(ruleValueStrList.get(0));
+				} else {
+					throw new EpException(
+							MessageConst.ERROR_770222,
+							new String[] { getRuleTypeDesc(reqDTO.getRuleType()) });
+				}
+			} finally {
+				ruleSO = null;
+			}
+		}
+		return 0;
+	}
+	
+	private void disableNewValueValidity() {
+		PmParameter procureMentMode = this.getManagedBean().getQt().getProcurementMode();
+		if (ParameterConst.PROCUREMENT_MODE_QUOTATION
+				.equalsIgnoreCase(procureMentMode.getParameterCode())) {
+			this.getManagedBean().setNewValueValidity(false);
+		}
+	}
+	//#29425 - end
 	public String getDoaaRequestStatus() {
 		
 		IScWorkFlowStatusSO wfStatusSO = BusinessDelegate.getInstance()
