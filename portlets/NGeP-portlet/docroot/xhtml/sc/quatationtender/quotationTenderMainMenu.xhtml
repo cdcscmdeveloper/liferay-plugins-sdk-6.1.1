@@ -208,22 +208,23 @@
 												<ui:include
 													src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderActivitiesTracking.xhtml" />
 											</c:if>
-											<c:if
-												test="#{qTDetailBB.managedBean.activeIndex eq '9' and qTDetailBB.displayMenuItem(qTDetailBB.menuItemCommitteeApprovalEcOcTecFec)}">
-												<ui:include
-													src="#{qTDetailBB.getCommitteeAppointmentApprovalPage()}" />
+											<!-- 31991@farhan - start -->
+											<c:if test="#{qTDetailBB.managedBean.activeIndex eq '9' and qTDetailBB.userTaskIsCommitteeAppointmentApprovalEcOcTecFec}">
+												<ui:include src="#{qTDetailBB.committeeAppointmentApprovalPage}" />
+											<!-- 31991@farhan - end -->
 											</c:if>
 										</c:when>
-										<c:when
-											test="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemCommitteeApproval)}">
+										<!-- 31991@farhan - start -->
+										<c:when test="#{qTDetailBB.userTaskIsCommitteeAppointmentApproval}" >
+										<!-- 31991@farhan - end -->	
 											<c:if test="#{qTDetailBB.managedBean.activeIndex eq '4'}">
 												<ui:include
 													src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderActivitiesTracking.xhtml" />
 											</c:if>
-											<c:if
-												test="#{qTDetailBB.managedBean.activeIndex eq '5' and qTDetailBB.displayMenuItem(qTDetailBB.menuItemCommitteeApproval)}">
-												<ui:include
-													src="#{qTDetailBB.getCommitteeAppointmentApprovalPage()}" />
+											<!-- 31991@farhan - start -->
+											<c:if test="#{qTDetailBB.managedBean.activeIndex eq '5' and qTDetailBB.userTaskIsCommitteeAppointmentApproval}">
+												 <ui:include src="#{qTDetailBB.committeeAppointmentApprovalPage}" />
+											<!-- 31991@farhan - end -->
 											</c:if>
 										</c:when>
 									</c:choose>
@@ -244,10 +245,10 @@
 										</c:if>
 										<c:if test="#{qTDetailBB.managedBean.activeIndex eq '5'}">
 											<c:choose>
-												<c:when
-													test="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemCommitteeApproval)}">
-													<ui:include
-														src="#{qTDetailBB.getCommitteeAppointmentApprovalPage()}" />
+												<!-- 31991@farhan - start -->
+												<c:when test="#{qTDetailBB.userTaskIsCommitteeAppointmentApproval}">
+								 					<ui:include src="#{qTDetailBB.committeeAppointmentApprovalPage}" />
+												<!-- 31991@farhan - end -->
 												</c:when>
 												<c:otherwise>
 													<ui:include
@@ -268,28 +269,29 @@
 												src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderActivitiesTracking.xhtml" />
 										</c:if>
 										<c:choose>
-											<c:when
-												test="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemPublicationApproval)}">
+											<!-- 31991@farhan - start -->					
+											<c:when test="#{qTDetailBB.userTaskIsPublicationApproval}">
+											<!-- 31991@farhan - end -->
 												<c:if test="#{qTDetailBB.managedBean.activeIndex eq '9'}">
-													<ui:include
-														src="#{qTDetailBB.getPublicationApprovalPage()}" />
+													<!-- 31991@farhan - start -->
+													<ui:include src="#{qTDetailBB.publicationApprovalPage}" />
+													<!-- 31991@farhan - end -->
 												</c:if>
 											</c:when>
-											<c:when
-												test="#{qTDetailBB.managedBean.activeIndex eq '9' and qTDetailBB.displayMenuItem(qTDetailBB.menuItemBPKApproval)}">
-												<ui:include src="#{qTDetailBB.getBPKApprovalPage()}" />
+											<!-- 31991@farhan - start -->
+											<c:when test="#{qTDetailBB.managedBean.activeIndex eq '9' and qTDetailBB.userTaskIsBPKApproval}">
+								 				<ui:include src="#{qTDetailBB.BPKApprovalPage}" />
+								 			<!-- 31991@farhan - end -->
 											</c:when>
-											<c:when
-												test="#{qTDetailBB.managedBean.activeIndex eq '9' and qTDetailBB.displayMenuItem(qTDetailBB.menuItemCommitteeApprovalEcOcTecFec)}">
-												<ui:include
-													src="#{qTDetailBB.getCommitteeAppointmentApprovalPage()}" />
+											<!-- 31991@farhan - start -->
+											<c:when test="#{qTDetailBB.managedBean.activeIndex eq '9' and qTDetailBB.userTaskIsCommitteeAppointmentApprovalEcOcTecFec}">
+								 				<ui:include src="#{qTDetailBB.committeeAppointmentApprovalPage}" />
+											<!-- 31991@farhan - end -->
 											</c:when>
-											<c:when
-												test="#{isQTStatusBtwScheduleDocAndPendingPublication and qTDetailBB.displayMenuItem(qTDetailBB.menuItemPublicationApproverAssignment)}">
-												<c:if test="#{qTDetailBB.managedBean.activeIndex eq '9'}">
-													<ui:include
-														src="/xhtml/sc/quatationtender/approval/qtpublicationapproval.xhtml" />
-												</c:if>
+											<!-- 31991@farhan - start -->
+											<c:when test="#{qTDetailBB.managedBean.activeIndex eq '9' and isQTStatusBtwScheduleDocAndPendingPublication and qTDetailBB.displayMenuItem(qTDetailBB.menuItemPublicationApproverAssignment)}">
+												<ui:include src="/xhtml/sc/quatationtender/approval/qtpublicationapproval.xhtml" />
+											<!-- 31991@farhan - end -->
 											</c:when>
 										</c:choose>
 										<!-- 25692 -end- -->
@@ -301,19 +303,20 @@
 										</c:if>
 										<!-- 25692 -start- -->
 										<c:choose>
-											<c:when
-												test="#{qTDetailBB.managedBean.activeIndex eq '5' and qTDetailBB.displayMenuItem(qTDetailBB.menuItemCommitteeApproval)}">
-												<ui:include
-													src="#{qTDetailBB.getCommitteeAppointmentApprovalPage()}" />
+											<!-- 31991@farhan - start -->
+											<c:when test="#{qTDetailBB.managedBean.activeIndex eq '5' and qTDetailBB.userTaskIsCommitteeAppointmentApproval}">
+								 					<ui:include src="#{qTDetailBB.committeeAppointmentApprovalPage}" />
+											<!-- 31991@farhan - end -->
 											</c:when>
-											<c:when
-												test="#{qTDetailBB.managedBean.activeIndex eq '5' and qTDetailBB.displayMenuItem(qTDetailBB.menuItemCommitteeApprovalEcOcTecFec)}">
-												<ui:include
-													src="#{qTDetailBB.getCommitteeAppointmentApprovalPage()}" />
+											<!-- 31991@farhan - start -->
+											<c:when test="#{qTDetailBB.managedBean.activeIndex eq '5' and qTDetailBB.userTaskIsCommitteeAppointmentApprovalEcOcTecFec}">
+								 					<ui:include src="#{qTDetailBB.committeeAppointmentApprovalPage}" />
+											<!-- 31991@farhan - end -->
 											</c:when>
-											<c:when
-												test="#{qTDetailBB.managedBean.activeIndex eq '5' and qTDetailBB.displayMenuItem(qTDetailBB.menuItemBPKApproval)}">
-												<ui:include src="#{qTDetailBB.getBPKApprovalPage()}" />
+											<!-- 31991@farhan - start -->
+											<c:when test="#{qTDetailBB.managedBean.activeIndex eq '5' and qTDetailBB.userTaskIsBPKApproval}">
+								 					<ui:include src="#{qTDetailBB.BPKApprovalPage}" />
+											<!-- 31991@farhan - end -->
 											</c:when>
 										</c:choose>
 										<!-- 25692 -end- -->
@@ -327,10 +330,10 @@
 										<c:if test="#{qTDetailBB.managedBean.activeIndex eq '5'}">
 											<!-- 25692 -start- -->
 											<c:choose>
-												<c:when
-													test="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemCommitteeApproval)}">
-													<ui:include
-														src="#{qTDetailBB.getCommitteeAppointmentApprovalPage()}" />
+												<!-- 31991@farhan - start -->
+												<c:when test="#{qTDetailBB.userTaskIsCommitteeAppointmentApproval}">
+							 						<ui:include src="#{qTDetailBB.committeeAppointmentApprovalPage}" />
+												<!-- 31991@farhan - end -->
 												</c:when>
 												<c:otherwise>
 													<ui:include
