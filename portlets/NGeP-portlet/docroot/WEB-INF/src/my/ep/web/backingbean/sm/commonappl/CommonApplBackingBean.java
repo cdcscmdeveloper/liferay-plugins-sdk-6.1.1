@@ -36,6 +36,8 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierCategory;
+import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -516,7 +518,19 @@ public class CommonApplBackingBean extends
 					//#12483 - START
 					if(!appl.getSmApplRevises().isEmpty()){
 						if(!appl.getSmSvTasks().isEmpty()){
-							smApplBB.getManagedBean().setReviewSiteVisit(true);
+							boolean hasSvTaskNotVisit = false;
+							for(SmSvTask smSvTask : appl.getSmSvTasks()){
+								if(!hasSvTaskNotVisit){
+									if(smSvTask.getActualVisitDate() == null){
+										hasSvTaskNotVisit = true;
+									}
+								}
+							}
+							if(hasSvTaskNotVisit){
+								smApplBB.getManagedBean().setReviewSiteVisit(false);
+							} else {
+								smApplBB.getManagedBean().setReviewSiteVisit(true);
+							}
 						} else {
 							smApplBB.getManagedBean().setReviewSiteVisit(false);
 						}
