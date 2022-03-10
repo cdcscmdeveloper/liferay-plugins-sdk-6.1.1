@@ -11692,12 +11692,21 @@ public class SmApplicationBackingBean extends
 							//Bug #27188-end
 						getManagedBean().setAlreadyBusinessSpecialCatcode(true);
 		//#32236 - Start
-						bf.append(index + "." + " "
-								+ cat.getPmCategoryL1().getCategoryL1Code()
-								+ cat.getPmCategoryL2().getCategoryL2Code()
-								+ cat.getPmCategoryL3().getCategoryL3Code()
-								+ ",");
-						index++;
+						if(index == 1){
+							bf.append("<br> " + index + "." + " "
+									+ cat.getPmCategoryL1().getCategoryL1Code()
+									+ cat.getPmCategoryL2().getCategoryL2Code()
+									+ cat.getPmCategoryL3().getCategoryL3Code()
+									+ "," + "<br />");
+							index++;	
+						}else if(index > 1){
+							bf.append(index + "." + " "
+									+ cat.getPmCategoryL1().getCategoryL1Code()
+									+ cat.getPmCategoryL2().getCategoryL2Code()
+									+ cat.getPmCategoryL3().getCategoryL3Code()
+									+ "," + "<br />");
+							index++;
+						}
 					}
 //				}
 		}
@@ -11705,7 +11714,7 @@ public class SmApplicationBackingBean extends
 		Locale locale = new FacesScopes().getUserLocale();
 			
 		String msg = ResourceBundleUtils.getMessage("lbl.sm.not.allowed.change.factype", new String[] { ""
-				+ "<br /> - " + bf.toString() + "<br /> "}, ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+				+ "-" + bf.toString()}, ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 		//#32236 - End
 //		getManagedBean().setBusinessOfficeCatCodeMsg(
 //				SmCommonUtil.getMessage(

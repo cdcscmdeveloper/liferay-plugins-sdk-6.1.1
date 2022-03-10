@@ -1576,11 +1576,19 @@ public class SmApplicationUtil {
 			for (SmSupplierCategory category : managedBean.getSmAppl().getSmSupplierCategories()) {
 				// paid up capital must less than paid-up capital of category code
 				if(managedBean.getSmAppl().getSmCompanyBasic().getPaidUpCapital().compareTo(category.getPmCategoryL3().getPaidUpCapital()) < 0){
-					bf.append("<br>" + index++ +". "
-							+ category.getPmCategoryL1().getCategoryL1Code()
-							+ category.getPmCategoryL2().getCategoryL2Code()
-							+ category.getPmCategoryL3().getCategoryL3Code()
-							+ " - RM" +category.getPmCategoryL3().getPaidUpCapital() +"<br>" );
+					if(index == 1){
+						bf.append("<br>" + index++ +". "
+								+ category.getPmCategoryL1().getCategoryL1Code()
+								+ category.getPmCategoryL2().getCategoryL2Code()
+								+ category.getPmCategoryL3().getCategoryL3Code()
+								+ " - RM" +category.getPmCategoryL3().getPaidUpCapital() +"<br>" );	
+					}else if(index > 1){
+						bf.append(index++ +". "
+								+ category.getPmCategoryL1().getCategoryL1Code()
+								+ category.getPmCategoryL2().getCategoryL2Code()
+								+ category.getPmCategoryL3().getCategoryL3Code()
+								+ " - RM" +category.getPmCategoryL3().getPaidUpCapital() +"<br>" );	
+					}
 				}
 			}
 			
