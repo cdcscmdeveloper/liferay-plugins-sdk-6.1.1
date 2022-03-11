@@ -1616,8 +1616,9 @@ public class SmApplicationUtil {
 		validateCategoryOtherDesc(validSave, managedBean, currentTab);
 		validateOverlapSuppDoc(validSave, managedBean, currentTab);
 		validateSpecialAndNormalCategory(validSave, managedBean, currentTab);//#30508
-		validateSpecialAndNormalCategoryCapital(managedBean);//#32236
-		
+		//#32236 - start
+		validateSpecialAndNormalCategoryCapital(managedBean);
+		//#32236 - end
 		if (!managedBean.isSiteVisitAfterApproval()) {
 			//#11765
 			//Need to allow user to move to other categories even if didn't add codes.
