@@ -62,7 +62,6 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
-import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
@@ -127,8 +126,6 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
-import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
-import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
@@ -1145,8 +1142,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				
 			}
 			// 11076 - start
-			
-			if (getManagedBean().getOverallTotalItem()>= FulfilmentConst.GFMAS_CHARGELINE_LIMIT || getManagedBean().getSelectedContractedItemList().size() > FulfilmentConst.GFMAS_CHARGELINE_LIMIT) {
+			getManagedBean().setUpdateItem(getManagedBean().getOverallTotalItem()+getManagedBean().getSelectedContractedItemList().size());
+			if (getManagedBean().getSelectedContractedItemList().size() > FulfilmentConst.GFMAS_CHARGELINE_LIMIT || getManagedBean().getUpdateItem() > FulfilmentConst.GFMAS_CHARGELINE_LIMIT) {
 				messageId = MessageConst.ERROR_740070;
 				itemExceed = true;
 				throw new EpException(MessageConst.ERROR_740070);
@@ -1233,7 +1230,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			ContractItemResDTO resDTO = new ContractItemResDTO();
 			reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
 			//start 11076
-			if(getManagedBean().getValidateItem() > FulfilmentConst.GFMAS_CHARGELINE_LIMIT){	
+			getManagedBean().setAddAllItem(getManagedBean().getValidateItem()+getManagedBean().getOverallTotalItem());
+			if(getManagedBean().getValidateItem() > FulfilmentConst.GFMAS_CHARGELINE_LIMIT || getManagedBean().getAddAllItem() > FulfilmentConst.GFMAS_CHARGELINE_LIMIT){	
 				messageId = MessageConst.ERROR_740070;					
 				itemExceed = true;									
 				throw new EpException(MessageConst.ERROR_740070);	
