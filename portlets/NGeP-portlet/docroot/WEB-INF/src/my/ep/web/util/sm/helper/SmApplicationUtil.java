@@ -1548,26 +1548,31 @@ public class SmApplicationUtil {
 	
 	//#32236-start
 	public static void validateSpecialAndNormalCategoryCapital(SmApplicationManagedBean managedBean) {
-		BigDecimal total = new BigDecimal(0);
-		
-		StringBuilder totalvalue = new StringBuilder();
-		totalvalue.append("RM");
-		
 		StringBuilder bf = new StringBuilder();
+		int index = 1;
 		
 		if(managedBean.isSupplierUser()){
 			for (SmSupplierCategory category : managedBean.getSmAppl().getSmSupplierCategories()) {
-				total = total.add(category.getPmCategoryL3().getPaidUpCapital());						
-				bf.append(" "
+				// paid up capital must less than paid-up capital of category code
+				if(managedBean.getSmAppl().getSmCompanyBasic().getPaidUpCapital().compareTo(category.getPmCategoryL3().getPaidUpCapital()) < 0){
+					if(index == 1){
+						bf.append("<br>" + index++ +". "
+								+ category.getPmCategoryL1().getCategoryL1Code()
+								+ category.getPmCategoryL2().getCategoryL2Code()
+								+ category.getPmCategoryL3().getCategoryL3Code()
+								+ " - RM" +category.getPmCategoryL3().getPaidUpCapital() +"<br>" );	
+					}else if(index > 1){
+						bf.append(index++ +". "
 						+ category.getPmCategoryL1().getCategoryL1Code()
 						+ category.getPmCategoryL2().getCategoryL2Code()
 						+ category.getPmCategoryL3().getCategoryL3Code()
-						+ ",");
+								+ " - RM" +category.getPmCategoryL3().getPaidUpCapital() +"<br>" );	
+					}
+				}
 			}
 			
-			totalvalue.append(total);
-			if(managedBean.getSmAppl().getSmCompanyBasic().getPaidUpCapital().compareTo(total) < 0 ){ // paid up capital must less than paid-up capital of total value
-				throw new EpException(MessageConst.ERROR_722693, new String[] { bf.toString().substring(0, bf.length()-2), totalvalue.toString()});
+			if(index>1){
+				throw new EpException(MessageConst.ERROR_722693, new String[] { bf.toString()});
 			}	
 		}
 	}
@@ -1590,8 +1595,9 @@ public class SmApplicationUtil {
 		validateCategoryOtherDesc(validSave, managedBean, currentTab);
 		validateOverlapSuppDoc(validSave, managedBean, currentTab);
 		validateSpecialAndNormalCategory(validSave, managedBean, currentTab);//#30508
-		validateSpecialAndNormalCategoryCapital(managedBean);//#32236
-		
+		//#32236 - start
+		validateSpecialAndNormalCategoryCapital(managedBean);
+		//#32236 - end
 		if (!managedBean.isSiteVisitAfterApproval()) {
 			//#11765
 			//Need to allow user to move to other categories even if didn't add codes.
