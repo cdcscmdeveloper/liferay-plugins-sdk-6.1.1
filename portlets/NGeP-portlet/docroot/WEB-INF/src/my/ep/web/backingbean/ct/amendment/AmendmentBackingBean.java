@@ -3150,7 +3150,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						}else if((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
 							|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange())
 							&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
-						getManagedBean().setSelectedTabIndex(index + 2);
+						getManagedBean().setSelectedTabIndex(index + 1);
 							} else {
 						getManagedBean().setSelectedTabIndex(index + 1);
 							}
