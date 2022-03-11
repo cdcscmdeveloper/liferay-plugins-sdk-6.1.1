@@ -335,7 +335,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				else{
 					if(suppCatLs.size() > 0){
 						for(SmSupplierCategory sCat : suppCatLs){
-							if(sCat.getPmCategoryL3().getCategoryL3Id() == getManagedBean().getSmSvTask().getPmCategoryL3().getCategoryL3Id()){
+							//28774
+							if(sCat.getPmCategoryL3().getCategoryL3Id().equals(getManagedBean().getSmSvTask().getPmCategoryL3().getCategoryL3Id())){
 								getManagedBean().setSupplierCategory(sCat);
 								break;
 							}
@@ -2689,7 +2690,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		//#24964 - end
 		getManagedBean().setFromReport(true);
 		getManagedBean().setSvTaskId(svTask.getSvTaskId());
-		retrieveSiteVisitInfo("V");
+		retrieveSiteVisitInfo(""); //28774
 		getManagedBean().setFromReport(false);
 		//#29430 - end
 		downloadSiteVisitTemplate(getManagedBean().getSmSvTask(), true);
