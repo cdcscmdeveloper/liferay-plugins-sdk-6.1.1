@@ -757,15 +757,19 @@ public class LovBackingBean implements Serializable {
 	@SuppressWarnings("unchecked")
 	public void onToggleSelect(ToggleSelectEvent event){
 		List<BaseEntity> templist = !selectedEntities.isEmpty() ? selectedEntities : searchDataModel.getList();
-		for(BaseEntity value : templist){
-			if(value instanceof PmBusinessNature){
-				Long key = ((PmBusinessNature) value).getBusinessNatureId();
-				if(persistedEntities.containsKey(key)) 
-					persistedEntities.remove(key);
-				else
-					persistedEntities.put(key,value);
+		//#32721 start
+		if (templist instanceof BaseEntity){
+			for(BaseEntity value : templist){
+				if(value instanceof PmBusinessNature){
+					Long key = ((PmBusinessNature) value).getBusinessNatureId();
+					if(persistedEntities.containsKey(key)) 
+						persistedEntities.remove(key);
+					else
+						persistedEntities.put(key,value);
+				}
 			}
 		}
+		//#32721 ends
 	}
 	
 	public void onPageChange(PageEvent event){
