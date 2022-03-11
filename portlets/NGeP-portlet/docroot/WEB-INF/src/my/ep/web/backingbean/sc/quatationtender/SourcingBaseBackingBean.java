@@ -5943,6 +5943,46 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					}
 					listSpec.add(map);
 				}
+			}else {
+				//non-zonal
+				
+				log.info("zaim 5949 "+ master.getTplSpecQuestions().size());
+					HashMap<String, String> map = new HashMap<>();
+					if (question.getQuestionType().equalsIgnoreCase("I")){
+						if (countIndex == 0){
+							if (getFirstValue){
+								map.put("clItem", question.getClItem());
+								map.put("uomName", question.getClUom().getUomName());
+								map.put("qty", question.getClQuantity().toString());
+
+								if(getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("service") || getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("Perkhidmatan")){
+									map.put("clUomFrequency", question.getClUomFrequency().toString());
+									map.put("clUomPerDay", question.getClUomPerDay().toString());
+									map.put("clUomPerMonth", question.getClUomPerMonth().toString());
+								}else {
+									//product
+									map.put("clPriceTypeCode", getParameterDescForReport(question.getClPriceTypeCode()));
+									map.put("qtyBerperingkat", getDefaultValue());
+								}
+								
+								for (String feedback:question.getFeedbackList()){
+									map.put("feedback", feedback);
+									break;
+								}
+								
+								for(String remark:question.getAnswerRemarkList()){
+									map.put("remark", remark);
+									break;
+								}
+							}
+							
+							listSpec.add(map);
+						}
+					}
+					
+				
+				
+				log.info("zaim 5979 "+ listSpec.size());
 			}
 			return listSpec;
 			//#26130 end
