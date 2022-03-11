@@ -181,12 +181,9 @@ import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
-import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
-import my.ep.persistence.entity.tpl.spec.TplSpecZone;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
@@ -3410,6 +3407,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			// Get the file
 			FileInputStream fis = null;
 			BufferedInputStream fif = null;
+			
 			try{
 				if (null != scAttachment
 						&& StringUtils.isNotBlank(scAttachment.getFilePath())) {
@@ -3627,7 +3625,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			// #26130 - End
 			question.setFeedbackList(feedbackList);
 			question.setAnswerRemarkList(answerRemarkList);
-
+			
 //#26130 - zaim start
 			
 			List<HashMap<String, String>> listCombine = null;
@@ -3716,6 +3714,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				
 			}
 			question.setListCombineSpec(listCombine);
+			
 		}
 		
 		
@@ -5461,7 +5460,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				return null;
 			}
 			return taskNames;
-		}	
+		}
 		
 		//25037 - start - note 510
 		public void assertSpecCommitteeMaintenanceInProgress(ScQt qt){
@@ -5532,7 +5531,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 		}
 		//25037 - end - note 510
-		
+
 		//25037 - End
 		
 		/*
@@ -5727,88 +5726,128 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
   		return CheckStatus.contains(currentStatusId);
  
   	}//11104-End
-
+	
 	//#26130 - zaim start 
-			private String getDefaultValue(){
-				String defaultValue = "";
-				if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
-					defaultValue = "N/A";
-				}else {
-					defaultValue = "T/B";
-				}
-				
-				return defaultValue;
-				
+	private String getDefaultValue(){
+			String defaultValue = "";
+			if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
+				defaultValue = "N/A";
+			}else {
+				defaultValue = "T/B";
 			}
-			//#26130 start		
-			private List<HashMap<String, String>>getCOmbineZonalSPec(TplSpecQuestion question, TplSpecMaster master){
+			
+			return defaultValue;
+			
+		}
+		//#26130 start		
+		private List<HashMap<String, String>>getCOmbineZonalSPec(TplSpecQuestion question, TplSpecMaster master){
 
+			
+			List<HashMap<String, String>> listSpec = new ArrayList<>();
+			int countIndex = 0;
+			int indi = 0;
+			boolean getFirstValue = true;
+			if (question.getTplSpecZoneQties().size()  > 0){
 				
-				List<HashMap<String, String>> listSpec = new ArrayList<>();
-				int countIndex = 0;
-				int indi = 0;
-				boolean getFirstValue = true;
-				if (question.getTplSpecZoneQties().size()  > 0){
+				for (TplSpecZoneQty zone: question.getTplSpecZoneQties()){
 					
-					for (TplSpecZoneQty zone: question.getTplSpecZoneQties()){
+					HashMap<String, String> map = new HashMap<>();
+					if (countIndex == 0){
+						if (getFirstValue){
+							map.put("clItem", question.getClItem());
+							map.put("uomName", question.getClUom().getUomName());
+							map.put("clPriceTypeCode", getParameterDescForReport(question.getClPriceTypeCode()));
+							map.put("zoneName",zone.getTplSpecZoneDtl().getZoneName());
+							map.put("qty", zone.getQty().toString());
+							if(getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("service") || getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("Perkhidmatan")){
+								map.put("clUomFrequency", question.getClUomFrequency().toString());
+								map.put("clUomPerDay", question.getClUomPerDay().toString());
+								map.put("clUomPerMonth", question.getClUomPerMonth().toString());
+							}
+							for (TplSpecAnswer answer: question.getTplSpecAnswers())
+							if (answer.getAnswerNumeric() != null){
+								map.put("answerNumeric", answer.getAnswerNumeric().toString());
+							}
+							getFirstValue = false;
+						}else {
+							map.put("clItem", "&nbsp");
+							map.put("uomName", "&nbsp");
+							map.put("clPriceTypeCode", "&nbsp");
+							map.put("zoneName",zone.getTplSpecZoneDtl().getZoneName());
+							if(getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("service") || getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("Perkhidmatan")){
+								map.put("clUomFrequency", "&nbsp");
+								map.put("clUomPerDay", "&nbsp");
+								map.put("clUomPerMonth", "&nbsp");
+							}
+							map.put("qty", zone.getQty().toString());
+							for (TplSpecAnswer answer: question.getTplSpecAnswers()) {
+								if (answer.getAnswerNumeric() != null){
+									map.put("answerNumeric", answer.getAnswerNumeric().toString());
+								}
+							}
+							
+							
+						}
 						
-						HashMap<String, String> map = new HashMap<>();
+					
+						for (int i = indi; i <question.getTplSpecZoneQties().size(); i++){
+							map.put("feedback",question.getFeedbackList().get(i));
+							break;
+						}
+						for (int i = indi; i <question.getTplSpecZoneQties().size(); i++){
+							map.put("answerRemark",question.getAnswerRemarkList().get(i));
+							break;
+						}
+						
+						indi++;
+					}
+					listSpec.add(map);
+				}
+			}else {
+				//non-zonal
+				
+				log.info("zaim 5949 "+ master.getTplSpecQuestions().size());
+					HashMap<String, String> map = new HashMap<>();
+					if (question.getQuestionType().equalsIgnoreCase("I")){
 						if (countIndex == 0){
 							if (getFirstValue){
 								map.put("clItem", question.getClItem());
 								map.put("uomName", question.getClUom().getUomName());
-								map.put("clPriceTypeCode", getParameterDescForReport(question.getClPriceTypeCode()));
-								map.put("zoneName",zone.getTplSpecZoneDtl().getZoneName());
-								map.put("qty", zone.getQty().toString());
+								map.put("qty", question.getClQuantity().toString());
+
 								if(getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("service") || getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("Perkhidmatan")){
 									map.put("clUomFrequency", question.getClUomFrequency().toString());
 									map.put("clUomPerDay", question.getClUomPerDay().toString());
 									map.put("clUomPerMonth", question.getClUomPerMonth().toString());
-								}
-								for (TplSpecAnswer answer: question.getTplSpecAnswers())
-								if (answer.getAnswerNumeric() != null){
-									map.put("answerNumeric", answer.getAnswerNumeric().toString());
-								}
-								getFirstValue = false;
-							}else {
-								map.put("clItem", "&nbsp");
-								map.put("uomName", "&nbsp");
-								map.put("clPriceTypeCode", "&nbsp");
-								map.put("zoneName",zone.getTplSpecZoneDtl().getZoneName());
-								if(getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("service") || getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("Perkhidmatan")){
-									map.put("clUomFrequency", "&nbsp");
-									map.put("clUomPerDay", "&nbsp");
-									map.put("clUomPerMonth", "&nbsp");
-								}
-								map.put("qty", zone.getQty().toString());
-								for (TplSpecAnswer answer: question.getTplSpecAnswers()) {
-									if (answer.getAnswerNumeric() != null){
-										map.put("answerNumeric", answer.getAnswerNumeric().toString());
-									}
+								}else {
+									//product
+									map.put("clPriceTypeCode", getParameterDescForReport(question.getClPriceTypeCode()));
+									map.put("qtyBerperingkat", getDefaultValue());
 								}
 								
+								for (String feedback:question.getFeedbackList()){
+									map.put("feedback", feedback);
+									break;
+								}
 								
+								for(String remark:question.getAnswerRemarkList()){
+									map.put("remark", remark);
+									break;
+								}
 							}
 							
-						
-							for (int i = indi; i <question.getTplSpecZoneQties().size(); i++){
-								map.put("feedback",question.getFeedbackList().get(i));
-								break;
-							}
-							for (int i = indi; i <question.getTplSpecZoneQties().size(); i++){
-								map.put("answerRemark",question.getAnswerRemarkList().get(i));
-								break;
-							}
-							
-							indi++;
+							listSpec.add(map);
 						}
-						listSpec.add(map);
 					}
-				}
-				return listSpec;
-				//#26130 end
+					
+				
+				
+				log.info("zaim 5979 "+ listSpec.size());
 			}
-			//#26130 - zaim end
+			return listSpec;
+			//#26130 end
+		}
+		//#26130 - zaim end
 
 
 
