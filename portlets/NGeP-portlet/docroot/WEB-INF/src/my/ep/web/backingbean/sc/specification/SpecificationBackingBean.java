@@ -1049,7 +1049,7 @@ public class SpecificationBackingBean extends
 			// ScQt scQtTechChecklist = constructSpecCommitteDtls().getScQt();
 			specSo.validateCheckList(constructSpecCommitteDtls());
 			// checktemplateSpecStatus(scQtTechChecklist);
-			if (!this.getManagedBean().isReadOnly()) {
+//			if (!this.getManagedBean().isReadOnly()) {
 				//1873 - start- note 52
 				if(isTechnicalTemplatesEdited() && !this.getManagedBean().isFromSubmit()){
 					nextIndex = activeIndex;//32204
@@ -1059,7 +1059,7 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().setTechnicalOtherCheckList(validateTechnicalStandardCheckList());
 				}
 				//1873 - end- note 52
-			}
+//			}
 			specReqDTO.setScQt(constructSpecCommitteDtls().getScQt());
 			specSo.validateCheckList(specReqDTO);
 			//#31292 - start
