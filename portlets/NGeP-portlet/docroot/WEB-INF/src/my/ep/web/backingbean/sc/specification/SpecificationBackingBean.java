@@ -1052,7 +1052,7 @@ public class SpecificationBackingBean extends
 //			if (!this.getManagedBean().isReadOnly()) {
 				//1873 - start- note 52
 				if(isTechnicalTemplatesEdited() && !this.getManagedBean().isFromSubmit()){
-					nextIndex = activeIndex;//32204
+					nextIndex = 3;//32204
 					RequestContext.getCurrentInstance().execute("alertFinancialTemplateIncompletePopup.show()");
 					this.getManagedBean().setTechnicalOtherCheckList(false);
 				}else{
