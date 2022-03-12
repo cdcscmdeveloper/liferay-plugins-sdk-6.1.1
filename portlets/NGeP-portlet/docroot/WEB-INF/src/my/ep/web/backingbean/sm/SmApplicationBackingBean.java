@@ -3158,11 +3158,23 @@ public class SmApplicationBackingBean extends
 					SmApplicationUtil.initPoInquiry(getManagedBean(), false);
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC:
+					//#31461-Start
+					SmApplicationUtil.validateEquityOwnerCount(getManagedBean(), -1,
+							SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
+					if (getManagedBean().isPoApproverEquityErr()) {
+						throw new EpException(getManagedBean().getMsgEquityErr());
+					}//#31461-end
 					SmApplicationUtil.checkAllowedToApprove(getManagedBean());
 					displayBumiRecommendNote();
 					getHqFacility();
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC:
+					//#31461-Start
+					SmApplicationUtil.validateEquityOwnerCount(getManagedBean(), -1,
+							SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
+					if (getManagedBean().isPoApproverEquityErr()) {
+						throw new EpException(getManagedBean().getMsgEquityErr());
+					}//#31461-End
 					SmApplicationUtil.checkAllowedToApprove(getManagedBean());
 					displayBumiRecommendNote();
 					break;
@@ -3522,7 +3534,7 @@ public class SmApplicationBackingBean extends
 
 		if (validSave && !StringUtils.isBlank(currentPageType)) {
 			if (currentPageType
-					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
+					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY) && !getManagedBean().isDisAllowOwnerEdit() ) {//31461
 				validSave = SmApplicationUtil.validateEquityOwnerCount(
 						getManagedBean(), currentTab, currentPageType);
 				if (validSave) {
@@ -11600,7 +11612,9 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setCurrLocalCompanyEquity(
 					getManagedBean().getSmAppl().getSmCompanyBasic()
 							.getLocalCompanyEquity());
-			validatePaidCaptialAmt(false);
+			if (!getManagedBean().isDisAllowOwnerEdit()){//#31461-start
+				validatePaidCaptialAmt(false);
+			}//#31461-end
 			// #28466 end - fix reopen
 		} catch (NumberFormatException ne) {
 			throw new EpException(MessageConst.ERROR_722522);

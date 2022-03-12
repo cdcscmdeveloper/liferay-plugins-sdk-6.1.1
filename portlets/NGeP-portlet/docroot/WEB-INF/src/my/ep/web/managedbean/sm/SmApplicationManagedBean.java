@@ -603,6 +603,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String searchRecommendRejectReason;
 	//#15629 - END
 	
+	private boolean poApproverEquityErr;//#31461-start
+	private String msgEquityErr;//#31461-end
+	
 	//#11641 - START
 	private SmApplInquiry selectedInquiryResponse;
 	private boolean emptyMandatoryDocHistory;
@@ -4529,6 +4532,23 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.searchRecommendRejectReason = searchRecommendRejectReason;
 	}
 	//#15629 - END
+	// #31461-start
+	public boolean isPoApproverEquityErr() {
+		return poApproverEquityErr;
+	}
+
+	public void setPoApproverEquityErr(boolean poApproverEquityErr) {
+		this.poApproverEquityErr = poApproverEquityErr;
+	}
+
+	public String getMsgEquityErr() {
+		return msgEquityErr;
+	}
+
+	public void setMsgEquityErr(String msgEquityErr) {
+		this.msgEquityErr = msgEquityErr;
+	}
+	// #31461-end
 	
 	//#11641 - START
 	public SmApplInquiry getSelectedInquiryResponse() {
