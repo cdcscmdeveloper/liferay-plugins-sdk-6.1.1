@@ -15,19 +15,19 @@
 					</p:commandButton>
 				</td>
 			<td style="text-align: right;">
+			<!-- #31248 - SupplierMgmtConst.pmStatusDeletePendingApplContractor -->
 				<!-- #28212 --> <p:outputPanel
 					rendered="#{not empty viewSmApplBackingBean.managedBean.resubmitUrl 
-					and viewSmApplBackingBean.managedBean.supplierUser 					
-					and viewSmApplBackingBean.managedBean.smAppl.pmStatus.statusId ne SupplierMgmtConst.pmStatusRejectedBySystemPayment 
-					and viewSmApplBackingBean.managedBean.smAppl.pmStatus.statusId ne SupplierMgmtConst.pmStatusRejectedBySystemProcessingFee
+					and viewSmApplBackingBean.managedBean.supplierUser 
+					and viewSmApplBackingBean.managedBean.displayResubmitButton 
 					and ((viewSmApplBackingBean.managedBean.smAppl.applType eq 'B' and viewSmApplBackingBean.managedBean.smMofAccount!=null and viewSmApplBackingBean.managedBean.smMofAccount.expDate gt CommonConstants.THREE_MONTHS_LATER_DATE
 					) or (viewSmApplBackingBean.managedBean.smAppl.applType ne 'B'))}">
 					<!-- START 29823 -->
 					<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'N'}">
 					<p:commandLink onclick="blockWidget.show()" rendered="#{viewSmApplBackingBean.isApplPORejectedAfterApprovelSV()}"
-							action="#{viewSmApplBackingBean.redirectToResubmit()}"
-							process="@this" partialSubmit="true" update=":form"
-							value="#{lbl['lbl.sm.resubmit']}" />&#160;&#160;
+						action="#{viewSmApplBackingBean.redirectToResubmit()}"
+						process="@this" partialSubmit="true" update=":form"
+						value="#{lbl['lbl.sm.resubmit']}" />&#160;&#160;
 				</p:outputPanel>
 				<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.smAppl.applType ne 'N'}">
 					<p:commandLink onclick="blockWidget.show()" rendered="#{viewSmApplBackingBean.isApplPORejectedAfterApprovelSV()}"

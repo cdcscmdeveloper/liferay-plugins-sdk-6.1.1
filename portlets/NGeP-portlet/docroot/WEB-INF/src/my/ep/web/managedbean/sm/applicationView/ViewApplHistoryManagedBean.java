@@ -1,7 +1,5 @@
 package my.ep.web.managedbean.sm.applicationView;
 
-import java.util.Date;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,15 +16,14 @@ import my.ep.dto.sm.bulkApplication.SmBulkApplicationVO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
-import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmAttachment;
-import my.ep.persistence.entity.sm.SmMofCert;
-import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.web.backingbean.trackingdiary.PmTrackingDiaryBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -69,6 +66,8 @@ public class ViewApplHistoryManagedBean extends
 	
 	//28771
 	private String SearchDocumentMode;
+	
+	private Boolean displayResubmitButton; //#31248
 
 	public ViewApplHistoryManagedBean() {
 
@@ -162,7 +161,7 @@ public class ViewApplHistoryManagedBean extends
 					.getObjectArrResultBean();
 			//Bug #25601 :
 			int[] indexToCheck = new int[]{0, 10, 11, 12, 13,1}; 
-			List<Object[]> resultListTemp = new ArrayList();
+			List<Object[]> resultListTemp = new ArrayList<Object[]>();
 			String previousAppl="applno,";
 			try {
 				for (Object[] obj : retVal.getResultList()) {
@@ -399,6 +398,14 @@ public class ViewApplHistoryManagedBean extends
 		this.SearchDocumentMode = SearchDocumentMode;
 	}
 	//28771 - end
+	
+	public Boolean getDisplayResubmitButton() {
+		return displayResubmitButton;
+	}
+	public void setDisplayResubmitButton(Boolean displayResubmitButton) {
+		this.displayResubmitButton = displayResubmitButton;
+	}
+	
 	//#11641 - Start
 	public SmApplInquiry getSelectedInquiryResponse() {
 		return selectedInquiryResponse;
