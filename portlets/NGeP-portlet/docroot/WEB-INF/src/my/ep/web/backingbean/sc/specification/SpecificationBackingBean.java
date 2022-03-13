@@ -12791,7 +12791,6 @@ public class SpecificationBackingBean extends
 				}
 			}
 		}
-		List<ScQtCheckList> updatedCheckLists = new ArrayList<ScQtCheckList>();
 		updatedCheckLists.add(scQtCheckList);
 
 		reqDTO.setCheckLists(updatedCheckLists);
