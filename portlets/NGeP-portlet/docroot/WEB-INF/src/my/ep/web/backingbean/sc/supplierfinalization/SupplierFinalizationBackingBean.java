@@ -7522,7 +7522,10 @@ public class SupplierFinalizationBackingBean extends
 							 * BUG #31128, #26247 - UNSELECT & DIM RADIOBUTTON WHEN THE SAID SUPPLIER IS IMPOSE OF DISCIPLINARY ACTION
 							 * SHAFFUL
 							 */
-							if (recommendationBean.isAwarded() && !recommendationBean.getScQtProposal().getScQtSupplier().getSmSupplier().isDisciplinaryActions()) {
+							// #32699, #26247 - Start.
+							if (recommendationBean.isAwarded() && (!recommendationBean.getScQtProposal().getScQtSupplier().getSmSupplier().isDisciplinaryActions()
+							    || recommendationBean.getScQtProposal().getScQtSupplier().getSmSupplier().isWarningDA())) {
+								// #32699, #26247 - End.
 								getManagedBean().setRecommendedSupplier(qualSupplier);
 							}
 							/*
