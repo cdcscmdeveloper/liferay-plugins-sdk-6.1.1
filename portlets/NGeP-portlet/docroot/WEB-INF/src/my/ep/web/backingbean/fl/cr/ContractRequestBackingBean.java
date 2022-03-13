@@ -1037,8 +1037,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				
 			}
 			// 11076 - start
-			
-			if (getManagedBean().getOverallTotalItem()>= FulfilmentConst.GFMAS_CHARGELINE_LIMIT || getManagedBean().getSelectedContractedItemList().size() > FulfilmentConst.GFMAS_CHARGELINE_LIMIT) {
+			getManagedBean().setUpdateItem(getManagedBean().getOverallTotalItem()+getManagedBean().getSelectedContractedItemList().size());
+			if (getManagedBean().getSelectedContractedItemList().size() > FulfilmentConst.GFMAS_CHARGELINE_LIMIT || getManagedBean().getUpdateItem() > FulfilmentConst.GFMAS_CHARGELINE_LIMIT) {
 				messageId = MessageConst.ERROR_740070;
 				itemExceed = true;
 				throw new EpException(MessageConst.ERROR_740070);
@@ -1126,7 +1126,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			ContractItemResDTO resDTO = new ContractItemResDTO();
 			reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
 			//start 11076
-			if(getManagedBean().getValidateItem() > FulfilmentConst.GFMAS_CHARGELINE_LIMIT){	
+			getManagedBean().setAddAllItem(getManagedBean().getValidateItem()+getManagedBean().getOverallTotalItem());
+			if(getManagedBean().getValidateItem() > FulfilmentConst.GFMAS_CHARGELINE_LIMIT || getManagedBean().getAddAllItem() > FulfilmentConst.GFMAS_CHARGELINE_LIMIT){	
 				messageId = MessageConst.ERROR_740070;					
 				itemExceed = true;									
 				throw new EpException(MessageConst.ERROR_740070);	
