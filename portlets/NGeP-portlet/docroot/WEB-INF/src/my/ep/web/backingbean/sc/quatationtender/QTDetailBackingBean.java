@@ -6595,7 +6595,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				return;
 			}
 			//#25037-end
+			if (this.getManagedBean().getQt().isSampleReq()) {//11104-start
+				this.getManagedBean().setSubmit(true);
+				retrieveScheduleTabDtl();
 
+			}//11104-End
 
 			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
 			quationTenderReqDTO.setSaveFlow(false);
