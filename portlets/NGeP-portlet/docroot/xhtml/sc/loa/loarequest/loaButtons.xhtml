@@ -12,7 +12,6 @@
 
 	<ui:param name="validityDaysExpiredQt"
 		value="#{lOADetailBackingBean.checkProposalValidityDateReachByQt(lOADetailBackingBean.managedBean.scQt)}" />
-		
 	<h:panelGroup rendered="#{isTrackingDairyView}">
 		<table style="width: 100%">
 			<tr>
@@ -118,7 +117,9 @@
 									update="#{isReject ? '@this' : '@form'}" />
 							</h:panelGroup>
 							
-							<h:panelGroup id="buttonsPG" rendered="#{(bpmAction != 'CANCEL') and (bpmAction !='REVISE') and (bpmAction !='REJECT')}"><ui:remove> #29007</ui:remove>						
+							<!-- #29838- Start -->
+							<h:panelGroup id="buttonsPG" rendered="#{(bpmAction != 'CANCEL') and (bpmAction !='REVISE') and (bpmAction !='REJECT')}">
+							<!-- #29838- End -->
 	                            <!-- 20190405@asyrafhaziq - CR(25062)- Start -->
 								<!-- changes the calling action   -->
 								<p:commandButton value="#{lbl[buttonLabel]}"
