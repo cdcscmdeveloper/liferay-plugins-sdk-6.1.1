@@ -98,6 +98,10 @@
 								</p:commandLink>		               		
 			               		<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'2'}]);" process="@this">
 									<p:outputLabel value="#{lbl['lbl.sc.financial']}" styleClass="commandLink" />
+									<!--  #29466 - START -->
+									<f:setPropertyActionListener value="#{suppFinalizationBackingBean.managedBean.scQt}"
+												   	 target="#{suppFinalizationBackingBean.managedBean.checkCategoryCodeQt}" />
+									<!--  #29466 - END -->					   	 	
 								</p:commandLink>								
 		               		</f:facet>
 		               	</p:column>
@@ -169,6 +173,10 @@
 								   process="@this" update="@([id$=preferenceMarginSuppDetailsPopupId])">
 							<f:setPropertyActionListener value="#{shortlistedSupp}"
 												   	 target="#{suppFinalizationBackingBean.managedBean.preferenceMarginDtls}" />
+							<!--  #29466 - START -->
+							<f:setPropertyActionListener value="#{suppFinalizationBackingBean.managedBean.scQt}"
+												   	 target="#{suppFinalizationBackingBean.managedBean.checkCategoryCodeQt}" />					   	 	
+							<!--  #29466 - END -->
 					<h:outputText value="#{shortlistedSupp.proposalAmount.proposalAmt}"
 								  rendered="#{!suppFinalizationBackingBean.managedBean.itemize and 
 								  			   	shortlistedSupp.proposalAmount ne null and 
@@ -306,6 +314,10 @@
 								</p:commandLink>		               		
 			               		<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'2'}]);" process="@this">
 									<p:outputLabel value="#{lbl['lbl.sc.financial']}" styleClass="commandLink" />
+									<!--  #29466 - START -->
+									<f:setPropertyActionListener value="#{suppFinalizationBackingBean.managedBean.scQt}"
+												   	 target="#{suppFinalizationBackingBean.managedBean.checkCategoryCodeQt}" />
+									<!--  #29466 - END -->					   	 	
 								</p:commandLink>								
 		               		</f:facet>
 		               	</p:column>
@@ -372,6 +384,10 @@
 								   process="@this" update="@([id$=preferenceMarginSuppDetailsPopupId])">
 							<f:setPropertyActionListener value="#{shortlistedSupp}"
 												   	 target="#{suppFinalizationBackingBean.managedBean.preferenceMarginDtls}" />	
+							<!--  #29466 - START -->
+							<f:setPropertyActionListener value="#{suppFinalizationBackingBean.managedBean.scQt}"
+												   	 target="#{suppFinalizationBackingBean.managedBean.checkCategoryCodeQt}" />					   	 	
+							<!--  #29466 - END -->	
 					<h:outputText value="#{shortlistedSupp.proposalAmount.proposalAmt}"
 								  rendered="#{!suppFinalizationBackingBean.managedBean.itemize and 
 								  			   	shortlistedSupp.proposalAmount ne null and 
