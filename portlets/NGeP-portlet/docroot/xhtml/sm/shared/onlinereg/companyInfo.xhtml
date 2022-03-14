@@ -272,7 +272,8 @@
 					<p:outputLabel value="#{lbl['lbl.sm.country']}" />
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
-				<td class="tdContent"><p:selectOneMenu id="compCountryId" disabled="#{registrationBackingBean.managedBean.smAppl.applValidWithSsm ? !registrationBackingBean.managedBean.smBusinessAdd.countrySsmNull : true}"
+				<!-- #30964 -->
+				<td class="tdContent"><p:selectOneMenu id="compCountryId" disabled="#{backingBean.disableFieldSSm(registrationBackingBean.managedBean.smBusinessAdd.ssmData,registrationBackingBean.managedBean.smAppl.applValidWithSsm,registrationBackingBean.managedBean.smBusinessAdd.addressSsmNull)}"
 						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.country']}"  style="width:80%"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.pmCountry.countryId}">
 						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
