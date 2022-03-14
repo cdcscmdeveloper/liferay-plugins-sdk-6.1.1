@@ -325,13 +325,10 @@
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.request.note.fulfill.type']}" />				
 			</td>
-			<td>
+			<td colspan="3">
 				<p:inputText 
 					value="#{lOADetailBackingBean.getParameterDesc(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode)}"
-					disabled="true" size="35">
-				</p:inputText>				
-			</td>
-			<td>
+					disabled="true" size="35"/>
 				<!-- #25726 START -->
 				<c:if test="#{isDocTypeQuotation}">
 					<ac:iconTooltip value="#{lbl['lbl.sc.fulfilment.type.qt.tooltip']}" />
@@ -339,7 +336,7 @@
 				<c:if test="#{!isDocTypeQuotation}">
 					<ac:iconTooltip value="#{lbl['lbl.sc.fulfilment.type.tooltip']}" />
 				</c:if>
-				<!-- #25726 END -->
+				<!-- #25726 END -->								
 			</td>
 		</tr>
 		<!-- #25725 end -->
