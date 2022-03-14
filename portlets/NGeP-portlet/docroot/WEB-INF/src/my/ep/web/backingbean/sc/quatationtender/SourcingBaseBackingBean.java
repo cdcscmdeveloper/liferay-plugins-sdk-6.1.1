@@ -3578,6 +3578,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						// #26130 - End.
 						constructTplSpecQuestion(dafaltValue,
 								newTplSpecQuestionsList, master, question);
+						//#26130 start
+						question.setListCombineZonal(getCOmbineZonalSPec(question,master));
+						//#26130 end
 					}
 					// 26130 - End.
 					master.setTplSpecQuestions(newTplSpecQuestionsList);
@@ -4214,9 +4217,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		question.setTplSpecMaster(master);
 		
-		//#26130 start
-		question.setListCombineZonal(getCOmbineZonalSPec(question,master));
-		//#26130 end
+		
 		// #26226 - Start
 		if(newTplSpecQuestionsList !=null)
 		{
@@ -5946,7 +5947,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}else {
 				//non-zonal
 				
-				log.info("zaim 5949 "+ master.getTplSpecQuestions().size());
+				
 					HashMap<String, String> map = new HashMap<>();
 					if (question.getQuestionType().equalsIgnoreCase("I")){
 						if (countIndex == 0){
@@ -5982,7 +5983,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					
 				
 				
-				log.info("zaim 5979 "+ listSpec.size());
 			}
 			return listSpec;
 			//#26130 end
