@@ -32,124 +32,86 @@
 				<h:outputText value="#{lbl['lbl.sm.sme.info.history']}"
 					style="white-space: nowrap !important; float: left !important;" />
 			</f:facet>
-			<p:dataTable var="sme" id="smeUpdateHistoryList"
-				value="#{smUpdateSmeInfoBackingBean.managedBean.supplierSmeList}"
-				emptyMessage="#{lbl['lbl.sm.sme.msg.no.records.found']}"
-				rowIndexVar="index">
-				<p:column headerText="#{lbl['lbl.sm.sme.app.no']}"
-					style="width : 55%;">
-					<h:outputText value="#{sme.applNo}"
-						style="float: left;white-space: normal;" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.sme.status.type']}"
-					style="width : 55%;">
-					<h:outputText value="#{lbl['lbl.sm.sme.status.type.manmicro']}"
-						rendered="#{sme.smeStatusType eq 'MANMICRO'}"
-						style="float: left;white-space: normal;" />
-					<h:outputText value="#{lbl['lbl.sm.sme.status.type.mansmall']}"
-						rendered="#{sme.smeStatusType eq 'MANSMALL'}"
-						style="float: left;white-space: normal;" />
-					<h:outputText value="#{lbl['lbl.sm.sme.status.type.manmed']}"
-						rendered="#{sme.smeStatusType eq 'MANMED'}"
-						style="float: left;white-space: normal;" />
-					<h:outputText value="#{lbl['lbl.sm.sme.status.type.sermicro']}"
-						rendered="#{sme.smeStatusType eq 'SERMICRO'}"
-						style="float: left;white-space: normal;" />
-					<h:outputText value="#{lbl['lbl.sm.sme.status.type.sersmall']}"
-						rendered="#{sme.smeStatusType eq 'SERSMALL'}"
-						style="float: left;white-space: normal;" />
-					<h:outputText value="#{lbl['lbl.sm.sme.status.type.sermed']}"
-						rendered="#{sme.smeStatusType eq 'SERMED'}"
-						style="float: left;white-space: normal;" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.sme.reg.status']}"
-					style="width : 55%;">
-					<h:outputText value="#{lbl['lbl.sm.sme.txt.yes']}"
-						rendered="#{sme.smeCorpRegistered}"
-						style="float: left;white-space: normal;" />
-					<h:outputText value="#{lbl['lbl.sm.sme.txt.no']}"
-						rendered="#{not sme.smeCorpRegistered}"
-						style="float: left;white-space: normal;" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.sme.ref.no']}"
-					style="width : 55%;">
-					<h:outputText value="#{sme.smeRefNo}"
-						rendered="#{not empty sme.smeRefNo}"
-						style="float: left;white-space: normal;" />
-					<h:outputText value="#{lbl['lbl.sm.sme.txt.no.available']}"
-						rendered="#{empty sme.smeRefNo}"
-						style="float: left;white-space: normal;" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.sme.valid.start']}"
-					style="width : 55%;">
-					<h:outputText value="#{sme.smeValidStartDate}"
-						rendered="#{not empty sme.smeValidStartDate}"
-						style="float: left;white-space: normal;">
-						<f:convertDateTime pattern="dd/MM/yyyy" />
-					</h:outputText>
-					<h:outputText value="#{lbl['lbl.sm.sme.txt.no.available']}"
-						rendered="#{empty sme.smeValidStartDate}"
-						style="float: left;white-space: normal;" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.sme.valid.end']}"
-					style="width : 55%;">
-					<h:outputText value="#{sme.smeValidEndDate}"
-						rendered="#{not empty sme.smeValidEndDate}"
-						style="float: left;white-space: normal;">
-						<f:convertDateTime pattern="dd/MM/yyyy" />
-					</h:outputText>
-					<h:outputText value="#{lbl['lbl.sm.sme.txt.no.available']}"
-						rendered="#{empty sme.smeValidEndDate}"
-						style="float: left;white-space: normal;" />
-				</p:column>
-				<!-- #29617 Start - add table column -->
-				<p:column headerText="#{lbl['lbl.sm.sme.declared.date']}"
-					style="width : 55%;">
-					<h:outputText value="#{sme.smeDeclaredDate}"
-						rendered="#{not empty sme.smeDeclaredDate}"
-						style="float: left;white-space: normal;">
-						<f:convertDateTime pattern="dd/MM/yyyy" />
-					</h:outputText>
-					<h:outputText value="#{lbl['lbl.sm.sme.txt.no.available']}"
-						rendered="#{empty sme.smeDeclaredDate}"
-						style="float: left;white-space: normal;" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.sme.deleted.date']}"
-					style="width : 55%;">
-					<h:outputText value="#{sme.smeDeletedDate}"
-						rendered="#{not empty sme.smeDeletedDate}"
-						style="float: left;white-space: normal;">
-						<f:convertDateTime pattern="dd/MM/yyyy" />
-					</h:outputText>
-					<h:outputText value="#{lbl['lbl.sm.sme.txt.no.available']}"
-						rendered="#{empty sme.smeDeletedDate}"
-						style="float: left;white-space: normal;" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.sme.action.by']}"
-					style="width : 55%;">
-					<h:outputText value="#{sme.actionedBy}"
-						rendered="#{not empty sme.actionedBy}"
-						style="float: left;white-space: normal;">
-					</h:outputText>
-					<h:outputText value="#{lbl['lbl.sm.sme.txt.no.available']}"
-						rendered="#{empty sme.actionedBy}"
-						style="float: left;white-space: normal;" />
-				</p:column>
-				<!-- #29617 End -->
-				<p:column headerText="#{lbl['lbl.sm.sme.supp.doc']}"
-					style="width : 55%;">
-					<p:commandLink ajax="false"
-						rendered="#{not empty sme.smSmeSupplierDocs[0].fileName}">
-						<p:graphicImage value="/css/images/design/download.png"
-							style="margin-right:2px;" />
-						<p:fileDownload
-							value="#{smUpdateSmeInfoBackingBean.commonDownload(sme.smSmeSupplierDocs[0].filePath,sme.smSmeSupplierDocs[0].fileName,sme.smSmeSupplierDocs[0].fileName)}" />
-					</p:commandLink>
-					<h:outputText value="#{lbl['lbl.sm.sme.txt.no.available']}"
-						rendered="#{empty sme.smSmeSupplierDocs[0].fileName}"
-						style="float: left;white-space: normal;" />
-				</p:column>
-			</p:dataTable>
+			<!-- #29617 Start - add table column -->
+			<p:dataTable var="sme" id="smeUpdateHistoryList" value="#{smUpdateSmeInfoBackingBean.managedBean.supplierSmeList}"
+				emptyMessage="#{lbl['lbl.sm.sme.msg.no.records.found']}" rowIndexVar="index" >
+				<p:column headerText="#{lbl['lbl.sm.sme.app.no']}" style="white-space: normal;" >
+					<h:outputText value="#{sme.applNo}" style="float:left;white-space: nowrap;"/>
+				</p:column> 
+				<p:column headerText="#{lbl['lbl.sm.sme.status.type']}" style="text-align:center;white-space: normal;" >
+					<h:outputText value="#{lbl['lbl.sm.sme.status.type.manmicro']}" rendered="#{sme.smeStatusType eq 'MANMICRO'}"
+					style="float:left;white-space: nowrap;" />
+					<h:outputText value="#{lbl['lbl.sm.sme.status.type.mansmall']}" rendered="#{sme.smeStatusType eq 'MANSMALL'}"
+					style="float:left;white-space: nowrap;" />
+					<h:outputText value="#{lbl['lbl.sm.sme.status.type.manmed']}" rendered="#{sme.smeStatusType eq 'MANMED'}"
+					style="float:left;white-space: nowrap;" />
+					<h:outputText value="#{lbl['lbl.sm.sme.status.type.sermicro']}" rendered="#{sme.smeStatusType eq 'SERMICRO'}"
+					style="float:left;white-space: nowrap;" />
+					<h:outputText value="#{lbl['lbl.sm.sme.status.type.sersmall']}" rendered="#{sme.smeStatusType eq 'SERSMALL'}"
+					style="float:left;white-space: nowrap;" />
+					<h:outputText value="#{lbl['lbl.sm.sme.status.type.sermed']}" rendered="#{sme.smeStatusType eq 'SERMED'}"
+					style="float:left;white-space: nowrap;" />
+				</p:column> 
+				<p:column headerText="#{lbl['lbl.sm.sme.reg.status']}" style="text-align:center;white-space: normal;" >
+					<h:outputText value="#{lbl['lbl.sm.sme.txt.yes']}" rendered="#{sme.smeCorpRegistered}"
+					style="float:left;white-space: nowrap;" />
+					<h:outputText value="#{lbl['lbl.sm.sme.txt.no']}" rendered="#{not sme.smeCorpRegistered}"
+					style="float:left;white-space: nowrap;" />
+				</p:column> 
+				<p:column headerText="#{lbl['lbl.sm.sme.ref.no']}" style="text-align:center;white-space: normal;" >
+					<h:outputText value="#{sme.smeRefNo}" rendered="#{not empty sme.smeRefNo}"
+						style="float:left;white-space: nowrap;" />
+					<h:outputText value="#{lbl['lbl.sm.sme.txt.no.available']}" rendered="#{empty sme.smeRefNo}"
+						style="float:left;white-space: nowrap;" />
+				</p:column> 
+				<p:column headerText="#{lbl['lbl.sm.sme.valid.start']}" style="text-align:center;white-space: normal;" >
+					<h:outputText value="#{sme.smeValidStartDate}" rendered="#{not empty sme.smeValidStartDate}"
+						style="float:left;white-space: nowrap;" >
+						<f:convertDateTime pattern="dd/MM/yyyy" /> 
+					</h:outputText> 
+					<h:outputText value="#{lbl['lbl.sm.sme.txt.no.available']}" rendered="#{empty sme.smeValidStartDate}" />
+				</p:column> 
+				<p:column headerText="#{lbl['lbl.sm.sme.valid.end']}" style="text-align:center;white-space: normal;" >
+					<h:outputText value="#{sme.smeValidEndDate}" rendered="#{not empty sme.smeValidEndDate}"
+						style="float:left;white-space: nowrap;" >
+						<f:convertDateTime pattern="dd/MM/yyyy" /> 
+					</h:outputText> 
+					<h:outputText value="#{lbl['lbl.sm.sme.txt.no.available']}" rendered="#{empty sme.smeValidEndDate}"
+						style="float:left;white-space: nowrap;" />
+				</p:column> 
+				<p:column headerText="#{lbl['lbl.sm.sme.declared.date']}" style="text-align:center;white-space: normal;" >
+					<h:outputText value="#{sme.smeDeclaredDate}" rendered="#{not empty sme.smeDeclaredDate}"
+						style="float:left;white-space: nowrap;" >
+						<f:convertDateTime pattern="dd/MM/yyyy" /> 
+					</h:outputText> 
+					<h:outputText value="#{lbl['lbl.sm.sme.txt.no.available']}" rendered="#{empty sme.smeDeclaredDate}"
+						style="float:left;white-space: nowrap;" />
+				</p:column> 
+				<p:column headerText="#{lbl['lbl.sm.sme.deleted.date']}" style="text-align:center;white-space: normal;" >
+					<h:outputText value="#{sme.smeDeletedDate}" rendered="#{not empty sme.smeDeletedDate}"
+						style="float:left;white-space: nowrap;" >
+						<f:convertDateTime pattern="dd/MM/yyyy" /> 
+					</h:outputText> 
+					<h:outputText value="#{lbl['lbl.sm.sme.txt.no.available']}" rendered="#{empty sme.smeDeletedDate}"
+						style="float:left;white-space: nowrap;" />
+				</p:column> 
+				<p:column headerText="#{lbl['lbl.sm.sme.action.by']}" style="text-align:center;white-space: normal;" >
+					<h:outputText value="#{sme.actionedBy}" rendered="#{not empty sme.actionedBy}"
+						style="float:left;white-space: nowrap;" >
+					</h:outputText> 
+					<h:outputText value="#{lbl['lbl.sm.sme.txt.no.available']}" rendered="#{empty sme.actionedBy}"
+						style="float:left;white-space: nowrap;" />
+				</p:column> 
+				<p:column headerText="#{lbl['lbl.sm.sme.supp.doc']}" style="text-align:center;white-space: normal;" >
+					<p:commandLink ajax="false" rendered="#{not empty sme.smSmeSupplierDocs[0].fileName}" >
+						<p:graphicImage value="/css/images/design/download.png" style="margin-right:2px;" />
+						<p:fileDownload 
+							value="#{smUpdateSmeInfoBackingBean.commonDownload(sme.smSmeSupplierDocs[0].filePath,sme.smSmeSupplierDocs[0].fileName,sme.smSmeSupplierDocs[0].fileName)}" /> 
+					</p:commandLink> 
+					<h:outputText value="#{lbl['lbl.sm.sme.txt.no.available']}" rendered="#{empty sme.smSmeSupplierDocs[0].fileName}" />
+				</p:column> 
+			</p:dataTable> 
+			<!-- #29617 End -->
 		</p:panel>
 	</ui:define>
 </ui:composition>
