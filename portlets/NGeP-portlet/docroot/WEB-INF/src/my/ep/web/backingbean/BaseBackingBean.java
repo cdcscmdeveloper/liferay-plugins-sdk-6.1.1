@@ -63,6 +63,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.vendorcode.IVendorCodeSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -74,6 +75,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.BpmConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -82,6 +84,7 @@ import my.ep.dto.pm.authorization.role.RoleReqDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
+import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
 import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
@@ -107,6 +110,8 @@ import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pp.procurementplan.PpAddress;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmEquityCompany;
@@ -4051,4 +4056,32 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return items;
 	}
 	//#8411 - END
+	
+	//#29466 - START
+	public boolean checkManufacturerCategoryCodes(ScQt scQt){
+		boolean manufacturer=false;	
+	  	if(null!=scQt&& !scQt.isPanel()){
+	  		List<ScQtCategory> qtCategories = null;
+	  		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			reqDTO.setQtId(scQt.getQtId());
+			qtCategories = getQtDetailSO().getQtCategoryByQtId(reqDTO).getCategories();	
+			if(null!=qtCategories && CollectionUtils.isNotEmpty(qtCategories)){
+		  		for (ScQtCategory category : qtCategories) {
+					if(SourcingConstants.MANUFACTURER_CATEGORY_CODE.equals(category.getPmCategoryL3().getCategoryL3Code())){
+				  		manufacturer=true;
+						break;
+					}
+				}
+			}
+	  	} else{
+	  		manufacturer=false;	
+	  	}
+	  	return manufacturer;
+	}
+
+  	private IQTDetailSO getQtDetailSO() {
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+	}
+  	//#29466 - END
 }

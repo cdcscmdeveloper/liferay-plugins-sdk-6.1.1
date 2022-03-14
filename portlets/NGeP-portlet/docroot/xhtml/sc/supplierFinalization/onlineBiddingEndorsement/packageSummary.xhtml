@@ -7,6 +7,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
+	<!-- #29466 - START -->
+	<ui:param name="manufacturercategoryCode" value="#{suppFinalBiddingBackingBean.checkManufacturerCategoryCodes(suppFinalBiddingBackingBean.managedBean.scQt)}"></ui:param>
+	<!-- #29466 - END -->
 	<h:outputText styleClass="instruction" escape="false" rendered="#{suppFinalBiddingBackingBean.managedBean.displayReviseInstrn}"
 			value="#{lbl['lbl.sc.sf.meeting.decision.instrn']}" />
 			
@@ -40,7 +43,7 @@
 				<p:outputLabel value="#{price.ranking}" />
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.supplier.code']}" style="width:10%; text-align:center;">
+			<p:column headerText="#{lbl['lbl.sc.supplier.code']}" style="width:5%; text-align:center;">
 				<p:commandLink oncomplete="suppDetailsPopup.show(); return false;"
 							   process="@this" update="@([id$=suppDetailsPopupId])">
 					<f:setPropertyActionListener value="#{price.scQtProposal}"
@@ -48,6 +51,15 @@
 					<h:outputText value="#{price.scQtProposal.supplierNo}" />
 				</p:commandLink>
 			</p:column>			
+			
+			<!-- #29466 - START -->
+			<p:column headerText="#{lbl['lbl.sc.total.score']}" style="width:5%; text-align:right;">
+				<h:outputText value="#{price.scBidSupplier.totalScore}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(
+												CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+				</h:outputText>
+			</p:column>		
+			<!-- #29466 - END -->
 			
 			<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;">
 				<h:outputText value="#{(price.scBidSupplier.bumi)?lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
@@ -115,12 +127,14 @@
 				</h:outputText>
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.pref.margin']}" style="width:5%; white-space:normal;">
+			<!-- #29466 - START -->
+			<p:column headerText="#{lbl[manufacturercategoryCode ?'lbl.sc.pref.margin.manufacturer' : 'lbl.sc.pref.margin']}" style="width:5%; white-space:normal;">
 				<h:outputText style="float : right;" value="#{price.prefMargin}" 
 							  rendered="#{price.scBidSupplier.bumi and suppFinalBiddingBackingBean.managedBean.nonBumiAvailable}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 				</h:outputText>
 			</p:column>
+			<!-- #29466 - END -->
 			
 			<p:column headerText="#{lbl['lbl.sc.total.cost.saving']}"  style="width:10%; white-space:normal; text-align:right;">
 				<h:outputText value="#{suppFinalBiddingBackingBean.managedBean.estimatedCost - 

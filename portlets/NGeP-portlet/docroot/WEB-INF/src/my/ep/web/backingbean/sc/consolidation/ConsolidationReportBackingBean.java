@@ -2204,6 +2204,7 @@ public class ConsolidationReportBackingBean extends
 		if(evaluationStageId==2){ //#26440 Start
 		supplierFinalizationBB.getManagedBean().setCurrentZone(specZoneDtl);
 		} //#26440 End
+		supplierFinalizationBB.getManagedBean().setCheckCategoryCodeQt(this.getManagedBean().getScQt());//#29466
 		supplierFinalizationBB.retrieveQualifiedSuppliersInfoByEvalStage();
 
 	}
