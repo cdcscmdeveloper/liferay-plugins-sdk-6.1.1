@@ -37,6 +37,10 @@ import org.apache.commons.lang.StringUtils;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.StreamedContent;
+// #29617 Start - add table column
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.web.util.pm.helper.PmCommonUtil;
+//#29617 End
 
 @ManagedBean(name = "smUpdateSmeInfoBackingBean")
 @RequestScoped
@@ -247,7 +251,8 @@ public class SmUpdateSmeInfoBackingBean extends BaseBackingBean<SmUpdateSmeInfoM
 		reqDTO.setSmSupplier(getManagedBean().getSmSupplier());
 		List<SmSmeSupplier> declaredSmeList = SmServiceLookup.getSupplierSmeSO()
 				.retrieveSmeHistoryListBySupplierId(reqDTO).getSupplierSmeList();
-		getManagedBean().setSupplierSmeList(declaredSmeList);
+		// #29617 - add table column
+		getManagedBean().setSupplierSmeList(updateCreatedUserName(declaredSmeList));
 	}
 
 	public void onDeleteSme() {
@@ -261,5 +266,14 @@ public class SmUpdateSmeInfoBackingBean extends BaseBackingBean<SmUpdateSmeInfoM
 		renewSesionObject();
 		SmCommonUtil.redirectToPage(SmApplicationUtil.getApplicationErrorPage(), MessageConst.INFO_296173, null, null);
 	}
+	// #29617 Start - add table column
+	private List<SmSmeSupplier> updateCreatedUserName(List<SmSmeSupplier> declaredSmeList) {
+		for(SmSmeSupplier rc: declaredSmeList){
+			PmUser user = PmCommonUtil.retrieveUserById(rc.getCreatedBy(),true);
+			rc.setActionedBy(user.getUserName());
+		}
+		return declaredSmeList;
+	}
+	// #29617 End
 
 }
