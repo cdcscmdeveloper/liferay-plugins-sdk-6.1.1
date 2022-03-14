@@ -102,6 +102,40 @@
 						rendered="#{empty sme.smeValidEndDate}"
 						style="float: left;white-space: normal;" />
 				</p:column>
+				<!-- #29617 Start - add table column -->
+				<p:column headerText="#{lbl['lbl.sm.sme.declared.date']}"
+					style="width : 55%;">
+					<h:outputText value="#{sme.smeDeclaredDate}"
+						rendered="#{not empty sme.smeDeclaredDate}"
+						style="float: left;white-space: normal;">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+					<h:outputText value="#{lbl['lbl.sm.sme.txt.no.available']}"
+						rendered="#{empty sme.smeDeclaredDate}"
+						style="float: left;white-space: normal;" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sm.sme.deleted.date']}"
+					style="width : 55%;">
+					<h:outputText value="#{sme.smeDeletedDate}"
+						rendered="#{not empty sme.smeDeletedDate}"
+						style="float: left;white-space: normal;">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+					<h:outputText value="#{lbl['lbl.sm.sme.txt.no.available']}"
+						rendered="#{empty sme.smeDeletedDate}"
+						style="float: left;white-space: normal;" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sm.sme.action.by']}"
+					style="width : 55%;">
+					<h:outputText value="#{sme.actionedBy}"
+						rendered="#{not empty sme.actionedBy}"
+						style="float: left;white-space: normal;">
+					</h:outputText>
+					<h:outputText value="#{lbl['lbl.sm.sme.txt.no.available']}"
+						rendered="#{empty sme.actionedBy}"
+						style="float: left;white-space: normal;" />
+				</p:column>
+				<!-- #29617 End -->
 				<p:column headerText="#{lbl['lbl.sm.sme.supp.doc']}"
 					style="width : 55%;">
 					<p:commandLink ajax="false"
