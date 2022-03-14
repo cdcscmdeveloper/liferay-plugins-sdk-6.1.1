@@ -466,7 +466,9 @@ public class SmApplicationUtil {
 			for (SmSupplierCategory cat : catList) {
 				// Bug #26031 - filter valid category
 				// //Bug #25676 : SM Showstopper - No Categories Appear in Processing Officer Screen
+				//#30766 - START
 				if (cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE && cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED && cat.getPoDecFlg() == null) {
+				//#30766 - END
 					//Enhancement #11765
 					invalidCatCodes.add(cat.getPmCategoryL1().getCategoryL1Code()+cat.getPmCategoryL2().getCategoryL2Code()+cat.getPmCategoryL3().getCategoryL3Code());
 				}
