@@ -299,6 +299,10 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean haveSupplierRejection;
 	// #11134 - End
 	
+	//29562 - START
+	private String finalizationMethodBefore;
+	//29562 - END
+	
 	/**
 	 * @return the activeIndex
 	 */
@@ -2435,4 +2439,26 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.isMofCntralCtc = isMofCntralCtc;
 	}
 	
+	//29562 - START
+	public String getFinalizationMethodBefore() {
+		return finalizationMethodBefore;
+	}
+
+	public String setFinalizationMethodBefore(String finalizationMethodBefore) {
+		return this.finalizationMethodBefore = finalizationMethodBefore;
 }
+	//29562 - END
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+// ***25201

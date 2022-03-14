@@ -160,9 +160,9 @@
 									disabled="#{!(isSecretaryUser or 
 													isBPKTaskAndClaimed) or isQTStatusReFinalized or suppFinalizationBackingBean.isQTMaintenanceScreen()}">
 									<f:selectItems value="#{suppFinalizationBackingBean.getFinalizationMethodDropDown()}" />
-									<p:ajax event="change" update="@([id$=recommendSupplierPanel],[id$=itemSupplierPanel])" 
-										listener="#{suppFinalizationBackingBean.finalizationMethodEvent}" process="@this" 
-										onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+									<!-- #29562 START -->
+									<p:ajax oncomplete="typeConfirmation.show();" listener="#{suppFinalizationBackingBean.finalizationMethodEvent}" process="@this"/>
+					   				<!-- #29562 END -->
 					   			</p:selectOneMenu>
 							</td>
 							<td style="margin-top: -3px">
@@ -460,6 +460,26 @@
 		</table>			
 	</p:panel>
 
+	<!-- #29562 START -->
+	<p:confirmDialog id="typeConfirmationId" closable="false"
+		header="#{lbl['lbl.sc.dialog.confirmation']}"
+		message="#{lbl['lbl.sc.dialog.confirmation.message']}"
+		widgetVar="typeConfirmation" modal="true" width="600px" height="50px">
+		
+		<div align="right">
+			<p:commandButton id="conf" value="#{lbl['lbl.txt.yes']}"
+				process="@this" partialSubmit="true" update="@form"
+				action="#{suppFinalizationBackingBean.resetSelectedItemSupplierandRemarks}"
+				oncomplete="typeConfirmation.hide()">
+				<p:ajax event="change" update="@([id$=recommendSupplierPanel],[id$=itemSupplierPanel], [id$=typeConfirmationId])" 
+										listener="#{suppFinalizationBackingBean.selectedFinalizationMethod}" process="@this"/>
+			</p:commandButton>
+			<p:commandButton id="decline" value="#{lbl['lbl.txt.no']}"
+				oncomplete="typeConfirmation.hide()" action="#{suppFinalizationBackingBean.resetFinalizationMethod}" update="recommendBy"/>
+		</div>
+	</p:confirmDialog>
+	<!-- #29562 END -->
+		
 </ui:composition>
 
 

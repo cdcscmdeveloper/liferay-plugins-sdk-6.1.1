@@ -10672,5 +10672,72 @@ return	remarksNotFound;
 		}
 	}
 	// #28834 - End. 
+	
+	//#29562 - START
+		/**
+		 * Reset search field
+		 */
+		public void resetSelectedItemSupplierandRemarks() {
+			//reset select all item list
+			this.getManagedBean().setSelectAll(false);
+			
+			if (this.getManagedBean().getItemList() != null){
+				//reset selected item list
+				for(int i = 0; i < this.getManagedBean().getItemList().size();){
+					if (this.getManagedBean().getItemList().get(i).isSelected()){
+						this.getManagedBean().getItemList().get(i).setSelected(false);
+						//reset selected suppliers
+						if (this.getManagedBean().getItemList().get(i).getSelectedSuppliers() != null){
+							this.getManagedBean().getItemList().get(i).getSelectedSuppliers().clear();
+							ScQtRecommend itemList = this.getManagedBean().getItemList().get(i);
+							getSupplierCodes(itemList);
+						}
+						i++;
+					}
+					else{
+						break;
+					}
+				}
+			}
+			
+			if (this.getManagedBean().getShortlistedSuppliersByRecommendType().getList() != null){
+				//reset selected suppliers in supplier list table
+				for(int j = 0; j < this.getManagedBean().getShortlistedSuppliersByRecommendType().getList().size();){
+					if (this.getManagedBean().getShortlistedSuppliersByRecommendType().getList().get(j).isShortListed()){
+						this.getManagedBean().getShortlistedSuppliersByRecommendType().getList().get(j).setShortListed(false);
+						j++;
+					}
+					else{
+						break;
+					}
+				}
+			}
+
+			if (this.getManagedBean().getScRemarks() != null){
+				//reset remarks
+				for(int k = 0; k < this.getManagedBean().getScRemarks().size(); k++){
+					if (this.getManagedBean().getScRemarks().get(k).getRemark() != null){
+						this.getManagedBean().getScRemarks().get(k).setRemark(null);
+					}
+					else{
+						break;
+					}
+				}
+			}
+			
+			//reset selected supplier for award
+			this.getManagedBean().setRecommendedSupplier(null);
+			this.getManagedBean().setFinalizationMethodBefore(getManagedBean().getFinalizationMethod());
+		}
+		
+		/**
+		* Reset finalization method
+		*/
+		public void resetFinalizationMethod() {
+			this.getManagedBean().setFinalizationMethod(getManagedBean().getFinalizationMethodBefore());
+			finalizationMethodEvent(null);
+		}
+		//#29562 - END
+		
 }
 // ***19336
