@@ -128,7 +128,9 @@
 			title="#{lbl['lbl.txt.product']}"
 			isWorkflowStatus="#{isSupplierAckStatus}"
 			newable="#{!(isPendingApprovalStatus or isPendingVerification) and !directLOABackingBean.managedBean.readOnly}" />
-
+		
+			<p:commandButton value="#{lbl['lbl.btn.clone']}" onclick="cloneLoaSpec.show();" process="@this"></p:commandButton>
+			
 		<ac:templateSpec
 			first="#{directLOABackingBean.managedBean.servFirst}"
 		    editable ="#{editable}" 
@@ -136,7 +138,9 @@
 			title="#{lbl['lbl.txt.service']}"
 			isWorkflowStatus="#{isSupplierAckStatus}"
 			newable="#{!(isPendingApprovalStatus or isPendingVerification) and !directLOABackingBean.managedBean.readOnly}" />
-
+	
+		<p:commandButton value="#{lbl['lbl.btn.clone']}" onclick="cloneLoaSpec.show();" process="@this"></p:commandButton>
+			
 	</h:panelGroup>
 
 </ui:composition>

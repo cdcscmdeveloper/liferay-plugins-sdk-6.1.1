@@ -10,6 +10,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import my.ep.constant.pm.ParameterConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCurrency;
@@ -21,6 +22,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
@@ -37,6 +39,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.type.pm.PTJLocalityCode;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.sc.common.ZonesBean;
+import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 
 import org.primefaces.model.TreeNode;
@@ -319,6 +322,44 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	private ScLoiLoaItem scLoiLoaItem;
 	private List<TplSpecAnswer> tplSpecAnswerList;
 	/*#29007 End Vinod*/
+	
+	// #29468 
+	// template Specification variables
+	
+	/** For clone Specification Screen. */
+	private QtnTenderSearchBean qtnTendertemplateSearchBean= new QtnTenderSearchBean();
+	
+	/** The standard template. */
+	private String standardTemplate = ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING;
+
+	/** The search item type id. */
+	private Long searchItemTypeId;
+
+	/** The search spec type id. */
+	private Long searchSpecTypeId;
+
+	/** The search procurement id. */
+	private Long searchProcurementId;
+
+	/** The doc searchlist. */
+	private List<ScQtDoc> docSearchlist;
+
+	/** The check list item. */
+	private List<ScQtCheckList> checkListItem;
+
+	/** The zone list. */
+//	private List<SelectItem> zoneList;
+
+	/** The spec name. */
+	private String specName;
+
+	/** The status id. */
+	private Long statusId;
+
+	/** The is record status. */
+//	private boolean isRecordStatus;
+
+	// #29468 
 	
 	// #25726 START
 	public BigDecimal limit = new BigDecimal(500000);
@@ -2014,4 +2055,81 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 	
 	// #25726 END
+	
+	//#29468
+	public QtnTenderSearchBean getQtnTendertemplateSearchBean() {
+		return qtnTendertemplateSearchBean;
+	}
+
+	public void setQtnTendertemplateSearchBean(QtnTenderSearchBean qtnTendertemplateSearchBean) {
+		this.qtnTendertemplateSearchBean = qtnTendertemplateSearchBean;
+	}
+
+	public String getStandardTemplate() {
+		return standardTemplate;
+	}
+
+	public void setStandardTemplate(String standardTemplate) {
+		this.standardTemplate = standardTemplate;
+	}
+
+	public Long getSearchItemTypeId() {
+		return searchItemTypeId;
+	}
+
+	public void setSearchItemTypeId(Long searchItemTypeId) {
+		this.searchItemTypeId = searchItemTypeId;
+	}
+
+	public Long getSearchSpecTypeId() {
+		return searchSpecTypeId;
+	}
+
+	public void setSearchSpecTypeId(Long searchSpecTypeId) {
+		this.searchSpecTypeId = searchSpecTypeId;
+	}
+
+	public Long getSearchProcurementId() {
+		return searchProcurementId;
+	}
+
+	public void setSearchProcurementId(Long searchProcurementId) {
+		this.searchProcurementId = searchProcurementId;
+	}
+
+	public List<ScQtDoc> getDocSearchlist() {
+		return docSearchlist;
+	}
+
+	public void setDocSearchlist(List<ScQtDoc> docSearchlist) {
+		this.docSearchlist = docSearchlist;
+	}
+
+	public List<ScQtCheckList> getCheckListItem() {
+		return checkListItem;
+	}
+
+	public void setCheckListItem(List<ScQtCheckList> checkListItem) {
+		this.checkListItem = checkListItem;
+	}
+
+	public String getSpecName() {
+		return specName;
+	}
+
+	public void setSpecName(String specName) {
+		this.specName = specName;
+	}
+
+	public Long getStatusId() {
+		return statusId;
+	}
+
+	public void setStatusId(Long statusId) {
+		this.statusId = statusId;
+	}
+
+	//#29468
+	
+	
 }
