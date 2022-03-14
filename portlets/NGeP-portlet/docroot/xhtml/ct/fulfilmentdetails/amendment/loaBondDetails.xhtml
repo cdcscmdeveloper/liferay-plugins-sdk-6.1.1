@@ -148,12 +148,12 @@
 					
 			<p:column styleClass="column-align-center"  headerText="#{lbl['lbl.txt.attachment']}" style="width:15%;">			
 				<h:panelGroup id="uploadBondPg" columns="2">
-					<p:commandButton oncomplete="uploadBondDlg.show();return false;" update=":form:uploadBondDlg"
+				<!--  <p:commandButton oncomplete="uploadBondDlg.show();return false;" update=":form:uploadBondDlg"
 					   	process="@this" partialSubmit="true" actionListener="#{ctBackingBean.PerformanceBondValue(varBond)}"
 						rendered="#{!ctBackingBean.managedBean.viewContract and varBond.fileName == null
 						and ctBackingBean.managedBean.ctContractAmount.bondReq}"
 						style="float:left;" icon="ui-icon-upload">
-					</p:commandButton>
+					</p:commandButton> -->
 					<h:commandLink
 						title="#{varBond.fileName}"
 						value="#{ctBackingBean.getShortFileName(varBond.fileName)}"						
