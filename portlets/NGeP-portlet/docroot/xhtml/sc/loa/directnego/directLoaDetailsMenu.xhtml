@@ -385,7 +385,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.qt.fileno']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td colspan="3">
+				<td>
 				     <p:inputText disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 						required="true" id="fileNoId"
 						value="#{directLOABackingBean.managedBean.scLoa.scQt.fileNo}"
@@ -402,14 +402,40 @@
 						<p:ajax event="blur" process="fileExtNo" update="fileExtNo"/>
 						</p:inputText>
 						 <p:message
-						id="fileExtNoMsg" for="fileExtNo" display="icon" /></td>
+						id="fileExtNoMsg" for="fileExtNo" display="icon" />
+				</td>
+				<td width="160px">
+					<p:outputLabel	value="#{lbl['lbl.sc.procurement.category']}" /> 
+					<p:outputLabel	value="*" styleClass="mandatory" />
+				</td>
+				<td><c:choose>
+							<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}">
+							<p:selectOneMenu id="procBoCategory" required="true"
+								style="margin-bottom:5px;width:206px;"
+								label="#{lbl['lbl.sc.procurement.category']}"
+								value="#{directLOABackingBean.managedBean.scLoa.scQt.pmProcurementCategory.parameterId}}">
+								<f:selectItems
+									value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
+							 <p:ajax event="change" 
+									process="@this" partialSubmit="true" update="procBoCategory"
+									listener="#{directLOABackingBean.procCategoryChanged(directLOABackingBean.managedBean.scLoa)}" />
+							</p:selectOneMenu>
+							<p:message id="procBoCategoryMsg" for="procBoCategory"
+								display="icon" />
+						</c:when>
+						<c:otherwise>
+							<p:inputText id="procCatTxt"
+								value="#{directLOABackingBean.getParameterDesc(directLOABackingBean.managedBean.scLoa.scQt.pmProcurementCategory)}"
+								size="35" disabled="true" />
+						</c:otherwise>
+					</c:choose></td>
 			</tr>
 			
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.est.price']}" />
 				</td>
 				<td colspan="3"><p:inputText style="text-align: right;"
-						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
+						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly or isPendingApprovalStatus or isPendingRevApprovalStatus}"
 						value="#{directLOABackingBean.managedBean.scLoa.estimatedPrice}"
 						size="35">
 						<p:ajax event="blur" process="@this" update="@this"></p:ajax>
@@ -426,7 +452,7 @@
 				<td colspan="3"><p:inputText style="text-align: right;" required="true" id="loaAmtId"
 						value="#{directLOABackingBean.managedBean.scLoa.loaAmt}" size="35"
 						label="#{lbl['lbl.sc.loiloa.loa.off.price']}"
-						disabled="#{isPendingApprovalStatus or directLOABackingBean.managedBean.readOnly or isPendingVerification}">
+						disabled="#{isPendingApprovalStatus or directLOABackingBean.managedBean.readOnly or isPendingVerification or isPendingApprovalStatus or isPendingRevApprovalStatus}">
 						<p:ajax event="blur"
 							listener="#{directLOABackingBean.setOverallCtAmount(directLOABackingBean.managedBean.scLoa.loaAmt)}"
 							update="@form"></p:ajax>
@@ -448,16 +474,18 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.fullfillent.type']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td colspan="3">
+
 					<table>
 						<tr>
 							<td>
 								<c:choose>
-									<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly and !isContractTypeAsCentral}">
-										<p:selectOneMenu id="fulfilId"
-											required="true"
-											label="#{lbl['lbl.sc.fullfillent.type']}"
-											value="#{directLOABackingBean.managedBean.scLoa.scQt.fulfilmentType.parameterId}"
-											style="width: 246px;margin-bottom: 5px;">
+									<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly and !isContractTypeAsCentral and !isPendingApprovalStatus and !isPendingRevApprovalStatus}">
+									<p:selectOneMenu id="fulfilId"
+										required="true"
+										label="#{lbl['lbl.sc.fullfillent.type']}"
+										value="#{directLOABackingBean.managedBean.scLoa.scQt.fulfilmentType.parameterId}"
+										style="width: 246px;margin-bottom: 5px;">
+
 		
 											<f:selectItems
 												value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
