@@ -5516,7 +5516,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							userReqDTO.setIncludeUserIds(Arrays.asList(new Long[]{member.getPmUser().getUserId()}));
 							UserResDTO resDTO = userSO.retrieveUserListByRole(userReqDTO);
 							
-							if(!CollectionUtils.isEmpty(resDTO.getUserList())){
+							if(CollectionUtils.isEmpty(resDTO.getUserList())){//25037 - end - note 510
 								if(inactiveUserSb.length()>0){
 									inactiveUserSb.append(", ");
 								}
