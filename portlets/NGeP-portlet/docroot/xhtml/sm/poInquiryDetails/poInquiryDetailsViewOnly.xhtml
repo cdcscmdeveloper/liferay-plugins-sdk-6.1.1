@@ -32,6 +32,10 @@
 				</c:if>
 			</td>
 				<td style="vertical-align: top;"><p:dialog />
+					<!-- #12483 - START -->
+					<h:outputText value="#{lbl['lbl.sm.revise.reason']} : #{backingBean.currentReviseReason()}" rendered="#{backingBean.currentReviseReason() ne null}" styleClass="splNotesFonts" escape="false" />
+					<br/>
+					<!-- #12483 - END -->
 					<ui:include src="/xhtml/sm/poInquiryDetails/poInquiryDetails.xhtml" /></td>
 			</tr>
 		</table>
