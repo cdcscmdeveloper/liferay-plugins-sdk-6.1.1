@@ -4806,9 +4806,17 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		ScLoa scLoa = awardResDTO.getLoa();
 		setUserDetails(scLoa);
 		setUserDetails(scLoa.getScLoiLoa());
+		
+		//Enhancement #29468
+		// procurement category
+		if (scLoa.getScQt().getPmProcurementCategory() == null) {
+			scLoa.getScQt().setPmProcurementCategory(new PmParameter());
+		}
+		
 		this.getManagedBean().setScLoa(scLoa);
 		ScQt scQt = scLoa.getScQt();
 		setUserDetails(scQt);
+			
 		this.getManagedBean().setScQt(scLoa.getScQt());
 		this.getManagedBean().setApproverUser(new PmUser());
 		this.getManagedBean().setScLoa(scLoa);
@@ -4917,7 +4925,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if (scLoa.getProcurementTypeCatId() == null) {
 			scLoa.setProcurementTypeCatId(new PmParameter());
 		}
-
+		
 		// contract Signer info
 		if (scLoa.getContractSigner() == null) {
 			scLoa.setContractSigner(new PmUser());
@@ -8380,7 +8388,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		IParameterSO parameterSO = null;
 		try {
 			Long parameterId = scLoa.getScQt().getPmProcurementCategory().getParameterId();
-
+			
 			parameterSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 			ParameterReqDTO reqDTO = new ParameterReqDTO();
