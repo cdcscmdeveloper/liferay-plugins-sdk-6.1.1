@@ -7082,7 +7082,11 @@ public class SmApplicationBackingBean extends
 		// set personnel field change value
 		SmFieldChangeUtil.initPersonnelChangeField(getManagedBean());
 		//start #31479
-		if(businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupplier().getRegNo(),this.getManagedBean().getSmSupplier().getBusinessType())){
+		//#32014 - START
+		if (SmCommonUtil.getInstance().ssmActive()
+				&& businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupplier().getRegNo(), this
+						.getManagedBean().getSmSupplier().getBusinessType()) && this.getManagedBean().isSupplierUser()) {
+		//#32014 - END
 			SsmReqDTO ssmReqDTO = new SsmReqDTO();
 			ssmReqDTO.setRegNo(this.getManagedBean().getSmSupplier().getRegNo());
 			ssmReqDTO.setBusinessType(this.getManagedBean().getSmSupplier().getBusinessType());
