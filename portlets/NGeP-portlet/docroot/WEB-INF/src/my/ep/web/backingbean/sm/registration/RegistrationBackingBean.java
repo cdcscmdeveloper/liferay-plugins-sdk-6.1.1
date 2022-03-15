@@ -3607,7 +3607,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 */
 	private void setAdminSameAsOwner() {
 		//#16052019 - SSM INTEGRATION CR - if ssm no need to do this
-		if (getManagedBean().isSameAsOwner()  && !getManagedBean().isCompanyValidWithSSM()) {
+		if (!getManagedBean().isCompanyValidWithSSM()) {
 			if(getManagedBean().getSmSuppOwners().size()>0){
 				getManagedBean().setSmSuppOwner(getManagedBean().getSmSuppOwners().get(0));
 			}
