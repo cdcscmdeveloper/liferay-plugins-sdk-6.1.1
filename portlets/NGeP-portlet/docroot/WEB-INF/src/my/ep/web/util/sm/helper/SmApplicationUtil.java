@@ -3115,7 +3115,7 @@ public class SmApplicationUtil {
 		}
 		
 		//31043 Start
-		if (managedBean.isShowMachineryEquipmentPanel() || managedBean.isShowFacilityMachine()) {
+		if (managedBean.isShowMachineryEquipmentPanel()) {
 			sec.setMachineryVerified(isVerifiedAll);
 			sec.setManufacturingVerified(isVerifiedAll);
 		}
