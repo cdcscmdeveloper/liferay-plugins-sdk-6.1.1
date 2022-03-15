@@ -3999,17 +3999,14 @@ public class SmApplicationUtil {
 					catList.add(cat);
 				} else if (cat.getRecordStatusFlg().compareTo(
 						SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
-					//30766 - START
 					//29823 - start
-					if(managedBean.getCurrentStatus() != null &&
-							managedBean.getCurrentStatus().equalsIgnoreCase("Pending Review Site Visit Report - After Approval") ||
+					if(managedBean.getCurrentStatus().equalsIgnoreCase("Pending Review Site Visit Report - After Approval") ||
 							managedBean.getCurrentStatus().equalsIgnoreCase("Menunggu Laporan Lawatan Tapak - Selepas Diluluskan")	){
 						catList.add(cat);
 					}else{
 						apprvList.add(cat);
 					}
 					//29823 - end
-					//30766 - END
 			
 					//30865, 30921 - Starts
 				} else if (cat.getRecordStatusFlg().compareTo(DbValueConst.RECORD_STATUS_CANCELLED) == 0){
