@@ -618,9 +618,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	//29727
 	private String deleteBranchMsg;
 	
-	// 26671 - Site Visit Grouping Enhancement -28775 START
+	// 31043 START
 	private boolean showFacilityMachine;
-	// 26671 - Site Visit Grouping Enhancement -28775 END
+	// 31043 END
 	
 	//13362
 	private List<SmBulkApplOverlapCatVO> overlapCategoryListMalay;
