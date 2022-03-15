@@ -139,7 +139,9 @@
 			</tr>
 		</table>
 	</p:panel>
-<!-- 32660 - start -->
-<!-- 	<ac:disciplinaryActionHistory voList="#{viewSmApplBackingBean.managedBean.disciplineVOs}" />  -->
-	<!-- 28237 - end, 28281, 32660 -->
+<!-- START - 32660, 32731 -->
+<c:if test="#{viewSmApplBackingBean.managedBean.portletUrlLabel == 'Supplier Application Status'}">
+	<ac:disciplinaryActionHistory voList="#{viewSmApplBackingBean.managedBean.disciplineVOs}" />
+</c:if>
+	<!-- END - 28237, 28281, 32660, 32731 -->
 </ui:composition>
