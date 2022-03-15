@@ -1914,6 +1914,7 @@ public class EvaluationBackingBean extends
 			if(CollectionUtils.isNotEmpty(this.getManagedBean().getComplianceTechnicalCheckList())){
 			checklistSorting(this.getManagedBean().getComplianceTechnicalCheckList());
 			}
+			
 		} finally {
 			evaluationSO = null;
 		}
@@ -2404,8 +2405,8 @@ public class EvaluationBackingBean extends
 						if(this.getManagedBean().getTabItemPackageIndex() == 1){
 							evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
 						}else{
-						evalstage.add(QTConstants.TECHNICAL_EVALUATION);
-					}
+							evalstage.add(QTConstants.TECHNICAL_EVALUATION);
+						}
 						//#32453-end
 					}
 					//#25138 - 040621 - end
@@ -2434,11 +2435,11 @@ public class EvaluationBackingBean extends
 				for (ScQtCheckList proposalCheckList : proposalChecklistList) {
 
 					//32426 - start
-						if (proposalCheckList.isScoringReq()) {
-							localCheckList
-									.add(checkStausForUploadNoActionCheckLists(
-											proposalCheckList, evalstage.get(0)));
-						}
+					if(proposalCheckList.isScoringReq()){
+						localCheckList
+						.add(checkStausForUploadNoActionCheckLists(
+								proposalCheckList, evalstage.get(0)));
+					} 
 //					if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
 //							.equalsIgnoreCase(proposalCheckList
 //									.getDefinationType().getParameterCode())
@@ -2943,8 +2944,8 @@ public class EvaluationBackingBean extends
 		SpecificationResDTO resDTO = null;
 		this.getManagedBean().setTabTechnicalIndex(5);
 		evaluationStageStatusCheck();
-		try {
 
+		try {
 			if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 					.equalsIgnoreCase(this.getManagedBean().getCommitteeType())
 					|| ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
@@ -2970,17 +2971,17 @@ public class EvaluationBackingBean extends
 							break;
 						}
 					}
-
 				}
 			}
 			this.getManagedBean().setEvaluationStgTechnicalCheckList(localcheckList);
-			if(CollectionUtils.isNotEmpty(this.getManagedBean().getEvaluationStgTechnicalCheckList())){
+			if (CollectionUtils.isNotEmpty(this.getManagedBean().getEvaluationStgTechnicalCheckList())) {
 				checklistSorting(this.getManagedBean().getEvaluationStgTechnicalCheckList());
-				}
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 	}
 	// #28784 - end
 
@@ -3058,7 +3059,7 @@ public class EvaluationBackingBean extends
 					 * FIX BUG REGARDING TAB PACKAGE IS SELECTED EVEN THOUGHT THE ITEM ONLY SINGLE
 					 */
 					if(!this.getManagedBean().getSingleSpecQuestion()){
-					financialCheckListStatusCheckPackage();//#25138 
+						financialCheckListStatusCheckPackage();//#25138 						
 					} 
 					evaluationSo
 							.prepareFinancialEvaluationSummary(summaryReqDTO);
@@ -3070,7 +3071,7 @@ public class EvaluationBackingBean extends
 					 * FIX BUG REGARDING TAB PACKAGE IS SELECTED EVEN THOUGHT THE ITEM ONLY SINGLE
 					 */
 					if(!this.getManagedBean().getSingleSpecQuestion()){
-					financialCheckListStatusCheckPackage();//#25138 
+						financialCheckListStatusCheckPackage();//#25138 						
 					}
 					evaluationSo
 							.prepareFinancialEvaluationSummary(summaryReqDTO);
@@ -7599,7 +7600,7 @@ public class EvaluationBackingBean extends
 							if (this.getManagedBean()
 									.getEvaluatioStageActiveIndex() < 1 ) {
 								if(SourcingConstants.EVALUATE_BY_BOTH_PACKAGE_ITEM.equals(this.getManagedBean().getScQt().getEvaluateBy())){//32453-start
-								retriveTechnicalEvaluationStagePackage();
+									retriveTechnicalEvaluationStagePackage();	
 								}else{
 									retriveSummaryEvaluationStage();	
 								}//32453-End
@@ -9571,7 +9572,7 @@ private void retriveCommitteeRemarksList(){
 						hideanswer.getTplSpecSuppAnswer().setTplSpecZoneDtl(
 								getManagedBean().getSelectedZone());
 						answers.add(hideanswer);
-			}
+					}
 					evalReqDTO.setAnswersList(answers);
 				}//32453-End
 			}
@@ -9704,7 +9705,7 @@ private void retriveCommitteeRemarksList(){
 								.equalsIgnoreCase(this.getManagedBean().getTaskName()))) {
 					//no need remark before demo invitation
 				} else {
-				validateRemarks();
+					validateRemarks();
 				}//#28784 - end
 				RequestContext.getCurrentInstance().execute("reviseApprovalDlgs.show()");
 			} else if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outCome)
@@ -12868,7 +12869,7 @@ private void retriveCommitteeRemarksList(){
 				if(scoringReq != null && !scoringReq && CollectionUtils.isNotEmpty(resultBean.getResultList())){
 					List<ScQtProposalChecklist> removesupplier=new ArrayList<ScQtProposalChecklist>();//32453-Financial Other package start
 					for(ScQtProposalChecklist pChecklist: resultBean.getResultList()){
-						pChecklist.setEvaluationStatus(getPmStatusByStatusId(QTStatusConst.PR_COMPLETED));
+						pChecklist.setEvaluationStatus(getPmStatusByStatusId(QTStatusConst.PR_COMPLETED));					
 						if(getManagedBean().getTabItemPackageIndex()==2 && SourcingConstants.TECHINICAL_STAGE.equals(evalStage) && getManagedBean().getScQt().isPartial() && !getManagedBean().getScQt().isZonal()){
 						checkFinancialpackageOtherChecklist(pChecklist,evalStage,getManagedBean().getScQt());
 						boolean existvalue=checkFinancialpackageOtherChecklist(pChecklist,evalStage,getManagedBean().getScQt());
@@ -12878,6 +12879,15 @@ private void retriveCommitteeRemarksList(){
 							removesupplier.add(pChecklist);	
 						}
 						}
+						if(getManagedBean().getTabItemPackageIndex()==2 && SourcingConstants.TECHINICAL_STAGE.equals(evalStage) && getManagedBean().getScQt().isPartial() && getManagedBean().getScQt().isZonal()){//32741-Financial Other package start
+							checkFinancialpackageOtherChecklist(pChecklist,evalStage,getManagedBean().getScQt());
+							boolean existvalue=checkFinancialpackageOtherChecklist(pChecklist,evalStage,getManagedBean().getScQt());
+							
+							if(!existvalue){
+								
+								removesupplier.add(pChecklist);	
+							}
+							}//32741-Financial Other package End
 					}
 					if(removesupplier.size()>0){
 						
@@ -12888,7 +12898,7 @@ private void retriveCommitteeRemarksList(){
 					boolean partia=Boolean.FALSE;
 					
 					if(getManagedBean().getTabTechnicalIndex()==2 && SourcingConstants.COMPLAINCE_STAGE.equals(evalStage) && getManagedBean().getScQt().isPartial() ){
-
+						
 
                         ISearchBean<Object[]> packagesearchBean=new SearchBean<Object[]>();
 						EvaluationReqDTO reqDTOP = new EvaluationReqDTO();
@@ -12950,6 +12960,20 @@ private void retriveCommitteeRemarksList(){
 							resultBean.getResultList().removeAll(removesupplier);
 						}
 						}//32453-Financial Other package End
+					if(getManagedBean().getTabItemPackageIndex()==2 && SourcingConstants.TECHINICAL_STAGE.equals(evalStage) && getManagedBean().getScQt().isPartial() && getManagedBean().getScQt().isZonal()){//32741-Financial Other package start
+						List<ScQtProposalChecklist> removesupplier=new ArrayList<ScQtProposalChecklist>();
+						for(ScQtProposalChecklist pChecklist: resultBean.getResultList()){
+						boolean existvalue=checkFinancialpackageOtherChecklist(pChecklist,evalStage,getManagedBean().getScQt());
+						
+						if(!existvalue){
+							removesupplier.add(pChecklist);	
+						}
+						}
+						if(removesupplier.size()>0){
+							
+							resultBean.getResultList().removeAll(removesupplier);
+						}
+						}//32741-Financial Other package End
 				}//32453-Technical Other package End
 				return resultBean;
 				//32426-end
@@ -13108,7 +13132,7 @@ private void retriveCommitteeRemarksList(){
 						}//32453
 					}
 					if(removesupplier.size()>0){//32453
-						resDTO.getComplianceResultBean().getResultList().removeAll(removesupplier);	
+						resDTO.getComplianceResultBean().getResultList().removeAll(removesupplier);
 						//Bug #32740 related to #21695
 						resDTO.getComplianceResultBean().setTotalRecord(resDTO.getComplianceResultBean().getResultList().size());
 						//Bug #32740 related to #21695
@@ -16312,8 +16336,8 @@ private void retriveCommitteeRemarksList(){
 			resDto = qtDemoSO.retrieveByItemScoreBySuppppierIdAndSpecQuestionId(demoReqDTO);
 			for (ScQtDemoByItemScore score : resDto.getByItemList()) {
 				this.getManagedBean().setDemoScore(score.getDemoEvalScore());
-				}
 			}
+		}
 		finally {
 
 		}
@@ -16627,7 +16651,39 @@ private void retriveCommitteeRemarksList(){
 				
 				checkProposalamount=Boolean.FALSE;
 			}
+		}else if(this.getManagedBean().getTabItemPackageIndex()==2 && SourcingConstants.TECHINICAL_STAGE.equals(evalStage) && qt.isPartial() && qt.isZonal()){//32741-Financial Other package start
+			List<TplSpecZoneDtl> zoneDetails = new ArrayList<TplSpecZoneDtl>();
+			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+			IQTSpecSO	specSo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+			reqDTO.setQtId(qt.getQtId());
+			SpecificationResDTO resDTO = specSo
+					.retrieveDeliverSeriviceAddress(reqDTO);
+			zoneDetails = resDTO.getSpecZoneDtls();
+			for(TplSpecZoneDtl zoneDtl:zoneDetails){
+			IQTEvaluationSO evaluationSO=null;
+			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			EvaluationReqDTO amountReqDto = new EvaluationReqDTO();
+			EvaluationResDTO amountResDto = new EvaluationResDTO();
+			amountReqDto.setScQt(qt);
+			amountReqDto.setProposalId(pChecklist.getScQtProposal().getQtProposalId());
+			amountReqDto.setSpeZoneId(zoneDtl.getSpecZoneId());
+			amountResDto = evaluationSO.retrieveProposalAmountbyProposal(amountReqDto); 
+			if(CollectionUtils.isNotEmpty(amountResDto.getProposalAmountListbyProposal())){
+				for(ScQtProposalAmount amount:amountResDto.getProposalAmountListbyProposal()){
+					if(amount.getTplSpecZoneDtl().getSpecZoneId()==zoneDtl.getSpecZoneId() || amount.getTplSpecZoneDtl().getSpecZoneId().equals(zoneDtl.getSpecZoneId())){
+						 return checkProposalamount=Boolean.TRUE;	
+					}
+				}
+				checkProposalamount=Boolean.FALSE;	
 		}else{
+				
+				checkProposalamount=Boolean.FALSE;
+			}
+			}
+		}//32741-Financial Other package End
+		else{
 			checkProposalamount=Boolean.TRUE;
 		}
 		
