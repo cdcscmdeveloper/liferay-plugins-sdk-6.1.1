@@ -3868,7 +3868,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						for(ScQtApproval approval : this.getManagedBean().getQt().getScQtApprovals()){
 							for(ScQtApproverSettings approverSetting : approval.getApproverSettings()){
 								if(isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId())){
-									throw new EpException(MessageConst.ERROR_775171);
+									//#11299 Start Vinod
+									throw new EpException(MessageConst.ERROR_775174);
+									//throw new EpException(MessageConst.ERROR_775171);
+									//#11299 End Vinod
 								}
 							}
 						}
@@ -3881,7 +3884,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT))	{
 							for(ScQtApproverSettings approverSetting : this.getManagedBean().getPublicationApproval().getApproverSettings()){
 								if(isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId())){
-									throw new EpException(MessageConst.ERROR_775172);
+									//#11299 Start Vinod
+									throw new EpException(MessageConst.ERROR_775174);
+									//throw new EpException(MessageConst.ERROR_775171);
+									//#11299 End Vinod
 								}
 							}
 				}
@@ -7820,7 +7826,16 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		
 		Long statusId = this
 				.getManagedBean().getQt().getQtStatus().getStatusId();
-		
+		//#11299 Start Vinod
+		String taskName = this.getManagedBean().getTaskName()==null ? "": this.getManagedBean().getTaskName();
+
+		if (taskName.equals(SCProcessNameConst.REVISE_COMMITTEE)
+			&& !this.getManagedBean().isMaintanceFlow()
+			&& isDeskOfficer()
+			&& !this.getManagedBean().isReadOnly()) {
+			return false;
+		}
+		//#11299 End Vinod
 		// #25426#36#95 ruzaimah - Start
 		if ((this.getManagedBean().isMaintanceFlow()
 				&& isDeskOfficer()) // #25426#85 ruzaimah - remove this.
@@ -10939,9 +10954,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
   	public boolean evaluateCommitteeAppointmentPage(){
   		boolean flag = false;
   		String taskName = this.getManagedBean().getTaskName()==null ? "": this.getManagedBean().getTaskName();
-  		if(this.getManagedBean().isCommitteeAppointment() && !taskName.equalsIgnoreCase(SCProcessNameConst.ASSIGN_SCORING_COMMITTEE)){
+  		//#11299 Start Vinod Added REVISE_COMMITTEE condition
+  		if(this.getManagedBean().isCommitteeAppointment() && !taskName.equalsIgnoreCase(SCProcessNameConst.ASSIGN_SCORING_COMMITTEE)
+  				&& !taskName.equalsIgnoreCase(SCProcessNameConst.REVISE_COMMITTEE)){
   			flag = true; 
   		}
+  		//#11299 End Vinod
   		return flag;
   	}
   	//29464-end
