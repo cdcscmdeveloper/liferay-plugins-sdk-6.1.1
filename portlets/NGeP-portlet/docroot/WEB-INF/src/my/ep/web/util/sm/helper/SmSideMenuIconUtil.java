@@ -900,15 +900,18 @@ public class SmSideMenuIconUtil {
 				}
 				
 				if(mandatoryDocVerified && nonMandatoryDocVerified && licenseMandatoryDocVerified){
-					retVal = ICON_TICK;
 					//#31043
 					bean.setDocumentVerified(true);
+					if(bean.isUpdateSuppDoc())
+						retVal = ICON_TICK;
 				}
 				else{
 					if(bean.isApproverUser()){
 						retVal = ICON_UNTICK;
 					}
 					bean.setDocumentVerified(false);
+					if(bean.isUpdateSuppDoc())
+						bean.setUpdateSuppDoc(false);
 				}
 				//24964 & 31043 - end
 

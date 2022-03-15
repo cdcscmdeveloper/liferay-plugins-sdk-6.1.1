@@ -2914,6 +2914,10 @@ public class SmApplicationBackingBean extends
 												.getStateId());
 					}
 				}
+				//#31043 start
+				if(getManagedBean().isDocumentVerified())
+					getManagedBean().setUpdateSuppDoc(true);
+				//#31043 end
 			} else if (currentPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)
 					&& getManagedBean().isSupplierUser()) {

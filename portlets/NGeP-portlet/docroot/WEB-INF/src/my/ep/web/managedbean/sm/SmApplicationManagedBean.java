@@ -613,7 +613,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	// 26671 - Site Visit Grouping Enhancement -28775 END
 	
 	// 31043 START
-	private boolean showFacilityMachine;
+	// private boolean showFacilityMachine;
 	// 31043 END
 	
 	//#31043 START
