@@ -238,7 +238,7 @@ public class MolPayServlet extends HttpServlet {
 					//32422 START
 					Timestamp bankDate = new Timestamp(System.currentTimeMillis());
 					log.info("start testing bankdate 32422");
-					date1 = "2022-03-18 11:10:01";
+					date1 = "0000-00-00 00:00:00";
 					try {
 						if(date1=="0000-00-00 00:00:00"){
 							throw new Exception();
@@ -248,12 +248,6 @@ public class MolPayServlet extends HttpServlet {
 							bankDate = DateUtils.convertStringToTimestamp("yyyy-MM-dd HH:mm:ss", date1);
 							pymtReqDTO.setBankDate(bankDate);
 						}
-//						else{
-//							log.info("payDate ==== "+paydate);
-//							bankDate = DateUtils.convertStringToDate("yyyy-MM-dd HH:mm:ss", paydate);
-//							pymtReqDTO.setBankDate(bankDate);
-//							smPayment.setPaymentDate(bankDate);
-//						}
 					} catch (Exception e) {
 						log.info("bankDate and paydate is null");
 						e.printStackTrace();
