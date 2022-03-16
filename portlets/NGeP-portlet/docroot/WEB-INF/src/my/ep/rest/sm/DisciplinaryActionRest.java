@@ -5,13 +5,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
-import my.ep.constant.MessageConst;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
@@ -21,9 +18,6 @@ import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
-import my.ep.persistence.entity.sm.SmPersonnel;
-import my.ep.web.util.FacesScopes;
-import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
@@ -213,8 +207,8 @@ public class DisciplinaryActionRest {
 									SmDisciplinaryAction completedPendingSmDa = SmServiceLookup.getSupplierDataMaintenanceSO()
 											.retrieveActiveDisciplinaryActionByDisciplinaryId(disciplinaryActionId);
 									
-									//26238 - 32558 -  skipped scheduler due to fail release da
-									if (completedPendingSmDa.isSuspendRegistration() && !completedPendingSmDa.isPendingSuspend() && completedPendingSmDa.getEndDate().compareTo(todayWithZeroTime) < 0) {
+									//26238 - 32558 - 32710 -  rollback code is for imposed suspen when supplier finish pending txn
+									if (completedPendingSmDa.isSuspendRegistration() && !completedPendingSmDa.isPendingSuspend()) {
 										completedPendingSmDa.getSmSupplier();
 										SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(completedPendingSmDa);
 									}
@@ -247,8 +241,8 @@ public class DisciplinaryActionRest {
 										SmDisciplinaryAction completedPendingSmDa = SmServiceLookup.getSupplierDataMaintenanceSO()
 												.retrieveActiveDisciplinaryActionByDisciplinaryId(disciplinaryActionId);
 										
-										//26238 - 32558 -  skipped scheduler due to fail release da
-										if (completedPendingSmDa.isSuspendRegistration() && !completedPendingSmDa.isPendingSuspend() && completedPendingSmDa.getEndDate().compareTo(todayWithZeroTime) < 0) {
+										//26238 - 32558 - 32710 -  rollback code is for imposed suspen when supplier finish pending txn
+										if (completedPendingSmDa.isSuspendRegistration() && !completedPendingSmDa.isPendingSuspend()) {
 											completedPendingSmDa.getSmSupplier();
 											SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(completedPendingSmDa);
 										}
