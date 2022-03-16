@@ -236,32 +236,35 @@ public class MolPayServlet extends HttpServlet {
 					// #26307 end
 					//32422 START
 					Date bankDate = null;
+					log.info("start testing bankdate 32422");
+					date1 = "2022-03-18 11:10:01";
 					try {
+						if(date1=="0000-00-00 00:00:00"){
+							throw new Exception();
+						}
 						if(date1 != null){
 							log.info("Bank Date&Time ==== "+date1);
 							bankDate = DateUtils.convertStringToDate("yyyy-MM-dd HH:mm:ss", date1);
 							pymtReqDTO.setBankDate(bankDate);
 							smPayment.setPaymentDate(bankDate);
-						}else{
-							log.info("payDate ==== "+paydate);
-							bankDate = DateUtils.convertStringToDate("yyyy-MM-dd HH:mm:ss", paydate);
-							pymtReqDTO.setBankDate(bankDate);
-							smPayment.setPaymentDate(bankDate);
 						}
+//						else{
+//							log.info("payDate ==== "+paydate);
+//							bankDate = DateUtils.convertStringToDate("yyyy-MM-dd HH:mm:ss", paydate);
+//							pymtReqDTO.setBankDate(bankDate);
+//							smPayment.setPaymentDate(bankDate);
+//						}
 					} catch (Exception e) {
 						log.info("bankDate and paydate is null");
 						e.printStackTrace();
 					}
-					//32422 END
-
 					log.info("channel---------"+channel);
 					paymentOrder.setChannelName(channel);
 					smPaymentRes.setTransactionId(tranID);
 					smPaymentRes.setErrorCode(errorCode);
 					smPaymentRes.setErrorDesc(errorDesc);
-					//32422 START
-					//smPaymentRes.setTransactionDate(txDate);
-					smPaymentRes.setTransactionDate(bankDate);
+					smPaymentRes.setTransactionDate(txDate);
+					smPaymentRes.setBankDateTime(bankDate);
 					//32422 END
 					smPaymentRes.setPyPaymentOrder(paymentOrder);
 					smPaymentRes.setPaymentStatus(status);
