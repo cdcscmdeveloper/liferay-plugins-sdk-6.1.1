@@ -249,7 +249,8 @@ public class MolPayServlet extends HttpServlet {
 							pymtReqDTO.setBankDate(bankDate);
 						}
 					} catch (Exception e) {
-						log.info("bankDate and paydate is null");
+						log.info("bankDate is null");
+						bankDate = null;
 						e.printStackTrace();
 					}
 					log.info("channel---------"+channel);
