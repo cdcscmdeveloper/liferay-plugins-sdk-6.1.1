@@ -328,14 +328,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			payment.setPyPaymentDtls(pymDtlList);
 			payment.setPyBill(pyBill);
 			payment.setPaymentAmt(totalAmount);
-			//32422 START
-			//payment.setPaymentDate(new Date());
-			if(payment.getPaymentDate() != null){
-				log.info("32422 Payment date" + payment.getPaymentDate());
-			}else{
-				log.info("32422 Payment date is null");
-			}
-			//32422 END
+			payment.setPaymentDate(new Date());
 
 			log.info("***Total Amount***" + totalAmount);
 
