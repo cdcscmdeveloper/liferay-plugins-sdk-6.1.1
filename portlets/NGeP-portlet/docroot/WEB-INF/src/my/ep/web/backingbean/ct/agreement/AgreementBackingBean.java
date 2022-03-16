@@ -546,7 +546,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 				reqDTO.setAgreementType(ContractConst.AGREEMENT);
 				reqDTO.setDocType(ParameterConst.DOCTYPE_AGREEMENT);
 			}
-
+			
 			getManagedBean().getCtAgreement().setCtContract(getManagedBean().getCtContract());
 			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
 			reqDTO.setOutcome(action);
@@ -932,7 +932,27 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			return null;
-		} else {
+		}
+		// 29417 - START
+		else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) ){
+			getManagedBean().setButtonProcess(outcome);
+			Date signDate = getManagedBean().getContractVer().getSignedDate();
+			Date expDate = getManagedBean().getContractVer().getCtContractValue().getExpDate();
+			if(signDate != null && expDate != null && signDate.after(expDate)){
+				
+				RequestContext.getCurrentInstance().execute("dateValidationExp.show()");
+					log.info("---------------Expire DATE--------------" + expDate);
+				
+			}
+			else {
+				log.info("------------------In validate method-----------");
+				return this.saveAgreement(outcome);
+			}
+			return null;
+		}
+		// 29417 - END 
+			
+		else {	
 			return this.saveAgreement(outcome);
 		}
 	}
@@ -1637,7 +1657,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			if (StringUtils.isNotBlank(ctAttachment.getFilePath())) {
 				fileList.add(new File(DocumentRepositoryUtils.getBaseDir() + ctAttachment.getFilePath()));
 			}
-		}		
+		}	
 		try {
 			if (fileList.size() == 1) {
 				agreementZipFilePath = fileList.get(0).getPath();
