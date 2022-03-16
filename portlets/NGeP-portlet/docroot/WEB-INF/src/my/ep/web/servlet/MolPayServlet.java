@@ -3,6 +3,7 @@ package my.ep.web.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.Date;
 
 import javax.servlet.ServletException;
@@ -235,7 +236,7 @@ public class MolPayServlet extends HttpServlet {
 					//END THIS LINE OF CODE DO NOT MERGE TO PRODUCTION
 					// #26307 end
 					//32422 START
-					Date bankDate = null;
+					Timestamp bankDate = new Timestamp(System.currentTimeMillis());
 					log.info("start testing bankdate 32422");
 					date1 = "2022-03-18 11:10:01";
 					try {
@@ -244,9 +245,8 @@ public class MolPayServlet extends HttpServlet {
 						}
 						if(date1 != null){
 							log.info("Bank Date&Time ==== "+date1);
-							bankDate = DateUtils.convertStringToDate("yyyy-MM-dd HH:mm:ss", date1);
+							bankDate = DateUtils.convertStringToTimestamp("yyyy-MM-dd HH:mm:ss", date1);
 							pymtReqDTO.setBankDate(bankDate);
-							smPayment.setPaymentDate(bankDate);
 						}
 //						else{
 //							log.info("payDate ==== "+paydate);
