@@ -400,6 +400,19 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		}
 		
 		// #26307 end
+		// #32422 START 
+		String date1 = null;
+		String extraP1 = extraP;
+		if(extraP1 != null){
+			JSONObject obj1;
+			try { 
+				obj1 = new JSONObject(extraP1); 
+				date1 = obj1.getString("bank_datetime") != null ? obj1.getString("bank_datetime") : null;
+			} catch (JSONException e) { 
+				e.printStackTrace(); 
+			}
+		}
+		// #32422 END
 
 		Long ordId = null;
 		if(orderId!= null){
@@ -523,22 +536,40 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				}
 				//END THIS LINE OF CODE DO NOT MERGE TO PRODUCTION
 				
-				// #26307 end 
-
-				Date txDate;
+				// #26307 end
+				//32422 START
+				Date bankDate = null;
 				try {
-					txDate = DateUtils.convertStringToDate(
-							"yyyy-MM-dd HH:mm:ss", paydate);
+					if(date1 != null){
+						log.info("Bank Date&Time ==== "+date1);
+						bankDate = DateUtils.convertStringToDate("yyyy-MM-dd HH:mm:ss", date1);
+						pymtReqDTO.setBankDate(bankDate);
+						pyPayment.setPaymentDate(bankDate);
+					}else{
+						log.info("payDate ==== "+paydate);
+						bankDate = DateUtils.convertStringToDate("yyyy-MM-dd HH:mm:ss", paydate);
+						pymtReqDTO.setBankDate(bankDate);
+						pyPayment.setPaymentDate(bankDate);
+					}
 				} catch (Exception e) {
-					txDate = new Date();
+					log.info("bankDate and paydate is null");
 					e.printStackTrace();
 				}
+//				Date txDate;
+//				try {
+//					txDate = DateUtils.convertStringToDate(
+//							"yyyy-MM-dd HH:mm:ss", paydate);
+//				} catch (Exception e) {
+//					txDate = new Date();
+//					e.printStackTrace();
+//				}
 				log.info("channel--------------------26307"+channel);
 				paymentOrder.setChannelName(channel);
 				smPaymentRes.setTransactionId(tranID);
 				smPaymentRes.setErrorCode(errorCode);
 				smPaymentRes.setErrorDesc(errorDesc);
-				smPaymentRes.setTransactionDate(txDate);
+				smPaymentRes.setTransactionDate(bankDate);
+				//32422 END
 				smPaymentRes.setPyPaymentOrder(paymentOrder);
 				smPaymentRes.setPaymentStatus(status);
 				smPaymentRes.setPaidAmt(txAmount);
