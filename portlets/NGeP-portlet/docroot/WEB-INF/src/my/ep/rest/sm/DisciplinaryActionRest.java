@@ -207,8 +207,8 @@ public class DisciplinaryActionRest {
 									SmDisciplinaryAction completedPendingSmDa = SmServiceLookup.getSupplierDataMaintenanceSO()
 											.retrieveActiveDisciplinaryActionByDisciplinaryId(disciplinaryActionId);
 									
-									//26238 - 32558 -  skipped scheduler due to fail release da
-									if (completedPendingSmDa.isSuspendRegistration() && !completedPendingSmDa.isPendingSuspend() && completedPendingSmDa.getEndDate().compareTo(todayWithZeroTime) < 0) {
+									//26238 - 32558 - 32710 -  rollback code is for imposed suspen when supplier finish pending txn
+									if (completedPendingSmDa.isSuspendRegistration() && !completedPendingSmDa.isPendingSuspend()) {
 										completedPendingSmDa.getSmSupplier();
 										SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(completedPendingSmDa);
 									}
@@ -241,8 +241,8 @@ public class DisciplinaryActionRest {
 										SmDisciplinaryAction completedPendingSmDa = SmServiceLookup.getSupplierDataMaintenanceSO()
 												.retrieveActiveDisciplinaryActionByDisciplinaryId(disciplinaryActionId);
 										
-										//26238 - 32558 -  skipped scheduler due to fail release da
-										if (completedPendingSmDa.isSuspendRegistration() && !completedPendingSmDa.isPendingSuspend() && completedPendingSmDa.getEndDate().compareTo(todayWithZeroTime) < 0) {
+										//26238 - 32558 - 32710 -  rollback code is for imposed suspen when supplier finish pending txn
+										if (completedPendingSmDa.isSuspendRegistration() && !completedPendingSmDa.isPendingSuspend()) {
 											completedPendingSmDa.getSmSupplier();
 											SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(completedPendingSmDa);
 										}
