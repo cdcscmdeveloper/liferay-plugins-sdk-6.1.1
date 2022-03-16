@@ -28,9 +28,8 @@
 						styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.location']}" />
 				</f:facet>
-				<p:inputTextarea label="#{lbl['lbl.sc.location']}" required="true"
-					rows="2" cols="30" maxlength="255"
-					onkeyup="limitTextArea(this,255);"
+				<p:inputTextarea label="#{lbl['lbl.sc.location']}" rows="2"
+					cols="30" maxlength="255" onkeyup="limitTextArea(this,255);"
 					onkeydown="limitTextArea(this,255);"
 					onmouseout="limitTextArea(this,255);"
 					value="#{demoSpecTempList.scQtDemoSchedule.demoLocation}"
@@ -49,8 +48,8 @@
 					<ac:iconTooltip value="#{lbl['lbl.sc.demo.meeting.date.tooltip']}" />
 				</f:facet>
 
-				<ac:dateTime id="demoStartDate" required="true"
-					label="#{lbl['lbl.sc.start.date']}" disabled="#{disableMeeting}"
+				<ac:dateTime id="demoStartDate" label="#{lbl['lbl.sc.start.date']}"
+					disabled="#{disableMeeting}"
 					value="#{demoSpecTempList.scQtDemoSchedule.demoStartDate}"
 					update="@([id$=demoStartDate])" rowIndex="#{rowIndex}">
 				</ac:dateTime>
@@ -66,8 +65,8 @@
 					<ac:iconTooltip value="#{lbl['lbl.sc.demo.meeting.date.tooltip']}" />
 				</f:facet>
 
-				<ac:dateTime id="demoEndDate" required="true"
-					label="#{lbl['lbl.sm.end.date']}"
+				<ac:dateTime id="demoEndDate" label="#{lbl['lbl.sm.end.date']}"
+					demo="true"
 					disabled="#{disableMeeting}"
 					value="#{demoSpecTempList.scQtDemoSchedule.demoEndDate}"
 					update="@([id$=demoEndDate])" rowIndex="#{rowIndex}">
