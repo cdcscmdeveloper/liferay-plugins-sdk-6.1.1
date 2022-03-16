@@ -328,7 +328,14 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			payment.setPyPaymentDtls(pymDtlList);
 			payment.setPyBill(pyBill);
 			payment.setPaymentAmt(totalAmount);
-			payment.setPaymentDate(new Date());
+			//32422 START
+			//payment.setPaymentDate(new Date());
+			if(payment.getPaymentDate() != null){
+				log.info("32422 Payment date" + payment.getPaymentDate());
+			}else{
+				log.info("32422 Payment date is null");
+			}
+			//32422 END
 
 			log.info("***Total Amount***" + totalAmount);
 
@@ -584,7 +591,9 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			payment.setPyPaymentDtls(pymDtlList);
 			payment.setPyBill(pyBill);
 			payment.setPaymentAmt(totalAmount);
-			payment.setPaymentDate(new Date());
+			//32422 START
+			//payment.setPaymentDate(new Date());
+			//32422 END
 
 			log.info("***Total Amount***" + totalAmount);
 
@@ -654,7 +663,14 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			smPaymentRes.setTransactionId(txID);
 			smPaymentRes.setErrorCode("");
 			smPaymentRes.setErrorDesc("");
-			smPaymentRes.setTransactionDate(new Date());
+			//32422 START
+			//smPaymentRes.setTransactionDate(new Date());
+			if(pyPayment.getPaymentDate()!=null){
+				log.info("32422 tempPaymentSuccess >Transaction Date== "+ pyPayment.getPaymentDate());
+			}else{
+				log.info("32422 tempPaymentSuccess >Transaction Date is null ");
+			}
+			//32422 END
 			smPaymentRes.setPyPaymentOrder(paymentOrder);
 			smPaymentRes.setPaymentStatus(status);
 			smPaymentRes.setPaidAmt(txAmount);
