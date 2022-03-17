@@ -545,7 +545,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				String invalidDate = "0000-00-00 00:00:00";
 				Boolean validFormat = false;
 				try {
-					if(date1==invalidDate || date1.isEmpty() || date1.trim().equals("")){
+					if(date1.trim().equals(invalidDate) || date1.isEmpty() || date1.trim().equals("")){
 						throw new Exception();
 					}
 					if(date1 != null){
@@ -578,15 +578,16 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 					bankDate = null;
 					e.printStackTrace();
 				}
-				//32422 END
-				Date txDate;
+				
+				Timestamp txDate = new Timestamp(System.currentTimeMillis());
 				try {
-					txDate = DateUtils.convertStringToDate(
+					txDate = DateUtils.convertStringToTimestamp(
 							"yyyy-MM-dd HH:mm:ss", paydate);
 				} catch (Exception e) {
-					txDate = new Date();
+					txDate = new Timestamp(System.currentTimeMillis());
 					e.printStackTrace();
 				}
+				//32422 END
 				log.info("channel--------------------26307"+channel);
 				paymentOrder.setChannelName(channel);
 				smPaymentRes.setTransactionId(tranID);
