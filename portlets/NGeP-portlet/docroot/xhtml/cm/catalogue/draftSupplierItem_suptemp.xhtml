@@ -142,11 +142,14 @@
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.cm.end.date']}" />
 			</f:facet>
+			<!-- #29961 - start -->
 			<p:calendar value="#{selectedSuppCat.cmStandardPricing.endDate}" readonlyInput="true" id="endDate"
 				navigator="true" showOn="button" size="10"
+				maxdate="#{catalogueBackingBean.getNextTwoYear(selectedSuppCat.cmStandardPricing.startDate)}"
 				mindate="#{catalogueBackingBean.managedBean.minDate}"
 				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 				</p:calendar>
+				<!-- #29961 - end -->
 
 		</p:column>
 		<!-- END SSM INTEGRATION #27089 -->

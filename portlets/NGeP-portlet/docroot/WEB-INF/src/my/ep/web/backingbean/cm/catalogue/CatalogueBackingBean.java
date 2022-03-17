@@ -11177,14 +11177,16 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	// 14921 - End
 
+	//29961 - start
 	public Date getNextTwoYear(Date startDate) {
 		Calendar cal = Calendar.getInstance();
 		if (startDate != null) {
 			cal.setTime(startDate);
-			cal.add(Calendar.YEAR, CmHelper.getInstance().getStandardPricingYear());
+			cal.add(Calendar.YEAR, getEndYearByRulesValue(RuleTypeConst.CATLOGUE_ITEM_VALIDITY));
 		}
 		return cal.getTime();
 	}
+	//29961 - end
 	
 	public void onDateSelectListener(Integer index) {
 		Date startDate = index < 0 ? this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing()
@@ -11720,6 +11722,26 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	}
 	// 26284 - End
 	
+	// 29961 - start
+	private Integer getEndYearByRulesValue(String RuleType) {
+		log.info("getEndYearByRulesValue");
+
+		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject("pm", IRuleSO.class);
+
+		Integer ruleValue = 0;
+
+		RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		RuleResDTO ruleResDTO = null;
+
+		ruleReqDTO.setRuleType(RuleType);
+		RuleResDTO rules = ruleSO.getRuleValueByRuleType(ruleReqDTO);
+
+		if (rules.getRulevalue() != null) {
+			ruleValue = Integer.parseInt(rules.getRulevalue());
+		}
+		return ruleValue;
+	}
+	// 29961 - end
 	
 	//30457 - START
 	public String getMinimumPrice(String RuleType) {
