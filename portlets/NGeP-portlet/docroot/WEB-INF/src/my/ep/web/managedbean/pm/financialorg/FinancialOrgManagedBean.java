@@ -60,6 +60,11 @@ public class FinancialOrgManagedBean extends BaseManagedBean {
 	private boolean addressAndContactPersonMandatory;
 	private List<PmParameterDesc> bankServicesList;
 
+	// #29487 - View bank details by factoring user_endorsed - Start
+	public Long financialProfId;
+	public boolean facCompanyInformation = false;
+	// #29487 - View bank details by factoring user_endorsed - End
+
 	public FinancialOrgManagedBean(){}
 
 	/**
@@ -304,6 +309,34 @@ public class FinancialOrgManagedBean extends BaseManagedBean {
 		this.bankServicesList = bankServicesList;
 	}
 
+	// #29487 - View bank details by factoring user_endorsed - Start
+	/**
+	 * @return the financialProfileId
+	 */	
+	public Long getFinancialId() {
+		return financialProfId;
+	}
 
+	/**
+	 * @param financialProfileId the financialProfileId to set
+	 */	
+	public void setFinancialId(Long financialProfId) {
+		this.financialProfId = financialProfId;
+	}
+	
+	/**
+	 * @return the FacCompanyInformation
+	 */	
+	public boolean getFacCompanyInformation() {
+		return facCompanyInformation;
+	}
+
+	/**
+	 * @param FacCompanyInformation the FacCompanyInformation to set
+	 */	
+	public void setFacCompanyInformation(boolean facCompanyInformation) {
+		this.facCompanyInformation = facCompanyInformation;
+	}
+	// #29487 - View bank details by factoring user_endorsed - End
 	
 }

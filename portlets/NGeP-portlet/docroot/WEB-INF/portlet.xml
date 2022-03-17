@@ -3926,6 +3926,9 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
+		<supported-locale>en_US</supported-locale>
+		<supported-locale>ms_MY</supported-locale>
+		<resource-bundle>content/Language</resource-bundle>
 		<portlet-info>
 			<title>Basic Account Maintenance</title>
 			<short-title>NewJSFPortlet</short-title>
@@ -7375,6 +7378,40 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>	
+	
+	<!--  #29487 - View bank details by factoring user_endorsed - Start -->
+	<portlet>
+		<portlet-name>factoringCompanyInformation</portlet-name>
+		<display-name>Factoring Company Information</display-name>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/pm/profileInfo/PreRenderFinOrg.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Factoring Company Information</title>
+			<short-title>NewJSFPortlet</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>	
+	<!--  #29487 - View bank details by factoring user_endorsed - End -->
 	
 	<portlet>
 		<portlet-name>pmLocation</portlet-name>
