@@ -3865,6 +3865,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//#25077 End 
 			//#30477 Start Vinod
 			if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
+				//#11299 Start Vinod
+				for(ScQtApproval approval : this.getManagedBean().getQt().getScQtApprovals()){
+					List<ScQtApproverSettings> approverSettings = approval.getApproverSettings();
+					if(CollectionUtils.isEmpty(approverSettings)){
+						throw new EpException(MessageConst.ERROR_775174);
+					}
+				}
+				//#11299 End Vinod
 				for(ScQtCommittee committee : this.getManagedBean().getQt().getScQtCommittees()){
 					if((committee.getScCommittee().getCommitteStatus().getStatusId().equals(QTStatusConst.CMT_PENDING_REVISION) 
 							|| currentStatus.equals(QTStatusConst.QT_RE_EVALUATION))
@@ -3883,18 +3891,24 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 			}
 			if(SCProcessNameConst.REVISE_QT_SCHEDULE.equalsIgnoreCase(taskName)) {
-				if((currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_REVISION)
-						|| currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION))
-						&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT))	{
-							for(ScQtApproverSettings approverSetting : this.getManagedBean().getPublicationApproval().getApproverSettings()){
-								if(isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId())){
-									//#11299 Start Vinod
-									throw new EpException(MessageConst.ERROR_775174);
-									//throw new EpException(MessageConst.ERROR_775171);
-									//#11299 End Vinod
+				//#11299 Start Vinod updated error message
+				List<ScQtApproverSettings> approverSettings = this.getManagedBean().getPublicationApproval().getApproverSettings();
+				if(CollectionUtils.isEmpty(approverSettings)){
+					throw new EpException(MessageConst.ERROR_775174);
+				}else{
+					if((currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_REVISION)
+							|| currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION))
+							&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT))	{
+						
+								for(ScQtApproverSettings approverSetting : this.getManagedBean().getPublicationApproval().getApproverSettings()){
+									if(isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId())){
+										throw new EpException(MessageConst.ERROR_775174);
+										//throw new EpException(MessageConst.ERROR_775171);
+									}
 								}
-							}
+					}
 				}
+				//#11299 End Vinod
 			}
 			//#30477 End Vinod
 			if (currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
