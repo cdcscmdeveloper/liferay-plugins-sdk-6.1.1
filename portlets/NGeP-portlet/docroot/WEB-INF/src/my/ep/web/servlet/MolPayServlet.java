@@ -262,8 +262,12 @@ public class MolPayServlet extends HttpServlet {
 					smPaymentRes.setTransactionId(tranID);
 					smPaymentRes.setErrorCode(errorCode);
 					smPaymentRes.setErrorDesc(errorDesc);
-					smPaymentRes.setTransactionDate(txDate);
 					//32422 START
+					if(bankDate != null){
+						smPaymentRes.setTransactionDate(bankDate);
+					}else{
+						smPaymentRes.setTransactionDate(txDate);
+					}
 					smPaymentRes.setBankDateTime(bankDate);
 					//32422 END
 					smPaymentRes.setPyPaymentOrder(paymentOrder);
