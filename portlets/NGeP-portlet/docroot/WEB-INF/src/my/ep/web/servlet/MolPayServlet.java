@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -248,16 +249,27 @@ public class MolPayServlet extends HttpServlet {
 						if(date1 != null){
 							log.info("Bank Date&Time ==== "+date1);
 							SimpleDateFormat sdfrmt = new SimpleDateFormat("YYYY-MM-DD HH:mm:ss");
-						    sdfrmt.setLenient(false);
-							if (sdfrmt.format(sdfrmt.parse(date1)).equals(date1)){
-					            validFormat=true;
-							}
-							if(validFormat){
-								bankDate = DateUtils.convertStringToTimestamp("yyyy-MM-dd HH:mm:ss", date1);
-								pymtReqDTO.setBankDate(bankDate);
-							}else{
-								throw new Exception();
-							}
+						    try{
+						    	log.info("In try");
+						        sdfrmt.parse(date1);
+						        log.info("Setting Valid Format to true");
+						        validFormat = true;
+						    }
+						    catch(ParseException e){
+						    	log.info("In Parse Catch");
+							    validFormat = false;
+						    }
+						    finally {
+						    	log.info("In finally");
+						    	if(validFormat){
+						    		log.info("Valid Format");
+									bankDate = DateUtils.convertStringToTimestamp("yyyy-MM-dd HH:mm:ss", date1);
+									pymtReqDTO.setBankDate(bankDate);
+								}else{
+									log.info("Invalid Format");
+									throw new Exception();
+								}
+						    }
 						}
 					} catch (Exception e) {
 						log.info("bankDate is null");
