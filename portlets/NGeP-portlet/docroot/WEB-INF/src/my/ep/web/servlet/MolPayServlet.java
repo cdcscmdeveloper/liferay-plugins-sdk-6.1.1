@@ -188,14 +188,15 @@ public class MolPayServlet extends HttpServlet {
 					}else if(status.equals(SupplierManagementConst.MOL_PENDING)){
 						statusCode = SupplierManagementConst.PM_STAT_PENDING_PAYMENT;
 					}
-
-					Date txDate;
+					//32422 START
+					Timestamp txDate = new Timestamp(System.currentTimeMillis());
 					try {
-						txDate = DateUtils.convertStringToDate("yyyy-MM-dd HH:mm:ss", paydate);
+						txDate = DateUtils.convertStringToTimestamp("yyyy-MM-dd HH:mm:ss", paydate);
 					} catch (Exception e) {
-						txDate = new Date();
+						txDate = new Timestamp(System.currentTimeMillis());
 						e.printStackTrace();
 					}
+					//32422 END
 					// #26307 start
 					PaymentReqDTO pymtReqDTO = new PaymentReqDTO();
 					log.info("Card type=============="+cardType);
@@ -242,7 +243,7 @@ public class MolPayServlet extends HttpServlet {
 					String invalidDate = "0000-00-00 00:00:00";
 					Boolean validFormat = false;
 					try {
-						if(date1==invalidDate || date1.isEmpty() || date1.trim().equals("")){
+						if(date1.trim().equals(invalidDate) || date1.isEmpty() || date1.trim().equals("")){
 							throw new Exception();
 						}
 						if(date1 != null){
