@@ -10,8 +10,9 @@
 	<cc:interface>
 		<cc:attribute name="dialogHeader" default="#{lbl['lbl.sm.view.history.disciplinary.action.headerlbl']}"/>
 		<cc:attribute name="dialogHeader1" default="#{lbl['lbl.sm.view.details.disciplinary.action.headerlbl']}"/>
-		<cc:attribute name="dialogWidth" default="1100px" />
-		<cc:attribute name="dialogHeight" default="500px" />
+		<ui:remove>
+			Bug #32759, Remove width & height
+		</ui:remove>
 		<cc:attribute name="voList" type="java.util.List" required="true" />
 		<cc:attribute name="mofView" default="true" />
 		<cc:attribute name="dialogMessage" default=""/>
@@ -22,9 +23,11 @@
 		<cc:attribute name="btnView" default="false" />
 	</cc:interface>
 	<cc:implementation>
+	<ui:remove>Bug #32759, change resizable to false 
+	</ui:remove>
 	<p:dialog id="disciplinaryActionHistoryDlgId" header="#{!cc.attrs.btnView ? cc.attrs.dialogHeader : cc.attrs.dialogHeader1}" closable="true"
 		widgetVar="disciplinaryActionHistoryDlg" modal="true" width="#{cc.attrs.dialogWidth}" height="auto"
-		resizable="true" style="display: block;">		
+		resizable="false" style="display: block;">		
 		<p:outputPanel id="disciplinaryActionMsgOP" rendered="#{not empty cc.attrs.dialogMessage}">     
 			<h:outputText value = "#{cc.attrs.dialogMessage}" style="color:red;" escape="false" />
 			<p:spacer height="3" />
@@ -41,7 +44,7 @@
 		
 		<p:dataTable value="#{cc.attrs.voList}" var="disciplinaryAction" id="disciplinaryActionDtId"
 		 sortBy="#{disciplinaryAction.endDate}" rowIndexVar="index" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" 
-		 style="table-layout: fixed;">
+		 style="width:1100px">
 			
 	/*  start : 27445 = Disciplinary Actions / history popup window*/
 			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2% !important; vertical-align:top;">
