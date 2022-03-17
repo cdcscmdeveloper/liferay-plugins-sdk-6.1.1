@@ -542,17 +542,24 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				//32422 START
 				Timestamp bankDate = new Timestamp(System.currentTimeMillis());
 				String invalidDate = "0000-00-00 00:00:00";
-				SimpleDateFormat sdfrmt = new SimpleDateFormat("YYYY-MM-DD HH:mm:ss");
-			    sdfrmt.setLenient(false);
+				Boolean validFormat = false;
 				try {
 					if(date1==invalidDate || date1.isEmpty() || date1.trim().equals("")){
 						throw new Exception();
 					}
 					if(date1 != null){
 						log.info("Bank Date&Time ==== "+date1);
-						sdfrmt.parse(date1);
-						bankDate = DateUtils.convertStringToTimestamp("yyyy-MM-dd HH:mm:ss", date1);
-						pymtReqDTO.setBankDate(bankDate);
+						SimpleDateFormat sdfrmt = new SimpleDateFormat("YYYY-MM-DD HH:mm:ss");
+					    sdfrmt.setLenient(false);
+						if (sdfrmt.format(sdfrmt.parse(date1)).equals(date1)){
+				            validFormat=true;
+						}
+						if(validFormat){
+							bankDate = DateUtils.convertStringToTimestamp("yyyy-MM-dd HH:mm:ss", date1);
+							pymtReqDTO.setBankDate(bankDate);
+						}else{
+							throw new Exception();
+						}
 					}
 				} catch (Exception e) {
 					log.info("bankDate is null");
