@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.servlet.ServletException;
@@ -123,7 +124,7 @@ public class MolPayServlet extends HttpServlet {
 		// #26307 end  
 		// #32422 START 
 		String date1 = null;
-		String extraP1 = req.getParameter("extraP");;
+		String extraP1 = req.getParameter("extraP");
 		JSONObject obj1;
 		try { 
 			obj1 = new JSONObject(extraP1); 
@@ -237,14 +238,16 @@ public class MolPayServlet extends HttpServlet {
 					// #26307 end
 					//32422 START
 					Timestamp bankDate = new Timestamp(System.currentTimeMillis());
-					log.info("start testing bankdate 32422");
-					date1 = "0000-00-00 00:00:00";
+					String invalidDate = "0000-00-00 00:00:00";
+					SimpleDateFormat sdfrmt = new SimpleDateFormat("YYYY-MM-DD HH:mm:ss");
+				    sdfrmt.setLenient(false);
 					try {
-						if(date1=="0000-00-00 00:00:00"){
+						if(date1==invalidDate || date1.isEmpty() || date1.trim().equals("")){
 							throw new Exception();
 						}
 						if(date1 != null){
 							log.info("Bank Date&Time ==== "+date1);
+							sdfrmt.parse(date1);
 							bankDate = DateUtils.convertStringToTimestamp("yyyy-MM-dd HH:mm:ss", date1);
 							pymtReqDTO.setBankDate(bankDate);
 						}
@@ -253,12 +256,14 @@ public class MolPayServlet extends HttpServlet {
 						bankDate = null;
 						e.printStackTrace();
 					}
+					//32422 END
 					log.info("channel---------"+channel);
 					paymentOrder.setChannelName(channel);
 					smPaymentRes.setTransactionId(tranID);
 					smPaymentRes.setErrorCode(errorCode);
 					smPaymentRes.setErrorDesc(errorDesc);
 					smPaymentRes.setTransactionDate(txDate);
+					//32422 START
 					smPaymentRes.setBankDateTime(bankDate);
 					//32422 END
 					smPaymentRes.setPyPaymentOrder(paymentOrder);

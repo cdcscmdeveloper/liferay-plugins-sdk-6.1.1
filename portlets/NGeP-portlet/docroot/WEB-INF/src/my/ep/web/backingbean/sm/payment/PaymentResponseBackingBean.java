@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 //#29481 - Start
@@ -403,7 +404,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		// #26307 end
 		// #32422 START 
 		String date1 = null;
-		String extraP1 = extraP;
+		String extraP1 = httpServletRequest.getParameter("extraP");
 		if(extraP1 != null){
 			JSONObject obj1;
 			try { 
@@ -540,22 +541,25 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				// #26307 end
 				//32422 START
 				Timestamp bankDate = new Timestamp(System.currentTimeMillis());
+				String invalidDate = "0000-00-00 00:00:00";
+				SimpleDateFormat sdfrmt = new SimpleDateFormat("YYYY-MM-DD HH:mm:ss");
+			    sdfrmt.setLenient(false);
 				try {
+					if(date1==invalidDate || date1.isEmpty() || date1.trim().equals("")){
+						throw new Exception();
+					}
 					if(date1 != null){
 						log.info("Bank Date&Time ==== "+date1);
+						sdfrmt.parse(date1);
 						bankDate = DateUtils.convertStringToTimestamp("yyyy-MM-dd HH:mm:ss", date1);
 						pymtReqDTO.setBankDate(bankDate);
 					}
-//					else{
-//						log.info("payDate ==== "+paydate);
-//						bankDate = DateUtils.convertStringToTimestamp("yyyy-MM-dd HH:mm:ss", paydate);
-//						pymtReqDTO.setBankDate(bankDate);
-//					}
 				} catch (Exception e) {
-					log.info("bankDate and paydate is null");
+					log.info("bankDate is null");
+					bankDate = null;
 					e.printStackTrace();
 				}
-				
+				//32422 END
 				Date txDate;
 				try {
 					txDate = DateUtils.convertStringToDate(
@@ -570,6 +574,8 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				smPaymentRes.setErrorCode(errorCode);
 				smPaymentRes.setErrorDesc(errorDesc);
 				smPaymentRes.setTransactionDate(txDate);
+				//32422 START
+				smPaymentRes.setBankDateTime(bankDate);
 				//32422 END
 				smPaymentRes.setPyPaymentOrder(paymentOrder);
 				smPaymentRes.setPaymentStatus(status);
