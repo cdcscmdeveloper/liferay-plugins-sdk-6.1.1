@@ -43,6 +43,13 @@ public class PmReportConst implements Serializable {
 	public static final String PARAM_PM_ORG_TYPE_KUMPULAN_PTJ = "P4";
 	public static final String PARAM_PM_ORG_TYPE_PTJ = "P5";
 	//shafie - #28833 -end
+	//shafie - #29486 - start
+	public static final String PARAM_PM_MINISTRY = "PMINISTRY";
+	public static final String PARAM_PM_KUMPULAN_PTJ = "PKPTJ";
+	public static final String PARAM_PM_PTJ = "PPTJ"; 
+	public static final String PARAM_PM_USER_STATUS = "PSTATUS"; 
+	public static final String PARAM_PM_MONTH = "PMTH"; 
+	//shafie - #29486 - end
 	
 
 	// PM Report Code
@@ -200,6 +207,14 @@ public class PmReportConst implements Serializable {
 	}
 	// shafie #28833  end
 
+	//shafie - #29486 - start
+	/**
+	 * @return the pmMonthlyUserAndRoleRptVal
+	 */
+	public String getPmMonthlyUserAndRoleRptVal() {
+		return PM_MONTHLY_USER_AND_ROLE_RPT_VAL;
+	}	
+		//shafie - #29486 - end
 	/**
 	 * @return the orgCatFederalGovt
 	 */

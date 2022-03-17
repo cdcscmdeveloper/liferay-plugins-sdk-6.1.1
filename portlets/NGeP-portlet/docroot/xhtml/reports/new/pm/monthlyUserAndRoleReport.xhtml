@@ -1,0 +1,100 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<style type="text/css">
+		.ui-datepicker-calendar{
+			display : none;		
+		}
+	</style>
+	
+	<script type="text/javascript">
+	function GenerateCal() {
+    	
+    	passToJSFBackingBean ([ {
+            
+            name:'month',
+			value:$(".ui-datepicker-month").val()
+           },   
+           {
+        	   name:'year',
+       		value:$(".ui-datepicker-year").val()
+           }  
+         ]);
+    }
+	</script>
+
+	<p:outputPanel id="opDefinedSearch">
+		<table style="width: 100%;">			
+			<tr>
+				<td width="15%"><p:outputLabel value="#{lbl['lbl.pm.org.ptj.search.ministry']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td>
+					<ac:lov id="minstryPtjsearchRpt" lovId="PM_ORG_PROFILE_MINSTRY"
+						headerText="#{lbl['lbl.pm.org.ptj.search.ministry.lov']}" update="@form"
+						saveObject="pmReportsBackingBean.managedBean.selectedMinistry"
+						value="#{pmReportsBackingBean.managedBean.selectedMinistry.pmOrgValidity.orgName}"
+						size="100" readonly="true"
+						postUpdateListener="pmReportsBackingBean.updateMinistrySearchCriteria" 
+						conditionField="#{pmReportsBackingBean.constructMinistryConditionFields()}" />				
+				</td>
+			</tr>		
+			<tr>
+				<td style="white-space: nowrap">
+					<p:outputLabel value="#{lbl['lbl.pm.org.ptj.search.jabatan']}" /><p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td>
+					<ac:lov id="PtjGroupsearchRpt" lovId="PM_ORG_PROFILE_KUMPULAN_PTJ"
+						headerText="#{lbl['lbl.pm.org.ptj.search.kptj.lov']}" update="@form"
+						disabled = "#{pmReportsBackingBean.managedBean.selectedMinistry.pmOrgValidity.orgName == null}"
+						saveObject="pmReportsBackingBean.managedBean.selectedKumpulanPTJ"
+						value="#{pmReportsBackingBean.managedBean.selectedKumpulanPTJ.pmOrgValidity.orgName}"
+						size="100" readonly="true" 
+						postUpdateListener="pmReportsBackingBean.updateKPTJSearchCriteria"
+						conditionField="#{pmReportsBackingBean.constuctConditionFieldsForPTJGroup()}" /> 
+				</td>
+			</tr>			
+			<tr>
+				<td style="white-space: nowrap">
+					<p:outputLabel value="#{lbl['lbl.pm.sidemenu.general.org.resProfile']}" /> <p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td>
+					<ac:lov id="openPtjsearchRpt" lovId="PM_ORG_PROFILE_PTJ"
+						headerText="#{lbl['lbl.pm.org.ptj.search']}"
+						disabled = "#{pmReportsBackingBean.managedBean.selectedKumpulanPTJ.pmOrgValidity.orgName == null}"
+						saveObject="pmReportsBackingBean.managedBean.selectedPTJ"
+						value="#{pmReportsBackingBean.managedBean.selectedPTJ.pmOrgValidity.orgName}"
+						size="100" readonly="true"
+						postUpdateListener="pmReportsBackingBean.updateSearchCriteria"
+						conditionField="#{pmReportsBackingBean.constuctConditionFieldsForPTJEpEnabled()}" /> 			
+				</td>	
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.rpt.userstatus']}" /></td>
+				<td><p:selectOneMenu
+					value="#{pmReportsBackingBean.managedBean.status}">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.all']}"
+						itemValue="#{null}" />
+					<f:selectItems
+						value="#{pmReportsBackingBean.getStatusOptions()}" />
+					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.rpt.month']}" /></td>
+				<td>
+					<p:calendar id="monthPicker" navigator="true" showOn="button" mode="inline" yearRange="c-7:c"/>
+				</td>
+				<td width="15%"><p:remoteCommand name="passToJSFBackingBean" actionListener="#{pmReportsBackingBean.pickMonthYear()}"/></td>
+		
+			</tr>
+		</table>
+
+	</p:outputPanel>
+	
+</ui:composition>

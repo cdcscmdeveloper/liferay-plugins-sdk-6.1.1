@@ -7,8 +7,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-
-
+	
 	<ui:define name="contentSection">
 		<!-- Validation Message -->
 		<p:messages id="messages" showDetail="true" autoUpdate="true"
@@ -19,7 +18,7 @@
 		<table style="margin-top: 10px; width: 100%;">
 			<tr>
 				<td width="10%"><p:outputLabel
-						value="#{lbl['lbl.rpt.rptName']}" /> <p:outputLabel value="*"
+						value="#{lbl['lbl.rpt.rptName']}" /><p:outputLabel value="*"
 						styleClass="mandatory" /></td>
 				<td width="100%"><p:selectOneMenu
 						label="#{lbl['lbl.rpt.rptName']}" id="somReportName"
@@ -111,25 +110,36 @@
 					test="#{PmReportConst.pmNoOfCpAndMrAccessApplicationRptVal eq pmReportsBackingBean.managedBean.reportCode}">
 					<ui:include src="/xhtml/reports/new/pm/noOfCPandMRAccsApplicationReport.xhtml"></ui:include>
 				</c:when>
-				<!-- #28833 start -->
+				<!-- #28833 shafie start -->
+				<!-- PM_012 -->
 				<c:when
 					test="#{PmReportConst.pmListOfPTJAllowedToApproveOtherPTJProcurementRptVal eq pmReportsBackingBean.managedBean.reportCode}">
 					<ui:include src="/xhtml/reports/new/pm/listOfPTJAllowedToApproveOtherPTJProcurementReport.xhtml"></ui:include>
 				</c:when>
-				<!-- #28833 end -->
+				<!-- #28833 shafie end -->
+				<!-- #29486 shafie start -->
+				<!-- PM_013 -->
+				<c:when
+					test="#{PmReportConst.pmMonthlyUserAndRoleRptVal eq pmReportsBackingBean.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/new/pm/monthlyUserAndRoleReport.xhtml"></ui:include>
+				</c:when>
+				<!-- #29486 shafie end -->
 				<c:otherwise>
         			#{lbl['lbl.rpt.search.REPORTS_NOT_AVAILABLE_BY_MODULE']}    				
 				</c:otherwise>
 			</c:choose>
 			<br />
-			<br />
+			<br /> 
 			<p:outputPanel id="btnOp">
 				<div align="right" style="width: 100%">
+				<!-- #29486 shafie start -->
 					<p:commandButton id="generateBtnId"
 						value="#{lbl['lbl.btn.generate']}" process="@form" update="@form"
+						onclick="if(#{PmReportConst.pmMonthlyUserAndRoleRptVal eq pmReportsBackingBean.managedBean.reportCode}){GenerateCal()}" 
 						action="#{pmReportsBackingBean.generatePmReport()}">
 						<f:param name="disableValidation" value="true" />
 					</p:commandButton>
+				<!-- #29486 shafie end -->
 					<p:commandButton id="resetBtnId" value="#{lbl['lbl.btn.reset']}"
 						process="@this" update="@form"
 						action="#{pmReportsBackingBean.resetAction()}">
