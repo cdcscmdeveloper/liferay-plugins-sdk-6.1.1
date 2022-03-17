@@ -241,7 +241,6 @@ public class MolPayServlet extends HttpServlet {
 					Timestamp bankDate = new Timestamp(System.currentTimeMillis());
 					String invalidDate = "0000-00-00 00:00:00";
 					Boolean validFormat = false;
-					date1 = "2022-03-18 12:40:08";
 					try {
 						if(date1==invalidDate || date1.isEmpty() || date1.trim().equals("")){
 							throw new Exception();
