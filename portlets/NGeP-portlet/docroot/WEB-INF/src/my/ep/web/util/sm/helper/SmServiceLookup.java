@@ -1,5 +1,6 @@
 package my.ep.web.util.sm.helper;
 
+import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -646,4 +647,12 @@ public class SmServiceLookup {
 						IUpgradeRoleSO.class);
 	}
 	//END LOG 12491
+	
+	//#30457-start
+	public static ICatalogueSO getCatalogueSO() {
+		return (ICatalogueSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT,
+						ICatalogueSO.class);
+	}
+	//#30457-end
 }

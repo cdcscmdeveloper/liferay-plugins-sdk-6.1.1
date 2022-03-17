@@ -21,7 +21,7 @@
 	
 		<p:commandButton id="submitLink" value="#{lbl['lbl.cm.publish']}"
 			disabled="#{fn:length(catalogueBackingBean.managedBean.cloneCmSupplierItemLs)&lt;1}"
-			action="#{catalogueBackingBean.submitToReviewItems}" update="@form"></p:commandButton>
+			action="#{catalogueBackingBean.validateBeforePopup}"></p:commandButton> <!-- #30457 - trigger popup -->
 	</div>
 
 	<ac:lovPopup />
@@ -36,7 +36,7 @@
 			<tr>
 				<td width="100%"><h:outputText styleClass="instruction"
 						style="float:left;margin-left:5px;"
-						value="#{lbl['lbl.cm.suptemp.insturction']}" /></td>
+						value="#{lbl['lbl.cm.suptemp.instruction']}" /></td> <!-- #30457 change label -->
 			</tr>
 		</table>
 	<p:dataTable id="draftSupplierItemID" lazy="true" style="width:100%;"
@@ -106,6 +106,20 @@
 				conditionField="recordStatus^1">
 			</ac:lov>
 		</p:column>
+		<!-- #30457 start -->
+		<p:column  style="text-align: center;" width="2%">
+			<f:facet name="header">
+				<h:outputText value="* " styleClass="mandatory" />
+				<h:outputText value="#{lbl['lbl.cm.suptemp.upload.image']}" escape="false"/>
+			</f:facet>
+			<p:commandLink action="#{catalogueBackingBean.loadBasicImageDialog(rowIndex,false)}" 
+			update=":form:imageAndBasicId" oncomplete="imageBasicDialog.show()" >
+				<p:graphicImage id="uploadImage" value="/css/images/design/document.png" 
+				title="#{lbl['lbl.cm.suptemp.upload.image.tooltip']}" /> 
+			</p:commandLink>
+		</p:column>
+		<!-- #30457 end -->
+		
 		<!-- START SSM INTEGRATION #27089 -->
 		<p:column width="2%">
 			<f:facet name="header">
@@ -116,7 +130,10 @@
 				navigator="true" showOn="button" size="10"
 				mindate="#{catalogueBackingBean.managedBean.currentDate}"
 				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
-				<p:ajax event="dateSelect" listener="#{catalogueBackingBean.getMinDate(selectedSuppCat.cmStandardPricing.startDate,null)}" partialSubmit="true" update="endDate" process="@this"/>
+				<!-- #30457-start -->
+				<p:ajax event="dateSelect" listener="#{catalogueBackingBean.getMinDate(selectedSuppCat.cmStandardPricing.startDate,null)}" 
+				update="endDate" process="@this"/>
+				<!-- #30457-end -->
 			</p:calendar>
 
 		</p:column>
@@ -185,5 +202,13 @@
 					onclick="confirmation1.hide()" />
 				<h:inputHidden id="rowIndex"></h:inputHidden>
 			</p:confirmDialog>
+			
+	<!-- #30457 start-->	
+	<ui:param name="multipleFile" value="false"/>
+	<ui:param name="updateImg" value=":form:imageUploadId"/>
+	<ui:include src="imageAndBasicPopup.xhtml" />
+	<ui:include src="declarationConfirmPopup.xhtml" />
+		
+	<!-- #30457 end-->
 
 </ui:composition>

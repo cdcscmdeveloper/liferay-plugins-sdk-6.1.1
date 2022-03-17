@@ -25,6 +25,9 @@
 
 	<p:messages id="catalogDetMsgId" showDetail="true" autoUpdate="true"
 		closable="true" showSummary="false"></p:messages>
+	<!-- #30457-start -->
+	<p:growl id="growlMssg" showDetail="true" showSummary="false"/>
+	<!-- #30457-end -->
 
 	<p:blockUI block="form" widgetVar="blockWidget">
 		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
@@ -159,6 +162,7 @@
 							rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' and catalogueBackingBean.managedBean.displayCatalogue and !unspscCodeBackingBean.supplierTemp}"
 							oncomplete="imageDialog.show();"
 							update=":form:imageDialog"> <!-- #14118 --> 
+							<h:outputText value="* " styleClass="mandatory" /> <!--#30457 - add * -->
 							<p:graphicImage value="/css/images/design/upload.png"
 								style="margin-top:10px;"></p:graphicImage>
 						</p:commandLink> <p:commandLink
@@ -233,8 +237,12 @@
 
 
 				<tr style="height: 30px;">
-					<td><p:outputLabel
-							value="#{lbl['lbl.cm.additional.item.description']}" /></td>
+					<!-- #30457 - start -->
+					<td>
+						<h:outputText value="* " styleClass="mandatory" />
+						<h:outputText styleClass="outputLabel-view-label" value="#{lbl['lbl.cm.basic.item.spec']}" />
+					</td>
+					<!-- #30457 - end -->
 					<td colspan="3"><p:inputTextarea maxlength="2000"
 							style="width:80% !important;height:100px;overflow:scroll;"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc}"
@@ -258,25 +266,43 @@
 			width="700px" resizable="false" styleClass="pop_up_top"
 			onShow="uploadImageListener(importDevicesWidget)">
 			
-			<h:outputText styleClass="instruction" escape="false"
-				style="float:left;margin-left:5px;"
-				value="#{lbl['lbl.cm.image.instruction']}" />
-			<br />
-
-			<p:fileUpload widgetVar="importDevicesWidget"
-				fileUploadListener="#{catalogueBackingBean.imageUpload}"
-				cancelLabel="#{lbl['lbl.btn.cancel']}"
-				sizeLimit="#{catalogueBackingBean.getImageSize()}"
-				uploadLabel="#{lbl['lbl.btn.upload']}"
-				invalidSizeMessage="#{catalogueBackingBean.getInvalidFileSize()}"
-				label="#{lbl['lbl.btn.choose']}" mode="advanced" id="upload"
-				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp)$/"
-				update=":form:deleteImage, :form:refereshImageId, :form:imageDialog"
-				invalidFileMessage="Only JPG, GIF, PNG, BMP files are accepted"
-				multiple="true" oncomplete="imageDialog.show()">
-			</p:fileUpload>
+			<!-- #30457 - fix view start-->
+			<table class="noBorder" width="700px">
+				<tr class="noBorder">
+					<td>
+						<h:outputText styleClass="instruction" escape="false"
+							style="float:left;margin-left:5px;"
+							value="#{lbl['lbl.cm.image.instruction']}" />
+					</td>
+				</tr>
+				
+				<tr class="noBorder">
+					<td class="noBorder" width="20%">
+						<h:outputText value="&#160;" />
+					</td>
+				</tr>
+				
+				<tr class="noBorder">
+					<td>
+						<p:fileUpload widgetVar="importDevicesWidget"
+							fileUploadListener="#{catalogueBackingBean.imageUpload}"
+							cancelLabel="#{lbl['lbl.btn.cancel']}"
+							sizeLimit="#{catalogueBackingBean.getImageSize()}"
+							uploadLabel="#{lbl['lbl.btn.upload']}"
+							invalidSizeMessage="#{catalogueBackingBean.getInvalidFileSize()}"
+							label="#{lbl['lbl.btn.choose']}" mode="advanced" id="upload"
+							allowTypes="/(\.|\/)(gif|jpe?g|png|bmp)$/"
+							update=":form:deleteImage, :form:refereshImageId, :form:imageDialog"
+							invalidFileMessage="#{lbl['lbl.cm.validation.img.type']}"
+							multiple="true" oncomplete="imageDialog.show()">
+						</p:fileUpload>
+					</td>
+				</tr>
+			</table>
+			<!-- #30457 - fix view end-->
 		</p:dialog>
 		<!-- #14118 - End -->
+
 
 		<p:tabView id="pricingTabID" orientation="left"
 			style="margin-top: 10px;"

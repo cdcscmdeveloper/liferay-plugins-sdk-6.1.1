@@ -30,7 +30,7 @@
 
 		<p:commandButton id="submitLink" value="#{lbl['lbl.cm.publish']}"
 			disabled="#{fn:length(catalogueBackingBean.managedBean.cloneCmSupplierItemLs)&lt;1}"
-			action="#{catalogueBackingBean.submitToReviewItems}" update="@form"></p:commandButton>
+			action="#{catalogueBackingBean.submitToReviewItems(true)}" update="@form"></p:commandButton> <!-- #30457 -->
 	</div>
 
 	<ac:lovPopup />
@@ -45,7 +45,7 @@
 			<tr>
 				<td width="100%"><h:outputText styleClass="instruction"
 						style="float:left;margin-left:5px;" escape="false"
-						value="#{lbl['lbl.cm.insturction']}" /></td>
+						value="#{lbl['lbl.cm.instruction.new1']}" /></td> <!-- #30457 -->
 			</tr>
 		</table>
 		
@@ -166,15 +166,26 @@
 								value="#{selectedSuppCat.pmUom}"
 								completeMethod="#{catalogueBackingBean.autoCompleteUom}"
 								maxResults="50" dropdown="false" forceSelection="true" />
-								<!-- #569 - start -->
+				<!-- #569 - start -->
 				<p:graphicImage
 				    rendered="#{catalogueBackingBean.managedBean.publish and selectedSuppCat.selected and selectedSuppCat.pmUom.uomId==null}"
 				    value="#{catalogueBackingBean.managedBean.publish and selectedSuppCat.selected
 						and selectedSuppCat.pmUom.uomId==null ? '/css/images/design/ico-termination.png' : ''}"
 					update="@form" />
-				 <!-- #569 - end -->				
+				 <!-- #569 - end -->			
 			</p:column>
+			<!-- #30457 start -->
 			<p:column  style="text-align: center;" width="2%">
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.cm.suptemp.upload.image']}" escape="false"/>
+				</f:facet>
+				<p:commandLink actionListener="#{catalogueBackingBean.loadBasicImageDialog(rowIndex,false)}" 
+					update=":form:uplimg:imageAndBasicId" oncomplete="imageBasicDialog.show()" >
+					<p:graphicImage id="uploadImage" value="/css/images/design/document.png" 
+					title="#{lbl['lbl.cm.suptemp.upload.image.tooltip']}" /> 
+				</p:commandLink>
+				<!-- #30457 end -->
 				<!-- 569 Start -->
 				<p:graphicImage
 				    rendered="#{catalogueBackingBean.managedBean.publish and selectedSuppCat.selected 
@@ -228,7 +239,7 @@
 						or (catalogueBackingBean.managedBean.publish and selectedSuppCat.selected and selectedSuppCat.cmStandardPricing.startDate gt selectedSuppCat.cmStandardPricing.endDate)? '/css/images/design/ico-termination.png' : ''}"
 					update="@form" />
 				<!-- #569 - end -->
-			</p:column>
+			 </p:column>
 			<!-- END SSM INTEGRATION #27089 -->
 			<p:column width="2%">
 				<f:facet name="header">
@@ -261,21 +272,29 @@
 
 	</div>
 
-
+	<!-- #30457 start-->
+	
+	<h:form id="uplexcl" enctype="multipart/form-data">
 	<p:dialog id="excelDialog" widgetVar="excelDialog" modal="true"
 		width="500px" onShow="singleUploadListener(fileUploadWidget);"
 		resizable="false" styleClass="pop_up_top">
-
-
 		<p:fileUpload fileUploadListener="#{catalogueBackingBean.uploadExcel}"
 			cancelLabel="#{lbl['lbl.btn.cancel']}" multiple="false"
 			uploadLabel="#{lbl['lbl.btn.upload']}" showButtons="false"
 			label="#{lbl['lbl.btn.choose']}" widgetVar="fileUploadWidget"
 			mode="advanced" id="upload" allowTypes="/(\.|\/)(xls|flv|xlsx)$/"
-			update="@form" invalidFileMessage="#{lbl['lbl.cm.only.xls']}">
+			update=":form" invalidFileMessage="#{lbl['lbl.cm.only.xls']}"
+			oncomplete="excelDialog.hide()">
 		</p:fileUpload>
-
 	</p:dialog>
+	</h:form>
+
+	<h:form id="uplimg" enctype="multipart/form-data">
+	<ui:param name="multipleFile" value="true"/>
+	<ui:param name="updateImg" value=":form:uplimg:imageUploadId"/>
+	<ui:include src="imageAndBasicPopup.xhtml" />
+	</h:form>
+	<!-- #30457 end-->
 	
 
 </ui:composition>

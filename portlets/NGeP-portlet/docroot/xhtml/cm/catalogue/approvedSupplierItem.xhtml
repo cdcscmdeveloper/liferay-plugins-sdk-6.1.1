@@ -122,6 +122,19 @@
 			<p:inputText value="#{approved.pmUom.uomName}" disabled="true"></p:inputText>
 
 		</p:column>
+		<!-- #30457 start -->
+		<p:column  style="text-align: center;" width="2%">
+			<f:facet name="header">
+				<h:outputText value="* " styleClass="mandatory" />
+				<h:outputText value="#{lbl['lbl.cm.suptemp.upload.image']}" escape="false"/>
+			</f:facet>
+			<p:commandLink action="#{catalogueBackingBean.loadBasicImageDialog(rowIndex,true)}" 
+			update=":form:imageAndBasicId" oncomplete="imageBasicDialog.show()" >
+				<p:graphicImage id="uploadImage" value="/css/images/design/document.png" 
+				title="#{lbl['lbl.cm.suptemp.upload.image.tooltip']}" /> 
+			</p:commandLink>
+		</p:column>
+		<!-- #30457 end -->
 		<p:column width="5%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.start.date']}
@@ -161,4 +174,10 @@
 		</p:column>
 	</p:dataTable>
 </h:panelGroup>
+
+<!-- #30457 start-->
+<ui:param name="multipleFile" value="false"/>
+<ui:param name="updateImg" value=":form:imageUploadId"/>
+<ui:include src="imageAndBasicPopup.xhtml" />
+<!-- #30457 end-->
 </ui:composition>
