@@ -947,6 +947,20 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		smPersonnel = setDesignationSSM(smPersonnel);
 		//END SSM CHANGES #27201
 		smAppl.getSmPersonnels().add(smPersonnel);
+		//32764 - start
+		if(!getManagedBean().isSameAsOwner() && getManagedBean().getSmSuppOwners() != null
+				&& getManagedBean().getSmSuppOwners().size() > 0){
+			SmPersonnel per = new SmPersonnel();
+			SmSupplierOwner owner = getManagedBean().getSmSuppOwners().get(0);
+			per.setName(owner.getOwnerName());
+			per.setIdentificationNo(owner.getIdentificationNo());
+			per.setIdentificationTypeId(owner.getIdentificationTypeId());
+			per.setPmCountry(owner.getNationality());
+			per.setEquityOwner(true);
+			per.setSmAppl(smAppl);
+			smAppl.getSmPersonnels().add(per);			
+		}
+		//32764 - end
 		//#16052019 - SSM INTEGRATION CR
 		//add list all personel & check if smPersonnel contain in this.getManagedBean().getSmPersonnelAll(), use smPersonnel to add into appl, otherwise use personnel
 		if(this.getManagedBean().isCompanyValidWithSSM()){
