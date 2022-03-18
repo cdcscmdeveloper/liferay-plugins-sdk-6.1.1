@@ -10,7 +10,6 @@ import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -25,14 +24,6 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
-
-import com.liferay.portal.util.PortalUtil;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -70,7 +61,6 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constants.CommonConstants;
-import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
@@ -101,7 +91,6 @@ import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.fl.FlActor;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
-import my.ep.persistence.entity.fl.FlWorkflowStatus;
 import my.ep.persistence.entity.fl.adjust.FlAdjustment;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
@@ -155,6 +144,14 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.InvoiceChargeLineVO;
 import my.ep.web.vo.TaxInvoiceVO;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+
+import com.liferay.portal.util.PortalUtil;
 
 /**
  * Payment Match Backing Bean.
@@ -1852,6 +1849,11 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			invBB.getManagedBean().setHyperLinkPage(true);
 			invBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 			invBB.getManagedBean().setReliefDeclarationCheck(true);
+			//start - 32678
+			flBB.getManagedBean().setHideRemarks(true);
+			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
+			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
+			//end - 32678
 			reqDTO.setInvoice(resDTO.getInvoice());
 			resDTO = invoiceSO.isInvoiceTaxable(reqDTO);
 			invBB.getManagedBean().setTaxable(resDTO.isTaxable());
@@ -1863,9 +1865,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			invBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
 			invBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());
 			invBB.getManagedBean().setPrevHideRemarks(flBB.getManagedBean().isHideRemarks());
-			flBB.getManagedBean().setHideRemarks(true);
-			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
-			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
+			
 			invBB.getManagedBean().setDocMaintain(false);
 			invBB.getManagedBean().setDelOrderList(new ArrayList<FlDeliveryOrder>()); 
 			for(FlDeliveryOrder flDeliveryOrder : invBB.getManagedBean().getInvoice().getFlFulfilmentOrder().getFlDeliveryOrders()) {
