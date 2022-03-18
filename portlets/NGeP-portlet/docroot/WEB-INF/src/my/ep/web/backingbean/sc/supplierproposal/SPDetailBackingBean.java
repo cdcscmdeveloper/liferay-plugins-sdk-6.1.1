@@ -1286,11 +1286,11 @@ public class SPDetailBackingBean extends
 				answers = getManagedBean().getTemplateSpecBean()
 						.getSpecAnswerList();
 			}
+			//#32783 fix revert old codes related to #21695 -START
             if(answers == null || answers.size() == 0){
-            	
-            	//REMOVE NOT USING #21695
-            	//#21695 Farid Start - fix proposal checking 18/2/2022
-            	
+                	throw new EpException(MessageConst.ERROR_760463);	
+    			} else {
+    		//#32783 fix revert old codes related to #21695 -END
 				// 20220127@syazani - Enhancement #3657 - specific error message - Start
 				List<String> errorLst = null;
 				boolean isThrow = false;
