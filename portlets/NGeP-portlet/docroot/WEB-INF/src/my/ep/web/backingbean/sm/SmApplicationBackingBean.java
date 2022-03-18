@@ -3366,6 +3366,8 @@ public class SmApplicationBackingBean extends
 
 		SmApplicationUtil
 				.validateSpecialCategoryAssignedToFacility(getManagedBean());
+		//#30508
+		SmApplicationUtil.validateSpecialAndNormalCategory(true, getManagedBean(),  -1);
 	}
 
 	/**
