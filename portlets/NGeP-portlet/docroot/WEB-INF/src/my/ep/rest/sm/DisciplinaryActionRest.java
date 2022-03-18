@@ -42,21 +42,12 @@ public class DisciplinaryActionRest {
 		boolean enter  = true;
 		try {
 			//27426 : Disciplinary Action - start
-			//find data with end date less than current date
-			SupplierDataMaintenanceResDTO releaseDAList = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveDisciplinaryAction();//28798: Disciplinary Action - remove blacklist and cancel registration
-			//find data pending DA, (data with active txn will update DA after complete all txn)
-			SupplierDataMaintenanceResDTO updateDAList = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryAction(); //28798: Disciplinary Action - remove blacklist and cancel registration
 			
-			//26238 - Disciplinary Action - 28798 - end
-			//find data pending Cancel Registration or Blacklist Owner / Director of Company
-			SupplierDataMaintenanceResDTO updateBCDAList = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveBlacklistCancelDisciplinaryAction();//28798: Disciplinary Action - get all active for cancel registration and blacklist
-			
-			//26238 - Disciplinary Action - 28798 - end
-			
-			//31100 start - find data pending suspend register
-			SupplierDataMaintenanceResDTO updateSuspendList = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveSuspendDisciplinaryAction();
-			//31100 end
-			
+			//26238 : Disciplinary Action -32710- start - replace recalling or retrieve data that cause other data include in next retrieve data
+			//that occur error data has been update from last read.
+			//NO 1 : find data with end date less than current date to release DA
+			SupplierDataMaintenanceResDTO releaseDAList = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveDisciplinaryAction();
+			 
 			if(releaseDAList.getSmDisciplinaryActions() != null
 					&& releaseDAList.getSmDisciplinaryActions().size() > 0){
 				log.info("releaseDAList.getSmDisciplinaryActions()=============="+releaseDAList.getSmDisciplinaryActions().size());
@@ -79,6 +70,9 @@ public class DisciplinaryActionRest {
 					}										
 				}
 			}
+
+			//NO 2: find data pending DA, (data with active txn will update DA after complete all txn)
+			SupplierDataMaintenanceResDTO updateDAList = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryAction(); //28798: Disciplinary Action - remove blacklist and cancel registration
 			
 			if(updateDAList != null
 					&& updateDAList.getSmDisciplinaryActions() != null
@@ -109,6 +103,9 @@ public class DisciplinaryActionRest {
 			}
 			
 			//28798: Disciplinary Action - start - 26238 - reopen
+			//NO 3 : find data pending Cancel Registration or Blacklist Owner / Director of Company 
+			SupplierDataMaintenanceResDTO updateBCDAList = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveBlacklistCancelDisciplinaryAction();//28798: Disciplinary Action - get all active for cancel registration and blacklist
+			
 			if(updateBCDAList != null && updateBCDAList.getSmDisciplinaryActions() != null && updateBCDAList.getSmDisciplinaryActions().size() > 0){
 				Date today = new Date(); 
 				for(SmDisciplinaryAction cancelRegBlacklist: updateBCDAList.getSmDisciplinaryActions()){
@@ -151,7 +148,11 @@ public class DisciplinaryActionRest {
 			}
 			//28798: Disciplinary Action - end - 26238 - reopen
 			
-			//31100 start
+			//31100 start - find data pending suspend register
+			//NO 4 : find data pending suspend register , update pending txn for DA suspend and release if DA suspend expired
+			SupplierDataMaintenanceResDTO updateSuspendList = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveSuspendDisciplinaryAction();
+			//26238 : Disciplinary Action -32710- end -
+
 			if (updateSuspendList != null && updateSuspendList.getSmDisciplinaryActions() != null
 					&& updateSuspendList.getSmDisciplinaryActions().size() > 0) {
 
