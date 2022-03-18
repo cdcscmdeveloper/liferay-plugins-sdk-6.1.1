@@ -970,16 +970,13 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		// 29417 - START
 		else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) ){
 			getManagedBean().setButtonProcess(outcome);
-			Date signDate = getManagedBean().getContractVer().getSignedDate();
+			Date signDate = getManagedBean().getAgreementContractVer().getSignedDate();
 			Date expDate = getManagedBean().getContractVer().getCtContractValue().getExpDate();
-			if(signDate != null && expDate != null && signDate.after(expDate)){
-				
-				RequestContext.getCurrentInstance().execute("dateValidationExp.show()");
-					log.info("---------------Expire DATE--------------" + expDate);
-				
+			
+			if(signDate != null && expDate != null && signDate.after(expDate)){	
+				RequestContext.getCurrentInstance().execute("dateValidationExp.show()");				
 			}
 			else {
-				log.info("------------------In validate method-----------");
 				return this.saveAgreement(outcome);
 			}
 			return null;
