@@ -40,6 +40,7 @@ import my.ep.biz.service.sc.document.IQTDocumentSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
+import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.constant.EpPropertiesConst;
@@ -69,6 +70,7 @@ import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
+import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
@@ -2961,45 +2963,88 @@ public class NoticeBoardBackingBean extends
 		boolean isRefinalized = getQTAwardSO().isQtRefinalized(awardReqDTO).isRefinalized();
 		
 		List<AwardedItemsBean> awardedItemList = new ArrayList<>();
+		//Bug #32512 start
+		boolean isLoaRejected = false; 
+		this.getManagedBean().setSupplierName(null);
+		//Bug #32512 end
+		
 		for (ScLoa scLoa : scLoalist) {
-			if (ParameterConst.RECOMMEND_TYPE_PACKAGE
-					.equalsIgnoreCase(pmParameter.getParameterCode())) {
-				this.getManagedBean().setSupplierName(
-						scLoa.getScLoiLoa().getSupplierName());
-				
-			} else {
-				for (ScLoiLoaItem scLoiLoaItem : scLoa.getScLoiLoaItems()) {
-					AwardedItemsBean awardedItem = new AwardedItemsBean();
-					ScRequestItem reqItem = scLoiLoaItem.getScRequestItem();
-					awardedItem.setItemName(reqItem.getItemName());
-					awardedItem.setSupplierName(scLoiLoaItem.getScLoa().getScLoiLoa().getSupplierName());
-					// By Loa
-					awardedItem.setPriceByLoa(TemplateSpecHelper.getInstance()
+			//Bug #32512 start
+			try{
+				isLoaRejected = isLOARejected(ParameterConst.DOCTYPE_LETTER_OF_AWARD , scLoa.getLoaId());
+			}catch(Exception e){
+				log.error("Exception occured while get LOA status completed for "+scLoa.getLoaNo());
+			}
+			
+			if (!isLoaRejected){
+				if (ParameterConst.RECOMMEND_TYPE_PACKAGE
+						.equalsIgnoreCase(pmParameter.getParameterCode())) {
+					this.getManagedBean().setSupplierName(
+							scLoa.getScLoiLoa().getSupplierName());
+					
+				} else {
+					for (ScLoiLoaItem scLoiLoaItem : scLoa.getScLoiLoaItems()) {
+						AwardedItemsBean awardedItem = new AwardedItemsBean();
+						ScRequestItem reqItem = scLoiLoaItem.getScRequestItem();
+						awardedItem.setItemName(reqItem.getItemName());
+						awardedItem.setSupplierName(scLoiLoaItem.getScLoa().getScLoiLoa().getSupplierName());
+						// By Loa
+						awardedItem.setPriceByLoa(TemplateSpecHelper.getInstance()
+								.calcTotalAmount(reqItem.getTplSpecQuestion(),
+										scLoiLoaItem.getUnitPrice(), scLoiLoaItem.getQty()));
+						// By Proposal
+						ScQtRecommendDtl scQtRecommendDtl = scLoiLoaItem.getScQtRecommendDtl();
+						if(null != scQtRecommendDtl && null != scQtRecommendDtl.getScQtProposalItem()){
+							BigDecimal totalPrice = TemplateSpecHelper.getInstance()
 							.calcTotalAmount(reqItem.getTplSpecQuestion(),
-									scLoiLoaItem.getUnitPrice(), scLoiLoaItem.getQty()));
-					// By Proposal
-					ScQtRecommendDtl scQtRecommendDtl = scLoiLoaItem.getScQtRecommendDtl();
-					if(null != scQtRecommendDtl && null != scQtRecommendDtl.getScQtProposalItem()){
-						BigDecimal totalPrice = TemplateSpecHelper.getInstance()
-						.calcTotalAmount(reqItem.getTplSpecQuestion(),
-								scQtRecommendDtl.getScQtProposalItem().getOfferPrice(), 
-									scLoiLoaItem.getQty());
-						awardedItem.setPriceByProposal(totalPrice);
+									scQtRecommendDtl.getScQtProposalItem().getOfferPrice(), 
+										scLoiLoaItem.getQty());
+							awardedItem.setPriceByProposal(totalPrice);
+						}
+						// By Bidding
+						if (finalizationMethod != null && ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
+								.equals(finalizationMethod.getParameterCode()) && !isRefinalized) {
+						awardedItem.setPriceByBidding(TemplateSpecHelper.getInstance()
+							.calcTotalAmount(reqItem.getTplSpecQuestion(),
+									scQtRecommendDtl.getScQtProposalItem().getFinalPrice(), 
+										scLoiLoaItem.getQty()));
+						}
+						awardedItemList.add(awardedItem);
 					}
-					// By Bidding
-					if (finalizationMethod != null && ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
-							.equals(finalizationMethod.getParameterCode()) && !isRefinalized) {
-					awardedItem.setPriceByBidding(TemplateSpecHelper.getInstance()
-						.calcTotalAmount(reqItem.getTplSpecQuestion(),
-								scQtRecommendDtl.getScQtProposalItem().getFinalPrice(), 
-									scLoiLoaItem.getQty()));
-					}
-					awardedItemList.add(awardedItem);
 				}
 			}
+			//Bug #32512 end
 		}
    return awardedItemList;
 	}
+	
+	//Bug #32512 start
+	public boolean isLOARejected(String docType, Long docId) throws Exception {
+		ScWorkFlowStatus currentWorkFlowStatus = retrieveStatusByTypeAndId(docType, docId);
+		if(currentWorkFlowStatus != null && currentWorkFlowStatus.getPmStatus() != null &&
+				currentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.LOA_REJECTED)) {
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
+	private ScWorkFlowStatus retrieveStatusByTypeAndId(String docType, Long docId) {
+		IScWorkFlowStatusSO workFlowStatusSO;
+		try {
+			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+			ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+			reqDTO.setDocType(docType);
+			reqDTO.setDocId(docId);
+			
+			return workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+		} finally {
+			workFlowStatusSO = null;
+		}
+	}
+	
+	//Bug #32512 end
 	
 	/**
 	 * Will be called up on tab change of show Award Details  screen.
