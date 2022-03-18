@@ -3420,6 +3420,15 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						} else if (t.getTabType().equals(ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE)) {
 							newCommitteTabs.add(t);
 						}
+						else if (t.getTabType().equals(ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE)) {//32775-start related to 27502
+							newCommitteTabs.add(t);
+						}
+						else if (t.getTabType().equals(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE)) {
+							newCommitteTabs.add(t);
+						}
+						else if (t.getTabType().equals(ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE)) {
+							newCommitteTabs.add(t);
+						}//32775-End related to 27502
 					}
 
 					StringBuilder fcTitleLabel = new StringBuilder("lbl.ministry.finance");
