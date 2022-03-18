@@ -3,7 +3,9 @@ package my.ep.web.backingbean.sm.payment;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -382,6 +384,19 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		}
 		
 		// #26307 end
+		// #32422 START 
+		String date1 = null;
+		String extraP1 = httpServletRequest.getParameter("extraP");
+		if(extraP1 != null){
+			JSONObject obj1;
+			try { 
+				obj1 = new JSONObject(extraP1); 
+				date1 = obj1.getString("bank_datetime") != null ? obj1.getString("bank_datetime") : null;
+			} catch (JSONException e) { 
+				e.printStackTrace(); 
+			}
+		}
+		// #32422 END
 
 		Long ordId = null;
 		if(orderId!= null){
@@ -506,21 +521,70 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				//END THIS LINE OF CODE DO NOT MERGE TO PRODUCTION
 				
 				// #26307 end 
-
-				Date txDate;
+				//32422 START
+				Timestamp bankDate = new Timestamp(System.currentTimeMillis());
+				Boolean validFormat = false;
 				try {
-					txDate = DateUtils.convertStringToDate(
-							"yyyy-MM-dd HH:mm:ss", paydate);
+					if(date1.trim().equals("0000-00-00 00:00:00")){
+						log.info("Invalid Date ==== "+date1);
+						date1 = null;
+					}
+					if(date1 == null || date1.trim().equals("")){
+						throw new Exception();
+					}
+					if(date1 != null){
+						log.info("Bank Date&Time ==== "+date1);
+						SimpleDateFormat sdfrmt = new SimpleDateFormat("YYYY-MM-DD HH:mm:ss");
+					    try{
+					    	log.info("In try");
+					        sdfrmt.parse(date1);
+					        log.info("Setting Valid Format to true");
+					        validFormat = true;
+					    }
+					    catch(ParseException e){
+					    	log.info("In Parse Catch");
+						    validFormat = false;
+					    }
+					    finally {
+					    	log.info("In finally");
+					    	if(validFormat){
+					    		log.info("Valid Format");
+								bankDate = DateUtils.convertStringToTimestamp("yyyy-MM-dd HH:mm:ss", date1);
+								pymtReqDTO.setBankDate(bankDate);
+							}else{
+								log.info("Invalid Format");
+								throw new Exception();
+							}
+					    }
+					}
 				} catch (Exception e) {
-					txDate = new Date();
+					log.info("bankDate is null");
+					bankDate = null;
 					e.printStackTrace();
 				}
+
+				Timestamp txDate = new Timestamp(System.currentTimeMillis());
+				try {
+					txDate = DateUtils.convertStringToTimestamp(
+							"yyyy-MM-dd HH:mm:ss", paydate);
+				} catch (Exception e) {
+					txDate = new Timestamp(System.currentTimeMillis());
+					e.printStackTrace();
+				}
+				//32422 END
 				log.info("channel--------------------26307"+channel);
 				paymentOrder.setChannelName(channel);
 				smPaymentRes.setTransactionId(tranID);
 				smPaymentRes.setErrorCode(errorCode);
 				smPaymentRes.setErrorDesc(errorDesc);
+				//32422 START
+				if(bankDate != null){
+					smPaymentRes.setTransactionDate(bankDate);
+				}else{
 				smPaymentRes.setTransactionDate(txDate);
+				}
+				smPaymentRes.setBankDateTime(bankDate);
+				//32422 END
 				smPaymentRes.setPyPaymentOrder(paymentOrder);
 				smPaymentRes.setPaymentStatus(status);
 				smPaymentRes.setPaidAmt(txAmount);
