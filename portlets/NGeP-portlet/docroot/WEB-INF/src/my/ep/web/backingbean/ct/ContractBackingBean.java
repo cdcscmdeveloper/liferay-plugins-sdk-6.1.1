@@ -2359,9 +2359,21 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			getManagedBean().setGstTotalAmount(staxAmt.add(gstAmt.add(contractAmt)));
 		}
 		// Recalculate the performance bond amount
+		// Start - Fix - #32663
+		String proc_type = getManagedBean().getContractVer().getCtContract().getLoa().getQtType().getParameterCode();
+
 		if (!getManagedBean().isDirectPurchase() && !getManagedBean().getCtContractAmount().isBondExempted()) {
-			calculateNewBondAmount();
-		}		    	
+				if(proc_type != null){
+					if(proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7) && getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()) {
+						//pk7 contract with bond from LOA
+						calculateNewBondAmount();
+					  } else if(!proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
+						// except pk7 and DP
+						calculateNewBondAmount();
+					  }
+			}
+		}
+		// End - Fix - #32663
 	}
 
 	/**
