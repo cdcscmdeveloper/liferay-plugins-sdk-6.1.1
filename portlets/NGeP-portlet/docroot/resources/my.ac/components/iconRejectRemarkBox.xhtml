@@ -13,7 +13,6 @@
 
 	</cc:interface>
 	<cc:implementation>
-		<h:outputScript library="javax.faces" name="jsf.js" target="head" />
 		<ui:fragment rendered="#{cc.attrs.show}">
 			<h:commandLink>
 				<f:ajax onevent="widget#{cc.attrs.supplierCode}.show()" />
