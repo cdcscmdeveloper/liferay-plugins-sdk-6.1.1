@@ -3,6 +3,9 @@ package my.ep.web.backingbean.sm.payment;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,6 +48,9 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.liferay.portal.util.PortalUtil;
+
+import org.primefaces.json.JSONException;
+import org.primefaces.json.JSONObject;
 
 @ManagedBean(name = "paymentResponseBB")
 @RequestScoped
@@ -178,6 +184,20 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		log.info("error_code:" + errorCode);
 		log.info("error_desc:" + errorDesc);
 		log.info("channel:" + channel);
+		
+		// #32422 START 
+		String date1 = null;
+		String extraP1 = httpServletRequest.getParameter("extraP");
+		if(extraP1 != null){
+			JSONObject obj1;
+			try { 
+				obj1 = new JSONObject(extraP1); 
+				date1 = obj1.getString("bank_datetime") != null ? obj1.getString("bank_datetime") : null;
+			} catch (JSONException e) { 
+				e.printStackTrace(); 
+			}
+		}
+		// #32422 END
 
 		Long ordId = Long.valueOf(orderId);
 		IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
@@ -256,20 +276,72 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				} else if (status.equals(SupplierManagementConst.MOL_FAIL)) {
 					statusCode = SupplierManagementConst.PM_STAT_FAILED_PAYMENT;
 				}
+				// #26307 start 
+				PaymentReqDTO pymtReqDTO = new PaymentReqDTO();
 
-				Date txDate;
+				//32422 START
+				Timestamp bankDate = new Timestamp(System.currentTimeMillis());
+				Boolean validFormat = false;
 				try {
-					txDate = DateUtils.convertStringToDate(
-							"yyyy-MM-dd HH:mm:ss", paydate);
+					if(date1.trim().equals("0000-00-00 00:00:00")){
+						log.info("Invalid Date ==== "+date1);
+						date1 = null;
+					}
+					if(date1 == null || date1.trim().equals("")){
+						throw new Exception();
+					}
+					if(date1 != null){
+						log.info("Bank Date&Time ==== "+date1);
+						SimpleDateFormat sdfrmt = new SimpleDateFormat("YYYY-MM-DD HH:mm:ss");
+					    try{
+					    	log.info("In try");
+					        sdfrmt.parse(date1);
+					        log.info("Setting Valid Format to true");
+					        validFormat = true;
+					    }
+					    catch(ParseException e){
+					    	log.info("In Parse Catch");
+						    validFormat = false;
+					    }
+					    finally {
+					    	log.info("In finally");
+					    	if(validFormat){
+					    		log.info("Valid Format");
+								bankDate = DateUtils.convertStringToTimestamp("yyyy-MM-dd HH:mm:ss", date1);
+								pymtReqDTO.setBankDate(bankDate);
+							}else{
+								log.info("Invalid Format");
+								throw new Exception();
+							}
+					    }
+					}
 				} catch (Exception e) {
-					txDate = new Date();
+					log.info("bankDate is null");
+					bankDate = null;
 					e.printStackTrace();
 				}
+				
+				Timestamp txDate = new Timestamp(System.currentTimeMillis());
+				try {
+					txDate = DateUtils.convertStringToTimestamp(
+							"yyyy-MM-dd HH:mm:ss", paydate);
+				} catch (Exception e) {
+					txDate = new Timestamp(System.currentTimeMillis());
+					e.printStackTrace();
+				}
+				//32422 END
 				paymentOrder.setChannelName(channel);
 				smPaymentRes.setTransactionId(tranID);
 				smPaymentRes.setErrorCode(errorCode);
 				smPaymentRes.setErrorDesc(errorDesc);
-				smPaymentRes.setTransactionDate(txDate);
+				//32422 START
+				if(bankDate != null){
+					smPaymentRes.setTransactionDate(bankDate);
+				}else{
+					smPaymentRes.setTransactionDate(txDate);
+				}
+				smPaymentRes.setBankDateTime(bankDate);
+				//32422 END
 				smPaymentRes.setPyPaymentOrder(paymentOrder);
 				smPaymentRes.setPaymentStatus(status);
 				smPaymentRes.setPaidAmt(txAmount);
@@ -280,7 +352,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 
 				// updatePayment(smPayment,validPayment);
 				Object token = getFacesScopes().getBPMAuthenticationCtxToken();
-				PaymentReqDTO pymtReqDTO = new PaymentReqDTO();
+//				PaymentReqDTO pymtReqDTO = new PaymentReqDTO();
 
 				//pymtReqDTO.setPaidPersonnels(getPaidPersonnelBeforeProceed());
 

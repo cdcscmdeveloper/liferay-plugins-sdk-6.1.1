@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sm.payment;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -625,7 +626,9 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			smPaymentRes.setTransactionId(txID);
 			smPaymentRes.setErrorCode("");
 			smPaymentRes.setErrorDesc("");
-			smPaymentRes.setTransactionDate(new Date());
+			//32422 START
+			smPaymentRes.setTransactionDate(new Timestamp(System.currentTimeMillis()));
+			//32422 END
 			smPaymentRes.setPyPaymentOrder(paymentOrder);
 			smPaymentRes.setPaymentStatus(status);
 			smPaymentRes.setPaidAmt(txAmount);
