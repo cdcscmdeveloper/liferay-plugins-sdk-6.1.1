@@ -1,0 +1,65 @@
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<cc:interface>
+		<cc:attribute name="id"/>
+		<cc:attribute name="show" default="false" />
+		<cc:attribute name="supplierCode"/>
+		<cc:attribute name="remark"/>
+
+	</cc:interface>
+	<cc:implementation>
+		<h:outputScript library="javax.faces" name="jsf.js" target="head" />
+		<ui:fragment rendered="#{cc.attrs.show}">
+			<h:commandLink>
+				<f:ajax onevent="widget#{cc.attrs.supplierCode}.show()" />
+				<ui:param name="imgId" value="#{cc.attrs.id}Img" />
+				<p:graphicImage id="#{imgId}"
+					value="/css/images/design/ico-tooltips.png" />
+				<p:tooltip id="#{cc.attrs.id}" for="#{imgId}">
+					<p:outputLabel escape="false" value="#{lbl['lbl.sc.supplier.reject.popup.tooltip']}" />
+				</p:tooltip>
+			</h:commandLink>
+
+			<p:dialog id="WidgetId#{cc.attrs.supplierCode}"
+				widgetVar="widget#{cc.attrs.supplierCode}" header="#{lbl['lbl.sc.supplier.reject.popup.header']}"
+				resizable="false" modal="true">
+				<p:outputPanel id="#{cc.attrs.id}Popup" layout="block">
+
+					<p:panelGrid>
+						<f:facet name="header">
+							<p:row>
+								<p:column style="text-align:center;">
+									<h:outputText value="#{lbl['lbl.sc.supplier.code']}" />
+								</p:column>
+								<p:column style="text-align:center;">
+									<h:outputText value="#{lbl['lbl.sc.supplier.reject.remark']}" />
+								</p:column>
+							</p:row>
+						</f:facet>
+						<p:row>
+							<p:column style="text-align:center;">
+								<h:outputText value="#{cc.attrs.supplierCode}" />
+							</p:column>
+							<p:column style="text-align:center;">
+								<h:outputText value="#{cc.attrs.remark}" />
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+					<div class="ppRightBtn">
+						<p:commandButton
+							oncomplete="widget#{cc.attrs.supplierCode}.hide()"
+							value="#{lbl['lbl.btn.ok']}" />
+					</div>
+				</p:outputPanel>
+			</p:dialog>
+		</ui:fragment>
+
+
+	</cc:implementation>
+
+</ui:component>

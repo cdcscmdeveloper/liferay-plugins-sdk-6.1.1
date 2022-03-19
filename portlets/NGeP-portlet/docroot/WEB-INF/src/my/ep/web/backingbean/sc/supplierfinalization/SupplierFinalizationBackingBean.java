@@ -5830,6 +5830,11 @@ return	remarksNotFound;
 						ParameterConst.DECISION_RECOMMEND_SUPPLIER);
 				excludedDecisionList.add(
 						ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY);
+				//6906 - start
+				excludedDecisionList.add(
+						ParameterConst.DECISION_RE_EVALUATION);
+				//6906 - end
+
 			}
 		}
 		//END - #26169
