@@ -33,6 +33,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
+import org.apache.log4j.Logger;
 import org.primefaces.json.JSONException;
 import org.primefaces.json.JSONObject;
 
@@ -78,20 +79,26 @@ public class MolPayServlet extends HttpServlet {
 		String paydate = req.getParameter("paydate");
 		String skey = req.getParameter("skey");
 		String channel = req.getParameter("channel") != null ?  req.getParameter("channel") : null;
-
-		System.out.println("nbcb:" + nbcb);
-		System.out.println("orderId: " + orderId);
-		System.out.println("tranID: " + tranID);
-		System.out.println("status:" + status);
-		System.out.println("domain:" + domain);
-		System.out.println("amount :" + amount);
-		System.out.println("currency:" + currency);
-		System.out.println("appcode: " + appcode);
-		System.out.println("paydate:" + paydate);
-		System.out.println("skey:" + skey);
-		System.out.println("error_code:" + errorCode);
-		System.out.println("error_desc:" + errorDesc);
-		System.out.println("channel:" + channel);
+		log.info("set session--");
+		req.getSession().setAttribute("orderidS", orderId);
+		log.info("getsession servlet: -"+req.getSession().getAttribute("orderidS"));
+		
+		String extraP = req.getParameter("extraP");
+		
+		log.info("nbcb:" + nbcb);
+		log.info("orderId: " + orderId);
+		log.info("tranID: " + tranID);
+		log.info("status:" + status);
+		log.info("domain:" + domain);
+		log.info("amount :" + amount);
+		log.info("currency:" + currency);
+		log.info("appcode: " + appcode);
+		log.info("paydate:" + paydate);
+		log.info("skey:" + skey);
+		log.info("error_code:" + errorCode);
+		log.info("error_desc:" + errorDesc);
+		log.info("channel:" + channel);
+		log.info("extraP:" + extraP);
 		
 		// #32422 START 
 		String date1 = null;
