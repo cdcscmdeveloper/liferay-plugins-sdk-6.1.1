@@ -170,6 +170,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		String channel = httpServletRequest.getParameter("channel") != null ? httpServletRequest.getParameter("channel") : null;
 		String errorCode = httpServletRequest.getParameter("error_code") != null ? httpServletRequest.getParameter("error_code") : null;
 		String errorDesc = httpServletRequest.getParameter("error_desc") != null ? httpServletRequest.getParameter("error_desc") : null;
+		String extraP = httpServletRequest.getParameter("extraP");
 
 
 		log.info("orderId: " + orderId);
@@ -184,6 +185,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		log.info("error_code:" + errorCode);
 		log.info("error_desc:" + errorDesc);
 		log.info("channel:" + channel);
+		log.info("extraP:" + extraP);
 		
 		// #32422 START 
 		String date1 = null;
