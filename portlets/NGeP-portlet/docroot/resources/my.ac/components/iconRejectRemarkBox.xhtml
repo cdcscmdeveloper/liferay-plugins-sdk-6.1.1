@@ -14,6 +14,7 @@
 	</cc:interface>
 	<cc:implementation>
 		<ui:fragment rendered="#{cc.attrs.show}">
+			<h:outputScript library="javax.faces" name="jsf.js" target="head" />
 			<h:commandLink>
 				<f:ajax onevent="widget#{cc.attrs.supplierCode}.show()" />
 				<ui:param name="imgId" value="#{cc.attrs.id}Img" />
@@ -27,28 +28,21 @@
 			<p:dialog id="WidgetId#{cc.attrs.supplierCode}"
 				widgetVar="widget#{cc.attrs.supplierCode}" header="#{lbl['lbl.sc.supplier.reject.popup.header']}"
 				resizable="false" modal="true">
-				<p:outputPanel id="#{cc.attrs.id}Popup" layout="block">
-
-					<p:panelGrid>
-						<f:facet name="header">
-							<p:row>
-								<p:column style="text-align:center;">
-									<h:outputText value="#{lbl['lbl.sc.supplier.code']}" />
-								</p:column>
-								<p:column style="text-align:center;">
-									<h:outputText value="#{lbl['lbl.sc.supplier.reject.remark']}" />
-								</p:column>
-							</p:row>
-						</f:facet>
-						<p:row>
-							<p:column style="text-align:center;">
-								<h:outputText value="#{cc.attrs.supplierCode}" />
-							</p:column>
-							<p:column style="text-align:center;">
-								<h:outputText value="#{cc.attrs.remark}" />
-							</p:column>
-						</p:row>
-					</p:panelGrid>
+				<p:outputPanel id="panelRejectRemark#{cc.attrs.supplierCode}" layout="block">
+				<table class="ui-panelgrid ui-widget">
+					<thead class="ui-panelgrid-header">
+						<tr class="ui-widget-header">
+							<td style="text-align: center !important;" class="ui-widget-header"><h:outputText value="#{lbl['lbl.sc.supplier.code']}" /></td>
+							<td style="text-align: center !important;" class="ui-widget-header"><h:outputText value="#{lbl['lbl.sc.supplier.reject.remark']}" /></td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="ui-widget-content">
+							<td style="text-align: center !important;"><h:outputText value="#{cc.attrs.supplierCode}" /></td>
+							<td style="text-align: center !important;"><h:outputText value="#{cc.attrs.remark}" /></td>
+						</tr>
+					</tbody>
+				</table>
 					<div class="ppRightBtn">
 						<p:commandButton
 							oncomplete="widget#{cc.attrs.supplierCode}.hide()"
@@ -57,8 +51,6 @@
 				</p:outputPanel>
 			</p:dialog>
 		</ui:fragment>
-
-
 	</cc:implementation>
 
 </ui:component>
