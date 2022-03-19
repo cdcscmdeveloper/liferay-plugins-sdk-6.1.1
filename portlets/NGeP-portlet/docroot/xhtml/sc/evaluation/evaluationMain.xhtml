@@ -49,8 +49,10 @@
 					oncomplete="blockWidget.hide();" style="float:right;"
 					process="@all" partialSubmit="true" 
 					action="#{evaluationBackingBean.submitPrepareEvaluationDetails(bpmAction)}" />
-				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button" rendered="#{validityDaysExpiredQt and bpmAction == 'SUBMIT'}"
+				<ui:remove><!-- 6906 - start --></ui:remove>
+				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button" disabled="#{evaluationBackingBean.managedBean.noProposalSubmitted}" rendered="#{validityDaysExpiredQt and bpmAction == 'SUBMIT'}"
 					oncomplete="confirmUpdateAsAttendPopup.show();" style="float:right;"/>
+				<ui:remove><!-- 6906 - end --></ui:remove>
 			</ui:repeat>
 		</ui:fragment>
 		<ui:fragment
