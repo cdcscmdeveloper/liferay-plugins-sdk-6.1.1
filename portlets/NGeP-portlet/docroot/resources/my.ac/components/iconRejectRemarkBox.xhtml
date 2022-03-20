@@ -13,17 +13,15 @@
 
 	</cc:interface>
 	<cc:implementation>
-		<h:outputScript library="javax.faces" name="jsf.js" target="head" />
 		<ui:fragment rendered="#{cc.attrs.show}">
-			<h:commandLink>
-				<f:ajax onevent="widget#{cc.attrs.supplierCode}.show()" />
+			<p:commandLink onclick="widget#{cc.attrs.supplierCode}.show()">
 				<ui:param name="imgId" value="#{cc.attrs.id}Img" />
-				<p:graphicImage id="#{imgId}"
+				<p:graphicImage id="#{imgId}#{cc.attrs.supplierCode}"
 					value="/css/images/design/ico-tooltips.png" />
 				<p:tooltip id="#{cc.attrs.id}" for="#{imgId}">
 					<p:outputLabel escape="false" value="#{lbl['lbl.sc.supplier.reject.popup.tooltip']}" />
 				</p:tooltip>
-			</h:commandLink>
+			</p:commandLink>
 
 			<p:dialog id="WidgetId#{cc.attrs.supplierCode}"
 				widgetVar="widget#{cc.attrs.supplierCode}" header="#{lbl['lbl.sc.supplier.reject.popup.header']}"
