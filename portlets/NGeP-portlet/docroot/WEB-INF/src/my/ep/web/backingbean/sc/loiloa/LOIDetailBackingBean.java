@@ -1258,23 +1258,27 @@ public class LOIDetailBackingBean extends
 			debugLogger(" onRowRecSupplierAction : " + event.toString() + "    class : " + event.getClass());
 		}
 		ScLoiLoa scLoiLoa = (ScLoiLoa) event.getObject();
-		try {
-			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-			getLoiLoaListTitle(scLoiLoa);
-			List<Long> loiLoaList = new ArrayList<Long>();
-			loiLoaList.add(scLoiLoa.getLoiLoaId());
-			reqDTO.setLoiLoaIds(loiLoaList);
-			AwardSupplierResDTO resDTO = getQtAwardSO().getLoiAndLoaByLoiLoaList(reqDTO);
-			if(!CollectionUtils.isEmpty(resDTO.getScLoas()) ||
-					!CollectionUtils.isEmpty(resDTO.getScLois())) {
-				getManagedBean().setLoiLoaBeans(
-						prepareLoiLoaList(resDTO.getScLois(), resDTO.getScLoas()));
+		// #32757- Start.
+		if (null != scLoiLoa) {
+			try {
+				AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+				getLoiLoaListTitle(scLoiLoa);
+				List<Long> loiLoaList = new ArrayList<Long>();
+				loiLoaList.add(scLoiLoa.getLoiLoaId());
+				reqDTO.setLoiLoaIds(loiLoaList);
+				AwardSupplierResDTO resDTO = getQtAwardSO().getLoiAndLoaByLoiLoaList(reqDTO);
+				if(!CollectionUtils.isEmpty(resDTO.getScLoas()) ||
+						!CollectionUtils.isEmpty(resDTO.getScLois())) {
+					getManagedBean().setLoiLoaBeans(
+							prepareLoiLoaList(resDTO.getScLois(), resDTO.getScLoas()));
+				}
+				else {
+					getManagedBean().setLoiLoaBeans(new ArrayList<LoiLoaBean>());
+				}
+			} finally {
 			}
-			else {
-				getManagedBean().setLoiLoaBeans(new ArrayList<LoiLoaBean>());
-			}
-		} finally {
 		}
+		// #32757- End.
 	}
 
 	/**
@@ -1692,6 +1696,9 @@ public class LOIDetailBackingBean extends
 				.getNavigationHandler()
 				.handleNavigation(fc, null,
 						getManagedBean().getBackToPreviousPage());
+		// #32757- Start.
+		getManagedBean().setBackToPreviousPage(null);
+		// #32757- End.
 	}
 
 	/**
