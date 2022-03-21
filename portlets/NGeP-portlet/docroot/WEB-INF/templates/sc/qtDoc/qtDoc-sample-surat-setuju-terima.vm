@@ -478,7 +478,7 @@
 	<tr>
 		<td colspan="4">
 			<br/><br/><br/>
-			<span class="text_family">Meterai atau Cap Syarikat</span><br/>
+			<span class="text_family">Meterai atau Cap Syarikat</span><br/><br/><br/>
 			<span class="text_family"><i>*potong mana yang tidak berkenaan</i></span>
 		</td>
 	</tr>
@@ -566,7 +566,7 @@
 			<table >
 				<tr>
 					<td align="center" style="vertical-align: top;" class="text_family_header">3. </td>
-					<td class="text_header_submenu">Pendaftaran Cukai Jualan dan Cukai Perkhidmatan (CJCP) dengan Jabatan	Kastam Diraja Malaysia (jika berdaftar)</td>
+					<td class="text_header_submenu">Pendaftaran Cukai Jualan dan Cukai Perkhidmatan (CJCP) dengan Jabatan	Kastam Diraja Malaysia (jika berdaftar), sekiranya berkaitan</td>
 				</tr>
 			</table>
 		</td>
@@ -647,14 +647,14 @@
 			<table>
 				<tr>
 					<td align="center" style="vertical-align: top;" class="text_family_header">5. </td>
-					<td class="text_header_submenu">Tempoh dan Jadual Penyempurnaan Perkhidmatan</td>
+					<td class="text_header_submenu">Tempoh dan Jadual Pembekalan Barang/Penyempurnaan Perkhidmatan</td>
 				</tr>
 			</table>		
 		</td>
 	</tr>
 	<tr>
 		<td align="left" style="padding-left: 20px;" colspan="3">
-						<span class="text_family">*Senarai item, kuantiti, jenis perkhidmatan dan/atau tempoh serta jadual penyempurnaan
+						<span class="text_family">*Senarai item, kuantiti, jenis perkhidmatan dan/atau tempoh serta jadual pembekalan/penyempurnaan
 						perkhidmatan yang ditetapkan seperti di <b><i>Lampiran A2</i></b></span><br/>
 		</td>
 	</tr>
@@ -794,7 +794,7 @@
 				</tr>
 				<tr>
 					<td></td>
-					<td><span class="text_family_small_black">(Lewat/Gagal bekal barang atau tidak menepati spesifikasi) </span></td>
+					<td><span class="text_family_small_black">(Lewat/Gagal bekal barang/perkhidmatan atau tidak menepati spesifikasi) </span></td>
 				</tr>
 				
 			</table>
