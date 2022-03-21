@@ -3252,6 +3252,15 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						} else if (t.getTabType().equals(ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE)) {
 							newCommitteTabs.add(t);
 						}
+						else if (t.getTabType().equals(ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE)) {//32775-start related to 27502
+							newCommitteTabs.add(t);
+						}
+						else if (t.getTabType().equals(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE)) {
+							newCommitteTabs.add(t);
+						}
+						else if (t.getTabType().equals(ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE)) {
+							newCommitteTabs.add(t);
+						}//32775-End related to 27502
 					}
 
 					StringBuilder fcTitleLabel = new StringBuilder("lbl.ministry.finance");
@@ -3510,6 +3519,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (null == this.getManagedBean().getQt().getProcurementMode()) {
 				this.getManagedBean().getQt().setProcurementMode(new PmParameter());
 			} 
+
 
 			if (SCProcessNameConst.REVISE_PCB.equalsIgnoreCase(this
 					.getManagedBean().getTaskName())) {
@@ -5323,8 +5333,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						
 						//#28784
 						checkDemoPresentationByStatus();						
-							
-							}
+				
+					}
 
 					this.getManagedBean().setAmendMentBean(
 							tenderResDTO.getAmendMentBean());
@@ -6349,6 +6359,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 			case 7:
 				break;
+
 			case 8:
 				break;
 			case 9:
@@ -6385,7 +6396,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			case 3:
 				// detailSO.validateApprovalDetails(reqDTO);
 				if (!getManagedBean().isApproverTabLoaded()){// #11104 - Start 
-				retrieveApprovalTabDtl();
+				   retrieveApprovalTabDtl();
 				}// #11104 - End
 				break;
 
@@ -6643,7 +6654,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (this.getManagedBean().getQt().isSampleReq()) {//11104-start
 				this.getManagedBean().setSubmit(true);
 				retrieveScheduleTabDtl();
-
+				
 			}//11104-End
 
 			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
@@ -8615,7 +8626,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		else if(isQcaSecretary() || isQcbSecretary()){
 			if(!(isDeskOfficer() || isAuditor() || isMofSupplier())){
 				qcSecretaryOnly = true;
-		}
+			}
 		}// Bug #32425 - End
 		
 		if (pbbSecretaryOnly) {
@@ -8912,8 +8923,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 //						MessageConst.ERROR_770222,
 //						new String[] { getRuleTypeDesc(RuleTypeConst.QT_PROPOSAL_VALIDITY_DAYS) });
 //			}//#29425 - end
-			}
 		}
+	}
 	
 	
 	
