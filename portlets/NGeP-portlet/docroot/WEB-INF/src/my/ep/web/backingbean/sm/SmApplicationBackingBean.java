@@ -1522,7 +1522,55 @@ public class SmApplicationBackingBean extends
 					"SmApplicationBackingBean.proceedToApplication", "getSmSupplierBasicInfoVO-19", 
 					subStartTime); //20211005@fadhli - #31754
 		}
+		//Start 29480
+		if (getManagedBean().getSmAppl().getSupplierType()
+				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
+			getManagedBean().getSmAppl().setApplCategoryType("N");
+		} else if (StringUtils.isEmpty(getManagedBean().getSmAppl()
+				.getApplCategoryType())) {
+			getManagedBean().getSmAppl().setApplCategoryType("N");
+		}
 		
+		getManagedBean().setCurrentPageType(
+				SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC);
+		if (SmCommonUtil.isCollectionEmpty(smAppl.getSmFacilities())
+				&& !smAppl.getApplType().equalsIgnoreCase(
+						ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
+			SmFacility fac = new SmFacility();
+			if (smAppl.getApplType().equalsIgnoreCase(
+					ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+				fac.setFacilityType("H");
+			}
+			if (fac.getSmAddress() == null
+					|| StringUtils.isBlank(fac.getSmAddress().getAddress1())) {
+				fac.setSmAddress(new SmAddress());
+				subStartTime = System.currentTimeMillis();
+				SmApplicationUtil.getInstance().cloneAddress(
+						fac.getSmAddress(),
+						getManagedBean().getSmAppl().getSmCompanyBasic()
+								.getSmCompanyAddresses().get(0).getSmAddress());				
+			}
+			fac.setFacilityName(getManagedBean().getSmAppl()
+					.getSmCompanyBasic().getCompanyName());
+			fac.setSmAppl(smAppl);
+			fac.setPurchasePrice(new BigDecimal(0.00));
+			fac.setRentalRate(new BigDecimal(0.00));
+			fac.setRevNo(1);
+			smAppl.getSmFacilities().add(fac);
+			this.getManagedBean().setBasicCompanyFacility(fac);
+			
+			SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
+					getManagedBean(), fac.getSmAddress(),
+					SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);			
+		} else {			
+			setApplicationFailities(smAppl.getSmFacilities());			
+		}
+		if (smAppl.getApplType().equalsIgnoreCase(
+				ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+			SmApplicationUtil.setCancellationSmAttachment(getManagedBean());
+			// set basic info for cancel mof
+		}
+		//End 29480
 		subStartTime = System.currentTimeMillis();
 		// set previous approved personnels
 		getManagedBean()
