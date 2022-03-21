@@ -328,6 +328,17 @@
 						<p:column headerText="#{lbl['lbl.sm.person.composition.eprole']}">
 							<ac:smRoleDesc backingBean="#{viewSmApplBackingBean}" roleCode="#{person.epRole}"/>
 						</p:column>
+		<!-- 29482 Start -->				
+						<p:column headerText="#{lbl['lbl.sm.academic.qualification']}">
+								<p:commandLink rendered="#{not empty person.smStaffAcademics}"
+									update=":#{p:component('qualifyDialog')}" 
+									action="#{viewSmApplBackingBean.assignSelAcadQualify(person)}"
+									style="padding-right:5px;"> 
+									<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
+								</p:commandLink>
+							<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty person.smStaffAcademics}" />
+						</p:column>
+		<!-- 29482 End -->				
 						<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
 							<p:commandLink
 								action="#{viewSmApplBackingBean.assignSelShareHolder(person)}"
@@ -349,6 +360,31 @@
 						
 			<ui:include src="/xhtml/sm/shared/applViewOnlyPages/branchCompanyInfoFormViewOnly.xhtml" />
 		</p:panel>
+		
+	<!-- 29482 Start -->
+		<p:dialog header="#{lbl['lbl.sm.academic.qualification']}" widgetVar="qualifyDialog"
+		resizable="false" showEffect="fade" closable="true" hideEffect="fade" height="200px"
+		modal="true" id="qualifyDialog" >
+			<p:outputPanel id="academicDetailsPanel" layout="block">
+				<p:dataTable style="width: 100%;table-layout:fixed" var="staffAcademic"  
+				value="#{viewSmApplBackingBean.managedBean.smPersonnel.smStaffAcademics}">
+					<p:column headerText="#{lbl['lbl.sm.year']}" style="width : 10%">
+						<h:outputText value="#{staffAcademic.year}" /> 
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.institute']}" style="width : 15%">
+						<h:outputText value="#{staffAcademic.instituteName}" /> 
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.education.field']}" style="width : 15%">
+						<h:outputText value="#{staffAcademic.pmEduField.fieldName}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.major.in']}" style="width : 15%">
+						<h:outputText value="#{staffAcademic.fieldMajor}" />
+					</p:column>
+				</p:dataTable>
+			</p:outputPanel>
+		</p:dialog>
+	<!-- 29482 End -->
+		
 	</h:panelGroup>
 
 </ui:composition>

@@ -7,7 +7,6 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.portlet.PortletRequest;
 
@@ -28,14 +27,11 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.SLAUtils;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
-import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
-import my.ep.web.vo.BlacklistOwnerDirectorVO;
-import my.ep.web.vo.DisciplinaryActionCategoryVO;
 import my.ep.web.vo.DisciplinaryActionVO;
 
 import org.apache.commons.lang.StringUtils;
@@ -574,6 +570,13 @@ public class ViewSuppProfileBackingBean extends
 		retrieveActiveDisciplinaryAction(supplier);
 	}
 	//28281 - end
+	
+	//#29482 - Start
+	public void assignSelAcadQualify(SmPersonnel smPersonnel) {
+		this.getManagedBean().setSmPersonnel(smPersonnel);
+		RequestContext.getCurrentInstance().execute("qualifyDialog.show()");
+	}
+	//#29482 - End
 	
 	//31033 start
 	public void onViewActiveDisciplinaryAction(SmSupplier smSupplier) {
