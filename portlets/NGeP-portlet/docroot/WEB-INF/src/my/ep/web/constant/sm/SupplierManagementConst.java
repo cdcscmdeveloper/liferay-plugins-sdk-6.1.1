@@ -694,18 +694,6 @@ public class SupplierManagementConst {
 	// SUPP_SUSPEND_OR_TERMINATED
 	public static String SUSPENDED = my.ep.constant.sm.SupplierManagementConst.SUSPENDED;
 	public static String TERMINATED = my.ep.constant.sm.SupplierManagementConst.TERMINATED;
-
-	// 29379 - Site Visit Grouping Enhancement -28775 - Start
-	public static final int MIN_EMPLOYEE = 2;
-
-	// //29380 - Site Visit Grouping Enhancement -28775 - Start
-	// Category Code for L1 L2 L3
-
-	public static final String CATEGORY_CODE_L1_22 = "22";
-	public static final String CATEGORY_CODE_L2_07 = "07";
-	public static final String CATEGORY_CODE_L3_01 = "01";
-	public static final String CATEGORY_CODE_L3_99 = "99";
-	public static final String CATEGORY_CODE_L1_L2_L3_220701 = "220701";
 	
 	//14530
 	public static final String PORTAL_URL = "https://www.eperolehan.gov.my/";
@@ -719,28 +707,6 @@ public class SupplierManagementConst {
 	public static final String ROLE_CODE_SM_3 = "CM_USER";
 	public static final String ROLE_CODE_SM_4 = "FL_USER";
 	public static final String ROLE_CODE_SM_5 = "SUPPLIER_TEMP";
-
-	public String getCATEGORY_CODE_L3_99() {
-		return CATEGORY_CODE_L3_99;
-	}
-
-	public String getCATEGORY_CODE_L1_22() {
-		return CATEGORY_CODE_L1_22;
-	}
-
-	public String getCATEGORY_CODE_L2_07() {
-		return CATEGORY_CODE_L2_07;
-	}
-
-	public String getCATEGORY_CODE_L3_01() {
-		return CATEGORY_CODE_L3_01;
-	}
-
-	public String getCATEGORY_CODE_L1_L2_L3_220701() {
-		return CATEGORY_CODE_L1_L2_L3_220701;
-	}
-
-	// 29380 - Site Visit Grouping Enhancement -28775 - End
 
 	// Getters for panel info
 	public String getSUPP_TYPE_CONTRACTOR() {

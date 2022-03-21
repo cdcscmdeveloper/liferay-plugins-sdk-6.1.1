@@ -8,27 +8,15 @@
 
 	<p:panel header="#{lbl['lbl.sm.dockyard.details']}" toggleable="true"
 		id="smDocDtPanel" rendered="#{backingBean.managedBean.showDockyardPanel}">
-		
 		<p:outputPanel id="dockyardPan" rendered="#{backingBean.managedBean.showDockyardPanel}">
 			<br />
 			<ui:repeat var="dockyardCatVar" value="#{backingBean.managedBean.dockYardFacilitiesVOList}" varStatus="dockyardCatVarStatus">
 				<table style="width: 100%;">
-				<!-- 29380  - Site Visit Grouping Enhancement -28775 - Start -->
 					<tr>
 						<td style="white-space: nowrap; float: left;">
-						    <p:outputLabel value="#{dockyardCatVarStatus.index + 1}. #{dockyardCatVar.fullCatcode} 
-						    					(#{dockyardCatVar.pmCategoryL2.pmCategoryL1.categoryName}/#{dockyardCatVar.pmCategoryL2.categoryName}/#{dockyardCatVar.categoryName})" />
+						    <p:outputLabel value="#{dockyardCatVarStatus.index + 1}. #{dockyardCatVar.fullCatcode} (#{dockyardCatVar.categoryName})" />
 						</td>
 					</tr>
-					<tr>
-					<ui:repeat var="categoryVar" value="#{backingBean.managedBean.smAppl.smSupplierCategories}">
-						<td style="white-space: nowrap; float: left;" >
-							<p:outputLabel style="text-indent: 10px;" value="#{lbl['lbl.sm.catCodes.othDesc']}: #{categoryVar.otherDesc}" 
-							rendered="#{backingBean.checkOtherDescDockyard(dockyardCatVar, categoryVar)}" />
-						</td>
-					</ui:repeat>
-					</tr>
-				<!-- 29380  - Site Visit Grouping Enhancement -28775 -End -->
 				</table>
 				<br />
 				

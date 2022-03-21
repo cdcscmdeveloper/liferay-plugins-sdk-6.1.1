@@ -16,11 +16,8 @@
 			<p:commandButton value="#{lbl['lbl.btn.download']}" ajax="false" onclick="submissionConfirmDlg.hide()">
 					<p:fileDownload value="#{svoSiteVisitBackingBean.downloadPOApprovalSiteVisitReport(null)}" />
 				</p:commandButton>
-			<!--28775 - Site Visit Grouping Enhancement - 28775 - start-->
-			<p:commandButton value="#{lbl['lbl.btn.proceed']}" 
-				onstart="blockWidget.show()" oncomplete="blockWidget.hide();submissionConfirmDlg.hide()"
-				action="#{svoSiteVisitBackingBean.saveSiteVisitReport(SupplierManagementConst.BPM_SUBMIT)}" />
-			<!--28775 - Site Visit Grouping Enhancement - 28775 - end-->
+			<p:commandButton value="#{lbl['lbl.btn.proceed']}" oncomplete="submissionConfirmDlg.hide()"
+				action="#{svoSiteVisitBackingBean.saveSiteVisitReport(SupplierManagementConst.BPM_SUBMIT)}"></p:commandButton>
 		</div>
 	</p:dialog>
 	<!-- #12483 - END -->
@@ -44,15 +41,14 @@
 			</p:column>
 	
 			<p:column headerText="#{lbl['lbl.sm.rptpreview.template']}">
-				<p:commandButton value="#{lbl['lbl.sm.button.preview']}" oncomplete="rptDlg.show();" id="btnPreview" action="#{svoSiteVisitBackingBean.rptPreview(svTask.smSvTemplate)}" />
-			</p:column>
-			<!--28775 - Site Visit Grouping Enhancement - 28775 - start-->
-			<p:column>
-				<p:commandButton value="#{lbl['lbl.btn.upload']}" onclick="uploadDlg.show();" actionListener="#{svoSiteVisitBackingBean.setReportUploadTemplate(svTask.smSvTemplate)}" />
+				<p:commandButton value="#{lbl['lbl.sm.button.preview']}" update=":form:rptDialogId" oncomplete="rptDlg.show();" id="btnPreview" action="#{svoSiteVisitBackingBean.rptPreview(svTask.smSvTemplate)}" />
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sm.sitevist.report.uploadedfile']}">
-			<!--28775 - Site Visit Grouping Enhancement - 28775 - end-->
+			<p:column>
+				<p:commandButton value="#{lbl['lbl.btn.upload']}" onclick="uploadDlg.show();" actionListener="#{svoSiteVisitBackingBean.setReportUploadTemplate(svTask.smSvTemplate)}"></p:commandButton>
+			</p:column>
+			
+			<p:column>
 				<table>
 					<ui:repeat var="attch" value="#{svTask.smSvTemplate.smAttachments}">
 					<p:outputPanel rendered="#{attch.recordStatusFlg == svoSiteVisitBackingBean.getRecordStatusActive()}">
@@ -88,45 +84,28 @@
 	</p:dialog>
 	
 	<p:dialog id="rptDialogId"  header="#{lbl['lbl.sm.rptpreview']}" widgetVar="rptDlg" modal="true" width="1158" height="500">
-		<!-- 28775 - Site Visit Grouping Enhancement - 28775 - start -->
-		<c:choose>
-			<c:when test="#{svoSiteVisitBackingBean.managedBean.licensed}">
-				<p:tabView>
-					<p:tab title="#{lbl['lbl.sm.license.insurance']}">
-						<ui:include src="/xhtml/sm/svositevisit/group/license.xhtml" />
-					</p:tab>
-					<p:tab title="#{lbl['lbl.sm.sitevisit.equipment.detail']}">
-						<ui:include src="/xhtml/sm/svositevisit/group/categoryType.xhtml" />
-					</p:tab>
-					<p:tab title="#{lbl['lbl.sm.sitevisit.premiselocation']}">
-						<ui:include src="/xhtml/sm/svositevisit/officeLocation.xhtml" />
-					</p:tab>
-				</p:tabView>
-			</c:when>
-			<c:otherwise>
-				<c:if test="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD}">
-					<ui:include src="/xhtml/sm/svositevisit/dockyard.xhtml" />
-				</c:if>
+		<c:if test="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD}">
+			<ui:include src="/xhtml/sm/svositevisit/dockyard.xhtml" />
+		</c:if>
 		
-				<c:if test="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING}">
-					<ui:include src="/xhtml/sm/svositevisit/manufacturing.xhtml" />
-				</c:if>
-				
-				<c:if test="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_WORKSHOP}">
-					<ui:include src="/xhtml/sm/svositevisit/workshop.xhtml" />
-				</c:if>
+		<c:if test="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING}">
+			<ui:include src="/xhtml/sm/svositevisit/manufacturing.xhtml" />
+		</c:if>
 		
-				<c:if test="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_PRINTING}">
-					<ui:include src="/xhtml/sm/svositevisit/printing.xhtml" />
-				</c:if>
-				<c:if test="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_TRAVEL}">
-					<ui:include src="/xhtml/sm/svositevisit/travel.xhtml" />
-				</c:if>
-			</c:otherwise>
-		</c:choose>
+		<c:if test="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_WORKSHOP}">
+			<ui:include src="/xhtml/sm/svositevisit/workshop.xhtml" />
+		</c:if>
+		
+		<c:if test="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_PRINTING}">
+			<ui:include src="/xhtml/sm/svositevisit/printing.xhtml" />
+		</c:if>
 
 		<c:if test="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_INSURANCE}">
 			<ui:include src="/xhtml/sm/svositevisit/insurance.xhtml" />
+		</c:if>
+		
+		<c:if test="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_TRAVEL}">
+			<ui:include src="/xhtml/sm/svositevisit/travel.xhtml" />
 		</c:if>
 		
 		<c:if test="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_BUMIPUTERA}">
@@ -142,7 +121,6 @@
 		</c:if>							
 	</p:dialog>
 	
-	<!-- 
 	<p:panel header="#{lbl['lbl.sm.rptpreview.actual.site.visit.date']}">
 		<table class="customTbl">
 				<tr>
@@ -167,8 +145,7 @@
 				</tr>
 		</table>
 	</p:panel>
-	-->
-	<!-- 28775 - Site Visit Grouping Enhancement - 28775 - end -->
+	
 	<ui:include src="/xhtml/sm/shared/sitevisit/recommendation.xhtml" />
 	
 </ui:composition>

@@ -1,28 +1,24 @@
-<u class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.manufacturing.equipmnt.mchne')</u>
+<u class="txtBold">Machine/Equipment List</u>
 <br /><br />
 
 
 <table class="descTable" width="100%">
 		<tr style="background-color:#99ccff;" align="center">
 			<th width="5%" class="txtBold">No</th>
-			<th width="25%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.manufacturing.type.machine')</th>
-			<th width="20%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.brand')</th>
-			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.function')</th>
-			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.quantity')</th>
-			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.value')</th>
-			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.purMthd')</th>
-			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.guarnName')</th>
+			<th width="25%" class="txtBold">Type of Machine/Equipment</th>
+			<th width="20%" class="txtBold">Brand</th>
+			<th width="10%" class="txtBold">Function</th>
+			<th width="10%" class="txtBold">Qty</th>
+			<th width="10%" class="txtBold">Value(RM)</th>
+			<th width="10%" class="txtBold">Purchasing/Method</th>
+			<th width="10%" class="txtBold">Guarantor Name</th>
 		</tr>
 		
 		#if($machineLs.size() > 0)
-			#foreach($smSvMachine in $machineLs)
-				#set($machine = $smSvMachine.smMachineDtl)
+			#foreach($machine in $machineLs)
 			<tr>
 				<td>$velocityCount</td>
-				<td>
-				$!machine.machineType
-				$!machine.machine.machineDesc
-				</td>
+				<td>$!machine.machineType</td>
 				<td>$!machine.brandName</td>
 				<td>$!machine.machineFunction</td>
 				<td>$!machine.qty</td>
@@ -39,7 +35,7 @@
 			#end
 		#else
 			<tr>
-				<td colspan="8" align="center">$smVmUtil.getDescByLabel('lbl.datatable.msg.no.records.found')</td>
+				<td colspan="8" align="center">No Record Found</td>
 			</tr>
 		#end
 </table>

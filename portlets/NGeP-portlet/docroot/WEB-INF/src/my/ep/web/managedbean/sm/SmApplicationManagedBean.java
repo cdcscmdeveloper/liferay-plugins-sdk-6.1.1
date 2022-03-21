@@ -607,9 +607,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<PmReasonDesc> selectedRejectReasonDescs;
 	private boolean showDifferenceRejection;
 	// #30974 - END
-
-	// 29379 - Site Visit Grouping Enhancement -28775
-	private SmSvWorker[] selectedWorkers;
 	
 	// #28778 - Start
 	private boolean specialCategoryRechecked;
@@ -4379,18 +4376,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.searchRecommendRejectReason = searchRecommendRejectReason;
 	}
 	// #15629 - END
-
-	// 29379 - Site Visit Grouping Enhancement -28775 START
-	public SmSvWorker[] getSelectedWorkers() {
-		return selectedWorkers;
-	}
-
-	public void setSelectedWorkers(SmSvWorker[] selectedWorkers) {
-		this.selectedWorkers = selectedWorkers;
-	}
-	// 29379 - Site Visit Grouping Enhancement -28775 END
-
-	
 
 	public List<SmSupplierBranch> getDisplayBranches() {
 		return displayBranches;

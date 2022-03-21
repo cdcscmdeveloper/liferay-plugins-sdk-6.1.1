@@ -47,10 +47,8 @@
 			<p:tab title="#{lbl['lbl.sm.catCodeStepLbl']}">
 				<ui:include src="step6RenewAppln_RegisterCategoryCodesInfo.xhtml" />
 			</p:tab>
-			<!-- #26671 - START -->
 			<c:if
-				test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S' or backingBean.managedBean.showFacilityMachine}">
-				<!-- #26671 - END -->
+				test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
 				<p:tab title="#{lbl['lbl.sm.factoryStepLbl']}">
 					<ui:include src="step6.1RenewAppln_FactoryInfo.xhtml" />
 				</p:tab>

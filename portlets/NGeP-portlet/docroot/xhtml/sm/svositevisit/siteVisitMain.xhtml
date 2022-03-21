@@ -39,22 +39,18 @@
 		
 		<table class="customTbl">
 			<tr valign="top">
-				<!-- 28775 - Site Visit Grouping Enhancement - 28775 - start -->
-				<td class="sidemenutd" style="width:20%">
-					<ui:include src="/xhtml/sm/shared/sidemenu/svoSideMenuGroup.xhtml" />
-				</td>
+				<td class="sidemenutd" style="width:20%"><ui:include
+						src="/xhtml/sm/shared/sidemenu/svoSideMenu.xhtml" /></td>
 
 				<td  style="width:80%" align="left"><p:outputPanel id="pnlDisplay">
 					<div align="right">
-						<!-- 30550, 9608 - Site Visit Grouping Enhancement - 28775 -->
+						<!-- 30550 -->
 						<p:commandButton value="#{lbl['lbl.btn.save']}" action="#{svoSiteVisitBackingBean.saveSiteVisitReport('')}"
-						disabled="#{!svoSiteVisitBackingBean.managedBean.claimTask}" onclick="this.disabled=true;" 
-						onstart="blockWidget.show()" oncomplete="this.disabled=false;blockWidget.hide();"
-						update="@form"/>
+						disabled="#{!svoSiteVisitBackingBean.managedBean.claimTask}"/>
 
-						<!-- 29430,28775 - Site Visit Grouping Enhancement - 28775 -->
+						<!-- 29430 -->
 						<p:commandButton value="#{lbl['lbl.btn.submit']}" id="btnBpmSubmit" onclick="submissionConfirmDlg.show()" 
-							rendered="#{svoSiteVisitBackingBean.managedBean.activePage eq 's'}" 
+							rendered="#{svoSiteVisitBackingBean.managedBean.activeIndex == svoSiteVisitBackingBean.managedBean.lastIndex}" 
 							disabled="#{!svoSiteVisitBackingBean.managedBean.claimTask}">
 							<f:param name="disableValidation" value="true" />
 						</p:commandButton>
@@ -74,17 +70,7 @@
 							<ui:include src="/xhtml/sm/svositevisit/commonFinancialInfo.xhtml" />
 						</c:if>
 
-						<c:if test="#{svoSiteVisitBackingBean.managedBean.activePage eq 'l'}">
-							<ui:include src="/xhtml/sm/svositevisit/group/license.xhtml" />
-						</c:if>
-
-						<c:if test="#{svoSiteVisitBackingBean.managedBean.activePage eq 'c'}">
-						<c:choose>
-						<c:when test="#{svoSiteVisitBackingBean.managedBean.licensed}">
-							<ui:include src="/xhtml/sm/svositevisit/group/categoryType.xhtml" />
-						</c:when>
-						
-						<c:otherwise>
+						<c:if test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 2}">
 						<c:if test="#{template == SupplierManagementConst.CAT_TYPE_TRANSPORTATION}">
 							<ui:include src="/xhtml/sm/svositevisit/transportation.xhtml" />
 						</c:if>
@@ -120,22 +106,20 @@
 						<c:if test="#{template == SupplierManagementConst.CAT_TYPE_READING_MATERIAL_FROM_OVERSEA}">
 							<ui:include src="/xhtml/sm/svositevisit/overseaReadingMaterial.xhtml" />
 						</c:if>
-						</c:otherwise>
-						</c:choose>
 						</c:if>
 						
-						<c:if test="#{svoSiteVisitBackingBean.managedBean.activePage eq 'r'}">
+						<c:if test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 3}">
 							<ui:include src="/xhtml/sm/svositevisit/categoryApplicable.xhtml" />
 						</c:if>
 
-						<c:if test="#{svoSiteVisitBackingBean.managedBean.activePage eq 'o'}">
+						<c:if test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 4}">
 							<ui:include src="/xhtml/sm/svositevisit/officeLocation.xhtml" />
 						</c:if>
 						
-						<c:if test="#{svoSiteVisitBackingBean.managedBean.activePage eq 's'}">
+						<c:if test="#{svoSiteVisitBackingBean.managedBean.activeIndex == svoSiteVisitBackingBean.managedBean.lastIndex}">
 							<ui:include src="/xhtml/sm/svositevisit/reportPreview.xhtml" />
 						</c:if>
-						<!-- 28775 - Site Visit Grouping Enhancement - 28775 - end --> 
+						
 					</p:outputPanel></td>
 			</tr>
 		</table>

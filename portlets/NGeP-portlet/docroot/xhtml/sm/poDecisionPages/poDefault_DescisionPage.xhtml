@@ -134,55 +134,6 @@
 								action="#{backingBean.assignMissingDocsList(true,'sendInqDialog')}"
 								update=":form:tt:sendInqDialog" />
 						</c:when>
-						
-						<!-- #28778 - Start -->
-						<c:when
-							test="#{ backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_APPL and  
-													backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew  and 
-													backingBean.managedBean.specialCategoryRechecked and backingBean.managedBean.showFacilityMachine}">
-
-							<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
-								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-								update=":form:tt:rejectDialogId" partialSubmit="true"
-								process="@this"
-								action="#{backingBean.assignFinalApproveOrReject('rejectDialog')}" />
-
-							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
-								<p:commandButton
-									value="#{lbl['lbl.sm.button.recommend.to.approve']}"
-									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-									partialSubmit="true" process="@this"
-									update=":form:tt:submitApprvrDialog"
-									disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.categoryCodeVerified or !backingBean.managedBean.documentVerified or !backingBean.managedBean.allowedToApprove}"
-									action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'APPROVE')}" />
-								<!-- #27297 -->
-							</c:if>
-
-							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
-								<p:commandButton
-									value="#{lbl['lbl.sm.button.recommend.to.reject']}"
-									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-									partialSubmit="true" process="@this"
-									update=":form:tt:submitApprvrDialog"
-									action="#{backingBean.submitPOEscalationToApprover('REJECT')}" />
-							</c:if>
-
-							<p:commandButton
-								value="#{lbl['lbl.sm.button.recommend.site.visit']}"
-								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-								partialSubmit="true" process="@this" update=":form:tt:svcDialog"
-								action="#{backingBean.assignSiteVisitPopUp('svcDialog')}"
-								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.categoryCodeVerified or !backingBean.managedBean.documentVerified}" />
-
-							<p:commandButton value="#{lbl['lbl.sm.button.send.enquiry']}"
-								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-								partialSubmit="true" process="@this"
-								action="#{backingBean.assignMissingDocsList(true,'sendInqDialog')}"
-								update=":form:tt:sendInqDialog" />
-
-						</c:when>
-						<!-- #28778 - End -->
-						
 						<c:otherwise>
 							<p:commandButton value="#{lbl['lbl.sm.button.approve']}"
 								update=":form:tt:approveDialog" partialSubmit="true"
@@ -327,13 +278,8 @@
 											<h:outputText value="#{lbl['lbl.sm.po.splNotes2']}"
 												styleClass="splNotesFonts" escape="false" />
 										</c:when>
-										
-										<!-- 26671  - Site Visit Grouping Enhancement -28775  START-->
 										<c:when
-											test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_APPL_SPLCAT or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi
-											or backingBean.managedBean.showFacilityMachine}">
-											<!-- 26671  - Site Visit Grouping Enhancement -28775  END-->
-											
+											test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_APPL_SPLCAT or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi}">
 											<h:outputText value="#{lbl['lbl.sm.po.splNotes3']}"
 												styleClass="splNotesFonts" escape="false" />
 										</c:when>

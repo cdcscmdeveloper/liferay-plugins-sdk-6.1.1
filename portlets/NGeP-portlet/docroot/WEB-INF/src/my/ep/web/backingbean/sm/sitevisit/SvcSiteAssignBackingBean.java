@@ -25,7 +25,6 @@ import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSvOfficer;
 import my.ep.persistence.entity.sm.SmSvTask;
-import my.ep.persistence.entity.sm.SmSvTaskGroup;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
@@ -37,7 +36,6 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.sitevisit.SvcSiteAssignManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SmSvcAssignmentVO;
@@ -337,34 +335,9 @@ public class SvcSiteAssignBackingBean extends
 		SmAppl smAppl = getManagedBean().getSmAppl();
 		
 		getManagedBean().setCategoryLs(new ArrayList<SmSupplierCategory>());
-		//28775 - Site Visit Grouping Enhancement - 28775 - start
-		List<SmSupplierCategory> tempL = new ArrayList<SmSupplierCategory>();
-		for(SmSvTask svTask : smAppl.getSmSvTasks()){
-			if(svTask.getPmCategoryL3() == null) continue;
-			tempL.addAll(SmCommonUtil.getInstance().retrieveSupplierCategoryByApplIdAndCategoryId
-					(smAppl.getApplId(), svTask.getPmCategoryL3().getCategoryL3Id(), smAppl.getApplType()));
-			if(!smAppl.isSiteVisitGroup() || svTask.getSmSvTaskGroups() == null)
-				continue;
-			for(SmSvTaskGroup svTGroup : svTask.getSmSvTaskGroups()){
-				tempL.addAll(SmCommonUtil.getInstance().retrieveSupplierCategoryByApplIdAndCategoryId
-						(smAppl.getApplId(), svTGroup.getPmCategoryL3().getCategoryL3Id(), smAppl.getApplType()));
-			}
-		}
-		for(SmSupplierCategory catTemp : tempL){
-			boolean dupe = false;
-			for(SmSupplierCategory catBean : getManagedBean().getCategoryLs()){
-				if(catTemp.getPmCategoryL3().getCategoryL3Id().equals(
-						catBean.getPmCategoryL3().getCategoryL3Id())){
-					dupe = true;
-					break;
-				}
-			}
-			if(!dupe)	
-				getManagedBean().getCategoryLs().add(catTemp);
-		}
-		SmApplicationUtil.sortSupplierCategory(getManagedBean().getCategoryLs());
-		/*
+		
 		List<String> tempCatLs = new ArrayList<String>();
+		
 		for(SmSvTask svTask : smAppl.getSmSvTasks()){
 			if(svTask.getPmCategoryL3() != null){
 				List<SmSupplierCategory> suppCatLs = SmCommonUtil.getInstance().
@@ -387,8 +360,6 @@ public class SvcSiteAssignBackingBean extends
 				}
 			}
 		}
-		*/
-		//28775 - Site Visit Grouping Enhancement - 28775 - end
 	}
 	
 	private PmUser getSupplierMOFAdmin(){
@@ -415,27 +386,4 @@ public class SvcSiteAssignBackingBean extends
 		
 		return pmUser;
 	} 
-	
-	//28775 - Site Visit Grouping Enhancement - 28775 - start
-	public String getFacilityType(SmSvTask svTask){
-		String s = svTask.getSmSvAddress().getFacilityType();
-		if(svTask.getPmCategoryL3() != null){
-			s = s.concat("<br/>"
-					+ svTask.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
-					+ svTask.getPmCategoryL3().getPmCategoryL2().getCategoryL2Code()
-					+ svTask.getPmCategoryL3().getCategoryL3Code());
-		}		
-		if(!getManagedBean().getSmAppl().isSiteVisitGroup()) 
-			return s;
-		
-		for(SmSvTaskGroup svTGroup : svTask.getSmSvTaskGroups()){
-			String catCode = svTGroup.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
-					+ svTGroup.getPmCategoryL3().getPmCategoryL2().getCategoryL2Code()
-					+ svTGroup.getPmCategoryL3().getCategoryL3Code();
-			if(!s.contains(catCode))
-				s = s.concat("<br/>"+catCode);
-		}
-		return s;
-	}
-	//28775 - Site Visit Grouping Enhancement - 28775 - end
 }

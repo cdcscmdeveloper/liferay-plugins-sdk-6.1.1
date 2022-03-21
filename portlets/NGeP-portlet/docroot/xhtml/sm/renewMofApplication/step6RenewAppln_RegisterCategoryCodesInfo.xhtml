@@ -35,10 +35,8 @@
 					</c:if>
 				<div class="nav-wrapper">
 					<c:choose>
-						<!-- #26671 - START -->
 						<c:when
-							test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S' or backingBean.managedBean.showFacilityMachine}">
-							<!-- #26671 - END -->
+							test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
 							<c:choose>
 							<c:when test="#{backingBean.managedBean.smAppl.applValidWithSsm and backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew}">
 							<table style="width: 100%">

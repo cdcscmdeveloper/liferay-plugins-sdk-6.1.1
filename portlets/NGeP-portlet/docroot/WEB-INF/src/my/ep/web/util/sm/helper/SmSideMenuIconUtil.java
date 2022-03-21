@@ -27,12 +27,9 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBranchBank;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
-import my.ep.persistence.entity.sm.SmSupplierSystem;
 import my.ep.persistence.entity.sm.SmSvInterviewee;
 import my.ep.persistence.entity.sm.SmSvMachine;
 import my.ep.persistence.entity.sm.SmSvTask;
-import my.ep.persistence.entity.sm.SmSvTaskGroup;
-import my.ep.persistence.entity.sm.SmSvTemplate;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.sm.sitevisit.SvoSiteVisitBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -1854,39 +1851,52 @@ public class SmSideMenuIconUtil {
 			}
 			
 			//equipment details
-			//28775 - Site Visit Grouping Enhancement - 28775 - start
-			retVal = templateHasDifference(svTask.getSmSvTemplate(), svTaskSVO.getSmSvTemplate(), excludes, param);
-			if(retVal) break;
+			if(param.equals(SupplierManagementConst.CAT_TYPE_WORKSHOP)
+					|| param.equals(SupplierManagementConst.CAT_TYPE_DOCKYARD)){
+				retVal = EntityHelper.hasDiffBetweenList(
+						svTask.getSmSvTemplate().getSmSvEquipments(),
+						svTaskSVO.getSmSvTemplate().getSmSvEquipments(), 
+						new String[] {"svEquipmentId"}, null, excludes);
+				if(retVal) break;
+			}
 			
-			if(applCurr.isSiteVisitGroup() && svTask.getSmSvTaskGroups() != null){
-				for(SmSvTaskGroup taskGroup : svTask.getSmSvTaskGroups()){
-					if(taskGroup.isRedundant()) continue;
-					SmSvTaskGroup taskGroupSVO = (SmSvTaskGroup) EntityHelper.getEntityBySinglePropertyFromList(
-									taskGroup.getSvTaskGroupId(), svTaskSVO.getSmSvTaskGroups(), "svTaskGroupId");
-					if(taskGroupSVO == null) {
-						return true;
-					}
-					retVal = templateHasDifference(taskGroup.getSmSvTemplate(), taskGroupSVO.getSmSvTemplate(),
-								excludes, param);
-					if(retVal) break;
-				}
+			if(param.equals(SupplierManagementConst.CAT_TYPE_WORKSHOP)){
+				retVal = EntityHelper.hasDiffBetweenList(
+						svTask.getSmSvTemplate().getSmSvWorkers(),
+						svTaskSVO.getSmSvTemplate().getSmSvWorkers(), 
+						new String[] {"svWorkerId"}, null, excludes);
+				if(retVal) break;
 			}
-			if(param.equals(SupplierManagementConst.CAT_TYPE_TRAVEL)){
-				if(applPrev.getSmSupplierSystems().size() != applCurr.getSmSupplierSystems().size()){
-					return true;
-				}
-				for(SmSupplierSystem system : applPrev.getSmSupplierSystems()){
-					SmSupplierSystem svoSystem = (SmSupplierSystem) EntityHelper.getEntityBySinglePropertyFromList(
-							system.getSupplierSystemId(), applCurr.getSmSupplierSystems(), "supplierSystemId");
-					if(svoSystem == null) {
+			
+			if(param.equals(SupplierManagementConst.CAT_TYPE_WORKSHOP)
+					|| param.equals(SupplierManagementConst.CAT_TYPE_DOCKYARD)
+					|| param.equals(SupplierManagementConst.CAT_TYPE_PRINTING)
+					|| param.equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING)){
+				
+				for(SmSvMachine mach : svTask.getSmSvTemplate().getSmSvMachines()){
+					SmSvMachine svoMach = (SmSvMachine) EntityHelper.getEntityByMultiplePropertiesFromList(mach, 
+							svTaskSVO.getSmSvTemplate().getSmSvMachines(),
+							new String[] { "svMachineId" }, null, null);
+					if(svoMach == null) return true;
+					if(EntityHelper.isObjectDifference(mach.getSmMachineDtl(), svoMach.getSmMachineDtl(), excludes)){
 						return true;
 					}
-					if(EntityHelper.isObjectDifference(system.getSystem(), svoSystem.getSystem(), excludes)){
-						return true;
-					}
 				}
+				
+				retVal = EntityHelper.hasDiffBetweenList(
+						svTask.getSmSvTemplate().getSmSvAdtMachines(),
+						svTaskSVO.getSmSvTemplate().getSmSvAdtMachines(), 
+						new String[] {"svAdtMachineId"}, null, excludes);
+				if(retVal) break;
 			}
-			//28775 - Site Visit Grouping Enhancement - 28775 - end
+			
+			if(param.equals(SupplierManagementConst.CAT_TYPE_PRINTING)){
+				retVal = EntityHelper.hasDiffBetweenList(
+						svTask.getSmSvTemplate().getSmSvPrintworks(),
+						svTaskSVO.getSmSvTemplate().getSmSvPrintworks(), 
+						new String[] {"svPrintworkId"}, null, excludes);
+				if(retVal) break;
+			}
 			
 			if(param.equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING)){
 				retVal = EntityHelper.hasDiffBetweenList(
@@ -1908,65 +1918,6 @@ public class SmSideMenuIconUtil {
 		return retVal;
 	} //END
 	
-	//28775 - Site Visit Grouping Enhancement - 28775 - start
-	private static boolean templateHasDifference(SmSvTemplate template, SmSvTemplate templateSVO, String[] excludes, String param){
-		boolean retVal = false;
-		if(param.equals(SupplierManagementConst.CAT_TYPE_WORKSHOP)
-				|| param.equals(SupplierManagementConst.CAT_TYPE_DOCKYARD)){
-			retVal = EntityHelper.hasDiffBetweenList(
-					template.getSmSvEquipments(), templateSVO.getSmSvEquipments(), 
-					new String[] {"svEquipmentId"}, null, excludes);
-			if(retVal) {
-				return true;
-			}
-		}
-		
-		if(param.equals(SupplierManagementConst.CAT_TYPE_WORKSHOP)){
-			retVal = EntityHelper.hasDiffBetweenList(
-					template.getSmSvWorkers(), templateSVO.getSmSvWorkers(), 
-					new String[] {"svWorkerId"}, null, excludes);
-			if(retVal) {
-				return true;
-			}
-		}
-		
-		if(param.equals(SupplierManagementConst.CAT_TYPE_WORKSHOP)
-				|| param.equals(SupplierManagementConst.CAT_TYPE_DOCKYARD)
-				|| param.equals(SupplierManagementConst.CAT_TYPE_PRINTING)
-				|| param.equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING)){
-			
-			for(SmSvMachine mach : template.getSmSvMachines()){
-				SmSvMachine svoMach = (SmSvMachine) EntityHelper.getEntityByMultiplePropertiesFromList(mach, 
-						templateSVO.getSmSvMachines(),
-						new String[] { "svMachineId" }, null, null);
-				if(svoMach == null) {
-					return true;
-				}
-				if(EntityHelper.isObjectDifference(mach.getSmMachineDtl(), svoMach.getSmMachineDtl(), excludes)){
-					return true;
-				}
-			}
-			
-			retVal = EntityHelper.hasDiffBetweenList(
-					template.getSmSvAdtMachines(), templateSVO.getSmSvAdtMachines(), 
-					new String[] {"svAdtMachineId"}, null, excludes);
-			if(retVal) {
-				return true;
-			}
-		}
-		
-		if(param.equals(SupplierManagementConst.CAT_TYPE_PRINTING)){
-			retVal = EntityHelper.hasDiffBetweenList(
-					template.getSmSvPrintworks(), templateSVO.getSmSvPrintworks(), 
-					new String[] {"svPrintworkId"}, null, excludes);
-			if(retVal) {
-				return true;
-			}
-		}
-		return false;
-	}
-	//28775 - Site Visit Grouping Enhancement - 28775 - end
-
 	private static SmAppl getSmApplFromSerFile(String applNo, String serType) {
 		SmAppl retVal = null;
 		try {
