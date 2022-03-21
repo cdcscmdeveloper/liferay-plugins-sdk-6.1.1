@@ -1778,7 +1778,7 @@ public class SmApplicationBackingBean extends
 					"SmApplicationBackingBean.proceedToApplication", "getSmSupplierBasicInfoVO-19", 
 					subStartTime); //20211005@fadhli - #31754
 		}
-		
+		//Start 29480
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
 			getManagedBean().getSmAppl().setApplCategoryType("N");
@@ -1836,7 +1836,7 @@ public class SmApplicationBackingBean extends
 			SmApplicationUtil.setCancellationSmAttachment(getManagedBean());
 			// set basic info for cancel mof
 		}
-
+		//End 29480
 		subStartTime = System.currentTimeMillis();
 		// set previous approved personnels
 		getManagedBean()
