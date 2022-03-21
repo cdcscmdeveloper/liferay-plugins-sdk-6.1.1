@@ -71,6 +71,9 @@ public class ViewApplHistoryManagedBean extends	BaseReviewApplicationManagedBean
 	private List<DisciplinaryActionVO> disciplineVOs; 
 	private boolean disciplinaryAction;
 	*/
+	//#29482 - Start
+	private SmPersonnel smPersonnel;
+	//#29482 - End
 	
 	//14530
 	private SmApplInquiry poToSupplierInquiry;
@@ -393,6 +396,15 @@ public class ViewApplHistoryManagedBean extends	BaseReviewApplicationManagedBean
 		this.selectedInquiryResponse = selectedInquiryResponse;
 	}
 	//#11641 - End
+	
+	//#29482 - Start
+	public SmPersonnel getSmPersonnel() {
+		return smPersonnel;
+	}
+	public void setSmPersonnel(SmPersonnel smPersonnel) {
+		this.smPersonnel = smPersonnel;
+	}
+	//#29482 - End
 	
 	//14530 - START
 	public SmApplInquiry getPoToSupplierInquiry() {
