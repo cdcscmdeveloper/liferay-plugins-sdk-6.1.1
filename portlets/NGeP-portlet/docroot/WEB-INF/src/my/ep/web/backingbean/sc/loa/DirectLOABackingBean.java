@@ -8605,7 +8605,15 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				supplierAddressTable.append("<br />");
 			}
 		}
-		
+		//#26770 - start
+		String headerTitle = "";
+		if (ParameterConst.PROCUREMENT_MODE_TENDER.equals(scLoa.getProcurementMode().getParameterCode())) {
+			headerTitle = "Tender";
+		} else {
+			headerTitle = "Sebut Harga";
+		}
+		context.put("headerTitle", headerTitle); 
+		//#26770 - end
 		context.put("supplierSignerUser", supplierSignerUser);
 		context.put("supplierSignerIcNo", supplierSignerIcNo);
 		context.put("supplierSignerAddress", supplierAddressTable);
@@ -8655,6 +8663,15 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				context.put("mofNo", smSupplier.getRegNo());
 			}
 		}
+		//#25025 - start
+		String headerTitle = "";
+		if (ParameterConst.PROCUREMENT_MODE_TENDER.equals(scLoa.getProcurementMode().getParameterCode())) {
+			headerTitle = "Tender";
+		} else {
+			headerTitle = "Sebut Harga";
+		}
+		context.put("headerTitle", headerTitle); 
+		//#25025 - end
 		generateDocument(context, attachment, SourcingConstants.LOA_SURAT_AKUAN_SUMPAH_SYARIKAT);
 		
 		//FileOutputStream fos = null;
