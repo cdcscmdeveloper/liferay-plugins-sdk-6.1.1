@@ -2726,7 +2726,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			String supplierType = this.getManagedBean().getSmAppl().getSupplierType();
 			if(supplierType != null){
 				if(supplierType.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
-					items = getDropdownCodeValues(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONTRACTOR);
+					//#27601 - START
+					items = getDropdownCodeValuesContractorCooperative(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONTRACTOR);
+					//#27601 - END
 				}else if(supplierType.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)){
 					items = getDropdownCodeValues(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONSULTANT);
 				}
