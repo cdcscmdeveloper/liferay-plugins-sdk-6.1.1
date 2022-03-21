@@ -19,7 +19,6 @@ import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.sm.payment.IPaymentSO;
 import my.ep.biz.service.sm.pending.IPendingPaymentSO;
 import my.ep.constant.MessageConst;
@@ -55,7 +54,6 @@ import my.ep.web.managedbean.sm.payment.PaymentManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
-import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
@@ -443,8 +441,19 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 				if(getManagedBean().getPaymentType().equals(SupplierManagementConst.PROCESSING_PAYMENT)){
 					msgCode = MessageConst.INFO_721058;
 				}else if(getManagedBean().getPaymentType().equals(SupplierManagementConst.SOFTCERT_PAYMENT)){
+					//#29481 - Start
+					if(getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_BASIC) || 
+							getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_GOVT_SELLER) || 
+							(getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR) && getManagedBean().getSmAppl().getSmCompanyBasic().isWithFederal()==true)) {
+						params = new String[] {getSoftCertNameEmailMulti(this.getManagedBean().getNewPyBillDtlLs())};
+						msgCode = MessageConst.INFO_721068;
+					} else {
+					//#29481 - End
 					msgCode = MessageConst.INFO_721065;
 					params = getSoftCertNameEmail(this.getManagedBean().getNewPyBillDtlLs().get(0));
+					//#29481 - Start
+					}
+					//#29481 - End
 				}else{
 					msgCode = MessageConst.INFO_721064;
 				}
@@ -452,8 +461,19 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 				if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_PROCESS_FEE)){
 					msgCode = MessageConst.INFO_721058;
 				}else if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)){
+					//#29481 - Start
+					if(getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_BASIC) || 
+							getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_GOVT_SELLER) || 
+							(getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR) && getManagedBean().getSmAppl().getSmCompanyBasic().isWithFederal()==true)) {
+						params = new String[] {getSoftCertNameEmailMulti(this.getManagedBean().getNewPyBillDtlLs())};
+						msgCode = MessageConst.INFO_721068;
+					} else {
+					//#29481 - End
 					msgCode = MessageConst.INFO_721065;
 					params = getSoftCertNameEmail(this.getManagedBean().getNewPyBillDtlLs().get(0));
+					//#29481 - Start
+					}
+					//#29481 - End
 				}else{
 					msgCode = MessageConst.INFO_721064;
 				}
@@ -813,6 +833,18 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 
 		return new String[]{};
 	}
+	//#29481 - Start
+	private String getSoftCertNameEmailMulti(List<PyBillDtl> bill) {
+		StringBuilder sbName = new StringBuilder();
+		for (int count=1, per=0; count<=bill.size(); count++,per++) {
+			SmPersonnel personnel = retrievePersonnelByPersonnelId(bill.get(per).getBillDtlRefId());
+			if(personnel!=null) {
+				sbName.append(count).append(". ").append(personnel.getName()).append(" (").append(personnel.getEmail()).append(")<br />");
+			}
+		}
+		return sbName.toString();
+	}
+	//#29481 - End
 	
 	/**
 	 * set Payment Charge Line by Type

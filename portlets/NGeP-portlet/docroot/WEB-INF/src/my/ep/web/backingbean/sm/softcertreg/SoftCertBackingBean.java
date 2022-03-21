@@ -535,7 +535,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				String email = StringUtils.EMPTY;
 				if (getManagedBean().getTotalPaymentAmount().compareTo(
 						BigDecimal.ZERO) == 0) {
-					msgKey = MessageConst.INFO_721061;
+					//msgKey = MessageConst.INFO_721061;
 
 					if (getManagedBean().getSupplierTmpPersonnel() != null) {
 						name = getManagedBean().getSupplierTmpPersonnel()
@@ -561,12 +561,17 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 						}
 
 					}
+					
+					//#29481 - Start
+					msgKey = MessageConst.INFO_721067;
 					params = new String[] { name, email };
+					//#29481 - End
+					
 				} else {
+					sbName = new StringBuilder();
 					if (!EntityHelper.isCollectionEmpty(reqDTO
 							.getSmPersonnelList())) {
 						for (SmPersonnel per : reqDTO.getSmPersonnelList()) {
-							sbName = new StringBuilder();
 							sbName.append(per.getName()).append(",");
 						}
 						name = sbName.toString();
