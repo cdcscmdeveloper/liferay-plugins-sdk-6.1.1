@@ -66,6 +66,17 @@
 				<p:selectBooleanCheckbox id="chkHomeOffice"
 					value="#{restrict.homeOffice}" />
 			</p:column>
+			<!-- #29857- Start -->
+			<p:column style="width:12%;text-align:center;white-space:normal;">
+				<f:facet name="header">
+					<h:outputText
+						value="#{lbl['lbl.sm.facility.facilityType.business.office']}" />
+					<ac:iconTooltip value="#{lbl['lbl.pm.suppdoc.businessoffice.tooltip']}" />
+				</f:facet>
+				<p:selectBooleanCheckbox id="chkBusinessOffice"
+					value="#{restrict.businessOffice}" />
+			</p:column>
+			<!-- #29857 - End -->
 			<p:column style="width:5%;text-align:center;"
 				headerText="#{lbl['lbl.pm.action']}">
 				<p:commandLink partialSubmit="true" process="@this"

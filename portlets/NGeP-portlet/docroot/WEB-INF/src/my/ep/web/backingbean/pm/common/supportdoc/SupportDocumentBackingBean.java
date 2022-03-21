@@ -18,11 +18,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -72,7 +74,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -1788,6 +1789,13 @@ public class SupportDocumentBackingBean extends
 	 */
 	private void validateRestrictions(PmDocument pmDocument) {
 		log.info("validateRestrictions");
+		//29857 - Start
+		for(PmDocumentRestr pmDocumentRestr : getManagedBean().getAppTypeRestrictions()){
+			if(!pmDocumentRestr.isHomeOffice() && !pmDocumentRestr.isBusinessOffice()){
+				throw new EpException(MessageConst.ERROR_770233);
+			}
+		}
+		//29857 - End
 
 		// validate required field
 		validateRestriction(pmDocument, this.getManagedBean()
