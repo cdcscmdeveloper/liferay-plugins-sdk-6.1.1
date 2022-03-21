@@ -849,6 +849,70 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 		return items;
 	}
+	
+	//#27601 - START
+	/**
+	 * Get parameter code select items by parameter type for dropdown.
+	 * 
+	 * @param parameterType
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getDropdownCodeValuesContractorCooperative(String parameterType) {
+		return getDropdownCodeValuesBySearchBeanContractorCooperative(parameterType, null);
+	}
+	
+	/**
+	 * Get parameter code select items by parameter type and search bean for
+	 * dropdown.
+	 * 
+	 * @param parameterType
+	 *            the parameter type
+	 * @param searchBean
+	 *            the search bean instance
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getDropdownCodeValuesBySearchBeanContractorCooperative(String parameterType,
+			ISearchBean<PmParameterDesc> searchBean) {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+
+		try {
+			List<PmParameterDesc> parameterDescs = ParameterHelper
+					.getInstance().getParameterDescListBySearchBean(
+							parameterType, searchBean);
+
+			if((parameterType.equalsIgnoreCase(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE) || 
+					parameterType.equalsIgnoreCase(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONTRACTOR))){
+				
+				items = new SelectItem[parameterDescs.size()];
+			} else {
+				items = new SelectItem[parameterDescs.size() + 1];
+			}
+			
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			int i = 1;
+			for (PmParameterDesc parameterDesc : parameterDescs) {
+				
+				if((parameterType.equalsIgnoreCase(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE) || 
+						parameterType.equalsIgnoreCase(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONTRACTOR)) && 
+						parameterDesc.getPmParameter().getParameterCode().equalsIgnoreCase("P")){
+				} else {
+					items[i++] = new SelectItem(parameterDesc.getPmParameter()
+							.getParameterCode(), parameterDesc.getCodeName());	
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+		return items;
+	}
+	//#27601 - END
 
 	/**
 	 * Get Parameter description by parameter.

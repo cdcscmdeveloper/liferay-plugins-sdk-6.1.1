@@ -174,27 +174,37 @@ public class BusinessRegNoValidator implements Validator {
 	 *            rosNo
 	 */
 	private void validateRosKoperasi(String rosNo) {
-		String[] splitRos = rosNo.split("-");
-		String splitRos1 = "";
-		String splitRos2 = "";
-		String splitRos3 = "";
-
-		if (splitRos != null && splitRos.length == 3) {
-			splitRos1 = splitRos[0];
-			splitRos2 = splitRos[1];
-			splitRos3 = splitRos[2];
-			if (splitRos1.length() != 1 || StringUtils.isNumeric(splitRos1)) {
-				throwErrorMsg("lbl.sm.businessregno.invalid.format.roskoperasiskm");
-			} else if (splitRos2.length() != 1
-					|| !StringUtils.isNumeric(splitRos2)) {
-				throwErrorMsg("lbl.sm.businessregno.invalid.format.roskoperasiskm");
-			} else if (splitRos3.length() != 4
-					|| !StringUtils.isNumeric(splitRos3)) {
-				throwErrorMsg("lbl.sm.businessregno.invalid.format.roskoperasiskm");
-			}
-		} else {
-			throwErrorMsg("lbl.sm.businessregno.notvalid.roskoperasiskm");
+		
+		// #27601 - Start - 8/2/2021
+//		String[] splitRos = rosNo.split("-");
+//		String splitRos1 = "";
+//		String splitRos2 = "";
+//		String splitRos3 = "";
+//
+//		if (splitRos != null && splitRos.length == 3) {
+//			splitRos1 = splitRos[0];
+//			splitRos2 = splitRos[1];
+//			splitRos3 = splitRos[2];
+//			if (splitRos1.length() != 1 || StringUtils.isNumeric(splitRos1)) {
+//				throwErrorMsg("lbl.sm.businessregno.invalid.format.roskoperasiskm");
+//			} else if (splitRos2.length() != 1
+//					|| !StringUtils.isNumeric(splitRos2)) {
+//				throwErrorMsg("lbl.sm.businessregno.invalid.format.roskoperasiskm");
+//			} else if (splitRos3.length() != 4
+//					|| !StringUtils.isNumeric(splitRos3)) {
+//				throwErrorMsg("lbl.sm.businessregno.invalid.format.roskoperasiskm");
+//			}
+//		} else {
+//			throwErrorMsg("lbl.sm.businessregno.notvalid.roskoperasiskm");
+//		}
+		
+		if(rosNo != null && !StringUtils.isNumeric(rosNo)){
+			throwErrorMsg("lbl.sm.businessregno.notvalid.enhancementroskoperasiskm");
+		} else if (rosNo != null && StringUtils.isNumeric(rosNo) && rosNo.length() != 12){
+			throwErrorMsg("lbl.sm.businessregno.notvalid.enhancementroskoperasiskm");
 		}
+		
+		// #27601 - End - 8/2/2021
 	}
 
 	/**
