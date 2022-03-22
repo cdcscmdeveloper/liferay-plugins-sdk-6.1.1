@@ -311,9 +311,15 @@ public class SupplierDataMaintenanceBackingBean extends
 					getManagedBean().getSmMofAccount().getExpDate());
 		}
 		//END 27465 : Disciplinary Action 26238
+		
+		// START - 
 		if (getManagedBean().getSmAppl().getPmRegStatus() == null) {
+			getManagedBean().setCancelMOFAccount(true);
 			getManagedBean().getSmAppl().setPmRegStatus(new PmRegStatus());
+		} else {
+			getManagedBean().setCancelMOFAccount(false);
 		}
+		// END - 
 		
 		//28146
 		if(searchBlacklisted){
@@ -329,7 +335,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setFlagBlacklistCancel(false);
 		
 		//#28278 - Disciplonary action - #28278 - Start
-		if(StringUtils.equals(mofStatus, "D") || StringUtils.equals(mofStatus, SupplierManagementConst.MOF_STATUS_EXPIRED_SYSTEM) ){ //29336: Disciplinary Action 26238 - add condition
+		if(StringUtils.equals(mofStatus, "D") || StringUtils.equals(mofStatus, SupplierManagementConst.MOF_STATUS_EXPIRED_SYSTEM) || getManagedBean().isCancelMOFAccount()){ // START //29336: Disciplinary Action 26238 - add condition
 			getManagedBean().setFlagShowButtonSubmit(false);
 		}
 		else {
@@ -3196,7 +3202,9 @@ public class SupplierDataMaintenanceBackingBean extends
 						selectList.add(cat);
 					}
 				}
+				//32760 - Start
 				getManagedBean().setSelectedApprovedCategories(selectList);
+				//32760 - End
 			}
 		}
 	}
