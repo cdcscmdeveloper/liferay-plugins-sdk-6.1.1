@@ -12386,7 +12386,7 @@ public class SmApplicationBackingBean extends
 			}
 			initMandatoryLicenseInfo(mandatoryLicenseDocs);
 
-			// sort by name
+			// sort by display seq as per redmine #30294
 			if (!EntityHelper.isCollectionEmpty(getManagedBean()
 					.getMandatoryDocs())) {
 				Collections.sort(getManagedBean().getMandatoryDocs(),
@@ -12394,16 +12394,20 @@ public class SmApplicationBackingBean extends
 							@Override
 							public int compare(final SmApplSupportDoc s1,
 									final SmApplSupportDoc s2) {
-								String docName1 = s1.getPmDocument() == null ? StringUtils.EMPTY
-										: s1.getPmDocument().getDocName();
-								String docName2 = s2.getPmDocument() == null ? StringUtils.EMPTY
-										: s2.getPmDocument().getDocName();
-								return (docName1).compareTo(docName2);
+								//#30294 - START
+								if(s1.getPmDocument().getDisplaySeq() == null){
+									return (s2.getPmDocument().getDisplaySeq() == null) ?  0 : 1;
+								}
+								if(s2.getPmDocument().getDisplaySeq() == null){
+									return -1;
+								}
+								return Integer.valueOf(s1.getPmDocument().getDisplaySeq().compareTo(s2.getPmDocument().getDisplaySeq()));
+								//#30294 - END
 							}
 						});
 			}
 
-			// sort by name
+			// sort by display seq as per redmine #30294
 			if (!EntityHelper.isCollectionEmpty(getManagedBean()
 					.getNonMandatoryDocs())) {
 				Collections.sort(getManagedBean().getNonMandatoryDocs(),
@@ -12411,15 +12415,19 @@ public class SmApplicationBackingBean extends
 							@Override
 							public int compare(final SmApplSupportDoc s1,
 									final SmApplSupportDoc s2) {
-								String docName1 = s1.getPmDocument() == null ? StringUtils.EMPTY
-										: s1.getPmDocument().getDocName();
-								String docName2 = s2.getPmDocument() == null ? StringUtils.EMPTY
-										: s2.getPmDocument().getDocName();
-								return (docName1).compareTo(docName2);
+								//#30294 - START
+								if(s1.getPmDocument().getDisplaySeq() == null){
+									return (s2.getPmDocument().getDisplaySeq() == null) ?  0 : 1;
+								}
+								if(s2.getPmDocument().getDisplaySeq() == null){
+									return -1;
+								}
+								return Integer.valueOf(s1.getPmDocument().getDisplaySeq().compareTo(s2.getPmDocument().getDisplaySeq()));
+								//#30294 - END
 							}
 						});
 			}
-
+			
 		}
 	}
 	
