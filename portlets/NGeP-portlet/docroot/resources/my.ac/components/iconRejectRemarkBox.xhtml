@@ -15,11 +15,16 @@
 	<cc:implementation>
 		<ui:fragment rendered="#{cc.attrs.show}">
 			<p:commandLink onclick="widget#{cc.attrs.supplierCode}.show()">
-				<ui:param name="imgId" value="#{cc.attrs.id}Img" />
-				<p:graphicImage id="#{imgId}#{cc.attrs.supplierCode}"
-					value="/css/images/design/ico-tooltips.png" />
-				<p:tooltip id="#{cc.attrs.id}" for="#{imgId}">
-					<p:outputLabel escape="false" value="#{lbl['lbl.sc.supplier.reject.popup.tooltip']}" />
+				<p:graphicImage id="imageId" value="/css/images/design/icon_error.png" />
+				<p:tooltip id="#{cc.attrs.id}" for="imageId" style="max-width:400px !important;">
+					<div style="display:inline !important;">
+						<div style="display: inline !important; text-align: left !important;">#{lbl['lbl.sc.supplier.reject.popup.tooltip']}</div>
+						<div style="display: inline !important;">
+							<p:graphicImage style="margin-bottom:-3px !important;"
+								value="/css/images/design/icon_error.png" />
+						</div>
+						<div style="display: inline !important; text-align: left !important;">#{lbl['lbl.sc.supplier.reject.popup.tooltip2']}</div>
+					</div>
 				</p:tooltip>
 			</p:commandLink>
 
