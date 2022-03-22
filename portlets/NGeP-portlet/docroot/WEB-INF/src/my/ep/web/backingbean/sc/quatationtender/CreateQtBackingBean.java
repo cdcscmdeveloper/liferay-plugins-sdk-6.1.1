@@ -88,13 +88,13 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
+import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQtStatus;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
-import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchOperator;
@@ -375,6 +375,12 @@ public class CreateQtBackingBean extends
 			scQt.setContractType(new PmParameter());
 			
 			setUserDetails(scQt);
+            
+			//9019 initializing QT remark for Quotation/Tender creation
+			scQt.setScQtRemarks(initializeRemarks(scQt, qtStatus,
+					scQt.getScQtRemarks(), ScQtRemark.class));
+			//9019 end
+			
 			this.getManagedBean().setQt(scQt);
 			Long currentStatus = this.getManagedBean().getQt().getQtStatus()
 					.getStatusId();
@@ -1184,9 +1190,14 @@ public class CreateQtBackingBean extends
 			removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
 
 			//20210615@asyrafahaziq - Bug #30891 - Start
-			 if (!this.getManagedBean().getQt().getContractDuration().equals(null) ) {
+//			 if (!this.getManagedBean().getQt().getContractDuration().equals(null) ) {
+//				 ContractPeriodChange();
+//			 }
+			 //9019 Start - Harun change comparing null done by Haziq 
+			 if (null != this.getManagedBean().getQt().getContractDuration() ) {
 				 ContractPeriodChange();
 			 }
+			 //9019 End
 			//20210615@asyrafahaziq - Bug #30891 - End
 		} finally {
 
@@ -3724,13 +3735,14 @@ public class CreateQtBackingBean extends
 			}
 		}
 	}
-	
-//#21695 Farid START 3/7/2021	
-		public boolean hasroleSCSecretary() {
-			FacesScopes facesScopes = new FacesScopes();
-			return facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value());	
-		}
-//#21695 Farid END 3/7/2021				
+
+	// #21695 Farid START 3/7/2021
+	public boolean hasroleSCSecretary() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value());
+	}
+
+	// #21695 Farid END 3/7/2021
 
 	public void validateDemoTechList(AjaxBehaviorEvent event) {
 		SpecificationResDTO resDTO = null;
@@ -3787,7 +3799,8 @@ public class CreateQtBackingBean extends
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-}
+	}
+
 	public void noDeleteExistingDemoTechChecklist() {
 		this.getManagedBean().getQt().setEvaluationType(ParameterConst.EVALUATION_TYPES_TWO_TIER);
 		this.getManagedBean().setDemoType(true);

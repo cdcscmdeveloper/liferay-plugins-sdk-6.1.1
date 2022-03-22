@@ -204,7 +204,7 @@
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td colspan="3"><p:inputTextarea id="title1"
 						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_TITLE) or isReadOnly or qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION}"
-						label="#{lbl['lbl.sc.title']}" required="#{empty param['skipvalidation']}"
+						label="#{lbl['lbl.sc.title']}" required="#{qTDetailBB.isProcurementTitleMandatory(scQt)}"
 						value="#{scQt.qtTitle}" cols="110" rows="3"
 						valueChangeListener="#{createQtBB.qtTitleValueChanged}"
 						onkeyup="limitTextArea(this,500);"
@@ -244,7 +244,7 @@
 						value="#{lbl['lbl.sc.qt.fileno']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></td>
 				<td colspan="3"><p:inputText id="fileno"
-						label="#{lbl['lbl.sc.qt.fileno']}" required="#{empty param['skipvalidation']}"
+						label="#{lbl['lbl.sc.qt.fileno']}" required="#{qTDetailBB.isFileNoMandatory(scQt)}"
 						value="#{scQt.fileNo}" style="width:653px;" maxlength="50"
 						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_FILE_NO) or isReadOnly}">
 						<p:ajax event="blur" partialSubmit="true" update="@this"
@@ -1013,6 +1013,48 @@
 				</tr>
 		</table>
 	</p:panel>
+<!-- #9019  start-->
+	<c:choose>
+       <c:when test="#{scQt.brandNew}">
+          <ac:scRemarkAndAttachment header="#{lbl['lbl.sc.qt.remarks']}" 
+	       remarkList="#{scQt.scQtRemarks}" showAttachment="false"/>
+       </c:when>
+		<c:otherwise>
+		<p:panel id="cancelRemark" header="#{lbl['lbl.sc.qt.remarks']}" toggleable="true">	
+			<table style="width: 100%">
+				<tr>
+					<td class="TableFieldLeft" width="10%"><p:outputLabel value="#{lbl['lbl.sc.qt.remark']}" /></td>
+					<td class="TableFieldRight"><p:dataGrid
+							value="#{qTDetailBB.managedBean.qt.scQtRemarks}"
+							var="remarkVar" rowIndexVar="remarkIndex" columns="1"
+							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+							<table>
+								<tr>
+									<td rowspan="2" valign="top"><h:graphicImage
+											value="#{qTDetailBB.userImagePath(remarkVar.createdUser.loginId)}"
+											height="30" width="30" /></td>
+									<td width="5"></td>
+									<td><h:outputText
+											value="#{remarkVar.createdUser.userName}" />, <h:outputText
+											id="remarkDates" value="#{remarkVar.changedDate}">
+											<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+										</h:outputText></td>
+								</tr>
+								<tr>
+									<td></td>
+									<td><p:inputTextarea cols="40" value="#{remarkVar.remark}"
+												label="#{lbl['lbl.sc.qt.remark']}" id="scRemarkId"
+												required="true and !scQt.cloned" validatorMessage="Remark required" readonly="${scQt.qtStatus.statusId == QTStatusConst.QT_CANCELLED}"/>
+										<p:message id="scRemarkMsgId" for="scRemarkId" display="icon" /></td>
+								</tr>
+							</table>
+						</p:dataGrid></td>
+				</tr>
+			</table>
+			</p:panel>
+		</c:otherwise>
+	</c:choose>
+<!-- #9019 end -->
 
 	<ui:include src="viewCircularPanelItemsPopup.xhtml"></ui:include>
 	<h:panelGroup id="generalLocationList">
