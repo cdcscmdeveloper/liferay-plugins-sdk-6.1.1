@@ -70,13 +70,11 @@
 				<p:commandButton value="#{lbl['lbl.btn.evaluate']}"
 					rendered="#{othersFinList.evaluationStatus.statusId eq '61600'}"
 					process="@this" partialSubmit="true"
-					action="#{evaluationBackingBean.financialSupplierEvaluate(othersFinList,'F')}" 
-					disabled="#{isRejected}"/><ui:remove><!-- 6906 --></ui:remove>
+					action="#{evaluationBackingBean.financialSupplierEvaluate(othersFinList,'F')}"/>
 				<p:commandButton value="#{lbl['lbl.btn.view']}"
 					rendered="#{othersFinList.evaluationStatus.statusId eq '61601'}"
 					process="@this" partialSubmit="true"
-					action="#{evaluationBackingBean.financialSupplierEvaluate(othersFinList,'F')}" 
-					disabled="#{isRejected}"/><ui:remove><!-- 6906 --></ui:remove>
+					action="#{evaluationBackingBean.financialSupplierEvaluate(othersFinList,'F')}"/>
 			</p:column>
 		</p:dataTable>
 	</p:panel>
