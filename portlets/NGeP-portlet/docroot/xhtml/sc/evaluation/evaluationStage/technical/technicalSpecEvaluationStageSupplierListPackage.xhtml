@@ -12,13 +12,14 @@
 			escape="false" />
 
 
-		<p:dataTable var="templateSpec" id="templateSpecId" editable="true"
+		<ui:remove><!-- 6906 reassign to diff var name, conflicting var--></ui:remove>
+		<p:dataTable var="tecTemplateSpec" id="templateSpecId" editable="true"
 			rows="10" lazy="true"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckListDMPackage}"
-			rowIndexVar="index" style="width:100%" rowKey="#{templateSpec}">
+			rowIndexVar="index" style="width:100%" rowKey="#{tecTemplateSpec}"><ui:remove><!-- 6906 conflicting var on otherview--></ui:remove>
 			<ac:paginator for="templateSpecIdPackage" />
-			
+			<ui:param name="templateSpec" value="#{tecTemplateSpec}"></ui:param><ui:remove><!-- 6906 conflicting var on otherview--></ui:remove>
 			<p:columnGroup type="header">  
 			        <p:row>  
 			            <p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.code']}" style="width:10%; text-align:center;"/>    
