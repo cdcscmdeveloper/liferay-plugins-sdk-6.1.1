@@ -3,6 +3,7 @@
  */
 package my.ep.web.util.template;
 
+import java.awt.Font;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -66,6 +67,7 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import com.liferay.portal.util.PortalUtil;
 import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.BaseFont;
 
 /**
  * Singleton Helper For Document Generator.
