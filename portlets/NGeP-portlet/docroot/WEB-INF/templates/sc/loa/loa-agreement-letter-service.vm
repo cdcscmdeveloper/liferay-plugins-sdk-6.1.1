@@ -299,7 +299,7 @@ u.underline {
 						<table width="50%" align="center" style="border-collapse: collapse;">
 							<tr>
 								<td style="border-bottom: 1px solid black;text-align: center;">
-									<span class="text_family">1% X Harga Kontrak</span>
+									<span class="text_family">1% X Harga Kontrak*</span>
 								</td>
 							</tr>
 							<tr>
