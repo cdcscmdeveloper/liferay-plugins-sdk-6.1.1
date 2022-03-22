@@ -62,15 +62,12 @@
 				<p:commandButton value="#{lbl['lbl.sc.btn.compliance']}"
 					rendered="#{complianceTechnicalSupplier.scQtProposalChecklistAttachment ne null and (complianceTechnicalSupplier.compliance eq null or complianceTechnicalSupplier.compliance eq 2)}"
 					process="@this" partialSubmit="true"
-					action="#{evaluationBackingBean.complianceUploadBasedOnSupp(complianceTechnicalSupplier,'F')}" 
-					disabled="#{isRejected}"/><ui:remove><!-- 6906 --></ui:remove>
+					action="#{evaluationBackingBean.complianceUploadBasedOnSupp(complianceTechnicalSupplier,'F')}"/>
 					
 						<p:commandButton value="#{lbl['lbl.btn.view']}"
 					rendered="#{(complianceTechnicalSupplier.scQtProposalChecklistAttachment ne null and complianceTechnicalSupplier.compliance ne null and complianceTechnicalSupplier.compliance ne 2) or complianceTechnicalSupplier.scQtProposalChecklistAttachment eq null}"
 					process="@this" partialSubmit="true"
-					action="#{evaluationBackingBean.complianceUploadBasedOnSupp(complianceTechnicalSupplier,'F')}" 
-					disabled="#{isRejected}"/><ui:remove><!-- 6906 --></ui:remove>
-					
+					action="#{evaluationBackingBean.complianceUploadBasedOnSupp(complianceTechnicalSupplier,'F')}"/>
 <!-- 				<p:commandButton value="#{lbl['lbl.btn.view']}" -->
 <!-- 					rendered="#{complianceTechnicalSupplier.scQtProposalChecklistAttachment eq null}" -->
 <!-- 					process="@this" partialSubmit="true" -->
