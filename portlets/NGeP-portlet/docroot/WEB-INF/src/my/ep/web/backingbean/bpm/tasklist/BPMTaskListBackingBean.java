@@ -519,6 +519,10 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 					+ SCProcessNameConst.GENERIC_APPROVAL_REVISE,
 					SourcingConstants.NAV_PAGE_GENERIC_APPROVAL_REVISE);
 			//#25037-END
+			//#9019 START
+			temp.put(SCProcessNameConst.START_QUOTATION_TENDER_CREATION + SCProcessNameConst.SUBMIT_QUOTATION_TENDER, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
+			//temp.put(SCProcessNameConst.START_QUOTATION_TENDER_CREATION+SCProcessNameConst.CANCEL_QT, SourcingConstants.NAV_PAGE_A)
+			//#9019-END
 			
 			//#28784  - start
 			temp.put(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME
@@ -754,13 +758,10 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 		return this.docTypeSearchBean;
 	}
 
-	public void preRenderTaskListView() {
-		//log.info("......................preRenderTaskListView");
-	}
+	public void preRenderTaskListView() {	}
 
 	public void preRenderTaskView() {
 		log.info("......................preRenderTaskView");
-		log.info("THE SERVER INFO : " + new FacesScopes().getRequest().getServerName() +" " + new FacesScopes().getRequest().getServerPort());
 		this.getManagedBean().setViewBy("");
 		this.getManagedBean().setViewByGroup("");
 		this.getManagedBean().setDocNo("");
