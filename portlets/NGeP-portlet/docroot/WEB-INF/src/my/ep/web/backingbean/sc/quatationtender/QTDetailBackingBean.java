@@ -814,7 +814,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			/*
 			 * Bug 31610 - To Exclude 9019 to allow 31610 to be merge into SIT
 			 * NOTE: 9019 WHEN COMMIT MAKE SURE CHANGE SUCCESSMESSAGE FROM THIS INTO THE ONE THAT 9019 
-			 */			
+			 * INCLUDE BACK 9019
+			 * */
 			boolean isFirstSave = scQt.getQtNo() == null && scQt.isBrandNew() ? true : false;
 			
 			validateQtDetails();
@@ -836,12 +837,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				
 				detailSO.updateDraftWorkflowStatus(reqDTO);				
 				 
-				 
-				successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES,
+
+				successMessage(MessageConst.INFO_7000044, ParameterTypeConst.DOCUMENT_TYPES,
 						ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtNo(), Boolean.TRUE);
 			}else{
-				successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES,
+				//9019 Start - re-endorse change INFO_700004 
+				successMessage(MessageConst.INFO_7000108, ParameterTypeConst.DOCUMENT_TYPES,
 						ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtNo(), Boolean.FALSE);
+				//9019 Start
 			}
 			/* Bug 31610 END */
 			debugLogger("end of saveQtDetailsAction");
@@ -2264,6 +2267,17 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 		//20190910@asyrafhaziq - 26404 -End
 		// save.
+       
+       //9019 for prevent null insert for remark
+		if (null != scQt.getScQtRemarks() && CollectionUtils.isNotEmpty(scQt.getScQtRemarks())) {
+			for (int i = 0; i < scQt.getScQtRemarks().size(); i++) {
+				String userRemark = scQt.getScQtRemarks().get(i).getRemark();
+				if (null == userRemark || "".equals(userRemark)) {
+					scQt.getScQtRemarks().remove(i);
+				}
+			}
+		}// 9019 end
+
 		QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
 		quationTenderReqDTO.setQtdetail(scQt);
 		quationTenderReqDTO.setQtCommittes(scQt.getScQtCommittees());
@@ -2655,14 +2669,17 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 								"procurementMode.parameterCode",
 								SearchOperator.OPERATOR_IN.value(), 
 								procurementModes));
-			}else {
+			}
+			/*
+			 * //9019 removed for to include SAVED QT without all mandatory all values
+			 * else {
 				// Filter By - procurementMode
 				List<String> procurementModes = new ArrayList<String>();
 				procurementModes.add(ParameterConst.PROCUREMENT_MODE_QUOTATION);
 				procurementModes.add(ParameterConst.PROCUREMENT_MODE_TENDER);
 				// ***17376#55 - start
 				//if (!(isQTMaintenanceScreen() || isQTSearchScreen())) {
-				procurementModes.add(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO);	
+			    procurementModes.add(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO);	
 				//}
 				// ***17376#55 - end 
 				searchFilterBean.add(
@@ -2670,7 +2687,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 								"procurementMode.parameterCode",
 								SearchOperator.OPERATOR_IN.value(), 
 								procurementModes));
-			}
+			}*/
 			
 			Date fromCreatedDate = qtnTenderSearchBean.getFromCreatedDate();
 			Date toCreatedDate = qtnTenderSearchBean.getToCreatedDate();
@@ -3639,7 +3656,19 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (null == this.getManagedBean().getQt().getProcurementMode()) {
 				this.getManagedBean().getQt().setProcurementMode(new PmParameter());
 			} 
-			
+            //9019 for load existing values
+           if(null==this.getManagedBean().getQt().getProcurementTypeCatId()){
+				this.getManagedBean().getQt().setProcurementTypeCatId(new PmParameter());	
+			}
+			if(null==this.getManagedBean().getQt().getFulfilmentType()){
+				this.getManagedBean().getQt().setFulfilmentType(new PmParameter());	
+			}
+			if(null==this.getManagedBean().getQt().getPmProcurementCategory()){
+				this.getManagedBean().getQt().setPmProcurementCategory(new PmParameter());	
+			}
+			if(null==this.getManagedBean().getQt().getContractType()){
+				this.getManagedBean().getQt().setContractType(new PmParameter());	
+			}
 			//#29474 - start
 			if (null == this.getManagedBean().getQt().getFulfilmentType()) {
 				this.getManagedBean().getQt().setFulfilmentType(new PmParameter());
@@ -3651,7 +3680,22 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 								.getParameterCode());
 			}
 			//#29474 - end
+			//9019 initializing remark for cancel or subsequent save start
+			if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
+				ScQt scQt = this.getManagedBean().getQt();
+				List<ScQtRemark> qtRemarks = initializeRemarks(scQt, this.getManagedBean().getQt()
+						.getCurrentWorkFlowStatus(), scQt.getScQtRemarks(), ScQtRemark.class);
 
+				for (ScQtRemark qtRemark : qtRemarks) {
+					qtRemark.setEditable(true);
+				}
+				this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
+
+			} else{
+				ScQt scQt = this.getManagedBean().getQt();
+				this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
+			}
+			//9019 end
 
 			if (SCProcessNameConst.REVISE_PCB.equalsIgnoreCase(this
 					.getManagedBean().getTaskName())) {
@@ -6229,20 +6273,32 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		QuationTenderReqDTO reqDTO = prepareQTInfo();
 		reqDTO.setSaveFlow(true);
 		reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
+		FacesScopes facesScopes = new FacesScopes();
+		reqDTO.setToken(facesScopes
+				.getBPMAuthenticationCtxToken());
+		reqDTO.setTaskId(this.getManagedBean().getTaskId());
+		reqDTO.setPayLoad(this.getManagedBean().getPayLoad());
+		
 		int changedIndexNumber = manipulateIndexNumber(activeIndex);
 		switch (changedIndexNumber) {
 		case 0:
 			detailSO.validateQTDetails(reqDTO);
-			resDTO = detailSO.saveQTDtl(reqDTO);
+			
+			//9019 - start using new method
+			resDTO = detailSO.saveQTDetailsForDraft(reqDTO); 
+			//9019 - end
 			renewQTSesionObject();
 			this.getManagedBean().setTaskName(taskName);
-			retrieveQuationTenderDetails(resDTO.getQtDetail().getQtId());
+			this.getManagedBean().setQt(resDTO.getQtDetail());
+			this.getManagedBean().setCurrentStatusId(currentStatus);
 			setAmmendMentBean(resDTO.getAmendMentBean());
 			getfulfilmentDtls(resDTO.getQtDetail());//#29474
 			break;
 		case 1:
 			detailSO.validateSupplierQualificationDtls(reqDTO);
-			resDTO = detailSO.saveQTDtl(reqDTO);
+			//9019 - start using new method
+			resDTO = detailSO.saveQTDetailsForDraft(reqDTO); 
+			//9019 - end
 			renewQTSesionObject();
 			this.getManagedBean().setQt(resDTO.getQtDetail());
 			this.getManagedBean().setCurrentStatusId(currentStatus);
@@ -6262,7 +6318,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			committeReqDTO.setSaveFlow(true);
 			committeSO.validateAppointCommitteDtls(committeReqDTO);
 			
-			resDTO = detailSO.saveQTDtl(reqDTO);
+			//9019 - start using new method
+			resDTO = detailSO.saveQTDetailsForDraft(reqDTO); 
+			//9019 - end
 
 			int committeeTabIndex = this.getManagedBean()
 					.getSelectedCommitteeTabIndex();
@@ -6285,7 +6343,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			reqDTO.getQtdetail().setModified(false);
 			reqDTO.getQtdetail().setFCApproval(true);
 			detailSO.validateApprovalDetails(reqDTO);
-			resDTO = detailSO.saveQTDtl(reqDTO);
+			
+			//9019 - start using new method
+			resDTO = detailSO.saveQTDetailsForDraft(reqDTO); 
+			//9019 - end
+			
 			int selectedApprovalTabIndex = this.getManagedBean().getSelectedApprovalTabIndex();
 			renewQTSesionObject();
 			this.getManagedBean().setQt(resDTO.getQtDetail());
@@ -6428,6 +6490,43 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		this.getManagedBean().setPanel(isPanel);
 		this.getManagedBean().setProcMethodDropdownPresent(isdropdownPresent);
 		this.getManagedBean().setSubStatusId(subStatus); //#25692
+		
+		//9019 - Start (Harun) initializing for NULL value when save 
+		if (null == this.getManagedBean().getQt().getProcurementTypeCatId()) {
+			this.getManagedBean().getQt().setProcurementTypeCatId(new PmParameter());
+			this.getManagedBean().getQt().getProcurementTypeCatId().setParameterId((long) 0);
+		}
+		if (null == this.getManagedBean().getQt().getFulfilmentType()) {
+			this.getManagedBean().getQt().setFulfilmentType(new PmParameter());
+			this.getManagedBean().getQt().getFulfilmentType().setParameterId((long) 0);
+		}
+		if (null == this.getManagedBean().getQt().getPmProcurementCategory()) {
+			this.getManagedBean().getQt().setPmProcurementCategory(new PmParameter());
+			this.getManagedBean().getQt().getPmProcurementCategory().setParameterId((long) 0);
+		}
+		if (null == this.getManagedBean().getQt().getContractType()) {
+			this.getManagedBean().getQt().setContractType(new PmParameter());
+			this.getManagedBean().getQt().getContractType().setParameterId((long) 0);
+		}
+		//9019 - End (Harun)
+	
+		//9019 - Start (Harun) initializing remark for cancel or subsequent save start
+		if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
+			ScQt scQt = this.getManagedBean().getQt();
+			List<ScQtRemark> qtRemarks = initializeRemarks(scQt, this.getManagedBean().getQt()
+					.getCurrentWorkFlowStatus(), scQt.getScQtRemarks(), ScQtRemark.class);
+
+			for (ScQtRemark qtRemark : qtRemarks) {
+				qtRemark.setEditable(true);
+			}
+			this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
+
+		} else{
+			ScQt scQt = this.getManagedBean().getQt();
+			this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
+		}
+		//9019 - End (Harun)
+		
 		if (isCreateQt) {
 			this.getManagedBean().setOutComes(
 					new String[] { ResourceBundleUtils.getMessage(
@@ -6982,6 +7081,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						retrieveFinalizationCommitteeType());
 				this.getManagedBean().setSelectedApprovalTabBean(tabBean);
 			} else {
+             //9019 null remark in UI it showing two editable textarea to prevent that only value be pass to below method 
+                List<ScQtRemark> remarks = null;
+				if (CollectionUtils.isNotEmpty(scQt.getScQtRemarks())
+						&& StringUtils.isNotEmpty(scQt.getScQtRemarks().get(0).getRemark())) {
+					remarks = scQt.getScQtRemarks();
+				}
+
 				scQt.setScQtRemarks(initializeRemarks(scQt, this
 						.getManagedBean().getQt().getCurrentWorkFlowStatus(),
 						scQt.getScQtRemarks(), ScQtRemark.class));
@@ -9567,14 +9673,38 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			
 			
 		}else{
-			resArr[0] = !ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO.equalsIgnoreCase(scQt.getProcurementMode().getParameterCode()); 
+			//9019 in QT maintenance we need to show QT without procurement mode and handle NPE when no procurement mode.
+			if (scQt.getProcurementMode() == null) {
+				resArr[0] = true;
+			}else{
+				resArr[0] = !ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO.equalsIgnoreCase(scQt.getProcurementMode().getParameterCode());
+			}
+			 
 			resArr[1] = ParameterConst.DOCTYPE_QUOTATION.equalsIgnoreCase(getManagedBean().getQtnTenderSearchBean().getResultDocType());
-			resArr[2] = ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO.equalsIgnoreCase(scQt.getProcurementMode().getParameterCode());
-			resArr[3] = !ParameterConst.DOCTYPE_BIDDING.equalsIgnoreCase(getManagedBean().getQtnTenderSearchBean().getResultDocType()) && !ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO.equalsIgnoreCase( scQt.getProcurementMode().getParameterCode());
+			
+			//9019 in QT maintenance we need to show QT without procurement mode and handle NPE when no procurement mode.
+			if (scQt.getProcurementMode() == null) {
+				resArr[2] = false;
+			}else{
+				resArr[2] = ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO.equalsIgnoreCase(scQt.getProcurementMode().getParameterCode());
+			}
+			//9019 in QT maintenance we need to show QT without procurement mode and handle NPE when no procurement mode.
+			if (scQt.getProcurementMode() == null) {
+				resArr[3] = false;
+			}else{
+				resArr[3] = !ParameterConst.DOCTYPE_BIDDING.equalsIgnoreCase(getManagedBean().getQtnTenderSearchBean().getResultDocType()) && !ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO.equalsIgnoreCase( scQt.getProcurementMode().getParameterCode());
+			}
+			
 			resArr[4] = ParameterConst.DOCTYPE_BIDDING.equalsIgnoreCase(getManagedBean().getQtnTenderSearchBean().getResultDocType());
 			resArr[5] = getManagedSearchBeanDocumentTypeIsLOI();
 			resArr[6] = getManagedSearchBeanDocumentTypeIsLOA();
-			resArr[7] = getManagedSearchBeanDocumentTypeIsSuppFinal() && !ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO.equalsIgnoreCase(scQt.getProcurementMode().getParameterCode()) && isAllowQTViewSupplierFinalization(scQt);
+			
+			//9019 in QT maintenance we need to show QT without procurement mode and handle NPE when no procurement mode.
+			if (scQt.getProcurementMode() == null) {
+				resArr[7] = false;
+			}else{
+				resArr[7] = getManagedSearchBeanDocumentTypeIsSuppFinal() && !ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO.equalsIgnoreCase(scQt.getProcurementMode().getParameterCode()) && isAllowQTViewSupplierFinalization(scQt);
+			}
 			
 			//only 1 is true
 			if(resArr[5] || resArr[6] || resArr[7]){
@@ -10728,8 +10858,99 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		return !StringUtils.join(previousListArr, ",").equalsIgnoreCase(StringUtils.join(currentListArr, ","));
 	}
   	//#25037 - end
+    
+    /**
+	 * CR-9019 will be used to cancel QT
+	 */
+	public void cancelQTDraft() {
+		IQTDetailSO detailSO;
+		try {
+			this.getManagedBean().setSaveFlow(false);
+			detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTDetailSO.class); //
+
+			QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+			ScQt qt = this.getManagedBean().getQt();
+			String ackMsg = null;
+
+			quationTenderReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+			List<ScQtRemark> remarks = qt.getScQtRemarks();
+
+			if (CollectionUtils.isEmpty(remarks)) {
+				throwExceptionForInvalidRemark();
+			}
+
+			for (int i = 0; i < remarks.size(); i++) {
+				String userRemark = remarks.get(i).getRemark();
+				if (null == userRemark || "".equals(userRemark)) {
+					throwExceptionForInvalidRemark();
+				}
+			}
+
+			finalizeRemarks(qt.getScQtRemarks());
+			qt.setScQtStatus(null);
+			qt.setScQtCommittees(null);
+			qt.setScQtApprovals(null);
+			qt.setScQtBriefings(null);
+			quationTenderReqDTO.setQtdetail(qt);
+			quationTenderReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			quationTenderReqDTO.setOutcome(BpmOutcomeConst.BPM_CANCEL);
+			ackMsg = MessageConst.INFO_700031;
+			FacesScopes facesScopes = new FacesScopes();
+			quationTenderReqDTO.setToken(facesScopes
+					.getBPMAuthenticationCtxToken());
+			quationTenderReqDTO.setTaskId(this.getManagedBean().getTaskId());
+			QuationTenderResDTO quationTenderResDTO = detailSO.cancleQTForDraft(quationTenderReqDTO);
+
+			if (quationTenderResDTO.isSuccessful()) {
+				successMessage(ackMsg, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION,
+						qt.getQtNo(), Boolean.TRUE);
+			}
+		} finally {
+			detailSO = null;
+		}
+	}
+
+	private void throwExceptionForInvalidRemark() {
+		throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+				"lbl.sc.remark", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()) });
+	}
   	
-    //29464-start - added logic at backingbean for future addition
+  	/**
+  	 * CR-9019 will be used to differentiate between cancel and submit 
+  	 * @param outCome
+  	 * @return
+  	 */
+  	public boolean isCancel(String outCome){
+  		return BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outCome);
+  	}
+  	
+  	
+  	/**
+  	 * CR-9019 will be used to enable/disable mandayory checking on UI
+  	 * @param scQt
+  	 * @return
+  	 */
+  	public boolean isProcurementTitleMandatory(ScQt scQt){
+  		if(scQt.isCloned()){
+  			return false;
+  		}	
+  		return scQt.isBrandNew() || (StringUtils.isEmpty(scQt.getQtTitle()));
+  	}
+  	
+  	/**
+  	 * CR-9019 will be used to enable/disable mandayory checking on UI
+  	 * @param scQt
+  	 * @return
+  	 */
+  	public boolean isFileNoMandatory(ScQt scQt){
+  		if(scQt.isCloned()){
+  			return false;
+  		}
+  		return scQt.isBrandNew() || StringUtils.isEmpty(scQt.getFileNo());
+  	}
+  //29464-start - added logic at backingbean for future addition
   	public boolean evaluateCommitteeAppointmentPage(){
   		boolean flag = false;
   		String taskName = this.getManagedBean().getTaskName()==null ? "": this.getManagedBean().getTaskName();
@@ -10841,7 +11062,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
   	}
   	//#29472 - start
   	public void reviseQtDocument() {
-  	
+  		
 		IQTDetailSO detailSO;
 		try {
 			ScQt scQt = this.getManagedBean().getQt();

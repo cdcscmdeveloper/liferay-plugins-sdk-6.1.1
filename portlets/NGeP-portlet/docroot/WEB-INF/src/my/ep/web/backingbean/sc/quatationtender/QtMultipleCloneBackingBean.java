@@ -181,7 +181,11 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 					reqDTO.setSaveFlow(true);
 					reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
 					reqDTO.setBrandNewQt(true);
-					
+					FacesScopes facesScopes = new FacesScopes();//#9019-start
+					reqDTO.setToken(facesScopes
+							.getBPMAuthenticationCtxToken());
+					reqDTO.setTaskId(this.getManagedBean().getTaskId());
+					reqDTO.setPayLoad(this.getManagedBean().getPayLoad());//#9019-End
 					QtDetailsSO.saveQTDtl(reqDTO);
 					i++;
 				}
@@ -576,6 +580,8 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 		scQt.setCircularVer(copyScqt.getCircularVer());
 		scQt.setItemGroup(copyScqt.getItemGroup());
 		scQt.setQtTitle(copyScqt.getQtTitle());
+        //9019 added for disable mandatory checking in QT while clone
+		scQt.setCloned(true);
 		scQt.setProcurementMode(copyScqt.getProcurementMode());
 		scQt.setPartial(copyScqt.isPartial());
 		BigDecimal tmpExpectedIntendedPrice = QtDetailsSO
@@ -787,4 +793,14 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 		
 	}
 	//#29942-End
+	
+	//#9019 - Start
+	public void confirmAddToClone(){
+		debugLogger("confirmAddToClone");
+		log.info("confirmAddToClone");
+		//this.totalClone=1;
+		RequestContext.getCurrentInstance().execute("confirmationClone.show()");
+		this.getManagedBean().setCloned(false);
+	}
+	//#9019 - End
 }

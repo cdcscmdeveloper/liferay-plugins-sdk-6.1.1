@@ -575,6 +575,11 @@ public class QTCloneBackingbean extends
 		getManagedBean().setAutoUpdate(false);
 		 getManagedBean().setSelectSearchcommitteeNode(new TreeNode[0]);
 		 getManagedBean().setCommType(null);
+		
+        //9019 added for disable mandatory checking while clone
+         ScQt scQt = getManagedBean().getQt();
+		 scQt.setCloned(true);
+		 getManagedBean().setQt(scQt);
 	}
 	
 	private String getLabel(String label) {
@@ -3640,8 +3645,8 @@ public class QTCloneBackingbean extends
 	//	scQt.setDecryptedEstAmt(copyScqt.getDecryptedEstAmt());
 	//	scQt.setDecExpectedIntendedPrice(copyScqt.getDecExpectedIntendedPrice());
 		
-		
-		
+		//9019 added for disable mandatory checking while clone
+		scQt.setCloned(true);
 		scQt.setZonal(copyScqt.isZonal());
 		
 		scQt.setProcurementMode(copyScqt.getProcurementMode());
@@ -3874,6 +3879,8 @@ public class QTCloneBackingbean extends
 			scQt.setItemGroup(copyScqt.getItemGroup());
 		}
 		scQt.setQtTitle(copyScqt.getQtTitle());
+        //9019 added for disable mandatory checking while clone
+		scQt.setCloned(true);
 		
 		scQt.setProcurementMode(copyScqt.getProcurementMode());
 			BigDecimal tmpExpectedIntendedPrice = QtDetailsSO
