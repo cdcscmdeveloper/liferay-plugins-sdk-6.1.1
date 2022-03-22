@@ -329,7 +329,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setFlagBlacklistCancel(false);
 		
 		//#28278 - Disciplonary action - #28278 - Start
-		if(StringUtils.equals(mofStatus, "D") || StringUtils.equals(mofStatus, SupplierManagementConst.MOF_STATUS_EXPIRED_SYSTEM) ){ //29336: Disciplinary Action 26238 - add condition
+		if(StringUtils.equals(mofStatus, "D") || StringUtils.equals(mofStatus, SupplierManagementConst.MOF_STATUS_EXPIRED_SYSTEM)){ // START //29336: Disciplinary Action 26238 - add condition
 			getManagedBean().setFlagShowButtonSubmit(false);
 		}
 		else {
@@ -3181,24 +3181,26 @@ public class SupplierDataMaintenanceBackingBean extends
 	 */
 	public void unSelectCancelBumiCategories(AjaxBehaviorEvent e) {
 		if (getManagedBean().getSmSupplier().isBumi() && getManagedBean().isBumiputeraStatusCancel()){
-		if (getManagedBean().getSelectedPendingApprovedCategories() != null) {
-			List<Long> bumiList = getManagedBean().getBumiCodeList();
-			if(bumiList == null || bumiList.isEmpty()){
-				bumiList = SmApplicationUtil.retrieveBumiCodeList();
-				getManagedBean().setBumiCodeList(bumiList);
-			}
-
-			List<SmSupplierCategory> selectList = new ArrayList<SmSupplierCategory>();
-			Iterator<SmSupplierCategory> iterator = getManagedBean().getApprovedCategoryList().iterator();
-			while (iterator.hasNext()) {
-				SmSupplierCategory cat = iterator.next();
-				if(bumiList.contains(cat.getPmCategoryL3().getCategoryL3Id())){
-					selectList.add(cat);
+			if (getManagedBean().getSelectedPendingApprovedCategories() != null) {
+				List<Long> bumiList = getManagedBean().getBumiCodeList();
+				if(bumiList == null || bumiList.isEmpty()){
+					bumiList = SmApplicationUtil.retrieveBumiCodeList();
+					getManagedBean().setBumiCodeList(bumiList);
 				}
+	
+				List<SmSupplierCategory> selectList = new ArrayList<SmSupplierCategory>();
+				Iterator<SmSupplierCategory> iterator = getManagedBean().getApprovedCategoryList().iterator();
+				while (iterator.hasNext()) {
+					SmSupplierCategory cat = iterator.next();
+					if(bumiList.contains(cat.getPmCategoryL3().getCategoryL3Id())){
+						selectList.add(cat);
+					}
+				}
+				//32760 - Start
+				getManagedBean().setSelectedApprovedCategories(selectList);
+				//32760 - End
 			}
-			getManagedBean().setSelectedApprovedCategories(selectList);
 		}
-	}
 	}
 	//32618 - End
 	
