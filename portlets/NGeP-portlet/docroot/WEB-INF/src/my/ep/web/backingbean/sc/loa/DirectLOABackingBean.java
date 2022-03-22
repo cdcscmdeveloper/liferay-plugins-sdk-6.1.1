@@ -8450,6 +8450,15 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				context.put("mofNo", smSupplier.getRegNo());
 			}
 		}
+		//#25025 - start
+		String headerTitle = "";
+		if (ParameterConst.PROCUREMENT_MODE_TENDER.equals(scLoa.getProcurementMode().getParameterCode())) {
+			headerTitle = "Tender";
+		} else {
+			headerTitle = "Sebut Harga";
+		}
+		context.put("headerTitle", headerTitle); 
+		//#25025 - end
 		generateDocument(context, attachment, SourcingConstants.LOA_SURAT_AKUAN_SUMPAH_SYARIKAT);
 		
 		//FileOutputStream fos = null;
@@ -8638,7 +8647,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		String headerTitle = "";
 		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa()
 				.getDocType())) {
-			headerTitle = "Pembelian Terus (Bermasa)";
+			headerTitle = "Pembelian Terus";
 		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType()) || 
 				ParameterConst.DOCTYPE_DIRECT_NEGO.equals(scLoa.getScLoiLoa().getDocType())) {
 			if (ParameterConst.PROCUREMENT_MODE_TENDER.equals(scLoa.getProcurementMode().getParameterCode())) {
