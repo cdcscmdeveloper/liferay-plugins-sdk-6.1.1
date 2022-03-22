@@ -224,16 +224,21 @@
 					</c:choose>
 				</p:column>
 				
-				<p:column rendered="#{!empty shortlistedSupp.smMofAccount and 
-									   shortlistedSupp.smMofAccount.recordStatusFlg
-								  	 			eq DbValueConst.recordStatusActive}">
-					<h:outputText value="#{lbl['lbl.pm.status.active']}"/>							  	 
+				<ui:remove> #26247 - #32687 - Start </ui:remove>
+				<p:column rendered="#{!empty shortlistedSupp.smMofAccount and shortlistedSupp.smMofAccount.mofRegStatus ne lbl['lbl.sc.mof.status.expired']}">
+					<h:outputText value="#{shortlistedSupp.smMofAccount.mofRegStatus}"/>							  	 
+				</p:column>
+				
+				<p:column style="background-color:red; color:white; font-weight:bold;" 
+					 rendered="#{!empty shortlistedSupp.smMofAccount and shortlistedSupp.smMofAccount.mofRegStatus eq lbl['lbl.sc.mof.status.expired']}">
+					<h:outputText value="#{shortlistedSupp.smMofAccount.mofRegStatus}"/>							  	 
 				</p:column>
 				
 				<p:column style="background-color:red; color:white; font-weight:bold;" 
 						  rendered="#{empty shortlistedSupp.smMofAccount}">
-					<h:outputText value="#{lbl['lbl.sm.status.expired']}"/>
+					<h:outputText value="#{lbl['lbl.sc.mof.status.expired']}"/>
 				</p:column>
+				<ui:remove> #26247 - #32687 - End </ui:remove>
 						
 				<p:column>
 				<!-- #31033 start -->
@@ -435,16 +440,21 @@
 					</c:choose>
 				</p:column>
 				
-				<p:column rendered="#{!empty shortlistedSupp.smMofAccount and 
-									   shortlistedSupp.smMofAccount.recordStatusFlg
-								  	 			eq DbValueConst.recordStatusActive}">
-					<h:outputText value="#{lbl['lbl.pm.status.active']}"/>							  	 
+				<ui:remove> #26247 - #32687 - Start </ui:remove>
+				<p:column rendered="#{!empty shortlistedSupp.smMofAccount and shortlistedSupp.smMofAccount.mofRegStatus ne lbl['lbl.sc.mof.status.expired']}">
+					<h:outputText value="#{shortlistedSupp.smMofAccount.mofRegStatus}"/>							  	 
+				</p:column>
+				
+				<p:column style="background-color:red; color:white; font-weight:bold;" 
+					 rendered="#{!empty shortlistedSupp.smMofAccount and shortlistedSupp.smMofAccount.mofRegStatus eq lbl['lbl.sc.mof.status.expired']}">
+					<h:outputText value="#{shortlistedSupp.smMofAccount.mofRegStatus}"/>							  	 
 				</p:column>
 				
 				<p:column style="background-color:red; color:white; font-weight:bold;" 
 						  rendered="#{empty shortlistedSupp.smMofAccount}">
-					<h:outputText value="#{lbl['lbl.sm.status.expired']}"/>
+					<h:outputText value="#{lbl['lbl.sc.mof.status.expired']}"/>
 				</p:column>
+				<ui:remove> #26247 - #32687 - End </ui:remove>
 						
 				<p:column>
 				<!-- #31033 Start -->
