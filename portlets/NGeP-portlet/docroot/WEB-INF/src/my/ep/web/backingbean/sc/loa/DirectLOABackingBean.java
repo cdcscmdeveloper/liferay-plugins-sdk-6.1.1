@@ -585,14 +585,14 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						}
 					}
 				}else{
-				for (ScLoaReport report : scLoaReports) {
-					// Check whether Branch Info attachment is existed or not
-					if (null == report.getPmDocument()) {
-						getManagedBean().setBranchInfoReport(report);
-						break;
+					for (ScLoaReport report : scLoaReports) {
+						// Check whether Branch Info attachment is existed or not
+						if (null == report.getPmDocument()) {
+							getManagedBean().setBranchInfoReport(report);
+							break;
+						}
 					}
 				}
-			}
 				//Bug #32188 - end
 			}
 			// Supplier Witness
@@ -698,9 +698,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			
 			// #11134 - start
 			// Remarks
-			scLoa.setScLoaRemarks(initializeRemarks(scLoa, 
-					scLoa.getCurrentStatus(),
-					scLoa.getScLoaRemarks(), ScLoaRemark.class));
+			scLoa.setScLoaRemarks(initializeRemarks(scLoa, scLoa.getCurrentStatus(), scLoa.getScLoaRemarks(),
+					ScLoaRemark.class));
 			// #11134 - end
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -858,7 +857,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			if (!((startDate.after(contractEffDate) || startDate
 					.equals(contractEffDate)) && startDate
 					.before(contractExpDate))) {
-				throw new EpException(MessageConst.ERROR_760347);
+				//#29474 - throw new EpException(MessageConst.ERROR_760347);
 			}
 
 			if (!(endDate.after(contractEffDate) && (endDate
@@ -1474,7 +1473,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			if (!(startDate.getTime().after(contractEffDate)
 					&& (startDate.getTime().before(contractExpDate)) || contractEffDate
 						.equals(startDate.getTime()))) {
-				throw new EpException(MessageConst.ERROR_760347);
+				//#29474 - throw new EpException(MessageConst.ERROR_760347);
 			}
 
 			if (!(endDate.getTime().after(contractEffDate)
@@ -4543,7 +4542,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
      * @param context
      * @throws IOException
      */
-    public void mergePdf(File file, String filePath, String tempFilePath, VelocityContext context) throws IOException {
+    @SuppressWarnings("unchecked")
+	public void mergePdf(File file, String filePath, String tempFilePath, VelocityContext context) throws IOException {
       PDDocument sstDocument = null;
       PDDocument lampiranA3Doc = null;
       try {
@@ -4745,6 +4745,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		this.getManagedBean().setScLoa(scLoa);
 		ScQt scQt = scLoa.getScQt();
 		setUserDetails(scQt);
+			
 		this.getManagedBean().setScQt(scLoa.getScQt());
 		this.getManagedBean().setApproverUser(new PmUser());
 		this.getManagedBean().setScLoa(scLoa);
@@ -4853,7 +4854,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if (scLoa.getProcurementTypeCatId() == null) {
 			scLoa.setProcurementTypeCatId(new PmParameter());
 		}
-
+		
 		// contract Signer info
 		if (scLoa.getContractSigner() == null) {
 			scLoa.setContractSigner(new PmUser());
@@ -5212,15 +5213,15 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				//CASE FROM NORMAL LOA
 				switch(this.getManagedBean().getScQt().getFinalization().getLoiLoaBy()){
 					case ParameterConst.LOILOA_PREPARED_BY_DO	:	//DESK OFFICER
-																		actorReqDTO.setUserId(this.getManagedBean().getScQt().getCreatedBy());
-																		break;
+						actorReqDTO.setUserId(this.getManagedBean().getScQt().getCreatedBy());
+						break;
 					case ParameterConst.LOILOA_PREPARED_BY_FC_SECRETARY	:	//SECRETARY
-																		if(null!=this.getManagedBean().getScLoa()){
-																			actorReqDTO.setUserId(this.getManagedBean().getScLoa().getCreatedBy());
-																		}else{
-																			actorReqDTO.setUserId(this.getManagedBean().getScLoa().getCreatedBy());
-																		}
-																		break;
+						if(null!=this.getManagedBean().getScLoa()){
+							actorReqDTO.setUserId(this.getManagedBean().getScLoa().getCreatedBy());
+						}else{
+							actorReqDTO.setUserId(this.getManagedBean().getScLoa().getCreatedBy());
+						}
+						break;
 				}
 			}else{
 				//CASE FROM DIRECT LOA
@@ -5240,17 +5241,19 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				if(reqDTO.getScLoa().getPmStatus().getStatusId().equals(QTStatusConst.LOA_REVISE_DOC)){
 					if(null!=procurementMode){
 						switch(procurementMode.getParameterCode()){
-							case ParameterConst.PROCUREMENT_MODE_QUOTATION : successMessage(MessageConst.INFO_700079,param);	
-																				break;
-							case ParameterConst.PROCUREMENT_MODE_TENDER :	successMessage(MessageConst.INFO_700080,param);
-																				break;
+							case ParameterConst.PROCUREMENT_MODE_QUOTATION : 
+								successMessage(MessageConst.INFO_700079,param);	
+								break;
+							case ParameterConst.PROCUREMENT_MODE_TENDER :	
+								successMessage(MessageConst.INFO_700080,param);
+								break;
 							case ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO :	
-																				if(null!=loaProcurementMode && loaProcurementMode.getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_QUOTATION)){
-																					successMessage(MessageConst.INFO_700079,param);
-																				}else if(loaProcurementMode != null && loaProcurementMode.getParameterCode().equals(ParameterConst.PROCUREMENT_MODE_TENDER)){
-																					successMessage(MessageConst.INFO_700080,param);
-																				}
-																				break;
+								if(null!=loaProcurementMode && loaProcurementMode.getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_QUOTATION)){
+									successMessage(MessageConst.INFO_700079,param);
+								}else if(loaProcurementMode != null && loaProcurementMode.getParameterCode().equals(ParameterConst.PROCUREMENT_MODE_TENDER)){
+									successMessage(MessageConst.INFO_700080,param);
+								}
+								break;
 						}
 					}
 				}else{
@@ -6260,7 +6263,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			
 		BigDecimal sstAmt = scLoa.getSstAmt();
 				
-		if (sstAmt != null) {
+		if (sstAmt != null && loaAmount != null ) {
 			sstAmount = amountDF.format(sstAmt);
 			overallctAmt = amountDF.format(loaAmount.add(sstAmt));
 			log.info(":::setSstInfoForAgreementLetter(). loaId: "+ scLoa.getLoaId() +". overallctAmt inc. sstAmt: "+ overallctAmt);
@@ -9674,7 +9677,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	public void searchSupplierItemByName(){
 		if(this.getItemNameSearchCriteria() != null && this.getItemNameSearchCriteria() != ""){
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-			TplSpecMaster tplSpecMaster = new TplSpecMaster();
+			//TplSpecMaster tplSpecMaster = new TplSpecMaster();
 			boolean isProduct = true;//29007
 			boolean isService = true;//29007
 			
@@ -10346,6 +10349,6 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 				}
 			});
 		}
-		//29007 End		
+		//29007 End	
 		
 }

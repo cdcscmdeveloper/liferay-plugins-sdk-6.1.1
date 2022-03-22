@@ -795,7 +795,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					qtDetailBB.getManagedBean().setActiveIndex(9);
 				}
 				if(isQTStatusBtwScheduleDocAndPendingPublication){
-					qtDetailBB.getManagedBean().setActiveIndex(9);
+					qtDetailBB.getManagedBean().setActiveIndex(10);//#29474
 				}
 				if(isQTStatusSCApprovalAndBefore){
 					qtDetailBB.getManagedBean().setActiveIndex(5);
@@ -850,7 +850,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						qtDetailBB.getManagedBean().setActiveIndex(5);
 					}
 					if(isCmtStatusCompletedAndBefore){
-						qtDetailBB.getManagedBean().setActiveIndex(9);
+						qtDetailBB.getManagedBean().setActiveIndex(10);//#29474
 					}
 					log.info("*********** preRenderView:userHasRole(COMMITTEE_APPROVER) for ecOcTecFec");
 				}
@@ -869,7 +869,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			else if(SCProcessNameConst.APPROVE_PUBLICATION.equalsIgnoreCase(taskName)){
 				qtDetailBB.getManagedBean().addAdditionalPages(UserTasks.PublicationApproval.toString(), pageAppr);
 				qtDetailBB.getManagedBean().addUserTasks(UserTasks.PublicationApproval);
-				qtDetailBB.getManagedBean().setActiveIndex(9);
+				qtDetailBB.getManagedBean().setActiveIndex(10);//#29474
 				qtDetailBB.getManagedBean().setFirstPagePA(qtPageFirst); //#25077 
 				log.info("*********** preRenderView:userHasRole(PUBLICATION_APPROVER)");
 			}

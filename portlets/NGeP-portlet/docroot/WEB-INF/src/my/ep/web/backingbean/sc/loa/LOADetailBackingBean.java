@@ -670,7 +670,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				//Bug #32188 - start
 				if (ParameterConst.DOCTYPE_DIRECT_NEGO
 						.equalsIgnoreCase(scLoa.getScLoiLoa().getDocType())) {
-				for (ScLoaReport report : scLoaReports) {
+					for (ScLoaReport report : scLoaReports) {
 						if (null != report.getPmDocument()) {
 							if (SourcingConstants.DOC_DEF_KEY_BRANCH_INFORMATION
 									.equalsIgnoreCase(report.getPmDocument().getDocDefinitionKey())) {
@@ -693,13 +693,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					}
 				}else{
 					for (ScLoaReport report : scLoaReports) {
-					// Check whether Branch Info attachment is existed or not
-					if (null == report.getPmDocument()) {
-						getManagedBean().setBranchInfoReport(report);
-						break;
+						// Check whether Branch Info attachment is existed or not
+						if (null == report.getPmDocument()) {
+							getManagedBean().setBranchInfoReport(report);
+							break;
+						}
 					}
 				}
-			}
 				//Bug #32188 - end
 			}
 
@@ -1040,7 +1040,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 *
 	 * @param scQtSchedule the sc qt schedule
 	 */
-	private void freqScheduleValidation(ScQtSchedule scQtSchedule) {
+	private void freqScheduleValidation(ScQtSchedule scQtSchedule, String docType) {
 		debugLogger("frequencyScheduleValidation");
 		FacesScopes facesScopes = new FacesScopes();
 		Calendar startDate = null;
@@ -1109,7 +1109,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 			if (!(startDate.getTime().after(contractEffDate)
 					&& (startDate.getTime().before(contractExpDate)) || contractEffDate.equals(startDate.getTime()))) {
-				throw new EpException(MessageConst.ERROR_760347);
+				//#29474 - start
+				if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(docType)) {
+					throw new EpException(MessageConst.ERROR_760347);
+				}
+				//#29474 - end
 			}
 
 			if (!(endDate.getTime().after(contractEffDate)
@@ -2477,12 +2481,14 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		List<ItemBean> productItemBeans = new ArrayList<ItemBean>();
 		List<ItemBean> serviceItemBeans = new ArrayList<ItemBean>();
 		ItemBean jadualHarga = null;
+		//26226 Start 
 		String itemType = null;
+		
 		String dafaltValue = "T/B";
 		if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
 			dafaltValue = "N/A";//#29006
 		}
-		
+		//End
 
 		for (ScLoiLoaItem item : scLoa.getScLoiLoaItems()) {
 			
@@ -4317,7 +4323,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					//#29173 - change size()>0 to !isEmpty()
 					if(scLoa.getScQtProgPayments() != null && !scLoa.getScQtProgPayments().isEmpty()){
 						for (ScQtProgressivePayment progressivePayment : scLoa.getScQtProgPayments()) {
-							progressivePayValidation(progressivePayment);
+							progressivePayValidation(progressivePayment, scLoa.getScLoiLoa().getDocType());
 						}
 					}
 					//#29173 - merged if statements
@@ -4325,7 +4331,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				} else if (("F").equals(getManagedBean().getScQt().getScheduleType()) &&
 						scLoa.getScQtSchedules() != null && !scLoa.getScQtSchedules().isEmpty()) {
 					for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
-						freqScheduleValidation(scQtSchedule);
+						freqScheduleValidation(scQtSchedule, scLoa.getScLoiLoa().getDocType());
 					}
 				}
 			} else{
@@ -4333,7 +4339,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				//#29173 - change size()>0 to !isEmpty()
 				if(scLoa.getScQtSchedules() != null && !scLoa.getScQtSchedules().isEmpty()){
 					for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
-						freqScheduleValidation(scQtSchedule);
+						freqScheduleValidation(scQtSchedule, scLoa.getScLoiLoa().getDocType());
 					}
 				}
 			}
@@ -6268,7 +6274,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 *
 	 * @param progressivePayment the progressive payment
 	 */
-	private void progressivePayValidation(ScQtProgressivePayment progressivePayment) {
+	private void progressivePayValidation(ScQtProgressivePayment progressivePayment, String docType) {
 		debugLogger("progressivePayValidation");
 		FacesScopes facesScopes = new FacesScopes();
 		Calendar startDate = null;
@@ -6327,7 +6333,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 			if (!(startDate.getTime().after(contractEffDate)
 					&& (startDate.getTime().before(contractExpDate)) || contractEffDate.equals(startDate.getTime()))) {
-				throw new EpException(MessageConst.ERROR_760347);
+				//#29474 - start
+				if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(docType)) {
+					throw new EpException(MessageConst.ERROR_760347);
+				}
+				//#29474 - end
 			}
 
 			if (!(endDate.getTime().after(contractEffDate)
