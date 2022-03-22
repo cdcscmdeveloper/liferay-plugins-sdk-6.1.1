@@ -5731,6 +5731,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		getManagedBean().setSelectedTabIndex(0);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, getManagedBean().getBackToPreviousPage());
+
+		// #32757- Start.
+		getManagedBean().setBackToPreviousPage(null);
+		// #32757- End.
 	}
 
 	/**
