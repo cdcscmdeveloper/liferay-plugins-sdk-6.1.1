@@ -8693,6 +8693,15 @@ return	remarksNotFound;
 
 						for (ScQtEvaluationResultDtl qualSupplier 
 												: qualifiedSuppliers) {
+							// #26247 - #32687 - Start.						
+							if (null !=  qualSupplier.getSmMofAccount() && StringUtils.isNotEmpty( qualSupplier.getSmMofAccount().getMofRegStatus())) {
+    						      qualSupplier.getSmMofAccount().setMofRegStatus(ResourceBundleUtils.getMessage(
+    						          qualSupplier.getSmMofAccount().getMofRegStatus(), 
+    						          ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+    						          new FacesScopes().getUserLocale()));
+  						    }
+							// #26247 - #32687 - End.
+							
 							QtEvaluationResultDtlBean recommendationBean = null;
 							recommendationBean = getCachedBeanFromList(cachedSuppliers, 
 									qualSupplier.getEvaluationResultDtlId());
@@ -10036,6 +10045,15 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 								List<ScQtEvaluationResultDtl> qualifiedSuppliers = resultBean.getResultList();
 								if (CollectionUtils.isNotEmpty(qualifiedSuppliers)) {
 									for (ScQtEvaluationResultDtl qualSupplier : qualifiedSuppliers) {
+										// #26247 - #32687 - Start.
+										if (null !=  qualSupplier.getSmMofAccount() && StringUtils.isNotEmpty( qualSupplier.getSmMofAccount().getMofRegStatus())) {
+										   qualSupplier.getSmMofAccount().setMofRegStatus(ResourceBundleUtils.getMessage(
+											   qualSupplier.getSmMofAccount().getMofRegStatus(), 
+											   ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+											   new FacesScopes().getUserLocale()));
+										}
+										// #26247 - #32687 - End.
+										
 										log.info("Inside qualified Supplier by item == ");
 										ScRequestItem requestItem = qtRecommendRequestItem.getRequestItem();
 										ScQtProposalItem proposalItem = getQtProposalItem(qtRecommendRequestItem,
