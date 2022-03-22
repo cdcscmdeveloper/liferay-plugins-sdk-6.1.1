@@ -329,7 +329,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setFlagBlacklistCancel(false);
 		
 		//#28278 - Disciplonary action - #28278 - Start
-		if(StringUtils.equals(mofStatus, "D") || StringUtils.equals(mofStatus, SupplierManagementConst.MOF_STATUS_EXPIRED_SYSTEM) || getManagedBean().isCancelMOFAccount()){ // START //29336: Disciplinary Action 26238 - add condition
+		if(StringUtils.equals(mofStatus, "D") || StringUtils.equals(mofStatus, SupplierManagementConst.MOF_STATUS_EXPIRED_SYSTEM)){ // START //29336: Disciplinary Action 26238 - add condition
 			getManagedBean().setFlagShowButtonSubmit(false);
 		}
 		else {
