@@ -212,6 +212,9 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 				
 						log.info("font path: "+fontPath);
 				render.getFontResolver().addFont(fontPath, true);
+				render.getFontResolver().addFont(getPortalBaseURL+"/NGeP-portlet/resources/fonts/Ariali.ttf",BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);  
+				render.getFontResolver().addFont(getPortalBaseURL+"/NGeP-portlet/resources/fonts/Arialbd.ttf",BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+				render.getFontResolver().addFont(getPortalBaseURL+"/NGeP-portlet/resources/fonts/Arialbi.ttf",BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
 		        //#26130 - end
 				render.setDocumentFromString(html);
 				render.layout();
