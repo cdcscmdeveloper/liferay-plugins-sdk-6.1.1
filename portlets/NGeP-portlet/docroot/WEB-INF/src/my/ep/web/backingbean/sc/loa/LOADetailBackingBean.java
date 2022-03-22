@@ -2242,7 +2242,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		String headerTitle = "";
 		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa()
 				.getDocType())) {
-			headerTitle = "Pembelian Terus (Bermasa)";
+			//#25025 - start
+			headerTitle = "Pembelian Terus";
+			//#25025 - end
 		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa()
 				.getDocType())) {
 			if (ParameterConst.PROCUREMENT_MODE_TENDER.equals(scLoa.getProcurementMode().getParameterCode())) {
@@ -2657,6 +2659,20 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		log.info("SupplierAddressTable" + supplierAddressTable);
 
+		// #25025 - start
+		String headerTitle = "";
+		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType())) {
+			headerTitle = "Pembelian Terus";
+		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())) {
+			if (ParameterConst.PROCUREMENT_MODE_TENDER.equals(scLoa.getProcurementMode().getParameterCode())) {
+				headerTitle = "Tender";
+			} else {
+				headerTitle = "Sebut Harga";
+			}
+
+		}
+		context.put("headerTitle", headerTitle);
+		// #25025 - end
 		context.put("supplierSignerUser", supplierSignerUser);
 		context.put("supplierSignerIcNo", supplierSignerIcNo);
 		context.put("supplierSignerAddress", supplierAddressTable);
@@ -2853,6 +2869,22 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		context.put("loaNo", loaNo);
 
+		// #25025 - start
+		String headerTitle = "";
+		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType())) {
+			// #25025 - start
+			headerTitle = "Pembelian Terus";
+			// #25025 - end
+		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())) {
+			if (ParameterConst.PROCUREMENT_MODE_TENDER.equals(scLoa.getProcurementMode().getParameterCode())) {
+				headerTitle = "Tender";
+			} else {
+				headerTitle = "Sebut Harga";
+			}
+
+		}
+		context.put("headerTitle", headerTitle);
+		// #25025 - end
 		if(scLoiLoa.getSmSupplier() != null){
 			SmSupplier smSupplier = scLoiLoa.getSmSupplier();
 			if(smSupplier.getSmMofAccount() != null && smSupplier.getSmMofAccounts().size()>0){

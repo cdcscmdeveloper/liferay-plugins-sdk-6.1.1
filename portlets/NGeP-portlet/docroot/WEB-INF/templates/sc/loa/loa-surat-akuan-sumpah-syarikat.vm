@@ -33,7 +33,7 @@
 			text-align:right;
 		}
 		body {
-			font-family: "Helvetica";
+			font-family: "Arial";
 			font-size: 8pt;
 		}
 		.header-cont {
@@ -67,7 +67,7 @@
 		.redText{
 			text-align:justify;
 			font-family:Arial;
-			font-size:12px;
+			font-size:10px;
 			font-weight:normal;
 			font-style:normal;
 			text-decoration:none;
@@ -82,6 +82,7 @@
 <body>
 <section class="header">
 	<span class="standard">
+	Pekeliling Perbendaharaan Malaysia <br/>
 		No. Surat Setuju Terima : <span class="underline">$loaNo</span>
 	</span>
 </section>
@@ -129,9 +130,11 @@
 					<tr>
 						<td><span id='font1'>(c)</span></td>
 						<td>
+						##25025 & #26770 - start
 							<span id='font1'>
-							syarikat <b>TIDAK</b> terlibat dalam membuat pakatan harga dengan syarikat-syarikat lain atau apa-apa pakatan sepanjang proses *sebut harga/tender sehingga dokumen kontrak ditandatangani;
+							syarikat <b>TIDAK</b> terlibat dalam membuat pakatan harga dengan syarikat-syarikat lain atau apa-apa pakatan sepanjang proses $headerTitle.toLowerCase() sehingga dokumen kontrak ditandatangani;
 							</span>
+						##25025 & #26770 - end	
 						</td>
 					</tr>
 						<tr>
