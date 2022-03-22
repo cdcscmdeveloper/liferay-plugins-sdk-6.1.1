@@ -311,15 +311,9 @@ public class SupplierDataMaintenanceBackingBean extends
 					getManagedBean().getSmMofAccount().getExpDate());
 		}
 		//END 27465 : Disciplinary Action 26238
-		
-		// START - 
 		if (getManagedBean().getSmAppl().getPmRegStatus() == null) {
-			getManagedBean().setCancelMOFAccount(true);
 			getManagedBean().getSmAppl().setPmRegStatus(new PmRegStatus());
-		} else {
-			getManagedBean().setCancelMOFAccount(false);
 		}
-		// END - 
 		
 		//28146
 		if(searchBlacklisted){
