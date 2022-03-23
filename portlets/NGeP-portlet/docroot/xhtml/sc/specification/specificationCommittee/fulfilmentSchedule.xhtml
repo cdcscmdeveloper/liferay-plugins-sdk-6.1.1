@@ -9,11 +9,13 @@
 	<h:panelGroup id="frequency">
 	
 	<!-- Enhancement #25659 remove the Radio button options selection between Frequency Payment/progressive Payment  -->
-
-		<!-- <table border="0" cellspacing="0" cellpadding="0">
+		
+		<!-- #25726 - Add Non Periodic Schedule to the rendered -->
+		<ui:remove> 
+		<table border="0" cellspacing="0" cellpadding="0">
 			<tr>
 				<h:panelGroup
-					rendered="#{specificationBackingBean.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeScheduled}">
+					rendered="#{((specificationBackingBean.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeScheduled) or (specificationBackingBean.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeNonPeriodicScheduled))}">
 					<td style="width: 175px;"><h:outputLabel
 							value="#{lbl['lbl.sc.periodic.fullfillent.type']}" /></td>
 					<td><p:selectOneRadio
@@ -29,12 +31,14 @@
 							value="#{lbl['lbl.sc.periodic.fullfillent.type.tooltip']}" /></td>
 				</h:panelGroup>
 			</tr>
-		</table> -->
-
+		</table>
+		</ui:remove> 
+		
+		<!-- #25726 - Add Non Periodic Schedule to the rendered -->
 		<h:panelGroup id="schedule">
 			<p:panel header="#{lbl['lbl.sc.spec.freq.schedule']} "
 				toggleable="true"
-				rendered="#{specificationBackingBean.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeScheduled and  specificationBackingBean.managedBean.qt.scheduleType eq ParameterConst.periodicScheduleTypeFrequencySchedule}">
+				rendered="#{((specificationBackingBean.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeScheduled) or (specificationBackingBean.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeNonPeriodicScheduled)) and  specificationBackingBean.managedBean.qt.scheduleType eq ParameterConst.periodicScheduleTypeFrequencySchedule}">
 
 				<h:outputText styleClass="instruction"
 					value="#{lbl['lbl.sc.spec.instruction']}"
@@ -43,9 +47,10 @@
 				<h:outputText styleClass="instruction"
 					value="#{lbl['lbl.sc.spec.instruction.delete']}"
 					escape="false" />
-
+				
+				<!-- #25726 - Add Non Periodic Schedule to the rendered -->
 				<p:dataTable id="frequencySchedule" var="frequency" rows="10"
-					rendered="#{specificationBackingBean.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeScheduled and  specificationBackingBean.managedBean.qt.scheduleType eq ParameterConst.periodicScheduleTypeFrequencySchedule}"
+					rendered="#{((specificationBackingBean.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeScheduled) or (specificationBackingBean.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeNonPeriodicScheduled)) and  specificationBackingBean.managedBean.qt.scheduleType eq ParameterConst.periodicScheduleTypeFrequencySchedule}"
 					rowIndexVar="index" widgetVar="freqScheduleWidget"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{specificationBackingBean.managedBean.scheduleList}">
