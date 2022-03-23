@@ -3699,7 +3699,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			{
 				tempCtAgreement = currentCtAgreementList.get(index);
 				
-				if(tempCtAgreement.getAgreementId() == getManagedBean().getCtContractAmount().getCtAgreement().getAgreementId())
+				if(tempCtAgreement.getAgreementId().equals(getManagedBean().getContractVer().getCtContractAmount().getCtAgreement().getAgreementId())) // Fix - #32622
 				{
 					while(index >= 0)
 					{
