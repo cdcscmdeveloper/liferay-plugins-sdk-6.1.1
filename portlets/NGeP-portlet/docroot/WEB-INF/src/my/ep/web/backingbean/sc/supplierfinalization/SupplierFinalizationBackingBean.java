@@ -606,6 +606,10 @@ public class SupplierFinalizationBackingBean extends
 			selectedTabIndex = getManagedBean().getActiveIndex();
 		}
 		
+		if (selectedTabIndex > 0 && !getManagedBean().isInitialDecisionFwdToBPK() && this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION)) {//32613-start
+			this.getManagedBean().setSubmit(true);
+			 validateInfo(0, false);
+             }//32613-End
 		switch (selectedTabIndex) {
 			case 0:
 				if (getManagedBean().isInitialDecisionFwdToBPK()) { //#28240-start
@@ -1439,6 +1443,7 @@ public class SupplierFinalizationBackingBean extends
 					this.getManagedBean().setSubmit(true);
 					reqDTO = validateInfo(activeIndex, skipValidation);
 					scQtCommittee = reqDTO.getScQtCommittee();
+					this.getManagedBean().setSubmit(Boolean.FALSE);//32613
 					reqDTO = validateInfo(2, skipValidation);
 
 				} else {
