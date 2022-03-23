@@ -15,6 +15,7 @@ import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeductionClause;
+import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
@@ -178,6 +179,14 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	private boolean showDeductionClause;
 	private Long selectedDeductionClauseParent;
 	//29551 - end
+	
+	//32678-start
+	private String backToPrevious;
+	private List<FlRemark> previousRemarkList;
+	private List<FlAttachment> previousAttachmentList;
+	private boolean docMaintain = false;
+	private boolean prevHideRemarks = false;
+	//32678-end
 
 	/**
 	 * Gets the doc type.
@@ -1693,6 +1702,61 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 		this.selectedDeductionClauseParent = selectedDeductionClauseParent;
 	}
 	//29551 - end
+	
+	// 32678 - start
+	/**
+	 * @return the backToPrevious
+	 */
+	public String getBackToPrevious() {
+		return backToPrevious;
+	}
+
+	/**
+	 * @param backToPrevious the backToPrevious to set
+	 */
+	public void setBackToPrevious(String backToPrevious) {
+		this.backToPrevious = backToPrevious;
+	}
+
+	/**
+	 * @return the docMaintain
+	 */
+	public boolean isDocMaintain() {
+		return docMaintain;
+	}
+
+	/**
+	 * @param docMaintain the docMaintain to set
+	 */
+	public void setDocMaintain(boolean docMaintain) {
+		this.docMaintain = docMaintain;
+	}
+	
+	public List<FlRemark> getPreviousRemarkList() {
+		return previousRemarkList;
+	}
+
+	public void setPreviousRemarkList(List<FlRemark> previousRemarkList) {
+		this.previousRemarkList = previousRemarkList;
+	}
+
+	public List<FlAttachment> getPreviousAttachmentList() {
+		return previousAttachmentList;
+	}
+
+	public void setPreviousAttachmentList(List<FlAttachment> previousAttachmentList) {
+		this.previousAttachmentList = previousAttachmentList;
+	}
+	
+	public boolean isPrevHideRemarks() {
+		return prevHideRemarks;
+	}
+
+	public void setPrevHideRemarks(boolean prevHideRemarks) {
+		this.prevHideRemarks = prevHideRemarks;
+	}
+	
+	//32678-End
 
 
 }

@@ -710,6 +710,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			pmBB.getManagedBean().setSelectedTabIndex(0);
 			pmBB.getManagedBean().setButtonVal(buttonVal);
 			pmBB.getManagedBean().setPaymentAdvice(resDTO.getPaymentAdvice());
+			pmBB.getManagedBean().setDocMaintain(true);//32678
 			for(FlPaymentDeduction deduction : resDTO.getPaymentAdvice().getFlPaymentDeduction()){
 				CtDeduction ctDeduction = new CtDeduction();
 				if(deduction.getCtDeduction() != null){

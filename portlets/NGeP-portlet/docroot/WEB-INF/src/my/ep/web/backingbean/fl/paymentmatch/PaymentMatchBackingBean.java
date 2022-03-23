@@ -21,6 +21,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
@@ -153,6 +154,8 @@ import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.util.PortalUtil;
 
 /**
@@ -245,7 +248,11 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setToken(token);
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
+			//32678-start
+			if(flBB.getManagedBean().getRemarkList().size() >0){
+				reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
+			}
+			//32678-End
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
 			//start 21229
 			
@@ -1297,13 +1304,31 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 	}
 	
 	/**
+	 * #32678-start
 	 * Page navigation to FLDoc search page in PA.
 	 *
 	 * @return the string
+	 * @throws PortalException the portal exception
+	 * @throws SystemException the system exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public String backToPervious() {
-		return "flDocSearch";
+	public String backToPervious() throws PortalException, SystemException, IOException {
+		if(getManagedBean().isDocMaintain()) {
+			return "flDocSearch";
+		}else if(getManagedBean().isHyperLinkPage()){
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			flBB.getManagedBean().setRemarkList(getManagedBean().getPreviousRemarkList());
+			flBB.getManagedBean().setAttachmentList(getManagedBean().getPreviousAttachmentList());
+			flBB.getManagedBean().setHideRemarks(getManagedBean().isPrevHideRemarks());
+			return getManagedBean().getBackToPrevious();
+		} else {
+			String commonUrl = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL);
+			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+			externalContext.redirect(commonUrl + "notifications");
+			return null;
+		}
 	}
+	//32678-end
 	
 	/**
 	 * Removes Payment match deduction row.
@@ -1870,6 +1895,9 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			invBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 			invBB.getManagedBean().setReliefDeclarationCheck(true);
 			//start - 32678
+			invBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
+			invBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());
+			invBB.getManagedBean().setPrevHideRemarks(flBB.getManagedBean().isHideRemarks());
 			flBB.getManagedBean().setHideRemarks(true);
 			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
 			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
@@ -1882,10 +1910,6 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			FacesContext fc = FacesContext.getCurrentInstance();
 			invBB.getManagedBean().setSelectedTabIndex(0);
 			invBB.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
-			invBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
-			invBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());
-			invBB.getManagedBean().setPrevHideRemarks(flBB.getManagedBean().isHideRemarks());
-			
 			invBB.getManagedBean().setDocMaintain(false);
 			invBB.getManagedBean().setDelOrderList(new ArrayList<FlDeliveryOrder>()); 
 			for(FlDeliveryOrder flDeliveryOrder : invBB.getManagedBean().getInvoice().getFlFulfilmentOrder().getFlDeliveryOrders()) {
