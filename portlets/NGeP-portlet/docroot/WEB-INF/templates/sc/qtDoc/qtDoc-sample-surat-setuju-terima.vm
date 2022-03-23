@@ -30,6 +30,17 @@
 			color: #333333;
 		}
 		
+		.text_family_medium {
+			font-family: Arial;
+			font-size: 11.5px;
+			font-weight: normal;
+			font-style: normal;
+			line-height: 20px;
+			text-decoration: none;
+			color: #333333;
+		}
+		
+		
 		.text_family_bold {
 			font-family: Arial;
 			font-weight: bold;
@@ -104,7 +115,7 @@
 		<td align="center" class="text_family_header">SURAT SETUJU TERIMA</td>
 	</tr>
 	<tr>
-		<td align="center" class="text_family_header">(Bagi $procurementMode Bekalan/ Perkhidmatan) <br /><br /><br /></td>
+		<td align="center" class="text_family_header">(Bagi $procurementMode Bekalan/Perkhidmatan) <br /><br /><br /></td>
 	</tr>
 	<tr>
 		<td align="right" class="text_family">Rujukan Kami : ............................................</td>
@@ -243,7 +254,7 @@
 				dikehendaki melaksanakan pembekalan barang/ perkhidmatan dalam tempoh yang ditetapkan dan kualiti barang/ perkhidmatan 
 				tersebut hendaklah memuaskan hati serta memenuhi kehendak Kerajaan. Sekiranya syarikat tuan gagal melaksanakan 
 				pembekalan barang/ perkhidmatan dalam tempoh dan/atau kualiti yang ditetapkan, Kerajaan berhak membatalkan 
-				pesanan/arahan yang dikeluarkan dan/atau mengenakan <i>*Denda / Tolakan Liquidated & Ascertained Damages (LAD)</i> 
+				pesanan/arahan yang dikeluarkan dan/atau mengenakan <i>*Denda / Tolakan / Liquidated & Ascertained Damages (LAD)</i> 
 				seperti yang ditetapkan dalam <b><i>Lampiran A</i></b>.
 			</p>
 			
@@ -266,15 +277,19 @@
 							RM24,000**
 						</td>
 					</tr>
+				</table>
+				##26770 - start
+				<table width="80%" align="center">
 					<tr>
-						<td class="text_family" style="text-align:center">
-						<br/>
-							*Bagi tujuan pengiraan PROTÉGÉ, Harga Kontrak adalah nilai tawaran yang dipersetujui tanpa cukai <br/>
-							**Elaun PROTÉGÉ (RM2,000 seorang x 12 bulan) <br/>
-						</td>
+						<td><span class="text_family_medium">*Bagi tujuan pengiraan PROTÉGÉ, Harga Kontrak adalah nilai tawaran yang dipersetujui tanpa cukai</span></td>
+					</tr>
+					<tr>
+						<td><span class="text_family_medium">**Elaun PROTÉGÉ (RM2,000 seorang x 12 )</span> </td>
 					</tr>
 				</table>
+				##26770 - end
 			</p>
+			
 			
 			<p>
 			<span class="text_family_small_black">Perenggan ini terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki untuk melaksanakan Program PROTÉGÉ berdasarkan PP/PK1.2.</span>
@@ -373,7 +388,7 @@
 							</tr>
 							<tr>
 								<td align="center" style="vertical-align: top;">(l)</td>
-								<td>syarikat gagal mematuhi skop perkhidmatan yang ditetapkan dan/atau <i>Service Level Agreement</i>;</td>
+								<td>syarikat gagal mematuhi spesifikasi pembekalan/skop perkhidmatan yang ditetapkan dan/atau <i>Service Level Agreement</i>;</td>
 							</tr>
 							<tr>
 								<td align="center" style="vertical-align: top;">(m)</td>
@@ -814,8 +829,8 @@
 		<td colspan="3" >
 			<table>
 				<tr>
-					<td align="center" style="vertical-align: top;" class="text_family_header" >*10. </td>
-					<td class="text_header_submenu"><i>Professional Training and Education for Growing Entrepreneurs </i> (PROTÉGÉ) (jika berkaitan)</td>
+					<td align="center" style="vertical-align: top;" class="text_family_header" >10. </td>
+					<td class="text_header_submenu"><i>*Professional Training and Education for Growing Entrepreneurs </i> (PROTÉGÉ) (jika berkaitan)</td>
 				</tr>
 				<tr>
 					<td></td>
@@ -883,7 +898,7 @@
 		</td>
 	</tr>			
 	<tr>
-		<td colspan="3" class="text_family_italic"><br/><br/><br/><br/><br/><br/>*<i>potong mana
+		<td colspan="3" class="text_family"><br/><br/><br/><br/><br/><br/>*<i>potong mana
 				yang tidak berkenaan</i></td>
 	</tr>			
 </table>
@@ -915,7 +930,7 @@
 						Ibu Pejabat Lembaga Hasil Dalam Negeri Malaysia<br/>
 						Menara Hasil<br/>
 						Aras 18, Persiaran Rimba Permai, Cyber 8<br/>
-						<b>63000 PUTRAJAYA</b><br/>
+						<b>63000 CYBERJAYA</b><br/>
 						(u.p : Pengarah Jabatan Pematuhan Cukai)
 					</span>
 				</p>
