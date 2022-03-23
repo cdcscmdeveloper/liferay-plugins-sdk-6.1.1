@@ -7900,11 +7900,11 @@ return	remarksNotFound;
 				//#21695 allow no records validation start
 				if(CollectionUtils.isNotEmpty(
 						scQtRecommend.getRecommendDtls())){
-				throw new EpException(MessageConst.ERROR_760206);
-			}
+					throw new EpException(MessageConst.ERROR_760206);
+				}
 				//#21695 allow no records validation end
-		}		
-	}
+			}		
+		}
 	}
 
 	private void validateAwardOfItem(ScQtRecommend scQtRecommend) {
@@ -8793,7 +8793,7 @@ return	remarksNotFound;
 				!awardedSupplier.equals(selectedSupplier)) {
 			awardedSupplier.setAwarded(false);
 			awardedSupplier.setShortlisted(false);
-		}		
+		}	
 	}
 	
 	// ***25201#35 
