@@ -31,6 +31,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
@@ -827,6 +828,7 @@ public class EvaluationBackingBean extends
 	 */
 	public void retrieveGeneralInfo() {
 		this.getManagedBean().setPrepareActiveIndex(0);
+		this.checkNoSuppliersSubmitted();//6906
 	}
 
 	/**
@@ -978,7 +980,7 @@ public class EvaluationBackingBean extends
 				}
 
 			}
-
+			this.checkNoSuppliersSubmitted();//6906
 		} finally {
 			meetingSO = null;
 			evaluationSo = null;
@@ -996,7 +998,7 @@ public class EvaluationBackingBean extends
 
 		try {
 			this.getManagedBean().setPrepareActiveIndex(index);
-
+			this.checkNoSuppliersSubmitted();//6906
 		} finally {
 
 		}
@@ -1019,7 +1021,7 @@ public class EvaluationBackingBean extends
 			if (null == meetingAttendanceRemoveList) {
 				meetingAttendanceRemoveList = new ArrayList<ScQtMeetingAttendance>();
 			}
-
+			this.checkNoSuppliersSubmitted();//6906
 		} finally {
 
 		}
@@ -1914,7 +1916,7 @@ public class EvaluationBackingBean extends
 			if(CollectionUtils.isNotEmpty(this.getManagedBean().getComplianceTechnicalCheckList())){
 			checklistSorting(this.getManagedBean().getComplianceTechnicalCheckList());
 			}
-			
+			this.checkNoSuppliersSubmitted();//6906
 		} finally {
 			evaluationSO = null;
 		}
@@ -2017,7 +2019,7 @@ public class EvaluationBackingBean extends
 			if(CollectionUtils.isNotEmpty(this.getManagedBean().getCompliancefinancialCheckList())){
 				checklistSorting(this.getManagedBean().getCompliancefinancialCheckList());
 				}
-
+			this.checkNoSuppliersSubmitted();//6906
 		} finally {
 			evaluationSO = null;
 		}
@@ -2099,7 +2101,7 @@ public class EvaluationBackingBean extends
 					new SummarySupplierPagingDataModel(
 							"complianceDisQualifiedSupplier", false, false,
 							null, evalstage));
-
+			this.checkNoSuppliersSubmitted();//6906
 		} finally {
 			evaluationSO = null;
 		}
@@ -2294,6 +2296,7 @@ public class EvaluationBackingBean extends
 				checklistSorting(this.getManagedBean().getEvaluationStgTechnicalCheckList());
 				}
 			checkTechnicalSuppliersQualified();
+			this.checkNoSuppliersSubmitted();//6906
 			localCheckList=null;
 			evalstage=null;
 		} finally {
@@ -2529,7 +2532,7 @@ public class EvaluationBackingBean extends
 							.getManagedBean().getScQt().getEvaluationType()) && this
 							.getManagedBean().getScQt().isTechEvaluationReq())) {
 				checkFinancialSuppliersQualified();
-
+				this.checkNoSuppliersSubmitted();//6906
 			}
 			if(CollectionUtils.isNotEmpty(this.getManagedBean().getEvaluationStgfinancialCheckList())){
 				checklistSorting(this.getManagedBean().getEvaluationStgfinancialCheckList());
@@ -2874,6 +2877,7 @@ public class EvaluationBackingBean extends
             	this.getManagedBean().setEvalStatusComp(false);
             }
             //28784 - end
+    		this.checkNoSuppliersSubmitted();//6906
 
 		} finally {
 			evaluationSo = null;
@@ -3079,6 +3083,7 @@ public class EvaluationBackingBean extends
 					//#25138-end
 				}
 			}
+			this.checkNoSuppliersSubmitted();//6906
 		} finally {
 			evaluationSo = null;
 		}
@@ -7284,6 +7289,7 @@ public class EvaluationBackingBean extends
 			int outputTab) throws Exception {
 		IQTEvaluationSO evaluationSo = null;
 		EvaluationResDTO evalResDTO = new EvaluationResDTO();
+		boolean noProposalSubmitted = this.getManagedBean().isNoProposalSubmitted();//6906
 		try {
 
 			// this.currentTab = currentTab;
@@ -8027,6 +8033,10 @@ public class EvaluationBackingBean extends
 				getManagedBean().setTempTab(outputTab);
 			}
 			getManagedBean().setTabActiveIndex(outputTab);
+			//6906 - start
+			this.getManagedBean().setNoProposalSubmitted(noProposalSubmitted);
+			this.checkNoSuppliersSubmitted();
+			//6906 - end
 		}catch(Exception e){
 			log.info("ExceptionBlock"+currentTab);
 			log.info("ExceptionBlockCommitteeType"+this.getManagedBean()
@@ -9966,7 +9976,13 @@ private void retriveCommitteeRemarksList(){
 
 		// FacesScopes facesScopes = new FacesScopes();
 		FacesContext fc = FacesContext.getCurrentInstance();
-
+		//6906 - start
+		IQTProposalSO proposalSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+		ProposalReqDTO reqDTO = new ProposalReqDTO();
+		reqDTO.setQtId(evaluationDataType.getQtId().longValue());
+		Long proposalSubmitted = proposalSO.getTotalSubmittedProposal(reqDTO).getTotalSubmitted();
+		this.getManagedBean().setNoProposalSubmitted(proposalSubmitted.compareTo(new Long(0)) == 0);
+		//6906 - end
 		retriveMeetingDtls(evaluationDataType.getQtId().longValue(),
 				evaluationDataType.getCommitteeType(), 1);
 		prepareUpdateCommitteeMember();//#25037								 
@@ -10025,35 +10041,35 @@ private void retriveCommitteeRemarksList(){
 		
 		// 28834 starts
 
-			if (QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL.equals(this.getManagedBean().getCurrentStatusId())
-					|| QTStatusConst.OC_PENDING_COMPLIANCE_PROPOSAL.equals(this.getManagedBean().getCurrentStatusId())
-					|| QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL.equals(this.getManagedBean().getCurrentStatusId())
-					|| QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL.equals(this.getManagedBean().getCurrentStatusId())
-					|| isStatusLessThanOrEquals(this.getManagedBean().getCurrentStatusId(),
-							QTStatusConst.OC_PENDING_COMPLIANCE_VERIFICATION_REVISION, QTStatusConst.OC_ORDERED_STATUSES)
-					&& ArrayUtils.isNotEmpty(this.getManagedBean().getOutComes())
-					&& this.getManagedBean().getOutComes().length > 0) {
-				boolean reviseExists = false;
-				for (String outcome : this.getManagedBean().getOutComes()) {
-					if (outcome.equals(BpmOutcomeConst.BPM_REVISEBP)) {
-						reviseExists = true;
+				if (QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL.equals(this.getManagedBean().getCurrentStatusId())
+						|| QTStatusConst.OC_PENDING_COMPLIANCE_PROPOSAL.equals(this.getManagedBean().getCurrentStatusId())
+						|| QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL.equals(this.getManagedBean().getCurrentStatusId())
+						|| QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL.equals(this.getManagedBean().getCurrentStatusId())
+						|| isStatusLessThanOrEquals(this.getManagedBean().getCurrentStatusId(),
+								QTStatusConst.OC_PENDING_COMPLIANCE_VERIFICATION_REVISION, QTStatusConst.OC_ORDERED_STATUSES)
+						&& ArrayUtils.isNotEmpty(this.getManagedBean().getOutComes())
+						&& this.getManagedBean().getOutComes().length > 0) {
+					boolean reviseExists = false;
+					for (String outcome : this.getManagedBean().getOutComes()) {
+						if (outcome.equals(BpmOutcomeConst.BPM_REVISEBP)) {
+							reviseExists = true;
+						}
 					}
-				}
 
-			if (reviseExists) {
-				String tempOutComes[] = new String[this.getManagedBean().getOutComes().length - 1];
-				for (int i = 0, k = 0; i < this.getManagedBean().getOutComes().length; i++) {
-					if (this.getManagedBean().getOutComes()[i].equals(BpmOutcomeConst.BPM_REVISEBP)) {
-						continue;
+					if (reviseExists) {
+						String tempOutComes[] = new String[this.getManagedBean().getOutComes().length - 1];
+						for (int i = 0, k = 0; i < this.getManagedBean().getOutComes().length; i++) {
+							if (this.getManagedBean().getOutComes()[i].equals(BpmOutcomeConst.BPM_REVISEBP)) {
+								continue;
+							}
+							tempOutComes[k++] = this.getManagedBean().getOutComes()[i];
+						}
+						this.getManagedBean().setOutComes(tempOutComes);
+
 					}
-					tempOutComes[k++] = this.getManagedBean().getOutComes()[i];
+
 				}
-				this.getManagedBean().setOutComes(tempOutComes);
-
-			}
-
-		}
-		// 28834 ends
+				// 28834 ends
 
 		this.getManagedBean().setPrepareActiveIndex(0);
 		if (SCProcessNameConst.FINALISE_EC_EVALUATION
@@ -12560,7 +12576,7 @@ private void retriveCommitteeRemarksList(){
 		if (!this.getManagedBean().isCheckQualifiedSuppliers()) {
 
 		} else {
-			if (!this.getManagedBean().isReadOnly()) {
+			if (!this.getManagedBean().isReadOnly() && !this.getManagedBean().isNoProposalSubmitted()) {//6906 
 				this.getManagedBean().setCheckTechnicalQualifiedOpenPopup(true);
 				/*
 				 * RequestContext.getCurrentInstance().execute(
@@ -12583,7 +12599,7 @@ private void retriveCommitteeRemarksList(){
 		if (!this.getManagedBean().isCheckQualifiedSuppliers()) {
 
 		} else {
-			if (!this.getManagedBean().isReadOnly()) {
+			if (!this.getManagedBean().isReadOnly() && !this.getManagedBean().isNoProposalSubmitted()) {//6906
 				this.getManagedBean().setCheckFinancialQualifiedOpenPopup(true);
 				/*
 				 * RequestContext.getCurrentInstance().execute(
@@ -14344,6 +14360,7 @@ private void retriveCommitteeRemarksList(){
 //				checklistSorting(this.getManagedBean().getDetachedPaginatorTest());
 //				}
 			checkTechnicalSuppliersQualified();
+			this.checkNoSuppliersSubmitted();//6906
 			innerCheckList=null;
 			evalstage=null;
 			
@@ -14587,6 +14604,7 @@ private void retriveCommitteeRemarksList(){
 							.getManagedBean().getScQt().getEvaluationType()) && this
 							.getManagedBean().getScQt().isTechEvaluationReq())) {
 				checkFinancialSuppliersQualified();
+				this.checkNoSuppliersSubmitted();//6906
 
 			}
 			//#25138 - filter auto score condition - Start
@@ -15907,7 +15925,7 @@ private void retriveCommitteeRemarksList(){
 				}*/
 
 			}
-
+			this.checkNoSuppliersSubmitted();//6906
 		} finally {
 			evaluationSO=null;
 		}
@@ -16677,7 +16695,7 @@ private void retriveCommitteeRemarksList(){
 					}
 				}
 				checkProposalamount=Boolean.FALSE;	
-		}else{
+			}else{
 				
 				checkProposalamount=Boolean.FALSE;
 			}
@@ -16690,4 +16708,21 @@ private void retriveCommitteeRemarksList(){
 	return checkProposalamount;	
 	}//32453-Financial Other package End
 	
+	//6906 - start
+	private void checkNoSuppliersSubmitted() {
+		if (!this.getManagedBean().isReadOnly() && this.getManagedBean().isNoProposalSubmitted()) {
+			String message = MessageUtils.getMessage(MessageConst.WARN_760530, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			Iterator<FacesMessage> messageIterator = facesContext.getMessages();
+			while (messageIterator.hasNext()) {
+				FacesMessage fm = messageIterator.next();
+				if(StringUtils.equals(fm.getDetail(), message)){
+					messageIterator.remove();
+				}
+			} 
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, null, message));
+		}
+	}
+	//6906 - end
+
 }
