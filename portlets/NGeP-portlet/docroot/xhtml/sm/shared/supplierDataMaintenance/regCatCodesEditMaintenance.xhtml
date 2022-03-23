@@ -141,13 +141,16 @@
 			</h:panelGroup>
 
 			#{lbl['lbl.sm.download.categorycode']}
+			<!-- #26238 - START -->
+			<c:if test="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId ne null}"> <!-- START -  -->
 			<p:commandButton value="#{lbl['lbl.sm.button.add']}"
 				partialSubmit="true" process=":#{p:component('regStatusId')},@this" id="addCatcodeBtnId" 
 				actionListener="#{supplierDataMaintenanceBackingBean.onAddCategoryCode()}" update=":#{p:component('messages')}"
 				disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}"
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
 			</p:commandButton>
-
+			</c:if>
+			<!-- #26238 - END -->
 			<ac:lookupCategoryCode okAction="supplierDataMaintenanceBackingBean.addNewCategoryAction"
 				catcodeL1 ="#{supplierDataMaintenanceBackingBean.managedBean.physicalConsulting}"
 				update="@form"

@@ -13,20 +13,32 @@
 				<p:outputPanel rendered="#{not empty supplierDataMaintenanceBackingBean.managedBean.smAppl.pmRegStatus}">
 					<tr><td><p:outputLabel value="#{lbl['lbl.rpt.rgstStatus']}" styleClass="outputLabel-view-label"/> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-	
-					<td><p:selectOneMenu label="#{lbl['lbl.rpt.rgstStatus']}"
-							id="regStatusId" required="true" value="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId}"
-							disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}"
-							style="width: 270px;margin-bottom: 5px;">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-							<f:selectItems
-								value="#{supplierDataMaintenanceBackingBean.managedBean.regStatusDescList}" var="reg"
-								itemLabel="#{reg.statusName}"
-								itemValue="#{reg.pmStatus.statusId}" />
-							<p:ajax event="change" partialSubmit="true" process="@this" 
-								update=":#{p:component('suppInfoPanelId')},:#{p:component('messages')}"/>
-						</p:selectOneMenu> <p:message id="regStatusIdMsg" for="regStatusId"
-							showSummary="true" showDetail="false" display="icon" /></td>
+					<!-- #26238 - START -->
+					<c:if test="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId ne null}">
+						<td><p:selectOneMenu label="#{lbl['lbl.rpt.rgstStatus']}"
+								id="regStatusId" required="true" value="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId}"
+								disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}"
+								style="width: 270px;margin-bottom: 5px;">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+								<f:selectItems
+									value="#{supplierDataMaintenanceBackingBean.managedBean.regStatusDescList}" var="reg"
+									itemLabel="#{reg.statusName}"
+									itemValue="#{reg.pmStatus.statusId}" />
+								<p:ajax event="change" partialSubmit="true" process="@this" 
+									update=":#{p:component('suppInfoPanelId')},:#{p:component('messages')}"/>
+							</p:selectOneMenu> <p:message id="regStatusIdMsg" for="regStatusId"
+								showSummary="true" showDetail="false" display="icon" /></td>
+					</c:if>
+					<c:if test="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId eq null}">
+						<td><p:selectOneMenu label="#{lbl['lbl.rpt.rgstStatus']}"
+								id="regStatusId" required="true"
+								disabled="true"
+								style="width: 270px;margin-bottom: 5px;">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							</p:selectOneMenu> <p:message id="regStatusIdMsg" for="regStatusId"
+								showSummary="true" showDetail="false" display="icon" /></td>
+					</c:if>
+					<!-- #26238 - END -->
 					</tr>
 				</p:outputPanel>
 				<tr>

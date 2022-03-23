@@ -310,10 +310,16 @@ public class SupplierDataMaintenanceBackingBean extends
 			getManagedBean().setExistingMofExpiryDate(
 					getManagedBean().getSmMofAccount().getExpDate());
 		}
-		//END 27465 : Disciplinary Action 26238
+		//END 27465 : Disciplinary Action 
+		
+		//START 26238
 		if (getManagedBean().getSmAppl().getPmRegStatus() == null) {
 			getManagedBean().getSmAppl().setPmRegStatus(new PmRegStatus());
+			getManagedBean().setCancelMofAccount(true);
+		} else {
+			getManagedBean().setCancelMofAccount(false);
 		}
+		//END 26238
 		
 		//28146
 		if(searchBlacklisted){
@@ -328,14 +334,14 @@ public class SupplierDataMaintenanceBackingBean extends
 		//26238 -  Disciplonary action - 28146
 		getManagedBean().setFlagBlacklistCancel(false);
 		
-		//#28278 - Disciplonary action - #28278 - Start
-		if(StringUtils.equals(mofStatus, "D") || StringUtils.equals(mofStatus, SupplierManagementConst.MOF_STATUS_EXPIRED_SYSTEM)){ // START //29336: Disciplinary Action 26238 - add condition
+		//#28278 - Disciplonary action - #28278, #26238 - Start
+		if(StringUtils.equals(mofStatus, "D") || StringUtils.equals(mofStatus, SupplierManagementConst.MOF_STATUS_EXPIRED_SYSTEM) || getManagedBean().isCancelMofAccount()){ // START //29336: Disciplinary Action 26238 - add condition
 			getManagedBean().setFlagShowButtonSubmit(false);
 		}
 		else {
 			getManagedBean().setFlagShowButtonSubmit(true);
 		}
-		//#28278 - Disciplonary action - #28278 - end
+		//#28278 - Disciplonary action - #28278, #26238 - end
 		
 	}
 
