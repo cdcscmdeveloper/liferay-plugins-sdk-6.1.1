@@ -13,14 +13,15 @@
 	</cc:interface>
 	
 	<cc:implementation>
-			<!-- #30824 & #29712 - start -->
+			<!-- #30824 & #29712, #32564 - start -->
 			<ac:lov id="basicMofSupplier" readonly="true" style="width:289px;"
 				lovId="SM_RPT_BASIC_ACCOUNT" size="40"
 				headerText="#{lbl['lbl.sm.supplov']}" 
 				value="#{cc.attrs.bBean.managedBean.selectedSupplier.companyName}"
 				saveObject="#{cc.attrs.saveObj}" 
+				conditionField="#{cc.attrs.bBean.constructConditionFieldsBasic()}"
 				tooltip="#{lbl['lbl.sm.rpt.profile.tooltip']}" />
 			<ac:lovPopup />
-			<!-- #30824 & #29712 - end -->
+			<!-- #30824 & #29712, #32564 - end -->
 	</cc:implementation>
 </ui:component>
