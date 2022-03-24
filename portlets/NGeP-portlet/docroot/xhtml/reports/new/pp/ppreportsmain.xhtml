@@ -15,13 +15,19 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
+		
+		<!--//[#29484] - start  -->
+			<ui:param name="isPpPeTotal"
+				value="#{PpReportConst.ppTotalApprovedPpPeMinistryRptVal eq ppReportsBackingBean.managedBean.reportCode}" />
+		<!--//[#29484] - end  -->
+	
 		<table style="margin-top: 10px; width: 100%;">
 			<tr>
 				<td width="10%"><p:outputLabel
 						value="#{lbl['lbl.rpt.rptName']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></td>
 				<!-- #27472 - change width style -->
-				<td width="90%"><p:selectOneMenu style="margin-top:5px;width:400px;"
+				<td width="90%"><p:selectOneMenu style="margin-top:5px;width:560px;"
 						label="#{lbl['lbl.rpt.rptName']}" id="somReportName"
 						value="#{ppReportsBackingBean.managedBean.reportCode}"
 						required="true">
@@ -46,13 +52,13 @@
 							style="float:left;margin-left:20px;"
 							value="1. #{lbl['lbl.instruction.mandatory']}" /></td> <!-- [#27197] -->
 				</tr>
-				<tr>
+				<tr style="display: #{isPpPeTotal ? 'none' : 'block'};"> <!--//[#29484] add rendered  -->
 					<td><h:outputText styleClass="instruction"
 							style="float:left;margin-left:20px;"
 							value="2. #{lbl['lbl.rpt.instructioninfo']}" /></td> <!-- [#27197] -->
 				</tr>
 				<!-- [#27197] - start -->
-				<tr>
+				<tr style="display: #{isPpPeTotal ? 'none' : 'block'};"> <!--//[#29484] add rendered  -->
 					<td><h:outputText styleClass="instruction"
 							style="float:left;margin-left:20px;"
 							value="3. #{lbl['lbl.rpt.instructioninfo2']}" /></td>

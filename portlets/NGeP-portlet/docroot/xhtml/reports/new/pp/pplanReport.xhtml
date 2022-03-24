@@ -22,6 +22,12 @@
 	<ui:param name="isPPPerformanceReport"
 		value="#{PpReportConst.ppProcurementPerformanceRptVal eq ppReportsBackingBean.managedBean.reportCode}" />
 	<!--//[#24976] - end  -->
+	
+	<!--//[#29484] - start  -->
+	<ui:param name="isPpPeTotal"
+		value="#{PpReportConst.ppTotalApprovedPpPeMinistryRptVal eq ppReportsBackingBean.managedBean.reportCode}" />
+	<!--//[#29484] - end  -->
+	
 	<!--//[#24974] - start  -->
 	<ui:param name="isPPBudgetAllocationAmendmentReport"
 		value="#{PpReportConst.ppBudgetAllocationAmendmentRptVal eq ppReportsBackingBean.managedBean.reportCode}" />
