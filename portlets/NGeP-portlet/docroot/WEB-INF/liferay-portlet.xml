@@ -2629,6 +2629,28 @@
 		</footer-portlet-javascript>
 		<css-class-wrapper>smdeactivateadmin-portlet</css-class-wrapper>
 	</portlet>
+	<!-- #29617 start -->
+	<portlet>
+		<portlet-name>updateSmeInfo</portlet-name>
+		<icon>/icon.png</icon>
+		<requires-namespaced-parameters>false</requires-namespaced-parameters>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>updatesmeinfo-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>alertSmeInfo</portlet-name>
+		<icon>/icon.png</icon>
+		<requires-namespaced-parameters>false</requires-namespaced-parameters>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>alertsmeinfo-portlet</css-class-wrapper>
+	</portlet>
+	<!-- #29617 end -->
 	<!-- #10724 start -->
 	<portlet>
 		<portlet-name>commonSmOverviewInfo</portlet-name>

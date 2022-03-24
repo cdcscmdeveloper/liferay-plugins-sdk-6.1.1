@@ -88,10 +88,74 @@
 						</td>
 						<p:outputPanel rendered="#{!viewSmApplBackingBean.managedBean.viewSupplierProfile}">
 							<td colspan="2"></td>
-						</p:outputPanel>
-					</tr>
 				</p:outputPanel>
-				
+				<!-- #29617 start-->
+				<p:outputPanel
+					rendered="#{viewSmApplBackingBean.managedBean.viewSupplierProfile}">
+					<p:outputPanel
+						rendered="#{viewSmApplBackingBean.managedBean.smSupplier.smeRegisteredFlag eq '0' or viewSmApplBackingBean.managedBean.smSupplier.smeRegisteredFlag eq '9'}">
+						<tr>
+							<td><p:outputLabel styleClass="outputLabel-view-label"
+									value="#{lbl['lbl.sm.sme.status']}" /></td>
+							<td><p:outputLabel styleClass="outputLabel-view"
+									value="#{lbl['lbl.sm.sme.txt.no']}" /></td>
+						</tr>
+					</p:outputPanel>
+					<p:outputPanel
+						rendered="#{viewSmApplBackingBean.managedBean.smSupplier.smeRegisteredFlag eq '1'}">
+						<tr>
+							<td><p:outputLabel styleClass="outputLabel-view-label"
+									value="#{lbl['lbl.sm.sme.status']}" /></td>
+							<td><p:outputLabel styleClass="outputLabel-view"
+									value="#{lbl['lbl.sm.sme.txt.yes']}  -" /> <p:outputLabel
+									styleClass="outputLabel-view"
+									value="#{lbl['lbl.sm.sme.status.type.manmicro']}"
+									rendered="#{viewSmApplBackingBean.managedBean.smeSupplier.smeStatusType eq 'MANMICRO'}" />
+								<p:outputLabel styleClass="outputLabel-view"
+									value="#{lbl['lbl.sm.sme.status.type.mansmall']}"
+									rendered="#{viewSmApplBackingBean.managedBean.smeSupplier.smeStatusType eq 'MANSMALL'}" />
+								<p:outputLabel styleClass="outputLabel-view"
+									value="#{lbl['lbl.sm.sme.status.type.manmed']}"
+									rendered="#{viewSmApplBackingBean.managedBean.smeSupplier.smeStatusType eq 'MANMED'}" />
+								<p:outputLabel styleClass="outputLabel-view"
+									value="#{lbl['lbl.sm.sme.status.type.sermicro']}"
+									rendered="#{viewSmApplBackingBean.managedBean.smeSupplier.smeStatusType eq 'SERMICRO'}" />
+								<p:outputLabel styleClass="outputLabel-view"
+									value="#{lbl['lbl.sm.sme.status.type.sersmall']}"
+									rendered="#{viewSmApplBackingBean.managedBean.smeSupplier.smeStatusType eq 'SERSMALL'}" />
+								<p:outputLabel styleClass="outputLabel-view"
+									value="#{lbl['lbl.sm.sme.status.type.sermed']}"
+									rendered="#{viewSmApplBackingBean.managedBean.smeSupplier.smeStatusType eq 'SERMED'}" /></td>
+							<td><p:outputLabel styleClass="outputLabel-view-label"
+									value="#{lbl['lbl.sm.sme.reg.status']}" /></td>
+							<td><p:outputLabel styleClass="outputLabel-view"
+									value="#{lbl['lbl.sm.sme.txt.yes']}"
+									rendered="#{viewSmApplBackingBean.managedBean.smeSupplier.smeCorpRegistered}" />
+								<p:outputLabel styleClass="outputLabel-view"
+									value="#{lbl['lbl.sm.sme.txt.no']}"
+									rendered="#{not viewSmApplBackingBean.managedBean.smeSupplier.smeCorpRegistered}" /></td>
+						</tr>
+						<p:outputPanel
+							rendered="#{viewSmApplBackingBean.managedBean.smeSupplier.smeCorpRegistered}">
+							<tr>
+								<td><p:outputLabel styleClass="outputLabel-view-label"
+										value="#{lbl['lbl.sm.sme.ref.no']}" /></td>
+								<td><p:outputLabel styleClass="outputLabel-view"
+										value="#{viewSmApplBackingBean.managedBean.smeSupplier.smeRefNo}" /></td>
+								<td><p:outputLabel styleClass="outputLabel-view-label"
+										value="#{lbl['lbl.sm.sme.valid.period']}" /></td>
+								<td><h:outputLabel styleClass="outputLabel-view"
+										value="#{viewSmApplBackingBean.managedBean.smeSupplier.smeValidStartDate}">
+										<f:convertDateTime pattern="dd/MM/yyyy  -" />
+									</h:outputLabel><h:outputLabel style="float: left;white-space: normal;"
+										value="#{viewSmApplBackingBean.managedBean.smeSupplier.smeValidEndDate}">
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</h:outputLabel></td>
+							</tr>
+						</p:outputPanel>
+					</p:outputPanel>
+				</p:outputPanel>
+				<!-- #29617 end-->
 				<c:if test="#{not empty viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses}">
 					<tr>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.companyaddress']}" /></td>

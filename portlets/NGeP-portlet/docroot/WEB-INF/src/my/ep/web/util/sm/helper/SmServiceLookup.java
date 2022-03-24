@@ -49,6 +49,7 @@ import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.selfrequestsupplieradmin.ISelfRequestSupplierAdminSO;
 import my.ep.biz.service.sm.siteVisit.ISiteAssignSO;
 import my.ep.biz.service.sm.siteVisit.ISiteVisitSO;
+import my.ep.biz.service.sm.sme.ISupplierSmeSO;
 import my.ep.biz.service.sm.sst.ISupplierSstSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.biz.service.sm.supplieruseractivation.ISupplierUserActivationSO;
@@ -647,6 +648,17 @@ public class SmServiceLookup {
 						IUpgradeRoleSO.class);
 	}
 	//END LOG 12491
+	// #29617 start
+	/**
+	 * Get ISupplierSmeSO
+	 * 
+	 * @return ISupplierSmeSO
+	 */
+	public static ISupplierSmeSO getSupplierSmeSO() {
+		return (ISupplierSmeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+				ISupplierSmeSO.class);
+	}
+	// #29617 end
 	
 	//#30457-start
 	public static ICatalogueSO getCatalogueSO() {

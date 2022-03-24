@@ -366,6 +366,10 @@
 		<portlet id="MySoftCert"></portlet>
 		<portlet id="smDeactivateAdmin"></portlet>
 		<portlet id="supplierPromotion"></portlet>
+		<!-- #29617 start -->
+		<portlet id="updateSmeInfo"></portlet>
+		<portlet id="alertSmeInfo"></portlet>
+		<!-- #29617 end -->
 		<!-- #10724 start -->
 		<portlet id="commonSmOverviewInfo"></portlet>
 		<!-- #10724 end -->

@@ -419,7 +419,7 @@ public class SupplierManagementConst {
 			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH,
 			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK,
 			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK);
-
+	
 	// #30829 - start
 	public static List<String> LIST_OF_BUSINESS_TYPE_FOR_ROLE_IN_COMPANY = Arrays.asList(
 			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG,
@@ -654,6 +654,8 @@ public class SupplierManagementConst {
 	public static final String SM_REASON_CODE_OTHER = "OTHER";
 
 	public static final String GST_FILE_PATH = "/SM/GST/";
+	// #29617
+	public static final String SME_FILE_PATH = "/SM/SME/";
 	public static final String SITE_VISIT_REPORT_PATH = "/SM/SITE_VISIT/";
 	public static final String OFFLINE_DOC_CHECKLIST_PATH = "/SM/OFFLINE_DOC/CHECKLIST/";
 	public static final String SUPPORTING_DOC_TEMP_PATH = "/SM/SUPPORTING_TEMP_DOWNLOAD/";
@@ -690,7 +692,7 @@ public class SupplierManagementConst {
 	// SUPP_SUSPEND_OR_TERMINATED
 	public static String SUSPENDED = my.ep.constant.sm.SupplierManagementConst.SUSPENDED;
 	public static String TERMINATED = my.ep.constant.sm.SupplierManagementConst.TERMINATED;
-
+	
 	//14530
 	public static final String PORTAL_URL = "https://www.eperolehan.gov.my/";
 	public static final int NOTIFICATION_ID_401189 = 401189;
@@ -703,7 +705,7 @@ public class SupplierManagementConst {
 	public static final String ROLE_CODE_SM_3 = "CM_USER";
 	public static final String ROLE_CODE_SM_4 = "FL_USER";
 	public static final String ROLE_CODE_SM_5 = "SUPPLIER_TEMP";
-		
+
 	// Getters for panel info
 	public String getSUPP_TYPE_CONTRACTOR() {
 		return SUPP_TYPE_CONTRACTOR;
@@ -905,7 +907,7 @@ public class SupplierManagementConst {
 	public String getSM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2() {
 		return SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2;
 	}
-
+	
 	// #30829 - start
 	public String getSM_SUPPLIER_BUSINESS_TYPE_PROFESSIONAL_BODY() {
 		return SM_SUPPLIER_BUSINESS_TYPE_PROFESSIONAL_BODY;

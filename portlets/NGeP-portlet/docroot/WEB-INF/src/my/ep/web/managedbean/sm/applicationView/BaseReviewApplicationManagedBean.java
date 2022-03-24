@@ -53,6 +53,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmRelatedCompany;
 import my.ep.persistence.entity.sm.SmRemark;
+import my.ep.persistence.entity.sm.SmSmeSupplier;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmStaffExperience;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -319,6 +320,9 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	
 	//28771 - start
 	private String supportingDocMode;
+	
+	// #29617
+	private SmSmeSupplier smeSupplier;
 	
 	//#3460
 	private String sdoRemark;
@@ -1776,6 +1780,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 				super("supplierItemTableId");
 				
 			}
+			@SuppressWarnings("rawtypes")
 			@Override
 			protected ISearchResultBean<CmSupplierItem> pageChangeListener(
 					ISearchBean<CmSupplierItem> searchBean) {
@@ -2298,6 +2303,16 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	public void setMissinDocs(List<SmApplSupportDoc> missinDocs) {
 		this.missinDocs = missinDocs;
 	}
+	
+	// #29617 start
+	public SmSmeSupplier getSmeSupplier() {
+		return smeSupplier;
+	}
+
+	public void setSmeSupplier(SmSmeSupplier smeSupplier) {
+		this.smeSupplier = smeSupplier;
+	}
+	// #29617 end
 	
 	//START 31111
 	public List<SmBulkApplOverlapCatVO> getOverlapCategoryVOList() {
