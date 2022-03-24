@@ -590,6 +590,9 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 		}
 		//#15391 - end
 		
+		//#28784
+		redirect = checkDemoRedirect();
+		
 		//29464-start
 		String renderPage = QTConstants.SPECIFICICATON_COMM_PREPARATION;
 		if(redirect){
@@ -646,6 +649,21 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 
 	return items;
 }*/
+
+	//#28784
+	private boolean checkDemoRedirect() {
+		Long status = this.getManagedBean().getQt().getQtStatus() != null ? this.getManagedBean().getQt().getQtStatus()
+				.getStatusId() : null;
+		boolean demoRequired = this.getManagedBean().getQt().isDemoRequired();
+		if (null != status
+				&& ((status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
+						|| status.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL) || status
+							.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL)))
+				&& this.getManagedBean().isMaintanceFlow() && demoRequired) {
+			return true;
+		}
+		return false;
+	}
 
 /**
  * Goto specMaintenance search page.

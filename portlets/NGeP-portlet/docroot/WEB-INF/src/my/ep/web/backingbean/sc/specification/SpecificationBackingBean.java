@@ -20563,6 +20563,19 @@ if(null!=allTechnicalChecklist){
 		return statusDesc;
 	}
 	
+	public String getYesNoStatusDescByBoolean(boolean trueFalse) {
+		String desc = null;
+
+		if (trueFalse) {
+			desc = ResourceBundleUtils.getMessage("lbl.btn.yes", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale());
+		} else {
+			desc = ResourceBundleUtils.getMessage("lbl.btn.no", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale());
+		}
+		return desc;
+	}
+	
 	public void resetDemoTechSpecListAfterDelete(){
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 		IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
