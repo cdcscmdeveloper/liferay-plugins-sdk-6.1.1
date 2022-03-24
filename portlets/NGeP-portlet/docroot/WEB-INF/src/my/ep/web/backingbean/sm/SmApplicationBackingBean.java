@@ -4490,6 +4490,11 @@ public class SmApplicationBackingBean extends
 		//#32236 - Start
 		SmApplicationUtil.validateSpecialAndNormalCategoryCapital(getManagedBean());
 		//#32236 - End
+		
+		//#31130- start
+		if (getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)){
+			SmApplicationUtil.validatePersonnelAcademics(true, getManagedBean(), currentTab);
+		}//#31130- end
 	}
 
 	/**
