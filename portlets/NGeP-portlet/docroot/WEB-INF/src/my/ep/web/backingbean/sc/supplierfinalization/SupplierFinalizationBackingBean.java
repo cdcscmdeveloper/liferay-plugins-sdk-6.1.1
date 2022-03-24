@@ -2317,6 +2317,7 @@ public class SupplierFinalizationBackingBean extends
 				 }
 			} 
 			// #25638 - End
+			reqDTO.setScQtReverse(getManagedBean().getScQtReverse());
 			String committeeType = getManagedBean().getCommitteeType();
 			CommitteResDTO committeeResDTO = getCommitteMemberByUserId();
 			ScCommitteeMember committeeMember = committeeResDTO.getCommMember();
@@ -2414,7 +2415,7 @@ public class SupplierFinalizationBackingBean extends
 		  if(scQtFinalizationReport.getPmDocument()!=null){
 			  report.setDocCategory(scQtFinalizationReport.getPmDocument().getDocCategoryCode().getParameterCode());
 			  report.setPmDocument(scQtFinalizationReport.getPmDocument());
-		  report.setDefinationType(scQtFinalizationReport.getPmDocument().getDocDefinitionTypeCode());
+			  report.setDefinationType(scQtFinalizationReport.getPmDocument().getDocDefinitionTypeCode()); 
 		  }else{
 				IParameterSO parameterSO = null;
 				IDocumentSO  documentSO = null;
@@ -2423,7 +2424,7 @@ public class SupplierFinalizationBackingBean extends
 							ModuleCodeConst.PROFILE_MANAGEMENT, IDocumentSO.class);
 					parameterSO = BusinessDelegate.getInstance().getServiceObject(
 					        ModuleCodeConst.PROFILE_MANAGEMENT,IParameterSO.class);
-	
+					
 					DocumentReqDTO docReqDTO = new DocumentReqDTO();
 					docReqDTO.setDocCategoryCode(ParameterConst.DOCUMENT_CATEGORY_BRIEFING_PAPER);
 					DocumentResDTO docResDTO = documentSO.retrieveDocumentCheckList(docReqDTO);
