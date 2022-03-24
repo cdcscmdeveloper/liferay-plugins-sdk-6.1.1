@@ -440,7 +440,7 @@ label.ui-button>span.ui-button-text {
 							</c:when>
 							<c:otherwise>
 								<p:inputText id="demoPopTxt"
-									value="#{question.itemReqDemo}"
+									value="#{specificationBackingBean.getYesNoStatusDescByBoolean(question.itemReqDemo)}"
 									style="width:195px;" disabled="true" />
 
 							</c:otherwise>

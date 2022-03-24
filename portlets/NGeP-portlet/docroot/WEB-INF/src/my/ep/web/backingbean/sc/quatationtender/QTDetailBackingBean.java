@@ -1079,27 +1079,25 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			
 			//#28784
 			boolean demoRequired = this.getManagedBean().getQt().isDemoRequired();
-			Long status = this.getManagedBean().getQt().getQtStatus() != null ? this.getManagedBean()
-					.getQt().getQtStatus().getStatusId() : null;
+			Long status = this.getManagedBean().getQt().getQtStatus() != null ? this.getManagedBean().getQt().getQtStatus().getStatusId() : null;
 			if(null != status && !status.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) && 
 					!status.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION) && this.getManagedBean().isMaintanceFlow() && 
-					!demoRequired && !status.equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)){
+					!demoRequired && !status.equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL) && 
+					!status.equals(QTStatusConst.CMT_PENDING_APPROVAL) && !status.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL) &&
+					!status.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL)){
 					this.getManagedBean().setDemoEvalDisabled(true);
 			} 
 			
 			if (null != status && !status.equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL) && 
 					!status.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) && 
-							!status.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION) && this.getManagedBean().isMaintanceFlow()) {
+					!status.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION) && this.getManagedBean().isMaintanceFlow() && 
+					!status.equals(QTStatusConst.CMT_PENDING_APPROVAL) && !status.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL) &&
+					!status.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL)) {
 				this.getManagedBean().setDemoDisabled(false);
 				this.getManagedBean().setDemoType(true);
 				this.getManagedBean().setDemoAction(true);
 			}
 			
-//			if(this.getManagedBean().isMaintanceFlow() && demoRequired){
-//				this.getManagedBean().setDemoDisabled(false);
-//				this.getManagedBean().setDemoType(true);
-//				this.getManagedBean().setDemoAction(true);
-//			}
 			
 			
 
