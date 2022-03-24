@@ -143,6 +143,16 @@ u.underline {
     white-space:pre;
     text-decoration:underline;
 }
+
+.text_family_medium_black {
+	font-family: Arial;
+	font-weight: normal;
+	font-style: normal;
+	line-height: 20px;
+	text-decoration: none;
+	font-size: 11.5px;
+	color: #333333;
+}
 ## #25025-end
 </style>
 </head>
@@ -307,16 +317,17 @@ u.underline {
 									<span class="text_family">RM24,000**</span>
 								</td>
 							</tr>
+						</table>
+						##26770 - start
+						<table width="80%" align="center">
 							<tr>
-								<td style="text-align:left">
-								<br/>
-									<span class="text_family">*Bagi tujuan pengiraan PROT&Eacute;G&Eacute;, Harga Kontrak adalah nilai tawaran yang dipersetujui
-									tanpa cukai</span>
-									<br/>
-									<span class="text_family">**Elaun PROT&Eacute;G&Eacute; (RM2,000 seorang x 12 bulan) </span>
-								</td>
+								<td><span class="text_family_medium_black">*Bagi tujuan pengiraan PROT&Eacute;G&Eacute;, Harga Kontrak adalah nilai tawaran yang dipersetujui tanpa cukai</span></td>
+							</tr>
+							<tr>
+								<td><span class="text_family_medium_black">**Elaun PROT&Eacute;G&Eacute; (RM2,000 seorang x 12 )</span> </td>
 							</tr>
 						</table>
+						##26770 - end
 					</p>
 								
 				#else
@@ -690,7 +701,12 @@ u.underline {
 						## #25025-start
 						<table class="text_family">
 							<td align="center" style="vertical-align: top;">4.1 </td>
+							#if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")
+							<td>Harga $docType (butiran harga seperti di <b><i>Lampiran A1</i></b>)</td>
+							#else
 							<td>Harga $docType (Butiran harga seperti di <b><i>Lampiran A1</i></b>)</td>
+							#end
+							
 						</table>
 						## #25025-end	
 					</td>
@@ -917,7 +933,7 @@ u.underline {
 					<td class="text_family_red">
 					    <table border="0" cellpadding="0" cellspacing="0" width="100%">
 					      <tr> 
-					      <td class="text_family_red" style="text-align:justify;><span class="text_family_small">Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara <i>upfront</i> kepada syarikat dalam dokumen pelawaan</span></td>
+					      <td style="text-align:justify;"><span class="text_family_small">Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara <i>upfront</i> kepada syarikat dalam dokumen pelawaan</span></td>
 					      </tr>
 					      <tr> 
 					         <td class="text_family_red">......................................</td>
@@ -1022,7 +1038,7 @@ u.underline {
 						Ibu Pejabat Lembaga Hasil Dalam Negeri Malaysia<br/>
 						Menara Hasil<br/>
 						Aras 18, Persiaran Rimba Permai, Cyber 8<br/>
-						<b>63000 PUTRAJAYA</b><br/>
+						<b>63000 CYBERJAYA</b><br/>
 						(u.p : Pengarah Jabatan Pematuhan Cukai)
 					</span>
 				</p>
