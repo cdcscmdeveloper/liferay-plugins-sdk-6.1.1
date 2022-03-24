@@ -9797,10 +9797,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				resArr[8] = isAllowQTPublishBtn(scQt);
 				resArr[9] = isAllowQTClosedBtn(scQt);
 			}
+			if(isQTMaintenanceScreen()){//32806-start
 			//29464-start
 			Long qtStatus = scQt.getQtStatus()==null ? 0L: scQt.getQtStatus().getStatusId();
 			resArr[1] = !qtStatus.equals(QTStatusConst.QT_PENDING_SPECIFICATION_COMMITTEE_APPOINTMENT);
 			//29464-end
+			}//32806-End
 		}
 		
 		return resArr;
