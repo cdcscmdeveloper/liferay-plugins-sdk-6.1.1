@@ -1,0 +1,56 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<ui:define name="contentSection">
+		<style>
+			a {
+				text-decoration: none;
+				color: blue;
+			}
+			
+			.smeAlertText {
+				font-family: Arial, Helvetica, sans-serif;
+				font-size: 12px;
+				color: blue;
+				margin: 10px;
+				word-wrap: break-word;
+				padding: 3px;
+			}
+			.blink_text {
+				animation:1s blinker linear infinite;
+				-webkit-animation:1s blinker linear infinite;
+				-moz-animation:1s blinker linear infinite;
+			}
+			
+			@-moz-keyframes blinker {  
+				 0% { opacity: 1.0; }
+				 50% { opacity: 0.0; }
+				 100% { opacity: 1.0; }
+			 }
+			
+			@-webkit-keyframes blinker {  
+				 0% { opacity: 1.0; }
+				 50% { opacity: 0.0; }
+				 100% { opacity: 1.0; }
+			 }
+			
+			@keyframes blinker {  
+				 0% { opacity: 1.0; }
+				 50% { opacity: 0.0; }
+				 100% { opacity: 1.0; }
+			 }
+		</style>
+		<span class='blink_text smeAlertText'><p:graphicImage
+				value="/css/images/priority.png" />&#160;<h:outputText
+				value="#{lbl['lbl.sm.sme.alert.first']}" />&#160;<a
+			href="update-sme-information"><h:outputText
+					value="#{lbl['lbl.sm.sme.alert.here']}" /></a>&#160;<h:outputText
+				value="#{lbl['lbl.sm.sme.alert.second']}" /></span>
+	</ui:define>
+</ui:composition>
