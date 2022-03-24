@@ -121,8 +121,7 @@
 				
 				<p:column style="width:2%" rendered="#{!isDeductionPaymentReadOnly}">
 					<f:facet name="header">
-						<p:selectBooleanCheckbox id="selectAllDeductionClauseId"
-							value="#{qTDeductionPaymentBackingBean.flag}">
+						<p:selectBooleanCheckbox id="selectAllDeductionClauseId">
 							<p:ajax partialSubmit="true" process="@form" update="@([id$=clausePnl])"
 								listener="#{qTDeductionPaymentBackingBean.selectAllDeductionClause}"/>
 						</p:selectBooleanCheckbox>
