@@ -34,6 +34,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
+import javax.portlet.PortletRequest;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -54,7 +55,6 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
-import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
@@ -94,8 +94,6 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
-import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
-import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
@@ -137,7 +135,6 @@ import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScRemark;
-import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScFinancialUserScoringSchemaAttachment;
@@ -201,7 +198,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-import my.ep.web.util.sc.helper.LocationSingleton;
 import my.ep.web.util.sc.helper.SourcingLocationHelper;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
@@ -9099,7 +9095,12 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			IParameterSO parameterSo;
 
 			try {
+				 //20211005@fadhli - #31754
+				String sessionId = ((PortletRequest) FacesContext.getCurrentInstance()
+						.getExternalContext().getRequest()).getRequestedSessionId(); 
+				
 				long startTime = System.currentTimeMillis();
+				long subStartTime = 0L;
 				
 				TemplateSpecReqDTO qtTemplateReqDTO = new TemplateSpecReqDTO();
 				parameterSo = BusinessDelegate.getInstance().getServiceObject(
@@ -9108,10 +9109,17 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				techSpecType
 						.setParameterType(ParameterTypeConst.SPECIFICATION_TYPE);
 				techSpecType.setParameterCode(ParameterConst.ANSWER_TYPE_TEXT);
+				subStartTime = System.currentTimeMillis();
 				ParameterResDTO techspecTyperesDTO = parameterSo
 						.retrieveParameterByTypeAndCode(techSpecType);
+				SLAUtils.getInstance().logSLASubInfo(ModuleCodeConst.SUPPLIER_SELECTION, 
+						ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, sessionId, "null",
+						"SpecificationBackingBean.pageChangeListener", "retrieveParameterByTypeAndCode", 
+						subStartTime); //20211005@fadhli - #31754
 				String specTypeCode = techspecTyperesDTO.getPmParameter()
 						.getParameterCode();
+				log.info("[CreateTemplateSpecPagingDataModel#pageChangeListener] #31754 getManagedBean().getStandardTemplate(): " 
+						+ getManagedBean().getStandardTemplate());
 				if (TemplateSpecConst.PROCESS_TYPE_STANDARD
 						.equalsIgnoreCase(getManagedBean()
 								.getStandardTemplate())) {
@@ -9140,10 +9148,20 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					templeteTypes.add(ParameterConst.TEMPLATE_TYPE_MINISTRY);
 					templeteTypes.add(ParameterConst.TEMPLATE_TYPE_PTJ);
 
+					subStartTime = System.currentTimeMillis();
 					List<Long> orgProfileIds = getMinistryPTJOrgIds(scQt
 							.getPmOrgProfile());
+					SLAUtils.getInstance().logSLASubInfo(ModuleCodeConst.SUPPLIER_SELECTION, 
+							ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, sessionId, "null",
+							"SpecificationBackingBean.pageChangeListener", "getMinistryPTJOrgIds(getPmOrgProfile())", 
+							subStartTime); //20211005@fadhli - #31754
+					subStartTime = System.currentTimeMillis();
 					List<Long> ownerOrgProfileIds = getMinistryPTJOrgIds(scQt
 							.getOwnerOrgProfile());
+					SLAUtils.getInstance().logSLASubInfo(ModuleCodeConst.SUPPLIER_SELECTION, 
+							ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, sessionId, "null",
+							"SpecificationBackingBean.pageChangeListener", "getMinistryPTJOrgIds(getOwnerOrgProfile())", 
+							subStartTime); //20211005@fadhli - #31754
 
 					if (ownerOrgProfileIds != null
 							&& ownerOrgProfileIds.size() > 0) {
@@ -9186,7 +9204,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 											ownFilterBean), allFilterBean));
 
 					qtTemplateReqDTO.setOrderByBlankTemplate(true);
-					templeteTypes=null;
+					templeteTypes = null;
 
 				} else if (TemplateSpecConst.PROCESS_TYPE_SOURCING
 						.equalsIgnoreCase(getManagedBean()
@@ -9209,8 +9227,13 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 										.getPmProcurementCategory()
 										.getParameterId());
 					}
+					subStartTime = System.currentTimeMillis();
 					populateQTSearchCriteria(templateQtnTenderSearchBean,
 							searchBean);
+					SLAUtils.getInstance().logSLASubInfo(ModuleCodeConst.SUPPLIER_SELECTION, 
+							ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, sessionId, "null",
+							"SpecificationBackingBean.pageChangeListener", "populateQTSearchCriteria", 
+							subStartTime); //20211005@fadhli - #31754
 				}
 				if (null != getManagedBean().getSpecName()
 						&& !"".equalsIgnoreCase(getManagedBean().getSpecName())) {
@@ -9265,7 +9288,16 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				qtTemplateSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
 								ITemplateSpecSO.class);
+				subStartTime = System.currentTimeMillis();
 				resDto = qtTemplateSO.searchTemplateMaster(qtTemplateReqDTO);
+				String qtNumber = "null";
+				if (null != getManagedBean() && null != getManagedBean().getQt()) {
+					qtNumber = getManagedBean().getQt().getQtNo();
+				}
+				SLAUtils.getInstance().logSLASubInfo(ModuleCodeConst.SUPPLIER_SELECTION, 
+						ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, sessionId, qtNumber,
+						"SpecificationBackingBean.pageChangeListener", "searchTemplateMaster", 
+						subStartTime); //20211005@fadhli - #31754
 
 				if (resDto != null) {
 					SLAUtils.getInstance().logSLAInfo(ModuleCodeConst.SUPPLIER_SELECTION, ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, 
@@ -9275,8 +9307,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				}
 
 			} finally {
-				qtTemplateSO=null;
-				parameterSo=null;
+				qtTemplateSO = null;
+				parameterSo = null;
 			}
 			return null;
 		}
@@ -9433,7 +9465,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				}
 
 			} finally {
-				addressSO=null;
+				addressSO = null;
 			}
 			return null;
 		}
