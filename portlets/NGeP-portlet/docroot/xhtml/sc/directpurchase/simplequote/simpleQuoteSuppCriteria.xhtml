@@ -365,9 +365,6 @@
 			</p:tabView>
 		</h:panelGroup>
 	</p:panel>
-	<ac:disciplinaryActionActiveDp voList="#{simpleQuoteBackingBean.managedBean.disciplineVOs}" 
-				startDate="#{simpleQuoteBackingBean.managedBean.disciplinaryActionStartDate}"
-				endDate="#{simpleQuoteBackingBean.managedBean.disciplinaryActionEndDate}"
-				isWarning="#{simpleQuoteBackingBean.managedBean.disciplinaryActionWarning}"/>
+	<ac:disciplinaryActionHistory voList="#{simpleQuoteBackingBean.managedBean.disciplineVOs}" btnView="true"/>
 
 </ui:composition>
