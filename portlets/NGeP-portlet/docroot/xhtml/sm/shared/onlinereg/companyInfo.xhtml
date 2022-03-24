@@ -272,7 +272,8 @@
 					<p:outputLabel value="#{lbl['lbl.sm.country']}" />
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
-				<td class="tdContent"><p:selectOneMenu id="compCountryId" disabled="#{registrationBackingBean.managedBean.smAppl.applValidWithSsm ? !registrationBackingBean.managedBean.smBusinessAdd.countrySsmNull : true}"
+				<!-- #30964 -->
+				<td class="tdContent"><p:selectOneMenu id="compCountryId" disabled="#{registrationBackingBean.managedBean.smAppl.applValidWithSsm or !registrationBackingBean.managedBean.smBusinessAdd.countrySsmNull}"
 						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.country']}"  style="width:80%"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.pmCountry.countryId}">
 						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
@@ -327,10 +328,11 @@
 				</td>
 				<td class="tdContent">
 				<p:outputPanel id="divisionDropdownPanelId">
-					<ui:fragment rendered="#{registrationBackingBean.managedBean.smBusinessAdd.pmState.adoptDivision}">
+					<!-- <ui:fragment rendered="#{registrationBackingBean.managedBean.smBusinessAdd.pmState.adoptDivision}"> -->
 						<p:selectOneMenu id="busDivision"
 						label="#{lbl['lbl.sm.division']}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.pmDivision.divisionId}"
+						rendered="#{registrationBackingBean.managedBean.smBusinessAdd.pmState.adoptDivision}"
 						style="width:80%">
 						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 						<f:selectItems var="division"
@@ -339,9 +341,9 @@
 							itemLabel="#{division.divisionName}" />
 						<p:ajax event="change" process="@this"
 							listener="#{registrationBackingBean.populateDivisionByAddType('business', true)}"
-							update="busDistrict,busCity" />
+							update="divisionDropdownPanelId,busDistrict,busCity,:form:acgmap:gmapInput:gmapInput,localAuthLabelOutPanelId,localAuthInputOutPanelId" />
 					</p:selectOneMenu>
-					</ui:fragment>
+			<!-- 		</ui:fragment> -->
 				</p:outputPanel>
 				</td>
 			</tr>
