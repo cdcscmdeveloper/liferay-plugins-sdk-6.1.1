@@ -166,7 +166,7 @@
 					<p:spacer width="2" />
 					<p:commandButton id="deleteButtonId"
 						value="#{lbl['lbl.ct.delete']}" partialSubmit="true"
-						disabled="#{qTDetailBB.managedBean.readOnly or qTDetailBB.managedBean.genInfo}"
+						disabled="#{qTDetailBB.deleteselectedList(qTDetailBB.managedBean.scheduleList) or qTDetailBB.managedBean.readOnly or qTDetailBB.managedBean.genInfo}"
 						process="@this" onsuccess="freqScheduleObj.show()">
 					</p:commandButton>
 				</div>
