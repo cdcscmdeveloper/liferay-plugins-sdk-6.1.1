@@ -341,6 +341,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 					List<FlRemark> remarkList = initializeRemarkList(paymentAdvice.getPaymentAdviceId());
 					flBB.initializeRemarkAndAttachement(paymentAdvice.getFlWorkflowStatus(), remarkList, resDTO.getAttachmentList());
 					//32026 end
+					initializeRemarkRevision(ParameterConst.DOCTYPE_PAYMENT_ADVICE, paymentAdvice.getPaymentAdviceId());//32678
 				}
 			}
 		}finally {
@@ -2623,7 +2624,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			remarklistT.add(remark);
 			getManagedBean().setRemarkReviseList(remarklistT);
 		}else {
-			remarklist.add(0,remark); // 32026
+//			remarklist.add(0,remark); // 32026 *comment out for #32678
 			getManagedBean().setRemarkReviseList(remarklist);
 		}
 	}
