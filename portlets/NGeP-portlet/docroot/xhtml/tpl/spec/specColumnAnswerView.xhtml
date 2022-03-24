@@ -148,7 +148,9 @@
 			<h:outputText value="#{tplSpecAnswer.answerNumeric}" rendered="#{isAnswerTypeNumeric}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</h:outputText>
-			<h:outputText value="#{tplSpecAnswer.answerCompliance ? 'Yes' : 'No'}" rendered="#{isAnswerTypeDropdown}" />
+			<!-- Bug #32389 Farid Start-->
+			<h:outputText value="#{tplSpecAnswer.answerCompliance ? lbl['lbl.txt.yes'] : lbl['lbl.txt.no']}" rendered="#{isAnswerTypeDropdown}" />
+			<!-- Bug #32389 Farid end-->
 		</h:panelGroup>
 	</p:column>
 	<p:column style="width:100px;white-space:normal;">
