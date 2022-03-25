@@ -1891,6 +1891,15 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			}
 			if (getManagedBean().isViewApplicationHistory()) {
 				// for history load all category
+				//32815 - start
+				if(cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED){
+					SmDisciplinaryAction da = SmApplicationUtil
+							.retrieveActiveSmDisciplinaryActionByDisciplinaryId(cat.getDisciplinaryActionId());
+					if(da != null && da.isManufacturerCancel()){
+						cat.setTypeDisciplinaryAction("M");
+					}
+				}
+				//32815 - end
 				getManagedBean().getSuppProfileOrHistoryCategoryList().add(cat);
 			} else {
 				//31480 - start
