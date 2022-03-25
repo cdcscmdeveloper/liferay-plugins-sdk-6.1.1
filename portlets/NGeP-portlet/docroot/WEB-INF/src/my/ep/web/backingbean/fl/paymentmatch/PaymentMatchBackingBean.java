@@ -1849,11 +1849,6 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			invBB.getManagedBean().setHyperLinkPage(true);
 			invBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 			invBB.getManagedBean().setReliefDeclarationCheck(true);
-			//start - 32678
-			flBB.getManagedBean().setHideRemarks(true);
-			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
-			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
-			//end - 32678
 			reqDTO.setInvoice(resDTO.getInvoice());
 			resDTO = invoiceSO.isInvoiceTaxable(reqDTO);
 			invBB.getManagedBean().setTaxable(resDTO.isTaxable());
