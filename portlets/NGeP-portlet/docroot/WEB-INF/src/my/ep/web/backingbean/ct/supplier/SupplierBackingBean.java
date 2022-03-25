@@ -390,20 +390,9 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			if (getManagedBean().getFactoring().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
 				getManagedBean().setRemoveFactoring(true);
 				getManagedBean().setDocType(reqDTO.getDocType());
-			} else {	
-				//#32555 start				
-				 if(reqDTO.getDocType().equals("UF")){
-						getManagedBean().setRemoveFactoring(false);
-						getManagedBean().setUpdateFactoring(true);
-						getManagedBean().setDocType(ParameterConst.DOCTYPE_UPDATE_FACTORING);
-						getManagedBean().setFcRequestType(ParameterConst.UPDATE_TYPE_FACTORING);						
-				 }else {
-						getManagedBean().setRemoveFactoring(false);
-						getManagedBean().setUpdateFactoring(false);
-						getManagedBean().setDocType(ParameterConst.DOCTYPE_REQUEST_FACTORING);
-						getManagedBean().setFcRequestType(ParameterConst.REQUEST_TYPE_FACTORING);						
-				 }
-				//#32555 end				
+			} else {
+				getManagedBean().setRemoveFactoring(false);
+				getManagedBean().setDocType(reqDTO.getDocType());
 			}
 
 			if (getManagedBean().getUserMap().size() == 0) {
