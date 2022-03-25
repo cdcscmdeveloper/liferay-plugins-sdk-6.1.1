@@ -110,8 +110,14 @@
 				<h:outputText value="#{lbl['lbl.sm.status.cancelation.da']}"
 					rendered="#{aprvdCatBean.recordStatusFlg eq 9 and not empty aprvdCatBean.disciplinaryActionId}" />
 					
+				<!-- 32815 - start -->	
 				<h:outputText value="#{lbl['lbl.sm.status.cancelation.da']}"
-					rendered="#{(aprvdCatBean.recordStatusFlg eq 2 or aprvdCatBean.recordStatusFlg eq 0) and not empty aprvdCatBean.disciplinaryActionId}" />
+					rendered="#{(aprvdCatBean.recordStatusFlg eq 2 or aprvdCatBean.recordStatusFlg eq 0) 
+								and not empty aprvdCatBean.disciplinaryActionId and not aprvdCatBean.typeDisciplinaryAction eq 'M'}" />
+				
+				<h:outputText value="#{lbl['lbl.sm.cancellation.manufacturer.category.code.by.disciplinary.action']}"
+					rendered="#{aprvdCatBean.recordStatusFlg eq 2 and aprvdCatBean.typeDisciplinaryAction eq 'M'}" />
+				<!-- 32815 - end -->
 					<!--	
 				<h:outputText value="#{lbl['lbl.sm.status.deleted1']} (#{lbl['lbl.sm.disciplinary.jktt.suspend.registration']})"
 					rendered="#{aprvdCatBean.recordStatusFlg eq 2 and aprvdCatBean.suspendCategory}" /> 
