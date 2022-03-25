@@ -737,7 +737,10 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 				flBB.getManagedBean().setDocMaintainRemarks(true);
 			} else {
-				flBB.initializeRemarkAndAttachement(resDTO.getPaymentAdvice().getFlWorkflowStatus(), resDTO.getRemarkList(),resDTO.getAttachmentList());
+				//32678-start
+				List<FlRemark> remarkList = initializeRemarkList(resDTO.getPaymentAdvice().getPaymentAdviceId());
+				flBB.initializeRemarkAndAttachement(resDTO.getPaymentAdvice().getFlWorkflowStatus(), remarkList,resDTO.getAttachmentList());
+				//32678-end
 			}
 			navgPage=NAV_TO_MAINTAIN_PA;
 		} else if(docType.equals(ParameterConst.DOCTYPE_STOP_DELIVERY)){
@@ -1504,4 +1507,20 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 		return getStatusDescById(statusId);
 	}
 	// 12177 - End
+	
+	/**
+	 * Initialize remark #32678 .
+	 * <p> get remarks lists.
+	 * @param docid
+	 */
+	public List<FlRemark> initializeRemarkList(Long docId) {
+		IPaymentMatchSO paymentMatchSO = (IPaymentMatchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IPaymentMatchSO.class);
+		FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTORemark = new FulfilmentResDTO();
+		flReqDTO.setDocId(docId);
+		flReqDTO.setDocType(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
+		resDTORemark = paymentMatchSO.retrieveRemarkByDocIdAndTypeAndNullSection(flReqDTO);
+		return resDTORemark.getRemarkList();
+		
+	}
 }
