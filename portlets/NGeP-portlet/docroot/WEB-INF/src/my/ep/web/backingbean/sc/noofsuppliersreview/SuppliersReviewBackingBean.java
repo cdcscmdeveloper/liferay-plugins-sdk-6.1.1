@@ -34,6 +34,7 @@ import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.logging.LogKey;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.SuppliersReviewSearchBean;
 import my.ep.web.managedbean.sc.noofsuppliersreview.SuppliersReviewManagedBean;
@@ -193,6 +194,8 @@ public class SuppliersReviewBackingBean extends
 		SuppliersReviewReqDTO suppliersReviewReqDTO = new SuppliersReviewReqDTO();
 
 		List<ScQtCategory> catList = this.getManagedBean().getQtCategoryList();
+		
+		long startTime = System.currentTimeMillis();
 
 		if (this.getManagedBean().getSuppliersReviewSearchBean()
 				.getPaidUpCapitalAmtFrom() != null
@@ -273,7 +276,9 @@ public class SuppliersReviewBackingBean extends
 		}finally{
 			suppliersReviewSO=null;
 		}
-
+		long diffTime = System.currentTimeMillis() - startTime;
+		log.info("******loop - start******"+diffTime);
+		SLAUtils.getInstance().logSQLPerformanceInfo("SM","Search Suppliers Review Data","SuppliersReviewSO.searchSuppliersReviewData", startTime,"31119");
 	}
 
 	/**
