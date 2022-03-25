@@ -19,6 +19,7 @@
 				headerText="#{lbl['lbl.sm.supplov']}" 
 				value="#{cc.attrs.bBean.managedBean.selectedSupplier.companyName}"
 				saveObject="#{cc.attrs.saveObj}" 
+				conditionField="#{cc.attrs.bBean.constructConditionFieldsBasic()}"
 				tooltip="#{lbl['lbl.sm.rpt.profile.tooltip']}" />
 			<ac:lovPopup />
 			<!-- #30824 & #29712, #32564 - end -->

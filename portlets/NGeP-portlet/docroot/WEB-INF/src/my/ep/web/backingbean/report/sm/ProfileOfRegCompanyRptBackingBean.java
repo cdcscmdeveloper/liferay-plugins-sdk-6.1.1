@@ -6,9 +6,8 @@ import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.exception.EpException;
+import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -104,7 +103,7 @@ public class ProfileOfRegCompanyRptBackingBean extends
 		StringBuilder sb = new StringBuilder();
 
 		if (StringUtils.isNotEmpty(getManagedBean().getRegType()) || getManagedBean().getRegType() != null) {
-			if (getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.REG_ACC_TYPE_G2G)) {
+			if (getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.SM_REG_TYPE_G2G)) {
 				sb.append("recordStatus^1");
 				sb.append("|pmOrgValidity.recordStatus^1");
 				sb.append("|orgTypeCode.parameterType^");
@@ -138,6 +137,16 @@ public class ProfileOfRegCompanyRptBackingBean extends
 					sb.append(OrganizationType.LOCAL_AUTHORITY.value());
 					sb.append("^9");
 				}
+				if(getManagedBean().getZone() != null){
+					if(sb.length() != 0) sb.append("|");
+					if (getManagedBean().getZone().toUpperCase().equalsIgnoreCase("SEMENANJUNG")) {
+						sb.append("pmZone.zoneId^1");
+					} else if (getManagedBean().getZone().toUpperCase().equalsIgnoreCase("SABAH")) {
+						sb.append("pmZone.zoneId^2");
+					} else if (getManagedBean().getZone().toUpperCase().equalsIgnoreCase("SARAWAK")) {
+						sb.append("pmZone.zoneId^3");
+					}
+				}
 			} else if (getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.SM_REG_TYPE_MOF)) {
 				if (this.getManagedBean().getZone() != null) {
 					if (getManagedBean().getZone().toUpperCase().equalsIgnoreCase("SEMENANJUNG")) {
@@ -152,6 +161,10 @@ public class ProfileOfRegCompanyRptBackingBean extends
 				if (getManagedBean().getSupplierType() != null && !getManagedBean().getSupplierType().equals("all")){
 					if(sb.length() != 0) sb.append("|");
 					sb.append("smMofAccounts.supplierType^" + this.getManagedBean().getSupplierType());
+				} else {
+					if(sb.length() != 0) sb.append("|");
+					sb.append("smAppl.supplierType^" + SupplierManagementConst.SUPP_TYPE_CONSULTANT
+							+ "*smAppl.supplierType^" + SupplierManagementConst.SUPP_TYPE_CONTRACTOR);
 				}
 				//#32564 - end
 			}
@@ -162,5 +175,22 @@ public class ProfileOfRegCompanyRptBackingBean extends
 	}
 	// #29712, #32564 - end
 	// #23080 - end
+	
+	//#32564 - start
+	public String constructConditionFieldsBasic(){
+		StringBuilder sb = new StringBuilder("smAppl.supplierType^"+SupplierManagementConst.SUPP_TYPE_BASIC);
+		if (getManagedBean().getZone() != null) {
+			if (getManagedBean().getZone().equalsIgnoreCase("SEMENANJUNG")) {
+				sb.append("|smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneId^1");
+			} else if (getManagedBean().getZone().equalsIgnoreCase("SABAH")) {
+				sb.append("|smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneId^2");
+			} else if (getManagedBean().getZone().equalsIgnoreCase("SARAWAK")) {
+				sb.append("|smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneId^3");
+			}
+		}
+		log.info("32564- constructConditionFieldsBasic():"+sb.toString());
+		return sb.toString();
+	}
+	//#32564 - end
 	
 }
