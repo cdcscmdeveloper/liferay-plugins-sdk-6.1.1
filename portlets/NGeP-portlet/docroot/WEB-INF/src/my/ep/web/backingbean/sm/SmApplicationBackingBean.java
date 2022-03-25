@@ -16830,4 +16830,15 @@ public class SmApplicationBackingBean extends
 		RequestContext.getCurrentInstance().execute("printConfirm.show();");
 	}
 	//#31407 - END
+	
+	//#12483 - START
+	public boolean renderRevisedReason(){
+		if(currentReviseReason() != null){
+			if(this.getManagedBean().getCurrentStatus() != "Pending Review Site Visit Report - After Approval" || this.getManagedBean().getCurrentStatus() != "Menunggu Laporan Lawatan Tapak - Selepas Diluluskan"){
+				return true;
+			}
+		}
+		return false;
+	}
+	//#12483 - END
 }
