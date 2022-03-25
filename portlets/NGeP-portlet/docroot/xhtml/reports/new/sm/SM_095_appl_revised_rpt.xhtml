@@ -32,10 +32,12 @@
 					disabled="#{applRevisedRptBB.managedBean.flag}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}"
 						itemValue="#{cc.attrs.allValue}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.consultant']}"
-						itemValue="#{SupplierManagementConst.SUPP_TYPE_CONSULTANT}"></f:selectItem>
+				<!-- #12483 - START -->
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.contractor']}"
 						itemValue="#{SupplierManagementConst.SUPP_TYPE_CONTRACTOR}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.consultant']}"
+						itemValue="#{SupplierManagementConst.SUPP_TYPE_CONSULTANT}"></f:selectItem>
+				<!-- #12483 - END -->
 				</p:selectOneMenu></td>
 
 			<td class="tdTitle"><p:outputLabel
