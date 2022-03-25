@@ -158,15 +158,18 @@
 					</td>
 					<td>
 						<p:outputPanel id="newAdminIdNoPanelId">
+							<!-- #32445 start -->
 							<p:inputText
 								label="#{lbl['lbl.sm.forcereplaceadmin.newAdmin.idno']}"
 								required="true" id="newAdminIcNo"
 								rendered="#{forceReplaceSuppAdminBackingBean.managedBean.identificationType.parameterCode eq 'I'}"
 								value="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.newIdentificationNo}"
-								size="35" maxlength="12">
+								size="35" maxlength="12"
+								validatorMessage="#{lbl['lbl.sm.person.icNum']} - #{lbl['lbl.sm.invalidNo']}">
 								<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 								<p:ajax event="blur" process="@this" partialSubmit="true"/>
 							</p:inputText>
+							<!-- #32445 end -->
 							<p:message id="newAdminIcNoMsg" for="newAdminIcNo"
 									showSummary="true" showDetail="false" display="icon" />
 							<!-- #32445 start -->
