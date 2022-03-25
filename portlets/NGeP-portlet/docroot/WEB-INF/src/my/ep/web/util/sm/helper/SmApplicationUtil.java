@@ -1967,7 +1967,7 @@ public class SmApplicationUtil {
 				validPersonnels = false;
 			}
 		}
-		if (!validPersonnels) {
+		if (!validPersonnels && managedBean.isSupplierUser()){//#31130
 			validSave = false;
 			setNavigationBackToCurrentPage(currentTab, managedBean);
 			throw new EpException(MessageConst.ERROR_722599,
@@ -2136,7 +2136,7 @@ public class SmApplicationUtil {
 
 		//16052019 - SSM INTEGRATION CR #27219
 		//31130
-		if (showerror && managedBean.isSupplierUser() && !managedBean.isDisAllowOwnerEdit()) {
+		if (showerror && managedBean.isSupplierUser() && !managedBean.isDisAllowOwnerEdit() && !managedBean.isApproverUser() && !managedBean.isPoUser()) {
 			if (currentTab != -1) {
 				setNavigationBackToCurrentPage(currentTab, managedBean);
 			}
