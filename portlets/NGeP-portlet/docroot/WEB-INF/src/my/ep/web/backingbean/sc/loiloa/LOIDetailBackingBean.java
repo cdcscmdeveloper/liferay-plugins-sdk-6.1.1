@@ -978,7 +978,14 @@ public class LOIDetailBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			for(ScQtEvaluationResultDtl qtEvalResDtl:evalResDtl){
 				ScQtProposal qtProposal = qtEvalResDtl.getQtEvaluationResult().getScQtProposal();
-				qtProposal.getScQtSupplier().setSmSupplier(qtDetailSO.retrieveActiveDABySupplierExcludePendingTransaction(qtProposal.getScQtSupplier().getSmSupplier()));
+				// #26247 - 32802 - Start.
+				Long qtId = null;
+				if (null != qtProposal && null != qtProposal.getScQtSupplier()
+                    && null != qtProposal.getScQtSupplier().getScQt()) {
+                  qtId = qtProposal.getScQtSupplier().getScQt().getQtId();
+                }
+				qtProposal.getScQtSupplier().setSmSupplier(qtDetailSO.retrieveActiveDABySupplierExcludePendingTransaction(qtProposal.getScQtSupplier().getSmSupplier(), qtId));
+				// #26247 - 32802 - End.
 			}
 		} finally {
 			qtDetailSO = null;
