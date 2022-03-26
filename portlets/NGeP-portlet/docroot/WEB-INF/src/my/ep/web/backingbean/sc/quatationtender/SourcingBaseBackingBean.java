@@ -180,6 +180,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -4883,15 +4884,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			
 			List<ScQtCheckList> scQtCheckLists = resDto.getSpecResultBean().getResultList();
 			
-			// #26130 #97 - Start			
-			/*if (CollectionUtils.isNotEmpty(scQtCheckLists)) {
-				scQtCheckLists.addAll(resDto.getFinSpecResultBean().getResultList());
-			} else {
-				scQtCheckLists = resDto.getFinSpecResultBean().getResultList();
-			}*/
-			
 			if (CollectionUtils.isNotEmpty(scQtCheckLists)) {
-			// #26130 #97 - End
 				for (ScQtCheckList scQtCheckList : scQtCheckLists) {
 					List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
 					
@@ -4902,6 +4895,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						constructSpecData(scLoa, master, question);
 
 						constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master, question);
+
+						question.setListCombineZonal(getCOmbineZonalSPec(question,master));
 					}
 					
 					master.setTplSpecQuestions(newTplSpecQuestionsList);
@@ -4977,6 +4972,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 			for (TplSpecQuestion tplSpecQuestion : master.getTplSpecQuestions()) {
 				if (tplSpecQuestion.getSpecQuestionId() == question.getSpecQuestionId()) {
+					if (answerRemarkList == null) {
+						answerRemarkList = new ArrayList<>();
+					}
+
+					answerRemarkList.add(tplSpecQuestion.getTplSpecAnswers().get(0).getAnswerRemark());
+
 					addSpecList = true;
 					continue;
 				}
@@ -5031,11 +5032,247 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 			
 			question.setSpecList(specList);
+
+			if (CollectionUtils.isNotEmpty(specList)) {
+				if (CollectionUtils.isNotEmpty(question.getTplSpecZoneQties())) {
+					for (int i=0; i < question.getTplSpecZoneQties().size(); i++) {
+						if (CollectionUtils.isNotEmpty(feedbackList)) {
+							feedbackList.add(i, "&nbsp;");
+						}
+
+						if (CollectionUtils.isNotEmpty(answerRemarkList) && answerRemarkList.size() != (question.getTplSpecZoneQties().size() + specList.size())) {
+							answerRemarkList.add(i, "&nbsp;");
+						}
+					}
+				} else {
+					if (CollectionUtils.isNotEmpty(feedbackList)) {
+						feedbackList.add(0, "&nbsp;");
+					}
+				}
+			}
+
 			question.setFeedbackList(feedbackList);
 			question.setAnswerRemarkList(answerRemarkList);
+
+			List<HashMap<String, String>> listCombine = null;
+		
+			if (listCombine == null) {
+				listCombine = new ArrayList<HashMap<String, String>>();
+			}
+		
+			if (specList != null) {
+				int tempFeedbackIndex = 0;
+				int tempRemarkIndex = 0;
+				int tempSpecZoneQty = 0;
+				int indexFeedbackStore = 0;
+				int indexRemarkStore = 0;
+				
+				if (CollectionUtils.isNotEmpty(question.getTplSpecZoneQties())) {
+					tempSpecZoneQty = question.getTplSpecZoneQties().size();
+				}
+			
+				for (String tempSpecVal : specList) {
+					HashMap<String, String> map = new HashMap<String, String>();
+					map.put("specVal", tempSpecVal);
+				
+					for (String tempFeedback : feedbackList) {
+						if (tempSpecZoneQty > 0) {
+							if (tempFeedbackIndex >= tempSpecZoneQty) {
+								if (indexFeedbackStore == 0) {
+									map.put("feedback", tempFeedback);
+									indexFeedbackStore = tempFeedbackIndex;
+									break;
+								} else if (tempFeedbackIndex > indexFeedbackStore) {
+									map.put("feedback", tempFeedback);
+									indexFeedbackStore = tempFeedbackIndex;
+									break;
+								}
+							}
+							
+							tempFeedbackIndex++;
+						} else {
+							if (tempFeedbackIndex > 0 && tempFeedbackIndex > indexFeedbackStore){
+								map.put("feedback", tempFeedback);
+								indexFeedbackStore = tempFeedbackIndex;
+								break;
+							}
+							
+							tempFeedbackIndex++;
+							
+						}
+					}
+					
+					for (String tempRemark : answerRemarkList) {
+
+						if (tempRemark == null) {
+							tempRemark = getDefaultValue();
+						} else {
+							if (tempSpecZoneQty > 0) {
+								if (tempRemarkIndex >= tempSpecZoneQty) {
+									if (indexRemarkStore == 0) {
+										map.put("remark", tempRemark);
+										indexRemarkStore = tempRemarkIndex;
+										break;
+									} else if (tempRemarkIndex > indexRemarkStore) {
+										map.put("remark", tempRemark);
+										indexRemarkStore = tempRemarkIndex;
+										break;
+									}
+									
+								}
+								
+								tempRemarkIndex++;
+							} else {
+								if (indexRemarkStore >= 0 && tempRemarkIndex > indexRemarkStore){
+									map.put("remark", tempRemark);
+									indexRemarkStore = tempRemarkIndex;
+									break;
+								}
+								
+								tempRemarkIndex++;
+							}
+						}
+
+					}
+					
+					tempFeedbackIndex = 0;
+					tempRemarkIndex = 0;
+					listCombine.add(map);				
+				}
+				
+				question.setListCombineSpec(listCombine);
+			}
 		}
 	}
-	// #26130 - End
+	// #26130 - End 
+
+	// #26130 - zaim start 
+	private String getDefaultValue() {
+		String defaultValue = "";
+		
+		if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
+			defaultValue = "N/A";
+		} else {
+			defaultValue = "T/B";
+		}
+
+		return defaultValue;
+	}
+	// #26130 - zaim -end-
+	
+	// #26130 start
+	private List<HashMap<String, String>> getCOmbineZonalSPec(TplSpecQuestion question, TplSpecMaster master) {
+				
+		List<HashMap<String, String>> listSpec = new ArrayList<>();
+		int countIndex = 0;
+		int indi = 0;
+		boolean getFirstValue = true;
+		
+		if (question.getTplSpecZoneQties().size() > 0) {
+
+			for (TplSpecZoneQty zone : question.getTplSpecZoneQties()) {
+
+				HashMap<String, String> map = new HashMap<>();
+				
+				if (countIndex == 0) {
+					if (getFirstValue) {
+						map.put("clItem", question.getClItem());
+						map.put("uomName", question.getClUom().getUomName());
+						map.put("clPriceTypeCode", getParameterDescForReport(question.getClPriceTypeCode()));
+						map.put("zoneName", zone.getTplSpecZoneDtl().getZoneName());
+						map.put("qty", zone.getQty().toString());
+
+						if (getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("service")
+								|| getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("Perkhidmatan")) {
+							map.put("clUomFrequency", question.getClUomFrequency().toString());
+							map.put("clUomPerDay", question.getClUomPerDay().toString());
+							map.put("clUomPerMonth", question.getClUomPerMonth().toString());
+						}
+
+						for (TplSpecAnswer answer : question.getTplSpecAnswers())
+							if (answer.getAnswerNumeric() != null) {
+								map.put("answerNumeric", answer.getAnswerNumeric().toString());
+							}
+						getFirstValue = false;
+					} else {
+						map.put("clItem", "&nbsp");
+						map.put("uomName", "&nbsp");
+						map.put("clPriceTypeCode", "&nbsp");
+						map.put("zoneName", zone.getTplSpecZoneDtl().getZoneName());
+
+						if (getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("service")
+								|| getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("Perkhidmatan")) {
+							map.put("clUomFrequency", "&nbsp");
+							map.put("clUomPerDay", "&nbsp");
+							map.put("clUomPerMonth", "&nbsp");
+						}
+						
+						map.put("qty", zone.getQty().toString());
+								
+						for (TplSpecAnswer answer : question.getTplSpecAnswers()) {
+							if (answer.getAnswerNumeric() != null) {
+								map.put("answerNumeric", answer.getAnswerNumeric().toString());
+							}
+						}
+
+					}							
+						
+					for (int i = indi; i < question.getTplSpecZoneQties().size(); i++) {
+						map.put("feedback", question.getFeedbackList().get(i));
+						break;
+					}
+					
+					for (int i = indi; i < question.getTplSpecZoneQties().size(); i++) {
+						map.put("answerRemark", question.getAnswerRemarkList().get(i));
+						break;
+					}
+
+					indi++;
+				}
+				
+				listSpec.add(map);
+			}
+		} else {
+			// non-zonal
+			HashMap<String, String> map = new HashMap<>();
+
+			if (question.getQuestionType().equalsIgnoreCase("I")) {
+				if (countIndex == 0) {
+					if (getFirstValue) {
+						map.put("clItem", question.getClItem());
+						map.put("uomName", question.getClUom().getUomName());
+						map.put("qty", question.getClQuantity().toString());
+
+						if (getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("service")
+								|| getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("Perkhidmatan")) {
+							map.put("clUomFrequency", question.getClUomFrequency().toString());
+							map.put("clUomPerDay", question.getClUomPerDay().toString());
+							map.put("clUomPerMonth", question.getClUomPerMonth().toString());
+						} else {
+							// product
+							map.put("clPriceTypeCode", getParameterDescForReport(question.getClPriceTypeCode()));
+							map.put("qtyBerperingkat", getDefaultValue());
+						}
+
+						for (String feedback : question.getFeedbackList()) {
+							map.put("feedback", feedback);
+							break;
+						}
+
+						for (String remark : question.getAnswerRemarkList()) {
+							map.put("remark", remark);
+							break;
+						}
+					}
+
+					listSpec.add(map);
+				}
+			}
+		}
+		
+		return listSpec;
+	}
+	// #26130 - zaim end
 		
     //Enhancement #25729 Allow create QT below threshold RM20k - start -
     //#25729 #142 start - checking total indicative price <= 20k
