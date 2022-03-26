@@ -756,17 +756,32 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 */
 	private void settingDisciplinaryAction(List<BidPackageBean> biddingPackagePriceList, List<BidItemBean> biddingItemPriceList){
 		IQTDetailSO qtDetailSO;
+		// #26247 - 32802 - Start.
+		Long qtId = null;
+		// #26247 - 32802 - End.
 		try {
 			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			if(biddingPackagePriceList!=null&&biddingPackagePriceList.size()>0){
 				for(BidPackageBean bidPackage: biddingPackagePriceList){
-					bidPackage.getScBidSupplier().setSmSupplier(qtDetailSO.retrieveActiveDABySupplierExcludePendingTransaction(bidPackage.getScBidSupplier().getSmSupplier()));
+					// #26247 - 32802 - Start.
+					if (null != bidPackage.getScQtProposal() && null != bidPackage.getScQtProposal().getScQtSupplier()
+                        && null != bidPackage.getScQtProposal().getScQtSupplier().getScQt()) {
+                      qtId = bidPackage.getScQtProposal().getScQtSupplier().getScQt().getQtId();
+                    }
+					// #26247 - 32802 - End.
+					bidPackage.getScBidSupplier().setSmSupplier(qtDetailSO.retrieveActiveDABySupplierExcludePendingTransaction(bidPackage.getScBidSupplier().getSmSupplier(), qtId));
 				}
 				getManagedBean().setBiddingPackagePriceList(biddingPackagePriceList);
 			}else{
 				for(BidItemBean bidItem : biddingItemPriceList){
-					bidItem.setSupplier(qtDetailSO.retrieveActiveDABySupplierExcludePendingTransaction(bidItem.getSupplier()));
+					// #26247 - 32802 - Start.
+					if (null != bidItem.getScQtProposal() && null != bidItem.getScQtProposal().getScQtSupplier()
+                        && null != bidItem.getScQtProposal().getScQtSupplier().getScQt()) {
+                      qtId = bidItem.getScQtProposal().getScQtSupplier().getScQt().getQtId();
+                    }
+					// #26247 - 32802 - End.
+					bidItem.setSupplier(qtDetailSO.retrieveActiveDABySupplierExcludePendingTransaction(bidItem.getSupplier(), qtId));
 				}
 			}
 		} finally {
