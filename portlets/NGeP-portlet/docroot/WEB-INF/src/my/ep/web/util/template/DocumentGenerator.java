@@ -16,6 +16,8 @@ import javax.faces.context.FacesContext;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
+import my.ep.web.util.sm.helper.SmCommonUtil;
+
 import org.apache.log4j.Logger;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
