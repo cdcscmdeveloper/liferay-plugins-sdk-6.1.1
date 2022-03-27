@@ -1074,13 +1074,14 @@ public class LOIDetailBackingBean extends
 			List<TplSpecZoneDtl> zoneDtls 
 						= this.getManagedBean().getMultiLOIZoneDetails();
 			
-			// sorting by spec zone id
+			// sorting by spec zone id for tab zone order view
+			// #32479 - Start
 		    Collections.sort(zoneDtls, new Comparator<TplSpecZoneDtl>() {
 				public int compare(TplSpecZoneDtl o1, TplSpecZoneDtl o2) {
-							return Integer.valueOf((int) o1.getSpecZoneId().longValue()).compareTo(
-								   Integer.valueOf((int) o2.getSpecZoneId().longValue()));
+							return o1.getSpecZoneId().compareTo(o2.getSpecZoneId());
 				}
 			}); 
+		    // #32479 - End
 
 			// Dynamically generating the zone tabs
 			MenuModel zoneMenuModel = new DefaultMenuModel();
