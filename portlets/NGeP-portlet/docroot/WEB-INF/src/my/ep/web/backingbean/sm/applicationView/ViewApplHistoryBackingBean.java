@@ -1854,4 +1854,18 @@ public class ViewApplHistoryBackingBean extends
 		return true;
 	}
 	//#29823 - END
+	
+	// #32424 - start
+	public void updateRoleCode(Long applId, Long remarkId, String docType, String poRoleCode) {
+		System.out.println("ViewApplHistoryBackingBean.updateRoleCode()");
+		SmRemarksReqDTO reqDTO = new SmRemarksReqDTO();
+		reqDTO.setDocId(applId);
+		reqDTO.setRemarkId(remarkId);
+		reqDTO.setDocType(docType);
+		reqDTO.setRoleCode(poRoleCode);
+		
+		SmServiceLookup.getSmRemarksSO().updateRoleCode(reqDTO);
+	}
+	// #32424 - end
+	
 }
