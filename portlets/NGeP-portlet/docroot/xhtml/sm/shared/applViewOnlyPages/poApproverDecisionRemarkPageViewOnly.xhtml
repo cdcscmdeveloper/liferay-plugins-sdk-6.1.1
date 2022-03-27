@@ -48,9 +48,6 @@
 				</td>
 			</tr>
 			<!-- #15629 end -->
-			<!-- #32424 - start -->
-			<p:column rendered="#{not empty viewSmApplBackingBean.managedBean.poRemark}">
-			<!-- #32424 - end -->
 			<tr>
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.po.approver.decision.remark']}" /></td>
 				<td>
@@ -69,9 +66,6 @@
 						rendered="#{empty viewSmApplBackingBean.managedBean.poRemarkCreatedDate}" />
 				</td>
 			</tr>
-			<!-- #32424 - start -->
-			</p:column>
-			<!-- #32424 - end -->
 			<!-- #29664 start -->
 			<p:column rendered="#{not empty viewSmApplBackingBean.managedBean.poRemarkAfterSiteVisit}">
 			<tr>
