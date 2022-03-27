@@ -12798,18 +12798,20 @@ public class SmApplicationUtil {
 	    			bean.getSelectedShareHolder().setDisableStaff(false);
 					bean.getSelectedShareHolder().setDisableProf(false);
 					bean.getSelectedShareHolder().setDisableManagement(false);
-					bean.getSelectedShareHolder().setDisableEquityOwner(false);				
+					bean.getSelectedShareHolder().setDisableEquityOwner(false);          
 	    		}
 	    	} else {
-				 if(bean.getSelectedShareHolder().isSemiProf()) {		   
+				 if(bean.getSelectedShareHolder().isSemiProf()) {
 						bean.getSelectedShareHolder().setClerical(false);
 						bean.getSelectedShareHolder().setProf(false);
 						bean.getSelectedShareHolder().setManagement(false);
 						bean.getSelectedShareHolder().setEquityOwner(false);
+						bean.getSelectedShareHolder().setHigherManagement(false); //#30444 --27032022--
+						bean.getSelectedShareHolder().setDirector(false);  //#30444 --27032022--
 						bean.getSelectedShareHolder().setDisableProf(true);
 						bean.getSelectedShareHolder().setDisableManagement(true);
 						bean.getSelectedShareHolder().setDisableEquityOwner(true);
-						bean.getSelectedShareHolder().setDisableStaff(true);
+						bean.getSelectedShareHolder().setDisableStaff(true);				
 				   }else{
 					   bean.getSelectedShareHolder().setDisableProf(false);
 					   bean.getSelectedShareHolder().setDisableManagement(false);

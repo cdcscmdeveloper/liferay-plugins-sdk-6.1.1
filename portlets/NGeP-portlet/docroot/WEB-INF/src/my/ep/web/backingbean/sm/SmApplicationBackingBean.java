@@ -15926,9 +15926,16 @@ public class SmApplicationBackingBean extends
 							getManagedBean().getSelectedShareHolder().setDisableProf(true);
 							getManagedBean().getSelectedShareHolder().setDisableManagement(true);
 						} else {
-							getManagedBean().getSelectedShareHolder().setDisableProf(false);
-							getManagedBean().getSelectedShareHolder().setDisableManagement(false);				
+							//#30444 START--27032022--
+							if(getManagedBean().getSelectedShareHolder().isSemiProf()){
+								getManagedBean().getSelectedShareHolder().setDisableProf(true);
+								getManagedBean().getSelectedShareHolder().setDisableManagement(true);	
+							}else{
+								getManagedBean().getSelectedShareHolder().setDisableProf(false);
+								getManagedBean().getSelectedShareHolder().setDisableManagement(false);
 							}
+							//#30444 END--27032022--
+						}
 						if (getManagedBean().getSelectedShareHolder().isClerical()){
 							getManagedBean().getSelectedShareHolder().setSemiProf(false);
 							getManagedBean().getSelectedShareHolder().setDisableSemiProf(true);
@@ -15943,26 +15950,40 @@ public class SmApplicationBackingBean extends
 			    		}
 			    		
 			   } else {
-				   if (getManagedBean().getSelectedShareHolder().isClerical()) {		   
+				   if (getManagedBean().getSelectedShareHolder().isClerical()) {
 						getManagedBean().getSelectedShareHolder().setProf(false);
 						getManagedBean().getSelectedShareHolder().setManagement(false);
 						getManagedBean().getSelectedShareHolder().setEquityOwner(false);
 						getManagedBean().getSelectedShareHolder().setSemiProf(false);
+						getManagedBean().getSelectedShareHolder().setHigherManagement(false); //#30444 --27032022--
 						getManagedBean().getSelectedShareHolder().setDisableProf(true);
 						getManagedBean().getSelectedShareHolder().setDisableManagement(true);
 						getManagedBean().getSelectedShareHolder().setDisableEquityOwner(true);
 						getManagedBean().getSelectedShareHolder().setDisableSemiProf(true);
-						
 				   }else{
-					    getManagedBean().getSelectedShareHolder().setDisableProf(false);
-						getManagedBean().getSelectedShareHolder().setDisableManagement(false);
-						getManagedBean().getSelectedShareHolder().setDisableEquityOwner(false);	
-						getManagedBean().getSelectedShareHolder().setDisableSemiProf(false);
+					 //#30444 START--27032022--
+					   if(getManagedBean().getSelectedShareHolder().isEquityOwner()
+							   ||getManagedBean().getSelectedShareHolder().isDirector()
+							   ||getManagedBean().getSelectedShareHolder().isManagement()
+							   ||getManagedBean().getSelectedShareHolder().isHigherManagement()
+							   ||getManagedBean().getSelectedShareHolder().isProf()){
+						   getManagedBean().getSelectedShareHolder().setSemiProf(false);
+						   getManagedBean().getSelectedShareHolder().setDisableSemiProf(true);				   
+					   }else if(getManagedBean().getSelectedShareHolder().isSemiProf()){
+						    getManagedBean().getSelectedShareHolder().setDisableProf(true);
+							getManagedBean().getSelectedShareHolder().setDisableManagement(true);
+							getManagedBean().getSelectedShareHolder().setDisableEquityOwner(true);	
+					   }else{
+						    getManagedBean().getSelectedShareHolder().setDisableProf(false);
+							getManagedBean().getSelectedShareHolder().setDisableManagement(false);
+							getManagedBean().getSelectedShareHolder().setDisableEquityOwner(false);	
+							getManagedBean().getSelectedShareHolder().setDisableSemiProf(false);	   
+					   }
+				   //#30444 END--27032022--
 				   }
-			     }
-
-			  }
+			   }
 		   }
+	}
 	//#30444 END--25082021--
     private static boolean alreadyHadEquityOwnerAsStaff(SmAppl appl, Long personnelId) { //#29666- add Long variable
 		boolean retVal = false;
