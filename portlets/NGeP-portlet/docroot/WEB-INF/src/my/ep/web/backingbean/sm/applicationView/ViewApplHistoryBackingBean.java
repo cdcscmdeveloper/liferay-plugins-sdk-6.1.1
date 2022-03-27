@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -760,6 +761,7 @@ public class ViewApplHistoryBackingBean extends
 		SmRemaksResDTO remaksResDTO = SmServiceLookup.getSmRemarksSO().retrieveSmRemarksByDocument(remarksReqDTO);
 
 		if (remaksResDTO.getRemarksList().size() > 0) {
+			log.info("getRemarksList().size():: " + remaksResDTO.getRemarksList().size());
 			for (SmRemark poRemark : remaksResDTO.getRemarksList()) {
 				// #32424 - start
 				if (!StringUtils.isEmpty(poRemark.getRoleCode()) && poRemark.getRoleCode().equals(RoleCode.UPS_PO.value())) {
@@ -777,34 +779,46 @@ public class ViewApplHistoryBackingBean extends
 					// #32424 - start
 					break;
 				} else if (StringUtils.isEmpty(poRemark.getRoleCode())) {
-					// #32424 - end
-					List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(poRemark.getCreatedBy());
-					String roleCode = StringUtils.EMPTY;
-					if (!EntityHelper.isCollectionEmpty(userRoles)) {
-						for (PmUserRole pmRole : userRoles) {
-							if (pmRole.getPmRole().getRoleCode().equals(RoleCode.UPS_PO.value()) && pmRole.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-								roleCode = pmRole.getPmRole().getRoleCode();
-								break;
-							}
-						}
-					}
-					if ((roleCode != null && roleCode.equals(RoleCode.UPS_PO.value()))) {
 						// #32424 - start
-						if ((poRemark.getCreatedBy().equals(getManagedBean().getSmAppl().getPoUserId()))) {
-							getManagedBean().setPoRemarkAfterSiteVisit(poRemark.getRemark());
-							getManagedBean().setPoRemarkAfterSiteVisitCreatedDate(poRemark.getCreatedDate());
-						} else {
+					SmWorkflowStatus currWorkflowStatus = SmCommonUtil.getCurrentActiveWokFlowStatus(getManagedBean().getSmAppl().getApplId());					
+					SimpleDateFormat sdf = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+					String poCreatedDate = sdf.format(poRemark.getCreatedDate());
+					String wFlowCreatedDate = sdf.format(currWorkflowStatus.getCreatedDate());
+					
+					System.out.println("getPoUserId== " + getManagedBean().getSmAppl().getPoUserId()
+							+ " || poRemark.getCreatedBy()==" + poRemark.getCreatedBy() + wFlowCreatedDate
+							+ " || wFlow CreatedBy==" + currWorkflowStatus.getCreatedBy() + " || applStatusId=="
+							+ getManagedBean().getSmAppl().getPmStatus().getStatusId() + " || wFlowStatusId=="
+							+ currWorkflowStatus.getPmStatus().getStatusId() + " || poCreatedDate==" + poCreatedDate
+							+ " || wFlowCreatedDate==");
+					
+					if ((getManagedBean().getSmAppl().getPoUserId() != null && ((getManagedBean().getSmAppl()
+							.getPoUserId().equals(poRemark.getCreatedBy())) || poRemark.getCreatedBy().equals(
+							currWorkflowStatus.getCreatedBy())))
+							&& (getManagedBean().getSmAppl().getPmStatus().getStatusId() != null
+									&& getManagedBean().getSmAppl().getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_REGISTERED && currWorkflowStatus
+									.getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_REGISTERED)
+							&& poCreatedDate.equals(wFlowCreatedDate)) {
 							getManagedBean().setPoRemarkAfterSiteVisit(poRemark.getRemark());
 							getManagedBean().setPoRemarkAfterSiteVisitCreatedDate(poRemark.getCreatedDate());
 
+						if (!(poRemark.getCreatedBy().equals(getManagedBean().getSmAppl().getPoUserId()))) {
 							PmUser user = SmCommonUtil.getUserByUserId(poRemark.getCreatedBy());
 							getManagedBean().setSecondPoUserName(user.getUserName());
 						}
+
+						if (getManagedBean().getSmAppl().getPoUserId().equals(poRemark.getCreatedBy())
+								|| poRemark.getCreatedBy().equals(currWorkflowStatus.getCreatedBy())) {
+							// update roleCode in smRemark
+							log.info("getRemarkId:: " + poRemark.getRemarkId());
+							updateRoleCode(getManagedBean().getSmAppl().getApplId(), poRemark.getRemarkId(),
+									ParameterConst.SM_APPLN_RMRK_DECISION_APPROVE, RoleCode.UPS_PO.value());
+						}
+					}
 						// #32424 - end
 					}
 				}
 			}
-		}
 		// #29664 - end
 	}
 
