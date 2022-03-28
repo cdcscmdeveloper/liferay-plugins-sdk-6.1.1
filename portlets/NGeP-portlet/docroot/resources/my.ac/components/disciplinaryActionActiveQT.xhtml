@@ -29,14 +29,9 @@
 			<p:spacer height="3" />
 		</p:outputPanel>
 		
-		<h:outputText value="#{lbl['lbl.sc.company.has.been.imposed']}" style="font-size:15px; vertical-align:top; color:red;"/>
-		<c:if test="#{cc.attrs.isWarning}"><h:outputText value="#{lbl['lbl.sc.da.warning']}" style="font-weight:bold; font-size:15px; vertical-align:top; color:red;"/></c:if>
-	    <c:if test="#{!cc.attrs.isWarning}"><h:outputText value="#{lbl['lbl.sc.da.disciplinary.action']}" style="font-weight:bold; font-size:15px; vertical-align:top; color:red;"/></c:if>
-		<h:outputText value="#{lbl['lbl.sc.da.from']}" style="font-size:15px; vertical-align:top; color:red;"/>
-		<h:outputText value="#{cc.attrs.startDate}" style="font-weight:bold; font-size:15px; vertical-align:top; color:red;"/>
-		<h:outputText value="&#160;" />
-		<h:outputText value="#{lbl['lbl.sc.da.to']}" style="font-size:15px; vertical-align:top; color:red;"/>
-		<h:outputText value="#{cc.attrs.endDate}" style="font-weight:bold; font-size:15px; vertical-align:top; color:red;"/>
+		<ui:remove>
+			BUG 32759,remove alert message to sync with SM (32639)
+		</ui:remove>
 		
 		<p:dataTable value="#{cc.attrs.voList}" style="width:1100px" var="disciplinaryAction" id="disciplinaryActionDtId"
 						 sortBy="#{disciplinaryAction.endDate}" rowIndexVar="index" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
