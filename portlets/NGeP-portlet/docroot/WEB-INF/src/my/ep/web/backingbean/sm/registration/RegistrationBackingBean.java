@@ -144,7 +144,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	private static Map<Long, PmCertBody> profCertBodyMap;
 	private static List<String> sabahSarawakRemoveWhiteSpaceList = Arrays.asList("D", "E", "G", "H");
 	private static List<String> rosRemoveWhiteSpaceList = Arrays.asList("O","M","P");
-	private boolean gmapDisabled;
+	//private boolean gmapDisabled;
 	//16052019 - SSM INTEGRATION CR - Fahmi
 	boolean fromtncProceed = false;
 	
@@ -1166,15 +1166,43 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
 
 		SmSupplier smSupp = this.getManagedBean().getSmSupp();
+		
+		// start - #30964
+		if (smSupp.getSmAppl() != null) {
+			smSupp.setCompanyName(smSupp.getSmAppl().getSmCompanyBasic().getCompanyName());
+			smSupp.setEstablishDate(smSupp.getSmAppl().getSmCompanyBasic().getEstablishDate());
+		}
+		// end - #30964
+		
 		if(this.getManagedBean().getSmSupp().getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)){
 			
 			smSupp.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).setSmAddress(this.getManagedBean().getSmPermenantAdd());
 		}else{
-			smSupp.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).setSmAddress(this.getManagedBean().getSmBusinessAdd());
+			//start - #30964
+			SmAddress smAddress = this.getManagedBean().getSmBusinessAdd();
+			if(smAddress.getPmCountry()!=null){
+				smAddress.getPmCountry().getCountryId();
+			}
+			if(smAddress.getPmCity()!=null){
+				smAddress.getPmCity().getCityId();
+			}
+			if(smAddress.getPmDistrict()!=null){
+				smAddress.getPmDistrict().getDistrictId();
+			}
+			if(smAddress.getPmState()!=null){
+				smAddress.getPmState().getStateId();
+			}
+			if(smAddress.getPmDivision()!=null &&smAddress.getPmDivision().getDivisionId()!=null){
+				smAddress.getPmDivision();
+			}
+			smSupp.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).setSmAddress(smAddress);
+			// end - #30964
 		}
 		smSupp.setEstablishDate(smSupp.getSmAppl().getSmCompanyBasic().getEstablishDate());
+		getManagedBean().setSmSupp(smSupp);  //#30964
 
-		reqDTO.setSmSupp(getManagedBean().getSmSupp());
+		reqDTO.setSmSupp(getManagedBean().getSmSupp()); //#30964
+		reqDTO.setDisabledCompanyNameInMaintenance(getManagedBean().isDisabledCompanyNameInMaintenance()); //#30964
 		
 		if(SmCommonUtil.getInstance().ssmActive()){
 			
@@ -1192,7 +1220,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate
 					.getInstance().getServiceObject("sm", IRegistrationSO.class);			
 			RegistrationResDTO resDTO = reqSO.updateOnlineAcc(reqDTO);
-			if (resDTO.isSuccessful()) {
+			RegistrationResDTO ressDTO = reqSO.updateOnlineAccount(reqDTO); //#30964
+			if (ressDTO.isSuccessful() && resDTO.isSuccessful()) { //#30964
 				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
 						FacesMessage.SEVERITY_INFO,
@@ -2001,20 +2030,23 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		if (typeAdd.equals("business")) {
 			if(reset){
 				getManagedBean().getSmBusinessAdd().setPmCity(new PmCity());
+			}else{ //start #30964
+				// start - #30483
+				PmState state = (SmCommonUtil.getInstance().getStateById(this.getManagedBean().getSmBusinessAdd()
+						.getPmState().getStateId()));
+				if (state != null && state.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
+					ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance()
+							.getServiceObject("sm", ISupplierSearchSO.class);
+					if (this.getManagedBean().getSmBusinessAdd() != null && this.getManagedBean()
+							.getSmBusinessAdd().getAddressId()!=null) { //#30726
+						SmAddress smAddress = supplierSearchSO.retrieveSmAddressByAddressId(this.getManagedBean()
+								.getSmBusinessAdd().getAddressId());
+						this.getManagedBean().setSmBusinessAdd(smAddress);
+					}
+				} //end #30964
+				// end - #30483
 			}
-			// start - #30483
-			PmState state = (SmCommonUtil.getInstance().getStateById(this.getManagedBean().getSmBusinessAdd()
-					.getPmState().getStateId()));
-			if (state != null && state.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
-				ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance()
-						.getServiceObject("sm", ISupplierSearchSO.class);
-				if (this.getManagedBean().getSmBusinessAdd() != null && this.getManagedBean()
-						.getSmBusinessAdd().getAddressId()!=null) { //#30726
-					SmAddress smAddress = supplierSearchSO.retrieveSmAddressByAddressId(this.getManagedBean()
-							.getSmBusinessAdd().getAddressId());
-					this.getManagedBean().setSmBusinessAdd(smAddress);
-				}
-			}
+			
 			//29012: Disciplinary Action - 26238 - fix for when district id null
 			if(this.getManagedBean().getSmBusinessAdd().getPmDistrict().getDistrictId() != null){
 				this.getManagedBean().getSmBusinessAdd().setPmDistrict(SmCommonUtil.getInstance().getDistrictById(this.getManagedBean().getSmBusinessAdd().getPmDistrict().getDistrictId()));
@@ -2228,6 +2260,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						ssmReqDTO.setBasicAcc(false);
 					}
 					*/
+					//#30964
+					this.getManagedBean().setSmBusinessAdd(resDTO.getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress());
 					ssmReqDTO.setBasicAcc(SupplierManagementConst.ACC_BASIC.equalsIgnoreCase(this.getManagedBean().getSmAppl().getApplType()));
 					//#29114, CR 27382: Static Code Analysis End
 					SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
@@ -2315,7 +2349,27 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setDistrictId(new Long(0));
 							this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPmDistrict(new PmDistrict());
 							this.getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
-							this.getManagedBean().setBusinessDistrictLs(SmCommonUtil.getDistrictList(ssmResDTO.getSmAddress().getPmState().getStateId()));
+							//START #30964
+							if (getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic() != null) {
+								if (getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses() != null
+										&& !getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses()
+												.isEmpty()) {
+									SmCompanyAddress comAdd = getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic()
+											.getSmCompanyAddresses().get(0);
+									SmAddress addr = comAdd.getSmAddress();
+									
+									
+									if(addr.getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)){
+									
+										List<SelectItem> divisionLs = SmCommonUtil.getDivisionList(addr.getPmState().getStateId());
+										this.getManagedBean().setBusinessDivisionLs(divisionLs);
+										this.getManagedBean().setBusinessDistrictLs(SmCommonUtil.getDistrictListByID(this.getManagedBean().getSmBusinessAdd().getPmDivision().getDivisionId()));
+										this.getManagedBean().getSmBusinessAdd().setPmDistrict(new PmDistrict());
+									}else{
+										this.getManagedBean().setBusinessDistrictLs(SmCommonUtil.getDistrictList(addr.getPmState().getStateId()));
+									}									
+								}
+							}//END #30964
 						}
 						//END 27488
 						this.getManagedBean().getSmSupp().getSmAppl().setApplValidWithSsm(true);
@@ -2479,7 +2533,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					this.getManagedBean().setSmBusinessAdd(smAddress);
 				}
 				// end - #30483
-				
+				//START #30964
+				if (this.getManagedBean().isCompanyValidWithSSM()){
+					this.getManagedBean().getSmBusinessAdd().setPmDistrict(new PmDistrict());
+				}//END #30964
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlineAccount/accountMaintenanceDet.xhtml");
 			}
 			
