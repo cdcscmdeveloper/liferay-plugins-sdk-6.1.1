@@ -2848,7 +2848,7 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSmAppl().getSmSupplierBranches().add(ssmBranch);
 		} else {
 			for (SmSupplierBranch branch : getManagedBean().getSmAppl().getSmSupplierBranches()) {
-				if (ssmBranch.getBranchName().equals(branch.getBranchName()) && !branch.isCopy()) {
+				if (ssmBranch.getBranchName().trim().equalsIgnoreCase(branch.getBranchName().trim()) && !branch.isCopy()) { // #32725
 					branch.setCopy(true);
 					branch.setSmAddress(SmCommonUtil.cloneAddress(ssmBranch.getSmAddress()));
 					branch.setSsmData(true); //#31627
@@ -2858,6 +2858,7 @@ public class SmApplicationBackingBean extends
 			}
 			if (!isExist) {
 				ssmBranch.setCopy(true);
+				ssmBranch.setRevNo(SupplierManagementConst.DEFAULT_REV_NO); // #32725
 				getManagedBean().getSmAppl().getSmSupplierBranches().add(ssmBranch);
 			}
 		}
