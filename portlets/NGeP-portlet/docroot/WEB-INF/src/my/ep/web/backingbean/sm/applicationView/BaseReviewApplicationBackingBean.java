@@ -931,6 +931,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 //				if (cat.getRecordStatusFlg().compareTo(
 //						SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
 				// #30021 - end
+				// #32809 - start
+				// filter category code that not imposed with DA
+				if(cat.getDisciplinaryActionId() == null){
 					for (SmMachineDtl machineDtl : getManagedBean().getSmAppl()
 							.getSmMachineDtls()) {
 						machDtlTmp = (SmMachineDtl) EntityHelper
@@ -971,6 +974,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 							}
 						}
 					}
+				}
+				// #32809 - end
+
 				// #30021 - start
 //				}
 				// #30021 - end
@@ -3288,61 +3294,71 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 */
 	public static List<PmCategoryL3> getCategoryFacilityVO(SmAppl smAppl,
 			String facType) {
-		return getCategoryFacilityVO(facType, smAppl.getSmSupplierCategories(),
+		//#32809 - start
+		return getCategoryFacilityVO(facType, smAppl,
 				smAppl.getSmFacilities());
+		//#32809 - end
 	}
 
 	public static List<PmCategoryL3> getCategoryFacilityVO(String facType,
-			List<SmSupplierCategory> categories, List<SmFacility> facilities) {
+			SmAppl smAppl, List<SmFacility> facilities) {
 		List<PmCategoryL3> categoryFacilityVOList = new ArrayList<PmCategoryL3>();
-		if (!EntityHelper.isCollectionEmpty(categories)) {
-			for (SmSupplierCategory cat : categories) {
+		
+		//#32809 - start
+		if (!EntityHelper.isCollectionEmpty(smAppl.getSmSupplierCategories())) {
+			for (SmSupplierCategory cat : smAppl.getSmSupplierCategories()) {
 				if (cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
 						&& cat.getPmCategoryL3() != null
 						&& !StringUtils.isBlank(cat.getPmCategoryL3()
 								.getFacilityType())
 						&& cat.getPmCategoryL3().getFacilityType()
 								.equalsIgnoreCase(facType)) {
-
-					cat.getPmCategoryL3().setFacilityList(
-							new ArrayList<SmFacility>());
-					cat.getPmCategoryL3().setSelectedFacilityList(
-							new ArrayList<SmFacility>());
-
-					for (SmFacility fac : facilities) {
-						if (!EntityHelper.isCollectionEmpty(fac
-								.getSmSupplierCategoryFacilities())) {
-							SmSupplierCategoryFacility catTmp = (SmSupplierCategoryFacility) EntityHelper
-									.getEntityBySinglePropertyFromList(cat
-											.getPmCategoryL3()
-											.getCategoryL3Id(), fac
-											.getSmSupplierCategoryFacilities(),
-											"pmCategoryL3");
-
-							if (catTmp != null) {
-								SmFacility facTmp = (SmFacility) EntityHelper
-										.getEntityBySinglePropertyFromList(fac
-												.getFacilityId(), cat
+					
+					// filter category code that not imposed with DA
+					if(cat.getDisciplinaryActionId() == null){
+						
+						cat.getPmCategoryL3().setFacilityList(
+								new ArrayList<SmFacility>());
+						cat.getPmCategoryL3().setSelectedFacilityList(
+								new ArrayList<SmFacility>());
+	
+						for (SmFacility fac : facilities) {
+							if (!EntityHelper.isCollectionEmpty(fac
+									.getSmSupplierCategoryFacilities())) {
+								SmSupplierCategoryFacility catTmp = (SmSupplierCategoryFacility) EntityHelper
+										.getEntityBySinglePropertyFromList(cat
 												.getPmCategoryL3()
-												.getFacilityList(),
-												"facilityId");
-								if (facTmp == null) {
-									cat.getPmCategoryL3().getFacilityList()
-											.add(fac);
+												.getCategoryL3Id(), fac
+												.getSmSupplierCategoryFacilities(),
+												"pmCategoryL3");
+	
+								if (catTmp != null) {
+									SmFacility facTmp = (SmFacility) EntityHelper
+											.getEntityBySinglePropertyFromList(fac
+													.getFacilityId(), cat
+													.getPmCategoryL3()
+													.getFacilityList(),
+													"facilityId");
+									if (facTmp == null) {
+										cat.getPmCategoryL3().getFacilityList()
+												.add(fac);
+									}
 								}
 							}
 						}
-					}
 
-					// only add category that have facilities
-					if (cat.getPmCategoryL3() != null
-							&& !EntityHelper.isCollectionEmpty(cat
-									.getPmCategoryL3().getFacilityList())) {
-						categoryFacilityVOList.add(cat.getPmCategoryL3());
+						// only add category that have facilities
+						if (cat.getPmCategoryL3() != null
+								&& !EntityHelper.isCollectionEmpty(cat
+										.getPmCategoryL3().getFacilityList())) {
+							categoryFacilityVOList.add(cat.getPmCategoryL3());
+						}
 					}
 				}
 			}
 		}
+		//#32809 - end
+
 		return categoryFacilityVOList;
 	}
 
