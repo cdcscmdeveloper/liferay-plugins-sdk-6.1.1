@@ -353,9 +353,11 @@ public class ForceReplaceSuppAdminBackingBean extends
 					if (!getManagedBean().isExistingUser()) {
 						throw new EpException(MessageConst.ERROR_721087);
 					}
-				}else {
-					throw new EpException(MessageConst.ERROR_722676);
 				}
+				//28765
+//				else {
+//					throw new EpException(MessageConst.ERROR_722676);
+//				}
 			} 
 			
 			SmPersonnel admin = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(
