@@ -6537,6 +6537,7 @@ public class EvaluationBackingBean extends
 		// this.getManagedBean().setQtProposalChecklist(checklist);
 		try {
 			this.getManagedBean().setPresentationDemoActiveIndex(0);
+			this.getManagedBean().setEvaluatioStageActiveIndex(3);//#28784
 			this.getManagedBean().setDemo(
 					this.getManagedBean().getScQt().isDemoRequired());
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
@@ -7622,6 +7623,14 @@ public class EvaluationBackingBean extends
 								// this.getManagedBean().setComplianceActiveIndex(2);
 								outputTab = 2;
 
+							//#28784 - start
+							}else if( this.getManagedBean()
+									.getPresentationDemoActiveIndex() < 0 ||
+									this.getManagedBean().getTabTechnicalIndex() == 3){
+								retrivePresentationOrDemoEvaluationStage();
+								this.getManagedBean().setTabTechnicalIndex(4);
+								outputTab = 2;
+
 							}else if (this.getManagedBean()
 									.getScQt().isDemoRequired()){
 								retrivePresentationDemo();
@@ -7634,9 +7643,12 @@ public class EvaluationBackingBean extends
 						}
 							
 						if (this.getManagedBean().getScQt().isDemoRequired()){
-							if(this.getManagedBean().getEvaluatioStageActiveIndex() == 2){
+							if(this.getManagedBean().getEvaluatioStageActiveIndex() == 3){
 								retrivePresentationDemo();
-							}else{
+							}else if (this.getManagedBean().getEvaluatioStageActiveIndex() == 2){
+								//eval summary
+							}//#28784 - end
+							else{
 								retriveTechnicalEvaluationStagePackage();
 								outputTab = 2;
 								this.getManagedBean().setTabTechnicalIndex(2);
