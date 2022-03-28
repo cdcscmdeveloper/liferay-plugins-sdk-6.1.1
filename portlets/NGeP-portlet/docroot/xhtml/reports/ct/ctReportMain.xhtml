@@ -55,17 +55,33 @@
 		<p:panel id="ctReportSearchCriteriaPanel"
 			header="#{ctReportBB.managedBean.reportTitle}"
 			rendered="#{!empty ctReportBB.managedBean.reportCode}" toggleable="true">
-			<h:outputText styleClass="instruction"
-				value="#{lbl['lbl.instruction.mandatory']}" escape="false"/><br/>
-			<h:outputText styleClass="instruction"
-				value="#{lbl['lbl.rpt.instructioninfo']}" escape="false"/><br/><br/>
 				
+			<!-- #29416 - added logic to change text color into blue for contract item monitoring report -->
+			
+			<c:choose>
+				<c:when test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctContractItemUsageMonitoringRptCcVal 
+				or ctReportBB.managedBean.reportCode eq CtReportConst.ctContractItemUsageMonitoringRptMcVal
+				or ctReportBB.managedBean.reportCode eq CtReportConst.ctContractManagementRptCcVal
+				or ctReportBB.managedBean.reportCode eq CtReportConst.ctContractManagementRptMcVal}">
+					<h:outputText styleClass="instruction" value="#{lbl['lbl.rpt.instructioninfo']}" escape="false"/><br/><br/>
+				</c:when>
+				
+				<c:otherwise>
+					<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}" escape="false"/><br/>
+					<h:outputText styleClass="instruction" value="#{lbl['lbl.rpt.instructioninfo']}" escape="false"/><br/><br/>
+				</c:otherwise>
+			</c:choose>
+		<!--29416 end-->
+			
+			<!-- MC -->	
 			<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctContractMonitoringRptVal
 				or ctReportBB.managedBean.reportCode eq CtReportConst.ctFulfilmentStatusRptVal
 				or ctReportBB.managedBean.reportCode eq CtReportConst.ctListOfContractMcRptVal
-				or ctReportBB.managedBean.reportCode eq CtReportConst.ctListOfContractCcRptVal}">
+				or ctReportBB.managedBean.reportCode eq CtReportConst.ctListOfContractCcRptVal
+				or ctReportBB.managedBean.reportCode eq CtReportConst.ctContractItemUsageMonitoringRptMcVal}">
 			     <ui:include src="/xhtml/reports/ct/common/ctReportContent.xhtml"></ui:include>
 			</c:if>
+			<!-- end mc -->
 			<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctStatementOfOrderCcRptVal}">
 				<ui:include src="/xhtml/reports/ct/cc/CT021_statementOfOrderReport.xhtml"></ui:include>
 			</c:if>
@@ -77,7 +93,12 @@
 			</c:if>				
 			<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctStatementOfOrderPqRptVal}">
 				<ui:include src="/xhtml/reports/ct/panel/CT024_statementOfOrderReport.xhtml"></ui:include>
-			</c:if>						
+			</c:if>		
+			<!-- #29416 added contract item usage monitoring report-->
+			<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctContractItemUsageMonitoringRptCcVal}">
+				<ui:include src="/xhtml/reports/ct/cc/CT_027_ContractItemMonitoringUsageRpt.xhtml"></ui:include>
+			</c:if>	
+			<!--#29416 end-->				
 		</p:panel>
 		<ac:lovPopup />
 	</ui:define>
