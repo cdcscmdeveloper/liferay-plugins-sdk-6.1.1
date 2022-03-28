@@ -97,7 +97,7 @@
 					rendered="#{financeList.scQtCheckList.definationType.parameterCode eq 'TS' or financeList.scQtCheckList.definationType.parameterCode eq 'WF'}">
 					<p:commandButton
 						action="#{supplierProposalDetailBackingBean.prepareFinancialAction(financeList)}"
-						value="#{supplierProposalDetailBackingBean.managedBean.readOnly ? lbl['lbl.btn.view']:lbl['lbl.btn.prepare']}" style="width:101px;" />
+						value="#{supplierProposalDetailBackingBean.managedBean.readOnly ? lbl['lbl.btn.view']:lbl['lbl.btn.prepare']}" style="width:101px;" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
 				</ui:fragment>
 				<ui:remove> #19287 #17376 - end </ui:remove>
 
