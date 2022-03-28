@@ -11,10 +11,12 @@
 			<td style="width: 20%; vertical-align: top;" class="sidemenutd"><ui:include
 					src="smRenewApplnSideMenuItem.xhtml" /></td>
 			<td style="vertical-align: top;">
-			<!-- #12483 - START -->
-			<h:outputText value="#{lbl['lbl.sm.revise.reason']} : #{backingBean.currentReviseReason()}" rendered="#{backingBean.currentReviseReason() ne null}" styleClass="splNotesFonts" escape="false" />
-			<br/>
-			<!-- #12483 - END -->
+				<!-- #12483 - START -->
+				<c:if test="#{backingBean.renderRevisedReason()}"> 
+					<h:outputText value="#{lbl['lbl.sm.revise.reason']} : #{backingBean.currentReviseReason()}" styleClass="splNotesFonts" escape="false"/>
+					<br/> 
+				</c:if>
+				<!-- #12483 - END -->
 					<p:outputPanel id="renewStep61OnlySuppPan"
 						rendered="#{backingBean.managedBean.supplierUser}">
 						<div align="right" style="width: 99%" class="button-wrapper">

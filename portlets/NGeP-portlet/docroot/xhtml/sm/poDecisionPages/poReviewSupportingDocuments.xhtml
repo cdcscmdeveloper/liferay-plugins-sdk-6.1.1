@@ -33,7 +33,7 @@
 				<TABLE style="width: 100%">
 					<tr>
 						<!-- #12483 - START -->
-						<h:outputText value="#{lbl['lbl.sm.revise.reason']} : #{backingBean.currentReviseReason()}" rendered="#{backingBean.currentReviseReason() ne null}" styleClass="splNotesFonts" escape="false" />
+						<h:outputText value="#{lbl['lbl.sm.revise.reason']} : #{backingBean.currentReviseReason()}" rendered="#{backingBean.renderRevisedReason()}" styleClass="splNotesFonts" escape="false" />
 						<!-- #12483 - END -->
 						<td><h:outputText value="#{lbl['lbl.sm.suppDoc.reviewNote']}"
 								style="float :left" escape="false" /> <h:inputHidden
