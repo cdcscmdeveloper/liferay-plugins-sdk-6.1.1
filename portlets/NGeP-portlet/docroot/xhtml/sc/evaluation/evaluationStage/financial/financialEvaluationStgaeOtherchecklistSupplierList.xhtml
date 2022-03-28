@@ -38,15 +38,6 @@
 				</table>
 			</p:column>
 			<ui:remove><!-- 6906 - end --></ui:remove>
-			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
-				style="width:20%; text-align:center;">
-
-				<h:outputText value="#{othersFinList.scQtProposal.supplierNo}"></h:outputText>
-
-
-			</p:column>
-
-
 			<p:column headerText="#{lbl['lbl.sc.total.score']}" rendered="#{evaluationBackingBean.managedBean.isScoringReq}"
 				style="width:25%;text-align:right;">
 				<h:outputText value="#{othersFinList.totalScore}"></h:outputText>
