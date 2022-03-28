@@ -33,8 +33,10 @@
 			</td>
 				<td style="vertical-align: top;"><p:dialog />
 					<!-- #12483 - START -->
-					<h:outputText value="#{lbl['lbl.sm.revise.reason']} : #{backingBean.currentReviseReason()}" rendered="#{backingBean.currentReviseReason() ne null}" styleClass="splNotesFonts" escape="false" />
-					<br/>
+					<c:if test="#{backingBean.renderRevisedReason()}"> 
+						<h:outputText value="#{lbl['lbl.sm.revise.reason']} : #{backingBean.currentReviseReason()}" styleClass="splNotesFonts" escape="false"/>
+						<br/> 
+					</c:if>
 					<!-- #12483 - END -->
 					<ui:include src="/xhtml/sm/poInquiryDetails/poInquiryDetails.xhtml" /></td>
 			</tr>
