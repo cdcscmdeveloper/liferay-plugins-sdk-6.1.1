@@ -497,10 +497,7 @@
 	</p:dialog>
 	
 	<!-- 26284 Start -->
-	<ac:disciplinaryActionActiveDp voList="#{requestNoteBackingBean.managedBean.disciplineVOs}" 
-				startDate="#{requestNoteBackingBean.managedBean.disciplinaryActionStartDate}"
-				endDate="#{requestNoteBackingBean.managedBean.disciplinaryActionEndDate}"
-				isWarning="#{requestNoteBackingBean.managedBean.disciplinaryActionWarning}"/>
+	<ac:disciplinaryActionHistory voList="#{requestNoteBackingBean.managedBean.disciplineVOs}" btnView="true"/>
 	<!-- 26284 End -->
 				
 </ui:composition>

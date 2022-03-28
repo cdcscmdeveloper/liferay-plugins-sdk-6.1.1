@@ -106,10 +106,7 @@
 
 			</p:dataTable>
 		</p:panel>		
-		<ac:disciplinaryActionActiveDp voList="#{dpLOABackingBean.managedBean.disciplineVOs}" 
-				startDate="#{dpLOABackingBean.managedBean.disciplinaryActionStartDate}"
-				endDate="#{dpLOABackingBean.managedBean.disciplinaryActionEndDate}"
-				isWarning="#{dpLOABackingBean.managedBean.disciplinaryActionWarning}"/>
+		<ac:disciplinaryActionHistory voList="#{dpLOABackingBean.managedBean.disciplineVOs}" btnView="true"/>
 	</ui:define>
 	
 </ui:composition>
