@@ -182,6 +182,8 @@
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.ownerName}" /></td>
 				</tr>
 				<!-- 29379 - Site Visit Grouping Enhancement - 28775 - start -->
+				<!-- 32809 - fix issue panel truncated when data workshop is empty - start -->
+				<c:if test="#{viewSmApplBackingBean.managedBean.viewApplicationHistory}">
 				<tr>
 				<p:panel header="#{lbl['lbl.sm.employee.info']}" toggleable="true" >
 					<p:dataTable var="empInfo" id="empInfoId" rowKey="#{empInfo}"
@@ -211,6 +213,8 @@
 				</p:panel>
 				</tr>
 				<!-- 29379 - Site Visit Grouping Enhancement - 28775 - end -->
+				<!-- 32809 - fix issue panel truncated when data workshop is empty - start -->
+				</c:if>
 			</table>
 		</p:scrollPanel>
 	</p:dialog>
