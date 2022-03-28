@@ -627,8 +627,8 @@ public class SupplierDataMaintenanceBackingBean extends
 			if(getManagedBean().isWarning()) {
 				getManagedBean().getDisciplineVO().getSmDiscplinaryAction().setWarning(true);			
 			}
-			
-			if(getManagedBean().isCancelCategoryCode()){
+			//32827
+			if(getManagedBean().isCancelCategoryCode() && !getManagedBean().isCancelCategoryCodeExist()){
 				getManagedBean().getDisciplineVO().getSmDiscplinaryAction().setCancelCategory(true);
 				//27460 : Disciplinary Action
 				if(getManagedBean().getSelectedApprovedCategories() == null
@@ -1216,10 +1216,12 @@ public class SupplierDataMaintenanceBackingBean extends
 				|| getManagedBean().isBlacklistOwnerOrDirector() || getManagedBean().isBumiputeraStatusCancel())
 				&& getManagedBean().isManufacturerStatusCancel()){ 
 			log.info("---showConfirmDialog semua DA---");
+			
+			//32827 - category code
 		} else if (!getManagedBean().isWarning() && !getManagedBean().isCancelCategoryCode()
 				&& !getManagedBean().isSuspendRegistration() && !getManagedBean().isCancelRegistration()
 				&& !getManagedBean().isBlacklistOwnerOrDirector() && !getManagedBean().isBumiputeraStatusCancel()
-				&& getManagedBean().isManufacturerStatusCancel()) {
+				&& getManagedBean().isManufacturerStatusCancel() && !getManagedBean().isManufacturerStatusCancelExist()) {
 			//27919 - start
 				if(getManagedBean().getSelectedApprovedCategories() == null
 						|| getManagedBean().getSelectedApprovedCategories().size() <= 0){
@@ -1249,7 +1251,8 @@ public class SupplierDataMaintenanceBackingBean extends
 		} 
 		//26238: Disciplinary Action - end - 28324
 		//27460 : Disciplinary Action
-		if(getManagedBean().isCancelCategoryCode()){			
+		//32827
+		if(getManagedBean().isCancelCategoryCode() && !getManagedBean().isCancelCategoryCodeExist()){			
 			if(getManagedBean().getSelectedApprovedCategories() == null
 					|| getManagedBean().getSelectedApprovedCategories().size() <= 0){
 				throw new EpException(SmCommonUtil.getMessage("lbl.sm.mandatory.to.select.category",null));
