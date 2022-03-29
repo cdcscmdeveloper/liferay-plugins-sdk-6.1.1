@@ -126,7 +126,9 @@
 					<td style="padding-left: 5px;">
 						<table>
 							<tr>
-								<c:if test="#{backingBean.managedBean.validEquityLimit or backingBean.managedBean.smSupplier.businessType eq 'R'}"> <!--  change by fahmi, log : 23858 13/03/2019 -->
+								<c:if test="#{backingBean.managedBean.validEquityLimit or backingBean.managedBean.smSupplier.businessType eq 'R'
+								or (backingBean.managedBean.selectedShareHolder.equityOwner and backingBean.managedBean.selectedShareHolder.ssmData)}"> <!-- #30444 -27032022  add condition --> <!--  change by fahmi, log : 23858 13/03/2019 -->
+								<h:panelGroup rendered="#{backingBean.showEquity(backingBean.managedBean)}"> <!-- #30444 -27032022  add panelGroup rendered -->		
 									<td style="width: 20px">
 										<p:selectBooleanCheckbox value="#{backingBean.managedBean.selectedShareHolder.equityOwner}"
 										disabled="#{(backingBean.managedBean.currentPageType eq SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY) 
@@ -145,8 +147,9 @@
 												oriValue="#{backingBean.managedBean.latestPersonnel.equityOwner}" 
 												currValue="#{backingBean.managedBean.selectedShareHolder.equityOwner}" />
 										<h:outputText style="float: left"
-											value="#{lbl['lbl.sm.person.equiOwner']}" />
+										    value="#{lbl['lbl.sm.person.equiOwner']}" />
 									</td>
+									</h:panelGroup> <!-- #30444 -27032022 end of panelGroup -->	
 								</c:if>
 								<c:if
 									test="#{backingBean.managedBean.currentPageType ne SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY}">

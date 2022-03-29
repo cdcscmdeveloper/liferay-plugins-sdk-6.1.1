@@ -12542,6 +12542,8 @@ public class SmApplicationUtil {
 						bean.getSelectedShareHolder().setProf(false);
 						bean.getSelectedShareHolder().setManagement(false);
 						bean.getSelectedShareHolder().setEquityOwner(false);
+						bean.getSelectedShareHolder().setHigherManagement(false); //#30444 --27032022--
+						bean.getSelectedShareHolder().setDirector(false);  //#30444 --27032022--
 						bean.getSelectedShareHolder().setDisableProf(true);
 						bean.getSelectedShareHolder().setDisableManagement(true);
 						bean.getSelectedShareHolder().setDisableEquityOwner(true);
