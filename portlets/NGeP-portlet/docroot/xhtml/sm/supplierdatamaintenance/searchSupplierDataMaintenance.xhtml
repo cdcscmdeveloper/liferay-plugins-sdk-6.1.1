@@ -105,14 +105,16 @@
 <!-- 							<p:graphicImage value="/css/images/design/edit.png" -->
 <!-- 								title="#{lbl['lbl.sm.edit']}" -->
 <!-- 								rendered="#{smSupplier.mofStatus ne SupplierManagementConst.MOF_STATUS_DELETED}" /> -->
-							<!-- bug #29156 -START -->
+							<!-- bug #29156, #32818 -START -->
 							<p:graphicImage value="/css/images/design/ico-view.png"
 								title="#{lbl['lbl.sm.view']}"
-								rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED or smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_CANCELLED or smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_EXPIRED_SYSTEM}" />
+								rendered="#{(smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED and smSupplier.pendingCancel eq false)
+									or smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_CANCELLED or smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_EXPIRED_SYSTEM}" />
 							<p:graphicImage value="/css/images/design/edit.png"
 								title="#{lbl['lbl.sm.edit']}"
-								rendered="#{smSupplier.mofStatus ne SupplierManagementConst.MOF_STATUS_DELETED and smSupplier.mofStatus ne SupplierManagementConst.MOF_STATUS_CANCELLED and smSupplier.mofStatus ne SupplierManagementConst.MOF_STATUS_EXPIRED_SYSTEM}" />
-						   	<!-- bug #29156 -END -->
+								rendered="#{(smSupplier.mofStatus ne SupplierManagementConst.MOF_STATUS_DELETED and smSupplier.mofStatus ne SupplierManagementConst.MOF_STATUS_CANCELLED and smSupplier.mofStatus ne SupplierManagementConst.MOF_STATUS_EXPIRED_SYSTEM)
+									or smSupplier.pendingCancel eq true}" />
+						   	<!-- bug #29156, #32818 -END -->
 						</p:commandLink>
 					</p:column>
 					
