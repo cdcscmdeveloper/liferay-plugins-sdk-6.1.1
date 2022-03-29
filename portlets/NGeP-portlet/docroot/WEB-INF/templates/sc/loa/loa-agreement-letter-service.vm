@@ -2041,14 +2041,14 @@ u {
 														
 														#end
 														
-														#if ($specCombine.feedback == "&nbsp;" ) 
+														#if ($specCombine.feedback == "&nbsp;" || $specCombine.feedback == " " ) 
 															<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$whitespace</td>
 														#else
 															<td bgcolor="#d0eaee"  class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$specCombine.feedback</td>
 														#end
 														
 														#if ($specCombine.answerRemark == "&nbsp;" || $specCombine.answerRemark == " ") 
-																<td bgcolor="#d0eaee"  class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$serviceScope</td>
+																<td bgcolor="#d0eaee"  class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$whitespace</td>
 														#else
 															#if ($specCombine.answerRemark)
 																<td bgcolor="#d0eaee"  class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$specCombine.answerRemark</td>
@@ -2059,7 +2059,7 @@ u {
 														
 														#if ($rowCount == 0)
 															#set($rowCount = $rowCount + 1)
-															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize"></td>
+															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize">$whitespace</td>
 														#end
 														
 													</tr>
