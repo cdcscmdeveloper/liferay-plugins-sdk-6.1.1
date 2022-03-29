@@ -370,6 +370,9 @@ public class ContractRequestManagedBean extends BaseManagedBean {
     private int validateItem;
     private int addAllItem;
     private int updateItem;
+    private int calculateTotalExist;
+    private int deleteItem;
+    private int deleteOverallItem;
   //11076 - end
     
 	private class ActiveContractPagingDataModel extends PagingDataModel<VCtActiveContract> {
@@ -3506,5 +3509,29 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		public void setUpdateItem(int updateItem) {
 			this.updateItem = updateItem;
 		}
-		//11076 - end	
+		
+		public int getCalculateTotalExist() {
+			return calculateTotalExist;
+		}
+
+		public void setCalculateTotalExist(int calculateTotalExist) {
+			this.calculateTotalExist = calculateTotalExist;
+		}
+		
+		public int getDeleteItem() {
+			return deleteItem;
+		}
+
+		public void setDeleteItem(int deleteItem) {
+			this.deleteItem = deleteItem;
+		}
+
+		public int getDeleteOverallItem() {
+			return deleteOverallItem;
+		}
+
+		public void setDeleteOverallItem(int deleteOverallItem) {
+			this.deleteOverallItem = deleteOverallItem;
+		}
+		//11076 - end
 }

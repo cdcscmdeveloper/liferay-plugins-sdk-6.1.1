@@ -390,11 +390,13 @@
 			severity="alert" widgetVar="delItemDlg" closable="true"
 			appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
 			<div class="ppRightBtn">
+				<!--11076 start-->
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
 					partialSubmit="true" 
 					action="#{contractRequestBackingBean.removeItemRow}"
-					update="deleteItemBtn,itemDataTable"
+					update="deleteItemBtn,itemDataTable,:form:itemExistingForm:textBox1,:form:itemExistingForm:textBox2,:form:itemExistingForm:textBox3"
 					oncomplete="delItemDlg.hide();" />
+				<!--11076 end-->
 				<p:commandButton value="#{lbl['lbl.btn.no']}" 
 					onclick="delItemDlg.hide()" type="button" />
 			</div>
