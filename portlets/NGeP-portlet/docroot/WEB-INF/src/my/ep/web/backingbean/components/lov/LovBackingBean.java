@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 //20200909@akmal - Enhancement28951 - Start
 import java.util.HashMap;
+import java.util.Iterator;
 //20200909@akmal - Enhancement28951 - End
 import java.util.List;
 //20200909@akmal - Enhancement28951 - Start
@@ -43,10 +44,12 @@ import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
 import my.ep.web.bean.LovBean;
 import my.ep.web.bean.LovColumnBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.managedbean.sc.simplequote.SimpleQuoteManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -82,7 +85,7 @@ public class LovBackingBean implements Serializable {
 	private LovBean lovBean = null;
 	private List<SelectItem> searchOptions = new ArrayList<SelectItem>();
 	
-	private List resultList = new ArrayList();
+	private List<?> resultList = new ArrayList();
 	private Object selectedEntity;
 	private List<BaseEntity> selectedEntities;
 	//20200909@akmal - Enhancement28951 - Start
@@ -106,6 +109,7 @@ public class LovBackingBean implements Serializable {
 			super("lovTb", true);
 		}
 		
+		@SuppressWarnings("rawtypes")
 		@Override
 		public ISearchResultBean pageChangeListener(ISearchBean searchBean) {
 			
@@ -338,6 +342,13 @@ public class LovBackingBean implements Serializable {
 //			initSearchBean();
 //		}
 		resetAction();
+		//#29832 - start
+		if(getLovBean().getLovId().equalsIgnoreCase("PM_BUSINESS_NATURE")){
+			FacesScopes facesScopesLovID = new FacesScopes();
+			facesScopesLovID.setSessionScope("LovID_Business_Nature", "PM_BUSINESS_NATURE");
+			removeSelectedBusinessNature();
+		}
+		//#29832 - end
 	}
 	
 	/**
@@ -747,16 +758,16 @@ public class LovBackingBean implements Serializable {
 		List<BaseEntity> templist = !selectedEntities.isEmpty() ? selectedEntities : searchDataModel.getList();
 		//#32721 start
 		if (templist instanceof BaseEntity){
-		for(BaseEntity value : templist){
-			if(value instanceof PmBusinessNature){
-				Long key = ((PmBusinessNature) value).getBusinessNatureId();
-				if(persistedEntities.containsKey(key)) 
-					persistedEntities.remove(key);
-				else
-					persistedEntities.put(key,value);
+			for(BaseEntity value : templist){
+				if(value instanceof PmBusinessNature){
+					Long key = ((PmBusinessNature) value).getBusinessNatureId();
+					if(persistedEntities.containsKey(key)) 
+						persistedEntities.remove(key);
+					else
+						persistedEntities.put(key,value);
+				}
 			}
 		}
-	}
 		//#32721 ends
 	}
 	
@@ -870,4 +881,38 @@ public class LovBackingBean implements Serializable {
 		this.persistedEntities = persistedEntities;
 	}
 	//20200909@akmal - Enhancement28951 - End
+	
+	/**
+	 * @author zaim
+	 * #29832 start - to remove auto populate checkbox after delete the list for business nature
+	 * 
+	 * **/
+	public void removeSelectedBusinessNature() {
+		SimpleQuoteManagedBean simpleQuoteMB = new SimpleQuoteManagedBean();
+		if (getLovBean().getSimpleQuoteBackingBean() != null) {
+			simpleQuoteMB = getLovBean().getSimpleQuoteBackingBean().deleteSuccess();
+			if (simpleQuoteMB.getDeleteBusinessNature()) {
+				if (simpleQuoteMB.getDeletedBusinessNatureMap() != null) {
+					if (simpleQuoteMB.getDeletedBusinessNatureMap().size() > 0) {
+						for (Long item : simpleQuoteMB.getDeletedBusinessNatureMap().keySet()) {
+							debugLogger("Delete key " + item);
+
+							for (Iterator<Map.Entry<Long, BaseEntity>> it = persistedEntities.entrySet().iterator(); it
+									.hasNext();) {
+								Map.Entry<Long, BaseEntity> entry = it.next();
+								if (entry.getKey().equals(item)) {
+									it.remove();
+								}
+							}
+						}
+						simpleQuoteMB = new SimpleQuoteManagedBean();
+					}
+				}
+			}
+		} else {
+			SimpleQuoteBackingBean bb = new SimpleQuoteBackingBean();
+			getLovBean().setSimpleQuoteBackingBean(bb);
+		}
+	}
+	// #29832 end
 }

@@ -2726,9 +2726,17 @@ public class SimpleQuoteBackingBean extends
 					getManagedBean().setDeletedBusinessNatureMap(deletedBusinessNatureMap);
 				}
 			}
+			
+			 getManagedBean()
+				.setSelectedBusinessNature(null);
+			 
 		}
-		 getManagedBean()
-			.setSelectedBusinessNature(null);
+		
+		//29832-start
+		getManagedBean().setDeleteBusinessNature(true);
+		//#29832-end 
+		 
+		
 	}
 
 	/**
@@ -4479,7 +4487,13 @@ public class SimpleQuoteBackingBean extends
 							if (!busNatureIds.contains(busiNature
 									.getBusinessNatureId())) {
 								natureQuoteCriterias.add(natureQuoteCriteria);
-							} else {
+							}
+							// #29832 added else if to prevent error after delete the list.
+							else if (busNatureIds.contains(busiNature
+									.getBusinessNatureId())){
+							}
+								else {
+							
 								throw new EpException(
 										MessageConst.ERROR_700027,
 										new String[] { ResourceBundleUtils
@@ -4495,6 +4509,16 @@ public class SimpleQuoteBackingBean extends
 					}
 				}
 			}
+			// #29832 - start
+			FacesScopes facesScopes = new FacesScopes();
+			String lovID = (String) facesScopes.getSessionScope("LovID_Business_Nature");
+			if (lovID.equalsIgnoreCase("PM_BUSINESS_NATURE")) {
+				getManagedBean().setDeleteBusinessNature(false);
+				getManagedBean().setDeletedBusinessNatureMap(null);
+			}
+
+			// #29832 - end
+			
 		}
 	}
 
@@ -8149,5 +8173,11 @@ public class SimpleQuoteBackingBean extends
 			preRenderView();
 		}
 		// #29800 - end
-
+		
+		// #29832 @zaim added method to pass the value into lovBackingBean
+		public SimpleQuoteManagedBean deleteSuccess(){
+			
+			return getManagedBean();
+		}
+		// #29832 end
 }

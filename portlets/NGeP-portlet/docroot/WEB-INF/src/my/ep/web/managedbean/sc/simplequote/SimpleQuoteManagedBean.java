@@ -58,7 +58,6 @@ import my.ep.web.vo.DisciplinaryActionVO;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.TreeNode;
 
-// TODO: Auto-generated Javadoc
 
 /**
  * The Class SimpleQuoteManagedBean.
@@ -451,6 +450,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	private boolean qtyNonEditable = Boolean.FALSE;
 	// #28865 - start
 	
+	private Boolean deleteBusinessNature = false;
 	/**
 	 * Gets the spki backing bean.
 	 * 
@@ -2820,5 +2820,19 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 		this.qtyNonEditable = qtyNonEditable;
 	}
 	// #28865 - end
+	
+	/**
+	 * @return the deleteBusinessNature
+	 */
+	public Boolean getDeleteBusinessNature() {
+		return deleteBusinessNature;
+	}
+
+	/**
+	 * @param deleteBusinessNature the deleteBusinessNature to set
+	 */
+	public void setDeleteBusinessNature(Boolean deleteBusinessNature) {
+		this.deleteBusinessNature = deleteBusinessNature;
+	}
 	
 }
