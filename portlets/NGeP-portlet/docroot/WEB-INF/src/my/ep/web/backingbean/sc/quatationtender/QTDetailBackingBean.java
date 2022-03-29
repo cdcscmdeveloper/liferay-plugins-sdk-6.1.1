@@ -3724,6 +3724,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 			//9019 end
 
+			//9019 - Start (Harun) rendering Group Item that left blank but panel is selected  
+			if (this.getManagedBean().getQt().isPanel() && null == this.getManagedBean().getQt().getItemGroup()) {
+				this.getManagedBean().getQt().setItemGroup(new CtPanelItemGroup());
+			}
+			//9019 - End (Harun)
 
 			if (SCProcessNameConst.REVISE_PCB.equalsIgnoreCase(this
 					.getManagedBean().getTaskName())) {
