@@ -193,38 +193,14 @@ public class DisciplinaryActionRest {
 								} catch (Exception ex) {
 									throw new EpException(ex.getMessage());
 								}
-							} else { // 26238 start future date for suspend registration								
+							} else {
+								//32558: disciplinary action - 26238 Start 
 								suspendList.getSmSupplier();
 								suspendList.getSmSupplier().getSmAppl();
 								
 								PmUser user = SmCommonUtil.getUserByUserId(suspendList.getChangedBy());
 								List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(user.getUserId());
-								SmServiceLookup.getSupplierDataMaintenanceSO().updatePendingDisciplinaryAction(suspendList,user, userRoles);
 
-								Long disciplinaryActionId = suspendList.getDisciplinaryActionId();
-
-								// release DA if pending is completed
-								if (disciplinaryActionId != null) {
-									SmDisciplinaryAction completedPendingSmDa = SmServiceLookup.getSupplierDataMaintenanceSO()
-											.retrieveActiveDisciplinaryActionByDisciplinaryId(disciplinaryActionId);
-									
-									//26238 - 32558 - 32710 -  rollback code is for imposed suspen when supplier finish pending txn
-									if (completedPendingSmDa.isSuspendRegistration() && !completedPendingSmDa.isPendingSuspend()) {
-										completedPendingSmDa.getSmSupplier();
-										SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(completedPendingSmDa);
-									}
-								}
-							} // 26238 end future date for suspend registration	
-
-							// check pending suspend task, if completed = release DA
-							if (suspendList.isPendingSuspend()) {
-								
-								suspendList.getSmSupplier();
-								suspendList.getSmSupplier().getSmAppl();
-								
-								PmUser user = SmCommonUtil.getUserByUserId(suspendList.getChangedBy());
-								List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(user.getUserId());
-								
 								//26238 start
 								// pending that expired
 								if(suspendList.getEndDate().compareTo(todayWithZeroTime) < 0 ){
@@ -250,8 +226,9 @@ public class DisciplinaryActionRest {
 									}
 								}
 								//26238 end
+							} // 26238 end future date for suspend registration	
+							// 32558: disciplinary action - 26238 end
 							}
-						}
 						//26238
 					}
 				}
