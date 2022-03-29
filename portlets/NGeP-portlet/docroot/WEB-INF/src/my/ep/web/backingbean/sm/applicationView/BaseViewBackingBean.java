@@ -318,26 +318,29 @@ public abstract class BaseViewBackingBean<T extends BaseViewManagedBean>
 			List<SmSupplierCategory> categories = SmServiceLookup
 					.getSupplierApplicationSO().retrieveEighthTab(reqDTO)
 					.getSmSupplierCategories();
+			
+			//#32809 - start
 			getManagedBean()
 					.setDockYardFacilitiesVOList(
 							getCategoryFacilityVO(
 									my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_DOCKYARD,
-									categories, facilities));
+									getManagedBean().getSmAppl(), facilities));
 			getManagedBean()
 					.setWorkshopFacilitiesVOList(
 							getCategoryFacilityVO(
 									my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP,
-									categories, facilities));
+									getManagedBean().getSmAppl(), facilities));
 			getManagedBean()
 					.setStoreFacilitiesVOList(
 							getCategoryFacilityVO(
 									my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_STORE,
-									categories, facilities));
+									getManagedBean().getSmAppl(), facilities));
 			getManagedBean()
 					.setFactoryFacilitiesVOList(
 							getCategoryFacilityVO(
 									my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_FACTORY,
-									categories, facilities));
+									getManagedBean().getSmAppl(), facilities));
+			//#32809 - end
 			getManagedBean().setLoadFacilityInfo(true);
 		}
 	}

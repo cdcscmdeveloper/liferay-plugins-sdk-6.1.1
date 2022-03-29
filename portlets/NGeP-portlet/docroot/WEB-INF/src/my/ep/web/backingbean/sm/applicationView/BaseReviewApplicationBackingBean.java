@@ -893,6 +893,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 //				if (cat.getRecordStatusFlg().compareTo(
 //						SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
 				// #30021 - end
+				// #32809 - start
+				// filter category code that not imposed with DA
+				if(cat.getDisciplinaryActionId() == null){
 					for (SmMachineDtl machineDtl : getManagedBean().getSmAppl()
 							.getSmMachineDtls()) {
 						machDtlTmp = (SmMachineDtl) EntityHelper
@@ -933,6 +936,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 							}
 						}
 					}
+				}
+				// #32809 - end
+
 				// #30021 - start
 //				}
 				// #30021 - end
@@ -3248,15 +3254,19 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 */
 	public static List<PmCategoryL3> getCategoryFacilityVO(SmAppl smAppl,
 			String facType) {
-		return getCategoryFacilityVO(facType, smAppl.getSmSupplierCategories(),
+		//#32809 - start
+		return getCategoryFacilityVO(facType, smAppl,
 				smAppl.getSmFacilities());
+		//#32809 - end
 	}
 
 	public static List<PmCategoryL3> getCategoryFacilityVO(String facType,
-			List<SmSupplierCategory> categories, List<SmFacility> facilities) {
+			SmAppl smAppl, List<SmFacility> facilities) {
 		List<PmCategoryL3> categoryFacilityVOList = new ArrayList<PmCategoryL3>();
-		if (!EntityHelper.isCollectionEmpty(categories)) {
-			for (SmSupplierCategory cat : categories) {
+		
+		//#32809 - start
+		if (!EntityHelper.isCollectionEmpty(smAppl.getSmSupplierCategories())) {
+			for (SmSupplierCategory cat : smAppl.getSmSupplierCategories()) {
 				if (cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
 						&& cat.getPmCategoryL3() != null
 						&& !StringUtils.isBlank(cat.getPmCategoryL3()
@@ -3264,6 +3274,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						&& cat.getPmCategoryL3().getFacilityType()
 								.equalsIgnoreCase(facType)) {
 
+					// filter category code that not imposed with DA
+					if(cat.getDisciplinaryActionId() == null){
+						
 					cat.getPmCategoryL3().setFacilityList(
 							new ArrayList<SmFacility>());
 					cat.getPmCategoryL3().setSelectedFacilityList(
@@ -3303,6 +3316,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				}
 			}
 		}
+		}
+		//#32809 - end
+
 		return categoryFacilityVOList;
 	}
 
