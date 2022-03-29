@@ -522,6 +522,16 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				      <p:column headerText="#{lbl['lbl.ct.business.reg.no']}"  style="width:10%;" styleClass="column-align-center" > 
 				          <h:outputText value="#{supVar.supplierRegNo}" style="float:left;"/>
 				      </p:column>
+				      	 <!-- #29983 start -->
+				       <p:column style="white-space:normal;width:10%;" styleClass="column-align-center" >
+								       <f:facet name="header">
+											<h:outputText id="businessRegNoNew" value="#{lbl['lbl.ct.business.reg.no.new']}" sstyle="float:left;"/>
+						               		<ac:iconTooltip   value="#{lbl['lbl.ct.tooltip.business.reg.no.new']}" />
+						               </f:facet>
+						               <h:outputText value="#{supVar.supplier.ssmNewRegNo == null ? lbl['lbl.txt.na'] : supVar.supplier.ssmNewRegNo }"  />
+						               
+						</p:column>
+						 <!-- #29983 end -->
 				     
 				      <p:column headerText="#{lbl['lbl.ct.mof.no']}"  style="width:10%;" styleClass="column-align-center" >
 				          <h:outputText value="#{supVar.supplierMofNo}" style="float:left;" />
@@ -741,10 +751,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 							<tr>
 								<td></td>
 								<td>
-									<!-- Bug #29446 -->
+									<!-- Bug #29447 -->
 									<h:outputText value="#{remark.remark}"
 									style="display: inline-block; word-break: break-word; white-space:normal"/>
-									<!-- Bug #29446 -->
+									<!-- Bug #29447 -->
 								</td>
 							</tr>
 						</table>

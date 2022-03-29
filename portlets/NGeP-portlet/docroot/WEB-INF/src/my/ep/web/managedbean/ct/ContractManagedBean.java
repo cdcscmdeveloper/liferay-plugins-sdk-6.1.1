@@ -182,13 +182,16 @@ public class ContractManagedBean extends BaseManagedBean {
 	
 	//#13847 - start
 	private boolean disableDeferment = false;
-
+	
+	//#29983 start
+	private String businessRegNoNew;
+	//#29983 end
+	
 	//Start Fix - #31740
 	private Map<Long, CtAgency> selectedAgencyChanges;
 	
 	private Map<Long, CtAgency> agencyDataDeletion;
 	//End Fix - #31740
-	
 	/**
 	 * @return the fileDirectory
 	 */
@@ -1460,6 +1463,23 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.waiverDetailDelete = waiverDetailDelete;
 	}
 	//13847 - shaqimi end
+
+	//#29983 start
+	/**
+	 * @return the businessRegNoNew
+	 */
+	public String getBusinessRegNoNew() {
+		return businessRegNoNew;
+	}
+
+	/**
+	 * @param businessRegNoNew the businessRegNoNew to set
+	 */
+	public void setBusinessRegNoNew(String businessRegNoNew) {
+		this.businessRegNoNew = businessRegNoNew;
+	}
+	//#29983 end
+
 	public boolean isDisableOriginalBond() {
 		return disableOriginalBond;
 	}
@@ -1467,7 +1487,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setDisableOriginalBond(boolean disableOriginalBond) {
 		this.disableOriginalBond = disableOriginalBond;
 	}
-	
+
     // Start Fix - #31740
 	/**
 	 * Populate only changes related to agency
@@ -1523,7 +1543,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	public boolean isViewSCL() {
 		return viewSCL;
 	}
-		
+
 	public void setViewSCL(boolean viewSCL) {
 		this.viewSCL = viewSCL;
 	}

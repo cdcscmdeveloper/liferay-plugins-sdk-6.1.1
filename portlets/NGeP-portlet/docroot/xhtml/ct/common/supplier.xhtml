@@ -41,6 +41,23 @@
                                      value="#{ctBackingBean.managedBean.contractVer.ctContractValue.gstRegNo == null ? lbl['lbl.txt.na'] : ctBackingBean.managedBean.contractVer.ctContractValue.gstRegNo}" />
                              </td>
                         </tr>
+                         <!-- #29983 start -->
+	                       <tr>
+	                        	<td>
+	                        		<p:outputLabel value="#{lbl['lbl.ct.business.reg.no.new']}"/>  
+	                        	</td>
+	                        	<td>
+	                        		  <p:inputText id="supplierRegNoNew" disabled="true" style="width:265px;" 
+						                   value="#{ctBackingBean.managedBean.contractVer.ctContract.smSupplier.ssmNewRegNo == null ? lbl['lbl.txt.na'] : ctBackingBean.managedBean.contractVer.ctContract.smSupplier.ssmNewRegNo}" />
+						               <p:spacer width="1"/>
+									   <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.business.reg.no.new']}" />
+						               <br />
+						               <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.note.applicable.for.roc.and.rob']}" style="float:left;margin-bottom: 5px;" /> 
+						           	  	
+	                        	</td>
+	                        </tr>
+	                       
+	                         <!-- #29983 end -->
                         
                          <h:panelGroup  rendered="#{!ctBackingBean.managedBean.viewContract 
                                            and ctBackingBean.managedBean.updateCompanyName}">
@@ -50,8 +67,10 @@
                                             <h:panelGrid columns="4">
                                             <p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
 			                                       value="#{ctBackingBean.managedBean.contractVer.ctContractValue.companyNameChange}">
+			                                        <!-- #24819 start added supplierRegNoNew-->
 				                                   <p:ajax event="change" 
 				                                        listener="#{ctBackingBean.retrieveCompanyName}" update="supplierCompanyName, supplierBranchName, supplierRegNo, supplierMofNo" />
+				                                         <!-- #24819 end -->
 				                            </p:selectBooleanCheckbox>
 			                               <p:spacer width="2" />	
 			                               <p:outputLabel value="#{lbl['lbl.ct.update.name']}" style="width:210px;text-align:left;"/>
@@ -183,7 +202,8 @@
                  <tr>
                  <td>
                     <p:outputLabel value="#{lbl['lbl.ct.contact.person']}"/>  </td>
-                <td>  <p:inputText disabled="true" style="width:265px;margin-bottom: 5px;" 
+                <td>  
+                <p:inputText disabled="true" style="width:265px;margin-bottom: 5px;" 
                       value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.contactPerson}" />
                 </td>
                  </tr>

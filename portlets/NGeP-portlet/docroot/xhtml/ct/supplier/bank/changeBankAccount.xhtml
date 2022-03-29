@@ -273,8 +273,26 @@
                     <p:inputText disabled="true" style="width:200px;margin-bottom: 5px;"  
                                      value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.gstRegNo == null ? lbl['lbl.txt.na'] : supplierBackingBean.managedBean.contractVer.ctContractValue.gstRegNo}" />
             
-            	<p:outputLabel value="#{lbl['lbl.ct.business.name']}" />
-				<p:inputText disabled="true" style="width:350px;"
+            <!-- #29983 start -->
+            	<p:outputLabel value="#{lbl['lbl.ct.business.reg.no.new']}" />
+				<h:panelGrid columns="3">
+					<p:inputText disabled="true" style="width:350px; margin-bottom: 0px;"
+						value="#{supplierBackingBean.managedBean.ctContract.smSupplier.ssmNewRegNo == null ? lbl['lbl.txt.na'] : supplierBackingBean.managedBean.ctContract.smSupplier.ssmNewRegNo}" />
+					<p:spacer width="1" />
+					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.business.reg.no.new']}" />
+				</h:panelGrid>
+		
+				<f:verbatim></f:verbatim> <f:verbatim></f:verbatim>
+            	
+            	<p:outputLabel value=" " />
+				<h:panelGrid columns="3">
+					<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.note.applicable.for.roc.and.rob']}" style="margin-bottom: 5px;"/>
+				</h:panelGrid>
+           		<f:verbatim></f:verbatim> <f:verbatim></f:verbatim>
+            <!-- #29983 end -->
+            
+            	<p:outputLabel value="#{lbl['lbl.ct.business.name']}" style="margin-top: 5px;" />
+				<p:inputText disabled="true" style="width:350px; margin-top:5px;"
 					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierName}" />
 					 <p:outputLabel value="#{lbl['lbl.ct.supplier.gst.eff.date']}" />
                       <p:inputText disabled="true" style="width:200px;margin-bottom: 5px;"  
