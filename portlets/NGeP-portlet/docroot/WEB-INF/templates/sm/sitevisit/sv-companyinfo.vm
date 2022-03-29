@@ -24,7 +24,8 @@
     	</tr>
     	
     	<tr>
-	        <td><br /></td>
+	        <td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.businessregno')</b></td>
+	        <td>$busRegNo</td>
     	</tr>
     	
     	<tr>

@@ -26,10 +26,7 @@ import javax.faces.application.ViewHandler;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.component.UIViewRoot;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.portlet.PortletRequest;
-import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 //#30504 start
@@ -135,7 +132,6 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.StreamedContent;
 
-import com.liferay.portal.util.PortalUtil;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfContentByte;
@@ -1280,6 +1276,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		context.put("companyName", svTask.getSmAppl().getSmSupplier().getCompanyName());	
 		context.put("applNo", svTask.getSmAppl().getApplNo());
 		context.put("businessRegistrationNo",  svTask.getSmAppl().getSmSupplier().getRegNo());
+		//24819
+		context.put("newBusinessRegistrationNo",svTask.getSmAppl().getSmSupplier().getSsmNewRegNo());
 		context.put("visitingPurpose", templateDesc.toUpperCase());
 		context.put("catApplicable", getManagedBean().getSupplierCategory());
 		context.put("telNo", svTask.getSmAppl().getSmCompanyBasic().getPhoneNo());
@@ -1379,6 +1377,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		
 		context.put("companyName", svTask.getSmAppl().getSmSupplier().getCompanyName());
 		context.put("busRegNo", svTask.getSmAppl().getSmSupplier().getRegNo());
+		context.put("newBusinessRegistrationNo",svTask.getSmAppl().getSmSupplier().getSsmNewRegNo());
 		context.put("mofNo",StringUtils.isNotBlank(mofAccount.getMofNo())?mofAccount.getMofNo() : "");
 		context.put("applNo",svTask.getSmAppl().getApplNo());
 		context.put("templateType",templateDesc);
