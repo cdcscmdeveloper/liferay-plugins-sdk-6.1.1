@@ -593,4 +593,15 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 		return url;
 	}
 	// #26130-end
+
+	// #25025 -start
+	public static void setMarginSpace(WordprocessingMLPackage wordPackage) {
+		ObjectFactory factory = Context.getWmlObjectFactory();
+		PgMar pg = factory.createSectPrPgMar();
+		pg.setLeft(BigInteger.valueOf(1000));
+		pg.setRight(BigInteger.valueOf(1000));
+
+		wordPackage.getDocumentModel().getSections().get(0).getSectPr().setPgMar(pg);
+	}
+	// #25025 - end
 }
