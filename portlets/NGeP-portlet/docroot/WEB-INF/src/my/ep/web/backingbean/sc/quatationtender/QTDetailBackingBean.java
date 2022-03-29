@@ -6329,6 +6329,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		reqDTO.setTaskId(this.getManagedBean().getTaskId());
 		reqDTO.setPayLoad(this.getManagedBean().getPayLoad());
 		
+		//9019 - Start (Harun) set Group Item to NULL when save while left blank and panel is selected
+		if (isPanel && null == this.getManagedBean().getQt().getItemGroup().getPanelItemGroupId()) {
+			this.getManagedBean().getQt().setItemGroup(null);
+		}
+		//9019 - End (Harun) 
+		
 		int changedIndexNumber = manipulateIndexNumber(activeIndex);
 		switch (changedIndexNumber) {
 		case 0:
@@ -6574,6 +6580,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		} else{
 			ScQt scQt = this.getManagedBean().getQt();
 			this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
+		}
+		//9019 - End (Harun)
+		
+		//9019 - Start (Harun) initializing Group Item when panel is selected and left blank while SAVE
+		if (isPanel) {
+			this.getManagedBean().getQt().setItemGroup(new CtPanelItemGroup());
+			this.getManagedBean().getQt().getItemGroup().setPanelItemGroupId((long) 0);
 		}
 		//9019 - End (Harun)
 		
