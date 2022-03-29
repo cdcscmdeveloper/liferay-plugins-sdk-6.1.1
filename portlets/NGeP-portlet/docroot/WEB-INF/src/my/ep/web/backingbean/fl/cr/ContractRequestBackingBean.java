@@ -690,6 +690,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		//#29171, CR 14650: Static Code Analysis 
 		if(!deletedItemId.isEmpty()) {
 			getManagedBean().setItemDeleteButtonShow(true);
+			//11076 start
+			getManagedBean().setDeleteOverallItem(deletedItemId.size());
+			log.info("=====deletedItemId====="+getManagedBean().getDeleteOverallItem());
+			getManagedBean().setDeleteItem(getManagedBean().getOverallTotalItem()-getManagedBean().getDeleteOverallItem());
+			log.info("====GET DELETE ITEM====="+getManagedBean().getDeleteItem());
+			//11076 end
 			List<FlFulfilmentItemAddr> deleteFlItemAddrs = new ArrayList<FlFulfilmentItemAddr>();
 			for (FlFulfilmentItemAddr flItemAddr : getManagedBean().getItemAddrList()) {
 				if(deletedItemId.contains(flItemAddr.getScRequestItem().getRequestNoteItemId())) {
@@ -719,6 +725,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}
 		if(getManagedBean().getSelectedDelAddr()!=null) {
 			populateItemsForSelectedAddress();
+			getManagedBean().setTotalNewItemsAdded(0);//11076
+			getManagedBean().setTotalExistingItem(getManagedBean().getOverallTotalItem());//11076
 		}
 	}
 	
@@ -1212,6 +1220,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().setSelectedContractedItemList(new ArrayList<CtContractItem>());
 		getManagedBean().setItemAutoUpdate(false);
 		getManagedBean().setAutoUpdate(true);
+		getManagedBean().setCalculateTotalExist(getManagedBean().getOverallTotalItem()-getManagedBean().getTotalNewItemsAdded());//11076
+		log.info("=========NEW CALCULATE EXISTING=========" + getManagedBean().getCalculateTotalExist());//11076
+		getManagedBean().setTotalExistingItem(getManagedBean().getCalculateTotalExist());//11076
 	}
 	
 	// 11076 start
@@ -2002,7 +2013,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		//11076
 		log.info("=======Populate Item======= : " + itemsList.size());// 11076
 		getManagedBean().setOverallTotalItem(itemsList.size());// 11076
-		
 	}
 	
 	/**
