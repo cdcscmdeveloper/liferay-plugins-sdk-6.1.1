@@ -5,7 +5,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	
 	<ui:define name="resourceSection">
@@ -64,6 +65,28 @@
 				<td><h:outputText value="#{svcSiteAssignBackingBean.managedBean.smAppl.smSupplier.regNo}" /></td>
 			</tr>
 			
+			<tr>
+			<td><p:outputLabel  value="#{lbl['lbl.sm.new.business.regNo']}" /></td>
+			<td class="header-info-text">
+					<h:outputText value="#{svcSiteAssignBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}" rendered="#{!empty svcSiteAssignBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}"/>
+					<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty svcSiteAssignBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}"/>
+					&#160;
+						<p:graphicImage id="newRegNoti" value="/css/images/design/tooltips.png"/>
+						<p:tooltip id="newRegNott" for="newRegNoti">
+							<p:outputLabel escape="false" value="#{lbl['tt.sm.new.business.regNo']}"  />
+						</p:tooltip>&#160;
+			</td>	
+			<tr>
+				<td></td>
+				<td  class="header-info-text">
+				<ac:instructionText value="#{lbl['lbl.sm.new.business.regNo.notes']}" />
+				</td>
+				<td></td>
+				<td></td>
+			</tr>
+			</tr>
+				
+				
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.siteassign.company.address']}" /></td>
 				<td>

@@ -194,7 +194,33 @@
 					 	<td class="tdContent">
 					 	<p:inputText readonly="true" value="#{supplierDataMaintenanceBackingBean.managedBean.smSupplier.regNo}" />
 						</td>
+						<td class="tdTitle">
+						<p:outputLabel value="#{lbl['lbl.sm.new.business.regNo']}" /></td>
+						<td class="tdContent">
+							<h:inputText value="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}" 
+							rendered="#{!empty supplierDataMaintenanceBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}"
+							disabled="#{!supplierDataMaintenanceBackingBean.managedBean.smSupp.brandNew}"
+									size="30" label="#{lbl['lbl.sm.new.business.regNo']}"  />
+							<h:inputText value="#{lbl['lbl.sm.no.available']}"
+							 rendered="#{empty supplierDataMaintenanceBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}"
+							 disabled="#{!supplierDataMaintenanceBackingBean.managedBean.smSupp.brandNew}"
+									size="30" label="#{lbl['lbl.sm.new.business.regNo']}"  />
+					&#160;
+						<p:graphicImage id="newRegNoti" value="/css/images/design/tooltips.png"/>
+						<p:tooltip id="newRegNott" for="newRegNoti">
+							<p:outputLabel escape="false" value="#{lbl['tt.sm.new.business.regNo']}"  />
+						</p:tooltip>&#160;
+			</td>	
 					 </tr>
+					 <tr>
+				<td></td>
+				<td></td>
+				<td class="header-info-text"></td>
+				<td><ac:instructionText value="#{lbl['lbl.sm.new.business.regNo.notes']}" />
+				</td>
+			</tr>
+		
+					 
 				</table>
 			</p:panel>
 			
@@ -755,7 +781,6 @@
 								supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirector}"/>
 						</p:column>
 						<!-- 28494, 32279 - end-->
-						<!-- 29659 START -->
 						<p:column headerText="#{lbl['lbl.sm.person.composition.name']}">
 							<h:outputText value="#{person.name}" />
 						</p:column>
