@@ -32,7 +32,7 @@
 						immediate="true" action="#{forceReplaceSuppAdminBackingBean.back}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 				</td>
 				<td style="white-space: nowrap; float: right;">
-				<!-- #28765 -->
+				
 					<p:commandButton value="#{lbl['lbl.sm.declare']}"  partialSubmit="true" process="@this" 
 					disabled="#{!forceReplaceSuppAdminBackingBean.managedBean.agreeTnc or empty forceReplaceSuppAdminBackingBean.managedBean.smReplaceSupplierAdminDocs[0].smReplacesupplieradminDocFiles[0].fileName}" 
 					update=":#{p:component('declareAlertPopUpId')},@this" id="declareBtnId" action="#{forceReplaceSuppAdminBackingBean.checkingBeforeDeclare}"
@@ -55,13 +55,8 @@
 		 	<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"  onclick="declareAlertPopUp.hide();" type="button" />
 		</div>
 		</p:confirmDialog>
-		<!-- #28765 End -->
-				<!-- 
-					<p:commandButton value="#{lbl['lbl.sm.declare']}" id="declareBtnId" update=":form"
-							action="#{forceReplaceSuppAdminBackingBean.declare}" 
-							disabled="#{!forceReplaceSuppAdminBackingBean.managedBean.agreeTnc or empty forceReplaceSuppAdminBackingBean.managedBean.smReplaceSupplierAdminDocs[0]}" 
-							onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-				 -->
+		
+				
 				</td>
 			</tr>
 		</table><br />
