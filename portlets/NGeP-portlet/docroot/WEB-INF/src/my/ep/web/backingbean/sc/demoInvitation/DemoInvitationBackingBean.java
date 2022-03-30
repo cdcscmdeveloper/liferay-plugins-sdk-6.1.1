@@ -793,32 +793,37 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 			QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
 			ScQt scQt = this.getManagedBean().getQt();
 
-			if (isQTStatusGreaterThanOrEquals(scQt.getQtStatus().getStatusId(),
-					QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION)) {
-				quationTenderReqDTO.setQtId(scQt.getQtId());
-				quationTenderReqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE);
-				QuationTenderResDTO resDTO = detailSO.retrieveApprovalsByQtIdNType(quationTenderReqDTO);
-				this.getManagedBean().setQt(resDTO.getQtDetail());
-				ScQtApproval qtApproval = resDTO.getQtApproval();
+			// if
+			// (!this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION))
+			// {
+			quationTenderReqDTO.setQtId(scQt.getQtId());
+			quationTenderReqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE);
+			QuationTenderResDTO resDTO = detailSO.retrieveApprovalsByQtIdNType(quationTenderReqDTO);
+			this.getManagedBean().setQt(resDTO.getQtDetail());
+			ScQtApproval qtApproval = resDTO.getQtApproval();
 
-				List<ScQtApprovalRemark> qtRemarks = initializeRemarks(qtApproval, this.getManagedBean().getQt()
-						.getCurrentWorkFlowStatus(), qtApproval.getScQtApprovalRemarks(), ScQtApprovalRemark.class);
-				for (ScQtApprovalRemark qtRemark : qtRemarks) {
-					qtRemark.setEditable(false);
-				}
-				qtApproval.setScQtApprovalRemarks(qtRemarks);
-				TabBean tabBean = new TabBean(null, null, qtApproval, retrieveFinalizationCommitteeType());
-				this.getManagedBean().setSelectedApprovalTabBean(tabBean);
-			} else {
-				List<ScQtRemark> remarks = null;
-				if (CollectionUtils.isNotEmpty(scQt.getScQtRemarks())
-						&& StringUtils.isNotEmpty(scQt.getScQtRemarks().get(0).getRemark())) {
-					remarks = scQt.getScQtRemarks();
-				}
-
-				scQt.setScQtRemarks(initializeRemarks(scQt, this.getManagedBean().getQt().getCurrentWorkFlowStatus(),
-						scQt.getScQtRemarks(), ScQtRemark.class));
+			List<ScQtApprovalRemark> qtRemarks = initializeRemarks(qtApproval, this.getManagedBean().getQt()
+					.getCurrentWorkFlowStatus(), qtApproval.getScQtApprovalRemarks(), ScQtApprovalRemark.class);
+			for (ScQtApprovalRemark qtRemark : qtRemarks) {
+				qtRemark.setEditable(false);
 			}
+			qtApproval.setScQtApprovalRemarks(qtRemarks);
+			TabBean tabBean = new TabBean(null, null, qtApproval, retrieveFinalizationCommitteeType());
+			this.getManagedBean().setSelectedApprovalTabBean(tabBean);
+			// } else {
+			// List<ScQtRemark> remarks = null;
+			// if (!scQt.getScQtRemarks().equals(null)) {
+			// if
+			// (StringUtils.isNotEmpty(scQt.getScQtRemarks().get(0).getRemark()))
+			// {
+			// remarks = scQt.getScQtRemarks();
+			// }
+			// }
+
+			// scQt.setScQtRemarks(initializeRemarks(scQt,
+			// this.getManagedBean().getQt().getCurrentWorkFlowStatus(),
+			// scQt.getScQtRemarks(), ScQtRemark.class));
+			// }
 			return "/xhtml/sc/demoInvitation/demoInvitationCancel.xhtml";
 
 		} finally {
@@ -893,9 +898,12 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 			} else if (this.getManagedBean().getDemoInvBy().equalsIgnoreCase(SourcingConstants.BY_ITEM)) {
 				scQtDemo.setScQtDemoSupplierList(null);
 			}
+			if(scQtDemo.getDemoCategoryId().getParameterId() == null){
+				scQtDemo.setDemoCategoryId(resDto.getScQtDemo().getDemoCategoryId());				
+			}
 
 			if (scQtDemo.getDemoCategoryId() != null && !resDto.getScQtDemo().getDemoCategoryId().getParameterCode()
-					.equalsIgnoreCase(scQtDemo.getDemoCategoryId().getParameterCode())) {
+					.equalsIgnoreCase(this.getManagedBean().getDemoInvBy())) {
 				if (resDto.getScQtDemo().getDemoCategoryId().getParameterCode()
 						.equalsIgnoreCase(SourcingConstants.BY_ITEM)) {
 					reqDto.setDemoItemToBeDeleted(resDto.getScQtDemo().getScQtDemoItemList());
@@ -975,40 +983,9 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 							throw new EpException(MessageConst.ERROR_760531);
 						}
 					}
-
 				}
 			}
-		} else if (scQtDemo != null && process.equals(BpmOutcomeConst.BPM_SAVE)) {
-			SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-			if (this.getManagedBean().getDemoInvBy().equalsIgnoreCase(SourcingConstants.ALL_ITEM)) {
-				for (ScQtDemoSupplier sup : scQtDemo.getScQtDemoSupplierList()) {
-					if (sup.getScQtDemoSchedule().getDemoStartDate() != null) {
-						String startDate = sdf.format(sup.getScQtDemoSchedule().getDemoStartDate());
-						if (startDate == null) {
-							throw new EpException(MessageConst.ERROR_760531);
-						}
-					} else if (sup.getScQtDemoSchedule().getDemoEndDate() != null) {
-						String endDate = sdf.format(sup.getScQtDemoSchedule().getDemoEndDate());
-						if (endDate == null) {
-							throw new EpException(MessageConst.ERROR_760531);
-						}
-					}
-				}
-
-			} else if (this.getManagedBean().getDemoInvBy().equalsIgnoreCase(SourcingConstants.BY_ITEM)) {
-				for (ScQtDemoItem item : scQtDemo.getScQtDemoItemList()) {
-					for (ScQtDemoByItemScore score : item.getScQtDemoByItemScoreList()) {
-						String startDate = sdf.format(score.getScQtDemoSchedule().getDemoStartDate());
-						String endDate = sdf.format(score.getScQtDemoSchedule().getDemoEndDate());
-						if (startDate == null || endDate == null) {
-							throw new EpException(MessageConst.ERROR_760531);
-						}
-					}
-				}
-			}
-
 		}
-
 	}
 
 	private void resolveAcknowledgement(ScQt scQt, DemoResDTO resDTO) {
