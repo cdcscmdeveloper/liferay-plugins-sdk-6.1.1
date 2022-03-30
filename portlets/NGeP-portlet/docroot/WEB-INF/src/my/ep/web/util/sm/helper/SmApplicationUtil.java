@@ -4210,7 +4210,7 @@ public class SmApplicationUtil {
 						SmDisciplinaryAction smDisciplinaryAction = retrieveActiveSmDisciplinaryActionByDisciplinaryId(cat.getDisciplinaryActionId());
 
 						//#32298 DA cancel manufacture alert warning - start - <26238>
-						if(smDisciplinaryAction.getRecordStatusFlg() != null && smDisciplinaryAction.getRecordStatusFlg() == 1 && !smDisciplinaryAction.isBumiputeraCancel()){
+						if(smDisciplinaryAction.getRecordStatusFlg() != null && smDisciplinaryAction.getRecordStatusFlg() == 1){
 							cat.setCancelCategory(true);
 							if(smDisciplinaryAction.isCancelCategory()){
 								cat.setTypeDisciplinaryAction("C"); 
