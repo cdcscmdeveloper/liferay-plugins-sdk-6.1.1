@@ -42,6 +42,7 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmApplDocFile;
 import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
@@ -573,6 +574,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String roleCode;
 	// #29664 - end
 	
+	//#28807 - START
+	private SmApplDocFile smApplDocFile;
+	//#28807 - END
+	
 	//#15629 - START
 	private List<PmReasonDesc> selectedRecommendReasonDescs;
 	private List<PmReasonDesc> recommendReasonDescList;
@@ -584,6 +589,12 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	
 	private boolean poApproverEquityErr;//#31461-start
 	private String msgEquityErr;//#31461-end
+	
+	//#11641 - START
+	private SmApplInquiry selectedInquiryResponse;
+	private boolean emptyMandatoryDocHistory;
+	private boolean emptyNonMandatoryDocHistory;
+	//#11641 - END
 
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
@@ -4382,6 +4393,16 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.divisionBox = divisionBox;
 	}
 	
+	//#28807 - Start
+	public SmApplDocFile getSmApplDocFile() {
+		return smApplDocFile;
+	}
+
+	public void setSmApplDocFile(SmApplDocFile smApplDocFile) {
+		this.smApplDocFile = smApplDocFile;
+	}
+	//#28807 - End
+	
 	//#15629 - START
 	public List<PmReasonDesc> getSelectedRecommendReasonDescs() {
 		return selectedRecommendReasonDescs;
@@ -4448,5 +4469,31 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.msgEquityErr = msgEquityErr;
 	}
 	// #31461-end
+	
+	//#11641 - START
+	public SmApplInquiry getSelectedInquiryResponse() {
+		return selectedInquiryResponse;
+	}
+
+	public void setSelectedInquiryResponse(SmApplInquiry selectedInquiryResponse) {
+		this.selectedInquiryResponse = selectedInquiryResponse;
+	}
+
+	public boolean isEmptyMandatoryDocHistory() {
+		return emptyMandatoryDocHistory;
+	}
+
+	public void setEmptyMandatoryDocHistory(boolean emptyMandatoryDocHistory) {
+		this.emptyMandatoryDocHistory = emptyMandatoryDocHistory;
+	}
+
+	public boolean isEmptyNonMandatoryDocHistory() {
+		return emptyNonMandatoryDocHistory;
+	}
+
+	public void setEmptyNonMandatoryDocHistory(boolean emptyNonMandatoryDocHistory) {
+		this.emptyNonMandatoryDocHistory = emptyNonMandatoryDocHistory;
+	}
+	//#11641 - END
 
 }
