@@ -4724,12 +4724,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				while (iterator.hasNext()) {
 					ScQtFinalizationReport report = iterator.next();
 					if (null != report) {
+						log.info("=======sourbasebackingBeanTitle===="+report.getTitle());
 						if (getManagedBean().getEvaluationReportList() == null) {
 							List<ScQtFinalizationReport> erList = new ArrayList<>();
 							getManagedBean().setEvaluationReportList(erList);
 						}
-						// 18685 - START.
-						if (null != report.getPmDocument()) {
+						// 18685 - START.                                     //#28784
+						if (null != report.getPmDocument() || report.getTitle().equalsIgnoreCase(SourcingConstants.DEMO_EVALUATION_REPORT)) {
 							if (SourcingConstants.EVALUATION_TYPE_TIER1.equals(evaluationType)) {
 								if (SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT.equals(report.getPmDocument().getDocDefinitionKey())) {
 									getManagedBean().getEvaluationReportList().add(report);
