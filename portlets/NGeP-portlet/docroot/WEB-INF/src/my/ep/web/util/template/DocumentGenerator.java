@@ -307,6 +307,7 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 			wordMLPackage.getContentTypeManager().addDefaultContentType("html","text/html");
 			createHeaderPart(wordMLPackage, docNo);
 			addFooterToDocument(wordMLPackage);
+			setMarginSpace(wordMLPackage); 	// #25025
 			wordMLPackage.save(new java.io.File(filePath));
 		} catch (InvalidFormatException e) {
 			e.printStackTrace();
