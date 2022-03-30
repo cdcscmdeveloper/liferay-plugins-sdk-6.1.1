@@ -48,13 +48,26 @@
 		<BR />
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.qt.committee.appointment.instruction']}" escape="false" rendered="#{isQTStatusChecklistAndAfter}" />
-			
+		<ui:remove><!-- Bugs: 32277 start--></ui:remove>	
+		<c:choose>
+			<c:when test="#{qTDetailBB.managedBean.taskName eq 'Approve Committee'}">
+				<c:set var="tabBeans" value="#{qTDetailBB.managedBean.readOnlyCommitteeTabBean}"/>
+				<c:set var="committeeReadOnly" value="true"/>
+			</c:when>
+			<c:otherwise>
+				<c:set var="tabBeans" value="#{qTDetailBB.managedBean.scCommitteeMemberTabList}"/>
+				<c:set var="committeeReadOnly" value="false"/>
+			</c:otherwise>
+		</c:choose>
+		<ui:remove><!-- Bugs: 32277 end--></ui:remove>	
 		<p:tabMenu id="committeTabMenu"
 			activeIndex="#{qTDetailBB.managedBean.selectedTabIndex}">
+			<ui:remove><!-- Bugs: 32277 -- change to tabBeans--></ui:remove>	
 			<c:forEach var="tabBean" varStatus="status"
-				items="#{qTDetailBB.managedBean.scCommitteeMemberTabList}">
+				items="#{tabBeans}">
+				<ui:remove><!-- Bugs: 32277 -- add new arg committeTabChangeAction--></ui:remove>	
 				<p:menuitem value="#{tabBean.titleName}"
-					action="#{qTDetailBB.committeTabChangeAction(status.index)}" 
+					action="#{qTDetailBB.committeTabChangeAction(status.index, committeeReadOnly)}" 
 					partialSubmit="true"
 					update="@form, committeeTabListId"
 					process="@form"
