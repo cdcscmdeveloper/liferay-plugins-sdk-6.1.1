@@ -169,40 +169,7 @@
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.facility.ownerName']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.ownerName}" /></td>
 				</tr>
-				<!-- 29379 - Site Visit Grouping Enhancement - 28775 - start -->
-				<!-- 32809 - fix issue panel truncated when data workshop is empty - start -->
-				<c:if test="#{viewSmApplBackingBean.managedBean.viewApplicationHistory}">
-				<tr>
-				<p:panel header="#{lbl['lbl.sm.employee.info']}" toggleable="true" >
-					<p:dataTable var="empInfo" id="empInfoId" rowKey="#{empInfo}"
-						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-						value="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.smSvWorkers}">
 	
-						<p:column headerText="#{lbl['lbl.sm.employee.name']}">
-							<p:outputLabel value="#{empInfo.name}"/>
-						</p:column>
-
-						<p:column headerText="#{lbl['lbl.sm.employee.idtype']}">
-							<p:outputLabel value="#{viewSmApplBackingBean.getParamDescByParameterId(empInfo.identificationTypeId)}" />
-						</p:column>
-
-						<p:column headerText="#{lbl['lbl.sm.employee.icno']}">
-							<p:outputLabel value="#{empInfo.identificationNo}" />
-						</p:column>
-
-						<p:column headerText="#{lbl['lbl.sm.employee.specialization']}">
-							<p:outputLabel value="#{empInfo.expertise}" />
-						</p:column>
-
-						<p:column headerText="#{lbl['lbl.sm.employee.experience']}">
-							<p:outputLabel value="#{empInfo.workExpYear}" />
-						</p:column>
-					</p:dataTable>
-				</p:panel>
-				</tr>
-				<!-- 29379 - Site Visit Grouping Enhancement - 28775 - end -->
-				<!-- 32809 - fix issue panel truncated when data workshop is empty - start -->
-				</c:if>
 			</table>
 		</p:scrollPanel>
 	</p:dialog>
