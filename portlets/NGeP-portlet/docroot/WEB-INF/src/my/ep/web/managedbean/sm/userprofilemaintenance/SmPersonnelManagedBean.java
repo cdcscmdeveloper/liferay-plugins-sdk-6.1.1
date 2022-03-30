@@ -15,6 +15,7 @@ import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
+import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
@@ -27,6 +28,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
 
 @ManagedBean(name = "smPersonnelMB")
 @SessionScoped
@@ -51,6 +53,35 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private SmPersonnel basicSmPersonnel;
 	private SmPersonnelAddress basicSmPersonnelMailingAddress;
 	private SmPersonnelAddress basicSmPersonnelPermanentAddress;
+	//9569 - Start
+	private SmAuthorizedPersonnelCountVO authVO;
+	private boolean validSmUserLimit;
+	private List<SelectItem> ePRoleList;
+	private SmPersonnelAddress basicSmPersonnelResidentialAddress;
+	private SmPersonnelAddress basicSmPersonnelOfficeAddress;
+	private SmPersonnelAddress basicSmPersonnelPrevAddress = new SmPersonnelAddress();
+	private SmPersonnelAddress basicSmPersonnelPrevAddress1 = new SmPersonnelAddress();
+	private SmPersonnelAddress basicSmPersonnelPrevAddress2= new SmPersonnelAddress();
+	private List<SelectItem> resAddCountryList;
+	private List<SelectItem> resAddStateList;
+	private List<SelectItem> resAddDistrictList;
+	private List<SelectItem> resAddCityList;
+	private List<SelectItem> offAddCountryList;
+	private List<SelectItem> offAddStateList;
+	private List<SelectItem> offAddDistrictList;
+	private List<SelectItem> offAddCityList;
+	
+	private List<SelectItem> resAddDivisionList;
+	private List<SelectItem> offAddDivisionList;
+	
+	private SmPersonnelAddress updateSmPersonnelOffAddress;
+	private SmPersonnelAddress updateSmPersonnelResAddress;
+	
+	private Long resDivisionId;
+	private boolean resDivisionBox=true;
+	private Long offDivisionId;
+	private boolean offDivisionBox=true;
+	//9569 - End
 	private List<SelectItem> mailAddCountryList;
 	private List<SelectItem> mailAddStateList;
 	private List<SelectItem> mailAddDistrictList;
@@ -111,6 +142,22 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	// #31710 - start
 	private String supplierType;
 	// #31710 - end
+	// 9569 start
+	private String spName;
+	private Long spCountryId;
+	private int spRecordStatus;
+	private int spSoftcertFlg;
+	private String spEpRole;
+	private int authUserCount;
+	private int contractSignerCount;
+	private String epRoleTrans;
+	private List<SelectItem> raceSelectItems;
+	private boolean disableRoleSelection;
+	private boolean allowAccess;
+	private int spIsAuthorize;
+	private int spIEpRoleStatus;
+	private List<PmUserRole> personnelHistoryList;
+	// 9569 end
 
 	public SmPersonnelManagedBean() {
 		// TODO Auto-generated constructor stub
@@ -760,4 +807,312 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 		this.supplierType = supplierType;
 	}
 	// #31710 - end
+
+	// 9569 start
+	public String getSpName() {
+		return spName;
+	}
+
+	public void setSpName(String spName) {
+		this.spName = spName;
+	}
+
+	public Long getSpCountryId() {
+		return spCountryId;
+	}
+
+	public void setSpCountryId(Long spCountryId) {
+		this.spCountryId = spCountryId;
+	}
+
+	public int getSpRecordStatus() {
+		return spRecordStatus;
+	}
+
+	public void setSpRecordStatus(int spRecordStatus) {
+		this.spRecordStatus = spRecordStatus;
+	}
+
+	public int getSpSoftcertFlg() {
+		return spSoftcertFlg;
+	}
+
+	public void setSpSoftcertFlg(int spSoftcertFlg) {
+		this.spSoftcertFlg = spSoftcertFlg;
+	}
+
+	public String getSpEpRole() {
+		return spEpRole;
+	}
+
+	public void setSpEpRole(String spEpRole) {
+		this.spEpRole = spEpRole;
+	}
+
+	public int getAuthUserCount() {
+		return authUserCount;
+	}
+
+	public void setAuthUserCount(int authUserCount) {
+		this.authUserCount = authUserCount;
+	}
+
+	public int getContractSignerCount() {
+		return contractSignerCount;
+	}
+
+	public void setContractSignerCount(int contractSignerCount) {
+		this.contractSignerCount = contractSignerCount;
+	}
+
+	public String getEpRoleTrans() {
+		return epRoleTrans;
+	}
+
+	public void setEpRoleTrans(String epRoleTrans) {
+		this.epRoleTrans = epRoleTrans;
+	}
+	
+	public boolean isAllowAccess() {
+		return allowAccess;
+	}
+
+	public void setAllowAccess(boolean allowAccess) {
+		this.allowAccess = allowAccess;
+	}
+	// 9569 end
+
+	public List<SelectItem> getRaceSelectItems() {
+		return raceSelectItems;
+	}
+
+	public void setRaceSelectItems(List<SelectItem> raceSelectItems) {
+		this.raceSelectItems = raceSelectItems;
+	}
+
+	public boolean isDisableRoleSelection() {
+		return disableRoleSelection;
+	}
+
+	public void setDisableRoleSelection(boolean disableRoleSelection) {
+		this.disableRoleSelection = disableRoleSelection;
+	}
+
+	public SmPersonnelAddress getBasicSmPersonnelResidentialAddress() {
+		return basicSmPersonnelResidentialAddress;
+	}
+
+	public void setBasicSmPersonnelResidentialAddress(SmPersonnelAddress basicSmPersonnelResidentialAddress) {
+		this.basicSmPersonnelResidentialAddress = basicSmPersonnelResidentialAddress;
+	}
+
+	public List<SelectItem> getResAddCountryList() {
+		return resAddCountryList;
+	}
+
+	public void setResAddCountryList(List<SelectItem> resAddCountryList) {
+		this.resAddCountryList = resAddCountryList;
+	}
+
+	public List<SelectItem> getResAddStateList() {
+		return resAddStateList;
+	}
+
+	public void setResAddStateList(List<SelectItem> resAddStateList) {
+		this.resAddStateList = resAddStateList;
+	}
+
+	public List<SelectItem> getResAddDistrictList() {
+		return resAddDistrictList;
+	}
+
+	public void setResAddDistrictList(List<SelectItem> resAddDistrictList) {
+		this.resAddDistrictList = resAddDistrictList;
+	}
+
+	public List<SelectItem> getResAddCityList() {
+		return resAddCityList;
+	}
+
+	public void setResAddCityList(List<SelectItem> resAddCityList) {
+		this.resAddCityList = resAddCityList;
+	}
+
+	public List<SelectItem> getOffAddCountryList() {
+		return offAddCountryList;
+	}
+
+	public void setOffAddCountryList(List<SelectItem> offAddCountryList) {
+		this.offAddCountryList = offAddCountryList;
+	}
+
+	public List<SelectItem> getOffAddStateList() {
+		return offAddStateList;
+	}
+
+	public void setOffAddStateList(List<SelectItem> offAddStateList) {
+		this.offAddStateList = offAddStateList;
+	}
+
+	public List<SelectItem> getOffAddDistrictList() {
+		return offAddDistrictList;
+	}
+
+	public void setOffAddDistrictList(List<SelectItem> offAddDistrictList) {
+		this.offAddDistrictList = offAddDistrictList;
+	}
+
+	public List<SelectItem> getOffAddCityList() {
+		return offAddCityList;
+	}
+
+	public void setOffAddCityList(List<SelectItem> offAddCityList) {
+		this.offAddCityList = offAddCityList;
+	}
+
+	public List<SelectItem> getResAddDivisionList() {
+		return resAddDivisionList;
+	}
+
+	public void setResAddDivisionList(List<SelectItem> resAddDivisionList) {
+		this.resAddDivisionList = resAddDivisionList;
+	}
+
+	public List<SelectItem> getOffAddDivisionList() {
+		return offAddDivisionList;
+	}
+
+	public void setOffAddDivisionList(List<SelectItem> offAddDivisionList) {
+		this.offAddDivisionList = offAddDivisionList;
+	}
+
+	public SmPersonnelAddress getUpdateSmPersonnelOffAddress() {
+		return updateSmPersonnelOffAddress;
+	}
+
+	public void setUpdateSmPersonnelOffAddress(SmPersonnelAddress updateSmPersonnelOffAddress) {
+		this.updateSmPersonnelOffAddress = updateSmPersonnelOffAddress;
+	}
+
+	public SmPersonnelAddress getUpdateSmPersonnelResAddress() {
+		return updateSmPersonnelResAddress;
+	}
+
+	public void setUpdateSmPersonnelResAddress(SmPersonnelAddress updateSmPersonnelResAddress) {
+		this.updateSmPersonnelResAddress = updateSmPersonnelResAddress;
+	}
+
+	public Long getResDivisionId() {
+		return resDivisionId;
+	}
+
+	public void setResDivisionId(Long resDivisionId) {
+		this.resDivisionId = resDivisionId;
+	}
+
+	public boolean isResDivisionBox() {
+		return resDivisionBox;
+	}
+
+	public void setResDivisionBox(boolean resDivisionBox) {
+		this.resDivisionBox = resDivisionBox;
+	}
+
+	public Long getOffDivisionId() {
+		return offDivisionId;
+	}
+
+	public void setOffDivisionId(Long offDivisionId) {
+		this.offDivisionId = offDivisionId;
+	}
+
+	public boolean isOffDivisionBox() {
+		return offDivisionBox;
+	}
+
+	public void setOffDivisionBox(boolean offDivisionBox) {
+		this.offDivisionBox = offDivisionBox;
+	}
+
+	public SmPersonnelAddress getBasicSmPersonnelOfficeAddress() {
+		return basicSmPersonnelOfficeAddress;
+	}
+
+	public void setBasicSmPersonnelOfficeAddress(SmPersonnelAddress basicSmPersonnelOfficeAddress) {
+		this.basicSmPersonnelOfficeAddress = basicSmPersonnelOfficeAddress;
+	}
+
+	public SmAuthorizedPersonnelCountVO getAuthVO() {
+		return authVO;
+	}
+
+	public void setAuthVO(SmAuthorizedPersonnelCountVO authVO) {
+		this.authVO = authVO;
+	}
+
+	public boolean isValidSmUserLimit() {
+		return validSmUserLimit;
+	}
+
+	public void setValidSmUserLimit(boolean validSmUserLimit) {
+		this.validSmUserLimit = validSmUserLimit;
+	}
+
+	public List<SelectItem> getePRoleList() {
+		return ePRoleList;
+	}
+
+	public void setePRoleList(List<SelectItem> ePRoleList) {
+		this.ePRoleList = ePRoleList;
+	}
+
+	public SmPersonnelAddress getBasicSmPersonnelPrevAddress() {
+		return basicSmPersonnelPrevAddress;
+	}
+
+	public void setBasicSmPersonnelPrevAddress(SmPersonnelAddress basicSmPersonnelPrevAddress) {
+		this.basicSmPersonnelPrevAddress = basicSmPersonnelPrevAddress;
+	}
+
+	public SmPersonnelAddress getBasicSmPersonnelPrevAddress1() {
+		return basicSmPersonnelPrevAddress1;
+	}
+
+	public void setBasicSmPersonnelPrevAddress1(SmPersonnelAddress basicSmPersonnelPrevAddress1) {
+		this.basicSmPersonnelPrevAddress1 = basicSmPersonnelPrevAddress1;
+	}
+
+	public SmPersonnelAddress getBasicSmPersonnelPrevAddress2() {
+		return basicSmPersonnelPrevAddress2;
+	}
+
+	public void setBasicSmPersonnelPrevAddress2(SmPersonnelAddress basicSmPersonnelPrevAddress2) {
+		this.basicSmPersonnelPrevAddress2 = basicSmPersonnelPrevAddress2;
+	}
+
+	public int getSpIsAuthorize() {
+		return spIsAuthorize;
+	}
+
+	public void setSpIsAuthorize(int spIsAuthorize) {
+		this.spIsAuthorize = spIsAuthorize;
+	}
+
+	public int getSpIEpRoleStatus() {
+		return spIEpRoleStatus;
+	}
+
+	public void setSpIEpRoleStatus(int spIEpRoleStatus) {
+		this.spIEpRoleStatus = spIEpRoleStatus;
+	}
+
+	public List<PmUserRole> getPersonnelHistoryList() {
+		return personnelHistoryList;
+	}
+
+	public void setPersonnelHistoryList(List<PmUserRole> personnelHistoryList) {
+		this.personnelHistoryList = personnelHistoryList;
+	}
+	
+	
 }

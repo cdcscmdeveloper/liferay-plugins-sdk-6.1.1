@@ -1,0 +1,277 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:p="http://primefaces.org/ui" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="contentSection">
+		<p:messages id="messages" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="false" escape="false" />
+
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+
+		<h:panelGrid id="search" style="width:100%;">
+			<p:panel header="#{lbl['lbl.sm.userprofile.authorized.personnels']}" rendered="#{smPersonnelBackingBean.managedBean.allowAccess}"
+				toggleable="true">
+				<p:outputPanel id="smPersonnelUserMaintenance">
+					<table width="100%">
+					<!-- NAME  -->
+						<tr>
+							<td width="10%"><p:outputLabel value="#{lbl['lbl.sm.person.name']}" /></td>
+							<td><p:inputText id="mofspName"
+									value="#{smPersonnelBackingBean.managedBean.spName}" size="35"
+									maxlength="80" label="{#lbl['lbl.sm.userprofile.name']}"></p:inputText></td>
+						</tr>
+					<!-- NAME  -->
+					<!-- AUTHORIZED PERSONNEL  -->
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.person.authorize']}"/></td>
+							<td><p:selectOneMenu id="authorizedPerson"
+									value="#{smPersonnelBackingBean.managedBean.spIsAuthorize}"
+									style="width: 207px;margin-bottom: 5px;">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
+									<f:selectItem itemLabel="#{lbl['lbl.sm.person.authorize.yes']}" itemValue="1" />
+									<f:selectItem itemLabel="#{lbl['lbl.sm.person.authorize.no']}" itemValue="2" />
+									</p:selectOneMenu>
+							</td>
+						</tr>
+					<!-- AUTHORIZED PERSONNEL  -->
+					<!-- NATIONALITY  -->
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.nationality']}" /></td>
+							<td><p:selectOneMenu id="mofspCountry"
+									label="#{lbl['lbl.sm.person.nationality.origin']}"
+									value="#{smPersonnelBackingBean.managedBean.spCountryId}"
+									style="width: 207px;margin-bottom: 5px;">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems
+										value="#{smPersonnelBackingBean.managedBean.countryList}" />
+								</p:selectOneMenu></td>
+						</tr>
+					<!-- NATIONALITY  -->
+					<!-- SOFT CERT STATUS  -->
+						<tr>
+							<td><p:outputLabel
+									value="#{lbl['lbl.sm.person.composition.certStatus']}" /></td>
+							<td><p:selectOneMenu id="mofspSoftcert"
+									value="#{smPersonnelBackingBean.managedBean.spSoftcertFlg}">
+									<f:selectItem itemLabel="#{lbl['lbl.cm.selectOne']}"
+										itemValue="0" />
+									<f:selectItem itemLabel="#{lbl['lbl.sm.maintenance.not.required']}"
+										itemValue="99" />
+									<f:selectItem itemLabel="#{lbl['lbl.sm.softcert.flg.pending']}"
+										itemValue="4" />
+									<f:selectItem
+										itemLabel="#{lbl['lbl.sm.softcert.flg.requested']}"
+										itemValue="2" />
+									<f:selectItem
+										itemLabel="#{lbl['lbl.sm.softcert.flg.processing']}"
+										itemValue="3" />
+									<f:selectItem itemLabel="#{lbl['lbl.sm.softcert.flg.issued']}"
+										itemValue="1" />
+									<f:selectItem
+										itemLabel="#{lbl['lbl.sm.softcert.flg.rejected']}"
+										itemValue="6" />
+									<f:selectItem itemLabel="#{lbl['lbl.sm.person.softcert.request.failed']}"
+										itemValue="9" />
+									<f:selectItem itemLabel="#{lbl['lbl.sm.softcert.flg.revoked']}"
+										itemValue="5" />
+									<f:selectItem itemLabel="#{lbl['lbl.sm.softcert.flg.renew']}"
+										itemValue="7" />
+								</p:selectOneMenu></td>
+						</tr>
+					<!-- SOFT CERT STATUS  -->
+					<!-- USER ACCOUNT STATUS  -->	
+						<tr>
+							<td><p:outputLabel
+									value="#{lbl['lbl.sm.person.userAccountStatus']}" /></td>
+							<td><p:selectOneMenu id="mofspRecordStatus"
+									value="#{smPersonnelBackingBean.managedBean.spRecordStatus}">
+									<f:selectItem itemLabel="#{lbl['lbl.cm.selectOne']}"
+										itemValue="0" />
+									<f:selectItem
+										itemLabel="#{lbl['lbl.sm.maintenance.status.activate']}"
+										itemValue="1" />
+									<f:selectItem
+										itemLabel="#{lbl['lbl.sm.maintenance.status.pending']}"
+										itemValue="8" />
+								</p:selectOneMenu> 
+								</td>
+						</tr>
+					<!-- USER ACCOUNT STATUS  -->
+					<!-- EP Role  -->
+						<tr>
+							<td><p:outputLabel
+									value="#{lbl['lbl.sm.userprofile.eprole']}" /></td>
+							<td><p:selectOneMenu id="mofspEpRole"
+									label="#{lbl['lbl.sm.userprofile.eprole']}"
+									value="#{smPersonnelBackingBean.managedBean.spEpRole}"
+									style="width: 207px;margin-bottom: 5px;">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems
+										value="#{smPersonnelBackingBean.managedBean.roleList}" />
+								</p:selectOneMenu></td>
+						</tr>
+					<!-- EP Role  -->
+					<!-- EP Role Status  -->
+						<tr>
+							<td><p:outputLabel
+									value="#{lbl['lbl.sm.person.epRoleStatus']}" /></td>
+							<td><p:selectOneMenu id="epRoleStatus"
+									value="#{smPersonnelBackingBean.managedBean.spIEpRoleStatus}"
+									style="width: 207px;margin-bottom: 5px;">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+										itemValue="0" />
+									<f:selectItem
+										itemLabel="#{lbl['lbl.sm.person.epRoleStatus.active']}"
+										itemValue="1" />
+									<f:selectItem
+										itemLabel="#{lbl['lbl.sm.person.epRoleStatus.deleted']}"
+										itemValue="2" />
+								</p:selectOneMenu></td>
+						</tr>
+						<!-- EP Role Status -->
+						<tr >
+							<td colspan="2">
+								<div style="text-align: right;">
+									<p:commandButton value="#{lbl['lbl.btn.search']}"
+										action="#{smPersonnelBackingBean.searchMOFSmPersonnel}"
+										update="@form" onstart="blockWidget.show()"
+										oncomplete="blockWidget.hide()" />
+									<p:commandButton value="#{lbl['lbl.btn.reset']}"
+										process="@this" update="@form"
+										action="#{smPersonnelBackingBean.resetMOFSmPersonnel}" />
+								</div>
+							</td>
+						</tr>
+					</table>
+				</p:outputPanel>
+				<p:dataTable id="smPersonnelListId"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					value="#{smPersonnelBackingBean.managedBean.smPersonnelList}"
+					var="personnel" rowKey="#{personnel}" rowIndexVar="index" rows="10">
+					<ac:paginator for="smPersonnelListId" />
+					
+					<!-- No.  -->
+					<p:column headerText="#{lbl['lbl.sm.userprofile.num']}">
+						<h:outputText value="#{index+1}" />
+					</p:column>
+					
+					<!-- Name  -->
+					<p:column headerText="#{lbl['lbl.sm.userprofile.name']}">
+						<h:outputText value="#{personnel.name}" />
+					</p:column>
+					
+					<!-- Authorized personel **** -->
+					<p:column headerText="#{lbl['lbl.sm.person.authorize']}">
+						<h:outputText 
+							value="#{lbl['lbl.sm.person.authorize.yes']}"
+							rendered="#{personnel.authorizedFlg eq '1'}" />
+						<h:outputText 
+							value="#{lbl['lbl.sm.person.authorize.no']}"
+							rendered="#{personnel.authorizedFlg eq '0'}" />
+					</p:column>
+
+					<!-- Nationality  -->
+					<p:column headerText="#{lbl['lbl.sm.userprofile.nationality']}">
+						<h:outputText value="#{personnel.pmCountry.countryName}" />
+					</p:column>
+					
+					<!-- Soft Cert Status  -->					
+					<p:column headerText="#{lbl['lbl.sm.person.composition.certStatus']}">
+						<h:outputText 
+							value="#{lbl['lbl.txt.na']}"
+							rendered="#{personnel.softcertFlg eq '0' or personnel.softcertFlg eq null}" />
+						<h:outputText
+							value="#{lbl['lbl.sm.person.composition.request.failed']}"
+							rendered="#{personnel.softcertFlg eq '9'}" />
+						<h:outputText 
+							value="#{lbl['lbl.sm.person.composition.ready.renewal']}"
+							rendered="#{personnel.softcertFlg eq '7'}" />
+						<h:outputText 
+							value="#{lbl['lbl.sm.person.composition.rejected']}"
+							rendered="#{personnel.softcertFlg eq '6'}" />
+						<h:outputText
+							value="#{lbl['lbl.sm.person.composition.pending.request']}"
+							rendered="#{personnel.softcertFlg eq '4'}" />
+						<h:outputText
+							value="#{lbl['lbl.sm.person.composition.processing']}"
+							rendered="#{personnel.softcertFlg eq '3'}" />
+						<h:outputText
+							value="#{lbl['lbl.sm.person.composition.requested']}"
+							rendered="#{personnel.softcertFlg eq '2'}" />
+						<h:outputText value="#{lbl['lbl.sm.person.composition.issued']}"
+							rendered="#{personnel.softcertFlg eq '1'}" />
+					</p:column>
+
+					<!-- User Account Status  -->
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.sm.person.userAccountStatus']} " />
+							<p:graphicImage id="toolTipIcon1" value="/css/images/design/tooltips.png" /> 
+							<p:tooltip	id="sourceTooltip1" for="toolTipIcon1">
+							<h:outputText id="sourceLabel1" escape="false" value="#{lbl['lbl.sm.person.userAccountStatus.info']}" />
+							</p:tooltip>
+						</f:facet>
+						<h:outputText 
+							value="#{lbl['lbl.sm.accountstatus.active']}"
+							rendered="#{personnel.recordStatusFlg eq '1'}" />
+						<h:outputText
+							value="#{lbl['lbl.sm.accountstatus.pendingactivation']}"
+							rendered="#{personnel.recordStatusFlg eq '8'}" />
+						<h:outputText 
+							value="#{lbl['lbl.sm.accountstatus.deactivate']}"
+							rendered="#{personnel.recordStatusFlg ne '1' and personnel.recordStatusFlg ne '8'}" />						
+					</p:column>
+					
+					<!-- Ep Role  -->
+					<p:column headerText="#{lbl['lbl.sm.userprofile.eprole']}">
+						<ac:smRoleDesc roleCode="#{personnel.prevEpRole}"
+							backingBean="#{smPersonnelBackingBean}" />
+					</p:column>
+					
+					<!-- Ep Role Status ** -->
+					<p:column>
+					<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.sm.person.epRoleStatus']} " />
+							<p:graphicImage id="toolTipIcon" value="/css/images/design/tooltips.png" /> 
+							<p:tooltip id="sourceTooltip" for="toolTipIcon">
+							<h:outputText id="sourceLabel" escape="false" value="#{lbl['lbl.sm.person.epRoleStatus.info']}" />
+							</p:tooltip> 
+					</f:facet>						
+						<h:outputText
+							value="#{lbl['lbl.sm.person.epRoleStatus.unavailable']}"
+							rendered="#{personnel.epRole eq null and personnel.pmUser eq null or personnel.epRole ne null and personnel.pmUser eq null}" />
+						<h:outputText
+							value="#{lbl['lbl.sm.person.epRoleStatus.active']}"
+							rendered="#{personnel.epRole ne null and personnel.pmUser ne null}" />
+						<h:outputText
+							value="#{lbl['lbl.sm.person.epRoleStatus.deleted']}"
+							rendered="#{personnel.epRole eq null and personnel.pmUser ne null}" />
+					</p:column>
+					
+					<!-- Action  -->
+					<p:column headerText="#{lbl['lbl.sm.userprofile.action']}"
+						style="text-align: center  !important;">
+						<p:commandLink title="#{lbl['lbl.sm.userprofile.edit']}"
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+							action="#{smPersonnelBackingBean.navigateToUpdateMOFUserPage(personnel.personnelId)}"
+							update="@form">
+							<p:graphicImage value="/css/images/design/edit.png"
+								title="#{lbl['lbl.sm.edit']}"></p:graphicImage>
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</h:panelGrid>
+	</ui:define>
+</ui:composition>
