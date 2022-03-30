@@ -592,6 +592,31 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		if (statusDesc != null) {
 			getManagedBean().setCurrRegStatus(statusDesc.getStatusName());
 		}
+		
+		//28767
+		this.getManagedBean().getPersonnelDirectorManager().clear();
+		this.getManagedBean().getPersonnelMembers().clear();
+		BigDecimal sum = new BigDecimal(0);
+		for(SmPersonnel personnel:this.getManagedBean().getSmAppl().getSmPersonnels()){
+			BigDecimal shareAmt = personnel.getShareAmt();
+				if(personnel.getDesignation() != null){
+					String designation = populateDesignationSSM(personnel.getDesignation());
+					personnel.setDesignation(designation);
+				}
+				if(personnel.isDirector() || personnel.isManagement()){
+				this.getManagedBean().getPersonnelDirectorManager().add(personnel);	
+				}
+				if(personnel.isEquityOwner()){
+					if(shareAmt != null && !(personnel.getShareAmt() == null)){
+						sum =  sum.add(shareAmt);
+						getManagedBean().setTotalShare(sum);
+						
+					}
+					this.getManagedBean().getPersonnelMembers().add(personnel);
+				}
+		
+		}
+		
 		getManagedBean().setReviewApplicationExist(true);
 	}
 
