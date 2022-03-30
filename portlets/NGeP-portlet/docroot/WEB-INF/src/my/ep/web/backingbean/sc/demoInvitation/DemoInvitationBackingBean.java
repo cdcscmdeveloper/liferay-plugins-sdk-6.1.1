@@ -529,6 +529,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 							.equalsIgnoreCase(resDto.getScQtDemo().getDemoCategoryId().getParameterCode())
 					|| !savedData) {
 				if (this.getManagedBean().getDemoInvBy().equalsIgnoreCase(SourcingConstants.ALL_ITEM)) {
+					List<ScQtDemoByItemScore> demoDemoByItemList = new ArrayList<ScQtDemoByItemScore>();
 					List<ScQtProposal> qualifiedSupp = new ArrayList<ScQtProposal>();
 					SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 					List<TplSpecQuestion> specQuestionList = new ArrayList<TplSpecQuestion>();
@@ -597,6 +598,24 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 							demoItemList.add(demoItem);
 						}
 					}
+					
+					for (ScQtDemoItem i : demoItemList) {
+						demoDemoByItemList = new ArrayList<>();
+						for (ScQtDemoSupplier s : demoSuppList) {
+							demoByItemScore = new ScQtDemoByItemScore();
+							scQtDemoSchedule = new ScQtDemoSchedule();
+
+							demoByItemScore.setScQtDemoItem(i);
+							demoByItemScore.setScQtDemoSupplier(s);
+							demoByItemScore.setSupplierId(s.getSupplierId());
+							scQtDemoSchedule.setScQtDemoSupplier(s);
+							scQtDemoSchedule.setScQtDemoByItemScore(demoByItemScore);
+							demoByItemScore.setScQtDemoSchedule(scQtDemoSchedule);
+							demoDemoByItemList.add(demoByItemScore);
+						}
+						i.setScQtDemoByItemScoreList(demoDemoByItemList);
+					}
+					this.getManagedBean().setByItemList(demoItemList);
 
 				} else if (this.getManagedBean().getDemoInvBy().equalsIgnoreCase(SourcingConstants.BY_ITEM)) {
 					List<ScQtDemoByItemScore> demoDemoByItemList = new ArrayList<ScQtDemoByItemScore>();
