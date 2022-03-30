@@ -44,6 +44,7 @@ import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
+import my.ep.dto.sm.blacklistDirector.BlacklistDirectorReqDTO;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
 import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
@@ -83,6 +84,7 @@ import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmGstSupplierDoc;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmMofCert;
+import my.ep.persistence.entity.sm.SmPersonBlacklist;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSstSupplier;
@@ -661,6 +663,15 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				this.getManagedBean().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF) ){
 				if(this.getManagedBean().getSmPersonnel() != null ){
 					if(suppOwner.getIdentificationNo() != null){
+						//32851 - start
+						BlacklistDirectorReqDTO reqDTO = new BlacklistDirectorReqDTO();
+						reqDTO.setDirectorIdNo(suppOwner.getIdentificationNo());
+						SmPersonBlacklist ban = SmServiceLookup.getBlacklistDirectorSO()
+								.retrievePersonBlacklistByIdentificationNO(reqDTO).getPersonBlacklist();
+						if(ban != null){
+							throw new EpException(SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",null));
+						}
+						//32851 - end
 						IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject("sm", IPersonnelSO.class);
 						PersonnelReqDTO personneleqDTO = new PersonnelReqDTO();
 						
@@ -686,7 +697,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 									if(discList != null && !discList.isEmpty()){
 										for(SmDisciplinaryAction disc : discList){
 											//27861:  Disciplinary Action - start - 28798
-											if(( disc.getDisciplinaryActionId() != null && disc.isRecordStatus() && disc.isBlacklistOwner() ) ||
+											//32851
+											if(//( disc.getDisciplinaryActionId() != null && disc.isRecordStatus() && disc.isBlacklistOwner() ) ||
 													(disc.getDisciplinaryActionId() != null && disc.isRecordStatus() && disc.isCancelRegistration() ) ||
 													(disc.getDisciplinaryActionId() != null && disc.isRecordStatus() && disc.isSuspendRegistration() ) ){
 												throw new EpException(SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",null));
