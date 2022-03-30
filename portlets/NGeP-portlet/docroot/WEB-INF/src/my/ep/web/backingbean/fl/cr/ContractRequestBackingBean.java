@@ -3221,6 +3221,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 */
 	public void onTabChange(int selectedTabIndex){	
 		initialize();
+		//start 13291
+		//if(selectedTabIndex==0){
+		//	initializeApproverGroup();
+		//}end 13291
 		if(selectedTabIndex==1){
 			recalculateItem();//11076
 			if(!getManagedBean().isFlRequestLink()){
@@ -4054,6 +4058,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	public AgOfficeResDTO getAgAccount(BaseEntity entity){
 		checkPtjGroupAndInitialize();
 		getManagedBean().getFlRequest().setIssuedOrgProfile(getManagedBean().getFlRequest().getPreparedOrgProfile());
+		//13291
+		//initializeApproverGroup();
 		initializeDelAddr();
 		getEspkbCommitmentNo();
 		getManagedBean().getFlRequest().setIssuedOrgProfile(getManagedBean().getFlRequest().getPreparedOrgProfile());
