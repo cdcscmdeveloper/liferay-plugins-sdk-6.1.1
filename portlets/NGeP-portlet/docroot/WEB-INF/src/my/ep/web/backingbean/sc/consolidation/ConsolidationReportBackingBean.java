@@ -1300,11 +1300,38 @@ public class ConsolidationReportBackingBean extends
 		ScQtFinalization scQtFinalization = getManagedBean()
 				.getScQtFinalization();
 		TplSpecZoneDtl selectedZone = getManagedBean().getSelectedZone();
+		Boolean isScQtRecommendByZoneNull = false;//#29466
 		if (scQtFinalization != null) {
 			Map<Long, List<ScQtRecommend>> scQtRecommendsByZone = scQtFinalization
 					.getScQtRecommendsByZone();
 			log.debug("scQtFinalization.getScQtRecommendsByZone() : "
 					+ scQtRecommendsByZone);
+			
+			//#29466 - START
+			/*Checking if each QtRecommendId() from scQtRecommendsByZone
+			  for that selected zone is null
+			*/
+			for(ScQtRecommend scQtRecommendByZone: scQtRecommendsByZone.get(selectedZone.getSpecZoneId())){
+				if (scQtRecommendByZone.getQtRecommendId() == null){
+					isScQtRecommendByZoneNull = true;
+					break;
+				}
+			}		
+			
+			/*If at least one QtRecommendId() from scQtRecommendsByZone is null, 
+			  will be replaced and added from each scQtFinalization.getScQtRecommends() 
+			  for that same selected zone
+			*/
+			if(isScQtRecommendByZoneNull) {
+				scQtRecommendsByZone.get(selectedZone.getSpecZoneId()).clear();
+				for(ScQtRecommend qtRecommend: scQtFinalization.getScQtRecommends()){
+					if(selectedZone.getSpecZoneId() == qtRecommend.getTplSpecZoneDtl().getSpecZoneId()){
+						scQtRecommendsByZone.get(selectedZone.getSpecZoneId()).add(qtRecommend);
+					}
+				}
+			}
+			//#29466 - END
+			
 			//#32092 - Start.
 			//#32009 - related to #21695 - start
 			if(scQtRecommendsByZone.size() > 0){
