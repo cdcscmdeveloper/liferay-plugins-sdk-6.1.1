@@ -950,6 +950,23 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				}
 			}
 			getManagedBean().getSmAppl().setSmApplSupportDocs(activeSuppDocs);
+			
+			//#30294 - START
+			if (!EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl().getSmApplSupportDocs())) {
+				Collections.sort(getManagedBean().getSmAppl().getSmApplSupportDocs(), new Comparator<SmApplSupportDoc>() {
+							@Override
+							public int compare(final SmApplSupportDoc s1, final SmApplSupportDoc s2) {
+								if(s1.getPmDocument().getDisplaySeq() == null){
+									return (s2.getPmDocument().getDisplaySeq() == null) ?  0 : 1;
+								}
+								if(s2.getPmDocument().getDisplaySeq() == null){
+									return -1;
+								}
+								return Integer.valueOf(s1.getPmDocument().getDisplaySeq().compareTo(s2.getPmDocument().getDisplaySeq()));
+							}
+						});
+			}
+			//#30294 - END
 		}
 	}
 
