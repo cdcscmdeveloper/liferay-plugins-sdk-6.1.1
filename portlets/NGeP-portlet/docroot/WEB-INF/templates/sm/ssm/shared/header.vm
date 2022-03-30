@@ -1,0 +1,61 @@
+<html>
+
+<head>
+	<style>
+		@page { size: A4 portrait;}
+		@page { @bottom-center { content: element(footer) }}
+				
+		.footer {
+			display: block; text-align: center;
+			position: running(footer);
+		}
+		
+		.descTable{
+		 	border-collapse: collapse;
+		}
+		
+		.descTable td, .descTable tr, .descTable th {
+		 	border: 1px solid black;
+		}
+
+		
+		.avoidbreak{
+			page-break-inside: avoid;
+		}
+
+		
+		body{
+			font-family: "Helvetica";
+			font-size: 8pt;
+		}
+		
+		.txtBold{
+			font-weight : bold;
+		}
+		
+		.sTable{
+			width : 80%;
+		}
+		
+		.sColTwentyPerc{
+			width : 20%;
+		}
+		
+		.infoTable{
+			font-align: left;
+			width: 100%;
+		}  
+	</style>
+</head>
+
+<body>
+	<table width='100%'>
+		 <tr align='center'>
+	        <td>
+	            <img src='$hostUrl/NGeP-portlet/css/images/Lambang_Malaysia_2010.jpg' width='124' height='100' ></img>
+	        </td>
+	    </tr>
+		<tr align='center'><td>KEMENTERIAN KEWANGAN MALAYSIA</td></tr>
+	</table>
+	
+	

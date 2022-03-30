@@ -13400,6 +13400,10 @@ public class SmApplicationBackingBean extends
 		public void clearPersonnelList() {
 			this.getManagedBean().getPersonnelsOwner().clear();
 			this.getManagedBean().getPersonnelsDirector().clear();
+		//27346 - start
+		this.getManagedBean().getPersonnelsOwnerSsm().clear();
+		this.getManagedBean().getSmPersonnelDirectorSsm().clear();
+		//27346-end
 			this.getManagedBean().getSmSupplierBranchSsm().clear();
 			this.getManagedBean().getSmSupplierBusinessSsm().clear();
 			this.getManagedBean().getPersonnelsSsm().clear();

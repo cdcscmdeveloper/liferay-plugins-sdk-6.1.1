@@ -36,6 +36,22 @@
 		</p:blockUI>
 
 		<ui:param name="mandatoryflg" value="true" />
+
+		 <h:outputText rendered="#{backingBean.managedBean.smAppl.applValidWithSsm}" 
+					  value="#{lbl['lbl.sm.po.disclaimer1']}" styleClass="splNotesFonts" style="float: inherit" escape="false" />
+
+			<h:commandLink onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
+				rendered="#{backingBean.managedBean.smAppl.applValidWithSsm}"	
+				action="#{backingBean.redirectToViewSSMInfo(backingBean.managedBean.smSupplier.regNo,backingBean.managedBean.smSupplier.businessType)}"
+				value="#{lbl['lbl.sm.instruction.here']}" 
+				styleClass="splNotesFonts" style="float: inherit" escape="false">
+				<f:ajax execute="@this" render="@form"  />
+				</h:commandLink>
+					
+		<h:outputText rendered="#{backingBean.managedBean.smAppl.applValidWithSsm}" 
+				value="#{lbl['lbl.sm.po.disclaimer2']}" styleClass="splNotesFonts" style="float: inherit" escape="false" />
+	
+		
 		<ac:smPanel id="tt">
 			<c:if test="#{!backingBean.managedBean.redirectToPersonPage}">
 				<table style="width: 100%" id="wizardMofRegParentTable">
@@ -401,5 +417,14 @@
 					widgetVar="uploadWV" showButtons="false" />
 			</p:dialog>
 		</ac:smPanel>
+		
+	<p:outputPanel id="detailSsm" rendered="#{backingBean.managedBean.showDetailSSM}">	
+		<ac:baseViewSsmInfo bBean="#{backingBean}" 
+							title="#{lbl['lbl.sm.view.ssm.infomation']}" 
+							dialogId="viewssminfo"
+							width="1150" height="600"
+							resizable="false"/>
+ 	</p:outputPanel> 
+ 	
 	</ui:define>
 </ui:composition>

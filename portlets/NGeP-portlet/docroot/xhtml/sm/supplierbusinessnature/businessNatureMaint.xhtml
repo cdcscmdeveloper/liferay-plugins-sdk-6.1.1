@@ -13,11 +13,27 @@
 			$('#portlet_supplierBusinessNature_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.supplier.businessnature.maintenance']}");
 		</script>
 	</ui:define> 
-	
-	<ui:define name="contentSection">
+
+	<ui:define name="contentSection"> 
+	<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>  
 		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+		
+		<h:outputText  rendered="#{supplierBusinessNatureBackingBean.managedBean.companyValidWithSSM}" styleClass="splNotesFonts" value="#{lbl['lbl.sm.po.disclaimer1']}" style="float: inherit" escape="false" ></h:outputText>
+		<h:commandLink onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
+				rendered="#{supplierBusinessNatureBackingBean.managedBean.companyValidWithSSM}"	
+				action="#{supplierBusinessNatureBackingBean.redirectToViewSSMInfo(supplierBusinessNatureBackingBean.managedBean.smSupplier.regNo,supplierBusinessNatureBackingBean.managedBean.smSupplier.businessType)}"
+				value="#{lbl['lbl.sm.instruction.here']}" 
+				styleClass="splNotesFonts" style="float: inherit" escape="false">
+				 <f:ajax execute="@form" render="@form" />
+				</h:commandLink>
+		<h:outputText rendered="#{supplierBusinessNatureBackingBean.managedBean.companyValidWithSSM}"
+				value="#{lbl['lbl.sm.po.disclaimer2']}" styleClass="splNotesFonts" style="float: inherit" escape="false" />
+		
+		
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.declare']}"  onclick="submissionConfirmDlg.show();"/>
+			<p:commandButton value="#{lbl['lbl.btn.declare']}"  onclick="submissionConfirmDlg.show();"/> 
 		</div>
 	<p:panel header="#{lbl['lbl.sm.natureofbusiness']}" id="natureBusinessId">
 		<p:dataTable var="suppBizNature" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -105,5 +121,14 @@
 		title="#{lbl['lbl.msg.confirm.delete.header']}"
 		content="#{lbl['lbl.msg.confirm.delete']}" 
 		update=":#{p:component('natureBusinessId')}"/>
-	</ui:define>
+		
+		<p:outputPanel id="detailSsm" rendered="#{supplierBusinessNatureBackingBean.managedBean.showDetailSSM}">
+		<ac:baseViewSsmInfo bBean="#{supplierBusinessNatureBackingBean}"
+							title="#{lbl['lbl.sm.view.ssm.infomation']}" 
+							dialogId="viewssminfo"
+							width="1150" height="600"
+							resizable="false" />
+		</p:outputPanel> 
+ 	
+	 </ui:define>
 </ui:composition>
