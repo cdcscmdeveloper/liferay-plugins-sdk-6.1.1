@@ -27,20 +27,21 @@
 				<td><p:inputText disabled="true" readonly="true" size="30"
 						value="#{smAppl.smCompanyBasic.incomeTaxNo}" /></td>
 
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.roc.no']}" /></td>
-				<td><p:inputText disabled="true" readonly="true" size="30"
-						value="#{smSupplier.epNo}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.supplierInfo.newSSMNo']}" /></td>
+				<td>
+					<p:inputText disabled="true" readonly="true" size="30"
+						value="#{empty smSupplier.ssmNewRegNo ? lbl['lbl.txt.na']: smSupplier.ssmNewRegNo}" />
+					<ac:iconTooltip id="ssmIcoTooltipId" value="#{lbl['lbl.sc.supplierInfo.newSSMNo.tooltip']}"  />
+					<h:outputText styleClass="instruction" style="display: block; margin-top: -4px;" value="#{lbl['lbl.sc.supplierInfo.newSSMNo.note']}"/>
+				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.mof.no']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30"
 						value="#{qtProposal.mofNo}" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.est.date']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.spec.roc.no']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30"
-						value="#{smSupplier.establishDate}">
-						<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText></td>
+						value="#{smSupplier.epNo}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.mof.eff.date']}" /></td>
@@ -49,9 +50,9 @@
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
-				<td><p:outputLabel value="#{lbl['lbl.sc.mof.expired.date']}" /></td>
-				<td><p:inputText value="#{supplierProposalDetailBackingBean.getSmMofAccountByMofNo(qtProposal.mofNo).expDate}"
-						size="30" readonly="true" disabled="true">
+				<td><p:outputLabel value="#{lbl['lbl.sc.spec.est.date']}" /></td>
+				<td><p:inputText disabled="true" readonly="true" size="30"
+						value="#{smSupplier.establishDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
@@ -62,10 +63,12 @@
 						value="#{supplierProposalDetailBackingBean.getParameterDesc(ParameterTypeConst.businessTypes, 
 											smSupplier.manufacturer ? ParameterConst.businessTypeManufacturer : ParameterConst.businessTypeDistributor)}"
 						disabled="true" readonly="true" size="30" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.sc.bumiputra.status']}" /></td>
-				<td><p:inputText value="#{supplierProposalDetailBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
-											fn:toUpperCase(qtProposal.bumi))}"
-						disabled="true" readonly="true" size="30" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.mof.expired.date']}" /></td>
+				<td><p:inputText value="#{supplierProposalDetailBackingBean.getSmMofAccountByMofNo(qtProposal.mofNo).expDate}"
+						size="30" readonly="true" disabled="true">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.address']}" /></td>
@@ -73,6 +76,10 @@
 						cols="30" autoResize="flase"
 						value="#{supplierProposalDetailBackingBean.getFullAddress(smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress)}"
 						style="width: 171px;margin-bottom: 5px;" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.bumiputra.status']}" /></td>
+				<td><p:inputText value="#{supplierProposalDetailBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
+											fn:toUpperCase(qtProposal.bumi))}"
+						disabled="true" readonly="true" size="30" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.tel.no']}" /></td>

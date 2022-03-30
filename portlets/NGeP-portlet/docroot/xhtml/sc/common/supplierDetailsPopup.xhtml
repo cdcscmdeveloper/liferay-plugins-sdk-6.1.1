@@ -32,10 +32,13 @@
 						disabled="true" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.ep.no']}" /></td>
-				<td><p:inputText size="30"
-						value="#{supplierDetailBackingBean.managedBean.smSupplier.epNo}"
-						disabled="true" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.supplierInfo.newSSMNo']}" /></td>
+				<td>
+					<p:inputText disabled="true" readonly="true" size="30"
+						value="#{empty supplierDetailBackingBean.managedBean.smSupplier.ssmNewRegNo ? lbl['lbl.txt.na']: supplierDetailBackingBean.managedBean.smSupplier.ssmNewRegNo}" />
+					<ac:iconTooltip id="ssmIcoTooltipId" value="#{lbl['lbl.sc.supplierInfo.newSSMNo.tooltip']}"  />
+					<h:outputText styleClass="instruction" style="display: block; margin-top: -4px;" value="#{lbl['lbl.sc.supplierInfo.newSSMNo.note']}"/>
+				</td>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.gst.register.num']}" /></td>
 				<td><p:inputText disabled="true" size="30"
@@ -44,9 +47,9 @@
 				</td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.comp.name']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.ep.no']}" /></td>
 				<td><p:inputText size="30"
-						value="#{supplierDetailBackingBean.managedBean.supplierName}"
+						value="#{supplierDetailBackingBean.managedBean.smSupplier.epNo}"
 						disabled="true" /></td>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.gst.effective.date']}" /></td>
@@ -58,14 +61,10 @@
 						value="#{lbl['lbl.sc.gst.effective.date.tooltip']}" id="_supplierGstEffDate"/></td>
 			</tr>
 			<tr>
-				<td>
-					<p:outputLabel value="#{lbl['lbl.sc.bumiputra.status']}" />
-				</td>
-				<td><p:inputText id="isBumiFlg"
-						value="#{supplierDetailBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
-											fn:toUpperCase(supplierDetailBackingBean.managedBean.smSupplier.bumi))}"
-						size="30" disabled="true" />
-				</td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.comp.name']}" /></td>
+				<td><p:inputText size="30"
+						value="#{supplierDetailBackingBean.managedBean.supplierName}"
+						disabled="true" /></td>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.gst.declared.date']}" /></td>
 				<td><p:inputText disabled="true" size="30"
@@ -76,19 +75,24 @@
 				</td>
 			</tr>
 			<tr>
-				<td rowspan="3" valign="top"><p:outputLabel
-						value="#{lbl['lbl.sc.comp.address']}" /></td>
-				<td><p:inputText id="suppAddr1"
-						value="#{supplierDetailBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}"
-						size="30" disabled="true" /></td>
+			    <td>
+					<p:outputLabel value="#{lbl['lbl.sc.bumiputra.status']}" />
+				</td>
+				<td><p:inputText id="isBumiFlg"
+						value="#{supplierDetailBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
+											fn:toUpperCase(supplierDetailBackingBean.managedBean.smSupplier.bumi))}"
+						size="30" disabled="true" />
+				</td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.post.code']}" /></td>
 				<td><p:inputText id="suppPostcode"
 						value="#{supplierDetailBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcode}"
 						size="30" disabled="true" /></td>
 			</tr>
 			<tr>
-				<td><p:inputText id="suppAddr2"
-						value="#{supplierDetailBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address2}"
+				<td rowspan="3" valign="top"><p:outputLabel
+						value="#{lbl['lbl.sc.comp.address']}" /></td>
+				<td><p:inputText id="suppAddr1"
+						value="#{supplierDetailBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}"
 						size="30" disabled="true" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.state']}" /></td>
 				<td><p:inputText id="suppState"
@@ -96,8 +100,8 @@
 						size="30" disabled="true" /></td>
 			</tr>
 			<tr>
-				<td><p:inputText id="suppAddr3"
-						value="#{supplierDetailBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address3}"
+				<td><p:inputText id="suppAddr2"
+						value="#{supplierDetailBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address2}"
 						size="30" disabled="true" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.town']}" /></td>
 				<td><p:inputText id="suppCity"
@@ -105,14 +109,21 @@
 						size="30" disabled="true" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.tel.no']}" /></td>
-				<td><p:inputText id="suppPhoneNo" size="30"
-						value="#{supplierDetailBackingBean.managedBean.smAppl.smCompanyBasic.phoneFull}"
-						disabled="true" /></td>
+				<td><p:inputText id="suppAddr3"
+						value="#{supplierDetailBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address3}"
+						size="30" disabled="true" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.fax.no']}" /></td>
 				<td><p:inputText id="suppFaxNo" size="30"
 						value="#{supplierDetailBackingBean.managedBean.smAppl.smCompanyBasic.faxFull}"
 						disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.tel.no']}" /></td>
+				<td><p:inputText id="suppPhoneNo" size="30"
+						value="#{supplierDetailBackingBean.managedBean.smAppl.smCompanyBasic.phoneFull}"
+						disabled="true" /></td>
+				<td></td>
+				<td></td>
 			</tr>
 		</table>
 		
