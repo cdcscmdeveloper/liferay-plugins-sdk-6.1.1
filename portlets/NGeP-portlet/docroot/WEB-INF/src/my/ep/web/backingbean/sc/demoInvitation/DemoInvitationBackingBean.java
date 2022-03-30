@@ -926,6 +926,17 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 			this.getManagedBean().setScQtDemo(resDto.getScQtDemo());
 			this.getManagedBean().setScQtDemoContactList(resDto.getScQtDemo().getScQtDemoContactList());
 			this.getManagedBean().setAllItemList(resDto.getScQtDemo().getScQtDemoSupplierList());
+			
+			/*
+			 * BUG 28784 : DEMO INVITATION COMPARATOR 
+			 */
+			reqDto = new DemoReqDTO();
+			reqDto.setScQtDemoItemList(resDto.getScQtDemo().getScQtDemoItemList());				
+			resDto.getScQtDemo().setScQtDemoItemList(qtDemoSO.sortDemoItem(reqDto).getScQtDemoItemList());
+			/*
+			 * BUG 28784 : DEMO INVITATION END
+			 */
+			
 			this.getManagedBean().setByItemList(resDto.getScQtDemo().getScQtDemoItemList());
 			if (action == null) {
 				successMessage(MessageConst.INFO_700004, getMessageCommon("lbl.demo.save.msg"), this.getManagedBean()
