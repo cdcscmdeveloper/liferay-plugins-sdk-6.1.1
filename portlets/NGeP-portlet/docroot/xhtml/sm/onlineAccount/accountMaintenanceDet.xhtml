@@ -5,7 +5,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
 	<ui:define name="resourceSection">
 		<script>
@@ -32,14 +33,24 @@
 		<p:outputPanel rendered="#{registrationBackingBean.managedBean.viewMode}">
 			<div align="left">
 				<p:commandButton id="btnBackId" value="#{lbl['lbl.sm.button.back']}"
-					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="detailSsm"
 					action="#{registrationBackingBean.backToHistory}" />
 			</div>
 		</p:outputPanel>
 		
 		<p:outputPanel rendered="#{!registrationBackingBean.managedBean.viewMode}">
-			<h:outputText rendered="#{registrationBackingBean.managedBean.smAppl.applValidWithSsm}" value="#{lbl['lbl.sm.po.disclaimer']}" styleClass="splNotesFonts" />
-			<div align="right">
+			 
+		<h:outputText rendered="#{registrationBackingBean.managedBean.companyValidWithSSM}" value="#{lbl['lbl.sm.po.disclaimer1']}" styleClass="splNotesFonts" style="float: inherit" escape="false" />
+		<h:commandLink onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
+				rendered="#{registrationBackingBean.managedBean.companyValidWithSSM}"
+				action="#{registrationBackingBean.redirectToViewSSMInfo(registrationBackingBean.managedBean.smSupp.regNo,registrationBackingBean.managedBean.smSupp.businessType)}"
+				value="#{lbl['lbl.sm.instruction.here']}" 
+				styleClass="splNotesFonts" style="float: inherit" escape="false">
+				 <f:ajax execute="@form" render="@form" />
+				</h:commandLink>
+		<h:outputText rendered="#{registrationBackingBean.managedBean.companyValidWithSSM}" value="#{lbl['lbl.sm.po.disclaimer2']}" styleClass="splNotesFonts" style="float: inherit" escape="false" />
+					
+			 <div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.declare']}" action="#{registrationBackingBean.updateBasicSupplier}" update="@([id$=Msg])" 
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
 					<f:param name="disableValidation" value="true" />
@@ -60,5 +71,14 @@
 				</c:otherwise>
 			</c:choose>
 		</p:outputPanel>
+		
+		<p:outputPanel id="detailSsm" rendered="#{registrationBackingBean.managedBean.showDetailSSM}">
+			<ac:baseViewSsmInfo bBean="#{registrationBackingBean}"
+								title="#{lbl['lbl.sm.view.ssm.infomation']}" 
+								dialogId="viewssminfo"
+								width="1150" height="600"
+								resizable="false" />
+		</p:outputPanel>
+		
 	</ui:define>
 </ui:composition>

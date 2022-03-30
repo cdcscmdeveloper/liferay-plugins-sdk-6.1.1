@@ -4,6 +4,8 @@
 package my.ep.web.managedbean;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,11 +16,18 @@ import java.util.Set;
 import javax.faces.model.SelectItem;
 
 import my.ep.dto.sm.common.ssm.SsmResDTO;
+import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmCompanyBasic;
+import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.entity.sm.SmSupplierBusiness;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.primefaces.model.StreamedContent;
 
 /**
  * @author siew mei
@@ -81,8 +90,69 @@ public abstract class BaseManagedBean implements Serializable {
 	//17906
 	private String displayMessageBank;
 
+	//27346-start 
 	private SmAppl smAppl;
+	private SmSupplier SmSupplier;
+	private List<SmPersonnel> personnelsDirector  = new ArrayList<SmPersonnel>();
+	private List<SmSupplierBranch>  smSupplierBranchSsm = new ArrayList<SmSupplierBranch>();
+	private List<SmEquityCompany> smEquityCompaniesSsm   = new ArrayList<SmEquityCompany>();   
+	private boolean disAllowOwnerEdit; 
+	private String businessTypeParamCode;
+	private List<SmPersonnel> personnelsOwner = new ArrayList<SmPersonnel>();
+	private List<SmPersonnel> personnelsSsm  = new ArrayList<SmPersonnel>();
+	private List<SmSupplierBusiness> smSupplierBusinessSsm   = new ArrayList<SmSupplierBusiness>();
+	private SmCompanyBasic smCompanyBasicSsm = null;
+	private boolean showDetailSSM; 
+	private List<SmPersonnel> smPersonnelDirectorSsm = new ArrayList<SmPersonnel>();
+	private List<SmPersonnel> personnelsOwnerSsm = new ArrayList<SmPersonnel>();
+	private SmAddress smAddress;
+	//27346-end
 	
+	
+	//27346-start 
+	// 27346
+	private StreamedContent downloadfile;
+
+	public boolean isShowDetailSSM() {
+		return showDetailSSM;
+	}
+
+	public void setShowDetailSSM(boolean showDetailSSM) {
+		this.showDetailSSM = showDetailSSM;
+	}
+
+	public List<SmPersonnel> getSmPersonnelDirectorSsm() {
+		return smPersonnelDirectorSsm;
+	}
+
+	public void setSmPersonnelDirectorSsm(List<SmPersonnel> smPersonnelDirectorSsm) {
+		this.smPersonnelDirectorSsm = smPersonnelDirectorSsm;
+	}
+
+	public List<SmPersonnel> getPersonnelsOwnerSsm() {
+		return personnelsOwnerSsm;
+	}
+
+	public void setPersonnelsOwnerSsm(List<SmPersonnel> personnelsOwnerSsm) {
+		this.personnelsOwnerSsm = personnelsOwnerSsm;
+	}
+
+	public SmAddress getSmAddress() {
+		return smAddress;
+	}
+
+	public void setSmAddress(SmAddress smAddress) {
+		this.smAddress = smAddress;
+	}
+	
+	public SmCompanyBasic getSmCompanyBasicSsm() {
+		return smCompanyBasicSsm;
+	}
+
+	public void setSmCompanyBasicSsm(SmCompanyBasic smCompanyBasicSsm) {
+		this.smCompanyBasicSsm = smCompanyBasicSsm;
+	}
+
 	public SmAppl getSmAppl() {
 		return smAppl;
 	}
@@ -90,6 +160,80 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setSmAppl(SmAppl smAppl) {
 		this.smAppl = smAppl;
 	}
+
+	public SmSupplier getSmSupplier() {
+		return SmSupplier;
+	}
+
+	public void setSmSupplier(SmSupplier smSupplier) {
+		SmSupplier = smSupplier;
+	}
+
+	public List<SmPersonnel> getPersonnelsDirector() {
+		return personnelsDirector;
+	}
+
+	public void setPersonnelsDirector(List<SmPersonnel> personnelsDirector) {
+		this.personnelsDirector = personnelsDirector;
+	}
+
+	public List<SmSupplierBranch> getSmSupplierBranchSsm() {
+		return smSupplierBranchSsm;
+	}
+
+	public void setSmSupplierBranchSsm(List<SmSupplierBranch> smSupplierBranchSsm) {
+		this.smSupplierBranchSsm = smSupplierBranchSsm;
+	}
+
+	public List<SmEquityCompany> getSmEquityCompaniesSsm() {
+		return smEquityCompaniesSsm;
+	}
+
+	public void setSmEquityCompaniesSsm(List<SmEquityCompany> smEquityCompaniesSsm) {
+		this.smEquityCompaniesSsm = smEquityCompaniesSsm;
+	}
+
+	public boolean isDisAllowOwnerEdit() {
+		return disAllowOwnerEdit;
+	}
+
+	public void setDisAllowOwnerEdit(boolean disAllowOwnerEdit) {
+		this.disAllowOwnerEdit = disAllowOwnerEdit;
+	}
+
+	public String getBusinessTypeParamCode() {
+		return businessTypeParamCode;
+	}
+
+	public void setBusinessTypeParamCode(String businessTypeParamCode) {
+		this.businessTypeParamCode = businessTypeParamCode;
+	}
+
+	public List<SmPersonnel> getPersonnelsOwner() {
+		return personnelsOwner;
+	}
+
+	public void setPersonnelsOwner(List<SmPersonnel> personnelsOwner) {
+		this.personnelsOwner = personnelsOwner;
+	}
+
+	public List<SmPersonnel> getPersonnelsSsm() {
+		return personnelsSsm;
+	}
+
+	public void setPersonnelsSsm(List<SmPersonnel> personnelsSsm) {
+		this.personnelsSsm = personnelsSsm;
+	}
+
+	public List<SmSupplierBusiness> getSmSupplierBusinessSsm() {
+		return smSupplierBusinessSsm;
+	}
+
+	public void setSmSupplierBusinessSsm(
+			List<SmSupplierBusiness> smSupplierBusinessSsm) {
+		this.smSupplierBusinessSsm = smSupplierBusinessSsm;
+	}
+	//27346-end
 	/**
 	 * @return the token
 	 */
@@ -543,5 +687,13 @@ public abstract class BaseManagedBean implements Serializable {
 
 	public void setErrorInvalidSelfRequest(boolean errorInvalidSelfRequest) {
 		this.errorInvalidSelfRequest = errorInvalidSelfRequest;
+	}
+	
+	public StreamedContent getDownloadfile() {
+		return downloadfile;
+	}
+
+	public void setDownloadfile(StreamedContent downloadfile) {
+		this.downloadfile = downloadfile;
 	}
 }
