@@ -173,6 +173,10 @@ public class ViewSuppProfileManagedBean extends
 	//29181: Disciplinary Action - start - 26238
 	private boolean editDisciplinaryActionCheckBox;
 	//29181: Disciplinary Action - end - 26238
+
+	// #26238 start
+	private boolean cancelMofAccount;
+	// #26238 eend
 	
 	public ViewSuppProfileManagedBean() {
 
@@ -952,5 +956,15 @@ public class ViewSuppProfileManagedBean extends
 		this.editDisciplinaryActionCheckBox = editDisciplinaryActionCheckBox;
 	}
 	//29181: Disciplinary Action - end - 26238
+	
+	// #26238 start
+	public boolean isCancelMofAccount() {
+		return cancelMofAccount;
+	}
+
+	public void setCancelMofAccount(boolean cancelMofAccount) {
+		this.cancelMofAccount = cancelMofAccount;
+	}
+	// #26238 end
 
 }
