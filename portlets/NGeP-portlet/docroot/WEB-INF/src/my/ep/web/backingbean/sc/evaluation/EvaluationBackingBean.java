@@ -6545,11 +6545,13 @@ public void saveComplianceSample() {
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			reqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+			reqDTO.setCompliance(null);
 			retrivePresetationDemoCheckList();
 			if (this.getManagedBean().getScQt().isDemoRequired()) {
 				this.getManagedBean().setPresentationDemoSupplierListDM(
-						new PresentationDemoSuppliersPagingDataModel(
-								"demoSupplierId", reqDTO.getQtId(), reqDTO
+						new ComplianceSupplierPagingDataModel(
+								"demoSupplierId", this.getManagedBean().getScQtChecklist().getQtChecklistId(), reqDTO.getCompliance(),
+								null, reqDTO
 										.getEvalStage()));
 			}
 
