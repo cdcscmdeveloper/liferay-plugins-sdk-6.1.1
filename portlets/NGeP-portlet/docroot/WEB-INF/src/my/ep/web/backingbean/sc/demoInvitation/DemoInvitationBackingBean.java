@@ -518,6 +518,15 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 					this.getManagedBean().setAllItemList(resDto.getScQtDemo().getScQtDemoSupplierList());
 
 				} else if (this.getManagedBean().getDemoInvBy().equalsIgnoreCase(SourcingConstants.BY_ITEM)) {
+					/*
+					 * BUG 28784 : DEMO INVITATION COMPARATOR 
+					 */
+					reqDto = new DemoReqDTO();
+					reqDto.setScQtDemoItemList(resDto.getScQtDemo().getScQtDemoItemList());				
+					resDto.getScQtDemo().setScQtDemoItemList(qtDemoSO.sortDemoItem(reqDto).getScQtDemoItemList());
+					/*
+					 * BUG 28784 : DEMO INVITATION END
+					 */
 					this.getManagedBean().setByItemList(resDto.getScQtDemo().getScQtDemoItemList());
 				}
 
