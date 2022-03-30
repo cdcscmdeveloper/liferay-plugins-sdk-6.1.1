@@ -32,18 +32,65 @@
 					<table style="width: 100%">
 						<tr>
 							<td><div align="left" style="width: 100%">
+								<c:choose> 
+									<c:when test="#{backingBean.managedBean.smAppl.applValidWithSsm and backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew}">
+									<c:choose>
+									 <c:when test="#{backingBean.managedBean.smSupplier.businessType eq 'I' or backingBean.managedBean.smSupplier.businessType eq 'J'}">
 									<p:commandButton value="#{lbl['lbl.sm.prev.section']}" rendered="#{!backingBean.managedBean.editVO.disciplinary}"
 										onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
+											actionListener="#{backingBean.setTabValue('5','4')}"
+											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK,SupplierManagementConst.SM_APPL_PAGE_TYPE_ANNUALINFO)}"
+											update=":form" />
+									</c:when>
+									<c:otherwise>
+											<p:commandButton value="#{lbl['lbl.sm.prev.section']}" rendered="#{!backingBean.managedBean.editVO.disciplinary}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
 										actionListener="#{backingBean.setTabValue('4','3')}"
-										action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)}"
+											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK,SupplierManagementConst.SM_APPL_PAGE_TYPE_ANNUALINFO)}"
+											update=":form" />
+									</c:otherwise>
+									</c:choose>
+									</c:when>
+								<c:otherwise>
+								<p:commandButton value="#{lbl['lbl.sm.prev.section']}" rendered="#{!backingBean.managedBean.editVO.disciplinary}"
+										onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
+										actionListener="#{backingBean.setTabValue('4','3')}"
+										action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK,SM_APPL_PAGE_TYPE_EQUITY)}"
 										update=":form" />
+								</c:otherwise>
+						</c:choose>
 								</div></td>
 							<td><div align="right" style="width: 100%">
+						
+							<c:choose> 
+									<c:when test="#{backingBean.managedBean.smAppl.applValidWithSsm and backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew}">
+									<c:choose>
+									 <c:when test="#{backingBean.managedBean.smSupplier.businessType eq 'I' or backingBean.managedBean.smSupplier.businessType eq 'J'}">
 									<p:commandButton value="#{lbl['lbl.sm.next.section']}" rendered="#{!backingBean.managedBean.editVO.disciplinary}"
+										onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
+											actionListener="#{backingBean.setTabValue('5','6')}"
+											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)}"
+											update=":form:" />
+									</c:when>
+									<c:otherwise>
+											<p:commandButton value="#{lbl['lbl.sm.next.section']}" rendered="#{!backingBean.managedBean.editVO.disciplinary}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
+										actionListener="#{backingBean.setTabValue('4','5')}"
+											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK,SupplierManagementConst.SM_APPL_PAGE_TYPE_ANNUALINFO)}"
+											update=":form" />
+									</c:otherwise>
+									</c:choose>
+									</c:when>
+								<c:otherwise>
+							<p:commandButton value="#{lbl['lbl.sm.next.section']}" rendered="#{!backingBean.managedBean.editVO.disciplinary}"
 										onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
 										actionListener="#{backingBean.setTabValue('4','5')}"
 										action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
 										update=":form:" />
+								</c:otherwise>
+						</c:choose>
+									
+									
 								</div></td>
 						</tr>
 					</table>
