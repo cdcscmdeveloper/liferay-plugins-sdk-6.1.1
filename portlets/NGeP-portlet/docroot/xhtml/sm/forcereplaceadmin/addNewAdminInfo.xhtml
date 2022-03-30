@@ -91,7 +91,7 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.sm.userprofile.name']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><!-- #28765 Added <p:ajax event --><p:inputText id="newAdminName"
+					<td><p:inputText id="newAdminName"
 							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.name}"
 							size="35" required="true"
 							label="#{lbl['lbl.sm.userprofile.name']}">
@@ -106,7 +106,7 @@
 							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.title.salutationId}"
 							style="width: 207px;margin-bottom: 5px;" required="true">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-							<!-- #28765 Added <p:ajax event -->
+							
 							<f:selectItems
 								value="#{forceReplaceSuppAdminBackingBean.managedBean.salutationItems}" />
 								<p:ajax event="change" partialSubmit="true" process="@this" />
@@ -139,7 +139,7 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.sm.userprofile.nationality']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<!-- 28765 -->
+					
 					<td><p:selectOneMenu id="newAdminNationality"
 							label="#{lbl['lbl.sm.userprofile.nationality']}"
 							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.pmCountry.countryId}"
@@ -154,7 +154,7 @@
 					<td><p:outputLabel
 								value="#{lbl['lbl.sm.userprofile.dob']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><!-- #28765 Added partialsubmit="true"<p:ajax event --><p:calendar showOn="button" navigator="true"
+					<td><p:calendar showOn="button" navigator="true"
 							display="inline" required="true" readonlyInput="true" 
 							partialsubmit="true" label="#{lbl['lbl.sm.person.dob']}" id="newAdminDob"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
@@ -170,7 +170,7 @@
 					<td><p:inputText id="newAdminEmail"
 							label="#{lbl['lbl.sm.userprofile.email']}"
 							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.email}"
-							size="40" required="true"><!-- #28765 Added <p:ajax event --><p:ajax event="change" partialSubmit="true" process="@this" />
+							size="40" required="true"><p:ajax event="change" partialSubmit="true" process="@this" />
 							<f:validateRegex 
 						pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
 							</p:inputText>
@@ -183,7 +183,7 @@
 					<td><p:inputText id="newAdminDesignation"
 							label="#{lbl['lbl.sm.userprofile.designation']}"
 							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.designation}"
-							size="35" required="true"><!-- #28765 Added <p:ajax event --><p:ajax event="change" partialSubmit="true" process="@this" /></p:inputText>
+							size="35" required="true"><p:ajax event="change" partialSubmit="true" process="@this" /></p:inputText>
 							<p:message id="newAdminDesignationMsg" for="newAdminDesignation"
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
@@ -288,9 +288,9 @@
 		</p:panel>
 		
 		<ui:include src="/xhtml/sm/shared/forcereplaceadmin/addInfoAddress.xhtml" />
-		<!-- #28765 Start -->
+		
 		<ui:include src="/xhtml/sm/forcereplaceadmin/forceReplaceAdminUploadDocument.xhtml" />
-		<!-- #28765 End -->
+		
 		<br />
 				<table>
 					<tr>
