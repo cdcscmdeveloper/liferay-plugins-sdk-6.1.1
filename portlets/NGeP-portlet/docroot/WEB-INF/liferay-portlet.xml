@@ -1692,7 +1692,21 @@
 			userprofilemaintenance-portlet
 		</css-class-wrapper>
 	</portlet>
-	
+<!-- #9569 - START -->	
+	<portlet>
+		<portlet-name>SupplierUserMaintenance</portlet-name>
+		<icon>/icon.png</icon>
+		<requires-namespaced-parameters>false</requires-namespaced-parameters>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>
+			supplierusermaintenance-portlet
+		</css-class-wrapper>
+	</portlet>
+<!-- #9569 - END -->	
+
 	<portlet>
 		<portlet-name>SpecCommitteMaintanance</portlet-name>
 		<icon>/icon.png</icon>
