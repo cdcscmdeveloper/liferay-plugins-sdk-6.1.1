@@ -48,7 +48,6 @@ import my.ep.biz.service.fl.itemsummary.IFlItemSummarySO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.agoffice.IAgOfficeSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
@@ -100,8 +99,6 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
-import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
-import my.ep.dto.pm.authorization.usergroup.UserGroupResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.agoffice.AgOfficeReqDTO;
@@ -143,7 +140,6 @@ import my.ep.persistence.entity.ct.CtAddress;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
-import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
 import my.ep.persistence.entity.ct.dtl.CtContractAmount;
 import my.ep.persistence.entity.ct.dtl.CtContractValue;
 import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
@@ -152,7 +148,6 @@ import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.ct.factoring.CtFactoring;
-import my.ep.persistence.entity.fl.FlActor;
 import my.ep.persistence.entity.fl.FlAddress;
 import my.ep.persistence.entity.fl.FlSupplierDtl;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
@@ -164,7 +159,6 @@ import my.ep.persistence.entity.fl.request.VAddressTypeDeliveryAddress;
 import my.ep.persistence.entity.fl.request.VAgencyDeliveryAddress;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
-import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
@@ -219,7 +213,6 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.FLCtSupplierItemVO;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -385,6 +378,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			//#21489-end
 			
 			//Bug #20701 Problem to generate DO - to monitor
+			//end Bug #20701            
 
 			reqDTO.setFlFulfilmentRequest(flRequest);
 			reqDTO.setContractRequest(Boolean.TRUE);
@@ -585,6 +579,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		//#29171, CR 14650: Static Code Analysis 
 		if(!deletedItemId.isEmpty()) {
 			getManagedBean().setItemDeleteButtonShow(true);
+			//11076 start
+			getManagedBean().setDeleteOverallItem(deletedItemId.size());
+			log.info("=====deletedItemId====="+getManagedBean().getDeleteOverallItem());
+			getManagedBean().setDeleteItem(getManagedBean().getOverallTotalItem()-getManagedBean().getDeleteOverallItem());
+			log.info("====GET DELETE ITEM====="+getManagedBean().getDeleteItem());
+			//11076 end
 			List<FlFulfilmentItemAddr> deleteFlItemAddrs = new ArrayList<FlFulfilmentItemAddr>();
 			for (FlFulfilmentItemAddr flItemAddr : getManagedBean().getItemAddrList()) {
 				if(deletedItemId.contains(flItemAddr.getScRequestItem().getRequestNoteItemId())) {
@@ -614,6 +614,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}
 		if(getManagedBean().getSelectedDelAddr()!=null) {
 			populateItemsForSelectedAddress();
+			getManagedBean().setTotalNewItemsAdded(0);//11076
+			getManagedBean().setTotalExistingItem(getManagedBean().getOverallTotalItem());//11076
 		}
 	}
 	
@@ -1108,6 +1110,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().setSelectedContractedItemList(new ArrayList<CtContractItem>());
 		getManagedBean().setItemAutoUpdate(false);
 		getManagedBean().setAutoUpdate(true);
+		getManagedBean().setCalculateTotalExist(getManagedBean().getOverallTotalItem()-getManagedBean().getTotalNewItemsAdded());//11076
+		log.info("=========NEW CALCULATE EXISTING=========" + getManagedBean().getCalculateTotalExist());//11076
+		getManagedBean().setTotalExistingItem(getManagedBean().getCalculateTotalExist());//11076
 	}
 	
 	// 11076 start
@@ -1132,7 +1137,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				itemExceed = true;									
 				throw new EpException(MessageConst.ERROR_740070);	
 			} //end 11076
-
+			
 			try {
 				ISearchBean<CtContractItem> searchBean = new SearchBean<CtContractItem>();
 				itemAddrList = new ArrayList<FlFulfilmentItemAddr>();
@@ -1161,19 +1166,11 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				reqDTO.setContractItemSearchBean(searchBean);
 				contractedItemList = contractItemSO.searchContractItem(reqDTO).getContractItemResultBean().getResultList();
 				log.info("=========contractedItemList=========" + contractedItemList.size());
-
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
-			}
-			messageId = MessageConst.ERROR_740070;
-			if (getManagedBean().getOverallTotalItem() > FulfilmentConst.GFMAS_CHARGELINE_LIMIT || contractedItemList.size() > FulfilmentConst.GFMAS_CHARGELINE_LIMIT) {
-				itemExceed = true;
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(messageId,
-								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			}
 			
 
@@ -3060,10 +3057,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 */
 	public void onTabChange(int selectedTabIndex){	
 		initialize();
-		
-		if(selectedTabIndex==0){
-			initializeApproverGroup();
-		}
 		if(selectedTabIndex==1){
 			recalculateItem();//11076
 			if(!getManagedBean().isFlRequestLink()){
@@ -3150,7 +3143,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	
 	public void testsetFlDeliveryItem(){
 		getManagedBean().setChargeLineItemRoot(new DefaultTreeNode("root", null));
-		Map<Long, List<FlFulfilmentItemAddr>> chargeLineItemsMap = new HashMap<Long, List<FlFulfilmentItemAddr>>();
+		//Map<Long, List<FlFulfilmentItemAddr>> chargeLineItemsMap = new HashMap<Long, List<FlFulfilmentItemAddr>>();
 		
 		for(FlDeliveryAddress  deliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()){
 			for(FlFulfilmentItemAddr itemAddress : deliveryAddress.getFlFulfilmentItemAddr()){
@@ -3894,7 +3887,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	public AgOfficeResDTO getAgAccount(BaseEntity entity){
 		checkPtjGroupAndInitialize();
 		getManagedBean().getFlRequest().setIssuedOrgProfile(getManagedBean().getFlRequest().getPreparedOrgProfile());
-		initializeApproverGroup();
 		initializeDelAddr();
 		getEspkbCommitmentNo();
 		getManagedBean().getFlRequest().setIssuedOrgProfile(getManagedBean().getFlRequest().getPreparedOrgProfile());
@@ -7129,7 +7121,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			sumOrderedAmt = calculatesTotalOrderedAmt();
 			reqDTO.setAmount(sumOrderedAmt);
 			resDTO=fulfilmentRequestSO.validateAP59(reqDTO);
-		
+			
 			if(!resDTO.isCrComplete()) {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));

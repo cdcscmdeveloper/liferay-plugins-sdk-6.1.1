@@ -14,32 +14,23 @@
 		<table style="width: 100%">
 			 <tr>
            		<br/>
-           		<br/>
-          
+           		<br/>          
            	</tr>
            	<tr>
            		<td>
-
-<p:selectBooleanCheckbox id="crGeneralRadio" required="true" value="#{contractRequestBackingBean.managedBean.flRequest.radioCheckDeliveryDate}">
-						<p:ajax event="change"
-							listener="#{contractRequestBackingBean.upDateStartDateFromBpm}" 
-							update="delStartDate"/>                   
+					<p:selectBooleanCheckbox id="crGeneralRadio" required="true" value="#{contractRequestBackingBean.managedBean.flRequest.radioCheckDeliveryDate}">
+						<p:ajax event="change" listener="#{contractRequestBackingBean.upDateStartDateFromBpm}" update="delStartDate"/>                   
            			</p:selectBooleanCheckbox>
           		</td>
            		<td>
            		
            		<p:outputLabel style="float:left !important; color:red" value="#{lbl['lbl.fl.flag']}"/> 
            			<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.flag']}"/>
-           			
-           		
-           			<br/>
-           
+           			<br/>           
             	</td>
 			</tr>
-
 		</table>
 		 </c:if>		
-
 		</p:panel>		
 		<p:dataTable id="addressDataTable" var="address"
 			value="#{contractRequestBackingBean.managedBean.flRequest.flDeliveryAddresses}"
@@ -390,11 +381,13 @@
 			severity="alert" widgetVar="delItemDlg" closable="true"
 			appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
 			<div class="ppRightBtn">
+				<!--11076 start-->
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
 					partialSubmit="true" 
 					action="#{contractRequestBackingBean.removeItemRow}"
-					update="deleteItemBtn,itemDataTable"
+					update="deleteItemBtn,itemDataTable,:form:itemExistingForm:textBox1,:form:itemExistingForm:textBox2,:form:itemExistingForm:textBox3"
 					oncomplete="delItemDlg.hide();" />
+				<!--11076 end-->
 				<p:commandButton value="#{lbl['lbl.btn.no']}" 
 					onclick="delItemDlg.hide()" type="button" />
 			</div>

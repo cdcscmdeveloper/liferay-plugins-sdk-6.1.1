@@ -17,15 +17,12 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
-import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
@@ -36,8 +33,6 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.VCtActiveContract;
-import my.ep.persistence.entity.ct.VCtContract;
-import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.fl.FlAttachment;
@@ -66,17 +61,13 @@ import my.ep.persistence.entity.pm.common.PmPrgActivity;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmVotFund;
-import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
-import my.ep.type.aut.SearchCondition;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.type.aut.SearchOperator;
-import my.ep.type.pm.OrganizationType;
-import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.GlAccountSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.DisciplinaryActionVO;
@@ -359,6 +350,9 @@ public class ContractRequestManagedBean extends BaseManagedBean {
     private int validateItem;
     private int addAllItem;
     private int updateItem;
+    private int calculateTotalExist;
+    private int deleteItem;
+    private int deleteOverallItem;
   //11076 - end
     
 	private class ActiveContractPagingDataModel extends PagingDataModel<VCtActiveContract> {
@@ -3279,6 +3273,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	}
 	//29728 - end
 	
+	//24956 - start
 	public boolean isCtTypeMinistry() {
 		return CtTypeMinistry;
 	}
@@ -3286,6 +3281,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	public void setCtTypeMinistry(boolean ctTypeMinistry) {
 		CtTypeMinistry = ctTypeMinistry;
 	}
+	//24956 - end
 	
 	//11076 -start
 		public int getTotalExistingItem() {
@@ -3334,6 +3330,30 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 		public void setUpdateItem(int updateItem) {
 			this.updateItem = updateItem;
+		}
+		
+		public int getCalculateTotalExist() {
+			return calculateTotalExist;
+		}
+
+		public void setCalculateTotalExist(int calculateTotalExist) {
+			this.calculateTotalExist = calculateTotalExist;
+		}
+		
+		public int getDeleteItem() {
+			return deleteItem;
+		}
+
+		public void setDeleteItem(int deleteItem) {
+			this.deleteItem = deleteItem;
+		}
+
+		public int getDeleteOverallItem() {
+			return deleteOverallItem;
+		}
+
+		public void setDeleteOverallItem(int deleteOverallItem) {
+			this.deleteOverallItem = deleteOverallItem;
 		}
 		//11076 - end
 }
