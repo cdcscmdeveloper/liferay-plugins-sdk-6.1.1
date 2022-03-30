@@ -101,10 +101,12 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmApplDocFile;
 import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmApplRejectReason;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
+import my.ep.persistence.entity.sm.SmApplSupportDocInquiry;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmAttachment;
@@ -207,6 +209,11 @@ public class SmApplicationBackingBean extends
 	SmRuleHelper ruleHelper = new SmRuleHelper();
 	ViewApplHistoryBackingBean viewApplHistoryBackingBean;
 
+	//#11641 - START
+	private int mandatoryCounter = 1;
+	private int nonMandatoryCounter = 1;
+	//#11641 - END
+	
 	/**
 	 * Instantiates a new sm application backing bean.
 	 */
@@ -324,9 +331,12 @@ public class SmApplicationBackingBean extends
 	}
 
 	// harris
-	public void onDeleteSupDocFileAttachment(SmApplSupportDoc doc, int index) {
+	//#28807 - Start
+	public void onDeleteSupDocFileAttachment(SmApplSupportDoc doc, int index, SmApplDocFile file) {
+		this.getManagedBean().setSupportDoc(doc);
 		this.getManagedBean().setAttachedFileIndex(index);
-		getManagedBean().setSupportDoc(doc);
+		this.getManagedBean().setSmApplDocFile(file);
+		//#28807 - End
 		RequestContext.getCurrentInstance().execute(
 				"confirmDeleteSupDocDialog.show();");
 	}
@@ -10452,11 +10462,22 @@ public class SmApplicationBackingBean extends
 				if (EntityHelper.isCollectionEmpty(doc.getSmApplDocFiles())) {
 					SmApplicationUtil.setDefaultSmApplDocFiles(doc);
 				}
-				doc.getSmApplDocFiles()
-						.get(0)
-						.setFileName(
-								StringUtils.replace(event.getFile()
-										.getFileName(), " ", "-"));
+				
+				//#28807 - START
+				SmApplDocFile aaa = new SmApplDocFile();
+				aaa.setFileName(StringUtils.replace(event.getFile().getFileName(), " ", "-"));
+				aaa.setSmApplSupportDoc(doc);
+				aaa.setFilePath(filePath);
+				doc.getSmApplDocFiles().add(aaa);
+						
+				for(int i=0; i<doc.getSmApplDocFiles().size(); i++){
+					if(doc.getSmApplDocFiles().get(i).getFileName()==null || 
+							doc.getSmApplDocFiles().get(i).getFileName().equalsIgnoreCase(" ")){
+						doc.getSmApplDocFiles().remove(i);
+					}
+					//log.info(i+". NAME -> " + doc.getSmApplDocFiles().get(i).getFileName());
+				}
+				//#28807 - END
 				doc.getSmApplDocFiles().get(0).setFilePath(filePath);
 
 				getManagedBean()
@@ -10477,11 +10498,13 @@ public class SmApplicationBackingBean extends
 	public void deleteSupDocFileAttachment() {
 
 		SmApplSupportDoc mainDoc = getManagedBean().getSupportDoc();
-		mainDoc.getSmApplDocFiles().get(0).setFileName(StringUtils.EMPTY);
-		mainDoc.getSmApplDocFiles().get(0).setFilePath(StringUtils.EMPTY);
-		mainDoc.setSmApplDocFiles(null);
-		
+		//#28807 - Start
+		if(this.getManagedBean().getSmApplDocFile() != null){
+			mainDoc.getSmApplDocFiles().remove(this.getManagedBean().getSmApplDocFile());
+		}
+		this.getManagedBean().setSmApplDocFile(null);
 	}
+	//#28807 - End
 
 	/**
 	 * Handle and save file attachment for cancel mof registration.
@@ -11948,7 +11971,7 @@ public class SmApplicationBackingBean extends
 			}
 			initMandatoryLicenseInfo(mandatoryLicenseDocs);
 
-			// sort by name
+			// sort by display seq as per redmine #30294
 			if (!EntityHelper.isCollectionEmpty(getManagedBean()
 					.getMandatoryDocs())) {
 				Collections.sort(getManagedBean().getMandatoryDocs(),
@@ -11956,16 +11979,20 @@ public class SmApplicationBackingBean extends
 							@Override
 							public int compare(final SmApplSupportDoc s1,
 									final SmApplSupportDoc s2) {
-								String docName1 = s1.getPmDocument() == null ? StringUtils.EMPTY
-										: s1.getPmDocument().getDocName();
-								String docName2 = s2.getPmDocument() == null ? StringUtils.EMPTY
-										: s2.getPmDocument().getDocName();
-								return (docName1).compareTo(docName2);
+								//#30294 - START
+								if(s1.getPmDocument().getDisplaySeq() == null){
+									return (s2.getPmDocument().getDisplaySeq() == null) ?  0 : 1;
+								}
+								if(s2.getPmDocument().getDisplaySeq() == null){
+									return -1;
+								}
+								return Integer.valueOf(s1.getPmDocument().getDisplaySeq().compareTo(s2.getPmDocument().getDisplaySeq()));
+								//#30294 - END
 							}
 						});
 			}
 
-			// sort by name
+			// sort by display seq as per redmine #30294
 			if (!EntityHelper.isCollectionEmpty(getManagedBean()
 					.getNonMandatoryDocs())) {
 				Collections.sort(getManagedBean().getNonMandatoryDocs(),
@@ -11973,11 +12000,15 @@ public class SmApplicationBackingBean extends
 							@Override
 							public int compare(final SmApplSupportDoc s1,
 									final SmApplSupportDoc s2) {
-								String docName1 = s1.getPmDocument() == null ? StringUtils.EMPTY
-										: s1.getPmDocument().getDocName();
-								String docName2 = s2.getPmDocument() == null ? StringUtils.EMPTY
-										: s2.getPmDocument().getDocName();
-								return (docName1).compareTo(docName2);
+								//#30294 - START
+								if(s1.getPmDocument().getDisplaySeq() == null){
+									return (s2.getPmDocument().getDisplaySeq() == null) ?  0 : 1;
+								}
+								if(s2.getPmDocument().getDisplaySeq() == null){
+									return -1;
+								}
+								return Integer.valueOf(s1.getPmDocument().getDisplaySeq().compareTo(s2.getPmDocument().getDisplaySeq()));
+								//#30294 - END
 							}
 						});
 			}
@@ -14032,4 +14063,29 @@ public class SmApplicationBackingBean extends
 	}
 // BUG #28173 & #28315 -END
 
+	//#11641 - START
+	public void inquiryRowSelect(){
+		//#11641 - START
+		this.getManagedBean().setEmptyMandatoryDocHistory(true);
+		this.getManagedBean().setEmptyNonMandatoryDocHistory(true);
+		for(SmApplSupportDocInquiry historySupportDoc: this.getManagedBean().getSelectedInquiryResponse().getSmApplSupportDocInquiries()){
+			if(historySupportDoc.getPmDocument().isMandatory()){
+				this.getManagedBean().setEmptyMandatoryDocHistory(false);
+			}
+			else if(!historySupportDoc.getPmDocument().isMandatory()){
+				this.getManagedBean().setEmptyNonMandatoryDocHistory(false);
+			}
+		}
+		//#11641 - END
+		RequestContext.getCurrentInstance().update("resOutPanelId");
+
+	}
+	public int getMandatoryCounter() {
+		return mandatoryCounter++;
+	}
+
+	public int getNonMandatoryCounter() {
+		return nonMandatoryCounter++;
+	}
+	//#11641 - END
 }
