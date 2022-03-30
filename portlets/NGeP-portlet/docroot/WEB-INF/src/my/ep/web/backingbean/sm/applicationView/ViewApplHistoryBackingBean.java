@@ -112,7 +112,13 @@ public class ViewApplHistoryBackingBean extends
 	public static PmTrackingDiaryBackingBean trackinDiaryInstance;
 	public static RegistrationBackingBean registrationBackingBean;
 	public static SvoSiteVisitBackingBean svoSiteVisitBackingBean;
-
+	//#11641 - Start
+	private int mandatoryCounter = 1;
+	private int nonMandatoryCounter = 1;
+	private boolean mandatoryEmpty = false;
+	private boolean nonMandatoryEmpty = false;
+	private boolean inquiryResponse = true;
+	//#11641 - End
 	/**
 	 * Set tab value
 	 * 
@@ -1359,4 +1365,77 @@ public class ViewApplHistoryBackingBean extends
 		return button;
 	}
 	//#31248 - END
+	
+	//#11641 - Start
+	public int getMandatoryCounter() {
+		return mandatoryCounter++;
+	}
+
+	public int getNonMandatoryCounter() {
+		return nonMandatoryCounter++;
+	}
+	
+	public boolean isMandatoryEmpty() {
+		int mandatoryCount = 0;
+		for(SmApplSupportDoc suppDoc : this.getManagedBean().getSmAppl().getSmApplSupportDocs()){
+			if(suppDoc.getPmDocument().isMandatory()){
+				mandatoryCount++;
+			}
+		}
+		if(mandatoryCount > 0){
+			mandatoryEmpty = false;
+		}else{
+			mandatoryEmpty = true;
+		}
+		return mandatoryEmpty;
+	}
+	
+	public boolean isNonMandatoryEmpty() {
+		int nonMandatoryCount = 0;
+		for(SmApplSupportDoc suppDoc : this.getManagedBean().getSmAppl().getSmApplSupportDocs()){
+			if(!suppDoc.getPmDocument().isMandatory()){
+				nonMandatoryCount++;
+			}
+		}
+		if(nonMandatoryCount > 0){
+			this.nonMandatoryEmpty = false;
+		}else{
+			this.nonMandatoryEmpty = true;
+		}
+		return nonMandatoryEmpty;
+	}
+	
+	/**
+	 * inquiry row select
+	 */
+	public void inquiryRowSelect(String docMode){
+		if(docMode.equalsIgnoreCase("online")){
+			RequestContext.getCurrentInstance().update("resOutPanelId");
+		}
+		if(docMode.equalsIgnoreCase("offline")){
+			RequestContext.getCurrentInstance().update("resOutPanelIdOffline");
+		}
+	}
+
+	public boolean isInquiryResponse() {
+		for(SmApplInquiry smApplInquiry : this.getManagedBean().getSmAppl().getSmApplInquiries()){
+			if(smApplInquiry.getResponseDate() == null){
+				inquiryResponse = false;
+				return inquiryResponse;
+			}
+		}
+		return inquiryResponse;
+	}
+	
+	public List<SmApplSupportDocInquiry> getNoResponseInquiryForApplHistory(){
+		for(SmApplInquiry smApplInquiry : this.getManagedBean().getSmAppl().getSmApplInquiries()){
+			if(smApplInquiry.getResponseDate() == null){
+				return smApplInquiry.getSmApplSupportDocInquiries();
+			}
+		}
+		return null;
+	}
+	//11641 - END
+	
+	
 }
