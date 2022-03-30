@@ -62,10 +62,10 @@
 		<ui:remove><!-- Bugs: 32277 end--></ui:remove>	
 		<p:tabMenu id="committeTabMenu"
 			activeIndex="#{qTDetailBB.managedBean.selectedTabIndex}">
-			<ui:remove><!-- Bugs: 32277 -- change to tabBeans--></ui:remove>	
+			<ui:remove><!-- Bugs: 32277 change to tabBeans--></ui:remove>	
 			<c:forEach var="tabBean" varStatus="status"
 				items="#{tabBeans}">
-				<ui:remove><!-- Bugs: 32277 -- add new arg committeTabChangeAction--></ui:remove>	
+				<ui:remove><!-- Bugs: 32277 add new arg committeTabChangeAction--></ui:remove>	
 				<p:menuitem value="#{tabBean.titleName}"
 					action="#{qTDetailBB.committeTabChangeAction(status.index, committeeReadOnly)}" 
 					partialSubmit="true"
