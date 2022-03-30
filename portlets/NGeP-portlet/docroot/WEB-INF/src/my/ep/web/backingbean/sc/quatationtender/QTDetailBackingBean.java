@@ -10597,7 +10597,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		log.debug("saveQtCAApproval");
 		IQTDetailSO detailSO;
 		try {
-			if(((getUserTaskIsCommitteeAppointmentApproval() && this.getManagedBean().getActiveIndex()==5) || (getUserTaskIsCommitteeAppointmentApprovalEcOcTecFec() && this.getManagedBean().getActiveIndex()==9))){//13344-start
+			if(((getUserTaskIsCommitteeAppointmentApproval() && this.getManagedBean().getActiveIndex()==5) || (getUserTaskIsCommitteeAppointmentApprovalEcOcTecFec() && this.getManagedBean().getActiveIndex()==10))){//13344-start//#29474 change tab active index
 				log.info("=========saveQtCAApprovalActiveIndexCodesExecuted======="+this.getManagedBean().getActiveIndex());
 			/*13344-start this.getManagedBean().setSaveFlow(true);
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
