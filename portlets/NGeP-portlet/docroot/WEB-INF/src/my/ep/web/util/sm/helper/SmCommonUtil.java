@@ -5411,6 +5411,12 @@ public class SmCommonUtil {
 										.getSmRemarksByDocTypeAndId(
 												ParameterConst.SM_APPLN_RMRK_DECISION_REJECT,
 												rej.getSmAppl().getApplId());
+								// #30745 - start
+								if (remark != null) {
+									remark = remark.replaceAll("(?m)^\\s*$[\n\r]{1,}", "");
+									System.out.println("remark:: " + remark);
+								}
+								// #30745 - end
 							}
 
 							if (desc.getPmLanguage() != null
@@ -5420,6 +5426,7 @@ public class SmCommonUtil {
 
 								if (remark != null) {
 									sbEng.append(" - ");
+									sbEng.append("<br/>"); // #30745
 									sbEng.append(remark);
 								}
 
@@ -5429,6 +5436,7 @@ public class SmCommonUtil {
 
 								if (remark != null) {
 									sbMs.append(" - ");
+									sbMs.append("<br/>"); // #30745
 									sbMs.append(remark);
 								}
 
