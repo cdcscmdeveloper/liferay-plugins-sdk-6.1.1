@@ -120,6 +120,41 @@
 							</table>
 						</p:outputPanel>
 					</p:outputPanel>
+					<c:choose>
+					<c:when test="#{backingBean.managedBean.smAppl.applValidWithSsm and backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew}">
+					<c:choose>
+					<c:when test="#{backingBean.managedBean.smSupplier.businessType eq 'I' or backingBean.managedBean.smSupplier.businessType eq 'J'}">						
+					<div class="nav-wrapper">
+						<table style="width: 100%">
+							<tr>
+								<td><div align="left" style="width: 100%">
+										<p:commandButton value="#{lbl['lbl.sm.prev.section']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
+											actionListener="#{backingBean.setTabValue('7','6')}"
+											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
+											update=":form" />
+									</div></td>
+								<td><div align="right" style="width: 100%">
+								<!-- Bug #26616 start-->
+										<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
+											actionListener="#{backingBean.setTabValue('7','8')}"
+											rendered="#{backingBean.managedBean.showMachineryEquipmentPanel or backingBean.managedBean.showTravelSoftwarePanel}"
+											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
+											update=":form" />
+										<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
+											actionListener="#{backingBean.setTabValue('7','8')}"
+											rendered="#{!backingBean.managedBean.showMachineryEquipmentPanel and !backingBean.managedBean.showTravelSoftwarePanel}"
+											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
+											update=":form" />
+									<!-- Bug #26616 end-->
+									</div></td>
+							</tr>
+						</table>
+					</div>
+					</c:when>
+					<c:otherwise>
 					<div class="nav-wrapper">
 						<table style="width: 100%">
 							<tr>
@@ -149,6 +184,41 @@
 							</tr>
 						</table>
 					</div>
+					</c:otherwise>
+					</c:choose>
+					</c:when>
+					<c:otherwise>
+					<div class="nav-wrapper">
+						<table style="width: 100%">
+							<tr>
+								<td><div align="left" style="width: 100%">
+										<p:commandButton value="#{lbl['lbl.sm.prev.section']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
+											actionListener="#{backingBean.setTabValue('6','5')}"
+											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
+											update=":form" />
+									</div></td>
+								<td><div align="right" style="width: 100%">
+								<!-- Bug #26616 start-->
+										<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
+											actionListener="#{backingBean.setTabValue('6','7')}"
+											rendered="#{backingBean.managedBean.showMachineryEquipmentPanel or backingBean.managedBean.showTravelSoftwarePanel}"
+											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
+											update=":form" />
+										<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
+											actionListener="#{backingBean.setTabValue('6','7')}"
+											rendered="#{!backingBean.managedBean.showMachineryEquipmentPanel and !backingBean.managedBean.showTravelSoftwarePanel}"
+											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
+											update=":form" />
+									<!-- Bug #26616 end-->
+									</div></td>
+							</tr>
+						</table>
+					</div>
+				</c:otherwise>
+				</c:choose>
 				</td>
 		</tr>
 

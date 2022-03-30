@@ -38,18 +38,64 @@
 					<table style="width: 100%">
 						<tr>
 							<td><div align="left" style="width: 99%">
+							<c:choose> 
+									<c:when test="#{backingBean.managedBean.smAppl.applValidWithSsm  and backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew}">
+									<c:choose>
+									 <c:when test="#{backingBean.managedBean.smSupplier.businessType eq 'I' or backingBean.managedBean.smSupplier.businessType eq 'J'}">	
+									<p:commandButton value="#{lbl['lbl.sm.prev.section']}"
+										onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
+										actionListener="#{backingBean.setTabValue('8','7')}"
+										action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)}"
+										update=":form" />
+										</c:when>
+										<c:otherwise>
+										<p:commandButton value="#{lbl['lbl.sm.prev.section']}" 
+										onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
+										actionListener="#{backingBean.setTabValue('7','6')}"
+										action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)}"
+										update=":form" />
+										</c:otherwise>
+										</c:choose>
+									</c:when>
+									<c:otherwise>										
 									<p:commandButton value="#{lbl['lbl.sm.prev.section']}"
 										onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
 										actionListener="#{backingBean.setTabValue('7','6')}"
 										action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)}"
 										update=":form" />
+									</c:otherwise>
+								</c:choose>
+										
 								</div></td>
 							<td><div align="right" style="width: 99%">
+								<c:choose> 
+									<c:when test="#{backingBean.managedBean.smAppl.applValidWithSsm and backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew}">
+									<c:choose>
+									<c:when test="#{backingBean.managedBean.smSupplier.businessType eq 'I' or backingBean.managedBean.smSupplier.businessType eq 'J'}">											
+									<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+										onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
+										actionListener="#{backingBean.setTabValue('8','9')}"
+										action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
+										update=":form" />
+									</c:when>
+									<c:otherwise>
+										<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+										onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
+										actionListener="#{backingBean.setTabValue('7','8')}"
+										action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
+										update=":form" />
+									</c:otherwise>
+									</c:choose>
+									</c:when>
+									<c:otherwise>
 									<p:commandButton value="#{lbl['lbl.sm.next.section']}"
 										onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
 										actionListener="#{backingBean.setTabValue('7','8')}"
 										action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
 										update=":form" />
+									</c:otherwise>
+								</c:choose>
+										
 								</div></td>
 						</tr>
 					</table>
