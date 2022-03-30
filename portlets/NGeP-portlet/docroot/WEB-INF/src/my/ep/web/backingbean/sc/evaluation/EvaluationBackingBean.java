@@ -10172,38 +10172,38 @@ private void retriveCommitteeRemarksList(){
 
 		this.getManagedBean().setPrepareActiveIndex(0);
 		//#10542 - start
-//		if (this.getManagedBean().getScQt() != null && this.getManagedBean().getScQt().getCurrentActiveTab() != null) {
-//			try {
-//				int currentActiveTab = this.getManagedBean().getScQt().getCurrentActiveTab().intValue();
-//				this.getManagedBean().setTabActiveIndex(currentActiveTab);
-//				this.getManagedBean().setTempTab(currentActiveTab);
-//				if (currentActiveTab == 1) {
-//					evaluationMaintainPreviousNextTabIndex(0, 1);
-//				} else if (currentActiveTab == 2) {
-//					evaluationMaintainPreviousNextTabIndex(1, 2);
-//					evaluationMaintainPreviousNextTabIndex(1, 2);
-//				} else if (currentActiveTab == 3) {
-//					evaluationMaintainPreviousNextTabIndex(1, 2);
-//					evaluationMaintainPreviousNextTabIndex(1, 2);
-//					evaluationMaintainPreviousNextTabIndex(2, 3);
-//					evaluationMaintainPreviousNextTabIndex(2, 4);
-//					evaluationMaintainPreviousNextTabIndex(2, 4);
-//				} else if (currentActiveTab == 4) {
-//					evaluationMaintainPreviousNextTabIndex(1, 2);
-//					evaluationMaintainPreviousNextTabIndex(1, 2);
-//					evaluationMaintainPreviousNextTabIndex(2, 3);
-//					evaluationMaintainPreviousNextTabIndex(2, 4);
-//					evaluationMaintainPreviousNextTabIndex(2, 4);
-//					evaluationMaintainPreviousNextTabIndex(3, 4);
-//					evaluationMaintainPreviousNextTabIndex(3, 4);
-//					evaluationMaintainPreviousNextTabIndex(3, 4);
-//				} else {
-//					evaluationMaintainPreviousNextTabIndex(currentActiveTab, currentActiveTab);
-//				}
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//		}
+		if (this.getManagedBean().getScQt() != null && this.getManagedBean().getScQt().getCurrentActiveTab() != null) {
+			try {
+				int currentActiveTab = this.getManagedBean().getScQt().getCurrentActiveTab().intValue();
+				this.getManagedBean().setTabActiveIndex(currentActiveTab);
+				this.getManagedBean().setTempTab(currentActiveTab);
+				if (currentActiveTab == 1) {
+					evaluationMaintainPreviousNextTabIndex(0, 1);
+				} else if (currentActiveTab == 2) {
+					evaluationMaintainPreviousNextTabIndex(1, 2);
+					evaluationMaintainPreviousNextTabIndex(1, 2);
+				} else if (currentActiveTab == 3) {
+					evaluationMaintainPreviousNextTabIndex(1, 2);
+					evaluationMaintainPreviousNextTabIndex(1, 2);
+					evaluationMaintainPreviousNextTabIndex(2, 3);
+					evaluationMaintainPreviousNextTabIndex(2, 4);
+					evaluationMaintainPreviousNextTabIndex(2, 4);
+				} else if (currentActiveTab == 4) {
+					evaluationMaintainPreviousNextTabIndex(1, 2);
+					evaluationMaintainPreviousNextTabIndex(1, 2);
+					evaluationMaintainPreviousNextTabIndex(2, 3);
+					evaluationMaintainPreviousNextTabIndex(2, 4);
+					evaluationMaintainPreviousNextTabIndex(2, 4);
+					evaluationMaintainPreviousNextTabIndex(3, 4);
+					evaluationMaintainPreviousNextTabIndex(3, 4);
+					evaluationMaintainPreviousNextTabIndex(3, 4);
+				} else {
+					evaluationMaintainPreviousNextTabIndex(currentActiveTab, currentActiveTab);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		//#10542 - end
 		if (SCProcessNameConst.FINALISE_EC_EVALUATION
 				.equalsIgnoreCase(taskName)
