@@ -64,7 +64,12 @@
 												update=":form" />
 										</div></td>
 									<td><div align="right" style="width: 100%">
-											<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+										<p:commandButton value="#{lbl['lbl.sm.next.section']}" rendered="#{backingBean.managedBean.smAppl.applValidWithSsm}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
+											actionListener="#{backingBean.setTabValue('3','4')}"
+											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY,SupplierManagementConst.SM_APPL_PAGE_TYPE_ANNUALINFO)}"
+											update=":form" />
+											<p:commandButton value="#{lbl['lbl.sm.next.section']}" rendered="#{!backingBean.managedBean.smAppl.applValidWithSsm}"
 												onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
 												actionListener="#{backingBean.setTabValue('3','4')}"
 												action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)}"
