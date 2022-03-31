@@ -4014,15 +4014,17 @@ public class SmApplicationUtil {
 						SmDisciplinaryAction smDisciplinaryAction = retrieveActiveSmDisciplinaryActionByDisciplinaryId(cat.getDisciplinaryActionId());
 
 						//#32298 DA cancel manufacture alert warning - start - <26238>
-						if(smDisciplinaryAction.getRecordStatusFlg() != null && smDisciplinaryAction.getRecordStatusFlg() == 1 && !smDisciplinaryAction.isBumiputeraCancel()){
+						//#32810 Alert message not display for cancel bumi - start 
+						if(smDisciplinaryAction.getRecordStatusFlg() != null && smDisciplinaryAction.getRecordStatusFlg() == 1){
 							cat.setCancelCategory(true);
-							if(smDisciplinaryAction.isCancelCategory()){
+							if(smDisciplinaryAction.isCancelCategory() || smDisciplinaryAction.isBumiputeraCancel()){
 								cat.setTypeDisciplinaryAction("C"); 
 							}else if(smDisciplinaryAction.isManufacturerCancel()){
 								cat.setTypeDisciplinaryAction("M"); 
 							}
 							apprvList.add(cat);
 						}
+						//#32810 Alert message not display for cancel bumi - end 
 						//#32298 DA cancel manufacture alert warning - end - <26238>
 					}
 				}
