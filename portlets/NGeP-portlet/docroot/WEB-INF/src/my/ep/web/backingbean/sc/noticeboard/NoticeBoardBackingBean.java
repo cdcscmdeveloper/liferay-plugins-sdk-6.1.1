@@ -154,6 +154,10 @@ import org.primefaces.model.MenuModel;
 import org.primefaces.model.TreeNode;
 
 import com.liferay.portal.util.PortalUtil;
+//#29732 Start
+import my.ep.web.util.pm.helper.PmCommonUtil;
+import org.primefaces.context.RequestContext;
+//#29732 End
 
 /**
  * Notice Board Backing Bean class displays the status of 
@@ -188,15 +192,6 @@ public class NoticeBoardBackingBean extends
 	private String slectedHeaderName;
 	
 	
-	/*new #29732 */ 
-	
-	private boolean newCategory = false;
-	
-	private PmCategoryL3 pmCategoryL3;
-	
-	private String remarkCategory;
-	
-	private List<PmRemarkCategory> remarkHistoryList;
 	
 
 	public NoticeBoardBackingBean() {
@@ -3465,36 +3460,40 @@ public class NoticeBoardBackingBean extends
 		}
 		//#30447 - end
 
-	public boolean isNewCategory() {
-		return newCategory;
-	}
-
-	public void setNewCategory(boolean newCategory) {
-		this.newCategory = newCategory;
-	}
-
-	public PmCategoryL3 getPmCategoryL3() {
-		return pmCategoryL3;
-	}
-
-	public void setPmCategoryL3(PmCategoryL3 pmCategoryL3) {
-		this.pmCategoryL3 = pmCategoryL3;
-	}
-
-	public String getRemarkCategory() {
-		return remarkCategory;
-	}
-
-	public void setRemarkCategory(String remarkCategory) {
-		this.remarkCategory = remarkCategory;
-	}
-
-	public List<PmRemarkCategory> getRemarkHistoryList() {
-		return remarkHistoryList;
-	}
-
-	public void setRemarkHistoryList(List<PmRemarkCategory> remarkHistoryList) {
-		this.remarkHistoryList = remarkHistoryList;
-	}
+		// #29732 Start
+		public void onClickHistoryIcon(String catCode, int catCodeLevel,
+				Long catCodeID) {
+			ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT,
+							ICategoryCodeSO.class);
+			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+			CategoryCodeResDTO resDTO = new CategoryCodeResDTO();
+			if (catCodeLevel == 1) {
+				reqDTO.setCategoryL1Id(catCodeID);
+				resDTO = categoryCodeSO.retrieveCategoryL1DtlById(reqDTO);
+			} else if (catCodeLevel == 2) {
+				reqDTO.setCategoryL2Id(catCodeID);
+				resDTO = categoryCodeSO.retrieveCategoryL2DtlById(reqDTO);
+			} else if (catCodeLevel == 3) {
+				reqDTO.setCategoryL3Id(catCodeID);
+				resDTO = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO);
+			}
+			getManagedBean().setHistoryList(
+					updateCreatedUserName(resDTO.getRemarkList()));
+			getManagedBean().setHisCatCode(catCode);
+			RequestContext.getCurrentInstance().execute("hisPopup.show()");
+		}
+	
+		private List<PmRemarkCategory> updateCreatedUserName(
+				List<PmRemarkCategory> remarkList) {
+			for (PmRemarkCategory rc : remarkList) {
+				PmUser user = PmCommonUtil
+						.retrieveUserById(rc.getCreatedBy(), true);
+				rc.setCreatedUsername(user.getUserName());
+			}
+			return remarkList;
+		}
+		// #29732 End
 	
 }

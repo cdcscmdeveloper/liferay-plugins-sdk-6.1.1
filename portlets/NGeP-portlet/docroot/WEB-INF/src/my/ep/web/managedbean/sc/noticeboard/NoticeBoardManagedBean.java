@@ -197,16 +197,10 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private boolean navigateFromMobileView;
 	private ScWorkFlowStatus workflowStatus;
 	
-	//#29732
-	private boolean newCategory = false;
-	
-	private PmCategoryL3 pmCategoryL3;
-	
-	private String remarkCategory;
-	
-	private List<PmRemarkCategory> remarkHistoryList;
-	
-	// #29732 End 
+	// #29732 Start
+	private String hisCatCode;
+	private List<PmRemarkCategory> historyList;
+	// #29732 End
 	
 	// #29624 - start
 	private List<ScLoa> scLoaList = new ArrayList<>();
@@ -1320,39 +1314,24 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	}
 
 	
-	public boolean isNewCategory() {
-		return newCategory;
-	}
-
-	public void setNewCategory(boolean newCategory) {
-		this.newCategory = newCategory;
-	}
-
-	public PmCategoryL3 getPmCategoryL3() {
-		return pmCategoryL3;
-	}
-
-	public void setPmCategoryL3(PmCategoryL3 pmCategoryL3) {
-		this.pmCategoryL3 = pmCategoryL3;
-	}
-
-	public String getRemarkCategory() {
-		return remarkCategory;
-	}
-
-	public void setRemarkCategory(String remarkCategory) {
-		this.remarkCategory = remarkCategory;
-	}
-
-
-	public List<PmRemarkCategory> getRemarkHistoryList() {
-		return remarkHistoryList;
-	}
-
-	public void setRemarkHistoryList(List<PmRemarkCategory> remarkHistoryList) {
-		this.remarkHistoryList = remarkHistoryList;
-	}
-
+	// #29732 Start
+	public String getHisCatCode() {
+		return hisCatCode;
+	} 
+ 
+	public void setHisCatCode(String hisCatCode) {
+		this.hisCatCode = hisCatCode;
+	} 
+ 
+	public List<PmRemarkCategory> getHistoryList() {
+		return historyList;
+	} 
+ 
+	public void setHistoryList(List<PmRemarkCategory> historyList) {
+		this.historyList = historyList;
+	} 
+	// #29732 End
+ 
 	//#29560 - start
 	/**
 	 * @return the supplierMofExpDate
