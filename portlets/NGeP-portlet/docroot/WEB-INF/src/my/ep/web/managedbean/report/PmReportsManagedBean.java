@@ -70,6 +70,14 @@ public class PmReportsManagedBean extends ReportBaseManagedBean {
 	private String selectedAccessType;
 	private Long selectedApplicationStatus;
 	
+	//29991 start
+	private PmOrgProfile selectedSupplier;
+	private String pmCompanyName;
+	private String cmCompanyName;
+	private String smCompanyName;
+	private String smSupplierName;
+	//29991 end
+	
 	public PmReportsManagedBean(){}
 
 	/**
@@ -129,7 +137,6 @@ public class PmReportsManagedBean extends ReportBaseManagedBean {
 	}
 	
 	//shafie - #28833 start ---------------
-	
 	/**
 	 * @return the govtSeller
 	 */
@@ -143,7 +150,6 @@ public class PmReportsManagedBean extends ReportBaseManagedBean {
 	public void setGovtSeller(boolean govtSeller) {
 		this.govtSeller = govtSeller;
 	}
-	
 	//shafie - #28833 end -----------------
 
 	/**
@@ -359,7 +365,7 @@ public class PmReportsManagedBean extends ReportBaseManagedBean {
 	public void setSearchOrgCategory(int searchOrgCategory) {
 		this.searchOrgCategory = searchOrgCategory;
 	}
-
+	
 	/**
 	 * @return the isDisabledOrgFields
 	 */
@@ -579,5 +585,79 @@ public class PmReportsManagedBean extends ReportBaseManagedBean {
 		this.pmSearchBean = pmSearchBean;
 	}
 	//shafie #28833 end
+	
+	//#29991 start--
+
+	/**
+	 * @return the pmCompanyName
+	 */
+	public String getPmCompanyName() {
+		return pmCompanyName;
+	}
+
+	/**
+	 * @param pmCompanyName the pmCompanyName to set
+	 */
+	public void setPmCompanyName(String pmCompanyName) {
+		this.pmCompanyName = pmCompanyName;
+	}
+
+	/**
+	 * @return the cmCompanyName
+	 */
+	public String getCmCompanyName() {
+		return cmCompanyName;
+	}
+
+	/**
+	 * @param cmCompanyName the cmCompanyName to set
+	 */
+	public void setCmCompanyName(String cmCompanyName) {
+		this.cmCompanyName = cmCompanyName;
+	}
+
+	/**
+	 * @return the smCompanyName
+	 */
+	public String getSmCompanyName() {
+		return smCompanyName;
+	}
+
+	/**
+	 * @param smCompanyName the smCompanyName to set
+	 */
+	public void setSmCompanyName(String smCompanyName) {
+		this.smCompanyName = smCompanyName;
+	}
+
+	/**
+	 * @return the smSupplierName
+	 */
+	public String getSmSupplierName() {
+		return smSupplierName;
+	}
+
+	/**
+	 * @param smSupplierName the smSupplierName to set
+	 */
+	public void setSmSupplierName(String smSupplierName) {
+		this.smSupplierName = smSupplierName;
+	}
+
+	/**
+	 * @return the selectedSupplier
+	 */
+	public PmOrgProfile getSelectedSupplier() {
+		return selectedSupplier;
+	}
+
+	/**
+	 * @param selectedSupplier the selectedSupplier to set
+	 */
+	public void setSelectedSupplier(PmOrgProfile selectedSupplier) {
+		this.selectedSupplier = selectedSupplier;
+	}
+	//#29991 end--
+	
 	
 }
