@@ -5,7 +5,7 @@
  * 
  * Release 1.00    
  *    
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  * 
  ****************************************************
 */
@@ -119,6 +119,14 @@ import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.TreeNode;
+//#29732 Start
+import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
+import my.ep.persistence.entity.pm.common.PmRemarkCategory;
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.web.util.pm.helper.PmCommonUtil;
+//#29732 End
 
 /**
  * The Class QTSupplierQulCriteriaBackingBean.
@@ -2111,4 +2119,39 @@ public class QTSupplierQulCriteriaBackingBean extends
 		}
 		
 	}
+	// #29732 Start
+	public void onClickHistoryIcon(String catCode, int catCodeLevel,
+			Long catCodeID) {
+		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate
+				.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT,
+						ICategoryCodeSO.class);
+		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+		CategoryCodeResDTO resDTO = new CategoryCodeResDTO();
+		if (catCodeLevel == 1) {
+			reqDTO.setCategoryL1Id(catCodeID);
+			resDTO = categoryCodeSO.retrieveCategoryL1DtlById(reqDTO);
+		} else if (catCodeLevel == 2) {
+			reqDTO.setCategoryL2Id(catCodeID);
+			resDTO = categoryCodeSO.retrieveCategoryL2DtlById(reqDTO);
+		} else if (catCodeLevel == 3) {
+			reqDTO.setCategoryL3Id(catCodeID);
+			resDTO = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO);
+		}
+		getManagedBean().setHistoryList(
+				updateCreatedUserName(resDTO.getRemarkList()));
+		getManagedBean().setHisCatCode(catCode);
+		RequestContext.getCurrentInstance().execute("hisPopup.show()");
+	}
+
+	private List<PmRemarkCategory> updateCreatedUserName(
+			List<PmRemarkCategory> remarkList) {
+		for (PmRemarkCategory rc : remarkList) {
+			PmUser user = PmCommonUtil
+					.retrieveUserById(rc.getCreatedBy(), true);
+			rc.setCreatedUsername(user.getUserName());
+		}
+		return remarkList;
+	}
+	// #29732 End
 }

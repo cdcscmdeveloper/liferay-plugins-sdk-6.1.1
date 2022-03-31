@@ -27,47 +27,97 @@
 				<p:column headerText="#{lbl['lbl.sc.main.category']}"
 					style="width:30%;white-space: normal;">
 					<h:outputText value="#{scQtCategory.pmCategoryL1Name}" />
-					<p:spacer width="5" />
-			 <p:commandLink onclick="historypop.show()" immediate="true">
-							<p:graphicImage value="/css/images/design/ico-view.png" /> 
-						</p:commandLink>
-						
-						<c:if test="#{!noticeBoardBackingBean.managedBean.newCategory}">
-			<ac:qtCategoryHistoryPopup catCode="#{noticeBoardBackingBean.managedBean.pmCategoryL3.categoryL3Code}" 
-			historyLis="#{noticeBoardBackingBean.managedBean.remarkHistoryList}" widget="historypop"/>
-		</c:if> 
-		
+					<!-- #29732 Start -->
+					<p:spacer width="5" /> 
+					<p:commandLink
+						actionListener="#{noticeBoardBackingBean.onClickHistoryIcon(scQtCategory.pmCategoryL1.categoryL1Code,1,scQtCategory.pmCategoryL1.categoryL1Id)}"
+						update="@form">
+						<p:graphicImage id="mainHisIcon"
+							value="/css/images/design/ico-view.png" />
+						<p:tooltip for="mainHisIcon">
+							<p:outputLabel escape="false"
+								value="#{lbl['lbl.sc.main.category.icon.tooltip']}" />
+						</p:tooltip>
+					</p:commandLink>
+					<p:outputPanel
+						rendered="#{(noticeBoardBackingBean.managedBean.selectedTab eq 'NBC') and
+										(scQtCategory.pmCategoryL1.changedDate ne scQtCategory.pmCategoryL1.createdDate)}"
+						style="color: red;font-weight:bold">
+						<h:outputText
+							value="&#60;br/&#62;&#40;#{lbl['lbl.sc.category.history.updated.on']}&#160;"
+							escape="false" />
+						<h:outputText value="#{scQtCategory.pmCategoryL1.changedDate}&#41;">
+							<f:convertDateTime pattern="dd/mm/yyyy h:mm a" />
+						</h:outputText>
+					</p:outputPanel>
+					<!-- #29732 End -->
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.sub.category']}"
 					style="width:30%;white-space: normal;">
 					<h:outputText value="#{scQtCategory.pmCategoryL2Name}" />
-					<p:spacer width="5" />
-			 <p:commandLink onclick="historypop.show()" immediate="true">
-							<p:graphicImage value="/css/images/design/ico-view.png" /> 
-						</p:commandLink>
-						
-						<c:if test="#{!noticeBoardBackingBean.managedBean.newCategory}">
-			<ac:qtCategoryHistoryPopup catCode="#{noticeBoardBackingBean.managedBean.pmCategoryL3.categoryL3Code}" 
-			historyLis="#{noticeBoardBackingBean.managedBean.remarkHistoryList}" widget="historypop"/>
-		</c:if> 
+					<!-- #29732 Start -->
+					<p:spacer width="5" /> 
+					<p:commandLink
+						actionListener="#{noticeBoardBackingBean.onClickHistoryIcon(scQtCategory.pmCategoryL2.categoryL2Code,2,scQtCategory.pmCategoryL2.categoryL2Id)}"
+						update="@form">
+						<p:graphicImage id="subHisIcon"
+							value="/css/images/design/ico-view.png" />
+						<p:tooltip for="subHisIcon">
+							<p:outputLabel escape="false"
+								value="#{lbl['lbl.sc.sub.category.icon.tooltip']}" />
+						</p:tooltip>
+					</p:commandLink>
+					<p:outputPanel
+						rendered="#{(noticeBoardBackingBean.managedBean.selectedTab eq 'NBC') and
+										(scQtCategory.pmCategoryL2.changedDate ne scQtCategory.pmCategoryL2.createdDate)}"
+						style="color: red;font-weight:bold">
+						<h:outputText
+							value="&#60;br/&#62;&#40;#{lbl['lbl.sc.category.history.updated.on']}&#160;"
+							escape="false" />
+						<h:outputText value="#{scQtCategory.pmCategoryL2.changedDate}&#41;">
+							<f:convertDateTime pattern="dd/mm/yyyy h:mm a" />
+						</h:outputText>
+					</p:outputPanel>
+					<!-- #29732 End -->
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.sub.category.division']}"
 					style="width:25%;white-space: normal;">
 					<h:outputText value="#{scQtCategory.pmCategoryL3Name}" />
-					<p:spacer width="5" />		
-					 <p:commandLink onclick="historypop.show()" immediate="true">
-							<p:graphicImage value="/css/images/design/ico-view.png" /> 
-						</p:commandLink>
-						
-						<c:if test="#{!noticeBoardBackingBean.managedBean.newCategory}">
-			<ac:qtCategoryHistoryPopup catCode="#{noticeBoardBackingBean.managedBean.pmCategoryL3.categoryL3Code}" 
-			historyLis="#{noticeBoardBackingBean.managedBean.remarkHistoryList}" widget="historypop"/>
-		</c:if> 
+					<!-- #29732 Start -->
+					<p:spacer width="5" />
+					<p:commandLink
+						actionListener="#{noticeBoardBackingBean.onClickHistoryIcon(scQtCategory.pmCategoryL3.categoryL3Code,3,scQtCategory.pmCategoryL3.categoryL3Id)}"
+						update="@form">
+						<p:graphicImage id="subDivHisIcon"
+							value="/css/images/design/ico-view.png" />
+						<p:tooltip for="subDivHisIcon">
+							<p:outputLabel escape="false"
+								value="#{lbl['lbl.sc.sub.category.division.icon.tooltip']}" />
+						</p:tooltip>
+					</p:commandLink>
+					<p:outputPanel
+						rendered="#{(noticeBoardBackingBean.managedBean.selectedTab eq 'NBC') and
+										(scQtCategory.pmCategoryL3.changedDate ne scQtCategory.pmCategoryL3.createdDate)}"
+						style="color: red;font-weight:bold">
+						<h:outputText
+							value="&#60;br/&#62;&#40;#{lbl['lbl.sc.category.history.updated.on']}&#160;"
+							escape="false" />
+						<h:outputText value="#{scQtCategory.pmCategoryL3.changedDate}&#41;">
+							<f:convertDateTime pattern="dd/mm/yyyy h:mm a" />
+						</h:outputText>
+					</p:outputPanel>
+					<!-- #29732 End -->
 				</p:column>
 
 			</p:dataTable>
+			<!-- #29732 Start -->
+			<ac:qtCategoryHistoryPopup
+				catCode="#{noticeBoardBackingBean.managedBean.hisCatCode}"
+				historyList="#{noticeBoardBackingBean.managedBean.historyList}"
+				widget="hisPopup" />
+	<!-- #29732 End -->
 			
 			
 			
