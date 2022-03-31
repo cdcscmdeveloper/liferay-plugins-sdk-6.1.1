@@ -1780,6 +1780,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	private List<BriefingZoneBean> sampleAddressBean;//11104-start
 	
+	private List<TabBean> readOnlyCommitteeTabBean;//Bug 32277
 	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -11100,6 +11101,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		public void setDemoOriSpecQuestionTemplateList(List<TplSpecQuestion> demoOriSpecQuestionTemplateList) {
 			this.demoOriSpecQuestionTemplateList = demoOriSpecQuestionTemplateList;
 		}
+		//Bug 32277 - start
+		public List<TabBean> getReadOnlyCommitteeTabBean() {
+			return readOnlyCommitteeTabBean;
+		}
+
+		public void setReadOnlyCommitteeTabBean(
+				List<TabBean> readOnlyCommitteeTabBean) {
+			this.readOnlyCommitteeTabBean = readOnlyCommitteeTabBean;
+		}
+		//Bug 32277 - end
 }
 
 // ***25201
