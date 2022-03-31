@@ -640,6 +640,15 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				this.getManagedBean().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF) ){
 				if(this.getManagedBean().getSmPersonnel() != null ){
 					if(suppOwner.getIdentificationNo() != null){
+						//32851 - start
+						BlacklistDirectorReqDTO reqDTO = new BlacklistDirectorReqDTO();
+						reqDTO.setDirectorIdNo(suppOwner.getIdentificationNo());
+						SmPersonBlacklist ban = SmServiceLookup.getBlacklistDirectorSO()
+								.retrievePersonBlacklistByIdentificationNO(reqDTO).getPersonBlacklist();
+						if(ban != null){
+							throw new EpException(SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",null));
+						}
+						//32851 - end
 						IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject("sm", IPersonnelSO.class);
 						PersonnelReqDTO personneleqDTO = new PersonnelReqDTO();
 						
@@ -663,7 +672,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 									if(discList != null && !discList.isEmpty()){
 										for(SmDisciplinaryAction disc : discList){
 											//27861:  Disciplinary Action - start - 28798
-											if(( disc.getDisciplinaryActionId() != null && disc.isRecordStatus() && disc.isBlacklistOwner() ) ||
+											//32851
+											if(//( disc.getDisciplinaryActionId() != null && disc.isRecordStatus() && disc.isBlacklistOwner() ) ||
 													(disc.getDisciplinaryActionId() != null && disc.isRecordStatus() && disc.isCancelRegistration() ) ||
 													(disc.getDisciplinaryActionId() != null && disc.isRecordStatus() && disc.isSuspendRegistration() ) ){
 												throw new EpException(SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",null));
