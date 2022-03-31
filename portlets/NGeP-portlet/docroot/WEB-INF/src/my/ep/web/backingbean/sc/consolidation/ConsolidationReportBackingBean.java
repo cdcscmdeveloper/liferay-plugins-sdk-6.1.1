@@ -1323,9 +1323,10 @@ public class ConsolidationReportBackingBean extends
 			  for that same selected zone
 			*/
 			if(isScQtRecommendByZoneNull) {
+				log.info("Replacing null recommendId for zone: " + selectedZone.getSpecZoneId());
 				scQtRecommendsByZone.get(selectedZone.getSpecZoneId()).clear();
 				for(ScQtRecommend qtRecommend: scQtFinalization.getScQtRecommends()){
-					if(selectedZone.getSpecZoneId() == qtRecommend.getTplSpecZoneDtl().getSpecZoneId()){
+					if(selectedZone.getSpecZoneId().equals(qtRecommend.getTplSpecZoneDtl().getSpecZoneId())){
 						scQtRecommendsByZone.get(selectedZone.getSpecZoneId()).add(qtRecommend);
 					}
 				}
