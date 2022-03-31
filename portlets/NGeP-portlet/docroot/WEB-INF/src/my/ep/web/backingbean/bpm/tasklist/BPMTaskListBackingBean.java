@@ -21,6 +21,7 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.QTStatusConst;
@@ -33,12 +34,15 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.bpm.tasklist.BPMTaskListManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
@@ -46,6 +50,7 @@ import my.ep.web.util.pm.helper.StatusHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 import com.liferay.compat.portal.util.PortalUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -79,6 +84,9 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 	private static final String purchaseRequestConstStr = "purchase-request";
 
 	private ISearchBean<PmParameterDesc> docTypeSearchBean;
+	
+	private static boolean sortAscending = true;
+	private static boolean fromSearchBttn = false;
 
 	public BPMTaskListBackingBean() {
 
@@ -573,7 +581,7 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 
 	public void navigateToURL() throws PortalException, SystemException {
 		log.info("......................navigateToURL");
-		//IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 
 		String taskId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("taskId");
 		String process = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("process");
@@ -586,9 +594,9 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 
 		log.info("****claim****"+claim);
 
-		//FacesScopes face = new FacesScopes();
-		//Object token = face.getBPMAuthenticationCtxToken();
-		//BpmRequestDTO reqDTO = new BpmRequestDTO();
+		FacesScopes face = new FacesScopes();
+		Object token = face.getBPMAuthenticationCtxToken();
+		BpmRequestDTO reqDTO = new BpmRequestDTO();
 
 		try {
 			log.info("taskId:" + taskId);
@@ -716,13 +724,39 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 	}
 
 	public void refreshAdvanceTaskList() {
-
+		//29810 - start
+		if (this.getManagedBean().getGroupTaskCreatedDateFrom() != null
+				&& this.getManagedBean().getGroupTaskCreatedDateTo() == null) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.bpm.createdDateTo", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()) });
+		} else if (this.getManagedBean().getGroupTaskCreatedDateFrom() == null
+				&& this.getManagedBean().getGroupTaskCreatedDateTo() != null) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.bpm.createdDateFrom", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()) });
+		}
+		//29810 - end
+		this.getManagedBean().setFromSearchBttn(true);
 		this.getManagedBean().getTaskListGroupDataModel().reloadData();
 	}
 
 
 	public void refreshNormalTaskList(){
-
+		//29810 - start
+		if (this.getManagedBean().getMyTaskCreatedDateFrom() != null
+				&& this.getManagedBean().getMyTaskCreatedDateTo() == null) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.bpm.createdDateTo", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()) });
+		} else if (this.getManagedBean().getMyTaskCreatedDateFrom() == null
+				&& this.getManagedBean().getMyTaskCreatedDateTo() != null) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.bpm.createdDateFrom", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()) });
+		}
+		//29810 - end
+		this.getManagedBean().setFromSearchBttn(true);
 		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
 	}
 	
@@ -789,6 +823,13 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
 		
 		getManagedBean().setSdoWithMultipleRoles(sdoWithMultipleRole());
+		
+		//29810 - start
+		FacesScopes sc = new FacesScopes();
+		if (sc.hasRoleUser(RoleCode.UPS_PO.value())) {
+			getManagedBean().setRoleType("PO");
+		}
+		//29810 - start
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "taskListView");
@@ -1092,6 +1133,38 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 
 	}
 	
+	public void orderByMyTaskList() {
+		
+		this.getManagedBean().setFromSearchBttn(false);
+		this.getManagedBean().setAscending(sortAscending);
+		
+		if (sortAscending) {
+			sortAscending =  false;
+		} else {
+			sortAscending = true;
+		}		
+		
+//		this.getManagedBean().getTaskListGroupDataModel().reloadData();
+		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
+	}
+	
+	public void orderByGroupTaskList() {
+
+		this.getManagedBean().setFromSearchBttn(false);
+		this.getManagedBean().setAscendingGroup(sortAscending);
+		
+		if (sortAscending) {
+			sortAscending =  false;
+		} else {
+			sortAscending = true;
+		}		
+		
+		this.getManagedBean().getTaskListGroupDataModel().reloadData();
+//		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
+		
+
+	}
+	
 	// 25627 - Start.
 	public boolean isCommitteeApproverWithQT(StatusReqDTO reqDTO) {
 		if (ParameterConst.DOCTYPE_QUOTATION.equals(reqDTO.getDocType())) {
@@ -1103,5 +1176,48 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 		return false;
 	}
 	// 25627 -End.
+	
+	//29810 - start
+	public void compareDate(String type){
+		
+		if(type.equalsIgnoreCase("normal")){
+			if (this.getManagedBean().getMyTaskCreatedDateFrom() != null
+					&& this.getManagedBean().getMyTaskCreatedDateTo() != null) {
+				if (this.getManagedBean().getMyTaskCreatedDateFrom().after(this.getManagedBean().getMyTaskCreatedDateTo())) {
+						RequestContext.getCurrentInstance().execute("dateFromDialog.show()");
+				} else {
+					Long date = DateUtils.getDaysDifference(this.getManagedBean().getMyTaskCreatedDateFrom(), this
+							.getManagedBean().getMyTaskCreatedDateTo());
+					if (date > 31) {
+						RequestContext.getCurrentInstance().execute("validateDateDialog.show()");
+					}
+				}
+			}
+		}else if(type.equalsIgnoreCase("advance")){
+			if (this.getManagedBean().getGroupTaskCreatedDateFrom() != null
+					&& this.getManagedBean().getGroupTaskCreatedDateTo() != null) {
+				if (this.getManagedBean().getGroupTaskCreatedDateFrom().after(this.getManagedBean().getGroupTaskCreatedDateTo())) {
+						RequestContext.getCurrentInstance().execute("dateFromDialogAdvance.show()");
+				} else {
+					Long date = DateUtils.getDaysDifference(this.getManagedBean().getGroupTaskCreatedDateFrom(), this
+							.getManagedBean().getGroupTaskCreatedDateTo());
+					if (date > 31) {
+						RequestContext.getCurrentInstance().execute("validateDateDialogAdvance.show()");
+					}
+				}
+			}
+		}		
+	} 
+	
+	public void resetDate(String type){
+		if(type.equalsIgnoreCase("normal")){
+			this.getManagedBean().setMyTaskCreatedDateFrom(null);
+			this.getManagedBean().setMyTaskCreatedDateTo(null);	
+		}else if(type.equalsIgnoreCase("advance")){
+			this.getManagedBean().setGroupTaskCreatedDateFrom(null);
+			this.getManagedBean().setGroupTaskCreatedDateTo(null);
+		}
+	}
+	//29810 - end
 }
 
