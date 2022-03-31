@@ -90,7 +90,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	
 	private List<WorklistItemVO> taskList;
 	private List<FlFulfilmentOrder> flFulfilmentOrderList;
-	private Map<?, ?> bpmMap = null;
+	private static Map<?, ?> bpmMap = null;
 	private String processName;
 	private String[] action;
 	private String taskId;
@@ -137,7 +137,12 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	private boolean ascending = true;
 	private String sort_byGroup;
 	private boolean ascendingGroup = true;
-
+	private boolean fromSearchBttn = false;
+	private Date  myTaskCreatedDateFrom;
+	private Date  myTaskCreatedDateTo;
+	private Date groupTaskCreatedDateFrom;
+	private Date  groupTaskCreatedDateTo;
+	private String roleType;
 
 	public List<WorklistItemVO> getTaskList() {
 		return taskList;
@@ -262,7 +267,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	private class taskPagingDataModel extends PagingDataModel<WorklistItemVO> {
 
 		private static final long serialVersionUID = 1L;
-		@SuppressWarnings("unused")
 		private final Logger log = EpLogger.getLogger(taskPagingDataModel.class);
 		
 		public taskPagingDataModel() {
@@ -471,7 +475,61 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				if(getDocStatus()>0){
 					reqDTO.setStatus(getDocStatus());
 				}
-
+				
+				//Start - Task list sorting n search criteria date from and date to by Najmi 
+				//29810 - START
+				log.info("getSort_by() = "+getSort_by());
+				
+				if (isFromSearchBttn()) {
+					if (getSort_by() != null && !getSort_by().equals("")) {
+						
+						if (getSort_by().equalsIgnoreCase(BpmConstants.SORT_BY_DOCNUMBER)) {
+							reqDTO.setSortBy(BpmConstants.SORT_BY_DOCNUMBER);
+						} else if (getSort_by().equalsIgnoreCase(BpmConstants.SORT_BY_DOCTYPE)) {
+							reqDTO.setSortBy(BpmConstants.SORT_BY_DOCTYPE);
+						} else if (getSort_by().equalsIgnoreCase(BpmConstants.SORT_BY_TITLE)) {
+							reqDTO.setSortBy(BpmConstants.SORT_BY_TITLE);
+						} else if (getSort_by().equalsIgnoreCase(BpmConstants.SORT_BY_CREATEDATE)) {
+							reqDTO.setSortBy(BpmConstants.SORT_BY_CREATEDATE);
+						} else if (getSort_by().equalsIgnoreCase(BpmConstants.SORT_BY_STATUS)) {
+							reqDTO.setSortBy(BpmConstants.SORT_BY_STATUS);
+						} else if (getSort_by().equalsIgnoreCase(BpmConstants.SORT_BY_RECEIVEDDATE)){
+							reqDTO.setSortBy(BpmConstants.SORT_BY_RECEIVEDDATE);
+						}					
+					}
+				} else {
+					if (this.getSortField() != null) {
+						if (this.getSortField().equalsIgnoreCase(BpmConstants.SORT_BY_DOCNUMBER)) {
+							reqDTO.setSortBy(BpmConstants.SORT_BY_DOCNUMBER);
+						} else if (this.getSortField().equalsIgnoreCase(BpmConstants.SORT_BY_DOCTYPE)) {
+							reqDTO.setSortBy(BpmConstants.SORT_BY_DOCTYPE);
+						} else if (this.getSortField().equalsIgnoreCase(BpmConstants.SORT_BY_TITLE)) {
+							reqDTO.setSortBy(BpmConstants.SORT_BY_TITLE);
+						} else if (this.getSortField().equalsIgnoreCase(BpmConstants.SORT_BY_CREATEDATE)) {
+							reqDTO.setSortBy(BpmConstants.SORT_BY_CREATEDATE);
+						} else if (this.getSortField().equalsIgnoreCase(BpmConstants.SORT_BY_STATUS)) {
+							reqDTO.setSortBy(BpmConstants.SORT_BY_STATUS);
+						} else if (this.getSortField().equalsIgnoreCase(BpmConstants.SORT_BY_RECEIVEDDATE)){
+							reqDTO.setSortBy(BpmConstants.SORT_BY_RECEIVEDDATE);
+						}
+					}
+				}				 			
+				
+				reqDTO.setIsAsc(isAscending());
+				
+				if (getMyTaskCreatedDateTo() != null) {
+					getMyTaskCreatedDateTo().setHours(23);
+					getMyTaskCreatedDateTo().setMinutes(59);
+				}
+				
+				log.info("date from = "+getMyTaskCreatedDateFrom() + " date to = "+getMyTaskCreatedDateTo());
+				
+				reqDTO.setCreatedDateFrom(getMyTaskCreatedDateFrom());
+				reqDTO.setCreatedDateTo(getMyTaskCreatedDateTo());
+				
+				//End - Task list sorting n search criteria date from and date to by Najmi 
+				//29810 - END
+				
 				reqDTO.setAssignment(BpmConstants.ASSIGNMENT_MY);
 				reqDTO.setCtxToken(token);
 				BpmResponseDTO responseDTO = bpmSO.getWorklistItems(reqDTO);
@@ -480,7 +538,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				if (responseDTO.getWorklistVO() != null) {
 					
 					if(responseDTO.getWorklistVO().getWorklistItem()!=null) {
-
 						//	Enhancement #28766 - Start
 						//	boolean viewGlpFlag = viewGlpFlag();
 						//	Enhancement #28766 - End
@@ -510,7 +567,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 									worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.ct.revise.circular.cancellation",ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));									
 								}
 								//CR 28766: Static Code Analysis End
-								
+	
 						       processWorklistItemByDocType(worklistItemVO);
 							}catch(Exception ex){
 								worklistItemVO.setTitle("Please check");
@@ -616,6 +673,62 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				reqDTO.setAssignment(BpmConstants.ASSIGNMENT_GROUP);
 				reqDTO.setIsClaimed(false);
 				reqDTO.setCtxToken(token);
+				
+				//Start - Task list sorting n search criteria date from and date to by Najmi 
+				//29810 - START
+				logger.info("getSort_by() = "+getSort_byGroup());
+				
+				if (isFromSearchBttn()) {
+					if (getSort_byGroup() != null && !getSort_byGroup().equals("")) {
+						
+						if (getSort_byGroup().equalsIgnoreCase(BpmConstants.SORT_BY_DOCNUMBER)) {
+							reqDTO.setSortBy(BpmConstants.SORT_BY_DOCNUMBER);
+						} else if (getSort_byGroup().equalsIgnoreCase(BpmConstants.SORT_BY_DOCTYPE)) {
+							reqDTO.setSortBy(BpmConstants.SORT_BY_DOCTYPE);
+						} else if (getSort_byGroup().equalsIgnoreCase(BpmConstants.SORT_BY_TITLE)) {
+							reqDTO.setSortBy(BpmConstants.SORT_BY_TITLE);
+						} else if (getSort_byGroup().equalsIgnoreCase(BpmConstants.SORT_BY_CREATEDATE)) {
+							reqDTO.setSortBy(BpmConstants.SORT_BY_CREATEDATE);
+						} else if (getSort_byGroup().equalsIgnoreCase(BpmConstants.SORT_BY_STATUS)) {
+							reqDTO.setSortBy(BpmConstants.SORT_BY_STATUS);
+						} else {
+							//reqDTO.setSortBy(getSort_by());
+						}					
+					}
+				} else {
+					if (this.getSortField() != null) {
+						if (this.getSortField().equalsIgnoreCase(BpmConstants.SORT_BY_DOCNUMBER)) {
+							reqDTO.setSortBy(BpmConstants.SORT_BY_DOCNUMBER);
+						} else if (this.getSortField().equalsIgnoreCase(BpmConstants.SORT_BY_DOCTYPE)) {
+							reqDTO.setSortBy(BpmConstants.SORT_BY_DOCTYPE);
+						} else if (this.getSortField().equalsIgnoreCase(BpmConstants.SORT_BY_TITLE)) {
+							reqDTO.setSortBy(BpmConstants.SORT_BY_TITLE);
+						} else if (this.getSortField().equalsIgnoreCase(BpmConstants.SORT_BY_CREATEDATE)) {
+							reqDTO.setSortBy(BpmConstants.SORT_BY_CREATEDATE);
+						} else if (this.getSortField().equalsIgnoreCase(BpmConstants.SORT_BY_STATUS)) {
+							reqDTO.setSortBy(BpmConstants.SORT_BY_STATUS);
+						} else {
+							//reqDTO.setSortBy(getSort_by());
+						}
+					}
+				}				 			
+				
+				reqDTO.setIsAsc(isAscendingGroup());
+				
+				if (getGroupTaskCreatedDateTo() != null) {
+					getGroupTaskCreatedDateTo().setHours(23);
+					getGroupTaskCreatedDateTo().setMinutes(59);
+				}
+				
+				logger.info("date from = "+getGroupTaskCreatedDateFrom() + " date to = "+getGroupTaskCreatedDateTo());
+				
+				
+				
+				reqDTO.setCreatedDateFrom(getGroupTaskCreatedDateFrom());
+				reqDTO.setCreatedDateTo(getGroupTaskCreatedDateTo());
+				
+				//End - Task list sorting n search criteria date from and date to by Najmi 
+				//29810 - END
 				
 				//SDO User - filer Search
 				sdoSearchFilter(reqDTO);
@@ -742,7 +855,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	
 	// #24714
 	private class taskPagingBothDataModel extends PagingDataModel<WorklistItemVO> {
-
 		private static final long serialVersionUID = 1L;
 		private final Logger log = EpLogger.getLogger(taskPagingBothDataModel.class);
 
@@ -942,9 +1054,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	}
 
 	public void setBpmMap(Map<?, ?> bpmMap) {
-		this.bpmMap = bpmMap;
+		BPMTaskListManagedBean.bpmMap = bpmMap;
 	}
-	
+
 	private AccessApplResDTO retrieveAccessApplByDocNo(String docNo){
 		IAccessApplSO accessApplSO = null;
 		try{
@@ -1760,7 +1872,55 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	public void setAscendingGroup(boolean ascendingGroup) {
 		this.ascendingGroup = ascendingGroup;
 	}
-	
+
+	public boolean isFromSearchBttn() {
+		return fromSearchBttn;
+	}
+
+	public void setFromSearchBttn(boolean fromSearchBttn) {
+		this.fromSearchBttn = fromSearchBttn;
+	}
+
+	public Date getMyTaskCreatedDateFrom() {
+		return myTaskCreatedDateFrom;
+	}
+
+	public void setMyTaskCreatedDateFrom(Date myTaskCreatedDateFrom) {
+		this.myTaskCreatedDateFrom = myTaskCreatedDateFrom;
+	}
+
+	public Date getMyTaskCreatedDateTo() {
+		return myTaskCreatedDateTo;
+	}
+
+	public void setMyTaskCreatedDateTo(Date myTaskCreatedDateTo) {
+		this.myTaskCreatedDateTo = myTaskCreatedDateTo;
+	}
+
+	public Date getGroupTaskCreatedDateFrom() {
+		return groupTaskCreatedDateFrom;
+	}
+
+	public void setGroupTaskCreatedDateFrom(Date groupTaskCreatedDateFrom) {
+		this.groupTaskCreatedDateFrom = groupTaskCreatedDateFrom;
+	}
+
+	public Date getGroupTaskCreatedDateTo() {
+		return groupTaskCreatedDateTo;
+	}
+
+	public void setGroupTaskCreatedDateTo(Date groupTaskCreatedDateTo) {
+		this.groupTaskCreatedDateTo = groupTaskCreatedDateTo;
+	}
+
+	public String getRoleType() {
+		return roleType;
+	}
+
+	public void setRoleType(String roleType) {
+		this.roleType = roleType;
+	}
+
 	/*#31422-basri 190821*/
 	public void setTaskIdPair(String taskIdPair) {
 		this.taskIdPair = taskIdPair;
@@ -1771,5 +1931,5 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		return taskIdPair;
 	}
 	/*#31422-basri 190821*/
-
+	
 }
