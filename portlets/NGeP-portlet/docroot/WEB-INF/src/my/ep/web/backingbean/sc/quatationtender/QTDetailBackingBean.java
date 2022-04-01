@@ -3859,6 +3859,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//#25077 End 
 			//#30477 Start Vinod
 			if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
+				//#11299 Start Vinod
+				for(ScQtApproval approval : this.getManagedBean().getQt().getScQtApprovals()){
+					List<ScQtApproverSettings> approverSettings = approval.getApproverSettings();
+					if(CollectionUtils.isEmpty(approverSettings)){
+						throw new EpException(MessageConst.ERROR_775174);
+					}
+				}
+				//#11299 End Vinod
 				for(ScQtCommittee committee : this.getManagedBean().getQt().getScQtCommittees()){
 					if((committee.getScCommittee().getCommitteStatus().getStatusId().equals(QTStatusConst.CMT_PENDING_REVISION) 
 							|| currentStatus.equals(QTStatusConst.QT_RE_EVALUATION))
@@ -3866,7 +3874,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						for(ScQtApproval approval : this.getManagedBean().getQt().getScQtApprovals()){
 							for(ScQtApproverSettings approverSetting : approval.getApproverSettings()){
 								if(isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId())){
-									throw new EpException(MessageConst.ERROR_775171);
+									//#11299 Start Vinod
+									throw new EpException(MessageConst.ERROR_775174);
+									//throw new EpException(MessageConst.ERROR_775171);
+									//#11299 End Vinod
 								}
 							}
 						}
@@ -3874,15 +3885,23 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 			}
 			if(SCProcessNameConst.REVISE_QT_SCHEDULE.equalsIgnoreCase(taskName)) {
+				//#11299 Start Vinod updated error message
+				List<ScQtApproverSettings> approverSettings = this.getManagedBean().getPublicationApproval().getApproverSettings();
+				if(CollectionUtils.isEmpty(approverSettings)){
+					throw new EpException(MessageConst.ERROR_775174);
+				}else{
 				if((currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_REVISION)
 						|| currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION))
 						&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT))	{
 							for(ScQtApproverSettings approverSetting : this.getManagedBean().getPublicationApproval().getApproverSettings()){
 								if(isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId())){
-									throw new EpException(MessageConst.ERROR_775172);
+										throw new EpException(MessageConst.ERROR_775174);
+										//throw new EpException(MessageConst.ERROR_775171);
 								}
 							}
 				}
+			}
+				//#11299 End Vinod
 			}
 			//#30477 End Vinod
 			if (currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
@@ -7899,7 +7918,16 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		
 		Long statusId = this
 				.getManagedBean().getQt().getQtStatus().getStatusId();
+		//#11299 Start Vinod
+		String taskName = this.getManagedBean().getTaskName()==null ? "": this.getManagedBean().getTaskName();
 		
+		if (taskName.equals(SCProcessNameConst.REVISE_COMMITTEE)
+			&& !this.getManagedBean().isMaintanceFlow()
+			&& isDeskOfficer()
+			&& !this.getManagedBean().isReadOnly()) {
+			return false;
+		}
+		//#11299 End Vinod
 		// #25426#36#95 ruzaimah - Start
 		if ((this.getManagedBean().isMaintanceFlow()
 				&& isDeskOfficer()) // #25426#85 ruzaimah - remove this.
@@ -11013,9 +11041,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
   	public boolean evaluateCommitteeAppointmentPage(){
   		boolean flag = false;
   		String taskName = this.getManagedBean().getTaskName()==null ? "": this.getManagedBean().getTaskName();
-  		if(this.getManagedBean().isCommitteeAppointment() && !taskName.equalsIgnoreCase(SCProcessNameConst.ASSIGN_SCORING_COMMITTEE)){
+  		//#11299 Start Vinod Added REVISE_COMMITTEE condition
+  		if(this.getManagedBean().isCommitteeAppointment() && !taskName.equalsIgnoreCase(SCProcessNameConst.ASSIGN_SCORING_COMMITTEE)
+  				&& !taskName.equalsIgnoreCase(SCProcessNameConst.REVISE_COMMITTEE)){
   			flag = true; 
   		}
+  		//#11299 End Vinod
   		return flag;
   	}
   	//29464-end
