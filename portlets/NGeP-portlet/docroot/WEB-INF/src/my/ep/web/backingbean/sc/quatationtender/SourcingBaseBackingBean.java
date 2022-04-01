@@ -111,6 +111,7 @@ import my.ep.dto.sc.directpurchase.QuoteResDTO;
 import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.EvaluationResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
+import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.quationtender.SpecificationReqDTO;
 import my.ep.dto.sc.quationtender.SpecificationResDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
@@ -181,7 +182,9 @@ import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
+import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
@@ -5705,6 +5708,71 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return result;
 	}
     // #11134 - end
+    
+    //#27927 - Start
+    /**
+  	 * Method to return true, if branch in supplier has been deleted
+  	 * @param supplier id and scQt
+  	 * @return	true or false
+  	 **/
+  	
+  	public boolean localitySupplierBranchListDeleted(Long supplierId, ScQt scQt){ 
+  		
+  		 QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+  		 qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
+  		 ScQt qt = qtBackingBean.getManagedBean().getQt();
+  		 ScQtSupplierCriteria scQtSupplierCriteria = qt.getScQtSupplierCriteria();
+  			
+  		 ISupplierSearchSO supplierSearchSO = null;
+  		 IQTDetailSO QtDetailsSO = null;
+  	     boolean isSupplierBranchListDeleted = false;
+  		 List<SmSupplierBranch> supplierBranchListDeleted = new ArrayList<>();
+  		 try{
+  			 
+  			 supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(
+  			 ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+  			 QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
+  			 ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+  			 
+  			 SupplierSearchReqDTO suppSearchReqDTO = new SupplierSearchReqDTO();
+  		 	 suppSearchReqDTO.setSupplierId(supplierId);
+  		     SupplierSearchResDTO suppSearchResDTO = supplierSearchSO.retrieveSmSupplierBranchDeletedBySupplier(suppSearchReqDTO);
+  		     supplierBranchListDeleted = suppSearchResDTO.getSmSupplierBranchList();
+  		     
+  		     if(scQtSupplierCriteria.isAllState()){
+  		    	  for (SmSupplierBranch supplierBranch : supplierBranchListDeleted) {
+  						if(supplierBranch.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){
+  							isSupplierBranchListDeleted = true;
+  						}
+  				 }
+  		    	 
+  		     }else{
+  		    	 
+  		    	 for (SmSupplierBranch supplierBranch : supplierBranchListDeleted) {
+  						QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+  			    		tenderReqDTO.setQtdetail(qt);
+  			    		QuationTenderResDTO tenderResDTO = QtDetailsSO.retriveQTSuppQulCriDetails(tenderReqDTO);
+  			    		if(tenderResDTO != null && tenderResDTO.getLocationDetails()!= null){
+  			    			for(TplSpecLoc location : tenderResDTO.getLocationDetails()){
+  								if(supplierBranch.getSmAddress().getPmState().getStateId() != null && location.getPmState().getStateId() != null){
+  			    					if(supplierBranch.getSmAddress().getPmState().getStateCode().equals(location.getPmState().getStateCode())){
+  			    						if(supplierBranch.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){
+  				    						isSupplierBranchListDeleted = true;
+  			    						}			    						
+  			    					}	
+  			    				}
+  			    			}
+  			    		}
+  		    		}
+  		    	 
+  		     }
+  			 
+  		} finally {
+  			supplierSearchSO = null;
+  		}     
+  		return isSupplierBranchListDeleted;
+  	}
+    //#27927 - End
     
     public boolean isQTCloneStatus(Long currentStatusId){//25635-start
   		List<Long> CheckStatus=new ArrayList<Long>();

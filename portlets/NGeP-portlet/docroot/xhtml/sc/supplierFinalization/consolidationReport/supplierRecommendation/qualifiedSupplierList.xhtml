@@ -18,6 +18,9 @@
 		<c:if test="#{!consolidationReportBackingBean.managedBean.itemized}">
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.select.disagree.proposal.validity.period.extension.package']} " escape="false" />
 		</c:if>
+		<!-- #29729 Start -->
+		<h:outputText styleClass="instruction" escape="false" value="#{lbl['lbl.sc.list.branch.supplier.related.qt.deleted.pr']}" /> 
+		<!-- #29729 End -->
 		<c:if test="#{consolidationReportBackingBean.managedBean.itemized}">
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.sf.finalization.supplier.selection.bumistatus.instruction']} " escape="false" />
 			<h:outputText styleClass="instruction" value="#{consolidationReportBackingBean.managedBean.scQt.closingDate}">
@@ -41,15 +44,13 @@
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" style="width:10%; text-align:right;"/>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" style="width:5%; text-align:right;"/>
-						<ui:remove>#29021 - start  </ui:remove>
 		               	<p:column rowspan="2" style="width:5%; text-align:center;">
 		               		<f:facet name="header">
 								<h:outputText value="#{lbl['lbl.sc.rating']}" />
 								<ac:iconTooltip value="#{lbl['lbl.sc.tec.rating.tooltip']}" />
 							</f:facet>
 		               	</p:column>
-		               	<ui:remove>#29021 - end </ui:remove>
-						<p:column rowspan="2" style="width:5%; text-align:center;white-space:normal;">
+		               	<p:column rowspan="2" style="width:5%; text-align:center;white-space:normal;">
 		               	<f:facet name="header">
 								<p:outputLabel value="#{lbl['lbl.sc.eval.ranking']}" /><br/>
 								<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'1'}]);"  
@@ -92,6 +93,13 @@
 												   	 target="#{supplierDetailBackingBean.scQtProposal}" />
 						<h:outputText value="#{qualifiedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
 					</p:commandLink>
+					<!-- #29729 Start -->
+					<p:spacer width="15" height="15"/>
+						<p:commandLink action="#{consolidationReportBackingBean.showSupplierBranchList(qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}"  
+			         		update="@([id$=suppBranchListPopupId])" oncomplete="suppBranchListPopup.show();">
+							<h:graphicImage value="/css/images/exclam-info.png" />
+		         		</p:commandLink> 
+		         	<!-- #29729 End -->
 				</p:column>
 	
 				<p:column>
@@ -120,22 +128,18 @@
 				</p:column>				
 	
 				<p:column style="text-align:right;">
-					<!-- #21695 Start -->
 					<h:outputText value="0" rendered="#{qualifiedSupp.qtEvaluationResult.offeredPrice eq 0}">
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 					</h:outputText>
 					<h:outputText value="#{qualifiedSupp.totalScore}" rendered="#{qualifiedSupp.qtEvaluationResult.offeredPrice ne 0}">
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
-					<!-- #21695 End -->
 					</h:outputText>
 				</p:column>
 	
 				<p:column style="text-align:center;">
-					<ui:remove>#29021 - start </ui:remove>
 					<h:outputText value="#{empty qualifiedSupp.totalRating? 0: qualifiedSupp.totalRating}"/>
 				</p:column>
 				<p:column style="text-align:center;">
-				<ui:remove>#29021 - end </ui:remove>
 					<h:outputText value="#{qualifiedSupp.evalRank}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 					</h:outputText>

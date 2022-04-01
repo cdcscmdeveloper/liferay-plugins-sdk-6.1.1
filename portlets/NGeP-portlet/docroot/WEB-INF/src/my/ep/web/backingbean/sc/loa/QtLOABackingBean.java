@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -15,6 +16,7 @@ import javax.faces.context.FacesContext;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.constant.MapKeyEnum;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.SourcingConstants;
@@ -31,6 +33,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.sc.loiloa.LOIDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -44,7 +47,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.event.SelectEvent;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class QtLOABackingBean.
  * @author kenny
@@ -505,6 +507,34 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 				|| QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId()) // ***17376#55
 				|| QTConstants.PORTLET_NAME_QT_TECHSUPP.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
+	
+	//#27927 - Start
+    /**
+  	 * Method to return true, if branch in supplier has been deleted (LOA)
+  	 * @param supplier id 
+  	 * @return	true or false
+  	 **/
+	public boolean displaySupplierBranchListDeletedForLOA(Long supplierId){
+		 boolean deleted = false;
+		 ScQt scQt = this.getManagedBean().getQt();
+		 if(localitySupplierBranchListDeleted(supplierId, scQt)){
+			 deleted = true;
+		 }else{
+			 deleted = false;
+		 }
+	  return deleted;
+	}
+	
+    /**
+	* Method to display message info for supplier branch has been deleted (LOA)
+	**/
+	public void infoBranchSupplierListDeletedForLOA(){
+		 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+					MessageUtils.getMessage(MessageConst.INFO_760523, 
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+	}
+	//#27927 - End
+	
 }
 
 
