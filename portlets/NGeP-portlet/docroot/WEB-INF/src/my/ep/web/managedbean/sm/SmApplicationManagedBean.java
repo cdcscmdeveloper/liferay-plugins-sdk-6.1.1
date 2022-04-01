@@ -104,7 +104,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.liferay.portal.model.Role;
 
-
 @ManagedBean(name = "smApplMB")
 @SessionScoped
 public class SmApplicationManagedBean extends BaseManagedBean {
@@ -135,6 +134,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmSupplierBranch selectedBranchPrev;
 	private int selectedBranchIndex;
 	private List<SmSupplierBranch> selectedBranches;
+	private List<SmSupplierBranch> displayBranches;
 	private SmAssociateCompany selectedAssocCompany;
 	private List<SmAssociateCompany> selectedAssocCompanies;
 	private List<SmSupplierCert> selectedCertList;
@@ -338,10 +338,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SelectItem> bankStates;
 	private List<SelectItem> bankDistricts;
 	private List<SelectItem> bankCities;
-	private List<SelectItem> bankDivisions;//13320
-	
-	
-	//13320-Start
+	private List<SelectItem> bankDivisions;// 13320
+
+	// 13320-Start
 	private List<SelectItem> basicCompanyDivisions;
 	private List<SelectItem> basicOffFacDivisions;
 	private List<SelectItem> branchCompanyDivisions;
@@ -355,9 +354,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SelectItem> shrHldrOffDivisions;
 	private List<SelectItem> shrHldrMailDivisions;
 	private List<SelectItem> shrHldrResdDivisions;
-	private boolean divisionBox=true;//13320
-	
-	//13320-End
+	private boolean divisionBox = true;// 13320
+
+	// 13320-End
 
 	private List<Long> svTaskIdsNeedToDelete;
 
@@ -457,12 +456,12 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private PmParameter certificate;
 	private PmParameter diploma;
 	private PmParameter glpCert;
-	
+
 	//3460 - Start
 	private SmRemark smRemark;
 	private String sdoRemark;
 	//3460 - End
-	
+
 	// private PmEduLevel certEduLevel;
 	// private PmEduLevel diplomaEduLevel;
 	private PmParameterDesc glp;
@@ -554,7 +553,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String searchRejectReason;
 	private String discplinaryActionMsg;
 	private IPagingDataModel<PmReasonDesc> rejectReasonDataModel = new RejectReasonPagingDataModel();
-	
+
 	private int attachedFileIndex;
 	private SoftcertUploadSuppDocVO selectedSuppDoc;
 	private boolean activeTransaction;
@@ -562,22 +561,22 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean itemDeleteButtonShow;
 	private int index;
 	private String accountNo;
-	
+
 	//#16052019 - SSM INTEGRATION CR
 	private List<SmEquityCompany> smEquityCompanyTemp;
 	private List<SmPersonnel> personnelsOwner = new ArrayList<SmPersonnel>();
-	private List<SmPersonnel> personnelsDirector  = new ArrayList<SmPersonnel>();
-	private List<SmPersonnel> personnelsSsm  = new ArrayList<SmPersonnel>();
-	private List<SmSupplierBranch>  smSupplierBranchSsm = new ArrayList<SmSupplierBranch>();
-	private List<SmSupplierBusiness> smSupplierBusinessSsm   = new ArrayList<SmSupplierBusiness>();
-	private List<SmEquityCompany> smEquityCompaniesSsm   = new ArrayList<SmEquityCompany>();
-	
-	//26238
+	private List<SmPersonnel> personnelsDirector = new ArrayList<SmPersonnel>();
+	private List<SmPersonnel> personnelsSsm = new ArrayList<SmPersonnel>();
+	private List<SmSupplierBranch> smSupplierBranchSsm = new ArrayList<SmSupplierBranch>();
+	private List<SmSupplierBusiness> smSupplierBusinessSsm = new ArrayList<SmSupplierBusiness>();
+	private List<SmEquityCompany> smEquityCompaniesSsm = new ArrayList<SmEquityCompany>();
+
+	// 26238
 	private Long disabledCategoryL3Id;
-	
+
 	//#29315
 	private boolean flagMandatoryEpfNo;
-	
+
 	// #29664 - start
 	private String roleCode;
 	// #29664 - end
@@ -608,12 +607,11 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean showDifferenceRejection;
 	// #30974 - END
 	
-	// 26671 - Site Visit Grouping Enhancement -28775 START
-	private boolean showFacilityMachine;
-	// 26671 - Site Visit Grouping Enhancement -28775 END
+	//29727
+	private String deleteBranchMsg;
 	
 	// 31043 START
-	// private boolean showFacilityMachine;
+	private boolean showFacilityMachine;
 	// 31043 END
 	
 	//#31043 START
@@ -635,7 +633,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean poApproverChgBusiness;
 	private String msgChgBusiness;
 	//#30691 - END - 26112021
-
+	
 	//#12492 - start
 	private boolean showDifferenceBankInfoAction;
 	//#12492 - end
@@ -651,8 +649,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		}
 
 		@Override
-		protected ISearchResultBean<PmReasonDesc> pageChangeListener(
-				ISearchBean<PmReasonDesc> searchBean) {
+		protected ISearchResultBean<PmReasonDesc> pageChangeListener(ISearchBean<PmReasonDesc> searchBean) {
 			ReasonReqDTO reqDTO = new ReasonReqDTO();
 			reqDTO.setReasonDescSearchBean(searchBean);
 			reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
@@ -665,20 +662,15 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 			}
 		}
 
-		private ISearchResultBean<PmReasonDesc> getRejectDescResultBean(
-				ReasonReqDTO reqDTO) {
+		private ISearchResultBean<PmReasonDesc> getRejectDescResultBean(ReasonReqDTO reqDTO) {
 			reqDTO.getReasonDescSearchBean().getDataFilterBeans().clear();
 			if (!StringUtils.isNotBlank(getSearchRejectReason())) {
-				SearchFilterBean reasonDescFilterBean = new SearchFilterBean(
-						SearchOperator.OPERATOR_LIKE.value());
+				SearchFilterBean reasonDescFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 				reasonDescFilterBean.setSearchField("reasonDesc");
 				reasonDescFilterBean.setSearchValue(getSearchRejectReason());
-				reqDTO.getReasonDescSearchBean().getDataFilterBeans()
-						.add(reasonDescFilterBean);
+				reqDTO.getReasonDescSearchBean().getDataFilterBeans().add(reasonDescFilterBean);
 			}
-			return SmServiceLookup.getReasonSO()
-					.retrieveReasonDescBySearchBean(reqDTO)
-					.getReasonDescResultBean();
+			return SmServiceLookup.getReasonSO().retrieveReasonDescBySearchBean(reqDTO).getReasonDescResultBean();
 		}
 	}
 
@@ -707,8 +699,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		for (Role r : loginUserRoles) {
 			roleNames.add(r.getName());
 		}
-		if (sc.hasRoleUser(SupplierManagementConst.PO_HQ)
-				|| sc.hasRoleUser(SupplierManagementConst.PO_HQ_TEMP)) {
+		if (sc.hasRoleUser(SupplierManagementConst.PO_HQ) || sc.hasRoleUser(SupplierManagementConst.PO_HQ_TEMP)) {
 			setPoUser(true);
 		} else if (sc.hasRoleUser(SupplierManagementConst.APPROVER_HQ)
 				|| sc.hasRoleUser(SupplierManagementConst.APPROVER_HQ_TEMP)
@@ -719,8 +710,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 				|| sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_ADMIN)
 				|| sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_USER)
 				|| sc.hasRoleUser(SupplierManagementConst.SUPPLIER_ADMIN)
-				|| sc.hasRoleUser(SupplierManagementConst.SUPPLIER_USER)
-				|| sc.hasRoleUser(RoleCode.FL_USER.value())
+				|| sc.hasRoleUser(SupplierManagementConst.SUPPLIER_USER) || sc.hasRoleUser(RoleCode.FL_USER.value())
 				|| sc.hasRoleUser(RoleCode.SUPPLIER_TEMP.value())) {
 			setSupplierUser(true);
 			if (sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_ADMIN)
@@ -732,9 +722,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		defaultAddr = new SmAddress();
 		defaultAddr.setPmCity(new PmCity());
 		defaultAddr.setPmDistrict(new PmDistrict());
-		defaultAddr
-				.setPmCountry(SmCommonUtil
-						.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE));
+		defaultAddr.setPmCountry(SmCommonUtil
+				.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE));
 		defaultAddr.setPmState(new PmState());
 
 		editVO = new SmSectionEditorVO();
@@ -744,12 +733,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		selectedBranch.setSmPersonnel(new SmPersonnel());
 		selectedBranches = new ArrayList<SmSupplierBranch>();
 		selectedAssocCompany = new SmAssociateCompany();
-		selectedAssocCompany.setSmAddress(SmApplicationUtil
-				.setDefaultAddr(null));
+		selectedAssocCompany.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
 		selectedAssocCompanies = new ArrayList<SmAssociateCompany>();
 		selectedEquityCompany = new SmEquityCompany();
-		selectedEquityCompany.setSmAddress(SmApplicationUtil
-				.setDefaultAddr(null));
+		selectedEquityCompany.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
 		selectedEquityCompanies = new ArrayList<SmEquityCompany>();
 		selectedCertList = new ArrayList<SmSupplierCert>();
 		selectedCert = new SmSupplierCert();
@@ -759,13 +746,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		selectedAssocBody.setPmCertBody(new PmCertBody());
 		selectedCompanyExperiences = new ArrayList<SmCompanyExperience>();
 		selectedCompanyExperience = new SmCompanyExperience();
-		selectedCompanyExperience
-				.setSmCompanyExperienceCats(new ArrayList<SmCompanyExperienceCat>());
-		selectedCompanyExperience.getSmCompanyExperienceCats().add(
-				setDefaulatExpCatVal());
+		selectedCompanyExperience.setSmCompanyExperienceCats(new ArrayList<SmCompanyExperienceCat>());
+		selectedCompanyExperience.getSmCompanyExperienceCats().add(setDefaulatExpCatVal());
 		selectedShareHolder = new SmPersonnel();
-		selectedShareHolder.setPmCountry(SmApplicationUtil.setDefaultAddr(null)
-				.getPmCountry());
+		selectedShareHolder.setPmCountry(SmApplicationUtil.setDefaultAddr(null).getPmCountry());
 		smapplShareHolders = new ArrayList<SmPersonnel>();
 		selectedShareHolders = new ArrayList<SmPersonnel>();
 		selectedShrHldrAcademics = new ArrayList<SmStaffAcademic>();
@@ -773,52 +757,41 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		selectedShrHldrProfBodies = new ArrayList<SmAssociationBody>();
 		selectedShrHldrRelatedCompanies = new ArrayList<SmRelatedCompany>();
 		shareHolderMailAddr = new SmPersonnelAddress();
-		shareHolderMailAddr
-				.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
+		shareHolderMailAddr.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
 		shareHolderPermAddr = new SmPersonnelAddress();
-		shareHolderPermAddr
-				.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
+		shareHolderPermAddr.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
 		shareHolderOffAddr = new SmPersonnelAddress();
 		shareHolderOffAddr.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
 		shareHolderResdAddr = new SmPersonnelAddress();
-		shareHolderResdAddr
-				.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
-		selectedShareHolder
-				.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
-		selectedShareHolder
-				.setSmStaffAcademics(new ArrayList<SmStaffAcademic>());
+		shareHolderResdAddr.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
+		selectedShareHolder.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
+		selectedShareHolder.setSmStaffAcademics(new ArrayList<SmStaffAcademic>());
 
 		// For share personell
 		selectedPersonnel = new SmPersonnel();
-		selectedPersonnel.setPmCountry(SmApplicationUtil.setDefaultAddr(null)
-				.getPmCountry());
+		selectedPersonnel.setPmCountry(SmApplicationUtil.setDefaultAddr(null).getPmCountry());
 		selectedPersonnels = new ArrayList<SmPersonnel>();
 		selectedPersAcademics = new ArrayList<SmStaffAcademic>();
 		selectedPersJobFunctions = new ArrayList<SmStaffExperience>();
 		selectedPersProfBodies = new ArrayList<SmAssociationBody>();
 		selectedPersRelatedCompanies = new ArrayList<SmRelatedCompany>();
 
-		selectedPersonnel
-				.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
+		selectedPersonnel.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
 
 		selectedFactoryFacility = new SmFacility();
-		selectedFactoryFacility.setSmAddress(SmApplicationUtil
-				.setDefaultAddr(null));
+		selectedFactoryFacility.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
 		selectedFactoryFacilities = new ArrayList<SmFacility>();
 		applFactoryFacilities = new ArrayList<SmFacility>();
 		selectedWorkShopFacility = new SmFacility();
-		selectedWorkShopFacility.setSmAddress(SmApplicationUtil
-				.setDefaultAddr(null));
+		selectedWorkShopFacility.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
 		selectedWorkShopFacilities = new ArrayList<SmFacility>();
 		applWorkShopFacilities = new ArrayList<SmFacility>();
 		selectedDockyardFacility = new SmFacility();
-		selectedDockyardFacility.setSmAddress(SmApplicationUtil
-				.setDefaultAddr(null));
+		selectedDockyardFacility.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
 		selectedDockyardFacilities = new ArrayList<SmFacility>();
 		applDockyardFacilities = new ArrayList<SmFacility>();
 		selectedStoreFacility = new SmFacility();
-		selectedStoreFacility.setSmAddress(SmApplicationUtil
-				.setDefaultAddr(null));
+		selectedStoreFacility.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
 		selectedStoreFacilities = new ArrayList<SmFacility>();
 		applStoreFacilities = new ArrayList<SmFacility>();
 		selectedManufacturingList = new ArrayList<SmManufacturingDtl>();
@@ -867,16 +840,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		selectedStfPrfBdy = new SmAssociationBody();
 		selectedStfPrfBdy.setPmCertBody(new PmCertBody());
 		perIdTypeParam = new PmParameter();
-		defPmCountry = SmCommonUtil
-				.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+		defPmCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 		if (defPmCountry == null) {
 			defPmCountry = new PmCountry();
 		}
 		uomSelectItems = SmApplicationUtil.getUomSelectItems();
 		raceSelectItems = SmApplicationUtil.getRaceSelectItems();
 		svTask = new SmSvTask();
-		DateFormat df = new SimpleDateFormat(
-				CommonConstants.DEFAULT_DATE_FORMAT);
+		DateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 		today = df.format(new Date());
 		currDate = new Date();
 		currYear = Calendar.getInstance().get(Calendar.YEAR);
@@ -886,10 +857,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		companyBasicSst = new SmSstSupplier();
 		salutationSelectItems = SmCommonUtil.getSalutationItems();
 		addrSameAsItems = new ArrayList<SelectItem>();
-		glp = SmCommonUtil.retrieveParameterDescByTypeAndCodeAndLang("CRT",
-				"GLP");
-		certBodyLs = SmApplicationUtil.retrievePmCertBodyList(glp
-				.getPmParameter().getParameterCode());
+		glp = SmCommonUtil.retrieveParameterDescByTypeAndCodeAndLang("CRT", "GLP");
+		certBodyLs = SmApplicationUtil.retrievePmCertBodyList(glp.getPmParameter().getParameterCode());
 		currBumiEquity = BigDecimal.ZERO;
 		currNonBumiEquity = BigDecimal.ZERO;
 		currForeignerEquity = BigDecimal.ZERO;
@@ -920,8 +889,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return deleteCategoryList;
 	}
 
-	public void setDeleteCategoryList(
-			List<SmSupplierCategory> deleteCategoryList) {
+	public void setDeleteCategoryList(List<SmSupplierCategory> deleteCategoryList) {
 		this.deleteCategoryList = deleteCategoryList;
 	}
 
@@ -985,8 +953,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return selectedAssocCompanies;
 	}
 
-	public void setSelectedAssocCompanies(
-			List<SmAssociateCompany> selectedAssocCompanies) {
+	public void setSelectedAssocCompanies(List<SmAssociateCompany> selectedAssocCompanies) {
 		this.selectedAssocCompanies = selectedAssocCompanies;
 	}
 
@@ -1042,8 +1009,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return selectedFactoryFacilities;
 	}
 
-	public void setSelectedFactoryFacilities(
-			List<SmFacility> selectedFactoryFacilities) {
+	public void setSelectedFactoryFacilities(List<SmFacility> selectedFactoryFacilities) {
 		this.selectedFactoryFacilities = selectedFactoryFacilities;
 	}
 
@@ -1051,8 +1017,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return selectedManufacturingList;
 	}
 
-	public void setSelectedManufacturingList(
-			List<SmManufacturingDtl> selectedManufacturingList) {
+	public void setSelectedManufacturingList(List<SmManufacturingDtl> selectedManufacturingList) {
 		this.selectedManufacturingList = selectedManufacturingList;
 	}
 
@@ -1092,8 +1057,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return selectedEquityCompanies;
 	}
 
-	public void setSelectedEquityCompanies(
-			List<SmEquityCompany> selectedEquityCompanies) {
+	public void setSelectedEquityCompanies(List<SmEquityCompany> selectedEquityCompanies) {
 		this.selectedEquityCompanies = selectedEquityCompanies;
 	}
 
@@ -1141,8 +1105,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return selectedSignatoryBankAcct;
 	}
 
-	public void setSelectedSignatoryBankAcct(
-			SmSupplierBank selectedSignatoryBankAcct) {
+	public void setSelectedSignatoryBankAcct(SmSupplierBank selectedSignatoryBankAcct) {
 		this.selectedSignatoryBankAcct = selectedSignatoryBankAcct;
 	}
 
@@ -1238,8 +1201,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return selectedTemplateList;
 	}
 
-	public void setSelectedTemplateList(
-			List<SvcTemplateBean> selectedTemplateList) {
+	public void setSelectedTemplateList(List<SvcTemplateBean> selectedTemplateList) {
 		this.selectedTemplateList = selectedTemplateList;
 	}
 
@@ -1344,8 +1306,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return selectedCompanyExperiences;
 	}
 
-	public void setSelectedCompanyExperiences(
-			List<SmCompanyExperience> selectedCompanyExperiences) {
+	public void setSelectedCompanyExperiences(List<SmCompanyExperience> selectedCompanyExperiences) {
 		this.selectedCompanyExperiences = selectedCompanyExperiences;
 	}
 
@@ -1353,8 +1314,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return selectedCompanyExperience;
 	}
 
-	public void setSelectedCompanyExperience(
-			SmCompanyExperience selectedCompanyExperience) {
+	public void setSelectedCompanyExperience(SmCompanyExperience selectedCompanyExperience) {
 		this.selectedCompanyExperience = selectedCompanyExperience;
 	}
 
@@ -1378,8 +1338,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return selectedWorkShopFacilities;
 	}
 
-	public void setSelectedWorkShopFacilities(
-			List<SmFacility> selectedWorkShopFacilities) {
+	public void setSelectedWorkShopFacilities(List<SmFacility> selectedWorkShopFacilities) {
 		this.selectedWorkShopFacilities = selectedWorkShopFacilities;
 	}
 
@@ -1395,8 +1354,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return selectedDockyardFacilities;
 	}
 
-	public void setSelectedDockyardFacilities(
-			List<SmFacility> selectedDockyardFacilities) {
+	public void setSelectedDockyardFacilities(List<SmFacility> selectedDockyardFacilities) {
 		this.selectedDockyardFacilities = selectedDockyardFacilities;
 	}
 
@@ -1412,8 +1370,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return selectedStoreFacilities;
 	}
 
-	public void setSelectedStoreFacilities(
-			List<SmFacility> selectedStoreFacilities) {
+	public void setSelectedStoreFacilities(List<SmFacility> selectedStoreFacilities) {
 		this.selectedStoreFacilities = selectedStoreFacilities;
 	}
 
@@ -1429,8 +1386,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return applWorkShopFacilities;
 	}
 
-	public void setApplWorkShopFacilities(
-			List<SmFacility> applWorkShopFacilities) {
+	public void setApplWorkShopFacilities(List<SmFacility> applWorkShopFacilities) {
 		this.applWorkShopFacilities = applWorkShopFacilities;
 	}
 
@@ -1438,8 +1394,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return applDockyardFacilities;
 	}
 
-	public void setApplDockyardFacilities(
-			List<SmFacility> applDockyardFacilities) {
+	public void setApplDockyardFacilities(List<SmFacility> applDockyardFacilities) {
 		this.applDockyardFacilities = applDockyardFacilities;
 	}
 
@@ -1531,8 +1486,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return selectedAssocBodyList;
 	}
 
-	public void setSelectedAssocBodyList(
-			List<SmAssociationBody> selectedAssocBodyList) {
+	public void setSelectedAssocBodyList(List<SmAssociationBody> selectedAssocBodyList) {
 		this.selectedAssocBodyList = selectedAssocBodyList;
 	}
 
@@ -1564,8 +1518,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return branchCompanyDistricts;
 	}
 
-	public void setBranchCompanyDistricts(
-			List<SelectItem> branchCompanyDistricts) {
+	public void setBranchCompanyDistricts(List<SelectItem> branchCompanyDistricts) {
 		this.branchCompanyDistricts = branchCompanyDistricts;
 	}
 
@@ -1629,8 +1582,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return supplierParentCatList;
 	}
 
-	public void setSupplierParentCatList(
-			List<PmCategoryL1> supplierParentCatList) {
+	public void setSupplierParentCatList(List<PmCategoryL1> supplierParentCatList) {
 		this.supplierParentCatList = supplierParentCatList;
 	}
 
@@ -1646,8 +1598,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return supplierSubChildCatList;
 	}
 
-	public void setSupplierSubChildCatList(
-			List<PmCategoryL3> supplierSubChildCatList) {
+	public void setSupplierSubChildCatList(List<PmCategoryL3> supplierSubChildCatList) {
 		this.supplierSubChildCatList = supplierSubChildCatList;
 	}
 
@@ -1663,8 +1614,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return factoryFacilityDistricts;
 	}
 
-	public void setFactoryFacilityDistricts(
-			List<SelectItem> factoryFacilityDistricts) {
+	public void setFactoryFacilityDistricts(List<SelectItem> factoryFacilityDistricts) {
 		this.factoryFacilityDistricts = factoryFacilityDistricts;
 	}
 
@@ -1704,8 +1654,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return workShopFacilityStates;
 	}
 
-	public void setWorkShopFacilityStates(
-			List<SelectItem> workShopFacilityStates) {
+	public void setWorkShopFacilityStates(List<SelectItem> workShopFacilityStates) {
 		this.workShopFacilityStates = workShopFacilityStates;
 	}
 
@@ -1713,8 +1662,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return workShopFacilityDistricts;
 	}
 
-	public void setWorkShopFacilityDistricts(
-			List<SelectItem> workShopFacilityDistricts) {
+	public void setWorkShopFacilityDistricts(List<SelectItem> workShopFacilityDistricts) {
 		this.workShopFacilityDistricts = workShopFacilityDistricts;
 	}
 
@@ -1722,8 +1670,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return workShopFacilityCities;
 	}
 
-	public void setWorkShopFacilityCities(
-			List<SelectItem> workShopFacilityCities) {
+	public void setWorkShopFacilityCities(List<SelectItem> workShopFacilityCities) {
 		this.workShopFacilityCities = workShopFacilityCities;
 	}
 
@@ -1739,8 +1686,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return storeFacilityDistricts;
 	}
 
-	public void setStoreFacilityDistricts(
-			List<SelectItem> storeFacilityDistricts) {
+	public void setStoreFacilityDistricts(List<SelectItem> storeFacilityDistricts) {
 		this.storeFacilityDistricts = storeFacilityDistricts;
 	}
 
@@ -1764,8 +1710,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return selectedShrHldrRelatedCompanies;
 	}
 
-	public void setSelectedShrHldrRelatedCompanies(
-			List<SmRelatedCompany> selectedShrHldrRelatedCompanies) {
+	public void setSelectedShrHldrRelatedCompanies(List<SmRelatedCompany> selectedShrHldrRelatedCompanies) {
 		this.selectedShrHldrRelatedCompanies = selectedShrHldrRelatedCompanies;
 	}
 
@@ -1773,8 +1718,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return selectedShrHldrAcademics;
 	}
 
-	public void setSelectedShrHldrAcademics(
-			List<SmStaffAcademic> selectedShrHldrAcademics) {
+	public void setSelectedShrHldrAcademics(List<SmStaffAcademic> selectedShrHldrAcademics) {
 		this.selectedShrHldrAcademics = selectedShrHldrAcademics;
 	}
 
@@ -1782,8 +1726,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return selectedShrHldrJobFunctions;
 	}
 
-	public void setSelectedShrHldrJobFunctions(
-			List<SmStaffExperience> selectedShrHldrJobFunctions) {
+	public void setSelectedShrHldrJobFunctions(List<SmStaffExperience> selectedShrHldrJobFunctions) {
 		this.selectedShrHldrJobFunctions = selectedShrHldrJobFunctions;
 	}
 
@@ -1791,8 +1734,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return selectedShrHldrProfBodies;
 	}
 
-	public void setSelectedShrHldrProfBodies(
-			List<SmAssociationBody> selectedShrHldrProfBodies) {
+	public void setSelectedShrHldrProfBodies(List<SmAssociationBody> selectedShrHldrProfBodies) {
 		this.selectedShrHldrProfBodies = selectedShrHldrProfBodies;
 	}
 
@@ -1968,8 +1910,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return selectedPersJobFunctions;
 	}
 
-	public void setSelectedPersJobFunctions(
-			List<SmStaffExperience> selectedPersJobFunctions) {
+	public void setSelectedPersJobFunctions(List<SmStaffExperience> selectedPersJobFunctions) {
 		this.selectedPersJobFunctions = selectedPersJobFunctions;
 	}
 
@@ -1977,8 +1918,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return selectedPersProfBodies;
 	}
 
-	public void setSelectedPersProfBodies(
-			List<SmAssociationBody> selectedPersProfBodies) {
+	public void setSelectedPersProfBodies(List<SmAssociationBody> selectedPersProfBodies) {
 		this.selectedPersProfBodies = selectedPersProfBodies;
 	}
 
@@ -1986,8 +1926,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return selectedPersRelatedCompanies;
 	}
 
-	public void setSelectedPersRelatedCompanies(
-			List<SmRelatedCompany> selectedPersRelatedCompanies) {
+	public void setSelectedPersRelatedCompanies(List<SmRelatedCompany> selectedPersRelatedCompanies) {
 		this.selectedPersRelatedCompanies = selectedPersRelatedCompanies;
 	}
 
@@ -1995,8 +1934,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return selectedPersAcademics;
 	}
 
-	public void setSelectedPersAcademics(
-			List<SmStaffAcademic> selectedPersAcademics) {
+	public void setSelectedPersAcademics(List<SmStaffAcademic> selectedPersAcademics) {
 		this.selectedPersAcademics = selectedPersAcademics;
 	}
 
@@ -2196,8 +2134,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return comExpSubChildCatList;
 	}
 
-	public void setComExpSubChildCatList(
-			List<PmCategoryL3> comExpSubChildCatList) {
+	public void setComExpSubChildCatList(List<PmCategoryL3> comExpSubChildCatList) {
 		this.comExpSubChildCatList = comExpSubChildCatList;
 	}
 
@@ -2253,8 +2190,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return selectedRelatedCompany;
 	}
 
-	public void setSelectedRelatedCompany(
-			SmRelatedCompany selectedRelatedCompany) {
+	public void setSelectedRelatedCompany(SmRelatedCompany selectedRelatedCompany) {
 		this.selectedRelatedCompany = selectedRelatedCompany;
 	}
 
@@ -2414,8 +2350,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return selectedCompExpCats;
 	}
 
-	public void setSelectedCompExpCats(
-			List<SmCompanyExperienceCat> selectedCompExpCats) {
+	public void setSelectedCompExpCats(List<SmCompanyExperienceCat> selectedCompExpCats) {
 		this.selectedCompExpCats = selectedCompExpCats;
 	}
 
@@ -2447,8 +2382,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return activeCategoryList;
 	}
 
-	public void setActiveCategoryList(
-			List<SmSupplierCategory> activeCategoryList) {
+	public void setActiveCategoryList(List<SmSupplierCategory> activeCategoryList) {
 		this.activeCategoryList = activeCategoryList;
 	}
 
@@ -2480,8 +2414,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return nonPersonnelProfBodyList;
 	}
 
-	public void setNonPersonnelProfBodyList(
-			List<SmAssociationBody> nonPersonnelProfBodyList) {
+	public void setNonPersonnelProfBodyList(List<SmAssociationBody> nonPersonnelProfBodyList) {
 		this.nonPersonnelProfBodyList = nonPersonnelProfBodyList;
 	}
 
@@ -2497,8 +2430,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return deleteNewApplCategoryList;
 	}
 
-	public void setDeleteNewApplCategoryList(
-			List<SmSupplierCategory> deleteNewApplCategoryList) {
+	public void setDeleteNewApplCategoryList(List<SmSupplierCategory> deleteNewApplCategoryList) {
 		this.deleteNewApplCategoryList = deleteNewApplCategoryList;
 	}
 
@@ -2786,8 +2718,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return selectedShareholderIdentificationType;
 	}
 
-	public void setSelectedShareholderIdentificationType(
-			String selectedShareholderIdentificationType) {
+	public void setSelectedShareholderIdentificationType(String selectedShareholderIdentificationType) {
 		this.selectedShareholderIdentificationType = selectedShareholderIdentificationType;
 	}
 
@@ -2803,8 +2734,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return disabledShareholderPersonnelNameAndNationality;
 	}
 
-	public void setDisabledShareholderPersonnelNameAndNationality(
-			boolean disabledShareholderPersonnelNameAndNationality) {
+	public void setDisabledShareholderPersonnelNameAndNationality(boolean disabledShareholderPersonnelNameAndNationality) {
 		this.disabledShareholderPersonnelNameAndNationality = disabledShareholderPersonnelNameAndNationality;
 	}
 
@@ -2860,8 +2790,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return prevApprovedPersonnels;
 	}
 
-	public void setPrevApprovedPersonnels(
-			List<SmPersonnel> prevApprovedPersonnels) {
+	public void setPrevApprovedPersonnels(List<SmPersonnel> prevApprovedPersonnels) {
 		this.prevApprovedPersonnels = prevApprovedPersonnels;
 	}
 
@@ -2949,8 +2878,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return disableWithFedralTransaction;
 	}
 
-	public void setDisableWithFedralTransaction(
-			boolean disableWithFedralTransaction) {
+	public void setDisableWithFedralTransaction(boolean disableWithFedralTransaction) {
 		this.disableWithFedralTransaction = disableWithFedralTransaction;
 	}
 
@@ -2966,8 +2894,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return approvedCategoryList;
 	}
 
-	public void setApprovedCategoryList(
-			List<SmSupplierCategory> approvedCategoryList) {
+	public void setApprovedCategoryList(List<SmSupplierCategory> approvedCategoryList) {
 		this.approvedCategoryList = approvedCategoryList;
 	}
 
@@ -3031,8 +2958,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return deletePendingApplDescList;
 	}
 
-	public void setDeletePendingApplDescList(
-			List<PmReasonDesc> deletePendingApplDescList) {
+	public void setDeletePendingApplDescList(List<PmReasonDesc> deletePendingApplDescList) {
 		this.deletePendingApplDescList = deletePendingApplDescList;
 	}
 
@@ -3040,8 +2966,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return deletePendingApplOtherReasonId;
 	}
 
-	public void setDeletePendingApplOtherReasonId(
-			Long deletePendingApplOtherReasonId) {
+	public void setDeletePendingApplOtherReasonId(Long deletePendingApplOtherReasonId) {
 		this.deletePendingApplOtherReasonId = deletePendingApplOtherReasonId;
 	}
 
@@ -3056,7 +2981,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public SmGstSupplier getCompanyBasicGst() {
 		return companyBasicGst;
 	}
-	//harris
+
+	// harris
 	public SmSstSupplier getCompanyBasicSst() {
 		return companyBasicSst;
 	}
@@ -3221,8 +3147,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return latestCompanyExperience;
 	}
 
-	public void setLatestCompanyExperience(
-			SmCompanyExperience latestCompanyExperience) {
+	public void setLatestCompanyExperience(SmCompanyExperience latestCompanyExperience) {
 		this.latestCompanyExperience = latestCompanyExperience;
 	}
 
@@ -3253,8 +3178,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return alreadyBusinessSpecialCatcode;
 	}
 
-	public void setAlreadyBusinessSpecialCatcode(
-			boolean alreadyBusinessSpecialCatcode) {
+	public void setAlreadyBusinessSpecialCatcode(boolean alreadyBusinessSpecialCatcode) {
 		this.alreadyBusinessSpecialCatcode = alreadyBusinessSpecialCatcode;
 	}
 
@@ -3270,8 +3194,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return selectedSupplierSystemList;
 	}
 
-	public void setSelectedSupplierSystemList(
-			List<SmSupplierSystem> selectedSupplierSystemList) {
+	public void setSelectedSupplierSystemList(List<SmSupplierSystem> selectedSupplierSystemList) {
 		this.selectedSupplierSystemList = selectedSupplierSystemList;
 	}
 
@@ -3287,8 +3210,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return travellingSoftwareItems;
 	}
 
-	public void setTravellingSoftwareItems(
-			List<SelectItem> travellingSoftwareItems) {
+	public void setTravellingSoftwareItems(List<SelectItem> travellingSoftwareItems) {
 		this.travellingSoftwareItems = travellingSoftwareItems;
 	}
 
@@ -3320,8 +3242,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return siteVisitFacVOList;
 	}
 
-	public void setSiteVisitFacVOList(
-			List<SmSiteVisitFacilityVO> siteVisitFacVOList) {
+	public void setSiteVisitFacVOList(List<SmSiteVisitFacilityVO> siteVisitFacVOList) {
 		this.siteVisitFacVOList = siteVisitFacVOList;
 	}
 
@@ -3441,8 +3362,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return selectedSignatoryBankAccts;
 	}
 
-	public void setSelectedSignatoryBankAccts(
-			List<SmSupplierBank> selectedSignatoryBankAccts) {
+	public void setSelectedSignatoryBankAccts(List<SmSupplierBank> selectedSignatoryBankAccts) {
 		this.selectedSignatoryBankAccts = selectedSignatoryBankAccts;
 	}
 
@@ -3530,8 +3450,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return rejectReasonDataModel;
 	}
 
-	public void setRejectReasonDataModel(
-			IPagingDataModel<PmReasonDesc> rejectReasonDataModel) {
+	public void setRejectReasonDataModel(IPagingDataModel<PmReasonDesc> rejectReasonDataModel) {
 		this.rejectReasonDataModel = rejectReasonDataModel;
 	}
 
@@ -3539,8 +3458,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return selectedPmReasonDescs;
 	}
 
-	public void setSelectedPmReasonDescs(
-			List<PmReasonDesc> selectedPmReasonDescs) {
+	public void setSelectedPmReasonDescs(List<PmReasonDesc> selectedPmReasonDescs) {
 		this.selectedPmReasonDescs = selectedPmReasonDescs;
 	}
 
@@ -3564,8 +3482,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return deleteExistingCategoryList;
 	}
 
-	public void setDeleteExistingCategoryList(
-			List<SmSupplierCategory> deleteExistingCategoryList) {
+	public void setDeleteExistingCategoryList(List<SmSupplierCategory> deleteExistingCategoryList) {
 		this.deleteExistingCategoryList = deleteExistingCategoryList;
 	}
 
@@ -3581,8 +3498,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return showPoApprovedOrRecommendButton;
 	}
 
-	public void setShowPoApprovedOrRecommendButton(
-			boolean showPoApprovedOrRecommendButton) {
+	public void setShowPoApprovedOrRecommendButton(boolean showPoApprovedOrRecommendButton) {
 		this.showPoApprovedOrRecommendButton = showPoApprovedOrRecommendButton;
 	}
 
@@ -3622,8 +3538,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return showMachineryEquipmentPanel;
 	}
 
-	public void setShowMachineryEquipmentPanel(
-			boolean showMachineryEquipmentPanel) {
+	public void setShowMachineryEquipmentPanel(boolean showMachineryEquipmentPanel) {
 		this.showMachineryEquipmentPanel = showMachineryEquipmentPanel;
 	}
 
@@ -3655,8 +3570,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return selectedSuppCategoryFacilityIds;
 	}
 
-	public void setSelectedSuppCategoryFacilityIds(
-			Long[] selectedSuppCategoryFacilityIds) {
+	public void setSelectedSuppCategoryFacilityIds(Long[] selectedSuppCategoryFacilityIds) {
 		this.selectedSuppCategoryFacilityIds = selectedSuppCategoryFacilityIds;
 	}
 
@@ -3728,8 +3642,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return dockYardFacilitiesVOList;
 	}
 
-	public void setDockYardFacilitiesVOList(
-			List<PmCategoryL3> dockYardFacilitiesVOList) {
+	public void setDockYardFacilitiesVOList(List<PmCategoryL3> dockYardFacilitiesVOList) {
 		this.dockYardFacilitiesVOList = dockYardFacilitiesVOList;
 	}
 
@@ -3737,8 +3650,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return storeFacilitiesVOList;
 	}
 
-	public void setStoreFacilitiesVOList(
-			List<PmCategoryL3> storeFacilitiesVOList) {
+	public void setStoreFacilitiesVOList(List<PmCategoryL3> storeFacilitiesVOList) {
 		this.storeFacilitiesVOList = storeFacilitiesVOList;
 	}
 
@@ -3746,8 +3658,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return workshopFacilitiesVOList;
 	}
 
-	public void setWorkshopFacilitiesVOList(
-			List<PmCategoryL3> workshopFacilitiesVOList) {
+	public void setWorkshopFacilitiesVOList(List<PmCategoryL3> workshopFacilitiesVOList) {
 		this.workshopFacilitiesVOList = workshopFacilitiesVOList;
 	}
 
@@ -3755,8 +3666,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return factoryFacilitiesVOList;
 	}
 
-	public void setFactoryFacilitiesVOList(
-			List<PmCategoryL3> factoryFacilitiesVOList) {
+	public void setFactoryFacilitiesVOList(List<PmCategoryL3> factoryFacilitiesVOList) {
 		this.factoryFacilitiesVOList = factoryFacilitiesVOList;
 	}
 
@@ -3764,8 +3674,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return dockYardSiteVisitVOList;
 	}
 
-	public void setDockYardSiteVisitVOList(
-			List<SmSiteVisitFacilityVO> dockYardSiteVisitVOList) {
+	public void setDockYardSiteVisitVOList(List<SmSiteVisitFacilityVO> dockYardSiteVisitVOList) {
 		this.dockYardSiteVisitVOList = dockYardSiteVisitVOList;
 	}
 
@@ -3773,8 +3682,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return storeSiteVisitVOList;
 	}
 
-	public void setStoreSiteVisitVOList(
-			List<SmSiteVisitFacilityVO> storeSiteVisitVOList) {
+	public void setStoreSiteVisitVOList(List<SmSiteVisitFacilityVO> storeSiteVisitVOList) {
 		this.storeSiteVisitVOList = storeSiteVisitVOList;
 	}
 
@@ -3782,8 +3690,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return workshopSiteVisitVOList;
 	}
 
-	public void setWorkshopSiteVisitVOList(
-			List<SmSiteVisitFacilityVO> workshopSiteVisitVOList) {
+	public void setWorkshopSiteVisitVOList(List<SmSiteVisitFacilityVO> workshopSiteVisitVOList) {
 		this.workshopSiteVisitVOList = workshopSiteVisitVOList;
 	}
 
@@ -3791,8 +3698,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return factorySiteVisitVOList;
 	}
 
-	public void setFactorySiteVisitVOList(
-			List<SmSiteVisitFacilityVO> factorySiteVisitVOList) {
+	public void setFactorySiteVisitVOList(List<SmSiteVisitFacilityVO> factorySiteVisitVOList) {
 		this.factorySiteVisitVOList = factorySiteVisitVOList;
 	}
 
@@ -3808,8 +3714,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return machineCategoryVOList;
 	}
 
-	public void setMachineCategoryVOList(
-			List<SmMachineCategoryVO> machineCategoryVOList) {
+	public void setMachineCategoryVOList(List<SmMachineCategoryVO> machineCategoryVOList) {
 		this.machineCategoryVOList = machineCategoryVOList;
 	}
 
@@ -3817,8 +3722,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return bumiSiteVisitVOList;
 	}
 
-	public void setBumiSiteVisitVOList(
-			List<SmSiteVisitFacilityVO> bumiSiteVisitVOList) {
+	public void setBumiSiteVisitVOList(List<SmSiteVisitFacilityVO> bumiSiteVisitVOList) {
 		this.bumiSiteVisitVOList = bumiSiteVisitVOList;
 	}
 
@@ -3826,8 +3730,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return paymentDetailsVOList;
 	}
 
-	public void setPaymentDetailsVOList(
-			List<SmPaymentDetailsVO> paymentDetailsVOList) {
+	public void setPaymentDetailsVOList(List<SmPaymentDetailsVO> paymentDetailsVOList) {
 		this.paymentDetailsVOList = paymentDetailsVOList;
 	}
 
@@ -3883,8 +3786,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return selectedTravellingSoftware;
 	}
 
-	public void setSelectedTravellingSoftware(
-			PmMachine selectedTravellingSoftware) {
+	public void setSelectedTravellingSoftware(PmMachine selectedTravellingSoftware) {
 		this.selectedTravellingSoftware = selectedTravellingSoftware;
 	}
 
@@ -3900,8 +3802,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return mandatoryLicenseDocs;
 	}
 
-	public void setMandatoryLicenseDocs(
-			List<SmLicenseInfoVO> mandatoryLicenseDocs) {
+	public void setMandatoryLicenseDocs(List<SmLicenseInfoVO> mandatoryLicenseDocs) {
 		this.mandatoryLicenseDocs = mandatoryLicenseDocs;
 	}
 
@@ -3933,8 +3834,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return poSupplierInquiryHistory;
 	}
 
-	public void setPoSupplierInquiryHistory(
-			List<SmApplInquiry> poSupplierInquiryHistory) {
+	public void setPoSupplierInquiryHistory(List<SmApplInquiry> poSupplierInquiryHistory) {
 		this.poSupplierInquiryHistory = poSupplierInquiryHistory;
 	}
 
@@ -3958,8 +3858,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return overlapCategoryVOList;
 	}
 
-	public void setOverlapCategoryVOList(
-			List<SmBulkApplOverlapCatVO> overlapCategoryVOList) {
+	public void setOverlapCategoryVOList(List<SmBulkApplOverlapCatVO> overlapCategoryVOList) {
 		this.overlapCategoryVOList = overlapCategoryVOList;
 	}
 
@@ -3983,8 +3882,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return recommendRegStatusDescList;
 	}
 
-	public void setRecommendRegStatusDescList(
-			List<PmStatusDesc> recommendRegStatusDescList) {
+	public void setRecommendRegStatusDescList(List<PmStatusDesc> recommendRegStatusDescList) {
 		this.recommendRegStatusDescList = recommendRegStatusDescList;
 	}
 
@@ -4032,8 +3930,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return businessOfficeSiteVisitVOList;
 	}
 
-	public void setBusinessOfficeSiteVisitVOList(
-			List<SmSiteVisitFacilityVO> businessOfficeSiteVisitVOList) {
+	public void setBusinessOfficeSiteVisitVOList(List<SmSiteVisitFacilityVO> businessOfficeSiteVisitVOList) {
 		this.businessOfficeSiteVisitVOList = businessOfficeSiteVisitVOList;
 	}
 
@@ -4052,19 +3949,20 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setPoUserName(String poUserName) {
 		this.poUserName = poUserName;
 	}
-	
+
 	// #25470
 	public boolean isWasBumiApplication() {
 		return wasBumiApplication;
 	}
-	
+
 	public void setWasBumiApplication(boolean wasBumiApplication) {
 		this.wasBumiApplication = wasBumiApplication;
 	}
-	
+
 	public int getAttachedFileIndex() {
 		return attachedFileIndex;
 	}
+
 	public void setAttachedFileIndex(int attachedFileIndex) {
 		this.attachedFileIndex = attachedFileIndex;
 	}
@@ -4164,6 +4062,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setPersonnelsSsm(List<SmPersonnel> personnelsSsm) {
 		this.personnelsSsm = personnelsSsm;
 	}
+
 	//26238 - start 
 	public Long getDisabledCategoryL3Id() {
 		return disabledCategoryL3Id;
@@ -4364,7 +4263,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setFlagMandatoryEpfNo(boolean flagMandatoryEpfNo) {
 		this.flagMandatoryEpfNo = flagMandatoryEpfNo;
 	}
-	
+
 	// #29664 - start
 	public String getRoleCode() {
 		return roleCode;
@@ -4467,7 +4366,34 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setSearchRecommendRejectReason(String searchRecommendRejectReason) {
 		this.searchRecommendRejectReason = searchRecommendRejectReason;
 	}
-	//#15629 - END
+	// #15629 - END
+	
+
+	public List<SmSupplierBranch> getDisplayBranches() {
+		return displayBranches;
+	}
+
+	public void setDisplayBranches(List<SmSupplierBranch> displayBranches) {
+		this.displayBranches = displayBranches;
+	}
+
+	public String getDeleteBranchMsg() {
+		return deleteBranchMsg;
+	}
+
+	public void setDeleteBranchMsg(String deleteBranchMsg) {
+		this.deleteBranchMsg = deleteBranchMsg;
+	}
+
+	// 26671 - Site Visit Grouping Enhancement -28775 START
+	public boolean isShowFacilityMachine() {
+		return showFacilityMachine;
+	}
+
+	public void setShowFacilityMachine(boolean showFacilityMachine) {
+		this.showFacilityMachine = showFacilityMachine;
+	}
+	// 26671 - Site Visit Grouping Enhancement -28775 END
 	
 	//30974 - start
 	public List<PmReasonDesc> getSelectedRecommendRejectReasonDescs() {
@@ -4554,17 +4480,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.msgEquityErr = msgEquityErr;
 	}
 	//#31461-end	
-	
-	// 26671 - Site Visit Grouping Enhancement -28775 START
-	public boolean isShowFacilityMachine() {
-		return showFacilityMachine;
-	}
 
-	public void setShowFacilityMachine(boolean showFacilityMachine) {
-		this.showFacilityMachine = showFacilityMachine;
-	}
-	// 26671 - Site Visit Grouping Enhancement -28775 END
-	
 	// #30974 - START
 	public boolean isShowDifferenceRejection() {
 		return showDifferenceRejection;
