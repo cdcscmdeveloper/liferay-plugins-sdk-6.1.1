@@ -37,7 +37,7 @@ p {
 	font-style: normal;
 	line-height: 20px;
 	text-decoration: none;
-	font-size: 11px;
+	font-size: 10.5px;
 	color: red;
 }
 
@@ -216,7 +216,7 @@ u.underline {
 				## #25025 & #26770 -start
 				<p>
 					<span class="text_family">2. &#160;&#160;&#160;&#160;&#160;Dengan pengakuan penerimaan
-						Surat ini suatu kontrak yang mengikat
+						Surat ini, suatu kontrak yang mengikat
 						terbentuk antara Kerajaan dengan syarikat tuan. 
 						#if($isAgreementReq == "true")
 						<span class="text_family_red">
@@ -345,11 +345,11 @@ u.underline {
 						##26770 - start
 						<table width="80%" align="center">
 							<tr>
-								<td><span class="text_family">*Bagi tujuan pengiraan PROT&Eacute;G&Eacute;, Harga Kontrak adalah nilai tawaran yang dipersetujui tanpa cukai</span></td>
+								<td style="margin-bottom:1px;"><span class="text_family">*Bagi tujuan pengiraan PROT&Eacute;G&Eacute;, Harga Kontrak adalah nilai tawaran yang dipersetujui tanpa cukai</span><br/>
+								<span class="text_family">**Elaun PROT&Eacute;G&Eacute; (RM2,000 seorang x 12 bulan)</span>
+								</td>
 							</tr>
-							<tr>
-								<td><span class="text_family">**Elaun PROT&Eacute;G&Eacute; (RM2,000 seorang x 12 bulan)</span> </td>
-							</tr>
+							
 						</table>
 						##26770 - end
 					</p>
@@ -904,7 +904,7 @@ u.underline {
 					<td>
 						<table border="0" cellpadding="0" cellspacing="0" width="100%">
 							 <tr>
-								<td class="text_family" style="margin-bottom:1px;">...................................................</td>
+								<td class="text_family" style="margin-bottom:1px;">.......................................................</td>
 							 </tr
 						      <tr> 
 						      	<td align="center"><span class="text_family_small">(Diisi Oleh Syarikat)</span></td>
@@ -921,7 +921,7 @@ u.underline {
 					<td>
 						<table border="0" cellpadding="0" cellspacing="0" width="100%">
 							 <tr>
-								 <td class="text_family" style="margin-bottom:1px;">...................................................</td>
+								 <td class="text_family" style="margin-bottom:1px;">.......................................................</td>
 							 </tr
 						      <tr> 
 						      	<td align="center"><span class="text_family_small">(Diisi Oleh Syarikat)</span></td>
