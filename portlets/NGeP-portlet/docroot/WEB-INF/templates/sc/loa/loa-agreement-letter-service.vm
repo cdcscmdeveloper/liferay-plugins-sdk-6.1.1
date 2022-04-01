@@ -38,7 +38,7 @@ p {
 	font-style: normal;
 	line-height: 20px;
 	text-decoration: none;
-	font-size: 14.5px;
+	font-size: 11px;
 	color: red;
 }
 
@@ -155,6 +155,9 @@ u.underline {
 	font-size: 11.5px;
 	color: #333333;
 }
+.dottedBorderRed{
+	border-bottom: red 2px dotted;
+}
 ## #25025-end
 </style>
 </head>
@@ -166,8 +169,18 @@ u.underline {
 			<td align="center"><span class="text_family_header">SURAT SETUJU TERIMA <br /> (Bagi $headerTitle Perkhidmatan) <br /><br /><br /></span></td>
 		</tr>
 		<tr>
-			<td align="right"><span class="text_family">Rujukan Kami : $fileNo <br />Tarikh :
-				$govtSignDate <br /></span></td>
+			<table align="right" class="text_family">
+				<tr style="margin-bottom:1px;">
+					<td valign="top"> Rujukan Kami</td>
+					<td valign="top">:</td>
+					<td valign="top">$fileNo</td>
+				</tr>
+				<tr>
+					<td valign="top">Tarikh</td>
+					<td valign="top">:</td>
+					<td valign="top">$govtSignDate</td>
+				</tr>
+			</table>
 		</tr>
 		<tr>
 			<td>
@@ -231,7 +244,7 @@ u.underline {
 				## #25025 & #26770 -end
 				
 				<p>
-					<span class="text_family_small">Perenggan 3 di atas adalah terpakai untuk perolehan dengan syarikat yang berdaftar di
+					<span class="text_family_small">Perenggan 3 di atas adalah terpakai untuk perolehan dengan syarikat yang berdaftar di 
 					bawah JKDM dan Perkhidmatan Dikenakan Cukai di bawah  Akta Cukai Perkhidmatan 2018 </span>
 				</p>
 				## #25025 & #26770 -start
@@ -270,7 +283,7 @@ u.underline {
 								</tr>
 								<tr class="text_family_red">
 									<td align="center" style="vertical-align: top;">*(b)</td>
-									<td style="text-align:justify;">suatu polisi insurans yang tidak boleh dibatalkan yang berjumlah Ringgit Malaysia ______________ (______________) dan resit premium; </td>
+									<td style="text-align:justify;">suatu polisi insurans yang tidak boleh dibatalkan yang berjumlah Ringgit Malaysia ______________ (RM______________) dan resit premium; </td>
 								</tr>	
 								<tr class="text_family">
 									<td align="center" style="vertical-align: top;"> (c)</td>
@@ -308,9 +321,9 @@ u.underline {
 					
 					</p>
 					<p>
-						<table width="50%" align="center" style="border-collapse: collapse;">
+						<table width="25%" align="center" style="border-collapse: collapse;">
 							<tr>
-								<td style="border-bottom: 1px solid black;text-align: center;">
+								<td style="border-bottom: 1px solid black;text-align: center; margin-bottom:1px;">
 									<span class="text_family">1% X Harga Kontrak*</span>
 								</td>
 							</tr>
@@ -323,10 +336,10 @@ u.underline {
 						##26770 - start
 						<table width="80%" align="center">
 							<tr>
-								<td><span class="text_family_medium_black">*Bagi tujuan pengiraan PROT&Eacute;G&Eacute;, Harga Kontrak adalah nilai tawaran yang dipersetujui tanpa cukai</span></td>
+								<td><span class="text_family">*Bagi tujuan pengiraan PROT&Eacute;G&Eacute;, Harga Kontrak adalah nilai tawaran yang dipersetujui tanpa cukai</span></td>
 							</tr>
 							<tr>
-								<td><span class="text_family_medium_black">**Elaun PROT&Eacute;G&Eacute; (RM2,000 seorang x 12 )</span> </td>
+								<td><span class="text_family">**Elaun PROT&Eacute;G&Eacute; (RM2,000 seorang x 12 bulan)</span> </td>
 							</tr>
 						</table>
 						##26770 - end
@@ -429,7 +442,7 @@ u.underline {
 							</tr>
 							<tr>
 								<td align="center" style="vertical-align: top;">(f)</td>
-								<td>syarikat tuan telah memberikan subkontrak sama ada sepenuhnya atau sebahagiannya pembekalan barang tanpa kelulusan Kerajaan terlebih dahulu;</td>
+								<td>syarikat tuan telah memberikan subkontrak sama ada sepenuhnya atau sebahagiannya perkhidmatan tanpa kelulusan Kerajaan terlebih dahulu;</td>
 							</tr>
 							<tr>
 								<td align="center" style="vertical-align: top;">(g)</td>
@@ -545,7 +558,7 @@ u.underline {
 		</tr>
 		<tr>
 			<td align="left" width="30%">
-				..................................<br/>
+				.......................................................<br/>
 				<span class="text_family">Nama Penuh</span><br/>
 				<span class="text_family">No. Kad Pengenalan</span><br/>
 				<span class="text_family">Alamat</span><br/>
@@ -559,7 +572,7 @@ u.underline {
 				<span class="text_family">:</span><br/>
 			</td>
 			<td align="left" width="30%">
-				..................................<br/>
+				.......................................................<br/>
 				<span class="text_family">Nama Penuh Saksi</span><br/>
 				<span class="text_family">No. Kad Pengenalan</span><br/>
 				<span class="text_family">Alamat</span><br/>
@@ -611,16 +624,16 @@ u.underline {
 					</td>
 				</tr>
 				<tr>
-					<td align="left" class="submenu_padding"><span
+					<td align="left" style="width: 60%" class="submenu_padding"><span
 						class="text_family">1.1 No. Pendaftaran</span></td>
-					<td style="width: 5%">:</td>
-					<td style="width: 20%">$!regNo</td>
+					<td style="width: 1%">:</td>
+					<td style="width: 37%">$!regNo</td>
 				</tr>
 				<tr>
 					<td align="left" class="submenu_padding"><span
 						class="text_family">1.2 Tempoh Sah Laku </span></td>
 					<td>:</td>
-					<td>_______________________________</td>
+					<td>______________</td>
 				</tr>
 
 				<tr>
@@ -756,13 +769,13 @@ u.underline {
 					<td align="left" class="submenu_padding"><span
 						class="text_family">4.6 Tarikh Mula Kontrak </span></td>
 					<td>:</td>
-					 <td>#if($!scLoa.contractEffDate) $dateSDF.format($scLoa.contractEffDate) #end </td> 
+					 <td>#if($contractEffDate)$contractEffDate #end </td> 
 				</tr>
 				<tr>
 					<td align="left" class="submenu_padding"><span
 						class="text_family">4.7 Tarikh Tamat Kontrak </span></td>
 					<td>:</td>
-					<td>$dateSDF.format($!scLoa.contractExpDate) </td>
+					<td>#if($contractExpDate)$contractExpDate #end </td>
 				</tr>
 
 				<tr>
@@ -840,14 +853,13 @@ u.underline {
 						class="text_family_red">Jaminan Bank/ Bank Islam/ Bank Pembangunan Malaysia Berhad; 
 						atau Jaminan Syarikat Kewangan; atau Jaminan Insurans/ Takaful</span></td>
 				</tr>
-				<tr>
+				<tr valign="top">
 					<td align="left" class="submenu_padding"><span
 						class="text_family_red">7.5 Tempoh Sah Laku</span></td>
 					<td class="text_family_red">:</td>
-					<td style="white-space: normal;"><span
-						class="text_family_red">Dari tarikh kuat kuasa kontrak
+					<td class="text_family_red">Dari tarikh kuat kuasa kontrak
 						sehingga 12 bulan selepas tarikh tamat kontrak atau tarikh
-						obligasi terakhir mengikut mana yang terkemudian.</span></td>
+						obligasi terakhir mengikut mana yang terkemudian.</td>
 				</tr>
 				<tr valign="top">
 					<td align="left" class="submenu_padding" colspan="3"><span
@@ -878,7 +890,7 @@ u.underline {
 					<td>
 						<table border="0" cellpadding="0" cellspacing="0" width="100%">
 							 <tr>
-								<td class="text_family">...................................................</td>
+								<td class="text_family" style="margin-bottom:1px;">...................................................</td>
 							 </tr
 						      <tr> 
 						      	<td align="center"><span class="text_family_small">(Diisi Oleh Syarikat)</span></td>
@@ -894,7 +906,7 @@ u.underline {
 					<td>
 						<table border="0" cellpadding="0" cellspacing="0" width="100%">
 							 <tr>
-								 <td class="text_family">...................................................</td>
+								 <td class="text_family" style="margin-bottom:1px;">...................................................</td>
 							 </tr
 						      <tr> 
 						      	<td align="center"><span class="text_family_small">(Diisi Oleh Syarikat)</span></td>
@@ -905,7 +917,14 @@ u.underline {
 				<tr valign="top">
 					<td align="left" class="submenu_padding"><span class="text_family_red">*8.3 Nilai Polisi</span></td>
 					<td class="text_family_red">:</td>
-					<td class="text_family_red">RM <span><u class="underline">   Nilai dalam angka </u></span></td>
+					<td>
+						<table>
+							<tr style="margin-bottom:1px;" align="bottom">
+								<td><span class="text_family_red">RM </span></td>
+								<td align="bottom" class="dottedBorderRed"><span class="text_family_medium">Nilai dalam angka</span></td>
+							</tr>
+						</table>
+					<td>
 				</tr>
 				<tr valign="top">				
 					<td align="left" class="submenu_padding"><span class="text_family_red">*8.4	 Tempoh Perlindungan</span></td>
@@ -920,7 +939,7 @@ u.underline {
 						<table>
 								<tr>
 									<td align="center" style="vertical-align: top;" class="text_sub_header_red">9. </td>
-									<td class="text_header_submenu_red">Kenaan *Denda/ Tolakan/ <i>Liquidated & Ascertained Damages</i> (LAD)
+									<td class="text_header_submenu_red">Kenaan *Denda/ Tolakan/ <i>Liquidated & Ascertained Damages (LAD)</i>
 							<br/>
 							<span class="text_family_red"><span class="text_family_small">
 							(Lewat/Gagal bekal barang atau tidak menepati spesifikasi) </span></span></td>
@@ -934,11 +953,12 @@ u.underline {
 					<td class="text_family_red">:</td>
 					<td class="text_family_red">
 					    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-					      <tr> 
-					      <td style="text-align:justify;"><span class="text_family_small">Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara <i>upfront</i> kepada syarikat dalam dokumen pelawaan</span></td>
-					      </tr>
-					      <tr> 
-					         <td class="text_family_red">......................................</td>
+					      <tr style="margin-bottom:1px;" align="bottom"> 
+						       #if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")
+						       		<td align="bottom" class="dottedBorderRed"><span class="text_family_small" style="text-align:justify;">Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara <i>upfront</i> kepada syarikat dalam dokumen </span></td>
+						       #else
+						         	<td align="bottom" class="dottedBorderRed"><span class="text_family_small">Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara <i>upfront</i> kepada syarikat dalam dokumen </span></td>
+						       #end 	
 					      </tr>
 					    </table>
 					</td>
@@ -947,13 +967,20 @@ u.underline {
 					<td align="left" class="submenu_padding"><span
 						class="text_family_red">9.2 Kadar Sehari</span></td>
 					<td class="text_family_red">:</td>
-					<td class="text_family_red">RM <span><u class="underline">   Nilai dalam angka </u></span></td>
+					<td>
+						<table>
+							<tr style="margin-bottom:1px;" align="bottom">
+								<td><span class="text_family_red">RM </span></td>
+								<td align="bottom" class="dottedBorderRed"><span class="text_family_medium">Nilai dalam angka</span></td>
+							</tr>
+						</table>
+					</td>
 				</tr>
 			#if ($isSL1M == "true")
 				<tr>
 					<td colspan="3">
 					<br/><br/>
-						<table>
+					<table>
 								<tr>
 									<td align="center" style="vertical-align: top;" class="text_family_header">10. </td>
 									<td class="text_header_submenu"><i>Professional Training and Education for Growing Entrepreneurs </i> (PROT&Eacute;G&Eacute;) (jika berkaitan)
@@ -983,14 +1010,24 @@ u.underline {
 							</td>
 						</tr>
 						<tr>
-							<td>
-								<span class="text_family">Formula : </span><span class="text_family" style="text-decoration:underline;padding-left:15px;"> 1% X Harga Kontrak*</span>
-							</td>
-						</tr>
-						<tr>
-							<td style="text-align: center;">
-								<span class="text_family" >RM24,000**</span>
-							</td>
+							<table>
+								<tr style="margin-bottom:1px" align="bottom">
+									<td align="top">
+									<span class="text_family_small_black">Formula : </span>
+								</td>
+								<td>
+									<span class="text_family_small_black" style="text-decoration:underline;padding-left:15px;"> 1% X Harga Kontrak*</span>
+									
+								</td>
+								</tr>
+								<tr >
+									<td/>
+									<td style="padding-left:20px; padding-bottom:5px;">
+										<span class="text_family_small_black" >RM24,000**</span>
+									</td>
+								</tr>
+								
+							</table>
 						</tr>
 						<tr>
 							<td>
@@ -1028,9 +1065,9 @@ u.underline {
 						Ketua Setiausaha Perbendaharaan<br/>
 						Bahagian Perolehan Kerajaan<br/>
 						Aras 4, Blok Utara, Kompleks Kementerian Kewangan<br/>
-						Presint 2, Pusat Pentadbiran Kerajaan Persekutuan,<br/>
+						Presint 2, Pusat Pentadbiran Kerajaan Persekutuan<br/>
 						<b>62592 PUTRAJAYA</b><br/>
-						(u.p : Ketua Seksyen Dasar Perolehan)
+						(u.p.: Ketua Seksyen Dasar Perolehan)
 					</span>
 				</p>
 				
@@ -1041,7 +1078,7 @@ u.underline {
 						Menara Hasil<br/>
 						Aras 18, Persiaran Rimba Permai, Cyber 8<br/>
 						<b>63000 CYBERJAYA</b><br/>
-						(u.p : Pengarah Jabatan Pematuhan Cukai)
+						(u.p.: Pengarah Jabatan Pematuhan Cukai)
 					</span>
 				</p>
 				
@@ -1051,9 +1088,9 @@ u.underline {
 						Ibu Pejabat Kastam Diraja Malaysia<br/>
 						Bahagian Cukai Dalam Negeri (SST)<br/>
 						Aras 3 -7, Blok A, Menara Tulus<br/>
-						No. 22, Persiaran Perdana , Presint 3<br/>
+						No. 22, Persiaran Perdana, Presint 3<br/>
 						<b>61200 PUTRAJAYA</b><br/>
-						(u.p.:Pengarah Bahagian Cukai Dalam Negeri (SST)) 
+						(u.p.: Pengarah Bahagian Cukai Dalam Negeri (SST)) 
 					</span>
 				</p>
 				
