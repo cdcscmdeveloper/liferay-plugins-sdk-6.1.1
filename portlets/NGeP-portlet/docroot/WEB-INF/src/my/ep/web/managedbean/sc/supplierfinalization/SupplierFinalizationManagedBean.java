@@ -37,6 +37,7 @@ import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationMeetingBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -298,6 +299,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	// #11134 - Start
 	private boolean haveSupplierRejection;
 	// #11134 - End
+	private List<SmSupplierBranch> supplierBranchList; //#29729
 	
 	//29562 - START
 	private String finalizationMethodBefore;
@@ -2422,6 +2424,16 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 	
 	//28834 end
+
+	//#29729 - Start
+	public List<SmSupplierBranch> getSupplierBranchList() {
+		return supplierBranchList;
+	}
+
+	public void setSupplierBranchList(List<SmSupplierBranch> supplierBranchList) {
+		this.supplierBranchList = supplierBranchList;
+	}
+	//#29729 - End
 
 	public boolean isDemoReq() {
 		return isDemoReq;

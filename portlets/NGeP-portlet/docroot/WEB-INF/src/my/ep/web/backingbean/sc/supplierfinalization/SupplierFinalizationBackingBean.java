@@ -47,6 +47,7 @@ import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -79,11 +80,14 @@ import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.MeetingReqDTO;
 import my.ep.dto.sc.quationtender.MeetingResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
+import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
@@ -126,11 +130,14 @@ import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendationUlasanRemarks;
+import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalAmount;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalItem;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.logging.LogKey;
@@ -10393,6 +10400,98 @@ return	remarksNotFound;
 			return reqDTO;
 		}
 		//28834 ends
+		
+		//#27927 - Start
+		/**
+		* Method to display list of supplier branch had deleted or not with related current QT
+		**/
+		public void showSupplierBranchList(Long supplierId) {
+	      
+			ScQt scQt = this.getManagedBean().getScQt();
+			ScQtSupplierCriteria qtSupplierCriteria = scQt.getScQtSupplierCriteria();
+			
+			List<SmSupplierBranch> supplierBranchListDeleted = new ArrayList<>();
+			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+			IQTDetailSO QtDetailsSO = (IQTDetailSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+		
+		    SupplierSearchReqDTO suppSearchDeletedReqDTO = new SupplierSearchReqDTO();
+		    suppSearchDeletedReqDTO.setSupplierId(supplierId);
+	    	SupplierSearchResDTO suppSearchDeletedResDTO = supplierSearchSO.retrieveSmSupplierBranchDeletedBySupplier(suppSearchDeletedReqDTO);
+			supplierBranchListDeleted = suppSearchDeletedResDTO.getSmSupplierBranchList();
+			
+			if(qtSupplierCriteria.isAllState()){
+	    		for(SmSupplierBranch supplierBranch : supplierBranchListDeleted) {
+	    	        supplierBranch.setQtRelatedSupplierBranch(true);
+	    		}
+	  		}else{
+	  			
+	    			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+		    		tenderReqDTO.setQtdetail(scQt);
+		    		QuationTenderResDTO tenderResDTO = QtDetailsSO.retriveQTSuppQulCriDetails(tenderReqDTO);
+		    		if(tenderResDTO != null && tenderResDTO.getLocationDetails()!= null){
+		    			for(TplSpecLoc locality : tenderResDTO.getLocationDetails()){
+			    			for(SmSupplierBranch  supplierBranch : supplierBranchListDeleted){
+								if(locality.getPmState().getStateId() != null && supplierBranch.getSmAddress().getPmState().getStateId() != null){
+									if(locality.getPmState().getStateCode().equals(supplierBranch.getSmAddress().getPmState().getStateCode())){
+			    						supplierBranch.setQtRelatedSupplierBranch(true);
+			    					}
+			    			    }
+			    			}
+		    			}
+		    		}
+	  		}
+			
+			if(CollectionUtils.isEmpty(supplierBranchListDeleted)){
+	    		getManagedBean().setSupplierBranchList(listSupplierBranchList(supplierId,scQt));
+	    	}else{
+	    		supplierBranchListDeleted.addAll(listSupplierBranchList(supplierId,scQt));
+	    		getManagedBean().setSupplierBranchList(supplierBranchListDeleted);
+	    	}
+			
+		}
+		
+		private List<SmSupplierBranch> listSupplierBranchList(Long supplierId,ScQt scQt){
+			
+			List<SmSupplierBranch> supplierBranchList = new ArrayList<>();
+			ScQtSupplierCriteria qtSupplierCriteria = scQt.getScQtSupplierCriteria();
+			
+			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+			IQTDetailSO QtDetailsSO = (IQTDetailSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			
+			SupplierSearchReqDTO suppSearchReqDTO = new SupplierSearchReqDTO();
+			suppSearchReqDTO.setSupplierId(supplierId);
+	    	SupplierSearchResDTO suppSearchResDTO = supplierSearchSO.retrieveSmSupplierBranchBySupplier(suppSearchReqDTO);
+	    	supplierBranchList = suppSearchResDTO.getSmSupplierBranchList();
+	    	
+	    	if(qtSupplierCriteria.isAllState()){
+	    		for(SmSupplierBranch supplierBranch : supplierBranchList) {
+	    	        supplierBranch.setQtRelatedSupplierBranch(true);
+	    		}
+	  		}else{
+	  			
+	    			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+		    		tenderReqDTO.setQtdetail(scQt);
+		    		QuationTenderResDTO tenderResDTO = QtDetailsSO.retriveQTSuppQulCriDetails(tenderReqDTO);
+		    		if(tenderResDTO != null && tenderResDTO.getLocationDetails()!= null){
+		    			for(TplSpecLoc locality : tenderResDTO.getLocationDetails()){
+			    			for(SmSupplierBranch  supplierBranch : supplierBranchList){
+								if(locality.getPmState().getStateId() != null && supplierBranch.getSmAddress().getPmState().getStateId() != null){
+									if(locality.getPmState().getStateCode().equals(supplierBranch.getSmAddress().getPmState().getStateCode())){
+			    						supplierBranch.setQtRelatedSupplierBranch(true);
+			    					}
+			    			    }
+			    			}
+		    			}
+		    		}
+	  		}
+	    	  
+	    	return supplierBranchList;
+		}
+		//#27927 - End
 		
 		//#32400 - Start
 		private List<ScQtRecommend> sortingItemizedFollowedOrderByQtId(List<ScQtRecommend> oldRequestItemsRecommend,ScQt scQt){
