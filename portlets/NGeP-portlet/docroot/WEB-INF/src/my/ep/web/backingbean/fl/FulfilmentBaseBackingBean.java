@@ -14,15 +14,10 @@ import java.util.Locale;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-
-import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
-import my.ep.biz.service.sm.search.ISupplierCategorySO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -40,8 +35,6 @@ import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
-import my.ep.dto.sm.search.SupplierCategoryReqDTO;
-import my.ep.dto.sm.search.SupplierCategoryResDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
@@ -79,6 +72,9 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.BlacklistOwnerDirectorVO;
 import my.ep.web.vo.DisciplinaryActionCategoryVO;
 import my.ep.web.vo.DisciplinaryActionVO;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 /**
  * Base Backing Bean for Fulfilment.
@@ -810,11 +806,9 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 					}						
 				}
 				
-				if(smDisciplinaryAction.isCancelRegistration() 
-						&& !smDisciplinaryAction.isBlacklistOwner()){
+				if(smDisciplinaryAction.isCancelRegistration() && !smDisciplinaryAction.isBlacklistOwner()){
 					//29579 - start
-					if(personnelResDTO != null 
-							&& !personnelResDTO.getSmPersonnelList().isEmpty()){						
+					if(personnelResDTO != null && !personnelResDTO.getSmPersonnelList().isEmpty()){						
 						BlacklistDirectorReqDTO reqDTO = new BlacklistDirectorReqDTO();
 						BlacklistDirectorResDTO resDTO;
 						for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
@@ -831,8 +825,7 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 				}
 				
 				if(smDisciplinaryAction.isBlacklistOwner()){
-					if(personnelResDTO != null 
-							&& !personnelResDTO.getSmPersonnelList().isEmpty()){
+					if(personnelResDTO != null && !personnelResDTO.getSmPersonnelList().isEmpty()){
 						BlacklistDirectorReqDTO reqDTO = new BlacklistDirectorReqDTO();
 						BlacklistDirectorResDTO resDTO;//28790
 						for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
@@ -891,7 +884,7 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		reqDTO.setSupplierId(supplierId);
 		MofRegistrationResDTO resDTO = mofRegistrationSO.isSupplierBranchDeleted(reqDTO);
 		if(resDTO.isSupplierBranchDeleted()) {
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+			FacesContext.getCurrentInstance().addMessage("delBranchMsg", new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 					MessageUtils.getMessage(MessageConst.INFO_745087, 
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			return true;
