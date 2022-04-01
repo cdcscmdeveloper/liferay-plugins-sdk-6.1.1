@@ -1205,7 +1205,7 @@ public class ConsolidationReportBackingBean extends
 							IQTSuppFinalizationSO.class);
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 			// #21695 - #32446 - Start.
-			if (zoneId != null) {
+			if (zoneId != null && zoneId !=0) {// #21695 - #32856 - Start.
 				reqDTO.setSpecZoneId(zoneId);
 			}
 			// #21695 - #32446 - End.
