@@ -2433,8 +2433,15 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		if (scLoa.getContractEffDate() != null) {
 			contractEffDate = DateUtils.getLocalizeDate(scLoa.getContractEffDate(), myLocale);
 		}
+		
+		//#25025 - start
+		String contractExpDate ="";
+		if (scLoa.getContractExpDate() != null){
+			contractExpDate = DateUtils.getLocalizeDate(scLoa.getContractExpDate(), myLocale);
+		}
 		context.put("contractEffDate", contractEffDate);
-
+		context.put("contractExpDate", contractExpDate);
+		//#25025 - end
 		//ontractDuration
 		context.put("contractDuration", scLoa.getContractDuration());
 
