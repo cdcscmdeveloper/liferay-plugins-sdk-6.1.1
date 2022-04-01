@@ -8927,12 +8927,24 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		context.put("ackDate", ackDate);
 		context.put("insWarrantyReq", scLoa.isInsWarrantyReq());
 
-		String contractEffDate = "";
-		if (scLoa.getContractEffDate() != null) {
-			contractEffDate = DateUtils.getLocalizeDate(scLoa.getContractEffDate(), myLocale);
-		}
-		context.put("contractEffDate", contractEffDate);
 		
+		
+		//#26770 - start
+		
+		if (null == scLoa.getContractEffDate()) {
+			context.put("contractEffDate", "");
+		}else{
+			context.put("contractEffDate", dateSDF.format(scLoa.getContractEffDate()));
+		}
+		
+		if (null == scLoa.getContractExpDate()) {
+			context.put("contractExpDate", "");
+		} else {
+			context.put("contractExpDate",
+					dateSDF.format(scLoa.getContractExpDate()));
+		}
+		
+		//#26770 - end
 		//ontractDuration
 		context.put("contractDuration", scLoa.getContractDuration());
 
