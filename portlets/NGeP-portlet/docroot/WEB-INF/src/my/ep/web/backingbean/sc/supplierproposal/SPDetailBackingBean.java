@@ -269,6 +269,12 @@ public class SPDetailBackingBean extends
 			ProposalResDTO resDTO = null; 
 			if(!byProposalId)	{ resDTO = proposalSO.retrieveProposalDtlBySupplierId(reqDTO);}
 			else				{ resDTO = proposalSO.retrieveProposalDetail(reqDTO);}
+			//32723
+			if(this.getManagedBean().getQt() != null){
+				if(this.getManagedBean().getQt().getDisciplinaryActionPresent()!= null){
+				resDTO.getScQt().setDisciplinaryActionPresent(this.getManagedBean().getQt().getDisciplinaryActionPresent());
+				}
+			}
 
 			ScQt scQt = resDTO.getScQt();
 			 ScQtProposal scQtProposal=resDTO.getScQtProposal();
