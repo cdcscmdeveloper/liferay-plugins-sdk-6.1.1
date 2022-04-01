@@ -1437,25 +1437,29 @@ public class SmApplicationUtil {
 		boolean retVal = false;
 		if (paramBranch != null && paramBranch.getSupplierBranchId() != null
 				&& !SmCommonUtil.isCollectionEmpty(appl.getSmSupplierBanks())) {
-			for (SmSupplierBank bnk : appl.getSmSupplierBanks()) {
-				if (!SmCommonUtil.isCollectionEmpty(bnk
-						.getSmSupplierBranchBanks())) {
-					for (SmSupplierBranchBank brBank : bnk
-							.getSmSupplierBranchBanks()) {
-						if (brBank.getSmSupplierBranch() != null
-								&& brBank.getSmSupplierBranch()
-										.getSupplierBranchId() != null
-								&& brBank
-										.getSmSupplierBranch()
-										.getSupplierBranchId()
-										.compareTo(
-												paramBranch
-														.getSupplierBranchId()) == 0) {
-							retVal = true;
-							break;
+			if(paramBranch.getRecordStatusFlg() != SupplierManagementConst.RECORD_STATUS_DELETED){ //#29727
+				for (SmSupplierBank bnk : appl.getSmSupplierBanks()) {
+					if (!SmCommonUtil.isCollectionEmpty(bnk
+							.getSmSupplierBranchBanks())) {
+						for (SmSupplierBranchBank brBank : bnk
+								.getSmSupplierBranchBanks()) {
+							if (brBank.getSmSupplierBranch() != null
+									&& brBank.getSmSupplierBranch()
+											.getSupplierBranchId() != null
+									&& brBank
+											.getSmSupplierBranch()
+											.getSupplierBranchId()
+											.compareTo(
+													paramBranch
+															.getSupplierBranchId()) == 0) {
+								retVal = true;
+								break;
+							}
 						}
 					}
 				}
+			} else {
+				retVal = true;
 			}
 		}
 		return retVal;
@@ -1563,9 +1567,9 @@ public class SmApplicationUtil {
 								+ " - RM" +category.getPmCategoryL3().getPaidUpCapital() +"<br>" );	
 					}else if(index > 1){
 						bf.append(index++ +". "
-						+ category.getPmCategoryL1().getCategoryL1Code()
-						+ category.getPmCategoryL2().getCategoryL2Code()
-						+ category.getPmCategoryL3().getCategoryL3Code()
+								+ category.getPmCategoryL1().getCategoryL1Code()
+								+ category.getPmCategoryL2().getCategoryL2Code()
+								+ category.getPmCategoryL3().getCategoryL3Code()
 								+ " - RM" +category.getPmCategoryL3().getPaidUpCapital() +"<br>" );	
 					}
 				}
