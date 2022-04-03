@@ -10607,7 +10607,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			
 			if(wfStatus!=null){
 				Long statusId = wfStatus.getPmStatus().getStatusId();
-				if(!this.isStatusLessThanOrEquals(statusId, QTStatusConst.QT_PROPOSAL_PREPARATION, QTStatusConst.QT_ORDERED_STATUSES)){
+				if(!this.isStatusLessThanOrEquals(statusId, QTStatusConst.QT_PROPOSAL_PREPARATION, QTStatusConst.QT_ORDERED_STATUSES) && committeeData.getCommitteeType() != null){//25037 - note 533
 		            //25037-start #372
 					String tabType = committeeData.getCommitteeType() == null ? "": committeeData.getCommitteeType();
 					getManagedBean().setRoleFilterList(getRoleFilterListForCommitteeMaintenance(this.getManagedBean().getQt(), tabType));
