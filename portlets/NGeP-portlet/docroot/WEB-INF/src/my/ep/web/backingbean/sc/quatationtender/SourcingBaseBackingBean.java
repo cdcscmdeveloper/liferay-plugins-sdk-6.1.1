@@ -5566,7 +5566,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 					UserReqDTO userReqDTO = new UserReqDTO();
-					userReqDTO.setOrgProfileId(qt.getPmOrgProfile().getOrgProfileId());
+//					userReqDTO.setOrgProfileId(qt.getPmOrgProfile().getOrgProfileId()); //25037 - note 533
 					userReqDTO.setUserSearchBean(new SearchBean<PmUser>());
 					userReqDTO.getUserSearchBean().getDataFilterBeans().add(new SearchFilterBean("recordStatusFlg", SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_ACTIVE));
 					userReqDTO.getUserSearchBean().getDataFilterBeans().add(new SearchFilterBean("pmUserOrgs.recordStatusFlg", SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_ACTIVE));
