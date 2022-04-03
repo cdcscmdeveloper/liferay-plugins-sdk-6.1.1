@@ -1296,7 +1296,6 @@ public class SPDetailBackingBean extends
             if(answers == null || answers.size() == 0) {
                 	throw new EpException(MessageConst.ERROR_760463);	
     			} else {
-    		//#32783 fix revert old codes related to #21695 -END
 				// 20220127@syazani - Enhancement #3657 - specific error message - Start
 				List<String> errorLst = null;
 				boolean isThrow = false;
@@ -1308,11 +1307,23 @@ public class SPDetailBackingBean extends
             			if (answer.getRatePerUom() == null && answer.getTplSpecZoneQty() != null 
             					&& answer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0
             					|| answer.getRatePerUom() == null && answer.getTplSpecZoneQty() == null) {
-            				throw new EpException(MessageConst.ERROR_760464);
+							if (errorLst == null) {
+								errorLst = new ArrayList<String>();
+							}
+
+							String zone = answer.getTplSpecZoneQty() != null
+									&& answer.getTplSpecZoneQty().getTplSpecZoneDtl() != null
+									&& answer.getTplSpecZoneQty().getTplSpecZoneDtl().getZoneName() != null ? answer
+									.getTplSpecZoneQty().getTplSpecZoneDtl().getZoneName() : "";
+							if (!duplicateErrorZoneCheck(zone, errorLst))
+								errorLst.add(zone);
+							isThrow = true;
             			}
             		// bug #31733 add condition 5/11/2021
 //farid end #21695 7/10/2021
             		}
+					
+					if (!isThrow) {
             		// added because of Bug #17772, please do not remove or 
     			    // change the order of if statements
             		if(answer.getAnswerNumeric() == null || answer.getAnswerNumeric().equals(0)){
@@ -1340,6 +1351,21 @@ public class SPDetailBackingBean extends
             		//20210419@asyrafhaziq - Bug #30061 - End
             		super.setUserDetails(answer);
             	}
+            }
+				
+				if (isThrow && errorLst != null && errorLst.size() > 0) {
+					if (getManagedBean().getQt().isZonal()) {
+						StringBuffer strB = new StringBuffer();
+						String unitPrice = ResourceBundleUtils.getMessage("lbl.tpl.spec.content.unit.price", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+						for (String zone : errorLst) {
+							strB.append(MessageUtils.getMessage(MessageConst.ERROR_760538, new String[] {unitPrice,zone}, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()));
+						}
+						throw new EpException(strB.toString());
+					} else {
+						throw new EpException(MessageConst.ERROR_760464);
+					}
+				}
+				// 20220127@syazani - Enhancement #3657 - specific error message - End
             }
 			TemplateSpecHelper tplHelper = TemplateSpecHelper.getInstance();
 			boolean isPriceTypeTier = tplHelper.isPriceTypeTier(answers.get(0)
@@ -6299,25 +6325,16 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 	}
 //#21695 Farid end 2/4/2021	
 	
-	//#21695 Farid Start - fix proposal checking 18/2/2022
-	public void disableDefaultSelected() {
-		for(TplSpecAnswer retrieveAns : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
-			if(retrieveAns != null && this.getManagedBean().getZones().size() == 1){
-				for(TplSpecZoneDtl specZonedtl : this.getManagedBean().getZones()){
-					if(specZonedtl != null){
-						for(TplSpecZoneQty specZoneQty : retrieveAns.getTplSpecQuestion().getTplSpecZoneQties()){
-							if(specZoneQty!= null && specZoneQty.getTplSpecQuestion().getSpecQuestionId().equals(retrieveAns.getTplSpecQuestion().getSpecQuestionId())
-									&& specZoneQty.getQty().equals(new BigDecimal(0)) 
-									&& specZonedtl.getSpecZoneId().equals(specZoneQty.getTplSpecZoneDtl().getSpecZoneId())){
-									retrieveAns.setOffer(false);
-									retrieveAns.setDisableRow(true);								
+	// 20220127@syazani - Enhancement #3657 - specific error message - Start
+	private boolean duplicateErrorZoneCheck(String str, List<String> errorLst) {
+		if (errorLst.size() > 0) {
+			for (String err : errorLst) {
+				if (err.equalsIgnoreCase(str)) {
+					return true;
 							}
 						}
 					}
+		return false;
 				}
+	// 20220127@syazani - Enhancement #3657 - specific error message - End
 			}
-		}
-	}
-	//#21695 Farid End - fix proposal checking 18/2/2022
-	
-}
