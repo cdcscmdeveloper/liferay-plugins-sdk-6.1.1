@@ -154,12 +154,15 @@ public class ContractManagedBean extends BaseManagedBean {
 	// End - 28479	
 
 	//Start Fix - #31740
-	private Map<Long, CtAgency> selectedAgencyChanges;
-	
+	private Map<Long, CtAgency> selectedAgencyChanges;	
 	private Map<Long, CtAgency> agencyDataDeletion;
 	//End Fix - #31740
 	
 	private boolean hasAmendmentLoaNo = false; //15851
+	private boolean fromViewPage = false;//15851
+	private boolean amendFromViewPage = false;//15851
+	private boolean amendFromTaskList = false;//15851
+	private boolean viewSCL = false;//15851
 
 	//#28854 - start
 	private List<String> itemSpecification;
@@ -1285,34 +1288,7 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.minQtyCheck = minQtyCheck;
 	}	
 	// End - 28479
-	
-		// Start Fix - #31740
-		/**
-		 * Populate only changes related to agency
-		 */
-		public Map<Long, CtAgency> getSelectedAgencyChanges() {
-			if(selectedAgencyChanges==null) {
-				selectedAgencyChanges = new HashMap<Long, CtAgency>();
-			}
-			return selectedAgencyChanges;
-		}
-
-		public void setSelectedAgencyChanges(Map<Long, CtAgency> selectedAgencyChanges) {
-			this.selectedAgencyChanges = selectedAgencyChanges;
-		}
 		
-		public Map<Long, CtAgency> getAgencyDataDeletion() {
-			if(agencyDataDeletion==null) {
-				agencyDataDeletion = new HashMap<Long, CtAgency>();
-			}
-			return agencyDataDeletion;
-		}
-
-		public void setAgencyDataDeletion(Map<Long, CtAgency> agencyDataDeletion) {
-			this.agencyDataDeletion = agencyDataDeletion;
-		}
-		// End Fix - #31740
-	
 	//#15851 - start
 	public boolean isHasAmendmentLoaNo() {
 		return hasAmendmentLoaNo;
@@ -1354,5 +1330,67 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setScRequestItemSpecOfferList(List<ScRequestItemSpecOffer> scRequestItemSpecOfferList) {
 		this.scRequestItemSpecOfferList = scRequestItemSpecOfferList;
 	}	
-	/* #28854 end*/	
+	/* #28854 end*/
+
+    // Start Fix - #31740
+	/**
+	 * Populate only changes related to agency
+	 */
+	public Map<Long, CtAgency> getSelectedAgencyChanges() {
+		if(selectedAgencyChanges==null) {
+			selectedAgencyChanges = new HashMap<Long, CtAgency>();
+		}
+		return selectedAgencyChanges;
+	}
+
+	public void setSelectedAgencyChanges(Map<Long, CtAgency> selectedAgencyChanges) {
+		this.selectedAgencyChanges = selectedAgencyChanges;
+	}
+	
+	public Map<Long, CtAgency> getAgencyDataDeletion() {
+		if(agencyDataDeletion==null) {
+			agencyDataDeletion = new HashMap<Long, CtAgency>();
+		}
+		return agencyDataDeletion;
+	}
+
+	public void setAgencyDataDeletion(Map<Long, CtAgency> agencyDataDeletion) {
+		this.agencyDataDeletion = agencyDataDeletion;
+	}
+	// End Fix - #31740
+	
+	//Enhancement 15851 - shaqimi start
+	public boolean isFromViewPage() {
+		return fromViewPage;
+	}
+
+	public void setFromViewPage(boolean fromViewPage) {
+		this.fromViewPage = fromViewPage;
+	}
+
+	public boolean isAmendFromViewPage() {
+		return amendFromViewPage;
+	}
+
+	public void setAmendFromViewPage(boolean amendFromViewPage) {
+		this.amendFromViewPage = amendFromViewPage;
+	}
+
+	public boolean isAmendFromTaskList() {
+		return amendFromTaskList;
+	}
+
+	public void setAmendFromTaskList(boolean amendFromTaskList) {
+		this.amendFromTaskList = amendFromTaskList;
+	}
+
+	public boolean isViewSCL() {
+		return viewSCL;
+	}
+
+	public void setViewSCL(boolean viewSCL) {
+		this.viewSCL = viewSCL;
+	}
+	//Enhancement 15851 - shaqimi end
+	
 }

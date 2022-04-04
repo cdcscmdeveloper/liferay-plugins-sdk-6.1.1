@@ -2188,6 +2188,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		reqDTO.setUpdateAction(true);
 
 		ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
+		ctBB.getManagedBean().setAmendFromViewPage(true); // #15851
 		AmendmentBackingBean amendBB = new AmendmentBackingBean();
 		amendBB.getManagedBean().setSelectedTabIndex(0);
 		/*#25956 Start*/
@@ -2222,6 +2223,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE); // View purpose, FU or FW also fine
 		reqDTO.setViewOnly(true);
 		ctBB.getManagedBean().setViewContract(true);
+		ctBB.getManagedBean().setFromViewPage(true); //#15851
 		ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
 		getManagedBean().setAsAtDate(null);
 		setValidateContractField(reqDTO);
@@ -2569,6 +2571,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 */
 	public String backAction() {
 		ctBB.getManagedBean().setViewContract(false);
+		ctBB.getManagedBean().setFromViewPage(false); //#15851
 		getManagedBean().setLoaContractVerList(null);
 		ContractItemSearchBackingBean  contractBB= new ContractItemSearchBackingBean();
 		contractBB.getManagedBean().setItemcode(null);
