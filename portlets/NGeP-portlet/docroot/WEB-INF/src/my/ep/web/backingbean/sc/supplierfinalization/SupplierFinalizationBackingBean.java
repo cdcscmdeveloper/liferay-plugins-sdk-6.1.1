@@ -166,6 +166,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
@@ -3608,7 +3609,10 @@ return	remarksNotFound;
 			}
 			reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
 			// #18685 - End
-			
+			//29561 -start
+			reqDTO.setBaseURL(SmCommonUtil.getBasePortalUrl());
+			reqDTO.setTaskName(this.getManagedBean().getTaskName());
+			//29561 -end
 			resDTO = qtSuppFinalizationSO.submitSupplierFinalization(reqDTO);
 
 			if (resDTO.isSuccessful()) {
@@ -7916,8 +7920,8 @@ return	remarksNotFound;
 					throw new EpException(MessageConst.ERROR_760206);
 				}
 				//#21695 allow no records validation end
-			}		
-		}
+			}
+		}		
 	}
 
 	private void validateAwardOfItem(ScQtRecommend scQtRecommend) {
