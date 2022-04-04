@@ -30,7 +30,7 @@
 				</c:if></td>
 			<td>
 				<!-- #12483 - START -->
-				<h:outputText value="#{lbl['lbl.sm.revise.reason']} : #{backingBean.currentReviseReason()}" rendered="#{backingBean.currentReviseReason() ne null}" styleClass="splNotesFonts" escape="false" />
+				<h:outputText value="#{lbl['lbl.sm.revise.reason']} : #{backingBean.currentReviseReason()}" rendered="#{backingBean.renderRevisedReason()}" styleClass="splNotesFonts" escape="false" />
 				<!-- #12483 - END -->
 				<h:inputHidden value="#{backingBean.managedBean.smAppl.applCategoryType}" />
 				<div style="width: 100%" align="right">
