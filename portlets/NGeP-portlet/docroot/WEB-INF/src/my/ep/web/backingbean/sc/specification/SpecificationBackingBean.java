@@ -227,6 +227,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -5383,14 +5384,14 @@ public class SpecificationBackingBean extends
 				return "/xhtml/sc/boSctemplatespec/committeeTechnicalEditAction.xhtml?faces-redirect=true";
 			} else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checkList
 					.getDefinationType().getParameterCode())) {//#11104-start
-				List<ScQtCheckList> technicalChecklist=this.getManagedBean().getScQtCheckSt2techProposal();//#11104-start
+				List<ScQtCheckList> technicalChecklist=this.getManagedBean().getScQtCheckSt2techProposal();//#25635-start
 				this.getManagedBean().setSampleSpecCheckList(new ArrayList<ScQtCheckList>());
 				for(ScQtCheckList checklist:technicalChecklist){
 					if (QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(checklist
 							.getDefinationType().getParameterCode()) & QTStatusConst.TS_COMPLETED.equals(checklist.getPmStatus().getStatusId())) {
 						this.getManagedBean().getSampleSpecCheckList().	add(checklist);
 					}
-				}//#11104-End
+				}//#25635-End
 				return "/xhtml/sc/specification/specificationCommittee/technicalCheckListSampleMain.xhtml?faces-redirect=true";	
 			}//#11104-End
 			else {
@@ -12392,6 +12393,11 @@ public class SpecificationBackingBean extends
 		spReqDTO.setScoreOfferPriceList(this.getManagedBean().getOfferPricePackageList());
 		//#31450 - bug for #25138 - end
 		IQTSpecSO specSO = getSpecSO();
+		
+		//29561 -start
+		spReqDTO.setBaseURL(SmCommonUtil.getBasePortalUrl());
+		spReqDTO.setTaskName(this.getManagedBean().getTaskName());
+		//29561 -end
 		SpecificationResDTO resDTO = new SpecificationResDTO();
 		try {
 			resDTO = specSO.updateBPMAction(spReqDTO);
