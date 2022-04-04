@@ -26,7 +26,7 @@
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}"
 						immediate="true" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();"
-						rendered="#{amendmentBackingBean.managedBean.taskId==null}"
+						rendered="#{amendmentBackingBean.managedBean.taskId==null || ctBackingBean.managedBean.viewSCL}"
 						action="#{amendmentBackingBean.backAction}" /></td>
 				<td class="ppRightBtn">
 					<ui:decorate template="/xhtml/ct/shared/claim_template.xhtml">
