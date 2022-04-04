@@ -887,7 +887,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				// #30021 - end
 				// #32809 - start
 				// filter category code that not imposed with DA
-				if(cat.getDisciplinaryActionId() == null){
+				if(cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_SUSPENDED && cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_CANCELLED){
 					for (SmMachineDtl machineDtl : getManagedBean().getSmAppl()
 							.getSmMachineDtls()) {
 						machDtlTmp = (SmMachineDtl) EntityHelper
@@ -922,6 +922,28 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 										&& macCatCode
 												.equalsIgnoreCase(suppCatCode)
 										&& machDtlTmp == null) {
+									// #32809 - start
+									List<SmMachineCategory> activeSmMachineCategory = new ArrayList<SmMachineCategory>();
+									
+									//filter DA category code for machine
+									for (SmMachineCategory catCodeNoDA : machineDtl.getSmMachineCategories() ) {
+										String catCode = catCodeNoDA
+												.getPmCategoryL3()
+												.getPmCategoryL2()
+												.getPmCategoryL1()
+												.getCategoryL1Code()
+												.concat(cat.getPmCategoryL3()
+														.getPmCategoryL2()
+														.getCategoryL2Code())
+												.concat(cat.getPmCategoryL3()
+														.getCategoryL3Code());
+										if(suppCatCode.equals(catCode)){
+											activeSmMachineCategory.add(catCodeNoDA);
+										}
+									}
+									
+									machineDtl.setSmMachineCategories(activeSmMachineCategory);
+									// #32809 - end
 									activeMachineDtls.add(machineDtl);
 									break;
 								}
@@ -944,10 +966,29 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					new ArrayList<SmManufacturingDtl>());
 		} else {
 			List<SmManufacturingDtl> activeManufacturingDtls = new ArrayList<SmManufacturingDtl>();
-			for (SmManufacturingDtl manuFacDtl : getManagedBean().getSmAppl()
-					.getSmManufacturingDtls()) {
+			
+			// #32809 - start
+			for (SmSupplierCategory cat : getManagedBean().getSmAppl().getSmSupplierCategories()) {
+				// filter category code that not imposed with DA
+				if ((cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_SUSPENDED && cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_CANCELLED)
+						&& cat.getPmCategoryL3() != null
+						&& cat.getPmCategoryL3().getCategoryTypeCode() != null
+						&& my.ep.constant.pm.ParameterConst.CATEGORY_TYPE_MANUFACTURING
+							.equals(cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode())) {
+					for (SmManufacturingDtl manuFacDtl : getManagedBean().getSmAppl().getSmManufacturingDtls()) { // filter manufacture not imposed DA
 				if (manuFacDtl.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
+							if(activeManufacturingDtls.size() > 0){
+								for (SmManufacturingDtl manuFacDtlAct : activeManufacturingDtls) {
+									if (!manuFacDtl.equals(manuFacDtlAct)) {
+										activeManufacturingDtls.add(manuFacDtl);
+									} 
+								}
+							} else {
 					activeManufacturingDtls.add(manuFacDtl);
+				}
+			}
+					}
+					// #32809 - end
 				}
 			}
 			getManagedBean().getSmAppl().setSmManufacturingDtls(
