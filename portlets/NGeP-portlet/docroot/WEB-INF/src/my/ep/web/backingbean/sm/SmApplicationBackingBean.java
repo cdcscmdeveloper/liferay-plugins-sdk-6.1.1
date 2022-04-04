@@ -10026,32 +10026,27 @@ public class SmApplicationBackingBean extends
 					actionDesc = SupplierManagementConst.PO_ESCALATE_APPROVER;
 					//#12483 - START
 					if(this.getManagedBean().isPoUser() && currentReviseReason() != null){
-							PmUser approver = PpCommonUtil.retrieveUserByLoginIdOrUserId(null, SmServiceLookup.getUserSO().retrieveLastPoOrApprover(this.getManagedBean().getSmAppl().getApplNo(), SupplierManagementConst.APPROVER_HQ));
-							if(approver.getRecordStatusFlg() == 1){
-								this.getManagedBean().setReviseApprover(approver);
-								successMsg = SmCommonUtil.getOutputMsgBundle(
-										MessageConst.INFO_700014,
-										new String[] { applNo, statusDesc,
-												"<tr><td>1)</td><td>"+PpCommonUtil.retrieveUserByLoginIdOrUserId(approver.getLoginId(), null).getUserName()+"</td></tr>" });
-								
-							} else {
-								successMsg = SmCommonUtil.getOutputMsgBundle(
-										MessageConst.INFO_700014,
-										new String[] { applNo, statusDesc,
-												getApproverListForSuccessMsg() });
-							}
-						}else{
+						PmUser approver = PpCommonUtil.retrieveUserByLoginIdOrUserId(null, SmServiceLookup.getUserSO().retrieveLastPoOrApprover(this.getManagedBean().getSmAppl().getApplNo(), SupplierManagementConst.APPROVER_HQ));
+						if(approver.getRecordStatusFlg() == 1){
+							this.getManagedBean().setReviseApprover(approver);
+							successMsg = SmCommonUtil.getOutputMsgBundle(
+									MessageConst.INFO_700014,
+									new String[] { applNo, statusDesc,
+											"<tr><td>1)</td><td>"+PpCommonUtil.retrieveUserByLoginIdOrUserId(approver.getLoginId(), null).getUserName()+"</td></tr>" });
+							
+						} else {
 							successMsg = SmCommonUtil.getOutputMsgBundle(
 									MessageConst.INFO_700014,
 									new String[] { applNo, statusDesc,
 											getApproverListForSuccessMsg() });
 						}
+					}else{
+						successMsg = SmCommonUtil.getOutputMsgBundle(
+								MessageConst.INFO_700014,
+								new String[] { applNo, statusDesc,
+										getApproverListForSuccessMsg() });
+					}
 					//#12483 - END
-					
-					successMsg = SmCommonUtil.getOutputMsgBundle(
-							MessageConst.INFO_700014,
-							new String[] { applNo, statusDesc,
-									getApproverListForSuccessMsg() });
 				} else if (res
 						.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.INQUIRY)) {
 					successMsg = SmCommonUtil.getOutputMsgBundle(
@@ -14663,4 +14658,15 @@ public class SmApplicationBackingBean extends
 		return nonMandatoryCounter++;
 	}
 	//#11641 - END
+	
+	//#12483 - START
+	public boolean renderRevisedReason(){
+		if(currentReviseReason() != null){
+			if(!this.getManagedBean().getCurrentStatus().equals("Pending Review Site Visit Report - After Approval") && !this.getManagedBean().getCurrentStatus().equals("Menunggu Laporan Lawatan Tapak - Selepas Diluluskan")){
+				return true;
+			}
+		}
+		return false;
+	}
+	//#12483 - END
 }
