@@ -113,7 +113,7 @@
 				<!-- 32815 - start -->	
 				<h:outputText value="#{lbl['lbl.sm.status.cancelation.da']}"
 					rendered="#{(aprvdCatBean.recordStatusFlg eq 2 or aprvdCatBean.recordStatusFlg eq 0) 
-								and not empty aprvdCatBean.disciplinaryActionId and not aprvdCatBean.typeDisciplinaryAction eq 'M'}" />
+								and not empty aprvdCatBean.disciplinaryActionId and aprvdCatBean.typeDisciplinaryAction != 'M'}" />
 				
 				<h:outputText value="#{lbl['lbl.sm.cancellation.manufacturer.category.code.by.disciplinary.action']}"
 					rendered="#{aprvdCatBean.recordStatusFlg eq 2 and aprvdCatBean.typeDisciplinaryAction eq 'M'}" />
