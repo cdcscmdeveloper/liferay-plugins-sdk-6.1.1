@@ -55,32 +55,30 @@
 					</p:dataGrid>
 				</td>
 				<td class="TableFieldRight" width="50%" style="padding-left:6.25%">
-					<p:dataGrid value="#{ctBackingBean.managedBean.attachmentList}"
-						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" var="attachment"
-						rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex != contractDetailsBackingBean.managedBean.settingIndex and
-							contractDetailsBackingBean.managedBean.selectedTabIndex != contractDetailsBackingBean.managedBean.notificationIndex}"
-						rowIndexVar="attachFileIndex" columns="1" style="width:100%">
-						<table>
-							<tr>
-								<td rowspan="2" style="vertical-align: top;" align="left">
-									<h:graphicImage value="/css/images/design/#{ctBackingBean.determineIcon(attachment)}"
-										height="30" width="30" />
-								</td>
-								<td><h:outputText value="#{attachment.createdUser.userName}" />, 
-									<h:outputText value="#{attachment.createdDate}">
-										<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
-									</h:outputText>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<h:commandLink value="#{attachment.fileName}"
-										styleClass="blue_font" immediate="true"
-										action="#{ctBackingBean.downloadFile(attachment)}" />
-								</td>
-							</tr>
-						</table>
-					</p:dataGrid>
+						<p:dataGrid value="#{ctBackingBean.managedBean.attachmentList}"
+							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" var="attachment"
+							rowIndexVar="attachFileIndex" columns="1" style="width:100%">
+							<table>
+								<tr>
+									<td rowspan="2" style="vertical-align: top;" align="left">
+										<h:graphicImage value="/css/images/design/#{ctBackingBean.determineIcon(attachment)}"
+											height="30" width="30" />
+									</td>
+									<td><h:outputText value="#{attachment.createdUser.userName}" />, 
+										<h:outputText value="#{attachment.createdDate}">
+											<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+										</h:outputText>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<h:commandLink value="#{attachment.fileName}"
+											styleClass="blue_font" immediate="true"
+											action="#{ctBackingBean.downloadFile(attachment)}" />
+									</td>
+								</tr>
+							</table>
+						</p:dataGrid>
 				</td>
 			</tr>
 		</table>
