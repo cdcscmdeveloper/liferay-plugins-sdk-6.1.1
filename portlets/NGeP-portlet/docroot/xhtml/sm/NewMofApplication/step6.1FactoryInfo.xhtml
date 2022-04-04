@@ -170,11 +170,21 @@
 									update=":form" />
 							</div></td>
 						<td><div align="right" style="width: 99%">
+								<!-- #3460 - start -->
 								<p:commandButton value="#{lbl['lbl.sm.next.section']}"
 									onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
 									actionListener="#{backingBean.setTabValue('6','7')}"
+									rendered="#{backingBean.managedBean.showMachineryEquipmentPanel or backingBean.managedBean.showTravelSoftwarePanel}"
 									action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
 									update=":form" />
+
+								<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
+									actionListener="#{backingBean.setTabValue('6','7')}"
+									rendered="#{!backingBean.managedBean.showMachineryEquipmentPanel and !backingBean.managedBean.showTravelSoftwarePanel}"
+									action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
+									update=":form" />
+									<!-- #3460 - end -->
 							</div></td>
 					</tr>
 				</table>
