@@ -53,7 +53,8 @@
 	                <p:inputText value="#{zoneTree.deliveryTerm}"  rendered="#{zoneTree.zone != null}"  required="true" maxlength="4"
 	                     style="width:40px;" styleClass="ppRightBtn"  label="#{lbl['lbl.ct.delivery.term']}"
 	                     disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting or
-	                      ctBackingBean.getValueFromAmendment() or ctBackingBean.managedBean.disableAmendDetails}">
+	                      ctBackingBean.getValueFromAmendment() or ctBackingBean.managedBean.disableAmendDetails
+	                      or ctBackingBean.managedBean.viewSCL}">
 	                     <p:ajax event="change" update="@this" listener="#{ctBackingBean.onChangeDeliveryTerm(zoneTree)}"/>
 	                </p:inputText>
 	                <h:outputText rendered="#{zoneTree.zone != null}" value="#{lbl['lbl.ct.days']}" ></h:outputText>
@@ -64,7 +65,8 @@
  	 </h:panelGrid>
 	</p:panel>
 	<p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true"
-	      rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}">
+	      rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting
+	      and !ctBackingBean.managedBean.viewSCL}">
 		<table style="width: 100%">
 			<tr>
 				<td width="50%" valign="top">
