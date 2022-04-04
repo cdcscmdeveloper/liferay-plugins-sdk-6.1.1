@@ -2907,4 +2907,16 @@ public class PmCommonUtil implements Serializable{
 		return userSO.retrieveUserRoleListByUserIds(reqDTO).getUserRoleList();
 	}
 	//END #27472
+	
+	//#32705 - Start
+	public static String getTypeOfCertIssuer(String idNo,
+			String epNo) {
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setEpNo(epNo);
+		reqDTO.setIdentificationNo(idNo);
+		String certIssuer = SmServiceLookup.getPersonnelSO()
+				.getTypeOfCertIssuer(reqDTO).getCertIssuer();
+		return certIssuer;
+	}
+	//#32705 - End
 }
