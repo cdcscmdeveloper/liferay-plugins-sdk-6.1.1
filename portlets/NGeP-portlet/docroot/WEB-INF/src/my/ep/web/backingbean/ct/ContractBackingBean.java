@@ -138,6 +138,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.ct.CtAddressUtil;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
 import my.ep.web.backingbean.ct.circular.cc.CentralContractBackingBean;
 import my.ep.web.backingbean.sc.loa.DirectLOABackingBean;
 import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
@@ -3540,7 +3541,26 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return the navigate URL 
 	 */
 	public void goToLoaView(ScLoa scLoa) {
-		if (scLoa.getScLoiLoa().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DIRECT_NEGO)) { //Direct Nego
+		//Enhancement 15851 - shaqimi start
+		String slLoaNo = this.getManagedBean().getContractVer().getCtContractValue().getLoaNo();
+		Long contractId = this.getManagedBean().getContractVer().getCtContract().getContractId();
+		if(slLoaNo.substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)){
+			AmendmentBackingBean abb = new AmendmentBackingBean();
+			getManagedBean().setAmendFromTaskList(true);
+			//follow structure but for amendment
+			FacesContext fc = FacesContext.getCurrentInstance();
+			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId()+"?faces-redirect=true");
+			abb.getManagedBean().setTrackingDairyView(true);
+			getManagedBean().setViewSCL(true);
+			if(abb.getManagedBean().getTaskId() != null){
+				abb.getManagedBean().setTaskIdFromTaskList(abb.getManagedBean().getTaskId());
+				abb.getManagedBean().setContractIdFromTaskList(new Long(getManagedBean().getContractVer().getCtContract().getContractId()));
+				abb.getManagedBean().setContractVerIdFromTaskList(getManagedBean().getContractVer().getContractVerId());
+			}
+			abb.gotoAmendViewPage(contractId, scLoa.getLoaId());
+		}
+		//Enhancement 15851 - shaqimi end
+		else if (scLoa.getScLoiLoa().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DIRECT_NEGO)) { //Direct Nego
 			DirectLOABackingBean directLoaBackingBean = new DirectLOABackingBean();
 			FacesContext fc = FacesContext.getCurrentInstance();
 			directLoaBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
@@ -3763,16 +3783,17 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		List<CtAgreement> currentCtAgreementList = getManagedBean().getCtAgreementList();
 		CtAgreement tempCtAgreement = null;
 		int index = 0;
-
+		System.out.println("--------------- shams in filterAgreementList : currentCtAgreementList.size() = "+currentCtAgreementList.size());
 		if(currentCtAgreementList != null && !currentCtAgreementList.isEmpty())
 		{
 			//currentCtAgreementList is sorted by created date in descending order
 			for(index = 0; index < currentCtAgreementList.size(); index++)
 			{
 				tempCtAgreement = currentCtAgreementList.get(index);
-				
+				System.out.println("--------------- shams in filterAgreementList : tempCtAgreement.getAgreementId() = "+tempCtAgreement.getAgreementId());
+				System.out.println("--------------- shams in filterAgreementList : getManagedBean().getCtContractAmount().getCtAgreement().getAgreementId() = "+getManagedBean().getCtContractAmount().getCtAgreement().getAgreementId());
 				if(tempCtAgreement.getAgreementId().equals(getManagedBean().getContractVer().getCtContractAmount().getCtAgreement().getAgreementId())) // Fix - #32622
-				{
+				{	System.out.println("--------------- shams in filterAgreementList : index 111 = "+index);
 					while(index >= 0)
 					{
 						//sort agreementList in ascending order starting from the selected Reference File No.
@@ -3783,11 +3804,12 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					break;
 				}
 			}
+			System.out.println("--------------- shams in filterAgreementList : newCtAgreementList.size() = "+newCtAgreementList.size());
 			if(newCtAgreementList.isEmpty())
-			{ 
+			{ System.out.println("--------------- shams in filterAgreementList : IN newCtAgreementList.isEmpty() ------------------ ");
 				index = currentCtAgreementList.size() - 1;
 				while(index >= 0)
-				{
+				{System.out.println("--------------- shams in filterAgreementList :  index 222 =  "+index);
 					//sort agreementList in ascending order
 					newCtAgreementList.add(0, currentCtAgreementList.get(index));
 					index--;
@@ -3795,7 +3817,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 	
 		}
-
+		System.out.println("--------------- shams in filterAgreementList : LAST newCtAgreementList.size() = "+newCtAgreementList.size());
 		return newCtAgreementList;
 	}
 	
@@ -4152,4 +4174,20 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}
 			}
 	//#30428 - End
+				
+		//Enhancement 15851 - Start
+		/**
+		 * The method used to navigate to Original contract details screen
+		 * for view purpose.
+		 * 
+		 * @return the navigate URL 
+		 */
+		public void goToOriginalLoaView(ScLoa scLoa) {
+				LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
+				FacesContext fc = FacesContext.getCurrentInstance();
+				loaDetailBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+				loaDetailBackingBean.getManagedBean().setTrackingDairyView(true);
+				loaDetailBackingBean.viewLOA(scLoa.getLoaId());			
+		}
+		//Enhancement 15851 - End
 }  
