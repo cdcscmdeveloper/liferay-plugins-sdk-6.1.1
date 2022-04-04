@@ -588,14 +588,11 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 				this.getManagedBean().setChecklist(false);
 			}
 		}
-		//#15391 - end
-		
-		//#28784
-		redirect = checkDemoRedirect();
+		//#15391 - end		
 		
 		//29464-start
 		String renderPage = QTConstants.SPECIFICICATON_COMM_PREPARATION;
-		if(redirect){
+		if(redirect || checkDemoRedirect()){//#28784
 			renderPage = renderPage.concat("?faces-redirect=true");
 		}
 		//29464-end

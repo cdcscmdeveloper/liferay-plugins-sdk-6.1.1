@@ -18,9 +18,9 @@ import my.ep.persistence.entity.sc.quationtender.ScQtBudget;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtDemo;
+import my.ep.persistence.entity.sc.quationtender.ScQtDemoByItemScore;
 import my.ep.persistence.entity.sc.quationtender.ScQtDemoContact;
 import my.ep.persistence.entity.sc.quationtender.ScQtDemoItem;
-import my.ep.persistence.entity.sc.quationtender.ScQtDemoSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQtDemoSupplier;
 import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
@@ -130,6 +130,10 @@ public class DemoInvitationManageBean extends BaseManagedBean {
 	private boolean readOnly;
 	
 	private ScQtApproval  currentApproval;
+	
+	private List<ScQtDemoByItemScore> tempDemoByItemScoreList;
+	
+	private List<ScQtDemoSupplier> tempDemoSuppList;
 
 	public int getTabActiveIndex() {
 		return tabActiveIndex;
@@ -473,6 +477,22 @@ public class DemoInvitationManageBean extends BaseManagedBean {
 
 	public void setCurrentApproval(ScQtApproval currentApproval) {
 		this.currentApproval = currentApproval;
+	}
+
+	public List<ScQtDemoSupplier> getTempDemoSuppList() {
+		return tempDemoSuppList;
+	}
+
+	public void setTempDemoSuppList(List<ScQtDemoSupplier> tempDemoSuppList) {
+		this.tempDemoSuppList = tempDemoSuppList;
+	}
+
+	public List<ScQtDemoByItemScore> getTempDemoByItemScoreList() {
+		return tempDemoByItemScoreList;
+	}
+
+	public void setTempDemoByItemScoreList(List<ScQtDemoByItemScore> tempDemoByItemScoreList) {
+		this.tempDemoByItemScoreList = tempDemoByItemScoreList;
 	}
 
 	
