@@ -524,7 +524,12 @@
 						</p:outputPanel>
 					</td>
 					
-				<td class="tdTitle" ><p:outputLabel style="float: right" value="#{lbl['lbl.sm.person.composition.role']}    " /> </td>
+				<!-- #30829 - start -->
+				<td class="tdTitle">
+					<p:outputLabel style="float: right" value="#{lbl['lbl.sm.person.composition.role']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<!-- #30829 - end -->
 				<td class="tdContent">
 					<p:outputPanel>
 						<table>
