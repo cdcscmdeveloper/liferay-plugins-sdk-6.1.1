@@ -281,7 +281,7 @@ public class SPDetailBackingBean extends
 				resDTO.getScQt().setDisciplinaryActionPresent(this.getManagedBean().getQt().getDisciplinaryActionPresent());
 				}
 			}
-
+			
 			ScQt scQt = resDTO.getScQt();
 			 ScQtProposal scQtProposal=resDTO.getScQtProposal();
 			getManagedBean().setQt(resDTO.getScQt());
@@ -1182,7 +1182,7 @@ public class SPDetailBackingBean extends
 			//Bug #31725 End 
 			
 			//#21695 - Start - fix completed financial proposal still ticked after technical proposal updated
-			return navigatePrepareFinProposalCheckList(scQtProposalChecklist,
+			return navigatePrepareFinProposalCheckList(scQtProposalChecklist, 
 					proposalResDTO.getProposalChecklist(), isCompleted, ignoreNav);
 			//#21695 - End - fix completed financial proposal still ticked after technical proposal updated
 
@@ -1293,9 +1293,10 @@ public class SPDetailBackingBean extends
 						.getSpecAnswerList();
 			}
 			//#32783 fix revert old codes related to #21695 -START
-            if(answers == null || answers.size() == 0) {
+            if(answers == null || answers.size() == 0){
                 	throw new EpException(MessageConst.ERROR_760463);	
     			} else {
+    		//#32783 fix revert old codes related to #21695 -END
 				// 20220127@syazani - Enhancement #3657 - specific error message - Start
 				List<String> errorLst = null;
 				boolean isThrow = false;
@@ -1303,10 +1304,10 @@ public class SPDetailBackingBean extends
 					if (isCompleted) {
 // #21695 7/10/2021	START
 //farid start #21695 to allow item has 0 qty and 0 price
-            		// bug #31733 add condition 5/11/2021
-            			if (answer.getRatePerUom() == null && answer.getTplSpecZoneQty() != null 
-            					&& answer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0
-            					|| answer.getRatePerUom() == null && answer.getTplSpecZoneQty() == null) {
+					// bug #31733 add condition 5/11/2021
+						if (answer.getRatePerUom() == null && answer.getTplSpecZoneQty() != null
+								&& answer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0
+								|| answer.getRatePerUom() == null && answer.getTplSpecZoneQty() == null) {
 							if (errorLst == null) {
 								errorLst = new ArrayList<String>();
 							}
@@ -1318,40 +1319,40 @@ public class SPDetailBackingBean extends
 							if (!duplicateErrorZoneCheck(zone, errorLst))
 								errorLst.add(zone);
 							isThrow = true;
-            			}
-            		// bug #31733 add condition 5/11/2021
-//farid end #21695 7/10/2021
-            		}
+						}
+						// bug #31733 add condition 5/11/2021
+						// farid end #21695 7/10/2021
+					}
 					
 					if (!isThrow) {
-            		// added because of Bug #17772, please do not remove or 
-    			    // change the order of if statements
-            		if(answer.getAnswerNumeric() == null || answer.getAnswerNumeric().equals(0)){
-            			boolean isItemTypeService = false; 
-            			if (getManagedBean().getTemplateSpecBean().getSpecMaster().getItemTypeCode().getParameterCode()
-            					.equals(ParameterConst.ITEM_TYPE_SERVICE)) {
-            				isItemTypeService = true;
-            			}
-            			this.getManagedBean().getTemplateSpecBackingBean()
-            			  .calcTotalAmount(getManagedBean().getTemplateSpecBean(),answer,isItemTypeService);
-            		}
-            		//20210419@asyrafhaziq - Bug #30061 - start
-            		if ((answer.getRatePerUom() != null && !answer.getRatePerUom().equals(0))
-            				&& (answer.getAnswerNumeric() != null && !answer.getAnswerNumeric().equals(0))) { // update for Bug #Bug #31134 
-        				boolean isItemTypeService = false; 
-            			if (getManagedBean().getTemplateSpecBean().getSpecMaster().getItemTypeCode().getParameterCode()
-            					.equals(ParameterConst.ITEM_TYPE_SERVICE)) {
-            				isItemTypeService = true;
-            			}	
-            			this.getManagedBean()
-            					.getTemplateSpecBackingBean()
-            					.CheckAndUpdateCalcTotalAmount(getManagedBean().getTemplateSpecBean(), answer,
-            							isItemTypeService);
-				     }
-            		//20210419@asyrafhaziq - Bug #30061 - End
-            		super.setUserDetails(answer);
-            	}
-            }
+						// added because of Bug #17772, please do not remove or
+						// change the order of if statements
+						if (answer.getAnswerNumeric() == null || answer.getAnswerNumeric().equals(0)) {
+							boolean isItemTypeService = false;
+							if (getManagedBean().getTemplateSpecBean().getSpecMaster().getItemTypeCode().getParameterCode()
+									.equals(ParameterConst.ITEM_TYPE_SERVICE)) {
+								isItemTypeService = true;
+							}
+							this.getManagedBean().getTemplateSpecBackingBean()
+									.calcTotalAmount(getManagedBean().getTemplateSpecBean(), answer, isItemTypeService);
+						}
+						// 20210419@asyrafhaziq - Bug #30061 - start
+						if ((answer.getRatePerUom() != null && !answer.getRatePerUom().equals(0))
+								&& (answer.getAnswerNumeric() != null && !answer.getAnswerNumeric().equals(0))) { // update for Bug #Bug #31134
+							boolean isItemTypeService = false;
+							if (getManagedBean().getTemplateSpecBean().getSpecMaster().getItemTypeCode().getParameterCode()
+									.equals(ParameterConst.ITEM_TYPE_SERVICE)) {
+								isItemTypeService = true;
+							}
+							this.getManagedBean()
+									.getTemplateSpecBackingBean()
+									.CheckAndUpdateCalcTotalAmount(getManagedBean().getTemplateSpecBean(), answer,
+											isItemTypeService);
+						}
+						// 20210419@asyrafhaziq - Bug #30061 - End
+						super.setUserDetails(answer);
+					}
+				}
 				
 				if (isThrow && errorLst != null && errorLst.size() > 0) {
 					if (getManagedBean().getQt().isZonal()) {
@@ -2209,7 +2210,7 @@ public class SPDetailBackingBean extends
 					// #28398 BUG - 26339 CR - End
 				}else{
 					//start Bug #28887
-					if (null != assetProposalChecklist) {
+					if (null != assetProposalChecklist) {					
 						if (assetProposalChecklist.isSubmitted()){
 							if (assetProposalChecklist.getScQtProposalChecklistAttachment() == null 
 									|| (scQtPRPAssetLiability.getCurrentAssets() != null)
@@ -4679,7 +4680,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 
 		if (pmUser != null) {
 			context.put("userName", pmUser.getUserName());
-			context.put("icNo", pmUser.getIdentificationNo());
+			context.put("icNo", pmUser.getIdentificationNo());			
 		}
 
 		if (smSupplier != null) {
@@ -4849,9 +4850,9 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 	 * @return the string
 	 */
 	//#21695 - Start - fix completed financial proposal still ticked after technical proposal updated
-	private String navigatePrepareFinProposalCheckList(
-			ScQtProposalChecklist currProposalChecklist,
-			ScQtProposalChecklist newProposalChecklist, boolean isCompleted) {
+	private String navigatePrepareFinProposalCheckList( 
+			ScQtProposalChecklist currProposalChecklist, 
+			ScQtProposalChecklist newProposalChecklist, boolean isCompleted){
 		return navigatePrepareFinProposalCheckList(currProposalChecklist, newProposalChecklist, isCompleted, false);
 	}
 	
@@ -6323,7 +6324,7 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 		}
 		return false;
 	}
-//#21695 Farid end 2/4/2021	
+//#21695 Farid end 2/4/2021
 	
 	// 20220127@syazani - Enhancement #3657 - specific error message - Start
 	private boolean duplicateErrorZoneCheck(String str, List<String> errorLst) {
@@ -6331,10 +6332,32 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 			for (String err : errorLst) {
 				if (err.equalsIgnoreCase(str)) {
 					return true;
+				}
+			}
+		}
+		return false;
+	}
+	// 20220127@syazani - Enhancement #3657 - specific error message - End
+	
+	//#21695 Farid Start - fix proposal checking 18/2/2022
+	public void disableDefaultSelected() {
+		for(TplSpecAnswer retrieveAns : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
+			if(retrieveAns != null && this.getManagedBean().getZones().size() == 1){
+				for(TplSpecZoneDtl specZonedtl : this.getManagedBean().getZones()){
+					if(specZonedtl != null){
+						for(TplSpecZoneQty specZoneQty : retrieveAns.getTplSpecQuestion().getTplSpecZoneQties()){
+							if(specZoneQty!= null && specZoneQty.getTplSpecQuestion().getSpecQuestionId().equals(retrieveAns.getTplSpecQuestion().getSpecQuestionId())
+									&& specZoneQty.getQty().equals(new BigDecimal(0)) 
+									&& specZonedtl.getSpecZoneId().equals(specZoneQty.getTplSpecZoneDtl().getSpecZoneId())){
+									retrieveAns.setOffer(false);
+									retrieveAns.setDisableRow(true);								
 							}
 						}
 					}
-		return false;
 				}
-	// 20220127@syazani - Enhancement #3657 - specific error message - End
 			}
+		}
+	}
+	//#21695 Farid End - fix proposal checking 18/2/2022
+	
+}
