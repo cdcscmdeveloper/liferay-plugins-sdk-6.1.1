@@ -636,7 +636,7 @@
 								</tr>
 							</table>
 						</c:when>
-						<c:when	test="#{isDemoEvalDisabled}">
+						<c:when	test="#{isDemoEvalDisabled and !isReadOnly}"><ui:remove><!-- 29464 note 42 --></ui:remove>
 							<table>
 								<tr>
 									<td><p:selectOneRadio id="evalType"
@@ -738,11 +738,13 @@
 							<p:message id="fulfilType" for="fulfilId" display="icon" />
 						</c:when>
 						<c:otherwise>
-							<p:inputText id="fulfilTypeTxt" rendered="#{!specificationBackingBean.managedBean.isGenInfo()}"
+							<ui:remove><!-- 29464 note 42 add readonly to renderred --></ui:remove>
+							<p:inputText id="fulfilTypeTxt" rendered="#{!specificationBackingBean.managedBean.isGenInfo() or isReadOnly}"
 								value="#{createQtBB.getParameterDesc(scQt.fulfilmentType)}"
 								style="width:195px;" disabled="true" />
-							<p:selectOneMenu required="#{empty param['skipvalidation']}"
-								id="fulfilId" rendered="#{specificationBackingBean.managedBean.isGenInfo()}"
+							<ui:remove><!-- 29464 note 42 add readonly to renderred --></ui:remove>
+							<p:selectOneMenu required="#{empty param['skipvalidation']}" 
+								id="fulfilId" rendered="#{specificationBackingBean.managedBean.isGenInfo() and !isReadOnly}}"
 								disabled="#{scQt.contractType ne null and scQt.contractType.parameterCode eq 'CC'}"
 								label="#{lbl['lbl.sc.fullfillent.type']}"
 								value="#{scQt.fulfilmentType.parameterId}"
@@ -783,15 +785,16 @@
 							<p:message id="completionBo" for="contractBo" display="icon"></p:message>
 						</c:when>
 						<c:otherwise>
-							<p:inputText label="#{lbl['lbl.sc.spec.complete.period']}"
-								value="#{scQt.contractDuration}" rendered="#{!specificationBackingBean.managedBean.isGenInfo()}"
+							<ui:remove><!-- 29464 note 42 add readonly to renderred --></ui:remove>
+							<p:inputText label="#{lbl['lbl.sc.spec.complete.period']}" 
+								value="#{scQt.contractDuration}" rendered="#{!specificationBackingBean.managedBean.isGenInfo() or isReadOnly}"
 								style="text-align:right;margin-bottom:5px; width:200px;"
 								required="#{qtStatusChecklistScoring or qtStatusAfterChecklistScoring}"
 								disabled="true">
 							</p:inputText>
-							<p:inputText id="contractBo" maxlength="3"
-								label="#{lbl['lbl.sc.spec.complete.period']}"
-								value="#{scQt.contractDuration}" rendered="#{specificationBackingBean.managedBean.isGenInfo()}"
+							<ui:remove><!-- 29464 note 42 add readonly to renderred --></ui:remove>							
+							<p:inputText id="contractBo" maxlength="3" label="#{lbl['lbl.sc.spec.complete.period']}"
+								value="#{scQt.contractDuration}" rendered="#{specificationBackingBean.managedBean.isGenInfo() and !isReadOnly}"
 								style="text-align:right;margin-bottom:5px; width:200px;"
 								required="#{qtStatusChecklistScoring or qtStatusAfterChecklistScoring}">
 								<p:ajax event="change" process="@this" partialSubmit="true"

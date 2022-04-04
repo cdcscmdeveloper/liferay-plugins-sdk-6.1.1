@@ -56,8 +56,9 @@
 						listener="#{specificationBackingBean.updateSelectedCheckListIndx(stageTwofunctional,index)}" />
 				</p:selectBooleanCheckbox>
 
-				<p:selectBooleanCheckbox value="#{stageTwofunctional.selected}"
-					disabled="#{specificationBackingBean.checkIsDisable(stageTwofunctional)==true}"
+				<ui:remove><!-- 29464 note 42 add readonly to disabled  --></ui:remove>
+				<p:selectBooleanCheckbox value="#{stageTwofunctional.selected}" 
+					disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.checkIsDisable(stageTwofunctional)==true}"
 					rendered="#{stageTwofunctional.manditory ==true and stageTwofunctional.definationType.parameterCode ne 'TS' }">
 					<p:ajax partialSubmit="true" process="@this" update="@this,@([id$=deleteFinancialChecklist],[id$=financeProposaltwo])"
 						listener="#{specificationBackingBean.updateSelectedCheckListIndx(stageTwofunctional,index)}" />
