@@ -90,6 +90,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.ContractBaseBackingBean;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
+import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
 import my.ep.web.backingbean.sc.loa.DirectLOABackingBean;
 import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
 import my.ep.web.backingbean.tpl.doc.TemplateDocBackingBean;
@@ -214,6 +215,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	 */
 	public void preRenderAgreement() {
 		renewSesionObject();
+		ctBB.getManagedBean().setAmendFromTaskList(true);//Enhancement 15851
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"agreementTab.xhtml?faces-redirect=true");
 	}
@@ -233,7 +235,36 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 			String taskId = originalServletRequest.getParameter("taskId");
 			if (taskId == null) {
-				return;
+				//Enhancement 15851 - shaqimi start
+				if(!getManagedBean().isFromViewSCL()){
+					return;
+				} else {
+					agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
+					ctReqDTO = new ContractAgreementReqDTO();
+					resDTO = new ContractAgreementResDTO();
+					
+					ctReqDTO.setContractId(getManagedBean().getCtContract().getContractId());
+					ctReqDTO.setDocId(getManagedBean().getContractVer().getContractVerId());
+					ctReqDTO.setAgreementId(getManagedBean().getCtAgreement().getAgreementId());
+					ctReqDTO.setDocType(ParameterConst.DOCTYPE_SUPPLEMENTAL_AGREEMENT);
+
+					resDTO = agreementSO.retrieveAgreement(ctReqDTO); 
+					setCtAgreementDetails(resDTO);
+					
+					if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_DRAFT_AGREEMENT_HT_NAME)
+							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_AGREEMENT_HT_NAME)
+							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_AGREEMENT_HT_NAME)
+							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_AC_HT_NAME)) {
+						getManagedBean().setFinalAgreement(true);
+					}
+					if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_AGREEMENT_HT_NAME)) {
+						getManagedBean().setApproveFinalAgreement(true);
+					}
+					
+					getManagedBean().setFromViewSCL(false);
+					return;
+				}
+				//Enhancement 15851 - shaqimi end
 			}
 			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
 			ctReqDTO = new ContractAgreementReqDTO();
@@ -1148,7 +1179,21 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	 * @return the navigate URL 
 	 */
 	public void goToLoaView(ScLoa scLoa) {
-		if (scLoa.getScLoiLoa().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DIRECT_NEGO)) { //Direct Nego
+		//#15851 - start
+		String slLoaNo = this.getManagedBean().getContractVer().getCtContractValue().getLoaNo();
+		Long contractId = this.getManagedBean().getContractVer().getCtContract().getContractId();
+		if(slLoaNo.substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)){
+			AmendmentBackingBean abb = new AmendmentBackingBean();
+			FacesContext fc = FacesContext.getCurrentInstance();			
+			getManagedBean().setFromViewSCL(true);			
+			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+			abb.getManagedBean().setTrackingDairyView(true);
+			ctBB.getManagedBean().setViewSCL(true);
+			abb.getManagedBean().setViewSclFromAgreement(true);
+			abb.gotoAmendViewPage(contractId, scLoa.getLoaId());
+		}
+		//#15851 - end
+		else if(scLoa.getScLoiLoa().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DIRECT_NEGO)) { //Direct Nego
 			DirectLOABackingBean directLoaBackingBean = new DirectLOABackingBean();
 			FacesContext fc = FacesContext.getCurrentInstance();
 			directLoaBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
