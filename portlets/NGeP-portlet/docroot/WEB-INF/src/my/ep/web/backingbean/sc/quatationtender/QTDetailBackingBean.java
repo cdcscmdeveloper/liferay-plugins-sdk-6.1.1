@@ -1096,9 +1096,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				this.getManagedBean().setDemoDisabled(false);
 				this.getManagedBean().setDemoType(true);
 				this.getManagedBean().setDemoAction(true);
-			}
-			
-			
+			}			
 			
 
 			if ( QTStatusConst.QT_CANCELLED.equals(currentStatus) && null == selectedScQt
@@ -3422,7 +3420,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			this.getManagedBean().setSelectedTabBean(committeTabBean);
 	    	this.getManagedBean().setShowHistory(false);
 		}else{
-		this.getManagedBean().setScCommitteeMemberTabList(committeTabs);
+			this.getManagedBean().setScCommitteeMemberTabList(committeTabs);
 		}
 		//Bug 32277 - end
 		for (TabBean tabBean : committeTabs) {
@@ -3890,17 +3888,18 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				if(CollectionUtils.isEmpty(approverSettings)){
 					throw new EpException(MessageConst.ERROR_775174);
 				}else{
-				if((currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_REVISION)
-						|| currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION))
-						&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT))	{
-							for(ScQtApproverSettings approverSetting : this.getManagedBean().getPublicationApproval().getApproverSettings()){
-								if(isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId())){
+					if((currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_REVISION)
+							|| currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION))
+							&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT))	{
+						
+								for(ScQtApproverSettings approverSetting : this.getManagedBean().getPublicationApproval().getApproverSettings()){
+									if(isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId())){
 										throw new EpException(MessageConst.ERROR_775174);
 										//throw new EpException(MessageConst.ERROR_775171);
+									}
 								}
-							}
+					}
 				}
-			}
 				//#11299 End Vinod
 			}
 			//#30477 End Vinod
@@ -6724,7 +6723,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				if(StringUtils.equals(this.getManagedBean().getTaskName(), SCProcessNameConst.APPROVE_COMMITTEE)){
 					retrieveCommitteeAppointmentTabDtl(FORM_NO_ACTION, REFORM_NO_ACTION, true);
 				}else{
-				retrieveCommitteeAppointmentTabDtl(FORM_NO_ACTION, REFORM_NO_ACTION);
+					retrieveCommitteeAppointmentTabDtl(FORM_NO_ACTION, REFORM_NO_ACTION);
 				}
 				//Bug 32277 - end
 				break;
@@ -6797,8 +6796,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				 if(getUserTaskIsCommitteeAppointmentApprovalEcOcTecFec() && isApprovalScreen()){
 					//Bug 32277 - start	
 					 if(CollectionUtils.isEmpty(this.getManagedBean().getScCommitteeMemberTabList())){
-					 ApprovalBackingBean approvalbean=new ApprovalBackingBean();
-					 approvalbean.retriveCommiteeApprovalTabDetails();
+						 ApprovalBackingBean approvalbean=new ApprovalBackingBean();
+						 approvalbean.retriveCommiteeApprovalTabDetails();	 
 					 }else{
 						int index = 0;
 						this.getManagedBean().setSelectedTabIndex(index);
@@ -6809,7 +6808,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						if(null!=committeTabBean.getScQtCommittee()){
 							List<QtCommitteeMemberBean> historyList = getMemberHistoryList(committeTabBean.getScQtCommittee().getScCommittee());
 							this.getManagedBean().setMemberHistoryList(historyList);
-				 }
+						}
 					 }
 					//Bug 32277 - end	
 				 }
@@ -10542,7 +10541,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			
 			if(wfStatus!=null){
 				Long statusId = wfStatus.getPmStatus().getStatusId();
-				if(!this.isStatusLessThanOrEquals(statusId, QTStatusConst.QT_PROPOSAL_PREPARATION, QTStatusConst.QT_ORDERED_STATUSES)){
+				if(!this.isStatusLessThanOrEquals(statusId, QTStatusConst.QT_PROPOSAL_PREPARATION, QTStatusConst.QT_ORDERED_STATUSES) && committeeData.getCommitteeType() != null){//25037 - note 533
 		            //25037-start #372
 					String tabType = committeeData.getCommitteeType() == null ? "": committeeData.getCommitteeType();
 					getManagedBean().setRoleFilterList(getRoleFilterListForCommitteeMaintenance(this.getManagedBean().getQt(), tabType));
