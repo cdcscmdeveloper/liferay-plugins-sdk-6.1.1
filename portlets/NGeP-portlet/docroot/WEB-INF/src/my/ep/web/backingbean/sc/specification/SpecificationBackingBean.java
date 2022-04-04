@@ -1033,8 +1033,15 @@ public class SpecificationBackingBean extends
 			// ScQt scQtTechChecklist = constructSpecCommitteDtls().getScQt();
 			specSo.validateCheckList(constructSpecCommitteDtls());
 			// checktemplateSpecStatus(scQtTechChecklist);
-//			if (!this.getManagedBean().isReadOnly()) {
-				//1873 - start- note 52
+			//1873 - start- note 52
+			String taskName = this.getManagedBean().getTaskName();
+			String[] allowedTaskName = new String[]{
+				SCProcessNameConst.FINALISE_SCORING,
+				SCProcessNameConst.UPDATE_SCORING,
+				SCProcessNameConst.VIEW_SCORING
+			};
+			if (Arrays.asList(allowedTaskName).contains(taskName)
+					|| (StringUtils.isEmpty(taskName) && !this.getManagedBean().isReadOnly())) {
 				if(isTechnicalTemplatesEdited() && !this.getManagedBean().isFromSubmit()){
 					nextIndex = 3;//32204
 					RequestContext.getCurrentInstance().execute("alertFinancialTemplateIncompletePopup.show()");
@@ -1042,8 +1049,9 @@ public class SpecificationBackingBean extends
 				}else{
 					this.getManagedBean().setTechnicalOtherCheckList(validateTechnicalStandardCheckList());
 				}
-				//1873 - end- note 52
-//			}
+			}
+			//1873 - end- note 52
+
 			specReqDTO.setScQt(constructSpecCommitteDtls().getScQt());
 			specSo.validateCheckList(specReqDTO);
 			//#31292 - start
