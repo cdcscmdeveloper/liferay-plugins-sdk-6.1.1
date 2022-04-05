@@ -85,10 +85,6 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	private boolean bpkAdminUser;
 	//[#22117 - stop]
 	
-	//#29874 - START
-	private ISearchResultBean<PmUser> resultBeanUser;
-	//#29874 - END
-	
 	public TaskReassignmentManagedBean(){}
 
 	/**
@@ -643,14 +639,4 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	public void setBpkAdminUser(boolean bpkAdminUser) {
 		this.bpkAdminUser = bpkAdminUser;
 	}
-	
-	//#29874 - START
-	public ISearchResultBean<PmUser> getResultBeanUser() {
-		return resultBeanUser;
-	}
-
-	public void setResultBeanUser(ISearchResultBean<PmUser> resultBeanUser) {
-		this.resultBeanUser = resultBeanUser;
-	}
-	//#29874 - END
 }
