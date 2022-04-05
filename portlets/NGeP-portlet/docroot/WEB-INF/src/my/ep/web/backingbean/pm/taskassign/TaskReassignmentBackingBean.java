@@ -2792,28 +2792,6 @@ public class TaskReassignmentBackingBean extends
 						getFacesScopes().getUserSessionBean()
 						.getUserId())),searchBean);
 			}
-
-			//#29874 - START
-			Long newOrgProfileId = vo.getOrgProfileId();
-			String newGroupOrgType = this.getManagedBean().getResultOrgProfile().getGroupOrgType();
-			Long parentId = this.getManagedBean().getCurrentActiveOrg().getOrgProfileId();
-
-			if(newOrgProfileId != null){
-				if(roleList == null || roleList.isEmpty()){
-					roleList = retrieveAvailableRoles(task.getDocStatus().longValue(),reassignType,subReassignType);
-				}
-				
-				for(String checkRole: roleList){
-					if(checkRole.equals("FL_APPROVER")){
-						resultBean = retrieveFlApprover(newOrgProfileId, roleList, false, 
-														newGroupOrgType, parentId, approvalLimit, 
-														new ArrayList<Long>(Arrays.asList(userId,
-																			getFacesScopes().getUserSessionBean()
-																			.getUserId())), searchBean);
-					}
-				}
-			}
-			//#29874 - END
 			isSearched = true;
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_DEL_ADDRESS:
@@ -4047,46 +4025,4 @@ public class TaskReassignmentBackingBean extends
 		}		
 		return isBpkAdmin;			
 	}
-	
-	//#29874 - START
-	private ISearchResultBean<PmUser> retrieveFlApprover(Long ptjOrgProfileId, List<String> roleCodeList, 
-														 boolean isNaikTaraf, String groupOrgType, 
-														 Long parentOrgId, BigDecimal approvalLimit, 
-														 List<Long> excludedUserIds, ISearchBean<PmUser> searchBean) {
-		log.info("retrieveFlApprover - Start");
-		IUserSO userSO = null;
-		try {
-			UserReqDTO reqDTO = new UserReqDTO();
-			UserResDTO resDTO = new UserResDTO();
-			
-			reqDTO.setOrgProfileId(ptjOrgProfileId);
-			reqDTO.setRoleCodes(roleCodeList);
-			reqDTO.setWithProfileGroup(isNaikTaraf);
-			reqDTO.setGroupOrgType(groupOrgType);
-			reqDTO.setExcludeUserIds(excludedUserIds);
-			reqDTO.setUserSearchBean(searchBean);
-			reqDTO.setRoleCode(PmCommonUtil.getUserRoleValue());
-			reqDTO.setApprovalLimit(approvalLimit);
-			if(reqDTO.getRoleCode() == RoleCode.PTJ_ADMIN.value() 
-				|| reqDTO.getRoleCode() == RoleCode.JABATAN_ADMIN.value() 
-				|| reqDTO.getRoleCode() == RoleCode.MINISTRY_ADMIN.value()){
-					reqDTO.setParentOrgProfid(parentOrgId);
-			}
-
-			userSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			resDTO = userSO.retrieveFlApprover(reqDTO);
-
-			if (resDTO.isSuccessful() && resDTO.getUserResultBean() != null) {
-				return resDTO.getUserResultBean();
-			}
-
-		} finally {
-			userSO = null;
-		}		
-		return null;
-	}
-	//#29874 - END
-	
-	
 }
