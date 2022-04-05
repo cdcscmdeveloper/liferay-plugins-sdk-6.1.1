@@ -590,12 +590,9 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 		}
 		//#15391 - end
 		
-		//#28784
-		redirect = checkDemoRedirect();
-		
 		//29464-start
 		String renderPage = QTConstants.SPECIFICICATON_COMM_PREPARATION;
-		if(redirect){
+		if(redirect || checkDemoRedirect()){//#28784
 			renderPage = renderPage.concat("?faces-redirect=true");
 		}
 		//29464-end
