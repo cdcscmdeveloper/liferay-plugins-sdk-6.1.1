@@ -176,7 +176,7 @@
 			actionListener="#{amendmentBackingBean.setTabValue('SDEC')}" update=":form" />
 				
 			<!--  Enhancemet 15851 - shaqimi start -->	
-		 <p:menuitem style="white-space:normal;" 
+		 <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.decision']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{(amendmentBackingBean.managedBean.signUpdateDecision or amendmentBackingBean.managedBean.signOffDecision
 			or amendmentBackingBean.managedBean.decisionPbQcLOA)
