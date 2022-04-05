@@ -10896,11 +10896,12 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 			public boolean validateApprovalLetter(ScLoa loa){										
 				Boolean approvalLetter = true;
 				Boolean isNonPeriodic = (loa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)) || (loa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN));
+				Boolean isOneOff = loa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 				Boolean isPK7 = ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(this.getManagedBean().getScLoa()
 									.getQtType().getParameterType())
 									&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(this.getManagedBean().getScLoa()
 											.getQtType().getParameterCode());
-				if((!loa.isAgreementReq())&&(isNonPeriodic && !isPK7 && over500K(loa))){
+				if((!loa.isAgreementReq())&&((isNonPeriodic||isOneOff) && !isPK7 && over500K(loa))){
 					if(loa.getScLoaAttachment() == null){
 						RequestContext.getCurrentInstance().execute("approvalLetterAlertDlg.show()");					
 						approvalLetter = false;
