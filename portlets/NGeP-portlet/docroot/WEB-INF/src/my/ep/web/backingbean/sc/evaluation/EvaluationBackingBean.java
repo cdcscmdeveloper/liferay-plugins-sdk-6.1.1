@@ -6544,11 +6544,13 @@ public class EvaluationBackingBean extends
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			reqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+			reqDTO.setCompliance(null);
 			retrivePresetationDemoCheckList();
 			if (this.getManagedBean().getScQt().isDemoRequired()) {
 				this.getManagedBean().setPresentationDemoSupplierListDM(
-						new PresentationDemoSuppliersPagingDataModel(
-								"demoSupplierId", reqDTO.getQtId(), reqDTO
+						new ComplianceSupplierPagingDataModel(
+								"demoSupplierId", this.getManagedBean().getScQtChecklist().getQtChecklistId(), reqDTO.getCompliance(),
+								null, reqDTO
 										.getEvalStage()));
 			}
 
@@ -10115,6 +10117,40 @@ private void retriveCommitteeRemarksList(){
 				// 28834 ends
 
 		this.getManagedBean().setPrepareActiveIndex(0);
+		//#10542 - start
+//		if (this.getManagedBean().getScQt() != null && this.getManagedBean().getScQt().getCurrentActiveTab() != null) {
+//			try {
+//				int currentActiveTab = this.getManagedBean().getScQt().getCurrentActiveTab().intValue();
+//				this.getManagedBean().setTabActiveIndex(currentActiveTab);
+//				this.getManagedBean().setTempTab(currentActiveTab);
+//				if (currentActiveTab == 1) {
+//					evaluationMaintainPreviousNextTabIndex(0, 1);
+//				} else if (currentActiveTab == 2) {
+//					evaluationMaintainPreviousNextTabIndex(1, 2);
+//					evaluationMaintainPreviousNextTabIndex(1, 2);
+//				} else if (currentActiveTab == 3) {
+//					evaluationMaintainPreviousNextTabIndex(1, 2);
+//					evaluationMaintainPreviousNextTabIndex(1, 2);
+//					evaluationMaintainPreviousNextTabIndex(2, 3);
+//					evaluationMaintainPreviousNextTabIndex(2, 4);
+//					evaluationMaintainPreviousNextTabIndex(2, 4);
+//				} else if (currentActiveTab == 4) {
+//					evaluationMaintainPreviousNextTabIndex(1, 2);
+//					evaluationMaintainPreviousNextTabIndex(1, 2);
+//					evaluationMaintainPreviousNextTabIndex(2, 3);
+//					evaluationMaintainPreviousNextTabIndex(2, 4);
+//					evaluationMaintainPreviousNextTabIndex(2, 4);
+//					evaluationMaintainPreviousNextTabIndex(3, 4);
+//					evaluationMaintainPreviousNextTabIndex(3, 4);
+//					evaluationMaintainPreviousNextTabIndex(3, 4);
+//				} else {
+//					evaluationMaintainPreviousNextTabIndex(currentActiveTab, currentActiveTab);
+//				}
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//		}
+		//#10542 - end
 		if (SCProcessNameConst.FINALISE_EC_EVALUATION
 				.equalsIgnoreCase(taskName)
 				|| SCProcessNameConst.UPDATE_EC_EVALUATION
@@ -16350,27 +16386,27 @@ private void retriveCommitteeRemarksList(){
 			totalTechScore = String.valueOf(technicalScore);
 			if (resDTO.isGenerateSuppliers()) {
 				
-				if (this.getManagedBean().getScQtDemo().getDemoCategoryId().getParameterCode().equals(SourcingConstants.BY_ITEM)) {
+//				if (this.getManagedBean().getScQtDemo().getDemoCategoryId().getParameterCode().equals(SourcingConstants.BY_ITEM)) {
 					presentationDemoItemScore(String.valueOf(propId.getQtEvaluationResult().getScQtProposal().getSupplierNo()),
 							this.getManagedBean().getSinglesummaryItemList().getRequestNoteItemId());
+//				} else {
+//					reqDTO.setQtproposalId(propId.getQtEvaluationResult().getScQtProposal().getQtProposalId());
+//					reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+//					reqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);			
+//					reqDTO.setDocDefinationKey(SourcingConstants.DOC_DEF_KEY_PRESENTATION_DEMO);
+//					resDTO = evaluationSO.retrieveSpecScore(reqDTO);
+//					//calculate demo total score
+//					for(ScQtProposalChecklist specscore : resDTO.getSpecScoreBySupplier()){
+//						demoScore = specscore.getTotalScore();
+//						strDemoScore = String.valueOf(demoScore);
+//					}
+//					this.getManagedBean().setDemoScore(strDemoScore);
+////					technicalScore = propId.getTotalScore().subtract(demoScore);
+//					
+////					totalTechScore = String.valueOf(technicalScore);
+//				
+//				}
 				} else {
-					reqDTO.setQtproposalId(propId.getQtEvaluationResult().getScQtProposal().getQtProposalId());
-					reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-					reqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);			
-					reqDTO.setDocDefinationKey(SourcingConstants.DOC_DEF_KEY_PRESENTATION_DEMO);
-					resDTO = evaluationSO.retrieveSpecScore(reqDTO);
-					//calculate demo total score
-					for(ScQtProposalChecklist specscore : resDTO.getSpecScoreBySupplier()){
-						demoScore = specscore.getTotalScore();
-						strDemoScore = String.valueOf(demoScore);
-					}
-					this.getManagedBean().setDemoScore(strDemoScore);
-//					technicalScore = propId.getTotalScore().subtract(demoScore);
-					
-//					totalTechScore = String.valueOf(technicalScore);
-				
-				}
-			} else {
 				this.getManagedBean().setDemoScore(ResourceBundleUtils.getMessage(
 						"lbl.sc.qt.item.spec.null",
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -16629,12 +16665,12 @@ private void retriveCommitteeRemarksList(){
 		finally {
 
 		}
-		if (this.getManagedBean().getScQtDemo().getDemoCategoryId().getParameterCode().equals(SourcingConstants.BY_ITEM)) {
+//		if (this.getManagedBean().getScQtDemo().getDemoCategoryId().getParameterCode().equals(SourcingConstants.BY_ITEM)) {
 			return "/xhtml/sc/evaluation/presentationDemo/presentationDemoSupplierItemList.xhtml";
-		} else {
-			return "/xhtml/sc/evaluation/presentationDemo/presentationDemoSupplierAllItemList.xhtml";
+//		} else {
+//			return "/xhtml/sc/evaluation/presentationDemo/presentationDemoSupplierAllItemList.xhtml";
+//		}
 		}
-	}
 	
 	public void saveDemoScoring() {
 		
