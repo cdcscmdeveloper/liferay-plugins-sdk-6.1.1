@@ -55,6 +55,10 @@
   		<param-name>javax.portlet.faces.RENDER_POLICY</param-name>
   		<param-value>ALWAYS_DELEGATE</param-value>
 	</context-param>
+	<context-param>
+    <param-name>facelets.SKIP_COMMENTS</param-name>
+    <param-value>true</param-value>
+    </context-param>
 	 <listener>
 	  <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	 </listener>
