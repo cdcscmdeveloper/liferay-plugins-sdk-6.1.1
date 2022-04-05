@@ -259,10 +259,9 @@
 		<ui:include src="/xhtml/sc/directpurchase/requestnote/addToCartPopup.xhtml" />
 		<ui:include
 			src="/xhtml/sc/directpurchase/searchcatalogue/recentPricePopup.xhtml" />
-		<ac:disciplinaryActionActiveDp voList="#{catalogueBackingBean.managedBean.disciplineVOs}" 
-				startDate="#{catalogueBackingBean.managedBean.disciplinaryActionStartDate}"
-				endDate="#{catalogueBackingBean.managedBean.disciplinaryActionEndDate}"
-				isWarning="#{catalogueBackingBean.managedBean.disciplinaryActionWarning}"/>
+		<ui:remove> #32643 #32642 - start 	</ui:remove>
+		<ac:disciplinaryActionHistory voList="#{catalogueBackingBean.managedBean.disciplineVOs}" btnView="true"/>
+		<ui:remove> #32643 #32642 - end 	</ui:remove>	 
 	</ui:define>
 
 </ui:composition>

@@ -133,6 +133,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScSQWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScPbAttachment;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;//#26284
+import my.ep.persistence.entity.sm.SmDisciplinaryActionRemarks; //#32643 & #32642															   
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;//#26284
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -7857,8 +7858,10 @@ public class SimpleQuoteBackingBean extends
 			} else {
 				getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
 			}
-		} else {
-			getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
+			//#32643,32642 - Start
+			RequestContext.getCurrentInstance().execute(
+					"disciplinaryActionHistoryDlg.show();");
+			//#32643,32642 - End
 		}
 		RequestContext.getCurrentInstance().execute(
 				"disciplinaryActionActiveDpDlg.show();");
@@ -7909,9 +7912,24 @@ public class SimpleQuoteBackingBean extends
 						str2.append(retVal.getEndDate()).append(".");
 						getManagedBean().setDisciplinaryActionEndDate(str2.toString());
 					}
-					if(disciplinaryAction.getRemark() != null) {
-						retVal.setRemarks(disciplinaryAction.getRemark());
-					}
+						//#32643,32642 - Start (follow from SM bug 28198))
+						List<DisciplinaryActionVO> remList = new ArrayList<DisciplinaryActionVO>();
+						
+						List<SmDisciplinaryActionRemarks> remarksList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionRemarksByDA(disciplinaryAction);
+						
+						if(remarksList != null && remarksList.size() > 0){
+							for (SmDisciplinaryActionRemarks remarks : remarksList) {
+								DisciplinaryActionVO rem1 = new DisciplinaryActionVO();
+								rem1.setRemarks(remarks.getRemark());
+								remList.add(rem1);
+							}
+						}
+						DisciplinaryActionVO rem = new DisciplinaryActionVO();
+						rem.setRemarks(disciplinaryAction.getRemark());
+						remList.add(rem);
+						retVal.setRemarksList(remList);
+						//32643,32642 - End
+						
 					if(disciplinaryAction.isWarning()){
 						retVal.setWarning(true);
 						getManagedBean().setDisciplinaryActionWarning(true);

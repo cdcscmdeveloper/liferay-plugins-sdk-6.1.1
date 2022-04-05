@@ -104,11 +104,10 @@
 				</p:column>
 
 			</p:dataTable>
-		</p:panel>		
-		<ac:disciplinaryActionActiveDp voList="#{dpLOABackingBean.managedBean.disciplineVOs}" 
-				startDate="#{dpLOABackingBean.managedBean.disciplinaryActionStartDate}"
-				endDate="#{dpLOABackingBean.managedBean.disciplinaryActionEndDate}"
-				isWarning="#{dpLOABackingBean.managedBean.disciplinaryActionWarning}"/>
+		</p:panel>	
+		<ui:remove> #32643 #32642 - start 	</ui:remove>	
+		<ac:disciplinaryActionHistory voList="#{dpLOABackingBean.managedBean.disciplineVOs}" btnView="true"/>
+		<ui:remove> #32643 #32642 - end 	</ui:remove>
 	</ui:define>
 	
 </ui:composition>
