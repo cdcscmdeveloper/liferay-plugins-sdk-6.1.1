@@ -14,6 +14,7 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
@@ -24,6 +25,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.common.city.CityReqDTO;
 import my.ep.dto.pm.common.city.CityResDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
@@ -36,6 +38,7 @@ import my.ep.dto.pm.common.location.LocationResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -45,6 +48,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 //Enhancement29642 - End
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.VPmLocation;
+import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -83,7 +87,19 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 	public LocationBackingBean() {
 
 	}
-
+	
+	//#32753 - START
+	/**
+	 * get faces scopes
+	 * 
+	 * @return FacesScopes
+	 */
+	private FacesScopes getFacesScopes() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
+	}
+	//#32753 - END
+	
 	public void preLoadingLocation() {
 		this.resetLocationSearchBean();
 		log.info("preLoading Location");
@@ -249,6 +265,26 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 	 */
 	public String saveLocation() {
 		log.info("saveLocation");
+		
+		//#32753 - START
+		Long loginSessionUserId = 1L;
+		IUserSO userSO = null;
+		userSO = (IUserSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IUserSO.class);
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setLoginId(getFacesScopes().getUserScreenName());
+		PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
+		if (pmUser == null) {
+			loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
+		}
+		else{
+			loginSessionUserId = pmUser.getUserId();
+		}
+		new LogKey(loginSessionUserId);
+		log.info("32753 UserId: " + loginSessionUserId);
+		//#32753 - END
+		
 		String message = null;
 		String[] messageParam = null;
 		Long locationId = null;
@@ -260,6 +296,16 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 			PmState state = this.getManagedBean().getState();
 			state.setStateCode(state.getStateCode().toUpperCase());
 			state.setStateName(state.getStateName().trim());
+
+			//#32753 - START
+			if (!state.isBrandNew()) {
+				state.setChangedBy(loginSessionUserId);
+			} else {
+				state.setChangedBy(loginSessionUserId);
+				state.setCreatedBy(loginSessionUserId);
+			}
+			//#32753 - END
+			
 			reqDTO.setPmState(state);
 			StateResDTO resDTO = stateSO.saveOrUpdateStates(reqDTO);
         
@@ -284,6 +330,16 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 			PmDivision division = this.getManagedBean().getDivision();
 			division.setDivisionCode(division.getDivisionCode().toUpperCase());
 			division.setDivisionName(division.getDivisionName().trim());
+
+			//#32753 - START
+			if (!division.isBrandNew()) {
+				division.setChangedBy(loginSessionUserId);
+			} else {
+				division.setChangedBy(loginSessionUserId);
+				division.setCreatedBy(loginSessionUserId);
+			}
+			//#32753 - END
+			
 			reqDTO.setPmDivision(division);
 			reqDTO.setStateId(division.getPmState().getStateId());
 			DivisionResDTO resDTO = divisionSO.saveOrUpdateDivision(reqDTO);			
@@ -315,6 +371,15 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 				}else{
 					district.setPmDivision(null);
 				}
+				//#32753 - START
+				if (!district.isBrandNew()) {
+					district.setChangedBy(loginSessionUserId);
+				} else {
+					district.setChangedBy(loginSessionUserId);
+					district.setCreatedBy(loginSessionUserId);
+				}
+				//#32753 - END
+				
 				reqDTO.setPmDistrict(district);
 				reqDTO.setStateId(district.getPmState().getStateId());
 				reqDTO.setDivisionId(null != district.getPmDivision() ? district.getPmDivision().getDivisionId() : null);
@@ -337,6 +402,16 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 				PmCity city = this.getManagedBean().getCity();
                 city.setCityCode(city.getCityCode().toUpperCase());
                 city.setCityName(city.getCityName().trim());
+
+    			//#32753 - START
+    			if (!city.isBrandNew()) {
+    				city.setChangedBy(loginSessionUserId);
+    			} else {
+    				city.setChangedBy(loginSessionUserId);
+    				city.setCreatedBy(loginSessionUserId);
+    			}
+    			//#32753 - END
+    			
 				reqDTO.setPmCity(city);
 				reqDTO.setDistrictId(city.getPmDistrict().getDistrictId());
 				CityResDTO resDTO = citySO.saveOrUpdateCity(reqDTO);
