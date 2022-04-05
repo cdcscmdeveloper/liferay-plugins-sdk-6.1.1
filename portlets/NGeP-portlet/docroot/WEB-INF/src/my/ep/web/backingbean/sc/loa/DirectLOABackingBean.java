@@ -9726,7 +9726,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			if (!getManagedBean().getScLoa().isAgreementReq() && !isPk7Periodic() && !this.getManagedBean().isReadOnly()) {
 				setOverallCtAmount(getManagedBean().getScLoa().getLoaAmt());
 			}
-			getManagedBean().getScLoa().setAgreementReq(true);
 		}
 		return false;
 		// #25726 END
@@ -10709,13 +10708,15 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 
 		// Proceed with changes and set new value for required agreement
 		public void agreementReqYes() {
-			getManagedBean().setAgreemetSelectedVal(getManagedBean().getNoParameterId());		
+			getManagedBean().setAgreemetSelectedVal(getManagedBean().getNoParameterId());
+			getManagedBean().getScLoa().setAgreementReq(false);
 			RequestContext.getCurrentInstance().update("agreementReqPG");		
 		}
 
 		// Cancel changes and reset the value for required agreement
 		public void agreementReqNo() {
-			getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());		
+			getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());	
+			getManagedBean().getScLoa().setAgreementReq(true);
 			RequestContext.getCurrentInstance().update("agreementReqPG");		
 		}
 
