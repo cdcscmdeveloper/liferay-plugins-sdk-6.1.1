@@ -6249,6 +6249,11 @@ public class SpecificationBackingBean extends
 							this.getManagedBean()
 							.setStartYear(String.valueOf(year));
 							this.getManagedBean().setEndYear(String.valueOf(year));
+							//Bug #32862 - start
+							this.getManagedBean().setBankstmntTomonth(null);
+							this.getManagedBean().setToMonth(null);
+							this.getManagedBean().setFromMonth(null);
+							//Bug #32862 - end
 
 							this.getManagedBean().setChecklistScoreType(null);
 
@@ -6312,6 +6317,11 @@ public class SpecificationBackingBean extends
 						this.getManagedBean()
 								.setStartYear(String.valueOf(year));
 						this.getManagedBean().setEndYear(String.valueOf(year));
+						//Bug #32862 - start
+						this.getManagedBean().setBankstmntTomonth(null);
+						this.getManagedBean().setToMonth(null);
+						this.getManagedBean().setFromMonth(null);
+						//Bug #32862 - end
 
 						// this.getManagedBean().setChecklistScoreType(null);
 
@@ -8765,11 +8775,15 @@ public class SpecificationBackingBean extends
 			endmonth = retriveMonthDtls(new Integer(this.getManagedBean()
 					.getToMonth()));
 
-			Date d1 = new Date();
-			SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+			//Bug #32862 - start
+			//Date d1 = new Date();
+			//SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+			//Bug #32862 - end
 			DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-			String localDate = format.format(d1);
-			String date = localDate.substring(0, 2);
+			//Bug #32862 - start
+			//String localDate = format.format(d1);
+			String date = "01";  
+			//Bug #32862 - end
 			String fromdate = date + "/" + Startmonth + "/"
 					+ this.getManagedBean().getStartYear();
 			String toDate = date + "/" + endmonth + "/"
