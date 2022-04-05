@@ -5,16 +5,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	
-	<style>
-		.ui-widget-overlay {
-			background: #FFFFFF !important;
-			opacity: 0.5 !important;
-			position: relative;
-		}
-	</style>
-	
-	<ui:param name="viewFlag" value="false" />
+
+	<ui:param name="viewFlag" value="true" />
 	<p:dataTable value="#{svoSiteVisitBackingBean.managedBean.smAppl.smSvTasks}" var="svTask">
 		<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}">
 			<h:outputText rendered="#{!empty svTask.pmCategoryL3}"
@@ -49,8 +41,8 @@
 		</p:column>
 	</p:dataTable>
 	
-	<p:dialog widgetVar="poReportDlg" modal="true" height="600" width="1500" id="poReportDlgId" resizable="false" closable="false">
-		<p:outputPanel id="reportPanel" rendered="#{!empty svoSiteVisitBackingBean.managedBean.smSvTask}" >
+	<p:dialog widgetVar="poReportDlg" modal="true" height="400" width="1000" id="poReportDlgId" resizable="false" >
+		<p:outputPanel id="reportPanel" rendered="#{!empty svoSiteVisitBackingBean.managedBean.smSvTask}">
 			<ui:include src="/xhtml/sm/shared/sitevisit/siteVisitReportPOReview.xhtml"></ui:include>
 		</p:outputPanel>
 	</p:dialog>

@@ -24,7 +24,7 @@
 
 			<p:column headerText="#{lbl['lbl.sm.rptpreview.template']}">
 				<p:commandButton value="#{lbl['lbl.btn.download']}" ajax="false"
-					action="#{svoSiteVisitBackingBean.downloadSiteVisitTemplate(cTask,true)}">
+					action="#{svoSiteVisitBackingBean.downloadSiteVisitTemplate(cTask,false)}">
 					<p:fileDownload value="#{svoSiteVisitBackingBean.file}" />
 				</p:commandButton>
 			</p:column>

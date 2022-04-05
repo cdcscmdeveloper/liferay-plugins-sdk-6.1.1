@@ -62,8 +62,6 @@ import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.sm.attachment.SmAttachmentReqDTO;
 import my.ep.dto.sm.attachment.SmAttachmentResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
-import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
-import my.ep.dto.sm.revision.SmApplRevisionResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.siteVisit.SiteVisitReqDTO;
@@ -79,7 +77,6 @@ import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmDocument;
-import my.ep.persistence.entity.pm.common.PmMachine;
 import my.ep.persistence.entity.pm.common.PmMachineCategory;
 import my.ep.persistence.entity.pm.common.PmMachineSection;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -252,12 +249,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				smSvTask.setSmSvOffice(new SmSvOffice());
 				smSvTask.getSmSvOffice().setSmSvTask(this.getManagedBean().getSmSvTask());
 			}
-			//24964 - start
-			if(smSvTask.getSmSvTemplate().getSmSvComment() == null){
-				smSvTask.getSmSvTemplate().setSmSvComment(new SmSvComment());
-				smSvTask.getSmSvTemplate().getSmSvComment().setSmSvTemplate(smSvTask.getSmSvTemplate());
-			}
-			//24964 - end
 			
 			//#28774 - Start
 			if(smSvTask.getSmSvAssistantOfficers() == null){
@@ -436,10 +427,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * remove selected Interviewee
 	 */
 	public void removeInterviewee(){
-		//#24964 - start
-		if(getManagedBean().getDuplicateInterviewees() == null)
-			getManagedBean().setDuplicateInterviewees(new ArrayList<>(getManagedBean().getSelectedSvTemplate().getSmSvInterviewees()));
-		//#24964 - end
 		if(this.getManagedBean().getSelectedInterviewees() != null && this.getManagedBean().getSelectedInterviewees().length > 0){
 			for (SmSvInterviewee interviewee : this.getManagedBean().getSelectedInterviewees()) {
 				this.getManagedBean().getSelectedSvTemplate().getSmSvInterviewees().remove(interviewee);		
@@ -1885,8 +1872,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		
 		this.getManagedBean().setSelectedAdtMachine(adtMachine);
 		this.getManagedBean().getSelectedAdtMachine().setNewMachine(true);
-		//24964
-		getManagedBean().setLatestAdtMachine(null);
 	}
 	
 	/**
@@ -1899,7 +1884,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				svTemplate.getSmSvAdtMachines().remove(adtMachine);
 			}
 		}
-		getManagedBean().getSelectedSvTemplate().setSelectedAdtMachines(null);
 	}
 	
 	/**
@@ -1979,21 +1963,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 					new String[] { SmCommonUtil.getMessage("lbl.sm.sv.templ.interview.representative", null) }));
 		}
 		//#30550 - end
-		
-		//#24964 - start
-		if(getManagedBean().getDuplicateInterviewees() != null){
-			for(SmSvInterviewee dupe : getManagedBean().getDuplicateInterviewees()){
-				for(SmSvInterviewee intvw : getManagedBean().getSelectedSvTemplate().getSmSvInterviewees()){
-					if(intvw.getName().equals(dupe.getName())){
-						dupe.setDesignation(intvw.getDesignation());
-						getManagedBean().getSelectedSvTemplate().getSmSvInterviewees().remove(intvw);
-						getManagedBean().getSelectedSvTemplate().getSmSvInterviewees().add(0, dupe);
-						break;
-					}
-				}
-			}
-		}
-		//#24964 - end
 
 		SmSvTemplate svTemplate = svTask.getSmSvTemplate();
 		if(svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING)){
@@ -2026,21 +1995,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			validateDuplicateWorker(svTemplate.getSmSvWorkers());
 		}
 		
-		//validate assistant officer
-		//#28774 - Start
-		if(svTask.getSmSvAssistantOfficers()==null){
-			svTask.setSmSvAssistantOfficers(null);
-		}//START 24964
-		else{
-			for(SmSvAssistantOfficer smSvAssistantOfficer : svTask.getSmSvAssistantOfficers())
-			{
-				log.info("**************SV Ass. Officer*************");
-				log.info("name -> " + smSvAssistantOfficer.getName());
-				smSvAssistantOfficer.setNameEnterBySvo(smSvAssistantOfficer.getName());
-			}
-		}
-		//#28774 - End
-		//END 24964
 		try{
 			//if Action equals to SUBMIT, set the BPM Info
 			if(action.equals(SupplierManagementConst.BPM_SUBMIT)){
@@ -2373,22 +2327,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		getManagedBean().setSvTaskId(svTask.getSvTaskId());
 		retrieveSiteVisitInfo("V");
 		RequestContext.getCurrentInstance().update("@form");
-		//24964 - start
-		String serType = "SVO";
-		SmSvTask svoTask = getManagedBean().getSmSvTask();
-		if(!SmCommonUtil.isSerFileExist(svoTask.getSmAppl().getApplNo(), serType+"_"+svoTask.getSvTaskId())){
-			SmCommonUtil.createSerFileSVO(svoTask, serType);
-		}
-		if(getManagedBean().getSmSvtaskSVO() == null 
-			|| getManagedBean().getSmSvTask().getSvTaskId() != getManagedBean().getSmSvtaskSVO().getSvTaskId()){
-			getManagedBean().setSmSvtaskSVO(getPrevSvTask(
-					getManagedBean().getSmSvTask().getSmAppl().getApplNo(), 
-					getManagedBean().getSmSvTask().getSvTaskId(), "SVO"));
-		
-			log.info("#24964 - TR TROUBLESHOOT METHOD retrieveSiteVisitInfo");
-			log.info("#24964 - SVTASK ID" + getManagedBean().getSmSvtaskSVO().getSvTaskId());
-		}
-		//24964 - end
 	}
 	
 	/**
@@ -2454,20 +2392,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 */
 	public void downloadPOApprovalSiteVisitReport(SmSvTask svTask) throws Exception{
 		//#29430 - start
-		//#24964 - start
-		if(svTask == null){
-			svTask = getManagedBean().getSmSvTask();
-			try{
-				SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
-				reqDTO.setSmSvTask(svTask);
-				reqDTO.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
-				((ISiteVisitSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISiteVisitSO.class))
-						.saveOrSubmitSiteVisitReport(reqDTO);
-			}catch(Exception ex){
-				throw new EpException(ex.getMessage());
-			}
-		}
-		//#24964 - end
 		getManagedBean().setFromReport(true);
 		getManagedBean().setSvTaskId(svTask.getSvTaskId());
 		retrieveSiteVisitInfo("V");
@@ -2592,9 +2516,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		oriMachine.getSmMachineDtl().setPurchaseYear(svMachine.getSmMachineDtl().getPurchaseYear());
 		oriMachine.getSmMachineDtl().setQty(svMachine.getSmMachineDtl().getQty());
 		oriMachine.getSmMachineDtl().setValue(svMachine.getSmMachineDtl().getValue());
-		//24964
+		//24964 - start
 		getManagedBean().setSelectedSvMachine(new SmSvMachine());
 		getManagedBean().getSelectedSvMachine().setSmMachineDtl(new SmMachineDtl());
+		//24964 - end
 		RequestContext.getCurrentInstance().execute("macDlg.hide()");
 	}
 	
@@ -2664,8 +2589,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		manufacDtl.setBrandNew(true);
 		manufacDtl.setSmAppl(getManagedBean().getSmSvTask().getSmAppl());
 		this.getManagedBean().setSelectedManufacturer(manufacDtl);
-		//24964
-		getManagedBean().setLatestManufacturer(null);
 
 	}
 
@@ -2694,7 +2617,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 */
 	public void removeAdditionalManufacturingDtl() {
 		//CR 28774: Static Code Analysis
-		/*
 		if (!getManagedBean().getSelectedManufacturingList().isEmpty()) {
 			EntityHelper.compareAndRemoveEntityFromList(getManagedBean().getSelectedManufacturingList(), getManagedBean().getSmSvTask().getSmAppl().getSmManufacturingDtls(),
 					"manufacturingDtlId");
@@ -2702,69 +2624,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		} else {
 			throw new EpException(MessageConst.ERROR_722534, new String[] { "Manufacturer" });
 		}
-		*/
-		//#24964 - start
-		if(getManagedBean().getSelectedManufacturingList() == null) return;
-		for (SmManufacturingDtl man : getManagedBean().getSelectedManufacturingList()){
-			getManagedBean().getSmSvTask().getSmAppl().getSmManufacturingDtls().remove(man);
-		}
-		getManagedBean().setSelectedManufacturingList(null);
-		//#24964 - end
-	}
-	
-	// #24964 - start
-	public void saveSiteVisitReportByPO(){		
-		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
-		SmSvTask svTask = this.getManagedBean().getSmSvTask();	
-		
-		//validate assistant officer
-		//#28774 - Start
-		if(svTask.getSmSvAssistantOfficers()==null){
-			svTask.setSmSvAssistantOfficers(null);
-		}
-		//#28774 - End
-		if(svTask.getSmSvTemplate()!=null){
-			if(svTask.getSmSvTemplate().getSmSvInterviewees()== null || svTask.getSmSvTemplate().getSmSvInterviewees().isEmpty()){
-				throw new EpException(SmCommonUtil.getMessage("lbl.sm.required.msg",
-						new String[] { SmCommonUtil.getMessage("lbl.sm.sv.templ.interview.representative", null) }));
-			}else{
-				for(SmSvInterviewee interviewee : svTask.getSmSvTemplate().getSmSvInterviewees()){
-					if(StringUtils.isBlank(interviewee.getName()) || StringUtils.isBlank(interviewee.getDesignation())){
-						return;
-					}
-				}
-			}
-		}
 
-		reqDTO.setSmSvTask(svTask);
-		reqDTO.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
-		ISiteVisitSO reqSO = (ISiteVisitSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISiteVisitSO.class);
-		reqSO.saveOrSubmitSiteVisitReport(reqDTO);
-		//#24964 - start
-		String statusId = svTask.getSmAppl().getPmStatus().getStatusId().toString();
-		if(statusId.equals(SupplierManagementConst.PM_STATUS_PENDING_REVIEW_SITE_VISIT_REPORT)
-				|| statusId.equals(SupplierManagementConst.PM_STATUS_PENDING_RE_REVIEW )){
-			SmCommonUtil.createSerFileSVO(svTask, "PO");
-		}
-		//retrieveSiteVisitInfo("V");
-		//#24964 - end
-		RequestContext.getCurrentInstance().execute("poReportDlg.hide()");
-	} 
-	
-	public boolean showEditAssistant(SmSvAssistantOfficer assistantOfficer){
-		boolean edit = false;
-		if(assistantOfficer == null){
-			return false;
-		}
-		if(assistantOfficer.getName() != null && assistantOfficer.getNameEnterBySvo() != null){
-			if(!assistantOfficer.getName().equalsIgnoreCase(assistantOfficer.getNameEnterBySvo())){
-				edit = true;
-			}
-		}
-		return edit;
 	}
 	
-	// #24964 - end
 	
 	// #29200 CR 14055: Static Code Analysis
 	public String getStatusFromLabel(String tempStatus) {		
@@ -2873,210 +2735,5 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 		return categoryL3Name;
 	}
-	// #28175 end
-	
-	//#24964 - start
-	public static SmSvTask getPrevSvTask(String applNo, long svTaskId, String role){
-		try {
-			String fileName = SmCommonUtil.readSerFileSvTask(applNo, svTaskId, role);
-			if (!StringUtils.isBlank(fileName)) {
-				SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
-				reqDTO.setDeSerFileName(fileName);
-				SmApplRevisionResDTO resDTO = SmServiceLookup
-						.getSmApplRevisionSO().readSmSvTask(reqDTO);
-				if (resDTO.getSmAppl().getSmSvTasks() != null) {
-					log.info("#24964 - TR TROUBLESHOOT METHOD getSVOTask");
-					log.info("SVTASK ID - " + resDTO.getSmAppl().getSmSvTasks().get(0).getSvTaskId());
-					return resDTO.getSmAppl().getSmSvTasks().get(0);
-				}
-			}
-		} catch (Exception ex) {}
-		return null;
-	}
-	
-	public SmSvLicenseInsurance getSVOLicense(SmSvLicenseInsurance license){
-		if(license == null || getManagedBean().getSmSvtaskSVO() == null ||
-			getManagedBean().getSmSvtaskSVO().getSmSvTemplate().getSmSvLicenseInsurances() == null){
-				return null;
-		}
-		return (SmSvLicenseInsurance) EntityHelper.getEntityByMultiplePropertiesFromList(license, 
-				getManagedBean().getSmSvtaskSVO().getSmSvTemplate().getSmSvLicenseInsurances(),
-				new String[] { "svLicenseInsuranceId" }, null, null);
-	}
-	
-	public SmSvDocLicense getSVOAdtLicense(SmSvDocLicense license){
-		if(license == null || getManagedBean().getSmSvtaskSVO() == null ||
-			getManagedBean().getSmSvtaskSVO().getSmSvDocLicenses() == null){
-				return null;
-		}
-		return (SmSvDocLicense) EntityHelper.getEntityByMultiplePropertiesFromList(license, 
-				getManagedBean().getSmSvtaskSVO().getSmSvDocLicenses(),
-				new String[] { "svDocLicenseId" }, null, null);
-	}
-	
-	public SmSvEquipment getSVOSmSvEquipment(SmSvEquipment equipment){
-		if(equipment == null || getManagedBean().getSmSvtaskSVO() == null ||
-				getManagedBean().getSmSvtaskSVO().getSmSvTemplate().getSmSvEquipments() == null){
-					return null;
-		}
-		return (SmSvEquipment) EntityHelper.getEntityByMultiplePropertiesFromList(equipment, 
-				 getManagedBean().getSmSvtaskSVO().getSmSvTemplate().getSmSvEquipments(),
-				new String[] { "svEquipmentId" }, null, null);
-	}
-	
-	public SmSvWorker getSVOSmSvWorker(SmSvWorker worker){
-		if(worker == null || getManagedBean().getSmSvtaskSVO() == null ||
-				getManagedBean().getSmSvtaskSVO().getSmSvTemplate().getSmSvWorkers() == null){
-					return null;
-		}
-		return (SmSvWorker) EntityHelper.getEntityByMultiplePropertiesFromList(worker, 
-				getManagedBean().getSmSvtaskSVO().getSmSvTemplate().getSmSvWorkers(),
-				new String[] { "svWorkerId" }, null, null);
-	}
-	
-	public SmSvPrintwork getSVOSmSvPrintwork(SmSvPrintwork printwork){
-		if(printwork == null || getManagedBean().getSmSvtaskSVO() == null ||
-				getManagedBean().getSmSvtaskSVO().getSmSvTemplate().getSmSvPrintworks() == null){
-					return null;
-		}
-		return (SmSvPrintwork) EntityHelper.getEntityByMultiplePropertiesFromList(printwork, 
-				getManagedBean().getSmSvtaskSVO().getSmSvTemplate().getSmSvPrintworks(),
-				new String[] { "svPrintworkId" }, null, null);
-	}
-	
-	public SmSvMachine getSVOSmSvMachine(SmSvMachine machine){
-		if(machine == null || getManagedBean().getSmSvtaskSVO() == null ||
-				getManagedBean().getSmSvtaskSVO().getSmSvTemplate().getSmSvMachines() == null){
-					return null;
-		}
-		return (SmSvMachine) EntityHelper.getEntityByMultiplePropertiesFromList(machine, 
-				getManagedBean().getSmSvtaskSVO().getSmSvTemplate().getSmSvMachines(),
-				new String[] { "svMachineId" }, null, null);
-	}
-	
-	public SmSvManufacturingDoc getSVOSmSvManufacturingDoc(SmSvManufacturingDoc finDoc){
-		if(finDoc == null || getManagedBean().getSmSvtaskSVO() == null ||
-				getManagedBean().getSmSvtaskSVO().getSmSvTemplate().getSmSvManufacturingDocs() == null){
-					return null;
-		}
-		return (SmSvManufacturingDoc) EntityHelper.getEntityByMultiplePropertiesFromList(finDoc, 
-				getManagedBean().getSmSvtaskSVO().getSmSvTemplate().getSmSvManufacturingDocs(),
-				new String[] { "svManufacturingDocId" }, null, null);
-	}
-	
-	public boolean isSVOSmSvMachineDifferent(SmSvMachine machine){
-		if(getManagedBean().getSmSvtaskSVO() == null) return false;
-		SmSvMachine svoMachine = getSVOSmSvMachine(machine);
-		if(svoMachine == null) return true;
-		return SmCommonUtil.isHasDifferences(machine.getSmMachineDtl(), svoMachine.getSmMachineDtl(), null);
-	}
-	
-	public SmSvAdtMachine getSVOSmSvAdtMachine(SmSvAdtMachine machine){
-		if(machine == null || getManagedBean().getSmSvtaskSVO() == null ||
-				getManagedBean().getSmSvtaskSVO().getSmSvTemplate().getSmSvAdtMachines() == null){
-					return null;
-		}
-		return (SmSvAdtMachine) EntityHelper.getEntityByMultiplePropertiesFromList(machine, 
-				getManagedBean().getSmSvtaskSVO().getSmSvTemplate().getSmSvAdtMachines(),
-				new String[] { "svAdtMachineId" }, null, null);
-	}
-	
-	public boolean isSVOSmSvAdtMachineDifferent(SmSvAdtMachine machine){
-		if(getManagedBean().getSmSvtaskSVO() == null) return false;
-		SmSvAdtMachine svoMachine = getSVOSmSvAdtMachine(machine);
-		return SmCommonUtil.isHasDifferences(machine, svoMachine, null);
-	}
-	
-	
-	public SmManufacturingDtl getSVOSmManufacturingDtl(SmManufacturingDtl manu){
-		if(manu == null || getManagedBean().getSmSvtaskSVO() == null ||
-				getManagedBean().getSmSvtaskSVO().getSmAppl().getSmManufacturingDtls() == null){
-					return null;
-		}
-		return (SmManufacturingDtl) EntityHelper.getEntityByMultiplePropertiesFromList(manu, 
-				getManagedBean().getSmSvtaskSVO().getSmAppl().getSmManufacturingDtls(),
-				new String[] { "manufacturingDtlId" }, null, null);
-	}
-	
-	public boolean isSVOSmManufacturingDtlDifferent(SmManufacturingDtl manu){
-		if(getManagedBean().getSmSvtaskSVO() == null) return false;
-		SmManufacturingDtl svoManu = getSVOSmManufacturingDtl(manu);
-		return SmCommonUtil.isHasDifferences(manu, svoManu, null);
-	}
-	
-	public void mapSmSvBankSVOWithPO(List<SmSvBankInfo> svoSmSvBankInfoLs){
-		log.info("=============#24964 - execute mapSmSvBankSVOWithPO=======================");
-		
-		if(svoSmSvBankInfoLs.isEmpty() || svoSmSvBankInfoLs == null){
-			log.info("SVO SmSvBank List id null or empty");
-		}
-		
-		if(!svoSmSvBankInfoLs.isEmpty() || svoSmSvBankInfoLs != null){
-			for(SmSvBankInfo smSvBankInfo : getManagedBean().getSmSvTask().getSmSvBankInfos()){
-				log.info("poBank - "+smSvBankInfo.getSvBankInfoId());
-				for(SmSvBankInfo svoSmSvBankInfo : svoSmSvBankInfoLs){
-					log.info("svoBank - "+svoSmSvBankInfo.getSvBankInfoId());
-					if(smSvBankInfo != null & svoSmSvBankInfo != null){
-						if(smSvBankInfo.getSvBankInfoId().equals(svoSmSvBankInfo.getSvBankInfoId())){
-							log.info("poBank is equal svoBank");
-							smSvBankInfo.setSvoSmSvBankInfo(svoSmSvBankInfo);
-							log.info("test read after set id = " + smSvBankInfo.getSvoSmSvBankInfo().getSvBankInfoId());
-						}
-					}
-				}
-			}
-		}
-		log.info("=============#24964 - finished mapSmSvBankSVOWithPO=======================");
-	}
-	
-	public void mapfinLsItemSVOWithPO(List<SmSvFinChecklist> svoSmSvFinChecklists){
-		log.info("=============#24964 - execute mapfinLsItemSVOWithPO=======================");
-		
-		if(svoSmSvFinChecklists.isEmpty() || svoSmSvFinChecklists == null){
-			log.info("SVO SmSvFinChecklist List id null or empty");
-		}
-		
-		if(!svoSmSvFinChecklists.isEmpty() || svoSmSvFinChecklists != null){
-			for(SmSvFinChecklist smSvFinChecklist : getManagedBean().getSmSvTask().getSmSvFinChecklists()){
-				log.info("poCheckList - "+smSvFinChecklist.getSvFinChecklistId());
-				for(SmSvFinChecklist svoSmSvFinChecklist : svoSmSvFinChecklists){
-					log.info("svoCheckList - "+svoSmSvFinChecklist.getSvFinChecklistId());
-					if(smSvFinChecklist != null && svoSmSvFinChecklist != null){
-						if(smSvFinChecklist.getSvFinChecklistId().equals(svoSmSvFinChecklist.getSvFinChecklistId())){
-							log.info("poCheckList is equal svoCheckList");
-							smSvFinChecklist.setSvoSmSvFinChecklist(svoSmSvFinChecklist);
-							log.info("test read after set id = " + smSvFinChecklist.getSvoSmSvFinChecklist().getSvFinChecklistId());
-						}
-					}
-				}
-			}
-		}
-		log.info("=============#24964 - finished mapfinLsItemSVOWithPO=======================");
-	}
-	
-	public void mapSmSvIntervieweesSVOWithPO(List<SmSvInterviewee> svoSmSvIntervieweeLs){
-		log.info("=============#24964 - execute mapSmSvIntervieweesSVOWithPO=======================");
-		
-		if(svoSmSvIntervieweeLs.isEmpty() || svoSmSvIntervieweeLs == null){
-			log.info("SVO SmSvInterviewee List id null or empty");
-		}
-
-		if(!svoSmSvIntervieweeLs.isEmpty() || svoSmSvIntervieweeLs != null){
-			for(SmSvInterviewee smSvInterviewee : getManagedBean().getSmSvTask().getSmSvTemplate().getSmSvInterviewees()){
-				log.info("poInterviewee - "+smSvInterviewee.getSvIntervieweeId());
-				for(SmSvInterviewee svoSmSvInterviewee : svoSmSvIntervieweeLs){
-					log.info("svoInterviewee - "+svoSmSvInterviewee.getSvIntervieweeId());
-					if(smSvInterviewee != null && svoSmSvInterviewee != null){
-						if(smSvInterviewee.getSvIntervieweeId()  == svoSmSvInterviewee.getSvIntervieweeId()){
-							log.info("poInterviewee is equal svoInterviewee");
-							smSvInterviewee.setSvoSmSvInterviewee(svoSmSvInterviewee);
-							log.info("test read after set id = " + smSvInterviewee.getSvoSmSvInterviewee().getSvIntervieweeId());
-						}
-					}
-				}
-			}
-		}
-		log.info("=============#24964 - finished mapSmSvIntervieweesSVOWithPO=======================");
-	}
-	//#24964 - end
+	// #28175 end	
 }

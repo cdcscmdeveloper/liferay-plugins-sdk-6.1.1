@@ -3,7 +3,6 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">	
 	
 	<p:panel header="#{lbl['lbl.sm.officeloc']}" toggleable="true">
@@ -33,68 +32,36 @@
 			</p:outputPanel>
 			</tr>
 
-			<!-- #9583 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.officeloc.sign.board']}" /></td>
 				<td>
-					<p:selectBooleanCheckbox value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.signboardValid}" readonly="#{viewFlag}">
-	
-					</p:selectBooleanCheckbox>
+					<p:selectBooleanCheckbox value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.signboardValid}" disabled="#{viewFlag}" />
 				</td>
-
 				<td><p:outputLabel value="#{lbl['lbl.sm.officeloc.share.with']}" /></td>
-				
-				<td><p:selectBooleanCheckbox value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.share}" readonly="#{viewFlag}">
-					</p:selectBooleanCheckbox>
+				<td><p:selectBooleanCheckbox value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.share}" disabled="#{viewFlag}" />
 				</td>
-			</tr> -->
+			</tr>
 			
 			<tr>
-				<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.officeloc.sign.board']}" /></td>
-				<!-- #9583 -->
-				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="1000" id="txtSignBoardRmk" readonly="#{viewFlag}"
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
+				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="255" id="txtSignBoardRmk" disabled="#{viewFlag}"
 					value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.signboardRemark}" /></td>
-				<!-- #24964 - START -->
-				<td>
-					<ac:smFieldChangeAlertSVO 
-						isShow="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO ne null}"
-						oriValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvOffice.signboardRemark}" 
-						currValue="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.signboardRemark}" 
-						alertValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvOffice.signboardRemark}"  />
-				</td>	
-				<!-- #24964 - END -->
-				<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.officeloc.share.with']}" /></td>
-				<!-- #9583 -->
-				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="1000" id="txtShareWithRmk" readonly="#{viewFlag}"
+					
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
+				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="255" id="txtShareWithRmk" disabled="#{viewFlag}"
 					value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.shareWithRemark}" /></td>
-				<!-- #24964 - START -->
-				<td>
-					<ac:smFieldChangeAlertSVO 
-						isShow="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO ne null}"
-						oriValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvOffice.shareWithRemark}" 
-						currValue="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.shareWithRemark}" 
-						alertValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvOffice.shareWithRemark}"  />
-				</td>	
-				<!-- #24964 - END -->
 			</tr>
 			
 			<tr><td>&#160;</td></tr>
 			
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.officeloc.office.arrngmnt']}" /></td>
-				<td><!-- #9583 -->
-				<p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="1000" label="#{lbl['lbl.sm.officeloc.office.arrngmnt']}"
-				value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.officeArrangement}">
-					<f:validateLength maximum="1000" />
+				<td>
+				<p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="255" label="#{lbl['lbl.sm.officeloc.office.arrngmnt']}"
+				value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.officeArrangement}" disabled="#{viewFlag}">
+					<f:validateLength maximum="255" />
 				</p:inputTextarea>
-				<!-- #24964 - START -->
-				<ac:smFieldChangeAlertSVO 
-					isShow="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO ne null}"
-					oriValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvOffice.officeArrangement}" 
-					currValue="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.officeArrangement}" 
-					alertValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvOffice.officeArrangement}"  />
-				</td>	
-				<!-- #24964 - END -->
+				</td>
 			</tr>
 		</table>
 	</p:panel>

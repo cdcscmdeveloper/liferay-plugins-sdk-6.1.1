@@ -4,8 +4,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc">
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
 	<p:panel id="pnlPremiseLocation" header="#{lbl['lbl.sm.sitevisit.premiselocation']}" toggleable="true">
 	<table class="customTbl">
@@ -46,66 +45,25 @@
 		<tr>
 		
 			<td><p:outputLabel value="#{lbl['lbl.sm.sitevist.premiseloc.overall.sqft']}" /></td>
-			<td><p:inputText value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.overallSqft}" maxlength="20" disabled="#{viewFlag}" />
-				<!-- #24964 -->
-				<ac:smFieldChangeAlertSVO
-					isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
-					oriValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvTemplate.smSvFacility.overallSqft}" 
-					currValue="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.overallSqft}" 
-					alertValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvTemplate.smSvFacility.overallSqft}"/>
-			</td>
+			<td><p:inputText value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.overallSqft}" maxlength="20" disabled="#{viewFlag}" /></td>
 			
 			<td><p:outputLabel value="#{lbl['lbl.sm.sitevist.premiseloc.enclsd.sqft']}" /></td>
-			<td><p:inputText value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.enclosedSqft}" maxlength="20" disabled="#{viewFlag}" />
-				<!-- #24964 -->
-				<ac:smFieldChangeAlertSVO
-					isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
-					oriValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvTemplate.smSvFacility.enclosedSqft}" 
-					currValue="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.enclosedSqft}" 
-					alertValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvTemplate.smSvFacility.enclosedSqft}"/>
-			</td>
+			<td><p:inputText value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.enclosedSqft}" maxlength="20" disabled="#{viewFlag}" /></td>
 		</tr>
 		
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.sitevist.premiseloc.enclsd.cap.sqft']}" /></td>
-			<td><p:inputText value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.enclosedCapacitySqft}" maxlength="20" disabled="#{viewFlag}" />
-				<!-- #24964 -->
-				<ac:smFieldChangeAlertSVO
-					isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
-					oriValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvTemplate.smSvFacility.enclosedCapacitySqft}" 
-					currValue="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.enclosedCapacitySqft}" 
-					alertValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvTemplate.smSvFacility.enclosedCapacitySqft}"/>
-			</td>
+			<td><p:inputText value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.enclosedCapacitySqft}" maxlength="20" disabled="#{viewFlag}" /></td>
 		</tr>
 		
 		<tr>
 			<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.sitevist.premiseloc.floor']}" /></td>
 			<td>
-				<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.cementFloor}" />#{lbl['lbl.sm.sitevist.premiseloc.floor']}
-				<!-- #24964 -->
-				<ac:smFieldChangeAlertSVO
-					isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
-					oriValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvTemplate.smSvFacility.cementFloor}" 
-					currValue="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.cementFloor}" 
-					alertValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvTemplate.smSvFacility.cementFloor}"/>
-				<br />
-				<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.tarFloor}" />#{lbl['lbl.sm.sitevist.premiseloc.tar']}
-				<!-- #24964 -->
-				<ac:smFieldChangeAlertSVO
-					isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
-					oriValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvTemplate.smSvFacility.tarFloor}" 
-					currValue="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.tarFloor}" 
-					alertValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvTemplate.smSvFacility.tarFloor}"/>
-				<br />
+				<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.cementFloor}" />#{lbl['lbl.sm.sitevist.premiseloc.floor']}<br />
+				<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.tarFloor}" />#{lbl['lbl.sm.sitevist.premiseloc.tar']}<br />
 				<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.otherFloor}">
 					<p:ajax event="change" update="otherFloorRemarkId" listener="#{svoSiteVisitBackingBean.preLocationFloorEnvOnChange}" />
 				</p:selectBooleanCheckbox>#{lbl['lbl.sm.sitevist.premiseloc.others']}
-				<!-- #24964 -->
-				<ac:smFieldChangeAlertSVO
-					isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
-					oriValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvTemplate.smSvFacility.otherFloor}" 
-					currValue="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.otherFloor}" 
-					alertValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvTemplate.smSvFacility.otherFloor}"/>
 				<br />
 				<p:inputTextarea value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.otherFloorRemark}" 
 				requiredMessage="#{lbl['lbl.sm.sitevist.premiseloc.floor']} :  #{lbl['lbl.sm.sitevisit.if.others']}"
@@ -114,49 +72,16 @@
 				required="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.otherFloor and !viewFlag}">
 					<f:validateLength maximum="50"/>
 				</p:inputTextarea>
-				<!-- #24964 -->
-				<ac:smFieldChangeAlertSVO
-					isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
-					oriValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvTemplate.smSvFacility.otherFloorRemark}" 
-					currValue="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.otherFloorRemark}" 
-					alertValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvTemplate.smSvFacility.otherFloorRemark}"/>
 			</td>
 			
 			<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.sitevist.premiseloc.environment']}" /></td>
 			<td>
-				<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.envFence}" />#{lbl['lbl.sm.sitevist.premiseloc.fenced']}
-				<!-- #24964 -->
-				<ac:smFieldChangeAlertSVO
-					isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
-					oriValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvTemplate.smSvFacility.envFence}" 
-					currValue="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.envFence}" 
-					alertValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvTemplate.smSvFacility.envFence}"/>
-				<br />
-				<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.envClean}" />#{lbl['lbl.sm.sitevist.premiseloc.cleanliness']}
-				<!-- #24964 -->
-				<ac:smFieldChangeAlertSVO
-					isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
-					oriValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvTemplate.smSvFacility.envClean}" 
-					currValue="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.envClean}" 
-					alertValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvTemplate.smSvFacility.envClean}"/>
-				<br />
-				<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.envOrganize}" />#{lbl['lbl.sm.sitevist.premiseloc.organized']}
-				<!-- #24964 -->
-				<ac:smFieldChangeAlertSVO
-					isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
-					oriValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvTemplate.smSvFacility.envOrganize}" 
-					currValue="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.envOrganize}" 
-					alertValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvTemplate.smSvFacility.envOrganize}"/>
-				<br />
+				<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.envFence}" />#{lbl['lbl.sm.sitevist.premiseloc.fenced']}<br />
+				<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.envClean}" />#{lbl['lbl.sm.sitevist.premiseloc.cleanliness']}<br />
+				<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.envOrganize}" />#{lbl['lbl.sm.sitevist.premiseloc.organized']}<br />
 				<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.otherEnv}" update="otherEnvRemarkId">
 					<p:ajax event="change" update="otherEnvRemarkId" listener="#{svoSiteVisitBackingBean.preLocationFloorEnvOnChange}" />
 				</p:selectBooleanCheckbox>#{lbl['lbl.sm.sitevist.premiseloc.others']}
-				<!-- #24964 -->
-				<ac:smFieldChangeAlertSVO
-					isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
-					oriValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvTemplate.smSvFacility.otherEnv}" 
-					currValue="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.otherEnv}" 
-					alertValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvTemplate.smSvFacility.otherEnv}"/>
 				<br />
 				<p:inputTextarea value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.otherEnvRemark}" 
 				requiredMessage="#{lbl['lbl.sm.sitevist.premiseloc.environment']} : #{lbl['lbl.sm.sitevisit.if.others']}" 
@@ -165,12 +90,6 @@
 				required="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.otherEnv and !viewFlag}">
 					<f:validateLength maximum="50"/>
 				</p:inputTextarea>
-				<!-- #24964 -->
-				<ac:smFieldChangeAlertSVO
-					isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
-					oriValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvTemplate.smSvFacility.otherEnvRemark}" 
-					currValue="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.otherEnvRemark}" 
-					alertValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvTemplate.smSvFacility.otherEnvRemark}"/>
 			</td>
 		</tr>
 		

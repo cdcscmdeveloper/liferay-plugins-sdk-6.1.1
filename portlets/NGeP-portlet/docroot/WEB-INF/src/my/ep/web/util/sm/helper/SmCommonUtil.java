@@ -1797,13 +1797,7 @@ public class SmCommonUtil {
 			reqDTO.setSmAppl(smAppl);
 			if (serType.equalsIgnoreCase("SUP")) {
 				reqDTO.setType("supplier");
-			//#24964 - START
-			} else if(serType.equalsIgnoreCase("SVO")){
-				reqDTO.setType("svo");
-			}else if (serType.equalsIgnoreCase("PO")){
-				reqDTO.setType("po");
-			//#24964 - END
-			}else {
+			} else {
 				reqDTO.setType("approved");
 			}
 			applRevisionSO.applicationHist(reqDTO);
@@ -1813,61 +1807,6 @@ public class SmCommonUtil {
 			applRevisionSO = null;
 		}
 	}
-	
-	//#24964 - START
-	public static void createSerFileSVO(SmSvTask smSvTask, String serType) {
-		ISmApplRevisionSO applRevisionSO = null;
-		try {
-			log.info("start creating SVO SER file for appNo:" + smSvTask.getSmAppl().getApplNo()
-					+ "  serType:" + serType);
-			applRevisionSO = (ISmApplRevisionSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-							ISmApplRevisionSO.class);
-
-			SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
-			reqDTO.setSmAppl(smSvTask.getSmAppl());
-			reqDTO.setSmSvTask(smSvTask);
-			if (serType.equalsIgnoreCase("SUP")) {
-				reqDTO.setType("supplier");
-			} else if(serType.equalsIgnoreCase("SVO")){
-				reqDTO.setType("svo");
-			//#24964 - start
-			} else if(serType.equalsIgnoreCase("PO")){
-				reqDTO.setType("po_svTask");
-			//#24964 - end
-			}else {
-				reqDTO.setType("approved");
-			}
-			applRevisionSO.applicationHist(reqDTO);
-		} catch (Exception ex) {
-			log.info("Failed to create SER file  [" + ex.getMessage() + "]");
-		} finally {
-			applRevisionSO = null;
-		}
-	}
-	//#24964 - END
-	
-	//24964 - start
-	public static String readSerFileSvTask(String applNo, Long svTaskId, String role){
-		String retVal = StringUtils.EMPTY;
-		String fileName = applNo + "_" + role.toUpperCase()+"_" + svTaskId + ".ser";
-		String baseDir = EpPropertiesUtils.getInstance().getProperty(
-				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)
-				+ File.separator
-				+ Calendar.getInstance().get(Calendar.YEAR)
-				+ File.separator;
-		String smRevisionDir = "SM" + File.separator + applNo + File.separator
-				+ "Revision" + File.separator;
-		
-		log.info("File Name:" + fileName);
-		log.info("Directory:" + baseDir + smRevisionDir);
-		if (new File(baseDir + smRevisionDir, fileName).exists()) {
-			retVal = baseDir + smRevisionDir + fileName;
-			log.info("Is File Exist: true");
-		}
-		return retVal;
-	}
-	//24964 - end
 
 	/**
 	 * Assigns the default address for the given address parameter.
@@ -4330,10 +4269,7 @@ public class SmCommonUtil {
 		if (appl.getSupplierType().equals("J")) {
 			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 			reqDTO.setApplId(appl.getApplId());
-			//START 24964
-			reqDTO.setCategoryCode(my.ep.constant.sm.SupplierManagementConst.PHYSICAL_SERVICES_CAT_CODE);		
-			reqDTO.setActiveAppl(appl.isActiveAppl());
-			//END 24964
+			reqDTO.setCategoryCode(my.ep.constant.sm.SupplierManagementConst.PHYSICAL_SERVICES_CAT_CODE);
 			int count = SmServiceLookup.getMofRegistrationSO()
 					.countSuppCatByApplIdAndCatCode(reqDTO).getCount();
 			if (count > 0) {

@@ -12,9 +12,9 @@
 	<p:dialog widgetVar="submissionConfirmDlg" id="submissionConfirmDlg" modal="true" height="100" width="500">
    			 #{lbl['lbl.sm.rptpreview.want.proceed/download.qmark']}	
    			<div align="right">
-   			<!-- 29430, 24964 -->
-			<p:commandButton value="#{lbl['lbl.btn.download']}" ajax="false" onclick="submissionConfirmDlg.hide()">
-					<p:fileDownload value="#{svoSiteVisitBackingBean.downloadPOApprovalSiteVisitReport(null)}" />
+			<p:commandButton value="#{lbl['lbl.btn.download']}" ajax="false"
+					action="#{svoSiteVisitBackingBean.downloadPOApprovalSiteVisitReport(svTask)}">
+					<p:fileDownload value="#{svoSiteVisitBackingBean.file}" />
 				</p:commandButton>
 			<p:commandButton value="#{lbl['lbl.btn.proceed']}" oncomplete="submissionConfirmDlg.hide()"
 				action="#{svoSiteVisitBackingBean.saveSiteVisitReport(SupplierManagementConst.BPM_SUBMIT)}"></p:commandButton>
@@ -53,11 +53,7 @@
 					<ui:repeat var="attch" value="#{svTask.smSvTemplate.smAttachments}">
 					<p:outputPanel rendered="#{attch.recordStatusFlg == svoSiteVisitBackingBean.getRecordStatusActive()}">
 					<tr>
-						<!-- #24964 - start -->
-						<td><p:commandLink value="#{attch.fileName}" ajax="false">
-							<p:fileDownload value="#{svoSiteVisitBackingBean.attachmentDownload(attch)}" />
-						</p:commandLink></td>
-						<!-- #24964 - end -->
+						<td><h:outputText value="#{attch.fileName}"  style="white-space: normal;"/></td>
 						<td><p:commandLink oncomplete="attachmentDeleteDlg.show()" action="#{svoSiteVisitBackingBean.showDeleteDialog(svTask.smSvTemplate.svTemplateId,attch)}" 
 						update="@([id$=attachmentDeleteDlg])">
 							<p:graphicImage value="/css/images/design/delete.png" title="#{lbl['lbl.btn.delete']}" />
