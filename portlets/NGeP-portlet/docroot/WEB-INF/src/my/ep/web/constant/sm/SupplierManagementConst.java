@@ -474,6 +474,8 @@ public class SupplierManagementConst {
 	public static final String PM_STATUS_REJECTED_BY_SYSTEM = "20118";
 	public static final String PM_STATUS_REJECTED_BY_SYSTEM_PAYMENT = "20119";
 	public static final String PM_STATUS_REJECTED_BY_SYSTEM_PROCESSING_FEE = "20120";
+	public static final String PM_STATUS_REJECTED_BY_SYSTEM_PO_INQUIRY = "20121";//#32627 START
+	public static final String PM_STATUS_REJECTED_BY_SYSTEM_SDO_INQUIRY = "20122";//#32627 END
 	public static final String PM_STATUS_PENDING_PAYMENT_PROCESSING_FEE = "20114";
 	// #12483 - START
 	public static final String PM_STATUS_PENDING_REVISE_APPLICATION = "20398";
