@@ -6548,9 +6548,8 @@ public class EvaluationBackingBean extends
 			retrivePresetationDemoCheckList();
 			if (this.getManagedBean().getScQt().isDemoRequired()) {
 				this.getManagedBean().setPresentationDemoSupplierListDM(
-						new ComplianceSupplierPagingDataModel(
-								"demoSupplierId", this.getManagedBean().getScQtChecklist().getQtChecklistId(), reqDTO.getCompliance(),
-								null, reqDTO
+						new PresentationDemoSuppliersPagingDataModel(
+								"demoSupplierId", reqDTO.getQtId(), reqDTO
 										.getEvalStage()));
 			}
 
