@@ -1498,8 +1498,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				if (!requestNoteDtl.isDeleted()) {
 					String pType = requestNoteDtl.getProcurementType().getParameterCode();
 					log.info("Bug 32362: pType (" + pType + ")");
-					if ((!pType.equals(ParameterConst.PROC_TYPE_G2G) && !pType
-							.equals(ParameterConst.PROC_TYPE_EMERGENCY)) && !pType.equals(ParameterConst.PROC_TYPE_PK7)) {
+					//#32362 - comment out this condition - start
+					/*if ((!pType.equals(ParameterConst.PROC_TYPE_G2G) && !pType
+							.equals(ParameterConst.PROC_TYPE_EMERGENCY)) && !pType.equals(ParameterConst.PROC_TYPE_PK7)) {*/
+					//#32362 - comment out this condition - end
 						// title validation
 						if (StringUtils.isBlank(requestNoteDtl.getProcurementTitle())) {
 							throw new EpException(
@@ -1557,7 +1559,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 									new String[] { ResourceBundleUtils.getMessage("lbl.sc.request.note.loa.prepare.by",
 											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
 						}
-					}
+					//} #32362 - comment out this curly bracket
 				}
 			}
 		}
