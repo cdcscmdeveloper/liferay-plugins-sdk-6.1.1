@@ -175,8 +175,8 @@ public class TemplateSpecHelper {
 								newSpecQuestion.setTplSpecEstimations(null);
 								newSpecQuestion.setTplSpecScorings(null);
 								//#28784 Reset clone value for demo
-								newSpecQuestion.setItemReqDemo(false);
-								newSpecQuestion.setDemoScore(null);
+								//newSpecQuestion.setItemReqDemo(false);//25635
+								//newSpecQuestion.setDemoScore(null);//25635
 								
 								
 								if (isTechnicalSpec) {
