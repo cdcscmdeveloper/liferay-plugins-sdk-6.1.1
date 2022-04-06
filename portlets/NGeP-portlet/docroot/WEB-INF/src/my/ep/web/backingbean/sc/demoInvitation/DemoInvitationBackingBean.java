@@ -508,6 +508,9 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 			DemoReqDTO reqDto = new DemoReqDTO();
 			reqDto.setScQt(this.getManagedBean().getQt());
 			DemoResDTO resDto = qtDemoSO.retrieveScQtDemoByQtNo(reqDto);
+			if(resDto.getScQtDemo() != null &&  resDto.getScQtDemo().getDemoId() != null ){
+				savedData = true;
+			}
 
 			if (savedData
 					&& this.getManagedBean().getDemoInvBy()
@@ -527,7 +530,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 					 */
 					this.getManagedBean().setByItemList(resDto.getScQtDemo().getScQtDemoItemList());
 				}
-
+				qtDemo = resDto.getScQtDemo();
 				this.getManagedBean().setScQtDemoContactList(resDto.getScQtDemo().getScQtDemoContactList());
 				this.getManagedBean().setDemoRemark(resDto.getScQtDemo().getDemoInvRemark());
 
@@ -713,12 +716,13 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 				} else {
 					pmParam = getParameterByTypeAndCode(ParameterTypeConst.ALL_BY_ITEM, SourcingConstants.BY_ITEM);
 					if (demoItemList.isEmpty()) {
-						demoDemoByItemList.addAll(this.getManagedBean().getTempDemoByItemScoreList());
-					} else {
-						for (ScQtDemoItem i : demoItemList) {
-							demoDemoByItemList.addAll(i.getScQtDemoByItemScoreList());
-						}
+						demoItemList.addAll(this.getManagedBean().getTempDemoItemList());
 					}
+
+					for (ScQtDemoItem i : demoItemList) {
+						demoDemoByItemList.addAll(i.getScQtDemoByItemScoreList());
+					}
+
 					for (ScQtDemoSupplier s : demoSuppList) {
 						for (ScQtDemoByItemScore sc : demoDemoByItemList) {
 							if (sc.getScQtDemoSupplier().getDemoSupplierId().equals(s.getDemoSupplierId())) {
@@ -729,7 +733,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 							}
 						}
 					}
-					this.getManagedBean().setByItemList(demoItemList);
+					getManagedBean().setByItemList(demoItemList);
 				}
 			}
 			
@@ -893,9 +897,10 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 			throw new EpException(MessageConst.ERROR_760531);
 		}
 		this.getManagedBean().setTempDemoSuppList(scQtDemo.getScQtDemoSupplierList());
-		for (ScQtDemoItem item : scQtDemo.getScQtDemoItemList()) {
-			this.getManagedBean().setTempDemoByItemScoreList(item.getScQtDemoByItemScoreList());
-		}
+		this.getManagedBean().setTempDemoItemList(scQtDemo.getScQtDemoItemList());
+//		for (ScQtDemoItem item : scQtDemo.getScQtDemoItemList()) {
+//			this.getManagedBean().setTempDemoByItemScoreList(item.getScQtDemoByItemScoreList());
+//		}
 		scQtDemo.setDemoInvRemark(this.getManagedBean().getDemoRemark());
 		reqDto.setScQtDemo(scQtDemo);
 		reqDto.setScQt(this.getManagedBean().getQt());
@@ -930,6 +935,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 			this.getManagedBean().setScQtDemo(resDto.getScQtDemo());
 			this.getManagedBean().setScQtDemoContactList(resDto.getScQtDemo().getScQtDemoContactList());
 			this.getManagedBean().setAllItemList(resDto.getScQtDemo().getScQtDemoSupplierList());
+			this.getManagedBean().setByItemList(resDto.getScQtDemo().getScQtDemoItemList());	
 			
 			/*
 			 * BUG 28784 : DEMO INVITATION COMPARATOR 
@@ -939,9 +945,8 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 			resDto.getScQtDemo().setScQtDemoItemList(qtDemoSO.sortDemoItem(reqDto).getScQtDemoItemList());
 			/*
 			 * BUG 28784 : DEMO INVITATION END
-			 */
-			
-			this.getManagedBean().setByItemList(resDto.getScQtDemo().getScQtDemoItemList());			
+			 */			
+					
 			if (action == null) {
 				successMessage(MessageConst.INFO_700004, getMessageCommon("lbl.demo.save.msg"), this.getManagedBean()
 						.getQt().getQtNo(), Boolean.FALSE);

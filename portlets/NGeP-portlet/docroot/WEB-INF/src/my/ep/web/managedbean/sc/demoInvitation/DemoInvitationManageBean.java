@@ -131,7 +131,7 @@ public class DemoInvitationManageBean extends BaseManagedBean {
 	
 	private ScQtApproval  currentApproval;
 	
-	private List<ScQtDemoByItemScore> tempDemoByItemScoreList;
+	private List<ScQtDemoItem> tempDemoItemList;
 	
 	private List<ScQtDemoSupplier> tempDemoSuppList;
 
@@ -487,12 +487,12 @@ public class DemoInvitationManageBean extends BaseManagedBean {
 		this.tempDemoSuppList = tempDemoSuppList;
 	}
 
-	public List<ScQtDemoByItemScore> getTempDemoByItemScoreList() {
-		return tempDemoByItemScoreList;
+	public List<ScQtDemoItem> getTempDemoItemList() {
+		return tempDemoItemList;
 	}
 
-	public void setTempDemoByItemScoreList(List<ScQtDemoByItemScore> tempDemoByItemScoreList) {
-		this.tempDemoByItemScoreList = tempDemoByItemScoreList;
+	public void setTempDemoItemList(List<ScQtDemoItem> tempDemoItemList) {
+		this.tempDemoItemList = tempDemoItemList;
 	}
 
 	
