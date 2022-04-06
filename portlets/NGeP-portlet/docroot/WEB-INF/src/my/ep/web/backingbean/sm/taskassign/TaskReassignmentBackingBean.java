@@ -1795,6 +1795,8 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 			PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), 
 			FacesMessage.SEVERITY_INFO, MessageConst.INFO_770105, null);
 			
+			this.getManagedBean().setEnableRemoveAllGroupTasksButton(false);
+			
 			log.info("==============dialog is completed closed==============");
 
 		}
@@ -1950,6 +1952,8 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 		if (resDTO != null && resDTO.isSuccessful()) {
 			PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_INFO,
 					MessageConst.INFO_770105, null);
+			
+			this.getManagedBean().setEnableRemoveAllOthersTasksButton(false);
 
 			log.info("==============dialog is completed closed==============");
 

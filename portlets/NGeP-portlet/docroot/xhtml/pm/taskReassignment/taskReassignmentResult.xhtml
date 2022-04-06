@@ -330,14 +330,14 @@
 			content="#{lbl['lbl.msg.confirm.delete']}" 
 			update=":form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult,@([id$=deleteGroupTasks])" />
 
-	<!-- 7465 -->	
+	<!-- 7465, 29822 -->	
 	<ac:confirmationPopupMultiple id="allGroupTasksDeleteId"
 			widget="allGroupTasksDeletePopUp"
 			okAction="taskReassignmentBackingBean.removeReassignAllGroupTasks()"
 			width="400" height="100"
 			title="#{lbl['lbl.msg.confirm.delete.header']}"
 			content="#{lbl['lbl.msg.confirm.deleteallgrouptask']}" 
-			update=":form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult,@([id$=deleteGroupTasks])" />
+			update=":form:dtGroupTaskAssignResult,:form:deleteGroupTasks,:form:dtOthersTaskAssignResult,@([id$=deleteGroupTasks])" />
 	<!-- 7465 -->
 			
 	<!-- 7465 -->
@@ -347,8 +347,8 @@
 			width="400" height="100"
 			title="#{lbl['lbl.msg.confirm.delete.header']}"
 			content="#{lbl['lbl.msg.confirm.deleteallothertask']}" 
-			update=":form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult,@([id$=deleteOthersTasks])" />
-	<!-- 7465 -->
+			update=":form:dtGroupTaskAssignResult,:form:deleteOthersTasks,:form:dtOthersTaskAssignResult,@([id$=deleteOthersTasks])" />
+	<!-- 7465, 29822  -->
 	<!-- 7465 end -->	
 	
 	<!-- Task Selection Popup -->

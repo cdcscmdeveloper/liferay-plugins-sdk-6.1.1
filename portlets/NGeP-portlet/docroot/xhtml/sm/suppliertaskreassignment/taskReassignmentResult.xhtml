@@ -272,7 +272,7 @@
 		width="400" height="100"
 		title="#{lbl['lbl.msg.confirm.delete.header']}"
 		content="#{lbl['lbl.msg.confirm.deleteallgrouptask']}"
-		update=":form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult,@([id$=deleteGroupTasks])" />
+		update=":form:dtGroupTaskAssignResult,:form:deleteGroupTasks,:form:dtOthersTaskAssignResult,@([id$=deleteGroupTasks])" />
 	
 	<ac:confirmationPopupMultiple id="multipleGroupTasksDeleteId"
 		widget="mutipleGroupTasksDeletePopup"
@@ -288,7 +288,7 @@
 		width="400" height="100"
 		title="#{lbl['lbl.msg.confirm.delete.header']}"
 		content="#{lbl['lbl.msg.confirm.deleteallothertask']}" 
-		update=":form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult,@([id$=deleteOthersTasks])" />
+		update=":form:dtGroupTaskAssignResult,:form:deleteOthersTasks,:form:dtOthersTaskAssignResult,@([id$=deleteOthersTasks])" />
 			
 	<ac:confirmationPopupMultiple id="multipleOthersTasksDeleteId"
 		widget="multipleOthersTasksDeletePopUp"
