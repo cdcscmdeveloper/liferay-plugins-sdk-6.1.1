@@ -141,8 +141,8 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			//30713 - Start
 			SmWorkflowStatus currWorkflowStatus = isLatestActiveWorkFlow(supplier.getSupplierId());
 			//31792 - START
+			Boolean resubmitExpired = false;
 			if(rejectedWf != null && my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF.equalsIgnoreCase(supplier.getSmAppl().getApplType())){
-			//31792 - END
 				Timestamp currentDate = new Timestamp(System.currentTimeMillis());
 				long diff = currentDate.getTime()
 						- rejectedWf.getCreatedDate().getTime();
@@ -150,11 +150,12 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				//if expired
 				if (diffDays >= SmRuleHelper.getInstance()
 						.getApplicationResubmissionDays()) {
+					resubmitExpired = true;
 					getManagedBean().setRejectedApplExist(false);
 					isRejectedApplExist = false;
-					rejectedWf = null;
 				}
 			}
+			//31792 - END
 			//30713 - End
 			boolean successPayment = checkSuccessPaymentBySupplierId(supplier.getSupplierId());
 			
@@ -254,7 +255,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 							if(wfStatus != null){
 								PmStatus wfStat = wfStatus.getPmStatus();
 								//31792
-								if(wfStat != null && rejectedWf != null &&
+								if(wfStat != null && !resubmitExpired &&
 									(wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PO_REJECTED_APPLICATION || 
 									wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_APPROVER_REJECTED_APPLICATION ||
 									wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS)){
@@ -280,7 +281,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 									path = MOF_REG_PATH;
 									getManagedBean().setFlowStatus(1);
 									
-									if(rejectedWf != null){
+									if(rejectedWf != null && !resubmitExpired){
 										path = validPaymentForResubmission(supplier.getSupplierId(), rejectedWf.getDocId());
 									}
 								}
