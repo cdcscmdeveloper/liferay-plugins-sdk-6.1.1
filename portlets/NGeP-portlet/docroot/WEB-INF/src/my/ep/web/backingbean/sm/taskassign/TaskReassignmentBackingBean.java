@@ -64,6 +64,7 @@ import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmPendingRemoveTask;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmStatusRole;
@@ -135,6 +136,11 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 				.setExcludeUser(getFacesScopes().getUserSessionBean());
 		this.getManagedBean().setTaskLazy(false);
 		resetAllTaskList();
+		
+		//29822 - start
+		this.getManagedBean().setEnableRemoveAllGroupTasksButton(false);
+		this.getManagedBean().setEnableRemoveAllOthersTasksButton(false);
+		//29822 - end
 	}
 	
 	/**
@@ -211,6 +217,10 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 		this.getManagedBean().setCheckAllOthersTasksEnabled(false);
 		//#29822 - END
 		log.info("searchDocument - End");
+		
+		//29822 - start
+		checkPendingTaskRemove();
+		//29822 - end
 
 	}
 
@@ -1771,7 +1781,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 					reqDTO.setParamDocType(getManagedBean().getTaskAssignmentSearchBean().getDocType());
 				}
 				
-				resDTO = taskAssignmentSO.saveTempTable(reqDTO);
+				resDTO = taskAssignmentSO.savePmPendingRemoveTask(reqDTO);
 				
 			}
 		} catch (Exception e) {
@@ -1928,7 +1938,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 					reqDTO.setParamDocType(getManagedBean().getTaskAssignmentSearchBean().getDocType());
 				}
 
-				resDTO = taskAssignmentSO.saveTempTable(reqDTO);
+				resDTO = taskAssignmentSO.savePmPendingRemoveTask(reqDTO);
 
 			}
 		} catch (Exception e) {
@@ -2120,7 +2130,24 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 	//#29822 - END
 	
 	//#29822 - start
-	
+	public void checkPendingTaskRemove() {
+		PmUser pmUser = this.getManagedBean().getTaskAssignmentSearchBean().getUser().getPmUser();
+		ISupplierDataMaintenanceSO iSupplierDataMaintenanceSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
+		PmPendingRemoveTask hasActivePending = iSupplierDataMaintenanceSO.checkActivePendingTaskRemove(pmUser
+				.getLoginId());
+		
+		if (hasActivePending != null) {
+			if (hasActivePending.getParamTask().equalsIgnoreCase("GROUP")) {
+				this.getManagedBean().setEnableRemoveAllGroupTasksButton(false);
+			} else {
+				this.getManagedBean().setEnableRemoveAllOthersTasksButton(false);
+			}
+		} else {
+			this.getManagedBean().setEnableRemoveAllGroupTasksButton(true);
+			this.getManagedBean().setEnableRemoveAllOthersTasksButton(true);
+		}
+	}
 	//#29822 - end
 	
 }

@@ -145,7 +145,7 @@
 						<p:commandButton value="#{lbl['lbl.btn.search']}" 
 							id="cbSearchTask" widgetVar="cbSearchTask"
 							process="pTaskAssignSearch" action="#{supplierTaskReassignmentBackingBean.searchTaskAssign}"
-							update=":form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult" 
+							update=":form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult,:form:deleteGroupTasks,:form:deleteOthersTasks" 
 							onclick="cbSearchTask.disable();cbResetTask.disable()"  
 							onstart="taskReassignconfirmPopupBlockWidget.show()"
 			  				oncomplete="cbSearchTask.enable();cbResetTask.enable();taskReassignconfirmPopupBlockWidget.hide();"
@@ -156,7 +156,7 @@
 			  				oncomplete="cbSearchTask.enable();cbResetTask.enable();taskReassignconfirmPopupBlockWidget.hide();"
 							value="#{lbl['lbl.btn.reset']}" 
 							action="#{supplierTaskReassignmentBackingBean.resetTaskAssignSearchBean}"
-							update="pTaskAssignSearch,:form:userTaskListID,:form:groupTaskListID,:form:othersTaskListID," 
+							update="pTaskAssignSearch,:form:userTaskListID,:form:groupTaskListID,:form:othersTaskListID,:form:deleteGroupTasks,:form:deleteOthersTasks" 
 							/> 
 					</div>
 				</td>

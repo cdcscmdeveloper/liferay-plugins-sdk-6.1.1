@@ -180,7 +180,7 @@
 				</td>
 			</tr>
 			<!-- 12852 End -->
-			<!-- 7465 start -->
+			<!-- 7465, 29822 start -->
 			<tr>
 				<td colspan="4">
 					<div class="ppRightBtn">
@@ -190,7 +190,7 @@
 							widgetVar="cbSearchTask"
 							process="pTaskAssignSearch" 
 							action="#{taskReassignmentBackingBean.searchTasks}"
-							update=":form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult,showReassigneeList,:form:messages,:form:noReassignees,:form:bulkReassignBtnId"
+							update=":form:dtTaskAssignResult,:form:deleteGroupTasks,:form:deleteOthersTasks,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult,showReassigneeList,:form:messages,:form:noReassignees,:form:bulkReassignBtnId"
 							onclick="cbSearchTask.disable();cbResetTask.disable();"
 							onstart="taskReassignconfirmPopupBlockWidget.show()"
 			  				oncomplete="cbSearchTask.enable();cbResetTask.enable();taskReassignconfirmPopupBlockWidget.hide();"
@@ -201,12 +201,12 @@
 			  				oncomplete="cbSearchTask.enable();cbResetTask.enable();taskReassignconfirmPopupBlockWidget.hide();"
 							value="#{lbl['lbl.btn.reset']}" 
 							action="#{taskReassignmentBackingBean.resetTaskAssignSearchBean}"
-							update="@form,pTaskAssignSearch,:form:userTaskListID,:form:groupTaskListID,:form:othersTaskListID,showReassigneeList,:form:messages,:form:noReassignees"
+							update="@form,pTaskAssignSearch,:form:userTaskListID,:form:groupTaskListID,:form:othersTaskListID,showReassigneeList,:form:messages,:form:noReassignees,:form:deleteGroupTasks,:form:deleteOthersTasks"
 						/>
 					</div>
 				</td>
 			</tr>
-			<!-- 7465 end -->
+			<!-- 7465,29822 end -->
 		</table>
 		
 		<ac:ptjPopup id="orgProfileCcId"
