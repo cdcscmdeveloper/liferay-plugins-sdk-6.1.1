@@ -40,7 +40,6 @@ import my.ep.biz.service.pm.common.taskassginment.ITaskAssignmentSO;
 import my.ep.biz.service.pp.procurementplan.IProcurementPlanSO;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
-import my.ep.biz.service.sm.common.taskassginment.ISmTaskAssignmentSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -83,6 +82,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmPendingRemoveTask;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmStatusRole;
@@ -90,7 +90,6 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -243,6 +242,11 @@ public class TaskReassignmentBackingBean extends
 		resetCheckAllTasks();
 		this.getManagedBean().setShowParentMsg(true);	// [#25018]
 		this.getManagedBean().setShowChildMsg(false);	// [#25018]
+		
+		//29822 - start
+		this.getManagedBean().setEnableRemoveAllGroupTasksButton(false);
+		this.getManagedBean().setEnableRemoveAllOthersTasksButton(false);
+		//29822 - end
 	}
 	
 	/**
@@ -828,6 +832,11 @@ public class TaskReassignmentBackingBean extends
 			resetReassigneeList(); //If the Reset button is not clicked when performing the next search
 			resetCheckAllTasks();
 			searchTaskAssign();
+			
+			//29822 - start
+			checkPendingTaskRemove();
+			//29822 - end
+			
 			log.info("[#22117] - isBpkAdminUser: " + this.getManagedBean().isBpkAdminUser());
 		} else {
 			/*if (!verifiedDocNumber(this.getManagedBean().
@@ -839,7 +848,6 @@ public class TaskReassignmentBackingBean extends
 				searchUsers();
 			//}
 		}
-		
 	}
 	
 	public void searchTaskAssign() {
@@ -3422,7 +3430,7 @@ public class TaskReassignmentBackingBean extends
 							.getPmParameter().getParameterCode());
 				}
 				
-				resDTO = taskAssignmentSO.saveTempTable(reqDTO);
+				resDTO = taskAssignmentSO.savePmPendingRemoveTask(reqDTO);
 				
 			}
 		} catch (Exception e) {
@@ -3499,7 +3507,7 @@ public class TaskReassignmentBackingBean extends
 							.getPmParameter().getParameterCode());
 				}
 
-				resDTO = taskAssignmentSO.saveTempTable(reqDTO);
+				resDTO = taskAssignmentSO.savePmPendingRemoveTask(reqDTO);
 
 			}
 		} catch (Exception e) {
@@ -4025,4 +4033,25 @@ public class TaskReassignmentBackingBean extends
 		}		
 		return isBpkAdmin;			
 	}
+	
+	//29822 - start
+	public void checkPendingTaskRemove() {
+		PmUser pmUser = this.getManagedBean().getTaskAssignmentSearchBean().getUser();
+		ISupplierDataMaintenanceSO iSupplierDataMaintenanceSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
+		PmPendingRemoveTask hasActivePending = iSupplierDataMaintenanceSO.checkActivePendingTaskRemove(pmUser
+				.getLoginId());
+		
+		if (hasActivePending != null) {
+			if (hasActivePending.getParamTask().equalsIgnoreCase("GROUP")) {
+				this.getManagedBean().setEnableRemoveAllGroupTasksButton(false);
+			} else {
+				this.getManagedBean().setEnableRemoveAllOthersTasksButton(false);
+			}
+		} else {
+			this.getManagedBean().setEnableRemoveAllGroupTasksButton(true);
+			this.getManagedBean().setEnableRemoveAllOthersTasksButton(true);
+		}
+	}
+	//29822 - end
 }
