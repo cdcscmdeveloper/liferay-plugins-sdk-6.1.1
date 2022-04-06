@@ -3048,8 +3048,10 @@ public class SupplierDataMaintenanceBackingBean extends
 		if(supplier == null){
 			supplier = SmApplicationUtil.getCurrentSupplier();
 		}
+		log.info(supplier+"-----------------Supplier ID-------------------------------");
+		log.info(supplier.getSupplierId()+"-----------------Supplier ID-------------------------------");
 		
-		log.info(supplier.getSupplierId().toString()+"-----------------Supplier ID-------------------------------");
+		
 		if (language.equals("en")) {
 			Map<String, String> paramMap = new HashMap<String, String>();
 			paramMap.put("PSUPPLIERID", supplier.getSupplierId().toString());
