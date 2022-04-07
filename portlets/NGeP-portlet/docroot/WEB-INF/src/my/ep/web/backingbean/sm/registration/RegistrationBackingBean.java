@@ -1199,9 +1199,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	
 	public void onCallFirstUserTncDialog(){
 		getManagedBean().setAggreeDeclareAdmin(false);
-		// #30829 - start
-		checkRoleInCompany();
-		// #30829 - end
 		setAdminSameAsOwner();
 		SmPersonnel smPersonnel = this.getManagedBean().getSmPersonnel();
 		//SSM INTEGRATION
@@ -4801,17 +4798,5 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 	//  #30829 - End 1/11/2021
 	
-	// #30829 - start
-	private void checkRoleInCompany() {
-		if (!getManagedBean().isSameAsOwner()) {
-			if (!getManagedBean().getSmPersonnel().isEquityOwner() && !getManagedBean().getSmPersonnel().isDirector()
-					&& !getManagedBean().getSmPersonnel().isHigherManagement()
-					&& !getManagedBean().getSmPersonnel().isManagement() && !getManagedBean().getSmPersonnel().isProf()
-					&& !getManagedBean().getSmPersonnel().isSemiProf()
-					&& !getManagedBean().getSmPersonnel().isClerical()) {
-				throw new EpException(MessageConst.ERROR_722535);
-			}
-		}
-	}
-	// #30829 - end
+	
 }
