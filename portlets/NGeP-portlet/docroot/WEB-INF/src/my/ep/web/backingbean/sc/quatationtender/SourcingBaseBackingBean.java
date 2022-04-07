@@ -5241,7 +5241,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					for (ScQtCommitteeActivity committeeActivity : committeeList) {
 						if (null != committeeActivity && null != committeeActivity.getScCommitteeMember()
 								&& null != committeeActivity.getScCommitteeMember().getMemberRole()
-								&& "S".equalsIgnoreCase(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())) {
+								&& ParameterConst.COMMITTEE_ROLE_SECRETARY.equalsIgnoreCase(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())) {
 							PmUser secretaryUser = committeeActivity.getScCommitteeMember().getPmUser();
 							if (secretaryUser.getUserId().longValue() != new FacesScopes().getUserSessionBean().getUserId()) {
 								getManagedBean().setDisplayReviseInstrn(true);
@@ -5518,7 +5518,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					for(ScCommitteeMember member: members){
 						PmParameter memberRoleParam =  member.getMemberRole();
 						if(!memberRoleParam.getParameterCode().equals(ParameterConst.COMMITTEE_ROLE_SECRETARY)){
-							String memberRole = this.getParameterDesc(memberRoleParam);
+							String memberRole = ResourceBundleUtils.getMessage("lbl.sc.committee.role.".concat(memberRoleParam.getParameterCode()), ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()); //25037 - note 533
 							userReqDTO.setRoleCode(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.concat(roleMap.get(memberRoleParam.getParameterCode())));
 							userReqDTO.setIncludeUserIds(Arrays.asList(new Long[]{member.getPmUser().getUserId()}));
 							UserResDTO resDTO = userSO.retrieveUserListByRole(userReqDTO);
