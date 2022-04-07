@@ -37,10 +37,11 @@
 				</c:choose>
 				<!-- 25692#95 - end -->
 				<!-- danial #25635 - rollback 22/11/2020 end -->
-				<p:commandButton value="#{lbl['lbl.sc.clone.specification']}" style="float:right;" id="cloneButton"
+	 			<p:commandButton value="#{lbl['lbl.sc.clone.specification']}" style="float:right;" id="cloneButton"
 											process="@this" partialSubmit="true" update="pnlid2" rendered="#{isClone and !specificationBackingBean.managedBean.readOnly}"
 											action="#{qtSpecCloneBackingBean.cloneCommitteePopupAction()}"
 											title="#{lbl['lbl.sc.qt.create.btn.clone.tooltip']}" />
+		
 				
 			<ui:fragment rendered="#{specificationBackingBean.managedBean.specMaintenanceScreen ne specificationBackingBean.getSpecMaintenance()}">
 				<ui:repeat var="bpmAction"
@@ -236,7 +237,7 @@
 		<p:dialog id="inactiveSCMembersPopupId" widgetVar="inactiveSCMembersPopup"
 			resizable="false"
 			style="max-width: 400px !important; border: 0 !important"
-			closable="false">
+			closable="false" modal="true">
 			<table>
 				<tr>
 					<td align="center" style="border: 0 !important"><p:outputLabel style="padding: 0 !important; text-align:justify !important;white-space: break-spaces !important; color: red !important;"

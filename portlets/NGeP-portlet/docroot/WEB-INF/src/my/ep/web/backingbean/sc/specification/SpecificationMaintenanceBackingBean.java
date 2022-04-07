@@ -431,16 +431,14 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable){
 
 
 public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean popup){
+	editSpecificationMaintenance(scQt, isEditable, true,false, null);
 	if(popup){
 		this.assertSpecCommitteeMaintenanceInProgress(scQt);
 		if(this.getManagedBean().getInactiveSCMemberStr().length()>0){
-			RequestContext.getCurrentInstance().execute("inactiveSCMembersPopup"+scQt.getQtId()+".show()");
-			return;
+			RequestContext.getCurrentInstance().execute("inactiveSCMembersPopup.show()");
 		}
 	}
 	//25037 - end - note 510
-
-	editSpecificationMaintenance(scQt, isEditable, true,false, null);
 }
 
 /**
