@@ -431,6 +431,7 @@ public void editSpecificationMaintenance(ScQt scQt, boolean isEditable){
 
 
 public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean popup){
+	editSpecificationMaintenance(scQt, isEditable, true,false, null);
 	if(popup){
 		this.assertSpecCommitteeMaintenanceInProgress(scQt);
 		if(this.getManagedBean().getInactiveSCMemberStr().length()>0){
@@ -439,8 +440,6 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 		}
 	}
 	//25037 - end - note 510
-
-	editSpecificationMaintenance(scQt, isEditable, true,false, null);
 }
 
 /**
