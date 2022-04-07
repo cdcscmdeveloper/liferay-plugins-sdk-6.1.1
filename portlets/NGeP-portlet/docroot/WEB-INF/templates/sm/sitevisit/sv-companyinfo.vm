@@ -29,8 +29,8 @@
     	</tr>
     	
     	<tr>
-	        <td width="30%"><b>ROC/ROB/ROS No.</b></td>
-	        <td>$busRegNo</td>
+	       <td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.new.business.regNo')</b></td>
+	        <td>$newBusinessRegistrationNo</td>
     	</tr>
     	
     	<tr>
