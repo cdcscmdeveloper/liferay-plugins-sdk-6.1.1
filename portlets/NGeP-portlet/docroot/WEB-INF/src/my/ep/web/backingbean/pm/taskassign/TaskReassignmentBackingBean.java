@@ -3442,7 +3442,7 @@ public class TaskReassignmentBackingBean extends
 		
 		if (resDTO != null && resDTO.isSuccessful()) {
 			PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), 
-			FacesMessage.SEVERITY_INFO, MessageConst.INFO_770105, null);
+			FacesMessage.SEVERITY_INFO, MessageConst.INFO_780071, null);
 			
 			this.getManagedBean().setEnableRemoveAllGroupTasksButton(false);
 			
@@ -3520,7 +3520,7 @@ public class TaskReassignmentBackingBean extends
 
 		if (resDTO != null && resDTO.isSuccessful()) {
 			PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_INFO,
-					MessageConst.INFO_770105, null);
+					MessageConst.INFO_780071, null);
 			
 			this.getManagedBean().setEnableRemoveAllOthersTasksButton(false);
 
