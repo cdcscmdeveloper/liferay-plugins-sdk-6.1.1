@@ -6920,6 +6920,9 @@ public class EvaluationBackingBean extends
 									&& !techCheckList.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO) ) {
 								this.getManagedBean()
 										.setEvaluatioStageActiveIndex(0);
+								// #25138 - #32392 - Start.
+                                this.getManagedBean().setTabTechnicalIndex(1); 
+                                // #25138 - #32392 - End.
 								throw new EpException(MessageConst.ERROR_760240);
 
 							}
