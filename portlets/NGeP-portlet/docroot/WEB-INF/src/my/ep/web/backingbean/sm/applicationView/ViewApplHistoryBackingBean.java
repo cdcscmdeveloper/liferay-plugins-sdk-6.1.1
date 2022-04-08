@@ -73,6 +73,7 @@ import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmApplSupportDocInquiry;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
@@ -292,6 +293,12 @@ public class ViewApplHistoryBackingBean extends
 		resubmitSSM();
 		//#27250 - END SSM CHANGES FOR RESUBMIT
 		
+		//#32002-start
+		if(getManagedBean().getSmAppl().getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED &&
+				getManagedBean().getSmAppl().getSmSupplier().getSmMofAccount().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED){
+			throw new EpException(SmCommonUtil.getMessage(
+					"lbl.sm.resubmitExpired.mofExpired", null));
+		}//#32002-end
 		// #14832 - To cater if resubmit link already expired and supplier still
 		// in progress (Supplier Temp), so will call alert popup that will
 		// redirect to clone new application and start fresh
@@ -1852,7 +1859,12 @@ public class ViewApplHistoryBackingBean extends
 					button = false;
 				}else if(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_REGISTERED)){
 					button = false;
-				}
+				}//#32002 - start
+				else if(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_APPROVER_REJECTED_APPLICATION)
+						|| smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_PO_REJECTED_APPLICATION)
+						 && checkStatusMofNoBySupplierId(smAppl)== false){
+					button = false;
+				}//#32002 - end
 			}
 		}
 		return button;
@@ -1901,5 +1913,18 @@ public class ViewApplHistoryBackingBean extends
 		SmServiceLookup.getSmRemarksSO().updateRoleCode(reqDTO);
 	}
 	// #32424 - end
-	
+	//#32002 - start
+	public Boolean checkStatusMofNoBySupplierId(SmAppl smAppl){
+		
+		SmSupplier supplier = smAppl.getSmSupplier();
+		if (supplier.getSupplierId()!=null){
+			for (SmMofAccount mofs : supplier.getSmMofAccounts()){
+				if (mofs.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED) 
+						&& supplier.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){
+					return false;
+				}
+			}
+		}
+		return true;
+	}//#32002 - end
 }
