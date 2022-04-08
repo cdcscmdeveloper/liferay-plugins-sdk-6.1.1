@@ -16095,6 +16095,7 @@ public class SpecificationBackingBean extends
 		//25037 - start - note 510
 		assertSpecCommitteeMaintenanceInProgress(this.getManagedBean().getQt());//#25037
 		if(this.getManagedBean().getInactiveSCMemberStr().length()>0){
+			this.qtChecklistTabChange(10);
 			RequestContext.getCurrentInstance().execute("inactiveSCMembersPopup.show()");
 			return;
 		}
