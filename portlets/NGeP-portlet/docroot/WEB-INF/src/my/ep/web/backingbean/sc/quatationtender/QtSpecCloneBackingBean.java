@@ -815,7 +815,7 @@ public class QtSpecCloneBackingBean extends
 		if(null!=copy.getDefinationType() && ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO
 				.equalsIgnoreCase(copy.getDefinationType()
 						.getParameterCode())){
-				copy.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
+				copy.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));//28784&25635-start
 			}
 		if(null!=copy.getDefinationType() && ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_DOCUMENT
 				.equalsIgnoreCase(copy.getDefinationType()
@@ -2719,6 +2719,15 @@ public class QtSpecCloneBackingBean extends
 				searchFilterBean.add(bean);
 				
 			}//21695&25635-End
+	if (null != this.getManagedBean().getQt()){//28784&25635-start
+		
+		SearchFilterBean bean = new SearchFilterBean();
+		bean.setSearchField("demoRequired");
+		bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+		bean.setSearchValue(this.getManagedBean().getQt().isDemoRequired());
+		searchFilterBean.add(bean);
+		
+	}//28784&25635-End
 			// Adding search filterbeans to searchbean.
 			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
 		}
