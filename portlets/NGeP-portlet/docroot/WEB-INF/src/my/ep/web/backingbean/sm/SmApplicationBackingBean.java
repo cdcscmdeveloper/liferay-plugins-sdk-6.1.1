@@ -9409,12 +9409,6 @@ public class SmApplicationBackingBean extends
 
 		} else if (res
 				.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
-			// #30929 - start
-			log.info("<<< #30929: SmApplicationBackingBean.submitPOorApproverReviewToBPM() - start >>>");
-			log.info("<<< getSupplierId : " + getManagedBean().getSmSupplier().getSupplierId() + " >>>");
-			log.info("<<< getApplId ::::: " + getManagedBean().getSmAppl().getApplId() + " >>>");
-			// #30929 - end
-			
 			PmRegStatus regStatus = null;
 			if (getManagedBean().isPoUser()) {
 				actionDesc = SupplierManagementConst.PO_APPROVE_APPL;
@@ -9511,7 +9505,7 @@ public class SmApplicationBackingBean extends
 				SmApplicationUtil
 						.updateSmSupplierInfo(getManagedBean(), reqDTO);
 			}
-			log.info("<<< #30929: SmApplicationBackingBean.submitPOorApproverReviewToBPM() - finish >>>");
+
 		}
 
 		log.info("Before final decision ---"
