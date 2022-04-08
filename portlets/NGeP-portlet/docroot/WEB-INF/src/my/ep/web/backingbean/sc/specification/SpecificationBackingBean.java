@@ -15613,6 +15613,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		
 		return "/xhtml/sc/specification/specificationCommittee/technicalCheckListSampleItemView.xhtml?faces-redirect=true";
 	}
+	// #11104 -end-
 
 	/****
 	 * 11104-start
@@ -15624,6 +15625,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	public String sampleViewBackAction() {
 		return "/xhtml/sc/specification/specificationCommittee/technicalCheckListSampleMain.xhtml?faces-redirect=true";
 	}
+	// #11104 -end-
 
 	/****
 	 * 11104-start retrive samplespecmaster and questions during click on view
@@ -15657,6 +15659,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		
 		templateSpecBean.setSpecMaster(this.getManagedBean().getSampleCheckList().getScQtDoc().getTplSpecMaster());
 	}
+	// #11104 -end-
 
 	/***
 	 * 11104-start display samplequantityerror in sample checkbox selected for
@@ -15676,6 +15679,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		
 		return null;
 	}
+	// #11104 -end-
 
 	/****
 	 * 11104-start display scoresetting dropdown values in sample screen.
@@ -15708,6 +15712,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		
 		return items;
 	}
+	// #11104 -end-
 
 	/***
 	 * 11104-start sample required checkbox selection for sample item.
@@ -15738,6 +15743,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			scoringPopUpAction(null);
 		}
 	}
+	// #11104 -end-
 
 	/****
 	 * 11104-start scoring action for sample item.
@@ -15765,6 +15771,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			RequestContext.getCurrentInstance().execute("samplescoringSetPopup.hide()");
 		}
 	}
+	// #11104 -end-
 
 	/****
 	 * 11104-start sample items save and complete action for sample itmes.
@@ -15847,14 +15854,15 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		
 		return null;
 	}
+	// #11104 -end-
 
 	/***
 	 * 11104-start reset item name in sample search scrren.
 	 */
 	public void resetSampleItem() {
-//		log.info("=======resetSampleItem======");
 		this.getManagedBean().setSampleItemName(" ");
 	}
+	// #11104 -end-
 
 	/***
 	 * 11104-start validate sample items quantity and score during complete
@@ -15876,29 +15884,10 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						String errorMessage = question.getClItem().concat("   ").concat(message);
 						
 						throw new EpException(MessageConst.ERROR_100022, new String[] { errorMessage });
-						// String
-						// message=sampleQuantityError(question.getClItem());
-						// throw new EpException(MessageConst.ERROR_760515 , new
-						// String[] {message} );
 					}
 					
-					/*
-					 * else{ //Pattern pattern = Pattern.compile("\\d");
-					 * //String pattern1 = "[0-9]+"; //Matcher matcher =
-					 * pattern.matches(question.getSampleQuantity().toString());
-					 * Pattern pattern =
-					 * Pattern.compile(CommonUIConst.NUMBER_REG_EX_PATTERN);
-					 * Matcher matcher =
-					 * pattern.matcher(question.getSampleQuantity().toString());
-					 * if (!matcher.matches()) { // throw new
-					 * EpException("Postcode is Valid"); String
-					 * message=sampleQuantityError(question.getClItem()); throw
-					 * new EpException(MessageConst.ERROR_760515 , new String[]
-					 * {message} ); } }
-					 */
-					
 					if (null == question.getSampleScore()) {
-						String message = ResourceBundleUtils.getMessage("lbl.tpl.spec.content.scoring.settings.title",
+						String message = ResourceBundleUtils.getMessage("lbl.tpl.spec.content.scoring.settings.max.score",
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 						String errorMessage = question.getClItem().concat("   ").concat(message);
 						
@@ -15913,6 +15902,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			}
 		}
 	}
+	// #11104 -end-
 
 	/***
 	 * 11104-start check sample checkist required or not based on sample radio

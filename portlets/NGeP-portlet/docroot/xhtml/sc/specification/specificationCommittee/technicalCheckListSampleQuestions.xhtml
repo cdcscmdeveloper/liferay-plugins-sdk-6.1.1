@@ -10,173 +10,191 @@
 		header="#{lbl['lbl.sc.qt.sampel.technical.panel.item.search.header']}"
 		toggleable="true">
 
-<h:outputText styleClass="instruction"  
-			value="#{lbl['lbl.sc.qt.spec.sample.instruction']}"
-			escape="false" />
-<p:spacer height="10"></p:spacer>
-			<table>
-					<tr>
-						<td valign="top"><h:outputLabel
-								value="#{lbl['lbl.sc.document.title']}"></h:outputLabel></td>
-						<td colspan="3"><p:inputTextarea rows="2" cols="95"
-								disabled="true" style="margin-bottom:5px;width:85%;"
-								maxlength="200"
-								value="#{specificationBackingBean.managedBean.sampleCheckList.scQtDoc.tplSpecMaster.specName}" /></td>
-					</tr>
-					<tr>
-						<td style="width: 10%"><h:outputLabel
-								value="#{lbl['lbl.sc.item.type']}" /></td>
-						<td><p:inputText
-								value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.sampleCheckList.scQtDoc.tplSpecMaster.itemTypeCode)}"
-								disabled="true" size="30" /></td>
-						<td><h:outputLabel
-								value="#{lbl['lbl.tpl.spec.specification.type']}" /></td>
-						<td>
-						<!-- - value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.sampleCheckList.scQtDoc.tplSpecMaster.specTypeCode)}" -->
-						<p:inputText disabled="true" size="30" value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.sampleCheckList.scQtDoc.tplSpecMaster.specTypeCode)}"
-								 /></td>
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.qt.spec.sample.instruction']}" escape="false" />
+		<p:spacer height="10"></p:spacer>
+		<table>
+			<tr>
+				<td valign="top"><h:outputLabel
+						value="#{lbl['lbl.sc.document.title']}"></h:outputLabel></td>
+				<td colspan="3"><p:inputTextarea rows="2" cols="95"
+						disabled="true" style="margin-bottom:5px;width:85%;"
+						maxlength="200"
+						value="#{specificationBackingBean.managedBean.sampleCheckList.scQtDoc.tplSpecMaster.specName}" /></td>
+			</tr>
+			<tr>
+				<td style="width: 10%"><h:outputLabel
+						value="#{lbl['lbl.sc.item.type']}" /></td>
+				<td><p:inputText
+						value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.sampleCheckList.scQtDoc.tplSpecMaster.itemTypeCode)}"
+						disabled="true" size="30" /></td>
+				<td><h:outputLabel
+						value="#{lbl['lbl.tpl.spec.specification.type']}" /></td>
+				<td><p:inputText disabled="true" size="30"
+						value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.sampleCheckList.scQtDoc.tplSpecMaster.specTypeCode)}" /></td>
 
-					</tr>
-					<tr>             
+			</tr>
+			<tr>
 
-						<td><h:outputLabel value="#{lbl['lbl.sc.spec.local.goods']}" /></td>
-						<td>
-						<!-- value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.sampleCheckList.scQtDoc.tplSpecMaster.itemOriginCode)}" -->
-						<p:inputText disabled="true" size="30" value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.sampleCheckList.scQtDoc.tplSpecMaster.itemOriginCode)}"
-								></p:inputText></td>
-					</tr>
+				<td><h:outputLabel value="#{lbl['lbl.sc.spec.local.goods']}" /></td>
+				<td><p:inputText disabled="true" size="30"
+						value="#{lbl['lbl.sc.qt.sample.type.of.goods.local']}"
+						rendered="#{specificationBackingBean.managedBean.sampleCheckList.scQtDoc.tplSpecMaster.itemOriginCode.parameterCode eq ParameterConst.LOCAL_GOODS}"></p:inputText>
 
-					
-				</table>
-         <p:spacer height="10"></p:spacer>
-         	<p:dataTable var="technicalSampleQuestion"
+					<p:inputText disabled="true" size="30"
+						value="#{lbl['lbl.sc.qt.sample.type.of.goods.import']}"
+						rendered="#{specificationBackingBean.managedBean.sampleCheckList.scQtDoc.tplSpecMaster.itemOriginCode.parameterCode eq ParameterConst.IMPORTED_GOODS}"></p:inputText>
+
+				</td>
+			</tr>
+
+
+		</table>
+		<p:spacer height="10"></p:spacer>
+		<p:dataTable var="technicalSampleQuestion"
 			id="technicalSampleTemplateQuestionsTableId" rows="50"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{specificationBackingBean.managedBean.sampleCheckList.scQtDoc.tplSpecMaster.tplSpecQuestions}"
 			rowIndexVar="index" style="width:100%"
 			rowKey="#{technicalSampleQuestion}">
 			<ac:paginator for="technicalSampleTemplateQuestionsTableId"></ac:paginator>
-			<ui:param name="quantityMsg" value="#{specificationBackingBean.sampleQuantityError(technicalSampleQuestion.clItem)}"></ui:param>
-				<p:columnGroup type="header">
-		<p:row>
-			<p:column rowspan="2" style="white-space: normal;"
-				headerText="#{lbl['lbl.tpl.spec.content.item']}">
-			</p:column>
-			
-			<p:column rowspan="2"  style="width:10%;white-space:normal;"
-				headerText="#{lbl['lbl.tpl.spec.content.uom']}">
+			<ui:param name="quantityMsg"
+				value="#{specificationBackingBean.sampleQuantityError(technicalSampleQuestion.clItem)}"></ui:param>
+			<p:columnGroup type="header">
+				<p:row>
+					<p:column rowspan="2" style="white-space: normal;"
+						headerText="#{lbl['lbl.tpl.spec.content.item']}">
+					</p:column>
 
-			</p:column>
-			<p:column rowspan="2"  style="width:10%; white-space:normal;"
-				headerText="#{lbl['lbl.tpl.spec.content.price.type']}">
-			</p:column>
-			
-			<p:column rowspan="2"  style="width:10%;white-space:normal;"
-				headerText="#{lbl['lbl.tpl.spec.content.quantity']}" >
+					<p:column rowspan="2" style="width:10%;white-space:normal;"
+						headerText="#{lbl['lbl.tpl.spec.content.uom']}">
 
-			</p:column>
-			    	<p:column colspan="2" headerText="#{lbl['lbl.sc.qt.sampel']}" style="width:15%; text-align:center;" />
-			
-				<p:column rowspan="2" headerText="#{lbl['lbl.tpl.spec.content.scoring.settings.title']}" style="width:10%; text-align:center;" />
-			</p:row>
-			 	<p:row>
-		             
-		               <p:column colspan="1" headerText="#{lbl['lbl.sc.qt.spec.sample.question.requird.sample']}"  style="width:10%; white-space:normal;"/>
-		               <p:column colspan="1" headerText="#{lbl['lbl.tpl.spec.content.quantity']}" style="width:7%; white-space:normal;" />
-		           	</p:row>
-			
+					</p:column>
+					<p:column rowspan="2" style="width:10%; white-space:normal;"
+						headerText="#{lbl['lbl.tpl.spec.content.price.type']}">
+					</p:column>
+
+					<p:column rowspan="2" style="width:10%;white-space:normal;"
+						headerText="#{lbl['lbl.tpl.spec.content.quantity']}">
+
+					</p:column>
+					<p:column colspan="2" headerText="#{lbl['lbl.sc.qt.sampel']}"
+						style="width:15%; text-align:center;" />
+
+					<p:column rowspan="2"
+						headerText="#{lbl['lbl.tpl.spec.content.scoring.settings.max.score']}"
+						style="width:10%; text-align:center;" />
+				</p:row>
+				<p:row>
+
+					<p:column colspan="1"
+						headerText="#{lbl['lbl.sc.qt.spec.sample.question.requird.sample']}"
+						style="width:10%; white-space:normal;" />
+					<p:column colspan="1"
+						headerText="#{lbl['lbl.tpl.spec.content.quantity']}"
+						style="width:7%; white-space:normal;" />
+				</p:row>
+
 			</p:columnGroup>
 			<p:column style="white-space: normal;">
-			<h:outputText value="#{technicalSampleQuestion.clItem}"></h:outputText>
+				<h:outputText value="#{technicalSampleQuestion.clItem}"></h:outputText>
 			</p:column>
-			
+
 			<p:column style="white-space: normal;">
-			<h:outputText value="#{technicalSampleQuestion.clUom.uomName}"></h:outputText>
+				<h:outputText value="#{technicalSampleQuestion.clUom.uomName}"></h:outputText>
 			</p:column>
-			
+
 			<p:column style="white-space: normal;">
-			<h:outputText
-			value="#{specificationBackingBean.getParameterDesc(technicalSampleQuestion.clPriceTypeCode)}" />
+				<h:outputText
+					value="#{specificationBackingBean.getParameterDesc(technicalSampleQuestion.clPriceTypeCode)}" />
 			</p:column>
-			
+
 			<p:column style="white-space: normal;">
-			<h:outputText value="#{technicalSampleQuestion.clQuantity}"  rendered="#{technicalSampleQuestion.clPriceTypeCode ne null and(technicalSampleQuestion.clPriceTypeCode.parameterCode eq ParameterConst.priceTypeStandard)}"></h:outputText>
-			<p:commandButton id="sampleZoneQtyBtn" 
-				icon="ui-icon-pencil" rendered="#{technicalSampleQuestion.clPriceTypeCode ne null and(technicalSampleQuestion.clPriceTypeCode.parameterCode eq ParameterConst.priceTypeZonalStandard or technicalSampleQuestion.clPriceTypeCode.parameterCode eq ParameterConst.priceTypeZonalTier)}"
-				style="background-color:transparent !important; border:0px none;"
-				styleClass="sampleZoneQtyBtn"
-				oncomplete="sampleZoneQtyPopup.show();" partialSubmit="true"
-				process="@this" update="@([id$=sampleZoneQtyPopup])">
-				<f:setPropertyActionListener target="#{specificationBackingBean.managedBean.sampleSpecQuestion}" value="#{technicalSampleQuestion}" />	
-			</p:commandButton>
-			
-			<p:commandButton id="sampleTierQtyBtn" 
-				icon="ui-icon-pencil" rendered="#{technicalSampleQuestion.clPriceTypeCode ne null and(technicalSampleQuestion.clPriceTypeCode.parameterCode eq ParameterConst.priceTypeTier or technicalSampleQuestion.clPriceTypeCode.parameterCode eq ParameterConst.priceTypeZonalTier)}"
-				style="background-color:transparent !important; border:0px none;"
-				styleClass="sampleTierQtyBtn"
-				oncomplete="sampletierWdgQtyPopup.show();" partialSubmit="true"
-				process="@this" update="@([id$=sampletierQtyPopup])">
-				<f:setPropertyActionListener target="#{specificationBackingBean.managedBean.sampleSpecQuestion}" value="#{technicalSampleQuestion}" />	
-			</p:commandButton>
+				<h:outputText value="#{technicalSampleQuestion.clQuantity}"
+					rendered="#{technicalSampleQuestion.clPriceTypeCode ne null and(technicalSampleQuestion.clPriceTypeCode.parameterCode eq ParameterConst.priceTypeStandard)}"></h:outputText>
+				<p:commandButton id="sampleZoneQtyBtn" icon="ui-icon-pencil"
+					rendered="#{technicalSampleQuestion.clPriceTypeCode ne null and(technicalSampleQuestion.clPriceTypeCode.parameterCode eq ParameterConst.priceTypeZonalStandard or technicalSampleQuestion.clPriceTypeCode.parameterCode eq ParameterConst.priceTypeZonalTier)}"
+					style="background-color:transparent !important; border:0px none;"
+					styleClass="sampleZoneQtyBtn"
+					oncomplete="sampleZoneQtyPopup.show();" partialSubmit="true"
+					process="@this" update="@([id$=sampleZoneQtyPopup])">
+					<f:setPropertyActionListener
+						target="#{specificationBackingBean.managedBean.sampleSpecQuestion}"
+						value="#{technicalSampleQuestion}" />
+				</p:commandButton>
+
+				<p:commandButton id="sampleTierQtyBtn" icon="ui-icon-pencil"
+					rendered="#{technicalSampleQuestion.clPriceTypeCode ne null and(technicalSampleQuestion.clPriceTypeCode.parameterCode eq ParameterConst.priceTypeTier or technicalSampleQuestion.clPriceTypeCode.parameterCode eq ParameterConst.priceTypeZonalTier)}"
+					style="background-color:transparent !important; border:0px none;"
+					styleClass="sampleTierQtyBtn"
+					oncomplete="sampletierWdgQtyPopup.show();" partialSubmit="true"
+					process="@this" update="@([id$=sampletierQtyPopup])">
+					<f:setPropertyActionListener
+						target="#{specificationBackingBean.managedBean.sampleSpecQuestion}"
+						value="#{technicalSampleQuestion}" />
+				</p:commandButton>
 			</p:column>
-			
-			<p:column style="white-space: normal;">
-			<p:selectBooleanCheckbox id="templateSpecQuestionCheckbox" value="#{technicalSampleQuestion.sampleReq}"
-			disabled="#{specificationBackingBean.managedBean.readOnly}">
-			 <p:ajax event="change" process="@this" partialSubmit="true" 
-			listener="#{specificationBackingBean.sampleRequiredChange(technicalSampleQuestion)}"
-			update="@([id$=technicalChecklistSampleScoreSetting],[id$=sampleQuanity],[id$=sampleTotalscoreId])"></p:ajax> 
-			
-			</p:selectBooleanCheckbox>
-			<p:tooltip id="templatespecSampleQuestionSC" for="templateSpecQuestionCheckbox">
-					<p:outputLabel escape="false" value="#{lbl['lbl.sc.qt.spec.sample.checkbox.mouserover']}"  />
+
+			<p:column style="white-space: normal;text-align:center;">
+				<p:selectBooleanCheckbox id="templateSpecQuestionCheckbox"
+					value="#{technicalSampleQuestion.sampleReq}"
+					disabled="#{specificationBackingBean.managedBean.readOnly}">
+					<p:ajax event="change" process="@this" partialSubmit="true"
+						listener="#{specificationBackingBean.sampleRequiredChange(technicalSampleQuestion)}"
+						update="@([id$=technicalChecklistSampleScoreSetting],[id$=sampleQuanity],[id$=sampleTotalscoreId])"></p:ajax>
+
+				</p:selectBooleanCheckbox>
+				<p:tooltip id="templatespecSampleQuestionSC"
+					for="templateSpecQuestionCheckbox">
+					<p:outputLabel escape="false"
+						value="#{lbl['lbl.sc.qt.spec.sample.checkbox.mouserover']}" />
 				</p:tooltip>
 			</p:column>
-			
+
 			<p:column style="white-space: normal;">
-			
-	 	   <h:panelGroup id="sampleQuanity">
-			<p:inputText value="#{technicalSampleQuestion.sampleQuantity}" maxlength="9" 
-			 onkeypress="if (event.keyCode == 46) { return false; }"  label="#{quantityMsg}"
-			style="text-align:right"
-			disabled="#{!technicalSampleQuestion.sampleReq or specificationBackingBean.managedBean.readOnly}">
-			<ac:validateNumber integerOnly="true" maxIntegerDigits="9">
-					</ac:validateNumber> 
-			<p:ajax event="change" process="@this" update="@this"></p:ajax>
-			</p:inputText>
-		</h:panelGroup>
+
+				<h:panelGroup id="sampleQuanity">
+					<p:inputText value="#{technicalSampleQuestion.sampleQuantity}"
+						maxlength="9"
+						onkeypress="if (event.keyCode == 46) { return false; }"
+						label="#{quantityMsg}" style="text-align:right"
+						disabled="#{!technicalSampleQuestion.sampleReq or specificationBackingBean.managedBean.readOnly}">
+						<ac:validateNumber integerOnly="true" maxIntegerDigits="9">
+						</ac:validateNumber>
+						<p:ajax event="change" process="@this" update="@this"></p:ajax>
+					</p:inputText>
+				</h:panelGroup>
 			</p:column>
 			<p:column>
-			
-			<h:panelGroup id="technicalChecklistSampleScoreSetting">
-			<h:selectOneMenu id="sampleScoreTypeId" rendered="#{technicalSampleQuestion.sampleReq}"
-			disabled="#{specificationBackingBean.managedBean.readOnly}"
-			value="#{technicalSampleQuestion.sampleScoreTypeCode.parameterId}" >
-				
-			<f:selectItems
-				value="#{specificationBackingBean.getDropDownSampleScoreType(ParameterTypeConst.answerType)}"></f:selectItems>
-			<p:ajax event="change" update="@this"
-				partialSubmit="true" process="@this"  />
-		</h:selectOneMenu>
-		
-		<p:commandButton id="samplescoringBtn" rendered="#{technicalSampleQuestion.sampleReq}"
-				icon="#{empty technicalSampleQuestion.sampleScore ? 'ui-icon-pencil' : 'ui-icon-evaluate'}"
-				style="background-color:transparent !important; border:0px none;"
-				styleClass="samplescoringBtn"
-				oncomplete="samplescoringSetPopup.show();" partialSubmit="true"
-				process="@this" update="@([id$=samplescoringSetPopup])">
-				<f:setPropertyActionListener target="#{specificationBackingBean.managedBean.sampleSpecQuestion}" value="#{technicalSampleQuestion}" />	
-			</p:commandButton>
-		
-		
-			</h:panelGroup>
-			
+
+				<h:panelGroup id="technicalChecklistSampleScoreSetting">
+
+					<p:inputText id="sampletechnicalmaxScoresampleId"
+						rendered="#{technicalSampleQuestion.sampleReq}"
+						style="text-align:right;"
+						onkeypress="if (event.keyCode == 46) { return false; }"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
+						value="#{technicalSampleQuestion.sampleScore}" size="15"
+						maxlength="3" required="false"
+						label="#{lbl['lbl.tpl.spec.content.scoring.settings.max.score']}">
+						<ac:validateNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
+							maxIntegerDigits="3" integerOnly="true" />
+						<p:ajax event="change" partialSubmit="true" process="@this"
+							update="@this,@([id$=sampleTechnicalmaxScoresampleMsg],[id$=sampleTotalscoreId])"
+							listener="#{specificationBackingBean.scoringPopUpAction(null)}" />
+					</p:inputText>
+					<p:message id="sampleTechnicalmaxScoresampleMsg"
+						for="sampletechnicalmaxScoresampleId" display="icon" />
+
+				</h:panelGroup>
+
 			</p:column>
-			
-			</p:dataTable>
-			<p:spacer height="10"></p:spacer>
-			<h:panelGroup id="sampleTotalscoreId">
-	<table>
+
+		</p:dataTable>
+		<p:spacer height="10"></p:spacer>
+		<h:panelGroup id="sampleTotalscoreId">
+			<table>
 
 				<tr>
 					<td style="width: 260px;"><p:outputLabel
@@ -185,8 +203,8 @@
 							style="text-align:right"
 							value="#{specificationBackingBean.managedBean.sampleTotalScore}" /></td>
 				</tr>
-				</table>
-				</h:panelGroup>
+			</table>
+		</h:panelGroup>
 	</p:panel>
-	
+
 </ui:composition>

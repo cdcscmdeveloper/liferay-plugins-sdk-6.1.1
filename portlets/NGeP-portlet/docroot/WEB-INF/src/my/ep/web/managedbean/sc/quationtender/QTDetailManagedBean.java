@@ -1676,6 +1676,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private String sampleItemName;
 	private int sampleTotalScore;
 	private List<ScQtCheckList> sampleSpecCheckList;
+	private List<BriefingZoneBean> sampleAddressBean;
 	//#11104-End
 	
 	// #15391 - start
@@ -10392,77 +10393,94 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		public void setCurrentQTStatus(Long currentQTStatus) {
 			this.currentQTStatus = currentQTStatus;
 		}
-		/**11104-start
-		 * @return the sampleCheckList
-		 */
-		public ScQtCheckList getSampleCheckList() {
-			return sampleCheckList;
-		}
 
-		/**
-		 * @param sampleCheckList the sampleCheckList to set
-		 */
-		public void setSampleCheckList(ScQtCheckList sampleCheckList) {
-			this.sampleCheckList = sampleCheckList;
-		}
+	/**
+	 * 11104-start
+	 * 
+	 * @return the sampleCheckList
+	 */
+	public ScQtCheckList getSampleCheckList() {
+		return sampleCheckList;
+	}
 
-		/**
-		 * @return the sampleSpecQuestion
-		 */
-		public TplSpecQuestion getSampleSpecQuestion() {
-			return sampleSpecQuestion;
-		}
+	/**
+	 * @param sampleCheckList the sampleCheckList to set
+	 */
+	public void setSampleCheckList(ScQtCheckList sampleCheckList) {
+		this.sampleCheckList = sampleCheckList;
+	}
 
-		/**
-		 * @param sampleSpecQuestion the sampleSpecQuestion to set
-		 */
-		public void setSampleSpecQuestion(TplSpecQuestion sampleSpecQuestion) {
-			this.sampleSpecQuestion = sampleSpecQuestion;
-		}
+	/**
+	 * @return the sampleSpecQuestion
+	 */
+	public TplSpecQuestion getSampleSpecQuestion() {
+		return sampleSpecQuestion;
+	}
 
-		/**
-		 * @return the sampleItemName
-		 */
-		public String getSampleItemName() {
-			return sampleItemName;
-		}
+	/**
+	 * @param sampleSpecQuestion the sampleSpecQuestion to set
+	 */
+	public void setSampleSpecQuestion(TplSpecQuestion sampleSpecQuestion) {
+		this.sampleSpecQuestion = sampleSpecQuestion;
+	}
 
-		/**
-		 * @param sampleItemName the sampleItemName to set
-		 */
-		public void setSampleItemName(String sampleItemName) {
-			this.sampleItemName = sampleItemName;
-		}
+	/**
+	 * @return the sampleItemName
+	 */
+	public String getSampleItemName() {
+		return sampleItemName;
+	}
 
-		/**
-		 * @return the sampleTotalScore
-		 */
-		public int getSampleTotalScore() {
-			return sampleTotalScore;
-		}
+	/**
+	 * @param sampleItemName the sampleItemName to set
+	 */
+	public void setSampleItemName(String sampleItemName) {
+		this.sampleItemName = sampleItemName;
+	}
 
-		/**
-		 * @param sampleTotalScore the sampleTotalScore to set
-		 */
-		public void setSampleTotalScore(int sampleTotalScore) {
-			this.sampleTotalScore = sampleTotalScore;
-		}
+	/**
+	 * @return the sampleTotalScore
+	 */
+	public int getSampleTotalScore() {
+		return sampleTotalScore;
+	}
 
-		/**
-		 * @return the sampleSpecCheckList
-		 */
-		public List<ScQtCheckList> getSampleSpecCheckList() {
-			return sampleSpecCheckList;
-		}
+	/**
+	 * @param sampleTotalScore the sampleTotalScore to set
+	 */
+	public void setSampleTotalScore(int sampleTotalScore) {
+		this.sampleTotalScore = sampleTotalScore;
+	}
 
-		/**
-		 * @param sampleSpecCheckList the sampleSpecCheckList to set
-		 */
-		public void setSampleSpecCheckList(List<ScQtCheckList> sampleSpecCheckList) {
-			this.sampleSpecCheckList = sampleSpecCheckList;
-		}
-		//#11104-End
-		
+	/**
+	 * @return the sampleSpecCheckList
+	 */
+	public List<ScQtCheckList> getSampleSpecCheckList() {
+		return sampleSpecCheckList;
+	}
+
+	/**
+	 * @param sampleSpecCheckList the sampleSpecCheckList to set
+	*/
+	public void setSampleSpecCheckList(List<ScQtCheckList> sampleSpecCheckList) {
+		this.sampleSpecCheckList = sampleSpecCheckList;
+	}
+
+	/**
+	 * @return the sampleAddressBean
+	 */
+	public List<BriefingZoneBean> getSampleAddressBean() {
+		return sampleAddressBean;
+	}
+
+	/**
+	 * @param sampleAddressBean the sampleAddressBean to set
+	 */
+	public void setSampleAddressBean(List<BriefingZoneBean> sampleAddressBean) {
+		this.sampleAddressBean = sampleAddressBean;
+	}
+	// #11104-End
+
 		public Long getCurrentCMTStatus() {
 			return currentCMTStatus;
 		}
