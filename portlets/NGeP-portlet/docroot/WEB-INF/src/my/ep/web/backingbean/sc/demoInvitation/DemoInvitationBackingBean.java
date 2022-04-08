@@ -411,8 +411,10 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 						scQt = tenderResDTO.getQtDetail();
 						getManagedBean().setQt(scQt);
 						this.getManagedBean().setPanel(scQt.isPanel());
-						Long currentStatus = this.getManagedBean().getQt().getQtStatus().getStatusId();
-						this.getManagedBean().setCurrentStatusId(currentStatus);
+						// #28784 - Start.
+						/*Long currentStatus = this.getManagedBean().getQt().getQtStatus().getStatusId();
+						this.getManagedBean().setCurrentStatusId(currentStatus);*/
+						// #28784 - End.
 						getManagedBean().getCtContract().setContractNo(
 								this.getManagedBean().getQt().getExistingContractNo());
 
