@@ -3412,6 +3412,8 @@ public class TaskReassignmentBackingBean extends
 				reqDTO.setParamTask("GROUP");
 				//module
 				reqDTO.setModule("PM");
+				//created by
+				reqDTO.setCreatedBy(getUserByLoginId());
 				
 				List<String> docNumberList = new ArrayList<String>();
 				if (StringUtils.isNotBlank(getManagedBean()
@@ -3429,7 +3431,7 @@ public class TaskReassignmentBackingBean extends
 							.getTaskAssignmentSearchBean().getDocType()
 							.getPmParameter().getParameterCode());
 				}
-				
+				getFacesScopes().getUserScreenName();
 				resDTO = taskAssignmentSO.savePmPendingRemoveTask(reqDTO);
 				
 			}
@@ -3493,6 +3495,8 @@ public class TaskReassignmentBackingBean extends
 				reqDTO.setParamTask("OTHERS");
 				//module
 				reqDTO.setModule("PM");
+				//created by
+				reqDTO.setCreatedBy(getUserByLoginId());
 
 				List<String> docNumberList = new ArrayList<String>();
 				if (StringUtils.isNotBlank(getManagedBean().getTaskAssignmentSearchBean().getDocNo())) {
@@ -4056,6 +4060,25 @@ public class TaskReassignmentBackingBean extends
 			this.getManagedBean().setEnableRemoveAllGroupTasksButton(true);
 			this.getManagedBean().setEnableRemoveAllOthersTasksButton(true);
 		}
+	}
+	
+	public Long getUserByLoginId(){
+		Long loginSessionUserId = 1L;
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IUserSO.class);
+	
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setLoginId(getFacesScopes().getUserScreenName());
+		PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
+		if (pmUser == null) {
+			loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
+		}
+		else{
+			loginSessionUserId = pmUser.getUserId();
+		}
+		
+		return loginSessionUserId;
 	}
 	//29822 - end
 }
