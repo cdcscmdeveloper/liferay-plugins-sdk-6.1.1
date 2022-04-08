@@ -1,0 +1,97 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<p:panel id="terRecord" header="#{lbl['lbl.ct.panel.record']}" toggleable="true" collapsed="false" toggleSpeed="500" 
+		 rendered="#{terminationBackingBean.managedBean.contractVer.status.statusId==CtStatusConst.ftPendingLetterPrintAndUpdate}" >
+	       
+	       <h:panelGrid columns="4" style="width:1050px;" styleClass="top-aligned-columns"
+	            columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
+	            
+	            
+		    	      <p:outputLabel value="#{lbl['lbl.ct.receiver.name']}" styleClass="required" />
+		  	       <h:panelGrid columns="5">
+           		      <p:inputText id="receiverName" 	style="width:170px;" maxlength="50" required="true"  
+           		      	  disabled="#{terminationBackingBean.managedBean.viewContract}"
+           		          value="#{terminationBackingBean.managedBean.contractVer.ctTermination.receiverName}" label="#{lbl['lbl.ct.receiver.name']}"/>
+                      <p:spacer width="1"/>
+				      <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.record.receiver.name']}" />
+				      <p:spacer width="1"/>
+                      <p:message for="receiverName" display="icon"/>
+		  	      </h:panelGrid>
+		  	      
+		  	          <p:outputLabel value="#{lbl['lbl.ct.receiver.ic.no']}"  styleClass="required" />
+		  	       <h:panelGrid columns="5">
+           		       <p:inputText id="icNo" style="width:170px;" maxlength="15" required="true" 
+           		       	  disabled="#{terminationBackingBean.managedBean.viewContract}"
+           		          value="#{terminationBackingBean.managedBean.contractVer.ctTermination.receiverIc}" label="#{lbl['lbl.ct.receiver.ic.no']}"/>
+                       <p:spacer width="1"/>
+				       <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.record.receiver.ic.no']}" />
+				       <p:spacer width="1"/>
+                       <p:message for="icNo" display="icon"/>
+		  	       </h:panelGrid>
+		  	      
+		    	      <p:outputLabel value="#{lbl['lbl.ct.delivery.date']}" styleClass="required" />
+                  <h:panelGrid columns="5">
+             	      <p:calendar  id="dDate" readonlyInput="true" required="true" label="#{lbl['lbl.ct.delivery.date']}"
+             	         	disabled="#{terminationBackingBean.managedBean.viewContract}"
+             	         	value="#{terminationBackingBean.managedBean.contractVer.ctTermination.noticeDeliveryDate}" size="24" 
+          		         	showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+          		       		<p:ajax event="dateSelect" update="rDate" />
+          		      </p:calendar>
+          		      <p:spacer width="1"/>
+			    	  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.record.delivery.date']}" />
+			    	  <p:spacer width="1"/>
+                      <p:message for="dDate" display="icon"/>
+                   </h:panelGrid>
+	            
+	   		      
+		    	      <p:outputLabel value="#{lbl['lbl.ct.notice.date']}" styleClass="required"  />
+                  <h:panelGrid columns="5">
+             	        <p:calendar id="nDate"   readonlyInput="true" required="true" label="#{lbl['lbl.ct.notice.date']}" navigator="true"
+             	            disabled="#{terminationBackingBean.managedBean.viewContract}"
+             	            value="#{terminationBackingBean.managedBean.contractVer.ctTermination.noticeDate}"  size="24" 
+          		            showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+          		        </p:calendar>
+          		        <p:spacer width="1"/>
+			    		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.record.notice.date']}" />
+			    		<p:spacer width="1"/>
+             	        <p:message for="nDate" display="icon"/>
+                  </h:panelGrid>
+            
+		  	      
+		    	       <p:outputLabel value="#{lbl['lbl.ct.received.date']}"  styleClass="required" />
+          	       <h:panelGrid columns="5">
+             	      <p:calendar id="rDate"  readonlyInput="true" required="true" label="#{lbl['lbl.ct.received.date']}"
+             	        disabled="#{terminationBackingBean.managedBean.viewContract}"
+             	        value="#{terminationBackingBean.managedBean.contractVer.ctTermination.noticeReceivedDate}"
+          		        mindate="#{terminationBackingBean.managedBean.contractVer.ctTermination.noticeDeliveryDate}"  size="24" 
+                        showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+                        <f:attribute name="startDate" value="#{terminationBackingBean.managedBean.contractVer.ctTermination.noticeDeliveryDate}" />
+                        <f:validator validatorId="primeDateRangeValidator" />
+                    </p:calendar>
+                    <p:spacer width="1"/>
+			   		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.record.received.date']}" />
+			   		<p:spacer width="1"/>
+                   	<p:message for="rDate" display="icon"/>
+                </h:panelGrid>
+          
+          <f:verbatim/><f:verbatim/>   
+          <f:verbatim rendered="#{terminationBackingBean.managedBean.termination}" />
+		  <p:commandButton id="lodgeComplaintBtn" value="#{lbl['lbl.ct.lodge.complaint']}"
+		      onclick="confirmation.show()" rendered="#{false}"
+		  	disabled="#{terminationBackingBean.managedBean.contractVer.ctTermination.complaintLodged}" />
+		</h:panelGrid>
+	    
+	    <p:confirmDialog message="#{lbl['lbl.ct.lodge.complaint.msg']} #{terminationBackingBean.managedBean.contractVer.ctContractValue.supplierName}?"
+	    	header="#{lbl['lbl.ct.lodge.complaint']}" severity="alert" widgetVar="confirmation">
+	        <p:commandButton value="Yes" update="lodgeComplaintBtn" oncomplete="confirmation.hide()" 
+	        	actionListener="#{terminationBackingBean.lodgeComplaint}" />
+	        <p:commandButton value="No" onclick="confirmation.hide()" type="button" />
+	    </p:confirmDialog>		
+     </p:panel>      
+</ui:composition>

@@ -1,0 +1,98 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.sc.qt.req.dtls']}" toggleable="true">
+		<p:dataTable id="requestdtlid"
+			value="#{approvalBackingBean.managedBean.scQtApprovalRequestList}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			var="requestdetails" rowIndexVar="index" editable="true"
+			rowKey="#{requestdetails}">
+
+			<p:column headerText="#{lbl['lbl.sc.qt.type.reqdtls']}">
+				<h:outputText
+					value="#{approvalBackingBean.getParameterDesc(requestdetails.approvalType)}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.from.value']}">
+				<h:panelGroup
+					rendered="#{requestdetails.originalValue eq ParameterConst.openForBumi or requestdetails.originalValue eq ParameterConst.openForAll}">
+					<h:outputText
+						value="#{approvalBackingBean.getParameterDesc(ParameterTypeConst.scOpenFor, requestdetails.originalValue)}" />
+				</h:panelGroup>
+				<h:panelGroup
+					rendered="#{requestdetails.originalValue ne ParameterConst.openForBumi and requestdetails.originalValue ne ParameterConst.openForAll}">
+					<h:outputText value="#{requestdetails.originalValue}" />
+				</h:panelGroup>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.to.value']}">
+				<h:panelGroup
+					rendered="#{requestdetails.changedValue eq ParameterConst.openForBumi or requestdetails.changedValue eq ParameterConst.openForAll}">
+					<h:outputText
+						value="#{approvalBackingBean.getParameterDesc(ParameterTypeConst.scOpenFor, requestdetails.changedValue)}" />
+				</h:panelGroup>
+				<h:panelGroup
+					rendered="#{requestdetails.changedValue ne ParameterConst.openForBumi and requestdetails.changedValue ne ParameterConst.openForAll}">
+					<h:outputText value="#{requestdetails.changedValue}" />
+				</h:panelGroup>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.decision']}">
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.sc.decision']}" />
+				</f:facet>
+				
+				<p:selectOneMenu id="decisiontypeid" value="#{requestdetails.approverAction.parameterId}" required="false"
+					label="#{lbl['lbl.sc.decision']}" disabled="#{approvalBackingBean.managedBean.readOnly and !approvalBackingBean.managedBean.approvalEditableSection}"
+					style="width: 178px;margin-bottom: 5px;" rendered="#{requestdetails.approvalType.parameterCode ne 'RT'}">
+					<f:selectItems value="#{approvalBackingBean.getDropdownValues(ParameterTypeConst.approvalDecisionType)}" />
+					<p:ajax event="change" listener="#{approvalBackingBean.updatePmParameter(requestdetails)}" />
+				</p:selectOneMenu><p:message id="decisiontypeidhMsg" for="decisiontypeid"
+										display="icon" />
+				
+				<p:selectOneMenu id="decisiontypeids" value="#{requestdetails.approverAction.parameterId}" required="false"
+					label="#{lbl['lbl.sc.decision']}" disabled="#{approvalBackingBean.managedBean.readOnly and !approvalBackingBean.managedBean.approvalEditableSection}"
+					style="width: 250px;margin-bottom: 5px;" rendered="#{requestdetails.approvalType.parameterCode eq 'RT'}">
+					<f:selectItems value="#{approvalBackingBean.getDropdownValues(ParameterTypeConst.restrictedApprovalDecisionType)}" />
+					<p:ajax event="change" listener="#{approvalBackingBean.updatePmParameter(requestdetails)}" />
+				</p:selectOneMenu><p:message id="decisiontypeidsMsg" for="decisiontypeids"
+										display="icon" />
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+
+	<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true"
+		rendered="#{approvalBackingBean.managedBean.qt.qtType eq 'R'}">
+		<p:dataTable id="supplierlistid" var="qtSupplier" rows="10"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtSupplierList}"
+			rowKey="#{qtSupplier}">
+			
+			<ac:paginator for="supplierlistid" />
+			
+			<p:column headerText="#{lbl['lbl.sc.supplier.name']}">
+				<h:outputText value="#{qtSupplier.smSupplier.companyName}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.mofno']}">
+				<h:outputText
+					value="#{qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(qtSupplier, null).mofNo}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.mofexp.date']}">
+				<h:outputText
+					value="#{qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(qtSupplier, null).expDate}">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.status']}">
+				<h:outputText
+						value="#{qTSupplierQulCriteriaBackingBean.getParameterDesc(ParameterTypeConst.recordStatus, qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(qtSupplier, null).recordStatusFlg)}" />
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+
+</ui:composition>

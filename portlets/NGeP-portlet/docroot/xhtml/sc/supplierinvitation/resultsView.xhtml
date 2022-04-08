@@ -1,0 +1,109 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<!-- #30646 start  -->
+	<ui:define name="resourceSection">
+		<script>
+			$('#portlet_scSupplierInvitationSq_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sc.menu.simple.quote.respond']}");			
+		</script>
+	</ui:define>
+	<!-- #30646 end -->
+
+<ui:define name="contentSection">
+	<p:blockUI block=":form" widgetVar="blockWidget">
+			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
+		</p:blockUI>
+		
+		<p:dataTable id="scSuppInviteTblId"
+			value="#{scSupplirInvitationdBB.supplierInvitationModel}" lazy="true"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			 style="width:100%" var="supplierInviteList" rows="5" rowIndexVar="rowIndex">
+			<ac:paginator for="scSuppInviteTblId" />
+			
+			<ui:param name="statusId" value="#{supplierInviteList[4]}"></ui:param>
+	        <ui:param name="labelVlaue" value="#{scSupplirInvitationdBB.labelValue(statusId,supplierInviteList[5])}" />
+	        
+			<p:column headerText="#{lbl['lbl.sc.no']}" style="text-align:center">
+				<h:outputText value="#{rowIndex+1}." />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.document.no']}" style="text-align:center">
+				<h:outputText value="#{supplierInviteList[6]}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.title']}" style="text-align:center">
+			<p:commandLink onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+					action="#{scSupplirInvitationdBB.getNavigationUrl(statusId,supplierInviteList[0])}">
+				<h:outputText value="#{supplierInviteList[1]}" style="float:left;white-space:normal;text-align:left;"/>
+			</p:commandLink>
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.start.date']}" style="text-align:center">
+				<h:outputText value="#{supplierInviteList[2]}">
+					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.end.date']}" style="text-align:center">
+				<h:outputText value="#{supplierInviteList[3]}">
+					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+				</h:outputText>
+			</p:column>
+
+		<!-- <p:column headerText="#{lbl['lbl.sc.invitation.type']}" style="text-align:center">
+			<h:outputText value="#{labelVlaue}" style="float:left;"/>
+		</p:column> -->
+		
+			<p:column style="white-space:normal;text-align:center;width:25%">
+				<f:facet name="header">
+					#{lbl['lbl.sc.invitation.type']}
+					<p:commandButton id="addBtn" icon="ui-icon-filter" style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"
+						partialSubmit="true" process="@this" />					
+					<p:menu overlay="true" trigger="addBtn" my="left top" at="left bottom" style="width:250px;">
+			            <p:menuitem value="#{lbl['lbl.txt.all']}" update="@([id$=scSuppInviteTblId])" action="#{scSupplirInvitationdBB.onSearchSelectedInvitationType(null)}">
+			            	<f:setPropertyActionListener value="#{null}" target="#{scSupplirInvitationdBB.managedBean.selectedInvitationType}" />
+			            </p:menuitem>					
+			            <p:menuitem value="#{scSupplirInvitationdBB.getParameterDesc(ParameterTypeConst.supplierInvitationTypes,'Q')}" update="@([id$=scSuppInviteTblId])" action="#{scSupplirInvitationdBB.onSearchSelectedInvitationType(null)}"
+			            			rendered="#{scSupplirInvitationdBB.isPorletIdFromQt()}">
+			            	<ui:param name="quotation" value="#{scSupplirInvitationdBB.retriveParameterId('Q')}"></ui:param>
+			            	<f:setPropertyActionListener value="#{quotation}" target="#{scSupplirInvitationdBB.managedBean.selectedInvitationType}" />
+			            </p:menuitem>	
+			            <p:menuitem value="#{scSupplirInvitationdBB.getParameterDesc(ParameterTypeConst.supplierInvitationTypes, 
+											'T')}" update="@([id$=scSuppInviteTblId])" action="#{scSupplirInvitationdBB.onSearchSelectedInvitationType(null)}"
+									rendered="#{scSupplirInvitationdBB.isPorletIdFromQt()}">
+											<ui:param name="tender" value="#{scSupplirInvitationdBB.retriveParameterId('T')}"></ui:param>
+			            	<f:setPropertyActionListener value="#{tender}" target="#{scSupplirInvitationdBB.managedBean.selectedInvitationType}" />
+			            </p:menuitem>			            					
+			            <p:menuitem value="#{scSupplirInvitationdBB.getParameterDesc(ParameterTypeConst.supplierInvitationTypes, 
+											'BSV')}" actionListener="#{scSupplirInvitationdBB.onSearchSelectedInvitationType(null)}" update="@([id$=scSuppInviteTblId])" 
+									rendered="#{scSupplirInvitationdBB.isPorletIdFromQt()}">
+											<ui:param name="bsv" value="#{scSupplirInvitationdBB.retriveParameterId('BSV')}"></ui:param>
+				            <f:setPropertyActionListener value="#{bsv}" target="#{scSupplirInvitationdBB.managedBean.selectedInvitationType}" />
+			            </p:menuitem>
+			            <p:menuitem value="#{scSupplirInvitationdBB.getParameterDesc(ParameterTypeConst.supplierInvitationTypes, 
+											'BID')}" update="@([id$=scSuppInviteTblId])" action="#{scSupplirInvitationdBB.onSearchSelectedInvitationType(null)}"
+									rendered="#{scSupplirInvitationdBB.isPorletIdFromQt()}">
+											<ui:param name="bid" value="#{scSupplirInvitationdBB.retriveParameterId('BID')}"></ui:param>
+			            	<f:setPropertyActionListener value="#{bid}" target="#{scSupplirInvitationdBB.managedBean.selectedInvitationType}" />
+			            </p:menuitem>
+			             <p:menuitem value="#{scSupplirInvitationdBB.getParameterDesc(ParameterTypeConst.supplierInvitationTypes, 
+											'SQ')}" update="@([id$=scSuppInviteTblId])" action="#{scSupplirInvitationdBB.onSearchSelectedInvitationType(null)}"
+									rendered="#{scSupplirInvitationdBB.isPorletIdFromQt() == false}">
+											<ui:param name="simplequote" value="#{scSupplirInvitationdBB.retriveParameterId('SQ')}"></ui:param>
+			            	<f:setPropertyActionListener value="#{simplequote}" target="#{scSupplirInvitationdBB.managedBean.selectedInvitationType}" />
+			            </p:menuitem>
+					</p:menu>
+				</f:facet>
+				<h:outputText value="#{labelVlaue}" style="float:left;"/>
+			</p:column>	
+
+	</p:dataTable>
+</ui:define>
+
+</ui:composition>

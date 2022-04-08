@@ -1,0 +1,194 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	
+	
+		<script>
+			$('#portlet_itemCodeCreation_WAR_NGePportlet').find('.portlet-title-text')
+					.html("#{lbl['lbl.cm.item.code.creation.title']}");
+		</script>
+	<h:outputStylesheet library="ep/css" name="common.css"  />
+	
+	<ui:define name="contentSection">
+	
+	   <ac:lovPopup />
+	
+		<h:panelGroup id="cmUNSPSCSingleUploadID">
+		
+		 <p:messages id="form" showDetail="true" autoUpdate="true" closable="true"
+				showSummary="true"></p:messages>
+	   	
+			 <table width="100%">
+			<tr>
+	   		<td style="text-align: left"><p:commandButton
+				    value="#{lbl['lbl.btn.back']}"
+					action="#{itemCodeCreationBackingBean.backToCodificationPortal()}">
+					</p:commandButton></td>
+			<td style="text-align: right"><p:commandButton	
+			         value="#{lbl['lbl.cm.create.publish']}"
+                     onclick="createItem.show()">
+              </p:commandButton>
+				  </td>
+				</tr>
+			</table> 
+			<br />
+
+			<p:panel header="#{lbl['lbl.cm.create.UNSPSC.code']}"
+				toggleable="true">
+
+				<p:panelGrid style="width:100%;" styleClass="tablePanel"
+					id="tablePanelId">
+					<f:facet name="header">
+						<p:row>
+							<p:column>
+								<h:outputLabel value="" />
+							</p:column>
+							<p:column>
+								<h:outputText value="*" styleClass="mandatory" />
+								<h:outputText style="color:white;"  value=" #{lbl['lbl.cm.code']}" />
+							</p:column>
+							<p:column>
+								<h:outputText value="*" styleClass="mandatory" />
+								<h:outputText style="color:white;"  value=" #{lbl['lbl.cm.doc.title']}" />
+							</p:column>
+							<p:column>
+								<h:outputText value="*" styleClass="mandatory" />
+								<h:outputText style="color:white;"  value=" #{lbl['lbl.cm.doc.title.eng']}" />
+							</p:column>
+						</p:row>
+
+					</f:facet>
+
+					<p:row>
+						<p:column>
+							<h:outputLabel value="#{lbl['lbl.cm.segment']}" />
+						</p:column>
+						<p:column>
+
+							<ac:lov style="width:200px;" id="segmentUploadId"
+								lovId="CM_UNSPSC" headerText="#{lbl['lbl.cm.segment']}"
+								update=":form:tablePanelId"
+								saveObject="itemCodeCreationBackingBean.managedBean.selectedLovUnspscSegment"
+								value="#{itemCodeCreationBackingBean.managedBean.selectedLovUnspscSegment.unspscCode}"
+								conditionField="recordStatus^1|unspscLevel^0">
+							</ac:lov>
+
+						</p:column>
+						<p:column>
+							<p:inputText style="width:400px;"
+								value="#{itemCodeCreationBackingBean.managedBean.selectedLovUnspscSegment.unspscTitle}"></p:inputText>
+						</p:column>
+						<p:column>
+							<p:inputText style="width:400px;"
+								value="#{itemCodeCreationBackingBean.managedBean.selectedLovUnspscSegment.unspscTitleEng}"></p:inputText>
+						</p:column>
+					</p:row>
+
+
+					<p:row>
+						<p:column>
+							<h:outputLabel value="#{lbl['lbl.cm.family']}" />
+						</p:column>
+						<p:column>
+							<ac:lov style="width:200px;" id="familyUploadId"
+								lovId="CM_UNSPSC" headerText="#{lbl['lbl.cm.family']}"
+								update=":form:tablePanelId"
+								saveObject="itemCodeCreationBackingBean.managedBean.selectedLovUnspscfamily"
+								value="#{itemCodeCreationBackingBean.managedBean.selectedLovUnspscfamily.unspscCode}"
+								conditionField="recordStatus^1|unspscLevel^1|unspscParentCode^#{itemCodeCreationBackingBean.managedBean.selectedLovUnspscSegment.unspscCode}">
+							</ac:lov>
+
+						</p:column>
+						<p:column>
+							<p:inputText style="width:400px;"
+								value="#{itemCodeCreationBackingBean.managedBean.selectedLovUnspscfamily.unspscTitle}"></p:inputText>
+
+						</p:column>
+						<p:column>
+							<p:inputText style="width:400px;"
+								value="#{itemCodeCreationBackingBean.managedBean.selectedLovUnspscfamily.unspscTitleEng}"></p:inputText>
+
+						</p:column>
+
+					</p:row>
+
+					<p:row>
+						<p:column>
+							<h:outputLabel value="#{lbl['lbl.cm.class']}" />
+						</p:column>
+						<p:column>
+							<ac:lov style="width:200px;" id="classUploadId" lovId="CM_UNSPSC"
+								headerText="#{lbl['lbl.cm.class']}" update=":form:tablePanelId"
+								saveObject="itemCodeCreationBackingBean.managedBean.selectedLovUnspscClass"
+								value="#{itemCodeCreationBackingBean.managedBean.selectedLovUnspscClass.unspscCode}"
+								conditionField="recordStatus^1|unspscLevel^2|unspscParentCode^#{unspscCodeBackingBean.managedBean.selectedLovUnspscfamily.unspscCode}">
+							</ac:lov>
+
+						</p:column>
+						<p:column>
+							<p:inputText style="width:400px;"
+								value="#{itemCodeCreationBackingBean.managedBean.selectedLovUnspscClass.unspscTitle}"></p:inputText>
+
+						</p:column>
+						<p:column>
+							<p:inputText style="width:400px;"
+								value="#{itemCodeCreationBackingBean.managedBean.selectedLovUnspscClass.unspscTitleEng}"></p:inputText>
+
+						</p:column>
+
+					</p:row>
+
+
+					<p:row>
+						<p:column>
+							<h:outputLabel value="#{lbl['lbl.cm.commodity']}" />
+						</p:column>
+						<p:column>
+							<ac:lov style="width:200px;" id="commodityUploadId"
+								lovId="CM_UNSPSC" headerText="#{lbl['lbl.cm.commodity']}"
+								update=":form:tablePanelId"
+								saveObject="itemCodeCreationBackingBean.managedBean.selectedLovUnspsc"
+								value="#{itemCodeCreationBackingBean.managedBean.selectedLovUnspsc.unspscCode}"
+								conditionField="recordStatus^1|unspscLevel^3|unspscParentCode^#{itemCodeCreationBackingBean.managedBean.selectedLovUnspscClass.unspscCode}">
+							</ac:lov>
+
+						</p:column>
+						<p:column>
+							<p:inputText style="width:400px;"
+								value="#{itemCodeCreationBackingBean.managedBean.selectedLovUnspsc.unspscTitle}"></p:inputText>
+
+						</p:column>
+						<p:column>
+							<p:inputText style="width:400px;"
+								value="#{itemCodeCreationBackingBean.managedBean.selectedLovUnspsc.unspscTitleEng}"></p:inputText>
+
+						</p:column>
+						
+					</p:row>
+
+
+				</p:panelGrid>
+
+			</p:panel>
+			
+			
+			<ac:confirmationPopup id="createItem" widget="createItem"
+				okAction="itemCodeCreationBackingBean.addNewUnspsc()"
+				width="400" height="100"
+				title="#{lbl['lbl.cm.dialog.cofirm.header']}"
+				content="#{lbl['lbl.cm.dialog.message']}"
+				update=":form"
+				oncomplete="createItem.hide();"/>
+			</h:panelGroup>
+
+	</ui:define>
+
+
+</ui:composition>

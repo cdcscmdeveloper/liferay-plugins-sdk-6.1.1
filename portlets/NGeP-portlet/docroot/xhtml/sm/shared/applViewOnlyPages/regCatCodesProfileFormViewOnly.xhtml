@@ -1,0 +1,233 @@
+<!-- #28175 start -->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:f="http://java.sun.com/jsf/core" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:p="http://primefaces.org/ui" 
+	xmlns:c="http://java.sun.com/jsp/jstl/core" 
+	xmlns:ac="http://ac.my/jsf/composite/cc" 
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+<!-- #28175 end -->
+
+	<p:panel header="#{lbl['lbl.sm.wizard.catCodeStepLbl']}" toggleable="true">
+		<!-- #14150 - added sortBy -->
+		<p:dataTable var="aprvdCatBean"
+			widgetVar="smApprvdCatCodesNonRenewApplDtWidVar"
+			value="#{viewSmApplBackingBean.managedBean.suppProfileOrHistoryCategoryList}"
+			rowKey="#{aprvdCatBean}" rowIndexVar="index" id="catApprDt"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			sortBy="#{aprvdCatBean.pmCategoryL1.categoryL1Code}">
+
+			<ac:paginator for="catApprDt" />
+			<p:columnGroup type="header">
+				<p:row>
+					<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
+						style="width : 2%;" />
+					<p:column style="width :350px;white-space : normal"
+						headerText="#{lbl['lbl.sm.catCodes.cate']}" />
+					<p:column style="width :100px;white-space : normal" headerText="#{lbl['lbl.sm.catCodes.catType']}" />
+					<p:column style="width :200px;white-space : normal" headerText="#{lbl['lbl.sm.officer.decision']}" />
+					<p:column style="width :450px;white-space : normal" headerText="#{lbl['lbl.sm.remark']}" />
+					<p:column headerText="#{lbl['lbl.sm.status']}" />
+				</p:row>
+			</p:columnGroup>
+			<p:column style="width : 2%;">
+				<p:outputLabel value="#{index + 1}"
+					style="float: left;white-space: normal;" />
+			</p:column>
+			
+			<!-- #28175 start -->
+			<c:choose>
+				<c:when test="#{(fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'application-history') or 
+					fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'supplier-application-search')) and 
+					viewSmApplBackingBean.managedBean.smAppl.workflowStatusDesc eq 'Registered'}">
+					<p:column style="width :350px;white-space : normal">
+						<h:outputText
+							value="#{aprvdCatBean.pmCategoryL1.categoryL1Code} -  #{aprvdCatBean.categoryL1Name}" />
+						<br />
+						<h:outputText
+							value="#{aprvdCatBean.pmCategoryL2.categoryL2Code} -  #{aprvdCatBean.categoryL2Name}" />
+						<br />
+						<h:outputText
+							value="#{aprvdCatBean.pmCategoryL3.categoryL3Code} -  #{aprvdCatBean.categoryL3Name}" />
+					</p:column>
+				</c:when>
+				<c:when
+					test="#{fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'supplier-profile')}">
+					<p:column style="width :350px;white-space : normal">
+						<h:outputText
+							value="#{aprvdCatBean.pmCategoryL1.categoryL1Code} -  #{aprvdCatBean.pmCategoryL1.categoryName}" />
+						<br />
+						<p:outputPanel rendered="#{aprvdCatBean.categoryL1Name ne aprvdCatBean.pmCategoryL1.categoryName}">
+							<p:graphicImage value="/css/images/msgwarn.png" />
+							<span style="color: red;">
+								<h:outputText value="#{lbl['lbl.sm.catCodes.change.alert.lv1.first']}" />&#160;
+								<h:outputText value="#{aprvdCatBean.pmCategoryL1.changedDate}">
+									<f:convertDateTime pattern="dd/mm/yyyy h:mm a" />
+								</h:outputText>
+								<br />
+								<h:outputText value="#{lbl['lbl.sm.catCodes.change.alert.second']}" />&#160;
+								<p:commandLink style="color: red;" 
+									action="#{viewSmApplBackingBean.onClickCatCodesHistory(aprvdCatBean.pmCategoryL1.categoryL1Code, 1, aprvdCatBean.pmCategoryL1.categoryL1Id)}"
+									value="#{lbl['lbl.sm.catCodes.change.alert.here']}" 
+									update="@form" />&#160;
+								<h:outputText value="#{lbl['lbl.sm.catCodes.change.alert.third']}" />
+							</span>
+							<br />
+						</p:outputPanel>
+						<h:outputText value="#{aprvdCatBean.pmCategoryL2.categoryL2Code} -  #{aprvdCatBean.pmCategoryL2.categoryName}" />
+						<br />
+						<p:outputPanel rendered="#{aprvdCatBean.categoryL2Name ne aprvdCatBean.pmCategoryL2.categoryName}">
+							<p:graphicImage value="/css/images/msgwarn.png" />
+							<span style="color: red;">
+								<h:outputText value="#{lbl['lbl.sm.catCodes.change.alert.lv2.first']}" />&#160;
+								<h:outputText value="#{aprvdCatBean.pmCategoryL2.changedDate}">
+									<f:convertDateTime pattern="dd/mm/yyyy h:mm a" />
+								</h:outputText>
+								<br />
+								<h:outputText value="#{lbl['lbl.sm.catCodes.change.alert.second']}" />&#160;
+								<p:commandLink style="color: red;" 
+									action="#{viewSmApplBackingBean.onClickCatCodesHistory(aprvdCatBean.pmCategoryL2.categoryL2Code, 2, aprvdCatBean.pmCategoryL2.categoryL2Id)}"
+									value="#{lbl['lbl.sm.catCodes.change.alert.here']}" 
+									update="@form" />&#160; 
+								<h:outputText value="#{lbl['lbl.sm.catCodes.change.alert.third']}" />
+							</span>
+							<br />
+						</p:outputPanel>
+						<h:outputText value="#{aprvdCatBean.pmCategoryL3.categoryL3Code} -  #{aprvdCatBean.pmCategoryL3.categoryName}" />
+						<br />
+						<p:outputPanel rendered="#{aprvdCatBean.categoryL3Name ne aprvdCatBean.pmCategoryL3.categoryName}">
+							<p:graphicImage value="/css/images/msgwarn.png" />
+							<span style="color: red;">
+								<h:outputText value="#{lbl['lbl.sm.catCodes.change.alert.lv3.first']}" />&#160;
+								<h:outputText value="#{aprvdCatBean.pmCategoryL3.changedDate}">
+									<f:convertDateTime pattern="dd/mm/yyyy h:mm a" />
+								</h:outputText>
+								<br />
+								<h:outputText value="#{lbl['lbl.sm.catCodes.change.alert.second']}" />&#160;
+								<p:commandLink style="color: red;" 
+									action="#{viewSmApplBackingBean.onClickCatCodesHistory(aprvdCatBean.pmCategoryL3.categoryL3Code, 3, aprvdCatBean.pmCategoryL3.categoryL3Id)}"
+									value="#{lbl['lbl.sm.catCodes.change.alert.here']}" 
+									update="@form" />&#160; 
+								<h:outputText value="#{lbl['lbl.sm.catCodes.change.alert.third']}" />
+							</span>
+						</p:outputPanel>
+					</p:column>
+				</c:when>
+				<c:otherwise>
+					<p:column style="width :350px;white-space : normal">
+						<h:outputText
+							value="#{aprvdCatBean.pmCategoryL1.categoryL1Code} -  #{aprvdCatBean.pmCategoryL1.categoryName}" />
+						<br />
+						<h:outputText
+							value="#{aprvdCatBean.pmCategoryL2.categoryL2Code} -  #{aprvdCatBean.pmCategoryL2.categoryName}" />
+						<br />
+						<h:outputText
+							value="#{aprvdCatBean.pmCategoryL3.categoryL3Code} -  #{aprvdCatBean.pmCategoryL3.categoryName}" />
+					</p:column>
+				</c:otherwise>
+			</c:choose>
+			<!-- #28175 end -->
+
+			<p:column>
+				<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
+					rendered="#{!aprvdCatBean.specialCategory}" />
+				<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
+					rendered="#{aprvdCatBean.specialCategory}" />
+			</p:column>
+			<p:column>
+				<table style="width: 100%; border: none !important; table-layout: fixed !important;">
+					<tr>
+						<td style="border: none !important; white-space: normal; width:70px"><b><h:outputText value="#{lbl['lbl.sm.po']} :" /></b></td>
+						<td style="border: none !important; white-space: normal; word-wrap: break-word !important;">
+							<p:outputPanel rendered="#{not empty aprvdCatBean.poDecFlg}">
+								<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}" rendered="#{aprvdCatBean.poDecFlg eq 1}" />
+								<h:outputText value="#{lbl['lbl.sm.catCodes.rejected']}" rendered="#{aprvdCatBean.poDecFlg eq 0}" />
+							</p:outputPanel>
+							<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty aprvdCatBean.poDecFlg}" />
+						</td>
+					</tr>
+					<tr>
+						<td style="border: none !important; white-space: normal; width:70px"><b><h:outputText value="#{lbl['lb.sm.approver']} :" /></b></td>
+						<td style="border: none !important; white-space: normal; word-wrap: break-word !important;">
+							<p:outputPanel rendered="#{not empty aprvdCatBean.apprvrDecFlg}">
+								<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}" rendered="#{aprvdCatBean.apprvrDecFlg eq 1}" />
+								<h:outputText value="#{lbl['lbl.sm.catCodes.rejected']}" rendered="#{aprvdCatBean.apprvrDecFlg eq 0}" />
+							</p:outputPanel>
+							<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty aprvdCatBean.apprvrDecFlg}" />
+						</td>
+					</tr>
+				</table>
+			</p:column>
+			<p:column>
+				<table style="width: 100%; border: none !important; table-layout: fixed !important;">
+					<tr>
+						<td style="border: none !important; white-space: normal; width:70px;"><b><h:outputText value="#{lbl['lbl.sm.po']} :" /></b></td>
+						<td style="border: none !important; white-space: normal; word-wrap: break-word !important;">
+						<p:scrollPanel mode="native" style="height:100px;">
+							<h:outputText value="#{aprvdCatBean.poRemarks}" rendered="#{not empty aprvdCatBean.poDecFlg}" />
+							<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty aprvdCatBean.poDecFlg}" />
+						</p:scrollPanel></td>
+					</tr>
+					<tr>
+						<td style="border: none !important; white-space: normal; width:70px;"><b><h:outputText value="#{lbl['lb.sm.approver']} :" /></b></td>
+						<td style="border: none !important; white-space: normal; word-wrap: break-word !important;">
+						<p:scrollPanel mode="native" style="height:100px;">
+							<h:outputText value="#{aprvdCatBean.approverRemarks}" rendered="#{not empty aprvdCatBean.apprvrDecFlg}"/>
+							<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty aprvdCatBean.apprvrDecFlg}" />
+						</p:scrollPanel></td>
+					</tr>
+				</table>
+			</p:column>
+			<p:column>
+			<!-- #28220 - disciplinary action- START -->
+				<h:outputText value="#{lbl['lbl.sm.status.pending.approval']}"
+					rendered="#{aprvdCatBean.recordStatusFlg eq 8 or aprvdCatBean.recordStatusFlg eq 6}" />
+				<h:outputText value="#{lbl['lbl.sm.status.active']}"
+					rendered="#{aprvdCatBean.recordStatusFlg eq 1}" />
+				<!-- #28764 START -->	
+				<h:outputText value="#{lbl['lbl.sm.status.reject']}"
+					rendered="#{aprvdCatBean.recordStatusFlg eq 0 and empty aprvdCatBean.disciplinaryActionId   }" />
+				<!-- #28764 END -->	
+				<h:outputText value="#{lbl['lbl.sm.deleted']}"
+					rendered="#{aprvdCatBean.recordStatusFlg eq 9 and empty aprvdCatBean.disciplinaryActionId}" />
+					
+				<h:outputText value="#{lbl['lbl.sm.status.cancelation.da']}"
+					rendered="#{aprvdCatBean.recordStatusFlg eq 9 and not empty aprvdCatBean.disciplinaryActionId}" />
+				
+				<!-- 32815 - start -->	
+				<h:outputText value="#{lbl['lbl.sm.status.cancelation.da']}"
+					rendered="#{(aprvdCatBean.recordStatusFlg eq 2 or aprvdCatBean.recordStatusFlg eq 0) 
+								and not empty aprvdCatBean.disciplinaryActionId and aprvdCatBean.typeDisciplinaryAction != 'M'}" />
+				
+				<h:outputText value="#{lbl['lbl.sm.cancellation.manufacturer.category.code.by.disciplinary.action']}"
+					rendered="#{aprvdCatBean.recordStatusFlg eq 2 and aprvdCatBean.typeDisciplinaryAction eq 'M'}" />
+				<!-- 32815 - end -->
+					<!--	
+				<h:outputText value="#{lbl['lbl.sm.status.deleted1']} (#{lbl['lbl.sm.disciplinary.jktt.suspend.registration']})"
+					rendered="#{aprvdCatBean.recordStatusFlg eq 2 and aprvdCatBean.suspendCategory}" /> 
+					
+				<h:outputText value="#{lbl['lbl.sm.status.deleted1']} (#{lbl['lbl.sm.disciplinary.jktt.cancel.of.bumiputera']})"
+					rendered="#{(aprvdCatBean.recordStatusFlg eq 2 or aprvdCatBean.recordStatusFlg eq 0) and aprvdCatBean.pmCategoryL3.bumiPercentage gt 50}" />
+					
+				<h:outputText value="#{lbl['lbl.sm.status.deleted1']} (#{lbl['lbl.sm.disciplinary.jktt.cancel.of.manufacturer']})"
+					rendered="#{(aprvdCatBean.recordStatusFlg eq 2 or aprvdCatBean.recordStatusFlg eq 0) and aprvdCatBean.pmCategoryL3.bumiPercentage lt 51 and aprvdCatBean.pmCategoryL3.categoryL3Code eq 99}" />
+				
+				<h:outputText value="#{lbl['lbl.sm.status.deleted1']} (#{lbl['lbl.sm.disciplinary.jktt.cancel.cat.code']})"
+					rendered="#{(aprvdCatBean.recordStatusFlg eq 2 or aprvdCatBean.recordStatusFlg eq 0) and ((aprvdCatBean.pmCategoryL3.bumiPercentage lt 51 and aprvdCatBean.pmCategoryL3.categoryL3Code ne 99) or aprvdCatBean.cancelCategory)}" />
+					-->
+			<!-- #28220 - disciplinary action- end -->
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+	<!-- #28175 start -->
+	<p:outputPanel id="popUpPanel" rendered="#{fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'supplier-profile')}">
+		<ac:pmCategoryHistoryPopup catCode="#{viewSmApplBackingBean.managedBean.catCode}" 
+			historyList="#{viewSmApplBackingBean.managedBean.historyList}" widget="remarkHisCatCodePopup"/>
+	</p:outputPanel>
+	<!-- #28175 end -->
+	
+	<p:outputPanel layout="block" rendered="#{not empty viewSmApplBackingBean.managedBean.smAppl.smCategoryOverlapDocs}">
+		<ui:include src="overlapCategorySuppDocViewOnly.xhtml"></ui:include>
+	</p:outputPanel>
+</ui:composition>

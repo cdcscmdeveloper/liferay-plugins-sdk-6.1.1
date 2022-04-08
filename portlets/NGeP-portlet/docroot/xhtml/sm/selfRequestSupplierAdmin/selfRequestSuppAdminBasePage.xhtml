@@ -1,0 +1,45 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+		<script>
+			$('#portlet_selfRequestSupplierAdmin_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.selfrequest.suppadmin.title']}");
+		</script>
+		<h:outputScript library="js" name="logout.js" />
+	</ui:define>
+	
+	<ui:define name="contentSection">
+		<p:messages for="validationMsg" showDetail="true" closable="true" showSummary="false" escape="false"/>
+	    <p:messages id="messages1" showSummary="false" showDetail="true"  escape="false" autoUpdate="true" closable="true" severity="error" 
+	    rendered="#{(selfRequestSupplierAdminBackingBean.managedBean.statusFromSSM ne 'A'
+	    	 and selfRequestSupplierAdminBackingBean.managedBean.statusFromSSM ne 'E' 
+	    	 and selfRequestSupplierAdminBackingBean.managedBean.statusFromSSM ne '') 
+	    	 or 
+	    	 (selfRequestSupplierAdminBackingBean.managedBean.statusFromSSM eq '' 
+	    	 and selfRequestSupplierAdminBackingBean.managedBean.errorInvalidSelfRequest eq true)}"/>
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		
+		<ac:httpsRedirectScript />
+		
+		<p:outputPanel id="companyValidationPanelId" rendered="#{selfRequestSupplierAdminBackingBean.managedBean.page eq '1'}">
+			<ui:include src="/xhtml/sm/selfRequestSupplierAdmin/selfRequestSuppAdminCompanyValidation.xhtml" />
+		</p:outputPanel>
+		
+		<p:outputPanel id="suppAdminPersonnelPanelId" rendered="#{selfRequestSupplierAdminBackingBean.managedBean.page eq '2'}">
+			<ui:include src="/xhtml/sm/selfRequestSupplierAdmin/selfRequestSuppAdminPersonnel.xhtml" />
+		</p:outputPanel>
+		
+		<p:outputPanel id="suppAdminDetailsPanelId" rendered="#{selfRequestSupplierAdminBackingBean.managedBean.page eq '3'}">
+			<ui:include src="/xhtml/sm/selfRequestSupplierAdmin/selfRequestSuppAdminDetails.xhtml" />
+		</p:outputPanel>
+	</ui:define>
+		
+</ui:composition>

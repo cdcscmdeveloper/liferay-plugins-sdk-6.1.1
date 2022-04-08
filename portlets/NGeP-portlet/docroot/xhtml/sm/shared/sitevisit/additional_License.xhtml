@@ -1,0 +1,52 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.sm.sitevisit.additional.license']}">
+		<p:dataTable var="adtLicense" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvDocLicenses}">
+			
+			<p:column>
+				<f:facet name="header">
+						#{lbl['lbl.sm.availableLbl']}
+				</f:facet>
+				<p:selectBooleanCheckbox value="#{adtLicense.available}" disabled="#{viewFlag}">
+				</p:selectBooleanCheckbox>
+				<!-- #24964 -->
+				<ac:smFieldChangeAlertSVO
+					isShow="#{not empty adtLicense.available and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
+					oriValue="#{svoSiteVisitBackingBean.getSVOAdtLicense(adtLicense).available}" 
+					currValue="#{adtLicense.available}" 
+					alertValue="#{svoSiteVisitBackingBean.getSVOAdtLicense(adtLicense).available}"/>
+			</p:column>
+
+			<p:column style="white-space: normal;word-wrap: break-word;">
+				<f:facet name="header">
+					#{lbl['lbl.sm.sitevisit.license']}
+				</f:facet>
+
+				<h:outputText
+					value="#{adtLicense.smApplSupportDoc.pmDocument.docName}"></h:outputText>
+			</p:column>
+
+			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.sm.license.closingexpiry.date']}
+				</f:facet>
+				<h:outputText
+					value="#{adtLicense.smApplSupportDoc.licenseExpDate}">
+					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />	
+				</h:outputText>
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sm.suppdoc.license.no']}">
+				<h:outputText value="#{adtLicense.smApplSupportDoc.licenseNo}"></h:outputText>
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+</ui:composition>

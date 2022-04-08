@@ -1,0 +1,30 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<!-- lbl.sc.integrity.pact -->
+	<p:panel header="#{lbl['lbl.sc.integrity.pact']}" style="width : 100%;" 
+		toggleable="true">
+		<table border="0" cellspacing="0" cellpadding="0" style="width: 100%">
+			<tr>
+				<td class="TableFieldRight"><p:editor id="othersEditor"  controls=""  width="930"
+						value="#{supplierProposalDetailBackingBean.managedBean.integrityPact}"
+						disabled="true" height="380" styleClass="hideToolbar" /></td>  <!-- style="overflow : auto;" -->
+			</tr>
+			<tr height="10">
+				<td></td>
+			</tr>
+			<tr>
+				<td><p:selectBooleanCheckbox
+						value="#{supplierProposalDetailBackingBean.managedBean.agreeWithOthersTermsConditions}"
+						style="vertical-align:top; float: left;" disabled="#{supplierProposalDetailBackingBean.managedBean.readOnly}"/> <p:spacer width="2" />
+					<p:outputLabel value="#{lbl['lbl.sc.integrity.note']}"
+						style="vertical-align:top; float: left;" /></td>
+			</tr>
+		</table>
+	</p:panel>
+
+</ui:composition>

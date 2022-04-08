@@ -1,0 +1,99 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<h:panelGroup id="cmReportListId">
+		<c:choose>
+			<c:when
+				test="#{cmReportsBackingBean.managedBean.reportCode == CmConst.reportCodeCm002}">
+				<ui:include src="cm/listOfApprovalCatalogItem.xhtml"></ui:include>
+			</c:when>
+			<c:when
+				test="#{cmReportsBackingBean.managedBean.reportCode == CmConst.reportCodeCm008}">
+				<ui:include src="cm/listOfCatalogItemNormalPrice.xhtml"></ui:include>
+			</c:when>
+			
+			<c:when
+				test="#{cmReportsBackingBean.managedBean.reportCode == CmConst.reportCodeCm009}">
+				<ui:include src="cm/listOfCatalogItemTierPrice.xhtml"></ui:include>
+			</c:when>
+			
+			<c:when
+				test="#{cmReportsBackingBean.managedBean.reportCode == CmConst.reportCodeCm010}">
+				<ui:include src="cm/listOfCatalogItemZonalPrice.xhtml"></ui:include>
+			</c:when>
+			
+			<c:when
+				test="#{cmReportsBackingBean.managedBean.reportCode == CmConst.reportCodeCm011}">
+				<ui:include src="cm/listOfCatalogItemZonalTierPrice.xhtml"></ui:include>
+			</c:when>
+			
+			<c:when
+				test="#{cmReportsBackingBean.managedBean.reportCode == CmConst.reportCodeCm005}">
+				<ui:include src="cm/listOfExpiredCatalogItem.xhtml"></ui:include>
+			</c:when>
+			
+			
+			
+			<c:when
+				test="#{cmReportsBackingBean.managedBean.reportCode == CmConst.reportCodeCm017}">
+				<ui:include src="cm/listOfItemCode.xhtml"></ui:include>
+			</c:when>
+			
+			<c:when
+				test="#{cmReportsBackingBean.managedBean.reportCode == CmConst.reportCodeCm016}">
+				<ui:include src="cm/listOfNewExtensionCode.xhtml"></ui:include>
+			</c:when>
+			
+			<c:when
+				test="#{cmReportsBackingBean.managedBean.reportCode == CmConst.reportCodeCm004}">
+				<ui:include src="cm/listOfPendingApprovalItem.xhtml"></ui:include>
+			</c:when>
+			
+			<c:when
+				test="#{cmReportsBackingBean.managedBean.reportCode == CmConst.reportCodeCm012}">
+				<ui:include src="cm/listOfPendingCodeAssignment.xhtml"></ui:include>
+			</c:when>
+			
+			<c:when
+				test="#{cmReportsBackingBean.managedBean.reportCode == CmConst.reportCodeCm001}">
+				<ui:include src="cm/listOfPublishCatalogItem.xhtml"></ui:include>
+			</c:when>
+			
+			<c:when
+				test="#{cmReportsBackingBean.managedBean.reportCode == CmConst.reportCodeCm003}">
+				<ui:include src="cm/listOfRejectCatalogItem.xhtml"></ui:include>
+			</c:when>
+			
+			<c:when
+				test="#{cmReportsBackingBean.managedBean.reportCode == CmConst.reportCodeCm015}">
+				<ui:include src="cm/listOfUnspscCodeReq.xhtml"></ui:include>
+			</c:when>
+			
+			<c:when
+				test="#{cmReportsBackingBean.managedBean.reportCode == CmConst.reportCodeCm013}">
+				<ui:include src="cm/summaryOfRejectCatItem.xhtml"></ui:include>
+			</c:when>
+			
+			<c:when
+				test="#{cmReportsBackingBean.managedBean.reportCode == CmConst.reportCodeCm014}">
+				<ui:include src="cm/totalCatItemApproveReject.xhtml"></ui:include>
+			</c:when>
+			
+			<!-- #29640 - start -->
+			<c:when
+				test="#{cmReportsBackingBean.managedBean.reportCode == CmConst.reportCodeCm020}">
+				<ui:include src="cm/ListOfPendingItemCodeAndExtensionCodeRequest.xhtml"></ui:include>
+			</c:when>
+			<!-- #29640 - end -->
+			
+		</c:choose>
+	</h:panelGroup>
+
+
+
+</ui:composition>

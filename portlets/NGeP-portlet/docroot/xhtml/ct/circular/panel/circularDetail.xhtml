@@ -1,0 +1,420 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc" >
+	<p:panel id="pc" header="#{lbl['lbl.ct.panel.panel.circular']}" toggleable="true" toggleSpeed="500" widgetVar="panelpc">
+		<h:panelGroup rendered="#{panelBackingBean.managedBean.circular.latestCircularVer == null or panelBackingBean.managedBean.viewContract}">
+			<ui:include src="createCircularDetail.xhtml" />
+		</h:panelGroup>
+		<h:panelGroup rendered="#{panelBackingBean.managedBean.circular.latestCircularVer != null and  !panelBackingBean.managedBean.viewContract}">
+			<ui:include src="updateCircularDetail.xhtml" />
+		</h:panelGroup>	
+	</p:panel>
+	
+	<h:panelGroup id="groupPaneId">
+	      
+	      <p:panel rendered="#{panelBackingBean.managedBean.circularVer.pid}" 
+	                id="purchaseInDefault"  header="#{lbl['lbl.ct.pid.panel.name']}" toggleable="true" toggleSpeed="500" >
+	                <p:dataTable id="pidTableId" var="pidObj" widgetVar="PidReasonObj" 
+	                        value="#{panelBackingBean.managedBean.circularVer.ctCircularPidReason}" 
+	                        rowKey="#{pidObj}" selection="#{panelBackingBean.managedBean.ctCircularPidReasons}">
+				                  <ac:paginator for="pidTableId" />
+				                    <p:column 
+				                      style="width:5%;text-align:center" rendered="#{!panelBackingBean.managedBean.viewContract}">
+				                          <f:facet name="header">
+							                <p:selectBooleanCheckbox id="checkBoxAll" value="#{panelBackingBean.managedBean.selectAll}">
+								               <p:ajax partialSubmit="true" process="@this"
+									               update=":form:pidTableId,:form:delPidPanelBtn" listener="#{panelBackingBean.selectAllPidReason}" />
+							               </p:selectBooleanCheckbox>
+						                  </f:facet>
+		           
+		                                 <p:selectBooleanCheckbox 
+		                                     value="#{pidObj.selectedCheckBox}" styleClass="myCustomChekBox">
+		           		                    <p:ajax event="change" 
+		           		                        update=":form:delPidPanelBtn,:form:pidTableId" listener="#{panelBackingBean.selectOnePidCheckboxSelect}"></p:ajax>
+			                             </p:selectBooleanCheckbox>
+			                      </p:column>
+				             
+				                 <p:column style="width:50%;white-space:normal;" rendered="#{!panelBackingBean.managedBean.viewContract}"
+				                         headerText="#{lbl['lbl.ct.pid.reason']}"  styleClass="column-align-center">
+		                                 <p:selectOneMenu value="#{pidObj.pmReason.reasonId}"
+		                                  style="width:360px;float:left;text-align:left;" >
+			                                     <f:selectItems value="#{panelBackingBean.getDropdownPidCodeValues()}" />
+			                                            <p:ajax event="change" partialSubmit="true" process="@this"
+			                                                  update="pidTableId" listener="#{panelBackingBean.validatePidReason(pidObj.pmReason.reasonId)}"></p:ajax>
+			                             </p:selectOneMenu>
+			                            </p:column>
+			                         <p:column style="width:50%;white-space:normal;" rendered="#{panelBackingBean.managedBean.viewContract}"
+				                         headerText="#{lbl['lbl.ct.pid.reason']}" id="updateColumn"  styleClass="column-align-center">
+			                                 <h:outputText value="#{panelBackingBean.getReasonDesc(pidObj.pmReason)}" 
+			                                            style="float:left;"  rendered="#{panelBackingBean.managedBean.viewContract}"/>
+			                       </p:column> 
+		              
+		                        <p:column  headerText="#{lbl['lbl.ct.pid.reason.desc']}" 
+		                             id="updatePidPurchase"  styleClass="column-align-center" style="width:45%;white-space:normal;">
+		                             <c:if test="#{!panelBackingBean.managedBean.viewContract}">
+		                                 <p:inputText  value="#{pidObj.reasonDesc}" maxlength="255"  style="width:350px;float:left;
+		                                       text-align:left;"   rendered="#{panelBackingBean.PidPurchaseTypeOther(pidObj.pmReason.reasonId)}">
+		                                </p:inputText>  
+		                                </c:if>
+			                               <c:if test="#{panelBackingBean.managedBean.viewContract}">
+			                                    <h:outputText value="#{pidObj.reasonDesc}"  style="float:left;text-align:left;"/>
+			                               </c:if>
+		                      </p:column>  
+				     </p:dataTable>
+	            
+	              <div class="ppRightBtn"> 
+			         <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form"   
+				            partialSubmit="true" action="#{panelBackingBean.addPurchaseInDefault()}" update="pidTableId" 
+				            oncomplete="PidReasonObj.paginator.endLink.click();" rendered="#{!panelBackingBean.managedBean.viewContract}"/>	
+				     <p:commandButton id="delPidPanelBtn"  value="#{lbl['lbl.ct.delete']}" process="@this"  
+				           partialSubmit="true"   disabled="#{panelBackingBean.managedBean.buttonHideActiveDel}"
+			              onsuccess="delPidPurchaseDlg.show()" rendered="#{!panelBackingBean.managedBean.viewContract}"/>			
+		        </div>
+		        
+		        <p:confirmDialog id="delPidPurchaseDlg" widgetVar="delPidPurchaseDlg"  message="#{lbl['lbl.msg.confirm.delete']}" 	
+		                severity="alert"  closable="true"  appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                     <div class="ppRightBtn">
+		                <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:pidTableId,:form:delPidPanelBtn"
+		                    process="@all" actionListener="#{panelBackingBean.deleteTableRow('PID')}" onclick="delPidPurchaseDlg.hide();"/>
+			            <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delPidPurchaseDlg.hide();" type="button" />
+		            </div>
+               </p:confirmDialog>
+	      </p:panel>
+	   </h:panelGroup>
+	      <p:panel id="contactPerson" 
+	           header="#{lbl['lbl.ct.panel.contact.person']}" toggleable="true" toggleSpeed="500" >
+		             <p:dataTable id="contactPersonDt" var="data" rowKey="#{data}" 
+		                    value="#{panelBackingBean.managedBean.circularVer.ctContactPersons}" rowIndexVar="index" 
+			                selection="#{panelBackingBean.managedBean.selectedContactPersons}" widgetVar="contactPersonObj">
+			                     <ac:paginator for="contactPersonDt" />
+			                     <p:column 
+			                           style="width:3%" rendered="#{!panelBackingBean.managedBean.viewContract}">
+			                            <f:facet name="header">
+							               <p:selectBooleanCheckbox value="#{panelBackingBean.managedBean.selectAll}">
+								             <p:ajax partialSubmit="true" process="@this"
+									            update=":form:contactPersonDt,:form:ctPersonDelBtn" listener="#{panelBackingBean.selectAllPerson}" />
+							               </p:selectBooleanCheckbox>
+						                </f:facet>
+		           
+		                                 <p:selectBooleanCheckbox
+		                                   value="#{data.selectedCheckBox}" styleClass="myCustomChekBox">
+		           		                       <p:ajax event="change" update=":form:ctPersonDelBtn, :form:contactPersonDt" 
+		           		                       listener="#{panelBackingBean.selectOnePersonCheckboxSelect}"></p:ajax>
+			                             </p:selectBooleanCheckbox>
+			                           </p:column>         <p:column style="width:20%;white-space:normal;" styleClass="column-align-center" >
+			                             <f:facet name="header">
+			                                  <h:outputText value="#{lbl['lbl.ct.contact.person.name']}" styleClass="required"/>
+			                            </f:facet>
+			                             <c:if test="#{!panelBackingBean.managedBean.viewContract}">
+				                               <p:inputText value="#{data.name}"  onkeypress="if (event.keyCode == 13) { return false; }"
+					                                 style="width:95%;" maxlength="80">
+					                                 <p:ajax process="@this"></p:ajax>
+							   	               </p:inputText>
+					                     </c:if>
+							   	           <c:if test="#{panelBackingBean.managedBean.viewContract}">
+							   	                  <h:outputText  value="#{data.name}" style="float:left;text-align:left;" />
+							   	            </c:if>
+			                    </p:column>
+			        
+			                    <p:column headerText="#{lbl['lbl.ct.address']}" style="width:40%;white-space:normal;" styleClass="column-align-center" >
+			                      <c:if test="#{!panelBackingBean.managedBean.viewContract}">
+				                     <p:inputText value="#{data.address}" onkeypress="if (event.keyCode == 13) { return false; }"   
+				        	                style="width:95%;" maxlength="200">
+				        	                <p:ajax process="@this"></p:ajax>
+							   	     </p:inputText>
+				        	       </c:if>
+							   	   <c:if test="#{panelBackingBean.managedBean.viewContract}">
+							   	        <h:outputText  value="#{data.address}" style="float:left;text-align:left;"/>
+							   	   </c:if>
+			                    </p:column>
+			        
+			                   <p:column style="width:20%;white-space:normal;" styleClass="column-align-center" >
+			                       <f:facet name="header">
+							            <h:outputText value="#{lbl['lbl.ct.email']}"/>
+					               		<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.email']}"/>
+					               	</f:facet>	
+			                        <c:if test="#{!panelBackingBean.managedBean.viewContract}">
+				                      <p:inputText id="email"  label="#{lbl['lbl.ct.email']}" 
+				                            style="width:95%;" 
+				                           onkeypress="if (event.keyCode == 13) { return false; }"  maxlength="100" value="#{data.email}">
+				                           <p:ajax process="@this"></p:ajax>
+							   	  	  </p:inputText>
+				                     </c:if>
+							   	       <c:if test="#{panelBackingBean.managedBean.viewContract}">
+							   	                   <h:outputText  value="#{data.email}" style="float:left;text-align:left;" />
+							   	     </c:if>
+			                   </p:column>
+			         
+			                   <p:column style="width:20%;white-space:normal;" styleClass="column-align-center" >
+			                         <f:facet name="header">
+							            <h:outputText value="#{lbl['lbl.ct.tel']}"/>
+					               		<ac:iconTooltip value="#{lbl['lbl.sc.telephone.no.tooltip']}"/>
+					               	</f:facet>
+			                         <c:if test="#{!panelBackingBean.managedBean.viewContract}">
+				                       <p:inputText id="phoneNo" value="#{data.phoneNo}" style="width:95%;" 
+				                             label="#{lbl['lbl.ct.tel']}" maxlength="20"
+				                             disabled="#{panelBackingBean.managedBean.viewContract}" onkeypress="if (event.keyCode == 13) { return false; }">
+				                             <p:ajax process="@this"></p:ajax>
+							   	 		</p:inputText>
+				           		      </c:if>
+							   	                      <c:if test="#{panelBackingBean.managedBean.viewContract}">
+							   	                              <h:outputText  value="#{data.phoneNo}" style="float:left;" />
+							   	                      </c:if>
+			                   </p:column>
+		         </p:dataTable>
+		      
+		        <div class="ppRightBtn"> 
+			        <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form"   
+				          action="#{panelBackingBean.addContactPerson()}" update=":form:contactPersonDt" 
+				          oncomplete="contactPersonObj.paginator.endLink.click();" 
+				          rendered="#{!panelBackingBean.managedBean.viewContract}" partialSubmit="true" />
+			         <p:commandButton id="ctPersonDelBtn"  value="#{lbl['lbl.ct.delete']}" process="@this"  
+			              partialSubmit="true"  disabled="#{panelBackingBean.managedBean.buttonHideActiveDel}"
+			             onsuccess="delCtPersonDlg.show()" rendered="#{!panelBackingBean.managedBean.viewContract}"/>						
+		      </div>
+		   
+		      <p:confirmDialog id="delCtPersonDlg" widgetVar="delCtPersonDlg"  message="#{lbl['lbl.msg.confirm.delete']}" 	
+		                severity="alert"  closable="true"  appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                     <div class="ppRightBtn">
+		                 <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:contactPerson"
+		                     process="@all" actionListener="#{panelBackingBean.deleteTableRow('PERSON')}" onclick="delCtPersonDlg.hide();"/>
+			             <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delCtPersonDlg.hide();" type="button" />
+		             </div>
+             </p:confirmDialog>	
+           </p:panel>
+	
+	<p:panel id="cancelCircularPnl" 
+	      header="#{lbl['lbl.ct.panel.related.cancelled.circular']}" toggleable="true" toggleSpeed="500">
+		    <p:dataTable id="cancelCircularDt" var="data" widgetVar="cancelCircularWidget"
+			        value="#{panelBackingBean.managedBean.circularVer.ctCancelCircularList}" rowKey="#{data}"
+			         rowIndexVar="index" selection="#{panelBackingBean.managedBean.selectedCancelCircular}">
+			               <ac:paginator for="cancelCircularDt" />		
+			                <p:column  style="width:3%" 
+				                    rendered="#{!panelBackingBean.managedBean.viewContract}">
+				                <f:facet name="header">
+							      <p:selectBooleanCheckbox value="#{panelBackingBean.managedBean.selectAll}">
+								     <p:ajax partialSubmit="true" process="@this"
+									      update=":form:cancelCircularDt,:form:cancelCircularDtBtn" listener="#{panelBackingBean.selectAllCancelCircular}" />
+							      </p:selectBooleanCheckbox>
+						       </f:facet>
+		           
+		                        <p:selectBooleanCheckbox 
+		                             value="#{data.selectedCheckBox}" styleClass="myCustomChekBox">
+		           		               <p:ajax event="change"
+		           		                  update=":form:cancelCircularDt,:form:cancelCircularDtBtn" listener="#{panelBackingBean.selectCancelCheckboxSelect}"></p:ajax>
+			                     </p:selectBooleanCheckbox>     
+				              </p:column>        <p:column headerText="#{lbl['lbl.ct.physical.circular.no']}" styleClass="column-align-center" >
+				                     <h:outputText value="#{data.circularVer.circularNo}"  style="float:left;"/>
+			                  </p:column>
+			
+			                  <p:column headerText="#{lbl['lbl.ct.circular.name']}" styleClass="column-align-center" >
+				                   <h:outputText value="#{data.circularVer.name}" style="float:left;" />
+			                  </p:column>	
+		         </p:dataTable>
+		
+		         <div class="ppRightBtn"> 
+		                   <p:commandButton value="#{lbl['lbl.btn.add']}"  oncomplete="cancelCircularDlg.show();" update="cancelledCclDt, :form:popUpSelectButtonId"
+				                 actionListener="#{panelBackingBean.addCancelCircularListener()}"  rendered="#{!panelBackingBean.managedBean.viewContract}"/>
+			               <p:commandButton id="cancelCircularDtBtn"  value="#{lbl['lbl.ct.delete']}"  
+			                      process="@this" partialSubmit="true"  disabled="#{panelBackingBean.managedBean.buttonHideActiveDel}"
+				                  rendered="#{!panelBackingBean.managedBean.viewContract}" onsuccess="cancelCircularDltDlg.show()"/>				
+		           </div>	
+		           
+		               <p:confirmDialog id="cancelCircularDlt" widgetVar="cancelCircularDltDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
+		                   severity="alert"  closable="true"  appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                           <div class="ppRightBtn">
+		                       <p:commandButton value="#{lbl['lbl.btn.yes']}"   action="#{panelBackingBean.deleteTableRow('CANCEL')}" process="@this"
+		                         update=":form:cancelCircularDt, :form:cancelCircularDtBtn" partialSubmit="true"  oncomplete="cancelCircularDltDlg.hide();"/>
+			                   <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="cancelCircularDltDlg.hide();" />
+		                   </div>
+                      </p:confirmDialog>
+	       </p:panel>
+	<p:dialog id="cancelCircularDlg" header="#{lbl['lbl.ct.cancelled.circular']}" widgetVar="cancelCircularDlg" resizable="false" 
+		styleClass="pop_up_top" modal="true" width="550" height="auto">
+			<p:dataTable id="cancelledCclDt" var="data" rowKey="#{data}" widgetVar="cancelledCirObj"
+			    rowIndexVar="index" value="#{panelBackingBean.managedBean.cancelledCircularList}"
+			    selection="#{panelBackingBean.managedBean.selectedCancelledCircularList}">
+				<ac:paginator for="cancelledCclDt" />
+			    <p:ajax event="toggleSelect"  update=":form:cancelledCclDt,:form:popUpSelectButtonId" />
+                <p:ajax event="rowSelect" update=":form:cancelledCclDt,:form:popUpSelectButtonId" />
+			    <p:ajax event="rowSelectCheckbox"  update=":form:cancelledCclDt,:form:popUpSelectButtonId" />
+                <p:ajax event="rowUnselectCheckbox"  update=":form:cancelledCclDt,:form:popUpSelectButtonId" />
+                 <p:column selectionMode="multiple" style="width:3%" 
+				          rendered="#{!panelBackingBean.managedBean.viewContract}"/>
+				       
+				<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}" styleClass="column-align-center"
+				     filterBy="#{data.circularVer.circularNo}"   filterMatchMode="contains" >
+					<h:outputText value="#{data.circularVer.circularNo}" style="text-align:left;float:left;width:200px;" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.ct.circular.name']}" styleClass="column-align-center" >
+					<h:outputText value="#{data.circularVer.name}" style="text-align:left;float:left;width:300px;" />
+				</p:column>											
+			</p:dataTable>
+			<p:spacer height="5"/>
+			<div class="ppRightBtn"> 
+   		<p:commandButton id="popUpSelectButtonId" value="#{lbl['lbl.btn.select']}"  process="cancelCircularDlg" 
+					action="#{panelBackingBean.addCancelledCircular}"
+					 disabled="#{panelBackingBean.isDisabled()}"
+					update="cancelCircularDt" onclick="cancelCircularDlg.hide();"
+					oncomplete="cancelCircularWidget.paginator.endLink.click();" />
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}"  type="button" ajax="false" onclick="cancelCircularDlg.hide();" />
+			</div>			
+	</p:dialog>
+	
+	<p:dialog id="uploadCircularDlg" widgetVar="uploadCircularDlg" modal="true" 
+			resizable="false" width="700px" height="350px" 
+			styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
+			<p:ajax event="close" />
+			<p:fileUpload style="display:inline;" 
+				mode="advanced"  dragDropSupport="false"
+				multiple="true"
+			    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" 
+				fileUploadListener="#{panelBackingBean.fileUpload}"  
+				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"  widgetVar="panelUploadWV"
+				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
+				invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
+				update="uploadCircularPg,uploadCircularPg1" 
+				label="#{lbl['lbl.btn.choose']}" 
+				uploadLabel="#{lbl['lbl.btn.upload.all']}"
+				cancelLabel="#{lbl['lbl.btn.remove.all']}" >
+		</p:fileUpload>
+		<f:facet name="footer">
+   		<div class="ppRightBtn">
+		    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadCircularDlg.hide();" />
+   		</div>
+   		</f:facet> 
+   	</p:dialog>
+	               
+	        <p:confirmDialog id="deleteAttachFile" widgetVar="deleteAttachFile" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                 <div class="ppRightBtn">
+		             <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                   update=":form:uploadCircularPg,:form:uploadCircularPg1" 
+		                   action="#{panelBackingBean.deleteAttachmentActionByIndex(panelBackingBean.managedBean.attachFileIndex)}" oncomplete="deleteAttachFile.hide();"/>
+			          <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteAttachFile.hide();" type="button" />
+		           </div>
+          </p:confirmDialog>
+
+	<p:panel header="#{lbl['lbl.ct.panel.remarks.attachment']}" toggleable="true" rendered="#{!panelBackingBean.managedBean.fromCircularNotice and !panelBackingBean.managedBean.viewContract}">
+		<table style="width: 100%">
+			<tr>
+				<td width="50%" valign="top">
+					<table style="width: 100%">
+						<tr>
+							<td class="TableFieldLeft" width="24%"><h:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
+							<td class="TableFieldRight">
+								<p:dataGrid value="#{panelBackingBean.managedBean.circularVer.circularRemarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
+									<table>
+										<tr>
+											<td rowspan="2" valign="top">
+												<h:graphicImage value="#{panelBackingBean.userImagePath(remarkVar.createdUser.loginId)}" height="30" width="30" />
+											</td>
+											<td width="5"></td>
+											<td>
+												<h:outputText value="#{remarkVar.createdUser.userName}"></h:outputText>,
+												<h:outputText value="#{remarkVar.changedDate}">
+													<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+												</h:outputText>
+											</td>
+										</tr>
+										<tr>
+											<td></td>
+											<td>
+												<p:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000" 
+													disabled="#{panelBackingBean.managedBean.viewContract}"
+													onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
+													style="width:70%;" autoResize="false"/> 
+												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
+											</td>
+										</tr>
+									</table>
+								</p:dataGrid>
+							</td>
+						</tr>
+					</table>    					
+				</td>
+				<td width="50%" valign="top">
+					<ui:include src="/xhtml/ct/shared/attachment.xhtml" />						
+				</td>
+			</tr>
+		</table>
+	</p:panel>
+	
+	<!-- Bug #29447 - To display Remarks and Attachments for CT Module - Circular Maintenance -->
+	<!-- start -->
+	<p:panel header="#{lbl['lbl.ct.panel.remarks.attachment']}" toggleable="true" 
+	    rendered="#{panelBackingBean.managedBean.viewContract}">
+		<table style="width: 100%">
+			<tr>
+				<td width="50%" valign="top" style="text-align:center"><h:outputLabel value="#{lbl['lbl.txt.remarks']}" 
+				style="float:none;text-align:center"/></td>
+				<td width="50%" valign="top" style="text-align:center"><h:outputLabel value="#{lbl['lbl.txt.attachment']}" 
+				style="float:none;text-align:center"/></td>
+			</tr>
+			<tr>
+				<td class="TableFieldLeft" width="50%" style="padding-left:6.25%;text-align:left">
+					<p:dataGrid var="remark" 
+					value="#{panelBackingBean.managedBean.circularVer.circularRemarks}" rowIndexVar="index"
+						columns="1" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+						<table>
+							<tr>
+								<td rowspan="2" valign="top">
+									<h:graphicImage value="#{panelBackingBean.userImagePath(remark.createdUser.loginId)}"
+										height="30" width="30" />
+									</td>
+								<td width="5"></td>
+								<td>
+									<h:outputText id="remarkCreator"
+										value="#{remark.createdUser.userName}" />, 
+									<h:outputText id="remarkDates" value="#{remark.changedDate}">
+										<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+									</h:outputText>
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td>
+									<!-- Bug #29447 -->
+									<h:outputText value="#{remark.remark}"
+									style="display: inline-block; word-break: break-word; white-space:normal"/>
+									<!-- Bug #29447 -->
+								</td>
+							</tr>
+						</table>
+					</p:dataGrid>
+				</td>
+				<td class="TableFieldRight" width="50%" style="padding-left:6.25%">
+					<p:dataGrid value="#{panelBackingBean.managedBean.circularVer.circularAttachments}"
+						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" var="attachment"
+						rowIndexVar="attachFileIndex" columns="1" style="width:100%">
+						<table>
+							<tr>
+								<td rowspan="2" style="vertical-align: top;" align="left">
+									<h:graphicImage value="/css/images/design/#{ctBackingBean.determineIcon(attachment)}"
+										height="30" width="30" />
+								</td>
+								<td><h:outputText value="#{attachment.createdUser.userName}" />, 
+									<h:outputText value="#{attachment.createdDate}">
+										<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+									</h:outputText>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<h:commandLink value="#{attachment.fileName}"
+										styleClass="blue_font" immediate="true"
+										action="#{panelBackingBean.downloadFile(attachment)}" />
+								</td>
+							</tr>
+						</table>
+					</p:dataGrid>
+				</td>
+			</tr>
+		</table>
+	</p:panel>
+	<!-- Bug #29447 - end -->
+</ui:composition>

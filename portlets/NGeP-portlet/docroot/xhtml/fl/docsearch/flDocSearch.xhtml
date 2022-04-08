@@ -1,0 +1,364 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+
+	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>		
+		<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error,info" />
+		<style>
+				.column-align-center {
+				text-align: center !important;
+				}
+				
+				.highlight-mark:before {
+ 					color: red;
+ 					content: "*";
+				}
+				
+				.ui-menu.ui-menu-dynamic.ui-widget.ui-widget-content.ui-corner-all.ui-helper-clearfix.ui-shadow{  
+              		width:180px;
+   				}
+		</style>
+		<p:panel id="searchPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}"/>
+			<br/>
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.pospec']}"/>
+			<br/>
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.dospec']}"/>
+			<br/>
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.dospectwo']}"/>
+			<table>
+				<tr>
+					<td style="width: 190px;"/>
+					<td>
+						<p:selectOneRadio value="#{flDocumentBackingBean.managedBean.searchFunctionType}" 
+							rendered="#{flDocumentBackingBean.showFunctionType()}" >
+							<f:selectItems value="#{flDocumentBackingBean.getFunctionType()}" />
+							<p:ajax event="change" update=":form" />
+						</p:selectOneRadio>
+					</td>
+				</tr>
+			</table>
+			<h:panelGroup id="orgSearch" rendered="#{flDocumentBackingBean.managedBean.searchFunctionType==ParameterConst.orgTypePtj}">
+			<table>
+				<tr>
+					<td style="width: 190px;">
+						<p:outputLabel value="#{lbl['lbl.fl.ministry']}"  /><p:outputLabel
+						value="*" styleClass="mandatory" />
+					</td>
+					<td>
+						<ac:lov id="searchMinistry" lovId="PM_ORG_PROFILE_MINSTRY" size="131" readonly="true" 
+							disabled="#{flDocumentBackingBean.disableMinistryLov()}"
+							headerText="#{lbl['lbl.fl.ministry']}" 
+							value="#{flDocumentBackingBean.managedBean.ministry.orgName}"
+							postUpdateListener="flDocumentBackingBean.resetPtjGroupProfile()"
+							update=":form:searchPtj,:form:orgSearch"
+							saveObject="flDocumentBackingBean.managedBean.ministry"
+							conditionField="#{flDocumentBackingBean.getMinistryCondition()}"
+							>
+						</ac:lov>
+					</td>
+				</tr>
+				<tr>
+					<td style="width: 190px;">
+						<p:outputLabel value="#{lbl['lbl.fl.jabatan']}"	/>
+					</td>
+					<td>
+						<ac:lov id="searchJabatan" lovId="PM_ORG_PROFILE_PTJ_GROUP" size="131" readonly="true" 
+							disabled="#{flDocumentBackingBean.disablePtjGroupLov()}"
+							headerText="#{lbl['lbl.fl.jabatan']}" 
+							value="#{flDocumentBackingBean.managedBean.ptjGroup.orgName}"
+							postUpdateListener="flDocumentBackingBean.resetPtjProfile()"
+							update=":form:searchPtj,:form:orgSearch"
+							saveObject="flDocumentBackingBean.managedBean.ptjGroup"
+							conditionField="#{flDocumentBackingBean.constuctConditionFieldsForPTJGroup()}"
+							>
+						</ac:lov>
+					</td>
+				</tr>
+				<tr>
+					<td style="width: 190px;"><p:outputLabel value="#{lbl['lbl.fl.ptj']}" /></td>
+					<td>
+						<ac:lov id="searchPtj" lovId="PM_ORG_PROFILE_PTJ" size="131" readonly="true" 
+							disabled="#{flDocumentBackingBean.disablePtjLov()}"
+							headerText="#{lbl['lbl.fl.ptj']}"
+							value="#{flDocumentBackingBean.managedBean.ptj.orgName}"
+							saveObject="flDocumentBackingBean.managedBean.ptj"	
+							conditionField="#{flDocumentBackingBean.getPTJCondition()}"
+							>			
+						</ac:lov>
+					</td>
+				</tr>
+			</table>
+			</h:panelGroup>
+			<table>
+			<tr>
+				<td style="width: 190px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.order.type']}" /><p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneMenu
+						value="#{flDocumentBackingBean.managedBean.searchOrderType}"
+						style="width: 314px;">
+						<f:selectItems
+							value="#{flDocumentBackingBean.getDropdownCodeValues(ParameterTypeConst.fulfilmentOrderType)}" />
+						<p:ajax event="change" update="form:searchPanel"
+							listener="#{flDocumentBackingBean.selectedOrderType}"/>
+					</p:selectOneMenu></td>
+				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.order.no']}" /></td>
+				<td><p:inputText size="28" maxlength="17" 
+						value="#{flDocumentBackingBean.managedBean.searchOrderNo}"></p:inputText>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.purchase.no.example']}"/></td>
+			</tr>
+			<tr>
+			<!-- #21150 - Document type become mandatory  -->
+			<td style="width: 190px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.doc.type']}"	/><p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+			<td><p:selectOneMenu id="searchDocTypeDD" style="width: 314px;"
+						value="#{flDocumentBackingBean.managedBean.searchDocType}">
+						<f:selectItems
+							value="#{flDocumentBackingBean.getDocumentTypeDropDown()}" />
+						<p:ajax event="change"
+							update="docTypeSearch,docTypeSearch1,docStatusSearch,docDoStatusSearch,docInvStatusSearch,searchPhysContractNo"
+							listener="#{flDocumentBackingBean.selectedDoctype}" />
+					</p:selectOneMenu></td>
+			<td ><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.circular.doc.no']}" /></td>
+			<td><p:inputText size="28" value="#{flDocumentBackingBean.managedBean.searchDocNo}" />
+				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.document.no.example']}"/>	
+			</td>
+			</tr>
+			</table>
+			<h:panelGroup id="docStatusSearch">
+				<table>
+					<tr>
+						<td style="width: 190px;"><p:outputLabel
+								value="#{lbl['lbl.fl.doc.maintain.doc.status']}" /></td>
+						<td><p:selectOneMenu id="statusId"
+								value="#{flDocumentBackingBean.managedBean.statusDescId}"
+								style="width: 314px;">
+								<f:selectItems
+									value="#{flDocumentBackingBean.getStatusDropdownValues('FL',flDocumentBackingBean.managedBean.searchDocType)}" />
+								<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue="0"></f:selectItem>	
+							</p:selectOneMenu></td>
+						<td style="width: 250px;"><p:outputLabel
+								value="#{lbl['lbl.fl.financial.year']}" /></td>
+						<td><p:selectOneMenu id="searchFinancialYear"
+								style="width: 100px;"
+								value="#{flDocumentBackingBean.managedBean.searchFinancialYear}">
+								<f:selectItems
+									value="#{flDocumentBackingBean.getFinancialYearOpt()}" />
+							</p:selectOneMenu></td>
+					</tr>
+				</table>
+			</h:panelGroup>
+			<h:panelGrid columns="4" columnClasses="flDocSearchWidth" >
+				<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.business.company.name']}" />
+				<p:inputText size="45"
+					value="#{flDocumentBackingBean.managedBean.searchSuppName}"></p:inputText>
+			</h:panelGrid>
+			
+			<h:panelGroup id="docDoStatusSearch">
+				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
+					rendered="#{flDocumentBackingBean.managedBean.checkDoDocType}">
+					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.supp.reference']}" />
+					<p:inputText size="28"
+						value="#{flDocumentBackingBean.managedBean.searchSuppDoRef}"></p:inputText>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.supp.ref']}"/>	
+				</h:panelGrid>
+			</h:panelGroup>
+			<h:panelGroup id="docInvStatusSearch">
+				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
+					rendered="#{flDocumentBackingBean.managedBean.checkInDocType}">
+					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.supp.reference']}" />
+					<p:inputText size="28"
+						value="#{flDocumentBackingBean.managedBean.searchSuppInvRef}"></p:inputText>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.supp.ref']}"/>	
+				</h:panelGrid>
+			</h:panelGroup>
+			<h:panelGroup id="docTypeSearch">
+			
+				<table>
+					<tr>
+						<td style="width: 190px;"><p:outputLabel rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
+								value="#{lbl['lbl.fl.sistem.panel.name']}" /></td>
+						<td><p:inputText size="28" rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
+						value="#{flDocumentBackingBean.managedBean.searchCentralContractName}"></p:inputText>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.central.contract.name']}" rendered="#{flDocumentBackingBean.managedBean.checkDocType}"/></td>
+						<td style="width: 340px;"><p:outputLabel rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
+								value="#{lbl['lbl.fl.doc.maintain.circular.no']}" /></td>
+						<td><p:inputText size="28" rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
+						value="#{flDocumentBackingBean.managedBean.searchCircularNo}"></p:inputText>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.treasury.circular']}" rendered="#{flDocumentBackingBean.managedBean.checkDocType}"/></td>
+					</tr>
+					<tr>
+						<td style="width: 190px;"><p:outputLabel rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
+								value="#{lbl['lbl.fl.doc.maintain.loa.no']}" /></td>
+						<td><p:inputText size="28" rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
+						value="#{flDocumentBackingBean.managedBean.searchLoaNo}"></p:inputText>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.loa']}" rendered="#{flDocumentBackingBean.managedBean.checkDocType}"/></td>
+						<td style="width: 340px;"><p:outputLabel rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
+								value="#{lbl['lbl.fl.doc.maintain.physical.loa.no']}" /></td>
+						<td><p:inputText size="28" rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
+						value="#{flDocumentBackingBean.managedBean.searchPhysLoaNo}"></p:inputText>
+						</td>
+					</tr>
+				</table>	
+			</h:panelGroup>
+				<table>
+					<tr>
+						<td style="width: 190px;"><p:outputLabel rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
+								value="#{lbl['lbl.fl.doc.maintain.contract.no']}" /></td>
+						<td><p:inputText size="28" rendered="#{flDocumentBackingBean.managedBean.checkDocType}" 
+						value="#{flDocumentBackingBean.managedBean.searchContractNo}"></p:inputText>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.contr.no']}" rendered="#{flDocumentBackingBean.managedBean.checkDocType}"/></td>
+						<td style="width: 340px;"><p:outputLabel rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
+								value="#{lbl['lbl.fl.physical.contract.no']}" /></td>
+						<td><p:inputText size="28" rendered="#{flDocumentBackingBean.managedBean.checkDocType}" id="searchPhysContractNo"
+						value="#{flDocumentBackingBean.managedBean.searchPhysContractNo}"></p:inputText>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.phycontr.no']}" rendered="#{flDocumentBackingBean.managedBean.checkDocType}"/></td>
+					</tr>
+				</table>
+			<h:panelGroup id="docTypeSearch1">	
+				<table>	
+					<tr>
+						<td style="width: 190px;"><p:outputLabel
+								rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
+								value="#{lbl['lbl.fl.doc.maintain.contract.start.date']}" /></td>
+						<td><p:calendar mode="popup" showOn="button"
+								id="calendarStart" readonlyInput="true"
+								rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+								value="#{flDocumentBackingBean.managedBean.searchContractFromDuration}">
+							</p:calendar> </td>
+						<td style="width: 340px;"><p:outputLabel
+								rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
+								value="#{lbl['lbl.fl.doc.maintain.contract.end.date']}" /></td>
+						<td><p:calendar mode="popup" showOn="button" id="calendarEnd"
+								readonlyInput="true"
+								rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+								value="#{flDocumentBackingBean.managedBean.searchContractToDuration}">
+							</p:calendar></td>
+					</tr>
+				</table>
+			</h:panelGroup>
+			
+			<p:outputPanel id="advanceSearchID" style="width:100%">
+			</p:outputPanel>
+
+			<f:verbatim></f:verbatim>
+			<f:verbatim></f:verbatim>
+			<f:verbatim></f:verbatim>
+
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.search']}"
+					action="#{flDocumentBackingBean.searchDocument}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+					update="resultPanel" />
+				<p:commandButton value="#{lbl['lbl.btn.reset']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+					action="#{flDocumentBackingBean.searchReset}" 
+					update=":form"  title="#{lbl['lbl.fl.tooltip.doc.maintain.reset']}"/>
+			</div>
+		</p:panel>
+		<p:panel id="resultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.doc.maintain.result']}"/><br/><br/>
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.doc.maintain.cogst.report']}"/><br/><br/>
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.order.no']}" escape="false"/><br/>
+			<p:dataTable id="flDocListDt"
+				value="#{flDocumentBackingBean.managedBean.flDocumentDataModel}" lazy="true"
+				var="flDocument" rowIndexVar="rowIndex" rowKey="#{flDocument.docId}" rows="10"
+				width="100%">
+				<ac:paginator for="flDocListDt" />
+				
+				<p:column
+					headerText="#{lbl['lbl.fl.doc.maintain.order.type']}" style="white-space:normal;" >
+					<h:outputText
+						value="#{flDocumentBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentOrderType, flDocument.orderType)}" />
+				</p:column>
+				<p:column
+					headerText="#{lbl['lbl.fl.doc.maintain.doc.type']}" style="white-space:normal;" >
+					<h:outputText
+						value="#{flDocumentBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentDocumentType, flDocument.docType)}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.fl.doc.maintain.circular.doc.no']}">
+					<h:outputText value="#{flDocument.docNo}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.fl.doc.maintain.order.no']}">
+					<h:outputText value="#{flDocument.orderNo}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.fl.doc.maintain.doc.title']}" style="white-space:normal;" >
+					<h:outputText value="#{flDocument.title}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.fl.doc.maintain.contract.no']}" style="white-space:normal;">
+					<h:outputText value="#{flDocument.physicalNo}" rendered="#{flDocument.physicalNo != null}"/>
+					<h:outputText value="&lt;br/&gt;" escape="false" rendered="#{flDocument.physicalNo != null}"/>
+					<h:outputText value="#{flDocument.contractNo}" />
+				</p:column>
+				<p:column
+					headerText="#{lbl['lbl.fl.doc.maintain.circular.no']}">
+					<h:outputText value="#{flDocument.circularNo}" />
+				</p:column>
+				<p:column
+					headerText="#{lbl['lbl.fl.doc.maintain.doc.status']}" style="white-space:normal;" >
+						<h:outputText value="#{flDocumentBackingBean.getDocStatus(flDocument.docId, flDocument.docNo, flDocument.statusId, flDocument.docType)}" />
+				</p:column>  
+				<p:column headerText="#{lbl['lbl.fl.doc.maintain.action.no']}"
+					style="text-align: center">
+					<p:menuButton value="#{lbl['lbl.btn.option']}">
+									<p:menuitem value="#{lbl['lbl.fl.doc.maintain.action.view']}"  
+										onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							        	rendered="#{flDocument.isViewAction()}"
+							        	icon="ui-icon-view"
+							        	onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'isPendingDelivery', value:'fasle'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmView}'}, {name:'statusDesc', value:'#{flDocument.statusId}'}])"/>
+									<!-- start #21221 -->
+									<p:menuitem value="#{lbl['lbl.btn.print']}" ajax="false"
+										rendered="#{!((flDocument.docType==ParameterConst.doctypeFulfilmentNote and flDocument.statusId!=FulfilmentStatusCont.fnAcknowledged) ||
+														(flDocument.docType==ParameterConst.doctypeStopDelivery and flDocument.statusId!=FulfilmentStatusCont.sdApproved) ||
+														(flDocument.docType==ParameterConst.doctypeDebitAdjustmentNote and flDocument.statusId!=FulfilmentStatusCont.dnApproved) || 
+														(flDocument.docType==ParameterConst.doctypePaymentAdvice and flDocument.statusId!=FulfilmentStatusCont.paSubmitted) ||
+														(flDocument.docType==ParameterConst.doctypePurchaseRequest and flDocument.statusId!=FulfilmentStatusCont.prApproved) ||
+														(flDocument.docType==ParameterConst.doctypeContractRequest and flDocument.statusId!=FulfilmentStatusCont.crComplete)  )}"
+										icon="ui-icon-print" 
+										action="#{flDocumentBackingBean.generateReport(flDocument.docType, flDocument.docNo, flDocument.taxable)}" />	
+									<!-- end #21221 -->							        
+									<p:menuitem value="#{lbl['lbl.btn.print.cogstr']}" ajax="false"
+										rendered="#{flDocument.coGSTR}"
+										icon="ui-icon-print" 
+										action="#{flDocumentBackingBean.generateCoGSTRReport(flDocument.docNo, flDocument.coGSTRNo)}" />
+									<p:menuitem value="#{lbl['lbl.fl.doc.maintain.action.update']}"  
+							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							        	rendered="#{flDocument.isUpdateAction()}"
+							        	icon="ui-icon-update"
+							        	onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'isPendingDelivery', value:'fasle'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmUpdate}'}, {name:'statusDesc', value:'#{flDocument.statusId}'}])"/>
+							        <p:menuitem value="#{lbl['lbl.fl.doc.maintain.action.cancel']}" 
+							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							        	rendered="#{flDocument.isCancelAction()}"
+							        	icon="ui-icon-fl-cancel"
+										onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'isPendingDelivery', value:'fasle'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmCancel}'}, {name:'statusDesc', value:'#{flDocument.statusId}'}])"/>
+							        <p:menuitem value="#{lbl['lbl.fl.doc.maintain.action.stop.fulfilment']}"  
+							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							        	rendered="#{flDocument.isStopFulfilmentAction()}"
+							        	icon="ui-icon-stop"
+							        	onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'isPendingDelivery', value:'fasle'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmStopFulfilment}'}, {name:'statusDesc', value:'#{flDocument.statusId}'}])"/>
+							        <p:menuitem value="#{lbl['lbl.fl.doc.maintain.action.factory.comp.removal']}"  
+							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							        	rendered="#{flDocument.isRemoveFactoringAction()}"
+							        	icon="ui-icon-termination"
+							        	onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'isPendingDelivery', value:'fasle'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmRemoveFactoring}'}, {name:'statusDesc', value:'#{flDocument.statusId}'}])"/>
+					</p:menuButton>
+				</p:column>
+			</p:dataTable>
+			<p:remoteCommand action="#{flDocumentBackingBean.navigateToPage}"
+				name="goToDetail" />
+		</p:panel>
+		<ac:lovPopup />
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,264 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel header="#{lbl['lbl.sm.panHdr.comBasic']}" toggleable="true"
+		id="basHdPan">
+		<p:outputPanel id="bsInfPan" layout="block">
+			<table style="width: 100%;table-layout:fixed">
+				<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.viewSupplierProfile}">
+					<tr>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.mof.no']}" /></td>
+						<td>
+							<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smMofAccount.mofNo}" 
+								rendered="#{not empty viewSmApplBackingBean.managedBean.smMofAccount}"/>
+							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.na']}" 
+								rendered="#{empty viewSmApplBackingBean.managedBean.smMofAccount}"/>
+						</td>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.mof.startDate']}" /></td>
+						<td>
+							<p:outputPanel rendered="#{not empty viewSmApplBackingBean.managedBean.smMofCert}">
+								<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smMofCert.effDate}" />
+							</p:outputPanel>
+							<p:outputPanel rendered="#{empty viewSmApplBackingBean.managedBean.smMofCert}">
+								<p:outputPanel rendered="#{not empty viewSmApplBackingBean.managedBean.smMofAccount}">
+									<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smMofAccount.effDate}" />
+								</p:outputPanel>
+								<p:outputPanel rendered="#{empty viewSmApplBackingBean.managedBean.smMofAccount}">
+									<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.na']}" />
+								</p:outputPanel>
+							</p:outputPanel>
+						</td>
+					</tr>
+					<tr>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.epno']}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smSupplier.epNo}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.mof.endDate']}" /></td>
+						<td>
+							<p:outputPanel rendered="#{not empty viewSmApplBackingBean.managedBean.smMofCert}">
+								<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smMofCert.expDate}" />
+							</p:outputPanel>
+							<p:outputPanel rendered="#{empty viewSmApplBackingBean.managedBean.smMofCert}">
+								<p:outputPanel rendered="#{not empty viewSmApplBackingBean.managedBean.smMofAccount}">
+									<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smMofAccount.expDate}" />
+								</p:outputPanel>
+								<p:outputPanel rendered="#{empty viewSmApplBackingBean.managedBean.smMofAccount}">
+									<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.na']}" />
+								</p:outputPanel>
+							</p:outputPanel>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="4" height="20"></td>
+					</tr>
+				</p:outputPanel>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.companyname']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.companyName}" /></td>
+					
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.application.no']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.applNo}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.regtype']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.supplierBusinessTypeVal}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.rocNo']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smSupplier.regNo}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.taxRefNo']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.incomeTaxNo}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.new.business.regNo']}" /></td>
+					<td>
+					<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}" rendered="#{not empty viewSmApplBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}"/>
+					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}" rendered="#{empty viewSmApplBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}"/>
+					</td>
+				</tr>
+				<p:outputPanel rendered="#{!viewSmApplBackingBean.managedBean.original}">
+					<tr>
+						<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.viewSupplierProfile}">
+							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.curr.regstatus']}" /></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.currRegStatus}" /></td>
+						</p:outputPanel>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.estdate']}" /></td>
+						<td><ac:labelDate value="#{viewSmApplBackingBean.managedBean.smSupplier.establishDate}" styleClass="outputLabel-view"/></td>
+						<p:outputPanel rendered="#{!viewSmApplBackingBean.managedBean.viewSupplierProfile}">
+							<td colspan="1"></td>
+						</p:outputPanel>
+					</tr>
+					<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.isbumi']}" /></td>
+						<td>
+							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.yes']}" rendered="#{viewSmApplBackingBean.managedBean.smAppl.bumi}"  />
+							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.no']}" rendered="#{!viewSmApplBackingBean.managedBean.smAppl.bumi}"  />
+					</td>
+					<td></td>
+					<td></td>
+	
+					</tr>
+				</p:outputPanel>
+				<!-- #29617 start-->
+				<p:outputPanel
+					rendered="#{viewSmApplBackingBean.managedBean.viewSupplierProfile}">
+					<p:outputPanel
+						rendered="#{viewSmApplBackingBean.managedBean.smSupplier.smeRegisteredFlag eq '0' or viewSmApplBackingBean.managedBean.smSupplier.smeRegisteredFlag eq '9'}">
+						<tr>
+							<td><p:outputLabel styleClass="outputLabel-view-label"
+									value="#{lbl['lbl.sm.sme.status']}" /></td>
+							<td><p:outputLabel styleClass="outputLabel-view"
+									value="#{lbl['lbl.sm.sme.txt.no']}" /></td>
+						</tr>
+					</p:outputPanel>
+					<p:outputPanel
+						rendered="#{viewSmApplBackingBean.managedBean.smSupplier.smeRegisteredFlag eq '1'}">
+						<tr>
+							<td><p:outputLabel styleClass="outputLabel-view-label"
+									value="#{lbl['lbl.sm.sme.status']}" /></td>
+							<td><p:outputLabel styleClass="outputLabel-view"
+									value="#{lbl['lbl.sm.sme.txt.yes']}  -" /> <p:outputLabel
+									styleClass="outputLabel-view"
+									value="#{lbl['lbl.sm.sme.status.type.manmicro']}"
+									rendered="#{viewSmApplBackingBean.managedBean.smeSupplier.smeStatusType eq 'MANMICRO'}" />
+								<p:outputLabel styleClass="outputLabel-view"
+									value="#{lbl['lbl.sm.sme.status.type.mansmall']}"
+									rendered="#{viewSmApplBackingBean.managedBean.smeSupplier.smeStatusType eq 'MANSMALL'}" />
+								<p:outputLabel styleClass="outputLabel-view"
+									value="#{lbl['lbl.sm.sme.status.type.manmed']}"
+									rendered="#{viewSmApplBackingBean.managedBean.smeSupplier.smeStatusType eq 'MANMED'}" />
+								<p:outputLabel styleClass="outputLabel-view"
+									value="#{lbl['lbl.sm.sme.status.type.sermicro']}"
+									rendered="#{viewSmApplBackingBean.managedBean.smeSupplier.smeStatusType eq 'SERMICRO'}" />
+								<p:outputLabel styleClass="outputLabel-view"
+									value="#{lbl['lbl.sm.sme.status.type.sersmall']}"
+									rendered="#{viewSmApplBackingBean.managedBean.smeSupplier.smeStatusType eq 'SERSMALL'}" />
+								<p:outputLabel styleClass="outputLabel-view"
+									value="#{lbl['lbl.sm.sme.status.type.sermed']}"
+									rendered="#{viewSmApplBackingBean.managedBean.smeSupplier.smeStatusType eq 'SERMED'}" /></td>
+							<td><p:outputLabel styleClass="outputLabel-view-label"
+									value="#{lbl['lbl.sm.sme.reg.status']}" /></td>
+							<td><p:outputLabel styleClass="outputLabel-view"
+									value="#{lbl['lbl.sm.sme.txt.yes']}"
+									rendered="#{viewSmApplBackingBean.managedBean.smeSupplier.smeCorpRegistered}" />
+								<p:outputLabel styleClass="outputLabel-view"
+									value="#{lbl['lbl.sm.sme.txt.no']}"
+									rendered="#{not viewSmApplBackingBean.managedBean.smeSupplier.smeCorpRegistered}" /></td>
+						</tr>
+						<p:outputPanel
+							rendered="#{viewSmApplBackingBean.managedBean.smeSupplier.smeCorpRegistered}">
+							<tr>
+								<td><p:outputLabel styleClass="outputLabel-view-label"
+										value="#{lbl['lbl.sm.sme.ref.no']}" /></td>
+								<td><p:outputLabel styleClass="outputLabel-view"
+										value="#{viewSmApplBackingBean.managedBean.smeSupplier.smeRefNo}" /></td>
+								<td><p:outputLabel styleClass="outputLabel-view-label"
+										value="#{lbl['lbl.sm.sme.valid.period']}" /></td>
+								<td><h:outputLabel styleClass="outputLabel-view"
+										value="#{viewSmApplBackingBean.managedBean.smeSupplier.smeValidStartDate}">
+										<f:convertDateTime pattern="dd/MM/yyyy  -" />
+									</h:outputLabel><h:outputLabel style="float: left;white-space: normal;"
+										value="#{viewSmApplBackingBean.managedBean.smeSupplier.smeValidEndDate}">
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</h:outputLabel></td>
+							</tr>
+						</p:outputPanel>
+					</p:outputPanel>
+				</p:outputPanel>
+				<!-- #29617 end-->
+				<c:if test="#{not empty viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses}">
+					<tr>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.companyaddress']}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.country']}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCountry.countryName}"/></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address2}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.state']}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.stateName}"/></td>
+					</tr>
+					<tr>
+						<td></td><!-- #13320 - added division -->
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address3}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.division']}" 
+											rendered="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.adoptDivision}"/></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDivision.divisionName}"
+											rendered="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.adoptDivision}"/></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.district']}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict.districtName}"/></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.towncity']}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity.cityName}"/></td>
+					</tr>
+				</c:if>	
+
+				<tr>
+					<td>
+						<p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.postcode']}" />
+					</td>
+					<td>
+						<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcode}" /> 
+					</td>
+					<td>
+						<p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.annualRev']}" />
+					</td>
+					<td>
+						<p:outputLabel styleClass="outputLabel-view" 
+							value="#{viewSmApplBackingBean.getParamDescByParameterId(viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.annualRevenue)}" />
+					</td>
+				</tr>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.phoneno']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.phoneFull}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.website']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.website}" /></td>
+					<p:outputPanel 
+						rendered="#{viewSmApplBackingBean.managedBean.smAppl.smSupplier.businessType eq 'D' or viewSmApplBackingBean.managedBean.smAppl.smSupplier.businessType eq 'E'
+							or viewSmApplBackingBean.managedBean.smAppl.smSupplier.businessType eq 'G' or viewSmApplBackingBean.managedBean.smAppl.smSupplier.businessType eq 'H'}">
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.local.authority']}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.localAuthority}" /></td>
+					</p:outputPanel>
+				</tr>
+				<tr>
+				<td>
+				<p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.faxno']}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.faxFull}" /></td>
+				</tr>
+				<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'C'}">
+					<tr>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.reason']}" /></td>
+						<td style="white-space: normal;"><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.cancelRemarkVO.reason}" /></td>
+						<td colspan="2">
+							<p:commandLink ajax="false" rendered="#{not empty viewSmApplBackingBean.managedBean.cancelRemarkVO.attch.fileName}">
+								<p:fileDownload value="#{viewSmApplBackingBean.commonDownload(viewSmApplBackingBean.managedBean.cancelRemarkVO.attch.filePath,
+								viewSmApplBackingBean.managedBean.cancelRemarkVO.attch.fileName,viewSmApplBackingBean.managedBean.cancelRemarkVO.attch.fileName)}" />
+								<p:graphicImage value="/css/images/design/download.png" style="margin-right:2px;" />
+							</p:commandLink>
+						</td>
+					</tr>
+				</p:outputPanel>
+			</table>
+				
+		</p:outputPanel>
+		
+		<ac:smRevisionRemark backingBean="#{viewSmApplBackingBean}" 
+				poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.basicRemark}" 
+				approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.basicRemark}" />
+
+	</p:panel>
+	
+	<ui:include src="gstCompanyBasicViewOnly.xhtml" />
+</ui:composition>

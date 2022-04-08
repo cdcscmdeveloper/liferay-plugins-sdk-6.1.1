@@ -1,0 +1,178 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.supp.data.maintenance.add.new.cat.instruction']}" />
+		
+		<p:dataTable var="catBean" widgetVar="smCatCodesNonRenewApplDtWidVar"
+			value="#{supplierDataMaintenanceBackingBean.managedBean.activeCategoryList}"
+			rowKey="#{catBean}" rowIndexVar="index" id="catDt"
+			selection="#{supplierDataMaintenanceBackingBean.managedBean.selectedPendingApprovedCategories}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+			<ac:paginator for="catDt" />
+			<p:ajax event="rowSelect" partialSubmit="true" process="@this"
+				listener="#{supplierDataMaintenanceBackingBean.unSelectApporvedCategories}"
+				update=":#{p:component('catCodeInfPan')},@([id$=deletedBtnId])"></p:ajax>
+			<p:ajax event="rowUnselect"
+				listener="#{supplierDataMaintenanceBackingBean.unSelectApporvedCategories}"
+				update=":#{p:component('catCodeInfPan')},@([id$=deletedBtnId])"></p:ajax>
+			<p:ajax event="rowSelectCheckbox"
+				listener="#{supplierDataMaintenanceBackingBean.unSelectApporvedCategories}"
+				update=":#{p:component('catCodeInfPan')},@([id$=deletedBtnId])"></p:ajax>
+			<p:ajax event="rowUnselectCheckbox"
+				listener="#{supplierDataMaintenanceBackingBean.unSelectApporvedCategories}"
+				update=":#{p:component('catCodeInfPan')},@([id$=deletedBtnId])"></p:ajax>
+			<p:ajax event="rowDblselect"
+				listener="#{supplierDataMaintenanceBackingBean.unSelectApporvedCategories}"
+				update=":#{p:component('catCodeInfPan')},@([id$=deletedBtnId])"></p:ajax>
+			<p:columnGroup type="header">
+				<p:row>
+					<!-- 1 -->
+					<p:column style="width:2%"
+						disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
+							or (catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS or not empty catBean.approvedDate)}" />
+					<!-- 2 -->
+					<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
+						style="width : 2%;"
+						disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance 
+							or (catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS)}" />
+					<!-- 3 -->
+					<p:column style="width :350px;white-space : normal"
+						headerText="#{lbl['lbl.sm.catCodes.cate']}"
+						disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
+							or (catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS)}" />
+					<!-- 4 -->
+					<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" style="width : 10% !important;"
+						disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
+							or (catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS)}" />
+					
+					<!-- 5 -->
+					<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" style="width : 25% !important;"
+						disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
+							or (catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS)}" />
+					<!-- 6 -->
+					<p:column headerText="#{lbl['lbl.sm.status']}"
+						disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
+							or (catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS)}" />
+				</p:row>
+			</p:columnGroup>
+			<!-- 1 -->
+			<p:column selectionMode="multiple" style="width:2%"
+				disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance 
+							or (catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS or not empty catBean.approvedDate)}" />
+			<!-- 2 -->
+			<p:column style="width : 2%;">
+				<p:outputLabel value="#{index + 1}"
+					style="float: left;white-space: normal;" />
+			</p:column>
+			<!-- 3 -->
+			<p:column style="width :350px;white-space : normal"
+				disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
+							or catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
+				<h:outputText
+					value="#{catBean.pmCategoryL1.categoryL1Code} -  #{catBean.pmCategoryL1.categoryName}" />
+				<br />
+				<h:outputText
+					value="#{catBean.pmCategoryL2.categoryL2Code} -  #{catBean.pmCategoryL2.categoryName}" />
+				<br />
+				<h:outputText
+					value="#{catBean.pmCategoryL3.categoryL3Code} -  #{catBean.pmCategoryL3.categoryName}" />
+			</p:column>
+			
+			<!-- 4 -->
+			<p:column style="width : 10% !important;"
+				disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
+							or catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
+				<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
+					rendered="#{!catBean.specialCategory}" />
+				<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
+					rendered="#{catBean.specialCategory}" />
+			</p:column>
+			
+			<!-- 5 -->
+			<p:column style="width : 25% !important;"
+				disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
+							or catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
+				<p:inputTextarea id="otherDesc" maxlength="100"
+					style="width : auto;" label="#{lbl['lbl.sm.catCodes.othDesc']}"
+					value="#{catBean.otherDesc}" rows="5" cols="40"
+					rendered="#{catBean.pmCategoryL3.otherDescReq eq 1}">
+					<p:ajax event="blur" process="@this" partialSubmit="true"
+						listener="#{supplierDataMaintenanceBackingBean.assignCategoryReApprovalOnOtherDescChange(catBean)}"
+						update=":form:catCodeInfPan" />
+				</p:inputTextarea>
+				<p:graphicImage id="prevOtherDesc"
+					value="/css/images/design/icon_alert.png"
+					style="padding-left : 3px;"
+					rendered="#{not empty catBean.approvedDate and catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and not empty catBean.prevOtherDesc}" />
+				<p:tooltip for="prevOtherDesc">
+					<p:inputTextarea readonly="true" disabled="true" rows="5" cols="20"
+						style="width : auto;"
+						value="#{lbl['lbl.sm.catCodes.prevDesc']} #{catBean.prevOtherDesc}" />
+				</p:tooltip>
+				<p:message for="otherDesc" showDetail="false" showSummary="true"
+					display="icon" />
+			</p:column>
+
+			<!-- 6 -->
+			<p:column
+				disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance 
+							or catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
+				<h:outputText value="#{lbl['lbl.sm.catCodes.pendingDec']}"
+					rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}" />
+				<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
+					rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
+			</p:column>
+		</p:dataTable>
+		
+		<div align="right">
+			#{lbl['lbl.sm.payment.click']}
+
+			<h:panelGroup rendered="#{backingBean.managedBean.smAppl.supplierType ne 'J'}">
+				<a href="#{DocumentRepositoryUtils.baseRepo}shared/SM/Kod_Bidang_Baharu_Bekalan_Perkhidmatan.pdf">#{lbl['lbl.sm.payment.here']}</a>
+			</h:panelGroup>
+
+			<h:panelGroup rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J'}">
+				<a href="#{DocumentRepositoryUtils.baseRepo}shared/SM/Kod_Bidang_Baharu_Perkhidmatan_Perunding.pdf">#{lbl['lbl.sm.payment.here']}</a>
+			</h:panelGroup>
+
+			#{lbl['lbl.sm.download.categorycode']}
+			<!-- #26238 - START -->
+			<c:if test="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId ne null}"> <!-- START -  -->
+			<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+				partialSubmit="true" process=":#{p:component('regStatusId')},@this" id="addCatcodeBtnId" 
+				actionListener="#{supplierDataMaintenanceBackingBean.onAddCategoryCode()}" update=":#{p:component('messages')}"
+				disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
+			</p:commandButton>
+			</c:if>
+			<!-- #26238 - END -->
+			<ac:lookupCategoryCode okAction="supplierDataMaintenanceBackingBean.addNewCategoryAction"
+				catcodeL1 ="#{supplierDataMaintenanceBackingBean.managedBean.physicalConsulting}"
+				update="@form"
+				supplierType="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.supplierType}"
+				facilityType="#{supplierDataMaintenanceBackingBean.managedBean.basicCompanyFacility.facilityType}"
+				paidUpCapital="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.smCompanyBasic.paidUpCapital}"
+				categoryType="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.applCategoryType}"
+				bumiPercentage="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.smCompanyBasic.bumiPercentage}"
+				businessTypeCode="#{supplierDataMaintenanceBackingBean.managedBean.smSupplier.businessType}"
+				supplierId="#{supplierDataMaintenanceBackingBean.managedBean.smSupplier.supplierId}"
+				special="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.supplierType}" />
+			
+			<p:commandButton value="#{lbl['lbl.sm.button.delete']}" id="deletedBtnId" 
+				disabled="#{empty supplierDataMaintenanceBackingBean.managedBean.selectedPendingApprovedCategories or 
+					!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}"
+				action="#{supplierDataMaintenanceBackingBean.deleteSelectedPendingApprovalCategoryCodes(supplierDataMaintenanceBackingBean.managedBean.selectedPendingApprovedCategories)}" 
+				update=":#{p:component('catCodeInfPan')}" partialSubmit="true" 
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				process="@this">
+			</p:commandButton>
+
+		</div>
+
+	<p:spacer height="2px;" />
+</ui:composition>

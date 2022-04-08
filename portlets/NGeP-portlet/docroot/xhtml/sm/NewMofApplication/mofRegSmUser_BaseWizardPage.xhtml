@@ -1,0 +1,430 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+		<h:panelGroup rendered="#{backingBean.managedBean.supplierUser}">
+			<script>
+				var emptyText = document.createTextNode("");
+				$('#breadcrumbs').find('.last').append(emptyText);
+				if (emptyText.parentNode != null) {
+					emptyText.parentNode.children[0].text = "#{lbl['lbl.sm.mof.acc.appl']}";
+				}
+
+				$('#portlet_MOFApplication_WAR_NGePportlet').find(
+						'.portlet-title-text').html(
+						"#{lbl['lbl.sm.newMofAppln']}");
+
+				$('#portlet_DirectMofRegistration_WAR_NGePportlet').find(
+						'.portlet-title-text').html(
+						"#{lbl['lbl.sm.newMofAppln']}");
+			</script>
+		</h:panelGroup>
+	</ui:define>
+
+
+	<ui:define name="contentSection">
+
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+
+		<ui:param name="mandatoryflg" value="true" />
+
+		 <h:outputText rendered="#{backingBean.managedBean.smAppl.applValidWithSsm}" 
+					  value="#{lbl['lbl.sm.po.disclaimer1']}" styleClass="splNotesFonts" style="float: inherit" escape="false" />
+
+			<h:commandLink onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
+				rendered="#{backingBean.managedBean.smAppl.applValidWithSsm}"	
+				action="#{backingBean.redirectToViewSSMInfo(backingBean.managedBean.smSupplier.regNo,backingBean.managedBean.smSupplier.businessType)}"
+				value="#{lbl['lbl.sm.instruction.here']}" 
+				styleClass="splNotesFonts" style="float: inherit" escape="false">
+				<f:ajax execute="@this" render="@form"  />
+				</h:commandLink>
+					
+		<h:outputText rendered="#{backingBean.managedBean.smAppl.applValidWithSsm}" 
+				value="#{lbl['lbl.sm.po.disclaimer2']}" styleClass="splNotesFonts" style="float: inherit" escape="false" />
+	
+		
+		<ac:smPanel id="tt">
+			<c:if test="#{!backingBean.managedBean.redirectToPersonPage}">
+				<table style="width: 100%" id="wizardMofRegParentTable">
+					<tr>
+						<td><div class="navDiv" id="menuDiv" align="center">
+								<ul class="menu-text">
+									<li>
+										<p:commandLink value="#{lbl['lbl.sm.wizard.companyStepLbl']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'0')}"
+											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)}"
+											update=":form"
+											rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 0}"
+											styleClass="#{backingBean.managedBean.tabActiveIndex eq 0 ? 'currentStep' : ''}" />
+									</li>
+
+									<li><h:outputText
+											value="#{lbl['lbl.sm.wizard.branchStepLbl']}"
+											rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 1}" />
+										<p:commandLink value="#{lbl['lbl.sm.wizard.branchStepLbl']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'1')}"
+											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH)}"
+											update=":form"
+											rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 1}"
+											styleClass="#{backingBean.managedBean.tabActiveIndex eq 1 ? 'currentStep' : ''}" />
+									</li>
+
+									<li><h:outputText
+											value="#{lbl['lbl.sm.wizard.personStepLbl']}"
+											rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 2}" />
+										<p:commandLink value="#{lbl['lbl.sm.wizard.personStepLbl']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'2')}"
+											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)}"
+											update=":form"
+											rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 2}"
+											styleClass="#{backingBean.managedBean.tabActiveIndex eq 2 ? 'currentStep' : ''}" /></li>
+
+									<li><h:outputText
+											value="#{lbl['lbl.sm.wizard.capitalStepLbl']}"
+											rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 3}" />
+										<p:commandLink value="#{lbl['lbl.sm.wizard.capitalStepLbl']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'3')}"
+											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)}"
+											update=":form"
+											rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 3}"
+											styleClass="#{backingBean.managedBean.tabActiveIndex eq 3 ? 'currentStep' : ''}" /></li>
+
+									<li><h:outputText
+											value="#{lbl['lbl.sm.wizard.bankStepLbl']}"
+											rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 4}" />
+										<p:commandLink value="#{lbl['lbl.sm.wizard.bankStepLbl']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'4')}"
+											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)}"
+											update=":form"
+											rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 4}"
+											styleClass="#{backingBean.managedBean.tabActiveIndex eq 4 ? 'currentStep' : ''}" /></li>
+
+									<li><h:outputText
+											value="#{lbl['lbl.sm.wizard.catCodeStepLbl']}"
+											rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 5}" />
+										<p:commandLink value="#{lbl['lbl.sm.wizard.catCodeStepLbl']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'5',SupplierManagementConst.SM_APPL_BUTTON_TYPE_SAME)}"
+											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
+											update=":form"
+											rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 5}"
+											styleClass="#{backingBean.managedBean.tabActiveIndex eq 5 ? 'currentStep' : ''}" /></li>
+
+									<c:choose>
+										<c:when
+											test="#{backingBean.managedBean.smAppl.applCategoryType == 'S'}">
+											<li><h:outputText
+													value="#{lbl['lbl.sm.factoryStepLbl']}"
+													rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 6}" />
+												<p:commandLink value="#{lbl['lbl.sm.factoryStepLbl']}"
+													onstart="blockWidget.show()"
+													oncomplete="blockWidget.hide()"
+													actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'6')}"
+													action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)}"
+													update=":form"
+													rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 6}"
+													styleClass="#{backingBean.managedBean.tabActiveIndex eq 6 ? 'currentStep' : ''}" /></li>
+
+											<c:choose>
+												<c:when
+													test="#{backingBean.managedBean.showMachineryEquipmentPanel or backingBean.managedBean.showTravelSoftwarePanel}">
+													<li><h:outputText
+															value="#{lbl['lbl.sm.equipmentStepLbl']}"
+															rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 7}" />
+														<p:commandLink value="#{lbl['lbl.sm.equipmentStepLbl']}"
+															onstart="blockWidget.show()"
+															oncomplete="blockWidget.hide()"
+															actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'7')}"
+															action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
+															update=":form"
+															rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 7}"
+															styleClass="#{backingBean.managedBean.tabActiveIndex eq 7 ? 'currentStep' : ''}" /></li>
+													<li><h:outputText
+															value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
+															rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 8}" />
+														<p:commandLink
+															value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
+															onstart="blockWidget.show()"
+															oncomplete="blockWidget.hide()"
+															actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'8')}"
+															action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
+															update=":form"
+															rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 8}"
+															styleClass="#{backingBean.managedBean.tabActiveIndex eq 8 ? 'currentStep' : ''}" /></li>
+
+													<li><h:outputText
+															value="#{lbl['lbl.sm.wizard.declarationLbl']}"
+															rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 9}" />
+														<p:commandLink
+															value="#{lbl['lbl.sm.wizard.declarationLbl']}"
+															onstart="blockWidget.show()"
+															oncomplete="blockWidget.hide()"
+															actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
+															action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION)}"
+															update=":form"
+															rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 9}"
+															styleClass="#{backingBean.managedBean.tabActiveIndex eq 9 ? 'currentStep' : ''}" /></li>
+												</c:when>
+												<c:otherwise>
+													<li><h:outputText
+															value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
+															rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 7}" />
+														<p:commandLink
+															value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
+															onstart="blockWidget.show()"
+															oncomplete="blockWidget.hide()"
+															actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'7')}"
+															action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
+															update=":form"
+															rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 7}"
+															styleClass="#{backingBean.managedBean.tabActiveIndex eq 7 ? 'currentStep' : ''}" /></li>
+
+													<li><h:outputText
+															value="#{lbl['lbl.sm.wizard.declarationLbl']}"
+															rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 8}" />
+														<p:commandLink
+															value="#{lbl['lbl.sm.wizard.declarationLbl']}"
+															onstart="blockWidget.show()"
+															oncomplete="blockWidget.hide()"
+															actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'8')}"
+															action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION)}"
+															update=":form"
+															rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 8}"
+															styleClass="#{backingBean.managedBean.tabActiveIndex eq 8 ? 'currentStep' : ''}" /></li>
+												</c:otherwise>
+											</c:choose>
+
+										</c:when>
+										<c:otherwise>
+											<li><h:outputText
+													value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
+													rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 6}" />
+												<p:commandLink value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
+													onstart="blockWidget.show()"
+													oncomplete="blockWidget.hide()"
+													actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'6')}"
+													action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
+													update=":form"
+													rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 6}"
+													styleClass="#{backingBean.managedBean.tabActiveIndex eq 6 ? 'currentStep' : ''}" /></li>
+
+											<li><h:outputText
+													value="#{lbl['lbl.sm.wizard.declarationLbl']}"
+													rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 7}" />
+												<p:commandLink
+													value="#{lbl['lbl.sm.wizard.declarationLbl']}"
+													onstart="blockWidget.show()"
+													oncomplete="blockWidget.hide()"
+													actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'7')}"
+													action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION)}"
+													update=":form"
+													rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 7}"
+													styleClass="#{backingBean.managedBean.tabActiveIndex eq 7 ? 'currentStep' : ''}" /></li>
+
+										</c:otherwise>
+									</c:choose>
+
+
+
+								</ul>
+								<ul id="tripMeter" class="menu-line">
+									<li
+										class="#{backingBean.managedBean.tabActiveIndex eq 0 ? 'space red-dot' : 'space green-dot'}" />
+									<li
+										class="#{backingBean.managedBean.tabActiveIndex eq 1 ? 'space red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 1 ? 'space green-dot':'space black-dot')}" />
+									<li
+										class="#{backingBean.managedBean.tabActiveIndex eq 2 ? 'space red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 2 ? 'space green-dot':'space black-dot')}" />
+									<li
+										class="#{backingBean.managedBean.tabActiveIndex eq 3 ? 'space red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 3 ? 'space green-dot':'space black-dot')}" />
+									<li
+										class="#{backingBean.managedBean.tabActiveIndex eq 4 ? 'space red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 4 ? 'space green-dot':'space black-dot')}" />
+									<li
+										class="#{backingBean.managedBean.tabActiveIndex eq 5 ? 'space red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 5 ? 'space green-dot':'space black-dot')}" />
+									<c:choose>
+										<c:when
+											test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
+											
+											<li
+												class="#{backingBean.managedBean.tabActiveIndex eq 6 ? 'space red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 6 ? 'space green-dot':'space black-dot')}" />
+											
+											<c:choose>
+												<c:when test="#{backingBean.managedBean.showMachineryEquipmentPanel or backingBean.managedBean.showTravelSoftwarePanel}">
+													<li
+														class="#{backingBean.managedBean.tabActiveIndex eq 7 ? 'space red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 7 ? 'space green-dot':'space black-dot')}" />
+													<li
+														class="#{backingBean.managedBean.tabActiveIndex eq 8 ? 'space red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 8 ? 'space green-dot':'space black-dot')}" />
+													<li
+														class="#{backingBean.managedBean.tabActiveIndex eq 9 ? 'space red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 9 ? 'space green-dot':'space black-dot')}" />
+												</c:when>
+												<c:otherwise>
+													<li
+														class="#{backingBean.managedBean.tabActiveIndex eq 7 ? 'space red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 7 ? 'space green-dot':'space black-dot')}" />
+													<li
+														class="#{backingBean.managedBean.tabActiveIndex eq 8 ? 'space red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 8 ? 'space green-dot':'space black-dot')}" />
+												</c:otherwise>
+											</c:choose>
+
+										</c:when>
+										<c:otherwise>
+											<li
+												class="#{backingBean.managedBean.tabActiveIndex eq 6 ? 'space red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 6 ? 'space green-dot':'space black-dot')}" />
+											
+											<li
+												class="#{backingBean.managedBean.tabActiveIndex eq 7 ? 'space red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 7 ? 'space green-dot':'space black-dot')}" />
+
+										</c:otherwise>
+									</c:choose>
+
+								</ul>
+							</div></td>
+						<td></td>
+					</tr>
+				</table>
+				<ui:include
+					src="/xhtml/sm/shared/mofRegistration/applAdditionalInfo.xhtml" />
+					
+				<p:outputPanel rendered="#{backingBean.managedBean.supplierUser}">
+					<table style="width: 100%">
+						<tr>
+							<td>
+							</td>
+							<td><div align="right" style="width: 99%" class="button-wrapper">
+									<p:commandButton value="#{lbl['lbl.sm.deleteDraft']}"
+										update=":form" onclick="mofApplDelConfirm.show()"
+										type="button" style="margin-bottom:5px;" />
+									<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
+										onclick="this.disabled=true;" onstart="blockWidget.show()"
+										oncomplete="this.disabled=false;blockWidget.hide();"
+										actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,backingBean.managedBean.tabActiveIndex)}"
+										action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType)}"
+										update=":form" style="margin-bottom:5px;" />
+									<p:outputPanel rendered="#{backingBean.managedBean.currentPageType eq SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION}">
+										<ui:include src="/xhtml/sm/shared/mofRegistration/declareButtonWithoutSpki.xhtml" />
+									</p:outputPanel>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</p:outputPanel>
+				
+			</c:if>
+			<p:confirmDialog id="mofApplDelConfirm" closable="false"
+				message="#{lbl['lbl.sm.deleteDraft.cnfmMsg']}"
+				header="#{lbl['lbl.sm.deleteDraft.cnfmHdr']}" severity="alert"
+				widgetVar="mofApplDelConfirm">
+
+				<div align="right">
+					<p:commandButton id="confApplDel" value="#{lbl['lbl.btn.yes']}"
+						onclick="mofApplDelConfirm.hide()" onstart="blockWidget.show()"
+						oncomplete="blockWidget.hide()" partialSubmit="true"
+						process="@this" action="#{backingBean.deleteDraftApplication}" />
+					<p:commandButton id="declineApplnDelete"
+						value="#{lbl['lbl.btn.no']}" onclick="mofApplDelConfirm.hide()"
+						type="button" />
+				</div>
+
+			</p:confirmDialog>
+			<!-- #17906 - bank tab -->
+			<p:messages id="messages" showDetail="true" showSummary="false"
+				autoUpdate="#{backingBean.managedBean.showParentMsg}"
+				closable="true" escape="false" globalOnly="#{backingBean.managedBean.tabActiveIndex eq 4}"/>
+
+			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 0}">
+				<ui:include src="step1CompanyInfo.xhtml" />
+			</c:if>
+			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 1}">
+				<ui:include src="step2BranchCompanyInfo.xhtml" />
+			</c:if>
+			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 2}">
+				<ui:include src="step4PersonnelInfo.xhtml" />
+			</c:if>
+			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 3}">
+
+				<ui:include src="step3CaptialAndEquityStatusInfo.xhtml" />
+			</c:if>
+			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 4}">
+				<ui:include src="step5BankInfo.xhtml" />
+			</c:if>
+			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 5}">
+				<ui:include src="step6RegisterCategoryCodesInfo.xhtml" />
+			</c:if>
+			<c:choose>
+				<c:when
+					test="#{backingBean.managedBean.smAppl.applCategoryType == 'S'}">
+
+					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 6}">
+						<ui:include src="step6.1FactoryInfo.xhtml" />
+					</c:if>
+					
+					<c:choose>
+						<c:when test="#{backingBean.managedBean.showMachineryEquipmentPanel or backingBean.managedBean.showTravelSoftwarePanel}">
+							<c:if test="#{backingBean.managedBean.tabActiveIndex eq 7}">
+								<ui:include src="step6.2EquipmentInfo.xhtml" />
+							</c:if>
+							<c:if test="#{backingBean.managedBean.tabActiveIndex eq 8}">
+								<ui:include src="step7SupportingDocumentsInfo.xhtml" />
+							</c:if>
+							<c:if test="#{backingBean.managedBean.tabActiveIndex eq 9}">
+								<ui:include src="step8Declaration.xhtml" />
+							</c:if>
+						</c:when>
+						<c:otherwise>
+							<c:if test="#{backingBean.managedBean.tabActiveIndex eq 7}">
+								<ui:include src="step7SupportingDocumentsInfo.xhtml" />
+							</c:if>
+							<c:if test="#{backingBean.managedBean.tabActiveIndex eq 8}">
+								<ui:include src="step8Declaration.xhtml" />
+							</c:if>
+						</c:otherwise>
+					</c:choose>
+				</c:when>
+				<c:otherwise>
+					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 6}">
+						<ui:include src="step7SupportingDocumentsInfo.xhtml" />
+					</c:if>
+					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 7}">
+						<ui:include src="step8Declaration.xhtml" />
+					</c:if>
+				</c:otherwise>
+			</c:choose>
+			<p:dialog id="attachDlg1" widgetVar="attachDlg1" modal="true"
+				dynamic="true" resizable="false" width="700px" height="200"
+				onShow="singleUploadListener(uploadWV)" styleClass="pop_up_top"
+				header="#{lbl['lbl.bpm.choose.file']}">
+				<p:fileUpload allowTypes="/(\.|\/)(pdf|doc|docx)$/"
+					sizeLimit="#{SupplierManagementConst.SM_SUPPORTDOCS_FILE_SIZE_LIMIT}"
+					invalidFileMessage="#{lbl['lbl.sm.upload.format.errmsg']}"
+					invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed20Mb']}"
+					fileUploadListener="#{backingBean.handleSupDocFileAttachment}"
+					update=":form:tt:onSdList" oncomplete="attachDlg1.hide();"
+					uploadLabel="#{lbl['lbl.btn.upload']}"
+					label="#{lbl['lbl.btn.choose']}"
+					cancelLabel="#{lbl['lbl.btn.cancel']}" multiple="false"
+					widgetVar="uploadWV" showButtons="false" />
+			</p:dialog>
+		</ac:smPanel>
+		
+	<p:outputPanel id="detailSsm" rendered="#{backingBean.managedBean.showDetailSSM}">	
+		<ac:baseViewSsmInfo bBean="#{backingBean}" 
+							title="#{lbl['lbl.sm.view.ssm.infomation']}" 
+							dialogId="viewssminfo"
+							width="1150" height="600"
+							resizable="false"/>
+ 	</p:outputPanel> 
+ 	
+	</ui:define>
+</ui:composition>

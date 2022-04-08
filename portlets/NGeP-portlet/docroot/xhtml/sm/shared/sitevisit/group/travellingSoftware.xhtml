@@ -1,0 +1,63 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.sm.travelling.system']}" >
+		<h:outputText styleClass="instruction" 
+		value="#{svoSiteVisitBackingBean.showTravellingInstruction(catCode)}"/>
+
+		<table style="width: 50%;">
+		<tr>
+			<td style='vertical-align: baseline;'>
+				<p:outputLabel value="#{lbl['lbl.sm.travelling.system.name']}" />
+				<p:outputLabel value="*" styleClass="mandatory" />
+			</td>
+			<td><table>
+				<ui:repeat var="travel" value="#{svoSiteVisitBackingBean.managedBean.travellingSoftwareList}">
+					<p:outputPanel rendered="#{not empty travel.machineId}">
+						<tr>
+							<td style="width: 2% !important;">
+								<p:selectBooleanCheckbox value="#{travel.selected}" disabled="#{viewFlag}">
+									<p:ajax event="change" update="@this" process="@this" partialSubmit="true" 
+										listener="#{svoSiteVisitBackingBean.editTravellingSoftware(travel)}"/>
+								</p:selectBooleanCheckbox>
+							</td>
+							<td>
+								<h:outputText value="#{travel.machineDesc}" />
+								<ac:smFieldChangeAlertSVO
+									isShow="#{not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
+									oriValue="#{not empty svoSiteVisitBackingBean.getSVOTravellingSoftware(travel)}" 
+									currValue="#{travel.selected}" 
+									alertValue="#{not empty svoSiteVisitBackingBean.getSVOTravellingSoftware(travel)}"/>
+							</td>
+						</tr>
+						</p:outputPanel>
+						<p:outputPanel rendered="#{empty travel.machineId}">
+						<tr>
+							<td colspan="2"><br />
+								<h:outputText value="#{lbl['lbl.sm.sitevisit.if.others']}" />&#160;
+								<p:inputText label="#{lbl['lbl.sm.travelling.system.name']}"
+											value="#{travel.machineDesc}" size="35" disabled="#{viewFlag}">
+										<p:ajax process="@this" update="@this" partialSubmit="true"
+											listener="#{svoSiteVisitBackingBean.editTravellingSoftware(travel)}"/>
+								</p:inputText>
+								<ac:smFieldChangeAlertSVO
+									isShow="#{not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
+									oriValue="#{svoSiteVisitBackingBean.getSVOTravellingSoftware(travel).system.machineDesc}" 
+									currValue="#{travel.machineDesc}" 
+									alertValue="#{svoSiteVisitBackingBean.getSVOTravellingSoftware(travel)}.system.machineDesc"/>
+							</td>
+						</tr>
+						</p:outputPanel>
+					</ui:repeat>
+				</table>
+			</td>
+		</tr>
+		</table>
+	</p:panel>
+	
+</ui:composition>

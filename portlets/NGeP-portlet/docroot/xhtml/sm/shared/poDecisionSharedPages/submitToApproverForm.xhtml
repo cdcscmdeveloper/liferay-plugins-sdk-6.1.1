@@ -1,0 +1,27 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<br />
+	
+	<p:messages id="recommendApproveMsg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" />
+	
+	<ac:smApplApproveDecisionForm
+		smAppl="#{backingBean.managedBean.smAppl}"
+		currRegStatus="#{backingBean.managedBean.currRegStatus}"
+		bean="#{backingBean.managedBean}"
+		backingBean="#{backingBean}"
+		facilityType="#{backingBean.managedBean.basicCompanyFacility.facilityType}"
+		changeCurrRegStatus="#{backingBean.managedBean.changeCurrRegStatus}"
+		approvalRemarks="#{backingBean.managedBean.poSecReview.remarkToApprover}"
+		overLapRemarks="#{backingBean.managedBean.applnOverLapRemarks}"
+		valueReqd="#{backingBean.managedBean.valueReqd}" 
+		poRecommend="true"
+		changeRegStatusUpdateId="submitToApproverOutPanelId"
+		overLappedCategoryExists="false" />
+	
+</ui:composition>

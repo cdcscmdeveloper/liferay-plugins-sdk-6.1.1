@@ -1,0 +1,170 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+<style>
+.splNotesFontBank{
+	color: rgb(79, 0, 255);
+	font-weight: bold;
+	float: left
+}
+
+.ui-dialog-content > .ui-icon {
+    display: none;
+}
+</style>
+	<p:panel header="#{lbl['lbl.sm.bankinformation']}" toggleable="true" id="pnlBankInfo">
+<!--#12492-START TASHA-->
+	<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.insertcmpnybank.instruction']}" escape="false">
+		</h:outputText>
+<!--#12492-END TASHA-->
+		<p:dataTable var="bankInfo" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			value="#{registrationBackingBean.managedBean.smAppl.smSupplierBanks}"
+			selection="#{registrationBackingBean.managedBean.selectedSuppBanks}" 
+			id="bankInfoId" rowKey="#{bankInfo}" >
+			
+			<p:ajax event="rowSelectCheckbox" update=":#{p:component('deleteBnkBtnId')}" />
+			<p:ajax event="rowUnselectCheckbox" update=":#{p:component('deleteBnkBtnId')}" />
+			<p:ajax event="rowSelect" update=":#{p:component('deleteBnkBtnId')}" />   
+            <p:ajax event="rowUnselect" update=":#{p:component('deleteBnkBtnId')}" />  
+            <p:ajax event="toggleSelect" update=":#{p:component('deleteBnkBtnId')}" />  
+               
+                
+			<p:column selectionMode="multiple" style="width:2%"	
+			rendered="#{not empty registrationBackingBean.managedBean.smAppl.smSupplierBanks}" />
+			<!-- 14685 START -->
+			<p:column style="white-space:normal;" id="bankNameColId">
+				<f:facet name="header">
+					<h:outputText value="*" styleClass="mandatory" />
+					#{lbl['lbl.sm.bankname']}
+				</f:facet>
+				<p:outputPanel>
+				<h:outputText value="#{bankInfo.displayMessageBank}" styleClass="splNotesFonts" rendered="#{registrationBackingBean.managedBean.showMessage}"
+				update="bankAlert,bankInfoId" style="float: inherit;width : 70% !important;" escape="false" />
+				
+				<p:selectOneMenu id="bankNameId" value="#{bankInfo.pmFinancialOrg.financialOrgId}"
+					style="width: 80% !important;margin-bottom: 5px !important;"
+					disabled="#{registrationBackingBean.managedBean.viewMode or bankInfo.hasActiveTransactionContractManagement or bankInfo.hasActiveTransactionFulfilment}">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+					<f:selectItems
+						value="#{registrationBackingBean.managedBean.financialOrgLs}"
+						var="finOrg" itemValue="#{finOrg.financialOrgId}"
+						itemLabel="#{finOrg.finOrgName}" />
+					<p:ajax event="change" process="@form" update="@this, bankAccNoId" listener="#{bankInfo.setAccountNo('')}"/>
+				</p:selectOneMenu>
+				<p:commandLink id="bankAlert" action="#{registrationBackingBean.showMessageToggle}" update="bankNameColId,bankInfoId"
+				 process="@this,bankNameColId" rendered="#{registrationBackingBean.managedBean.viewMode or bankInfo.hasActiveTransactionContractManagement or bankInfo.hasActiveTransactionFulfilment}"
+				 style="padding-right:5px;" >
+				<p:graphicImage value="/css/images/design/icon_info_red.png" />
+				</p:commandLink>
+				
+				</p:outputPanel>
+				
+			</p:column>
+			<!-- 14685 END -->
+			<p:column>
+			
+				<f:facet name="header">
+					#{lbl['lbl.sm.bankaccnumber']}
+					&#160;
+					<p:graphicImage id="banti" value="/css/images/design/tooltips.png" />
+					<p:tooltip id="bantt" for="banti">
+						<p:outputLabel escape="false" value="#{lbl['tt.sm.account.no']}"  />
+					</p:tooltip>
+				</f:facet>
+			<!--#12492-START-->
+				<p:inputText id="bankAccNoId" value="#{bankInfo.accountNo}" maxlength="18" disabled="#{registrationBackingBean.managedBean.viewMode or bankInfo.hasActiveTransactionContractManagement or bankInfo.hasActiveTransactionFulfilment}">
+					<p:ajax event="change" process="@this" update="@this" listener="#{registrationBackingBean.CheckBankAccount('fromBankInfo')}"/>
+				</p:inputText>
+			<!--#12492-END-->
+				<p:message id="bankAccNoIdMsg" for="bankAccNoId" display="icon" />
+			</p:column>
+			<p:column rendered="#{registrationBackingBean.managedBean.applType eq 'G'}" style="width : 30% !important;">
+			
+				<f:facet name="header">
+					#{lbl['lbl.sm.bankpayment.for']}
+				</f:facet>
+			
+				<table>
+					<tr>
+						<td style="width: 2% !important;">
+							<p:selectBooleanCheckbox value="#{bankInfo.selected}">
+								<p:ajax event="change" update="@this" process="@this" partialSubmit="true" />
+							</p:selectBooleanCheckbox>
+						</td>
+						<td>
+							<h:outputText value="#{lbl['lbl.sm.bankDtls.hq']}" />
+						</td>
+					</tr>
+					<p:outputPanel rendered="#{not empty bankInfo.branches}">
+						<ui:repeat var="var" value="#{bankInfo.branches}" >
+							<tr>
+								<td style="width: 2% !important;">
+									<p:selectBooleanCheckbox value="#{var.selected}">
+										<p:ajax event="change" update="@this" process="@this" partialSubmit="true" />
+									</p:selectBooleanCheckbox>
+								</td>
+								<td>
+									<h:outputText value="#{var.branchName}" />
+								</td>
+							</tr>
+						</ui:repeat>
+					</p:outputPanel>
+				</table>
+			</p:column>
+		</p:dataTable>
+		
+		<p:outputPanel rendered="#{!registrationBackingBean.managedBean.viewMode}">
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.add']}" partialSubmit="true" process="@this,bankInfoId"
+					action="#{registrationBackingBean.addSupplierBank}" id="addBnkBtnId"
+					disabled="#{not empty registrationBackingBean.managedBean.smAppl.smSupplierBanks and 
+					registrationBackingBean.managedBean.smAppl.smSupplierBanks.size() eq SupplierManagementConst.MAX_PAYMENT_BANK}"
+					update="deleteBnkBtnId,bankInfoId,@this" />
+				<p:commandButton value="#{lbl['lbl.btn.delete']}"  partialSubmit="true" process="@this,bankInfoId"
+					disabled="#{empty registrationBackingBean.managedBean.selectedSuppBanks}" 
+					update=":#{p:component('bankAlertPopUpId')},bankInfoId,addBnkBtnId,@this" id="deleteBnkBtnId" action="#{registrationBackingBean.checkingBeforeRemoveSupplierBank}"/>
+			</div>
+		</p:outputPanel>
+	</p:panel>
+	
+	<!--#12492-START-->
+	<p:dialog style="width: 20px; height: auto;top: 261px; align:center" widgetVar="bankDialogDuplicate"
+		id="bankDialogDuplicateId" resizable="false" modal="true" closable="false">
+		
+		<p:outputPanel layout="block" id="bankDialogDuplicatePanel">
+			<p:messages id="bankDialogDuplicateMessagePanel" showSummary="false" showDetail="true"
+				autoUpdate="true" closable="true" />
+			<div align="center">
+				<b>#{lbl['lbl.sm.duplicateInfo']}</b>
+			</div>
+			<div class="ppRightBtn">		    
+		 		<p:commandButton value="#{lbl['lbl.btn.close']}"  onclick="bankDialogDuplicate.hide();" type="button" />
+			</div>
+		</p:outputPanel>
+	</p:dialog>
+	<!--#12492-END-->
+	<ac:confirmationPopup id="bankDeletePopUpId"
+		widget="bankDeletePopUp"
+		okAction="registrationBackingBean.removeSupplierBank()"
+		width="400" height="100"
+		title="#{lbl['lbl.msg.confirm.delete.header']}"
+		content="#{lbl['lbl.msg.confirm.delete']}" 
+		update=":#{p:component('pnlBankInfo')}"/>
+		
+		 <p:confirmDialog id="bankAlertPopUpId" widgetVar="bankAlertPopUp" 
+			 closable="true"  header="#{lbl['lbl.txt.alert']}"  styleClass="splNotesFontBank" >
+			<div class="ppLeftBtn">
+			<f:facet name="message">
+                   <h:outputText value="#{registrationBackingBean.managedBean.displayMessageBank}" styleClass=""  escape="false"/>
+          </f:facet>
+			</div>
+		<div class="ppRightBtn">		    
+		 	<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"  onclick="bankAlertPopUp.hide();" type="button" />
+		</div>
+		</p:confirmDialog>
+		
+</ui:composition>

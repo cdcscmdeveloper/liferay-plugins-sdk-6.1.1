@@ -1,0 +1,232 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:dialog id="cloneid2" header="#{lbl['lbl.sc.clone.qt']}"
+		widgetVar="screen3" width="970" height="600"
+		styleClass="cloneCommitteMember" position="top">
+		<h:panelGroup id="pnlid2">
+			
+			<p:blockUI block="panelresult" widgetVar="blockWidgetClone">
+					<p:graphicImage value="/css/images/ajax-loader.gif" />
+				</p:blockUI>
+			
+			<p:messages id="clonemessages2" showDetail="true" autoUpdate="true"
+				closable="true" showSummary="false" severity="error, info" />
+			<p:panel id="clonesearchpnlid2" header="#{lbl['lbl.btn.search']}"
+				toggleable="true">
+				<table style="width: 100%;">
+					<tr>
+						<td valign="top"><p:outputLabel
+								value="#{lbl['lbl.sc.title']}" /></td>
+						<td colspan="3"><p:inputText
+								onkeypress="if (event.keyCode == 13) { quotationTndrCommitteeAppointmentMainCloneSearch.jq.click(); return false; }"
+								value="#{qTCloneBackingbean.managedBean.cloneQtnTenderSearchBean.qtTitle}"
+								style="width:98%;" maxlength="100" /></td>
+					</tr>
+					<tr>
+						<td style="width: 165px;"><p:outputLabel
+								value="#{lbl['lbl.sc.qtn.no']}" /></td>
+						<td style="width: 285px;"><p:inputText
+								onkeypress="if (event.keyCode == 13) { quotationTndrCommitteeAppointmentMainCloneSearch.jq.click(); return false; }"
+								value="#{qTCloneBackingbean.managedBean.cloneQtnTenderSearchBean.qtNo}"
+								maxlength="21" size="35" /></td>
+						<td style="width: 165px;"><p:outputLabel
+								value="#{lbl['lbl.sc.procurement.mode']}" /></td>
+						<td style="width: 285px;"><p:selectOneMenu
+								style="width: 283px;margin-bottom: 5px;"
+								value="#{qTCloneBackingbean.managedBean.cloneQtnTenderSearchBean.procurementMode}">
+								<f:selectItems
+									value="#{qTCloneBackingbean.getProcurementModeDropdownValues()}" />
+							</p:selectOneMenu></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sc.created.date.from']}" /></td>
+						<td><p:calendar id="datecreatedfrm2" showOn="button"
+								onkeypress="if (event.keyCode == 13) { quotationTndrCommitteeAppointmentMainCloneSearch.jq.click(); return false; }"
+								value="#{qTCloneBackingbean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+								size="29" readonlyInput="true" style="width:180px;">
+								<p:ajax event="dateSelect" update="datecreatedto2" />
+							</p:calendar></td>
+						<td><p:outputLabel value="#{lbl['lbl.sc.created.date.to']}" /></td>
+						<td><p:calendar id="datecreatedto2" showOn="button"
+								onkeypress="if (event.keyCode == 13) { quotationTndrCommitteeAppointmentMainCloneSearch.jq.click(); return false; }"
+								value="#{qTCloneBackingbean.managedBean.cloneQtnTenderSearchBean.toCreatedDate}"
+								mindate="#{qTCloneBackingbean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+								size="29" readonlyInput="true" style="width:180px;">
+								<f:attribute name="startDate"
+									value="#{qTCloneBackingbean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}" />
+							</p:calendar></td>
+					</tr>
+					<tr>
+						<td><h:outputLabel value="#{lbl['lbl.sc.pbldtfrom']}" /></td>
+						<td><p:calendar
+								onkeypress="if (event.keyCode == 13) { quotationTndrCommitteeAppointmentMainCloneSearch.jq.click(); return false; }"
+								value="#{qTCloneBackingbean.managedBean.cloneQtnTenderSearchBean.fromPublishDate}"
+								id="pbdateFrom2" showOn="button" size="29" readonlyInput="true"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+								style="width:180px;">
+								<p:ajax event="dateSelect" update="pbdateTo2" />
+							</p:calendar></td>
+						<td><h:outputLabel value="#{lbl['lbl.sc.pbldtto']}" /></td>
+						<td><p:calendar id="pbdateTo2" showOn="button"
+								onkeypress="if (event.keyCode == 13) { quotationTndrCommitteeAppointmentMainCloneSearch.jq.click(); return false; }"
+								value="#{qTCloneBackingbean.managedBean.cloneQtnTenderSearchBean.toPublishDate}"
+								mindate="#{qTCloneBackingbean.managedBean.cloneQtnTenderSearchBean.fromPublishDate}"
+								size="29" readonlyInput="true"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+								style="width:180px;">
+								<f:attribute name="startDate"
+									value="#{qTCloneBackingbean.managedBean.cloneQtnTenderSearchBean.fromPublishDate}" />
+								<f:validator validatorId="dateRangeValidator" />
+							</p:calendar></td>
+					</tr>
+					<tr>
+						<td><h:outputLabel value="#{lbl['lbl.sc.clsdtfrom']}" /></td>
+						<td><p:calendar
+								onkeypress="if (event.keyCode == 13) { quotationTndrCommitteeAppointmentMainCloneSearch.jq.click(); return false; }"
+								value="#{qTCloneBackingbean.managedBean.cloneQtnTenderSearchBean.fromClosingDate}"
+								id="cldateFrom2" showOn="button" size="29" readonlyInput="true"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+								style="width:180px;">
+								<p:ajax event="dateSelect" update="cldateTo2" />
+							</p:calendar></td>
+						<td><h:outputLabel value="#{lbl['lbl.sc.clsdtto']}" /></td>
+						<td><p:calendar id="cldateTo2" showOn="button"
+								onkeypress="if (event.keyCode == 13) { quotationTndrCommitteeAppointmentMainCloneSearch.jq.click(); return false; }"
+								value="#{qTCloneBackingbean.managedBean.cloneQtnTenderSearchBean.toClosingDate}"
+								mindate="#{qTCloneBackingbean.managedBean.cloneQtnTenderSearchBean.fromClosingDate}"
+								size="29" readonlyInput="true"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+								style="width:180px;">
+								<f:attribute name="startDate"
+									value="#{qTCloneBackingbean.managedBean.cloneQtnTenderSearchBean.fromClosingDate}" />
+								<f:validator validatorId="dateRangeValidator" />
+							</p:calendar></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
+						<td>
+						<p:selectOneMenu style="width: 283px;margin-bottom: 5px;" rendered="#{qTCloneBackingbean.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_QT_SUBMISSION}"
+								value="#{qTCloneBackingbean.managedBean.cloneQtnTenderSearchBean.qtStatus}">
+								<f:selectItems
+									value="#{qTDetailBB.getStatusDropdownValuesWithExclusions('SC', 'QT',60002,60039)}" />
+						</p:selectOneMenu>
+						
+						<p:selectOneMenu style="width: 283px;margin-bottom: 5px;" rendered="#{qTCloneBackingbean.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION}"
+								value="#{qTCloneBackingbean.managedBean.cloneQtnTenderSearchBean.qtStatus}">
+								<f:selectItems
+									value="#{qTDetailBB.getStatusDropdownValuesWithExclusions('SC', 'QT',60002,60033,60024,60003,60025,60026,60028,60037,60027,60034,60004,60030,60006,60039)}" />
+						</p:selectOneMenu>
+						
+						</td>
+						<td />
+						<td />
+					</tr>
+				</table>
+				<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.btn.search']}"
+						widgetVar="quotationTndrCommitteeAppointmentMainCloneSearch"
+						action="#{qTCloneBackingbean.cloneSearchQtAction}"
+						update="pnlid2" process="@parent" />
+					<p:commandButton value="#{lbl['lbl.btn.reset']}"
+						action="#{qTCloneBackingbean.resetClone}" update="pnlid2"
+						resetValues="true" partialSubmit="true" process="@this" />
+				</div>
+			</p:panel>
+			<p:panel id="panelresult" header="#{lbl['lbl.sc.qtn.list']}" toggleable="true">
+				<p:dataTable id="clonesearchCommitteid2"
+					value="#{qTCloneBackingbean.managedBean.cloneSearchQTDataModel}"
+					selection="#{qTCloneBackingbean.managedBean.selectedCloneTender}"
+					rowKey="#{rscQt}" selectionMode="single" var="rscQt" lazy="true"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					styleClass="cloneResults" rows="10">
+
+					<ac:paginator for="clonesearchCommitteid2" />
+
+					<p:ajax event="rowSelect" update=":form:pnlid2"
+						listener="#{qTCloneBackingbean.onRowCloneAction}" />
+                <p:ajax event="page"  listener="#{qTCloneBackingbean.searchActionPageChange}" update="@([id$=cloneCommitteeTreeBtnOnId2])"></p:ajax>
+					<p:column headerText="#{lbl['lbl.sc.qtn.no']}">
+						<h:outputText value="#{rscQt.qtNo}" style="white-space: normal;" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.title']}">
+						<h:outputText value="#{rscQt.qtTitle}"
+							style="white-space: normal;" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.procurement.mode']}">
+						<h:outputText
+							value="#{qTCloneBackingbean.getParameterDesc(rscQt.procurementMode)}"
+							style="white-space: normal;" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.created.date']}">
+						<h:outputText value="#{rscQt.createdDate}">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.published.date']}">
+						<h:outputText value="#{rscQt.publishDate}">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.closing.date']}">
+						<h:outputText value="#{rscQt.closingDate}">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.status']}">
+						<h:outputText
+							value="#{qTCloneBackingbean.getStatusDescById(rscQt.qtStatus.statusId)}"
+							style="white-space: normal;" />
+					</p:column>
+
+				</p:dataTable>
+				<br />
+				<ui:fragment
+					rendered="#{qTCloneBackingbean.managedBean.cloneCommitteeSelectQt ne null}">
+					#{qTCloneBackingbean.managedBean.cloneCommitteeSelectQt.qtNo}
+				</ui:fragment>
+
+				<p:tree value="#{qTCloneBackingbean.root}" var="node" rendered="#{qTCloneBackingbean.showTree}"
+						showUnselectableCheckbox="true"
+                        selection="#{qTCloneBackingbean.selectedNodes}"
+					selectionMode="checkbox">
+					<p:treeNode>
+						<h:outputText value="#{node.label}"/>
+					</p:treeNode>
+					
+				</p:tree>
+
+
+				<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.btn.ok']}"
+						onclick="blockWidgetClone.show()" oncomplete="blockWidgetClone.hide()"
+						disabled="#{empty qTCloneBackingbean.managedBean.selectedCloneTender}"
+						styleClass="BtnSpacing" id="cloneCommitteeTreeBtnOnId2" update="@(form,.briefingList,.amendButton,.sampleSubmitionUpdate)"
+						action="#{qTCloneBackingbean.addToClone()}">
+					 <f:param name="skipvalidation" value="1" />
+					</p:commandButton>
+					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+						styleClass="BtnSpacing" onclick="screen3.hide();"
+					 ><f:param name="skipvalidation" value="1" />
+					 </p:commandButton>
+				</div>
+			</p:panel>
+		</h:panelGroup>
+	</p:dialog>
+</ui:composition>

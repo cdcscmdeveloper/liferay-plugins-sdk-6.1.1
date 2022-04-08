@@ -1,0 +1,71 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.sm.manufacture.panHdr']}" >
+
+		<p:dataTable
+			value="#{svoSiteVisitBackingBean.managedBean.manufacturingDtlLs}"
+			var="manufacturingDtl" rowKey="#{manufacturingDtl}"
+			selection="#{svoSiteVisitBackingBean.managedBean.selectedManufacturingList}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" >
+
+			<p:column selectionMode="multiple" style="width:2%"
+				rendered="#{!viewFlag and not empty svoSiteVisitBackingBean.managedBean.manufacturingDtlLs}" />
+			<!-- #24964 -->
+			<p:ajax event="rowSelectCheckbox" update="@parent" />
+			<p:ajax event="rowUnselectCheckbox" update="@parent" />
+			<p:ajax event="rowSelect" update="@parent" />
+        	<p:ajax event="rowUnselect" update="@parent" />
+        	<p:ajax event="toggleSelect" update="@parent" />
+
+			<p:column headerText="#{lbl['lbl.sm.manufacture.prdType']}">
+				<h:outputText value="#{manufacturingDtl.goodsType}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sm.manufacture.brand']}">
+				<h:outputText value="#{manufacturingDtl.brand}" />
+			</p:column>
+
+			<p:column
+				headerText="#{lbl['lbl.sm.manufacture.prodCap']} / #{lbl['lbl.sm.manufacture.month']}">
+				<h:outputText value="#{manufacturingDtl.productionCapacity}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sm.manufacture.mesUnit']}">
+				<h:outputText value="#{manufacturingDtl.uom}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sm.action']}"
+				rendered="#{!viewFlag}">
+				<p:commandLink oncomplete="manufacturingDialog.show();" process="@this"
+					rendered="#{!viewFlag}" update=":#{p:component('manufacturingDlg')}"
+					action="#{svoSiteVisitBackingBean.editMachine(manufacturingDtl)}" >
+					<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
+				</p:commandLink>
+				<!-- #24964 -->
+				<p:graphicImage style="vertical-align:top" value="/css/images/design/icon_alert.png" 
+					rendered="#{svoSiteVisitBackingBean.isSVOSmManufacturingDtlDifferent(manufacturingDtl)}"/>
+			</p:column>
+
+		</p:dataTable>
+
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+				oncomplete="manufacturingDialog.show();"
+				action="#{svoSiteVisitBackingBean.addAdditionalManufacturing}"
+				rendered="#{!viewFlag}" update="@parent">
+			</p:commandButton>
+			<!-- #24964 -->
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				oncomplete="additionalManufacturingDeletePopUp.show();"
+				rendered="#{!viewFlag}" update="@parent"
+				disabled="#{empty svoSiteVisitBackingBean.managedBean.selectedManufacturingList}">
+			</p:commandButton>
+		</div>
+	</p:panel>
+</ui:composition>

@@ -1,0 +1,264 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<p:panel header="#{lbl['lbl.sm.supp.info']}" toggleable="true"
+		id="suppInfoPanelId">
+		<p:outputPanel id="suppInfoOutId" layout="block">
+			<table style="width: 50%;table-layout:fixed">
+				<p:outputPanel rendered="#{not empty supplierDataMaintenanceBackingBean.managedBean.smAppl.pmRegStatus}">
+					<tr><td><p:outputLabel value="#{lbl['lbl.rpt.rgstStatus']}" styleClass="outputLabel-view-label"/> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<!-- #26238 - START -->
+					<c:if test="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId ne null}">
+						<td><p:selectOneMenu label="#{lbl['lbl.rpt.rgstStatus']}"
+								id="regStatusId" required="true" value="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId}"
+								disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}"
+								style="width: 270px;margin-bottom: 5px;">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+								<f:selectItems
+									value="#{supplierDataMaintenanceBackingBean.managedBean.regStatusDescList}" var="reg"
+									itemLabel="#{reg.statusName}"
+									itemValue="#{reg.pmStatus.statusId}" />
+								<p:ajax event="change" partialSubmit="true" process="@this" 
+									update=":#{p:component('suppInfoPanelId')},:#{p:component('messages')}"/>
+							</p:selectOneMenu> <p:message id="regStatusIdMsg" for="regStatusId"
+								showSummary="true" showDetail="false" display="icon" /></td>
+					</c:if>
+					<c:if test="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId eq null}">
+						<td><p:selectOneMenu label="#{lbl['lbl.rpt.rgstStatus']}"
+								id="regStatusId" required="true"
+								disabled="true"
+								style="width: 270px;margin-bottom: 5px;">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							</p:selectOneMenu> <p:message id="regStatusIdMsg" for="regStatusId"
+								showSummary="true" showDetail="false" display="icon" /></td>
+					</c:if>
+					<!-- #26238 - END -->
+					</tr>
+				</p:outputPanel>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label"
+							value="#{lbl['lbl.sm.mofacc.expiry.date']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td>
+					<!-- START 27465 : Disciplinary Action 26238 -->
+					<p:calendar showOn="button" navigator="true"
+							display="inline" required="true" readonlyInput="true"
+							label="#{lbl['lbl.sm.mofacc.expiry.date']}" id="expDate"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							mindate="#{CommonConstants.CURRENT_DATE}"
+							value="#{supplierDataMaintenanceBackingBean.managedBean.smMofAccount.expDate}"
+							rendered="#{supplierDataMaintenanceBackingBean.managedBean.smMofAccount.expDate ge CommonConstants.CURRENT_DATE}" >
+							<p:ajax event="change" process="@this" partialSubmit="true"/>
+					</p:calendar>
+					<p:calendar navigator="true"
+							display="inline" required="true" readonlyInput="true" disabled="true"
+							label="#{lbl['lbl.sm.mofacc.expiry.date']}" id="expDateexp"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							mindate="#{CommonConstants.CURRENT_DATE}"
+							value="#{supplierDataMaintenanceBackingBean.managedBean.smMofAccount.expDate}"
+							rendered="#{supplierDataMaintenanceBackingBean.managedBean.smMofAccount.expDate lt CommonConstants.CURRENT_DATE}" >
+							<p:ajax event="change" process="@this" partialSubmit="true"/>
+					</p:calendar>
+						<!-- END START 27465 : Disciplinary Action 26238 -->
+						<p:message id="expDateMsg" for="expDate"
+								showSummary="true" showDetail="false" display="icon" /></td>
+				</tr>
+			</table>
+		</p:outputPanel>
+
+	</p:panel>
+	
+	<p:panel header="#{lbl['lbl.sm.disciplinary.action.headerLbl']}" toggleable="true" id="disciplinaryActionPanelId">
+		
+		<!-- Enhancement 26238 - START -->
+		<p:outputPanel>
+			<h:outputText value="#{lbl['lbl.sm.disciplinary.click']}" escape="false"/>
+			<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				action="#{supplierDataMaintenanceBackingBean.onViewDisciplinaryAction}" 
+				partialSubmit="true" update=":form">
+					<u><h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" style="color:blue;" escape="false"/></u>
+			</p:commandLink><p:spacer width="2"/>
+			<h:outputText value="#{lbl['lbl.sm.disciplinary.to.view.history.disciplinary.action']}" escape="false"/><br />
+			<p:spacer height="2"/>
+		</p:outputPanel>
+		<!-- 26238 - END -->
+					
+		<table style="width: 100%;table-layout:fixed">
+			<!-- Enhancement 26238 -->
+			<tr>
+				<td><p:outputLabel styleClass="outputLabel-view-label"
+						value="#{lbl['lbl.sm.disciplinary.jktt.punishment.type']}" /></td>
+				<td><p:spacer width="5" />
+					<!-- 27857: Disciplinary Action - start - 26238 -->
+					<p:selectBooleanCheckbox  value="#{supplierDataMaintenanceBackingBean.managedBean.warning}"
+						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
+						or supplierDataMaintenanceBackingBean.managedBean.warningExist}" style="float:left">
+			            <p:ajax event="change" partialSubmit="true" process="@this"
+							listener="#{supplierDataMaintenanceBackingBean.onTickPunishmentType()}"
+							update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+			        </p:selectBooleanCheckbox> <p:spacer width="5" />
+			        <p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.warning']}" styleClass="outputLabel-view"/>
+				</td>
+				<td>	
+					<p:spacer width="5" />
+					<p:selectBooleanCheckbox value="#{supplierDataMaintenanceBackingBean.managedBean.cancelCategoryCode}" 
+						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
+						or supplierDataMaintenanceBackingBean.managedBean.cancelCategoryCodeExist}" style="float:left">
+			            <p:ajax event="change" partialSubmit="true" process="@this"
+							listener="#{supplierDataMaintenanceBackingBean.onTickPunishmentType()}"
+							update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+			        </p:selectBooleanCheckbox> <p:spacer width="5" />
+			        <p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.cancel.cat.code']}" styleClass="outputLabel-view"/>
+				</td>
+				<td>
+					<p:spacer width="5" />
+					<p:selectBooleanCheckbox value="#{supplierDataMaintenanceBackingBean.managedBean.suspendRegistration}" 
+						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
+						or supplierDataMaintenanceBackingBean.managedBean.suspendRegistrationExist}" style="float:left">
+			            <p:ajax event="change" partialSubmit="true" process="@this"
+							listener="#{supplierDataMaintenanceBackingBean.onTickPunishmentType()}"
+							update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+			        </p:selectBooleanCheckbox> <p:spacer width="5" />
+			        <p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.suspend.registration']}" styleClass="outputLabel-view"/>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>
+					<p:spacer width="5" />
+					<p:selectBooleanCheckbox value="#{supplierDataMaintenanceBackingBean.managedBean.cancelRegistration}" 
+						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
+						or supplierDataMaintenanceBackingBean.managedBean.cancelRegistrationExist}" style="float:left">
+			            <p:ajax event="change" partialSubmit="true" process="@this"
+							listener="#{supplierDataMaintenanceBackingBean.onTickPunishmentType()}"
+							update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+			        </p:selectBooleanCheckbox> <p:spacer width="5" />
+			        <p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.cancel.registration']}" styleClass="outputLabel-view"/>
+				</td>
+				<td>	
+					<p:spacer width="5" />
+					<p:selectBooleanCheckbox value="#{supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirector}" 
+						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
+						or supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirectorExist}" style="float:left">
+			            <p:ajax event="change" partialSubmit="true" process="@this"
+							listener="#{supplierDataMaintenanceBackingBean.onTickPunishmentType()}"
+							update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+			        </p:selectBooleanCheckbox> <p:spacer width="5" />
+			        <p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']}" styleClass="outputLabel-view"/>
+				</td>
+				<td>
+					<p:spacer width="5" />
+					<p:selectBooleanCheckbox value="#{supplierDataMaintenanceBackingBean.managedBean.bumiputeraStatusCancel}" 
+						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
+						or supplierDataMaintenanceBackingBean.managedBean.bumiputeraStatusCancelExist}" style="float:left">
+			            <p:ajax event="change" partialSubmit="true" process="@this"
+							listener="#{supplierDataMaintenanceBackingBean.onTickPunishmentType()}"
+							update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+			        </p:selectBooleanCheckbox> <p:spacer width="5" />
+			        <p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.cancel.of.bumiputera']}" styleClass="outputLabel-view"/>
+				</td>
+				<!-- 27857: Disciplinary Action - end - 26238 -->
+			</tr>
+			
+			<tr>
+				<td></td>
+				<td>	
+					<p:spacer width="5" />
+					<p:selectBooleanCheckbox value="#{supplierDataMaintenanceBackingBean.managedBean.manufacturerStatusCancel}" 
+						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}" style="float:left">
+			            <p:ajax event="change" partialSubmit="true" process="@this"
+							listener="#{supplierDataMaintenanceBackingBean.onTickPunishmentType()}"
+							update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+			        </p:selectBooleanCheckbox> <p:spacer width="5" />
+			        <p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.cancel.of.manufacturer']}" styleClass="outputLabel-view"/>
+				</td>
+				<td></td>
+				<td></td>
+			</tr>
+			
+			<tr>
+				<td><p:outputLabel styleClass="outputLabel-view-label"
+						value="#{lbl['lbl.sm.disciplinary.action.edit']}" /></td>
+				<td>
+					<p:selectBooleanCheckbox value="#{supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryActionCheckBox}" 
+						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}">
+			            <p:ajax event="change" partialSubmit="true" process="@this"
+							listener="#{supplierDataMaintenanceBackingBean.onTickDiscipline()}"
+							update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+			        </p:selectBooleanCheckbox>
+				</td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr> 
+				<td><p:outputLabel styleClass="outputLabel-view-label"
+						value="#{lbl['lbl.sm.disciplinary.jktt.start.date']}" />
+					<p:outputLabel value="*" styleClass="mandatory" 
+					rendered="#{supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}"/></td>
+				<td><p:calendar showOn="button" navigator="true"
+						display="inline" readonlyInput="true"
+						label="#{lbl['lbl.sm.disciplinary.jktt.start.date']}" id="startDate"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						value="#{supplierDataMaintenanceBackingBean.managedBean.disciplineVO.smDiscplinaryAction.startDate}"  
+						required="#{supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}"
+						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}">
+						<p:ajax event="dateSelect" update="endDate" process="@this" partialSubmit="true"/>
+					</p:calendar>
+					<p:message id="startDateMsg" for="startDate"
+							showSummary="true" showDetail="false" display="icon" /></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel styleClass="outputLabel-view-label"
+						value="#{lbl['lbl.sm.disciplinary.jktt.end.date']}" />
+					<p:outputLabel value="*" styleClass="mandatory" 
+					rendered="#{supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}"/></td>
+				<td><p:calendar showOn="button" navigator="true"
+						display="inline" readonlyInput="true"
+						label="#{lbl['lbl.sm.disciplinary.jktt.end.date']}" id="endDate"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						mindate="#{supplierDataMaintenanceBackingBean.managedBean.disciplineVO.smDiscplinaryAction.startDate}" 
+						value="#{supplierDataMaintenanceBackingBean.managedBean.disciplineVO.smDiscplinaryAction.endDate}"
+						required="#{supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}"
+						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}" >
+					<!-- 26238: Disciplinary Action - start -->
+					<p:ajax event="dateSelect" update="endDate" process="@this" partialSubmit="true"/>
+					</p:calendar>
+					<!-- 26238: Disciplinary Action - end  -->
+					<p:message id="endDateMsg" for="endDate"
+							showSummary="true" showDetail="false" display="icon" /></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.disciplinary.jktt.remarks']}" />
+					<p:outputLabel value="*" styleClass="mandatory" 
+					rendered="#{supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}"/></td>
+				<td><p:inputTextarea autoResize="false" cols="100" rows="10" id="suspendRemark" 
+						required="#{supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}"
+						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}"
+						maxlength="2500" label="#{lbl['lbl.sm.disciplinary.jktt.remarks']}"
+						value="#{supplierDataMaintenanceBackingBean.managedBean.disciplineVO.smDiscplinaryAction.remark}" >
+					<!-- 26238: Disciplinary Action - start -->
+					<p:ajax process="@this" partialSubmit="true" update="@this"/>
+					</p:inputTextarea>
+					<!-- 26238: Disciplinary Action - end -->
+					<p:message id="suspendRemarkMsg"
+					for="suspendRemark" showSummary="true" showDetail="false"
+					display="icon" />
+				</td>
+				<td></td>
+				<td></td>
+			</tr>
+		</table>
+	</p:panel>
+	<!-- 26238 onViewDisciplinaryAction -->
+	<ac:disciplinaryActionHistory voList="#{supplierDataMaintenanceBackingBean.managedBean.disciplineVOs}" /> 
+</ui:composition>

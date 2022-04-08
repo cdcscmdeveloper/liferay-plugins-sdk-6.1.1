@@ -1,0 +1,53 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+	<p:panel header="#{lbl['lbl.pm.uom.title']}" toggleable="true"
+		id="uomId">
+		
+		<table>
+			<!-- 12852 Start -->
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.pm.uom.uomcode']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:inputText
+						value="#{unitOfMeasurementBackingBean.managedBean.pmUom.uomCode}"
+						disabled="#{!unitOfMeasurementBackingBean.managedBean.pmUom.brandNew}"
+						size="30" maxlength="3" style="width:18%"/></td>
+			</tr>
+			<!-- 12852 End -->
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.pm.uom.uomname']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:inputText disabled="#{!unitOfMeasurementBackingBean.managedBean.pmUom.brandNew}"
+						value="#{unitOfMeasurementBackingBean.managedBean.pmUom.uomName}"
+						size="30" maxlength="50" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.pm.uom.uomdecimal']}" /></td>
+				<td><p:selectOneMenu id="uomDec"
+						disabled="#{!unitOfMeasurementBackingBean.managedBean.pmUom.brandNew}"
+						value="#{unitOfMeasurementBackingBean.managedBean.pmUom.decimalScale}">
+						<f:selectItems
+							value="#{unitOfMeasurementBackingBean.getMeasurementDecimal()}"></f:selectItems>
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.pm.search.status']}" /></td>
+				<td><p:selectOneMenu id="uomStatus"
+						value="#{unitOfMeasurementBackingBean.managedBean.pmUom.recordStatusFlg}"
+						disabled="#{unitOfMeasurementBackingBean.managedBean.pmUom.brandNew}">
+						<f:selectItems
+							value="#{unitOfMeasurementBackingBean.getMeasurementStatusList()}"></f:selectItems>
+						<p:ajax event="change" process="@form" partialSubmit="true"
+							update="@form" />
+					</p:selectOneMenu></td>
+			</tr>
+		</table>
+	</p:panel>
+</ui:composition>

@@ -1,0 +1,87 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel styleClass="scMemberDtl">
+		<p:dataTable id="committeeapprovalId"
+			value="#{membersList.scCommitteeMembers}" var="committeeapprover"
+			rowIndexVar="index" editable="true" rowKey="#{committeeapprover}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			selection="#{selectedMembersList}">
+            
+			<ui:param name="assertDisabledRole" value="#{approvalBackingBean.assertCommitteeMemberRoleIsDisabled(committeeapprover.memberRole.parameterCode)}"/>
+					<p:column style="width:3px;text-align:center;">
+				<f:facet name="header">
+					<p:selectBooleanCheckbox disabled="#{(approvalBackingBean.managedBean.readOnly and not approvalBackingBean.inApprovalEditableSection) or approvalBackingBean.assertCommitteeMemberRoleIsDisabled('S')}"
+						value="#{qTDetailBB.managedBean.templateSpecBean.selectAll}">
+						<p:ajax partialSubmit="true" process="@this" update="@form"
+							listener="#{qTDetailBB.selectAll(qTDetailBB.managedBean.templateSpecBean.selectAll, membersList.scCommitteeMembers)}" />
+					</p:selectBooleanCheckbox>
+				</f:facet>
+				<p:selectBooleanCheckbox value="#{committeeapprover.selected}" disabled="#{(approvalBackingBean.managedBean.readOnly and not approvalBackingBean.inApprovalEditableSection) or assertDisabledRole}">
+					<p:ajax partialSubmit="true" process="@this" update="@form" />
+				</p:selectBooleanCheckbox>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.name']}">
+				<h:outputText value="#{committeeapprover.memberName}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.identification.no']}"
+				style="width: 10%">
+				<h:outputText value="#{committeeapprover.icPassport}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.designation']}">
+				<h:outputText value="#{committeeapprover.designation}"
+					style="white-space: normal;word-wrap: break-word;" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.email']}">
+				<h:outputText value="#{committeeapprover.email}"
+					style="white-space: normal;word-wrap: break-word;" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.grade']}" style="width: 10%">
+				<h:outputText value="#{committeeapprover.grade}" />
+			</p:column>
+
+			<p:column style="width: 7%">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.pnp']}" />
+					<ac:iconTooltip id="pnpTT#{index}" value="#{lbl['lbl.sc.pnp.tooltip']}" />
+				</f:facet>
+				<h:outputText
+					value="#{lbl[committeeapprover.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
+			</p:column>
+
+			<p:column style="width: 11%">
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.sc.role']}" />
+				</f:facet>
+				<ui:param name="filteredRoles" value="#{approvalBackingBean.managedBean.roleFilterList}"/>
+				<p:selectOneMenu id="roleid" label="#{lbl['lbl.sc.role']}"
+					value="#{committeeapprover.memberRoleId}"
+					style="width: 110px;margin-bottom: 5px;"
+					disabled="#{committe.committeStatus.statusId eq QTStatusConst.CMT_COMPLETED or (approvalBackingBean.managedBean.readOnly and not approvalBackingBean.inApprovalEditableSection) or assertDisabledRole}">
+					<p:ajax event="change" partialSubmit="true" process="@this"
+						listener="#{approvalBackingBean.roleChangedListener(committeeapprover)}" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+						itemValue="#{null}" />
+					<f:selectItems var="role" itemDisabled="#{!role.selectable}"
+						value="#{approvalBackingBean.getRoleTypeDropdownValuesBasedOnPTJ(committeeapprover.PNP,approvalBackingBean.managedBean.qt,committeeapprover.pmUser, filteredRoles)}"
+						itemLabel="#{role.codeName}"
+						itemValue="#{role.pmParameter.parameterId}" />
+				</p:selectOneMenu>
+				<p:message id="roleidMsg" for="roleid" display="icon" />
+				<!-- </ui:fragment> -->
+			</p:column>
+
+		</p:dataTable>
+	</p:panel>
+</ui:composition>

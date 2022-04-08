@@ -1,0 +1,164 @@
+<ui:composition xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:panel header="#{lbl['lbl.pm.header.general.org.paymentBank']}"
+		toggleable="true">
+		<p:dataTable id="govorgid" var="supplierBank" widgetVar="supplierBankWidget"
+			value="#{organisationBackingBean.managedBean.smSupplierBanks}"
+			rowKey="#{supplierBank}" rowIndexVar="rowIndex">
+
+			<ac:paginator for="govorgid" />
+			<p:column headerText="#{lbl['lbl.pm.financialorg.paymentbankname']}" style="width:45%">
+				<p:selectOneMenu value="#{supplierBank.pmFinancialOrg.financialOrgId}" id="finorgn" 
+					label="#{lbl['lbl.pm.financialorg.paymentbankname']}" disabled="#{!supplierBank.brandNew}" 
+					required="true" style="margin-bottom: 5px;" styleClass="ppDropDownWidthL">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+					<f:selectItems var="finorgLs"
+						value="#{organisationBackingBean.managedBean.financialBanks}"
+						itemLabel="#{finorgLs.finOrgName}"
+						itemValue="#{finorgLs.financialOrgId}" />
+
+				</p:selectOneMenu>
+				<p:message id="finorgnMsg" for="finorgn" display="icon" />
+			</p:column>
+			<p:column style="width:35%" >
+			<f:facet name="header">
+			     	<h:outputText value="* " styleClass="mandatory" />
+			    	<h:outputText value="#{lbl['lbl.pm.financialorg.acnumber']}" />
+			    </f:facet>
+
+				<p:inputText id="finAccountNo" value="#{supplierBank.accountNo}" label="#{lbl['lbl.pm.financialorg.acnumber']}"
+				maxlength="18" required="true" disabled="#{!supplierBank.brandNew}"  />
+			<p:message id="finAccountNoMsg" for="finAccountNo" display="icon" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}" style="width:15%">
+				<p:selectOneMenu value="#{supplierBank.recordStatusFlg}" id="paymentBankStatusId" 
+					required="true" disabled="#{supplierBank.brandNew}" style="margin-bottom: 5px;">
+					<f:selectItems
+						value="#{organisationBackingBean.getStatusOptions()}" />
+						<!-- 20210107@Jacky - Enhancement#28836 - Start -->
+						<p:ajax event="change" 
+						onstart="blockWidget.show()" 
+						oncomplete="blockWidget.hide()" 
+						listener="#{organisationBackingBean.disableActiveStatus(supplierBank.recordStatusFlg, supplierBank.supplierBankId, supplierBank.accountNo)}"
+					update="govorgid" partialSubmit="true" process="@this"/>
+					<!-- 20210107@Jacky - Enhancement#28836 - End -->
+				</p:selectOneMenu>
+
+			</p:column>
+	        <p:column style="width :5%;text-align:center;" headerText="#{lbl['lbl.pm.financialorg.action']}">
+             <p:commandLink partialSubmit="true" disabled="#{!supplierBank.brandNew}"             	
+				process="@this" 
+				oncomplete="paymentBankDeletePopUp.show();"
+				update="@([id$=#{paymentBankDeleteId}])" >
+				<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+				<f:setPropertyActionListener target="#{organisationBackingBean.managedBean.selectedDeletePaymentBank}" 
+							value="#{supplierBank}" />
+			</p:commandLink>
+			</p:column>
+		</p:dataTable>
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
+				id="paymentBankAddBtnId" 
+				process="@this,govorgid" partialSubmit="true"
+				action="#{organisationBackingBean.addSupplierBank}" 
+				oncomplete="supplierBankWidget.paginator.endLink.click();"
+				update="govorgid" />
+		</div>
+		<ac:confirmationPopup id="paymentBankDeleteId"
+			widget="paymentBankDeletePopUp"
+			okAction="organisationBackingBean.deleteSupplierBank()"
+			width="400" height="100"
+			title="#{lbl['lbl.msg.confirm.delete.header']}"
+			content="#{lbl['lbl.msg.confirm.delete']}" 
+			update=":#{p:component('govorgid')}" />	
+	</p:panel>
+
+	<p:panel header="#{lbl['lbl.pm.header.general.org.supplierusr']}"
+		toggleable="true">
+		<f:facet name="header">
+			<h:outputText value="* " styleClass="mandatory" />
+			<h:outputText value="#{lbl['lbl.pm.header.general.org.supplierusr']}" />
+		</f:facet>
+		<p:dataTable id="supplierUsers" widgetVar="supplierUser"
+			value="#{organisationBackingBean.managedBean.smPersonnels}" var="personnel"
+			rowIndexVar="index" rowKey="#{personnel}">
+			<ac:paginator for="supplierUsers"></ac:paginator>
+
+			<p:column headerText="#{lbl['lbl.pm.org.govseller.userdetails.loginid']}" style="width :25%">
+				<h:outputText value="#{personnel.pmUser.loginId}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.org.govseller.userdetails.username']}" style="width :50%">
+				<h:outputText value="#{personnel.pmUser.userName}" />
+			</p:column>
+			<p:column style="width:15%" headerText="#{lbl['lbl.pm.financialorg.status']}">
+				<p:selectOneMenu value="#{personnel.recordStatusFlg}" id="supplierUserStatusId" 
+					required="true" disabled="#{personnel.brandNew}" style="margin-bottom: 5px;">
+					<f:selectItems
+						value="#{organisationBackingBean.getStatusOptions()}" />
+					<p:ajax event="change" partialSubmit="true" process="@this" update="@this" />
+				</p:selectOneMenu>
+
+			</p:column>
+			<p:column style="width :5%;text-align:center;" headerText="#{lbl['lbl.pm.financialorg.action']}">
+             <p:commandLink partialSubmit="true"
+				process="@this" disabled="#{!personnel.brandNew}"
+				oncomplete="supplierUserDeletePopUp.show();"
+				update="@([id$=#{supplierUserDeleteId}])" >
+				<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+				<f:setPropertyActionListener target="#{organisationBackingBean.managedBean.selectedDeleteSupplierUser}" 
+							value="#{personnel}" />
+			</p:commandLink>
+			</p:column>
+		</p:dataTable>
+		<br />
+		
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this" id="supplierUserAddBtnId" 
+				action="#{organisationBackingBean.addPersonnel}" update="userSearch"
+				oncomplete="userlistpopup.show();"  />
+
+		</div>
+		<ac:confirmationPopup id="supplierUserDeleteId"
+			widget="supplierUserDeletePopUp"
+			okAction="organisationBackingBean.deletePersonnel()"
+			width="400" height="100"
+			title="#{lbl['lbl.msg.confirm.delete.header']}"
+			content="#{lbl['lbl.msg.confirm.delete']}" 
+			update=":#{p:component('supplierUsers')}" />			
+	</p:panel>
+	<p:dialog id="userSearch" header="#{lbl['lbl.pm.org.govseller.user.list']}"
+		widgetVar="userlistpopup" modal="true" width="600" height="300"
+		resizable="false">
+		<p:messages showDetail="true" autoUpdate="true" closable="true"
+			severity="error, info" />
+		<p:dataTable id="searchUserId" var="user"
+			value="#{organisationBackingBean.managedBean.supplierUserList}"
+			selection="#{organisationBackingBean.managedBean.selectedSupplierUsers}"
+			rowKey="#{user.userId}" rowIndexVar="index">
+			<p:column selectionMode="multiple" style="width:2%" />
+			<ac:paginator for="searchUserId"></ac:paginator>
+			<p:column headerText="#{lbl['lbl.pm.org.govseller.userdetails.loginid']}" style="width :15%" >
+				<h:outputText value="#{user.loginId}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.org.govseller.userdetails.username']}" style="width :40%" >
+				<h:outputText value="#{user.userName}" />
+			</p:column>
+		</p:dataTable>
+		<p:spacer height="15"></p:spacer>
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.ok']}" action="#{organisationBackingBean.conformUsers}"
+				ajax="true" oncomplete="supplierUser.paginator.endLink.click();"
+				update="userSearch,supplierUsers"
+				process="@this, userSearch" onclick="userlistpopup.hide();" />
+
+			<p:commandButton value="#{lbl['lbl.btn.cancel']}"  process="@this"
+				onclick="userlistpopup.hide();" />
+		</div>
+	</p:dialog>
+
+</ui:composition>

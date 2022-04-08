@@ -1,0 +1,1153 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	<ac:lovPopup />	
+	<ui:include src="../shared/loaInstructionHeader.xhtml" />
+	<!-- #31033 starts -->
+	<ui:param name="isHiddenDownloadButtonDAHistory" value="#{directLOABackingBean.isHiddenDownloadButtonDAHistory()}" />
+	<!-- #31033 ends -->
+	<ui:param name="isContractTypeAsMinistry"
+		value="#{directLOABackingBean.managedBean.scLoa.contractType.parameterCode == ParameterConst.contractTypeMinistry}" />
+	<ui:param name="isContractTypeAsCentral"
+		value="#{directLOABackingBean.managedBean.scLoa.contractType.parameterCode == ParameterConst.contractTypeCentral}" />
+		
+	<!-- #25726 START -->
+	<ui:param name="isPeriodic" value="#{(directLOABackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeAsAndWhen) or
+	(directLOABackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeScheduled)}"></ui:param>
+	<ui:param name="isOneOff" value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeOneOff}"></ui:param>
+	<ui:param name="isNonPeriodic" value="#{(directLOABackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeNonPeriodicAsAndWhen) or
+	(directLOABackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeNonPeriodicScheduled)}"></ui:param>
+	<ui:param name="isPK7" value="#{(directLOABackingBean.managedBean.scLoa.qtType.parameterCode eq ParameterConst.quotationTenderTypeItemInPk7)}"></ui:param>	
+	<ui:param name="above500K" value="#{(directLOABackingBean.managedBean.above500K)}"/>
+	<!-- #25726 END -->
+	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}"
+		toggleable="true">
+		
+		<h:outputText styleClass="instruction" escape="false" value="#{lbl['lbl.sc.qt.instruction']}" />
+		
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		   <tr>
+			    <td><p:outputLabel value="#{lbl['lbl.sc.supplier.name']}" /></td>
+				<td colspan="3"><ac:lov id="supplierId" lovId="SM_SUPPLIER" label="#{lbl['lbl.sc.supplier.name']}" 
+						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
+						postUpdateListener="directLOABackingBean.supplierListener(directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier)"
+						headerText="#{lbl['lbl.sc.supp.name']}" selectionMode="single"
+						saveObject="directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier"
+						conditionField="recordStatus^1|smMofAccounts.recordStatus^1" readonly="true" size="106"
+						value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.supplierName}"
+						update="@form" required="true" /></td>
+			</tr>
+			
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.mof.no']}" />
+				</td>
+				<td colspan="1"><p:inputText size="35"
+						value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.mofNo}"
+						disabled="true" /></td>
+						
+				<td width="160px"><p:outputLabel value="#{lbl['lbl.sc.discipline.action']}" />
+				</td>
+				<td>
+				<!--  31033 start -->
+					<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
+						rendered="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier.disciplinaryActions}"
+						action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier)}" 
+						process="@this" partialSubmit="true" update=":form">
+							<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
+					</p:commandLink><p:spacer width="2"/>
+					
+					<h:outputText rendered="#{!directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier.disciplinaryActions}"
+					 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
+					 
+					<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
+				<!--  31033 end -->
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.gst.register.num']}" />
+				</td>
+				<td colspan="3"><p:inputText size="35"
+						value="#{directLOABackingBean.managedBean.scLoa.gstRegNo eq null ? lbl['lbl.txt.na']:directLOABackingBean.managedBean.scLoa.gstRegNo}"
+						disabled="true" /> <ac:iconTooltip
+						value="#{lbl['lbl.sc.gst.registartion.number.tooltip']}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.gst.effective.date']}" />
+				</td>
+				<td colspan="3"><p:inputText size="35"
+						value="#{directLOABackingBean.managedBean.scLoa.gstEffDate eq null ? lbl['lbl.txt.na']:directLOABackingBean.managedBean.scLoa.gstEffDate}"
+						disabled="true">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText> <ac:iconTooltip value="#{lbl['lb.sc.gst.effective.date.tooltip']}" />
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.gst.declared.date']}" />
+				</td>
+				<td colspan="3"><p:inputText size="35"
+						value="#{directLOABackingBean.managedBean.scLoa.gstDeclaredDate eq null ? lbl['lbl.txt.na']:directLOABackingBean.managedBean.scLoa.gstDeclaredDate}"
+						disabled="true">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText> <ac:iconTooltip
+						value="#{lbl['lbl.sc.gst.declartive.date.tooltip']}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.branch']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td colspan="3">
+					<table>
+						<tr>
+							<td>
+								<c:choose>
+									<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}">
+										<p:selectOneMenu id="branch"
+											value="#{directLOABackingBean.managedBean.scLoa.supplierBranchCode}"
+											style="width: 246px;margin-bottom: 5px;"
+											label="#{lbl['lbl.sc.branch']}">
+											<f:selectItem itemLabel="HQ" itemValue="#{null}" />
+											<f:selectItems
+												value="#{directLOABackingBean.managedBean.branchsList}"
+												var="smSupplierBranch"
+												itemValue="#{smSupplierBranch.branchCode}"
+												itemLabel="#{smSupplierBranch.branchName}" />
+											<p:ajax event="change"
+												listener="#{directLOABackingBean.handleBranchDetailsChanged}"
+												partialSubmit="true" process="@this"
+												update="suppAddr, suppPhoneNo, suppFaxNo, suppMobNo, suppContact, suppEmail" />
+										</p:selectOneMenu> 
+										<p:message id="branchMsg" for="branch" display="icon" />
+									</c:when>
+									<c:otherwise>
+										<p:inputText size="35"
+											value="#{directLOABackingBean.managedBean.scLoa.supplierBranch}"
+											disabled="true" />
+									</c:otherwise>
+								</c:choose>
+							</td>
+							<td style="margin-top: -3px"><ac:iconTooltip
+										value="#{lbl['lbl.sc.branch.tooltip']}" />
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td rowspan="3" valign="top" width="21%"><p:outputLabel
+						value="#{lbl['lbl.sc.address']}" /></td>
+				<td rowspan="3">
+					<p:inputTextarea id="suppAddr" label="#{lbl['lbl.sc.address']}" 
+					onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"
+						cols="36" disabled="true" rows="6" style=" margin-bottom:5px; width: 236px" maxlength="200" 
+						value="#{directLOABackingBean.getFullAddress(directLOABackingBean.managedBean.scLoa.scSupplierAddress)}"
+						required="true" /></td>
+
+				<td width="160px"><p:outputLabel value="#{lbl['lbl.sc.tel.no']}" />
+				</td>
+				<td><p:inputText id="suppPhoneNo" size="28" disabled="true" 
+								 value="#{directLOABackingBean.managedBean.scLoa.scSupplierAddress.phoneFull}" />
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.fax.no']}" /></td>
+				<td><p:inputText id="suppFaxNo" size="28" disabled="true"
+						value="#{directLOABackingBean.managedBean.scLoa.scSupplierAddress.faxFull}" />
+				</td>
+
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.mobile.no']}" /></td>
+				<td><p:inputText id="suppMobNo" size="28" disabled="true"
+						value="#{directLOABackingBean.managedBean.scLoa.scSupplierAddress.contactMobileFull}" />
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.contact.person']}" />
+				</td>
+				<td><p:inputText id="suppContact" size="35" disabled="true"
+						value="#{directLOABackingBean.managedBean.scLoa.scSupplierAddress.pmContactUserID.salutationCode.salutationName.concat(' ').concat(directLOABackingBean.managedBean.scLoa.scSupplierAddress.contactPerson)}" />
+				</td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.email']}" /></td>
+				<td><p:inputText id="suppEmail" size="28"
+						style=" margin-bottom:5px;" disabled="true"
+						value="#{directLOABackingBean.managedBean.scLoa.scSupplierAddress.contactEmail}" />
+				</td>
+			</tr>
+		</table>
+	</p:panel>
+
+	<p:panel header="#{lbl['lbl.sc.loiloa.loa.details.section']}"
+		toggleable="true">
+		<table width="100%">
+			<tr>
+				<td><h:outputLabel
+						value="#{lbl['lbl.sc.ministry']}" /></td>
+				<td colspan="3"><p:inputText disabled="#{!isEditableStatus}"
+						readonly="true"
+						value="#{directLOABackingBean.managedBean.scQt.ministryOrgProfile.orgName}"
+						size="106" maxlength="100" /></td>
+			</tr>
+			<tr>
+
+				<td><p:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
+				<td colspan="3"><ac:lov id="ptjProfile" lovId="PM_ORG_PROFILE"
+						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" headerText="#{lbl['lbl.sc.ptj']}"
+						selectionMode="single"
+						saveObject="directLOABackingBean.managedBean.scQt.pmOrgProfile"
+						readonly="true" size="106"
+						value="#{directLOABackingBean.managedBean.scQt.pmOrgProfile.orgName}"
+						update="@form"
+						conditionField="#{directLOABackingBean.constuctConditionFields()}" /></td>
+			</tr>
+
+			<h:panelGroup
+				rendered="#{isPendingSubmissionStatus}">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.qtn.no']}" /></td>
+					<td colspan="3"><ac:lov id="directLoaQT" lovId="DIRECT_LOA_QT"
+							disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
+							headerText="#{lbl['lbl.sc.quotation.tender']}"
+							selectionMode="single"
+							saveObject="directLOABackingBean.managedBean.scQt"
+							readonly="true" size="35"
+							value="#{directLOABackingBean.managedBean.scQt.qtNo}"
+							update="@form"
+							postUpdateListener="directLOABackingBean.onQTSelected(directLOABackingBean.managedBean.scQt)"
+							conditionField="#{directLOABackingBean.constuctQTConditionFields()}" /></td>
+				</tr>
+
+				<tr>
+					<td valign="top"><p:outputLabel
+							value="#{lbl['lbl.sc.loiloa.loa.title']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td colspan="3"><p:inputTextarea id="title"
+							onkeyup="limitTextArea(this,500);"
+							onkeydown="limitTextArea(this,500);"
+							disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
+							label="#{lbl['lbl.sc.loiloa.loa.title']}" required="true"
+							size="110"
+							value="#{directLOABackingBean.managedBean.scLoa.scQt.qtTitle}"
+							cols="110" rows="3" style="margin-bottom:5px;width: 670px;"
+							maxlength="500">
+							<p:ajax event="blur" process="title" update="@form" />
+						</p:inputTextarea>
+						<p:message id="titleMsg" for="title" display="icon" /></td>
+				</tr>
+			</h:panelGroup>
+			<tr>
+				<td width="21%"><p:outputLabel
+						value="#{lbl['lbl.sc.procurement.mode']}" /> 
+					<p:outputLabel
+						value="*" styleClass="mandatory" />
+				</td>
+				<td>
+					<c:choose>
+						<c:when test="#{!isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}">
+							<p:selectOneMenu id="procMode" required="true"
+								value="#{directLOABackingBean.managedBean.scLoa.procurementMode.parameterId}"
+								style="margin-bottom:5px;width:246px;"
+								label="#{lbl['lbl.sc.procurement.mode']}"
+								disabled="#{directLOABackingBean.managedBean.disableFields}">
+								<f:selectItems value="#{directLOABackingBean.getProcurementModeDropdownValues()}" />
+								<p:ajax event="change" 
+									process="@this" partialSubmit="true" update="qtType"
+									listener="#{directLOABackingBean.procurementModeChanged}" />
+							</p:selectOneMenu>
+							<p:message id="procModeMsg" for="procMode" display="icon" />
+						</c:when>
+						<c:otherwise>
+							<p:inputText id="procModeTxt"
+								value="#{directLOABackingBean.getParameterDesc(directLOABackingBean.managedBean.scLoa.procurementMode)}"
+								size="35" disabled="true" />
+						</c:otherwise>
+					</c:choose>
+				</td>
+				<td width="160px">
+					<p:outputLabel value="#{lbl['lbl.sc.qttentype']}" /> 
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td>
+					<c:choose>
+						<c:when test="#{!isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}">
+							<p:selectOneMenu id="qtType" required="true"
+								value="#{directLOABackingBean.managedBean.scLoa.qtType.parameterId}"
+								style="margin-bottom:5px;width:206px;"
+								label="#{lbl['lbl.sc.qttentype']}"
+								disabled="#{directLOABackingBean.managedBean.disableFields}">
+								<f:selectItems value="#{directLOABackingBean.getQTTypesDropdownValues()}" />
+								<p:ajax event="change" 
+									process="@this" partialSubmit="true" 
+									listener="#{directLOABackingBean.qtTypeChanged}" 
+									update="@([id$=uploadApprovalLetterPg])"/>
+									
+								<p:ajax event="change"
+									listener="#{directLOABackingBean.isPbDropDown()}"
+									partialSubmit="true" 
+									update="bondReqPG, menuItems, reasonPG, reasonDescPG" />
+												
+								<p:ajax event="change"
+									listener="#{directLOABackingBean.isAgreementDropDown}"
+									partialSubmit="true" 
+									update="agreementReqPG" />
+									
+								<p:ajax event="change"
+									listener="#{directLOABackingBean.isPk7Periodic()}"
+									partialSubmit="true" 
+									update="bondReqPG, menuItems, agreementReqPG" />
+							</p:selectOneMenu>
+							<p:message id="qtTypeMsg" for="qtType" display="icon" />
+						</c:when>
+						<c:otherwise>
+							<p:inputText id="qtTypeTxt"
+								value="#{directLOABackingBean.getParameterDesc(directLOABackingBean.managedBean.scLoa.qtType)}"
+								size="28" disabled="true" />
+						</c:otherwise>
+					</c:choose>
+					
+				</td>
+			</tr>
+			<tr>
+				<td width="21%"><p:outputLabel
+						value="#{lbl['lbl.sc.procurment.type.category']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td>
+					<c:choose>
+						<c:when test="#{!isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}">
+							<p:selectOneMenu id="procTypeBoCategory" required="true"
+								value="#{directLOABackingBean.managedBean.scLoa.procurementTypeCatId.parameterId}"
+								style="margin-bottom:5px;width:246px;"
+								label="#{lbl['lbl.sc.procurment.type.category']}"
+								disabled="#{directLOABackingBean.managedBean.disableFields}">
+								<f:selectItems
+									value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.procurementTypeCategory)}" />
+								 <p:ajax event="change" 
+									process="@this" partialSubmit="true" update="procTypeBoCategory"
+									listener="#{directLOABackingBean.procTypeCategoryChanged(directLOABackingBean.managedBean.scLoa)}" />
+							</p:selectOneMenu>
+							<p:message id="procTypeBoCategoryMsg" for="procTypeBoCategory"
+								display="icon" />
+						</c:when>
+						<c:otherwise>
+							<p:inputText id="procTypeCatTxt"
+								value="#{directLOABackingBean.getParameterDesc(directLOABackingBean.managedBean.scLoa.procurementTypeCatId)}"
+								size="35" disabled="true" />
+						</c:otherwise>
+					</c:choose>
+					
+				</td>
+				
+				<td width="160px">
+					<h:panelGroup id="reasonDescPG">
+						<c:if test="#{directLOABackingBean.isPbDropDown() || directLOABackingBean.isPk7Periodic()}">
+								<p:outputLabel value="#{lbl['lbl.sc.reason']}" /> <p:outputLabel value="*"
+								styleClass="mandatory" />
+						</c:if>
+					</h:panelGroup>
+				</td>
+				
+				<td>
+					<h:panelGroup id="reasonPG">
+						<c:if test="#{directLOABackingBean.isPbDropDown() || directLOABackingBean.isPk7Periodic()}">
+							<c:choose>
+							<c:when test="#{directLOABackingBean.managedBean.disableFields or directLOABackingBean.managedBean.readOnly}" >
+							<p:inputText 
+								value="#{directLOABackingBean.getReasonDesc(directLOABackingBean.managedBean.scLoa.justificationType.reasonCode)}"
+								size="35" disabled="true" />
+							</c:when>
+							<c:otherwise>
+								<p:selectOneMenu
+										style="width: 206px;margin-bottom: 5px;" id="justificationId"
+										panelStyle="overflow-y: scroll; width:400px; height:200px;"
+										label="#{lbl['lbl.sc.reason']}"
+										required="true"
+										value="#{directLOABackingBean.managedBean.scLoa.justificationType.reasonCode}"
+										disabled="#{directLOABackingBean.managedBean.disableFields}">
+										<f:selectItems
+											value="#{directLOABackingBean.managedBean.pk7Reasons}" />
+									
+										<p:ajax event="change" partialSubmit="true" process="@this" update="@this"
+										listener="#{directLOABackingBean.reasonChanged(directLOABackingBean.managedBean.scLoa.justificationType.reasonCode)}"/>
+									
+									</p:selectOneMenu> <p:message id="justTypeMsg" for="justificationId"
+										display="icon" />
+							</c:otherwise>
+							</c:choose>
+						</c:if>
+					</h:panelGroup>
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.qt.fileno']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td>
+				     <p:inputText disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
+						required="true" id="fileNoId"
+						value="#{directLOABackingBean.managedBean.scLoa.scQt.fileNo}"
+						label="#{lbl['lbl.sc.qt.fileno']}" size="28" >
+						<p:ajax event="blur" process="fileNoId" update="fileNoId"/>
+						</p:inputText>
+						 <p:spacer width="1px" />
+						
+					<p:inputText required="true"
+						id="fileExtNo" styleClass="ppNumericAlign"
+						value="#{directLOABackingBean.managedBean.scLoa.fileExtNo}"
+						size="1" label="#{lbl['lbl.sc.loiloa.file.extension.no']}"
+						maxlength="3" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" >
+						<p:ajax event="blur" process="fileExtNo" update="fileExtNo"/>
+						</p:inputText>
+						 <p:message
+						id="fileExtNoMsg" for="fileExtNo" display="icon" />
+				</td>
+				<td width="160px">
+					<p:outputLabel	value="#{lbl['lbl.sc.procurement.category']}" /> 
+					<p:outputLabel	value="*" styleClass="mandatory" />
+				</td>
+				<td><c:choose>
+							<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}">
+							<p:selectOneMenu id="procBoCategory" required="true"
+								style="margin-bottom:5px;width:206px;"
+								label="#{lbl['lbl.sc.procurement.category']}"
+								value="#{directLOABackingBean.managedBean.scLoa.scQt.pmProcurementCategory.parameterId}">
+								<f:selectItems
+									value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
+							 <p:ajax event="change" 
+									process="@this" partialSubmit="true" update="procBoCategory"
+									listener="#{directLOABackingBean.procCategoryChanged(directLOABackingBean.managedBean.scLoa)}" />
+							</p:selectOneMenu>
+							<p:message id="procBoCategoryMsg" for="procBoCategory"
+								display="icon" />
+						</c:when>
+						<c:otherwise>
+							<p:inputText id="procCatTxt"
+								value="#{directLOABackingBean.getParameterDesc(directLOABackingBean.managedBean.scLoa.scQt.pmProcurementCategory)}"
+								size="35" disabled="true" />
+						</c:otherwise>
+					</c:choose></td>
+			</tr>
+			
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.spec.est.price']}" />
+				</td>
+				<td colspan="3"><p:inputText style="text-align: right;"
+						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly or isPendingApprovalStatus or isPendingRevApprovalStatus}"
+						value="#{directLOABackingBean.managedBean.scLoa.estimatedPrice}"
+						size="35">
+						<p:ajax event="blur" process="@this" update="@this"></p:ajax>
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText></td>
+
+			</tr>
+
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.loiloa.loa.off.price']}">
+					</p:outputLabel> <p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td colspan="3"><p:inputText style="text-align: right;" required="true" id="loaAmtId"
+						value="#{directLOABackingBean.managedBean.scLoa.loaAmt}" size="35"
+						label="#{lbl['lbl.sc.loiloa.loa.off.price']}"
+						disabled="#{isPendingApprovalStatus or directLOABackingBean.managedBean.readOnly or isPendingVerification or isPendingApprovalStatus or isPendingRevApprovalStatus}">
+						<p:ajax event="blur"
+							listener="#{directLOABackingBean.setOverallCtAmount(directLOABackingBean.managedBean.scLoa.loaAmt)}"
+							update="@form"></p:ajax>
+							
+						<p:ajax event="change"
+							listener="#{directLOABackingBean.isPbDropDown()}"
+							partialSubmit="true" 
+							update="bondReqPG" />
+							
+						<p:ajax event="change"
+									listener="#{directLOABackingBean.loaOfferedPriceChange}"
+									partialSubmit="true" 
+									update="agreementReqPG @([id$=uploadApprovalLetterPg])" />
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText>  <p:message id="loaAmtIdMsg" for="loaAmtId" display="icon" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.fullfillent.type']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td colspan="3">
+
+					<table>
+						<tr>
+							<td>
+								<c:choose>
+									<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly and !isContractTypeAsCentral and !isPendingApprovalStatus and !isPendingRevApprovalStatus}">
+									<p:selectOneMenu id="fulfilId"
+										required="true"
+										label="#{lbl['lbl.sc.fullfillent.type']}"
+										value="#{directLOABackingBean.managedBean.scLoa.scQt.fulfilmentType.parameterId}"
+										style="width: 246px;margin-bottom: 5px;">
+
+		
+											<f:selectItems
+												value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
+											<p:ajax event="change" process="@this" partialSubmit="true"
+												update="@this, menuItems,agreementReqPG, expDateLabel, effDateLabel, contractDurationLabel, @([id$=uploadApprovalLetterPg])"
+												listener="#{directLOABackingBean.fulfilmentChange}"></p:ajax>
+																							
+											<p:ajax event="change"
+												listener="#{directLOABackingBean.isPbDropDown()}"
+												partialSubmit="true" 
+												update="bondReqPG, reasonPG, reasonDescPG" />
+									
+											<p:ajax event="change"
+												listener="#{directLOABackingBean.isAgreementDropDown}"
+												partialSubmit="true" 
+												update="agreementReqPG" />
+										</p:selectOneMenu>
+										<p:message id="fulfilType" for="fulfilId" display="icon" />							
+									</c:when>
+									<c:otherwise>
+										<p:inputText id="fulfilTypeTxt"
+											value="#{directLOABackingBean.getParameterDesc(directLOABackingBean.managedBean.scLoa.scQt.fulfilmentType)}"
+											size="35" disabled="true" />							
+									</c:otherwise>
+								</c:choose>
+							</td>
+							<td style="margin-top: -3px">
+								<ac:iconTooltip value="#{lbl['lbl.sc.fulfilment.type.qt.tooltip']}" />
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<!-- Enhncement #24259 #24269 Workaround CJCP (LOA) - QT, DIRECT, DP -->
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.sst.rm']}" /></td>
+				<td>
+					<p:inputText size="35" style="text-align:right;"
+							value="#{directLOABackingBean.managedBean.scLoa.sstAmt}"
+							disabled="#{isPendingApprovalStatus or directLOABackingBean.managedBean.readOnly or isPendingVerification}">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						<p:ajax event="blur"
+							listener="#{directLOABackingBean.calculateOverallAmount(directLOABackingBean.managedBean.scLoa.sstAmt)}"
+							update="@this,ContractAmtId,bondReqPG"></p:ajax>
+					</p:inputText>
+				</td>
+			</tr>
+
+			<tr>
+				<td></td>
+				<td colspan="3">
+					<h:outputText styleClass="instruction"
+						value=" #{lbl['lbl.sc.sst.offer.price.reminder']}"
+						escape="false" /> <BR />
+					<!-- <h:outputText styleClass="instruction"
+						value=" #{lbl['lbl.sc.gst.remainder.one.instruction']}"
+						escape="false" 
+						rendered = "#{directLOABackingBean.getGstRate() == 6}"/> 
+					<h:outputText styleClass="instruction"
+						value=" #{lbl['lbl.sc.gst.remainder.one.instruction.0']}"
+						escape="false" 
+						rendered = "#{directLOABackingBean.getGstRate() == 0}"/> 						
+						<br />
+					<h:outputText styleClass="instruction"
+						value="#{lbl['lbl.sc.gst.remainder.two.instruction']}"
+						escape="false"
+						rendered="#{directLOABackingBean.managedBean.renderRemainder}" />  -->
+				</td>
+			</tr>
+			<!-- end Enhncement #24259 #24269 -->
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.gst.overall.contract.amount']}" /></td>
+				<td colspan="3">
+					<p:inputText style="text-align: right;"
+						value="#{directLOABackingBean.managedBean.overallContractAmt}"
+						size="35" id="ContractAmtId" disabled="true">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText></td>
+			</tr>
+			<tr>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.req.ins.war']}" /> 
+					<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
+				</td>
+				<td>
+					<c:choose>
+						<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}">
+							<p:selectOneRadio id="insWarranty" styleClass="commonLabel"
+								value="#{directLOABackingBean.managedBean.scLoa.insWarrantyReq}"
+								required="true" label="#{lbl['lbl.sc.loiloa.loa.req.ins.war']}">
+								<f:selectItems
+									value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+								<p:ajax process="@this" partialSubmit="true" update="@this" />
+							</p:selectOneRadio>
+							<p:message id="insWarrantyMsg" for="insWarranty" display="icon" />
+						</c:when>
+						<c:otherwise>
+							<p:inputText id="insWarrantyTxt"
+								value="#{directLOABackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(directLOABackingBean.managedBean.scLoa.insWarrantyReq))}"
+								size="35" disabled="true" />
+						</c:otherwise>
+					</c:choose>
+				</td>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
+				</td>
+				<td>
+					<table>
+						<tr>
+							<td>
+								<h:panelGroup id="bondReqPG">
+									<c:choose>
+										<c:when test="#{!directLOABackingBean.isPbDropDown() and !directLOABackingBean.isPerformanceBondRequired(directLOABackingBean.managedBean.overallContractAmt, null) and !directLOABackingBean.managedBean.readOnly}">
+											<c:choose>
+												<c:when test="#{directLOABackingBean.isPk7Periodic()}">
+													<p:selectOneMenu id="bondReqPk7Per" required="true"
+														style="margin-bottom:5px;width:175px;"
+														value="#{directLOABackingBean.managedBean.bondReqSelectedVal}"
+														label="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}">
+														<f:selectItems
+															value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.yesNoFlag)}" />
+															
+														 <p:ajax partialSubmit="true" process="@this" update="menuTab" 
+														 listener="#{directLOABackingBean.performanceBondChanged(directLOABackingBean.managedBean.bondReqSelectedVal)}"/>
+													</p:selectOneMenu>
+												</c:when>
+												<c:otherwise>
+													<p:selectOneRadio id="bondReq" styleClass="commonLabel"
+														value="#{directLOABackingBean.managedBean.scLoa.bondReq}"
+														required="true"
+														label="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}">
+								
+														<f:selectItems
+															value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+														<p:ajax partialSubmit="true" process="@this" update="menuTab" />
+													</p:selectOneRadio>
+													<p:message id="bondReqMsg" for="bondReq" display="icon" />
+												</c:otherwise>
+											</c:choose>
+										</c:when>
+										<c:otherwise>
+											<c:choose>
+												<c:when test="#{!directLOABackingBean.isPbDropDown()}">
+													<c:choose>
+														<c:when test="#{directLOABackingBean.isPk7Periodic()}">
+															<c:choose>
+															<c:when test="#{directLOABackingBean.managedBean.readOnly}" >
+																<p:inputText 
+																value="#{directLOABackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(directLOABackingBean.managedBean.scLoa.bondReq))}"
+																size="28" disabled="true" />
+															</c:when>
+															<c:otherwise>
+															<p:selectOneMenu id="bondReqPk7" required="true"
+																style="margin-bottom:5px;width:175px;"
+																value="#{directLOABackingBean.managedBean.bondReqSelectedVal}"
+																label="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}">
+																<f:selectItems
+																	value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.yesNoFlag)}" />
+																	
+																 <p:ajax partialSubmit="true" process="@this" update="menuTab" 
+																 listener="#{directLOABackingBean.performanceBondChanged(directLOABackingBean.managedBean.bondReqSelectedVal)}"/>
+															</p:selectOneMenu>
+															</c:otherwise>
+															</c:choose>
+														</c:when>
+														<c:otherwise>
+															<p:inputText id="bondReqTxt"
+																value="#{directLOABackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(directLOABackingBean.managedBean.scLoa.bondReq))}"
+																size="28" disabled="true" />
+														</c:otherwise>
+													</c:choose>
+												</c:when>
+												<c:otherwise>
+													<c:choose>
+													<c:when test="#{directLOABackingBean.managedBean.readOnly}" >
+														<p:inputText 
+														value="#{directLOABackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(directLOABackingBean.managedBean.scLoa.bondReq))}"
+														size="28" disabled="true" />
+													</c:when>
+													<c:otherwise>
+													<p:selectOneMenu id="performanceBondValId" required="true"
+														style="margin-bottom:5px;width:175px;"
+														value="#{directLOABackingBean.managedBean.bondReqSelectedVal}"
+														label="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}"
+														disabled="#{directLOABackingBean.managedBean.disableFields}">
+														<f:selectItems
+															value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.yesNoFlag)}" />
+															
+														 <p:ajax partialSubmit="true" process="@this" update="menuTab" 
+														 listener="#{directLOABackingBean.performanceBondChanged(directLOABackingBean.managedBean.bondReqSelectedVal)}"/>
+													</p:selectOneMenu>
+													</c:otherwise>
+													</c:choose>
+												</c:otherwise>
+											</c:choose>
+										</c:otherwise>
+									</c:choose>
+								</h:panelGroup>
+							</td>
+							<td style="margin-top: -3px">
+								<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.req.perform.bond.tooltip']}" />
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.appr.req.field']}" />
+					<p:outputLabel value="*" styleClass="mandatory"
+						rendered="#{isEditableStatus}" /></td>
+				<td>
+					<c:choose>
+						<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}">
+						
+						    <table>
+							     <tr>
+								   <td>
+										<p:selectOneRadio id="approvalReq" styleClass="commonLabel"
+											value="#{directLOABackingBean.managedBean.scLoa.approvalReq}"
+											required="true" label="#{lbl['lbl.sc.loiloa.appr.req.field']}">
+											<f:selectItems
+												value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+											<p:ajax process="@this" partialSubmit="true" update="menuTab" />
+										</p:selectOneRadio>
+										<p:message id="approvalReqMsg" for="approvalReq" display="icon" />
+									 </td>
+								<td style="margin-top: -3px">
+									   <ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.req.verification.approval.tooltip']}" />
+								</td>
+							 </tr>
+						  </table>
+							
+						</c:when>
+						<c:otherwise>
+							<p:inputText id="approvalReqTxt"
+								value="#{directLOABackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(directLOABackingBean.managedBean.scLoa.approvalReq))}"
+								size="35" disabled="true" />
+						</c:otherwise>
+					</c:choose>
+				</td>
+				<td>
+					<p:outputLabel style="width:145%; text-align:left;" value="#{lbl['lbl.sc.loiloa.loa.req.sl1m']}" />
+					<p:outputLabel style="width: 151%;text-align:left;margin-top: -40px;" value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
+				</td>
+				<td>
+					<table>
+						<tr>
+							<td>
+								<p:selectOneRadio id="sl1mReq" styleClass="commonLabel"
+									value="#{directLOABackingBean.managedBean.scLoa.sl1mReq}"
+									required="true"
+									label="#{lbl['lbl.sc.loiloa.loa.req.sl1m']}"
+									disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}">
+									<f:selectItems value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+									<p:ajax partialSubmit="true" process="@this" update="menuTab" />
+								</p:selectOneRadio>
+								<p:message id="sl1mReqMsg" for="sl1mReq" display="icon" />
+							</td>
+							<td>
+								<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.req.sl1m.tooltip']}" />
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</p:panel>
+
+	<p:panel header="#{lbl['lbl.sc.loiloa.loa.contract.details']}"  id="contractDetailsId"
+		toggleable="true">
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.loiloa.loa.cont.type']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td colspan="3">
+					<c:choose>
+						<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}">
+							<p:selectOneMenu id="contractType"
+								required="true" 
+								value="#{directLOABackingBean.managedBean.scLoa.contractType.parameterId}"
+								style="width: 246px;margin-bottom: 5px;"
+								label="#{lbl['lbl.sc.loiloa.loa.cont.type']}">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+								<f:selectItems
+									value="#{directLOABackingBean.getContractTypes(ParameterConst.procurementModeDirectNego)}"
+									var="pmParameterDesc" itemLabel="#{pmParameterDesc.codeName}"
+									itemValue="#{pmParameterDesc.pmParameter.parameterId}" />
+								<p:ajax event="change"
+									listener="#{directLOABackingBean.contractTypeChanged()}"
+									partialSubmit="true" process="@this"
+									update="@form" />
+									
+							</p:selectOneMenu>
+							<p:message id="contractTypeMsg" for="contractType" display="icon" />
+						</c:when>
+						<c:otherwise>
+							<p:inputText id="contractTypeTxt"
+								value="#{directLOABackingBean.getParameterDesc(directLOABackingBean.managedBean.scLoa.contractType)}"
+								size="35" disabled="true" />
+						</c:otherwise>
+					</c:choose>
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.agency']}" /></td>
+				<td colspan="3">
+					<p:inputText id="contractAgency" disabled="true" size="106"
+						value="#{directLOABackingBean.managedBean.scLoa.contractAgency.orgName}" 
+						rendered="#{!isEditableStatus}" />
+
+					<c:if test="#{isEditableStatus}">
+						<p:inputText id="contractAgencyEdit" disabled="true" size="106"
+							value="#{directLOABackingBean.managedBean.scLoa.contractAgency.orgName}"
+							rendered="#{directLOABackingBean.managedBean.selectedOrgType.parameterCode == null}" />
+
+						<p:outputPanel id="opPtjOrgCode" 
+							rendered="#{ParameterConst.orgTypePtj eq directLOABackingBean.managedBean.selectedOrgType.parameterCode or 
+							ParameterConst.orgTypePtjGroup eq directLOABackingBean.managedBean.selectedOrgType.parameterCode}">
+							<ui:remove>
+								Enhancement #26474 - upSize size from 60 - 106	
+							</ui:remove>
+							<p:inputText 
+								size="106"
+								id="itSelectedPtj" 
+								value="#{directLOABackingBean.managedBean.selectedPtj.orgName}" 
+								readonly="true"
+								/>
+							&#160;
+							<p:commandLink id="ptjSearchCL" partialSubmit="true"
+								disabled="#{directLOABackingBean.managedBean.selectedOrgType.parameterId==null}"
+								process="@this" update=":form:orgProfileCcId:ptjPopup"
+								action="#{organisationSearchBackingBean.initPtjPopupDefaultMinistry(directLOABackingBean.managedBean.scQt.ministryOrgProfile.orgProfileId)}"
+								oncomplete="ptjPopup.show();" >
+								<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
+							</p:commandLink>
+						</p:outputPanel>
+
+						<h:panelGroup rendered="#{directLOABackingBean.managedBean.selectedOrgType.parameterCode eq ParameterConst.orgTypePtj
+							or directLOABackingBean.managedBean.selectedOrgType.parameterCode eq ParameterConst.orgTypePtjGroup}">
+							<ac:ptjPopup 
+								id="orgProfileCcId"
+								orgTypeParamCode="#{directLOABackingBean.managedBean.selectedOrgType.parameterCode}"
+								okAction="directLOABackingBean.userListener" update=":form:opPtjOrgCode,:form:itSelectedPtj"/>
+						</h:panelGroup>
+					</c:if>
+					<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.agency.tooltip']}" />
+				</td>
+			</tr>
+
+			<!-- #26474 - start -->
+			<!-- <tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.loiloa.loa.cont.admin']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td colspan="3">
+					<c:choose>
+						<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}">
+							<p:selectOneMenu id="contAdminId" styleClass="ppDropDownWidthM"
+								disabled="false" label="#{lbl['lbl.sc.loiloa.loa.cont.admin']}"
+								value="#{directLOABackingBean.managedBean.scLoa.contractAdmin.userId}"
+								style="width: 275px;margin-bottom: 5px;">
+								<f:selectItems
+									value="#{directLOABackingBean.getUsersByAgency()}" />
+								<p:ajax event="change" listener="#{directLOABackingBean.updateContractAdmin()}" 
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form"/>
+							</p:selectOneMenu>
+						</c:when>
+						<c:otherwise>
+							<p:inputText id="contractAdminTxt"
+								value="#{directLOABackingBean.managedBean.scLoa.contractAdmin.userName}"
+								size="35" disabled="true" />
+						</c:otherwise>
+					</c:choose>
+				</td>
+			</tr> -->
+			<!-- #26474 - start -->
+			<tr>
+				<td>
+				<ui:param name="lblContractDuration" 
+				    value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeOneOff ? 'lbl.sc.loiloa.loa.comp.period' : 'lbl.sc.loiloa.loa.cont.period'}" />
+				<p:outputLabel id="contractDurationLabel"
+						value="#{lbl[lblContractDuration]}" />
+				 <p:outputLabel value="*" styleClass="mandatory"/>
+				</td>
+				<td colspan="3"><p:inputText style="text-align: right;" required="true" label="#{lbl[lblContractDuration]}"
+						id="contractDuration" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
+						value="#{directLOABackingBean.managedBean.scLoa.contractDuration}"
+						size="35">
+						<p:ajax event="blur" update="@this contractDuration,effdate,expdate,contractDurationMsg"
+							process="@this contractDuration"
+							partialSubmit="true"
+							listener="#{directLOABackingBean.resetContractDates()}"></p:ajax>
+					</p:inputText>  <p:message id="contractDurationMsg" for="contractDuration" display="icon" /></td>
+			</tr>
+			<ui:param name="lbleffDate"  
+				value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeOneOff ? 'lbl.sc.loiloa.loa.comp.eff.date' : 'lbl.sc.loiloa.loa.cont.eff.date'}" />
+			<ui:param name="lblexpDate" 
+				value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeOneOff ? 'lbl.sc.loiloa.loa.comp.exp.date' : 'lbl.sc.loiloa.loa.cont.exp.date'}" />
+			<tr>
+				<td width="21%"><p:outputLabel id="effDateLabel" value="#{lbl[lbleffDate]}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:calendar id="effdate" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						showOn="button" required="true"
+						readonlyInput="true"
+						value="#{directLOABackingBean.managedBean.scLoa.contractEffDate}"
+						label="#{lbl[lbleffDate]}" size="28">
+						<p:ajax event="dateSelect" process="@this"
+							partialSubmit="true"
+							listener="#{directLOABackingBean.contractEffDateChanged()}"
+							update="expdate" />
+					</p:calendar> <p:message id="effdateMsg" for="effdate" display="icon" /></td>
+				<td width="160px"><p:outputLabel id="expDateLabel" value="#{lbl[lblexpDate]}" /></td>
+				<td><p:calendar id="expdate" disabled="true"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						showOn="button" required="true"
+						value="#{directLOABackingBean.managedBean.scLoa.contractExpDate}"
+						mindate="#{directLOABackingBean.managedBean.scLoa.contractEffDate}"
+						label="#{lbl[lblexpDate]}" size="28" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.loiloa.loa.req.agree']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td colspan="3">
+					<table>
+						<tr>
+							<td>
+								<h:panelGroup id="agreementReqPG">
+								<c:choose>
+									<c:when test="#{!directLOABackingBean.isAgreementDropDown() and !directLOABackingBean.checkAgreementMandatory() and !directLOABackingBean.managedBean.readOnly}">
+										<c:choose>
+												<c:when test="#{directLOABackingBean.isPk7Periodic()}">
+													<p:selectOneMenu id="agreementReqPk7Per" required="true"
+														style="margin-bottom:5px;width:246px;"
+														value="#{directLOABackingBean.managedBean.agreemetSelectedVal}"
+														label="#{lbl['lbl.sc.loiloa.loa.req.agree']}">
+														<f:selectItems
+															value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.yesNoFlag)}" />
+														<!-- #25726 START -->
+														 <p:ajax event="change" partialSubmit="true" update="agreementReqPG @([id$=uploadApprovalLetterPg])" 
+														 listener="#{directLOABackingBean.onChangeAgreementReqType}"/>
+														<!-- #25726 END -->
+													</p:selectOneMenu>
+												</c:when>
+												<c:otherwise>
+													<p:selectOneRadio id="agreementReq" styleClass="commonLabel"
+														value="#{directLOABackingBean.managedBean.scLoa.agreementReq}"
+														label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
+														disabled="#{directLOABackingBean.disabledButton()}">
+														<f:selectItems
+															value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+															<!-- #25726 START -->
+															<p:ajax event="change" partialSubmit="true"
+														 	listener="#{directLOABackingBean.onChangeAgreementReqType}"/>
+															<!-- #25726 END -->
+													</p:selectOneRadio> 
+													<p:message id="agreementReqMsg" for="agreementReq" display="icon" />
+												</c:otherwise>
+											</c:choose>
+									</c:when>
+									<c:otherwise>
+										<c:choose>
+												<c:when test="#{!directLOABackingBean.isAgreementDropDown()}">
+													<c:choose>
+														<c:when test="#{directLOABackingBean.isPk7Periodic()}">
+															<c:choose>
+															<c:when test="#{directLOABackingBean.managedBean.readOnly}" >
+																<p:inputText 
+																value="#{directLOABackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(directLOABackingBean.managedBean.scLoa.agreementReq))}"
+																size="28" disabled="true" />
+															</c:when>
+															<c:otherwise>
+															<p:selectOneMenu id="agreementReqPk7" required="true"
+																style="margin-bottom:5px;width:246px;"
+																value="#{directLOABackingBean.managedBean.agreemetSelectedVal}"
+																label="#{lbl['lbl.sc.loiloa.loa.req.agree']}">
+																<f:selectItems
+																	value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.yesNoFlag)}" />
+																<!-- #25726 START -->
+																 <p:ajax event="change" partialSubmit="true" update="agreementReqPG @([id$=uploadApprovalLetterPg])" 
+																 listener="#{directLOABackingBean.onChangeAgreementReqType}"/>
+																<!-- #25726 END -->
+															</p:selectOneMenu>
+															</c:otherwise>
+															</c:choose>
+														</c:when>
+														<c:otherwise>
+															<p:inputText id="agreementReqTxt"
+																value="#{directLOABackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(directLOABackingBean.managedBean.scLoa.agreementReq))}"
+																size="35" disabled="true" />
+														</c:otherwise>
+													</c:choose>
+												</c:when>
+												<c:otherwise>
+													<c:choose>
+													<c:when test="#{directLOABackingBean.managedBean.readOnly}" >
+														<p:inputText 
+														value="#{directLOABackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(directLOABackingBean.managedBean.scLoa.agreementReq))}"
+														size="28" disabled="true" />
+													</c:when>
+													<c:otherwise>
+													<p:selectOneMenu id="agreementValId" required="true"
+														style="margin-bottom:5px;width:246px;"
+														value="#{directLOABackingBean.managedBean.agreemetSelectedVal}"
+														label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
+														disabled="#{directLOABackingBean.managedBean.disableFields}">
+														<f:selectItems
+															value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.yesNoFlag)}" />
+															<!-- #25726 START -->
+														 <p:ajax event="change" partialSubmit="true" update="agreementReqPG @([id$=uploadApprovalLetterPg])" 
+														 listener="#{directLOABackingBean.onChangeAgreementReqType}"/>
+														<!-- #25726 END -->
+													</p:selectOneMenu>
+													</c:otherwise>
+													</c:choose>
+												</c:otherwise>
+											</c:choose>
+									</c:otherwise>
+								</c:choose>
+								</h:panelGroup>
+							</td>
+							<td style="margin-top: -3px">
+								<!-- #25726 START -->
+								<ac:iconTooltip
+									value="#{lbl['lbl.sc.required.agreement.qt.tooltip']}" />
+								<!-- #25726 END -->
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>				
+				<td colspan="3">
+					<p:outputPanel id="uploadApprovalLetterPg"> 
+						<!-- #25726 START -->													
+						<h:panelGroup  rendered="#{((((isNonPeriodic || isOneOff) and !isPK7) and !directLOABackingBean.managedBean.scLoa.agreementReq and above500K and !directLOABackingBean.managedBean.readOnly)||(((isNonPeriodic || isOneOff) and !isPK7) and !directLOABackingBean.managedBean.agreementReqChange and !directLOABackingBean.managedBean.scLoa.agreementReq and above500K and directLOABackingBean.managedBean.readOnly))}" 
+						required="true">
+						<!-- #25726 END -->
+							<table>
+								<tr>
+									<td width="300">
+										<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.approval.letter']}" escape="false"/> 
+										<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
+									</td>
+									<td>
+										<p:outputPanel id="uploadedPage">						
+											<p:commandButton 
+											oncomplete="uploadApprovalLetterDlg.show();return false;"
+					 						icon="ui-icon-upload" immediate="true" update="uploadApprovalLetterDlg" 
+					 						rendered="#{directLOABackingBean.managedBean.scLoa.scLoaAttachment eq null}"/>								
+											<p:commandLink
+											title="#{directLOABackingBean.managedBean.scLoa.scLoaAttachment.fileName}"
+											value="#{directLOABackingBean.managedBean.scLoa.scLoaAttachment.fileName}"						
+											action="#{directLOABackingBean.fileDownload}"
+											styleClass="blue_font"
+											rendered="#{directLOABackingBean.managedBean.scLoa.scLoaAttachment.filePath != null}"/>
+											<p:commandLink oncomplete="deleteApprovalLetterDlg.show();return false;"
+											rendered="#{directLOABackingBean.managedBean.scLoa.scLoaAttachment ne null and !directLOABackingBean.disabledButton()}" process="@this" partialSubmit="true"
+											disabled="#{directLOABackingBean.managedBean.scLoa.scLoaAttachment eq null}">
+			   									<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
+			 	 							</p:commandLink>
+			 	 						</p:outputPanel> 
+			 	 					</td>
+			 	 					<td style="margin-top: -3px">
+										<ac:iconTooltip value="#{lbl['lbl.sc.tooltip.approval.letter']}" />
+									</td>
+			 	 				</tr>
+			 	 			</table>			 	 				
+			 	 		</h:panelGroup>		 							
+					</p:outputPanel>		 	 								
+				</td>
+				<td>
+				</td>
+			</tr>
+		</table>
+	</p:panel>
+	<p:outputPanel id="remarksPanel">
+		<ac:scRemarkAndAttachment rendered="#{not empty directLOABackingBean.managedBean.scLoa.scLoaRemarks}"
+			remarkList="#{directLOABackingBean.managedBean.scLoa.scLoaRemarks}"
+			showAttachment="false" 
+			readonly="true" />
+	</p:outputPanel>
+	<!-- #31033 #32560 starts -->
+	<ac:disciplinaryActionActiveQT voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}"  btnView="true" 
+				startDate="#{viewSuppProfileBackingBean.managedBean.startDate}"
+				endDate="#{viewSuppProfileBackingBean.managedBean.endDate}"
+				isWarning="#{viewSuppProfileBackingBean.managedBean.warning}" 
+				rendered="#{isHiddenDownloadButtonDAHistory}"/>
+	    <ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" rendered="#{!isHiddenDownloadButtonDAHistory}" />
+	      <!-- #31033 #32560 Ends -->
+	      
+	<!-- #25726 START -->
+	<p:confirmDialog id="qtChangeAgreementReqDlg" widgetVar="qtChangeAgreementReqDlg"  appendToBody="true" 
+		message="#{lbl['lbl.msg.confirm.change']}" 	severity="alert"  closable="false">
+		<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"  update="agreementReqPG" process="@this"
+				partialSubmit="true" oncomplete="qtChangeAgreementReqDlg.hide();" action="#{directLOABackingBean.agreementReqYes}"/>
+				<p:commandButton value="#{lbl['lbl.btn.no']}" update="agreementReqPG" onclick="qtChangeAgreementReqDlg.hide();"
+				process="@this" partialSubmit="true" action="#{directLOABackingBean.agreementReqNo}"/>					
+		</div>
+	</p:confirmDialog>
+	
+	<p:dialog id="uploadApprovalLetterDlg" widgetVar="uploadApprovalLetterDlg"
+		resizable="false" width="700px" height="350px" modal="true" 
+		styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}"
+		onShow="singleUploadListener(approvalLetterUploadWV);">
+		<p:ajax event="close" />
+		<p:fileUpload style="display:inline;" mode="advanced" dragDropSupport="false"
+		    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" showButtons="false"
+			fileUploadListener="#{directLOABackingBean.fileUpload}" multiple="false"
+			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" widgetVar="approvalLetterUploadWV"
+			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+			invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}" 
+			update=":form:uploadedPage" label="#{lbl['lbl.btn.choose']}" oncomplete="uploadApprovalLetterDlg.hide();" >
+		</p:fileUpload>
+		<f:facet name="footer">
+		<div class="ppRightBtn">
+	    	<p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadApprovalLetterDlg.hide();" />
+  		</div>
+  		</f:facet>
+	</p:dialog>
+		
+	<p:confirmDialog id="deleteApprovalLetterDlg" widgetVar="deleteApprovalLetterDlg"  appendToBody="true" 
+		message="#{lbl['lbl.msg.confirm.delete']}" 	severity="alert"  closable="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"
+			partialSubmit="true" 
+			action="#{directLOABackingBean.fileDelete}"
+			oncomplete="deleteApprovalLetterDlg.hide();"  update="uploadedPage"/>
+			<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteApprovalLetterDlg.hide();" />	
+		</div>
+	</p:confirmDialog>
+	
+	<p:dialog id="approvalLetterAlert" widgetVar="approvalLetterAlertDlg"
+		header="#{lbl['lbl.txt.alert']}" resizable="false" width="500"
+		modal="true">
+			<p:panel>				
+				<table>
+					<tr>
+						<td>
+							<h:graphicImage value="/css/images/design/exclamation.png" style="margin-top: 3px" />
+							<p:spacer width="10"></p:spacer>
+							<ui:fragment>
+								<h:outputText value="#{lbl['lbl.sc.approval.letter.alert']}" style="margin-top: 3px" escape="false"/>								
+								<br />
+								<br />
+							</ui:fragment> 							
+						</td>
+					</tr>
+				</table>			
+				
+				<p:spacer height="1px" />
+				<div class="ppRightBtn" style="width: 100%">
+					<p:commandButton value="#{lbl['lbl.btn.ok']}"
+						id="approvalLetterAlertButton"
+						onclick ="approvalLetterAlertDlg.hide();"/>
+				</div>				
+			</p:panel>	
+		</p:dialog>
+	<!-- #25726 END -->
+</ui:composition>

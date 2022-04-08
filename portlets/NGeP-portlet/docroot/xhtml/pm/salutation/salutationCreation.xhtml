@@ -1,0 +1,41 @@
+<ui:composition	
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	
+   <p:panel header="#{lbl['lbl.pm.sa.title']}" toggleable="true">
+	<p:spacer height="10"></p:spacer>
+			
+	<table style="width:100%;">
+	  <!-- 12852 Start -->
+	  <tr>	  	
+		<td style="width:16%;"><p:outputLabel value="#{lbl['lbl.pm.sa.code']}" />
+			<p:outputLabel value="*" styleClass="mandatory" /></td>
+		<td><p:inputText id="SalutationCode" styleClass="ppDisplayTextS" style="text-transform:uppercase;width:7%" label="#{lbl['lbl.pm.sa.code']}"
+			value="#{salutationBackingBean.managedBean.pmSalutation.salutationCode}" required="true"
+		    disabled="#{!salutationBackingBean.managedBean.pmSalutation.brandNew}" size="30" maxlength="10" />
+		</td>
+	  </tr>
+	  <!-- 12852 End -->
+	  <tr>
+		<td><p:outputLabel value="#{lbl['lbl.pm.sa.name']}" />
+			<p:outputLabel value="*" styleClass="mandatory" /></td>
+		<td><p:inputText id="SalutationName" styleClass="ppDisplayTextM" required="true" value="#{salutationBackingBean.managedBean.pmSalutation.salutationName}" 
+			 size="30" maxlength="100" label="#{lbl['lbl.pm.sa.name']}" />
+	  </td>
+	  </tr>
+	   <tr> 
+		<td><p:outputLabel value="#{lbl['lbl.pm.search.status']}" /></td>
+     	<td><p:selectOneMenu style="width:178px;margin-bottom:5px;" value="#{salutationBackingBean.managedBean.pmSalutation.recordStatusFlg}"
+     			disabled="#{salutationBackingBean.managedBean.pmSalutation.brandNew}" > 
+    	    	<f:selectItems value="#{salutationBackingBean.getStatusList()}"></f:selectItems>   	   
+    	    </p:selectOneMenu></td>				
+	    </tr>
+	</table>
+   </p:panel>	
+</ui:composition>

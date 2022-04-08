@@ -1,0 +1,167 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+	<p:outputPanel id="supDocPan">
+		<!--	#28776 - start
+		<h:panelGroup
+			rendered="#{backingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_OFFLINE}">
+
+			<ui:include
+				src="/xhtml/sm/shared/mofRegistration/offlineSupportingDocsForm.xhtml" />
+			<c:choose>
+				<c:when
+					test="#{backingBean.managedBean.smAppl.applCategoryType == 'S'}">
+					<div class="nav-wrapper">
+						<table style="width: 100%">
+							<tr>
+								<td>
+									<div align="left" style="width: 99%">
+										<p:commandButton value="#{lbl['lbl.sm.prev.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+											actionListener="#{backingBean.setTabValue('8','7')}"
+											rendered="#{backingBean.managedBean.showMachineryEquipmentPanel or backingBean.managedBean.showTravelSoftwarePanel}"
+											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
+											update=":form" />
+										<p:commandButton value="#{lbl['lbl.sm.prev.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+											actionListener="#{backingBean.setTabValue('7','6')}"
+											rendered="#{!backingBean.managedBean.showMachineryEquipmentPanel and !backingBean.managedBean.showTravelSoftwarePanel}"
+											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)}"
+											update=":form" />
+									</div>
+								</td>
+								<td>
+									<p:outputPanel rendered="#{backingBean.managedBean.supplierUser}">
+										<div align="right" style="width: 99%">
+										<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
+											actionListener="#{backingBean.setTabValue('8','9')}"
+											rendered="#{backingBean.managedBean.showMachineryEquipmentPanel or backingBean.managedBean.showTravelSoftwarePanel}"
+											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION)}"
+											update=":form" />
+										<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
+											actionListener="#{backingBean.setTabValue('7','8')}"
+											rendered="#{!backingBean.managedBean.showMachineryEquipmentPanel and !backingBean.managedBean.showTravelSoftwarePanel}"
+											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION)}"
+											update=":form" />
+										</div>
+									</p:outputPanel>
+								</td>
+
+							</tr>
+						</table>
+					</div>
+				</c:when>
+				<c:otherwise>
+					<div class="nav-wrapper">
+						<table style="width: 100%">
+							<tr>
+								<td><div align="left" style="width: 99%">
+										<p:commandButton value="#{lbl['lbl.sm.prev.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+											actionListener="#{backingBean.setTabValue('6','5')}"
+											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
+											update=":form" />
+									</div></td>
+								<td>
+									<p:outputPanel rendered="#{backingBean.managedBean.supplierUser}">
+										<div align="right" style="width: 99%">
+										<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
+											actionListener="#{backingBean.setTabValue('6','7')}"
+											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION)}"
+											update=":form" />
+										</div>
+									</p:outputPanel>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</c:otherwise>
+			</c:choose>
+		</h:panelGroup>
+		-->
+		<h:panelGroup id="onSupGroup">
+		<!-- rendered="#{backingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}"> -->
+			<!-- #28776 - end -->
+			<ui:include
+				src="/xhtml/sm/shared/mofRegistration/onlineSupportingDocsForm.xhtml" />
+			<c:choose>
+				<c:when
+					test="#{backingBean.managedBean.smAppl.applCategoryType == 'S'}">
+					<div class="nav-wrapper">
+						<table style="width: 100%">
+							<tr>
+								<td>
+									<div align="left" style="width: 99%">
+										<p:commandButton value="#{lbl['lbl.sm.prev.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+											actionListener="#{backingBean.setTabValue('8','7')}"
+											rendered="#{backingBean.managedBean.showMachineryEquipmentPanel or backingBean.managedBean.showTravelSoftwarePanel}"
+											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
+											update=":form" />
+										<p:commandButton value="#{lbl['lbl.sm.prev.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+											actionListener="#{backingBean.setTabValue('7','6')}"
+											rendered="#{!backingBean.managedBean.showMachineryEquipmentPanel and !backingBean.managedBean.showTravelSoftwarePanel}"
+											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)}"
+											update=":form" />
+									</div>
+								</td>
+								<td>
+									<p:outputPanel rendered="#{backingBean.managedBean.supplierUser}">
+										<div align="right" style="width: 99%">
+											<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+												onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
+												actionListener="#{backingBean.setTabValue('8','9')}"
+												rendered="#{backingBean.managedBean.showMachineryEquipmentPanel or backingBean.managedBean.showTravelSoftwarePanel}"
+												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION)}"
+												update=":form" />
+											<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+												onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
+												actionListener="#{backingBean.setTabValue('7','8')}"
+												rendered="#{!backingBean.managedBean.showMachineryEquipmentPanel and !backingBean.managedBean.showTravelSoftwarePanel}"
+												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION)}"
+												update=":form" />
+										</div>
+									</p:outputPanel>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</c:when>
+				<c:otherwise>
+					<div class="nav-wrapper">
+						<table style="width: 100%">
+							<tr>
+								<td>
+									<div align="left" style="width: 99%">
+										<p:commandButton value="#{lbl['lbl.sm.prev.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+											actionListener="#{backingBean.setTabValue('6','5')}"
+											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
+											update=":form" />
+									</div>
+								</td>
+								<td>
+									<p:outputPanel rendered="#{backingBean.managedBean.supplierUser}">
+										<div align="right" style="width: 99%">
+										<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
+											actionListener="#{backingBean.setTabValue('6','7')}"
+											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION)}"
+											update=":form" />
+										</div>
+									</p:outputPanel>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</c:otherwise>
+			</c:choose>
+		</h:panelGroup>
+
+	</p:outputPanel>
+
+</ui:composition>

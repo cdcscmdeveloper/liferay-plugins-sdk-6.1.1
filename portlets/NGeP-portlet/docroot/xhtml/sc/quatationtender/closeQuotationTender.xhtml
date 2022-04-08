@@ -1,0 +1,138 @@
+<!-- 26095@hatta - start -->
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<ui:define name="contentSection">
+	        
+					<p:blockUI block=":form" widgetVar="blockWidget">
+						<p:graphicImage value="/css/images/icon_loadingLarge.gif" />
+					</p:blockUI>
+					<p:messages id="cancelMsg" showDetail="true" autoUpdate="true"
+					closable="true" showSummary="false" severity="error, info" />
+							<div class="ppRightBtn">
+							      <h:panelGroup id="closeQTBtns">
+									<p:commandButton value="#{lbl['lbl.btn.submit']}" action="#{qTDetailBB.submitCloseQTDetail}" 
+										process="@form" update="@all" onstart="blockWidget.show();" soncomplete="blockWidget.hide();" />
+								  </h:panelGroup>
+							</div> 
+						    <p:panel id="closeQTSubmitOnly" header="#{lbl['lbl.sc.qt.close.panel']}" toggleable="true">	
+								<table style="width: 100%">
+										<tr>
+										     <td>
+												<table style="width: 100%">
+													<tr>
+														<td class="TableFieldLeft" width="28%"><p:outputLabel value="#{lbl['lbl.sc.sf.justification']}" /></td>
+														<td class="TableFieldRight">
+															<p:dataGrid value="#{qTDetailBB.managedBean.qt.scCloseQTRemark}" 
+															    var="remarkVar" rowIndexVar="remarkIndex" columns="1"
+															    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" >
+															        <table>
+																		<tr>
+																			<td rowspan="2" valign="top"><h:graphicImage
+																					value="#{qTDetailBB.userImagePath(remarkVar.createdUser.loginId)}"
+																					height="30" width="30" /></td>
+																			<td width="5"></td>
+																			<td><h:outputText value="#{remarkVar.createdUser.userName}" />,
+																				<h:outputText id="remarkDates" value="#{remarkVar.changedDate}">
+																					<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+																				</h:outputText></td>
+																		</tr>
+																		<tr>
+																			<td></td>
+																			<td><p:inputTextarea cols="40" value="#{remarkVar.remark}"
+																					rendered="#{remarkVar.remarkId eq null}"/>
+																				<h:outputText value="#{remarkVar.remark}"
+																					rendered="#{remarkVar.remarkId ne null}"
+																					style="display: inline-block; width:220px;word-wrap: break-word;"/></td>
+																		</tr>
+																	</table>
+															</p:dataGrid>
+														</td>
+													</tr>
+												</table>    					
+										      </td>
+										 </tr>
+										 <tr>
+										      <td>
+									            <table style="width: 100%">
+													<tr>
+														<td class="TableFieldLeft" width="28%"><p:outputLabel value="#{lbl['lbl.sc.supporting.document']}" /> </td>
+														<td class="TableFieldRight">
+														     <p:commandButton  widgetVar="uploadButton" onclick="uploadButton.disable();" oncomplete="uploadCloseQTAttachDlg.show();return false;uploadButton.enable();" 
+																update="reportAttachment, uploadCloseQTAttachDlg" icon="ui-icon-upload" />
+																<ac:iconTooltip value="#{lbl['lbl.sc.approval.letter.tooltip']}" />
+														</td>
+													</tr>
+													<tr>
+														<td colspan="2">
+															<p:dataGrid id="reportAttachment" value="#{qTDetailBB.managedBean.qt.scCloseQTAttachment}"
+																var="attachFile" rowIndexVar="attachFileIndex" columns="1" style="width:100%"
+																emptyMessage ="#{lbl['lbl.datatable.msg.no.records.found']}">
+																<table>
+																	<tr>
+																		<td rowspan="2"><h:graphicImage value="#{qTDetailBB.userImagePath(attachFile.createdUser.loginId)}" height="30" width="30" /></td>
+																		<td width="5"></td>
+																		<td>
+																			<h:outputText value=" #{attachFile.createdUser.userName}"></h:outputText>,
+																			<h:outputText value="#{attachFile.createdDate}">									
+																				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
+																			</h:outputText>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td></td>
+																		<td>
+																			<h:commandLink value="#{attachFile.fileName}" styleClass="blue_font" action="#{qTDetailBB.downloadFile(attachFile)}" />
+																			<p:commandLink onsuccess="deleteCloseQTAttachDlg.show();" action="#{qTDetailBB.setAttachFileIndex(attachFileIndex)}">
+														   						<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
+														 	 				</p:commandLink>
+														 	 			</td>
+																	</tr>
+																</table>
+															</p:dataGrid>
+														</td>
+													</tr>
+												</table>
+									        </td>
+										</tr>
+									</table>
+									<p:dialog id="uploadCloseQTAttachDlg" widgetVar="uploadCloseQTAttachDlg" modal="true"  resizable="false"
+								     width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.txt.attach.file']}">
+											<p:ajax event="close" />
+				                            	<p:fileUpload style="display:inline;" oncomplete="uploadCloseQTAttachDlg.hide();"
+													fileUploadListener="#{qTDetailBB.handleCloseQTFileUpload}"  
+													mode="advanced" id="uploadCloseQTAttachId" multiple="false"
+													sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+													allowTypes="#{CommonConstants.FILE_UPLOAD_PDF_TYPE}"
+													invalidFileMessage="#{lbl['lbl.txt.upload.pdf.file']}"
+													invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
+													label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload']}" cancelLabel="#{lbl['lbl.btn.remove']}" 
+													update="reportAttachment" >
+												</p:fileUpload>
+											<f:facet name="footer">
+											<div class="ppRightBtn">
+											    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadCloseQTAttachDlg.hide();" />
+									  		</div>
+									   		</f:facet>
+								    </p:dialog>	
+						            <p:confirmDialog id="deleteCloseQTAttachDlg" widgetVar="deleteCloseQTAttachDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
+					                           severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+					                         <div class="ppRightBtn">
+							                     <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+							                         update=":form:reportAttachment" 
+							                         action="#{qTDetailBB.deleteCloseQTAttachmentAction(qTDetailBB.managedBean.attachFileIndex)}"
+							                         oncomplete="deleteCloseQTAttachDlg.hide();uploadButton.enable();"/>
+								                 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteCloseQTAttachDlg.hide();" type="button" />
+							                 </div>
+					                </p:confirmDialog>
+						  </p:panel>  
+	</ui:define>
+</ui:composition>
+<!-- 26095@hatta - end -->

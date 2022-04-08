@@ -1,0 +1,52 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.sm.sitevisit.printing.license.insurance']}">
+		<!-- 28775 - Site Visit Grouping Enhancement - 28775 --> 
+		<p:dataTable var="printingLicenseIns" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplate.smSvLicenseInsurances}">
+			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.sm.sitevisit.printing.license.insurance']}
+				</f:facet>
+				
+				<h:outputText value="#{svoSiteVisitBackingBean.getParameterDesc(printingLicenseIns.pmParameter)}"></h:outputText>
+			</p:column>
+
+			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.sm.sitevisit.printing.closing.date']}
+				</f:facet>
+				<p:calendar id="closingDateCalId" disabled="#{viewFlag}"
+						navigator="true"  label="Closing Date"
+						value="#{printingLicenseIns.expDate}"
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
+						yearRange="0:+99" 
+						mindate="#{CommonConstants.CURRENT_DATE}"
+						readonlyInput="true" size="30" showOn="button" />
+				<!-- #24964 -->
+				<ac:smFieldChangeAlertSVO
+						isShow="#{not empty printingLicenseIns.expDate and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
+						oriValue="#{svoSiteVisitBackingBean.getSVOLicense(printingLicenseIns).expDate}" 
+						currValue="#{printingLicenseIns.expDate}" 
+						alertValue="#{svoSiteVisitBackingBean.getSVOLicense(printingLicenseIns).expDate}"/>
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sm.sitevisit.printing.reference.no']}">
+				<p:inputText value="#{printingLicenseIns.pppmmNo}" maxlength="10" disabled="#{viewFlag}" />
+				<!-- #24964 -->
+				<ac:smFieldChangeAlertSVO
+						isShow="#{not empty printingLicenseIns.pppmmNo and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
+						oriValue="#{svoSiteVisitBackingBean.getSVOLicense(printingLicenseIns).pppmmNo}" 
+						currValue="#{printingLicenseIns.pppmmNo}" 
+						alertValue="#{svoSiteVisitBackingBean.getSVOLicense(printingLicenseIns).pppmmNo}"/>
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+</ui:composition>

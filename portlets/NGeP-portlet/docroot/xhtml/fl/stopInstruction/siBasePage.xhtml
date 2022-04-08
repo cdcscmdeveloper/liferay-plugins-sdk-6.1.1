@@ -1,0 +1,161 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="resourceSection">
+		<style>
+			.gfmasPanelCss>.ui-panel-content {
+				background: #f2dede !important;
+			}
+		</style>		
+	</ui:define>
+
+	<ui:define name="contentSection">
+		<h:panelGroup layout="block" class="ui-messages ui-widget" rendered="#{stopInstrBB.managedBean.stopInstr.pmStatus.statusId.longValue() == FulfilmentStatusCont.sdPendingApproval.longValue() 
+		and not empty stopInstrBB.managedBean.disciplinaryActionMessage}">
+		<h:panelGroup layout="block" class="ui-messages-info ui-corner-all">
+		<h:outputText class="ui-messages-info-icon" /><ul><li>
+		<h:outputText class="ui-messages-info-detail" /> #{stopInstrBB.managedBean.disciplinaryActionMessage} <p:commandLink id="sharedcommand" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" action="#{stopInstrBB.viewDisciplinaryAction(stopInstrBB.managedBean.smDisciplinaryAction)}" process="@this" partialSubmit="true" update=":form">#{lbl['lbl.sm.disciplinary.here']}</p:commandLink> #{lbl['lbl.sm.supplier.to.view.disc.action.details']}</li></ul>
+		</h:panelGroup>
+		</h:panelGroup>
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>
+		<ac:gpkiPopup 
+			textBeforeSign="#{stopInstrBB.managedBean.textBeforeSign}"
+			postSignAction="#{stopInstrBB.preSubmitStopInstruction(gpkiBackingBean.pmDigiSign)}"
+			enableAutoUpdate="#{stopInstrBB.enableAutoUpdate()}" />
+		<f:event listener="#{stopInstrBB.preRenderView}" type="preRenderView" />
+		<ac:spkiPopup id="spkiPopUp"
+			password="#{stopInstrBB.managedBean.spkiBackingBean.password}"
+   		 	challengeAns1="#{stopInstrBB.managedBean.spkiBackingBean.challengeAns1}"
+  		 	challengeQues1="#{stopInstrBB.managedBean.spkiBackingBean.challengeQues1}"
+			textBeforeSign="#{stopInstrBB.managedBean.textBeforeSign}"
+			postSignAction="#{stopInstrBB.preSubmitStopInstruction(spkiBackingBean.pmDigiSign)}"
+			enableAutoUpdate="#{stopInstrBB.enableAutoUpdate()}"/>
+		<c:if test="#{stopInstrBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or 
+					  stopInstrBB.managedBean.isHyperLinkPage()}">
+			<ac:title value="#{stopInstrBB.getParameterDesc(ParameterTypeConst.documentTypes, ParameterConst.doctypeStopDelivery)}" />
+		</c:if>		
+		<c:if test="#{ stopInstrBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmStopFulfilment}">
+			<ac:title value="#{stopInstrBB.getParameterDesc(ParameterTypeConst.documentTypes, stopInstrBB.managedBean.stopInstr.flFulfilmentOrder.docType)}" />
+		</c:if>					
+		<p:messages id="messages" showDetail="true" autoUpdate="#{stopInstrBB.managedBean.autoUpdate}" showSummary="false" closable="true" severity="error, info" />
+		<p:panel style="background:#f2dede !important; border:0px;" styleClass="gfmasPanelCss" rendered="#{stopInstrBB.managedBean.gfmasError}" >		
+			<table>
+				<tr>
+					<td>
+						<p:commandLink oncomplete="gfmasError.show();" immediate="true"
+							action="#{stopInstrBB.show1GFMASError()}"
+							rendered="#{stopInstrBB.managedBean.gfmasError}">
+							<p:graphicImage value="/css/images/design/exclamation.png" />
+						</p:commandLink>
+						<p:spacer width="2" />
+					</td>
+					<td>
+						<p:outputLabel value="#{stopInstrBB.managedBean.gfmasErrorDesc} #{lbl['lbl.fl.integration.click.for.exception.details']} (ERR-#{stopInstrBB.managedBean.gfmasErrorCode})" style="color: #C55751 !important; font-weight: normal !important"
+							rendered="#{stopInstrBB.managedBean.gfmasError}" />
+					</td>					
+				</tr>
+			</table>
+		</p:panel>			
+		<table style="width: 100%;">
+			<tr>
+				<td>
+					<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"  
+						action="#{stopInstrBB.backToPervious}"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+						rendered="#{stopInstrBB.managedBean.taskId==null}" />
+				</td>
+				<td colspan="4" style="text-align: right">
+					<c:if test='#{stopInstrBB.managedBean.buttonVal ne BpmOutcomeConstant.bpmView}'>
+					<p:commandButton
+							styleClass="ui-button"  value="#{lbl['lbl.btn.save']}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							update="@form"  
+							action="#{stopInstrBB.saveStopInstruction(BpmOutcomeConstant.bpmSave)}" />
+				</c:if>		
+					<ui:repeat var="bpmAction" value="#{stopInstrBB.managedBean.outComes}">
+						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+						<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							action="#{stopInstrBB.signingAction(bpmAction)}"  update="@form"  />
+					</ui:repeat> 
+					<c:if test='#{stopInstrBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmStopFulfilment}'>
+						<p:commandButton value="#{lbl['lbl.btn.stop.fulfilment']}" 
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							action="#{stopInstrBB.signingAction(BpmOutcomeConstant.bpmStopFulfilment)}"  update="@form">
+						</p:commandButton>
+					</c:if>
+					<c:if
+						test='#{stopInstrBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmView and !stopInstrBB.managedBean.isHyperLinkPage()}'>
+						<td colspan="4" style="text-align: right"><p:commandLink
+								value="#{lbl['lbl.td.doc.trackingDiary']}"
+								action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeStopDelivery,stopInstrBB.managedBean.stopInstr.stopInstrId)}"
+								immediate="true" />
+						</td>
+					</c:if>
+					<h:panelGroup id="printButtonSi"
+						rendered="#{(stopInstrBB.managedBean.stopInstr.pmStatus.statusId == FulfilmentStatusCont.sdApproved)}">
+						<td style="text-align: right; width: 30px;"><p:commandLink
+								value="#{lbl['lbl.btn.print']}" ajax="false">
+								<p:fileDownload
+									value="#{flDocumentBackingBean.generateReport(ParameterConst.doctypeStopDelivery,stopInstrBB.managedBean.stopInstr.stopInstrNo,flDocumentManagedBean.taxable)}" />
+							</p:commandLink></td>
+					</h:panelGroup>
+				</td>
+			</tr>
+		</table>
+		<ui:include src="siHeaderPage.xhtml" />
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<td width="20%" valign="top" class="sidemenutd">
+					<p:tabMenu styleClass="sidemenu"
+						activeIndex="#{stopInstrBB.managedBean.selectedTabIndex}">
+						<p:menuitem value="#{lbl['lbl.fl.menu.general']}" update="@form">
+							<f:setPropertyActionListener target="#{stopInstrBB.managedBean.selectedTabIndex}" value="0" />
+						</p:menuitem>
+						<p:menuitem value="#{lbl['lbl.fl.do.delivery.items']}" update="@form">
+							<f:setPropertyActionListener target="#{stopInstrBB.managedBean.selectedTabIndex}" value="1" />
+						</p:menuitem>
+						<p:menuitem value="#{lbl['lbl.fl.si.item.summary']}" update="@form" actionListener="#{stopInstrBB.onTabChange(2)}">
+							<f:setPropertyActionListener target="#{stopInstrBB.managedBean.selectedTabIndex}" value="2" />
+						</p:menuitem>
+					</p:tabMenu>
+				</td>
+				<td width="80%">
+					<p:outputPanel rendered="#{stopInstrBB.managedBean.selectedTabIndex == 0}">
+						<ui:include src="siGeneral.xhtml" />
+					</p:outputPanel> 
+					<p:outputPanel rendered="#{stopInstrBB.managedBean.selectedTabIndex == 1}">
+						<ui:include src="siDeliveryItems.xhtml" />
+					</p:outputPanel> 
+					<p:outputPanel rendered="#{stopInstrBB.managedBean.selectedTabIndex == 2}">
+						<ui:include src="siItem.xhtml" />
+					</p:outputPanel>
+				</td>
+			</tr>
+		</table>
+		<p:dialog id="gfmasErrorDlg" header="#{lbl['lbl.fl.integration.exception.details']}" widgetVar="gfmasError" width="80%"
+			showEffect="fade" hideEffect="fade" modal="true" resizable="false">
+			<table style="width: 100%">
+				<tr>
+					<td><p:messages id="gfmasMsg" showSummary="false" escape="false" showDetail="true" autoUpdate="true" closable="true" severity="error,info" /></td>
+				</tr>
+			</table>
+			<p:spacer height="2px"></p:spacer>
+			<div style="width: 100%; text-align: right">
+				<p:commandButton value="#{lbl['lbl.btn.close']}" oncomplete="gfmasError.hide();" />
+			</div>
+		</p:dialog>	
+		<ac:disciplinaryActionHistory voList="#{stopInstrBB.managedBean.disciplineVOs}" 
+		dialogHeader="#{lbl['lbl.sm.view.details.disciplinary.action.headerlbl']}" dialogWidth="800px" dialogHeight="400px" btnView="true" />				
+	</ui:define>
+</ui:composition>

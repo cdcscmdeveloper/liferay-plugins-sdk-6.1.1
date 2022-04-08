@@ -1,0 +1,986 @@
+<html>
+<head>
+	<style>
+		@page { size: A4 portrait;}
+		@page { @bottom-right { content: counter(page) " daripada " counter(pages); }}
+		
+		p {
+			text-align: justify;
+		}		
+				
+		.footer {
+			display: block; text-align: center;
+			position: running(footer);
+		}
+		
+		.text_family_header {
+			font-family: Arial;
+			font-size: 14.5px;
+			font-weight: bold;
+			line-height: 20px;
+		}
+		
+		.text_family {
+			font-family: Arial;
+			font-size: 14.5px;
+			font-weight: normal;
+			font-style: normal;
+			line-height: 20px;
+			text-decoration: none;
+			color: #333333;
+		}
+		
+		.text_family_medium {
+			font-family: Arial;
+			font-size: 11.5px;
+			font-weight: normal;
+			font-style: normal;
+			line-height: 20px;
+			text-decoration: none;
+			color: #333333;
+		}
+		
+		
+		.text_family_bold {
+			font-family: Arial;
+			font-weight: bold;
+			font-size: 14.5px;
+			line-height: 20px;
+		}
+		
+		.text_family_italic {
+			font-family: Arial;
+			font-style: italic;
+			font-size: 14.5px;
+			line-height: 20px;
+		}
+
+		.text_family_small_normal {
+			font-family: Arial;
+			font-weight: normal;
+			font-style: normal;
+			line-height: 20px;
+			text-decoration: none;
+			font-size: 9px;
+		}		
+		
+		.text_family_red {
+			font-family: Arial;
+			font-size: 14.5px;
+			font-weight: normal;
+			font-style: normal;
+			line-height: 20px;
+			text-decoration: none;
+			color: red;
+		}		
+		
+		.text_header_submenu {
+			font-family: Arial;
+			font-size: 14.5px;
+			font-weight: bold;
+			font-style: normal;
+			line-height: 20px;
+			text-decoration: underline;
+		}	
+		
+		.submenu_padding {
+			padding-left: 30px; width: 60%"
+		}
+
+		.text_indent {   
+			margin-left: 20px; 
+		}
+		
+		.break-after {
+			page-break-after:always;
+		}
+		
+		##26770 - start
+		.text_family_small_black {
+			font-family: Arial;
+			font-weight: normal;
+			font-style: normal;
+			line-height: 9px;
+			text-decoration: none;
+			font-size: 9px;
+			color: #333333;
+		}
+		##26770 - end
+	</style>
+</head>
+<body>
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+	<tbody class="text_family">
+	<tr>
+		<td align="center" class="text_family_header">SURAT SETUJU TERIMA</td>
+	</tr>
+	<tr>
+		<td align="center" class="text_family_header">(Bagi $procurementMode Bekalan/Perkhidmatan) <br /><br /><br /></td>
+	</tr>
+	<tr>
+		<td align="right" class="text_family">Rujukan Kami : ............................................</td>
+	</tr>
+	<tr>
+		<td align="right" class="text_family">Tarikh : ............................................</td>
+	</tr>
+	<tr>
+		<td class="text_family">
+			............................................<br/>
+			............................................<br/>
+			............................................<br/>
+			............................................<br/>
+			<br/>
+		</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<span class="text_family">Tuan, </span><br /> <br /> 
+			<span class="text_family_bold">$procurementMode Untuk : </span>
+			<span class="text_family">$title </span><br />  
+			<span class="text_family_bold"> No. $procurementMode : </span>
+			<span class="text_family">$qtNo</span>
+			<br/><br/>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<p>
+				Dengan ini dimaklumkan bahawa 
+				Kerajaan telah bersetuju menerima tawaran $procurementMode.toLowerCase() syarikat tuan 
+				dengan harga sebanyak Ringgit Malaysia .........................................................
+				(RM...........................) yang merupakan harga kontrak bagi tempoh kontrak selama 
+				............... tertakluk kepada dokumen $procurementMode.toLowerCase() yang menjadi 
+				sebahagian daripada perolehan ini dan Surat Setuju Terima ini berserta dengan 
+				<b><i>Lampiran A</i></b> kepada Surat Setuju Terima iaitu maklumat terperinci 
+				kontrak (selepas ini disebut sebagai "Surat ini").
+			</p>	
+
+			<p>
+				2.	Dengan pengakuan penerimaan Surat ini, suatu kontrak 
+				yang mengikat terbentuk antara Kerajaan dengan syarikat tuan. Satu dokumen kontrak 
+				hendaklah ditandatangani dalam kadar segera dengan memasukkan semua terma sebagaimana 
+				dokumen $procurementMode.toLowerCase() serta semua terma dalam <b><i>Lampiran A</i></b>. 
+				Sehingga dokumen kontrak tersebut ditandatangani, Surat ini hendaklah terus mengikat 
+				kedua-dua pihak.
+			</p>
+			<p style="margin-bottom:1px">
+				<span class="text_family">*3.    Harga kontrak adalah tidak termasuk cukai jualan selaras dengan pengecualian yang 
+				diberikan di bawah Perintah Cukai Jualan (Orang Yang Dikecualikan Daripada Pembayaran Cukai) 2018 
+				yang dengannya Sijil Di Bawah Perintah Cukai Jualan (Orang Yang Dikecualikan Daripada Pembayaran Cukai) 
+				2018 akan dikeluarkan sebelum sebarang pembayaran dibuat.</span>
+				
+			</p>
+			<span class="text_family_small_black">Perenggan 3 di atas adalah terpakai untuk Perolehan Bekalan yang diberi pengecualian cukai di bawah Perintah Cukai Jualan (Orang Yang Dikecualikan Daripada Pembayaran Cukai) 2018.</span>
+			<p style="margin-bottom:1px">
+				<span class="text_family" >*3.	Harga kontrak ini adalah termasuk peruntukan Kerajaan 
+				sebanyak ...................% Cukai jualan memandangkan barangan ini dikenakan cukai dan syarikat tuan telah berdaftar 
+				dengan Jabatan Kastam Diraja Malaysia (JKDM). Pembayaran cukai jualan ini adalah dikira berdasarkan 
+				tuntutan sebenar dan tarikh kuat kuasa pendaftaran syarikat tuan dengan JKDM. </span>
+				
+			</p>
+			<span class="text_family_small_black">Perenggan 3 di atas adalah terpakai untuk syarikat yang berdaftar dengan JKDM dan Barangan Dikenakan Cukai Dibawah Akta Cukai Jualan 2018.</span>	
+			<p>
+				*3.     Harga kontrak adalah tidak termasuk peruntukan Kerajaan sebanyak ...............% cukai jualan memandangkan syarikat tuan 
+				tidak berdaftar dengan Jabatan Kastam Diraja Malaysia (JKDM). Sekiranya syarikat tuan telah berdaftar dengan JKDM, 
+				tuan adalah dikehendaki untuk memaklumkan nombor pendaftaran dan tarikh kuat kuasanya kepada Kerajaan untuk pelarasan harga kontrak 
+				dalam tempoh tujuh (7) hari dari tarikh surat kelulusan JKDM. Pembayaran cukai jualan ini adalah dikira 
+				berdasarkan tuntutan sebenar dan tarikh kuat kuasa pendaftaran syarikat tuan dengan JKDM. <br/>
+				<span class="text_family_small_black">Perenggan 3 di atas adalah terpakai untuk syarikat yang tidak berdaftar dengan JKDM dan Barangan Dikenakan Cukai dibawah Akta Cukai Jualan 2018</span>
+			</p>
+			
+			<p style="margin-bottom:1px">
+				<span class="text_family">*3.      Harga kontrak adalah termasuk peruntukan Kerajaan sebanyak  ...................% cukai perkhidmatan 
+				memandangkan perkhidmatan ini dikenakan cukai dan syarikat tuan berdaftar dengan Jabatan Kastam Diraja Malaysia (JKDM). 
+				Pembayaran cukai perkhidmatan ini adalah dikira berdasarkan tuntutan sebenar dan tarikh kuat kuasa pendaftaran syarikat tuan dengan JKDM.</span>
+				
+			</p>
+			<span class="text_family_small_black">Perenggan 3 di atas adalah terpakai untuk perolehan dengan syarikat yang berdaftar di bawah JKDM dan Perkhidmatan Dikenakan Cukai di bawah  Akta Cukai Perkhidmatan 2018.</span>
+			<p>
+				*3.        Harga kontrak adalah tidak termasuk peruntukan Kerajaan sebanyak ..............% cukai perkhidmatan memandangkan 
+				syarikat tuan tidak berdaftar dengan Jabatan Kastam Diraja Malaysia (JKDM). Sekiranya syarikat tuan telah berdaftar dengan JKDM, 
+				tuan adalah dikehendaki untuk memaklumkan nombor pendaftaran dan tarikh kuat kuasanya kepada Kerajaan untuk pelarasan harga kontrak 
+				dalam tempoh tujuh (7) hari dari tarikh surat kelulusan JKDM. Pembayaran cukai perkhidmatan ini adalah dikira berdasarkan tuntutan sebenar 
+				dan tarikh kuat kuasa pendaftaran syarikat tuan dengan JKDM.<br/>
+				<span class="text_family_small_black">Perenggan 3 di atas adalah terpakai untuk perolehan dengan syarikat yang tidak berdaftar di bawah JKDM bagi Perkhidmatan Yang Dikenakan Cukai di bawah Akta Cukai Perkhidmatan 2018.</span>
+			</p>
+			
+			<p>
+				4.	Adalah dimaklumkan bahawa tiada pembekalan 
+				barang/ perkhidmatan boleh dibuat <b>melainkan</b> jika syarikat tuan telah mengemukakan kepada Kerajaan 
+				dokumen-dokumen berikut: 
+			</p>
+			
+			<div class="text_indent">
+				<table width="100%">
+								<tr class="text_family">
+									<td align="center" style="vertical-align: top;">*(a)</td>
+									<td  width="100%">suatu bon pelaksanaan yang tidak boleh dibatalkan yang berjumlah Ringgit Malaysia <br/>
+									<span> _________________(RM_________________);</span><br/>
+									</td>
+									
+									
+								</tr>
+								<tr class="text_family">
+									<td align="center" style="vertical-align: top;">*(b)</td>
+									<td style="text-align:justify;">suatu polisi insurans yang tidak boleh dibatalkan yang berjumlah Ringgit Malaysia _________________ (_________________) dan resit premium; </td>
+								</tr>	
+								<tr class="text_family">
+									<td align="center" style="vertical-align: top;"> (c)</td>
+									<td style="text-align:justify;">Nombor Kod Majikan di bawah Skim PERKESO dan/atau Polisi Pampasan Pekerja, </td>
+								</tr>
+								<tr class="text_family">
+									<td align="center" style="vertical-align: top;"> (d)</td>
+									<td style="text-align:justify;">Nombor Pendaftaran Kumpulan Wang Simpanan Pekerja (KWSP), </td>
+								</tr>
+				</table>
+			
+			</div>
+			
+			<p>
+				seperti yang ditetapkan dalam <b><i>Lampiran A</i></b> tidak melebihi *14/30 hari dari tarikh 
+				pengakuan penerimaan Surat ini oleh syarikat tuan. Apa-apa kegagalan dalam mematuhi kehendak di perenggan 
+				ini dalam tempoh masa yang ditetapkan, boleh mengakibatkan Surat ini terbatal dan Kerajaan tidaklah dengan 
+				apa-apa cara jua bertanggungan terhadap syarikat tuan <b>melainkan jika</b> penepian bertulis diberikan oleh orang 
+				yang diberi kuasa, bagi bekalan barang yang perlu dibuat dengan segera atau serta-merta apabila kelewatan itu 
+				akan memudarat dan menjejaskan perkhidmatan dan kepentingan awam.
+			</p>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<p>
+				5. Setelah pesanan/arahan dikeluarkan oleh Kerajaan, syarikat tuan 
+				dikehendaki melaksanakan pembekalan barang/ perkhidmatan dalam tempoh yang ditetapkan dan kualiti barang/ perkhidmatan 
+				tersebut hendaklah memuaskan hati serta memenuhi kehendak Kerajaan. Sekiranya syarikat tuan gagal melaksanakan 
+				pembekalan barang/ perkhidmatan dalam tempoh dan/atau kualiti yang ditetapkan, Kerajaan berhak membatalkan 
+				pesanan/arahan yang dikeluarkan dan/atau mengenakan <i>*Denda / Tolakan / Liquidated & Ascertained Damages (LAD)</i> 
+				seperti yang ditetapkan dalam <b><i>Lampiran A</i></b>.
+			</p>
+			
+			<p>
+				*6. Syarikat tuan juga adalah dikehendaki melaksanakan program 
+				<i>Professional Training and Education for Growing Entrepreneurs</i> (PROTÉGÉ) seperti yang ditetapkan oleh Kerajaan berdasarkan harga kontrak dengan bilangan 
+				minimum peserta PROTÉGÉ sebanyak ............... orang tanpa sebarang kos kepada Kerajaan. 
+				Bilangan minimum peserta yang diperlukan hendaklah dikira berdasarkan formula di bawah:
+			</p>
+			
+			<p>
+				<table width="50%" align="center" style="border-collapse: collapse;">
+					<tr>
+						<td class="text_family" style="border-bottom: 1px solid black;text-align: center;">
+							1% X Harga Kontrak*
+						</td>
+					</tr>
+					<tr >
+						<td class="text_family" style="border-top: 1px solid black;text-align: center;">
+							RM24,000**
+						</td>
+					</tr>
+				</table>
+				##26770 - start
+				<table width="80%" align="center">
+					<tr>
+						<td><span class="text_family_medium">*Bagi tujuan pengiraan PROTÉGÉ, Harga Kontrak adalah nilai tawaran yang dipersetujui tanpa cukai</span></td>
+					</tr>
+					<tr>
+						<td><span class="text_family_medium">**Elaun PROTÉGÉ (RM2,000 seorang x 12 )</span> </td>
+					</tr>
+				</table>
+				##26770 - end
+			</p>
+			
+			
+			<p>
+			<span class="text_family_small_black">Perenggan ini terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki untuk melaksanakan Program PROTÉGÉ berdasarkan PP/PK1.2.</span>
+			</p>
+			
+			<p style="margin-bottom:1px">
+				<span class="text_family" >*6.&nbsp;&nbsp;&nbsp;&nbsp;Syarikat tuan juga adalah digalakkan melaksanakan program <i>Professional Training and Education for Growing Entrepreneurs</i> (PROTÉGÉ)
+				seperti yang ditetapkan oleh Kerajaan.</span>
+			</p>
+			<span class="text_family_small_black">Perenggan ini terpakai sekiranya Harga Kontrak <b>di bawah nilai ambang</b> dan syarikat digalakkan untuk melaksanakan Program PROTÉGÉ berdasarkan PP/PK 1.2. </span>
+			<p>
+				7.	Bagi tujuan program PROTÉGÉ ini, syarikat tuan adalah dikehendaki untuk: 
+			</p>
+			
+			<div class="text_indent">
+				<table class="text_family" style="text-align:justify;">
+							<tr>
+								<td align="center" style="vertical-align: top;">(a)</td>
+								<td>mengemukakan Jadual Pelaksanaan Program PROTÉGÉ berdasarkan tempoh kontrak kepada Sekretariat PROTÉGÉ untuk kelulusan dalam tempoh dua (2) minggu selepas tarikh pengakuan penerimaan Surat ini oleh syarikat tuan;</td>
+							</tr> 
+							<tr style="border-spacing: 1em">
+								<td align="center" style="vertical-align: top;">(b)</td>
+								<td>melaksanakan program ini mengikut Jadual Pelaksanaan Program PROTÉGÉ yang diluluskan oleh Sekretariat PROTÉGÉ;</td>
+							</tr >
+							<tr style="border-spacing: 1em">
+								<td align="center" style="vertical-align: top;">(c)</td>
+								<td>mengemaskini maklumat berkaitan pengalaman syarikat melaksanakan program PROTÉGÉ dalam sistem ePerolehan di Kementerian Kewangan atau sistem  di Lembaga Pembangunan Industri Pembinaan Malaysia (CIDB), mengikut mana yang berkaitan;</td>
+							</tr>
+							<tr style="broder-spacing: 1em">
+								<td align="center" style="vertical-align: top;">(d)</td>
+								<td>mengemukakan sijil atau surat pengesahan oleh Sekretariat PROTÉGÉ kepada Agensi sebaik sahaja pelaksanaan program PROTÉGÉ selesai; dan</td>
+							</tr>
+							<tr style="broder-spacing: 1em">
+								<td align="center" style="vertical-align: top;">(e)</td>
+								<td>mengemukakan laporan berkaitan pelaksanaan program PROTÉGÉ kepada Sekretariat PROTÉGÉ. </td>
+							</tr>
+					</table>
+			</div>
+			
+			<p style="margin-bottom:1px">
+				<span class="text_family">*8.	Sekiranya syarikat tuan gagal mematuhi mana-mana terma 
+				di perenggan 6 dan 7 atau arahan oleh Kerajaan, Kerajaan berhak untuk tidak mempertimbangkan sebarang 
+				tawaran kontrak baharu atau pelanjutan kontrak pada masa hadapan kepada syarikat tuan.</span>
+			</p>
+			<span class="text_family_small_black">Perenggan ini terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki untuk melaksanakan Program PROTÉGÉ berdasarkan PP/PK1.2. Bagi Harga Kontrak di bawah nilai ambang, perenggan ini hendaklah dipotong</span>
+			<p>
+				9.	Syarikat tuan juga adalah diingatkan bahawa Kerajaan berhak 
+				untuk membatalkan Surat ini sekiranya:
+			</p>
+			
+			<div class="text_indent">
+				<table class="text_family" style="text-align:justify;">
+							<tr>
+								<td align="center" style="vertical-align: top;">(a)</td>
+								<td align="justify">syarikat tuan gagal mematuhi mana-mana terma di perenggan 4 dalam tempoh masa yang ditetapkan;</td>
+							</tr>
+							<tr>
+								<td align="center" style="vertical-align: top;">(b)</td>
+								<td>syarikat tuan gagal mematuhi mana-mana terma yang dinyatakan  dalam Surat Akuan Pembida Berjaya;</td>
+							</tr>
+							<tr>
+								<td align="center" style="vertical-align: top;">(c)</td>
+								<td>syarikat tuan telah membuat salah nyataan (<i>misrepresentation</i>) atau mengemukakan maklumat palsu semasa berurusan dengan Kerajaan bagi perolehan ini atau  melakukan apa-apa perbuatan lain, seperti memalsukan maklumat dalam Sijil Akuan Pendaftaran Syarikat, mengemukakan bon pelaksanaan atau dokumen lain yang palsu atau yang telah diubah suai;</td>
+							</tr>
+							<tr>
+								<td align="center" style="vertical-align: top;">(d)</td>
+								<td>syarikat tuan membenarkan Sijil Akuan Pendaftaran Syarikat disalahgunakan oleh individu/syarikat lain;</td>
+							</tr>
+							<tr>
+								<td align="center" style="vertical-align: top;">(e)</td>
+								<td>syarikat tuan terlibat dalam membuat pakatan harga dengan syarikat-syarikat lain atau apa-apa pakatan sepanjang proses $procurementMode.toLowerCase() sehingga dokumen kontrak ditandatangani; </td>
+							</tr>
+							<tr>
+								<td align="center" style="vertical-align: top;">(f)</td>
+								<td>syarikat tuan telah memberikan subkontrak sama ada sepenuhnya atau sebahagiannya pembekalan barang/perkhidmatan tanpa kelulusan Kerajaan terlebih dahulu;</td>
+							</tr>
+							<tr>
+								<td align="center" style="vertical-align: top;">(g)</td>
+								<td>syarikat tuan gagal membekalkan barang/ menyempurnakan perkhidmatan dalam tempoh yang ditetapkan seperti di <b><i>Lampiran A</i></b>;</td>
+							</tr>
+							<tr>
+								<td align="center" style="vertical-align: top;">(h)</td>
+								<td>syarikat tuan gagal mematuhi mana-mana terma/arahan di dalam dokumen $procurementMode.toLowerCase(); </td>
+							</tr>
+							<tr>
+								<td align="center" style="vertical-align: top;">(i)</td>
+								<td>syarikat tuan/ pemilik/ rakan kongsi/ pengarah telah disabitkan atas kesalahan jenayah di dalam atau luar Malaysia;</td>
+							</tr>
+							<tr>
+								<td align="center" style="vertical-align: top;">(j)</td>
+								<td>syarikat tuan digulungkan;</td>
+							</tr>
+							<tr>
+								<td align="center" style="vertical-align: top;">(k)</td>
+								<td>syarikat tuan membekal barang-barang yang tidak tulen, bukan baharu atau yang terpakai;</td>
+							</tr>
+							<tr>
+								<td align="center" style="vertical-align: top;">(l)</td>
+								<td>syarikat gagal mematuhi spesifikasi pembekalan/skop perkhidmatan yang ditetapkan dan/atau <i>Service Level Agreement</i>;</td>
+							</tr>
+							<tr>
+								<td align="center" style="vertical-align: top;">(m)</td>
+								<td>syarikat tuan tidak mendapat kelulusan daripada Kerajaan terlebih dahulu bagi apa-apa penjualan atau pemindahan ekuiti sepanjang tempoh kontrak ini berkuat kuasa; atau</td>
+							</tr>
+							<tr>
+								<td align="center" style="vertical-align: top;">(n)</td>
+								<td>terdapat perkara yang melibatkan kepentingan awam atau keselamatan dan kepentingan negara.</td>
+							</tr>
+						</table>
+			
+			</div>
+			
+			<p>
+				10.	Sekiranya Surat ini dibatalkan atas alasan seperti yang ditetapkan 
+				di perenggan 9, Kerajaan tidak akan bertanggungan terhadap apa-apa kerugian syarikat tuan termasuk kerugian masa hadapan.
+			</p>
+			<p>
+				11.	Bersama-bersama Surat ini disertakan Surat Akuan Pembida Berjaya 
+				dan Surat Akuam Sumpah Syarikat seperti di <b><i>Lampiran B</i></b> dan <b><i>Lampiran C</i></b> untuk 
+				ditandatangani oleh syarikat tuan dan dikembalikan bersama-sama dengan Surat ini. 
+			</p>
+			<p>
+				12.	Surat ini dihantar kepada syarikat tuan dalam tiga (3) salinan. 
+				Sila kembalikan ke pejabat ini salinan asal dan kedua berserta lampiran yang berkaitan yang telah ditandatangani 
+				dengan sempurna oleh syarikat tuan dan saksi syarikat tuan tidak melebihi *3/7/14 hari dari tarikh Surat ini 
+				diterima untuk tindakan kami selanjutnya. Apa-apa kegagalan dalam mematuhi kehendak di perenggan ini dalam 
+				tempoh masa yang ditetapkan boleh mengakibatkan Surat ini terbatal dan Kerajaan tidaklah dengan apa-apa jua 
+				bertanggungan terhadap syarikat tuan. 
+			</p>
+			<br /> <br />
+		</td>
+	</tr>
+	<tr>
+		<td class="text_family">
+			<br /> <br />Sekian, terima kasih. <br /> <br />
+		</td>
+	</tr>
+	<tr>
+		<td class="text_family_header">"BERKHIDMAT UNTUK NEGARA"<br /> <br /></td>
+	</tr>
+	<tr>
+		<td class="text_family">Saya yang menjalankan amanah, <br /> <br /><br/><br/>
+			........................................................<br /> 
+			(Nama Penuh Pegawai) <br /> 
+			Jawatan Pegawai <br />
+		<br />
+		</td>
+	</tr>	
+	</tbody>
+</table>
+<div class="break-after"><br/></div>
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+	<tbody>
+	<tr>
+		<td align="left" colspan="4" class="text_family_header">
+			PENGAKUAN PENERIMAAN SURAT SETUJU TERIMA DAN LAMPIRAN YANG BERKAITAN OLEH SYARIKAT<br /> <br />
+		</td>
+	</tr>
+	<tr>
+		<td colspan="4">
+			<p>
+				<span class="text_family">Dengan ini disahkan bahawa yang bertandatangan di bawah ini mengakui penerimaan Surat ini 
+				dan lampiran yang berkaitan yang rujukannya ialah ............................................................. bertarikh ...................................................... dan bersetuju dengan terma dan syarat yang terkandung dalam 
+				Surat ini tanpa syarat yang mana salinan kepada Surat ini telah pun disimpan, dan selanjutnya disahkan bahawa 
+				tiada apa-apa terma, syarat atau stipulasi tambahan kepada yang terkandung dalam dokumen $procurementMode.toLowerCase() 
+				dan Surat ini telah dikenakan.</span>
+			</p>
+			<br/><br/><br/>
+		</td>
+	</tr>
+	<tr>
+		<td align="left" width="30%" class="text_family">
+			....................................................<br/>
+			<span class="text_family">Nama Penuh</span><br/>
+			<span class="text_family">No. Kad Pengenalan</span><br/>
+			<span class="text_family">Alamat</span><br/>
+			<span class="text_family">Tarikh</span><br/>
+		</td>
+		<td align="left" width="20%" class="text_family">
+			<br/>
+			<span class="text_family">:</span><br/>
+			<span class="text_family">:</span><br/>
+			<span class="text_family">:</span><br/>
+			<span class="text_family">:</span><br/>
+		</td>
+		<td align="left" width="30%" class="text_family">
+			....................................................<br/>
+			<span class="text_family">Nama Penuh Saksi</span><br/>
+			<span class="text_family">No. Kad Pengenalan</span><br/>
+			<span class="text_family">Alamat</span><br/>
+			<span class="text_family">Tarikh</span><br/>
+		</td>
+		<td align="left" width="20%" class="text_family">
+			<br/>
+			<span class="text_family">:</span><br/>
+			<span class="text_family">:</span><br/>
+			<span class="text_family">:</span><br/>
+			<span class="text_family">:</span><br/><br/>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="4">
+			<br/><br/><br/>
+			<span class="text_family">Meterai atau Cap Syarikat</span><br/><br/><br/>
+			<span class="text_family"><i>*potong mana yang tidak berkenaan</i></span>
+		</td>
+	</tr>
+	</tbody>
+</table>
+
+<div class="break-after"><br/></div>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+
+	<tr>
+		<td align="right" class="text_family"><b><i>Lampiran A</i></b></td>
+	</tr>
+	<tr>
+		<td align="center" class="text_family_header">BUTIRAN KONTRAK<br /> <br /></td>
+	</tr>
+	<tr>
+		<td align="center" class="text_family">$title<br /> <br /></td>
+	</tr>
+</table>
+	
+<table width="100%">
+	<tr>
+		<td colspan="3">
+			<table>
+				<tr>
+					<td align="center" style="vertical-align: top;" class="text_family_header">1. </td>
+					<td class="text_header_submenu">Pendaftaran dengan Suruhanjaya Syarikat Malaysia (SSM) Atau Pendaftaran Koperasi Dengan Suruhanjaya Koperasi Malaysia (SKM) (jika berkaitan)</td>
+				</tr>
+			</table>		
+		</td>
+	</tr>
+	<tr>
+		<td align="left" class="submenu_padding"><span class="text_family">1.1 No. Pendaftaran</span></td>
+		<td style="width: 5%">:</td>
+		<td style="width: 55%" class="text_family">.....................................................................</td>
+	</tr>
+	<tr>
+		<td align="left" class="submenu_padding"><span class="text_family">1.2 Tempoh Sah Laku </span></td>
+		<td class="text_family">:</td>
+		<td class="text_family">.....................................................................</td>
+	</tr>
+
+	<tr>
+		<td colspan="3" >
+			<table>
+				<tr>
+					<td align="center" style="vertical-align: top;" class="text_family_header">2. </td>
+					<td class="text_header_submenu">Pendaftaran dengan Kementerian Kewangan (jika berdaftar)</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td align="left" class="submenu_padding"><span class="text_family">2.1 No. Pendaftaran</span></td>
+		<td class="text_family">:</td>
+		<td class="text_family">.....................................................................</td>
+	</tr>
+	<tr>
+		<td align="left" class="submenu_padding"><span class="text_family">2.2 Tempoh Sah Laku </span></td>
+		<td class="text_family">:</td>
+		<td class="text_family">.....................................................................</td>
+	</tr>
+	<tr>
+		<td align="left" class="submenu_padding"><span class="text_family">2.3 Kod Bidang </span></td>
+		<td class="text_family">:</td>
+		<td class="text_family">.....................................................................</td>
+	</tr>
+	<tr>
+		<td align="left" class="submenu_padding"><span class="text_family">2.4 Taraf Syarikat </span></td>
+		<td class="text_family">:</td>
+		<td class="text_family">.....................................................................</td>
+	</tr>
+	<tr>
+		<table>
+			<td align="left" class="submenu_padding"><span class="text_family">2.5</span></td>
+			<td align="left"><span class="text_family">Tempoh Sah Laku Taraf Bumiputera </span></td>
+		</table>
+		<td class="text_family">:</td>
+		<td class="text_family">.....................................................................</td>
+	</tr>
+
+	<tr>
+		<td colspan="3">
+			<table >
+				<tr>
+					<td align="center" style="vertical-align: top;" class="text_family_header">3. </td>
+					<td class="text_header_submenu">Pendaftaran Cukai Jualan dan Cukai Perkhidmatan (CJCP) dengan Jabatan	Kastam Diraja Malaysia (jika berdaftar), sekiranya berkaitan</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td align="left" class="submenu_padding"><span class="text_family">3.1 No. Pendaftaran</span></td>
+		<td class="text_family">:</td>
+		<td class="text_family">.....................................................................</td>
+	</tr>
+	<tr>
+		<td align="left" class="submenu_padding"><span class="text_family">3.2 Tarikh Kuat Kuasa </span></td>
+		<td class="text_family">:</td>
+		<td class="text_family">.....................................................................</td>
+	</tr>
+	<tr>
+		<td colspan="3">
+			<table>
+					<tr>
+						<td align="center" style="vertical-align: top;" class="text_family_header">4. </td>
+						<td class="text_header_submenu">Harga dan Tempoh Kontrak</td>
+					</tr>
+			</table>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td>
+				<td align="left" class="submenu_padding"><span class="text_family">4.1</span></td>
+				<td align="left"><span class="text_family">Harga $procurementMode.toLowerCase() (butiran harga seperti di <b><i>Lampiran A1</i></b>)</span></td>
+		</td>
+		<td class="text_family">:</td>
+		<td class="text_family">RM ........................................</td>
+	</tr>
+	<tr valign="top">
+		<td>
+			<table>
+				<td align="left" class="submenu_padding"><span class="text_family">4.2</span></td>
+				<td align="left" ><span class="text_family">Peruntukan Cukai Jualan/Cukai Perkhidmatan (sekiranya berkaitan)</span></td>
+			</table>
+			
+		</td>
+		<td class="text_family">:</td>
+		<td class="text_family">RM ........................................</td>
+	</tr>
+	<tr valign="top">
+		<td>
+			<table>
+				<td align="left" class="submenu_padding"><span class="text_family">4.3</span></td>
+				<td align="left" ><span class="text_family">Fi Perkhidmatan ePerolehan(sekiranya berkaitan) </span></td>
+			</table>
+		</td>
+		<td class="text_family">:</td>
+		<td class="text_family"> *0.4% / 0.8% </td>
+	</tr>
+	<tr valign="top">
+		<td align="left" class="submenu_padding"><span class="text_family">4.4 Harga Kontrak </span></td>
+		<td class="text_family">:</td>
+		<td class="text_family">RM ........................................</td>
+	</tr>
+	<tr valign="top">
+		<td align="left" class="submenu_padding"><span class="text_family">4.5 Tempoh Kontrak </span></td>
+		<td class="text_family">:</td>
+		<td class="text_family">..................................................................... </td>
+	</tr>
+
+	<tr valign="top">
+		<td align="left" class="submenu_padding"><span class="text_family">4.6 Tarikh Mula Kontrak </span></td>
+		<td class="text_family">:</td>
+		<td class="text_family">.....................................................................</td>
+	</tr>
+	<tr valign="top">
+		<td align="left" class="submenu_padding"><span class="text_family">4.7 Tarikh Tamat Kontrak </span></td>
+		<td class="text_family">:</td>
+		<td class="text_family">.....................................................................</td>
+	</tr>
+
+	<tr>
+		<td colspan="3" >
+			<table>
+				<tr>
+					<td align="center" style="vertical-align: top;" class="text_family_header">5. </td>
+					<td class="text_header_submenu">Tempoh dan Jadual Pembekalan Barang/Penyempurnaan Perkhidmatan</td>
+				</tr>
+			</table>		
+		</td>
+	</tr>
+	<tr>
+		<td align="left" style="padding-left: 20px;" colspan="3">
+						<span class="text_family">*Senarai item, kuantiti, jenis perkhidmatan dan/atau tempoh serta jadual pembekalan/penyempurnaan
+						perkhidmatan yang ditetapkan seperti di <b><i>Lampiran A2</i></b></span><br/>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="3"  style="padding-left: 20px; padding-top:10px;"><span class="text_family"><b><i>Lampiran A2</i></b> adalah untuk menyatakan tempoh atau jadual pembekalan/jadual perkhidmatan mengikut tawaran syarikat dan disediakan oleh Agensi</span></td>
+	</tr>
+
+	<tr>
+		<td colspan="3">
+		<table>
+			<tr>
+				<td align="center" style="vertical-align: top;" class="text_family_header">6. </td>
+				<td class="text_header_submenu">Spesifikasi Pembekalan/Skop Perkhidmatan/Service Level Agreement (SLA) (sekiranya berkaitan)</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td align="left" class="submenu_padding" colspan="3">
+			<span class="text_family">
+				Spesifikasi Pembekalan/Skop Perkhidmatan/SLA yang	ditetapkan seperti di <b><i>Lampiran A3</i></b>
+			</span>
+		</td>
+	</tr>
+	
+</table>	
+	
+<div class="break-after"><br/></div>
+<table width="100%">
+	<tr>
+		<td colspan="3">
+			<table>
+				<tr>
+					<td align="center" style="vertical-align: top;" class="text_family_header">7. </td>
+					<td class="text_header_submenu">*Bon Pelaksanaan</td>
+				</tr>
+			</table>	
+		</td>
+	</tr>
+	<tr>
+		<td align="left" class="submenu_padding"><span class="text_family">7.1	Kadar Bon Pelaksanaan</span></td>
+		<td style="width: 3%" class="text_family">:</td>
+		<td style="width: 55%" class="text_family">.....................................................................</td>
+	</tr>
+	<tr>
+		<td align="left" class="submenu_padding"><span class="text_family">7.2	Formula Bon Pelaksanaan</span></td>
+		<td class="text_family">:</td>
+		<td class="text_family">.....................................................................</td>
+	</tr>
+	<tr>
+		<td align="left" class="submenu_padding"><span class="text_family">7.3	Nilai Bon Pelaksanaan</span></td>
+		<td class="text_family">:</td>
+		<td class="text_family">.....................................................................</td>
+	</tr>
+	<tr valign="top">
+		<td align="left" class="submenu_padding"><span class="text_family">7.4	Bentuk Bon Pelaksanaan</span></td>
+		<td class="text_family">:</td>
+		<td class="text_family" style="text-align:justify">
+			Jaminan Bank/ Bank Islam/ Bank Pembangunan Malaysia Berhad; atau Jaminan Syarikat Kewangan; atau Jaminan Insurans/ Takaful
+		</td>
+	</tr>
+	<tr valign="top">
+		<td align="left" class="submenu_padding"><span class="text_family">7.5	Tempoh Sah Laku</span></td>
+		<td class="text_family">:</td>
+		<td class="text_family">
+			Dari tarikh kuat kuasa kontrak sehingga 12 bulan selepas 
+			tarikh tamat kontrak atau tarikh obligasi terakhir mengikut mana yang 
+			terkemudian. <br/><br/>
+		</td>
+	</tr>
+	<tr>
+		<td align="left" class="submenu_padding" colspan="3">
+			<span class="text_family">Mengikut format yang ditetapkan oleh Kerajaan seperti di <b><i>Lampiran A4</i></b></span>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td align="left" class="submenu_padding" colspan="3"><span class="text_family">
+			<b><i>Lampiran A4</i></b> akan disediakan oleh Agensi berdasarkan format PP/PK4</span>
+		</td>
+	</tr>			
+	
+	<tr>
+		<td colspan="3">
+			<table>
+				<tr>
+					<td align="center" style="vertical-align: top;" class="text_family_header">8. </td>
+					<td class ="text_header_submenu">No. Kod Majikan PERKESO/No. Pendaftaran KWSP/*Polisi Insurans (jika berkaitan)</td>
+				</tr>
+			</table>
+		</td>
+	</tr>			
+	
+	<tr>
+		<td align="left" class="submenu_padding"><span
+						class="text_family">8.1 No. Kod Majikan PERKESO </span></td>
+					<td class="text_family">:</td>
+					
+					<td>
+						<table border="0" cellpadding="0" cellspacing="0" width="100%">
+							 <tr>
+								<td class="text_family">...................................................</td>
+							 </tr>
+						</table>
+					</td>
+					
+	</tr>
+	<tr valign="top">
+					<td align="left" class="submenu_padding"><span
+						class="text_family">8.2	 No. Pendaftaran KWSP</span></td>
+					<td class="text_family">:</td>
+					<td>
+						<table border="0" cellpadding="0" cellspacing="0" width="100%">
+							 <tr>
+								 <td class="text_family">...................................................</td>
+							 </tr>
+						</table>
+					</td>
+	</tr>
+	<tr>
+		<td align="left" class="submenu_padding"><span class="text_family">*8.3	Nilai Polisi</span></td>
+		<td class="text_family">:</td>
+		<td class="text_family">RM ........................................</td>
+	</tr>	
+
+	<tr>
+		<td align="left" class="submenu_padding"><span class="text_family">*8.4 Tempoh Perlindungan</span></td>
+		<td class="text_family">:</td>				
+		<td class="text_family">Meliputi tempoh kontrak</td>
+	</tr>	
+
+	<tr>
+		<td align="left" colspan="3">
+			<table>
+				<tr>
+					<td align="center" style="vertical-align: top;" class="text_family_header">9. </td>
+					<td class="text_header_submenu">Kenaan *Denda/ Tolakan/ <i>Liquidated & Ascertained Damages</i> (LAD)</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><span class="text_family_small_black">(Lewat/Gagal bekal barang/perkhidmatan atau tidak menepati spesifikasi) </span></td>
+				</tr>
+				
+			</table>
+		</td>
+	</tr>				
+	<tr>
+		<td align="left" class="submenu_padding"><span class="text_family">9.1	Formula </span></td>
+		<td class="text_family">:</td>
+		<td class="text_family">.....................................................................</td>
+	</tr>			
+	<tr>
+		<td align="left" class="submenu_padding"><span class="text_family">9.2	Kadar sehari </span></td>
+		<td class="text_family">:</td>
+		<td class="text_family"><span class="text_family">RM ........................................</span></td>
+	</tr>				
+	<tr>
+		<td colspan="3" >
+			<table>
+				<tr>
+					<td align="center" style="vertical-align: top;" class="text_family_header" >10. </td>
+					<td class="text_header_submenu"><i>*Professional Training and Education for Growing Entrepreneurs </i> (PROTÉGÉ) (jika berkaitan)</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><span class="text_family_small_black">(Bagi perolehan yang telah melebihi nilai ambang berdasarkan PP/PK1.2)</span></td>
+				</tr>
+				
+				
+			</table>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td>
+			<table>
+				<td align="left" class="submenu_padding"><span
+			class="text_family">10.1</span>
+				</td>
+					<td align="left"><span
+					class="text_family">Tertakluk kepada Pelaksanaan Program PROTÉGÉ </span>
+				</td>
+			</table>
+		</td>
+		<td class="text_family">:</td>
+		<td>
+			<span class="text_family">Ya / Tidak</span>
+			<span class="text_family_small_black">(Berdasarkan nilai ambang yang ditetapkan dalam PP/PK1)</span>
+		</td>
+	</tr>	
+	<tr valign="top">
+		<td>
+			<table>
+				<td align="left" class="submenu_padding"><span class="text_family">10.2</span></td>
+				<td align="left" ><span class="text_family">Bilangan Minimum peserta PROTÉGÉ</span></td>
+			</table>
+		</td>
+		<td>:</td>
+		<td>
+			<table width="100%" align="left" style="border-collapse: collapse;">
+						<tr>
+							<td>
+								<span class="text_family">........... peserta</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<span class="text_family">Formula : </span><span class="text_family" style="text-decoration:underline;padding-left:15px;"> 1% X Harga Kontrak*</span>
+							</td>
+						</tr>
+						<tr>
+							<td style="text-align: center;">
+								<span class="text_family" >RM24,000**</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<span class="text_family_small_black">*Bagi tujuan pengiraan PROTÉGÉ, Harga Kontrak adalah
+							nilai tawaran yang dipersetujui tanpa cukai</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<span class="text_family_small_black">**Elaun PROTÉGÉ (RM2,000 seorang x 12 bulan)</span>
+							</td>
+						</tr>
+					</table>
+		</td>
+	</tr>			
+	<tr>
+		<td colspan="3" class="text_family"><br/><br/><br/><br/><br/><br/>*<i>potong mana
+				yang tidak berkenaan</i></td>
+	</tr>			
+</table>
+	
+<div class="break-after"><br/></div>
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+		<td align="left" class="text_header_submenu"><b>Salinan Kepada :</b><br/><br/>
+		</td>
+	</tr>
+	<tr>
+		<td align="left">
+				
+				
+				<p style="text-align:left;">
+					<span class="text_family">
+						Ketua Setiausaha Perbendaharaan<br/>
+						Bahagian Perolehan Kerajaan<br/>
+						Aras 4, Blok Utara, Kompleks Kementerian Kewangan<br/>
+						Presint 2, Pusat Pentadbiran Kerajaan Persekutuan,<br/>
+						<b>62592 PUTRAJAYA</b><br/>
+						(u.p : Ketua Seksyen Dasar Perolehan)
+					</span>
+				</p>
+				
+				<p style="text-align:left;">
+					<span class="text_family">
+						Ketua Pegawai Eksekutif<br/>
+						Ibu Pejabat Lembaga Hasil Dalam Negeri Malaysia<br/>
+						Menara Hasil<br/>
+						Aras 18, Persiaran Rimba Permai, Cyber 8<br/>
+						<b>63000 CYBERJAYA</b><br/>
+						(u.p : Pengarah Jabatan Pematuhan Cukai)
+					</span>
+				</p>
+				
+				<p style="text-align:left;">
+					<span class="text_family">
+						Ketua Pengarah Kastam<br/>
+						Ibu Pejabat Kastam Diraja Malaysia<br/>
+						Bahagian Cukai Dalam Negeri (SST)<br/>
+						Aras 3 -7, Blok A, Menara Tulus<br/>
+						No. 22, Persiaran Perdana , Presint 3<br/>
+						<b>61200 PUTRAJAYA</b><br/>
+						(u.p.:Pengarah Bahagian Cukai Dalam Negeri (SST)) 
+					</span>
+				</p>
+				
+				<p style="text-align:left;">
+					<span class="text_family">
+						Sekretariat<br/>
+						Majlis Perundingan Gaji Negara<br/>
+						Kementerian Sumber Manusia<br/>
+						Aras 7, Blok D3, Kompleks D<br/>
+						<b>62530 PUTRAJAYA</b><br/>
+					</span>
+				</p>
+				
+				<p style="text-align:left;">
+					<span class="text_family">
+						Professional Training and Education for Growing Entrepreneurs (PROTÉGÉ)<br/>
+						Aras 2, Blok E4/5, Parcel E<br/>
+						Kementerian Pembangunan Usahawan<br/>
+						Pusat Pentadbiran Kerajaan Persekutuan<br/>
+						<b>62668 PUTRAJAYA</b><br/>
+						(u.p.: Ketua Sekretariat PROTÉGÉ) 
+					</span>
+				</p>
+				## #26770 - start
+				<p style="text-align:left;">
+				   <span class="text_family">
+						Ketua Pegawai Eksekutif <br/>
+						Kumpulan Wang Simpanan Pekerja<br/>
+						Jabatan Penguatkuasaan <br/>
+						Tingkat 13, Bangunan KWSP, Jalan Raja Laut <br/>
+						<b>50350 KUALA LUMPUR</b><br/>
+						(u.p.: Ketua Unit Forensik Majikan dan Hubungan Luar, Seksyen Operasi)
+					</span>
+				</p>
+				## #26770 - end		
+			</td>
+	</tr>
+</table>
+</body>
+</html>

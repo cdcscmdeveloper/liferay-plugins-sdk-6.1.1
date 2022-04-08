@@ -1,0 +1,75 @@
+<ui:composition	
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+		
+   <p:panel id="profCertDetailsPanel" header="#{lbl['lbl.pm.search.title']}" toggleable="true">
+				
+	<table style="width:100%;">
+		 <tr>
+		<td><p:outputLabel value="#{lbl['lbl.pm.search.profcert']}" />
+			<p:outputLabel value="*" styleClass="mandatory" /></td>
+	  	<td style="padding: 5px 0px;">
+	  		<p:selectBooleanCheckbox value="#{profcertifiedbodyBackingBean.managedBean.certBody.professionalBody}" />
+	  		<h:outputText value="#{lbl['lbl.pm.pc.profBody']}" />&#160;&#160;&#160;
+	  		<p:selectBooleanCheckbox value="#{profcertifiedbodyBackingBean.managedBean.certBody.certifiedBody}" >
+	  			<p:ajax event="change" process="@this" partialSubmit="true" update="@this,:form:profCertDetailsPanel" />
+	  		</p:selectBooleanCheckbox>
+	  		<h:outputText value="#{lbl['lbl.pm.pc.certBody']}" /></td>	  	
+	  </tr>
+	  <!-- 12852 Start-->
+	  <tr>
+		<td style="width:14%;"><p:outputLabel value="#{lbl['lbl.pm.search.codes']}" />
+			</td>
+		<td><p:inputText style="text-transform:uppercase;width:8%" value="#{profcertifiedbodyBackingBean.managedBean.certBody.bodyCode}" 
+			  disabled="true" size="20" maxlength="12" />
+		</td>
+	  </tr>
+	  <!-- 12852 End-->
+	  <tr>	
+		<td><p:outputLabel value="#{lbl['lbl.pm.pc.certifiedby']}" />
+			<p:outputLabel value="*" styleClass="mandatory" /></td>
+		<td><p:inputText value="#{profcertifiedbodyBackingBean.managedBean.certBody.bodyName}" 
+			size="40" maxlength="255" style="width: 375px;"
+			disabled="#{!profcertifiedbodyBackingBean.managedBean.certBody.brandNew}">
+				<p:ajax event="blur" process="@this" partialSubmit="true" update="@this" />
+			</p:inputText>
+		</td>
+	  </tr>
+	  <tr>
+		<td><p:outputLabel value="#{lbl['lbl.pm.pc.certname']}" />
+			<h:panelGroup  id="certnameMandatoryId" rendered="#{profcertifiedbodyBackingBean.managedBean.certBody.certifiedBody}">
+				<p:outputLabel value="*" styleClass="mandatory" />
+			</h:panelGroup>
+			</td>
+		<td><p:inputTextarea row="40" cols="80" 
+			value="#{profcertifiedbodyBackingBean.managedBean.certBody.description}" 
+			 maxlength="255" style="width: 375px;">
+			 	<p:ajax event="blur" process="@this" partialSubmit="true" update="@this" />
+			 </p:inputTextarea></td>
+	  </tr>  
+	  <tr>
+		<td style="width:14%;"><p:outputLabel value="#{lbl['lbl.pm.pc.glp']}" />
+			<p:outputLabel value="*" styleClass="mandatory" /></td>
+	  	<td>      
+	  		<p:selectOneRadio id="centraloptions" value="#{profcertifiedbodyBackingBean.managedBean.certBody.glp}">  
+				<f:selectItems value="#{profcertifiedbodyBackingBean.getYesNoOptions()}" />
+				<p:ajax process="@this" event="change" partialSubmit="true" update="@this" />
+           	</p:selectOneRadio> </td>	  	
+	  </tr>
+	   <tr> 
+		<td><p:outputLabel value="Status " /></td>
+     	<td><p:selectOneMenu id="selectStatusId" style="width:178px;margin-bottom:5px;" value="#{profcertifiedbodyBackingBean.managedBean.certBody.recordStatusFlg}"
+     			disabled="#{profcertifiedbodyBackingBean.managedBean.certBody.brandNew}">   
+			  <f:selectItems value="#{profcertifiedbodyBackingBean.getCertStatusList()}" /> 
+			  <p:ajax event="change" process="@form" partialSubmit="true"
+							update="@form" />
+    	    </p:selectOneMenu></td>				
+	    </tr>
+	</table>
+   </p:panel>	
+</ui:composition>

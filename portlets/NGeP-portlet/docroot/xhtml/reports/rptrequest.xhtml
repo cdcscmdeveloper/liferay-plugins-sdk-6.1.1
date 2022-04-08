@@ -1,0 +1,175 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+	<ui:define name="resourceSection">
+	
+		<style type="text/css">
+			
+			.ui-scrollpanel-native{
+				background-color : #FFFFFF !important;
+			}
+			
+			.ui-menubutton .ui-state-default .ui-icon {
+			    background-image: url("/css/images/design/icon_trash.png") !important; 
+			}
+			
+		</style>
+	
+	</ui:define>
+	
+	<ui:define name="contentSection">
+			
+	  	<p:remoteCommand name="onload" action="#{rptRequestBackingBean.getLatestStatusCodeForRequests()}" partialSubmit="true" process="@this" update="@form"/>
+	  
+		<p:remoteCommand name="stop" update="@form" />
+	  
+		<p:messages id="messages" autoUpdate="true" closable="true" />
+		
+		<table width="100%" border="0" cellpadding="0" cellspacing="0">
+	
+			<tr>
+	
+				<td width="42%" valign="top">
+					
+					<h:outputText styleClass="instruction" value="#{lbl['lbl.rpt.quegen.instruction']}" escape="false" style="margin-left:12px;" />
+					
+					<table width="100%">
+					
+						<tr style="background-color:#f4f4f4;">
+						
+							<td>
+<!-- 								<p:commandButton action="target" icon="ui-icon-arrowthick-1-w" onclick="window.history.back();"/> -->
+							</td>
+										
+							<td style="text-align: right;">
+							
+								<p:commandButton value="#{lbl['lbl.btn.refresh']}"
+								   action="#{rptRequestBackingBean.getLatestStatusCodeForRequests()}"
+								   update=":form:rptRequestTable, :form:deleteBtn"/> 
+									
+								<p:commandButton id="deleteBtn" value="#{lbl['lbl.btn.delete']}"
+									disabled="#{rptRequestBackingBean.managedBean.deleteButtonHide}"
+									oncomplete="confirmation.show();" update=":form:rptRequestTable, :form:deleteBtn"/>
+							</td>
+							
+						</tr>
+
+						<tr>
+						
+							<td colspan="2" width="100%" valign="top">
+							
+								<p:dataTable
+									value="#{rptRequestBackingBean.rptRequestDataModel}" var="rptRequest"
+									id="rptRequestTable" rows="5" rowIndexVar="index" width="100%"
+									rowKey="#{rptRequest}" lazy="true" 
+									selection="#{rptRequestBackingBean.managedBean.selectedRPTRequests}">
+
+									<ac:paginator for="rptRequestTable" />
+	
+									<p:column  selectionMode="multiple" style="width:2%;"/>
+									
+									<p:column headerText="#{lbl['lbl.rpt.reportName']}" style="padding-left:8px!important;">
+										<h:outputText value="#{rptRequestBackingBean.getReportName(rptRequest.reportCode)}"/>
+									</p:column>
+									
+									<p:column headerText="#{lbl['lbl.td.doc.no']}" style="text-align:center;">
+    									<h:outputText value="#{fn:replace(rptRequestBackingBean.getDocumentsNo(rptRequest.requestId),',','&lt;/br&gt;')}" escape="false"/> 																				
+									</p:column>
+	
+									<p:column headerText="#{lbl['lbl.rpt.requestId']}" style="text-align:center;">
+										<h:outputText value="#{rptRequest.requestId}" style="text-align:center;"/>
+									</p:column>
+																	
+									<p:column headerText="#{lbl['lbl.rpt.reportModule']}" style="text-align:center;">
+										<h:outputText value="#{rptRequestBackingBean.getReportModule(rptRequest.reportCode)}"/>
+									</p:column>
+									
+	      							<p:column headerText="#{lbl['lbl.txt.dateTime']}"
+										style="text-align: center;width:10%; padding:5px!important; ">
+
+										<h:outputText value="#{rptRequest.createdDate}">
+											<f:convertDateTime pattern="dd-MM-yyyy" />
+										</h:outputText>
+										
+										<br/>
+										
+										<h:outputText value="#{rptRequest.createdDate}">
+											<f:convertDateTime pattern="hh:mm:ss a" />
+										</h:outputText>
+
+									</p:column>
+									
+									<p:column headerText="#{lbl['lbl.txt.docStatus']}" style="text-align:center;">
+										<h:outputText value="#{rptRequestBackingBean.getTrimmedStatusCode(rptRequest.statusCode)}" style="text-align:center;"/>
+									</p:column>
+									
+									<p:column headerText="#{lbl['lbl.txt.action']}" style="text-align:center;">
+										
+										<p:commandLink rendered="#{rptRequestBackingBean.isSuccess(rptRequest.statusCode)}" action="#{rptRequestBackingBean.attachmentDownload(rptRequest)}" ajax="false"
+										    onclick="setTimeout('location.reload();', 1000);"
+											style="text-align:center;">
+											<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/download.png" id="downloadImage"
+												style="margin-right:2px;" height="16px" width="16px"/>
+											<p:tooltip id="tooltip" for="downloadImage">
+												<p:outputLabel escape="false" value="#{lbl['lbl.rpt.download']}"  />
+											</p:tooltip>	
+											
+										</p:commandLink>
+										
+										
+									</p:column>
+									
+									<p:ajax event="rowSelectCheckbox" listener="#{rptRequestBackingBean.rowSelectUnselectCheckbox}" update=":form:rptRequestTable, :form:deleteBtn"/>
+									<p:ajax event="rowUnselectCheckbox" listener="#{rptRequestBackingBean.rowSelectUnselectCheckbox}" update=":form:rptRequestTable, :form:deleteBtn"/>
+									<p:ajax event="rowUnselect" listener="#{rptRequestBackingBean.rowSelectUnselectCheckbox}" update=":form:rptRequestTable, :form:deleteBtn"/>
+									<p:ajax event="rowSelect" listener="#{rptRequestBackingBean.rowSelectUnselectCheckbox}" update=":form:rptRequestTable, :form:deleteBtn"/>
+									<p:ajax event="toggleSelect" listener="#{rptRequestBackingBean.rowSelectUnselectCheckbox}" update=":form:rptRequestTable, :form:deleteBtn"/>
+								
+								</p:dataTable>
+								
+							</td>
+						
+						</tr>
+					
+					</table>
+				
+				</td>
+			
+			</tr>
+			
+		</table>
+		
+		<p:confirmDialog message="#{lbl['lbl.btn.dialog.cofirm.delete.msg']}" header="#{lbl['lbl.btn.dialog.cofirm.header']}" widgetVar="confirmation">
+	
+			<div align="right">
+	
+				<p:commandButton id="conf" value="#{lbl['lbl.btn.dialog.cofirm.yes']}"
+					actionListener="#{rptRequestBackingBean.removeRPTRequests}" update="@form"
+					oncomplete="confirmation.hide()" />
+	
+				<p:commandButton id="decline" value="#{lbl['lbl.btn.dialog.cofirm.no']}"
+					onclick="confirmation.hide()" />
+	
+					<h:inputHidden id="rowIndex"></h:inputHidden>
+			</div>
+	
+		</p:confirmDialog>
+		
+		<p:dialog id="errorDialog"  widgetVar="errorDialog" header="Report server down" onHide="jQuery('#someId').hide();" onShow="jQuery('#someId').show();" draggable="false" closable="true" resizable="false">
+			<table>
+				<tr>
+					<td> The connection to report server is interrupt.</td>
+				</tr>
+			</table>
+		</p:dialog>
+	
+	</ui:define>
+	
+</ui:composition>

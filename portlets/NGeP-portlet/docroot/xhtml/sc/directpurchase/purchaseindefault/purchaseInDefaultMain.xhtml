@@ -1,0 +1,193 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	<ui:define name="contentSection">
+		<c:if test="#{purchaseInDefaultBackingBean.managedBean.titleChecker}">
+			<ac:title value="#{lbl['lbl.sc.purchase.in.default']}" />
+		</c:if>
+		<p:messages showDetail="true"
+			autoUpdate="#{purchaseInDefaultBackingBean.managedBean.autoUpdate}"
+			closable="true" severity="error, info" showSummary="false" />
+
+		<ui:param name="isPendingSubmissionStatus"
+			value="#{purchaseInDefaultBackingBean.managedBean.pidStatus.statusId eq DPStatusConstants.pidPendingSubmission}" />
+		<ui:param name="isPendingVerification"
+			value="#{purchaseInDefaultBackingBean.managedBean.pidStatus.statusId eq DPStatusConstants.pidPendingVerification}" />
+		<!-- #9133 - start -->
+		<ui:param name="isPidPendingRevision"
+			value="#{purchaseInDefaultBackingBean.managedBean.pidStatus.statusId eq DPStatusConstants.pidPendingRevision}" />
+		<ui:param name="isPidGenerated" value="#{purchaseInDefaultBackingBean.isPidGenerated()}" />
+		<!-- #9133 - end -->
+
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+
+		<!-- 20190417@asyrafhaziq_12095 - Start -->
+		<ui:param name="reject" value="REJECT" />
+		<ui:param name="rejectPID" value="rejectPID" />
+		<!-- #9133 - start -->
+		<ui:param name="draft" value="DRAFT" />
+		<!-- #9133 - end -->
+		<ac:cancelRejectPopup id="#{rejectPID}" widget="rejectPID" width="30%"
+			height="100"
+			okAction="#{purchaseInDefaultBackingBean.approverAction(reject)}"
+			title="#{lbl['lbl.reject.details']}"
+			content="#{lbl['lbl.reject.dialog.confirm.message']}" update="@this" />
+		<!-- 20190417@asyrafhaziq_12095 - End -->
+
+		<ac:gpkiPopup
+			textBeforeSign="#{purchaseInDefaultBackingBean.textBeforeSign}"
+			postSignAction="#{purchaseInDefaultBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" 
+			enableAutoUpdate="#{purchaseInDefaultBackingBean.enableAutoUpdate()}" />
+
+		<c:if
+			test="#{purchaseInDefaultBackingBean.managedBean.taskId eq null}">
+			<table style="width: 100%">
+				<tr>
+					<td align="right">
+					  <p:commandButton immediate="true"
+							partialSubmit="true" process="@this"
+							value="#{lbl['lbl.btn.item.search']}"
+							rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag}"
+							style="float:left;"
+							action="#{purchaseInDefaultBackingBean.backToPrevious}" />
+							
+						 <p:commandLink
+							value="#{lbl['lbl.td.doc.trackingDiary']}" style="float:right;"
+							rendered="#{purchaseInDefaultBackingBean.managedBean.trackingDairyView}"
+							action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypePurchaseInDefault, purchaseInDefaultBackingBean.managedBean.purchaseInDefault.purchaseInDefaultId)}"
+							immediate="true" /> 
+							
+						<p:commandButton
+							immediate="true" value="#{lbl['lbl.btn.back']}"
+							partialSubmit="true" process="@this" style="float:left;"
+							rendered="#{!purchaseInDefaultBackingBean.managedBean.pidBtnFlag}"
+							action="#{purchaseInDefaultBackingBean.backToPrevious}" /> 
+						<!-- #9133 - start -->
+						<p:commandButton value="#{lbl['lbl.btn.save']}"
+							action="#{purchaseInDefaultBackingBean.submitPurchaseInDefault(draft)}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							update="@form" process="@all" partialSubmit="true"
+							rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag}" /> 
+						<!-- #9133 - end --> 
+						<!-- #28865 change submitPurchaseInDefault() to dialogMsgCheck()-->	
+						<p:commandButton
+							value="#{lbl['lbl.btn.submit']}"
+							action="#{purchaseInDefaultBackingBean.dialogMsgCheck}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							update="@form" process="@all" partialSubmit="true"
+							rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag}" />
+						<!-- #9133 - start -->	
+						<p:commandButton
+							immediate="true" value="#{lbl['lbl.btn.cancel']}"
+							partialSubmit="true" process="@this" style="float:right;"
+							rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag and !isPidGenerated}"
+							action="#{purchaseInDefaultBackingBean.backToPrevious}" /> 	
+						<!-- #9133 - end -->
+					</td>
+				</tr>
+			</table>
+		</c:if>
+		<!-- #9133 - start -->
+		<c:if
+			test="#{purchaseInDefaultBackingBean.managedBean.taskId ne null and isPendingSubmissionStatus}">
+			<table style="width: 100%">
+				<tr>
+					<td align="right">
+						<!-- #9133 - start (hide button back on pending submission status)-->						
+						<!-- <p:commandButton
+							immediate="true" value="#{lbl['lbl.btn.back']}"
+							partialSubmit="true" process="@this" style="float:left;"
+							rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag}"
+							action="#{purchaseInDefaultBackingBean.backToPrevious}" /> -->
+						<!-- #9133 - end (hide button back on pending submission status)-->	
+						<p:commandButton value="#{lbl['lbl.btn.save']}"
+							action="#{purchaseInDefaultBackingBean.submitPurchaseInDefault(draft)}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							update="@form" process="@all" partialSubmit="true"
+							rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag}" />
+						<p:commandButton
+							value="#{lbl['lbl.btn.submit']}"
+							action="#{purchaseInDefaultBackingBean.dialogMsgCheck}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							update="@form" process="@all" partialSubmit="true"
+							rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag}" />
+						<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+							action="#{purchaseInDefaultBackingBean.beforeCancelPid()}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							update="@form" process="@all" partialSubmit="true"
+							rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag and isPidGenerated}" />
+					</td>
+				</tr>
+			</table>
+		</c:if>
+		<!-- #9133 - end -->
+		<c:if
+			test="#{purchaseInDefaultBackingBean.managedBean.taskId ne null and !isPendingSubmissionStatus}"> <!-- #9133 - add condition not isPendingSubmissionStatus-->
+			<table style="width: 100%">
+				<tr>
+					<td align="right">
+					<!-- #9133 - start -->
+					<p:commandButton value="#{lbl['lbl.btn.save']}"
+							action="#{purchaseInDefaultBackingBean.updatePID()}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							update="@form" process="@all" partialSubmit="true"
+							rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag}" />
+					<!-- #9133 - end -->
+					<ui:repeat var="bpmAction"
+							value="#{purchaseInDefaultBackingBean.managedBean.outComes}">
+							<ui:param name="buttonLabel"
+								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+
+							<ui:param name="isReject" value="${bpmAction == 'REJECT'}" />
+
+							<p:commandButton value="#{lbl[buttonLabel]}" process="@all"
+							    onstart="#{isReject ? '' : 'blockWidget.show();'}" oncomplete="#{isReject ? '' : 'blockWidget.hide();'}" 
+								styleClass="ui-button" update="#{isReject ? '@form' : ''}"
+								partialSubmit="true"
+								actionListener="#{purchaseInDefaultBackingBean.beforeApproverAction(bpmAction)}" />
+
+						</ui:repeat></td>
+				</tr>
+			</table>
+		</c:if>
+		<!-- #28865 start -->
+		<p:confirmDialog message="#{lbl['lbl.ct.pid.confirm.msg']}"
+			severity="alert" widgetVar="submitSuppDlg" closable="true"
+			appendToBody="true" header="#{lbl['lbl.sc.submit.confirmation']}">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
+					action="#{purchaseInDefaultBackingBean.submitPurchaseInDefault(null)}"
+					onstart="submitSuppDlg.hide();blockWidget.show();"
+					oncomplete="blockWidget.hide();" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
+					onclick="submitSuppDlg.hide();" />
+			</div>
+		</p:confirmDialog>
+		<!-- #28865 end -->
+		<!-- #9133 - start -->
+		<p:confirmDialog message="#{lbl['lbl.cancel.dialog.confirm.message']}"
+			severity="alert" widgetVar="cancelDlg" closable="true"
+			appendToBody="true" header="#{lbl['lbl.sc.cancel.confirm']}">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					actionListener="#{purchaseInDefaultBackingBean.updateBPMTasks('CANCEL')}"
+					oncomplete="cancelDlg.hide();" partialSubmit="true" process="@this"
+					immediate="true" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					oncomplete="cancelDlg.hide();" />
+			</div>
+		</p:confirmDialog>
+		<!-- #9133 - end -->
+		<ui:include
+			src="/xhtml/sc/directpurchase/purchaseindefault/purchaseInDefaultHeader.xhtml" />
+		<ui:include src="/xhtml/sc/directpurchase/purchaseindefault/purchaseInDefault.xhtml" />
+	</ui:define>
+</ui:composition>

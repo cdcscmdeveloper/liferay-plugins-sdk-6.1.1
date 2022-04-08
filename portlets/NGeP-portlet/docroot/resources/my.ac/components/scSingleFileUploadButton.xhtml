@@ -1,0 +1,71 @@
+<ui:composition
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:p="http://primefaces.org/ui">
+
+<cc:interface>
+	<cc:attribute name="attachment" required="true" />
+	<cc:attribute name="readonly" default="false" />
+	<cc:attribute name="encrypted" default="false" />
+	<cc:attribute name="encryptionKey" required="#{cc.attrs.encrypted}" />
+	<cc:attribute name="popupWidgetVar" required="true" />
+	<cc:attribute name="rowIndex" default="0" />
+	<cc:attribute name="deleteFileUploadListener" />
+	<cc:attribute name="update" default="#{cc.attrs.id}" />
+	<cc:actionSource name="actionEvent" targets="#{cc.attrs.id}Btn #{cc.attrs.id}Del" />
+</cc:interface>
+
+<cc:implementation>
+	<h:panelGroup id="#{cc.attrs.id}">
+		<p:commandButton id="#{cc.attrs.id}Btn"
+			icon="ui-icon-upload"
+			partialSubmit="true" process="@this" update="@([id$=#{cc.attrs.popupWidgetVar}Id])"
+			oncomplete="#{cc.attrs.popupWidgetVar}.show();return false;"
+			disabled="#{cc.attrs.readonly}"
+			rendered="#{empty cc.attrs.attachment}">
+			<cc:insertChildren />
+		</p:commandButton>
+		
+		<h:panelGroup rendered="#{!empty cc.attrs.attachment}">
+			<c:choose>
+				<c:when test="#{cc.attrs.encrypted}">
+					<h:commandLink value="#{cc.attrs.attachment.fileName}" styleClass="blue_font"
+						immediate="true"
+						action="#{scRemarkAndAttachmentBackingBean.downloadEncryptedFile(cc.attrs.attachment, cc.attrs.encryptionKey)}" />
+				</c:when>
+				<c:otherwise>
+					<h:commandLink value="#{cc.attrs.attachment.fileName}" styleClass="blue_font"
+						immediate="true"
+						action="#{scRemarkAndAttachmentBackingBean.downloadFile(cc.attrs.attachment)}" />
+				</c:otherwise>
+			</c:choose>
+			<p:commandLink id="#{cc.attrs.id}Del"
+				process="@this" partialSubmit="true" update="@([id$=#{cc.attrs.popupWidgetVar}delAttPopupId])"
+				oncomplete="#{cc.attrs.popupWidgetVar}delAttPopup.show();" 
+				rendered="#{!cc.attrs.readonly}">
+				<h:graphicImage
+					value="#{CommonUIConstant.imagePathUptoDesign}/icon_trash.png"
+					styleClass="tasklist_title1" />
+				<f:setPropertyActionListener
+					target="#{scRemarkAndAttachmentBackingBean.selectedComponentId}"
+					value="#{cc.attrs.id}#{cc.attrs.rowIndex}" />
+				<cc:insertChildren />
+			</p:commandLink>
+		</h:panelGroup>
+	</h:panelGroup>
+		
+	
+	<p:remoteCommand name="#{cc.attrs.id}#{cc.attrs.rowIndex}deleteSelAttachment"
+			partialSubmit="true" process="@this" update="#{cc.attrs.update}"
+			action="#{scRemarkAndAttachmentBackingBean.deleteSingleAttachmentAction(cc.attrs.attachment, cc.attrs.deleteFileUploadListener, cc.attrs.popupWidgetVar)}"
+			rendered="#{!cc.attrs.readonly}">
+			<c:if test="#{empty cc.attrs.deleteFileUploadListener}">
+				<f:setPropertyActionListener target="#{cc.attrs.attachment}" value="#{null}" />
+			</c:if>
+	</p:remoteCommand>
+</cc:implementation>
+</ui:composition>

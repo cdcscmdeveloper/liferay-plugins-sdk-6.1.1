@@ -1,0 +1,303 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.fl.req.details']}" toggleable="true">
+		<table style="width: 100%">
+			<tr>
+				<td style="width: 136px;"><p:outputLabel value="#{lbl['lbl.fl.ministry']}" /></td>
+				<td><p:inputText size="66" id="ministry" style="width:417px"
+						value="#{receivedNoteBackingBean.retrieveMinistryByOrgProfileId(receivedNoteBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgProfileId, receivedNoteBackingBean.managedBean.fulfilmentRequest.agApprovedDate)}"
+						disabled="true" /></td>
+			</tr>
+			<tr>
+				<td valign="top"><p:outputLabel
+						value="#{lbl['lbl.fl.pegawai.pengawal']}" /></td>
+				<td><p:inputTextarea rows="2" cols="67" readonly="true" autoResize="false" style="resize:none;" 
+						value="#{receivedNoteBackingBean.retrievePegawaiPengawalByOrgProfileId(receivedNoteBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId, receivedNoteBackingBean.managedBean.fulfilmentRequest.agApprovedDate)}"/>
+				</td>
+			</tr>
+			<tr>
+				<td valign="top"><p:outputLabel
+						value="#{lbl['lbl.fl.jabatan']}" /></td>
+				<td><p:inputTextarea rows="2" cols="67" readonly="true" autoResize="false" style="resize:none;" 
+						value="#{receivedNoteBackingBean.retrieveJabatanByOrgProfileId(receivedNoteBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId, receivedNoteBackingBean.managedBean.fulfilmentRequest.agApprovedDate)}"/>
+				</td>
+			</tr>
+			<tr>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
+				<td width="460px"><p:inputTextarea rows="2" cols="67" readonly="true" autoResize="false" style="resize:none;" 
+						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgCode} #{receivedNoteBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}"/>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"/></td>
+			</tr>
+			<tr>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
+				<td width="460px"><p:inputTextarea rows="2" cols="67" readonly="true" autoResize="false" style="resize:none;" 
+						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgCode} #{receivedNoteBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgName}"/>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/></td>
+
+			</tr>
+			<tr>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.do.title']}" /></td>
+				<td><p:inputTextarea cols="67" rows="4"
+						maxlength="500"
+						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.title}"
+						style=" margin-bottom:5px;" disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.procur.type.category']}" /></td>
+				<td><p:inputText size="66" disabled="true"
+						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.procurementTypeCategory ==null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.getParameterDesc(receivedNoteBackingBean.managedBean.fulfilmentRequest.procurementTypeCategory)}" /></td>				
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.fl.do.requisitioner']}" /></td>
+				<td><p:inputText size="66"
+						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.requistioner.userName}"
+						disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.fl.approver.name']}" /></td>
+				<td><p:inputText size="66"
+						value="#{receivedNoteBackingBean.managedBean.flApprover.userName}"
+						disabled="true" /></td>
+			</tr>
+		</table>
+	</p:panel>
+	<p:panel header="#{lbl['lbl.fl.del.ord.info']}" toggleable="true">
+	<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}"/>
+		<table style="width: 100%">
+			<tr>
+				<td style="width: 150px;" rowspan="4" valign="top"><p:outputLabel
+						value="#{lbl['lbl.fl.supp.address']}" /></td>
+				<td style="width: 350px;" rowspan="4"><p:inputTextarea
+						id="delAddrText1" cols="57" rows="7" maxlength="500"
+						style=" margin-bottom:5px;" disabled="true"
+						autoResize="false"
+						value="#{receivedNoteBackingBean.getFullAddress(receivedNoteBackingBean.managedBean.fulfilmentNote.flDeliveryOrder.flDeliveryAddress.flAddress)}" />
+				</td>
+				<td style="width: 200px;"><p:outputLabel
+						value="#{lbl['lbl.fl.frn.dl.ordered.date']}" /></td>
+
+				<td><p:inputText size="10" disabled="true" value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flDeliveryOrder.createdDate}">
+				<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</p:inputText><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ordered.date']}"/>
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.frn.acknowledged.date']}" rendered="#{receivedNoteBackingBean.managedBean.acknowledgeDate != null}"/></td>
+				<td><p:inputText size="10" disabled="true" value="#{receivedNoteBackingBean.managedBean.acknowledgeDate}" rendered="#{receivedNoteBackingBean.managedBean.acknowledgeDate != null}">
+				<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</p:inputText><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.frn.subb.date']}" rendered="#{receivedNoteBackingBean.managedBean.acknowledgeDate != null}"/></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.fl.frn.act.received.date']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td style="width: 190px;"><p:calendar mode="popup" showOn="button" id="receivedDate" label="#{lbl['lbl.fl.frn.act.received.date']}" required="true"
+						disabled="#{receivedNoteBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmCancel or  receivedNoteBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or !bpmTasklistBackingBean.managedBean.claim}"
+						rendered="#{receivedNoteBackingBean.managedBean.buttonVal ne BpmOutcomeConstant.bpmCancel or  receivedNoteBackingBean.managedBean.buttonVal ne BpmOutcomeConstant.bpmView}"
+						readonlyInput="true"
+						size="10"
+						value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.receivedDate}"
+						maxdate="#{receivedNoteBackingBean.getCurrentDate()}"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+						<p:ajax event="dateSelect" listener="#{receivedNoteBackingBean.reCalculateGstUnitPriceforAjax(receivedNoteBackingBean.managedBean.fulfilmentNote)}" 
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form" />
+					</p:calendar><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.frn.actul.recv.date']}"/>
+				</td>
+				<td><p:message for="receivedDate" display="icon" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.fl.exp.del.date']}" /></td>
+				<td style="width: 190px;">
+					<p:inputText size="10" disabled="true" value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flDeliveryOrder.estDeliveryDate}">
+					<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</p:inputText><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.exp.del.date']}"/>
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.frn.supp.do.no']}" /></td>
+				<td><p:inputText size="45" disabled="true" value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flDeliveryOrder.supplierDoRef}">
+				</p:inputText><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.no']}"/></td>
+				
+			</tr>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.fl.acknowledgeOfficer']}" rendered="#{receivedNoteBackingBean.isReceivingOfficer()}"
+						style="text-align: top" /><p:outputLabel rendered="#{receivedNoteBackingBean.isReceivingOfficer()}" 
+						value="*" styleClass="mandatory" /></td>
+				<!-- 13291 --><td colspan="3"><p:selectOneMenu style="width:350px; margin-bottom:5px;" rendered="#{receivedNoteBackingBean.isReceivingOfficer()}"
+						disabled="#{receivedNoteBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or !bpmTasklistBackingBean.managedBean.claim}" label="#{lbl['lbl.fl.acknowledgeOfficer']}"
+						value="#{receivedNoteBackingBean.managedBean.userLoginId}">
+						<f:selectItems
+							value="#{receivedNoteBackingBean.getAcknowledgeOfficerDropdown()}" />
+							<p:ajax process="@this" event="change" listener="#{receivedNoteBackingBean.setSelectedAckOfficer}"></p:ajax>
+					</p:selectOneMenu>
+					<!-- 13291 start -->
+					<c:if test="#{receivedNoteBackingBean.isReceivingOfficer()}">
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.acknowledge.officer']}"/>
+					</c:if>
+					<!-- 13291 end -->
+					</td>
+			</tr>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.fl.receiving.officer.name']}" rendered="#{receivedNoteBackingBean.isFlFulfilmentApprover()}"
+						style="text-align: top" /><p:outputLabel rendered="#{receivedNoteBackingBean.isFlFulfilmentApprover()}" 
+						value="*" styleClass="mandatory" /></td>
+				<td><p:inputText size="45" disabled="true" value="#{receivedNoteBackingBean.getUsername(receivedNoteBackingBean.managedBean.fulfilmentNote.createdBy)}" rendered="#{receivedNoteBackingBean.isFlFulfilmentApprover()}">
+				</p:inputText></td>
+			</tr>
+		</table>
+		<p:spacer height="5px"></p:spacer>
+			<table>
+				<tr>
+					<td><h:outputText styleClass="instruction" value="#{lbl['lbl.txt.click']}" escape="false" rendered="#{receivedNoteBackingBean.managedBean.lastFRNTaxInv}"/></td>
+					<td><p:commandLink value="#{lbl['lbl.fl.instruction.here']}" style="font-size:10px;font-style:italic"
+							action="#{receivedNoteBackingBean.navigateToFlRequest()}" process="@this" rendered="#{receivedNoteBackingBean.managedBean.lastFRNTaxInv}" />
+							<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.gst.relief']}" escape="false" rendered="#{receivedNoteBackingBean.managedBean.lastFRNTaxInv}" /></td>
+
+				</tr>
+				<tr>
+					<td><p:selectBooleanCheckbox rendered="#{receivedNoteBackingBean.managedBean.lastFRNTaxInv}"
+							disabled="#{receivedNoteBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
+							value="#{receivedNoteBackingBean.managedBean.issuanceCogstrCheck}" /></td>
+					<td><h:outputText style="text-align:left"
+							value="#{lbl['lbl.fl.issuance.of.cogstr']}" rendered="#{receivedNoteBackingBean.managedBean.lastFRNTaxInv}" /></td>
+				</tr>
+			</table>
+	</p:panel>
+	<p:panel header="#{lbl['lbl.fl.supp.details']}" toggleable="true">
+		<table style="width: 100%">
+			<tr>
+				<td style="width: 135px;"><p:outputLabel
+						value="#{lbl['lbl.fl.supp.buss.reg.no']}" /></td>
+				<td><table style="width: 100%">
+						<tr>
+							<td style="width: 175px;"><p:inputText size="15"
+									disabled="true"
+									value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.smSupplier.regNo}" />
+									<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.buss.reg.no']}"/></td>
+							<td style="width: 62px;"><p:outputLabel
+									value="#{lbl['lbl.fl.supp.mof.no']}" /></td>
+							<td><p:inputText size="15" disabled="true"
+									value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.mofNo}" />
+									<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.mof.no']}"/></td>
+						</tr>
+					</table></td>
+				<td><p:outputLabel
+						value="#{lbl['lbl.fl.ep.basic.acct.no']}" /></td>
+				<td style="width:274px;"><p:inputText size="15" disabled="true" 
+									value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.smSupplier.epNo ==null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.managedBean.fulfilmentRequest.smSupplier.epNo}"></p:inputText></td>		
+			</tr>
+			<!-- 29982 start -->
+			<tr>
+			    <td><p:outputLabel value="#{lbl['lbl.fl.business.registration.no']}" /></td>
+				<td><p:inputText size="15" disabled="true"
+						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.smSupplier.ssmNewRegNo ==null ? lbl['lbl.fl.business.registration.no.empty'] : receivedNoteBackingBean.managedBean.fulfilmentRequest.smSupplier.ssmNewRegNo}" />
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.business.registration.no']}"/>
+					<br/>
+					<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.business.registration.no.note']}" style="float:left;margin-bottom: 5px;" />
+					</td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.ep.declared.date']}" /></td>
+				<td><p:inputText size="15" disabled="true"
+						value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.gstDeclaredDate ==null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.managedBean.fulfilmentNote.gstDeclaredDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ep.declared.date']}"/></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.gst.reg.no']}" /></td>
+				<td><p:inputText size="15" disabled="true"
+						value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.gstRegNo ==null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.managedBean.fulfilmentNote.gstRegNo}" />
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gst.reg.no']}"/></td>
+			</tr>
+			<!-- 29982 end -->
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.gst.effective.date']}" /></td>
+				<td><p:inputText size="15" disabled="true"
+						value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.gstEffectiveDate ==null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.managedBean.fulfilmentNote.gstEffectiveDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gst.effect.date']}"/></td>
+
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
+				<td><p:inputText disabled="true" size="53"
+						value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flRequest.flSupplierDtl.supplierName}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" /></td>
+				<td><p:inputText disabled="true" size="49"
+						value="#{receivedNoteBackingBean.getText(receivedNoteBackingBean.managedBean.fulfilmentNote.flRequest.flSupplierDtl.branchName)}" />
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.branch']}"/></td>
+			</tr>
+			<tr>
+				<td valign="top"><p:outputLabel
+						value="#{lbl['lbl.fl.supp.address']}" /></td>
+				<td><p:inputTextarea cols="55" rows="8" disabled="true"
+						style=" margin-bottom:5px;"
+						autoResize="false"
+						value="#{receivedNoteBackingBean.getFullAddress(receivedNoteBackingBean.managedBean.fulfilmentNote.flRequest.flSupplierDtl.flAddress)}" /></td>
+			</tr>
+			<tr>
+				<td style="width: 117px;"><p:outputLabel
+						value="#{lbl['lbl.fl.telno']}" /></td>
+				<td><table style="width: 100%">
+						<tr>
+							<td style="width: 25px;"><p:inputText size="25"
+									disabled="true"
+									value="#{receivedNoteBackingBean.getText(receivedNoteBackingBean.managedBean.fulfilmentNote.flRequest.flSupplierDtl.flAddress.phoneNoFull)}" /></td>
+							<td style="width: 63px;"><p:outputLabel
+									value="#{lbl['lbl.fl.faxno']}" /></td>
+							<td><p:inputText size="25" disabled="true"
+									value="#{receivedNoteBackingBean.getText(receivedNoteBackingBean.managedBean.fulfilmentNote.flRequest.flSupplierDtl.flAddress.faxNoFull)}" /></td>
+						</tr>
+					</table></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.fl.supp.contact.person']}" /></td>
+				<td><p:inputText disabled="true" size="70"
+						value="#{receivedNoteBackingBean.getText(receivedNoteBackingBean.managedBean.fulfilmentNote.flRequest.flSupplierDtl.flAddress.contactPerson)}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.fl.email']}" /></td>
+				<td><p:inputText disabled="true" size="70"
+						value="#{receivedNoteBackingBean.getText(receivedNoteBackingBean.managedBean.fulfilmentNote.flRequest.flSupplierDtl.flAddress.contactEmail)}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.telno']}" /></td>
+				<td><p:inputText disabled="true" size="25"
+						value="#{receivedNoteBackingBean.getText(receivedNoteBackingBean.managedBean.fulfilmentNote.flRequest.flSupplierDtl.flAddress.contactPhoneNoFull)}" /></td>
+			</tr>
+		</table>
+	</p:panel>
+	<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
+		<table style="width: 100%">
+			<tr>
+				<td width="50%" valign="top"><ui:include
+						src="/xhtml/fl/shared/remark.xhtml" /></td>
+				<td width="50%" valign="top">
+					<h:panelGroup rendered="#{receivedNoteBackingBean.managedBean.taskName ne FulfilmentConst.approveFRN}">
+						<ui:include src="/xhtml/fl/shared/attachment.xhtml" />
+					</h:panelGroup> 
+					<h:panelGroup rendered="#{receivedNoteBackingBean.managedBean.taskName eq FulfilmentConst.approveFRN}">
+						<ui:include src="/xhtml/fl/shared/attachmentAuthorize.xhtml" />
+					</h:panelGroup></td>
+			</tr>
+		</table>
+	</p:panel>
+</ui:composition>

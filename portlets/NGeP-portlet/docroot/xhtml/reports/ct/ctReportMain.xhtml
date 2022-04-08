@@ -1,0 +1,116 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="contentSection">
+		<p:messages id="ctReportMsgId" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="false"></p:messages>
+		<table style="margin-top: 10px; width: 100%;">
+			<tr>
+				<td style="width:20%">
+					<p:outputLabel value="#{lbl['lbl.rpt.rptCategory']}"  styleClass="required"/>
+				</td>
+				<td>
+					<p:selectOneMenu
+						label="#{lbl['lbl.rpt.rptCategory']}" id="reportCategory"
+						value="#{ctReportBB.managedBean.reportCategory}"
+						required="true">
+						<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+							itemValue="#{null}"></f:selectItem>
+						<f:selectItems
+							value="#{ctReportBB.managedBean.reportCategoryList}"></f:selectItems>
+						<p:ajax event="change"
+							listener="#{ctReportBB.retrieveReportListByCategory(ctReportBB.managedBean.reportCategory)}"
+							process="@this" partialSubmit="true" update="@all" />
+					</p:selectOneMenu>
+				</td>
+			</tr> 
+			<tr>
+				<td style="width:20%">
+					<p:outputLabel value="#{lbl['lbl.rpt.rptName']}"  styleClass="required"/>
+				</td>
+				<td>
+					<p:selectOneMenu label="#{lbl['lbl.rpt.rptName']}"
+						id="reportName"
+						value="#{ctReportBB.managedBean.reportCode}"
+						required="true" style="margin-top:5px;width:300px;">
+						<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+							itemValue="#{null}"></f:selectItem>
+						<f:selectItems
+							value="#{ctReportBB.managedBean.reportList}"></f:selectItems>
+						<p:ajax event="change"
+							listener="#{ctReportBB.onChangeReportName()}"
+							process="@this" partialSubmit="true" update="@form" />
+					</p:selectOneMenu>
+				</td>
+			</tr>
+		</table>	
+	
+		<p:panel id="ctReportSearchCriteriaPanel"
+			header="#{ctReportBB.managedBean.reportTitle}"
+			rendered="#{!empty ctReportBB.managedBean.reportCode}" toggleable="true">
+			
+			<!-- #29416 - added logic to change text color into blue for contract item monitoring report -->
+			
+			<c:choose>
+				<c:when test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctContractItemUsageMonitoringRptCcVal 
+				or ctReportBB.managedBean.reportCode eq CtReportConst.ctContractItemUsageMonitoringRptMcVal
+				or ctReportBB.managedBean.reportCode eq CtReportConst.ctContractManagementRptCcVal
+				or ctReportBB.managedBean.reportCode eq CtReportConst.ctContractManagementRptMcVal}">
+					<h:outputText styleClass="instruction" value="#{lbl['lbl.rpt.instructioninfo']}" escape="false"/><br/><br/>
+				</c:when>
+				
+				<c:otherwise>
+					<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}" escape="false"/><br/>
+					<h:outputText styleClass="instruction" value="#{lbl['lbl.rpt.instructioninfo']}" escape="false"/><br/><br/>
+				</c:otherwise>
+			</c:choose>
+		<!--29416 end-->
+			
+			<!-- MC -->	
+			<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctContractMonitoringRptVal
+				or ctReportBB.managedBean.reportCode eq CtReportConst.ctFulfilmentStatusRptVal
+				or ctReportBB.managedBean.reportCode eq CtReportConst.ctListOfContractMcRptVal
+				or ctReportBB.managedBean.reportCode eq CtReportConst.ctListOfContractCcRptVal
+				or ctReportBB.managedBean.reportCode eq CtReportConst.ctContractItemUsageMonitoringRptMcVal}">
+			     <ui:include src="/xhtml/reports/ct/common/ctReportContent.xhtml"></ui:include>
+			</c:if>
+			<!-- end mc -->
+			<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctStatementOfOrderCcRptVal}">
+				<ui:include src="/xhtml/reports/ct/cc/CT021_statementOfOrderReport.xhtml"></ui:include>
+			</c:if>
+			<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctListOfCircularCqRptVal}">
+				<ui:include src="/xhtml/reports/ct/cc/CT016_listOfCircular.xhtml"></ui:include>
+			</c:if>											
+			<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctListOfCircularPqRptVal}">
+				<ui:include src="/xhtml/reports/ct/panel/CT023_listOfCircular.xhtml"></ui:include>
+			</c:if>				
+			<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctStatementOfOrderPqRptVal}">
+				<ui:include src="/xhtml/reports/ct/panel/CT024_statementOfOrderReport.xhtml"></ui:include>
+			</c:if>	
+			<!-- #29416 added contract item usage monitoring report-->
+			<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctContractItemUsageMonitoringRptCcVal}">
+				<ui:include src="/xhtml/reports/ct/cc/CT_027_ContractItemMonitoringUsageRpt.xhtml"></ui:include>
+			</c:if>	
+			<!--#29416 end-->
+			<!-- #30918 - start -->
+			<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctContractManagementRptCcVal}">
+				<ui:include src="/xhtml/reports/ct/cc/CT_036_ContractManagementReportCC.xhtml"></ui:include>
+			</c:if>				
+			<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctContractManagementRptMcVal}">
+				<ui:include src="/xhtml/reports/ct/mc/CT_037_ContractManagementReport.xhtml"></ui:include>
+			</c:if>	
+			<!-- #30918 - end -->	
+				
+
+								
+		</p:panel>
+		<ac:lovPopup />
+	</ui:define>
+</ui:composition>

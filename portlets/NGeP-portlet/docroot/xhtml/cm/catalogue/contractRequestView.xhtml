@@ -1,0 +1,191 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+
+
+	<ui:define name="contentSection">
+
+		<p:messages id="contractRequestViewId" showDetail="true"
+			autoUpdate="true" closable="true" showSummary="true"></p:messages>
+		<!-- BEGINNING FOR #13984 Dialog Box for schedule and phase -->
+		<h:form id="commands">
+			<table style="width: 100%">
+				<tr>
+					<td><p:commandLink
+							value="#{lbl['lbl.quartz.scheduled.jobs.info']}" rendered="#{not empty catalogueBackingBean.availableNoListCR}"
+							
+							update="display" oncomplete="sample.show()"
+							style="color: blue;display: inline-block;text-align: right;float: left;font-size: 12px;padding: 0 400px 0 0;width: 72.1%" /></td>
+				</tr>
+			</table>
+
+			<p:dialog header="#{lbl['lbl.quartz.scheduled.jobs.info']}"
+				widgetVar="sample" modal="true" id="display">
+
+				<h3></h3>
+				<p>
+				</p>
+
+				<p:dataTable
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					value="#{catalogueBackingBean.schInfo}" id="contractRequestIdd"
+					rowIndexVar="rowIndex" var="contractObjj" width="100%">
+
+					<ac:paginator for="contractRequestIdd"></ac:paginator>
+
+
+					<p:columnGroup type="header">
+						<p:row>
+							<p:column colspan="3"
+								style="white-space:normal;text-align: center;"
+								headerText="#{lbl['lbl.pm.org.ptjCode']}/#{lbl['lbl.pm.org.ptjName']} : #{catalogueBackingBean.orgCode} #{catalogueBackingBean.orgName}"/>
+
+
+						</p:row>
+						<p:row>
+							<p:column style="text-align: center;" colspan="1"
+								headerText="#{lbl['lbl.fl.fs.tableinfo']}" />
+							<p:column style="text-align: center;" colspan="1"
+								headerText="#{lbl['lbl.fl.title.contract.contractreq']}" />
+							<p:column style="text-align: center;" colspan="1"
+								headerText="#{lbl['lbl.fl.do.pocostatus']}" />
+						</p:row>
+
+					</p:columnGroup>
+
+
+					<p:column>
+						<h:outputText value="#{contractObjj.schNo}"
+							style="display: block; width:100%; text-align:center;" />
+
+					</p:column>
+
+					<p:column>
+						<h:outputText value="#{contractObjj.crNo}"
+							style="display: block; width:100%; text-align:center;" />
+					<h:outputText value="#{contractObjj.crNoStatus=='(null)' ? '' : contractObjj.crNoStatus}"
+							style="display: block; width:100%; text-align:center;white-space: pre-wrap;" />
+
+					</p:column>
+
+					<p:column>
+						<h:outputText value="#{contractObjj.coNo}"
+							style="display: block; width:100%; text-align:center;" />
+
+					<h:outputText value="#{contractObjj.coNoStatus=='(null)' ? '' : contractObjj.coNoStatus}"
+							style="display: block; width:100%; text-align:center;white-space: pre-wrap;" />
+
+					</p:column>
+
+
+				</p:dataTable>
+
+
+				<table style="width: 100%">
+					<tr>
+						<td style="text-align: right; width: 12%"><p:commandButton
+								value="#{lbl['lbl.fl.btn.close']}" type="text"
+								onclick="sample.hide();" style="text-align: right;" /></td>
+					</tr>
+				</table>
+			</p:dialog>
+		</h:form>
+		<!-- ENDING FOR #13984 Dialog Box for schedule and phase -->
+
+		<table style="width:100%">
+			<tr>
+				<td style="text-align: left;width:60%"><p:commandButton	value="#{lbl['lbl.cm.back']}"
+						action="#{catalogueBackingBean.backTocatalogueSearch}" /></td>
+				<td style="width:10%"><p:outputLabel value="#{lbl['lbl.fl.fs.no']}" rendered="#{not empty catalogueBackingBean.availableNoListCR}" /></td>
+				<td style="text-align: right; width: 5%"><p:selectOneMenu id="schedule" value="#{catalogueBackingBean.managedBean.scheduleNo}" rendered="#{not empty catalogueBackingBean.availableNoListCR}">
+						<f:selectItems	value="#{catalogueBackingBean.availableNoListCR}" />
+					</p:selectOneMenu></td>
+				<td style="text-align: right; width: 12%"><p:commandButton id="navigateCR" style="white-space:nowrap;" disabled="#{empty catalogueBackingBean.ctRequestListCR}"
+						value="#{lbl['lbl.cm.contract.request']}" action="#{catalogueBackingBean.navigateToCR}" /></td>
+			</tr>
+		</table>
+
+		<p:panel header="#{lbl['lbl.cm.list.of.items']}" toggleable="true">
+
+			<p:dataTable emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				value="#{catalogueBackingBean.ctRequestListCR}"
+				id="contractRequestId" rowIndexVar="rowIndex" var="contractObj"
+				width="100%">
+
+
+
+				<ac:paginator for="contractRequestId"></ac:paginator>
+
+				<p:column headerText="#{lbl['lbl.cm.image']}">
+					<h:panelGroup rendered="#{contractObj.imagePath == null}">
+						<p:outputPanel
+							style="border: 1px solid #808080; display: block; vertical-align: middle; padding: 20px 4px; text-align: center;">
+								#{lbl['lbl.cm.no.image.available']}
+								</p:outputPanel>
+
+					</h:panelGroup>
+					<h:panelGroup rendered="#{contractObj.imagePath != null}">
+						<img
+							src="/NGeP-portlet/image?imageName=#{contractObj.epNo}/#{contractObj.imagePath}"
+							style="height: 80px; left: 0px !important;" />
+					</h:panelGroup>
+				</p:column>
+
+				<p:column style="white-space:normal;" headerText="#{lbl['lbl.cm.item.name']}">
+								#{contractObj.itemName}
+							</p:column>
+
+				<p:column width="10%" headerText="#{lbl['lbl.cm.contact.no']}">
+								#{contractObj.contractNo}
+							</p:column>
+
+				<p:column width="10%" headerText="#{lbl['lbl.cm.circular.no']}">
+								#{contractObj.circularNo}
+							</p:column>
+
+				<p:column headerText="#{lbl['lbl.cm.supplier.name']}">
+					#{contractObj.companyName}		
+				</p:column>
+
+				<p:column headerText="UOM">
+							#{contractObj.uomName}
+							</p:column>
+
+				<p:column headerText="#{lbl['lbl.cm.action']}" width="2%">
+					<p:commandLink
+						onsuccess="delItemDlg.show()" process="@this"
+						update=":form:contractRequestId,:form:navigateCR">
+						<f:setPropertyActionListener value="#{contractObj}" target="#{catalogueBackingBean.managedBean.selectedItem}" />
+						<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+					</p:commandLink>
+				</p:column>
+
+			</p:dataTable>
+			
+			<p:confirmDialog message="#{lbl['lbl.msg.confirm.delete']}"
+				severity="alert" widgetVar="delItemDlg" closable="true"
+				appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+				<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
+						update=":form:contractRequestId,:form:navigateCR"
+						action="#{catalogueBackingBean.deleteContractRequestItem()}"
+						oncomplete="delItemDlg.hide();" />
+					<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
+						update=":form:contractRequestId,:form:navigateCR"
+						onclick="delItemDlg.hide();" />
+				</div>
+			</p:confirmDialog>
+
+		</p:panel>
+
+	</ui:define>
+
+</ui:composition>

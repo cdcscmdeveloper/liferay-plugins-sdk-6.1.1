@@ -1,0 +1,139 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel header="#{lbl['lbl.sc.qt.req.ptj']}" toggleable="true" id="qtScQtReqPtjId">
+		<c:if test="#{approvalBackingBean.managedBean.taskName eq ParameterConst.supplierAcceptQtChange}" >
+			<p:outputLabel style="float:left" value="#{lbl['lbl.sc.proposal.validity.period.extension.response.supplier']}" /><br/><br/>
+		</c:if>
+		<table style="width: 100%;">
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.ministry']}" /></td>
+				<td colspan="3"><p:inputText
+						value="#{approvalBackingBean.retrieveMinistryByOrgProfileId(scQt.pmOrgProfile.orgProfileId)}"
+						disabled="true" readonly="true" style="width:866px;" /></td>
+			</tr>
+			<!-- <tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.department']}" /></td>
+				<td><p:inputText
+						value="#{scQt.pmOrgProfile.parentOrgProfile.orgName}"
+						disabled="true" readonly="true" size="80" /></td>
+				<td />
+				<td />
+			</tr> -->
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.prepare.ptj']}" /></td>
+				<td colspan="3"><p:inputText
+						value="#{approvalBackingBean.retrievePTJByOrgProfileId(scQt.ownerOrgProfile.orgProfileId,approvalBackingBean.isQTStatusPublished(approvalBackingBean.managedBean.currentStatusId)?scQt.publishDate : scQt.createdDate)}"
+						disabled="true" readonly="true" style="width:866px;" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.prepare.for.ptj']}" /></td>
+				<td colspan="3"><p:inputText
+						value="#{approvalBackingBean.retrievePTJByOrgProfileId(scQt.pmOrgProfile.orgProfileId,approvalBackingBean.isQTStatusPublished(approvalBackingBean.managedBean.currentStatusId)?scQt.publishDate : scQt.createdDate)}"
+						disabled="true" readonly="true" style="width:866px;" /></td>
+			</tr>
+			<tr>
+				<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.requestor']}" /></td>
+				<td style="width: 450px;"><p:inputText
+						value="#{approvalBackingBean.retriveUserName(scQt.createdBy)}"
+						disabled="true" readonly="true" style="width:350px;" /></td>
+				
+				<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.request.date']}" /></td>
+				<td><p:inputText
+						value="#{scQtApproval.requestDate}"
+						disabled="true" readonly="true" style="width:212px;">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.qtn.no']}" /></td>
+				<td><p:inputText
+						value="#{scQt.qtNo}" disabled="true"
+						readonly="true" style="width:350px;" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" /></td>
+				<td><p:inputText
+						value="#{approvalBackingBean.getParameterDesc(scQt.procurementMode)}"
+						disabled="true" readonly="true" style="width:212px;" /></td>
+			</tr>
+			<c:if test="#{approvalBackingBean.managedBean.taskName eq ParameterConst.supplierAcceptQtChange}" >
+				<tr>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.sc.qt.response.period']}" /> 
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</td>
+					<td>
+						<p:inputText id="responsePeriod" value="#{CommonConstants.DEFAULT_RESPONSE_PERIOD}" style="width:200px;" disabled="true" />
+					</td>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.sc.qt.proposal.validity.extension.response.due.date']}" />
+					</td>
+					<td>
+						<p:inputText value="#{scQt.closingDate}" style="width:200px;" disabled="true" >
+							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+						</p:inputText>
+					</td>
+				</tr>
+			</c:if>
+			<tr>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.sc.title']}" /></td>
+				<td colspan="3"><p:inputTextarea
+						value="#{scQt.qtTitle}" cols="170"
+						rows="3" style=" margin-bottom:5px; width:866px;" disabled="true" /></td>
+			</tr>
+			<c:if test="${approvalBackingBean.managedBean.approvalType == ParameterConst.approvalCategoryFinalizationCommittee}">
+				<tr>
+					<td style="width: 235px;">
+						<p:outputLabel value="#{lbl['lbl.sc.qt.proposal.approval.date.chairperson.finalization']}" /> 
+						<p:outputLabel value="*" styleClass="mandatory"/></td>
+					<td>
+						<p:calendar label="#{lbl['lbl.sc.qt.proposal.approval.date.chairperson.finalization']}"
+							disabled="#{approvalBackingBean.managedBean.readOnly}"
+							mindate="#{approvalBackingBean.handlePublishDate()}"
+							value="#{approvalBackingBean.managedBean.qt.newChmnFinalizationDate}"
+							id="approvalDateChairperson" required="true"
+							maxdate="#{qTScheduleDetailBackingBean.handleMaximumDate()}"
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button"
+							size="15">
+							<p:ajax event="dateSelect" process="@this"
+								listener="#{qTScheduleDetailBackingBean.handlePublishedDate}"
+								update="qtScQtReqPtjId" />
+						</p:calendar>
+						<p:inputText id="approvalDateChairpersonTime" value="#{approvalBackingBean.managedBean.qt.chmnFinalizationDate}" disabled="true" size="4"
+							style="width: 65px;margin-top: 1px;margin-bottom: 0px;">
+							<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
+						</p:inputText>
+						<p:message id="approvalDateChairpersonMsg" for="approvalDateChairperson" display="icon" />
+					</td>
+					<td style="width: 235px;">
+						<p:outputLabel value="#{lbl['lbl.sc.qt.proposal.approval.date.mof']}" /> 
+						<p:outputLabel value="*" styleClass="mandatory"/></td>
+					<td>
+						<p:calendar label="#{lbl['lbl.sc.qt.proposal.approval.date.mof']}"
+							disabled="#{approvalBackingBean.managedBean.readOnly}"
+							mindate="#{approvalBackingBean.handlePublishDate()}"
+							value="#{approvalBackingBean.managedBean.qt.newMofDate}"
+							id="approvalDateMof" required="true"
+							maxdate="#{qTScheduleDetailBackingBean.handleMaximumDate()}"
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button"
+							size="15">
+							<p:ajax event="dateSelect" process="@this"
+								listener="#{qTScheduleDetailBackingBean.handlePublishedDate}"
+								update="qtScQtReqPtjId" />
+						</p:calendar>
+						<p:inputText id="approvalDateMofTime" value="#{approvalBackingBean.managedBean.qt.mofDate}" disabled="true" size="4"
+							style="width: 65px;margin-top: 1px;margin-bottom: 0px;">
+							<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
+						</p:inputText>
+						<p:message id="approvalDateMofMsg" for="approvalDateMof" display="icon" />
+					</td>
+				</tr>
+			</c:if>
+		</table>
+	</p:panel>
+</ui:composition>

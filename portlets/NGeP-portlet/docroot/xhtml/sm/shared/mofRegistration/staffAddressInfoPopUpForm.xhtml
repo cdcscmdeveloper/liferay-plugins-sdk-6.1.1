@@ -1,0 +1,109 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	
+	<table style="width: 100%">
+		<tr>
+			<td valign="top" width="50%">
+				<p:outputPanel id="staffPermAddrPan" layout="block">
+					
+					<ac:smShareholderAddress bBean="#{backingBean}" 
+					addressTitle="#{backingBean.managedBean.selectedShareHolder.identificationType.parameterCode == SupplierManagementConst.NEW_IC 
+						? lbl['lbl.sm.ic.address'] : lbl['lbl.sm.person.permAddr']}" 
+					addrObj="#{backingBean.managedBean.shareHolderPermAddr}" 
+					latestAddrObj="#{backingBean.managedBean.latestPermAddr}" 
+					addrPanelId="staffPermAddrPan" addrId="staffEquiPersPermAddrLine" 
+					stateItems="#{backingBean.managedBean.shrHldrPermStates}"
+					divisionItems="#{backingBean.managedBean.shrHldrPermDivisions}"
+					districtItems="#{backingBean.managedBean.shrHldrPermDistricts}"
+					cityItems="#{backingBean.managedBean.shrHldrPermCities}"
+					countryId="staffEquiPersPermCntry" stateId="staffEquiPersPermState" 
+					divisionId="staffEquiPersPermDivision" 
+					districtId="staffEquiPersPermDist" cityId="staffEquiPersPermCity" 
+					postCodeId="staffEquiPersPermAddrPostCode"
+					addressType="#{SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL}"/>
+					
+				</p:outputPanel></td>
+			<td>
+			<!-- 13320-DivisionAdd -->
+			<p:outputPanel id="staffMailAddrPan"
+					rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1'}"
+					layout="block">
+					
+					<ac:smShareholderAddress bBean="#{backingBean}" 
+					addressTitle="#{lbl['lbl.sm.person.mailAddr']}" 
+					addrSameAsObj="#{backingBean.managedBean.shareHolderPermAddr.smAddress}"
+					addrObj="#{backingBean.managedBean.shareHolderMailAddr}" 
+					latestAddrObj="#{backingBean.managedBean.latestMailAddr}" 
+					addrPanelId="staffMailAddrPan" addrId="staffEquiPersMailAddrLine" 
+					stateItems="#{backingBean.managedBean.shrHldrMailStates}"
+					divisionItems="#{backingBean.managedBean.shrHldrMailDivisions}" 
+					districtItems="#{backingBean.managedBean.shrHldrMailDistricts}"
+					cityItems="#{backingBean.managedBean.shrHldrMailCities}"
+					countryId="staffEquiPersMailCntry" stateId="staffEquiPersMailState" 
+					divisionId="staffEquiPersMailDivision" 
+					districtId="staffEquiPersMailDist" cityId="staffEquiPersMailCity" 
+					postCodeId="staffEquiPersMailAddrPostCode" showTick="true"
+					tickLabel="#{lbl['lbl.sm.person.duplicateAddr']}"
+					addressType="#{SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL}"/>
+					
+				</p:outputPanel></td>
+		</tr>
+		<!-- 30444-START 30112021-->
+		<tr>
+			<td valign="top" width="50%">
+				<p:outputPanel id="staffResiAddrPan" layout="block"
+					rendered="#{backingBean.managedBean.selectedShareHolder.equityOwner 
+					or backingBean.managedBean.selectedShareHolder.higherManagement 
+					or backingBean.managedBean.selectedShareHolder.director}">
+					
+					<ac:smShareholderAddress bBean="#{backingBean}" 
+					addressTitle="#{lbl['lbl.sm.person.resiAddr']}" 
+					addrSameAsObj="#{backingBean.managedBean.shareHolderPermAddr.smAddress}"
+					addrObj="#{backingBean.managedBean.shareHolderResdAddr}" 
+					latestAddrObj="#{backingBean.managedBean.latestResdAddr}" 
+					addrPanelId="staffResiAddrPan" addrId="staffEquiPersResiAddrLine" 
+					stateItems="#{backingBean.managedBean.shrHldrResdStates}"
+					divisionItems="#{backingBean.managedBean.shrHldrResdDivisions}"
+					districtItems="#{backingBean.managedBean.shrHldrResdDistricts}"
+					cityItems="#{backingBean.managedBean.shrHldrResdCities}"
+					countryId="staffEquiPersResiCntry" stateId="staffEquiPersResiState" 
+					divisionId="staffEquiPersResiDivision" 
+					districtId="staffEquiPersResiDist" cityId="staffEquiPersResiCity" 
+					postCodeId="staffEquiPersResiAddrPostCode" showTick="true" 
+					tickLabel="#{lbl['lbl.sm.person.duplicateAddr']}" 
+					addressType="#{SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL}"/>
+					
+				</p:outputPanel></td>
+			<td><p:outputPanel id="staffOffcAddrPan" layout="block"
+					rendered="#{backingBean.managedBean.selectedShareHolder.equityOwner 
+					or backingBean.managedBean.selectedShareHolder.higherManagement 
+					or backingBean.managedBean.selectedShareHolder.director}">
+					
+					<ac:smShareholderAddress bBean="#{backingBean}" 
+					addressTitle="#{lbl['lbl.sm.person.offAddr']}"
+					addrSameAsObj="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress}"
+					addrObj="#{backingBean.managedBean.shareHolderOffAddr}" 
+					latestAddrObj="#{backingBean.managedBean.latestOffAddr}" 
+					addrPanelId="staffOffcAddrPan" addrId="staffEquiPersOffcAddrLine" 
+					stateItems="#{backingBean.managedBean.shrHldrOffStates}"
+					divisionItems="#{backingBean.managedBean.shrHldrOffDivisions}"
+					districtItems="#{backingBean.managedBean.shrHldrOffDistricts}"
+					cityItems="#{backingBean.managedBean.shrHldrOffCities}"
+					countryId="staffEquiPersOffcCntry" stateId="staffEquiPersOffcState" 
+					divisionId="staffEquiPersOffcDivision" 
+					districtId="staffEquiPersOffcDist" cityId="staffEquiPersOffcCity" 
+					postCodeId="staffEquiPersOffcAddrPostCode" showTick="true"
+					tickLabel="#{lbl['lbl.sm.person.duplicateCmpnyAddr']}"
+					addressType="#{SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL}"/>
+					
+				</p:outputPanel></td>
+		</tr>
+		<!-- 30444-END 30112021-->
+    </table>
+</ui:composition>

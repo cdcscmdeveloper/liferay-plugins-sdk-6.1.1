@@ -1,0 +1,51 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:outputPanel id="supplierViewId">
+		<div align="left" class="header-info header-spacing">
+			<table style="width: 100%">
+				<tr>
+					<td style="width: 10%"><h:outputLabel
+							value="#{lbl['lbl.sc.sq.simple.quote.no']}" /></td>
+					<td class="header-info-text">
+						#{simpleQuoteBackingBean.managedBean.scQuote.quoteNo}</td>
+					<td style="width: 6%"><h:outputLabel
+							value="#{lbl['lbl.sc.ptj']}" /></td>
+					<td class="header-info-text">
+						#{simpleQuoteBackingBean.retrievePTJByOrgProfileId
+(simpleQuoteBackingBean.managedBean.scQuote.requestNotes[0].pmOrgProfile.orgProfileId,
+simpleQuoteBackingBean.managedBean.scQuote.createdDate)}
+						
+					</td>
+					<td style="width: 8%"><h:outputLabel
+							value="#{lbl['lbl.sc.sq.request.date']}" /></td>
+					<td class="header-info-text"><h:outputText
+							value="#{simpleQuoteBackingBean.managedBean.scQuote.createdDate}">
+							<f:convertDateTime
+								pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+						</h:outputText></td>
+				<!--#5426 start-->		
+					<td style="width: 8%">
+						<h:outputLabel id="remainingMsg" value="#{simpleQuoteBackingBean.displayRemainingTimeMsg()}" />
+					</td>	
+					 <td>
+					<FONT style="color: red;font-weight: bold;">
+							<h:outputText id="days" value="#{simpleQuoteBackingBean.displayRemainingTime()}"/>
+				
+						
+					 	<p:poll binding="#{poll}" interval="1" listener="#{simpleQuoteBackingBean.initCountdown()}" update="days, remainingMsg" widgetVar="poll" process="@this" partialSubmit="true"/>
+					</FONT> 
+					</td>
+				<!-- #5426 end -->
+				</tr>
+			</table>
+		</div>
+	</p:outputPanel>
+</ui:composition>

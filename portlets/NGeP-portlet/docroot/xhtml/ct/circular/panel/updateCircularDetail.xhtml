@@ -1,0 +1,155 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc" >
+    <h:panelGrid columns="2" style="width:100%;"  styleClass="top-aligned-columns"  id="panelCircularDetailsId">
+           <h:panelGrid id="pGrid1" columns="2" style="width:550px;" columnClasses="columnWidth200">
+				   <p:outputLabel id="lbl1"  value="#{lbl['lbl.ct.physical.circular.no']}" styleClass="required"/>
+				   <h:panelGrid columns="5" id="pGrid2">
+					   <p:inputTextarea  id="circularNoTxt1" style="width:200px;" autoResize="false" rows="3"
+						    required="true" maxlength="60" disabled="#{panelBackingBean.managedBean.viewContract}"
+						    label="#{lbl['lbl.ct.physical.circular.no']}" value="#{panelBackingBean.managedBean.circularVer.circularNo}"/>
+					        <p:spacer width="5"/>
+					        <ac:iconTooltip  value="#{lbl['lbl.ct.tooltip.circular.no']}" />
+					        <p:spacer width="5"/>
+					        <p:message for="circularNoTxt1" display="icon" />
+				   </h:panelGrid>
+				   
+				     <h:outputLabel  id="lb2" value="#{lbl['lbl.ct.circular.panel.name']}" styleClass="required"/>
+					<h:panelGrid columns="5" id="pGrid3" >
+					    <p:inputTextarea id="circularNameTxt1" rows="5"  style="width:200px;margin-top:2px;margin-bottom:2px;" maxlength="500"
+					        disabled="#{panelBackingBean.managedBean.viewContract}" autoResize="false"
+					        required="true" label="#{lbl['lbl.ct.circular.name']}" value="#{panelBackingBean.managedBean.circularVer.name}" />
+					      <p:spacer width="5"/>
+					        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.circular.name']}" />
+					        <p:spacer width="5"/>
+					        <p:message for="circularNameTxt1" display="icon" />
+				    </h:panelGrid>
+				    
+				    <p:outputLabel id="lbl4" value="#{lbl['lbl.ct.file.ref.no']}" />
+			    	<p:inputTextarea id="circularRefTxt1"  style="width:200px;margin-bottom:2px;" maxlength="60"
+					     disabled="#{panelBackingBean.managedBean.viewContract}" autoResize="false"
+					     value="#{panelBackingBean.managedBean.circularVer.circularFileRefNo}" />
+					     
+				<h:outputLabel id="lbl5" value="#{lbl['lbl.ct.delivery.period']}" /> 
+				<h:panelGroup id="pGrid5">
+				<p:inputText id="circularTermTxt1"  value="#{panelBackingBean.managedBean.circularVer.deliveryTerm}" 
+				    maxlength="4" style="text-align:right; width:85px;"
+				    disabled="#{panelBackingBean.managedBean.viewContract}">
+				</p:inputText>
+				<p:spacer width="5" />
+				<h:outputText id="lbl6" value="#{lbl['lbl.ct.days']}" />
+			</h:panelGroup>
+			    
+			<p:outputLabel value="#{lbl['lbl.ct.start.date']}"  id="lbl7" />
+			<p:inputText id="inputTxt1" value="#{panelBackingBean.managedBean.circularVer.startDate}" disabled="true" style="width:85px;">
+			   	 <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+			 </p:inputText>	
+			   		
+			   	<p:outputLabel value="#{lbl['lbl.ct.end.date']}" id="lbl8"  />
+			   	<p:inputText id="inputTxt2" value="#{panelBackingBean.managedBean.circularVer.endDate}" disabled="true" style="width:85px; margin-top:3px;" >
+			   			<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+			   	</p:inputText>	 
+			   	
+			   	 <p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" styleClass="required" />
+		         <h:panelGroup id="uploadCircularPg1">
+		         	<h:panelGrid columns="5">
+				   	           <p:commandButton icon="ui-icon-upload" update="uploadCircularPg1, uploadCircularDlg"
+								action="#{panelBackingBean.setPanelDetailsValue()}" 
+								rendered="#{!panelBackingBean.managedBean.viewContract}" />
+						 
+						 
+						  		<p:dataGrid id="copyAgreement1" value="#{panelBackingBean.retrieveAttachmentList()}"
+									var="attachAggreement" rowIndexVar="attachAggreementIndex" columns="1" style="width:100%"
+									emptyMessage ="#{lbl['lbl.datatable.msg.no.records.found']}">
+									<table>
+										
+										<tr>
+											<td></td>
+											<td>
+											 	<h:commandLink action="#{panelBackingBean.downloadFile(attachAggreement)}" 
+											 		styleClass="blue_font" value="#{attachAggreement.fileName}" />			
+										     	<p:commandLink action="#{panelBackingBean.setAttachmentIndex(attachAggreementIndex)}"
+								   	                 onclick="deleteAttachFile.show();" rendered="#{!panelBackingBean.managedBean.viewContract}">
+								   				   <h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
+								   			   	 </p:commandLink>
+								   			 </td>
+										</tr>
+									 </table>
+								</p:dataGrid>
+			 	      <p:spacer width="1" />
+					  </h:panelGrid>				
+			  	   </h:panelGroup>
+			 </h:panelGrid>
+			 <h:panelGrid  style="width:350px; margin-left:5px" columns="2" id="pmGridId">
+			 
+			     	 <p:outputLabel value="#{lbl['lbl.ct.panel.pm']}" id="lbl10" />
+			        <h:panelGrid columns="3" id="pGrid6">
+			               <p:selectBooleanCheckbox  disabled="#{panelBackingBean.managedBean.viewContract}" style="text-align:top;"  id="checkBox1"
+			                       value="#{panelBackingBean.managedBean.circularVer.directNego}"> 
+			                       <p:ajax process="@this"></p:ajax>
+			               </p:selectBooleanCheckbox>
+			              <p:spacer width="2" />	
+			  	         <h:outputText value="#{lbl['lbl.ct.panel.dn']}" id="lbl11"   />
+			       </h:panelGrid>      	
+			   		
+			       <f:verbatim/>
+			       <h:panelGrid columns="3">
+			             <p:selectBooleanCheckbox disabled="#{panelBackingBean.managedBean.viewContract}" style="text-align:top;" id="checkBox2"
+			                      value="#{panelBackingBean.managedBean.circularVer.directPurchase}" >
+			                       <p:ajax event="change" update=":form:pmGridId"
+			                             process="@this" partialSubmit="@this" listener="#{panelBackingBean.setPidValue()}"/>
+			             </p:selectBooleanCheckbox>
+			             <p:spacer width="2" />	
+			  	          <h:outputText value="#{lbl['lbl.ct.panel.dp']}"  id="lbl12"  />
+			  	 </h:panelGrid>
+			  	 
+			  	  <f:verbatim/>
+			         <h:panelGrid columns="3">
+		         	       <p:selectBooleanCheckbox disabled="#{panelBackingBean.managedBean.viewContract}" style="text-align:top;"
+		         	              value="#{panelBackingBean.managedBean.circularVer.qt}" id="checkBox3">
+		         	              <p:ajax process="@this"></p:ajax>
+				           </p:selectBooleanCheckbox>
+			               <p:spacer width="2" />	
+			  	          <h:outputText value="#{lbl['lbl.ct.panel.qt']}" id="lbl13"   />   
+			  	      </h:panelGrid>    
+			  	           
+			     <p:outputLabel id="lbl17"  value="#{lbl['lbl.ct.pid']}" rendered="#{panelBackingBean.managedBean.circularVer.directPurchase}" />
+			     <h:panelGrid columns="3" rendered="#{panelBackingBean.managedBean.circularVer.directPurchase}">
+			     	<p:selectBooleanCheckbox disabled="#{panelBackingBean.managedBean.viewContract}" 
+			        	value="#{panelBackingBean.managedBean.circularVer.pid}"  style="text-align:top;" id="checkBox4">
+			         	<p:ajax event="change"  update=":form:groupPaneId" process="@this"></p:ajax>
+			       	</p:selectBooleanCheckbox>
+			       	<p:spacer width="5"/>
+				  	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.circular.pid']}" />
+			     </h:panelGrid>
+			
+			  	       <p:outputLabel id="lbl18"  value="#{lbl['lbl.ct.circular.extension']}" />
+			   	        <p:selectBooleanCheckbox id="extensionId" value="#{panelBackingBean.managedBean.circularExtension}"
+			   	        	disabled="#{panelBackingBean.managedBean.viewContract}">
+			                 <p:ajax event="change" update=":form:pmGridId" listener="#{panelBackingBean.chkCircularExtension}" process="@this"/> 
+			           </p:selectBooleanCheckbox>
+			  	     
+			    <p:outputLabel id="lbl19"  value="#{lbl['lbl.ct.extension.start.date']}"  styleClass="required"  rendered="#{panelBackingBean.managedBean.circularExtension}" />
+			    <p:calendar  value="#{panelBackingBean.managedBean.circularVer.extendStartDate}" readonly="true"
+			         maxdate="#{panelBackingBean.managedBean.circularVer.extendStartDate}" 
+			         mindate="#{panelBackingBean.managedBean.circularVer.extendStartDate}"
+			         disabled="#{panelBackingBean.managedBean.viewContract}"
+			         			         rendered="#{panelBackingBean.managedBean.circularExtension}"  size="8"  id="popupButtonCal5" showOn="button"
+				     pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
+		       </p:calendar>
+		       
+		   <p:outputLabel id="lbl20"  value="#{lbl['lbl.ct.extension.end.date']}"  styleClass="required"  rendered="#{panelBackingBean.managedBean.circularExtension}"  />
+		   <p:calendar size="8"  value="#{panelBackingBean.managedBean.circularVer.extendEndDate}"  navigator="true"
+		            mindate="#{panelBackingBean.managedBean.circularVer.extendStartDate}" readonlyInput="true"  styleClass="calendarDateField" 
+				   disabled="#{panelBackingBean.managedBean.viewContract}"  
+				   rendered="#{panelBackingBean.managedBean.circularExtension}" 
+				   required="true" label="#{lbl['lbl.ct.extension.end.date']}"
+				   pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" showOn="button" id="popupButtonCal6" >
+		    </p:calendar>	 
+		 </h:panelGrid>
+		 </h:panelGrid>
+</ui:composition>

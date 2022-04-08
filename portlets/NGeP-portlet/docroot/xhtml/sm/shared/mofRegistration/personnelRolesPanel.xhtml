@@ -1,0 +1,279 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<c:choose>
+		<c:when test="#{backingBean.managedBean.smAppl.supplierType eq 'K'}">
+			<table style="width: 100%">
+				<tr>
+					<td style="width: 18%"><p:outputLabel value="#{lbl['lbl.sm.roles']} : " /><p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+					<td style="padding-left: 5px;">
+						<table>
+							<tr>
+								<c:if test="#{backingBean.managedBean.validEquityLimit or (backingBean.managedBean.selectedShareHolder.equityOwner and backingBean.managedBean.selectedShareHolder.ssmData)}">
+									<!-- SSM INTEGRATION -->
+									<!-- bug #28173 & #28315-->
+									<td style="width: 20px"><p:selectBooleanCheckbox 
+									        disabled="#{(backingBean.managedBean.currentPageType eq SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY) 
+									        or (backingBean.managedBean.selectedShareHolder.ssmData and backingBean.managedBean.selectedShareHolder.equityOwnerSsm) 
+									        or (backingBean.managedBean.smAppl.applValidWithSsm 
+									        	and (backingBean.managedBean.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG or backingBean.managedBean.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG))
+									        	or (backingBean.managedBean.selectedShareHolder.disableEquityOwner)}"
+									        rendered="#{backingBean.showEquity(backingBean.managedBean)}"
+											value="#{backingBean.managedBean.selectedShareHolder.equityOwner}">
+											<p:ajax event="change" update=":#{p:component('shrRolesPanel')}, @([id$=shareHolderAddrDialog]),:#{p:component('equiShrHldrJbFnc')}"
+												process=":#{p:component('shrRolesPanel')}" partialSubmit="true"
+												listener="#{backingBean.managePersonnelRoles('Y')}" />
+										</p:selectBooleanCheckbox></td>
+									<td><h:outputText style="float: left" rendered="#{backingBean.showEquity(backingBean.managedBean)}"
+											value="#{lbl['lbl.sm.person.equiOwner']}" /></td>
+								</c:if>
+								<c:if
+									test="#{backingBean.managedBean.currentPageType ne SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY}">
+									<c:if
+										test="#{backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT and 
+										backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT}">
+										<h:panelGroup rendered="#{backingBean.showDirector(backingBean.managedBean)}">
+											<td style="width: 20px">
+												<p:selectBooleanCheckbox
+													value="#{backingBean.managedBean.selectedShareHolder.director}"           
+													disabled="#{backingBean.managedBean.selectedShareHolder.directorSsm || backingBean.managedBean.selectedShareHolder.disableEquityOwner}" > <!--#30444-->
+													<p:ajax event="change" update=":#{p:component('shrRolesPanel')}, @([id$=shareHolderAddrDialog])"
+														process=":#{p:component('shrRolesPanel')}" partialSubmit="true"
+														listener="#{backingBean.managePersonnelRoles('Y')}" />
+												</p:selectBooleanCheckbox>
+											</td>
+											<td>
+												<ac:smCheckBoxChangeAlert 
+													isShow="#{backingBean.managedBean.showFieldChanges
+														and not empty backingBean.managedBean.latestPersonnel}"
+													oriValue="#{backingBean.managedBean.latestPersonnel.director}" 
+													currValue="#{backingBean.managedBean.selectedShareHolder.director}" />
+												<h:outputText style="float: left" value="#{lbl['lbl.sm.person.dir']}" />
+											</td>
+										</h:panelGroup>
+										
+										<td style="width: 20px"><p:selectBooleanCheckbox
+												value="#{backingBean.managedBean.selectedShareHolder.higherManagement}"
+												disabled="#{backingBean.managedBean.selectedShareHolder.disableEquityOwner}" ><!--#30444-->
+												<p:ajax event="change" update=":#{p:component('shrRolesPanel')}, @([id$=shareHolderAddrDialog])"
+													process=":#{p:component('shrRolesPanel')}" partialSubmit="true"
+													listener="#{backingBean.managePersonnelRoles('Y')}" />
+											</p:selectBooleanCheckbox></td>
+										<td>
+											<ac:smCheckBoxChangeAlert 
+												isShow="#{backingBean.managedBean.showFieldChanges
+													and not empty backingBean.managedBean.latestPersonnel}"
+												oriValue="#{backingBean.managedBean.latestPersonnel.higherManagement}" 
+												currValue="#{backingBean.managedBean.selectedShareHolder.higherManagement}" />
+											<h:outputText style="float: left"
+												value="#{lbl['lbl.sm.person.hghMngmt']}" />
+										</td>
+									</c:if>
+								</c:if>
+							</tr>
+								<tr>
+								<!-- bug #28173 & #28315-->
+								<!-- #28256 -->
+									<td style="width: 20px"><p:selectBooleanCheckbox
+									        disabled="#{backingBean.managedBean.selectedShareHolder.disableManagement || backingBean.managedBean.currentPageType eq SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY}"
+											value="#{backingBean.managedBean.selectedShareHolder.management}"> <!--#30444 -25082021 alter disabled-->
+											<p:ajax event="change" update=":#{p:component('shrRolesPanel')},@([id$=shareHolderAddrDialog])"
+												process=":#{p:component('shrRolesPanel')}" partialSubmit="true"
+												listener="#{backingBean.managePersonnelRoles('N')}" />
+										</p:selectBooleanCheckbox></td>
+									<td>
+										<ac:smCheckBoxChangeAlert 
+												isShow="#{backingBean.managedBean.showFieldChanges
+													and not empty backingBean.managedBean.latestPersonnel}"
+												oriValue="#{backingBean.managedBean.latestPersonnel.management}" 
+												currValue="#{backingBean.managedBean.selectedShareHolder.management}" />
+										<h:outputText style="float: left" value="#{lbl['lbl.sm.person.mngmt']}" />
+									</td>
+									<!-- SSM Redmine : 9456 -->
+									<!-- #28256 -->
+									<td style="width: 20px"><p:selectBooleanCheckbox
+											disabled="#{backingBean.managedBean.selectedShareHolder.disableStaff || backingBean.managedBean.currentPageType eq SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY || (backingBean.managedBean.selectedShareHolder.equityOwner and backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)}"
+											value="#{backingBean.managedBean.selectedShareHolder.clerical}" >
+											<p:ajax event="change" update=":#{p:component('shrRolesPanel')},@([id$=shareHolderAddrDialog])"
+												process=":#{p:component('shrRolesPanel')}" partialSubmit="true" listener="#{backingBean.setRoleStaffAddrReqd()}"/>
+										</p:selectBooleanCheckbox>
+									</td>
+									<td>
+										<ac:smCheckBoxChangeAlert 
+												isShow="#{backingBean.managedBean.showFieldChanges
+													and not empty backingBean.managedBean.latestPersonnel}"
+												oriValue="#{backingBean.managedBean.latestPersonnel.clerical}" 
+												currValue="#{backingBean.managedBean.selectedShareHolder.clerical}" />
+										<h:outputText style="float: left" value="#{lbl['lbl.sm.person.stf']}" />
+									</td>
+								</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</c:when>
+		<c:otherwise>
+			<table style="width: 100%">
+				<tr>
+					<td style="width: 18%"><p:outputLabel value="#{lbl['lbl.sm.roles']} : " /><p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+					<td style="padding-left: 5px;">
+						<table>
+							<tr>
+								<c:if test="#{backingBean.managedBean.validEquityLimit or backingBean.managedBean.smSupplier.businessType eq 'R'
+								or (backingBean.managedBean.selectedShareHolder.equityOwner and backingBean.managedBean.selectedShareHolder.ssmData)}"> <!-- #30444 -27032022  add condition --> <!--  change by fahmi, log : 23858 13/03/2019 -->
+								<h:panelGroup rendered="#{backingBean.showEquity(backingBean.managedBean)}"> <!-- #30444 -27032022  add panelGroup rendered -->		
+									<td style="width: 20px">
+										<p:selectBooleanCheckbox value="#{backingBean.managedBean.selectedShareHolder.equityOwner}"
+										disabled="#{(backingBean.managedBean.currentPageType eq SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY) 
+									        or (backingBean.managedBean.selectedShareHolder.ssmData and backingBean.managedBean.selectedShareHolder.equityOwnerSsm) 
+									        or (backingBean.managedBean.smAppl.applValidWithSsm 
+									        	and (backingBean.managedBean.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG or backingBean.managedBean.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG))
+									        	or (backingBean.managedBean.selectedShareHolder.disableEquityOwner)}"><!--#30444 -17022022 add condition in disabled-->
+											<p:ajax event="change" update=":#{p:component('shrRolesPanel')}, @([id$=shareHolderAddrDialog]),:#{p:component('equiShrHldrJbFnc')}"
+												process=":#{p:component('shrRolesPanel')}" partialSubmit="true"
+												listener="#{backingBean.managePersonnelRoles('Y')}" />
+										</p:selectBooleanCheckbox></td>
+									<td>
+										<ac:smCheckBoxChangeAlert 
+												isShow="#{backingBean.managedBean.showFieldChanges
+													and not empty backingBean.managedBean.latestPersonnel}"
+												oriValue="#{backingBean.managedBean.latestPersonnel.equityOwner}" 
+												currValue="#{backingBean.managedBean.selectedShareHolder.equityOwner}" />
+										<h:outputText style="float: left"
+										    value="#{lbl['lbl.sm.person.equiOwner']}" />
+									</td>
+									</h:panelGroup> <!-- #30444 -27032022 end of panelGroup -->	
+								</c:if>
+								<c:if
+									test="#{backingBean.managedBean.currentPageType ne SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY}">
+									<c:if
+										test="#{backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT and 
+										backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT}">
+										<h:panelGroup rendered="#{backingBean.showDirector(backingBean.managedBean)}" >
+											<td style="width: 20px">
+												<p:selectBooleanCheckbox
+													value="#{backingBean.managedBean.selectedShareHolder.director}" 
+													disabled="#{backingBean.managedBean.selectedShareHolder.directorSsm || backingBean.managedBean.selectedShareHolder.disableEquityOwner}" > <!--#30444 -17022022 add condition in disabled-->
+													<p:ajax event="change" update=":#{p:component('shrRolesPanel')}, @([id$=shareHolderAddrDialog])"
+														process=":#{p:component('shrRolesPanel')}" partialSubmit="true"
+														listener="#{backingBean.managePersonnelRoles('Y')}" />
+												</p:selectBooleanCheckbox>
+											</td>
+											<td>
+												<ac:smCheckBoxChangeAlert 
+													isShow="#{backingBean.managedBean.showFieldChanges
+														and not empty backingBean.managedBean.latestPersonnel}"
+													oriValue="#{backingBean.managedBean.latestPersonnel.director}" 
+													currValue="#{backingBean.managedBean.selectedShareHolder.director}" />
+												<h:outputText style="float: left" value="#{lbl['lbl.sm.person.dir']}" />
+											</td>
+										</h:panelGroup>
+										
+										<td style="width: 20px"><p:selectBooleanCheckbox
+												value="#{backingBean.managedBean.selectedShareHolder.higherManagement}"
+												disabled="#{backingBean.managedBean.selectedShareHolder.disableEquityOwner}" ><!--#30444 -25082021 add disabled-->
+												<p:ajax event="change" update=":#{p:component('shrRolesPanel')}, @([id$=shareHolderAddrDialog])"
+													process=":#{p:component('shrRolesPanel')}" partialSubmit="true"
+													listener="#{backingBean.managePersonnelRoles('Y')}" />
+											</p:selectBooleanCheckbox></td>
+										<td>
+											<ac:smCheckBoxChangeAlert 
+												isShow="#{backingBean.managedBean.showFieldChanges
+													and not empty backingBean.managedBean.latestPersonnel}"
+												oriValue="#{backingBean.managedBean.latestPersonnel.higherManagement}" 
+												currValue="#{backingBean.managedBean.selectedShareHolder.higherManagement}" />
+											<h:outputText style="float: left"
+												value="#{lbl['lbl.sm.person.hghMngmt']}" />
+										</td>
+									</c:if>
+									<td style="width: 20px"><p:selectBooleanCheckbox
+									        disabled="#{backingBean.managedBean.selectedShareHolder.disableManagement}"  
+											value="#{backingBean.managedBean.selectedShareHolder.management}">     <!--#30444 -07052021 add disabled-->
+											<p:ajax event="change" update=":#{p:component('shrRolesPanel')}"
+												process=":#{p:component('shrRolesPanel')}" partialSubmit="true"
+												listener="#{backingBean.managePersonnelRoles('N')}" />
+										</p:selectBooleanCheckbox></td>
+									<td>
+										<ac:smCheckBoxChangeAlert 
+												isShow="#{backingBean.managedBean.showFieldChanges
+													and not empty backingBean.managedBean.latestPersonnel}"
+												oriValue="#{backingBean.managedBean.latestPersonnel.management}" 
+												currValue="#{backingBean.managedBean.selectedShareHolder.management}" />
+										<h:outputText style="float: left" value="#{lbl['lbl.sm.person.mngmt']}" />
+									</td>
+								</c:if>
+							</tr>
+							<c:if
+								test="#{backingBean.managedBean.currentPageType ne SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY}">
+								<tr>
+									<td style="width: 20px"><p:selectBooleanCheckbox
+									        disabled="#{backingBean.managedBean.selectedShareHolder.disableProf}"  
+											value="#{backingBean.managedBean.selectedShareHolder.prof}"> <!--#30444 -07052021 add disabled-->
+											<!-- #30517 Start -->
+											<p:ajax event="change" update=":#{p:component('shrRolesPanel')}"
+												process=":#{p:component('shrRolesPanel')}" partialSubmit="true"
+												listener="#{backingBean.managePersonnelRoles('N')}" />
+											<!-- #30517 End -->
+										</p:selectBooleanCheckbox></td>
+									<td>
+										<ac:smCheckBoxChangeAlert 
+												isShow="#{backingBean.managedBean.showFieldChanges
+													and not empty backingBean.managedBean.latestPersonnel}"
+												oriValue="#{backingBean.managedBean.latestPersonnel.prof}" 
+												currValue="#{backingBean.managedBean.selectedShareHolder.prof}" />
+										<h:outputText style="float: left"
+											value="#{lbl['lbl.sm.professional']}" />
+									</td>
+									<td style="width: 20px"><p:selectBooleanCheckbox
+											disabled="#{backingBean.managedBean.selectedShareHolder.disableSemiProf}"
+											value="#{backingBean.managedBean.selectedShareHolder.semiProf}">
+											<!-- #30517 Start -->
+											<p:ajax event="change" update=":#{p:component('shrRolesPanel')}"
+												process=":#{p:component('shrRolesPanel')}" partialSubmit="true"
+												listener="#{backingBean.managePersonnelRoles('N')}" />
+											<!-- #30517 End -->
+										</p:selectBooleanCheckbox></td>
+									<td>
+										<ac:smCheckBoxChangeAlert 
+											isShow="#{backingBean.managedBean.showFieldChanges
+												and not empty backingBean.managedBean.latestPersonnel}"
+											oriValue="#{backingBean.managedBean.latestPersonnel.semiProf}" 
+											currValue="#{backingBean.managedBean.selectedShareHolder.semiProf}" />
+										<h:outputText style="float: left"
+											value="#{lbl['lbl.sm.professional.semi']}" />
+									</td>
+									<!-- SSM Redmine 9456 -->
+									<td style="width: 20px"><p:selectBooleanCheckbox
+											disabled="#{backingBean.managedBean.selectedShareHolder.disableStaff || (backingBean.managedBean.selectedShareHolder.equityOwner and backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)}"
+											value="#{backingBean.managedBean.selectedShareHolder.clerical}" >
+										<!-- #30517 Start -->
+										<p:ajax event="change" update=":#{p:component('shrRolesPanel')},@([id$=shareHolderAddrDialog])"
+												process=":#{p:component('shrRolesPanel')}" partialSubmit="true" listener="#{backingBean.setRoleStaffAddrReqd()}"/>
+										<!-- #30517 End -->
+										</p:selectBooleanCheckbox>
+									</td>
+									<td>
+										<ac:smCheckBoxChangeAlert 
+											isShow="#{backingBean.managedBean.showFieldChanges
+												and not empty backingBean.managedBean.latestPersonnel}"
+											oriValue="#{backingBean.managedBean.latestPersonnel.clerical}" 
+											currValue="#{backingBean.managedBean.selectedShareHolder.clerical}" />
+										<h:outputText style="float: left" value="#{lbl['lbl.sm.person.composition.clrStf']}" />
+									</td>
+								</tr>
+							</c:if>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</c:otherwise>
+	</c:choose>
+
+</ui:composition>

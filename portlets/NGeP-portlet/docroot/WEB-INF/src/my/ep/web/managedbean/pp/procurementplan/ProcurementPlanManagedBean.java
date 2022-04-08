@@ -1,0 +1,1488 @@
+/*
+ * Copyright © 2014 Archisoft Consulting Sdn Bhd. All rights reserved.
+ */
+package my.ep.web.managedbean.pp.procurementplan;
+
+//210801@akmal - Enhancement27624 - Start
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+//210801@akmal - Enhancement27624 - End
+
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
+
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.VPmGo;
+import my.ep.persistence.entity.pp.procurementplan.PpExpenditureItem;
+import my.ep.persistence.entity.pp.procurementplan.PpPlan;
+import my.ep.persistence.entity.pp.procurementplan.PpProcurementItem;
+import my.ep.persistence.entity.pp.procurementplan.PpRejectReason;
+import my.ep.persistence.entity.pp.procurementplan.PpRemark;
+import my.ep.persistence.entity.pp.procurementplan.PpWorkflowStatus;
+import my.ep.persistence.entity.pp.procurementplan.PpUpdateReason;
+import my.ep.web.bean.pp.ProcurementPlanSearchBean;
+import my.ep.web.managedbean.BaseManagedBean;
+
+import org.primefaces.model.DualListModel;
+
+/**
+ * Managed Bean for Procurement Plan 
+ * 
+ * @author RAIN POH
+ * @since 20/10/2014
+ *
+ */
+@ManagedBean(name = "pPlanManagedBean")
+@SessionScoped
+public class ProcurementPlanManagedBean extends BaseManagedBean{
+
+	private static final long serialVersionUID = 1L;
+	private ProcurementPlanSearchBean planSearchBean;
+	private String filterOrgCondition;
+	private PmOrgProfile currentActiveOrg;
+	private PmOrgProfile orgProfile;
+	
+	private boolean modeReview;
+	private boolean modeReviewEditable;
+	private boolean modeEditable;
+	private boolean isSearch;
+	private boolean backAllow;
+	private boolean approvedPlan;
+	//210801@akmal - Enhancement27624 - Start
+	private boolean isPlanDetailSearch = false;
+	private boolean isPlanDetailReset = false;
+	private Long planId;
+	private List<VPmGo> vPmGolist;
+	private Map<String, VPmGo> vPmGomap;
+	private boolean disablePlanSearchDet = false;
+	private String maxYear = "31/12/2050";
+	private String minYear = "01/01/2010";
+	private String minInvitationYear = "01/01/2010";
+	private String maxInvitationYear = "01/01/2050";
+	private boolean fromTaskList = false;
+	private PmParameter selectedCatSearch;
+	private String pageStyle;
+	private String prevAction;
+	private boolean fromAudit=false;
+	//210801@akmal - Enhancement27624 - End
+	private String btnValue;
+	
+	private PpWorkflowStatus ppWorkflowStatus;
+	private String bpmStatusCreator;
+	private Timestamp bpmStatusDate;
+	private Long bpmStatusId;
+	private String invitationYear;
+	
+	private List <PpExpenditureItem> epItemsB;
+	private BigDecimal epTotalBudgetB;
+	private BigDecimal epTotalPlanB ;
+	private BigDecimal epTotalNonEpAllocB;
+	private List <PpExpenditureItem> epItemsT;
+	private BigDecimal epTotalBudgetT;
+	private BigDecimal epTotalPlanT;
+	private BigDecimal epTotalNonEpAllocT;
+	private List <PpExpenditureItem> epItemsP;
+	private BigDecimal epTotalBudgetP;
+	private BigDecimal epTotalPlanP;
+	private BigDecimal epTotalNonEpAllocP;
+	private List <PpExpenditureItem> epItemsS;
+	private BigDecimal epTotalBudgetS;
+	private BigDecimal epTotalPlanS;
+	private BigDecimal epTotalNonEpAllocS;
+	private List <PpExpenditureItem> epItemsH;
+	private BigDecimal epTotalBudgetH;
+	private BigDecimal epTotalPlanH;
+	private BigDecimal epTotalNonEpAllocH;
+	
+	
+	private PpPlan selectedPlan;
+	private List<PpExpenditureItem> deleteEpItemsAll;
+	private List<PpProcurementItem> deletePpItems;
+	private DualListModel<PmUser> approverModel;
+	private DualListModel<PmUser> verifierModel;
+	private boolean confirmJustification;
+	private boolean confirmReason;
+	private boolean confirmRemark;
+	private String selectedReasonDesc;
+	private String selectedRemarkDesc;
+	private String selectedItemRemarkDesc;
+	private String selectedJustificationDesc;
+	private List<PpRejectReason> selectedRejectReasons;
+	private List<PpRemark> selectedRemarks;
+	private List<PpRemark> selectedJustifications;
+	private List<PpRemark> selectedItemRemarks;
+	private BigDecimal ppTotalEst;
+	private List<PpExpenditureItem> deleteEpItemsB;
+	private List<PpExpenditureItem> deleteEpItemsT;
+	private List<PpExpenditureItem> deleteEpItemsP;
+	private List<PpExpenditureItem> deleteEpItemsS;
+	private List<PpExpenditureItem> deleteEpItemsH;
+
+	private int selectedSearchType;
+	private List<SelectItem> searchOptions;
+	private String searchValue;
+	private PmOrgProfile selectedPTJ;
+	private PmOrgProfile selectedKumpulanPTJ;
+	private PmOrgProfile selectedMinistry;
+	private boolean isDisabledMinistryLov = false;
+	private boolean isDisabledKumpulanPTJLov = false;
+	private boolean isDisabledPTJLov = false;	
+	private boolean isTrackingDiary;
+	private Long oldYearValue;
+	private Date invitationMinDateFrom;
+	private Date invitationMinDateTo;
+	private Date invitationMaxDate;
+	
+	private List<PpUpdateReason> selectedUpdateReasons;
+	
+	
+	//[#25549] add .. start
+	private List<PpProcurementItem> clonePpProcurementItemLs;
+	private List<PpExpenditureItem> clonePpExpenditureItemLs;
+	private List<PpExpenditureItem> clonePpExpenditurePItemLs;
+	private List<PpExpenditureItem> clonePpExpenditureSItemLs;
+	private List<PpExpenditureItem> clonePpExpenditureTItemLs;
+	private List<PpExpenditureItem> clonePpExpenditureHItemLs;
+	private String paramExpenditure;
+	private String status;
+	private boolean disableSelectBtn = false;
+	private boolean disableSelectExpBtn = false;
+	private boolean disableSelectRow = false;
+
+	//End
+	
+	//#24975 17/03/20 - start
+	private boolean editable;
+	//#24975 17/03/20 - end
+	
+	//25549@18092020 - start
+	private boolean disable;
+	//25549@18092020 - end
+	
+	//28760 - start
+	private boolean flagCancelButton = false;
+	//28760 - end
+	//27624 - start
+	private boolean planDetailSearchReset;
+	private boolean getProcurementItemList;
+	// 27624 - end
+	public ProcurementPlanManagedBean(){}
+
+	/**
+	 * @return the epItemsB
+	 */
+	public List<PpExpenditureItem> getEpItemsB() {
+		if (epItemsB == null)
+			epItemsB = new ArrayList<PpExpenditureItem>();
+		return epItemsB;
+	}
+	/**
+	 * @param epItemsB the epItemsB to set
+	 */
+	public void setEpItemsB(List<PpExpenditureItem> epItemsB) {
+		this.epItemsB = epItemsB;
+	}
+
+	/**
+	 * @return the epItemsT
+	 */
+	public List<PpExpenditureItem> getEpItemsT() {
+		return epItemsT;
+	}
+
+	/**
+	 * @param epItemsT the epItemsT to set
+	 */
+	public void setEpItemsT(List<PpExpenditureItem> epItemsT) {
+		this.epItemsT = epItemsT;
+	}
+
+	/**
+	 * @return the epItemsP
+	 */
+	public List<PpExpenditureItem> getEpItemsP() {
+		return epItemsP;
+	}
+
+	/**
+	 * @param epItemsP the epItemsP to set
+	 */
+	public void setEpItemsP(List<PpExpenditureItem> epItemsP) {
+		this.epItemsP = epItemsP;
+	}
+
+	/**
+	 * @return the epItemsS
+	 */
+	public List<PpExpenditureItem> getEpItemsS() {
+		return epItemsS;
+	}
+
+	/**
+	 * @param epItemsS the epItemsS to set
+	 */
+	public void setEpItemsS(List<PpExpenditureItem> epItemsS) {
+		this.epItemsS = epItemsS;
+	}
+
+	/**
+	 * @return the epItemsH
+	 */
+	public List<PpExpenditureItem> getEpItemsH() {
+		return epItemsH;
+	}
+
+	/**
+	 * @param epItemsH the epItemsH to set
+	 */
+	public void setEpItemsH(List<PpExpenditureItem> epItemsH) {
+		this.epItemsH = epItemsH;
+	}
+
+	/**
+	 * @return the approvedPlan
+	 */
+	public boolean isApprovedPlan() {
+		return approvedPlan;
+	}
+
+	/**
+	 * @param approvedPlan the approvedPlan to set
+	 */
+	public void setApprovedPlan(boolean approvedPlan) {
+		this.approvedPlan = approvedPlan;
+	}
+
+	/**
+	 * @return the invitationYear
+	 */
+	public String getInvitationYear() {
+		return invitationYear;
+	}
+
+	/**
+	 * @param invitationYear the invitationYear to set
+	 */
+	public void setInvitationYear(String invitationYear) {
+		this.invitationYear = invitationYear;
+	}
+
+	/**
+	 * @return the bpmStatusCreator
+	 */
+	public String getBpmStatusCreator() {
+		return bpmStatusCreator;
+	}
+
+	/**
+	 * @param bpmStatusCreator the bpmStatusCreator to set
+	 */
+	public void setBpmStatusCreator(String bpmStatusCreator) {
+		this.bpmStatusCreator = bpmStatusCreator;
+	}
+
+	/**
+	 * @return the bpmStatusDate
+	 */
+	public Timestamp getBpmStatusDate() {
+		return bpmStatusDate;
+	}
+
+	/**
+	 * @param bpmStatusDate the bpmStatusDate to set
+	 */
+	public void setBpmStatusDate(Timestamp bpmStatusDate) {
+		this.bpmStatusDate = bpmStatusDate;
+	}
+
+	/**
+	 * @return the bpmStatusId
+	 */
+	public Long getBpmStatusId() {
+		return bpmStatusId;
+	}
+
+	/**
+	 * @param bpmStatusId the bpmStatusId to set
+	 */
+	public void setBpmStatusId(Long bpmStatusId) {
+		this.bpmStatusId = bpmStatusId;
+	}
+
+	/**
+	 * @return the ppWorkflowStatus
+	 */
+	public PpWorkflowStatus getPpWorkflowStatus() {
+		return ppWorkflowStatus;
+	}
+
+	/**
+	 * @param ppWorkflowStatus the ppWorkflowStatus to set
+	 */
+	public void setPpWorkflowStatus(PpWorkflowStatus ppWorkflowStatus) {
+		this.ppWorkflowStatus = ppWorkflowStatus;
+	}
+
+	/**
+	 * @return the backAllow
+	 */
+	public boolean isBackAllow() {
+		return backAllow;
+	}
+
+	/**
+	 * @param backAllow the backAllow to set
+	 */
+	public void setBackAllow(boolean backAllow) {
+		this.backAllow = backAllow;
+	}
+
+	/**
+	 * @return the selectedRemarkDesc
+	 */
+	public String getSelectedRemarkDesc() {
+		return selectedRemarkDesc;
+	}
+
+	/**
+	 * @param selectedRemarkDesc the selectedRemarkDesc to set
+	 */
+	public void setSelectedRemarkDesc(String selectedRemarkDesc) {
+		this.selectedRemarkDesc = selectedRemarkDesc;
+	}
+
+	/**
+	 * @return the selectedItemRemarks
+	 */
+	public List<PpRemark> getSelectedItemRemarks() {
+		return selectedItemRemarks;
+	}
+
+	/**
+	 * @param selectedItemRemarks the selectedItemRemarks to set
+	 */
+	public void setSelectedItemRemarks(List<PpRemark> selectedItemRemarks) {
+		this.selectedItemRemarks = selectedItemRemarks;
+	}
+
+
+
+	/**
+	 * @return the confirmJustification
+	 */
+	public boolean isConfirmJustification() {
+		return confirmJustification;
+	}
+
+	/**
+	 * @param confirmJustification the confirmJustification to set
+	 */
+	public void setConfirmJustification(boolean confirmJustification) {
+		this.confirmJustification = confirmJustification;
+	}
+
+	/**
+	 * @return the confirmReason
+	 */
+	public boolean isConfirmReason() {
+		return confirmReason;
+	}
+
+	/**
+	 * @param confirmReason the confirmReason to set
+	 */
+	public void setConfirmReason(boolean confirmReason) {
+		this.confirmReason = confirmReason;
+	}
+
+	/**
+	 * @return the confirmRemark
+	 */
+	public boolean isConfirmRemark() {
+		return confirmRemark;
+	}
+
+	/**
+	 * @param confirmRemark the confirmRemark to set
+	 */
+	public void setConfirmRemark(boolean confirmRemark) {
+		this.confirmRemark = confirmRemark;
+	}
+
+	/**
+	 * @return the isSearch
+	 */
+	public boolean isSearch() {
+		return isSearch;
+	}
+
+	/**
+	 * @param isSearch the isSearch to set
+	 */
+	public void setSearch(boolean isSearch) {
+		this.isSearch = isSearch;
+	}
+
+	/**
+	 * @return the selectedRemarks
+	 */
+	public List<PpRemark> getSelectedRemarks() {
+		return selectedRemarks;
+	}
+
+	/**
+	 * @param selectedRemarks the selectedRemarks to set
+	 */
+	public void setSelectedRemarks(List<PpRemark> selectedRemarks) {
+		this.selectedRemarks = selectedRemarks;
+	}
+
+	/**
+	 * @return the selectedReasonDesc
+	 */
+	public String getSelectedReasonDesc() {
+		return selectedReasonDesc;
+	}
+
+	/**
+	 * @param selectedReasonDesc the selectedReasonDesc to set
+	 */
+	public void setSelectedReasonDesc(String selectedReasonDesc) {
+		this.selectedReasonDesc = selectedReasonDesc;
+	}
+
+	/**
+	 * @return the filterOrgCondition
+	 */
+	public String getFilterOrgCondition() {
+		return filterOrgCondition;
+	}
+
+	/**
+	 * @param filterOrgCondition the filterOrgCondition to set
+	 */
+	public void setFilterOrgCondition(String filterOrgCondition) {
+		this.filterOrgCondition = filterOrgCondition;
+	}
+
+	/**
+	 * @return the currentActiveOrg
+	 */
+	public PmOrgProfile getCurrentActiveOrg() {
+		return currentActiveOrg;
+	}
+
+	/**
+	 * @param currentActiveOrg the currentActiveOrg to set
+	 */
+	public void setCurrentActiveOrg(PmOrgProfile currentActiveOrg) {
+		this.currentActiveOrg = currentActiveOrg;
+	}
+
+	/**
+	 * @return the modeReviewEditable
+	 */
+	public boolean isModeReviewEditable() {
+		return modeReviewEditable;
+	}
+
+	/**
+	 * @param modeReviewEditable the modeReviewEditable to set
+	 */
+	public void setModeReviewEditable(boolean modeReviewEditable) {
+		this.modeReviewEditable = modeReviewEditable;
+	}
+
+	/**
+	 * @return the selectedRejectReasons
+	 */
+	public List<PpRejectReason> getSelectedRejectReasons() {
+		return selectedRejectReasons;
+	}
+
+	/**
+	 * @param selectedRejectReasons the selectedRejectReasons to set
+	 */
+	public void setSelectedRejectReasons(List<PpRejectReason> selectedRejectReasons) {
+		this.selectedRejectReasons = selectedRejectReasons;
+	}
+	
+	//#24975
+	/**
+	 * @return the selectedRejectReasons
+	 */
+	public List<PpUpdateReason> getSelectedUpdateReasons() {
+		return selectedUpdateReasons;
+	}
+
+	/**
+	 * @param selectedUpdateReasons the selectedRejectReasons to set
+	 */
+	public void setSelectedUpdateReasons(List<PpUpdateReason> selectedUpdateReasons) {
+		this.selectedUpdateReasons = selectedUpdateReasons;
+	}
+
+
+	/**
+	 * @return the approverModel
+	 */
+	public DualListModel<PmUser> getApproverModel() {
+		return approverModel;
+	}
+
+	/**
+	 * @param approverModel the approverModel to set
+	 */
+	public void setApproverModel(DualListModel<PmUser> approverModel) {
+		this.approverModel = approverModel;
+	}
+
+	/**
+	 * @return the verifierModel
+	 */
+	public DualListModel<PmUser> getVerifierModel() {
+		return verifierModel;
+	}
+
+	/**
+	 * @param verifierModel the verifierModel to set
+	 */
+	public void setVerifierModel(DualListModel<PmUser> verifierModel) {
+		this.verifierModel = verifierModel;
+	}
+
+//	/**
+//	 * @return the deleteEpItems
+//	 */
+//	public List<PpExpenditureItem> getDeleteEpItems() {
+//		return deleteEpItems;
+//	}
+//
+//	/**
+//	 * @param deleteEpItems the deleteEpItems to set
+//	 */
+//	public void setDeleteEpItems(List<PpExpenditureItem> deleteEpItems) {
+//		this.deleteEpItems = deleteEpItems;
+//	}
+
+	/**
+	 * @return the deletePpItems
+	 */
+	public List<PpProcurementItem> getDeletePpItems() {
+		return deletePpItems;
+	}
+
+	/**
+	 * @param deletePpItems the deletePpItems to set
+	 */
+	public void setDeletePpItems(List<PpProcurementItem> deletePpItems) {
+		this.deletePpItems = deletePpItems;
+	}
+
+
+	/**
+	 * @return the planSearchBean
+	 */
+	public ProcurementPlanSearchBean getPlanSearchBean() {
+		if(planSearchBean==null)
+			planSearchBean = new ProcurementPlanSearchBean();
+		return planSearchBean;
+	}
+
+	/**
+	 * @param planSearchBean the planSearchBean to set
+	 */
+	public void setPlanSearchBean(ProcurementPlanSearchBean planSearchBean) {
+		this.planSearchBean = planSearchBean;
+	}
+
+	/**
+	 * @return the selectedPlan
+	 */
+	public PpPlan getSelectedPlan() {
+		return selectedPlan;
+	}
+
+	/**
+	 * @param selectedPlan the selectedPlan to set
+	 */
+	public void setSelectedPlan(PpPlan selectedPlan) {
+		this.selectedPlan = selectedPlan;
+	}
+
+	/**
+	 * @return the modeReview
+	 */
+	public boolean isModeReview() {
+		return modeReview;
+	}
+
+	/**
+	 * @param modeReview the modeReview to set
+	 */
+	public void setModeReview(boolean modeReview) {
+		this.modeReview = modeReview;
+	}
+
+	/**
+	 * @return the modeEditable
+	 */
+	public boolean isModeEditable() {
+		return modeEditable;
+	}
+
+	/**
+	 * @param modeEditable the modeEditable to set
+	 */
+	public void setModeEditable(boolean modeEditable) {
+		this.modeEditable = modeEditable;
+	}
+//
+//	/**
+//	 * @return the selectedRemarks
+//	 */
+//	public List<PpRemark> getSelectedRemarks() {
+//		return selectedRemarks;
+//	}
+//
+//	/**
+//	 * @param selectedRemarks the selectedRemarks to set
+//	 */
+//	public void setSelectedRemarks(List<PpRemark> selectedRemarks) {
+//		this.selectedRemarks = selectedRemarks;
+//	}
+
+
+	/**
+	 * @return the ppTotalEst
+	 */
+	public BigDecimal getPpTotalEst() {
+		if(ppTotalEst==null)
+			ppTotalEst = new BigDecimal(0);
+		return ppTotalEst;
+	}
+
+	/**
+	 * @param ppTotalEst the ppTotalEst to set
+	 */
+	public void setPpTotalEst(BigDecimal ppTotalEst) {
+		this.ppTotalEst = ppTotalEst;
+	}
+
+	/**
+	 * @return the selectedJustifications
+	 */
+	public List<PpRemark> getSelectedJustifications() {
+		return selectedJustifications;
+	}
+
+	/**
+	 * @param selectedJustifications the selectedJustifications to set
+	 */
+	public void setSelectedJustifications(List<PpRemark> selectedJustifications) {
+		this.selectedJustifications = selectedJustifications;
+	}
+
+	/**
+	 * @return the selectedItemRemarkDesc
+	 */
+	public String getSelectedItemRemarkDesc() {
+		return selectedItemRemarkDesc;
+	}
+
+	/**
+	 * @param selectedItemRemarkDesc the selectedItemRemarkDesc to set
+	 */
+	public void setSelectedItemRemarkDesc(String selectedItemRemarkDesc) {
+		this.selectedItemRemarkDesc = selectedItemRemarkDesc;
+	}
+
+	/**
+	 * @return the selectedJustificationDesc
+	 */
+	public String getSelectedJustificationDesc() {
+		return selectedJustificationDesc;
+	}
+
+	/**
+	 * @param selectedJustificationDesc the selectedJustificationDesc to set
+	 */
+	public void setSelectedJustificationDesc(String selectedJustificationDesc) {
+		this.selectedJustificationDesc = selectedJustificationDesc;
+	}
+
+	/**
+	 * @return the epTotalBudgetB
+	 */
+	public BigDecimal getEpTotalBudgetB() {
+		if(epTotalBudgetB==null)
+			epTotalBudgetB = new BigDecimal(0);
+		return epTotalBudgetB;
+	}
+
+	/**
+	 * @param epTotalBudgetB the epTotalBudgetB to set
+	 */
+	public void setEpTotalBudgetB(BigDecimal epTotalBudgetB) {
+		this.epTotalBudgetB = epTotalBudgetB;
+	}
+
+	/**
+	 * @return the epTotalPlanB
+	 */
+	public BigDecimal getEpTotalPlanB() {
+		if(epTotalPlanB==null)
+			epTotalPlanB = new BigDecimal(0);
+		return epTotalPlanB;
+	}
+
+	/**
+	 * @param epTotalPlanB the epTotalPlanB to set
+	 */
+	public void setEpTotalPlanB(BigDecimal epTotalPlanB) {
+		this.epTotalPlanB = epTotalPlanB;
+	}
+
+	/**
+	 * @return the epTotalNonEpAllocB
+	 */
+	public BigDecimal getEpTotalNonEpAllocB() {
+		if(epTotalNonEpAllocB==null)
+			epTotalNonEpAllocB = new BigDecimal(0);
+		return epTotalNonEpAllocB;
+	}
+
+	/**
+	 * @param epTotalNonEpAllocB the epTotalNonEpAllocB to set
+	 */
+	public void setEpTotalNonEpAllocB(BigDecimal epTotalNonEpAllocB) {
+		this.epTotalNonEpAllocB = epTotalNonEpAllocB;
+	}
+
+	/**
+	 * @return the epTotalBudgetT
+	 */
+	public BigDecimal getEpTotalBudgetT() {
+		if(epTotalBudgetT==null)
+			epTotalBudgetT = new BigDecimal(0);
+		return epTotalBudgetT;
+	}
+
+	/**
+	 * @param epTotalBudgetT the epTotalBudgetT to set
+	 */
+	public void setEpTotalBudgetT(BigDecimal epTotalBudgetT) {
+		this.epTotalBudgetT = epTotalBudgetT;
+	}
+
+	/**
+	 * @return the epTotalPlanT
+	 */
+	public BigDecimal getEpTotalPlanT() {
+		if(epTotalPlanT==null)
+			epTotalPlanT = new BigDecimal(0);
+		return epTotalPlanT;
+	}
+
+	/**
+	 * @param epTotalPlanT the epTotalPlanT to set
+	 */
+	public void setEpTotalPlanT(BigDecimal epTotalPlanT) {
+		this.epTotalPlanT = epTotalPlanT;
+	}
+
+	/**
+	 * @return the epTotalNonEpAllocT
+	 */
+	public BigDecimal getEpTotalNonEpAllocT() {
+		if(epTotalNonEpAllocT==null)
+			epTotalNonEpAllocT = new BigDecimal(0);
+		return epTotalNonEpAllocT;
+	}
+
+	/**
+	 * @param epTotalNonEpAllocT the epTotalNonEpAllocT to set
+	 */
+	public void setEpTotalNonEpAllocT(BigDecimal epTotalNonEpAllocT) {
+		this.epTotalNonEpAllocT = epTotalNonEpAllocT;
+	}
+
+	/**
+	 * @return the epTotalBudgetP
+	 */
+	public BigDecimal getEpTotalBudgetP() {
+		if(epTotalBudgetP==null)
+			epTotalBudgetP = new BigDecimal(0);
+		return epTotalBudgetP;
+	}
+
+	/**
+	 * @param epTotalBudgetP the epTotalBudgetP to set
+	 */
+	public void setEpTotalBudgetP(BigDecimal epTotalBudgetP) {
+		this.epTotalBudgetP = epTotalBudgetP;
+	}
+
+	/**
+	 * @return the epTotalPlanP
+	 */
+	public BigDecimal getEpTotalPlanP() {
+		if(epTotalPlanP==null)
+			epTotalPlanP = new BigDecimal(0);
+		return epTotalPlanP;
+	}
+
+	/**
+	 * @param epTotalPlanP the epTotalPlanP to set
+	 */
+	public void setEpTotalPlanP(BigDecimal epTotalPlanP) {
+		this.epTotalPlanP = epTotalPlanP;
+	}
+
+	/**
+	 * @return the epTotalNonEpAllocP
+	 */
+	public BigDecimal getEpTotalNonEpAllocP() {
+		if(epTotalNonEpAllocP==null)
+			epTotalNonEpAllocP = new BigDecimal(0);
+		return epTotalNonEpAllocP;
+	}
+
+	/**
+	 * @param epTotalNonEpAllocP the epTotalNonEpAllocP to set
+	 */
+	public void setEpTotalNonEpAllocP(BigDecimal epTotalNonEpAllocP) {
+		this.epTotalNonEpAllocP = epTotalNonEpAllocP;
+	}
+
+	/**
+	 * @return the epTotalBudgetS
+	 */
+	public BigDecimal getEpTotalBudgetS() {
+		if(epTotalBudgetS==null)
+			epTotalBudgetS = new BigDecimal(0);
+		return epTotalBudgetS;
+	}
+
+	/**
+	 * @param epTotalBudgetS the epTotalBudgetS to set
+	 */
+	public void setEpTotalBudgetS(BigDecimal epTotalBudgetS) {
+		this.epTotalBudgetS = epTotalBudgetS;
+	}
+
+	/**
+	 * @return the epTotalPlanS
+	 */
+	public BigDecimal getEpTotalPlanS() {
+		if(epTotalPlanS==null)
+			epTotalPlanS = new BigDecimal(0);
+		return epTotalPlanS;
+	}
+
+	/**
+	 * @param epTotalPlanS the epTotalPlanS to set
+	 */
+	public void setEpTotalPlanS(BigDecimal epTotalPlanS) {
+		this.epTotalPlanS = epTotalPlanS;
+	}
+
+	/**
+	 * @return the epTotalNonEpAllocS
+	 */
+	public BigDecimal getEpTotalNonEpAllocS() {
+		if(epTotalNonEpAllocS==null)
+			epTotalNonEpAllocS = new BigDecimal(0);
+		return epTotalNonEpAllocS;
+	}
+
+	/**
+	 * @param epTotalNonEpAllocS the epTotalNonEpAllocS to set
+	 */
+	public void setEpTotalNonEpAllocS(BigDecimal epTotalNonEpAllocS) {
+		this.epTotalNonEpAllocS = epTotalNonEpAllocS;
+	}
+
+	/**
+	 * @return the epTotalBudgetH
+	 */
+	public BigDecimal getEpTotalBudgetH() {
+		if(epTotalBudgetH==null)
+			epTotalBudgetH = new BigDecimal(0);
+		return epTotalBudgetH;
+	}
+
+	/**
+	 * @param epTotalBudgetH the epTotalBudgetH to set
+	 */
+	public void setEpTotalBudgetH(BigDecimal epTotalBudgetH) {
+		this.epTotalBudgetH = epTotalBudgetH;
+	}
+
+	/**
+	 * @return the epTotalPlanH
+	 */
+	public BigDecimal getEpTotalPlanH() {
+		if(epTotalPlanH==null)
+			epTotalPlanH = new BigDecimal(0);
+		return epTotalPlanH;
+	}
+
+	/**
+	 * @param epTotalPlanH the epTotalPlanH to set
+	 */
+	public void setEpTotalPlanH(BigDecimal epTotalPlanH) {
+		this.epTotalPlanH = epTotalPlanH;
+	}
+
+	/**
+	 * @return the epTotalNonEpAllocH
+	 */
+	public BigDecimal getEpTotalNonEpAllocH() {
+		if(epTotalNonEpAllocH==null)
+			epTotalNonEpAllocH = new BigDecimal(0);
+		return epTotalNonEpAllocH;
+	}
+
+	/**
+	 * @param epTotalNonEpAllocH the epTotalNonEpAllocH to set
+	 */
+	public void setEpTotalNonEpAllocH(BigDecimal epTotalNonEpAllocH) {
+		this.epTotalNonEpAllocH = epTotalNonEpAllocH;
+	}
+	
+	/**
+	 * @return the orgProfile
+	 */
+	public PmOrgProfile getOrgProfile() {
+		return orgProfile;
+	}
+	
+	/**
+	 * @param orgProfile
+	 *            the orgProfile to set
+	 */
+	public void setOrgProfile(PmOrgProfile orgProfile) {
+		this.orgProfile = orgProfile;
+	}
+
+	/**
+	 * @return the selectedSearchType
+	 */
+	public int getSelectedSearchType() {
+		return selectedSearchType;
+	}
+
+	/**
+	 * @param selectedSearchType the selectedSearchType to set
+	 */
+	public void setSelectedSearchType(int selectedSearchType) {
+		this.selectedSearchType = selectedSearchType;
+	}
+
+	/**
+	 * @return the searchOptions
+	 */
+	public List<SelectItem> getSearchOptions() {
+		return searchOptions;
+	}
+
+	/**
+	 * @param searchOptions the searchOptions to set
+	 */
+	public void setSearchOptions(List<SelectItem> searchOptions) {
+		this.searchOptions = searchOptions;
+	}
+
+	/**
+	 * @return the selectedPTJ
+	 */
+	public PmOrgProfile getSelectedPTJ() {
+		return selectedPTJ;
+	}
+
+	/**
+	 * @param selectedPTJ the selectedPTJ to set
+	 */
+	public void setSelectedPTJ(PmOrgProfile selectedPTJ) {
+		this.selectedPTJ = selectedPTJ;
+	}
+
+	/**
+	 * @return the searchValue
+	 */
+	public String getSearchValue() {
+		return searchValue;
+	}
+
+	/**
+	 * @param searchValue the searchValue to set
+	 */
+	public void setSearchValue(String searchValue) {
+		this.searchValue = searchValue;
+	}
+
+	/**
+	 * @return the selectedKumpulanPTJ
+	 */
+	public PmOrgProfile getSelectedKumpulanPTJ() {
+		return selectedKumpulanPTJ;
+	}
+
+	/**
+	 * @param selectedKumpulanPTJ the selectedKumpulanPTJ to set
+	 */
+	public void setSelectedKumpulanPTJ(PmOrgProfile selectedKumpulanPTJ) {
+		this.selectedKumpulanPTJ = selectedKumpulanPTJ;
+	}
+
+	/**
+	 * @return the selectedMinistry
+	 */
+	public PmOrgProfile getSelectedMinistry() {
+		return selectedMinistry;
+	}
+
+	/**
+	 * @param selectedMinistry the selectedMinistry to set
+	 */
+	public void setSelectedMinistry(PmOrgProfile selectedMinistry) {
+		this.selectedMinistry = selectedMinistry;
+	}
+
+	/**
+	 * @return the isDisabledMinistryLov
+	 */
+	public boolean isDisabledMinistryLov() {
+		return isDisabledMinistryLov;
+	}
+
+	/**
+	 * @param isDisabledMinistryLov the isDisabledMinistryLov to set
+	 */
+	public void setDisabledMinistryLov(boolean isDisabledMinistryLov) {
+		this.isDisabledMinistryLov = isDisabledMinistryLov;
+	}
+
+	/**
+	 * @return the isDisabledKumpulanPTJLov
+	 */
+	public boolean isDisabledKumpulanPTJLov() {
+		return isDisabledKumpulanPTJLov;
+	}
+
+	/**
+	 * @param isDisabledKumpulanPTJLov the isDisabledKumpulanPTJLov to set
+	 */
+	public void setDisabledKumpulanPTJLov(boolean isDisabledKumpulanPTJLov) {
+		this.isDisabledKumpulanPTJLov = isDisabledKumpulanPTJLov;
+	}
+
+	/**
+	 * @return the isDisabledPTJLov
+	 */
+	public boolean isDisabledPTJLov() {
+		return isDisabledPTJLov;
+	}
+
+	/**
+	 * @param isDisabledPTJLov the isDisabledPTJLov to set
+	 */
+	public void setDisabledPTJLov(boolean isDisabledPTJLov) {
+		this.isDisabledPTJLov = isDisabledPTJLov;
+	}
+
+	/**
+	 * @return the btnValue
+	 */
+	public String getBtnValue() {
+		return btnValue;
+	}
+
+	/**
+	 * @param btnValue the btnValue to set
+	 */
+	public void setBtnValue(String btnValue) {
+		this.btnValue = btnValue;
+	}
+
+	/**
+	 * @return the isTrackingDiary
+	 */
+	public boolean isTrackingDiary() {
+		return isTrackingDiary;
+	}
+
+	/**
+	 * @param isTrackingDiary the isTrackingDiary to set
+	 */
+	public void setTrackingDiary(boolean isTrackingDiary) {
+		this.isTrackingDiary = isTrackingDiary;
+	}
+
+	/**
+	 * @return the oldYearValue
+	 */
+	public Long getOldYearValue() {
+		return oldYearValue;
+	}
+
+	/**
+	 * @param oldYearValue the oldYearValue to set
+	 */
+	public void setOldYearValue(Long oldYearValue) {
+		this.oldYearValue = oldYearValue;
+	}
+
+	public List<PpExpenditureItem> getDeleteEpItemsAll() {
+		return deleteEpItemsAll;
+	}
+
+	public void setDeleteEpItemsAll(List<PpExpenditureItem> deleteEpItemsAll) {
+		this.deleteEpItemsAll = deleteEpItemsAll;
+	}
+
+	public List<PpExpenditureItem> getDeleteEpItemsB() {
+		return deleteEpItemsB;
+	}
+
+	public void setDeleteEpItemsB(List<PpExpenditureItem> deleteEpItemsB) {
+		this.deleteEpItemsB = deleteEpItemsB;
+	}
+
+	public List<PpExpenditureItem> getDeleteEpItemsT() {
+		return deleteEpItemsT;
+	}
+
+	public void setDeleteEpItemsT(List<PpExpenditureItem> deleteEpItemsT) {
+		this.deleteEpItemsT = deleteEpItemsT;
+	}
+
+	public List<PpExpenditureItem> getDeleteEpItemsP() {
+		return deleteEpItemsP;
+	}
+
+	public void setDeleteEpItemsP(List<PpExpenditureItem> deleteEpItemsP) {
+		this.deleteEpItemsP = deleteEpItemsP;
+	}
+
+	public List<PpExpenditureItem> getDeleteEpItemsS() {
+		return deleteEpItemsS;
+	}
+
+	public void setDeleteEpItemsS(List<PpExpenditureItem> deleteEpItemsS) {
+		this.deleteEpItemsS = deleteEpItemsS;
+	}
+
+	public List<PpExpenditureItem> getDeleteEpItemsH() {
+		return deleteEpItemsH;
+	}
+
+	public void setDeleteEpItemsH(List<PpExpenditureItem> deleteEpItemsH) {
+		this.deleteEpItemsH = deleteEpItemsH;
+	}
+
+	public Date getInvitationMinDateFrom() {
+		return invitationMinDateFrom;
+	}
+
+	public void setInvitationMinDateFrom(Date invitationMinDateFrom) {
+		this.invitationMinDateFrom = invitationMinDateFrom;
+	}
+
+	public Date getInvitationMinDateTo() {
+		return invitationMinDateTo;
+	}
+
+	public void setInvitationMinDateTo(Date invitationMinDateTo) {
+		this.invitationMinDateTo = invitationMinDateTo;
+	}
+
+	public Date getInvitationMaxDate() {
+		return invitationMaxDate;
+	}
+
+	public void setInvitationMaxDate(Date invitationMaxDate) {
+		this.invitationMaxDate = invitationMaxDate;
+	}
+	
+	
+	//[#25549] add .. start
+	public List<PpProcurementItem> getClonePpProcurementItemLs() {
+		return clonePpProcurementItemLs;
+	}
+
+	public void setClonePpProcurementItemLs(List<PpProcurementItem> clonePpProcurementItemLs) {
+		this.clonePpProcurementItemLs = clonePpProcurementItemLs;
+	}
+		
+		
+	public List<PpExpenditureItem> getClonePpExpenditureItemLs() {
+		return clonePpExpenditureItemLs;
+	}
+
+	public void setClonePpExpenditureItemLs(List<PpExpenditureItem> clonePpExpenditureItemLs) {
+		this.clonePpExpenditureItemLs = clonePpExpenditureItemLs;
+	}
+		
+	public List<PpExpenditureItem> getClonePpExpenditurePItemLs() {
+		return clonePpExpenditurePItemLs;
+	}
+
+	public void setClonePpExpenditurePItemLs(List<PpExpenditureItem> clonePpExpenditurePItemLs) {
+		this.clonePpExpenditurePItemLs = clonePpExpenditurePItemLs;
+	}
+		
+	public List<PpExpenditureItem> getClonePpExpenditureSItemLs() {
+		return clonePpExpenditureSItemLs;
+	}
+
+	public void setClonePpExpenditureSItemLs(List<PpExpenditureItem> clonePpExpenditureSItemLs) {
+		this.clonePpExpenditureSItemLs = clonePpExpenditureSItemLs;
+	}
+		
+	public List<PpExpenditureItem> getClonePpExpenditureTItemLs() {
+		return clonePpExpenditureTItemLs;
+	}
+
+	public void setClonePpExpenditureTItemLs(List<PpExpenditureItem> clonePpExpenditureTItemLs) {
+		this.clonePpExpenditureTItemLs = clonePpExpenditureTItemLs;
+	}
+		
+		
+	public List<PpExpenditureItem> getClonePpExpenditureHItemLs() {
+		return this.clonePpExpenditureHItemLs;
+	}
+
+	public void setClonePpExpenditureHItemLs(List<PpExpenditureItem> clonePpExpenditureHItemLs) {
+		this.clonePpExpenditureHItemLs = clonePpExpenditureHItemLs;
+		
+	}
+	
+	
+	public String getParamExpenditure() {
+		return paramExpenditure;
+	}
+
+		
+	public void setParamExpenditure(String paramExpenditure) {
+		this.paramExpenditure = paramExpenditure;
+	}
+		
+		
+	public String getStatus() {
+		return status;
+	}
+
+		
+	public void setStatus(String string) {
+		this.status = string;
+	}
+		
+	public boolean isDisableSelectBtn() {
+		return disableSelectBtn;
+	}
+	
+	public void setDisableSelectBtn(boolean disableSelectBtn) {
+		this.disableSelectBtn = disableSelectBtn;
+	}
+	
+	public boolean isDisableSelectExpBtn() {
+		return disableSelectExpBtn;
+	}
+	
+	public void setDisableSelectExpBtn(boolean disableSelectExpBtn) {
+		this.disableSelectExpBtn = disableSelectExpBtn;
+	}
+	
+	public boolean isDisableSelectRow() {
+		return disableSelectRow;
+	}
+
+	public void setDisableSelectRow(boolean disableSelectRow) {
+		this.disableSelectRow = disableSelectRow;
+	}
+
+	//[#25549] add .. End
+	
+	//#24975 17/03/20 - start
+	public boolean isEditable() {
+		return editable;
+	}
+
+	
+	public void setEditable(boolean editable) {
+		this.editable = editable;
+	}
+	
+	//#24975 17/03/20 - end
+	
+	//25549@18092020 - start
+	public boolean isDisable() {
+		return disable;
+	}
+	
+	public void setDisable(boolean disable) {
+		this.disable = disable;
+	}
+	//25549@18092020 - end
+	
+	//210801@akmal - Enhancement27624 - Start
+	public boolean isPlanDetailSearch() {
+		return isPlanDetailSearch;
+	}
+
+	public void setPlanDetailSearch(boolean isPlanDetailSearch) {
+		this.isPlanDetailSearch = isPlanDetailSearch;
+	}
+
+	public boolean isPlanDetailReset() {
+		return isPlanDetailReset;
+	}
+
+	public void setPlanDetailReset(boolean isPlanDetailReset) {
+		this.isPlanDetailReset = isPlanDetailReset;
+	}
+
+	public Long getPlanId() {
+		return planId;
+	}
+
+	public void setPlanId(Long planId) {
+		this.planId = planId;
+	}
+
+	public List<VPmGo> getvPmGolist() {
+		if(vPmGolist==null) vPmGolist=new ArrayList<VPmGo>();
+		return vPmGolist;
+	}
+
+	public void setvPmGolist(List<VPmGo> vPmGolist) {
+		this.vPmGolist = vPmGolist;
+	}
+
+	public Map<String,VPmGo> getvPmGomap() {
+		if(vPmGomap==null) vPmGomap=new HashMap<String,VPmGo>();
+		return vPmGomap;
+	}
+
+	public void setvPmGomap(Map<String,VPmGo> vPmGomap) {
+		this.vPmGomap = vPmGomap;
+	}
+
+	public boolean isDisablePlanSearchDet() {
+		return disablePlanSearchDet;
+	}
+
+	public void setDisablePlanSearchDet(boolean disablePlanSearchDet) {
+		this.disablePlanSearchDet = disablePlanSearchDet;
+	}
+    
+	public String getMaxYear() {
+		return maxYear;
+	}
+
+	public void setMaxYear(String maxYear) {
+		this.maxYear = maxYear;
+	}
+
+	public String getMinYear() {
+		return minYear;
+	}
+
+	public void setMinYear(String minYear) {
+		this.minYear = minYear;
+	}
+
+	public String getMinInvitationYear() {
+		return minInvitationYear;
+	}
+
+	public void setMinInvitationYear(String minInvitationYear) {
+		this.minInvitationYear = minInvitationYear;
+	}
+
+	public String getMaxInvitationYear() {
+		return maxInvitationYear;
+	}
+
+	public void setMaxInvitationYear(String maxInvitationYear) {
+		this.maxInvitationYear = maxInvitationYear;
+	}
+
+	public PmParameter getSelectedCatSearch() {
+		return selectedCatSearch;
+	}
+
+	public void setSelectedCatSearch(PmParameter selectedCatSearch) {
+		this.selectedCatSearch = selectedCatSearch;
+	}
+
+	public String getPageStyle() {
+		return pageStyle;
+	}
+
+	public void setPageStyle(String pageStyle) {
+		this.pageStyle = pageStyle;
+	}
+
+	public String getPrevAction() {
+		return prevAction;
+	}
+
+	public void setPrevAction(String prevAction) {
+		this.prevAction = prevAction;
+	}
+
+	public boolean isAudit() {
+		return fromAudit;
+	}
+
+	public void setAudit(boolean isAudit) {
+		this.fromAudit = isAudit;
+	}
+
+	public boolean isFromTaskList() {
+		return fromTaskList;
+	}
+
+	public void setFromTaskList(boolean fromTaskList) {
+		this.fromTaskList = fromTaskList;
+	}
+	//210801@akmal - Enhancement27624 - End
+
+	//12112020@azza - 28760 - Start
+	public boolean isFlagCancelButton() {
+		return flagCancelButton;
+	}
+
+	public void setFlagCancelButton(boolean flagCancelButton) {
+		this.flagCancelButton = flagCancelButton;
+	}
+	//12112020@azza - 28760 - End
+	//27624 - start
+	public boolean isPlanDetailSearchReset() {
+		return planDetailSearchReset;
+	}
+
+	public void setPlanDetailSearchReset(boolean planDetailSearchReset) {
+		this.planDetailSearchReset = planDetailSearchReset;
+	}
+	
+	public boolean isGetProcurementItemList() {
+		return getProcurementItemList;
+	}
+
+	public void setGetProcurementItemList(boolean getProcurementItemList) {
+		this.getProcurementItemList = getProcurementItemList;
+	}
+	//27624 - end
+}

@@ -1,0 +1,225 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+	<p:panel id="groupInfo" header="#{lbl['lbl.pm.ug.result.title1']}"
+		toggleable="true">
+		<table>
+			<!-- 12852 Start -->
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.pm.ug.result.groupcode']}" />
+				</td>
+				<td><p:inputText style="width:14%;text-transform:uppercase"
+						value="#{usergroupBackingBean.managedBean.userGroup.groupCode}"
+						disabled="#{!usergroupBackingBean.managedBean.userGroup.brandNew or usergroupBackingBean.managedBean.userGroup.brandNew}"
+						size="8" maxlength="10" /></td>
+			</tr>
+			<!-- 12852 End -->
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.pm.ug.result.groupname']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:inputTextarea style="width:220px"
+						rows="3" cols="36"
+						value="#{usergroupBackingBean.managedBean.userGroup.groupName}"
+						size="30" maxlength="100" 
+						onkeyup="limitTextArea(this,100);"
+							onkeydown="limitTextArea(this,100);"
+						disabled="#{not usergroupBackingBean.managedBean.userGroup.brandNew}"/>
+						<ac:iconTooltip id="uggroupnamett" value="#{lbl['lbl.pm.ug.groupname.tooltips']}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.pm.ug.search.role']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneMenu id="somusergrouproles" style="width:230px;margin-bottom:5px;"
+						value="#{usergroupBackingBean.managedBean.userGroup.roleCode}"
+						required="true"
+						label="#{lbl['lbl.pm.ug.search.role']}"
+						disabled="#{not usergroupBackingBean.managedBean.userGroup.brandNew}">
+						<f:selectItems
+							value="#{usergroupBackingBean.getUserGroupRoles()}"></f:selectItems>
+						<p:ajax event="change" update="userPanelId" process="@this" 
+							listener="#{usergroupBackingBean.resetGroupUsers()}"/>	
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.pm.ug.info.orgunit']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:columnGroup>
+						<!-- 12852 Start --> 
+						<p:inputText
+							value="#{usergroupBackingBean.managedBean.userGroup.pmOrgProfile.pmOrgValidity.orgCode}"
+							id="orgCodeUpdate"
+							disabled="#{!usergroupBackingBean.managedBean.userGroup.brandNew}"
+							size="8" readonly="true" />
+							<!-- 12852 End --> &#160;
+							<p:inputText 
+						size="80"
+						id="itSelectedPtj" 
+						value="#{usergroupBackingBean.managedBean.userGroup.pmOrgProfile.pmOrgValidity.orgName}" 
+						readonly="true"/>
+						&#160;	
+						<p:commandLink id="ptjSearchCL" partialSubmit="true"
+							disabled="#{!usergroupBackingBean.managedBean.userGroup.brandNew or usergroupBackingBean.managedBean.disabledOrg}"
+							process="@this" update=":form:orgProfileCcId:ptjPopup"
+							action="#{organisationSearchBackingBean.initPtjPopup}"
+							oncomplete="ptjPopup.show();" >
+							<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
+						</p:commandLink>
+						<ui:remove>
+      	                   <ac:lov id="uomLovId"
+							lovId="PM_ORG_PROFILE_FPJ" size="60"
+							update=":form:orgCodeUpdate,:form:userPanelId"
+							headerText="#{lbl['lbl.pm.ug.info.ptj.list']}"
+							value="#{usergroupBackingBean.managedBean.userGroup.pmOrgProfile.pmOrgValidity.orgName}"
+							saveObject="usergroupBackingBean.managedBean.userGroup.pmOrgProfile"
+							disabled="#{!usergroupBackingBean.managedBean.userGroup.brandNew}"
+							postUpdateListener="usergroupBackingBean.userListner"
+							readonly="true" conditionField="#{usergroupBackingBean.constructConditionFields()}">
+							
+						</ac:lov>
+						
+						<ac:lovPopup />
+						</ui:remove>
+					</p:columnGroup></td>
+			</tr>
+			<p:spacer height="5"></p:spacer>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.pm.search.status']}" /></td>
+				<td><p:selectOneMenu style="width:230px;margin-bottom:5px;"
+						id="usergroupRecordStatusId"
+						value="#{usergroupBackingBean.managedBean.userGroup.recordStatusFlg}"
+						disabled="#{usergroupBackingBean.managedBean.userGroup.brandNew}">
+						<f:selectItems
+							value="#{usergroupBackingBean.getUserGroupStatus()}"></f:selectItems>
+							<p:ajax event="change"
+									onstart="userGroupBlockWidget.show()" 
+									oncomplete="userGroupBlockWidget.hide()"
+									listener="#{usergroupBackingBean.userGroupStatusChange()}"
+									partialSubmit="true" process="@this"
+									update="@this, usergroupmsg" />	
+					</p:selectOneMenu></td>
+			</tr>
+		</table>
+	</p:panel>
+	<ac:ptjPopup 
+		  	id="orgProfileCcId"
+		  	orgTypeParamCode="#{ParameterConst.orgTypePtj}"
+		  	okAction="usergroupBackingBean.userListner"
+		  	update=":form:orgCodeUpdate,:form:userPanelId,:form:itSelectedPtj"  />
+
+	<p:panel header="#{lbl['lbl.pm.ug.result.title']}" toggleable="true"
+		id="userPanelId">
+
+		<table style="width: 100%;">
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.pm.ug.search.name']}"></p:outputLabel></td>
+				<td colspan="1"><p:inputText size="30" id="usernameSearch"
+						value="#{usergroupBackingBean.managedBean.userName}" /></td>
+				<td><p:outputLabel
+						value="#{lbl['lbl.pm.ug.search.identificationNo']}"></p:outputLabel></td>
+				<td><p:inputText title="#{lbl['lbl.cm.title.english']}"
+						maxlength="14" id="identificationNoSearch"
+						value="#{usergroupBackingBean.managedBean.identificationNo}"
+						size="30" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.pm.ug.search.status']}"></p:outputLabel></td>
+				<td><p:selectOneMenu style="width:203px"
+						id="usergroupRecordStatusSearch"
+						value="#{usergroupBackingBean.managedBean.recordSearchStatusFlg}">
+						<f:selectItems
+							value="#{usergroupBackingBean.getSearchUserGroupStatus()}" />
+					</p:selectOneMenu></td>
+			</tr>
+		</table>
+
+		<div style="text-align: right;">
+			<p:commandButton value="#{lbl['lbl.btn.search']}"
+				action="#{usergroupBackingBean.userGroupUserSearch}"
+				update=":form:groupUser" />
+			<p:commandButton value="#{lbl['lbl.btn.reset']}"
+				action="#{usergroupBackingBean.userGroupUserReset}"
+				update=":form:groupUser,:form:usernameSearch,:form:identificationNoSearch,:form:usergroupRecordStatusSearch" />
+		</div>
+
+		<ac:lovPopup />
+		<p:dataTable id="groupUser"
+			value="#{usergroupBackingBean.managedBean.userSearch ? usergroupBackingBean.managedBean.userGroupUserSearch : usergroupBackingBean.managedBean.userGroups}"
+			var="groupuser" rowIndexVar="rowIndex" 
+			rowKey="#{groupuser}">
+			<ac:paginator for="groupUser" />		
+
+			<p:column style="width:65%"
+				headerText="#{lbl['lbl.pm.ug.info.uname']}">
+				<h:outputText value="#{groupuser.pmUser.userName}" />
+			</p:column>
+			
+			<p:column style="width:20%"
+				headerText="#{lbl['lbl.pm.ug.info.identificationNo']}">
+				<h:outputText value="#{groupuser.pmUser.identificationNo}" />
+			</p:column>
+			
+
+			<p:column style="width:20%;" headerText="#{lbl['lbl.pm.ug.info.al']}">
+				<h:outputText value="#{groupuser.approvalLimit}"  style="float:right;"
+					rendered="#{usergroupBackingBean.managedBean.userGroup.roleCode eq ProfileManagementConst.flApprover}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+
+			<p:column style="width:10%"
+				headerText="#{lbl['lbl.pm.ug.result.status']}">
+				<p:selectOneMenu style="width:203px" 
+					required="true"
+					label="#{lbl['lbl.pm.ug.result.status']}"
+					value="#{groupuser.recordStatusFlg}"
+					disabled="#{groupuser.brandNew}">
+					<f:selectItems value="#{usergroupBackingBean.getUserGroupStatus()}"></f:selectItems>
+					<p:ajax event="change" update="@this" process="@this" partialSubmit="true"/>	
+				</p:selectOneMenu>
+			</p:column>
+			<p:column style="width:5%;text-align:center;">
+			<f:facet name="header">				
+				<h:outputText value="#{lbl['lbl.pm.action']}" />
+			</f:facet>
+			<p:commandLink 
+					partialSubmit="true"
+					process="@this"
+					disabled="#{!(groupuser.brandNew)}"
+					oncomplete="groupUserDeletePopUp.show();"
+					update="@([id$=#{groupUserDeleteId}])">
+					<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+					<f:setPropertyActionListener target="#{usergroupBackingBean.managedBean.selectedDeleteGroupUser}" 
+							value="#{groupuser}" />
+			</p:commandLink>
+			
+			
+		</p:column>
+
+		</p:dataTable>
+		
+		<div style="text-align: right;">
+				<ac:lov id="usergrouping" lovId="PM_USER"
+						headerText="#{lbl['lbl.pm.ug.info.users']}"
+						buttonLabel="#{lbl['lbl.btn.add']}" selectionMode="multiple"
+						saveObject="usergroupBackingBean.managedBean.users"
+						postUpdateListener="usergroupBackingBean.userGroupListner"
+						update="@form"
+						disabled="#{!usergroupBackingBean.managedBean.selectGrp or empty usergroupBackingBean.managedBean.userGroup.roleCode}"
+						conditionField="#{usergroupBackingBean.constuctConditionFields()}">
+				</ac:lov>
+		</div>
+		
+		<ac:confirmationPopup id="groupUserDeleteId"
+			widget="groupUserDeletePopUp"
+			okAction="usergroupBackingBean.deleteUserGroup()"
+			width="400" height="100"
+			title="#{lbl['lbl.msg.confirm.delete.header']}"
+			content="#{lbl['lbl.msg.confirm.delete']}" 
+			update=":form:groupUser,:form:usergrouping:usergrouping" />	
+	</p:panel>
+
+</ui:composition>

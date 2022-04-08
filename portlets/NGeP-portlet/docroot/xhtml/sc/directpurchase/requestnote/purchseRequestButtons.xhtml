@@ -1,0 +1,38 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc" 
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+		
+	<div>
+		<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
+			id="backPrevious" partialSubmit="true" process="@this"
+			immediate="true" action="#{requestNoteBackingBean.backToPrevious}"
+			rendered="#{isViewOnly}" />
+
+		<c:if test="#{isViewOnly}">
+			<c:if test="#{isPendingItemCodificationStatus}">
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+					onclick="cd.show()" style="float:right;" />
+				<p:confirmDialog
+					message="#{lbl['lbl.sc.note.request.dialog.confirm.message']}"
+					header="#{lbl['lbl.sc.note.request.dialog.confirm.cancel']}"
+					severity="alert" widgetVar="cd">
+					<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.btn.yes']}"
+							actionListener="#{requestNoteBackingBean.cancelPendingItemCodificationDPM}"
+							onstart="cd.hide(); blockWidget.show()"
+							oncomplete="blockWidget.hide()" id="cancelPendingItemCodification"
+							partialSubmit="true" process="@this" immediate="true" />
+						<p:commandButton value="#{lbl['lbl.btn.no']}"
+							oncomplete="cd.hide();" />
+					</div>
+				</p:confirmDialog>
+			</c:if>
+		</c:if>
+
+	</div>
+</ui:composition>

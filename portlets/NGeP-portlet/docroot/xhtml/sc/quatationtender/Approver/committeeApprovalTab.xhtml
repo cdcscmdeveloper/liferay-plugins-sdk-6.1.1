@@ -1,0 +1,55 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:param name="membersList"
+		value="#{qTDetailBB.managedBean.selectedTabBean.scQtCommittee.scCommittee}" />
+	<ui:param name="selectedMembersList"
+		value="#{qTDetailBB.managedBean.committemembers}" />
+
+	<ui:include src="committeeApproval.xhtml" />
+
+	<div class="ppRightBtn">
+		<ui:remove>
+<!-- 		<p:commandButton value="#{lbl['lbl.btn.clone'].concat(' test')}" -->
+<!-- 			styleClass="BtnSpacing" -->
+<!-- 			disabled="#{approvalBackingBean.managedBean.readOnly and not approvalBackingBean.inApprovalEditableSection}" -->
+<!-- 			rendered="#{!approvalBackingBean.managedBean.committeeReviseFlow}" -->
+<!-- 			actionListener="#{qTCommitteBackingBean.committeeclonePopupAction(qTDetailBB.managedBean.selectedTabBean.scQtCommittee)}" -->
+<!-- 			oncomplete="screen2.show();" process="@this" -->
+<!-- 			update="@([id$=cloneid])" /> -->
+		</ui:remove>
+		<p:commandButton id="committeeapproveradd" styleClass="BtnSpacing"
+			disabled="#{approvalBackingBean.managedBean.readOnly and not approvalBackingBean.inApprovalEditableSection}"
+			value="#{lbl['lbl.btn.add']}" process="@this"
+			actionListener="#{qTCommitteBackingBean.addCommitteMember(qTDetailBB.managedBean.selectedTabBean.scQtCommittee, qTDetailBB.managedBean.selectedTabBean.titleName)}"
+			oncomplete="newspecificationcommittee.show();"
+			update="@([id$=newspecificationcommitteeid])" />
+		<p:commandButton value="#{lbl['lbl.btn.delete']}"
+			styleClass="BtnSpacing"
+			disabled="#{qTDetailBB.deleteselectedList(membersList.scCommitteeMembers)}"
+			actionListener="#{qTDetailBB.deleteCommitteemembersData(membersList.scCommitteeMembers)}"
+			process="@this, committeeapprovalId" partialSubmit="true"
+			oncomplete="committeeApprovalDeletePopUp.show();"
+			update="@([id$=#{committeeApprovalDeleteId}])" >
+			<f:setPropertyActionListener target="#{qTCommitteBackingBean.managedBean.extraDeleteComitteeSelection}" value="#{qTDetailBB.managedBean.committemembers}"></f:setPropertyActionListener>
+			<f:setPropertyActionListener target="#{qTDetailBB.managedBean.committemembers}" value="#{null}"></f:setPropertyActionListener>
+			</p:commandButton>
+	</div>
+	<ui:param name="committeeApprovalDeleteId"
+		value="committeeApprovalDeleteId" />
+	<ac:confirmationPopup id="#{committeeApprovalDeleteId}"
+		widget="committeeApprovalDeletePopUp"
+		okAction="qTCommitteBackingBean.deleteSpecificationCommittee"
+		width="400" height="100"
+		title="#{lbl['lbl.sc.qt.committee.appointment']}"
+		content="#{lbl['lbl.sc.dialog.confirm.committee.members.dtls']}"
+		update="@form" />
+	<ui:include src="/xhtml/sc/quatationtender/committeeappointment/addspecificationcommittee.xhtml" />
+	<ui:include src="/xhtml/sc/quatationtender/committeeappointment/cloneDetails.xhtml" />
+	
+</ui:composition>

@@ -1,0 +1,135 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="contentSection">
+		<p:blockUI widgetVar="blkReportContent" block=":form">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+
+		<p:messages id="qtReportMsgId" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="false"></p:messages>
+
+		<table style="margin-bottom: 10px; width: 100%;">
+			<tr>
+				<td width="10%"><p:outputLabel
+						value="#{lbl['lbl.rpt.rptName']}" /> <p:outputLabel value="*"
+						styleClass="mandatory" /></td>
+
+				<td width="90%"><p:selectOneMenu
+						label="#{lbl['lbl.rpt.rptName']}" id="reportName"
+						value="#{qtReportMainBB.managedBean.reportCode}" required="true"
+						style="margin-top:5px;width:300px;">
+						<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue=""></f:selectItem>
+
+						<f:selectItems value="#{qtReportMainBB.managedBean.reportList}"></f:selectItems>
+						<p:ajax event="change" update="outputPnlqtReport"
+							listener="#{qtReportMainBB.reportOnChange}" />
+					</p:selectOneMenu></td>
+			</tr>
+		</table>
+
+		<p:outputPanel id="outputPnlqtReport">
+			<p:panel header="#{qtReportMainBB.managedBean.reportTitle}"
+				rendered="#{!empty qtReportMainBB.managedBean.reportCode}">
+
+				<c:if
+					test="#{qtReportMainBB.managedBean.reportCode eq QtReportConst.SC_QUOT_TENDER_OR_RPT_VAL}">
+                <ui:include src="SC_038_Restricted_Tender.xhtml"></ui:include>
+				</c:if>
+				
+				<c:if
+					test="#{qtReportMainBB.managedBean.reportCode eq QtReportConst.SC_SUMMRY_SRC_OR_RPT_VAL}">
+					 <ui:include src="SC_039_Summary_Quotation_Tender.xhtml"></ui:include>
+				</c:if>
+
+				<c:if
+					test="#{qtReportMainBB.managedBean.reportCode eq QtReportConst.SC_BRIF_SITE_VISIT_OR_RPT_VAL}">
+					 <ui:include src="SC_040_Briefing_And_Sitevisit.xhtml"></ui:include>
+
+				</c:if>
+
+				<c:if
+					test="#{qtReportMainBB.managedBean.reportCode eq QtReportConst.SC_QUOT_TENDER_MONITOR_OR_RPT_VAL}">
+                 <ui:include src="SC_041_Restricted_Tender_Observation.xhtml"></ui:include>
+				</c:if>
+
+				<c:if
+					test="#{qtReportMainBB.managedBean.reportCode eq QtReportConst.SC_PRAPOSAL_SUB_LST_OR_RPT_VAL}">
+                   <ui:include src="SC_042_Proposal_Submission_List.xhtml"></ui:include>
+				</c:if>
+
+				<c:if
+					test="#{qtReportMainBB.managedBean.reportCode eq QtReportConst.SC_PRICE_SCHEDULE_OR_RPT_VAL}">
+
+					<ui:include src="SC_043_Financial_Table.xhtml"></ui:include>
+				</c:if>
+
+				<c:if
+					test="#{qtReportMainBB.managedBean.reportCode eq QtReportConst.SC_LETTER_OF_ACCPT_OR_RPT_VAL}">
+                    <ui:include src="SC_044_LetterOf_Acceptance.xhtml"></ui:include>
+				</c:if>
+
+				<c:if
+					test="#{qtReportMainBB.managedBean.reportCode eq QtReportConst.SC_COMMITTEE_DTLS_TD_RPT_VAL}">
+					<ui:include src="SC_045_Committee_Detail.xhtml"></ui:include>
+				</c:if>
+
+				<c:if
+					test="#{qtReportMainBB.managedBean.reportCode eq QtReportConst.SC_PROPOSAL_DTLS_PRODUCT_RPT_VAL}">
+                   <ui:include src="SC_046_Proposal_Product.xhtml"></ui:include>
+				</c:if>
+
+				<c:if
+					test="#{qtReportMainBB.managedBean.reportCode eq QtReportConst.SC_PROPOSAL_DTLS_SERVICE_RPT_VAL}">
+                            <ui:include src="SC_047_Proposal_Service.xhtml"></ui:include>
+				</c:if>
+
+				<c:if
+					test="#{qtReportMainBB.managedBean.reportCode eq QtReportConst.SC_BRIEFING_PAPER_RPT_VAL}">
+					<ui:include src="SC_048_Briefing_Paper.xhtml"></ui:include>
+				</c:if>
+
+				<c:if
+					test="#{qtReportMainBB.managedBean.reportCode eq QtReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL}">
+					<ui:include src="SC_049_Evaluation_Committee.xhtml"></ui:include>
+				</c:if>
+				
+				<c:if
+					test="#{qtReportMainBB.managedBean.reportCode eq QtReportConst.SC_LETTER_OF_ACCPT_CONTENT_RPT_VAL}">
+					<ui:param name="dpReportBackingBean" value="#{qtReportMainBB}"></ui:param>
+					<ui:include src="/xhtml/reports/new/sc/dp/SC_070_loaContentReport.xhtml"></ui:include>
+				</c:if>
+
+				<c:if
+					test="#{qtReportMainBB.managedBean.reportCode eq QtReportConst.SC_OPENING_COMMITTEE_RPT_VAL}">
+					<ui:include src="SC_071_Opening_Committee.xhtml"></ui:include>
+				</c:if>
+
+				<c:if
+					test="#{qtReportMainBB.managedBean.reportCode eq QtReportConst.SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL}">
+					<ui:include src="SC_072_Technical_Evaluation.xhtml"></ui:include>
+				</c:if>
+
+				<c:if
+					test="#{qtReportMainBB.managedBean.reportCode eq QtReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL}">
+					<ui:include src="SC_073_Financial_Evaluation_Committee.xhtml"></ui:include>
+				</c:if>
+
+				<c:if
+					test="#{qtReportMainBB.managedBean.reportCode eq QtReportConst.SC_PROP_VALID_PERIOD_EXT_RPT_VAL}">
+					<ui:include src="SC_076_Prop_Valid_Period_Ext.xhtml"></ui:include>
+				</c:if>
+
+			</p:panel>
+
+		</p:outputPanel>
+
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,80 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<table width="100%">
+		<tr>
+			<td align="right">
+				<div class="ppRightBtn">
+					<c:if test="#{demoInvBB.managedBean.qualifiedSupplier}">
+						<p:commandButton value="#{lbl['lbl.btn.save']}"
+							action="#{demoInvBB.saveDemoInvitation}" process="@form"
+							partialSubmit="true" onclick="blockWidget.show();"
+							oncomplete="blockWidget.hide();" update="@form" />
+
+						<p:commandButton value="#{lbl['lbl.btn.submit']}"
+							styleClass="amendButton" update="@([id$=#{submitConfirmId}])"
+							onclick="submitConfirmPopUp.show();" process="@form"
+							oncomplete="blockWidget.hide();" />
+					</c:if>
+
+					<c:if test="#{!demoInvBB.managedBean.qualifiedSupplier}">
+						<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
+							onclick="cancelTaskPopUp.show();" style="float:right;" />
+					</c:if>
+
+				</div>
+			</td>
+		</tr>
+	</table>
+
+	<p:dialog id="submitConfirmId" widgetVar="submitConfirmPopUp"
+		header="#{lbl['lbl.sc.confirmation']}" resizable="false"
+		width="30%" height="100" closable="false">
+		<table>
+			<tr>
+				<td align="center"><p:outputLabel
+						value="#{lbl['lbl.sc.approval.dialog.confirm.invitation']}" /></td>
+			</tr>
+		</table>
+		<p:spacer height="1" />
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}"
+				onclick="submitConfirmPopUp.hide(); blockWidget.show();"
+				oncomplete="blockWidget.hide();" partialSubmit="true"
+				process="@form" update="@form"
+				action="#{demoInvBB.submitDemoInvitation}" />
+			<p:commandButton value="#{lbl['lbl.btn.no']}"
+				onclick="submitConfirmPopUp.hide();" type="button"
+				partialSubmit="true" process="@this" />
+		</div>
+	</p:dialog>
+
+	<p:dialog id="cancelTaskId" widgetVar="cancelTaskPopUp"
+		header="#{lbl['lbl.sc.approval.confirm']}" resizable="false"
+		width="30%" height="100" closable="false">
+		<table>
+			<tr>
+				<td align="center"><p:outputLabel
+						value="#{lbl['lbl.demo.cancel.task']}" /></td>
+			</tr>
+		</table>
+		<p:spacer height="1" />
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}"
+				onclick="submitConfirmPopUp.hide(); blockWidget.show();"
+				oncomplete="blockWidget.hide();" partialSubmit="true"
+				process="@form" update="@form"
+				action="#{demoInvBB.demoInvitationCancel}" />
+			<p:commandButton value="#{lbl['lbl.btn.no']}"
+				onclick="cancelTaskPopUp.hide();" type="button" partialSubmit="true"
+				process="@this" />
+		</div>
+	</p:dialog>
+
+</ui:composition>

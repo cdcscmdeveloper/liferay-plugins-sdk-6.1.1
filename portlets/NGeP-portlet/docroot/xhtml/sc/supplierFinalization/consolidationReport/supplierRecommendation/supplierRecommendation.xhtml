@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<style type="text/css">
+		.checkbox .ui-chkbox {
+			float: left;
+			vertical-align: bottom;
+		}
+		.label .ui-outputlabel { 
+			text-align: left; 
+		}
+		
+		<c:if test="#{consolidationReportBackingBean.managedBean.scQt.zonal}">
+			.tdWidth { width: 80%; }
+		</c:if>
+		<c:if test="#{!consolidationReportBackingBean.managedBean.scQt.zonal}">
+			.tdWidth { width: 100%; }
+		</c:if>		
+	</style>
+
+	<ui:include src="/xhtml/sc/common/supplierDetailsPopup.xhtml" />
+	
+	<p:outputPanel id="itemSupplierPanel">
+		<table style="border: 0px;width:100%;">
+			<tr>
+				<c:if test="#{consolidationReportBackingBean.managedBean.scQt.zonal}">
+				 			  	
+					<td width="20%" class="sidemenutd" valign="top">
+						<p:remoteCommand name="onZoneTabChangeAction" update="@form" partialSubmit="true" 
+							process="@form" action="#{consolidationReportBackingBean.onZoneTabChangeAction}" />
+						
+						<p:tabMenu styleClass="sidemenu" id="zonalMenu" 
+							activeIndex="#{consolidationReportBackingBean.managedBean.zoneActiveIndex}"
+							model="#{consolidationReportBackingBean.managedBean.zoneMenuModel}">
+							<!-- Menu items are dynamically populated from backing bean -->
+						</p:tabMenu>						
+					</td>
+				</c:if>
+				
+				<td class="tdWidth" valign="top">
+					<h:panelGroup rendered="#{consolidationReportBackingBean.managedBean.itemized}">
+						<ui:include src="#{consolidationReportFolderPath}/supplierRecommendation/itemList.xhtml" />
+					</h:panelGroup>
+					<h:panelGroup id="supplierPanel">
+						<ui:include src="#{consolidationReportFolderPath}/supplierRecommendation/qualifiedSupplierList.xhtml" />
+					</h:panelGroup>
+				</td>
+			</tr>
+		</table>	
+	</p:outputPanel>
+	
+	<c:choose>
+		<c:when test="#{consolidationReportBackingBean.managedBean.itemized}">
+			<ac:scRemarkAndAttachment
+			remarkList="#{consolidationReportBackingBean.managedBean.finalizationItemizedRemarks}"
+			showAttachment="false" />
+		</c:when>
+		<c:otherwise>
+			<ac:scRemarkAndAttachment
+			remarkList="#{consolidationReportBackingBean.managedBean.finalizationRemars}"
+			showAttachment="false" />
+		</c:otherwise>
+	</c:choose>
+	
+</ui:composition>

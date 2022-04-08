@@ -1,0 +1,134 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="resourceSection">
+		<style>
+			.gfmasPanelCss>.ui-panel-content {
+				background: #f2dede !important;
+			}
+		</style>		
+	</ui:define>
+
+	<ui:define name="contentSection">
+		<h:panelGroup layout="block" class="ui-messages ui-widget" rendered="#{danBackingBean.managedBean.adjustment.status.statusId.longValue() == FulfilmentStatusCont.dnPendingApproval.longValue() 
+		and not empty danBackingBean.managedBean.disciplinaryActionMessage}">
+		<h:panelGroup layout="block" class="ui-messages-info ui-corner-all">
+		<h:outputText class="ui-messages-info-icon" /><ul><li>
+		<h:outputText class="ui-messages-info-detail" /> #{danBackingBean.managedBean.disciplinaryActionMessage} <p:commandLink id="sharedcommand" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" action="#{danBackingBean.viewDisciplinaryAction(danBackingBean.managedBean.smDisciplinaryAction)}" process="@this" partialSubmit="true" update=":form">#{lbl['lbl.sm.disciplinary.here']}</p:commandLink> #{lbl['lbl.sm.supplier.to.view.disc.action.details']}</li></ul>
+		</h:panelGroup>
+		</h:panelGroup>
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>		
+		<f:event listener="#{danBackingBean.preRenderView}"	type="preRenderView" />
+		<ac:gpkiPopup 
+			textBeforeSign="#{danBackingBean.managedBean.textBeforeSign}"
+			postSignAction="#{danBackingBean.preSubmitAction(gpkiBackingBean.pmDigiSign)}"
+			enableAutoUpdate="#{danBackingBean.enableAutoUpdate()}" />
+		<f:event listener="#{danBackingBean.preRenderView}" type="preRenderView" />
+		<c:if test="#{danBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or danBackingBean.managedBean.isHyperLinkPage()}">
+			<ac:title value="#{danBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, danBackingBean.managedBean.adjustment.docType)}" />
+		</c:if>	
+		<p:messages id="messages" showDetail="true" autoUpdate="#{danBackingBean.managedBean.autoUpdate}" showSummary="false" closable="true" severity="error, info" />
+		<p:panel style="background:#f2dede !important; border:0px;" styleClass="gfmasPanelCss" rendered="#{danBackingBean.managedBean.gfmasError}" >		
+			<table>
+				<tr>
+					<td>
+						<p:commandLink oncomplete="gfmasError.show();" immediate="true"
+							action="#{danBackingBean.show1GFMASError()}"
+							rendered="#{danBackingBean.managedBean.gfmasError}">
+							<p:graphicImage value="/css/images/design/exclamation.png" />
+						</p:commandLink>
+						<p:spacer width="2" />
+					</td>
+					<td>
+						<p:outputLabel value="#{danBackingBean.managedBean.gfmasErrorDesc} #{lbl['lbl.fl.integration.click.for.exception.details']} (ERR-#{danBackingBean.managedBean.gfmasErrorCode})" style="color: #C55751 !important; font-weight: normal !important"
+							rendered="#{danBackingBean.managedBean.gfmasError}" />
+					</td>					
+				</tr>
+			</table>
+		</p:panel>				
+		<table style="width: 100%;">
+			<tr>
+				<td>
+					<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"  
+						action="#{danBackingBean.backToPervious}"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+						rendered="#{danBackingBean.managedBean.taskId==null}" />
+				</td>
+				<td colspan="4" style="text-align: right"><ui:repeat
+						var="bpmAction" value="#{danBackingBean.managedBean.outComes}">
+						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+						<p:commandButton value="#{lbl[buttonLabel]}" update="@form" styleClass="ui-button" 
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							action="#{danBackingBean.gpkiSignAction(bpmAction)}"/>
+					</ui:repeat></td>
+				<c:if
+					test='#{danBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView and !danBackingBean.managedBean.isHyperLinkPage()}'>
+					<td colspan="4" style="text-align: right">	
+					<p:commandLink
+						value="#{lbl['lbl.td.doc.trackingDiary']}"
+						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(danBackingBean.managedBean.adjustment.docType,danBackingBean.managedBean.adjustment.adjustmentId)}"
+						immediate="true" />&#160;&#160;
+					</td>		
+				</c:if>
+				<h:panelGroup id="printButtonPm"
+					rendered="#{danBackingBean.managedBean.adjustment.status.statusId == FulfilmentStatusCont.dnApproved}">
+					<td style="text-align: right; width: 30px;"><p:commandLink
+							value="#{lbl['lbl.btn.print']}" ajax="false">
+							<p:fileDownload value="#{flDocumentBackingBean.generateReport(danBackingBean.managedBean.adjustment.docType,danBackingBean.managedBean.adjustment.docNo,flDocumentManagedBean.taxable)}" />
+						</p:commandLink></td>
+				</h:panelGroup>		
+			</tr>
+		</table>
+		<ui:include src="/xhtml/fl/invoice/adjustment/danHeaderPage.xhtml" />
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<td width="20%" valign="top" class="sidemenutd"><p:tabMenu
+						styleClass="sidemenu" 
+						activeIndex="#{danBackingBean.managedBean.selectedTabIndex}">
+						<p:menuitem value="#{lbl['lbl.fl.menu.general']}" update="@form" >
+							<f:setPropertyActionListener
+								target="#{danBackingBean.managedBean.selectedTabIndex}"
+								value="0" />
+						</p:menuitem>
+						<p:menuitem value="#{lbl['lbl.fl.menu.charge.line.summary.pm.can.dan']}" update="@form" actionListener="#{danBackingBean.onTabChange(1)}">
+							<f:setPropertyActionListener
+								target="#{danBackingBean.managedBean.selectedTabIndex}"
+								value="1" />
+						</p:menuitem>
+
+					</p:tabMenu></td>
+				<td width="80%"><p:outputPanel
+						rendered="#{danBackingBean.managedBean.selectedTabIndex == 0}">
+						<ui:include src="danGeneral.xhtml" />
+					</p:outputPanel> <p:outputPanel
+						rendered="#{danBackingBean.managedBean.selectedTabIndex == 1}">
+						<ui:include src="danChargeLine.xhtml" />
+					</p:outputPanel></td>
+			</tr>
+		</table>
+		<p:dialog id="gfmasErrorDlg" header="#{lbl['lbl.fl.integration.exception.details']}" widgetVar="gfmasError" width="80%"
+			showEffect="fade" hideEffect="fade" modal="true" resizable="false">
+			<table style="width: 100%">
+				<tr>
+					<td><p:messages id="gfmasMsg" showSummary="false" escape="false" showDetail="true" autoUpdate="true" closable="true" severity="error,info" /></td>
+				</tr>
+			</table>
+			<p:spacer height="2px"></p:spacer>
+			<div style="width: 100%; text-align: right">
+				<p:commandButton value="#{lbl['lbl.btn.close']}" oncomplete="gfmasError.hide();" />
+			</div>
+		</p:dialog>
+		<ac:disciplinaryActionHistory voList="#{danBackingBean.managedBean.disciplineVOs}" 
+		dialogHeader="#{lbl['lbl.sm.view.details.disciplinary.action.headerlbl']}" dialogWidth="800px" dialogHeight="400px" btnView="true" />			
+	</ui:define>
+</ui:composition>

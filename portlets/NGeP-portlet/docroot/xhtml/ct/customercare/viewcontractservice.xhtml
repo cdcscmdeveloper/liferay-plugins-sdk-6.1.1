@@ -1,0 +1,204 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc" >
+	<ui:define name="contentSection">
+    <style>
+      .column-align-center { text-align: center !important;}
+    </style>
+    <table style="width: 100%;">
+		<tr>
+			<td><p:commandButton value="#{lbl['lbl.btn.back']}"
+					immediate="true" process="@this" partialSubmit="true"
+					action="#{customerServiceBackingBean.gotoBackPage}" /></td>
+		 </tr>
+		 </table>
+   		<p:panel id="viewServicePanel" toggleable="true" 
+    		   header="#{lbl['lbl.ct.customer.service.header']}" collapsed="false" toggleSpeed="500" >
+				<h:panelGroup columns="4" style="width:100%;" styleClass="top-aligned-columns">
+					<table style="width: 100%">
+							<tr>
+							
+									<td class="columnWidth15">
+	     	            			 	<p:outputLabel  value="#{lbl['lbl.ct.ministry']}" style="width:100%"/>
+									</td> 
+									<td>
+											<p:inputTextarea id="MinistryName" autoResize="false" maxlength="1000"
+												 disabled="true" rows="1" style="width:800px; margin-bottom:5px;"  
+												value="#{customerServiceBackingBean.managedBean.ministryName}" />
+                		      		 </td>
+                		   </tr>
+						  
+						  	<tr>		
+									  <td class="columnWidth15">
+											<p:outputLabel id="PtjKumpulan" value="#{lbl['lbl.ct.jabatan']}" />
+										</td> 
+										<td>
+								  			    <p:inputTextarea id="KumpulanName" autoResize="false" maxlength="1000"
+												 disabled="true" rows="1" style="width:800px; margin-bottom:5px;"  
+												value="#{customerServiceBackingBean.managedBean.kumpulanPtjName}" />
+			  							</td>
+			  				</tr>
+			  				<tr>
+			  							<td class="columnWidth15">
+												<p:outputLabel id="ptjCode" value="#{lbl['lbl.ct.ptj']}" />
+										</td> 
+										<td>
+										 <p:inputTextarea id="PtjCode" autoResize="false" maxlength="100"
+												 disabled="true" rows="1" style="width:150px; margin-bottom:5px;"  
+												value="#{customerServiceBackingBean.managedBean.searchPtjProfile.orgCode}" />
+												<p:spacer width="1"/>
+										       <p:inputTextarea id="PtjName" autoResize="false" maxlength="1000"
+												 disabled="true" rows="1" style="width:635px; margin-bottom:5px;"  
+												value="#{customerServiceBackingBean.managedBean.searchPtjProfile.orgName}" />
+										</td>
+							</tr>
+							<tr>
+									<td class="columnWidth15">
+											<p:outputLabel id="cno" value="#{lbl['lbl.ct.contract.no']}" />
+									</td>
+									<td>
+											<p:inputText for="cno"  disabled="true" maxlength="17" style="width:150px;"
+														value="#{customerServiceBackingBean.managedBean.ctContractVer.ctContract.contractNo}" />
+						           </td>
+						      </tr>
+						   
+						      <tr>
+						          	<td><p:outputLabel value="#{lbl['lbl.ct.contract.Type']}" /></td>
+									<td><p:inputText style="width:150px;" disabled="true"
+													maxlength="50"
+													value="#{customerServiceBackingBean.getParameterDesc(customerServiceBackingBean.managedBean.ctContractVer.ctContract.contractType)}" />
+									</td>
+			    			</tr>
+			    		
+			    			<tr>
+									<td class="columnWidth15">
+										<p:outputLabel for="contractName" value="#{lbl['lbl.ct.contract.title']}" />
+									</td>
+									<td colspan="3">
+										<p:inputTextarea id="contractName" autoResize="false" maxlength="1000"
+											disabled="true" rows="3" style="width:800px; margin-bottom:5px;"  
+											value="#{customerServiceBackingBean.managedBean.ctContractVer.ctContract.contractName}" />
+									</td>					
+						   </tr>
+						
+							<tr>
+							   <td class="columnWidth15">
+										<p:outputLabel id="startDate" value="#{lbl['lbl.ct.customer.service.start.date']}" />
+									</td>
+							   <td>
+							   <table style="width:620px">
+							    	 <tr>
+									
+									<td>
+											<p:inputText for="startDate" disabled="true" style="width:150px;"
+													value="#{customerServiceBackingBean.managedBean.ctContractVer.ctContractValue.effDate}">
+													<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+			  								</p:inputText>
+								</td>
+								<td class="columnWidth15"></td>
+								<td class="columnWidth15"></td>
+								<td align="right"  class="columnWidth30">
+									<p:outputLabel id="endDate" value="#{lbl['lbl.ct.customer.service.end.date']}"  />
+								</td>
+								<td class="columnWidth20">
+										<p:inputText for="endDate" disabled="true" style="width:150px;"
+												value="#{customerServiceBackingBean.managedBean.ctContractVer.ctContractValue.expDate}">
+												<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+			  							</p:inputText>
+								</td>
+                			</tr>
+                		</table>
+                		</td>
+                	</tr>
+                	  <tr>
+                	  <td><p:outputLabel value="#{lbl['lbl.ct.contract.status']}" /></td>
+                	  <td> <table style="width:610px">
+									           <tr>
+														<td><p:inputText style="width:150px" disabled="true"
+														         value="#{customerServiceBackingBean.getContractStatusDesc(customerServiceBackingBean.managedBean.cotractStatus)}"/></td>
+														
+											</tr>
+									</table>
+							</td>
+                	  </tr>
+                	  <tr>
+                	  <td><p:outputLabel value="#{lbl['lbl.ct.doc.contract.status']}" /></td>
+                	  <td> <table style="width:610px">
+									           <tr>
+														<td><p:inputText style="width:150px" disabled="true"
+														         value="#{customerServiceBackingBean.chkContractStatusType(customerServiceBackingBean.managedBean.status)}"/>
+														         <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.status.contract']}" /></td>
+														
+											</tr>
+									</table>
+							</td>
+                	  </tr>
+                	  <tr>
+							   <td class="columnWidth15"></td>
+							  		 <td>
+							  				 <table style="width:620px">
+									           <tr>
+														<td>
+														       <br/>
+                												<p:dataTable id="officerInfoName" var="officerInfo"  widgetVar="tableOfficerWidget"
+       					 											  value="#{customerServiceBackingBean.managedBean.customerServiceEntity}"   rowIndexVar="index">
+                	        												<p:column style="width:2%" headerText="No.">
+				                  													 <h:outputText value="#{index+1}." style="float:left;"/>
+			               	  												</p:column>
+			               	  												 <p:column style="width:45%;white-space:normal;" 
+			               	  												     headerText="#{lbl['lbl.ct.customer.service.table.officer']}" >
+				                											  	  <h:outputText value="#{officerInfo.officerName}"  style="float:left;"/>
+			               													  </p:column>
+                												</p:dataTable>
+                									</td>
+                								</tr>
+				                    	</table>
+				                    		<br/>
+				                   </td>
+				               </tr>
+				           </table>
+				</h:panelGroup>
+			</p:panel>
+		
+				<p:panel id="viewAgencyPanel" toggleable="true" 
+    		   		header="#{lbl['lbl.ct.agency.information']}" collapsed="false" toggleSpeed="500" >
+					<p:dataTable id="tableAgencyDetails" var="agencyData"  widgetVar="tableAgencyWidget"
+       					value="#{customerServiceBackingBean.managedBean.ctContractVer.ctAgencies}"   rowIndexVar="index"  >
+         		  		 <ac:paginator for="tableAgencyDetails"/>
+         		  		  	   	<p:column style="width:2%" headerText="No.">
+				                  	 <h:outputText value="#{index+1}." style="float:left;"/>
+			               	  	</p:column>
+	      	               	  		<p:column style="width:25%;white-space:normal;" headerText="#{lbl['lbl.ct.ministry']}">
+				                 	   <h:outputText value="#{agencyData.ministryName}" style="float:left;"/>
+			               		  </p:column>
+			             	   	 <p:column style="width:25%;white-space:normal;" headerText="#{lbl['lbl.ct.jabatan']}" >
+				                	  	  <h:outputText value="#{agencyData.kumpulanPtjName}"  style="float:left;"/>
+			               		  </p:column>
+			                 	 <p:column style="width:25%;white-space:normal;" headerText="#{lbl['lbl.ct.ptj']}">
+				                 	    <h:outputText  value="#{agencyData.orgProfile.orgName}" style="float:left;"/>
+			                	  </p:column>
+									 <p:column headerText="#{lbl['lbl.ct.effective.date']}">
+		   	       	  						<h:outputText value="#{agencyData.effDate}">
+		   	       								  <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+		   	      						 	  </h:outputText>
+	            						  </p:column>
+		   	
+		   	     						 <p:column headerText="#{lbl['lbl.ct.expiry.date']}">
+											  <h:outputText value="#{agencyData.expDate}">
+											      <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></h:outputText>
+								   	   </p:column> 
+		      						  <p:column headerText="#{lbl['lbl.ct.status']}">
+		   	     						    <h:outputText id="agenyStatus"
+		   	     						        value="#{agencyData.chkStatus ? lbl['lbl.ct.active']:lbl['lbl.ct.inactive']}" style="float:none" />
+		   							    </p:column>
+          					</p:dataTable> 
+					</p:panel>
+			</ui:define>
+</ui:composition>
+  

@@ -1,0 +1,126 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="contentSection">
+		<p:messages id="qtSearchMsg" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="false" severity="error, info" />
+		<p:panel header="#{lbl['lbl.sc.search']}" toggleable="true"
+			id="specMaintenanceQtSearch">	
+       <ui:param name="screenName" value="SM"></ui:param>
+		<ui:include
+			src="/xhtml/sc/quatationtender/searchQuotationTenderDetails.xhtml"></ui:include>
+         <div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.search']}"
+					action="#{specMaintenanceBB.searchSpeMaintenanceQTAction}" update="@([id$=specMaintenancesearchQTs])"
+					process="@this, specMaintenanceQtSearch" />
+				<p:commandButton value="#{lbl['lbl.btn.reset']}"
+					action="#{specMaintenanceBB.specCommitteeMaintenancereset}" update="@([id$=specMaintenanceQtSearch])"
+					resetValues="true" partialSubmit="true"
+					process="@this" />
+			</div>
+		</p:panel>	
+		<p:panel header="#{lbl['lbl.sc.qtn.list']}" toggleable="true">
+			<h:panelGroup id="table-wrapper" style="width:100%;">
+				<p:dataTable id="specMaintenancesearchQTs" value="#{specMaintenanceBB.specMaintenanceDataModel}"
+					var="scQt"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					rowIndexVar="index" lazy="true" rows="10">
+
+					<ac:paginator for="specMaintenancesearchQTs" />
+
+					<p:column headerText="#{lbl['lbl.sc.qtn.no']}" style="width:100px;">
+						<h:outputText value="#{scQt.qtNo}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.title']}">
+						<h:outputText value="#{scQt.qtTitle}"
+							style="white-space: normal;word-wrap: break-word;" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.procurement.mode']}"
+						style="width:100px;">
+						<h:outputText
+							value="#{qTDetailBB.getParameterDesc(scQt.procurementMode)}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.created.date']}"
+						style="width:80px;">
+						<h:outputText value="#{scQt.createdDate}">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.published.date']}"
+						style="width:80px;">
+						<h:outputText value="#{scQt.publishDate}">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.closing.date']}"
+						style="width:80px;">
+						<h:outputText value="#{scQt.closingDate}">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.status']}" style="width:200px;">
+						<h:outputText
+							value="#{qTDetailBB.getStatusDescById(scQt.qtStatus.statusId)}" />
+					</p:column>
+					<ui:param name="statusId" value="#{scQt.qtStatus.statusId}"/>
+					<p:column headerText="#{lbl['lbl.sc.action']}"
+						style="width:6%;text-align: center;">
+						<ui:remove><!-- 25037 - start - note 510--></ui:remove>
+						<p:dialog id="inactiveSCMembersPopupId#{scQt.qtId}"
+							widgetVar="inactiveSCMembersPopup#{scQt.qtId}" resizable="false"
+							style="max-width: 400px !important; border: 0 !important"
+							closable="false">
+							<table>
+								<tr>
+									<td align="center" style="border: 0 !important"><p:outputLabel
+											style="padding: 0 !important; text-align:justify !important;white-space: break-spaces !important; color: red !important;"
+											value="#{specMaintenanceBB.managedBean.inactiveSCMemberStr.concat(' ').concat(lbl['lbl.sc.popup.spec.confirmCheckInactive'])}" /></td>
+								</tr>
+							</table>
+							<p:spacer height="1" />
+							<div class="ppRightBtn">
+								<p:commandButton value="#{lbl['lbl.btn.ok']}"
+									action="#{specMaintenanceBB.editSpecificationMaintenance(scQt, true)}"
+									partialSubmit="true" process="@this" />
+							</div>
+						</p:dialog>
+						<p:commandLink id="editSMIcon"
+							action="#{specMaintenanceBB.editSpecificationMaintenance(scQt, true, true)}"
+							style="margin-right:20px;" partialSubmit="true" update="@form"
+							rendered="#{specMaintenanceBB.renderIcon(statusId)}">
+							<h:graphicImage
+								value="#{CommonUIConstant.imagePathUptoDesign}/edit.png"
+								styleClass="tasklist_title1"
+								title="#{lbl['lbl.sc.qt.search.edit.tooltip']}" />
+						</p:commandLink>
+						<ui:remove><!-- 25037 - end - note 510--></ui:remove>
+
+						<p:commandLink id="viewSMIcon" style="margin-right:20px;" action="#{specMaintenanceBB.editSpecificationMaintenance(scQt,false)}"
+							partialSubmit="true" process="@this" rendered="#{!specMaintenanceBB.renderIcon(statusId)}">
+							<p:graphicImage
+								value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png"
+								styleClass="tasklist_title1"
+								title="#{lbl['lbl.sc.qt.search.view.tooltip']}" />
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+			</h:panelGroup>
+		</p:panel>
+		<ac:lovPopup />
+	</ui:define>
+</ui:composition>

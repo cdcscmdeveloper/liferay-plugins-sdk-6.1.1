@@ -1,0 +1,350 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc" >
+	<ui:define name="contentSection">
+	<script> $('#portlet_ctContractMaintenance_WAR_NGePportlet').find('.portlet-title-text').html('#{contractDetailsBackingBean.getPortletTitle()}'); </script>
+    <style>
+      .column-align-center { text-align: center !important;}
+     .ui-menu.ui-menu-dynamic.ui-widget.ui-widget-content.ui-corner-all.ui-helper-clearfix.ui-shadow{  
+              width:250px;
+   }
+    </style>
+   
+    <p:blockUI block=":form" trigger="searchButtonId" widgetVar="blkContractSearchTable">
+		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+	</p:blockUI>
+    <p:messages id="messages" showDetail="true" 
+          showSummary="false" autoUpdate="true" closable="true" severity="error, info, warning" />
+
+     <p:panel id="searchId" header="#{lbl['lbl.ct.search']}" toggleable="true"  toggleSpeed="500">
+     	<h:panelGrid columns="2" style="width:100%;"
+     	     columnClasses="columnWidth20"  rendered="#{!contractDetailsBackingBean.isSupplierRole()}">
+ 			<p:outputLabel value="#{lbl['lbl.ct.ministry']}" />
+           	<ac:lov id="searchMinistry" lovId="PM_ORG_PROFILE_MINSTRY" size="110" readonly="true"
+				disabled="#{contractDetailsBackingBean.disableMinistryLov()}"
+				headerText="#{lbl['lbl.ct.ministry']}" 
+				value="#{contractDetailsBackingBean.managedBean.searchMinistryProfile.orgName}"
+				postUpdateListener="contractDetailsBackingBean.resetPtjGroupProfile()"
+				update="@form"
+				saveObject="contractDetailsBackingBean.managedBean.searchMinistryProfile">
+			</ac:lov>
+			<p:outputLabel value="#{lbl['lbl.ct.jabatan']}" />
+           	<ac:lov id="searchPtjGroup" lovId="PM_ORG_PROFILE_PTJ_GROUP" size="110" readonly="true"
+				disabled="#{contractDetailsBackingBean.isContractAdmin() 
+					or ctBackingBean.isApprover() 
+					or contractDetailsBackingBean.managedBean.searchMinistryProfile==null}"
+				headerText="#{lbl['lbl.ct.jabatan']}"
+				value="#{contractDetailsBackingBean.managedBean.searchPtjGroupProfile.orgName}"
+				postUpdateListener="contractDetailsBackingBean.resetPtjProfile()"
+				update="@form"
+				saveObject="contractDetailsBackingBean.managedBean.searchPtjGroupProfile"
+				conditionField="#{contractDetailsBackingBean.getPTJGroupCondition()}">			
+			</ac:lov>
+     		<p:outputLabel value="#{lbl['lbl.ct.ptj']}" />
+           	<ac:lov id="searchPtj" lovId="PM_ORG_PROFILE_PTJ" size="110" readonly="true"
+				disabled="#{contractDetailsBackingBean.isContractAdmin() 
+					or ctBackingBean.isApprover() 
+					or contractDetailsBackingBean.managedBean.searchMinistryProfile==null
+					or contractDetailsBackingBean.managedBean.searchPtjGroupProfile==null}"
+				headerText="#{lbl['lbl.ct.ptj']}"
+				value="#{contractDetailsBackingBean.managedBean.searchPtjProfile.orgName}"
+				saveObject="contractDetailsBackingBean.managedBean.searchPtjProfile"
+				conditionField="#{contractDetailsBackingBean.getPtjCondition()}">			
+			</ac:lov>
+     	</h:panelGrid>
+     	<h:panelGrid columns="4" style="width:100%;" 
+     	   	columnClasses="columnWidth20,columnWidth20,columnWidth15,columnWidth30">
+           	<p:outputLabel value="#{lbl['lbl.ct.contract.no']}" />
+           	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchContractNo}" maxlength="17" style="width:170px;"/>
+           	<p:outputLabel value="#{lbl['lbl.ct.contract.title']}" />
+           	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchContractName}" maxlength="1000" style="width:170px;"/>
+           	<p:outputLabel value="#{lbl['lbl.ct.physical.circular.no']}" rendered="#{contractDetailsBackingBean.isBPKCCA()}"/>
+           	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchCircularNo}" maxlength="50" style="width:170px;" rendered="#{contractDetailsBackingBean.isBPKCCA()}"/>
+           	<p:outputLabel value="#{lbl['lbl.ct.circular.name']}" rendered="#{contractDetailsBackingBean.isBPKCCA()}"/>
+           	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchCircularName}" maxlength="500" style="width:170px;" rendered="#{contractDetailsBackingBean.isBPKCCA()}"/>
+           	<p:outputLabel value="#{lbl['lbl.ct.contract.start']}"/>
+           	<p:calendar id="popupButtonCal"   showOn="button" readonlyInput="true"  navigator="true"
+               	style="width:130px;" value="#{contractDetailsBackingBean.managedBean.searchCtStartDate}" 
+               	pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+           	<p:outputLabel value="#{lbl['lbl.ct.contract.end']}" />
+           	<p:calendar id="popupButtonCal1"  style="width:130px;"  readonlyInput="true" 
+             	value="#{contractDetailsBackingBean.managedBean.searchCtEndDate}"  navigator="true"  showOn="button"
+             	pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
+           	<p:outputLabel value="#{lbl['lbl.ct.loa.no']}"/>
+           	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchLoaNo}" maxlength="17" style="width:170px;"/>
+           	<p:outputLabel value="#{lbl['lbl.ct.supplier.name']}" rendered="#{!contractDetailsBackingBean.isSupplierRole()}"/>
+          	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchSupplierName}" maxlength="100" style="width:170px;" rendered="#{!contractDetailsBackingBean.isSupplierRole()}"/> 
+           	<p:outputLabel value="#{lbl['lbl.ct.loa.physical.no']}" />
+           	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchLoaPhysicalNo}" maxlength="100" style="width:170px;margin-top:3px;"/>                     
+           	<p:outputLabel value="#{lbl['lbl.ct.physical.no']}" />
+           	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchCtPhysicalNo}" maxlength="100" style="width:170px;margin-top:3px;" />
+		   	<p:outputLabel value="#{lbl['lbl.ct.termination.type']}" rendered="#{!contractDetailsBackingBean.isSupplierRole()}" />
+		   	<p:selectOneMenu id="terminationType" value="#{contractDetailsBackingBean.managedBean.searchTerminationType}" 
+		   	    style="width:200px; margin-bottom:5px" rendered="#{!contractDetailsBackingBean.isSupplierRole()}">
+		   		<f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(ParameterTypeConst.terminationDecisionType)}" />
+		   	</p:selectOneMenu>
+		  	<p:outputLabel for="contractStatus" value="#{lbl['lbl.ct.contract.status']}" />
+		   	<p:selectOneMenu id="contractStatus" value="#{contractDetailsBackingBean.managedBean.searchContractStatus}"	
+		   	   style="width:200px;">
+				<f:selectItems value="#{contractDetailsBackingBean.getSearchContractStatusDropdown()}" />
+		   	</p:selectOneMenu>
+		   	<p:outputLabel for="status" value="#{lbl['lbl.ct.doc.contract.status']}" rendered="#{!contractDetailsBackingBean.isSupplierRole()}"/>
+		   	<p:selectOneMenu id="status" value="#{contractDetailsBackingBean.managedBean.searchStatus}"	
+		   	      style="width:200px; margin-bottom:5px" rendered="#{!contractDetailsBackingBean.isSupplierRole()}">
+				<f:selectItems value="#{contractDetailsBackingBean.getSearchStatusDropdown()}" />
+		   	</p:selectOneMenu>		   
+		</h:panelGrid>
+	  	<div class="ppRightBtn"> 
+        	<p:commandButton
+        	 id="searchButtonId" value="#{lbl['lbl.btn.search']}" validateClient="true"  action="#{contractDetailsBackingBean.searchContract}" 
+        	 onstart="blkContractSearchTable.show();" oncomplete="blkContractSearchTable.hide();"    update="contractTbl"/>
+             <p:commandButton value="#{lbl['lbl.btn.reset']}" action="#{contractDetailsBackingBean.searchReset}"    update=":form"/>
+	  	</div>	  		  
+	  	<ac:lovPopup />
+	  </p:panel>
+		<p:panel id="searchResulId"	header="#{lbl['lbl.ct.search.result']}" toggleable="true"	toggleSpeed="500">
+			<div style="overflow-x: auto">				
+				<p:dataTable id="contractTbl" value="#{contractDetailsBackingBean.managedBean.contractDataModel}"
+					var="data" lazy="true" rowIndexVar="index" rowKey="#{data}" rows="10">
+					<ac:paginator for="contractTbl" />
+					<p:column headerText="#{lbl['lbl.ct.contract.no']}" style="width:10%;"  styleClass="column-align-center">
+						<h:outputText value="#{data.contractNo}" style="text-align:left; float:left;" />
+					</p:column>					
+					<p:column headerText="#{lbl['lbl.ct.contract.title']}" styleClass="column-align-center"  style="width:15%; white-space:normal;">
+						<h:outputText value="#{data.contractName}"  style="text-align:left; float:left;" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}"  
+					      styleClass="column-align-center" style="width:8%; white-space:normal;" rendered="#{contractDetailsBackingBean.isBPKCCA()}">
+						<h:outputText value="#{data.circularNo}" style="text-align:left; float:left;" rendered="#{data.ctCircularVer != null and 
+						(data.ctCircularVer.status.statusId != CtStatusConst.cqRejected
+							or data.ctCircularVer.status.statusId != CtStatusConst.cqCancelled)}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.ct.circular.status']}" 
+					     styleClass="column-align-center"  style="width:8%; white-space:normal;" rendered="#{contractDetailsBackingBean.isBPKCCA()}">
+						<h:outputText value="#{contractDetailsBackingBean.getStatusDescById(data.ctCircularVer.status.statusId)}" 
+						      style="text-align:left; float:left;" rendered="#{data.ctCircularVer != null and 
+						      (data.ctCircularVer.status.statusId != CtStatusConst.cqRejected
+						      	or data.ctCircularVer.status.statusId != CtStatusConst.cqCancelled)}"    />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.ct.supplier.name']}" styleClass="column-align-center" style="width:8%; white-space:normal;" rendered="#{!contractDetailsBackingBean.isSupplierRole()}">
+						<div align="left">
+						<h:outputText value="#{data.companyName}"/></div>
+					</p:column>					
+					<p:column headerText="#{lbl['lbl.ct.loa.physical.no']}" styleClass="column-align-center"  style="width:8%; white-space:normal;">
+						<h:outputText value="#{data.loaPhysicalNo}" style="text-align:left; float:left;"/>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.ct.contract.start']}" styleClass="column-align-center"  style="width:5%; white-space:normal;">
+						<h:outputText value="#{data.effDate}" style="text-align:left; float:left;">
+							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.ct.contract.end']}"  styleClass="column-align-center" style="width:5%; white-space:normal;">
+						<h:outputText value="#{data.expDate}" style="text-align:left; float:left;">
+							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</p:column>										
+					<p:column headerText="#{lbl['lbl.ct.contract.status']}" styleClass="column-align-center"  style="width:8%; white-space:normal;">
+						<h:outputText value="#{contractDetailsBackingBean.getContractStatusDesc(data.contractStatus)}" style="text-align:left; float:left;"/>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.ct.fulfilment.details.status']}" styleClass="column-align-center" style="width:15%; white-space:normal;">
+					<div align="left">
+						<h:outputText value="#{contractDetailsBackingBean.chkContractStatusType(data.fdStatus)}" /></div>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.ct.agreement.status']}" styleClass="column-align-center" style="width:15%; white-space:normal;">
+					<div align="left">
+						<h:outputText value="#{contractDetailsBackingBean.chkContractStatusType(data.agStatus)}" /></div>
+					</p:column>
+					<p:column style="width:6%; white-space:normal;" styleClass="column-align-center">
+						<f:facet name="header" >
+					   		<h:outputText value="#{lbl['lbl.ct.doc.contract.status']}"/>
+               		   		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.status.contract']}" />
+               	    	</f:facet>
+               	    	<div align="left">
+						<h:outputText value="#{contractDetailsBackingBean.chkContractStatusType(data.status)}" /></div>						
+					</p:column>
+					<p:column headerText="#{lbl['lbl.ct.action']}" 
+					 	    styleClass="column-align-center"  style="width:7%;" rendered="#{!contractDetailsBackingBean.isSupplierRole()}">
+					 	 	
+					 	 	 	<p:menuButton id="menuButtonId" value="#{lbl['lbl.btn.option']}" >					 	 	 	
+							
+								 <p:menuitem id="menuItemId" value="#{lbl['lbl.ct.view']}"  icon="ui-icon-view"
+								    process="@this" partialSubmit="true"
+							        action="#{contractDetailsBackingBean.gotoViewPage(data.ctContract.contractId, data.ctContractVer.contractVerId)}"
+						   	    	onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
+						   	   	 </p:menuitem>
+					   	   
+                                 <p:menuitem id="menuItemId1" value="#{lbl['lbl.ct.suspend.contract']}"   icon="ui-icon-suspension"
+                                      rendered="#{contractDetailsBackingBean.isContractAdmin()
+                                      	and contractDetailsBackingBean.isSelectedCtAdmin(data.assignedCtAdminId,data.assignedCtAdminFlag)
+					 		          	and data.ctStatus == 1 and data.ctContract.recordStatusFlg==1
+					 		          	and !contractDetailsBackingBean.managedBean.trackingDiarySearch
+					 		          	and !data.allowAgreementCreation}"  
+					 		          process="@this" partialSubmit="true"
+					 		          action="#{contractDetailsBackingBean.gotoSuspendPage(data.ctContract.contractId)}" 
+                                      onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()"></p:menuitem>
+					 		          
+					 		   <p:menuitem id="menuItemId2" value="#{lbl['lbl.ct.termination']}"  icon="ui-icon-termination"
+					 		         rendered="#{contractDetailsBackingBean.isContractAdmin() 
+					 		         	and contractDetailsBackingBean.isSelectedCtAdmin(data.assignedCtAdminId,data.assignedCtAdminFlag)
+					 		         	and data.ctStatus == 1 and data.ctContract.recordStatusFlg==1
+					 		         	and !contractDetailsBackingBean.managedBean.trackingDiarySearch
+					 		         	and !data.allowAgreementCreation}"  
+                             	    action="#{contractDetailsBackingBean.gotoTerminatePage(data.ctContract.contractId)}"
+                             	    process="@this" partialSubmit="true"
+								     onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
+							   </p:menuitem>
+								        
+							  <p:menuitem id="menuItemId3" value="#{lbl['lbl.ct.amendment.with.supplement']}" icon="ui-icon-amendment" 
+							        rendered="#{(contractDetailsBackingBean.isContractAdmin() and data.ctStatus == 1 and data.ctContract.recordStatusFlg ==1
+							        	and contractDetailsBackingBean.isSelectedCtAdmin(data.assignedCtAdminId,data.assignedCtAdminFlag)
+                             	        and data.agStatus == 1 and !contractDetailsBackingBean.managedBean.trackingDiarySearch
+                             	        and !data.allowAgreementCreation) or (contractDetailsBackingBean.isContractAdmin() and data.ctStatus == 1 and data.ctContract.recordStatusFlg ==3
+                             	        and data.agStatus == 1 and !contractDetailsBackingBean.managedBean.trackingDiarySearch
+                             	        and !data.allowAgreementCreation)}" 
+                             	        process="@this" partialSubmit="true"
+								    action="#{contractDetailsBackingBean.gotoAmendPage(data.ctContract.contractId)}"
+								    onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
+							  </p:menuitem>
+					 		 
+					 		<p:menuitem id="menuItemId4" value="#{(data.agStatus == 1) ? lbl['lbl.ct.amendment.without.supplement'] : lbl['lbl.ct.fulfilment.details.update']}"  icon="ui-icon-update" 
+					 		      rendered="#{contractDetailsBackingBean.isContractAdmin() 
+					 		      			  and contractDetailsBackingBean.isSelectedCtAdmin(data.assignedCtAdminId,data.assignedCtAdminFlag)
+					 		      			  and data.ctStatus == 1
+					 		      			  and data.ctContract.recordStatusFlg==1 and !data.pendingFinalistAgreement
+					 		      			  and !contractDetailsBackingBean.managedBean.trackingDiarySearch
+					 		      			  and !data.allowAgreementCreation }" 
+					 		      			  process="@this" partialSubmit="true"
+                             	  action="#{contractDetailsBackingBean.gotoUpdatePage(data.ctContract.contractId, data.agStatus)}"
+								  onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
+					        </p:menuitem>
+					        <!--#29374 start-->
+					        <p:menuitem id="menuItemId15" value="#{lbl['lbl.ct.notification.setting']}" icon="ui-icon-edit" 
+						          rendered="#{contractDetailsBackingBean.isContractAdmin() 
+						          			and data.ctStatus == 1
+						          			and data.ctContract.recordStatusFlg==1
+						          			and contractDetailsBackingBean.isSelectedCtAdmin(data.assignedCtAdminId,data.assignedCtAdminFlag)
+									        and !contractDetailsBackingBean.managedBean.trackingDiarySearch
+									        and !data.allowAgreementCreation}"
+									        process="@this" partialSubmit="true"
+						          action="#{contractDetailsBackingBean.gotoNotificationSetting(data.ctContract.contractId)}"
+						          onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
+						    </p:menuitem>
+						     <!--#29374 end-->
+						    
+						    <!-- #25406 - Start -->
+						     <p:menuitem id="menuItemId7" value="#{lbl['lbl.ct.owner.management']}" icon="ui-icon-edit" 
+						          rendered="#{contractDetailsBackingBean.isApprover() and data.ctStatus == 1 and data.status == 1
+						          and !contractDetailsBackingBean.managedBean.trackingDiarySearch
+						          			 and contractDetailsBackingBean.isSelectedCtAdmin(data.assignedCtAdminId,data.assignedCtAdminFlag)}" 
+								  process="@this" partialSubmit="true"
+								  disabled="#{data.assignedCtAdminFlag == 1}"
+						          action="#{contractDetailsBackingBean.gotoOwnerManagementPage(data.ctContract.contractId)}"
+						          onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
+						    </p:menuitem>
+							<!-- #25406 - End -->
+			
+					   	 <p:menuitem id="menuItemId5" value="#{lbl['lbl.ct.view.termination.history']}"  
+					   	     icon="ui-icon-termination-history" 
+                             rendered="#{(data.terminate or data.mutualTerminate or data.remedy)
+                           			    and contractDetailsBackingBean.isSelectedCtAdmin(data.assignedCtAdminId,data.assignedCtAdminFlag)
+                             	    	and !data.allowAgreementCreation}" process="@this" partialSubmit="true"
+                             action="#{contractDetailsBackingBean.gotoTerminateHistoryPage(data.ctContract.contractId)}"
+							 onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
+					     </p:menuitem>
+					     
+					     <p:menuitem id="menuItemId6" value="#{lbl['lbl.ct.proceed.migrated']}"  
+					   	     icon="ui-icon-proceed-migrated" 
+                             rendered="#{contractDetailsBackingBean.isContractAdmin() 
+                            		  and contractDetailsBackingBean.isSelectedCtAdmin(data.assignedCtAdminId,data.assignedCtAdminFlag)
+					 		          and data.ctContract.recordStatusFlg==1
+					 		          and data.allowAgreementCreation}"
+					 		 action="#{contractDetailsBackingBean.setContractId(data.ctContract.contractId)}"
+							   	process="@this" partialSubmit="true"  oncomplete="proceedMigratedDlg.show()">
+					     </p:menuitem>
+						 <p:menuitem id="menuItemId16" value="#{(data.assignedCtAdminFlag == 0) ? lbl['lbl.ct.request.design.ct.admin'] : lbl['lbl.ct.remove.design.ct.admin']}"
+					     		icon="ui-icon-edit"
+					     		process="@this" partialSubmit="true"
+					     		rendered="#{(contractDetailsBackingBean.isContractAdmin() or ctBackingBean.isApprover()) 
+					     				and data.status == 1
+					     				and data.ctStatus == 1 
+					     				and data.ctContract.recordStatusFlg==1
+					     				and !contractDetailsBackingBean.managedBean.trackingDiarySearch
+					     				and contractDetailsBackingBean.isSelectedCtAdmin(data.assignedCtAdminId,data.assignedCtAdminFlag)
+					     				and  !data.allowAgreementCreation}" action="#{contractDetailsBackingBean.goToRequestCtAdmin(data.ctContract.contractId,(data.assignedCtAdminFlag == 0) ? lbl['lbl.ct.request.ct.admin'] : lbl['lbl.ct.remove.ct.admin'])}"
+					     		onStart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
+					     </p:menuitem>  
+                       </p:menuButton>
+					</p:column>
+					<!-- Supplier's action -->
+					<p:column headerText="#{lbl['lbl.ct.action']}"  styleClass="column-align-center" 
+					   style="width:8%;" rendered="#{contractDetailsBackingBean.isSupplierRole()}">
+					    <p:menuButton id="menuButtonId11" value="#{lbl['lbl.btn.option']}" >
+					     	<p:menuitem id="menuItemId11" value="#{lbl['lbl.ct.view']}"  
+					   	     	icon="ui-icon-view" 
+					   	     	process="@this" partialSubmit="true"
+                            	action="#{contractDetailsBackingBean.gotoViewPage(data.ctContract.contractId, data.ctContractVer.contractVerId)}"
+					   			onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
+					     	</p:menuitem>
+					     	<p:menuitem id="menuItemId12" value="#{lbl['lbl.ct.request.change.bank.acc']}"
+					     		icon="ui-icon-change-bank" 
+                            	rendered="#{data.ctStatus == 1 and data.ctContract.recordStatusFlg==1 
+                            	 		and !data.pendingFinalistAgreement
+                            			and !contractDetailsBackingBean.managedBean.trackingDiarySearch
+                            			and !data.allowAgreementCreation}"
+                            		process="@this" partialSubmit="true"
+					   	     	action="#{contractDetailsBackingBean.gotoChangeBankPage(data.ctContract.contractId)}"
+					   			onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
+					     	</p:menuitem>
+					     	<p:menuitem id="menuItemId13" value="#{(data.ctContract.factored) ? lbl['lbl.ct.remove.factoring'] : lbl['lbl.ct.request.factoring']}"
+					   	     	icon="ui-icon-factoring" 
+					   	     	process="@this" partialSubmit="true"
+					   	     	rendered="#{data.isAllowFactoring() and data.ctContract.recordStatusFlg==1
+					   	     		and !contractDetailsBackingBean.managedBean.trackingDiarySearch
+					   	     		and !data.allowAgreementCreation}"
+                            	action="#{contractDetailsBackingBean.gotoFactoringPage(data.ctContract.contractId,false)}"
+					   			onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
+					     	</p:menuitem>
+					     	<p:menuitem id="menuItemId14" value="#{lbl['lbl.ct.update.factoring']}"
+					   	     	icon="ui-icon-edit" 
+					   	     	process="@this" partialSubmit="true"
+					   	     	rendered="#{data.isAllowFactoring() and data.ctContract.recordStatusFlg==1
+					   	     		and !contractDetailsBackingBean.managedBean.trackingDiarySearch
+					   	     		and !data.allowAgreementCreation and data.ctContract.factored}"
+                            	action="#{contractDetailsBackingBean.gotoFactoringPage(data.ctContract.contractId,true)}"
+					   			onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
+					     	</p:menuitem>
+						</p:menuButton>
+					</p:column>
+				</p:dataTable>
+			</div>			
+			<p:confirmDialog id="proceedMigratedDlg" widgetVar="proceedMigratedDlg" message="#{lbl['lbl.ct.proceed.migrated.message']}" 	
+       			severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.ct.proceed.migrated.confirmation']}">
+           		<div class="ppRightBtn">
+		     		<p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		         		update="contractTbl, proceedMigratedConfirmDlg" 
+		          		action="#{contractDetailsBackingBean.proceedForFulfilment(true)}"
+		          		onstart="proceedMigratedDlg.hide(); blkContractSearchTable.show();"
+		            	oncomplete="blkContractSearchTable.hide(); proceedMigratedConfirmDlg.show();"/>
+			 		<p:commandButton value="#{lbl['lbl.btn.no']}"  process="@this"  partialSubmit="true"
+		         		update="contractTbl, proceedMigratedConfirmDlg" 
+		          		action="#{contractDetailsBackingBean.proceedForFulfilment(false)}"
+		          		onstart="proceedMigratedDlg.hide(); blkContractSearchTable.show();"
+		            	oncomplete="blkContractSearchTable.hide(); proceedMigratedConfirmDlg.show();"/>
+		      	</div>
+   			</p:confirmDialog>
+   			<p:confirmDialog id="proceedMigratedConfirmDlg" widgetVar="proceedMigratedConfirmDlg" message="#{contractDetailsBackingBean.proceedForFulfilmentMsg}" 	
+       			severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.ct.proceed.migrated.confirmation']}">
+           		<div class="ppRightBtn">
+			 		<p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="proceedMigratedConfirmDlg.hide();" />
+		      	</div>
+   			</p:confirmDialog>
+		</p:panel>
+	</ui:define>
+</ui:composition>
+  

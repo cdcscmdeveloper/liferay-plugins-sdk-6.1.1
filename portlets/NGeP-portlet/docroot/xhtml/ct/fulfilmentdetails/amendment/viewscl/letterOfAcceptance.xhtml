@@ -1,0 +1,117 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<p:panel id="loaContents" header="#{lbl['lbl.ct.menu.loa.content']}" toggleable="true" toggleSpeed="500">
+		<p:panel rendered="#{amendmentBackingBean.managedBean.ackFA ne CtConst.supplierAckLoa}">
+	    <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.loa.letter']}" escape="false"/><br/>
+	    <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.loa.file.format']}" escape="false"/><br/>
+	    </p:panel>
+		<h:panelGrid columns="2" columnClasses="columnWidth300">
+			<p:outputLabel value="#{lbl['lbl.ct.loa.physical.no']}" styleClass="required" />
+			<h:panelGrid columns="2">
+				<p:inputText disabled="true" style="width:300px;"
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.scLoiLoa.fileNo}" />
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.scl.file.ref.no']}" />
+			</h:panelGrid>
+			<p:outputLabel value="#{lbl['lbl.ct.supplemental.contract.letter.date']}" styleClass="required" />
+			<h:panelGrid columns="2">
+	   			<p:calendar style="width:100px;" id="signDateLoaId" showOn="button"  readonlyInput="true" navigator="true"
+	 				maxdate="#{(ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend)
+			              	? ctBackingBean.managedBean.contractVer.ctAmendment.extendEndDate : ctBackingBean.managedBean.contractVer.ctContractValue.expDate}"
+			  		pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
+					label="#{lbl['lbl.ct.supplemental.contract.letter.date']}" 
+					disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails}"
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.govtSignDate}">
+					<p:ajax event="dateSelect" process="@this" onstart="blockWidget.show();"  oncomplete="blockWidget.hide();"
+						update=":form:responseDueDate"/>
+				</p:calendar>
+				<p:message for="signDateLoaId" display="icon"/>
+			</h:panelGrid>
+			<p:outputLabel value="#{lbl['lbl.ct.scl.response.period']}" styleClass="required" /> 
+   			<p:selectOneMenu id="responsePeriodId" style="width:150px;"
+				value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.loaResponsePeriod}"
+				disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails}">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"></f:selectItem>
+					<f:selectItem itemLabel="7" itemValue="7"></f:selectItem>
+					<f:selectItem itemLabel="14" itemValue="14"></f:selectItem>
+					<p:ajax event="change" process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+						update=":form:responseDueDate" />
+			</p:selectOneMenu>
+			<p:outputLabel value="#{lbl['lbl.ct.scl.response.due.date']}" styleClass="required" /> 
+		 	<p:inputText id="responseDueDate" disabled="true" value="#{amendmentBackingBean.retrieveResponseDueDate()}" style="width:150px;" />
+		</h:panelGrid>
+		<p:spacer height="5"/>
+		<p:dataTable id="loaContentDt" var="loaReportVar" rowIndexVar="index"
+	 		value="#{amendmentBackingBean.managedBean.ctLetterOfAcceptance}">
+			<p:column headerText="#{lbl['lbl.ct.contents']}" style="width:45%;" styleClass="column-align-center">
+				<h:outputText value="#{loaReportVar.contentTypeDesc}" style="float:left;" />
+			</p:column>
+				 
+			<p:column headerText="#{lbl['lbl.ct.amend.sample']}" styleClass="column-align-center" style="width:10%;">
+				<h:panelGroup rendered="#{loaReportVar.docDefinitionKey eq ParameterConst.documentDefinitionKeyAckOfLoaReceipt
+					or (loaReportVar.docDefinitionKey eq ParameterConst.documentDefinitionKeyLetterOfAcceptance
+						and !amendmentBackingBean.managedBean.disableFinalAmendDetails)}">
+	   				<h:commandLink  action="#{amendmentBackingBean.downloadLOAContentFile(loaReportVar.docDefinitionKey)}" immediate="true">
+						<p:graphicImage value="/css/images/design/ico-download.png" title="#{lbl['lbl.txt.file.download']}" />
+					</h:commandLink>
+					<ac:iconTooltip value="#{(loaReportVar.docDefinitionKey eq ParameterConst.documentDefinitionKeyLetterOfAcceptance)
+						? lbl['lbl.ct.tooltip.loa.ct.letter'] : lbl['lbl.ct.tooltip.loa.sup.letter']}" />
+				</h:panelGroup>
+			</p:column>
+				 
+			<p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center" style="width:45%;">
+				<h:panelGroup id="uploadLetterPg" rendered="#{loaReportVar.docDefinitionKey eq ParameterConst.documentDefinitionKeyLetterOfAcceptance}">
+					<p:commandButton icon="ui-icon-upload"
+						rendered="#{loaReportVar.loaAttachments.filePath == null}"
+						process="@this" partialSubmit="true"
+						update=":form:loaContentDt, :form:uploadLetterDlg" oncomplete="uploadLetterDlg.show();return false;" >
+					</p:commandButton>
+					<h:commandLink rendered="#{loaReportVar.loaAttachments.filePath != null}" title="#{loaReportVar.loaAttachments.fileName}"
+						value="#{loaReportVar.loaAttachments.fileName}" onclick="enableAckBtn()"
+						action="#{amendmentBackingBean.downloadSupplementalLetter(loaReportVar.loaAttachments)}">
+					</h:commandLink>
+					<p:spacer width="1"/>
+					<p:commandLink onsuccess="deleteUploadLetterDlg.show();"
+						rendered="#{loaReportVar.loaAttachments.filePath != null
+							and !amendmentBackingBean.managedBean.disableFinalAmendDetails}"
+						action="#{ctBackingBean.setAttachFileIndex(index)}" process="@this" partialSubmit="true">
+			   			<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
+			 		</p:commandLink>
+				</h:panelGroup>
+			</p:column>
+		 </p:dataTable>
+		<p:remoteCommand name="enableAckBtn" update="@form" />
+			 <p:dialog id="uploadLetterDlg" widgetVar="uploadLetterDlg" resizable="false" modal="true" 
+		    	  width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}" onShow="singleUploadListener(letterUploadWV);">
+					<p:ajax event="close" />
+					<p:fileUpload style="display:inline;" mode="advanced"  dragDropSupport="false" 
+					      sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"  showButtons="false"  
+					      fileUploadListener="#{amendmentBackingBean.UploadLetterOfAcceptance}" multiple="false"  
+					      allowTypes="#{CommonConstants.FILE_UPLOAD_PDF_TYPE}"  widgetVar="letterUploadWV"
+					      invalidFileMessage="#{lbl['lbl.txt.upload.pdf.file']}"					      
+						  invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
+					      update=":form:loaContentDt" label="#{lbl['lbl.btn.choose']}" oncomplete="uploadLetterDlg.hide();" >
+					</p:fileUpload>
+					<f:facet name="footer">
+							<div class="ppRightBtn">
+			   					 <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadLetterDlg.hide();" />
+	   						</div>
+	   				</f:facet>
+				</p:dialog>
+		
+				<p:confirmDialog id="deleteUploadLetterId" widgetVar="deleteUploadLetterDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                		  severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                  		 <div class="ppRightBtn">
+		               			<p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                      		 	  update=":form:loaContentDt" 
+		                        		 action="#{amendmentBackingBean.deleteLoaAttachment(ctBackingBean.managedBean.attachFileIndex)}"
+		                       			  oncomplete="deleteUploadLetterDlg.hide();"/>
+			                	 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteUploadLetterDlg.hide();" type="button" />
+		                 </div>
+                   </p:confirmDialog>
+	 	 </p:panel>
+</ui:composition>

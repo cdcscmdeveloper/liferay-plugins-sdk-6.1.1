@@ -1,0 +1,45 @@
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<cc:interface>
+		<cc:attribute name="suppEdit" required="true" />
+		<cc:attribute name="poEdit" required="true" />
+		<cc:attribute name="appEdit" required="true" />
+		<cc:attribute name="backingBean" required="true"/>
+		<cc:attribute name="section" required="true"/>
+		<cc:attribute name="tabNo" required="true"/>
+		<cc:attribute name="label" required="true"/>
+		<cc:attribute name="validate" />
+		<cc:attribute name="disciplinary" required="true"/>
+		<cc:attribute name="hasOverlap" required="true"/>
+	</cc:interface>
+
+	<cc:implementation>
+		<ui:param name="basicParam" value="#{cc.attrs.backingBean.getStepIcon(cc.attrs.section)}" />
+		<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" disabled="#{cc.attrs.disciplinary}"
+			actionListener="#{cc.attrs.backingBean.setTabValue(cc.attrs.backingBean.managedBean.tabActiveIndex,cc.attrs.tabNo)}"
+			action="#{cc.attrs.backingBean.updateSmAppl(cc.attrs.backingBean.managedBean.smAppl.applType,cc.attrs.backingBean.managedBean.currentPageType,cc.attrs.section)}"
+			partialSubmit="true" update=":form">
+			<p:graphicImage value="#{basicParam}" rendered="#{not empty basicParam}" style="vertical-align:top !important;"/>
+			<h:outputText value="#{cc.attrs.label}" style="vertical-align:top !important;"/>&#160;&#160;
+			<p:graphicImage value="/css/images/design/ico-uneditable.png" rendered="#{cc.attrs.suppEdit or cc.attrs.poEdit or cc.attrs.appEdit}" 
+				style="vertical-align:top !important;" />&#160;
+			<h:outputText value="S" rendered="#{cc.attrs.suppEdit}" title="#{lbl['tt.sm.edit.by.supp']}" style="color:red !important;"/>
+			<h:outputText value="P" rendered="#{cc.attrs.poEdit}" title="#{lbl['tt.sm.edit.by.po']}" style="color:red !important;"/>
+			<h:outputText value="A" rendered="#{cc.attrs.appEdit}" title="#{lbl['tt.sm.edit.by.app']}" style="color:red !important;"/>
+			<h:outputText value="O" rendered="#{cc.attrs.hasOverlap}" title="#{lbl['tt.sm.has.overlap']}" style="color:red !important;"/>
+			<ui:remove>
+				<p:outputPanel rendered="#{cc.attrs.backingBean.managedBean.smAppl.applType eq 'A' 
+					and cc.attrs.backingBean.managedBean.overLappedCategoryExists}">
+					&#160;<font color="red">&#x26A0;</font>&#160;
+					<h:outputText styleClass="warning" value="#{lbl['lbl.txt.alert']}" />
+				</p:outputPanel>
+			</ui:remove>
+		</p:commandLink>
+	</cc:implementation>
+
+</ui:component>

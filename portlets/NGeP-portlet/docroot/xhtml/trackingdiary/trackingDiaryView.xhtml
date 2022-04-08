@@ -1,0 +1,40 @@
+<ui:composition
+template="/WEB-INF/facelets/templates/basic_template.xhtml"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:p="http://primefaces.org/ui"
+xmlns:c="http://java.sun.com/jsp/jstl/core"
+xmlns:tp="http://java.sun.com/jsf/composite/ep"
+xmlns:ac="http://ac.my/jsf/composite/cc"
+>
+	
+	<ui:define name="contentSection">
+
+			
+		<p:panel>
+<table style="width: 100%">
+		<tr>
+			<td>
+			<div align="left" style="width: 100%">
+			    <p:commandButton value="#{lbl['lbl.btn.back']}" action="#{pmTrackingDiaryBackingBean.redirectToMainPage}"
+			  	 />
+			 </div>
+			 </td>
+			 <td>
+			 <div align="right" style="width: 100%">
+			 <ui:remove>#Bug:28933,#Bug:28934,#Bug:28985,#Bug:28983 - Remove attribute disable="true" for hyperlink Print</ui:remove>
+			  <p:commandLink value="#{lbl['lbl.btn.print']}" ajax="false">
+				<p:fileDownload value="#{pmTrackingDiaryBackingBean.generateReport(pmTrackingDiaryBackingBean.managedBean.selectedDocType, pmTrackingDiaryBackingBean.managedBean.selectedDocId)}" />
+			  </p:commandLink>
+			  </div>
+			 </td>
+		</tr>
+		</table>
+       <ui:include src="/xhtml/pm/shared/trackingDiaryPanel.xhtml" />
+
+		</p:panel>			
+		
+</ui:define>
+</ui:composition>

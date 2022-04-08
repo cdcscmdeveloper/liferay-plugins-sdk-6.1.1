@@ -1,0 +1,329 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+	<ui:define name="contentSection">
+		<style>
+			div[id$="ctSubListTree"] thead {
+    			display:none;
+			}
+			
+			.ui-datatable.ctlisttree thead th,
+			.ui-datatable.ctlisttree tbody,
+			.ui-datatable.ctlisttree tbody tr,
+			.ui-datatable.ctlisttree tbody td {
+				padding:4px;
+			}
+			
+			
+			tr.ui-expanded-row-content.ui-widget-content td[colspan="11"]:first-child{
+    			padding: 0px;
+    			border-top: 0 !important;
+    			border-right: 0 !important;    		
+    			border-left: 0 !important;
+			}
+				
+			.ui-datatable.borderless thead th,
+			.ui-datatable.borderless tbody,
+			.ui-datatable.borderless tbody tr,
+			.ui-datatable.borderless tbody td {
+    			border-style: none;
+    			padding:4px 10px !important;
+    			border: 0px !important;
+    			
+			}
+			.ui-datatable.borderless table{
+				border:0 !important;
+				border-collapse:collapse !important;
+			}
+			
+			.borderless.ui-datatable .ui-datatable-tablewrapper {
+			    overflow:hidden !important;
+			    padding:0px !important;
+			}
+			
+			.ui-datatable.borderless.ui-datatable-resizable{
+				padding:0px;
+			}
+			
+			.ui-row-toggler{
+				margin-left:auto !important;
+				margin-right:auto !important;
+			}
+			<!--#13984 CSS for dialog box BEGINNING-->
+			.ui-dialog{
+                   padding: 25px 50px 75px 100px;
+                               
+ 
+  			}
+  			<!--#13984 CSS for dialog box ENDING-->
+			
+			tr.ui-widget-content.ui-datatable-odd.ui-expanded-row ~ tr.ui-expanded-row-content.ui-widget-content td{
+				background-color:#F9F9F9 !important;
+			}
+			
+			tr.ui-widget-content.ui-datatable-even.ui-expanded-row ~ tr.ui-expanded-row-content.ui-widget-content td{
+				background-color:white !important;
+			}
+			
+			@-moz-document url-prefix() {
+				tr.ui-expanded-row-content.ui-widget-content td[colspan="11"]:first-child{
+	    			padding: 0px;
+	    			border-top: 0 !important;
+	    			border-right: 0 !important;  
+	    			border-bottom : 0 !important;
+    			}
+			}
+			
+			@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) { 
+    			.ui-datatable.borderless tbody td:last-child {
+	    			border-right: 0 !important;
+				}
+				.ui-datatable.borderless tbody tr:last-child td {
+	    			border-bottom: 0 !important;
+				}
+				.ui-datatable table{
+					width:auto; !important;
+				}
+			}
+		</style>
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.tooltip.active.contract.mof']}"/>
+		<p:spacer height="2px"></p:spacer>
+		<h:panelGroup id="searchContractPanel">
+			<table>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.fl.search.contract.list']}" /></td>
+					<td><p:selectOneMenu
+							value="#{contractRequestBackingBean.managedBean.searchContractListDD}"
+							style="width: 314px;">
+							<f:selectItems value="#{contractRequestBackingBean.getSearchContractCriteriaList()}" />
+							<p:ajax event="change"
+								update="searchContractPanel,searchContractCriteria,searchTypesDD"
+								listener="#{contractRequestBackingBean.getSelectedContractCriteriaDesc}" />
+						</p:selectOneMenu></td>
+						<p:spacer height="2px"></p:spacer>
+					<td><p:inputText id="searchContractCriteria" size="28" disabled="#{empty contractRequestBackingBean.managedBean.searchContractListDD}"
+							value="#{contractRequestBackingBean.managedBean.searchContractCriteria}"
+							rendered="#{!contractRequestBackingBean.managedBean.types}"></p:inputText>
+						<p:selectOneMenu id="searchTypesDD"
+							value="#{contractRequestBackingBean.managedBean.searchTypesDD}"
+							rendered="#{contractRequestBackingBean.managedBean.types}"
+							style="width: 200px;">
+							<f:selectItems value="#{contractRequestBackingBean.getSearchTypeList()}" />
+						</p:selectOneMenu></td>
+					<td><p:commandButton value="#{lbl['lbl.btn.search']}"
+							action="#{contractRequestBackingBean.searchContract}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							update="ctListDt" /></td>
+
+				</tr>
+			</table>
+		</h:panelGroup>
+		<p:dataTable id="ctListDt" var="vCtActiveContract" lazy="true" rows="10" rowIndexVar="rowIndex" styleClass="ctlisttree"
+			value="#{contractRequestBackingBean.managedBean.activeContractDataModel}">
+			<ac:paginator for="ctListDt" />
+			<p:column style="width:25px">
+            	<p:rowToggler rendered="#{not empty vCtActiveContract.activeContractSubList}" />
+        	</p:column>
+			<p:column headerText="#{lbl['lbl.fl.contract.no']}" style="width:142px;text-align:center">
+					<h:outputText value="#{vCtActiveContract.physicalNo}" style="float:left;text-align:left;" 
+				rendered="#{vCtActiveContract.physicalNo != null}"/>
+				<h:outputText value="&lt;br/&gt;" escape="false" rendered="#{vCtActiveContract.physicalNo != null}" />
+					<p:commandLink value="#{vCtActiveContract.contractNo}" style="float:left;text-align:left;"
+				action="#{contractRequestBackingBean.navigateDocument(vCtActiveContract.contractId)}"/>
+				
+			</p:column>
+			<p:column headerText="#{lbl['lbl.fl.contract.name']}" style="width:142px;white-space:normal;text-align:center">
+				<h:outputText
+					value="#{vCtActiveContract.contractName}" style="float:left;text-align:left;"/>
+			</p:column>
+			<p:column style="width:120px;white-space:normal;text-align:center">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.fl.fs.no']}" />
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.crlist.phase.no']}"/>
+				</f:facet>
+				<h:outputText value="#{vCtActiveContract.scheduleNo == null ? vCtActiveContract.phaseNo : vCtActiveContract.scheduleNo}"/>
+	
+				<!--#13984 Schedule/ Phase Information link for table BEGINNING -->
+				<p:commandLink value="#{lbl['lbl.quartz.scheduled.jobs.info']}"
+					update="display" oncomplete="sample.show();"
+					style="color: blue;font-size: 12px;display: inline-block;text-align: centre;"
+					rendered="#{not empty vCtActiveContract.activeContractSubList}" />
+
+				<p:dialog header="#{lbl['lbl.quartz.scheduled.jobs.info']}"
+					widgetVar="sample" modal="true" id="display">
+
+					<h3></h3>
+					<p></p>
+
+					<p:dataTable 
+						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+						id="contractRequestIdd" var="contractExpansion"
+						value="#{vCtActiveContract.activeContractScheduleList}"
+						 width="100%">
+
+						<ac:paginator for="contractRequestIdd"></ac:paginator>
+
+
+						<p:columnGroup type="header">
+							<p:row>
+								<p:column colspan="3"
+									style="white-space:normal;text-align: center;"
+									headerText="#{lbl['lbl.pm.org.ptjCode']}/#{lbl['lbl.pm.org.ptjName']} : #{contractRequestBackingBean.managedBean.orgCode} #{contractRequestBackingBean.managedBean.orgName}" />
+
+
+							</p:row>
+						<p:row>
+							<p:column style="text-align: center;" colspan="1"
+								headerText="#{lbl['lbl.fl.fs.tableinfo']}" />
+							<p:column style="text-align: center;" colspan="1"
+								headerText="#{lbl['lbl.fl.title.contract.contractreq']}" />
+							<p:column style="text-align: center;" colspan="1"
+								headerText="#{lbl['lbl.fl.do.pocostatus']}" />
+						</p:row>
+
+						</p:columnGroup>
+
+
+						<p:column>
+							<h:outputText value="#{contractExpansion.scheduleNo}"
+								style="display: block; width:100%; text-align:center;" />
+
+						</p:column>
+						
+                        <p:column>
+                        							<h:outputText value="#{contractExpansion.crNo}"
+								style="display: block; width:100%; text-align:center;" />
+
+							    <h:outputText value="#{contractExpansion.crNoStatus=='(null)' ? '' : contractExpansion.crNoStatus}"
+								style="display: block; width:100%; text-align:center;white-space: pre-wrap;" />
+								
+                        </p:column>
+                        
+                          <p:column>
+                          <h:outputText value="#{contractExpansion.coNo}"
+								style="display: block; width:100%; text-align:center;" />
+			
+						  <h:outputText value="#{contractExpansion.coNoStatus=='(null)' ? '' : contractExpansion.coNoStatus}"
+							style="display: block; width:100%; text-align:center;white-space: pre-wrap;" />
+                        </p:column>
+					</p:dataTable>
+
+
+				<table style="width: 100%">
+					<tr>
+						<td style="text-align: right; width: 12%"><p:commandButton
+								value="#{lbl['lbl.fl.btn.close']}" type="text"
+								onclick="sample.hide();" style="text-align: right;" /></td>
+					</tr>
+				</table>
+				</p:dialog>
+            	<!--#13984 Schedule/ Phase Information link for table ENDING -->
+			</p:column>
+			<p:column headerText="#{lbl['lbl.fl.physical.treasury.circular']}" style="width:100px;white-space:normal;text-align:center">
+				<h:outputText value="#{vCtActiveContract.physicalCircularNo}" style="float:left;text-align:left;" 
+				rendered="#{vCtActiveContract.physicalCircularNo != null}"/>
+				<h:outputText value="&lt;br/&gt;" escape="false" rendered="#{vCtActiveContract.physicalNo != null}" />
+				<h:outputText value="#{vCtActiveContract.circularNo}" style="float:left;text-align:left;"/>
+			</p:column>
+			<p:column style="width:60px;white-space:normal;text-align:center">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.fl.period.start']}"/>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.crlist.period.start']}"/>
+				</f:facet>
+				<h:outputText value="#{vCtActiveContract.startEffective}" style="float:left;text-align:left;">
+					<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</h:outputText>			
+			</p:column>
+			<p:column style="width:60px;white-space:normal;text-align:center">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.fl.period.end']}"/>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.crlist.period.end']}"/>
+				</f:facet>
+				<h:outputText value="#{vCtActiveContract.endEffective}" style="float:left;text-align:left;">
+					<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</h:outputText>			
+			</p:column>
+			<p:column headerText="#{lbl['lbl.fl.fulfilment.type']}" style="width:108px;white-space:normal;text-align:center">
+				<h:outputText value="#{contractRequestBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentType, vCtActiveContract.fulfilmentType)}" style="float:left;text-align:left;">
+				</h:outputText>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.fl.contract.type']}" style="width:99px;text-align:center">
+				<h:outputText value="#{contractRequestBackingBean.getParameterDesc(ParameterTypeConst.contractType, vCtActiveContract.contractType)}" style="float:left;text-align:left;">
+				</h:outputText>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.fl.supp.name']}" style="width:98px;white-space:normal;text-align:center">
+				<h:outputText value="#{vCtActiveContract.supplierName}" style="float:left;text-align:left;">
+				</h:outputText>
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.fl.doc.maintain.action.no']}" style="width:58px;text-align:center">
+				<p:commandLink id="crBasepageLink" rendered="#{vCtActiveContract.fulfilmentType ne ParameterConst.fulfilmentTypeScheduled}"
+					onclick="procure([{name:'contractId',value:'#{vCtActiveContract.contractId}'},{name:'scheduleNo',value:'#{vCtActiveContract.scheduleNo == null ? vCtActiveContract.phaseNo : vCtActiveContract.scheduleNo}'}])">
+					<p:graphicImage value="/css/images/design/ico-view.png"
+						title="#{lbl['lbl.fl.contract.request']}" />
+				</p:commandLink>
+			</p:column>
+			
+			<p:rowExpansion>
+			
+				<p:dataTable id="ctSubListTree" var="contractExpansion" styleClass="borderless"
+					value="#{vCtActiveContract.activeContractSubList}"  resizableColumns="true">
+					<p:column style="width:25px">
+					</p:column>
+					<p:column style="width:142px">
+					</p:column>
+					<p:column style="width:142px">
+					</p:column>
+					<p:column style="width:120px;text-align:center">
+						<h:outputText value="#{contractExpansion.scheduleNo == null ? contractExpansion.phaseNo : contractExpansion.scheduleNo}" style="text-align: left;float:left"/>
+						<h:outputText value="#{lbl['lbl.fl.schedule']}" rendered="#{contractExpansion.scheduleType.parameterCode=='P'}" style="float:right;"/>
+						<h:outputText value="#{lbl['lbl.fl.as.and.when']}" rendered="#{contractExpansion.scheduleType.parameterCode=='A'}" style="float:right;"/>
+					</p:column>
+					<p:column style="width:100px">
+					</p:column>
+					<p:column style="width:60px;">
+						<h:outputText value="#{contractExpansion.startEffective}" >
+						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</p:column>
+					<p:column style="width:60px;">
+						<h:outputText value="#{contractExpansion.endEffective}" >
+						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</p:column>
+					<p:column style="width:108px">
+					</p:column>
+					<p:column style="width:99px">
+					</p:column>
+				
+					<p:column style="width:98px">
+					</p:column>
+					<p:column style="width:58px;text-align:center">
+						<p:commandLink id="crBasepageLink" 
+							onclick="procure([{name:'contractId',value:'#{contractExpansion.contractId}'},{name:'scheduleNo',value:'#{contractExpansion.scheduleNo == null ? contractExpansion.phaseNo : contractExpansion.scheduleNo}'}])">
+							<p:graphicImage value="/css/images/design/ico-view.png"
+								title="#{lbl['lbl.fl.contract.request']}" />
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+			</p:rowExpansion>
+
+		</p:dataTable>
+		
+		<p:remoteCommand name="procure" action="#{contractRequestBackingBean.procureContract}" />
+	</ui:define>
+</ui:composition>

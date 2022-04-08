@@ -1,0 +1,276 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<h:outputStylesheet library="ep/css" name="blinktext.css" />
+	
+	<p:panel header="#{lbl['lbl.bpm.my.task']}" collapsed="true" toggleable="true" id="normalViewPanelId">
+
+		<table style="width: 100%">
+			<tr>
+				<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.doc.no']} : " /></td>
+				<td width="40%"><p:inputText size="60" value="#{bpmTasklistBackingBean.managedBean.docNo}"></p:inputText></td>
+				<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.doc.type']} : " /></td>
+				<td width="40%">
+					<p:selectOneMenu id="docTypeNormalId" style="width: 200px;" value="#{bpmTasklistBackingBean.managedBean.docType}">
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue=""></f:selectItem>
+						<f:selectItems value="#{bpmTasklistBackingBean.getRadioButtonCodeValuesBySearchBean(ParameterTypeConst.documentTypes, bpmTasklistBackingBean.docTypeSearchBean)}" />
+						<p:ajax listener="#{bpmTasklistBackingBean.findDocStatus}" update="docStatus" />
+					</p:selectOneMenu>
+				</td>
+			</tr>
+			<tr>
+				<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.status']} :" /></td>
+				<td width="40%">
+					<p:selectOneMenu id="docStatus"
+						style="width: 200px;"
+						disabled="#{bpmTasklistBackingBean.managedBean.docType == null || bpmTasklistBackingBean.managedBean.docType ==''}"
+						value="#{bpmTasklistBackingBean.managedBean.docStatus}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
+						<f:selectItems
+							value="#{bpmTasklistBackingBean.managedBean.docStatusList}"
+							itemLabel="#{docStatus.statusName}" var="docStatus"
+							itemValue="#{docStatus.statusDescId}">
+						</f:selectItems>
+					</p:selectOneMenu>
+				</td>
+				<td width="10%"></td>
+				<td width="40%"></td>
+			</tr>
+			<!-- <tr>
+				<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.created.date']} : " /></td>
+				<td width="40%">
+					<p:selectOneMenu style="width: 150px;" value="#{bpmTasklistBackingBean.managedBean.viewBy}">
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue=""></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.past.day']}" itemValue="DAY"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.past.week']}" itemValue="WEEK"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.past.month']}" itemValue="MONTH"></f:selectItem>
+					</p:selectOneMenu>
+				</td>
+				<td width="10%"></td>
+				<td width="40%"></td>
+			</tr>
+			-->
+			<!--#29810-START-->
+			<tr>
+				<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.sort.by']} :" /></td>
+				<td width="40%">
+					<p:selectOneMenu id="taskListSortBy" style="width: 200px;" value="#{bpmTasklistBackingBean.managedBean.sort_by}">
+						<f:selectItem itemLabel="" itemValue=""></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue=""></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.doc.no']}" itemValue="DOCNUMBER"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.doc.type']}" itemValue="DOCTYPE"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.created.date']}" itemValue="CREATEDATE"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.description']}" itemValue="TITLE"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.status']}" itemValue="DOCSTATUS"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.received.date']}" itemValue="RECEIVEDDATE"></f:selectItem>
+						<!-- <f:selectItem itemLabel="Document Receive Date" itemValue="CREATEDATE"></f:selectItem> -->
+					</p:selectOneMenu>
+				</td>
+				<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.order.by']} :"  /></td>
+				<td width="40%">
+					<p:selectOneMenu id="taskListOrderBy" style="width: 200px;" value="#{bpmTasklistBackingBean.managedBean.ascending}">
+						<f:selectItem itemLabel="" itemValue=""></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.ascending']}" itemValue="true"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.descending']}" itemValue="false"></f:selectItem>
+					</p:selectOneMenu>
+				</td>
+			</tr>
+			<tr>
+				<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.createdDateFrom']} :" /></td>
+				<td width="40%">
+					<p:calendar showOn="button" navigator="true"
+						display="inline" required="false" readonlyInput="false"
+						label="#{lbl['lbl.cm.doc.createdDate']}" id="myTaskCreatedDateFrom"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						yearRange="-99:+0" maxdate="#{backingBean.managedBean.currDate}"
+						value="#{bpmTasklistBackingBean.managedBean.myTaskCreatedDateFrom}">
+						<p:ajax event="dateSelect" listener="#{bpmTasklistBackingBean.compareDate('normal')}"/>
+						<p:ajax event="change" listener="#{bpmTasklistBackingBean.compareDate('normal')}"/>
+					</p:calendar>
+				</td>
+				<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.createdDateTo']} :" /></td>
+				<td width="40%">
+					<p:calendar showOn="button" navigator="true"
+						display="inline" required="false" readonlyInput="false"
+						label="#{lbl['lbl.cm.doc.createdDate']}" id="myTaskCreatedDateTo"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						yearRange="-99:+0" maxdate="#{backingBean.managedBean.currDate}"
+						value="#{bpmTasklistBackingBean.managedBean.myTaskCreatedDateTo}">
+						<p:ajax event="dateSelect" listener="#{bpmTasklistBackingBean.compareDate('normal')}"/>
+						<p:ajax event="change" listener="#{bpmTasklistBackingBean.compareDate('normal')}"/>
+					</p:calendar>
+				</td>
+			</tr>
+			<!--#29810-END-->
+		</table>
+		<div class="clear"></div>
+		<!--#29810-START-->
+		<div style="text-align: left; margin-right: 2px; float: right;">
+			<p:commandButton
+				value="#{lbl['lbl.btn.reset']}" 
+				action="#{bpmTasklistBackingBean.resetDate('normal')}"
+				update="normalViewPanelId" >
+			</p:commandButton>
+		</div>
+		<!--#29810-end-->
+		<div style="text-align: left; margin-right: 2px; float: right;">
+			<p:commandButton
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				action="#{bpmTasklistBackingBean.refreshNormalTaskList}"
+				update="taskListMyTaskId" value="#{lbl['lbl.btn.search']}">
+			</p:commandButton>
+		</div>
+	</p:panel>
+
+	<div class="clear"></div>
+
+	<!-- <p:panel header="#{lbl['lbl.cm.search.result']}" toggleable="true"> -->
+	<p:dataTable
+		value="#{bpmTasklistBackingBean.managedBean.taskListMyTaskDataModel}"
+		emptyMessage="#{lbl['lbl.pp.no.record.found']}" lazy="true"
+		rowIndexVar="rowIndex" rows="10" id="taskListMyTaskId"
+		style="width:100%;" var="tasks" widgetVar="taskListTableWidget">
+		
+		<!--#29810-START-->
+		<ac:paginator for="taskListMyTaskId"></ac:paginator>
+		<p:ajax event="sort" listener="#{bpmTasklistBackingBean.orderByMyTaskList}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"></p:ajax>
+		<p:column width="5%;" sortBy="#{tasks.docNumber}" >
+			<f:facet name="header">	
+				#{lbl['lbl.bpm.doc.no']}				
+			</f:facet>
+			<!-- start updated for #24968 -->
+			<h:panelGroup rendered="#{not empty tasks.pocoNo}">
+				<div >#{tasks.pocoNo}</div>
+			</h:panelGroup>
+			<h:panelGroup>
+				<div >#{tasks.docNumber}</div>
+			</h:panelGroup>
+			<!-- end updated for #24968 -->
+		</p:column>
+		
+		<p:column width="20%;" style="white-space:normal;" sortBy="#{tasks.docType}">
+			<f:facet name="header">
+				#{lbl['lbl.bpm.doc.type']}
+			</f:facet>
+			#{bpmTasklistBackingBean.getParameterDesc(ParameterTypeConst.documentTypes,tasks.docType)}				
+		</p:column>
+		<p:column style="white-space:normal;" sortBy="#{tasks.title}">
+			<f:facet name="header">
+				#{lbl['lbl.bpm.description']}
+			</f:facet>
+			<p:commandLink action="#{bpmTasklistBackingBean.navigateToURL}" onclick="blockWidget.show();" oncomplete="">
+				<f:param name="taskId" value="#{tasks.taskId}" />
+				<f:param name="process" value="#{tasks.process}" />
+				<f:param name="taskName" value="#{tasks.taskName}" />
+				<f:param name="docType" value="#{tasks.docType}" />
+				<f:param name="isClaim" value="true" />
+				<h:outputText value="#{tasks.title}" escape="false" />
+				<!-- 26238 - Disciplinary Action 28111 -->
+				<f:param name="docNo" value="#{tasks.docNumber}" />
+			</p:commandLink>
+		</p:column>
+		<p:column width="10%" sortBy="#{tasks.createDate}">
+			<f:facet name="header">
+					#{lbl['lbl.bpm.created.date']}
+				</f:facet>
+			<h:outputText value="#{tasks.createDate.time}">
+				<f:convertDateTime
+					pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+			</h:outputText>
+		</p:column>
+		<p:column rendered="#{bpmTasklistBackingBean.managedBean.roleType eq 'PO'}" width="10%" sortBy="#{tasks.receivedDate}">
+			<f:facet name="header">
+					#{lbl['lbl.bpm.documentReceivedDate']}
+				</f:facet>
+			<h:outputText value="#{tasks.receivedDate.time}">
+				<f:convertDateTime
+					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+			</h:outputText>
+		</p:column>
+		<!--#29810-END-->
+		<p:column width="10%">
+			<f:facet name="header">
+					#{lbl['lbl.bpm.due.date']}
+				</f:facet>
+			<h:outputText value="#{tasks.expirationDate.time}">
+				<f:convertDateTime
+					pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+			</h:outputText>
+			<p:outputPanel rendered="#{tasks.docStatus eq SupplierManagementConst.PM_STATUS_PO_REVIEW}">
+				<h:outputText value="#{bpmTasklistBackingBean.poKpiByCompanyState(tasks.docId, tasks.docStatus)}" escape="false"/>
+			</p:outputPanel>
+			<!-- #12483 - START -->
+			<p:outputPanel rendered="#{tasks.docStatus eq SupplierManagementConst.PM_STATUS_PENDING_REVISE_APPLICATION_LONG_VALUE}">
+				<h:outputText value="#{bpmTasklistBackingBean.poKpiByCompanyState(tasks.docId, tasks.docStatus)}" escape="false"/>
+			</p:outputPanel>
+			<!-- #12483 - END -->
+		</p:column>
+		<!--#29810-START-->
+		<p:column width="18%;" style="white-space:normal;" sortBy="#{tasks.docStatus}">
+			<f:facet name="header">
+				#{lbl['lbl.bpm.status']}
+			</f:facet>				
+			#{bpmTasklistBackingBean.applicationStatus(tasks.docStatus)}
+		</p:column>
+		<!--#29810-END-->
+		<p:column width="6%">
+			<f:facet name="header">
+				#{lbl['lbl.cm.action']}
+			</f:facet>
+
+			<p:commandButton value="#{lbl['lbl.bpm.btn.release']}"
+				onclick="this.disabled=true;"
+				action="#{bpmTasklistBackingBean.releaseTask}" update="@form"
+				rendered="#{tasks.claimed}">
+				<f:param name="taskId" value="#{tasks.taskId}" />
+			</p:commandButton>
+
+			<h:panelGroup rendered="#{!tasks.claimed}">
+				<div style="height: 30px"></div>
+			</h:panelGroup>
+
+		</p:column>
+
+
+	</p:dataTable>
+
+	<!-- 	</p:panel> -->
+	
+	<!--#29810-START-->
+	<p:dialog style="width: 20px; height: auto;top: 261px; align:center" widgetVar="dateFromDialog"
+		id="dateFromDialogId" resizable="false" modal="true" closable="false">
+		
+		<p:outputPanel layout="block" id="dateFromDialogPanel">
+			<p:messages id="dateFromDialogMessagePanel" showSummary="false" showDetail="true"
+				autoUpdate="true" closable="true" />
+			<div align="center">
+				<p>#{lbl['lbl.bpm.dialog.date.to']}</p>
+			</div>
+			<div class="ppRightBtn">		    
+		 		<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"  onclick="dateFromDialog.hide();" type="button" />
+			</div>
+		</p:outputPanel>
+	</p:dialog>
+	<p:dialog style="width: 20px; height: auto;top: 261px; align:center" widgetVar="validateDateDialog"
+		id="validateDateDialogId" resizable="false" modal="true" closable="false">
+		
+		<p:outputPanel layout="block" id="validateDateDialogPanel">
+			<p:messages id="validateDateDialogMessagePanel" showSummary="false" showDetail="true"
+				autoUpdate="true" closable="true" />
+			<div align="center">
+				<p>#{lbl['lbl.bpm.dialog.maximumDate']}</p>
+			</div>
+			<div class="ppRightBtn">		    
+		 		<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"  onclick="validateDateDialog.hide();" type="button" />
+			</div>
+		</p:outputPanel>
+	</p:dialog>
+	<!--#29810-END-->
+
+</ui:composition>

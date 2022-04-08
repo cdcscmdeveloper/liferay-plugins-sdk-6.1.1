@@ -1,0 +1,32 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<!-- #31407 START -->
+	<p:commandButton value="#{lbl['lbl.sm.submitForPay']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+		action="#{backingBean.checkBeforeSubmit}" update=":form"
+		style="margin-bottom:5px;" />
+	<!-- #31407 END -->
+	
+	<p:confirmDialog id="printConfirm" closable="true"
+		message="#{lbl['lbl.sm.supp.declare.print.confirmmsg']}"
+		header="#{lbl['lbl.sm.supp.declare.print.confirmheader']}" severity="alert"
+		widgetVar="printConfirm">
+		
+		<div align="right">
+			<p:commandButton id="yes" value="#{lbl['lbl.btn.download']}" ajax="false" onclick="printConfirm.hide()">
+				<p:fileDownload value="#{backingBean.printSupplierProfile()}" />
+			</p:commandButton>
+			<p:commandButton id="no"
+				value="#{lbl['lbl.btn.proceed']}" onclick="printConfirm.hide()" 
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				action="#{backingBean.submitSmApplToBpm(backingBean.managedBean.smAppl.applType)}" />
+		</div>
+
+	</p:confirmDialog>
+	
+</ui:composition>

@@ -1,0 +1,116 @@
+#parse("templates/sm/sitevisit/shared/header.vm")
+	<table width='100%'>
+		<tr align='center' style="background-color: #3366ff;">
+	        <td>
+	            <font style='color:#ffffff;font-weight: bold;font-size: 12pt;'>$templateType - $smVmUtil.getDescByLabel('lbl.sm.sv.templ.compinfo')</font>
+	        </td>
+    	</tr>
+	</table>
+	
+	<table class="infoTable">
+		<tr>
+	        <td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.compinfo.accept.appl.date')</b></td>
+	        <td>$accptDate</td>
+    	</tr>
+    	
+    	<tr>
+	        <td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.final.info.date')</b></td>
+	        <td>$finalInfoDate</td>
+    	</tr>
+    	
+    	<tr>
+	        <td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.company.name')</b></td>
+	        <td>$companyName</td>
+    	</tr>
+    	
+    	<tr>
+	        <td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.businessregno')</b></td>
+	        <td>$busRegNo</td>
+    	</tr>
+    	
+    	<tr>
+	       <td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.new.business.regNo')</b></td>
+	        #if($newBusinessRegistrationNo != $null)
+	      	<td>$newBusinessRegistrationNo</td>
+	      	#else
+	      	<td>$!smVmUtil.getDescByLabel('lbl.txt.na') </td>
+	      	#end
+    	</tr>
+    	
+    	<tr>
+	        <td width="30%" valign="top"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.address')</b></td>
+	        <td>$addrLiines</td>
+    	</tr>
+    	
+    	<tr>
+	        <td><br /></td>
+    	</tr>
+    	
+        <tr>
+	        <td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.postal.code')</b></td>
+	        <td>$postCode</td>
+    	</tr>
+    	
+    	<tr>
+	        <td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.town.city')</b></td>
+	        <td>$townDtls</td>
+    	</tr>
+    	
+    	<tr>
+	        <td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.state')</b></td>
+	        <td>$stateDtls</td>
+    	</tr>
+    	
+    	<tr>
+    		<td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.district')</b></td>
+    		<td>$districtDtls</td>
+    	</tr>
+    	
+   	    <tr>
+	        <td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.mof.reg.no').</b></td>
+	        <td>$mofNo</td>
+    	</tr>
+    	
+    	<tr>
+	        <td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.appl.ref.no')</b></td>
+	        <td>$applNo</td>
+    	</tr>
+    	
+    	<tr>
+    		<td width="30%" valign="top"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.visiting.officer')</b></td>
+    		<td>$svOfficers</td>
+    	</tr>
+    	
+    	<tr>
+    		<td width="30%" valign="top"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.assisting.officer')</b></td>
+    		<td>$svAOfficer</td>
+    	</tr>
+    	
+    	<tr>
+    		<td width="30%" valign="top"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.interview.representative')</b></td>
+    		<td valign="top">
+    			#if($intRepresentatives.size() != $null && $intRepresentatives.size() > 0)
+    				<table>
+    				#foreach($intRep in $intRepresentatives)
+    					<tr><td width="50%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.name')</td>
+    						<td>$intRep.name</td>
+    					</tr>
+	    				<tr><td class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.designation')</td>
+	    					<td>$intRep.designation</td>
+	    				</tr>
+	    				<tr><td><br /></td></tr>
+    				#end
+    				</table>
+    			#else
+	    			<p class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.name')</p>
+	    			<p class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.designation')</p><br />
+	    			<p class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.name')</p>
+	    			<p class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.designation')</p><br />
+	    			<p class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.name')</p>
+	    			<p class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.designation')</p><br />
+    			#end
+    		</td>
+    	</tr>
+	</table>
+	<br /><br />
+#include("templates/sm/sitevisit/shared/footer.vm")

@@ -1,0 +1,52 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<h:outputText value="#{panelListOfCircularRptBB.managedBean.reportUrl}" /><br/><br/>
+	<table style="width: 100%;">
+		<tr>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.physical.circular.no']}" /></td>
+			<td>
+				<p:inputText value="#{panelListOfCircularRptBB.managedBean.circularNo}"  maxlength="60" style="width:300px">
+					<p:ajax event="blur" partialSubmit="true" />
+				</p:inputText>
+			</td>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.circular.central.panel.contract.name']}" /></td>
+			<td>
+				<p:inputText value="#{panelListOfCircularRptBB.managedBean.circularName}"  maxlength="500" style="width:300px">
+					<p:ajax event="blur" partialSubmit="true" />
+				</p:inputText>
+			</td>
+		</tr>
+		<tr>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.circular.eff.date.from']}" /></td>
+			<td>
+				<table><tr>
+					<td class="columnDateFromClass">
+						<p:calendar showOn="button" navigator="true" display="inline" readonlyInput="true"
+							value="#{panelListOfCircularRptBB.managedBean.circularEffFromDate}" size="9"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							partialSubmit="true" process="@form">
+						</p:calendar>
+					</td>
+					<td class="columnDateToClass"><p:outputLabel value="#{lbl['lbl.ct.date.range.to']}" style="width:55px;" /></td>
+					<td>
+						<p:calendar showOn="button" navigator="true"
+							display="inline" readonlyInput="true"
+							value="#{panelListOfCircularRptBB.managedBean.circularEffToDate}" size="9"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							partialSubmit="true" process="@form">
+						</p:calendar>
+					</td>
+				</tr></table>
+			</td>
+		</tr>
+	</table>
+	<br/>
+	<ac:generateReport bBean="#{panelListOfCircularRptBB}"
+		reportMainBean="#{ctReportBB}">
+	</ac:generateReport>
+</ui:composition>

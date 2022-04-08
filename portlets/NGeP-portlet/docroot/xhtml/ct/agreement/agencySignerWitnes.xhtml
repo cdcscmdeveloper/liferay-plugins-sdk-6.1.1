@@ -1,0 +1,243 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+   
+    <p:panel id="agencyPanelId"  toggleSpeed="500"  header="#{lbl['lbl.ct.panel.agency.signing']}"  toggleable="true"  >
+         <h:panelGrid style="width:100%;">
+           		
+           		<h:panelGrid columns="3">
+   					<p:outputLabel value="#{lbl['lbl.ct.signer']}" style="float:left;"/>
+      				<p:spacer width="1"/>
+					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agency.signer']}" />
+		 		 </h:panelGrid>
+               
+                 <p:dataTable id="AgSignerTable" var="agSignerVar" 
+                         value="#{agreementBackingBean.managedBean.ctAgencySigner}" widgetVar="AgSignerObj" 
+                         selection="#{agreementBackingBean.managedBean.selectedAgencySigner}" rowKey="#{agSignerVar}" rowIndexVar="index">
+		                 <ac:paginator for="AgSignerTable"/>
+		                     <p:column  style="width:5%;text-align:center">
+				                   <f:facet name="header">
+							             <p:selectBooleanCheckbox value="#{agreementBackingBean.managedBean.selectAll}">
+								               <p:ajax partialSubmit="true" process="@this"
+									                  update=":form:AgSignerTable,:form:delAgencySignerBtn" listener="#{agreementBackingBean.selectAllAgencySignerCheckBox}" />
+							              </p:selectBooleanCheckbox>
+						            </f:facet>
+		           
+		                             <p:selectBooleanCheckbox  value="#{agSignerVar.selectedCheckBox}" styleClass="myCustomChekBox">
+		           		                    <p:ajax event="change" 
+		           		                         update=":form:AgSignerTable,:form:delAgencySignerBtn" listener="#{agreementBackingBean.selectOneAgencySignerCheckBox}"></p:ajax>
+			                         </p:selectBooleanCheckbox>
+			                    </p:column>
+		               
+		                        <p:column style="width:20%; white-space:normal;"  headerText="#{lbl['lbl.ct.ptj']}" styleClass="column-align-center"
+		                                rendered="#{agreementBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral}">
+		                               <div align="left">
+		                                     <h:outputText value="#{agSignerVar.orgProfile.orgName}" /></div>
+		                        </p:column>
+		        
+		               <p:column style="width:20%; white-space:normal;"  headerText="#{lbl['lbl.ct.ministry']}" styleClass="column-align-center"
+		                       rendered="#{agreementBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
+		                          <div align="left">
+		                             <h:outputText value="#{agSignerVar.ministryName}" /></div>
+		                   </p:column>
+		               
+					     <p:column style="width:20%;white-space:normal;" headerText="#{lbl['lbl.ct.jabatan']}" styleClass="column-align-center"
+                             rendered="#{agreementBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
+					              <div align="left">
+					               <h:outputText  value="#{agSignerVar.jabatanName}" /></div>
+					        </p:column>
+        
+                        <p:column style="width:20%;white-space:normal;" headerText="#{lbl['lbl.ct.ptj']}"  styleClass="column-align-center"
+                             rendered="#{agreementBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
+                                <div align="left">
+                                 <h:outputText value="#{agSignerVar.ptjName}" /> </div>
+					     </p:column>
+					     
+					     <p:column style="width:15%;" styleClass="column-align-center">
+					     <f:facet name="header">
+					         <h:outputText value="#{lbl['lbl.ct.contract.signer']}" styleClass="required"/>
+					         <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.agency.contract.signer']}"/>
+					        </f:facet>
+                 
+                             <p:selectOneMenu id="contractSigner" style="width:180px;" value="#{agSignerVar.officer.userId}" label="#{lbl['lbl.ct.contract.signer']}">
+                                 <f:selectItems value="#{agreementBackingBean.getContractSignerDropdown(agSignerVar)}"/>
+                                 <p:ajax event="change" update="agOfId,agOfPosition"  
+                                     process="@this" partialSubmit="true"  listener="#{agreementBackingBean.setUserValueAgency(agSignerVar)}"/> 
+                             </p:selectOneMenu>
+                         </p:column>  
+        
+                         <p:column style="width:10%; white-space:normal;" headerText="#{lbl['lbl.ct.identification.no']}" styleClass="column-align-center">
+                          <div align="left">
+                              <h:outputText id="agOfId" value="#{agSignerVar.officerIc}" /> 
+                              </div>
+                         </p:column>         
+               
+                         <p:column style="width:20%; white-space:normal;" headerText="#{lbl['lbl.ct.designation']}" styleClass="column-align-center">
+                             <div align="left">
+                              <h:outputText id="agOfPosition" value="#{agSignerVar.officerPosition}" /></div>
+                         </p:column> 
+                 </p:dataTable>
+           </h:panelGrid>
+           <div class="ppRightBtn"> 
+           <p:commandButton id="addAgencySignerBtn" value="#{lbl['lbl.btn.add']}"  
+                oncomplete="dlgAgencySigner.show();"  partialSubmit="true" process="@this"
+       	        update=":form:AgSignerTable,:form:dialogAgencySigner" action="#{agreementBackingBean.resetSignerAgencyDetails()}">
+                <p:tooltip for="addAgencySignerBtn">
+			 	     <h:outputText value="#{lbl['lbl.ct.tooltip.add.agency.signer']}" escape="false" />
+			      </p:tooltip>
+       		</p:commandButton>
+       		
+		      <p:commandButton id="delAgencySignerBtn" process="@this" 
+		            disabled="#{agreementBackingBean.managedBean.buttonHideActive}"
+		          value="#{lbl['lbl.ct.delete']}"   onsuccess="dlgAgSignerDel.show()">
+		  	       <p:tooltip for="delAgencySignerBtn">
+				      <h:outputText value="#{lbl['lbl.ct.tooltip.delete.agency.signer']}" escape="false" />
+			       </p:tooltip>
+		       </p:commandButton>
+	        </div>
+	        
+	         <p:confirmDialog id="dlgAgSignerDel" widgetVar="dlgAgSignerDel" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                 <div class="ppRightBtn">
+		                 <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                       update=":form:AgSignerTable, :form:delAgencySignerBtn" 
+		                       action="#{agreementBackingBean.deleteTableRow('AGENCY_SIGNER')}" oncomplete="dlgAgSignerDel.hide();"/>
+			            <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgAgSignerDel.hide();" type="button" />
+		           </div>
+          </p:confirmDialog>
+             <h:panelGrid style="width:100%;">
+			  
+			       <h:panelGrid columns="3">
+   				    	<p:outputLabel value="#{lbl['lbl.ct.witness']}" style="float:left;"/>
+      				    <p:spacer width="1"/>
+					    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agency.witness']}" />
+		 	       </h:panelGrid>
+                  
+                   <p:dataTable id="AgWitnessTable" var="signAgWitnessVar" widgetVar="agWitnessTableWidget"
+                        value="#{agreementBackingBean.managedBean.ctSignAgencyWitness}"
+	                    selection="#{agreementBackingBean.managedBean.selectedAgencyWitnes}" rowKey="#{signAgWitnessVar}">
+		                <ac:paginator for="AgWitnessTable"/>
+		             
+                         <p:column  style="width:5%;text-align:center">
+				                  <f:facet name="header">
+							            <p:selectBooleanCheckbox value="#{agreementBackingBean.managedBean.selectAll}">
+								               <p:ajax partialSubmit="true" process="@this"
+									                  update=":form:AgWitnessTable,:form:delAgencyWitnessBtn" listener="#{agreementBackingBean.selectAllAgencyWitnessCheckBox}" />
+							              </p:selectBooleanCheckbox>
+						            </f:facet>
+		           
+		                             <p:selectBooleanCheckbox  value="#{signAgWitnessVar.selectedCheckBox}" styleClass="myCustomChekBox">
+		           		                    <p:ajax event="change" 
+		           		                         update=":form:AgWitnessTable,:form:delAgencyWitnessBtn" listener="#{agreementBackingBean.selectOneAgencyWitnessCheckBox}"></p:ajax>
+			                         </p:selectBooleanCheckbox>
+			                </p:column>
+		            	<!-- #30453 start -->
+		            	<p:column style="width:35%;" styleClass="column-align-center">
+					     <f:facet name="header">
+					         <h:outputText value="#{lbl['lbl.ct.name']}" styleClass="required"/>
+					         <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.agency.witness']}"/>
+					        </f:facet>
+                 
+                             <p:inputText value="#{signAgWitnessVar.officerName}" 
+		                          style="width:90%" maxlength="80" />
+                         </p:column>		            	
+						<!-- #30453 end -->
+		                <p:column style="width:20%;" styleClass="column-align-center">
+		                        <f:facet name="header">
+		                           <h:outputText value="#{lbl['lbl.ct.identification.no']}" styleClass="required"/>
+		                         <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.agency.signer.user']}"/>
+				              </f:facet>
+		                    <p:inputText value="#{signAgWitnessVar.officerIc}" style="width:90%"
+		                        label="#{lbl['lbl.ct.identification.no']}"  maxlength="20">
+		                    <p:ajax event="change" listener="#{agreementBackingBean.checkDuplicateAgreementParty()}"/>
+		                    </p:inputText>
+		                </p:column> 
+		         
+		                <p:column headerText="#{lbl['lbl.ct.designation']}" style="width:45%;" styleClass="column-align-center">
+		                     <p:inputText value="#{signAgWitnessVar.officerPosition}" style="width:90%" maxlength="255" />
+		                </p:column> 
+		           </p:dataTable>
+             </h:panelGrid>
+      
+             <div class="ppRightBtn"> 
+		       <p:commandButton id="addAgencyWitnessBtn" value="#{lbl['lbl.btn.add']}" 
+		            action="#{agreementBackingBean.addAgencyWitnes()}" 
+		           process="@form"  update=":form:AgWitnessTable"
+		           oncomplete="agWitnessTableWidget.paginator.endLink.click();">
+		           <p:tooltip for="addAgencyWitnessBtn">
+				      <h:outputText value="#{lbl['lbl.ct.tooltip.add.agency.witness']}" escape="false" />
+			       </p:tooltip>
+		       </p:commandButton>
+		       <p:commandButton id="delAgencyWitnessBtn" process="@this"
+		             disabled="#{agreementBackingBean.managedBean.buttonHideActive}"
+		            value="#{lbl['lbl.ct.delete']}"    onsuccess="dlgAgWitnessDel.show()">
+		            <p:tooltip for="delAgencyWitnessBtn">
+			             <h:outputText value="#{lbl['lbl.ct.tooltip.delete.agency.witness']}" escape="false" />
+			        </p:tooltip>
+		        </p:commandButton>
+	        </div>
+	          <p:confirmDialog id="dlgAgWitnessDel" widgetVar="dlgAgWitnessDel" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                           severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                         <div class="ppRightBtn">
+		                     <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                         update=":form:AgWitnessTable, :form:delAgencyWitnessBtn" 
+		                         action="#{agreementBackingBean.deleteTableRow('AGENCY_WITNESS')}" oncomplete="dlgAgWitnessDel.hide();"/>
+			                 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgAgWitnessDel.hide();" type="button" />
+		                 </div>
+                   </p:confirmDialog>
+         
+           <p:dialog id="dialogAgencySigner"  header="#{lbl['lbl.ct.add.agency.signer']}" resizable="false"
+                  widgetVar="dlgAgencySigner"  styleClass="pop_up_top" modal="true" width="600" height="200">
+			    		<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.agency.signer']}" escape="false"/><br/><br/>
+		    			  <h:panelGroup  id="agencyiesSingner">
+               					   <h:panelGrid columns="3">
+               
+               									  <p:selectOneMenu id="ministry"  style="width:140px" disabled="true" >
+            	    										<f:selectItem itemLabel="#{lbl['lbl.ct.ministry']}" itemValue=""/>
+                								 </p:selectOneMenu>
+                 								<p:spacer height="1"/>
+               								  <p:selectOneMenu id="ministryMenue" style="width:430px"
+                   									   value="#{agreementBackingBean.managedBean.ministryProfileId}" >
+            	 										  <f:selectItems value="#{agreementBackingBean.getMinistryDropdown()}"/>
+            	   										  <p:ajax  listener="#{agreementBackingBean.settingMinistryListener}"
+            	                                                  event="change"  process="@this"  update=":form:jabatanMenu,:form:ptjIdMenue, :form:selectAgencySignerId" />
+                                             </p:selectOneMenu>
+                 
+                                           <p:selectOneMenu id="jabatan"  style="width:140px" disabled="true" >
+            	                                 <f:selectItem itemLabel="#{lbl['lbl.ct.jabatan']}" itemValue=""/>
+                                           </p:selectOneMenu>
+                                         <p:spacer height="1"/>
+                                          <p:selectOneMenu id="jabatanMenu" style="width:430px"
+                                                value="#{agreementBackingBean.managedBean.jabatanProfileId}" >
+            	                                <f:selectItems value="#{agreementBackingBean.getJabatanDropdown()}"/>
+            	                                <p:ajax event="change" process="@this" 
+            	                                     listener="#{agreementBackingBean.settingJabatanListener}" update=":form:ptjIdMenue, :form:selectAgencySignerId"/>
+                                            </p:selectOneMenu>
+                 
+                                          <p:selectOneMenu id="ptjId"  style="width:140px" disabled="true">
+            	                                 <f:selectItem itemLabel="PTJ" itemValue="null"/>
+                                          </p:selectOneMenu>
+                                          <p:spacer height="1"/>
+                                          <p:selectOneMenu id="ptjIdMenue" style="width:430px"
+                                                value="#{agreementBackingBean.managedBean.ptjProfileId}" >
+            	                               <f:selectItems value="#{agreementBackingBean.getPtjDropdown()}"/>
+            	                               <p:ajax event="change"  update=":form:selectAgencySignerId" process="@this" partialSubmit="true"/>
+                                          </p:selectOneMenu>
+                                 </h:panelGrid>
+              
+                                <div class="ppRightBtn">
+       		                          <p:commandButton id="selectAgencySignerId"  value="#{lbl['lbl.btn.select']}" partialSubmit="true" process="@this" 
+       		                                update=":form:AgSignerTable" action="#{agreementBackingBean.addAgencySignerDetails}" 
+       		                                onclick="dlgAgencySigner.hide();" disabled="#{empty  agreementBackingBean.managedBean.ptjProfileId}" />
+				                      <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" process="@this" onclick="dlgAgencySigner.hide();" />
+		                     </div>
+             </h:panelGroup>
+	      </p:dialog>  
+	   </p:panel>
+</ui:composition>

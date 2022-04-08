@@ -1,0 +1,78 @@
+<html>
+   <head>
+      <style>
+         @page { size: A4 portrait;}
+         .footer {
+         display: block; text-align: center;
+         position: running(footer);
+         }
+      </style>
+   </head>
+   <body>
+      Dengan disaksikan di bawah ini, pihak-pihak di sini telah menandatangani nama masing-masing pada _____________ haribulan ______________ tahun ${currentYear}.
+      <br/>
+      <br/>
+      Untuk dan bagi pihak <strong>KERAJAAN MALAYSIA</strong>
+      <br/>
+      <br/>
+      <strong>${ministryName}</strong>
+      <br/>
+      <br/>
+      <br/>
+      #foreach( $ctAgencySigner in $ctAgencySignerList )
+      Di hadapan
+      <br/>
+      Nama			:   #if($ctAgencySigner.officer.salutationCode.salutationName) $ctAgencySigner.officer.salutationCode.salutationName  #end #if ( $ctAgencySigner.officerName ) $ctAgencySigner.officerName #end
+      <br/>
+      No. K/Pengenalan	: #if ( $ctAgencySigner.officerIc ) $ctAgencySigner.officerIc #end
+      <br/>
+      Jawatan		:  #if ( $ctAgencySigner.officerPosition ) $ctAgencySigner.officerPosition #end
+      <br/>
+      <br/>
+      #end
+      #foreach( $ctSignAgencyWitness in $ctSignAgencyWitnessList )
+      Di hadapan
+      <br/>
+      Nama			:  #if ( $ctSignAgencyWitness.officerName ) $ctSignAgencyWitness.officerName #end
+      <br/>
+      No. K/Pengenalan	: #if ( $ctSignAgencyWitness.officerIc ) $ctSignAgencyWitness.officerIc #end
+      <br/>
+      Jawatan		:  #if ( $ctSignAgencyWitness.officerPosition ) $ctSignAgencyWitness.officerPosition #end
+      <br/>
+      <br/>
+      #end
+      <br/>
+      <br/>
+      Untuk dan bagi pihak <strong>KONTRAKTOR</strong>
+      <br/>
+      <br/>
+      <strong>${companyName}</strong>
+      <br/>
+      <strong>(No. Syarikat: ${companyRegNo})</strong>
+      <br/>
+      <br/>
+      <br/>
+      #foreach( $ctSupplierSigner in $ctSupplierSignerList )
+      Di hadapan
+      <br/>
+      Nama			:  #if($ctSupplierSigner.officer.salutationCode.salutationName) $ctSupplierSigner.officer.salutationCode.salutationName  #end #if ( $ctSupplierSigner.officerName ) $ctSupplierSigner.officerName #end
+      <br/>
+      No. K/Pengenalan	: #if ( $ctSupplierSigner.officerIc ) $ctSupplierSigner.officerIc #end
+      <br/>
+      Jawatan		:  #if ( $ctSupplierSigner.officerPosition ) $ctSupplierSigner.officerPosition #end
+      <br/>
+      <br/>
+      #end
+      #foreach( $ctSupplierWitness in $ctSupplierWitnessList )
+      Di hadapan
+      <br/>
+      Nama			:  #if ( $ctSupplierWitness.officerName ) $ctSupplierWitness.officerName #end
+      <br/>
+      No. K/Pengenalan	: #if ( $ctSupplierWitness.officerIc ) $ctSupplierWitness.officerIc #end
+      <br/>
+      Jawatan		:  #if ( $ctSupplierWitness.officerPosition ) $ctSupplierWitness.officerPosition #end
+      <br/>
+      <br/>
+      #end
+   </body>
+</html>

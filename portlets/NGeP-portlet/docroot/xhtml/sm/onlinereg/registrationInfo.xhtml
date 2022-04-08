@@ -1,0 +1,68 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+	
+		<script type='text/javascript'>
+			//var $jq = jQuery.noConflict(true);
+		</script>
+	
+	</ui:define>
+
+	<ui:define name="contentSection">
+	<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>  
+		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" escape="false"/>
+		
+		<h:outputText rendered="#{registrationBackingBean.managedBean.smAppl.applValidWithSsm}" value="#{lbl['lbl.sm.po.disclaimer1']}" styleClass="splNotesFonts" style="float: inherit" escape="false" />			
+		<h:commandLink onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
+				rendered="#{registrationBackingBean.managedBean.smAppl.applValidWithSsm}"
+				action="#{registrationBackingBean.redirectToViewSSMInfo(registrationBackingBean.managedBean.smSupp.regNo,registrationBackingBean.managedBean.smSupp.businessType)}"
+				value="#{lbl['lbl.sm.instruction.here']}" 
+				styleClass="splNotesFonts" style="float: inherit" escape="false">
+				 <f:ajax execute="@form" render="@form" />
+		</h:commandLink>
+		<h:outputText rendered="#{registrationBackingBean.managedBean.smAppl.applValidWithSsm}" value="#{lbl['lbl.sm.po.disclaimer2']}" styleClass="splNotesFonts" style="float: inherit" escape="false" />
+					
+		<p:outputPanel id="outPnlRegForm">
+		<ui:include src="/xhtml/sm/shared/onlinereg/accountInfo.xhtml" />
+			<c:choose>
+				<c:when
+					test="#{registrationBackingBean.managedBean.smSupp.businessType == SupplierManagementConst.INDIVIDUAL_FLAG}">
+					<ui:include
+						src="/xhtml/sm/shared/onlinereg/individualregform.xhtml" />
+					<!-- 16052019 - SSM INTEGRATION CR - Fahmi--> 
+					<div align="left">
+						<p:commandButton value="#{lbl['lbl.sm.prev']}" rendered="registrationBackingBean.managedBean.ssmIntegrationActive"
+						action="#{registrationBackingBean.returnToCompanyValidation}">
+						</p:commandButton>
+						<p:commandButton value="#{lbl['lbl.sm.prev']}" rendered="!registrationBackingBean.managedBean.ssmIntegrationActive"
+						action="#{registrationBackingBean.returnToTermAndCondition}">
+						</p:commandButton>
+					</div>
+				</c:when>
+
+				<c:otherwise>
+					<ui:include src="/xhtml/sm/shared/onlinereg/corporateregform.xhtml" />
+				</c:otherwise>
+			</c:choose>
+		</p:outputPanel>
+		<p:outputPanel id="detailSsm" rendered="#{registrationBackingBean.managedBean.showDetailSSM}">
+			<ac:baseViewSsmInfo bBean="#{registrationBackingBean}" 
+								title="#{lbl['lbl.sm.view.ssm.infomation']}" 
+								dialogId="viewssminfo"
+								width="1150" height="600"
+								resizable="false"/>
+		</p:outputPanel>
+		
+	
+	 	 </ui:define>
+</ui:composition>

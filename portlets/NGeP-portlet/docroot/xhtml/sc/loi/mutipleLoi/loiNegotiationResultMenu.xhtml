@@ -1,0 +1,162 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+
+		<ui:param name="isPendingNegotiationStatus"
+			value="#{lOIDetailBackingBean.isPendingNegotiationStatus()}" />
+
+		<ui:param name="isPendingEndorsementStatus"
+			value="#{lOIDetailBackingBean.managedBean.currentStatusId == QTStatusConst.SF_PENDING_ENDORSEMENT}" />
+
+		<ui:param name="isEditableStatus"
+			value="#{isPendingNegotiationStatus and !empty lOIDetailBackingBean.managedBean.taskId}" />
+
+		<ui:param name="isFulfilmentTypeScheduled"
+			value="#{lOIDetailBackingBean.managedBean.scQt.fulfilmentType.parameterCode eq ParameterConst.fulfilmentTypeScheduled}" />
+
+		<ui:param name="validityDaysExpiredQt"
+			value="#{lOIDetailBackingBean.checkProposalValidityDateReach(
+		     				lOIDetailBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
+
+		<p:messages id="suppFinalMsg" showDetail="true" autoUpdate="#{lOIDetailBackingBean.managedBean.autoUpdate}"
+			closable="true" showSummary="false" severity="error, info" />
+
+		<ac:gpkiPopup textBeforeSign="#{lOIDetailBackingBean.textBeforeSign}"
+			postSignAction="#{lOIDetailBackingBean.gpkiSignMultiLoiAction(gpkiBackingBean.pmDigiSign)}" 
+			enableAutoUpdate="#{lOIDetailBackingBean.enableAutoUpdate()}" />
+
+		<div class="ppRightBtn">
+		<ui:param name="readOnlyTask" value="#{lOIDetailBackingBean.managedBean.readOnly}" />
+			<ui:decorate
+				template="/WEB-INF/facelets/templates/claim_template.xhtml">
+				<ui:define name="outComeSection">
+					<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all"
+						partialSubmit="true" update="@form" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();"
+						rendered="#{isPendingNegotiationStatus}"
+						action="#{lOIDetailBackingBean.saveMultipleLoiAction}" />
+
+					<ui:repeat var="bpmAction"
+						value="#{lOIDetailBackingBean.managedBean.outComes}">
+						<ui:param name="buttonLabel"
+							value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+
+						<p:commandButton value="#{lbl[buttonLabel]}"
+							styleClass="ui-button"
+							action="#{lOIDetailBackingBean.updateMultiLoiBpmTaskAction(bpmAction)}"
+							partialSubmit="true" onstart="blockWidget.show();"
+							oncomplete="blockWidget.hide();" process="@form" update="@form"
+							rendered="#{validityDaysExpiredQt}" />
+					</ui:repeat>
+				</ui:define>
+			</ui:decorate>
+
+		</div>
+
+		<ui:include src="/xhtml/sc/loi/loilist/loiListHeader.xhtml"></ui:include>
+
+		<p:tabMenu
+			activeIndex="#{lOIDetailBackingBean.managedBean.selectedTabIndex}">
+
+			<p:menuitem value="#{lbl['lbl.sc.negotiation.result']}"
+				process="@form" update="@form">
+				<f:setPropertyActionListener
+					target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
+					value="0" />
+			</p:menuitem>
+
+			<p:menuitem value="#{lbl['lbl.sc.negotation.committee']}" process="@form"
+				update="@form">
+				<f:setPropertyActionListener
+					target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
+					value="1" />
+			</p:menuitem>
+			<p:menuitem value="#{lbl['lbl.sc.briefing.paper.preparation.previous']}" process="@form"
+				update="@form">
+				<f:setPropertyActionListener
+					target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
+					value="2" />
+			</p:menuitem>
+			<p:menuitem value="#{lbl['lbl.sc.recommendation']}" process="@form"
+				update="@form">
+				<f:setPropertyActionListener
+					target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
+					value="3" />
+			</p:menuitem>
+
+			<p:menuitem value="#{lbl['lbl.sc.report.summary']}" process="@form"
+				update="@form">
+				<f:setPropertyActionListener
+					target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
+					value="4" />
+			</p:menuitem>
+
+		</p:tabMenu>
+
+		<p:panel id="contentPanel">
+			<c:if
+				test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '0'}">
+				<ui:include
+					src="/xhtml/sc/loi/mutipleLoi/loiNegotiationResult.xhtml" />
+			</c:if>
+			<c:if
+				test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '1'}">
+				<ui:include
+					src="/xhtml/sc/loi/mutipleLoi/loiNegotiationCommittee.xhtml" />
+			</c:if>
+			<c:if
+				test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '2'}">
+				<ui:include
+					src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/briefingPaperReport.xhtml" />
+			</c:if>
+			<c:if
+				test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '3'}">
+				<ui:include
+					src="/xhtml/sc/loi/mutipleLoi/loiNegotiationRecomendation.xhtml" />
+			</c:if>
+			<c:if
+				test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '4'}">
+				<ui:include
+					src="/xhtml/sc/loi/mutipleLoi/loiNegotiationReport.xhtml" />
+			</c:if>
+		</p:panel>
+
+		<ac:scSingleFileUploadPopup widgetVar="loiReportAttWidget"
+			fileUploadListener="lOIDetailBackingBean.handleFileUpload"
+			update="@([id$=reportContentsTbl])" 
+			autoUpdateValue="#{lOIDetailBackingBean.managedBean.autoUpdate}"/>	
+			
+		<p:dialog id="reviseLoiDlgs" widgetVar="reviseLoiDlgs"
+			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
+			resizable="false" width="400" height="75" closable="false">
+			<table>
+				<tr>
+					<td align="center">
+						<h:graphicImage value="/css/images/design/exclamation.png" /> 
+						<p:outputLabel value="#{lbl['lbl.sc.dialog.confirm.to.revise']}" />
+					</td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}"
+				oncomplete="reviseLoiDlgs.hide();"
+				action="#{lOIDetailBackingBean.reviseAction()}" />
+			<p:commandButton value="#{lbl['lbl.btn.no']}"
+				onclick="reviseLoiDlgs.hide();" type="button" />
+			</div>
+		</p:dialog>	
+
+	</ui:define>
+</ui:composition>

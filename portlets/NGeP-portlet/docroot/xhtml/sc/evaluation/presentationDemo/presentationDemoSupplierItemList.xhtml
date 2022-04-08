@@ -1,0 +1,83 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<ui:define name="resourceSection">
+	</ui:define>
+
+
+	<ui:define name="contentSection">
+		
+			<p:blockUI block=":form" widgetVar="blockWidget">
+				<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
+			</p:blockUI>
+			<p:messages id="financialCompliance" showDetail="true"
+				autoUpdate="true" closable="true" severity="error,info"
+				showSummary="false" />
+			<table width="100%" class="BtnSpacing">
+				<tr>
+					<td align="right"><p:commandButton
+							value="#{lbl['lbl.btn.back']}" style="float:left;"
+							immediate="true"
+							action="#{evaluationBackingBean.presentationDemoBackaction}" /> <p:commandButton
+							value="#{lbl['lbl.btn.save']}"
+							style="float:right;" update="@all" onstart="blockWidget.show();"
+							oncomplete="blockWidget.hide();"
+							action="#{evaluationBackingBean.saveDemoScoring}" 
+							rendered="#{!evaluationBackingBean.managedBean.readOnly}"/>
+					</td>
+				</tr>
+			</table>
+			
+			<p:panel id="presentationDemoItemSupplierHeaderIds" header="#{lbl['lbl.sc.eva.technical.presentation.demo.presentation.demo.item']}"
+				toggleable="true">
+				<p:dataTable var="demoitemsupplier" id="demoitemsupplierId" editable="true"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			rows="10" lazy="true"
+			value="#{evaluationBackingBean.managedBean.byItemDemoList}"
+			rowIndexVar="index" rowKey="#{demoitemsupplier}">
+			<ac:paginator for="questionTbl" />
+			<p:column headerText="#{lbl['lbl.sc.price.inquiry.item.name']}"
+				style="width:10%; white-space:normal; text-align:center;">
+
+				<h:outputText value="#{demoitemsupplier.scQtDemoItem.tplSpecQuestion.clItem}"></h:outputText>
+
+
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.score']}"
+				style="width:2%; text-align:center;">
+				<p:inputText value="#{demoitemsupplier.demoEvalScore}"
+					style="text-align:right" maxlength="18"
+					disabled="#{evaluationBackingBean.managedBean.readOnly}">
+				</p:inputText>
+				<p:spacer width="5"></p:spacer>
+				<h:outputText
+					value="/#{demoitemsupplier.scQtDemoItem.tplSpecQuestion.demoScore}" />
+			</p:column>
+		</p:dataTable>
+		
+		<p:spacer height="20px" />
+		<table>
+
+			<tr>
+				<td style="width: 230px;"><h:outputLabel
+						value="#{lbl['lbl.sc.total.score']}" /></td>
+				<td>
+				<p:inputText value="#{evaluationBackingBean.managedBean.qtProposalChecklist.totalUserScore}/#{evaluationBackingBean.managedBean.userScores}"
+					style="text-align:right" maxlength="18"
+					disabled="true">
+				</p:inputText></td>
+			</tr>
+
+		</table>
+		
+			</p:panel>
+	
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,181 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+<!-- #21695 Farid Start 
+	added is no all supplier-->
+	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="#{CommonUIConstant.imagePath}/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+
+		<ui:param name="consolidationReportFolderPath"
+			value="/xhtml/sc/supplierFinalization/consolidationReport" />
+		<ui:param name="validityDaysExpiredQt"
+			value="#{consolidationReportBackingBean.checkProposalValidityDateReach(
+		     					consolidationReportBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
+		<ui:param name="itemOnly"
+			value="#{consolidationReportBackingBean.managedBean.scQt.evaluateBy == consolidationReportBackingBean.evalTypeItem() }" />
+		<ui:param name="isOneTier"
+			value="#{consolidationReportBackingBean.managedBean.scQt.evaluationType eq ParameterConst.evaluationTypesOneTier}" />
+		<ui:param name="isOneTierWithTechnical"
+			value="#{consolidationReportBackingBean.managedBean.scQt.evaluationType eq ParameterConst.evaluationTypesOneTier  
+			  			and consolidationReportBackingBean.managedBean.scQt.techEvaluationReq}" />
+		<ui:param name="isTwoTier"
+			value="#{consolidationReportBackingBean.managedBean.scQt.evaluationType eq ParameterConst.evaluationTypesTwoTier}" />
+		<ui:param name="hasPresentationDemo"
+			value="#{consolidationReportBackingBean.managedBean.scQt.demoRequired}" />
+		<!-- #21695 added -->
+		<ui:param name="isNoAllOffer"
+			value="#{consolidationReportBackingBean.managedBean.offerAll}" />
+		<p:messages id="consolidationReportErr" showDetail="true"
+			showSummary="false" autoUpdate="true" closable="true"
+			severity="error, info" />
+		
+		<ac:scSingleFileUploadPopup widgetVar="crBriefingReportAttWidget"
+			fileUploadListener="consolidationReportBackingBean.handleFileUpload"
+			update="@([id$=briefingReportUploadBtn],[id$=uploadCBP])"  />
+			
+		<div align="right" class="BtnSpacing">
+			<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all"
+				partialSubmit="true" update="@form"
+				action="#{consolidationReportBackingBean.saveAction}"
+				onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+
+			<ui:repeat var="bpmAction"
+				value="#{consolidationReportBackingBean.managedBean.outComes}">
+				<ui:param name="buttonLabel"
+					value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+
+				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
+					action="#{consolidationReportBackingBean.submitAction}"
+					actionListener="#{consolidationReportBackingBean.managedBean.setOutcome(bpmAction)}"
+					process="@this" rendered="#{validityDaysExpiredQt}"
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+					update="@form" />
+			</ui:repeat>
+		</div>
+
+		<ui:include
+			src="#{consolidationReportFolderPath}/consolidationReportHeader.xhtml" />
+
+		<p:tabMenu id="tab"
+			activeIndex="#{consolidationReportBackingBean.managedBean.activeIndex}">
+			<p:menuitem value="#{lbl['lbl.sc.evaluation.report']}"
+				actionListener="#{consolidationReportBackingBean.onTabMenuChangeAction(0)}"
+				process="@form" update="@form" partialSubmit="true"
+				style="width:150px;">
+			</p:menuitem>
+			<!-- #21695 added disable Start-->
+			<p:menuitem value="#{lbl['lbl.sc.consolidation.report.packagewise']}"
+				actionListener="#{consolidationReportBackingBean.onTabMenuChangeAction(1)}"
+				process="@form" update="@form" partialSubmit="true"
+				style="width:150px;" disabled="#{isNoAllOffer}">
+			</p:menuitem>
+			<!-- #21695 added disable End-->
+			<p:menuitem value="#{lbl['lbl.sc.consolidation.report.itemized']}"
+				actionListener="#{consolidationReportBackingBean.onTabMenuChangeAction(2)}"
+				process="@form" update="@form" partialSubmit="true"
+				style="width:150px;">
+			</p:menuitem>
+			<p:menuitem value="#{lbl['lbl.sc.briefing.paper.preparation']}"
+				actionListener="#{consolidationReportBackingBean.onTabMenuChangeAction(3)}"
+				process="@form" update="@form" partialSubmit="true"
+				style="width:150px;">
+			</p:menuitem>
+		</p:tabMenu>
+
+		<p:panel id="contentPanel">
+			<c:if
+				test="#{consolidationReportBackingBean.managedBean.activeIndex eq 
+								consolidationReportBackingBean.getBRIEFING_PAPER_TAB_INDEX()}">
+				<ui:include
+					src="#{consolidationReportFolderPath}/briefingPaper/briefingPaperReport.xhtml" />
+			</c:if>
+			<c:if
+				test="#{consolidationReportBackingBean.managedBean.activeIndex eq 
+								consolidationReportBackingBean.getPACKAGE_TYPE_TAB_INDEX() or 
+							consolidationReportBackingBean.managedBean.activeIndex eq 
+								consolidationReportBackingBean.getITEMIZED_TYPE_TAB_INDEX()}">
+				<ui:include
+					src="#{consolidationReportFolderPath}/supplierRecommendation/supplierRecommendation.xhtml" />
+			</c:if>
+			<c:if
+				test="#{consolidationReportBackingBean.managedBean.activeIndex eq 
+								consolidationReportBackingBean.getEvaluationReportTabIndex()}">
+				<ui:include
+					src="#{consolidationReportFolderPath}/evaluationReport/evaluationReport.xhtml" />
+			</c:if>
+		</p:panel>
+		 <!-- #29729 Start -->	
+		<ui:include src="#{consolidationReportFolderPath}/supplierRecommendation/supplierBranchListPopup.xhtml" />
+        <!-- #29729 End -->
+		<ui:include
+			src="/xhtml/sc/supplierFinalization/supplierFinalization/supplierPreferencemargin.xhtml" />
+		<ui:include
+			src="/xhtml/sc/supplierFinalization/supplierFinalization/qualifiedSuppliersByEvalStage.xhtml" />
+		<ui:include
+			src="#{consolidationReportFolderPath}/supplierRecommendation/boardofDirectorsDetails.xhtml" />
+
+		<!-- <ac:scSingleFileUploadPopup widgetVar="kertasTaklimUploadAttWidget"
+			fileUploadListener="consolidationReportBackingBean.handleKertasFileUpload"
+			update="@([id$=reportTbl])"
+			fileType="#{CommonConstants.FILE_UPLOAD_DOC_TYPE}"
+			invalidFileMessage="#{lbl['lbl.txt.upload.doc.file']}" /> -->
+
+
+		<p:dialog id="submissionPopupId" widgetVar="submissionPopup"
+			header="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit.header']}"
+			resizable="false" width="325" height="100" closable="false"
+			modal="true">
+
+			<table>
+				<tr>
+					<td align="center"><h:graphicImage
+							value="/css/images/design/exclamation.png" /> <p:outputLabel
+							value="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
+					action="#{consolidationReportBackingBean.preSubmitConsolidationReport}"
+					oncomplete="submissionPopup.hide();" update="@form">
+				</p:commandButton>
+
+				<p:commandButton value="#{lbl['lbl.btn.no']}" immediate="true"
+					oncomplete="submissionPopup.hide();" />
+
+			</div>
+		</p:dialog>
+		<!-- 32044  start -->
+		<p:dialog id="submissionPopupAndNewComId" widgetVar="submissionPopupAndNewCom"
+			header="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit.header']}"
+			resizable="false" width="325" height="130" closable="false"
+			modal="true">
+		<!-- 32044  end -->
+			<table>
+				<tr>
+					<td align="center"><h:graphicImage
+							value="/css/images/design/exclamation.png" /> <p:outputLabel
+							value="#{lbl['lbl.sc.dialog.confirm.new.sf.commitee.report.submit']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<!-- 32044  start -->
+				<p:commandButton value="#{lbl['lbl.btn.proceed']}" partialSubmit="true"
+					action="#{consolidationReportBackingBean.submitConsolidationReport}"
+					oncomplete="submissionPopupAndNewCom.hide();" update="@form">
+				</p:commandButton>
+				<!-- 32044  end -->
+			</div>
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>

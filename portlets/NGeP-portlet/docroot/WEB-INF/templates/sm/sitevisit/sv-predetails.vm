@@ -1,0 +1,146 @@
+#parse("templates/sm/sitevisit/shared/header.vm")
+
+	<table width='100%'>
+		<tr align='center' style="background-color: #3366ff;">
+	        <td>
+	            <font style='color:#ffffff;font-weight: bold;font-size: 10pt;'>$templateType - $smVmUtil.getDescByLabel('lbl.sm.sv.templ.prep.title')</font>
+	        </td>
+    	</tr>
+	</table>
+	
+	<table class="infoTable">
+		<tr>
+	        <td width="35%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.appl.ref.no')</b></td>
+	        <td>$applNo</td>
+    	</tr>
+    	
+    	<tr>
+	        <td width="35%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.company.name')</b></td>
+	        <td>$companyName</td>
+    	</tr>
+    	
+    	<tr>
+	        <td><br /></td>
+    	</tr>
+    	
+    	<tr>
+	        <td width="35%"><b>$smVmUtil.getDescByLabel('lbl.sm.businessregno')</b></td>
+	        <td>$businessRegistrationNo</td>
+    	</tr>
+    	
+    	<!-- 24819 start -->
+    	<tr>
+	        <td width="35%"><b>$smVmUtil.getDescByLabel('lbl.sm.new.business.regNo')</b></td>
+	        #if($newBusinessRegistrationNo != $null)
+	      	<td>$newBusinessRegistrationNo</td>
+	      	#else
+	      	<td>$!smVmUtil.getDescByLabel('lbl.txt.na') </td>
+	      	#end
+    	</tr>
+    	<!-- 24819 end
+    	 -->	
+    	<tr>
+    		 <td width="35%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.gst')</b></td>
+	        <td>$!gstRegNo</td>
+    	</tr>
+    	
+    	<tr>
+    		 <td width="35%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.gst.date')</b></td>
+	        <td>$!smVmUtil.formatDate($gstEffDate)</td>
+    	</tr>
+    	
+    	<!--
+    	<tr>
+    		 <td width="35%"><b>GST Effective End Date.</b></td>
+	        <td>$!smVmUtil.formatDate($gstEndDate)</td>
+    	</tr>
+    	-->
+    	
+ 
+	    <tr>
+			 <td width="35%" valign="top"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.address')</b></td>
+			 <td>$addressFormatter.getAddress($svAddress)</td>
+		</tr>
+		    	
+		<tr>
+			 <td width="35%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.postal.code')</b></td>
+			 <td>$svAddress.postcode</td>
+		</tr>
+		    	
+		<tr>
+			 <td width="35%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.town.city')</b></td>
+			 <td>$svAddress.pmCity.cityName</td>
+		</tr>
+		    	
+		<tr>
+			 <td width="35%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.state')</b></td>
+			 <td>$svAddress.pmState.stateName</td>
+		 </tr>
+		    	
+		 <tr>
+		    <td><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.scheduled.date.visit')</b></td>
+		    <td>$smVmUtil.formatDate($scheduleDate)</td>
+		 </tr>
+		    	
+		 <tr>
+	        <td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.visiting.date')</b></td>
+	    	<td>#if($actualSiteVisitDate != $null) $smVmUtil.formatDate($actualSiteVisitDate) #end</td>
+    	</tr>
+    	<tr>
+    		<td width="35%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.latitude')</b></td>
+    		<td>$!latitude</td>
+    	</tr>
+    	
+    	<tr>
+    		<td width="35%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.longitude')</b></td>
+    		<td>$!longitute</td>
+    	</tr>
+	 
+   	    <tr>
+	        <td width="35%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.tel.no')</b></td>
+	        <td>$telNo</td>
+    	</tr>
+    	
+       	<tr>
+	        <td width="35%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.purpose')</b></td>
+	        <td>$visitingPurpose</td>
+    	</tr>
+    	
+    	<tr>
+	        <td width="35%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.contact')</b></td>
+	        <td>$!contactPersonName</td>
+    	</tr>
+    	
+       <tr>
+	        <td width="35%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.contact.desgn')</b></td>
+	        <td>$!contactPersonDesignation</td>
+    	</tr>
+	</table>
+	<br /><br />
+	
+	<table class="descTable" width="100%">
+		<tr style="background-color:#99ccff;" align="center">
+			<th>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.cat.desc')</th>
+			<th>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.cat.remarks')</th>
+		</tr>
+		
+		#if($isGroup)
+			#foreach($tmp in $templates)
+				#set($codeL1 = $tmp.suppCategory.pmCategoryL1.categoryL1Code)
+				#set($codeL2 = $tmp.suppCategory.pmCategoryL2.categoryL2Code)
+				#set($codeL3 = $tmp.suppCategory.pmCategoryL3.categoryL3Code)
+		    	<tr>
+		    	<td>
+		    		$codeL1$codeL2$codeL3 : $tmp.suppCategory.pmCategoryL3.categoryName
+		    		#if($codeL3 == "99")
+		    			($tmp.suppCategory.otherDesc)
+		    		#end
+		    	</td>
+		    	<td></td></tr>
+			#end
+  		#else
+  			<tr align="center"><td colspan="2">$smVmUtil.getDescByLabel('lbl.datatable.msg.no.records.found')</td></tr>
+  		#end
+	</table>
+	
+#include("templates/sm/sitevisit/shared/footer.vm")

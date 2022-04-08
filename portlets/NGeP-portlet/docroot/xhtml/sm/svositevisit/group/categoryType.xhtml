@@ -1,0 +1,83 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<h:outputText value="#{lbl['lbl.sm.sv.cat.details']}"  styleClass="screen-title"/> <br/>
+	<ui:param name="code" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.pmCategoryL3.categoryTypeCode.parameterCode}"/>
+	
+	<h:panelGroup id="categoryTypeGroupPanel">
+		<!-- 
+		<ui:repeat var="tmp" value="#{svoSiteVisitBackingBean.managedBean.templates}" >
+		-->
+		<c:forEach var="tmp" items="#{svoSiteVisitBackingBean.managedBean.templates}">
+			<ui:param name="catCode" value="#{tmp.suppCategory.pmCategoryL1.categoryL1Code}#{tmp.suppCategory.pmCategoryL2.categoryL2Code}#{tmp.suppCategory.pmCategoryL3.categoryL3Code}"/>
+			<p:panel header="#{svoSiteVisitBackingBean.managedBean.parameterDesc} - #{catCode}" toggleable="true">
+			
+				<c:if test="#{code == SupplierManagementConst.CAT_TYPE_WORKSHOP}">
+					<ui:include src="/xhtml/sm/shared/sitevisit/group/equipment.xhtml" >
+						<ui:param name="template" value="#{tmp}"/>
+					</ui:include>
+					<ui:include src="/xhtml/sm/shared/sitevisit/group/worker.xhtml" >
+						<ui:param name="template" value="#{tmp}"/>
+					</ui:include>
+				</c:if>
+				
+				<c:if test="#{code == SupplierManagementConst.CAT_TYPE_DOCKYARD}">
+					<ui:include src="/xhtml/sm/shared/sitevisit/group/equipment.xhtml" >
+						<ui:param name="template" value="#{tmp}"/>
+					</ui:include>
+				</c:if>
+				
+				<c:if test="#{code != SupplierManagementConst.CAT_TYPE_TRAVEL}">
+					<ui:include src="/xhtml/sm/shared/sitevisit/group/machine.xhtml" >
+						<ui:param name="template" value="#{tmp}"/>
+					</ui:include>
+				</c:if>
+				
+				<c:if test="#{code == SupplierManagementConst.CAT_TYPE_PRINTING}">
+					<ui:include src="/xhtml/sm/shared/sitevisit/group/printing_typeWork.xhtml" >
+						<ui:param name="template" value="#{tmp}"/>
+					</ui:include>
+				</c:if>
+			 	
+				<c:if test="#{code != SupplierManagementConst.CAT_TYPE_TRAVEL}">
+					<ui:include src="/xhtml/sm/shared/sitevisit/group/additional_machine.xhtml" >
+						<ui:param name="template" value="#{tmp}"/>
+					</ui:include>
+				</c:if>
+				
+				<c:if test="#{code == SupplierManagementConst.CAT_TYPE_MANUFACTURING}">
+					<ui:include src="/xhtml/sm/shared/sitevisit/group/manufacturingOrAssmblyDetails.xhtml" />
+				</c:if>
+				
+				<c:if test="#{code == SupplierManagementConst.CAT_TYPE_TRAVEL}">
+					<ui:include src="/xhtml/sm/shared/sitevisit/group/travellingSoftware.xhtml" >
+						<ui:param name="catCode" value="#{catCode}"/>
+					</ui:include>
+				</c:if>
+			</p:panel>
+		</c:forEach>
+		<!-- 
+		</ui:repeat>
+		-->
+		
+		<!-- dialog -->
+		<c:if test="#{code == SupplierManagementConst.CAT_TYPE_MANUFACTURING}">
+			<ui:include src="/xhtml/sm/svositevisit/group/manufacturingDlg.xhtml" />
+		</c:if>	
+		<c:if test="#{code != SupplierManagementConst.CAT_TYPE_TRAVEL}">
+			<ui:include src="/xhtml/sm/svositevisit/group/machineDlg.xhtml" />
+			<ui:include src="/xhtml/sm/svositevisit/group/additional_machine_Dlg.xhtml" />
+		</c:if>
+		<c:if test="#{code == SupplierManagementConst.CAT_TYPE_WORKSHOP}">
+			<ui:include src="/xhtml/sm/svositevisit/group/workerDlg.xhtml" />
+		</c:if>
+		<c:if test="#{code == SupplierManagementConst.CAT_TYPE_PRINTING}">
+			<ui:include src="/xhtml/sm/svositevisit/group/printingDlg.xhtml" />
+		</c:if>
+	</h:panelGroup>
+</ui:composition>

@@ -1,0 +1,101 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<h:outputText value="#{panelStatementOfOrderRptBB.managedBean.reportUrl}" /><br/><br/>
+	<table style="width: 100%;">
+		<tr>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.name.supplier']}" /></td>
+			<td colspan="3">
+				<ac:lov id="ctSupplierName" readonly="true" size="100"
+					lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" 
+					headerText="#{lbl['lbl.ct.name.supplier']}" update="@form"
+					value="#{panelStatementOfOrderRptBB.managedBean.selectedSupplier.smSupplier.companyName}"
+					saveObject="panelStatementOfOrderRptBB.managedBean.selectedSupplier" /></td>
+		</tr>
+		<tr>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.physical.circular.no']}" /></td>
+			<td>
+				<p:inputText value="#{panelStatementOfOrderRptBB.managedBean.circularNo}"  maxlength="60" style="width:300px">
+					<p:ajax event="blur" partialSubmit="true" />
+				</p:inputText>
+			</td>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.circular.central.panel.contract.name']}" /></td>
+			<td>
+				<p:inputText value="#{panelStatementOfOrderRptBB.managedBean.circularName}"  maxlength="30" style="width:300px">
+					<p:ajax event="blur" partialSubmit="true" />
+				</p:inputText>
+			</td>
+		</tr>
+		<tr>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.item.name']}" /></td>
+			<td>
+				<p:inputText value="#{panelStatementOfOrderRptBB.managedBean.itemName}"  maxlength="100" style="width:300px">
+					<p:ajax event="blur" partialSubmit="true" />
+				</p:inputText>
+			</td>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.proc.method']}" /></td>
+			<td>
+				<p:selectOneMenu value="#{panelStatementOfOrderRptBB.managedBean.procurementMode}" style="width:300px">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.all']}" itemValue="#{null}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.ct.panel.dp']}" itemValue="1"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.ct.panel.qt']}" itemValue="2"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.ct.panel.dn']}" itemValue="3"></f:selectItem>
+					<p:ajax event="change" partialSubmit="true" />
+					<p:ajax event="change" partialSubmit="true" />
+				</p:selectOneMenu>
+			</td>
+		</tr>
+		<tr>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.contract.order.date.from']}" /></td>
+			<td>
+				<table><tr>
+					<td class="columnDateFromClass">
+						<p:calendar showOn="button" navigator="true" display="inline" readonlyInput="true"
+							value="#{panelStatementOfOrderRptBB.managedBean.fromDate}" size="9"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							partialSubmit="true" process="@form">
+						</p:calendar>
+					</td>
+					<td class="columnDateToClass"><p:outputLabel value="#{lbl['lbl.ct.date.range.to']}" style="width:55px;" /></td>
+					<td>
+						<p:calendar showOn="button" navigator="true"
+							display="inline" readonlyInput="true"
+							value="#{panelStatementOfOrderRptBB.managedBean.toDate}" size="9"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							partialSubmit="true" process="@form">
+						</p:calendar>
+					</td>
+				</tr></table>
+			</td>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.circular.eff.date.from']}" /></td>
+			<td>
+				<table><tr>
+					<td class="columnDateFromClass">
+						<p:calendar showOn="button" navigator="true" display="inline" readonlyInput="true"
+							value="#{panelStatementOfOrderRptBB.managedBean.circularEffFromDate}" size="9"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							partialSubmit="true" process="@form">
+						</p:calendar>
+					</td>
+					<td class="columnDateToClass"><p:outputLabel value="#{lbl['lbl.ct.date.range.to']}" style="width:55px;" /></td>
+					<td>
+						<p:calendar showOn="button" navigator="true"
+							display="inline" readonlyInput="true"
+							value="#{panelStatementOfOrderRptBB.managedBean.circularEffToDate}" size="9"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							partialSubmit="true" process="@form">
+						</p:calendar>
+					</td>
+				</tr></table>
+			</td>
+		</tr>
+	</table>
+	<br/>
+	<ac:generateReport bBean="#{panelStatementOfOrderRptBB}"
+		reportMainBean="#{ctReportBB}">
+	</ac:generateReport>
+</ui:composition>

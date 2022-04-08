@@ -1,0 +1,592 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel header="#{lbl['lbl.sm.panHdr.offFacility']}" id="ofp"
+		toggleable="true">
+		
+		<table style="width: 350px">
+			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+				<tr>
+					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+							value="#{backingBean.managedBean.poSecReview.officeFacilityVerfied}"
+							id="poOffVer">
+							<p:ajax update=":form:tt:offInfPan,:form:revPanHdr"
+								event="change" process="@this,:form:tt:offInfPan"
+								listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.officeFacilityVerfied)}" />
+						</p:selectBooleanCheckbox></td>
+					<td valign="top"><h:outputText
+							value="#{lbl['lbl.sm.sectionPoVerf']}"
+							title="For PO to highlight the verified section " /></td>
+
+				</tr>
+			</p:outputPanel>
+			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+				<tr>
+					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+							value="#{backingBean.managedBean.apprvrSecReview.officeFacilityVerfied}"
+							id="apprOffVer">
+							<p:ajax update=":form:tt:offInfPan,:form:revPanHdr"
+								event="change" process="@this,:form:tt:offInfPan"
+								listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.officeFacilityVerfied)}" />
+						</p:selectBooleanCheckbox></td>
+					<td valign="top"><h:outputText
+							value="#{lbl['lbl.sm.sectionApprVerf']}"
+							title="For Approver to highlight the verified section " /></td>
+				</tr>
+			</p:outputPanel>
+		</table>
+		<p:outputPanel id="offInfPan" layout="block">
+			<p:blockUI block=":form:tt:offInfPan" widgetVar="buiPoOff"
+				id="poOffBlc"
+				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.officeFacilityVerfied : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.officeFacilityVerfied : false)}" />
+
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.facility.ownerType']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td style="padding-bottom: 2px;"><p:selectOneRadio
+							id="ownTypeId" label="#{lbl['lbl.sm.facility.ownerType']}"
+							value="#{backingBean.managedBean.basicCompanyFacility.ownershipType}"
+							required="true">
+							<f:selectItem itemLabel="#{lbl['lbl.sm.facility.own']}"
+								itemValue="O" />
+							<f:selectItem itemLabel="#{lbl['lbl.sm.facility.rent']}"
+								itemValue="R" />
+							<p:ajax update="ofp" event="change" process="@this"
+								listener="#{backingBean.officeFacilitySelected}" />
+						</p:selectOneRadio>
+						
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges}"
+							oriValue="#{backingBean.managedBean.latestAppl.hqFacility.ownershipType}" 
+							currValue="#{backingBean.managedBean.basicCompanyFacility.ownershipType}" 
+							alertValue="#{backingBean.getOwnershipTypeLabel(backingBean.managedBean.latestAppl.hqFacility.ownershipType)}"/>
+						
+						<p:message for="ownTypeId" showDetail="false" showSummary="true"
+							display="icon" /></td>
+					<td colspan='2'>&#160;</td>
+				</tr>
+				<!-- 29480 - Start -->
+				<tr align="center">
+					<td colspan='4'>
+					<table style="width: 80%">
+							<tr>
+								<td><i><h:outputText style="float:initial"
+											value="#{lbl['lbl.sm.premises.type.note']} "
+											styleClass="splNotesFonts" escape="false" /> <p:commandLink
+											onclick="showPremisesTypeInfo.show()"
+											value="#{lbl['lbl.sm.premises.type.note1']}"
+											styleClass="splNotesFonts" style="float: inherit" /></i></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<!-- 29480 - End -->
+				<p:outputPanel rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'O' or backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}">
+					<tr>
+						<td><p:outputLabel
+								value="#{lbl['lbl.sm.facility.facilityType']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+	
+						<p:outputPanel
+							rendered="#{!backingBean.managedBean.disabledHomeOffice}">
+							<td style="padding-bottom: 4px;"><p:selectOneRadio
+									id="rentedFacTypeId"
+									value="#{backingBean.managedBean.basicCompanyFacility.facilityType}"
+									required="true" label="#{lbl['lbl.sm.facility.facilityType']}">
+									<f:selectItem
+										itemLabel="#{lbl['lbl.sm.facility.facilityType.home.office']}"
+										itemValue="H" />
+	
+									<f:selectItem
+										itemLabel="#{lbl['lbl.sm.facility.facilityType.business.office']}"
+										itemValue="B" />
+										
+									<p:ajax event="change" process="@this" partialSubmit="true" update="@this"
+										listener="#{backingBean.onChangeFacilityType}"/>
+								</p:selectOneRadio> 
+								
+								<ac:smFieldChangeAlert 
+									isShow="#{backingBean.managedBean.showFieldChanges}"
+									oriValue="#{backingBean.managedBean.latestAppl.hqFacility.facilityType}" 
+									currValue="#{backingBean.managedBean.basicCompanyFacility.facilityType}" 
+									alertValue="#{backingBean.getFacTypeLabel(backingBean.managedBean.latestAppl.hqFacility.facilityType)}"/>
+								
+								<p:message id="rentedFacTypeIdMsg" for="rentedFacTypeId"
+									showSummary="true" showDetail="false" display="icon" /></td>
+						</p:outputPanel>
+						<p:outputPanel
+							rendered="#{backingBean.managedBean.disabledHomeOffice}">
+							<td><p:outputLabel styleClass="outputLabel-view"
+									value="#{lbl['lbl.sm.facility.facilityType.business.office']}"></p:outputLabel>
+							</td>
+						</p:outputPanel>
+						<td colspan='2'>&#160;</td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'?
+								lbl['lbl.sm.facility.landLordName']:lbl['lbl.sm.facility.ownerName']}" /> 
+							<p:outputLabel value="*" styleClass="mandatory" /></td>
+						<td>
+							<p:inputText id="fcltyOwnerName"
+								label="#{lbl['lbl.sm.facility.ownerName']}" maxlength="50"
+								value="#{backingBean.managedBean.basicCompanyFacility.ownerName}"
+								size="35" required="true"> 
+								<p:ajax partialSubmit="true" process="@this" />
+							</p:inputText>
+								
+								<ac:smFieldChangeAlert 
+									isShow="#{backingBean.managedBean.showFieldChanges}"
+									oriValue="#{backingBean.managedBean.latestAppl.hqFacility.ownerName}" 
+									currValue="#{backingBean.managedBean.basicCompanyFacility.ownerName}" 
+									alertValue="#{backingBean.managedBean.latestAppl.hqFacility.ownerName}"/>
+								
+								<p:message id="fcltyOwnerNameMsg"
+								for="fcltyOwnerName" showSummary="true" showDetail="false"
+								display="icon" /></td>
+						<p:outputPanel rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'O'}">
+							<td><p:outputLabel
+									value="#{lbl['lbl.sm.facility.purchaseDate']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
+							<td style="padding-bottom: 3px;">
+								<p:calendar showOn="button"
+									id="purchaseDate" navigator="true" readonlyInput="true"
+									display="inline" maxdate="#{CommonConstants.CURRENT_DATE}"
+									label="#{lbl['lbl.sm.facility.purchaseDate']}"
+									value="#{backingBean.managedBean.basicCompanyFacility.purchaseDate}"
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+									required="true" yearRange="-99:+0">
+									<p:ajax event="dateSelect" process="@this" partialSubmit="true"/>
+								</p:calendar> 
+								
+								<ac:smFieldChangeAlert 
+									isShow="#{backingBean.managedBean.showFieldChanges}"
+									oriValue="#{backingBean.managedBean.latestAppl.hqFacility.purchaseDate}" 
+									currValue="#{backingBean.managedBean.basicCompanyFacility.purchaseDate}" 
+									alertValue="#{backingBean.getDateFormat(backingBean.managedBean.latestAppl.hqFacility.purchaseDate)}"/>
+								
+								<p:message id="purchaseDateMsg" for="purchaseDate"
+									showSummary="true" showDetail="false" display="icon" />
+							</td>
+						</p:outputPanel>
+						<p:outputPanel rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}">
+							<td><p:outputLabel
+										value="#{lbl['lbl.sm.facility.monthRent']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
+							<td><p:inputText id="rental" rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}"
+									value="#{backingBean.managedBean.basicCompanyFacility.rentalRate}"
+									size="35" required="true" maxlength="17"
+									validatorMessage="#{lbl['lbl.sm.facility.monthRent']} - #{lbl['lbl.sm.minAmt.validMsg']}"
+									label="#{lbl['lbl.sm.facility.monthRent']}">
+									<f:validateDoubleRange
+										minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
+										maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
+									<f:convertNumber
+										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+									<p:ajax process="@this" partialSubmit="true"
+										update="@this,rentalMsg" />
+								</p:inputText> 
+								
+								<ac:smFieldChangeAlert 
+									isShow="#{backingBean.managedBean.showFieldChanges}"
+									oriValue="#{backingBean.managedBean.latestAppl.hqFacility.rentalRate}" 
+									currValue="#{backingBean.managedBean.basicCompanyFacility.rentalRate}" 
+									alertValue="#{backingBean.getPriceAmountFormat(backingBean.managedBean.latestAppl.hqFacility.rentalRate)}"/>
+								
+								<p:message id="rentalMsg" for="rental" showSummary="true"
+									showDetail="false" display="icon" />
+							</td>
+						</p:outputPanel>
+					</tr>
+				</p:outputPanel>
+				<p:outputPanel rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'O'}">
+					<tr>
+						<td colspan='2'>&#160;</td>
+						<td><p:outputLabel
+								value="#{lbl['lbl.sm.facility.purchasePrice']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:inputText size="35" id="purchasePrice" maxlength="17"
+								label="#{lbl['lbl.sm.facility.purchasePrice']}"
+								validatorMessage="#{lbl['lbl.sm.facility.purchasePrice']} - #{lbl['lbl.sm.minAmt.validMsg']}"
+								value="#{backingBean.managedBean.basicCompanyFacility.purchasePrice}"
+								required="true">
+								<f:validateDoubleRange
+									minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
+									maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
+								<f:convertNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+								<p:ajax process="@this" partialSubmit="true"
+									update="@this,purchasePriceMsg" />
+							</p:inputText> 
+							
+							<ac:smFieldChangeAlert 
+								isShow="#{backingBean.managedBean.showFieldChanges}"
+								oriValue="#{backingBean.managedBean.latestAppl.hqFacility.purchasePrice}" 
+								currValue="#{backingBean.managedBean.basicCompanyFacility.purchasePrice}" 
+								alertValue="#{backingBean.getPriceAmountFormat(backingBean.managedBean.latestAppl.hqFacility.purchasePrice)}"/>
+							
+							<p:message id="purchasePriceMsg" for="purchasePrice"
+								showSummary="true" showDetail="false" display="icon" /></td>
+					</tr>
+				</p:outputPanel>
+				<p:outputPanel rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.companyaddress']}"
+								style="padding-top :5px;" /> <p:outputLabel value="*"
+								styleClass="mandatory" /></td>
+						<td><p:inputText id="companyAdd1" size="35" maxlength="100"
+								required="true" label="#{lbl['lbl.sm.companyaddress']}"
+								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address1}" >
+								<p:ajax partialSubmit="true" process="@this" />
+							</p:inputText>
+							
+							<ac:smFieldChangeAlert 
+								isShow="#{backingBean.managedBean.showFieldChanges}"
+								oriValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.address1}" 
+								currValue="#{backingBean.managedBean.basicCompanyFacility.smAddress.address1}" 
+								alertValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.address1}"/>
+							
+							<p:message id="companyAdd1Msg" for="companyAdd1"
+								showSummary="true" showDetail="false" display="icon" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+								id="companyCntry"
+								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.countryId}"
+								required="true" label="#{lbl['lbl.sm.country']}">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+								<f:selectItems var="basicCountry"
+									value="#{backingBean.managedBean.countryItems}" />
+								<p:ajax event="change" process="@this"
+									listener="#{backingBean.onChangeCountry(backingBean.managedBean.basicCompanyFacility.smAddress, 
+								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
+									update="basicOffFacState,basicOffFacDist,basicOffFacCity,postCodeOffFacPanelId" />
+							</p:selectOneMenu> 
+							
+							<ac:smFieldChangeAlert 
+								isShow="#{backingBean.managedBean.showFieldChanges}"
+								oriValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.pmCountry.countryId}" 
+								currValue="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmCountry.countryId}" 
+								alertValue="#{backingBean.getCountryLabelById(backingBean.managedBean.latestAppl.hqFacility.smAddress.pmCountry.countryId)}"/>
+							
+							<p:message id="cmpnyCntryNameMsg" for="companyCntry"
+								showSummary="true" showDetail="false" display="icon" /></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td><p:inputText id="companyAdd2" size="35" maxlength="100"
+								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address2}" >
+								<p:ajax partialSubmit="true" process="@this" />
+							</p:inputText>
+							
+							<ac:smFieldChangeAlert 
+								isShow="#{backingBean.managedBean.showFieldChanges}"
+								oriValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.address2}" 
+								currValue="#{backingBean.managedBean.basicCompanyFacility.smAddress.address2}" 
+								alertValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.address2}"/>
+							
+						</td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.stateId}"
+								id="basicOffFacState" required="true"
+								label="#{lbl['lbl.sm.state']}">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+								<f:selectItems var="offState"
+									value="#{backingBean.managedBean.basicOffFacStates}" />
+								<p:ajax event="change" process="@this"
+									listener="#{backingBean.onChangeState(backingBean.managedBean.basicCompanyFacility.smAddress, 
+								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
+									update="ofp,basicOffFacDist,
+									divisionOfficeLabelPanelId,divisionOfficeDropdownPanelId,basicOffFacCity" />
+							</p:selectOneMenu> <ac:smFieldChangeAlert 
+								isShow="#{backingBean.managedBean.showFieldChanges}"
+								oriValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.pmState.stateId}" 
+								currValue="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmState.stateId}" 
+								alertValue="#{backingBean.getStateLabelById(backingBean.managedBean.latestAppl.hqFacility.smAddress.pmState.stateId)}"/>
+							
+							<p:message id="basicOffFacStateMsg" for="basicOffFacState"
+								showSummary="true" showDetail="false" display="icon" /></td>
+					</tr>
+					<!-- 13320 -->
+					<tr id="divisoTrId">
+				<td></td>
+				<td></td>
+				<td class="tdTitle">
+					<h:panelGroup id="divisionOfficeLabelPanelId" rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmState.adoptDivision}">
+						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</h:panelGroup>
+				</td>
+				<td class="tdContent">
+					<h:panelGroup id="divisionOfficeDropdownPanelId" rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmState.adoptDivision}">
+						<p:selectOneMenu id="basicOffFacDivision" required="true"
+						label="#{lbl['lbl.sm.division']}"
+						value="#{backingBean.managedBean.basicCompanyFacility.smAddress.divisionId}"
+						style="width: 207px;margin-bottom: 5px;">
+						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
+						<f:selectItems var="division"
+							value="#{backingBean.managedBean.basicOffFacDivisions}"
+							itemValue="#{division.divisionId}"
+							itemLabel="#{division.divisionName}" />
+						<p:ajax event="change" process="@this"
+								listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.basicCompanyFacility.smAddress, 
+								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
+								update="basicOffFacDist,basicOffFacCity" />
+					</p:selectOneMenu>
+					</h:panelGroup>
+				</td>
+            </tr>
+					<tr>
+						<td></td>
+						<td><p:inputText id="companyAdd3" size="35" maxlength="100"
+								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address3}" />
+							
+							<ac:smFieldChangeAlert 
+								isShow="#{backingBean.managedBean.showFieldChanges}"
+								oriValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.address3}" 
+								currValue="#{backingBean.managedBean.basicCompanyFacility.smAddress.address3}" 
+								alertValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.address3}"/>
+							
+						</td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+								id="basicOffFacDist" required="true"
+								label="#{lbl['lbl.sm.district']}"
+								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.districtId}">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+								<f:selectItems var="offDist"
+									value="#{backingBean.managedBean.basicOffFacDistricts}" />
+								<p:ajax event="change" process="@this"
+									listener="#{backingBean.onChangeDistrict(backingBean.managedBean.basicCompanyFacility.smAddress, 
+								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
+									update="basicOffFacCity" />
+							</p:selectOneMenu> 
+							
+							<ac:smFieldChangeAlert 
+								isShow="#{backingBean.managedBean.showFieldChanges}"
+								oriValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.pmDistrict.districtId}" 
+								currValue="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmDistrict.districtId}" 
+								alertValue="#{backingBean.getDistrictLabelById(backingBean.managedBean.latestAppl.hqFacility.smAddress.pmDistrict.districtId)}"/>
+							
+							<p:message id="basicOffFacDistMsg" for="basicOffFacDist"
+								showSummary="true" showDetail="false" display="icon" /></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+								id="basicOffFacCity" required="true"
+								label="#{lbl['lbl.sm.towncity']}"
+								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.cityId}">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+								<f:selectItems var="offCity"
+									value="#{backingBean.managedBean.basicOffFacCities}" />
+								<p:ajax event="change" process="@this"
+									listener="#{backingBean.onChangeCity(backingBean.managedBean.basicCompanyFacility.smAddress, 
+								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
+									update="basicOffFacCity" />
+							</p:selectOneMenu> 
+							
+							<ac:smFieldChangeAlert 
+								isShow="#{backingBean.managedBean.showFieldChanges}"
+								oriValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.pmCity.cityId}" 
+								currValue="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmCity.cityId}" 
+								alertValue="#{backingBean.getCityLabelById(backingBean.managedBean.latestAppl.hqFacility.smAddress.pmCity.cityId)}"/>
+							
+							<p:message id="basicOffFacCityMsg" for="basicOffFacCity"
+								showSummary="true" showDetail="false" display="icon" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:outputPanel id="postCodeOffFacPanelId">
+								<p:outputPanel
+									rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.countryId==backingBean.managedBean.myCountryId}">
+									<p:inputText maxlength="5" required="true"
+										label="#{lbl['lbl.sm.postcode']}" id="companyPostMyCode"
+										value="#{backingBean.managedBean.basicCompanyFacility.smAddress.postcode}"
+										validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
+										size="35">
+										<f:validator validatorId="postcodeValidator" />
+										<p:ajax partialSubmit="true" process="@this" />
+									</p:inputText>
+									
+									<ac:smFieldChangeAlert 
+										isShow="#{backingBean.managedBean.showFieldChanges}"
+										oriValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.postcode}" 
+										currValue="#{backingBean.managedBean.basicCompanyFacility.smAddress.postcode}" 
+										alertValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.postcode}"/>
+									
+									<p:message id="companyPostMyCodeMsg" for="companyPostMyCode"
+										showSummary="true" showDetail="false" display="icon" />
+								</p:outputPanel>
+								<p:outputPanel
+									rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.countryId!=backingBean.managedBean.myCountryId}">
+									<p:inputText maxlength="10" required="true"
+										label="#{lbl['lbl.sm.postcode']}" id="companyPostForeignCode"
+										value="#{backingBean.managedBean.basicCompanyFacility.smAddress.postcode}"
+										size="35">
+										<p:ajax partialSubmit="true" process="@this" />
+									</p:inputText>
+									
+									<ac:smFieldChangeAlert 
+										isShow="#{backingBean.managedBean.showFieldChanges}"
+										oriValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.postcode}" 
+										currValue="#{backingBean.managedBean.basicCompanyFacility.smAddress.postcode}" 
+										alertValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.postcode}"/>
+									
+									<p:message id="companyPostForeignCodeMsg"
+										for="companyPostForeignCode" showSummary="true"
+										showDetail="false" display="icon" />
+								</p:outputPanel>
+							</p:outputPanel></td>
+						<td colspan="2"></td>
+					</tr>
+					<tr>
+					<td>
+					<p:outputLabel value="#{lbl['lbl.sm.coordinate']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+					</td>
+					<td colspan="3"  >
+						<script>
+						
+					      function getAddress2() {
+					    	  
+					    	  var addr1 = document.getElementById('#{p:component(&quot;companyAdd1&quot;)}').value + ',';
+					    	  var addr2 = document.getElementById('#{p:component(&quot;companyAdd2&quot;)}').value + ',';
+					    	  var addr3 = document.getElementById('#{p:component(&quot;companyAdd3&quot;)}').value + ',';
+					    	  var postcode = document.getElementById('#{p:component(&quot;companyPostMyCode&quot;)}').value + ' ';
+					    	  
+					    	  var cityName = document.getElementById('#{p:component(&quot;basicOffFacCity&quot;)}_input').options[document.getElementById('#{p:component(&quot;basicOffFacCity&quot;)}_input').selectedIndex].text;
+					    	  var districtName = document.getElementById('#{p:component(&quot;basicOffFacDist&quot;)}_input').options[document.getElementById('#{p:component(&quot;basicOffFacDist&quot;)}_input').selectedIndex].text;
+					    	  var stateName = document.getElementById('#{p:component(&quot;basicOffFacCity&quot;)}_input').options[document.getElementById('#{p:component(&quot;basicOffFacCity&quot;)}_input').selectedIndex].text;
+					    	  var countryName = document.getElementById('#{p:component(&quot;companyCntry&quot;)}_input').options[document.getElementById('#{p:component(&quot;companyCntry&quot;)}_input').selectedIndex].text;
+					    	  
+					    	  var address = addr1 + addr2 + addr3 + postcode + cityName + ',' + districtName + ',' + stateName + ',' + countryName;
+
+					      	return address;
+					      }
+						
+						</script>
+									 
+						<ac:gmap id="acgmap2" 
+							address="getAddress2()"
+							locationName="#{backingBean.managedBean.smAppl.smCompanyBasic.companyName}"
+							latitude="#{backingBean.managedBean.smAppl.smFacilities[0].smAddress.mapLatitude}"
+							longitude="#{backingBean.managedBean.smAppl.smFacilities[0].smAddress.mapLongitude}" />					
+					</td>
+				</tr>
+				</p:outputPanel>
+				
+				<p:outputPanel rendered="#{backingBean.managedBean.poUser or (backingBean.managedBean.smAppl.resubmit and backingBean.managedBean.supplierUser)}">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
+						<td colspan="3"><p:inputTextarea autoResize="false" cols="41"
+								maxlength="200" id="offFacSectPoRmrk" readonly="#{backingBean.managedBean.smAppl.resubmit and backingBean.managedBean.supplierUser}"
+								validatorMessage="#{lbl['lbl.sm.panHdr.offFacility']} - #{lbl['lbl.sm.poRemarks.length.validMsg']}"
+								value="#{backingBean.managedBean.poSecReview.officeFacilityRemark}">
+								<f:validateLength maximum="200" />
+							</p:inputTextarea> <p:message id="offFacSectPoRmrkMsg" for="offFacSectPoRmrk"
+								showSummary="true" showDetail="false" display="icon" /></td>
+					</tr>
+
+				</p:outputPanel>
+				<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
+						<td><p:inputTextarea autoResize="false" readonly="true"
+								disabled="true" cols="41" maxlength="200"
+								value="#{backingBean.managedBean.poSecReview.officeFacilityRemark}" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
+						<td><p:inputTextarea autoResize="false" cols="41"
+								maxlength="200" id="offFacApprvrRmrk"
+								validatorMessage="#{lbl['lbl.sm.panHdr.offFacility']} - #{lbl['lbl.sm.apprvrRemarks.length.validMsg']}"
+								value="#{backingBean.managedBean.apprvrSecReview.officeFacilityRemark}">
+								<f:validateLength maximum="200" />
+							</p:inputTextarea> <p:message id="offFacApprvrRmrkMsg" for="offFacApprvrRmrk"
+								showSummary="true" showDetail="false" display="icon" /></td>
+
+					</tr>
+
+				</p:outputPanel>
+			</table>
+		</p:outputPanel>
+		
+		<p:confirmDialog id="alertFacTypeChangeDlg" closable="true"
+			header="#{lbl['lbl.sm.facility.facilityType.change.alertheader']}" severity="alert"
+			widgetVar="alertFacTypeChangeDlg">
+			
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.ok']}" onclick="alertFacTypeChangeDlg.hide();" />
+			</div>
+			
+			<f:facet name="message">
+		    	<h:outputText styleClass="instruction" value="#{backingBean.managedBean.businessOfficeCatCodeMsg}" escape="false"/>
+		    </f:facet>
+		    
+		</p:confirmDialog>
+		<!-- 29480 - Start -->
+		<p:dialog id="showPremisesTypeInfo" widgetVar="showPremisesTypeInfo" closable="true" modal="true" resizable="false" style="display: static;">
+			<p:outputPanel layout="block" id="showPremisesTypeInfoBlockPanel">
+				<table style="width: 425px">
+					<tr align="justify">
+						<td><h:outputText
+								value="#{lbl['lbl.sm.premises.type.info9']}" /></td>
+						<td>&#160;</td>
+						<td colspan='3'><h:outputText
+								value="#{lbl['lbl.sm.premises.type.info1']}" /></td>
+					</tr>
+					<tr>
+						<td colspan='5'>&#160;</td>
+					</tr>
+					<tr align="justify">
+						<td colspan="2">&#160;</td>
+						<td valign="top"><h:outputText
+								value="#{lbl['lbl.sm.premises.type.info2']}" /></td>
+						<td>&#160;</td>
+						<td><h:outputText
+								value="#{lbl['lbl.sm.premises.type.info3']}" /> <b><h:outputText
+									value="#{lbl['lbl.sm.premises.type.info8']}" /></b></td>
+					</tr>
+					<tr>
+						<td colspan='5'>&#160;</td>
+					</tr>
+					<tr align="justify">
+						<td colspan="2">&#160;</td>
+						<td valign="top"><h:outputText
+								value="#{lbl['lbl.sm.premises.type.info4']}" /></td>
+						<td>&#160;</td>
+						<td><h:outputText
+								value="#{lbl['lbl.sm.premises.type.info5']}" /></td>
+					</tr>
+					<tr>
+						<td colspan='5'>&#160;</td>
+					</tr>
+					<tr align="justify">
+						<td colspan="2">&#160;</td>
+						<td valign="top"><h:outputText
+								value="#{lbl['lbl.sm.premises.type.info6']}" /></td>
+						<td>&#160;</td>
+						<td><h:outputText
+								value="#{lbl['lbl.sm.premises.type.info7']}" /></td>
+					</tr>
+					<tr>
+						<td colspan="5">&#160;</td>
+					</tr>
+				</table>
+			</p:outputPanel>
+		</p:dialog>
+	<!-- 29480 - End -->
+		
+	</p:panel>
+</ui:composition>

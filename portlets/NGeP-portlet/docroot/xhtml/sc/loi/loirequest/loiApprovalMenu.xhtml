@@ -1,0 +1,79 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	
+
+	<p:panel header="#{lbl['lbl.sc.loiloa.request.for.approval']}" rendered="#{lOIDetailBackingBean.managedBean.scLoi.approvalReq}"
+		id="approvalId" toggleable="true">
+		<table style="width: 100%">
+			<tr>
+				<td width="22%"><p:outputLabel value="#{lbl['lbl.sc.approver']}" /> 
+				  <p:outputLabel value="*" styleClass="mandatory"/></td>
+				<td>
+				
+				   <table>
+				     <tr>
+					   <td>
+				
+						    <p:selectOneMenu id="loiApprover"
+								value="#{lOIDetailBackingBean.managedBean.approverUser.userId}"
+								disabled="#{!isPendingSubmissionStatus or lOIDetailBackingBean.managedBean.readOnly}"
+								required="#{lOIDetailBackingBean.managedBean.scLoi.approvalReq}"
+								label="#{lbl['lbl.sc.approver']}"
+								style="width: 276px;margin-bottom: 5px;">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+									itemValue="#{null}" />
+								<f:selectItems
+									value="#{lOIDetailBackingBean.managedBean.approverNames}"
+									var="appName" itemLabel="#{appName.userName}"
+									itemValue="#{appName.userId}" />
+							</p:selectOneMenu><p:message id="loiApproverMsg" for="loiApprover"
+								display="icon" />
+								
+					   </td>
+							<td style="margin-top: -3px">
+								  <ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.req.verification.approval.tooltip']}" />
+							</td>
+						</tr>
+					</table>
+						
+				</td>
+			</tr>
+		</table>
+	</p:panel>
+	
+	<ac:scRemarkAndAttachment
+		remarkList="#{lOIDetailBackingBean.managedBean.scLoi.scLoiRemarks}"
+		showAttachment="false"
+		readonly="#{lOIDetailBackingBean.managedBean.readOnly}" />
+
+	<p:panel header="#{lbl['lbl.sc.history']}" toggleable="true">
+		<p:dataTable id="apprHistTbl" var="scLoiApproval"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiApproval}">
+			
+			<ac:paginator for="apprHistTbl" />
+			
+			<p:column headerText="#{lbl['lbl.sc.approved.by']}" style="width:40%">
+				#{scLoiApproval.approver.userName}
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.status']}" style="width:35%">
+				#{lOADetailBackingBean.getApprovalActionDisplayName(scLoiApproval.approverAction)}
+		
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.date']}" style="width:25%">
+				<h:outputText value="#{scLoiApproval.approverActionDate}">
+					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</h:outputText>
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+
+</ui:composition>

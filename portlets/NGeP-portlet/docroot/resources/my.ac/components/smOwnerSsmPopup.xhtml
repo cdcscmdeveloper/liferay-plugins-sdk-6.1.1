@@ -1,0 +1,126 @@
+<ui:composition xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:p="http://primefaces.org/ui">
+	<cc:interface>
+		<cc:attribute name="bBean" required="true" />
+		<cc:attribute name="title" required="true" />
+		<cc:attribute name="dialogId" required="true" />
+		<cc:attribute name="btnOkLabel" required="true" />
+		<cc:attribute name="btnOkProcess" required="false" default="@this" />
+		<cc:attribute name="btnOkUpdate" required="false" default="@form" />
+		<cc:attribute name="btnCancelLabel" required="true" />
+		<cc:attribute name="height" default="170" />
+		<cc:attribute name="width" default="650" />
+	</cc:interface>
+
+	<cc:implementation>
+		<p:dialog id="#{cc.attrs.dialogId}" header="#{cc.attrs.title}"
+			widgetVar="#{cc.attrs.dialogId}WidgetVar" modal="true"
+			height="#{cc.attrs.height}" width="#{cc.attrs.width}"
+			resizable="false">
+			<div id="#{cc.attrs.dialogId}ContentDiv"
+				style="overflow-wrap: break-word;">
+				
+ 				<c:choose>
+					<c:when test="#{!cc.attrs.bBean.managedBean.dontGetSsmData}"> 
+						<h:outputText value="#{cc.attrs.bBean.managedBean.termAndConditionCheckOwner}" rendered="#{!cc.attrs.bBean.managedBean.preRegistration}"
+							escape="false" />
+						<h:outputText value="#{lbl['lbl.sm.term.and.condition.pre.checkowner']}" rendered="#{cc.attrs.bBean.managedBean.preRegistration}"
+							escape="false" />
+						<br /> &#160;&#160;&#160;&#160;&#160;a.
+						<p:commandLink update="#{cc.attrs.btnOkUpdate}"
+							style="margin-right:20px;"
+							onclick="#{cc.attrs.dialogId}WidgetVar.hide()"
+							oncomplete="#{cc.attrs.dialogId}ChangeWidgetVar.show()">
+							<h:outputFormat value="#{lbl['lbl.txt.clickhere']}" escape="false"></h:outputFormat>
+						</p:commandLink>
+						<h:outputText
+							value="#{cc.attrs.bBean.managedBean.termAndConditionCheckOwnerA}"  rendered="#{!cc.attrs.bBean.managedBean.preRegistration}"
+							escape="false" />
+						<h:outputText
+							value="#{lbl['lbl.sm.term.and.condition.pre.checkowner.a']}" rendered="#{cc.attrs.bBean.managedBean.preRegistration}"
+							escape="false" />
+						<br /> &#160;&#160;&#160;&#160;&#160;b.
+						<h:outputText
+							value="#{lbl['lbl.sm.term.and.condition.checkowner.b']}" rendered="#{!cc.attrs.bBean.managedBean.preRegistration}"
+							escape="false" />
+						<h:outputText
+							value="#{lbl['lbl.sm.term.and.condition.pre.checkowner.b']}" rendered="#{cc.attrs.bBean.managedBean.preRegistration}"
+							escape="false" />
+						<br /> &#160;&#160;&#160;&#160;&#160;c.
+						<h:outputText
+							value="#{cc.attrs.bBean.managedBean.termAndConditionCheckOwnerC}"  rendered="#{!cc.attrs.bBean.managedBean.preRegistration}"
+							escape="false" />
+						<h:outputText
+							value="#{lbl['lbl.sm.term.and.condition.pre.checkowner.c']}" rendered="#{cc.attrs.bBean.managedBean.preRegistration}"
+							escape="false" />
+						<br />
+ 				</c:when>
+				<c:otherwise>
+					<h:outputText
+							value="#{lbl['lbl.sm.term.and.condition.checkowner.new']}" rendered="#{!cc.attrs.bBean.managedBean.preRegistration}"
+							escape="false" />
+				</c:otherwise>
+				</c:choose> 
+				
+			</div>
+
+			<div style="float: right;">
+				<p:commandButton value="#{cc.attrs.btnCancelLabel}"
+					oncomplete="#{cc.attrs.dialogId}WidgetVar.hide()" immediate="true" partialSubmit="true" action="#{cc.attrs.bBean.resetRoleValue()}"
+					/>
+			</div>
+		</p:dialog>
+
+		<p:dialog id="#{cc.attrs.dialogId}Change"
+			style="overflow-wrap: break-word;" 
+			header="#{cc.attrs.bBean.managedBean.termAndConditionCheckOwnerChangeRole}" 
+			widgetVar="#{cc.attrs.dialogId}ChangeWidgetVar" modal="true"
+			height="100" width="800" resizable="false" >
+			<p:outputPanel id="popupRolePanelId">
+				<p:dataTable var="person" widgetVar="personRolePopupVar"
+					value="#{cc.attrs.bBean.managedBean.personnelsRole}"
+					rowKey="#{person}" rowIndexVar="index" id="personDt" 
+					>
+					<p:column headerText="#{lbl['lbl.sm.person.composition.name']}"	>
+						<h:outputText value="#{person.name}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.roles']}">
+						<c:if test="#{cc.attrs.bBean.businessTypeIsROC(cc.attrs.bBean.managedBean.smSupplierSsm.businessType)}">
+							<!-- #27951 p:selectBooleanCheckbox value="#{person.director}" itemLabel="#{lbl['lbl.sm.person.dir']}" disabled="#{(person.directorSsm or person.clerical)}">
+								<p:ajax update=":#{p:component('popupRolePanelId')}" listener="#{cc.attrs.bBean.listenerRolePopup(person)}" process="@this" onstart="submissionDialog.show();" oncomplete="submissionDialog.hide();" />
+							</p:selectBooleanCheckbox> -->
+							<p:selectBooleanCheckbox value="#{person.higherManagement}" itemLabel="#{lbl['lbl.sm.person.hghMngmt']}" disabled="#{(person.clerical)}">
+								<p:ajax update=":#{p:component('popupRolePanelId')}" listener="#{cc.attrs.bBean.listenerRolePopup(person)}" process="@this" onstart="submissionDialog.show();" oncomplete="submissionDialog.hide();" />
+							</p:selectBooleanCheckbox>
+						</c:if>
+						<p:selectBooleanCheckbox value="#{person.management}" itemLabel="#{lbl['lbl.sm.person.mngmt']}" disabled="#{(person.clerical)}">
+							<p:ajax update=":#{p:component('popupRolePanelId')}" listener="#{cc.attrs.bBean.listenerRolePopup(person)}" process="@this" onstart="submissionDialog.show();" oncomplete="submissionDialog.hide();" />
+						</p:selectBooleanCheckbox>
+						<p:selectBooleanCheckbox value="#{person.clerical}" itemLabel="#{lbl['lbl.sm.person.stf']}" disabled="#{(person.higherManagement or person.management)}">
+							<p:ajax update=":#{p:component('popupRolePanelId')}" listener="#{cc.attrs.bBean.listenerRolePopup(person)}" process="@this" onstart="submissionDialog.show();" oncomplete="submissionDialog.hide();" />
+						</p:selectBooleanCheckbox>
+					</p:column>
+				</p:dataTable>
+			</p:outputPanel>
+			<div style="float: right;">
+				<p:commandButton value="#{cc.attrs.btnOkLabel}"
+					process="#{cc.attrs.btnOkProcess}" partialSubmit="true"
+					immediate="true" action="#{cc.attrs.bBean.changeRoleAndProceed()}"
+					update="#{cc.attrs.btnOkUpdate}" />
+					
+				<p:commandButton value="#{cc.attrs.btnCancelLabel}" immediate="true" partialSubmit="true" action="#{cc.attrs.bBean.resetRoleValue()}"
+					oncomplete="#{cc.attrs.dialogId}ChangeWidgetVar.hide()}" />
+			</div>
+		</p:dialog>
+		
+		<p:dialog widgetVar="submissionDialog" modal="true" draggable="false"
+			closable="false" resizable="false" showHeader="false">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:dialog>
+	</cc:implementation>
+</ui:composition>

@@ -1,0 +1,198 @@
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<cc:interface>
+		<cc:attribute name="tableId" required="true" />
+		<cc:attribute name="smApplSupportDocs" required="true" />
+		<cc:attribute name="mandatory" default="false"/>
+		<cc:attribute name="uploadDialogId" default="false"/>
+	</cc:interface>
+
+	<cc:implementation>
+		<p:dataTable var="table" id="#{cc.attrs.tableId}" 
+			value="#{cc.attrs.smApplSupportDocs}" rowIndexVar="index" 
+			style="width:100% !important; table-layout: fixed !important;" 
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+			
+			<p:columnGroup type="header">
+				<p:row>
+					<p:column headerText="#{lbl['lbl.sm.mandatory.suppdoc']}" colspan="5" rendered="#{cc.attrs.mandatory}"
+						style="background-color:PeachPuff !important;text-align: center !important;color:black !important"/>
+					<p:column headerText="#{lbl['lbl.sm.nonmandatory.suppdoc']}" colspan="5" rendered="#{!cc.attrs.mandatory}"
+						style="background-color:PaleGreen !important;text-align: center !important;color:black !important"/>
+                </p:row>
+                <p:row>
+                	<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
+						style="width : 5%;text-align: center !important;" />
+					<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" 
+						style="width : 55%;overflow: hidden !important;" />
+					<p:column headerText="#{lbl['lbl.btn.download']}"
+						rendered="#{backingBean.managedBean.hasSuppDocToDownload}"
+						style="width : 10%;text-align: center  !important;" />
+					<p:column headerText="#{lbl['lbl.btn.upload.doc']}"
+						style="width : 10%;text-align: center  !important;" />
+					<p:column headerText="#{lbl['lbl.pm.document.name']}"
+						style="width : 20%;overflow: hidden !important;" />
+                </p:row>
+			</p:columnGroup>
+
+			<p:column style="width : 5%;text-align: center !important;">
+				<h:outputText value="#{index + 1}" />
+			</p:column>
+
+			<p:column style="width : 55%;overflow: hidden !important;">
+			
+				<h:outputText value="#{table.pmDocument.docName}" style="float: left;white-space: normal;" />
+					
+				<p:outputPanel rendered="#{table.pmDocument.licenseReq}">
+					<table width="100%">
+						<tr>
+							<td style="border-style: none !important;">
+								<p:outputLabel value="#{lbl['lbl.sm.suppdoc.license.no']}" />
+								<p:outputLabel value="*" styleClass="mandatory" rendered="#{table.pmDocument.mandatory}"/>
+							</td>
+							<td style="border-style: none !important;">
+								<p:inputText value="#{table.licenseNo}" size="20" id="licenseNoId" required="#{table.pmDocument.mandatory}" label="#{lbl['lbl.sm.suppdoc.license.no']}" maxlength="30">
+									<p:ajax process="@this" partialSubmit="true"/>
+								</p:inputText>
+								<p:message id="licenseNoIdMsg" for="licenseNoId" showSummary="true" showDetail="false" display="icon" />
+							</td>
+							<td colspan="2" style="border-style: none !important;"></td>
+						</tr>
+						<tr>
+							<td style="border-style: none !important;">
+								<p:outputLabel value="#{lbl['lbl.sm.suppdoc.license.effdate']}" />
+								<p:outputLabel value="*" styleClass="mandatory" rendered="#{table.pmDocument.mandatory}"/>
+							</td>
+							<td style="border-style: none !important;">
+								<p:calendar id="licenseEffDateId"
+									navigator="true" required="#{table.pmDocument.mandatory}" 
+									label="#{lbl['lbl.sm.suppdoc.license.effdate']}"
+									value="#{table.licenseEffDate}"
+									pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
+									readonlyInput="true" size="10" showOn="button" yearRange="-99:+0" >
+									<p:ajax event="dateSelect" update="licenseExpDateId" process="@this"/>
+								</p:calendar>
+								<p:message id="licenseEffDateIdMsg"
+									for="licenseEffDateId" showSummary="true" showDetail="false"
+									display="icon" />
+							</td>
+							<td style="border-style: none !important;">
+								<p:outputLabel value="#{lbl['lbl.sm.suppdoc.license.expdate']}" />
+								<p:outputLabel value="*" styleClass="mandatory" rendered="#{table.pmDocument.mandatory}"/>
+							</td>
+							<td style="border-style: none !important;">
+								<p:calendar id="licenseExpDateId" disabled="#{empty table.licenseEffDate}"
+									navigator="true" required="#{table.pmDocument.mandatory}"
+									label="#{lbl['lbl.sm.suppdoc.license.expdate']}"
+									value="#{table.licenseExpDate}"
+									pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
+									readonlyInput="true" size="10" showOn="button" yearRange="-99:+10" 
+									mindate="#{table.licenseEffDate}">
+									<p:ajax event="dateSelect" process="@this"/>
+								</p:calendar>
+								<p:message id="licenseExpDateIdMsg"
+									for="licenseExpDateId" showSummary="true" showDetail="false"
+									display="icon" />
+							</td>
+						</tr>
+					</table>
+				</p:outputPanel>
+				
+			</p:column>
+
+			<p:column rendered="#{backingBean.managedBean.hasSuppDocToDownload}"
+				style="width : 10%;text-align: center  !important;">
+				<h:outputText rendered="#{table.pmDocument.hardCopyReq}"
+					value="#{lbl['lbl.sm.suppDoc.document.hdrCpyOnly']}"
+					style="float: left;white-space: normal;" />
+
+				<p:commandLink rendered="#{table.pmDocument.download}"
+					action="#{backingBean.downloadSignatureSuppDoc(table.pmDocument.docDefinitionKey)}"
+					update=":form" ajax="false">
+					<p:fileDownload value="#{backingBean.file}" />
+					<p:graphicImage value="/css/images/design/download.png"
+						style="margin-right:2px;" />
+				</p:commandLink>
+			</p:column>
+
+			<p:column style="width : 10%;text-align: center  !important;">
+				<p:commandLink oncomplete="#{cc.attrs.uploadDialogId}.show();return false;"
+					process="@this" partialSubmit="true"
+					rendered="#{!table.pmDocument.hardCopyReq}"
+					update="@([id$=#{cc.attrs.uploadDialogId}])"
+					action="#{backingBean.assignSelectedSupportDocIndex(table,index)}">
+					<p:graphicImage value="/css/images/design/upload.png"
+						style="margin-right:2px;" />
+				</p:commandLink>
+			</p:column>
+			
+			<p:column style="width : 20%;overflow: hidden !important;">
+				<h:outputText rendered="#{table.pmDocument.hardCopyReq}"
+					value="#{lbl['lbl.sm.suppDoc.document.hdrCpyRmrks']}"
+					style="float: left;white-space: normal;" />										
+				<!-- #28807 - Start -->
+				<ui:repeat var="applDocs" value="#{table.smApplDocFiles}">
+					<h:commandLink id="file" value="#{backingBean.getShortFileName(applDocs.fileName)}" rendered="#{not empty applDocs and !table.pmDocument.hardCopyReq}">
+            			<p:fileDownload value="#{backingBean.commonDownload(applDocs.filePath,applDocs.fileName,applDocs.fileName)}" />
+        			</h:commandLink>
+			    	<p:tooltip for="file" value="#{applDocs.fileName}" position="top"/>
+					<p:spacer width="10" />
+					<p:commandLink 
+						rendered="#{fn:length(applDocs.fileName) > 1}"				
+						action="#{backingBean.onDeleteSupDocFileAttachment(table,index,applDocs)}" update="@form">
+						<p:graphicImage value="/css/images/design/trash.png" />
+					</p:commandLink>
+					<br/>
+				</ui:repeat>
+				<!-- #28807 - End -->
+			</p:column>
+		</p:dataTable>
+		
+		<p:dialog id="#{cc.attrs.uploadDialogId}" widgetVar="#{cc.attrs.uploadDialogId}" modal="true"
+			dynamic="true" resizable="false" width="700px" height="200"
+			styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}"
+			onShow="singleUploadListener(uploadWV);"
+			onHide="uploadWV.buttonBar.find('input[type=file]').get(0).disabled=false;">
+			<!-- #28807 - Start -->
+			<p:fileUpload widgetVar="uploadWV" 
+				allowTypes="/(\.|\/)(pdf|doc|docx|zip)$/"
+				sizeLimit="#{SupplierManagementConst.SM_SUPPORTDOCS_FILE_SIZE_LIMIT}"
+				invalidFileMessage="#{lbl['lbl.sm.upload.suppDoc.format.errmsg']}"
+				invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed20Mb']}"
+				fileUploadListener="#{backingBean.handleSupDocFileAttachment}"
+				update="#{cc.attrs.tableId}"
+				uploadLabel="#{lbl['lbl.btn.upload']}"  
+				label="#{lbl['lbl.btn.addfile']}" 
+				cancelLabel="#{lbl['lbl.btn.cancel']}"
+				multiple="true"
+				showButtons="false"/>
+			<!-- #28807 - End -->
+		</p:dialog>
+
+		<!-- harris -->
+		<p:confirmDialog id="confirmDeleteSupDocDialog" closable="true"
+			message="#{lbl['lbl.sm.upload.delete.message']}"
+			header="#{lbl['lbl.sm.upload.delete.confirm.header']}"
+			severity="alert" widgetVar="confirmDeleteSupDocDialog">
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.delete']}"
+					onclick="confirmDeleteSupDocDialog.hide();"
+					action="#{backingBean.deleteSupDocFileAttachment}" update="@form"
+					partialSubmit="true" onstart="blockWidget.show()"
+					oncomplete="blockWidget.hide()" process="@this" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="confirmDeleteSupDocDialog.hide();" />
+			</div>
+		</p:confirmDialog>
+
+
+	</cc:implementation>
+</ui:component>

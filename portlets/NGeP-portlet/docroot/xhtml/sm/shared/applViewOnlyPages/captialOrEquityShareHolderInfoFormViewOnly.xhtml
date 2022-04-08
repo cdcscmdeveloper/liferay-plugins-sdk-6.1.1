@@ -1,0 +1,51 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<h:panelGroup id="shrHolderPanGroup">
+		<p:panel header="#{lbl['lbl.sm.shrHldrInfo.panHdr']}"
+			toggleable="true">
+			
+			<p:outputPanel id="shrInfPan" layout="block">
+				
+				<p:dataTable var="shareBean" widgetVar="suppCapShrHldrDtWidVar"
+					value="#{viewSmApplBackingBean.managedBean.smapplShareHolders}"
+					rowKey="#{shareBean}" rowIndexVar="index" id="shrPerDt">
+					<ac:paginator for="shrPerDt" />
+					<!-- 29659 START -->
+					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.name']}">
+						<h:outputText value="#{shareBean.title.salutationName} #{shareBean.name}" />
+					</p:column>
+					<!-- 29659 END -->
+					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.idNo']}">
+						<h:outputText value="#{shareBean.identificationNo}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.shrPerc']}">
+						<ac:labelEquityAmount value="#{shareBean.sharePercentage}" styleClass="outputLabel-view"/>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.shrVal']}">
+						<ac:labelAmount value="#{shareBean.shareAmt}" styleClass="outputLabel-view"/>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.bumi']}" >
+						<h:outputText value="#{lbl['lbl.txt.yes']}"
+							rendered="#{shareBean.bumiFlg eq 1}" />
+						<h:outputText value="#{lbl['lbl.txt.no']}"
+							rendered="#{shareBean.bumiFlg eq 0}" />
+					</p:column>
+				</p:dataTable>
+				
+				<ac:smRevisionRemark backingBean="#{viewSmApplBackingBean}" 
+						poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.shareholderRemark}" 
+						approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.shareholderRemark}" />
+			
+			</p:outputPanel>
+		</p:panel>
+	</h:panelGroup>
+
+
+
+</ui:composition>

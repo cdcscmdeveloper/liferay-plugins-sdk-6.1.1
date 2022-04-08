@@ -1,0 +1,179 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}" toggleable="true">
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		<c:if test="#{!isDocTypeQuotation}">
+		<tr>
+			<td width="16%">
+				<p:outputLabel value="#{lbl['lbl.sc.ep.no']}" />
+			</td>
+			<td>
+				<p:inputText size="50"
+					value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.epNo}"
+					disabled="true" />
+			</td>
+		</tr>
+		</c:if>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.mof.no']}" />
+			</td>
+			<td>
+				<p:inputText size="50"
+					value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.mofNo}"
+					disabled="true" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.supplier.name']}" />
+			</td>
+			<td>
+				<p:inputText size="50"
+					value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.supplierName}"
+					disabled="true" />
+				<p:spacer width="5" />
+				<p:commandLink oncomplete="suppDetailsPopup.show();return false;" process="@this" 
+				disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
+					update="@([id$=suppDetailsPopupId])">
+					
+					<p:graphicImage library="/css/images/design/evaluate.png" title="#{lbl['lbl.sc.view.companyinfo']}" style="vertical-align:middle" />
+					
+					<f:setPropertyActionListener value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.smSupplier}" 
+						target="#{supplierDetailBackingBean.smSupplier}" />
+				</p:commandLink>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.branch']}" />
+			</td>
+			<td>
+				<p:inputText id="branch" size="50"
+					value="#{lOIDetailBackingBean.managedBean.scLoi.supplierBranch}"
+					disabled="true" />
+			</td>
+		</tr>
+		
+		<tr>
+			<td rowspan="3" valign="top" width="21%">
+				<p:outputLabel value="#{lbl['lbl.sc.address']}" />
+			</td>
+			<td rowspan="3">
+				<p:inputTextarea id="suppAddr"
+					rows="5"
+					value="#{lOIDetailBackingBean.getFullAddress(lOIDetailBackingBean.managedBean.scLoi.scSupplierAddress)}"
+					style=" margin-bottom:5px; width: 326px;" disabled="true" />
+			</td>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.tel.no']}" />
+			</td>
+			<td>
+				<p:inputText id="supplierPhoneNo" size="30"
+					value="#{lOIDetailBackingBean.managedBean.scLoi.scSupplierAddress.phoneFull}"
+					disabled="true" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.fax.no']}" />
+			</td>
+			<td>
+				<p:inputText size="30"
+					value="#{lOIDetailBackingBean.managedBean.scLoi.scSupplierAddress.faxFull}"
+					disabled="true" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.mobile.no']}" />
+			</td>
+			<td>
+				<p:inputText size="30"
+					value="#{lOIDetailBackingBean.managedBean.scLoi.scSupplierAddress.contactMobileFull}"
+					disabled="true" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.contact.person']}" />
+			</td>
+			<td>
+				<!-- #30447 start -->
+				<p:inputText size="50"
+					value="#{lOIDetailBackingBean.managedBean.scLoi.scSupplierAddress.pmContactUserID.salutationCode.salutationName.concat(' ').concat(lOIDetailBackingBean.managedBean.scLoi.scSupplierAddress.contactPerson)}"
+					disabled="true" />
+				<!-- #30447 end -->
+			</td>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.email']}" />
+			</td>
+			<td>
+				<p:inputText size="30" style=" margin-bottom:5px;"
+					value="#{lOIDetailBackingBean.managedBean.scLoi.scSupplierAddress.contactEmail}"
+					disabled="true" />
+			</td>
+		</tr>
+		</table>
+	</p:panel>
+		<p:panel header="#{lbl['lbl.sc.loiloa.loi.details.section']}" toggleable="true">
+		<table style="width: 100%">
+			<tr>
+				<td width="21%" style="vertical-align: top;"><p:outputLabel
+						value="#{lbl['lbl.sc.loiloa.loi.title']}" /></td>
+				<td colspan="3"><p:inputTextarea
+						value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.title}"
+						maxlength="500" rows="3" disabled="true"
+						style="width: 670px;margin-bottom: 5px;">
+					</p:inputTextarea></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.qt.fileno']}" /></td>
+				<td><p:inputText disabled="true"
+						value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.fileNo}" size="38" />
+					<p:spacer width="3px"></p:spacer> <p:inputText disabled="true"
+						size="5"
+						value="#{lOIDetailBackingBean.managedBean.scLoi.fileExtnNo}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loi.issue']}" /></td>
+				<td><p:inputText size="50"
+						value="#{lOIDetailBackingBean.managedBean.scLoi.issueDate}"
+						disabled="true">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.loiloa.loi.res.due.date']}" /></td>
+				<td><p:inputText styleClass="ppRightBtn"
+						value="#{!empty lOIDetailBackingBean.managedBean.scLoi.ackDueDate ? DateUtils.getDaysDifference(lOIDetailBackingBean.managedBean.scLoi.issueDate, lOIDetailBackingBean.managedBean.scLoi.ackDueDate) : ''}"
+						disabled="true" size="4" readonly="true" /> #{lbl['lbl.sc.days']}
+					<ui:param name="days" value="#{lOIDetailBackingBean.retrivemessage(lOIDetailBackingBean.managedBean.scLoi.ackDueDate)}" />
+					<ac:iconTooltip value="#{days}" /><p:inputText size="30" disabled="true"
+						value="#{lOIDetailBackingBean.managedBean.scLoi.ackDueDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText> <p:spacer width="10px" /> 
+				</td>
+			</tr>
+			
+		</table>
+	</p:panel>
+	<p:outputPanel id="remarksPanel" rendered="#{isSupplierAckStatus}">
+		<ac:scRemarkAndAttachment
+			remarkList="#{lOIDetailBackingBean.managedBean.scLoi.scLoiRemarks}"
+			showAttachment="false" 
+			readonly="false" />
+	</p:outputPanel>
+	<ui:include src="/xhtml/sc/common/supplierDetailsPopup.xhtml" />
+	
+</ui:composition>

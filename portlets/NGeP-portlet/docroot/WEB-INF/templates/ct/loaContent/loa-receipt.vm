@@ -1,0 +1,91 @@
+<html>
+<head>
+	<style>
+	@page {
+		size: A4 portrait;
+ 	}  
+		
+	</style>
+</head>
+<body>
+	<table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+        <td align="center">
+              <span style='font-weight:bold;font-size:18px;font-family: Albertus Medium;'>PENGAKUAN PENERIMAAN SURAT BERKAITAN KONTRAK TAMBAHAN OLEH SYARIKAT</span>
+            <br/> <br/>
+        </td>
+    </tr>
+    
+	<tr>
+		<td>Dengan ini disahkan bahawa yang bertandatangan di bawah ini mengakui penerimaan surat ini dengan no. rujukan $agencyRefNo bertarikh $govSignDate.
+	     <br/> <br/>
+		</td>
+	</tr>	
+
+	
+	<tr></tr>
+	<tr>
+		<td>
+		<table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr valign="top">
+				<td width="18%">
+					Nama Penuh 
+				</td>
+				<td width="1%">
+					: 
+				</td>
+				<td width="50%">
+					$supplierName
+				</td>
+			</tr>
+			<tr  valign="top" >
+				<td>
+					No. Kad Pengenalan
+				</td>
+				<td>
+					: 
+				</td>
+				<td>
+					$supplierIcNo
+				</td>
+			</tr>
+			<tr  valign="top" >
+				<td>
+					Nama Pembekal
+				</td>
+				<td>
+					: 
+				</td>
+				<td>
+					$companyName
+				</td>
+			</tr>
+			<tr  valign="top">
+				<td>
+					Alamat 
+				</td>
+				<td>
+					: 
+				</td>
+				<td>
+					$supplierAddress
+				</td>
+			</tr>
+			<tr valign="top" >
+				<td>
+					Tarikh
+				</td>
+				<td>
+					: 
+				</td>
+				<td style="white-space: normal;">
+					$supplierAckDate
+				</td>
+			</tr>
+			</table>
+			 <div class="break"></div>
+		</td>
+	</tr>		
+	</table>
+</body>
+</html>

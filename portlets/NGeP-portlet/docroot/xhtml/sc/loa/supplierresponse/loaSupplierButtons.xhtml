@@ -1,0 +1,189 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+	<p:blockUI block=":form" widgetVar="blockWidget">
+		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+	</p:blockUI>
+
+	<ui:param name="isMultipleLOI"
+		value="#{lOADetailBackingBean.managedBean.scLoa.finalizationMethod eq ParameterConst.recommendByMultipleLoi}" />
+	<ui:param name="validityDaysExpiredQt"
+		value="#{lOADetailBackingBean.checkProposalValidityDateReachByQt(lOADetailBackingBean.managedBean.scQt)}" />
+
+	<ac:gpkiPopup textBeforeSign="#{lOADetailBackingBean.textBeforeSign}"
+		postSignAction="#{lOADetailBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" 
+		enableAutoUpdate="#{lOADetailBackingBean.enableAutoUpdate()}" />
+
+	<table style="width: 100%">
+	<tr>
+		<td>
+			<div align="left" style="width: 100%">
+			    <p:commandButton immediate="true"
+					value="#{lbl['lbl.btn.back']}"
+					action="#{lOADetailBackingBean.backToPrevious}"
+					style="float:left;" 
+					rendered="#{!empty lOADetailBackingBean.managedBean.backToPreviousPage}" />
+			 </div>
+			 </td>
+			 <td>
+			 <div align="right" style="width: 100%">
+				<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
+					action="#{pmTrackingDiaryBackingBean.redirectToSupplierTrackingDiary(ParameterConst.doctypeLetterOfAward, lOADetailBackingBean.managedBean.scLoa.loaId, true)}"
+					immediate="true" 
+					rendered="#{!empty lOADetailBackingBean.managedBean.backToPreviousPage and !isLoaReviseStatus}" />
+								
+				<ui:param name="readOnlyTask" value="#{lOADetailBackingBean.managedBean.readOnly}" />
+				<ui:decorate
+					template="/WEB-INF/facelets/templates/claim_template.xhtml">
+					<ui:define name="outComeSection">
+						<c:choose>
+							<c:when test="#{!empty lOADetailBackingBean.managedBean.taskId}">							
+							<p:commandButton value="#{lbl['lbl.btn.view.loa']}" process="@this" ajax="false" immediate="true" 
+									 action="#{lOADetailBackingBean.downloadViewLoa}"/>
+								<ui:remove>
+								 	Enhancement #21694
+								</ui:remove>
+								<!-- Start #22211 -->
+								<!-- <c:if test="#{!isLoaReviseStatus}"> -->
+								<!-- End #22211 -->
+									<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all"
+										partialSubmit="true" update="@form" onstart="blockWidget.show();"
+										oncomplete="blockWidget.hide();"
+										action="#{lOADetailBackingBean.saveAction(true)}" />	
+								<!-- Start #22211 -->
+								<!-- </c:if> -->
+								<!-- End #22211 -->	
+								<ui:repeat var="bpmAction"
+									value="#{lOADetailBackingBean.managedBean.outComes}">
+									<ui:param name="buttonLabel"
+										value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+									<h:panelGroup rendered="#{bpmAction == 'RESUBMIT' and lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_REVISE_DOC}">
+										<p:commandButton value="#{lbl[buttonLabel]}"
+											rendered="#{!lOADetailBackingBean.managedBean.qtCancelRequested}"
+											styleClass="ui-button" update="@form"
+											partialSubmit="true" process="@all"
+											action="#{lOADetailBackingBean.updateReviseBPMTaskAction(bpmAction)}"
+											onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
+											<f:setPropertyActionListener value="#{bpmAction}"
+												target="#{lOADetailBackingBean.managedBean.action}" />
+											<f:setPropertyActionListener value="false"
+												target="#{lOADetailBackingBean.managedBean.autoUpdate}" />										
+										</p:commandButton>
+									</h:panelGroup>
+									<!-- Start #22211 -->
+									<h:panelGroup rendered="#{bpmAction == 'RESUBMIT' and lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_ACKNOWLEDGE_RECEIPT_SUPPLIER_ACTION}">
+										<p:commandButton value="#{lbl[buttonLabel]}"
+											rendered="#{!lOADetailBackingBean.managedBean.qtCancelRequested}"
+											styleClass="ui-button" update="@form"
+											partialSubmit="true" process="@all"
+											action="#{lOADetailBackingBean.updateReviseBPMTaskActionWithoutQt(bpmAction)}"
+											onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
+											<f:setPropertyActionListener value="#{bpmAction}"
+												target="#{lOADetailBackingBean.managedBean.action}" />
+											<f:setPropertyActionListener value="false"
+												target="#{lOADetailBackingBean.managedBean.autoUpdate}" />										
+										</p:commandButton>
+									</h:panelGroup>
+									<!-- End #22211 -->
+									<!-- Enhancement #21573 -->
+									<h:panelGroup rendered="#{bpmAction == 'ACCEPT' and !isLoaReviseStatus and lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId ne QTStatusConst.LOA_PENDING_ACKNOWLEDGE_RECEIPT_SUPPLIER_ACTION}">
+										<p:commandButton value="#{lbl[buttonLabel]}"
+											rendered="#{!lOADetailBackingBean.managedBean.qtCancelRequested}"
+											styleClass="ui-button" update="@form"
+											partialSubmit="true" process="@all"
+											action="#{lOADetailBackingBean.updateBpmTaskActionSupplier(bpmAction)}"
+											onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
+											<f:setPropertyActionListener value="#{bpmAction}"
+												target="#{lOADetailBackingBean.managedBean.action}" />
+											<f:setPropertyActionListener value="false"
+												target="#{lOADetailBackingBean.managedBean.autoUpdate}" />										
+										</p:commandButton>
+									</h:panelGroup>
+		
+									<h:panelGroup rendered="#{bpmAction == 'REJECT' and !isLoaReviseStatus and lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId ne QTStatusConst.LOA_PENDING_ACKNOWLEDGE_RECEIPT_SUPPLIER_ACTION}">
+										<p:commandButton value="#{lbl[buttonLabel]}"
+											rendered="#{!isMultipleLOI}"
+											styleClass="ui-button" onstart="blockWidget.show();"
+											oncomplete="blockWidget.hide();"
+											action="#{lOADetailBackingBean.updateBpmTaskActionSupplier(bpmAction)}"
+											partialSubmit="true" process="@all" update="@form" />
+									</h:panelGroup>
+								</ui:repeat>
+								<h:panelGroup rendered="#{!isLoaReviseStatus}">
+									<ac:spkiPopup id="spkiPopup"
+									password="#{lOADetailBackingBean.managedBean.spkiBackingBean.password}"
+									challengeAns1="#{lOADetailBackingBean.managedBean.spkiBackingBean.challengeAns1}"
+									challengeQues1="#{lOADetailBackingBean.managedBean.spkiBackingBean.challengeQues1}"
+									postSignAction="#{lOADetailBackingBean.spkiSignAction(spkiBackingBean.pmDigiSign)}" 
+									enableAutoUpdate="#{lOADetailBackingBean.enableAutoUpdate()}" />
+								</h:panelGroup>
+								
+							</c:when>
+						</c:choose>
+							
+							<p:dialog id="confirmAccept" widgetVar="confmAcceptDlg"
+								header="#{lbl['lbl.sc.confirmation']}" resizable="false" 
+								closable="false" modal="true">
+						
+								<p:panel id="confirmAccDlgId">
+									<table>
+										<tr>
+											<td>
+												<h:graphicImage value="/css/images/design/exclamation.png" />
+													<h:outputText value="#{lOADetailBackingBean.managedBean.suppConfirmMsgAccept}" />
+													<br />
+													<br />
+											</td>
+										</tr>
+									</table>
+						
+									<p:spacer height="1px" />
+									<div align="right">
+										<p:commandButton id="yesBtnConfmA" value="#{lbl['lbl.btn.yes']}"
+											onclick="confmAcceptDlg.hide()" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+											action="#{lOADetailBackingBean.confirmSupplierAccept}"/>
+										<p:commandButton id="noBtnConfmA" value="#{lbl['lbl.btn.no']}"
+											onclick="confmAcceptDlg.hide()" type="button" />
+									</div>
+								</p:panel>
+							</p:dialog>
+							<p:dialog id="confirmReject" widgetVar="confmRejectDlg"
+								header="#{lbl['lbl.sc.confirmation']}" resizable="false" 
+								closable="false" modal="true">
+						
+								<p:panel id="confirmRejDlgId">
+									<table>
+										<tr>
+											<td>
+												<h:graphicImage value="/css/images/design/exclamation.png" />
+													<h:outputText value="#{lOADetailBackingBean.managedBean.suppConfirmMsgReject}" />
+													<br />
+													<br />
+											</td>
+										</tr>
+									</table>
+						
+									<p:spacer height="1px" />
+									<div align="right">
+										<p:commandButton id="yesBtnConfmR" value="#{lbl['lbl.btn.yes']}"
+											onclick="confmRejectDlg.hide()" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+											action="#{lOADetailBackingBean.confirmSupplierReject}"/>
+										<p:commandButton id="noBtnConfmR" value="#{lbl['lbl.btn.no']}"
+											onclick="confmRejectDlg.hide()" type="button" />
+									</div>
+								</p:panel>
+							</p:dialog>
+						<!-- end Enhancement #21573 -->
+					</ui:define>
+				</ui:decorate>
+			 </div>
+		</td>
+	</tr>
+	</table>
+</ui:composition>

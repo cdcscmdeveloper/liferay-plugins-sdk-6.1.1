@@ -1,0 +1,61 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<p:panel header="#{lbl['lbl.pm.organisation.result']}" 
+		toggleable="true">		
+		<p:dataTable id="custSvcTb" var="userOrg" rows="10"
+			value="#{custServiceBackingBean.custSvcDataModel}"
+			rowIndexVar="index" lazy="true">
+
+			<ac:paginator for="custSvcTb"></ac:paginator>
+			
+			<p:column headerText="#{lbl['lbl.pm.state.seq.no']}" style="width :5%;white-space : normal;text-align:center;">
+				#{index + 1}
+			</p:column>			
+			<p:column headerText="#{lbl['lbl.pm.profiles.search.result.username']}" style="width :20%;white-space : normal">
+				#{userOrg.pmUser.userName}
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.idno']}" style="width :10%;white-space : normal">
+				#{userOrg.pmUser.identificationNo}
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.designation']}" style="width :10%;white-space : normal">
+				#{userOrg.designation}
+			</p:column>			
+			<p:column rendered="#{userOrg.pmOrgProfile.orgTypeCode.parameterCode !='SUP'}" headerText="#{lbl['lbl.pm.profiles.search.orgname']}" style="width :25%;white-space : normal">			
+				#{userOrg.pmOrgProfile.pmOrgValidity.orgName}
+			</p:column>
+			<p:column rendered="#{userOrg.pmOrgProfile.orgTypeCode.parameterCode =='SUP'}" headerText="#{lbl['lbl.pm.profiles.search.orgname']}" style="width :25%;white-space : normal">			
+				#{userOrg.pmOrgProfile.smSupplier.companyName}
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.status']}" style="width:8%;text-align:center;">
+				#{(userOrg.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}
+			</p:column>			
+			<p:column headerText="#{lbl['lbl.pm.profiles.search.role']}" style="width:5%;text-align:center;">
+				<p:commandLink  action="#{custServiceBackingBean.getListOfAssignedRoles(userOrg)}" 
+				disbaled="#(userOrg.recordStatusFlg!=1)"
+				oncomplete="dlRoleList.show();" update=":form:opRoleList" >
+					<p:graphicImage value="/css/images/design/ico-user-role.png"/>
+				</p:commandLink>
+			</p:column>
+			<p:column rendered="#{userOrg.pmOrgProfile.orgTypeCode.parameterCode =='SUP'}" headerText="#{lbl['lbl.pm.action']}" style="width:5%;text-align:center;">
+				<p:commandLink  action="#{custServiceBackingBean.redirectToUserInfo(userOrg)}" >
+					<p:graphicImage value="/css/images/design/ico-edit.png"/>
+				</p:commandLink>
+			</p:column>
+			<p:column rendered="#{userOrg.pmOrgProfile.orgTypeCode.parameterCode !='SUP'}" headerText="#{lbl['lbl.pm.action']}" style="width:5%;text-align:center;">
+				<p:commandLink  action="#{custServiceBackingBean.redirectToUserInfo(userOrg)}" >
+					<p:graphicImage value="/css/images/design/ico-view.png"/>
+				</p:commandLink>
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+	
+	<!-- Role list Popup -->
+	<ui:include src="assignedRolesToPopUp.xhtml" />
+	
+</ui:composition>

@@ -1,0 +1,84 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="contentSection">
+	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" escape="false"/>
+		<!-- #32587 start -->
+		<p:panel header="#{lbl['lbl.sm.softcert.provider']}" toggleable="true">
+			<div align="right">
+				<p:commandButton id="btnSave" value="#{lbl['lbl.btn.save']}" update="dtRuleValue"
+					action="#{softCertProviderBB.saveSoftCertProvider()}" />
+			</div>
+
+			<p:dataTable value="#{softCertProviderBB.managedBean.configRule.configRuleValues}"
+				id="dtRuleValue" rowIndexVar="index" var="ruleValue"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+
+				<ac:paginator for="dtRuleValue" />
+
+				<p:column headerText="#{lbl['lbl.sm.softcert.provider.column']}">
+					<p:selectOneMenu value="#{ruleValue.ruleValue}"
+						disabled="#{!ruleValue.brandNew}">
+						<f:selectItems var="certProvider" 
+							value="#{softCertProviderBB.managedBean.providerLs}"
+							itemValue="#{certProvider.pmParameter.parameterCode}"
+							itemLabel="#{certProvider.codeName}">
+						</f:selectItems>
+					</p:selectOneMenu>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sm.softcert.effDate.column']}">
+					<p:calendar label="#{lbl['lbl.rpt.frmdate']}" id="calEffDate"
+						showOn="button" navigator="true" disabled="#{!ruleValue.brandNew}"
+						display="inline" readonlyInput="true" size="9" update="calExpDate"
+						value="#{ruleValue.effDate}" required="true" 
+						mindate="#{softCertProviderBB.getMinEffDate()}" 
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+						<p:ajax event="dateSelect" update="calExpDate" process="@this"  />
+					</p:calendar>
+					<p:message id="effDateMsg" for="calEffDate" display="icon" />	
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sm.softcert.endDate.column']}">
+					<p:calendar label="#{lbl['lbl.rpt.frmdate']}"
+						disabled="#{empty ruleValue.effDate || ruleValue.expDate lt CommonConstants.CURRENT_DATE}" id="calExpDate" showOn="button"
+						navigator="true" display="inline" readonlyInput="true" size="9"
+						value="#{ruleValue.expDate}" required="false"
+						mindate="#{!empty ruleValue.effDate ? softCertProviderBB.getMinExpDate(ruleValue.effDate) : null}"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+						<p:ajax event="dateSelect"  process="@this" />
+					</p:calendar>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sm.softcert.action.column']}">
+					<p:commandLink disabled="#{ruleValue.effDate le DateUtils.getCurrentDateWithoutTime() or !ruleValue.brandNew}" 
+					id="btnDeleteId" partialSubmit="true" process="@this" oncomplete="ruleValueDeletePopUp.show();">
+						<p:graphicImage id="trashImgId" value="/css/images/design/trash.png"></p:graphicImage>
+						<f:setPropertyActionListener target="#{softCertProviderBB.managedBean.deleteRuleValue}" value="#{ruleValue}" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+
+			<div align="right">
+			<p:commandButton id="btnAdd" value="#{lbl['lbl.btn.add']}" update="dtRuleValue" partialSubmit="true" process="@this"
+				action="#{softCertProviderBB.addSoftCertProviderRule()}" />
+			</div>
+		</p:panel>
+		<!-- #32587 end -->
+
+		<ac:confirmationPopup id="ruleValueDeleteId"
+			widget="ruleValueDeletePopUp"
+			okAction="#{softCertProviderBB.deleteSelectedRow()}"
+			width="400" height="100"
+			title="#{lbl['lbl.msg.confirm.delete.header']}"
+			content="#{lbl['lbl.msg.confirm.delete']}"
+			update=":form:dtRuleValue" />
+	</ui:define>
+</ui:composition>

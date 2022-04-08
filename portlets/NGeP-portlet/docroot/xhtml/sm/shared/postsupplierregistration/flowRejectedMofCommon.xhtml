@@ -1,0 +1,125 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<!-- FLOW STATUS 3 -->
+	<div class="flow-chartbox">
+  	<div class="flow-chart">
+	<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 3}">
+		<div class="flow-chart-left flowInactive">
+			<div class="bg"><div class="no">1</div></div><p>#{lbl['lbl.sm.basic.cont.mof.reg']}</p>
+		</div>
+		
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">2</div></div><p>#{lbl['lbl.sm.basic.processing.fee']}</p></div>
+		
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">3</div></div><p style="top: 1px">#{lbl['lbl.sm.basic.gov.process']}&#160;&#160;</p></div>
+		
+		<div class="flow-chart-left flowActive">
+			<div class="bg"><div class="no">4</div></div><p></p>
+			<p style="top: 1px"><p:commandLink styleClass="current-link" onclick="blockWidget.show()" onerror="blockWidget.hide()"
+				value="#{lbl['lbl.sm.basic.resubmit.appl']}" 
+				action="#{postSupplierRegBB.pageNavigate}" update="@form" /></p>
+		</div>
+		
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">5</div></div><p style="top: 1px">#{lbl['lbl.sm.basic.gov.process']}&#160;&#160;</p></div>
+		
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">6</div></div><p>#{lbl['lbl.sm.basic.registration.fee']}</p></div>
+
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">7</div></div><p>#{lbl['lbl.sm.basic.view.virtual.cert']}</p></div>
+	</c:if>
+	<!-- FLOW STATUS 3 - END -->
+
+	<!-- FLOW STATUS 4 -->
+	<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 4}">
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">1</div></div><p>#{lbl['lbl.sm.basic.cont.mof.reg']}</p></div>
+		
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">2</div></div><p>#{lbl['lbl.sm.basic.processing.fee']}</p></div>
+		
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">3</div></div><p style="top: 1px">#{lbl['lbl.sm.basic.gov.process']}&#160;&#160;</p></div>
+		
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">4</div></div><p style="top: 1px">#{lbl['lbl.sm.basic.resubmit.appl']}</p></div>
+		
+		<div class="flow-chart-left flowActive">
+		<div class="bg"><div class="no">5</div></div><p style="top: 1px">#{lbl['lbl.sm.basic.gov.process']}&#160;&#160;</p></div>
+		
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">6</div></div><p>#{lbl['lbl.sm.basic.registration.fee']}</p></div>
+
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">7</div></div><p>#{lbl['lbl.sm.basic.view.virtual.cert']}</p></div>
+	</c:if>
+	<!-- FLOW STATUS 4 - END -->
+
+
+	<!-- FLOW STATUS 5 -->
+	<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 5}">
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">1</div></div><p>#{lbl['lbl.sm.basic.cont.mof.reg']}</p></div>
+		
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">2</div></div><p>#{lbl['lbl.sm.basic.processing.fee']}</p></div>
+		
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">3</div></div><p style="top: 1px">#{lbl['lbl.sm.basic.gov.process']}&#160;&#160;</p></div>
+		
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">4</div></div><p style="top: 1px">#{lbl['lbl.sm.basic.resubmit.appl']}</p></div>
+
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">5</div></div><p style="top: 1px">#{lbl['lbl.sm.basic.gov.process']}&#160;&#160;</p></div>
+
+		<div class="flow-chart-left flowActive">
+		<div class="bg"><div class="no">6</div></div><p></p>
+		<p><p:commandLink styleClass="current-link" 
+				value="#{lbl['lbl.sm.basic.registration.fee']}" 
+				action="#{postSupplierRegBB.pageNavigate}" /></p>
+		</div>
+		
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">7</div></div><p>#{lbl['lbl.sm.basic.view.virtual.cert']}</p></div>
+	</c:if>
+	<!-- FLOW STATUS 5 - END -->
+
+	<!-- FLOW STATUS 6 -->
+	<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 6}">
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">1</div></div><p>#{lbl['lbl.sm.basic.cont.mof.reg']}</p></div>
+		
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">2</div></div><p>#{lbl['lbl.sm.basic.processing.fee']}</p></div>
+		
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">3</div></div><p style="top: 1px">#{lbl['lbl.sm.basic.gov.process']}&#160;&#160;</p></div>
+		
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">4</div></div><p style="top: 1px">#{lbl['lbl.sm.basic.resubmit.appl']}</p></div>
+
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">5</div></div><p style="top: 1px">#{lbl['lbl.sm.basic.gov.process']}&#160;&#160;</p></div>
+
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">6</div></div><p>#{lbl['lbl.sm.basic.registration.fee']}</p></div>
+
+		<div class="flow-chart-left flowActive">
+		<div class="bg"><div class="no">7</div></div><p></p>
+		<p><p:commandLink styleClass="current-link" 
+				value="#{lbl['lbl.sm.basic.view.virtual.cert']}" 
+				action="#{postSupplierRegBB.pageNavigate}" /></p>
+		</div>
+	</c:if>
+	</div>
+	</div>
+	<!-- FLOW STATUS 6 - END -->
+</ui:composition>

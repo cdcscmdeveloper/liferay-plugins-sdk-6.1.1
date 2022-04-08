@@ -1,0 +1,47 @@
+<u class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.manufacturing.additional.docs')</u>
+<br /><br />
+
+
+<table class="descTable" width="100%">
+		<tr style="background-color:#99ccff;" align="center">
+			<th width="5%" class="txtBold">No</th>
+			<th width="35%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.manufacturing.documents')</th>
+			<th width="20%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.financial.reference')</th>
+			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.financial.date.issued')</th>
+			<th width="30%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.manufacturing.notes')</th>
+		</tr>
+
+		#if($review)
+			#if($additionalDocLs.size() > 0)
+				#foreach($revFinDoc in $additionalDocLs)
+					<tr>
+						<td>$velocityCount</td>
+						<td>$revFinDoc.docName</td>
+						<td>$!revFinDoc.docRef</td>
+						<td>$!smVmUtil.formatDate($revFinDoc.docDate)</td>
+						<td>$!revFinDoc.remark</td>
+					</tr>
+				#end
+			#else
+				<tr>
+					<td colspan="5" align="center">$smVmUtil.getDescByLabel('lbl.datatable.msg.no.records.found')</td>
+				</tr>
+			#end
+		#else
+			#if($additionalDocLs.size() > 0)
+				#foreach($financialDoc in $additionalDocLs)
+				<tr>
+					<td>$velocityCount</td>
+					<td>$financialDoc.codeName</td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				#end
+			#else
+				<tr>
+					<td colspan="5" align="center">$smVmUtil.getDescByLabel('lbl.datatable.msg.no.records.found')</td>
+				</tr>
+			#end
+		#end
+</table>

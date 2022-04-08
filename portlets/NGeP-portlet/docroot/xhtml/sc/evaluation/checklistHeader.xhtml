@@ -1,0 +1,89 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<!-- #25138-Ahmaa-Start -->
+	<div  class="header-info header-spacing">
+		<p:panel rendered="#{evaluationBackingBean.managedBean.evaluationTechnicalFinancialType eq 'ET' 
+		and evaluationBackingBean.managedBean.scQt.techEvaluationReq 
+		and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '0'}"	>				
+			<table border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td><h:outputLabel
+							value="#{lbl['lbl.sc.spec.checklist.title']}" /></td>
+					<td style="font-size: 12px;">:
+					#{evaluationBackingBean.managedBean.scQtChecklist.title}</td>				
+				</tr>
+				
+			</table>
+		</p:panel>
+		<p:panel rendered="#{evaluationBackingBean.managedBean.evaluationTechnicalFinancialType eq 'ET' 
+		and evaluationBackingBean.managedBean.scQt.techEvaluationReq 
+		and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1'}"	>	
+			<c:if test="#{evaluationBackingBean.managedBean.evaluationCheckListType == ParameterConst.documentDefinitionTypeTemplateSpecification}">
+				<table border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td><h:outputLabel
+								value="#{lbl['lbl.sc.spec.checklist.title']}" /></td>
+						<td style="font-size: 12px;">:
+						#{lbl['lbl.sc.eva.all.template']}</td>				
+					</tr>
+					
+				</table>
+			</c:if>
+			<c:if test="#{evaluationBackingBean.managedBean.evaluationCheckListType != ParameterConst.documentDefinitionTypeTemplateSpecification}">
+				<table border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td><h:outputLabel
+								value="#{lbl['lbl.sc.spec.checklist.title']}" /></td>
+						<td style="font-size: 12px;">:
+						#{evaluationBackingBean.managedBean.scQtChecklist.title}</td>				
+					</tr>
+					
+				</table>
+			</c:if> 				
+		</p:panel>
+		<p:panel rendered="#{evaluationBackingBean.managedBean.evaluationTechnicalFinancialType eq 'EF' 
+		and evaluationBackingBean.managedBean.scQt.techEvaluationReq 
+		and evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '0'}"	>				
+			<table border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td><h:outputLabel
+							value="#{lbl['lbl.sc.spec.checklist.title']}" /></td>
+					<td style="font-size: 12px;">:
+					#{evaluationBackingBean.managedBean.scQtChecklist.title}</td>				
+				</tr>
+				
+			</table>
+		</p:panel>
+		<p:panel rendered="#{evaluationBackingBean.managedBean.evaluationTechnicalFinancialType eq 'EF' 
+		and evaluationBackingBean.managedBean.scQt.techEvaluationReq 
+		and evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '1'}"	>				
+			<c:if test="#{evaluationBackingBean.managedBean.evaluationCheckListType == ParameterConst.documentDefinitionTypeTemplateSpecification}">
+				<table border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td><h:outputLabel
+								value="#{lbl['lbl.sc.spec.checklist.title']}" /></td>
+						<td style="font-size: 12px;">:
+						#{lbl['lbl.sc.eva.all.template']}</td>				
+					</tr>
+					
+				</table>
+			</c:if>
+			<c:if test="#{evaluationBackingBean.managedBean.evaluationCheckListType != ParameterConst.documentDefinitionTypeTemplateSpecification}">
+				<table border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td><h:outputLabel
+								value="#{lbl['lbl.sc.spec.checklist.title']}" /></td>
+						<td style="font-size: 12px;">:
+						#{evaluationBackingBean.managedBean.scQtChecklist.title}</td>				
+					</tr>
+					
+				</table>
+			</c:if> 
+		</p:panel>
+	</div>
+	<!-- #25138-Ahmaa-End -->
+</ui:composition>

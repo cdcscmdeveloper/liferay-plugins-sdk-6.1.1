@@ -1,0 +1,87 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel id="requestNoteItemDetails" toggleable="true"
+		toggleSpeed="500">
+		<f:facet name="header">
+			<h:outputText value="* " styleClass="mandatory" />
+			<h:outputText value="#{lbl['lbl.sc.panel.title.item.detail']}" />
+		</f:facet>
+		<c:if test="#{requestNoteBackingBean.managedBean.selectedPrDtls == null}">
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sc.rn.supplier.instruction']}" /><br></br>
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sc.item.codification.instruction']}" />
+		</c:if>
+			
+		<ac:lovPopup />
+
+		<h:panelGrid width="100%" id="itemDtlId">
+			<p:dataTable id="requestListDataTable" var="requestNoteDtl"
+				style="white-space: normal;"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				value="#{requestNoteBackingBean.managedBean.requestNoteDtls}"
+				rowKey="#{requestNoteDtl}" rowIndexVar="rowIndex">
+
+				<p:column headerText="#{lbl['lbl.sc.request.note.item.name']}"
+					style="white-space: normal;">
+					<h:outputText
+							value="#{requestNoteDtl.requestItem.itemName}" />
+					<p:spacer width="2px;" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.product.code']}"
+					style="white-space: normal;">
+					<h:outputText
+							value="#{requestNoteDtl.requestItem.cmItem.extensionCode}" />
+					<p:spacer width="2px;" />
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sc.uom']}"
+					style="white-space: normal;">
+					<h:outputText
+							value="#{requestNoteDtl.requestItem.uom.uomName}" />
+					<p:spacer width="2px;" />
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sc.quantity']}"
+					style="white-space: normal;">
+					<h:outputText
+							value="#{requestNoteDtl.requestItem.quantity}" />
+					<p:spacer width="2px;" />
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sc.request.note.fulfill.type']}"
+					style="white-space: normal;">
+					<h:outputText
+							value="#{requestNoteBackingBean.getParameterDesc(requestNoteDtl.fulfilmentType)}" />
+					<p:spacer width="2px;" />
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.tpl.spec.content.specification']}"
+					style="white-space: normal;">
+					<p:commandLink partialSubmit="true" process="@this"
+						actionListener="#{requestNoteBackingBean.showSpecificationPopup(requestNoteDtl)}"
+						update=":form:specificationPopup"
+						oncomplete="specificationPopup.show();">
+						
+						<p:graphicImage value="/css/images/design/ico-view.png"
+							style="vertical-align:middle"></p:graphicImage>
+					</p:commandLink>
+					<p:spacer width="2px;" />
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sc.action']}"
+					style="white-space: normal;">
+					<p:commandButton value="#{lbl['lbl.btn.assign']}" disabled="#{readOnlyTask}"
+					action="#{requestNoteBackingBean.assignProductCode(requestNoteDtl)}"/>
+				</p:column>
+			</p:dataTable>
+		</h:panelGrid>
+	</p:panel>
+</ui:composition>

@@ -1,0 +1,105 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<ui:param name="requisitionerEnableDisable"
+			value="#{rnSummaryRptBackingBean.retrieveUserRoles()}"></ui:param>
+	<ui:param name="ptjEnableDisable"
+			value="#{rnSummaryRptBackingBean.retrievePtjRoles()}"></ui:param>
+
+	<table style="width: 100%;">
+		<tr>
+			<td width="15%"><p:outputLabel
+					value="#{lbl['lbl.sc.supp.name']}" /></td>
+			<td width="35%"><ac:lov id="dpInquirySupplierName" readonly="true" 
+								lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" 
+								headerText="#{lbl['lbl.sc.supp.name']}" update="@form"
+								value="#{rnSummaryRptBackingBean.managedBean.selectedOrgProfile.smSupplier.companyName}"
+								saveObject="rnSummaryRptBackingBean.managedBean.selectedOrgProfile" 
+								postUpdateListener="#{rnSummaryRptBackingBean.onSupplierChange()}" /></td>
+			<td width="15%"><p:outputLabel
+					value="#{lbl['lbl.sc.status']}" /></td>
+			<td width="35%"><p:selectOneMenu
+					value="#{rnSummaryRptBackingBean.managedBean.status}">
+					<f:selectItems
+						value="#{rnSummaryRptBackingBean.searchStatusDesc(ParameterConst.doctypeRequestNote)}" />
+					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
+				</p:selectOneMenu></td>
+		</tr>
+		<tr>
+			<td width="15%"><p:outputLabel
+					value="#{lbl['lbl.sc.request.note.header.rn.no']}" /></td>
+			<td width="35%"><p:inputText maxlength="50" size="50"
+					value="#{rnSummaryRptBackingBean.managedBean.docNo}">
+				</p:inputText></td>
+			<td width="15%"><p:outputLabel
+					value="#{lbl['lbl.sc.request.note.proc.type']}" /></td>
+			<td width="35%"><p:selectOneMenu
+					value="#{rnSummaryRptBackingBean.managedBean.procurementType}">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+						itemValue="#{null}" />
+					<f:selectItems
+						value="#{rnSummaryRptBackingBean.getRadioButtonCodeValues(ParameterTypeConst.procurementType)}" />
+					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
+				</p:selectOneMenu></td>
+		</tr>
+
+		<c:if test="#{requisitionerEnableDisable}">
+		<tr>
+			<td width="15%">
+				<p:outputLabel value="#{lbl['lbl.rpt.requisitioner']}"
+					style="margin-top:5px;width:160px;" /></td>
+			<td width="35%">
+				<p:selectOneMenu
+					value="#{rnSummaryRptBackingBean.managedBean.scRequisitioner}"
+					style="margin-top:5px;width:300px;">
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+						itemValue="#{null}"></f:selectItem>
+	
+					<f:selectItems value="#{rnSummaryRptBackingBean.retrieveRequisitioner()}"></f:selectItems>
+					<p:ajax event="change" partialSubmit="true" update="@this" />
+				</p:selectOneMenu>
+			</td>
+			<td width="15%"></td>
+			<td width="35%"></td>
+		</tr>
+		</c:if>
+	</table>
+	
+	<table style="width: 100%;">
+		<tr>
+			<td width="15%"><p:outputLabel
+					value="#{lbl['lbl.rpt.createdDt']}" /></td>
+			<td width="15%"><p:calendar showOn="button" navigator="true"
+					display="inline" readonlyInput="true" size="9"
+					value="#{rnSummaryRptBackingBean.managedBean.dateFrom}"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+					<p:ajax event="dateSelect" partialSubmit="true" process="@this"
+						update="@this" />
+					<p:ajax event="change" partialSubmit="true" process="@this"
+						update="@this" />
+				</p:calendar></td>
+			<td width="1%"><p:outputLabel
+					value="#{lbl['lbl.rpt.dtRangeTo']}" /></td>
+			<td><p:calendar showOn="button" navigator="true"
+					display="inline" readonlyInput="true"
+					value="#{rnSummaryRptBackingBean.managedBean.dateTo}" size="9"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+					<p:ajax event="dateSelect" partialSubmit="true" process="@this"
+						update="@this" />
+					<p:ajax event="change" partialSubmit="true" process="@this"
+						update="@this" />
+				</p:calendar></td>
+
+		</tr>
+	</table>
+	
+	<ac:generateReport bBean="#{rnSummaryRptBackingBean}"
+		reportMainBean="#{dpReportBackingBean}">
+	</ac:generateReport>
+	
+</ui:composition>

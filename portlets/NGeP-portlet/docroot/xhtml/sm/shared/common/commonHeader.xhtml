@@ -1,0 +1,42 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<!-- 	<h:outputText styleClass="warning" style="font-weight: bold;" value="&#x26A0;  #{lbl['lbl.sm.glp.alert']}" rendered="#{showGlpAlert}" /> -->
+	
+	<table class="customTbl" style="background-color: #FAFAFA;table-layout:fixed">
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.sm.suppname']}" /></td>
+			<td class="header-info-text">
+				#{supplierName}
+			</td>
+			
+			<td><p:outputLabel value="#{lbl['lbl.sm.application.no']}" /></td>
+			<td class="header-info-text">
+				#{applNo}
+			</td>
+			
+			<td><p:outputLabel value="#{lbl['lbl.sm.applicationtype']} :" /></td>
+			<td class="header-info-text">
+				#{lbl[applType]}
+			</td>
+		</tr>
+		<p:outputPanel rendered="#{not empty sdoReviewBackingBean.managedBean.rejectReasonsMsg 
+			and sdoReviewBackingBean.managedBean.smAppl.resubmit}">
+		<tr>
+			<td style="vertical-align: baseline;width: 15% !important"><p:outputLabel
+					value="#{lbl['lbl.sm.rejection.reasons']}"
+					styleClass="outputLabel-view-label" /></td>
+			<td style="word-wrap: break-word;" colspan="5">
+				<h:outputText value="#{sdoReviewBackingBean.managedBean.rejectReasonsMsg}" 
+						escape="false" style="font-family: Arial;font-size: 12px;text-align: left !important;font-weight: normal !important;"/>
+			</td>
+		</tr>
+		</p:outputPanel>
+	</table>
+	
+	<br />
+	
+</ui:composition>

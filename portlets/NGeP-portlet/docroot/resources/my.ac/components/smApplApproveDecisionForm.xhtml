@@ -1,0 +1,332 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:cc="http://java.sun.com/jsf/composite"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+   	xmlns:p="http://primefaces.org/ui"
+   	xmlns:c="http://java.sun.com/jsp/jstl/core"
+   	xmlns:ac="http://ac.my/jsf/composite/cc" >
+
+	<cc:interface>
+		<cc:attribute name="changeRegStatusUpdateId" default="approveApplOutPanelId"/>
+		<cc:attribute name="smAppl" required="true" />
+		<cc:attribute name="currRegStatus" />
+		<cc:attribute name="facilityType" />
+		<cc:attribute name="changeCurrRegStatus" default="false" />
+		<cc:attribute name="approvalRemarks" />
+		<cc:attribute name="overLapRemarks" />
+		<cc:attribute name="valueReqd" default="false" />
+		<cc:attribute name="border" default="false" />
+		<cc:attribute name="overLappedCategoryExists" default="false" />
+		<cc:attribute name="poRecommend" default="false" />
+		<cc:attribute name="bean" required="true" />
+		<cc:attribute name="backingBean" required="true" />
+	</cc:interface>
+	
+	<cc:implementation>
+		<style>
+			.selectRecRejectReasonTable .ui-chkbox-box{
+      	 	   pointer-events: all;
+			}
+			.selectRecRejectReasonTable .ui-widget-content{
+    			pointer-events: none;
+			}
+		</style>
+		<!-- 13362 START -->
+		<script>
+					$(function(){
+					    // Self-executing recursive animation
+					    (function pulse(){
+					        $('#blinkId4').delay(1000).fadeOut('slow').delay(50).fadeIn('slow',pulse);
+					    })();
+					});
+		</script>
+		<!-- 13362 END -->
+		
+		<p:outputPanel id="#{cc.attrs.changeRegStatusUpdateId}">
+			<table style="width: 100%" border="#{cc.attrs.border ? 1 : 0}">
+				<c:if test="#{cc.attrs.smAppl.applType ne 'C'}">
+					<p:outputPanel rendered="#{not empty cc.attrs.bean.poRecommendationDesc}">
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.po.recommend']}" /></td>
+							<td><h:outputText value="#{cc.attrs.bean.poRecommendationDesc}"/></td>
+						</tr>
+					</p:outputPanel>
+					<p:outputPanel rendered="#{cc.attrs.smAppl.applType ne 'N'}">
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.curr.regstatus']}" /></td>
+							<td>
+								<h:outputText value="#{cc.attrs.currRegStatus}"/>
+							</td>
+						</tr>
+					</p:outputPanel>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.panHdr.offFacility']}" /></td>
+						<td>
+							<h:outputText value="#{lbl['lbl.sm.facility.facilityType.home.office']}" 
+								rendered="#{cc.attrs.facilityType eq 'H'}"/>
+							<h:outputText value="#{lbl['lbl.sm.facility.facilityType.business.office']}" 
+								rendered="#{cc.attrs.facilityType eq 'B'}" />
+						</td>
+					</tr>
+					<p:outputPanel rendered="#{cc.attrs.smAppl.applType ne 'N' and cc.attrs.smAppl.applType ne 'B'}">
+						<tr>
+							<td style="border-style: none !important;float: right !important;">
+								<p:selectBooleanCheckbox value="#{cc.attrs.changeCurrRegStatus}" 
+									disabled="#{empty cc.attrs.currRegStatus}">
+									<p:ajax event="change" partialSubmit="true" process="@this"
+										update=":#{p:component(cc.attrs.changeRegStatusUpdateId)}" />
+								</p:selectBooleanCheckbox>
+							</td>
+							<td valign="top" style="border-style: none !important;">
+								<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.curr.regstatus.change.msg']}" />
+							</td>
+						</tr>
+					</p:outputPanel>
+					<p:outputPanel rendered="#{cc.attrs.smAppl.applType eq 'N' or cc.attrs.smAppl.applType eq 'B'
+							or cc.attrs.changeCurrRegStatus}">
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.rpt.rgstStatus']}" />
+								<c:if test="#{cc.attrs.valueReqd}">
+									<p:outputLabel value="*" styleClass="mandatory" />
+								</c:if>
+							</td>
+			
+							<td>
+								<p:outputPanel rendered="#{!cc.attrs.poRecommend}">
+									<p:selectOneMenu label="#{lbl['lbl.rpt.rgstStatus']}"
+										id="approveSelBox" required="#{cc.attrs.valueReqd}"
+										value="#{cc.attrs.bean.approvedStatusId}"
+										style="width: 240px;margin-bottom: 5px;">
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+										<f:selectItems value="#{cc.attrs.bean.regStatusDescList}" var="reg"
+											itemLabel="#{reg.statusName}" itemValue="#{reg.pmStatus.statusId}" />
+									</p:selectOneMenu>
+									<p:message id="approveSelBoxMsg" for="approveSelBox"
+										showSummary="true" showDetail="false" display="icon" />
+								</p:outputPanel>
+								<p:outputPanel rendered="#{cc.attrs.poRecommend}">
+									<p:selectOneMenu label="#{lbl['lbl.rpt.rgstStatus']}"
+										id="poRecommendSelBox" required="#{cc.attrs.valueReqd}"
+										value="#{cc.attrs.bean.poRecommendStatusId}"
+										style="width: 240px;margin-bottom: 5px;">
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+										<f:selectItems value="#{cc.attrs.bean.regStatusDescList}" var="reg"
+											itemLabel="#{reg.statusName}" itemValue="#{reg.pmStatus.statusId}" />
+									</p:selectOneMenu>
+									<p:message id="poRecommendSelBoxMsg" for="poRecommendSelBox"
+										showSummary="true" showDetail="false" display="icon" />
+								</p:outputPanel>
+							</td>
+						</tr>
+					</p:outputPanel>
+				</c:if>
+				
+                <!-- #15629 start -->
+				<c:if test="#{cc.attrs.bean.poSecReview.recommendation eq 'REJECT' and !cc.attrs.bean.approverUser}">
+				<p:outputPanel layout="block" id="recRejectBlockPanel">
+				
+<!-- 					<p:messages id="recSearchRejectMsgId" showDetail="true" autoUpdate="true" closable="true" showSummary="false"/> -->
+					
+						<table style="width: 100%">
+							<tr>
+								<td><p:outputLabel value="#{lbl['lbl.sm.rejection.reasons']}" /></td>
+								<td>
+									<p:inputText id="recRejectReasonSearchId"
+										label="#{lbl['lbl.sm.rejection.reasons']}" 
+										value="#{cc.attrs.bean.searchRecommendRejectReason}" 
+										onkeypress="if (event.keyCode == 13) { rejectReasonSearch.jq.click(); return false;}"
+										size="35" 
+										partialSubmit="true">
+										<p:ajax event="blur" process="@this" update="@this"/>
+									</p:inputText>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">
+									<div style="text-align: right;">
+										<p:commandButton value="#{lbl['lbl.btn.search']}"
+											action="#{cc.attrs.backingBean.searchRecommendRejectedReason()}"
+											onstart="recRejectBlockPanelWidget.show()" oncomplete="recRejectBlockPanelWidget.hide()"
+											update=":#{p:component(cc.attrs.changeRegStatusUpdateId)}"  process="@this, recRejectReasonSearchId" widgetVar="rejectReasonSearch">
+										</p:commandButton>
+										<p:commandButton value="#{lbl['lbl.btn.reset']}" process="@this"
+											action="#{cc.attrs.backingBean.resetSearchRecommendRejectedReason}"
+											update=":#{p:component(cc.attrs.changeRegStatusUpdateId)}" 
+											onstart="recRejectBlockPanelWidget.show()" oncomplete="recRejectBlockPanelWidget.hide()">
+										</p:commandButton>
+									</div>
+								</td>
+							</tr>
+						</table>
+					
+					  		<p:panel header="#{lbl['lbl.sm.result']}" toggleable="true" id="recResultRejectedReasonPanelId">
+								<p:dataTable var="recReason" widgetVar="recReasonWidgetVar"
+									editable="false" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+									value="#{cc.attrs.bean.recommendReasonDescList}"
+									selection="#{cc.attrs.bean.selectedRecommendReasonDescs}"
+									rowKey="#{recReason}" rowIndexVar="index" id="recReasonDtId"
+									styleClass="selectRecRejectReasonTable">
+							
+									<ac:paginator for="recReasonDtId" />
+									<p:ajax event="rowSelect" listener="#{cc.attrs.backingBean.onTickOrUnTickRecommendReason}"
+										update=":#{p:component(cc.attrs.changeRegStatusUpdateId)}"></p:ajax>
+										<!--#30974 - Start  -->
+									<p:ajax event="rowUnselect"
+										listener="#{cc.attrs.backingBean.unTickRecommendReason}"
+										update=":#{p:component(cc.attrs.changeRegStatusUpdateId)}"></p:ajax>
+										<!--#30974 - End  -->
+									<p:ajax event="rowSelectCheckbox"
+										listener="#{cc.attrs.backingBean.onTickOrUnTickRecommendReason}"
+										update=":#{p:component(cc.attrs.changeRegStatusUpdateId)}"></p:ajax>
+										<!-- #30974 - Start  -->
+									<p:ajax event="rowUnselectCheckbox"
+										listener="#{cc.attrs.backingBean.unTickRecommendReason}"
+										update=":#{p:component(cc.attrs.changeRegStatusUpdateId)}"></p:ajax>
+										<!-- #30974 - End  -->
+									<p:ajax event="rowDblselect"
+										listener="#{cc.attrs.backingBean.onTickOrUnTickRecommendReason}"
+										update=":#{p:component(cc.attrs.changeRegStatusUpdateId)}"></p:ajax>
+									<p:ajax event="toggleSelect"
+										listener="#{cc.attrs.backingBean.allOnTickOrUnTickRecommendReason}"
+										update=":#{p:component(cc.attrs.changeRegStatusUpdateId)}"></p:ajax>
+							
+									<p:column selectionMode="multiple" width="1%" />
+							
+									<p:column headerText="#{lbl['lbl.sm.rejection.reasons']}">
+										<h:outputText value="#{recReason.reasonDesc}" />
+									</p:column>
+							
+								</p:dataTable>
+							</p:panel>
+
+					<p:outputPanel id="recRejRemarksPanel">
+						<table style="width: 100%">
+							<tr>
+							<!--#30974 - Start  -->
+								<td style="vertical-align: top; width: 15%"><p:outputLabel
+										value="#{lbl['lbl.sm.remarks.rejection']}" id="recRejReasonLbl"
+										rendered="#{cc.attrs.bean.recommendRejectReasonReqd}" /> 
+										<p:outputLabel
+										value="*" styleClass="mandatory" id="recRejReasonLblMndty"
+										rendered="#{cc.attrs.bean.recommendRejectReasonReqd}" /></td>
+								<td style="padding-top: 5px;"><p:inputTextarea cols="100"
+										style="width : auto;"
+										rendered="#{cc.attrs.bean.recommendRejectReasonReqd}"
+										value="#{cc.attrs.approvalRemarks}"
+										id="recRmrksForRejectTxtArea" rows="5"
+										validatorMessage="#{lbl['lbl.sm.remarks.rejection']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit.po']}"
+										label="#{lbl['lbl.sm.remarks.rejection']}"
+										required="#{cc.attrs.bean.valueReqd and cc.attrs.bean.recommendRejectReasonReqd}"
+										maxlength="4000">
+										<!-- 30974 - start -->
+										<p:ajax event="blur" process="@this" update="@this"/>
+										<!-- 30974 - end -->
+										<f:validateLength maximum="4000" />
+									</p:inputTextarea> <p:message id="recRmrksForRejectTxtAreaMsg"
+										for="recRmrksForRejectTxtArea" showSummary="true" showDetail="false"
+										display="icon" /></td>
+							<!--#30974 - End  -->
+							</tr>
+						</table>
+					</p:outputPanel>
+				
+					<div align="right">
+						<cc:insertChildren />
+					</div>
+					<p:blockUI block="recRejectBlockPanel" widgetVar="recRejectBlockPanelWidget">
+						<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+					</p:blockUI>
+				
+					</p:outputPanel>
+				</c:if>
+				
+				<c:if test="#{(cc.attrs.bean.poUser and cc.attrs.bean.poSecReview.recommendation ne 'REJECT') or 
+				cc.attrs.bean.approverUser}">
+				<tr>
+					<td style="vertical-align: top"><p:outputLabel
+							value="#{lbl['lbl.sm.remarks.approval']}" /></td>
+					<td style="padding-top: 5px;"><p:inputTextarea cols="90"
+							style="width : auto;" rows="10"
+							value="#{cc.attrs.approvalRemarks}"
+							id="rmrksForApprTxtArea" label="#{lbl['lbl.sm.remarks.approval']}"
+							validatorMessage="#{lbl['lbl.sm.remarks.approval']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit.po']}"
+							maxlength="4000">
+							<f:validateLength maximum="4000" />
+						</p:inputTextarea> <p:message id="rmrksForApprTxtAreaMsg" for="rmrksForApprTxtArea"
+							showSummary="true" showDetail="false" display="icon" /></td>
+				</tr>
+				</c:if>
+				
+                <!-- #15629 end -->
+												
+				<c:if test="#{cc.attrs.overLappedCategoryExists}">
+				<!-- 13362 START -->
+				<tr><td><br></br></td></tr>
+					<tr>
+						<td></td>
+						<td align="left">
+							<span id="blinkId4">
+								<font color="red">&#x26A0;</font>
+								<h:outputText styleClass="warning" value="#{lbl['lbl.txt.alert']}" />
+							</span>
+							<span style="opacity: 0.0;">
+								<font color="red">&#x26A0;</font>
+								<h:outputText styleClass="instruction" value="#{lbl['lbl.txt.alert']}" />
+							</span>
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td align="left">
+							<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.main']}" escape="false"/>&#160;
+							<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.please.click']}" escape="false"/>&#160;
+							<p:commandLink onstart="blockWidget.show()"
+						oncomplete="blockWidget.hide()"
+						action="#{backingBean.onViewOverlapCategory()}"
+						process="@this"
+						partialSubmit="true">
+							<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.here']}" escape="false"/>
+					</p:commandLink>&#160; 
+							<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.to.view.details']}" escape="false"/>
+					
+						</td>
+					</tr>
+				<tr><td><br></br></td></tr>
+				<!-- 13362 END -->
+					<tr>
+					<td></td>
+						<td align="left"><p:outputLabel style="float:left;"
+								value="#{lbl['lbl.sm.remarks.overLap.note1']}" escape="false" /></td>
+					</tr>
+					<!-- 13362 START -->
+					<tr>
+					<td></td>
+						<td align="left"><p:outputLabel style="float:left;"
+								value="#{lbl['lbl.sm.remarks.overLap.note3']}" escape="false" /></td>
+					</tr>
+					<!-- 13362 END -->
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.remarks.overLapping']}" /></td>
+						<td style="padding-top: 5px;"><p:inputTextarea cols="90"
+								style="width : auto;" rows="10" id="rmrksForSplApprTxtArea"
+								maxlength="2500"
+								value="#{cc.attrs.overLapRemarks}"
+								label="#{lbl['lbl.sm.remarks.overLapping']}"
+								validatorMessage="#{lbl['lbl.sm.remarks.overLapping']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit']}"
+								required="false">
+								<f:validateLength maximum="2500" />
+							</p:inputTextarea> <p:message id="rmrksForSplApprTxtAreaMsg"
+								for="rmrksForSplApprTxtArea" showSummary="true" showDetail="false"
+								display="icon" /></td>
+					</tr>
+					<tr>
+					<td></td>
+						<td align="left"><p:outputLabel style="float:left;"
+								value="#{lbl['lbl.sm.remarks.overLap.note2']}" escape="false" /></td>
+					</tr>
+				</c:if>
+			</table>
+		</p:outputPanel>
+	</cc:implementation>
+</ui:composition>

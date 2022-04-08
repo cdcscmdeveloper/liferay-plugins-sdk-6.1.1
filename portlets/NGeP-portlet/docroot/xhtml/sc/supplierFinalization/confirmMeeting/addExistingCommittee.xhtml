@@ -1,0 +1,126 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:dialog id="memberDialogId" position="top" resizable="false"
+		header="#{lbl['lbl.sc.add']} #{suppFinalMeetingBackingBean.managedBean.tabTitle}"
+		 width="950" height="600" widgetVar="memberWidgetVar" modal="true"
+		styleClass="addQCMember">
+		<p:messages id="committeemessagesid" showDetail="true"
+			autoUpdate="true" closable="true" showSummary="false" severity="error, info" />
+		<h:panelGroup id="userSearch" style="width:100%;margin-top:10px;">
+				<p:panel id="memberPanel" header="#{lbl['lbl.btn.search']}"
+					toggleable="true" style="width:100%;margin-top:0px;">
+					<table>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sc.name']}" />
+							   <p:outputLabel value="*" styleClass="mandatory" /></td>
+							<td colspan="3"><p:inputText onkeypress="if (event.keyCode == 13) { supplierFinalizationConfirmMeetingAddSearch.jq.click(); return false; }"
+									value="#{suppFinalMeetingBackingBean.managedBean.userSearchBean.name}"
+									size="64" id="name1"  label="#{lbl['lbl.sc.name']}" required="#{suppFinalMeetingBackingBean.managedBean.nameRequired}"/>
+									<p:message id="name1Msg" for="name1" display="icon" /></td>
+						</tr>
+						<tr>
+							<td style="width: 110px;"><p:outputLabel
+									value="#{lbl['lbl.sc.id.type']}" /></td>
+							<td colspan="3"><p:selectOneMenu
+									value="#{suppFinalMeetingBackingBean.managedBean.userSearchBean.identificationType}"
+									style="width: 178px;margin-bottom: 5px;">
+									<f:selectItems
+										value="#{suppFinalMeetingBackingBean.getDropdownCodeValues(ParameterTypeConst.identificationTypes)}" />
+								</p:selectOneMenu></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel
+									value="#{lbl['lbl.sc.identification.no']}" /></td>
+							<td colspan="3"><p:inputText onkeypress="if (event.keyCode == 13) { supplierFinalizationConfirmMeetingAddSearch.jq.click(); return false; }"
+									value="#{suppFinalMeetingBackingBean.managedBean.userSearchBean.identificationNo}"
+									size="30" /></td>
+						</tr>
+					</table>
+					<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.btn.search']}"
+						widgetVar="supplierFinalizationConfirmMeetingAddSearch"
+							action="#{suppFinalMeetingBackingBean.searchUserAction}"
+							update="existingMemberTbl" process="@parent, memberPanel" />
+						<p:commandButton value="#{lbl['lbl.btn.reset']}"
+							action="#{suppFinalMeetingBackingBean.resetUserAction}" update="memberPanel"
+							resetValues="true" partialSubmit="true" process="@this" />
+					</div>
+				</p:panel>
+				<p:panel header="#{lbl['lbl.sc.search.result']}" toggleable="true"
+					style="width:100%;">
+					<p:dataTable id="existingMemberTbl"
+						value="#{suppFinalMeetingBackingBean.managedBean.userSearchDataModel}"
+						selection="#{suppFinalMeetingBackingBean.managedBean.selectedPmUsers}"
+						rowKey="#{existingMember.userId}" var="existingMember"
+						lazy="true" styleClass="existingCommitteeResults" style="width : 100%;"
+						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+						rows="10"
+						rowIndexVar="index">
+
+						<ac:paginator for="existingMemberTbl" />
+                <p:ajax event="rowSelect" update="@([id$=supplierFinalizationMeetingAddOnBtnId])" />
+			<p:ajax event="rowUnselect" update="@([id$=supplierFinalizationMeetingAddOnBtnId])" />
+			<p:ajax event="rowSelectCheckbox" update="@([id$=supplierFinalizationMeetingAddOnBtnId])" />
+			<p:ajax event="rowUnselectCheckbox" update="@([id$=supplierFinalizationMeetingAddOnBtnId])" />
+			<p:ajax event="toggleSelect" update="@([id$=supplierFinalizationMeetingAddOnBtnId])" />
+						<p:column selectionMode="multiple" style="width:2%" />
+
+						<p:column headerText="#{lbl['lbl.sc.name']}">
+							<h:outputText value="#{existingMember.userName}"
+								style="white-space: normal;" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sc.identification.no']}">
+							<h:outputText value="#{existingMember.identificationNo}" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sc.designation']}">
+							<h:outputText value="#{existingMember.designation}"
+								style="white-space: normal;" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sc.email']}">
+							<h:outputText value="#{existingMember.email}"
+								style="white-space: normal;" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sc.grade']}">
+							<h:outputText value="#{existingMember.grade}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.sc.pnp']}" />
+								<ac:iconTooltip id="pnpTT#{index}" value="#{lbl['lbl.sc.pnp.tooltip']}" />
+							</f:facet>
+							<h:outputText
+								value="#{lbl[existingMember.PMP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sc.role']}">
+								<p:selectOneMenu id="appaction"
+										value="#{existingMember.memberRoleId}"
+										style="width: 110px;margin-bottom: 5px;">
+										<f:selectItems
+											value="#{suppFinalMeetingBackingBean.getRoleTypeDropdownValues(existingMember.PMP,suppFinalMeetingBackingBean.managedBean.scQt, existingMember)}" />
+									</p:selectOneMenu>
+					</p:column>
+					</p:dataTable>
+				</p:panel>
+		</h:panelGroup>
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.ok']}"
+			id="supplierFinalizationMeetingAddOnBtnId"
+			disabled="#{empty suppFinalMeetingBackingBean.managedBean.selectedPmUsers}"
+				process="@this, userSearch" update=":form:memberListTbl"
+				actionListener="#{suppFinalMeetingBackingBean.committeeOkAction}" />
+
+			<p:commandButton value="#{lbl['lbl.btn.cancel']}" 
+					process="@this" oncomplete="memberWidgetVar.hide();"
+					action="#{suppFinalMeetingBackingBean.committeeCancelAction}"
+					ajax="true" update="name1"/>
+		</div>
+		<p:ajax event="close"
+				listener="#{suppFinalMeetingBackingBean.committeeCancelAction}" update="@([id$=name1])"/>
+	</p:dialog>
+</ui:composition>

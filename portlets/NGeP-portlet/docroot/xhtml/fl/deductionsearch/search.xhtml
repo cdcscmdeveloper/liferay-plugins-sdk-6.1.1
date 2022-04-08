@@ -1,0 +1,190 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc" >
+	<ui:define name="contentSection">
+	<script> 
+	$('#portlet_flDeductionClause_WAR_NGePportlet').find('.portlet-title-text').html('#{contractDetailsBackingBean.getFlDeductionClausePortletTitle()}');
+	</script>
+    <style>
+      .column-align-center { text-align: center !important;}
+     .ui-menu.ui-menu-dynamic.ui-widget.ui-widget-content.ui-corner-all.ui-helper-clearfix.ui-shadow{  
+              width:250px;
+    }
+         
+      .ui-inputfield.ui-widget.ui-state-default.ui-corner-all.hasDatepicker {
+   		 width: 125px;
+	}
+    </style>
+ 	<p:blockUI block=":form" trigger="searchButtonId" widgetVar="blkContractSearchTable">
+		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+	</p:blockUI>
+     <p:panel id="searchId" header="#{lbl['lbl.fl.search']}" toggleable="true"  toggleSpeed="500">
+     	<h:panelGrid columns="2" style="width:100%;"
+     	     columnClasses="columnWidth20">
+ 			<p:outputLabel value="#{lbl['lbl.ct.ministry']}" />
+           	<ac:lov id="searchMinistry" lovId="PM_ORG_PROFILE_MINSTRY" size="123" readonly="true"
+				headerText="#{lbl['lbl.ct.ministry']}" 
+				value="#{contractDetailsBackingBean.managedBean.searchMinistryProfile.orgName}"
+				postUpdateListener="contractDetailsBackingBean.resetPtjGroupProfile()"
+				update="@form"
+				saveObject="contractDetailsBackingBean.managedBean.searchMinistryProfile">
+			</ac:lov>
+			<p:outputLabel value="#{lbl['lbl.ct.jabatan']}" />
+           	<ac:lov id="searchPtjGroup" lovId="PM_ORG_PROFILE_PTJ_GROUP" size="123" readonly="true"
+				disabled="#{contractDetailsBackingBean.managedBean.searchMinistryProfile==null}"
+				headerText="#{lbl['lbl.ct.jabatan']}"
+				value="#{contractDetailsBackingBean.managedBean.searchPtjGroupProfile.orgName}"
+				postUpdateListener="contractDetailsBackingBean.resetPtjProfile()"
+				update="@form"
+				saveObject="contractDetailsBackingBean.managedBean.searchPtjGroupProfile"
+				conditionField="#{contractDetailsBackingBean.getPTJGroupCondition()}">			
+			</ac:lov>
+     		<p:outputLabel value="#{lbl['lbl.fl.ptj.name']}" />
+           	<ac:lov id="searchPtj" lovId="PM_ORG_PROFILE_PTJ" size="123" readonly="true"
+				disabled="#{contractDetailsBackingBean.managedBean.searchMinistryProfile==null
+					or contractDetailsBackingBean.managedBean.searchPtjGroupProfile==null}"
+				headerText="#{lbl['lbl.ct.ptj']}"
+				value="#{contractDetailsBackingBean.managedBean.searchPtjProfile.orgName}"
+				saveObject="contractDetailsBackingBean.managedBean.searchPtjProfile"
+				conditionField="#{contractDetailsBackingBean.getPtjCondition()}">			
+			</ac:lov>
+     	</h:panelGrid>
+     	<h:panelGrid columns="4" style="width:100%;" 
+     	   	columnClasses="columnWidth20,columnWidth20,columnWidth15,columnWidth30">
+     	   	<p:outputLabel value="#{lbl['lbl.fl.doc.search.purchase.order.no']}" />
+           	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchPurchaseOrderNo}" maxlength="100" style="width:175px;margin-top:3px;" />
+           	<p:outputLabel value="#{lbl['lbl.ct.contract.title']}" />
+           	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchContractName}" maxlength="1000" style="width:175px;" />
+            <p:outputLabel value="#{lbl['lbl.ct.contract.no']}" />
+           	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchContractNo}" maxlength="17" style="width:146px;" />
+           	<p:outputLabel value="#{lbl['lbl.fl.physical.ct.no']}" />
+           	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchCtPhysicalNo}" maxlength="100" style="width:146px;margin-top:3px;" />
+           	<p:outputLabel value="#{lbl['lbl.ct.contract.start']}"/>
+           	<p:calendar id="popupButtonCal" showOn="button" readonlyInput="true"  navigator="true"
+                value="#{contractDetailsBackingBean.managedBean.searchCtStartDate}" 
+               	pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
+           	<p:outputLabel value="#{lbl['lbl.ct.contract.end']}" />
+           	<p:calendar id="popupButtonCal1" readonlyInput="true" 
+             	value="#{contractDetailsBackingBean.managedBean.searchCtEndDate}"  navigator="true"  showOn="button"
+             	pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
+           	<p:outputLabel value="#{lbl['lbl.fl.deduction.loa']}"/>
+           	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchLoaNo}" maxlength="20" style="margin-top: 3px; width: 146px;"/>
+           	<p:outputLabel for="financialYear" value="#{lbl['lbl.fl.financial.year']}" />
+		   	<p:selectOneMenu id="financialYear" value="#{contractDetailsBackingBean.managedBean.searchFinancialYear}"
+		   	    style="margin-bottom:5px; width: 31%;" >
+		   		<f:selectItems value="#{contractDetailsBackingBean.getYearDropDownOpt()}" />
+		   	</p:selectOneMenu>
+		  	<p:outputLabel for="contractStatus" value="#{lbl['lbl.ct.contract.status']}" />
+		   	<p:selectOneMenu id="contractStatus" value="#{contractDetailsBackingBean.managedBean.searchContractStatus}" style="width: 81%;">
+				<f:selectItems value="#{contractDetailsBackingBean.getSearchContractStatusDropdown()}" />
+		   	</p:selectOneMenu>		   
+		</h:panelGrid>
+	  	<div class="ppRightBtn"> 
+        	<p:commandButton
+        	 id="searchButtonId" value="#{lbl['lbl.btn.search']}" validateClient="true" action="#{contractDetailsBackingBean.searchContractDeductionClause}" 
+        	 onstart="blkContractSearchTable.show();" oncomplete="blkContractSearchTable.hide();" update="contractFlTbl" />
+             <p:commandButton value="#{lbl['lbl.btn.reset']}" action="#{contractDetailsBackingBean.searchContractDeductionClauseReset}" update=":form"/>
+	  	</div>
+	  	<ac:lovPopup />
+	  </p:panel>
+		<p:panel id="searchResultId" header="#{lbl['lbl.ct.search.result']}" toggleable="true" toggleSpeed="500">
+			<div style="overflow-x: auto">				
+				<p:dataTable id="contractFlTbl" value="#{contractDetailsBackingBean.managedBean.contractFlDataModel}"
+					var="data" lazy="true" rowIndexVar="index" rowKey="#{data}" rows="10">
+					<ac:paginator for="contractFlTbl" />
+					<p:ajax event="rowToggle" listener="#{contractDetailsBackingBean.onRowToggle}" partialSubmit="true" />
+					<p:column style="width:1%">
+            		<p:rowToggler rendered="#{not empty data.ctContractVer.ctDeductions}" />
+        			</p:column>
+					<p:column headerText="#{lbl['lbl.ct.contract.no']}" style="width:10%;"  styleClass="column-align-center">
+						<h:outputText value="#{data.contractNo}" style="text-align:left; float:left;" />
+					</p:column>					
+					<p:column headerText="#{lbl['lbl.ct.contract.title']}" styleClass="column-align-center"  style="width:15%; white-space:normal;">
+						<h:outputText value="#{data.contractName}"  style="text-align:left; float:left;" />
+					</p:column>			
+					<p:column headerText="#{lbl['lbl.ct.loa.physical.no']}" styleClass="column-align-center"  style="width:8%; white-space:normal;">
+						<h:outputText value="#{data.loaPhysicalNo}" style="text-align:left; float:left;" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.ct.contract.start']}" styleClass="column-align-center"  style="width:5%; white-space:normal;">
+						<h:outputText value="#{data.effDate}" style="text-align:left; float:left;">
+							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.ct.contract.end']}"  styleClass="column-align-center" style="width:5%; white-space:normal;">
+						<h:outputText value="#{data.expDate}" style="text-align:left; float:left;">
+							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</p:column>										
+					<p:column headerText="#{lbl['lbl.ct.contract.status']}" styleClass="column-align-center"  style="width:8%; white-space:normal;">
+						<h:outputText value="#{contractDetailsBackingBean.getContractStatusDesc(data.contractStatus)}" style="text-align:left; float:left;" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.ct.fulfilment.details.status']}" styleClass="column-align-center" style="width:15%; white-space:normal;">
+					<div align="left">
+						<h:outputText value="#{contractDetailsBackingBean.chkContractStatusType(data.fdStatus)}" /></div>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.ct.agreement.status']}" styleClass="column-align-center" style="width:10%; white-space:normal;">
+					<div align="left">
+						<h:outputText value="#{contractDetailsBackingBean.chkContractStatusType(data.agStatus)}" /></div>
+					</p:column>
+					<p:column style="width:6%; white-space:normal;" styleClass="column-align-center">
+						<f:facet name="header" >
+					   		<h:outputText value="#{lbl['lbl.ct.doc.contract.status']}" />
+               		   		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.status.contract']}" />
+               	    	</f:facet>
+               	    	<div align="left">
+						<h:outputText value="#{contractDetailsBackingBean.chkContractStatusType(data.status)}" /></div>						
+					</p:column>
+					<p:rowExpansion>
+				<p:panel id="deductionPnl" >
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.ct.panel.deduction']}" />
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.deduction.details']}" />
+				</f:facet>				
+				<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.deduction.details']}" escape="false" /><br/><br/>
+				<p:dataTable id="deductionSubListTree" var="deductionExpansion"  rowIndexVar="deductionIndex" width="100%"
+					value="#{data.ctContractVer.ctDeductions}" selectionMode="single" rowStyleClass="selectable"
+					selection="#{contractDetailsBackingBean.managedBean.selectedDeduction}" rowKey="#{deductionExpansion.deductionId}">
+					<p:ajax event="rowSelect" partialSubmit="true" update="@parent" />
+					<p:ajax event="rowUnselect" partialSubmit="true" update="@parent" />
+					<p:column styleClass="column-align-center" width="25%">
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.ct.deduction.type']}" />
+               		   		<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.deduction.type']}" />
+						</f:facet>
+						<ui:repeat var="deductionTypeVar" value="#{deductionExpansion.deductionType.pmParameterDescs}" style="text-align:left !important">
+							<h:outputText value="#{deductionTypeVar.codeName}" rendered="#{deductionTypeVar.languageCode eq contractDetailsBackingBean.getLanguageCode() and deductionExpansion.recordStatusFlg == 1}" 
+							style="text-align:left; float:left;"/>
+						</ui:repeat>
+					</p:column>					
+					<p:column styleClass="column-align-center" headerText="#{lbl['lbl.ct.deduction.description']}" style="text-align:center" width="62%">
+						<h:outputText value="#{deductionExpansion.deductionDesc}"  style="text-align:left; float:left;" />		
+					</p:column>					
+					<p:column headerText="#{lbl['lbl.fl.amountrm']}" style="text-align:right;">
+						<h:outputText value="#{deductionExpansion.amount}" />
+					</p:column>									
+				</p:dataTable><br/><br/>
+				<p:dataTable id="deductionClauseTbl" var="deductionClause"  rowIndexVar="clauseIndex" width="100%"
+					value="#{contractDetailsBackingBean.managedBean.selectedDeduction.ctDeductionClauses}" 
+					rendered="#{data.ctContractVer eq contractDetailsBackingBean.managedBean.selectedDeduction.ctContractVer}">
+					<p:column width="3%" styleClass="column-align-center">
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.ct.deduction.clause.desc']}" />
+							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.deduction.desc']}" />
+						</f:facet>
+						<h:outputText value="#{deductionClause.clauseDescription}" style="text-align:left; float:left;" />
+					</p:column>										
+				</p:dataTable>	
+				</p:panel>		
+				</p:rowExpansion>
+				</p:dataTable>
+			</div>
+		</p:panel>
+	</ui:define>
+</ui:composition>
+  

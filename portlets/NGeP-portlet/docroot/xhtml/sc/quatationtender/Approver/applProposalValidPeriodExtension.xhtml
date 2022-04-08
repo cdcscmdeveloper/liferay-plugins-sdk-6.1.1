@@ -1,0 +1,76 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+	<ui:define name="contentSection">
+		<ui:param name="scQt" value="#{approvalBackingBean.managedBean.qt}" />
+		<ui:param name="scQtApproval"
+			value="#{approvalBackingBean.managedBean.scQtApproval}" />
+		<ui:param name="qtExtensionResponseDueDate"
+			value="#{qTDetailBB.getExtensionResponseDueDate(scQt.qtId)}" />
+		<ui:param name="validityDaysExpiredQt"
+			value="#{suppFinalizationBackingBean.checkProposalValidityDateReach(
+			suppFinalizationBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
+
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/icon_loadingLarge.gif" />
+		</p:blockUI>
+		<p:messages id="specApprovalMessages" showDetail="true"
+			autoUpdate="#{approvalBackingBean.managedBean.autoUpdate}"
+			closable="true" showSummary="false" severity="error, info" />
+
+		<ac:gpkiPopup textBeforeSign="#{approvalBackingBean.textBeforeSign}"
+			postSignAction="#{approvalBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}"
+			enableAutoUpdate="#{approvalBackingBean.enableAutoUpdate()}" />
+
+		<div class="ppRightBtn">
+			<h:panelGroup id="approverBtns">
+				<ui:decorate
+					template="/WEB-INF/facelets/templates/claim_template.xhtml">
+					<ui:define name="outComeSection">
+						<p:commandButton value="#{lbl['lbl.btn.save']}"
+							action="#{approvalBackingBean.saveAction}" process="@form"
+							update="@form" onstart="blockWidget.show();"
+							oncomplete="blockWidget.hide();" />
+
+						<p:commandButton value="#{lbl['lbl.btn.submit']}"
+							action="#{approvalBackingBean.submitAction}" process="@form"
+							update="@form" onstart="blockWidget.show();"
+							oncomplete="blockWidget.hide();" />
+					</ui:define>
+				</ui:decorate>
+			</h:panelGroup>
+		</div>
+
+		<ui:include src="requestPTJdetails.xhtml" />
+		<ui:include src="supplierFinalizationCommitteeApproval.xhtml" />
+		<ui:include src="approveremarksdetails.xhtml" />
+
+		<p:dialog id="rejectApprovalDlg" widgetVar="rejectApprovalDlg"
+			header="#{lbl['lbl.sc.dialog.confirm.header.reject']}"
+			resizable="false" width="350" height="90" modal="true">
+
+			<table>
+				<tr>
+					<td align="center"><p:outputLabel
+							value="#{lbl['lbl.sc.dialog.confirm.reject']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					oncomplete="rejectApprovalDlg.hide();"
+					action="#{approvalBackingBean.updateRejectBpmTask}" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="rejectApprovalDlg.hide();" type="button" />
+			</div>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

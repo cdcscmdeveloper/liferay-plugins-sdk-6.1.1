@@ -1,0 +1,277 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.sc.negotation.committee.selection']}"
+		toggleable="true">
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.multipleloi.nego.committe.instruction']}" escape="false"/>
+		<c:if
+			test="#{lOIDetailBackingBean.managedBean.scQtFinalization.scQt.evaluationType == '1'}">
+			<p:panel
+				header="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.scCommitteeType, ParameterConst.committeeTypeEvaluationCommittee)}"
+				toggleable="false">
+				<p:dataTable id="ecMemberTbl" var="committeeDtl"
+					value="#{lOIDetailBackingBean.managedBean.ecActivityList}"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					rowKey="#{committeeDtl}" rowIndexVar="index">
+
+					<ac:paginator for="ecMemberTbl" />
+
+					<p:column headerText="#{lbl['lbl.sc.name']}">
+					#{committeeDtl.scCommitteeMember.memberName}
+				</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.identification.no']}"
+						style="white-space: normal;">
+					#{committeeDtl.scCommitteeMember.icPassport}
+				</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.designation']}">
+					#{committeeDtl.scCommitteeMember.designation}
+				</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.email']}">
+					#{committeeDtl.scCommitteeMember.email}
+				</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.grade']}">
+					#{committeeDtl.scCommitteeMember.grade}
+				</p:column>
+
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.sc.pnp']}" />
+							<ac:iconTooltip id="pnpTT#{index}" value="#{lbl['lbl.sc.pnp.tooltip']}" />
+						</f:facet>
+					#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
+											fn:toUpperCase(committeeDtl.scCommitteeMember.PNP))}				
+				</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.role']}">
+					#{lOIDetailBackingBean.getParameterDesc(committeeDtl.scCommitteeMember.memberRole)}
+				</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.selection']}">
+						<p:selectBooleanCheckbox value="#{committeeDtl.multiLoiAttended}"
+							disabled="#{!isPendingNegotiationStatus or lOIDetailBackingBean.managedBean.readOnly}" />
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</c:if>
+
+		<c:if
+			test="#{lOIDetailBackingBean.managedBean.scQtFinalization.scQt.evaluationType == '2'}">
+			<p:panel
+				header="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.scCommitteeType, ParameterConst.committeeTypeTechnicalEvaluationCommittee)}"
+				toggleable="false">
+				<p:dataTable id="tecMemberTbl" var="committeeDtl"
+					value="#{lOIDetailBackingBean.managedBean.tecActivityList}"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					rowKey="#{committeeDtl}" rowIndexVar="index">
+
+					<ac:paginator for="tecMemberTbl" />
+
+					<p:column headerText="#{lbl['lbl.sc.name']}">
+					#{committeeDtl.scCommitteeMember.memberName}
+				</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.identification.no']}"
+						style="white-space: normal;">
+					#{committeeDtl.scCommitteeMember.icPassport}
+				</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.designation']}">
+					#{committeeDtl.scCommitteeMember.designation}
+				</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.email']}">
+					#{committeeDtl.scCommitteeMember.email}
+				</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.grade']}">
+					#{committeeDtl.scCommitteeMember.grade}
+				</p:column>
+
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.sc.pnp']}" />
+							<ac:iconTooltip id="pnpTT#{index}" value="#{lbl['lbl.sc.pnp.tooltip']}" />
+						</f:facet>
+					#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
+											fn:toUpperCase(committeeDtl.scCommitteeMember.PNP))}
+				</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.role']}">
+					#{lOIDetailBackingBean.getParameterDesc(committeeDtl.scCommitteeMember.memberRole)}
+				</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.selection']}">
+						<p:selectBooleanCheckbox value="#{committeeDtl.multiLoiAttended}"
+							disabled="#{!isPendingNegotiationStatus or lOIDetailBackingBean.managedBean.readOnly}" />
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+			<p:panel
+				header="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.scCommitteeType, ParameterConst.committeeTypeFinancialEvaluationCommittee)}"
+				toggleable="false">
+				<p:dataTable id="fecMemberTbl" var="committeeDtl"
+					value="#{lOIDetailBackingBean.managedBean.fecActivityList}"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					rowKey="#{committeeDtl}" rowIndexVar="index">
+
+					<ac:paginator for="fecMemberTbl" />
+
+					<p:column headerText="#{lbl['lbl.sc.name']}">
+					#{committeeDtl.scCommitteeMember.memberName}
+				</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.identification.no']}"
+						style="white-space: normal;">
+					#{committeeDtl.scCommitteeMember.icPassport}
+				</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.designation']}">
+					#{committeeDtl.scCommitteeMember.designation}
+				</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.email']}">
+					#{committeeDtl.scCommitteeMember.email}
+				</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.grade']}">
+					#{committeeDtl.scCommitteeMember.grade}
+				</p:column>
+
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.sc.pnp']}" />
+							<ac:iconTooltip id="pnpTT#{index}" value="#{lbl['lbl.sc.pnp.tooltip']}" />
+						</f:facet>
+					#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
+											fn:toUpperCase(committeeDtl.scCommitteeMember.PNP))}					
+				</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.role']}">
+					#{lOIDetailBackingBean.getParameterDesc(committeeDtl.scCommitteeMember.memberRole)}
+				</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.selection']}">
+						<p:selectBooleanCheckbox value="#{committeeDtl.multiLoiAttended}"
+							disabled="#{!isPendingNegotiationStatus or lOIDetailBackingBean.managedBean.readOnly}" />
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</c:if>
+
+		<p:panel header="#{lbl['lbl.sc.multipleloi.join.in']}" toggleable="true"
+			id="meetingAttDetailsId">
+			<p:dataTable id="meetingAttDtlTbl" var="meetingAttDtl"
+				value="#{lOIDetailBackingBean.managedBean.scQtCommittee.meetingAttendances}"
+				rows="10" rowKey="#{meetingAttDtl}" rowIndexVar="index"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				selection="#{lOIDetailBackingBean.managedBean.selectedMeetingAttList}">
+
+				<ac:paginator for="meetingAttDtlTbl" />
+                <p:ajax event="rowSelect" update="@([id$=meetingAttDetailsId])" />
+			<p:ajax event="rowUnselect" update="@([id$=meetingAttDetailsId])" />
+			<p:ajax event="rowSelectCheckbox" update="@([id$=meetingAttDetailsId])" />
+			<p:ajax event="rowUnselectCheckbox" update="@([id$=meetingAttDetailsId])" />
+			<p:ajax event="toggleSelect" update="@([id$=meetingAttDetailsId])" />
+				<p:column selectionMode="multiple" style="width:2%"
+					rendered="#{isPendingNegotiationStatus}" />
+
+				<p:column headerText="#{lbl['lbl.sc.name']}">
+					<h:inputText value="#{meetingAttDtl.name}" maxlength="50" size="50"
+						rendered="#{isPendingNegotiationStatus}" />
+					<h:outputText value="#{meetingAttDtl.name}"
+						rendered="#{!isPendingNegotiationStatus}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.identification.no']}">
+					<h:inputText value="#{meetingAttDtl.icPassport}" maxlength="15"
+						size="15" rendered="#{isPendingNegotiationStatus}" />
+					<h:outputText value="#{meetingAttDtl.icPassport}"
+						rendered="#{!isPendingNegotiationStatus}"></h:outputText>
+				</p:column>
+
+			</p:dataTable>
+			<div class="ppRightBtn BtnSpacing">
+				<p:commandButton value="#{lbl['lbl.btn.add']}"
+					disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
+					process="@this,meetingAttDtlTbl" partialSubmit="true"
+					action="#{lOIDetailBackingBean.addMeetingAttendance}"
+					update="meetingAttDtlTbl" rendered="#{isPendingNegotiationStatus}" />
+
+				<p:commandButton value="#{lbl['lbl.btn.delete']}"
+					disabled="#{lOIDetailBackingBean.managedBean.readOnly or empty lOIDetailBackingBean.managedBean.selectedMeetingAttList}"
+					process="@this, meetingAttDtlTbl" partialSubmit="true"
+					rendered="#{isPendingNegotiationStatus}"
+					oncomplete="alsoPresentDeletePopUp.show();"
+					update="@([id$=#{alsoPresentDeleteId}])" />
+
+			</div>
+			<ac:confirmationPopup id="alsoPresentDeleteId"
+				widget="alsoPresentDeletePopUp"
+				okAction="lOIDetailBackingBean.deleteMeetingAttendance" width="400"
+				height="100" title="#{lbl['lbl.msg.confirm.delete.header']}"
+				content="#{lbl['lbl.msg.confirm.delete']}"
+				 update="@([id$=meetingAttDetailsId])" />
+
+		</p:panel>
+	</p:panel>
+<ui:remove>
+	<p:panel header="#{lbl['lbl.sc.committee.endorsement']}"
+		toggleable="true"
+		rendered="#{lOIDetailBackingBean.managedBean.committeeType ne null}">
+		<p:panel
+			header="#{lOIDetailBackingBean.getParameterDesc(
+				lOIDetailBackingBean.managedBean.scQtFinalization.scQt.finalizationCommitte)}"
+			toggleable="false"
+			rendered="#{lOIDetailBackingBean.managedBean.scQtCommittee ne null}">
+			<p:dataTable id="fcMemberTbl" var="committeeDtl"
+				value="#{lOIDetailBackingBean.managedBean.fcActivityList}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				rowKey="#{committeeDtl}" rowIndexVar="index">
+
+				<ac:paginator for="fcMemberTbl" />
+
+				<p:column headerText="#{lbl['lbl.sc.name']}">
+				#{committeeDtl.scCommitteeMember.memberName}
+			</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.identification.no']}"
+					style="white-space: normal;">
+				#{committeeDtl.scCommitteeMember.icPassport}
+			</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.designation']}"
+					style="white-space: normal;">
+				#{committeeDtl.scCommitteeMember.designation}
+			</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.email']}">
+				#{committeeDtl.scCommitteeMember.email}
+			</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.role']}">
+				#{lOIDetailBackingBean.getFCMemberRole(
+							committeeDtl.scCommitteeMember.memberRole)}
+			</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.status']}" style="width:20%">
+					<h:outputText value="#{lbl['lbl.sc.pending']}"
+						rendered="#{!committeeDtl.multiLoiSignedOff}" />
+					<h:outputText value="#{lbl['lbl.sc.endorse']}"
+						rendered="#{committeeDtl.multiLoiSignedOff}" />
+				</p:column>
+
+			</p:dataTable>
+		</p:panel>
+	</p:panel>
+</ui:remove>
+
+</ui:composition>

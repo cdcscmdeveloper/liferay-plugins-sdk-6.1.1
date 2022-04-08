@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<p:panel id="reportPanel" header="#{lbl['lbl.sc.report.section']}" toggleable="true">
+		<h:outputText styleClass="instruction" 
+			value="#{lbl['lbl.sc.consolidation.report.brefing.papaer.instructions']}"
+			escape="false" />
+		
+		<p:dataTable id="reportTbl" value="#{consolidationReportBackingBean.managedBean.finalizationReports}" 
+			widgetVar="reportWidget" var="report" rows="10" rowKey="#{report}" 
+			rowIndexVar="rowIndex" styleClass="documentslist"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+						
+			<ac:paginator for="reportTbl" />
+			
+			<p:ajax event="rowSelect" listener="#{consolidationReportBackingBean.selectReportEvent}"
+					update="@([id$=reportTbl])" />			
+			
+			<p:column styleClass="td-check-box-spacing">
+				<f:facet name="header">
+					<p:selectBooleanCheckbox id="selAllChk"  disabled="true" />
+				</f:facet>
+				<p:selectBooleanCheckbox value="#{report.selected}" 
+						disabled="#{!empty report.pmDocument or 
+						  				report.docCategory eq ParameterConst.documentCategoryEndorsementReport}">
+					<p:ajax partialSubmit="true" process="@this" update="@([id$=reportPanel])"  
+							listener="#{consolidationReportBackingBean.selectReportEvent(report)}" />
+				</p:selectBooleanCheckbox>
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.content']}" style="width:68%; white-space:normal;">
+				<h:inputText style="width:96%" value="#{report.title}" 
+							 required="#{!report.selected}" label="#{lbl['lbl.sc.content']}"
+							 rendered="#{empty report.pmDocument and 
+										report.docCategory ne ParameterConst.documentCategoryEndorsementReport}">
+					<p:ajax partialSubmit="true" process="@this" update="@this" />
+				</h:inputText>
+				<h:outputText value="#{report.title}" rendered="#{!empty report.pmDocument or 
+								report.docCategory eq ParameterConst.documentCategoryEndorsementReport}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.action']}" style="width:30%; white-space:normal; text-align:center;">
+				<ui:fragment rendered="#{report.pmDocument ne null and 
+										 	consolidationReportBackingBean.managedBean.getDirectdownloaddocdefkeys()
+										 		.contains(report.pmDocument.docDefinitionKey)}"> 
+				 
+					<p:commandButton id="download" icon="ui-icon-download" 
+						style="background-color:transparent !important; border:0px none;"
+						ajax="false" action="#{consolidationReportBackingBean.downloadBriefingPaperReport(report)}" />
+					<ui:fragment
+						rendered="#{report.pmDocument ne null and 'KT' eq report.pmDocument.docDefinitionKey and report.kertasTaklimatUpload}">						
+						<!-- <ac:scSingleFileUploadButton id="kertasTakliUploadBtn"
+							popupWidgetVar="kertasTaklimUploadAttWidget"
+							attachment="#{report.scQtFinalizationReportAttachment}"
+							rowIndex="#{rowIndex}"
+							deleteFileUploadListener="consolidationReportBackingBean.deleteKertasAttachment">
+							<f:setPropertyActionListener for="actionEvent" value="#{report}"
+							target="#{consolidationReportBackingBean.managedBean.selectedFinalizationReport}" />
+						<f:setPropertyActionListener for="actionEvent" value="KTR"
+							target="#{consolidationReportBackingBean.managedBean.attachmentDocType}" />
+						</ac:scSingleFileUploadButton> -->
+					</ui:fragment>
+
+				</ui:fragment>
+				
+				<h:panelGroup id="uploadCBP">
+					<ui:fragment rendered="#{(report.pmDocument ne null and
+												!consolidationReportBackingBean.managedBean.getDirectdownloaddocdefkeys()
+													.contains(report.pmDocument.docDefinitionKey)) or report.pmDocument eq null}">						
+						<ac:scSingleFileUploadButton id="briefingReportUploadBtn"
+							popupWidgetVar="crBriefingReportAttWidget" update="@([id$=reportTbl])"
+							attachment="#{report.scQtFinalizationReportAttachment}" 
+							readonly="#{!empty report.pmDocument or 
+							  				report.docCategory eq ParameterConst.documentCategoryEndorsementReport}" 
+							rowIndex="#{rowIndex}">
+		
+							<f:setPropertyActionListener for="actionEvent" value="#{report}"
+								target="#{consolidationReportBackingBean.managedBean.selectedFinalizationReport}" />
+		
+							<f:setPropertyActionListener for="actionEvent" value="KTR"
+								target="#{consolidationReportBackingBean.managedBean.attachmentDocType}" />
+						</ac:scSingleFileUploadButton>
+					</ui:fragment>	
+				</h:panelGroup>
+			</p:column>
+		</p:dataTable>
+		
+		
+		<ui:include	src="/xhtml/sc/supplierFinalization/consolidationReport/briefingPaper/briefingPaperEvaluationCnReport.xhtml" />
+		
+		<ac:confirmationPopup id="deleteReportPopupId" title="#{lbl['lbl.msg.confirm.delete.header']}"
+			width="400" height="100" widget="deleteReportPopup" 
+			okAction="consolidationReportBackingBean.deleteFinalizationReportAction" 
+			content="#{lbl['lbl.msg.confirm.delete']}" update="@form" />
+			
+	</p:panel>
+
+
+<ui:remove>
+<!-- Removed as part of #18685. -->
+<ac:scRemarkAndAttachment remarkList="#{consolidationReportBackingBean.managedBean.finalizationUlasanremarks}"
+							  showAttachment="false" showRemarkLabel="false"
+							  numberOfCols="80"/>	
+</ui:remove>
+
+
+
+<!-- <ac:scRemarkAndAttachment remarkList="#{consolidationReportBackingBean.managedBean.finalizationPengreysonremarks}"
+							  showAttachment="false" header="#{lbl['lbl.sc.recommendation']}" 
+							  numberOfCols="80"/>	 -->
+
+
+</ui:composition>

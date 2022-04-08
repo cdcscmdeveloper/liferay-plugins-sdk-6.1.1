@@ -1,0 +1,84 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<ui:define name="resourceSection">
+		<script>
+			$('#portlet_MOFApplication_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.review.application']}");
+		</script>
+	</ui:define>
+
+
+	<ui:define name="contentSection">
+		<p:messages id="messages" showDetail="true"
+			autoUpdate="#{backingBean.managedBean.showParentMsg}" closable="true"
+			showSummary="false" />
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.unclaim.task.approved.or.reject.msg']}" 
+			rendered="#{!backingBean.managedBean.claimTask}" escape="false"/><br />
+		
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.bpm.btn.claim']}" action="#{backingBean.onClickClaimButton}" update="@form" process="@this"
+				rendered="#{!backingBean.managedBean.claimTask}" onclick="blockWidget.show()" oncomplete="blockWidget.hide()">
+				<f:param name="taskId" value="#{backingBean.managedBean.taskId}" />
+			</p:commandButton>
+		</div>
+
+		<ui:include src="approverCompanyInfo.xhtml" />
+		<ui:include src="approverContactInfo.xhtml" />
+		<ui:include src="approverDecisionPage.xhtml" />
+
+
+		<p:dialog width="800px" height="250px" closable="false"
+			header="#{lbl['lbl.sm.approve.application']}" id="approveAppCanDialog"
+			widgetVar="approveAppCanDialog" resizable="false" showEffect="fade"
+			hideEffect="fade" modal="true">
+			
+			<p:outputPanel layout="block" id="approvedCancelMofBlockPanel">
+				<ui:include
+					src="/xhtml/sm/shared/poDecisionSharedPages/approvedRemarksPopUpForm.xhtml" />
+				<div align="center">
+					<p:commandButton value="#{lbl['lbl.btn.submit']}" update="@([id$=Msg])"
+						onclick="approvedCancelMofBlockWidget.show();" oncomplete="approveAppCanDialog.hide();approvedCancelMofBlockWidget.hide();"
+						partialSubmit="true" process="approvedCancelMofBlockPanel"
+						action="#{backingBean.submitPOorApproverReviewToBPM('APPROVE')}" />
+					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+						onclick="approveAppCanDialog.hide();" />
+				</div>
+				<p:blockUI block="approvedCancelMofBlockPanel" widgetVar="approvedCancelMofBlockWidget">
+					<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+				</p:blockUI>
+			</p:outputPanel>
+		</p:dialog>
+		<p:dialog width="1000px" height="250px" closable="false"
+			header="#{lbl['lbl.sm.reject.application']}" id="rejectAppCanDialog"
+			widgetVar="rejectAppCanDialog" resizable="false" showEffect="fade"
+			hideEffect="fade" modal="true">
+			
+			<p:outputPanel layout="block" id="rejectCancelMofBlockPanel">
+				<ui:include
+					src="/xhtml/sm/shared/poDecisionSharedPages/rejectedRemarksPopUpForm.xhtml" />
+				<div align="center">
+					<p:commandButton value="#{lbl['lbl.btn.submit']}"
+						partialSubmit="true" process="rejectAppCanDialog"
+						onclick="rejectCancelMofBlockWidget.show();" oncomplete="rejectCancelMofBlockWidget.hide();"
+						action="#{backingBean.finalDecisionApproveOrRejectAppln('rejectAppCanDialog','REJECT')}" />
+					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+						onclick="rejectCancelMofBlockWidget.show();" oncomplete="rejectCancelMofBlockWidget.hide();"
+						action="#{backingBean.resetMofCancellationFinalApproveOrReject('rejectAppCanDialog')}"
+						partialSubmit="true" process="@this" />
+				</div>
+				<p:blockUI block="rejectCancelMofBlockPanel" widgetVar="rejectCancelMofBlockWidget">
+					<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+				</p:blockUI>
+			</p:outputPanel>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

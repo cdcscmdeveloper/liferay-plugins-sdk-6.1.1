@@ -1,0 +1,209 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:dialog id="briefdlgId" widgetVar="addbsvdtls" position="top"
+		dynamic="true" resizable="false" style="width:692px;height:335px;"
+		modal="true" styleClass="pop_up_top qtBriefDetails"
+		header="#{lbl['lbl.sc.add']} #{lbl[!empty qTBriefingSiteVisitBackingBean.managedBean.qtBriefing and qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvType eq 'B' ? 'lbl.sc.briefing.dtls' : 'lbl.sc.site.visit.dtls']}">
+		<c:if
+			test="#{!empty qTBriefingSiteVisitBackingBean.managedBean.qtBriefing}">
+			<p:panel id="bsvdetailsdlg" toggleable="true">
+				<p:messages id="briefmessages" showDetail="true" autoUpdate="true"
+					closable="true" showSummary="false" severity="error, info" />
+				<table style="width: 100%" border="0">
+					<tr>
+						<td valign="top"><p:outputLabel
+								value="#{lbl['lbl.sc.description']}" /> <p:outputLabel value="*"
+								styleClass="mandatory" /></td>
+						<td colspan="3">
+							<table>
+								<tr>
+									<td><p:inputText id="briefdesc"
+											required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
+											label="#{lbl['lbl.sc.description']}"
+											value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvDesc}"
+											style="margin-top:5px;" size="80" maxlength="500" /></td>
+									<td><p:message id="briefdescMsg" for="briefdesc"
+											display="icon" /></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sc.date.time.day']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td colspan="1">
+							<ac:dateTime id="briefdate"
+									mindate="#{qTBriefingSiteVisitBackingBean.handleBSVMinDate()}"
+									required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
+									label="#{lbl['lbl.sc.date.time.day']}"
+									value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvDate}"
+									update="@this, @([id$=pday]) "  >									
+							</ac:dateTime>
+						</td>
+						<td>
+							<p:inputText id="pday" value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvDate}" style="width: 65px; text-align: center;" disabled="true">
+									<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_DAY_ONLY}" /> 
+							</p:inputText>
+						
+						</td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sc.location']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:inputText id="brieflocation"
+								required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
+								label="#{lbl['lbl.sc.location']}"
+								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.location}"
+								style="margin-top:5px;" size="30" maxlength="255" /> <p:message
+								id="brieflocationMsg" for="brieflocation" display="icon" /></td>
+						<td style="width: 92px;"><p:outputLabel value="#{lbl['lbl.sc.state']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:selectOneMenu id="briefstate"
+								label="#{lbl['lbl.sc.state']}"
+								required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
+								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.address.pmState.stateId}"
+								style="width: 249px;margin-bottom: 5px;">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+								<f:selectItems var="stateList"
+									value="#{qTBriefingSiteVisitBackingBean.managedBean.states}"
+									itemLabel="#{stateList.stateName}"
+									itemValue="#{stateList.stateId}" />
+								<p:ajax event="change"
+									listener="#{qTBriefingSiteVisitBackingBean.retrievePmDivisions}"
+									update="manDivison, briefdistrict, briefcity, briefpost" />
+							</p:selectOneMenu> <p:message id="briefstateMsg" for="briefstate" display="icon" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sc.qt.address.one']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:inputText id="add1"
+								required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
+								label="#{lbl['lbl.sc.qt.address.one']}"
+								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.address.address1}"
+								style="margin-top:5px;" size="30" maxlength="255" /> <p:message
+								id="add1Msg" for="add1" display="icon" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.fl.division']}" /></td>
+						<td><p:selectOneMenu id="manDivison"
+								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.address.pmDivision.divisionId}"
+								style="width: 249px;margin-bottom: 5px;"
+								disabled="#{empty qTBriefingSiteVisitBackingBean.managedBean.divisionList}">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+								<f:selectItems var="divisionList"
+									value="#{qTBriefingSiteVisitBackingBean.managedBean.divisionList}"
+									itemValue="#{divisionList.divisionId}"
+									itemLabel="#{divisionList.divisionName}" />
+								<p:ajax event="change"
+									listener="#{qTBriefingSiteVisitBackingBean.retrievePmDistrictList}"
+									update="briefdistrict,briefcity" />
+							</p:selectOneMenu></td>
+
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sc.qt.address.two']}" /></td>
+						<td><p:inputText
+								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.address.address2}"
+								size="30" maxlength="255" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sc.district']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:selectOneMenu styleClass="brieftstate"
+								style="width: 249px;margin-bottom: 5px;" id="briefdistrict"
+								required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
+								label="#{lbl['lbl.sc.district']}"
+								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.address.pmDistrict.districtId}">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+								<f:selectItems var="district"
+									value="#{qTBriefingSiteVisitBackingBean.managedBean.districts}"
+									itemValue="#{district.districtId}"
+									itemLabel="#{district.districtName}" />
+								<p:ajax event="change"
+									listener="#{qTBriefingSiteVisitBackingBean.retrievePmCityList}"
+									update="@(.briefdistrictCity)" partialSubmit="true" />
+							</p:selectOneMenu> <p:message id="briefdistrictMsg" for="briefdistrict"
+								display="icon" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sc.qt.address.three']}" /></td>
+						<td><p:inputText
+								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.address.address3}"
+								size="30" maxlength="255" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sc.town']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:selectOneMenu styleClass="briefdistrictCity"
+								style="width: 249px;margin-bottom: 5px;" id="briefcity"
+								required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
+								label="#{lbl['lbl.sc.town']}"
+								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.address.pmCity.cityId}">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+								<f:selectItems var="city"
+									value="#{qTBriefingSiteVisitBackingBean.managedBean.citys}"
+									itemValue="#{city.cityId}" itemLabel="#{city.cityName}" />
+							</p:selectOneMenu> <p:message id="briefcityMsg" for="briefcity" display="icon" /></td>
+					</tr>
+					<tr>
+					
+						<td><p:outputLabel value="#{lbl['lbl.sc.post.code']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:inputText id="briefpost"
+								required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
+								label="#{lbl['lbl.sc.post.code']}"
+								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.address.postcode}"
+								size="30" maxlength="5">
+								<p:ajax event="blur" partialSubmit="true" process="@this"
+									listener="#{qTBriefingSiteVisitBackingBean.validatePostcode}" />
+							</p:inputText> <p:message id="briefpostMsg" for="briefpost" display="icon" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sc.coordinate.officer']}" />
+							<p:outputLabel value="*" styleClass="mandatory" /></td>
+						<td colspan="3"><p:inputText id="briefofficer"
+								required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
+								label="#{lbl['lbl.sc.coordinate.officer']}"
+								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.coordinatingOfficer}"
+								size="80" maxlength="255" /> <p:message id="briefofficerMsg"
+								for="briefofficer" display="icon" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sc.qt.max.attendance']}" /></td>
+						<td>
+							<p:inputText style="text-align: right;" size="30" maxlength="2" 
+										 required="true" label="#{lbl['lbl.sc.qt.max.attendance']}"
+										 value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.maxNoOfAttendance}"
+										 validatorMessage="#{lbl['lbl.sc.qt.bsv.max.validator.msg']}">
+										 <f:validateDoubleRange minimum = "1" />
+							</p:inputText>
+							<ac:iconTooltip value="#{lbl['lbl.sc.qt.max.attendance.tooltip']}" />
+						</td>
+						<c:if test="#{QTStatusConst.QT_BRIEFING_SITE_VISIT eq qTBriefingSiteVisitBackingBean.managedBean.currentStatusId and qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvStatusId != QTStatusConst.BSV_COMPLETED}">
+						<td>
+							<p:outputLabel value="#{lbl['lbl.sc.status']}" />
+						</td>
+						<td>
+							<p:selectOneMenu
+								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvStatusId}"
+								style="width: 249px;margin-bottom: 5px;">
+								<f:selectItems
+									value="#{qTBriefingSiteVisitBackingBean.getBsvStatusDropdownValues()}" />
+								<p:ajax event="change" partialSubmit="true" process="@this" update="@this" listener="#{qTBriefingSiteVisitBackingBean.bsvStatusChanged}" />
+							</p:selectOneMenu>
+						</td>
+						</c:if>
+					</tr>
+				</table>
+				<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.btn.ok']}"
+						process="@this, bsvdetailsdlg" update="@(.briefingList,.amendButton)" 
+						action="#{qTBriefingSiteVisitBackingBean.addToBriefingList}" />
+					<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
+						action="#{qTBriefingSiteVisitBackingBean.cancelBriefingList}"
+						partialSubmit="true" />
+				</div>
+			</p:panel>
+		</c:if>
+	</p:dialog>
+</ui:composition>

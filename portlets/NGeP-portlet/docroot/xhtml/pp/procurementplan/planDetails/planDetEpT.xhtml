@@ -1,0 +1,383 @@
+<ui:composition
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:p="http://primefaces.org/ui"
+xmlns:c="http://java.sun.com/jsp/jstl/core"
+xmlns:ac="http://ac.my/jsf/composite/cc"
+>
+	
+	<script type="text/javascript">
+		/*
+			This is to update grand total at footer without reloading the whole datatable
+			gtBudgetAmt, gtPlanAmt, gtNonAllocAmt - the class name of grand total fields 
+			hiddenGtBudgetAmt, hiddenGtPlanAmt, hiddenGtNonAllocAmt - the class name of calculated value in hidden fields
+		*/
+		function updateEpFooterT(){
+			document.getElementsByClassName('gtBudgetAmtT')[0].innerHTML = document.getElementsByClassName('hiddenGtBudgetAmtT')[0].value;
+			document.getElementsByClassName('gtPlanAmtT')[0].innerHTML = document.getElementsByClassName('hiddenGtPlanAmtT')[0].value;
+			document.getElementsByClassName('gtNonAllocAmtT')[0].innerHTML = document.getElementsByClassName('hiddenGtNonAllocAmtT')[0].value;
+			
+		}
+			
+ 	</script>
+	<p:panel id="opPlanEpT" header="#{lbl['lbl.pp.plan.details.t']}" toggleable="true">
+	
+		<p:inputText style="display:none" id="hiddenGtBudgetAmtT" styleClass="hiddenGtBudgetAmtT" value="#{pPlanBackingBean.managedBean.epTotalBudgetT}">
+			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+		</p:inputText>
+		<p:inputText style="display:none" id="hiddenGtPlanAmtT" styleClass="hiddenGtPlanAmtT" value="#{pPlanBackingBean.managedBean.epTotalPlanT}">
+			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+		</p:inputText>
+		<p:inputText style="display:none" id="hiddenGtNonAllocAmtT" styleClass="hiddenGtNonAllocAmtT" value="#{pPlanBackingBean.managedBean.epTotalNonEpAllocT}">
+			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+		</p:inputText>
+		<div id="tGlAccErrMsgDiv" style="display:none;">
+			<p:messages id="tGlAccMsg" showDetail="true" autoUpdate="false" closable="true" showSummary="false" escape="false"/>
+		</div>
+		<!-- 200911@akmal - Enhancement27624 - Start -->
+	   	<p:dataTable id="dtExpenditurePlanT" styleClass="dtProcurementPlan" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+		     var="epItem" value="#{pPlanBackingBean.managedBean.epItemsT}" rendered="#{epItem.recordStatusFlg != 2}"
+		     rowIndexVar="index" rowKey="#{epItem}" rows="10">
+	     <!-- 200911@akmal - Enhancement27624 - End -->
+			<ac:paginator for="dtExpenditurePlanT" />
+	    	<p:columnGroup type="header">
+				<p:row>
+				<!-- #24975 -->
+				 	<p:column width="5%">
+					    <f:facet name="header">
+					     	<h:outputText value="* " styleClass="mandatory" />
+					     	<h:outputText value="#{lbl['lbl.pp.action']}" />
+					     	<ac:iconTooltip value="#{lbl['lbl.pp.action.tooltip']}" />
+					    </f:facet>
+				    </p:column>
+				    <p:column  width="10%">
+					    <f:facet name="header">
+					    	<h:outputText value="* " styleClass="mandatory" />
+					     	<h:outputText value="#{lbl['lbl.pp.object']}" />
+					    </f:facet>
+				    </p:column>
+			     	<p:column width="15%" headerText="#{lbl['lbl.pp.type.of.expenses']}" />
+				    <p:column width="13%">
+					    <f:facet name="header">
+					     	<h:outputText value="* " styleClass="mandatory" />
+					     	<h:outputText value="#{lbl['lbl.pp.total.approved.budget']}" />
+					    </f:facet>
+				    </p:column>
+			        <p:column width="13%">
+					    <f:facet name="header">
+					     	<h:outputText value="* " styleClass="mandatory" />
+					     	<h:outputText value="#{lbl['lbl.pp.budget.spend.ep']}" />
+					    </f:facet>
+				    </p:column>
+			     	<p:column width="13%">
+					    <f:facet name="header">
+					     	<h:outputText value="#{lbl['lbl.pp.non.ep.allocation']}" />
+					    </f:facet>
+				    </p:column>
+				    <!-- hiding fulfillment via ep column -->
+					<ui:remove>
+				    	<p:column width="5%">
+					    	<f:facet name="header">
+					     		<h:outputText value="#{lbl['lbl.pp.fulfillment.via.ep']}" />
+					    	</f:facet>
+				    	</p:column>
+				    </ui:remove>
+				    <!-- hiding ep usage target column -->
+					<ui:remove>
+				    	<p:column width="5%">
+					    	<f:facet name="header">
+					     		<h:outputText value="#{lbl['lbl.pp.ep.usage.target']}" />
+					    	</f:facet>
+				    	</p:column>
+				    </ui:remove>
+			      	<p:column width="5%" rendered="#{pPlanBackingBean.managedBean.modeReview}">
+					    <f:facet name="header">
+					     	<h:outputText value="#{lbl['lbl.pp.reject.and.reason']}" />
+					    </f:facet>
+				    </p:column>
+				    <p:column width="5%">
+					    <f:facet name="header">
+					     	<h:outputText value="#{lbl['lbl.pp.justification']}" />
+					    </f:facet>
+				    </p:column>
+				    <p:column width="5%" rendered="#{pPlanBackingBean.managedBean.modeEditable and (pPlanBackingBean.managedBean.selectedPlan.updatable or pPlanBackingBean.managedBean.approvedPlan)}">
+				    	<f:facet name="header">
+				    	    <h:outputText value="* " styleClass="mandatory" />  <!-- 24975@18112020 -->
+					     	<h:outputText value="#{lbl['lbl.pp.reason.for.update']}" />
+					    </f:facet>
+				    </p:column>
+				    <p:column width="5%">
+					    <f:facet name="header">
+					     	<h:outputText value="#{lbl['lbl.pp.status']}" />
+					    </f:facet>
+				    </p:column>
+			        <p:column width="5%" rendered="#{!pPlanBackingBean.managedBean.selectedPlan.brandNew}" >
+					    <f:facet name="header">
+					     	<h:outputText value="#{lbl['lbl.pp.last.updated']}" />
+					    </f:facet>
+				    </p:column>
+				</p:row>
+			</p:columnGroup>
+			<!-- [SIR#12802] - start -->
+			<p:column>
+				<!--25549@18092020 -->
+				<p:selectBooleanCheckbox id="checkBox" 
+					disabled="#{!(epItem.brandNew ? epItem.brandNew : epItem.selectable) or !epItem.selectable}" 
+					value="#{epItem.deleted}"/>
+			<!-- #24975 -->
+			<!--24975@azza - start -->
+				<p:commandLink
+				        rendered="#{!(epItem.brandNew ? epItem.brandNew : epItem.selectable) and pPlanBackingBean.managedBean.modeEditable}"
+				        id="addUpdateEpBInfo" 
+						immediate="true" 
+						update="dtExpenditurePlanT" 
+						partialSubmit="true"
+						disabled="#{epItem.cloneEnabled or epItem.disableForPindaan or epItem.disableRow or (!epItem.disableReviseItem)}">
+				     <h:graphicImage value="/css/images/design/ico-viewnedit.png"  
+				     style="float:left; padding-left: 5px;" process="@this">
+				      <p:ajax event="click"
+				      		listener="#{pPlanBackingBean.addUpdateEpAllInfo(ParameterConst.votTanggungan, pPlanBackingBean.managedBean.selectedPlan, index)}"
+				      		disabled="#{epItem.cloneEnabled or epItem.disableForPindaan or epItem.disableRow or (!epItem.disableReviseItem)}"
+				      		update="@form"/>
+				      </h:graphicImage>
+				</p:commandLink>
+	     <!--24975@azza - end -->
+			</p:column>
+			<!-- [SIR#12802] - end -->
+	        <p:column style="white-space:nowrap;">
+	        	<p:inputText 
+						size="10"
+						id="itSelectedGlAccount" 
+						value="#{epItem.pmGlAccount.glAccCode}" 
+						readonly="true"
+						required="#{!empty param['disableValidation']}"
+						/>
+					&#160;	
+					<!--25549@18092020 -->
+				    <!--24975@azza - start -->
+					<p:commandLink id="glAccountSearchCL" 
+						partialSubmit="true"
+						disabled="#{!(epItem.brandNew) or epItem.disableEditAccount or (epItem.disableRow)}"
+				        process="@this" 
+						readonly="true" 
+						action="#{pmGoSearchBackingBean.initPmGoPopup}"
+						oncomplete="pmGoPopup.show();"
+						update=":form:glAccountCcId:goDoPanelId" >
+						<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
+						<f:param name="index" 	value="#{index}" />
+						<f:param name="type" 	value="t" />
+						<f:param name="update" 	value=":form:dtExpenditurePlanT :form:tGlAccMsg" />
+						<f:param name="kptjId" 	value="#{pPlanBackingBean.retrieveKptjId()}" />
+						<p:resetInput target=":form"></p:resetInput>	
+					</p:commandLink>
+				   	<!--24975@azza - end -->
+					<ui:remove>
+	       		<ac:lov id="lovGlAccount" lovId="PM_GL_ACCOUNT" size="10" 
+	       			update=":form:dtExpenditurePlanT :form:tGlAccMsg" 
+   					disabled="#{!epItem.brandNew}"
+			    	required="#{!empty param['disableValidation']}"
+	            	readonly="true" 
+					headerText="#{lbl['lbl.pp.goso.code']}"
+					postUpdateListenerWithIndex="pPlanBackingBean.validateEpItemTLov"
+					value="#{epItem.pmGlAccount.glAccCode}" 
+					saveObject="pPlanBackingBean.managedBean.epItemsT[#{index}].pmGlAccount"
+					conditionField="recordStatus^1" 
+				/>
+   		
+				<p:message id="lovGOSOMsg" for="lovGlAccount" display="icon" />	 </ui:remove>
+	        </p:column>	 
+	        <p:column>
+		  		#{epItem.pmGlAccount.description}
+	        </p:column>
+	        <p:column>
+	         <!--25549@18092020 -->
+	         	<!--24975@azza - start -->
+   				<p:inputText style="width:90%; " value="#{epItem.budgetAmt}" required="#{!empty param['disableValidation']}" 
+		  			id="itBudgetAmt" styleClass="amountRight" label="#{lbl['lbl.pp.total.approved.budget']}" 
+		  			disabled="#{!(pPlanBackingBean.managedBean.modeEditable and epItem.editable) or (epItem.disableRow)}"
+		  			onkeypress="if (event.keyCode == 13) { return false; }">
+		  			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+		  			<f:attribute name="max" value="99999999999"/>		
+					<f:validator validatorId="quantityDoubleRangeValidator" />
+		  			<p:ajax event="change" listener="#{pPlanBackingBean.calculateNonAllocationBudget(epItem, ParameterConst.votTanggungan)}"
+		  				update=":form:hiddenGtBudgetAmtT, :form:hiddenGtNonAllocAmtT, otNonAllocAmt, itBudgetAmt,itBudgetAmtMsg" oncomplete="updateEpFooterT();" 
+		  				 />
+		  		</p:inputText>
+		  		<p:message id="itBudgetAmtMsg" for="itBudgetAmt" display="icon" />
+	        </p:column>	        
+	        <p:column>
+	         <!--25549@18092020 -->
+   				<p:inputText style="width:90%" value="#{epItem.planAmt}" required="#{!empty param['disableValidation']}" 
+		  			id="itPlanAmt" styleClass="amountRight" label="#{lbl['lbl.pp.budget.spend.ep']}"
+			  		disabled="#{!(pPlanBackingBean.managedBean.modeEditable and epItem.editable) or (epItem.disableRow)}"
+	  			    onkeypress="if (event.keyCode == 13) { return false; }">
+		  			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+		  			<f:attribute name="max" value="99999999999"/>		
+					<f:validator validatorId="quantityDoubleRangeValidator" />
+		  			<p:ajax event="change" listener="#{pPlanBackingBean.calculateNonAllocationBudget(epItem, ParameterConst.votTanggungan)}"
+		  				update=":form:hiddenGtPlanAmtT, :form:hiddenGtNonAllocAmtT, otNonAllocAmt, itPlanAmt,itPlanAmtMsg" oncomplete="updateEpFooterT();"   />
+		  		</p:inputText>
+		  		<!--24975@azza - end -->
+		  		<p:message id="itPlanAmtMsg" for="itPlanAmt" display="icon" />
+	        </p:column>
+	        <p:column styleClass="amountRight">
+	        	<h:outputText id="otNonAllocAmt" value="#{epItem.nonEpAmt}">
+	        	<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+	        	</h:outputText>
+	        </p:column>
+	        <!-- hiding fulfillment via ep column -->
+			<ui:remove>
+	        	<p:column>
+			    	#{lbl['lbl.pp.no.available']}
+	        	</p:column>
+	        </ui:remove>
+	        <!-- hiding ep usage target column -->
+			<ui:remove>
+	        	<p:column>
+			    	#{lbl['lbl.pp.no.available']}
+	        	</p:column>
+	        </ui:remove>
+	        <!--24975@azza - start -->
+	        <p:column style="white-space:nowrap;" rendered="#{pPlanBackingBean.managedBean.modeReview}">
+			    <p:selectBooleanCheckbox id="chkRejected" value="#{epItem.rejected}" disabled="#{(!epItem.disableReviseItem) or epItem.statusEnabled or !pPlanBackingBean.managedBean.modeReviewEditable or epItem.disableRow}">
+			    	<p:ajax event="change" update="clEpReason"/>
+			    </p:selectBooleanCheckbox>
+			    &#160;
+			    <p:commandLink oncomplete="dlRejectReasonWv.show();" action="#{pPlanBackingBean.retrieveEpRejectReasons(epItem)}"
+			    	disabled="#{!epItem.rejected or !epItem.reviseReject or epItem.disableRow}" id="clEpReason" update=":form:dgReason" immediate="true">
+					<p:graphicImage value="#{!pPlanBackingBean.managedBean.modeReviewEditable ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"/>
+				</p:commandLink>
+	        </p:column>
+	        <p:column style="text-align:center;">
+	          <!--25549@18092020 -->
+	           <!--03122020@24975 - start -->
+	        	<p:commandLink oncomplete="dlItemJustificationWv.show();" update="@form" action="#{pPlanBackingBean.retrieveJustification(epItem)}"
+			    	 id="clEpJustification" disabled="#{epItem.disableRow}">
+					<p:graphicImage value="#{!pPlanBackingBean.managedBean.modeEditable or !epItem.selectable ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"
+					 disabled="#{pPlanBackingBean.managedBean.modeEditable or epItem.justificationEnabled}" update="@form" />
+					<f:param name="disableValidation" value="" />
+				</p:commandLink>
+				<p:graphicImage
+				     rendered="#{epItem.notUsingEp}"
+				     value="#{epItem.notUsingEp ? '/css/images/design/exclamation.png' : ''}" update="@form" />
+			 <!--03122020@24975 - end -->
+	        </p:column>
+	       	<!--24975@azza - end -->
+	       	 <!--24975@20112020azza - start -->
+	        <p:column style="white-space:nowrap;text-align:center;" rendered="#{pPlanBackingBean.managedBean.modeEditable and (pPlanBackingBean.managedBean.selectedPlan.updatable or pPlanBackingBean.managedBean.approvedPlan)}">
+		      	<p:commandLink oncomplete="dlItemRemarkWv.show();" action="#{pPlanBackingBean.retrieveEpItemRemark(epItem)}"
+			    	update="@form"  immediate="true"  id="clEpRemarkT"
+			    	disabled="#{epItem.brandNew ? epItem.brandNew : epItem.selectable or epItem.disableRow}">
+				    <p:graphicImage value="#{epItem.changePencilToNote ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"
+					 disabled="#{(pPlanBackingBean.managedBean.modeEditable) or !epItem.reasonForUpdateEnabled}" update="@form" />
+					<f:param name="disableValidation" value="" />
+				</p:commandLink>
+				  <p:graphicImage
+				    rendered="#{epItem.indicator}"
+				    value="#{epItem.indicator ? '/css/images/design/exclamation.png' : ''}" update="@form" />
+	        </p:column>
+	          <!--24975@20112020azza - end -->
+	        <p:column>
+	        	<p:selectOneMenu value="#{epItem.recordStatusFlg}" style="width:99%"
+	        	   	disabled="#{!(pPlanBackingBean.managedBean.modeEditable) or epItem.cloneEnabled or epItem.statusEnabled}"> 
+	        	   <f:selectItems value="#{pPlanBackingBean.getStatusOptions()}" />
+	  	           <p:ajax event="change"  update="dtExpenditurePlanT" listener="#{pPlanBackingBean.selectedSEptatus(ParameterConst.votTanggungan, epItem.recordStatusFlg, index)}" partialSubmit="true" />
+	          	</p:selectOneMenu> 
+	        </p:column>
+	        <p:column rendered="#{!pPlanBackingBean.managedBean.selectedPlan.brandNew}">
+	        	<h:outputText value="#{epItem.changedDate}">
+					<f:convertDateTime
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+				</h:outputText>
+	        </p:column>
+	        <p:columnGroup type="footer">
+				<p:row>
+					<p:column colspan="3">
+					 	<f:facet name="footer">
+					     	<p:outputLabel value="#{lbl['lbl.pp.grand.total']}" />
+					    </f:facet>
+					</p:column>
+					<p:column>
+					   	<f:facet name="footer">
+				     		<h:outputText  id="gtBudgetAmtT" value="#{pPlanBackingBean.managedBean.epTotalBudgetT}" styleClass="gtBudgetAmtT">
+			     				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				     		</h:outputText>
+					    </f:facet>
+					</p:column>
+					<p:column>
+					 	<f:facet name="footer">
+					     	<h:outputText  id="gtPlanAmtT" value="#{pPlanBackingBean.managedBean.epTotalPlanT}" styleClass="gtPlanAmtT">
+					     		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					     	</h:outputText>
+					    </f:facet>
+					</p:column>
+					 <p:column>
+					 	<f:facet name="footer">
+					     	<h:outputText  id="gtNonAllocAmtT" value="#{pPlanBackingBean.managedBean.epTotalNonEpAllocT}" styleClass="gtNonAllocAmtT" >
+					     		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					     	</h:outputText>
+					    </f:facet>
+					</p:column>
+					<!-- hiding fulfillment via ep column -->
+					<ui:remove>
+						<p:column>
+							<f:facet name="footer">
+					     		#{lbl['lbl.pp.no.available']}
+					    	</f:facet>
+						</p:column>
+					</ui:remove>
+					<!-- hiding ep usage target column -->
+					<ui:remove>
+						<p:column>
+							<f:facet name="footer">
+					     		#{lbl['lbl.pp.no.available']}
+					    	</f:facet>
+						</p:column>
+					</ui:remove>
+					<p:column footerText="&#160;"  rendered="#{pPlanBackingBean.managedBean.modeReview}"/>
+					<p:column footerText="&#160;" />
+				 	<p:column footerText="&#160;"  rendered="#{pPlanBackingBean.managedBean.modeEditable and (pPlanBackingBean.managedBean.selectedPlan.updatable or pPlanBackingBean.managedBean.approvedPlan)}"/>
+				 	<p:column footerText="&#160;" />
+					<p:column footerText="&#160;" rendered="#{!pPlanBackingBean.managedBean.selectedPlan.brandNew}" />
+				</p:row>
+			</p:columnGroup>
+		</p:dataTable>
+		
+		<div class="ppRightBtn">
+		    
+		    <!-- #25549 - start -->
+		    <!-- 02022021@#27624 - start --> 
+			<p:commandButton id="btnCloneT" value="#{lbl['lbl.btn.clone']}" 
+			   action="#{pPlanBackingBean.parameterExpenditure(ParameterConst.votTanggungan)}"
+	           disabled="#{!pPlanBackingBean.managedBean.modeEditable or (pPlanBackingBean.managedBean.isAudit())}"
+			   update="dtExpenditurePlanT, ppExpenditureTCloneid, dtclonepitemsTsearchresults"
+	           onclick="cloneExpenditureTPopUp.show()"
+	           rendered="#{pPlanBackingBean.isRolePlanner()}"/>
+			   <p:tooltip id="toolTipT" for="btnCloneT" value="#{lbl['lbl.pp.clone.year.tooltip']}"
+                  position="bottom"/>
+		    <!-- end -->
+		    &#160;
+		 	<p:commandButton value="#{lbl['lbl.btn.add']}" immediate="true" update="dtExpenditurePlanT" 
+		 		disabled="#{!pPlanBackingBean.managedBean.modeEditable or (pPlanBackingBean.managedBean.isAudit())}" 
+		 		partialSubmit="true" process="@this" action="#{pPlanBackingBean.addEpItemDet(ParameterConst.votTanggungan)}"/>
+			&#160;
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" update="dtExpenditurePlanT" 
+				disabled="#{!pPlanBackingBean.managedBean.modeEditable or (pPlanBackingBean.managedBean.isAudit())}" 
+				action="#{pPlanBackingBean.deleteEpItemDet(ParameterConst.votTanggungan)}"/>
+				<!-- 02022021@#27624 - end --> 				
+			</div>
+
+
+	   <!-- #25549@17022021 - start -->
+	   <p:remoteCommand name="resetAllDataCloneT" update="ppExpenditureTCloneid, dtclonepitemsTsearchresults" partialSubmit="true" action="#{pPlanBackingBean.resetExpenditureClone()}" process="@this" />
+		  <p:dialog id="cloneExpenditureTPopUp"  widgetVar="cloneExpenditureTPopUp" closable="true" onHide="resetAllDataCloneT();" 
+		      header="#{lbl['lbl.pp.plan.t.clone']}" modal="true" width="680">
+			<ui:include src="planExpenditureTPopup.xhtml"></ui:include>
+		 </p:dialog> 
+	  <!-- #25549@17022021 - end -->
+		 
+	</p:panel> 	
+	
+</ui:composition>

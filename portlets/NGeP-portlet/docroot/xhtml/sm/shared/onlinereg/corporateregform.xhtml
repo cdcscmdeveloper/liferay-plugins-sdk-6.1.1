@@ -1,0 +1,33 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<ui:include src="/xhtml/sm/shared/onlinereg/companyInfo.xhtml" />
+	<ui:include src="/xhtml/sm/shared/onlinereg/bankInfo.xhtml" />
+	<p:outputPanel id="outPnlProfCert">
+		<c:if
+			test="#{registrationBackingBean.managedBean.smAppl.supplierType == SupplierManagementConst.STYPE_CONSULTANT}">
+			<ui:include src="/xhtml/sm/shared/onlinereg/professionalBody.xhtml" />
+		</c:if>
+	</p:outputPanel>
+	
+	<br />
+	<c:if test="#{registrationBackingBean.managedBean.smSupp.brandNew}">
+		<div class="nav-wrapper" align="justify">
+				<!--#12492-START-->
+				<p:commandButton value="#{lbl['lbl.sm.next']}" style="float:right;" oncomplete="scrollToTop();"
+					action="#{registrationBackingBean.proceedToFirstUserRegistration}" update="@([id$=Msg])">
+					<f:param name="disableValidation" value="true" />
+				</p:commandButton>
+				<!--#12492-END-->
+				<p:commandButton value="#{lbl['lbl.sm.prev']}" style="left;"
+					action="#{registrationBackingBean.returnToTermAndCondition}">
+				</p:commandButton>
+		</div>
+		<div style="clear: both;"></div>
+	</c:if>
+</ui:composition>

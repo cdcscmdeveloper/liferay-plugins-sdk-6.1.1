@@ -311,7 +311,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				// End - Fix #29368
 				}
 			// End Fix - #30856
-					
 			return;
 		}
 
@@ -398,6 +397,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IAgreementSO.class);
 			ctAgreementReqDTO = new ContractAgreementReqDTO();
 			ctAgreementReqDTO.setContractId(resDTO.getCtContractVer().getCtContract().getContractId());
+			ctAgreementReqDTO.setViewOnly(reqDTO.isViewOnly());//Enhancement 29418 - shaqimi;
 			ctAgreementResDTO = agreementSO.retrieveContractAgreements(ctAgreementReqDTO);
 			
 			ctBB.getManagedBean().setCtAgreementList(ctAgreementResDTO.getAgreementList());
@@ -407,11 +407,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			ctBB.getManagedBean().setDeleteAgencyMap(resDTO.getDeleteAgencyMap());
 			ctBB.getManagedBean().setUpdateZoneMap(resDTO.getUpdateZoneMap());
 			ctBB.getManagedBean().setUpdateItemMap(resDTO.getUpdateItemMap());
-			
-
-			// 31345 - performance start
-			ctBB.getManagedBean().setUpdateAgencyForSP(resDTO.getUpdateAgencyForSP());
-			// 31345 - performance end
 
 			if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 				// Retrieve Agencies
@@ -977,22 +972,44 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		reqDTO.setDeleteAgencyMap(ctBB.getManagedBean().getDeleteAgencyMap());
 		reqDTO.setUpdateZoneMap(ctBB.getManagedBean().getUpdateZoneMap());
 		reqDTO.setUpdateItemMap(ctBB.getManagedBean().getUpdateItemMap());
-		
-		// 31345 - performance start
-		reqDTO.setUpdateAgencyForSP(ctBB.getManagedBean().getUpdateAgencyForSP());
-		// 31345 - performance end
 
 		if (this.getManagedBean().getPmDigiSign() != null) {
 			reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
 		}
 		contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);	
-		ContractResDTO resDTO = contractSO.saveContractVer(reqDTO);
+		ContractResDTO resDTO = contractSO.saveContractVer(reqDTO);			
 
 		if (resDTO.isSuccessful()) {
+
 			log.debug("Record saved successfully");
 			String messageId = MessageConst.INFO_700005;
 			String nextRole = null;
+		 
+			// Start Fix - #31740
+			if(ctBB.getManagedBean().getSelectedAgencyChanges() != null){
+			    if(ctBB.getManagedBean().getSelectedAgencyChanges().size()>0) {
+				   log.info(" getSelectedAgencyChanges ::::::::::::::::::::::: "+ctBB.getManagedBean().getSelectedAgencyChanges().size());
+				   for (CtAgency ctAgencysz : new ArrayList<CtAgency>(ctBB.getManagedBean().getSelectedAgencyChanges().values())){
+					   if(ctBB.getManagedBean().getAgencyDataDeletion().containsKey(ctAgencysz.getOrgProfile().getOrgProfileId())){
+						   ctBB.getManagedBean().getSelectedAgencyChanges().remove(ctAgencysz.getOrgProfile().getOrgProfileId());
+						   log.info("Deleted agency profile ID :: "+ctAgencysz.getOrgProfile().getOrgProfileId());
+						   log.info("Deleted agency name test :: "+ctAgencysz.getOrgProfile().getOrgValidity().getOrgName());
+
+					   }else{
+				    	    log.info(" agency org profile id :: "+ctAgencysz.getOrgProfile().getOrgProfileId());
+						    log.info(" agency name test :: "+ctAgencysz.getOrgProfile().getOrgValidity().getOrgName() );
+							contractSO.updateAgencyCeilingAmount(ctAgencysz.getCeilingAmount(), ctAgencysz.getOrgProfile().getOrgProfileId(),resDTO.getCtContractVer().getContractVerId());
+							    	  
+				      }				   
+					   
+				   }
+				}
+			    
+			    ctBB.getManagedBean().getSelectedAgencyChanges().clear();
+				  // log.info(" getSelectedAgencyChanges after clear() ::::::::::::::::::::::: "+ctBB.getManagedBean().getSelectedAgencyChanges().size());
+
+			}
 
 			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && !ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {
 				messageId = MessageConst.INFO_700021;
@@ -1243,8 +1260,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				String contractNO = ctBB.getManagedBean().getContractVer().getCtContract().getContractNo();
 				for (CtAgency ctAgency : ctBB.getManagedBean().getContractVer().getCtAgencies()) {
 					ceilingAmt = ceilingAmt + ctAgency.getCeilingAmount().doubleValue();
-					log.info(" Bug #31740 ceiling amount in contractdetailsbackingbean  :"+ctAgency.getCeilingAmount()+" and Contract NO : "+contractNO+" and agency_profile_id :  "+ctAgency.getOrgProfile().getOrgProfileId());
-
 				}
 				ceilingAmt = Double.valueOf(df.format(ceilingAmt));
 
@@ -1344,8 +1359,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 
 		// Validation for Deduction
-		if(ctBB.getManagedBean().getContractVer().getCtDeductions() != null 
-				&& ctBB.getManagedBean().getContractVer().getCtDeductions().size() > 0){
+		//#32123 - During Notification Setting, no need to validate
+		if((ctBB.getManagedBean().getContractVer().getCtDeductions() != null 
+				&& ctBB.getManagedBean().getContractVer().getCtDeductions().size() > 0)
+				&& !ctBB.getManagedBean().getContractVer().getDocType().equals(ParameterConst.DOCTYPE_NOTIFICATION_SETTING)){
 			for(CtDeduction deduction : ctBB.getManagedBean().getContractVer().getCtDeductions()){
 				if(deduction.getDeductionType() == null ||deduction.getDeductionType().getParameterId() == null ){
 					setTabValue("DE");
@@ -1362,11 +1379,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					}
 				/*#25592-basri*/
 				/*validation error if deduction clause is empty*/
-				} else {  // Start Fix - #32123
-					   if(!ctBB.getManagedBean().getContractVer().getDocType().equals(ParameterConst.DOCTYPE_NOTIFICATION_SETTING)){
+				} else { 
 						setTabValue("DE");
 						throwExceptions(MessageConst.ERROR_100022, "lbl.ct.deduction.clause.desc");	
-				}
 					   // End Fix - #32123				
 				}
 				/*end*/
@@ -2422,6 +2437,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		reqDTO.setUpdateAction(true);
 
 		ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
+		ctBB.getManagedBean().setAmendFromViewPage(true); // #15851
 		AmendmentBackingBean amendBB = new AmendmentBackingBean();
 		amendBB.getManagedBean().setSelectedTabIndex(0);
 		/*#25956 Start*/
@@ -2456,6 +2472,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE); // View purpose, FU or FW also fine
 		reqDTO.setViewOnly(true);
 		ctBB.getManagedBean().setViewContract(true);
+		ctBB.getManagedBean().setFromViewPage(true); //#15851
 		ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
 		getManagedBean().setAsAtDate(null);
 		setValidateContractField(reqDTO);
@@ -2744,7 +2761,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					supplierBB.getManagedBean().setRemoveFactoring(false);
 					supplierBB.getManagedBean().setUpdateFactoring(false);
 					supplierBB.getManagedBean().setDocType(ParameterConst.DOCTYPE_REQUEST_FACTORING);
-					supplierBB.getManagedBean().setFcRequestType("A");
+					//#32555 start
+					supplierBB.getManagedBean().setFcRequestType(ParameterConst.REQUEST_TYPE_FACTORING);
+					//#32555 end
 				}
 				supplierBB.getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, supplierBB.getManagedBean().getDocType(), supplierBB.getManagedBean().getCtContract().getContractNo()));
 				supplierBB.setCtBB(new ContractBackingBean(supplierBB.getManagedBean().getFileDirectory()));
@@ -2800,6 +2819,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 */
 	public String backAction() {
 		ctBB.getManagedBean().setViewContract(false);
+		ctBB.getManagedBean().setFromViewPage(false); //#15851
 		getManagedBean().setLoaContractVerList(null);
 		ContractItemSearchBackingBean  contractBB= new ContractItemSearchBackingBean();
 		contractBB.getManagedBean().setItemcode(null);
@@ -3497,6 +3517,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE); // View purpose, FU or FW also fine
 			reqDTO.setViewOnly(true);
 			reqDTO.setContractVerId(getManagedBean().getLoaContractVerId());
+			log.info(getManagedBean().getLoaContractVerId());
 			ctBB.getManagedBean().setViewContract(true);
 			getManagedBean().setAsAtDate(null);
 			setValidateContractField(reqDTO);
@@ -3854,4 +3875,5 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 	}
 	// End Fix - #30856
+	
 }

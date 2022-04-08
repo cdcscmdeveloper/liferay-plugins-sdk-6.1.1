@@ -1,0 +1,89 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<ui:param name="canShowSupplierProposal" value="#{lOADetailBackingBean.canShowSupplierProposal() and lOADetailBackingBean.canShowSupplierProposalByLOAStatus()}" />
+
+	<div align="left" class="header-info header-spacing">
+		
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<td width="12%"><h:outputLabel
+						value="#{lbl['lbl.sc.loiloa.loa.no']}" /></td>
+				<td class="header-info-text" width="16%">
+					#{lOADetailBackingBean.managedBean.scLoa.loaNo}</td>
+				<td width="12%"><h:outputLabel value="#{lbl['lbl.sc.ptj']}" />
+				</td>
+				<td class="header-info-text" width="30%"><c:if
+						test="#{isDocTypeQuotation}">
+					#{lOADetailBackingBean.retrievePTJByOrgProfileId(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.pmOrgProfile.orgProfileId, lOADetailBackingBean.isQTStatusPublished(lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId)?lOADetailBackingBean.managedBean.scQt.publishDate : lOADetailBackingBean.managedBean.scQt.createdDate)}
+					</c:if> <c:if test="#{!isDocTypeQuotation}">
+					#{lOADetailBackingBean.retrievePTJByOrgProfileId(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.pmOrgProfile.orgProfileId,lOADetailBackingBean.managedBean.scLoa.scQuote.createdDate)}
+					</c:if></td>
+				<td width="15%"><h:outputLabel
+						value="#{lbl['lbl.sc.loiloa.loa.issue']}" /></td>
+				<td class="header-info-text" width="15%"><h:outputText
+						value="#{lOADetailBackingBean.managedBean.scLoa.issueDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText></td>
+			</tr>
+			<tr>
+				<td width="10%"><h:outputLabel
+						value="#{isDocTypeQuotation or isDocTypeDirectNego?lbl['lbl.rpt.qtNo']:lbl['lbl.sc.document.no']}" /></td>
+				<td class="header-info-text">
+						<ui:remove>
+							Bug #27412 #70 - added filter by supplier START
+						</ui:remove>
+						
+						<!-- #28780 start -->
+						<p:commandLink rendered="#{!qTDetailBB.isMofSupplier() and (isDocTypeQuotation or isDocTypeDirectNego)}" process="@this" partialSubmit="true"
+						action="#{qTDetailBB.editQuationTenderDetails(lOADetailBackingBean.managedBean.scQt, false, true, view.viewId)}">
+							<h:outputText value="#{null != lOADetailBackingBean.managedBean.scQt ?lOADetailBackingBean.managedBean.scQt.qtNo : ' '}" rendered="#{isDocTypeQuotation || isDocTypeDirectNego}" escape="false" />
+						</p:commandLink>
+						<!-- #28780 start -->
+						<h:outputText value="#{null != lOADetailBackingBean.managedBean.scQt ?lOADetailBackingBean.managedBean.scQt.qtNo : ' '}" rendered="#{qTDetailBB.isMofSupplier() and (isDocTypeQuotation || isDocTypeDirectNego)}" escape="false" />
+						<ui:remove>
+						    Bug #27412 #70 - added filter by supplier END
+						</ui:remove>
+						<h:outputText
+						value="#{lOADetailBackingBean.managedBean.scLoa.scQuote.quoteNo}"
+						rendered="#{!(isDocTypeQuotation || isDocTypeDirectNego)}" />
+				</td>
+				<td width="10%"><h:outputLabel
+						value="#{lbl['lbl.sc.loiloa.loa.title']}" /></td>
+				<td class="header-info-text" colspan="3">
+					#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.title}</td>				
+			</tr>
+			<c:if test="#{((not empty lOADetailBackingBean.managedBean.scQtProposal) or (not empty lOADetailBackingBean.managedBean.scLoa.scQuote)) and lOADetailBackingBean.qtPrefixIsQT()}" >
+			<tr>
+				<td width="10%"><h:outputLabel
+						value="#{lbl['lbl.sc.proposal.no']}" /></td>
+				<td class="header-info-text">
+				<p:commandLink rendered="#{(isDocTypeQuotation or isDocTypeDirectNego) and canShowSupplierProposal}" process="@this" partialSubmit="true"
+						action="#{ViewSPBackingBean.navigatetoViewSupplierProposal(view.viewId, lOADetailBackingBean.managedBean.scQtProposal.qtProposalId)}">
+				       #{lOADetailBackingBean.managedBean.scQtProposal.proposalNo}
+					</p:commandLink>
+				 <h:outputText
+						value="#{lOADetailBackingBean.managedBean.scLoa.scQuote.quoteNo}"
+						rendered="#{!(isDocTypeQuotation or isDocTypeDirectNego)}" /></td>
+				<td><p:spacer width="1" /></td>
+				<td><p:spacer width="1" /></td>
+				<td><p:spacer width="1" /></td>
+				<td><p:spacer width="1" /></td>
+			</tr>
+			</c:if>
+		</table>
+	</div>
+
+</ui:composition>
+
+
+
+<!-- ***25201#35 -->
+
+
+<!-- ***19336 -->

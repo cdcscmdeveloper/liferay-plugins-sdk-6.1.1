@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+
+<faces-config
+    version="2.0"
+    xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
+>
+
+	<managed-bean>
+		  <description>Procurement Plan Constant</description>
+		  <managed-bean-name>ProcurementPlanConst</managed-bean-name>
+		  <managed-bean-class>my.ep.constant.pp.ProcurementPlanConst</managed-bean-class>
+		  <managed-bean-scope>application</managed-bean-scope>
+ 	</managed-bean>
+
+	<converter>
+		<converter-id>pmUserConverter</converter-id>
+		<converter-class>my.ep.web.converter.pm.PmUserConverter</converter-class>
+	</converter>
+	
+	<converter>
+		<converter-id>pmParameterConverter</converter-id>
+		<converter-class>my.ep.web.converter.pm.PmParameterConverter</converter-class>
+	</converter>
+</faces-config>

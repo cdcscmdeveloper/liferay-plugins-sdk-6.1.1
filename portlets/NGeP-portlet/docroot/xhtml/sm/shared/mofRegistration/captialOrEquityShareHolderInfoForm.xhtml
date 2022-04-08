@@ -1,0 +1,237 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<h:panelGroup id="shrHolderPanGroup">
+		<p:panel header="#{lbl['lbl.sm.shrHldrInfo.panHdr']}"
+			toggleable="true">
+			
+			<ui:param name="lblShareholderInstruction" value="lbl.sm.shareholder.composistion.#{backingBean.managedBean.smSupplier.businessType}" />
+			<h:outputText styleClass="instruction" value="#{lbl[lblShareholderInstruction]}" escape="false" 
+				rendered="#{backingBean.managedBean.smSupplier.businessType ne 'K' and backingBean.managedBean.smSupplier.businessType ne 'L'
+					and backingBean.managedBean.smSupplier.businessType ne 'M' and backingBean.managedBean.smSupplier.businessType ne 'O'
+					and backingBean.managedBean.smSupplier.businessType ne 'P'}"/>
+			<!-- 28466 - start - add screen instruction -->
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sm.shareholder.valid.value.shareholder']}"
+				escape="false"
+				rendered="#{backingBean.managedBean.smSupplier.businessType ne 'K' and backingBean.managedBean.smSupplier.businessType ne 'L'
+					and backingBean.managedBean.smSupplier.businessType ne 'M' and backingBean.managedBean.smSupplier.businessType ne 'O'
+					and backingBean.managedBean.smSupplier.businessType ne 'P' and backingBean.managedBean.businessTypeVal eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT}" />
+			<!-- 28466 - end -->
+
+			<table style="width: 100%">
+				<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+					<tr>
+						<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+								value="#{backingBean.managedBean.poSecReview.shareholderVerifed}"
+								id="poShrVer">
+								<p:ajax update=":form:tt:shrInfPan,:form:revPanHdr"
+									event="change" process="@this,:form:tt:shrInfPan"
+									listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.shareholderVerifed)}" />
+							</p:selectBooleanCheckbox></td>
+						<td valign="top"><h:outputText
+								value="#{lbl['lbl.sm.sectionPoVerf']}"
+								title="For PO to highlight the verified section " /></td>
+
+					</tr>
+				</p:outputPanel>
+				<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+					<tr>
+						<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+								value="#{backingBean.managedBean.apprvrSecReview.shareholderVerifed}"
+								id="apprShrVer">
+								<p:ajax update=":form:tt:shrInfPan,:form:revPanHdr"
+									event="change" process="@this,:form:tt:shrInfPan"
+									listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.shareholderVerifed)}" />
+							</p:selectBooleanCheckbox></td>
+						<td valign="top"><h:outputText
+								value="#{lbl['lbl.sm.sectionApprVerf']}"
+								title="For Approver to highlight the verified section " /></td>
+					</tr>
+				</p:outputPanel>
+			</table>
+			<p:outputPanel id="shrInfPan" layout="block">
+				<p:blockUI block=":form:tt:shrInfPan" widgetVar="buiPoShr"
+					id="poShrBlc"
+					blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.shareholderVerifed : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.shareholderVerifed : false)}" />
+				<p:dataTable var="shareBean" widgetVar="suppCapShrHldrDtWidVar"
+					value="#{backingBean.managedBean.smapplShareHolders}"
+					selection="#{backingBean.managedBean.selectedShareHolders}"
+					rowKey="#{shareBean}" rowIndexVar="index" id="shrPerDt">
+					<ac:paginator for="shrPerDt" />
+					<p:ajax event="rowSelect" listener="#{backingBean.unSelectAdmin}"
+						update=":form:tt:shrInfPan"></p:ajax>
+					<p:ajax event="rowUnselect" listener="#{backingBean.unSelectAdmin}"
+						update=":form:tt:shrInfPan"></p:ajax>
+					<p:ajax event="rowSelectCheckbox"
+						listener="#{backingBean.unSelectAdmin}"
+						update=":form:tt:shrInfPan"></p:ajax>
+					<p:ajax event="rowUnselectCheckbox"
+						listener="#{backingBean.unSelectAdmin}"
+						update=":form:tt:shrInfPan"></p:ajax>
+					<p:ajax event="rowDblselect"
+						listener="#{backingBean.unSelectAdmin}"
+						update=":form:tt:shrInfPan"></p:ajax>
+					<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.smapplShareHolders}"
+						disabledSelection="#{shareBean.prevApprovedDirector or shareBean.prevApprovedEquityOwner or shareBean.ssmData}" />
+
+
+					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.name']}"
+						disabledSelection="#{shareBean.prevApprovedDirector or shareBean.prevApprovedEquityOwner}">
+						<!-- 29659 START -->
+						<h:outputText value="#{shareBean.title.salutationName} #{shareBean.name}" />
+						<!-- 29659 END -->
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.idNo']}"
+						disabledSelection="#{shareBean.prevApprovedDirector or shareBean.prevApprovedEquityOwner}">
+						<h:outputText value="#{shareBean.identificationNo}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.shrPerc']}"
+						disabledSelection="#{shareBean.prevApprovedDirector or shareBean.prevApprovedEquityOwner}">
+						<h:outputText value="#{shareBean.sharePercentage}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE_EQUITY)}" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.shrVal']}"
+						disabledSelection="#{shareBean.prevApprovedDirector or shareBean.prevApprovedEquityOwner}">
+						<!-- 28466 - start - add mandatory sign (*) and allow supplier to key-in the Value (RM)-->
+						<c:choose>
+							<c:when
+								test="#{backingBean.managedBean.businessTypeVal eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT}">
+								<f:facet name="header">
+									<p:outputLabel value="*" styleClass="mandatory"
+										style="float:left" />
+									<h:outputText value="#{lbl['lbl.sm.shrHldrInfo.shrVal']}" />
+								</f:facet>
+								<!-- #30660 - disable edit -->
+								<p:inputText value="#{shareBean.shareAmt}" disabled="#{backingBean.managedBean.disAllowOwnerEdit}">
+									<f:convertNumber
+										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+									<p:ajax event="blur" update="shrPerDt"
+										listener="#{backingBean.calculateCapital}" />
+								</p:inputText>
+							</c:when>
+							<c:otherwise>
+								<h:outputText value="#{shareBean.shareAmt}">
+									<f:convertNumber
+										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+								</h:outputText>
+							</c:otherwise>
+						</c:choose>
+						<!-- 28466 - end -->
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.bumi']}"
+						disabledSelection="#{shareBean.prevApprovedDirector or shareBean.prevApprovedEquityOwner}">
+						<h:outputText value="#{lbl['lbl.txt.yes']}"
+							rendered="#{shareBean.bumiFlg eq 1}" />
+						<h:outputText value="#{lbl['lbl.txt.no']}"
+							rendered="#{shareBean.bumiFlg eq 0}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.myId']}" rendered="#{!backingBean.managedBean.supplierUser}"
+						disabledSelection="#{shareBean.prevApprovedDirector or shareBean.prevApprovedEquityOwner}">
+						<p:commandLink onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()"
+							action="#{backingBean.viewMyIdentityResponse(shareBean)}"
+							process="@this"
+							rendered="#{not empty shareBean.identityResponseCode}"
+							partialSubmit="true" update=":form" style="padding-right:5px;">
+							<p:graphicImage value="/css/images/design/icon_alert.png"
+								title="#{lbl['lbl.sm.view.myidentity.response']}" />
+						</p:commandLink>
+						<h:outputText value="#{lbl['lbl.txt.na']}"
+							rendered="#{empty shareBean.identityResponseCode}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;"
+						disabledSelection="#{shareBean.prevApprovedDirector or shareBean.prevApprovedEquityOwner}">
+						<p:commandLink onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()"
+							action="#{backingBean.assignSelShareHolder(shareBean)}"
+							update=":form" style="padding-right:5px;">
+							<!-- #START 27165 -->
+							<p:outputPanel rendered="#{shareBean.prevApprovedEquityOwner || backingBean.managedBean.disAllowOwnerEdit}">
+								<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
+							</p:outputPanel>
+							<p:outputPanel rendered="#{!shareBean.prevApprovedEquityOwner and !backingBean.managedBean.disAllowOwnerEdit}">
+								<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
+							</p:outputPanel>
+							<!-- #END 27165 -->
+						</p:commandLink>
+						<ac:smFieldChangeTableAlert object="#{shareBean}" />
+					</p:column>
+				</p:dataTable>
+
+				<p:spacer height="2px;" />
+				<div align="right">
+					<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						action="#{backingBean.assignNewShareHolder(SupplierManagementConst.PERSONNEL_TYPE_EQUITY)}"
+						update=":form" disabled="#{backingBean.managedBean.disAllowOwnerEdit}"/>
+					<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						action="#{backingBean.deleteSelectedShareHolders(SupplierManagementConst.PERSONNEL_TYPE_EQUITY,false)}"
+						update=":form:tt:shrPerDt" disabled="#{backingBean.managedBean.disAllowOwnerEdit or empty backingBean.managedBean.selectedShareHolders}"/>
+				</div>
+				<br />
+				<p:outputPanel rendered="#{backingBean.managedBean.poUser or (backingBean.managedBean.smAppl.resubmit and backingBean.managedBean.supplierUser)}">
+					<table style="width: 50%">
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
+							<td><p:inputTextarea autoResize="false" cols="41"
+									maxlength="200" id="capShrHoldInfoPoRmrk" readonly="#{backingBean.managedBean.smAppl.resubmit and backingBean.managedBean.supplierUser}"
+									validatorMessage="#{lbl['lbl.sm.shrHldrInfo.panHdr']} - #{lbl['lbl.sm.poRemarks.length.validMsg']}"
+									value="#{backingBean.managedBean.poSecReview.shareholderRemark}">
+									<f:validateLength maximum="200" />
+								</p:inputTextarea> <p:message id="capShrHoldInfoPoRmrkMsg"
+									for="capShrHoldInfoPoRmrk" showSummary="true"
+									showDetail="false" display="icon" /></td>
+						</tr>
+					</table>
+				</p:outputPanel>
+				<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+					<table style="width: 100%">
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
+							<td><p:inputTextarea autoResize="false" readonly="true"
+									disabled="true" cols="41" maxlength="200"
+									value="#{backingBean.managedBean.poSecReview.shareholderRemark}" /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
+							<td><p:inputTextarea autoResize="false" cols="41"
+									maxlength="200" id="capShrHoldInfoApprvrRmrk"
+									validatorMessage="#{lbl['lbl.sm.shrHldrInfo.panHdr']} - #{lbl['lbl.sm.apprvrRemarks.length.validMsg']}"
+									value="#{backingBean.managedBean.apprvrSecReview.shareholderRemark}">
+									<f:validateLength maximum="200" />
+								</p:inputTextarea> <p:message id="capShrHoldInfoApprvrRmrkMsg"
+									for="capShrHoldInfoApprvrRmrk" showSummary="true"
+									showDetail="false" display="icon" /></td>
+
+						</tr>
+					</table>
+				</p:outputPanel>
+			</p:outputPanel>
+		</p:panel>
+	</h:panelGroup>
+
+	<p:confirmDialog id="deleteAuthEquityConfirmDialog" closable="true"
+		message="#{lbl['lbl.sm.confirm.delete.auth.personnel.msg']}"
+		header="#{lbl['lbl.sm.confirm.delete.auth.personnel.header']}" severity="alert"
+		widgetVar="deleteAuthEquityConfirmDialog">
+		
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="deleteAuthEquityConfirmDialog.hide();" 
+				action="#{backingBean.confirmDeleteAuthorizedPersonnel}" update="@form" process="@this"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+			<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="deleteAuthEquityConfirmDialog.hide();" />
+		</div>
+	</p:confirmDialog>
+	
+	<p:confirmDialog id="myIdentityDlg" closable="true"
+		message="#{backingBean.getMyIdentityStatusDescription(backingBean.managedBean.selectedShareHolder.identityResponseCode)}"
+		header="#{lbl['lbl.sm.person.myIdResp']}" severity="alert" widgetVar="myIdentityDlg" />
+
+</ui:composition>

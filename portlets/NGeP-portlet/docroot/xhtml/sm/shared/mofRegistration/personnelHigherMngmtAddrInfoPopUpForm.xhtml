@@ -1,0 +1,584 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.sm.permenantaddress']}" toggleable="true">
+		<table style="width: 100%">
+			<tr>
+				<td valign="top" width="50%">
+
+					<table style="width: 100%">
+						<tr>
+							<td><u><b><h:outputText value="#{lbl['lbl.sm.permenantaddress']} : " /></b></u></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="* #{lbl['lbl.sm.address']}" /></td>
+							<td><p:inputText
+									value="#{backingBean.managedBean.personnelPermAddr.smAddress.address1}"
+									size="35" /></td>
+						</tr>
+
+						<tr>
+							<td></td>
+							<td><p:inputText
+									value="#{backingBean.managedBean.personnelPermAddr.smAddress.address2}"
+									size="35" /></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><p:inputText
+									value="#{backingBean.managedBean.personnelPermAddr.smAddress.address3}"
+									size="35" /></td>
+						</tr>
+						
+						<tr>
+							<td><p:outputLabel value="* #{lbl['lbl.sm.country']}" /></td>
+							<td><p:selectOneMenu
+									value="#{backingBean.managedBean.personnelPermAddr.smAddress.pmCountry.countryId}"
+									style="width: 207px;margin-bottom: 5px;">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems var="prsPermAddr"
+										value="#{backingBean.managedBean.countryLs}"
+										itemValue="#{prsPermAddr.countryId}"
+										itemLabel="#{prsPermAddr.countryName}" />
+									<p:ajax event="change"
+										listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.personnelPermAddr.smAddress.pmCountry.countryId, 
+								SupplierManagementConst.SM_PERSNL_PERM_ADDR_PANEL,
+								backingBean.managedBean.personnelPermAddr.smAddress.pmState,
+								backingBean.managedBean.personnelPermAddr.smAddress.pmDistrict,
+								backingBean.managedBean.personnelPermAddr.smAddress.pmCity)}"
+										update="prsPermState,prsPermDivision,prsPermDist,prsPermCity" />
+								</p:selectOneMenu></td>
+						</tr>
+
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
+							<td><p:selectOneMenu
+									style="width: 207px;margin-bottom: 5px;"
+									value="#{backingBean.managedBean.personnelPermAddr.smAddress.pmState.stateId}"
+									id="prsPermState">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems var="prsPermState"
+										value="#{backingBean.managedBean.persnlPermStates}"
+										itemValue="#{prsPermState.stateId}"
+										itemLabel="#{prsPermState.stateName}" />
+									<p:ajax event="change"
+										listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.personnelPermAddr.smAddress.pmState.stateId, 
+								SupplierManagementConst.SM_PERSNL_PERM_ADDR_PANEL,
+								backingBean.managedBean.personnelPermAddr.smAddress.pmDistrict,
+								backingBean.managedBean.personnelPermAddr.smAddress.pmCity)}"
+										update="prsPermDist,prsPermCity, divisionPrsnlHighLabelPanelId, divisionPrsnlHighDropdownPanelId" />
+
+								</p:selectOneMenu></td>
+						</tr>
+						<!-- 13320 -->
+						<tr>
+							<td  class="tdTitle">
+				<p:outputPanel id="divisionPrsnlHighLabelPanelId" >
+					<ui:fragment rendered="#{backingBean.managedBean.personnelPermAddr.smAddress.pmState.adoptDivision}">
+						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+						</ui:fragment>
+					</p:outputPanel>
+					</td>
+					<td>
+				<p:outputPanel id="divisionPrsnlHighDropdownPanelId">
+				<ui:fragment rendered="#{backingBean.managedBean.personnelPermAddr.smAddress.pmState.adoptDivision}">
+					
+							<td><p:selectOneMenu
+									style="width: 207px;margin-bottom: 5px;"
+									value="#{backingBean.managedBean.personnelPermAddr.smAddress.pmDivision.divisionId}"
+									id="prsPermDivision">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems var="prsPermDivision"
+										value="#{backingBean.managedBean.persnlPermDivisions}"
+										itemValue="#{prsPermDivision.divisionId}"
+										itemLabel="#{prsPermDivision.divisionName}" />
+									<p:ajax event="change"
+										listener="#{backingBean.populateDivisionsByState}"
+										update="prsPermDist,prsPermCity" />
+
+								</p:selectOneMenu></td>
+								</ui:fragment>
+								</p:outputPanel>
+								</td>
+						</tr>
+
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
+							<td><p:selectOneMenu
+									style="width: 207px;margin-bottom: 5px;" id="prsPermDist"
+									value="#{backingBean.managedBean.personnelPermAddr.smAddress.pmDistrict.districtId}">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems var="prsPermDist"
+										value="#{backingBean.managedBean.persnlPermDistricts}"
+										itemValue="#{prsPermDist.districtId}"
+										itemLabel="#{prsPermDist.districtName}" />
+									<p:ajax event="change"
+										listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.personnelPermAddr.smAddress.pmDistrict.districtId, 
+								SupplierManagementConst.SM_PERSNL_PERM_ADDR_PANEL,
+								backingBean.managedBean.personnelPermAddr.smAddress.pmCity)}"
+										update="prsPermCity" />
+								</p:selectOneMenu></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
+							<td><p:selectOneMenu
+									style="width: 207px;margin-bottom: 5px;" id="prsPermCity"
+									value="#{backingBean.managedBean.personnelPermAddr.smAddress.pmCity.cityId}">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems var="prsPermCity"
+										value="#{backingBean.managedBean.persnlPermCities}"
+										itemValue="#{prsPermCity.cityId}"
+										itemLabel="#{prsPermCity.cityName}" />
+								</p:selectOneMenu></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
+							<td><p:inputText
+									value="#{backingBean.managedBean.personnelPermAddr.smAddress.postcode}"
+									size="35" /></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
+							<td><p:inputText size="35" /></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.faxno']}" /></td>
+							<td><p:inputText size="35" /></td>
+						</tr>
+					</table>
+				</td>
+				<td valign="top">
+
+					<table style="width: 100%">
+						<tr>
+							<td><u><b><h:outputText value="#{lbl['lbl.sm.person.mailAddr']} : " /></b></u>
+							</td>
+							<td><table style="width: 100%">
+									<tr>
+										<td width="10px"><p:selectBooleanCheckbox /></td>
+										<td><h:outputText value="#{lbl['lbl.sm.person.duplicateAddr']} : " /></td>
+									</tr>
+								</table></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="* #{lbl['lbl.sm.address']}" /></td>
+							<td><p:inputText
+									value="#{backingBean.managedBean.personnelMailAddr.smAddress.address1}"
+									size="35" /></td>
+						</tr>
+
+						<tr>
+							<td></td>
+							<td><p:inputText
+									value="#{backingBean.managedBean.personnelMailAddr.smAddress.address2}"
+									size="35" /></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><p:inputText
+									value="#{backingBean.managedBean.personnelMailAddr.smAddress.address3}"
+									size="35" /></td>
+						</tr>
+
+						<tr>
+							<td><p:outputLabel value="* #{lbl['lbl.sm.country']}" /></td>
+							<td><p:selectOneMenu
+									value="#{backingBean.managedBean.personnelMailAddr.smAddress.pmCountry.countryId}"
+									style="width: 207px;margin-bottom: 5px;">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems var="prsMailContry"
+										value="#{backingBean.managedBean.countryLs}"
+										itemValue="#{prsMailContry.countryId}"
+										itemLabel="#{prsMailContry.countryName}" />
+									<p:ajax event="change"
+										listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.personnelMailAddr.smAddress.pmCountry.countryId, 
+								SupplierManagementConst.SM_PERSNL_MAIL_ADDR_PANEL,
+								backingBean.managedBean.personnelMailAddr.smAddress.pmState,
+								backingBean.managedBean.personnelMailAddr.smAddress.pmDistrict,
+								backingBean.managedBean.personnelMailAddr.smAddress.pmCity)}"
+										update="prsMailState,prsMailDivision,prsMailDist,prsMailCity" />
+								</p:selectOneMenu></td>
+						</tr>
+
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
+							<td><p:selectOneMenu
+									style="width: 207px;margin-bottom: 5px;"
+									value="#{backingBean.managedBean.personnelMailAddr.smAddress.pmState.stateId}"
+									id="prsMailState">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems var="prsMailState"
+										value="#{backingBean.managedBean.persnlMailStates}"
+										itemValue="#{prsMailState.stateId}"
+										itemLabel="#{prsMailState.stateName}" />
+									<p:ajax event="change"
+										listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.personnelMailAddr.smAddress.pmState.stateId, 
+								SupplierManagementConst.SM_PERSNL_MAIL_ADDR_PANEL,
+								backingBean.managedBean.personnelMailAddr.smAddress.pmDistrict,
+								backingBean.managedBean.personnelMailAddr.smAddress.pmCity)}"
+										update="prsMailDivision,prsMailDist,prsMailCity" />
+
+								</p:selectOneMenu></td>
+						</tr>
+						<!-- 13320 -->
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.division']}" /></td>
+							<td><p:selectOneMenu
+									style="width: 207px;margin-bottom: 5px;"
+									value="#{backingBean.managedBean.personnelMailAddr.smAddress.pmDivision.divisionId}"
+									disabled="#{backingBean.managedBean.divisionBox}"
+									id="prsMailDivision">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems var="prsMailDivision"
+										value="#{backingBean.managedBean.persnlMailDivisions}"
+										itemValue="#{prsMailDivision.divisionId}"
+										itemLabel="#{prsMailDivision.divisionName}" />
+									<p:ajax event="change"
+										listener="#{backingBean.populateDivisionsByState}"
+										update="prsMailDist,prsMailCity" />
+
+								</p:selectOneMenu></td>
+						</tr>
+
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
+							<td><p:selectOneMenu
+									style="width: 207px;margin-bottom: 5px;" id="prsMailDist"
+									value="#{backingBean.managedBean.personnelMailAddr.smAddress.pmDistrict.districtId}">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems var="prsMailDist"
+										value="#{backingBean.managedBean.persnlMailDistricts}"
+										itemValue="#{prsMailDist.districtId}"
+										itemLabel="#{prsMailDist.districtName}" />
+									<p:ajax event="change"
+										listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.personnelMailAddr.smAddress.pmDistrict.districtId, 
+								SupplierManagementConst.SM_PERSNL_MAIL_ADDR_PANEL,
+								backingBean.managedBean.personnelMailAddr.smAddress.pmCity)}"
+										update="prsMailCity" />
+								</p:selectOneMenu></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
+							<td><p:selectOneMenu
+									style="width: 207px;margin-bottom: 5px;" id="prsMailCity"
+									value="#{backingBean.managedBean.personnelMailAddr.smAddress.pmCity.cityId}">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems var="prsMailCity"
+										value="#{backingBean.managedBean.persnlMailCities}"
+										itemValue="#{prsMailCity.cityId}"
+										itemLabel="#{prsMailCity.cityName}" />
+								</p:selectOneMenu></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
+							<td><p:inputText
+									value="#{backingBean.managedBean.personnelMailAddr.smAddress.postcode}"
+									size="35" /></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
+							<td><p:inputText size="35" /></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.faxno']}" /></td>
+							<td><p:inputText size="35" /></td>
+						</tr>
+					</table>
+
+				</td>
+			</tr>
+		</table>
+	</p:panel>
+	<p:panel header="#{lbl['lbl.sm.correspondenceadd']}" toggleable="true">
+		<table style="width: 100%">
+			<tr>
+				<td valign="top" width="50%">
+
+					<table style="width: 100%">
+						<tr>
+							<td><u><b><h:outputText value="#{lbl['lbl.sm.person.resiAddr']} : " /></b></u></td>
+							<td><table style="width: 100%">
+									<tr>
+										<td width="10px"><p:selectBooleanCheckbox /></td>
+										<td><h:outputText value="#{lbl['lbl.sm.person.duplicateAddr']} : " /></td>
+									</tr>
+								</table></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="* #{lbl['lbl.sm.address']}" /></td>
+							<td><p:inputText
+									value="#{backingBean.managedBean.personnelResdAddr.smAddress.address1}"
+									size="35" /></td>
+						</tr>
+
+						<tr>
+							<td></td>
+							<td><p:inputText
+									value="#{backingBean.managedBean.personnelResdAddr.smAddress.address2}"
+									size="35" /></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><p:inputText
+									value="#{backingBean.managedBean.personnelResdAddr.smAddress.address3}"
+									size="35" /></td>
+						</tr>
+
+						<tr>
+							<td><p:outputLabel value="*#{lbl['lbl.sm.country']}" /></td>
+							<td><p:selectOneMenu
+									value="#{backingBean.managedBean.personnelResdAddr.smAddress.pmCountry.countryId}"
+									style="width: 207px;margin-bottom: 5px;">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems var="prsResCountry"
+										value="#{backingBean.managedBean.countryLs}"
+										itemValue="#{prsResCountry.countryId}"
+										itemLabel="#{prsResCountry.countryName}" />
+									<p:ajax event="change"
+										listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.personnelResdAddr.smAddress.pmCountry.countryId, 
+								SupplierManagementConst.SM_PERSNL_RESD_ADDR_PANEL,
+								backingBean.managedBean.personnelResdAddr.smAddress.pmState,
+								backingBean.managedBean.personnelResdAddr.smAddress.pmDistrict,
+								backingBean.managedBean.personnelResdAddr.smAddress.pmCity)}"
+										update="prsResState,prsResDivision,prsResDist,prsResCity" />
+								</p:selectOneMenu></td>
+						</tr>
+
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
+							<td><p:selectOneMenu
+									style="width: 207px;margin-bottom: 5px;"
+									value="#{backingBean.managedBean.personnelResdAddr.smAddress.pmState.stateId}"
+									id="prsResState">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems var="prsResState"
+										value="#{backingBean.managedBean.persnlResdStates}"
+										itemValue="#{prsResState.stateId}"
+										itemLabel="#{prsResState.stateName}" />
+									<p:ajax event="change"
+										listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.personnelResdAddr.smAddress.pmState.stateId, 
+								SupplierManagementConst.SM_PERSNL_RESD_ADDR_PANEL,
+								backingBean.managedBean.personnelResdAddr.smAddress.pmDistrict,
+								backingBean.managedBean.personnelResdAddr.smAddress.pmCity)}"
+										update="prsResDivision,prsResDist,prsResCity" />
+
+								</p:selectOneMenu></td>
+						</tr>
+						<!-- 13320 -->
+						
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.division']}" /></td>
+							<td><p:selectOneMenu
+									style="width: 207px;margin-bottom: 5px;"
+									value="#{backingBean.managedBean.personnelResdAddr.smAddress.pmDivision.divisionId}"
+									id="prsResDivision">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems var="prsResDivision"
+										value="#{backingBean.managedBean.persnlResdDivisions}"
+										itemValue="#{prsResDivision.divisionId}"
+										itemLabel="#{prsResDivision.divisionName}" />
+									<p:ajax event="change"
+										listener="#{backingBean.populateDivisionsByState}"
+										update="prsResDist,prsResCity" />
+
+								</p:selectOneMenu></td>
+						</tr>
+
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
+							<td><p:selectOneMenu
+									style="width: 207px;margin-bottom: 5px;" id="prsResDist"
+									value="#{backingBean.managedBean.personnelResdAddr.smAddress.pmDistrict.districtId}">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems var="prsResDist"
+										value="#{backingBean.managedBean.persnlResdDistricts}"
+										itemValue="#{prsResDist.districtId}"
+										itemLabel="#{prsResDist.districtName}" />
+									<p:ajax event="change"
+										listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.personnelResdAddr.smAddress.pmDistrict.districtId, 
+								SupplierManagementConst.SM_PERSNL_RESD_ADDR_PANEL,
+								backingBean.managedBean.personnelResdAddr.smAddress.pmCity)}"
+										update="prsResCity" />
+								</p:selectOneMenu></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
+							<td><p:selectOneMenu
+									style="width: 207px;margin-bottom: 5px;" id="prsResCity"
+									value="#{backingBean.managedBean.personnelResdAddr.smAddress.pmCity.cityId}">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems var="prsResCity"
+										value="#{backingBean.managedBean.persnlResdCities}"
+										itemValue="#{prsResCity.cityId}"
+										itemLabel="#{prsResCity.cityName}" />
+								</p:selectOneMenu></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
+							<td><p:inputText
+									value="#{backingBean.managedBean.personnelResdAddr.smAddress.postcode}"
+									size="35" /></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
+							<td><p:inputText size="35" /></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.faxno']}" /></td>
+							<td><p:inputText size="35" /></td>
+						</tr>
+					</table>
+
+				</td>
+				<td valign="top">
+					<table style="width: 100%">
+						<tr>
+							<td><u><b><h:outputText value="#{lbl['lbl.sm.person.offAddr']} : " /></b></u></td>
+							<td><table style="width: 100%">
+									<tr>
+										<td width="10px"><p:selectBooleanCheckbox /></td>
+										<td><h:outputText value=" #{lbl['lbl.sm.person.duplicateAddr']} : " /></td>
+									</tr>
+								</table></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="* #{lbl['lbl.sm.address']}" /></td>
+							<td><p:inputText
+									value="#{backingBean.managedBean.personnelOffAddr.smAddress.address1}"
+									size="35" /></td>
+						</tr>
+
+						<tr>
+							<td></td>
+							<td><p:inputText
+									value="#{backingBean.managedBean.personnelOffAddr.smAddress.address2}"
+									size="35" /></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><p:inputText
+									value="#{backingBean.managedBean.personnelOffAddr.smAddress.address3}"
+									size="35" /></td>
+						</tr>
+
+						<tr>
+							<td><p:outputLabel value="* #{lbl['lbl.sm.country']}" /></td>
+							<td><p:selectOneMenu
+									value="#{backingBean.managedBean.personnelOffAddr.smAddress.pmCountry.countryId}"
+									style="width: 207px;margin-bottom: 5px;">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems var="prsOffCountry"
+										value="#{backingBean.managedBean.countryLs}"
+										itemValue="#{prsOffCountry.countryId}"
+										itemLabel="#{prsOffCountry.countryName}" />
+									<p:ajax event="change"
+										listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.personnelOffAddr.smAddress.pmCountry.countryId, 
+								SupplierManagementConst.SM_PERSNL_OFF_ADDR_PANEL,
+								backingBean.managedBean.personnelOffAddr.smAddress.pmState,
+								backingBean.managedBean.personnelOffAddr.smAddress.pmDistrict,
+								backingBean.managedBean.personnelOffAddr.smAddress.pmCity)}"
+										update="prsOffState,prsOffDivision,prsOffDist,prsOffCity" />
+								</p:selectOneMenu></td>
+						</tr>
+
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
+							<td><p:selectOneMenu
+									style="width: 207px;margin-bottom: 5px;"
+									value="#{backingBean.managedBean.personnelOffAddr.smAddress.pmState.stateId}"
+									id="prsOffState">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems var="prsOffState"
+										value="#{backingBean.managedBean.persnlOffStates}"
+										itemValue="#{prsOffState.stateId}"
+										itemLabel="#{prsOffState.stateName}" />
+									<p:ajax event="change"
+										listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.personnelOffAddr.smAddress.pmState.stateId, 
+								SupplierManagementConst.SM_PERSNL_OFF_ADDR_PANEL,
+								backingBean.managedBean.personnelOffAddr.smAddress.pmDistrict,
+								backingBean.managedBean.personnelOffAddr.smAddress.pmCity)}"
+										update="prsOffDivision,prsOffDist,prsOffCity" />
+
+								</p:selectOneMenu></td>
+						</tr>
+						
+						<!-- 13320 -->
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.division']}" /></td>
+							<td><p:selectOneMenu
+									style="width: 207px;margin-bottom: 5px;"
+									value="#{backingBean.managedBean.personnelOffAddr.smAddress.pmDivision.divisionId}"
+									disabled="#{backingBean.managedBean.divisionBox}"
+									id="prsOffDivision">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems var="prsOffDivision"
+										value="#{backingBean.managedBean.persnlOffDivisions}"
+										itemValue="#{prsOffDivision.divisionId}"
+										itemLabel="#{prsOffDivision.divisionName}" />
+									<p:ajax event="change"
+										listener="#{backingBean.populateDivisionsByState}"
+										update="prsOffDist,prsOffCity" />
+
+								</p:selectOneMenu></td>
+						</tr>
+						
+
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
+							<td><p:selectOneMenu
+									style="width: 207px;margin-bottom: 5px;" id="prsOffDist"
+									value="#{backingBean.managedBean.personnelOffAddr.smAddress.pmDistrict.districtId}">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems var="prsOffDist"
+										value="#{backingBean.managedBean.persnlOffDistricts}"
+										itemValue="#{prsOffDist.districtId}"
+										itemLabel="#{prsOffDist.districtName}" />
+									<p:ajax event="change"
+										listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.personnelOffAddr.smAddress.pmDistrict.districtId, 
+								SupplierManagementConst.SM_PERSNL_OFF_ADDR_PANEL,
+								backingBean.managedBean.personnelOffAddr.smAddress.pmCity)}"
+										update="prsOffCity" />
+								</p:selectOneMenu></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
+							<td><p:selectOneMenu
+									style="width: 207px;margin-bottom: 5px;" id="prsOffCity"
+									value="#{backingBean.managedBean.personnelOffAddr.smAddress.pmCity.cityId}">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems var="prsOffCity"
+										value="#{backingBean.managedBean.persnlOffCities}"
+										itemValue="#{prsOffCity.cityId}"
+										itemLabel="#{prsOffCity.cityName}" />
+								</p:selectOneMenu></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
+							<td><p:inputText
+									value="#{backingBean.managedBean.personnelOffAddr.smAddress.postcode}"
+									size="35" /></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
+							<td><p:inputText size="35" /></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.faxno']}" /></td>
+							<td><p:inputText size="35" /></td>
+						</tr>
+					</table>
+
+
+				</td>
+			</tr>
+		</table>
+	</p:panel>
+
+
+</ui:composition>

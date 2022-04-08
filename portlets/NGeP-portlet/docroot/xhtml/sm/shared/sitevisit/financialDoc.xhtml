@@ -1,0 +1,166 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<p:panel header="#{lbl['lbl.sm.sitevisit.licenseinsurance']}" id="financialPanel"> 
+		<!-- 28775 - Site Visit Grouping Enhancement - 28775 --> 
+		<p:dataTable id="dtFinanceDoc" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+		value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplate.financialDocLs}" var="finDoc">
+			<p:column>
+					<f:facet name="header">
+						#{lbl['lbl.sm.financial.doc']}
+					</f:facet>
+					<h:outputText value="#{svoSiteVisitBackingBean.getParameterDesc(finDoc.pmParameter)}"></h:outputText>
+			</p:column>
+			
+			<p:column>
+					<f:facet name="header">
+						#{lbl['lbl.sm.financial.reference']}
+					</f:facet>
+					
+					<p:inputText value="#{finDoc.docRef}" disabled="#{viewFlag}" maxlength="80"/>
+					<!-- #24964 -->
+					<ac:smFieldChangeAlertSVO
+						isShow="#{not empty finDoc and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
+						oriValue="#{svoSiteVisitBackingBean.getSVOSmSvManufacturingDoc(finDoc).docRef}" 
+						currValue="#{finDoc.docRef}" 
+						alertValue="#{svoSiteVisitBackingBean.getSVOSmSvManufacturingDoc(finDoc).docRef}"/>
+					
+			</p:column>
+			
+			<p:column>
+					<f:facet name="header">
+						#{lbl['lbl.sm.financial.date.issued']}
+					</f:facet>
+					<p:calendar id="dateIssuedCalId" disabled="#{viewFlag}"
+						navigator="true" label="#{lbl['lbl.sm.financial.date.issued']}"
+						value="#{finDoc.docDate}"
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
+						readonlyInput="true" size="30" showOn="button" />
+					<!-- #24964 -->
+					<ac:smFieldChangeAlertSVO
+						isShow="#{not empty finDoc and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
+						oriValue="#{svoSiteVisitBackingBean.getSVOSmSvManufacturingDoc(finDoc).docDate}" 
+						currValue="#{finDoc.docDate}" 
+						alertValue="#{svoSiteVisitBackingBean.getSVOSmSvManufacturingDoc(finDoc).docDate}"/>
+			</p:column>
+			
+			<p:column>
+					<f:facet name="header">
+						#{lbl['lbl.sm.financial.note']}
+					</f:facet>
+					<p:inputTextarea rows="3" cols="35" autoResize="false" value="#{finDoc.remark}" disabled="#{viewFlag}" maxlength="500"
+						label="#{lbl['lbl.sm.financial.note']}">
+					 	<f:validateLength maximum="500" />
+					</p:inputTextarea>
+					<!-- #24964 -->
+					<ac:smFieldChangeAlertSVO
+						isShow="#{not empty finDoc and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
+						oriValue="#{svoSiteVisitBackingBean.getSVOSmSvManufacturingDoc(finDoc).remark}" 
+						currValue="#{finDoc.remark}" 
+						alertValue="#{svoSiteVisitBackingBean.getSVOSmSvManufacturingDoc(finDoc).remark}"/>
+			</p:column>
+			</p:dataTable>
+	</p:panel>
+	
+	<p:panel header="#{lbl['lbl.sm.financial.add.docs']}" id="pnlAddFinancialDoc">
+		<!-- 28775 - Site Visit Grouping Enhancement - 28775 -->
+		<p:dataTable id="dtAddFinDocId" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplate.additionalDocLs}"
+			var="addFinDoc" selection="#{svoSiteVisitBackingBean.managedBean.selectedAddFinancialDoc}" rowKey="#{addFinDoc}">
+
+			<p:column selectionMode="multiple" style="width:2%" rendered="#{!viewFlag}"/>
+			<!-- #24964 -->
+			<p:ajax event="rowSelectCheckbox" update=":#{p:component('btnFinancialDocDelete')}" />
+			<p:ajax event="rowUnselectCheckbox" update=":#{p:component('btnFinancialDocDelete')}" />
+			<p:ajax event="rowSelect" update=":#{p:component('btnFinancialDocDelete')}" />
+        	<p:ajax event="rowUnselect" update=":#{p:component('btnFinancialDocDelete')}" />
+        	<p:ajax event="toggleSelect" update=":#{p:component('btnFinancialDocDelete')}" />
+			<p:column>
+				<f:facet name="header">
+						<h:outputText value="*" styleClass="mandatory" />
+						#{lbl['lbl.sm.financial.doc']}
+					</f:facet>
+				<p:inputText value="#{addFinDoc.docName}" maxlength="100" disabled="#{viewFlag}" label="#{lbl['lbl.sm.financial.doc']}" required="#{empty param['disabledValidation']}"></p:inputText>
+				<!-- #24964 -->
+				<ac:smFieldChangeAlertSVO
+					isShow="#{not empty addFinDoc and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
+					oriValue="#{svoSiteVisitBackingBean.getSVOSmSvManufacturingDoc(addFinDoc).docName}" 
+					currValue="#{addFinDoc.docName}" 
+					alertValue="#{svoSiteVisitBackingBean.getSVOSmSvManufacturingDoc(addFinDoc).docName}"/>
+			</p:column>
+
+			<p:column>
+				<f:facet name="header">
+						<h:outputText value="*" styleClass="mandatory" />
+						#{lbl['lbl.sm.financial.reference']}
+					</f:facet>
+				<p:inputText value="#{addFinDoc.docRef}" maxlength="80" disabled="#{viewFlag}" required="#{empty param['disabledValidation']}" label="#{lbl['lbl.sm.financial.reference']}" />
+				<!-- #24964 -->
+				<ac:smFieldChangeAlertSVO
+					isShow="#{not empty addFinDoc and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
+					oriValue="#{svoSiteVisitBackingBean.getSVOSmSvManufacturingDoc(addFinDoc).docRef}" 
+					currValue="#{addFinDoc.docRef}" 
+					alertValue="#{svoSiteVisitBackingBean.getSVOSmSvManufacturingDoc(addFinDoc).docRef}"/>
+			</p:column>
+
+			<p:column>
+				<f:facet name="header">
+						<h:outputText value="*" styleClass="mandatory" />
+						#{lbl['lbl.sm.financial.date.issued']}
+					</f:facet>
+				<p:calendar id="dateIssuedCalId" navigator="true" disabled="#{viewFlag}" required="#{empty param['disabledValidation']}"
+					label="#{lbl['lbl.sm.financial.date.issued']}" value="#{addFinDoc.docDate}"
+					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
+					readonlyInput="true" size="15" showOn="button" />
+				<!-- #24964 -->
+				<ac:smFieldChangeAlertSVO
+					isShow="#{not empty addFinDoc and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
+					oriValue="#{svoSiteVisitBackingBean.getSVOSmSvManufacturingDoc(addFinDoc).docDate}" 
+					currValue="#{addFinDoc.docDate}" 
+					alertValue="#{svoSiteVisitBackingBean.getSVOSmSvManufacturingDoc(addFinDoc).docDate}"/>
+			</p:column>
+
+			<p:column>
+				<f:facet name="header">
+						#{lbl['lbl.sm.financial.note']}
+					</f:facet>
+				<p:inputTextarea rows="3" cols="35" autoResize="false" disabled="#{viewFlag}" maxlength="500"
+					value="#{addFinDoc.remark}" label="#{lbl['lbl.sm.financial.note']}">
+					<f:validateLength maximum="500" />
+				</p:inputTextarea>
+				<!-- #24964 -->
+				<ac:smFieldChangeAlertSVO
+					isShow="#{not empty addFinDoc and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
+					oriValue="#{svoSiteVisitBackingBean.getSVOSmSvManufacturingDoc(addFinDoc).remark}" 
+					currValue="#{addFinDoc.remark}" 
+					alertValue="#{svoSiteVisitBackingBean.getSVOSmSvManufacturingDoc(addFinDoc).remark}"/>
+			</p:column>
+		</p:dataTable>
+
+		<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.add']}" rendered="#{!viewFlag}"
+					action="#{svoSiteVisitBackingBean.addFinancialDoc}"
+					update="dtAddFinDocId" />
+				<!-- #24964 -->
+				<p:commandButton value="#{lbl['lbl.btn.delete']}" rendered="#{!viewFlag}"
+					oncomplete="financialDocDeletePopUp.show();"
+					update="dtAddFinDocId"  id="btnFinancialDocDelete"
+					disabled="#{empty svoSiteVisitBackingBean.managedBean.selectedAddFinancialDoc}">
+					<f:param name="disabledValidation" value="true" />
+				</p:commandButton>
+			</div>
+	</p:panel>
+	
+	<ac:confirmationPopup id="financialDocDeletePopUpId"
+		widget="financialDocDeletePopUp"
+		okAction="svoSiteVisitBackingBean.removeFinancialDoc()"
+		width="400" height="100"
+		title="#{lbl['lbl.msg.confirm.delete.header']}"
+		content="#{lbl['lbl.msg.confirm.delete']}" 
+		update=":#{p:component('pnlAddFinancialDoc')}"/>
+</ui:composition>

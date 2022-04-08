@@ -1,0 +1,254 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<h:panelGroup id="specDetails" width="100%">
+		<p:panel header="#{lbl['lbl.demo.item.demo.presentation']}"
+			text-transform="uppercase" toggleable="true">
+			<p:dataTable id="demoSpecItemId" var="demoSpecItemList"
+				value="#{demoInvBB.managedBean.scQtCheckSt2techProposal}"
+				rowIndexVar="index"
+				selection="#{demoInvBB.managedBean.s2TechSelect}"
+				first="#{demoInvBB.managedBean.technicalTableRow}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				rowKey="#{demoSpecItemList}" width="100%">
+
+				<p:column headerText="#{lbl['lbl.sc.spec.checklist.title']}"
+					style="width:50%;white-space: normal;">
+					<h:outputText value="#{demoSpecItemList.title}"></h:outputText>
+				</p:column>
+
+<!-- 				<p:column style="width:20%;white-space: normal;"> -->
+<!-- 					<f:facet name="header"> -->
+<!-- 						<h:outputText value="#{lbl['lbl.sc.type']}" /> -->
+<!-- 						<ac:iconTooltip id="technicalChecklistMechasine#{index}Sc" -->
+<!-- 							value="#{lbl['lbl.sc.type.technical.tooltip']}" /> -->
+<!-- 					</f:facet> -->
+
+<!-- 					<h:panelGroup id="technicalChecklisttypes"> -->
+<!-- 						<h:outputText -->
+<!-- 							value="#{specificationBackingBean.getParameterDesc(demoSpecItemList.definationType)}"></h:outputText> -->
+<!-- 					</h:panelGroup> -->
+<!-- 				</p:column> -->
+
+				<p:column headerText="#{lbl['lbl.sc.spec.specification.status']}"
+					style="width:7%;white-space: normal;">
+					<h:panelGroup id="technicalSpecificationStatus">
+						<h:outputText
+							value="#{specificationBackingBean.getStatusDescById(demoSpecItemList.pmStatus.statusId)}"></h:outputText>
+					</h:panelGroup>
+				</p:column>
+
+				<p:column style="width:5%;text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.action']}" />
+					</f:facet>
+					<h:panelGroup id="technicalChecklistEditActionView">
+						<p:commandButton value="#{lbl['lbl.btn.view']}" process="@this"
+							styleClass="BtnSpacing"
+							action="#{demoInvBB.demoSpectechnicalChecklist(index,demoSpecItemList,'T')}"
+							oncomplete="demoSpecList.show();" update="@([id$=questionTbl])"
+							partialSubmit="true" />
+					</h:panelGroup>
+				</p:column>
+
+			</p:dataTable>
+
+		</p:panel>
+	</h:panelGroup>
+
+	<p:dialog widgetVar="demoSpecList" modal="true" width="950"
+		height="500" position="top"
+		header="#{lbl['lbl.sc.demo.spec.tech.list']}">
+
+		<p:dataTable id="questionTbl" converter="PositionMetricConverter"
+			value="#{demoInvBB.managedBean.templateSpecBean.specMaster.tplSpecQuestions}"
+			widgetVar="#{templateSpecId}questionTblWidget" var="question"
+			rowIndexVar="row"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			scrollable1="true" scrollWidth1="#{scrollWidth}">
+
+			<ui:param name="isFulfilmentTypeOneOff"
+				value="#{question.clFulfilmentTypeCode.parameterCode == ParameterConst.fulfilmentTypeOneOff}" />
+			<ui:param name="isShowService"
+				value="#{(!isFulfilmentTypeReq or (isFulfilmentTypeReq and !isFulfilmentTypeOneOff))}" />
+			<ui:param name="widthPixes"
+				value="#{(isSpecificationReq and !isItemTypeService)?'170px':'100px'}" />
+			<ui:param name="specificationrequired"
+				value="#{isSpecTypeTechnical or (isSpecTypeFinancial and !isSpecificationReq) or isSqSpec }"></ui:param>
+			<ui:param name="widthPixes"
+				value="#{(isSpecificationReq and !isItemTypeService)?'100px':'85px'}" />
+			<ui:param name="clspecDetail"
+				value="#{fn:replace(question.clSpecDetail,',',', ')}"></ui:param>
+			<ui:param name="navToFirstPage"
+				value="#{templateSpecId}questionTblWidget.paginator.setPage(0, false);" />
+			<ui:param name="navToNextPage"
+				value="#{templateSpecId}nextBtnWG.getJQ().click();" />
+			<ui:param name="addItemSpecOnComplete"
+				value="#{row mod rowsPerPage == (rowsPerPage - 1) ? navToNextPage : ''}" />
+			<ui:param name="prevSpecQuestion"
+				value="#{row > 0 ? templateSpecBean.specMaster.tplSpecQuestions[row-1] : null}" />
+			<ui:param name="isQuestionTypeItem"
+				value="#{question.questionType == TplSpecConst.questionTypeItem}" />
+			<ui:param name="isPriceTypeStandard"
+				value="#{question.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard}" />
+			<ui:param name="isPriceTypeAllStandard"
+				value="#{isPriceTypeStandard or question.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalStandard}" />
+			<ui:param name="isAnswerTypeDropdown"
+				value="#{question.answerTypeCode.parameterCode == ParameterConst.answerTypeDropdown}" />
+			<ui:param name="isAnswerTypeText"
+				value="#{question.answerTypeCode.parameterCode == ParameterConst.answerTypeText}" />
+			<ui:param name="isAnswerTypeNumeric"
+				value="#{question.answerTypeCode.parameterCode == ParameterConst.answerTypeNumeric}" />
+			<ui:param name="isUOMHours"
+				value="#{question.clUom.uomCode == 'H' or question.clUom.uomCode == 'HUR' or question.clUom.uomCode == 'HR'}" />
+			<ui:param name="isUOMDays"
+				value="#{question.clUom.uomCode == 'D' or question.clUom.uomCode == 'DAY'}" />
+			<ui:param name="isUOMNoOfPerson"
+				value="#{question.clUom.uomCode == 'PRS'}" />
+			<ui:param name="delBtnClientId" value="#{templateSpecId}delBtn" />
+			<ui:param name="isValidationReq"
+				value="#{param[p:component(delBtnClientId)]==null}" />
+			<ui:param name="isQuestion" value="true" />
+
+			<f:attribute name="rows" value="#{rowsPerPage}" />
+			<p:columnGroup type="header">
+				<p:row>
+					<p:column colspan="1">
+						<f:facet name="header">
+							<h:outputText value="* " styleClass="mandatory"
+								rendered="#{updateSpec}" />
+							<h:outputText value="#{lbl['lbl.tpl.spec.content.item']}" />
+						</f:facet>
+
+					</p:column>
+					<p:column rowspan="#{specificationrequired ? 2 : 1}"
+						style="width:98px;"
+						rendered="#{isItemTypeService and isFulfilmentTypeReq}">
+						<f:facet name="header">							
+							<h:outputText
+								value="#{lbl['lbl.tpl.spec.content.fulfilment.type']}" />
+						</f:facet>
+
+					</p:column>
+					<p:column rowspan="#{specificationrequired ? 2 : 1}"
+						style="width:120px;">
+						<f:facet name="header">							
+							<h:outputText value="#{lbl['lbl.tpl.spec.content.uom']}" />
+						</f:facet>
+
+
+					</p:column>
+					<p:column rowspan="#{specificationrequired ? 2 : 1}"
+						style="width:70px;white-space:normal;">
+						<f:facet name="header">							
+							<h:outputText
+								value="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}" />
+						</f:facet>
+
+					</p:column>
+					<p:column rowspan="#{specificationrequired ? 2 : 1}"
+						style="width:60px;white-space:normal;">
+						<f:facet name="header">							
+							<h:outputText
+								value="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}" />
+						</f:facet>
+
+					</p:column>
+					<p:column rowspan="#{specificationrequired ? 2 : 1}"
+						style="width:60px;white-space:normal;">
+						<f:facet name="header">						
+							<h:outputText
+								value="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}" />
+						</f:facet>
+
+					</p:column>
+					<p:column rowspan="#{specificationrequired ? 2 : 1}"
+						style="width:63px;white-space:normal;"
+						rendered="#{isDurationByItem}">
+						<f:facet name="header">							
+							<h:outputText
+								value="#{lbl['lbl.tpl.spec.content.duration.month']}" />
+						</f:facet>
+
+					</p:column>
+
+					<ui:param name="widthPixes"
+						value="#{(isSpecificationReq and !isItemTypeService)?'100px':'85px'}" />
+					<p:column rowspan="#{specificationrequired ? 2 : 1}"
+						style="width:170px;white-space:normal">
+						<f:facet name="header">							
+							<h:outputText value="#{lbl['lbl.tpl.spec.content.quantity']}" />
+						</f:facet>
+					</p:column>
+
+					<p:column rowspan="#{specificationrequired ? 2 : 1}"
+						style="width:170px;white-space:normal">
+						<f:facet name="header">						
+							<h:outputText value="#{lbl['lbl.tpl.req.spec.demo']}" />
+						</f:facet>
+					</p:column>
+				</p:row>
+			</p:columnGroup>
+
+			<p:column>
+				<h:outputText value="#{fn:replace(question.clItem,',',', ')}"
+					escape="false" />
+				<h:outputText
+					value="#{templateSpecBackingBean.replaceWithBR(clspecDetail)}"
+					escape="false" style="white-space: normal;word-wrap: break-word;" />
+			</p:column>
+
+			<p:column style="width:120px;">
+				<h:outputText value="#{question.clUom.uomName}" />
+			</p:column>
+
+			<p:column style="width:70px;white-space:normal;">
+				<h:panelGroup id="freqUOMPG" style="white-space:nowrap;">
+					<h:outputText value="#{question.clUomFrequency}" />
+				</h:panelGroup>
+			</p:column>
+
+			<p:column style="width:60px;white-space:normal;">
+				<h:panelGroup id="dayUOMPG" style="white-space:nowrap;">
+					<h:outputText value="#{question.clUomPerDay}" />
+				</h:panelGroup>
+			</p:column>
+
+			<p:column style="width:60px;white-space:normal;">
+				<h:panelGroup id="monthUOMPG" style="white-space:nowrap;">
+					<h:outputText value="#{question.clUomPerMonth}" />
+				</h:panelGroup>
+			</p:column>
+
+			<p:column style="width:63px;white-space:normal;"
+				rendered="#{isDurationByItem}">
+				<h:panelGroup id="durationPG" style="white-space:nowrap;">
+					<h:outputText value="#{question.clDurationMonth}" />
+				</h:panelGroup>
+			</p:column>
+
+			<p:column style="width:170px;white-space:normal">
+				<h:panelGroup id="qtyPG" rendered="#{isQuestionTypeItem}">
+					<h:outputText value="#{question.clQuantity}" />
+				</h:panelGroup>
+			</p:column>
+
+			<p:column style="width:125px;">
+				<p:outputPanel id="demoPop">
+					<p:inputText id="demoId"
+						value="#{demoInvBB.getParameterDesc(ParameterTypeConst.yesNoFlag, 
+								fn:toUpperCase(question.itemReqDemo))}"
+						style="width:200px;" disabled="true" />
+				</p:outputPanel>
+			</p:column>
+		</p:dataTable>
+
+	</p:dialog>
+
+</ui:composition>

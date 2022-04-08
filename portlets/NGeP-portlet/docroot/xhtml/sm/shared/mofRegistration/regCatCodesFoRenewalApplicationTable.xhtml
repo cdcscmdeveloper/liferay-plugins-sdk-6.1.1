@@ -1,0 +1,367 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:dataTable var="catBeanR" widgetVar="smCatCodesRenewApplDtWidVar"
+		value="#{backingBean.managedBean.activeCategoryList}"
+		rowKey="#{catBeanR}" rowIndexVar="index" id="catDtR"
+		selection="#{backingBean.managedBean.deleteCategoryList}">
+		<ac:paginator for="catDtR" />
+		<p:columnGroup type="header">
+
+			<p:row>
+				<p:column selectionMode="multiple" style="width:2%"
+					rendered="#{!backingBean.managedBean.approverUser}" />
+				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
+					style="width : 2%;" />
+				<p:column headerText="#{lbl['lbl.sm.catCodes.cate']}" style="width :350px;white-space : normal" />
+				<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" />
+				<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" />
+				<p:column headerText="#{lbl['lbl.sm.status']}"
+					rendered="#{!backingBean.managedBean.poUser and !backingBean.managedBean.approverUser}" />
+				<p:column headerText="#{lbl['lbl.sm.catCodes.poAct']}"
+					rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}" />
+				<p:column headerText="#{lbl['lbl.sm.catCodes.appAct']}"
+					rendered="#{backingBean.managedBean.approverUser}" />
+				<p:column headerText="#{lbl['lbl.sm.catCodes.remark']}"
+					rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}" />
+				<p:column rendered="#{backingBean.managedBean.smAppl.resubmit}"
+					headerText="#{lbl['lbl.sm.catCodes.prevDecision']}" />
+			</p:row>
+		</p:columnGroup>
+		<p:column selectionMode="multiple" style="width:2%"
+			rendered="#{!backingBean.managedBean.approverUser}" />
+		<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
+			style="width : 2%;">
+			<p:outputLabel value="#{index + 1}"
+				style="float: left;white-space: normal;" />
+		</p:column>
+		<p:column style="width :350px;white-space : normal">
+			<h:outputText
+				value="#{catBeanR.pmCategoryL1.categoryL1Code} -  #{catBeanR.pmCategoryL1.categoryName}" />
+			<br />
+			<h:outputText
+				value="#{catBeanR.pmCategoryL2.categoryL2Code} -  #{catBeanR.pmCategoryL2.categoryName}" />
+			<br />
+			<h:outputText
+				value="#{catBeanR.pmCategoryL3.categoryL3Code} -  #{catBeanR.pmCategoryL3.categoryName}" />
+		</p:column>
+		<p:column>
+			<p:inputTextarea id="otherDescR" maxlength="100"
+				label="#{lbl['lbl.sm.catCodes.othDesc']}"
+				value="#{catBeanR.otherDesc}" style="width : auto;" rows="5"
+				cols="20" rendered="#{catBeanR.pmCategoryL3.otherDescReq eq 1}">
+				<p:ajax event="blur" process="@this" partialSubmit="true"
+					listener="#{backingBean.assignCategoryReApprovalOnOtherDescChange(catBeanR)}"
+					update=":form:tt:catCodeInfPan" />
+			</p:inputTextarea>
+			<p:graphicImage id="prevOtherDescR"
+				value="/css/images/design/icon_alert.png"
+				style="padding-left : 3px;"
+				rendered="#{not empty catBeanR.approvedDate and (catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS or catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) and not empty catBeanR.prevOtherDesc and (backingBean.managedBean.poUser or backingBean.managedBean.approverUser)}" />
+			<p:tooltip for="prevOtherDescR">
+				<p:inputTextarea readonly="true" disabled="true" rows="5" cols="20"
+					style="width : auto;"
+					value="#{lbl['lbl.sm.catCodes.prevDesc']} #{catBeanR.prevOtherDesc}" />
+			</p:tooltip>
+			<p:message for="otherDescR" showDetail="false" showSummary="true"
+				display="icon" />
+		</p:column>
+		<p:column>
+			<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
+				rendered="#{!catBeanR.specialCategory}" />
+			<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
+				rendered="#{catBeanR.specialCategory}" />
+		</p:column>
+		<p:column
+			rendered="#{!backingBean.managedBean.poUser and !backingBean.managedBean.approverUser}">
+			<h:outputText value="#{lbl['lbl.sm.catCodes.pendingDec']}"
+				rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}" />
+			<h:outputText value="#{lbl['lbl.sm.catCodes.pendingVer']}"
+				rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_RE_APPROVAL_STATUS}" />
+			<p:graphicImage id="pendReApprvImg"
+				value="/css/images/design/icon_alert.png"
+				style="padding-left : 3px;"
+				rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_RE_APPROVAL_STATUS}" />
+			<p:tooltip for="pendReApprvImg">
+				<h:outputText value="#{lbl['lbl.sm.catCodes.prevAppvd.toolTip']}" />
+			</p:tooltip>
+			<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
+				rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
+		</p:column>
+		<p:column
+			rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}">
+			<p:selectOneRadio layout="pageDirection" id="catPoApprR"
+				value="#{catBeanR.poDecFlg}"
+				label="#{lbl['lbl.sm.catCodes.poAct']} #{lbl['lbl.sm.catCodes.forCatCode']} #{catBeanR.pmCategoryL1.categoryL1Code} #{catBeanR.pmCategoryL2.categoryL2Code} #{catBeanR.pmCategoryL3.categoryL3Code} "
+				rendered="#{(catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS or catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_RE_APPROVAL_STATUS or catBeanR.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS) and backingBean.managedBean.poUser}">
+				<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.apprv']}"
+					itemValue="1" />
+				<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.reject']}"
+					itemValue="0" />
+				<p:ajax event="change" process="@this" update="poCatRDecisionRmrk"
+					partialSubmit="true"
+					listener="#{backingBean.assignCategoryApproveOrRejectDate(catBeanR)}" />
+			</p:selectOneRadio>
+
+			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+				<table
+					style="width: 100%; border: none !important; table-layout: fixed !important;">
+					<tr>
+						<td
+							style="border: none !important; white-space: normal; word-wrap: break-word !important;">
+							<h:outputText
+								value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.approved']}"
+								rendered="#{(catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS or catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_RE_APPROVAL_STATUS or catBeanR.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS) and catBeanR.poDecFlg eq 1}"
+								escape="false" /> <h:outputText
+								value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.rejected']}"
+								rendered="#{(catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS or catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_RE_APPROVAL_STATUS or catBeanR.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS) and catBeanR.poDecFlg eq 0}"
+								escape="false" />
+						</td>
+					</tr>
+					<tr>
+						<td style="border: none !important; font-weight: bold;"><h:outputText
+								value="#{lbl['lbl.sm.catCodes.remark']}" />:</td>
+					</tr>
+					<tr>
+						<td
+							style="border: none !important; white-space: normal; word-wrap: break-word !important;">
+							<p:scrollPanel mode="native" style="height:100px; width:auto;">
+								<h:outputText value="#{catBean.poRemarks}"
+									rendered="#{not empty catBean.poRemarks}" />
+							</p:scrollPanel>
+						</td>
+					</tr>
+				</table>
+			</p:outputPanel>
+		</p:column>
+		<p:column rendered="#{backingBean.managedBean.poUser}">
+			<p:inputTextarea  autoResize="false" value="#{catBeanR.poRemarks}" maxlength="2000"
+				rendered="#{backingBean.managedBean.poUser}" style="white-space:normal; width: 95%"
+				rows="6" cols="30"
+				label="#{lbl['lbl.sm.catCodes.rejRemarks']} #{catBeanR.pmCategoryL1.categoryL1Code} #{catBeanR.pmCategoryL2.categoryL2Code} #{catBeanR.pmCategoryL3.categoryL3Code} "
+				id="poCatRDecisionRmrk">
+				<p:ajax process="@this" update=":form:tt:catCodeInfPan" />
+				<f:validateLength maximum="2000" />
+			</p:inputTextarea>
+		</p:column>
+		<p:column rendered="#{backingBean.managedBean.approverUser}">
+			<p:selectOneRadio layout="pageDirection" id="catRApprvrAppr"
+				value="#{catBeanR.apprvrDecFlg}"
+				label="#{lbl['lbl.sm.catCodes.appAct']} #{lbl['lbl.sm.catCodes.forCatCode']} #{catBeanR.pmCategoryL1.categoryL1Code} #{catBeanR.pmCategoryL2.categoryL2Code} #{catBeanR.pmCategoryL3.categoryL3Code} "
+				rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS or catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_RE_APPROVAL_STATUS or catBeanR.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
+				<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.apprv']}"
+					itemValue="1" />
+				<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.reject']}"
+					itemValue="0" />
+				<p:ajax event="change" process="@this"
+					update="apprvrCatRDecisionRmrk" partialSubmit="true"
+					listener="#{backingBean.assignCategoryApproveOrRejectDate(catBeanR)}" />
+			</p:selectOneRadio>
+			<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
+				rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
+		</p:column>
+		<p:column rendered="#{backingBean.managedBean.approverUser}">
+			<p:inputTextarea autoResize="false" value="#{catBeanR.approverRemarks}"
+				id="apprvrCatRDecisionRmrk" style="white-space:normal;" rows="5" cols="20"
+				rendered="#{(catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS or catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_RE_APPROVAL_STATUS or catBeanR.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS)}"
+				label="#{lbl['lbl.sm.catCodes.rejRemarks']} #{catBeanR.pmCategoryL1.categoryL1Code} #{catBeanR.pmCategoryL2.categoryL2Code} #{catBeanR.pmCategoryL3.categoryL3Code} "
+				maxlength="2000">
+				<p:ajax process="@this" update=":form:tt:catCodeInfPan" />
+				<f:validateLength maximum="2000" />
+			</p:inputTextarea>
+		</p:column>
+		<p:column rendered="#{backingBean.managedBean.smAppl.resubmit}">
+			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+				<p:outputPanel
+					rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS or catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_RE_APPROVAL_STATUS}">
+					<p:outputPanel rendered="#{not empty catBeanR.prevApprDecFlg}">
+						<table
+							style="width: 100%; border: none !important; table-layout: fixed !important;">
+							<tr>
+								<td
+									style="border: none !important; white-space: normal; word-wrap: break-word !important;">
+									<h:outputText
+										value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.approved']}"
+										rendered="#{catBeanR.prevApprDecFlg eq 1}" escape="false" />
+									<h:outputText
+										value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.rejected']}"
+										rendered="#{catBeanR.prevApprDecFlg eq 0}" escape="false" />
+								</td>
+							</tr>
+							<tr>
+								<td style="border: none !important; font-weight: bold;"><h:outputText
+										value="#{lbl['lbl.sm.catCodes.prevRmrk']}" /></td>
+							</tr>
+							<tr>
+								<td
+									style="border: none !important; white-space: normal; word-wrap: break-word !important;"><h:outputText
+										value="#{catBeanR.prevApproverRemarks}"
+										rendered="#{not empty catBeanR.prevApproverRemarks}" /></td>
+							</tr>
+						</table>
+					</p:outputPanel>
+					<p:outputPanel rendered="#{empty catBeanR.prevApprDecFlg}">
+						<h:outputText value="#{lbl['lbl.sm.no.available']}" />
+					</p:outputPanel>
+				</p:outputPanel>
+				<p:outputPanel
+					rendered="#{catBeanR.recordStatusFlg ne SupplierManagementConst.PENDING_ACT_STATUS}">
+					<h:outputText value="#{lbl['lbl.sm.no.available']}" />
+				</p:outputPanel>
+			</p:outputPanel>
+			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+				<p:outputPanel
+					rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS or catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_RE_APPROVAL_STATUS}">
+					<p:outputPanel rendered="#{not empty catBeanR.prevPoDecFlg}">
+						<table
+							style="width: 100%; border: none !important; table-layout: fixed !important;">
+							<tr>
+								<td
+									style="border: none !important; white-space: normal; word-wrap: break-word !important;">
+									<h:outputText
+										value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.approved']}"
+										rendered="#{catBeanR.prevPoDecFlg eq 1}" escape="false" /> <h:outputText
+										value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.rejected']}"
+										rendered="#{catBeanR.prevPoDecFlg eq 0}" escape="false" />
+								</td>
+							</tr>
+							<tr>
+								<td style="border: none !important; font-weight: bold;"><h:outputText
+										value="#{lbl['lbl.sm.catCodes.prevRmrk']}" /></td>
+							</tr>
+							<tr>
+								<td
+									style="border: none !important; white-space: normal; word-wrap: break-word !important;"><h:outputText
+										value="#{catBeanR.prevPoRemarks}"
+										rendered="#{not empty catBeanR.prevPoRemarks}" /></td>
+							</tr>
+						</table>
+					</p:outputPanel>
+					<p:outputPanel rendered="#{empty catBeanR.prevPoDecFlg}">
+						<h:outputText value="#{lbl['lbl.sm.no.available']}" />
+					</p:outputPanel>
+				</p:outputPanel>
+				<p:outputPanel
+					rendered="#{catBeanR.recordStatusFlg ne SupplierManagementConst.PENDING_ACT_STATUS}">
+					<h:outputText value="#{lbl['lbl.sm.no.available']}" />
+				</p:outputPanel>
+			</p:outputPanel>
+			<p:outputPanel
+				rendered="#{!backingBean.managedBean.approverUser  and !backingBean.managedBean.poUser}">
+				<p:outputPanel
+					rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS or catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_RE_APPROVAL_STATUS}">
+					<p:outputPanel rendered="#{not empty catBeanR.prevApprDecFlg}">
+						<table
+							style="width: 100%; border: none !important; table-layout: fixed !important;">
+							<tr>
+								<td
+									style="border: none !important; white-space: normal; word-wrap: break-word !important;">
+									<h:outputText
+										value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.approved']}"
+										rendered="#{catBeanR.prevApprDecFlg eq 1}" escape="false" />
+									<h:outputText
+										value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.rejected']}"
+										rendered="#{catBeanR.prevApprDecFlg eq 0}" escape="false" />
+								</td>
+							</tr>
+							<tr>
+								<td style="border: none !important; font-weight: bold;"><h:outputText
+										value="#{lbl['lbl.sm.catCodes.prevRmrk']}" /></td>
+							</tr>
+							<tr>
+								<td
+									style="border: none !important; white-space: normal; word-wrap: break-word !important;"><h:outputText
+										value="#{catBeanR.prevApproverRemarks}"
+										rendered="#{not empty catBeanR.prevApproverRemarks}" /></td>
+							</tr>
+						</table>
+					</p:outputPanel>
+					<p:outputPanel rendered="#{empty catBeanR.prevApprDecFlg}">
+						<table
+							style="width: 100%; border: none !important; table-layout: fixed !important;">
+							<tr>
+								<td
+									style="border: none !important; white-space: normal; word-wrap: break-word !important;">
+									<h:outputText
+										value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.approved']}"
+										rendered="#{catBeanR.prevPoDecFlg eq 1}" escape="false" /> <h:outputText
+										value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.rejected']}"
+										rendered="#{catBeanR.prevPoDecFlg eq 0}" escape="false" />
+								</td>
+							</tr>
+							<tr>
+								<td style="border: none !important; font-weight: bold;"><h:outputText
+										value="#{lbl['lbl.sm.catCodes.prevRmrk']}" /></td>
+							</tr>
+							<tr>
+								<td
+									style="border: none !important; white-space: normal; word-wrap: break-word !important;"><h:outputText
+										value="#{catBeanR.prevPoRemarks}"
+										rendered="#{not empty catBeanR.prevPoRemarks}" /></td>
+							</tr>
+						</table>
+					</p:outputPanel>
+
+				</p:outputPanel>
+				<p:outputPanel
+					rendered="#{catBeanR.recordStatusFlg ne SupplierManagementConst.PENDING_ACT_STATUS and catBeanR.recordStatusFlg ne SupplierManagementConst.PENDING_RE_APPROVAL_STATUS}">
+					<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}" />
+				</p:outputPanel>
+			</p:outputPanel>
+		</p:column>
+	</p:dataTable>
+	<p:spacer height="2px;" />
+	<c:if
+		test="#{!backingBean.managedBean.approverUser}">
+		<div align="right">
+			#{lbl['lbl.sm.payment.click']}
+			
+			<h:panelGroup rendered="#{backingBean.managedBean.smAppl.supplierType ne 'J'}">
+				<a href="#{DocumentRepositoryUtils.baseRepo}shared/SM/Kod_Bidang_Baharu_Bekalan_Perkhidmatan.pdf">#{lbl['lbl.sm.payment.here']}</a>
+			</h:panelGroup>
+
+			<h:panelGroup rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J'}">
+				<a href="#{DocumentRepositoryUtils.baseRepo}shared/SM/Kod_Bidang_Baharu_Perkhidmatan_Perunding.pdf">#{lbl['lbl.sm.payment.here']}</a>
+			</h:panelGroup>
+			
+			#{lbl['lbl.sm.download.categorycode']}
+			<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+				partialSubmit="true" process="@this"
+				oncomplete="catCodePopup.show();">
+			</p:commandButton>
+			
+			<!-- 30865 Start -->
+			<ac:lookupCategoryCode okAction="backingBean.addNewCategoryAction"
+					catcodeL1 ="#{backingBean.managedBean.physicalConsulting}"
+					update="@([id$=catCodeInfPan])"
+					supplierType="#{backingBean.managedBean.smAppl.supplierType}"
+					supplierId="#{backingBean.managedBean.smAppl.smSupplier.supplierId}"
+					facilityType="#{backingBean.managedBean.basicCompanyFacility.facilityType}"
+					paidUpCapital="#{backingBean.managedBean.smAppl.smCompanyBasic.paidUpCapital}"
+					categoryType="#{backingBean.managedBean.smAppl.applCategoryType}"
+					bumiPercentage="#{(backingBean.managedBean.smAppl.applType eq 'N' or backingBean.managedBean.smSupplier.bumi) ? backingBean.managedBean.smAppl.smCompanyBasic.bumiPercentage : 0}"
+					businessTypeCode="#{backingBean.managedBean.smSupplier.businessType}"
+					special="#{backingBean.managedBean.smAppl.supplierType}" />
+			<!-- 30865 End -->
+			
+			<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
+				oncomplete="addtnlCatCodeRenewDeletePopUp.show()"
+				update=":form:tt:catCodeInfPan" partialSubmit="true"
+				process=":form:tt:catCodeInfPan">
+			</p:commandButton>
+		</div>
+	</c:if>
+	
+	<ac:confirmationPopup id="addtnlCatCodeRenewDeletePopUpId"
+		widget="addtnlCatCodeRenewDeletePopUp"
+		okAction="backingBean.deleteSelectedCategoryCodes"
+		width="400" height="100"
+		title="#{lbl['lbl.msg.confirm.delete.header']}"
+		content="#{lbl['lbl.msg.confirm.delete']}" 
+		update=":form:tt:catCodeInfPan"/>
+</ui:composition>

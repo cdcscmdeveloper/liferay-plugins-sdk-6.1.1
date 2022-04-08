@@ -1,0 +1,180 @@
+<html>
+<head>
+<style>
+@page {size: A4 portrait;}
+
+@page { @bottom-left { content:element(footer);	}
+
+@bottom-right {
+	content: "Page " counter(page) " of " counter(pages);}
+
+@top-left {
+	content: element(header);}
+}
+.header {
+	display: block;
+	text-align: left;
+	position: running(header);
+}
+## #25025 -start
+.footer {
+		   position: fixed;
+		   left: 0;
+		   bottom: 0;
+		   text-align: left;
+		}
+		
+		.standard{
+			font-family:Arial;
+			font-size:11px;
+			font-weight:normal;
+			font-style:normal;
+			text-decoration:none;
+			color:#333333;
+		}
+		
+		.redText{
+			text-align:justify;
+			font-family:Arial;
+			font-size:12px;
+			font-weight:normal;
+			font-style:normal;
+			text-decoration:none;
+			color:red;
+		}
+		
+## #25025 - end
+p {text-align: justify;}
+
+.text_family {
+	font-family: Arial;
+	font-weight: normal;
+	font-style: normal;
+	text-decoration: none;
+	color: #333333;
+}
+
+.title-text {
+	font-family: Arial;
+	font-weight: normal;
+	font-size: 15px;
+}
+
+## #26770 -start
+.text_family_header {
+	font-family: Arial;
+	font-size: 14px;
+	font-weight: bold;
+}
+## #26770 -end
+</style>
+</head>
+<body>
+
+	<div class='header'>
+		<span class='title-text'>No.Surat Setuju Terima :$loaNo</span>
+	</div>
+	<br />
+	<br />
+	<br />
+	<br />
+
+	<table align="left" width="100%">
+		<tr>
+			<td colspan="2"><span class="text_family_header"><b>PENGAKUAN
+						PENERIMAAN SURAT SETUJU TERIMA DAN LAMPIRAN YANG BERKAITAN OLEH
+						SYARIKAT</b></span></td>
+		</tr>
+		<tr>
+			<td colspan="2"><p>
+					<span class="text_family"> Dengan ini disahkan bahawa yang
+						bertandatangan di bawah ini mengakui penerimaan Surat ini dan
+						lampiran yang berkaitan yang rujukannya ialah $fileNo bertarikh
+						$govtSignDate dan bersetuju dengan terma dan syarat yang
+						terkandung dalam Surat ini tanpa syarat yang mana salinan kepada
+						Surat ini telah pun disimpan, dan selanjutnya disahkan bahawa
+						tiada apa-apa terma, syarat atau stipulasi tambahan kepada yang
+						terkandung dalam dokumen $headerTitle.toLowerCase() dan Surat ini telah
+						dikenakan. </span>
+				</p></td>
+		</tr>
+	</table>
+
+	<table align="left" width="50%" class="text_family">
+		<tr>
+			<td colspan="3"><br />__________________________________</td>
+
+		</tr>
+		<tr>
+			<td style ="width:100px">Nama Penuh</td>
+			<td>:</td>
+			<td style="white-space: normal;">$supplierSignerUser</td>
+		</tr>
+		<tr>
+			<td>No. Kad Pengenalan</td>
+			<td>:</td>
+			<td>$supplierSignerIcNo</td>
+		</tr>
+		<tr valign="top">
+			<td>Alamat</td>
+			<td>:</td>
+			<td style="white-space: normal;">$supplierSignerAddress</td>
+		</tr>
+		<tr>
+			<td>Tarikh</td>
+			<td>:</td>
+			<td>$supplierSignDate</td>
+		</tr>
+		<tr>
+			## #25025 - start
+			<td colspan="3"><br />
+			
+			<br /> Meterai atau Cap Syarikat <br /> <br/> *<i>potong mana yang tidak
+				berkenaan</i></td>
+				## #25025 - end
+		</tr>
+	</table>
+
+	<table align="right" width="50%" class="text_family">
+		<tr>
+			<td colspan="3"><br />__________________________________</td>
+		</tr>
+		<tr>
+			<td style ="width:100px">Nama Penuh Saksi</td>
+			<td>:</td>
+			<td style="white-space: normal;">$supplierWitnessUser</td>
+
+		</tr>
+		<tr>
+			<td>No. Kad Pengenalan</td>
+			<td>:</td>
+			<td>$supplierWitnessIcNo</td>
+
+		</tr>
+		<tr valign="top">
+			<td>Alamat</td>
+			<td>:</td>
+			<td style="white-space: normal;">$!supplierWitnessAddress</td>
+
+		</tr>
+		<tr>
+			<td>Tarikh</td>
+			<td>:</td>
+			<td>$supplierSignDate</td>
+		</tr>
+
+	</table>
+
+<section class="footer">
+	<span class="standard">
+	Tandatangan & Cap (Kerajaan) : .......................
+	<br/><br/>
+	Tandatangan & Cap (Syarikat) : .......................<br/>
+	</span>
+	<span class="redText">
+	Pihak Kerajaan : Pegawai yang diberi kuasa oleh Menteri di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani kontrak<br/>
+	Pihak Syarikat : Penama pada sijil pendaftaran untuk menandatangi Surat ini
+	</span>
+</section>
+</body>
+</html>

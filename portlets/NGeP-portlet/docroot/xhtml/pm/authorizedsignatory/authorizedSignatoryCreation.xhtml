@@ -1,0 +1,148 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<style>
+	.displayTextL {
+		width: 550px !important;
+	}
+	
+	
+	.ui-selectonemenu.ppDropDownWidthS {
+		width: 110px !important;
+	}
+	
+	.ui-selectonemenu.ppDropDownWidthS label{
+		width: 110px !important;
+	}
+	
+	input[id$="effDateId_input"] {
+    	width:80px !important;
+	}
+			
+	input[id$="expDateId_input"] {
+    	width:80px !important;
+	}
+
+	</style>
+	<p:panel header="#{lbl['lbl.pm.authorizedsigntory']}" toggleable="true">
+		<p:spacer height="10"></p:spacer>
+
+		<table>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.pm.as.search']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneMenu
+						value="#{authorizedsignatoryBackingBean.managedBean.zone.zoneId}"
+						style="width:178px;margin-bottom:5px;">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
+						<f:selectItems
+							value="#{authorizedsignatoryBackingBean.retrieveZones()}"
+							var="zone" itemLabel="#{zone.zoneName}"
+							itemValue="#{zone.zoneId}" />
+						<p:ajax event="change"
+							update="searchSignatoryResults, lovSignatory"
+							listener="#{authorizedsignatoryBackingBean.changeZone(authorizedsignatoryBackingBean.managedBean.zone.zoneId)}" />
+					</p:selectOneMenu></td>
+			</tr>
+		</table>
+		
+		<ac:lovPopup />
+		<p:dataTable id="searchSignatoryResults"
+			widgetVar="searchSignatoryResultsWidVar"
+			rowIndexVar="index"
+			rowKey="#{certSignatory}" rows="10" sortMode="multiple"
+			emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+			selection="#{authorizedsignatoryBackingBean.managedBean.deletedCertSignatories}"
+			value="#{authorizedsignatoryBackingBean.managedBean.certSignatories}"
+			var="certSignatory">
+			<ac:paginator for="searchSignatoryResults" />
+			<p:ajax event="toggleSelect" update="@this" process="@this" />
+			<p:ajax event="rowSelectCheckbox" update="@this" />
+			<p:column style="width :50%">
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.pm.as.name']}" />
+				</f:facet>
+				<p:inputText id="asName" value="#{certSignatory.sinnatoryName}"
+					label="#{lbl['lbl.pm.as.name']}" maxlength="80" required="true"
+					disabled="#{!certSignatory.brandNew}" styleClass="displayTextL" />
+				<p:message id="asNameMsg" for="asName" display="icon" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.pm.as.effdate']}" style="width :15%">
+				<p:calendar id="effDateId" value="#{certSignatory.effDate}"
+					navigator="true" maxdate="#{ProfileManagementConst.maxDate}"
+					disabled="#{!certSignatory.brandNew}"
+					label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
+					yearRange="0:+99" showOn="button"
+					mindate="#{authorizedsignatoryBackingBean.managedBean.tomorrow}"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+					<p:ajax event="dateSelect" process="@this" />
+				</p:calendar>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.pm.as.expdate']}" style="width :15%">
+				<p:calendar id="expDateId" value="#{certSignatory.expDate}"
+					valueChangeListener="#{authorizedsignatoryBackingBean.expDateChangedListener}"
+					disabled="#{certSignatory.expDate lt DateUtils.getCurrentDateWithoutTime()}"
+					navigator="true" maxdate="#{ProfileManagementConst.maxDate}"
+					label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
+					yearRange="0:+99" showOn="button"
+					mindate="#{authorizedsignatoryBackingBean.managedBean.today}"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+					<f:attribute name="certSignatory" value="#{certSignatory}" />
+					<p:ajax event="dateSelect" process="@this" />
+				</p:calendar>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.pm.search.status']}"
+				style="width :10%">
+				<p:selectOneMenu value="#{certSignatory.recordStatusFlg}"
+					disabled="#{certSignatory.brandNew || certSignatory.recordStatusFlg ==9}"
+					styleClass="ppDropDownWidthS">
+					<f:selectItems
+						value="#{authorizedsignatoryBackingBean.getSignatoryStatusList()}" />
+					<p:ajax event="change" immediate="true"
+						listener="#{authorizedsignatoryBackingBean.certSignatoryStatusChange(certSignatory)}"
+						partialSubmit="true" process="@this" update="@this" />
+				</p:selectOneMenu>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.action']}"
+				style="width :5%;text-align:center;">
+				<p:commandLink
+					disabled="#{!certSignatory.brandNew}" 
+					partialSubmit="true"
+					process="@this" 
+					oncomplete="signatoryDeletePopUp.show();"
+					update="@([id$=#{signatoryDeleteId}])">
+					<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+					<f:setPropertyActionListener target="#{authorizedsignatoryBackingBean.managedBean.deleteSignatory}" 
+							value="#{certSignatory}" />
+				</p:commandLink>
+			</p:column>
+
+		</p:dataTable>
+	
+		<div class="ppRightBtn">
+
+			<p:commandButton id="lovSignatory" value="#{lbl['lbl.btn.add']}"
+				disabled="#{authorizedsignatoryBackingBean.managedBean.zone.zoneId==null}"
+				headerText="User Selection" buttonLabel="#{lbl['lbl.btn.add']}"
+				action="#{authorizedsignatoryBackingBean.addAuthorizer}"
+				update="searchSignatoryResults" />
+		</div>
+		
+		<ac:confirmationPopup id="signatoryDeleteId"
+				widget="signatoryDeletePopUp"
+				okAction="authorizedsignatoryBackingBean.deleteAuthorizedSignatory()"
+				width="400" height="100"
+				title="#{lbl['lbl.msg.confirm.delete.header']}"
+				content="#{lbl['lbl.msg.confirm.delete']}" 
+				update=":#{p:component('searchSignatoryResults')}"/>
+	</p:panel>
+</ui:composition>

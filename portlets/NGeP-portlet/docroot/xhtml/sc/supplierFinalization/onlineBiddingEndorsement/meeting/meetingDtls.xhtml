@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.sc.meeting.details']}" toggleable="true" id="supplierFinalizationOnlineEndorsmentMeetingPanel">
+		<p:dataTable id="meetingDtlTbl" var="meetingDtl"
+			value="#{suppFinalBiddingBackingBean.managedBean.meetingList}"
+			rows="10" rowKey="#{meetingDtl}" rowIndexVar="rowIndex"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			editable="true">
+
+			<ac:paginator for="meetingDtlTbl" />
+
+			<ui:param name="isSecretaryUser"
+					  value="#{suppFinalBiddingBackingBean.managedBean.secretaryUser}" />
+			<ui:param name="disableMeeting"
+					  value="#{!isSecretaryUser or 
+									meetingDtl.recordStatusFlg ne DbValueConst.recordStatusActive}" />
+									
+			<p:column style="width:20px;" styleClass="td-check-box-spacing">
+				<f:facet name="header">
+					<p:selectBooleanCheckbox id="selAllChk" 
+						value="#{suppFinalBiddingBackingBean.managedBean.selectAllMeetings}"
+						disabled="#{!isSecretaryUser}">
+
+						<p:ajax partialSubmit="true" process="@this"
+							update="@([id$=supplierFinalizationOnlineEndorsmentMeetingPanel])"
+							listener="#{suppFinalBiddingBackingBean.selectAll(
+															suppFinalBiddingBackingBean.managedBean.selectAllMeetings, 
+															suppFinalBiddingBackingBean.managedBean.meetingList)}" />
+					</p:selectBooleanCheckbox>
+				</f:facet>
+				<p:selectBooleanCheckbox id="selectMeeting"
+					value="#{meetingDtl.selected}" disabled="#{disableMeeting}">
+					<p:ajax partialSubmit="true" process="@this" update="@([id$=supplierFinalizationOnlineEndorsmentMeetingPanel])" />
+				</p:selectBooleanCheckbox>
+			</p:column>
+
+			<p:column style="width:18%;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.txt.mandatory']}"
+						styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.sc.meeting.date']}" />
+				</f:facet>
+				
+					<ac:dateTime id="meetingDate"
+									required="true"
+									label="#{lbl['lbl.sc.meeting.date']}"
+									disabled="#{disableMeeting}" value="#{meetingDtl.meetingDate}"
+									update="@([id$=meetingDate])" rowIndex="#{rowIndex}">
+								</ac:dateTime>
+				<p:message id="mtgDate" for="meetingDate" display="icon"
+					showDetail="false"></p:message>
+			</p:column>
+
+			<p:column style="width:30%;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.txt.mandatory']}"
+						styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.sc.meeting.location']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.meeting.location.tooltip']}" />
+				</f:facet>
+				<p:inputTextarea label="#{lbl['lbl.sc.meeting.location']}"
+					required="true" rows="2" cols="30" maxlength="255"
+					onkeyup="limitTextArea(this,255);" onkeydown="limitTextArea(this,255);"
+					onmouseout="limitTextArea(this,255);"
+					value="#{meetingDtl.meetingLocation}" id="meetingLocation"
+					disabled="#{disableMeeting}">
+					<p:ajax partialSubmit="true" process="@this" update="@this,mtgLoc" />
+				</p:inputTextarea>
+				<p:message id="mtgLoc" for="meetingLocation" display="icon"
+					showDetail="false"></p:message>
+			</p:column>
+
+			<p:column style="width:20%;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.txt.mandatory']}"
+						styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.sc.status']}" />
+				</f:facet>
+				<p:selectOneMenu label="#{lbl['lbl.sc.status']}" required="false"
+					value="#{meetingDtl.meetingStatusStr}" disabled="#{disableMeeting}">
+					<f:selectItems
+						value="#{suppFinalBiddingBackingBean.getMeetingStatusDropDown()}" />
+					<p:ajax partialSubmit="true" process="@this" update="@this"
+						listener="#{suppFinalBiddingBackingBean.changeMeetingStatus(meetingDtl)}" />
+				</p:selectOneMenu>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.remark']}" style="width:30%;">
+				<p:inputTextarea value="#{meetingDtl.remark}" rows="2" cols="30" maxlength="100"
+				onkeyup="limitTextArea(this,100);" onkeydown="limitTextArea(this,100);"
+					onmouseout="limitTextArea(this,100);" disabled="#{disableMeeting}">
+					<p:ajax partialSubmit="true" process="@this" update="@this" />
+				</p:inputTextarea>
+			</p:column>
+		</p:dataTable>
+
+		<div align="right" class="BtnSpacing">
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
+				process="@this,meetingDtlTbl" partialSubmit="true"
+				action="#{suppFinalBiddingBackingBean.addMeetingDtls}"
+				update="meetingDtlTbl"
+				rendered="#{suppFinalBiddingBackingBean.managedBean.secretaryUser}" />
+
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" id="supplierFinalizationOnlineEndosmentMeetingDtlsdeleteBtnId"
+			disabled="#{suppFinalBiddingBackingBean.deleteselectedList(suppFinalBiddingBackingBean.managedBean.meetingList)}"
+			process="@this" partialSubmit="true"
+				oncomplete="dlgPerformDel.show();" update="@([id$=#{supplierFinalizationOnlineBiddingEndorsmentDeleteId}])"
+				rendered="#{suppFinalBiddingBackingBean.managedBean.secretaryUser}" >
+				<f:setPropertyActionListener target="#{suppFinalBiddingBackingBean.managedBean.selectAllMeetings}" value="#{false}"></f:setPropertyActionListener>
+				</p:commandButton>
+
+		</div>
+		<ui:param name="supplierFinalizationOnlineBiddingEndorsmentDeleteId"
+			value="supplierFinalizationOnlineBiddingEndorsmentDeleteId"></ui:param>
+			<ac:confirmationPopup id="#{supplierFinalizationOnlineBiddingEndorsmentDeleteId}"
+			widget="dlgPerformDel" width="450" height="100"
+			okAction="suppFinalBiddingBackingBean.deleteMeetingDetails"
+			title="#{lbl['lbl.sc.meeting.details']}"
+			content="#{lbl['lbl.sc.dialog.confirm.message']}"
+			update="@([id$=supplierFinalizationOnlineEndorsmentMeetingPanel])" />
+
+		
+	</p:panel>
+
+</ui:composition>

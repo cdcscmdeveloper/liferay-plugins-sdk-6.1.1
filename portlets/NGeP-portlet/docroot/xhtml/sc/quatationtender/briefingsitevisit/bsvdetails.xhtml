@@ -1,0 +1,275 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<ui:param name="isBSVEnabled" value="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_BSVDETAILS) and (empty qTDetailBB.managedBean.amendMentBean or qTDetailBB.managedBean.amendMentBean.brandNew)}" />
+	<ui:param name="isQTStatusPublished" value="#{qTDetailBB.isQTStatusPublished(qTDetailBB.managedBean.qt.qtStatus.statusId)}" />
+	
+	<p:panel header="#{lbl['lbl.sc.briefing.dtls']}" toggleable="true"
+		styleClass="briefingList">
+		<table style="width: 100%" border="0">
+			<tr>
+				<td style="width: 280px; white-space: nowrap;"><p:outputLabel
+						value="#{lbl['lbl.sc.briefing.sameas.sv']}" /></td>
+				<td><p:selectOneRadio value="#{bsvdtlbean.scQtBsv.sameBsv}"
+						disabled="#{!isBSVEnabled or isQTStatusPublished}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="true" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="false" />
+						<p:ajax update="sameasbsvrequired, addtositebutton"
+							listener="#{qTBriefingSiteVisitBackingBean.processChecked}" />
+					</p:selectOneRadio></td>
+			</tr>
+		</table>
+		<p:dataTable id="briefingdtlid" var="briefingdtls"
+			value="#{bsvdtlbean.briefingList}" rowKey="#{briefingdtls}"
+			rowIndexVar="index" styleClass="briefDetails"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			selection="#{bsvdtlbean.selectedBriefingDtls}">
+
+			<ac:paginator for="briefingdtlid" />
+			<p:ajax event="rowSelect" update="@form" />
+			<p:ajax event="rowUnselect" update="@form" />
+			<p:ajax event="rowSelectCheckbox" update="@form" />
+			<p:ajax event="rowUnselectCheckbox" update="@form" />
+			<p:ajax event="toggleSelect" update="@form" />
+			<p:column selectionMode="multiple" style="width:2%"
+				rendered="#{isBSVEnabled and !isQTStatusPublished}" />
+			<p:column headerText="#{lbl['lbl.sc.description']}"
+				style="white-space: normal;word-wrap: break-word;">
+				<h:panelGroup
+					rendered="#{QTStatusConst.QT_PROPOSAL_PREPARATION eq qTBriefingSiteVisitBackingBean.managedBean.currentStatusId and briefingdtls.bsvStatus.statusId ne QTStatusConst.BSV_CANCELLED}">
+					<p:commandLink
+						action="#{qTBriefingSiteVisitBackingBean.gotoAttandanceDtl(briefingdtls)}"
+						partialSubmit="true" process="@this" update="@([id$=briefdlgId])">
+						<h:outputText value="#{briefingdtls.bsvDesc}" />
+					</p:commandLink>
+				</h:panelGroup>
+				<h:panelGroup
+					rendered="#{QTStatusConst.QT_PROPOSAL_PREPARATION ne qTBriefingSiteVisitBackingBean.managedBean.currentStatusId or briefingdtls.bsvStatus.statusId eq QTStatusConst.BSV_CANCELLED}">
+					<h:outputText value="#{briefingdtls.bsvDesc}" />
+				</h:panelGroup>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.date.time.day']}"
+				style="white-space: normal;word-wrap: break-word;">
+				<h:outputText value="#{briefingdtls.bsvDate}">
+					<f:convertDateTime
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT_WITH_DAY}" />
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.location']}"
+				style="white-space: normal;word-wrap: break-word;">
+				<h:outputText value="#{briefingdtls.location}" />,<br/>
+				<h:outputText value="#{qTBriefingSiteVisitBackingBean.getFullFormattedAddress(briefingdtls.address)}" escape="false" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.coordinate.officer']}"
+				style="white-space: normal;word-wrap: break-word;">
+				<h:outputText value="#{briefingdtls.coordinatingOfficer}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.qt.max.attendance']}"
+				style="width:14%;text-align: right;">
+				<h:outputText value="#{briefingdtls.maxNoOfAttendance}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.status']}"
+				style="white-space: normal;word-wrap: break-word;">
+				<h:outputText
+					value="#{qTBriefingSiteVisitBackingBean.getStatusDescById(briefingdtls.bsvStatus.statusId)}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.action']}"
+				style="width:5%;white-space: normal;text-align: center;"
+				rendered="#{isBSVEnabled}">
+				<p:commandLink 
+					action="#{qTBriefingSiteVisitBackingBean.editAction(briefingdtls,index,'B')}"
+					partialSubmit="true" process="@this" update="@([id$=briefdlgId])"
+					rendered="#{briefingdtls.bsvStatus.statusId ne QTStatusConst.BSV_COMPLETED}">
+					<h:graphicImage
+						value="#{CommonUIConstant.imagePathUptoDesign}/edit.png"
+						styleClass="tasklist_title1" />
+				</p:commandLink>
+			</p:column>
+		</p:dataTable>
+		<ui:param name="briefingDelPopUp" value="briefingDelPopUp#{!empty bsvdtlbean.tplSpecZoneDtl ? bsvdtlbean.tplSpecZoneDtl.specZoneId : ''}" />
+		<div class="ppRightBtn BtnSpacing">
+			<h:panelGroup id="addtositebutton">
+				<p:commandButton id="addtositevisitid"
+					update="@([id$=sameasbsvrequired])"
+					value="#{lbl['lbl.sc.qt.addtositevisit']}"
+					process="@this,briefingdtlid" partialSubmit="true"
+					actionListener="#{qTBriefingSiteVisitBackingBean.addToSiteVisitDtl(bsvdtlbean)}"
+					rendered="#{bsvdtlbean.scQtBsv.sameBsv eq 'false' and isBSVEnabled and !isQTStatusPublished}" />
+			</h:panelGroup>
+			<p:commandButton id="briefingaddid" value="#{lbl['lbl.btn.add']}"
+				process="@this"
+				disabled="#{bsvdtlbean.briefingList.size() eq 1}"
+				rendered="#{isBSVEnabled and !isQTStatusPublished}"
+				action="#{qTBriefingSiteVisitBackingBean.addBsvDetails('B')}"
+				oncomplete="addbsvdtls.show();" update="@(.qtBriefDetails)" />
+
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+			disabled="#{empty bsvdtlbean.selectedBriefingDtls}"
+				process="@this, briefingdtlid"
+				partialSubmit="true"
+				oncomplete="#{briefingDelPopUp}.show();"
+				rendered="#{isBSVEnabled and !isQTStatusPublished}"
+				update="@this" />
+			
+		</div>
+		<ac:confirmationPopup id="briefingDtlsDeleteId"
+			widget="#{briefingDelPopUp}"
+			okAction="#{qTBriefingSiteVisitBackingBean.deleteBsvDetails('B')}"
+			width="37%" height="100"
+			title="#{lbl['lbl.sc.briefing.dtls']}"
+			content="#{lbl['lbl.sc.dialog.confirm.briefing.details.dtls']}"
+			update="@form" >
+		</ac:confirmationPopup>
+	</p:panel>
+
+	<h:panelGroup id="sameasbsvrequired">
+		<h:panelGroup rendered="#{bsvdtlbean.scQtBsv.sameBsv eq 'false'}">
+
+			<p:panel header="#{lbl['lbl.sc.site.visit.dtls']}" toggleable="true"
+				styleClass="briefingList">
+				<p:dataTable id="sitevisitdtlid" var="sitevisitdtls"
+					value="#{bsvdtlbean.sitevisitList}" styleClass="briefDetails"
+					selection="#{bsvdtlbean.selectedSiteVisitDtls}"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					rowKey="#{sitevisitdtls}" rowIndexVar="rowIndex" editable="true">
+
+					<ac:paginator for="sitevisitdtlid" />
+					<p:ajax event="rowSelect" update="@form" />
+			<p:ajax event="rowUnselect" update="@form" />
+			<p:ajax event="rowSelectCheckbox" update="@form" />
+			<p:ajax event="rowUnselectCheckbox" update="@form" />
+			<p:ajax event="toggleSelect" update="@form" />
+					<p:column selectionMode="multiple" style="width:2%"
+						rendered="#{isBSVEnabled and !isQTStatusPublished}" />
+
+					<p:column headerText="#{lbl['lbl.sc.description']}"
+						style="white-space: normal;word-wrap: break-word;">
+						<h:panelGroup
+							rendered="#{QTStatusConst.QT_PROPOSAL_PREPARATION eq qTBriefingSiteVisitBackingBean.managedBean.currentStatusId and sitevisitdtls.bsvStatus.statusId ne QTStatusConst.BSV_CANCELLED}">
+							<p:commandLink
+								action="#{qTBriefingSiteVisitBackingBean.gotoAttandanceDtl(sitevisitdtls)}"
+								partialSubmit="true" process="@this"
+								update="@([id$=briefdlgId])">
+								<h:outputText value="#{sitevisitdtls.bsvDesc}" />
+							</p:commandLink>
+						</h:panelGroup>
+						<h:panelGroup
+							rendered="#{QTStatusConst.QT_PROPOSAL_PREPARATION ne qTBriefingSiteVisitBackingBean.managedBean.currentStatusId or sitevisitdtls.bsvStatus.statusId eq QTStatusConst.BSV_CANCELLED}">
+							<h:outputText value="#{sitevisitdtls.bsvDesc}" />
+						</h:panelGroup>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.date.time.day']}"
+						style="white-space: normal;word-wrap: break-word;">
+						<h:outputText value="#{sitevisitdtls.bsvDate}">
+							<f:convertDateTime
+								pattern="#{CommonConstants.DEFAULT_DATE_FORMAT_WITH_DAY}" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.location']}"
+						style="white-space: normal;word-wrap: break-word;">
+						<h:outputText value="#{sitevisitdtls.location}" />,<br/>
+						<h:outputText value="#{qTBriefingSiteVisitBackingBean.getFullFormattedAddress(sitevisitdtls.address)}" escape="false" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.coordinate.officer']}"
+						style="white-space: normal;word-wrap: break-word;">
+						<h:outputText value="#{sitevisitdtls.coordinatingOfficer}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.qt.max.attendance']}"
+						style="width:14%;text-align: right;">
+						<h:outputText value="#{sitevisitdtls.maxNoOfAttendance}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.status']}"
+						style="white-space: normal;word-wrap: break-word;">
+						<h:outputText
+							value="#{qTBriefingSiteVisitBackingBean.getStatusDescById(sitevisitdtls.bsvStatus.statusId)}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.action']}"
+						style="width:5%;white-space: normal;text-align: center;"
+						rendered="#{isBSVEnabled}">
+						<p:commandLink
+							action="#{qTBriefingSiteVisitBackingBean.editAction(sitevisitdtls,rowIndex,'S')}"
+							partialSubmit="true" process="@this" update="@([id$=briefdlgId])"
+							rendered="#{sitevisitdtls.bsvStatus.statusId ne QTStatusConst.BSV_COMPLETED}">
+							<h:graphicImage
+								value="#{CommonUIConstant.imagePathUptoDesign}/edit.png"
+								styleClass="tasklist_title1" />
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+				<ui:param name="siteVisitDelPopUp" value="siteVisitDelPopUp#{!empty bsvdtlbean.tplSpecZoneDtl ? bsvdtlbean.tplSpecZoneDtl.specZoneId : ''}" />
+				<div class="ppRightBtn BtnSpacing">
+					<p:commandButton id="addsitevisitid" 
+						rendered="#{isBSVEnabled and !isQTStatusPublished}"
+						value="#{lbl['lbl.btn.add']}" process="@this"
+						action="#{qTBriefingSiteVisitBackingBean.addBsvDetails('S')}"
+						oncomplete="addbsvdtls.show();" update="@(.qtBriefDetails)" />
+
+					<p:commandButton value="#{lbl['lbl.btn.delete']}"
+					disabled="#{empty bsvdtlbean.selectedSiteVisitDtls}"
+						process="@this, sitevisitdtlid" partialSubmit="true"
+						oncomplete="#{siteVisitDelPopUp}.show();"
+						rendered="#{isBSVEnabled and !isQTStatusPublished}"
+						update="@this" />
+				</div>
+				<ac:confirmationPopup id="sitevisitDtlsDeleteId"
+					widget="#{siteVisitDelPopUp}"
+					okAction="#{qTBriefingSiteVisitBackingBean.deleteBsvDetails('S')}"
+					width="35%" height="100"
+					title="#{lbl['lbl.sc.site.visit.dtls']}"
+					content="#{lbl['lbl.sc.dialog.confirm.sitevisit.details.dtls']}"
+					update="@form" >
+				</ac:confirmationPopup>
+				<!--  commentd by VidyasagarReddy  -->
+				<!-- <h:panelGroup id="panelGrpId" rendered="#{bsvdtlbean.sitevisitList.size() ge 2}">
+					<table style="width: 100%" border="0">
+						<tr>
+							<td style="width: 27px;"><ac:iconTooltip
+									value="#{lbl['lbl.sc.qt.attendance.tooltip']}" /></td>
+							<td style="width: 145px;"><p:outputLabel
+									value="#{lbl['lbl.sc.qt.attendance.site']}" /></td>
+							<td style="width: 145px;"><p:selectOneRadio
+									disabled="#{!isBSVEnabled}"
+									value="#{bsvdtlbean.scQtBsv.allSiteVisitReq}">
+									<f:selectItem itemLabel="#{lbl['lbl.sc.qt.all']}"
+										itemValue="true" />
+									<f:selectItem itemLabel="#{lbl['lbl.sc.qt.atleast']}"
+										itemValue="false" />
+								</p:selectOneRadio></td>
+							<td><h:panelGroup id="minSiteVisitAtt">
+									<ui:fragment rendered="#{!bsvdtlbean.scQtBsv.allSiteVisitReq}">
+										<p:inputText id="minSiteVisitAttss" size="5"
+											value="#{bsvdtlbean.scQtBsv.minSiteVisitAttend}"
+											readonly="#{bsvdtlbean.scQtBsv.allSiteVisitReq}">
+											<p:ajax event="change" process="@this" partialSubmit="true" />
+										</p:inputText>
+									</ui:fragment>
+								</h:panelGroup></td>
+						</tr>
+					</table>
+				</h:panelGroup> -->
+			</p:panel>
+		</h:panelGroup>
+	</h:panelGroup>
+	
+	<ac:scRemarkAndAttachment
+		remarkList="#{bsvdtlbean.scQtBsv.bsvRemarks}"
+		showAttachment="false"
+		readonly="#{!isBSVEnabled}"
+		rendered="#{isBSVRemarkRendered}" />
+
+</ui:composition>

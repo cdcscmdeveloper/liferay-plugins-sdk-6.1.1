@@ -1,0 +1,478 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:param name="uomCode"
+		value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.requestNoteItem.uom.uomCode}" />
+		<ui:param name="isStockAvailable" value="#{purchaseInquiryBackingBean.managedBean.stockAvailabilityFlag}" />
+		<!-- #29557 - start -->
+		<ui:param name="isEnableTierNormalDel" value="#{purchaseInquiryBackingBean.managedBean.enableTierNormalDel}" />
+		<ui:param name="isEnableTierPromoDel" value="#{purchaseInquiryBackingBean.managedBean.enableTierPromoDel}" />
+		<ui:param name="isEnableZonalTierNormalDel" value="#{purchaseInquiryBackingBean.managedBean.enableZonalTierNormalDel}" />
+		<ui:param name="isEnableZonalTierPromoDel" value="#{purchaseInquiryBackingBean.managedBean.enableZonalTierPromoDel}" />
+		<ui:param name="isEnableZonalNormalDel" value="#{purchaseInquiryBackingBean.managedBean.enableZonalNormalDel}" />
+		<ui:param name="isEnableZonalPromoDel" value="#{purchaseInquiryBackingBean.managedBean.enableZonalPromoDel}" />
+		<!-- #29557 - end -->
+
+	<p:panel header="#{lbl['lbl.sc.price.inquiry.header.inquiry.detail']}"
+		toggleable="true" id="addToCartId">
+		<table>
+			<tr>
+				<td style="width:220px;"><p:outputLabel
+						value="#{lbl['lbl.sc.direct.purchase.title']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td colspan="3">
+				    <p:inputText id="title"
+						value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.title}"
+						required="true" maxlength="100"
+						label="#{lbl['lbl.sc.direct.purchase.title']}"
+						disabled="#{isViewOnly}"
+						size="106">
+						<f:ajax></f:ajax>
+					</p:inputText> <p:message id="titleMsg"
+						for="title" display="icon" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.price.inquiry.supp.name']}" /></td>
+				<td colspan="3"><p:inputText disabled="true"
+						value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.supplierName}"
+						size="106" /></td>
+			</tr>
+			
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.price.inquiry.item.name']}" /></td>
+				<td colspan="3"><p:inputText disabled="true"
+						value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.requestNoteItem.cmItem.itemName}"
+						size="106" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.price.inquiry.product.code']}" /></td>
+				<td><p:inputText disabled="true"
+						value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.requestNoteItem.cmItem.extensionCode}"
+						size="50" /></td>
+			</tr>
+			<tr>
+				<td style="vertical-align: top; text-align: left;"><p:outputLabel
+						value="#{lbl['lbl.sc.price.inquiry.desc']}" /></td>
+				<td><p:inputTextarea disabled="true"
+						value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.requestNoteItem.itemDesc}"
+						rows="3" style="margin-bottom: 5px; width: 325px;" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.price.inquiry.uom']}" /></td>
+				<td><p:inputText disabled="true"
+						value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.requestNoteItem.uom.uomName}"
+						size="28" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.price.inquiry.min.qty']}" /></td>
+				<td><p:inputText disabled="true" styleClass="ppRightBtn"
+						value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.minOrder}"
+						size="28">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+						<p:ajax event="keyup" />
+					</p:inputText></td>
+			</tr>
+			
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.price.inquiry.inquiry.date']}" /></td>
+				<td><p:inputText disabled="true"
+						value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.createdDate}"
+						size="28">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+					</p:inputText></td>
+			</tr>
+			
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.price.inquiry.order.qty']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:inputText disabled="#{isViewOnly}"
+						style="text-align: right;"
+						label="#{lbl['lbl.sc.price.inquiry.order.qty']}" maxlength="14"
+						id="oderQtyId" required="true"
+						validatorMessage="Order Qty: must be a decimal number between 0.0 and 9999999999.999"
+						value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.requestNoteItem.quantity}"
+						size="28">
+						<p:ajax partialSubmit="true" process="@this" update="@this" />
+						<ac:validateNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, uomCode)}"
+							maxIntegerDigits="10" />
+
+					</p:inputText> <p:message id="oderQtyIdMsg" for="oderQtyId" display="icon" /></td>
+			</tr>
+			
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.delivery.term']}" />
+					 <p:outputLabel
+						value="*" styleClass="mandatory" />
+				</td>
+				<td><p:inputText
+						label="#{lbl['lbl.sc.delivery.term']}"
+						value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.deliverTerm}"
+						required="true"
+						disabled="#{isViewOnly}"
+						style="text-align:right;" size="28"/> <p:spacer width="6px" />
+					     <h:outputText value="#{lbl['lbl.sc.days']}" style="font-weight:bold" /> </td>
+			</tr>
+			
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.price.inquiry.day.to.resp']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+
+				<td><p:inputText id="dayToResponse" size="3" maxlength="2"
+						required="true" label="#{lbl['lbl.sc.price.inquiry.day.to.resp']}"
+						disabled="#{isViewOnly}" style="text-align:right;"
+						value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.dayToResponse}">
+						<p:ajax event="keyup" update="dayToRespId"
+							listener="#{purchaseInquiryBackingBean.calcDayToResponse(purchaseInquiryBackingBean.managedBean.scPrInquiry)}" />
+					</p:inputText> <p:spacer width="6px" /><h:outputText
+									value="#{lbl['lbl.sc.days']}"
+									style="font-weight:bold" /> <p:spacer width="6px" /> <p:inputText disabled="true"
+						id="dayToRespId"
+						value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.dateToResponse}"
+						size="12">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+					</p:inputText></td>
+				<td><p:message id="dayToResponseMsg" for="dayToResponse"
+						display="icon" /></td>
+			</tr>
+				
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.price.inquiry.price.type']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td>
+					<table>
+						<!--  #29557 start -->
+						<!-- <tr>
+							<td><c:if test="#{isPendingSubmissionStatus}">
+									<p:selectOneMenu required="true" id="priceType"
+										style="margin-bottom: 5px; width: 235px;"
+										label="#{lbl['lbl.sc.price.inquiry.price.type']}"
+										disabled="#{isViewOnly}"
+										value="#{purchaseInquiryBackingBean.managedBean.priceType}">
+										<f:selectItems
+											value="#{purchaseInquiryBackingBean.managedBean.priceTypes}" />
+										<p:ajax event="change"
+											listener="#{purchaseInquiryBackingBean.priceTypeChangeListener()}"
+											update="respDtl" process="@this" />
+									</p:selectOneMenu>
+									
+								</c:if> <c:if test="#{!isPendingSubmissionStatus}">
+									<p:inputText
+										value="#{purchaseInquiryBackingBean.managedBean.priceType}"
+										disabled="true" size="28" />
+								</c:if></td>
+							<td><p:spacer width="2px"></p:spacer> <h:commandLink
+									immediate="true"
+									action="#{requestNoteBackingBean.viewMarketResearch(purchaseInquiryBackingBean.managedBean.requestNoteDtl)}"
+									rendered="#{isPendingSubmissionStatus and !isTrackingDairyView}">
+									<p:graphicImage value="/css/images/design/ico-view.png"
+										title="#{lbl['lbl.sc.summary.searchresult.tooltip']}"></p:graphicImage>
+								</h:commandLink></td>
+							<td style="margin-top: -3px"><p:message id="priceTypeMsg" rendered="#{isPendingSubmissionStatus}"
+									for="priceType" display="icon" />
+								<ac:iconTooltip value="#{lbl['lbl.sc.pricetype.tooltip']}" /></td>
+						</tr>-->
+						<tr>
+							<td><c:if test="#{isPendingSubmissionStatus or isPendingRnCreationStatus}">
+									<!-- #29557 remove required="true" --><p:selectOneMenu id="priceType"
+										style="margin-bottom: 5px; width: 235px;"
+										label="#{lbl['lbl.sc.price.inquiry.price.type']}"
+										disabled="#{isPendingSubmissionStatus}"
+										value="#{purchaseInquiryBackingBean.managedBean.priceType}">
+										<f:selectItems
+											value="#{purchaseInquiryBackingBean.managedBean.priceTypes}" />
+										<p:ajax event="change"
+											listener="#{purchaseInquiryBackingBean.priceTypeChangeListener()}"
+											update="respDtl" process="@this" />
+									</p:selectOneMenu>
+									
+								</c:if> <c:if test="#{isPendingSupplierRespStatus}">
+									<p:inputText
+										value="#{purchaseInquiryBackingBean.managedBean.priceType}"
+										disabled="true" size="28" />
+								</c:if></td>
+							<td><p:spacer width="2px"></p:spacer> <h:commandLink
+									immediate="true" disabled="#{isPendingSubmissionStatus}"
+									action="#{requestNoteBackingBean.viewMarketResearch(purchaseInquiryBackingBean.managedBean.requestNoteDtl)}"
+									rendered="#{(isPendingSubmissionStatus and !isTrackingDairyView) or (isPendingRnCreationStatus and !isTrackingDairyView)}">
+									<p:graphicImage value="/css/images/design/ico-view.png"
+										title="#{lbl['lbl.sc.summary.searchresult.tooltip']}"></p:graphicImage>
+								</h:commandLink></td>
+							<td style="margin-top: -3px"><p:message id="priceTypeMsg" rendered="#{isPendingSubmissionStatus or isPendingRnCreationStatus}"
+									for="priceType" display="icon" />
+								<ac:iconTooltip rendered="#{isPendingSupplierRespStatus and !isTrackingDairyView}" value="#{lbl['lbl.sc.all.pricetype.tooltip']}" />
+								<ac:iconTooltip rendered="#{(isPendingSubmissionStatus and !isTrackingDairyView) or (isPendingRnCreationStatus and !isTrackingDairyView)}" value="#{lbl['lbl.sc.pricetype.pi.submission.tooltip']}" /></td>
+						</tr>
+						<!--  #29557 end -->
+					</table>
+
+				</td>
+			</tr>
+			
+			<tr>
+				<td colspan="4"><h:panelGroup
+						rendered="#{isPendingSubmissionStatus and !isTrackingDairyView}" id="justiId">
+
+						<table style="width: 100%">
+							<tr>
+								<td style="width: 220px"><p:outputLabel
+										value="#{lbl['lbl.sc.procurement.type']}" /> <p:outputLabel
+										value="*" styleClass="mandatory" /></td>
+								<td>
+									<table>
+										<tr>
+											<td><p:selectOneRadio styleClass="commonLabel"
+													style="margin-bottom: 5px;" id="procType" required="true"
+													label="#{lbl['lbl.sc.procurement.type']}"
+													value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode}"
+													disabled="#{purchaseInquiryBackingBean.managedBean.disProcTyp}">
+													<f:selectItems
+														value="#{purchaseInquiryBackingBean.managedBean.procurementTypes}" />
+													<p:ajax event="change" update="justiId"
+														listener="#{purchaseInquiryBackingBean.procurementTypeEvent}"
+														process="@this" />
+												</p:selectOneRadio></td>
+											<td style="margin-top: -3px"><p:message id="procTypeMsg"
+													for="procType" display="icon" /> <ac:iconTooltip
+													value="#{purchaseInquiryBackingBean.procurementTypeToolTip}" /></td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+
+							<tr>
+								<ui:fragment
+									rendered="#{purchaseInquiryBackingBean.managedBean.procTypeOption}">
+									<td style="width: 220px"><p:outputLabel
+											value="#{lbl['lbl.sc.reason']}" /> <p:outputLabel value="*"
+											styleClass="mandatory" /></td>
+									<td><p:selectOneMenu
+											style="width: 235px; margin-bottom: 5px;"
+											panelStyle="overflow-y: scroll; width:400px; height:200px;"
+											id="justificationId" label="#{lbl['lbl.sc.reason']}"
+											required="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode eq 'A' or purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode eq 'P'}"
+											value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.justificationType.reasonCode}"
+											disabled="#{purchaseInquiryBackingBean.managedBean.disProcTyp}">
+											<f:selectItems
+												value="#{purchaseInquiryBackingBean.managedBean.justDropdown}" />
+											<p:ajax event="change" update="justiId" process="@this" />
+										</p:selectOneMenu> <p:message id="justTypeMsg" for="justificationId"
+											display="icon" /></td>
+
+								</ui:fragment>
+							</tr>
+							<tr>
+								<ui:fragment
+									rendered="#{purchaseInquiryBackingBean.managedBean.procTypeOption}">
+									<td style="vertical-align: top; text-align: left;"><p:outputLabel
+											value="#{lbl['lbl.sc.price.inquiry.just.rmks']}" /> <p:outputLabel
+											value="*" styleClass="mandatory" /></td>
+									<td><p:inputTextarea
+											value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.justification}"
+											id="justificationRmk"
+											label="#{lbl['lbl.sc.price.inquiry.just.rmks']}"
+											maxlength="100"
+											required="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode eq 'A' or purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode eq 'P'}"
+											rows="3" cols="122" style="margin-bottom: 5px; width: 325px;" 
+											disabled="#{purchaseInquiryBackingBean.managedBean.disProcTyp}"/>
+										<p:message id="justRmksMsg" for="justificationRmk"
+											display="icon" /></td>
+								</ui:fragment>
+							</tr>
+						</table>
+					</h:panelGroup></td>
+			</tr>
+		</table>
+	</p:panel>
+	<p:panel header="#{lbl['lbl.sc.price.inquiry.header.response.detail']}"
+		toggleable="true" id="resDetailId">
+	<!--  #29557 start -->	
+	<h:outputText rendered="#{isPendingSupplierRespStatus}" styleClass="instruction" 
+			value="#{lbl['lbl.sc.price.inquiry.supplier.response.instruction']}"
+			escape="false" />
+	<!--  #29557 end -->
+		<table>
+			<tr>
+				<td style="width: 220px;"><p:outputLabel
+						value="#{lbl['lbl.sc.price.inquiry.stock.avail']}" /> <p:outputLabel
+						value="*" styleClass="mandatory"
+						rendered="#{isPendingSupplierRespStatus}" /></td>
+				<td><p:selectOneRadio styleClass="commonLabel"
+						id="stockAvailable" style="margin-bottom: 2px;"
+						label="#{lbl['lbl.sc.price.inquiry.stock.avail']}"
+						disabled="#{!isPendingSupplierRespStatus or isTrackingDairyView or readOnlyTask}"
+						value="#{purchaseInquiryBackingBean.managedBean.stockAvailable}"
+						required="#{!purchaseInquiryBackingBean.isRequisitioner()}">
+						<f:selectItem itemLabel="#{lbl['lbl.sc.price.inquiry.yes']}"
+							itemValue="1" />
+						<f:selectItem itemLabel="#{lbl['lbl.sc.price.inquiry.no']}"
+							itemValue="0" />
+						<p:ajax event="change" update="@([id$=headerTabId])" process="@this"
+							listener="#{purchaseInquiryBackingBean.stockAvailabilityEvent}"
+							partialSubmit="true" />
+					</p:selectOneRadio> <p:message id="stockAvailableMsg" for="stockAvailable"
+						display="icon" /></td>
+			</tr>
+			<!-- #29557 - start -->
+			<tr>
+				<td style="width: 220px;"><p:outputLabel
+							value="#{lbl['lbl.sc.price.inquiry.price.type']}" /></td>
+				<td><ac:iconTooltip value="#{lbl['lbl.sc.all.pricetype.tooltip']}" /></td>
+			</tr>
+			<!-- #29557 - end -->
+		</table>
+		<!-- #29557 - add rendered attribute to hide datatable-->
+		<p:dataTable id="respDtl" var="supplierItemPrice" rendered="false"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			value="#{purchaseInquiryBackingBean.managedBean.supplierItemPrices}"
+			rowKey="#{supplierItemPrice.pricing.pricingId}" rowIndexVar="index" preserveDataModel="true">
+			<p:column headerText="#{lbl['lbl.sc.price.inquiry.zone']}"
+				sortBy="#{supplierItemPrice.tplSpecZone.zoneName}" style="width:25%">
+					#{supplierItemPrice.tplSpecZone.zoneName}
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.price.inquiry.from.qty']}"
+				sortBy="#{supplierItemPrice.fromQty}" style="width:10%">
+				<h:outputText value="#{supplierItemPrice.fromQty}"
+					style="float:right" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.price.inquiry.to.qty']}"
+				sortBy="#{supplierItemPrice.toQty}" style="width:10%">
+				<h:outputText value="#{supplierItemPrice.toQty}" style="float:right" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.price.inquiry.price.published']}"
+				style="width:15%">
+				<h:outputText value="#{supplierItemPrice.pricing.price}"
+					style="float:right">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+
+			<p:column style="width:15%">
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory"
+						rendered="#{isStockAvailable and isPendingSupplierRespStatus}" />
+					<h:outputText value="#{lbl['lbl.sc.price.inquiry.price.offered']}" />
+				</f:facet>
+				<ui:fragment rendered="#{!supplierItemPrice.brandNew}">
+					<h:inputText value="#{supplierItemPrice.itemPrice}"
+						style="text-align:right;"
+						label="#{lbl['lbl.sc.price.inquiry.price.offered']}"
+						maxlength="23" size="30" id="itemPrice"
+						disabled="#{!isStockAvailable or !isPendingSupplierRespStatus}"
+						required="#{isStockAvailable}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						<p:ajax process="@this" update=":#{p:component('resDetailId')}" />
+					</h:inputText>
+					<p:message id="itemPriceMsg" for="itemPrice" display="icon" />
+				</ui:fragment>
+			</p:column>
+
+		</p:dataTable>
+
+		<!-- #29557 start -->
+		<table>
+		<tr>
+		<td style="width: 220px;"></td>
+		<td>
+		<p:tabView id="headerTabId"
+			activeIndex="#{purchaseInquiryBackingBean.managedBean.pricingTabIndex}">
+
+			<p:tab title="#{lbl['lbl.cm.normal']}">
+				<p:tabView id="normalId"
+					activeIndex="#{purchaseInquiryBackingBean.managedBean.normalPricingIndex}">
+
+					<p:tab title="#{lbl['lbl.cm.standard']}">
+						<ui:include src="price/pricingTab.xhtml" />
+					</p:tab>
+					<p:tab disabled="#{purchaseInquiryBackingBean.managedBean.supplierItemPromoPrices.size() == 0}" title="#{lbl['lbl.cm.promotion']}">
+						<c:if test="#{purchaseInquiryBackingBean.managedBean.supplierItemPromoPrices.size() > 0}">
+							<ui:include src="price/promotionTab.xhtml" />
+						</c:if>
+					</p:tab>
+				</p:tabView>
+			</p:tab>
+
+
+			<p:tab title="#{lbl['lbl.cm.tier']}">
+				<p:tabView id="tierId"
+					activeIndex="#{purchaseInquiryBackingBean.managedBean.tierPricingIndex}">
+
+					<p:tab title="#{lbl['lbl.cm.standard']}">
+						<ui:include src="price/pricingTierTab.xhtml" />
+					</p:tab>
+					<p:tab disabled="#{purchaseInquiryBackingBean.managedBean.supplierItemTierPromotionPrices.size() == 0}" title="#{lbl['lbl.cm.promotion']}">
+						<c:if test="#{purchaseInquiryBackingBean.managedBean.supplierItemTierPromotionPrices.size() > 0}">
+							<ui:include src="price/pricingPromotionTierTab.xhtml" />
+						</c:if> 
+					</p:tab>
+				</p:tabView>
+			</p:tab>
+
+			<p:tab title="#{lbl['lbl.cm.zonal']}">
+				<p:tabView id="zonalId"
+					activeIndex="#{purchaseInquiryBackingBean.managedBean.zonalPricingIndex}">
+
+					<p:tab disabled="#{purchaseInquiryBackingBean.managedBean.supplierItemZonalStandardPrices.size() == 0}" title="#{lbl['lbl.cm.standard']}">
+						<c:if test="#{purchaseInquiryBackingBean.managedBean.supplierItemZonalStandardPrices.size() > 0}">
+							<ui:include src="price/zonalStandardPricingTab.xhtml" />
+						</c:if> 
+					</p:tab>
+					<p:tab disabled="#{purchaseInquiryBackingBean.managedBean.supplierItemZonalPromotionPrices.size() == 0}" title="#{lbl['lbl.cm.promotion']}">
+						<c:if test="#{purchaseInquiryBackingBean.managedBean.supplierItemZonalPromotionPrices.size() > 0}">
+							<ui:include src="price/zonalPromotionPricingTab.xhtml" />
+						</c:if> 
+					</p:tab>
+				</p:tabView>
+			</p:tab>
+
+			<p:tab title="#{lbl['lbl.cm.zonal.tier']}">
+				<p:tabView id="zonalTierId"
+					activeIndex="#{purchaseInquiryBackingBean.managedBean.zonalTierPricingIndex}">
+					<p:tab disabled="#{purchaseInquiryBackingBean.managedBean.supplierItemZonalTierStandardPrices.size() == 0}" title="#{lbl['lbl.cm.standard']}">
+						<c:if test="#{purchaseInquiryBackingBean.managedBean.supplierItemZonalTierStandardPrices.size() > 0}">
+							<ui:include src="price/zonalTierPricingTab.xhtml" />
+						</c:if> 
+					</p:tab>
+					<p:tab disabled="#{purchaseInquiryBackingBean.managedBean.supplierItemZonalTierPromotionPrices.size() == 0}" title="#{lbl['lbl.cm.promotion']}">
+						<c:if test="#{purchaseInquiryBackingBean.managedBean.supplierItemZonalTierPromotionPrices.size() > 0}">
+							<ui:include src="price/zonalPromotionTierPricingTab.xhtml" />
+						</c:if> 
+					</p:tab>
+				</p:tabView>
+			</p:tab>
+
+		</p:tabView>
+		</td>
+		</tr>
+		</table>
+		<!-- #29557 end -->
+
+	</p:panel>
+
+	<ac:scRemarkAndAttachment
+		remarkList="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.remarks}"
+		readonly="#{purchaseInquiryBackingBean.managedBean.disabledRemark or readOnlyTask}" showAttachment="false" />
+
+</ui:composition>

@@ -1,0 +1,143 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+		<p:panel header="#{lbl['lbl.fl.out.of.scope']}" toggleable="true" rendered="#{invoiceBackingBean.managedBean.taxInvoice}">
+			<p:treeTable id="outOfScopeTbl" var="chargeLineNode" rendered="#{invoiceBackingBean.managedBean.taxInvoice and not empty invoiceBackingBean.managedBean.outOfScopeSectionItemRoot}"
+					styleClass="invItemChange" value="#{invoiceBackingBean.managedBean.outOfScopeSectionItemRoot}">
+					<p:ajax event="expand" 
+		                onstart="blockOOSTbl.show();" oncomplete="blockOOSTbl.hide();" />
+			<p:column headerText="#{lbl['lbl.fl.item.name']}" style="white-space:normal;text-align:center;width:20%;" >
+				<f:facet name="footer">
+					<h:outputText value=""></h:outputText>			
+				</f:facet>
+				<!--#21416 filter item name-->
+					<h:outputText value="#{invoiceBackingBean.filterItemName(chargeLineNode.flInvoiceSummary.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.itemName)}" id="itemDesc"
+					rendered="#{chargeLineNode.level == 1}" style="text-align:left; float:left;" title="#{chargeLineNode.flInvoiceSummary.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : chargeLineNode.flInvoiceSummary.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.itemDesc}"/>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.fl.uom']}" style="white-space:normal;text-align:center">
+				<f:facet name="footer">
+					<h:outputText value=""></h:outputText>			
+				</f:facet>
+					<h:outputText value="#{chargeLineNode.flInvoiceSummary.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomName}" 
+					rendered="#{chargeLineNode.level == 1}" style="float:left;"/>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="white-space:normal;text-align:center">
+				<f:facet name="footer">
+					<h:outputText value=""></h:outputText>			
+				</f:facet>
+					<h:outputText value="#{chargeLineNode.flInvoiceSummary.flFulfilmentItem.flFulfilmentItemAddr[0].unitPrice}"
+					rendered="#{chargeLineNode.level == 2}" style="float:right;">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
+				</p:column>
+				<p:column style="white-space:normal;text-align:center">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.fl.gst.rate']}"/>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.tax.code.os']}" />
+					</f:facet>
+					<h:outputText value="#{chargeLineNode.flInvoiceItem.gstFlag.parameterCode}" rendered="#{chargeLineNode.level == 3}" >
+					</h:outputText>
+				</p:column>
+				<p:column style="white-space:normal; text-align:center">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.fl.received.qty']}"></h:outputText>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.received.quantity']}"/>
+				</f:facet>
+				<f:facet name="footer">
+					<h:outputText value=""></h:outputText>			
+				</f:facet>
+					<h:outputText value="#{chargeLineNode.flInvoiceItem.totalReceivedQty}" rendered="#{chargeLineNode.level == 3}" style="float:right;">
+						<f:converter converterId="dynamicNumberConverter" />
+						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, chargeLineNode.flInvoiceSummary.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomCode)}" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.fl.unit.price.w.gst']}" style="white-space:normal;text-align:center">
+					<f:facet name="footer">
+						<h:outputText value="#{lbl['lbl.fl.item.total']}"></h:outputText>			
+					</f:facet>
+					<h:outputText value="#{lbl['lbl.txt.na']}" rendered="#{chargeLineNode.level == 3}" style="float:right;">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.fl.inv.total.amt']}" style="white-space:normal;text-align:center">
+				<f:facet name="footer">
+					<f:facet name="footer">
+						<h:outputText value="#{invoiceBackingBean.managedBean.oosInvAmtGrandTotal}" style="float:right;">
+							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</h:outputText>
+					</f:facet>		
+				</f:facet>
+					<h:outputText value="#{chargeLineNode.flInvoiceItem.invAmt}" id="invSumAmountTxt" rendered="#{chargeLineNode.level == 2}" style="float:right;">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
+					<p:inputText size="9" value="#{chargeLineNode.flInvoiceItem.totalReceivedAmt}" maxlength="15" id="oosChargeInvAmt" label="#{lbl['lbl.fl.invoice.amount']}" 
+							required="true" style="float:right;color: red;text-align:right;"  
+						rendered="#{chargeLineNode.level == 3}" disabled="true">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText><p:message for="oosChargeInvAmt" display="icon" />
+				</p:column>
+			</p:treeTable>
+			
+			<p:dataTable emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" value="#{invoiceBackingBean.emptyTableList}" rendered="#{invoiceBackingBean.managedBean.taxInvoice and empty invoiceBackingBean.managedBean.outOfScopeSectionItemRoot}">
+			<p:column headerText="#{lbl['lbl.fl.item.name']}" style="white-space:normal;text-align:center;width:20%;" >
+				<f:facet name="footer">
+					<h:outputText value=""></h:outputText>			
+				</f:facet>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.fl.uom']}" style="white-space:normal;text-align:center">
+				<f:facet name="footer">
+					<h:outputText value=""></h:outputText>			
+				</f:facet>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="white-space:normal;text-align:center">
+				<f:facet name="footer">
+					<h:outputText value=""></h:outputText>			
+				</f:facet>
+				</p:column>
+				<p:column style="white-space:normal;text-align:center">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.fl.gst.rate']}"/>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.tax.code.os']}" />
+					</f:facet>
+				</p:column>
+				<p:column style="white-space:normal; text-align:center">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.fl.received.qty']}"></h:outputText>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.received.quantity']}"/>
+				</f:facet>
+				<f:facet name="footer">
+					<h:outputText value=""></h:outputText>			
+				</f:facet>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.fl.unit.price.w.gst']}" style="white-space:normal;text-align:center">
+				<f:facet name="footer">
+					<h:outputText value=""></h:outputText>			
+				</f:facet>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.fl.inv.total.amt']}" style="white-space:normal;text-align:center">
+				<f:facet name="footer">
+					<f:facet name="footer">
+					</f:facet>		
+				</f:facet>
+				</p:column>
+			</p:dataTable>
+
+			<p:spacer height="2px" rendered="#{invoiceBackingBean.managedBean.oosItemTableClause=='true'}"></p:spacer>
+			<h:panelGroup rendered="#{invoiceBackingBean.managedBean.oosItemTableClause=='true'}">
+				<table>
+					<tr>
+						<td><h:outputText style="text-align:left"
+								value="#{lbl['lbl.fl.invoice.outofscope.clause']}"/></td>
+					</tr>
+				</table>
+			</h:panelGroup>
+		</p:panel>
+		<p:blockUI widgetVar="blockOOSTbl" block="outOfScopeTbl" >
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+</ui:composition>

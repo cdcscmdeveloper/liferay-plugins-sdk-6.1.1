@@ -1,0 +1,263 @@
+package my.ep.web.backingbean.sm.virtualcert;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
+
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.biz.service.sm.virtualcert.IVirtualCertSO;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.dto.sm.questionnaire.QuestionnaireReqDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
+import my.ep.dto.sm.virtualcert.VirtualCertResDTO;
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.persistence.entity.sm.SmMofCert;
+import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.type.pm.RoleCode;
+import my.ep.util.SLAUtils;
+import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.sm.questionnaire.QuestionnaireBackingBean;
+import my.ep.web.managedbean.sm.virtualcert.VirtualCertManagedBean;
+import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.util.sm.helper.SmVirtualCertHelper;
+//#28175 start
+import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
+import my.ep.persistence.entity.sm.SmSupplierCategory;
+import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.constant.ModuleCodeConst;
+//#28175 end
+
+import org.apache.log4j.Logger;
+
+@ManagedBean(name = "virtualCertBackingBean")
+@RequestScoped
+public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBean> {
+	public static Logger log = Logger.getLogger(VirtualCertBackingBean.class);
+	private final static String XHTML_VIRTUAL_DET = "/xhtml/sm/virtualcert/virtualCertDet.xhtml";
+	private final static String XHTML_QUESTIONNAIRE = "/xhtml/sm/questionnaire/questionnaireView.xhtml";
+	
+	public void viewVirtualCert(){
+		long startTime = System.currentTimeMillis();
+		renewSesionObject();
+		
+		FacesContext fc = FacesContext.getCurrentInstance();
+		SmSupplier supp = getSmSupplier();
+		supp = updateMofCertPendingCertGeneration(supp);
+		setExpiredMofAccountMessageIfApplicable(fc, supp);
+		
+		try{
+			SmVirtualCertHelper.getInstance().autoGenerateVirtualCertBySupplier(supp.getSupplierId());
+		}catch(Exception ex){
+			log.info("<<<<virtual cert - error when generate Virtual Cert>>>>" + ex.getMessage());
+		}
+		
+		if(!supp.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)){
+			if(!supp.getSmAppl().isQuestionnaire()){
+				QuestionnaireReqDTO reqDTO = new QuestionnaireReqDTO();
+				reqDTO.setSmAppl(supp.getSmAppl());
+				SmServiceLookup.getQuestionnaireSO().deleteSupplierAnswerByApplId(reqDTO);
+				QuestionnaireBackingBean quesBackingBean = new QuestionnaireBackingBean();
+				quesBackingBean.getManagedBean().setTargetUrl(XHTML_VIRTUAL_DET);
+				quesBackingBean.getManagedBean().setSmSupp(supp);
+				quesBackingBean.getManagedBean().setSmAppl(supp.getSmAppl());
+				quesBackingBean.retrieveQuestionnaire();	
+				retrieveCertInfo(supp.getSupplierId());
+				fc.getApplication().getNavigationHandler().handleNavigation(fc, null,XHTML_QUESTIONNAIRE);
+			}else{
+				retrieveCertInfo(supp.getSupplierId());
+				SLAUtils.getInstance().logSLAInfo("SM","SR",
+						"VirtualCertBackingBean.viewVirtualCert", startTime);
+				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, XHTML_VIRTUAL_DET);
+			}
+		}else{
+			retrieveCertInfo(supp.getSupplierId());
+			SLAUtils.getInstance().logSLAInfo("SM","SR",
+					"VirtualCertBackingBean.viewVirtualCert", startTime);
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, XHTML_VIRTUAL_DET);
+		}
+	}
+	
+	/**
+	 * Set message for expired MOF account
+	 * 
+	 * @param FacesContext
+	 *            fc
+	 * @param SmSupplier
+	 *            supp
+	 */
+	private void setExpiredMofAccountMessageIfApplicable(FacesContext fc,
+			SmSupplier supp) {
+		if (supp.getSmAppl() != null) {
+			SmMofAccount mofAcc = SmCommonUtil
+					.getMofAccountBySuppIdAndSuppType(supp.getSupplierId(),
+							supp.getSmAppl().getSupplierType());
+			if (mofAcc != null) {
+				Date today = new Date();
+				/*if (!(today.compareTo(mofAcc.getExpDate()) < 0)) {
+					fc.addMessage(
+							null,
+							new FacesMessage(
+									FacesMessage.SEVERITY_ERROR,
+									null,
+									SmCommonUtil
+											.getMessage(
+													"lbl.sm.alert.expired.mof.view.virtualcert",
+													null)));
+				}*/
+			}
+		}
+	}
+	
+	/**
+	 * Update migrated supplier sm_mof_cert with pending mof cert generation
+	 * 
+	 * @param SmSupplier
+	 *            supplier
+	 * @return SmSupplier
+	 */
+	private SmSupplier updateMofCertPendingCertGeneration(SmSupplier supplier) {
+		VirtualCertReqDTO reqDTO = new VirtualCertReqDTO();
+		reqDTO.setSupplierId(supplier.getSupplierId());
+
+		VirtualCertResDTO resDTO = new VirtualCertResDTO();
+		resDTO = SmServiceLookup.getVirtualCertSO()
+				.updateMofCertForPendingCertGeneration(reqDTO);
+		if (resDTO.getSupplier() != null) {
+			supplier = resDTO.getSupplier();
+		}
+		return supplier;
+	}
+
+	/**
+	 * Get Supplier Object
+	 * @param mofAccountNo
+	 * @return SmSupplier
+	 */
+	private SmSupplier getSmSupplier() {
+		
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		log.info("******getSmSupplier******" + pmUser.getUserId());
+		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
+		supplierSearchReqDTO.setUserId(pmUser.getUserId());
+		if(new FacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())){ 
+			log.info("****Role is Supplier temp*****");
+			supplierSearchReqDTO.setAllStatuses(true);
+		}
+		
+		
+		ISupplierSearchSO supplierSearchSO= null;
+		SmSupplier smSupp = null;
+		try {
+			supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
+//			SupplierSearchResDTO smResDTO = supplierSearchSO.retrieveSupplierForVirtualCertification(supplierSearchReqDTO);
+			SupplierSearchResDTO smResDTO = supplierSearchSO.retriveSupplierProfileForVirtualCert(supplierSearchReqDTO);
+//			smSupp = (SmSupplier)smResDTO.getResultBean().getResultList().get(0);
+			smSupp = smResDTO.getSmSupplier();
+		} finally {
+			supplierSearchSO = null;
+		}
+		
+		return smSupp;
+	}
+	
+	/**
+	 * retrieve Cert Info
+	 * @param supplierId
+	 */
+	private void retrieveCertInfo(Long supplierId){
+		IVirtualCertSO virtualCertSO = (IVirtualCertSO) BusinessDelegate.getInstance().getServiceObject("sm", IVirtualCertSO.class);
+		VirtualCertReqDTO reqDTO = new VirtualCertReqDTO();
+		reqDTO.setSupplierId(supplierId);
+		VirtualCertResDTO resDTO = virtualCertSO.retrieveMOFCertBySupplierId(reqDTO);
+		this.getManagedBean().setMofCertLs(new ArrayList<SmMofCert>());
+		if(resDTO.getSmMofCerts().size() > 0){
+			this.getManagedBean().setMofCertLs(resDTO.getSmMofCerts());
+		}
+	}
+	
+	/**
+	 * Print Virtual Cert
+	 * @param cert
+	 * @throws IOException
+	 */
+	// 26340
+	//rollback to v H1.53 cz error on redmine:26915
+	public void printVirtualCert(SmMofCert cert) throws IOException{
+		//#28175
+		if(!checkCatCodeList(cert.getSmAppl())){
+			cert.setFileName(null);
+			cert.setFilePath(null);
+		}
+		//#28175 end
+		if(cert.getFileName() != null || cert.getFilePath() != null){
+			String file = cert.getFilePath() + "/" + cert.getFileName();
+			commonDownload(file,cert.getFileName());
+		}else{
+			SmMofCert mofCert = SmVirtualCertHelper.getInstance().genReport(
+					SmVirtualCertHelper.getInstance().getReportType(cert.getBumiCertFlg()), 
+					SmVirtualCertHelper.getInstance().getReportParam(cert), cert, false);
+			String newfile = mofCert.getFilePath() + "/" + cert.getFileName();
+			commonDownload(newfile,mofCert.getFileName());
+		}
+		
+	}
+
+	/**
+	 * get Supplier Application Type description
+	 * @param applType
+	 * @return String
+	 */
+	public String getsupplierApplTypeDesc(String applType){
+		return SmCommonUtil.getApplTypeDesc(applType);
+	}
+	//#28175 start
+	public boolean checkCatCodeList(SmAppl appl){
+		boolean check = true;
+		
+		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,ISupplierSearchSO.class);
+		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
+		SupplierSearchReqDTO supReqDTO = new SupplierSearchReqDTO();
+		SupplierSearchResDTO supResDTO = new SupplierSearchResDTO();
+		supReqDTO.setApplId(appl.getApplId());
+		supResDTO = supplierSearchSO.retrieveSupplierActiveCategoryCodeByApplId(supReqDTO);
+		CategoryCodeReqDTO catReqDTO = new CategoryCodeReqDTO();
+		CategoryCodeResDTO catResDTO = new CategoryCodeResDTO();
+		for (SmSupplierCategory catCode : supResDTO.getSmSupplierCategoryList()){
+			catReqDTO.setCategoryL1Id(catCode.getPmCategoryL1().getCategoryL1Id());
+			catResDTO = categoryCodeSO.retrieveCategoryL1DtlById(catReqDTO);
+			if(!catCode.getCategoryL1Name().equalsIgnoreCase(catResDTO.getCategoryL1().getCategoryName())){
+				check = false;
+				break;
+			}else{
+				catReqDTO.setCategoryL2Id(catCode.getPmCategoryL2().getCategoryL2Id());
+				catResDTO = categoryCodeSO.retrieveCategoryL2DtlById(catReqDTO);
+				if(!catCode.getCategoryL2Name().equalsIgnoreCase(catResDTO.getCategoryL2().getCategoryName())){
+					check = false;
+					break;
+				}else{
+					catReqDTO.setCategoryL3Id(catCode.getPmCategoryL3().getCategoryL3Id());
+					catResDTO = categoryCodeSO.retrieveCategoryL3DtlById(catReqDTO);
+					if(!catCode.getCategoryL3Name().equalsIgnoreCase(catResDTO.getCategoryL3().getCategoryName())){
+						check = false;
+						break;
+					}
+				}	
+			}
+		}
+		return check;
+	}
+	//#28175 end
+}
+

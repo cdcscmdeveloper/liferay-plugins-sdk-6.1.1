@@ -1,0 +1,188 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.sm.bankDtls.panHdr']}" toggleable="true">
+		<p:outputPanel id="bankInfPan" layout="block">
+			<p:dataTable var="bankBean" widgetVar="suppBankInfoDtWidVar"
+				value="#{viewSmApplBackingBean.managedBean.smSupplierBankList}"
+				rowKey="#{bankBean}" rowIndexVar="index" id="bankDt">
+				<ac:paginator for="bankDt" />
+
+				<p:column headerText="#{lbl['lbl.sm.bankDtls.acctNo']}">
+					<h:outputText value="#{bankBean.accountNo}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sm.bankDtls.bankName']}">
+					<h:outputText value="#{bankBean.pmFinancialOrg.finOrgName}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sm.bankDtls.acctPurpose']}"
+					style="text-align: center;width: 15%">
+					<h:outputText value="#{lbl['lbl.sm.paymentLbl']}"
+						rendered="#{bankBean.accountPurpose eq 'P'}" />
+					<h:outputText value="#{lbl['lbl.sm.bankDtls.registration']}"
+						rendered="#{bankBean.accountPurpose eq 'R'}" />
+					<h:outputText value="#{lbl['lbl.sm.bankDtls.both.regandpay']}"
+						rendered="#{bankBean.accountPurpose eq 'B'}" />
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sm.bankDtls.addr']}"
+					style="width :50%;white-space : normal">
+					<h:outputText
+						value="#{viewSmApplBackingBean.getFullAddress(bankBean.smAddress)}"
+						style="float : left" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
+					<p:commandLink action="#{viewSmApplBackingBean.viewSignatories(bankBean)}" 
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						partialSubmit="true" process="@this" update=":form:tt:sfieldset"
+						style="padding-right :5px;">
+						<p:graphicImage value="/css/images/design/seller_detail.png"
+							title="#{lbl['lbl.sm.view.signatories']} " />
+					</p:commandLink>
+					<p:commandLink partialSubmit="true" process="@this" onstart="blockWidget.show()"
+						action="#{viewSmApplBackingBean.assignSelBank(bankBean)}" oncomplete="bankDialog.show()"
+						update=":form:tt:bankDialog" style="padding-right :5px;">
+						<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+			<p:spacer height="2px;" />
+			
+		</p:outputPanel>
+	</p:panel>
+	
+	<p:panel id="sfieldset" header="#{lbl['lbl.sm.bankDtls.cheSignPanHdr']}#{viewSmApplBackingBean.managedBean.selectedSignatoryBankAcct.accountNo}">
+		<p:dataTable id="signatory" var="auth" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			value="#{viewSmApplBackingBean.managedBean.selectedSignatoryBankAcct.smChequeSignatories}"
+			rowKey="#{auth}" rowIndexVar="index">
+			<ac:paginator for="signatory" />
+
+			<p:column headerText="#{lbl['lbl.sm.bankDtls.signName']}">
+				<h:outputText value="#{auth.smPersonnel.name}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sm.bankDtls.signId']}">
+				<h:outputText value="#{auth.smPersonnel.identificationNo}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sm.bankDtls.signIsBumi']}">
+				<h:outputText value="#{lbl['lbl.txt.no']}"
+					rendered="#{auth.smPersonnel.bumiFlg eq 0}" />
+				<h:outputText value="#{lbl['lbl.txt.yes']}"
+					rendered="#{auth.smPersonnel.bumiFlg eq 1}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sm.bankDtls.signPos']}">
+				<h:outputText value="#{auth.smPersonnel.designation}" />
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+	
+	<ac:smRevisionRemark backingBean="#{viewSmApplBackingBean}" 
+		poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.bankRemark}" 
+		approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.bankRemark}" />
+	
+	<p:dialog style="max-height:700px;width:700px"
+		header="#{lbl['lbl.sm.bankDtls.bankDiaHdr']}" widgetVar="bankDialog"
+		resizable="false" showEffect="fade" closable="true" hideEffect="fade"
+		modal="true" id="bankDialog" >
+		
+		<p:scrollPanel mode="native" style="max-height:500px;width:600px;border:none">
+			<p:outputPanel id="bankDetailsPanel" layout="block">
+				<table style="width: 100%;table-layout:fixed">
+					<tr>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.bankDtls.acctNo']}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBank.accountNo}" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.bankDtls.bankName']}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBank.pmFinancialOrg.finOrgName}" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.bankDtls.acctPurpose']}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBankAccountPurpose}" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.bankDtls.bankBranch']}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBank.bankBranch}"/></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.address']}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBank.smAddress.address1}" /></td>
+					</tr>
+	
+					<tr>
+						<td></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBank.smAddress.address2}" /></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBank.smAddress.address3}" /></td>
+					</tr>
+					
+					<tr>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.country']}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBank.smAddress.pmCountry.countryName}" /></td>
+					</tr>
+	
+					<tr>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.state']}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBank.smAddress.pmState.stateName}" /></td>
+					</tr>
+					<!-- 13320 -->
+					<tr>
+						<!-- #13320 - render division-->
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.division']}" 
+											rendered="#{viewSmApplBackingBean.managedBean.selectedBank.smAddress.pmState.adoptDivision}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBank.smAddress.pmDivision.divisionName}"
+											rendered="#{viewSmApplBackingBean.managedBean.selectedBank.smAddress.pmState.adoptDivision}" /></td>
+						<!-- #13320 - render division - end-->
+					</tr>
+	
+					<tr>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.district']}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBank.smAddress.pmDistrict.districtName}" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.towncity']}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBank.smAddress.pmCity.cityName}" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.postcode']}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBank.smAddress.postcode}" /></td>
+					</tr>
+	
+					<tr>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.bankDtls.is.associate.to.hq']}" /></td>
+						<td>
+							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.yes']}" rendered="#{viewSmApplBackingBean.managedBean.selectedBank.forHqFlg eq 1}"/>
+							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.no']}" rendered="#{viewSmApplBackingBean.managedBean.selectedBank.forHqFlg ne 1}"/>
+						</td>
+					</tr>
+					
+					<c:if test="#{viewSmApplBackingBean.managedBean.selectedBank.accountPurpose eq 'P' or viewSmApplBackingBean.managedBean.selectedBank.accountPurpose eq 'B'}">
+						<tr>
+							<td style="vertical-align: baseline;"><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.bankDtls.assocBran']}" id="banBranchLbl" /></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.bankBranchName}" escape="false"/></td>
+						</tr>
+					</c:if>
+					<tr>
+						<td style="vertical-align: baseline;"><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.bankDtls.chequesign.tnc']}" /></td>
+						<td style="word-wrap: break-word"><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBank.signatureInstruction}" /></td>
+					</tr>
+					<tr>
+						<td style="vertical-align: baseline;"><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.bankDtls.cheSigns']}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.chequeSignPersonnelName}" escape="false" /></td>
+					</tr>
+				</table>
+			</p:outputPanel>
+		</p:scrollPanel>
+	</p:dialog>
+	
+</ui:composition>

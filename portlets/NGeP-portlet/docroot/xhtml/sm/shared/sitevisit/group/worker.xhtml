@@ -1,0 +1,106 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<p:panel header="#{lbl['lbl.sm.worker.employee']}" >
+	<p:dataTable value="#{template.smSvWorkers}" var="svWorker" selection="#{template.selectedWorkers}" 
+		rowKey="#{svWorker}" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+		<p:column selectionMode="multiple" style="width:2%" rendered="#{!viewFlag}" />
+		<p:ajax event="rowSelectCheckbox" update="@parent" />
+		<p:ajax event="rowUnselectCheckbox" update="@parent" />
+		<p:ajax event="rowSelect" update="@parent" />
+        <p:ajax event="rowUnselect" update="@parent" />
+        <p:ajax event="toggleSelect" update="@parent" />
+			<p:column>
+					<f:facet name="header">
+						#{lbl['lbl.sm.worker.specialization']}
+					</f:facet>
+					<p:inputText value="#{svWorker.expertise}" disabled="#{viewFlag}" label="#{lbl['lbl.sm.worker.specialization']}"
+					maxlength="100" required="#{empty param['disabledValidation'] and empty param['disableMsgAutoUpdate'] and empty param['disabledValidation']}" />
+					<!-- #24964 -->
+					<ac:smFieldChangeAlertSVO
+						isShow="#{not empty svWorker and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
+						oriValue="#{svoSiteVisitBackingBean.getSVOSmSvWorker(svWorker).expertise}" 
+						currValue="#{svWorker.expertise}" 
+						alertValue="#{svoSiteVisitBackingBean.getSVOSmSvWorker(svWorker).expertise}"/>
+			</p:column>
+			<p:column>
+					<f:facet name="header">
+						#{lbl['lbl.sm.worker.name']}
+					</f:facet>
+				<p:inputText value="#{svWorker.name}" disabled="#{viewFlag}" label="#{lbl['lbl.sm.worker.name']}"
+				maxlength="50" required="#{empty param['disabledValidation'] and empty param['disableMsgAutoUpdate'] and empty param['disabledValidation']}"/>
+				<!-- #24964 -->
+				<ac:smFieldChangeAlertSVO
+					isShow="#{not empty svWorker and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
+					oriValue="#{svoSiteVisitBackingBean.getSVOSmSvWorker(svWorker).name}" 
+					currValue="#{svWorker.name}" 
+					alertValue="#{svoSiteVisitBackingBean.getSVOSmSvWorker(svWorker).name}"/>
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.sm.employee.idtype']}
+				</f:facet>
+				<p:selectOneMenu id="empIdTypeId" size="50" disabled="#{viewFlag}" label="#{lbl['lbl.sm.employee.idtype']}"
+						required="#{empty param['disabledValidation'] and empty param['disableMsgAutoUpdate'] and empty param['disabledValidation']}" 
+						value="#{svWorker.identificationTypeId}">
+						<f:selectItems value="#{svoSiteVisitBackingBean.managedBean.identificationTypes}" />
+						<p:ajax event="change" process="@form" 
+							listener="#{svoSiteVisitBackingBean.changeWorkerIdentificationType(svWorker)}"/>
+				</p:selectOneMenu>
+				<ac:smFieldChangeAlertSVO
+					isShow="#{not empty svWorker and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
+					oriValue="#{svoSiteVisitBackingBean.getSVOSmSvWorker(svWorker).identificationTypeId}" 
+					currValue="#{svWorker.identificationTypeId}" 
+					alertValue="#{svoSiteVisitBackingBean.getSVOSmSvWorker(svWorker).identificationTypeId}"/>
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.sm.worker.icno']}
+				</f:facet>
+				<p:inputText value="#{svWorker.identificationNo}" disabled="#{viewFlag}" label="#{lbl['lbl.sm.worker.icno']}"
+				maxlength="12" validatorMessage="#{lbl['lbl.sm.invalidIcNo']}" required="#{empty param['disabledValidation'] and empty param['disableMsgAutoUpdate'] and empty param['disabledValidation']}"> 
+					<f:validateRegex pattern="^-?\d*(\.\d+)?$" disabled="#{svWorker.identificationTypeId ne '115'}"/>
+                </p:inputText>                				
+				<!-- #24964 -->
+				<ac:smFieldChangeAlertSVO
+					isShow="#{not empty svWorker and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
+					oriValue="#{svoSiteVisitBackingBean.getSVOSmSvWorker(svWorker).identificationNo}" 
+					currValue="#{svWorker.identificationNo}" 
+					alertValue="#{svoSiteVisitBackingBean.getSVOSmSvWorker(svWorker).identificationNo}"/>
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.sm.worker.experience']}
+				</f:facet>
+				<p:inputText value="#{svWorker.workExpYear}" disabled="#{viewFlag}" label="#{lbl['lbl.sm.worker.experience']}"
+				maxlength="2" required="#{empty param['disabledValidation'] and empty param['disableMsgAutoUpdate'] and empty param['disabledValidation']}" />
+				<!-- #24964 -->
+				<ac:smFieldChangeAlertSVO
+					isShow="#{not empty svWorker and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
+					oriValue="#{svoSiteVisitBackingBean.getSVOSmSvWorker(svWorker).workExpYear}" 
+					currValue="#{svWorker.workExpYear}" 
+					alertValue="#{svoSiteVisitBackingBean.getSVOSmSvWorker(svWorker).workExpYear}"/>
+			</p:column>
+		</p:dataTable>		
+		
+		
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.add']}" rendered="#{!viewFlag}"
+				actionListener="#{svoSiteVisitBackingBean.setSelectedTemplate(template)}"
+				action="#{svoSiteVisitBackingBean.addWorkshopWorker()}" 
+				update="@parent" />
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				rendered="#{!viewFlag}" oncomplete="workerDeletePopUp.show();"
+				update="@parent" action="#{svoSiteVisitBackingBean.setSelectedTemplate(template)}"
+				disabled="#{empty template.selectedWorkers}">
+				<f:param name="disabledValidation" value="true" />
+			</p:commandButton>
+		</div>
+	</p:panel>
+</ui:composition>

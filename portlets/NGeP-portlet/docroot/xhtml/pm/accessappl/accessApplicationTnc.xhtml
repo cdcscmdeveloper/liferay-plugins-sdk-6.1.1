@@ -1,0 +1,58 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<ui:define name="contentSection">
+		<p:blockUI id="tncBlockWidget" block=":form" widgetVar="tncBlockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+			</p:blockUI>	
+		
+		<p:panel header="#{lbl['lbl.pm.access.app.tnc.header']}"
+			toggleable="true" id="tncPnl">
+			<p:scrollPanel style="height:300px;border:0;" mode="native">
+			<p:inputText value="#{commonBackingBean.managedBean.reportName}"  size="40"></p:inputText>
+			<p:commandButton value="Push Schedule ID. Do not click."
+					action="#{commonBackingBean.testPushBiddingSchedule()}"
+					update="@form"></p:commandButton>
+			<h:outputText escape="false"
+				value="#{lbl['lbl.pm.access.app.tnc.desc']}" />
+			<h:outputText escape="false"
+				value="#{lbl['lbl.pm.access.app.tnc.desc1']}" />
+			<h:outputText escape="false"
+				value="#{lbl['lbl.pm.access.app.tnc.desc2']}" />
+			<h:outputText escape="false"
+				value="#{lbl['lbl.pm.access.app.tnc.desc3']}" />
+			<h:outputText escape="false"
+				value="#{lbl['lbl.pm.access.app.tnc.desc4']}" />
+			<h:outputText escape="false"
+				value="#{lbl['lbl.pm.access.app.tnc.desc5']}" />
+			<h:outputText escape="false"
+				value="#{lbl['lbl.pm.access.app.tnc.desc6']}" />
+			<h:outputText escape="false"
+				value="#{lbl['lbl.pm.access.app.tnc.desc6.list']}" />
+			<h:outputText escape="false"
+				value="#{lbl['lbl.pm.access.app.tnc.desc7']}" />
+			
+			</p:scrollPanel>
+		</p:panel>
+		<br />
+		<p:selectBooleanCheckbox id="isTncChkBox" style="float:left;"
+				value="#{accessApplBackingBean.managedBean.tncChecked}">
+				<p:ajax update="@this,btnProceed" />
+		</p:selectBooleanCheckbox>
+		<div>
+			<h:outputText escape="false" style="margin-left:5px;"
+				value="#{lbl['lbl.pm.access.app.tnc.agree']}" />
+		</div>	
+		<div align="right">
+			<p:commandButton id="btnProceed" value="#{lbl['lbl.sm.next']}"
+				onstart="tncBlockWidget.show()" oncomplete="tncBlockWidget.hide()"
+			disabled="#{not accessApplBackingBean.managedBean.tncChecked}" 
+				action="#{accessApplBackingBean.proceedToMainPage}" />
+		</div>
+		</ui:define>
+</ui:composition>

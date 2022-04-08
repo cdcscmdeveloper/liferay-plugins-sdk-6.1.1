@@ -1,0 +1,104 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" 
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+		
+		<table style="width: 100%;">
+			<tr>
+				<td style="text-align: left;">
+					<p:commandButton value="#{lbl['lbl.btn.proceed']}" action="#{softCertBackingBean.navigateToUploadSuppDocPage}" 
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form"
+						style="float:right;" id="proceedBtnId" disabled="#{empty softCertBackingBean.managedBean.softCertSelectList}">
+					</p:commandButton>
+				</td>
+			</tr>
+		</table>
+		
+		<p:panel header="#{lbl['lbl.sm.softcert.authpersonnel.panheader']}" toggleable="true" id="resultPanelId">
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.softcert.disclaimer']}"/>
+			<h:outputText styleClass="instruction" value="&lt;br/&gt;#{lbl['lbl.sm.softcert.revoke']}" escape="false" 
+			rendered="#{softCertBackingBean.managedBean.renderRevokeButton}" />
+			<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+				rendered="#{softCertBackingBean.managedBean.renderRevokeButton}"
+				action="#{softCertBackingBean.navigateToRevokeUser}" process="@this" partialSubmit="true" update=":form">
+				&#160;<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.softcert.revoke.here']}" escape="false"/>
+			</p:commandLink>
+			
+			<p:dataTable id="softCertPageDataModelId" rowKey="#{personnel}" 
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				rowIndexVar="index" value="#{softCertBackingBean.managedBean.authorizedPersonnels}"
+				var="personnel" selection="#{softCertBackingBean.managedBean.softCertSelect}" >
+				<ac:paginator for="softCertPageDataModelId" />
+				
+				<p:ajax event="rowSelectRadio"
+					listener="#{softCertBackingBean.unSelectPersonnel}"
+					update=":form:resultPanelId,@([id$=proceedBtnId])"></p:ajax>
+					
+				<!-- #10729 start -->
+				<p:column selectionMode="single" style="width:2%" disabledSelection="#{personnel.disableRowSelection}" 
+					rendered="#{not empty softCertBackingBean.managedBean.authorizedPersonnels 
+					and softCertBackingBean.managedBean.loginUserPersonnelInfo.smAppl.smSupplier.recordStatusFlg ne 5}"/>
+				<!-- #10729 end -->
+
+				<p:column headerText="#{lbl['lbl.sm.userprofile.name']}" style="width : 30%;white-space : normal" 
+					disabledSelection="#{personnel.disableRowSelection}">
+					<!-- 29659 START -->
+					<h:outputText value="#{personnel.pmUser.salutationCode.salutationName} #{personnel.name}" />
+					<!-- 29659 END -->
+				</p:column>
+
+				<!-- #10729 start -->
+				<p:column headerText="#{lbl['lbl.sm.soft.cert.idno']}"  disabledSelection="#{personnel.disableRowSelection}"
+					rendered="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.smAppl.smSupplier.recordStatusFlg eq 5}">
+					<h:outputText value="#{personnel.identificationNo}" />
+				</p:column>
+				<!-- #10729 end -->
+				
+				<p:column headerText="#{lbl['lbl.sm.userprofile.nationality']}"  disabledSelection="#{personnel.disableRowSelection}">
+					<h:outputText value="#{personnel.pmCountry.countryName}" />
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sm.person.composition.isAuth']}" style="width : 8%;white-space : normal" 
+					disabledSelection="#{personnel.disableRowSelection}">
+					<h:outputText value="#{lbl['lbl.txt.yes']}"
+						rendered="#{personnel.authorizedFlg eq '1'}" />
+					<h:outputText value="#{lbl['lbl.txt.no']}"
+						rendered="#{personnel.authorizedFlg eq '0'}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sm.userprofile.eprole']}" disabledSelection="#{personnel.disableRowSelection}">
+					<ac:smRoleDesc backingBean="#{softCertBackingBean}" roleCode="#{personnel.epRole}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sm.person.composition.certStatus']}" disabledSelection="#{personnel.disableRowSelection}">
+					<ac:smSoftcertStatus personnel="#{personnel}" />
+				</p:column>
+				
+				<!-- #10729 start -->
+				<p:column headerText="#{lbl['lbl.sm.userprofile.accountstatus']}" disabledSelection="#{personnel.disableRowSelection}"
+					rendered="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.smAppl.smSupplier.recordStatusFlg ne 5}">
+					<h:outputText value="#{lbl['lbl.sm.accountstatus.active']}" rendered="#{personnel.recordStatusFlg eq '1'}" />
+					<h:outputText value="#{lbl['lbl.sm.accountstatus.pendingactivation']}" rendered="#{personnel.recordStatusFlg eq '8'}" />
+					<h:outputText value="#{lbl['lbl.sm.accountstatus.inactive']}" rendered="#{personnel.recordStatusFlg eq '9'}" />
+				</p:column>
+				
+				<p:column disabledSelection="#{personnel.disableRowSelection}" headerText="#{lbl['lbl.sm.softcert.no']}"
+					rendered="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.smAppl.smSupplier.recordStatusFlg ne 5}">
+					<h:outputText value="#{personnel.softcertNo}" />
+				</p:column>
+
+				<p:column disabledSelection="#{personnel.disableRowSelection}" 
+					headerText="#{lbl['lbl.sm.userprofile.softcertexpirationdate']}"
+					rendered="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.smAppl.smSupplier.recordStatusFlg ne 5}">
+					<h:outputText value="#{personnel.softcertValidityDate}" />
+				</p:column>
+				<!-- #10729 end -->
+
+			</p:dataTable>
+			
+		</p:panel>
+</ui:composition>

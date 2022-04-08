@@ -1,0 +1,376 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+	<p:panel id="financialMainScCommitteeCheckList" toggleable="true">
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.sc.spec.finance.check.list']}" />
+			<ac:iconTooltip
+				value="#{lbl['lbl.sc.spec.finance.check.list.tooltip']}" />
+		</f:facet>
+
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.spec.financial.check.list.instruction']}"
+			escape="false" />
+		<ui:include src="/xhtml/tpl/spec/specGuideLineInstructions.xhtml"></ui:include>
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.spec.financial.check.list.instruction1']}"
+			escape="false" />
+
+		<p:dataTable id="financeProposaltwo" var="stageTwofunctional"
+			value="#{specificationBackingBean.managedBean.scQtCheckSt2financeProposalList}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			rowIndexVar="index"
+			selection="#{specificationBackingBean.managedBean.s2FinSelect}"
+			first="#{specificationBackingBean.managedBean.financialTableRow}"
+			rowKey="#{stageTwofunctional}">
+			<!-- 	<ac:paginator for="financeProposaltwo" /> -->
+			<!-- 	<p:column selectionMode="multiple" style="text-align:left;"
+				rendered="#{stageTwofunctional.manditory !=true and stageTwofunctional.definationType.parameterCode ne 'TS'}" />
+
+			<p:column style="text-align:left;" selectionMode="multiple"
+				disabledSelection="true"
+				rendered="#{stageTwofunctional.manditory ==true and stageTwofunctional.definationType.parameterCode ne 'TS' }" />
+			<p:column style="text-align:left;" selectionMode="multiple"
+				disabledSelection="true"
+				rendered="#{stageTwofunctional.manditory !=true and stageTwofunctional.definationType.parameterCode eq 'TS'}" /> -->
+
+			<p:column style="width:3px;text-align:center;">
+				<f:facet name="header">
+					<p:selectBooleanCheckbox disabled="true"
+						value="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}">
+						<p:ajax partialSubmit="true" process="@this"
+							update="@([id$=financeProposaltwo]),@([id$=deleteFinancialChecklist])"
+							listener="#{specificationBackingBean.selectAll(specificationBackingBean.managedBean.templateSpecBean.selectAll, specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}" />
+					</p:selectBooleanCheckbox>
+				</f:facet>
+				<p:selectBooleanCheckbox value="#{stageTwofunctional.selected}"
+					disabled="#{(specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()) and !specificationBackingBean.managedBean.isChecklist()}"
+					rendered="#{stageTwofunctional.manditory !='true' and stageTwofunctional.definationType.parameterCode ne 'TS'}"> <!-- #15391 -->
+					<p:ajax partialSubmit="true" process="@this" update="@this,@([id$=deleteFinancialChecklist],[id$=financeProposaltwo])"
+						listener="#{specificationBackingBean.updateSelectedCheckListIndx(stageTwofunctional,index)}" />
+				</p:selectBooleanCheckbox>
+
+				<ui:remove><!-- 29464 note 42 add readonly to disabled  --></ui:remove>
+				<p:selectBooleanCheckbox value="#{stageTwofunctional.selected}" 
+					disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.checkIsDisable(stageTwofunctional)==true}"
+					rendered="#{stageTwofunctional.manditory ==true and stageTwofunctional.definationType.parameterCode ne 'TS' }">
+					<p:ajax partialSubmit="true" process="@this" update="@this,@([id$=deleteFinancialChecklist],[id$=financeProposaltwo])"
+						listener="#{specificationBackingBean.updateSelectedCheckListIndx(stageTwofunctional,index)}" />
+				</p:selectBooleanCheckbox>
+
+				<p:selectBooleanCheckbox value="#{stageTwofunctional.selected}"
+					disabled="true"
+					rendered="#{stageTwofunctional.manditory !=true and stageTwofunctional.definationType.parameterCode eq 'TS'}">
+
+					<p:ajax partialSubmit="true" process="@this" update="@this,@([id$=deleteFinancialChecklist],[id$=financeProposaltwo])"
+						listener="#{specificationBackingBean.updateSelectedCheckListIndx(stageTwofunctional,index)}" />
+				</p:selectBooleanCheckbox>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.spec.checklist.title']}"
+				style="width:24%;white-space: normal;">
+
+
+				
+				<ui:fragment rendered="#{stageTwofunctional.pmDocument ne null or stageTwofunctional.qtChecklistId ne null}">
+					<h:outputText value="#{stageTwofunctional.title}"  />
+				</ui:fragment>
+			<ui:fragment rendered="#{stageTwofunctional.pmDocument eq null and stageTwofunctional.qtChecklistId eq null}">
+				<h:panelGroup id="financialChecklistTitleHeader">
+					<p:inputText value="#{stageTwofunctional.title}" size="35" rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1}"
+						maxlength="1000" required="true" id="finChecklistTitle"
+						label="#{lbl['lbl.sc.spec.checklist.title']}">
+						<p:ajax event="change" process="@this,financialChecklistTitleHeader" partialSubmit="true"
+							update="financialCheckListtitle"
+							listener="#{specificationBackingBean.financialCheckListTitleChange(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
+
+					</p:inputText>
+					<p:message id="finChecklistId" for="finChecklistTitle"
+						display="icon"></p:message>
+						<h:outputText value="#{stageTwofunctional.title}" rendered="#{index ne specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1}" />
+						</h:panelGroup>
+				</ui:fragment>
+
+			</p:column>
+
+			<p:column style="width:20%;white-space: normal;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.type']}" />
+					<ac:iconTooltip id="financialChecklistType#{index}Sc"
+						value="#{lbl['lbl.sc.type.financial.tooltip']}" />
+				</f:facet>
+
+				<h:panelGroup id="financialCheckListtitle">
+
+					<ui:fragment
+						rendered="#{((stageTwofunctional.pmDocument ne null and (stageTwofunctional.pmDocument.docDefinitionKey ne 'UP' and  stageTwofunctional.pmDocument.docDefinitionKey ne null)) or (stageTwofunctional.pmDocument eq null and stageTwofunctional.definationType.parameterCode eq 'TS'))}">
+
+						<h:outputText
+							value="#{specificationBackingBean.getParameterDesc(stageTwofunctional.definationType)}"></h:outputText>
+					</ui:fragment>
+
+
+					<ui:fragment
+						rendered="#{((stageTwofunctional.pmDocument ne null and (stageTwofunctional.pmDocument.docDefinitionKey eq 'UP' or stageTwofunctional.pmDocument.docDefinitionKey  eq null)) or(stageTwofunctional.pmDocument eq null and stageTwofunctional.definationType.parameterCode ne 'TS'))}">
+						<c:if test="#{specificationBackingBean.isQTStatusChecklistScoring() or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision()) or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.isChecklist())}"><!-- #15391 -->
+						<p:selectOneMenu style="width:170px;" required="true"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
+							id="finhChecklistTitlenullType" label="#{lbl['lbl.sc.type']}"
+							value="#{stageTwofunctional.definationType.parameterId}">
+							<f:selectItems
+								value="#{specificationBackingBean.getFinancialChecklistDefTypeValues(ParameterTypeConst.documentDefinitionType)}"></f:selectItems>
+							<p:ajax event="change" process="@this"
+								update="financialChecklistsupplier,scoreFinanceView,uploadFinance,financialChecklistSpecificationStatus"
+								partialSubmit="true"
+								listener="#{specificationBackingBean.financialCheckListTypeChange(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
+						</p:selectOneMenu>
+						<p:message id="finChecklistTitlenullType1"
+							for="finhChecklistTitlenullType" display="icon"></p:message>
+							</c:if>
+							<c:if test="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring() and !specificationBackingBean.managedBean.specMaintenance}">
+							<h:outputText
+							value="#{specificationBackingBean.getParameterDesc(stageTwofunctional.definationType)}"></h:outputText>
+							</c:if>
+							<c:if test="#{specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance() and specificationBackingBean.managedBean.specMaintenance and !specificationBackingBean.managedBean.isChecklist()}"><!-- #15391 -->
+							<h:outputText
+							value="#{specificationBackingBean.getParameterDesc(stageTwofunctional.definationType)}"></h:outputText>
+							</c:if>
+					</ui:fragment>
+
+
+				</h:panelGroup>
+
+
+
+
+
+			</p:column>
+			<p:column 
+				style="width:20%;white-space: normal;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.spec.supplier.action']}" />
+					<ac:iconTooltip id="financialChecklistsupplieractionchecklist#{index}Scall"
+						value="#{lbl['lbl.sc.spec.supplier.finacial.checklist.action.tooltip']}" />
+				</f:facet>
+				<h:panelGroup id="financialChecklistsupplier">
+					<ui:fragment
+						rendered="#{((stageTwofunctional.pmDocument ne null and (stageTwofunctional.pmDocument.docDefinitionKey ne 'UP' and  stageTwofunctional.pmDocument.docDefinitionKey ne null)) or (stageTwofunctional.pmDocument eq null and stageTwofunctional.definationType.parameterCode eq 'TS'))}">
+
+						<h:outputText
+							value="#{specificationBackingBean.getParameterDesc(stageTwofunctional.action)}"></h:outputText>
+					</ui:fragment>
+					<ui:fragment
+						rendered="#{((stageTwofunctional.pmDocument ne null and (stageTwofunctional.pmDocument.docDefinitionKey eq 'UP' or stageTwofunctional.pmDocument.docDefinitionKey  eq null)) or(stageTwofunctional.pmDocument eq null and stageTwofunctional.definationType.parameterCode ne 'TS'))}">
+						<c:if test="#{specificationBackingBean.isQTStatusChecklistScoring() or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision()) or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.isChecklist())}">
+						<p:selectOneMenu value="#{stageTwofunctional.action.parameterId}"
+							disabled="#{specificationBackingBean.managedBean.readOnly}"
+							rendered="#{stageTwofunctional.definationType.parameterCode eq 'UP' and stageTwofunctional.action.parameterCode eq null}"
+							required="true" id="financialactionnull"
+							label="#{lbl['lbl.sc.spec.supplier.action']}"
+							style="width:170px;">
+							<f:selectItems
+								value="#{specificationBackingBean.managedBean.financialChecklistAction}"></f:selectItems>
+							<p:ajax event="change" process="@this" partialSubmit="true"
+								update="scoreFinanceView,uploadFinance,financialChecklistSpecificationStatus,financialChecklistsupplier"
+								listener="#{specificationBackingBean.financialCheckListDropDownActionChange(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
+						</p:selectOneMenu>
+
+						<p:selectOneMenu value="#{stageTwofunctional.action.parameterId}"
+							disabled="#{specificationBackingBean.managedBean.readOnly}"
+							rendered="#{stageTwofunctional.definationType.parameterCode eq 'UP' and stageTwofunctional.action.parameterCode ne null}"
+							required="true" id="financialactionnotnullvalue"
+							label="#{lbl['lbl.sc.spec.supplier.action']}"
+							style="width:170px;">
+							<f:selectItems
+								value="#{specificationBackingBean.PTJUploadDropDownActionValues}"></f:selectItems>
+							<p:ajax event="change" process="@this" partialSubmit="true"
+								update="scoreFinanceView,uploadFinance,financialChecklistSpecificationStatus,financialChecklistsupplier"
+								listener="#{specificationBackingBean.financialCheckListDropDownActionChange(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
+						</p:selectOneMenu>
+						</c:if>
+							<ui:fragment rendered="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring() and stageTwofunctional.definationType.parameterCode eq 'UP' and !specificationBackingBean.managedBean.specMaintenance}">
+								<h:outputText
+							value="#{specificationBackingBean.getParameterDesc(stageTwofunctional.action)}"></h:outputText>
+							</ui:fragment>
+						<h:outputText
+							rendered="#{stageTwofunctional.definationType.parameterCode ne 'UP'}"
+							value="#{specificationBackingBean.getParameterDesc(stageTwofunctional.action)}"></h:outputText>
+							
+							<h:outputText rendered="#{specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance() and specificationBackingBean.managedBean.specMaintenance and stageTwofunctional.definationType.parameterCode eq 'UP' and !specificationBackingBean.managedBean.isChecklist()}"
+							value="#{specificationBackingBean.getParameterDesc(stageTwofunctional.action)}"></h:outputText><!-- #15391 -->
+							
+					</ui:fragment>
+				</h:panelGroup>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.spec.scoring']}"
+				style="width:5%;white-space: normal;text-align: center;">
+				<h:panelGroup id="scoreFinanceView">
+				
+<!-- #30559 Farid add condition definition key 'FA' and 'U'-->				
+				<c:choose>	
+					<c:when test="#{(stageTwofunctional.pmDocument.docDefinitionKey ne 'UP' and stageTwofunctional.pmDocument.docDefinitionKey ne 'FA' and stageTwofunctional.pmDocument.docDefinitionKey ne 'U')}">
+						<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
+							disabled="#{specificationBackingBean.managedBean.readOnly}"
+							rendered="#{(stageTwofunctional.pmDocument.docDefinitionKey ne 'UP' and stageTwofunctional.pmDocument.docDefinitionKey ne 'FA' and stageTwofunctional.pmDocument.docDefinitionKey ne 'U')}">
+							<p:ajax event="change" process="@this" partialSubmit="true"
+								update="financialChecklistSpecificationStatus,actionView"
+								listener="#{specificationBackingBean.financialCheckListScoreReqChange(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
+						</p:selectBooleanCheckbox>
+					</c:when>
+					<c:otherwise>
+<!-- #30559 Farid add condition definition key 'FA' and 'U'-->	
+
+					<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
+						rendered="#{((stageTwofunctional.pmDocument.docDefinitionKey ne 'SD' and   stageTwofunctional.action.parameterCode ne 'U') and !(stageTwofunctional.definationType.parameterCode eq 'TS' and stageTwofunctional.action.parameterCode eq 'I') and !(stageTwofunctional.definationType.parameterCode eq 'UP' and stageTwofunctional.action.parameterCode eq 'V'))}">
+						<p:ajax event="change" process="@this" partialSubmit="true"
+							update="financialChecklistSpecificationStatus,actionView"
+							listener="#{specificationBackingBean.financialCheckListScoreReqChange(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
+					</p:selectBooleanCheckbox>
+
+  
+						<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
+						disabled="true"
+						rendered="#{((stageTwofunctional.definationType.parameterCode eq 'TS' and stageTwofunctional.action.parameterCode eq 'I') or (stageTwofunctional.definationType.parameterCode eq 'UP' and stageTwofunctional.action.parameterCode eq 'V'))}">
+
+					</p:selectBooleanCheckbox>
+ 		 							
+					
+<!-- #13955 start comment
+					<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
+						disabled="true"
+						rendered="#{(((stageTwofunctional.pmDocument.docDefinitionKey eq 'UP' or stageTwofunctional.pmDocument.docDefinitionKey eq 'FA') and   stageTwofunctional.definationType.parameterCode eq 'NA' and stageTwofunctional.action.parameterCode eq 'U') and (fn:containsIgnoreCase(stageTwofunctional.title,'Annual') or fn:containsIgnoreCase(stageTwofunctional.title,'Verification') or fn:containsIgnoreCase(stageTwofunctional.title,'Pengesahan') or fn:containsIgnoreCase(stageTwofunctional.title,'Kunci')))}">
+
+					</p:selectBooleanCheckbox>
+ #13955 end comment -->					
+					<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
+						rendered="#{stageTwofunctional.pmDocument.docDefinitionKey ne 'SD' and stageTwofunctional.action.parameterCode eq 'U' and stageTwofunctional.action.parameterCode ne 'V' and !fn:contains(stageTwofunctional.title,'Annual') and !fn:contains(stageTwofunctional.title,'Verification') and !fn:contains(stageTwofunctional.title,'Pengesahan') and !fn:contains(stageTwofunctional.title,'Kunci')}">
+						<p:ajax event="change" process="@this" partialSubmit="true"
+							update="financialChecklistSpecificationStatus,actionView"
+							listener="#{specificationBackingBean.financialCheckListScoreReqChange(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
+					</p:selectBooleanCheckbox>
+					<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
+						rendered="#{stageTwofunctional.pmDocument.docDefinitionKey eq 'SD' and stageTwofunctional.action.parameterCode eq 'V'}">
+						<p:ajax event="change" process="@this" partialSubmit="true"
+							update="actionView,financialChecklistSpecificationStatus"
+							listener="#{specificationBackingBean.financialCheckListScoreReqChange(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
+					</p:selectBooleanCheckbox>
+
+				</c:otherwise>
+						</c:choose>
+
+				</h:panelGroup>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.spec.specification.status']}"
+				style="width:7%;white-space: normal;">
+				<h:panelGroup id="financialChecklistSpecificationStatus">
+					<h:outputText
+						value="#{specificationBackingBean.getStatusDescById(stageTwofunctional.pmStatus.statusId)}"></h:outputText>
+				</h:panelGroup>
+
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.document']}"
+				style="width:16%;white-space: normal;text-align: center;">
+				<h:panelGroup id="uploadFinance">
+				
+							<ui:fragment
+						rendered="#{stageTwofunctional.definationType.parameterCode eq 'UP'}">
+						<ac:scSingleFileUploadButton id="scfcsUploadBtn"
+							popupWidgetVar="scFinancialChecklistUploadDlg"
+							attachment="#{stageTwofunctional.scQtCheckListAttachment}"
+							readonly="#{specificationBackingBean.managedBean.readOnly}"
+							deleteFileUploadListener="specificationBackingBean.deleteCheckListAttachmentFile"
+							rowIndex="#{index}">
+							<f:setPropertyActionListener for="actionEvent"
+								value="#{stageTwofunctional}"
+								target="#{specificationBackingBean.managedBean.scQtChecklist}" />
+						</ac:scSingleFileUploadButton>
+					</ui:fragment>
+				</h:panelGroup>
+			</p:column>
+
+			<p:column style="width:5%;text-align: center;">
+				<f:facet name="header">
+					<ui:fragment
+						rendered="#{!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoring()}">
+						<h:outputText value="* " styleClass="mandatory" />
+					</ui:fragment>
+					<h:outputText value="#{lbl['lbl.sc.action']}" />
+				</f:facet>
+
+				<h:panelGroup id="actionView">
+					<p:commandLink
+						action="#{specificationBackingBean.financialChecklistEditAction(index,stageTwofunctional,'F')}"
+						rendered="#{stageTwofunctional.definationType.parameterCode eq 'TS' or ((stageTwofunctional.pmDocument ne null) and (stageTwofunctional.pmDocument.docDefinitionKey eq 'FG' or stageTwofunctional.pmDocument.docDefinitionKey eq 'FN' or stageTwofunctional.pmDocument.docDefinitionKey eq 'BS' or ((stageTwofunctional.pmDocument.docDefinitionKey eq 'CH' or stageTwofunctional.pmDocument.docDefinitionKey eq 'AL' or stageTwofunctional.pmDocument.docDefinitionKey eq 'PC' or stageTwofunctional.pmDocument.docDefinitionKey eq 'SD' or stageTwofunctional.pmDocument.docDefinitionKey eq 'CF') and stageTwofunctional.scoringReq)))}">
+
+						<ui:fragment
+							rendered="#{specificationBackingBean.isQTStatusChecklistScoring() or 
+						(specificationBackingBean.isQTStatusChecklistScoringRevision()) or(specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance() and specificationBackingBean.managedBean.specMaintenance)}">
+							<h:graphicImage value="/css/images/design/edit.png" />
+						</ui:fragment>
+						<ui:fragment
+							rendered="#{(specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring() and !specificationBackingBean.isQTStatusChecklistScoringRevision()) or(specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance() and !specificationBackingBean.managedBean.specMaintenance)}">
+							<h:graphicImage value="/css/images/design/ico-view.png" />
+						</ui:fragment>
+						<f:setPropertyActionListener value="#{stageTwofunctional}"
+							target="#{specificationBackingBean.managedBean.scQtChecklist}" />
+
+					</p:commandLink>
+				</h:panelGroup>
+			</p:column>
+		</p:dataTable>
+		<ui:param name="isReadOnlyOrSpecMain"
+			value="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()}" />
+
+		<div align="right">
+			<p:commandButton styleClass="BtnSpacing"
+				value="#{lbl['lbl.sc.spec.btn.standard.check.list']}"
+				rendered="#{!isReadOnlyOrSpecMain or specificationBackingBean.managedBean.isChecklist()}"
+				process="@this" partialSubmit="true"
+				oncomplete="stageTwoFinance.show();"
+				actionListener="#{specificationBackingBean.retriveFinancialStandardCheckList}"
+				update="@([id$=financialChecklistPopup])" />
+			<p:commandButton value="#{lbl['lbl.btn.add']}" styleClass="BtnSpacing"
+				rendered="#{!isReadOnlyOrSpecMain or specificationBackingBean.managedBean.isChecklist()}"
+				process="@this,financeProposaltwo" partialSubmit="true"
+				action="#{specificationBackingBean.addFinancialCheckList}"
+				update="@all,financeProposaltwo" />
+
+
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" styleClass="BtnSpacing" id="deleteFinancialChecklist"
+				disabled="#{specificationBackingBean.deleteselectedList(specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"
+				process="@this" partialSubmit="true"
+				oncomplete="financialCheckListDeletePopUp.show();"
+				update="@([id$=#{financialCheckListDeleteId}])"
+				rendered="#{!isReadOnlyOrSpecMain or specificationBackingBean.managedBean.isChecklist()}">
+				<f:setPropertyActionListener
+					target="#{specificationBackingBean.managedBean.finStandaraChecklist}"
+					value="#{true}" />
+				<f:setPropertyActionListener
+					target="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}"
+					value="#{false}" />
+			</p:commandButton>
+
+
+		</div>
+		<ui:param name="financialCheckListDeleteId"
+			value="financialCheckListDeleteId"></ui:param>
+		<ac:confirmationPopup id="#{financialCheckListDeleteId}"
+			widget="financialCheckListDeletePopUp" width="450" height="100"
+			okAction="specificationBackingBean.deleteFinancialCheckList"
+			title="#{lbl['lbl.sc.spec.finance.check.list']}"
+			content="#{lbl['lbl.sc.dialog.confirm.message']}"
+			update="@([id$=financialMainScCommitteeCheckList])" />
+		<ui:include src="financialCheckListStandardCheckList.xhtml" />
+	</p:panel>
+</ui:composition>

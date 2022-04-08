@@ -1,0 +1,497 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<p:panel header="#{lbl['lbl.sm.companyinfo']}" toggleable="true" id="compInfoPanelId">
+		<table style="width: 50%;">
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.selfrequest.mof.number']}" /></td>
+				<td><p:inputText value="#{selfRequestSupplierAdminBackingBean.managedBean.mofNo}"
+						size="35" disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.assocCmpny.companyName']}" /></td>
+				<td><p:inputText value="#{selfRequestSupplierAdminBackingBean.managedBean.supplier.companyName}"
+						size="35" disabled="true" /></td>
+			</tr>
+		</table>
+	</p:panel>
+	
+	<p:panel header="#{lbl['lbl.sm.suppadmin.info']}" toggleable="true" id="suppAdminInfoPanelId">
+	
+		<p:messages id="messages" showDetail="true" closable="true" showSummary="false" escape="false"/>
+		
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.selfrequest.field.mark.with']} ("/>
+		<h:outputText styleClass="mandatory" value="*"/>
+		<h:outputText styleClass="instruction" value=") #{lbl['lbl.sm.selfrequest.isrequired']}"/>
+		
+		<table style="width: 100%;">
+			<tr>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sm.fullname']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td>
+					<p:inputText id="suppAdminName" maxlength="80"
+						label="#{lbl['lbl.sm.fullname']}" required="true" size="35"
+						value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.name}"  />
+					<p:message id="suppAdminNameMsg" for="suppAdminName"
+						showSummary="true" showDetail="false" display="icon" />
+				</td>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sm.phoneno']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td>
+					<ac:phone id="suppAdminPhone" isMobile="false" label="#{lbl['lbl.sm.phoneno']}"
+						countryCode="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.phoneCountry}" 
+						areaCode="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.phoneArea}" 
+						number="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.phoneNo}"  
+						validatorMessage="#{lbl['lbl.sm.phoneno']} - #{lbl['lbl.sm.invalidNo']}" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sm.person.nationality.origin']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td>
+					<p:selectOneMenu
+						label="#{lbl['lbl.sm.person.nationality.origin']}" id="suppAdminNational"
+						required="true" style="width: 207px;margin-bottom: 5px;"
+						value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.pmCountry.countryId}" >
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItems value="#{selfRequestSupplierAdminBackingBean.managedBean.countryItems}" />
+						<p:ajax event="change" partialSubmit="true" process="@this" 
+							update="bumiRadioOutPanelId,muslimRadioOutPanelId,suppAdminIdenType,suppAdminIdentTypeTtId"/>
+					</p:selectOneMenu>
+					<p:message id="suppAdminNationalMsg" for="suppAdminNational"
+						showSummary="true" showDetail="false" display="icon" />
+				</td>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sm.mobileNo']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td>
+					<ac:phone id="suppAdminMobile" label="#{lbl['lbl.sm.mobileNo']}"
+						countryCode="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.mobileCountry}" 
+						areaCode="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.mobileArea}" 
+						number="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.mobileNo}" 
+						isMobile="true" required="true" validatorMessage="#{lbl['lbl.sm.mobileNo']} - #{lbl['lbl.sm.invalidNo']}"
+						telcoId="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.mobileTelcoId}" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sm.person.dob']}" /> 
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td>
+					<p:calendar showOn="button" navigator="true"
+						display="inline" required="true" readonlyInput="true"
+						label="#{lbl['lbl.sm.person.dob']}" id="suppAdminDob"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						yearRange="-99:+0" maxdate="#{selfRequestSupplierAdminBackingBean.managedBean.currDate}"
+						value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.birthDate}" />
+					<p:message id="suppAdminDobMsg" for="suppAdminDob" showSummary="true"
+						showDetail="false" display="icon" />
+				</td>
+				<td>
+				<c:choose>
+						<c:when
+							test="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.identificationType.parameterCode == SupplierManagementConst.NEW_IC}">
+							<p:outputLabel value="#{lbl['lbl.sm.person.asIcAddr']}" />
+						</c:when>
+						<c:otherwise>
+							<p:outputLabel value="#{lbl['lbl.sm.person.permAddr']}" />
+						</c:otherwise>
+					</c:choose> <p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td>
+					<p:inputText id="suppAdminAddr1" size="35"
+						label="#{lbl['lbl.sm.person.asIcAddr']}" required="true" maxlength="100"
+						value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress.address1}">
+						<p:ajax process="@this" partialSubmit="true" update="@this" />
+					</p:inputText>
+					&#160;
+					<p:graphicImage id="suppAdminAddr1ImgId"	value="/css/images/design/tooltips.png" /> 
+					<p:tooltip	id="suppAdminAddr1TtId" for="suppAdminAddr1ImgId" >
+						<p:outputLabel escape="false" value="#{lbl['tt.sm.address.as.ic']}" />
+					</p:tooltip> 
+					<p:message id="suppAdminAddr1Msg" for="suppAdminAddr1" showSummary="true"
+						showDetail="false" display="icon" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sm.person.bumi']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td>
+					<p:outputPanel id="bumiRadioOutPanelId">
+						<h:outputText value="#{lbl['lbl.txt.na']}" 
+							rendered="#{empty selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.pmCountry or
+							 selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.pmCountry.countryCode ne 'MY'}"/>
+						<p:selectOneRadio rendered="#{not empty selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.pmCountry 
+							and selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.pmCountry.countryCode eq 'MY'}" 
+							required="true" value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.bumiFlg}"
+							label="#{lbl['lbl.sm.person.bumi']}" id="suppAdminBumi">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
+							<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
+							<p:ajax event="change" partialSubmit="true" process="@this" />
+						</p:selectOneRadio>
+						<p:message id="suppAdminBumiMsg" for="suppAdminBumi" showSummary="true"
+							showDetail="false" display="icon" />
+					</p:outputPanel>
+				</td>
+				<td></td>
+				<td>
+					<p:inputText id="suppAdminAddr2" size="35"
+						label="#{lbl['lbl.sm.person.permAddr']}" maxlength="100"
+						value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress.address2}">
+						<p:ajax process="@this" partialSubmit="true" update="@this" />
+					</p:inputText>
+					&#160;
+					<p:graphicImage id="suppAdminAddr2ImgId"	value="/css/images/design/tooltips.png" /> 
+					<p:tooltip	id="suppAdminAddr2TtId" for="suppAdminAddr2ImgId" >
+						<p:outputLabel escape="false" value="#{lbl['tt.sm.address.as.ic']}" />
+					</p:tooltip> 
+					<p:message id="suppAdminAddr2Msg" for="suppAdminAddr2" showSummary="true"
+						showDetail="false" display="icon" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p:outputLabel value=" #{lbl['lbl.sm.person.religion']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td>
+					<p:outputPanel id="muslimRadioOutPanelId">
+						<h:outputText value="#{lbl['lbl.txt.na']}" 
+							rendered="#{empty selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.pmCountry or
+							 selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.pmCountry.countryCode ne 'MY'}"/>
+						<p:selectOneRadio id="suppAdminMuslim"
+							label="#{lbl['lbl.sm.person.religion']}"
+							rendered="#{not empty selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.pmCountry 
+							and selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.pmCountry.countryCode eq 'MY'}"
+							value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.muslimFlg}" required="true">
+							<f:selectItem itemLabel="#{lbl['lbl.sm.person.religion.muslim']}" itemValue="1" />
+							<f:selectItem itemLabel="#{lbl['lbl.sm.person.religion.non.muslim']}" itemValue="0" />
+						</p:selectOneRadio>
+						<p:message id="suppAdminMuslimMsg" for="suppAdminMuslim" showSummary="true"
+							showDetail="false" display="icon" />
+					</p:outputPanel>
+				</td>
+				<td></td>
+				<td>
+					<p:inputText id="suppAdminAddr3" size="35"
+						label="#{lbl['lbl.sm.person.permAddr']}" maxlength="100"
+						value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress.address3}">
+						<p:ajax process="@this" partialSubmit="true" update="@this" />
+					</p:inputText>
+					&#160;
+					<p:graphicImage id="suppAdminAddr3ImgId"	value="/css/images/design/tooltips.png" /> 
+					<p:tooltip	id="suppAdminAddr3TtId" for="suppAdminAddr3ImgId" >
+						<p:outputLabel escape="false" value="#{lbl['tt.sm.address.as.ic']}" />
+					</p:tooltip> 
+					<p:message id="suppAdminAddr3Msg" for="suppAdminAddr2" showSummary="true"
+						showDetail="false" display="icon" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sm.identificationtype']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td>
+					<p:selectOneMenu id="suppAdminIdenType" required="true"
+						label="#{lbl['lbl.sm.identificationtype']}"
+						disabled="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.pmCountry.countryCode eq 'MY'}"
+						value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.identificationTypeId}"
+						style="width:200px">
+						<f:selectItems
+							value="#{selfRequestSupplierAdminBackingBean.managedBean.identificationTypeItems}" />
+						<p:ajax event="change" partialSubmit="true" process="@this"
+							listener="#{selfRequestSupplierAdminBackingBean.assignPersonIdentType}"
+							update="suppAdminIdenTypePan,suppAdminIdenTypeLblPan,@this" />
+					</p:selectOneMenu> 
+					
+					<p:outputPanel id="suppAdminIdentTypeTtId">
+						&#160;&#160;
+						<p:graphicImage id="idTypeNonMyImg"	value="/css/images/design/tooltips.png" 
+							rendered="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.pmCountry.countryCode ne 'MY'}"/> 
+						<p:tooltip	id="idTypeNonMyTt" for="idTypeNonMyImg" 
+							rendered="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.pmCountry.countryCode ne 'MY'}">
+							<table>
+								<tr><td width="300px"><p:outputLabel escape="false" value="#{lbl['tt.sm.identype.nonmy']}" /></td></tr>
+							</table>
+						</p:tooltip>
+					</p:outputPanel>
+					
+					<p:message id="suppAdminIdenTypeMsg" for="suppAdminIdenType"
+						showSummary="true" showDetail="false" display="icon" />
+				</td>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sm.country']}" /> 
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td>
+					<p:selectOneMenu
+						label="#{lbl['lbl.sm.person.permAddr']} - #{lbl['lbl.sm.country']}"
+						required="true" id="suppAdminPermCntry"
+						value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress.countryId}"
+						style="width: 207px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItems var="shrPermCountry"
+							value="#{selfRequestSupplierAdminBackingBean.managedBean.countryItems}" />
+						<p:ajax event="change" process="@this"
+							listener="#{backingBean.onChangeCountry(selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress)}"
+							update="suppAdminPermState,suppAdminPermDist,suppAdminPermCity,postCodePermPanelId" />
+					</p:selectOneMenu>
+					<p:message id="suppAdminPermCntryMsg" for="suppAdminPermCntry"
+						showSummary="true" showDetail="false" display="icon" />
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputPanel id="suppAdminIdenTypeLblPan">
+						<p:outputLabel value="#{lbl['lbl.sm.person.icNum']}"
+							id="suppAdminIcNumLbl"
+							rendered="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.identificationType.parameterCode ne 'P'}" />
+						<p:outputLabel value="#{lbl['lbl.sm.person.psptNum']}"
+							id="suppAdminPsptNumLbl"
+							rendered="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.identificationType.parameterCode eq 'P'}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</p:outputPanel></td>
+
+				<td>
+					<p:outputPanel id="suppAdminIdenTypePan">
+						<p:inputText label="#{lbl['lbl.sm.shrHldrInfo.idNo']}"
+							required="true" id="suppAdminIcNum"
+							requiredMessage="#{lbl['lbl.sm.icNo.required']}"
+							rendered="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.identificationType.parameterCode eq 'I'}"
+							value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.identificationNo}"
+							size="35" maxlength="12"
+							validatorMessage="#{lbl['lbl.sm.person.icNum']} - #{lbl['lbl.sm.invalidNo']}">
+							<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+						</p:inputText>
+						<p:inputText label="#{lbl['lbl.sm.shrHldrInfo.idNo']}"
+							required="true" id="suppAdminPasptNum"
+							rendered="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.identificationType.parameterCode ne 'I'}"
+							value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.identificationNo}"
+							size="35" maxlength="12">
+							<p:ajax process="@this" partialSubmit="true" update="@this"
+								listener="#{backingBean.trimPersonnelPassportValue}" />
+						</p:inputText>
+						   &#160; <p:graphicImage id="tooltip1"
+							value="/css/images/design/tooltips.png" />
+						<p:tooltip id="toolinfo1" for="tooltip1">
+							<p:outputLabel escape="false"
+								value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.identificationType.parameterCode eq 'I' ? 
+								lbl['tt.sm.registration.identification.no'] : lbl['tt.sm.registration.identification.no']}}" />
+						</p:tooltip>&#160;
+						<p:message id="suppAdminIcNumMsg" for="suppAdminIcNum"
+							rendered="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.identificationType.parameterCode eq 'I'}"
+							showSummary="true" showDetail="false" display="icon" />
+						<p:message id="suppAdminPasptNumMsg" for="suppAdminPasptNum"
+							rendered="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.identificationType.parameterCode ne 'I'}"
+							showSummary="true" showDetail="false" display="icon" />
+					</p:outputPanel>
+				</td>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sm.state']}" /> 
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td>
+					<p:selectOneMenu
+						label="#{lbl['lbl.sm.person.permAddr']} - #{lbl['lbl.sm.state']}"
+						required="true" style="width: 207px;margin-bottom: 5px;" id="suppAdminPermState"
+						value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress.stateId}" >
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItems value="#{selfRequestSupplierAdminBackingBean.managedBean.stateItems}" />
+						<p:ajax event="change" process="@this"
+							listener="#{selfRequestSupplierAdminBackingBean.onChangeState(selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress)}"
+							update="divisionSrLabelPanelId,divisionSrDropdownPanelId,suppAdminPermDist,suppAdminPermCity" />
+
+					</p:selectOneMenu>
+					<p:message id="suppAdminPermStateMsg" for="suppAdminPermState"
+						showSummary="true" showDetail="false" display="icon" />
+						</td>
+					</tr>
+					
+				<!-- 13320 Start-->
+			     <tr>
+				    <td></td>
+				    <td></td>
+				    <td class="tdTitle"><p:outputPanel id="divisionSrLabelPanelId">
+				    <ui:fragment
+				    rendered="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress.pmState.adoptDivision}">
+					<p:outputLabel value="#{lbl['lbl.sm.division']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+					</ui:fragment>
+					</p:outputPanel></td>
+				    <td><p:outputPanel id="divisionSrDropdownPanelId">
+					<ui:fragment
+						rendered="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress.pmState.adoptDivision}">
+						<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+							label="#{lbl['lbl.sm.division']}"
+							value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress.divisionId}"
+							id="suppAdminPermDivision">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItems var="suppAdminSrPermDivision"
+							value="#{selfRequestSupplierAdminBackingBean.managedBean.divisionItems}" />
+							<p:ajax event="change" process="@this"
+							listener="#{selfRequestSupplierAdminBackingBean.onChangeDivision(selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress)}"
+							update="suppAdminPermDist,suppAdminPermCity" />
+						</p:selectOneMenu>
+					</ui:fragment>
+					</p:outputPanel></td>
+			</tr>
+			<!-- 13320-End -->
+			<tr>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sm.person.designation']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td>
+					<p:inputText label="#{lbl['lbl.sm.person.designation']}"
+						id="suppAdminDesignation" maxlength="30" required="true" size="35"
+						value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.designation}" />
+						<p:message id="suppAdminDesignationMsg"
+						for="suppAdminDesignation" showSummary="true" showDetail="false"
+						display="icon" />
+				</td>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sm.district']}" /> 
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td>
+					<p:selectOneMenu
+						label="#{lbl['lbl.sm.person.permAddr']} - #{lbl['lbl.sm.district']}"
+						required="true" style="width: 207px;margin-bottom: 5px;" id="suppAdminPermDist"
+						value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress.districtId}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItems value="#{selfRequestSupplierAdminBackingBean.managedBean.districtItems}" />
+						<p:ajax event="change" process="@this"
+							listener="#{selfRequestSupplierAdminBackingBean.onChangeDistrict(selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress)}"
+							update="suppAdminPermCity" />
+					</p:selectOneMenu>
+					<p:message id="suppAdminPermDistMsg" for="suppAdminPermDist"
+						showSummary="true" showDetail="false" display="icon" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sm.person.email']} " /> 
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td>
+					<p:outputPanel id="emailInputPanelId" >
+						<p:inputText label="#{lbl['lbl.sm.person.email']}"
+							id="suppAdminEmail" maxlength="80"
+							validatorMessage="#{lbl['lbl.sm.person.email']} - #{lbl['lbl.sm.invalidEmail']}"
+							value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdmin.email}"
+							size="35">
+							<f:validateRegex 
+								pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+							<p:ajax process="@this" partialSubmit="true"/>
+							<p:ajax event="change" process="@this" listener="#{selfRequestSupplierAdminBackingBean.onChangeEmail()}" update="suppAdminEmail"/> 
+						</p:inputText> 
+					</p:outputPanel>
+					&#160;&#160;
+					<p:graphicImage id="toolTipIcon" value="/css/images/design/tooltips.png" /> 
+				  	<p:tooltip id="sourceTooltip" for="toolTipIcon">
+						<h:outputText id="sourceLabel" escape="false" value="#{lbl['lbl.sm.email.change.tooltip']}" />
+					</p:tooltip> 
+					<p:message id="suppAdminEmailMsg" for="suppAdminEmail"
+						showSummary="true" showDetail="false" display="icon" />
+				</td>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> 
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td>
+					<p:selectOneMenu
+						label="#{lbl['lbl.sm.person.permAddr']} - #{lbl['lbl.sm.towncity']}"
+						required="true" style="width: 207px;margin-bottom: 5px;"
+						id="suppAdminPermCity"
+						value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress.cityId}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItems value="#{selfRequestSupplierAdminBackingBean.managedBean.cityItems}" />
+						<p:ajax event="change" process="@this"
+							listener="#{selfRequestSupplierAdminBackingBean.onChangeCity(selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress)}"
+							update="suppAdminPermCity" />
+					</p:selectOneMenu>
+					<p:message id="suppAdminPermCityMsg" for="suppAdminPermCity"
+						showSummary="true" showDetail="false" display="icon" />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">&#160;</td>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> 
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td>
+					<p:outputPanel id="postCodePermPanelId">
+						<p:outputPanel
+							rendered="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress.countryId==selfRequestSupplierAdminBackingBean.managedBean.myCountryId}">
+							<p:inputText maxlength="5" required="true"
+								label="#{lbl['lbl.sm.person.permAddr']} -#{lbl['lbl.sm.postcode']}"
+								id="suppAdminPermAddrPostCodeMy"
+								value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress.postcode}"
+								validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
+								size="35">
+								<f:validator validatorId="postcodeValidator" />
+								<p:ajax process="@this" partialSubmit="true"
+									update="@this,suppAdminPermAddrPostCodeMyMsg" />
+							</p:inputText>
+							<p:message id="suppAdminPermAddrPostCodeMyMsg"
+								for="suppAdminPermAddrPostCodeMy" showSummary="true"
+								showDetail="false" display="icon" />
+						</p:outputPanel>
+						<p:outputPanel
+							rendered="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress.countryId!=selfRequestSupplierAdminBackingBean.managedBean.myCountryId}">
+							<p:inputText maxlength="10" required="true"
+								label="#{lbl['lbl.sm.person.permAddr']} -#{lbl['lbl.sm.postcode']}"
+								id="suppAdminPermAddrPostCodeForeign"
+								value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress.postcode}"
+								size="35">
+								<p:ajax process="@this" partialSubmit="true"
+									update="@this,suppAdminPermAddrPostCodeForeignMsg" />
+							</p:inputText>
+							<p:message id="suppAdminPermAddrPostCodeForeignMsg"
+								for="suppAdminPermAddrPostCodeForeign" showSummary="true"
+								showDetail="false" display="icon" />
+						</p:outputPanel>
+					</p:outputPanel>
+				</td>
+			</tr>
+		</table>
+		
+		<br />
+		<table style="width: 100%;">
+			<tr>
+				<td>
+					<p:commandButton value="#{lbl['lbl.btn.prev']}" update="@form"
+						immediate="true" action="#{selfRequestSupplierAdminBackingBean.back('2')}" 
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+				</td>
+				<td style="white-space: nowrap; float: right;">
+					<p:commandButton value="#{lbl['lbl.btn.cancel']}" 
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+						action="#{selfRequestSupplierAdminBackingBean.redirectToMainPage}"
+						update="@form" />
+					
+					<p:commandButton id="btnSubmitSuppAdminDetails" value="#{lbl['lbl.btn.submit']}" 
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form"
+						action="#{selfRequestSupplierAdminBackingBean.submit}" />
+				</td>
+			</tr>
+		</table>
+		<ac:smEmailAlertPopup bBean="#{backingBean}" title="#{lbl['lbl.sm.email.change.header']}" dialogId="emailPopUp" 
+		btnOkLabel="#{lbl['lbl.btn.ok']}" />
+	</p:panel>
+
+</ui:composition>

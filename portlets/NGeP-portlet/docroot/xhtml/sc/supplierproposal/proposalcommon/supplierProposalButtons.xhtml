@@ -1,0 +1,80 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:blockUI block=":form" widgetVar="blockWidget">
+		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+	</p:blockUI>
+
+	<table border="0" cellpadding="0" cellspacing="0" width="100%">
+		<tr>
+			<td><p:commandButton value="#{lbl['lbl.btn.back']}"
+					immediate="true"
+					action="#{supplierProposalDetailBackingBean.backAction}"
+					rendered="#{!empty supplierProposalDetailBackingBean.managedBean.previousPageUrl}" />
+			</td>
+			<td align="right"><p:commandLink
+					value="#{lbl['lbl.td.doc.trackingDiary']}" style="float:right;"
+					action="#{pmTrackingDiaryBackingBean.redirectToSupplierTrackingDiary(ParameterConst.doctypeQuotation, supplierProposalDetailBackingBean.managedBean.qt.qtId, true)}"
+					immediate="true"
+					rendered="#{!empty supplierProposalDetailBackingBean.managedBean.previousPageUrl}" />
+				<ui:remove>
+					Bug #27412 #75 : START
+				</ui:remove>	
+				<c:if test="#{!empty qTDetailBB.isMofSupplier() and qTDetailBB.isMofSupplier()}">
+					<p:commandButton value="#{lbl['lbl.sc.print.proposal']}" styleClass="BtnSpacing" ajax="false" action="#{supplierProposalDetailBackingBean.downloadProposalReport}" />
+				</c:if>
+				<ui:remove>
+					Bug #27412 #75 : END
+				</ui:remove>				
+				<p:commandButton value="#{lbl['lbl.btn.submit']}"
+					styleClass="BtnSpacing" onstart="blockWidget.show()"
+					oncomplete="blockWidget.hide()"
+					action="#{supplierProposalDetailBackingBean.spkiSignAction}"
+					rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly and !supplierProposalDetailBackingBean.managedBean.supplierBranchListDeleted}"
+					update="spkiOutputPanel,proposalMenuContent" process="@form"
+					disabled="#{supplierProposalDetailBackingBean.checkDisciplinaryActionForQTCat()}" />
+					
+				<p:commandButton value="#{lbl['lbl.btn.update']}"
+					styleClass="BtnSpacing"  onstart="updateProposal.show()"
+					rendered="#{supplierProposalDetailBackingBean.managedBean.readOnly and !supplierProposalDetailBackingBean.managedBean.qtClosed and !supplierProposalDetailBackingBean.managedBean.supplierBranchListDeleted}"
+					update="@this" process="@this" partialSubmit="true"/>
+					</td>
+		</tr>
+	</table>
+
+	<p:outputPanel id="spkiOutputPanel">
+		<ac:spkiPopup id="spkiPopup"
+			password="#{supplierProposalDetailBackingBean.managedBean.spkiBackingBean.password}"
+			challengeAns1="#{supplierProposalDetailBackingBean.managedBean.spkiBackingBean.challengeAns1}"
+			challengeQues1="#{supplierProposalDetailBackingBean.managedBean.spkiBackingBean.challengeQues1}"
+			postSignAction="#{supplierProposalDetailBackingBean.submitSupplierProposal(spkiBackingBean.pmDigiSign)}"
+			enableAutoUpdate="#{supplierProposalDetailBackingBean.enableAutoUpdate()}" />
+	</p:outputPanel>
+	<p:outputPanel id="updateProposalPopUp">
+		<p:dialog header="#{lbl['lbl.sc.dialog.confirm.update.proposal']}" width="500px"
+			height="125px" draggable="false" resizable="false" closable="false" closeOnEscape="flase"
+			styleClass="pop_up_top" widgetVar="updateProposal"
+			showEffect="fade" hideEffect="fade" modal="false"
+			id="updateProposal">
+			<div align="left" >
+			<h:outputText value="#{lbl['lbl.sc.proposal.update.instruction']}" style="white-space : normal;align - left;" />
+			</div>
+			<br/>
+			<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+				styleClass="BtnSpacing"
+				onstart="updateProposal.hide();" immediate="true" />
+				<p:commandButton value="#{lbl['lbl.btn.proceed']}" styleClass="BtnSpacing"
+				action="#{supplierProposalDetailBackingBean.updateProposal}" oncomplete="updateProposal.hide();"
+				process="@this" partialSubmit="true"
+				update="form" />
+		</div>
+		</p:dialog>
+	</p:outputPanel>
+
+</ui:composition>

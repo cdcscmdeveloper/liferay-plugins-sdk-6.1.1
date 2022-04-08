@@ -1,0 +1,472 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<table style="width: 100%">
+		<tr>
+			<td style="width: 20%; vertical-align: top;" class="sidemenutd"><c:if
+					test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForMof}">
+					<ui:include
+						src="/xhtml/sm/NewMofApplication/smMofApplnSideMenuItem.xhtml" />
+				</c:if> <c:if
+					test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi}">
+					<ui:include
+						src="/xhtml/sm/updateMofDetails/smUpdateMofApplnSideMenuItem.xhtml" />
+				</c:if> <c:if
+					test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew}">
+					<ui:include
+						src="/xhtml/sm/renewMofApplication/smRenewApplnSideMenuItem.xhtml" />
+				</c:if> <c:if
+					test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForApplcatcodes}">
+					<ui:include
+						src="/xhtml/sm/renewMofApplication/smRenewApplnSideMenuItem.xhtml" />
+				</c:if> <c:if
+					test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForUpdate}">
+					<ui:include
+						src="/xhtml/sm/updateMofDetails/smUpdateMofApplnSideMenuItem.xhtml" />
+				</c:if></td>
+			<td>
+				<!-- #12483 - START -->
+				<h:outputText value="#{lbl['lbl.sm.revise.reason']} : #{backingBean.currentReviseReason()}" rendered="#{backingBean.renderRevisedReason()}" styleClass="splNotesFonts" escape="false"/>
+				<!-- #12483 - END -->
+				<h:inputHidden value="#{backingBean.managedBean.smAppl.applCategoryType}" />
+				<div style="width: 100%" align="right">
+				
+					<ui:remove>
+					<p:outputPanel rendered="#{empty backingBean.managedBean.smAppl.smSvTasks and backingBean.managedBean.showNewChanges}">
+						<ui:include src="/xhtml/sm/shared/mofRegistration/revertToSupplierOriginalApplButton.xhtml" />
+					</p:outputPanel>
+					</ui:remove>
+					
+					<c:choose>
+						<c:when
+							test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_VERIFY_APPL}">
+							<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								update=":form:tt:rejectDialogId" partialSubmit="true"
+								process="@this"
+								action="#{backingBean.assignFinalApproveOrReject('rejectDialog')}" />
+							<p:commandButton onstart="blockWidget.show()"
+								oncomplete="blockWidget.hide()" update=":form:tt:submitApprvrDialog"
+								value="#{lbl['lbl.sm.button.recommend.to.approve']}"
+								partialSubmit="true" process="@this"
+								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.categoryCodeVerified or !backingBean.managedBean.documentVerified or !backingBean.managedBean.allowedToApprove}"
+								action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'APPROVE')}" /> <!-- #29727 -->
+							<p:commandButton onstart="blockWidget.show()"
+								oncomplete="blockWidget.hide()" update=":form:tt:submitApprvrDialog"
+								value="#{lbl['lbl.sm.button.recommend.to.reject']}"
+								partialSubmit="true" process="@this"
+								action="#{backingBean.submitPOEscalationToApprover('REJECT')}" />
+							<!-- #12483 - START -->
+							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
+								<p:commandButton value="#{lbl['lbl.sm.button.send.enquiry']}"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+									partialSubmit="true" process="@this"
+									action="#{backingBean.assignMissingDocsList(true,'sendInqDialog')}"
+									update=":form:tt:sendInqDialog" />
+							</c:if>
+							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
+								<c:if
+									test="#{backingBean.managedBean.smAppl.applType eq 'B' or backingBean.managedBean.smAppl.applCategoryType eq 'S' }">
+									<c:if test="#{!backingBean.managedBean.reviewSiteVisit}">
+										<p:commandButton
+											value="#{lbl['lbl.sm.button.recommend.site.visit']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											partialSubmit="true" process="@this"
+											update=":form:tt:svcDialog"
+											action="#{backingBean.assignSiteVisitPopUp('svcDialog')}"
+											disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.categoryCodeVerified or !backingBean.managedBean.documentVerified}" />
+									</c:if>
+								</c:if>
+							</c:if>
+							<!-- #12483 - END -->
+						</c:when>
+						<c:when
+							test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE}">
+							<p:commandButton value="#{lbl['lbl.sm.button.approve']}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								update=":form:tt:approveDialog" partialSubmit="true"
+								process="@this"
+								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.categoryCodeVerified or !backingBean.managedBean.documentVerified or !backingBean.managedBean.allowedToApprove}" 
+								action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'approveDialog')}" />  <!-- #29727 -->
+							<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								update=":form:tt:rejectDialogId" partialSubmit="true"
+								process="@this"
+								action="#{backingBean.assignFinalApproveOrReject('rejectDialog')}" />
+						</c:when>
+						<c:when
+							test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_APPL_SPLCAT 
+							or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi}">
+							
+							<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								update=":form:tt:rejectDialogId" partialSubmit="true"
+								process="@this" action="#{backingBean.assignFinalApproveOrReject('rejectDialog')}" />
+	
+							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
+								<p:commandButton value="#{lbl['lbl.sm.button.recommend.to.approve']}"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+									partialSubmit="true" process="@this" update=":form:tt:submitApprvrDialog"
+									disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.categoryCodeVerified or !backingBean.managedBean.documentVerified or !backingBean.managedBean.allowedToApprove}"
+									action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'APPROVE')}" /> <!-- #27297 -->
+							</c:if>
+
+							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
+								<p:commandButton value="#{lbl['lbl.sm.button.recommend.to.reject']}"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+									partialSubmit="true" process="@this" update=":form:tt:submitApprvrDialog"
+									action="#{backingBean.submitPOEscalationToApprover('REJECT')}" />
+							</c:if>
+								
+							<p:commandButton
+								value="#{lbl['lbl.sm.button.recommend.site.visit']}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								partialSubmit="true" process="@this" update=":form:tt:svcDialog"
+								action="#{backingBean.assignSiteVisitPopUp('svcDialog')}"
+								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.categoryCodeVerified or !backingBean.managedBean.documentVerified}" />
+							<p:commandButton value="#{lbl['lbl.sm.button.send.enquiry']}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								partialSubmit="true" process="@this"
+								action="#{backingBean.assignMissingDocsList(true,'sendInqDialog')}"
+								update=":form:tt:sendInqDialog" />
+						</c:when>
+						
+						<!-- #28778 - Start -->
+						<c:when
+							test="#{ backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_APPL and  
+													backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew  and 
+													backingBean.managedBean.specialCategoryRechecked and backingBean.managedBean.showFacilityMachine}">
+
+							<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								update=":form:tt:rejectDialogId" partialSubmit="true"
+								process="@this"
+								action="#{backingBean.assignFinalApproveOrReject('rejectDialog')}" />
+
+							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
+								<p:commandButton
+									value="#{lbl['lbl.sm.button.recommend.to.approve']}"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+									partialSubmit="true" process="@this"
+									update=":form:tt:submitApprvrDialog"
+									disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.categoryCodeVerified or !backingBean.managedBean.documentVerified or !backingBean.managedBean.allowedToApprove}"
+									action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'APPROVE')}" />
+								<!-- #27297 -->
+							</c:if>
+
+							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
+								<p:commandButton
+									value="#{lbl['lbl.sm.button.recommend.to.reject']}"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+									partialSubmit="true" process="@this"
+									update=":form:tt:submitApprvrDialog"
+									action="#{backingBean.submitPOEscalationToApprover('REJECT')}" />
+							</c:if>
+
+							<p:commandButton
+								value="#{lbl['lbl.sm.button.recommend.site.visit']}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								partialSubmit="true" process="@this" update=":form:tt:svcDialog"
+								action="#{backingBean.assignSiteVisitPopUp('svcDialog')}"
+								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.categoryCodeVerified or !backingBean.managedBean.documentVerified}" />
+
+							<p:commandButton value="#{lbl['lbl.sm.button.send.enquiry']}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								partialSubmit="true" process="@this"
+								action="#{backingBean.assignMissingDocsList(true,'sendInqDialog')}"
+								update=":form:tt:sendInqDialog" />
+
+						</c:when>
+						<!-- #28778 - End -->
+						
+						<c:otherwise>
+							<p:commandButton value="#{lbl['lbl.sm.button.approve']}"
+								update=":form:tt:approveDialog" partialSubmit="true"
+								process="@this" rendered="#{backingBean.managedBean.showPoApprovedOrRecommendButton}"
+								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.categoryCodeVerified or !backingBean.managedBean.documentVerified or !backingBean.managedBean.allowedToApprove}" 
+								action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'approveDialog')}" /> <!-- #27297 -->
+							<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								update=":form:tt:rejectDialogId" partialSubmit="true" process="@this"
+								action="#{backingBean.assignFinalApproveOrReject('rejectDialog')}" />
+							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
+								<p:commandButton rendered="#{backingBean.managedBean.showPoApprovedOrRecommendButton}"
+									value="#{lbl['lbl.sm.button.recommend.to.approve']}"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+									partialSubmit="true" process="@this" update=":form:tt:submitApprvrDialog"
+									disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.categoryCodeVerified or !backingBean.managedBean.documentVerified or !backingBean.managedBean.allowedToApprove}"
+									action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'APPROVE')}" /> <!-- 29727 -->
+							</c:if>
+							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
+								<p:commandButton rendered="#{backingBean.managedBean.showPoApprovedOrRecommendButton}"
+									value="#{lbl['lbl.sm.button.recommend.to.reject']}"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+									partialSubmit="true" process="@this" update=":form:tt:submitApprvrDialog"
+									action="#{backingBean.submitPOEscalationToApprover('REJECT')}" />
+							</c:if>
+							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
+								<c:if
+									test="#{backingBean.managedBean.smAppl.applType eq 'B' or backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
+									<c:if test="#{!backingBean.managedBean.reviewSiteVisit}">
+										<p:commandButton
+											value="#{lbl['lbl.sm.button.recommend.site.visit']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											partialSubmit="true" process="@this"
+											update=":form:tt:svcDialog"
+											action="#{backingBean.assignSiteVisitPopUp('svcDialog')}"
+											disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.categoryCodeVerified or !backingBean.managedBean.documentVerified}" />
+									</c:if>
+								</c:if>
+							</c:if>
+							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
+								<p:commandButton value="#{lbl['lbl.sm.button.send.enquiry']}"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+									partialSubmit="true" process="@this"
+									action="#{backingBean.assignMissingDocsList(true,'sendInqDialog')}"
+									update=":form:tt:sendInqDialog" />
+							</c:if>
+						</c:otherwise>
+					</c:choose>
+
+					<c:if test="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.categoryCodeVerified or !backingBean.managedBean.documentVerified}">
+						<div>
+							<h:outputText value="#{lbl['lbl.sm.po.vrfyAllNotes']}"
+								escape="false" />
+						</div>
+					</c:if>
+				</div> <p:panel header="#{lbl['lbl.sm.poDecisionLbl']}">
+					<table>
+
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.suppname']}" /></td>
+							<td><p:outputLabel value="   : " /></td>
+							<td><p:inputText readonly="true" size="50"
+									value="#{backingBean.managedBean.smAppl.smCompanyBasic.companyName}"
+									disabled="true" /></td>
+
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.dateSubmitted']}" /></td>
+							<td><p:outputLabel value="   : " /></td>
+							<td><p:inputText readonly="true" size="50"
+									value="#{backingBean.managedBean.smAppl.applSubmitDate}"
+									disabled="true">
+									<f:convertDateTime
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+								</p:inputText></td>
+
+						</tr>
+						
+						<c:if test="#{not empty backingBean.managedBean.currRegStatus}">
+							<tr>
+								<td><p:outputLabel value="#{lbl['lbl.sm.curr.regstatus']}" /></td>
+								<td><p:outputLabel value="   : " /></td>
+								<td><p:inputText readonly="true" size="50"
+										value="#{backingBean.managedBean.currRegStatus}"
+										disabled="true" /></td>
+	
+							</tr>
+						</c:if>
+						
+						<tr>
+							<c:if test="#{backingBean.managedBean.smAppl.applType eq 'C'}">
+								<td><p:outputLabel
+										value="#{lbl['lbl.sm.remark.cancellation']}" /></td>
+								<td><p:outputLabel value="   : " /></td>
+								<td><p:inputTextarea readonly="true" cols="60"
+										value="#{backingBean.managedBean.supplierRemarks}"
+										disabled="true" /></td>
+							</c:if>
+						</tr>
+					</table>
+
+					<c:if
+						test="#{not empty backingBean.managedBean.bumiRecommendationNote}">
+						<table style="width: 100%">
+							<tr>
+								<td><h:outputText value="#{backingBean.managedBean.bumiRecommendationNote}" 
+										style="color: green;font-weight: bold;float:left;"/></td>
+							</tr>
+						</table>
+					</c:if>
+
+					<p:separator />
+					<div>
+						<table style="width: 100%">
+							<tr>
+								<td><c:choose>
+										<c:when
+											test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_VERIFY_APPL}">
+											<!-- #12483 - START -->
+											<table>
+												<tr>
+													<td><h:outputText
+															value="#{lbl['lbl.sm.po.splNotes1']}"
+															styleClass="splNotesFonts" escape="false" /></td>
+												</tr>
+												<tr>
+													<td>
+														<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
+															<c:if test="#{backingBean.managedBean.smAppl.applType eq 'B' or backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
+																<c:if test="#{!backingBean.managedBean.reviewSiteVisit}">
+																	<h:outputText value="#{lbl['lbl.sm.po.splNotes1.siteVisit']}" styleClass="splNotesFonts" />
+																</c:if>
+															</c:if>
+														</c:if>
+													</td>
+												</tr>
+											</table>
+											<!-- #12483 - END -->
+										</c:when>
+										<c:when
+											test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE}">
+											<h:outputText value="#{lbl['lbl.sm.po.splNotes2']}"
+												styleClass="splNotesFonts" escape="false" />
+										</c:when>
+										
+										<!-- 26671  - Site Visit Grouping Enhancement -28775  START-->
+										<c:when
+											test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_APPL_SPLCAT or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi
+											or backingBean.managedBean.showFacilityMachine}">
+											<!-- 26671  - Site Visit Grouping Enhancement -28775  END-->
+											
+											<h:outputText value="#{lbl['lbl.sm.po.splNotes3']}"
+												styleClass="splNotesFonts" escape="false" />
+										</c:when>
+										<c:otherwise>
+											<h:outputText value="#{lbl['lbl.sm.po.splNotes']}"
+												styleClass="splNotesFonts" escape="false" />
+										</c:otherwise>
+									</c:choose></td>
+							</tr>
+						</table>
+					</div>
+
+				</p:panel></td>
+		</tr>
+	</table>
+
+	<p:dialog width="1000px" height="450px" header="#{lbl['lbl.sm.send.enquiry']}"
+		id="sendInqDialog" widgetVar="sendInqDialog" resizable="false"
+		showEffect="fade" hideEffect="fade" modal="true" closable="false">
+		
+		<p:outputPanel layout="block" id="poEnquiryBlockPanel">
+			<ui:include src="/xhtml/sm/shared/mofSdoSharedPages/sdoSendEnquiry.xhtml" />
+			<div align="right">
+				<!-- #12483 - START -->
+				<p:commandButton value="#{lbl['lbl.sm.button.submit.enquiry']}"
+					update="@([id$=Msg])" process="poEnquiryBlockPanel"
+					action="#{backingBean.submitPOorApproverReviewToBPM('INQUIRY')}" />
+				<!-- #12483 - END -->
+				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" process="@this"
+					onclick="sendInqDialog.hide();" action="#{backingBean.cancelInquiry}" />
+			</div>
+			<p:blockUI block="poEnquiryBlockPanel" widgetVar="poEnquiryBlockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+			</p:blockUI>
+		</p:outputPanel>
+	</p:dialog>
+	<p:dialog width="70%" height="60%" closable="false"
+		header="#{lbl['lbl.sm.assign.site.visit']}" widgetVar="svcDialog"
+		id="svcDialog" showEffect="fade" hideEffect="fade"
+		modal="true">
+		
+		<p:scrollPanel style="height:600px;border:0;" mode="native">
+			<p:outputPanel layout="block" id="assignSvcBlockPanel">
+					<ui:include src="/xhtml/sm/shared/poDecisionSharedPages/assignToSvcForm.xhtml" />
+				<p:blockUI block="assignSvcBlockPanel" widgetVar="assignSvcBlockWidget">
+					<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+				</p:blockUI>
+			</p:outputPanel>
+		</p:scrollPanel>
+		
+	</p:dialog>
+	<p:dialog width="1000px" header="#{backingBean.managedBean.poSecReview.recommendation eq 'REJECT' ? lbl['lbl.sm.button.recommend.to.reject'] : lbl['lbl.sm.button.recommend.to.approve']}"
+		closable="false" id="submitApprvrDialog" height="400px"
+		widgetVar="submitApprvrDialog" resizable="false" showEffect="fade"
+		hideEffect="fade" modal="true">
+		
+		<p:outputPanel layout="block" id="poEscalateBlockPanel">
+			<ui:include
+				src="/xhtml/sm/shared/poDecisionSharedPages/submitToApproverForm.xhtml" />
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.submit']}" update="@([id$=Msg])"
+					onclick="poEscalateBlockWidget.show()" oncomplete="poEscalateBlockWidget.hide();" 
+					action="#{backingBean.submitPOorApproverReviewToBPM('ESCALATE')}" process="poEscalateBlockPanel"/>
+				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+					action="#{backingBean.cancelPOEscalationToApprover}"
+					partialSubmit="true" process="@this" />
+			</div>
+			<p:blockUI block="poEscalateBlockPanel" widgetVar="poEscalateBlockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+			</p:blockUI>
+		</p:outputPanel>
+		
+	</p:dialog>
+	
+	<!-- #29727 START -->
+	<ac:confirmationPopup id="pendingQTPopUpApprovePoId"
+		widget="pendingQTPopUpApprovePo"
+		okAction="backingBean.assignFinalApproveOrReject('approveDialog')"
+		width="400" height="100"
+		title="#{lbl['lbl.sm.approve.application']}"
+		content="#{backingBean.managedBean.deleteBranchMsg}" 
+		update=":form:tt:approveDialog"/>
+		
+	<ac:confirmationPopup id="pendingQTPopUpRecommendApprovePoId"
+		widget="pendingQTPopUpRecommendApprovePo"
+		okAction="backingBean.submitPOEscalationToApprover('APPROVE')"
+		width="400" height="100"
+		title="#{lbl['lbl.sm.approve.application']}"
+		content="#{backingBean.managedBean.deleteBranchMsg}" 
+		update=":form:tt:approveDialog"/>
+	<!-- #29727 END -->
+		
+	<p:dialog width="1000px" header="#{lbl['lbl.sm.approve.application']}"
+		closable="false" id="approveDialog" widgetVar="approveDialog"
+		height="480px" resizable="false" showEffect="fade" hideEffect="fade"
+		modal="true">
+		
+		<p:outputPanel layout="block" id="poApprovedBlockPanel">
+			<ui:include
+				src="/xhtml/sm/shared/poDecisionSharedPages/approvedRemarksPopUpForm.xhtml" />
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.submit']}" update="@([id$=Msg])"
+					onclick="poApprovedBlockWidget.show()" oncomplete="poApprovedBlockWidget.hide()" 
+					action="#{backingBean.finalDecisionApproveOrRejectAppln('approveDialog','APPROVE')}"
+					partialSubmit="true" process="poApprovedBlockPanel" />
+				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+					action="#{backingBean.cancelFinalApproveOrReject('approveDialog')}"
+					partialSubmit="true" process="@this" />
+			</div>
+			<p:blockUI block="poApprovedBlockPanel" widgetVar="poApprovedBlockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+			</p:blockUI>
+		</p:outputPanel>
+	</p:dialog>
+	
+	<p:dialog width="1000px" header="#{lbl['lbl.sm.reject.application']}"
+		closable="false" id="rejectDialogId" widgetVar="rejectDialog"
+		height="400px" resizable="false" showEffect="fade" hideEffect="fade"
+		modal="true">
+		<ac:smSearchRejectReasons>
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.submit']}"
+					onclick="rejectBlockPanelWidget.show()" oncomplete="rejectBlockPanelWidget.hide()"
+					update="@([id$=Msg])" partialSubmit="true" process="rejectBlockPanel"
+					action="#{backingBean.finalDecisionApproveOrRejectAppln('rejectDialog','REJECT')}" />
+				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+					onclick="rejectBlockPanelWidget.show()" oncomplete="rejectBlockPanelWidget.hide()"
+					action="#{backingBean.cancelFinalApproveOrReject('rejectDialog')}"
+					partialSubmit="true" process="@this" />
+		</div>
+		</ac:smSearchRejectReasons>
+	</p:dialog>
+	<!-- 13362 START -->
+	<ac:smOverlapCategoryDialog voList="#{backingBean.managedBean.overlapCategoryVOList}" bBean="#{backingBean}" showButton="true"/>
+	<!-- 13362 END -->
+</ui:composition>

@@ -1,0 +1,221 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<p:panel  header="#{lbl['lbl.sm.bulk.applied.category']}" toggleable="true" >		
+		<p:dataTable var="applCat" value="#{tasks.appliedPaginatorApprovedByPO.model}" rowIndexVar="indexAppl"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" sortBy="#{applCat.poDecFlg}">
+			
+			<p:columnGroup type="header">
+				<p:row>
+					<p:column headerText="#{lbl['lbl.sm.approved.catCode.by.po']}" colspan="6"/>
+                </p:row>
+				<p:row>
+					<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2% !important;"/>
+					<p:column headerText="#{lbl['lbl.sm.catCodes.cate']}" />
+					<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" style="width : 10% !important;"/>
+					<p:column headerText="#{lbl['lbl.sm.po.recommend']}" style="width : 10% !important;"/>
+					<p:column headerText="#{lbl['lbl.sm.catCodes.appAct']}" style="width : 10% !important;"/>
+					<p:column headerText="#{lbl['lbl.sm.catCodes.remark']}" style="width : 25% !important;"/>
+				</p:row>
+			</p:columnGroup>
+			
+			<p:column style="width : 2% !important;">
+				<p:outputLabel value="#{indexAppl + 1 + tasks.appliedPaginatorApprovedByPO.fromIndex}"
+					style="float: left;white-space: normal;" />
+			</p:column>
+			<p:column style="white-space : normal">
+				<!-- #28175 start -->
+				<h:outputText 
+					value="#{applCat.pmCategoryL1.categoryL1Code} -  #{applCat.pmCategoryL1.categoryName}" />
+				<br /> 
+				<h:outputText 
+					value="#{applCat.pmCategoryL2.categoryL2Code} -  #{applCat.pmCategoryL2.categoryName}" />
+				<br /> 
+				<h:outputText 
+					value="#{applCat.pmCategoryL3.categoryL3Code} -  #{applCat.pmCategoryL3.categoryName}" />
+				<!-- #28175 end -->
+			</p:column>
+			<p:column style="width : 10% !important;white-space : normal">
+				<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
+					rendered="#{!applCat.specialCategory}" />
+				<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
+					rendered="#{applCat.specialCategory}" />
+			</p:column>
+			<p:column style="width : 10% !important;white-space : normal">			
+				<table style="width: 100%; border: none !important; table-layout: fixed !important;">
+						<tr>
+							<td style="border: none !important; white-space: normal; word-wrap: break-word !important;">
+								<h:outputText value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.approved']}"
+									rendered="#{applCat.poDecFlg eq 1}"
+									escape="false" /> 
+								<h:outputText value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.rejected']}"
+									rendered="#{applCat.poDecFlg eq 0}"
+									escape="false" />
+							</td>
+						</tr>
+						<tr>
+							<td style="border: none !important; font-weight: bold;"><h:outputText	value="#{lbl['lbl.sm.catCodes.remark']}: " rendered="#{applCat.poDecFlg eq 0}" /></td>
+						</tr>
+						<tr>
+							<td	style="border: none !important; white-space: normal; word-wrap: break-word !important;">
+								<h:outputText value="#{applCat.poRemarks}" rendered="#{applCat.poDecFlg eq 0}" /></td>
+						</tr>
+					</table>					
+			</p:column>
+			<p:column style="width : 10% !important;white-space : normal">
+				<!-- 21937 - start -->
+				<p:selectOneRadio layout="pageDirection" id="catApprvrAppr"
+					value="#{applCat.apprvrDecFlg}" 
+					label="#{lbl['lbl.sm.catCodes.appAct']} #{lbl['lbl.sm.catCodes.forCatCode']} 
+							#{applCat.pmCategoryL1.categoryL1Code} #{applCat.pmCategoryL2.categoryL2Code} 
+							#{applCat.pmCategoryL3.categoryL3Code} "
+					rendered="#{!applCat.overLapCategory}">
+
+					<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.apprv']}" itemValue="1"/>
+					<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.reject']}"
+						itemValue="0" />
+					<p:ajax event="change" process="@this"
+						update="apprvrCatDecisionRmrk" partialSubmit="true"
+						listener="#{bulkApplicationBackingBean.assignCategoryApproveOrRejectDate(applCat)}" />
+				</p:selectOneRadio>
+				
+				<p:selectOneRadio layout="pageDirection" id="catApprvrApprx"
+					value="#{applCat.apprvrDecFlg}" 
+					label="#{lbl['lbl.sm.catCodes.appAct']} #{lbl['lbl.sm.catCodes.forCatCode']} 
+							#{applCat.pmCategoryL1.categoryL1Code} #{applCat.pmCategoryL2.categoryL2Code} 
+							#{applCat.pmCategoryL3.categoryL3Code} "
+					rendered="#{applCat.overLapCategory}">
+
+					<f:selectItem itemValue="1" itemEscaped="false"
+							itemLabel="#{lbl['lbl.sm.catCodes.apprv']} &lt;img src=&quot;/NGeP-portlet/css/images/design/reject.png&quot;/&gt;"/>
+					<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.reject']}"
+						itemValue="0" />
+					<p:ajax event="change" process="@this"
+						update="apprvrCatDecisionRmrk" partialSubmit="true"
+						listener="#{bulkApplicationBackingBean.assignCategoryApproveOrRejectDate(applCat)}" />
+				</p:selectOneRadio>
+				<!-- 21937 - end -->
+			</p:column>
+			<p:column style="width : 25% !important;white-space : normal">
+				<p:inputTextarea value="#{applCat.approverRemarks}" maxlength="200"
+					style="width : 100%;" rows="3"   
+					label="#{lbl['lbl.sm.catCodes.rejRemarks']} #{applCat.pmCategoryL1.categoryL1Code} 
+							#{applCat.pmCategoryL2.categoryL2Code} #{applCat.pmCategoryL3.categoryL3Code} "
+					id="apprvrCatDecisionRmrk">
+					<p:ajax process="@this" update=":#{p:component('resultPanelId')},@([id$=Msg])" />
+					<f:validateLength maximum="200" />
+				</p:inputTextarea>
+			</p:column>
+		</p:dataTable> 
+		<ac:smBulkPaginator paginator="#{tasks.appliedPaginatorApprovedByPO}" /><p:spacer height="5"/>
+		<p:dataTable var="applCat" value="#{tasks.appliedPaginatorRejectedByPO.model}" rowIndexVar="indexAppl2"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" sortBy="#{applCat.poDecFlg}">
+			
+			<p:columnGroup type="header">
+				<p:row>
+					<p:column headerText="#{lbl['lbl.sm.rejected.catCode.by.po']}" colspan="6" />
+                </p:row>
+				<p:row>
+					<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2% !important;"/>
+					<p:column headerText="#{lbl['lbl.sm.catCodes.cate']}" />
+					<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" style="width : 10% !important;"/>
+					<p:column headerText="#{lbl['lbl.sm.po.recommend']}" style="width : 10% !important;"/>
+					<p:column headerText="#{lbl['lbl.sm.catCodes.appAct']}" style="width : 10% !important;"/>
+					<p:column headerText="#{lbl['lbl.sm.catCodes.remark']}" style="width : 25% !important;"/>
+				</p:row>
+			</p:columnGroup>
+			<p:column style="width : 2% !important;">
+				<p:outputLabel value="#{indexAppl2 + 1 + tasks.appliedPaginatorRejectedByPO.fromIndex}"
+					style="float: left;white-space: normal;" />
+			</p:column>
+			<p:column style="white-space : normal">
+				<!-- #28175 start -->
+				<h:outputText 
+					value="#{applCat.pmCategoryL1.categoryL1Code} -  #{applCat.pmCategoryL1.categoryName}" />
+				<br /> 
+				<h:outputText 
+					value="#{applCat.pmCategoryL2.categoryL2Code} -  #{applCat.pmCategoryL2.categoryName}" />
+				<br /> 
+				<h:outputText 
+					value="#{applCat.pmCategoryL3.categoryL3Code} -  #{applCat.pmCategoryL3.categoryName}" />
+				<!-- #28175 end -->
+			</p:column>
+			<p:column style="width : 10% !important;white-space : normal">
+				<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
+					rendered="#{!applCat.specialCategory}" />
+				<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
+					rendered="#{applCat.specialCategory}" />
+			</p:column>
+			<p:column style="width : 10% !important;white-space : normal">			
+				<table style="width: 100%; border: none !important; table-layout: fixed !important;">
+						<tr>
+							<td style="border: none !important; white-space: normal; word-wrap: break-word !important;">
+								<h:outputText value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.approved']}"
+									rendered="#{applCat.poDecFlg eq 1}"
+									escape="false" /> 
+								<h:outputText value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.rejected']}"
+									rendered="#{applCat.poDecFlg eq 0}"
+									escape="false" />
+							</td>
+						</tr>
+						<tr>
+							<td style="border: none !important; font-weight: bold;"><h:outputText	value="#{lbl['lbl.sm.catCodes.remark']}: " rendered="#{applCat.poDecFlg eq 0}" /></td>
+						</tr>
+						<tr>
+							<td	style="border: none !important; white-space: normal; word-wrap: break-word !important;">
+								<h:outputText value="#{applCat.poRemarks}" rendered="#{applCat.poDecFlg eq 0}" /></td>
+						</tr>
+					</table>					
+			</p:column>
+			<p:column style="width : 10% !important;white-space : normal">
+				<!-- 21937 - start -->
+				<p:selectOneRadio layout="pageDirection" id="catApprvrAppr2"
+					value="#{applCat.apprvrDecFlg}" 
+					label="#{lbl['lbl.sm.catCodes.appAct']} #{lbl['lbl.sm.catCodes.forCatCode']} 
+							#{applCat.pmCategoryL1.categoryL1Code} #{applCat.pmCategoryL2.categoryL2Code} 
+							#{applCat.pmCategoryL3.categoryL3Code} "
+					rendered="#{!applCat.overLapCategory}">
+					
+					<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.apprv']}" itemValue="1"/>
+					<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.reject']}" itemValue="0"/>
+					<p:ajax event="change" process="@this"
+						update="apprvrCatDecisionRmrk2" partialSubmit="true"
+						listener="#{bulkApplicationBackingBean.assignCategoryApproveOrRejectDate(applCat)}" />
+				</p:selectOneRadio>
+				
+				<p:selectOneRadio layout="pageDirection" id="catApprvrAppr2x"
+					value="#{applCat.apprvrDecFlg}" 
+					label="#{lbl['lbl.sm.catCodes.appAct']} #{lbl['lbl.sm.catCodes.forCatCode']} 
+							#{applCat.pmCategoryL1.categoryL1Code} #{applCat.pmCategoryL2.categoryL2Code} 
+							#{applCat.pmCategoryL3.categoryL3Code} "
+					rendered="#{applCat.overLapCategory}">
+					
+					<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.apprv']}" itemValue="1"/>
+					<f:selectItem itemValue="0" itemEscaped="false"
+						itemLabel="#{lbl['lbl.sm.catCodes.reject']} &lt;img src=&quot;/NGeP-portlet/css/images/design/reject.png&quot;/&gt;"/>
+					<p:ajax event="change" process="@this"
+						update="apprvrCatDecisionRmrk2" partialSubmit="true"
+						listener="#{bulkApplicationBackingBean.assignCategoryApproveOrRejectDate(applCat)}" />
+				</p:selectOneRadio>
+				<!-- 21937 - end -->
+			</p:column>
+			<p:column style="width : 25% !important;white-space : normal">
+				<p:inputTextarea value="#{applCat.approverRemarks}" maxlength="200"
+					style="width : 100%;" rows="3"   
+					label="#{lbl['lbl.sm.catCodes.rejRemarks']} #{applCat.pmCategoryL1.categoryL1Code} 
+							#{applCat.pmCategoryL2.categoryL2Code} #{applCat.pmCategoryL3.categoryL3Code} "
+					id="apprvrCatDecisionRmrk2">
+					<p:ajax process="@this" update=":#{p:component('resultPanelId')},@([id$=Msg])" />
+					<f:validateLength maximum="200" />
+				</p:inputTextarea>
+			</p:column>
+		</p:dataTable>
+		<br />
+		<ac:smBulkPaginator paginator="#{tasks.appliedPaginatorRejectedByPO}" />
+	</p:panel>
+</ui:composition>

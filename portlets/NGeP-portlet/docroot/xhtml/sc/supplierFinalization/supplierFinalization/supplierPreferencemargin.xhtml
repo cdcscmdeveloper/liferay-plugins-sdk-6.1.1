@@ -1,0 +1,103 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<!-- Qualified Supplier Details By Evaluation Stage dialog -->
+	<!-- #29466 - START -->
+	<ui:param name="manufacturercategoryCode" value="#{suppFinalizationBackingBean.checkManufacturerCategoryCodes(suppFinalizationBackingBean.managedBean.checkCategoryCodeQt)}"></ui:param>
+	<p:dialog id="preferenceMarginSuppDetailsPopupId"
+		widgetVar="preferenceMarginSuppDetailsPopup" position="center"
+		header="#{lbl[manufacturercategoryCode? 'lbl.sc.sf.supplier.offerprice.manufacturer.popup.header' : 'lbl.sc.sf.preference.margin.popup.header']}" 
+		modal="true" dynamic="true" styleClass="pop_up_top" width="950"
+		resizable="false">
+	<!-- #29466 - END -->
+
+        <ui:param name="preferencemarginList" value="#{suppFinalizationBackingBean.getPreferenceMarginList(suppFinalizationBackingBean.managedBean.preferenceMarginDtls)}"></ui:param>
+		<p:dataTable id="preferenceMarginSFSuppliers"
+			style="width:100%; height:75%;" var="qualifiedSupp"
+			widgetVar="qualifiedSupplierDtls"
+			rowKey="#{qualifiedSupp.evaluationResultDtlId}" rowIndexVar="index"
+			rows="10" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			value="#{preferencemarginList}">
+
+			<ac:paginator for="preferenceMarginSFSuppliers" />
+
+			<p:column headerText="#{lbl['lbl.sc.ranking']}"
+				style="width:5%; text-align:center;">
+				<h:outputText value="#{qualifiedSupp.evalRank}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(
+												CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
+				style="width:5%; white-space:normal; text-align:center;">
+
+				<h:outputText
+					value="#{qualifiedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
+
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.total.score']}"
+				style="width:5%; text-align:right;">
+				<h:outputText value="#{qualifiedSupp.totalScore}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(
+												CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}"
+				style="width:5%; white-space:normal;">
+				<h:outputText
+					value="#{suppFinalizationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
+										fn:toUpperCase(qualifiedSupp.qtEvaluationResult.scQtProposal.bumi))}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.offered.price']}"
+				style="width:10%; text-align:right;">
+				<h:outputText value="#{qualifiedSupp.proposalAmount.proposalAmt}"
+					rendered="#{qualifiedSupp.proposalAmount ne null}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(
+												CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.difference.rm']}"
+				style="width:15%; white-space:normal; text-align:right;">
+				<h:outputText value="#{qualifiedSupp.priceDifference}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.difference.perc']}"
+				style="width:5%; text-align:right;">
+				<h:outputText value="#{qualifiedSupp.percentageDifference}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+				</h:outputText>
+			</p:column>
+
+			<!-- #29466 - START -->
+			<p:column headerText="#{lbl[manufacturercategoryCode? 'lbl.sc.pref.margin.manufacturer' : 'lbl.sc.pref.margin']}"
+				style="width:5%; text-align:right; white-space:normal;">
+				<h:outputText rendered="#{qualifiedSupp.preferenceMargin gt 0}"
+					value="#{qualifiedSupp.preferenceMargin}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+				</h:outputText>
+			</p:column>
+			<!-- #29466 - END -->
+
+		</p:dataTable>
+
+	</p:dialog>
+
+</ui:composition>

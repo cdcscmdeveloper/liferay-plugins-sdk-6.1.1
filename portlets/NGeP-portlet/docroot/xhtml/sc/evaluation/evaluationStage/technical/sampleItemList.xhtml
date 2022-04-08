@@ -1,0 +1,144 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+
+
+	<h:panelGroup>
+		<h:panelGroup id="sampleItemList">
+			<p:panel header="#{lbl['lbl.sc.item.list']}"
+				id="evaluationStageTechnicalSampleItemsListForDatatable"
+				toggleable="true">
+				<p:dataTable var="sampleItem" id="techSampleEvaluateId" rows="50"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					value="#{evaluationBackingBean.managedBean.sampleItemList}"
+					selectionMode="single"
+					selection="#{evaluationBackingBean.managedBean.sampleItemSelection}"
+					editable="true" rowIndexVar="index" style="width:100%"
+					rowKey="#{sampleItem}">
+					<ac:paginator for="techSampleEvaluateId" />
+
+					<p:ajax event="rowSelect" process="@this" partialSubmit="true"
+						update="@([id$=samplespecLists])"
+						listener="#{evaluationBackingBean.retriveSpecificationsByItem}"></p:ajax>
+					<p:column headerText="#{lbl['lbl.sc.item.name']}"
+						style="width:55%;white-space: normal;">
+						<h:outputText
+							value="#{sampleItem.scRequestItem.tplSpecQuestion.clItem}"></h:outputText>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.spec.local.goods']}"
+						style="width:15%;">
+								<h:outputText value="#{lbl['lbl.sc.qt.sample.type.of.goods.local']}" rendered="#{sampleItem.scRequestItem.tplSpecQuestion.tplSpecMaster.itemOriginCode.parameterCode eq ParameterConst.LOCAL_GOODS}"></h:outputText>
+			                    <h:outputText value="#{lbl['lbl.sc.qt.sample.type.of.goods.import']}" rendered="#{sampleItem.scRequestItem.tplSpecQuestion.tplSpecMaster.itemOriginCode.parameterCode eq ParameterConst.IMPORTED_GOODS}"></h:outputText>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.sp.extensionno']}"
+						style="width:15%">
+						#{sampleItem.scQtSampleLable.lableNo} - #{sampleItem.subLableNo}
+					</p:column>
+					<p:column style="width:15%">
+						<f:facet name="header">
+							<h:outputText value="*" styleClass="mandatory"></h:outputText>
+							<h:outputText value="#{lbl['lbl.tpl.spec.content.user.score']}"></h:outputText>
+						</f:facet>
+						<p:inputText id="sampleaddressmanualScoreEvaluation"
+							rendered="#{sampleItem.scRequestItem.tplSpecQuestion.parentSpecQuestion.sampleReq}"
+							label="#{lbl['lbl.tpl.spec.content.user.score']}" 
+							disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
+								or evaluationBackingBean.managedBean.tabTechnicalIndex eq '2'}"
+							size="15" value="#{sampleItem.userScore}" maxlength="3"
+							style="text-align:right">
+							<ac:validateNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
+								maxIntegerDigits="3" integerOnly="true" />
+							<f:attribute name="min" value="0" />
+							<f:attribute name="max"
+								value="#{sampleItem.scRequestItem.tplSpecQuestion.parentSpecQuestion.sampleScore.toString()}" />
+							<p:ajax event="change" process="@this"
+								update="@([id$=sampleTotalScoreGroupId])" partialSubmit="true"
+								listener="#{evaluationBackingBean.sampleScoreCalculate}"></p:ajax>
+						</p:inputText>
+						<p:spacer width="5"></p:spacer>
+						<h:outputText
+							rendered="#{sampleItem.scRequestItem.tplSpecQuestion.parentSpecQuestion.sampleReq}"
+							value="/#{sampleItem.scRequestItem.tplSpecQuestion.parentSpecQuestion.sampleScore}" />
+						<p:message id="sampleaddressmanualScoreEvaluationMessage"
+							for="sampleaddressmanualScoreEvaluation" display="icon"></p:message>
+
+					</p:column>
+
+				</p:dataTable>
+				<p:spacer height="7px;"></p:spacer>
+				<h:panelGroup id="sampleTotalScoreGroupId">
+					<table>
+
+
+						<tr>
+
+							<td><p:outputLabel
+									value="#{lbl[evaluationBackingBean.managedBean.itemSampleReq ? 'lbl.sc.spec.total.points' : 'lbl.tpl.spec.content.user.score']}"
+									rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scoringReq}" />
+								<p:outputLabel value="* " styleClass="mandatory"
+									rendered="#{!evaluationBackingBean.managedBean.itemSampleReq}" />
+							</td>
+							<td><p:inputText id="sampleaddressUserScoreId"
+									rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scoringReq}"
+									label="#{lbl['lbl.tpl.spec.content.user.score']}"
+									disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
+								or evaluationBackingBean.managedBean.itemSampleReq
+								or evaluationBackingBean.managedBean.tabTechnicalIndex eq '2'}"
+									required="!evaluationBackingBean.managedBean.itemSampleReq"
+									value="#{evaluationBackingBean.managedBean.noOfContractsProposalScore.userScore}"
+									maxlength="18" style="text-align:right">
+									<ac:validateNumber
+										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
+										maxIntegerDigits="14" integerOnly="true" />
+									<f:attribute name="min" value="0" />
+									<f:attribute name="max"
+										value="#{evaluationBackingBean.managedBean.userScores}" />
+									<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
+								</p:inputText> <p:spacer width="5"></p:spacer> <h:outputText
+									rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scoringReq}"
+									value="/#{evaluationBackingBean.managedBean.userScores}" /> <p:message
+									id="sampleaddressUserScoreMessage"
+									for="sampleaddressUserScoreId" display="icon"></p:message></td>
+
+
+
+						</tr>
+					</table>
+				</h:panelGroup>
+			</p:panel>
+		</h:panelGroup>
+
+
+		<h:panelGroup id="samplespecLists">
+			<p:panel
+				id="evaluationStageTechnicalsampleSpecificationsDataTableItemsListIds"
+				header="#{lbl['lbl.sc.eva.item.specification']}" toggleable="true">
+				<p:dataTable var="itemspec" id="techSampleSpecId" editable="true"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					rows="10"
+					value="#{evaluationBackingBean.managedBean.sampleItemSpecifications}"
+					rowIndexVar="index" style="width:50%" rowKey="#{itemspec}">
+					<ac:paginator for="techSampleSpecId" />
+
+
+					<p:column headerText="#{lbl['lbl.sc.specification']}"
+						style="width:50%">
+						<h:outputText value="#{itemspec.clSpecDetail}"></h:outputText>
+
+					</p:column>
+
+				</p:dataTable>
+
+			</p:panel>
+		</h:panelGroup>
+	</h:panelGroup>
+
+</ui:composition>

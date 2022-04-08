@@ -1,0 +1,102 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+		<script>
+			$('#portlet_viewSupplierProfile_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.supprofile']}");
+		</script>
+	</ui:define>
+	
+	<ui:param name="viewSmApplBackingBean" value="#{viewSuppProfileBackingBean}" />
+	
+	<ui:define name="contentSection">
+		<p:messages id="messages" showDetail="true" closable="false" showSummary="false" />
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		
+		<p:outputPanel id="supplierProfilePanelId">
+			<c:if test="#{viewSmApplBackingBean.managedBean.reviewApplicationExist}">
+				<ac:smPanel id="tt">
+					
+					<ui:include src="/xhtml/sm/shared/applViewOnlyPages/backButtonAndUrl.xhtml" />
+					
+					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 0}">
+						<ui:include src="step1ViewProfileCompanyInfo.xhtml" />
+					</c:if>
+					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 1}">
+						<ui:include src="step2ViewProfileBranchCompanyInfo.xhtml" />
+					</c:if>
+					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 2}">
+						<ui:include src="step4ViewProfilePersonnelInfo.xhtml" />
+					</c:if>
+					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 3}">
+						<ui:include src="step3ViewProfileCaptialAndEquityStatusInfo.xhtml" />
+					</c:if>
+				<!-- 28767 -->
+					<c:choose>
+					<c:when test="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'R' and viewSmApplBackingBean.managedBean.smAppl.applValidWithSsm}">
+					<c:choose>
+					<c:when test="#{viewSmApplBackingBean.managedBean.smSupplier.businessType == 'I' or viewSmApplBackingBean.managedBean.smSupplier.businessType == 'J'}" >		
+					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 4}">
+						<ui:include src="step9ViewAnnualInfo.xhtml" />
+					</c:if>
+					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 5}">
+						<ui:include src="step5ViewProfileBankInfo.xhtml" />
+					</c:if>
+					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 6}">
+						<ui:include src="step6ViewProfileCategoryCodesInfo.xhtml" />
+					</c:if>
+					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 7}">
+						<ui:include src="step6.1ViewProfileFactoryInfo.xhtml" />
+					</c:if>
+					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 8}">
+						<ui:include src="step6.2ViewProfileEquipmentInfo.xhtml" />
+					</c:if>
+					</c:when>
+					<c:otherwise>
+					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 4}">
+						<ui:include src="step5ViewProfileBankInfo.xhtml" />
+					</c:if>
+					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 5}">
+						<ui:include src="step6ViewProfileCategoryCodesInfo.xhtml" />
+					</c:if>
+					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 6}">
+						<ui:include src="step6.1ViewProfileFactoryInfo.xhtml" />
+					</c:if>
+					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 7}">
+						<ui:include src="step6.2ViewProfileEquipmentInfo.xhtml" />
+					</c:if>
+					</c:otherwise>
+					</c:choose>
+					</c:when>
+					<c:otherwise>
+					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 4}">
+						<ui:include src="step5ViewProfileBankInfo.xhtml" />
+					</c:if>
+					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 5}">
+						<ui:include src="step6ViewProfileCategoryCodesInfo.xhtml" />
+					</c:if>
+					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 6}">
+						<ui:include src="step6.1ViewProfileFactoryInfo.xhtml" />
+					</c:if>
+					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 7}">
+						<ui:include src="step6.2ViewProfileEquipmentInfo.xhtml" />
+					</c:if>
+					</c:otherwise>
+					</c:choose>
+					<!-- <c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 8}">
+						<ui:include src="step7ViewProfileSupportingDocumentsInfo.xhtml" />
+					</c:if> -->
+				</ac:smPanel>
+			</c:if>
+		</p:outputPanel>
+	</ui:define>
+		
+</ui:composition>

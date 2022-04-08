@@ -1,0 +1,265 @@
+<ui:composition
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<ui:param name="isQuestionTypeItem" value="#{templateSpecBean.selectedSpecQuestion.questionType == TplSpecConst.questionTypeItem}" />
+	
+	<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<ui:param name="itemSpecInfo" value="#{isQuestionTypeItem ? templateSpecBean.selectedSpecQuestion.clItem : templateSpecBean.selectedSpecQuestion.clSpecDetail}"></ui:param>
+	<tr>
+		<td><p:outputLabel value="#{lbl[isQuestionTypeItem ? 'lbl.tpl.spec.content.item' : 'lbl.tpl.spec.content.specification']}" /></td>
+		<td colspan="3" >
+			<h:inputTextarea id="itemSpec" style="width:calc(100% - 50px);"
+			value="#{itemSpecInfo}" 
+			disabled="true" autoResize="false" rows="#{templateSpecBackingBean.getNumOfRows(itemSpecInfo)}"/>
+		</td>
+	</tr>
+	<tr>
+		<td width="21%"><p:outputLabel value="#{lbl['lbl.tpl.spec.content.scoring.settings.answer.type']}" /></td>
+		<td width="26%">
+			<p:inputText id="answerType" value="#{templateSpecBackingBean.getParameterDesc(templateSpecBean.selectedSpecQuestion.answerTypeCode)}" disabled="true" size="15" />
+		</td>
+		<td width="17%">
+			<p:outputLabel value="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type']}" />
+			<p:outputLabel value="*" styleClass="mandatory" rendered="#{editable and templateSpecBean.selectedSpecQuestion.answerTypeCode.parameterCode != ParameterConst.answerTypeText}" />
+		</td>
+		<td width="36%">
+			<h:selectOneMenu id="scoreType" value="#{templateSpecBean.selectedScoreTypeId}" 
+				required="true"
+				label="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type']}"
+				rendered="#{editable and templateSpecBean.selectedSpecQuestion.answerTypeCode.parameterCode != ParameterConst.answerTypeText}">
+				<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.scoreType)}" />
+				<p:ajax event="change" 
+					listener="#{templateSpecBackingBean.scoreTypeChange(templateSpecBean.selectedSpecQuestion, templateSpecBean.selectedScoreTypeId)}" 
+					update="maxScoreLPG, maxScorePG, scorePG" />
+			</h:selectOneMenu>
+			<p:inputText value="#{templateSpecBackingBean.getParameterDesc(templateSpecBean.selectedSpecQuestion.scoreTypeCode)}" 
+				disabled="true" size="15"
+				rendered="#{!editable or templateSpecBean.selectedSpecQuestion.answerTypeCode.parameterCode == ParameterConst.answerTypeText}" />
+			<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type.tooltip']}" />
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<h:panelGroup id="maxScoreLPG">
+				<p:outputLabel value="#{lbl['lbl.tpl.spec.content.scoring.settings.max.score']}"
+					rendered="#{templateSpecBean.selectedSpecQuestion.scoreTypeCode.parameterCode == ParameterConst.scoreTypeUser}" />
+					<p:outputLabel value="*" styleClass="mandatory" 
+					rendered="#{editable and templateSpecBean.selectedSpecQuestion.scoreTypeCode.parameterCode == ParameterConst.scoreTypeUser}" />
+			</h:panelGroup>
+		</td>
+		<td>
+			<h:panelGroup id="maxScorePG">
+				<p:inputText id="maxScore" style="text-align:right;"
+					value="#{templateSpecBean.selectedSpecQuestion.maxScore}" 
+					required="true" size="15" maxlength="3"
+					onkeypress="if (event.keyCode == 46) { return false; }"
+					disabled="#{!editable}"
+					label="#{lbl['lbl.tpl.spec.content.scoring.settings.max.score']}"
+					rendered="#{templateSpecBean.selectedSpecQuestion.scoreTypeCode.parameterCode == ParameterConst.scoreTypeUser}">
+					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="3" integerOnly="true" />
+				</p:inputText>
+				<p:message id="maxScoreMsg" for="maxScore" display="icon" />
+			</h:panelGroup>
+		</td>
+		<td width="20%">
+			<h:panelGroup rendered="#{templateSpecBean.selectedSpecQuestion.weightageReq}">
+				<h:outputText value="* " styleClass="mandatory" rendered="#{editable}" />
+				<p:outputLabel value="#{lbl['lbl.tpl.spec.content.scoring.settings.weightage']}" style="white-space:nowrap;"/>
+			</h:panelGroup>
+		</td>
+		<td>
+			<h:panelGroup rendered="#{templateSpecBean.selectedSpecQuestion.weightageReq}">
+				<p:inputText id="weightage" style="text-align:right;" 
+					value="#{templateSpecBean.selectedSpecQuestion.weightage}" 
+					required="true" size="15" maxlength="19"
+					disabled="#{!editable}"
+					label="#{lbl['lbl.tpl.spec.content.scoring.settings.weightage']}">
+					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" maxIntegerDigits="2" />
+				</p:inputText> <ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.settings.weightage.tooltip']}" />
+				<p:message id="weightageMsg" for="weightage" display="icon" />
+				
+			</h:panelGroup>
+		</td>
+	</tr>
+	</table>
+	
+	<br />
+	
+	<h:panelGroup id="scorePG">
+	<p:panel id="scorePnl" 
+		header="#{lbl['lbl.tpl.spec.content.scoring.scoring.title']}" 
+		toggleable="true"
+		rendered="#{templateSpecBean.selectedSpecQuestion.scoreTypeCode.parameterCode == ParameterConst.scoreTypeAuto}">
+		
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.tpl.spec.content.scoring.scoring.title']}" />
+			<c:if test="#{!isSpecTypeFinancial}">
+				<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.scoring.title.tooltip']}"  />
+			</c:if>
+			<c:if test="#{isSpecTypeFinancial}">
+				<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.scoring.title.variance.tooltip']}" />
+			</c:if>
+		</f:facet>
+		
+		<ui:param name="isCompliance" value="#{templateSpecBean.selectedSpecQuestion.answerTypeCode.parameterCode == ParameterConst.answerTypeDropdown}" />
+		
+		<p:dataTable id="scoringTbl" 
+			var="tplSpecScoring"
+			rowIndexVar="rowIndex"
+			value="#{templateSpecBean.selectedSpecQuestion.tplSpecScorings}"
+			rowKey="#{tplSpecScoring}" scrollable="false" scrollHeight="200"> 
+			
+			<p:column style="width:25px;" rendered="#{!isCompliance and !isSpecTypeFinancial and editable}" >
+				<f:facet name="header">
+					<p:selectBooleanCheckbox id="selAllChk" value="#{templateSpecBean.selectAll}">
+						<p:ajax partialSubmit="true" process="@this" update="scoringTbl"  listener="#{templateSpecBackingBean.selectAll(templateSpecBean.selectAll, templateSpecBean.selectedSpecQuestion.tplSpecScorings)}" />
+					</p:selectBooleanCheckbox>
+				</f:facet>
+				<p:selectBooleanCheckbox value="#{tplSpecScoring.selected}">
+					<p:ajax partialSubmit="true" process="@this" update="@this" />
+				</p:selectBooleanCheckbox>
+			</p:column>
+			
+			<p:column rendered="#{!isCompliance and !isSpecTypeFinancial}">
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" rendered="#{editable}" />
+					<h:outputText value="#{lbl['lbl.tpl.spec.content.scoring.scoring.range.from']}" />
+				</f:facet>
+				<p:inputText id="rangeFrom" value="#{tplSpecScoring.rangeFrom}" style="width:80%; text-align:right;" 
+					required="true" maxlength="19"
+					label="#{lbl['lbl.tpl.spec.content.scoring.scoring.range.from']}"
+					disabled="#{!editable}">
+					<p:ajax partialSubmit="true" process="@this" update="@this, rangeFromMsg" />
+					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
+					<f:attribute name="min" value="0" />
+				</p:inputText>
+				<p:message id="rangeFromMsg" for="rangeFrom" display="icon" />
+			</p:column>
+			<p:column rendered="#{!isCompliance and isSpecTypeFinancial}">
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" rendered="#{editable}" />
+					<h:outputText value="#{lbl['lbl.tpl.spec.content.scoring.scoring.from.variance']}" />
+				</f:facet>
+				<p:inputText id="fromVariance" value="#{tplSpecScoring.rangeFrom}" style="width:75%; text-align:right;" 
+					required="true" maxlength="3"
+					label="#{lbl['lbl.tpl.spec.content.scoring.scoring.from.variance']}"
+					disabled="#{!editable}">
+					<p:ajax partialSubmit="true" process="@this" update="@this, fromVarianceMsg" />
+					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="3" />
+					<f:attribute name="max" value="100" />
+				</p:inputText>
+				<p:message id="fromVarianceMsg" for="fromVariance" display="icon" />
+			</p:column>
+			<p:column rendered="#{!isCompliance and !isSpecTypeFinancial}">
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" rendered="#{editable}" />
+					<h:outputText value="#{lbl['lbl.tpl.spec.content.scoring.scoring.range.to']}" />
+					<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.scoring.range.to.tooltip']}" />
+				</f:facet>
+				<p:inputText id="rangeTo" value="#{tplSpecScoring.rangeTo}" style="width:80%; text-align:right;" 
+					required="#{rowIndex lt templateSpecBean.selectedSpecQuestion.tplSpecScorings.size()-1}" maxlength="19"
+					label="#{lbl['lbl.tpl.spec.content.scoring.scoring.range.to']}"
+					disabled="#{!editable}">
+					<p:ajax partialSubmit="true" process="@this" update="@this, rangeToMsg" />
+					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
+				</p:inputText>
+				<p:message id="rangeToMsg" for="rangeTo" display="icon" />
+			</p:column>
+			<p:column rendered="#{!isCompliance and isSpecTypeFinancial}">
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" rendered="#{editable}" />
+					<h:outputText value="#{lbl['lbl.tpl.spec.content.scoring.scoring.to.variance']}" />
+				</f:facet>
+				<p:inputText id="toVariance" value="#{tplSpecScoring.rangeTo}" style="width:75%; text-align:right;" 
+					required="true" maxlength="3"
+					label="#{lbl['lbl.tpl.spec.content.scoring.scoring.to.variance']}"
+					disabled="#{!editable}">
+					<p:ajax partialSubmit="true" process="@this" update="@this, toVarianceMsg" />
+					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="3" />
+					<f:attribute name="max" value="100" />
+					<f:attribute name="min" value="0" />
+				</p:inputText>
+				<p:message id="toVarianceMsg" for="toVariance" display="icon" />
+			</p:column>
+			<p:column rendered="#{isCompliance}">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.tpl.spec.content.scoring.scoring.compliance']}"/>
+				</f:facet>
+				#{lbl[tplSpecScoring.compliance ? 'lbl.txt.yes' : 'lbl.txt.no']}
+			</p:column>
+			<p:column style="width:80px;" rendered="#{isSpecTypeFinancial}">
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" rendered="#{editable}" />
+					<h:outputText value="#{lbl['lbl.tpl.spec.content.scoring.scoring.below.score']}"/>
+				</f:facet>
+				<p:inputText id="belowScore" value="#{tplSpecScoring.belowScore}" style="width:75%; text-align:right;" 
+					required="true" maxlength="3"
+					label="#{lbl['lbl.tpl.spec.content.scoring.scoring.below.score']}"
+					disabled="#{!editable}">
+					<p:ajax partialSubmit="true" process="@this" update="@this, belowScoreMsg" />
+					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="3" integerOnly="true" />
+					<f:attribute name="min" value="0" />
+				</p:inputText>
+				<p:message id="belowScoreMsg" for="belowScore" display="icon" />
+			</p:column>
+			
+			<ui:param name="lblScore" value="#{isSpecTypeFinancial ? 'lbl.tpl.spec.content.scoring.scoring.within.score' : 'lbl.tpl.spec.content.scoring.scoring.score'}" />
+			<p:column style="width:80px;">
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" rendered="#{editable}" />
+					<h:outputText value="#{lbl[lblScore]}" />
+				</f:facet>
+				<p:inputText id="score" value="#{tplSpecScoring.score}" style="width:75%; text-align:right;" 
+					maxlength="3"
+					label="#{lbl[lblScore]}"
+					disabled="#{!editable}">
+					<p:ajax partialSubmit="true" process="@this" update="@this, scoreMsg" />
+					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="3" integerOnly="true" />
+					<f:attribute name="min" value="0" />
+				</p:inputText>
+				<p:message id="scoreMsg" for="score" display="icon" />
+			</p:column>
+			<p:column style="width:80px;" rendered="#{isSpecTypeFinancial}">
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" rendered="#{editable}" />
+					<h:outputText value="#{lbl['lbl.tpl.spec.content.scoring.scoring.above.score']}"/>
+				</f:facet>
+				<p:inputText id="aboveScore" value="#{tplSpecScoring.aboveScore}" style="width:75%; text-align:right;" 
+					required="true" maxlength="3"
+					label="#{lbl['lbl.tpl.spec.content.scoring.scoring.above.score']}"
+					disabled="#{!editable}">
+					<p:ajax partialSubmit="true" process="@this" update="@this, aboveScoreMsg" />
+					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="3" integerOnly="true" />
+					<f:attribute name="min" value="0" />
+				</p:inputText>
+				<p:message id="aboveScoreMsg" for="aboveScore" display="icon" />
+			</p:column>
+		</p:dataTable>
+		
+		<table style="width:100%;">
+		<tr>
+			<td style="text-align:right;">
+				<p:commandButton value="#{lbl['lbl.btn.add']}"
+					process="@this, scoringTbl" partialSubmit="true"
+					action="#{templateSpecBackingBean.addScoringAction(templateSpecBean.selectedSpecQuestion)}"
+					update="scoringTbl" 
+					rendered="#{!isCompliance and !isSpecTypeFinancial and editable}"
+					title="#{lbl['lbl.tpl.spec.content.scoring.settings.btn.add.tooltip']}" />
+				<p:commandButton value="#{lbl['lbl.btn.delete']}"
+					process="@this" partialSubmit="true"
+					action="#{templateSpecBackingBean.deleteSelectedRowsAction(templateSpecBean.selectedSpecQuestion.tplSpecScorings)}"
+					update="scoringTbl"
+					rendered="#{!isCompliance and !isSpecTypeFinancial and editable}">
+					<f:setPropertyActionListener target="#{templateSpecBean.selectAll}" value="#{false}" />
+				</p:commandButton>
+			</td>
+		</tr>
+		</table>
+	</p:panel>
+	</h:panelGroup>
+</ui:composition>

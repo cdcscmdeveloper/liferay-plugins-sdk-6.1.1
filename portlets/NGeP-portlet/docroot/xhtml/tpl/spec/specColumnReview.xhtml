@@ -1,0 +1,85 @@
+<ui:composition
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<ui:decorate template="specColumnQuestionViewHeader.xhtml">
+	<ui:define name="otherHeaderSection">
+	<ui:param name="specificationRequired" value="#{isSpecTypeTechnical or isSqSpec or (isSpecTypeFinancial and !isSpecificationReq)}"></ui:param>
+
+<!-- #25039 #162 Begin to add indicative column -->	
+		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:120px;text-align:right;" rendered="#{isEstCostReq and isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.Indicative.unit.price']}">
+		</p:column>
+		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:120px;text-align:right;" rendered="#{isItemTypeService and isSpecTypeFinancial}"  headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
+		</p:column>
+<!-- #25039 #162 End -->
+	
+		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:120px;text-align:right;" rendered="#{isEstCostReq and isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.estimate.cost']}">
+		</p:column>
+			<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:125px;" headerText="#{lbl[isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer.schema']}" rendered="#{isScoringReq}">
+			</p:column>
+			<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:200px;" headerText="#{lbl['lbl.tpl.spec.content.comment']}" rendered="#{isContentTypeReview}">
+			</p:column>
+	</ui:define>
+	</ui:decorate>
+<!-- #25039 #162 Begin to add indicative column -->	
+	<p:column style="width:120px;text-align:right;" rendered="#{isEstCostReq and isSpecTypeFinancial}">
+		<c:if test="#{!isZonal}">
+			<h:outputText value="#{question.tplSpecEstimations[0].indicativeUnitPrice}">
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			</h:outputText>
+		</c:if>
+		<c:if test="#{isZonal}">
+			<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;"  
+				action="#{templateSpecBackingBean.zoneEstimationPopupAction(templateSpecBean)}"
+				oncomplete="#{zoneEstimationPopup}.show();"
+				partialSubmit="true" process="@this" update="@([id$=zoneEstimationPopup])">
+				<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
+			</p:commandButton>
+		</c:if>
+	</p:column>
+		<p:column style="width:95px;" rendered="#{isItemTypeService and isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
+		<p:inputText style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign"
+			rendered="#{isQuestionTypeItem}" disabled="true">
+			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+		</p:inputText>
+	</p:column>
+<!-- #25039 #162 End -->	
+	<p:column style="width:120px;text-align:right;" rendered="#{isEstCostReq and isSpecTypeFinancial}">
+		<f:facet name="footer">
+			<h:outputText id="totalEstAmount" 
+				styleClass="calcEstAmount" 
+				value="#{templateSpecBackingBean.calcGrandTotalEstAmount(templateSpecBean)}">
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			</h:outputText>
+		</f:facet>
+		<c:if test="#{!isZonal}">
+			<h:outputText value="#{question.tplSpecEstimations[0].estimatedCost}">
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			</h:outputText>
+		</c:if>
+		<c:if test="#{isZonal}">
+			<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;"  
+				action="#{templateSpecBackingBean.estimationPopupAction(templateSpecBean)}"
+				oncomplete="#{estimationPopup}.show();"
+				partialSubmit="true" process="@this" update="@([id$=estimationPopup])">
+				<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
+			</p:commandButton>
+		</c:if>
+	</p:column>
+	<p:column style="width:125px;"  rendered="#{isScoringReq}">
+		<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;" id="scoringBtn" 
+			action="#{templateSpecBackingBean.scoringPopupAction(templateSpecBean)}"
+			oncomplete="#{scoringSetPopup}.show();"
+			partialSubmit="true" process="@this" update="@([id$=scoringSetPopup])"
+			rendered="#{((!isSpecTypeFinancial and !isQuestionTypeItem) or isSpecTypeFinancial) and !empty question.answerTypeCode.parameterId}">
+			<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
+		</p:commandButton>
+	</p:column>
+	<p:column style="width:200px;"  rendered="#{isContentTypeReview}">
+		<p:inputTextarea style="width:188px;" value="#{question.clReviewRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);" />
+	</p:column>
+</ui:composition>

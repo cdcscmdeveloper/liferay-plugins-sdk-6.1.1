@@ -1,0 +1,616 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<style>
+		div[id$="tfno"] > br ,div[id$="tfaxno"] > br ,div[id$="mbno"] > br {
+   		  display: none;
+		}
+		.ppDisplayTextL {
+			width: 230px !important;
+			}
+		.ui-selectonemenu.ppDropDownWidthL label{
+			width: 240px !important;
+		}
+		.ui-selectonemenu.ppDropDownWidthL{
+			width: 240px !important;
+		}
+		.icTextL {
+			width: 265px !important;
+		}
+			
+		div[id$="somIdTypeMsg"],
+		div[id$="orgTypeFederalListMsg"],
+		div[id$="orgTypeOthersListMsg"],
+		div[id$="lovResOrgMsg"]{
+			display:inline-block;
+		}
+		
+	</style>
+	<table>
+		<tr>
+			<td colspan="2" style="padding-bottom:5px;">
+				<h:outputText styleClass="instruction" value="#{lbl['lbl.pm.profiles.userdetails.roles.instruction']}" />
+			</td>
+		</tr>
+	</table>
+	
+	<!-- User Profile -->
+	<p:panel header="#{lbl['lbl.pm.profiles.org.detail']}" id="orgDetailPanel"
+		toggleable="true">
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+			columns="2">
+			<p:outputPanel id="orgProfileDet">
+				<table class="ppTwoTable">
+					<tr>
+						<th width="20%"><p:outputLabel
+								value="#{lbl['lbl.pm.org.category']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></th>
+								
+						<td colspan="3"><p:selectOneRadio id="sorOrgTypeId" layout="custom"
+								value="#{profileManagementBackingBean.managedBean.orgCategory}"
+								disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew}">
+								<f:selectItem
+									itemLabel="#{lbl['lbl.pm.org.federal.government']}"
+									itemValue="#{profileManagementBackingBean.federalGovt}" />
+								<f:selectItem itemLabel="#{lbl['lbl.pm.org.others']}"
+									itemValue="#{profileManagementBackingBean.others}" />
+								<p:ajax process="@this,orgCategoryMaintainPanelGrid" event="change" partialSubmit="true"
+									onstart="blockWidget.show()" 
+									oncomplete="blockWidget.hide()" 
+									listener="#{profileManagementBackingBean.resetOrgTypeAndCode()}"
+									update=":form:orgProfileDet,:form:opUserProfileDet" />
+							</p:selectOneRadio>
+							<h:panelGrid id="orgCategoryMaintainPanelGrid" columns="4">
+					            <p:radioButton id="sorMaintainFederalGovn" for="sorOrgTypeId" itemIndex="0" />
+					            <h:outputLabel styleClass="commonLabel" for="sorMaintainFederalGovn" value="#{lbl['lbl.pm.org.federal.government']}" />			       
+					 
+					            <p:radioButton id="sorMaintainOthers" for="sorOrgTypeId" itemIndex="1" />
+					            <h:outputLabel styleClass="commonLabel" for="sorMaintainOthers" value="#{lbl['lbl.pm.org.others']}" />			          
+					            
+			       	 		</h:panelGrid>
+							
+							</td>
+						<td colspan="2"></td>
+					</tr>
+					<tr>
+						<th width="20%"><p:outputLabel
+								value="#{lbl['lbl.pm.organisation.orgType']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></th>
+						<td width="80%">
+						<ui:fragment rendered="#{profileManagementBackingBean.managedBean.selectedUserOrg.brandNew}">
+							<p:selectOneMenu id="orgTypeFederalList"
+								rendered="#{profileManagementBackingBean.managedBean.orgCategory eq profileManagementBackingBean.federalGovt}"
+								disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or profileManagementBackingBean.managedBean.disabledOrgFields}"
+								styleClass="ppDropDownWidthL" required="true"
+								label="#{lbl['lbl.pm.organisation.orgType']}"
+								style="margin-bottom: 5px;"
+								value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId}">
+								<f:selectItems
+									value="#{profileManagementBackingBean.getNewOrgTypeDropdownValues()}" />
+								<p:ajax event="change" partialSubmit="true" process="@this"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+									listener="#{profileManagementBackingBean.changeResOrgType()}"
+									update=":form:orgProfilePG,:form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
+			     					:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr" />
+							</p:selectOneMenu>  
+							<p:selectOneMenu id="orgTypeOthersList"
+								rendered="#{profileManagementBackingBean.managedBean.orgCategory eq profileManagementBackingBean.others}"
+								disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or profileManagementBackingBean.managedBean.disabledOrgFields}"
+								styleClass="ppDropDownWidthL" required="true"
+								label="#{lbl['lbl.pm.organisation.orgType']}"
+								style="margin-bottom: 5px;"
+								value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId}">
+								<f:selectItems
+									value="#{profileManagementBackingBean.getNewOrgTypeDropdownValues()}" />
+								<p:ajax event="change" partialSubmit="true" process="@this"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+									listener="#{profileManagementBackingBean.changeResOrgType()}"
+									update=":form:orgProfilePG,:form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
+			     					:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr" />
+							</p:selectOneMenu> 
+							</ui:fragment>
+							<ui:fragment rendered="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew}">
+								<p:inputText id="itOrgTypeName" 
+										disabled="true" styleClass="ppDisplayTextL" 
+										value="#{profileManagementBackingBean.getParameterDesc(profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode)}"
+										size="30">
+								</p:inputText>
+							</ui:fragment>
+							&#160;
+							<ui:fragment rendered="#{profileManagementBackingBean.managedBean.selectedUserOrg.brandNew}">
+							<p:message id="orgTypeFederalListMsg" 
+								for="orgTypeFederalList"
+								display="icon" 
+								rendered="#{profileManagementBackingBean.managedBean.orgCategory eq profileManagementBackingBean.federalGovt}"/>
+							<p:message id="orgTypeOthersListMsg" 
+								for="orgTypeOthersList"
+								display="icon" 
+								rendered="#{profileManagementBackingBean.managedBean.orgCategory eq profileManagementBackingBean.others}"/>
+								</ui:fragment>
+							
+							</td>
+					</tr>
+					<!-- #29594 start -->
+					<c:if test="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterCode eq 'FJA'
+					            or profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterCode eq 'FPJ'}">
+					<tr>
+						<th width="20%"><p:outputLabel
+								value="#{lbl['lbl.pm.organisation.ministry']}" /> </th>
+						<td width="80%">
+							<p:inputText id="itMinistry" 
+									disabled="true" 
+									value="#{profileManagementBackingBean.retrieveMinistryName()}"
+									maxlength="100"
+									size="103">
+							</p:inputText>
+						</td>
+					</tr>
+					<c:if test="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterCode eq 'FPJ'}">
+					<tr>
+						<th width="20%"><p:outputLabel
+								value="#{lbl['lbl.pm.organisation.ptjGroup']}" /> </th>
+						<td width="80%">
+							<p:inputText id="itPtjGroup" 
+									disabled="true" 
+									value="#{profileManagementBackingBean.retrievePTJGroupName()}"
+									maxlength="100"
+									size="103">
+							</p:inputText>
+						</td>
+					</tr>
+					</c:if>
+					</c:if>
+					<!-- #29594 end -->
+					<tr>
+					<td>
+						<p:outputLabel
+								value="#{lbl['lbl.pm.organisation.orgName']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" />
+					</td>
+					<td>
+						<div style="display:inline-block;">
+							<h:panelGroup id="orgProfilePG">
+								<ui:fragment rendered="#{isFFCOrgType}">
+								<!-- 20210113@Jacky - Enhancement#28836 - Start -->
+							       <ac:lov id="lovFfcOrg" lovId="PM_ORG_PROFILE_FFC" size="103" 
+							    	required="true" 
+							    	label="#{lbl['lbl.pm.profiles.authorisation.org.lov.name']}"
+					            	update=":form:orgProfilePG,:form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
+						     			:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr"
+					            	disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId==null or profileManagementBackingBean.managedBean.disabledOrgFields}"
+									headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov.name']}"									
+									value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmFinancialOrg.finOrgName}" 
+									saveObject="profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile"
+									conditionField="#{profileManagementBackingBean.constructConditionFieldsForCreate()}" 
+									postUpdateListener="profileManagementBackingBean.changeOrgUnit" />	
+								<!-- 20210113@Jacky - Enhancement#28836 - End -->
+							    </ui:fragment>
+							    <ui:fragment rendered="#{isSupplierOrgType}">
+							    <!-- 20210113@Jacky - Enhancement#28836 - Start -->						    
+							        <ac:lov id="lovSuppOrg" lovId="PM_ORG_PROFILE_WITH_SUPPLIER" size="103" 
+							    	required="true" 
+							    	label="#{lbl['lbl.pm.profiles.authorisation.org.lov.name']}"
+					            	update=":form:orgProfilePG, :form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
+						     			:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr"
+					            	disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId==null or profileManagementBackingBean.managedBean.disabledOrgFields}"
+									headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov.name']}"
+									value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.smSupplier.companyName}" 
+									saveObject="profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile"
+									conditionField="#{profileManagementBackingBean.constructConditionFieldsForCreate()}" 
+									postUpdateListener="profileManagementBackingBean.changeOrgUnit" />
+							    <!-- 20210113@Jacky - Enhancement#28836 - End -->
+							    </ui:fragment>
+							     <ui:fragment rendered="#{isPTJOrgType or isKPTJOrgType}">								  
+							    	<h:panelGroup id="lovResOrg">
+							    	<p:inputText 
+										size="103"
+										id="itSelectedPtj" 
+										value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmOrgValidity.orgCode} - #{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmOrgValidity.orgName}" 
+										readonly="true"
+									/><!-- #29594 add orgCode and '-' -->
+									&#160;	
+									<p:commandLink id="ptjSearchCL" partialSubmit="true"
+										disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId==null or profileManagementBackingBean.managedBean.disabledOrgFields}"
+										process="@this" update=":form:orgProfileCcId:ptjPopup"
+										action="#{organisationSearchBackingBean.initPtjPopup}"
+										oncomplete="ptjPopup.show();" >
+										<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
+									</p:commandLink>
+									</h:panelGroup>
+							    </ui:fragment>
+							    <ui:fragment rendered="#{not isFFCOrgType and not isSupplierOrgType and not isPTJOrgType and not isKPTJOrgType}">		
+							        <!-- 20210113@Jacky - Enhancement#28836 - Start -->
+							        <ac:lov id="lovOtherOrg" lovId="PM_ORG_PROFILE" size="103"
+												required="true"
+												label="#{lbl['lbl.pm.profiles.authorisation.org.lov.name']}"
+												update=":form:orgProfilePG, :form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
+						     			:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr"
+												disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId==null or profileManagementBackingBean.managedBean.disabledOrgFields}"
+												headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov.name']}"
+												value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmOrgValidity.orgName}"
+												saveObject="profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile"
+												conditionField="#{profileManagementBackingBean.constructConditionFieldsForCreate()}"
+												postUpdateListener="profileManagementBackingBean.changeOrgUnit"  />	
+							    <!-- 20210113@Jacky - Enhancement#28836 - End -->
+							    </ui:fragment>
+							</h:panelGroup>
+							</div>
+					
+					</td>
+					
+					</tr>
+				</table>
+				<ac:ptjPopup 
+		  	id="orgProfileCcId"
+		  	orgTypeParamCode="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterCode}"
+		  	okAction="profileManagementBackingBean.selectPtjActionForCreateUser"
+		  	update=":form:orgProfilePG, :form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
+						     			:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr" />
+			</p:outputPanel>
+		</h:panelGrid>
+	</p:panel>
+	<p:panel id="userProfileDetailPanel" header="#{lbl['lbl.pm.profiles.user.profile']}"
+		toggleable="true">
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+			columns="2">
+			<p:outputPanel id="opUserProfileDet">
+				<table class="ppTwoTable">
+					 <tr>
+						<td colspan="4" style="padding-bottom:5px;">
+							<h:outputText styleClass="instruction" value="#{lbl['lbl.pm.profiles.userdetails.ic.instruction']}" />
+						</td>
+					</tr>
+					<tr>
+						<th width="20%"><p:outputLabel
+								value="#{lbl['lbl.pm.profiles.userdetails.nationality']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></th>
+						<td><p:selectOneMenu styleClass="ppDropDownWidthL"
+								id="somNationality"
+								disabled="#{isSupplierOrgType or !profileManagementBackingBean.managedBean.selectedUser.brandNew}"
+								required="#{!empty param['disableValidation']}"
+								label="#{lbl['lbl.pm.profiles.userdetails.nationality']}"
+								value="#{profileManagementBackingBean.managedBean.selectedUser.pmCountry.countryId}">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+									itemValue="#{null}" />
+								<f:selectItems
+									value="#{profileManagementBackingBean.getCountryList()}"
+									var="countrylist" itemLabel="#{countrylist.countryName}"
+									itemValue="#{countrylist.countryId}" />
+									<p:ajax event="change" listener="#{profileManagementBackingBean.resetIdType()}"
+										partialSubmit="true" process="@this" update="@this,somIdType,itIdentityNo,itLoginId" />
+							</p:selectOneMenu>&#160;
+							<p:message id="somNationalityMsg" for="somNationality"
+								display="icon" />
+						</td>
+						
+					</tr>
+					<tr>
+						<th width="20%"><p:outputLabel
+								value="#{lbl['lbl.pm.profiles.userdetails.idtype']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></th>
+						<td colspan="2" width="80%"><p:selectOneMenu styleClass="ppDropDownWidthL"
+								id="somIdType" required="#{!empty param['disableValidation']}"
+								label="#{lbl['lbl.pm.profiles.userdetails.idtype']}"
+								disabled="true"
+								value="#{profileManagementBackingBean.managedBean.selectedUser.identificationCode.parameterCode}">
+								<f:selectItems
+									value="#{profileManagementBackingBean.getIdentityTypeList()}" />
+
+								<p:ajax event="change"
+									listener="#{profileManagementBackingBean.resetIcAndLoginId()}"
+									partialSubmit="true" process="@this" update="@form" />
+							</p:selectOneMenu>&#160;
+							<p:message id="somIdTypeMsg" for="somIdType" display="icon" />
+							
+										<div style="display:inline-block;">
+							<c:choose>
+								<c:when
+									test="#{profileManagementBackingBean.managedBean.selectedUser.identificationCode.parameterCode == ProfileManagementConst.newIc}">
+									<p:inputText id="itIdentityNo" styleClass="icTextL"
+										required="#{!empty param['disableValidation']}"
+										label="#{lbl['lbl.pm.profiles.userdetails.idno']}"
+										disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}"
+										value="#{profileManagementBackingBean.managedBean.selectedUser.identificationNo}"
+										size="23" maxlength="12"
+										validatorMessage="#{lbl['lbl.pm.profiles.userdetails.idno']} #{lbl['lbl.pm.profiles.newicno']} - #{lbl['lbl.pm.profiles.invalidIcNo']}">
+										<f:validateRegex pattern="[0-9]{12}" />
+										<p:ajax event="change"
+											listener="#{profileManagementBackingBean.checkIdentificationNumber()}"
+											partialSubmit="true" process="@this" update="@this,somIdType,itLoginId,somSalutation,itUserName,somNationality"/>
+									</p:inputText>
+									&#160;<p:graphicImage id="giIcNo"
+								value="/css/images/design/ico-tooltips.png" /> <p:tooltip
+								for="giIcNo" id="ttIcNo"
+								showEffect="fade" hideEffect="fade" > 
+									<p:outputLabel escape="false" value="#{lbl['lbl.pm.profiles.userdetails.idno.tooltip']}"/>
+								</p:tooltip>
+								</c:when>
+								<c:otherwise>
+									<p:inputText id="itIdentityNo" styleClass="icTextL"
+										style="text-transform: uppercase;"
+										required="#{!empty param['disableValidation']}"
+										label="#{lbl['lbl.pm.profiles.userdetails.idno']}"
+										disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}"
+										value="#{profileManagementBackingBean.managedBean.selectedUser.identificationNo}"
+										size="23" maxlength="15" 
+										validatorMessage="#{lbl['lbl.pm.profiles.userdetails.idno']} #{lbl['lbl.pm.profiles.userdetails.passportno']} - #{lbl['lbl.pm.profiles.invalidPassportNo']}">
+										<f:validateRegex pattern="[a-zA-Z0-9]{6,15}" />
+										<p:ajax event="change"
+											listener="#{profileManagementBackingBean.checkIdentificationNumber()}"
+											partialSubmit="true" process="@this" update="@this,somIdType,itLoginId,somSalutation,itUserName,somNationality"/>
+									</p:inputText>
+									&#160;<p:graphicImage id="giPassportNo"
+								value="/css/images/design/ico-tooltips.png" /> <p:tooltip
+								for="giPassportNo" id="ttPassportNo"
+								showEffect="fade" hideEffect="fade" > 
+									<p:outputLabel escape="false" value="#{lbl['lbl.pm.profiles.userdetails.passportno.tooltip']}"/>
+								</p:tooltip>
+								</c:otherwise>
+							</c:choose>
+								<p:message id="itIdentityNoMsg" for="itIdentityNo"
+								display="icon" />
+							</div>
+							</td>
+							
+					</tr>
+
+
+					<tr>
+						<th width="20%"><p:outputLabel
+								value="#{lbl['lbl.pm.profiles.userdetails.loginid']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></th>
+						<td width="40%"><p:inputText styleClass="ppDisplayTextL" id="itLoginId"
+								maxlength="18" 
+								style="text-transform: uppercase;"
+								label="#{lbl['lbl.pm.profiles.userdetails.loginid']}"
+								required="#{!empty param['disableValidation']}"
+								disabled="true"
+								value="#{profileManagementBackingBean.managedBean.selectedUser.loginId}">								
+							</p:inputText> &#160; 
+								<p:graphicImage id="giLoginId"
+								value="/css/images/design/ico-tooltips.png" /> <p:tooltip
+								for="giLoginId"  id="ttLoginId"
+								value="#{lbl['lbl.pm.profiles.userdetails.loginid.tooltip']}"
+								showEffect="fade" hideEffect="fade" /> &#160;
+								<p:message id="itLoginIdMsg" for="itLoginId"
+								display="icon" />
+						</td>
+						<ui:remove>
+						<td width="40%"><p:inputText styleClass="ppDisplayTextL" id="itLoginId"
+								maxlength="75" converter="toLowerCaseConverter"
+								label="#{lbl['lbl.pm.profiles.userdetails.loginid']}"
+								required="#{!empty param['disableValidation']}"
+								disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}"
+								value="#{profileManagementBackingBean.managedBean.selectedUser.loginId}"
+								validatorMessage="#{lbl['lbl.pm.profiles.userdetails.loginid']} - #{lbl['lbl.pm.profiles.invalidLogin']}">
+								<f:validateRegex pattern="^([a-zA-Z0-9.-]{8,40})?$" />
+								<p:ajax event="blur"
+									partialSubmit="true" process="@this" update="@this" />
+							</p:inputText> 
+							<p:message id="itLoginIdMsg" for="itLoginId" display="icon" />
+						</td>
+						</ui:remove>
+						<td rowspan="7">
+							<p:outputPanel id="opPortrait"
+								rendered="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}">
+								<div align="left">
+									<h:graphicImage id="giUserImage"
+										value="#{profileManagementBackingBean.userImagePathWithDefaultImage(profileManagementBackingBean.managedBean.selectedUser.loginId)}"
+										width="140px" height="160px" />
+
+									<div align="left">
+										<p:commandButton
+											value="#{lbl['lbl.pm.profiles.userdetails.changepic']}"
+											oncomplete="dlImageUpload.show();" immediate="true" />
+										<p:commandButton
+											value="#{lbl['lbl.pm.profiles.userdetails.deletepic']}"
+											action="#{profileManagementBackingBean.deletePortrait}"
+											immediate="true" update="giUserImage" />
+									</div>
+								</div>
+							</p:outputPanel>
+						</td>	
+					</tr>
+
+					<tr>
+						<th width="20%"><p:outputLabel
+								value="#{lbl['lbl.pm.profiles.userdetails.salutation']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></th>
+						<td><p:selectOneMenu styleClass="ppDropDownWidthL"
+								id="somSalutation"
+								required="#{!empty param['disableValidation']}"								
+								label="#{lbl['lbl.pm.profiles.userdetails.salutation']}"
+								value="#{profileManagementBackingBean.managedBean.selectedUser.salutationCode.salutationId}">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+									itemValue="#{null}" />
+								<f:selectItems
+									value="#{profileManagementBackingBean.salutationOptions()}"
+									var="salutation" itemLabel="#{salutation.salutationName}"
+									itemValue="#{salutation.salutationId}" />
+								<p:ajax event="change"
+									partialSubmit="true" process="@this" update="@this" />
+							</p:selectOneMenu>&#160;
+							<p:message id="somSalutationMsg" for="somSalutation"
+								display="icon" />
+						</td>
+						
+					</tr>
+
+					<tr>
+						<th width="20%"><p:outputLabel
+								value="#{lbl['lbl.pm.profiles.userdetails.username']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></th>
+						<td><p:inputText styleClass="ppDisplayTextL" id="itUserName"
+								disabled="#{isSupplierOrgType or profileManagementBackingBean.managedBean.selectedUserOrg.recordStatusFlg == 0}"
+								maxlength="80" required="#{!empty param['disableValidation']}"
+								label="#{lbl['lbl.pm.profiles.userdetails.username']}"
+								validatorMessage="#{lbl['lbl.pm.profiles.userdetails.username']} #{lbl['lbl.pm.profiles.invalidString']}"
+								value="#{profileManagementBackingBean.managedBean.selectedUser.userName}">
+								<f:validateRegex pattern="^([\S]+[\s\S]{1,80})?$" />
+								<p:ajax event="blur"
+									partialSubmit="true" process="@this" update="@this" />
+							</p:inputText> &#160; <p:graphicImage id="giUserUsername"
+								value="/css/images/design/ico-tooltips.png" /> <p:tooltip
+								for="giUserUsername" id="ttUserUsername"
+								value="#{lbl['lbl.pm.profiles.userdetails.username.tooltip']}"
+								showEffect="fade" hideEffect="fade" /> &#160;
+							<p:message
+								id="itUserNameMsg" for="itUserName" display="icon" />
+								
+						</td>
+						
+					</tr>
+					<tr>
+						<th width="20%"><p:outputLabel
+								value="#{lbl['lbl.pm.profiles.userdetails.designation']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></th>
+						<td><p:inputText styleClass="ppDisplayTextL" maxlength="255"
+								id="itDesignation"
+								disabled="#{isSupplierOrgType}"
+								required="#{!empty param['disableValidation']}"
+								label="#{lbl['lbl.pm.profiles.userdetails.designation']}"
+								value="#{profileManagementBackingBean.managedBean.selectedUserOrg.designation}" />
+								 &#160; <p:graphicImage id="giDesignation"
+								value="/css/images/design/ico-tooltips.png" /> <p:tooltip
+								for="giDesignation" id="ttDesignation"
+								value="#{lbl['lbl.pm.profiles.userdetails.designation.tooltip']}"
+								showEffect="fade" hideEffect="fade" /> &#160;
+								<p:message id="itDesignationMsg" for="itDesignation"
+									display="icon" />
+						</td>
+						
+					</tr>
+
+					<tr>
+						<th width="20%"><p:outputLabel
+								value="#{lbl['lbl.pm.profiles.userdetails.promanagement']}" />
+						</th>
+						<td><p:selectOneRadio id="rBtnPmp"
+								disabled="#{isSupplierOrgType}"
+								value="#{profileManagementBackingBean.managedBean.selectedUserOrg.PMP}">
+								<f:selectItems
+									value="#{profileManagementBackingBean.getYesNoOptions()}" />
+							</p:selectOneRadio></td>
+					</tr>
+
+					<tr>
+						<th width="20%"><p:outputLabel
+								value="#{lbl['lbl.pm.profiles.userdetails.grade']}" />
+								<p:outputPanel id="userGradeLabel" rendered="#{profileManagementBackingBean.managedBean.orgCategory eq profileManagementBackingBean.federalGovt}">
+								<p:outputLabel 
+								value="*" styleClass="mandatory" 
+								/>
+								</p:outputPanel></th>
+						<td><p:inputText id="userGrade" styleClass="ppDisplayTextL" 
+								required="#{profileManagementBackingBean.managedBean.orgCategory eq profileManagementBackingBean.federalGovt}"
+								value="#{profileManagementBackingBean.managedBean.selectedUserOrg.grade}"
+								maxlength="10"
+								disabled="#{isSupplierOrgType}"
+								label="#{lbl['lbl.pm.profiles.userdetails.grade']}" /> &#160; 
+								<p:graphicImage id="giUserGrade"
+								value="/css/images/design/ico-tooltips.png" /> <p:tooltip
+								for="giUserGrade"  id="ttUserGrade"
+								value="#{lbl['lbl.pm.profiles.userdetails.grade.tooltip']}"
+								showEffect="fade" hideEffect="fade" /> &#160;
+								<p:message id="userGradeMsg" for="userGrade"
+								display="icon" />
+								
+						</td>	
+					</tr>
+					<tr>
+						<th width="20%"><p:outputLabel
+								value="#{lbl['lbl.pm.profiles.userdetails.email']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></th>
+						<td><p:inputText id="itEmail"
+								required="#{!empty param['disableValidation']}" maxlength="80"
+								label="#{lbl['lbl.pm.profiles.userdetails.email']}"
+								value="#{profileManagementBackingBean.managedBean.selectedUserOrg.email}"
+								styleClass="ppDisplayTextL"
+								disabled="#{profileManagementBackingBean.managedBean.selectedUserOrg.recordStatusFlg == 0}"
+								validatorMessage="#{lbl['lbl.pm.profiles.invalidEmail']}">
+								<f:validateRegex disabled="#{empty param['disableValidation']}"
+									pattern="^[_'A-Za-z0-9-\+]+(\.[_'A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+							<p:ajax event="change" process="@this" listener="#{profileManagementBackingBean.onChangeEmail()}" update="itEmail"/> 
+							
+							</p:inputText> &#160; <p:graphicImage id="giEmail"
+								value="/css/images/design/ico-tooltips.png" /> <p:tooltip
+								for="giEmail" id="ttEmail"
+								value="#{lbl['lbl.pm.profiles.userdetails.email.tooltip']}"
+								showEffect="fade" hideEffect="fade" /> &#160;
+								<p:message
+								id="itEmailMsg" for="itEmail" display="icon" />
+								</td>	
+					
+					</tr>
+					<tr>
+						<th width="20%"><p:outputLabel
+								value="#{lbl['lbl.pm.profiles.userdetails.telno']}" /></th>
+						<td colspan="2"><ac:phone id="itTelNo" isMobile="false" label="#{lbl['lbl.pm.profiles.userdetails.telno']}"
+						countryCode="#{profileManagementBackingBean.managedBean.selectedUserOrg.phoneCountry}" 
+						areaCode="#{profileManagementBackingBean.managedBean.selectedUserOrg.phoneArea}" 
+						number="#{profileManagementBackingBean.managedBean.selectedUserOrg.phoneNo}"  
+						validatorMessage="#{lbl['lbl.pm.profiles.userdetails.telno']} - #{lbl['lbl.pm.profiles.invalidNo']}" />
+						</td>
+						
+					</tr>
+					<tr>
+						<th width="20%"><p:outputLabel
+								value="#{lbl['lbl.pm.profiles.userdetails.faxno']}" /></th>
+						<td colspan="2"><ac:phone id="itFaxNo" isMobile="false" label="#{lbl['lbl.pm.profiles.userdetails.faxno']}"
+						countryCode="#{profileManagementBackingBean.managedBean.selectedUserOrg.faxCountry}" 
+						areaCode="#{profileManagementBackingBean.managedBean.selectedUserOrg.faxArea}" 
+						number="#{profileManagementBackingBean.managedBean.selectedUserOrg.faxNo}"  
+						validatorMessage="#{lbl['lbl.pm.profiles.userdetails.faxno']} - #{lbl['lbl.pm.profiles.invalidNo']}" />
+						</td>
+						
+					</tr>
+					<tr>
+						<th width="20%"><p:outputLabel
+								value="#{lbl['lbl.pm.profiles.userdetails.mobileno']}" /></th>
+						<td colspan="2"><ac:phone id="itMobileNo" label="#{lbl['lbl.pm.profiles.userdetails.mobileno']}"
+							countryCode="#{profileManagementBackingBean.managedBean.selectedUserOrg.mobileCountry}" 
+							areaCode="#{profileManagementBackingBean.managedBean.selectedUserOrg.mobileArea}" 
+							number="#{profileManagementBackingBean.managedBean.selectedUserOrg.mobileNo}" 
+							isMobile="true"
+							validatorMessage="#{lbl['lbl.pm.profiles.userdetails.mobileno']} - #{lbl['lbl.pm.profiles.invalidNo']}"
+							telcoId="#{profileManagementBackingBean.managedBean.selectedUserOrg.mobileTelcoId}" />
+						</td>
+						
+					</tr>
+
+					<tr>
+						<th width="20%"><p:outputLabel
+								value="#{lbl['lbl.pm.profiles.userdetails.status']}" /></th>
+						<td><p:selectOneMenu id="somUserOrgStatus"
+								disabled="#{profileManagementBackingBean.managedBean.selectedUser.brandNew or (!profileManagementBackingBean.managedBean.selectedUser.brandNew and profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or isSupplierOrgType)}"
+								value="#{profileManagementBackingBean.managedBean.selectedUserOrg.recordStatusFlg}"
+								styleClass="ppDropDownWidthL">
+								<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}"
+									itemValue="0" />
+								<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
+								<p:ajax event="change"
+									listener="#{profileManagementBackingBean.orgUnitStatusChange()}"
+									partialSubmit="true" process="@this"
+									update="@this, :form:pUserProfileHeader, :form:tvRoleReceivingAddr,:form:opUserProfileDet" />
+
+							</p:selectOneMenu></td>
+						
+					</tr>
+
+				</table>
+			</p:outputPanel>
+		</h:panelGrid>
+		<ac:lovPopup />
+		<ac:smEmailAlertPopup bBean="#{backingBean}" title="#{lbl['lbl.sm.email.change.header']}" dialogId="emailPopUp" 
+		btnOkLabel="#{lbl['lbl.btn.ok']}" />
+	</p:panel>
+
+	<!-- Upload Image Popup -->
+	<ui:include
+		src="/xhtml/pm/profilemanagement/common/uploadPortrait.xhtml" />
+</ui:composition>

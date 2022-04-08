@@ -1,0 +1,88 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<ui:define name="resourceSection">
+		<script>
+			var emptyText = document.createTextNode("");
+			$('#breadcrumbs').find('.last').append(emptyText);
+			if(emptyText.parentNode != null) {
+				emptyText.parentNode.children[0].text = "#{lbl['lbl.sm.basic.acc.maintenance']}";
+			}
+			
+			$('#portlet_onlineAccountMaintenance_WAR_NGePportlet').find(
+					'.portlet-title-text').html(
+					"#{lbl['lbl.sm.basic.acc.maintenance']}");
+		</script>
+		      <ui:param name="isReadOnly" value="#{registrationBackingBean.managedBean.viewMode}" />
+	</ui:define>
+	
+	<ui:define name="contentSection">
+		<p:messages id="messages" showDetail="true" autoUpdate="true" 
+			closable="true" showSummary="false" severity="error"/>
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		
+		<p:outputPanel rendered="#{registrationBackingBean.managedBean.viewMode}">
+			<div align="left">
+				<p:commandButton id="btnBackId" value="#{lbl['lbl.sm.button.back']}"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="detailSsm"
+					action="#{registrationBackingBean.backToHistory}" />
+			</div>
+		</p:outputPanel>
+		
+		<p:outputPanel rendered="#{!registrationBackingBean.managedBean.viewMode}">
+			 
+		<h:outputText rendered="#{registrationBackingBean.managedBean.companyValidWithSSM}" value="#{lbl['lbl.sm.po.disclaimer1']}" styleClass="splNotesFonts" style="float: inherit" escape="false" />
+		<h:commandLink onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
+				rendered="#{registrationBackingBean.managedBean.companyValidWithSSM}"
+				action="#{registrationBackingBean.redirectToViewSSMInfo(registrationBackingBean.managedBean.smSupp.regNo,registrationBackingBean.managedBean.smSupp.businessType)}"
+				value="#{lbl['lbl.sm.instruction.here']}" 
+				styleClass="splNotesFonts" style="float: inherit" escape="false">
+				 <f:ajax execute="@form" render="@form" />
+				</h:commandLink>
+		<h:outputText rendered="#{registrationBackingBean.managedBean.companyValidWithSSM}" value="#{lbl['lbl.sm.po.disclaimer2']}" styleClass="splNotesFonts" style="float: inherit" escape="false" />
+					
+			 <div align="right">
+			 <!--#12492-START-->
+				<p:commandButton value="#{lbl['lbl.btn.declare']}" actionListener="#{registrationBackingBean.CheckBankAccount('fromNext')}" action="#{registrationBackingBean.updateBasicSupplier}" update="@([id$=Msg])" 
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
+					<f:param name="disableValidation" value="true" />
+				</p:commandButton>
+			 <!--#12492-END-->
+			</div>
+		</p:outputPanel>
+		
+		<ui:include src="/xhtml/sm/shared/onlinereg/accountInfo.xhtml" />
+		<p:outputPanel id="outPnlRegForm">
+			<c:choose>
+				<c:when
+					test="${registrationBackingBean.managedBean.smSupp.businessType == SupplierManagementConst.INDIVIDUAL_FLAG}">
+					<ui:include src="/xhtml/sm/shared/onlinereg/individualregform.xhtml" />
+				</c:when>
+
+				<c:otherwise>
+					<ui:include src="/xhtml/sm/shared/onlinereg/corporateregform.xhtml" />
+				</c:otherwise>
+			</c:choose>
+		</p:outputPanel>
+		<!-- 26238 - todo > Disciplinary Action Information display active DA -->
+		<ui:include src="/xhtml/sm/shared/onlinereg/disciplinaryActionInfo.xhtml" />	
+		
+		<p:outputPanel id="detailSsm" rendered="#{registrationBackingBean.managedBean.showDetailSSM}">
+			<ac:baseViewSsmInfo bBean="#{registrationBackingBean}"
+								title="#{lbl['lbl.sm.view.ssm.infomation']}" 
+								dialogId="viewssminfo"
+								width="1150" height="600"
+								resizable="false" />
+		</p:outputPanel>
+		
+	</ui:define>
+</ui:composition>

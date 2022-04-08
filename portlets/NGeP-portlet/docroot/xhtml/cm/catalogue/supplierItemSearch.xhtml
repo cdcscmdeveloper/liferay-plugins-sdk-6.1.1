@@ -1,0 +1,624 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<style>
+			.tree-container{
+				display: inline-block  !important;
+				width: 314px !important;
+			}
+			.tree-container > ul {
+				max-height: 200px !important;
+			}
+		</style>
+	<h:panelGroup  id="supplierItemViewID">
+	
+		<script>
+			$('#portlet_Catalogue_WAR_NGePportlet').find('.portlet-title-text')
+					.html("#{lbl['lbl.cm.catalogue.search']}");
+		</script>
+
+		<p:messages id="catSrchMsg" closable="true" showDetail="true"></p:messages>
+
+		<p:blockUI block=":form"
+			trigger="searchButtonId, ccmi, mcmi, pcmi, xcmi"
+			widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		<h:panelGroup>
+			<p:panel header="#{lbl['lbl.cm.define.search']}" toggleable="true" id="searchTabId">
+						<h:panelGroup>
+													<table style="margin-top: 10px; width: 100%;">
+							<tr>
+								<td width="15%"><p:outputLabel
+										value="#{lbl['lbl.cm.item.name.keyword']}" /></td>
+								<td width="35%"><p:inputText size="50"
+										value="#{catalogueBackingBean.managedBean.itemNameFilterBean.searchValue}"></p:inputText>
+									<p:graphicImage id="itemNameID"
+										value="/css/images/design/tooltips.png" /> <p:tooltip
+										for="itemNameID">
+										<p:outputLabel escape="false"
+											value="#{lbl['lbl.tooltip.product.service']}" />
+									</p:tooltip></td>
+								<td width="15%"><p:outputLabel
+										value="#{lbl['lbl.cm.item.code']}" /></td>
+								<td width="35%"><p:inputText size="50"
+										value="#{catalogueBackingBean.managedBean.itemCodeFilterBean.searchValue}"></p:inputText>
+									<p:graphicImage id="itemCodeID"
+										value="/css/images/design/tooltips.png" /> <p:tooltip
+										for="itemCodeID">
+										<p:outputLabel escape="false"
+											value="#{lbl['lbl.tooltip.item.code']}" />
+									</p:tooltip></td>
+							</tr>
+
+
+							<tr>
+								<td><p:outputLabel value="#{lbl['lbl.cm.supplier.name']}" /></td>
+								<td><p:inputText size="50"
+										value="#{catalogueBackingBean.managedBean.supplierNameFilterBean.searchValue}"></p:inputText>
+									<p:graphicImage id="suppID"
+										value="/css/images/design/tooltips.png" /> <p:tooltip
+										for="suppID">
+										<p:outputLabel escape="false"
+											value="#{lbl['lbl.tooltip.supplier']}" />
+									</p:tooltip></td>
+								<td><p:outputLabel value="#{lbl['lbl.cm.business.reg.no']}" /></td>
+								<td><p:inputText size="50"
+										value="#{catalogueBackingBean.managedBean.bizRegNoFilterBean.searchValue}"></p:inputText>
+									<p:graphicImage id="regNoID"
+										value="/css/images/design/tooltips.png" /> <p:tooltip
+										for="regNoID">
+										<p:outputLabel escape="false"
+											value="#{lbl['lbl.tooltip.business.registration.no']}" />
+									</p:tooltip></td>
+							</tr>
+						</table>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{unspscCodeBackingBean.requisitioner}">
+							<table style="width: 100%">
+								<tr>
+									<td width="15%"><p:outputLabel
+											value="#{lbl['lbl.cm.ep.no']}" /></td>
+									<td width="35%"><p:inputText size="50"
+											value="#{catalogueBackingBean.managedBean.epNoFilterBean.searchValue}">
+										</p:inputText> <p:graphicImage id="epNoId"
+											value="/css/images/design/tooltips.png" /> <p:tooltip
+											for="epNoId">
+											<p:outputLabel escape="false"
+												value="#{lbl['lbl.tooltip.ep.no']}" />
+										</p:tooltip></td>
+									<td><p:outputLabel value="#{lbl['lbl.sm.mofno']}" /></td>
+									<td><p:inputText size="50"
+											value="#{catalogueBackingBean.managedBean.mofNoFilterBean.searchValue}"></p:inputText>
+										<p:graphicImage id="mofNoID"
+											value="/css/images/design/tooltips.png" /> <p:tooltip
+											for="mofNoID">
+											<p:outputLabel escape="false"
+												value="#{lbl['lbl.tooltip.mof.no']}" />
+										</p:tooltip></td>
+
+								</tr>
+
+								<tr>
+									<td><p:outputLabel value="#{lbl['lbl.cm.contract.no']}" /></td>
+									<td><p:inputText size="50"
+											value="#{catalogueBackingBean.managedBean.contractNoFilterBean.searchValue}"></p:inputText>
+										<p:graphicImage id="uidt"
+											value="/css/images/design/tooltips.png" /> <p:tooltip
+											id="uid" for="uidt">
+											<p:outputLabel escape="false"
+												value="#{lbl['lbl.tooltip.contract.no']}" />
+										</p:tooltip></td>
+
+									<td width="15%"><p:outputLabel
+											value="#{lbl['lbl.ct.contract.title']}" /></td>
+									<td width="35%"><p:inputText size="50"
+											value="#{catalogueBackingBean.managedBean.contractTitleFilterBean.searchValue}"></p:inputText></td>
+
+
+								</tr>
+
+								<tr>
+									<td><p:outputLabel value="#{lbl['lbl.ct.loa.no']}" /></td>
+									<td><p:inputText size="50"
+											value="#{catalogueBackingBean.managedBean.loaNoFilterBean.searchValue}" />
+										<p:graphicImage id="loaNoID"
+											value="/css/images/design/tooltips.png" /> <p:tooltip
+											for="loaNoID">
+											<p:outputLabel escape="false"
+												value="#{lbl['lbl.tooltip.letter.of.acceptance.loa.no']}" />
+										</p:tooltip></td>
+									<td><p:outputLabel
+											value="#{lbl['lbl.ct.loa.physical.no']}" /></td>
+									<td><p:inputText size="50"
+											value="#{catalogueBackingBean.managedBean.loaPhysicalNoFilterBean.searchValue}"></p:inputText>
+										<p:graphicImage id="phyloaNoID"
+											value="/css/images/design/tooltips.png" /> <p:tooltip
+											for="phyloaNoID">
+											<p:outputLabel escape="false"
+												value="#{lbl['lbl.tooltip.physical.letter.of.acceptance.loa.no']}" />
+										</p:tooltip></td>
+								</tr>
+
+								<tr>
+									<td><p:outputLabel
+											value="#{lbl['lbl.cm.physical.contract.no']}" /></td>
+									<td><p:inputText size="50"
+											value="#{catalogueBackingBean.managedBean.physicalContractNoFilterBean.searchValue}" />
+										<p:graphicImage id="phyContractNoID"
+											value="/css/images/design/tooltips.png" /> <p:tooltip
+											for="phyContractNoID">
+											<p:outputLabel escape="false"
+												value="#{lbl['lbl.tooltip.physical.contract.no']}" />
+										</p:tooltip></td>
+									<td><p:outputLabel value="#{lbl['lbl.cm.circular.pp.no']}" /></td>
+									<td><p:inputText size="50"
+											value="#{catalogueBackingBean.managedBean.circularNoFilterBean.searchValue}"></p:inputText>
+										<p:graphicImage id="circularID"
+											value="/css/images/design/tooltips.png" /> <p:tooltip
+											for="circularID">
+											<p:outputLabel escape="false"
+												value="#{lbl['lbl.tooltip.treasury.circular.1pp.no']}" />
+										</p:tooltip></td>
+								</tr>
+							</table>
+						</h:panelGroup>
+						<h:panelGroup>
+											<table style="width: 100%">
+							<tr>
+								<td width="15%"><p:outputLabel
+										value="#{lbl['lbl.cm.supplier.coverage']}" /></td>
+								<td width="35%">
+								<p:tree styleClass	="tree-container" id="treeZoneLocationPopup"
+									value="#{catalogueBackingBean.managedBean.stateTree}"
+									var="location"
+									selection="#{catalogueBackingBean.managedBean.selectedNodes}"
+									selectionMode="checkbox">
+									<p:ajax event="select"/>
+									<p:ajax event="unselect"/>
+									<p:treeNode type="state">
+										<h:outputText value="#{location.locationName}" />
+									</p:treeNode>
+									<p:treeNode type="division">
+										<h:outputText value="#{location.locationName}" />
+									</p:treeNode>
+									<p:treeNode type="district">
+										<h:outputText value="#{location.locationName}" />
+									</p:treeNode>
+								</p:tree>
+									<p:graphicImage style="position:relative !important; vertical-align: top !important; margin-top:100px !important;" id="epSuppCoverage"
+											value="/css/images/design/tooltips.png" /> <p:tooltip
+											for="epSuppCoverage">
+											<p:outputLabel escape="false"
+												value="#{lbl['lbl.tooltip.supplier.coverage']}" />
+										</p:tooltip>
+								</td>
+								<td width="15%" style="vertical-align:top;"><p:outputLabel value="G2G" /></td>
+								<td width="35%" style="vertical-align:top;"><p:selectBooleanCheckbox value="#{catalogueBackingBean.managedBean.g2gFlag}" /></td>
+							</tr>
+						</table>
+						<div style="text-align: right;">
+							<p:commandButton value="#{lbl['lbl.cm.search']}"
+								action="#{catalogueBackingBean.managedBean.searchCatalogue}"
+								update="searchViewId,catSrchMsg,btnId,labelId" id="searchButtonId"
+								oncomplete="updateCatButtons();">
+								<f:param name="unspscCode" value="#{unspscCode}" />
+							</p:commandButton>
+							<p:commandButton value="#{lbl['lbl.btn.reset']}"
+								action="#{catalogueBackingBean.resetCatalogueSearch}"
+								update="supplierItemViewID">
+							</p:commandButton>
+						</div>
+						</h:panelGroup>
+					</p:panel>
+					<p:panel header="#{lbl['lbl.cm.search.result']}"
+						toggleable="true">
+						<p:remoteCommand name="updateCatButtons" partialSubmit="true"
+							process="@this" update="btnId,labelId" />
+						<h:panelGroup id="btnId">
+							<div style="text-align: right;">
+								<p:commandButton
+									action="#{catalogueBackingBean.navigateContractRequest()}"
+									rendered="#{unspscCodeBackingBean.requisitioner}"
+									value="#{lbl['lbl.sc.contract.request']} ( #{fn:length(catalogueBackingBean.managedBean.ctRequestList)} )"
+									disabled="#{fn:length(catalogueBackingBean.managedBean.ctRequestList)&lt;1}"></p:commandButton>
+
+								<p:commandButton id="requestNoteId"
+									rendered="#{unspscCodeBackingBean.requisitioner}"
+									action="#{requestNoteBackingBean.requestNoteAction}"
+									partialSubmit="true" process="@this"
+									value="#{lbl['lbl.sc.request.note']} ( #{fn:length(requestNoteBackingBean.managedBean.requestNote.requestNoteDtls)} )"
+									disabled="#{fn:length(requestNoteBackingBean.managedBean.requestNote.requestNoteDtls) eq '0'}" />
+
+								<p:commandButton
+									value="#{lbl['lbl.sc.sq']} ( #{simpleQuoteBackingBean.getNoQuestionInSQ()} )"
+									rendered="#{unspscCodeBackingBean.requisitioner}"
+									id="simpleQuoteId"
+									action="#{simpleQuoteBackingBean.simpleQuoteAction(null, false, null)}"
+									disabled="#{catalogueBackingBean.managedBean.simpleQuoteFlag}"
+									partialSubmit="true" process="@this"
+									title="#{lbl['lbl.sc.sq.tooltip']}" escape="false">
+								</p:commandButton>
+
+
+								<p:commandButton id="compareButton"
+									action="#{catalogueBackingBean.compareSupplierItem}"
+									value="#{lbl['lbl.cm.view.compare']} ( #{fn:length(catalogueBackingBean.managedBean.selectViewItems)} )"
+									disabled="#{2 > fn:length(catalogueBackingBean.managedBean.selectViewItems)}"
+									rendered="#{unspscCodeBackingBean.requisitioner}"
+									title="#{lbl['lbl.compare.tooltip']}">
+								</p:commandButton>
+							</div>
+	
+						</h:panelGroup>
+						
+						<h:outputText styleClass="instruction" escape="false" style="float:left;margin-left:5px;"
+							value="#{lbl['lbl.cm.instruction.search.action']}" /><br/><br/>						
+						<h:outputLabel id="labelId" style="float:left;" value="#{catalogueBackingBean.managedBean.totalRecords}"/>
+						<div class="clear"></div>
+						
+						<h:panelGroup id="searchViewId">
+						
+						
+							<p:tabMenu id="catTypeMenu"
+								activeIndex="#{catalogueBackingBean.managedBean.resultTabActiveIndex}"
+								rendered="#{unspscCodeBackingBean.requisitioner}">
+								<!--  <p:menuitem id="allmi" value="#{lbl['lbl.cm.catalogue.all']}" oncomplete="updateCatButtons();"
+									actionListener="#{catalogueBackingBean.setCatTypeAndTabIndex('',0)}"
+									action="#{catalogueBackingBean.managedBean.searchCatalogue}"
+									update="searchViewId,catSrchMsg,btnId"></p:menuitem>-->
+								<p:menuitem id="ccmi" value="#{lbl['lbl.cm.central.contract']}" oncomplete="updateCatButtons();"
+									actionListener="#{catalogueBackingBean.setCatTypeAndTabIndex('CC', 0)}"
+									action="#{catalogueBackingBean.managedBean.searchCatalogue}"
+									update="searchViewId,catSrchMsg,btnId"></p:menuitem>
+								<p:menuitem id="mcmi" value="#{lbl['lbl.cm.ministry.contract']}" oncomplete="updateCatButtons();"
+									actionListener="#{catalogueBackingBean.setCatTypeAndTabIndex('MC', 1)}"
+									action="#{catalogueBackingBean.managedBean.searchCatalogue}"
+									update="searchViewId,catSrchMsg,btnId"></p:menuitem>
+								<p:menuitem id="pcmi" value="#{lbl['lbl.cm.panel.item']}" oncomplete="updateCatButtons();"
+									actionListener="#{catalogueBackingBean.setCatTypeAndTabIndex('PC',2)}"
+									action="#{catalogueBackingBean.managedBean.searchCatalogue}"
+									update="searchViewId,catSrchMsg,btnId"></p:menuitem>
+								<p:menuitem id="xcmi" value="#{lbl['lbl.cm.non.contracted']}" oncomplete="updateCatButtons();"
+									actionListener="#{catalogueBackingBean.setCatTypeAndTabIndex('XC', 3)}"
+									action="#{catalogueBackingBean.managedBean.searchCatalogue}"
+									update="searchViewId,catSrchMsg,btnId"></p:menuitem>
+							</p:tabMenu>
+
+							<p:dataTable lazy="true"
+								emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+								rendered="#{catalogueBackingBean.managedBean.renderTableView}"
+								value="#{catalogueBackingBean.managedBean.searchDataModel}"
+								rowKey="#{supplierItem.rowId}"
+								selection="#{catalogueBackingBean.managedBean.selectedItems}"
+								id="supplierItemID" var="supplierItem" rowIndexVar="rowIndex"
+								rows="10">
+
+								<ac:paginator for="supplierItemID"></ac:paginator>
+
+								<p:ajax event="rowSelectCheckbox"
+									listener="#{catalogueBackingBean.onRowSelect}"
+									update="@([id$=btnId])"></p:ajax>
+								<p:ajax event="rowUnselectCheckbox"
+									listener="#{catalogueBackingBean.onRowUnselect}"
+									update="@([id$=btnId])"></p:ajax>
+
+								<ui:remove>
+									<p:ajax event="rowUnselect"
+										update="@(.ui-button[id$=compareButton])"></p:ajax>
+									<p:ajax event="rowSelect"
+										update="@(.ui-button[id$=compareButton])"></p:ajax>
+									<p:ajax event="toggleSelect"
+										update="@(.ui-button[id$=compareButton])" />
+								</ui:remove>
+								<!-- # 2020/05/05 - 27626 - start -->
+								<p:column headerText="#{lbl['lbl.cm.item.code']}" width="8%">
+									<h:panelGroup rendered="#{supplierItem.imagePath == null}">
+
+										<p:outputPanel
+											style="border: 1px solid #808080; display: block; vertical-align: middle; padding: 20px 4px; text-align: center;">
+								#{lbl['lbl.cm.no.image.available']}
+								
+								</p:outputPanel>
+											
+											
+															
+									</h:panelGroup>
+									<h:panelGroup rendered="#{supplierItem.imagePath != null}">
+										<img
+											src="/NGeP-portlet/image?imageName=#{supplierItem.epNo}/#{supplierItem.imagePath}"
+											style="height: 80px; left: 0px !important;" />
+										
+										<br />
+										
+										
+									</h:panelGroup>
+									<h:outputText value="#{supplierItem.itemCode.charAt(0) != '0' ? supplierItem.itemCode : null }"></h:outputText>
+								</p:column>
+								<!-- # 2020/05/05 - 27626 - end -->
+
+								<p:column headerText="#{lbl['lbl.cm.item.name']}"
+									style="white-space: normal">
+									<p:commandLink value="#{supplierItem.itemName}"
+										action="#{catalogueBackingBean.navigateToSupplierItemDet(supplierItem)}" />
+										
+									<!-- #27654 start -->
+									<p:spacer width="5" />
+									<p:commandLink id="itemSuspendedAlert"
+										rendered="#{(catalogueMB.catTypeFilterBean.searchValue eq 'MC' or catalogueMB.catTypeFilterBean.searchValue eq 'CC') and supplierItem.itemSuspended}"	
+										onclick="dlItemSuspendedWv.show();">
+										<p:graphicImage id="itemSuspendedAlertGI" value="/css/images/design/exclamation.png" />
+									</p:commandLink>
+									<!-- #27654 end -->
+									
+								</p:column>
+
+								<p:column width="8%" headerText="#{lbl['lbl.cm.contact.no']}"
+									rendered="#{unspscCodeBackingBean.requisitioner}"
+									style="white-space: normal">
+									<h:outputText value="#{supplierItem.latestContractPhysicalNo}"
+										rendered="#{supplierItem.latestContractPhysicalNo != null}" />
+									<h:outputText value="&lt;br/&gt;" escape="false"
+										rendered="#{supplierItem.latestContractPhysicalNo != null}" />
+									<h:outputText value="#{supplierItem.contractNo}" />
+								</p:column>
+
+								<p:column width="8%" headerText="#{lbl['lbl.cm.circular.pp.no']}"
+									rendered="#{unspscCodeBackingBean.requisitioner}"
+									style="white-space: normal">
+									#{supplierItem.circularNo}
+								</p:column>
+
+								<p:column headerText="#{lbl['lbl.cm.supplier.name']}"
+									style="white-space: normal">
+									<h:outputText value="#{supplierItem.companyName}" />
+									<!-- [#26282] - start -->
+									<p:spacer width="5" />
+									<p:commandLink id="daSupplierAlertCL"
+										action="#{catalogueBackingBean.onViewDisciplinaryAction(supplierItem.supplierId, supplierItem.mofNo)}"
+										partialSubmit="true" process="@this" update="@([id$=disciplinaryActionHistoryDlgId])"
+										rendered="#{supplierItem.daWarning or supplierItem.daSuspendReg}"	
+										onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
+										<p:graphicImage id="daSupplierAlertGI" 
+											value="/css/images/design/exclamation.png" />
+									</p:commandLink>									
+									<!-- [#26282] - end -->
+								</p:column>
+
+								<p:column width="5%" headerText="#{lbl['lbl.cm.uom']}"
+										style="white-space: normal">
+								   #{supplierItem.uomName}
+								</p:column>
+
+								<p:column width="9%">
+									<f:facet name="header">
+										<h:outputText value="#{lbl['lbl.cm.best.price']}" />
+										<p:graphicImage id="uidti"
+											value="/css/images/design/tooltips.png" />
+										<p:tooltip id="uidtt" for="uidti">
+											<p:outputLabel escape="false"
+												value="#{lbl['lbl.cm.tooltip.best.price']}" />
+										</p:tooltip>
+										<!--  <ac:iconTooltip value="#{lbl['lbl.cm.tooltip.best.price']}"/> -->
+									</f:facet>
+									<h:panelGroup
+										rendered="#{supplierItem.contractNo == null and supplierItem.circularNo == null }">
+										<table width="100%" border="0"
+											style="white-space: normal; text-align: end; border: none !important;">
+											<tr>
+												<td
+													style="text-align: end; border: none !important; padding-bottom: 0px;">
+													<h:outputLabel value="#{supplierItem.bestPrice}"
+														rendered="#{supplierItem.bestPrice>0}">
+															<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+													</h:outputLabel>
+
+												</td>
+											</tr>
+											<tr>
+												<td
+													style="text-align: end; border: none !important; padding-top: 0px;">
+													<p:commandLink id="recentPrice"
+														value="#{lbl['lbl.sc.recent.price']}"
+														rendered="#{supplierItem.bestPrice>0}"
+														action="#{requestNoteBackingBean.showRecentPrice(null, supplierItem)}"
+														oncomplete="recentPricePopup.show()" /> <p:tooltip
+														for="recentPrice">
+														<h:outputText value="#{lbl['lbl.sc.recentprice.tooltip']}"
+															escape="false" />
+													</p:tooltip>
+												</td>
+											</tr>
+										</table>
+									</h:panelGroup>
+
+									<h:panelGroup
+										rendered="#{supplierItem.contractNo != null or supplierItem.circularNo != null }">
+										<h:outputLabel value="#{supplierItem.bestPrice}"
+											rendered="#{supplierItem.bestPrice>0}">
+												<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+										</h:outputLabel>
+									</h:panelGroup>
+								</p:column>
+
+								<p:column width="8%"
+									headerText="#{lbl['lbl.sc.price.inquiry.price.type']}"
+									style="white-space: normal">
+									<h:outputLabel
+										value="#{catalogueBackingBean.getPriceType(supplierItem.docId, supplierItem.contractNo)}" />
+								</p:column>
+
+								<p:column headerText="#{lbl['lbl.cm.action']}"
+									rendered="#{unspscCodeBackingBean.requisitioner}">
+
+									<p:menuButton value="" disabled="#{supplierItem.daSuspendReg or !supplierItem.atcRequired or supplierItem.contractTerminated or supplierItem.itemSuspended}">	<!-- [#26282]/#27654 -->
+										<p:menuitem value="#{lbl['lbl.cm.add.to.cr']}"
+											actionListener="#{catalogueBackingBean.addToList(supplierItem,1)}"
+											update="@form" icon="ui-icon-plus"
+											rendered="#{supplierItem.contractNo != null}"
+											onstart="blockWidget.show();"
+											oncomplete="blockWidget.hide();" />
+										<p:menuitem value="#{lbl['lbl.cm.add.to.simple.qoute']}"
+											action="#{simpleQuoteBackingBean.simpleQuoteAction(supplierItem.docId, supplierItem.circularNo != null , null)}"
+											update="@form" icon="ui-icon-plus"
+											rendered="#{supplierItem.contractNo == null}"
+											onstart="blockWidget.show();"
+											oncomplete="blockWidget.hide();" />
+										<p:menuitem value="#{lbl['lbl.cm.add.to.compare']}"
+											actionListener="#{catalogueBackingBean.addToList(supplierItem,3)}"
+											update="@form" icon="ui-icon-plus"
+											rendered="#{supplierItem.contractNo == null and supplierItem.circularNo == null}"
+											onstart="blockWidget.show();"
+											oncomplete="blockWidget.hide();" />
+									</p:menuButton>
+
+
+									<p:commandButton value="#{lbl['lbl.sc.purchase.in.default']}"
+										id="pidId"
+										action="#{purchaseInDefaultBackingBean.pidAction(supplierItem)}"
+										disabled="#{!supplierItem.pidRequired or supplierItem.contractTerminated or supplierItem.itemSuspended}"
+										rendered="#{supplierItem.contractNo ne null or supplierItem.circularNo ne null }"
+										onstart="blockWidget.show();" process="@this"
+										partialSubmit="true" oncomplete="blockWidget.hide();"
+										title="#{lbl['lbl.sc.pid.tooltip']}">
+									</p:commandButton>
+
+									<p:spacer width="5px" />
+
+									<h:panelGroup rendered="#{supplierItem.daSuspendReg ? 'false' : supplierItem.atcRequired}">	<!-- [#26282] -->
+										<p:commandLink disabled="#{!supplierItem.atcRequired}"
+											action="#{requestNoteBackingBean.addToCart(supplierItem.docId, false, null)}"
+											update="@form"
+											rendered="#{supplierItem.contractNo == null and supplierItem.circularNo == null }"
+											partialSubmit="true" process="@this"
+											onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
+											<p:graphicImage value="/css/images/design/cart.png"
+												id="addToCartId" style="max-width: 16px;" />
+										</p:commandLink>
+										<p:tooltip for="addToCartId">
+											<h:outputText value="#{lbl['lbl.sc.atc.tooltip']}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+								</p:column>
+
+							</p:dataTable>
+
+							<p:dataGrid columns="3" rows="9" lazy="true"
+								rendered="#{catalogueBackingBean.managedBean.renderGridView}"
+								value="#{catalogueBackingBean.managedBean.searchDataModel}"
+								id="supplierItemGridViewID" var="supplierItem" first="10"
+								rowIndexVar="rowIndex" rowsPerPageTemplate="6,9,12">
+								<ac:paginator for="supplierItemGridViewID"></ac:paginator>
+
+								<p:panel>
+
+									<table style="width: 100%">
+
+										<tr align="center">
+											<td width="100%" style="text-align: center;"><h:selectBooleanCheckbox
+													value="#{catalogueBackingBean.managedBean.selectedIds[supplierItem.docId]}"
+													disabled="#{supplierItem.contractNo != null or supplierItem.circularNo != null}">
+													<p:ajax update="@(.ui-button[id$=compareButton])"
+														event="change"
+														listener="#{catalogueBackingBean.setAsSelectedItem(supplierItem)}" />
+												</h:selectBooleanCheckbox> <p:graphicImage value="/images/#{supplierItem.imagePath}"
+													height="100" width="100" /></td>
+										</tr>
+
+										<tr style="text-align: center">
+											<td width="100%" style="text-align: center;"><h:outputText
+													value="#{supplierItem.itemName}" /></td>
+										</tr>
+
+										<tr style="text-align: center">
+											<td width="100%" style="text-align: center;"><h:outputText
+													value="#{supplierItem.companyName}"
+													rendered="#{supplierItem.contractNo != null or supplierItem.circularNo != null}"></h:outputText>
+												<p:commandLink value="#{supplierItem.companyName}"
+													rendered="#{supplierItem.contractNo == null and supplierItem.circularNo == null}"
+													action="#{catalogueBackingBean.navigateToSupplierItemDet(supplierItem)}" />
+											</td>
+										</tr>
+										<tr>
+											<td width="100%" style="text-align: center;"><h:panelGroup
+													rendered="#{unspscCodeBackingBean.requisitioner}">
+													<table style="width: 100%">
+														<tr>
+															<td width="100%" style="text-align: center;"><p:commandLink
+																	action="#{requestNoteBackingBean.addToCart(supplierItem.docId)}"
+																	process="@this" partialSubmit="true"
+																	update="@([id$=addToCartPopup])"
+																	rendered="#{supplierItem.contractNo == null and supplierItem.circularNo == null }">
+																	<p:graphicImage library="ep/images/design"
+																		name="cart_full.png" id="addToCartId" />
+																</p:commandLink> <p:tooltip for="addToCartId"
+																	value="#{lbl['lbl.sc.add.to.cart']}" /> <p:commandButton
+																	value="#{lbl['lbl.sc.purchase.in.default']}" id="pidId"
+																	action="#{purchaseInDefaultBackingBean.pidAction(supplierItem)}"
+																	disabled="#{!supplierItem.pidRequired}"
+																	rendered="#{supplierItem.contractNo ne null or supplierItem.circularNo ne null }">
+																</p:commandButton> <p:tooltip for="pidId"
+																	value="#{lbl['lbl.sc.purchase.in.default']}" /> <p:commandButton
+																	value="#{lbl['lbl.sc.simple.quote']}" id="sqId"
+																	action="#{simpleQuoteBackingBean.simpleQuoteAction(supplierItem.docId , false)}"
+																	rendered="#{supplierItem.circularNo ne null}"
+																	disabled="#{supplierItem.circularNo ne null }">
+																</p:commandButton> <p:tooltip for="sqId" value="#{lbl['lbl.sc.sq']}" /> <p:commandButton
+																	value="CR" update="@form"
+																	action="#{catalogueBackingBean.addToContractRequest(supplierItem)}"
+																	rendered="#{supplierItem.contractNo ne null}">
+																</p:commandButton>></td>
+
+														</tr>
+													</table>
+												</h:panelGroup></td>
+										</tr>
+
+									</table>
+
+								</p:panel>
+
+							</p:dataGrid>
+						</h:panelGroup>
+					</p:panel>
+		</h:panelGroup>
+		<!-- <p:dialog id="wishListDialog" widgetVar="wishListPopUp" width="500px"
+			modal="true">
+
+			<ui:include src="wishListPopUp.xhtml" />
+
+		</p:dialog>
+
+		<p:dialog id="deleteWishListDialog" widgetVar="deleteWishListPopUp"
+			width="500px" modal="true">
+			<ui:include src="viewWishListItem.xhtml"></ui:include>
+		</p:dialog> -->
+		
+		<!-- [#26282] - start -->
+		<ac:disciplinaryActionHistory 
+			voList="#{catalogueBackingBean.managedBean.disciplineVOs}" 
+			mofView="#{catalogueBackingBean.managedBean.mofSupplier}"
+			dialogMessage="#{catalogueBackingBean.managedBean.disciplinaryMsg}" />
+		<!-- [#26282] - end -->
+		
+		<!-- #27654 start -->
+		<p:dialog id="dlItemSuspended" header="#{lbl['lbl.cm.alert.message']}" 
+			widgetVar="dlItemSuspendedWv" dynamic="true" width="500" height="100" closable="true">
+			<ui:include src="itemSuspendedPopup.xhtml"></ui:include>
+		</p:dialog>
+		<!-- #27654 end -->						
+	</h:panelGroup>
+
+	<ui:include
+		src="/xhtml/sc/directpurchase/requestnote/addToCartPopup.xhtml" />
+	<ui:include
+		src="/xhtml/sc/directpurchase/searchcatalogue/recentPricePopup.xhtml" />
+
+</ui:composition>

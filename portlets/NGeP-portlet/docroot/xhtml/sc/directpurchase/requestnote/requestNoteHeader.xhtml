@@ -1,0 +1,77 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<p:outputPanel id="rnHeader">
+		<div align="left" class="header-info header-spacing" style="width: 100%">
+			<table style="width: 100%">
+				<tr>
+				<c:if test="#{requestNoteBackingBean.managedBean.requestNote.quote.quoteNo != null}">
+					<td style="width:9%">
+						<h:outputLabel
+							value="#{lbl['lbl.sc.request.note.header.rn.no']}" />
+						<br/>
+						<h:outputLabel
+							value="#{lbl['lbl.sc.sq.simple.quote.no']}" />
+					</td>
+					<td class="header-info-text">
+							#{requestNoteBackingBean.managedBean.requestNote.requestNoteNo == null ? lbl['lbl.sc.system.generated'] : requestNoteBackingBean.managedBean.requestNote.requestNoteNo}
+						<br/>
+							#{requestNoteBackingBean.managedBean.requestNote.quote.quoteNo}
+				   </td>
+				 </c:if>
+				 <c:if test="#{requestNoteBackingBean.managedBean.requestNote.quote.quoteNo == null}">
+					<td style="width:9%">
+						<h:outputLabel
+							value="#{lbl['lbl.sc.request.note.header.rn.no']}" />
+					</td>
+					<td class="header-info-text">
+							#{requestNoteBackingBean.managedBean.requestNote.requestNoteNo == null ? lbl['lbl.sc.system.generated'] : requestNoteBackingBean.managedBean.requestNote.requestNoteNo}
+				   </td>
+				 </c:if>
+					<td style="width:3%"><h:outputLabel
+							value="#{lbl['lbl.sc.request.note.header.ptj.name']}" /></td>
+					<td class="header-info-text">
+					  <h:panelGroup rendered="#{requestNoteBackingBean.managedBean.requestNote.isBrandNew()}">
+						#{requestNoteBackingBean.managedBean.requestNote.pmOrgProfile.orgName}
+				     </h:panelGroup>
+				     <h:panelGroup rendered="#{!requestNoteBackingBean.managedBean.requestNote.isBrandNew()}">
+						#{requestNoteBackingBean.retrievePTJByOrgProfileId(requestNoteBackingBean.managedBean.requestNote.pmOrgProfile.orgProfileId, requestNoteBackingBean.managedBean.requestNote.createdDate)}
+				     </h:panelGroup>
+					</td>
+					<td style="width:5%"><h:outputLabel
+							value="#{lbl['lbl.sc.request.note.header.method']}" /></td>
+					<td style="width:12%" class="header-info-text">
+					 <h:panelGroup
+							 rendered="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SC'}">  
+				              #{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.sourceMethod, ParameterConst.reqNoteMethodCode)}
+				        </h:panelGroup> 
+				       <h:panelGroup
+							rendered="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SQ'}">
+				         #{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.sourceMethod, ParameterConst.reqNoteSQMethodCode)}
+				         <p:commandLink id="viewSimpleQuote" partialSubmit="true" process="@this" 
+				                onstart="blockWidget.show();"
+								oncomplete="blockWidget.hide();"
+								action="#{requestNoteBackingBean.showSimpleQuote}">
+								<p:graphicImage value="/css/images/design/ico-view.png" style="vertical-align:middle"
+									title="#{lbl['lbl.sc.rn.simple.quote.tooltip']}" />
+							</p:commandLink>
+						</h:panelGroup></td>
+
+					<td style="width: 5%"><h:outputLabel
+							value="#{lbl['lbl.sc.request.note.created.by']}" /></td>
+					<td style="width:10%" class="header-info-text">
+						#{requestNoteBackingBean.managedBean.createdBy}</td>
+
+					<td style="width: 3%"><h:outputLabel
+							value="#{lbl['lbl.sc.request.note.header.status']}" /></td>
+					<td style="width:13%" class="header-info-text">
+						#{requestNoteBackingBean.managedBean.docStatus}									
+					</td>
+				</tr>
+			</table>
+		</div>
+	</p:outputPanel>
+</ui:composition>

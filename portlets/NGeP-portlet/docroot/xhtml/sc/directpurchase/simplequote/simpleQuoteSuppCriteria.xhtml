@@ -1,0 +1,370 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<ac:lovPopup />
+	<p:panel id="suppCriteria" header="#{lbl['lbl.sc.sq.supp.criteria']}"
+		toggleable="true">
+		<h:panelGroup
+			rendered="#{simpleQuoteBackingBean.managedBean.locAndBusinessFlag}">
+			<h:panelGrid columns="3" style="margin-bottom:10px" cellpadding="5">
+				<p:selectBooleanCheckbox id="byLocId"
+					value="#{simpleQuoteBackingBean.managedBean.byLocality}"
+					disabled="#{!isEditable}">
+					<p:ajax event="change" update="suppCriteria"
+						listener="#{simpleQuoteBackingBean.byLocAndBusinessEvent}"
+						process="@this byLocId" />
+				</p:selectBooleanCheckbox>
+				<h:outputText value="#{lbl['lbl.sc.sq.by.locality']}" />
+				<ac:iconTooltip value="#{lbl['lbl.sc.sq.locality.tooltip']}" />
+
+				<p:selectBooleanCheckbox id="byBussNatureId"
+					value="#{simpleQuoteBackingBean.managedBean.byBusinessNature}"
+					disabled="#{!isEditable}">
+					<p:ajax event="change" update="@([id$=suppCriteriasId])"
+						listener="#{simpleQuoteBackingBean.byLocAndBusinessEvent}"
+						process="@this byBussNatureId" />
+				</p:selectBooleanCheckbox>
+				<h:outputText value="#{lbl['lbl.sc.sq.by.business.nature']}" />
+				<ac:iconTooltip value="#{lbl['lbl.sc.sq.businessnature.tooltip']}" />
+			</h:panelGrid>
+		</h:panelGroup>
+		<h:panelGroup id="suppCriteriasId">
+			<p:tabView
+				activeIndex="#{simpleQuoteBackingBean.managedBean.tabActiveIndex}">
+				<p:ajax event="tabChange"
+					listener="#{simpleQuoteBackingBean.onTabChange}" />
+				<!-- BY LOCATION -->
+				<p:tab title="#{lbl['lbl.sc.sq.supplier.location']}"
+					rendered="#{simpleQuoteBackingBean.managedBean.byLocality}">
+					<h:panelGroup id="locPanel">
+						<table style="width: 100%">
+							<tr>
+								<td style="width: 160px"><p:outputLabel
+										value="#{lbl['lbl.sc.location.level']}" /></td>
+								<td style="width: 152px;"><p:selectOneMenu id="locLevels"
+										value="#{simpleQuoteBackingBean.managedBean.supplierLocLevel}"
+										style="width: 150px;" disabled="#{!isEditable}">
+										<f:selectItems
+											value="#{simpleQuoteBackingBean.locationLevelDropdown}" />
+										<p:ajax event="change" update="locPanel" partialSubmit="true"
+											process="@this"
+											listener="#{simpleQuoteBackingBean.localityLocLevelEvent(simpleQuoteBackingBean.managedBean.supplierLocLevel)}" />
+									</p:selectOneMenu></td>
+								<td><ac:iconTooltip
+										value="#{lbl['lbl.sc.localitycoverage.tooltip']}"/></td>
+							</tr>
+						</table>
+						<p:dataTable id="locationDataTable"
+						    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+							value="#{simpleQuoteBackingBean.managedBean.locationTrees}"
+							var="locationTree" rowIndexVar="index">
+							<p:column headerText="#{lbl['lbl.sc.location.name']}">
+								<p:tree value="#{locationTree}" var="location"
+									selectionMode="#{isEditable ? 'checkbox' : 'null'}">
+									<p:ajax event="select" update="@([id$=locDeleteBtnId])"
+										listener="#{simpleQuoteBackingBean.selectLocationTreeNode}" />
+									<p:ajax event="unselect" update="@([id$=locDeleteBtnId])"
+										listener="#{simpleQuoteBackingBean.unSelectLocationTreeNode}" />
+
+									<p:treeNode type="state">
+										<h:outputText value="#{location.pmState.stateName}" />
+									</p:treeNode>
+									<p:treeNode type="division">
+										<h:outputText value="#{location.pmDivision.divisionName}" />
+									</p:treeNode>
+									<p:treeNode type="district">
+										<h:outputText value="#{location.pmDistrict.districtName}" />
+									</p:treeNode>
+
+								</p:tree>
+							</p:column>
+							<p:column headerText="#{lbl['lbl.sc.action']}" style="text-align: center;">
+							<h:panelGroup rendered="#{simpleQuoteBackingBean.managedBean.supplierLocLevel ne null and  ((simpleQuoteBackingBean.managedBean.supplierLocLevel ne 'ST') or (simpleQuoteBackingBean.managedBean.supplierLocLevel eq 'ST' and index eq'0'))}">
+								<p:commandLink
+									actionListener="#{simpleQuoteBackingBean.editLocation(locationTree,index)}"
+									rendered="#{isEditable}" process="@this"
+									update="@([id$=locPopupPanel])"
+									oncomplete="locationPopup.show();">
+									<p:graphicImage value="/css/images/design/edit.png" />
+								</p:commandLink>
+                             </h:panelGroup>
+							</p:column>
+						</p:dataTable>
+						
+						<div align="right" style="width: 100%">
+							<c:if test="#{isEditable}">
+								<p:commandButton value="#{lbl['lbl.btn.add']}"
+								    styleClass="BtnSpacing"
+									process="@this ,locLevels" update="@form" partialSubmit="true"
+									oncomplete="locationPopup.show();"
+									actionListener="#{simpleQuoteBackingBean.showLocationPopup}" />
+
+								<p:commandButton value="#{lbl['lbl.btn.delete']}" id="locDeleteBtnId"
+								    styleClass="BtnSpacing" disabled="#{simpleQuoteBackingBean.checkLocationDeleteButtonDisable()}"
+									process="@this, locationDataTable" partialSubmit="true"
+									oncomplete="supplierLocationDeletePopUp.show();"
+									update="@([id$=#{supplierLocationDeleteId}])" />
+							</c:if>
+						</div>
+						<ac:confirmationPopup id="supplierLocationDeleteId"
+							widget="supplierLocationDeletePopUp"
+							okAction="simpleQuoteBackingBean.deleteLocationTreeNode"
+							width="400" height="100"
+							title="#{lbl['lbl.msg.confirm.delete.header']}"
+							content="#{lbl['lbl.msg.confirm.delete']}"
+							update="@([id$=locPanel])" />
+
+					</h:panelGroup>
+					<ui:include
+						src="/xhtml/sc/directpurchase/simplequote/simpleQuoteLocationPopup.xhtml" />
+				</p:tab>
+
+				<!-- BY BUSINESS NATURE -->
+				<p:tab title="#{lbl['lbl.sc.sq.business.nature']}"
+					rendered="#{simpleQuoteBackingBean.managedBean.byBusinessNature}">
+					<p:dataTable id="byBusNatureDtl" var="busiNatureCriteria"
+					    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+						rowKey="#{busiNatureCriteria}" rowIndexVar="index"
+						selection="#{simpleQuoteBackingBean.managedBean.selectedBusinessNature}"
+						value="#{simpleQuoteBackingBean.managedBean.businessNatureCriterias}">
+						<ac:paginator for="byBusNatureDtl" />
+						<p:ajax event="rowSelect" update="@([id$=simpleQuoteSupplierCriteriaBusinessNatureDeleteBtnId])" />
+			<p:ajax event="rowUnselect" update="@([id$=simpleQuoteSupplierCriteriaBusinessNatureDeleteBtnId])" />
+			<p:ajax event="rowSelectCheckbox" update="@([id$=simpleQuoteSupplierCriteriaBusinessNatureDeleteBtnId])" />
+			<p:ajax event="rowUnselectCheckbox" update="@([id$=simpleQuoteSupplierCriteriaBusinessNatureDeleteBtnId])" />
+			<p:ajax event="toggleSelect" update="@([id$=simpleQuoteSupplierCriteriaBusinessNatureDeleteBtnId])" />
+						<p:column selectionMode="multiple" styleClass="td-check-box-spacing" 
+						   disabledSelection="#{!isEditable}"/>
+						<p:column headerText="#{lbl['lbl.sc.code']}" style="width:15%">
+							<h:outputText
+								value="#{busiNatureCriteria.pmBusinessNature.levelCode}" />
+						</p:column>
+
+						<p:column headerText="#{lbl['lbl.sc.business.nature.desc']}"
+							style="width:30%">
+							<h:outputText
+								value="#{busiNatureCriteria.pmBusinessNature.levelName}" />
+						</p:column>
+
+					</p:dataTable>
+
+					<c:if test="#{isEditable}">
+						<div class="ppRightBtn BtnSpacing" style="width: 100%">
+							<h:outputText styleClass="instruction"
+								escape="false"
+								value="#{lbl['lbl.sc.instruction.click']}" />
+					
+							<p:commandLink styleClass="instruction"
+								style="padding-left: 4px;padding-right: 4px;font-size: 13px;"
+								ajax="false" immediate="true" process="@this"
+								value="#{lbl['lbl.sc.instruction.here']}"
+								action="#{simpleQuoteBackingBean.downloadBusinessNaturePdf}" />
+					
+							<h:outputText styleClass="instruction"
+								escape="false"
+								value="#{lbl['lbl.sm.download.natureofbusiness']}" />
+							<ac:lov id="busiNatureId" lovId="PM_BUSINESS_NATURE"
+								postUpdateListener="simpleQuoteBackingBean.businessNatureListener(simpleQuoteBackingBean.managedBean.businessNatures)"
+								headerText="#{lbl['lbl.sc.sq.business.nature']}" buttonLabel="#{lbl['lbl.btn.add']}"
+								selectionMode="multiple"
+								saveObject="simpleQuoteBackingBean.managedBean.businessNatures"
+								autoUpdateValue="simpleQuoteBackingBean.managedBean.autoUpdate"
+								conditionField="recordStatus^1|businessLevel^#{ParameterConst.businessNatureLevel}"
+								update=":form:suppCriteria" />
+							<p:commandButton value="#{lbl['lbl.btn.delete']}" id="simpleQuoteSupplierCriteriaBusinessNatureDeleteBtnId"
+							disabled="#{empty simpleQuoteBackingBean.managedBean.selectedBusinessNature}"
+								process="@this,byBusNatureDtl" partialSubmit="true"
+								oncomplete="businessNatureDeletePopUp.show();"
+								update="@([id$=#{businessNatureDeleteId}])" />
+							<ac:confirmationPopup id="businessNatureDeleteId"
+								widget="businessNatureDeletePopUp"
+								okAction="simpleQuoteBackingBean.deleteBusinessNature"
+								width="400" height="100"
+								title="#{lbl['lbl.msg.confirm.delete.header']}"
+								content="#{lbl['lbl.msg.confirm.delete']}" update="@form" />
+						</div>
+					</c:if>
+				</p:tab>
+
+				<!--  BY SUPPLIER   -->
+				<p:tab title="#{lbl['lbl.sc.supplier.list']}"
+					rendered="#{simpleQuoteBackingBean.managedBean.locAndBusinessFlag}">
+					<p:dataTable id="supplierItemDt" var="quoteSupplier"
+					    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+						rowKey="#{quoteSupplier}" rowIndexVar="index"
+						selection="#{simpleQuoteBackingBean.managedBean.selectedSupplierList}"
+						value="#{simpleQuoteBackingBean.managedBean.supplierList}">
+						<ac:paginator for="supplierItemDt" />
+						<p:ajax event="rowSelect" update="@([id$=simpleQuoteSuppliercriteriaSupplierListDeleteBtnId])" />
+			<p:ajax event="rowUnselect" update="@([id$=simpleQuoteSuppliercriteriaSupplierListDeleteBtnId])" />
+			<p:ajax event="rowSelectCheckbox" update="@([id$=simpleQuoteSuppliercriteriaSupplierListDeleteBtnId])" />
+			<p:ajax event="rowUnselectCheckbox" update="@([id$=simpleQuoteSuppliercriteriaSupplierListDeleteBtnId])" />
+			<p:ajax event="toggleSelect" update="@([id$=simpleQuoteSuppliercriteriaSupplierListDeleteBtnId])" />
+						<p:column selectionMode="multiple" styleClass="td-check-box-spacing" 
+						 disabledSelection="#{!isEditable}"/>
+						<p:column headerText="#{lbl['lbl.sc.supplier']}" style="width:30%">
+							<h:outputText value="#{quoteSupplier.supplierName}" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sc.supplier.ep.no']}"
+							style="width:10%">
+							<h:outputText value="#{quoteSupplier.smSupplier.epNo}" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sc.mof.no']}" style="width:10%">
+							<h:outputText value="#{quoteSupplier.mofNumber}" />
+						</p:column>
+						<p:column style="white-space:normal;text-align:center;width:20%;">
+							<f:facet name="header" style="white-space:normal;">
+								<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}"/>
+								<ac:iconTooltip value="#{lbl['lbl.sc.tooltip.disciplinary.action.taken']}"/>
+							</f:facet>
+							<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								rendered="#{quoteSupplier.smSupplier ne null and simpleQuoteBackingBean.getDisciplinaryActionActive(quoteSupplier.smSupplier)}"
+								action="#{simpleQuoteBackingBean.supplierDisciplinaryActionInfo(quoteSupplier)}" 
+								process="@this" partialSubmit="true" update=":form">
+								<h:outputText value="#{lbl['lbl.sc.da.yes']}" style="color:red;"/>
+							</p:commandLink>
+							<h:outputText rendered="#{quoteSupplier.smSupplier ne null and !simpleQuoteBackingBean.getDisciplinaryActionActive(quoteSupplier.smSupplier)}" value="#{lbl['lbl.sc.da.no']}"/>									   
+						</p:column>
+					</p:dataTable>
+
+					<c:if test="#{isEditable}">
+						<div class="ppRightBtn BtnSpacing" style="width: 100%">
+							<ac:lov id="supplier" lovId="SM_SUPPLIER_SQ"
+								postUpdateListener="simpleQuoteBackingBean.supplierListListener(simpleQuoteBackingBean.managedBean.smSuppliers, simpleQuoteBackingBean.managedBean.scQuote)"
+								headerText="#{lbl['lbl.sc.supplier.list']}" buttonLabel="#{lbl['lbl.btn.add']}"
+								selectionMode="multiple" update=":form:suppCriteria"
+								saveObject="simpleQuoteBackingBean.managedBean.smSuppliers"
+								autoUpdateValue="simpleQuoteBackingBean.managedBean.autoUpdate"
+								conditionField="#{simpleQuoteBackingBean.supplierListCriteria}" />
+							<p:commandButton value="#{lbl['lbl.btn.delete']}" id="simpleQuoteSuppliercriteriaSupplierListDeleteBtnId"
+							disabled="#{empty simpleQuoteBackingBean.managedBean.selectedSupplierList}"
+								process="@this,supplierItemDt" partialSubmit="true"
+								oncomplete="supplierListDeletePopUp.show();"
+								update="@([id$=#{supplierListDeleteId}])" />
+							<ac:confirmationPopup id="supplierListDeleteId"
+								widget="supplierListDeletePopUp"
+								okAction="simpleQuoteBackingBean.deleteSupplier" width="400"
+								height="100" title="#{lbl['lbl.msg.confirm.delete.header']}"
+								content="#{lbl['lbl.msg.confirm.delete']}" update="@form" />
+						</div>
+					</c:if>
+				</p:tab>
+
+				<!--  BY Government Seller   -->
+				<p:tab title="#{lbl['lbl.sc.agency']}"
+					rendered="#{simpleQuoteBackingBean.managedBean.g2GFlag}">
+					<p:dataTable id="govtSellerId" var="data" rowKey="#{data}"
+						rowIndexVar="index"
+						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+						selection="#{simpleQuoteBackingBean.managedBean.selectedGovtSellers}"
+						value="#{simpleQuoteBackingBean.managedBean.govtSellers}">
+						<ac:paginator for="govtSellerId" />
+						<p:ajax event="rowSelect" update="@([id$=simpleQuoteSuppliercriteriaAgencyDeleteBtnId])" />
+			<p:ajax event="rowUnselect" update="@([id$=simpleQuoteSuppliercriteriaAgencyDeleteBtnId])" />
+			<p:ajax event="rowSelectCheckbox" update="@([id$=simpleQuoteSuppliercriteriaAgencyDeleteBtnId])" />
+			<p:ajax event="rowUnselectCheckbox" update="@([id$=simpleQuoteSuppliercriteriaAgencyDeleteBtnId])" />
+			<p:ajax event="toggleSelect" update="@([id$=simpleQuoteSuppliercriteriaAgencyDeleteBtnId])" />
+						<p:column selectionMode="multiple" styleClass="td-check-box-spacing"  
+						  disabledSelection="#{!isEditable}"/>
+						<p:column headerText="#{lbl['lbl.sc.supplier']}" style="width:30%">
+							<h:outputText value="#{data.supplierName}" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sc.supplier.ep.no']}"
+							style="width:10%">
+							<h:outputText value="#{data.smSupplier.epNo}" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sc.sq.organization.type']}"
+							style="width:10%">
+							<h:outputText
+								value="#{simpleQuoteBackingBean.getParameterDesc(data.smSupplier.pmOrgProfile.orgTypeCode)}" />
+						</p:column>
+					</p:dataTable>
+
+					<c:if test="#{isEditable}">
+						<div class="ppRightBtn BtnSpacing" style="width: 100%">
+							<ac:lov id="govtSeller" lovId="PM_ORG_PROFILE"
+								postUpdateListener="simpleQuoteBackingBean.govtSellerListener(simpleQuoteBackingBean.managedBean.orgProfiles)"
+								headerText="#{lbl['lbl.sc.simple.quote.government.seller']}"
+								buttonLabel="#{lbl['lbl.btn.add']}" selectionMode="multiple"
+								saveObject="simpleQuoteBackingBean.managedBean.orgProfiles"
+								autoUpdateValue="simpleQuoteBackingBean.managedBean.autoUpdate"
+								conditionField="#{simpleQuoteBackingBean.govtSellerCriteria}" update=":form:suppCriteria" />
+							<p:commandButton value="#{lbl['lbl.btn.delete']}" id="simpleQuoteSuppliercriteriaAgencyDeleteBtnId"
+							disabled="#{empty simpleQuoteBackingBean.managedBean.selectedGovtSellers}"
+								process="@this,govtSellerId" partialSubmit="true"
+								oncomplete="govtSellerDeletePopUp.show();"
+								update="@([id$=#{govtSellerDeleteId}])" />
+							<ac:confirmationPopup id="govtSellerDeleteId"
+								widget="govtSellerDeletePopUp"
+								okAction="simpleQuoteBackingBean.deleteGovtSeller" width="400"
+								height="100" title="#{lbl['lbl.msg.confirm.delete.header']}"
+								content="#{lbl['lbl.msg.confirm.delete']}" update="@form" />
+						</div>
+					</c:if>
+				</p:tab>
+
+				<!-- Panel Supplier   -->
+				<p:tab title="#{lbl['lbl.sc.sq.panel.supplier']}"
+					rendered="#{simpleQuoteBackingBean.managedBean.scQuote.panel}">
+					<p:dataTable id="bypanelItemId" var="data" rowKey="#{data}"
+					    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+						rowIndexVar="index"
+						selection="#{simpleQuoteBackingBean.managedBean.selectedPanelSuppliers}"
+						value="#{simpleQuoteBackingBean.managedBean.panelSuppliers}">
+
+						<ac:paginator for="bypanelItemId" />
+						<p:ajax event="rowSelect" update="@([id$=simpleQuoteSupplierCriteriaPanelSupplierDeleteBtnId])" />
+			<p:ajax event="rowUnselect" update="@([id$=simpleQuoteSupplierCriteriaPanelSupplierDeleteBtnId])" />
+			<p:ajax event="rowSelectCheckbox" update="@([id$=simpleQuoteSupplierCriteriaPanelSupplierDeleteBtnId])" />
+			<p:ajax event="rowUnselectCheckbox" update="@([id$=simpleQuoteSupplierCriteriaPanelSupplierDeleteBtnId])" />
+			<p:ajax event="toggleSelect" update="@([id$=simpleQuoteSupplierCriteriaPanelSupplierDeleteBtnId])" />
+						<p:column selectionMode="multiple" styleClass="td-check-box-spacing" 
+						  disabledSelection="#{!isEditable}"/>
+						<p:column headerText="#{lbl['lbl.sc.supplier']}" style="width:30%">
+							<h:outputText value="#{data.supplierName}" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sc.supplier.ep.no']}"
+							style="width:10%">
+							<h:outputText value="#{data.smSupplier.epNo}" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sc.mof.no']}" style="width:10%">
+							<h:outputText value="#{data.mofNumber}" />
+						</p:column>
+						<c:if test="#{simpleQuoteBackingBean.managedBean.scQuote.zonal}">
+							<p:column headerText="#{lbl['lbl.sc.zone']}" style="width:20%">
+								<h:outputText value="#{data.tplSpecZoneDtl.zoneName}" />
+							</p:column>
+						</c:if>
+					</p:dataTable>
+
+					<c:if test="#{isEditable}">
+						<div class="ppRightBtn BtnSpacing" style="width: 100%">
+							<p:commandButton value="#{lbl['lbl.btn.delete']}" id="simpleQuoteSupplierCriteriaPanelSupplierDeleteBtnId"
+							disabled="#{empty simpleQuoteBackingBean.managedBean.selectedPanelSuppliers}"
+								process="@this,bypanelItemId" partialSubmit="true"
+								rendered="#{isEditable}"
+								oncomplete="panelSupplierDeletePopUp.show();"
+								update="@([id$=#{panelSupplierDeleteId}])" />
+							<ac:confirmationPopup id="panelSupplierDeleteId"
+								widget="panelSupplierDeletePopUp"
+								okAction="simpleQuoteBackingBean.deletePanelSupplier"
+								width="400" height="100"
+								title="#{lbl['lbl.msg.confirm.delete.header']}"
+								content="#{lbl['lbl.msg.confirm.delete']}" update="@form" />
+						</div>
+
+					</c:if>
+				</p:tab>
+
+			</p:tabView>
+		</h:panelGroup>
+	</p:panel>
+	<ac:disciplinaryActionHistory voList="#{simpleQuoteBackingBean.managedBean.disciplineVOs}" btnView="true"/>
+
+</ui:composition>

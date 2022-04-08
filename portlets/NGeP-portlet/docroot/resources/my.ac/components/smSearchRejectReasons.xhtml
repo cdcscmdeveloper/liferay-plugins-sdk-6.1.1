@@ -1,0 +1,173 @@
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<cc:interface>
+		
+	</cc:interface>
+
+	<cc:implementation>
+		<style>
+			.selectRejectReasonTable .ui-chkbox-box{
+      	 	   pointer-events: all;
+			}
+			.selectRejectReasonTable .ui-widget-content{
+    			pointer-events: none;
+			}
+		</style>
+			<p:outputPanel layout="block" id="rejectBlockPanel">
+			
+				<p:messages id="searchRejectMsgId" showDetail="true" autoUpdate="true" closable="true" showSummary="false"/>
+				
+				<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
+					<table style="width: 100%">
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.rejection.reasons']}" /></td>
+							<td>
+								<p:inputText id="rejectReasonSearchId"
+									label="#{lbl['lbl.sm.rejection.reasons']}"
+									value="#{backingBean.managedBean.searchRejectReason}"
+									onkeypress="if (event.keyCode == 13) { rejectReasonSearch.jq.click(); return false;}"
+									size="35" 
+									partialSubmit="true">
+									<p:ajax event="blur" process="@this" update="@this"/>
+								</p:inputText>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<div style="text-align: right;">
+									<p:commandButton value="#{lbl['lbl.btn.search']}" 
+										action="#{backingBean.searchRejectedReason()}"
+										onstart="rejectBlockPanelWidget.show()" oncomplete="rejectBlockPanelWidget.hide()"
+										update="rejectBlockPanel" process="@this, rejectReasonSearchId" widgetVar="rejectReasonSearch">
+									</p:commandButton>
+									<p:commandButton value="#{lbl['lbl.btn.reset']}" process="@this"
+										action="#{backingBean.resetSearchRejectedReason}"
+										update=":#{p:component('rejectBlockPanel')}" 
+										onstart="rejectBlockPanelWidget.show()" oncomplete="rejectBlockPanelWidget.hide()">
+									</p:commandButton>
+								</div>
+							</td>
+						</tr>
+					</table>
+					
+					<p:panel header="#{lbl['lbl.sm.result']}" toggleable="true" id="resultRejectedReasonPanelId">
+						<p:dataTable var="reason" widgetVar="reasonWidgetVar"
+							editable="false" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+							value="#{backingBean.managedBean.reasonDescList}"
+							selection="#{backingBean.managedBean.selectedReasonDescs}"
+							rowKey="#{reason}" rowIndexVar="index" id="reasonDtId"
+							styleClass="selectRejectReasonTable">
+							
+							<ac:paginator for="reasonDtId" />
+							<p:ajax event="rowSelect" listener="#{backingBean.onTickOrUnTickRecommendReason}"
+								update=":#{p:component('rejectBlockPanel')}"></p:ajax>
+							<p:ajax event="rowUnselect"
+								listener="#{backingBean.unTickRecommendReason}"
+								update=":#{p:component('rejectBlockPanel')}"></p:ajax>
+							<p:ajax event="rowSelectCheckbox"
+								listener="#{backingBean.onTickOrUnTickRecommendReason}"
+								update=":#{p:component('rejectBlockPanel')}"></p:ajax>
+							<p:ajax event="rowUnselectCheckbox"
+								listener="#{backingBean.unTickRecommendReason}"
+								update=":#{p:component('rejectBlockPanel')}"></p:ajax>
+							<p:ajax event="rowDblselect"
+								listener="#{backingBean.oonTickOrUnTickRecommendReason}"
+								update=":#{p:component('rejectBlockPanel')}"></p:ajax>
+							<p:ajax event="toggleSelect"
+								listener="#{backingBean.allOnTickOrUnTickRecommendReason}"
+								update=":#{p:component('rejectBlockPanel')}"></p:ajax>
+							
+							<p:column selectionMode="multiple" width="1%" />
+							
+							<p:column headerText="#{lbl['lbl.sm.rejection.reasons']}">
+								<h:outputText value="#{reason.reasonDesc}" />
+							</p:column>
+							
+						</p:dataTable>
+						
+					</p:panel>
+				
+				</c:if>
+				
+				<!-- #15629 start 23/2/2021 -->
+				<c:if test="#{backingBean.managedBean.poUser and backingBean.managedBean.rejectReasonReqd}">
+				<p:outputPanel id="rejRemarksPanelTst">
+					<table style="width: 100%">
+						<tr>
+							<td style="vertical-align: top; width: 15%"><p:outputLabel
+									value="#{lbl['lbl.sm.remarks.rejection']}" id="rejReasonLbl"
+									rendered="#{backingBean.managedBean.rejectReasonReqd}" /> <p:outputLabel
+									value="*" styleClass="mandatory" id="rejReasonLblMndty"
+									rendered="#{backingBean.managedBean.rejectReasonReqd}" /></td>
+							<td style="padding-top: 5px;"><p:inputTextarea cols="100"
+									style="width : auto;"
+									rendered="#{backingBean.managedBean.rejectReasonReqd}"
+									value="#{backingBean.managedBean.applnRejectionRemarks}"
+									id="rmrksForRejectTxtArea" rows="5"
+									validatorMessage="#{lbl['lbl.sm.remarks.rejection']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit.po']}"
+									label="#{lbl['lbl.sm.remarks.rejection']}"
+									required="#{backingBean.managedBean.valueReqd and backingBean.managedBean.rejectReasonReqd}"
+									maxlength="4000">
+									<f:validateLength maximum="4000" />
+									<!-- 30974 - start -->
+									<p:ajax event="blur" process="@this" update="@this"/>
+									<!-- 30974 - end -->
+								</p:inputTextarea> <p:message id="rmrksForRejectTxtAreaMsg"
+									for="rmrksForRejectTxtArea" showSummary="true" showDetail="false"
+									display="icon" /></td>
+						</tr>
+					</table>
+				</p:outputPanel>
+				</c:if>
+				
+				<!-- #15629 start -->
+				<c:if test="#{backingBean.managedBean.approverUser}">
+					<table style="width: 100%">
+						<tr>
+							<td colspan="2"><p:outputLabel value="#{lbl['lbl.sm.po.remarks']}" /></td>
+							<td><h:outputText value="#{backingBean.managedBean.poSecReview.remarkToApprover}"/></td>
+						</tr>
+						<tr>
+							<td colspan="2"><p:outputLabel
+									value="#{lbl['lbl.sm.approvremark.new.remarknotes']}" id="recApprvRejReasonLbl"/>
+									<p:outputLabel
+										value="*" styleClass="mandatory" id="recApprvRejReasonLblMndty"
+										rendered="#{backingBean.managedBean.rejectReasonReqd}" /></td>
+							<!-- #15629 start 25/2/2021 -->
+							<td style="padding-top: 5px;"><p:inputTextarea cols="90"
+									style="width : auto;" rows="10"
+									value="#{backingBean.managedBean.applnRejectionRemarks}"
+									id="rmrksForApprovTxtArea" label="#{lbl['lbl.sm.remarks.approval']}"
+									validatorMessage="#{lbl['lbl.sm.approvremark.new.remarknotes']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit.po']}"
+									required="#{backingBean.managedBean.valueReqd and backingBean.managedBean.rejectReasonReqd}"
+									maxlength="4000">
+									<f:validateLength maximum="4000" />
+									<!-- 30974 - start -->
+									<p:ajax event="blur" process="@this" update="@this"/>
+									<!-- 30974 - end -->
+							<!-- #15629 end 25/2/2021 -->
+							</p:inputTextarea> <p:message id="rmrksForApprovTxtAreaMsg" for="rmrksForApprovTxtArea"
+								showSummary="true" showDetail="false" display="icon" /></td>
+						</tr>
+					</table>
+				</c:if>
+                <!-- #15629 end -->
+                <!-- #15629 end 23/2/2021 -->
+							
+				<div align="right">
+					<cc:insertChildren />
+				</div>
+				<p:blockUI block="rejectBlockPanel" widgetVar="rejectBlockPanelWidget">
+					<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+				</p:blockUI>
+			</p:outputPanel>
+			   
+	</cc:implementation>
+</ui:component>

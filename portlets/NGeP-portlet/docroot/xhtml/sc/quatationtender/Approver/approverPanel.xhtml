@@ -1,0 +1,120 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel>
+		<ui:param name="scQt" value="#{approvalBackingBean.managedBean.qt}" />
+		<ui:param name="scQtApproval" value="#{approvalBackingBean.managedBean.scQtApproval}" />
+		
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/icon_loadingLarge.gif" />
+		</p:blockUI>
+		<!-- <p:messages id="specApprovalMessages" showDetail="true"
+			autoUpdate="#{approvalBackingBean.managedBean.autoUpdate}"
+			closable="true" showSummary="false" severity="error, info" /> -->
+
+		
+		<c:if
+			test="${approvalBackingBean.managedBean.approvalType == ParameterConst.approvalCategoryBudget}">
+			<ui:include src="requestPTJdetails.xhtml" />
+			<ui:include src="approveremarksdetails.xhtml" />
+		</c:if>
+		<c:if
+			test="${approvalBackingBean.managedBean.approvalType == ParameterConst.approvalCategoryBpk}">
+			<ui:include src="requestPTJdetails.xhtml" />
+			<ui:include src="bpkApproval.xhtml" />
+			<ui:include src="approveremarksdetails.xhtml" />
+		</c:if>
+		<c:if
+			test="${approvalBackingBean.managedBean.approvalType == ParameterConst.approvalCategoryPtj}">
+			<ui:include src="requestPTJdetails.xhtml" />
+			<ui:include src="ptjApprovalextendcls.xhtml" />
+			<ui:include src="approveremarksdetails.xhtml" />
+		</c:if>
+		<c:if
+			test="${approvalBackingBean.managedBean.approvalType == ParameterConst.approvalCategoryCommitteeeApointment}">
+			<ui:include src="requestPTJdetails.xhtml" />
+			<ui:include src="approverCommittee.xhtml" />
+			<!-- <ui:include src="approveremarksdetails.xhtml" /> -->
+	
+	   <ac:scRemarkAndAttachment
+		remarkList="#{qTDetailBB.managedBean.scQtApproval.scQtApprovalRemarks}"
+		attachmentList="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalAttachments}"
+		readonly="#{approvalBackingBean.managedBean.readOnly and !approvalBackingBean.managedBean.approvalEditableSection}"
+		fileUploadListener="approvalBackingBean.handleFileUpload"
+		instruction="#{approvalBackingBean.isReviceOrReject() ? lbl['lbl.sc.approval.remarks.instruction'] : ''}"
+		autoUpdateValue="#{approvalBackingBean.managedBean.autoUpdate}" />
+		
+		</c:if>
+		<c:if
+			test="${approvalBackingBean.managedBean.approvalType == ParameterConst.approvalRequestPublicationApproval}">
+			<ui:include src="requestPTJdetails.xhtml" />
+			<ui:include src="publicApproval.xhtml" />
+		</c:if>
+
+		<c:if
+			test="${approvalBackingBean.managedBean.approvalType == ParameterConst.approvalCategoryFinalizationCommittee or
+				approvalBackingBean.managedBean.approvalType == ParameterConst.approvalCategoryProcurementBoard}">
+			<ui:include src="requestPTJdetails.xhtml" />
+			<ui:include src="FinalaizationCommitteeApproval.xhtml" />
+			<ui:include src="approveremarksdetails.xhtml" />
+		</c:if>
+		
+		
+		
+		<ui:remove>#25077 - Start</ui:remove>	
+		<c:if test="#{approvalBackingBean.managedBean.currentStatusId ne QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL}">
+		<ui:remove>#25077 - End</ui:remove>	
+		  <p:dialog id="reviceApprovalDlg" widgetVar="reviceApprovalDlg"
+				header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
+				resizable="false" width="360" height="90" modal="true"
+				closable="false">
+	
+				<table>
+					<tr>
+						<td align="center"><p:outputLabel
+								value="#{lbl['lbl.sc.dialog.confirm.revise']}" /></td>
+					</tr>
+				</table>
+				<p:spacer height="1" />
+				<div class="ppRightBtn">
+					<p:commandButton widgetVar="reviseOKBtn" onclick="reviseOKBtn.disable(); reviseCANCELBtn.disable(); reviceApprovalDlg.hide(); blockWidget.show();" value="#{lbl['lbl.btn.yes']}"
+						oncomplete="reviceApprovalDlg.hide(); blockWidget.hide()"
+						action="#{approvalBackingBean.updateReviceBpmTask}" />
+					<p:commandButton widgetVar="reviseCANCELBtn" value="#{lbl['lbl.btn.no']}"
+						onclick="reviceApprovalDlg.hide();" type="button" />
+				</div>
+		  </p:dialog>
+	    <ui:remove>#25077 - Start</ui:remove>	
+		</c:if>
+		<ui:remove>#25077 - End</ui:remove>
+		
+		<p:dialog id="rejectApprovalDlg" widgetVar="rejectApprovalDlg"
+			header="#{lbl['lbl.sc.dialog.confirm.header.reject']}"
+			resizable="false" width="350" height="90" modal="true">
+
+			<table>
+				<tr>
+					<td align="center"><p:outputLabel
+							value="#{lbl['lbl.sc.dialog.confirm.reject']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					oncomplete="rejectApprovalDlg.hide();"
+					action="#{approvalBackingBean.updateRejectBpmTask}" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="rejectApprovalDlg.hide();" type="button" />
+			</div>
+		</p:dialog>
+		
+				
+	</p:panel>
+</ui:composition>

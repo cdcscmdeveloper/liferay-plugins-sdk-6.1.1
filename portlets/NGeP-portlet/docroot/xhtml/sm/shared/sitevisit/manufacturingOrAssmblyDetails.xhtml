@@ -1,0 +1,181 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.sm.manufacture.panHdr']}"
+		id="manufacturingPanel">
+
+		<p:dataTable
+			value="#{svoSiteVisitBackingBean.managedBean.manufacturingDtlLs}"
+			var="manufacturingDtl"
+			selection="#{svoSiteVisitBackingBean.managedBean.selectedManufacturingList}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			id="smManufacturingDtl" rowKey="#{manufacturingDtl}">
+
+			<p:column selectionMode="multiple" style="width:2%"
+				rendered="#{!viewFlag and not empty svoSiteVisitBackingBean.managedBean.manufacturingDtlLs}" />	
+			<!-- #24964 -->
+			<p:ajax event="rowSelectCheckbox" update=":#{p:component('btnManufacturingListDelete')}" />
+			<p:ajax event="rowUnselectCheckbox" update=":#{p:component('btnManufacturingListDelete')}" />
+			<p:ajax event="rowSelect" update=":#{p:component('btnManufacturingListDelete')}" />
+        	<p:ajax event="rowUnselect" update=":#{p:component('btnManufacturingListDelete')}" />
+        	<p:ajax event="toggleSelect" update=":#{p:component('btnManufacturingListDelete')}" />
+
+			<p:column headerText="#{lbl['lbl.sm.manufacture.prdType']}">
+				<h:outputText value="#{manufacturingDtl.goodsType}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sm.manufacture.brand']}">
+				<h:outputText value="#{manufacturingDtl.brand}" />
+			</p:column>
+
+			<p:column
+				headerText="#{lbl['lbl.sm.manufacture.prodCap']} / #{lbl['lbl.sm.manufacture.month']}">
+				<h:outputText value="#{manufacturingDtl.productionCapacity}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sm.manufacture.mesUnit']}">
+				<h:outputText value="#{manufacturingDtl.uom}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sm.action']}"
+				rendered="#{!viewFlag}">
+				<p:commandLink id="btnEditManufacturing"
+					oncomplete="manufacturingDialog.show();"
+					update=":#{p:component('manufacturingDlg')}"
+					rendered="#{!viewFlag}"
+					action="#{svoSiteVisitBackingBean.editMachine(manufacturingDtl)}"
+					process="@this">
+					<p:graphicImage value="/css/images/design/edit.png"
+						title="#{lbl['lbl.sm.edit']}" />
+				</p:commandLink>
+				<!-- #24964 -->
+				<p:graphicImage id="icon_alert" style="vertical-align:top"
+					value="/css/images/design/icon_alert.png" 
+					rendered="#{svoSiteVisitBackingBean.isSVOSmManufacturingDtlDifferent(manufacturingDtl)}"/>
+			</p:column>
+
+		</p:dataTable>
+
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+				oncomplete="manufacturingDialog.show();"
+				action="#{svoSiteVisitBackingBean.addAdditionalManufacturing}"
+				rendered="#{!viewFlag}" update="smManufacturingDtl,manufacturingDlg">
+			</p:commandButton>
+			<!-- #24964 -->
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				oncomplete="additionalManufacturingDeletePopUp.show();"
+				rendered="#{!viewFlag}" update="smManufacturingDtl" id="btnManufacturingListDelete"
+				disabled="#{empty svoSiteVisitBackingBean.managedBean.selectedManufacturingList}">
+			</p:commandButton>
+		</div>
+
+	</p:panel>
+
+	<p:dialog id="manufacturingDlg"
+		header="#{lbl['lbl.sm.manufacture.diaHdr']}"
+		widgetVar="manufacturingDialog" modal="true" width="500px"
+		dynamic="true" closable="true">
+
+		<p:messages id="manufacturingDialogMsg" showDetail="true"
+			autoUpdate="#{!empty param['disableMsgAutoUpdateMac']}"
+			closable="true" showSummary="false" />
+
+		<table>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.manufacture.prdType']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:inputText label="#{lbl['lbl.sm.manufacture.prdType']}"
+						id="smManuDtlProdType" size="35" maxlength="50"
+						required="#{!empty param['disableMsgAutoUpdateMac']}"
+						value="#{svoSiteVisitBackingBean.managedBean.selectedManufacturer.goodsType}" />
+					<!-- #24964 -->
+					<ac:smFieldChangeAlertSVO
+						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedManufacturer and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
+						oriValue="#{svoSiteVisitBackingBean.managedBean.latestManufacturer.goodsType}" 
+						currValue="#{svoSiteVisitBackingBean.managedBean.selectedManufacturer.goodsType}" 
+						alertValue="#{svoSiteVisitBackingBean.managedBean.latestManufacturer.goodsType}"/>
+					<p:message id="smManuDtlProdTypeMsg" for="smManuDtlProdType"
+						showSummary="true" showDetail="false" display="icon" /></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.manufacture.brand']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:inputText label="#{lbl['lbl.sm.manufacture.brand']}"
+						id="smManuDtlBrdType" size="35" maxlength="50"
+						required="#{!empty param['disableMsgAutoUpdateMac']}"
+						value="#{svoSiteVisitBackingBean.managedBean.selectedManufacturer.brand}" />
+					<!-- #24964 -->
+					<ac:smFieldChangeAlertSVO
+						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedManufacturer and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
+						oriValue="#{svoSiteVisitBackingBean.managedBean.latestManufacturer.brand}" 
+						currValue="#{svoSiteVisitBackingBean.managedBean.selectedManufacturer.brand}" 
+						alertValue="#{svoSiteVisitBackingBean.managedBean.latestManufacturer.brand}"/>
+					<p:message id="smManuDtlBrdTypeMsg" for="smManuDtlBrdType"
+						showSummary="true" showDetail="false" display="icon" /></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sm.manufacture.prodCapMonth']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:inputText label="#{lbl['lbl.sm.manufacture.prodCap']}"
+						id="smManuDtlProdCap" size="35" maxlength="6"
+						required="#{!empty param['disableMsgAutoUpdateMac']}"
+						value="#{svoSiteVisitBackingBean.managedBean.selectedManufacturer.productionCapacity}" />
+					<!-- #24964 -->
+					<ac:smFieldChangeAlertSVO
+						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedManufacturer and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
+						oriValue="#{svoSiteVisitBackingBean.managedBean.latestManufacturer.productionCapacity}" 
+						currValue="#{svoSiteVisitBackingBean.managedBean.selectedManufacturer.productionCapacity}" 
+						alertValue="#{svoSiteVisitBackingBean.managedBean.latestManufacturer.productionCapacity}"/>
+					<p:message id="smManuDtlProdCapMsg" for="smManuDtlProdCap"
+						showSummary="true" showDetail="false" display="icon" /></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.manufacture.mesUnit']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td valign="top"><p:inputText
+						label="#{lbl['lbl.sm.manufacture.mesUnit']}" id="smManuDtlMesUnit"
+						maxlength="20"
+						required="#{!empty param['disableMsgAutoUpdateMac']}"
+						value="#{svoSiteVisitBackingBean.managedBean.selectedManufacturer.uom}" />
+					<!-- #24964 -->
+					<ac:smFieldChangeAlertSVO
+						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedManufacturer and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
+						oriValue="#{svoSiteVisitBackingBean.managedBean.latestManufacturer.uom}" 
+						currValue="#{svoSiteVisitBackingBean.managedBean.selectedManufacturer.uom}" 
+						alertValue="#{svoSiteVisitBackingBean.managedBean.latestManufacturer.uom}"/>
+					<p:message id="smManuDtlMesUnitMsg" for="smManuDtlMesUnit"
+						showSummary="true" showDetail="false" display="icon" /></td>
+			</tr>
+		</table>
+
+		<br />
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.save']}"
+				update="smManufacturingDtl"
+				action="#{svoSiteVisitBackingBean.saveSmManufacturingDtl}">
+				<f:param name="disableMsgAutoUpdateMac" value="true" />
+			</p:commandButton>
+
+		</div>
+
+	</p:dialog>
+
+	<ac:confirmationPopup id="additionalManufacturingDeletePopUpId"
+		widget="additionalManufacturingDeletePopUp"
+		okAction="svoSiteVisitBackingBean.removeAdditionalManufacturingDtl()"
+		width="400" height="100"
+		title="#{lbl['lbl.msg.confirm.delete.header']}"
+		content="#{lbl['lbl.msg.confirm.delete']}"
+		update=":#{p:component('manufacturingPanel')}" />
+
+</ui:composition>

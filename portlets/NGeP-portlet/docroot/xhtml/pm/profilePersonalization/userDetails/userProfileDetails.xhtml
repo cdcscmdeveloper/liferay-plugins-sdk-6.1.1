@@ -1,0 +1,270 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">	
+	
+	<style>
+		div[id$="somSalutationMsg"], div[id$="itEmailMsg"],div[id$="itTelNoMsg"],div[id$="itMobileNoMsg"],div[id$="itFaxNoMsg"] {
+    			display:inline-block;
+    			vertical-align:middle;
+    			margin-bottom:5px;
+		}
+			
+		div[id$="tfno"] > br ,div[id$="tfaxno"] > br ,div[id$="mbno"] > br {
+   		  display: none;
+		}
+		
+		.ppDisplayTextL {
+			width: 230px !important;
+			}
+		.ui-selectonemenu.ppDropDownWidthL label{
+			width: 240px !important;
+		}
+		.ui-selectonemenu.ppDropDownWidthL{
+			width: 240px !important;
+		}
+		.icTextL {
+			width: 265px !important;
+		}
+	</style>
+
+	<!-- User Profile -->
+	<p:panel header="#{lbl['lbl.pm.profiles.user.profile']}" toggleable="true">
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2">
+			<p:outputPanel id="opUserProfileDet">
+				<table class="ppTwoTable">
+					<tr>
+						<th width="20%">
+							<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.loginid']}" />
+						</th>
+						<td>
+							<p:inputText styleClass="ppDisplayTextL" id="itLoginId" maxlength="75"
+								style="text-transform: uppercase;"
+								label="#{lbl['lbl.pm.profiles.userdetails.loginid']}"
+								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.loginId}"
+								disabled="true"/>
+						</td>
+						<!-- Profile Photo -->
+						<td colspan="2" rowspan="9">
+							<h:graphicImage id="giUserImage"
+										value="#{profilePersonalizationBackingBean.userImagePathWithDefaultImage(profilePersonalizationBackingBean.managedBean.selectedUser.loginId)}"
+									    width="140px" height="160px" />	
+							<div align="left">
+								<p:commandButton value="#{lbl['lbl.pm.profiles.userdetails.changepic']}" 
+									immediate="true" oncomplete="dlImageUpload.show();"  />
+								<p:commandButton value="#{lbl['lbl.pm.profiles.userdetails.deletepic']}" 
+									immediate="true" update="giUserImage" action="#{profilePersonalizationBackingBean.deletePortrait()}" />
+							</div>
+						</td>
+					</tr>
+					
+					<tr>
+						<th width="20%">
+							<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.salutation']}" /> 
+							<p:outputLabel value="*" styleClass="mandatory" />
+						</th>
+						<td>
+							<p:selectOneMenu styleClass="ppDropDownWidthL" id="somSalutation" 
+								required="#{!empty param['disableValidation']}" valueChangeListener="#{profilePersonalizationBackingBean.saluationChanged}"
+								label="#{lbl['lbl.pm.profiles.userdetails.salutation']}"
+								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.salutationCode.salutationId}">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+								<f:selectItems value="#{profilePersonalizationBackingBean.salutationOptions()}" 
+									var="salutation" itemLabel="#{salutation.salutationName}"
+									itemValue="#{salutation.salutationId}"/>
+							</p:selectOneMenu>
+							<p:message id="somSalutationMsg" for="somSalutation" display="icon" />
+						</td>
+						<th></th>
+						<td></td>
+					</tr>
+
+					<tr>
+						<th width="20%">
+							<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.username']}" /> 
+							<p:outputLabel value="*" styleClass="mandatory" />
+						</th>
+						<td>
+							<p:inputText styleClass="ppDisplayTextL" disabled="true" maxlength="50" label="#{lbl['lbl.pm.profiles.userdetails.username']}"
+								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.userName}"/>
+						</td>
+						<th></th>
+						<td></td>
+					</tr>
+
+					<tr>
+						<th width="20%">
+							<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.idtype']}" /> 
+							<p:outputLabel value="*" styleClass="mandatory" />
+						</th>
+						<td>
+							<p:inputText styleClass="ppDisplayTextL" disabled="true" label="#{lbl['lbl.pm.profiles.userdetails.idtype']}"
+								value="#{profilePersonalizationBackingBean.retrieveParamDesc(
+								ParameterTypeConst.identificationTypes,
+								profilePersonalizationBackingBean.managedBean.selectedUser.identificationCode.parameterCode)}"/>
+						</td>
+						<th ></th>
+						<td></td>
+					</tr>
+
+					<tr>
+						<th width="20%">
+							<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.idno']}" /> 
+							<p:outputLabel value="*" styleClass="mandatory" />
+						</th>
+						<td>
+							<p:inputText styleClass="ppDisplayTextL" disabled="#{!profilePersonalizationBackingBean.managedBean.selectedUser.brandNew}"
+								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.identificationNo}" maxlength="12"
+								label="#{lbl['lbl.pm.profiles.userdetails.idno']}">
+								<p:ajax event="change" update="itLoginId" listener="#{profilePersonalizationBackingBean.updateLoginId()}"/>
+							</p:inputText>
+						</td>
+						<th></th>
+						<td></td>
+					</tr>
+
+					<tr>
+						<th width="20%">
+							<p:outputLabel
+								value="#{lbl['lbl.pm.profiles.userdetails.nationality']}" /> 
+							<p:outputLabel value="*" styleClass="mandatory" />
+						</th>
+						<td>
+							<p:inputText styleClass="ppDisplayTextL" disabled="true" label="#{lbl['lbl.pm.profiles.userdetails.nationality']}"
+								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.pmCountry.countryName}"/>
+						</td>
+						<th></th>
+						<td></td>
+					</tr>
+
+					<tr>
+						<th width="20%">
+							<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.designation']}" />
+						</th>
+						<td>
+							<p:inputText disabled="true" styleClass="ppDisplayTextL" maxlength="30"
+								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.designation}" />
+						</td>
+						<th></th>
+						<td></td>
+					</tr>
+
+					<tr>
+						<th width="20%">
+							<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.promanagement']}" />
+						</th>
+						<td>
+							<p:selectOneRadio disabled="true" value="#{profilePersonalizationBackingBean.managedBean.selectedUser.PMP}" >
+								<f:selectItems value="#{profilePersonalizationBackingBean.getYesNoOptions()}" />
+							</p:selectOneRadio>
+						</td>
+						<th></th>
+						<td></td>
+					</tr>
+
+					<tr>
+						<th width="20%">
+							<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.grade']}" />
+						</th>
+						<td>
+							<p:inputText styleClass="ppDisplayTextL" disabled="true" maxlength="10"
+								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.grade}"/>
+						</td>
+						<th></th>
+						<td></td>
+					</tr>
+					<tr>
+						<th width="20%"><p:outputLabel
+								value="#{lbl['lbl.pm.profiles.userdetails.email']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></th>
+						<td><p:inputText id="itEmail"
+								required="#{!empty param['disableValidation']}" maxlength="80"
+								label="#{lbl['lbl.pm.profiles.userdetails.email']}"
+								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.email}"
+								styleClass="ppDisplayTextL"
+								validatorMessage="#{lbl['lbl.pm.profiles.invalidEmail']}">
+								<f:validateRegex disabled="#{empty param['disableValidation']}"
+									pattern="^[_'A-Za-z0-9-\+]+(\.[_'A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+								<p:ajax event="change" process="@this" listener="#{profilePersonalizationBackingBean.onChangeEmail()}" update="itEmail"/> 
+								</p:inputText> 
+							&#160;&#160;
+								<p:graphicImage id="toolTipIcon" value="/css/images/design/tooltips.png" /> 
+								  <p:tooltip id="sourceTooltip" for="toolTipIcon">
+									<h:outputText id="sourceLabel" escape="false" value="#{lbl['lbl.sm.email.change.tooltip']}" />
+								</p:tooltip>
+						</td>
+						<th></th>
+						<td></td>
+					</tr>
+					<tr>
+						<th width="20%"><p:outputLabel
+								value="#{lbl['lbl.pm.profiles.userdetails.telno']}" /></th>
+						<td><ac:phone id="itTelNo" isMobile="false" label="#{lbl['lbl.pm.profiles.userdetails.telno']}"
+						countryCode="#{profilePersonalizationBackingBean.managedBean.selectedUser.phoneCountry}" 
+						areaCode="#{profilePersonalizationBackingBean.managedBean.selectedUser.phoneArea}" 
+						number="#{profilePersonalizationBackingBean.managedBean.selectedUser.phoneNo}"  
+						validatorMessage="#{lbl['lbl.pm.profiles.userdetails.telno']} - #{lbl['lbl.pm.profiles.invalidNo']}" />
+								
+						</td>
+						<td><p:message id="itTelNoMsg" for="itTelNo" display="icon" /></td>
+						<td></td>
+					</tr>
+					<tr>
+						<th width="20%"><p:outputLabel
+								value="#{lbl['lbl.pm.profiles.userdetails.faxno']}" /></th>
+						<td colspan="3"><ac:phone id="itFaxNo" isMobile="false" label="#{lbl['lbl.pm.profiles.userdetails.faxno']}"
+						countryCode="#{profilePersonalizationBackingBean.managedBean.selectedUser.faxCountry}" 
+						areaCode="#{profilePersonalizationBackingBean.managedBean.selectedUser.faxArea}" 
+						number="#{profilePersonalizationBackingBean.managedBean.selectedUser.faxNo}"  
+						validatorMessage="#{lbl['lbl.pm.profiles.userdetails.faxno']} - #{lbl['lbl.pm.profiles.invalidNo']}" />
+							
+						</td>
+						<td><p:message id="itFaxNoMsg" for="itFaxNo" display="icon" /></td>
+						<td></td>
+					
+					</tr>
+					<tr>
+						<th width="20%"><p:outputLabel
+								value="#{lbl['lbl.pm.profiles.userdetails.mobileno']}" /></th>
+						<td colspan="3"><ac:phone id="itMobileNo" label="#{lbl['lbl.pm.profiles.userdetails.mobileno']}"
+							countryCode="#{profilePersonalizationBackingBean.managedBean.selectedUser.mobileCountry}" 
+							areaCode="#{profilePersonalizationBackingBean.managedBean.selectedUser.mobileArea}" 
+							number="#{profilePersonalizationBackingBean.managedBean.selectedUser.mobileNo}" 
+							isMobile="true"
+							validatorMessage="#{lbl['lbl.pm.profiles.userdetails.mobileno']} - #{lbl['lbl.pm.profiles.invalidNo']}"
+							telcoId="#{profilePersonalizationBackingBean.managedBean.selectedUser.mobileTelcoId}">
+							
+							</ac:phone>
+							
+						</td>
+						<td><p:message id="itMobileNoMsg" for="itMobileNo" display="icon" /></td>
+						<td></td>
+					</tr>
+					<tr>
+						<th width="20%">
+							<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.status']}"/>
+						</th>
+						<td>
+							<p:inputText styleClass="ppDisplayTextL" disabled="true" label="#{lbl['lbl.pm.profiles.userdetails.status']}"
+								value="#{(profilePersonalizationBackingBean.managedBean.selectedUser.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}"
+							/>
+						</td>
+						<th></th>
+						<td></td>
+					</tr>
+				</table>
+			</p:outputPanel>
+		</h:panelGrid> 
+		<ac:smEmailAlertPopup bBean="#{backingBean}" title="#{lbl['lbl.sm.email.change.header']}" dialogId="emailPopUp" 
+		btnOkLabel="#{lbl['lbl.btn.ok']}" />
+		
+    </p:panel>	  
+    
+    <!-- Address & Contact -->
+	<ui:include src="/xhtml/pm/profilePersonalization/userDetails/userRoles.xhtml" />
+	<!-- Upload Image Popup -->
+	<ui:include src="/xhtml/pm/profilePersonalization/common/uploadPortrait.xhtml" />
+</ui:composition>

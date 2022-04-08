@@ -1,0 +1,176 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc" 
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+	<ui:param name="isSourceMethodSC"
+		value="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SC'}" />
+
+	<p:dialog id="deliveryTermConform" widgetVar="deliveryTermConform"
+		header="#{lbl['lbl.sc.submit.confirmation']}" resizable="false"
+		width="500" closable="false" modal="true">
+		<p:blockUI block="conformDlgId" widgetVar="blockWidgeDeliveryTerm">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		
+		<p:panel id="conformDlgId">
+			<table>
+				<tr>
+					<td><h:graphicImage value="/css/images/design/exclamation.png" />
+						<h:outputText escape="false"
+							value="#{lbl['lbl.sc.dialog.confirm.delivery.term']}" /></td>
+				</tr>
+			</table>
+
+			<p:spacer height="1" />
+			<div class="ppRightBtn" style="width: 100%">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
+					rendered="#{isPendingSubmissionStatus or isPendingRevisionStatus}"
+					onstart="blockWidgeDeliveryTerm.show();"
+					oncomplete="blockWidgeDeliveryTerm.hide();deliveryTermConform.hide();"
+					actionListener="#{requestNoteBackingBean.requestNoteSubmit(requestNoteBackingBean.managedBean.action)}" />
+
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
+					rendered="#{isPendingApprovalStatus}"
+					onstart="blockWidgeDeliveryTerm.show();"
+					oncomplete="blockWidgeDeliveryTerm.hide();deliveryTermConform.hide();"
+					actionListener="#{requestNoteBackingBean.approverAction(requestNoteBackingBean.managedBean.action)}" />
+
+				<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
+					process="@this" onclick="deliveryTermConform.hide();" type="button" />
+
+			</div>
+		</p:panel>
+	</p:dialog>
+	
+	<!-- 20190417@asyrafhaziq_12095 - Start -->
+	<ui:param name="cancel" value="CANCEL" />
+	<ui:param name="cancelRN" value="cancelRN" />
+	<ac:cancelRejectPopup id="#{cancelRN}" widget="cancelRN" width="30%"
+		height="100"
+		okAction="#{requestNoteBackingBean.submitAction(cancel)}"
+		title="#{lbl['lbl.cancel.details']}"
+		content="#{lbl['lbl.cancel.dialog.confirm.message']}" update="@this" />
+		
+	<ui:param name="reject" value="REJECT" />
+	<ui:param name="rejectRN" value="rejectRN" />
+	<ac:cancelRejectPopup id="#{rejectRN}" widget="rejectRN" width="30%"
+		height="100"
+		okAction="#{requestNoteBackingBean.submitAction(reject)}"
+		title="#{lbl['lbl.reject.details']}"
+		content="#{lbl['lbl.reject.dialog.confirm.message']}" update="@this" />	
+     <!-- 20190417@asyrafhaziq_12095 - End -->
+
+	<div>
+		<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
+			id="backPrevious" partialSubmit="true" process="@this"
+			immediate="true" action="#{requestNoteBackingBean.backToPrevious}"
+			rendered="#{isViewOnly}" />
+
+		<c:if test="#{isViewOnly}">
+			<c:if test="#{isPendingItemCodificationStatus}">
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+					onclick="cd.show()" style="float:right;"
+					rendered="#{requestNoteBackingBean.managedBean.cancel}" />
+				<p:confirmDialog
+					message="#{lbl['lbl.sc.note.request.dialog.confirm.message']}"
+					header="#{lbl['lbl.sc.note.request.dialog.confirm.cancel']}"
+					severity="alert" widgetVar="cd">
+					<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.btn.yes']}"
+							actionListener="#{requestNoteBackingBean.cancelPendingItemCodification}"
+							oncomplete="cd.hide();" id="cancelPendingItemCodification"
+							partialSubmit="true" process="@this" immediate="true" />
+						<p:commandButton value="#{lbl['lbl.btn.no']}"
+							oncomplete="cd.hide();" />
+					</div>
+				</p:confirmDialog>
+			</c:if>
+		</c:if>
+
+		<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
+			style="float:right;"
+			action="#{pmTrackingDiaryBackingBean.redirectToSupplierTrackingDiary(ParameterConst.doctypeRequestNote, requestNoteBackingBean.managedBean.requestNote.requestNoteId, requestNoteBackingBean.isSupplier())}"
+			immediate="true" 
+			rendered="#{requestNoteBackingBean.managedBean.trackingDairyView}" />
+	</div>
+	<h:panelGroup
+		rendered="#{!isViewOnly}">
+		<div class="ppRightBtn">
+			<c:if test="#{empty requestNoteBackingBean.managedBean.taskId}">
+				<p:commandButton value="#{lbl['lbl.btn.item.search']}"
+					style="float:left;" id="backButton" partialSubmit="true"
+					process="@this" immediate="true"
+					action="#{requestNoteBackingBean.backToPrevious}"
+					rendered="#{isSourceMethodSC and requestNoteBackingBean.managedBean.itemSearchBackBtn}"
+					title="#{lbl['lbl.sc.itemsearch.tooltip']}">
+				</p:commandButton>
+
+				<p:commandButton value="#{lbl['lbl.btn.save']}" process="@this"
+					update="@form" onstart="blockWidget.show();"
+					oncomplete="blockWidget.hide();"
+					action="#{requestNoteBackingBean.saveAction('')}" />
+
+				<p:commandButton value="#{lbl['lbl.btn.submit']}"
+					update="@([id$=requestNoteId])" onclick="blockWidget.show();"
+					oncomplete="blockWidget.hide();"
+					action="#{requestNoteBackingBean.submitAction('')}" process="@all">
+					<f:setPropertyActionListener
+						target="#{requestNoteBackingBean.managedBean.action}" value="" />
+				</p:commandButton>
+
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+					action="#{requestNoteBackingBean.cancel}"
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+					style="float:right;" process="@this" partialSubmit="true" />
+			</c:if>
+		</div>
+		<div>
+			<c:if test="#{!empty requestNoteBackingBean.managedBean.taskId}">
+				<div class="ppRightBtn">
+					<c:if test="#{!isPurchaseInquiryContinuity and (isPendingSubmissionStatus or isPendingRevisionStatus)}"> <!-- #29557 -->
+						<p:commandButton value="#{lbl['lbl.btn.item.search']}"
+							process="@this" partialSubmit="true" style="float:left;"
+							immediate="true"
+							action="#{requestNoteBackingBean.backToPrevious}"
+							rendered="#{isSourceMethodSC and requestNoteBackingBean.managedBean.itemSearchBackBtn}" />
+					</c:if>
+					
+					<p:commandButton value="#{lbl['lbl.btn.clone.requote']}"
+						rendered="#{requestNoteBackingBean.managedBean.cloneReQuote}"
+						action="#{requestNoteBackingBean.cloneAction()}"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+						process="@this" />				
+
+					<p:commandButton value="#{lbl['lbl.btn.save']}"						
+						rendered="#{!isPidExpired and (requestNoteBackingBean.managedBean.assignedState or empty requestNoteBackingBean.managedBean.taskId)
+									and isSqStillValid}"
+						action="#{requestNoteBackingBean.saveAction('Save')}"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+						process="@this" />
+
+					<ui:repeat var="bpmAction"
+						value="#{requestNoteBackingBean.managedBean.outComes}">
+						<ui:param name="buttonLabel"
+							value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+						<ui:param name="isCancel" value="${bpmAction == 'CANCEL'}" />
+						<!-- 20190417@asyrafhaziq_12095 - Start -->
+						<ui:param name="isReject" value="${bpmAction == 'REJECT'}" />
+						<ui:param name="isCancelReject" value="${ isCancel || isReject}" />
+						<!-- 20190417@asyrafhaziq_12095 - End -->
+						
+						<p:commandButton value="#{lbl[buttonLabel]}" partialSubmit="true"
+							onstart="#{isCancelReject ? '' : 'blockWidget.show();'}" oncomplete="#{isCancelReject ? '' : 'blockWidget.hide();'}" 
+							process="#{isCancel ? '@this,  @([id$= remark])' : '@form'}"
+							update="#{isCancel ? '@this,  @([id$= remark])' : '@form'}"
+							actionListener="#{requestNoteBackingBean.cancelRejectAction(bpmAction)}" />	
+					</ui:repeat>
+				</div>
+			</c:if>
+		</div>
+	</h:panelGroup>
+</ui:composition>

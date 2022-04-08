@@ -1,0 +1,33 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<div align="left" class="header-info header-spacing">
+		<table style="width: 100%">
+			<tr>
+				<td style="width: 5%"><h:outputLabel
+						value="#{lbl['lbl.sc.ptj']}" /></td>
+				<td style="width: 30%" class="header-info-text">
+					<ui:param name="date" value="#{committeBackingBean.retriveDatesforOrgProfile(committeBackingBean.managedBean.qtCommittee.scQt.publishDate,committeBackingBean.managedBean.qtCommittee.scQt.createdDate)}"></ui:param>
+					#{committeBackingBean.retrievePTJByOrgProfileId(committeBackingBean.managedBean.qtCommittee.scQt.ownerOrgProfileId,date)}
+					
+					</td>
+				<td style="width: 5%"><h:outputLabel
+						value="#{lbl['lbl.sc.created.date']}" /></td>
+				<td style="width: 10%" class="header-info-text"><h:outputText
+						value="#{committeBackingBean.managedBean.qtCommittee.scQt.createdDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText></td>
+				<td style="width: 5%"><h:outputLabel
+						value="#{lbl['lbl.sc.status']}" /></td>
+				<td style="width: 12%" class="header-info-text">
+					#{(committeBackingBean.managedBean.qtCommittee.recordStatusFlg==1)?
+					lbl['lbl.txt.active'] : lbl['lbl.txt.inactive']}</td>
+			</tr>
+		</table>
+	</div>
+</ui:composition>

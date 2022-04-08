@@ -1,0 +1,480 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<!-- 29728 - start -->
+	<script>
+	//<![CDATA[
+	$(document)
+    .ready(
+            function() {
+            	PrimeFaces.widget.SelectOneMenu.prototype.selectItem = function(item, silent) {
+            	    var selectedOption = this.options.eq(this.resolveItemIndex(item)),
+            	    //sameOption = selectedOption.val() == currentOption.val() | or make it false |
+            	    currentOption = this.options.filter(':selected'),
+            	    shouldChange = null;
+
+            	    if(this.cfg.editable) {
+            	        shouldChange = (selectedOption.text() != this.label.val()); //changes done here, see original function 
+            	    }
+            	    else {
+            	        shouldChange = true;
+            	    }
+
+            	    if(shouldChange) {
+            	        this.highlightItem(item);
+            	        this.input.val(selectedOption.val())
+
+            	        this.triggerChange();
+
+            	        if(this.cfg.editable) {
+            	            this.customInput = false;
+            	        }
+            	    }
+
+            	    if(!silent) {
+            	        this.focusInput.focus();
+            	    }
+
+            	    if(this.panel.is(':visible')) {
+            	        this.hide();
+            	    }
+            	}
+            })
+     //]]>
+	</script>
+	<!-- 29728 - end -->
+	<p:panel header="#{lbl['lbl.fl.agency.details']}" toggleable="true" id="flDetails">
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}"/>
+		<!-- 13291 - start -->
+		<c:if test="#{purchaseRequestBackingBean.isFlFulfilmentApprover()}">
+			<br /><h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.agency.details']}"/><br /><br />
+		</c:if>
+		<!-- 13291 - end -->
+		<table style="width: 100%">
+			<tr>
+				<td style="width: 106px;"><p:outputLabel
+						value="#{lbl['lbl.fl.ministry']}" /></td>
+				<td><p:inputText size="66" id="ministry"
+						value="#{purchaseRequestBackingBean.retrieveMinistryByOrgProfileId(purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgProfileId, purchaseRequestBackingBean.getTransactionDate(purchaseRequestBackingBean.managedBean.fulfilmentRequest))}"
+						disabled="true" /></td>
+			</tr>
+			<tr>
+				<td valign="top" style="width: 106px;"><p:outputLabel
+						value="#{lbl['lbl.fl.pegawai.pengawal']}" /></td>
+				<td><p:inputTextarea id="controlOff" rows="2" cols="67"
+						disabled="true" autoResize="false" style="resize:none;"
+						value="#{purchaseRequestBackingBean.retrievePegawaiPengawalByOrgProfileId(purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId, purchaseRequestBackingBean.getTransactionDate(purchaseRequestBackingBean.managedBean.fulfilmentRequest))}" />
+				</td>
+			</tr>
+			<tr>
+				<td valign="top" style="width: 106px;"><p:outputLabel
+						value="#{lbl['lbl.fl.jabatan']}" /></td>
+				<td><p:inputTextarea id="ptjGroup" rows="2" cols="67"
+						disabled="true" autoResize="false" style="resize:none;"
+						value="#{purchaseRequestBackingBean.retrieveJabatanByOrgProfileId(purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId, purchaseRequestBackingBean.getTransactionDate(purchaseRequestBackingBean.managedBean.fulfilmentRequest))}" />
+				</td>
+			</tr>
+			<tr>
+				<td valign="top"><p:outputLabel
+						value="#{lbl['lbl.fl.prepared.for.ptj']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td style="width: 560px;">
+					<p:inputTextarea id="preparedOrgProfileId" rows="2" cols="63" readonly="true" autoResize="false" style="resize:none;" 
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgCode} #{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}" />					
+					<p:commandLink oncomplete="dlgPreparePtj.show();"
+						action="#{purchaseRequestBackingBean.resetPreparedForPtjDetails}"
+						update="dlgPreparePtj"
+						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or purchaseRequestBackingBean.isFlFulfilmentApprover()}"
+						style="padding-left:10px">
+						<p:graphicImage value="/css/images/design/search.png" />
+					</p:commandLink>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}" />
+				</td>				
+			</tr>
+			<tr>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /> </td>
+				<td>	<p:inputTextarea id="issuedOrgProfile" rows="2" cols="67" disabled="true" autoResize="false" style="resize:none;" 
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgCode} #{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgName}" />	
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/>	
+				</td>
+			</tr>										
+			<tr>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.acc.office']}" /></td>
+				<td><p:inputTextarea id="agOffice" rows="2" cols="67"
+						readonly="true" autoResize="false" style="resize:none;"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.agOffice.officeCode} #{purchaseRequestBackingBean.managedBean.fulfilmentRequest.agOfficeName}" />
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.acct.off']}" /></td>
+			</tr>
+		</table>
+	</p:panel>
+	<p:panel header="#{lbl['lbl.fl.req.details']}" toggleable="true">
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}"/>
+		<table style="width: 100%">
+			<tr>
+				<td rowspan="3" valign="top" style="width: 142px;"><p:outputLabel
+						value="#{lbl['lbl.fl.title']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td rowspan="3" style="width:380px"><p:inputTextarea cols="45" rows="4" id="title"
+						onkeyup="limitTextArea(this,500);"
+						onkeydown="limitTextArea(this,500);"
+						autoResize="false"
+						style=" margin-bottom:5px;" label="#{lbl['lbl.fl.title']}"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.title}"
+						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}">
+						<p:ajax update="@this"></p:ajax>
+						</p:inputTextarea>
+						<ac:iconTooltip value="#{lbl['lbl.fl.pr.tooltip.title']}"/></td>
+						<td><p:message for="title" display="icon" /></td>
+				<td style="width: 134px;"><p:outputLabel
+						value="#{lbl['lbl.fl.procurement.type']}" /></td>
+				<td><p:inputText size="25" disabled="true"
+						value="#{purchaseRequestBackingBean.getParameterDesc(purchaseRequestBackingBean.managedBean.fulfilmentRequest.procurementType)}" />
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.procurement.type']}"/>	
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2"><p:outputLabel value="#{lbl['lbl.fl.financial.year']}" /></td>
+				<td><p:inputText size="25"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.financialYear}"
+						disabled="true" /></td>
+			</tr>
+			<tr>
+				<td colspan="2"><p:outputLabel value="#{lbl['lbl.fl.prepared.date']}" /></td>
+				<td><p:inputText size="25" disabled="true"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.createdDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.date']}"/>	
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.procur.type.category']}" /></td>
+				<td><p:inputText size="30" disabled="true"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.procurementTypeCategory ==null ? lbl['lbl.fl.supp.na'] : purchaseRequestBackingBean.getParameterDesc(purchaseRequestBackingBean.managedBean.fulfilmentRequest.procurementTypeCategory)}" /></td>
+			</tr>
+			
+			<tr>
+				<td style="width: 142px;"><p:outputLabel
+						value="#{lbl['lbl.fl.delivery.period']}" /></td>
+				<td><table style="width: 100%">
+						<tr>
+							<td>
+								<p:inputText size="12" style="text-align:right;"
+									disabled="true"
+									value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.deliveryTerm}" />
+								<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.delivery.service.period']}" />							
+							</td>
+							<ui:remove>
+							<td style="width: 208px;"><p:outputLabel styleClass="outputLabel-view"
+									value="#{purchaseRequestBackingBean.getParameterDesc(purchaseRequestBackingBean.managedBean.fulfilmentRequest.pmUom)}" /></td>
+							</ui:remove>
+						</tr>
+					</table></td>
+				<td colspan="2"><p:outputLabel rendered="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.submissionDate != null}"
+						value="#{lbl['lbl.fl.submission.date']}" /></td>
+				<td>	
+				<p:inputText size="25" disabled="true" rendered="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.submissionDate != null}"
+					value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.submissionDate}">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</p:inputText>
+				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.pr.submission.date']}" rendered="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.submissionDate != null}"/></td>
+			</tr>
+			<!--#17087 icon tooltip -->
+			<c:if test="#{purchaseRequestBackingBean.zonalTest ne '298'}">
+
+				<!--#17087 radio select -->
+
+				<tr>
+					<td colspan="15">
+
+
+
+						<table>
+							<tr>
+								<td><p:selectBooleanCheckbox id="prGeneralRadio"
+										required="true"
+										value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.radioCheckDeliveryDate}"
+										style="margin-right: 0;">
+
+										<p:ajax event="change"
+											listener="#{purchaseRequestBackingBean.upDateStartDateFromBpm}"
+											update="delStartDate" />
+
+									</p:selectBooleanCheckbox></td>
+								<td><p:outputLabel style="float:right; color:red"
+										value="#{lbl['lbl.fl.flag']}" /></td>
+								<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.flag']}" /></td>
+
+							</tr>
+						</table>
+
+					</td>
+
+
+
+
+
+
+
+
+				</tr>
+			</c:if>
+
+			<!--#17087 calendar -->
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.start']}" /></td>
+				<td><p:calendar id="delStartDate" mode="popup" readonlyInput="true"
+						showOn="button"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.startDate}">
+						<p:ajax event="dateSelect"
+							listener="#{purchaseRequestBackingBean.updateDeliveryDate}"
+							update="delEndDate" />
+					</p:calendar>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.delivery.start.date']}"/></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.end']}" /></td>
+				<td><p:calendar id="delEndDate" mode="popup"
+						readonlyInput="true"  showOn="button"
+						mindate="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.startDate}" 
+						maxdate="#{purchaseRequestBackingBean.managedBean.maxDate}"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.endDate}">
+						<p:ajax event="dateSelect"
+							listener="#{purchaseRequestBackingBean.updateDeliveryEndDate}" />
+					</p:calendar></td>
+			</tr>
+		</table>
+		<table>
+		<tr>
+				<td><p:selectBooleanCheckbox
+						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
+						value="#{purchaseRequestBackingBean.managedBean.declarationCheck}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><h:outputText style="text-align:left" value="#{lbl['lbl.fl.declaration']}"/></td>
+		</tr>
+	</table>
+	</p:panel>
+		
+	<p:panel id="supplierPnl" header="#{lbl['lbl.fl.supp.details']}" toggleable="true">
+		<table style="width: 100%">
+			<tr>
+				<td style="width: 142px;"><p:outputLabel
+						value="#{lbl['lbl.fl.supp.buss.reg.no']}" /></td>
+				<td><table style="width: 100%">
+						<tr>
+							<td style="width: 175px;"><p:inputText size="15"
+									disabled="true"
+									value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.smSupplier.regNo}" />
+								<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.buss.reg.no']}"/>	
+							</td>
+							<td><p:outputLabel
+									value="#{lbl['lbl.fl.supp.mof.no']}" /></td>
+							<td><p:inputText size="15" disabled="true"
+									value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.mofNo}" />
+								<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.mof.no']}"/>	
+							</td>
+						</tr>
+					</table></td>
+				<td><p:outputLabel
+						value="#{lbl['lbl.fl.ep.basic.acct.no']}" /></td>
+				<td style="width:230px;"><p:inputText size="15" disabled="true" 
+									value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.smSupplier.epNo ==null ? lbl['lbl.fl.supp.na'] : purchaseRequestBackingBean.managedBean.fulfilmentRequest.smSupplier.epNo}"></p:inputText></td>		
+			</tr>
+			<!-- 29982 start -->
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.business.registration.no']}" /></td>
+				<td><p:inputText size="15" disabled="true"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.smSupplier.ssmNewRegNo ==null ? lbl['lbl.fl.business.registration.no.empty'] : purchaseRequestBackingBean.managedBean.fulfilmentRequest.smSupplier.ssmNewRegNo}" />
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.business.registration.no']}"/>
+					<br/>
+					<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.business.registration.no.note']}" style="float:left;margin-bottom: 5px;" />
+					</td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.ep.declared.date']}" /></td>
+				<td><p:inputText size="15" disabled="true"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.gstDeclaredDate ==null ? lbl['lbl.fl.supp.na'] : purchaseRequestBackingBean.managedBean.fulfilmentRequest.gstDeclaredDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ep.declared.date']}"/></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.gst.reg.no']}" /></td>
+				<td><p:inputText size="15" disabled="true"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.gstRegNo ==null ? lbl['lbl.fl.supp.na'] : purchaseRequestBackingBean.managedBean.fulfilmentRequest.gstRegNo}" />
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gst.reg.no']}"/></td>
+			</tr>
+			<!-- 29982 end -->
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.gst.effective.date']}" /></td>
+				<td><p:inputText size="15" disabled="true"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.gstEffectiveDate ==null ? lbl['lbl.fl.supp.na'] : purchaseRequestBackingBean.managedBean.fulfilmentRequest.gstEffectiveDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gst.effect.date']}"/></td>
+
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
+				<td><p:inputText disabled="true" size="59"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.supplierName}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" />
+				</td>
+				
+				<td><p:selectOneMenu id="suppBranch"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.branchCode}"
+						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or empty purchaseRequestBackingBean.managedBean.supplierBranchesList}"
+						style="width: 360px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItems var="suppBranchList"
+							value="#{purchaseRequestBackingBean.managedBean.supplierBranchesList}"
+							itemLabel="#{suppBranchList.branchName}"
+							itemValue="#{suppBranchList.branchCode}" />
+						<p:ajax event="change"
+							listener="#{purchaseRequestBackingBean.getSelectedSupplierBranchDtl}"
+							update="supplierPnl" />
+					</p:selectOneMenu>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.branch']}"/></td>
+			</tr>
+			<tr>
+				<td valign="top"><p:outputLabel
+						value="#{lbl['lbl.fl.supp.address']}" /></td>
+				<td><p:inputTextarea cols="50" rows="8" disabled="true"
+						id="smAddress" style=" margin-bottom:5px;"
+						autoResize="false"
+						value="#{purchaseRequestBackingBean.getFullAddress(purchaseRequestBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.flAddress)}" /></td>
+			</tr>
+			<tr>
+				<td style="width: 100px;"><p:outputLabel
+						value="#{lbl['lbl.fl.telno']}" /></td>
+				<td><table style="width: 100%">
+						<tr>
+							<td style="width: 25px;"><p:inputText size="25"
+									disabled="true"
+									value="#{purchaseRequestBackingBean.getText(purchaseRequestBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.flAddress.phoneNoFull)}" /></td>
+							<td style="width: 66px;"><p:outputLabel
+									value="#{lbl['lbl.fl.faxno']}" /></td>
+							<td><p:inputText size="25" disabled="true"
+									value="#{purchaseRequestBackingBean.getText(purchaseRequestBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.flAddress.faxNoFull)}" /></td>
+						</tr>
+					</table></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.fl.supp.contact.person']}" /></td>
+				<td><p:inputText disabled="true" size="70"
+						value="#{purchaseRequestBackingBean.getText(purchaseRequestBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.flAddress.contactPerson)}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.fl.email']}" /></td>
+				<td><p:inputText disabled="true" size="70"
+						value="#{purchaseRequestBackingBean.getText(purchaseRequestBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.flAddress.contactEmail)}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.telno']}" /></td>
+				<td><p:inputText disabled="true" size="25"
+						value="#{purchaseRequestBackingBean.getText(purchaseRequestBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.flAddress.contactPhoneNoFull)}" /></td>
+			</tr>
+		</table>
+	</p:panel>
+	<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
+		<table style="width: 100%">
+			<tr>
+				<td width="50%" valign="top"><ui:include
+						src="/xhtml/fl/shared/remark.xhtml" /></td>
+				<td width="50%" valign="top">
+				<h:panelGroup rendered="#{purchaseRequestBackingBean.managedBean.taskName ne FulfilmentConst.reviewPR}">
+						<ui:include src="/xhtml/fl/shared/attachment.xhtml" />
+					</h:panelGroup> 
+					<h:panelGroup rendered="#{purchaseRequestBackingBean.managedBean.taskName eq FulfilmentConst.reviewPR}">
+						<ui:include src="/xhtml/fl/shared/attachmentAuthorize.xhtml" />
+					</h:panelGroup></td>
+			</tr>
+		</table>
+	</p:panel>
+	<p:dialog id="dlgPreparePtj"  header="#{lbl['lbl.fl.add.prepared.ptj']}" widgetVar="dlgPreparePtj" 
+			styleClass="pop_up_top" modal="true" width="700" resizable="false" position="top">
+			<p:messages id="preparePtjMsg" showSummary="false" showDetail="true"  autoUpdate="true" closable="true" severity="error, info" />
+		   <h:panelGroup  id="preparePtj">
+		   	 <p:panel id="preparePtjSearchPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
+              <h:panelGrid columns="3">
+                 <p:selectOneMenu for="prepareMinistry"  style="width:150px" disabled="true" >
+            	    <f:selectItem itemLabel="#{lbl['lbl.fl.ministry']}" itemValue=""/>
+                 </p:selectOneMenu>
+                 <p:spacer height="1"/>
+                 <p:selectOneMenu id="prepareMinistry" style="width:300px"
+                      value="#{purchaseRequestBackingBean.managedBean.ministryProfileId}" disabled="true">
+            	   <f:selectItems value="#{purchaseRequestBackingBean.getPreparedForPTJMinistryDropdown()}"/>
+            	   <p:ajax event="change" update=":form:prepareJabatan" />
+                 </p:selectOneMenu>
+                 <p:selectOneMenu for="prepareJabatan"  style="width:150px" disabled="true" >
+            	    <f:selectItem itemLabel="#{lbl['lbl.fl.jabatan']}" itemValue=""/>
+                 </p:selectOneMenu>
+                 <p:spacer height="1"/>
+                 <p:selectOneMenu id="prepareJabatan" style="width:300px"
+                      value="#{purchaseRequestBackingBean.managedBean.jabatanProfileId}" >
+            	   <f:selectItems value="#{purchaseRequestBackingBean.getPreparedForPTJJabatanDropdown()}"/>
+            	    <p:ajax event="change" update=":form:prepareJabatan"/>
+                 </p:selectOneMenu>
+                 <p:selectOneMenu for="preparePtjCodeName" 
+                    value="#{purchaseRequestBackingBean.managedBean.ptjCodeName}"  style="width:150px;">
+                       <f:selectItem itemLabel="#{lbl['lbl.fl.ptj.code']}" itemValue="#{CtConst.ptjCode}"/>
+            	      <f:selectItem itemLabel="#{lbl['lbl.fl.ptj.name']}" itemValue="#{CtConst.ptjName}"/>
+            	      <p:ajax process="@this"/>
+                 </p:selectOneMenu>
+				 <p:spacer height="1"/>
+                 <p:inputText id="preparePtjCodeValue"  style="width:300px;" 
+                     value="#{purchaseRequestBackingBean.managedBean.ptjCodeNameSearchValues}" >
+                     <p:ajax process="@this"/></p:inputText>
+			  </h:panelGrid>
+			  </p:panel>
+			  	<div class="ppRightBtn">
+       		         
+       		         <p:commandButton id="preparePtjSearchId" value="#{lbl['lbl.btn.search']}" update=":form:tablePreparePtj"  
+       		            action="#{purchaseRequestBackingBean.searchPreparedForPtjDetails}" process="@this" /> 
+			         <p:commandButton id="resetBtn1" value="#{lbl['lbl.btn.reset']}" process="@this"
+			            action="#{purchaseRequestBackingBean.resetPreparedForPtjDetails}" update=":form:preparePtj"   />
+		       </div>
+			  <p:panel id="prepareResultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
+				<p:dataTable id="tablePreparePtj" var="pmVar"
+					value="#{purchaseRequestBackingBean.managedBean.preparedForPtjDataModel}"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					rowIndexVar="rowIndex"
+					selection="#{purchaseRequestBackingBean.selectedPreparedForPTJOrg}"
+					rowKey="#{pmVar}" lazy="true" rows="10">
+					 <p:ajax event="rowSelectRadio" update=":form:preparePtjSelectBtn" ></p:ajax>
+					<ac:paginator for="tablePreparePtj" />
+					<p:column selectionMode="single" style="width:18px;">
+						<f:facet name="header">
+						</f:facet>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.fl.ptj.code']}">
+                       	#{pmVar.orgCode}
+					</p:column>
+					<p:column headerText="#{lbl['lbl.fl.ptj.name']}">
+                      	#{pmVar.orgName}
+					</p:column>
+				</p:dataTable>
+			</p:panel>           
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.select']}" process="@this" update=":form:preparedOrgProfileId,:form:issuedOrgProfile,:form:controlOff,:form:ptjGroup,:form:agOffice"  id="preparePtjSelectBtn"
+					disabled="#{fn:length(purchaseRequestBackingBean.managedBean.preparedForPtjDataModel.list) == 0 }"
+				    action="#{purchaseRequestBackingBean.addPreparedForPtjDetails()}" onclick="dlgPreparePtj.hide();"/>
+				    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="dlgPreparePtj.hide();" />
+           </div>
+           </h:panelGroup>
+	</p:dialog>
+</ui:composition>

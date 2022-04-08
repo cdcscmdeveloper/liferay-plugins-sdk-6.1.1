@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<!DOCTYPE hook PUBLIC "-//Liferay//DTD Hook 6.1.0//EN" "http://www.liferay.com/dtd/liferay-hook_6_1_0.dtd">
+
+<hook>
+	<language-properties>Language_en_US.properties</language-properties>
+		
+	<service>
+	    <service-type>com.liferay.portal.service.LayoutLocalService</service-type>
+	    <service-impl>my.ep.liferay.ExtLayoutLocalServiceWrapper</service-impl>
+	</service>
+	
+</hook>

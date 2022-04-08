@@ -1,0 +1,183 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc" >
+
+	<ui:define name="resourceSection">
+		<style>
+			.gfmasPanelCss>.ui-panel-content {
+				background: #f2dede !important;
+			}
+		</style>	
+	</ui:define>
+
+	<ui:define name="contentSection">
+		<h:panelGroup layout="block" class="ui-messages ui-widget" rendered="#{(receivedNoteBackingBean.managedBean.fulfilmentNote.status.statusId.longValue() == FulfilmentStatusCont.fnPendingApproval.longValue() 
+		or receivedNoteBackingBean.managedBean.fulfilmentNote.status.statusId.longValue() == FulfilmentStatusCont.fnPendingRevision.longValue() 
+		or receivedNoteBackingBean.managedBean.fulfilmentNote.status.statusId.longValue() == FulfilmentStatusCont.fnPendingRevApproval.longValue() 
+		or receivedNoteBackingBean.managedBean.fulfilmentNote.status.statusId.longValue() == FulfilmentStatusCont.fnPendingCancelSubmission.longValue()
+		or receivedNoteBackingBean.managedBean.fulfilmentNote.status.statusId.longValue() == FulfilmentStatusCont.fnPendingDoAcknowledgment.longValue()) 
+		and not empty receivedNoteBackingBean.managedBean.disciplinaryActionMessage}">
+		<h:panelGroup layout="block" class="ui-messages-info ui-corner-all">
+		<h:outputText class="ui-messages-info-icon" /><ul><li>
+		<h:outputText class="ui-messages-info-detail" /> #{receivedNoteBackingBean.managedBean.disciplinaryActionMessage} <p:commandLink id="sharedcommand" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" action="#{receivedNoteBackingBean.viewDisciplinaryAction(receivedNoteBackingBean.managedBean.smDisciplinaryAction)}" process="@this" partialSubmit="true" update=":form">#{lbl['lbl.sm.disciplinary.here']}</p:commandLink> #{lbl['lbl.sm.supplier.to.view.disc.action.details']}</li></ul>
+		</h:panelGroup>
+		</h:panelGroup>
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>	
+		<ac:gpkiPopup 
+			textBeforeSign="#{receivedNoteBackingBean.managedBean.textBeforeSign}"
+			postSignAction="#{receivedNoteBackingBean.preSubmitAction(gpkiBackingBean.pmDigiSign)}"
+			enableAutoUpdate="#{receivedNoteBackingBean.enableAutoUpdate()}" />		
+		<f:event listener="#{receivedNoteBackingBean.preRenderView}" type="preRenderView" />
+		<c:if test="#{receivedNoteBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or 
+					  receivedNoteBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancel or
+					  receivedNoteBackingBean.managedBean.isHyperLinkPage()}">
+			<ac:title value="#{receivedNoteBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, ParameterConst.doctypeFulfilmentNote)}" />
+		</c:if>					
+		<p:messages id="messages" showDetail="true" autoUpdate="#{receivedNoteBackingBean.managedBean.autoUpdate}" showSummary="false" closable="true" severity="error, info" />
+		<p:panel style="background:#f2dede !important; border:0px;" styleClass="gfmasPanelCss" rendered="#{receivedNoteBackingBean.managedBean.gfmasError}" >		
+			<table>
+				<tr>
+					<td>
+						<p:commandLink oncomplete="gfmasError.show();" immediate="true"
+							action="#{receivedNoteBackingBean.show1GFMASError()}"
+							rendered="#{receivedNoteBackingBean.managedBean.gfmasError}">
+							<p:graphicImage value="/css/images/design/exclamation.png" />
+						</p:commandLink>
+						<p:spacer width="2" />
+					</td>
+					<td>
+						<p:outputLabel value="#{receivedNoteBackingBean.managedBean.gfmasErrorDesc} #{lbl['lbl.fl.integration.click.for.exception.details']} (ERR-#{receivedNoteBackingBean.managedBean.gfmasErrorCode})" style="color: #C55751 !important; font-weight: normal !important"
+							rendered="#{receivedNoteBackingBean.managedBean.gfmasError}" />
+					</td>					
+				</tr>
+			</table>
+		</p:panel>					
+		<table style="width: 100%;">
+			<tr>
+				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" 
+						rendered="#{receivedNoteBackingBean.managedBean.taskId==null}"
+						action="#{receivedNoteBackingBean.backAction}" /></td>
+				<td colspan="4" style="text-align: right">
+					<c:if test='#{receivedNoteBackingBean.managedBean.buttonVal ne BpmOutcomeConstant.bpmView}'>
+					<ui:decorate template="/xhtml/fl/shared/claim_template.xhtml">
+						<ui:define name="outComeSection">
+							<ui:repeat 
+							var="bpmAction"
+							value="#{receivedNoteBackingBean.managedBean.outComes}">
+							<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+							<p:commandButton value="#{lbl[buttonLabel]}" update="@form" styleClass="ui-button" 
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							action="#{receivedNoteBackingBean.gpkiSignAction(bpmAction)}"/>
+							</ui:repeat>
+						</ui:define>
+					</ui:decorate>
+					</c:if>
+					<c:if
+						test='#{receivedNoteBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmUpdate}'>
+						<td colspan="4" style="text-align: right"><p:commandButton
+								value="#{lbl['lbl.btn.update']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+								action="#{receivedNoteBackingBean.submitAction(BpmOutcomeConstant.bpmUpdate)}">
+								<f:param name="actionName" value="#{BpmOutcomeConstant.bpmUpdate}" />
+							</p:commandButton></td>
+					</c:if>
+					<c:if
+						test='#{receivedNoteBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancel}'>
+						<td colspan="4" style="text-align: right"><p:commandButton
+								value="#{lbl['lbl.btn.cancel']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+								action="#{receivedNoteBackingBean.submitAction(BpmOutcomeConstant.bpmCancel)}">
+								<f:param name="actionName" value="#{BpmOutcomeConstant.bpmCancel}" />
+							</p:commandButton></td>
+					</c:if>	
+					<c:if
+						test='#{receivedNoteBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}'>
+						<td colspan="4" style="text-align: right"><p:commandLink
+								rendered="#{!receivedNoteBackingBean.managedBean.isHyperLinkPage()}"
+								value="#{lbl['lbl.td.doc.trackingDiary']}"
+								action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeFulfilmentNote,receivedNoteBackingBean.managedBean.fulfilmentNote.fulfilmentNoteId)}"
+								immediate="true" /></td>
+					</c:if> 
+					<h:panelGroup id="printButtonFrn"
+						rendered="#{receivedNoteBackingBean.managedBean.fulfilmentNote.status.statusId==FulfilmentStatusCont.fnAcknowledged}">
+						<td style="text-align: right; width: 60px;"><p:commandLink
+								value="#{lbl['lbl.btn.print']}" ajax="false">
+								<p:fileDownload
+									value="#{flDocumentBackingBean.generateReport(ParameterConst.doctypeFulfilmentNote,receivedNoteBackingBean.managedBean.fulfilmentNote.fulfilmentNoteNo,flDocumentManagedBean.taxable)}" />
+							</p:commandLink></td>
+					</h:panelGroup>
+				</td>
+			</tr>
+		</table>
+			
+		<ui:include src="frnReviewHeaderPage.xhtml" />
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<td width="20%" valign="top" class="sidemenutd">
+					<p:tabMenu styleClass="sidemenu"
+						activeIndex="#{receivedNoteBackingBean.managedBean.selectedTabIndex}">
+						<p:menuitem value="#{lbl['lbl.fl.menu.general']}" update="@form">
+							<f:setPropertyActionListener
+								target="#{receivedNoteBackingBean.managedBean.selectedTabIndex}"
+								value="0" />
+						</p:menuitem>
+						<p:menuitem value="#{lbl['lbl.fl.menu.items']}" update="@form" actionListener="#{receivedNoteBackingBean.onTabChange(1)}">
+							<f:setPropertyActionListener
+								target="#{receivedNoteBackingBean.managedBean.selectedTabIndex}"
+								value="1" />
+						</p:menuitem>
+						<p:menuitem  value="#{lbl['lbl.fl.menu.frn.evaluation']}" update="@form" rendered="#{receivedNoteBackingBean.checkUserAuthority() == 'true'}">
+							<f:setPropertyActionListener
+								target="#{receivedNoteBackingBean.managedBean.selectedTabIndex}"
+								value="2" />
+						</p:menuitem>
+					</p:tabMenu></td>
+				<td width="80%"><p:outputPanel
+						rendered="#{receivedNoteBackingBean.managedBean.selectedTabIndex == 0}">
+						<ui:include src="frnGeneral.xhtml" />
+					</p:outputPanel> <p:outputPanel
+						rendered="#{receivedNoteBackingBean.managedBean.selectedTabIndex == 1}">
+						<ui:include src="frnItem.xhtml" />
+					</p:outputPanel> <p:outputPanel
+						rendered="#{receivedNoteBackingBean.managedBean.selectedTabIndex == 2}">
+						<ui:include src="frnEvaluation.xhtml" />
+					</p:outputPanel></td>
+			</tr>
+		</table>
+		<p:dialog id="gfmasErrorDlg" header="#{lbl['lbl.fl.integration.exception.details']}" widgetVar="gfmasError" width="80%"
+			showEffect="fade" hideEffect="fade" modal="true" resizable="false">
+			<table style="width: 100%">
+				<tr>
+					<td><p:messages id="gfmasMsg" showSummary="false" escape="false" showDetail="true" autoUpdate="true" closable="true" severity="error,info" /></td>
+				</tr>
+			</table>
+			<p:spacer height="2px"></p:spacer>
+			<div style="width: 100%; text-align: right">
+				<p:commandButton value="#{lbl['lbl.btn.close']}" oncomplete="gfmasError.hide();" />
+			</div>
+		</p:dialog>			
+		<p:confirmDialog message="#{lbl['lbl.fl.confirmation.reject.dialogue']}"
+			severity="alert" widgetVar="cancelConfirmDlg" closable="true"
+			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
+					partialSubmit="true" 
+					action="#{receivedNoteBackingBean.submitAction(BpmOutcomeConstant.bpmReject)}"
+					onstart="cancelConfirmDlg.hide();blockWidget.show();"
+					oncomplete="blockWidget.hide();"/>
+				<p:commandButton value="#{lbl['lbl.btn.no']}" 
+					partialSubmit="true"
+					onclick="cancelConfirmDlg.hide();" />
+			</div>
+		</p:confirmDialog>	
+		<ac:disciplinaryActionHistory voList="#{receivedNoteBackingBean.managedBean.disciplineVOs}" 
+		dialogHeader="#{lbl['lbl.sm.view.details.disciplinary.action.headerlbl']}" dialogWidth="800px" dialogHeight="400px" btnView="true" />
+	</ui:define>
+</ui:composition>

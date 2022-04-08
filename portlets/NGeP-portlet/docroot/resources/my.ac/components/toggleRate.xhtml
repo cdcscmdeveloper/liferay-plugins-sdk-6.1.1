@@ -1,0 +1,60 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<cc:interface>
+		<cc:attribute name="value" type="java.lang.Object" required="true"/>
+		<cc:attribute name="tooltip" required="true"/>
+		<cc:attribute name="update" default="@(.ep-toggle-rate)"/><ui:remove>#32334  for 29021</ui:remove>
+		<cc:attribute name="show" default="true"/>
+		<cc:attribute name="disabled" default="false"/>
+	</cc:interface>
+	<cc:implementation>
+		<ui:param name="value" value="#{cc.attrs.value}"/>
+		<ui:param name="tooltip" value="#{cc.attrs.tooltip}"/>
+		<ui:param name="update" value="#{cc.attrs.update}"/>
+		<ui:param name="disabled" value="#{cc.attrs.disabled}"/>
+		<ui:param name="show" value="#{cc.attrs.show}"/>
+		<style>
+			.ui-single-rating-star{
+				position: relative;
+    			height: 20px !important;
+    			min-height: 20px !important;
+			}
+			.ui-single-rating-star .ui-state-disabled{
+				filter: grayscale(1) !important;
+				opacity: 1 !important;
+			}
+			.toggleRateShow .ui-rating-star, .toggleRateHide .ui-rating-star{
+				position: absolute !important;
+				z-index: 98 !important;	
+			}
+			.toggleRateShow .ui-rating-cancel{
+				position: absolute !important;
+				z-index: 99 !important;
+    			opacity: 0 !important;
+    			display: block;
+			}
+			.toggleRateHide .ui-rating-cancel{
+				position: absolute !important;
+    			display: none;
+			}
+		</style>
+		<ui:fragment rendered="#{show}">
+			<div class="ui-single-rating-star">
+				<ui:remove>#32334  for 29021 start</ui:remove>
+				<p:rating disabled="#{disabled}" converter="javax.faces.Integer" styleClass="#{value>0 ? 'toggleRateShow' : 'toggleRateHide'} ep-toggle-rate" id="rating" value="#{value}" stars="1" cancel="true">
+					<p:ajax event="rate" update="#{update}"/>
+					<p:ajax event="cancel" update="#{update}"/>
+				</p:rating>
+				<ui:remove>#32334  for 29021 end</ui:remove>
+				<p:tooltip for="rating" value="#{tooltip}" position="top"/>
+			</div>
+		</ui:fragment>
+		
+	</cc:implementation>
+</ui:composition>

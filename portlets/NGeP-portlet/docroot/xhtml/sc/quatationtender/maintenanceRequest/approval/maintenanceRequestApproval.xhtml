@@ -1,0 +1,45 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/icon_loadingLarge.gif" />
+		</p:blockUI>
+		<p:messages id="doa" showDetail="true"
+			autoUpdate="#{approvalBackingBean.managedBean.autoUpdate}"
+			closable="true" showSummary="false" severity="error, info" />
+		<ac:gpkiPopup
+			beforeSignText="#{approvalBackingBean.textBeforeSign}"
+			postSignAction="#{approvalBackingBean.updateGenericApprovalTask(gpkiBackingBean.pmDigiSign)}"
+			enableAutoUpdate="#{approvalBackingBean.enableAutoUpdate()}" />
+		<ui:param name="scQt" value="#{approvalBackingBean.managedBean.qt}"/>
+		<ui:param name="doaRequest" value="#{approvalBackingBean.managedBean.doaaRequest}"/>
+		
+		<div class="ppRightBtn">
+			<h:panelGroup id="approverBtns">
+				<ui:decorate
+					template="/WEB-INF/facelets/templates/claim_template.xhtml">
+					<ui:define name="outComeSection">
+						<ui:repeat var="bpmAction" value="#{approvalBackingBean.managedBean.outComes}">
+							<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+							<ui:remove><!-- 25037 - note 510--></ui:remove>
+							<p:commandButton value="#{lbl[buttonLabel]}"
+								styleClass="ui-button" onstart="blockWidget.show();"
+								oncomplete="blockWidget.hide();"
+								action="#{approvalBackingBean.preSubmitGenericApprovalTask(bpmAction)}"/>
+						</ui:repeat>
+					</ui:define>
+				</ui:decorate>
+			</h:panelGroup>
+		</div>
+		<ui:include src="common/approvalGeneralInfo.xhtml"/>
+		<ui:include src="approvalFragment/doaAssignmentApproval.xhtml"/>
+	</ui:define>
+</ui:composition>

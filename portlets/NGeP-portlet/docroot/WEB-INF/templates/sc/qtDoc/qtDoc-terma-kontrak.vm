@@ -1,0 +1,309 @@
+<html>
+	<head>
+		<style>
+			@page { size: A4 portrait;}
+			@page { @bottom-center { content: "Page " counter(page) " / " counter(pages); }}
+			.footer {
+				display: block; text-align: center;
+				position: running(footer);
+			}
+		</style>
+	</head>
+	<body>
+		<div id="u12" class="u12">
+			<div id="u12_rtf">
+				<p style="text-align:left;"><span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;"><u>TERMA KONTRAK</u></span></p>
+			</div>
+		</div>
+		<div id="u12" class="u12">
+			<div id="u12_rtf">
+				<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">TAFSIRAN</span>
+			</div>
+		</div>
+		<div id="u15" class="u15"  >
+			<div id="u15_rtf" style="text-align:justify;">
+				<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Tawaran  ini dan apa-apa  kontrak  yang  timbul  daripadanya hendaklah  diertikan  mengikut dan dikawal oleh undang-undang Malaysia, dan Pembekal bersetuju tertakluk hanya kepada bidangkuasa  Mahkamah  Malaysia  sahaja  dalam apa-apa  pertikaian  atau  perselisihan jua pun yang  mungkin  timbul  mengenai  Tawaran  ini atau apa-apa  kontrak yang timbul daripadanya.</span>
+			</div>
+		</div>
+		<div id="u12" class="u12">
+			<div id="u12_rtf">
+				<br />
+				<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">KONTRAK</span>
+			</div>
+		</div>
+		<div id="u15" class="u15"  >
+			<div id="u15_rtf" style="text-align:justify;">
+				<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Semua syarat-syarat yang terkandung di dalam dokumen atau di mana-mana Lampiran yang terdahulu bersama-sama dengan dokumen Tawaran ini adalah merupakan sebahagian daripada kontrak yang akan ditandatangani di antara Kerajaan Malaysia dan Pembekal yang berjaya. Pembekal yang berjaya dikehendaki menadatangani kontrak dengan Kerajaan dan membayar segala gantirugi jika tidak memenuhi syarat-syarat kontrak. Sebarang bantahan kepada syarat-syarat kontrak hendaklah dibuat semasa mengemukakan cadangan tawaran.</span>
+				<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Kerajaan  mempunyai hak untuk menamatkan kontrak pada bila-bila masa sekiranya Pembekal yang berjaya gagal memenuhi obligasi mengikut Kontrak.</span></p>
+				<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Kerajaan tidak terikat dengan nilai kontrak(nilai/kuantiti), dimana selepas habis tempoh kontrak, jumlah kuantiti yand telah dibekalkan tidak semestinya mencapai nilai/kuantiti kontrak yang ditetapkan.</span></p>
+				<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Sebelum sesuatu Tawaran disetuju terima, Pegawai Pengawal hendaklah berpuas hati bahawa syarat-syarat perolehan yang telah diputuskan dan dinyatakan dengan jelas. Perhatian khusus hendaklah diberikan kepada maklumat penuh mengenai perolahan, harga seunit yang dipersetujui, kuantiti yang dikehendaki, tarikh, masa dan tempat serahan, belanja serahan, perkhidmatan lepas jualan, kemudahan mendapatkan alat ganti dan lain-lain yang berkenaan. Selepas setuju terima oleh pihak berkuasa yang berkenaan, satu kontrak formal hendaklah disempurnakan oleh Pegawai Pengawal.</span></p>
+				<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Bagi semua perolehan bekalan atau perkhidmatan bermasa kontrak formal hendaklah diadakan walaupun nilai perolehan kurang daripada RM20,000 dan Arahan Perbendaharaan 204 hendaklah dipatuhi.</span></p>
+			</div>
+		</div>
+		<div id="u12" class="u12">
+			<div id="u12_rtf">
+				<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">NILAI KONTRAK</span>
+			</div>
+		</div>
+		<div id="u15" class="u15"  >
+			<div id="u15_rtf" style="text-align:justify;">
+				<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Nilai keseluruhan Kontrak ini adalah sebagaimana dalam Surat Setuju Terima (kemudian daripada ini dirujuk sebagai “Nilai Kontrak“) dan bagi maksud Kontrak ini dan tertakluk kepada Pembekal memenuhi semua terma-terma dan syarat-syarat dalam Kontrak ini, Kerajaan hendaklah sebagai ganjaran kepada Perkhidmatan yang dilaksanakan oleh Pembekal, dalam tempoh Kontrak berkuatkuasa membuat pembayaran kepada Pembekal mengikut Klausa Pembayaran.</span>
+				<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Pengiraan kepada Nilai Kontrak adalah berdasarkan kepada Jadual Harga yang dinyatakan.</span></p>
+				<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Nilai Kontrak yang dinyatakan adalah tetap dan tiada apa-apa kenaikan atau perubahan harga Perkhidmatan boleh dibuat oleh Pembekal kecuali jika telah dipersetujui secara bertulis oleh Kerajaan.</span></p>
+			</div>
+		</div>
+		<div id="u12" class="u12">
+			<div id="u12_rtf">
+				<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">PENAMATAN KONTRAK</span>
+				<br />
+				<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;"><u>Penamatan oleh Kerajaan</u></span>
+				<br />
+				<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;"><u><i>Keingkaran oleh Syarikat</i></u></span>
+			</div>
+		</div>
+		<div id="u15" class="u15"  >
+			<div id="u15_rtf" style="text-align:justify;">
+				<ol type="a">
+					<li style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Dalam keadaan dimana Syarikat tanpa sebab yang munasabah:</li>
+						<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;"> i) menggantung Perkhidmatan dan gagal meneruskan pelaksanaan obligasinya di bawah Kontrak; </span></p>
+						<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;"> ii) gagal melaksanakan Perkhidmatan menurut Kontrak atau mengabaikan obligasinya di bawah Kontrak; </span></p>
+						<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;"> iii) ingkar menjalankan tanggungjawab di bawah Kontrak; </span></p>
+						<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;"> iv) mungkir apa-apa obligasi atau gagal mematuhi apa-apa terma dan syarat Kontrak; </span></p>
+					<li style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Pekerja melakukan salahlaku, berkelakuan buruk atau cuai menjalankan tugas secara yang boleh menjejaskan nama baik Kerajaan;</li>
+					<li style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Lesen Syarikat untuk menjalankan urusan agensi persendirian di tamatkan oleh Kementerian Dalam Negeri;</li>
+				</ol>
+				<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Kerajaan berhak untuk memberikan notis bertulis ( kemudian daripada ini disebut sebagai ”Notis Kemungkiran”) kepada Syarikat dengan membuat kemungkiran yang berkaitan dan mengkehendaki Syarikat meremedikan kemungkiran itu dalam tempoh masa tidak kurang daripada tiga puluh (30) hari dari tarikh Syarikat menerima Notis Kemungkiran itu atau tempoh yang lebih lama sebagaimana yang dipersetujui oleh Kerajaan.</span></p>
+				<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Jika Syarikat gagal untuk meremedikan kemungkiran berkaitan dalam tempoh masa yang dinyatakan dalam Notis Kemungkiran itu atau dalam tempoh masa yang lebih lama sebagaimana yang dipersetujui oleh Kerajaan, Kerajaan boleh menamatkan Kontrak ini pada bila-bila masa sesudah itu dengan memberikan tidak kurang daripada tiga puluh (30) hari notis bertulis yang bermaksud sedemikian kepada Syarikat.</span></p>
+			</div>
+		</div>
+		<div id="u12" class="u12">
+			<div id="u12_rtf">
+				<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;"><u><i>Ingkar Am</i></u></span>
+			</div>
+		</div>
+		<div id="u15" class="u15"  >
+			<div id="u15_rtf" style="text-align:justify;">
+				<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Sekiranya pada bila-bila masa dalam tempoh Kontrak:</span>
+				<ol type="a">
+					<li style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">suatu perintah dibuat atau suatu resolusi diluluskan bagi penggulungan Syarikat melainkan bagi tujuan pembentukan semula atau penyatuan Syarikat yang tidak melibatkan penghasilan aset di mana kepentingan pemiutang dilindungi;</li>
+					<li style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Syarikat mengalami likuidasi atau seorang penerima telah dilantik ke atas aset Syarikat atau Syarikat membuat penyerahhakkan faedah atau memasuki suatu perkiraan atau komposisi dengan pemiutangnya atau menghentikan pembayaran atau gagal untuk membayar hutangnya; atau</li>
+					<li style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">pelaksanaan dikenakan terhadap bahagian aset Syarikat yang substantif, melainkan Syarikat telah memulakan prosiding dengan niat baik untuk mengenepikan perlaksanaan itu.</li>
+				</ol>
+				<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Kerajaan berhak untuk menamatkan Kontrak ini dengan memberikan notis menyatakan hasrat sedemikian.</span></p>
+				<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Kesan daripada penamatan oleh Kerajaan</span></p>
+				<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Dengan penamatan Kontrak ini:</span></p>
+				<ol type="a">
+					<li style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">segala kuasa dan hak yang diberikan dan obligasi dalam Kontrak ini ditamatkan serta-merta;</li>
+					<li style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Syarikat hendaklah</li>
+						<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;"> i) menghentikan Perkhidmatan; </span></p>
+						<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;"> ii) mengemukakan kepada Kerajaan suatu laporan terperinci berkenaan kos dan apa-apa pembayaran yang kena dibayar dan terhutang daripada Kerajaan sebelum penamatan bagi tujuan pengesahan dan kelulusan Kerajaan; </span></p>
+					<li style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Kerajaan hendaklah</li>
+						<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;"> i) menuntut terhadap syarikat bagi apa-apa kehilangan dan kerugian akibat daripada penamatan Kontrak ini; dan</span></p>
+						<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;"> ii) berhak melantik Syarikat lain untuk memberikan perkhidmatan dan Syarikat hendaklah membayar semua kos dan perbelanjaan yang terlibat kepada Kerajaan dan kos lain yang melebihi kos yang sepatutnya dibayar kepada Syarikat untuk memberikan Perkhidmatan sekiranya Kontrak ini tidak ditamatkan</span></p>
+				</ol>
+				<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Dengan syarat penamatan ini tidak menjejaskan hak mana-mana Pihak yang terakru sebelum tarikh penamatan Kontrak ini dan obligasi di bawah Kontrak ini hendaklah diteruskan walaupun selepas penamatan bagi apa-apa tindakan atau perkara yang berlaku sebelum penamatan Kontrak ini.</span></p>
+			</div>
+		</div>
+		<div id="u12" class="u12">
+			<div id="u12_rtf">
+				<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;"><u>Penamatan oleh Syarikat</u></span>
+				<br />
+				<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;"><u>Keingkaran oleh Kerajaan</u></span>
+			</div>
+		</div>
+		<div id="u15" class="u15"  >
+			<div id="u15_rtf" style="text-align:justify;">
+				<ol type="a">
+					<li style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Jika Kerajaan tanpa sebab yang munasabah gagal menjalankan atau memenuhi apa-apa obligasi yang menjejaskan obligasi Syarikat di bawah Kontrak ini, Syarikat boleh memberi notis secara bertulis kepada Kerajaan menyatakan keingkaran tersebut dan Kerajaan hendaklah meremedikan keingkaran tersebut dan Kerajaan hendaklah meremedikan keingkaran tersebut dalam tempoh tiga puluh (30) hari daripada tarikh notis atau suatu tempoh lanjutan yang dipersetujui oleh pihak-pihak.</li>
+					<li style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Kerajaan hendaklah membayar Syarikat apa-apa wang yang kena dibayar dan hendaklah dibayar kepada Syarikat pada tarikh penamatan Kontrak dan apa-apa jumlah yang belum dibayar dengan syarat Kerajaan berhak jika Kerajaan gagal meremedikan keingkaran tersebut dalam tempoh yang ditetapkan, syarikat berhak untuk menamatkan Kontrak ini pada bila-bila masa dengan memberikan notis menyatakan hasrat sedemikian.</li>
+				</ol>
+				<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Kesan daripada penamatan oleh Syarikat</span></p>
+				<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Dengan penamatan tersebut, Syarikat hendaklah menerima aku janji Kerajaan sebagai penyelesaian penuh dan muktamad bagi semua tuntutan pembayaran di bawah atau yang timbul daripada Kontrak ini:</span></p>
+				<ol type="a">
+					<li style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">memotong jumlah yang kena dibayar kepada Kerajaan oleh Syarikat di bawah Kontrak ini;</li>
+					<li style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Syarikat hendaklah menghentikan perkhidmatan serta-merta</li>
+				</ol>
+			</div>
+		</div>
+		<div id="u12" class="u12">
+			<div id="u12_rtf">
+				<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;"><u>Penamatan demi kepentingan negara</u></span>
+			</div>
+			<div id="u15_rtf" style="text-align:justify;">
+				<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Walau apapun peruntukan Kontrak ini, Kerajaan boleh menamatkan Kontrak ini dengan memberikan notis tidak kurang daripada tiga puluh (30 hari) kepada Syarikat ( tanpa apa-apa obligasi untuk memberikan sebarang alasan) jika Kerajaan mempertimbangkan bahawa penamatan adalah perlu bagi kepentingan negara, demi keselamatan negara atau bagi tujuan dasar Kerajaan atau dasar awam.</span>
+				<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Bagi tujuan fasal ini, apa yang dimaksudkan dengan”kepentingan negara”. ”keselamatan negara”, ”dasar Kerajaan dan ”dasar awam” hendaklah ditentukan dan ditetapkan semata-mata oleh Kerajaan dan penentuan itu hendaklah bagi semua niat dan tujuan adalah muktamad dan konklusif dan tidak boleh dicabar sama sekali.</span></p>
+			</div>
+			<div id="u12_rtf">
+				<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;"><u>Penamatan disebabkan rasuah</u></span>
+			</div>
+			<div id="u15_rtf" style="text-align:justify;">
+				<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Tanpa memprejudiskan apa-apa hak lain, jika Kerajaan berpuas hati bawa Syarikat, Pekerja, agen atau Sub-Pembekal terlibat dalam rasuah yang berkaitan dengan Kontrak ini, Kerajaan berhak untuk menamatkan Kontrak ini pada bila-bila masa dengan memberikan notis bertulis menyatakan sedemikian.</span>
+				<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Dengan penamatan tersebut, Kerajaan berhak terhadap semua kehilangan, kos, ganti dan perbelanjaan termasuk kos sampingan yang teraku oleh Kerajaan yang timbul daripada penamatan tersebut.</span></p>
+			</div>
+			<div id="u12_rtf">
+				<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">POTONGAN PEMBAYARAN</span>
+			</div>
+			<div id="u15_rtf" style="text-align:justify;">
+				<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Kerajaan berhak memotong apa –apa wang yang kena dibayar kepada Pembekal mengikut peruntukan dalam Kontrak ini daripada apa –apa wang yang Pembekal berhutang kepada kerajaan. Jika wang yang Pembekal berhutang kepada Kerajaan tidak mencukupi bagi menampung tuntutan Kerajaan, Kerajaan boleh menuntut baki wang tersebut daripada Pembekal dan Pembekal hendaklah membuat pembayaran selewat – lewatnya tiga puluh(30) hari selepas tuntutan itu diberikan.</span>
+				<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Sekiranya Pembekal gagal membuat pembayaran selepas tamat tempoh seperti yang dinyatakan di atas atau apa – apa tempoh lain yang telah diberikan oleh Kerajaan, maka Kerajaan boleh mengambil apa – apa tindakan undang – undang pada bila – bila masa tanpa memberi notis terlebih dahulu kepada Pembekal.</span></p>
+			</div>
+		</div>
+		<div id="u12" class="u12">
+			#if ( $penalty == "true")
+				<div id="u12_rtf">
+					<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;"><u>Denda / Penalty</u></span>
+				</div>
+				<div id="u15_rtf" style="text-align:justify;">
+					<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Sekiranya Pembekal gagal menyediakan perkhidmatan dalam tempoh yang ditetapkan, denda akan dikenakan mengikut kadar yang termaktub di dalam kontrak.</span>
+				</div>
+				<div id="u12_rtf">
+					<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;"><u>Denda Kesempurnaan Bekalan / Perkhidmatan</u></span>
+				</div>
+				<div id="u15_rtf" style="text-align:justify;">
+					<ol type="i">
+						<li style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Pembekal yang berjaya mestilah menyempurnakan kontrak tersebut dalam tempoh yang ditetapkan dalam kontrak</li>
+						<li style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Pembekal yang berjaya akan dikenakan denda sekiranya gagal menyempurnakan obligasi kontrak dalam tempoh yang telah ditetapkan.</li>
+					</ol>
+				</div>
+				<div id="u12_rtf">
+					<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;"><u>Denda Lewat Tuntut Pembayaran</u></span>
+				</div>
+				<div id="u15_rtf" style="text-align:justify;">
+					<ol type="i">
+						<li style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Pembekal hendaklah membuat tuntutan pembayaran kepada Kerajaan tidak lewat daripada tempoh dua puluh satu ((21)) hari dari tarikh tamat tempoh pembekalan.</li>
+						<li style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Sekiranya tuntutan pembayaran lewat dan melebihi tempoh yang ditetapkan, Pembekal boleh dikenakan denda mengikut peratusan yang termaktub dalam kontrak daripada jumlah tuntutan bagi setiap bilangan hari yang Pembekal lewat tuntut.</li>
+					</ol>
+				</div>
+			#end
+		</div>
+		<div id="u12" class="u12">
+			#if ( $royaltyFee == "true")
+				<div id="u12_rtf">
+					<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;"><u>Bayaran Royalti</u></span>
+				</div>
+				<div id="u15_rtf" style="text-align:justify;">
+					<ol type="i">
+						<li style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Pembekal yang berjaya hendaklah membayar royalti permerakuan item kepada Kerajaan bagi item tersebut yang terjual setiap tahun</li>
+						<li style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Kadar bayaran royalti pemerakuan item akan mengikut peratusan yang ditetapkan untuk kontrak atas harga item tersebut</li>
+						<li style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Bagi item-item tersebut yang dibeli oleh Kerajaan, bayaran royalti pemerakuan item akan dipotong terus oleh Kerajaan daripada bayaran-bayaran harga item tersebut mengikut kadar yang ditetapkan/</li>
+					</ol>
+					<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Pembekal yang berjaya tidak dibenarkan untuk menarik balik tawaran royalti pemerakuan item bagi tersebut yang telah ditetapkan</span></p>
+				</div>
+			#end
+		</div>
+		<div id="u12" class="u12">
+			#if ( $fixedDeduction == "true")
+				<div id="u12_rtf">
+					<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;"><u>Potongan Tetap</u></span>
+				</div>
+				<div id="u15_rtf" style="text-align:justify;">
+					<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Kadar Sewa</span>
+					<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Kadar sewa ruang premis adalah RM --- $deductionAmount --- --- tempoh--- (Ringgit Malaysia : ------ sahaja).</span></p>
+					<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Kadar sewa peralatan adalah RM --- $deductionAmount --- ---- tempoh --- (Ringgit Malaysia : ------ sahaja).</span></p>
+					<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Pembekal dikehendaki menjelaskan bayaran sewa bulanan untuk ruangan premis dan peralatan yang digunakan kepada Kerajaan.</span></p>
+					<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Semua bayaran akan ditolak dari amoun invois pembekal.</span></p>
+				</div>
+			#end
+		</div>
+		<div id="u12" class="u12">
+			#if ( $nonFixedDeduction == "true")
+				<div id="u12_rtf">
+					<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;"><u>Potongan Tidak Tetap</u></span>
+				</div>
+				<div id="u15_rtf" style="text-align:justify;">
+					<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Utiliti</span>
+					<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Pembayaran ke atas penggunaan utiliti seperti bekalan air, elektrik dan gas perlu dijelaskan kepada Kerajaan.</span></p>
+					<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Meter berasingan disediakan untuk mengetahui kadar penggunaan bekalan air, elektrik dan gas.</span></p>
+					<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Semua bayaran akan ditolak dari amoun invois pembekal.</span></p>
+				</div>
+			#end
+		</div>
+		<div id="u12" class="u12">
+			<div id="u12_rtf">
+				<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;"><u>TERMA PEMBAYARAN</u></span>
+			</div>
+			<div id="u15_rtf" style="text-align:justify;">
+				<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Pembayaran bagi semua perkara dan skop kerja yang ditawarkan mestilah dalam Ringgit Malaysia (RM) sahaja. Harga ini mestilah sah laku dalam tempoh $validityPeriod hari daripada tarikh tutup Tawaran.</span>
+				<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Pembayaran akan dibuat pada tidak lewat dari 14 hari selepas menerima invois daripada pihak Pembekal.</span></p>
+				<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Sebarang tuntutan kenaikan harga dalam jangkamasa sah laku Tawaran tidak akan dilayan.</span></p>
+			</div>
+			<div id="u12_rtf">
+				<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">CAJ PERKHIDMATAN SISTEM ePEROLEHAN</span>
+			</div>
+			<div id="u15_rtf" style="text-align:justify;">
+				<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Tawaran harga hendaklah telah mengambil kiraan fi perkhidmatan bagi perolehan secara elektronik. Fi yang dikenakan ini adalah seperti yang termaktub dalam Terma dan Syarat bagi Pendaftaran  di bawah Sistem ePerolehan.</span>
+			</div>
+			#if ( $fulfilmentType == "true")
+				<p style="text-align:justify;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Syarikat/Firma/Koperasi/Pemilikan Tunggal hendaklah mengambil perhatian bahawa setiap transaksi melalui Sistem ePerolehan akan dikenakan fi perkhidmatan sebanyak 0.8% (kosong perpuluhan lapan peratus) mengikut setiap nilai invois yang dikemukakan kepada Kerajaan tertakluk kepada had maksimum RM 9,600.00 (Ringgit Malaysia: Sembilan Ribu dan Enam Ratus) bagi invois yang bernilai RM 1.2 juta (Ringgit Malaysia: Satu Juta Dua Ratus Ribu) atau lebih.</span></p>
+			#end 
+			#if ( $fulfilmentType == "false")
+				<p style="text-align:justify;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Syarikat/Firma/Koperasi/Pemilikan Tunggal hendaklah mengambil perhatian bahawa setiap transaksi melalui Sistem ePerolehan akan dikenakan fi perkhidmatan sebanyak 0.4% (kosong perpuluhan empat peratus) mengikut setiap nilai invois yang dikemukakan kepada Kerajaan tertakluk kepada had maksimum RM 4,800.00 (Ringgit Malaysia : Empat Ribu dan Sembilan Ratus) bagi invois yang bernilai RM 1.2 juta (Ringgit Malaysia : Satu Juta Dua Ratus Ribu) atau lebih.</span></p>
+			#end
+			<div id="u12_rtf">
+				<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">BON PELAKSANAAN</span>
+			</div>
+			<div id="u15_rtf" style="text-align:justify;">
+				<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Pembekal-Pembekal yang berjaya, dikehendaki memberi Cagaran Kontrak untuk memastikan kontrak dilaksanakan mengikut syarat-syarat dalam kontrak. Bagi kontrak bekalan /perkhidmatan, Pembekal hendaklah mengemukakan bersama-sama dengan Surat Setuju Terima, Bon Pelaksanaan yang nilainya adalah seperti berikut :</span>
+				<ul>
+					<li style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Dua setengah peratus (2.5%) daripada jumlah harga kontrak bagi kontrak bekalan atau perkhidmatan yang bernilai melebihi RM200, 000.00 hingga RM500, 000.00.</li>
+					<li style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Lima peratus (5%) daripada jumlah harga kontrak bagi kontrak bekalan atau perkhidmatan yang bernilai melebihi RM500,000.00.</li>
+				</ul>
+				<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Cagaran kontrak ini hendaklah dalam bentuk Jaminan Bank,Jaminan Bank Islam,Jaminan Insurans,Jaminan Takaful atau Jaminan yang dikeluarkan oleh Bank Pembangunan Malaysia Berhad (BPMB) dan Bank Perusahaan Kecil and Sederhana Malaysia (SME Bank) (seperti dalam Para 50.4 Pekeliling Perbendaharaan Bil 5 Tahun 2007).</span></p>
+				<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Cagaran kontrak akan dikembalikan setelah kontrak dilaksanakan dengan memuaskan. Sekiranya kontrak itu tidak dilaksanakan dengan memuaskan, maka Cagaran Kontrak itu akan dirampas.</span></p>
+				<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Cagaran kontrak hendaklah dikemukakan dalam tempoh 30 hari dari tarikh surat setuju terima tawaran dikeluarkan.</span></p>
+				<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Semasa penyediaan Cagaran Kontrak, bentuk format hendaklah ditepati tanpa sebarang pindaan.</span></p>
+			</div>
+			<div id="u12_rtf">
+				<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;"><u>Pelucutan Bon Pelaksanaan</u></span>
+			</div>
+			<div id="u15_rtf" style="text-align:justify;">
+				<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">KERAJAAN berhak melucut hak Bon Pelaksanaan sekiranya kontrak ditamatkan.</span>
+			</div>
+			<div id="u12_rtf">
+				<br />
+				<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">TEMPOH KONTRAK</span>
+			</div>
+			<div id="u15_rtf" style="text-align:justify;">
+				<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Perkhidmatan /bekalan akan berkuatkuasa untuk tempoh $contractPeriod tahun iaitu bermula daripada --tarikh-- sehingga --tarikh--. Namun begitu, pihak Kerajaan berhak meminda tarikh ini jika diperlukan.</span>
+			</div>
+			<div id="u12_rtf">
+				<br />
+				<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">ADDENDA/PINDAAN</span>
+			</div>
+			<div id="u15_rtf" style="text-align:justify;">
+				<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Apa - apa perkara dalam perjanjian ini boleh dipinda dan sebarang perubahan, modifikasi, penambahan, pembatalan atau pindaan hendaklah dipersetujui secara bertulis Pihak – Pihak dan boleh dilakukan dari semasa ke semasa selepas perjanjian ini ditandatangani melalui Perjanjian Tambahan yang secara khusus merujuk kepada perjanjian ini dan ditandatangani oleh Pihak – Pihak dan Perjanjian Tambahan itu hendaklah dibaca dan ditafsirkan sebagai sebahagian dari perjanjian ini.</span>
+			</div>
+			<div id="u12_rtf">
+				<br />
+				<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">KERAHSIAAN</span>
+			</div>
+			<div id="u15_rtf" style="text-align:justify;">
+				<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Pembekal tidak boleh menzahirkan kepada mana – mana orang atau mana – mana pihak apa – apa maklumat yang ditemuinya atau yang dizahirkan kepadanya bagi maksud pelaksanaan Perjanjian ini antara Pihak – Pihak.</span>
+				<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Klausa kerahsiaan hendaklah terus berkuat kuasa walaupun setelah Perjanjian ini ditamatkan atas apa –apa sebab.</span></p>
+			</div>
+			<div id="u12_rtf">
+				<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">PERINGATAN MENGENAI KESALAHAN RASUAH (INTEGRITY PACT)</span>
+			</div>
+			<div id="u15_rtf" style="text-align:justify;">
+				<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Merujuk kepada Surat Arahan Perbendaharaan rujukan S/K.Kew/PK/PP/1100/000000/10/31 Jld 26 SK. 7 (3) bertarikh 28 Februari 2009.</span>
+				<ol>
+					<li style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Sebarang perbuatan atau percubaan rasuah untuk menawar atau memberi, meminta atau menerima apa-apa suapan secara rasuah kepada dan daripada mana-mana orang berkaitan perolehan ini merupakan suatu kesalahan jenayah di bawah Akta Pencegahan Rasuah 2009 (Akta 694);</li>
+					<li style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Sekiranya mana-mana pihak ada menawar atau memberi apa–apa suapan kepada mana-mana anggota pentadbiran awam, maka pihak yang ditawar atau diberi suapan dikehendaki membuat aduan dengan segera ke pejabat Suruhanjaya Pencegahan Rasuah Malaysia (SPRM) atau balai polis yang berhampiran. Kegagalan berbuat demikian adalah merupakan suatu kesalahan di bawah Akta Pencegahan Rasuah 2009 (Akta 694);</li>
+					<li style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Tanpa prejudis kepada tindakan-tindakan lain, tindakan tatatertib terhadap anggota perkhidmatan awam dan menyenaraihitamkan Pembekal atau Pembekal boleh diambil sekiranya pihak-pihak terlibat dengan kesalahan rasuah di bawah Akta Pencegahan Rasuah 2009 (Akta 694); dan</li>
+					<li style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Mana-mana Pembekal atau Pembekal yang membuat tuntutan pembayaran berkaitan perolehan ini walaupun tiada kerja dibuat atau tiada barangan dibekal mengikut spesifikasi yang ditetapkan atau tiada perkhidmatan diberi dan mana-mana anggota perkhidmatan awam yang mengesahkan tuntutan berkenaan adalah melakukan kesalahan di bawah Akta Pencegahan Rasuah 2009 (Akta 694).</li>
+				</ol>
+			</div>
+			<div id="u12_rtf">
+				<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">SENARAI SEMAK UNTUK PEMATUHAN DOKUMEN</span>
+			</div>
+			<div id="u15_rtf" style="text-align:justify;">
+				<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Semua Lampiran yang lengkap dikemukakan akan dijadikan asas dalam penilaian dan pemilihan pembekal. Semua softcopy yang dimuatnaik hendaklah benar dan sah dari segi undang-undang. Cadangan tawaran yang tidak lengkap akan ditolak.</span>
+				<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Bagi membolehkan penilaian ini dibuat Pembekal dikehendaki mengemukakan dokumen-dokumen berikut bersama-sama cadangan tawaran :-</span></p>
+				<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Dokumen-dokumen ini sangatlah penting untuk membolehkan penilaian keupayaan yang sewajarnya dibuat ke atas Pembekal. Sekiranya Pembekal tidak atau gagal untuk mengemukakan dokumen-dokumen seperti di dalam senarai semak, Cadangan tawaran akan ditolak dan tidak akan dipertimbangkan.</span></p>
+				<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Sekiranya Pembekal gagal untuk mengemukakan salah satu bahagian daripada dokumen-dokumen, maklumat dan data-data yang tidak dapat disemak kerana ketiadaan atau ketidak-cukupan dokumen-dokumen yang tersebut adalah tidak sah dan tidak boleh diambil kira dalam penilaian keupayaan Pembekal yang berkenaan.</span></p>
+				<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Di samping mengemukakan dokumen-dokumen yang tersebut, Pembekal-P dikehendaki melengkapkan lampiran yang disertakan bersama cadangan tawaran ini, dengan sempurna dan mengembalikannya bersama-sama dengan tawaran masing-masing dengan cara memuat naik salinan lampiran dan juga mengunci masuk maklumat yang di minta</span></p>
+				<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Pembekal adalah dilarang menulis, mencatatkan dan meletakkan cop nama / tanda syarikat di dalam dokumen sokongan/lampiran yang dikemukakan secara atas talian. Sekiranya berbuat demikan Pembekal cadangan tidak akan dipertimbangkan.</span></p>
+			</div>
+		</div>
+	</body>
+</html>

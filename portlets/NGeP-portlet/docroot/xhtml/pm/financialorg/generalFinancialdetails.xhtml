@@ -1,0 +1,134 @@
+<ui:composition 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:p="http://primefaces.org/ui">
+
+    <h:outputLabel value="" />
+	<p:panel id="pGeneralFinance" header="#{lbl['lbl.pm.header.general.finance']}" toggleable="true">
+		<table>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.pm.financialorg.buzregno']}" />
+					<p:outputPanel id="mandatoryFinBizRegNoPanel" rendered="#{financialOrgBackingBean.bizRegNoMandatory()}">
+					<p:outputLabel id="mandatoryFinBizRegNoId" value="*" styleClass="mandatory" 
+						/>
+					</p:outputPanel>
+				</td>
+				<!-- 12852 Start -->
+				<td><p:inputText id="bizRegNo" style="width:50%"
+						required="#{financialOrgBackingBean.bizRegNoMandatory() and 
+						!empty param['disableValidation']}"
+						label="#{lbl['lbl.pm.financialorg.buzregno']}"
+						value="#{financialOrgBackingBean.managedBean.financialOrg.bizRegNumber}"						 
+						size="40" maxlength="20" >
+						<p:ajax process="@this" update="@this" partialSubmit="true" event="blur" />
+						</p:inputText>
+						 &#160; <p:graphicImage id="giBizRegNo" style="vertical-align:top;"
+								value="/css/images/design/ico-tooltips.png" /> <p:tooltip
+								for="giBizRegNo" id="ttBizRegNo"
+								showEffect="fade" hideEffect="fade" > 
+									<p:outputLabel escape="false" value="#{lbl['lbl.pm.financialorg.buzregno.tt']}"/>
+								</p:tooltip>
+						</td>
+						<!-- 12852 End -->
+				<td><p:message id="bizRegNoMsg" for="bizRegNo" display="icon" /></td>
+			</tr>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.pm.financialorg.name']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:inputText id="finOrgName" styleClass="ppDisplayTextL"
+						label="#{lbl['lbl.pm.financialorg.name']}"
+						value="#{financialOrgBackingBean.managedBean.financialOrg.finOrgName}"
+						disabled ="#{financialOrgBackingBean.checkFinancialServices()}"
+						required="#{!empty param['disableValidation']}" size="40" maxlength="100" >
+						<p:ajax process="@this" update="@this" partialSubmit="true" event="blur" />
+						</p:inputText>						
+						</td>
+				<td><p:message id="finOrgNameMsg" for="finOrgName"
+						display="icon" /></td>
+			</tr>
+			<ui:remove>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.pm.address.country']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneMenu id="country" styleClass="ppDropDownWidthL"
+						disabled="#{!financialOrgBackingBean.managedBean.financialOrg.brandNew}"
+						label="#{lbl['lbl.pm.address.country']}"
+						value="#{financialOrgBackingBean.managedBean.financialOrg.pmCountry.countryId}"
+						required="#{!empty param['disableValidation']}" style="width: 276px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
+						<f:selectItems value="#{financialOrgBackingBean.getCountryList()}"
+							var="country" itemLabel="#{country.countryName}" itemValue="#{country.countryId}" />
+					</p:selectOneMenu></td>
+				<td><p:message id="countryMsg" for="country" display="icon" /></td>
+			</tr>
+			</ui:remove>
+			<tr>
+				<td><h:outputLabel
+						value="#{lbl['lbl.pm.financialorg.bankcode']}" /></td>
+				<td><p:inputText
+						value="#{financialOrgBackingBean.getBankCode()}" disabled="true"
+						styleClass="ppDisplayTextM" size="30" maxlength="20" /></td>
+			</tr>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.pm.financialorg.status']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td>
+					<p:selectOneMenu styleClass="ppDropDownWidthM"					
+						disabled="#{financialOrgBackingBean.managedBean.financialOrg.brandNew eq true ? financialOrgBackingBean.managedBean.financialOrg.brandNew : (!financialOrgBackingBean.managedBean.enableUpdateStatus)}"
+						label="#{lbl['lbl.pm.financialorg.status']}" required="#{!empty param['disableValidation']}"
+						value="#{financialOrgBackingBean.managedBean.financialOrg.recordStatusFlg}"
+						id="recordSts" style="width: 135px;margin-bottom: 5px;">
+						<f:selectItems value="#{financialOrgBackingBean.getStatusOptions()}" />
+						<!-- 20201105@Jacky - Enhancement#28836 - Start -->
+						<p:ajax event="change" 
+						onstart="blockWidget.show()" 
+						oncomplete="blockWidget.hide()" 
+						listener="#{financialOrgBackingBean.disableFinancialActiveStatus(financialOrgBackingBean.managedBean.financialOrg.recordStatusFlg)}"
+						update="recordSts" partialSubmit="true" process="@this"/>
+						<!-- 20201105@Jacky - Enhancement#28836 - End -->
+					</p:selectOneMenu>
+				</td>
+				<td><p:message id="recordStsMsg" for="recordSts" display="icon" /></td>
+
+			</tr>
+			<tr>
+				<td style="text-align:right;">
+					<p:selectBooleanCheckbox 
+						label="#{lbl['lbl.pn.finorg.is.ep']}" 
+						value="#{financialOrgBackingBean.managedBean.financialOrg.forEp}"
+						id="isforEp"/>
+						
+				</td>
+				<td><h:outputText style="font-weight:bold !important;" value="#{lbl['lbl.pn.finorg.is.ep']}" /></td>
+				<td></td>
+
+			</tr>
+		</table>
+		<p:outputPanel id="opGeneralTopMenu">
+				<p:tabView id="tvGeneralFinance"  widgetVar="tvGeneralFinance" dynamic="false" cache="false" orientation="top"
+					activeIndex="#{financialOrgBackingBean.managedBean.tabActiveIndex}">
+					<p:tab id="tFacAdd" title="#{lbl['lbl.pm.financialorg.tab.address']}">
+						<ui:include src="/xhtml/pm/financialorg/financialOrgAddress.xhtml" />
+					</p:tab>
+					<p:tab id="tFinancialService" title="#{lbl['lbl.pm.financialorg.tab.financial']}">
+						<ui:include src="/xhtml/pm/financialorg/financialServices.xhtml" />
+					</p:tab>
+					<!-- disabled="#{!financialOrgBackingBean.managedBean.showFactoringBank}" -->
+					<!-- disabled="#{!financialOrgBackingBean.managedBean.serviceTypes.contains(ParameterConst.bankServicesFactoringCompany)}" -->
+					<p:tab title="#{lbl['lbl.pm.financialorg.tab.factoringbank']}" id="tFactoryBankDet"
+						disabled="#{!financialOrgBackingBean.managedBean.serviceTypes.contains(ParameterConst.bankServicesFactoringCompany) or !financialOrgBackingBean.managedBean.showFactoringBank}"
+						>
+						<ui:include src="/xhtml/pm/financialorg/factoringBankDetail.xhtml" />
+					</p:tab>
+				</p:tabView>
+
+		</p:outputPanel>
+	</p:panel>
+
+	
+
+</ui:composition>

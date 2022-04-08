@@ -1,0 +1,218 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<ui:define name="contentSection">
+		<p:messages id="loiMsg" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="false" />
+
+		<ui:param name="readOnly" value="#{lOIDetailBackingBean.managedBeanIsReadOnly}" />
+        <ui:param name="isMultipleLoi" value="#{lOIDetailBackingBean.managedBean.docType eq ParameterConst.recommendByMultipleLoi}" />
+		<ui:include src="loiListButtons.xhtml" />
+
+		<ui:include src="loiListHeader.xhtml" />
+		
+		<h:outputText styleClass="instruction" 
+			value="#{lbl['lbl.sc.loiloa.loi.childtask.instruction']}" />
+
+		<p:panel header="#{lbl['lbl.sc.loiloa.recom.supp.list']}"
+			id="recSupplierListId" toggleable="true">
+			<table>
+				<tr>
+					<td style="width: 210px;"><p:outputLabel
+							value="#{lbl['lbl.sc.award.type']}" /></td>
+					<td><p:inputText disabled="true"
+							value="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.recommendType,
+					lOIDetailBackingBean.managedBean.scQtFinalization.recommendedTypeId.parameterCode)}"
+							size="30" /></td>
+				</tr>
+				<tr>
+					<td style="width: 210px;"><p:outputLabel
+							value="#{lbl['lbl.sc.recommend.by']}" /></td>
+					<td><p:inputText disabled="true"
+							value="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.finalizationRecommendBy,
+					lOIDetailBackingBean.managedBean.docType)}"
+							size="30" /></td>
+				</tr>
+			</table>
+
+			<p:spacer height="20px"></p:spacer>
+
+			<p:dataTable id="loiLoaDtl" var="loiLoa"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				value="#{lOIDetailBackingBean.managedBean.recSupplierList}"
+				selection="#{lOIDetailBackingBean.managedBean.selectedLoiLoa}"
+				selectionMode="single" rowKey="#{loiLoa}"
+				rowIndexVar="rowIndex">
+
+				<p:ajax event="rowSelect"
+					listener="#{lOIDetailBackingBean.onRowRecSupplierAction}"
+					update=":form:loiLoaListId" />
+
+				<p:column headerText="#{lbl['lbl.sc.supplier.name']}">
+					<h:outputText value="#{loiLoa.smSupplier.companyName}" />
+				</p:column>
+				
+				<p:column style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
+						<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
+					</f:facet>
+					
+					<!-- #31033 start -->
+					<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
+						rendered="#{loiLoa.smSupplier.disciplinaryActions}"
+						action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(loiLoa.smSupplier)}" 
+						process="@this" partialSubmit="true" update=":form">
+							<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
+					</p:commandLink><p:spacer width="2"/>
+					<!-- #31033 End -->
+					
+					<h:outputText rendered="#{!loiLoa.smSupplier.disciplinaryActions}"
+					 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
+				</p:column>
+						
+				<p:column headerText="#{lbl['lbl.sc.loiloa.is.loi.required']}" style="width:15%" rendered="#{!isMultipleLoi}">
+					<h:selectOneMenu value="#{loiLoa.loiRequired}" required="true"
+					    disabled="#{lOIDetailBackingBean.isLoiRequiredDisabled(loiLoa) or readOnly}"
+					    label="#{loiLoa.smSupplier.companyName} : #{lbl['lbl.sc.loiloa.is.loi.required']}" 
+						id="isLoiReq">
+					    <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"/>
+						<f:selectItem itemLabel="#{lbl['lbl.btn.yes']}" itemValue="true" />
+						<f:selectItem itemLabel="#{lbl['lbl.btn.no']}" itemValue="false" />
+						<p:ajax event="change" partialSubmit="true" update="@form"
+						    listener="#{lOIDetailBackingBean.loiRequiredListener(loiLoa)}"
+							process="@this" />
+					</h:selectOneMenu>
+					<p:message id="isLoiReqMsg" for="isLoiReq" display="icon" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.action']}" style="width:15%;text-align: center;">
+				   <!-- #29729 Start  -->
+			       <ui:param name="isBranchSupplierListDeleted" 
+			        	value="#{lOIDetailBackingBean.displaySupplierBranchListDeletedForLOI(loiLoa.smSupplier.supplierId)}" />
+                   <h:panelGroup id="loiPrepareButton" rendered="#{!isMultipleLoi}">
+                          <p:commandButton value="#{lbl['lbl.sc.loiloa.create.loi']}"
+							partialSubmit="true" process="@form" update="@form"
+							rendered="#{!loiLoa.loiCreated and loiLoa.loiRequired eq true and isBranchSupplierListDeleted}"
+							actionListener="#{lOIDetailBackingBean.infoBranchSupplierListDeletedForLOI()}" />
+				   <!-- #29729 End  -->
+						  <p:commandButton value="#{lbl['lbl.sc.loiloa.create.loi']}"
+							partialSubmit="true" process="@form" update="@form"
+							rendered="#{!loiLoa.loiCreated and loiLoa.loiRequired eq true and !isBranchSupplierListDeleted}"
+							actionListener="#{lOIDetailBackingBean.createLOI(loiLoa)}" />
+					</h:panelGroup>
+					
+					  <h:panelGroup id="loiPrepareMLI" rendered="#{isMultipleLoi}">
+					 <!-- #29729 Start  -->
+                          <p:commandButton value="#{lbl['lbl.sc.loiloa.create.loi']}"
+							partialSubmit="true" process="@form" update="@form"
+							rendered="#{!loiLoa.loiCreated and isMultipleLoi  and isBranchSupplierListDeleted}"
+							actionListener="#{lOIDetailBackingBean.infoBranchSupplierListDeletedForLOI()}" />
+					 <!-- #29729 End  --> 
+						  <p:commandButton value="#{lbl['lbl.sc.loiloa.create.loi']}"
+							partialSubmit="true" process="@form" update="@form"
+							rendered="#{!loiLoa.loiCreated and isMultipleLoi  and !isBranchSupplierListDeleted}"
+							actionListener="#{lOIDetailBackingBean.createLOI(loiLoa)}" />
+					</h:panelGroup>
+
+				</p:column>
+			</p:dataTable>
+
+            <br />
+            <h:panelGroup id="loiLoaListId"> 
+			<h:outputText value="#{lbl['lbl.sc.loiloa.recom.supp.list']} >" />
+			<h:outputText value="#{lbl['lbl.sc.loiloa.loiloalist']} " />
+			<h:outputText style="margin-left: 140px;"
+				value="#{lOIDetailBackingBean.managedBean.loiLoaListTitle}" />
+			
+				<p:dataTable id="loiLoaId" var="loiloaBean"
+				    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					value="#{lOIDetailBackingBean.managedBean.loiLoaBeans}"
+					rowIndexVar="rowIndex">
+
+					<p:column headerText="#{lbl['lbl.sc.loiloa.loiloano']}">
+						<h:outputText value="#{loiloaBean.scLoi.loiNo}"
+							rendered="#{loiloaBean.scLoi ne null}" />
+						<h:outputText value="#{loiloaBean.scLoa.loaNo}"
+							rendered="#{loiloaBean.scLoa ne null}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.loiloa.loa.type']}"
+						style="width:20%">
+						<h:outputText
+							value="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, loiloaBean.loiLoaType)}" />
+					</p:column>
+
+					<p:column style="text-align: center;">
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.sc.item']}" />
+							<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.item.view.tooltip']}" />
+						</f:facet>
+						<p:commandLink
+							actionListener="#{lOIDetailBackingBean.viewItemDetail(loiloaBean)}"
+							oncomplete="ItemDetailsPopup.show()" update=":form:ItemDetailsPopup"
+							process="@this">
+							<p:graphicImage id="itemDetImgId" title="Item Detail" value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png"
+											style="margin-right:2px;" />
+						</p:commandLink>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.status']}" style="width:15%">
+						<h:outputText value="#{loiloaBean.loiLoaStatus}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:15%;text-align: center;">
+
+						<h:panelGroup rendered="#{loiloaBean.loiLoaType eq 'LI'}">
+
+							<p:commandButton title="edit" icon="ui-icon-edit"
+								rendered="#{loiloaBean.pmStatus.statusId eq QTStatusConst.LOI_PENDING_SUBMISSION and !lOIDetailBackingBean.managedBean.readOnly }"
+								style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
+								action="#{lOIDetailBackingBean.editLOI(loiloaBean.scLoi, true)}" />
+
+							<p:commandLink
+								rendered="#{loiloaBean.pmStatus.statusId ne QTStatusConst.LOI_PENDING_SUBMISSION or lOIDetailBackingBean.managedBean.readOnly}"
+								action="#{lOIDetailBackingBean.editLOI(loiloaBean.scLoi, false)}"
+								process="@this">
+
+								<p:graphicImage id="editLoiImgId" value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" />
+								<p:spacer width="5"></p:spacer>
+							</p:commandLink>
+
+						</h:panelGroup>
+						<h:panelGroup rendered="#{loiloaBean.loiLoaType eq 'LA'}">
+							<p:commandButton title="edit" icon="ui-icon-edit"
+								rendered="#{loiloaBean.pmStatus.statusId eq QTStatusConst.LOA_PENDING_SUBMISSION}"
+								style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
+								action="#{lOADetailBackingBean.editLOAAction(loiloaBean.scLoa)}" />
+
+							<p:commandLink
+								rendered="#{loiloaBean.pmStatus.statusId ne QTStatusConst.LOA_PENDING_SUBMISSION}"
+								action="#{lOADetailBackingBean.editLOAAction(loiloaBean.scLoa)}"
+								process="@this">
+
+								<p:graphicImage id="editLoaImgId" value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" />
+								<p:spacer width="5"></p:spacer>
+							</p:commandLink>
+						</h:panelGroup>
+
+					</p:column>
+
+				</p:dataTable>
+			</h:panelGroup>
+		</p:panel>
+		<ui:include src="loiItemDetailPopup.xhtml" />
+		<!-- Bug #31033 #32560 Start -->
+		<ac:disciplinaryActionActiveQT voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}"  btnView="true" 
+				startDate="#{viewSuppProfileBackingBean.managedBean.startDate}"
+				endDate="#{viewSuppProfileBackingBean.managedBean.endDate}"
+				isWarning="#{viewSuppProfileBackingBean.managedBean.warning}"/>
+		<!-- Bug #31033 #32560 end -->
+	</ui:define>
+</ui:composition>

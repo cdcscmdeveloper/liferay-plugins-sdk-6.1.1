@@ -1,0 +1,289 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc" >
+    <p:panel id="signingWitness" header="#{lbl['lbl.ct.panel.supplier.signing']}" toggleable="true" toggleSpeed="500">
+        
+         <h:panelGrid style="width:100%">
+              <h:panelGrid columns="3">
+   			      <p:outputLabel value="#{lbl['lbl.ct.signer']}" style="float:left;"/>
+      		      <p:spacer width="1"/>
+			      <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.supplier.signer']}" />
+		      </h:panelGrid>
+        
+              <p:dataTable id="agSupplierSigner" var="signSupplierVar" widgetVar="agSupplierSignerWidget"
+                   value="#{agreementBackingBean.managedBean.ctSupplierSigner}"
+                   selection="#{agreementBackingBean.managedBean.selectedSupplierSigner}" rowKey="#{signSupplierVar}">
+                   <ac:paginator for="agSupplierSigner"/>
+			        <p:column  style="width:5%;text-align:center">
+				                   <f:facet name="header">
+							             <p:selectBooleanCheckbox value="#{agreementBackingBean.managedBean.selectAll}">
+								               <p:ajax partialSubmit="true" process="@this"
+									                  update=":form:agSupplierSigner,:form:delSupplierSignerBtn" listener="#{agreementBackingBean.selectAllSupplierSignerCheckBox}" />
+							              </p:selectBooleanCheckbox>
+						            </f:facet>
+		           
+		                             <p:selectBooleanCheckbox  value="#{signSupplierVar.selectedCheckBox}" styleClass="myCustomChekBox">
+		           		                    <p:ajax event="change" 
+		           		                         update=":form:agSupplierSigner,:form:delSupplierSignerBtn" listener="#{agreementBackingBean.selectOneSupplierSignerCheckBox}"></p:ajax>
+			                         </p:selectBooleanCheckbox>
+			            </p:column>
+                  
+                   <p:column style="width:25%;" headerText="#{lbl['lbl.ct.business.name']}" styleClass="column-align-center">
+                       <div align="left">
+                        <h:outputText 
+                            value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.supplierName}" /></div>
+                   </p:column> 
+                 
+                   <p:column style="width:25%;" styleClass="column-align-center">
+                        <f:facet name="header">
+					         <h:outputText value="#{lbl['lbl.ct.contract.signer']}" styleClass="required"/>
+					        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.supplier.contract.signer']}"/>
+				        </f:facet>
+                 
+                       <p:selectOneMenu id="contractSigner" value="#{signSupplierVar.officerName}"  style="width:95%;">
+                          <f:selectItems value="#{agreementBackingBean.getSupplierSignerDropdown()}"/>
+                          <p:ajax event="change" update="suOfId,suOfPosition"   
+                              onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+                              process="@all" listener="#{agreementBackingBean.setSupplierUserValue(signSupplierVar)}"/> 
+                       </p:selectOneMenu>
+                     </p:column>  
+             
+                     <p:column style="width:15%;" headerText="#{lbl['lbl.ct.identification.no']}" styleClass="column-align-center"> 
+                          <h:outputText id="suOfId" value="#{signSupplierVar.officerIc}" style="float:left;"/>
+                     </p:column> 	
+               
+                      <p:column style="width:30%;" headerText="#{lbl['lbl.ct.designation']}" styleClass="column-align-center">
+                           <div align="left">
+                           <h:outputText id="suOfPosition" value="#{signSupplierVar.officerPosition}" /></div>
+                      </p:column>  	
+                </p:dataTable>
+		    </h:panelGrid>
+		    <div class="ppRightBtn"> 
+		       <p:commandButton id="addSupplierSignerBtn" value="#{lbl['lbl.btn.add']}" 
+		           process="@form" action="#{agreementBackingBean.addSupplierSigner()}" update=":form:agSupplierSigner"
+		           oncomplete="agSupplierSignerWidget.paginator.endLink.click();">
+		    	   <p:tooltip for="addSupplierSignerBtn">
+				      <h:outputText value="#{lbl['lbl.ct.tooltip.add.supplier.signer']}" escape="false" />
+				   </p:tooltip>
+		        </p:commandButton>
+		        <p:commandButton id="delSupplierSignerBtn" process="@this" 
+		             disabled="#{agreementBackingBean.managedBean.buttonHideActive}"
+		           value="#{lbl['lbl.ct.delete']}"  onsuccess="dlgAgSupplierDel.show()">
+		    	   <p:tooltip for="delSupplierSignerBtn">
+				       <h:outputText value="#{lbl['lbl.ct.tooltip.delete.supplier.signer']}" escape="false" />
+			        </p:tooltip>
+		         </p:commandButton>
+              </div>
+              
+                 <p:confirmDialog id="dlgAgSupplierDel" widgetVar="dlgAgSupplierDel" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                 <div class="ppRightBtn">
+		                 <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                       update=":form:agSupplierSigner, :form:delSupplierSignerBtn" 
+		                       action="#{agreementBackingBean.deleteTableRow('SUPPLIER_SIGNER')}" oncomplete="dlgAgSupplierDel.hide();"/>
+			            <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgAgSupplierDel.hide();" type="button" />
+		           </div>
+          </p:confirmDialog>
+      
+             <h:panelGrid style="width:100%">
+                  <h:panelGrid columns="3">
+   			          <p:outputLabel value="#{lbl['lbl.ct.witness']}" style="float:left;"/>
+      		          <p:spacer width="1"/>
+			         <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.supplier.witness']}" />
+		          </h:panelGrid>
+       
+                  <p:dataTable id="supplierWitnesTable" var="supplierWitnessVar" widgetVar="supplierWitnesWidget"
+                       value="#{agreementBackingBean.managedBean.ctSupplierWitness}"
+                       selection="#{agreementBackingBean.managedBean.selectedSupplierWitnes}" rowKey="#{supplierWitnessVar}">
+                       <ac:paginator for="supplierWitnesTable"/>
+                        <p:column  style="width:5%;text-align:center">
+				                   <f:facet name="header">
+							             <p:selectBooleanCheckbox value="#{agreementBackingBean.managedBean.selectAll}">
+								               <p:ajax partialSubmit="true" process="@this"
+									                  update=":form:supplierWitnesTable,:form:delSupplierWitnessBtn" listener="#{agreementBackingBean.selectAllSupplierWitnessCheckBox}" />
+							              </p:selectBooleanCheckbox>
+						            </f:facet>
+		           
+		                             <p:selectBooleanCheckbox  value="#{supplierWitnessVar.selectedCheckBox}" styleClass="myCustomChekBox">
+		           		                    <p:ajax event="change" 
+		           		                         update=":form:supplierWitnesTable,:form:delSupplierWitnessBtn" listener="#{agreementBackingBean.selectOneSupplierSignerCheckBox}"></p:ajax>
+			                         </p:selectBooleanCheckbox>
+			            </p:column>
+			            
+			            <!-- #30453 start -->
+			            <p:column style="width:35%;" styleClass="column-align-center">
+					     <f:facet name="header">
+					         <h:outputText value="#{lbl['lbl.ct.name']}" styleClass="required"/>
+					         <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.supplier.witness']}"/>
+					        </f:facet>
+                 
+                             <p:inputText value="#{supplierWitnessVar.officerName}" 
+		                          style="width:90%" maxlength="80" />
+                         </p:column>                       
+                       <!-- #30453 end -->
+                        <p:column style="width:20%;"  styleClass="column-align-center"> 
+                         	 <f:facet name="header">
+		                           <h:outputText value="#{lbl['lbl.ct.identification.no']}" styleClass="required"/>
+		                         <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.agency.signer.user']}"/>
+				              </f:facet>
+                         	   <p:inputText value="#{supplierWitnessVar.officerIc}" label="#{lbl['lbl.ct.identification.no']}" 
+                           			style="width:95%;" maxlength="20">
+                            			<p:ajax event="change" listener="#{agreementBackingBean.checkDuplicateAgreementParty()}"/>
+                              </p:inputText>
+                        </p:column> 	       
+          
+                         <p:column style="width:45%;" headerText="#{lbl['lbl.ct.designation']}"  styleClass="column-align-center">
+                             <p:inputText value="#{supplierWitnessVar.officerPosition}" style="width:95%;" maxlength="255" />
+                         </p:column>  
+                   </p:dataTable>
+              </h:panelGrid>
+              <div class="ppRightBtn"> 
+		            <p:commandButton id="addSupplierWitnessBtn" value="#{lbl['lbl.btn.add']}" 
+		                 process="@form" 
+		                 action="#{agreementBackingBean.addSupplierWitness()}" update=":form:supplierWitnesTable"
+		                 oncomplete="supplierWitnesWidget.paginator.endLink.click();">
+		    	        <p:tooltip for="addSupplierWitnessBtn">
+				             <h:outputText value="#{lbl['lbl.ct.tooltip.add.supplier.witness']}" escape="false" />
+				        </p:tooltip>
+		            </p:commandButton>
+		            <p:commandButton id="delSupplierWitnessBtn" value="#{lbl['lbl.ct.delete']}" 
+		                  disabled="#{agreementBackingBean.managedBean.buttonHideActive}"
+		                  process="@this" onsuccess="dlgSupplierWitnesDel.show()">
+		         	     <p:tooltip for="delSupplierWitnessBtn">
+				             <h:outputText value="#{lbl['lbl.ct.tooltip.delete.supplier.witness']}" escape="false" />
+				         </p:tooltip>
+		             </p:commandButton>
+                </div>
+                
+                   <p:confirmDialog id="dlgSupplierWitnesDel" widgetVar="dlgSupplierWitnesDel" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                 <div class="ppRightBtn">
+		                 <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                       update=":form:supplierWitnesTable, :form:delSupplierWitnessBtn" 
+		                       action="#{agreementBackingBean.deleteTableRow('SUPPLIER_WITNESS')}" oncomplete="dlgSupplierWitnesDel.hide();"/>
+			            <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgSupplierWitnesDel.hide();" type="button" />
+		           </div>
+          </p:confirmDialog>
+       </p:panel>
+       <p:panel header="#{lbl['lbl.ct.panel.remarks.attachment']}" toggleable="true">
+		<table style="width: 100%">
+			<tr>
+				<td width="50%" valign="top">
+					<table style="width: 100%">
+						<tr>
+							<td class="TableFieldLeft" width="24%"><h:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
+							<td class="TableFieldRight">
+								<p:dataGrid value="#{agreementBackingBean.managedBean.ctAgreement.signAgreementRemark}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
+									<table>
+										<tr>
+											<td rowspan="2" valign="top">
+												<h:graphicImage value="#{agreementBackingBean.userImagePath(remarkVar.createdUser.loginId)}" height="30" width="30" />
+											</td>
+											<td width="5"></td>
+											<td>
+												<h:outputText value="#{remarkVar.createdUser.userName}"></h:outputText>,
+												<h:outputText value="#{remarkVar.changedDate}">
+													<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
+												</h:outputText>
+											</td>
+										</tr>
+										<tr>
+											<td></td>
+											<td>
+												<p:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" 
+												   onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);" 
+												   style="width:70%;" autoResize="false" /> 
+												<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.remark']}" rendered="#{remarkIndex==0}" />
+												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
+											</td>
+										</tr>
+									</table>
+								</p:dataGrid>
+							</td>
+						</tr>
+					</table>    					
+				</td>
+				<td width="50%" valign="top">
+				<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.attachment']}" escape="false"/><br/><br/>
+				<table style="width: 100%">
+		<tr>
+			<td class="TableFieldLeft" width="24%"><h:outputLabel value="#{lbl['lbl.txt.attachment']}" /></td>
+			<td class="TableFieldRight">
+				<p:commandButton oncomplete="uploadSignAttachDlg.show();return false;"
+					update="lampiranAttach, uploadSignAttachDlg" value="#{lbl['lbl.txt.attach.files']}"
+					disabled="#{ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim}" />
+			</td>
+		</tr>
+		<tr>
+			<td/>
+			<td>
+				<p:dataGrid id="lampiranAttach" value="#{agreementBackingBean.managedBean.ctAgreement.signAgreementAttachments}"
+					var="attachFile" rowIndexVar="attachFileIndex" columns="1" style="width:100%"
+					emptyMessage ="#{lbl['lbl.datatable.msg.no.records.found']}">
+					<table>
+						<tr>
+							<td rowspan="2"><h:graphicImage value="/css/images/design/#{ctBackingBean.determineIcon(attachFile)}" height="30" width="30"/></td>
+							<td width="5"></td>
+							<td>
+								<h:outputText value=" #{attachFile.createdUser.userName}"></h:outputText>,
+								<h:outputText value="#{attachFile.createdDate}">									
+									<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
+								</h:outputText>
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td>
+								<h:commandLink value="#{attachFile.fileName}" 
+									styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
+								<p:commandLink onsuccess="deleteSignAttachDlg.show();" action="#{ctBackingBean.setAttachFileIndex(attachFileIndex)}"
+									disabled="#{ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim}">
+			   						<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
+			 	 				</p:commandLink>
+			 	 			</td>
+						</tr>
+					</table>
+				</p:dataGrid>
+			</td>
+		</tr>
+	</table>
+				</td>
+			</tr>
+		</table>
+		<p:dialog id="uploadSignAttachDlg" widgetVar="uploadSignAttachDlg" modal="true"  resizable="false"
+	     width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
+		<p:ajax event="close" />
+		<p:fileUpload style="display:inline;"
+			fileUploadListener="#{agreementBackingBean.fileUpload}"
+			mode="advanced" id="uploadSignAttachId" multiple="true"
+			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+			invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
+			label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload.all']}" cancelLabel="#{lbl['lbl.btn.remove.all']}" 
+			update="lampiranAttach" >
+		</p:fileUpload>
+		<f:facet name="footer">
+		<div class="ppRightBtn">
+		    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadSignAttachDlg.hide();" />
+  		</div>
+   		</f:facet>
+	</p:dialog>	
+	
+	             <p:confirmDialog id="deleteSignAttachDlg" widgetVar="deleteSignAttachDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                           severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                         <div class="ppRightBtn">
+		                     <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                         update=":form:lampiranAttach" 
+		                         action="#{agreementBackingBean.deleteSignAttachmentAction(ctBackingBean.managedBean.attachFileIndex)}"
+		                         oncomplete="deleteSignAttachDlg.hide();"/>
+			                 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteSignAttachDlg.hide();" type="button" />
+		                 </div>
+                   </p:confirmDialog>
+	</p:panel>		   	
+</ui:composition>

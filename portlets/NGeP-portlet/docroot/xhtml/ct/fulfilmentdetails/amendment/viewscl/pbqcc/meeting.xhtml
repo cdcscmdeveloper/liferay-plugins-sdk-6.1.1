@@ -1,0 +1,158 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc" >
+    <p:panel id="meetingPanel" header="#{lbl['lbl.ct.menu.meeting']}" toggleable="true"  toggleSpeed="500">
+           <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.mandatory']}" escape="false" /><br/><br/>
+           <p:dataTable id="meetingTable" var="ctMeetingsVar" widgetVar="meetingTableWidget"
+                value="#{ctBackingBean.managedBean.contractVer.ctAmendment.ctMeetings}" rowIndexVar="indexMeeting"
+                selection="#{amendmentBackingBean.selectedMeetingUser}" rowKey="#{ctMeetingsVar}">
+                <ac:paginator for="meetingTable" />
+                  <p:ajax event="toggleSelect" 
+			                              listener="#{ctBackingBean.onToggleSelect}" update=":form:meetingDelBtn" />
+			      <p:ajax event="rowSelect"
+                                       listener="#{ctBackingBean.onRowSelect}" update=":form:meetingDelBtn" />
+			      <p:ajax event="rowSelectCheckbox" 
+			                             listener="#{ctBackingBean.onRowSelect}" update=":form:meetingDelBtn" />
+                   <p:ajax event="rowUnselectCheckbox" 
+                                         listener="#{ctBackingBean.onRowUnselect}" update=":form:meetingDelBtn" />
+              
+                <p:column selectionMode="multiple" style="width:2%;" rendered="#{!amendmentBackingBean.managedBean.disableMeetingDetails}"/>  
+                <p:column style="width:25%;white-space:normal;" styleClass="column-align-center" >
+			           <f:facet name="header">
+				             <h:outputText value="#{lbl['lbl.ct.date.of.meeting']}" styleClass="required"/>
+				        </f:facet>
+
+			          	<ac:dateTimeWithColon id="calMeeting" label="#{lbl['lbl.ct.date.of.meeting']}"
+							required="true" disabled="#{amendmentBackingBean.managedBean.disableMeetingDetails}"
+							value="#{ctMeetingsVar.meetingDate}" modVal="15"
+							maxdate="#{(ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend)
+			              	? ctBackingBean.managedBean.contractVer.ctAmendment.extendEndDate : ctBackingBean.managedBean.contractVer.ctContractValue.expDate}">
+					  	</ac:dateTimeWithColon>
+			    </p:column> 
+
+			 	<p:column style="width:30%;white-space:normal;" styleClass="column-align-center">
+			         <f:facet name="header">
+			             <h:outputText value="#{lbl['lbl.ct.meeting.title']}" styleClass="required" />
+			         </f:facet>
+				      <p:inputText value="#{ctMeetingsVar.meetingTitle}" style="width:95%;" maxlength="255"
+				      	required="true" label="#{lbl['lbl.ct.meeting.title']}"
+				      	requiredMessage="#{lbl['lbl.ct.meeting.title.mandatory']}"
+				      	disabled="#{amendmentBackingBean.managedBean.disableMeetingDetails}"/>
+			     </p:column> 
+
+			     <p:column style="width:20%;white-space:normal;" styleClass="column-align-center">
+			         <f:facet name="header">
+			             <h:outputText value="#{lbl['lbl.ct.location.of.meeting']}" styleClass="required" />
+			         </f:facet>
+				      <p:inputText value="#{ctMeetingsVar.meetingLocation}" style="width:95%;" maxlength="50"
+				      	required="true" label="#{lbl['lbl.ct.location.of.meeting']}"
+				      	disabled="#{amendmentBackingBean.managedBean.disableMeetingDetails}"/>
+			     </p:column> 
+			   
+			     <p:column style="width:10%;white-space:normal;"  styleClass="column-align-center">
+			        <f:facet name="header">
+			             <h:outputText value="#{lbl['lbl.ct.status']}" styleClass="required"/>
+			        </f:facet>
+				      <p:selectOneMenu value="#{ctMeetingsVar.meetingStatusId}"  style="with:150px;"
+				      	required="true" label="#{lbl['lbl.ct.status']}"
+				      	disabled="#{amendmentBackingBean.managedBean.disableMeetingDetails}">
+			              <f:selectItems value="#{amendmentBackingBean.getMeetingStatusDropdown()}"/>
+			          </p:selectOneMenu>
+			     </p:column>
+
+			     <p:column width="25%">
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.ct.meeting.amendment.paper']}"/>
+							<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.meeting.amendment.paper']}"/>
+						</f:facet>
+						<p:commandButton
+							oncomplete="uploadMeetingAmendmentAttachmentDlg.show();return false;"
+							update="meetingTable"
+							icon="ui-icon-upload"
+							action="#{ctBackingBean.setAttachFileIndex(indexMeeting)}"
+							rendered="#{ctMeetingsVar.meetingAmendmentAttachment.filePath == null}"
+							disabled="#{amendmentBackingBean.managedBean.disableMeetingDetails}" />
+						<h:commandLink value="#{ctMeetingsVar.meetingAmendmentAttachment.fileName}"
+							styleClass="blue_font"
+							action="#{ctBackingBean.commonDownload(ctMeetingsVar.meetingAmendmentAttachment.filePath, ctMeetingsVar.meetingAmendmentAttachment.fileName)}"  />
+						<p:commandLink onsuccess="delMeetingAmendmentAttachDlg.show();"
+							action="#{ctBackingBean.setAttachFileIndex(indexMeeting)}"
+							rendered="#{ctMeetingsVar.meetingAmendmentAttachment.filePath != null}"
+							disabled="#{amendmentBackingBean.managedBean.disableMeetingDetails}">
+							<h:graphicImage value="/css/images/design/icon_trash.png"
+								styleClass="tasklist_title1" />
+						</p:commandLink>
+						
+				  </p:column> 	
+           </p:dataTable>
+    
+            <div class="ppRightBtn"> 
+		       <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" 
+		          action="#{amendmentBackingBean.addPbQccMeetingDetails}"  update="meetingTable"
+		          rendered="#{!amendmentBackingBean.managedBean.disableMeetingDetails}"
+		          oncomplete="meetingTableWidget.paginator.endLink.click();" />
+		       <p:commandButton id="meetingDelBtn" value="#{lbl['lbl.ct.delete']}"  process="@this"  partialSubmit="true"
+		          onsuccess="dlgMeetingDetails.show();" update="meetingTable" disabled="#{ctBackingBean.managedBean.buttonHideActive}"
+		          rendered="#{!amendmentBackingBean.managedBean.disableMeetingDetails}"/>
+		    </div>
+		    
+		    <p:confirmDialog id="dlgMeetingDetails" widgetVar="dlgMeetingDetails" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                           severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                         <div class="ppRightBtn">
+		                     <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                         update=":form:meetingTable,:form:meetingDelBtn" 
+		                         action="#{amendmentBackingBean.delPbQccMeetingDetails}" oncomplete="dlgMeetingDetails.hide();"/>
+			                 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgMeetingDetails.hide();" type="button" />
+		                 </div>
+                   </p:confirmDialog>
+                   
+                   
+			<p:confirmDialog id="delMeetingAmendmentAttachDlg"
+				widgetVar="delMeetingAmendmentAttachDlg"
+				message="#{lbl['lbl.msg.confirm.delete']}" severity="alert"
+				closable="true" appendToBody="true"
+				header="#{lbl['lbl.msg.confirm.delete.header']}">
+				<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@this"
+						partialSubmit="true"
+						update=":form:meetingTable" id="delMeetingAmendmentAttachId"
+						actionListener="#{ctBackingBean.deleteAttachmentActionByEvent}"
+						oncomplete="delMeetingAmendmentAttachDlg.hide();"/>
+					<p:commandButton value="#{lbl['lbl.btn.no']}"
+						onclick="delMeetingAmendmentAttachDlg.hide();" type="button" />
+				</div>
+			</p:confirmDialog>
+			<p:dialog id="uploadMeetingAmendmentAttachmentDlg"
+				widgetVar="uploadMeetingAmendmentAttachmentDlg" modal="true"
+				resizable="false" width="700px" height="350px"
+				styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}"
+				onShow="singleUploadListener(meetingAmendmentAttachmentWV);">
+				<p:ajax event="close" />
+				<p:fileUpload style="display:inline;" mode="advanced"
+					dragDropSupport="false" id="meetingAmendmendAttachmentId"
+					fileUploadListener="#{ctBackingBean.fileUpload}"
+					showButtons="false"
+					sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+					allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+					multiple="true"
+					invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+					widgetVar="meetingAmendmentAttachmentWV"
+					invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
+					update="meetingTable" label="#{lbl['lbl.btn.choose']}"
+					oncomplete="uploadMeetingAmendmentAttachmentDlg.hide();">
+				</p:fileUpload>
+				<f:facet name="footer">
+					<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.btn.close']}" type="button"
+							ajax="false" onclick="uploadMeetingAmendmentAttachmentDlg.hide();" />
+					</div>
+				</f:facet>
+			</p:dialog>
+			
+      	</p:panel>
+</ui:composition>

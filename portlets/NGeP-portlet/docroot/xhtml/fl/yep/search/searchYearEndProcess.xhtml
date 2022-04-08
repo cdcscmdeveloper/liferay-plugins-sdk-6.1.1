@@ -1,0 +1,452 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+	<ui:define name="contentSection">
+		
+		<style>
+			div[id$="ctSubListTree"] thead {
+    			display:none;
+			}
+			
+			.ui-datatable.ctlisttree thead th,
+			.ui-datatable.ctlisttree tbody,
+			.ui-datatable.ctlisttree tbody tr,
+			.ui-datatable.ctlisttree tbody td {
+				padding:4px;
+			}
+			
+			
+			tr.ui-expanded-row-content.ui-widget-content td[colspan="11"]:first-child{
+    			padding: 0px;
+    			border-top: 0 !important;
+    			border-right: 0 !important;    		
+    			border-left: 0 !important;
+			}
+				
+			.ui-datatable.borderless thead th,
+			.ui-datatable.borderless tbody,
+			.ui-datatable.borderless tbody tr,
+			.ui-datatable.borderless tbody td {
+    			border-style: none;
+    			padding:4px 10px !important;
+    			border: 0px !important;
+    			
+			}
+			.ui-datatable.borderless table{
+				border:0 !important;
+				border-collapse:collapse !important;
+			}
+			
+			.borderless.ui-datatable .ui-datatable-tablewrapper {
+			    overflow:hidden !important;
+			    padding:0px !important;
+			}
+			
+			.ui-datatable.borderless.ui-datatable-resizable{
+				padding:0px;
+			
+
+			
+			.ui-row-toggler{
+				margin-left:auto !important;
+				margin-right:auto !important;
+			}
+			
+			tr.ui-widget-content.ui-datatable-odd.ui-expanded-row ~ tr.ui-expanded-row-content.ui-widget-content td{
+				background-color:#F9F9F9 !important;
+			}
+			
+			tr.ui-widget-content.ui-datatable-even.ui-expanded-row ~ tr.ui-expanded-row-content.ui-widget-content td{
+				background-color:white !important;
+			}
+			
+			@-moz-document url-prefix() {
+				tr.ui-expanded-row-content.ui-widget-content td[colspan="11"]:first-child{
+	    			padding: 0px;
+	    			border-top: 0 !important;
+	    			border-right: 0 !important;  
+	    			border-bottom : 0 !important;
+    			}
+			}
+			
+			@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) { 
+    			.ui-datatable.borderless tbody td:last-child {
+	    			border-right: 0 !important;
+				}
+				.ui-datatable.borderless tbody tr:last-child td {
+	    			border-bottom: 0 !important;
+				}
+				.ui-datatable table{
+					width:auto; !important;
+				}
+			}
+		</style>
+	
+	
+	
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>
+			<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error,info" />
+		<!-- start search panel -->
+		<p:panel id="searchPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}"/>
+			<table>
+				<tr>
+					<td style="width: 190px;"/>
+					<td>
+						<p:selectOneRadio value="#{yearEndProcessBackingBean.managedBean.searchFunctionType}" 
+							rendered="#{yearEndProcessBackingBean.showFunctionType()}" >
+							<f:selectItems value="#{yearEndProcessBackingBean.getFunctionType()}" />
+							<p:ajax event="change" update=":form" />
+						</p:selectOneRadio>
+					</td>
+				</tr>
+			</table>
+			<h:panelGroup id="orgSearch" rendered="#{false}">
+			<table>
+				<tr>
+					<td style="width: 190px;">
+						<p:outputLabel value="#{lbl['lbl.fl.ministry']}"  /><p:outputLabel
+						value="*" styleClass="mandatory" />
+					</td>
+					<td>
+						<ac:lov id="searchMinistry" lovId="PM_ORG_PROFILE_MINSTRY" size="131" readonly="true" 
+							disabled="#{yearEndProcessBackingBean.disableMinistryLov()}"
+							headerText="#{lbl['lbl.fl.ministry']}" 
+							value="#{yearEndProcessBackingBean.managedBean.ministry.orgName}"
+							postUpdateListener="yearEndProcessBackingBean.resetPtjGroupProfile()"
+							update=":form:searchPtj,:form:orgSearch"
+							saveObject="yearEndProcessBackingBean.managedBean.ministry"
+							conditionField="#{yearEndProcessBackingBean.getMinistryCondition()}"
+							>
+						</ac:lov>
+					</td>
+				</tr>
+				<tr>
+					<td style="width: 190px;">
+						<p:outputLabel value="#{lbl['lbl.fl.jabatan']}"	/>
+					</td>
+					<td>
+						<ac:lov id="searchJabatan" lovId="PM_ORG_PROFILE_PTJ_GROUP" size="131" readonly="true" 
+							disabled="#{yearEndProcessBackingBean.disablePtjGroupLov()}"
+							headerText="#{lbl['lbl.fl.jabatan']}" 
+							value="#{yearEndProcessBackingBean.managedBean.ptjGroup.orgName}"
+							postUpdateListener="yearEndProcessBackingBean.resetPtjProfile()"
+							update=":form:searchPtj,:form:orgSearch"
+							saveObject="yearEndProcessBackingBean.managedBean.ptjGroup"
+							conditionField="#{yearEndProcessBackingBean.constuctConditionFieldsForPTJGroup()}"
+							>
+						</ac:lov>
+					</td>
+				</tr>
+				<tr>
+					<td style="width: 190px;"><p:outputLabel value="#{lbl['lbl.fl.ptj']}" /></td>
+					<td>
+						<ac:lov id="searchPtj" lovId="PM_ORG_PROFILE_PTJ" size="131" readonly="true" 
+							disabled="#{yearEndProcessBackingBean.disablePtjLov()}"
+							headerText="#{lbl['lbl.fl.ptj']}"
+							value="#{yearEndProcessBackingBean.managedBean.ptj.orgName}"
+							saveObject="yearEndProcessBackingBean.managedBean.ptj"	
+							conditionField="#{yearEndProcessBackingBean.getPTJCondition()}"
+							>			
+						</ac:lov>
+					</td>
+				</tr>
+			</table>
+			</h:panelGroup>
+			<!-- PO panel -->
+			<p:panel id="purchaseOrderPanel" header="#{lbl['lbl.fl.purchaseorder']}" toggleable="true">
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}"/>
+				<table style="width: 100%">
+					<tr>
+						<!-- po no -->
+						<td width="20%"><p:outputLabel
+								value="#{lbl['lbl.fl.doc.search.purchase.order.no']}" /></td>
+						<td width="30%"><p:inputText size="35"
+								value="#{yearEndProcessBackingBean.managedBean.searchOrderNo}"></p:inputText></td>
+		
+						<!-- title -->
+						<td width="20%"><p:outputLabel
+								value="#{lbl['lbl.fl.yep.search.title']}" /></td>
+						<td width="30%"><p:inputText size="60" style="width: 170px;"
+								value="#{yearEndProcessBackingBean.managedBean.searchTitle}"></p:inputText></td>
+		
+					</tr>
+					<tr>
+						<!-- doc type  -->
+						<td width="20%"><p:outputLabel value="#{lbl['lbl.fl.yep.search.doc.type']}"	/><p:outputLabel
+						value="*" styleClass="mandatory" />
+						</td>
+						<td width="30%">
+							<p:selectOneMenu
+								value="#{yearEndProcessBackingBean.managedBean.searchDocType}"
+								style="width: 314px;">
+								<f:selectItems
+									value="#{yearEndProcessBackingBean.getDropdownCodeValues(ParameterTypeConst.fulfilmentOrderType)}" />
+								<p:ajax event="change" update="form:searchPanel"
+								listener="#{yearEndProcessBackingBean.selectedDocType}"/>
+							</p:selectOneMenu>
+						</td>
+						<!-- po status -->
+						<td width="20%"><p:outputLabel
+							value="#{lbl['lbl.fl.purchaseorder.status']}" /><p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+						<td width="30%">
+							<p:selectOneMenu id="postatus"
+								style="width: 200px;"
+								value="#{yearEndProcessBackingBean.managedBean.statusDescId}">
+								<f:selectItems value="#{yearEndProcessBackingBean.getStatusDropdownValues('FL',yearEndProcessBackingBean.managedBean.searchDocType)}"/>
+								<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue="0"></f:selectItem>	
+							</p:selectOneMenu>
+						</td>
+	
+					</tr>
+					<TR />
+					<tr style="margin-top:2px">
+						<td width="20%"></td>
+						<td width="30%"></td>
+						<td width="20%"></td>
+						<td width="30%"><p:selectBooleanCheckbox  style="float:left;text-align:left " value="#{yearEndProcessBackingBean.managedBean.searchAp58}">
+							<p:ajax process="@this"></p:ajax></p:selectBooleanCheckbox>
+							<p:spacer width="2"/>
+						<h:outputText value="#{lbl['lbl.fl.yep.ap58a']}"></h:outputText></td>
+					</tr>
+					<!-- #28373 added by vinod -->
+					<tr>
+						<td width="20%"></td>
+						<td width="30%"></td>
+						<td width="20%"></td>
+						<td width="30%"><p:selectBooleanCheckbox   style="float:left;text-align:left" value="#{yearEndProcessBackingBean.managedBean.searchCarryFoward}">
+							<p:ajax process="@this"></p:ajax></p:selectBooleanCheckbox>
+							<p:spacer width="2"/>
+						<h:outputText value="#{lbl['lbl.fl.yep.carryFow']}"></h:outputText></td>
+					</tr>
+					<!-- <tr>
+						<td width="20%"></td>
+						<td width="30%"></td>
+						<td width="20%"></td>
+						<td width="30%"><p:selectBooleanCheckbox   style="float:left;text-align:left" value="#{yearEndProcessBackingBean.managedBean.searchCloseMnualPay}">
+							<p:ajax process="@this"></p:ajax></p:selectBooleanCheckbox>
+							<p:spacer width="2"/>
+						<h:outputText value="#{lbl['lbl.fl.yep.closedManPay']}"></h:outputText></td>
+					</tr>
+					<tr>
+						<td width="20%"></td>
+						<td width="30%"></td>
+						<td width="20%"></td>
+						<td width="30%"><p:selectBooleanCheckbox   style="float:left;text-align:left" value="#{yearEndProcessBackingBean.managedBean.searchNonAction}">
+							<p:ajax process="@this"></p:ajax></p:selectBooleanCheckbox>
+							<p:spacer width="2"/>
+						<h:outputText value="#{lbl['lbl.fl.yep.nonActTrans']}"></h:outputText></td>
+					</tr> -->
+					<tr>
+						<td width="20%"><p:outputLabel value="#{lbl['lbl.fl.created.date.from']} " /></td>
+						<td width="30%"><p:calendar mode="popup" showOn="button"
+								id="calendarStart" readonlyInput="true"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+								value="#{yearEndProcessBackingBean.managedBean.searchStartDate}">
+							</p:calendar></td>
+								
+						<td width="20%"><p:outputLabel value="#{lbl['lbl.fl.created.date.to']}" /></td>
+						<td width="30%"><p:calendar mode="popup" showOn="button" id="calendarEnd"
+								readonlyInput="true"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+								value="#{yearEndProcessBackingBean.managedBean.searchToDate}">
+							</p:calendar></td>
+	
+					</tr>
+					<tr>
+						<td width="20%"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.business.company.name']}" /></td>
+						<td width="30%"><p:inputText size="45"
+							value="#{yearEndProcessBackingBean.managedBean.searchSuppName}"></p:inputText></td>
+						<td  width="20%"><p:outputLabel
+									value="#{lbl['lbl.fl.financial.year']}" /></td>
+						<td width="30%"> <p:selectOneMenu id="searchFinancialYear"
+								style="width: 100px;"
+								value="#{yearEndProcessBackingBean.managedBean.searchFinancialYear}">
+								<f:selectItems
+									value="#{yearEndProcessBackingBean.getFinancialYearOpt()}" />
+							</p:selectOneMenu></td>
+					</tr>
+				</table>
+				<!-- expanded panel -->
+				<h:panelGroup id="ctOrderExpandPnl"  rendered="#{yearEndProcessBackingBean.managedBean.checkDocType}">
+					<table style="width: 100%">
+						<tr>
+							<td  width="20%"><p:outputLabel
+									value="#{lbl['lbl.fl.sistem.panel.name']}" /></td>
+							<td width="30%"><p:inputText  maxlength="500" value="#{yearEndProcessBackingBean.managedBean.searchCentralPanelContractName}" />	
+				         		  <p:spacer width="2"/>
+				          		<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.central.contract.name']}"/></td>
+							<td width="20%"><p:outputLabel
+									value="#{lbl['lbl.fl.doc.maintain.circular.no']}" /></td>
+							<td width="30%"><p:inputText   maxlength="60" value="#{yearEndProcessBackingBean.managedBean.searchCircularNo}"/>
+							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.treasury.circular']}"/></td>
+						</tr>
+						<tr>
+							<td  width="20%"><p:outputLabel value="#{lbl['lbl.ct.loa.no']}"/><p:outputLabel value="*" styleClass="mandatory" /></td>
+							<td width="30%"><p:inputText  maxlength="17" value="#{yearEndProcessBackingBean.managedBean.searchLoaNo}"/>	
+				         		  <p:spacer width="2"/>
+				          		<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.loa']}"  /></td>
+							<td  width="20%"><p:outputLabel
+									value="#{lbl['lbl.ct.loa.physical.no']}" /></td>
+							<td width="30%"><p:inputText  maxlength="100" value="#{yearEndProcessBackingBean.managedBean.searchPhysLoaNo}"/>         	
+				         		 <p:spacer width="2"/>
+				          		</td>
+						</tr>
+						<tr>
+							<td  width="20%"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.contract.no']}" /></td>
+							<td width="30%"><p:inputText maxlength="17" value="#{yearEndProcessBackingBean.managedBean.searchContractNo}"/>      	
+				         		 <p:spacer width="2"/>
+				          		<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.contr.no']}"/></td>
+							<td width="20%"><p:outputLabel value="#{lbl['lbl.fl.physical.contract.no']}" /></td>
+							<td width="30%"><p:inputText  maxlength="100" style="margin-top:3px;" value="#{yearEndProcessBackingBean.managedBean.searchPhysContractNo}"/>
+							 <p:spacer width="2"/>
+				          		 <ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.phycontr.no']}" /></td>
+						</tr>
+						<tr>
+							<td  width="20%"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.contract.start.date']}"/></td>
+							<td width="30%"><p:calendar id="calendarCtStart"   showOn="button" readonlyInput="true"  navigator="true"
+					               	pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
+					               	value="#{yearEndProcessBackingBean.managedBean.searchContractFromDuration}" />     	
+				         		 <p:spacer width="2"/>
+				          		 </td>
+							<td width="20%"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.contract.end.date']}" /></td>
+							<td width="30%"><p:calendar id="calendarCtEnd"   readonlyInput="true" 
+					             	 navigator="true"  showOn="button"
+					             	pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
+					             	value="#{yearEndProcessBackingBean.managedBean.searchContractToDuration}" />
+								 <p:spacer width="2"/>
+				          		</td>
+						</tr>
+					</table>
+			
+				</h:panelGroup>
+				<!-- end expanded panel -->
+				
+			</p:panel>
+			<!-- end PO panel -->
+			
+			<div class="clear"></div>
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.search']}" validateClient="true"
+					action="#{yearEndProcessBackingBean.searchYep}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+					update="flYepList" />
+				<p:commandButton value="#{lbl['lbl.btn.reset']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+					action="#{yearEndProcessBackingBean.searchReset}" 
+					update=":form"  title="#{lbl['lbl.fl.tooltip.doc.maintain.reset']}"/>
+			</div>
+		</p:panel>
+		<!-- end search panel -->
+		<!-- start result panel -->
+		<p:panel id="resultPanel" header="#{lbl['lbl.fl.search.result']}" toggleable="true"><!-- #29064 changed lbl.fl.result to lbl.fl.search.result by Vinod -->
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.doc.maintain.result']}"/><br/><br/>
+			<p:dataTable id="flYepList"
+				value="#{yearEndProcessBackingBean.managedBean.flYepDataModel}" lazy="true"
+				var="flYep" rowIndexVar="rowIndex" rowKey="#{flYep.docId}" rows="10"
+				width="100%">
+				<ac:paginator for="flYepList" />
+				<p:column
+					headerText="#{lbl['lbl.fl.doc.maintain.doc.type']}" style="white-space:normal;" >
+					<h:outputText
+						value="#{yearEndProcessBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentOrderType, flYep.docType)}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.fl.doc.maintain.circular.doc.no']}">
+					<h:outputText value="#{flYep.docNo}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.fl.doc.maintain.order.no']}">
+					<h:outputText value="#{flYep.orderNo}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.fl.doc.maintain.doc.title']}" style="white-space:normal;" >
+					<h:outputText value="#{flYep.title}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.fl.doc.maintain.contract.no']}" style="white-space:normal;">
+					<h:outputText value="#{flYep.ctContract.contractNo}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.fl.yep.po.created.date']}" style="white-space:normal;" >
+					<h:outputText value="#{flYep.orderCreatedDate}" ><f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" /></h:outputText>
+				</p:column>  
+				
+				<p:column headerText="#{lbl['lbl.fl.doc.maintain.doc.status']}" style="white-space:normal;" >
+					<h:outputText value="#{yearEndProcessBackingBean.getStatusDescById(flYep.statusId)}" />
+				</p:column> 
+				<p:column headerText="#{lbl['lbl.fl.yep.category']}" style="white-space:normal;" >
+					<!-- #28373 added by vinod start -->
+					<h:outputText value="#{(flYep.isAp58 eq 1) ? 'Ap58a' : ''}" rendered="#{flYep.isAp58 eq 1}"/>
+					<h:outputText value="#{lbl['lbl.fl.yep.carryFow']}" rendered="#{flYep.carryForward}"/>
+					<!-- #28373 added by vinod End -->
+				</p:column> 
+				
+				<p:column headerText="#{lbl['lbl.fl.doc.maintain.action.no']}"
+					style="text-align: center">
+					<p:menuButton value="#{lbl['lbl.btn.option']}">	
+					                <!-- 29440 start -->
+					                <p:menuitem value="#{lbl['lbl.fl.doc.maintain.action.view']}"  
+										onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							        	icon="ui-icon-view"
+							        	onclick="goToDetail([{name:'docType', value:'#{flYep.docType}'}, {name:'docId', value:'#{flYep.docId}'}, {name:'docNo', value:'#{flYep.docNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmView}'}, {name:'statusDesc', value:'#{flYep.statusId}'}])"/>
+							        <p:menuitem value="#{lbl['lbl.btn.print']}" ajax="false"
+										icon="ui-icon-print" 
+										action="#{yearEndProcessBackingBean.generateReport(flYep.docType, flYep.docNo)}" />
+									<p:menuitem value="#{lbl['lbl.btn.proceed']}"  
+							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							        	icon="ui-icon-amendment"
+							        	process="@this" update="flYepList"
+							        	rendered="#{flYep.isAp58 == null and flYep.phase == 5}"
+							        	onclick="goToDetail([{name:'docType', value:'#{flYep.docType}'}, {name:'docId', value:'#{flYep.docId}'}, {name:'docNo', value:'#{flYep.docNo}'}, {name:'buttonVal', value:'NONAP58'}, {name:'statusDesc', value:'#{flYep.statusId}'}])"/>
+					                <!-- 29440 end -->
+									<!-- #29041 start added flYep.phase in rendered by Vinod -->		
+									<p:menuitem value="#{lbl['lbl.fl.yep.closeManPay']}"  
+							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							        	rendered="#{yearEndProcessBackingBean.getAllowClose(flYep.statusId) and !(flYep.phase eq '3')}"
+							        	icon="ui-icon-fl-cancel"
+							        	onclick="goToDetail([{name:'docType', value:'#{flYep.docType}'}, {name:'docId', value:'#{flYep.docId}'}, {name:'docNo', value:'#{flYep.docNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmCloseManual}'}, {name:'statusDesc', value:'#{flYep.statusId}'}])"/>
+							        	<!-- #29041 End Vinod-->
+							        	<!-- start 28377 -->
+							        	<p:menuitem value="#{lbl['lbl.fl.ap58']}"  
+							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							        	rendered="#{yearEndProcessBackingBean.isAP58(flYep.statusId) and flYep.isAp58 == 1 and flYep.phase == 5}"
+							        	icon="ui-icon-amendment"
+							        	onclick="goToDetail([{name:'docType', value:'#{flYep.docType}'}, {name:'docId', value:'#{flYep.docId}'}, {name:'docNo', value:'#{flYep.docNo}'}, {name:'buttonVal', value:'AP58'}, {name:'statusDesc', value:'#{flYep.statusId}'}])"/>
+					                    <!-- end 28377 -->		
+					                    
+					                    
+				
+						<!-- #28375- Beginning Logan -->
+					
+						<p:menuitem value="#{lbl['lbl.fl.yep.carryForward']}"  
+							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							        	rendered="#{yearEndProcessBackingBean.isCarryForward(flYep.statusId) and flYep.phase eq '3'}"
+							        	icon="ui-icon-amendment"
+							        	onclick="goToDetail([{name:'docType', value:'#{flYep.docType}'}, {name:'docId', value:'#{flYep.docId}'}, {name:'docNo', value:'#{flYep.docNo}'}, {name:'taskId', value:'#{flYep.yepTaskId}'}, {name:'orderN', value:'#{flYep.orderNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.carryForward}'} , {name:'phase', value:'#{flYep.phase}'} , {name:'statusDesc', value:'#{flYep.statusId}'}, {name:'progressStatus', value:'#{flYep.progressStatus}'}, {name:'carryForward', value:'#{flYep.carryForward}'}])"/>
+					
+					<!-- #28375- Ending Logan-->
+					<!-- #28374	Vinod Start -->
+						<p:menuitem value="#{lbl['lbl.fl.yep.cancel']}"  
+							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							        	rendered="#{flYep.phase eq '3'}"
+							        	icon="ui-icon-fl-cancel" 
+							        	onclick="goToDetail([{name:'docType', value:'#{flYep.docType}'}, {name:'docId', value:'#{flYep.docId}'}, {name:'docNo', value:'#{flYep.docNo}'}, {name:'taskId', value:'#{flYep.yepTaskId}'}, {name:'orderN', value:'#{flYep.orderNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmCancelYEP}'}, {name:'statusDesc', value:'#{flYep.statusId}'}, {name:'progressStatus', value:'#{flYep.progressStatus}'}, {name:'carryForward', value:'#{flYep.carryForward}'}])"/>
+					<!-- #28374	Vinod End -->
+					</p:menuButton>
+				</p:column>
+			</p:dataTable>
+			<p:remoteCommand action="#{yearEndProcessBackingBean.navigateToPage}"
+				name="goToDetail" />
+		</p:panel>
+		<!-- end result panel -->
+		<ac:lovPopup />
+	</ui:define>
+	
+</ui:composition>

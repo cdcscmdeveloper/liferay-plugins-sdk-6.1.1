@@ -1,0 +1,279 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:param name="sampleClsDate"
+		value="#{noticeBoardBackingBean.managedBean.scQt.sampleClosingDate}"></ui:param>
+	<p:panel
+		header="#{lbl[noticeBoardBackingBean.managedBean.scQt.procurementMode == ParameterConst.procurementModeQuotation ? 'lbl.sc.notice.board.quotation.details' : 'lbl.sc.notice.board.tender.details']}"
+		toggleable="true">
+
+		<h:panelGrid border="0" width="100%" columns="4" id="changedTabQTDtls"
+			columnClasses="columnWidth20,columnWidth20,columnWidth20,columnWidth40"
+			rendered="#{isChangesTab}">
+		   
+			<h:outputLabel value="#{lbl['lbl.sc.title']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
+			<h:outputText style="white-space: normal;word-wrap: break-word;"
+				value="#{noticeBoardBackingBean.managedBean.scQt.qtTitle}" />
+			<ui:param name="qtTitleChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[QTFieldConst.FIELD_QT_TITLE]}" />
+			<c:choose>
+				<c:when test="#{!empty qtTitleChangeDate}">
+					<h:panelGroup>
+						<h:outputText value="(#{lbl['lbl.sc.updated.on']} " styleClass="lastUpdated" />
+						<h:outputText value="#{qtTitleChangeDate}" styleClass="lastUpdated">
+							<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
+						</h:outputText>
+						<h:outputText value=")" styleClass="lastUpdated" />
+					</h:panelGroup>
+				</c:when>
+				<c:otherwise>
+					<h:outputLabel value="" />
+				</c:otherwise>
+			</c:choose>
+			<h:outputLabel value="" />
+
+			<h:outputLabel value="#{lbl['lbl.sc.qtn.no']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
+			<h:outputText value="#{noticeBoardBackingBean.managedBean.scQt.qtNo}" />
+			<h:outputLabel value="" />
+			<h:outputLabel value="" />
+
+			<h:outputLabel value="#{lbl['lbl.sc.ministry']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
+			<h:outputText
+				value="#{noticeBoardBackingBean.managedBean.ministryName}" />
+			<h:outputLabel value="" />
+			<h:outputLabel value="" />
+
+			<h:outputLabel value="#{lbl['lbl.sc.ptj']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
+			<ui:param name="date" value="#{noticeBoardBackingBean.retriveDatesforOrgProfile(noticeBoardBackingBean.managedBean.scQt.publishDate,noticeBoardBackingBean.managedBean.scQt.createdDate)}"></ui:param>
+			<h:outputText
+				value="#{noticeBoardBackingBean.retrievePTJByOrgProfileId(noticeBoardBackingBean.managedBean.scQt.pmOrgProfile.orgProfileId,date)}" />
+			<h:outputLabel value="" />
+			<h:outputLabel value="" />
+			<h:outputLabel value="#{lbl['lbl.sc.publish.date']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
+			<h:outputText
+				value="#{noticeBoardBackingBean.managedBean.scQt.publishDate}">
+				<f:convertDateTime
+					pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
+			</h:outputText>
+			<h:outputLabel value="" />
+			<h:outputLabel value="" />
+
+			<h:outputLabel value="#{lbl['lbl.sc.qt.publishing.period']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
+			<h:outputText
+				value="#{noticeBoardBackingBean.managedBean.scQt.publishPeriod}" />
+			<ui:param name="publishPeriodChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[QTFieldConst.FIELD_QT_PUBLISH_PERIOD]}" />
+			<c:choose>
+				<c:when test="#{!empty publishPeriodChangeDate}">
+					<h:panelGroup>
+						<h:outputText value="(#{lbl['lbl.sc.updated.on']} " styleClass="lastUpdated" />
+						<h:outputText value="#{publishPeriodChangeDate}" styleClass="lastUpdated">
+							<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
+						</h:outputText>
+						<h:outputText value=")" styleClass="lastUpdated" />
+					</h:panelGroup>
+				</c:when>
+				<c:otherwise>
+					<h:outputLabel value="" />
+				</c:otherwise>
+			</c:choose>
+			<h:outputLabel value="" />
+
+			<h:outputLabel value="#{lbl['lbl.sc.closing.date']}"  styleClass="outputLabel-view-label" style="white-space: nowrap"/>
+			<h:outputText
+				value="#{noticeBoardBackingBean.managedBean.scQt.closingDate}">
+				<f:convertDateTime
+					pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
+			</h:outputText>
+			<ui:param name="proposalStartChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[QTFieldConst.FIELD_QT_PROPOSAL_START_DATE]}" />
+			<ui:param name="closingChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[QTFieldConst.FIELD_QT_CLOSING_DATE]}" />
+			<c:choose>
+				<c:when test="#{!empty publishPeriodChangeDate or !empty closingChangeDate or !empty proposalStartChangeDate}">
+					<ui:param name="latestClosingChangeDate" value="#{proposalStartChangeDate}" />
+					<ui:param name="latestClosingChangeDate" value="#{empty latestClosingChangeDate ? closingChangeDate : (empty closingChangeDate ? latestClosingChangeDate : (DateUtils.isDateGreater(latestClosingChangeDate, closingChangeDate) ? latestClosingChangeDate : closingChangeDate))}" />
+					<ui:param name="latestClosingChangeDate" value="#{empty latestClosingChangeDate ? publishPeriodChangeDate : (empty publishPeriodChangeDate ? latestClosingChangeDate : (DateUtils.isDateGreater(latestClosingChangeDate, publishPeriodChangeDate) ? latestClosingChangeDate : publishPeriodChangeDate))}" />
+					<h:panelGroup>
+						<h:outputText value="(#{lbl['lbl.sc.updated.on']} " styleClass="lastUpdated" />
+						<h:outputText value="#{latestClosingChangeDate}" 
+							styleClass="lastUpdated">
+							<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
+						</h:outputText>
+						<h:outputText value=")" styleClass="lastUpdated" />
+					</h:panelGroup>
+				</c:when>
+				<c:otherwise>
+					<h:outputLabel value="" />
+				</c:otherwise>
+			</c:choose>
+			<h:outputLabel value="" />
+
+			<h:outputLabel value="#{lbl['lbl.sc.sample.closingdate']}"
+				rendered="#{sampleClsDate ne null}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
+			<h:outputText value="#{sampleClsDate}"
+				rendered="#{sampleClsDate ne null}">
+				<f:convertDateTime
+					pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
+			</h:outputText>
+			<h:outputLabel value="" rendered="#{sampleClsDate ne null}" />
+			<h:outputLabel value="" rendered="#{sampleClsDate ne null}" />
+
+			<h:outputLabel value="#{lbl['lbl.sc.qt.proposal.validity']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
+			<h:outputText
+				value="#{noticeBoardBackingBean.managedBean.scQt.qtValidityPeriod}" />
+			<ui:param name="validityPeriodChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[QTFieldConst.FIELD_QT_VALIDITY_PERIOD]}" />
+			<c:choose>
+				<c:when test="#{!empty validityPeriodChangeDate}">
+					<h:panelGroup>
+						<h:outputText value="(#{lbl['lbl.sc.updated.on']} " styleClass="lastUpdated" />
+						<h:outputText value="#{validityPeriodChangeDate}" styleClass="lastUpdated">
+							<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
+						</h:outputText>
+						<h:outputText value=")" styleClass="lastUpdated" />
+					</h:panelGroup>
+				</c:when>
+				<c:otherwise>
+					<h:outputLabel value="" />
+				</c:otherwise>
+			</c:choose>
+			<h:outputLabel value="" />
+
+			<h:outputLabel value="#{lbl['lbl.sc.proposal.validity.until']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
+			<h:outputText
+				value="#{noticeBoardBackingBean.managedBean.scQt.proposalValidityEndDate}">
+				<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+			</h:outputText>
+			<c:choose>
+				<c:when test="#{!empty validityPeriodChangeDate or !empty latestClosingChangeDate}">
+					<ui:param name="latestValidityPeriodChangeDate" value="#{latestClosingChangeDate}" />
+					<ui:param name="latestValidityPeriodChangeDate" value="#{empty latestValidityPeriodChangeDate ? validityPeriodChangeDate : (empty validityPeriodChangeDate ? latestClosingChangeDate : (DateUtils.isDateGreater(latestValidityPeriodChangeDate, validityPeriodChangeDate) ? latestValidityPeriodChangeDate : validityPeriodChangeDate))}" />
+					<h:panelGroup>
+						<h:outputText value="(#{lbl['lbl.sc.updated.on']} " styleClass="lastUpdated" />
+						<h:outputText value="#{latestValidityPeriodChangeDate}" styleClass="lastUpdated">
+							<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
+						</h:outputText>
+						<h:outputText value=")" styleClass="lastUpdated" />
+					</h:panelGroup>
+				</c:when>
+				<c:otherwise>
+					<h:outputLabel value="" />
+				</c:otherwise>
+			</c:choose>
+			<h:outputLabel value="" />
+			
+			<h:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
+			<h:outputText
+				value="#{noticeBoardBackingBean.getParameterDesc(noticeBoardBackingBean.managedBean.scQt.procurementMode)}">
+			</h:outputText>
+			<h:outputLabel value="" />
+			<h:outputLabel value="" />
+				<!-- #21693 Venkat Start -->	
+			<!--  <h:outputLabel value="#{lbl['lbl.sc.evaluation.type']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
+			<h:outputText value="#{lbl['lbl.sc.notice.board.eval.one.tier']}"
+				rendered="#{noticeBoardBackingBean.managedBean.scQt.evaluationType eq '1'}" />
+			<h:outputText value="#{lbl['lbl.sc.notice.board.eval.two.tier']}"
+				rendered="#{noticeBoardBackingBean.managedBean.scQt.evaluationType eq '2'}" />
+			<h:outputLabel value="" />  -->
+				<!-- #21693 Venkat END -->
+<!-- Bug #32079 related to #21695 Farid Start -->			
+			<h:outputLabel value="#{lbl['lbl.sc.partial.offer']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
+			<h:outputText value="#{lbl['lbl.sc.partial.offer.no']}"
+				rendered="#{noticeBoardBackingBean.managedBean.scQt.partial eq false or noticeBoardBackingBean.managedBean.scQt.partial eq null}" />
+			<h:outputText value="#{lbl['lbl.sc.partial.offer.yes']}"
+				rendered="#{noticeBoardBackingBean.managedBean.scQt.partial eq true}" />
+			<h:outputLabel value="" />
+<!-- Bug #32079 related to #21695 Farid END -->	
+		</h:panelGrid>
+
+		<h:panelGrid border="0" width="100%" columns="3" id="publishTabQTDtls"
+			columnClasses="columnWidth20,columnWidth100,columnWidth30"
+			rendered="#{!isChangesTab}">
+			<h:outputLabel value="#{lbl['lbl.sc.title']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
+			<h:outputText style="white-space: normal;word-wrap: break-word;"
+				value="#{noticeBoardBackingBean.managedBean.scQt.qtTitle}" />
+			<h:outputLabel value="" />
+
+			<h:outputLabel value="#{lbl['lbl.sc.qtn.no']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
+			<h:outputText value="#{noticeBoardBackingBean.managedBean.scQt.qtNo}" />
+			<h:outputLabel value="" />
+
+			<h:outputLabel value="#{lbl['lbl.sc.ministry']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
+			<h:outputText
+				value="#{noticeBoardBackingBean.managedBean.ministryName}" />
+			<h:outputLabel value="" />
+
+			<h:outputLabel value="#{lbl['lbl.sc.ptj']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
+			<ui:param name="date" value="#{noticeBoardBackingBean.retriveDatesforOrgProfile(noticeBoardBackingBean.managedBean.scQt.publishDate,noticeBoardBackingBean.managedBean.scQt.createdDate)}"></ui:param>
+			<h:outputText
+				value="#{noticeBoardBackingBean.retrievePTJByOrgProfileId(noticeBoardBackingBean.managedBean.scQt.pmOrgProfile.orgProfileId,date)}" />
+			<h:outputLabel value="" />
+			
+			<h:outputLabel value="#{lbl['lbl.sc.publish.date']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
+			<h:outputText
+				value="#{noticeBoardBackingBean.managedBean.scQt.publishDate}">
+				<f:convertDateTime
+					pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
+			</h:outputText>
+			<h:outputLabel value="" />
+
+			<h:outputLabel value="#{lbl['lbl.sc.qt.publishing.period']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
+			<h:outputText
+				value="#{noticeBoardBackingBean.managedBean.scQt.publishPeriod}" />
+			<h:outputLabel value="" />
+
+			<h:outputLabel value="#{lbl['lbl.sc.closing.date']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
+			<h:outputText
+				value="#{noticeBoardBackingBean.managedBean.scQt.closingDate}">
+				<f:convertDateTime
+					pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
+			</h:outputText>
+			<h:outputLabel value="" />
+
+			<h:outputLabel value="#{lbl['lbl.sc.sample.closingdate']}"
+				rendered="#{sampleClsDate ne null}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
+			<h:outputText value="#{sampleClsDate}"
+				rendered="#{sampleClsDate ne null}">
+				<f:convertDateTime
+					pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
+			</h:outputText>
+			<h:outputLabel value="" rendered="#{sampleClsDate ne null}" />
+
+			<h:outputLabel value="#{lbl['lbl.sc.qt.proposal.validity']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
+			<h:outputText
+				value="#{noticeBoardBackingBean.managedBean.scQt.qtValidityPeriod}" />
+			<h:outputLabel value="" />
+
+			<h:outputLabel value="#{lbl['lbl.sc.proposal.validity.until']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
+			<h:outputText
+				value="#{noticeBoardBackingBean.managedBean.scQt.proposalValidityEndDate}">
+				<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+			</h:outputText>
+			<h:outputLabel value="" />
+
+			<h:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
+			<h:outputText
+				value="#{noticeBoardBackingBean.getParameterDesc(noticeBoardBackingBean.managedBean.scQt.procurementMode)}">
+			</h:outputText>
+			<h:outputLabel value="" />
+			<!-- #21693 Venkat Start -->	
+			<!--  
+			<h:outputLabel value="#{lbl['lbl.sc.evaluation.type']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
+			<h:outputText value="#{lbl['lbl.sc.notice.board.eval.one.tier']}"
+				rendered="#{noticeBoardBackingBean.managedBean.scQt.evaluationType eq '1'}" />
+			<h:outputText value="#{lbl['lbl.sc.notice.board.eval.two.tier']}"
+				rendered="#{noticeBoardBackingBean.managedBean.scQt.evaluationType eq '2'}" />
+			<h:outputLabel value="" /> -->	
+			<!-- #21693 Venkat END -->		
+<!-- #21695 Farid Start -->			
+			<h:outputLabel value="#{lbl['lbl.sc.partial.offer']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
+			<h:outputText value="#{lbl['lbl.sc.partial.offer.no']}"
+				rendered="#{noticeBoardBackingBean.managedBean.scQt.partial eq false or noticeBoardBackingBean.managedBean.scQt.partial eq null}" />
+			<h:outputText value="#{lbl['lbl.sc.partial.offer.yes']}"
+				rendered="#{noticeBoardBackingBean.managedBean.scQt.partial eq true}" />
+			<h:outputLabel value="" />
+<!-- #21695 Farid END -->		
+		</h:panelGrid>
+	</p:panel>
+</ui:composition>

@@ -1,0 +1,67 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<p:messages for="ssmInvalid" showDetail="true" closable="true" autoUpdate="true" showSummary="true" escape="false" severity="error, info, warn"/>
+	<p:panel header="#{lbl['lbl.sm.selfrequest.company.validation']}" toggleable="true" id="compValPanelId">
+		
+		<table>
+			<tr>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sm.selfrequest.mof.number']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td>
+					<p:inputText id="mofNoId" value="#{selfRequestSupplierAdminBackingBean.managedBean.mofNo}"
+						size="35" maxlength="15" label="#{lbl['lbl.sm.selfrequest.mof.number']}" >
+					<p:ajax event="blur" process="@this" update="@form" partialSubmit="true" 
+						listener="#{selfRequestSupplierAdminBackingBean.onBlurMofNo(selfRequestSupplierAdminBackingBean.managedBean.mofNo)}" 
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+					</p:inputText>
+					<p:messages for="mofNoInvalid" showDetail="true" closable="true" showSummary="false" escape="false"/>
+				</td>
+			</tr>
+			<p:outputPanel id="compNameOutPanelId">
+				<tr>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.sm.assocCmpny.companyName']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</td>
+					<td>
+						<p:inputText value="#{selfRequestSupplierAdminBackingBean.managedBean.supplier.companyName}"
+							id="compNameId" size="35" disabled="true" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.sm.reactivate.basicacc.supp.regno']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</td>
+					<td>
+						<p:inputText value="#{selfRequestSupplierAdminBackingBean.managedBean.supplier.regNo}"
+							id="regNoId" size="35" disabled="true" >
+							<f:validator validatorId="busRegNoValidator" />
+							</p:inputText>
+					</td>
+				</tr>
+			</p:outputPanel>
+		</table>
+		
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.cancel']}" 
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+				action="#{selfRequestSupplierAdminBackingBean.redirectToMainPage}"
+				update="@form" />
+			
+			<p:commandButton id="btnProceed" value="#{lbl['lbl.sm.next']}" 
+				disabled="#{selfRequestSupplierAdminBackingBean.managedBean.disabledNextBtn}"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form"
+				action="#{selfRequestSupplierAdminBackingBean.navigateToSuppAdmin}" />
+		</div>
+	
+	</p:panel>
+
+</ui:composition>

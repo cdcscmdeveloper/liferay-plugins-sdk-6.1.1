@@ -1,0 +1,1910 @@
+/**
+ * Copyright © 2013 Archisoft. All rights reserved.
+ */
+package my.ep.web.backingbean.fl.frn;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletRequest;
+
+import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.ct.supplier.IContractSupplierSO;
+import my.ep.biz.service.fl.IFulfilmentSO;
+import my.ep.biz.service.fl.frn.IReceivedNoteSO;
+import my.ep.biz.service.fl.order.IDeliveryOrderSO;
+import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
+import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.criteria.ICriteriaSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.pm.general.settings.designatedarea.IDesignatedAreaSO;
+import my.ep.biz.service.pm.general.settings.gstitem.IGstItemSO;
+import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
+import my.ep.biz.service.sc.quationtender.IQTAwardSO;
+import my.ep.biz.service.sc.requestitem.IRequestItemSO;
+import my.ep.biz.service.sm.gst.ISupplierGstSO;
+import my.ep.biz.service.sm.personnel.IPersonnelSO;
+import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.fl.FulfilmentConst;
+import my.ep.constant.fl.FulfilmentStatusConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.tpl.TemplateSpecConst;
+import my.ep.constants.CommonConstants;
+import my.ep.constants.FLProcessNameConst;
+import my.ep.dto.ct.ContractReqDTO;
+import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
+import my.ep.dto.ct.supplier.ContractSupplierResDTO;
+import my.ep.dto.fl.FulfilmentReqDTO;
+import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.authorization.userorg.UserOrgReqDTO;
+import my.ep.dto.pm.authorization.userorg.UserOrgResDTO;
+import my.ep.dto.pm.common.criteria.CriteriaReqDTO;
+import my.ep.dto.pm.common.criteria.CriteriaResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.general.settings.designatedarea.DesignatedAreaReqDTO;
+import my.ep.dto.pm.general.settings.designatedarea.DesignatedAreaResDTO;
+import my.ep.dto.pm.general.settings.gstitem.GstItemReqDTO;
+import my.ep.dto.pm.general.settings.gstitem.GstItemResDTO;
+import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
+import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
+import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
+import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
+import my.ep.dto.sm.gst.SupplierGstReqDTO;
+import my.ep.dto.sm.gst.SupplierGstResDTO;
+import my.ep.dto.sm.personnel.PersonnelReqDTO;
+import my.ep.dto.sm.personnel.PersonnelResDTO;
+import my.ep.exception.EpException;
+import my.ep.jaxb.fl.frndata.FLFulFillmentReceivedNoteDataType;
+import my.ep.jaxb.fl.maintenace.cancel.dofulfillment.FLDOFulfillmentCancelReqType;
+import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.ct.dtl.CtAgency;
+import my.ep.persistence.entity.fl.FlActor;
+import my.ep.persistence.entity.fl.FlRemark;
+import my.ep.persistence.entity.fl.FlWorkflowStatus;
+import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
+import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
+import my.ep.persistence.entity.fl.frn.FlSupplierEvaluation;
+import my.ep.persistence.entity.fl.order.FlDelOrderItem;
+import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
+import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
+import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.pm.common.PmCriteria;
+import my.ep.persistence.entity.pm.common.PmCriteriaDesc;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
+import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.type.pm.GSLType;
+import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;
+import my.ep.util.MessageUtils;
+import my.ep.util.ResourceBundleUtils;
+import my.ep.web.backingbean.fl.FulfilmentBackingBean;
+import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
+import my.ep.web.backingbean.fl.cr.ContractRequestBackingBean;
+import my.ep.web.backingbean.fl.deliveryorder.DeliveryOrderBackingBean;
+import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
+import my.ep.web.backingbean.fl.pr.PurchaseRequestBackingBean;
+import my.ep.web.constant.CommonUIConst;
+import my.ep.web.managedbean.fl.frn.ReceivedNoteManagedBean;
+import my.ep.web.util.DateUtils;
+import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.web.vo.DisciplinaryActionVO;
+
+import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+import org.springframework.util.CollectionUtils;
+
+import com.liferay.portal.util.PortalUtil;
+
+/**
+ * Backing Bean for Create Received Note .
+ *
+ * @author Giribabu
+ * @since 7/10/2013
+ */
+@ManagedBean(name = "receivedNoteBackingBean")
+@RequestScoped
+public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedNoteManagedBean> {
+
+	private static final long serialVersionUID = 1L;
+	private static Logger log = Logger.getLogger(ReceivedNoteBackingBean.class);
+	private String className="@(.myFrnEvalClassName)";
+	private static final String NAV_DELIVERYORDER_PAGE = "/xhtml/fl/deliveryorder/doBasePage.xhtml";
+	private static final String NAV_PO = "/xhtml/fl/purchaseorder/poBasePage.xhtml";
+	private static final String NAV_CO = "/xhtml/fl/contractorder/coBasePage.xhtml";
+	public static final String NAV_CR = "/xhtml/fl/contractrequest/crBasePage.xhtml";
+	public static final String NAV_PR = "/xhtml/fl/purchaserequest/prBasePage.xhtml";
+	
+	/**
+	 * Gets the class name.
+	 *
+	 * @return the className
+	 */
+	public String getClassName() {
+		return className;
+	}
+
+	/**
+	 * Sets the class name.
+	 *
+	 * @param className the className to set
+	 */
+	public void setClassName(String className) {
+		this.className = className;
+	}
+	
+	/**
+	 * save,submit received note.
+	 * <p>submit - save data into database and BPM process will route to the next respective user.
+	 * <p>save - save data into database.
+	 * @param action the action
+	 * navigate to acknowledge page.
+	 */
+	public String submitAction(String action) {
+		log.debug("ReceivedNoteBackingBean.submitAction()");
+		IReceivedNoteSO receivedNoteSO = null;
+		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		try {
+			if(!getManagedBean().isValidated()){
+				validateFulfilmentNote(action);
+			}
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) 
+					|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)){
+				if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
+					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+				}
+				
+				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)){
+					IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+					UserReqDTO userReqDTO = new UserReqDTO();
+					userReqDTO.setUserId(getManagedBean().getFulfilmentNote().getCreatedBy());
+					UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
+					if(userResDTO.getPmUser().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE){
+						throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.receivingOfficer",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+					}
+				}
+			}
+			
+			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
+			FlFulfilmentNote fulfilmentNote = getManagedBean().getFulfilmentNote();
+			receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IReceivedNoteSO.class);
+			
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			reqDTO.setFulfilmentNote(fulfilmentNote);
+			reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			reqDTO.setOutcome(action);
+			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+			reqDTO.setFlDeleteAttachmentList(flBB.getManagedBean().getDeleteAttachments());
+			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
+			if(getManagedBean().getSelectedAckOfficer()==null) {
+				setSelectedAckOfficer();
+			} 
+			reqDTO.setSelectedAckOfficer(getManagedBean().getSelectedAckOfficer());
+			if(flBB.getManagedBean().getRemarkList().size()>1) {
+				reqDTO.setFlRemarkList(flBB.getManagedBean().getRemarkList());
+			}
+			if(getManagedBean().getBpmTaskName()!=null && 
+				(getManagedBean().getBpmTaskName().equalsIgnoreCase(FLProcessNameConst.CREATE_FRN_HT) || 
+				getManagedBean().getBpmTaskName().equalsIgnoreCase(FLProcessNameConst.REVISE_FRN_HT))){
+				reqDTO.setUserRole(RoleCode.RECEIVING_OFFICER.value());	
+			}else if(getManagedBean().getBpmTaskName()!=null && 
+				getManagedBean().getBpmTaskName().equalsIgnoreCase(FLProcessNameConst.APPROVE_FRN_HT)){
+				reqDTO.setUserRole(RoleCode.ACKNOWLEDGE_OFFICER.value());	
+			}else{
+				reqDTO.setUserRole(getUserRole());
+			}
+			reqDTO.setToken(token);
+			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+			reqDTO.setFrnCancellationProcess(getManagedBean().isFrnCancellationProcess());
+			reqDTO.setLastFRNTaxInv(getManagedBean().isLastFRNTaxInv());
+			reqDTO.setRejectionRemark(getManagedBean().getRejectionRemark());
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
+				if(getManagedBean().getApproverList() == null || getManagedBean().getApproverList().isEmpty()){
+					getAcknowledgeOfficer();
+				}
+				if(getManagedBean().isLastFRNTaxInv() && getManagedBean().isIssuanceCogstrCheck()){
+					reqDTO.setCoGstr(true);
+				}
+			} //13291 - start
+			else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) || 
+					(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && FulfilmentStatusConst.FN_PENDING_CANCEL_SUBMISSION.equals(getManagedBean().getFulfilmentNote().getStatus().getStatusId()))){
+				if(getManagedBean().getApproverList() == null || getManagedBean().getApproverList().isEmpty()){
+					getAcknowledgeOfficer();
+				}
+			}
+			//13291 - end
+			
+			reqDTO.setApproverUserList(getManagedBean().getApproverList());
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) || 
+				(getManagedBean().getProcessName()!=null && getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.FRN_CANCELLATION_PROCESS_NAME))){	
+				resDTO = receivedNoteSO.receiveNoteModification(reqDTO);
+			} else {
+				if(getManagedBean().getPmDigiSign() !=null){
+					reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
+				}
+				if(fulfilmentNote.isBrandNew()) {
+					reqDTO.setBrandnew(true);
+				}
+				resDTO = receivedNoteSO.saveReceivedNote(reqDTO);
+				reqDTO.setFulfilmentNote(resDTO.getFulfilmentNote());
+				reqDTO.setTriggerBPM(true);
+				resDTO = receivedNoteSO.saveReceivedNote(reqDTO);
+			}
+			if (resDTO.isSuccessful()) {
+				String messageId = MessageConst.INFO_745014;
+				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+					if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+						messageId = MessageConst.INFO_700004;
+					} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)) {
+						messageId = MessageConst.INFO_745002;
+					} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+						messageId = MessageConst.INFO_745016;
+					} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+						messageId = MessageConst.INFO_700009;
+					}else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+						messageId = MessageConst.INFO_700008;
+					}else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+						messageId = MessageConst.INFO_700018;
+						if(getManagedBean().getProcessName()!=null && getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.FRN_CANCELLATION_PROCESS_NAME)) {
+							messageId = MessageConst.INFO_700005;
+						}
+					}
+					if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(messageId, 
+										new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_DELIVERY_ORDER), 
+										" "+ resDTO.getFlDeliveryOrder().getSupplierDoRef()}, 
+										MessageUtils.BUNDLE_COMMON_MESSAGES, 
+										new FacesScopes().getUserLocale())));
+					}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(messageId, 
+										new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_FULFILMENT_NOTE), 
+										resDTO.getFulfilmentNoteNo()}, 
+										MessageUtils.BUNDLE_COMMON_MESSAGES, 
+										new FacesScopes().getUserLocale())));
+					}else{
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(messageId, 
+										new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_FULFILMENT_NOTE), 
+										ResourceBundleUtils.getMessage("lbl.fl.frn.product.service",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+ resDTO.getFulfilmentNoteNo()}, 
+										MessageUtils.BUNDLE_COMMON_MESSAGES, 
+										new FacesScopes().getUserLocale())));
+					}
+				} else {
+					if(getManagedBean().isLastFRNTaxInv() && checkTaxInvoice(getManagedBean().getFulfilmentNote().getFlRequest().getFulfilmentReqId())){
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(MessageConst.INFO_745010, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, 
+										ParameterConst.DOCTYPE_FULFILMENT_NOTE),
+										ResourceBundleUtils.getMessage("lbl.fl.frn.product.service",
+												ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+resDTO.getFulfilmentNoteNo()},
+												MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					
+					}else{
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(messageId, 
+										new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_FULFILMENT_NOTE), 
+										ResourceBundleUtils.getMessage("lbl.fl.frn.product.service",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+resDTO.getFulfilmentNoteNo()}, 
+										MessageUtils.BUNDLE_COMMON_MESSAGES, 
+										new FacesScopes().getUserLocale())));
+					}
+				}
+
+				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+					renewSesionObject();
+					return CommonUIConst.ACKNOWLEDGE_PAGE;
+				} else {
+					reqDTO.setFulfilmentNoteId(resDTO.getFulfilmentNoteId());
+					resDTO = receivedNoteSO.retrieveReceivedNoteByReceivedNoteId(reqDTO);
+					setFulfilmentNoteField(resDTO);
+				}
+			}
+		} finally {
+			receivedNoteSO = null;
+		}
+		return null;
+	}
+	
+	/**
+	 * Pre render view.
+	 */
+	public void preRenderView() {
+		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+		String taskId = originalServletRequest.getParameter("taskId");
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		FulfilmentResDTO resDTOInvoice = new FulfilmentResDTO();
+		if(taskId != null){
+			renewSesionObject();
+			IFulfilmentSO iFulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentSO.class);
+			IFulfilmentRequestSO iFulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
+			IReceivedNoteSO receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
+			IDeliveryOrderSO deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
+			IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IStatusSO.class);
+			
+			Object obj = super.getBpmTaskDetails(Object.class, new String[]{BpmOutcomeConst.BPM_SAVE});
+			getManagedBean().setBpmTaskName(this.getManagedBean().getTaskName());
+			if(this.getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.FRN_CANCELLATION_PROCESS_NAME)){
+				FLDOFulfillmentCancelReqType fulfillmentCancelReqType = (FLDOFulfillmentCancelReqType)obj;
+				reqDTO.setDeliveryOrderId(fulfillmentCancelReqType.getDoId());
+				resDTO = receivedNoteSO.retrieveReceivedNoteByDeliveryOrderId(reqDTO);
+				
+				getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());
+				getManagedBean().setFulfilmentRequest(resDTO.getFulfilmentNote().getFlRequest());
+				getManagedBean().setDocType(resDTO.getFulfilmentNote().getFlRequest().getDocType());
+				
+				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+				flBB.initializeRemarkAndAttachement(resDTO.getFulfilmentNote().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
+				
+				getManagedBean().setFrnCancellationProcess(true);
+				getManagedBean().setDocMaintainRemarks(true);
+				if(fulfillmentCancelReqType.getErrorId() != null && fulfillmentCancelReqType.getErrorId() > 0){
+					getManagedBean().setAutoUpdate(Boolean.FALSE);
+					getManagedBean().setGfmasError(true);
+					FulfilmentReqDTO errReq = new FulfilmentReqDTO();
+					errReq.setErrorId(fulfillmentCancelReqType.getErrorId());
+					FulfilmentResDTO errRes = iFulfilmentRequestSO.retrieveErrorContent(errReq);
+					getManagedBean().setGfmasErrorCode(errRes.getErrorCode());
+					getManagedBean().setGfmasErrorDesc(MessageUtils.getMessage("ERR-"+errRes.getErrorCode(), new String[]{}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale()));
+					getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
+				}
+				if(getManagedBean().getFlApprover() == null){
+					FlActor actor = iFulfilmentSO.retrieveFlActors(getManagedBean().getFulfilmentNote().getFlRequest().getDocType(), getManagedBean().getFulfilmentNote().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
+					if(actor != null){
+						getManagedBean().setFlApprover(actor.getUser());
+					}
+				}
+				if(getManagedBean().getFulfilmentNote().getApproverId() != null){
+					getManagedBean().setUserLoginId(getManagedBean().getFulfilmentNote().getApproverId());
+				}
+			}else{
+				FLFulFillmentReceivedNoteDataType fulFillmentRecievedNoteDataType = (FLFulFillmentReceivedNoteDataType)obj;
+				reqDTO.setDeliveryOrderId(fulFillmentRecievedNoteDataType.getDoId());
+				
+				resDTO = receivedNoteSO.retrieveReceivedNoteByDeliveryOrderId(reqDTO);
+				if(resDTO.getFulfilmentNote()!=null) {
+					getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());
+					getManagedBean().setFulfilmentRequest(resDTO.getFulfilmentNote().getFlRequest());
+					getManagedBean().setDocType(resDTO.getFulfilmentNote().getFlRequest().getDocType());
+					if(getManagedBean().getFulfilmentNote().getApproverId() != null){
+						getManagedBean().setUserLoginId(getManagedBean().getFulfilmentNote().getApproverId());
+					}
+					if(getManagedBean().getFlApprover() == null){
+						FlActor actor = iFulfilmentSO.retrieveFlActors(getManagedBean().getFulfilmentNote().getFlRequest().getDocType(), getManagedBean().getFulfilmentNote().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
+						if(actor != null){
+							getManagedBean().setFlApprover(actor.getUser());
+						}
+					}
+				} else {
+					reqDTO.setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+					resDTO = deliveryOrderSO.retrieveDeliveryOrderById(reqDTO);
+					getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
+					getManagedBean().getFulfilmentNote().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
+					getManagedBean().getFulfilmentNote().setFlRequest(resDTO.getFlDeliveryOrder().getFlRequest());
+					
+					if(getManagedBean().getFlApprover() == null){
+						FlActor actor = iFulfilmentSO.retrieveFlActors(resDTO.getFlDeliveryOrder().getFlRequest().getDocType(), resDTO.getFlDeliveryOrder().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
+						if(actor != null){
+							getManagedBean().setFlApprover(actor.getUser());
+						}
+					}
+					
+					getManagedBean().setDocType(resDTO.getFlDeliveryOrder().getFlRequest().getDocType());
+					// Default status
+					StatusReqDTO statusReqDTO = new StatusReqDTO();
+					statusReqDTO.setStatusId(FulfilmentStatusConst.FN_PENDING_DO_ACKNOWLEDGMENT);
+					getManagedBean().getFulfilmentNote().setStatus(statusSO.retrieveStatusByStatusId(statusReqDTO).getPmStatus());
+					
+					List<FlFulfilmentNoteItem> noteItemList=new ArrayList<FlFulfilmentNoteItem>();
+					for (FlDelOrderItem delOrderItem : resDTO.getFlDeliveryOrder().getFlDelOrderItem()){
+						if(delOrderItem.getDeliveredQty().doubleValue()>0) { 
+							FlFulfilmentNoteItem noteItem=new FlFulfilmentNoteItem();
+							noteItem.setFlDelOrderItem(delOrderItem);
+							noteItem.setFlFulfilmentNote(getManagedBean().getFulfilmentNote());
+							noteItem.setFlItem(delOrderItem.getFlItem());
+							noteItem.setGstAmount(delOrderItem.getGstAmount());
+							noteItem.setGstUnitPrice(delOrderItem.getGstUnitPrice());
+							noteItem.setReceivedQty(delOrderItem.getDeliveredQty());
+							noteItem.setReceivedAmt(delOrderItem.getDeliveredAmt());
+							noteItemList.add(noteItem);
+						}
+					}
+					getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(noteItemList);
+				}
+				getManagedBean().setSelectedItem(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem().get(0));
+				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+				flBB.renewSesionObject();
+				flBB.getManagedBean().setHideRemarks(false);
+				if(getManagedBean().getFulfilmentRequest().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)) {
+					new FulfilmentBackingBean(ParameterConst.DOCTYPE_FULFILMENT_NOTE, getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getRequestNote().getRequestNoteNo());
+				} else {
+					new FulfilmentBackingBean(ParameterConst.DOCTYPE_FULFILMENT_NOTE, getManagedBean().getFulfilmentRequest().getCtContract().getContractNo());
+				}				
+				if(resDTO.getFulfilmentNote()!=null) {
+					flBB.initializeRemarkAndAttachement(resDTO.getFulfilmentNote().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
+				} else {
+					flBB.initializeRemarkAndAttachement(resDTO.getFlDeliveryOrder().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
+				}
+				
+				if(fulFillmentRecievedNoteDataType.getErrorId() != null && fulFillmentRecievedNoteDataType.getErrorId() > 0){
+					getManagedBean().setAutoUpdate(Boolean.FALSE);
+					getManagedBean().setGfmasError(true);
+					FulfilmentReqDTO errReq = new FulfilmentReqDTO();
+					errReq.setErrorId(fulFillmentRecievedNoteDataType.getErrorId());
+					FulfilmentResDTO errRes = iFulfilmentRequestSO.retrieveErrorContent(errReq);
+					getManagedBean().setGfmasErrorCode(errRes.getErrorCode());
+					getManagedBean().setGfmasErrorDesc(MessageUtils.getMessage("ERR-"+errRes.getErrorCode(), new String[]{}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale()));
+					getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
+				}
+				if(null == getManagedBean().getFulfilmentNote().getReceivedDate()){
+					getManagedBean().getFulfilmentNote().setReceivedDate(DateUtils.getCurrentDateWithoutTime());
+				}
+				getSupplierGst(getManagedBean().getFulfilmentNote());
+			}
+			getManagedBean().setSelectedTabIndex(0);
+			log.info("getTaskName: "+this.getManagedBean().getTaskName());
+			if(this.getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.APPROVE_FRN_HT)){
+				checkLastTaxFRN();//Issuance of CoGSTR
+			}
+			getAcknowledgeOfficerDropdown();
+		    
+			if(this.getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.APPROVE_FRN_HT)){
+				getManagedBean().setDisableEvaluation(Boolean.TRUE);
+			}
+			if(getManagedBean().getFulfilmentNote().getFlSupplierEvaluation().size()==0) {
+				retrieveCriteriaList();
+			}
+			if(null == getManagedBean().getFulfilmentNote().getReceivedDate()){
+				getManagedBean().getFulfilmentNote().setReceivedDate(DateUtils.getCurrentDateWithoutTime());
+			}
+			if(null == getManagedBean().getFulfilmentNote().getCreatedDate()){
+				getManagedBean().getFulfilmentNote().setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			}		
+			if(null == getManagedBean().getFulfilmentNote().getSubmissionDate() || 
+				(getManagedBean().getFulfilmentNote().getStatus()!=null && getManagedBean().getFulfilmentNote().getStatus().getStatusId().longValue()==FulfilmentStatusConst.FN_PENDING_DO_ACKNOWLEDGMENT.longValue())){
+				getManagedBean().getFulfilmentNote().setSubmissionDate(DateUtils.getCurrentDateWithoutTime());
+			}	
+			for(FlFulfilmentNoteItem noteItem : getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem()){
+				if(noteItem.getFulfilmentNoteItemId() != null){
+					reqDTO.setDocId(noteItem.getFulfilmentNoteItemId());
+					reqDTO.setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE_ITEM);
+					resDTO = receivedNoteSO.retrieveRejectionRemarksHistory(reqDTO);
+					noteItem.setRejectionRemarks(resDTO.getFNIRejectionRemarks());
+					initializeRejectionRemarks(getManagedBean().getFulfilmentNote().getFlWorkflowStatus() ,resDTO.getFNIRejectionRemarks(),noteItem,false);
+				}else{
+					noteItem.getRejectionRemarks().add(new FlRemark());
+				}
+			}
+			//26279 - start
+			if(getManagedBean().getFulfilmentNote().getStatus().getStatusId().longValue() == FulfilmentStatusConst.FN_PENDING_APPROVAL 
+					|| getManagedBean().getFulfilmentNote().getStatus().getStatusId().longValue() == FulfilmentStatusConst.FN_PENDING_REVISION 
+					|| getManagedBean().getFulfilmentNote().getStatus().getStatusId().longValue() == FulfilmentStatusConst.FN_PENDING_REV_APPROVAL 
+					|| getManagedBean().getFulfilmentNote().getStatus().getStatusId().longValue() == FulfilmentStatusConst.FN_PENDING_CANCEL_SUBMISSION
+					|| getManagedBean().getFulfilmentNote().getStatus().getStatusId().longValue() == FulfilmentStatusConst.FN_PENDING_DO_ACKNOWLEDGMENT) {
+				SmSupplier smSupplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
+				SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
+				if(smDisciplinaryAction != null) {
+					getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
+					boolean isWarningOnly = false;
+					String warningOrDisciplinaryActionMsg;
+					String language =  new FacesScopes().getUserLocale().getLanguage();
+					if(smDisciplinaryAction.isWarning() && !smDisciplinaryAction.isCancelCategory() 
+							&& !smDisciplinaryAction.isSuspendRegistration() && !smDisciplinaryAction.isCancelRegistration() 
+							&& !smDisciplinaryAction.isBlacklistOwner() && !smDisciplinaryAction.isBumiputeraCancel() 
+							&& !smDisciplinaryAction.isManufacturerCancel()) {
+						isWarningOnly = true;
+						warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
+						getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
+					} else if(smDisciplinaryAction.isCancelCategory() 
+							|| smDisciplinaryAction.isSuspendRegistration() || smDisciplinaryAction.isCancelRegistration() 
+							|| smDisciplinaryAction.isBlacklistOwner() || smDisciplinaryAction.isBumiputeraCancel() 
+							|| smDisciplinaryAction.isManufacturerCancel()){
+						warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
+						getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
+					}
+				} else {
+					getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
+				}
+			}
+			//26279 - end
+			
+			/*#14650 - Logan - Beginning*/
+			IFulfilmentRequestSO fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+			
+			if(getManagedBean().getFulfilmentRequest().getCtContract() !=null 
+					&& getManagedBean().getFulfilmentRequest().getCtContract().getContractId() !=null){
+				reqDTO.setContractId(getManagedBean().getFulfilmentRequest().getCtContract().getContractId());
+							
+				BigDecimal sumReceivedAmt = BigDecimal.ZERO;
+				BigDecimal frnReceivedAmt = BigDecimal.ZERO;
+				FulfilmentReqDTO reqDTOsum = new FulfilmentReqDTO();
+				FulfilmentResDTO resDTOsum = new FulfilmentResDTO();
+				
+				reqDTOsum.setFlRequestId(getManagedBean().getFulfilmentRequest().getFulfilmentReqId());
+				if(getManagedBean().getFulfilmentNote()!=null && getManagedBean().getFulfilmentNote().getFulfilmentNoteId()!=null){					
+					reqDTOsum.setRequestNoteId(getManagedBean().getFulfilmentNote().getFulfilmentNoteId());
+				}else{
+					reqDTOsum.setRequestNoteId(null);
+				}
+				
+				//get accumulative FRN exclude this FRn amount (to avoid duplicate if frn newBrand)
+				resDTOsum = receivedNoteSO.retriveSumReceivedAmtByReqId(reqDTOsum);
+				sumReceivedAmt = resDTOsum.getAccumulativeProcuValue();
+				//get this FRN amount
+				for(FlFulfilmentNoteItem noteItem : getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem()){
+					frnReceivedAmt = frnReceivedAmt.add(noteItem.getReceivedAmt());
+				}				
+				sumReceivedAmt = sumReceivedAmt.add(frnReceivedAmt);				
+
+				reqDTO.setAmount(sumReceivedAmt);
+				resDTOInvoice=fulfilmentRequestSO.validateAP59(reqDTO);
+				
+				//28719-start
+				if(resDTOInvoice.isSuppContract() && !resDTOInvoice.isCrComplete()) {
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(MessageConst.INFO_745090, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+					
+				}else//28719-end
+				if(!resDTOInvoice.isCrComplete()){
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+					MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));					
+				}
+			}
+			/*#14650 - Ending*/
+			
+			
+		}else{
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
+				flBB.getManagedBean().setHideRemarks(false);
+			}
+		}
+		
+		// 28855 - Start
+		String DocType =  getManagedBean().getFulfilmentNote().getFlRequest().getFlFulfilmentOrder().getDocType();
+		if(DocType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)) {
+			getManagedBean().setContractFlag(true);
+		} else {
+			getManagedBean().setContractFlag(false);
+		}
+		// 28855 - End
+	}
+
+	/**
+	 * Initialize the rejection remarks
+	 */
+	public void initializeRejectionRemarks(FlWorkflowStatus flWorkflowStatus ,List<FlRemark> rejectionRemarks,FlFulfilmentNoteItem noteItem,boolean isHideRemarks) {
+		FacesScopes facesScopes = new FacesScopes();
+
+		boolean statusMatch = false;
+		if(flWorkflowStatus!=null) {
+			if(!rejectionRemarks.isEmpty() && rejectionRemarks.get(0).getFlWorkflowStatus()!=null) {
+				if(flWorkflowStatus.getPmStatus().getStatusId().longValue()==rejectionRemarks.get(0).getFlWorkflowStatus().getPmStatus().getStatusId().longValue()) {
+					statusMatch = true;
+				}
+			}
+		} else { // both also null
+			statusMatch = true;
+		}
+		//#29171, CR 14650: Static Code Analysis Start
+		//if(rejectionRemarks.size()>0){
+			if(!rejectionRemarks.isEmpty() && rejectionRemarks.get(0).getCreatedBy().equals(facesScopes.getUserSessionBean().getUserId())){
+				statusMatch = true;
+			}
+		//}
+		//#29171, CR 14650: Static Code Analysis End
+		
+		if (rejectionRemarks.isEmpty() || !statusMatch) {
+			FlRemark remark = new FlRemark();
+			remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			remark.setChangedBy(remark.getCreatedBy());
+			remark.setChangedDate(remark.getCreatedDate());
+			remark.setCreatedUsername(facesScopes.getUserSessionBean()
+					.getUserName());
+			remark.setUserId(facesScopes.getUserSessionBean().getLoginId());
+
+			noteItem.setRejectionRemarks(rejectionRemarks);
+			if(!isHideRemarks) {
+				noteItem.getRejectionRemarks().add(0, remark);
+			}
+		} else {
+			noteItem.setRejectionRemarks(rejectionRemarks);
+		}
+
+	}
+
+	/**
+	 * calculate  received amount based on received quantity and unit price.
+	 *
+	 * @param item the item
+	 */
+	public void retrieveReceivedAmt() {
+		if(null != getManagedBean().getSelectedItem()){
+			FlFulfilmentNoteItem item=	getManagedBean().getSelectedItem();
+		
+			if(item.getReceivedQty()==null) {
+				item.setReceivedQty(BigDecimal.ZERO);
+			}
+			//30468-start
+			if(item.getReceivedQty().doubleValue()<0) {		
+				item.setReceivedQty(BigDecimal.ZERO);
+				throw new EpException(MessageConst.ERROR_100033, new String[]{ResourceBundleUtils.getMessage("lbl.fl.received.qty",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),"0"});
+			}
+			//30468-end
+			if(item.getReceivedQty().doubleValue() > item.getFlDelOrderItem().getDeliveredQty().doubleValue()) {
+				item.setReceivedQty(BigDecimal.ZERO);
+				item.setReceivedAmt(BigDecimal.ZERO);
+				throw new EpException(MessageConst.ERROR_100032, new String[]{
+						ResourceBundleUtils.getMessage("lbl.fl.received.qty",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),
+						ResourceBundleUtils.getMessage("lbl.fl.do.delivery.qty",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});	
+			}
+			if(null != item.getReceivedQty()){
+				BigDecimal formattedReceivedQty = item.getReceivedQty().setScale(
+						item.getFlDelOrderItem().getFlFulfilmentItemAddr().getScRequestItem().getUom().getDecimalScale(),BigDecimal.ROUND_HALF_UP);
+				item.setReceivedQty(formattedReceivedQty);
+			}
+			BigDecimal receivedAmt = item.getReceivedQty().multiply(item.getGstUnitPrice());
+			item.setReceivedAmt(receivedAmt.setScale(2, RoundingMode.HALF_UP));
+			getManagedBean().setRemainingQty(item.getFlDelOrderItem().getDeliveredQty().subtract(item.getReceivedQty()));
+		}
+	}
+	 
+	/**
+	 * Retrieve criteria list based on language code.
+	 */
+	private void retrieveCriteriaList() {
+		ICriteriaSO criteriaSO = (ICriteriaSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICriteriaSO.class);
+		CriteriaReqDTO reqDTO = new CriteriaReqDTO();
+		reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
+		CriteriaResDTO resDTO = criteriaSO.retrieveCriteriaDescList(reqDTO);
+
+		for (PmCriteriaDesc pmCriteriaDesc : resDTO.getCriteriaDescList()) {
+			FlSupplierEvaluation evaluationCriteria = new FlSupplierEvaluation();
+			evaluationCriteria.setPmCriteria(pmCriteriaDesc.getPmCriteria());
+			evaluationCriteria.setFlFulfilmentNote(getManagedBean().getFulfilmentNote());
+			getManagedBean().getFulfilmentNote().getFlSupplierEvaluation().add(evaluationCriteria);
+		}
+	}
+	
+	/**
+	 * Gets the criteria description based on language code and criteria id.
+	 *
+	 * @param pmCriteria the pm criteria
+	 * @return the criteria desc
+	 */
+	public String getCriteriaDesc(PmCriteria pmCriteria) {
+		ICriteriaSO criteriaSO = (ICriteriaSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICriteriaSO.class);
+		CriteriaReqDTO reqDTO = new CriteriaReqDTO();
+		reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
+		reqDTO.setCriteriaId(pmCriteria.getCriteriaId());
+		CriteriaResDTO resDTO = criteriaSO.retrieveCriteriaDescById(reqDTO);
+		return resDTO.getPmCriteriaDesc().getCriteria();
+	}
+	
+	/**
+	 * Validate fulfilment note before submit and gpki Sign Action.
+	 *
+	 * @param outcome the outcome
+	 */
+	public void validateFulfilmentNote(String outcome) {
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
+		if(getManagedBean().getFulfilmentNote().getReceivedDate()==null) {
+			throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.frn.act.received.date",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+		}
+		
+		if(outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_SUBMIT)) {
+			List<PmUser> orderApproverList = new ArrayList<PmUser>();
+			List<PmUser> pendingApproverList = new ArrayList<PmUser>();
+			if(getManagedBean().getPmUserList().isEmpty()){
+				getManagedBean().setSelectedTabIndex(0);
+				throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.fl.acknowledgeOfficer",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+			}
+			if(getManagedBean().getUserLoginId() == null) {
+				getManagedBean().setSelectedTabIndex(0);
+				throw new EpException(MessageConst.ERROR_100022, new String[]{
+						ResourceBundleUtils.getMessage("lbl.fl.acknowledgeOfficer",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+			}
+			for(PmUser user : getManagedBean().getPmUserList()){
+				if(getManagedBean().getUserLoginId().equals(user.getUserId())){
+					orderApproverList.add(user);
+				} else if (!orderApproverList.isEmpty()) {
+					orderApproverList.add(user);
+				} else if (orderApproverList.isEmpty()) {
+					pendingApproverList.add(user);
+				}
+			}
+			orderApproverList.addAll(pendingApproverList);
+			getManagedBean().getApproverList().addAll(orderApproverList);
+		}
+		BigDecimal sumReceiveQty = new BigDecimal(0);
+		for(FlFulfilmentNoteItem frnItem : getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem()) {
+			sumReceiveQty = sumReceiveQty.add(frnItem.getReceivedQty());
+		}
+		if(sumReceiveQty.doubleValue() == 0){
+			getManagedBean().setSelectedTabIndex(1);
+			throw new EpException(MessageConst.ERROR_100033, new String[]{ResourceBundleUtils.getMessage("lbl.fl.received.qty",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+		}
+		int scoreNotSelectedCount=0;
+		for(FlSupplierEvaluation supplierEvaluation : getManagedBean().getFulfilmentNote().getFlSupplierEvaluation()) {
+			if(supplierEvaluation.getScore()==null ||  supplierEvaluation.getScore()==0) {
+				scoreNotSelectedCount++;
+				if(scoreNotSelectedCount==3){
+					getManagedBean().setSelectedTabIndex(2);
+					throw new EpException(MessageConst.ERROR_745083, new String[]{null,null});
+				}
+				
+			}
+		}
+		if(scoreNotSelectedCount > 0 && scoreNotSelectedCount < 3 ){
+			for(FlSupplierEvaluation supplierEvaluation : getManagedBean().getFulfilmentNote().getFlSupplierEvaluation()) {
+				if(supplierEvaluation.getScore()==null ||  supplierEvaluation.getScore()==0) {
+					String messageId = MessageConst.ERROR_100051;
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,	null,
+							MessageUtils.getMessage(messageId, 
+									new String[]{ResourceBundleUtils.getMessage("lbl.fl.frn.score",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()), getCriteriaDesc(supplierEvaluation.getPmCriteria())}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, 
+									new FacesScopes().getUserLocale())));
+					
+				}
+			}
+			getManagedBean().setSelectedTabIndex(2);
+			throw new EpException("");
+		}
+		
+		for(FlFulfilmentNoteItem frnItem : getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem()) {
+			frnItem.setRejectedQty(frnItem.getFlDelOrderItem().getDeliveredQty().subtract(frnItem.getReceivedQty()));
+			if(frnItem.getReceivedQty().doubleValue() < frnItem.getFlDelOrderItem().getDeliveredQty().doubleValue()) {
+				if(frnItem.getRejectionRemarks().get(0).getRemark()==null || frnItem.getRejectionRemarks().get(0).getRemark().length()==0) {
+					throw new EpException(MessageConst.ERROR_740024, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),frnItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getScRequestItem().getItemName()});
+				}
+			}
+			frnItem.setRejectedAmt(frnItem.getFlDelOrderItem().getDeliveredAmt().subtract(frnItem.getReceivedAmt()));
+			if(frnItem.getRejectedAmt().doubleValue()<=0) {
+				frnItem.setRejectedAmt(new BigDecimal(0));
+			}
+			if(ParameterConst.ITEM_TYPE_PRODUCT.equalsIgnoreCase(frnItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getItemType().getParameterCode())){
+				if(frnItem.getReceivedAmt().doubleValue() < frnItem.getFlDelOrderItem().getDeliveredAmt().doubleValue()) {
+					if(frnItem.getRejectionRemarks().get(0).getRemark()==null || frnItem.getRejectionRemarks().get(0).getRemark().length()==0) {
+						throw new EpException(MessageConst.ERROR_745051, new String[]{frnItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getScRequestItem().getItemName()});
+					}
+				}		
+			}
+		}
+		
+		Date today = new Date();
+		if(getManagedBean().getFulfilmentNote().getReceivedDate().after(today)){
+			throw new EpException(MessageConst.ERROR_740012);
+		}
+		
+		FlFulfilmentNote fulfilmentNote = getManagedBean().getFulfilmentNote();	
+		
+		if(outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_APPROVE)) {
+			checkLastTaxFRN();
+			IPersonnelSO personnelSO = (IPersonnelSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
+			PersonnelReqDTO personnelReqDTO = new PersonnelReqDTO();
+			personnelReqDTO.setSmSupplierId(fulfilmentNote.getFlRequest().getSmSupplier().getSupplierId());
+			PersonnelResDTO personnelResDTO = personnelSO.retrieveLatestActivePersonnelBySupplierId(personnelReqDTO);
+			
+			if(personnelResDTO.getSmPersonnelList().isEmpty()){
+				throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.supplierUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+			}
+			//System.out.println("issuance cogst: "+getManagedBean().isIssuanceCogstrCheck() + " **isLastFRNTaxInv: " +getManagedBean().isLastFRNTaxInv());
+			if(!getManagedBean().isIssuanceCogstrCheck() && getManagedBean().isLastFRNTaxInv()){
+				getManagedBean().setSelectedTabIndex(0);
+				onTabChange(getManagedBean().getSelectedTabIndex());
+				throw new EpException(MessageConst.ERROR_745078);
+			}
+		}
+	}
+	
+	/**
+	 * Gets the current date.
+	 *
+	 * @return the current date
+	 */
+	public Date getCurrentDate() {
+		return new Date();
+	}
+	
+	/**
+	 * Check supplier Evaluation score.
+	 * supplier Evaluation score between the 1 and 5
+	 * @param supplierEvaluation the supplier evaluation
+	 */
+	public void checkScore(FlSupplierEvaluation supplierEvaluation){
+		//#29171, CR 14650: Static Code Analysis Start
+		//if(supplierEvaluation.getScore()!=null) {
+			if( supplierEvaluation.getScore()!=null && (supplierEvaluation.getScore() > 5 || supplierEvaluation.getScore() == 0)){
+				String score = supplierEvaluation.getScore().toString();
+				supplierEvaluation.setScore(null);
+				throw new EpException(MessageConst.ERROR_100039, new String[]{score,"1","5"});
+			}
+		//}
+		//#29171, CR 14650: Static Code Analysis End
+	}
+	
+	/**
+	 * Page navigation to FLDoc search page in FRN.
+	 *
+	 * @return the string
+	 */
+	public String backToPervious() {
+		return "flDocSearch";
+	}
+	
+	/**
+	 * Gpki sign action.
+	 *
+	 * @param outcome the outcome
+	 */
+	public String gpkiSignAction(String outcome){
+		IDeliveryOrderSO orderSO = (IDeliveryOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
+		IReceivedNoteSO receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		reqDTO.setDeliveryOrderId(getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
+		PmStatus status = orderSO.retrieveDelOrderStatus(reqDTO).getPmStatus();
+		if(status==null || status.getStatusId().longValue()==FulfilmentStatusConst.DO_CLOSED_DUE_TO_AP59 ||
+				status.getStatusId().longValue()==FulfilmentStatusConst.DO_CANCELLED ||
+				status.getStatusId().longValue()==FulfilmentStatusConst.DO_PENDING_MODIFICATION_APRROVAL ||
+				status.getStatusId().longValue()==FulfilmentStatusConst.DO_PENDING_CANCELLATION_APPROVAL) {
+			throw new EpException(MessageConst.ERROR_745068, new String[]{getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderNo()});
+		}
+		
+		if(getManagedBean().getFulfilmentNote().isBrandNew() && getManagedBean().getFulfilmentNote().getFlDeliveryOrder()!=null) { // validate to avoid duplicate FRN under one DO inserted
+			reqDTO.setDeliveryOrderId(getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
+			if(receivedNoteSO.retrieveActiveReceivedNoteByDeliveryOrderId(reqDTO).getFulfilmentNote()!=null) {
+				throw new EpException(MessageConst.ERROR_100048);
+			}
+		}
+		
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {		
+			validateFulfilmentNote(outcome);
+			setTextBeforeSign(outcome);
+			getManagedBean().setAutoUpdate(Boolean.FALSE);
+			getManagedBean().setButtonAction(outcome);
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			return null;
+		} else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)){
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
+				getManagedBean().setSelectedTabIndex(0);
+				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+			}
+			if(getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.APPROVE_FRN_HT)){
+				setTextBeforeSign(outcome);		
+				getManagedBean().setAutoUpdate(Boolean.FALSE);
+				getManagedBean().setButtonAction(outcome);
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+				return null;
+			}
+			if(getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.CREATE_FRN_HT) ||
+					getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVISE_FRN_HT)){
+				getManagedBean().setValidated(Boolean.TRUE);
+				getManagedBean().setAutoUpdate(Boolean.TRUE);
+				RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
+				return null;
+			}
+			getManagedBean().setValidated(Boolean.TRUE);
+			getManagedBean().setAutoUpdate(Boolean.TRUE);
+			return submitAction(outcome);
+		}
+		else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+			getManagedBean().setValidated(Boolean.FALSE);
+			return submitAction(outcome);
+		} else{
+			getManagedBean().setValidated(Boolean.TRUE);
+			getManagedBean().setAutoUpdate(Boolean.TRUE);
+			return submitAction(outcome);
+		}
+	}
+	
+	/**
+	 * Pre submit action.
+	 *
+	 * @param pmDigiSign the pm digi sign
+	 * @return the string
+	 * @throws Exception the exception
+	 */
+	public String preSubmitAction(
+			PmDigiSign pmDigiSign) throws Exception {
+		if (pmDigiSign != null) {
+			this.getManagedBean().setPmDigiSign(pmDigiSign);
+		}
+		getManagedBean().setValidated(Boolean.TRUE);
+		return submitAction(getManagedBean().getButtonAction());
+	}
+	
+	/**
+	 * Gets the user role.
+	 *
+	 * @return the user role
+	 */
+	private String getUserRole() {
+		if(getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value())){
+			return RoleCode.RECEIVING_OFFICER.value();		
+		}else if(getFacesScopes().hasRoleUser(RoleCode.ACKNOWLEDGE_OFFICER.value())){
+			return RoleCode.ACKNOWLEDGE_OFFICER.value();		
+		}else{  
+			throw new EpException(MessageConst.ERROR_750040);
+		}
+	}
+	
+	/**
+	 * Navigate to do Hyper link page if doc type is DO.
+	 *<p> Navigate to order No Hyper link page if doc type is PO.
+	 * @param docType the doc type
+	 * @return the string
+	 */
+	public String navigateDocument(String docType){
+		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_DELIVERY_ORDER)){
+			IDeliveryOrderSO orderSO = (IDeliveryOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			reqDTO.setDeliveryOrderId(getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
+			reqDTO.setDocType(docType);
+			FulfilmentResDTO resDTO = orderSO.retrieveDeliveryOrderById(reqDTO);
+			DeliveryOrderBackingBean doBB = new DeliveryOrderBackingBean();
+			FacesContext fc = FacesContext.getCurrentInstance();
+			doBB.getManagedBean().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
+			doBB.getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
+			doBB.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
+			doBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
+			doBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());
+			// Set DO status
+			doBB.getManagedBean().setFulfilmentOrder(new FlFulfilmentOrder());
+			doBB.getManagedBean().getFulfilmentOrder().setFulfilmentOrderId(resDTO.getFlDeliveryOrder().getFlFulfilmentOrder().getFulfilmentOrderId());
+			doBB.getManagedBean().getFulfilmentOrder().setDocNo(resDTO.getFlDeliveryOrder().getFlFulfilmentOrder().getDocNo());
+			doBB.getManagedBean().getFulfilmentOrder().setDocType(resDTO.getFlDeliveryOrder().getFlFulfilmentOrder().getDocType());
+			doBB.getManagedBean().getFulfilmentOrder().setStatus(resDTO.getFlDeliveryOrder().getStatus());
+			doBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
+			doBB.getManagedBean().setHyperLinkPage(true);
+			doBB.getManagedBean().setPrevHideRemarks(flBB.getManagedBean().isHideRemarks());
+			doBB.getManagedBean().setSupplierUserName(PmCommonUtil.retriveUserName(resDTO.getFlDeliveryOrder().getCreatedBy()));
+			//26279 - start
+			if(doBB.getManagedBean().getFulfilmentOrder().getStatus().getStatusId().longValue() == FulfilmentStatusConst.DO_PENDING_ACKNOWLEDGEMENT 
+					|| doBB.getManagedBean().getFulfilmentOrder().getStatus().getStatusId().longValue() == FulfilmentStatusConst.DO_PENDING_CANCELLATION_APPROVAL 
+					|| doBB.getManagedBean().getFulfilmentOrder().getStatus().getStatusId().longValue() == FulfilmentStatusConst.DO_PENDING_MODIFICATION_APRROVAL) {
+				SmSupplier smSupplier = doBB.getManagedBean().getFulfilmentRequest().getSmSupplier();
+				SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
+				if(smDisciplinaryAction != null) {
+					doBB.getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
+					boolean isWarningOnly = false;
+					String warningOrDisciplinaryActionMsg;
+					String language =  new FacesScopes().getUserLocale().getLanguage();
+					if(smDisciplinaryAction.isWarning() && !smDisciplinaryAction.isCancelCategory() 
+							&& !smDisciplinaryAction.isSuspendRegistration() && !smDisciplinaryAction.isCancelRegistration() 
+							&& !smDisciplinaryAction.isBlacklistOwner() && !smDisciplinaryAction.isBumiputeraCancel() 
+							&& !smDisciplinaryAction.isManufacturerCancel()) {
+						isWarningOnly = true;
+						warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
+						doBB.getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
+					} else if(smDisciplinaryAction.isCancelCategory() 
+							|| smDisciplinaryAction.isSuspendRegistration() || smDisciplinaryAction.isCancelRegistration() 
+							|| smDisciplinaryAction.isBlacklistOwner() || smDisciplinaryAction.isBumiputeraCancel() 
+							|| smDisciplinaryAction.isManufacturerCancel()){
+						warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
+						doBB.getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
+					}
+				} else {
+					doBB.getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
+				}
+			}
+			//26279 - end
+			flBB.getManagedBean().setHideRemarks(true);
+			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
+			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
+			return NAV_DELIVERYORDER_PAGE;
+		}else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)||docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
+			IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			reqDTO.setFlOrderId(getManagedBean().getFulfilmentNote().getFlRequest().getFlFulfilmentOrder().getFulfilmentOrderId());
+			reqDTO.setDocType(docType);
+			FulfilmentResDTO resDTO = orderSO.retrieveFulfilmentOrderById(reqDTO);
+			FulfilmentOrderBackingBean orderBackingBean = new FulfilmentOrderBackingBean();
+			orderBackingBean.getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
+			orderBackingBean.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
+			FacesContext fc = FacesContext.getCurrentInstance();
+			orderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
+			orderBackingBean.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
+			orderBackingBean.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());
+			orderBackingBean.getManagedBean().setHyperLinkPage(true);
+			orderBackingBean.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
+			orderBackingBean.getManagedBean().setPrevHideRemarks(flBB.getManagedBean().isHideRemarks());
+			flBB.getManagedBean().setHideRemarks(true);
+			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
+			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
+			orderBackingBean.getManagedBean().setSupplier(hasSupplierRole());
+			 
+			boolean isFactoredSelected=resDTO.getFlOrder().isFactored();
+			if(isFactoredSelected){
+				orderBackingBean.getManagedBean().setFactoringCheck("true");
+			} else {
+				orderBackingBean.getManagedBean().setFactoringCheck("false");
+			}
+			
+			if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
+				return NAV_PO;
+			}else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
+				return NAV_CO;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * sorting all the items showing in Item menu
+	 *
+	 * @param flFulfilmentNoteItemList the Fl Fulfilment Note Item list
+	 */
+	public void sortItems(List<FlFulfilmentNoteItem> flFulfilmentNoteItemList) {
+		//Creating Comparator
+		if(null==flFulfilmentNoteItemList || flFulfilmentNoteItemList.isEmpty()){
+			return;
+		}
+		  Comparator<FlFulfilmentNoteItem> comparator = new Comparator<FlFulfilmentNoteItem>() {
+	            @Override
+	            public int compare(FlFulfilmentNoteItem o1, FlFulfilmentNoteItem o2) {
+	            	String object1Code = o1.getFlDelOrderItem().getFlFulfilmentItemAddr().getItemCode();
+	            	String object2Code = o2.getFlDelOrderItem().getFlFulfilmentItemAddr().getItemCode();
+	                return new CompareToBuilder()
+		                .append(object1Code, object2Code)
+		                .toComparison();
+	            }
+	        };
+			Collections.sort(flFulfilmentNoteItemList, comparator);
+    }
+	public void onTabChange(int selectedTabIndex){
+		if(selectedTabIndex==1){
+			sortItems(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem());
+			if(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem().get(0).getFulfilmentNoteItemId() != null){
+				getManagedBean().setSelectedItem(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem().get(0));
+			}
+			selectedItemRow();
+		}
+		
+	}
+	/**
+	 * Enable auto update.
+	 */
+	public void enableAutoUpdate(){
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
+		RequestContext.getCurrentInstance().update("@form");
+	}
+	
+	/**
+	 * Back to document.
+	 *
+	 * @return the string
+	 * @throws IOException 
+	 */
+	public String backAction() throws IOException {
+		if(getManagedBean().getBackToPrevious() !=null){
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			flBB.getManagedBean().setRemarkList(getManagedBean().getPreviousRemarkList());
+			flBB.getManagedBean().setAttachmentList(getManagedBean().getPreviousAttachmentList());
+			flBB.getManagedBean().setHideRemarks(getManagedBean().isPrevHideRemarks());
+			return getManagedBean().getBackToPrevious();
+		}
+		else{
+			FacesContext.getCurrentInstance().getExternalContext().redirect(
+					 EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL) + "notifications");
+			return null;
+		}
+	}
+	
+	/**
+	 * Show 1GFMAS error
+	 *
+	 */
+	public void show1GFMASError(){
+		getManagedBean().setAutoUpdate(Boolean.FALSE);
+		RequestContext.getCurrentInstance().update("@form");
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null,getManagedBean().getGfmasErrorContent()));
+	}
+	
+	/**
+	 * Retrieve received note by fulfilment note id and display in UI
+	 *
+	 */
+	public void viewReceivedNote() {
+		IFulfilmentSO iFulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentSO.class);
+		IReceivedNoteSO receivedNoteSO =(IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
+		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+		
+		String fulNoteId = originalServletRequest.getParameter("fulNoteId");
+		
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		if(fulNoteId!=null) {
+			reqDTO.setFulfilmentNoteId(Long.valueOf(fulNoteId));
+			reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+			reqDTO.setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+			reqDTO.setFrnLink(Boolean.TRUE);
+			renewSesionObject();
+			try {
+				resDTO = receivedNoteSO.retrieveReceivedNoteByReceivedNoteId(reqDTO);
+
+
+				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+				getManagedBean().setSelectedTabIndex(0);
+				getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
+				getManagedBean().setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+				getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());
+				getManagedBean().setFulfilmentRequest(resDTO.getFulfilmentNote().getFlRequest());
+				getManagedBean().getFulfilmentNote().setFlRequest(resDTO.getFulfilmentNote().getFlRequest());
+
+				reqDTO.setDeliveryOrderId(resDTO.getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
+				getManagedBean().setPmUser(reqDTO.getPmUser());
+				getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(resDTO.getFulfilmentNote().getFlFulfilmentNoteItem());
+				getManagedBean().setDocMaintainRemarks(true);
+				getManagedBean().setAcknowledged(true);
+				if(getManagedBean().getAcknowledgeDate() == null){
+					FlActor actor = iFulfilmentSO.retrieveFlActors(ParameterConst.DOCTYPE_FULFILMENT_NOTE, getManagedBean().getFulfilmentNote().getFulfilmentNoteId(), RoleCode.ACKNOWLEDGE_OFFICER.value());
+					if(actor != null){
+						getManagedBean().setAcknowledgeDate(actor.getActionDate());
+					}
+				}
+				if(getManagedBean().getFlApprover() == null){
+					FlActor actor = iFulfilmentSO.retrieveFlActors(getManagedBean().getFulfilmentNote().getFlRequest().getDocType(), getManagedBean().getFulfilmentNote().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
+					if(actor != null){
+						getManagedBean().setFlApprover(actor.getUser());
+					}
+				}
+
+				flBB.getManagedBean().setHideRemarks(true);
+				flBB.initializeRemarkAndAttachement(resDTO.getFulfilmentNote().getFlWorkflowStatus(), resDTO.getRemarkList(),resDTO.getAttachmentList());
+				for(FlFulfilmentNoteItem noteItem : getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem()){
+					if(noteItem.getFulfilmentNoteItemId() != null){
+						reqDTO.setDocId(noteItem.getFulfilmentNoteItemId());
+						reqDTO.setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE_ITEM);
+						resDTO = receivedNoteSO.retrieveRejectionRemarksHistory(reqDTO);
+						noteItem.setRejectionRemarks(resDTO.getFNIRejectionRemarks());
+						initializeRejectionRemarks(getManagedBean().getFulfilmentNote().getFlWorkflowStatus() ,resDTO.getFNIRejectionRemarks(),noteItem,false);
+					}else{
+						noteItem.getRejectionRemarks().add(new FlRemark());
+					}
+				}
+				FacesContext fc = FacesContext.getCurrentInstance();
+				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "frnBasePage?faces-redirect=true");
+			} catch (EpException e) {
+				handleException(e);
+			}finally{
+				receivedNoteSO = null;
+			}
+		}
+	}	
+
+	/**
+	 * Check user login is FL approver role
+	 *
+	 */
+	public boolean isFlFulfilmentApprover() {
+		return getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value());
+	}
+	
+	/**
+	 * Check user login is receiving officer role true or false
+	 *
+	 */
+	public boolean isReceivingOfficer() {
+		//#29171, CR 14650: Static Code Analysis Start
+		/*
+		if(getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value())){
+			return true;
+		}else{
+			return false;
+		}
+		*/
+		return getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value());
+		//#29171, CR 14650: Static Code Analysis End
+	}
+	
+	private void getSupplierGst(FlFulfilmentNote fulfilmentNote) {
+		ISupplierGstSO supplierGstSO = (ISupplierGstSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierGstSO.class);
+		
+		SupplierGstReqDTO reqDTO = new SupplierGstReqDTO();
+		reqDTO.setBranchCode(fulfilmentNote.getFlRequest().getFlSupplierDtl().getBranchCode());
+		reqDTO.setSupplierId(fulfilmentNote.getFlRequest().getSmSupplier().getSupplierId());
+		SupplierGstResDTO resDTO = supplierGstSO.retrieveGstInfoBySupplierIdAndBranchCode(reqDTO);
+		if(resDTO.getSmGstSupplier() != null){
+			fulfilmentNote.setGstEffectiveDate(resDTO.getSmGstSupplier().getGstEffDate());
+			fulfilmentNote.setGstDeclaredDate(resDTO.getSmGstSupplier().getGstDeclaredDate());
+			fulfilmentNote.setGstRegNo(resDTO.getSmGstSupplier().getGstRegNo());
+		} else {
+			fulfilmentNote.setGstEffectiveDate(null);
+			fulfilmentNote.setGstDeclaredDate(null);
+			fulfilmentNote.setGstRegNo(null);
+		}
+
+		boolean amtChanged = reCalculateGstUnitPrice(fulfilmentNote);
+		if(amtChanged){
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+					MessageUtils.getMessage(MessageConst.INFO_745009, new String[]{getManagedBean().getFulfilmentRequest().getFlFulfilmentOrder().getDocNo()}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+		}
+	}
+	
+	/**
+	 * Recalculate gst unit price for Ajax
+	 *
+	 */
+	public boolean reCalculateGstUnitPriceforAjax(FlFulfilmentNote fulfilmentNote){
+		boolean amtChanged = false;
+		
+		checkLastTaxFRN();
+		
+		amtChanged = reCalculateGstUnitPrice(fulfilmentNote);		
+		
+		return amtChanged;
+	}
+	
+	/**
+	 * Recalculate gst unit price
+	 *
+	 */
+	public boolean reCalculateGstUnitPrice(FlFulfilmentNote fulfilmentNote){
+		boolean amtChanged = false;
+		if(fulfilmentNote.getFlRequest().getGstRate() == null){
+			fulfilmentNote.getFlRequest().setGstRate(BigDecimal.ZERO);
+		}
+		
+		boolean isFrnGST = fulfilmentNote.getGstEffectiveDate()!=null && fulfilmentNote.getGstEffectiveDate().getTime() <= getManagedBean().getFulfilmentNote().getReceivedDate().getTime();
+		BigDecimal gstAmt = BigDecimal.ZERO;
+		BigDecimal frnGstAmt = BigDecimal.ZERO;
+		BigDecimal receivedAmt = BigDecimal.ZERO;
+		
+		for(FlFulfilmentNoteItem noteItem : fulfilmentNote.getFlFulfilmentNoteItem()){
+			if(!fulfilmentNote.isBrandNew()) {
+				frnGstAmt = noteItem.getGstAmount();
+			}
+			if(isFrnGST && noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().isGst()){
+				gstAmt = noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice().multiply(fulfilmentNote.getFlRequest().getGstRate().divide(new BigDecimal(100)));
+				noteItem.setGstAmount(gstAmt.setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE, BigDecimal.ROUND_HALF_UP));
+				noteItem.setGstUnitPrice(noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice().add(noteItem.getGstAmount()));
+			} else {
+				noteItem.setGstAmount(BigDecimal.ZERO);
+				noteItem.setGstUnitPrice(noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice());
+			}
+			
+			if(!amtChanged && fulfilmentNote.isBrandNew() && noteItem.getFlDelOrderItem().getGstAmount().compareTo(noteItem.getGstAmount())!=0) {
+				amtChanged = true;
+			}
+			if(!amtChanged && !fulfilmentNote.isBrandNew() && noteItem.getGstAmount().compareTo(frnGstAmt)!=0) {
+				amtChanged = true;
+			}
+			
+			if(noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT) || amtChanged){
+				receivedAmt = noteItem.getReceivedQty().multiply(noteItem.getGstUnitPrice());
+				noteItem.setReceivedAmt(receivedAmt.setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE, BigDecimal.ROUND_HALF_UP));
+			}
+		}
+		return amtChanged;
+	}
+	
+	/**
+	 * Applicable in the delivery order item rejection column. Selected the item the item amount, quantity, delivery quantity, delivery amount 
+	 * total received amount , total received quantity and remaining quantity will be set and display
+	 *
+	 */
+	public void selectedItemRow(){
+		if(null != getManagedBean().getSelectedItem()){
+			getManagedBean().setOrderedAmt(getManagedBean().getSelectedItem().getFlDelOrderItem().getFlFulfilmentItemAddr().getOrderedAmt());
+			getManagedBean().setOrderedQty(getManagedBean().getSelectedItem().getFlDelOrderItem().getFlFulfilmentItemAddr().getOrderedQty());
+			getManagedBean().setDeliveredQty(getManagedBean().getSelectedItem().getFlDelOrderItem().getDeliveredQty());
+			getManagedBean().setDeliveredAmt(getManagedBean().getSelectedItem().getFlDelOrderItem().getDeliveredAmt());
+			getManagedBean().setRemainingQty(getManagedBean().getSelectedItem().getFlDelOrderItem().getDeliveredQty().subtract(getManagedBean().getSelectedItem().getReceivedQty()));
+			getManagedBean().setItemTypeProduct(false);
+			if(getManagedBean().getSelectedItem().getFlDelOrderItem().getFlFulfilmentItemAddr().getItemType().getParameterCode().equals(ParameterConst.ITEM_TYPE_PRODUCT)){
+				getManagedBean().setItemTypeProduct(true);
+			}else if(getManagedBean().getSelectedItem().getFlDelOrderItem().getFlFulfilmentItemAddr().getItemType().getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE)){
+				getManagedBean().setItemTypeProduct(false);
+			}
+		}
+	}
+	
+	/**
+	 * Retrieve a list of acknowledge officers 
+	 *
+	 */
+	public SelectItem[] getAcknowledgeOfficerDropdown() {
+		SelectItem[] items = null;
+		getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId();
+		
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		UserReqDTO reqDTO = new UserReqDTO();
+		//13291 - start
+		reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+		UserResDTO resDTO = userSO.retrieveUserByUserId(reqDTO);
+		Long roOrgProfileId = null;
+		for(PmUserOrg pmUserOrg: resDTO.getPmUser().getPmUserOrgs()) {
+			if (pmUserOrg.getRecordStatusFlg() == 1) {
+				roOrgProfileId = pmUserOrg.getPmOrgProfile().getOrgProfileId();
+				break;
+			}
+		}
+		reqDTO.setOrgProfileId(roOrgProfileId);
+		reqDTO.setOrgType(resDTO.getPmUser().getOrgTypeCode().getParameterCode());
+		//13291 - end
+		reqDTO.setRoleCode(RoleCode.ACKNOWLEDGE_OFFICER.value());
+		resDTO = userSO.retrieveUserListByRole(reqDTO);//13291
+		getManagedBean().setPmUserList(resDTO.getUserList());
+		items = new SelectItem[resDTO.getUserList().size() + 1];
+		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+				"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				getFacesScopes().getUserLocale()));
+		
+		int i = 1;
+		for(PmUser user : resDTO.getUserList()) {
+			items[i++] = new SelectItem(user.getUserId(), user.getUserName());
+		}
+	    return items;
+	}
+	
+	/**
+	 * Sets the selected ack officer.
+	 */
+	public void setSelectedAckOfficer(){
+		for(PmUser user : getManagedBean().getPmUserList()){
+			if(user.getUserId().equals(getManagedBean().getUserLoginId())){
+				getManagedBean().setSelectedAckOfficer(user);
+				break;
+			}
+		}
+	}
+	
+	/**
+	 * retrieve the user name
+	 */
+	public String getUsername(Long userId) {
+		return PmCommonUtil.retriveUserName(userId);
+	}
+		
+	/**
+	 * Check user authority.
+	 *
+	 * @return true, if successful
+	 */
+	public boolean checkUserAuthority(){
+		boolean userAuthority = true;
+		
+		if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
+			return Boolean.FALSE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+			return Boolean.FALSE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
+			return Boolean.FALSE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
+			return Boolean.FALSE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.FL_USER.value())) {
+			return Boolean.FALSE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())) {
+			return Boolean.FALSE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())) {
+			return Boolean.FALSE;
+		}
+		
+		return userAuthority;
+	}
+	
+	/**
+	 * Sets the fulfilment note field.
+	 *
+	 * @param resDTO the new fulfilment note field
+	 */
+	private void setFulfilmentNoteField(FulfilmentResDTO resDTO){
+		if(resDTO.getFulfilmentNote() != null){
+			getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());
+		}
+		getManagedBean().setSelectedItem(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem().get(0));
+		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+		flBB.getManagedBean().setHideRemarks(false);
+		if(getManagedBean().getFulfilmentRequest().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)) {
+			new FulfilmentBackingBean(ParameterConst.DOCTYPE_FULFILMENT_NOTE, getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getRequestNote().getRequestNoteNo());
+		} else {
+			new FulfilmentBackingBean(ParameterConst.DOCTYPE_FULFILMENT_NOTE, getManagedBean().getFulfilmentRequest().getCtContract().getContractNo());
+		}				
+		if(resDTO.getFulfilmentNote()!=null) {
+			flBB.initializeRemarkAndAttachement(resDTO.getFulfilmentNote().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
+		}
+
+		if(null == getManagedBean().getFulfilmentNote().getReceivedDate()){
+			getManagedBean().getFulfilmentNote().setReceivedDate(DateUtils.getCurrentDateWithoutTime());
+		}
+		getSupplierGst(getManagedBean().getFulfilmentNote());
+	
+		if(getManagedBean().getFulfilmentNote().getApproverId() != null){
+			getManagedBean().setUserLoginId(getManagedBean().getFulfilmentNote().getApproverId()); 
+		}
+		getManagedBean().setSelectedTabIndex(0);
+
+		// Set evaluation
+		if(this.getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.APPROVE_FRN_HT)){
+			getManagedBean().setDisableEvaluation(Boolean.TRUE);
+		}
+		if(getManagedBean().getFulfilmentNote().getFlSupplierEvaluation().size()==0) {
+			retrieveCriteriaList();
+		}
+		if(null == getManagedBean().getFulfilmentNote().getReceivedDate()){
+			getManagedBean().getFulfilmentNote().setReceivedDate(DateUtils.getCurrentDateWithoutTime());
+		}
+		if(null == getManagedBean().getFulfilmentNote().getCreatedDate()){
+			getManagedBean().getFulfilmentNote().setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		}		
+		if(null == getManagedBean().getFulfilmentNote().getSubmissionDate() || 
+				(getManagedBean().getFulfilmentNote().getStatus()!=null && getManagedBean().getFulfilmentNote().getStatus().getStatusId().longValue()==FulfilmentStatusConst.FN_PENDING_DO_ACKNOWLEDGMENT.longValue())){
+			getManagedBean().getFulfilmentNote().setSubmissionDate(DateUtils.getCurrentDateWithoutTime());
+		}	
+		
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		IReceivedNoteSO receivedNoteSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IReceivedNoteSO.class);
+		for(FlFulfilmentNoteItem noteItem : getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem()){
+			if(noteItem.getFulfilmentNoteItemId() != null){
+				reqDTO.setDocId(noteItem.getFulfilmentNoteItemId());
+				reqDTO.setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE_ITEM);
+				resDTO = receivedNoteSO.retrieveRejectionRemarksHistory(reqDTO);
+				getManagedBean().getSelectedItem().getRejectionRemarks().addAll(resDTO.getFNIRejectionRemarks());
+				
+				initializeRejectionRemarks(getManagedBean().getFulfilmentNote().getFlWorkflowStatus() ,resDTO.getFNIRejectionRemarks(),noteItem,false);
+			}else{
+				noteItem.getRejectionRemarks().add(new FlRemark());
+			}
+		}
+	}
+	
+	/**
+	 * Check last tax frn.
+	 */
+	public void checkLastTaxFRN(){
+		IFulfilmentSO iFulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
+		getManagedBean().setLastFRNTaxInv(false);
+		BigDecimal sumTotalReceivedQty = BigDecimal.ZERO;
+		BigDecimal sumTotalOrderQty = BigDecimal.ZERO;
+		BigDecimal sumTotalOrderReceivedQty = BigDecimal.ZERO;
+		for(FlFulfilmentNoteItem noteItem : getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem()){
+			sumTotalReceivedQty = sumTotalReceivedQty.add(noteItem.getReceivedQty());
+		}
+		for(FlDeliveryAddress delAddr : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+			for(FlFulfilmentItemAddr itemAddr : delAddr.getFlFulfilmentItemAddr()){
+				sumTotalOrderQty = sumTotalOrderQty.add(itemAddr.getOrderedQty());
+			}
+		}
+		sumTotalOrderReceivedQty = iFulfilmentSO.getSumTotalItemsReceivedQtyByReqId(getManagedBean().getFulfilmentRequest().getFulfilmentReqId());
+		
+		sumTotalReceivedQty = sumTotalOrderReceivedQty.add(sumTotalReceivedQty);
+		if(sumTotalReceivedQty.doubleValue() == sumTotalOrderQty.doubleValue()){
+			getManagedBean().setLastFRNTaxInv(true); 
+		}
+		if(getManagedBean().isLastFRNTaxInv()){
+			IDesignatedAreaSO designatedAreaSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDesignatedAreaSO.class);
+			IGstItemSO gstItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IGstItemSO.class);
+			
+			GstItemReqDTO gstItemReqDTO = new GstItemReqDTO();
+			GstItemResDTO gstItemResDTO = null;
+			gstItemReqDTO.setG2g(false);
+			if(getManagedBean().getFulfilmentNote().getFlRequest().getProcurementType()!=null) {
+				if(getManagedBean().getFulfilmentNote().getFlRequest().getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
+					gstItemReqDTO.setG2g(true);
+				}
+			}
+			gstItemReqDTO.setGstEffDate(getManagedBean().getFulfilmentNote().getGstEffectiveDate());
+			gstItemReqDTO.setProcurementCatCode(ParameterConst.PROCUREMENT_TYPE_CODE_SUPPLY);
+			gstItemReqDTO.setActualReceivedDate(getManagedBean().getFulfilmentNote().getReceivedDate());
+			//get Gst from PR
+			gstItemReqDTO.setGstRate(getManagedBean().getFulfilmentNote().getFlRequest().getGstRate());
+			
+			if(getManagedBean().getFulfilmentNote().getFlRequest().getProcurementTypeCategory()!=null) {
+				gstItemReqDTO.setProcurementCatCode(getManagedBean().getFulfilmentNote().getFlRequest().getProcurementTypeCategory().getParameterCode());
+			}
+			if(getManagedBean().getFulfilmentNote().getFlRequest().getCtContract()!=null) {
+				gstItemReqDTO.setSvcCharge(getManagedBean().getFulfilmentNote().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().isServiceTax());
+				gstItemReqDTO.setLoaSignedDate(getManagedBean().getFulfilmentNote().getFlRequest().getCtContract().getLoa().getAckDate());
+			}
+			
+			int countisCogstrFalse = 0;
+						
+			for(FlFulfilmentNoteItem frnItem : getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem()) {
+				gstItemReqDTO.setGst(frnItem.getFlDelOrderItem().getFlFulfilmentItemAddr().isGst());
+				gstItemReqDTO.setRequestType(getManagedBean().getFulfilmentRequest().getDocType());
+				// default to PCA to PCA
+				gstItemReqDTO.setGslTypeCode(GSLType.PCA_TO_PCA.value());
+				
+				// Set GSL Type
+				DesignatedAreaReqDTO daReqDTO = new DesignatedAreaReqDTO();
+				DesignatedAreaResDTO daResDTO = new DesignatedAreaResDTO();
+				daReqDTO.setFromAddressId(getManagedBean().getFulfilmentNote().getFlRequest().getFlSupplierDtl().getFlAddress().getAddressId());
+				daReqDTO.setToAddressId(getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getFlDeliveryAddress().getFlAddress().getAddressId());
+				daReqDTO.setActualReceivedDate(getManagedBean().getFulfilmentNote().getReceivedDate());
+				daResDTO = designatedAreaSO.retrieveGSLParam(daReqDTO);
+				if(daResDTO.isSuccessful()) {
+					gstItemReqDTO.setGslTypeCode(daResDTO.getGslParam().getParameterCode());
+				}
+									
+				gstItemResDTO = gstItemSO.retrieveGSTFlag(gstItemReqDTO); 
+				//check atLeast one isCoGSTRFlag = false, LastFRNTaxInv false
+				if(!gstItemResDTO.isCoGSTRFlag()){
+					countisCogstrFalse = countisCogstrFalse+1;
+				}
+				
+			}
+			//#29171, CR 14650: Static Code Analysis Start
+			/*
+			if(countisCogstrFalse > 0){
+				getManagedBean().setLastFRNTaxInv(false);
+			}else{
+				getManagedBean().setLastFRNTaxInv(true); 
+			}
+			*/
+			
+			getManagedBean().setLastFRNTaxInv(countisCogstrFalse > 0? false:true);
+			//#29171, CR 14650: Static Code Analysis Start
+			
+			int countisCogstrFalseDB = 0;
+			
+			if(getManagedBean().isLastFRNTaxInv()){
+				//double check DB
+				IReceivedNoteSO receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IReceivedNoteSO.class);
+				FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+				reqDTO.setFlRequestId(getManagedBean().getFulfilmentNote().getFlRequest().getFulfilmentReqId());
+				FulfilmentResDTO resDTO = receivedNoteSO.retrieveReceivedNoteByReqId(reqDTO);
+				for(FlFulfilmentNote note : resDTO.getFulfilmentNoteList()){
+
+					if(!note.getFulfilmentNoteId().equals(getManagedBean().getFulfilmentNote().getFulfilmentNoteId())) {
+						if(!getManagedBean().isLastFRNTaxInv()){
+							break;
+						}
+					
+						for(FlFulfilmentNoteItem frnItem : note.getFlFulfilmentNoteItem()) {
+						
+							if(!frnItem.isCoGSTRReq()){
+								countisCogstrFalseDB = countisCogstrFalseDB + 1;
+							}
+						}
+					}
+				}
+				//#29171, CR 14650: Static Code Analysis Start
+				/*
+				if(countisCogstrFalseDB > 0){
+					getManagedBean().setLastFRNTaxInv(false);
+				}else{
+					getManagedBean().setLastFRNTaxInv(true); 
+				}
+				*/
+				getManagedBean().setLastFRNTaxInv(countisCogstrFalseDB > 0 ? false : true);
+				//#29171, CR 14650: Static Code Analysis End
+			}
+		}
+	}
+	
+	/**
+	 * Navigate Navigate to other page based on document type.
+	 *
+	 * @return the string
+	 */
+	public String navigateToFlRequest(){
+		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+		if(getManagedBean().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_REQUEST)){
+			IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			reqDTO.setFlRequestId(getManagedBean().getFulfilmentRequest().getFulfilmentReqId());
+			reqDTO.setFlRequestLink(true);
+			FulfilmentResDTO resDTO = requestSO.retrieveFulfilmentRequest(reqDTO);
+			
+			ContractRequestBackingBean crBB = new ContractRequestBackingBean();
+			crBB.renewSesionObject();
+			crBB = new ContractRequestBackingBean();
+			crBB.getManagedBean().setSelectedTabIndex(0);
+			crBB.getManagedBean().setDocProcess(getManagedBean().getDocType());
+			
+			FacesContext fc = FacesContext.getCurrentInstance();
+			crBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
+			crBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
+			crBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());		
+			crBB.getManagedBean().setHyperLinkPage(true);
+			crBB.getManagedBean().setPrevHideRemarks(flBB.getManagedBean().isHideRemarks());
+			flBB.getManagedBean().setHideRemarks(true);
+			crBB.setFulfilmentRequestField(resDTO);
+			crBB.initializeApproverGroup();
+			crBB.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
+			crBB.getManagedBean().setPmUser(reqDTO.getPmUser());
+			crBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
+			IContractSupplierSO contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
+			ContractSupplierReqDTO contractSupplierReqDTO = new ContractSupplierReqDTO();
+			if(null != resDTO.getFlFulfilmentRequest()){
+				if(resDTO.getFlFulfilmentRequest().getCtContract().isFactored()){
+					Long supplieContractId=resDTO.getFlFulfilmentRequest().getCtContract().getContractId();
+					contractSupplierReqDTO.setContractId(supplieContractId);
+					ContractSupplierResDTO contractSupplierResDTO = contractSupplierSO.retrieveFactoringByContract(contractSupplierReqDTO);
+					if(contractSupplierResDTO.getFactoring() != null){
+						resDTO.getFlFulfilmentRequest().getCtContract().setCtFactoring(contractSupplierResDTO.getFactoring());
+						crBB.getManagedBean().setFactored(true);
+						if(contractSupplierResDTO.getFactoring().getFinancialOrg() != null){
+							crBB.getSelectedFactoringCompDtl(contractSupplierResDTO.getFactoring());
+						}
+					}else{
+						crBB.getManagedBean().setFactored(false);
+					}
+				}
+			}
+			
+			for(CtAgency agency : crBB.getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtAgencies()){
+				if(agency.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE || 
+						(agency.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_SUSPENDED && agency.getEffDate().after(new Date()))) {
+					crBB.getManagedBean().getAgentOrgProfileList().add(agency.getOrgProfile().getOrgProfileId());
+					if(agency == crBB.getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtAgencies().get(0)){
+						crBB.getManagedBean().setOrgProfileIds(agency.getOrgProfile().getOrgProfileId().toString());
+					}else{
+						crBB.getManagedBean().setOrgProfileIds(crBB.getManagedBean().getOrgProfileIds() + "," +agency.getOrgProfile().getOrgProfileId().toString());
+					}
+				}
+			}
+			crBB.setFulfilmentItemAddr(crBB.getManagedBean().getFlRequest());
+			
+			return NAV_CR;
+		}if(getManagedBean().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)){
+			IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			reqDTO.setFlRequestId(getManagedBean().getFulfilmentRequest().getFulfilmentReqId());
+			reqDTO.setFlRequestLink(true);
+			FulfilmentResDTO resDTO = requestSO.retrieveFulfilmentRequest(reqDTO);
+			
+			PurchaseRequestBackingBean prBB = new PurchaseRequestBackingBean();
+			prBB.initializePRBeans();
+			prBB.getManagedBean().setSubmitButtonStatus(false);
+			prBB.getManagedBean().setDocProcess(getManagedBean().getDocType());
+			
+			FacesContext fc = FacesContext.getCurrentInstance();
+			prBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
+			prBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
+			prBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());	
+			prBB.getManagedBean().setPrevHideRemarks(flBB.getManagedBean().isHideRemarks());
+			flBB.getManagedBean().setHideRemarks(true);
+			prBB.setFulfilmentRequestField(resDTO);
+			prBB.getManagedBean().setPmUser(reqDTO.getPmUser());
+			prBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
+			prBB.getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
+			prBB.getManagedBean().setHyperLinkPage(true);
+			return NAV_PR;
+		}
+		return null;
+		
+	}
+	
+	/**
+	 * Sets the text before sign.
+	 *
+	 * @param outcome the new text before sign
+	 */
+	private void setTextBeforeSign(String outcome) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(getManagedBean().getFulfilmentRequest().getFlFulfilmentOrder().getDocNo()+"|");
+		sb.append(getManagedBean().getFulfilmentNote().getFulfilmentNoteNo()+"|");
+		sb.append(outcome+"|");
+		sb.append(getFacesScopes().getUserSessionBean().getIdentificationNo());
+		getManagedBean().setTextBeforeSign(sb.toString());
+	}
+	
+	/**
+	 * Check tax invoice.
+	 *
+	 * @param reqId 
+	 * @return true, if successful
+	 */
+	private boolean checkTaxInvoice(Long reqId){
+		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
+		return fulfilmentSO.checkTaxInvoice(reqId);
+	}
+	
+	/**
+	 * Gets the acknowledge officer.
+	 *
+	 * @return the acknowledge officer
+	 */
+	private void getAcknowledgeOfficer(){
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		UserReqDTO reqDTO = new UserReqDTO();
+		//13291 - start
+		IFulfilmentSO iFulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentSO.class);
+		FlActor actor = iFulfilmentSO.retrieveFlActors(FulfilmentConst.DOC_TYPE_FN, getManagedBean().getFulfilmentNote().getFulfilmentNoteId(), RoleCode.RECEIVING_OFFICER.value());
+		if(actor != null){
+			reqDTO.setUserId(actor.getUser().getUserId());
+		} else {
+			if(getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value())) {
+				reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+			}			
+		}		
+		UserResDTO resDTO = userSO.retrieveUserByUserId(reqDTO);
+		Long roOrgProfileId = null;
+		for(PmUserOrg pmUserOrg: resDTO.getPmUser().getPmUserOrgs()) {
+			if (pmUserOrg.getRecordStatusFlg() == 1) {
+				roOrgProfileId = pmUserOrg.getPmOrgProfile().getOrgProfileId();
+				break;
+			}
+		}
+		reqDTO.setOrgProfileId(roOrgProfileId);
+		reqDTO.setOrgType(resDTO.getPmUser().getOrgTypeCode().getParameterCode());
+		//13291 - end
+		reqDTO.setRoleCode(RoleCode.ACKNOWLEDGE_OFFICER.value());
+		resDTO = userSO.retrieveUserListByRole(reqDTO);//13291
+		getManagedBean().setPmUserList(resDTO.getUserList());
+		
+		List<PmUser> orderApproverList = new ArrayList<PmUser>();
+		List<PmUser> pendingApproverList = new ArrayList<PmUser>();
+		for(PmUser user : getManagedBean().getPmUserList()){
+			if(getManagedBean().getUserLoginId().equals(user.getUserId())){
+				orderApproverList.add(user);
+			} else if (!orderApproverList.isEmpty()) {
+				orderApproverList.add(user);
+			} else if (orderApproverList.isEmpty()) {
+				pendingApproverList.add(user);
+			}
+		}
+		orderApproverList.addAll(pendingApproverList);
+		getManagedBean().getApproverList().addAll(orderApproverList);
+	}
+	
+	/**
+	 * Retrieve remark rejection history.
+	 */
+	public void retrieveRemarkRejectionHistory(){
+		
+		if(getManagedBean().getSelectedItem().getFulfilmentNoteItemId() != null && !getManagedBean().getSelectedItem().getRejectionRemarks().isEmpty()){
+			getManagedBean().getRejectionRemarkHistory().clear();
+			 for(int i = 1; i < getManagedBean().getSelectedItem().getRejectionRemarks().size(); i++) {
+				 getManagedBean().getRejectionRemarkHistory().add(getManagedBean().getSelectedItem().getRejectionRemarks().get(i));
+			}
+			
+		}
+	}
+	
+	/**
+	 * Close listener.
+	 */
+	public void closeListener() {
+		RequestContext.getCurrentInstance().execute("rejectionRemarksHistory.hide()");
+	}
+	//26279 - start
+	/**
+	 * View list of Disciplinary Action
+	 */
+	public void viewDisciplinaryAction() {
+		List<DisciplinaryActionVO> disciplinaryActionVOs = retrieveDisciplinaryActions(getManagedBean().getSmDisciplinaryAction());
+		getManagedBean().setDisciplineVOs(disciplinaryActionVOs);
+		RequestContext.getCurrentInstance().execute(
+				"disciplinaryActionHistoryDlg.show();");
+	}
+	//26279 - end	
+	
+	//28855 - start
+	public void frnItemInfoList(FlFulfilmentItemAddr flItemAddr) {
+		IRequestItemSO requestItemSO = (IRequestItemSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
+			
+		getManagedBean().setItemName(flItemAddr.getScRequestItem().getItemName());
+			
+		getManagedBean().setSpecificationList(requestItemSO.retrieveNewOfferSpec(flItemAddr.getScRequestItem().getRequestNoteItemId()));
+		
+		if (!getManagedBean().getSpecificationList().isEmpty()) {
+				getManagedBean().setItemSpecList(new ArrayList<ScRequestItemSpecOffer>());
+				for (ScRequestItemSpecOffer specification : getManagedBean().getSpecificationList()) {
+					if (specification.getSupplierOffer()!= null && specification.getSupplierId().getSupplierId()
+							.equals(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId()) &&
+							specification.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
+						getManagedBean().setSupplierOffer(specification.getSupplierOffer());
+					}
+					if (specification.getNewOfferSpec()!= null && specification.getSupplierId().getSupplierId()
+							.equals(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId()) &&
+							specification.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
+						getManagedBean().setNewOfferedSpec(specification.getNewOfferSpec());
+					}
+					if (specification.getItemSpec()!= null && specification.getSupplierId().getSupplierId()
+							.equals(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId()) &&
+							specification.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)) {
+						getManagedBean().setItemSpecification(specification.getItemSpec());	
+						getManagedBean().getItemSpecList().add(specification);
+					}					
+				}
+				
+			} else {
+			getManagedBean().setSupplierOffer(null);
+			getManagedBean().setNewOfferedSpec(null);
+			getManagedBean().setItemSpecification(null);
+			getManagedBean().setItemSpecList(new ArrayList<ScRequestItemSpecOffer>());
+			}
+		
+		Long contractId = getManagedBean().getFulfilmentRequest().getCtContract()!=null?getManagedBean().getFulfilmentRequest().getCtContract().getContractId() : null;
+		IFulfilmentRequestSO fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
+		FulfilmentReqDTO reqFDTO = new FulfilmentReqDTO();
+		reqFDTO.setContractId(contractId);
+		String  loaDocType=  fulfilmentRequestSO.getLoaDocType(reqFDTO).getDocType();
+		
+		/*IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IContractSO.class);
+		ContractReqDTO cireqDTO = new ContractReqDTO();
+		cireqDTO.setContractId(getManagedBean().getFulfilmentRequest().getCtContract().getContractId());
+		ContractResDTO ciResDTO = contractSO.retrieveContract(cireqDTO);
+		
+		IQTAwardSO qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+		
+		AwardSupplierReqDTO reqLoaDTO = new AwardSupplierReqDTO();
+		if (ciResDTO.getContract().getLoa() != null) {
+		reqLoaDTO.setLoaId(ciResDTO.getContract().getLoa().getLoaId());
+		AwardSupplierResDTO resLoaDTO = qtAwardSO.retrieveLOADtlByLoaId(reqLoaDTO); */
+
+			if (loaDocType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)) {
+				getManagedBean().setDpFlag(true);
+			} else {
+				getManagedBean().setDpFlag(false);
+				if (getManagedBean().getItemSpecList().isEmpty() && !getManagedBean().getSpecificationList().isEmpty()) {
+					getManagedBean().getItemSpecList().add(getManagedBean().getSpecificationList().get(0));
+				}
+			}
+		//}
+	
+	}
+	//28855 - end
+	
+	//30468-start
+	/**
+	 * validate  received amount 
+	 *
+	 * @param item the item
+	 */
+	public void validateReceivedAmt() {
+		if(null != getManagedBean().getSelectedItem()){
+			FlFulfilmentNoteItem item=	getManagedBean().getSelectedItem();
+			
+			if(item.getReceivedAmt()==null) {
+				item.setReceivedAmt(BigDecimal.ZERO);
+			}
+			
+			if(item.getReceivedAmt().doubleValue()<0) {
+				item.setReceivedAmt(BigDecimal.ZERO);
+				throw new EpException(MessageConst.ERROR_100033, new String[]{ResourceBundleUtils.getMessage("lbl.fl.received.amount",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),"0"});
+			}		
+		}
+	}
+	//30468-end
+	//#21416 start
+	public String filterItemName(String itemName) {
+		if(this.getManagedBean().getFulfilmentRequest() != null){
+			if(this.getManagedBean().getFulfilmentRequest().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)){
+				String filteredItemName = filterItemNameNA(itemName);
+				return filteredItemName;
+			}
+		}
+		return itemName;
+				
+	}
+	//#21416 end
+}

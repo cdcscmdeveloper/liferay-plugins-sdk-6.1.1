@@ -1,0 +1,128 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<table style="width: 100%">
+		<tr>
+			<td style="width: 20%; vertical-align: baseline;" class="sidemenutd"><c:if
+					test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForMof}">
+					<ui:include
+						src="/xhtml/sm/NewMofApplication/smMofApplnSideMenuItem.xhtml" />
+				</c:if> <c:if
+					test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi}">
+					<ui:include
+						src="/xhtml/sm/updateMofDetails/smUpdateMofApplnSideMenuItem.xhtml" />
+				</c:if> <c:if
+					test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew}">
+					<ui:include
+						src="/xhtml/sm/renewMofApplication/smRenewApplnSideMenuItem.xhtml" />
+				</c:if> <c:if
+					test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForApplcatcodes}">
+					<ui:include
+						src="/xhtml/sm/renewMofApplication/smRenewApplnSideMenuItem.xhtml" />
+				</c:if> <c:if
+					test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForUpdate}">
+					<ui:include
+						src="/xhtml/sm/updateMofDetails/smUpdateMofApplnSideMenuItem.xhtml" />
+				</c:if></td>
+			<td>
+				<TABLE style="width: 100%">
+					<tr>
+						<!-- #12483 - START -->
+						<h:outputText value="#{lbl['lbl.sm.revise.reason']} : #{backingBean.currentReviseReason()}" rendered="#{backingBean.renderRevisedReason()}" styleClass="splNotesFonts" escape="false" />
+						<!-- #12483 - END -->
+						<td><h:outputText value="#{lbl['lbl.sm.suppDoc.reviewNote']}"
+								style="float :left" escape="false" /> <h:inputHidden
+								value="#{backingBean.managedBean.smAppl.applCategoryType}" /> <p:spacer
+								height="10px" />
+							<p:commandButton value="#{lbl['lbl.sm.valid.all']}" style="float:right;" 
+								rendered="#{not empty backingBean.managedBean.smAppl.smApplSupportDocs}"
+								update="@form" process="@this" partialSubmit="true"
+				    			onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+				    			action="#{backingBean.approveAllSuppDocByPOorApprover}"/>
+						</td>
+					</tr>
+					<tr>
+						<td><c:if
+								test="#{backingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_OFFLINE}">
+								<ui:include
+									src="/xhtml/sm/shared/mofSdoSharedPages/offlineSupportingDocsForm.xhtml" />
+							</c:if> <c:if
+								test="#{backingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
+								<ui:include
+									src="/xhtml/sm/shared/mofSdoSharedPages/onlineSupportingDocsForm.xhtml" />
+							</c:if>
+							<table style="width: 100%">
+								<tr>
+									<td><c:choose>
+											<c:when
+												test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForMof or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForApplcatcodes}">
+												<c:choose>
+													<c:when
+														test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
+														<div align="left" style="width: 100%">
+															<p:commandButton value="#{lbl['lbl.sm.prev.section']}"
+																onstart="blockWidget.show()"
+																oncomplete="blockWidget.hide()"
+																actionListener="#{backingBean.assignReviewSupportingNav('prev')}"
+																action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
+																update=":form" />
+														</div>
+													</c:when>
+													<c:otherwise>
+														<div align="left" style="width: 100%">
+															<p:commandButton value="#{lbl['lbl.sm.prev.section']}"
+																onstart="blockWidget.show()"
+																oncomplete="blockWidget.hide()"
+																actionListener="#{backingBean.assignReviewSupportingNav('prev')}"
+																action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
+																update=":form" />
+														</div>
+													</c:otherwise>
+												</c:choose>
+											</c:when>
+											<c:otherwise>
+												<div align="left" style="width: 100%">
+													<p:commandButton value="#{lbl['lbl.sm.prev.section']}"
+														onstart="blockWidget.show()"
+														oncomplete="blockWidget.hide()"
+														actionListener="#{backingBean.assignReviewSupportingNav('prev')}"
+														action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)}"
+														update=":form" />
+												</div>
+											</c:otherwise>
+										</c:choose></td>
+									<td><c:choose>
+											<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
+												<div align="right" style="width: 100%">
+													<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+														onstart="blockWidget.show()"
+														oncomplete="blockWidget.hide()"
+														actionListener="#{backingBean.assignReviewSupportingNav('next')}"
+														action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)}"
+														update=":form" />
+												</div>
+											</c:when>
+											<c:otherwise>
+												<div align="right" style="width: 100%">
+													<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+														onstart="blockWidget.show()"
+														oncomplete="blockWidget.hide()"
+														actionListener="#{backingBean.assignReviewSupportingNav('next')}"
+														action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+														update=":form" />
+												</div>
+											</c:otherwise>
+										</c:choose></td>
+								</tr>
+							</table></td>
+					</tr>
+
+				</TABLE>
+			</td>
+		</tr>
+	</table>
+</ui:composition>

@@ -1,0 +1,132 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:cc="http://java.sun.com/jsf/composite"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+   	xmlns:p="http://primefaces.org/ui"
+   	xmlns:ac="http://ac.my/jsf/composite/cc">
+    
+
+	<p:remoteCommand name="resetAllData" update="searchPanel deductionTitle resultPanel" partialSubmit="true" action="#{paymentMatchBackingBean.resetAction}" process="@this" />
+	<p:dialog id="deductionPopup" widgetVar="deductionPopup" modal="true" width="700" position="top" resizable="false">
+		<p:ajax event="close" listener="#{paymentMatchBackingBean.resetAction}" />
+		<f:facet name="header">
+			<h:panelGroup id="deductionTitle">#{lbl['lbl.lov.listing']} - #{lbl['lbl.fl.payment.match.amanah']} </h:panelGroup>
+		</f:facet>
+		
+		
+		<p:panel header="#{lbl['lbl.cm.search']}" toggleable="true">
+		
+		<h:panelGroup id="searchPanel" style="width:100%;">
+
+		<table>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.fl.payment.match.amanah']}" /></td>
+					<td><p:selectOneMenu value="#{paymentMatchBackingBean.managedBean.selectedVotFundId}" style="width: 115px;" >
+							<f:selectItems value="#{paymentMatchBackingBean.dropdownVOTFund}" />
+							<p:ajax event="change" update="deductionSearchBtn" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td><p:selectOneMenu value="#{paymentMatchBackingBean.managedBean.selectedVotValue}" style="width: 115px;" >
+							<f:selectItems value="#{paymentMatchBackingBean.dropdownVotCodeAndDesc}" />
+						</p:selectOneMenu></td>
+					<td><p:inputText value="#{paymentMatchBackingBean.managedBean.searchVotField}" 
+					 onkeypress="if (event.keyCode == 13) { lovSearch.jq.click(); return false; }"/></td>
+				</tr>
+		</table>
+		
+		
+
+		<table style="width:100%;"><tr><TD style="text-align:right;">
+			<p:commandButton id="deductionSearchBtn"
+				value="#{lbl['lbl.btn.search']}"
+				action="#{paymentMatchBackingBean.searchAction}"
+				partialSubmit="true"
+				process="searchPanel"
+				update="resultPanel"
+				disabled="#{paymentMatchBackingBean.managedBean.selectedVotFundId == null}"
+				widgetVar="lovSearch">
+			</p:commandButton>		
+			<p:commandButton
+				value="#{lbl['lbl.btn.reset']}"
+				action="#{paymentMatchBackingBean.resetAction}"
+				partialSubmit="true"
+				process="searchPanel"
+				update="searchPanel resultPanel">
+			</p:commandButton>
+		</TD></tr></table>
+
+		</h:panelGroup>
+		</p:panel>
+		<p:panel header="#{lbl['lbl.fl.result']}" toggleable="true">
+		<h:panelGroup id="resultPanel" style="width:100%;">
+			
+		<h:panelGroup>
+			<p:dataTable id="votList"
+				emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+				value="#{paymentMatchBackingBean.searchVot}" rows="10"
+				var="votList" rowIndexVar="index" lazy="true"
+				selectionMode="single"
+				selection="#{paymentMatchBackingBean.managedBean.selectedVotObj}"
+				rendered="#{paymentMatchBackingBean.managedBean.selectedVotFundId == 3}">
+				<p:ajax event="rowDblselect" listener="#{paymentMatchBackingBean.populateSelectedObj}" 
+                     update="@form"/>
+                <p:ajax event="rowSelect" update=":form:slbtn" />   
+                <p:ajax event="rowUnselect" update=":form:slbtn" />   
+				<ac:paginator for="votList" />
+	
+				<p:column headerText="#{lbl['lbl.pm.category.code.only']}" style="width:10%;white-space: normal;word-wrap: break-word;">
+					<h:outputText value="#{votList[0]}" />
+				</p:column>
+	
+				<p:column headerText="#{lbl['lbl.pm.category.desc.only']}" style="width:30%;white-space: normal;word-wrap: break-word;">
+					<h:outputText value="#{votList[1]}" />
+				</p:column>
+				
+			</p:dataTable>
+			<p:dataTable id="fundList"
+				emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+				value="#{paymentMatchBackingBean.searchFund}" rows="10"
+				var="fundList" rowIndexVar="index" lazy="true"
+				selectionMode="single"
+				selection="#{paymentMatchBackingBean.managedBean.selectedFundObj}"
+				rendered="#{paymentMatchBackingBean.managedBean.selectedVotFundId == 2}">
+				<p:ajax event="rowDblselect" listener="#{paymentMatchBackingBean.populateSelectedObj}" 
+                     update="@form"/>
+                <p:ajax event="rowSelect" update=":form:slbtn" />   
+                <p:ajax event="rowUnselect" update=":form:slbtn" />   
+				<ac:paginator for="fundList" />
+
+						<p:column headerText="#{lbl['lbl.pm.fund.code']}" style="width:10%;white-space: normal;word-wrap: break-word;">
+					<h:outputText value="#{fundList[0]}" />
+				</p:column>
+	
+				<p:column headerText="#{lbl['lbl.pm.fund.desc']}" style="width:30%;white-space: normal;word-wrap: break-word;">
+					<h:outputText value="#{fundList[1]}" />
+				</p:column>
+			</p:dataTable>
+			</h:panelGroup>
+
+
+			<table style="width:100%;"><tr><td style="text-align:right;">
+				<p:commandButton 
+					id="slbtn"
+					value="#{lbl['lbl.btn.select']}"
+					oncomplete="deductionPopup.hide();"
+					update=":form,:form:deductionDataTable" 
+					disabled="#{paymentMatchBackingBean.isSelectButtonDisable()}"
+					styleClass="BtnSpacing"
+					action="#{paymentMatchBackingBean.populateSelectedObj}"/>	
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+					update=":form" action="#{paymentMatchBackingBean.resetAction}"
+					oncomplete="deductionPopup.hide();" styleClass="BtnSpacing"/>
+			</td>
+			</tr></table>
+			
+		</h:panelGroup>
+		</p:panel>
+	</p:dialog>
+	
+</ui:composition>

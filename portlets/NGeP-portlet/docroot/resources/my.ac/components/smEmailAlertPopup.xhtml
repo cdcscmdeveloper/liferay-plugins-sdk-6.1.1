@@ -1,0 +1,27 @@
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<cc:interface>
+		<!-- <cc:attribute name="id" /> -->
+		<cc:attribute name="value" default="null" />
+				
+	</cc:interface>
+
+	<cc:implementation>
+		<p:confirmDialog id="#{cc.attrs.dialogId}" header="#{cc.attrs.title}" widgetVar="#{cc.attrs.dialogId}WidgetVar">
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.ok']}" onclick="#{cc.attrs.dialogId}WidgetVar.hide()" />
+			</div>
+			
+			<f:facet name="message">
+		    	<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.email.change.message']}" escape="false"/>
+		    </f:facet>
+		    
+		</p:confirmDialog>
+	</cc:implementation>
+	
+</ui:component>

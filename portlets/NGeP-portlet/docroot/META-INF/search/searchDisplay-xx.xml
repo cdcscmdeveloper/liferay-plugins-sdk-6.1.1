@@ -1,0 +1,2505 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+	<bean id="CM_COLOR" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="colorId" />
+
+		<property name="daoClass" value="my.ep.persistence.dao.cm.catalog.ColorDAO" />
+		<!-- <property name="searchMethod" value="findColor" /> -->
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="colorName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.cm.color.name" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="colorCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.cm.color.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="CM_UNSPSC" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="unspscId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.cm.catalog.CodificationDAO" />
+		<!-- <property name="searchMethod" value="" /> -->
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="unspscCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.cm.unspsc.code.lov" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="unspscTitle" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.cm.unspsc.title.lov" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="unspscTitleEng" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.cm.unspsc.title.lov.eng" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+	
+	
+	<bean id="PM_STATUS_DESC" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="statusDescId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.common.status.StatusDescDAO" />
+		<!-- <property name="searchMethod" value="" /> -->
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="statusName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.bpm.status" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+	
+	
+
+	<bean id="PM_CITY" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="cityId" />
+
+		<property name="daoClass" value="my.ep.persistence.dao.pm.common.city.CityDAO" />
+		<!-- <property name="searchMethod" value="findColor" /> -->
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="cityCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.city.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="cityName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.city.name" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="PM_UOM" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="uomId" />
+		<property name="daoClass" value="my.ep.persistence.dao.pm.common.uom.UomDAO" />
+		<!-- <property name="searchMethod" value="" /> -->
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="uomCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.uom.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="uomName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.uom.name" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="SM_SUPPLIER" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="supplierId" />
+
+		<property name="daoClass" value="my.ep.persistence.dao.sm.SmSupplierDAO" />
+		<property name="searchMethod" value="retrieveComplaintSupplierLs" /> 
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="companyName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.companyname" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="epNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.epno" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="regNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.businessregno" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="smMofAccounts.mofNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.mofno" />
+					<property name="viewable" value="false" />
+				</bean>
+				
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="mofNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.mofno" />
+					<property name="searchable" value="false"></property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<!-- #30824 & #29712, #32564 - start -->
+	<bean id="SM_RPT_MOF_ACCOUNT" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="supplierId" />
+
+		<property name="daoClass" value="my.ep.persistence.dao.sm.SmSupplierDAO" />
+		<property name="searchMethod" value="retrieveMOFAccountList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="companyName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.companyname" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="mofNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.mofno" />
+					<property name="searchable" value="false"></property>
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="regNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.businessregno" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="smMofAccounts.mofNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.mofno" />
+					<property name="viewable" value="false" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="supplierStatus" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.supplier.status" />
+					<property name="searchable" value="false" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="mofStatus" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.mof.status" />
+					<property name="searchable" value="false" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="SM_RPT_BASIC_ACCOUNT" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="supplierId" />
+
+		<property name="daoClass" value="my.ep.persistence.dao.sm.SmSupplierDAO" />
+		<property name="searchMethod" value="retrieveBasicAccountList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="companyName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.companyname" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="regNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.businessregno" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="supplierStatus" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.supplier.status" />
+					<property name="searchable" value="false" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="SM_RPT_G2G_ACCOUNT" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="orgProfileId" />
+
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.authorization.orgprofile.OrgProfileDAO" />
+		<property name="searchMethod" value="retrieveG2GAccountList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmOrgValidity.orgCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.ta.org.code" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmOrgValidity.orgName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.ta.org.name" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmOrgValidity.supplierStatus" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.supplier.status" />
+					<property name="searchable" value="false" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<!-- #30824 & #29712, #32564 - end -->
+
+	<bean id="PM_ORG_PROFILE_WITH_SUPPLIER" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="orgProfileId" />
+
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.authorization.orgprofile.OrgProfileDAO" />
+		<property name="searchMethod" value="retrieveOrgProfilesWithSupplier" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="smSupplier.companyName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.companyname" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="smSupplier.epNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.epno" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="smSupplier.regNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.regno" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="smSupplier.smMofAccounts.mofNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.mofno" />
+					<!-- <property name="columnWidth" value="150" /> -->
+					<property name="viewable" value="false" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="PM_CATEGORY_L1" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="categoryL1Id" />
+
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.common.categorycode.CategoryL1DAO" />
+		<!-- <property name="searchMethod" value="findColor" /> -->
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="categoryL1Code" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.main.category.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="categoryName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.main.category" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="PM_CATEGORY_L2" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="categoryL2Id" />
+
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.common.categorycode.CategoryL2DAO" />
+		<!-- <property name="searchMethod" value="findColor" /> -->
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="categoryL2Code" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.sub.category.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="categoryName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.sub.category" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<bean id="PM_CATEGORY_L3_FOR_RULE" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="categoryL3Id" />
+
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.common.categorycode.CategoryL3DAO" />
+		<property name="searchMethod" value="retrieveCategoryL3List2" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmCategoryL2.pmCategoryL1.categoryL1Code" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.main.category.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+					<property name="viewable" value="false" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmCategoryL2.pmCategoryL1.categoryName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.main.category" />
+					<!-- <property name="columnWidth" value="150" /> -->
+					<property name="viewable" value="false" />
+				</bean>
+
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmCategoryL2.categoryL2Code" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.sub.category.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+					<property name="viewable" value="false" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmCategoryL2.categoryName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.sub.category" />
+					<!-- <property name="columnWidth" value="150" /> -->
+					<property name="viewable" value="false" />
+				</bean>
+
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="categoryL3Code" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.sub.category.div.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="categoryName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.sub.category.div" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="PM_CATEGORY_L3" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="categoryL3Id" />
+
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.common.categorycode.CategoryL3DAO" />
+		<property name="searchMethod" value="retrieveCategoryL3List" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmCategoryL2.pmCategoryL1.categoryL1Code" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.main.category.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+					<property name="viewable" value="false" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmCategoryL2.pmCategoryL1.categoryName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.main.category" />
+					<!-- <property name="columnWidth" value="150" /> -->
+					<property name="viewable" value="false" />
+				</bean>
+
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmCategoryL2.categoryL2Code" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.sub.category.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+					<property name="viewable" value="false" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmCategoryL2.categoryName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.sub.category" />
+					<!-- <property name="columnWidth" value="150" /> -->
+					<property name="viewable" value="false" />
+				</bean>
+
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="categoryL3Code" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.sub.category.div.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="categoryName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.sub.category.div" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<bean id="PM_ORG_PROFILE" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="orgProfileId" />
+
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.authorization.orgprofile.OrgProfileDAO" />
+		<property name="searchMethod" value="retrieveOrgProfileDtlList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmOrgValidity.orgCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.ta.org.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmOrgValidity.orgName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.ta.org.name" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="PM_ORG_PROFILE_REPORT" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="orgProfileId" />
+
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.authorization.orgprofile.OrgProfileDAO" />
+		<property name="searchMethod" value="retrieveOrgProfileDtlList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmOrgValidity.orgCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.ta.org.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmOrgValidity.orgName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.ta.org.name" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="orgProfileId" />
+
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.authorization.orgprofile.OrgProfileDAO" />
+		<property name="searchMethod" value="retrieveOrgProfilesWithSupplier" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="smSupplier.companyName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.rpt.supName" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>				
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="smSupplier.regNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.regno" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>				
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="PM_ORG_PROFILE_WITH_COMPANY_REPORT" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="orgProfileId" />
+
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.authorization.orgprofile.OrgProfileDAO" />
+		<property name="searchMethod" value="retrieveOrgProfilesWithSupplier" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="smSupplier.companyName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.companyname" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>				
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="smSupplier.regNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.regno" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>				
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="PM_ORG_PROFILE_AUTH_TYPE" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="orgProfileId" />
+
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.authorization.orgprofile.OrgProfileDAO" />
+		<property name="searchMethod" value="retrieveOrgProfilesFromUserOrgProfileAuthType" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmOrgValidity.orgCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.ta.org.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmOrgValidity.orgName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.ta.org.name" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="CT_CONTRACT" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="contractId" />
+
+		<property name="daoClass" value="my.ep.persistence.dao.ct.CtContractDAO" />
+		<!-- <property name="searchMethod" value="findColor" /> -->
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="contractNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.ct.contract.no" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="contractName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.fl.contract.name" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="CT_CONTRACT_FOR_FEE" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="contractId" />
+
+		<property name="daoClass" value="my.ep.persistence.dao.ct.CtContractDAO" />
+		<property name="searchMethod" value="retrieveContract" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="contractNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.ct.contract.no" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="contractName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.fee.contract.name" />
+					<property name="columnWidth" value="100" />
+				</bean>
+				
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="smSupplier.companyName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.fee.supplier.name" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+	            <bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="currentContractVer.contractPhysicalNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.contract.physical.no" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				 <bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="loa.loaNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.contract.loa.referece.no" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				 <bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="loaPhysicalNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.contract.loa.physical.no" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="FL_DELIVERY_ADDR" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="addressId" />
+
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.common.address.AddressDAO" />
+		<!-- <property name="searchMethod" value="findColor" /> -->
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="addressId" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.fl.del.addr" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="address1" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.fl.del.addr" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="PM_DISTRICT" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="districtId" />
+
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.common.district.DistrictDAO" />
+		<!-- <property name="searchMethod" value="findColor" /> -->
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmState.stateName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.cm.state.name" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="districtName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.cm.district.name" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="PM_BUSINESS_NATURE" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="businessNatureId" />
+
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.common.businessnature.BusinessNatureDAO" />
+		<property name="searchMethod" value="retrieveBusinessNatureList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="sectionCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.businessnature.lvl1.section" />
+					<property name="searchable" value="false" />
+				</bean>
+				
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="levelCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sc.code" />
+				</bean>
+				
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="levelName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sc.business.nature.desc" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="CT_PANEL_SUPPLIER" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="panelSupplierId" />
+
+		<property name="daoClass"
+			value="my.ep.persistence.dao.ct.circular.panel.CtPanelSupplierDAO" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="supplier.companyName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sc.supplier" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="supplier.epNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sc.supplier.ep.no" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="supplier.regNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sc.mof.no" />
+				</bean>
+
+			</list>
+		</property>
+	</bean>
+
+	<bean id="SM_SUPPLIER_MOFNO" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="mofAccountId" />
+		<property name="daoClass" value="my.ep.persistence.dao.sm.SmMofAccountDAO" />
+		<property name="searchMethod" value="retrieveMofAccountDtls" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="mofNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sc.mof.no" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="smSupplier.companyName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.companyname" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="PM_USER" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="userId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.authorization.user.UserDAO" />
+		<property name="searchMethod" value="retrieveUserLoList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="userName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.profiles.search.name" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="identificationNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.profiles.userdetails.idno" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="designation" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.profiles.userdetails.designation" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="PM_USER_ID" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="userId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.authorization.user.UserDAO" />
+		<property name="searchMethod" value="retrieveUserLoList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="userName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.profiles.search.name" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="identificationNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.rpt.icNo" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="PM_USER_ID_MINISTRY" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="userId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.authorization.user.UserDAO" />
+		<property name="searchMethod" value="retrieveMinistryUserList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="userName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.profiles.search.name" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="identificationNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.rpt.icNo" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="methodName" value="directLOABackingBean.getOrgProfileByUserId(entity.userId).orgCode" />
+					<property name="columnName" value="pmUserOrgs.pmOrgProfile.pmOrgValidity.orgCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.ta.org.code" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="methodName" value="directLOABackingBean.getOrgProfileByUserId(entity.userId).orgName" />
+					<property name="columnName" value="pmUserOrgs.pmOrgProfile.pmOrgValidity.orgName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.ta.org.name" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="PM_ADDRESS_TYPE" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="addressTypeId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.common.address.AddressTypeDAO" />
+		<property name="searchMethod" value="retrieveAddressTypeAddressDtlList" />
+		<property name="columns">
+			<list>
+			<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmAddress.addressName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.profiles.authorisation.addname" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmAddress.address1" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.profiles.authorisation.add1" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmAddress.address2" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.profiles.authorisation.add2" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmAddress.address3" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.profiles.authorisation.add3" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmAddress.pmState.stateName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.address.state" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmAddress.pmDistrict.districtName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.district" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmAddress.pmDivision.divisionName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.division" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmAddress.pmCity.cityName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.city" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="PM_CATEGORY_L3_ALL" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="categoryL3Id" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.common.categorycode.CategoryL3DAO" />
+		<property name="searchMethod" value="searchAllCategoryL3" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmCategoryL2.categoryL2Code" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.category.code" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmCategoryL2.categoryName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.category.desc" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="categoryL3Code" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.sub.category.div.code" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="categoryName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.sub.category.div" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="PM_CERT_BODY" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="certBodyId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.common.certbody.CertBodyDAO" />
+		<property name="searchMethod" value="retrieveAllCertBodyList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="bodyName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.suppdoc.certified.body" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="PM_OBJECTS" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="doId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.common.object.PmDoDAO" />
+		<property name="searchMethod" value="retrieveGOSODOList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmSo.pmGo.goCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.go.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmSo.soCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.so.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="doCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.do.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<bean id="PM_PROJECT" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="subSetiaId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.common.projectsetia.SubSetiaDAO" />
+		<property name="searchMethod" value="retrieveSubSetiaDtlList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="projectCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.sub.setia.project.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="description" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.sub.setia.project.desc" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="setiaCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.sub.setia.setia.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="subSetiaCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.sub.setia.sub.setia.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName"
+ 						value="financingTypeValue" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.fl.cp" />
+					<property name="searchable" value="false" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="methodName"
+						value="simpleQuoteBackingBean.retrieveSupplierGstDates(entity.effDate)" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.vot.program.valid.from" />
+					<property name="searchable" value="false" />								
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="methodName" value="simpleQuoteBackingBean.retrieveSupplierGstDates(entity.expDate)" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.vot.program.valid.to" />
+					<property name="searchable" value="false" />
+				</bean>					
+			</list>
+		</property>
+	</bean>
+
+	<bean id="PM_PRG_ACTIVITY" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="prgActivityId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.common.programactivity.PrgActivityDAO" />
+		<property name="searchMethod" value="retrievePrgActivityDtlList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="prgActivityCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.prog.activity.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="description" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.prog.activity.desc" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="methodName"
+						value="simpleQuoteBackingBean.retrieveSupplierGstDates(entity.effDate)" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.vot.program.valid.from" />
+					<property name="searchable" value="false" />								
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="methodName" value="simpleQuoteBackingBean.retrieveSupplierGstDates(entity.expDate)" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.vot.program.valid.to" />
+					<property name="searchable" value="false" />
+				</bean>								
+			</list>
+		</property>
+	</bean>
+	<bean id="PM_GL_ACCOUNT" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="glAccountId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.common.glaccount.GlAccountDAO" />
+		<property name="searchMethod" value="retrieveValidGlAccountDtlList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="glAccCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.gl.accountCode" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="description" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.gl.description" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<bean id="PM_GL_ACCOUNT_FL" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="glAccountId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.common.glaccount.GlAccountDAO" />
+		<property name="searchMethod" value="retrieveFLGlAccountDtlList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="glAccCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.gl.accountCode" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="description" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.gl.description" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>	
+	<bean id="PM_VOT_FUND" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="votFundId" />
+		<property name="daoClass" value="my.ep.persistence.dao.pm.common.votfund.VotFundDAO" />
+		<property name="searchMethod" value="retrieveFundList" />	
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="votFundCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.fl.fund" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="description" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.fl.title" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="methodName"
+						value="simpleQuoteBackingBean.retrieveSupplierGstDates(entity.effDate)" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.fund.valid.from" />
+					<property name="searchable" value="false" />								
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="methodName" value="simpleQuoteBackingBean.retrieveSupplierGstDates(entity.expDate)" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.fund.valid.to" />
+					<property name="searchable" value="false" />
+				</bean>				
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="PM_VOT" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="votFundId" />
+		<property name="daoClass" value="my.ep.persistence.dao.pm.common.votfund.VotFundDAO" />
+		<property name="searchMethod" value="retrieveVotList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="votFundCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.vot.code" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="description" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.vot.desc" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="methodName"
+						value="simpleQuoteBackingBean.retrieveSupplierGstDates(entity.effDate)" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.vot.valid.from" />
+					<property name="searchable" value="false" />								
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="methodName" value="simpleQuoteBackingBean.retrieveSupplierGstDates(entity.expDate)" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.vot.valid.to" />
+					<property name="searchable" value="false" />
+				</bean>						
+			</list>
+		</property>
+	</bean>
+
+	<bean id="CM_ITEM" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="itemId" />
+		<property name="daoClass" value="my.ep.persistence.dao.cm.catalog.ItemDAO" />
+		<!-- <property name="searchMethod" value="" /> -->
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="extensionCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.itemcode" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="itemName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.itemname" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="CM_ITEM_REPORT" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="itemId" />
+		<property name="daoClass" value="my.ep.persistence.dao.cm.catalog.ItemDAO" />
+		<!-- <property name="searchMethod" value="" /> -->
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="extensionCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.itemcode" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="itemName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.itemname" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="CM_UNSPSC_REPORT" class="my.ep.web.bean.LovBean">
+	<property name="pk" value="unspscId" />
+	<property name="daoClass"
+		value="my.ep.persistence.dao.cm.catalog.CodificationDAO" />
+
+	<property name="columns">
+		<list>
+			<bean class="my.ep.web.bean.LovColumnBean">
+				<property name="columnName" value="unspscCode" />
+				<property name="bundleFile"
+					value="messageprovider-config.bundles.labels.labels" />
+				<property name="bundleKey" value="lbl.pm.itemcode" />
+			</bean>
+			<bean class="my.ep.web.bean.LovColumnBean">
+				<property name="columnName" value="unspscTitle" />
+				<property name="bundleFile"
+					value="messageprovider-config.bundles.labels.labels" />
+				<property name="bundleKey" value="lbl.pm.itemname" />
+
+			</bean>
+			</list>
+		</property>
+	</bean>
+	
+
+	<bean id="CT_CONTRACT_ITEM" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="contractItemId" />
+
+		<property name="daoClass"
+			value="my.ep.persistence.dao.ct.dtl.CtContractItemDAO" />
+		<!-- <property name="searchMethod" value="findColor" /> -->
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="scRequestItem.itemName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.ct.item.name" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<bean id="PM_GOSO" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="soId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.common.object.PmSoDAO" />
+		<property name="searchMethod" value="retrieveGOSOList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmGo.goCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.go.code" />
+				</bean>
+
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="soCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.so.code" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<bean id="V_SUPPLIER_ITEM" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="docId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.cm.catalog.ViewSupplierItemDAO" />
+		<property name="searchMethod" value="retrieveNonContractedSupplierItems" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="companyName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.companyname" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<bean id="PM_ORG_PROFILE_FPJ" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="orgProfileId" />
+
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.authorization.orgprofile.OrgProfileDAO" />
+		<property name="searchMethod" value="retrieveOrgProfileFPJ" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmOrgValidity.orgCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.fl.pm.org.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmOrgValidity.orgName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.fl.pm.org.name" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<bean id="SC_REQUEST_ITEM" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="requestNoteItemId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.sc.common.RequestItemDAO" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="itemName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.ct.item.name" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<bean id="SC_REQUEST_SUPPLIER_ITEM" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="requestSupplierItemId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.sc.directpurchase.RequestSupplierItemDAO" />
+		<property name="searchMethod" value="retrieveSupplierItemList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="supplierName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.companyname" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<bean id="SM_SUPPLIER_BY_REQUEST_SUPPLIER_ITEM" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="supplierId" />
+		<property name="daoClass" value="my.ep.persistence.dao.sm.SmSupplierDAO" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="companyName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.companyname" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<bean id="PM_BUSINESS_NATURE_ADV" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="businessNatureId" />
+
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.common.businessnature.BusinessNatureDAO" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="businessLevel" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.bn.level" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="levelCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sc.code" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="levelName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sc.business.nature.desc" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="PM_MACHINE" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="machineId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.common.categorycode.PmMachineDAO" />
+		<!-- <property name="searchMethod" value="" /> -->
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="machineCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.machine.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="machineDesc" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.machine.desc" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<bean id="PM_CATEGORY_L3_EDU" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="categoryL3Id" />
+
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.common.categorycode.CategoryL3DAO" />
+		<property name="searchMethod" value="searchAllCategoryL3" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="categoryL3Code" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.sub.category.div.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="categoryName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.sub.category.div" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmCategoryL2.categoryL2Code" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.sub.category.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+					<property name="viewable" value="false" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmCategoryL2.categoryName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.sub.category" />
+					<!-- <property name="columnWidth" value="150" /> -->
+					<property name="viewable" value="false" />
+				</bean>
+
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmCategoryL2.pmCategoryL1.categoryL1Code" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.main.category.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+					<property name="viewable" value="false" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmCategoryL2.pmCategoryL1.categoryName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.main.category" />
+					<!-- <property name="columnWidth" value="150" /> -->
+					<property name="viewable" value="false" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<bean id="PM_ORG_PROFILE_MINSTRY" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="orgProfileId" />
+
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.authorization.orgprofile.OrgProfileDAO" />
+		<property name="searchMethod" value="retrieveOrgProfileMinistry" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmOrgValidity.orgCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.org.ministryCode" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmOrgValidity.orgName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.org.ministryName" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<bean id="PM_ORG_PROFILE_PTJ" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="orgProfileId" />
+
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.authorization.orgprofile.OrgProfileDAO" />
+		<property name="searchMethod" value="retrieveOrgProfileFPJ" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmOrgValidity.orgCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.org.ptjCode" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmOrgValidity.orgName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.ug.search.ptjname" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<bean id="PM_ROLE_DESC" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="roleDescId" />
+
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.authorization.role.RoleDescDAO" />
+		<property name="searchMethod" value="retrieveRoleDescList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="roleName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.profiles.search.role" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="PM_ORG_PROFILE_FFC" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="orgProfileId" />
+
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.authorization.orgprofile.OrgProfileDAO" />
+		<property name="searchMethod" value="retrieveFactoryingOrgProfileList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmFinancialOrg.bizRegNumber" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.txt.business.reg.no" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmFinancialOrg.finOrgName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sc.company.name" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<bean id="PM_ORG_PROFILE_ALL" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="orgProfileId" />
+
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.authorization.orgprofile.OrgProfileDAO" />
+		<property name="searchMethod" value="retrieveOrgProfileDtlList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="methodName"
+						value="pPlanBackingBean.retrieveMinistryCodeByOrgProfileId(entity.orgProfileId)" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.org.ministryCode" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="methodName"
+						value="pPlanBackingBean.retrieveMinistryByOrgProfileId(entity.orgProfileId)" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.org.ministryName" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmOrgValidity.orgCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.org.ptjCode" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmOrgValidity.orgName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.org.ptjName" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<bean id="PM_ORG_PROFILE_FL" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="orgProfileId" />
+
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.authorization.orgprofile.OrgProfileDAO" />
+		<property name="searchMethod" value="retrieveOrgProfileDtlListForFl" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmOrgValidity.orgCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.fl.pm.org.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmOrgValidity.orgName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.fl.pm.org.name" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<bean id="PM_ADDRESS_TYPE_FL" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="addressTypeId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.common.address.AddressTypeDAO" />
+		<property name="searchMethod" value="retrieveAddressTypeListLov" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmAddress.address1" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.profiles.authorisation.add1" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmAddress.address2" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.profiles.authorisation.add2" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmAddress.address3" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.profiles.authorisation.add3" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmAddress.pmState.stateName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.address.state" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmAddress.pmDistrict.districtName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.district" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmAddress.pmCity.cityName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.city" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<bean id="CT_AGENCY_ADDRESS" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="agencyAddressId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.ct.dtl.CtAgencyAddressDAO" />
+		<property name="searchMethod" value="getAgencyAddressesByOrgProfileIdLov" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="addressType.pmAddress.address1" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.profiles.authorisation.add1" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="addressType.pmAddress.address2" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.profiles.authorisation.add2" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="addressType.pmAddress.address3" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.profiles.authorisation.add3" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="addressType.pmAddress.pmState.stateName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.address.state" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName"
+						value="addressType.pmAddress.pmDistrict.districtName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.district" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="addressType.pmAddress.pmCity.cityName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.city" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<bean id="PM_PARAMETER_DESC" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="parameterDescId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.common.parameter.ParameterDescDAO" />
+		<property name="searchMethod" value="retrieveParameterDescList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmParameter.parameterCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.ta.document.type" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="codeName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.ta.document.description" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+
+			</list>
+		</property>
+	</bean>
+	<bean id="CT_PANEL_ITEM_GROUP" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="panelItemGroupId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.ct.circular.panel.CtPanelItemGroupDAO" />
+		<!-- <property name="searchMethod" value="" /> -->
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="groupName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.ct.group.name" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<!--shafie #28833 -start  -->
+	<bean id="PM_ORG_PROFILE_KUMPULAN_PTJ" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="orgProfileId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.authorization.orgprofile.OrgProfileDAO" />
+		<property name="searchMethod" value="retrieveOrgProfilePTJGroup" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmOrgValidity.orgCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.org.ptj.kumpulan.code" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmOrgValidity.orgName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.org.ptj.kumpulan.name" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<!--shafie #28833 -end  -->
+	<bean id="PM_ORG_PROFILE_PTJ_GROUP" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="orgProfileId" />
+
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.authorization.orgprofile.OrgProfileDAO" />
+		<property name="searchMethod" value="retrieveOrgProfilePTJGroup" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmOrgValidity.orgCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.org.ptj.group.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmOrgValidity.orgName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.org.ptj.group.name" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<bean id="V_PM_LOCATION" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="rowNum" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.common.location.LocationDAO" />
+		<property name="searchMethod" value="searchLocationData" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="locationCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.location.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="locationName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.location.name" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<bean id="PM_ORG_PROFILE_GST_PTJ" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="orgProfileId" />
+
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.authorization.orgprofile.OrgProfileDAO" />
+		<property name="searchMethod" value="retrieveOrgProfileFPJ" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmOrgValidity.orgCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.settings.gst.orgptj.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmOrgValidity.orgName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.settings.gst.orgptj.name" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+
+	<bean id="SM_SUPPLIER_SQ" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="supplierId" />
+
+		<property name="daoClass" value="my.ep.persistence.dao.sm.SmSupplierDAO" />
+		<property name="searchMethod" value="retriveSupplierAndGSTInfos" />
+
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="companyName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.companyname" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="epNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.epno" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="regNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.businessregno" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="smMofAccounts.mofNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.mofno" />
+					<!-- <property name="columnWidth" value="150" /> -->
+					<property name="viewable" value="false" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="smGstSupplier.gstRegNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sc.gst.register.num" />
+					<property name="searchable" value="false" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="methodName"
+						value="simpleQuoteBackingBean.retrieveSupplierGstDates(entity.smGstSupplier.gstEffDate)" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sc.gst.effective.date" />
+					<property name="searchable" value="false" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="methodName"
+						value="simpleQuoteBackingBean.retrieveSupplierGstDates(entity.smGstSupplier.gstDeclaredDate)" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sc.gst.declared.date" />
+					<property name="searchable" value="false" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+	
+ <bean id="CT_CIRCULAR_PANEL" class="my.ep.web.bean.LovBean">
+	<property name="pk" value="circularVerId" />
+
+	<property name="daoClass"
+		value="my.ep.persistence.dao.ct.circular.CtCircularVerDAO" />
+	<property name="searchMethod" value="findActiveCircularVer" />
+	<property name="columns">
+		<list>
+			<bean class="my.ep.web.bean.LovColumnBean">
+				<property name="columnName" value="circularNo" />
+				<property name="bundleFile"
+					value="messageprovider-config.bundles.labels.labels" />
+				<property name="bundleKey" value="lbl.sc.circular.no" />
+			</bean>
+			<bean class="my.ep.web.bean.LovColumnBean">
+				<property name="columnName" value="name" />
+				<property name="bundleFile"
+					value="messageprovider-config.bundles.labels.labels" />
+				<property name="bundleKey" value="lbl.sc.circular.name" />
+			</bean>
+		</list>
+	</property>
+</bean>
+
+	<bean id="DIRECT_LOA_QT" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="qtId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.sc.quationtender.QTDetailDAO" />
+		<property name="searchMethod" value="retrieveMigratedQT" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="qtNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sc.qtn.no" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="qtTitle" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sc.title" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="PANEL_SUPPLIER_MOFNO" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="panelSupplierId" />
+		<property name="daoClass" value="my.ep.persistence.dao.ct.circular.panel.CtPanelSupplierDAO" />
+	 	<property name="searchMethod" value="getSupplierByItemId" /> 
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="methodName"
+						value="bsvAttendanceBackingBean.mofAccountNumber(entity.supplier)" />
+						<property name="columnName" value="supplierMofNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sc.mof.no" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="supplier.companyName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.companyname" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="RESTR_SUPPLIER_MOFNO" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="qtSupplierId" />
+		<property name="daoClass" value="my.ep.persistence.dao.sc.quationtender.QtSupplierDAO" />
+		<property name="searchMethod" value="retrieveQtsuppliersByQtId" /> 
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="methodName"
+						value="bsvAttendanceBackingBean.mofAccountNumber(entity.smSupplier)" />
+						<property name="columnName" value="supplierMofNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sc.mof.no" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="smSupplier.companyName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.companyname" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="DELIVERY_FULL_ADDRESS" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="rowNum" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.ct.dtl.VCtAgencyDeliveryAddDAO" />
+		<property name="searchMethod" value="retrieveDeliveryAddressList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="fullAddress" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.ct.address" />
+				</bean>				
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="PM_USER_ID_REPORT" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="userId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.authorization.user.UserDAO" />
+		<property name="searchMethod" value="retrieveUserLoList" />
+		<property name="columns">
+			<list>				
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="identificationNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.rpt.icNo" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="userName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.profiles.search.name" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+     <bean id="PM_ROLE_DESC_REPORT" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="roleDescId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.authorization.role.RoleDescDAO" />
+		<property name="searchMethod" value="retrieveDataRoleDescList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmRole.roleCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.rpt.profiles.search.rolecode" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="roleName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.rpt.profiles.search.rolename" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+    <bean id="PM_ORG_PROFILE_FFC_REPORT" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="orgProfileId" />
+
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.authorization.orgprofile.OrgProfileDAO" />
+		<property name="searchMethod" value="retrieveFactoryingOrgProfileList" />
+		<property name="columns">
+			<list>				
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmFinancialOrg.finOrgName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.financialorg.name" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmFinancialOrg.bizRegNumber" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.txt.business.reg.no" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<bean id="DELIVERY_FULL_ADDRESS_FL" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="rowNum" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.fl.request.VAddressTypeDeliveryAddDAO" />
+		<property name="searchMethod" value="retrieveDeliveryAddressList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="fullAddress" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.fl.address" />
+				</bean>				
+			</list>
+		</property>
+	</bean>
+	<bean id="FL_AGENCY_ADDRESS" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="rowNum" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.fl.request.VAgencyDeliveryAddDAO" />
+		<property name="searchMethod" value="retrieveAgencyDeliveryAddressList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="fullAddress" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.fl.address" />
+				</bean>				
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="CT_CIRCULAR_PID_REASON" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="circularPidReasonId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.ct.circular.dtl.CtCircularPidReasonDAO" />
+		<property name="searchMethod" value="retrieveCircularPidReason" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="methodName" value="purchaseInDefaultBackingBean.getReasonDescByReasonId(entity.pmReason.reasonId).reasonDesc" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sc.purchase.in.default.just" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="reasonDesc" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sc.reason.other.desc" />
+				</bean>
+
+			</list>
+		</property>
+	</bean>
+	<bean id="CT_PID_REASON" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="pidReasonId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.ct.dtl.CtPidReasonDAO" />
+		<property name="searchMethod" value="retrieveContractPidReason" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="methodName" value="purchaseInDefaultBackingBean.getReasonDescByReasonId(entity.pmReason.reasonId).reasonDesc" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sc.purchase.in.default.just" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="reasonDesc" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sc.reason.other.desc" />
+				</bean>
+
+			</list>
+		</property>
+	</bean>
+	<bean id="SM_PERSONNEL_LOV" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="personnelId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.sm.SmPersonnelDAO" />
+		<property name="searchMethod" value="retrieveSupplierLoList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="name" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.profiles.search.name" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="identificationNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.rpt.icNo" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="designation" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.designation" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="methodName" value="supplierTaskReassignmentBackingBean.getRoleDescByRoleCode(entity.epRole)" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.userprofile.eprole" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+	
+		<bean id="PM_ORG_PROFILE_SPEC_MAINTENANCE" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="orgProfileId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.authorization.orgprofile.OrgProfileDAO" />
+		<property name="searchMethod" value="retrieveQTPtj" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmOrgValidity.orgCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.ta.org.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmOrgValidity.orgName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.ta.org.name" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+	
+	
+	<bean id="PM_USER_DO_SEARCH" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="userId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.authorization.user.UserDAO" />
+		<property name="searchMethod" value="retrieveDOListBySearchBean" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="userName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.profiles.search.name" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="identificationNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.rpt.icNo" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="PM_USER_REQ_SEARCH" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="userId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.authorization.user.UserDAO" />
+		<property name="searchMethod" value="retrieveUserList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="userName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.profiles.search.name" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<!--29991  start-->
+	<bean id="PM_ORG_PROFILE_WITH_ORGANISATION_REPORT" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="orgProfileId" />
+
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.authorization.orgprofile.OrgProfileDAO" />
+		<property name="searchMethod" value="retrieveOrgProfilesWithSupplier" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="smSupplier.regNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.rpt.businessregistrationnoscreen" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>				
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="smSupplier.companyName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.rpt.companyName" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>				
+			</list>
+		</property>
+	</bean>
+	<!--29991  end-->
+	<!-- 29554 - find ag office -->
+	<bean id="PM_AG_OFFICE" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="interfaceAgOffId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.common.interfaceptj.InterfaceAgOffDAO" />
+		<property name="searchMethod" value="retrieveAgOfficeSearchData" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="offCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.accounting.office.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="offDesc" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.gl.description" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<!-- 29554 - end-->
+</beans>

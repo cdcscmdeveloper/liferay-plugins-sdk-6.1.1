@@ -1,0 +1,189 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<ui:define name="resourceSection">
+		<style>
+			.gfmasPanelCss>.ui-panel-content {
+				background: #f2dede !important;
+			}
+		</style>	
+	</ui:define>
+	<ui:define name="contentSection">
+		<h:panelGroup layout="block" class="ui-messages ui-widget" rendered="#{(createDOBackingBean.managedBean.fulfilmentOrder.status.statusId.longValue() == FulfilmentStatusCont.doPendingAcknowledgement.longValue() 
+		or createDOBackingBean.managedBean.fulfilmentOrder.status.statusId.longValue() == FulfilmentStatusCont.doPendingCancellationApproval.longValue() 
+		or createDOBackingBean.managedBean.fulfilmentOrder.status.statusId.longValue() == FulfilmentStatusCont.doPendingModificationAprroval.longValue()) 
+		and not empty createDOBackingBean.managedBean.disciplinaryActionMessage}">
+		<h:panelGroup layout="block" class="ui-messages-info ui-corner-all">
+		<h:outputText class="ui-messages-info-icon" /><ul><li>
+		<h:outputText class="ui-messages-info-detail" /> #{createDOBackingBean.managedBean.disciplinaryActionMessage} <p:commandLink id="sharedcommand" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" action="#{createDOBackingBean.viewDisciplinaryAction(createDOBackingBean.managedBean.smDisciplinaryAction)}" process="@this" partialSubmit="true" update=":form">#{lbl['lbl.sm.disciplinary.here']}</p:commandLink> #{lbl['lbl.sm.supplier.to.view.disc.action.details']}</li></ul>
+		</h:panelGroup>
+		</h:panelGroup>
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>		
+		<script>
+			$('#portlet_flDeliveryOrder_WAR_NGePportlet').find(
+					'.portlet-title-text').html(
+					'#{createDOBackingBean.getPortletTitle()}');
+		</script>
+		<f:event listener="#{createDOBackingBean.preRenderView}" type="preRenderView" />
+		<c:if test="#{createDOBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or 
+					  createDOBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmUpdate or
+					  createDOBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancel or
+					  createDOBackingBean.managedBean.isHyperLinkPage()}">
+			<ac:title value="#{createDOBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, ParameterConst.doctypeDeliveryOrder)}" />
+		</c:if>			
+		<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="#{createDOBackingBean.managedBean.autoUpdate}" closable="true" severity="error,info,warn" />
+		<p:panel style="background:#f2dede !important; border:0px;" styleClass="gfmasPanelCss" rendered="#{createDOBackingBean.managedBean.gfmasError}" >		
+			<table>
+				<tr>
+					<td>
+						<p:commandLink oncomplete="gfmasError.show();" immediate="true"
+							action="#{createDOBackingBean.show1GFMASError()}"
+							rendered="#{createDOBackingBean.managedBean.gfmasError}">
+							<p:graphicImage value="/css/images/design/exclamation.png" />
+						</p:commandLink>
+						<p:spacer width="2" />
+					</td>
+					<td>
+						<p:outputLabel value="#{createDOBackingBean.managedBean.gfmasErrorDesc} #{lbl['lbl.fl.integration.click.for.exception.details']} (ERR-#{createDOBackingBean.managedBean.gfmasErrorCode})" style="color: #C55751 !important; font-weight: normal !important"
+							rendered="#{createDOBackingBean.managedBean.gfmasError}" />
+					</td>					
+				</tr>
+			</table>
+		</p:panel>
+		<ac:gpkiPopup 
+			textBeforeSign="#{createDOBackingBean.managedBean.textBeforeSign}"
+			postSignAction="#{createDOBackingBean.preSubmitDeliveryOrder(gpkiBackingBean.pmDigiSign)}"
+			enableAutoUpdate="#{createDOBackingBean.enableAutoUpdate()}" />
+		<ac:spkiPopup id="spkiPopUp"
+		 password="#{createDOBackingBean.managedBean.spkiBackingBean.password}"
+   		 challengeAns1="#{createDOBackingBean.managedBean.spkiBackingBean.challengeAns1}"
+  		 challengeQues1="#{createDOBackingBean.managedBean.spkiBackingBean.challengeQues1}"
+		 postSignAction="#{createDOBackingBean.preSubmitDeliveryOrder(spkiBackingBean.pmDigiSign)}"
+		 enableAutoUpdate="#{createDOBackingBean.enableAutoUpdate()}" />
+		<table style="width: 100%;">
+			<tr>
+				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" rendered="#{createDOBackingBean.managedBean.taskId==null}" 
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+						action="#{createDOBackingBean.backAction}" /></td>
+				<h:panelGroup
+					rendered="#{empty createDOBackingBean.managedBean.buttonVal}">
+					<td colspan="4" style="text-align: right">
+						<p:commandButton disabled="#{createDOBackingBean.managedBean.orderDisabledForSdCheck eq true}"
+							styleClass="ui-button"  value="#{lbl['lbl.btn.save']}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							update="@form"  
+							action="#{createDOBackingBean.createDeliveryOrder(BpmOutcomeConstant.bpmSave)}" /> 
+						<p:commandButton update="spkiPopUp, @form" disabled="#{createDOBackingBean.managedBean.orderDisabledForSdCheck eq true}"
+							styleClass="ui-button"  value="#{lbl['lbl.btn.submit']}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+							action="#{createDOBackingBean.signingAction(BpmOutcomeConstant.bpmSubmit)}" />
+					</td>
+				</h:panelGroup>
+				<h:panelGroup
+					rendered="#{createDOBackingBean.managedBean.buttonVal eq 'ACK' }">
+					<td colspan="4" style="text-align: right"><ui:repeat
+							var="bpmAction"
+							value="#{createDOBackingBean.managedBean.outComes}">
+							<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+							<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
+								styleClass="ui-button" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+								action="#{createDOBackingBean.signingAction(bpmAction)}" />
+						</ui:repeat></td>
+				</h:panelGroup>
+				
+				<h:panelGroup
+					rendered="#{createDOBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmUpdate }">	
+					<td colspan="4" style="text-align: right"><p:commandButton
+							value="#{lbl['lbl.btn.update']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+							action="#{createDOBackingBean.signingAction(BpmOutcomeConstant.bpmUpdate)}">
+							<f:param name="actionName" value="#{BpmOutcomeConstant.bpmUpdate}" />
+						</p:commandButton></td>
+				</h:panelGroup>
+				<h:panelGroup
+					rendered="#{createDOBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancel}">	
+					<td colspan="4" style="text-align: right"><p:commandButton
+							value="#{lbl['lbl.btn.cancel']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+							action="#{createDOBackingBean.signingAction(BpmOutcomeConstant.bpmCancel)}">
+							<f:param name="actionName" value="#{BpmOutcomeConstant.bpmCancel}" />
+						</p:commandButton></td>
+				</h:panelGroup>
+				<c:if test='#{createDOBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}'>
+					<td colspan="4" style="text-align: right"><p:commandLink 
+							rendered="#{!createDOBackingBean.managedBean.isHyperLinkPage()}"
+							value="#{lbl['lbl.td.doc.trackingDiary']}"
+							action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeDeliveryOrder,createDOBackingBean.managedBean.flDeliveryOrder.deliveryOrderId)}"
+							immediate="true" /></td>
+				</c:if>
+				<h:panelGroup id="printButtonDo"
+					rendered="#{createDOBackingBean.managedBean.flDeliveryOrder.deliveryOrderNo != null}">
+					<td style="text-align: right; width: 30px;"><p:commandLink
+							value="#{lbl['lbl.btn.print']}" ajax="false">
+							<p:fileDownload
+								value="#{flDocumentBackingBean.generateReport(ParameterConst.doctypeDeliveryOrder,createDOBackingBean.managedBean.flDeliveryOrder.deliveryOrderNo,flDocumentManagedBean.taxable)}" />
+						</p:commandLink></td>
+				</h:panelGroup>
+			</tr>
+		</table>
+		<ui:include src="doReviewHeaderPage.xhtml" />
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<td width="20%" valign="top" class="sidemenutd"><p:tabMenu
+						styleClass="sidemenu"
+						activeIndex="#{createDOBackingBean.managedBean.selectedTabIndex}">
+						<p:menuitem value="#{lbl['lbl.fl.menu.general']}" update="@form">
+							<f:setPropertyActionListener
+								target="#{createDOBackingBean.managedBean.selectedTabIndex}"
+								value="0" />
+						</p:menuitem>
+						<p:menuitem value="#{lbl['lbl.fl.do.delivery.items']}" update="@form" actionListener="#{createDOBackingBean.onTabChange(1)}">
+							<f:setPropertyActionListener
+								target="#{createDOBackingBean.managedBean.selectedTabIndex}"
+								value="1" />
+						</p:menuitem>
+					</p:tabMenu></td>
+				<h:panelGroup id="doMaintenence" rendered="#{createDOBackingBean.managedBean.isModificationCancel() or not empty createDOBackingBean.managedBean.buttonVal }">
+					<td width="80%"><p:outputPanel
+							rendered="#{createDOBackingBean.managedBean.selectedTabIndex == 0}">
+							<ui:include src="doMaintenenceGeneral.xhtml" />
+						</p:outputPanel> <p:outputPanel
+							rendered="#{createDOBackingBean.managedBean.selectedTabIndex == 1}">
+							<ui:include src="doMaintenenceItem.xhtml" />
+						</p:outputPanel></td>
+				</h:panelGroup>
+				<h:panelGroup id="do" rendered="#{empty createDOBackingBean.managedBean.buttonVal and !createDOBackingBean.managedBean.isModificationCancel()}">
+					<td width="80%"><p:outputPanel
+							rendered="#{createDOBackingBean.managedBean.selectedTabIndex == 0}">
+							<ui:include src="doGeneral.xhtml" />
+						</p:outputPanel> <p:outputPanel
+							rendered="#{createDOBackingBean.managedBean.selectedTabIndex == 1}">
+							<ui:include src="doItem.xhtml" />
+						</p:outputPanel></td>
+				</h:panelGroup>
+			</tr>
+		</table>
+		<p:dialog id="gfmasErrorDlg" header="#{lbl['lbl.fl.integration.exception.details']}" widgetVar="gfmasError" width="80%"
+			showEffect="fade" hideEffect="fade" modal="true" resizable="false">
+			<table style="width: 100%">
+				<tr>
+					<td><p:messages id="gfmasMsg" showSummary="false" escape="false" showDetail="true" autoUpdate="true" closable="true" severity="error,info" /></td>
+				</tr>
+			</table>
+			<p:spacer height="2px"></p:spacer>
+			<div style="width: 100%; text-align: right">
+				<p:commandButton value="#{lbl['lbl.btn.close']}" oncomplete="gfmasError.hide();" />
+			</div>
+		</p:dialog>
+		<ac:disciplinaryActionHistory voList="#{createDOBackingBean.managedBean.disciplineVOs}" 
+		dialogHeader="#{lbl['lbl.sm.view.details.disciplinary.action.headerlbl']}" dialogWidth="800px" dialogHeight="400px" btnView="true" />
+	</ui:define>
+</ui:composition>

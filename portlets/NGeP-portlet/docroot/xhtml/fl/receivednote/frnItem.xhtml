@@ -1,0 +1,326 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>
+	<p:panel header="#{lbl['lbl.fl.menu.items']}" toggleable="true" id="itemPnl">
+	<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.frn.item']}" escape="false"/>
+		<br />
+	<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.item']}" escape="false"/>
+		<br />
+	<p:dataTable id="frnItemDt" var="item" 
+			value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flFulfilmentNoteItem}"	
+			selection="#{receivedNoteBackingBean.managedBean.selectedItem}"
+			rowIndexVar="index" selectionMode="single" rowKey="#{item}" >
+			<p:ajax event="rowSelect" update=":form:selectedItemSection" listener="#{receivedNoteBackingBean.selectedItemRow()}"/>
+			<ac:paginator for="itemDataTable" />
+         <p:columnGroup type="header">
+			<p:row>
+				<p:column rowspan="3">
+					<f:facet name="header" >
+	    				<h:outputText value="#{lbl['lbl.fl.item.code']}"/>
+	     				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.item.code']}"/>
+	    			</f:facet>
+    			</p:column>		
+				<p:column rowspan="3" headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;text-align:center;"/>
+				<p:column rowspan="3" headerText="#{lbl['lbl.fl.uom']}" style="text-align:center;"/>
+				<p:column rowspan="3" headerText="#{lbl['lbl.fl.unit.price']}" style="white-space:normal;text-align:center;"/>
+				<p:column rowspan="3" headerText="#{lbl['lbl.fl.gst.amt']}" style="white-space:normal;text-align:center;"/>
+				<p:column rowspan="3" headerText="#{lbl['lbl.fl.unit.price.w.gst']}" style="white-space:normal;text-align:center;"/>
+				<p:column rowspan="3" headerText="#{lbl['lbl.fl.frn.accum.total.received.qty']}" style="white-space:normal;text-align:center;"/>
+				<p:column rowspan="3" style="width:15%;">
+				<f:facet name="header" style="white-space:normal;">
+					<h:outputText value="#{lbl['lbl.fl.frn.accum.total.received.amt']}" style="white-space:normal;text-align:center;"/>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.frn.accumulated.total.received.amt']}"/>
+				</f:facet>
+			</p:column>
+            </p:row>
+          </p:columnGroup>    
+             <p:column>
+            	<h:outputText value="#{item.flDelOrderItem.flFulfilmentItemAddr.itemCode}" />
+        	</p:column>
+        	<p:column style="white-space:normal;">
+        	<!--#21416 filter item name-->
+				<h:outputText value="#{receivedNoteBackingBean.filterItemName(item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemName)}" 
+				id="itemDesc" title="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemDesc}"/>
+				<p:commandLink oncomplete="frnItemInfo.show();" process="@this"  
+					rendered="#{receivedNoteBackingBean.managedBean.contractFlag}"
+					action="#{receivedNoteBackingBean.frnItemInfoList(item.flDelOrderItem.flFulfilmentItemAddr)}"
+					update=":form:frnItemInfoDialog,@(.orderSummaryChange)">
+					<ac:iconTooltip value="#{lbl['lbl.fl.request.item.info.contract']}"  escape="false"/>
+					</p:commandLink>
+			</p:column>
+			<p:column >
+				<h:outputText value="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomName}" />
+			</p:column>
+			<p:column style="white-space:normal;text-align:right;">
+				<h:outputText styleClass="colFloatRight" value="#{item.flDelOrderItem.flFulfilmentItemAddr.unitPrice}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+			<p:column style="white-space:normal;text-align:right;">
+				<h:outputText styleClass="colFloatRight" value="#{item.gstAmount}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+			<p:column style="white-space:normal;text-align:right;">
+				<h:outputText styleClass="colFloatRight" value="#{item.gstUnitPrice}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+			<p:column style="white-space:normal;text-align:right;">
+				<h:outputText styleClass="colFloatRight" value="#{item.flDelOrderItem.flFulfilmentItemAddr.receivedQty}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+			<p:column style="white-space:normal;text-align:right;">
+				<h:outputText styleClass="colFloatRight" value="#{item.flDelOrderItem.flFulfilmentItemAddr.receivedAmt}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+		</p:dataTable>
+		
+		<p:spacer height="20"/>
+		<h:panelGroup styleClass="selectedItemSection" id="selectedItemSection">
+			<table style="width: 50%">
+				<tr>
+					<td style="width:250px;"></td>
+					<td style="width:130px;"><p:outputLabel value="#{lbl['lbl.fl.qty']}" /></td>
+					<td style="width:50px;"></td>
+					<td style="width:138px;"><p:outputLabel value="#{lbl['lbl.fl.amount.rm']}" /></td>
+					<td style="width:50px;"></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.fl.ordered']}" /></td>
+					<td><p:inputText style="text-align:right;"
+							styleClass="colFloatRight"
+							value="#{receivedNoteBackingBean.managedBean.orderedQty}"
+							size="15" disabled="true" ><f:converter converterId="dynamicNumberConverter" />
+							<f:attribute name="pattern"
+								value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, receivedNoteBackingBean.managedBean.selectedItem.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" /></p:inputText> </td>
+					<td><ac:iconTooltip
+							value="#{lbl['lbl.fl.tooltip.do.order.qty']}" /></td>
+					<td><p:inputText style="text-align:right;"
+							styleClass="colFloatRight"
+							value="#{receivedNoteBackingBean.managedBean.orderedAmt}"
+							size="15" disabled="true">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:inputText></td>
+					<td><ac:iconTooltip
+							value="#{lbl['lbl.fl.tooltip.frn.order.amt']}" /></td>
+					
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.fl.delivery']}" /></td>
+					<td><p:inputText styleClass="colFloatRight"
+							style="text-align:right;"
+							value="#{receivedNoteBackingBean.managedBean.deliveredQty}"
+							size="15" disabled="true" ><f:converter converterId="dynamicNumberConverter" />
+							<f:attribute name="pattern"
+								value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, receivedNoteBackingBean.managedBean.selectedItem.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" /></p:inputText></td>
+					<td> <ac:iconTooltip
+							value="#{lbl['lbl.fl.tooltip.do.del.qty']}" /></td>
+					<td><p:inputText styleClass="colFloatRight"
+							style="text-align:right;"
+							value="#{receivedNoteBackingBean.managedBean.deliveredAmt}"
+							size="15" disabled="true">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:inputText></td>
+					<td><ac:iconTooltip
+							value="#{lbl['lbl.fl.tooltip.frn.del.amt']}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.fl.received']}" /></td>
+					<td><p:inputText id="receivedQty"
+							label="#{lbl['lbl.fl.received.qty']}" style="text-align:right;"
+							styleClass="colFloatRight"
+							value="#{receivedNoteBackingBean.managedBean.selectedItem.receivedQty}"
+							maxlength="14" size="15"
+							disabled="#{receivedNoteBackingBean.managedBean.isDocMaintainRemarks() or !bpmTasklistBackingBean.managedBean.claim or receivedNoteBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}">
+							<p:ajax event="blur" update="selectedItemSection" process="@this"
+								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+								listener="#{receivedNoteBackingBean.retrieveReceivedAmt()}" />
+							<f:converter converterId="dynamicNumberConverter" />
+							<f:attribute name="pattern"
+								value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, receivedNoteBackingBean.managedBean.selectedItem.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" />
+						</p:inputText></td>
+					<td> <ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.received.qty']}" /></td>
+					<td><p:inputText size="15" style="text-align:right;"
+							styleClass="colFloatRight" id="receivedAmtVal"
+							label="#{lbl['lbl.fl.received.amount']}"
+							disabled="#{receivedNoteBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmCancel or receivedNoteBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or !bpmTasklistBackingBean.managedBean.claim}"
+							rendered="#{!receivedNoteBackingBean.managedBean.isItemTypeProduct()}"
+							value="#{receivedNoteBackingBean.managedBean.selectedItem.receivedAmt}">
+							<p:ajax event="blur" update="selectedItemSection" process="@this"
+								listener="#{receivedNoteBackingBean.validateReceivedAmt()}"/>
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:inputText> <p:inputText size="15" id="receivedAmt" style="text-align:right;"
+							value="#{receivedNoteBackingBean.managedBean.selectedItem.receivedAmt}"
+							styleClass="colFloatRight" disabled="true"
+							rendered="#{receivedNoteBackingBean.managedBean.isItemTypeProduct()}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:inputText></td>
+					<td><ac:iconTooltip
+							value="#{lbl['lbl.fl.tooltip.frn.received.amt']}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.fl.remaining']}" /></td>
+					<td><p:inputText id="remaingQtyTxt" style="text-align:right;"
+							value="#{receivedNoteBackingBean.managedBean.remainingQty}"
+							size="15" disabled="true" styleClass="colFloatRight" ><f:converter converterId="dynamicNumberConverter" />
+							<f:attribute name="pattern"
+								value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, receivedNoteBackingBean.managedBean.selectedItem.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" /></p:inputText></td><td> <ac:iconTooltip
+							value="#{lbl['lbl.fl.tooltip.do.remain.qty']}" /></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td valign="top" style="width:110px;"><p:outputLabel value="#{lbl['lbl.fl.stop.instuc.remark.frn']}" /></td>
+					<td colspan="3">
+						<p:inputTextarea cols="47" maxlength="200" value="#{receivedNoteBackingBean.managedBean.selectedItem.rejectionRemarks.get(0).remark}" autoResize="false" disabled="#{receivedNoteBackingBean.managedBean.isDocMaintainRemarks() or receivedNoteBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}"
+						onkeypress="if (event.keyCode == 13) { remarks.jq.click(); return false; }" widgetVar="remarks">
+							<p:ajax process="@this" />
+						</p:inputTextarea>
+					</td>
+					<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.frn.item.rejection.remarks']}"/></td>
+				</tr>
+				<tr>
+					<td valign="top" style="width:110px;"><p:outputLabel value="#{lbl['lbl.fl.remark.history']}" /></td>
+					<td>
+						<p:commandLink id="remarkHistory"
+							oncomplete="rejectionRemarksHistory.show();"
+							action="#{receivedNoteBackingBean.retrieveRemarkRejectionHistory}"
+							update=":form:rejectionRemarksHistory">
+							<p:graphicImage value="/css/images/design/ico-view.png"
+								title="Remark History" />
+						</p:commandLink>
+					</td>
+				</tr>
+			</table>
+		</h:panelGroup>
+	</p:panel>	
+	<p:dialog id="rejectionRemarksHistory" header="#{lbl['lbl.fl.remark.history']}"
+		widgetVar="rejectionRemarksHistory" showEffect="fade" hideEffect="fade"
+		 modal="true" width="900px"
+		 resizable="false">
+		 <p:ajax event="close"
+			listener="#{receivedNoteBackingBean.closeListener}"
+			update="remarkHistory" />
+			<table>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.fl.item.code']}" /></td>
+					<td><p:inputText value="#{receivedNoteBackingBean.managedBean.selectedItem.flDelOrderItem.flFulfilmentItemAddr.itemCode}" disabled="true"/></td>
+					<td><p:outputLabel value="#{lbl['lbl.pm.bn.itemname']}" /></td>
+					<!--#21416 filter item name-->
+					<td><p:inputText value="#{receivedNoteBackingBean.filterItemName(receivedNoteBackingBean.managedBean.selectedItem.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemName)}" size="51" disabled="true"/></td>
+				</tr>
+			</table>
+			<p:dataTable id="rejectionRemarks" value="#{receivedNoteBackingBean.managedBean.rejectionRemarkHistory}" var="remarks"
+			rowIndexVar="rowIndex">
+			<ac:paginator for="rejectionRemarks" />
+			<p:column headerText="#{lbl['lbl.fl.num']}" style="text-align:right;width:2%">
+				<h:outputText value="#{rowIndex+1}" ></h:outputText>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.fl.remark.by']}" style="text-align:left;width:28%">
+				<h:outputText value="#{remarks.createdUsername}" ></h:outputText>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.txt.remarks']}" style="text-align:left">
+				<h:outputText value="#{remarks.remark}" ></h:outputText>
+			</p:column>
+		</p:dataTable>
+		<p:spacer height="2px"></p:spacer>
+		<div style="width: 100%; text-align: right">
+			<p:commandButton value="#{lbl['lbl.btn.close']}" 
+				oncomplete="rejectionRemarksHistory.hide();">
+			</p:commandButton>
+		</div>
+		 </p:dialog>
+		 
+		 <!-- 28855 Start -->
+		 <p:dialog id="frnItemInfoDialog" header="#{lbl['lbl.fl.do.item']}"
+		widgetVar="frnItemInfo" showEffect="fade" hideEffect="fade"
+		modal="true" width="900" height="400" resizable="false" style="overflow:scroll">
+		<table style="width: 100%">
+			<tr>
+				<td valign="top" width="25%"><p:outputLabel value="#{lbl['lbl.fl.item.name']} :&#160;" /></td>
+				<td><h:outputText style="float:left;" 
+						value="#{receivedNoteBackingBean.managedBean.itemName}"/></td>
+						
+			</tr>		
+			<tr>
+				<td valign="top" width="25%"><p:outputLabel value="#{lbl['lbl.fl.supp.offer']} :&#160;" rendered="#{receivedNoteBackingBean.managedBean.dpFlag}"/></td>
+				<td><h:outputText style="float:left;" rendered="#{receivedNoteBackingBean.managedBean.dpFlag}" escape="false" 
+						value="#{receivedNoteBackingBean.managedBean.supplierOffer == null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.managedBean.supplierOffer}"/></td>
+			</tr>			
+			<tr>
+				<td valign="top" width="25%"><p:outputLabel value="#{lbl['lbl.fl.new.supp.offer']} :&#160;" rendered="#{receivedNoteBackingBean.managedBean.dpFlag}"/></td>
+				<td><h:outputText style="float:left;" rendered="#{receivedNoteBackingBean.managedBean.dpFlag}"
+						value="#{receivedNoteBackingBean.managedBean.newOfferedSpec == null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.managedBean.newOfferedSpec}"/></td>
+			</tr>
+			</table> 
+			
+			<p:dataTable id="specificationDt" var="specificationList"
+			value="#{receivedNoteBackingBean.managedBean.itemSpecList}" width="100%" >
+			<ac:paginator for="specificationDt" />
+			
+			<p:column headerText="#{lbl['lbl.fl.spec']}" style="text-align:center"
+			rendered="#{receivedNoteBackingBean.managedBean.dpFlag}">
+			<p:inputTextarea disabled="true" rendered="#{receivedNoteBackingBean.managedBean.dpFlag}" styleClass="colFloatLeft"
+						value="#{specificationList.itemSpec}" cols="135" rows="2" autoResize="false" style="width: 100% !important;"/>
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.fl.spec']}" style="text-align:center"
+			rendered="#{!receivedNoteBackingBean.managedBean.dpFlag}">			
+			<p:inputTextarea cols="41" rows="10" id="itemSpecification"
+						rendered="#{!receivedNoteBackingBean.managedBean.dpFlag}"
+						styleClass="colFloatLeft"
+						autoResize="false"
+						style="width: 96% !important; margin-left:0px;" 
+						disabled="true"
+						value="#{specificationList.itemSpec == null ? lbl['lbl.fl.supp.na'] : specificationList.itemSpec}" /> 
+			</p:column>
+			<p:column headerText="#{lbl['lbl.fl.supp.offer']}" style="text-align:center"
+						rendered="#{!receivedNoteBackingBean.managedBean.dpFlag}">
+			<p:inputTextarea cols="41" rows="10" id="supplierOffer"
+						rendered="#{!receivedNoteBackingBean.managedBean.dpFlag}"
+						styleClass="colFloatLeft"
+						autoResize="false"
+						style="width: 96% !important; margin-left:0px;" 
+						disabled="true"
+						value="#{specificationList.supplierOffer == null ? lbl['lbl.fl.supp.na'] : specificationList.supplierOffer}" /> 
+			</p:column>
+			<p:column headerText="#{lbl['lbl.fl.new.offer.spec']}" style="text-align:center"
+						rendered="#{!receivedNoteBackingBean.managedBean.dpFlag}">
+			<p:inputTextarea cols="41" rows="10" id="newOfferedSpec"
+						rendered="#{!receivedNoteBackingBean.managedBean.dpFlag}"
+						styleClass="colFloatLeft"
+						autoResize="false"
+						style="width: 96% !important; margin-left:0px;" 
+						disabled="true"
+						value="#{specificationList.newOfferSpec == null ? lbl['lbl.fl.supp.na'] : specificationList.newOfferSpec}" /> 
+			</p:column>
+				
+			</p:dataTable>
+			
+			<p:spacer height="2px"></p:spacer>
+			<div style="width: 100%; text-align: right">
+				<p:commandButton value="#{lbl['lbl.btn.close']}" process="@this"
+					oncomplete="frnItemInfo.hide()" partialSubmit="true">
+				</p:commandButton>
+			</div> 		
+			
+		</p:dialog>
+		<!-- 28855 End -->
+		
+</ui:composition>

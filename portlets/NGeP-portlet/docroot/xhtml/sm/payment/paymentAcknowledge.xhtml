@@ -1,0 +1,26 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui" >
+	
+    <ui:define name="contentSection">
+		<ui:param name="lblPaymentBillType"
+		  value="#{empty paymentResponseBB.managedBean.billTypeLbl ? 'lbl.sm.payment.process' : paymentResponseBB.managedBean.billTypeLbl}" />
+		<p:panel id="acknowledge" header="#{lbl[lblPaymentBillType]}">
+			<p:messages id="ackMsg" showDetail="true" autoUpdate="true" escape="false" />			
+			<p:outputPanel rendered="#{(paymentResponseBB.managedBean.paymentId != null) and (paymentResponseBB.managedBean.paymentStatus)}">
+				<h:outputText value="#{lbl['lbl.sm.payment.click']} " />
+				<p:commandLink value="#{lbl['lbl.sm.payment.here']} "  ajax="false" immediate="true">>
+					<p:fileDownload value="#{paymentAcknowledgeBB.printReceipt()}" />
+					 <f:ajax execute="@this" render="@form"  />
+				</p:commandLink>
+				<h:outputText value=" #{lbl['lbl.sm.payment.to.download.receipt']}" />
+			</p:outputPanel>
+		</p:panel>
+	</ui:define>
+		    
+</ui:composition>				

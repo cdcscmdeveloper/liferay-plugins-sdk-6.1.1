@@ -1,0 +1,117 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<p:dialog id="dlTaskReassignment" position="339,450"
+		header="#{lbl['lbl.pm.ta.task.reassignment']}" modal="true"
+		widgetVar="dlTaskReassignment" dynamic="true" width="700">
+		<!-- Validation Message -->
+		<p:blockUI block="dlTaskReassignment" widgetVar="taskReassignPopupBlockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		<p:messages id="messagesRole" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="false" />
+		<p:panel id="pTaskReassignSearchPnl"
+			header="#{lbl['lbl.pm.ta.search']}" toggleable="true">
+			<h:panelGroup id="searchPanel" style="width:100%;">
+				<h:panelGrid columns="2" id="userSearchCriteria" cellpadding="0"
+					cellspacing="0" >
+					
+					<p:outputLabel value="#{lbl['lbl.pm.ta.doc.type']}" />
+					<p:inputText label="#{lbl['lbl.pm.ta.doc.type']}" disabled="true"
+						size="60"
+						value="#{taskReassignmentBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, taskReassignmentBackingBean.managedBean.selectedTask.docType)}" 
+						rendered="#{taskReassignmentBackingBean.managedBean.singleReassign}" />
+					<p:inputText label="#{lbl['lbl.pm.ta.doc.type']}" disabled="true"
+						size="60"
+						value="#{taskReassignmentBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, taskReassignmentBackingBean.managedBean.docType)}" 
+						rendered="#{taskReassignmentBackingBean.managedBean.bulkReassign}" />
+										
+					<p:outputLabel value="#{lbl['lbl.pm.ta.doc.no']}" />
+					<!-- 12852 Start -->
+					<p:inputText label="#{lbl['lbl.pm.ta.doc.no']}" disabled="true"
+						size="20"
+						value="#{taskReassignmentBackingBean.managedBean.selectedTask.docNumber}" 
+						rendered="#{taskReassignmentBackingBean.managedBean.singleReassign}" />
+					<!-- 12852 End -->
+					<p:inputTextarea label="#{lbl['lbl.pm.ta.doc.no']}" rows="3" cols="60" disabled="true" 
+						value="#{taskReassignmentBackingBean.managedBean.selectedTasksTA}" 
+						rendered="#{taskReassignmentBackingBean.managedBean.bulkReassign}" />
+					
+					<p:outputLabel value="#{lbl['lbl.pm.ta.username']}" />
+					<p:inputText label="#{lbl['lbl.pm.ta.username']}" size="60"
+						value="#{taskReassignmentBackingBean.managedBean.searchUserName}" />						
+				</h:panelGrid>
+				<table style="width: 100%;">
+					<tr>
+						<td style="text-align: right;"><p:commandButton
+								id="taSearchUserBtn" value="#{lbl['lbl.btn.search']}"
+								action="#{taskReassignmentBackingBean.searchAvailableUser}"
+								partialSubmit="true" process="searchPanel" update="resultPanel">
+							</p:commandButton> <p:commandButton id="taResetUserBtn"
+								value="#{lbl['lbl.btn.reset']}"
+								action="#{taskReassignmentBackingBean.resetAvailableUser}"
+								partialSubmit="true" process="searchPanel"
+								update="searchPanel resultPanel">
+							</p:commandButton></td>
+					</tr>
+				</table>
+			</h:panelGroup>
+		</p:panel>
+		<p:panel id="pTaskReassignResultPnl"
+			header="#{lbl['lbl.pm.ta.result']}" toggleable="true">
+			<h:panelGroup id="resultPanel" style="width:100%;">
+				<p:dataTable id="dtTaskReassign"
+					emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+					selection="#{taskReassignmentBackingBean.managedBean.selectedUser}"
+					rowIndexVar="index" rowKey="#{user}" var="user"
+					selectionMode="single" lazy="true"
+					rows="#{taskReassignmentBackingBean.managedBean.remarkRequired ? '5' : '10'}"
+					value="#{taskReassignmentBackingBean.userListDataModel}">
+					<p:ajax event="rowSelect" />
+					<ac:paginator for="dtTaskReassign" />
+					<p:column headerText="#{lbl['lbl.pm.ta.name']}">  
+			    		#{user.userName}
+		        	</p:column>
+		        	<p:column headerText="#{lbl['lbl.pm.ic.no']}">  
+			    		#{user.identificationNo}
+		        	</p:column>
+				</p:dataTable>
+				<table style="width: 100%;">
+					<c:if
+						test="#{taskReassignmentBackingBean.managedBean.remarkRequired}">
+						<tr>
+							<td>
+							<p:outputLabel value="#{lbl['lbl.txt.remarks']}" />
+							</td>
+							<td style="text-align: left;"><p:inputText
+									label="#{lbl['lbl.txt.remarks']}" size="60" 
+									required="#{!empty param['disableValidation']}"
+									value="#{taskReassignmentBackingBean.managedBean.remarks}" >
+										<p:ajax event="blur" update="@this" process="@this" partialSubmit="true"/>
+									</p:inputText></td>
+						</tr>
+					</c:if>
+
+					<tr>
+						<td colspan="2" style="text-align: right;">
+							<p:commandButton
+								value="#{lbl['lbl.pm.ta.btn.assign']}"
+								action="#{taskReassignmentBackingBean.confirmReassignTask()}"
+								update=":form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult,messagesRole"
+								process=":form:pTaskReassignResultPnl"
+								onclick="taskReassignPopupBlockWidget.show()" oncomplete="taskReassignPopupBlockWidget.hide()" >
+									 <f:param name="disableValidation" value="true" />
+							</p:commandButton>
+							 <p:commandButton id="cbCancel"
+								value="#{lbl['lbl.btn.cancel']}" process="@this"
+								oncomplete="dlTaskReassignment.hide()" immediate="true" /></td>
+					</tr>
+				</table>
+			</h:panelGroup>
+		</p:panel>
+	</p:dialog>
+</ui:composition>

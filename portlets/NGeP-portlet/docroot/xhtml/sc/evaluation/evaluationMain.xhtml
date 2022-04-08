@@ -1,0 +1,204 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+
+	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
+		</p:blockUI>
+		<p:messages id="evaluateMessages" showDetail="true" autoUpdate="#{evaluationBackingBean.managedBean.autoUpdate}"
+			showSummary="false" closable="true" severity="error, info,warn" />
+		<ac:gpkiPopup textBeforeSign="#{evaluationBackingBean.textBeforeSign}"
+			postSignAction="#{evaluationBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" 
+			enableAutoUpdate="#{evaluationBackingBean.enableAutoUpdate()}"/>
+		
+		<ac:confirmationPopup id="confirmSubmitMeetingMainId"
+			widget="confirmSubmitMeetingMainPopup" loadingWidget="blockWidget"
+			title="#{lbl['lbl.sc.confirmation']}"
+			okAction="evaluationMeetingBackingBean.submitMettingDetails()"
+			content="#{lbl['lbl.sc.popup.sendproposaleval']}" />
+		<ac:confirmationPopup id="confirmUpdateAsAttendId"
+			widget="confirmUpdateAsAttendPopup" loadingWidget="blockWidget"
+			title="#{lbl['lbl.sc.confirmation']}"
+			okAction="evaluationBackingBean.submitPrepareEvaluationDetails('SUBMIT')"
+			content="#{lbl['lbl.sc.popup.updateasattended']}" />
+		<ac:confirmationPopup id="confirmUpdatePresentationDemoId"
+			widget="confirmUpdatePresentationDemoPopup" loadingWidget="blockWidget"
+			title="#{lbl['lbl.sc.eva.technical.presentation.demo.submit.message1']}"
+			okAction="evaluationBackingBean.submitPrepareEvaluationDetails('SUBMIT')"
+			content="#{lbl['lbl.sc.eva.technical.presentation.demo.submit.message1']} #{evaluationBackingBean.managedBean.scQt.qtNo} #{lbl['lbl.sc.eva.technical.presentation.demo.submit.message2']} #{evaluationBackingBean.managedBean.passingScore}% #{lbl['lbl.sc.eva.technical.presentation.demo.submit.message3']}" />
+
+
+		<ui:fragment
+			rendered="#{evaluationBackingBean.managedBean.tabActiveIndex eq 5}">
+			<ui:repeat var="bpmAction"
+				value="#{evaluationBackingBean.managedBean.outComes}">
+				<ui:param name="buttonLabel"
+					value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+				<ui:param name="validityDaysExpiredQt"
+					value="#{evaluationBackingBean.checkProposalValidityDateReach(evaluationBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
+				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
+					rendered="#{validityDaysExpiredQt and bpmAction != 'SUBMIT' and bpmAction != 'REVISEBP'}" onstart="blockWidget.show();"
+					oncomplete="blockWidget.hide();" style="float:right;"
+					process="@all" partialSubmit="true" 
+					action="#{evaluationBackingBean.submitPrepareEvaluationDetails(bpmAction)}" />
+				<ui:remove><!-- 6906 - start --></ui:remove>
+				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button" disabled="#{evaluationBackingBean.managedBean.noProposalSubmitted}" rendered="#{validityDaysExpiredQt and bpmAction == 'SUBMIT'}"
+					oncomplete="confirmUpdateAsAttendPopup.show();" style="float:right;"/>
+				<ui:remove><!-- 6906 - end --></ui:remove>
+			</ui:repeat>
+		</ui:fragment>
+		<ui:fragment
+			rendered="#{evaluationBackingBean.managedBean.tabActiveIndex eq 2 and evaluationBackingBean.managedBean.committeeType eq 'TEC' 
+			and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true' and !evaluationBackingBean.managedBean.afterDemoInv}"><!-- #28784 -->
+			<ui:repeat var="bpmAction"
+				value="#{evaluationBackingBean.managedBean.outComes}">
+				<ui:param name="buttonLabel"
+					value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+				<ui:param name="validityDaysExpiredQt"
+					value="#{evaluationBackingBean.checkProposalValidityDateReach(evaluationBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
+				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
+					rendered="#{validityDaysExpiredQt and bpmAction != 'SUBMIT' and bpmAction != 'REVISEBP'}" onstart="blockWidget.show();"
+					oncomplete="blockWidget.hide();" style="float:right;"
+					process="@all" partialSubmit="true" 
+					action="#{evaluationBackingBean.submitPrepareEvaluationDetails(bpmAction)}" />
+				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button" rendered="#{validityDaysExpiredQt and bpmAction == 'SUBMIT'}"
+					disabled="#{evaluationBackingBean.managedBean.isEvalStatusComp()}" oncomplete="confirmUpdatePresentationDemoPopup.show();" style="float:right;"/>
+			</ui:repeat>
+		</ui:fragment>
+		<ui:fragment rendered="#{evaluationBackingBean.managedBean.tabActiveIndex ne 5}">
+			<p:commandButton value="#{lbl['lbl.btn.save']}"
+			onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+			disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationMeetingBackingBean.managedBean.committeeModified}"
+			style="float:right;" process="@form" update="@form"
+			action="#{evaluationBackingBean.saveMeetingDtls(true)}" />
+		</ui:fragment>
+		<p:commandButton value="#{lbl['lbl.btn.submit']}" rendered="#{evaluationBackingBean.managedBean.tabActiveIndex == 0}" disabled="#{!evaluationMeetingBackingBean.managedBean.committeeModified}"
+			styleClass="ui-button" action="#{evaluationMeetingBackingBean.submitMettingDetails()}" onstart="blockWidget.show();"
+			oncomplete="blockWidget.hide();"
+			style="float:right;" process="@all" partialSubmit="true">
+		</p:commandButton>
+
+		<p:dialog id="reviseApprovalDlgs" widgetVar="reviseApprovalDlgs"
+			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
+			resizable="false" width="400" height="75" closable="false">
+			<table>
+				<tr>
+					<td align="center">
+						<h:graphicImage value="/css/images/design/exclamation.png" /> 
+						<p:outputLabel value="#{lbl['lbl.sc.dialog.confirm.to.revise']}" />
+					</td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					oncomplete="reviseApprovalDlgs.hide();"
+					action="#{evaluationBackingBean.reviseProposalEvaluation}" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="reviseApprovalDlgs.hide();" type="button" />
+			</div>
+		</p:dialog>
+
+		<p:dialog id="reviceApprovalDlgs" widgetVar="reviceApprovalDlgs"
+			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
+			resizable="false" width="400" height="75" closable="false">
+			<table>
+				<tr>
+					<td align="center"><h:graphicImage
+							value="/css/images/design/exclamation.png" /> <p:outputLabel
+							value="#{lbl['lbl.sc.dialog.confirm.revise']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					oncomplete="reviceApprovalDlgs.hide();"
+					action="#{evaluationBackingBean.reviseProposalEvaluation}" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="reviceApprovalDlgs.hide();" type="button" />
+			</div>
+		</p:dialog>
+
+		<p:dialog id="reportContentPopupDlgId" widgetVar="reportContentPopupDlg" closable="false"
+				  modal="true" resizable="false" width="875" height="400" styleClass="pop_up_top" 
+				  header="#{evaluationBackingBean.managedBean.selectedReport.title}">
+	
+			<table>
+				<tr>
+					<td align="center">
+						<p:inputTextarea value="#{evaluationBackingBean.managedBean.selectedReport.reportContent}" 
+								 		 scrollHeight="0" rows="15" cols="130" autoResize="false" maxlength="2000"
+								 		 disabled="#{evaluationBackingBean.managedBean.readOnly}"
+								 		 rendered="#{evaluationBackingBean.managedBean.selectedReport ne null}">
+							<p:ajax partialSubmit="true" process="@this" update="@this" />
+						</p:inputTextarea>					
+					</td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.close']}" style="width: 8%;" action="#{evaluationBackingBean.saveEditTemplateDocContent(evaluationBackingBean.managedBean.selectedReport)}"
+					oncomplete="reportContentPopupDlg.hide();" process="@this" partialSubmit="true" />
+			</div>			
+		</p:dialog>
+
+		<ui:include src="evaluationTraininclude.xhtml" />
+
+		<ui:include src="evaluationHeader.xhtml" />
+
+
+
+		<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 0}">
+			<ui:include src="/xhtml/sc/evaluation/preparation/prepareMain.xhtml" />
+
+		</c:if>
+		<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 1}">
+
+
+			<ui:include
+				src="/xhtml/sc/evaluation/compliance/complianceStageMain.xhtml" />
+		</c:if>
+
+		<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 2 }">
+
+			<ui:include
+				src="/xhtml/sc/evaluation/evaluationStage/evaluationStage.xhtml" />
+		</c:if>
+
+
+		<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 3}">
+			<c:if
+				test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq eq 'true'}">
+				<ui:include
+					src="/xhtml/sc/evaluation/evaluationStage/oneTierFinancialEvaluation.xhtml" />
+			</c:if>
+			<c:if
+				test="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
+				<ui:include
+					src="/xhtml/sc/evaluation/presentationDemo/presentationDemoStage.xhtml" />
+			</c:if>
+		</c:if>
+
+
+		<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 4}">
+			<ui:include src="/xhtml/sc/evaluation/report/report.xhtml" />
+		</c:if>
+		<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 5}">
+
+			<ui:include
+				src="/xhtml/sc/evaluation/committeeEndorsment/signoff.xhtml" />
+
+		</c:if>
+
+		<ui:include src="/xhtml/sc/evaluation/uploadEvaluation.xhtml"></ui:include>
+	</ui:define>
+
+</ui:composition>

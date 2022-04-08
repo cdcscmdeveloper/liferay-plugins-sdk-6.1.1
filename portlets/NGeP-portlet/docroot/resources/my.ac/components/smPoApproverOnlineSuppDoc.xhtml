@@ -1,0 +1,137 @@
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<cc:interface>
+		<cc:attribute name="tableId" required="true" />
+		<cc:attribute name="smApplSupportDocs" required="true" />
+		<cc:attribute name="mandatory" default="false"/>
+	</cc:interface>
+
+	<cc:implementation>
+		<p:dataTable var="onTable" id="#{cc.attrs.tableId}" style="width:100% !important; table-layout: fixed !important;"
+			value="#{cc.attrs.smApplSupportDocs}" rowIndexVar="index" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+			<ac:paginator for="#{cc.attrs.tableId}" />
+			
+			<p:columnGroup type="header">
+				<p:row>
+					<p:column headerText="#{lbl['lbl.sm.mandatory.suppdoc']}" colspan="4" rendered="#{cc.attrs.mandatory}"
+						style="background-color:PeachPuff !important;text-align: center !important;color:black !important"/>
+					<p:column headerText="#{lbl['lbl.sm.nonmandatory.suppdoc']}" colspan="4" rendered="#{!cc.attrs.mandatory}"
+						style="background-color:PaleGreen !important;text-align: center !important;color:black !important"/>
+                </p:row>
+                <p:row>
+                	<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 5%;"/>
+					<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" style="width : 65%;"/>
+					<p:column headerText="#{lbl['lbl.cm.download']}" style="width : 10%;" />
+					<p:column headerText="#{lbl['lbl.sm.suppDoc.document.dwldVld']}" style="width : 20%;" />
+                </p:row>
+			</p:columnGroup>
+
+			<p:column style="width : 5%;">
+				<p:outputLabel value="#{index + 1}"
+					style="float: left;white-space: normal;" />
+			</p:column>
+
+			<p:column style="width : 65%;">
+				<h:outputText value="#{onTable.pmDocument.docName}"
+					style="float: left;white-space: normal;" />
+				
+				<p:outputPanel rendered="#{onTable.pmDocument.licenseReq}">
+					<table style="width: 50%;table-layout:fixed">
+						<tr>
+							<td style="border-style: none !important;"><h:outputText
+									value="#{lbl['lbl.sm.suppdoc.license.no']}" /></td>
+							<td style="border-style: none !important;width: 10% !important;">:</td>
+							<td style="border-style: none !important;">
+								<h:outputText value="#{onTable.licenseNo}" rendered="#{not empty onTable.licenseNo}"/>
+								<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty onTable.licenseNo}"/>
+							</td>
+						</tr>
+						<tr>
+							<td style="border-style: none !important;"><h:outputText
+									value="#{lbl['lbl.sm.suppdoc.license.effdate']}" /></td>
+							<td style="border-style: none !important;">:</td>
+							<td style="border-style: none !important;">
+								<h:outputText value="#{onTable.licenseEffDate}" rendered="#{not empty onTable.licenseEffDate}">
+									<f:convertDateTime
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+								</h:outputText>
+								<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty onTable.licenseEffDate}"/>
+							</td>
+						</tr>
+						<tr>
+							<td style="border-style: none !important;"><h:outputText
+									value="#{lbl['lbl.sm.suppdoc.license.expdate']}" /></td>
+							<td style="border-style: none !important;">:</td>
+							<td style="border-style: none !important;">
+								<h:outputText value="#{onTable.licenseExpDate}" rendered="#{not empty onTable.licenseExpDate}">
+									<f:convertDateTime
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+								</h:outputText>
+								<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty onTable.licenseExpDate}"/>
+							</td>
+						</tr>
+					</table>
+				</p:outputPanel>
+			</p:column>
+
+			<p:column style="width : 10%;">
+				<!-- #28807 - End -->
+				<ui:repeat var="applDocs" value="#{onTable.smApplDocFiles}">
+					<p:outputLabel rendered="#{onTable.pmDocument.hardCopyReq}"
+						value="#{lbl['lbl.sm.suppDoc.document.hdrCpySent']}"
+						style="float: left;white-space: normal;" />
+					<ui:remove>
+					<p:commandButton value="#{lbl['lbl.cm.download']}"
+						rendered="#{!onTable.pmDocument.hardCopyReq and not empty applDocs.fileName and applDocs.fileName ne ' '}"
+						action="#{backingBean.downloadSelectedSuppDoc(applDocs.fileName,applDocs.filePath)}"
+						update=":form" ajax="false">
+						<p:fileDownload value="#{backingBean.file}" />
+					</p:commandButton>
+					<br />
+					</ui:remove>
+					<h:panelGroup rendered="#{!onTable.pmDocument.hardCopyReq and not empty applDocs.fileName and applDocs.fileName ne ' '}">
+						<a href="#{DocumentRepositoryUtils.baseRepo}#{applDocs.filePath}#{applDocs.fileName}">#{applDocs.fileName}</a>
+					</h:panelGroup>
+					<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{!onTable.pmDocument.hardCopyReq and 
+						(empty applDocs.fileName or applDocs.fileName eq ' ')}"/>
+					<br/>
+				</ui:repeat>		
+				<!-- #28807 - End -->		
+			</p:column>
+			
+			<p:column style="width : 20%;" rendered="#{backingBean.managedBean.poUser}">
+				<p:selectOneRadio value="#{onTable.verifiedFlg}"
+					label="#{onTable.pmDocument.docName} - #{lbl['lbl.sm.suppDoc.document.dwldVld']}"
+					layout="pageDirection" id="onlnPo">
+					<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.document.valid']}"
+						itemValue="1" />
+					<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.document.invalid']}"
+						itemValue="0" />
+				</p:selectOneRadio>
+				<p:message id="onlnPoMsg" for="onlnPo" showSummary="true"
+					showDetail="false" display="icon" />
+			</p:column>
+			
+			<p:column style="width : 20%;" rendered="#{backingBean.managedBean.approverUser}">
+				<p:selectOneRadio value="#{onTable.approverVerifiedFlg}"
+					label="#{onTable.pmDocument.docName} - #{lbl['lbl.sm.suppDoc.document.dwldVld']}"
+					layout="pageDirection" id="onlnApp">
+					<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.document.valid']}"
+						itemValue="1" />
+					<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.document.invalid']}"
+						itemValue="0" />
+				</p:selectOneRadio>
+				<p:message id="onlnAppMsg" for="onlnApp" showSummary="true"
+					showDetail="false" display="icon" />
+			</p:column>
+		</p:dataTable>
+		
+	</cc:implementation>
+</ui:component>

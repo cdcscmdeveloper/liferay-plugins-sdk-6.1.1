@@ -1,0 +1,322 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:p="http://primefaces.org/ui" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<ui:define name="resourceSection">
+		<script>
+			$('#portlet_forceReplaceSupplierAdmin_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.force.replace.suppadmin']}");
+		</script>
+	</ui:define>
+
+	<ui:define name="contentSection">
+		
+		<p:messages id="addInfoPopupMsg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" />
+	
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+	
+		<table style="width: 100%;">
+			<tr>
+				<td>
+					<p:commandButton value="#{lbl['lbl.btn.back']}"
+						immediate="true" action="#{forceReplaceSuppAdminBackingBean.back}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+				</td>
+				<td style="white-space: nowrap; float: right;">
+				<!-- #28765 -->
+					<p:commandButton value="#{lbl['lbl.sm.declare']}"  partialSubmit="true" process="@this" 
+					disabled="#{!forceReplaceSuppAdminBackingBean.managedBean.agreeTnc or empty forceReplaceSuppAdminBackingBean.managedBean.smReplaceSupplierAdminDocs[0].smReplacesupplieradminDocFiles[0].fileName}" 
+					update=":#{p:component('declareAlertPopUpId')},@this" id="declareBtnId" action="#{forceReplaceSuppAdminBackingBean.checkingBeforeDeclare}"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+					<ac:confirmationPopup id="declareDeletePopUpId"
+		widget="declareDeletePopUp"
+		okAction="#{forceReplaceSuppAdminBackingBean.declare()}"
+		width="400" height="150"
+		title="#{lbl['lbl.msg.confirm.declare.header']}"
+		content="#{forceReplaceSuppAdminBackingBean.managedBean.displayMessageReplaceTrans}" 
+		update=":form"/>
+				 <p:confirmDialog id="declareAlertPopUpId" widgetVar="declareAlertPopUp" 
+			 closable="true"  header="#{lbl['lbl.txt.alert']}"  styleClass="splNotesFontBank" >
+			<div class="ppLeftBtn">
+			<f:facet name="message">
+                   <h:outputText value="TEST" styleClass=""  escape="false"/>
+          </f:facet>
+			</div>
+		<div class="ppRightBtn">		    
+		 	<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"  onclick="declareAlertPopUp.hide();" type="button" />
+		</div>
+		</p:confirmDialog>
+		<!-- #28765 End -->
+				<!-- 
+					<p:commandButton value="#{lbl['lbl.sm.declare']}" id="declareBtnId" update=":form"
+							action="#{forceReplaceSuppAdminBackingBean.declare}" 
+							disabled="#{!forceReplaceSuppAdminBackingBean.managedBean.agreeTnc or empty forceReplaceSuppAdminBackingBean.managedBean.smReplaceSupplierAdminDocs[0]}" 
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+				 -->
+				</td>
+			</tr>
+		</table><br />
+
+		<table style="width: 100%">
+			<tr>
+				<td style="padding-left: 4px;"><p:outputPanel>
+						<p>
+							<h:outputText
+								value="#{lbl['lbl.sm.forcereplaceadmin.tnc.declaration']}"
+								escape="false" />
+						</p>
+					</p:outputPanel></td>
+			</tr>
+			<tr>
+				<td style="padding-left: 4px;"><p:outputPanel>
+						<p>
+							<h:outputText
+								value="#{lbl['lbl.sm.forcereplaceadmin.tnc.processing.fee']}"
+								escape="false" />
+						</p>
+					</p:outputPanel></td>
+			</tr>
+		</table>
+
+		<p:panel id="addInfoPanel" toggleable="true">
+			<f:facet name="header">
+				<h:outputText value="#{lbl['lbl.sm.forcereplaceadmin.headerpanel.addinfo']}" />
+			</f:facet>
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sm.userprofile.name']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><!-- #28765 Added <p:ajax event --><p:inputText id="newAdminName"
+							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.name}"
+							size="35" required="true"
+							label="#{lbl['lbl.sm.userprofile.name']}">
+							<p:ajax event="change" partialSubmit="true" process="@this" /></p:inputText>
+							<p:message id="newAdminNameMsg" for="newAdminName"
+							showSummary="true" showDetail="false" display="icon" /></td>
+					<td><p:outputLabel
+							value="#{lbl['lbl.pm.profiles.userdetails.salutation']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:selectOneMenu id="newAdminSalutation"
+							label="#{lbl['lbl.pm.profiles.userdetails.salutation']}"
+							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.title.salutationId}"
+							style="width: 207px;margin-bottom: 5px;" required="true">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<!-- #28765 Added <p:ajax event -->
+							<f:selectItems
+								value="#{forceReplaceSuppAdminBackingBean.managedBean.salutationItems}" />
+								<p:ajax event="change" partialSubmit="true" process="@this" />
+						</p:selectOneMenu>
+						<p:message id="newAdminSalutationMsg" for="newAdminSalutation"
+							showSummary="true" showDetail="false" display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sm.identificationtype']}" /></td>
+					<td><p:selectOneMenu id="newAdminIdType"
+							label="#{lbl['lbl.sm.identificationtype']}"
+							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.identificationTypeId}"
+							style="width:200px" disabled="true">
+							<f:selectItems
+								value="#{forceReplaceSuppAdminBackingBean.managedBean.identificationTypes}" />
+						</p:selectOneMenu>
+					</td>
+
+					<td><p:outputLabel value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.identificationType.parameterCode eq 
+							SupplierManagementConst.NEW_IC?lbl['lbl.sm.individual.newicno']:lbl['lbl.sm.userprofile.idno']}" /></td>
+
+					<td>
+						<p:inputText label="#{lbl['lbl.sm.userprofile.idno']}" id="newAdminIdNo"
+							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.identificationNo}"
+							size="35" disabled="false" />
+					</td>
+				</tr>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sm.userprofile.nationality']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<!-- 28765 -->
+					<td><p:selectOneMenu id="newAdminNationality"
+							label="#{lbl['lbl.sm.userprofile.nationality']}"
+							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.pmCountry.countryId}"
+							style="width: 207px;margin-bottom: 5px;" required="true"
+							disabled="#{forceReplaceSuppAdminBackingBean.managedBean.accType eq SupplierManagementConst.ACC_BASIC}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItems
+								value="#{forceReplaceSuppAdminBackingBean.managedBean.nationalities}" />
+						</p:selectOneMenu>
+						<p:message id="newAdminNationalityMsg" for="newAdminNationality"
+							showSummary="true" showDetail="false" display="icon" /></td>
+					<td><p:outputLabel
+								value="#{lbl['lbl.sm.userprofile.dob']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><!-- #28765 Added partialsubmit="true"<p:ajax event --><p:calendar showOn="button" navigator="true"
+							display="inline" required="true" readonlyInput="true" 
+							partialsubmit="true" label="#{lbl['lbl.sm.person.dob']}" id="newAdminDob"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							yearRange="-99:+0" maxdate="#{forceReplaceSuppAdminBackingBean.getCurrDate()}"
+							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.birthDate}" />
+						<p:message id="newAdminDobMsg" for="newAdminDob"
+								showSummary="true" showDetail="false" display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sm.userprofile.email']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:inputText id="newAdminEmail"
+							label="#{lbl['lbl.sm.userprofile.email']}"
+							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.email}"
+							size="40" required="true"><!-- #28765 Added <p:ajax event --><p:ajax event="change" partialSubmit="true" process="@this" />
+							<f:validateRegex 
+						pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+							<p:ajax event="change" process="@this" listener="#{forceReplaceSuppAdminBackingBean.onChangeEmail()}" update="newAdminEmail"/> 
+							</p:inputText>
+							<p:graphicImage id="toolTipIcon" value="/css/images/design/tooltips.png" /> 
+						  	<p:tooltip id="sourceTooltip" for="toolTipIcon">
+								<h:outputText id="sourceLabel" escape="false" value="#{lbl['lbl.sm.email.change.tooltip']}" />
+							</p:tooltip> 
+						<p:message id="newAdminEmailMsg" for="newAdminEmail"
+							showSummary="true" showDetail="false" display="icon" />
+					</td>
+	
+					<td><p:outputLabel
+							value="#{lbl['lbl.sm.userprofile.designation']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:inputText id="newAdminDesignation"
+							label="#{lbl['lbl.sm.userprofile.designation']}"
+							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.designation}"
+							size="35" required="true"><!-- #28765 Added <p:ajax event --><p:ajax event="change" partialSubmit="true" process="@this" /></p:inputText>
+							<p:message id="newAdminDesignationMsg" for="newAdminDesignation"
+							showSummary="true" showDetail="false" display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sm.userprofile.phone']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td>
+						<ac:phone id="newAdminPhone" isMobile="false" label="#{lbl['lbl.sm.userprofile.phone']}"
+							countryCode="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.phoneCountry}" 
+							areaCode="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.phoneArea}" 
+							number="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.phoneNo}"  
+							validatorMessage="#{lbl['lbl.sm.phoneno']} - #{lbl['lbl.sm.invalidNo']}" 
+							required="true"/>
+					</td>
+
+					<td><p:outputLabel
+							value="#{lbl['lbl.sm.userprofile.mobile']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td>
+						<ac:phone id="newAdminMobile" label="#{lbl['lbl.sm.userprofile.mobile']}"
+							countryCode="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.mobileCountry}" 
+							areaCode="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.mobileArea}" 
+							number="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.mobileNo}" 
+							isMobile="true" required="true"
+							validatorMessage="#{lbl['lbl.sm.mobileNo']} - #{lbl['lbl.sm.invalidNo']}"
+							telcoId="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.mobileTelcoId}" />
+					</td>
+				</tr>
+				<tr>
+					<td class="tdTitle" ><p:outputLabel style="float: right" value="#{lbl['lbl.sm.person.composition.role']}    " /> </td>
+					<td class="tdContent">
+						<p:outputPanel>
+							<table>
+								<tr>
+									<td>
+										<p:selectBooleanCheckbox id="chkOwner" disabled="#{forceReplaceSuppAdminBackingBean.managedBean.disableEquity}" value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.equityOwner}">
+										<p:ajax event="change" update="chkOwner,chkStaff" listener="#{forceReplaceSuppAdminBackingBean.listenerChangeRole}"
+										partialSubmit="true" 
+										process="@this" /></p:selectBooleanCheckbox>
+									</td>
+									<td>
+										<h:outputText style="float: left" value="#{lbl['lbl.sm.person.equiOwner']}" />
+									</td>
+									<td>
+										<table>
+											<c:if test="#{forceReplaceSuppAdminBackingBean.managedBean.smSupplier.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG and forceReplaceSuppAdminBackingBean.managedBean.smSupplier.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG and forceReplaceSuppAdminBackingBean.managedBean.smSupplier.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK and forceReplaceSuppAdminBackingBean.managedBean.smSupplier.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH and forceReplaceSuppAdminBackingBean.managedBean.smSupplier.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK and forceReplaceSuppAdminBackingBean.managedBean.smSupplier.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH}">
+												<tr>
+													<td>
+														<p:selectBooleanCheckbox disabled="" value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.director}"/>
+													</td>
+													<td>
+														<h:outputText style="float: left" value="#{lbl['lbl.sm.person.dir']}" />
+													</td>
+													<td>
+														<p:selectBooleanCheckbox disabled="" value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.higherManagement}"/>
+													</td>
+													<td>
+														<h:outputText style="float: left" value="#{lbl['lbl.sm.person.hghMngmt']}" />
+													</td>
+												</tr>
+											</c:if>
+										</table>
+									</td>
+								</tr>
+							</table>
+						</p:outputPanel>
+					</td>
+					<td></td>
+					<td></td>
+				</tr>
+				
+				<tr>
+					<td></td>
+					<td>
+						<table>
+							<tr>
+								<td>
+									<p:selectBooleanCheckbox disabled="" value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.management}"/>
+								</td>
+								<td>
+									<h:outputText style="float: left" value="#{lbl['lbl.sm.person.mngmt']}" />
+								</td>
+								<td>
+									<p:selectBooleanCheckbox id="chkStaff" disabled="#{forceReplaceSuppAdminBackingBean.managedBean.disableStaff}"  value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.clerical}">
+										<p:ajax event="change" update="chkOwner,chkStaff" listener="#{forceReplaceSuppAdminBackingBean.listenerChangeRole}"
+											partialSubmit="true" 
+											process="@this" />
+									</p:selectBooleanCheckbox>
+								</td>
+								<td>
+									<h:outputText style="float: left"  value="#{lbl['lbl.sm.person.stf']}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+					<td></td>
+					<td></td>
+				</tr>
+	
+			</table>
+			<ac:smEmailAlertPopup bBean="#{backingBean}" title="#{lbl['lbl.sm.email.change.header']}" dialogId="emailPopUp" 
+				btnOkLabel="#{lbl['lbl.btn.ok']}" />
+		</p:panel>
+		
+		<ui:include src="/xhtml/sm/shared/forcereplaceadmin/addInfoAddress.xhtml" />
+		<!-- #28765 Start -->
+		<ui:include src="/xhtml/sm/forcereplaceadmin/forceReplaceAdminUploadDocument.xhtml" />
+		<!-- #28765 End -->
+		<br />
+				<table>
+					<tr>
+		
+						<td width="10px" style="padding: 4px 2px 0px 4px;"><p:selectBooleanCheckbox
+								value="#{forceReplaceSuppAdminBackingBean.managedBean.agreeTnc}">
+								<p:ajax event="change" update="declareBtnId"
+									partialSubmit="true" process="@this" />
+							</p:selectBooleanCheckbox></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.termsConditions']}" /></td>
+					</tr>
+				</table>
+			<br />
+
+	</ui:define>
+</ui:composition>

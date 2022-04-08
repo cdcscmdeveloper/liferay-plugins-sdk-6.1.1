@@ -1,0 +1,387 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<!-- ***25692 - start -->
+	<c:if test="#{qTDetailBB.approvalScreen}">
+		<ac:gpkiPopup textBeforeSign="#{approvalBackingBean.textBeforeSign}"
+				postSignAction="#{approvalBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}"
+				enableAutoUpdate="#{approvalBackingBean.enableAutoUpdate()}" />
+	</c:if>
+	<!-- ***25692 - end -->
+	
+	<c:choose>
+	<c:when test="#{qTDetailBB.evaluateCommitteeAppointmentPage()}"><ui:remove>//29464</ui:remove>
+		<ui:include src="/xhtml/sc/quatationtender/committeeappointment/qtcommitteeappointment.xhtml" />
+	</c:when>
+	<c:otherwise>
+	<ui:param name="statusId" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId}" />
+	<ui:param name="isQTStatusScheduleDocAndAfter" value="#{qTDetailBB.isQTStatusGreaterThanOrEquals(statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
+	<ui:param name="isQTStatusBtwScheduleDocAndPendingPublication" value="#{qTDetailBB.isQTStatusInBetween(statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT, QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION)}" />
+	<ui:param name="isMaintancePendingChklistStatus" value="#{qTDetailBB.isMaintancePendingChklistStatus()}" />
+	<ui:param name="isQTStatusSCApprovalAndBefore" value="#{qTDetailBB.isQTStatusLessThanOrEquals(statusId, QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)}" />
+	<ui:param name="isCmtStatusCompletedAndBefore" value="#{qTDetailBB.isStatusLessThanOrEquals(statusId, QTStatusConst.CMT_COMPLETED, qTDetailBB.cmtOrderedStatuses)}" />
+	<!-- 26095@hatta - start -->
+	<ui:param name="isQTClosePermanently" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_CLOSE_PERMANENTLY}" />
+	<!-- 26095@hatta - end -->
+	<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		<tr>
+			<td width="20%" valign="top" class="sidemenutd"><p:tabMenu
+					styleClass="sidemenu"
+					activeIndex="#{qTDetailBB.managedBean.activeIndex}"	>
+					<p:menuitem value="#{lbl['lbl.sc.qt.qtn.details']}"
+						action="#{qTDetailBB.qtDetailsTabChange(0)}" update="@form"
+						process="@form" 
+						rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemDetails)}" />
+					<p:menuitem value="#{lbl['lbl.sc.supplier.qulification.criteria']}"
+						action="#{qTDetailBB.qtDetailsTabChange(1)}" update="@form"
+						process="@form" 
+						rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemSuppQualificationCriteria)}" />
+					<p:menuitem value="#{lbl['lbl.sc.qt.committee.appointment']}"
+						action="#{qTDetailBB.qtDetailsTabChange(2)}" update="@form"
+						process="@form" 
+						rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemCommitteeAppointment)}" />	
+					<p:menuitem value="#{lbl['lbl.sc.approval']}"
+						action="#{qTDetailBB.qtDetailsTabChange(3)}" update="@form"
+						process="@form" 
+						rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemApproval)}" />
+					
+					<c:choose>
+					<c:when test="#{isCmtStatusCompletedAndBefore}">
+						<c:choose>
+							<c:when test="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemCommitteeApprovalEcOcTecFec)}" >
+								<p:menuitem value="#{lbl['lbl.sc.qt.briefing.sv']}"
+									action="#{qTDetailBB.qtDetailsTabChange(4)}" update="@form"
+									process="@form"
+									rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemBriefSiteVisit)}"
+									/>
+								<p:menuitem value="#{lbl['lbl.sc.qt.schedule.contact']}"
+									action="#{qTDetailBB.qtDetailsTabChange(5)}" update="@form"
+									style="white-space: normal;" process="@form"
+									rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemPublishDetail)}"
+									/>
+								<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}"
+									action="#{qTDetailBB.qtDetailsTabChange(6)}" update="@form"
+									process="@form"
+									rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemPaymentDeduction)}"
+									/>
+									<ui:remove>#29474 - start</ui:remove>
+								<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
+									disabled="#{qTDetailBB.managedBean.fulfilmentType eq null or qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeAsAndWhen 
+										or qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeOneOff or qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeNonPeriodicAsAndWhen}"
+									action="#{qTDetailBB.qtDetailsTabChange(7)}" update="@form"
+									process="@form"
+									rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemFulfilmentSchhedule)}"
+								/>
+								<p:menuitem value="#{lbl['lbl.sc.qt.documents']}"
+									action="#{qTDetailBB.qtDetailsTabChange(8)}" update="@form"
+									process="@form"
+									rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemDocuments)}"
+									/>
+								<p:menuitem value="#{lbl['lbl.sc.activities']}"
+									action="#{qTDetailBB.qtDetailsTabChange(9)}" update="@form"
+									process="@form"
+									rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemActivities)}"
+									/>
+									<ui:remove>#29474 - end</ui:remove>
+							</c:when>
+							<c:when test="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemCommitteeApproval)}" >
+								<p:menuitem value="#{lbl['lbl.sc.activities']}"
+									action="#{qTDetailBB.qtDetailsTabChange(4)}" update="@form"
+									process="@form"
+									rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemActivities)}"
+									/>
+							</c:when>
+						</c:choose>
+					</c:when>				
+						
+					<c:otherwise>
+					<p:menuitem value="#{lbl['lbl.sc.activities']}"
+						action="#{qTDetailBB.qtDetailsTabChange(4)}" update="@form"
+						process="@form"
+						rendered="#{(isQTStatusSCApprovalAndBefore) and qTDetailBB.displayMenuItem(qTDetailBB.menuItemActivities)}" />
+					<p:menuitem value="#{lbl['lbl.sc.qt.briefing.sv']}"
+						action="#{qTDetailBB.qtDetailsTabChange(4)}" update="@form"
+						process="@form"
+						rendered="#{(isQTStatusScheduleDocAndAfter) and qTDetailBB.displayMenuItem(qTDetailBB.menuItemBriefSiteVisit)}" />
+					<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}"
+						action="#{qTDetailBB.qtDetailsTabChange(4)}" update="@form"
+						process="@form"
+						rendered="#{(isMaintancePendingChklistStatus) and qTDetailBB.displayMenuItem(qTDetailBB.menuItemPaymentDeduction)}" />
+						
+					<p:menuitem value="#{lbl['lbl.sc.qt.schedule.contact']}"
+						action="#{qTDetailBB.qtDetailsTabChange(5)}" update="@form"
+						style="white-space: normal;" process="@form"
+						rendered="#{isQTStatusScheduleDocAndAfter and qTDetailBB.displayMenuItem(qTDetailBB.menuItemPublishDetail)}" />
+					<ui:remove>#29474 - start</ui:remove>
+					<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
+						disabled="#{qTDetailBB.managedBean.fulfilmentType eq null or qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeAsAndWhen 
+										or qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeOneOff or qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeNonPeriodicAsAndWhen}"
+						action="#{qTDetailBB.qtDetailsTabChange(5)}" update="@form"
+						process="@form"
+						rendered="#{isMaintancePendingChklistStatus and qTDetailBB.displayMenuItem(qTDetailBB.menuItemFulfilmentSchhedule)}"
+					/>
+					<!-- 26095@hatta - start -->
+					<p:menuitem value="#{lbl['lbl.sc.qt.close.panel']}"
+						action="#{qTDetailBB.qtDetailsTabChange(5)}" update="@form"
+						process="@form"
+						rendered="#{isQTClosePermanently}" />
+					<!-- 26095@hatta - end -->
+										
+					<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}"
+						action="#{qTDetailBB.qtDetailsTabChange(6)}" update="@form"
+						process="@form"
+						rendered="#{isQTStatusScheduleDocAndAfter and qTDetailBB.displayMenuItem(qTDetailBB.menuItemPaymentDeduction)}" />
+					<p:menuitem value="#{lbl['lbl.sc.qt.documents']}"
+						action="#{qTDetailBB.qtDetailsTabChange(6)}" update="@form"
+						process="@form"
+						rendered="#{isMaintancePendingChklistStatus and qTDetailBB.displayMenuItem(qTDetailBB.menuItemDocuments)}" />
+					<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
+						disabled="#{qTDetailBB.managedBean.fulfilmentType eq null or qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeAsAndWhen 
+										or qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeOneOff or qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeNonPeriodicAsAndWhen}"
+						action="#{qTDetailBB.qtDetailsTabChange(7)}" update="@form"
+						process="@form"
+						rendered="#{isQTStatusScheduleDocAndAfter and qTDetailBB.displayMenuItem(qTDetailBB.menuItemFulfilmentSchhedule)}"
+					/>
+					<p:menuitem value="#{lbl['lbl.sc.activities']}"
+						action="#{qTDetailBB.qtDetailsTabChange(7)}" update="@form"
+						process="@form"
+						rendered="#{isMaintancePendingChklistStatus and qTDetailBB.displayMenuItem(qTDetailBB.menuItemActivities)}" />
+						
+					<p:menuitem value="#{lbl['lbl.sc.qt.documents']}"
+						action="#{qTDetailBB.qtDetailsTabChange(8)}" update="@form"
+						process="@form"
+						rendered="#{isQTStatusScheduleDocAndAfter and qTDetailBB.displayMenuItem(qTDetailBB.menuItemDocuments)}" />
+					
+					<p:menuitem value="#{lbl['lbl.sc.activities']}"
+						action="#{qTDetailBB.qtDetailsTabChange(9)}" update="@form"
+						process="@form"
+						rendered="#{(isQTStatusScheduleDocAndAfter) and qTDetailBB.displayMenuItem(qTDetailBB.menuItemActivities)}" />
+					</c:otherwise>
+					</c:choose>
+					
+					<p:menuitem value="#{lbl['lbl.sc.qt.public.approval']}"
+						action="#{qTDetailBB.qtDetailsTabChange(10)}" update="@form"
+						process="@form"
+						rendered="#{(isQTStatusBtwScheduleDocAndPendingPublication and qTDetailBB.displayMenuItem(qTDetailBB.menuItemPublicationApproverAssignment)) or qTDetailBB.displayMenuItem(qTDetailBB.menuItemPublicationApproval)}" />
+					<p:menuitem value="#{lbl['lbl.sc.qt.approval.bpk']}" 
+						action="#{qTDetailBB.qtDetailsTabChange(5, 10, isQTStatusSCApprovalAndBefore)}" update="@form"
+						process="@form"
+						rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemBPKApproval)}" />
+					<p:menuitem value="#{lbl['lbl.sc.qt.approval.committeeappointment']}" 
+						action="#{qTDetailBB.qtDetailsTabChange(5, 10, isQTStatusSCApprovalAndBefore)}" update="@form"
+						process="@form"
+						rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemCommitteeApprovalEcOcTecFec)}" />
+					<ui:remove>#29474 - end</ui:remove>
+					<!-- ***25692#31 - start -->
+					<p:menuitem value="#{lbl['lbl.sc.qt.approval.committeeappointment']}" 
+						action="#{qTDetailBB.qtDetailsTabChange(5)}" update="@form"
+						process="@form"
+						rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemCommitteeApproval)}" />
+					<!-- ***25692#31 - end -->
+					
+					<ui:remove>29464-start</ui:remove>
+					<p:menuitem value="#{lbl['lbl.sc.qt.specificationCommittee']}" 
+						action="#{qTDetailBB.qtDetailsTabChange(5)}" update="@form" process="@form"
+						rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemSpecificationCommitteeAssignment)}" />
+					<ui:remove>29464-end</ui:remove>
+					
+							
+				</p:tabMenu></td>
+			<td width="80%" valign="top">
+			<h:panelGroup id="menuQTContent">
+					<c:if test="#{qTDetailBB.managedBean.activeIndex eq '0'}">
+						<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderGeneralDetails.xhtml" />
+					</c:if>
+					<c:if test="#{qTDetailBB.managedBean.activeIndex eq '1'}">
+						<ui:include src="/xhtml/sc/quatationtender/supplierQualificationCriteria/supplierQualificationCriteria.xhtml" />
+					</c:if>
+					<c:if test="#{qTDetailBB.managedBean.activeIndex eq '2'}">
+						<ui:include
+							src="/xhtml/sc/quatationtender/committeeappointment/qtcommitteeappointment.xhtml" />
+					</c:if>
+					<c:if test="#{qTDetailBB.managedBean.activeIndex eq '3'}">
+						<ui:include src="/xhtml/sc/quatationtender/approval/approvalCheckBox.xhtml" />
+					</c:if>
+					<c:choose>
+					<c:when test="#{isCmtStatusCompletedAndBefore}">
+						<c:choose>
+							<c:when test="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemCommitteeApprovalEcOcTecFec)}" >
+								<c:if test="#{qTDetailBB.managedBean.activeIndex eq '4' and qTDetailBB.displayMenuItem(qTDetailBB.menuItemBriefSiteVisit)}">
+									<ui:include
+										src="/xhtml/sc/quatationtender/briefingsitevisit/qtbriefingsitevisitdetails.xhtml" />
+								</c:if>
+								<c:if test="#{qTDetailBB.managedBean.activeIndex eq '5' and qTDetailBB.displayMenuItem(qTDetailBB.menuItemPublishDetail)}">
+									<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderPublishingDetails.xhtml" />
+								</c:if>
+								<c:if test="#{qTDetailBB.managedBean.activeIndex eq '6' and qTDetailBB.displayMenuItem(qTDetailBB.menuItemPaymentDeduction)}">
+									<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderPaymentDeduction.xhtml" />
+								</c:if>
+								<ui:remove>#29474 - start</ui:remove>
+								<c:if test="#{qTDetailBB.managedBean.activeIndex eq '7' and qTDetailBB.displayMenuItem(qTDetailBB.menuItemFulfilmentSchhedule)}">
+									<ui:include src="/xhtml/sc/specification/specificationCommittee/qtFulfilmentSchedule.xhtml" />
+								</c:if>
+								<c:if test="#{qTDetailBB.managedBean.activeIndex eq '8' and qTDetailBB.displayMenuItem(qTDetailBB.menuItemDocuments)}">
+									<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderDocuments.xhtml" />
+								</c:if>
+								<c:if test="#{qTDetailBB.managedBean.activeIndex eq '9' and qTDetailBB.displayMenuItem(qTDetailBB.menuItemActivities)}">
+									<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderActivitiesTracking.xhtml" />
+								</c:if>
+								<!-- 31991@farhan - start -->
+								<c:if test="#{qTDetailBB.managedBean.activeIndex eq '10' and qTDetailBB.userTaskIsCommitteeAppointmentApprovalEcOcTecFec}">
+									<ui:include src="#{qTDetailBB.committeeAppointmentApprovalPage}" />
+								<ui:remove>#29474 - end</ui:remove>
+								<!-- 31991@farhan - end -->
+								</c:if>
+							</c:when>
+							<!-- 31991@farhan - start -->
+							<c:when test="#{qTDetailBB.userTaskIsCommitteeAppointmentApproval}" >
+							<!-- 31991@farhan - end -->	
+								<c:if test="#{qTDetailBB.managedBean.activeIndex eq '4'}">
+									<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderActivitiesTracking.xhtml" />
+								</c:if>
+								<!-- 31991@farhan - start -->
+								<c:if test="#{qTDetailBB.managedBean.activeIndex eq '5' and qTDetailBB.userTaskIsCommitteeAppointmentApproval}">
+									 <ui:include src="#{qTDetailBB.committeeAppointmentApprovalPage}" />
+								<!-- 31991@farhan - end -->
+								</c:if>
+							</c:when>
+						</c:choose>
+					</c:when>
+					<c:otherwise>
+					    <!-- 26095@hatta - start -->
+					    <c:if  test="#{isQTClosePermanently}">
+					         <c:if test="#{qTDetailBB.managedBean.activeIndex eq '5'}">
+									<ui:include src="/xhtml/sc/quatationtender/viewQuotationTender.xhtml" />
+							</c:if>
+					    </c:if>
+					    <!-- 26095@hatta - end -->
+						<c:if test="#{isQTStatusScheduleDocAndAfter}">
+							<c:if test="#{qTDetailBB.managedBean.activeIndex eq '4'}">
+								<ui:include
+									src="/xhtml/sc/quatationtender/briefingsitevisit/qtbriefingsitevisitdetails.xhtml" />
+							</c:if>
+							<c:if test="#{qTDetailBB.managedBean.activeIndex eq '5'}">
+								<c:choose>
+									<!-- 31991@farhan - start -->
+									<c:when test="#{qTDetailBB.userTaskIsCommitteeAppointmentApproval}">
+								 		<ui:include src="#{qTDetailBB.committeeAppointmentApprovalPage}" />
+									<!-- 31991@farhan - end -->
+									</c:when>
+									<c:otherwise>
+										<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderPublishingDetails.xhtml" />
+									</c:otherwise>
+								</c:choose>	
+							</c:if>
+							<c:if test="#{qTDetailBB.managedBean.activeIndex eq '6'}">
+								<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderPaymentDeduction.xhtml" />
+							</c:if>
+							<ui:remove>#29474 - start</ui:remove>
+							<c:if test="#{qTDetailBB.managedBean.activeIndex eq '7'}">
+								<ui:include src="/xhtml/sc/specification/specificationCommittee/qtFulfilmentSchedule.xhtml" />
+							</c:if>
+							<c:if test="#{qTDetailBB.managedBean.activeIndex eq '8'}">
+								<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderDocuments.xhtml" />
+							</c:if>
+							<c:if test="#{qTDetailBB.managedBean.activeIndex eq '9'}">
+								<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderActivitiesTracking.xhtml" />
+							</c:if>
+							<c:choose>		
+								<!-- 31991@farhan - start -->					
+								<c:when test="#{qTDetailBB.userTaskIsPublicationApproval}">
+								<!-- 31991@farhan - end -->
+									<c:if test="#{qTDetailBB.managedBean.activeIndex eq '10'}">
+										<!-- 31991@farhan - start -->
+										<ui:include src="#{qTDetailBB.publicationApprovalPage}" />
+										<!-- 31991@farhan - end -->
+									</c:if>
+								</c:when>
+								<!-- 31991@farhan - start -->
+								<c:when test="#{qTDetailBB.managedBean.activeIndex eq '10' and qTDetailBB.userTaskIsBPKApproval}">
+								 	<ui:include src="#{qTDetailBB.BPKApprovalPage}" />
+								 <!-- 31991@farhan - end -->
+								</c:when>
+								<!-- 31991@farhan - start -->
+								<c:when test="#{qTDetailBB.managedBean.activeIndex eq '10' and qTDetailBB.userTaskIsCommitteeAppointmentApprovalEcOcTecFec}">
+								 	<ui:include src="#{qTDetailBB.committeeAppointmentApprovalPage}" />
+								<!-- 31991@farhan - end -->
+								</c:when>
+								<!-- 31991@farhan - start -->
+								<c:when test="#{qTDetailBB.managedBean.activeIndex eq '10' and isQTStatusBtwScheduleDocAndPendingPublication and qTDetailBB.displayMenuItem(qTDetailBB.menuItemPublicationApproverAssignment)}">
+									<ui:include src="/xhtml/sc/quatationtender/approval/qtpublicationapproval.xhtml" />
+								<ui:remove>#29474 - end</ui:remove>
+								<!-- 31991@farhan - end -->
+								</c:when>
+							</c:choose>
+						</c:if>
+						<c:if test="#{isQTStatusSCApprovalAndBefore}">
+							<c:if test="#{qTDetailBB.managedBean.activeIndex eq '4'}">
+									<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderActivitiesTracking.xhtml" />
+							</c:if>
+							<c:choose>
+							<!-- 31991@farhan - start -->
+							<c:when test="#{qTDetailBB.managedBean.activeIndex eq '5' and qTDetailBB.userTaskIsCommitteeAppointmentApproval}">
+								 	<ui:include src="#{qTDetailBB.committeeAppointmentApprovalPage}" />
+							<!-- 31991@farhan - end -->
+							</c:when>
+							<!-- 31991@farhan - start -->
+							<c:when test="#{qTDetailBB.managedBean.activeIndex eq '5' and qTDetailBB.userTaskIsCommitteeAppointmentApprovalEcOcTecFec}">
+								 	<ui:include src="#{qTDetailBB.committeeAppointmentApprovalPage}" />
+							<!-- 31991@farhan - end -->
+							</c:when>
+							<!-- 31991@farhan - start -->
+							<c:when test="#{qTDetailBB.managedBean.activeIndex eq '5' and qTDetailBB.userTaskIsBPKApproval}">
+								 	<ui:include src="#{qTDetailBB.BPKApprovalPage}" />
+							<!-- 31991@farhan - end -->
+							</c:when>		
+							<ui:remove>29464-start</ui:remove>
+							<c:when test="#{qTDetailBB.managedBean.activeIndex eq '5' and !isQTClosePermanently}"> <ui:remove>32577-start</ui:remove>
+								<ui:include src="/xhtml/sc/quatationtender/committeeappointment/qtcommitteeappointment.xhtml" />							</c:when>
+							<ui:remove>29464-end</ui:remove>		
+							</c:choose>				
+						 </c:if>
+						
+					 <c:if test="#{isMaintancePendingChklistStatus}">
+						<c:if test="#{qTDetailBB.managedBean.activeIndex eq '4'}">
+								<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderPaymentDeduction.xhtml" />
+						</c:if>
+						<c:if test="#{qTDetailBB.managedBean.activeIndex eq '5'}">
+							<c:choose>
+								<!-- 31991@farhan - start -->
+								<c:when test="#{qTDetailBB.userTaskIsCommitteeAppointmentApproval}">
+							 		<ui:include src="#{qTDetailBB.committeeAppointmentApprovalPage}" />
+								<!-- 31991@farhan - end -->
+								</c:when>
+								<ui:remove>#29474 - start</ui:remove>
+								<c:otherwise>
+									<ui:include src="/xhtml/sc/specification/specificationCommittee/qtFulfilmentSchedule.xhtml" />
+								</c:otherwise>
+							</c:choose>
+						</c:if>
+						<c:if test="#{qTDetailBB.managedBean.activeIndex eq '6'}">
+								<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderDocuments.xhtml" />
+						</c:if>
+						<c:if test="#{qTDetailBB.managedBean.activeIndex eq '7'}">
+								<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderActivitiesTracking.xhtml" />
+						</c:if>
+						<ui:remove>#29474 - end</ui:remove>
+					 </c:if>
+					</c:otherwise>
+					</c:choose>
+					
+				 
+				 
+				</h:panelGroup></td>
+		</tr>
+	</table>
+	<ui:include src="/xhtml/sc/quatationtender/uploadPopup.xhtml" />
+	<ui:include src="/xhtml/sc/quatationtender/createquotationtender/clone/cloneDetails.xhtml" />	
+	</c:otherwise>
+	</c:choose>
+</ui:composition>
+

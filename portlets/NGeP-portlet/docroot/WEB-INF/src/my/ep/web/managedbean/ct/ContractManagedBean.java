@@ -157,7 +157,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	private CtAttachment ctAttachmentDelete;
 	private List<ScLoa> bondDetail;
 	// #24333 - Start
-	private boolean isExtendContract = false;
+	private boolean extendContract = false;
 	private boolean disableOriginalBond = false;
 	// #24333 - End
 	
@@ -168,6 +168,10 @@ public class ContractManagedBean extends BaseManagedBean {
 	// End - 28479	
 	
 	private boolean hasAmendmentLoaNo = false; //15851
+	private boolean fromViewPage = false;//15851
+	private boolean amendFromViewPage = false;//15851
+	private boolean amendFromTaskList = false;//15851
+	private boolean viewSCL = false;//15851
 
 	//#28854 - start
 	private List<String> itemSpecification;
@@ -183,10 +187,11 @@ public class ContractManagedBean extends BaseManagedBean {
 	private String businessRegNoNew;
 	//#29983 end
 	
-	//#30783 start
-	private Map<String, CtAgency> updateAgencyForSP;
-	//#30783 end
-
+	//Start Fix - #31740
+	private Map<Long, CtAgency> selectedAgencyChanges;
+	
+	private Map<Long, CtAgency> agencyDataDeletion;
+	//End Fix - #31740
 	/**
 	 * @return the fileDirectory
 	 */
@@ -1358,11 +1363,11 @@ public class ContractManagedBean extends BaseManagedBean {
 	}
 
 	public boolean isExtendContract() {
-		return isExtendContract;
+		return extendContract;
 	}
 
-	public void setExtendContract(boolean isExtendContract) {
-		this.isExtendContract = isExtendContract;
+	public void setExtendContract(boolean extendContract) {
+		this.extendContract = extendContract;
 	}
 
 	public boolean isNotificationSetting() {
@@ -1483,16 +1488,65 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.disableOriginalBond = disableOriginalBond;
 	}
 
-	// #30783 - performance start
-	public Map<String, CtAgency> getUpdateAgencyForSP() {
-		if(updateAgencyForSP==null) {
-			updateAgencyForSP = new HashMap<String, CtAgency>();
+    // Start Fix - #31740
+	/**
+	 * Populate only changes related to agency
+	 */
+	public Map<Long, CtAgency> getSelectedAgencyChanges() {
+		if(selectedAgencyChanges==null) {
+			selectedAgencyChanges = new HashMap<Long, CtAgency>();
 		}
-		return updateAgencyForSP;
+		return selectedAgencyChanges;
 	}
 
-	public void setUpdateAgencyForSP(Map<String, CtAgency> updateAgencyForSP) {
-		this.updateAgencyForSP = updateAgencyForSP;
+	public void setSelectedAgencyChanges(Map<Long, CtAgency> selectedAgencyChanges) {
+		this.selectedAgencyChanges = selectedAgencyChanges;
 	}
-	// #30783 - performance end
+	
+
+	public Map<Long, CtAgency> getAgencyDataDeletion() {
+		if(agencyDataDeletion==null) {
+			agencyDataDeletion = new HashMap<Long, CtAgency>();
+		}
+		return agencyDataDeletion;
+	}
+
+	public void setAgencyDataDeletion(Map<Long, CtAgency> agencyDataDeletion) {
+		this.agencyDataDeletion = agencyDataDeletion;
+	}
+
+	//Enhancement 15851 - shaqimi start
+	public boolean isFromViewPage() {
+		return fromViewPage;
+	}
+
+	public void setFromViewPage(boolean fromViewPage) {
+		this.fromViewPage = fromViewPage;
+	}
+
+	public boolean isAmendFromViewPage() {
+		return amendFromViewPage;
+	}
+
+	public void setAmendFromViewPage(boolean amendFromViewPage) {
+		this.amendFromViewPage = amendFromViewPage;
+	}
+
+	public boolean isAmendFromTaskList() {
+		return amendFromTaskList;
+	}
+
+	public void setAmendFromTaskList(boolean amendFromTaskList) {
+		this.amendFromTaskList = amendFromTaskList;
+	}
+
+	public boolean isViewSCL() {
+		return viewSCL;
+	}
+
+	public void setViewSCL(boolean viewSCL) {
+		this.viewSCL = viewSCL;
+	}
+	//Enhancement 15851 - shaqimi end
+	// End Fix - #31740
 }

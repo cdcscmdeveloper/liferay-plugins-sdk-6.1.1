@@ -1,0 +1,48 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">	
+
+		<p:dataTable id="dtapsearchresults"
+			value="#{pPlanBackingBean.ppAnnualPlanDataModel}" var="planItem" lazy="true"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			styleClass="dtProcurementPlan" style="width:100%" rows="20">
+
+			<ac:paginator for="dtapsearchresults" />
+			
+			<p:column headerText="#{lbl['lbl.pp.ptj']}" style="width:20%;white-space: normal;">				
+				<h:outputText value="#{planItem.ppPlan.orgProfile!=null ? planItem.ppPlan.orgProfile.pmOrgValidity.orgName : '-'}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.pp.annual.plan.title']}" style="width:27%;white-space: normal;">
+				<h:outputText value="#{planItem.procurementTitle}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.pp.annual.plan.desc']}" style="width:27%;white-space: normal;">
+				<h:outputText value="#{planItem.procurementDesc}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.pp.category']}" style="width:20%;white-space: normal;">
+				<h:outputText value="#{pPlanBackingBean.getParameterDesc(planItem.procurementCat)}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.pp.procurement.method']}" style="width:20%;white-space: normal;">
+				<h:outputText value="#{pPlanBackingBean.getParameterDesc(planItem.procurementType)}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.pp.invitation.date']}" style="width:11%;white-space: normal;">
+				<h:outputText value="#{planItem.invitationDate}">
+					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+				</h:outputText>
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.pp.annual.plan.last.updated']}" style="width:11%;white-space: normal;">
+				<h:outputText value="#{planItem.changedDate}">
+					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+				</h:outputText>
+			</p:column>			
+		</p:dataTable>
+</ui:composition>

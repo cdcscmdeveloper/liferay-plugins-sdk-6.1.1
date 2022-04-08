@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<style>
+		.committeeDtlTblCl th, .committeeDtlTblCl td{
+			width: auto;
+			min-width: 50px;
+            word-break: break-word !important;
+            white-space: normal !important;
+		}
+		.committeeDtlTblCl th{
+			text-align: center !important;
+		}
+		.committeeDtlTblCl tr td:last-child{
+			width: auto;
+			text-align: center !important;
+		}
+	
+	</style>
+	<p:panel header="#{suppFinalizationBackingBean.managedBean.committeeTabLabel}"
+			 toggleable="true">
+		<p:dataTable id="committeeDtlTbl" var="committeeDtl" styleClass="committeeDtlTblCl"
+			value="#{suppFinalizationBackingBean.managedBean.committeeList}"
+			rows="10" rowKey="#{committeeDtl}" rowIndexVar="index"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			resizableColumns="false">
+			<ac:paginator for="committeeDtlTbl" />
+
+			<p:column headerText="#{lbl['lbl.sc.name']}">
+				<h:outputText value="#{committeeDtl.scCommitteeMember.memberName}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.identification.no']}">
+				<h:outputText value="#{committeeDtl.scCommitteeMember.icPassport}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.designation']}">
+				<h:outputText value="#{committeeDtl.scCommitteeMember.designation}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.email']}">
+				<h:outputText value="#{committeeDtl.scCommitteeMember.email}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.grade']}">
+				<h:outputText value="#{committeeDtl.scCommitteeMember.grade}" />
+			</p:column>
+
+			<p:column style="min-width: 50px !important;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.pnp']}"/>
+					<ac:iconTooltip id="pnpTT#{index}" value="#{lbl['lbl.sc.pnp.tooltip']}" />
+				</f:facet>
+				<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
+											fn:toUpperCase(committeeDtl.scCommitteeMember.PNP))}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.role']}">
+				<h:outputText value="#{suppFinalizationBackingBean.getFCMemberRole(
+								committeeDtl.scCommitteeMember.memberRole)}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.representative.type']}">
+				<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(
+									  	 committeeDtl.scCommitteeMember.representativeType)}" />
+			</p:column>
+				
+			<p:column style="min-width: 100px !important;">
+				<f:facet name="header">
+					<h:outputText  value="#{lbl['lbl.sc.lbl.attendandendorse']}" />
+					<ac:iconTooltip id="attendanceTooltip" value="#{lbl['lbl.sc.tooltip.attendandendorse']}" />
+				</f:facet>	
+				<p:selectBooleanCheckbox value="#{committeeDtl.attended}"
+					disabled="#{!isSecretaryUser or suppFinalizationBackingBean.managedBean.readOnly}"  />
+			</p:column>
+		</p:dataTable>
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.sc.btn.update.committee']}" rendered="#{suppFinalMeetingBackingBean.managedBean.validFor25037}"
+				styleClass="BtnSpacing" onclick="blockWidget.show();" oncomplete="blockWidget.hide();"
+				action="#{suppFinalMeetingBackingBean.navigateToUpdateMember('update')}" />
+		</div>
+	</p:panel>
+	
+	<ac:scRemarkAndAttachment
+		remarkList="#{suppFinalizationBackingBean.omitLatestRemarkForDisplay(suppFinalizationBackingBean.managedBean.committeeRemarkList)}"
+		readonly="#{suppFinalizationBackingBean.managedBean.readOnly}"
+		showAttachment="false" />
+
+</ui:composition>

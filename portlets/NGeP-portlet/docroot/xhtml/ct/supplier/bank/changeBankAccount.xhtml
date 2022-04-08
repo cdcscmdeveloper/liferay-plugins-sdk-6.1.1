@@ -1,0 +1,371 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<ui:define name="contentSection">
+		<script> $('#portlet_ctContractMaintenance_WAR_NGePportlet').find('.portlet-title-text').html('#{supplierBackingBean.getChangeBankPortletTitle()}'); </script>
+		<style>
+.column-align-center {
+	text-align: center !important;
+}
+
+.top-aligned-columns td {
+	vertical-align: top;
+}
+
+.columnWidth200 {
+	width: 225px;
+	vertical-align: top;
+	text-align: right;
+}
+
+.columnWidth400 {
+	width: 400px;
+}
+
+.columnWidth300 {
+	width: 300px;
+}
+</style>
+ <script type="text/javascript">  
+           window.addEventListener('keydown',function(e)
+    		      {
+    	                  if(e.keyIdentifier=='U+000A'||e.keyIdentifier=='Enter'||e.keyCode==13)
+    	                       {
+    	            	            e.preventDefault();return false;
+    	                   }
+    	        },  true);
+      </script>
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>
+		<ac:gpkiPopup
+			textBeforeSign="#{supplierBackingBean.managedBean.textBeforeSign}"
+			postSignAction="#{supplierBackingBean.preSubmitChangeBankRequest(gpkiBackingBean.pmDigiSign)}"
+			enableAutoUpdate="#{supplierBackingBean.enableAutoUpdate()}" />
+		<ac:spkiPopup
+			password="#{supplierBackingBean.managedBean.spkiBackingBean.password}"
+			challengeAns1="#{supplierBackingBean.managedBean.spkiBackingBean.challengeAns1}"
+			challengeQues1="#{supplierBackingBean.managedBean.spkiBackingBean.challengeQues1}"
+			postSignAction="#{supplierBackingBean.preSubmitChangeBankRequest(spkiBackingBean.pmDigiSign)}" 
+			enableAutoUpdate="#{supplierBackingBean.enableAutoUpdate()}" />
+		<f:event listener="#{supplierBackingBean.preRenderView}"
+			type="preRenderView" />
+		<p:messages id="messages" showSummary="false" showDetail="true"
+			autoUpdate="#{supplierBackingBean.managedBean.autoUpdate}"
+			closable="true" severity="error, info" />
+		<table style="width: 100%;">
+			<tr>
+				<!-- Bug #30038 start -->
+				<td><p:commandButton value="#{lbl['lbl.btn.back']}"
+						immediate="true" onstart="blockWidget.show();"
+						action = "#{supplierBackingBean.backAction}" 
+						oncomplete="blockWidget.hide();" rendered="#{supplierBackingBean.managedBean.taskId==null}" /></td>	
+				<!-- Bug #30038 end -->					
+				<td class="ppRightBtn"><ui:repeat var="outcome"
+						value="#{supplierBackingBean.managedBean.outComes}">
+						<ui:param name="buttonLabel"
+							value="lbl.btn.#{fn:toLowerCase(outcome)}" />
+						<p:commandButton value="#{lbl[buttonLabel]}"  update="@form,@([id$=messages])"
+							styleClass="ui-button" process="@form"
+							onstart="blockWidget.show();" onkeypress="if (event.keyCode == 13) { return false; }"
+							oncomplete="blockWidget.hide();" 						
+							action="#{supplierBackingBean.changeBankRequestSignAction(outcome)}" 							
+							rendered="#{supplierBackingBean.isSupplierRole()}"/>
+						<p:commandButton value="#{lbl[buttonLabel]}"  update="@form,@([id$=messages])"
+							styleClass="ui-button" process="@form"
+							onstart="blockWidget.show();"		
+							oncomplete="blockWidget.hide();" 	
+							action="#{supplierBackingBean.saveChangeBankRequest(outcome)}" 
+							rendered="#{not supplierBackingBean.isSupplierRole()}"
+						/>
+					</ui:repeat></td>
+			</tr>
+		</table>
+
+		<div align="left" class="header-info">
+			<table style="width: 100%">
+				<tr>
+					<td style="width: 20%"><h:outputLabel
+							value="#{lbl['lbl.ct.loa.no']}" /></td>
+					<td style="width: 13%" >
+						<p:commandLink value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.loaNo}" 
+							process="@this" partialSubmit="true" styleClass="blue_font"
+					       	action="#{supplierBackingBean.goToLoaView(supplierBackingBean.managedBean.ctContract.loa)}"/></td>						
+					<td style="width: 10%"><h:outputLabel
+							value="#{lbl['lbl.ct.contract.no']}" /></td>
+					<td style="width: 10%" class="header-info-text">
+						#{supplierBackingBean.managedBean.ctContract.contractNo}</td>
+					<td style="width: 10%"><h:outputLabel
+							value="#{lbl['lbl.ct.supplier.name']}" /></td>
+					<td style="width: 15%" class="header-info-text">
+						#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierName}</td>
+					<td style="width: 10%"><h:outputLabel
+							value="#{lbl['lbl.ct.status']}" /></td>
+					<td style="width: 12%" class="header-info-text">
+						#{supplierBackingBean.getStatusDescById(supplierBackingBean.managedBean.contractVer.status.statusId)}</td>
+				</tr>
+			</table>
+		</div>
+		<br/>
+		<p:panel id="fulfilmentDetail"
+			header="#{lbl['lbl.ct.panel.contract']}" toggleable="true"
+			toggleSpeed="500">
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.ct.instruction.mandatory']}" escape="false" />
+			<br />
+			<br />
+			<h:panelGrid columns="4" style="width:100%;"
+				columnClasses="columnWidth200,columnWidth400,columnWidth200,columnWidth300">					
+				
+				<p:outputLabel value="#{lbl['lbl.ct.contract.no']}" />
+				<p:inputText style="width:200px;" disabled="true"
+					value="#{supplierBackingBean.managedBean.ctContract.contractNo}" />
+					
+				<p:outputLabel value="#{lbl['lbl.ct.loa.physical.no']}" />
+				<p:inputText style="width:200px;" disabled="true"
+					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.loaPhysicalNo}" />
+
+				<p:outputLabel value="#{lbl['lbl.ct.effective.date']}" />
+				<p:inputText id="effDate" disabled="true" style="width:200px;"
+					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.effDate}">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</p:inputText>
+
+				<h:outputLabel value="#{lbl['lbl.ct.expiry.date']}" />
+				<p:inputText id="expDate" disabled="true" style="width:200px;"
+					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.expDate}">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</p:inputText>
+				
+				<p:outputLabel value="#{lbl['lbl.ct.bank.account.ct']}" />
+					<p:inputText id="loaNo1"
+					value="#{supplierBackingBean.managedBean.curentAccNoBankName}"
+					style="width:350px;" disabled="true" />		
+				
+				<p:outputLabel value="#{lbl['lbl.ct.loa.no']}" />
+					<p:inputText id="loaNo2"
+					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.loaNo}"
+					style="width:200px;" disabled="true" />		
+
+				<p:outputLabel value="#{lbl['lbl.ct.ministry.name']}" />
+				<p:inputText style="width:350px;" disabled="true"
+					value="#{supplierBackingBean.retrieveMinistryOrgProfile(supplierBackingBean.managedBean.ctContract.ownerOrgProfile.orgProfileId).orgName}" />
+
+				<p:outputLabel value="#{lbl['lbl.ct.physical.no']}" />
+				<h:panelGrid columns="3">
+					<p:inputText id="physicalNo" disabled="true" style="width:200px;"
+						value="#{supplierBackingBean.managedBean.contractVer.contractPhysicalNo}" />
+					<p:spacer width="1" />
+					<ac:iconTooltip
+						value="#{lbl['lbl.ct.tooltip.physical.contract.no']}" />
+				</h:panelGrid>
+
+				<h:panelGroup>
+					<div style="height: 40px; vertical-align: top;">
+						<p:outputLabel value="#{lbl['lbl.ct.contract.title']}" />
+					</div>
+				</h:panelGroup>
+				<h:panelGrid>
+					<p:inputTextarea id="contractName" rows="3" style="width:350px;"
+						value="#{supplierBackingBean.managedBean.ctContract.contractName}"
+						disabled="true" autoResize="false" />
+				</h:panelGrid>
+
+				<h:panelGroup>
+					<div style="height: 40px; vertical-align: top;">
+						<p:outputLabel value="#{lbl['lbl.ct.ptj.name']}" />
+					</div>
+				</h:panelGroup>
+				<h:panelGrid>
+					<p:inputTextarea id="ptjName" rows="3" style="width:200px;"
+						disabled="true"
+						value="#{supplierBackingBean.managedBean.ctContract.ownerOrgProfile.orgName}"
+						autoResize="false" />
+				</h:panelGrid>
+			</h:panelGrid>
+		</p:panel>
+
+		<p:panel id="bankId" header="#{lbl['lbl.ct.panel.bank.info']}"
+			toggleable="true" toggleSpeed="500">
+			<h:panelGrid columns="4" style="width:100%;"
+				styleClass="top-aligned-columns"
+				columnClasses="columnWidth200,columnWidth400,columnWidth200,columnWidth300">
+
+				
+					<p:outputLabel value="#{lbl['lbl.ct.bank.account.name']}"  styleClass="required" />
+
+				<h:panelGrid id="menuBankId" columns="3"
+					rendered="#{supplierBackingBean.managedBean.taskId==null}">
+					<p:selectOneMenu id="accountId" required="true"
+						style="width:360px;margin-bottom: 5px;"
+						value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.bankAccountNo}"
+						label="#{lbl['lbl.ct.bank.account.name']}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+						<f:selectItems
+							value="#{supplierBackingBean.populateBankAccountList}" />
+						<p:ajax event="change" process="@form"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							update=":form:bankId, :form:messages"
+							listener="#{supplierBackingBean.changeAccountActionListener}" />
+					</p:selectOneMenu>
+					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.bank.name']}" />
+					<p:message for="accountId" display="icon" />
+				</h:panelGrid>
+				<p:inputText
+					rendered="#{supplierBackingBean.managedBean.taskId!=null}"
+					style="width:350px;" disabled="true"
+					value="#{supplierBackingBean.managedBean.accountNoAndName}" />
+
+				<p:outputLabel value="#{lbl['lbl.ct.bank.branch']}" />
+				<p:inputText id="bankBranch" disabled="true" style="width:200px;"
+					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.bankBranch}" />
+
+				<h:panelGroup>
+					<div style="height: 40px; vertical-align: top">
+						<p:outputLabel for="bankAddress"
+							value="#{lbl['lbl.ct.bank.address']}" />
+					</div>
+				</h:panelGroup>
+				<h:panelGrid>
+					<p:inputTextarea id="bankAddress" rows="4" style="width:350px;"
+						disabled="true" maxlength="250" autoResize="true"
+						value="#{supplierBackingBean.getFullAddress(supplierBackingBean.managedBean.contractVer.ctContractValue.bankAddress)}" />
+				</h:panelGrid>
+
+			</h:panelGrid>
+		</p:panel>
+
+		<p:panel id="supplierDetails" header="#{lbl['lbl.ct.panel.supplier']}"
+			toggleable="true" toggleSpeed="500">
+			
+			<h:panelGrid columns="4" style="width:100%;"
+				styleClass="top-aligned-columns"
+				columnClasses="columnWidth200,columnWidth400,columnWidth200,columnWidth300">
+
+				<p:outputLabel value="#{lbl['lbl.ct.business.reg.no']}" />
+				<h:panelGrid columns="4" style="width:400px;">
+					<h:panelGrid columns="3">
+						<p:inputText disabled="true" style="width:120px;"
+							value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierRegNo}" />
+						<p:spacer width="1" />
+						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.business.reg.no']}" />
+					</h:panelGrid>
+					<p:spacer width="1" />
+					<p:outputLabel value="#{lbl['lbl.ct.mof.no']}" />
+					<h:panelGrid columns="3">
+						<p:inputText disabled="true" style="width:120px;"
+							value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierMofNo}" />
+						<p:spacer width="1" />
+						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.mof.no']}" />
+					</h:panelGrid>
+				</h:panelGrid>
+				
+				 <p:outputLabel value="#{lbl['lbl.ct.supplier.gst.reg']}"/> 
+                    <p:inputText disabled="true" style="width:200px;margin-bottom: 5px;"  
+                                     value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.gstRegNo == null ? lbl['lbl.txt.na'] : supplierBackingBean.managedBean.contractVer.ctContractValue.gstRegNo}" />
+            
+            <!-- #29983 start -->
+            	<p:outputLabel value="#{lbl['lbl.ct.business.reg.no.new']}" />
+				<h:panelGrid columns="3">
+					<p:inputText disabled="true" style="width:350px; margin-bottom: 0px;"
+						value="#{supplierBackingBean.managedBean.ctContract.smSupplier.ssmNewRegNo == null ? lbl['lbl.txt.na'] : supplierBackingBean.managedBean.ctContract.smSupplier.ssmNewRegNo}" />
+					<p:spacer width="1" />
+					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.business.reg.no.new']}" />
+				</h:panelGrid>
+		
+				<f:verbatim></f:verbatim> <f:verbatim></f:verbatim>
+            	
+            	<p:outputLabel value=" " />
+				<h:panelGrid columns="3">
+					<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.note.applicable.for.roc.and.rob']}" style="margin-bottom: 5px;"/>
+				</h:panelGrid>
+           		<f:verbatim></f:verbatim> <f:verbatim></f:verbatim>
+            <!-- #29983 end -->
+            
+            	<p:outputLabel value="#{lbl['lbl.ct.business.name']}" style="margin-top: 5px;" />
+				<p:inputText disabled="true" style="width:350px; margin-top:5px;"
+					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierName}" />
+					 <p:outputLabel value="#{lbl['lbl.ct.supplier.gst.eff.date']}" />
+                      <p:inputText disabled="true" style="width:200px;margin-bottom: 5px;"  
+                           rendered="#{supplierBackingBean.managedBean.contractVer.ctContractValue.gstEffDate != null}"
+                         value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.gstEffDate}">
+                           <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+                         </p:inputText>
+				     <p:inputText disabled="true" style="width:100px;margin-bottom: 5px;"  value="#{lbl['lbl.txt.na']}" 
+                          rendered="#{supplierBackingBean.managedBean.contractVer.ctContractValue.gstEffDate == null}"/> 
+				
+				<p:outputLabel value="#{lbl['lbl.ct.branch.name']}" />
+				<h:panelGrid columns="3">
+					<p:inputText disabled="true" style="width:350px;"
+						value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierBranch}" />
+					<p:spacer width="1" />
+					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.supplier.branch']}" />
+				</h:panelGrid>
+				
+				  <p:outputLabel  value="#{lbl['lbl.ct.supplier.ep.date']}"/>  
+                   <p:inputText disabled="true" style="width:200px;margin-bottom: 5px;"  
+                        rendered="#{supplierBackingBean.managedBean.contractVer.ctContractValue.gstDeclaredDate != null}"
+                       value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.gstDeclaredDate}" > 
+                       <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+                       </p:inputText> 
+                       
+                       <p:inputText disabled="true" style="width:100px;margin-bottom: 5px;"  value="#{lbl['lbl.txt.na']}" 
+                          rendered="#{supplierBackingBean.managedBean.contractVer.ctContractValue.gstDeclaredDate == null}"/> 
+				
+				<p:outputLabel value="#{lbl['lbl.ct.contact.person']}" />
+				<!-- #30453 start -->
+				<h:panelGrid columns="3">
+				<p:inputText disabled="true" style="width:250px;"
+					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.pmUser.salutationCode.salutationName.concat(' ')
+					.concat(supplierBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.contactPerson)}" />
+					<p:spacer width="1" />
+					<ac:iconTooltip
+						value="#{lbl['lbl.ct.change.bank.acc.contact.person']}" />
+				</h:panelGrid>
+				<!-- #30453 end -->
+				<f:verbatim></f:verbatim> <f:verbatim></f:verbatim>
+				
+				
+                   <h:panelGroup>
+					<div style="height: 40px; vertical-align: top">
+						<p:outputLabel for="supplierAddress"
+							value="#{lbl['lbl.ct.address']}" />
+					</div>
+				</h:panelGroup>
+				<h:panelGrid>
+					<p:inputTextarea id="supplierAddress" disabled="true" rows="5"
+						style="width:250px;margin-bottom: 5px;" autoResize="true"
+						value="#{supplierBackingBean.getFullAddress(supplierBackingBean.managedBean.contractVer.ctContractValue.supplierAddress)}" />
+				</h:panelGrid>
+				
+				<f:verbatim></f:verbatim> <f:verbatim></f:verbatim>
+
+             <p:outputLabel value="#{lbl['lbl.ct.tel']}" />
+             <h:panelGrid columns="4">
+				<p:inputText disabled="true" style="width:134px;"
+					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.phoneNoFull}" />
+                 <p:spacer width="10"></p:spacer>
+				<p:outputLabel value="#{lbl['lbl.ct.fax']}" />
+				<p:inputText disabled="true" style="width:135px;"
+					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.faxNoFull}" />
+				</h:panelGrid>
+				<f:verbatim></f:verbatim> <f:verbatim></f:verbatim>
+				<p:outputLabel value="#{lbl['lbl.ct.email']}" />
+				<p:inputText disabled="true" style="width:350px;"
+					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.contactEmail}" />
+				
+				
+			</h:panelGrid>
+		</p:panel>		
+		<ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
+	</ui:define>
+</ui:composition>

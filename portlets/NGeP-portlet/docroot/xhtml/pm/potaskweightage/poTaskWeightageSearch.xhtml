@@ -1,0 +1,71 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<p:blockUI block=":form" widgetVar="blockWidget">
+		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+	</p:blockUI>	
+			
+	<p:panel header="#{lbl['lbl.pm.po.task.search']}" toggleable="true" id="searchPnl">
+		<table class="ppTwoTable">
+			<tr>
+				<th width="15%"><p:outputLabel value="#{lbl['lbl.pm.po.task.identification.no']}" /></th>
+				<td width="25%"><p:inputText id="identificationNoId" value="#{poTaskWeightageBB.managedBean.identificationNo}" maxlength="20" /></td>
+				<th>&#160;</th>
+				<td>&#160;</td>
+			</tr>
+			
+			<tr>
+				<th width="15%"><p:outputLabel
+						value="#{lbl['lbl.pm.po.task.user.name']}" /></th>
+				<td width="25%"><p:inputText id="userNameId" value="#{poTaskWeightageBB.managedBean.userName}" maxlength="80" /></td>
+				<th>&#160;</th>
+				<td>&#160;</td>
+			</tr>
+			
+			<tr>
+				<th width="15%">
+				<p:outputLabel value="#{lbl['lbl.pm.po.task.user.status']}" /></th>
+				<td width="25%">
+					<p:selectOneMenu value="#{poTaskWeightageBB.managedBean.recordStatus}" style="width:300px;">
+						<f:selectItem itemLabel="#{lbl['lbl.pm.po.task.active']}" 
+						itemValue="#{DbValueConst.recordStatusActive}"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.pm.po.task.inactive']}" 
+						itemValue="#{DbValueConst.recordStatusSuspended}"></f:selectItem>
+					</p:selectOneMenu>
+				</td>
+				<th>&#160;</th>
+				<td>&#160;</td>
+			</tr>
+			
+			<tr>
+				<th width="15%">
+				<p:outputLabel value="#{lbl['lbl.pm.po.task.po.status']}" /></th>
+				<td width="25%">
+					<p:selectOneMenu value="#{poTaskWeightageBB.managedBean.poStatus}" style="width:300px;">
+						<f:selectItem itemLabel="#{lbl['lbl.pm.po.task.active']}" 
+						itemValue="#{DbValueConst.recordStatusActive}"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.pm.po.task.inactive']}" 
+						itemValue="#{DbValueConst.recordStatusSuspended}"></f:selectItem>
+					</p:selectOneMenu>
+				</td>
+				<th>&#160;</th>
+				<td>&#160;</td>
+			</tr>
+		</table>
+		
+		<div style="text-align: right;">
+				<p:commandButton id="searchBtn" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+					action="#{poTaskWeightageBB.retrievePOUsers}" value="#{lbl['lbl.btn.search']}"
+					update="poUserResultDtTbl" />
+					
+				<p:commandButton id="resetBtn" 
+					action="#{poTaskWeightageBB.resetPOTaskWeightageSearch}" value="#{lbl['lbl.btn.reset']}"
+					update="searchPnl" />
+		</div>
+	</p:panel>
+</ui:composition>

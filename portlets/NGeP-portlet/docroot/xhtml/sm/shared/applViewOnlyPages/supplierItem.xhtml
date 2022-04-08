@@ -1,0 +1,110 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<c:choose>
+		<c:when test="#{viewSmApplBackingBean.managedBean.redirectToSupplierItemPage}">
+			<ui:include src="catalogueItemDetail.xhtml" />
+		</c:when>
+		<c:otherwise>
+		<h:panelGroup id="catalogueInfPanGrp">
+		<p:panel header="#{lbl['lbl.sm.catalogue.info.hdr']}" toggleable="true" id="catalogueInfHdPan">
+			<p:tabMenu
+				activeIndex="#{viewSmApplBackingBean.managedBean.catalogueInfoTabActiveIndex}">
+				<p:menuitem value="#{lbl['lbl.cm.approval']} ( #{viewSmApplBackingBean.managedBean.pendingApprovalSupplierItemSize} )"
+					actionListener="#{viewSmApplBackingBean.onCatalogueInfoTabChange(0, cmConstant.itemStatusPendingApproval)}"
+					update=":form" onstart="blockWidget.show()"
+					oncomplete="blockWidget.hide()" ajax="true" async="true"/>
+				<p:menuitem value="#{lbl['lbl.cm.approved']} ( #{viewSmApplBackingBean.managedBean.approvedSupplierItemSize} )"
+					actionListener="#{viewSmApplBackingBean.onCatalogueInfoTabChange(1, cmConstant.itemStatusApproved)}"
+					update=":form" onstart="blockWidget.show()"
+					oncomplete="blockWidget.hide()" ajax="true" async="true"/>
+				<p:menuitem value="#{lbl['lbl.cm.reject']} ( #{viewSmApplBackingBean.managedBean.rejectedSupplierItemSize} )"
+					actionListener="#{viewSmApplBackingBean.onCatalogueInfoTabChange(2, cmConstant.itemStatusRejected)}"
+					update=":form" onstart="blockWidget.show()"
+					oncomplete="blockWidget.hide()" ajax="true" async="true"/>
+				<p:menuitem value="#{lbl['lbl.cm.published']} ( #{viewSmApplBackingBean.managedBean.publishedSupplierItemSize} )"
+					actionListener="#{viewSmApplBackingBean.onCatalogueInfoTabChange(3, cmConstant.itemStatusPublished)}"
+					update=":form" onstart="blockWidget.show()"
+					oncomplete="blockWidget.hide()" ajax="true" async="true"/>
+				<p:menuitem value="#{lbl['lbl.cm.expired']} ( #{viewSmApplBackingBean.managedBean.expiredSupplierItemSize} )"
+					actionListener="#{viewSmApplBackingBean.onCatalogueInfoTabChange(4, cmConstant.itemStatusExpired)}"
+					update=":form" onstart="blockWidget.show()"
+					oncomplete="blockWidget.hide()" ajax="true" async="true"/>
+			</p:tabMenu>	
+	<p:spacer height="2%"/>	
+	<p:dataTable id="supplierItemTableId" lazy="true" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+		value="#{viewSmApplBackingBean.managedBean.supplierItemSearchDataModel}" rows="10" style="width:100%;"
+		rowIndexVar="rowIndex" var="supplierItem"
+		rowKey="#{supplierItem.supplierItemId}">		
+		<ac:paginator for="supplierItemTableId" />
+		<p:column width="3%">
+			<f:facet name="header">
+				#{lbl['lbl.cm.item.code']}
+			</f:facet>
+			<h:outputText value="#{supplierItem.cmItem.extensionCode}" style="white-space: normal"/>
+		</p:column>
+		
+		<p:column width="20%" style="white-space: normal;">
+			<f:facet name="header">
+				#{lbl['lbl.cm.item.name']}
+			</f:facet>
+			<h:outputText value="#{supplierItem.cmItem.itemName}" style="white-space: normal"/>
+			
+
+		</p:column>
+		<p:column width="2%">
+			<f:facet name="header">
+				#{lbl['lbl.cm.price']}
+			</f:facet>
+			<p:inputText value="#{supplierItem.cmStandardPricing.price}" disabled="true" size="10" style="text-align:right">
+			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			</p:inputText>
+
+		</p:column>
+		<p:column width="5%">
+			<f:facet name="header">
+				#{lbl['lbl.cm.uom']}
+			</f:facet>
+			
+			<p:inputText value="#{supplierItem.pmUom.uomName}" disabled="true"></p:inputText>
+			
+
+		</p:column>
+		<p:column width="2%">
+			<f:facet name="header">
+				#{lbl['lbl.cm.start.date']}
+			</f:facet>
+			<p:calendar value="#{supplierItem.cmStandardPricing.startDate}" showOn="button" size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true"></p:calendar>
+
+		</p:column>
+		<p:column width="2%">
+			<f:facet name="header">
+				#{lbl['lbl.cm.end.date']}
+			</f:facet>
+			<p:calendar value="#{supplierItem.cmStandardPricing.endDate}" showOn="button" size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true"></p:calendar>
+
+		</p:column>
+		<p:column width="2%">
+			<f:facet name="header">
+				#{lbl['lbl.cm.action']}
+			</f:facet>
+			<p:commandLink title="View"
+				action="#{viewSmApplBackingBean.assignSelectedSupplierItem(supplierItem)}" 
+				process="@this" partialSubmit="true" update=":form"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				style="padding-right:5px;">
+				<p:graphicImage value="/css/images/design/document.png" 
+				title="#{lbl['lbl.sm.view']}"></p:graphicImage>
+			</p:commandLink>
+		</p:column>
+	</p:dataTable>
+	</p:panel>
+	<ui:include src="requestNewItemCode.xhtml" />
+	</h:panelGroup>
+	</c:otherwise>
+	</c:choose>
+</ui:composition>

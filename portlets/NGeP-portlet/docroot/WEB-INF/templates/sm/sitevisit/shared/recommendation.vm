@@ -1,0 +1,173 @@
+<table width='100%'>
+	<tr>
+		<td class="txtBold"><u>$smVmUtil.getDescByLabel('lbl.sm.officeloc')</u></td>
+	</tr>
+
+	<tr>
+		<td  class="txtBold" width="25%">$smVmUtil.getDescByLabel('lbl.sm.officeloc.ownership')</td>
+		<td  width="25%">
+		#if($review)
+			#if($officeOwnership == "O")
+				$smVmUtil.getDescByLabel('lbl.sm.facility.own')
+			#elseif($officeOwnership == "R")
+				$smVmUtil.getDescByLabel('lbl.sm.facility.rent')
+			#end
+		#end
+		</td>
+		
+		#if($officeOwnership == "O")
+			<td width="25%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.officeloc.prvt.prchs.price')</td>
+			<td width="25%">#if($review) $!officePrice #end</td>
+		#elseif($officeOwnership == "R")
+			<td class="txtBold" width="25%">$smVmUtil.getDescByLabel('lbl.sm.officeloc.rent.mnthly.rate')</td>
+			<td width="25%">#if($review) $!officeRentalRate #end</td>
+		#end
+	</tr>
+	
+	<tr>
+		<td></td>
+		<td></td>
+		<td class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.officeloc.share.with')</td>
+		<td>#if($review) #if($!svTask.smSvOffice.share)
+							$smVmUtil.getDescByLabel('lbl.sm.sme.txt.yes') 
+						#else $smVmUtil.getDescByLabel('lbl.sm.sme.txt.no') #end #end</td>
+	</tr>
+	
+	#if($review)
+	<tr>
+		<td></td>
+		<td></td>
+		<td class="txtBold" valign="top">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.remark')</td>
+		<td> $!svTask.smSvOffice.shareWithRemark</td>
+	</tr>
+	<br />
+	 #end
+	
+	<tr>
+		<td></td>
+		<td></td>
+		<td class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.officeloc.sign.board')</td>
+		<td>#if($review) #if($svTask.smSvOffice.signboardValid)
+							$smVmUtil.getDescByLabel('lbl.sm.sme.txt.yes') 
+						#else $smVmUtil.getDescByLabel('lbl.sm.sme.txt.no') #end #end</td>
+	</tr>
+	
+	#if($review)
+	<tr>
+		<td></td>
+		<td></td>
+		<td class="txtBold" valign="top">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.remark')</td>
+		<td>#if($review) $!svTask.smSvOffice.signboardRemark #end</td>
+	</tr>
+	#end
+	
+	<tr>
+		<td class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.officeloc.office.arrngmnt')</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td colspan="2">#if($review) $!svTask.smSvOffice.officeArrangement #end</td>
+	</tr>
+</table>
+<br /><br /><br /><br /><br /><br />
+
+
+#if($templateCode == "M")
+<table>
+	<tr><td class="txtBold"><u>$smVmUtil.getDescByLabel('lbl.sm.comments')</u></td></tr>
+	<tr><td class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.officeloc.operation.stage')</td></tr>
+	#if($review) 
+		<tr><td>$!svTask.smSvTemplate.smSvComment.operationStage</td></tr>
+		<br />
+	#else
+	<tr><br /><br /><br /><br /><br /></tr>
+	#end
+			
+	<tr><td class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.officeloc.prod.capability')</td></tr>
+	#if($review) 
+		<tr><td>$!svTask.smSvTemplate.smSvComment.productionCapacity</td></tr>
+		<br />
+	#else
+		<tr><br /><br /><br /><br /><br /></tr>
+	#end
+	
+	<tr><td class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.manufacturing.factrymchne.ownrshp.method')</td></tr>
+	#if($review) 
+		<tr><td>$!svTask.smSvTemplate.smSvComment.fmOwnershipMethod</td></tr>
+		<br />
+	#end
+</table>
+#else
+<table>
+	<tr><td class="txtBold"><u>$smVmUtil.getDescByLabel('lbl.sm.comments')</u></td></tr>
+	#if($review)
+		<tr><td>$!svTask.officerComment</td></tr>
+		<br />
+	#else
+		<tr><br /><br /><br /><br /><br /></tr>
+	#end
+</table>
+#end
+
+#if(!$svTask.smAppl.siteVisitGroup)
+	<table>
+		<tr><td class="txtBold"><u>Company Information Update(If any changes)</u></td></tr>
+	
+		#if($review)
+			<tr><td>$!svTask.companyInfoUpdate</td></tr>
+			<br />
+		#else
+			<tr><br /><br /><br /><br /><br /></tr>
+		#end
+	</table>
+	
+#elseif($templateCode == "L" || $templateCode == "B")
+	<br /><br />
+    #parse("templates/sm/sitevisit/shared/premiseLocation.vm")
+#end
+
+<table>
+	<tr><td class="txtBold"><u>$smVmUtil.getDescByLabel('lbl.sm.sitevisit.recommdeclaration')</u></td></tr>
+	
+	#if($review)
+		#if($templateCode == "M")
+		<tr><td>$!svTask.officerComment</td></tr>
+		#else
+			#if($svTask.recommended)
+				<tr><td>$smVmUtil.getDescByLabel('lbl.sm.sitevisit.approve')</td></tr>
+			#else
+				<tr><td>$smVmUtil.getDescByLabel('lbl.sm.sitevisit.reject')</td></tr>
+			#end
+		#end
+		<br /><br /><br />
+	#else
+		<tr><br /><br /><br /><br /><br /></tr>
+	#end
+</table>
+
+<table class="sTable">
+#if($review)
+		#if($svTask.smSvOfficers.size() > 0)
+			<tr>
+			#foreach($svOfficer in $svTask.smSvOfficers)
+				<td>
+				<table>
+					<tr><td class="txtBold">$smVmUtil.getDescByLabel('lbl.pm.contact.name')</td>
+						<td>$svOfficer.pmUser.userName</td>
+					</tr>
+					<tr><td class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.date')</td>
+						<td></td>
+					</tr>
+				</table>
+				</td>
+			#end
+			</tr>
+		#else
+			<tr><td class="txtBold">$smVmUtil.getDescByLabel('lbl.pm.contact.name')</td><td class="txtBold">$smVmUtil.getDescByLabel('lbl.pm.contact.name')</td></tr>
+			<tr><td class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.date')</td><td class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.date')</td></tr>
+		#end
+#else
+		<tr><td class="txtBold">$smVmUtil.getDescByLabel('lbl.pm.contact.name')</td><td class="txtBold">$smVmUtil.getDescByLabel('lbl.pm.contact.name')</td></tr>
+		<tr><td class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.date')</td><td class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.date')</td></tr>
+#end
+</table>

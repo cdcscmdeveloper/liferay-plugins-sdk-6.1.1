@@ -1,0 +1,130 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+	<p:blockUI block=":form" widgetVar="blockWidget">
+		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+	</p:blockUI>
+		
+	<table style="width: 100%">
+	<tr>
+		<td>
+			<div align="left" style="width: 100%">
+			    <p:commandButton immediate="true" value="#{lbl['lbl.btn.back']}"
+					rendered="#{!empty lOIDetailBackingBean.managedBean.backToPreviousPage}"
+					style="float:left;" action="#{lOIDetailBackingBean.backToPrevious}" />
+			 </div>
+		</td>
+		<td>
+			 <div align="right" style="width: 100%">
+			 	<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
+					style="float:right;"
+					action="#{pmTrackingDiaryBackingBean.redirectToSupplierTrackingDiary(ParameterConst.doctypeLetterOfIntent, lOIDetailBackingBean.managedBean.scLoi.loiId, true)}"
+					immediate="true" 
+					rendered="#{!empty lOIDetailBackingBean.managedBean.backToPreviousPage}" />
+					
+				<c:choose>
+					<c:when test="#{!empty lOIDetailBackingBean.managedBean.taskId}">
+					<ui:param name="readOnlyTask" value="#{lOIDetailBackingBean.managedBean.readOnly}" />
+						<ui:decorate template="/WEB-INF/facelets/templates/claim_template.xhtml">
+							<ui:define name="outComeSection">
+								<ui:repeat var="bpmAction" value="#{lOIDetailBackingBean.managedBean.outComes}">
+									<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+									<!-- Enhancement #21573 -->
+									<h:panelGroup rendered="#{bpmAction == 'ACCEPT'}">
+										<p:commandButton value="#{lbl[buttonLabel]}" process="@all"
+											styleClass="ui-button" update="@form"
+											rendered="#{!lOIDetailBackingBean.managedBean.qtCancelRequested}"
+											action="#{lOIDetailBackingBean.updateBpmTaskActionSupplier(bpmAction)}"
+											onstart="blockWidget.show();">
+											<f:setPropertyActionListener value="#{bpmAction}"
+												target="#{lOIDetailBackingBean.managedBean.action}" />
+												<f:setPropertyActionListener value="false"
+												target="#{lOIDetailBackingBean.managedBean.autoUpdate}" />
+										</p:commandButton>
+									</h:panelGroup>
+		
+									<h:panelGroup rendered="#{bpmAction == 'REJECT'}">
+										<p:commandButton value="#{lbl[buttonLabel]}"
+											styleClass="ui-button" onstart="blockWidget.show();"
+											oncomplete="blockWidget.hide();"
+											action="#{lOIDetailBackingBean.updateBpmTaskActionSupplier(bpmAction)}"
+											partialSubmit="true" process="@all" update="@form" />
+									</h:panelGroup>
+		
+								</ui:repeat>
+								<ac:spkiPopup id="spkiPopup"
+												password="#{lOIDetailBackingBean.managedBean.spkiBackingBean.password}"
+												challengeAns1="#{lOIDetailBackingBean.managedBean.spkiBackingBean.challengeAns1}"
+												challengeQues1="#{lOIDetailBackingBean.managedBean.spkiBackingBean.challengeQues1}"
+												postSignAction="#{lOIDetailBackingBean.spkiSignAction(spkiBackingBean.pmDigiSign)}" 
+												enableAutoUpdate="#{lOIDetailBackingBean.enableAutoUpdate()}" />	
+								
+								<p:dialog id="confirmAccept" widgetVar="confmAcceptDlg"
+									header="#{lbl['lbl.sc.confirmation']}" resizable="false" 
+									closable="false" modal="true">
+							
+									<p:panel id="confirmAccDlgId">
+										<table>
+											<tr>
+												<td>
+													<h:graphicImage value="/css/images/design/exclamation.png" />
+														<h:outputText value="#{lOIDetailBackingBean.managedBean.suppConfirmMsgAccept}" />
+														<br />
+														<br />
+												</td>
+											</tr>
+										</table>
+							
+										<p:spacer height="1px" />
+										<div align="right">
+											<p:commandButton id="yesBtnConfmA" value="#{lbl['lbl.btn.yes']}"
+												onclick="confmAcceptDlg.hide()" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+												action="#{lOIDetailBackingBean.confirmSupplierAccept}"/>
+											<p:commandButton id="noBtnConfmA" value="#{lbl['lbl.btn.no']}"
+												onclick="confmAcceptDlg.hide()" type="button" />
+										</div>
+									</p:panel>
+								</p:dialog>
+								<p:dialog id="confirmReject" widgetVar="confmRejectDlg"
+									header="#{lbl['lbl.sc.confirmation']}" resizable="false" 
+									closable="false" modal="true">
+							
+									<p:panel id="confirmRejDlgId">
+										<table>
+											<tr>
+												<td>
+													<h:graphicImage value="/css/images/design/exclamation.png" />
+														<h:outputText value="#{lOIDetailBackingBean.managedBean.suppConfirmMsgReject}" />
+														<br />
+														<br />
+												</td>
+											</tr>
+										</table>
+							
+										<p:spacer height="1px" />
+										<div align="right">
+											<p:commandButton id="yesBtnConfmR" value="#{lbl['lbl.btn.yes']}"
+												onclick="confmRejectDlg.hide()" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+												action="#{lOIDetailBackingBean.confirmSupplierReject}" update="@form" />
+											<p:commandButton id="noBtnConfmR" value="#{lbl['lbl.btn.no']}"
+												onclick="confmRejectDlg.hide()" type="button" />
+										</div>
+									</p:panel>
+								</p:dialog>
+							<!-- end Enhancement #21573 -->
+							</ui:define>
+						</ui:decorate>
+					</c:when>
+				</c:choose>
+			 </div>
+		</td>
+	</tr>
+	</table>	
+</ui:composition>
+

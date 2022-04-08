@@ -1,0 +1,143 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+	<table style="width: 100%">
+		<tr>
+			<td style="width: 20%; vertical-align: top;" class="sidemenutd"><c:if
+					test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForMof}">
+					<ui:include
+						src="/xhtml/sm/NewMofApplication/smMofApplnSideMenuItem.xhtml" />
+				</c:if> <c:if
+					test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi}">
+					<ui:include
+						src="/xhtml/sm/updateMofDetails/smUpdateMofApplnSideMenuItem.xhtml" />
+				</c:if> <c:if
+					test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew}">
+					<ui:include
+						src="/xhtml/sm/renewMofApplication/smRenewApplnSideMenuItem.xhtml" />
+				</c:if> <c:if
+					test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForApplcatcodes}">
+					<ui:include
+						src="/xhtml/sm/renewMofApplication/smRenewApplnSideMenuItem.xhtml" />
+				</c:if> <c:if
+					test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForUpdate}">
+					<ui:include
+						src="/xhtml/sm/updateMofDetails/smUpdateMofApplnSideMenuItem.xhtml" />
+				</c:if></td>
+			<td style="vertical-align: top;">
+			<!-- #12483 - START -->
+				<h:outputText value="#{lbl['lbl.sm.revise.reason']} : #{backingBean.currentReviseReason()}" rendered="#{backingBean.renderRevisedReason()}" styleClass="splNotesFonts" escape="false" />
+			<!-- #12483 - END -->
+			<h:inputHidden value="#{backingBean.managedBean.smAppl.applCategoryType}" /> <br />
+				<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+					<table style="width: 100%">
+						<tr>
+							<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+									value="#{backingBean.managedBean.poSecReview.sitevisitVerified}"
+									id="poSiteVisitVer">
+									<p:ajax update=":form:tt:siteVisitVerfPanel,:form:revPanHdr"
+										event="change" process="@this,:form:tt:siteVisitVerfPanel"
+										listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.sitevisitVerified)}" />
+								</p:selectBooleanCheckbox></td>
+							<td valign="top"><h:outputText
+									value="#{lbl['lbl.sm.sectionPoVerf']}"
+									title="For PO to highlight the verified section " /></td>
+
+						</tr>
+					</table>
+				</p:outputPanel> <p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+					<table style="width: 100%">
+						<tr>
+							<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+									value="#{backingBean.managedBean.apprvrSecReview.sitevisitVerified}"
+									id="apprSiteVisitVer">
+									<p:ajax update=":form:tt:siteVisitVerfPanel,:form:revPanHdr"
+										event="change" process="@this,:form:tt:siteVisitVerfPanel"
+										listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.sitevisitVerified)}" />
+								</p:selectBooleanCheckbox></td>
+							<td valign="top"><h:outputText
+									value="#{lbl['lbl.sm.sectionApprVerf']}"
+									title="For Approver to highlight the verified section " /></td>
+						</tr>
+					</table>
+				</p:outputPanel> <p:outputPanel id="siteVisitVerfPanel" layout="block">
+					<p:blockUI block=":form:tt:siteVisitVerfPanel"
+						widgetVar="buiPoSiteVisit" id="poSiteVisitBlc"
+						blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.sitevisitVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.sitevisitVerified : false)}" />
+
+					<ui:include
+						src="/xhtml/sm/svositevisit/reviewSiteVisitReport.xhtml" />
+					<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+						<table style="width: 50%">
+							<tr>
+								<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
+								<td><p:inputTextarea autoResize="false" cols="41"
+										maxlength="200" id="siteVisitRevPORmrks"
+										validatorMessage="#{lbl['lbl.sm.revSiteVisitRpt.panHdr']} - #{lbl['lbl.sm.poRemarks.length.validMsg']}"
+										value="#{backingBean.managedBean.poSecReview.siteVisitVerifiedRemark}">
+										<f:validateLength maximum="200" />
+									</p:inputTextarea> <p:message id="siteVisitRevPORmrksMsg"
+										for="siteVisitRevPORmrks" showSummary="true"
+										showDetail="false" display="icon" /></td>
+							</tr>
+						</table>
+					</p:outputPanel>
+					<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+						<table style="width: 100%">
+							<tr>
+								<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
+								<td><p:inputTextarea autoResize="false" readonly="true"
+										disabled="true" cols="41" maxlength="200"
+										value="#{backingBean.managedBean.poSecReview.siteVisitVerifiedRemark}" /></td>
+								<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
+								<td><p:inputTextarea autoResize="false" cols="41"
+										maxlength="200" id="siteVisitRptAprvrRmrk"
+										validatorMessage="#{lbl['lbl.sm.revSiteVisitRpt.panHdr']} - #{lbl['lbl.sm.apprvrRemarks.length.validMsg']}"
+										value="#{backingBean.managedBean.apprvrSecReview.siteVisitVerifiedRemark}">
+										<f:validateLength maximum="200" />
+									</p:inputTextarea> <p:message id="siteVisitRptAprvrRmrkMsg"
+										for="siteVisitRptAprvrRmrk" showSummary="true"
+										showDetail="false" display="icon" /></td>
+
+							</tr>
+						</table>
+					</p:outputPanel>
+				</p:outputPanel> <br /> <br />
+
+				<table style="width: 100%">
+					<tr>
+						<td><div align="left" style="width: 100%">
+								<p:commandButton value="#{lbl['lbl.sm.prev.section']}"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+									actionListener="#{backingBean.assignReviewSupportingNav('prev')}"
+									action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
+									update=":form" />
+							</div></td>
+						<td><c:if test="#{backingBean.managedBean.approverUser}">
+								<div align="right" style="width: 100%">
+									<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+										onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+										actionListener="#{backingBean.assignReviewSupportingNav('next')}"
+										action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+										update=":form" />
+								</div>
+							</c:if> <c:if test="#{backingBean.managedBean.poUser}">
+								<div align="right" style="width: 100%">
+									<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+										onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+										actionListener="#{backingBean.assignReviewSupportingNav('next')}"
+										action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV,SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)}"
+										update=":form" />
+								</div>
+							</c:if></td>
+					</tr>
+				</table></td>
+		</tr>
+	</table>
+
+</ui:composition>

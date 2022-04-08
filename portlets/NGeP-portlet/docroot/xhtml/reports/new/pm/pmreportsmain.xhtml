@@ -1,0 +1,156 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<ui:define name="contentSection">
+		<!-- Validation Message -->
+		<p:messages id="messages" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="false" />
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		<table style="margin-top: 10px; width: 100%;">
+			<tr>
+				<td width="10%"><p:outputLabel
+						value="#{lbl['lbl.rpt.rptName']}" /><p:outputLabel value="*"
+						styleClass="mandatory" /></td>
+				<td width="100%"><p:selectOneMenu
+						label="#{lbl['lbl.rpt.rptName']}" id="somReportName"
+						value="#{pmReportsBackingBean.managedBean.reportCode}"
+						style="margin-top:5px;width:330px;"
+						required="true"> <!-- shafie reopen #28833  -->
+						<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+							itemValue="#{null}"></f:selectItem>
+						<f:selectItems
+							value="#{pmReportsBackingBean.managedBean.reportList}"></f:selectItems>
+						<p:ajax event="change"
+							listener="#{pmReportsBackingBean.onChangeReportName()}"
+							process="@this" partialSubmit="true" update="@form" />
+					</p:selectOneMenu></td>
+			</tr>
+		</table>
+		<br />
+		<p:panel id="pmRptSearchCriteriaPnl"
+			header="#{pmReportsBackingBean.managedBean.reportTitle}"
+			rendered="#{not empty pmReportsBackingBean.managedBean.reportCode}"
+			toggleable="true">
+			<table width="100%">
+				<tr>
+					<td><h:outputText styleClass="instruction"
+							style="float:left;margin-left:20px;"
+							value="#{lbl['lbl.instruction.mandatory']}" /></td>
+				</tr>
+				<tr>
+					<td><h:outputText styleClass="instruction"
+							style="float:left;margin-left:20px;"
+							value="#{lbl['lbl.instruction.dpatleast']}" /></td>
+				</tr>
+			</table>
+			<br />
+			<c:choose>
+				<!-- PM_001 -->
+				<c:when
+					test="#{PmReportConst.pmListOfFinacialInstitutionsRptVal eq pmReportsBackingBean.managedBean.reportCode}">
+					<ui:include
+						src="/xhtml/reports/new/pm/listOfFinancialOrgReport.xhtml"></ui:include>
+				</c:when>
+				<!-- PM_002 -->
+				<c:when
+					test="#{PmReportConst.pmListOfOrganizationRptVal eq pmReportsBackingBean.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/new/pm/listOfOrgReport.xhtml"></ui:include>
+				</c:when>
+				<!-- PM_003 -->
+				<c:when
+					test="#{PmReportConst.pmListOfProfilesRptVal eq pmReportsBackingBean.managedBean.reportCode}">
+					<ui:include
+						src="/xhtml/reports/new/pm/listOfUserProfileReport.xhtml"></ui:include>
+				</c:when>
+				<!-- PM_004 -->
+				<c:when
+					test="#{PmReportConst.pmListOfGovernmentSellersRptVal eq pmReportsBackingBean.managedBean.reportCode}">
+					<ui:include
+						src="/xhtml/reports/new/pm/listOfGovtSellerReport.xhtml"></ui:include>
+				</c:when>
+				<!-- PM_005 -->
+				<c:when
+					test="#{PmReportConst.pmListOfExemptedItemsBySupplierRptVal eq pmReportsBackingBean.managedBean.reportCode}">
+					<ui:include
+						src="/xhtml/reports/new/pm/listOfExemptedItemsBySupplierReport.xhtml"></ui:include>
+				</c:when>
+				<!-- PM_006 -->
+				<c:when
+					test="#{PmReportConst.pmListOfExemptedItemsRptVal eq pmReportsBackingBean.managedBean.reportCode}">
+					<ui:include
+						src="/xhtml/reports/new/pm/listOfExemptedItemsReport.xhtml"></ui:include>
+				</c:when>
+				<!-- PM_007 -->
+				<c:when
+					test="#{PmReportConst.pmListOfExemptedContractedItemsRptVal eq pmReportsBackingBean.managedBean.reportCode}">
+					<ui:include
+						src="/xhtml/reports/new/pm/listOfExemptionContractedItemsReport.xhtml"></ui:include>
+				</c:when>
+				<!-- PM_008 -->
+				<c:when
+					test="#{PmReportConst.pmBpkUserProfileRptVal eq pmReportsBackingBean.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/new/pm/bpkUserProfileReport.xhtml"></ui:include>
+				</c:when>
+				<!-- PM_009 -->
+				<c:when
+					test="#{PmReportConst.pmBpkAdminProfileRptVal eq pmReportsBackingBean.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/new/pm/bpkAdminProfileReport.xhtml"></ui:include>
+				</c:when>
+				<!-- PM_010 -->
+				<c:when
+					test="#{PmReportConst.pmNoOfCpAndMrAccessApplicationRptVal eq pmReportsBackingBean.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/new/pm/noOfCPandMRAccsApplicationReport.xhtml"></ui:include>
+				</c:when>
+				<!-- #28833 shafie start -->
+				<!-- PM_012 -->
+				<c:when
+					test="#{PmReportConst.pmListOfPTJAllowedToApproveOtherPTJProcurementRptVal eq pmReportsBackingBean.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/new/pm/listOfPTJAllowedToApproveOtherPTJProcurementReport.xhtml"></ui:include>
+				</c:when>
+				<!-- #28833 shafie end -->
+				<!-- #29486 shafie start -->
+				<!-- PM_013 -->
+				<c:when
+					test="#{PmReportConst.pmMonthlyUserAndRoleRptVal eq pmReportsBackingBean.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/new/pm/monthlyUserAndRoleReport.xhtml"></ui:include>
+				</c:when>
+				<!-- #29486 shafie end -->
+				<c:otherwise>
+        			#{lbl['lbl.rpt.search.REPORTS_NOT_AVAILABLE_BY_MODULE']}    				
+				</c:otherwise>
+			</c:choose>
+			<br />
+			<br /> 
+			<p:outputPanel id="btnOp">
+				<div align="right" style="width: 100%">
+				<!-- #29486 shafie start -->
+					<p:commandButton id="generateBtnId"
+						value="#{lbl['lbl.btn.generate']}" process="@form" update="@form"
+						onclick="if(#{PmReportConst.pmMonthlyUserAndRoleRptVal eq pmReportsBackingBean.managedBean.reportCode}){GenerateCal()}" 
+						action="#{pmReportsBackingBean.generatePmReport()}">
+						<f:param name="disableValidation" value="true" />
+					</p:commandButton>
+				<!-- #29486 shafie end -->
+					<p:commandButton id="resetBtnId" value="#{lbl['lbl.btn.reset']}"
+						process="@this" update="@form"
+						action="#{pmReportsBackingBean.resetAction()}">
+					</p:commandButton>
+				</div>
+			</p:outputPanel>
+		</p:panel>
+		<ui:include
+			src="/xhtml/reports/new/pm/common/confirmationDialog.xhtml"></ui:include>
+		<ac:lovPopup />
+	</ui:define>
+
+
+</ui:composition>

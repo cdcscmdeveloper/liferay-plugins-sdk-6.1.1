@@ -1,0 +1,108 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<ui:include src="../shared/loaInstructionHeader.xhtml" />
+	
+	<p:panel header="#{lbl['lbl.sc.loiloa.loa.perform.bond']}"
+		toggleable="true">
+		<p:commandLink value="#{lbl['lbl.sc.loiloa.bond.letter']}"
+			process="@this" style="float:left;" styleClass="blue_font"
+			action="#{directLOABackingBean.getBondLetterStreamContent}"
+			oncomplete="bdLetterDlg.show();"
+			title="#{lbl['lbl.sc.loiloa.bond.letter.tooltip']}">
+		</p:commandLink>
+		<table style="width: 100%">
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.loiloa.loa.cont.period']}" /></td>
+				<td><p:inputText style="text-align: right;"
+						value="#{directLOABackingBean.managedBean.scLoa.contractDuration}"
+						disabled="true" size="35" readonly="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.cont.amt']}" /></td>
+				<td><p:inputText style="text-align: right;"
+						value="#{directLOABackingBean.managedBean.overallContractAmt}"
+						disabled="true" size="35" readonly="true">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.loiloa.loa.bond.percentage']}" /></td>
+				<td><p:inputText style="text-align: right;"
+						value="#{directLOABackingBean.managedBean.scLoa.bondPercentage}"
+						disabled="true" size="35" readonly="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.bond.amt']}" /></td>
+				<td><p:inputText style="text-align: right;"
+						value="#{directLOABackingBean.managedBean.scLoa.bondAmt}"
+						disabled="true" size="35" readonly="true">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText> <p:spacer width="10px" /></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><p:inputTextarea
+						value="#{directLOABackingBean.managedBean.bondAmountWord}"
+						rows="3" maxlength="500" style="margin-bottom:5px;width: 274px;"
+						disabled="true" /></td>
+			</tr>
+		</table>
+	</p:panel>
+	<p:dataTable id="performancebondtbl" var="bondList"
+		value="#{directLOABackingBean.managedBean.scLoa}"
+		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+		rows="10" rowIndexVar="rowIndex">
+		<ac:paginator for="performancebondtbl" />
+		<p:column headerText="#{lbl['lbl.sc.loiloa.loa.bond.ref.no']}"
+			style="width:20%">
+		</p:column>
+
+		<p:column headerText="#{lbl['lbl.sc.loiloa.loa.finan.inst']}"
+			style="width:20%">
+		</p:column>
+
+		<p:column headerText="#{lbl['lbl.sc.loiloa.loa.amt']}"
+			style="width:10%;text-align: right;">
+		</p:column>
+
+		<p:column headerText="#{lbl['lbl.sc.effective.date']}"
+			style="width:15%">
+		</p:column>
+
+		<p:column headerText="#{lbl['lbl.sc.exp.date']}"
+			style="width:15%">
+		</p:column>
+
+		<p:column headerText="#{lbl['lbl.txt.attachment']}"
+			style="width:15%">
+		</p:column>
+	</p:dataTable>
+
+	
+
+	<p:dialog id="sampleBondLetterDlg" widgetVar="bdLetterDlg" modal="true"
+		dynamic="true" hideEffect="explode" resizable="false" width="1000px"
+		height="500px" styleClass="pop_up_top"
+		header="#{lbl['lbl.sc.loiloa.bond.letter']}">
+		<p:media value="#{directLOABackingBean.bondLetterStreamContent}"
+			width="100%" height="450px" player="pdf" />
+		<p:panelGrid styleClass="noBorders tr,noBorders td">
+			<p:row>
+				<p:column width="100%" style="text-align:right">
+					<p:commandButton value="#{lbl['lbl.btn.close']}"
+						onclick="bdLetterDlg.hide()" />
+				</p:column>
+			</p:row>
+		</p:panelGrid>
+	</p:dialog>
+</ui:composition>

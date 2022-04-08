@@ -1,0 +1,175 @@
+<html>
+<head>
+	<style>
+	    @page { size: A4 portrait;}
+		@page { @bottom-center { content: "Page " counter(page) " / " counter(pages); }}
+		 
+		#bottom {
+			clear:both;
+			text-align:right;
+		}
+		body{
+			font-family: "Helvetica";
+			font-size: 8pt;
+		}
+		.header-cont {
+			width:100%;
+			position:fixed;
+			margin-left: 10px;
+			top:0px;
+		}
+		.table2 {
+			border-collapse: collapse;
+			width:100%;
+		}
+		.table2 th, .table2 td {
+			border: 1px solid black;
+		}
+		th{
+			background-color: #BCE18A;
+		}
+	</style>
+</head>
+<body>
+<div class="header-cont">
+	<table width="100%">
+		<tr>
+			<td>
+				<span style="font-family:Arial;font-size:10px;font-weight:normal;font-style:normal;text-decoration:none;color:#808080;">No. Surat Niat : </span>
+				<span style="font-family:Arial;font-size:10px;font-weight:normal;font-style:normal;text-decoration:none;color:#808080;border-bottom:1px dotted #808080">$loiNo</span>
+			</td>
+		</tr>
+	</table>
+</div>
+<br/><br/><br/><br/><br/><br/><br/>
+<table width="100%">
+	<tr>
+		<td align='center' valign="top">
+			<span style='font-weight:bold;font-size:12px;font-family:Arial;'>SURAT NIAT</span>
+			<br />
+			<span style='font-weight:bold;font-size:11px;font-family:Arial;'>(Bagi $method $category)</span>
+			<br />
+		</td>
+	</tr>
+	<tr>
+		<td>
+		<p style='float:right;text-align:justify;'>
+			<span style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Rujukan Kami : $fileNo </span>
+		<br /><br />
+			<span style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Tarikh :$dateSDF.format($issueDate)</span> 
+		<br />
+		</p>
+		</td>
+	</tr>
+	<tr>
+		<td>
+         
+			<span style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$supplierName</span><br/>
+			<span style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$!supplierAddressTable</span><br/>
+          	<span style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">(No. Pen. Kew: $mofNo)</span><br/>
+			<span style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">(No. Pen. CBP: $gstNo)</span>
+          <br/><br/>
+          
+            <span style="font-family:Arial;font-size:12px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Tuan,</span><br/><br/>
+			<table style="height: auto;" width="70%">
+				<tbody>
+					<tr>
+						<td style="width: 23%;"><span style="font-family: Arial; font-size: 11px; font-weight: bold; font-style: normal; text-decoration: none; color: #333333;">$method Untuk</span> 
+						</td>
+						<td style="width: 5%"><span style="font-family: Arial; font-size: 11px; font-weight: bold; font-style: normal; text-decoration: none; color: #333333;">:</span></td>
+						<td style="width: auto;"><span style="font-family: Arial; font-size: 11px; font-weight: bold; font-style: normal; text-decoration: none; color: #333333;"> $title</span></td>
+					</tr>
+					<tr>
+						<td style="width: 23%;"><span style="font-family: Arial; font-size: 11px; font-weight: bold; font-style: normal; text-decoration: none; color: #333333;">No. $method</span></td>
+						<td style="width: 5%"><span style="font-family: Arial; font-size: 11px; font-weight: bold; font-style: normal; text-decoration: none; color: #333333;">:</span></td>
+						<td style="width: auto;"><span style="font-family: Arial; font-size: 11px; font-weight: bold; font-style: normal; text-decoration: none; color: #333333;">$qtNo</span></td>
+					</tr>
+				</tbody>
+			</table>
+          
+			<p style="text-align:justify;"><span style="font-family:Arial;font-size:12px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Merujuk kepada cadangan tawaran yang tersebut di atas, Kerajaan Malaysia ingin memberitahu tuan bahawa pada amnya terma-terma cadangan tuan boleh diterima oleh Kerajaan.</span></p>
+			<p style="text-align:justify;"><span style="font-family:Arial;font-size:12px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">2. Walau bagaimanapun, Kerajaan tidak dapat menerima cadangan tuan tanpa perbincangan/rundingan lanjut dengan tuan berhubung dengan terma-terma tertentu untuk kontrak yang dicadangkan itu, terutama terma-terma yang berkenaan dengan perkara-perkara berikut:</span></p>
+			<span style='font-weight:normal;font-size:11px;font-family: Calibri;'>
+				<table width="70%" align="center">
+                  #set ($count = 1)
+                  #foreach($scNegoTerm in $scNegoTerms)
+                  <tr>
+					#if ($scNegoTerm.termDesc == 'Price')
+                    <td>2.$count	Harga $method</td>
+					#else
+					<td>2.$count	$scNegoTerm.termDesc</td>
+					#end
+                  </tr>
+                  #set ($count = $count + 1)
+                  #end
+              	</table>
+          	</span>
+			<p style="text-align:justify;"><span style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">3. Sehubungan itu, sila nyatakan secara rasmi persetujuan tuan untuk berbincang/berunding/
+				terma dalam perenggan 2 di atas dalam tempoh $ackDueDays hari daripada tarikh surat ini. Jika tuan bersetuju, Kerajaan bercadang untuk mengadakan mesyuarat di antara wakil-wakil Kerajaan dengan pihak tuan seperti ketetapan berikut:</span></p>
+			<span style='font-weight:bold;font-size:11px;font-family: Times New Roman;'>
+				<table width="70%" align="center">
+				#if ($scNegoLocations != 'null')
+					#foreach( $scNegoLocation in $scNegoLocations )
+					<tr>
+						<td style="width: 15%;">Tarikh</td>
+						<td style="width: 5%;">:</td>
+						<td style="width: auto;"><span style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$dateSDF.format($scNegoLocation.negoDate)</span></td>
+                  	</tr>
+                    <tr>
+						<td style="width: 15%;">Masa</td>
+						<td style="width: 5%;">:</td>
+						<td style="width: auto;"><span style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$timeSDF.format($scNegoLocation.negoDate)</span></td>
+                  	</tr>
+                  	<tr>
+						<td style="width: 15%;">Tempat</td>
+						<td style="width: 5%;">:</td>
+						<td style="width: auto;"><span style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$scNegoLocation.negoLocation</span></td>
+					</tr>
+					#end
+				#else
+					<tr>
+						<td style="width: 15%;">Tarikh</td>
+						<td style="width: 5%;">:</td>
+						<td style="width: auto;"><span style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">
+							Tidak Berkenaan</span></td>
+                  	</tr>
+                    <tr>
+						<td style="width: 15%;">Masa</td>
+						<td style="width: 5%;">:</td>
+						<td style="width: auto;"><span style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">
+							Tidak Berkenaan</span></td>
+                  	</tr>
+                  	<tr>
+						<td style="width: 15%;">Tempat</td>
+						<td style="width: 5%;">:</td>
+						<td style="width: auto;"><span style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">
+							Tidak Berkenaan</span></td>
+					</tr>
+				#end
+				</table>
+			</span>
+			<p style="text-align:justify;"><span style="font-family:Arial;font-size:12px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Nota : Sila abaikan ayat 'Jika tuan bersetuju, Kerajaan bercadang untuk mengadakan mesyuarat di antara wakil-wakil Kerajaan dengan pihak tuan seperti ketetapan berikut:' sekiranya tiada rundingan diadakan dan bersetuju dengan terma di para 2.</span></p>
+			<p style="text-align:justify;"><span style="font-family:Arial;font-size:12px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">4. Kerajaan berhak membatalkan surat niat ini selepas $ackDueDays hari sekiranya tiada pengesahan persetujuan dibuat oleh pembekal.</span></p>
+			<p style="text-align:justify;"><span style="font-family:Arial;font-size:12px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">5. Surat ini adalah RAHSIA KERAJAAN dan tidak boleh disebarkan kepada mana-mana pihak lain. Surat ini hanyalah suatu surat niat dan hendaklah tidak ditafsirkan dalam apa-apa cara jua sebagai mengikat Kerajaan.</span></p>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<span style="font-family:Arial;font-size:12px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Sekian, terima kasih.</span><br/><br/>
+			<span style="font-family:Arial;font-size:12px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">" BERKHIDMAT UNTUK NEGARA "</span><br/><br/>
+			<span style="font-family:Arial;font-size:12px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Saya yang menurut perintah,</span><br/><br/><br/><br/><br/><br/>
+			<span>................................................</span><br/><br/>
+			<span style="font-family:Arial;font-size:12px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$salutation $loiSigner</span><br/><br/>
+			<span style="font-family:Arial;font-size:12px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$loiSignerDesignation</span>
+		</td>
+	</tr>
+	#if ( $hasDisclaimer == 'true' )
+	<tr>
+		<td>
+			<span style="font-family:Arial;font-size:10px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Surat ini dijana oleh komputer dan tandatangan tidak diperlukan.</span><br/>
+		</td>
+	</tr>
+	#end
+</table>
+</body>
+</html>

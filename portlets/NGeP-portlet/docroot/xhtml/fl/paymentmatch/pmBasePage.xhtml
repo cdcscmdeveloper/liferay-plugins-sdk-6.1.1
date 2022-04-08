@@ -1,0 +1,216 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="resourceSection">
+		<style>
+			.gfmasPanelCss>.ui-panel-content {
+				background: #f2dede !important;
+			}
+		</style>	
+	</ui:define>
+
+	<ui:define name="contentSection">
+		<h:panelGroup layout="block" class="ui-messages ui-widget" rendered="#{(paymentMatchBackingBean.managedBean.paymentAdvice.status.statusId.longValue() == FulfilmentStatusCont.paPendingPaymentMatch.longValue() 
+		or paymentMatchBackingBean.managedBean.paymentAdvice.status.statusId.longValue() == FulfilmentStatusCont.poPendingPaymentQuery.longValue() 
+		or paymentMatchBackingBean.managedBean.paymentAdvice.status.statusId.longValue() == FulfilmentStatusCont.coPendingPaymentQuery.longValue()
+		or paymentMatchBackingBean.managedBean.paymentAdvice.status.statusId.longValue() == FulfilmentStatusCont.paPendingPaymentQuery.longValue()) 
+		and not empty paymentMatchBackingBean.managedBean.disciplinaryActionMessage}">
+		<h:panelGroup layout="block" class="ui-messages-info ui-corner-all">
+		<h:outputText class="ui-messages-info-icon" /><ul><li>
+		<h:outputText class="ui-messages-info-detail" /> #{paymentMatchBackingBean.managedBean.disciplinaryActionMessage} <p:commandLink id="sharedcommand" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" rendered="#{not empty paymentMatchBackingBean.managedBean.disciplinaryActionMessage}" action="#{paymentMatchBackingBean.viewDisciplinaryAction(paymentMatchBackingBean.managedBean.smDisciplinaryAction)}" process="@this" partialSubmit="true" update=":form">#{lbl['lbl.sm.disciplinary.here']}</p:commandLink> #{lbl['lbl.sm.supplier.to.view.disc.action.details']}</li></ul>
+		</h:panelGroup>
+		</h:panelGroup>
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>
+		<ac:gpkiPopup 
+			textBeforeSign="#{paymentMatchBackingBean.managedBean.textBeforeSign}"
+			postSignAction="#{paymentMatchBackingBean.preSubmitAction(gpkiBackingBean.pmDigiSign)}"
+			enableAutoUpdate="#{paymentMatchBackingBean.enableAutoUpdate()}" 
+		/>	
+		<f:event listener="#{paymentMatchBackingBean.preRenderView}" type="preRenderView" />
+		<c:if test="#{paymentMatchBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or paymentMatchBackingBean.managedBean.isHyperLinkPage()}">
+			<ac:title value="#{paymentMatchBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, ParameterConst.doctypePaymentAdvice)}" />
+		</c:if>			
+		<p:messages id="messages" showDetail="true" autoUpdate="#{paymentMatchBackingBean.managedBean.autoUpdate}" showSummary="false"
+			closable="true" severity="error, info, warn" />
+		<p:panel style="background:#f2dede !important; border:0px;" styleClass="gfmasPanelCss" rendered="#{paymentMatchBackingBean.managedBean.gfmasError}" >		
+			<table>
+				<tr>
+					<td>
+						<p:commandLink oncomplete="gfmasError.show();" immediate="true"
+							action="#{paymentMatchBackingBean.show1GFMASError()}"
+							rendered="#{paymentMatchBackingBean.managedBean.gfmasError}">
+							<p:graphicImage value="/css/images/design/exclamation.png" />
+						</p:commandLink>
+						<p:spacer width="2" />
+					</td>
+					<td>
+						<p:outputLabel value="#{paymentMatchBackingBean.managedBean.gfmasErrorDesc} #{lbl['lbl.fl.integration.click.for.exception.details']} (ERR-#{paymentMatchBackingBean.managedBean.gfmasErrorCode})" style="color: #C55751 !important; font-weight: normal !important"
+							rendered="#{paymentMatchBackingBean.managedBean.gfmasError}" />
+					</td>					
+				</tr>
+			</table>
+		</p:panel>	
+		<p:panel style="background:#f2dede !important; border:0px;" styleClass="gfmasPanelCss" rendered="#{paymentMatchBackingBean.managedBean.queryDisplay}" >		
+			<table>
+				<tr>
+					<td>
+						<p:commandLink oncomplete="addQuery.show();"
+							action="#{paymentMatchBackingBean.showQuery()}"
+							rendered="#{paymentMatchBackingBean.managedBean.queryDisplay}"
+							update=":form:queryDialog">
+							<p:graphicImage value="/css/images/design/exclamation.png"
+								title="Query" />
+						</p:commandLink>
+						<p:spacer width="2" />
+					</td>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.fl.instruction.payment.query']}" style="color: #C55751 !important; font-weight: normal !important"
+							rendered="#{paymentMatchBackingBean.managedBean.queryDisplay}" />
+					</td>						
+				</tr>
+			</table>
+		</p:panel>			
+				
+		<table style="width: 100%;">
+			<tr>
+				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" 
+						rendered="#{paymentMatchBackingBean.managedBean.taskId==null}"
+						action="#{paymentMatchBackingBean.backToPervious}" /></td>			
+				<td colspan="4" style="text-align: right;">
+				<ui:decorate template="/xhtml/fl/shared/claim_template.xhtml">
+						<ui:define name="outComeSection">
+							<ui:repeat var="bpmAction"
+							value="#{paymentMatchBackingBean.managedBean.outComes}">
+							<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+							<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
+							action="#{paymentMatchBackingBean.gpkiSignAction(bpmAction)}"
+							styleClass="ui-button" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>							
+							</ui:repeat>
+						</ui:define>
+					</ui:decorate></td>
+				<c:if
+					test='#{paymentMatchBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}'>
+					<td colspan="4" style="text-align: right">	
+					<p:commandLink 
+						value="#{lbl['lbl.td.doc.trackingDiary']}"
+						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypePaymentAdvice,paymentMatchBackingBean.managedBean.paymentAdvice.paymentAdviceId)}"
+						immediate="true" />
+					</td>		
+				</c:if>
+				<h:panelGroup id="printButtonPm"
+					rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.status.statusId == FulfilmentStatusCont.paSubmitted}">
+					<td style="text-align: right; width: 30px;"><p:commandLink
+							value="#{lbl['lbl.btn.print']}" ajax="false">
+							<p:fileDownload value="#{flDocumentBackingBean.generateReport(ParameterConst.doctypePaymentAdvice,paymentMatchBackingBean.managedBean.paymentAdvice.paymentAdviceNo,flDocumentManagedBean.taxable)}" />
+						</p:commandLink></td>
+				</h:panelGroup>	
+			</tr>
+		</table>
+		<ui:include src="/xhtml/fl/paymentmatch/pmReviewHeaderPage.xhtml" />	
+		<h:panelGroup id="instructionRevise">
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.txt.pleaseclick']}" escape="false"  />&#160;
+			<p:commandLink value="#{lbl['lbl.txt.guideline']}" ajax="false" style="font-size:11px;font-style:italic" process="@this"
+							action="#{invoiceBackingBean.downloadFile('/shared/FL/Garis_Panduan_Payment_Query.pdf')}"></p:commandLink>&#160;
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.payment.revise']}" escape="false"  />
+		</h:panelGroup>	
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<td width="20%" valign="top" class="sidemenutd">
+					<p:tabMenu styleClass="sidemenu" 
+						activeIndex="#{paymentMatchBackingBean.managedBean.selectedTabIndex}">
+						<p:menuitem value="#{lbl['lbl.fl.menu.general']}" update="@form"
+						actionListener="#{paymentMatchBackingBean.onTabChange(0)}">
+							<f:setPropertyActionListener
+								target="#{paymentMatchBackingBean.managedBean.selectedTabIndex}"
+								value="0" />
+						</p:menuitem>
+						<p:menuitem value="#{lbl['lbl.fl.menu.charge.line.summary.pm.can.dan']}" update="@form"
+							actionListener="#{paymentMatchBackingBean.onTabChange(1)}">
+							<f:setPropertyActionListener
+								target="#{paymentMatchBackingBean.managedBean.selectedTabIndex}"
+								value="1" />
+						</p:menuitem>
+						<p:menuitem value="#{lbl['lbl.fl.payment.match.deduction']}" update="@form" 
+						actionListener="#{paymentMatchBackingBean.onTabChange(2)}" rendered="#{paymentMatchBackingBean.managedBean.showDeductionTab}">
+							<f:setPropertyActionListener
+								target="#{paymentMatchBackingBean.managedBean.selectedTabIndex}"
+								value="2" />
+						</p:menuitem>
+						<p:menuitem value="#{lbl['lbl.fl.payment.match.payment.summary']}" update="@form"
+							actionListener="#{paymentMatchBackingBean.onTabChange(3)}">
+							<f:setPropertyActionListener
+								target="#{paymentMatchBackingBean.managedBean.selectedTabIndex}"
+								value="#{paymentMatchBackingBean.managedBean.showDeductionTab ? 3 : 2}" />
+						</p:menuitem>
+						<p:menuitem value="#{lbl['lbl.fl.advanced.payment.summary']}" update="@form" 
+						rendered="#{paymentMatchBackingBean.managedBean.haveAdvancedPymt}"
+							actionListener="#{paymentMatchBackingBean.onTabChange(4)}">
+							<f:setPropertyActionListener
+								target="#{paymentMatchBackingBean.managedBean.selectedTabIndex}"
+								value="#{paymentMatchBackingBean.managedBean.showDeductionTab ? 4 : 3}" />
+						</p:menuitem>
+					</p:tabMenu></td>
+				<td width="80%"><p:outputPanel
+						rendered="#{paymentMatchBackingBean.managedBean.selectedTabIndex == 0}">
+						<ui:include src="pmGeneral.xhtml" />
+					</p:outputPanel> <p:outputPanel
+						rendered="#{paymentMatchBackingBean.managedBean.selectedTabIndex == 1}">
+						<ui:include src="pmChargeLine.xhtml" />
+					</p:outputPanel> <p:outputPanel
+						rendered="#{paymentMatchBackingBean.managedBean.selectedTabIndex == 2 and paymentMatchBackingBean.managedBean.showDeductionTab}">
+						<ui:include src="pmDeduction.xhtml" />
+					</p:outputPanel> <p:outputPanel
+						rendered="#{paymentMatchBackingBean.managedBean.selectedTabIndex == (paymentMatchBackingBean.managedBean.showDeductionTab ? 3 : 2)}">
+						<ui:include src="pmSummary.xhtml" />
+					</p:outputPanel>
+					 <p:outputPanel
+						rendered="#{paymentMatchBackingBean.managedBean.selectedTabIndex == (paymentMatchBackingBean.managedBean.showDeductionTab ? 4 : 3)}">
+						<ui:include src="pmAdvancedPaymentSumm.xhtml" />
+					</p:outputPanel></td>
+			</tr>
+		</table>
+		<p:dialog id="gfmasErrorDlg" header="#{lbl['lbl.fl.integration.exception.details']}" widgetVar="gfmasError" width="80%"
+			showEffect="fade" hideEffect="fade" modal="true" resizable="false">
+			<table style="width: 100%">
+				<tr>
+					<td><p:messages id="gfmasMsg" showSummary="false" escape="false" showDetail="true" autoUpdate="true" closable="true" severity="error,info" /></td>
+				</tr>
+			</table>
+			<p:spacer height="2px"></p:spacer>
+			<div style="width: 100%; text-align: right">
+				<p:commandButton value="#{lbl['lbl.btn.close']}" oncomplete="gfmasError.hide();" />
+			</div>
+		</p:dialog>	
+		<p:dialog id="queryDialog" header="#{lbl['lbl.fl.query.detail']}" widgetVar="addQuery"
+			showEffect="fade" hideEffect="fade" modal="true" width="600px"
+			height="250px" resizable="false">
+		<table style="width: 100%">
+			<tr>
+				<td valign="top" ><h:outputText style="text-align:left; float:left;" value="#{lbl['lbl.fl.query.payment.desc']}" /></td>
+			</tr>
+			<tr>
+				<td><p:inputTextarea cols="50" rows="6" disabled="true" autoResize="false"
+						style=" margin-bottom:5px;" value="#{paymentMatchBackingBean.managedBean.queryPaymentDesc}"/></td>
+			</tr>
+		</table>
+		<p:spacer height="2px"></p:spacer>
+		<div style="width: 100%; text-align: right">
+			<p:commandButton value="#{lbl['lbl.btn.close']}" 
+				oncomplete="addQuery.hide();">
+			</p:commandButton>
+		</div>
+	</p:dialog>
+	<ac:disciplinaryActionHistory voList="#{paymentMatchBackingBean.managedBean.disciplineVOs}" 
+		dialogHeader="#{lbl['lbl.sm.view.details.disciplinary.action.headerlbl']}" dialogWidth="800px" dialogHeight="400px" btnView="true" />		
+	</ui:define>
+</ui:composition>

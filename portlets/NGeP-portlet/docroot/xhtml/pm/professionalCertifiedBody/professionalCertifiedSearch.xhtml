@@ -1,0 +1,64 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.pm.search.search']}"
+		id="professionalCertSearch" toggleable="true">
+
+		<table style="width: 100%;">
+			<tr>
+				<td style="width: 14%;"><h:outputLabel
+						value="#{lbl['lbl.pm.search.profcert']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneMenu
+						value="#{profcertifiedbodyBackingBean.managedBean.profCertifiedBodySearchBean.certType}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
+						<f:selectItems
+							value="#{profcertifiedbodyBackingBean.getBodyType()}" />
+					</p:selectOneMenu></td>
+			</tr>
+			<!-- 12852 Start-->
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.pm.search.codes']}"></h:outputLabel></td>
+				<td><p:inputText maxlength="12"
+						value="#{profcertifiedbodyBackingBean.managedBean.profCertifiedBodySearchBean.bodyCode}"
+						size="30" style="width:8%"/></td>
+			</tr>
+			<!-- 12852 End-->
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.pm.search.name']}"></h:outputLabel></td>
+				<td><p:inputText maxlength="255"
+						value="#{profcertifiedbodyBackingBean.managedBean.profCertifiedBodySearchBean.bodyName}"
+						size="30" /></td>
+			</tr>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.pm.search.status']}"></h:outputLabel></td>
+				<td><p:selectOneMenu style="width:205px;margin-bottom:5px;"
+						value="#{profcertifiedbodyBackingBean.managedBean.profCertifiedBodySearchBean.status}"
+						disabled="false">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
+						<f:selectItems style="width:189px;"
+							value="#{profcertifiedbodyBackingBean.getCertStatusList()}" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td colspan="2" width="100%">
+					<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.btn.search']}"
+							update=":form:searchProfCertResult"
+							action="#{profcertifiedbodyBackingBean.searchProfessionalCertBody}" />
+						<p:commandButton value="#{lbl['lbl.btn.reset']}"
+							action="#{profcertifiedbodyBackingBean.reset}" process="@this"
+							update=":form:searchProfCertResult,:form:professionalCertSearch" />
+					</div>
+				</td>
+			</tr>
+		</table>
+	</p:panel>
+</ui:composition>

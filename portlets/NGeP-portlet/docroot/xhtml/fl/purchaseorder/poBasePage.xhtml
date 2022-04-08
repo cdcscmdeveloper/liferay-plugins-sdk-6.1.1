@@ -1,0 +1,217 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="resourceSection">
+		<style>
+			.gfmasPanelCss>.ui-panel-content {
+				background: #f2dede !important;
+			}
+		</style>	
+	</ui:define>
+
+	<ui:define name="contentSection">
+		<h:panelGroup layout="block" class="ui-messages ui-widget" rendered="#{flOrderBB.managedBean.fulfilmentOrder.status.statusId.longValue() == FulfilmentStatusCont.poPendingCancellationSubmission.longValue() 
+		and not empty flOrderBB.managedBean.disciplinaryActionMessage}">
+		<h:panelGroup layout="block" class="ui-messages-info ui-corner-all">
+		<h:outputText class="ui-messages-info-icon" /><ul><li>
+		<h:outputText class="ui-messages-info-detail" /> #{flOrderBB.managedBean.disciplinaryActionMessage} <p:commandLink id="sharedcommand" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" action="#{flOrderBB.viewDisciplinaryAction(flOrderBB.managedBean.smDisciplinaryAction)}" process="@this" partialSubmit="true" update=":form">#{lbl['lbl.sm.disciplinary.here']}</p:commandLink> #{lbl['lbl.sm.supplier.to.view.disc.action.details']}</li></ul>
+		</h:panelGroup>
+		</h:panelGroup>	
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>	
+		<script>
+			$('#portlet_flDocumentMaintenance_WAR_NGePportlet').find(
+					'.portlet-title-text').html(
+					'#{flOrderBB.getPortletTitle()}');
+		</script>
+		<f:event listener="#{flOrderBB.preRenderViewPR}" type="preRenderView" />
+		<c:if test="#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or 
+					  flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancel or					 
+					  flOrderBB.managedBean.isHyperLinkPage()}">
+			<ac:title value="#{flOrderBB.getParameterDesc(ParameterTypeConst.documentTypes, ParameterConst.doctypePurchaseOrder)}" />
+		</c:if>			
+		<p:messages id="messages" showDetail="true" autoUpdate="#{flOrderBB.managedBean.autoUpdate}"
+			showSummary="false" closable="true" severity="error, info" />
+		<p:panel style="background:#f2dede !important; border:0px;" styleClass="gfmasPanelCss" rendered="#{flOrderBB.managedBean.gfmasError}" >		
+			<table>
+				<tr>
+					<td>
+						<p:commandLink oncomplete="gfmasError.show();" immediate="true"
+							action="#{flOrderBB.show1GFMASError()}"
+							rendered="#{flOrderBB.managedBean.gfmasError}">
+							<p:graphicImage value="/css/images/design/exclamation.png" />
+						</p:commandLink>
+						<p:spacer width="2" />
+					</td>
+					<td>
+						<p:outputLabel value="#{flOrderBB.managedBean.gfmasErrorDesc} #{lbl['lbl.fl.integration.click.for.exception.details']} (ERR-#{flOrderBB.managedBean.gfmasErrorCode})" style="color: #C55751 !important; font-weight: normal !important"
+							rendered="#{flOrderBB.managedBean.gfmasError}" />
+					</td>					
+				</tr>
+			</table>
+		</p:panel>				
+		<ac:gpkiPopup 
+			textBeforeSign="#{flOrderBB.managedBean.textBeforeSign}"
+			postSignAction="#{flOrderBB.preSubmitFulfillmentOrder(gpkiBackingBean.pmDigiSign)}"
+			enableAutoUpdate="#{flOrderBB.enableAutoUpdate()}"/>
+		<ac:spkiPopup id="spkiPopUp"
+			password="#{flOrderBB.managedBean.spkiBackingBean.password}"
+   		 	challengeAns1="#{flOrderBB.managedBean.spkiBackingBean.challengeAns1}"
+  		 	challengeQues1="#{flOrderBB.managedBean.spkiBackingBean.challengeQues1}"
+			textBeforeSign="#{flOrderBB.managedBean.textBeforeSign}"
+			postSignAction="#{flOrderBB.preSubmitFulfillmentOrder(spkiBackingBean.pmDigiSign)}"
+			enableAutoUpdate="#{flOrderBB.enableAutoUpdate()}"/>
+		<table style="width: 100%;">
+			<tr>
+				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"  
+					action="#{flOrderBB.backToPervious}"
+					rendered="#{flOrderBB.managedBean.taskId==null}" />
+				</td>
+				<c:if test='#{flOrderBB.managedBean.outComes ne "null"}'>
+				<td colspan="4" style="text-align: right">
+					<c:if test='#{flOrderBB.managedBean.buttonVal ne BpmOutcomeConstant.bpmView}'>
+						<ui:decorate template="/xhtml/fl/shared/claim_template.xhtml">
+							<ui:define name="outComeSection">
+								<ui:repeat var="bpmAction" value="#{flOrderBB.managedBean.outComes}">
+									<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+									<p:commandButton value="#{lbl[buttonLabel]}"
+										styleClass="ui-button" onstart="blockWidget.show();"
+										oncomplete="blockWidget.hide();" update="@form"
+										action="#{flOrderBB.signingAction(bpmAction)}" />
+								</ui:repeat>
+							</ui:define>
+						</ui:decorate>
+					</c:if>
+					<!-- 28377 -->
+					<!-- #28375- Beginning - Logan-->
+					
+				
+					
+				<c:if test='#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.carryForward}'>
+				<!-- 28375 start -->		
+				<p:commandButton
+						value="#{lbl['lbl.fl.yep.proceed']}" 
+						action="#{flOrderBB.carryForward(BpmOutcomeConstant.proceed)}" 
+                        disabled="#{!(flOrderBB.managedBean.patCheck eq 'true')}">
+						<f:param name="actionName" value="#{BpmOutcomeConstant.proceed}" />
+					</p:commandButton>
+				<!-- 28375 end -->
+					
+									<p:commandButton
+						value="#{lbl['lbl.fl.yep.carryForward']}" 
+						action="#{flOrderBB.carryForward(BpmOutcomeConstant.carryForward)}" 
+						disabled="#{flOrderBB.managedBean.iscarryForward eq 'true'}" >
+						<f:param name="actionName" value="#{BpmOutcomeConstant.carryForward}" />
+					</p:commandButton>
+					
+					<p:commandButton value="#{lbl['lbl.fl.yep.cancel']}" immediate="true"  
+					action="#{flOrderBB.cancelCarryForwardAction(BpmOutcomeConstant.bpmCancelYEP)}"
+					disabled="#{flOrderBB.managedBean.progressStatus eq '4'}"/>
+			</c:if>
+					
+					
+					<!-- #28375- Ending -->
+					<!-- #28374	Vinod Start -->
+					<c:if test='#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancelYEP}'>
+					<p:commandButton value="#{lbl['lbl.fl.yep.cancel']}" immediate="true"  
+					action="#{flOrderBB.cancelCarryForwardAction(BpmOutcomeConstant.bpmCancelYEP)}"
+					disabled="#{flOrderBB.managedBean.progressStatus eq '4'}"/>
+					</c:if>
+					<!-- #28374	Vinod End -->
+					<!-- start 29442 -->
+					<p:commandButton value="#{lbl['lbl.fl.general.save']}" immediate="true" action="#{flOrderBB.saveCloseManual}" 
+					process="@form" partialSubmit="true" rendered='#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmCloseManual || flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.carryForward}'
+					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/>
+					<!-- end 29442 -->
+					<!-- #28375- Ending -->
+					<p:commandButton value="#{lbl['lbl.btn.close.manual.pay']}" immediate="true" action="#{flOrderBB.closeManualPayment}" 
+					process="@form" partialSubmit="true" rendered='#{(flOrderBB.managedBean.yep) and !(flOrderBB.managedBean.buttonVal eq "AP58")
+					and (flOrderBB.managedBean.getButtonVal() != BpmOutcomeConstant.bpmView)
+					and !(flOrderBB.managedBean.buttonVal eq "NONAP58") and !(flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.carryForward)}'
+					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/>
+					<!-- edit render -->
+					
+					<p:commandButton value="#{lbl['lbl.fl.general.save']}" immediate="true" action="#{flOrderBB.saveAP58}" 
+					process="@form" partialSubmit="true" rendered='#{flOrderBB.managedBean.buttonVal eq "AP58"}'
+					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/>
+					
+					<p:commandButton value="#{lbl['lbl.fl.general.proceed']}" immediate="true" action="#{flOrderBB.submitAP58}" 
+					process="@form" partialSubmit="true" rendered='#{flOrderBB.managedBean.buttonVal eq "AP58"}'
+					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/>
+					<!-- end 28377 -->
+					<!-- start 29440 -->
+					<p:commandButton value="#{lbl['lbl.fl.general.proceed']}" immediate="true" action="#{flOrderBB.proceedNonAP58}" 
+					process="@form" partialSubmit="true" rendered='#{flOrderBB.managedBean.buttonVal eq "NONAP58"}'
+					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/>
+					<!-- end 29440 -->
+				</td>
+				</c:if>
+				<c:if test='#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}'>
+				<td colspan="4" style="text-align: right"><p:commandLink
+						rendered="#{!flOrderBB.managedBean.isHyperLinkPage()}"
+						value="#{lbl['lbl.td.doc.trackingDiary']}"
+						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(flOrderBB.managedBean.fulfilmentOrder.docType,flOrderBB.managedBean.fulfilmentOrder.fulfilmentOrderId)}"
+						immediate="true" />&#160;
+				</td>
+				</c:if>
+				<h:panelGroup id="printButton">
+				<td style="text-align: right; width: 30px;"><p:commandLink
+						value="#{lbl['lbl.btn.print']}" ajax="false">
+						<p:fileDownload
+							value="#{flDocumentBackingBean.generateReport(flOrderBB.managedBean.fulfilmentOrder.docType,flOrderBB.managedBean.fulfilmentOrder.docNo,flDocumentManagedBean.taxable)}" />
+					</p:commandLink>
+				</td>
+				</h:panelGroup>
+			</tr>
+		</table>
+		
+		<ui:include src="poReviewHeaderPage.xhtml" />
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<td width="20%" valign="top" class="sidemenutd"><p:tabMenu
+						styleClass="sidemenu"
+						activeIndex="#{flOrderBB.managedBean.selectedTabIndex}">
+						<p:menuitem value="#{lbl['lbl.fl.menu.general']}" update="@form">
+							<f:setPropertyActionListener
+								target="#{flOrderBB.managedBean.selectedTabIndex}" value="0" />
+						</p:menuitem>
+						<p:menuitem value="#{lbl['lbl.fl.menu.order.summary']}" update="@form"  actionListener="#{flOrderBB.onTabChange(1)}">
+							<f:setPropertyActionListener
+								target="#{flOrderBB.managedBean.selectedTabIndex}" value="1" />
+						</p:menuitem>
+					</p:tabMenu></td>
+
+				<td width="80%"><p:outputPanel
+						rendered="#{flOrderBB.managedBean.selectedTabIndex == 0}">
+						<ui:include src="poGeneral.xhtml" />
+					</p:outputPanel> <p:outputPanel
+						rendered="#{flOrderBB.managedBean.selectedTabIndex == 1}">
+						<ui:include src="poItem.xhtml" />
+					</p:outputPanel></td>
+			</tr>
+		</table>
+		<p:dialog id="gfmasErrorDlg" header="#{lbl['lbl.fl.integration.exception.details']}" widgetVar="gfmasError" width="80%"
+			showEffect="fade" hideEffect="fade" modal="true" resizable="false">
+			<table style="width: 100%">
+				<tr>
+					<td><p:messages id="gfmasMsg" showSummary="false" escape="false" showDetail="true" autoUpdate="true" closable="true" severity="error,info" /></td>
+				</tr>
+			</table>
+			<p:spacer height="2px"></p:spacer>
+			<div style="width: 100%; text-align: right">
+				<p:commandButton value="#{lbl['lbl.btn.close']}" oncomplete="gfmasError.hide();"/>
+			</div>
+		</p:dialog>		
+		<ac:disciplinaryActionHistory voList="#{flOrderBB.managedBean.disciplineVOs}" 
+		dialogHeader="#{lbl['lbl.sm.view.details.disciplinary.action.headerlbl']}" dialogWidth="800px" dialogHeight="400px" btnView="true" />	
+	</ui:define>
+</ui:composition>

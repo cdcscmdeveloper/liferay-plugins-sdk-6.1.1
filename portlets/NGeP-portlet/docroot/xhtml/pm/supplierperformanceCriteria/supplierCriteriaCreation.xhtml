@@ -1,0 +1,39 @@
+<ui:composition	
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	
+   <p:panel header="#{lbl['lbl.pm.criteria.title']}" toggleable="true">
+	<p:spacer height="10"></p:spacer>
+			
+	<table style="width:100%;">
+	  <tr>	  	
+		<td style="width:16%;"><p:outputLabel value="#{lbl['lbl.pm.criteria.code']}" />
+			<p:outputLabel value="*" styleClass="mandatory" /></td>
+		<td><p:inputText id="SupplierCriteriaCode" styleClass="ppDisplayTextM" style="text-transform:uppercase" label="#{lbl['lbl.pm.criteria.code']}"
+			value="#{supplierCriteriaBackingBean.managedBean.pmSupplierCriteria.supplierCriteriaCode}" required="true"
+		    disabled="#{!supplierCriteriaBackingBean.managedBean.pmSupplierCriteria.brandNew}" size="30" maxlength="10" />
+		</td>
+	  </tr>	
+	  <tr>
+		<td><p:outputLabel value="#{lbl['lbl.pm.criteria.name']}" />
+			<p:outputLabel value="*" styleClass="mandatory" /></td>
+		<td><p:inputText id="SupplierCriteriaName" styleClass="ppDisplayTextM" required="true" value="#{supplierCriteriaBackingBean.managedBean.pmSupplierCriteria.supplierCriteriaName}" 
+			 size="30" maxlength="100" label="#{lbl['lbl.pm.criteria.name']}" />
+	  </td>
+	  </tr>
+	   <tr> 
+		<td><p:outputLabel value="#{lbl['lbl.pm.search.status']}" /></td>
+     	<td><p:selectOneMenu style="width:178px;margin-bottom:5px;" value="#{supplierCriteriaBackingBean.managedBean.pmSupplierCriteria.recordStatusFlg}"
+     			disabled="#{supplierCriteriaBackingBean.managedBean.pmSupplierCriteria.brandNew}" > 
+    	    	<f:selectItems value="#{supplierCriteriaBackingBean.getStatusList()}"></f:selectItems>   	   
+    	    </p:selectOneMenu></td>				
+	    </tr>
+	</table>
+   </p:panel>	
+</ui:composition>

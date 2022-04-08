@@ -1,0 +1,169 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<h:outputText value="#{ccListOfCircularRptBB.managedBean.reportUrl}" /><br/><br/>
+	<table style="width: 100%;">
+		<tr>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.ministry']}" /></td>
+			<td colspan="3">
+				<ac:lov id="lovCtMinistry"
+					lovId="PM_ORG_PROFILE_REPORT" size="100" update="@form"
+					disabled="#{ccListOfCircularRptBB.managedBean.disableMinistryField}"
+					readonly="true" headerText="#{lbl['lbl.ct.ministry']}"
+					value="#{ccListOfCircularRptBB.managedBean.selectedMinistry.pmOrgValidity.orgName}"
+					saveObject="ccListOfCircularRptBB.managedBean.selectedMinistry"
+					postUpdateListener="ccListOfCircularRptBB.onChangeMinistry"
+					conditionField="#{ccListOfCircularRptBB.constructMinistryConditionFields()}" /></td>
+		</tr>
+		<tr>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.jabatan']}" /></td>
+			<td colspan="3">
+				<ac:lov id="lovCtKumpulanPTJ"
+					lovId="PM_ORG_PROFILE_REPORT" size="100" update="@form"
+					headerText="#{lbl['lbl.ct.jabatan']}" readonly="true"
+					disabled="#{ccListOfCircularRptBB.managedBean.selectedMinistry==null or ccListOfCircularRptBB.managedBean.disableOrgField}"
+					value="#{ccListOfCircularRptBB.managedBean.selectedKumpulanPTJ.pmOrgValidity.orgName}"
+					saveObject="ccListOfCircularRptBB.managedBean.selectedKumpulanPTJ"
+					conditionField="#{ccListOfCircularRptBB.constructKumpulanPTJConditionFields()}"
+					postUpdateListener="ccListOfCircularRptBB.onChangeKumpulanPTJ" /></td>
+		</tr>
+		<tr>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.ptj']}" /></td>
+			<td colspan="3">
+				<ac:lov id="lovCtPTJ"
+					lovId="PM_ORG_PROFILE_REPORT" readonly="true" size="100"
+					headerText="#{lbl['lbl.ct.ptj']}" update="@form"
+					disabled="#{ccListOfCircularRptBB.managedBean.selectedKumpulanPTJ==null or ccListOfCircularRptBB.managedBean.disableOrgField}"
+					value="#{ccListOfCircularRptBB.managedBean.selectedPTJ.pmOrgValidity.orgName}"
+					saveObject="ccListOfCircularRptBB.managedBean.selectedPTJ"
+					conditionField="#{ccListOfCircularRptBB.constructPTJConditionFields()}" /></td>
+		</tr>
+		<tr>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.contract.no']}" /></td>
+			<td>
+				<p:inputText value="#{ccListOfCircularRptBB.managedBean.contractNo}"  maxlength="17" style="width:300px">
+					<p:ajax event="blur" partialSubmit="true" />
+				</p:inputText>
+			</td>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.physical.no']}" /></td>
+			<td colspan="2">
+				<p:inputText value="#{ccListOfCircularRptBB.managedBean.contractPhysicalNo}"  maxlength="100" style="width:300px">
+					<p:ajax event="blur" partialSubmit="true" />
+				</p:inputText>
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.physical.contract.no']}" />
+			</td>
+		</tr>
+		<tr>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.loa.no']}" /></td>
+			<td>
+				<p:inputText value="#{ccListOfCircularRptBB.managedBean.loaNo}"  maxlength="17" style="width:300px">
+					<p:ajax event="blur" partialSubmit="true" />
+				</p:inputText>
+			</td>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.loa.physical.no']}" /></td>
+			<td colspan="2">
+				<p:inputText value="#{ccListOfCircularRptBB.managedBean.loaPhysicalNo}"  maxlength="100" style="width:300px">					
+					<p:ajax event="blur" partialSubmit="true" />
+				</p:inputText>
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.loa.physical.no']}" />
+			</td>
+		</tr>
+		<tr>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.agreement']}" /></td>
+			<td>
+				<p:selectOneMenu value="#{ccListOfCircularRptBB.managedBean.agreement}" style="width:300px">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.all']}" itemValue="#{null}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0"></f:selectItem>
+					<p:ajax event="change" partialSubmit="true" />
+				</p:selectOneMenu>
+			</td>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.proc.method']}" /></td>
+			<td>
+				<p:selectOneMenu value="#{ccListOfCircularRptBB.managedBean.procurementMode}" style="width:300px">
+					<f:selectItems value="#{ccListOfCircularRptBB.getProcurementModeDropdownValues()}" />
+					<p:ajax event="change" partialSubmit="true" />
+				</p:selectOneMenu>
+			</td>
+		</tr>
+		<tr>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.status']}" /></td>
+			<td>
+				<p:selectOneMenu value="#{ccListOfCircularRptBB.managedBean.status}" style="width:300px">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.all']}" itemValue="#{null}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.ct.effective']}" itemValue="1"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.ct.inactive']}" itemValue="2"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.ct.expired']}" itemValue="3"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.ct.terminated']}" itemValue="4"></f:selectItem>
+					<p:ajax event="change" partialSubmit="true" />
+				</p:selectOneMenu>		
+			</td>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.contract.eff.date.from']}" /></td>
+			<td>
+				<table><tr>
+					<td class="columnDateFromClass">
+						<p:calendar showOn="button" navigator="true" display="inline" readonlyInput="true"
+							value="#{ccListOfCircularRptBB.managedBean.fromDate}" size="9"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							partialSubmit="true" process="@form">
+						</p:calendar>
+					</td>
+					<td class="columnDateToClass"><p:outputLabel value="#{lbl['lbl.ct.date.range.to']}" style="width:55px;" /></td>
+					<td>
+						<p:calendar showOn="button" navigator="true"
+							display="inline" readonlyInput="true"
+							value="#{ccListOfCircularRptBB.managedBean.toDate}" size="9"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							partialSubmit="true" process="@form">
+						</p:calendar>
+					</td>
+				</tr></table>
+			</td>
+		</tr>
+		<tr>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.physical.circular.no']}" /></td>
+			<td>
+				<p:inputText value="#{ccListOfCircularRptBB.managedBean.circularNo}"  maxlength="60" style="width:300px">
+					<p:ajax event="blur" partialSubmit="true" />
+				</p:inputText>
+			</td>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.circular.central.name']}" /></td>
+			<td>
+				<p:inputText value="#{ccListOfCircularRptBB.managedBean.circularName}"  maxlength="500" style="width:300px">
+					<p:ajax event="blur" partialSubmit="true" />
+				</p:inputText>
+			</td>
+		</tr>
+		<tr>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.circular.eff.date.from']}" /></td>
+			<td>
+				<table><tr>
+					<td class="columnDateFromClass">
+						<p:calendar showOn="button" navigator="true" display="inline" readonlyInput="true"
+							value="#{ccListOfCircularRptBB.managedBean.circularEffFromDate}" size="9"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							partialSubmit="true" process="@form">
+						</p:calendar>
+					</td>
+					<td class="columnDateToClass"><p:outputLabel value="#{lbl['lbl.ct.date.range.to']}" style="width:55px;" /></td>
+					<td>
+						<p:calendar showOn="button" navigator="true"
+							display="inline" readonlyInput="true"
+							value="#{ccListOfCircularRptBB.managedBean.circularEffToDate}" size="9"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							partialSubmit="true" process="@form">
+						</p:calendar>
+					</td>
+				</tr></table>
+			</td>
+		</tr>
+	</table>
+	<br/>
+	<ac:generateReport bBean="#{ccListOfCircularRptBB}"
+		reportMainBean="#{ctReportBB}">
+	</ac:generateReport>
+</ui:composition>

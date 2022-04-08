@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+
+<faces-config version="2.0" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+
+		<navigation-case>
+			<from-outcome>createDo</from-outcome>
+			<to-view-id>/xhtml/fl/deliveryorder/doBasePage.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>flOrder</from-outcome>
+			<to-view-id>/xhtml/fl/dopending/flOrder.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>MaintainPR</from-outcome>
+			<to-view-id>/xhtml/fl/purchaserequest/prBasePage.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>MaintainCR</from-outcome>
+			<to-view-id>/xhtml/fl/contractrequest/crPrerender.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>MaintainPO</from-outcome>
+			<to-view-id>/xhtml/fl/purchaseorder/poBasePage.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>MaintainCO</from-outcome>
+			<to-view-id>/xhtml/fl/contractorder/coBasePage.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>MaintainDO</from-outcome>
+			<to-view-id>/xhtml/fl/deliveryorder/doBasePage.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>MaintainINV</from-outcome>
+			<to-view-id>/xhtml/fl/invoice/invBasePage.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>MaintainFRN</from-outcome>
+			<to-view-id>/xhtml/fl/receivednote/frnBasePage.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>stopInstr</from-outcome>
+			<to-view-id>/xhtml/fl/stopInstruction/siBasePage.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>flDocSearch</from-outcome>
+			<to-view-id>/xhtml/fl/docsearch/flDocSearch.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>searchYearEndProcess</from-outcome>
+			<to-view-id>/xhtml/fl/yep/search/searchYearEndProcess.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>				
+	</navigation-rule>
+	
+	<managed-bean>
+		<description>Fulfilment Status Constants</description>
+		<managed-bean-name>FulfilmentStatusCont</managed-bean-name>
+		<managed-bean-class>my.ep.constant.fl.FulfilmentStatusConst</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<description>Fulfilment Constants</description>
+		<managed-bean-name>FulfilmentConst</managed-bean-name>
+		<managed-bean-class>my.ep.constant.fl.FulfilmentConst</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<description>Fulfilment Report Constants</description>
+		<managed-bean-name>FlReportConst</managed-bean-name>
+		<managed-bean-class>my.ep.web.constant.report.FlReportConst</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
+</faces-config>
+

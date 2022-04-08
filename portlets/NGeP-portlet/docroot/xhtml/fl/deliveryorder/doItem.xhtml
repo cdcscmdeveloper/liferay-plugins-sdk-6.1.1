@@ -1,0 +1,566 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<p:panel header="#{lbl['lbl.fl.delivery.address']}"  toggleable="true" styleClass="doPnlClass">
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}"/>
+		<br/>
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.del.address']}" escape="false"/>
+		<p:commandLink oncomplete="uomRefDialog.show();" value="#{lbl['lbl.fl.instruction.here']}" style="font-size:10px;font-style:italic"
+					action="#{createDOBackingBean.resetMeasurementSearch}" process="@this"
+					update=":form:uomRefDlg"/>
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.del.address2']}" />
+		<p:dataTable id="doDelAddress" var="doDelAddress"
+			styleClass="orderSummaryChange hide-column-names "
+			rowIndexVar="index" rowKey="#{doDelAddress}"
+			value="#{createDOBackingBean.managedBean.fulfilmentRequest.flDeliveryAddresses}">
+			<ac:paginator for="doDelAddress" />
+			<p:ajax event="rowToggle" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+			<p:column style="width:2%">
+				<p:rowToggler />
+			</p:column>
+			<p:column rowspan="2" width="2%">
+				<p:selectBooleanCheckbox
+					value="#{doDelAddress.flTempDoAddr.selected}" disabled="#{doDelAddress.suppDelOrdNoEnabled eq 'false' or createDOBackingBean.managedBean.orderDisabledForSdCheck eq 'true'}">
+					<p:ajax onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+					listener="#{createDOBackingBean.delAddressSelect(doDelAddress)}" 
+					update="expDelDate,supplierDoRefNo,addRemarkBtn,@(.delQtyTxt)"/>	
+					<p:ajax update="@(.delAmountTxt)"/>
+				</p:selectBooleanCheckbox>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.fl.delivery.address']}" 
+				style="white-space:normal;width:270px" >
+				<h:outputText
+					value="#{createDOBackingBean.getFullAddress(doDelAddress.flAddress)}" />
+			</p:column>
+			<p:column style="white-space:normal;width:240px;" headerText="#{lbl['lbl.fl.delivery.date']}" >
+				<h:outputText value="#{lbl['lbl.fl.do.start.date']}" />
+				<p:spacer width="2"/>
+				<p:inputText size="7" disabled="true"
+					value="#{doDelAddress.startDate}">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</p:inputText>
+				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.del.start.date']}"/>
+				<br />
+				<h:outputText value="#{lbl['lbl.fl.do.end.date']}" />
+				<p:spacer width="5"/>
+				<p:inputText size="7" disabled="true"
+					value="#{doDelAddress.endDate}">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</p:inputText>
+				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.del.end.date']}"/>
+				<br />
+				<h:outputText value="*" styleClass="mandatory" />
+				<h:outputText value="#{lbl['lbl.fl.exp.del.date']}" />
+				<p:spacer width="2"/>
+				<p:calendar mode="popup" readonlyInput="true" id="expDelDate"
+						showOn="button" size="10"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						mindate="#{doDelAddress.startDate}" 
+						disabled="#{createDOBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or doDelAddress.suppDelOrdNoEnabled eq 'false' or createDOBackingBean.managedBean.orderDisabledForSdCheck eq 'true' or doDelAddress.flTempDoAddr.delAddressSelected eq 'false'}"
+						value="#{doDelAddress.flTempDoAddr.estDeliveryDate}">
+						<p:ajax event="dateSelect" process="@this" update="@this,:form:messages" listener="#{createDOBackingBean.validateEstDate(doDelAddress)}"/>
+					</p:calendar><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.exp.del.date']}"/>
+			</p:column>
+			<p:column style="white-space:normal;" headerText="#{lbl['lbl.fl.del.delivery.ord.no']}">
+				<h:outputText value="*" styleClass="mandatory" />
+				<h:outputText value="#{lbl['lbl.fl.do.supp.do.no']}" />
+				<br />
+				<p:inputText size="37" maxlength="30" id="supplierDoRefNo"
+					value="#{doDelAddress.flTempDoAddr.supplierDoRef}"
+					style="text-align:left" 
+					disabled="#{doDelAddress.suppDelOrdNoEnabled eq 'false' or createDOBackingBean.managedBean.orderDisabledForSdCheck eq true or doDelAddress.flTempDoAddr.delAddressSelected eq 'false'}"
+					onkeypress="if (event.keyCode == 13) { orderNo.jq.click(); return false; }" widgetVar="orderNo"
+					validatorMessage="#{lbl['lbl.fl.do.supp.do.no']} - #{lbl['lbl.txt.special.char']}">
+					<f:validateRegex pattern="^[a-zA-Z0-9~`!@#\$%\^&amp;\*\(\)_\-\+={\[\}\]\|\\:;&quot;'&lt;,>\.\?\/  ]*$" />
+					<p:ajax update="@this"/> </p:inputText>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.del.order.no']}"/>
+				<p:commandLink oncomplete="addRemarks.show();" id="addRemarkBtn"
+					action="#{fulfilmentBackingBean.openAttachmentPage(doDelAddress)}"
+					disabled="#{doDelAddress.suppDelOrdNoEnabled eq 'false' or createDOBackingBean.managedBean.orderDisabledForSdCheck eq 'true' or doDelAddress.flTempDoAddr.delAddressSelected eq 'false'}"
+					update=":form:addRemarmAttachmentDialog">
+					<f:setPropertyActionListener
+						target="#{createDOBackingBean.managedBean.selectedDelAddr}"
+						value="#{doDelAddress}" />
+					<p:graphicImage value="/css/images/design/attach.png"
+						title="#{lbl['lbl.ct.panel.remarks.attachment']}" />
+				</p:commandLink>
+				&#160;&#160;
+				<p:commandLink oncomplete="submittedDoList.show();" process="@this" value="#{lbl['lbl.fl.do.view.list']}" 
+					action="#{createDOBackingBean.getSubmittedDoList(doDelAddress)}"
+					update=":form:submittedDoListDialog">
+				</p:commandLink>
+			</p:column>
+			
+			<p:rowExpansion>
+				<p:dataTable id="doItems" var="doItems"
+					value="#{doDelAddress.flFulfilmentItemAddr}" rowIndexVar="index"
+					rowKey="#{flItem}"
+					styleClass="itemsSelectedPanel show-column-names">
+					<p:column headerText="#{lbl['lbl.fl.item']}"   style="white-space:normal">
+					<!--#21416 filter item name-->
+						<h:outputText value="#{createDOBackingBean.filterItemName(doItems.scRequestItem.itemName)}" id="itemDesc"
+						 title="#{doItems.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : doItems.scRequestItem.itemDesc}"/>
+							<p:commandLink oncomplete="doItemInfo.show();" process="@this"
+							rendered="#{createDOBackingBean.managedBean.contractFlag}"  
+							action="#{createDOBackingBean.doItemInfoList(doItems)}"
+							update=":form:doItemInfoDialog2">
+							<ac:iconTooltip value="#{lbl['lbl.fl.request.item.info.contract']}" escape="false"/>
+							</p:commandLink>
+					</p:column>
+					<p:column style="white-space:normal;text-align:center">
+						<f:facet name="header" >
+    				 <h:outputText value="#{lbl['lbl.fl.uom']}" style="float:left;"/>
+    				</f:facet>
+						<h:outputText value="#{doItems.scRequestItem.uom.uomName}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="white-space:normal;text-align:center">
+						<h:outputText disabled="true" value="#{doItems.unitPrice}" style="float:right;">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.fl.gst.amt']}" style="white-space:normal;text-align:center">
+						<h:outputText disabled="true" value="#{doItems.doGstAmt}" style="float:right;">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.fl.unit.price.w.gst']}" style="white-space:normal;text-align:center">
+						<h:outputText disabled="true" value="#{doItems.doGstUnitPrice}" style="float:right;">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</h:outputText>
+					</p:column>
+					<p:column style="white-space:normal;text-align:center"> 
+						<f:facet name="header" >
+    				 <h:outputText value="#{lbl['lbl.fl.ordered.qty']}" style="float:right;"/>
+     					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.order.qty']}"/>
+    				</f:facet>
+						<h:outputText value="#{doItems.orderedQty}" style="float:right;">
+							<f:converter converterId="dynamicNumberConverter" />
+							<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />	
+						</h:outputText>
+					</p:column>
+					<p:column  style="white-space:normal;text-align:center">
+						<f:facet name="header" >
+    				 <h:outputText value="#{lbl['lbl.fl.do.remaining.qty']}" style="float:right;"/>
+     					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.remain.qty']}"/>
+    				</f:facet>
+						<h:outputText id="remaingQtyTxt"
+							value="#{doItems.orderedQty - doItems.sumDeliveredQty + doItems.rejectedQty}" style="float:right;">
+							<f:converter converterId="dynamicNumberConverter" />
+							<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />	
+						</h:outputText>
+					</p:column>
+					<p:column style="white-space:normal;text-align:center">
+						<f:facet name="header" >
+    				 <h:outputText value="#{lbl['lbl.fl.do.delivery.qty']}" style="float:right;"/>
+     					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.del.qty']}"/>
+    				</f:facet>
+						<h:panelGroup id="delQtyTxt" styleClass="delQtyTxt">
+							<p:inputText value="#{doItems.deliveredQty}" size="5" id="delOrderedQty" label="#{lbl['lbl.fl.do.delivery.qty']}" styleClass="colFloatRight" maxlength="14"	disabled="#{doItems.delQtyDisabled or createDOBackingBean.managedBean.isOrderDisabledForSdCheck() or doDelAddress.flTempDoAddr.delAddressSelected eq 'false'}"
+								rendered="#{createDOBackingBean.managedBean.docProcess ne 'DO'}"  style="text-align:right"
+								onkeypress="if (event.keyCode == 13) { delQty.jq.click(); return false; }" widgetVar="delQty">
+								<p:ajax event="blur" update="delQtyTxt,delAmountTxt,remaingQtyTxt" process="@this"
+									listener="#{createDOBackingBean.retrieveDelAmount(doItems)}" />
+									<f:converter converterId="dynamicNumberConverter" />
+									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
+							</p:inputText>
+							<p:message for="delOrderedQty" display="icon" />
+							<h:outputText value="#{doItems.deliveredQty}" size="5" style="float:right;"
+								rendered="#{createDOBackingBean.managedBean.docProcess eq 'DO'}">
+								<f:converter converterId="dynamicNumberConverter" />
+								<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
+							</h:outputText>
+						</h:panelGroup>
+					</p:column>
+					<p:column style="white-space:normal;text-align:center">
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.fl.delivery.amount']}" style="float:right;"/>
+							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.del.amt']}" />
+						</f:facet>
+						<h:panelGroup id="delAmountTxt" styleClass="delAmountTxt">
+							<h:outputText value="#{doItems.deliveredAmt}" disabled="true" style="float:right;"
+								rendered="#{doItems.itemType.parameterCode eq ParameterConst.itemTypeProduct}">
+								<f:convertNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+							</h:outputText>
+							<p:inputText value="#{doItems.deliveredAmt}" size="17" 
+								disabled="#{doItems.delQtyDisabled or doDelAddress.flTempDoAddr.delAddressSelected eq 'false'}"
+								maxlength="15" style="text-align:right" styleClass="colFloatRight"
+								rendered="#{doItems.itemType.parameterCode eq ParameterConst.itemTypeService}">
+								<f:convertNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+									<p:ajax event="blur" update="delAmountTxt" process="@this"
+									listener="#{createDOBackingBean.retrieveDelAmount(doItems)}" />
+							</p:inputText>
+						</h:panelGroup>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.fl.ordered.amount']}" style="white-space:normal;text-align:center">
+						<h:outputText value="#{doItems.orderedAmt}" style="float:right;">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</h:outputText>
+					</p:column>
+					<p:column style="white-space:normal;text-align:center;">
+						<f:facet name="header" >
+    				 <h:outputText value="#{lbl['lbl.fl.received.qty']}" style="float:right;"/>
+     					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.received.qty']}"/>
+    				</f:facet>
+						<h:outputText value="#{doItems.chargeReceivedQty}" style="float:right;">
+							<f:converter converterId="dynamicNumberConverter" />
+							<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.fl.do.received.amount']}"
+						style="white-space:normal;text-align:center;">
+						<h:outputText value="#{doItems.chargeReceivedAmt}" style="float:right;">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</h:outputText>
+					</p:column>
+					<p:column style="white-space:normal;text-align:center;">
+						<f:facet name="header" >
+    				 <h:outputText value="#{lbl['lbl.fl.do.rejected.qty']}" style="float:right;"/>
+     					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.rejected.qty']}"/>
+    				</f:facet>
+						<h:outputText value="#{doItems.rejectedQty}" style="float:right;">
+							<f:converter converterId="dynamicNumberConverter" />
+									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />	
+						</h:outputText>
+						<p:commandLink oncomplete="rejectionDialog.show();"
+							rendered="#{doItems.rejectedQty > 0}"
+							action="#{createDOBackingBean.retrieveRejectionData(doItems)}"
+							update=":form:rejectionDialog">
+							<f:setPropertyActionListener
+								target="#{createDOBackingBean.managedBean.selectedItemRow}"
+								value="#{doItems}" />
+							<p:graphicImage value="/css/images/design/ico-view.png"  styleClass="tasklist_title1"/>
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+
+			</p:rowExpansion>
+
+		</p:dataTable>
+	</p:panel>
+	<p:dialog id="addRemarmAttachmentDialog" header="#{lbl['lbl.txt.remarks']}"
+		widgetVar="addRemarks" showEffect="fade" hideEffect="fade"
+		modal="true" width="900" resizable="false">
+		<table>
+			<tr>
+				<td valign="top"><p:outputLabel
+						value="#{lbl['lbl.fl.delivery.address']}" /></td>
+				<td><p:inputTextarea cols="50" rows="3"
+						style=" margin-bottom:5px;" disabled="true" autoResize="false"
+						value="#{createDOBackingBean.getFullAddress(createDOBackingBean.managedBean.selectedDelAddr.flAddress)}" />
+				</td>
+			</tr>
+		</table>
+		<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
+			<table style="width: 100%">
+				<tr>
+					<ui:param name="deliverAddress" value="#{doDelAddress}"></ui:param>
+					<td width="50%" valign="top"><ui:include
+							src="/xhtml/fl/shared/remark.xhtml" /></td>
+					<td width="50%" valign="top"><table style="width: 100%">
+							<h:outputText styleClass="instruction"
+								value="#{lbl['lbl.fl.instruction.attachment']}" escape="false" />
+							<tr>
+								<td class="TableFieldLeft" width="24%"><h:outputLabel
+										value="#{lbl['lbl.txt.attachment']}" /></td>
+								<td class="TableFieldRight"><p:commandButton
+										oncomplete="uploadDlg.show();return false;"
+										disabled="#{fulfilmentBackingBean.managedBean.isHideRemarks()}"
+										update="lampiran" partialSubmit="true"
+										value="#{lbl['lbl.txt.attach.files']}" /></td>
+							</tr>
+							<tr>
+								<td />
+								<td><p:dataGrid id="lampiran"
+										value="#{fulfilmentBackingBean.managedBean.attachmentList}"
+										var="attachFile" rowIndexVar="attachFileIndex" columns="1"
+										style="width:100%" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" styleClass="noBorder">
+										<table>
+											<tr>
+												<td rowspan="2"><h:graphicImage
+														value="/css/images/design/#{fulfilmentBackingBean.determineIcon(attachFile)}"
+														height="30" width="30" /></td>
+												<td width="5"></td>
+												<td><h:outputText
+														value=" #{attachFile.createdUsername}"></h:outputText>, <h:outputText
+														value="#{attachFile.createdDate}">
+														<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
+													</h:outputText></td>
+											</tr>
+											<tr>
+												<td></td>
+												<td><h:commandLink value="#{attachFile.fileName}"
+														styleClass="blue_font"
+														action="#{fulfilmentBackingBean.downloadFile(attachFile)}" />
+													<p:commandLink oncomplete="delFileDlg.show()"
+														action="#{fulfilmentBackingBean.confirmDeleteAttachment(attachFileIndex)}"
+														immediate="true"
+														rendered="#{fulfilmentBackingBean.compareAttachmentUserName(attachFile.createdUsername)}"
+														update="lampiran">
+														<h:graphicImage value="/css/images/design/delete.png" styleClass="tasklist_title1" />
+													</p:commandLink></td>
+											</tr>
+										</table>
+									</p:dataGrid></td>
+							</tr>
+						</table></td>
+				</tr>
+			</table>
+		</p:panel>
+		<p:spacer height="2px"></p:spacer>
+		<div style="width: 100%; text-align: right">
+			<p:commandButton value="#{lbl['lbl.btn.ok']}" 
+				oncomplete="addRemarks.hide();" process="@this">
+			</p:commandButton>
+			<p:commandButton value="#{lbl['lbl.btn.close']}" 
+				oncomplete="addRemarks.hide();" process="@this">
+			</p:commandButton>
+		</div>
+	</p:dialog>
+
+	<p:dialog id="rejectionDialog" header="#{lbl['lbl.fl.do.rejection.history']}" 
+		widgetVar="rejectionDialog" showEffect="fade" hideEffect="fade"
+		modal="true" width="900px" resizable="false">
+		<table>
+			<tr>
+				<td width="100px"><p:outputLabel value="#{lbl['lbl.fl.item.code']}" /></td>
+				<td width="200px"><p:inputText disabled="true"
+						value="#{createDOBackingBean.managedBean.selectedItemRow.itemCode}" />
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.item.code']}"/>
+				</td>
+				<td width="10px"></td>
+				<td width="100px"><p:outputLabel value="#{lbl['lbl.fl.item.name']}" /></td>
+				<!--#21416 filter item name-->
+				<td width="300px"><p:inputText disabled="true" style="width: 400px;"
+						value="#{createDOBackingBean.filterItemName(createDOBackingBean.managedBean.selectedItemRow.scRequestItem.itemName)}" />
+				</td>
+			</tr>
+		</table>
+		<p:dataTable id="rejectionHistoryDt" var="frnItem" rowIndexVar="index"
+			rowKey="#{frnItem}"
+			value="#{createDOBackingBean.managedBean.rejectionList}">
+			<ac:paginator for="rejectionHistoryDt" />
+			<p:column>
+				<f:facet name="header" style="width:8%;">
+    				 <h:outputText value="#{lbl['lbl.fl.do.rejected.delivery.ord.no']}"/>
+     					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.rejected.del.ord.no']}"/>
+    				</f:facet>
+				<h:outputText
+					value="#{frnItem.flDelOrderItem.flDeliveryOrder.deliveryOrderNo}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.txt.remarks']}"  style="white-space:normal;">
+				<h:outputText value="#{frnItem.rejectionRemarks.get(0).remark}" rendered="#{not empty frnItem.rejectionRemarks}"/>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.fl.remark.by']}"  style="white-space:normal;">
+				<h:outputText value="#{frnItem.rejectionRemarks.get(0).createdUsername}" rendered="#{not empty frnItem.rejectionRemarks}"/>
+			</p:column>
+			<p:column >
+				<f:facet name="header" style="width:8%;">
+    				 <h:outputText value="#{lbl['lbl.fl.do.rejected.qty']}"/>
+     					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.rejected.qty']}"/>
+    				</f:facet>
+				<h:outputText value="#{frnItem.rejectedQty}">
+					<f:converter converterId="dynamicNumberConverter" />
+					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, frnItem.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" />	
+				</h:outputText>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.fl.amount']}"  style="text-align:right;">
+				<h:outputText value="#{frnItem.rejectedAmt}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+		</p:dataTable>
+		<p:spacer height="2px"></p:spacer>
+		<div style="width: 100%; text-align: right">
+			<p:commandButton value="#{lbl['lbl.btn.close']}" 
+				oncomplete="rejectionDialog.hide();">
+			</p:commandButton>
+		</div>
+	</p:dialog>
+	<p:dialog id="uploadDlg" widgetVar="uploadDlg" appendToBody="false"	resizable="false" width="700px"	height="350" 
+		styleClass="pop_up_top"	header="#{lbl['lbl.bpm.choose.file']}">
+		<p:ajax event="close" update="lampiran"/>
+		<p:fileUpload style="display:inline;"
+			fileUploadListener="#{fulfilmentBackingBean.handleFileUpload}"
+			mode="advanced" multiple="true" id="upload" sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" 
+			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+			label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload.all']}" cancelLabel="#{lbl['lbl.btn.remove.all']}" 
+			update="lampiran" >
+		</p:fileUpload>
+		<f:facet name="footer">
+			<div class="ppRightBtn">
+			    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadDlg.hide();" />
+   			</div>
+   		</f:facet>		
+	</p:dialog>
+	
+		<p:confirmDialog message="#{lbl['lbl.msg.confirm.delete']}"
+			severity="alert" widgetVar="delFileDlg" closable="true"
+			appendToBody="true" header="Delete Confirmation">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
+					partialSubmit="true" immediate="true"
+					update="lampiran"
+					action="#{fulfilmentBackingBean.deleteAttachmentAction()}"/>
+				<p:commandButton value="#{lbl['lbl.btn.no']}" 
+					onclick="delFileDlg.hide();" type="button" />
+			</div>
+		</p:confirmDialog>		
+		
+		<p:dialog id="uomRefDlg" header="#{lbl['lbl.fl.instruction.uom.table']}" 
+			widgetVar="uomRefDialog" showEffect="fade" hideEffect="fade" modal="true"
+			width="600" resizable="false">
+			<p:panel id="measurementPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
+				<h:panelGrid columns="2" >
+				        <h:outputLabel value="#{lbl['lbl.fl.uom.uomcode']}"></h:outputLabel>
+			            <p:inputText value="#{createDOBackingBean.managedBean.measurementCodes}" size="30"  
+			            onkeypress="if (event.keyCode == 13) { uomSearch.jq.click(); return false; }"/>					
+						<h:outputLabel value="#{lbl['lbl.fl.uom.uomname']}"></h:outputLabel>
+						<p:inputText value="#{createDOBackingBean.managedBean.measurementNames}" size="50" 
+						onkeypress="if (event.keyCode == 13) { uomSearch.jq.click(); return false; }"/>
+				</h:panelGrid>
+				<div align="right">
+					<p:commandButton value="#{lbl['lbl.btn.search']}"  
+							 action="#{createDOBackingBean.retrieveMeasurement}"
+						     update="measurementSR" process="measurementPanel" widgetVar="uomSearch"/>
+            		<p:commandButton value="#{lbl['lbl.btn.reset']}" 
+            				 action="#{createDOBackingBean.resetMeasurementSearch}"
+            				 process="@this" update="measurementPanel,resultPanel" />
+	  			</div>
+    			<br/>
+				<br/>
+			 </p:panel>
+			<p:panel id="resultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
+				<p:dataTable id="measurementSR" value="#{createDOBackingBean.unitOfMeasurementDataModel}"
+				rows="10" var="measurementList" rowIndexVar="index" lazy="true">	
+			   <ac:paginator for="measurementSR" />				
+		       <p:column headerText="#{lbl['lbl.fl.uom.uomcode']}" style="width:15%"> 
+					<h:outputText value="#{measurementList.uomCode}" />    
+		       </p:column>		       
+		       <p:column headerText="#{lbl['lbl.fl.uom.uomname']}" style="width:50%"> 
+					<h:outputText value="#{measurementList.uomName}" /> 
+		       </p:column>  		       
+		        <p:column headerText="#{lbl['lbl.fl.uom.uomdecimal']}" style="width:20%"> 
+					<h:outputText value="#{measurementList.decimalScale}" /> 
+		       </p:column> 		    	
+		     </p:dataTable>	
+			</p:panel>			
+		</p:dialog>
+		
+		<p:dialog id="submittedDoListDialog" header="#{lbl['lbl.fl.do.list']}"
+		widgetVar="submittedDoList" showEffect="fade" hideEffect="fade"
+		modal="true" width="600" resizable="false">
+		<p:dataTable id="submittedDoDt" var="submittedDo"
+			value="#{createDOBackingBean.managedBean.submittedDoList}"
+			rowKey="doList">
+			<ac:paginator for="submittedDoDt" />
+			<p:column headerText="#{lbl['lbl.fl.frn.do.no']}" style="text-align:center">
+				<h:outputText value="#{submittedDo.deliveryOrderNo}" style="float:left;"/>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.fl.do.supp.do.no']}" style="text-align:center">
+				<h:outputText value="#{submittedDo.supplierDoRef}" style="float:left;"/>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.fl.rev.hed.status']}" style="text-align:center">
+				<h:outputText value="#{createDOBackingBean.getStatusDescById(submittedDo.status.statusId)}" style="float:left;"/>
+			</p:column>
+		</p:dataTable>
+		<div style="width: 100%; text-align: right">
+			<p:commandButton value="#{lbl['lbl.btn.close']}" process="@this"
+				oncomplete="submittedDoList.hide()" partialSubmit="true">
+			</p:commandButton>
+		</div>
+	</p:dialog>
+	
+	<!-- 28855 Start -->
+	<p:dialog id="doItemInfoDialog2" header="#{lbl['lbl.fl.do.item']}"
+		widgetVar="doItemInfo" showEffect="fade" hideEffect="fade"
+		modal="true" width="900" height="400" resizable="false" style="overflow:scroll">
+		<table style="width: 100%">
+			<tr>
+				<td valign="top" width="25%"><p:outputLabel value="#{lbl['lbl.fl.item.name']} :&#160;" /></td>
+				<td><h:outputText style="float:left;"
+						value="#{createDOBackingBean.managedBean.itemName}"	/>
+				</td>
+						
+			</tr>		
+			<tr>
+				<td valign="top" width="25%"><p:outputLabel value="#{lbl['lbl.fl.supp.offer']} :&#160;" rendered="#{createDOBackingBean.managedBean.dpFlag}"/></td>
+				<td><h:outputText style="float:left;" rendered="#{createDOBackingBean.managedBean.dpFlag}" escape="false" 
+						value="#{createDOBackingBean.managedBean.supplierOffer == null ? lbl['lbl.fl.supp.na'] : createDOBackingBean.managedBean.supplierOffer}" />
+				</td>
+			</tr>			
+			<tr>
+				<td valign="top" width="25%"><p:outputLabel value="#{lbl['lbl.fl.new.supp.offer']} :&#160;" rendered="#{createDOBackingBean.managedBean.dpFlag}"/></td>
+				<td><h:outputText style="float:left;" rendered="#{createDOBackingBean.managedBean.dpFlag}"
+						value="#{createDOBackingBean.managedBean.newOfferedSpec == null ? lbl['lbl.fl.supp.na'] : createDOBackingBean.managedBean.newOfferedSpec}" />
+				</td>
+			</tr>
+			</table> 
+			<p:dataTable id="specificationDt2" var="specificationList"
+			value="#{createDOBackingBean.managedBean.itemSpecList}" width="100%">
+			<ac:paginator for="specificationDt" />
+			
+			<p:column headerText="#{lbl['lbl.fl.spec']}" style="text-align:center" 
+			rendered="#{createDOBackingBean.managedBean.dpFlag}">
+			<p:inputTextarea disabled="true" rendered="#{createDOBackingBean.managedBean.dpFlag}" styleClass="colFloatLeft"
+						value="#{specificationList.itemSpec}" cols="135" rows="2" style="width: 100% !important;"/>
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.fl.spec']}" style="text-align:center"
+			rendered="#{!createDOBackingBean.managedBean.dpFlag}">			
+			<p:inputTextarea cols="41" rows="10" id="itemSpecification"
+						rendered="#{!createDOBackingBean.managedBean.dpFlag}"
+						styleClass="colFloatLeft"
+						autoResize="false"
+						style="width: 96% !important; margin-left:0px;" 
+						disabled="true"
+						value="#{specificationList.itemSpec == null ? lbl['lbl.fl.supp.na'] : specificationList.itemSpec}" /> 
+			</p:column>
+			<p:column headerText="#{lbl['lbl.fl.supp.offer']}" style="text-align:center"
+						rendered="#{!createDOBackingBean.managedBean.dpFlag}">
+			<p:inputTextarea cols="41" rows="10" id="supplierOffer"
+						rendered="#{!createDOBackingBean.managedBean.dpFlag}"
+						styleClass="colFloatLeft"
+						autoResize="false"
+						style="width: 96% !important; margin-left:0px;" 
+						disabled="true"
+						value="#{specificationList.supplierOffer == null ? lbl['lbl.fl.supp.na'] : specificationList.supplierOffer}" /> 
+			</p:column>
+			<p:column headerText="#{lbl['lbl.fl.new.offer.spec']}" style="text-align:center"
+						rendered="#{!createDOBackingBean.managedBean.dpFlag}">
+			<p:inputTextarea cols="41" rows="10" id="newOfferedSpec"
+						rendered="#{!createDOBackingBean.managedBean.dpFlag}"
+						styleClass="colFloatLeft"
+						autoResize="false"
+						style="width: 96% !important; margin-left:0px;" 
+						disabled="true"
+						value="#{specificationList.newOfferSpec == null ? lbl['lbl.fl.supp.na'] : specificationList.newOfferSpec}" /> 
+			</p:column>
+			
+			</p:dataTable>
+			
+			<p:spacer height="2px"></p:spacer>
+			<div style="width: 100%; text-align: right">
+				<p:commandButton value="#{lbl['lbl.btn.close']}" process="@this"
+					oncomplete="doItemInfo.hide()" partialSubmit="true">
+				</p:commandButton>
+			</div> 
+			
+		</p:dialog>
+		<!-- 28855 End -->
+</ui:composition>

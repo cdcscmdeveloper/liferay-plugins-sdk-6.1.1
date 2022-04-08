@@ -1,0 +1,103 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+	<p:panel id="userGroupSearch" header="#{lbl['lbl.pm.sa.search']}"
+		toggleable="true">
+
+		<table class="ppTwoTable">			
+			<tr>
+				<th><p:outputLabel value="#{lbl['lbl.pm.ug.search.role']}" />
+				<p:outputLabel value="*" styleClass="mandatory" /></th>
+				<td><p:selectOneMenu id="somusergrouproles" style="width:230px;margin-bottom:5px;"
+						required="true"
+						label="#{lbl['lbl.pm.ug.search.role']}"
+						value="#{usergroupBackingBean.managedBean.usergroupSearchBean.role}">
+						<f:selectItems
+							value="#{usergroupBackingBean.getUserGroupRoles()}"></f:selectItems>
+					</p:selectOneMenu></td>
+				<th>&#160;</th>
+				<td>&#160;</td>
+			</tr>
+			<!-- 12852 Start -->
+			<tr>
+				<th width="20%"><h:outputLabel
+						value="#{lbl['lbl.pm.ug.result.groupcode']}"></h:outputLabel></th>
+				<td><p:inputText
+						value="#{usergroupBackingBean.managedBean.usergroupSearchBean.groupCode}" size="10"
+						styleClass="ppDisplayTextS"
+						style="text-transform: uppercase" maxlength="10" /></td>
+				<th>&#160;</th>
+				<td>&#160;</td>
+			</tr>
+			<!-- 12852 End -->
+			<tr>
+				<th width="20%"><h:outputLabel
+						value="#{lbl['lbl.pm.ug.result.groupname']}"></h:outputLabel></th>
+				<td><p:inputText
+						value="#{usergroupBackingBean.managedBean.usergroupSearchBean.groupName}" size="30"
+						maxlength="50" /></td>
+				<th>&#160;</th>
+				<td>&#160;</td>
+			</tr>
+			<!-- 12852 Start -->
+			<tr>
+				<th width="20%"><h:outputLabel
+						value="#{lbl['lbl.pm.ug.search.ptjcode']}"></h:outputLabel></th>
+				<td><p:inputText maxlength="8" 
+						value="#{usergroupBackingBean.managedBean.usergroupSearchBean.ptjCode}" size="9" styleClass="ppDisplayTextS"/></td>
+				<th>&#160;</th>
+				<td>&#160;</td>
+			</tr>
+			<!-- 12852 End --> 
+			<tr>
+				<th width="20%"><h:outputLabel
+						value="#{lbl['lbl.pm.ug.search.ptjname']}"></h:outputLabel></th>
+				<td><p:inputText maxlength="100" 
+						value="#{usergroupBackingBean.managedBean.usergroupSearchBean.ptjName}" size="30" /></td>
+				<th>&#160;</th>
+				<td>&#160;</td>
+			</tr>
+			<tr>
+				<th width="20%"><h:outputLabel
+						value="#{lbl['lbl.pm.ug.search.name']}"></h:outputLabel></th>
+				<td><p:inputText maxlength="80" 
+						value="#{usergroupBackingBean.managedBean.usergroupSearchBean.userName}" size="30" /></td>
+				<th>&#160;</th>
+				<td>&#160;</td>
+			</tr>
+			<tr>
+				<th width="20%"><h:outputLabel
+						value="#{lbl['lbl.pm.search.status']}">
+					</h:outputLabel></th>
+				<td><p:selectOneMenu style="width:203px"
+						value="#{usergroupBackingBean.managedBean.usergroupSearchBean.status}">
+						<f:selectItems
+							value="#{usergroupBackingBean.getUserGroupStatus()}" />
+					</p:selectOneMenu></td>
+
+				<th>&#160;</th>
+				<td>&#160;</td>
+			</tr>
+
+			<tr>
+				<td colspan="4" width="100%">
+					<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.btn.search']}"
+							action="#{usergroupBackingBean.searchUserGroupAction}"
+							update=":form:searchGroupProfile"
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+						<p:commandButton value="#{lbl['lbl.btn.reset']}"
+							update="userGroupSearch,:form:searchGroupProfile" process="@this"
+							partialSubmit="true" action="#{usergroupBackingBean.reset}" />
+					</div>
+				</td>
+			</tr>
+		</table>
+	</p:panel>
+</ui:composition>

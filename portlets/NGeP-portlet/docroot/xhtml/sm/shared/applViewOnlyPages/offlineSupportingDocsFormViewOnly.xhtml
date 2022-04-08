@@ -1,0 +1,380 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<script>
+		function printDiv() {
+			newWin = window.open();
+
+			var divToPrint = document.getElementById('printArea');
+			newWin.document.write(divToPrint.innerHTML);
+
+			var style = newWin.document.createElement('style');
+			style.type = 'text/css';
+			style.innerHTML = '.ui-panel-title{font-family: Arial;margin: 0 0 0 5px !important;border: 0px !important;border-radius: 0px !important;background: none !important;color: #5BA218;font-size: 12px !important;font-weight: bold;}.ui-panel-titlebar{padding: 2px 0 3px 5px !important;background: none !important;height: 19px !important;border-radius: 0px;text-transform: uppercase;}.ui-outputlabel{display: inline-block;text-align: left !important;font-size: 12px;vertical-align: middle;padding: 0 10px 0 0;font-family: Arial;}table {border-collapse: collapse;border-spacing: 0;font-family: Tahoma;font-size: 11px;overflow: hidden;}.ui-datatable{font-family: Arial;color: #333333 !important;text-decoration: none;}.ui-datatable-tablewrapper{overflow: auto;}.ui-widget .ui-widget{font-size: 12px;}.ui-datatable th.ui-state-default{font-family: Arial;font-weight: bold !important;text-decoration: none;background: #F0EFEF;}thead>tr>th.ui-state-default{color: #555555 !important;font-size: 12px !important;text-align: left;}.ui-datatable thead th, .ui-datatable tbody td, .ui-datatable tfoot td{border: 1px solid #DDDDDD !important;}.ui-datatable thead th, .ui-datatable tbody td, .ui-datatable tfoot td{padding: 4px 10px;overflow: hidden;white-space: nowrap;border-width: 1px;border-style: solid;}.ui-state-default{text-shadow: none !important;box-shadow: none !important;}';
+			newWin.document.getElementsByTagName('head')[0].appendChild(style);
+
+			newWin.print();
+			newWin.close();
+		}
+	</script>
+	
+	<p:dialog id="docCheckListDlg" widgetVar="docCheckListDlg" modal="true"
+		dynamic="true" resizable="false" width="900px"
+		height="700px" styleClass="pop_up_top" 
+		header="#{lbl['lbl.sm.printchecklist.header']}">
+		<p:media value="#{viewSmApplBackingBean.getOfflineSuppDocCheckList()}" 
+			width="100%" height="700px" player="pdf" />
+		<p:panelGrid styleClass="noBorders tr,noBorders td" >
+			<p:row>
+				<p:column width="100%" style="text-align:right">
+					<p:commandButton value="#{lbl['lbl.btn.close']}"
+						onclick="docCheckListDlg.hide()" />
+				</p:column>
+			</p:row>
+		</p:panelGrid>
+	</p:dialog>
+	
+	<div id="printArea">
+	<p:panel
+		header="#{lbl['lbl.sm.suppDoc.offline.checklist.application.no']} #{viewSmApplBackingBean.managedBean.smAppl.applNo}"
+		toggleable="true">
+		
+		<ui:remove>
+			<c:if test="#{not empty viewSmApplBackingBean.managedBean.bumiRecommendationNote}">
+				<table style="width: 100%;">
+					<tr>
+						<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.bumiRecommendationNote}" 
+								style="color: green;font-weight: bold;float:left;"/></td>
+					</tr>
+				</table>
+			</c:if>
+			<br />
+		</ui:remove>
+		
+		<table style="width: 100%;">
+
+			<tr>
+				<td>
+					<h:outputText style="float:left"
+						value="#{lbl['lbl.sm.suppDoc.offline.note1']}" /> <br /> 
+					<h:outputText style="float:left"
+						value="#{lbl['lbl.sm.suppDoc.offline.note3']}" /> <br />
+				</td>
+				<td>
+					<div align="right">
+						<p:commandLink onclick="printDiv();">
+							<p:graphicImage value="/css/images/design/print.png"
+										style="margin-right:2px;" title="#{lbl['lbl.sm.printList']}"/>
+						</p:commandLink>
+					</div>
+				</td>
+			</tr>
+
+		</table>
+		<p:spacer height="10px" />
+		<table style="width: 100%;">
+			<tr>
+				<td style="width: 33%">
+					<table>
+						<tr>
+							<td><p:outputLabel style="float:left"
+									value="#{lbl['lbl.sm.suppDoc.offline.peninAddr1']}"
+									escape="false" /></td>
+						</tr>
+						<tr>
+							<td style="padding-top: 10px;"><p:outputLabel
+									style="float:left"
+									value="#{lbl['lbl.sm.suppDoc.offline.peninAddr2']}"
+									escape="false" /></td>
+						</tr>
+					</table>
+				</td>
+
+				<td style="width: 33%"><table>
+						<tr>
+							<td><p:outputLabel style="float:left"
+									value="#{lbl['lbl.sm.suppDoc.offline.sabahAddr1']}"
+									escape="false" /></td>
+						</tr>
+						<tr>
+							<td style="padding-top: 10px;"><p:outputLabel
+									style="float:left"
+									value="#{lbl['lbl.sm.suppDoc.offline.sabahAddr2']}"
+									escape="false" /></td>
+						</tr>
+					</table></td>
+				<td style="width: 33%"><table>
+						<tr>
+							<td><p:outputLabel style="float:left"
+									value="#{lbl['lbl.sm.suppDoc.offline.sarawakAddr1']}"
+									escape="false" /></td>
+						</tr>
+						<tr>
+							<td style="padding-top: 10px;"><p:outputLabel
+									style="float:left"
+									value="#{lbl['lbl.sm.suppDoc.offline.sarawakAddr2']}"
+									escape="false" /></td>
+						</tr>
+					</table></td>
+			</tr>
+		</table>
+		<p:spacer height="10px" />
+		<!-- #11641 - Start -->
+		<style>
+		.suppDocEmpty-tbl thead{
+			display:none;
+		}
+		</style>
+		<p:outputPanel id="offlineSupportDocTable">
+			<p:dataTable var="table" value="#{viewSmApplBackingBean.managedBean.smAppl.smApplSupportDocs}" id="offlineMandatoryList" 
+			rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+			
+			<p:columnGroup type="header">
+				<p:row>
+					<p:column headerText="#{lbl['lbl.sm.mandatory.suppdoc']}" colspan="5" 
+						style="background-color:PeachPuff !important;text-align: center !important;color:black !important"/>
+                </p:row>
+                <p:row>
+                	<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
+						style="width : 5%;text-align: center !important;" />
+					<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" 
+						style="width : 55%;overflow: hidden !important;" />
+					<p:column headerText="#{lbl['lbl.sm.remarks']}" 
+						style="width : 55%;overflow: hidden !important;" />
+                </p:row>
+			</p:columnGroup>	
+			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 5%;" rendered="#{table.pmDocument.mandatory}">
+				<h:outputText value="#{viewSmApplBackingBean.mandatoryCounter}"
+					style="float: left;white-space: normal;font-weight:bold;" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" style="width : 65%;" rendered="#{table.pmDocument.mandatory}">
+				<h:outputText value="#{table.pmDocument.docName}"
+					style="float: left;white-space: normal;" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 65%;" rendered="#{table.pmDocument.mandatory}">
+				<h:outputText value="#{table.sdoRemarks}"
+					style="float: left;white-space: normal;" />
+			</p:column>
+		</p:dataTable>
+			<p:dataTable styleClass="suppDocEmpty-tbl" var="emptyMandatory" value="" id="mandatoryEmptyTable" rendered="#{viewSmApplBackingBean.mandatoryEmpty}"
+				rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+				<p:column style="width : 65%;">
+					<h:outputText value="#{lbl['lbl.datatable.msg.no.records.found']}"
+						style="float: left;white-space: normal;" disabled="true"/>
+				</p:column>
+			</p:dataTable>
+		
+			<p:dataTable var="table" value="#{viewSmApplBackingBean.managedBean.smAppl.smApplSupportDocs}" id="offlineNonMandatoryList" 
+				rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+				
+				<p:columnGroup type="header">
+					<p:row>
+						<p:column headerText="#{lbl['lbl.sm.nonmandatory.suppdoc']}" colspan="5" 
+							style="background-color:PaleGreen !important;text-align: center !important;color:black !important"/>
+	                </p:row>
+	                <p:row>
+	                	<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
+							style="width : 5%;text-align: center !important;" />
+						<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" 
+							style="width : 55%;overflow: hidden !important;" />
+						<p:column headerText="#{lbl['lbl.sm.remarks']}" 
+							style="width : 55%;overflow: hidden !important;" />
+	                </p:row>
+				</p:columnGroup>	
+				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 5%;" rendered="#{!table.pmDocument.mandatory}">
+					<h:outputText value="#{viewSmApplBackingBean.nonMandatoryCounter}"
+						style="float: left;white-space: normal;font-weight:bold;" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" style="width : 65%;" rendered="#{!table.pmDocument.mandatory}">
+					<h:outputText value="#{table.pmDocument.docName}"
+						style="float: left;white-space: normal;" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 65%;" rendered="#{!table.pmDocument.mandatory}">
+					<h:outputText value="#{table.sdoRemarks}"
+						style="float: left;white-space: normal;" />
+				</p:column>
+			</p:dataTable>
+			<p:dataTable styleClass="suppDocEmpty-tbl" var="emptyNonMandatory" value="" id="nonMandatoryEmptyTable" rendered="#{viewSmApplBackingBean.nonMandatoryEmpty}"
+				rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+				<p:column style="width : 65%;">
+					<h:outputText value="#{lbl['lbl.datatable.msg.no.records.found']}"
+						style="float: left;white-space: normal;" disabled="true"/>
+				</p:column>
+			</p:dataTable>
+		</p:outputPanel>
+	</p:panel>
+	
+	<br/>
+	<p:panel header="#{lbl['lbl.sm.enquiry']}" toggleable="true"
+		rendered="#{not empty viewSmApplBackingBean.managedBean.smAppl.smApplInquiries}">
+		<p:dataTable id="dtInquiryResponseOffline" selectionMode="single" 
+		selection="#{viewSmApplBackingBean.managedBean.selectedInquiryResponse}" rowKey="#{applInq}" 
+		value="#{viewSmApplBackingBean.managedBean.smAppl.smApplInquiries}" var="applInq">
+			<p:column headerText="#{lbl['lbl.sm.supportingdoc.subject']}">
+				<h:outputText value="#{applInq.inquirySubject}" rendered="#{applInq.inquirySubject ne 'INQUIRY_PO_SUPPLIER'}"/>
+			</p:column>
+			<p:ajax event="rowSelect" listener="#{viewSmApplBackingBean.inquiryRowSelect('offline')}"  update=":#{p:component('resOutPanelIdOffline')}" oncomplete="responseDlg.show();" />
+			
+			<p:column headerText="#{lbl['lbl.sm.supportingdoc.inquirydate']}">
+				<h:outputText value="#{applInq.createdDate}" rendered="#{applInq.inquirySubject ne 'INQUIRY_PO_SUPPLIER'}">
+					<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sm.supportingdoc.responsedate']}">
+				<h:outputText value="#{applInq.responseDate}" rendered="#{applInq.inquirySubject ne 'INQUIRY_PO_SUPPLIER'}">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</h:outputText>
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+	
+	<p:outputPanel id="resOutPanelIdOffline">
+		<p:dialog header="#{lbl['lbl.sm.supportingdoc.panel.response']}" widgetVar="responseDlg" modal="true" height="500">
+			<p:panel header="#{lbl['lbl.sm.supportingdoc.inquiry']}" id="pnlInquiryIdOffline">
+				<table>
+				<tr>
+					<td>#{lbl['lbl.sm.supportingdoc.subject']}</td>
+				</tr>
+				<tr>
+					<td><p:inputText size="50" id="resInquirySubIdOffline" disabled="true" 
+							value="#{viewSmApplBackingBean.managedBean.selectedInquiryResponse.inquirySubject}" /></td>
+				</tr>
+				
+				<tr>
+					<td>#{lbl['lbl.sm.supportingdoc.inquirydate']}</td>
+				</tr>
+				<tr>
+					<td><p:inputText id="resInquiryDateIdOffline" disabled="true" 
+							value="#{viewSmApplBackingBean.managedBean.selectedInquiryResponse.inquiryDate}">
+							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</p:inputText>		
+					</td>
+				</tr>
+				
+				<tr>
+					<!-- 14530 START -->
+					<td>#{lbl['lbl.sm.enquiry.supporting.document.list']}</td>
+					<!-- 14530 END -->
+				</tr>
+				<tr>
+					<td>
+						<style>
+						.suppDocEmpty-tbl thead{
+   							display:none;
+						}
+						</style>
+					
+						<p:dataTable var="table" value="#{viewSmApplBackingBean.managedBean.selectedInquiryResponse.smApplSupportDocInquiries}" id="inquiryHistoryOfflineMandatoryList" 
+							rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
+							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+							<p:columnGroup type="header">
+								<p:row>
+									<p:column headerText="#{lbl['lbl.sm.mandatory.suppdoc']}" colspan="5" style="background-color:PeachPuff !important;text-align: center !important;color:black !important"/>
+					            </p:row>
+	               				<p:row>
+				                	<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 5%;text-align: center !important;" />
+									<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width : 55%;overflow: hidden !important;" />
+									<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 55%;overflow: hidden !important;" />
+				                </p:row>
+							</p:columnGroup>	
+						<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 5%;" rendered="#{table.pmDocument.mandatory}">
+							<h:outputText value="#{viewSmApplBackingBean.mandatoryCounter}" style="float: left;white-space: normal;font-weight:bold;" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width : 65%;" rendered="#{table.pmDocument.mandatory}">
+							<h:outputText value="#{table.pmDocument.docName}" style="float: left;white-space: normal;" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 65%;" rendered="#{table.pmDocument.mandatory}">
+							<h:inputTextarea value="#{table.sdoRemarks}" style="float: left;white-space: normal;" disabled="true"/>
+						</p:column>
+						</p:dataTable>
+						<p:dataTable styleClass="suppDocEmpty-tbl" var="emptyMandatory" value="" id="mandatoryEmptyForApplStatusOffline" rendered="#{viewSmApplBackingBean.mandatoryEmpty}"
+							rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
+							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+							<p:column style="width : 65%;">
+								<h:outputText value="#{lbl['lbl.datatable.msg.no.records.found']}" style="float: left;white-space: normal;" disabled="true"/>
+							</p:column>
+						</p:dataTable>
+	
+						<p:dataTable var="table" value="#{viewSmApplBackingBean.managedBean.selectedInquiryResponse.smApplSupportDocInquiries}" id="inquiryHistoryOfflineNonMandatoryList" 
+							rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
+							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+							<p:columnGroup type="header">
+								<p:row>
+									<p:column headerText="#{lbl['lbl.sm.nonmandatory.suppdoc']}" colspan="5" 
+										style="background-color:PaleGreen !important;text-align: center !important;color:black !important"/>
+				                </p:row>
+				                <p:row>
+				                	<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 5%;text-align: center !important;" />
+									<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}"  style="width : 55%;overflow: hidden !important;" />
+									<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 55%;overflow: hidden !important;" />
+				                </p:row>
+							</p:columnGroup>	
+							<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 5%;" rendered="#{!table.pmDocument.mandatory}">
+								<h:outputText value="#{viewSmApplBackingBean.nonMandatoryCounter}" style="float: left;white-space: normal;font-weight:bold;" />
+							</p:column>
+							<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width : 65%;" rendered="#{!table.pmDocument.mandatory}">
+								<h:outputText value="#{table.pmDocument.docName}" style="float: left;white-space: normal;" />
+							</p:column>
+							<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 65%;" rendered="#{!table.pmDocument.mandatory}">
+								<h:inputTextarea value="#{table.sdoRemarks}" style="float: left;white-space: normal;" disabled="true"/>
+							</p:column>
+						</p:dataTable>
+						<p:dataTable styleClass="suppDocEmpty-tbl" var="emptyNonMandatory" value="" id="nonMandatoryEmptyForApplHistoryOffline" rendered="#{viewSmApplBackingBean.nonMandatoryEmpty}"
+							rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
+							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+							<p:column style="width : 65%;">
+								<h:outputText value="#{lbl['lbl.datatable.msg.no.records.found']}" style="float: left;white-space: normal;" disabled="true"/>
+							</p:column>
+						</p:dataTable>
+					</td>
+				</tr>
+				</table>
+			</p:panel>
+			
+			<p:panel header="#{lbl['lbl.sm.supportingdoc.response']}" id="pnlResponseIdOffline">
+			<table>
+				<tr><td>#{lbl['lbl.sm.supportingdoc.responsedate']} :</td></tr>
+				<tr>
+					<td><p:inputText disabled="true" value="#{viewSmApplBackingBean.managedBean.selectedInquiryResponse.responseDate}">
+							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</p:inputText>
+					</td>
+				</tr>
+				<tr><td>#{lbl['lbl.sm.supportingdoc.response']} :</td></tr>
+				<tr>
+					<td><p:inputTextarea id="responseTextIdOfflineDoc" rows="10" cols="150" style="width: 95%;"
+							autoResize="false" disabled="true"
+							value="#{viewSmApplBackingBean.managedBean.selectedInquiryResponse.responseText}" /></td>
+				</tr>
+			</table>
+			</p:panel>
+		</p:dialog>
+	</p:outputPanel>
+	<!-- #3460 - Start -->
+	<br/>
+	<table>
+		<tr>
+			<td><p:outputLabel valign="top"
+					value="#{lbl['lbl.sm.supportingdoc.supp.application.sdo.remarks']}" /></td>
+			<td><p:inputTextarea align="right" id="sdoRemarksOffline"
+					rows="10" cols="10" autoResize="false" maxlength="4000"
+					style="width: 300px;"
+					value="#{viewSmApplBackingBean.managedBean.sdoRemark}"
+					readonly="true" /></td>
+		</tr>
+	</table>
+	<!-- #3460 - End -->	
+	<!-- #11641 - End -->
+	</div>
+</ui:composition>

@@ -1,0 +1,87 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" 
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<ui:define name="resourceSection">
+		<script>
+			$('#portlet_MySoftCert_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.mysoftcert.panHeader']}");
+		</script>
+	</ui:define>
+	
+	<ui:define name="contentSection">
+	
+	<p:blockUI block=":form" widgetVar="blockWidget">
+		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+	</p:blockUI>
+	
+	<p:panel header="#{lbl['lbl.sm.mysoftcert.info.panHeader']}" toggleable="true"
+		id="mySoftcertPanelId">
+		
+		<table style="width: 100%;table-layout:fixed">
+			<tr>
+				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.name']}" /></td>
+				<!-- 29659 START -->
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.title.salutationName} #{softCertBackingBean.managedBean.loginUserPersonnelInfo.name}" /></td>
+				<!-- 29659 END -->
+				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.mysoftcert.no']}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertNo}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.shrHldrInfo.idNo']}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.identificationNo}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.mysoftcert.validity']}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertValidityDate}" /></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td></td>
+				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.mysoftcert.status']}" /></td>
+				<td><ac:smSoftcertStatus personnel="#{softCertBackingBean.managedBean.loginUserPersonnelInfo}" /></td>
+			</tr>
+		</table>
+		
+		<p:spacer height="2px;" />
+		<div align="right">
+			<h:commandLink 
+				action="#{softCertBackingBean.updateChallengeResponse}" target="_blank"
+				process="@this" partialSubmit="true" update=":form" >
+				<p:commandButton type="button" value="#{lbl['lbl.sm.button.update.chalresponse']}" 
+					disabled="#{softCertBackingBean.managedBean.disableButton}"/> <!--#29027 -->
+			</h:commandLink>
+			<h:commandLink disabled="#{softCertBackingBean.managedBean.disableButton}"
+				action="#{softCertBackingBean.changePin}" target="_blank"
+				process="@this" partialSubmit="true" update=":form" >
+				<p:commandButton type="button" value="#{lbl['lbl.sm.button.change.pin']}" 
+					disabled="#{softCertBackingBean.managedBean.disableButton}"/>
+			</h:commandLink>
+			<h:commandLink disabled="#{softCertBackingBean.managedBean.disableButton}"
+				action="#{softCertBackingBean.resetPin}" target="_blank"
+				process="@this" partialSubmit="true" update=":form" >
+				<p:commandButton type="button" value="#{lbl['lbl.sm.button.reset.pin']}" 
+					disabled="#{softCertBackingBean.managedBean.disableButton}"/>
+			</h:commandLink>
+			<h:commandLink 
+				action="#{softCertBackingBean.onDisplaySpkiPopup}" 
+				process="@this" partialSubmit="true" update=":form" >
+				<p:commandButton type="button" value="Test SPKI" 
+					rendered="false"/>  <!--#29027 -->
+			</h:commandLink>
+		</div>
+	</p:panel>
+	
+	</ui:define>
+
+<p:outputPanel id="spkiOutPanel" autoUpdate="false">
+		<ac:spkiPopup id="spkiPopup"
+			password="#{softCertBackingBean.managedBean.spkiBackingBean.password}"
+			challengeAns1="#{softCertBackingBean.managedBean.spkiBackingBean.challengeAns1}"
+			challengeQues1="#{softCertBackingBean.managedBean.spkiBackingBean.challengeQues1}"
+			postSignAction="#{softCertBackingBean.onClickSignSpki(spkiBackingBean.pmDigiSign)}" 
+			enableAutoUpdate="#{softCertBackingBean.enableAutoUpdate()}" />
+	</p:outputPanel>
+</ui:composition>

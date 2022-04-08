@@ -1,0 +1,85 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"	
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+
+	<h:panelGroup rendered="#{unspscCodeBackingBean.catalogueAdmin}">
+		<table style="width: 100%; margin-left: 22px;">
+			<tr>
+			
+			
+			<td colspan="2" style="padding-bottom: 10px;">
+ 				 <span class="mandatory">*</span> <span style="font-weight: bold">#{lbl['lbl.cm.select.reject.reason']}</span>
+ 			  </td>
+			
+			
+			</tr>
+			<tr>
+				<td width="50%">
+				<p:selectManyCheckbox layout="pageDirection" styleClass="float-left"
+						disabled="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin}"
+						value="#{catalogueBackingBean.managedBean.rejectReasonIds}">
+						<f:selectItems
+							value="#{catalogueBackingBean.managedBean.statusDescList}"
+							var="remark" itemLabel="#{remark.statusName}"
+							itemValue="#{remark.pmStatus.statusId}"></f:selectItems>
+						<p:ajax listener="#{catalogueBackingBean.enableRemark}" update="@([id$=remarkpg])" />
+					</p:selectManyCheckbox></td>
+				<td style="vertical-align: bottom;">
+				<h:panelGroup id="remarkpg">
+						<p:inputTextarea id="remarkInputId" maxlength="255"
+							readonly="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin}"
+							value="#{catalogueBackingBean.managedBean.rejectReason}"
+							rendered="#{catalogueBackingBean.remarkRendered}"
+							style="width: 78% !important;">
+							<p:ajax partialSubmit="true" event="change" />
+							</p:inputTextarea>
+				</h:panelGroup></td>
+			</tr>
+		</table>
+	</h:panelGroup>
+	
+	<div class="clear"></div>
+
+	<p:panel header="#{lbl['lbl.cm.reject.history']}" toggleable="true">
+
+		<p:panelGrid style="margin-bottom: 0 !important; width: 100% !important;" id="panelGridId">
+				<f:facet name="header">
+		<p:row>
+			<p:column headerText="">#{lbl['lbl.txt.reject.by']}</p:column>
+			<p:column headerText="">#{lbl['lbl.txt.reject.date']}</p:column>
+			<p:column headerText="">#{lbl['lbl.cm.reject.reason']}</p:column>
+			<p:column headerText="">#{lbl['lbl.txt.remarks']}</p:column>	
+		</p:row>
+		</f:facet>
+			<c:forEach var="reasonGroup" items="#{catalogueBackingBean.managedBean.getDetachedPaginator().getModel()}">
+				<c:forEach var="reason" items="#{reasonGroup}" varStatus="st">
+					<p:row rendered="#{st.index lt reasonGroup.size()}">
+						<p:column rowspan="#{reasonGroup.size()}" rendered="#{st.index==0}">
+							#{reason.createdUser}
+						</p:column>
+						<p:column rowspan="#{reasonGroup.size()}" rendered="#{st.index==0}">
+							<h:outputText value="#{reason.createdDate}">
+								<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+							</h:outputText>
+						</p:column>
+						<p:column>
+							<h:outputText value="#{catalogueBackingBean.itemRejectReason(reason.pmStatus.statusId)}"></h:outputText>
+						</p:column>
+						<p:column>
+							<h:outputText value="#{reason.remark}" rendered="#{reason.pmStatus.statusId == 10010}" />
+						</p:column>
+					</p:row>
+				</c:forEach>				
+			</c:forEach>
+		</p:panelGrid>
+	<ac:detachablePaginator loopId="panelGridId" paginatorObject="#{catalogueBackingBean.managedBean.getDetachedPaginator()}"/>
+	</p:panel>
+
+
+</ui:composition>

@@ -1,0 +1,60 @@
+<html>
+<head>
+	<style>
+		@page { size: A4 portrait;}
+		@page { @bottom-center { content: element(footer) }}
+				
+		.footer {
+			display: block; text-align: center;
+			position: running(footer);
+		}
+			
+		table{
+   			 border: 1px solid black;
+			}		
+	</style>
+</head>
+
+<body>
+
+
+
+ 	#foreach( $sampleItem in $sampleItems )
+ 	
+	<table cellpadding="0" cellspacing="10" width="100%" style="border: 3px solid black">
+	<br/>
+
+		<table cellpadding="0" cellspacing="0" width="100%" border="1">
+			<tr style="width : 100%" border="1">
+			    <td style="width : 40%"><h3>PTJ NAME</h3></td>
+				<td style="width : 60%"><h3>$PTJName</h3></td>		
+       		</tr>
+			<tr style="width : 100%" border="1">
+			    <td style="width : 40%"><h3>PTJ CODE</h3></td>
+				<td style="width : 60%"><h3>$PTJCode</h3></td>	
+        	</tr>
+			<tr style="width : 100%" border="1">
+			    <td style="width : 40%"><h3>QT TITLE</h3></td>
+				<td style="width : 60%"><h3>$QTTitle</h3></td>		
+        	</tr>
+			<tr style="width : 100%" border="1">
+				<td style="width : 40%"><h3>QT NO</h3></td>
+				<td style="width : 60%"><h3>$QTNo</h3></td>
+        	</tr>
+        	<tr style="width : 100%" border="1">
+				<td style="width : 40%"><h3>ITEM NAME</h3></td>
+				<td style="width : 60%"><h3>$sampleItem.scRequestItem.itemName</h3></td>
+        	</tr>
+			<tr style="width : 100%" border="1">
+				<td style="width : 40%"><h3>LABEL NO</h3></td>
+				<td style="width : 60%"><h3>$lableNo - $sampleItem.subLableNo</h3></td>
+        	</tr>
+        </table>
+          <br/>
+          
+	</table>
+	#end
+	
+ </body>
+
+</html>

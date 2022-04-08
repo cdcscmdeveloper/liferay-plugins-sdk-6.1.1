@@ -1,0 +1,795 @@
+<ui:composition
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:p="http://primefaces.org/ui"
+xmlns:c="http://java.sun.com/jsp/jstl/core"
+xmlns:ac="http://ac.my/jsf/composite/cc">
+<style type="text/css">
+.columnLineBreak {
+    white-space: normal;
+}
+</style>
+<p:panel id="itemId" header="#{lbl['lbl.ct.panel.item']}" toggleable="true" toggleSpeed="500">
+		<div>
+		          <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.panel.item']}" escape="false"/><br/>
+		          <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.mark.panel.item']}" 
+		             rendered="#{!panelBackingBean.managedBean.fromCircularNotice}" escape="false"/>
+		             <p:spacer height="10" rendered="#{!panelBackingBean.managedBean.fromCircularNotice}"/>
+		          <h:panelGrid width="100%">
+		          
+		          <p:dataTable id="panelItemDt" var="panelItemsVar"  value="#{panelBackingBean.managedBean.circularVer.ctPanelItems}" 
+		                    selectionMode="single" rowKey="#{panelItemsVar}" selection="#{panelBackingBean.managedBean.selectedPanelItems}"
+		                     rowIndexVar="index" widgetVar="panelItemObj">
+		                    <ac:paginator for="panelItemDt" />
+                            <p:ajax event="rowSelect"  listener="#{panelBackingBean.setPanelListner()}" process="@this" 
+                                   onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  update="@([id$=itemZone],[id$=itemSupplier])"  />	
+		                     <p:ajax event="rowUnselect" process="@this" 
+                                   onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  update="@([id$=itemZone],[id$=itemSupplier])" >
+                                   <f:setPropertyActionListener value="#{null}" target="#{panelBackingBean.managedBean.selectedPanelItems}" />
+                             </p:ajax>	
+		      
+							      <p:column style="width:3%;" rendered="#{!panelBackingBean.managedBean.viewContract}">
+							           <p:selectBooleanCheckbox value="#{panelItemsVar.selectedCheckBox}" styleClass="myCustomChekBox">
+							                 <p:ajax event="change" process="@this" 
+									           update=":form:deleteItemBtn,:form:delUpdateButtonId"  listener="#{panelBackingBean.selectOneCheckboxSelect}">
+									           </p:ajax>
+								       </p:selectBooleanCheckbox>
+							      </p:column>
+								 
+								  <p:column style="white-space:normal;width:8%;" styleClass="column-align-center" >
+								       <f:facet name="header">
+											<h:outputText id="coverageId" value="#{lbl['lbl.ct.panel.coverage']}" styleClass="required"/>
+						               		<ac:iconTooltip   value="#{lbl['lbl.ct.tooltip.panel.coverage']}" />
+						               </f:facet>
+						             
+						                <c:if test="#{!panelBackingBean.managedBean.viewContract}">
+										       <p:selectOneMenu id="panelCoverage" value="#{panelItemsVar.zoneAllParamterId}" style="width:80px;"> 
+										             <f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.panelCoverageType)}"/>
+										             <p:ajax event="change"   listener="#{panelBackingBean.setCtPanelZoneListner(panelItemsVar)}" 
+										                 process="@all"   update="panelItemDt,@([id$=itemZone],[id$=itemSupplier],[id$=deleteItemBtn])" /> 
+										      </p:selectOneMenu>
+										 </c:if>
+										  <c:if test="#{panelBackingBean.managedBean.viewContract}">
+								                  <h:outputText value="#{panelBackingBean.getParameterDesc(panelItemsVar.panelCoverageId)}" style="float:left; text-align:left;"/>
+								          </c:if>
+						  	     </p:column>
+			 
+								 <p:column  style="white-space:pre-line;width:8%;" styleClass="column-align-center" >
+								      <f:facet name="header">
+								         <h:outputText value="#{lbl['lbl.ct.item.category']}" styleClass="required"/>
+								      </f:facet>
+								     
+								      <c:if test="#{!panelBackingBean.managedBean.viewContract}">
+										      <p:selectOneMenu value="#{panelItemsVar.categoryParameterId}" style="width:80px;">
+										           <f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.itemCategoryType)}"/>
+										           <p:ajax event="change" update="spec" process="@this" listener="#{panelBackingBean.changeItemCategoryListner(panelItemsVar)}" />
+										      </p:selectOneMenu>
+									    </c:if>
+								        <c:if test="#{panelBackingBean.managedBean.viewContract}">
+								                 <h:outputText value="#{panelBackingBean.getParameterDesc(panelItemsVar.itemCategoryId)}" style="float:left; text-align:left;"/>
+								         </c:if>
+								  </p:column>
+								  
+								  <p:column  style="width:18%;" styleClass="column-align-center" >
+								         <f:facet name="header">
+								             <h:outputText value="#{lbl['lbl.ct.item.group']}" styleClass="required"/>
+								          </f:facet>
+								         
+								          <c:if test="#{!panelBackingBean.managedBean.viewContract}">
+								          	<p:inputTextarea id="panelItemGroupTxtAreaId" rows="2" cols="10" readonly="true" autoResize="false" style="resize:none;" 
+						                          value="#{panelItemsVar.ctPanelItemGroup.groupName}" />					
+					                             <ac:lov id="itemGroupLovId" uiMode="link" 
+					                            	lovId="CT_PANEL_ITEM_GROUP" headerText="#{lbl['lbl.ct.item.group']}"
+						                            saveObject="panelBackingBean.managedBean.circularVer.ctPanelItems[#{index}].ctPanelItemGroup"
+						                            value="#{panelBackingBean.managedBean.circularVer.ctPanelItems[index].ctPanelItemGroup.groupName}"
+						                             size="15" update=":form:panelItemDt" readonly="true" conditionField="recordStatus^1">
+				                         	</ac:lov>     
+								      	  </c:if>
+										   <c:if test="#{panelBackingBean.managedBean.viewContract}">
+								                   <h:outputText value="#{panelItemsVar.ctPanelItemGroup.groupName}" style="float:left; text-align:left;"/>
+								           </c:if>
+								   </p:column>
+							   
+                                   <p:column  style="width:11%;white-space:pre-line" styleClass="column-align-center" >
+				                         <f:facet name="header">
+							                  <h:outputText value="#{lbl['lbl.ct.item.type']}" styleClass="required"/>
+							             </f:facet>
+							             <c:if test="#{!panelBackingBean.managedBean.viewContract}">
+						                    <p:selectOneMenu value="#{panelItemsVar.itemTypeId}" style="width:110px;">
+									           <f:selectItems value="#{panelBackingBean.itemTypeValues}"/>
+									           <p:ajax  process="@this"/>
+									         </p:selectOneMenu>
+									    </c:if>
+									     <c:if test="#{panelBackingBean.managedBean.viewContract}">
+							                     <h:outputText value="#{panelBackingBean.getParameterDesc(panelItemsVar.itemType)}" style="float:left; text-align:left;"/>
+							             </c:if>
+				                   </p:column>
+              
+                                   <p:column style="width:16%;" styleClass="column-align-center">
+                                       <f:facet name="header">
+			                               <h:outputText value="#{lbl['lbl.ct.item.name']}" styleClass="required" />
+			                        		<ac:iconTooltip   value="#{lbl['lbl.ct.tooltip.panel.item.name']}" />
+						               </f:facet>
+			                       
+			               
+			                           <c:if test="#{!panelBackingBean.managedBean.viewContract}">
+                                           <p:inputTextarea value="#{panelItemsVar.itemName}"  maxlength="100" rows="2" style="width:80px;" autoResize="false">
+                                               <p:ajax  process="@this"/>
+                                           </p:inputTextarea>
+                                  	   </c:if>
+					                   <c:if test="#{panelBackingBean.managedBean.viewContract}">
+			                                 <h:outputText value="#{panelItemsVar.itemName}" style="float:left; text-align:left;"/>
+			                           </c:if>
+                  	
+                  	                   <p:spacer width="3" />
+                                 	   <p:commandLink id="spec" update=":form:itemSpecDlg" action="#{panelBackingBean.panelItemSpecDlg(panelItemsVar)}" style="width:20px;"
+                  		                     disabled="#{panelItemsVar.categoryParameterId == null or panelBackingBean.getItemGeneralCode(panelItemsVar.categoryParameterId) == ParameterConst.itemCategoryTypeGeneral}">
+						                     <p:graphicImage value="/css/images/design/ico-viewnedit.png" title="#{lbl['lbl.ct.specification']}"  />
+					                   </p:commandLink>
+                                  </p:column>
+			  
+			                      <p:column styleClass="column-align-center" style="width:10%;">
+				  	                    <f:facet name="header" >
+						                    <h:outputText value="#{lbl['lbl.ct.uom']}"  styleClass="required columnLineBreak"   />
+	                            	    </f:facet>
+	                            	        <c:if test="#{!panelBackingBean.managedBean.viewContract}">
+			                            	    <p:inputTextarea id="panelItemUomTxtAreaId" rows="2"  cols="7" readonly="true" 
+			                            	          autoResize="false" style="resize:none;"  value="#{panelItemsVar.pmUom.uomName}" />					
+							                             <ac:lov id="uomLovId" uiMode="link" 
+							                            	lovId="PM_UOM" headerText="#{lbl['lbl.ct.uom']}"
+								                            saveObject="panelBackingBean.managedBean.circularVer.ctPanelItems[#{index}].pmUom"
+								                            value="#{panelBackingBean.managedBean.circularVer.ctPanelItems[index].pmUom.uomName}"
+								                             size="7" update=":form:panelItemDt" readonly="true" conditionField="recordStatus^1">
+						                         	</ac:lov> 
+	               	                       </c:if>
+					                    <c:if test="#{panelBackingBean.managedBean.viewContract}">
+			                                   <h:outputText value="#{panelItemsVar.pmUom.uomName}" style="float:left; text-align:left;"/>
+			                            </c:if>
+			                       </p:column>
+			  
+								  <p:column headerText="#{lbl['lbl.ct.min.order.qty']}" style="white-space:pre-line;width:7%;" styleClass="column-align-center" >
+								      	 <c:if test="#{!panelBackingBean.managedBean.viewContract}">
+										       <p:inputText value="#{panelItemsVar.minimumOrderQty}" style="width:65px;text-align:right;" label="#{lbl['lbl.ct.min.order.qty']}"
+										       		maxlength="#{panelItemsVar.pmUom.decimalScale == 0 ? 13 : 14}">
+										           	<f:converter converterId="dynamicNumberConverter" />
+													<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, panelItemsVar.pmUom.uomCode)}" />
+													<p:ajax event="blur" update="@this" process="@this" />
+										       </p:inputText>
+								        </c:if>
+										   <c:if test="#{panelBackingBean.managedBean.viewContract}">
+								                     <h:outputText value="#{panelItemsVar.minimumOrderQty}" style="float:left; text-align:left;">
+								                     	<f:converter converterId="dynamicNumberConverter" />
+											           <f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, panelItemsVar.pmUom.uomCode)}" />
+										               </h:outputText>
+								        </c:if>
+								  </p:column>
+			 
+								  <p:column headerText="#{lbl['lbl.ct.purchase.limit']}" style="white-space:pre-line;width:7%;" styleClass="column-align-center" >
+								      	 <c:if test="#{!panelBackingBean.managedBean.viewContract}">
+								  
+								       <p:inputText value="#{panelItemsVar.maxProcureAmt}" style="width:65px;text-align:right;" label="#{lbl['lbl.ct.purchase.limit']}">
+								          <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+								          <p:ajax process="@this"></p:ajax>
+								       </p:inputText>
+								        </c:if>
+										   <c:if test="#{panelBackingBean.managedBean.viewContract}">
+								                     <h:outputText value="#{panelItemsVar.maxProcureAmt}" style="float:left; text-align:left;">
+								                     	<f:converter converterId="dynamicNumberConverter" />
+											<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, panelItemsVar.pmUom.uomCode)}" />
+										
+										</h:outputText>
+								               </c:if>
+								  </p:column>
+			 
+								  <p:column headerText="#{lbl['lbl.ct.status']}" style="width:7%;" styleClass="column-align-center" >
+								   	 <c:if test="#{!panelBackingBean.managedBean.viewContract}">
+								  
+							           <p:selectOneMenu  value="#{panelItemsVar.recordStatusFlg}" 
+							           		disabled="#{!panelBackingBean.managedBean.updateAction}" style="width:65px;">
+									       <f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
+								           <f:selectItem itemValue="1" itemLabel="#{lbl['lbl.ct.active']}" />
+								       </p:selectOneMenu>
+								         </c:if>
+										   <c:if test="#{panelBackingBean.managedBean.viewContract}">
+								               <h:outputText value="#{panelItemsVar.recordStatusFlg ==1 ? lbl['lbl.ct.active'] : lbl['lbl.ct.inactive']}" style="float:left; text-align:left;"/>
+								              </c:if>
+								  </p:column>													
+		    </p:dataTable>
+		    </h:panelGrid>
+		 </div>
+	  <h:panelGroup id="delUpdateButtonId">
+	   <div class="ppRightBtn">
+	   	 <p:commandButton id="addItemGroupBtn" value="#{lbl['lbl.ct.add.item.group']}"  process="@this"
+					     action="#{panelBackingBean.addPanelItemGroup}" update="addItemGroupDlg"
+					     rendered="#{!panelBackingBean.managedBean.viewContract}"/>
+	 	 <ac:lov id="loaBulkSupId" lovId="SM_SUPPLIER"  
+	 	                disabled="#{panelBackingBean.managedBean.buttonHideActiveDel}"
+						postUpdateListener="panelBackingBean.addBulkPanelSupplier"
+						headerText="#{lbl['lbl.ct.supplier']}" 
+						buttonLabel="#{lbl['lbl.ct.bulk.update.supplier']}"
+						selectionMode="multiple"
+						saveObject="panelBackingBean.managedBean.supplierList"
+						update=":form:itemSupplierDt" 
+						rendered="#{!panelBackingBean.managedBean.viewContract}"/>
+		<p:commandButton id="bulkUpdateBtn" value="#{lbl['lbl.ct.bulk.update']}"  process="@this" update="bulkUpdateDlg" 
+					     action="#{panelBackingBean.bulkUpdateItem}"  disabled="#{panelBackingBean.managedBean.buttonHideActiveDel}" 
+					     rendered="#{!panelBackingBean.managedBean.viewContract}"/>
+		<p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" 
+		                   update=":form:panelItemDt" action="#{panelBackingBean.addPanelItem()}"
+		                   rendered="#{!panelBackingBean.managedBean.viewContract}" oncomplete="panelItemObj.paginator.endLink.click();"/>
+		<p:commandButton id="deleteItemBtn" value="#{lbl['lbl.ct.delete']}"   process="@this"
+			              onsuccess="delItemDlg.show()" disabled="#{panelBackingBean.managedBean.buttonHideActiveDel}" 
+			              rendered="#{!panelBackingBean.managedBean.viewContract}"/>
+	 </div>
+	  </h:panelGroup>
+	  <p:dialog id="addItemGroupDlg" header="#{lbl['lbl.ct.add.item.group']}" styleClass="pop_up_top" resizable="false"
+		widgetVar="addItemGroupDlg"  modal="true" width="500" height="150">  
+		<p:messages id="itemGroupMsg" showSummary="false" showDetail="true" autoUpdate="true" cosable="true" severity="error, info" />
+ 			<table style="width:100%;">
+		  	<tr>
+		  		<td><p:outputLabel value="#{lbl['lbl.ct.panel.group.name']}" styleClass="required"  /></td>
+				<td><p:inputText id="groupName" value="#{panelBackingBean.managedBean.ctPanelItemGroup.groupName}" 
+					size="50" maxlength="50" />
+		  		</td>
+		  	</tr>
+		   	<tr> 
+				<td><p:outputLabel value="#{lbl['lbl.ct.panel.group.status']}" styleClass="required" /></td>
+	     		<td><p:inputText id="groupStatus" value="#{lbl['lbl.ct.active']}" disabled="true" size="50" />
+	     		</td>				
+		   	</tr>
+			</table>			
+			<div class="ppRightBtn">
+		     	<p:commandButton id="btnAddItemGroupDlg" value="#{lbl['lbl.btn.add']}" 
+		     		actionListener="#{panelBackingBean.createPanelItemGroup()}" />
+			 	<p:commandButton value="#{lbl['lbl.btn.close']}"  onclick="addItemGroupDlg.hide();" type="button" />
+		   	</div>
+        </p:dialog>
+	    <p:dialog id="bulkUpdateDlg" header="#{lbl['lbl.ct.bulk.update']}" styleClass="pop_up_top" resizable="false"
+		    widgetVar="bulkUpdateDlg"  modal="true" width="300" height="120">  
+            <h:panelGrid columns="3">
+               <f:verbatim></f:verbatim>
+              <p:outputLabel  value="#{lbl['lbl.ct.panel.coverage']}"/>
+                 <p:selectOneMenu value="#{panelBackingBean.managedBean.panelCoverageId}" style="width:100px;margin-bottom: 5px;">
+			        <f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.panelCoverageType)}"/> 
+			        <p:ajax event="change" process="@this" update=":form:btnIdBulkUpdate"></p:ajax>
+			     </p:selectOneMenu>
+			     <f:verbatim></f:verbatim>
+			      <p:outputLabel  value="#{lbl['lbl.ct.item.category']}"/>
+			     <p:selectOneMenu value="#{panelBackingBean.managedBean.itemCategoryId}" style="width:100px;">
+			       <f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.itemCategoryType)}"/>
+			         <p:ajax event="change" process="@this" update=":form:btnIdBulkUpdate"></p:ajax>
+			     </p:selectOneMenu>
+			  </h:panelGrid>
+           <div class="ppRightBtn">
+		     <p:commandButton id="btnIdBulkUpdate" value="#{lbl['lbl.btn.yes']}"  update="@([id$=panelItemDt])"
+		       process="@all" actionListener="#{panelBackingBean.bulkUpdateRow()}" onclick="bulkUpdateDlg.hide();"
+		       disabled="#{panelBackingBean.managedBean.panelCoverageId == null and panelBackingBean.managedBean.itemCategoryId == null }"/>
+			 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="bulkUpdateDlg.hide();" type="button" />
+		   </div>
+        </p:dialog>
+        
+        <p:confirmDialog id="delItemDlg" widgetVar="delItemDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
+		                severity="alert"  closable="true"  appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+		           <div class="ppRightBtn">
+				     <p:commandButton value="#{lbl['lbl.btn.yes']}"  update="@([id$=itemId])"
+		       process="@all" actionListener="#{panelBackingBean.removeAddRow()}" onclick="delItemDlg.hide();"/>
+			 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delItemDlg.hide();" type="button" />
+				   </div>
+        </p:confirmDialog>
+       
+        <p:dialog id="itemSpecDlg" widgetVar="itemSpecDlg" header="#{lbl['lbl.ct.item.specification.list']}" 
+	   		styleClass="pop_up_top" modal="true" width="700" height="auto"  resizable="false">
+	   		<p:messages id="itemSpecMsg" showSummary="false" 
+			   showDetail="true"   autoUpdate="true" cosable="true" />
+	   		<h:panelGrid columns="1">
+	    		<p:outputLabel value="#{lbl['lbl.ct.item.name']}" >: #{panelBackingBean.managedBean.selectedItemForSpec.itemName}</p:outputLabel>
+	     	</h:panelGrid>
+	     	<p:dataTable id="itemSpecDt" var="data" value="#{panelBackingBean.managedBean.selectedItemForSpec.ctPanelItemSpecs}"
+				rowKey="#{data}" rowIndexVar="index" selection="#{panelBackingBean.managedBean.selectedPanelItemSpecs}" widgetVar="panelItemSpecObj">
+				<ac:paginator for="itemSpecDt" />
+				<p:column  style="width:2%" 
+				      	         	 rendered="#{!panelBackingBean.managedBean.viewContract}">
+				      		        <f:facet name="header">
+							            <p:selectBooleanCheckbox value="#{panelBackingBean.managedBean.selectAll}">
+								             <p:ajax partialSubmit="true" process="@this"
+									             update=":form:itemSpecDt,:form:itemSpecificDelBtn" listener="#{panelBackingBean.selectAllSpecificItem}" />
+							            </p:selectBooleanCheckbox>
+						          </f:facet>
+		           
+		                          <p:selectBooleanCheckbox 
+		                               value="#{data.selectedCheckBox}" styleClass="myCustomChekBox">
+		           		               <p:ajax event="change" partialSubmit="true" process="@this"
+		           		                    update=":form:itemSpecDt,:form:itemSpecificDelBtn" listener="#{panelBackingBean.selectSpecificCheckBoxSelect}"></p:ajax>
+			                     </p:selectBooleanCheckbox>     
+				      		</p:column>
+				<p:column headerText="#{lbl['lbl.ct.specification']}" style="width:40%;" styleClass="column-align-center" >
+					<p:inputTextarea value="#{data.specification}" maxlength="1000" rows="3" style="width:98%; resize:none;" autoResize="false"
+						disabled="#{panelBackingBean.managedBean.viewContract}" required="true" label="#{lbl['lbl.ct.specification']}">
+						<p:ajax process="@this"></p:ajax>
+						</p:inputTextarea>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.ct.description']}" style="width:40%;" styleClass="column-align-center" >
+					<p:inputTextarea value="#{data.description}" maxlength="1000" rows="3" style="width:98%; resize:none;" autoResize="false"
+						disabled="#{panelBackingBean.managedBean.viewContract}" />
+				</p:column>
+			</p:dataTable>			
+     		<f:facet name="footer">
+			<div class="ppRightBtn"> 
+				<p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" partialSubmit="true" 
+					action="#{panelBackingBean.addPanelItemSpec()}" update="itemSpecDt" 
+					oncomplete="panelItemSpecObj.paginator.endLink.click();" rendered="#{!panelBackingBean.managedBean.viewContract}"/>
+				<p:commandButton id="itemSpecificDelBtn" value="#{lbl['lbl.ct.delete']}" process="@this"  partialSubmit="true"
+				     disabled="#{panelBackingBean.managedBean.buttonHideActiveDel}" 
+				     onsuccess="delPanelItemSpecDlg.show()" rendered="#{!panelBackingBean.managedBean.viewContract}"/>				
+				<p:commandButton value="#{lbl['lbl.btn.close']}"  action="#{panelBackingBean.onClose()}" process="@all"  />
+			</div>
+			</f:facet>
+   		</p:dialog>
+   		
+   		 <p:confirmDialog id="delPanelItemSpecDlg" widgetVar="delPanelItemSpecDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
+		                severity="alert"  closable="true"  appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+		           <div class="ppRightBtn">
+				     <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:itemSpecDt, :form:itemSpecificDelBtn"
+				       process="@this" partialSubmit="true" actionListener="#{panelBackingBean.deleteTableRow('SPEC')}" oncomplete="delPanelItemSpecDlg.hide();"/>
+					 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delPanelItemSpecDlg.hide();" type="button" />
+				   </div>
+        </p:confirmDialog>
+        
+		<p:spacer height="40" />
+		<p:outputPanel id="itemZone">
+		    <h:panelGroup rendered="#{panelBackingBean.managedBean.selectedPanelItems != null and panelBackingBean.managedBean.selectionOfZone}">
+		                <p:outputLabel value="#{lbl['lbl.ct.sublabel.panel.coverage']}" style="float:left; font-weight:bold; padding-top:25px;"/>
+			            <div style="clear:both" />
+			            <table style="width: 100%">
+				            <tr>
+								<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.ct.location.level']}" /></td>
+								<td><p:selectOneMenu id="locationLevels" style="width:200px;" disabled="#{panelBackingBean.managedBean.viewContract}"
+										value="#{panelBackingBean.managedBean.selectedPanelItems.locationLevelId.parameterId}">
+										<f:selectItems value="#{panelBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
+										<p:ajax event="change" listener="#{panelBackingBean.selectLocation}" process="@this" update=":form:zoneGeneralDataTable"/>
+									</p:selectOneMenu>
+								</td>
+							</tr>
+						</table>
+		  
+				      <p:spacer height="20" />
+				       <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.panel.zone']}" escape="false"/><br/>
+				     <p:dataTable id="zoneGeneralDataTable" value="#{panelBackingBean.managedBean.selectedPanelItems.ctPanelZones}" 
+				                var="panelZoneVar" selectionMode="single" widgetVar="panelZoneObj"
+				                selection="#{panelBackingBean.managedBean.selectedPanelZone}" rowKey="#{panelZoneVar}" rowIndexVar="index" >
+									    <ac:paginator for="zoneGeneralDataTable" />
+									    <p:ajax event="rowSelect" update=":form:itemSupplier"   
+											process="@this"  onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  />
+										<p:ajax event="rowUnselect" process="@this"	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+											update=":form:itemSupplier">
+											<f:setPropertyActionListener value="#{null}" target="#{panelBackingBean.managedBean.selectedPanelZone}" />
+										</p:ajax>
+										
+										  <p:column  style="width:2%" 
+				      	         	           rendered="#{!panelBackingBean.managedBean.viewContract}">
+				      		                  <f:facet name="header">
+							                          <p:selectBooleanCheckbox value="#{panelBackingBean.managedBean.selectAll}">
+								                            <p:ajax partialSubmit="true" process="@this"
+									                            update=":form:zoneGeneralDataTable,:form:deleteZoneBtn" listener="#{panelBackingBean.selectAllPanelZone}" />
+							                         </p:selectBooleanCheckbox>
+						                      </f:facet>
+		           
+		                                    <p:selectBooleanCheckbox 
+		                                          value="#{panelZoneVar.selectedCheckBox}" styleClass="myCustomChekBox">
+		           		                          <p:ajax event="change"
+		           		                                update=":form:zoneGeneralDataTable,:form:deleteZoneBtn" listener="#{panelBackingBean.selectPanelZoneCheckboxSelect}"></p:ajax>
+			                                     </p:selectBooleanCheckbox>     
+				      		                </p:column>
+				
+										<p:column style="width:60%" styleClass="column-align-center" >
+				    	                   <f:facet name="header">
+				    	                       <h:outputText value="#{lbl['lbl.ct.location']}" styleClass="required"/>
+				    	                 </f:facet>
+				    	                 <h:outputText value="#{panelZoneVar.name}" style="float:left;"/>	
+					                 </p:column>
+                    
+                                     <p:column headerText="#{lbl['lbl.ct.status']}" style="width:20%" styleClass="column-align-center" >
+                                      <c:if test="#{!panelBackingBean.managedBean.viewContract}">
+                                          <p:selectOneMenu  value="#{panelZoneVar.recordStatusFlg}"  
+                                               disabled="#{!panelBackingBean.managedBean.updateAction or panelBackingBean.managedBean.viewContract}" style="width:100px;">
+				                                 <f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
+			                                    <f:selectItem itemValue="1" itemLabel="#{lbl['lbl.ct.active']}" />
+			                             </p:selectOneMenu>
+			                             </c:if>
+										   <c:if test="#{panelBackingBean.managedBean.viewContract}">
+								               <h:outputText value="#{panelZoneVar.recordStatusFlg ==1 ? lbl['lbl.ct.active'] : lbl['lbl.ct.inactive']}" style="float:left; text-align:left;"/>
+								              </c:if>
+                                    </p:column>
+					
+					               <p:column headerText="#{lbl['lbl.ct.action']}" style="width:20%" styleClass="column-align-center">
+					                   <p:commandLink
+						                   actionListener="#{panelBackingBean.editPanelZoneLocation(panelZoneVar,index)}"
+						                   process="@this" update=":form:ZoneGeneral"
+					                    	oncomplete="ZoneGeneral.show();">
+						                <p:graphicImage value="/css/images/design/ico-viewnedit.png" />
+					                 </p:commandLink>
+					            </p:column>
+					            
+			
+			         </p:dataTable>
+		           
+		             <div class="ppRightBtn">
+		                 <p:commandButton value="#{lbl['lbl.btn.add']}" process="@this" update="@([id$=zonePopupGeneral])"
+					           oncomplete="ZoneGeneral.show();" actionListener="#{panelBackingBean.showGeneralZoneLocationPopup}"
+					           rendered="#{!panelBackingBean.managedBean.viewContract}"/>
+		                 <p:commandButton id="deleteZoneBtn" value="#{lbl['lbl.ct.delete']}"  process="@this"
+		                             disabled="#{panelBackingBean.managedBean.buttonHideActiveDel}"
+		                      onsuccess="delZoneDlg.show();" rendered="#{!panelBackingBean.managedBean.viewContract}"/>
+	              </div>	
+	    
+	         <p:confirmDialog id="delZoneDlg" widgetVar="delZoneDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
+		                severity="alert"  closable="true"  appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+		           <div class="ppRightBtn">
+				     <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:zoneGeneralDataTable,:form:itemSupplier, :form:deleteZoneBtn"
+				       process="@all" actionListener="#{panelBackingBean.deleteTableRow('ZONE')}" onclick="delZoneDlg.hide();"/>
+					 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delZoneDlg.hide();" type="button" />
+				   </div>
+        </p:confirmDialog>
+	  </h:panelGroup>
+	  <p:dialog id="ZoneGeneral" header="#{lbl['lbl.ct.add.location']}" widgetVar="ZoneGeneral" resizable="false" 
+	  	styleClass="pop_up_top" modal="true" width="600" height="500">
+	  	 <p:panel id="zonePopupGeneral">
+	  	 	<table styleClass="noBorders tr,noBorders td">
+				<tr>
+					<td width="25%" valign="top"><p:outputLabel value="#{lbl['lbl.ct.zone.name']}" styleClass="required"></p:outputLabel></td>
+					<td width="70%"><p:inputText id="zoneName" style="width:300px;" disabled="#{panelBackingBean.managedBean.viewContract}"
+							value="#{panelBackingBean.managedBean.zoneName}"  
+							label="#{lbl['lbl.ct.zone.name']}"
+						    maxlength="20">
+						    <p:ajax event="change" process="@this" update=":form:okBtnId"></p:ajax>
+						    </p:inputText> 
+					</td>
+				</tr>
+				<tr>
+					<td width="25%" valign="top"><p:outputLabel value="#{lbl['lbl.ct.location']}" styleClass="required" /></td>
+					<td width="70%">
+				
+							<p:tree id="treeZoneGeneralPopup"  style="height: 370px;"
+								value="#{panelBackingBean.managedBean.rootZoanlTree}"  
+								var="location"  
+								selection="#{panelBackingBean.managedBean.selectedGeneralTreeNodes}"
+								selectionMode="checkbox" >
+							<p:ajax event="select" listener="#{panelBackingBean.onNodeSelect}" update=":form:okBtnId"/>
+								<p:ajax event="unselect" listener="#{panelBackingBean.onNodeSelect1}" update=":form:okBtnId"/>
+								<p:treeNode type="state">
+									<h:outputText value="#{location.stateId.stateName}" />
+								</p:treeNode>
+								<p:treeNode type="division">
+									<h:outputText value="#{location.divisionId.divisionName}" />
+								</p:treeNode>
+								<p:treeNode type="district">
+									<h:outputText value="#{location.districtId.districtName}" />
+								</p:treeNode>
+							</p:tree>
+						</td>
+				</tr>
+			</table>
+		
+		
+		<div align="right">
+		<p:spacer height="10"/>
+		<p:commandButton id="okBtnId" value="#{lbl['lbl.btn.ok']}"  process="@all"
+			update=":form:zonePopupGeneral, :form:itemZone"
+			disabled="#{panelBackingBean.managedBean.buttonHideActiveDel}"
+			rendered="#{!panelBackingBean.managedBean.viewContract}"
+			action="#{panelBackingBean.updateZoneGeneralLocation}"
+			oncomplete="panelZoneObj.paginator.endLink.click();">
+		</p:commandButton>
+		
+		<p:commandButton
+			value="#{lbl['lbl.btn.close']}" onclick="ZoneGeneral.hide();"  />
+	</div>
+	</p:panel>
+	   </p:dialog>
+	   
+       </p:outputPanel>
+		<p:spacer height="40" />
+		<p:outputPanel id="itemSupplier" >
+		<p:outputLabel rendered="#{panelBackingBean.managedBean.selectedPanelItems != null and panelBackingBean.managedBean.selectedPanelZone != null and panelBackingBean.managedBean.selectionOfZone}" value="#{lbl['lbl.ct.sublabel.panel.supplier']}" style="float:left; font-weight:bold; padding-top:25px;"/>
+		<p:outputLabel rendered="#{panelBackingBean.managedBean.selectedPanelItems != null and !panelBackingBean.managedBean.selectionOfZone}" value="#{lbl['lbl.ct.sublabel.item.supplier']}" style="float:left; font-weight:bold; padding-top:25px;"/>
+		<div style="clear:both" />
+		<h:panelGroup rendered="#{(panelBackingBean.managedBean.selectedPanelItems != null and panelBackingBean.managedBean.selectedPanelZone != null and panelBackingBean.managedBean.selectionOfZone) or
+		       (panelBackingBean.managedBean.selectedPanelItems != null and !panelBackingBean.managedBean.selectionOfZone)}">
+		    	<p:dataTable id="itemSupplierDt" var="supVar" rowIndexVar="index" widgetVar="itemSupplierWidget"
+			          value="#{panelBackingBean.managedBean.selectionOfZone ? panelBackingBean.managedBean.selectedPanelZone.ctPanelSuppliers : panelBackingBean.managedBean.selectedPanelItems.ctPanelSuppliers}"
+		              selection="#{panelBackingBean.managedBean.selectedPanelSuppliers}" rowKey="#{supVar}" >
+			          <ac:paginator for="itemSupplierDt" />
+			             <p:ajax event="toggleSelect"  update=":form:itemSupplierDt,:form:deleteSupplierBtn" />
+                         <p:ajax event="rowSelect" update=":form:itemSupplierDt,:form:deleteSupplierBtn" />
+			             <p:ajax event="rowSelectCheckbox"  update=":form:itemSupplierDt,:form:deleteSupplierBtn" />
+                         <p:ajax event="rowUnselectCheckbox"  update=":form:itemSupplierDt,:form:deleteSupplierBtn" />
+                         <p:column selectionMode="multiple" style="width:3%" 
+				                rendered="#{!panelBackingBean.managedBean.viewContract}"/>
+				
+				      <p:column headerText="#{lbl['lbl.ct.supplier.name']}" 
+				             style="width:25%;white-space:normal;" styleClass="column-align-center" >
+				          <div align="left">
+				           <p:commandLink update="@([id$=suppDtlPopUp])" 
+									action="#{panelBackingBean.showSupplierDetails(supVar)}"
+									oncomplete="suppDtlWidgetVar.show();">
+									<h:outputText value="#{supVar.supplierCompanyName}" />
+								</p:commandLink>
+							</div>
+			          </p:column>
+			          
+			    	
+				
+				      <p:column headerText="#{lbl['lbl.ct.business.reg.no']}"  style="width:10%;" styleClass="column-align-center" > 
+				          <h:outputText value="#{supVar.supplierRegNo}" style="float:left;"/>
+				      </p:column>
+				      	 <!-- #29983 start -->
+				       <p:column style="white-space:normal;width:10%;" styleClass="column-align-center" >
+								       <f:facet name="header">
+											<h:outputText id="businessRegNoNew" value="#{lbl['lbl.ct.business.reg.no.new']}" sstyle="float:left;"/>
+						               		<ac:iconTooltip   value="#{lbl['lbl.ct.tooltip.business.reg.no.new']}" />
+						               </f:facet>
+						               <h:outputText value="#{supVar.supplier.ssmNewRegNo == null ? lbl['lbl.txt.na'] : supVar.supplier.ssmNewRegNo }"  />
+						               
+						</p:column>
+						 <!-- #29983 end -->
+				     
+				      <p:column headerText="#{lbl['lbl.ct.mof.no']}"  style="width:10%;" styleClass="column-align-center" >
+				          <h:outputText value="#{supVar.supplierMofNo}" style="float:left;" />
+				      </p:column>
+				      
+				       <p:column  style="width:15%;" styleClass="column-align-center" >
+				              <f:facet name="header">
+				                  <h:outputText value="#{lbl['lbl.ct.bank.account.name']}" />
+				              </f:facet>
+				               <p:selectOneMenu id="accountId" style="width:380px;margin-bottom: 5px;"
+						           value="#{supVar.bankAccountNo}" rendered="#{!panelBackingBean.managedBean.viewContract}">
+						           <f:selectItems value="#{panelBackingBean.populateBankAccountList(supVar.supplier, index)}" />
+						          <p:ajax event="change" process="@form"
+							          onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							           listener="#{panelBackingBean.changeAccountActionListener(supVar, index)}" />
+					         </p:selectOneMenu>
+					          <h:outputText rendered="#{panelBackingBean.managedBean.viewContract}"
+					           value="#{supVar.bankAccountNo}/#{supVar.bankName}" style="width:250px;float:left;text-align:left;" />
+					     </p:column>
+				        
+				      <p:column headerText="#{lbl['lbl.ct.address']}" style="width:30%;white-space:normal;" styleClass="column-align-center" rendered="false" >
+					     <h:outputText value="#{panelBackingBean.getFullAddress(supVar.supplierAddress)}"  style="text-align:left;float:left;"/>
+				      </p:column>
+				   
+				      <p:column headerText="#{lbl['lbl.ct.status']}" style="width:8%;" styleClass="column-align-center" >
+				         	 <c:if test="#{!panelBackingBean.managedBean.viewContract}">
+						         <p:selectOneMenu  value="#{supVar.recordStatusFlg}"  
+		                            style="width:70px;">
+						             <f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
+					                 <f:selectItem itemValue="1" itemLabel="#{lbl['lbl.ct.active']}" />
+					                     <p:ajax process="@this"   /> 
+					          </p:selectOneMenu>
+					         </c:if>
+							   <c:if test="#{panelBackingBean.managedBean.viewContract}">
+					               <h:outputText value="#{supVar.recordStatusFlg ==1 ? lbl['lbl.ct.active'] : lbl['lbl.ct.inactive']}" style="float:left; text-align:left;"/>
+					           </c:if>
+				    </p:column>
+			</p:dataTable>			
+		   <div class="ppRightBtn">
+		   		<ac:lov id="loaSupId" lovId="SM_SUPPLIER"
+						postUpdateListener="panelBackingBean.addPanelSupplier"
+						headerText="#{lbl['lbl.ct.supplier']}" 
+						buttonLabel="#{lbl['lbl.btn.add']}"
+						selectionMode="multiple"
+						saveObject="panelBackingBean.managedBean.supplierList"
+						update=":form:itemSupplierDt" 
+						rendered="#{!panelBackingBean.managedBean.viewContract}"/>
+				<p:commandButton id="deleteSupplierBtn" value="#{lbl['lbl.ct.delete']}" 
+				         disabled="#{panelBackingBean.managedBean.selectedPanelSuppliers.size() == 0 
+				         or panelBackingBean.managedBean.selectedPanelSuppliers.size() == '' or panelBackingBean.managedBean.selectedPanelSuppliers == null}"
+				     	 process="@this" onclick="cancelCircularSupDlg.show()" rendered="#{!panelBackingBean.managedBean.viewContract}"/>
+		   </div>
+	        <p:confirmDialog id="cancelCircularSupDlt" widgetVar="cancelCircularSupDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
+		                severity="alert"  closable="true"  appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+           <div class="ppRightBtn">
+		     <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:itemSupplierDt,:form:deleteSupplierBtn" process="@all"
+		        actionListener="#{panelBackingBean.deletePanelSupplier()}" onclick="cancelCircularSupDlg.hide();"/>
+			 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="cancelCircularSupDlg.hide();" type="button" />
+		  </div>
+        </p:confirmDialog>
+        <!-- Supplier Details PopUp -->
+		<ui:include src="/xhtml/ct/circular/panel/supplierDetailsPopUp.xhtml" />
+	    </h:panelGroup>	
+	  </p:outputPanel>
+	</p:panel>
+	<p:panel header="#{lbl['lbl.ct.panel.remarks.attachment']}" toggleable="true" 
+	    rendered="#{!panelBackingBean.managedBean.viewContract}">
+		<table style="width: 100%">
+			<tr>
+				<td width="50%" valign="top">
+					<table style="width: 100%">
+						<tr>
+							<td class="TableFieldLeft" width="24%"><h:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
+							<td class="TableFieldRight">
+								<p:dataGrid value="#{panelBackingBean.managedBean.circularVer.itemRemarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
+									<table>
+										<tr>
+											<td rowspan="2" valign="top">
+												<h:graphicImage value="#{panelBackingBean.userImagePath(remarkVar.createdUser.loginId)}" height="30" width="30" />
+											</td>
+											<td width="5"></td>
+											<td>
+												<h:outputText value="#{remarkVar.createdUser.userName}"></h:outputText>,
+												<h:outputText value="#{remarkVar.changedDate}">
+													<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
+												</h:outputText>
+											</td>
+										</tr>
+										<tr>
+											<td></td>
+											<td>
+												<p:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000" 
+													disabled="#{panelBackingBean.managedBean.viewContract}"
+													style="width:70%;" autoResize="false" /> 
+												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
+											</td>
+										</tr>
+									</table>
+								</p:dataGrid>
+							</td>
+						</tr>
+					</table>    					
+				</td>
+				<td width="50%" valign="top">
+				<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.attachment']}" escape="false"/><br/><br/>
+				<table style="width: 100%">
+		<tr>
+			<td class="TableFieldLeft" width="24%">
+			      <h:outputLabel value="#{lbl['lbl.txt.attachment']}" /></td>
+			<td class="TableFieldRight">
+				<p:commandButton oncomplete="uploadItemDlg.show();return false;"
+					update="lampiranItem, uploadItemDlg" value="#{lbl['lbl.txt.attach.files']}"
+					disabled="#{panelBackingBean.managedBean.viewContract
+						or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}" />
+			</td>
+		</tr>
+		<tr>
+			<td/>
+			<td>
+				<p:dataGrid id="lampiranItem" value="#{panelBackingBean.managedBean.circularVer.itemAttachments}"
+					var="attachFile" rowIndexVar="attachFileIndex" columns="1" style="width:100%"
+					emptyMessage ="#{lbl['lbl.datatable.msg.no.records.found']}">
+					<table>
+						<tr>
+							<td rowspan="2"><h:graphicImage value="/css/images/design/#{ctBackingBean.determineIcon(attachFile)}" height="30" width="30"/></td>
+							<td width="5"></td>
+							<td>
+								<h:outputText value=" #{attachFile.createdUser.userName}"></h:outputText>,
+								<h:outputText value="#{attachFile.createdDate}">									
+									<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
+								</h:outputText>
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td>
+								<h:commandLink value="#{attachFile.fileName}" 
+									styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
+								<p:commandLink onsuccess="deleteItemAttachmentDlg.show();" action="#{ctBackingBean.setAttachFileIndex(attachFileIndex)}"
+									rendered="#{!ctBackingBean.managedBean.viewContract}"
+									disabled="#{ctBackingBean.managedBean.viewContract
+										or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}">
+			   						<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
+			 	 				</p:commandLink>
+			 	 			</td>
+						</tr>
+					</table>
+				</p:dataGrid>
+			</td>
+		</tr>
+	</table>
+				</td>
+			</tr>
+		</table>
+		<p:dialog id="uploadItemDlg" widgetVar="uploadItemDlg" modal="true"  resizable="false"
+	     width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
+		<p:ajax event="close" />
+		<p:fileUpload style="display:inline;"
+			fileUploadListener="#{panelBackingBean.fileUpload}"
+			mode="advanced" id="uploadItemId" multiple="true"
+			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+			invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
+			label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload.all']}" cancelLabel="#{lbl['lbl.btn.remove.all']}" 
+			update="lampiranItem" >
+		</p:fileUpload>
+		<f:facet name="footer">
+		<div class="ppRightBtn">
+		    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadItemDlg.hide();" />
+  		</div>
+   		</f:facet>
+	</p:dialog>	
+	
+	               <p:confirmDialog id="deleteItemAttachmentDlg" widgetVar="deleteItemAttachmentDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                           severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                         <div class="ppRightBtn">
+		                     <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                         update=":form:lampiranItem" 
+		                         action="#{panelBackingBean.deleteCircularAttachmentAction(ctBackingBean.managedBean.attachFileIndex)}"
+		                         oncomplete="deleteItemAttachmentDlg.hide();"/>
+			                 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteItemAttachmentDlg.hide();" type="button" />
+		                 </div>
+                   </p:confirmDialog>
+	</p:panel>
+	
+	<!-- Bug #29447 - To display Remarks and Attachments for CT Module - Circular Maintenance -->
+	<!-- start -->
+	<p:panel header="#{lbl['lbl.ct.panel.remarks.attachment']}" toggleable="true" 
+	    rendered="#{panelBackingBean.managedBean.viewContract}">
+		<table style="width: 100%">
+			<tr>
+				<td width="50%" valign="top" style="text-align:center"><h:outputLabel value="#{lbl['lbl.txt.remarks']}" style="float:none;text-align:center"/></td>
+				<td width="50%" valign="top" style="text-align:center"><h:outputLabel value="#{lbl['lbl.txt.attachment']}" style="float:none;text-align:center"/></td>
+			</tr>
+			<tr>
+				<td class="TableFieldLeft" width="50%" style="padding-left:6.25%;text-align:left">
+					<p:dataGrid var="remark" 
+					value="#{panelBackingBean.managedBean.circularVer.itemRemarks}" rowIndexVar="index"
+						columns="1"
+						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+						<table>
+							<tr>
+								<td rowspan="2" valign="top">
+									<h:graphicImage value="#{panelBackingBean.userImagePath(remark.createdUser.loginId)}"
+										height="30" width="30" />
+									</td>
+								<td width="5"></td>
+								<td>
+									<h:outputText id="remarkCreator"
+										value="#{remark.createdUser.userName}" />, 
+									<h:outputText id="remarkDates" value="#{remark.changedDate}">
+										<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+									</h:outputText>
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td>
+									<!-- Bug #29447 -->
+									<h:outputText value="#{remark.remark}"
+									style="display: inline-block; word-break: break-word; white-space:normal"/>
+									<!-- Bug #29447 -->
+								</td>
+							</tr>
+						</table>
+					</p:dataGrid>
+				</td>
+				<td class="TableFieldRight" width="50%" style="padding-left:6.25%">
+					<p:dataGrid value="#{panelBackingBean.managedBean.circularVer.itemAttachments}"
+						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" var="attachment"
+						rowIndexVar="attachFileIndex" columns="1" style="width:100%">
+						<table>
+							<tr>
+								<td rowspan="2" style="vertical-align: top;" align="left">
+									<h:graphicImage value="/css/images/design/#{ctBackingBean.determineIcon(attachment)}"
+										height="30" width="30" />
+								</td>
+								<td><h:outputText value="#{attachment.createdUser.userName}" />, 
+									<h:outputText value="#{attachment.createdDate}">
+										<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+									</h:outputText>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<h:commandLink value="#{attachment.fileName}"
+										styleClass="blue_font" immediate="true"
+										action="#{panelBackingBean.downloadFile(attachment)}" />
+								</td>
+							</tr>
+						</table>
+					</p:dataGrid>
+				</td>
+			</tr>
+		</table>
+	</p:panel>	
+	<!-- Bug #29447 - end -->
+</ui:composition>

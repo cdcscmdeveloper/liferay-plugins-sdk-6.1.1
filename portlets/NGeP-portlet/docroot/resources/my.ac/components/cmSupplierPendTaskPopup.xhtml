@@ -1,0 +1,88 @@
+<ui:composition xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+	
+		<h:panelGroup id="cmSupplierPendTask">
+	
+		<p:panel header="#{lbl['lbl.cm.search']}" toggleable="true">
+			<table style="width: 100%;">
+				<tr>
+					<td><p:selectOneMenu
+						value="#{cmReportsBackingBean.managedBean.dropdownCompanyNameOrRegNo}" size="25"
+						style="width: 180px;">
+						<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue=""></f:selectItem>
+						<f:selectItem itemValue="CompanyName"
+							itemLabel="#{lbl['lbl.cm.rpt.companyname']}" />
+						<f:selectItem itemValue="RegNo"
+							itemLabel="#{lbl['lbl.cm.rpt.regNo']}" />
+					</p:selectOneMenu>
+				    <p:inputText value="#{cmReportsBackingBean.managedBean.companyNameOrRegNo}" size="25"
+						style="width: 230px;" /></td>
+					<td />
+					<td />
+				</tr>
+			</table>
+		
+			 <div class="ppRightBtn">
+				<p:commandButton styleClass="BtnSpacing"
+				    value="#{lbl['lbl.btn.search']}"
+				    action="#{cmReportsBackingBean.searchCMSuppPendTaskPopup}"
+				    update=":form:dtcmSuppierPendTasksearchresults"/>
+				<p:commandButton styleClass="BtnSpacing"
+				    value="#{lbl['lbl.btn.reset']}"
+					action="#{cmReportsBackingBean.resetCMSuppPendTaskPopup}"
+					update="form:cmSupplierPendTask, :form:dtcmSuppierPendTasksearchresults"/>
+			</div>
+		</p:panel>
+		
+		<p:panel header="#{lbl['lbl.rpt.search.result']}" toggleable="true">
+		
+		<p:dataTable tableStyleClass = "fixedTable" id="dtcmSuppierPendTasksearchresults" lazy="true" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			    value="#{cmReportsBackingBean.cmSupplierPendTaskDataModel}" selectionMode="single" var="supplier" selection="#{cmReportsBackingBean.managedBean.selectSupplier}" 
+			    rowIndexVar="rowIndex" rowKey="#{supplier}" rows="10" style="width: 100%">
+			
+              <p:ajax event="toggleSelect"  listener="#{cmReportsBackingBean.rowSelectSupplier}" update=":form:btnSelect" />		
+              <p:ajax event="rowUnselect" listener="#{cmReportsBackingBean.rowSelectSupplier}" update=":form:btnSelect"/>
+			  <p:ajax event="rowSelect"  listener="#{cmReportsBackingBean.rowSelectSupplier}" update=":form:btnSelect"/>
+			  <p:ajax event="page" listener="#{cmReportsBackingBean.onPageChangeSelectSupplier}" update=":form:btnSelect" />
+			  
+			<ac:paginator for="dtcmSuppierPendTasksearchresults"/>
+				
+			 <p:column>
+				<f:facet name="header">
+				  #{lbl['lbl.cm.rpt.companyname']}
+				</f:facet>
+				  #{supplier[1]}
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+				  #{lbl['lbl.cm.rpt.regNo']}
+			    </f:facet>
+				  #{supplier[2]}
+			</p:column>
+			</p:dataTable>
+			
+			<div class="ppRightBtn">
+		    <p:commandButton 
+		       value="#{lbl['lbl.btn.select']}"
+		       id="btnSelect"
+		       action="#{cmReportsBackingBean.selectCompanyName}"
+		       update=":form:itSelectCompany"
+		 	   disabled="#{cmReportsBackingBean.managedBean.disableSelectBtn}"
+		 	   oncomplete="cmSupplierListPendTaskPopup.hide();"/>
+			<p:commandButton 
+			   value="#{lbl['lbl.btn.cancel']}" 
+			   action="#{cmReportsBackingBean.resetCMSuppPendTaskPopup}"
+			   update=":form:dtcmSuppierPendTasksearchresults"
+			   onclick="cmSupplierListPendTaskPopup.hide();"/> 	
+		</div> 
+		
+		</p:panel>
+		
+		</h:panelGroup>
+</ui:composition>

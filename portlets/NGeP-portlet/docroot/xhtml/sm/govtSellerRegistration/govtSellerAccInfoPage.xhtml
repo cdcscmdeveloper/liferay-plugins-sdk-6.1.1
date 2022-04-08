@@ -1,0 +1,32 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<ui:include src="/xhtml/sm/govtSellerRegistration/govtSellerCompanyInfoPage.xhtml" />
+	<p:outputPanel rendered="#{bb.managedBean.showGst}">
+		<ui:include src="/xhtml/sm/shared/onlinereg/gstInfo.xhtml" />
+	</p:outputPanel>
+	<ui:include src="/xhtml/sm/govtSellerRegistration/govtSellerBranchInfoPage.xhtml" />
+	<ui:include src="/xhtml/sm/shared/onlinereg/bankInfo.xhtml" />
+	
+	<c:if test="#{registrationBackingBean.managedBean.smSupp.brandNew or registrationBackingBean.managedBean.deletedNotActivatedSupplier}">
+		<div class="nav-wrapper" align="justify">
+				<p:commandButton value="#{lbl['lbl.sm.next']}" style="float:right;"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form"
+					action="#{bb.proceedToFirstUserRegistration}" >
+					<f:param name="disableValidation" value="true" />
+				</p:commandButton>
+				
+				<p:commandButton value="#{lbl['lbl.sm.prev']}" style="left;"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form"
+					action="#{bb.navigateToPage(SupplierManagementConst.GOVT_SELLER_SEARCH_PAGE)}">
+				</p:commandButton>
+		</div>
+		<div style="clear: both;"></div>
+	</c:if>
+
+</ui:composition>

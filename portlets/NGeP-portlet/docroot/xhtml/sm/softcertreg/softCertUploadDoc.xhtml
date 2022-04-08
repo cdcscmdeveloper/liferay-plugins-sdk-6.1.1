@@ -1,0 +1,255 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+		
+		<table style="width: 100%;">
+			<tr>
+				<td>
+					<p:commandButton value="#{lbl['lbl.btn.back']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+						action="#{softCertBackingBean.backToPersonnelListPage}" update="@form"/>
+				</td>
+				<td style="white-space: nowrap; float: right;">
+				    <p:commandButton value="#{lbl['lbl.sm.request.softcert']}" style="float:right;" id="uploadRequestBtnId" update="@form"
+				    	onstart="blockWidget.show()" oncomplete="blockWidget.hide()" action="#{softCertBackingBean.navigateToPaymentPage}"/>
+				</td>
+			</tr>
+			<tr height="10"><td height="10"></td></tr>
+		</table>
+
+		<p:panel header="#{lbl['lbl.sm.softcert.selected.personnel.panheader']}" toggleable="true" id="uploadPanelId">
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.softcert.upload.suppdoc.note']}&lt;br/&gt;" 
+				rendered="#{softCertBackingBean.managedBean.suppDocMode eq 'S'}" escape="false">
+			</h:outputText>
+			
+			<h:outputText styleClass="warning" value="#{lbl['lbl.sm.softcert.upload.basic']}&lt;br/&gt;" escape="false"
+				rendered="#{softCertBackingBean.managedBean.suppDocMode eq 'S' and softCertBackingBean.managedBean.basicAppl == true}">
+			</h:outputText>
+			
+			<h:outputText styleClass="warning" value="#{lbl['lbl.sm.softcert.upload.file.type']}" escape="false"
+				rendered="#{softCertBackingBean.managedBean.suppDocMode eq 'S'}"></h:outputText>
+	
+			<h:outputText styleClass="warning" value="#{lbl['lbl.sm.softcert.offline.suppdoc.note']}" 
+			rendered="#{softCertBackingBean.managedBean.suppDocMode eq 'H'}" escape="false"/>
+			
+			<ui:param name="softcertSelLs" value="#{softCertBackingBean.managedBean.softCertSelectList[0]}"></ui:param>
+			<table style="width: 100%;">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.submission.type']}" /></td>
+					<td><p:selectOneRadio id="onLnSuppDocs" disabled="#{empty softCertBackingBean.managedBean.softcertUploadSuppDocList}"
+							value="#{softCertBackingBean.managedBean.suppDocMode}">
+							<f:selectItem itemLabel="#{lbl['lbl.sm.softcert.submission.ep.centre']}"
+								itemValue="H" />
+							<f:selectItem itemLabel="#{lbl['lbl.sm.softcert.submission.online']}" 
+							itemDisabled="#{!empty softcertSelLs.softcertRejectCode and 
+							(softcertSelLs.softcertRejectCode == SupplierMgmtConst.rejectedWithFraud or softcertSelLs.softcertRejectCode == SupplierMgmtConst.rejectedWithBlacklist)}"
+								itemValue="S"/>
+							<p:ajax update="@([id$=uploadPanelId])" event="change" />
+						</p:selectOneRadio></td>
+				</tr>
+			</table>
+			
+			<p:dataTable id="softcertUploadDtlId" rowKey="#{upload}" rendered="#{softCertBackingBean.managedBean.suppDocMode eq 'S'}"
+				rowIndexVar="index" value="#{softCertBackingBean.managedBean.softcertUploadSuppDocList}"
+				var="upload" >
+				<ac:paginator for="softcertUploadDtlId" />
+				
+				<p:column style="width : 25%;white-space: normal !important;">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sm.userprofile.name']}" />
+					</f:facet>
+					<!-- 29659 START -->
+					<h:outputText value="#{upload.personnel.pmUser.salutationCode.salutationName} #{upload.personnel.name}" />
+					<!-- 29659 END -->
+				</p:column>
+		
+				<!-- #10729 start -->
+				<p:column rendered="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.smAppl.smSupplier.recordStatusFlg eq 5}">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sm.soft.cert.idno']}" />
+					</f:facet>
+					<h:outputText value="#{upload.personnel.identificationNo}" />
+				</p:column>
+				<!-- #10729 end -->
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sm.userprofile.nationality']}" />
+					</f:facet>
+					<h:outputText value="#{upload.personnel.pmCountry.countryName}" />
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sm.userprofile.eprole']}" />
+					</f:facet>
+					<ac:smRoleDesc backingBean="#{softCertBackingBean}" roleCode="#{upload.personnel.epRole}" />
+				</p:column>
+				
+				<!-- #10729 start -->
+				<p:column rendered="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.smAppl.smSupplier.recordStatusFlg ne 5}">
+					<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sm.userprofile.accountstatus']}" />
+					</f:facet>
+					<h:outputText value="#{lbl['lbl.sm.accountstatus.active']}" rendered="#{upload.personnel.recordStatusFlg eq '1'}" />
+				</p:column>
+				<!-- #10729 end -->
+				
+				<p:column style="width : 35%;white-space: normal !important;">
+					<f:facet name="header">
+						<h:outputText value="*" styleClass="mandatory" />
+						<h:outputText value="#{lbl['lbl.sm.softcert.suppdoc']}" />
+						&#160;
+						<p:graphicImage id="codeti" value="/css/images/design/tooltips.png" />
+						<p:tooltip id="codett" for="codeti">
+							<p:outputLabel escape="false" value="#{lbl['tt.sm.softcert.upload.suppdoc']}" />
+						</p:tooltip>
+					</f:facet>
+					<table width="100%">											
+						<ui:repeat var="suppDoc" rowIndexVar="attachFileIndex" columns="2" value="#{upload.suppDocList}" varStatus="status">
+							<tr>
+								<td style="width: 5% !important;vertical-align: baseline !important;border-style: none !important;">
+									<h:outputText value="#{status.index + 1})"  />
+								</td>
+								<td style="border-style: none !important;width: 95%;">
+									<h:outputText escape="false" value="#{suppDoc.pmDocument.docNameWithUrl}" style="float: left;white-space: normal;" 
+										rendered="#{empty suppDoc.smSofcertDocFiles or empty suppDoc.smSofcertDocFiles[0].fileName}"/>
+									<p:commandLink ajax="false" value="#{suppDoc.pmDocument.docName}" 
+										rendered="#{not empty suppDoc.smSofcertDocFiles and not empty suppDoc.smSofcertDocFiles[0].fileName}">
+										<p:fileDownload value="#{softCertBackingBean.commonDownload(suppDoc.smSofcertDocFiles[0].filePath,suppDoc.smSofcertDocFiles[0].fileName,suppDoc.smSofcertDocFiles[0].fileName)}" />
+									</p:commandLink>
+									<p:spacer width="20" />										
+									<p:commandLink id="deleteSupDocId"
+										rendered="#{!empty suppDoc.smSofcertDocFiles[0].fileName}"
+										oncomplete="confirmDeleteSupDocDialog.show()" update="@form"
+										action="#{softCertBackingBean.assignSelectedSmSoftcertDocFile(upload.personnel,suppDoc,attachFileIndex)}">
+										<p:graphicImage value="/css/images/design/trash.png" />
+									</p:commandLink>
+							</td>
+							</tr>
+						</ui:repeat>
+					</table>
+				</p:column>
+				<p:column style="text-align:center !important;">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sm.action']}" />
+					</f:facet>
+					<table width="100%">
+						<ui:repeat var="suppDoc" value="#{upload.suppDocList}">
+							<tr>
+								<td width="20%" style="border-style: none !important;text-align: center !important;">
+									<p:commandLink oncomplete="uploadDialog.show();return false;" update="@([id$=uploadDialog])"
+										action="#{softCertBackingBean.assignSelectedSupportDoc(upload.personnel,suppDoc)}">
+										<p:graphicImage value="/css/images/design/upload.png"
+											style="margin-right:2px;" />
+									</p:commandLink>
+								</td>
+							</tr>
+						</ui:repeat>
+					</table>
+				</p:column>
+					
+			</p:dataTable>
+			
+			<p:dataTable id="softcertOfflineDtlId" rowKey="#{offline}" rendered="#{softCertBackingBean.managedBean.suppDocMode eq 'H'}"
+				rowIndexVar="index" value="#{softCertBackingBean.managedBean.softcertUploadSuppDocList}"
+				var="offline" >
+				<ac:paginator for="softcertOfflineDtlId" />
+				
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sm.userprofile.name']}" />
+					</f:facet>
+					<h:outputText value="#{offline.personnel.name}" />
+				</p:column>
+				
+				<!-- #10729 start -->
+				<p:column rendered="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.smAppl.smSupplier.recordStatusFlg eq 5}">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sm.soft.cert.idno']}" />
+					</f:facet>
+					<h:outputText value="#{offline.personnel.identificationNo}" />
+				</p:column>
+				<!-- #10729 end -->
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sm.userprofile.nationality']}" />
+					</f:facet>
+					<h:outputText value="#{offline.personnel.pmCountry.countryName}" />
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sm.userprofile.eprole']}" />
+					</f:facet>
+					<ac:smRoleDesc backingBean="#{softCertBackingBean}" roleCode="#{offline.personnel.epRole}" />
+				</p:column>
+				
+				<!-- #10729 start -->
+				<p:column rendered="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.smAppl.smSupplier.recordStatusFlg ne 5}">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sm.userprofile.accountstatus']}" />
+					</f:facet>
+					<h:outputText value="#{lbl['lbl.sm.accountstatus.active']}" rendered="#{offline.personnel.recordStatusFlg eq '1'}" />
+				</p:column>
+				<!-- #10729 end -->
+				
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sm.softcert.suppdoc']}" />
+					</f:facet>
+					<table width="100%">
+						<ui:repeat var="suppDoc" value="#{offline.suppDocList}" varStatus="status">
+							<tr>
+								<td style="width: 5% !important;vertical-align: baseline !important;border-style: none !important;">
+									<h:outputText value="#{status.index + 1})"  />
+								</td>
+								<td width="40%" style="border-style: none !important;">
+									<h:outputText escape="false" value="#{suppDoc.pmDocument.docNameWithUrl}" style="float: left;white-space: normal;" />
+								</td>
+							</tr>
+						</ui:repeat>
+					</table>
+				</p:column>
+					
+			</p:dataTable>
+		</p:panel>
+		
+		<p:dialog id="uploadDialog" widgetVar="uploadDialog" modal="true"
+			dynamic="true" resizable="false" width="700px" height="200"
+			styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}"
+			onShow="singleUploadListener(uploadWV);">
+			<p:fileUpload
+				allowTypes="/(\.|\/)(gif|jpe?g|png|pdf)$/"
+				sizeLimit="1000000"
+				id="upload"
+				invalidFileMessage="#{lbl['lbl.sm.upload.softcert.format.errmsg']}"
+				invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed1Mb']}"
+				fileUploadListener="#{softCertBackingBean.handleSupDocFileAttachment}"
+				update=":form" oncomplete="uploadDialog.hide();" 
+				uploadLabel="#{lbl['lbl.btn.upload']}"  
+				label="#{lbl['lbl.btn.choose']}" 
+				cancelLabel="#{lbl['lbl.btn.cancel']}"
+				showButtons="false" 
+				widgetVar="uploadWV" />
+		</p:dialog>
+		
+		<p:confirmDialog id="confirmDeleteSupDocDialog" closable="true"
+			message="#{lbl['lbl.sm.upload.delete.message']}"
+			header="#{lbl['lbl.sm.upload.delete.confirm.header']}"
+			severity="alert" widgetVar="confirmDeleteSupDocDialog">
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.delete']}" 
+					action="#{softCertBackingBean.deleteSupDocFileAttachment}" update="@form"
+					partialSubmit="true" onstart="blockWidget.show()"
+					oncomplete="blockWidget.hide()" process="@this" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="confirmDeleteSupDocDialog.hide();" />
+			</div>
+		</p:confirmDialog>
+
+</ui:composition>

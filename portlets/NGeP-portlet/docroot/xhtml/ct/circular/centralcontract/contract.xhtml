@@ -1,0 +1,633 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<p:panel id="contractListPnl" header="#{lbl['lbl.ct.contract.list']}" toggleable="true" toggleSpeed="500">
+		 <div>
+	      <h:panelGrid style="width:100%">
+	        <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.central.contract.table']}" escape="false"/><br/>
+		   <p:dataTable id="centralContractDt" var="circularContractsVar" rowIndexVar="index" widgetVar="centralContractWidget" 
+			   value="#{centralContractBackingBean.managedBean.circularVer.ctCircularContracts}" selectionMode="single" 
+			   selection="#{centralContractBackingBean.managedBean.selectedCircularContract}" rowKey="#{circularContractsVar}">
+			        <ac:paginator for="centralContractDt" />
+			        <p:ajax event="rowSelect" update=":form:contractListPnl" process="@this" 
+			          onstart="blockWidget.show();" oncomplete="blockWidget.hide();" listener="#{centralContractBackingBean.setContractListner()}" />
+		   
+		             <p:column  style="width:25%; white-space:pre-line;" styleClass="column-align-center">
+				        <f:facet name="header">
+				            <h:outputText value="#{lbl['lbl.ct.contract.title']}" styleClass="required" />
+				         </f:facet>
+				        <h:outputText value="#{circularContractsVar.ctContract.contractName}" style="float:left;text-align:left;" />
+			         </p:column>
+		
+		          	<p:column headerText="#{lbl['lbl.ct.loa.physical.no']}" style="width:15%;white-space:pre-line;" styleClass="column-align-center">
+				        <h:outputText value="#{circularContractsVar.ctContract.latestContractVer.ctContractValue.loaPhysicalNo}" style="float:left;text-align:left;"/>
+			        </p:column>
+			
+			        <p:column headerText="#{lbl['lbl.ct.physical.no']}" style="width:15%;white-space:pre-line;" styleClass="column-align-center">
+				        <h:outputText value="#{circularContractsVar.ctContract.latestContractVer.contractPhysicalNo}" style="float:left;text-align:left;"/>
+			        </p:column>
+			
+			        <p:column headerText="#{lbl['lbl.ct.contract.start']}" style="width:10%;" styleClass="column-align-center">
+			 	        <h:outputText value="#{circularContractsVar.ctContract.latestContractVer.ctContractValue.effDate}" style="float:left;text-align:left;">
+					       <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+				        </h:outputText>
+			         </p:column>
+			         
+			         <p:column headerText="#{lbl['lbl.ct.contract.end']}" style="width:10%;" styleClass="column-align-center">
+			 	        <h:outputText value="#{circularContractsVar.ctContract.latestContractVer.ctContractValue.expDate}" style="float:left;text-align:left;">
+					        <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+				        </h:outputText>
+			          </p:column>
+			
+			          <p:column headerText="#{lbl['lbl.ct.supplier.name']}" style="width:15%;white-space:pre-line;" styleClass="column-align-center">
+				          <h:outputText value="#{circularContractsVar.ctContract.latestContractVer.ctContractValue.supplierName}" style="float:left;text-align:left;"/>
+			          </p:column>
+		
+			          <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;" styleClass="column-align-center">
+			                 <h:outputText value="#{circularContractsVar.recordStatusFlg == 1 ? lbl['lbl.ct.active'] : lbl['lbl.ct.inactive']}" 
+			                 style="float:left;text-align:left;" rendered="#{centralContractBackingBean.managedBean.viewContract}"/>
+				           <p:selectOneMenu value="#{circularContractsVar.recordStatusFlg}" 
+				                rendered="#{!centralContractBackingBean.managedBean.viewContract}"
+					            disabled="#{!centralContractBackingBean.managedBean.updateAction}">
+					            <f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
+					            <f:selectItem itemValue="1" itemLabel="#{lbl['lbl.ct.active']}" />
+				           </p:selectOneMenu>
+			          </p:column>
+		         </p:dataTable>
+		        </h:panelGrid>
+		        </div>
+		         <div class="ppRightBtn">
+			           <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" 
+				           oncomplete="contractDlg.show();" rendered="#{!centralContractBackingBean.managedBean.viewContract}"
+				           actionListener="#{centralContractBackingBean.addCircularContractListener()}"
+				           update="contractDlg"/>
+			              <p:commandButton id="deleteContractBtn" value="#{lbl['lbl.ct.delete']}" process="@this"
+				              rendered="#{!centralContractBackingBean.managedBean.viewContract}"
+				              disabled="#{centralContractBackingBean.managedBean.selectedCircularContract == null}" onsuccess="delCtContractDlg.show()" />
+		           </div>
+
+		          <p:confirmDialog id="delCtContractDlg" widgetVar="delCtContractDlg"  message="#{lbl['lbl.msg.confirm.delete']}" 	
+		                severity="alert"  closable="true"  appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+			             <div class="ppRightBtn">
+				              <p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true" update=":form:contractListPnl"
+					              process="@all" actionListener="#{centralContractBackingBean.deleteCircularContract()}"
+					              onclick="delCtContractDlg.hide();" />
+				                  <p:commandButton value="#{lbl['lbl.btn.no']}" onclick="delCtContractDlg.hide();" type="button" />
+			            </div>
+		          </p:confirmDialog>
+
+		<p:spacer height="20" />
+		<p:outputPanel id="circularItemsPanel">
+			<h:panelGroup
+				rendered="#{centralContractBackingBean.managedBean.selectedCircularContract != null and
+		           centralContractBackingBean.managedBean.selectedCircularContract.ctCircularItems.size() > 0}">
+				<p:outputLabel value="#{lbl['lbl.ct.sublabel.item']}"
+					style="float:left; font-weight:bold; padding-top:5px;" />
+				<div style="clear: both" />
+				<p:dataTable id="circularItemDt" var="itemVar"
+					value="#{centralContractBackingBean.getActiveCircularItem()}"
+					selectionMode="single" selection="#{centralContractBackingBean.managedBean.selectedCircularItem}"
+					rowKey="#{itemVar}">
+					<ac:paginator for="circularItemDt" />
+					<p:ajax event="rowSelect"
+						update=":form:circularZonePanel,:form:circularPricePanel"
+						process="@this" 
+						listener="#{centralContractBackingBean.setZoneListener()}" />
+					<p:column headerText="#{lbl['lbl.ct.item.name']}"
+						style="width:45%; white-space:pre-line;" styleClass="column-align-center">
+						<h:outputText value="#{itemVar.ctContractItem.scRequestItem.itemName}"  style="float:left;text-align:left;"  />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.ct.uom']}" styleClass="column-align-center" style="width:15%; white-space:normal;">
+		              <h:outputText value="#{itemVar.ctContractItem.scRequestItem.uom.uomName}" style="float:left;"/>
+		         </p:column> 
+					<p:column headerText="#{lbl['lbl.ct.min.order.qty']}" style="width:13%;white-space:pre-line;" styleClass="column-align-center">
+						<h:outputText value="#{itemVar.minimumOrderQty}" style="float:right;text-align:right;" 
+						     rendered="#{centralContractBackingBean.managedBean.viewContract}">
+						     <f:converter converterId="dynamicNumberConverter" />
+							<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, itemVar.ctContractItem.scRequestItem.uom.uomCode)}" />
+						</h:outputText>
+						<p:inputText styleClass="ppRightBtn"  style="width:110px;" rendered="#{!centralContractBackingBean.managedBean.viewContract}"
+							value="#{itemVar.minimumOrderQty}" maxlength="#{itemVar.ctContractItem.scRequestItem.uom.decimalScale == 0 ? 13 : 14}"
+							label="#{lbl['lbl.ct.min.order.qty']}">
+							<f:converter converterId="dynamicNumberConverter" />
+							<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, itemVar.ctContractItem.scRequestItem.uom.uomCode)}" />
+						 <p:ajax event="blur" process="@this" update=":form:messages"  />
+						</p:inputText>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.ct.min.order.amount']}" style="width:13%;white-space:pre-line;" styleClass="column-align-center">
+						<h:outputText value="#{itemVar.minimumOrderAmt}" style="float:right;text-align:right;" 
+						    rendered="#{centralContractBackingBean.managedBean.viewContract}">
+						    	<f:convertNumber
+								    pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />	
+				         </h:outputText>
+						<p:inputText styleClass="ppRightBtn" style="width:110px;"
+							value="#{itemVar.minimumOrderAmt}" maxlength="19" label="#{lbl['lbl.ct.min.order.amount']}"
+							rendered="#{!centralContractBackingBean.managedBean.viewContract}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						 <p:ajax event="blur" update="@this, :form:messages"  />
+						</p:inputText>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.ct.contract.purchase.limit']}"
+						style="width:14%;white-space:pre-line;" styleClass="column-align-center">
+							<h:outputText value="#{itemVar.maxProcureAmt}" style="float:right;text-align:right;" 
+						           rendered="#{centralContractBackingBean.managedBean.viewContract}">
+						    		<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				         </h:outputText>
+						<p:inputText styleClass="ppRightBtn" style="width:110px;"
+							value="#{itemVar.maxProcureAmt}" maxlength="19"
+							label="#{lbl['lbl.ct.contract.purchase.limit']}"
+							 rendered="#{!centralContractBackingBean.managedBean.viewContract}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						<p:ajax event="blur" update="@this, :form:messages"  />
+						</p:inputText>
+					</p:column>
+				</p:dataTable>
+			</h:panelGroup>
+		</p:outputPanel>
+
+		<p:spacer height="40" />
+		<p:outputPanel id="circularZonePanel">
+			<h:panelGroup
+				rendered="#{centralContractBackingBean.managedBean.selectedCircularItem != null
+		     and centralContractBackingBean.managedBean.chkItemZone}">
+				<p:outputLabel value="#{lbl['lbl.ct.sublabel.zone']}"
+					style="float:left; text-align:left; font-weight:bold; padding-top:25px;" />
+				<div style="clear: both" />
+				<p:dataTable id="circularItemZoneDt" var="dataZone"
+					value="#{centralContractBackingBean.managedBean.contractItemZones}"
+					selection="#{centralContractBackingBean.managedBean.selectedZoneItems}"
+					selectionMode="single" rowKey="#{dataZone}" rowIndexVar="index">
+					<ac:paginator for="circularItemZoneDt" />
+					<p:ajax event="rowSelect" update=":form:circularPricePanel"
+						process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+						listener="#{centralContractBackingBean.setPriceListener()}" />
+					<p:column headerText="#{lbl['lbl.ct.zone']}" style="width:60%;" styleClass="column-align-center">
+						<h:outputText value="#{dataZone.zoneName}" style="float:left;text-align:left;width:50%;" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.ct.location']}" style="width:40%;" styleClass="column-align-center">
+						<p:commandLink update=":form:itemZoneId" actionListener="#{centralContractBackingBean.viewZoneLocation(dataZone)}"
+							oncomplete="itemZoneDlg.show();" immediate="true">
+							<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.ct.view']}"></p:graphicImage>
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+			</h:panelGroup>
+		</p:outputPanel>
+
+		<p:spacer height="40" />
+		<p:outputPanel id="circularPricePanel">
+			<h:panelGroup
+				rendered="#{centralContractBackingBean.managedBean.chkItemPrice and  
+		    centralContractBackingBean.managedBean.selectedCircularItem.ctContractItem.ctItemPrices != null 
+		    and centralContractBackingBean.managedBean.selectedCircularItem.ctContractItem.ctItemPrices.size() > 0}">
+				<p:outputLabel
+					value="#{(centralContractBackingBean.managedBean.selectedCircularItem != null
+		     and centralContractBackingBean.managedBean.chkItemZone)?lbl['lbl.ct.sublabel.zone.price']:lbl['lbl.ct.sublabel.item.price']}"
+					style="float:left;text-align:left; font-weight:bold; padding-top:25px;" />
+				<div style="clear: both" />
+				<p:dataTable id="circularItemZonePriceDt" var="itemPrice"  value="#{centralContractBackingBean.getItemPrice()}">
+					<ac:paginator for="circularItemZonePriceDt" />
+					<c:if test="#{centralContractBackingBean.managedBean.selectedCircularItem.ctContractItem.priceType.parameterCode eq ParameterConst.priceTypeStandard}">
+			                   <p:column headerText="#{lbl['lbl.ct.price']}">
+			                        <h:outputText value="#{itemPrice.unitPrice}">
+			                           <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			                        </h:outputText>
+			                   </p:column>   
+			            </c:if>  
+			     
+			            <c:if test="#{centralContractBackingBean.managedBean.selectedCircularItem.ctContractItem.priceType.parameterCode eq ParameterConst.priceTypeTier}">
+			                  <p:column styleClass="column-align-center">
+					          	<f:facet name="header">
+									<h:outputText value="#{lbl['lbl.ct.from.qty']}"/>
+				               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.qty']}"/>
+				               	</f:facet>
+			               		<h:outputText value="#{itemPrice.fromQty}" style="float:right;text-align:right;">
+               						<f:converter converterId="dynamicNumberConverter" />
+									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, centralContractBackingBean.managedBean.selectedCircularItem.ctContractItem.scRequestItem.uom.uomCode)}" />
+			              		</h:outputText>
+			                  </p:column>       
+			                  <p:column styleClass="column-align-center">
+					          	<f:facet name="header">
+									<h:outputText value="#{lbl['lbl.ct.to.qty']}"/>
+				               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.qty']}"/>
+				               	</f:facet>
+				               	<h:outputText value="#{itemPrice.toQty}" style="float:right;text-align:right;">
+               						<f:converter converterId="dynamicNumberConverter" />
+									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, centralContractBackingBean.managedBean.selectedCircularItem.ctContractItem.scRequestItem.uom.uomCode)}" />		
+				               	</h:outputText>          
+			                  </p:column> 
+			                 <p:column headerText="#{lbl['lbl.ct.price']}" styleClass="column-align-center">
+			                     <h:outputText value="#{itemPrice.unitPrice}" style="float:right;text-align:right;">
+			                         <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			                     </h:outputText>
+			                 </p:column>
+			              </c:if>   
+			        
+			              <c:if  test="#{centralContractBackingBean.managedBean.selectedCircularItem.ctContractItem.priceType.parameterCode 
+			                  eq ParameterConst.priceTypeZonalStandard}">
+			                   <p:column headerText="#{lbl['lbl.ct.price']}">
+			                       <h:outputText value="#{itemPrice.unitPrice}">
+			                           <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			                       </h:outputText>
+			                   </p:column>
+			             </c:if>
+			           
+			             <c:if test="#{centralContractBackingBean.managedBean.selectedCircularItem.ctContractItem.priceType.parameterCode
+			                  eq ParameterConst.priceTypeZonalTier}">
+			                 <p:column styleClass="column-align-center">
+					             <f:facet name="header">
+									<h:outputText value="#{lbl['lbl.ct.from.qty']}"/>
+				               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.qty']}"/>
+				               	</f:facet>
+			               		<h:outputText value="#{itemPrice.fromQty}" style="float:right;text-align:right;">
+               						<f:converter converterId="dynamicNumberConverter" />
+									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, centralContractBackingBean.managedBean.selectedCircularItem.ctContractItem.scRequestItem.uom.uomCode)}" />
+				              	</h:outputText>
+			                 </p:column>       
+			                 <p:column styleClass="column-align-center">
+					             <f:facet name="header">
+									<h:outputText value="#{lbl['lbl.ct.to.qty']}"/>
+				               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.qty']}"/>
+				               	</f:facet>
+			               		<h:outputText value="#{itemPrice.toQty}" style="float:right;text-align:right;">
+               						<f:converter converterId="dynamicNumberConverter" />
+									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, centralContractBackingBean.managedBean.selectedCircularItem.ctContractItem.scRequestItem.uom.uomCode)}" />			
+				             	</h:outputText>		           
+			                 </p:column>    
+			                 <p:column headerText="#{lbl['lbl.ct.price']}" styleClass="column-align-center">
+			                     <h:outputText value="#{itemPrice.unitPrice}" style="float:right;text-align:right;">
+			                         <f:convertNumber
+						                pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			                     </h:outputText>
+			                </p:column>
+			              </c:if> 
+                    
+                          <c:if test="#{centralContractBackingBean.managedBean.selectedCircularItem.ctContractItem.priceType.parameterCode
+			                  eq ParameterConst.priceTypeTariff}">
+			                   <p:column styleClass="column-align-center">
+					           	<f:facet name="header">
+									<h:outputText value="#{lbl['lbl.ct.from.qty']}"/>
+				               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.qty']}"/>
+				               	</f:facet>
+			               		<h:outputText value="#{itemPrice.fromQty}" style="float:right;text-align:right;">
+               						<f:converter converterId="dynamicNumberConverter" />
+									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, centralContractBackingBean.managedBean.selectedCircularItem.ctContractItem.scRequestItem.uom.uomCode)}" />			
+				               	</h:outputText>		            
+			                   </p:column>       
+			                  <p:column styleClass="column-align-center">
+					          	<f:facet name="header">
+									<h:outputText value="#{lbl['lbl.ct.to.qty']}"/>
+				               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.qty']}"/>
+				               	</f:facet>
+			               		<h:outputText value="#{itemPrice.toQty}" style="float:right;text-align:right;">
+               						<f:converter converterId="dynamicNumberConverter" />
+									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, centralContractBackingBean.managedBean.selectedCircularItem.ctContractItem.scRequestItem.uom.uomCode)}" />
+				               	</h:outputText>   
+			                   </p:column>  
+			                   <p:column styleClass="column-align-center">
+					           	<f:facet name="header">
+									<h:outputText value="#{lbl['lbl.ct.sub.seq']}"/>
+				               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.qty']}"/>
+				               	</f:facet>
+				                <h:outputText value="#{itemPrice.subSequence}" style="float:left;text-align:left;">
+               						<f:converter converterId="dynamicNumberConverter" />
+									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, centralContractBackingBean.managedBean.selectedCircularItem.ctContractItem.scRequestItem.uom.uomCode)}" />
+				                </h:outputText>
+			                   </p:column> 
+			                    <p:column headerText="#{lbl['lbl.ct.price']}" styleClass="column-align-center">
+			                        <h:outputText value="#{itemPrice.unitPrice}"  style="float:right;text-align:right;">
+			                            <f:convertNumber
+						                   pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			                        </h:outputText>			                
+			                    </p:column>            
+			             </c:if> 
+			           
+			             <c:if test="#{centralContractBackingBean.managedBean.selectedCircularItem.ctContractItem.priceType.parameterCode
+			                eq ParameterConst.priceTypeZonalTariff}">
+			                 <p:column styleClass="column-align-center">
+					             <f:facet name="header">
+									<h:outputText value="#{lbl['lbl.ct.from.qty']}"/>
+				               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.qty']}"/>
+				               	</f:facet>
+			               		<h:outputText value="#{itemPrice.fromQty}" style="float:right;text-align:right;">
+               						<f:converter converterId="dynamicNumberConverter" />
+									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, centralContractBackingBean.managedBean.selectedCircularItem.ctContractItem.scRequestItem.uom.uomCode)}" />
+				             	</h:outputText>			              
+			                 </p:column>       
+			                 <p:column styleClass="column-align-center">
+					         	<f:facet name="header">
+									<h:outputText value="#{lbl['lbl.ct.to.qty']}"/>
+				               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.qty']}"/>
+				               	</f:facet>
+			               		<h:outputText value="#{itemPrice.toQty}" style="float:right;text-align:right;">
+               						<f:converter converterId="dynamicNumberConverter" />
+									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, centralContractBackingBean.managedBean.selectedCircularItem.ctContractItem.scRequestItem.uom.uomCode)}" />
+				             	</h:outputText>	           
+			                 </p:column>
+			                  <p:column styleClass="column-align-center">
+					          	<f:facet name="header">
+									<h:outputText value="#{lbl['lbl.ct.sub.seq']}"/>
+				               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.qty']}"/>
+				               	</f:facet>
+			               		<h:outputText value="#{itemPrice.subSequence}" style="float:left;text-align:left;">
+               						<f:converter converterId="dynamicNumberConverter" />
+									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, centralContractBackingBean.managedBean.selectedCircularItem.ctContractItem.scRequestItem.uom.uomCode)}" />
+				              	</h:outputText>
+			                  </p:column>     
+			           </c:if>
+				</p:dataTable>
+			</h:panelGroup>
+		</p:outputPanel>
+
+		<p:dialog id="itemZoneDlg" header="#{lbl['lbl.ct.panel.zone']}" styleClass="pop_up_top" resizable="false"
+			widgetVar="itemZoneDlg" modal="true" width="350" height="200">
+			<p:outputPanel id="itemZoneId">
+				<p:treeTable id="itemZoneDt" style="height:160px;"
+					value="#{centralContractBackingBean.managedBean.centralZoneTrees}"
+					var="zoneTree">
+					<p:column style="width:70%;" styleClass="column-align-center">
+						<f:facet name="header">#{lbl['lbl.ct.location.name']}</f:facet>
+						<p:treeNode type="zone">
+							<h:outputText value="#{zoneTree.zone}"  style="float:left;text-align:left;"/>
+						</p:treeNode>
+						<p:treeNode type="state">
+							<h:outputText value="#{zoneTree.state.stateName}" style="float:left;text-align:left;" />
+						</p:treeNode>
+						<p:treeNode type="district">
+							<h:outputText value="#{zoneTree.district.districtName}" style="float:left;text-align:left;" />
+						</p:treeNode>
+					</p:column>
+				</p:treeTable>
+			</p:outputPanel>
+			<div align="right">
+		        <p:spacer height="10"/>
+		        <p:commandButton value="#{lbl['lbl.btn.close']}" onclick="itemZoneDlg.hide();"  />
+	      </div>
+		</p:dialog>
+
+		<p:dialog id="contractDlg" header="#{lbl['lbl.ct.contract.list']}" styleClass="pop_up_top" resizable="false"
+			widgetVar="contractDlg" modal="true" width="800" height="auto">
+			<p:messages id="contractMsg" showSummary="false" 
+			   showDetail="true"   autoUpdate="true" cosable="true" severity="error, info" />
+				<h:panelGrid columns="4">
+				    <p:selectOneMenu id="contractSearchId" style="width:200px"
+                      value="#{centralContractBackingBean.managedBean.searchContractType}" >
+            	   <f:selectItems value="#{centralContractBackingBean.getCtSearchTypeList()}"/>
+            	   <p:ajax event="change" update="contractDt" process="@this"/>
+                 </p:selectOneMenu>
+	 			<p:spacer width="10" />
+				<p:inputText id="contractName" maxlength="1000" 
+						value="#{centralContractBackingBean.managedBean.searchContractValue}"/>
+				
+				<p:commandButton value="#{lbl['lbl.btn.search']}"
+						process="contractDlg" 
+						update="contractDt" actionListener="#{centralContractBackingBean.searchContract()}" />
+				</h:panelGrid>
+				<p:dataTable id="contractDt" var="contractListVar" rowIndexVar="index"
+					rowKey="#{contractListVar.contractId}" paginator="true"
+					value="#{centralContractBackingBean.managedBean.contractList}">
+					<ac:paginator for="contractDt" />
+					 <p:column  style="width:3%">
+				                <f:facet name="header">
+							      <p:selectBooleanCheckbox value="#{centralContractBackingBean.managedBean.selectAll}">
+								     <p:ajax partialSubmit="true" process="@this"
+									      update=":form:contractDt, :form:addCtListId" listener="#{centralContractBackingBean.selectAllContractList}" />
+							      </p:selectBooleanCheckbox>
+						       </f:facet>
+		                        <p:selectBooleanCheckbox 
+		                             value="#{contractListVar.selectedCheckBox}" styleClass="myCustomChekBox">
+		           		               <p:ajax event="change"
+		           		                  update=":form:contractDt,:form:addCtListId" listener="#{centralContractBackingBean.selectContractCheckboxSelectList}"></p:ajax>
+			                     </p:selectBooleanCheckbox>     
+				              </p:column>
+					<p:column headerText="#{lbl['lbl.ct.loa.physical.no']}" 
+					    style="width:30%;white-space:normal;" styleClass="column-align-center" >
+						<h:outputText value="#{contractListVar.latestContractVer.ctContractValue.loaPhysicalNo}" style="float:left;text-align:left;" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.ct.physical.no']}" 
+					    style="width:20%;white-space:normal;" styleClass="column-align-center">
+						<h:outputText value="#{contractListVar.latestContractVer.contractPhysicalNo}"  style="float:left;text-align:left;"/>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.ct.contract.no']}" 
+					    style="width:20%;" styleClass="column-align-center">
+						<h:outputText value="#{contractListVar.contractNo}" style="float:left;text-align:left;" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.ct.supplier.name']}" 
+					      style="width:30%;white-space:normal;" styleClass="column-align-center">
+						<h:outputText style="float:left;text-align:left;"
+							value="#{contractListVar.latestContractVer.ctContractValue.supplierName}" />
+					</p:column>
+				</p:dataTable>
+				<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.btn.ok']}" id="addCtListId"
+					    disabled="#{centralContractBackingBean.managedBean.buttonHideActiveDel}"
+						process="contractDlg" action="#{centralContractBackingBean.addSelectedContract}" update="centralContractDt"
+						oncomplete="centralContractWidget.paginator.endLink.click();" />
+					<p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="contractDlg.hide();" />
+				</div>
+	    	</p:dialog>
+	</p:panel>
+	
+	<p:panel header="#{lbl['lbl.ct.panel.remarks.attachment']}" toggleable="true" 
+	    rendered="#{!centralContractBackingBean.managedBean.viewContract}">
+		<table style="width: 100%">
+			<tr>
+				<td width="50%" valign="top">
+					<table style="width: 100%">
+						<tr>
+							<td class="TableFieldLeft" width="24%"><h:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
+							<td class="TableFieldRight">
+								<p:dataGrid value="#{centralContractBackingBean.managedBean.circularVer.contractRemarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
+									<table>
+										<tr>
+											<td rowspan="2" valign="top">
+												<h:graphicImage value="#{centralContractBackingBean.userImagePath(remarkVar.createdUser.loginId)}" height="30" width="30" />
+											</td>
+											<td width="5"></td>
+											<td>
+												<h:outputText value="#{remarkVar.createdUser.userName}"></h:outputText>,
+												<h:outputText value="#{remarkVar.changedDate}">
+													<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
+												</h:outputText>
+											</td>
+										</tr>
+										<tr>
+											<td></td>
+											<td>
+												<p:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" 
+													disabled="#{centralContractBackingBean.managedBean.viewContract}"  autoResize="false" 
+													onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
+													style="width:70%;"/> 
+												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
+											</td>
+										</tr>
+									</table>
+								</p:dataGrid>
+							</td>
+						</tr>
+					</table>    					
+				</td>
+				<td width="50%" valign="top">
+				<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.attachment']}" escape="false"/><br/><br/>
+				<table style="width: 100%">
+		<tr>
+			<td class="TableFieldLeft" width="24%">
+			      <h:outputLabel value="#{lbl['lbl.txt.attachment']}" /></td>
+			<td class="TableFieldRight">
+				<p:commandButton oncomplete="uploadContractDlg.show();return false;"
+					update="lampiranContract, uploadContractDlg" value="#{lbl['lbl.txt.attach.files']}"
+					disabled="#{centralContractBackingBean.managedBean.viewContract
+						or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}" />
+			</td>
+		</tr>
+		<tr>
+			<td/>
+			<td>
+				<p:dataGrid id="lampiranContract" value="#{centralContractBackingBean.managedBean.circularVer.contractAttachments}"
+					var="attachFile" rowIndexVar="attachFileIndex" columns="1" style="width:100%"
+					emptyMessage ="#{lbl['lbl.datatable.msg.no.records.found']}">
+					<table>
+						<tr>
+							<td rowspan="2"><h:graphicImage value="/css/images/design/#{ctBackingBean.determineIcon(attachFile)}" height="30" width="30"/></td>
+							<td width="5"></td>
+							<td>
+								<h:outputText value=" #{attachFile.createdUser.userName}"></h:outputText>,
+								<h:outputText value="#{attachFile.createdDate}">									
+									<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
+								</h:outputText>
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td>
+								<h:commandLink value="#{attachFile.fileName}" 
+									styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
+								<p:commandLink onsuccess="deleteContractAttachmentDlg.show();" action="#{ctBackingBean.setAttachFileIndex(attachFileIndex)}"
+									rendered="#{!centralContractBackingBean.managedBean.viewContract}"
+									disabled="#{centralContractBackingBean.managedBean.viewContract
+										or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}">
+			   						<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
+			 	 				</p:commandLink>
+			 	 			</td>
+						</tr>
+					</table>
+				</p:dataGrid>
+			</td>
+		</tr>
+	</table>
+				</td>
+			</tr>
+		</table>
+		<p:dialog id="uploadContractDlg" widgetVar="uploadContractDlg" modal="true"  resizable="false"
+	     width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
+		<p:ajax event="close" />
+		<p:fileUpload style="display:inline;"
+			fileUploadListener="#{centralContractBackingBean.fileUpload}"
+			mode="advanced" id="uploadContractId" multiple="true"
+			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+			invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
+			label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload.all']}" cancelLabel="#{lbl['lbl.btn.remove.all']}" 
+			update="lampiranContract" >
+		</p:fileUpload>
+		<f:facet name="footer">
+		<div class="ppRightBtn">
+		    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadContractDlg.hide();" />
+  		</div>
+   		</f:facet>
+	</p:dialog>	
+	
+	               <p:confirmDialog id="deleteContractAttachmentDlg" widgetVar="deleteContractAttachmentDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                           severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                         <div class="ppRightBtn">
+		                     <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                         update=":form:lampiranContract" 
+		                         action="#{centralContractBackingBean.deleteContractAttachmentAction(ctBackingBean.managedBean.attachFileIndex)}"
+		                         oncomplete="deleteContractAttachmentDlg.hide();"/>
+			                 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteContractAttachmentDlg.hide();" type="button" />
+		                 </div>
+                   </p:confirmDialog>
+	</p:panel>
+	
+	<!-- Bug #29447 - To display Remarks and Attachments for CT Module - Circular Maintenance -->
+	<!-- start -->
+	<p:panel header="#{lbl['lbl.ct.panel.remarks.attachment']}" toggleable="true" 
+	    rendered="#{centralContractBackingBean.managedBean.viewContract}">
+		<table style="width: 100%">
+			<tr>
+				<td width="50%" valign="top" style="text-align:center"><h:outputLabel value="#{lbl['lbl.txt.remarks']}" 
+				style="float:none;text-align:center"/></td>
+				<td width="50%" valign="top" style="text-align:center"><h:outputLabel value="#{lbl['lbl.txt.attachment']}" 
+				style="float:none;text-align:center"/></td>
+			</tr>
+			<tr>
+				<td class="TableFieldLeft" width="50%" style="padding-left:6.25%;text-align:left">
+					<p:dataGrid var="remark" 
+					value="#{centralContractBackingBean.managedBean.circularVer.contractRemarks}" rowIndexVar="index"
+						columns="1" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+						<table>
+							<tr>
+								<td rowspan="2" valign="top">
+									<h:graphicImage value="#{centralContractBackingBean.userImagePath(remark.createdUser.loginId)}"
+										height="30" width="30" />
+									</td>
+								<td width="5"></td>
+								<td>
+									<h:outputText id="remarkCreator"
+										value="#{remark.createdUser.userName}" />, 
+									<h:outputText id="remarkDates" value="#{remark.changedDate}">
+										<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+									</h:outputText>
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td>
+									<!-- Bug #29447 -->
+									<h:outputText value="#{remark.remark}"
+									style="display: inline-block; word-break: break-word; white-space:normal"/>
+									<!-- Bug #29447 -->
+								</td>
+							</tr>
+						</table>
+					</p:dataGrid>
+				</td>
+				<td class="TableFieldRight" width="50%" style="padding-left:6.25%">
+					<p:dataGrid value="#{centralContractBackingBean.managedBean.circularVer.contractAttachments}"
+						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" var="attachment"
+						rowIndexVar="attachFileIndex" columns="1" style="width:100%">
+						<table>
+							<tr>
+								<td rowspan="2" style="vertical-align: top;" align="left">
+									<h:graphicImage value="/css/images/design/#{ctBackingBean.determineIcon(attachment)}"
+										height="30" width="30" />
+								</td>
+								<td><h:outputText value="#{attachment.createdUser.userName}" />, 
+									<h:outputText value="#{attachment.createdDate}">
+										<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+									</h:outputText>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<h:commandLink value="#{attachment.fileName}"
+										styleClass="blue_font" immediate="true"
+										action="#{centralContractBackingBean.downloadFile(attachment)}" />
+								</td>
+							</tr>
+						</table>
+					</p:dataGrid>
+				</td>
+			</tr>
+		</table>
+	</p:panel>
+	<!-- Bug #29447 - end -->
+</ui:composition>

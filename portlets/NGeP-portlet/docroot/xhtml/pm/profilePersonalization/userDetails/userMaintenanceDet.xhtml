@@ -1,0 +1,78 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	
+	<table style="border:0; cellspacing:0; cellpadding:0; width:100%;">
+		  <tr>
+			<td width="20%" valign="top" class="sidemenutd">
+				<p:tabMenu styleClass="sidemenu" id="tUserDetails"
+					activeIndex="#{profilePersonalizationBackingBean.managedBean.selectedTabIndex}">
+					<!-- User Profile -->
+                    <p:menuitem value="#{lbl['lbl.pm.profiles.tab.name.up']}" update="@form">
+                    	<f:param name="disableValidation" value="true" />    
+						<f:setPropertyActionListener target="#{profilePersonalizationBackingBean.managedBean.selectedTabIndex}" 
+							value="#{profilePersonalizationBackingBean.tabUserProfile}" />
+					</p:menuitem>
+					<!-- Personalization -->	
+					<p:menuitem value="#{lbl['lbl.pm.profiles.tab.name.pl']}" update="@form">
+						<f:param name="disableValidation" value="true" />    
+						<f:setPropertyActionListener target="#{profilePersonalizationBackingBean.managedBean.selectedTabIndex}" 
+							value="#{profilePersonalizationBackingBean.tabPersonalization}" />
+					</p:menuitem>
+					<!-- Change Password -->
+					<p:menuitem value="#{lbl['lbl.pm.profiles.tab.name.cp']}" update="@form">
+						<f:param name="disableValidation" value="true" />    
+						<f:setPropertyActionListener target="#{profilePersonalizationBackingBean.managedBean.selectedTabIndex}" 
+							value="#{profilePersonalizationBackingBean.tabChangePassword}" />
+					</p:menuitem>
+					<!-- Authorization personnel -->
+					<!--  28838 - start -->
+					<p:menuitem value="#{lbl['lbl.pm.profiles.tab.name.ap']}" update="@form" rendered="#{profilePersonalizationBackingBean.checkFactUser}">
+						<f:param name="disableValidation" value="true" />     
+						<f:setPropertyActionListener target="#{profilePersonalizationBackingBean.managedBean.selectedTabIndex}" 
+							value="#{profilePersonalizationBackingBean.tabAuthPersonnel}" />
+					</p:menuitem>
+					<!--  28838 - end --><!-- 30781 : move end comment -->
+					<ui:remove>
+					<!-- Change Challenge Question -->
+					<p:menuitem value="#{lbl['lbl.pm.profiles.tab.name.ccq']}" update="@form">
+						<f:param name="disableValidation" value="true" />    
+						<f:setPropertyActionListener target="#{profilePersonalizationBackingBean.managedBean.selectedTabIndex}" 
+							value="#{profilePersonalizationBackingBean.tabChangeChallengeQuestion}" />
+					</p:menuitem>
+					</ui:remove>
+				</p:tabMenu>
+			</td>
+			<td width="80%" valign="top">
+				<!-- User Profile -->
+				<p:outputPanel rendered="#{profilePersonalizationBackingBean.managedBean.selectedTabIndex == profilePersonalizationBackingBean.tabUserProfile}">
+					<ui:include src="/xhtml/pm/profilePersonalization/userDetails/userProfileDetails.xhtml" /> 
+				</p:outputPanel>
+				<!-- Personalization -->
+				<p:outputPanel rendered="#{profilePersonalizationBackingBean.managedBean.selectedTabIndex == profilePersonalizationBackingBean.tabPersonalization}">
+					<ui:include src="/xhtml/pm/profilePersonalization/userDetails/userPreference.xhtml" />
+				</p:outputPanel>
+				<!-- Change Password -->	
+				<p:outputPanel rendered="#{profilePersonalizationBackingBean.managedBean.selectedTabIndex == profilePersonalizationBackingBean.tabChangePassword}">
+					<ui:include src="/xhtml/pm/profilePersonalization/userDetails/userChangePassword.xhtml" />
+				</p:outputPanel>
+				<!-- Authorization Personnel --> 	
+				<p:outputPanel rendered="#{profilePersonalizationBackingBean.managedBean.selectedTabIndex == profilePersonalizationBackingBean.tabAuthPersonnel}">
+					<ui:include src="/xhtml/pm/profilePersonalization/userDetails/authorizationPersonnel.xhtml" />
+				</p:outputPanel>
+				
+				
+				<ui:remove>
+				<!-- Change Challenge Question -->	
+				<p:outputPanel rendered="#{profilePersonalizationBackingBean.managedBean.selectedTabIndex == profilePersonalizationBackingBean.tabChangeChallengeQuestion}">
+					<ui:include src="/xhtml/pm/profilePersonalization/userDetails/userChangeChallengeQuestion.xhtml" />
+				</p:outputPanel>
+				</ui:remove>
+			</td>
+		</tr>
+	</table>
+</ui:composition>

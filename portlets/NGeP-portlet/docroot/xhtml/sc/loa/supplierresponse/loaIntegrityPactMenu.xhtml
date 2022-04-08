@@ -1,0 +1,27 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<ui:include src="../shared/loaInstructionHeader.xhtml" />
+	
+	<p:panel header="#{lbl['lbl.sc.terms.and.conds']}" toggleable="true">
+		<table style="width: 100%" border="0" cellspacing="0" cellpadding="0">
+			<tr>
+				<td style="vertical-align: top; padding-top: 106px;"><p:selectBooleanCheckbox
+						disabled="#{lOADetailBackingBean.managedBean.readOnly}"
+						value="#{lOADetailBackingBean.managedBean.agreeWithTermsConditions}">
+						<p:ajax update="@form" />
+					</p:selectBooleanCheckbox></td>
+				<td class="TableFieldRight"><p:editor controls=""
+						id="loaEditor"
+						value="#{lOADetailBackingBean.managedBean.termsConditions}"
+						disabled="true" width="870" height="400" /></td>
+			</tr>
+		</table>
+	</p:panel>
+
+</ui:composition>

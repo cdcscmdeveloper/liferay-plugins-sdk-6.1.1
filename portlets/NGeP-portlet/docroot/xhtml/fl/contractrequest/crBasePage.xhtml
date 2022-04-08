@@ -1,0 +1,238 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="resourceSection">
+		<style>
+			.gfmasPanelCss>.ui-panel-content {
+				background: #f2dede !important;
+			}
+		</style>	
+	</ui:define>
+
+	<ui:define name="contentSection">	
+		<h:panelGroup layout="block" class="ui-messages ui-widget" rendered="#{(contractRequestBackingBean.managedBean.flRequest.status.statusId.longValue() == FulfilmentStatusCont.crPendingSubmission.longValue() 
+		or contractRequestBackingBean.managedBean.flRequest.status.statusId.longValue() == FulfilmentStatusCont.crPendingApproval.longValue() 
+		or contractRequestBackingBean.managedBean.flRequest.status.statusId.longValue() == FulfilmentStatusCont.crPendingRevision.longValue() 
+		or contractRequestBackingBean.managedBean.flRequest.status.statusId.longValue() == FulfilmentStatusCont.crPendingRevisionApproval.longValue() 
+		or contractRequestBackingBean.managedBean.flRequest.status.statusId.longValue() == FulfilmentStatusCont.crPendingQueryVerification.longValue()) 
+		and not empty contractRequestBackingBean.managedBean.disciplinaryActionMessage}">
+		<h:panelGroup layout="block" class="ui-messages-info ui-corner-all">
+		<h:outputText class="ui-messages-info-icon" /><ul><li>
+		<h:outputText class="ui-messages-info-detail" /> #{contractRequestBackingBean.managedBean.disciplinaryActionMessage} <p:commandLink id="sharedcommand" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" action="#{contractRequestBackingBean.viewDisciplinaryAction(contractRequestBackingBean.managedBean.smDisciplinaryAction)}" process="@this" partialSubmit="true" update=":form">#{lbl['lbl.sm.disciplinary.here']}</p:commandLink> #{lbl['lbl.sm.supplier.to.view.disc.action.details']}</li></ul>
+		</h:panelGroup>
+		</h:panelGroup>
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>
+		<ac:gpkiPopup 
+			textBeforeSign="#{contractRequestBackingBean.managedBean.textBeforeSign}"
+			postSignAction="#{contractRequestBackingBean.preSubmitFulfillmentRequest(gpkiBackingBean.pmDigiSign)}"
+			enableAutoUpdate="#{contractRequestBackingBean.enableAutoUpdate()}" />		
+		<c:if test="#{contractRequestBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or contractRequestBackingBean.managedBean.isHyperLinkPage()}">
+			<ac:title value="#{contractRequestBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, ParameterConst.doctypeContractRequest)}" />
+		</c:if>			
+		<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="#{contractRequestBackingBean.managedBean.autoUpdate}" closable="true" severity="error,info" escape="false" globalOnly="true"/><!--#29728 - add globalOnly="true" to not allow the branch deletion message to use this sharing messages component -->
+		<p:messages id="delBranchMsg" showSummary="false" showDetail="true" autoUpdate="#{contractRequestBackingBean.managedBean.autoUpdate}" closable="true" severity="error,info" escape="false" for="delBranchMsg"/><!--#29728 - message to notify branch deletion  -->
+		<p:panel style="background:#f2dede !important; border:0px;" styleClass="gfmasPanelCss" rendered="#{contractRequestBackingBean.managedBean.gfmasError}" >		
+			<table>
+				<tr>
+					<td>
+						<p:commandLink oncomplete="gfmasError.show();" immediate="true"
+							action="#{contractRequestBackingBean.show1GFMASError()}"
+							rendered="#{contractRequestBackingBean.managedBean.gfmasError}">
+							<p:graphicImage value="/css/images/design/exclamation.png" />
+						</p:commandLink>
+						<p:spacer width="2" />
+					</td>
+					<td>
+						<p:outputLabel value="#{contractRequestBackingBean.managedBean.gfmasErrorDesc} #{lbl['lbl.fl.integration.click.for.exception.details']} (ERR-#{contractRequestBackingBean.managedBean.gfmasErrorCode})" style="color: #C55751 !important; font-weight: normal !important"
+							rendered="#{contractRequestBackingBean.managedBean.gfmasError}" />
+					</td>					
+				</tr>
+			</table>
+		</p:panel>			
+		<table style="width: 100%">
+			<tr>
+				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" rendered="#{contractRequestBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}" 
+						action="#{contractRequestBackingBean.backToPervious}" />
+						<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" rendered="#{contractRequestBackingBean.managedBean.buttonVal eq FulfilmentConst.contractRequest}" 
+						action="#{contractRequestBackingBean.backToCrList}" /></td>
+				<td colspan="4" style="text-align: right">
+					<c:if test='#{contractRequestBackingBean.managedBean.buttonVal ne BpmOutcomeConstant.bpmView}'>
+						<ui:decorate template="/xhtml/fl/shared/claim_template.xhtml">
+							<ui:define name="outComeSection">
+								<ui:repeat
+								var="bpmAction" value="#{contractRequestBackingBean.managedBean.outComes}">	
+								<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+								<p:commandButton value="#{lbl[buttonLabel]}"
+									styleClass="ui-button" 
+									update="@form" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+									action="#{contractRequestBackingBean.gpkiSignAction(bpmAction)}" />
+								</ui:repeat>
+							</ui:define>
+						</ui:decorate>
+					</c:if>				
+				</td>
+				<c:if
+					test='#{contractRequestBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView and !contractRequestBackingBean.managedBean.isHyperLinkPage()}'>
+					<td colspan="4" style="text-align: right">	
+					<p:commandLink
+						value="#{lbl['lbl.td.doc.trackingDiary']}"
+						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(contractRequestBackingBean.managedBean.flRequest.docType,contractRequestBackingBean.managedBean.flRequest.fulfilmentReqId)}"
+						immediate="true" />
+					</td>		
+				</c:if>	
+				<!-- #21221 -->
+				<h:panelGroup id="printButtonCr" 
+					rendered="#{contractRequestBackingBean.managedBean.flRequest.status.statusId.longValue() == FulfilmentStatusCont.crComplete.longValue()}">
+				<td style="text-align: right; width: 30px;"><p:commandLink
+						value="#{lbl['lbl.btn.print']}" ajax="false">
+						<p:fileDownload
+							value="#{flDocumentBackingBean.generateReport(contractRequestBackingBean.managedBean.flRequest.docType,contractRequestBackingBean.managedBean.flRequest.docNo,flDocumentManagedBean.taxable)}" />
+					</p:commandLink>
+				</td>
+				</h:panelGroup>
+			</tr>
+		</table>
+		<ui:include src="/xhtml/fl/contractrequest/crHeaderPage.xhtml" />
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<td width="20%" valign="top" class="sidemenutd">
+					<p:tabMenu styleClass="sidemenu"
+						activeIndex="#{contractRequestBackingBean.managedBean.selectedTabIndex}">
+						<p:menuitem value="#{lbl['lbl.fl.menu.general']}" update="@form">
+							<f:setPropertyActionListener
+								target="#{contractRequestBackingBean.managedBean.selectedTabIndex}"
+								value="0" />
+						</p:menuitem>
+						<p:menuitem value="#{lbl['lbl.fl.menu.delivery.address.item']}" update="@form"
+							actionListener="#{contractRequestBackingBean.onTabChange(1)}">
+							<f:setPropertyActionListener
+								target="#{contractRequestBackingBean.managedBean.selectedTabIndex}"
+								value="1" />
+						</p:menuitem>
+						<p:menuitem value="#{lbl['lbl.fl.menu.order.summary']}" update="@form"
+							actionListener="#{contractRequestBackingBean.onTabChange(3)}" >
+							<f:setPropertyActionListener
+								target="#{contractRequestBackingBean.managedBean.selectedTabIndex}"
+								value="2" />
+						</p:menuitem>
+						<p:menuitem value="#{lbl['lbl.fl.menu.charge.line.assignment']}" update="@form"
+							actionListener="#{contractRequestBackingBean.onTabChange(3)}">
+							<f:setPropertyActionListener
+								target="#{contractRequestBackingBean.managedBean.selectedTabIndex}"
+								value="3" />
+						</p:menuitem>
+						<p:menuitem value="#{lbl['lbl.fl.menu.approver.list']}" update="@form" actionListener="#{contractRequestBackingBean.onTabChange(4)}"
+						rendered="#{contractRequestBackingBean.isFlFulfilmentRequisitioner()}"
+							>
+							<f:setPropertyActionListener
+								target="#{contractRequestBackingBean.managedBean.selectedTabIndex}"
+								value="4" />
+						</p:menuitem>
+					</p:tabMenu></td>
+				<td width="80%" valign="top">
+					<p:outputPanel
+						rendered="#{contractRequestBackingBean.managedBean.selectedTabIndex == 0}">
+						<ui:include src="crGeneral.xhtml" />
+					</p:outputPanel> <p:outputPanel
+						rendered="#{contractRequestBackingBean.managedBean.selectedTabIndex == 1}">
+						<ui:include src="crItem.xhtml" />
+					</p:outputPanel> <p:outputPanel
+						rendered="#{contractRequestBackingBean.managedBean.selectedTabIndex == 2}">
+						<ui:include src="crOrdersummary.xhtml" />
+					</p:outputPanel> <p:outputPanel
+						rendered="#{contractRequestBackingBean.managedBean.selectedTabIndex == 3}">
+						<ui:include src="crChargeline.xhtml" />
+					</p:outputPanel> <p:outputPanel
+						rendered="#{contractRequestBackingBean.managedBean.selectedTabIndex == 4}">
+						<p:panel id="settingId" header="#{lbl['lbl.fl.ptj.approver.details']}"
+							toggleable="true" toggleSpeed="500">
+			  <!-- 13291 --><h:outputText styleClass="instruction" value="#{lbl['lbl.fl.ptj.approver.ptj.name.instr']}" escape="false"/>
+							<h:panelGrid columns="1">
+			    <!-- 13291 start --><h:panelGrid columns="2">
+									<h:outputLabel value="#{lbl['lbl.fl.ptj.approver.ptj.name']}" style="text-align: top; float:left;" />
+									<p:selectOneMenu id="approverPTJNameDropdown" style="width:528px; margin-bottom:5px; float: right; margin-right: -5% !important;"
+										disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
+										value="#{contractRequestBackingBean.managedBean.selectedApproverPTJ}">
+										<p:ajax event="change" process="@this" update="approverGroupDropdown,approverDropdown" 
+											listener="#{contractRequestBackingBean.approverPTJNameChangeListener()}" />
+										<f:selectItems value="#{contractRequestBackingBean.getApproverPTJNameDropdown()}" />
+									</p:selectOneMenu>
+									<h:outputLabel value="#{lbl['lbl.fl.ptj.approver.group']}" style="text-align: top; float:left;" />
+					<!-- 13291 --><p:selectOneMenu id="approverGroupDropdown" style="width:450px; margin-bottom:5px; float: right; margin-right: 9.8% !important;"
+										disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
+										value="#{contractRequestBackingBean.managedBean.flRequest.pmUserGroup.userGroupId}" >
+										<p:ajax event="change" process="@this" update="approverDropdown"
+											listener="#{contractRequestBackingBean.userGroupChangeListener()}"  />
+										<f:selectItems value="#{contractRequestBackingBean.getUserGroupDropdown()}" />
+									</p:selectOneMenu>
+									<h:outputLabel value="#{lbl['lbl.rpt.approverName']}" style="float:left;"/><!-- 13291 -->
+									<p:selectOneMenu id="approverDropdown"
+										disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
+										value="#{contractRequestBackingBean.managedBean.selectedApprover}"
+										style="width:450px; float: right; margin-right: 9.8% !important;"><!-- 13291 -->
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" />
+										<f:selectItems
+											value="#{contractRequestBackingBean.getApproverListDropDown()}" />
+									</p:selectOneMenu>
+								</h:panelGrid><!-- 13291 - end -->
+							</h:panelGrid>
+						</p:panel>
+						<!-- 13291 start -->
+						<p:panel id="pmoDetails" header="#{lbl['lbl.fl.pmo.ptj.name.dtls.header']}" toggleable="true" toggleSpeed="500">
+							<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.pmo.ptj.name.dtls.instr']}" escape="false"/><br />
+							<h:panelGrid columns="1">
+								<h:panelGrid columns="2">
+									<h:outputLabel value="#{lbl['lbl.fl.pmo.ptj.name']}" style="text-align: top" />
+									<p:selectOneMenu style="width:450px; margin-bottom:5px;"
+										disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
+										value="#{contractRequestBackingBean.managedBean.selectedPmoPTJ}" >
+										<f:selectItems value="#{contractRequestBackingBean.getPmoPTJNameDropdown()}" />
+									</p:selectOneMenu>
+								</h:panelGrid>
+							</h:panelGrid>	
+						</p:panel>
+						<!-- 13291 end -->
+					</p:outputPanel></td>
+			</tr>
+		</table>
+		<p:dialog id="gfmasErrorDlg" header="#{lbl['lbl.fl.integration.exception.details']}" widgetVar="gfmasError" width="80%"
+			showEffect="fade" hideEffect="fade" modal="true" resizable="false">
+			<table style="width: 100%">
+				<tr>
+					<td><p:messages id="gfmasMsg" showSummary="false" escape="false" showDetail="true" autoUpdate="true" closable="true" severity="error,info" /></td>
+				</tr>
+			</table>
+			<p:spacer height="2px"></p:spacer>
+			<div style="width: 100%; text-align: right">
+				<p:commandButton value="#{lbl['lbl.btn.close']}" oncomplete="gfmasError.hide();" />
+			</div>
+		</p:dialog>					
+		<p:confirmDialog message="#{lbl['lbl.fl.confirmation.cancel.dialogue']}"
+			severity="alert" widgetVar="cancelConfirmDlg" closable="true"
+			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
+					partialSubmit="true" 
+					action="#{contractRequestBackingBean.submitAction(BpmOutcomeConstant.bpmCancel)}"
+					onstart="cancelConfirmDlg.hide();blockWidget.show();"
+					oncomplete="blockWidget.hide();"/>
+				<p:commandButton value="#{lbl['lbl.btn.no']}" 
+					partialSubmit="true"
+					onclick="cancelConfirmDlg.hide();" />
+			</div>
+		</p:confirmDialog>	
+		<ac:lovPopup />
+		<ac:disciplinaryActionHistory voList="#{contractRequestBackingBean.managedBean.disciplineVOs}" 
+		dialogHeader="#{lbl['lbl.sm.view.details.disciplinary.action.headerlbl']}" dialogWidth="800px" dialogHeight="400px" btnView="true" />
+	</ui:define>
+</ui:composition>
