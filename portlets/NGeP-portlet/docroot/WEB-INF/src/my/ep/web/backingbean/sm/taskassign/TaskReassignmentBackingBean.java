@@ -27,6 +27,7 @@ import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.ct.IContractIntegrationSO;
 import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.pm.access.application.IAccessApplSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pp.procurementplan.IProcurementPlanSO;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
@@ -50,6 +51,7 @@ import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.access.application.AccessApplReqDTO;
 import my.ep.dto.pm.access.application.AccessApplResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanReqDTO;
@@ -1726,6 +1728,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 	}
 	
 	//#29822 - start
+	
 	public void removeReassignAllGroupTasks() {
 		
 		String loginId = null;
@@ -1739,6 +1742,8 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 		try {
 			taskAssignmentSO = (ISupplierDataMaintenanceSO) BusinessDelegate
 					.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
+			
+			
 			
 			taskSearchBean = getManagedBean().getTaskAssignmentSearchBean();
 			loginId = taskSearchBean.getUser() != null ? taskSearchBean
@@ -1765,6 +1770,8 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 				reqDTO.setParamTask("GROUP");
 				//module
 				reqDTO.setModule("SM");
+				//created by
+				reqDTO.setCreatedBy(getUserByLoginId());
 				
 				List<String> docNumberList = new ArrayList<String>();
 				if (StringUtils.isNotBlank(getManagedBean()
@@ -1926,6 +1933,8 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 				reqDTO.setParamTask("OTHERS");
 				//module
 				reqDTO.setModule("SM");
+				//created by
+				reqDTO.setCreatedBy(getUserByLoginId());
 
 				List<String> docNumberList = new ArrayList<String>();
 				if (StringUtils.isNotBlank(getManagedBean().getTaskAssignmentSearchBean().getDocNo())) {
@@ -2151,6 +2160,25 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 			this.getManagedBean().setEnableRemoveAllGroupTasksButton(true);
 			this.getManagedBean().setEnableRemoveAllOthersTasksButton(true);
 		}
+	}
+	
+	public Long getUserByLoginId(){
+		Long loginSessionUserId = 1L;
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IUserSO.class);
+	
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setLoginId(getFacesScopes().getUserScreenName());
+		PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
+		if (pmUser == null) {
+			loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
+		}
+		else{
+			loginSessionUserId = pmUser.getUserId();
+		}
+		
+		return loginSessionUserId;
 	}
 	//#29822 - end
 	
