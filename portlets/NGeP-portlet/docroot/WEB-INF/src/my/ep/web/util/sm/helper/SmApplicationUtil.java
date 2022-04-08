@@ -4014,24 +4014,25 @@ public class SmApplicationUtil {
 			
 					//30865, 30921 - Starts
 				} else if (cat.getRecordStatusFlg().compareTo(DbValueConst.RECORD_STATUS_CANCELLED) == 0){
-					if(managedBean.getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)){
+					//#32810 Alert message not display for cancel bumi - start 
+//					if(managedBean.getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)){
 						SmDisciplinaryAction smDisciplinaryAction = retrieveActiveSmDisciplinaryActionByDisciplinaryId(cat.getDisciplinaryActionId());
 
 						//#32298 DA cancel manufacture alert warning - start - <26238>
-						//#32810 Alert message not display for cancel bumi - start 
 						if(smDisciplinaryAction.getRecordStatusFlg() != null && smDisciplinaryAction.getRecordStatusFlg() == 1){
 							cat.setCancelCategory(true);
 							if(smDisciplinaryAction.isCancelCategory() || smDisciplinaryAction.isBumiputeraCancel()){
 								cat.setTypeDisciplinaryAction("C"); 
+								apprvList.add(cat);
 							}else if(smDisciplinaryAction.isManufacturerCancel()){
 								cat.setTypeDisciplinaryAction("M"); 
+								apprvList.add(cat);
 							}
-							apprvList.add(cat);
 						}
 						//#32810 Alert message not display for cancel bumi - end 
 						//#32298 DA cancel manufacture alert warning - end - <26238>
+//					}
 					}
-				}
 				//30865, 30921  - Ends
 			}
 			if (managedBean.getActiveCategoryList() != null
