@@ -31,14 +31,6 @@ import org.apache.log4j.Logger;
 public class UpgradeRoleFinishButtonRest {
 	public static Logger log = Logger.getLogger(UpgradeRoleFinishButtonRest.class);
 	
-	//#30942 LOG START
-	private void debugLogger(Object message) {
-		if (log.isDebugEnabled()) {
-			log.debug(message);
-		}
-		log.info(message);
-	}
-	
 	@GET
 	@Path("/upgraderolefinishbutton/{userId}")
 	public Response upgradeRoleFinishButton(@PathParam("userId") long userId) {
@@ -70,7 +62,6 @@ public class UpgradeRoleFinishButtonRest {
 		try {	
 			//START 12491
 			IUpgradeRoleSO upgradeRoleSO = SmServiceLookup.getUpgradeRoleSO();
-			debugLogger("30942 :: start -> upgradeRoleFinishButtonBulk()");
 			SmSchedulerResDTO resDTO = upgradeRoleSO.retrievePendingUpgradeRole();
 			if(resDTO.getSmUpdateRoleProcess()!= null){
 				for(SmUpdateRoleProcess process:resDTO.getSmUpdateRoleProcess()){
