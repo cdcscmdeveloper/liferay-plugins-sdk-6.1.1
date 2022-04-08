@@ -435,6 +435,8 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 	if(popup){
 		this.assertSpecCommitteeMaintenanceInProgress(scQt);
 		if(this.getManagedBean().getInactiveSCMemberStr().length()>0){
+			SpecificationBackingBean specBB = new SpecificationBackingBean();
+			specBB.qtChecklistTabChange(10);
 			RequestContext.getCurrentInstance().execute("inactiveSCMembersPopup.show()");
 		}
 	}
