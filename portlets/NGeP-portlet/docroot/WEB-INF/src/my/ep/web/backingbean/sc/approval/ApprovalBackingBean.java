@@ -695,6 +695,10 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				workFlowStatusSO = null;
 			}
 		} else if(SCProcessNameConst.DEMO_APPROVE_CANCELLATION.equalsIgnoreCase(taskName)) {//#28784		
+			SCEvaluationDataType dataType = getBpmTaskDetails(SCEvaluationDataType.class, null);
+			getManagedBean().setPayLoad(dataType);
+			qtId = Long.valueOf(dataType.getQtId());
+
 			List<String> fc = new ArrayList<String>();
 			fc.add(ParameterConst.APPROVAL_REQUEST_CANCELATITION_QT);
 			paramTypes = fc;
@@ -705,22 +709,21 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			docType = ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE;
 			IScWorkFlowStatusSO workFlowStatusSO;
 			try {
-				workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+				workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IScWorkFlowStatusSO.class);
 				ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
 				reqDTO.setDocType(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE);
 				reqDTO.setDocId(qtId);
 
-				currentStatus = workFlowStatusSO.
-						retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+				currentStatus = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
 				
 				QTDetailBackingBean qtBackingBean =   new QTDetailBackingBean();
 				qtBackingBean.retrieveQuationTenderDetails(qtId);
 				ScQt scQt = qtBackingBean.getManagedBean().getQt();
 				this.getManagedBean().setQt(scQt);				
 				
-				IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTDetailSO.class);
+				IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 				
 				QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
 				quationTenderReqDTO.setQtId(scQt.getQtId());
@@ -729,8 +732,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				this.getManagedBean().setQt(resDTO.getQtDetail());
 				ScQtApproval qtApproval = resDTO.getQtApproval();
 				this.getManagedBean().setScQtApproval(qtApproval);
-			}
-			finally {
+			} finally {
 				workFlowStatusSO = null;
 			}
 		}
@@ -743,7 +745,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				currentStatus, 
 				getManagedBean().getScQtApproval().getScQtApprovalRemarks(),
 				ScQtApprovalRemark.class);
-		// this.getManagedBean().setScQtApproval(this.getManagedBean().getScQtApproval());
 		this.getManagedBean().setScQtApprovalRequestList(approvalRequests);
 		FacesContext context = FacesContext.getCurrentInstance();
 
@@ -1428,6 +1429,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				resDTO.setPmUser(new FacesScopes().getUserSessionBean());				
 				resDTO.setOutcome(BpmOutcomeConst.BPM_APPROVE);
 				resDTO.setPayLoad(this.getManagedBean().getPayLoad());
+				resDTO.setTaskName(taskName);
+				resDTO.setTaskId(this.getManagedBean().getTaskId());
 				resDTO = demoBB.demoUpdateBpmTask(resDTO, outcome);
 				tenderResDTO.setSuccessful(resDTO.isSuccessful());
 				tenderResDTO.setQtDetail(qt);			
@@ -2916,6 +2919,12 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			return inactive;
 		}
 		//#30477 - Start
+		
+		//#28784
+		private FacesScopes getFacesScopes() {
+			FacesScopes facesScopes = new FacesScopes();
+			return facesScopes;
+		}
 		
 }
 
