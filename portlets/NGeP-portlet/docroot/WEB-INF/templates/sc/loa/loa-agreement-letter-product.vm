@@ -259,7 +259,7 @@ u.underline {
 				## #25025 & #26770 -end
 				<p>
 					<span class="text_family_small">Perenggan 3 di atas adalah terpakai untuk syarikat yang
-					berdaftar dengan JKDM dan Barangan dikenakan Cukai di bawah Akta Cukai Jualan 2018</span>
+					berdaftar dengan JKDM dan Barangan dikenakan Cukai di bawah Akta Cukai Jualan 2018.</span>
 				</p>
 				
 				## #25025 & #26770 -start
@@ -317,7 +317,7 @@ u.underline {
 				
 				## #25025 & #26770 -start
 				<p>
-					<span class="text_family">5. &#160;&#160;&#160;&#160;&#160;Setelah pesanan/arahan dikeluarkan oleh Kerajaan, syarikat tuan dikehendaki melaksanakan pembekalan barang dalam tempoh yang ditetapkan dan kualiti bekalan tersebut hendaklah memuaskan hati serta memenuhi kehendak Kerajaan. Sekiranya syarikat tuan gagal melaksanakan pembekalan barang dalam tempoh dan/atau kualiti yang ditetapkan, Kerajaan berhak membatalkan pesanan/arahan yang dikeluarkan dan/atau mengenakan <span class="text_family_red">*Denda/ Tolakan/ <i>Liquidated & Ascertained Damages</i> (LAD)</span> seperti yang ditetapkan dalam <b><i>Lampiran A</i></b>.  </span>
+					<span class="text_family">5. &#160;&#160;&#160;&#160;&#160;Setelah pesanan/arahan dikeluarkan oleh Kerajaan, syarikat tuan dikehendaki melaksanakan pembekalan barang dalam tempoh yang ditetapkan dan kualiti bekalan tersebut hendaklah memuaskan hati serta memenuhi kehendak Kerajaan. Sekiranya syarikat tuan gagal melaksanakan pembekalan barang dalam tempoh dan/atau kualiti yang ditetapkan, Kerajaan berhak membatalkan pesanan/arahan yang dikeluarkan dan/atau mengenakan <span class="text_family_red">*Denda/ Tolakan / <i>Liquidated & Ascertained Damages</i> (LAD)</span> seperti yang ditetapkan dalam <b><i>Lampiran A</i></b>.  </span>
 				</p>
 				## #25025 & #26770 -end
 				#if($isSL1M == "true")
@@ -367,12 +367,12 @@ u.underline {
 				#if($isSL1M == "true")
 				<p>
 					<span class="text_family_small">Perenggan ini terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki
-					untuk melaksanakan Program PROT&Eacute;G&Eacute; berdasarkan PP//PK 1.2</span>
+					untuk melaksanakan Program PROT&Eacute;G&Eacute; berdasarkan PP/PK 1.2</span>
 				</p>
 				#else
 				<p>
-					<span class="text_family_small">Perenggan ini terpakai sekiranya Harga Kontrak <b>di bawah nilai ambang</b> dan syarikat dikehendaki
-					untuk melaksanakan Program PROT&Eacute;G&Eacute; berdasarkan PP//PK 1.2</span>
+					<span class="text_family_small">Perenggan ini terpakai sekiranya Harga Kontrak <b>di bawah nilai ambang</b> dan syarikat digalakkan
+					untuk melaksanakan Program PROT&Eacute;G&Eacute; berdasarkan PP/PK 1.2</span>
 				</p>
 				#end
 				
@@ -819,7 +819,7 @@ u.underline {
 						<table>
 								<tr>
 									<td align="center" style="vertical-align: top;" class="text_family_header">6. </td>
-									<td class="text_header_submenu">Spesifikasi Pembekalan (sekiranya berkaitan)</td>
+									<td class="text_header_submenu">Spesifikasi Pembekalan <i>(sekiranya berkaitan)</i></td>
 								</tr>
 						</table>
 					</td>
@@ -956,7 +956,7 @@ u.underline {
 						<table>
 								<tr>
 									<td align="center" style="vertical-align: top;" class="text_sub_header_red">9. </td>
-									<td class="text_header_submenu_red">Kenaan *Denda/Tolakan/ <i>Liquidated & Ascertained Damages (LAD)</i><br/>
+									<td class="text_header_submenu_red">Kenaan *Denda/ Tolakan/ <i>Liquidated & Ascertained Damages (LAD)</i><br/>
 												<span class="text_family_red"><span class="text_family_small">
 												(Lewat/Gagal bekal barang atau tidak menepati spesifikasi) </span></span>
 									</td>
@@ -1011,9 +1011,9 @@ u.underline {
 					</td>
 				</tr>
 				<tr>
-					<td align="left" class="submenu_padding"><span
+					<td valign="top" align="left" class="submenu_padding"><span
 						class="text_family">10.1 Tertakluk kepada pelaksanaan Program PROT&Eacute;G&Eacute;</span></td>
-					<td class="text_family">:</td>
+					<td valign="top"class="text_family">:</td>
 					<td class="text_family">YA <span class="text_family_small_black">(Berdasarkan nilai ambang yang ditetapkan dalam PP/PK1)</span></td>
 				</tr>
 				<tr>
