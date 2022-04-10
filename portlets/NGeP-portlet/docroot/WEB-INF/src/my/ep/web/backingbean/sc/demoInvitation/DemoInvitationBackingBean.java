@@ -1025,6 +1025,8 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 	public DemoResDTO demoUpdateBpmTask(DemoResDTO resDTO, String outcome) {
 		try {
 			FacesScopes facesScopes = new FacesScopes();
+			String taskName = null;
+			String taskId = null;
 			String languageCode = new FacesScopes().getUserLocale().getLanguage();
 			resDTO.setLanguageCode(languageCode);
 			IQTDemoSO qtDemoSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
@@ -1068,9 +1070,19 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 				if (resDTO.getScQt() == null) {
 					resDTO.setScQt(scqt);
 				}
+
+				if (this.getManagedBean().getTaskId() == null || this.getManagedBean().getTaskId() == null) {
+					taskId = resDTO.getTaskId();
+					taskName = resDTO.getTaskName();
+
+				} else {
+					taskId = this.getManagedBean().getTaskId();
+					taskName = this.getManagedBean().getTaskName();
+				}
+				
 				resDTO.setPmUser(userResDTO.getPmUser());
-				demoReqDTO.setTaskId(this.getManagedBean().getTaskId());
-				demoReqDTO.setTaskName(this.getManagedBean().getTaskName());// #25037
+				demoReqDTO.setTaskId(taskId);
+				demoReqDTO.setTaskName(taskName);// #25037
 				demoReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 				demoReqDTO.setPayLoad(this.getManagedBean().getPayLoad());
 				demoReqDTO.setPmUser(facesScopes.getUserSessionBean());
