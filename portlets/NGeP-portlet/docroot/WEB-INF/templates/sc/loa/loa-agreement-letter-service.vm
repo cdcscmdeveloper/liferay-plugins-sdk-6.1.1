@@ -992,9 +992,9 @@ u.underline {
 					</td>
 				</tr>
 				<tr>
-					<td align="left" class="submenu_padding"><span
+					<td valign="top" align="left" class="submenu_padding"><span
 						class="text_family">10.1 Tertakluk kepada pelaksanaan Program PROT&Eacute;G&Eacute;</span></td>
-					<td class="text_family">:</td>
+					<td valign="top" class="text_family">:</td>
 					<td class="text_family">YA <span class="text_family_small_black">(Berdasarkan nilai ambang yang ditetapkan dalam PP/PK1)</span></td>
 				</tr>
 				<tr>
