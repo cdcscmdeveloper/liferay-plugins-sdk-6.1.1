@@ -15,8 +15,9 @@
 		
 		<p:spacer height="3" />
 		<div style="width: 100%">
+			<ui:remove>#11299 Vinod added disableFieldsforCommitteeRevision</ui:remove>
 			<p:pickList id="publicationapproverid"
-				disabled="#{!isPubApprovalDtlsEditable}"
+				disabled="#{!isPubApprovalDtlsEditable or  qTDetailBB.disableFieldsforCommitteeRevision()}"
 				value="#{qTDetailBB.managedBean.publicationApprovals}"
 				var="publicationUser" showTargetControls="true"
 				itemLabel="#{publicationUser.pmUser.userName}"

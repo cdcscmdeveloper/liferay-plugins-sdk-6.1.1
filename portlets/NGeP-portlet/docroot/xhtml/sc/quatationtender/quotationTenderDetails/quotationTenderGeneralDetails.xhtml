@@ -432,7 +432,8 @@
 								<td><c:choose>
 										<c:when	test="#{(!scQt.panel and !isReadOnly) and (!isDemoDisabled and !isMaintenanceFlow and !isDemoSpecialCase)}">
 											<p:outputPanel id="demoPop">
-												<p:selectOneRadio value="#{scQt.demoRequired}" disabled="#{scQt.partial}">
+												<ui:remove>#11299 Vinod added disableFieldsforCommitteeRevision</ui:remove>
+												<p:selectOneRadio value="#{scQt.demoRequired}" disabled="#{scQt.partial or  qTDetailBB.disableFieldsforCommitteeRevision()}">
 													<f:selectItems
 														value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 													<p:ajax event="change" update="@form" partialSubmit="true" process="@this"
@@ -444,7 +445,8 @@
 										</c:when>
 										<c:when	test="#{isDemoDisabled}">
 											<p:outputPanel id="demoPop">
-												<p:selectOneRadio value="#{scQt.demoRequired}" disabled="#{scQt.partial}">
+												<ui:remove>11299 Vinod added disableFieldsforCommitteeRevision</ui:remove>
+												<p:selectOneRadio value="#{scQt.demoRequired}" disabled="#{scQt.partial or  qTDetailBB.disableFieldsforCommitteeRevision()}">
 													<f:selectItems
 														value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 													<p:ajax event="change" update="@form" partialSubmit="true" process="@this"

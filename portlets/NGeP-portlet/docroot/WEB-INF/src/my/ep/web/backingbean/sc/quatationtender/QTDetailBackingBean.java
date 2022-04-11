@@ -3762,6 +3762,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				this.getManagedBean().setSubStatusId(sts.getStatusId());
 			}
 			//#25692-End
+			//#11299 vinod start
+			if (SCProcessNameConst.REVISE_COMMITTEE.equals(this.getManagedBean().getTaskName())) {
+				PmStatus sts = getQTDetailSO().retrieveActiveStatusByDoctype(this.getManagedBean().getQt().getQtId(), ParameterConst.DOCTYPE_COMMITTE_APROVAL);
+				this.getManagedBean().setSubStatusId(sts.getStatusId());
+			}
+			//#11299 vinod End
 			assertSpecificationUpdateInProgress(false);			
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, QTConstants.MAINTANANCE_PAGE);
@@ -3906,9 +3912,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
 				//#11299 Start Vinod
 				for(ScQtApproval approval : this.getManagedBean().getQt().getScQtApprovals()){
-					List<ScQtApproverSettings> approverSettings = approval.getApproverSettings();
-					if(CollectionUtils.isEmpty(approverSettings)){
-						throw new EpException(MessageConst.ERROR_775174);
+					if(!approval.getApprovalCategory().getParameterCode().equals(ParameterConst.DOCTYPE_BPK_APPROVAL)){
+						List<ScQtApproverSettings> approverSettings = approval.getApproverSettings();
+						if(CollectionUtils.isEmpty(approverSettings)){
+							throw new EpException(MessageConst.ERROR_775174);
+						}
 					}
 				}
 				//#11299 End Vinod
@@ -11987,4 +11995,12 @@ public void retrieveDemoQtDetails(Long qtId) {
 		return alertCatCodeChange;
 	}
 	// #29732 End
+	//#11299 Start Vinod
+	public boolean disableFieldsforCommitteeRevision() {
+		if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(this.getManagedBean().getTaskName())) 
+			return true;
+		else
+			return false;
+	}
+	//#11299 End Vinod
 }
