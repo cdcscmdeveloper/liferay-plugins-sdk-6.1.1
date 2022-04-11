@@ -10973,6 +10973,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 			}
 
+			//9019 - Start (Harun) set Group Item to NULL when save while left blank and panel is selected
+			if (qt.isPanel() && null == qt.getItemGroup().getPanelItemGroupId()) {
+				this.getManagedBean().getQt().setItemGroup(null);
+				this.getManagedBean().getQt().setCircularVer(null);
+			}
+			//9019 - End (Harun) 
+
 			finalizeRemarks(qt.getScQtRemarks());
 			qt.setScQtStatus(null);
 			qt.setScQtCommittees(null);
