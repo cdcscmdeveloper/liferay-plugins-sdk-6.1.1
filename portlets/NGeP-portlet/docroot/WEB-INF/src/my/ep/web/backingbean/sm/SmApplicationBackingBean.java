@@ -6782,6 +6782,37 @@ public class SmApplicationBackingBean extends
 			}	
 		}
 		
+		//31749 - start
+		/*
+		 * Bug where symbol 'P' will show eventough 
+		 * there is no changed value at sm personnel
+		 * 
+		 * Need to set value ..Flg before .ser file creation
+		 * 
+		 * */
+		//set flag value
+		if(getManagedBean().getSelectedShareHolder().isManagement()){
+			getManagedBean().getSelectedShareHolder().setManagementFlg(1);
+		}
+		
+		if(getManagedBean().getSelectedShareHolder().isClerical()){
+			getManagedBean().getSelectedShareHolder().setClericalFlg(1);
+		}
+		
+		if(getManagedBean().getSelectedShareHolder().isContractSigner()){
+			getManagedBean().getSelectedShareHolder().setContractSignerFlg(1);
+		}
+		
+		if(getManagedBean().getSelectedShareHolder().isSemiProf()){
+			getManagedBean().getSelectedShareHolder().setSemiProfFlg(1);
+		}
+		
+		if(getManagedBean().getSelectedShareHolder().isProf()){
+			getManagedBean().getSelectedShareHolder().setProfFlg(1);
+		}
+		//31749 - end
+		
+		
 		if (validShrHldr) {
 			if (getManagedBean().getSelectedShareHolder().getPmRace() != null
 					&& getManagedBean().getSelectedShareHolder().getPmRace()
