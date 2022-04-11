@@ -295,7 +295,7 @@ public class ViewApplHistoryBackingBean extends
 		
 		//#32002-start
 		if(getManagedBean().getSmAppl().getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED &&
-				getManagedBean().getSmAppl().getSmSupplier().getSmMofAccount().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED){
+				getManagedBean().getSmAppl().getSmSupplier().getSmMofAccounts().get(0).getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED){
 			throw new EpException(SmCommonUtil.getMessage(
 					"lbl.sm.resubmitExpired.mofExpired", null));
 		}//#32002-end
