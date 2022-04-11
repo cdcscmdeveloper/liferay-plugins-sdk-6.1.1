@@ -275,6 +275,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td>
+					<!-- Start 31736 -->
 					<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.state']}"
@@ -285,8 +286,9 @@
 								value="#{backingBean.managedBean.assocCompanyStates}"/>
 							<p:ajax event="change" process="@this"
 								listener="#{backingBean.onChangeState(backingBean.managedBean.selectedAssocCompany.smAddress,SupplierManagementConst.SM_ASSOC_COMPANY_PANEL)}"
-								update="assocBlockPanel,divisionAssocDropdownPanelId,divisionLabelAssocPanelId,divisionAssocDropdownPanelId,assocDist,assocCity" />
+								update="divisionAssocDropdownPanelId,divisionLabelAssocPanelId,divisionAssocDropdownPanelId,assocDist,assocCity" />
 						</p:selectOneMenu> 
+						<!-- END 31736 -->
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges 
 									and not empty backingBean.managedBean.selectedAssocCompany.associateCompanyId}"
@@ -299,20 +301,22 @@
 						<p:message id="assocStateMsg" for="assocState" showSummary="true"
 							showDetail="false" display="icon" /></td>
 				</tr>
+				<!-- Start 31736 -->
 				<!-- 13320 -->
 				<tr id="diTrId">
 				<td class="tdTitle">
-					<h:panelGroup id="divisionLabelAssocPanelId" rendered="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmState.adoptDivision}">
-						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
-						<p:outputLabel value="*" styleClass="mandatory" />
+					<h:panelGroup id="divisionLabelAssocPanelId">
+						<p:outputLabel value="#{lbl['lbl.sm.division']}" rendered="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmState.adoptDivision}"/>
+						<p:outputLabel value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmState.adoptDivision}"/>
 					</h:panelGroup>
 				</td>
 				<td class="tdContent">
-					<h:panelGroup id="divisionAssocDropdownPanelId" rendered="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmState.adoptDivision}">
+					<h:panelGroup id="divisionAssocDropdownPanelId">
 						<p:selectOneMenu id="assocDivision"
 						label="#{lbl['lbl.sm.division']}"
 						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.divisionId}"
-						style="width: 207px;margin-bottom: 5px;background-color:white;">
+						style="width: 207px;margin-bottom: 5px;background-color:white;"
+						rendered="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmState.adoptDivision}">
 						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 						<f:selectItems var="division"
 							value="#{backingBean.managedBean.assocCompanyDivisions}"
@@ -322,6 +326,7 @@
 							listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.selectedAssocCompany.smAddress,SupplierManagementConst.SM_ASSOC_COMPANY_PANEL)}"
 								update="assocDist,assocCity" />
 					</p:selectOneMenu>
+					<!-- END 31736 -->
 					<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges 
 									and not empty backingBean.managedBean.selectedAssocCompany.associateCompanyId}"
