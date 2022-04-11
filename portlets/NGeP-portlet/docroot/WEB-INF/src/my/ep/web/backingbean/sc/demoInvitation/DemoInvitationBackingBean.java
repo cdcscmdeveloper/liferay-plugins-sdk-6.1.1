@@ -258,15 +258,20 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 					this.getManagedBean().setDemoInvBy(scQtDemo.getDemoCategoryId().getParameterCode());
 
 					if (this.getManagedBean().getDemoInvBy().equalsIgnoreCase(SourcingConstants.ALL_ITEM)) {
+						/*
+						 * BUG 28784 : DEMO INVITATION COMPARATOR 
+						 */
+						reqDto = new DemoReqDTO();
+						reqDto.setScQtDemoSupplierList(scQtDemo.getScQtDemoSupplierList());
+						scQtDemo.setScQtDemoSupplierList(qtDemoSO.sortDemoItem(reqDto,SourcingConstants.ALL_ITEM).getScQtDemoSupplierList());
 						this.getManagedBean().setAllItemList(scQtDemo.getScQtDemoSupplierList());
-
 					} else if (this.getManagedBean().getDemoInvBy().equalsIgnoreCase(SourcingConstants.BY_ITEM)) {
 						/*
 						 * BUG 28784 : DEMO INVITATION COMPARATOR 
 						 */
 						reqDto = new DemoReqDTO();
 						reqDto.setScQtDemoItemList(scQtDemo.getScQtDemoItemList());						
-						scQtDemo.setScQtDemoItemList(qtDemoSO.sortDemoItem(reqDto).getScQtDemoItemList());
+						scQtDemo.setScQtDemoItemList(qtDemoSO.sortDemoItem(reqDto,SourcingConstants.BY_ITEM).getScQtDemoItemList());
 						/*
 						 * BUG 28784 : DEMO INVITATION END
 						 */
@@ -517,16 +522,24 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 			if (savedData
 					&& this.getManagedBean().getDemoInvBy()
 							.equalsIgnoreCase(resDto.getScQtDemo().getDemoCategoryId().getParameterCode())) {
-				if (this.getManagedBean().getDemoInvBy().equalsIgnoreCase(SourcingConstants.ALL_ITEM)) {
+				if (this.getManagedBean().getDemoInvBy().equalsIgnoreCase(SourcingConstants.ALL_ITEM)) {					
+					/*
+					 * BUG 28784 : DEMO INVITATION COMPARATOR 
+					 */
+					reqDto = new DemoReqDTO();
+					reqDto.setScQtDemoSupplierList(resDto.getScQtDemo().getScQtDemoSupplierList());
+					resDto.setScQtDemoSupplierList(qtDemoSO.sortDemoItem(reqDto,SourcingConstants.ALL_ITEM).getScQtDemoSupplierList());
 					this.getManagedBean().setAllItemList(resDto.getScQtDemo().getScQtDemoSupplierList());
-
+					/*
+					 * BUG 28784: DEMO INVITATION END
+					 */
 				} else if (this.getManagedBean().getDemoInvBy().equalsIgnoreCase(SourcingConstants.BY_ITEM)) {
 					/*
 					 * BUG 28784 : DEMO INVITATION COMPARATOR 
 					 */
 					reqDto = new DemoReqDTO();
 					reqDto.setScQtDemoItemList(resDto.getScQtDemo().getScQtDemoItemList());				
-					resDto.getScQtDemo().setScQtDemoItemList(qtDemoSO.sortDemoItem(reqDto).getScQtDemoItemList());
+					resDto.getScQtDemo().setScQtDemoItemList(qtDemoSO.sortDemoItem(reqDto,SourcingConstants.BY_ITEM).getScQtDemoItemList());
 					/*
 					 * BUG 28784 : DEMO INVITATION END
 					 */
@@ -697,8 +710,18 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 				demoItemList = new ArrayList<ScQtDemoItem>();
 				List<ScQtDemoByItemScore> demoDemoByItemList = new ArrayList<ScQtDemoByItemScore>();
 
-				demoSuppList.addAll(resDto.getScQtDemo().getScQtDemoSupplierList());
-				demoItemList.addAll(resDto.getScQtDemo().getScQtDemoItemList());
+				/*
+				 * BUG 28784 : DEMO INVITATION COMPARATOR 
+				 */
+				reqDto = new DemoReqDTO();
+				reqDto.setScQtDemoSupplierList(resDto.getScQtDemo().getScQtDemoSupplierList());
+				reqDto.setScQtDemoItemList(resDto.getScQtDemo().getScQtDemoItemList());	
+				demoSuppList.addAll(qtDemoSO.sortDemoItem(reqDto,SourcingConstants.ALL_ITEM).getScQtDemoSupplierList());
+				demoItemList.addAll(qtDemoSO.sortDemoItem(reqDto,SourcingConstants.BY_ITEM).getScQtDemoItemList());
+				/*
+				 * BUG 28784 : DEMO INVITATION END
+				 */
+				
 				demoContactList.addAll(resDto.getScQtDemo().getScQtDemoContactList());
 				
 				if(demoSuppList.isEmpty()){
@@ -714,7 +737,11 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 						scQtDemoSchedule.setScQtDemoByItemScore(null);
 						s.setScQtDemoSchedule(scQtDemoSchedule);
 					}
+					
 					this.getManagedBean().setAllItemList(demoSuppList);
+					/*
+					 * BUG 28784 : DEMO INVITATION END
+					 */
 				} else {
 					pmParam = getParameterByTypeAndCode(ParameterTypeConst.ALL_BY_ITEM, SourcingConstants.BY_ITEM);
 					if (demoItemList.isEmpty()) {
@@ -904,6 +931,10 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 //			this.getManagedBean().setTempDemoByItemScoreList(item.getScQtDemoByItemScoreList());
 //		}
 		scQtDemo.setDemoInvRemark(this.getManagedBean().getDemoRemark());
+		// #28784 - Start.
+		scQtDemo.setScQtDemoItemList(getManagedBean().getByItemList());
+		scQtDemo.setScQtDemoSupplierList(getManagedBean().getAllItemList());
+	    // #28784 - Start.
 		reqDto.setScQtDemo(scQtDemo);
 		reqDto.setScQt(this.getManagedBean().getQt());
 		DemoResDTO resDto = qtDemoSO.retrieveScQtDemoByQtNo(reqDto);
@@ -936,15 +967,17 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 			resDto = qtDemoSO.retrieveScQtDemoByQtNo(reqDto);
 			this.getManagedBean().setScQtDemo(resDto.getScQtDemo());
 			this.getManagedBean().setScQtDemoContactList(resDto.getScQtDemo().getScQtDemoContactList());
-			this.getManagedBean().setAllItemList(resDto.getScQtDemo().getScQtDemoSupplierList());
-			this.getManagedBean().setByItemList(resDto.getScQtDemo().getScQtDemoItemList());	
 			
 			/*
 			 * BUG 28784 : DEMO INVITATION COMPARATOR 
 			 */
 			reqDto = new DemoReqDTO();
-			reqDto.setScQtDemoItemList(resDto.getScQtDemo().getScQtDemoItemList());				
-			resDto.getScQtDemo().setScQtDemoItemList(qtDemoSO.sortDemoItem(reqDto).getScQtDemoItemList());
+			reqDto.setScQtDemoItemList(resDto.getScQtDemo().getScQtDemoItemList());		
+			reqDto.setScQtDemoSupplierList(resDto.getScQtDemo().getScQtDemoSupplierList());
+			resDto.getScQtDemo().setScQtDemoItemList(qtDemoSO.sortDemoItem(reqDto,SourcingConstants.BY_ITEM).getScQtDemoItemList());
+			resDto.getScQtDemo().setScQtDemoSupplierList(qtDemoSO.sortDemoItem(reqDto,SourcingConstants.ALL_ITEM).getScQtDemoSupplierList());
+			this.getManagedBean().setAllItemList(resDto.getScQtDemo().getScQtDemoSupplierList());	
+			this.getManagedBean().setByItemList(resDto.getScQtDemo().getScQtDemoItemList());
 			/*
 			 * BUG 28784 : DEMO INVITATION END
 			 */			
