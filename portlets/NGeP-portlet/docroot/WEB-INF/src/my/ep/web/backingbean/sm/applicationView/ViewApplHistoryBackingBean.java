@@ -1860,8 +1860,8 @@ public class ViewApplHistoryBackingBean extends
 				}else if(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_REGISTERED)){
 					button = false;
 				}//#32002 - start
-				else if(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_APPROVER_REJECTED_APPLICATION)
-						|| smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_PO_REJECTED_APPLICATION)
+				else if((smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_APPROVER_REJECTED_APPLICATION)
+						|| smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_PO_REJECTED_APPLICATION))
 						 && checkStatusMofNoBySupplierId(smAppl)== false){
 					button = false;
 				}//#32002 - end
