@@ -292,13 +292,7 @@ public class ViewApplHistoryBackingBean extends
 		//#27250 - START SSM CHANGES FOR RESUBMIT
 		resubmitSSM();
 		//#27250 - END SSM CHANGES FOR RESUBMIT
-		
-		//#32002-start
-		if(getManagedBean().getSmAppl().getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED &&
-				getManagedBean().getSmAppl().getSmSupplier().getSmMofAccounts().get(0).getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED){
-			throw new EpException(SmCommonUtil.getMessage(
-					"lbl.sm.resubmitExpired.mofExpired", null));
-		}//#32002-end
+
 		// #14832 - To cater if resubmit link already expired and supplier still
 		// in progress (Supplier Temp), so will call alert popup that will
 		// redirect to clone new application and start fresh
@@ -332,7 +326,16 @@ public class ViewApplHistoryBackingBean extends
 			if (SmApplicationUtil
 					.isRejectedApplValidForResubmission(getManagedBean()
 							.getSmAppl())) {
-				redirectToReapplyNewAppl(true); //29956
+				//#32002-start
+				if(getManagedBean().getSmAppl().getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED &&
+						getManagedBean().getSmAppl().getSmSupplier().getSmMofAccounts().get(0).getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED){
+					redirectToReapplyNewAppl(false);
+					throw new EpException(SmCommonUtil.getMessage(
+							"lbl.sm.resubmitExpired.mofExpired", null));
+				}//#32002-end
+				else{
+					redirectToReapplyNewAppl(true); //29956
+				}
 			} else {
 				throw new EpException(SmCommonUtil.getMessage(
 						"lbl.sm.resubmitExpired", null));
