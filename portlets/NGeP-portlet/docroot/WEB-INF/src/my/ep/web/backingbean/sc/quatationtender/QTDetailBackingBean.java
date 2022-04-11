@@ -2215,35 +2215,73 @@ public class QTDetailBackingBean extends
 					}
 				}
 				
+				 /* Enhancement #27668 -start-
+				 * TO INCLUDE QT WHICH PPB SECRETARY INVOLVE IN IT, IF HIGHER_AUTHORITY LINK ALSO
+				 * AND WITH PTJ HIMSELF */
+				SearchFilterBean secretaryFilterBean = new SearchFilterBean(
+						QTConstants.FINALIZATION_SECRETARY_LOGIN_ID, SearchOperator.OPERATOR_EQUALS.value(),
+						new FacesScopes().getUserSessionBean().getLoginId(), JoinType.LEFT);
+				
+				SearchMultiFilterBean secretartStatusBean = null;
+				secretartStatusBean = new SearchMultiFilterBean(secretaryFilterBean, new SearchFilterBean(
+						QTConstants.FINALIZATION_SECRETARY_LOGIN_ID, SearchOperator.OPERATOR_IS_NULL.value(), null,
+						SearchCondition.CONDITION_OR.value()));
+
+				SearchFilterBean highAuthFilterBean = new SearchFilterBean(QTConstants.FINALIZATION_HIGH_AUTH_SECRETARY_LOGIN_ID,
+						SearchOperator.OPERATOR_EQUALS.value(), new FacesScopes().getUserSessionBean().getLoginId(),JoinType.LEFT);
+				SearchMultiFilterBean highAuthStatusBean = null;
+				highAuthStatusBean = new SearchMultiFilterBean(highAuthFilterBean, new SearchFilterBean(
+						QTConstants.FINALIZATION_HIGH_AUTH_SECRETARY_LOGIN_ID, SearchOperator.OPERATOR_IS_NULL.value(),
+						null, SearchCondition.CONDITION_OR.value()));			
+				// #27668 -end-
+
 				PmOrgProfile ptjProfiles = qtnTenderSearchBean.getPtjProfile();
+				SearchFilterBean searchFilterBean1 = null; // #27668
+
 				if (ptjProfiles != null && ptjProfiles.getOrgProfileId() != null) {
 					// Filter By - PTJ
-					searchFilterBean.add(new SearchFilterBean(
+					// #27668 -start-
+					searchFilterBean1 = new SearchFilterBean(	
 							"pmOrgProfile." + OrgProfileUtil
 								.getSearchBeanParentString(OrganizationType.DIVISION.value()),
 							SearchOperator.OPERATOR_EQUALS.value(),
-							ptjProfiles.getOrgProfileId()));
+							ptjProfiles.getOrgProfileId(),SearchCondition.CONDITION_OR.value());
+					// #27668 -end-
 				} else {
 					// Filter By - PTJ Group
 					PmOrgProfile ptjGroupProfile = qtnTenderSearchBean.getPtjGroupProfile();
 					if (ptjGroupProfile != null && ptjGroupProfile.getOrgProfileId() != null) {
-						searchFilterBean.add(new SearchFilterBean(
+						// #27668 -start-
+						searchFilterBean1 = new SearchFilterBean(	
 								"pmOrgProfile." + OrgProfileUtil
 									.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()),
 								SearchOperator.OPERATOR_EQUALS.value(),
-								ptjGroupProfile.getOrgProfileId()));
+								ptjGroupProfile.getOrgProfileId(),SearchCondition.CONDITION_OR.value());
+						// #27668 -end-
 					} else {
 						// Filter By - Ministry
 						PmOrgProfile ministryProfile = qtnTenderSearchBean.getMinistryProfile();
 						if (ministryProfile != null
 								&& ministryProfile.getOrgProfileId() != null) {	
-							searchFilterBean.add(new SearchFilterBean(
+							// #27668 -start-
+							searchFilterBean1 = new SearchFilterBean(	
 									"pmOrgProfile." + OrgProfileUtil
 										.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
 									SearchOperator.OPERATOR_EQUALS.value(),
-									ministryProfile.getOrgProfileId()));
+									ministryProfile.getOrgProfileId(),SearchCondition.CONDITION_OR.value());
+							// #27668 -end-
 						}
 					}
+				}				
+
+				// #27668 -start-
+				if (searchFilterBean1 != null) {
+					SearchMultiFilterBean searchFilterBeanOr1 = new SearchMultiFilterBean(secretartStatusBean,
+							SearchCondition.CONDITION_OR.value(), highAuthStatusBean);
+					SearchMultiFilterBean searchFilterBeanAnd2 = new SearchMultiFilterBean(searchFilterBeanOr1,
+							searchFilterBean1);
+					qtSearchBean.getDataFilterBeans().add(searchFilterBeanAnd2);
+					// #27668 -end-
 					
 				}
 			}
@@ -6897,6 +6935,18 @@ public class QTDetailBackingBean extends
 		return  facesScopes.hasRoleUser(RoleCode.PPB_SECRETARY.value());  //#27668
 	}
 	
+	/*
+	 * Enhancement #27668 START
+	 * To Cater FPB SECRETARY DROPDOWN LIST
+	 */
+	private boolean isFpbSecretary() {
+		FacesScopes facesScopes = new FacesScopes();
+		return  facesScopes.hasRoleUser(RoleCode.FPB_SECRETARY.value());  
+	}
+	/*
+	 * Enhancement #27668 END
+	 */
+	
 	/* Bug #27412 START - CHANGE PRIVATE TO PUBLIC TO ALLOWED METHOD CALLED FROM FRONT*/
 	public boolean isMofSupplier() {
 		FacesScopes facesScopes = new FacesScopes();
@@ -7466,6 +7516,13 @@ public class QTDetailBackingBean extends
 		boolean pbbSecretaryOnly = false; 
 		if (isPbbSecretary() && !(isDeskOfficer() || isAuditor() || isMofSupplier())){
 			pbbSecretaryOnly = true;
+
+			/*
+			 * Enhancement #27668 TO CATER FPB SECRETARY DROPDOWN LIST -start-
+			 */
+		} else if (isFpbSecretary() && !(isDeskOfficer() || isAuditor() || isMofSupplier())) {
+			pbbSecretaryOnly = true;
+			// #27668 -end-
 		}
 		
 		if (pbbSecretaryOnly) {
