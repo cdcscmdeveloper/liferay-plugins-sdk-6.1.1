@@ -20047,6 +20047,7 @@ if(null!=allTechnicalChecklist){
 		SLAUtils.getInstance().logSQLPerformanceInfo("QT","DEMO INVITATION (SAVE)","SpecificationBackingBean.saveOrUpdateDemoTemplateSpecs", startTime,"#29305");
 	    
 		if (resDTO.isSuccessful()) {
+			retriveTechnicalCheckList();
 			SpecificationResDTO resDTO1 = new SpecificationResDTO();
 			List<ScQtCheckList> updatedCheckListsDemo = new ArrayList<ScQtCheckList>();
 			List<ScQtCheckList> updatedCheckListsOtherDemo = new ArrayList<ScQtCheckList>();
