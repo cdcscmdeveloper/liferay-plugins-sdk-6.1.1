@@ -16446,4 +16446,11 @@ public class SmApplicationBackingBean extends
 		return false;
 	}
 	//#12483 - END
+	//#32014 - START
+	public boolean ssmIsActive(){
+		boolean ssmActive = SmCommonUtil.getInstance().ssmActive();
+		log.info("#32014 SSM ACTIVE : "+ ssmActive);
+		return ssmActive;
+	}
+	//#32014 - END
 }

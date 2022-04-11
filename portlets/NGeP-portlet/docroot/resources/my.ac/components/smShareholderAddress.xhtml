@@ -197,7 +197,7 @@
 
 				<tr>
 					<!-- #32014 - START -->
-					<p:outputPanel rendered="#{!cc.attrs.addrObj.sameAsPerm and cc.attrs.bBean.disableFieldSSm(cc.attrs.addrObj.smAddress.ssmData,cc.attrs.addrObj.smAddress.ssmData,cc.attrs.addrObj.smAddress.stateSsmNull)}">
+					<p:outputPanel rendered="#{!cc.attrs.addrObj.sameAsPerm and cc.attrs.bBean.managedBean.smAppl.applValidWithSsm and cc.attrs.bBean.ssmIsActive()}">
 					<p:outputPanel rendered="#{cc.attrs.addrObj.addressType eq 'R' and cc.attrs.addrObj.smAddress.pmState.stateCode != null and cc.attrs.bBean.managedBean.supplierUser}">
 				 		#{cc.attrs.bBean.onChangeState(cc.attrs.addrObj.smAddress,cc.attrs.addressType)}
 					</p:outputPanel>
