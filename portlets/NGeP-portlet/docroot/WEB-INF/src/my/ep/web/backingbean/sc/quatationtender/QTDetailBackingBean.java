@@ -10323,9 +10323,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
             //End 19287 
    //#25692-start         
     public Long retirveStatusId() {
-    	if(((null!=this.getManagedBean().getTaskName()&&SCProcessNameConst.REVISE_BPK.equalsIgnoreCase(this
-				.getManagedBean().getTaskName()))|| (getUserTaskIsCommitteeAppointmentApprovalEcOcTecFec() && isApprovalScreen()) || (getUserTaskIsBPKApproval() && isApprovalScreen())  || (getUserTaskIsCommitteeAppointmentApproval() && isApprovalScreen())
-				|| this.getManagedBean().getTaskName().equalsIgnoreCase(SCProcessNameConst.REVISE_COMMITTEE))){//#11299 Vinod Added REVISE_COMMITTEE
+    	if(((null!=this.getManagedBean().getTaskName()&&(SCProcessNameConst.REVISE_BPK.equalsIgnoreCase(this
+				.getManagedBean().getTaskName()) || this.getManagedBean().getTaskName().equalsIgnoreCase(SCProcessNameConst.REVISE_COMMITTEE)))
+			|| (getUserTaskIsCommitteeAppointmentApprovalEcOcTecFec() && isApprovalScreen()) || (getUserTaskIsBPKApproval() && isApprovalScreen())  || (getUserTaskIsCommitteeAppointmentApproval() && isApprovalScreen()))){//#11299 Vinod Added REVISE_COMMITTEE
     		log.debug("=====returnif====");
     	return this.getManagedBean().getSubStatusId();	
     	}else{
