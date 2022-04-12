@@ -4799,7 +4799,9 @@
 	 
 	 <portlet>
 	 	<portlet-name>scSupplierFinalization</portlet-name>
-	 	<display-name>Supplier Finalization</display-name>
+	 	<!-- 18685 -start- -->
+	 	<display-name>Meeting Decision</display-name>
+	 	<!-- 18685 -end- -->
 	 	<portlet-class>
 	 		org.portletfaces.bridge.GenericFacesPortlet
 	 	</portlet-class>
@@ -4815,8 +4817,10 @@
 	 		<portlet-mode>view</portlet-mode>
 	 	</supports>
 	 	<portlet-info>
-	 		<title>Supplier Finalization</title>
-	 		<short-title>Supplier Finalization</short-title>
+	 		<!-- 18685 -start- -->
+	 		<title>Meeting Decision</title>
+	 		<short-title>Meeting Decision</short-title>
+	 		<!-- 18685 -end- -->
 	 		<keywords></keywords>
 	 	</portlet-info>
 	 	<security-role-ref>
@@ -10614,4 +10618,72 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
+	<!-- Enhancement 25627-start- -->
+	<portlet>
+		<portlet-name>deskOfficerMaintenance</portlet-name>
+		<display-name>Desk Officer Maintenance</display-name>
+		<portlet-class>
+			org.portletfaces.bridge.GenericFacesPortlet
+		</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/sc/quatationtender/deskOfficerMaintenance/deskOfficerMaintenanceMain.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Desk Officer Maintenance</title>
+			<short-title>Desk Officer Maintenance</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>		
+	<portlet>
+		<portlet-name>deskOfficerMaintenanceApproval</portlet-name>
+		<display-name>Desk Officer Maintenance Approval</display-name>
+		<portlet-class>
+			org.portletfaces.bridge.GenericFacesPortlet
+		</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/sc/quatationtender/deskOfficerMaintenance/approval/deskOfficerMaintenanceApprovalMain.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Desk Officer Maintenance Approval</title>
+			<short-title>Desk Officer Maintenance Approval</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<!-- Enhancement 25627-end- -->
 </portlet-app>
