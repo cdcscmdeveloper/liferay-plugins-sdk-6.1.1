@@ -53,6 +53,10 @@ import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
+import my.ep.persistence.entity.sc.loaloi.ScLoaBasic;
+import my.ep.persistence.entity.sc.loaloi.ScLoaForQt;
+import my.ep.persistence.entity.sc.loaloi.ScLoi;
+import my.ep.persistence.entity.sc.loaloi.ScLoiForQt;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -1590,6 +1594,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	private ScQtApprovalRequest scQtApprovalDtls;
+
+	// #19336, #25201, #17376, #19287 -start-
+	private IPagingDataModel<ScLoi> searchLoiDataModel;	
+	private IPagingDataModel<ScLoiForQt> searchLoiForQtDataModel;	
+	private IPagingDataModel<ScLoaBasic> searchLoaDataModel;	
+	private IPagingDataModel<ScLoaForQt> searchLoaForQtDataModel;
+	// #19336, #25201, #17376, #19287 -end-
 	
 	// ***25692 -start-
 	/*
@@ -1603,12 +1614,15 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean isGenInfo;
 	private boolean specUpdateInProgress;
 	// #15391 - end
-
+	
+	// #30451, #17376-Start.
+	private boolean isBdSfFlow;
+	// #30451, #17376-End.
+	
 	/**
 	 * Instantiates a new QT detail managed bean.
 	 */
 	public QTDetailManagedBean() {
-		log.info("inside ");
 
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
@@ -9876,6 +9890,40 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setBsvDBStateId(Long bsvDBStateId) {
 		this.bsvDBStateId = bsvDBStateId;
 	}
+
+	// #19336, #25201, #17376, #19287 -start-
+	public IPagingDataModel<ScLoi> getSearchLoiDataModel() {
+		return searchLoiDataModel;
+	}
+
+	public void setSearchLoiDataModel(IPagingDataModel<ScLoi> searchLoiDataModel) {
+		this.searchLoiDataModel = searchLoiDataModel;
+	}
+
+	public IPagingDataModel<ScLoiForQt> getSearchLoiForQtDataModel() {
+		return searchLoiForQtDataModel;
+	}
+
+	public void setSearchLoiForQtDataModel(IPagingDataModel<ScLoiForQt> searchLoiForQtDataModel) {
+		this.searchLoiForQtDataModel = searchLoiForQtDataModel;
+	}
+
+	public IPagingDataModel<ScLoaBasic> getSearchLoaDataModel() {
+		return searchLoaDataModel;
+	}
+
+	public void setSearchLoaDataModel(IPagingDataModel<ScLoaBasic> searchLoaDataModel) {
+		this.searchLoaDataModel = searchLoaDataModel;
+	}
+
+	public IPagingDataModel<ScLoaForQt> getSearchLoaForQtDataModel() {
+		return searchLoaForQtDataModel;
+	}
+	
+	public void setSearchLoaForQtDataModel(IPagingDataModel<ScLoaForQt> searchLoaForQtDataModel) {
+		this.searchLoaForQtDataModel = searchLoaForQtDataModel; 
+	}
+	// #19336, #25201, #17376, #19287 -end-
 	
 	/*basri 19637*/
 	public boolean isPanelZone() {
@@ -10027,5 +10075,21 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.specUpdateInProgress = specUpdateInProgress;
 	}
 	// #15391 -end-
+
+	// #30451, #17376-Start.
+	/**
+	 * @return the isBdSfFlow
+	 */
+	public boolean isBdSfFlow() {
+		return isBdSfFlow;
+	}
+
+	/**
+	 * @param isBdSfFlow the isBdSfFlow to set
+	 */
+	public void setBdSfFlow(boolean isBdSfFlow) {
+		this.isBdSfFlow = isBdSfFlow;
+	}
+	// #30451, #17376-End.
 
 }
