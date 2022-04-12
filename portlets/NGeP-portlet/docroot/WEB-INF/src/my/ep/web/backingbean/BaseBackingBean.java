@@ -2020,6 +2020,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 
 	/**
+	 * original default
 	 * To get BpmTask Details.
 	 * 
 	 * @param clazz
@@ -2028,13 +2029,45 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	@SuppressWarnings("unchecked")
 	protected <BPM_DATA_TYPE> BPM_DATA_TYPE getBpmTaskDetails(
 			Class<BPM_DATA_TYPE> clazz, String[] additionalButtons) {
+		// 17376#37 -start-
+		return getBpmTaskDetails(clazz, additionalButtons, null, null);
+		// 17376#37 -end-
+	}
+	
+	// 17376#37 -start-
+	@SuppressWarnings("unchecked")
+	protected <BPM_DATA_TYPE> BPM_DATA_TYPE getBpmTaskDetails(
+			Class<BPM_DATA_TYPE> clazz, String[] additionalButtons, String theTaskId) {
+		return getBpmTaskDetails(clazz, additionalButtons, theTaskId, null);
+	}
+	// 17376#37 -end-
+	
+	// 17376#37 -start-
+	/**
+	 * To get BpmTask Details.
+	 * 
+	 * @param clazz, additionalButtons(optional), theTaskId(optional), theLoginId(optional)
+	 * @return Object payLoadInstance
+	 */
+	@SuppressWarnings("unchecked")
+	protected <BPM_DATA_TYPE> BPM_DATA_TYPE getBpmTaskDetails(
+			Class<BPM_DATA_TYPE> clazz, String[] additionalButtons, String theTaskId, String theLoginId) {
+		// 17376#37 -end-
+		// 25201#35-1 -start-
+		String taskId = null;
 		FacesScopes facesScopes = new FacesScopes();
-		HttpServletRequest servletRequest = PortalUtil
-				.getHttpServletRequest(facesScopes.getRequest());
-		HttpServletRequest originalServletRequest = PortalUtil
-				.getOriginalServletRequest(servletRequest);
 
-		String taskId = originalServletRequest.getParameter("taskId");
+		if (StringUtils.isBlank(theTaskId)) {
+			HttpServletRequest servletRequest = PortalUtil
+					.getHttpServletRequest(facesScopes.getRequest());
+			HttpServletRequest originalServletRequest = PortalUtil
+					.getOriginalServletRequest(servletRequest);
+
+			taskId = originalServletRequest.getParameter("taskId");
+		} else {
+			taskId = theTaskId;
+		}
+		// 25201#35-1 -end-
 
 		IBpmSO bpmSO;
 
@@ -2043,7 +2076,15 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					.getServiceObject(IBpmSO.class);
 
 			BpmRequestDTO reqDTO = new BpmRequestDTO();
-			reqDTO.setCtxToken(facesScopes.getBPMAuthenticationCtxToken());
+
+			// 17376#37 -start-
+			if (theLoginId != null && !StringUtils.isBlank(theLoginId)) {
+				reqDTO.setCtxToken(bpmSO.authenticate(theLoginId));
+			} else {
+				reqDTO.setCtxToken(facesScopes.getBPMAuthenticationCtxToken());
+			}
+			// 17376#37 -end-
+
 			reqDTO.setTaskId(taskId);
 
 			BpmResponseDTO resDTO = bpmSO.getTaskDetails(reqDTO);
@@ -2373,6 +2414,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	return uomCodeDesc;	
 	}
 	
+	// #25201 -start-
+	protected FacesScopes getFacesScopesGen() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
+	}
+	// #25201 -end-
+	
 	// #25692, original by #25201 -start-
 	/**
 	 * Determine if user for current session have role
@@ -2393,6 +2441,16 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return false;
 	}
 	// #25692, original by #25201 -end-
+	
+	// #19336, #25201, #17376, #19287 -start-
+	public boolean isNull(Object o) {
+		if (o == null) {
+			return true;
+		}
+		
+		return false;
+	}
+	// #19336, #25201, #17376, #19287 -end-
 	
 	//16052019 - SSM INTEGRATION CR - Fahmi
 			public boolean businessTypeTovalidateWithSSM(String regNo,String businessType){
