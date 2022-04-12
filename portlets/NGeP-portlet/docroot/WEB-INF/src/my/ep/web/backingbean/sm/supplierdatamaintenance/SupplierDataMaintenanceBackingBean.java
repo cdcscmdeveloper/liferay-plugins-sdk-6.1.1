@@ -73,6 +73,7 @@ import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.sm.applicationView.BaseReviewApplicationBackingBean;
 import my.ep.web.backingbean.sm.registration.RegistrationBackingBean;
 import my.ep.web.constant.report.ReportConst;
@@ -1216,11 +1217,12 @@ public class SupplierDataMaintenanceBackingBean extends
 	 */
 	public void showConfirmDialog() {
 		//26238: Disciplinary Action - start - 28324
+		log.info("---iseditDA---" +getManagedBean().isEditDisciplinaryAction());
 		if ((getManagedBean().isWarning() || getManagedBean().isCancelCategoryCode()
 				|| getManagedBean().isSuspendRegistration() || getManagedBean().isCancelRegistration()
 				|| getManagedBean().isBlacklistOwnerOrDirector() || getManagedBean().isBumiputeraStatusCancel())
 				&& getManagedBean().isManufacturerStatusCancel()){ 
-			log.info("---showConfirmDialog semua DA---");
+			log.info("---showConfirmDialog semua DA---"); 
 			
 			//32827 - category code
 		} else if (!getManagedBean().isWarning() && !getManagedBean().isCancelCategoryCode()
@@ -1289,6 +1291,8 @@ public class SupplierDataMaintenanceBackingBean extends
 	 */
 	private void saveSelectedCategory() {
 		boolean validCat = true;
+		//32891 - Checking category code for activeappl - 26238
+		boolean applValidCat = true;  
 		if (getManagedBean().getSelectedCategory().getPmCategoryL1() != null
 				&& getManagedBean().getSelectedCategory().getPmCategoryL1()
 						.getCategoryL1Id() != null) {
@@ -1317,7 +1321,10 @@ public class SupplierDataMaintenanceBackingBean extends
 		for (SmSupplierCategory cat : getManagedBean().getSmAppl()
 				.getSmSupplierCategories()) {
 			//Redmine #18959
-			if(cat.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_ACTIVE) {
+			
+			//32891 - Checking category code for activeappl - 26238
+			//Check category added from data maintenance
+			if(cat.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_ACTIVE || cat.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_PENDING_ACTIVATION) {
 				if (cat.getPmCategoryL1()
 						.getCategoryL1Id()
 						.equals(getManagedBean().getSelectedCategory()
@@ -1335,15 +1342,50 @@ public class SupplierDataMaintenanceBackingBean extends
 				}
 			}
 		}
+				
+		//32891 - Checking category code for activeappl - 26238 - start
+			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+			reqDTO.setSupplierId(getManagedBean().getSmSupplier().getSupplierId());
+			
+			SmAppl activeAppl = SmServiceLookup.getMofRegistrationSO()
+					.retrieveActiveSmApplBySupp(reqDTO).getSmAppl(); 
+			//retrieveActiveCategoryByApplId
+			List<SmSupplierCategory> activeApplCategory = retrieveCategoryCode(activeAppl.getApplId());
 
-		if (validCat) {
+			log.info("size activeApplCategory :" + activeApplCategory.size());
+			
+			for (SmSupplierCategory cat : activeApplCategory) {
+				//Redmine #18959
+				if(cat.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_PENDING_ACTIVATION) {
+					if (cat.getPmCategoryL1()
+							.getCategoryL1Id()
+							.equals(getManagedBean().getSelectedCategory()
+									.getPmCategoryL1().getCategoryL1Id())
+							&& cat.getPmCategoryL2()
+									.getCategoryL2Id()
+									.equals(getManagedBean().getSelectedCategory()
+											.getPmCategoryL2().getCategoryL2Id())
+							&& cat.getPmCategoryL3()
+									.getCategoryL3Id()
+									.equals(getManagedBean().getSelectedCategory()
+											.getPmCategoryL3().getCategoryL3Id())) {
+						validCat = false;
+						throw new EpException(ResourceBundleUtils.getMessage(
+								"lbl.sm.category.error.add", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale()));
+					}
+				}
+			} 
+			
+		if (validCat && applValidCat) {
 			getManagedBean().getSmAppl().getSmSupplierCategories()
-					.add(getManagedBean().getSelectedCategory());
+			.add(getManagedBean().getSelectedCategory());
 
 			assignApplActiveAndApprovedCategoryList();
-			setOverLappingCategories();
-
+			setOverLappingCategories(); 
 		}
+
+		//32891 - Checking category code for activeappl - 26238 - end
 	}
 
 	/**
@@ -3222,4 +3264,20 @@ public class SupplierDataMaintenanceBackingBean extends
 	}
 	//32618 - End
 	
+	//32891 - Checking category code for activeappl - 26238 - start
+	/**
+	 * retrieve CategoryCode
+	 * @param Long applId - application id
+	 * @return List<SmSupplierCategory>
+	 */
+	public List<SmSupplierCategory> retrieveCategoryCode(Long applId){
+		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
+		ISupplierSearchSO reqSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+		reqDTO.setApplId(applId);
+		
+		SupplierSearchResDTO resDTO = reqSO.retrieveCategoryCodeByApplId(reqDTO);
+		
+		return resDTO.getSmSupplierCategoryList();
+	}
+	//32891 - Checking category code for activeappl - 26238 - end
 }
