@@ -146,8 +146,8 @@
 										or qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeOneOff or qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeNonPeriodicAsAndWhen}"
 						action="#{qTDetailBB.qtDetailsTabChange(7)}" update="@form"
 						process="@form"
-						rendered="#{isQTStatusScheduleDocAndAfter and qTDetailBB.displayMenuItem(qTDetailBB.menuItemFulfilmentSchhedule)}"
-					/>
+						rendered="#{isQTStatusScheduleDocAndAfter and qTDetailBB.displayMenuItem(qTDetailBB.menuItemFulfilmentSchhedule) and  !qTDetailBB.disableFieldsforCommitteeRevision()}"
+					/><ui:remove>#11299 Vinod added disableFieldsforCommitteeRevision</ui:remove>
 					<p:menuitem value="#{lbl['lbl.sc.activities']}"
 						action="#{qTDetailBB.qtDetailsTabChange(7)}" update="@form"
 						process="@form"

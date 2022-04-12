@@ -1941,12 +1941,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//20191127@asyrafhaziq - Bug #26289 - Start
 			else
 			{				
-			Long currentStatus = scQt.getQtStatus().getStatusId();
-			if (isQTStatusGreaterThanOrEqualsScheduleDoc(currentStatus)) {
-				if ((null == this.getManagedBean().getZoneTrees() || this.getManagedBean().getZoneTrees().isEmpty()) && scQt.getScQtSupplierCriteria().getScQtLocCriteria() != null) {
-					scQt.getScQtSupplierCriteria().setScQtLocCriteria(null);
+				Long currentStatus = scQt.getQtStatus().getStatusId();
+				if (isQTStatusGreaterThanOrEqualsScheduleDoc(currentStatus)) {
+					if ((null == this.getManagedBean().getZoneTrees() || this.getManagedBean().getZoneTrees().isEmpty()) && scQt.getScQtSupplierCriteria().getScQtLocCriteria() != null) {
+						scQt.getScQtSupplierCriteria().setScQtLocCriteria(null);
+					}
 				}
-			}
 			}
 			//20191127@asyrafhaziq - Bug #26289 - End
 		}
@@ -3723,6 +3723,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				this.getManagedBean().setSubStatusId(sts.getStatusId());
 			}
 			//#25692-End
+			//#11299 vinod start
+			if (SCProcessNameConst.REVISE_COMMITTEE.equals(this.getManagedBean().getTaskName())) {
+				PmStatus sts = getQTDetailSO().retrieveActiveStatusByDoctype(this.getManagedBean().getQt().getQtId(), ParameterConst.DOCTYPE_COMMITTE_APROVAL);
+				this.getManagedBean().setSubStatusId(sts.getStatusId());
+			}
+			//#11299 vinod End
 			assertSpecificationUpdateInProgress(false);			
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, QTConstants.MAINTANANCE_PAGE);
@@ -3859,9 +3865,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
 				//#11299 Start Vinod
 				for(ScQtApproval approval : this.getManagedBean().getQt().getScQtApprovals()){
-					List<ScQtApproverSettings> approverSettings = approval.getApproverSettings();
-					if(CollectionUtils.isEmpty(approverSettings)){
-						throw new EpException(MessageConst.ERROR_775174);
+					if(!approval.getApprovalCategory().getParameterCode().equals(ParameterConst.DOCTYPE_BPK_APPROVAL)){
+						List<ScQtApproverSettings> approverSettings = approval.getApproverSettings();
+						if(CollectionUtils.isEmpty(approverSettings)){
+							throw new EpException(MessageConst.ERROR_775174);
+						}
 					}
 				}
 				//#11299 End Vinod
@@ -5602,7 +5610,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 		if (scQt.getEvaluationType() != null
 				&& scQt.getEvaluationType().equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER)
-				&& !status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)) {			
+				&& !status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
 
 			if (null != status && (status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT))
 					&& !this.getManagedBean().isQtSpecMaintanance()) {
@@ -5678,7 +5686,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			this.getManagedBean().setDemoDisabled(true);
 			this.getManagedBean().setDemoEvalDisabled(true);
 		}
-
+		
 	}
 
 	private void populateZoneDetailIntoTreeNode(ScQt scQt, List<TplSpecZoneDtl> specZoneDtls) {
@@ -6509,15 +6517,15 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 		
 		//32880 - Bug - start
-			ScQt scQt = getManagedBean().getQt();
-			
-			if (scQt.isZonal() && 
-					scQt.getScQtSupplierCriteria() != null &&
-					scQt.getScQtSupplierCriteria().getQtZoneCriterias() != null) {
-				// Populate zone detail into tree node
-				populateZoneDetailIntoTreeNode(scQt, 
-						scQt.getScQtSupplierCriteria().getQtZoneCriterias().getTplSpecZoneDtls());	
-			}
+		ScQt scQt = getManagedBean().getQt();
+		
+		if (scQt.isZonal() && 
+				scQt.getScQtSupplierCriteria() != null &&
+				scQt.getScQtSupplierCriteria().getQtZoneCriterias() != null) {
+			// Populate zone detail into tree node
+			populateZoneDetailIntoTreeNode(scQt, 
+					scQt.getScQtSupplierCriteria().getQtZoneCriterias().getTplSpecZoneDtls());	
+		}
 		//32880 - Bug - end
 		if(null!=this.getManagedBean().getCtContract()){
 			this.getManagedBean().getCtContract().setContractNo(this.getManagedBean().getQt().getExistingContractNo());
@@ -7160,8 +7168,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			} else {
              //9019 null remark in UI it showing two editable textarea to prevent that only value be pass to below method 
                 List<ScQtRemark> remarks = null;
-				if (CollectionUtils.isNotEmpty(scQt.getScQtRemarks())
-						&& StringUtils.isNotEmpty(scQt.getScQtRemarks().get(0).getRemark())) {
+				if (CollectionUtils.isNotEmpty(scQt.getScQtRemarks()) && StringUtils.isNotEmpty(scQt.getScQtRemarks().get(0).getRemark())) {
 					remarks = scQt.getScQtRemarks();
 				}
 
@@ -7919,7 +7926,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				.getManagedBean().getQt().getQtStatus().getStatusId();
 		//#11299 Start Vinod
 		String taskName = this.getManagedBean().getTaskName()==null ? "": this.getManagedBean().getTaskName();
-		
+
 		if (taskName.equals(SCProcessNameConst.REVISE_COMMITTEE)
 			&& !this.getManagedBean().isMaintanceFlow()
 			&& isDeskOfficer()
@@ -10250,7 +10257,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
    //#25692-start         
     public Long retirveStatusId() {
     	if(((null!=this.getManagedBean().getTaskName()&&SCProcessNameConst.REVISE_BPK.equalsIgnoreCase(this
-				.getManagedBean().getTaskName()))|| (getUserTaskIsCommitteeAppointmentApprovalEcOcTecFec() && isApprovalScreen()) || (getUserTaskIsBPKApproval() && isApprovalScreen())  || (getUserTaskIsCommitteeAppointmentApproval() && isApprovalScreen()))){
+				.getManagedBean().getTaskName()))|| (getUserTaskIsCommitteeAppointmentApprovalEcOcTecFec() && isApprovalScreen()) || (getUserTaskIsBPKApproval() && isApprovalScreen())  || (getUserTaskIsCommitteeAppointmentApproval() && isApprovalScreen())
+				|| this.getManagedBean().getTaskName().equalsIgnoreCase(SCProcessNameConst.REVISE_COMMITTEE))){//#11299 Vinod Added REVISE_COMMITTEE
     		log.debug("=====returnif====");
     	return this.getManagedBean().getSubStatusId();	
     	}else{
@@ -10972,7 +10980,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					throwExceptionForInvalidRemark();
 				}
 			}
-
+			
 			//9019 - Start (Harun) set Group Item to NULL when save while left blank and panel is selected
 			if (qt.isPanel() && null == qt.getItemGroup().getPanelItemGroupId()) {
 				this.getManagedBean().getQt().setItemGroup(null);
@@ -11865,4 +11873,13 @@ public void retrieveDemoQtDetails(Long qtId) {
 
 	}
 	//#29474 - end
+	
+	//#11299 Start Vinod
+	public boolean disableFieldsforCommitteeRevision() {
+		if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(this.getManagedBean().getTaskName())) 
+			return true;
+		else
+			return false;
+	}
+	//#11299 End Vinod
 }
