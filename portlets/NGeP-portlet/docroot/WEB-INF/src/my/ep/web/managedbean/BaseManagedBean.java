@@ -4,8 +4,6 @@
 package my.ep.web.managedbean;
 
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -16,6 +14,9 @@ import java.util.Set;
 import javax.faces.model.SelectItem;
 
 import my.ep.dto.sm.common.ssm.SsmResDTO;
+import my.ep.persistence.entity.sc.common.ScAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationReport;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
@@ -24,9 +25,9 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
+import my.ep.web.bean.tpl.TemplateSpecBean;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.StreamedContent;
 
 /**
@@ -49,6 +50,10 @@ public abstract class BaseManagedBean implements Serializable {
 	private String processName;
 	private Boolean groupTask;
 	private boolean isReadOnly;
+	/*
+	 * commonly used as a flag to user's permission to download documents/attachment
+	 */
+	private Boolean enableDownloadAllDocuments = Boolean.FALSE; // #25201
 	private List<SelectItem> localAuthorityItems;
 	private String captchaText;
 	private String captchaAnswer;
@@ -56,6 +61,24 @@ public abstract class BaseManagedBean implements Serializable {
 	private Set<UserTasks> userTasks;
 	private Map<String, List<String>> additionalPages;
 	// #25692 -end-
+
+	// 18685 - Start
+	private String reportDownloadFileName;
+	private ScAttachment scAttachment;
+	private List<ScQtEvaluationReport> scQtEvaluationReportList;
+	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
+	private List<ScQtEvaluationReport> selectedScQtEvaluationReports;
+	private ScQtEvaluationReport selectedReport;
+	private List<ScQtFinalizationReport> evaluationReportList;
+	private List<ScQtEvaluationReport> reportsToBeRemovedList;
+	private List<ScQtFinalizationReport> newBriefingPaperReportList;
+	private ScQtFinalizationReport selectedBriefingReport;
+	private List<ScQtFinalizationReport> removeFinalizationReports;
+	private List<ScQtFinalizationReport> consolidationBriefingPaperReportList;
+	private List<ScQtFinalizationReport> sfBriefingPaperReportList;
+	private String docNo;
+	// 18685 - End.
+
 	//27382
 	private boolean errorInvalidSelfRequest;
 	private boolean autoUpdate = Boolean.TRUE;	
@@ -678,8 +701,6 @@ public abstract class BaseManagedBean implements Serializable {
 		this.resubmitAppl = resubmitAppl;
 	}
 	
-	
-	
 	//27382
 	public boolean isErrorInvalidSelfRequest() {
 		return errorInvalidSelfRequest;
@@ -696,4 +717,137 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setDownloadfile(StreamedContent downloadfile) {
 		this.downloadfile = downloadfile;
 	}
+	
+	// #25201 -start-
+	public Boolean getEnableDownloadAllDocuments() {
+		return enableDownloadAllDocuments;
+	}
+
+	public void setEnableDownloadAllDocuments(Boolean enableDownloadAllDocuments) {
+		this.enableDownloadAllDocuments = enableDownloadAllDocuments;
+	}
+	// #25201 -end-
+
+	// Enhancement #18685 - start
+	public String getReportDownloadFileName() {
+		return reportDownloadFileName;
+	}
+
+	public void setReportDownloadFileName(String reportDownloadFileName) {
+		this.reportDownloadFileName = reportDownloadFileName;
+	}
+
+	public ScAttachment getScAttachment() {
+		return scAttachment;
+	}
+
+	public void setScAttachment(ScAttachment scAttachment) {
+		this.scAttachment = scAttachment;
+	}
+
+	public List<ScQtEvaluationReport> getScQtEvaluationReportList() {
+		return scQtEvaluationReportList;
+	}
+
+	public void setScQtEvaluationReportList(
+			List<ScQtEvaluationReport> scQtEvaluationReportList) {
+		this.scQtEvaluationReportList = scQtEvaluationReportList;
+	}
+
+	public TemplateSpecBean getTemplateSpecBean() {
+		return templateSpecBean;
+	}
+
+	public void setTemplateSpecBean(TemplateSpecBean templateSpecBean) {
+		this.templateSpecBean = templateSpecBean;
+	}
+
+	public List<ScQtEvaluationReport> getSelectedScQtEvaluationReports() {
+		return selectedScQtEvaluationReports;
+	}
+
+	public void setSelectedScQtEvaluationReports(
+			List<ScQtEvaluationReport> selectedScQtEvaluationReports) {
+		this.selectedScQtEvaluationReports = selectedScQtEvaluationReports;
+	}
+
+	public ScQtEvaluationReport getSelectedReport() {
+		return selectedReport;
+	}
+
+	public void setSelectedReport(ScQtEvaluationReport selectedReport) {
+		this.selectedReport = selectedReport;
+	}
+
+	public List<ScQtFinalizationReport> getEvaluationReportList() {
+		return evaluationReportList;
+	}
+
+	public void setEvaluationReportList(
+			List<ScQtFinalizationReport> evaluationReportList) {
+		this.evaluationReportList = evaluationReportList;
+	}
+
+	public List<ScQtEvaluationReport> getReportsToBeRemovedList() {
+		return reportsToBeRemovedList;
+	}
+
+	public void setReportsToBeRemovedList(
+			List<ScQtEvaluationReport> reportsToBeRemovedList) {
+		this.reportsToBeRemovedList = reportsToBeRemovedList;
+	}
+
+	public List<ScQtFinalizationReport> getNewBriefingPaperReportList() {
+		return newBriefingPaperReportList;
+	}
+
+	public void setNewBriefingPaperReportList(
+			List<ScQtFinalizationReport> newBriefingPaperReportList) {
+		this.newBriefingPaperReportList = newBriefingPaperReportList;
+	}
+
+	public ScQtFinalizationReport getSelectedBriefingReport() {
+		return selectedBriefingReport;
+	}
+
+	public void setSelectedBriefingReport(
+			ScQtFinalizationReport selectedBriefingReport) {
+		this.selectedBriefingReport = selectedBriefingReport;
+	}
+
+	public List<ScQtFinalizationReport> getRemoveFinalizationReports() {
+		return removeFinalizationReports;
+	}
+
+	public void setRemoveFinalizationReports(
+			List<ScQtFinalizationReport> removeFinalizationReports) {
+		this.removeFinalizationReports = removeFinalizationReports;
+	}
+
+	public List<ScQtFinalizationReport> getConsolidationBriefingPaperReportList() {
+		return consolidationBriefingPaperReportList;
+	}
+
+	public void setConsolidationBriefingPaperReportList(
+			List<ScQtFinalizationReport> consolidationBriefingPaperReportList) {
+		this.consolidationBriefingPaperReportList = consolidationBriefingPaperReportList;
+	}
+
+	public List<ScQtFinalizationReport> getSfBriefingPaperReportList() {
+		return sfBriefingPaperReportList;
+	}
+
+	public void setSfBriefingPaperReportList(
+			List<ScQtFinalizationReport> sfBriefingPaperReportList) {
+		this.sfBriefingPaperReportList = sfBriefingPaperReportList;
+	}
+
+	public String getDocNo() {
+		return docNo;
+	}
+
+	public void setDocNo(String docNo) {
+		this.docNo = docNo;
+	}
+	// Enhancement #18685 - end
 }
