@@ -31,9 +31,9 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.sc.EncryptDataBean;
-import my.ep.biz.bean.sc.SupplierQualificationBean;
 import my.ep.biz.bean.sc.EncryptDataBean.EncryptColumnName;
 import my.ep.biz.bean.sc.EncryptDataBean.EncryptTableName;
+import my.ep.biz.bean.sc.SupplierQualificationBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
@@ -108,12 +108,14 @@ import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecSuppAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.AddressType;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.util.encrypt.BouncyCastleProvider_AES_CBC;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
+import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
@@ -223,27 +225,64 @@ public class SPDetailBackingBean extends
 	 * 
 	 * @param qtID
 	 * @param userId
+	 * @param isReadonly
 	 */
 	public void retrieveProposalChecklistDtls(Long qtID, Long userId,
 			boolean isReadonly) {
-		debugLogger("retrieveProposalChecklistDtls qtId:::"+qtID+"::::UserId::::"+userId);
+		// #25201 -start-
+		retrieveProposalChecklistDtls(qtID, userId, isReadonly, false);
+		// #25201 -end-
+	}
+
+	// #25201 -start-
+	/**
+	 * @param qtOrProposalId  -> set qtID or proposalId if byProposalId is true
+	 * @param userId
+	 */
+	public void retrieveProposalChecklistDtls(Long qtOrProposalId, Long userId,
+			boolean isReadonly, boolean byProposalId) {
+		debugLogger("retrieveProposalChecklistDtls");
+		// #25201 -end-
 		ProposalReqDTO reqDTO = new ProposalReqDTO();
 		IQTProposalSO proposalSO;
+		
 		try {
-			reqDTO.setQtId(qtID);
 			reqDTO.setUserId(userId);
+			
+			// #25201 -start-
+			if (!byProposalId) {
+				reqDTO.setQtId(qtOrProposalId);
+			} else {
+				reqDTO.setQtProposalId(qtOrProposalId);
+			}	
+			// #25201 -end-
+
 			proposalSO = getProposalSO();
-			ProposalResDTO resDTO = proposalSO
-					.retrieveProposalDtlBySupplierId(reqDTO);
+			
+			// #25201 -start-
+			ProposalResDTO resDTO = null; 
+			if (!byProposalId) {
+				resDTO = proposalSO.retrieveProposalDtlBySupplierId(reqDTO);
+			} else {
+				resDTO = proposalSO.retrieveProposalDetail(reqDTO);
+			}
+			// #25201 -end-
 
 			ScQt scQt = resDTO.getScQt();
-
+			
+			//#25811 for #25201 -start-
+			 ScQtProposal scQtProposal=resDTO.getScQtProposal();
+			//#25811 for #25201 -end-
+			
 			getManagedBean().setQt(resDTO.getScQt());
 
 			getManagedBean().setScQtDocReports(resDTO.getScQtDocReports());
 
-			getManagedBean().setQtProposal(resDTO.getScQtProposal());
-			getManagedBean().setLastSubmittedDate(resDTO.getScQtProposal().getLastSubmitDate());
+			//#25811 for #25201 -start-
+			getManagedBean().setQtProposal(scQtProposal);
+			getManagedBean().setLastSubmittedDate(scQtProposal.getLastSubmitDate());
+			//#25811 for #25201 -end-
+
 			getManagedBean().setSupplierId(resDTO.getSupplierId());
 
 			// Technical Check List
@@ -267,6 +306,36 @@ public class SPDetailBackingBean extends
 						+ resDTO.getFinancialCheckLists().size());
 			}
 
+			//#25811 for #25201 -start-
+			if(resDTO.getTechnicalCheckLists().size()==0 || resDTO.getFinancialCheckLists().size()==0) {
+				reqDTO = new ProposalReqDTO();
+				reqDTO.setTechnicalCount(resDTO.getTechnicalCheckLists().size());
+				reqDTO.setFinancialCount(resDTO.getFinancialCheckLists().size());
+				reqDTO.setQtId(scQt.getQtId());
+				reqDTO.setSupplierId(resDTO.getSupplierId());
+				reqDTO.setScQt(scQt);
+				reqDTO.setScQtProposal(scQtProposal);
+				
+				ProposalResDTO	checklist = proposalSO.retrieveProposalChecklistDcoumentDtls(reqDTO);
+			
+				if(resDTO.getTechnicalCheckLists().size()==0 && checklist.getTechnicalCheckLists()!=null ){
+					getManagedBean().setTecCheckDetailsList(
+							checklist.getTechnicalCheckLists());
+					checklistSorting(getManagedBean().getTecCheckDetailsList());
+					debugLogger("TechnicalChecklistretrieveProposalChecklistDcoumentDtls: "
+							+ checklist.getTechnicalCheckLists().size());
+				}
+			
+				if(resDTO.getFinancialCheckLists().size()==0 && checklist.getFinancialCheckLists()!=null ){
+					getManagedBean().setFinanceCheckDetailsList(
+							checklist.getFinancialCheckLists());
+					checklistSorting(getManagedBean().getFinanceCheckDetailsList());
+					debugLogger("FinancialChecklistretrieveProposalChecklistDcoumentDtls: "
+							+ checklist.getFinancialCheckLists().size());
+				}
+			}
+			//#25811 for #25201 -end-
+			
 			if (null != scQt.getClosingDate()) {
 				Date closingDate = scQt.getClosingDate();
 				PmStatus qtStatus = scQt.getQtStatus();
@@ -277,7 +346,9 @@ public class SPDetailBackingBean extends
 					getManagedBean().setQtClosed(true);
 					getManagedBean().setClosingTime("0");
 				} else {
-					if (resDTO.getScQtProposal().isSubmitted()) {
+					//#25811 for #25201 -start-
+					if (scQtProposal.isSubmitted()) {
+					//#25811 for #25201 -end-
 						getManagedBean().setReadOnly(true);
 					} else {
 						getManagedBean().setReadOnly(isReadonly);
@@ -293,7 +364,10 @@ public class SPDetailBackingBean extends
 
 			if (!isReadonly) {
 				// checking for proposal validity
-				reqDTO.setScQt(resDTO.getScQt());
+				//#25811 for #25201 -start-
+				reqDTO.setScQt(scQt);
+				//#25811 for #25201 -end-
+				
 				getProposalSO().validateSupplierProposal(reqDTO);
 			}
 
@@ -4259,23 +4333,44 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 				.handleNavigation(fc, null, NAV_TO_PROPOSAL_MAIN_PAGE);
 	}
 
+	//#25201 -start-
+	public String retriveSupplierProposalDtl(Long qtId, String previousPageUrl, boolean isReadonly) {
+		return retriveSupplierProposalDtl(qtId, previousPageUrl, isReadonly, false);
+	}	
+	//#25201 -end-
+	
 	/**
 	 * Get supplier proposal details.
 	 * 
-	 * @param qtId
-	 *            the quotation / tender id.
+	 * @param qtOrProposalId
+	 *            the quotation / tender id
+	 *            or proposalId if byProposalId is true
+	 *        
 	 * @param previousPageUrl
 	 *            the previous page url.
 	 * @param isReadonly
 	 *            the read only flag
+	 * @param byProposalId -> accept qtId as proposalId if set to true
 	 * @return the supplier proposal page
 	 */
-	public String retriveSupplierProposalDtl(Long qtId, String previousPageUrl,
-			boolean isReadonly) {
+	public String retriveSupplierProposalDtl(Long qtOrProposalId, String previousPageUrl,
+			boolean isReadonly, boolean byProposalId) {
 		super.renewSesionObject();
-        debugLogger("retriveSupplierProposalDtl:::"+qtId+":::previousPageUrl:::"+previousPageUrl);
-		retrieveProposalChecklistDtls(qtId, new FacesScopes()
+		// #25201	
+		if(!byProposalId){
+			retrieveProposalChecklistDtls(qtOrProposalId, new FacesScopes()
 				.getUserSessionBean().getUserId(), isReadonly);
+		} else {
+			retrieveProposalChecklistDtls(qtOrProposalId, new FacesScopes()
+			.getUserSessionBean().getUserId(), isReadonly, true);
+		}
+		
+		// #27200,#17376 -start-
+		if (this.isProposalSubmitted()) {
+			this.getManagedBean().setAgreeWithIntegrityPact(true);
+			this.getManagedBean().setAgreeWithOthersTermsConditions(true);
+		}
+		// #27200,#17376 -end-
 
 		getManagedBean()
 				.setProcCategoryMedicine(
@@ -5495,6 +5590,12 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			proposalSO = null;
 		}
 	}
+	
+	/* 27368, #17376 - start */
+	public boolean enableQtNoHyperlink() {
+		return userHasRole(new RoleCode[] { RoleCode.DESK_OFFICER, RoleCode.BPK_AUDITOR });
+	}
+	/* 27368, #17376 - end */
 	
 	//#25089@hatta - start
 	public void onTabChange(TabChangeEvent event){
