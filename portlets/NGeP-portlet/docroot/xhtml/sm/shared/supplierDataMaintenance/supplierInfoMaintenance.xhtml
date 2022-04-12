@@ -107,9 +107,11 @@
 				</td>
 				<td>	
 					<p:spacer width="5" />
+					<!-- #32827 - disabled -->
 					<p:selectBooleanCheckbox value="#{supplierDataMaintenanceBackingBean.managedBean.cancelCategoryCode}" 
 						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
-						or supplierDataMaintenanceBackingBean.managedBean.cancelCategoryCodeExist}" style="float:left">
+						or (supplierDataMaintenanceBackingBean.managedBean.cancelCategoryCodeExist 
+							and !supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryActionCheckBox)}" style="float:left">
 			            <p:ajax event="change" partialSubmit="true" process="@this"
 							listener="#{supplierDataMaintenanceBackingBean.onTickPunishmentType()}"
 							update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>

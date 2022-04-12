@@ -628,6 +628,10 @@ public class SupplierDataMaintenanceBackingBean extends
 			if(getManagedBean().isWarning()) {
 				getManagedBean().getDisciplineVO().getSmDiscplinaryAction().setWarning(true);			
 			}
+			//32827 - start
+			getManagedBean().getDisciplineVO().getSmDiscplinaryAction().setCancelCategory(
+					getManagedBean().isCancelCategoryCode());
+			//32827 - end
 			//32827
 			if(getManagedBean().isCancelCategoryCode() && !getManagedBean().isCancelCategoryCodeExist()){
 				getManagedBean().getDisciplineVO().getSmDiscplinaryAction().setCancelCategory(true);
@@ -3029,11 +3033,13 @@ public class SupplierDataMaintenanceBackingBean extends
 	//27857: Disciplinary Action - start - 26238
 	public void resetDisciplinaryActionSectionExist(){
 		getManagedBean().setWarningExist(false);
-		getManagedBean().setCancelCategoryCodeExist(false);
+		//32827
+		//getManagedBean().setCancelCategoryCodeExist(false);
 		getManagedBean().setSuspendRegistrationExist(false);
 		getManagedBean().setCancelRegistrationExist(false);
 		getManagedBean().setBlacklistOwnerOrDirectorExist(false);
-		getManagedBean().setManufacturerStatusCancelExist(false);
+		//32827
+		//getManagedBean().setManufacturerStatusCancelExist(false);
 		getManagedBean().setBumiputeraStatusCancelExist(false);
 	}
 	//27857: Disciplinary Action - end - 26238
