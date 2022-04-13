@@ -82,21 +82,31 @@
 	</h:panelGroup>
 
 	<h:panelGroup id="productAndServiceId">
+		<ui:remove> ***19287#63 - start </ui:remove>
+		<ui:param name="editable" value="#{isPendingSubmissionStatus or isSupplierAckStatus or isPendingRevisionStatus}" />
+		<c:if test="#{directLOABackingBean.managedBean.readOnly}">
+			<ui:param name="editable" value="#{false}" />
+		</c:if>
+		<ui:remove> ***19287#63 - end </ui:remove>
+		<!-- 19287 -start- -->
 		<ac:templateSpec
 			first="#{directLOABackingBean.managedBean.prodFirst}"
-		    editable ="#{isPendingSubmissionStatus or isSupplierAckStatus or isPendingRevisionStatus}"
+		    editable ="#{editable}" 
 			templateSpecBean="#{directLOABackingBean.managedBean.prodTemplateSpecBean}"
 			title="#{lbl['lbl.txt.product']}"
 			isWorkflowStatus="#{isSupplierAckStatus}"
 			newable="#{!(isPendingApprovalStatus or isPendingVerification) and !directLOABackingBean.managedBean.readOnly}" />
+		<!-- 19287 -end- -->
 
+		<!-- 19287 -start- -->
 		<ac:templateSpec
 			first="#{directLOABackingBean.managedBean.servFirst}"
-		    editable ="#{isPendingSubmissionStatus or isSupplierAckStatus or isPendingRevisionStatus}"
+		    editable ="#{editable}" 
 			templateSpecBean="#{directLOABackingBean.managedBean.specTemplateSpecBean}"
 			title="#{lbl['lbl.txt.service']}"
 			isWorkflowStatus="#{isSupplierAckStatus}"
 			newable="#{!(isPendingApprovalStatus or isPendingVerification) and !directLOABackingBean.managedBean.readOnly}" />
+		<!-- 19287 -end- -->
 
 	</h:panelGroup>
 
