@@ -21,7 +21,9 @@
 			rowKey="#{creditfacilities}" rowIndexVar="rowIndex" rows="10">
 			<ac:paginator for="creditfaciitiesid" />
 
-			<p:column style="width:2%" rendered="#{!statusHide}">
+			<!-- CR 25201 -start- -->
+			<p:column style="width:2%" rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.readOnly}">
+			<!-- CR 25201 -end- -->	
 				<f:facet name="header">
 					<p:selectBooleanCheckbox
 						value="#{supplierProposalDetailBackingBean.managedBean.selectedAll}">

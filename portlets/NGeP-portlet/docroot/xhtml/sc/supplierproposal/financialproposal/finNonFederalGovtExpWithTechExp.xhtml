@@ -73,10 +73,14 @@
 					</ui:fragment>
 					<h:outputText value="#{lbl['lbl.sc.spec.contarct.amount']}" />
 				</f:facet>
+				
+				<ui:remove>#25201 - start </ui:remove>
 				<p:inputText id="contractAmt" value="#{financenongovt.contractAmt}"
-					size="15" style="text-align: right;" disabled="#{statusHide}"
+					size="15" style="text-align: right;" disabled="#{statusHide or supplierProposalDetailBackingBean.managedBean.readOnly}"
 					maxlength="14" required="true"
 					label="#{lbl['lbl.sc.spec.contarct.amount']}">
+					<ui:remove>#25201 - end </ui:remove>
+
 					<f:validateLongRange minimum="1" maximum="99999999999999" />
 					<p:ajax event="blur" process="@this"
 						listener="#{supplierProposalDetailBackingBean.totalContractAmount}"
@@ -86,13 +90,15 @@
 				</p:inputText>
 				<p:message id="contractAmtMsg" for="contractAmt" display="icon" />
 			</p:column>
-
+			
+			<ui:remove>#25201 - start </ui:remove>
 			<p:column headerText="#{lbl['lbl.sc.remarks']}"
 				style="white-space : normal;  width : 15%;">
 				<p:inputTextarea value="#{financenongovt.remark}" rows="3" cols="17" maxlength="300"
 				onkeyup="limitTextArea(this,300);" onkeydown="limitTextArea(this,300);" onmouseout="limitTextArea(this,300);"
-					disabled="#{statusHide}" />
+					disabled="#{statusHide or supplierProposalDetailBackingBean.managedBean.readOnly}" />
 			</p:column>
+			<ui:remove>#25201 - end </ui:remove>
 
 		</p:dataTable>
 		<p:spacer height="5" />

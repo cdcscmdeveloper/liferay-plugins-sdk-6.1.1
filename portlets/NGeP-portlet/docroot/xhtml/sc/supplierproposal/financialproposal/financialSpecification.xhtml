@@ -34,12 +34,13 @@
 		<ui:include src="financialSpecificationDtlbyzone.xhtml" />
 	</c:if>
 
-
+	<ui:remove>#25201 - start </ui:remove>
 	<c:if test="#{!supplierProposalDetailBackingBean.managedBean.qt.zonal}">
 		<ac:templateSpec
-			templateSpecBean="#{supplierProposalDetailBackingBean.managedBean.templateSpecBean}"
+			templateSpecBean="#{supplierProposalDetailBackingBean.managedBean.templateSpecBean}" editable="#{!supplierProposalDetailBackingBean.managedBean.readOnly}"  
 			title="#{lbl['lbl.sc.spec.financial.title']}" />
 	</c:if>
+	<ui:remove>#25201 - end </ui:remove>
 	</h:panelGroup>
 
 </ui:composition>
