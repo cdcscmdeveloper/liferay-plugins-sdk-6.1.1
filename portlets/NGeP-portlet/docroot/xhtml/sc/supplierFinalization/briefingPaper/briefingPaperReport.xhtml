@@ -33,51 +33,40 @@
 					rendered="#{report.pmDocument ne null and
 										 	suppFinalizationBackingBean.managedBean.getDirectdownloaddocdefkeys()
 										 		.contains(report.pmDocument.docDefinitionKey)}">
+					<ui:remove> #18685 - start </ui:remove>
 					<p:commandButton id="download" icon="ui-icon-download"
 						style="background-color:transparent !important; border:0px none;"
 						ajax="false" immediate="true"
-						action="#{suppFinalizationBackingBean.downloadReport(report)}" />
+						action="#{suppFinalizationBackingBean.downloadBriefingPaperReport(report)}" />
 				</ui:fragment>
-				<ui:fragment
-					rendered="#{(report.pmDocument ne null and
-											!suppFinalizationBackingBean.managedBean.getDirectdownloaddocdefkeys()
-												.contains(report.pmDocument.docDefinitionKey)) or report.pmDocument eq null}">
-					<ac:scSingleFileUploadButton id="briefingReportUploadBtn"
-						popupWidgetVar="briefingReportAttWidget"
-						attachment="#{report.scQtFinalizationReportAttachment}"
-						readonly="#{!(isSecretaryUser and report.selected)}"
-						rowIndex="#{rowIndex}">
-
-						<f:setPropertyActionListener for="actionEvent" value="#{report}"
-							target="#{suppFinalizationBackingBean.managedBean.selectedFinalizationReport}" />
-
-						<f:setPropertyActionListener for="actionEvent" value="KTR"
-							target="#{suppFinalizationBackingBean.managedBean.attachmentDocType}" />
-
-					</ac:scSingleFileUploadButton>
-				</ui:fragment>
+				
+				<h:panelGroup id="uploadBP">
+					<ui:fragment
+						rendered="#{(report.pmDocument ne null and
+												!suppFinalizationBackingBean.managedBean.getDirectdownloaddocdefkeys()
+													.contains(report.pmDocument.docDefinitionKey)) or report.pmDocument eq null}">
+						<ac:scSingleFileUploadButton id="sfBriefingReportUploadBtn"
+							popupWidgetVar="sfBriefingReportAttWidget"
+							attachment="#{report.scQtFinalizationReportAttachment}"
+							readonly="#{!(isSecretaryUser and report.selected)}"
+							rowIndex="#{rowIndex}">
+	
+							<f:setPropertyActionListener for="actionEvent" value="#{report}"
+								target="#{suppFinalizationBackingBean.managedBean.selectedFinalizationReport}" />
+	
+							<f:setPropertyActionListener for="actionEvent" value="KTR"
+								target="#{suppFinalizationBackingBean.managedBean.attachmentDocType}" />
+	
+						</ac:scSingleFileUploadButton>
+					</ui:fragment>
+				</h:panelGroup>
+			<ui:remove> #18685 - end </ui:remove>
 			</p:column>
 		</p:dataTable>
 		
-		<!-- <ui:fragment
-					rendered="#{report.pmDocument ne null and 'KT' eq report.pmDocument.docDefinitionKey and report.kertasTaklimatUpload}">
-					<ac:scSingleFileUploadButton id="kertasTakliUploadBtn"
-						popupWidgetVar="kertasTaklimUploadAttWidget"
-						attachment="#{report.tempReportAttachment}" rowIndex="#{rowIndex}"
-						readonly="#{!(isSecretaryUser)}"
-						deleteFileUploadListener="suppFinalizationBackingBean.deleteKertasAttachment">
-						<f:setPropertyActionListener for="actionEvent" value="#{report}"
-							target="#{suppFinalizationBackingBean.managedBean.selectedFinalizationReport}" />
-						<f:setPropertyActionListener for="actionEvent" value="KTR"
-							target="#{suppFinalizationBackingBean.managedBean.attachmentDocType}" />
-					</ac:scSingleFileUploadButton>
-				</ui:fragment> -->
-
-		<div class="ppRightBtn BtnSpacing">
-			<p:commandButton value="#{lbl['lbl.btn.download.all']}"
-				action="#{suppFinalizationBackingBean.downloadAllReports}"
-				ajax="false" immediate="true" rendered="#{!readOnlyTask}" />
-		</div>
+		<ui:remove> #18685 - start </ui:remove>
+		<ui:include src="/xhtml/sc/supplierFinalization/briefingPaper/briefingPaperEvaluationSfReport.xhtml" />
+		<ui:remove> #18685 - end </ui:remove>
 	</p:panel>
 
 </ui:composition>
