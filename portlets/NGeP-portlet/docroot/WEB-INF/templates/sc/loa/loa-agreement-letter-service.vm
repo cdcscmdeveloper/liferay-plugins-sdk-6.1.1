@@ -803,7 +803,7 @@ u.underline {
 						<table>
 								<tr>
 									<td align="center" style="vertical-align: top;" class="text_family_header">6. </td>
-									<td class="text_header_submenu">Skop Perkhidmatan <i>/Service Level Agreement (SLA) (sekiranya berkaitan)</i></td>
+									<td class="text_header_submenu">Skop Perkhidmatan<i>/Service Level Agreement (SLA) (sekiranya berkaitan)</i></td>
 								</tr>
 						</table>
 					</td>
@@ -876,7 +876,7 @@ u.underline {
 						<table>
 								<tr>
 									<td align="center" style="vertical-align: top;" class="text_family_header">8. </td>
-									<td class ="text_header_submenu">No. Kod Majikan PERKESO/No. Pendaftaran KWSP <span class="text_header_submenu_red">/*Polisi Insurans (jika berkaitan)</span></td>
+									<td class ="text_header_submenu">No. Kod Majikan PERKESO/No. Pendaftaran KWSP<span class="text_header_submenu_red">/*Polisi Insurans (jika berkaitan)</span></td>
 								</tr>
 						</table>
 					</td>
@@ -1139,9 +1139,6 @@ u.underline {
 		</tr>
 	</table>
 	
-<div class="break-after"><br/></div>
-
-	
 #if($itemType =="1")
 
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
@@ -1262,7 +1259,7 @@ u.underline {
 			<td align="right"> <span class="text_family"> <b><i>Lampiran A3</i></b></span></td>
 	  </tr>
 		<tr>
-			<td><span class="text_header_submenu"><u style="text-decoration:underline;">*Spesifikasi/Skop
+			<td><span class="text_header_submenu"><u style="text-decoration:underline;">*Skop
 					Perkhidmatan/Service Level Agreement (SLA) (sekiranya berkaitan)</u></span> <br />
 				<br /></td>
 		</tr>
@@ -1814,7 +1811,7 @@ u.underline {
 				<td align="right"> <span class="text_family"> <b><i>Lampiran A3</i></b></span></td>
 		  </tr>
 			<tr>
-				<td><span class="text_header_submenu"><u style="text-decoration:underline;">*Spesifikasi/Skop
+				<td><span class="text_header_submenu"><u style="text-decoration:underline;">*Skop
 						Perkhidmatan/Service Level Agreement (SLA) (sekiranya berkaitan)</u></span> <br />
 					<br /></td>
 			</tr>
