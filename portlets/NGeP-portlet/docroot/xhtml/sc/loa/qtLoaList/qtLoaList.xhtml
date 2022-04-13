@@ -9,6 +9,9 @@
 	<ui:define name="contentSection">
 		<p:messages id="qtloaMsg" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" />
+		<!-- 19366 -start- -->
+		<ui:include src="qtLoaListButton.xhtml" />
+		<!-- 19366 -end- -->
 		<ui:include src="qtLoaListHeader.xhtml" />
 		<p:panel id="suppListPanel" toggleable="true" toggleSpeed="500">
 			<f:facet name="header">
