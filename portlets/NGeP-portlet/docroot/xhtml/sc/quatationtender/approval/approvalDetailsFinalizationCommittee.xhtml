@@ -40,9 +40,11 @@
 				<c:choose>
 					<c:when test="#{!empty fcaApprovalTab.scQtApproval.scQtApprovalDtls and empty fcaApprovalTab.scQtApproval.scQtApprovalDtls[0].submissionDate and 
 							qTDetailBB.managedBean.selectedApprovalTabBean.tabType != ParameterConst.approvalCategoryProcurementBoard}">
+						<!-- 17376 -start- -->
 						<p:selectOneMenu id="fcApprovalId"
 							value="#{approverSettings.committeeType.parameterId}"
-							style="width:75%;margin-bottom: 5px;">
+							style="width:75%;margin-bottom: 5px;" disabled="#{qTDetailBB.managedBean.readOnly}">
+						<!-- 17376 -end- -->
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
 							<f:selectItems var="secretary"
@@ -62,9 +64,11 @@
 				<h:panelGroup id="commTypes">
 					<c:choose>
 						<c:when test="#{!empty fcaApprovalTab.scQtApproval.scQtApprovalDtls and empty fcaApprovalTab.scQtApproval.scQtApprovalDtls[0].submissionDate}">
+							<!-- 17376 -start- -->
 							<p:selectOneMenu id="usersSecretaryId"
-								value="#{approverSettings.pmUser.userId}"
+								value="#{approverSettings.pmUser.userId}" disabled="#{qTDetailBB.managedBean.readOnly}"
 								style="width:90%;margin-bottom: 5px;">
+							<!-- 17376 -end- -->
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 									itemValue="#{null}" />
 								<f:selectItems var="usersSecretary"
@@ -85,10 +89,12 @@
 		</p:dataTable>
 	</p:panel>
 
+	<!-- 17376 -start- -->
 	<ac:scRemarkAndAttachment
 		remarkList="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalRemarks}"
 		attachmentList="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalAttachments}"
-		readonly="#{!isFCApprovalDtlsEditable}"
+		readonly="#{!isFCApprovalDtlsEditable || qTDetailBB.managedBean.readOnly}"
 		fileUploadListener="qTDetailBB.handleFileUpload" />
+	<!-- 17376 -end- -->
 
 </ui:composition>
