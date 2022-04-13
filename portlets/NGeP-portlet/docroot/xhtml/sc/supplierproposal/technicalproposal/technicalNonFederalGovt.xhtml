@@ -245,15 +245,18 @@
 			              evaluationBackingBean.managedBean.currentStatusId ne QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL and 
 			              evaluationBackingBean.managedBean.currentStatusId ne QTStatusConst.TEC_PENDING_ENDORSEMENT and
 			              evaluationBackingBean.managedBean.currentStatusId ne QTStatusConst.TEC_PENDING_SIGN_OFF}">
-			  <p:column headerText="#{lbl['lbl.sc.action']}"
-				style="width:5%;white-space: normal;text-align: center;">
-			    
-			    <p:commandLink action="#{supplierProposalDetailBackingBean.editRowNonFederalGovtExperience(technongovt)}"
-		         partialSubmit="true" 
-		         process="@this" 
-		         rendered="#{technongovt.brandNew eq false and not technongovt.editable}"
-		         update="@([id$=technongovtid])" >
-			         <h:graphicImage
+				<!-- 25201 -start- -->
+				<p:column headerText="#{lbl['lbl.sc.action']}"
+					style="width:5%;white-space: normal;text-align: center;"
+					rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.readOnly}">
+					<!-- 25201 -end- -->
+
+					<p:commandLink
+						action="#{supplierProposalDetailBackingBean.editRowNonFederalGovtExperience(technongovt)}"
+						partialSubmit="true" process="@this"
+						rendered="#{technongovt.brandNew eq false and not technongovt.editable}"
+						update="@([id$=technongovtid])">
+						<h:graphicImage
 							value="#{CommonUIConstant.imagePathUptoDesign}/edit.png"
 							styleClass="tasklist_title1" title="#{lbl['lbl.sc.qt.search.edit.tooltip']}" />
 							
