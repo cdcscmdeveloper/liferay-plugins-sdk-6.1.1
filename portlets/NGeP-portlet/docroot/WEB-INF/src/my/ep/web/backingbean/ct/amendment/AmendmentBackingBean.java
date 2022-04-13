@@ -1657,11 +1657,37 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			reqDTO.setUpdateItemMap(ctBackingBean.getManagedBean().getUpdateItemMap());
 			reqDTO.setContractAdminlist(getManagedBean().getContractAdminlist());
 			
-			//26186 start
-			if(getManagedBean().isDisciplinaryAction() && ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions()!=null){
-				reqDTO.setCtDisciplinaryAction(ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions());
+			//26186/#32860 start
+			boolean checkValidationDisciplinaryAction = false;
+			
+			if (getManagedBean().isDisciplinaryAction()) {
+				if (ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions() != null) {
+					reqDTO.setCtDisciplinaryAction(ctBackingBean.getManagedBean().getContractVer()
+							.getCtDisciplinaryActions());
+				}
+				
+				if(!getManagedBean().isDisciplinaryActionNotification()){
+					if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)
+							&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate() != null
+							&& (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate()
+									.equals(getManagedBean().getDisciplinaryActionStartDate()) || ctBackingBean
+									.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate()
+									.after(getManagedBean().getDisciplinaryActionStartDate()))) {
+						checkValidationDisciplinaryAction = true;
+						reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
+
+					} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_MOF_RESULT_HT_NAME)
+							&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate() != null
+							&& (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate()
+									.equals(getManagedBean().getDisciplinaryActionStartDate()) || ctBackingBean
+									.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate()
+									.after(getManagedBean().getDisciplinaryActionStartDate()))) {
+						checkValidationDisciplinaryAction = true;
+						reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
+					}
+				}
 			}
-			//26186 end
+			//26186/#32860 end
 
 			if (getManagedBean().getPmDigiSign() != null) {
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
@@ -1673,21 +1699,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (resDTO.isSuccessful()) {
 				log.debug("Record saved successfully");
 				String messageId = MessageConst.INFO_700005;
-				//#32860 start
-				boolean checkValidationDisciplinaryAction = false;
-				//#32860 end
 				String[] params = new String[] { getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,
 						this.ctBackingBean.getManagedBean().getContractVer().getDocType()),
 						this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo()};
 
 				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
-					//#32860 start
-					if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME) && getManagedBean().isDisciplinaryAction()) {
-						checkValidationDisciplinaryAction=true;
-					} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_MOF_RESULT_HT_NAME) && getManagedBean().isDisciplinaryAction()) {
-						checkValidationDisciplinaryAction=true;
-					}
-					//#32860 end
 					messageId = MessageConst.INFO_700025;
 				} else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 					
@@ -1775,11 +1791,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							messageId = MessageConst.INFO_758002;
 							params = new String[] { this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo()};
 						} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)) {
-							if(getManagedBean().isDisciplinaryAction()){checkValidationDisciplinaryAction=true;}//#32860 
 							messageId = MessageConst.INFO_758003;
 							params = new String[] { this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo()};
 						} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_MOF_RESULT_HT_NAME)) {
-							if(getManagedBean().isDisciplinaryAction()){checkValidationDisciplinaryAction=true;}//#32860
 							messageId = MessageConst.INFO_758004;
 							params = new String[] { this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo()};
 						}
@@ -1821,15 +1835,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				successMessage(messageId, params);
 				
 				//#32860 start
-				if(checkValidationDisciplinaryAction){
-					disciplinaryActionCheckAndSet(true);
-				}
-				//#32860 end
-				
-				//#32860 start
 				if ((!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) 
 						|| (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId() == null))
-						&& (!checkValidationDisciplinaryAction && !getManagedBean().isDisciplinaryActionCancel())) {
+						&& (!checkValidationDisciplinaryAction)) {
 					//#32860 end
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
@@ -1838,7 +1846,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					ctReqDTO.setContractVerId(resDTO.getCtContractVer().getContractVerId());
 					ctReqDTO.setDocType(resDTO.getCtContractVer().getDocType());
 					setAmendmentContractVer(ctReqDTO);
-					//if(checkValidationDisciplinaryAction){disciplinaryActionCheckAndSet(true);}//#32860
+					//#32860 start
+					if(checkValidationDisciplinaryAction){
+						disciplinaryActionCheckAndSet(true);
+					}
+					//#32860 end
 					ConstructTabSideMenu();
 					//26753 - start
 					if(getManagedBean().getFilteredUpdatedCommitteeMembers() != null){
