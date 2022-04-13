@@ -4,7 +4,9 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-
+	<ui:remove> #25201 - start </ui:remove>	
+	<ui:param name="canShowSupplierProposal" value="#{lOADetailBackingBean.canShowSupplierProposal() and lOADetailBackingBean.canShowSupplierProposalByLOAStatus()}" />
+	<ui:remove> #25201 - end </ui:remove>	
 	<div align="left" class="header-info header-spacing">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
@@ -30,21 +32,51 @@
 			</tr>
 			<tr>
 				<td width="10%"><h:outputLabel
-						value="#{lbl['lbl.sc.document.no']}" /></td>
+						value="#{isDocTypeQuotation or isDocTypeDirectNego?lbl['lbl.rpt.qtNo']:lbl['lbl.sc.document.no']}" /></td>
 				<td class="header-info-text">
-						<p:commandLink rendered="#{isDocTypeQuotation}" process="@this" partialSubmit="true"
-						action="#{ViewQtDetailsGeneralInfoBB.navigatetoViewQtDetailsGeneralInfo(view.viewId,lOADetailBackingBean.managedBean.scQt,false)}">
-				<h:outputText value="#{lOADetailBackingBean.managedBean.scQt !=null ?lOADetailBackingBean.managedBean.scQt.qtNo : ' '}" rendered="#{isDocTypeQuotation}" escape="false" />
-					</p:commandLink>
+						<ui:remove>
+							Bug #27412 #70 - added filter by supplier START
+						</ui:remove>
+						<!-- 28780 start -->
+						<p:commandLink rendered="#{!qTDetailBB.isMofSupplier() and (isDocTypeQuotation or isDocTypeDirectNego)}" process="@this" partialSubmit="true"
+						action="#{qTDetailBB.editQuationTenderDetails(lOADetailBackingBean.managedBean.scQt, false, true, view.viewId)}">
+							<h:outputText value="#{null != lOADetailBackingBean.managedBean.scQt ?lOADetailBackingBean.managedBean.scQt.qtNo : ' '}" rendered="#{isDocTypeQuotation || isDocTypeDirectNego}" escape="false" />
+						</p:commandLink>
+						<!-- 28780 end -->
+						<h:outputText value="#{null != lOADetailBackingBean.managedBean.scQt ?lOADetailBackingBean.managedBean.scQt.qtNo : ' '}" rendered="#{qTDetailBB.isMofSupplier() and (isDocTypeQuotation || isDocTypeDirectNego)}" escape="false" />
+						<ui:remove>
+						    Bug #27412 #70 - added filter by supplier END
+						</ui:remove>
 						<h:outputText
 						value="#{lOADetailBackingBean.managedBean.scLoa.scQuote.quoteNo}"
-						rendered="#{!isDocTypeQuotation}" />
+						rendered="#{!(isDocTypeQuotation || isDocTypeDirectNego)}" />
 				</td>
 				<td width="10%"><h:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.title']}" /></td>
 				<td class="header-info-text" colspan="3">
-					#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.title}</td>
+					#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.title}</td>				
 			</tr>
+			<ui:remove> #19336 - start </ui:remove>
+			<c:if test="#{((not empty lOADetailBackingBean.managedBean.scQtProposal) or (not empty lOADetailBackingBean.managedBean.scLoa.scQuote)) and lOADetailBackingBean.qtPrefixIsQT()}" >
+			<tr>
+				<td width="10%"><h:outputLabel
+						value="#{lbl['lbl.sc.proposal.no']}" /></td>
+				<td class="header-info-text">
+				<p:commandLink rendered="#{(isDocTypeQuotation or isDocTypeDirectNego) and canShowSupplierProposal}" process="@this" partialSubmit="true"
+						action="#{ViewSPBackingBean.navigatetoViewSupplierProposal(view.viewId, lOADetailBackingBean.managedBean.scQtProposal.qtProposalId)}">
+				       #{lOADetailBackingBean.managedBean.scQtProposal.proposalNo}
+					</p:commandLink>
+				 <h:outputText
+						value="#{lOADetailBackingBean.managedBean.scLoa.scQuote.quoteNo}"
+						rendered="#{!(isDocTypeQuotation or isDocTypeDirectNego)}" /></td>
+				<td><p:spacer width="1" /></td>
+				<td><p:spacer width="1" /></td>
+				<td><p:spacer width="1" /></td>
+				<td><p:spacer width="1" /></td>
+			</tr>
+			</c:if>
+			<ui:remove> #19336 - end </ui:remove>
 		</table>
 	</div>
+
 </ui:composition>
