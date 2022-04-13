@@ -33,11 +33,13 @@
 				value="#{scheduleBiddingBB.managedBean.outComes}">
 				<ui:param name="buttonLabel"
 					value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+				<!-- 30451,17376 -start- -->
 				<p:commandButton id="submitBtn" value="#{lbl[buttonLabel]}"
 					update="@form" styleClass="ui-button"
-					rendered="#{qtValidityDaysExpired}" onstart="blockWidget.show()"
+					rendered="#{qtValidityDaysExpired and !scheduleBiddingBB.managedBean.bdSfFlow}" onstart="blockWidget.show()"
 					oncomplete="blockWidget.hide()"
 					action="#{scheduleBiddingBB.submitBiddingDetails(bpmAction)}" />
+				<!-- 30451,17376 -end- -->
 			</ui:repeat>
 		</div>
 
@@ -47,9 +49,11 @@
 					<td><p:outputLabel id="docNoMain"
 							value="#{lbl['lbl.sc.document.no']}" /></td>
 					<td class="header-info-text">
+					<!-- 28780 start -->
 						<p:commandLink process="@this" partialSubmit="true"
-						action="#{ViewQtDetailsGeneralInfoBB.navigatetoViewQtDetailsGeneralInfo(view.viewId,scheduleBiddingBB.managedBean.scQt,true)}">
-				<h:outputText value="#{scheduleBiddingBB.managedBean.scQt.qtNo}" escape="false" />
+					    	action="#{qTDetailBB.editQuationTenderDetails(scheduleBiddingBB.managedBean.scQt, false, true, view.viewId)}">
+						<h:outputText value="#{scheduleBiddingBB.managedBean.scQt.qtNo}" escape="false" />
+					<!-- 28780 end -->
 					</p:commandLink>
 						</td>
 
@@ -98,15 +102,21 @@ scheduleBiddingBB.isQTStatusPublished(scheduleBiddingBB.managedBean.currentStatu
 				<ac:paginator for="contactPersonDetails" />
 				<p:column style="width:2% ;">
 					<f:facet name="header">
+						<!-- 30451,17376 -start- -->
 						<p:selectBooleanCheckbox id="multiSelectContactCB"
-							value="#{scheduleBiddingBB.managedBean.selectedAllBidContacts}">
+							value="#{scheduleBiddingBB.managedBean.selectedAllBidContacts}"
+							disabled="#{scheduleBiddingBB.managedBean.bdSfFlow}">
+						<!-- 30451,17376 -end- -->
 							<p:ajax partialSubmit="true" process="@this"
 								update="@([id$=contactDetailsPanelMain])"
 								listener="#{scheduleBiddingBB.selectAll(scheduleBiddingBB.managedBean.selectedAllBidContacts,scheduleBiddingBB.managedBean.scBidContactPersonList)}"/>
 						</p:selectBooleanCheckbox>
 					</f:facet>
+					<!-- 30451,17376 -start- -->
 					<p:selectBooleanCheckbox id="selectCOntactCB"
-						value="#{contact.selected}">
+						value="#{contact.selected}" 
+						disabled="#{scheduleBiddingBB.managedBean.bdSfFlow}">
+					<!-- 30451,17376 -end- -->
 						<p:ajax partialSubmit="true" process="@this"
 							update="@([id$=contactDetailsPanelMain])" />
 					</p:selectBooleanCheckbox>
@@ -137,16 +147,20 @@ scheduleBiddingBB.isQTStatusPublished(scheduleBiddingBB.managedBean.currentStatu
 
 			</p:dataTable>
 			<div align="right">
+				<!-- 30451,17376 -start- -->			
 				<p:commandButton value="#{lbl['lbl.btn.add']}" id="addContact"
 					process="@this" partialSubmit="true"
 					action="#{scheduleBiddingBB.addContactAction}" immediate="true"
-					update="@([id$=contactPersonDetails])" />
+					update="@([id$=contactPersonDetails])" 
+					rendered="#{!scheduleBiddingBB.managedBean.bdSfFlow}"/>
 
 				<p:commandButton id="deleteContact" value="#{lbl['lbl.btn.delete']}"
 					immediate="true" process="@this"
 					disabled="#{scheduleBiddingBB.deleteselectedList(scheduleBiddingBB.managedBean.scBidContactPersonList)}"
 					partialSubmit="true" oncomplete="contactPersonDelete.show();"
-					update="@([id$=contactPersonDeleteId])" />
+					update="@([id$=contactPersonDeleteId])" 
+					rendered="#{!scheduleBiddingBB.managedBean.bdSfFlow}"/>
+				<!-- 30451,17376 -end- -->
 
 				<ui:param name="contactPersonDeleteId" value="contactPersonDeleteId"></ui:param>
 
