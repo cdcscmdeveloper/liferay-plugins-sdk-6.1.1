@@ -24,15 +24,21 @@
 
 			<p:column style="width:2% ;">
 				<f:facet name="header">
+					<!-- 30451,17376 -start- -->
 					<p:selectBooleanCheckbox id="selectAllItemsByItem"
-						value="#{scheduleBiddingBB.managedBean.selectedAll}">
+						value="#{scheduleBiddingBB.managedBean.selectedAll}"
+						disabled="#{scheduleBiddingBB.managedBean.bdSfFlow}">
+						<!-- 30451,17376 -end- -->
 						<p:ajax partialSubmit="true" process="@this"
 							update="@([id$=scheduleByItemPanel])"
 							listener="#{scheduleBiddingBB.selectAll(scheduleBiddingBB.managedBean.selectedAll,scheduleBiddingBB.managedBean.bidItemList)}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
+				<!-- 30451,17376 -start- -->
 				<p:selectBooleanCheckbox id="selectItemByItem"
-					value="#{bidItem.selected}">
+					value="#{bidItem.selected}"
+					disabled="#{scheduleBiddingBB.managedBean.bdSfFlow}">
+					<!-- 30451,17376 -end- -->
 					<p:ajax partialSubmit="true" process="@this"
 						update="@([id$=scheduleByItemPanel])"
 						listener="#{scheduleBiddingBB.selected(index)}" />
@@ -45,11 +51,14 @@
 						value="#{lbl['lbl.sc.bidding.item.name.supplier.tooltip']}" />
 				</f:facet>
 				
+				<!-- 30451,17376 -start- -->
 				<p:commandLink id="itemNameByItem" 
 						value="#{bidItem.scRequestItem.itemName}" process="@this" partialSubmit="true"
 						action="#{scheduleBiddingBB.itemDetailsPopupAction(bidItem.scRequestItem,bidItem.qty)}"
 						update=":form:scheduleBiddingItemDetails"
-						oncomplete="scheduleBiddingItemDetails.show()" />
+						oncomplete="scheduleBiddingItemDetails.show()"
+						disabled="#{scheduleBiddingBB.managedBean.bdSfFlow}" />
+				<!-- 30451,17376 -end- -->
 				
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.item.description']}"
@@ -75,20 +84,26 @@
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.bidding.start']}" />
 				</f:facet>
+				<!-- 30451,17376 -start- -->
 				<ac:dateTime id="bidStartDateByItem" style="width:92%"
 					mindate="#{scheduleBiddingBB.managedBean.minStartDate}"
 					postUpdateListener="#{scheduleBiddingBB.itemStartDateSelectListener(bidItem)}"
 					label="#{lbl['lbl.sc.bidding.start']}"
 					value="#{bidItem.scBidSchedule.startDate}" rowIndex="#{index}"
-					update="@([id$=bidEndDateByItem],[id$=byItemStartDateMsg])">
+					update="@([id$=bidEndDateByItem],[id$=byItemStartDateMsg])"
+					disabled="#{scheduleBiddingBB.managedBean.bdSfFlow}">
+					<!-- 30451,17376 -end- -->
 				</ac:dateTime>
 				<p:message id="byItemStartDateMsg" for="bidStartDateByItem"
 					showDetail="false" display="icon" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.bidding.end']}"
 				style="width : 10%;">
+				<!-- 30451,17376 -start- -->
 				<p:inputText id="bidEndDateByItem" readonly="true" size="15"
-					value="#{bidItem.scBidSchedule.endDate}">
+					value="#{bidItem.scBidSchedule.endDate}"
+					disabled="#{scheduleBiddingBB.managedBean.bdSfFlow}">
+					<!-- 30451,17376 -end- -->
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 				</p:inputText>
@@ -98,8 +113,11 @@
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.duration.hours']}" />
 				</f:facet>
+				<!-- 30451,17376 -start- -->
 				<p:selectOneMenu id="bidDurationByItem" 
-					value="#{bidItem.scBidSchedule.duration}">
+					value="#{bidItem.scBidSchedule.duration}"
+					disabled="#{scheduleBiddingBB.managedBean.bdSfFlow}">
+					<!-- 30451,17376 -end- -->
 					<f:selectItems value="#{scheduleBiddingBB.managedBean.selectItems}"
 						var="selectItem" itemLabel="#{selectItem.label}"
 						itemValue="#{selectItem.value}" />
@@ -117,8 +135,11 @@
 					<ac:iconTooltip
 						value="#{lbl['lbl.sc.min.decrement.block.tooltip']}" />
 				</f:facet>
+				<!-- 30451,17376 -start- -->
 				<p:inputText style="text-align : right" id="decrementAmtByItem"
-					maxlength="19" value="#{bidItem.decrementAmt }">
+					maxlength="19" value="#{bidItem.decrementAmt }"
+					disabled="#{scheduleBiddingBB.managedBean.bdSfFlow}">
+					<!-- 30451,17376 -end- -->
 					<p:ajax event="change" process="@this" partialSubmit="true" />
 					<ac:validateNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"
@@ -131,26 +152,38 @@
 			<table style="align: left">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.bidding.start']}" /></td>
-					<td><ac:dateTime id="multiSelectStartDateByItem"
+					<td>
+						<!-- 30451,17376 -start- -->
+						<ac:dateTime id="multiSelectStartDateByItem"
 							mindate="#{scheduleBiddingBB.managedBean.minStartDate}"
 							postUpdateListener="#{scheduleBiddingBB.multiSelectStartDateListener(scheduleBiddingBB.managedBean.rowSelectedBid)}"
 							label="#{lbl['lbl.sc.bidding.start']}"
 							value="#{scheduleBiddingBB.managedBean.rowSelectedBid.startDate}"
-							update="@([id$=multiSelectEndDateByItem],[id$=ScheduleBiddingMainnMessage])">
+							update="@([id$=multiSelectEndDateByItem],[id$=ScheduleBiddingMainnMessage])"
+							disabled="#{scheduleBiddingBB.managedBean.bdSfFlow}">
+						<!-- 30451,17376 -end- -->
 						</ac:dateTime></td>
 						<td><p:spacer width="5" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.sc.bidding.end']}" /></td>
-					<td><p:inputText id="multiSelectEndDateByItem" readonly="true"
+					<td>
+						<!-- 30451,17376 -start- -->
+						<p:inputText id="multiSelectEndDateByItem" readonly="true"
 							size="15"
-							value="#{scheduleBiddingBB.managedBean.rowSelectedBid.endDate}">
+							value="#{scheduleBiddingBB.managedBean.rowSelectedBid.endDate}"
+							disabled="#{scheduleBiddingBB.managedBean.bdSfFlow}">
+							<!-- 30451,17376 -end- -->
 							<f:convertDateTime
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 						</p:inputText></td>
 						<td><p:spacer width="5" /></td>
 					<td><h:outputText value="#{lbl['lbl.sc.duration.hours']}" />
 					</td>
-					<td><p:selectOneMenu id="bidDurationByItem" 
-							value="#{scheduleBiddingBB.managedBean.rowSelectedBid.duration}">
+					<td>
+						<!-- 30451,17376 -start- -->
+						<p:selectOneMenu id="bidDurationByItem" 
+							value="#{scheduleBiddingBB.managedBean.rowSelectedBid.duration}"
+							disabled="#{scheduleBiddingBB.managedBean.bdSfFlow}">
+							<!-- 30451,17376 -end- -->
 							<f:selectItems
 								value="#{scheduleBiddingBB.managedBean.selectItems}"
 								var="selectItem" itemLabel="#{selectItem.label}"
@@ -161,14 +194,18 @@
 						</p:selectOneMenu></td>
 						<td><p:spacer width="5" /></td>
 
-					<TD><p:commandButton value="#{lbl['lbl.btn.apply.to.all']}"
-							id="applyDates"
-							disabled="#{scheduleBiddingBB.deleteselectedList(scheduleBiddingBB.managedBean.bidItemList)}"
-							process="@this,multiSelectStartDateByItem,multiSelectEndDateByItem"
-							partialSubmit="true" style="float:center;"
-							action="#{scheduleBiddingBB.applyBidDates}"
-							update="@([id$=scheduleByItemPanel])"
-							title="#{lbl['lbl.sc.bidding.item.btn.apply.to.all.tooltip']}" /></TD>
+						<TD>
+							<!-- 30451,17376 -start- -->
+							<p:commandButton
+								value="#{lbl['lbl.btn.apply.to.all']}" id="applyDates"
+								disabled="#{scheduleBiddingBB.deleteselectedList(scheduleBiddingBB.managedBean.bidItemList) or scheduleBiddingBB.managedBean.bdSfFlow}"
+								process="@this,multiSelectStartDateByItem,multiSelectEndDateByItem"
+								partialSubmit="true" style="float:center;"
+								action="#{scheduleBiddingBB.applyBidDates}"
+								update="@([id$=scheduleByItemPanel])"
+								title="#{lbl['lbl.sc.bidding.item.btn.apply.to.all.tooltip']}" />
+							<!-- 30451,17376 -end- -->
+						</TD>
 
 				</tr>
 
