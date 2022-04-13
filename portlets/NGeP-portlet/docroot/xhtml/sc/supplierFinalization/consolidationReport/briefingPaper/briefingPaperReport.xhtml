@@ -50,60 +50,44 @@
 										 	consolidationReportBackingBean.managedBean.getDirectdownloaddocdefkeys()
 										 		.contains(report.pmDocument.docDefinitionKey)}"> 
 				 
+					<!-- 18685 -start- -->
 					<p:commandButton id="download" icon="ui-icon-download" 
 						style="background-color:transparent !important; border:0px none;"
-						ajax="false" action="#{consolidationReportBackingBean.downloadReport(report)}" />
+						ajax="false" action="#{consolidationReportBackingBean.downloadBriefingPaperReport(report)}" />
+					<!-- 18685 -end- -->
 					<ui:fragment
-						rendered="#{report.pmDocument ne null and 'KT' eq report.pmDocument.docDefinitionKey and report.kertasTaklimatUpload}">						
-						<ac:scSingleFileUploadButton id="kertasTakliUploadBtn"
-							popupWidgetVar="kertasTaklimUploadAttWidget"
-							attachment="#{report.scQtFinalizationReportAttachment}"
-							rowIndex="#{rowIndex}"
-							deleteFileUploadListener="consolidationReportBackingBean.deleteKertasAttachment">
-							<f:setPropertyActionListener for="actionEvent" value="#{report}"
-							target="#{consolidationReportBackingBean.managedBean.selectedFinalizationReport}" />
-						<f:setPropertyActionListener for="actionEvent" value="KTR"
-							target="#{consolidationReportBackingBean.managedBean.attachmentDocType}" />
-						</ac:scSingleFileUploadButton>
+						rendered="#{report.pmDocument ne null and 'KT' eq report.pmDocument.docDefinitionKey and report.kertasTaklimatUpload}">
 					</ui:fragment>
 
 				</ui:fragment>
-				<ui:fragment rendered="#{(report.pmDocument ne null and
-											!consolidationReportBackingBean.managedBean.getDirectdownloaddocdefkeys()
-												.contains(report.pmDocument.docDefinitionKey)) or report.pmDocument eq null}">						
-					<ac:scSingleFileUploadButton id="briefingReportUploadBtn"
-						popupWidgetVar="briefingReportAttWidget" update="@([id$=reportTbl])"
-						attachment="#{report.scQtFinalizationReportAttachment}" 
-						readonly="#{!empty report.pmDocument or 
-						  				report.docCategory eq ParameterConst.documentCategoryEndorsementReport}" 
-						rowIndex="#{rowIndex}">
-	
-						<f:setPropertyActionListener for="actionEvent" value="#{report}"
-							target="#{consolidationReportBackingBean.managedBean.selectedFinalizationReport}" />
-	
-						<f:setPropertyActionListener for="actionEvent" value="KTR"
-							target="#{consolidationReportBackingBean.managedBean.attachmentDocType}" />
-					</ac:scSingleFileUploadButton>
-				</ui:fragment>	
+				
+				<!-- 18685 -start- -->
+				<h:panelGroup id="uploadCBP">
+					<ui:fragment rendered="#{(report.pmDocument ne null and
+												!consolidationReportBackingBean.managedBean.getDirectdownloaddocdefkeys()
+													.contains(report.pmDocument.docDefinitionKey)) or report.pmDocument eq null}">						
+						<ac:scSingleFileUploadButton id="briefingReportUploadBtn"
+							popupWidgetVar="crBriefingReportAttWidget" update="@([id$=reportTbl])"
+							attachment="#{report.scQtFinalizationReportAttachment}" 
+							readonly="#{!empty report.pmDocument or 
+							  				report.docCategory eq ParameterConst.documentCategoryEndorsementReport}" 
+							rowIndex="#{rowIndex}">
+		
+							<f:setPropertyActionListener for="actionEvent" value="#{report}"
+								target="#{consolidationReportBackingBean.managedBean.selectedFinalizationReport}" />
+		
+							<f:setPropertyActionListener for="actionEvent" value="KTR"
+								target="#{consolidationReportBackingBean.managedBean.attachmentDocType}" />
+						</ac:scSingleFileUploadButton>
+					</ui:fragment>
+				</h:panelGroup>
+				<!-- 18685 -end- -->
 			</p:column>
 		</p:dataTable>
 		
-		<div class="ppRightBtn BtnSpacing">
-			<p:commandButton value="#{lbl['lbl.btn.download.all']}" ajax="false"	
-				action="#{consolidationReportBackingBean.downloadAllReports}" />
-				
-			<p:commandButton value="#{lbl['lbl.btn.add']}"
-				process="@this, reportTbl" partialSubmit="true"
-				action="#{consolidationReportBackingBean.addFinalizationReportAction}"
-				oncomplete="reportWidget.paginator.endLink.click();" 
-				update="@([id$=reportTbl])"/>
-
-			<p:commandButton value="#{lbl['lbl.btn.delete']}" 
-				process="@this, reportTbl" partialSubmit="true"
-				oncomplete="deleteReportPopup.show();"
-				update="@([id$=#{deleteReportPopupId}])" 
-				disabled="#{empty consolidationReportBackingBean.managedBean.selectedFinalizationReports}" />				
-		</div>
+		<!-- 18685 -start- -->
+		<ui:include	src="/xhtml/sc/supplierFinalization/consolidationReport/briefingPaper/briefingPaperEvaluationCnReport.xhtml" />
+		<!-- 18685 -end- -->
 		
 		<ac:confirmationPopup id="deleteReportPopupId" title="#{lbl['lbl.msg.confirm.delete.header']}"
 			width="400" height="100" widget="deleteReportPopup" 
@@ -111,17 +95,5 @@
 			content="#{lbl['lbl.msg.confirm.delete']}" update="@form" />
 			
 	</p:panel>
-
-
-<ac:scRemarkAndAttachment remarkList="#{consolidationReportBackingBean.managedBean.finalizationUlasanremarks}"
-							  showAttachment="false" showRemarkLabel="false"
-							  numberOfCols="80"/>	
-
-
-
-<!-- <ac:scRemarkAndAttachment remarkList="#{consolidationReportBackingBean.managedBean.finalizationPengreysonremarks}"
-							  showAttachment="false" header="#{lbl['lbl.sc.recommendation']}" 
-							  numberOfCols="80"/>	 -->
-
 
 </ui:composition>
