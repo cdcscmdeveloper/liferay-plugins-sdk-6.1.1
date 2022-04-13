@@ -1070,7 +1070,9 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					BigDecimal gstServiceChargeAmt = serviceCharge.multiply(gstRate).setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE,BigDecimal.ROUND_HALF_UP);
 					BigDecimal netPrice = amount.add(gstAmount).subtract(serviceCharge).subtract(gstServiceChargeAmt).setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE,BigDecimal.ROUND_HALF_UP);
 					reportListMap.put(m, new Object[]{
-						(Date)row[16],(Date)row[1],row[2].toString(),row[3].toString(),String.valueOf(row[4]),row[14].toString(),
+						(Date)row[16],(Date)row[1],row[2].toString(),row[3].toString(),
+						row[4] != null ? String.valueOf(row[4]) : "",//BUG:#29454
+						row[14] != null ? row[14].toString() : "",// BUG:#29454
 						row[5].toString(),row[6].toString(),amount,gstAmount,serviceCharge,gstServiceChargeAmt,netPrice,netPrice,row[13].toString()
 					});
 				}
@@ -1103,7 +1105,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		}
 		
 		//START HERE POPULATE REPORT ------ 
-		Workbook wb = new SXSSFWorkbook(); // Change package from XSSFWorkbook to SXSSFWorkbook due to populate large data.
+		Workbook wb = new XSSFWorkbook(); // Change package from XSSFWorkbook to SXSSFWorkbook due to populate large data.
 		CreationHelper createHelper = wb.getCreationHelper();
 		
 		//START - #29454
@@ -1122,7 +1124,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		//Only create Sheet Senarai only if search result return has records.
 		if(!reportListMap.isEmpty()){
 			log.info("LIST IS NOT EMPTY !!!");
-			SXSSFSheet sheetList = (SXSSFSheet) wb.createSheet("Senarai"); //BUG:#29454
+			Sheet sheetList = wb.createSheet("Senarai"); //BUG:#29454
 			try{
 				//Setting Report Title
 				Row titleRowSheetList = sheetList.createRow(0);
@@ -1282,7 +1284,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			}
 		}
 		//SECTION SHEET (Populate) : Ringkasan
-		SXSSFSheet sheetSummary = (SXSSFSheet) wb.createSheet("Ringkasan"); //BUG:#29454
+		Sheet sheetSummary = wb.createSheet("Ringkasan"); //BUG:#29454
 		try{
 			//Setting Report Title
 			Row titleRowSheetSummary = sheetSummary.createRow(0);
@@ -1378,7 +1380,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	    	FileOutputStream out = new FileOutputStream(new File(fullPath));
 	    	wb.write(out);
 	        out.close();
-	        ((SXSSFWorkbook) wb).dispose();//BUG:#29454
+	        //((SXSSFWorkbook) wb).dispose();//BUG:#29454
 	        wb.close();
 	    }catch(Exception e){
 	    	e.printStackTrace();
@@ -1478,7 +1480,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		}
 		
 		//START - BUG:#29454
-		Workbook wb = new SXSSFWorkbook();
+		Workbook wb = new XSSFWorkbook();
 		CreationHelper createHelper = wb.getCreationHelper();
 
 		CellStyle titleHeaderStyle_1 = titleHeaderStyle(wb,true,false,false,false);
@@ -1493,7 +1495,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		
 		//Only Create Sheet Senarai_FPX only if search result has return records
 		if(!fpxList.isEmpty()){
-			SXSSFSheet sheetFPX = (SXSSFSheet) wb.createSheet(sheetName[0]); //BUG:#29454
+			Sheet sheetFPX = wb.createSheet(sheetName[0]); //BUG:#29454
 			//Setting Report Title
 			Row titleRowSheetFpx = sheetFPX.createRow(0);
 			Cell cellTitleRow = titleRowSheetFpx.createCell(1);
@@ -1581,7 +1583,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		//Only Create Sheet Senarai_Kad Kredit only if search result has return records
 		if(!creditList.isEmpty()){
 			log.info("CREDIT LIST IS NOT NULL !!!");
-			SXSSFSheet sheetCC = (SXSSFSheet) wb.createSheet(sheetName[1]); //BUG:#29454
+			Sheet sheetCC = wb.createSheet(sheetName[1]); //BUG:#29454
 			//Setting Report Title
 			Row titleRowSheetCC = sheetCC.createRow(0);
 			Cell cellTitleRowCC = titleRowSheetCC.createCell(1);
@@ -1665,7 +1667,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		}
 		
 		//SECTION SHEET (Populate) : Ringkasan
-		SXSSFSheet sheetSummary = (SXSSFSheet) wb.createSheet(sheetName[2]); //BUG:#29454 
+		Sheet sheetSummary = wb.createSheet(sheetName[2]); //BUG:#29454 
         //Setting Report Title
 		Row titleRowSheetSummary = sheetSummary.createRow(0);
 		Cell cellTitleRowSummary = titleRowSheetSummary.createCell(0);
@@ -1765,7 +1767,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
         	FileOutputStream out = new FileOutputStream(new File(fullPath));
         	wb.write(out);
             out.close();
-            ((SXSSFWorkbook) wb).dispose();//BUG:#29454
+            //((SXSSFWorkbook) wb).dispose();//BUG:#29454
             wb.close();
         }catch(Exception e){
         	e.printStackTrace();
@@ -1930,7 +1932,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		
 		if("Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE)))columnHeaderList.remove(1);
 		//START -#29454
-		Workbook wb = new SXSSFWorkbook();// Change package from XSSFWorkbook to SXSSFWorkbook due to populate large data.
+		//Workbook wb = new SXSSFWorkbook();// Change package from XSSFWorkbook to SXSSFWorkbook due to populate large data.
+		Workbook wb = new XSSFWorkbook();
 		CreationHelper createHelper = wb.getCreationHelper();
 		
 		//Fix issue cell styles exceeded
@@ -1946,7 +1949,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		//Only Create  Sheet of Senarai_FPX , only if search result has return records
 		if(!fpxList.isEmpty()){
 			log.info("FPX LIST IS NOT EMPTY !!!");
-			SXSSFSheet sheetFPX = (SXSSFSheet) wb.createSheet(sheetName[0]); //BUG:#29454
+			Sheet sheetFPX = wb.createSheet(sheetName[0]); //BUG:#29454
 			//Setting Report Title
 			Row titleRowSheetFpx = sheetFPX.createRow(0);
 			Cell cellTitleRow = titleRowSheetFpx.createCell(1);
@@ -2099,7 +2102,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		//Only Create Sheet of Senarai_Kad Kredit , only if search result has return records
 		if(!creditList.isEmpty()){
 			log.info("CREDIT LIST IS NOT EMPTY !!!");
-			SXSSFSheet sheetCC = (SXSSFSheet) wb.createSheet(sheetName[1]);//BUG:#29454 
+			Sheet sheetCC = wb.createSheet(sheetName[1]);//BUG:#29454 
 	        //Setting Report Title
 			Row titleRowSheetCC = sheetCC.createRow(0);
 			Cell cellTitleRowCC = titleRowSheetCC.createCell(1);
@@ -2255,7 +2258,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		}
 		
 		//SECTION SHEET (Populate) : Ringkasan
-		SXSSFSheet sheetSummary = (SXSSFSheet) wb.createSheet(sheetName[2]); //BUG:#29454 
+		Sheet sheetSummary = wb.createSheet(sheetName[2]); //BUG:#29454 
         //Setting Report Title
 		Row titleRowSheetSummary = sheetSummary.createRow(0);
 		Cell cellTitleRowSummary = titleRowSheetSummary.createCell(0);
@@ -2348,7 +2351,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	    	FileOutputStream out = new FileOutputStream(new File(fullPath));
 	    	wb.write(out);
 	        out.close();
-	        ((SXSSFWorkbook) wb).dispose();//BUG:#29454
+	        //((SXSSFWorkbook) wb).dispose();//BUG:#29454
 	        wb.close();
 	    }catch(Exception e){
 	    	e.printStackTrace();
@@ -2410,7 +2413,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			e.printStackTrace();
 		}
 		
-		Workbook wb = new SXSSFWorkbook();// Change package from XSSFWorkbook to SXSSFWorkbook due to populate large data.
+		//Workbook wb = new SXSSFWorkbook();// Change package from XSSFWorkbook to SXSSFWorkbook due to populate large data.
+		Workbook wb = new XSSFWorkbook();//#29454
 		CreationHelper createHelper = wb.getCreationHelper();
 		//START - BUG:#29454
 		CellStyle titleHeaderStyle_1 = titleHeaderStyle(wb,true,false,false,false);
@@ -2426,7 +2430,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		//Only create Sheet Senarai only if search result has return records
 		if(!fullList.isEmpty()){
 			log.info("SHEET SENARAI IS NOT EMPTY !!!");
-			SXSSFSheet sheetReportList = (SXSSFSheet) wb.createSheet(sheetName[0]); //BUG:#29454
+			Sheet sheetReportList = wb.createSheet(sheetName[0]); //BUG:#29454
 			//Setting Report Title
 			Row titleRowSheetList= sheetReportList.createRow(0);
 			Cell cellTitleRow = titleRowSheetList.createCell(1);
@@ -2530,7 +2534,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		}
 		
 		//SECTION SHEET (Populate) : Ringkasan
-		SXSSFSheet sheetSummaryList = (SXSSFSheet) wb.createSheet(sheetName[1]); //BUG:#29454 
+		Sheet sheetSummaryList = wb.createSheet(sheetName[1]); //BUG:#29454 
         //Setting Report Title
 		Row titleRowSheetSummary = sheetSummaryList.createRow(0);
 		Cell cellTitleRowSummary = titleRowSheetSummary.createCell(0);
@@ -2622,7 +2626,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	    	FileOutputStream out = new FileOutputStream(new File(fullPath));
 	    	wb.write(out);
 	        out.close();
-	        ((SXSSFWorkbook) wb).dispose();//BUG:#29454
+	        //((SXSSFWorkbook) wb).dispose();//BUG:#29454
 	        wb.close();
 	        
 	    }catch(Exception e){
