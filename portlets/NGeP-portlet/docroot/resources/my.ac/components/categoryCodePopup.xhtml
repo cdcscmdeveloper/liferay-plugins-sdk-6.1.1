@@ -13,12 +13,9 @@
 </cc:interface>
 
 <cc:implementation>
-	<p:dialog id="catCodePopup"
-		header="#{lbl['lbl.sc.category.code.search']}"
-		widgetVar="catCodePopup" modal="true" width="680" position="top">
+	<p:dialog id="catCodePopup" header="#{lbl['lbl.sc.category.code.search']}" widgetVar="catCodePopup" modal="true" width="680" position="top">
 
-		<p:messages id="catCodePopupMsg" showDetail="true" autoUpdate="true"
-			closable="true" showSummary="false" severity="error, info" />
+		<p:messages id="catCodePopupMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" severity="error, info" />
 
 		<h:panelGroup id="catCodePnl">
 			<table border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -27,8 +24,7 @@
 					<p:outputLabel value="#{lbl['lbl.sc.category.code.search.by']}" />
 				</td>
 				<td width="75%">
-					<p:selectOneRadio id="searchBy" label="#{lbl['lbl.sc.category.code.search.by']}"
-						value="#{categoryCodeSearchBackingBean.managedBean.searchBy}" styleClass="commonLabel">
+					<p:selectOneRadio id="searchBy" label="#{lbl['lbl.sc.category.code.search.by']}" value="#{categoryCodeSearchBackingBean.managedBean.searchBy}" styleClass="commonLabel">
 						<f:selectItems value="#{categoryCodeSearchBackingBean.getRadioButtonCodeValues(ParameterTypeConst.categoryCodeSearchBy)}" />
 						<p:ajax event="change" update="catCodePnl" />
 					</p:selectOneRadio>
@@ -148,14 +144,10 @@
 
 			<table style="width: 100%;">
 				<tr>
-					<TD style="text-align: right;"><p:commandButton
-							value="#{lbl['lbl.btn.ok']}"
-							action="#{categoryCodeSearchBackingBean.okAction(cc.attrs.okAction)}"
-							process="@form" update="#{cc.attrs.update}" styleClass="BtnSpacing" /> <p:commandButton
-							value="#{lbl['lbl.btn.cancel']}" partialSubmit="true"
-							process="@this" update="@this"
-							action="#{categoryCodeSearchBackingBean.cancelAction}"
-							oncomplete="catCodePopup.hide()"  styleClass="BtnSpacing" /></TD>
+					<TD style="text-align: right;">
+						<p:commandButton value="#{lbl['lbl.btn.ok']}" action="#{categoryCodeSearchBackingBean.okAction(cc.attrs.okAction)}" process="@form" update="#{cc.attrs.update}" styleClass="BtnSpacing" /> 
+						<p:commandButton value="#{lbl['lbl.btn.cancel']}" partialSubmit="true" process="@this" update="@this" action="#{categoryCodeSearchBackingBean.cancelAction}" oncomplete="catCodePopup.hide()"  styleClass="BtnSpacing" />
+					</TD>
 				</tr>
 			</table>
 		</p:dialog>
