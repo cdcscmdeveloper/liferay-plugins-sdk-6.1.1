@@ -94,14 +94,9 @@ public class CommonSiteVisitBackingBean extends BaseBackingBean<CommonSiteVisitM
 			//svoBB.getManagedBean().setAppType(svObj.getAppType());
 			svoBB.getManagedBean().setBpmPojo(svObj);
 			svoBB.retrieveSiteVisitInfo("");
-			//#24964 - START
-			log.info("#24964 - TR TROUBLESHOOT METHOD preRenderView 1");
-			//#24964 - END
+			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sm/svositevisit/siteVisitMain");
-			//#24964 - START
-			log.info("#24964 - TR TROUBLESHOOT METHOD preRenderView 2");
-			//#24964 - END
 		}
 		
 	}
