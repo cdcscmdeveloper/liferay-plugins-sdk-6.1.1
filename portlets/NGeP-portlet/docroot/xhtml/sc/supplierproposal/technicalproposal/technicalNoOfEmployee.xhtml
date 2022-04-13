@@ -32,13 +32,15 @@
 						rendered="#{!supplierProposalDetailBackingBean.managedBean.technicalQtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee and !statusHide}" />
 				</td>
 				<td><h:panelGroup id="totalNoOfEmployeesInvolved">
+						<!-- 17376,19287 -start- -->
 						<p:inputText id="totalEmployees"
 							style="text-align:right;margin-bottom:5px;"
 							rendered="#{!supplierProposalDetailBackingBean.managedBean.technicalQtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}"
 							size="20" required="true" maxlength="6"
 							label="#{lbl['lbl.sc.total.employees']}"
 							value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPEmployee.totalEmployees}"
-							disabled="#{supplierProposalDetailBackingBean.managedBean.technicalQtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee or statusHide}">
+							disabled="#{supplierProposalDetailBackingBean.managedBean.technicalQtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee or statusHide or supplierProposalDetailBackingBean.managedBean.readOnly}">
+							<!-- 17376,19287 -end- -->
 							<f:validateLongRange minimum="1" maximum="99999999999" />
 							<p:ajax process="@this" partialSubmit="true"
 								update="@this,totalEmployeesMsg"></p:ajax>
