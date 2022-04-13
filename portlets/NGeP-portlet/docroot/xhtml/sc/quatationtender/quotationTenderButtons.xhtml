@@ -27,13 +27,26 @@
 		</tr>
 		<tr>
 		<td align="right">
-			<c:if test="#{qTDetailBB.managedBean.taskId eq null and qTDetailBB.managedBean.maintanceFlow}">
-				<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-					action="#{qTDetailBB.gotoQtSearchPage}"
-					partialSubmit="true"
-					process="@this"
-					update="@this" />
-			</c:if>
+			<!-- 25201 -start- -->
+			<c:choose>
+				<c:when test="#{not empty qTDetailBB.managedBean.viewOriginalUrl}">
+					<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
+						action="#{qTDetailBB.backToPrevious()}"
+						partialSubmit="true"
+						process="@this"
+						update="@this" />
+				</c:when>
+				<c:when test="#{qTDetailBB.managedBean.taskId eq null and qTDetailBB.managedBean.maintanceFlow}">
+				<!-- 25201 -end- -->
+					<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
+						action="#{qTDetailBB.gotoQtSearchPage}"
+						partialSubmit="true"
+						process="@this"
+						update="@this" />
+				<!-- 25201 -start- -->
+				</c:when>
+			</c:choose>
+			<!-- 25201 -end- -->
 
 			<ui:remove> ***25692 - start </ui:remove> 
 			<c:if test="#{qTDetailBB.approvalScreen and qTDetailBB.managedBean.readOnly}">
