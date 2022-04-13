@@ -23,9 +23,13 @@
 					immediate="true"
 					rendered="#{!empty supplierProposalDetailBackingBean.managedBean.previousPageUrl}" />
 
-				<p:commandButton value="#{lbl['lbl.sc.print.proposal']}"
+				<!-- 27412 note-75, 17376 -start- -->
+				<c:if test="#{!empty qTDetailBB.isMofSupplier() and qTDetailBB.isMofSupplier()}">
+					<p:commandButton value="#{lbl['lbl.sc.print.proposal']}"
 					styleClass="BtnSpacing" ajax="false"
 					action="#{supplierProposalDetailBackingBean.downloadProposalReport}" />
+				</c:if>
+				<!-- 27412 note-75, 17376 -end- -->
 
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					styleClass="BtnSpacing" onstart="blockWidget.show()"
