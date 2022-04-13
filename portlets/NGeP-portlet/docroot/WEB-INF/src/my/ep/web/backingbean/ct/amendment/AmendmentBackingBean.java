@@ -1658,6 +1658,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			reqDTO.setContractAdminlist(getManagedBean().getContractAdminlist());
 			
 			//26186/#32860 start
+			/**
+			 * Process to validate the DA again when the PBM/MOF Decision DATE has been submit.
+			 * (isDisciplinaryActionNotification - false) to check the type of punishment.
+			 * Once the DA has been validate, it will do the following 
+			 * 1. Set the BPM outcome to SAVE so that the contract will not undergo Tracking Diary and BPM process in SO file.
+			 * 2. Set the checkValidationDisciplinaryAction to true so that after the record has been saved, it will go to disciplinaryActionCheckAndSet.
+			 */
 			boolean checkValidationDisciplinaryAction = false;
 			
 			if (getManagedBean().isDisciplinaryAction()) {
@@ -6684,8 +6691,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	//#26520 - end
 	
+	/**
+	 * disciplinaryActionCheckAndSet - function to retrieve (get) DA, set DA and set button cancel
+	 * isDisciplinaryAction - Variable for the contract got DA or not
+	 * isDisciplinaryActionNotification - Variable for type of punishment either small or big (true - small || false - big)  
+	 * isDisciplinaryActionCancel - Variable for DA to be cancel (to set button cancel for the DA that need to be cancel)
+	**/
+	
 	//#29793 #26186 start 	
-	public void disciplinaryActionCheckAndSet(boolean processValidation){ //#32860 start 
+	public void disciplinaryActionCheckAndSet(boolean skipRetrieve){ //#32860 start 
 		log.info("______________________________________________________________________________________________________");
 		log.info("Hafiz test disciplinary statusid: " + ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId());
 		log.info("Hafiz test disciplinary getTaskName: " + getManagedBean().getTaskName());
@@ -6696,7 +6710,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			&& !ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_VERIFICATION)){
 			
 			//#32860 start 
-			if (!processValidation){
+			if (!skipRetrieve){
 				checkDisciplinaryAction();
 			}
 			setDisciplinaryAction();
@@ -6738,6 +6752,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		log.info("______________________________________________________________________________________________________");
 	}
+	
+	/**
+	 * The method will set the DA for every status. 
+	 * isDisciplinaryActionCancel to be set so that the cancel button can be set
+	 **/
 	
 	public void setDisciplinaryAction(){
 		if(ContractStatusConst.FA_DA.contains(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())
