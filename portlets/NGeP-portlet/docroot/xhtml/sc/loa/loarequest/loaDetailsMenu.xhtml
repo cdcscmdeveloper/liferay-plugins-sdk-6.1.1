@@ -448,11 +448,11 @@
 					<p:message id="contractTypeMsg" for="contractType" display="icon" />
 				</c:if>
 				<c:if test="#{!isEditableStatus or isDocTypeQuotation}">
-					<!-- 17376 -start- -->
+					<!-- 17376 -start -->
 					<p:inputText 
 						value="#{lOADetailBackingBean.getParameterDesc(lOADetailBackingBean.managedBean.scLoa.contractType)}"
 						disabled="true" style="min-width:235px" size="35" />
-					<!-- 17376 -end- -->
+					<!-- 17376 -end -->
 				</c:if>
 			</td>
 		</tr>
