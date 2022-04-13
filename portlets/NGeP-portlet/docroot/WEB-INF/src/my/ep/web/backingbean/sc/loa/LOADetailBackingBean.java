@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.ParseException;
@@ -36,7 +35,6 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
-import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
@@ -48,6 +46,7 @@ import my.ep.biz.service.sm.virtualcert.IVirtualCertSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.MapKeyEnum;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -64,7 +63,6 @@ import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
-import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.actor.ScActorReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
@@ -91,12 +89,10 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScActor;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
-import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
 import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
@@ -349,6 +345,32 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		return QTConstants.LOA_PAGE;
 	}
 	
+	// #25201 -start-
+	/**
+	 * Get the supplier loa details.
+	 * 
+	 * @param sourceId 
+	 * 		the source id (qt id / rn id
+	 * @param loaId 
+	 * 		the loa id
+	 * @param previousPageUrl
+	 * 		the previous page url.
+	 * @param isReadonly
+	 * 		the readonly flag
+	 * @param enableDownloadAllDocuments
+	 * 		either user can download documents
+	 * 
+	 * @return the supplier loa page
+	 */
+	public String retrieveSupplierLOADtl(Long sourceId, Long loaId, String previousPageUrl, boolean isReadonly, boolean enableDownloadAllDocuments) {
+		Map<MapKeyEnum, Object> otherArgs = new HashMap<MapKeyEnum, Object>();
+		otherArgs.put(MapKeyEnum.enableDownloadAllDocuments, Boolean.valueOf(enableDownloadAllDocuments));
+
+		return retrieveSupplierLOADtlPriv(sourceId, loaId, previousPageUrl, isReadonly, otherArgs);
+	}
+	// #25201 -end-
+
+
 	/**
 	 * Get the supplier loa details.
 	 * 
@@ -364,11 +386,48 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * @return the supplier loa page
 	 */
 	public String retrieveSupplierLOADtl(Long sourceId, Long loaId, String previousPageUrl, boolean isReadonly) {
-		debugLogger("retrieveSupplierLOADtl");
+		// #19336, #25201, #17376, #19287 -start-
+		return retrieveSupplierLOADtlPriv(sourceId, loaId, previousPageUrl, isReadonly, null);
+		// #19336, #25201, #17376, #19287 -end-
+	}
+	
+	// #19336, #25201, #17376, #19287 -start-
+	/**
+	 * Get the supplier loa details.
+	 * 
+	 * @param sourceId 
+	 * 		the source id (qt id / rn id
+	 * @param loaId 
+	 * 		the loa id
+	 * @param previousPageUrl
+	 * 		the previous page url.
+	 * @param isReadonly
+	 * 		the readonly flag
+	 * @param otherArgs
+	 * 		enableDownloadAllDocuments - java.lang.Boolean
+	 * 		either user can download all attachments/documents or not
+	 * 
+	 * @return the supplier loa page
+	 */
+	private String retrieveSupplierLOADtlPriv(Long sourceId, Long loaId, String previousPageUrl, boolean isReadonly, Map<MapKeyEnum, Object> otherArgs) {
 		try {
+			//to avoid otherArgs is null checking next time
+			if (otherArgs == null) {
+				otherArgs = new HashMap<MapKeyEnum, Object>();
+			}
+
 			getManagedBean().setSourceId(sourceId);
 			getManagedBean().setBackToPreviousPage(previousPageUrl);
 			getManagedBean().setReadOnly(isReadonly);
+			
+			if (otherArgs.containsKey(MapKeyEnum.enableDownloadAllDocuments)
+					&& otherArgs.get(MapKeyEnum.enableDownloadAllDocuments) instanceof Boolean) {
+				Object o = otherArgs.get(MapKeyEnum.enableDownloadAllDocuments);
+				
+				if (o instanceof Boolean) {
+					getManagedBean().setEnableDownloadAllDocuments((Boolean) o);
+				}
+			}
 
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setLoaId(loaId);
@@ -384,6 +443,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 			// Setting OverallContractAmount
 			calculateOverallCtAmtForSupplier();
+			
+			// setting supplier proposal
+			getManagedBean().setScQtProposal(resDTO.getSupplierProposal());
 			
 			//Enhancement #24259 #24269
 //			isGSTRegActive();
@@ -536,6 +598,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		return null;
 	}
+	// #19336, #25201, #17376, #19287 -end-
 
 	/**
 	 * Pre render page navigation to loa page based on task id
@@ -641,6 +704,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		String redirectUrl = retrieveSupplierLOADtl(sourceId, 
 				loaId, null, getManagedBean().isReadOnly());
+		
+		// #19336 -start-
+		getManagedBean().setValidatewitness(Boolean.TRUE);
+		// #19336 -end-
 
 		if (StringUtils.isNotBlank(redirectUrl)) {
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -885,6 +952,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			getManagedBean().setBondAmountWord(
 					NumberWordUtil.convert(scLoa.getBondAmt().toString()));
 		}
+
+		// #19336, #25201, #17376, #19287 -start-
+		//awarded supplier and proposal
+		if (resDTO.getSupplierProposal() != null) {
+			getManagedBean().setScQtProposal(resDTO.getSupplierProposal());
+		}
+		// #19336, #25201, #17376, #19287 -end-
 
 		// clauses title
 		getClausesTitle(null);
@@ -1291,7 +1365,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		if(scLoaReport.getTitle().equalsIgnoreCase(QTConstants.REPORT_ACKNOWLEDGEMENT_LOA_RECEIPT) &&
 				getManagedBean().getScLoa().getPmStatus().getStatusId().
 				equals(QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT)) {
-			validateLoaWitnessAndAckBy();
+			if (this.getManagedBean().isValidatewitness()) { // #19336
+				validateLoaWitnessAndAckBy();
+			} // #19336
 		}
 
 		ScLoaReportAttachment scLoaReportAttachmentGenerated = generateDocumentAttachment(scLoaReport);
@@ -1306,7 +1382,20 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					SourcingConstants.REG_EXP_WHITE_SPACE, "");
 			scLoaReportAttachmentGenerated.setTempFileName(prefixName);
 		}
-		downloadFile(scLoaReportAttachmentGenerated);
+		
+		// #19336, #25201, #17376, #19287 -start-
+		try {
+			downloadFile(scLoaReportAttachmentGenerated);
+		} catch (IOException ex) {
+			if (ex instanceof FileNotFoundException) {
+				handleException(new EpException(MessageConst.ERROR_760411,
+						new String[] { scLoaReport.getTitle() }));
+			}
+
+		} catch (EpException ex) {
+			handleException(ex);
+		}
+		// #19336, #25201, #17376, #19287 -end-
 	}
 
 	/**
@@ -1506,7 +1595,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		for (ScLoaReport scLoaReport : scLoaReports) {
 			if(scLoaReport.getTitle().equalsIgnoreCase(QTConstants.REPORT_ACKNOWLEDGEMENT_LOA_RECEIPT) &&
 					scLoa.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT)) {
-				validateLoaWitnessAndAckBy();
+				if (this.getManagedBean().isValidatewitness()) { // #19336
+					validateLoaWitnessAndAckBy();
+				} // #19336
 			}
 
 			ScLoaReportAttachment scLoaReportAttachment = scLoaReport
@@ -2793,6 +2884,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 					String outcome = BpmOutcomeConst.BPM_SAVE;
 					ScLoa scLoa = this.getManagedBean().getScLoa();
+				// #19336 -start-
+				boolean validateWitness = this.getManagedBean().isValidatewitness();
+				// #19336 -end-
+					
 					if((scLoa!=null) && (this.getManagedBean().getFlowamt()!=null))
 					{
 						scLoa.setFollowLoaAmt(this.getManagedBean().getFlowamt());
@@ -2836,7 +2931,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						} else {
 							editLOAAction(scLoa);
 						}
-		
+						
+					// #19336 -start-
+					this.getManagedBean().setValidatewitness(validateWitness);
+					// #19336 -end-
+						
 						successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_LETTER_OF_AWARD, 
 								scLoa.getLoaNo(), Boolean.FALSE);
 					}
@@ -6824,6 +6923,62 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		return roleCode;
 	}
 	
+	// 25201 -start-
+	public Boolean canShowSupplierProposal() {
+		// ***25201#82 - start
+		return true;
+		// ***25201#82 - end
+	}
+	// 25201 -end-
+	
+	// ***25201#35 -start-
+	public Boolean canShowSupplierProposalByLOAStatus(){
+		/*
+		i) Pending Letter of Acceptance Preparation 
+		ii) Pending Letter Of Acceptance Submission 
+		iii) Pending Letter of Acceptance Approval
+		iv) Pending Letter of Acceptance Revision
+		v) Pending Letter of Acceptance Revision Approval
+		vi) Pending Acknowledgement Receipt's Letter Of Acceptance 
+		vii) Pending Verification of Acknowledgement Receipt's Letter Of Acceptance
+		*/
+		Long[] statusList = {
+				QTStatusConst.QT_PENDING_LOA, //i
+				QTStatusConst.QT_RE_FINALIZATION,//viii
+				QTStatusConst.QT_AWARDED, //ix Bug #27412 #33 #35
+				QTStatusConst.QT_SUPPLIER_FINALIZATION, //x Bug #27412 #33 #35
+				QTStatusConst.QT_CANCELLED, // Bug #27412 #33 #35
+				QTStatusConst.QT_RE_EVALUATION, //Bug #27412 #33 #35
+				QTStatusConst.QT_RE_FINALIZATION, //Bug #27412 #33 #35
+				QTStatusConst.LOA_PENDING_SUBMISSION, //ii 
+				QTStatusConst.LOA_PENDING_APPROVAL, //iii
+				QTStatusConst.LOA_PENDING_REVISION, //iv
+				QTStatusConst.LOA_PENDING_REVISION_APPROVAL, //v
+				QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT, //vi
+				QTStatusConst.LOA_PENDING_VERIFICATION, //vii
+				QTStatusConst.LOA_COMPLETED, //xi Bug #27412 #33 #35
+				QTStatusConst.LOA_PENDING_CONTRACT_SIGNING,//xi Bug #27412 #33 #35
+				QTStatusConst.LOA_REJECTED, //xi Bug #27412 #33 #35
+				QTStatusConst.LOA_CANCELLED, //xi Bug #27412 #33 #35
+				QTStatusConst.LOA_REVISE_DOC
+				};
+		
+		if (getManagedBean() != null
+				&& getManagedBean().getScLoa() != null
+				&& getManagedBean().getScLoa().getPmStatus() != null
+				&& getManagedBean().getScLoa().getPmStatus().getStatusId() != null) {
+			for (Long s : statusList) {
+				if (s.longValue() == getManagedBean().getScLoa().getPmStatus()
+						.getStatusId().longValue()) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	// ***25201#35 -end-
+	
 	//#22211 - show LOA Cancellation Approver Detail
 	public boolean isLOACancelByApprover(){
 		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
@@ -7010,6 +7165,40 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							e.getMessage()));
 		}
 	}
+
+	// 25201#73 -start-
+	/**
+	 * only if qt no prefix is 'QT'
+	 * @return
+	 */
+	public boolean qtPrefixIsQT(){		
+		if(this.getManagedBean().getScQt()!=null){
+			String qtNo = this.getManagedBean().getScQt().getQtNo();
+			if(!StringUtils.isBlank(qtNo)){
+				return ParameterConst.DOCTYPE_QUOTATION.equalsIgnoreCase(qtNo.trim().substring(0, ParameterConst.DOCTYPE_QUOTATION.length()));
+			}
+		}
+		return false;
+	}
+	// 25201#73 -end-	
+	
+	/* 19336#99 - start */
+	public String getManagedBeanLoaContractAgencyOrgName() {
+		try {
+			return getManagedBean().getScLoa().getContractAgency().getOrgName();
+		} catch (Exception ex) {
+			return "";
+		}
+	}
+
+	public String getManagedBeanSelectedPtjOrgName() {
+		try {
+			return getManagedBean().getSelectedPtj().getOrgName();
+		} catch (Exception ex) {
+			return "";
+		}
+	}
+	/* 19336#99 - end */
 	
 	/**
 	 * Check either SQ is valid or not (SQ only valid for 60 days after it closing date)
