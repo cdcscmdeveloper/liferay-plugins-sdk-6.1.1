@@ -36,12 +36,19 @@
 			</p:columnGroup>
 
 			<p:column style="width:2%">
+				<!-- 11042022@syazani - Bug #32756 - Checklist supporting document ticked although there is no value inserted in the checklist - Start -->
 				<p:selectBooleanCheckbox id="allChk"
-					value="#{financeList.submitted}" disabled="true"
+					value="#{financeList.submitted and financeList.scQtProposalChecklistAttachment eq null and 
+					financeList.scQtCheckList.definationType.parameterCode eq 'NA' and 
+					(fn:contains(financeList.scQtCheckList.title,'Kunci Kira-Kira Tahunan (Nota - Untuk syarikat ROC, ini mestilah salinan yang telah diaudit)') or 
+					fn:contains(financeList.scQtCheckList.title,'Pengesahan dari Institusi Kewangan ke atas jumlah yang telah dibayar'))  
+					? false : financeList.submitted}"
+					disabled="true"
 					rendered="#{financeList.scQtCheckList.definationType.parameterCode eq 'TS' 
 						or financeList.scQtCheckList.definationType.parameterCode eq 'WF'
 						or (financeList.scQtCheckList.definationType.parameterCode eq 'UP' and financeList.scQtCheckList.action.parameterCode eq 'O')
 						or financeList.scQtCheckList.definationType.parameterCode eq 'NA'}" />
+				<!-- 11042022@syazani - Bug #32756 - Checklist supporting document ticked although there is no value inserted in the checklist - End -->
 			</p:column>
 
 			<p:column style="white-space : normal">
