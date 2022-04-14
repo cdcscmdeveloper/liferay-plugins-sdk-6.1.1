@@ -3450,16 +3450,25 @@ public class TemplateSpecBackingBean extends
 	 * 
 	 * @return List<SelectItem>
 	 */
+	
+//Bug #32952 related to #21695 Start (farid) 14/4/2022
 	public List<SelectItem> getOfferDetails() {
+		return getOfferDetails(null);
+	}
+	
+	public List<SelectItem> getOfferDetails(TplSpecAnswer answer) {
 		List<SelectItem> selectItems = new ArrayList<SelectItem>();
-
+		String notOfferStr = "lbl.sc.checklist.partial.notoffer";
+		if(answer!=null && this.getManagedBean().getScQt().isZonal() && answer.isDisableRow()){
+			notOfferStr="lbl.sc.not.applicable";
+		}
 		try {
 			selectItems.add(new SelectItem(true, ResourceBundleUtils.getMessage(
 					"lbl.sc.checklist.partial.offer",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale())));
 			selectItems.add(new SelectItem(false, ResourceBundleUtils.getMessage(
-					"lbl.sc.checklist.partial.notoffer",
+					notOfferStr,
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale())));
 
@@ -3472,6 +3481,7 @@ public class TemplateSpecBackingBean extends
 		return this.getManagedBean().getOffer();
 		
 	}
+//Bug #32952 related to #21695 End (farid) 14/4/2022
 /** #21695 FARID END */	
 	
 	/** #25633 START ADDED BY HAIDAH */
