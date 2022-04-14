@@ -2757,7 +2757,7 @@ public class SmApplicationBackingBean extends
 		this.getManagedBean().getPersonnelDirectorManager().clear();
 		this.getManagedBean().getPersonnelMembers().clear();
 		for(SmPersonnel personnel:this.getManagedBean().getSmAppl().getSmPersonnels()){
-			BigDecimal shareAmt = personnel.getShareAmt();
+			BigDecimal shareAmtSsm = personnel.getShareAmt();
 				if(personnel.getDesignation() != null){
 					String designation = populateDesignationSSM(personnel.getDesignation());
 					personnel.setDesignation(designation);
@@ -2766,10 +2766,10 @@ public class SmApplicationBackingBean extends
 				this.getManagedBean().getPersonnelDirectorManager().add(personnel);	
 				}
 				if(personnel.isEquityOwner()){
-					if(shareAmt != null && !(personnel.getShareAmt() == null)){
+					if(shareAmtSsm != null && !(personnel.getShareAmtSsm() == null)){
 						log.info("THIS IS THE VALUE OF THE TOTAL SUM ////////////////////// " + sum);
-						log.info("THIS IS THE VALUE OF THE TOTAL SHARE ////////////////////// " + shareAmt);
-						sum =  sum.add(shareAmt);
+						log.info("THIS IS THE VALUE OF THE TOTAL SHARE ////////////////////// " + shareAmtSsm);
+						sum =  sum.add(shareAmtSsm);
 						getManagedBean().setTotalShare(sum);
 						log.info("THIS IS THE VALUE OF THE TOTAL SUM ////////////////////// " + sum);
 						
