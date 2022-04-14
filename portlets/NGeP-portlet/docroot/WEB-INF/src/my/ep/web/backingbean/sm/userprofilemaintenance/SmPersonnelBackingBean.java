@@ -48,6 +48,7 @@ import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.authorization.PmDigiCert;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
@@ -2021,6 +2022,26 @@ public class SmPersonnelBackingBean extends
 					.getBasicSmPersonnel().getName(), getManagedBean()
 					.getBasicSmPersonnel().getEmail());
 		}
+		//32515 START
+		//Update Role
+		if (getManagedBean().getBasicSmPersonnel() != null && getManagedBean().getBasicSmPersonnel().getEpRole() != null &&
+				getManagedBean().getBasicSmPersonnel().getPrevEpRole() != null &&
+				getManagedBean().getAccountStatus() == DbValueConst.RECORD_STATUS_ACTIVE) {
+			
+			String name = getManagedBean().getBasicSmPersonnel().getName();
+			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+			reqDTO.setSmSupplierId(getManagedBean().getBasicSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());
+			reqDTO.setSmSupplier(getManagedBean().getBasicSmPersonnel().getSmAppl().getSmSupplier());
+			reqDTO.setUserId(getManagedBean().getBasicSmPersonnel().getPmUser().getUserId());
+			SmSoftcertRequest softcertRequest = SmServiceLookup.getPersonnelSO().retrievePersonnelSoftcertRequestBySupplierIdAndUserId(reqDTO).getSoftcertRequest();
+			
+			if (!validateSoftcertExpired(softcertRequest)) {
+				throw new EpException(MessageConst.ERROR_770252, new String[] { name });
+			}else if(getManagedBean().getBasicSmPersonnel().getPmUser() != null && PmCommonUtil.isAnyPendingTask(getManagedBean().getBasicSmPersonnel().getPmUser().getLoginId())){
+				throw new EpException(MessageConst.ERROR_770251, new String[] { name });
+			}
+		}
+		//32515 END
 		//Start 13320
 		for (SmPersonnelAddress per : getManagedBean().getBasicSmPersonnel().getSmPersonnelAddresses()) {
 			if (!per.getSmAddress().getPmState().getStateId().equals(SupplierManagementConst.SARAWAK_CODE)){
@@ -3747,5 +3768,17 @@ public class SmPersonnelBackingBean extends
 		}
 	}
 	// #28720 End
+	//32515 START
+	public Boolean validateSoftcertExpired(SmSoftcertRequest softcertRequest){
+		Boolean valid = true;
+		if(softcertRequest != null){
+			Date currentDate = new Date();
+			if(currentDate.after(softcertRequest.getPmDigiCert().getValidTo())){
+				valid = false;
+			}
+		}
+		return valid;
+	}
+	//32515 END
 
 }
