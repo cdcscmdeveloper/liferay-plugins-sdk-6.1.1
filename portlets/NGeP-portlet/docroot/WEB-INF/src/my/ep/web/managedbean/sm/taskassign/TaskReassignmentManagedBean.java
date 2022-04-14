@@ -73,6 +73,11 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	private SmTaskReassignmentVO smTaskReassignmentVO;
 	//#29822 - END
 	
+	// #29822 - start
+	private boolean enableRemoveAllGroupTasksButton;
+	private boolean enableRemoveAllOthersTasksButton;
+	// #29822 - end
+	
 	public TaskReassignmentManagedBean(){}
 
 	/**
@@ -482,5 +487,23 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 		this.smTaskReassignmentVO = smTaskReassignmentVO;
 	}
 	//#29822 - END
+
+	// #29822 - start
+	public boolean isEnableRemoveAllGroupTasksButton() {
+		return enableRemoveAllGroupTasksButton;
+	}
+
+	public void setEnableRemoveAllGroupTasksButton(boolean enableRemoveAllGroupTasksButton) {
+		this.enableRemoveAllGroupTasksButton = enableRemoveAllGroupTasksButton;
+	}
+
+	public boolean isEnableRemoveAllOthersTasksButton() {
+		return enableRemoveAllOthersTasksButton;
+	}
+
+	public void setEnableRemoveAllOthersTasksButton(boolean enableRemoveAllOthersTasksButton) {
+		this.enableRemoveAllOthersTasksButton = enableRemoveAllOthersTasksButton;
+	}
+	// #29822 - start
 	
 }
