@@ -6422,6 +6422,20 @@ public class QTDetailBackingBean extends
 	}
 	// BUG 32050, 32209 -end-
 	
+	// Bug #32425, #19336 - Start
+	private boolean isQcaSecretary() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.QCA_SECRETARY.value());
+	}
+	// Bug #32425, #19336 - End
+	
+	// Bug #32425, #19336 - Start
+	private boolean isQcbSecretary() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.QCB_SECRETARY.value());
+	}
+	// Bug #32425, #19336 - End
+	
 	private boolean isDeskOfficer() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value());
@@ -7008,16 +7022,32 @@ public class QTDetailBackingBean extends
 		//filter document type search by role.
 		// 26259 -start-
 		boolean pbbSecretaryOnly = false; 
+		boolean qcSecretaryOnly = false; //#32425, #19336
+		
 		if (isPbbSecretary() && !(isDeskOfficer() || isAuditor() || isMofSupplier())){
 			pbbSecretaryOnly = true;
+		}// Bug #32425, #19336 - Start
+		else if (isQcaSecretary() || isQcbSecretary()) {
+			if (!(isDeskOfficer() || isAuditor() || isMofSupplier())) {
+				qcSecretaryOnly = true;
+			}
 		}
+		// Bug #32425, #19336 - End
 		
 		if (pbbSecretaryOnly) {
 		// 26259 -end-
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_INTENT); // 19336#note-33
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION);
-		} else if (isMofSupplier()) {
+		}
+		// Bug #32425, #19336 - Start
+		else if (qcSecretaryOnly) {
+			// log.info(":::getDocTypeQtLOADropdownValues() -in true- qcSecretaryOnly = "+ qcSecretaryOnly +" :::");
+			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
+			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
+			qtLoaDoctypes.add(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION);
+		}// Bug #32425, #19336 - End 
+		else if (isMofSupplier()) {
 			/*Bug #27412 START*/
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
