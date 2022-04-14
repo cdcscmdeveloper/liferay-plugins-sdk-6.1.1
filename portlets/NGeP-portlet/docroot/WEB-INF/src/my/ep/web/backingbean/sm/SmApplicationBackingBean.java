@@ -11366,12 +11366,7 @@ public class SmApplicationBackingBean extends
 			RequestContext.getCurrentInstance().execute("sendInqDialog.hide()");
 		} else {
 			// #26136
-			
-			//#31386
-			if (!getManagedBean().getSmAppl().getApplType()
-					.equals(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)){
-				RequestContext.getCurrentInstance().execute("submitApprvrDialog.hide()");	
-			}
+			RequestContext.getCurrentInstance().execute("submitApprvrDialog.hide()");
 		}
 		//END 12483
 		return retMsg;
