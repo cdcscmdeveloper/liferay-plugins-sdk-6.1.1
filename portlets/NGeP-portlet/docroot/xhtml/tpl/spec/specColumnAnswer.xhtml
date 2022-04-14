@@ -246,6 +246,7 @@
 			<p:message id="answerComplianceMsg" for="answerCompliance" display="icon" rendered="#{isAnswerTypeDropdown}" />
 <!-- #21695 Farid end 1/4/2021-->				
 <!-- #21695 Farid Start - fix proposal checking 18/2/2022-->	
+<!-- Bug #32952 related to 21695 Farid Start add not applicable 14/4/2022-->	
 			<h:panelGroup layout="div" rendered="#{!isSqSpec and !isSpecTypeFinancial}">
 				<h:selectOneMenu id="answerOffer" style="width:calc(100% - 30px);" 
 						value="#{tplSpecAnswer.offer}"
@@ -254,12 +255,12 @@
 						!isSpecTypeFinancial and isQuestionTypeItem}" 
 						label="#{lbl[answerlbl]}"
 						disabled="#{isZonal and tplSpecAnswer.disableRow or !editable}">
-					<f:selectItems value="#{templateSpecBackingBean.offerDetails}"></f:selectItems>
+					<f:selectItems value="#{templateSpecBackingBean.getOfferDetails(tplSpecAnswer)}"></f:selectItems>
 									  
 					<p:ajax event="change" partialSubmit="true" process="@form" update="@form"
 						listener="#{templateSpecBackingBean.offerTypeChange(tplSpecAnswer.offer,tplSpecAnswer.tplSpecQuestion.specQuestionId,row)}"/>					  							  	
-	   
 				</h:selectOneMenu>
+<!-- Bug #32952 related to 21695 Farid End add not applicable 14/4/2022-->
 <!-- #21695 Farid End - fix proposal checking 18/2/2022-->				
 		<c:if test="#{isZonal}">		
 			<h:panelGroup layout="div" 
