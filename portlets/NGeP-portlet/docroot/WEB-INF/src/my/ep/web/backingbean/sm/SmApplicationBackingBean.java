@@ -11096,7 +11096,8 @@ public class SmApplicationBackingBean extends
 						if(!EntityHelper.isCollectionEmpty(allAppl)){
 							for(SmAppl pendingSite: allAppl){
 								log.info("Appl No: "+pendingSite.getApplNo());
-								reqSO.removeKBAppl(pendingSite);
+//								reqSO.removeKBAppl(pendingSite);
+								reqDTO.setPendingKBAppl(pendingSite);
 							}
 						}
 						//#31386 - END
@@ -11365,7 +11366,12 @@ public class SmApplicationBackingBean extends
 			RequestContext.getCurrentInstance().execute("sendInqDialog.hide()");
 		} else {
 			// #26136
-			RequestContext.getCurrentInstance().execute("submitApprvrDialog.hide()");			
+			
+			//#31386
+			if (!getManagedBean().getSmAppl().getApplType()
+					.equals(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)){
+				RequestContext.getCurrentInstance().execute("submitApprvrDialog.hide()");	
+			}
 		}
 		//END 12483
 		return retMsg;
