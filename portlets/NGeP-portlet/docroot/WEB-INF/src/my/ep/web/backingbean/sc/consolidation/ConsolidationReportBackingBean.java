@@ -1169,6 +1169,11 @@ public class ConsolidationReportBackingBean extends
 					saveNewBriefingPaperReportList(reportDocDefList, _scQtFinalization, qtId);
 				}
 			}
+			
+			//#28784
+			if(this.getManagedBean().getScQt().isDemoRequired()) {
+				this.getManagedBean().setDemoReq(true);
+			}
 			// 18685 - END.
 			//retrieveReportTabDtl(getManagedBean().getScQt(), "KT", SourcingConstants.CONSOLIDATION_TASK);
 		} finally {
