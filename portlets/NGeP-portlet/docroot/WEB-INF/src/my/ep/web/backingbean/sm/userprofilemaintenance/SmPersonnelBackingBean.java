@@ -2035,7 +2035,7 @@ public class SmPersonnelBackingBean extends
 			reqDTO.setUserId(getManagedBean().getBasicSmPersonnel().getPmUser().getUserId());
 			SmSoftcertRequest softcertRequest = SmServiceLookup.getPersonnelSO().retrievePersonnelSoftcertRequestBySupplierIdAndUserId(reqDTO).getSoftcertRequest();
 			
-			if (!validateSoftcertExpired(softcertRequest)) {
+			if (validateSoftcertExpired(softcertRequest)) {
 				throw new EpException(MessageConst.ERROR_770252, new String[] { name });
 			}else if(getManagedBean().getBasicSmPersonnel().getPmUser() != null && PmCommonUtil.isAnyPendingTask(getManagedBean().getBasicSmPersonnel().getPmUser().getLoginId())){
 				throw new EpException(MessageConst.ERROR_770251, new String[] { name });
