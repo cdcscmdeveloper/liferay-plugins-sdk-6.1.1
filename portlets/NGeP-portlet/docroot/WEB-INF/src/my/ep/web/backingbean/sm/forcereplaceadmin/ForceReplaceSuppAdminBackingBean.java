@@ -55,6 +55,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.forcereplaceadmin.ForceReplaceSuppAdminManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -677,12 +678,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 						new String[] { getManagedBean().getOldAdmin()
 								.getIdentificationNo() });
 			}
-//			//#29616 -start
-//			//check old admin have active softcert
-//			if (getManagedBean().getOldAdmin().getSoftcertFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-//				throw new EpException(MessageConst.ERROR_722685,
-//						new String[] { getManagedBean().getOldAdmin().getName() });
-//			}//#29616 -end
 		}
 		
 		listenerChangeRole();
@@ -738,6 +733,15 @@ public class ForceReplaceSuppAdminBackingBean extends
 				ParameterTypeConst.IDENTIFICATION_TYPES,
 				SupplierManagementConst.NEW_IC, StringUtils.EMPTY);
 		vo.setNewIdentificationType(ic.getParameterId());
+		
+		//#32445 - start
+		if (getManagedBean().getReactivateBasic().getNewIdentificationType() != null) {
+			getManagedBean().setIdentificationType(
+					SmApplicationUtil.retrievePmParameterById(getManagedBean()
+							.getReactivateBasic().getNewIdentificationType()));
+			getManagedBean().getReactivateBasic().setNewIdentificationNo("");
+		}
+		//#32445 - end
 	}
 
 	/**
@@ -1114,6 +1118,9 @@ public class ForceReplaceSuppAdminBackingBean extends
 			getManagedBean().setIdentificationType(
 					SmApplicationUtil.retrievePmParameterById(getManagedBean()
 							.getReactivateBasic().getNewIdentificationType()));
+			//#32445 - start
+			getManagedBean().getReactivateBasic().setNewIdentificationNo("");
+			//#32445 - end
 		}
 	}
 
