@@ -1,27 +1,26 @@
-<u><b>$smVmUtil.getDescByLabel('lbl.sm.sitevisit.printing.license.insurance')</b></u>
-
-<table class="descTable" width="100%">
-	<tr style="background-color:#99ccff;" align="center">
-		<th width="5%" class="txtBold">No</th>
-		<th width="35%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.manufacturing.documents')</th>
-		<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.license.enddate')</th>
-		<th width="20%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.financial.reference')</th>		
-	</tr>
+<u><b>License/Insurance</b></u>
+<table>
 	#if($licenseInsuranceLs != $null && $licenseInsuranceLs.size() > 0)
-		
 		#foreach($licenseIns in $licenseInsuranceLs)
 		<tr>
-			<td>$velocityCount</td>
-			<td>$smVmUtil.getParameterDesc($!licenseIns.pmParameter)</td>
-			<td>#if($licenseIns.expDate != $null)
+			<td class="txtBold" width="30%"></td>
+			<td class="txtBold">
+				#if($review)
+					$!licenseIns.pmParameter.pmParameterDescs.get(0).codeName
+				#else
+					$!licenseIns.codeName
+				#end
+				,Expiry Date
+			</td>
+				
+
+			#if($review)
+				<td>$!licenseIns.pppmmNo, 
+				#if($licenseIns.expDate != $null)
 					$smVmUtil.formatDate($licenseIns.expDate)
 				#end</td>
-			<td>$!licenseIns.pppmmNo</td>
+			#end
 		</tr>
 		#end
-	#else
-		<tr>
-			<td colspan="5" align="center">$smVmUtil.getDescByLabel('lbl.datatable.msg.no.records.found')</td>
-		</tr>
 	#end
 </table>

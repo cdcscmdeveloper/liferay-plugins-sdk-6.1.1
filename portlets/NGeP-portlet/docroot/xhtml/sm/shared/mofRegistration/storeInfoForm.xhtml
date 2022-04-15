@@ -12,23 +12,11 @@
 			<br />
 			<ui:repeat var="storeCatVar" value="#{backingBean.managedBean.storeFacilitiesVOList}" varStatus="storeCatVarStatus">
 				<table style="width: 100%;">
-					<!-- 29380  - Site Visit Grouping Enhancement -28775 -Start -->
 					<tr>
 						<td style="white-space: nowrap; float: left;">
-						    <p:outputLabel value="#{storeCatVarStatus.index + 1}. #{storeCatVar.fullCatcode} (#{storeCatVar.pmCategoryL2.pmCategoryL1.categoryName}/#{storeCatVar.pmCategoryL2.categoryName}/#{storeCatVar.categoryName})" />
+						    <p:outputLabel value="#{storeCatVarStatus.index + 1}. #{storeCatVar.fullCatcode} (#{storeCatVar.categoryName})" />
 						</td>
 					</tr>
-					<ui:repeat var="categoryVar" value="#{backingBean.managedBean.smAppl.smSupplierCategories}" >
-					<tr>
-						<td style="white-space: nowrap; float: left;">
-						    <p:outputLabel style="text-indent: 10px;" value="#{lbl['lbl.sm.catCodes.othDesc']}: #{categoryVar.otherDesc}" 
-						    rendered="#{categoryVar.pmCategoryL3.categoryL3Code eq SupplierManagementConst.CATEGORY_CODE_L3_99 and storeCatVar.categoryL3Code eq SupplierManagementConst.CATEGORY_CODE_L3_99
-						    and categoryVar.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS
-						    and categoryVar.pmCategoryL3.categoryL3Id eq storeCatVar.categoryL3Id}"/>
-						</td>
-					</tr>
-					</ui:repeat>
-					<!-- 29380  - Site Visit Grouping Enhancement -28775 -End -->
 				</table>
 				<br />
 				
@@ -46,6 +34,7 @@
 								listener="#{backingBean.selectAll(storeCatVar.selected,storeCatVar.facilityList)}"/>
 				          </p:selectBooleanCheckbox>
 				       </f:facet>
+				       <!-- #30043 -->
 						<p:selectBooleanCheckbox value="#{stor.selected}" disabled="#{stor.facilityType eq 'B' or stor.facilityType eq 'H'}">
 							<p:ajax event="change" update="@this,:#{p:component('storePan')}" 
 								process="@this" partialSubmit="true" />

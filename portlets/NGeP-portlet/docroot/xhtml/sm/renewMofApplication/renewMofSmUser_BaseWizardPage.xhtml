@@ -83,10 +83,8 @@
 
 
 								<c:choose>
-									<!-- #26671 - START -->
 									<c:when
-										test="#{backingBean.managedBean.smAppl.applCategoryType == 'S' or backingBean.managedBean.showFacilityMachine}">
-										<!-- #26671 - END -->
+										test="#{backingBean.managedBean.smAppl.applCategoryType == 'S'}">
 										<li><h:outputText value="#{lbl['lbl.sm.facilities']}"
 												rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 6}" />
 											<p:commandLink value="#{lbl['lbl.sm.facilities']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
@@ -153,10 +151,8 @@
 								<li
 									class="#{backingBean.managedBean.tabActiveIndex eq 5 ? 'space red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 5 ? 'space green-dot':'space black-dot')}" />
 								<c:choose>
-									<!-- #26671 - START -->
 									<c:when
-										test="#{backingBean.managedBean.smAppl.applCategoryType == 'S' or backingBean.managedBean.showFacilityMachine}">
-										<!-- #26671 - END -->
+										test="#{backingBean.managedBean.smAppl.applCategoryType == 'S'}">
 										<li
 											class="#{backingBean.managedBean.tabActiveIndex eq 6 ? 'space red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 6 ? 'space green-dot':'space black-dot')}" />
 										<li
@@ -218,10 +214,9 @@
 				<ui:include src="step6RenewAppln_RegisterCategoryCodesInfo.xhtml" />
 			</c:if>
 			<c:choose>
-				<!-- #26671 - START -->
 				<c:when
-					test="#{backingBean.managedBean.smAppl.applCategoryType == 'S' or backingBean.managedBean.showFacilityMachine}">
-					<!-- #26671 - END -->
+					test="#{backingBean.managedBean.smAppl.applCategoryType == 'S'}">
+
 					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 6}">
 						<ui:include src="step6.1RenewAppln_FactoryInfo.xhtml" />
 					</c:if>
