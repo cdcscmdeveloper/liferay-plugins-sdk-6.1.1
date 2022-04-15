@@ -18,21 +18,11 @@
 			<br />
 			<ui:repeat var="factoryCatVar" value="#{backingBean.managedBean.factoryFacilitiesVOList}" varStatus="factoryCatVarStatus">
 				<table style="width: 100%;">
-				<!-- 29380  - Site Visit Grouping Enhancement -28775 - Start -->
 					<tr>
 						<td style="white-space: nowrap; float: left;">
-						    <p:outputLabel value="#{factoryCatVarStatus.index + 1}. #{factoryCatVar.fullCatcode} (#{factoryCatVar.pmCategoryL2.pmCategoryL1.categoryName}/#{factoryCatVar.pmCategoryL2.categoryName}/#{factoryCatVar.categoryName})" />
+						    <p:outputLabel value="#{factoryCatVarStatus.index + 1}. #{factoryCatVar.fullCatcode} (#{factoryCatVar.categoryName})" />
 						</td>
 					</tr>
-					<ui:repeat var="categoryVar" value="#{backingBean.managedBean.smAppl.smSupplierCategories}" >
-					<tr>
-						<td style="white-space: nowrap; float: left;" >
-						    <p:outputLabel style="text-indent: 10px;" value="#{lbl['lbl.sm.catCodes.othDesc']}: #{categoryVar.otherDesc}" 
-						    rendered="#{categoryVar.otherDesc != null and categoryVar.pmCategoryL3.categoryL3Id eq factoryCatVar.categoryL3Id}"/>
-						</td>
-					</tr>
-					</ui:repeat>
-				<!-- 29380  - Site Visit Grouping Enhancement -28775 -End -->
 				</table>
 				<br />
 				

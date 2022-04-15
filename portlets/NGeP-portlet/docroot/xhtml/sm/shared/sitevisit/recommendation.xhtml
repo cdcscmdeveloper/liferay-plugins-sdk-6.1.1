@@ -13,8 +13,8 @@
 				<td valign="top" width="35%"><p:outputLabel value="#{lbl['lbl.sm.comments']}" /></td>
 				<td>
 					<p:inputTextarea rows="8" id="commentId"  style="width:70%;" autoResize="false"  label="#{lbl['lbl.sm.comments']}"
-					maxlength="5000" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.officerComment}">
-						<f:validateLength maximum="5000" />
+					maxlength="1000" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.officerComment}">
+						<f:validateLength maximum="1000" />
 					</p:inputTextarea>
 					<!-- #24964 -->
 					<ac:smFieldChangeAlertSVO
@@ -25,8 +25,6 @@
 				</td>
 			</tr>
 			
-			<!-- 28775 - Site Visit Grouping Enhancement - 28775 -->
-			<ui:remove>
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.officeloc.cmpny.info.update.any']}" /></td>
 				<td>
@@ -42,7 +40,6 @@
 						alertValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.companyInfoUpdate}"/>
 				</td>
 			</tr>
-			</ui:remove>
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.sitevisit.recommdeclaration']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
@@ -61,8 +58,6 @@
 				</td>
 			</tr>
 			
-			<!-- 28775 - Site Visit Grouping Enhancement - 28775 - start -->
-			<ui:remove>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.sitevisit.bumirecommend']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td>
@@ -79,8 +74,6 @@
 						alertValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.bumiRecommended}"/>
 				</td>
 			</tr>
-			</ui:remove>
-			<!-- 28775 - Site Visit Grouping Enhancement - 28775 - end -->
 		</table>
 	</p:panel>
 	

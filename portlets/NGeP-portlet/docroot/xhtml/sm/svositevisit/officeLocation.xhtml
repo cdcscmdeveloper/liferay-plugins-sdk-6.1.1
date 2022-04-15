@@ -33,7 +33,7 @@
 			</p:outputPanel>
 			</tr>
 
-			<!-- #9583  - Site Visit Grouping Enhancement - 28775
+			<!-- #9583 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.officeloc.sign.board']}" /></td>
 				<td>
@@ -51,8 +51,8 @@
 			
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.officeloc.sign.board']}" /></td>
-				<!-- 9583  - Site Visit Grouping Enhancement - 28775 -->
-				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="10000" id="txtSignBoardRmk" readonly="#{viewFlag}"
+				<!-- #9583 -->
+				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="1000" id="txtSignBoardRmk" readonly="#{viewFlag}"
 					value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.signboardRemark}" /></td>
 				<!-- #24964 - START -->
 				<td>
@@ -65,7 +65,7 @@
 				<!-- #24964 - END -->
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.officeloc.share.with']}" /></td>
 				<!-- #9583 -->
-				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="10000" id="txtShareWithRmk" readonly="#{viewFlag}"
+				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="1000" id="txtShareWithRmk" readonly="#{viewFlag}"
 					value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.shareWithRemark}" /></td>
 				<!-- #24964 - START -->
 				<td>
@@ -83,9 +83,9 @@
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.officeloc.office.arrngmnt']}" /></td>
 				<td><!-- #9583 -->
-				<p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="10000" label="#{lbl['lbl.sm.officeloc.office.arrngmnt']}"
-				value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.officeArrangement}" readonly="#{viewFlag}">
-					<f:validateLength maximum="10000" />
+				<p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="1000" label="#{lbl['lbl.sm.officeloc.office.arrngmnt']}"
+				value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.officeArrangement}">
+					<f:validateLength maximum="1000" />
 				</p:inputTextarea>
 				<!-- #24964 - START -->
 				<ac:smFieldChangeAlertSVO 
@@ -97,20 +97,5 @@
 				<!-- #24964 - END -->
 			</tr>
 		</table>
-		<!-- 28775 - Site Visit Grouping Enhancement - 28775 - start -->
-		<c:if test="#{svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.siteVisitGroup}">
-			<ui:param name="param" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.pmCategoryL3.categoryTypeCode.parameterCode}" />
-			<c:if test="#{param == SupplierManagementConst.CAT_TYPE_WORKSHOP
-						or param == SupplierManagementConst.CAT_TYPE_DOCKYARD}">
-				<ui:include src="/xhtml/sm/shared/sitevisit/group/premiseLocation.xhtml" />
-			</c:if>
-			<c:if test="#{param == SupplierManagementConst.CAT_TYPE_MANUFACTURING}">
-				<ui:include src="/xhtml/sm/shared/sitevisit/manufacturingComment.xhtml" />
-			</c:if>
-			<c:if test="#{param == SupplierManagementConst.CAT_TYPE_PRINTING}">
-				<ui:include src="/xhtml/sm/shared/sitevisit/group/printing_premiseLocation.xhtml" />
-			</c:if>
-		</c:if>
-		<!-- 28775 - Site Visit Grouping Enhancement - 28775 - end -->
 	</p:panel>
 </ui:composition>
