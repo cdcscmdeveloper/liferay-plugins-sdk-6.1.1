@@ -1762,12 +1762,14 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 						pmUserRole.setModified(false);
 					}
 				}
-
+				
 				if (getManagedBean().getSelectedReceivingAddrTypes() != null
 						&& !getManagedBean().getSelectedReceivingAddrTypes().isEmpty()) {
 					List<PmAddressType> removeNewAddressTypes = new ArrayList<PmAddressType>();
 					for (PmAddressType addType : getManagedBean().getSelectedReceivingAddrTypes()) {
-						if (addType.isBrandNew()) {
+						//Bug #32656 - Check whether addressTypeId just remove or inactive 
+						logger.info("userRoleStatusChange : inactive addressTypeId :" + addType.getAddressTypeId());
+						if (addType.isBrandNew() && addType.getAddressTypeId() == null) {
 							removeNewAddressTypes.add(addType);
 						} else {
 							if (DbValueConst.RECORD_STATUS_ACTIVE == addType.getRecordStatusFlg()) {
