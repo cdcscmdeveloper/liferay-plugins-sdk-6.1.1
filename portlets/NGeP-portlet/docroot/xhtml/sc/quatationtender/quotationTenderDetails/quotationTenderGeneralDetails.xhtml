@@ -40,9 +40,10 @@
 	<ui:param name="isDemoSpecialCase"  
 		value="#{qTDetailBB.managedBean.demoSpecialCase}" />			
 	<ac:lovPopup />
+	<!-- START #28784 -->
 	<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
-	</p:blockUI>
+	</p:blockUI><!-- END #28784 -->
 
 	<p:panel id="qtdetailsid" header="#{lbl['lbl.sc.general.info']}" toggleable="true">
 		<h:outputText styleClass="instruction"
