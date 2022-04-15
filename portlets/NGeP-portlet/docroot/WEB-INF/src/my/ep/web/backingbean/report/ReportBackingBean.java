@@ -16309,6 +16309,7 @@ public class ReportBackingBean extends
 	 */
 	public void generateSCReport() {
 		log.info("ReportBackingBean-generateSCReport");
+		log.info("harun cek generateSCReport==============");
 		/*
 		 * if ((getManagedBean().getReportValue() != null) &&
 		 * (getManagedBean().getReportValue().trim()
@@ -16546,9 +16547,11 @@ public class ReportBackingBean extends
 				rptGenBean.setScPtjVar(ReportConst.AMP_PROCURE_PTJ_EQ + "\""
 						+ this.getScPtj() + "\"");
 			}
+			log.info("harun cek scStatus====="+this.getScStatus());//29580
 			if (StringUtils.isNotEmpty(this.getScStatus())) {
 				rptGenBean.setScStatusVar(ReportConst.AMP_PROCURE_STATUS_EQ + "\""
 						+ this.getScStatus() + "\"");
+				log.info("harun cek rptGenBean.setScStatusVar====="+rptGenBean.getScStatusVar());
 			}
 			if (StringUtils.isNotEmpty(this.getScProcessRptQuotationNo())) {
 				if (StringUtils.isNotEmpty(getManagedBean().getReportValue())
