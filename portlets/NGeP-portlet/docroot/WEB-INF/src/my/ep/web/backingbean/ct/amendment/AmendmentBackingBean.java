@@ -1673,7 +1673,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							.getCtDisciplinaryActions());
 				}
 				
-				if(!getManagedBean().isDisciplinaryActionNotification()){
+				if(!getManagedBean().isDisciplinaryActionNotification() && !getManagedBean().isDisciplinaryActionCancel()){
 					if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)
 							&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate() != null
 							&& (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate()
