@@ -34,7 +34,7 @@ public class SmeSupplierRptBackingBean extends SmReportBackingBean<SmeSupplierRp
 
 	public void generateReport() {
 		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
-
+		retrieveReportValueFromDb();
 		if (StringUtils.isNotBlank(getManagedBean().getAccountType())) {
 			params.put(SmReportConst.PARAM_ACCOUNT_TYPE, getManagedBean().getAccountType());
 		}
