@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -963,4 +964,90 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		
 		return pmOrgProfile;
 	}
+
+	// 29580 - Start (Harun) change dropdown list to selectManyMenu for status
+	public List<String> reportStatusDropdownValuesSelectManyMenu(String reportCode) {
+		log.info("harun reportStatusDropdownValues reportCode=======" + reportCode);
+		List<String> statusValues = new ArrayList<String>();
+		List<String> statusValuesRemove = null;
+		boolean checkRemove = false;
+
+		String[] removeReportStr = { ReportConst.SC_BRIF_SITE_VISIT_OR_RPT_VAL,
+				ReportConst.SC_PROPOSAL_DTLS_PRODUCT_RPT_VAL, ReportConst.SC_PROPOSAL_DTLS_SERVICE_RPT_VAL,
+				ReportConst.SC_LETTER_OF_ACCPT_OR_RPT_VAL };
+		String[] removeStsStr = { getStatusDesc("lbl.rpt.preparation"), getStatusDesc("lbl.rpt.publishing") };
+
+		statusValues.add(getStatusDesc("lbl.rpt.preparation"));
+		statusValues.add(getStatusDesc("lbl.rpt.publishing"));
+		statusValues.add(getStatusDesc("lbl.rpt.pendingEvaluation"));
+		statusValues.add(getStatusDesc("lbl.rpt.pendingSupplierFinalization"));
+		statusValues.add(getStatusDesc("lbl.rpt.pendingLOInLOA"));
+		statusValues.add(getStatusDesc("lbl.rpt.loaCompleted"));
+		statusValues.add(getStatusDesc("lbl.rpt.drpdown.cancelledLabel"));
+
+		for (String strRpt : removeReportStr) {
+			if (reportCode.equalsIgnoreCase(strRpt)) {
+				statusValuesRemove = new ArrayList<String>(statusValues);
+				checkRemove = true;
+				break;
+			} else {
+				checkRemove = false;
+			}
+		}
+
+		if (checkRemove) {
+			for (Iterator<String> it = statusValuesRemove.iterator(); it.hasNext();) {
+				String strVal = (String) it.next();
+				for (String strSts : removeStsStr) {
+					if (strSts.equalsIgnoreCase(strVal)) {
+						statusValues.remove(strSts);
+					}
+				}
+			}
+		}
+
+		return statusValues;
+	}
+	// 29580 - End (Harun)
+
+	// 29580 - Start (Harun) for trigger selectALL
+	public void onSelectAll(String reportCode) {
+
+		boolean checkAll = false;
+		List<String> statusList = new ArrayList<String>(this.getManagedBean().getScReportSearchBean()
+				.getScStatusManyMenu());
+		List<String> allList = reportStatusDropdownValuesSelectManyMenu(reportCode);
+
+		for (String stsvalue : statusList) {
+			if (stsvalue.equalsIgnoreCase(getStatusDesc("lbl.rpt.all"))) {
+				allList = reportStatusDropdownValuesSelectManyMenu(reportCode);
+
+				List<SelectItem> items = new ArrayList<SelectItem>();
+				for (String strSelectItem : allList) {
+					items.add(new SelectItem(strSelectItem));
+				}
+				for (Iterator<SelectItem> it = items.iterator(); it.hasNext();) {
+					SelectItem si = (SelectItem) it.next();
+					this.getManagedBean().getScReportSearchBean().getScStatusManyMenu().add((String) si.getValue());
+				}
+				checkAll = true;
+			} else {
+				checkAll = false;
+			}
+		}
+		if (!checkAll) {
+			if (allList.size() == statusList.size()) {
+				List<SelectItem> items = new ArrayList<SelectItem>();
+				for (String strSelectItem : statusList) {
+					items.add(new SelectItem(strSelectItem));
+				}
+				for (Iterator<SelectItem> it = items.iterator(); it.hasNext();) {
+					SelectItem si = (SelectItem) it.next();
+					this.getManagedBean().getScReportSearchBean().getScStatusManyMenu().remove((String) si.getValue());
+				}
+			}
+		}
+
+	}
+	// 29580 - End (Harun)
 }
