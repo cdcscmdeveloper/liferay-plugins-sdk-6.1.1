@@ -752,7 +752,23 @@ public class SmApplicationBackingBean extends
 							this.getManagedBean().setValidResubmit(false);
 						}
 					}
-
+					//#32002-start
+					if (this.getManagedBean().isValidResubmit()) {
+						sb = new StringBuilder();
+						sb.append("(")
+								.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER)
+								.append(",")
+								.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)
+								.append(")");
+						reqDTO.setWorkflowStatus(sb.toString());
+						
+						if (supplierProfile.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED &&
+								supplierProfile.getSmMofAccounts().get(0).getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED) {
+							resubmitErrorKey = "lbl.sm.resubmitExpired.mofExpired";
+							this.getManagedBean().setValidResubmit(false);
+						}
+					}
+					//#32002-end
 					if (this.getManagedBean().isValidResubmit()
 							&& rejAppl.getCreatedDate().compareTo(
 									supplierProfile.getSmAppl()
