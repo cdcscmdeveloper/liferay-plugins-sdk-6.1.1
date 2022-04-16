@@ -1242,6 +1242,10 @@ public class ReportBackingBean extends
 	boolean testing = false;
 	
 	private String message;
+	
+	/** The sc status multiple. */
+	private List<String> scStatusManyMenu; //29580
+	
 	/**
 	 * Gets the select cat deletion list.
 	 * 
@@ -8004,6 +8008,20 @@ public class ReportBackingBean extends
 	 */
 	public void setModuleItemMap(Map<String, List<SelectItem>> moduleItemMap) {
 		this.moduleItemMap = moduleItemMap;
+	}
+	
+	/**
+	 * @return the scStatusManyMenu
+	 */
+	public List<String> getScStatusManyMenu() {
+		return scStatusManyMenu;
+	}
+
+	/**
+	 * @param scStatusManyMenu the scStatusManyMenu to set
+	 */
+	public void setScStatusManyMenu(List<String> scStatusManyMenu) {
+		this.scStatusManyMenu = scStatusManyMenu;
 	}
 
 	/**
@@ -16551,7 +16569,14 @@ public class ReportBackingBean extends
 			if (StringUtils.isNotEmpty(this.getScStatus())) {
 				rptGenBean.setScStatusVar(ReportConst.AMP_PROCURE_STATUS_EQ + "\""
 						+ this.getScStatus() + "\"");
-				log.info("harun cek rptGenBean.setScStatusVar====="+rptGenBean.getScStatusVar());
+				log.info("harun cek rptGenBean.setScStatusVar====="+rptGenBean.getScStatusVar());//29580
+			}
+			log.info("harun cek scStatus multiple=====");//29580
+			log.info("harun cek scStatusManyMenu size======"+this.getScStatusManyMenu().size());//29580
+			if(this.getScStatusManyMenu().size() > 0){
+				for (String strManyMenu: this.getScStatusManyMenu()){
+					log.info("harun scStatusManyMenu====="+strManyMenu);
+				}
 			}
 			if (StringUtils.isNotEmpty(this.getScProcessRptQuotationNo())) {
 				if (StringUtils.isNotEmpty(getManagedBean().getReportValue())
