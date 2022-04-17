@@ -3701,7 +3701,7 @@ public class CreateQtBackingBean extends
 	 */
 	public void renderDemoRadioButton(AjaxBehaviorEvent event){
 		Long status = this.getManagedBean().getQt().getQtStatus().getStatusId();
-
+		RequestContext.getCurrentInstance().execute("blockWidget.show()");
 		if (!status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
 			String type = (String) event.getComponent().getAttributes().get("value");
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
@@ -3734,6 +3734,7 @@ public class CreateQtBackingBean extends
 				this.getManagedBean().getQt().setDemoRequired(false);
 			}
 		}
+		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 	}
 
 	// #21695 Farid START 3/7/2021
