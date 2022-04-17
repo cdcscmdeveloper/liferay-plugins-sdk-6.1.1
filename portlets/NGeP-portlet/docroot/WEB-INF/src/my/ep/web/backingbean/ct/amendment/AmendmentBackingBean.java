@@ -1681,21 +1681,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (resDTO.isSuccessful()) {
 				log.debug("Record saved successfully");
 				String messageId = MessageConst.INFO_700005;
-				//#32860 start
-				boolean checkValidationDisciplinaryAction = false;
-				//#32860 end
 				String[] params = new String[] { getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,
 						this.ctBackingBean.getManagedBean().getContractVer().getDocType()),
 						this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo()};
 
 				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
-					//#32860 start
-					if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME) && getManagedBean().isDisciplinaryAction()) {
-						checkValidationDisciplinaryAction=true;
-					} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_MOF_RESULT_HT_NAME) && getManagedBean().isDisciplinaryAction()) {
-						checkValidationDisciplinaryAction=true;
-					}
-					//#32860 end
 					messageId = MessageConst.INFO_700025;
 				} else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 					
