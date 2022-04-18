@@ -1350,32 +1350,36 @@ public class SupplierDataMaintenanceBackingBean extends
 			SmAppl activeAppl = SmServiceLookup.getMofRegistrationSO()
 					.retrieveActiveSmApplBySupp(reqDTO).getSmAppl(); 
 			//retrieveActiveCategoryByApplId
-			List<SmSupplierCategory> activeApplCategory = retrieveCategoryCode(activeAppl.getApplId());
+			//32891 - check if active appl is null - start - 26238
+			if(activeAppl != null){
+				List<SmSupplierCategory> activeApplCategory = retrieveCategoryCode(activeAppl.getApplId());
 
-			log.info("size activeApplCategory :" + activeApplCategory.size());
-			
-			for (SmSupplierCategory cat : activeApplCategory) {
-				//Redmine #18959
-				if(cat.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_PENDING_ACTIVATION) {
-					if (cat.getPmCategoryL1()
-							.getCategoryL1Id()
-							.equals(getManagedBean().getSelectedCategory()
-									.getPmCategoryL1().getCategoryL1Id())
-							&& cat.getPmCategoryL2()
-									.getCategoryL2Id()
-									.equals(getManagedBean().getSelectedCategory()
-											.getPmCategoryL2().getCategoryL2Id())
-							&& cat.getPmCategoryL3()
-									.getCategoryL3Id()
-									.equals(getManagedBean().getSelectedCategory()
-											.getPmCategoryL3().getCategoryL3Id())) {
-						validCat = false;
-						throw new EpException(ResourceBundleUtils.getMessage(
-								"lbl.sm.category.error.add", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale()));
+				log.info("size activeApplCategory :" + activeApplCategory.size());
+				
+				for (SmSupplierCategory cat : activeApplCategory) {
+					//Redmine #18959
+					if(cat.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_PENDING_ACTIVATION) {
+						if (cat.getPmCategoryL1()
+								.getCategoryL1Id()
+								.equals(getManagedBean().getSelectedCategory()
+										.getPmCategoryL1().getCategoryL1Id())
+								&& cat.getPmCategoryL2()
+										.getCategoryL2Id()
+										.equals(getManagedBean().getSelectedCategory()
+												.getPmCategoryL2().getCategoryL2Id())
+								&& cat.getPmCategoryL3()
+										.getCategoryL3Id()
+										.equals(getManagedBean().getSelectedCategory()
+												.getPmCategoryL3().getCategoryL3Id())) {
+							validCat = false;
+							throw new EpException(ResourceBundleUtils.getMessage(
+									"lbl.sm.category.error.add", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale()));
+						}
 					}
 				}
-			} 
+			}
+			//32891 - end
 			
 		if (validCat && applValidCat) {
 			getManagedBean().getSmAppl().getSmSupplierCategories()
