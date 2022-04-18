@@ -59,6 +59,13 @@ public class ProfileOfRegCompanyRptBackingBean extends
 		}
 		log.info("********Report Code************* after set newCode: " + getManagedBean().getReportCode());
 		
+		//#32564 & #26238 - Start
+		if(getManagedBean().getSelectedOrgProfile().getSmSupplier() != null){
+			params.put(SmReportConst.PARAM_SUPPLIER_ID, String.valueOf(getManagedBean()
+					.getSelectedOrgProfile().getSmSupplier().getSupplierId()));	
+		}
+		//#32564 & #26238 - End
+		
 		for (Map.Entry<String, String> entry : params.entrySet()) {
 			log.info("Key : " + entry.getKey() + "=" + entry.getValue() + "&");
 		}
