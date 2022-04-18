@@ -2,23 +2,7 @@ package my.ep.web.backingbean.sm.userprofilemaintenance;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-
-// 9569 start
-import java.util.Collections;
-import java.util.Comparator;
-
-//9569 end
-
-//start #12981 - no 2, comment #189
-import java.util.Arrays;
-//start #12981 - no 2, comment #189
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -61,7 +45,6 @@ import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
-import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSoftcertRequest;
@@ -85,6 +68,18 @@ import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
+//9569 end
+//start #12981 - no 2, comment #189
+import java.util.Arrays;
+//start #12981 - no 2, comment #189
+import java.util.Calendar;
+// 9569 start
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.ListIterator;
+import java.util.Map;
 
 
 @ManagedBean(name = "smPersonnelBackingBean")
@@ -2021,6 +2016,26 @@ public class SmPersonnelBackingBean extends
 					.getBasicSmPersonnel().getName(), getManagedBean()
 					.getBasicSmPersonnel().getEmail());
 		}
+		//32515 START
+		//Update Role
+		if (getManagedBean().getBasicSmPersonnel() != null && getManagedBean().getBasicSmPersonnel().getEpRole() != null &&
+				getManagedBean().getBasicSmPersonnel().getPrevEpRole() != null &&
+				getManagedBean().getAccountStatus() == DbValueConst.RECORD_STATUS_ACTIVE) {
+			
+			String name = getManagedBean().getBasicSmPersonnel().getName();
+			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+			reqDTO.setSmSupplierId(getManagedBean().getBasicSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());
+			reqDTO.setSmSupplier(getManagedBean().getBasicSmPersonnel().getSmAppl().getSmSupplier());
+			reqDTO.setUserId(getManagedBean().getBasicSmPersonnel().getPmUser().getUserId());
+			SmSoftcertRequest softcertRequest = SmServiceLookup.getPersonnelSO().retrievePersonnelSoftcertRequestBySupplierIdAndUserId(reqDTO).getSoftcertRequest();
+			
+			if (validateSoftcertExpired(softcertRequest)) {
+				throw new EpException(MessageConst.ERROR_770252, new String[] { name });
+			}else if(getManagedBean().getBasicSmPersonnel().getPmUser() != null && PmCommonUtil.isAnyPendingTask(getManagedBean().getBasicSmPersonnel().getPmUser().getLoginId())){
+				throw new EpException(MessageConst.ERROR_770251, new String[] { name });
+			}
+		}
+		//32515 END
 		//Start 13320
 		for (SmPersonnelAddress per : getManagedBean().getBasicSmPersonnel().getSmPersonnelAddresses()) {
 			if (!per.getSmAddress().getPmState().getStateId().equals(SupplierManagementConst.SARAWAK_CODE)){
@@ -3744,5 +3759,18 @@ public class SmPersonnelBackingBean extends
 		}
 		return retVal;
 	}
+	
+	//32515 START
+	public Boolean validateSoftcertExpired(SmSoftcertRequest softcertRequest){
+		Boolean valid = true;
+		if(softcertRequest != null){
+			Date currentDate = new Date();
+			if(currentDate.after(softcertRequest.getPmDigiCert().getValidTo())){
+				valid = false;
+			}
+		}
+		return valid;
+	}
+	//32515 END
 
 }
