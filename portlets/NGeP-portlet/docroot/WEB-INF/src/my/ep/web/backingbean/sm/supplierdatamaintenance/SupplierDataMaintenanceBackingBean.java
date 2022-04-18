@@ -1349,6 +1349,8 @@ public class SupplierDataMaintenanceBackingBean extends
 			SmAppl activeAppl = SmServiceLookup.getMofRegistrationSO()
 					.retrieveActiveSmApplBySupp(reqDTO).getSmAppl(); 
 			//retrieveActiveCategoryByApplId
+			//32891 - check if active appl is null - start - 26238
+			if(activeAppl != null){
 			List<SmSupplierCategory> activeApplCategory = retrieveCategoryCode(activeAppl.getApplId());
 
 			log.info("size activeApplCategory :" + activeApplCategory.size());
@@ -1375,6 +1377,8 @@ public class SupplierDataMaintenanceBackingBean extends
 					}
 				}
 			} 
+			}
+			//32891 - end
 			
 		if (validCat && applValidCat) {
 			getManagedBean().getSmAppl().getSmSupplierCategories()
