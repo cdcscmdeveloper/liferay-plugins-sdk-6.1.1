@@ -1360,11 +1360,14 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		
 		if (this.getManagedBean().getInvoice() != null) {
 			//32967-Start
-			if(getManagedBean().getAccountNo()==null){
-				getManagedBean().setAccountNo(this.getManagedBean().getInvoice().getAccountNo());
-			}
-			if(this.getManagedBean().getInvoice().getAccountNo().equalsIgnoreCase(getManagedBean().getAccountNo())){
-				this.getManagedBean().getInvoice().setAccountNo(this.getManagedBean().getInvoice().getPaymentBank().getFinancialOrgId()+" "+this.getManagedBean().getInvoice().getAccountNo());
+			if(this.getManagedBean().getInvoice().getAccountNo()!=null){
+				if(getManagedBean().getAccountNo()==null){
+					getManagedBean().setAccountNo(this.getManagedBean().getInvoice().getAccountNo());
+				}			
+			
+				if(this.getManagedBean().getInvoice().getAccountNo().equalsIgnoreCase(getManagedBean().getAccountNo())){
+					this.getManagedBean().getInvoice().setAccountNo(this.getManagedBean().getInvoice().getPaymentBank().getFinancialOrgId()+" "+this.getManagedBean().getInvoice().getAccountNo());
+				}
 			}
 			//32967-End
 			if(this.getManagedBean().getInvoice().getFlRequest().getFlSupplierDtl().getBranchName() != null ){
