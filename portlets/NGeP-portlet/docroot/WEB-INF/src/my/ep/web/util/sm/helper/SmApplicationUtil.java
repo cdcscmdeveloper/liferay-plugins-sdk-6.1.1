@@ -1595,6 +1595,29 @@ public class SmApplicationUtil {
 			if(index>1){
 				throw new EpException(MessageConst.ERROR_722693, new String[] { bf.toString()});
 			}	
+		}else if(managedBean.isApproverUser() || managedBean.isPoUser() && managedBean.getCurrentPageType().equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)){
+			for (SmSupplierCategory category : managedBean.getSmAppl().getSmSupplierCategories()) {
+				// paid up capital must less than paid-up capital of category code
+				if(managedBean.getSmAppl().getSmCompanyBasic().getPaidUpCapital().compareTo(category.getPmCategoryL3().getPaidUpCapital()) < 0){
+					if(index == 1){
+						bf.append("<br>" + index++ +". "
+								+ category.getPmCategoryL1().getCategoryL1Code()
+								+ category.getPmCategoryL2().getCategoryL2Code()
+								+ category.getPmCategoryL3().getCategoryL3Code()
+								+ " - RM" +category.getPmCategoryL3().getPaidUpCapital() +"<br>" );	
+					}else if(index > 1){
+						bf.append(index++ +". "
+								+ category.getPmCategoryL1().getCategoryL1Code()
+								+ category.getPmCategoryL2().getCategoryL2Code()
+								+ category.getPmCategoryL3().getCategoryL3Code()
+								+ " - RM" +category.getPmCategoryL3().getPaidUpCapital() +"<br>" );	
+					}
+				}
+			}
+			
+			if(index>1){
+				throw new EpException(MessageConst.ERROR_722695, new String[] { bf.toString()});
+			}	
 		}
 	}
 	//#32236-end
