@@ -3923,6 +3923,10 @@ public class SmApplicationBackingBean extends
 					SmApplicationUtil.checkAllowedToApprove(getManagedBean());
 					displayBumiRecommendNote();
 					getHqFacility();
+					//#32236 start
+//					setBusinessAndHadApprovedSpecialCatcode();
+					SmApplicationUtil.validateSpecialAndNormalCategoryCapital(getManagedBean());
+					//#32236 end
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC:
 					//#30444 --START--  --31072021					
@@ -7874,7 +7878,6 @@ public class SmApplicationBackingBean extends
 					getManagedBean().getCurrentPageType());
 			
 			setBranchDisplayTable(); //29727
-
 		}
 	}
 
