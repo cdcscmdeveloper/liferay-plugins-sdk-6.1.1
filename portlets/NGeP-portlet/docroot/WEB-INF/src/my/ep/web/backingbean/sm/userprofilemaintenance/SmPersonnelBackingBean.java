@@ -526,6 +526,7 @@ public class SmPersonnelBackingBean extends
 		getPersonnelInfoById(personnelId);
 		// #32515 - start
 		getManagedBean().setSupplierType(getManagedBean().getSmSupplier().getSmAppl().getSupplierType());
+		getManagedBean().setEpRoleTrans(getManagedBean().getBasicSmPersonnel().getEpRole());
 		// #32515 - end
 		buildRoleList();
 		validateAccountStatus();
@@ -2025,7 +2026,7 @@ public class SmPersonnelBackingBean extends
 		//32515 START
 		//Update Role
 		if (getManagedBean().getBasicSmPersonnel() != null && getManagedBean().getBasicSmPersonnel().getEpRole() != null &&
-				getManagedBean().getBasicSmPersonnel().getPrevEpRole() != null &&
+				getManagedBean().getEpRoleTrans() != null && !getManagedBean().getEpRoleTrans().equals(getManagedBean().getBasicSmPersonnel().getEpRole()) &&
 				getManagedBean().getAccountStatus() == DbValueConst.RECORD_STATUS_ACTIVE) {
 			
 			String name = getManagedBean().getBasicSmPersonnel().getName();
