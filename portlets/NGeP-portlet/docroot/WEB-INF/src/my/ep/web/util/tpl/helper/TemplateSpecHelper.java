@@ -69,6 +69,9 @@ public class TemplateSpecHelper {
 	
 	private static TemplateSpecHelper instance;	
 	
+	//#28784
+	private boolean demoSpecClone = false;
+	
 	/**
 	 * Get singleton of TemplateSpecHelper
 	 * 
@@ -96,7 +99,7 @@ public class TemplateSpecHelper {
 	 * 		clone including child entities.
 	 * @return	the new cloned TplSpecMaster instance.
 	 */
-	public TplSpecMaster cloneTplSpecMaster(TplSpecMaster specMaster, boolean includeQuestions, boolean isScoringReq, boolean isQtyByZone) {
+	public TplSpecMaster cloneTplSpecMaster(TplSpecMaster specMaster, boolean includeQuestions, boolean isScoringReq, boolean isQtyByZone, boolean isDemoCloneSpec) {
 		debugLogger("cloneTplSpecMaster : " + specMaster);
 		
 		TplSpecMaster newSpecMaster = null;
@@ -117,6 +120,12 @@ public class TemplateSpecHelper {
 					newSpecMaster.setScoringReq(isScoringReq);
 					newSpecMaster.setQtyByZone(isQtyByZone);
 					setUserDetails(newSpecMaster);
+					
+					if(isDemoCloneSpec){
+						demoSpecClone = true;
+					} else {
+						demoSpecClone = false;
+					}
 
 					if (includeQuestions) {
 						// clone spec questions
@@ -174,10 +183,12 @@ public class TemplateSpecHelper {
 								newSpecQuestion.setTplSpecAnswers(null);
 								newSpecQuestion.setTplSpecEstimations(null);
 								newSpecQuestion.setTplSpecScorings(null);
-								//#28784 Reset clone value for demo, reenable back for tech spec cloning on 11/4, please dont change back
-								newSpecQuestion.setItemReqDemo(false);//25635
-								newSpecQuestion.setDemoScore(null);//25635
 								
+								//#28784 Reset clone value for demo
+								if(demoSpecClone){
+									newSpecQuestion.setItemReqDemo(false);
+									newSpecQuestion.setDemoScore(null);
+								}								
 								
 								if (isTechnicalSpec) {
 									if(TemplateSpecConst.QUESTION_TYPE_ITEM.equals(quesType)){
