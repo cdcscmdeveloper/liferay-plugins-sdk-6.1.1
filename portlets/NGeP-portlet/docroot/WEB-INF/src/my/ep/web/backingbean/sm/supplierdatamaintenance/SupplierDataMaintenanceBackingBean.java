@@ -2791,17 +2791,19 @@ public class SupplierDataMaintenanceBackingBean extends
 				getManagedBean().setBusinessDistrictLs(new ArrayList<SelectItem>());
 				this.getManagedBean().setBusinessCityLs(null);	
 			}
+			//33071 - start	
 				if(state !=null && state.getAdoptDivision()) {
 					getManagedBean().setDivisionBox(false);	
 				}
 				else{	
 					getManagedBean().setDivisionBox(true);//13320-End
-			List<SelectItem> divisionLs = SmCommonUtil.getDistrictList(this.getManagedBean().getSmBusinessAdd().getPmState().getStateId());
-			this.getManagedBean().setBusinessDistrictLs(divisionLs);
-			this.getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
-			
 				}
+			}else{
+				List<SelectItem> divisionLs = SmCommonUtil.getDistrictList(this.getManagedBean().getSmBusinessAdd().getPmState().getStateId());
+				this.getManagedBean().setBusinessDistrictLs(divisionLs);
+				this.getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
 			}
+			//33071 - end
 		} else if (typeAdd.equals("residential")) {
 			log.info("------------residential----------------");
 			//13320-Start
