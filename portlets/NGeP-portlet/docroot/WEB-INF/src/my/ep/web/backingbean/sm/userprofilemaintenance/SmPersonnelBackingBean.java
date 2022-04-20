@@ -3769,13 +3769,13 @@ public class SmPersonnelBackingBean extends
 		}
 	}
 	// #28720 End
-	//32515 START
+	//32515 START	
 	public Boolean validateSoftcertExpired(SmSoftcertRequest softcertRequest){
-		Boolean valid = true;
+		Boolean valid = false;
 		if(softcertRequest != null){
 			Date currentDate = new Date();
-			if(currentDate.after(softcertRequest.getPmDigiCert().getValidTo())){
-				valid = false;
+			if(currentDate.before(softcertRequest.getPmDigiCert().getValidTo())){
+				valid = true;
 			}
 		}
 		return valid;
