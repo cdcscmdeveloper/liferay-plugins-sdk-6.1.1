@@ -198,7 +198,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	// #21331 - start
 	public void validateParameterValue(String reportCode) {
 		log.info("************** SmReportBackingBean.validateParameterValue() | reportCode: " + reportCode);
-		// #29712 & #30824 - start
+		// #29712 & #30824, #32564 - start
 		// SM_001
 		if (StringUtils.isNotEmpty(reportCode) && (reportCode.trim().equalsIgnoreCase(ReportConst.SM_REG_COMPANY_IN_MOF_RPT_VAL))) {
 			if (StringUtils.isEmpty(getManagedBean().getRegType())) {
@@ -207,8 +207,11 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 				if (getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.SM_REG_TYPE_MOF)) {
 					validateMofRegNo(getManagedBean().getMofNo());
 				} else if (getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.SM_REG_TYPE_BASIC)) {
+					System.out.println("getSelectedSupplier ==> " + getManagedBean().getSelectedSupplier());
 					if (getManagedBean().getSelectedSupplier() == null) {
 						throw new EpException(MessageConst.ERROR_REPORT_780044);
+					} else {
+						System.out.println("getCompanyName ==> " + getManagedBean().getSelectedSupplier().getCompanyName());
 					}
 				} else if (getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.SM_REG_TYPE_G2G)) {
 					if (getManagedBean().getSelectedOrgProfile() == null) {
@@ -217,7 +220,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 				}
 			}
 		}
-		// #29712 & #30824 - end
+		// #29712 & #30824, #32564 - end
 
 		if (StringUtils.isNotEmpty(reportCode) && (reportCode.trim().equalsIgnoreCase(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL))) {
 			// search date
