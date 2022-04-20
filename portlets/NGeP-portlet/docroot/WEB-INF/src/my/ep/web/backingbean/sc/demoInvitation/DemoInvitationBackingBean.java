@@ -1117,7 +1117,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 				
 				resDTO.setPmUser(userResDTO.getPmUser());
 				demoReqDTO.setTaskId(taskId);
-				demoReqDTO.setTaskName(taskName);// #25037
+				demoReqDTO.setTaskName(taskName);// #25037 & #28784
 				demoReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 				demoReqDTO.setPayLoad(this.getManagedBean().getPayLoad());
 				demoReqDTO.setPmUser(facesScopes.getUserSessionBean());

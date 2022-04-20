@@ -2800,7 +2800,7 @@ public class TemplateSpecBackingBean extends
 		debugLogger("cloneAction");
 		TplSpecMaster specMaster = templateSpecBean.getSpecMaster();
 		TplSpecMaster clonedSpecMaster = TemplateSpecHelper.getInstance()
-				.cloneTplSpecMaster(specMaster, true, true, false);
+				.cloneTplSpecMaster(specMaster, true, true, false, false);//#28784
 		if (this.getManagedBean().getOrgProfileOfLoginUser() == null) {
 			this.getManagedBean().setOrgProfileOfLoginUser(retrieveUserOrgListByUserId());
 		}

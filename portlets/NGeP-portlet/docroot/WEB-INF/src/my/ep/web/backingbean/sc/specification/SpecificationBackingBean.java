@@ -13439,7 +13439,7 @@ public class SpecificationBackingBean extends
 			TplSpecMaster specMaster = TemplateSpecHelper.getInstance()
 					.cloneTplSpecMaster(
 							scQtCheckList.getScQtDoc().getTplSpecMaster(),
-							false, true, true);
+							false, true, true, false);//#28784
 			specMaster
 					.setProcessType(ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING);
 
@@ -13850,10 +13850,12 @@ public class SpecificationBackingBean extends
 			specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
 			TemplateSpecResDTO resDTO = templateSpecSO
 					.getTemplateMaster(specReqDTO);
+			
+			//#28784 - Adding demoSpec clone condition			
 			TplSpecMaster specMaster = TemplateSpecHelper.getInstance()
 					.cloneTplSpecMaster(resDTO.getSpecMaster(), true,
 							getManagedBean().getQt().isTechEvaluationReq(),
-							true);
+							true, true);//#28784
 			
 			//Danial - #8979 - if partial, no need to set weightage
 			if(this.getManagedBean().getQt().isPartial()){
@@ -19877,8 +19879,7 @@ if(null!=allTechnicalChecklist){
 	 * #28784	
 	 */
 	public String demoSpectechnicalChecklist(int index, ScQtCheckList checkList, String specType) {
-		IQTSpecSO specSo = null;
-		SpecificationResDTO resDTO = new SpecificationResDTO();
+		
 		this.getManagedBean().setScQtChecklist(checkList);
 		this.getManagedBean().setIndex(index);
 		this.getManagedBean().setSpecType(specType);
@@ -19888,11 +19889,7 @@ if(null!=allTechnicalChecklist){
 		this.getManagedBean().setScQtContractScore(null);
 		try {
 
-			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			List<TplSpecQuestion> newSpecItemList = new ArrayList<>();
-			specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-					IQTSpecSO.class);
-
 			if (QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(checkList.getDefinationType().getParameterCode())) {
 				this.getManagedBean().setSpecStatusId(checkList.getPmStatus().getStatusId());
 				this.getManagedBean().setIndex(index);
@@ -20082,7 +20079,6 @@ if(null!=allTechnicalChecklist){
 			 */
 			List<ScQtCheckList> savedCheckListsDemo = resDTO1.getSavedCheckLists();
 			specCommitteeResetData();
-			// settemplateSpecList(savedCheckLists);
 			for(ScQtCheckList obj : savedCheckListsDemo){
 				resetDemoChecklist(obj);
 			}
@@ -20134,13 +20130,12 @@ if(null!=allTechnicalChecklist){
 			scQtCheckList.setPmDemoStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
 			scQtCheckList.getScQtDoc().getTplSpecMaster().setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
 			scQtCheckList.setSampleStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));// #11104
-			// Code to construct financial checklist..			
 
 			TplSpecMaster specMaster = TemplateSpecHelper.getInstance().cloneTplSpecMaster(
-					scQtCheckList.getScQtDoc().getTplSpecMaster(), false, true, true);
+					scQtCheckList.getScQtDoc().getTplSpecMaster(), false, true, true, false);//#28784
 			specMaster.setProcessType(ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING);			
 
-			boolean buildFinancialTemplate = isSpecQuestionsModified(scQtCheckList);// #1873
+			//boolean buildFinancialTemplate = isSpecQuestionsModified(scQtCheckList);// #1873
 
 			IParameterSO parameterSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
@@ -20149,20 +20144,10 @@ if(null!=allTechnicalChecklist){
 			finSpecType.setParameterCode(ParameterConst.SPECIFICATION_TYPE_FINANCIAL);
 			ParameterResDTO finSpecresDTO = parameterSO.retrieveParameterByTypeAndCode(finSpecType);
 			specMaster.setSpecTypeCode(finSpecresDTO.getPmParameter());
-			//specMaster.setScoringReq(true);
-			TemplateSpecHelper.getInstance().cloneTplSpecQuestions(specMaster, scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions());
-			/*ScQtCheckList qtCheckList = constructQtDocByType(specMaster, SourcingConstants.FINANCIAL_DOCTYPE);
-			qtCheckList.setPmStatus(getPmStatusByStatusId(buildFinancialTemplate ? QTStatusConst.TS_PENDING_SUBMISSION: QTStatusConst.TS_COMPLETED)); 
-			qtCheckList.setTitle(scQtCheckList.getScQtDoc().getTplSpecMaster().getSpecName());
-			qtCheckList.setScoringReq(true);
-			qtCheckList.getScQtDoc().getTplSpecMaster().setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT); 
-			qtCheckList.getScQtDoc().getTplSpecMaster().setWeightageReq(false);
-			qtCheckList.setChecklistSeq(scQtCheckList.getChecklistSeq());*/
-			/*TemplateSpecHelper.getInstance().updateItemWeightageReq(qtCheckList.getScQtDoc().getTplSpecMaster(),
-					qtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions());			
-			checkTechnicalFinancialItemCount(scQtCheckList, qtCheckList);*/
+		
+			TemplateSpecHelper.getInstance().cloneTplSpecQuestions(specMaster, scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions());			
 			updatedCheckLists.add(scQtCheckList);
-			//updatedCheckLists.add(qtCheckList);			
+					
 			
 		} else {
 			if (this.getManagedBean().getSpecMaintenanceScreen().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)) {//#28784
@@ -20240,7 +20225,6 @@ if(null!=allTechnicalChecklist){
 				reqDTO1.setTobeRemoveList(updatedCheckListsOtherDemo);
 				resDTO1 = specSO.updateDemoScoreWeightage(reqDTO1);
 				
-				//List<ScQtCheckList> savedCheckLists = resDTO.getSavedCheckLists();
 				settemplateSpecList(savedCheckLists, flowType);
 				List<ScQtCheckList> savedCheckListsDemo = resDTO1.getSavedCheckLists();
 				for(ScQtCheckList obj : savedCheckListsDemo){
@@ -20252,7 +20236,6 @@ if(null!=allTechnicalChecklist){
 				this.getManagedBean().setOfferPricePackage(null);
 				this.getManagedBean().setPanelSpecExistedOrNot(false);
 				specCommitteeResetData();
-				//this.getManagedBean().setScQtCheckSt2techProposal(st2technicalproposalList);
 				return "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
 			}else{
 				return null;
