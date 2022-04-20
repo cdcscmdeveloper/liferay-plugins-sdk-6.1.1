@@ -611,7 +611,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		this.getManagedBean().getPersonnelMembers().clear();
 		BigDecimal sum = new BigDecimal(0);
 		for(SmPersonnel personnel:this.getManagedBean().getSmAppl().getSmPersonnels()){
-			BigDecimal shareAmt = personnel.getShareAmt();
+			BigDecimal shareAmtSsm = personnel.getShareAmtSsm();
 				if(personnel.getDesignation() != null){
 					String designation = populateDesignationSSM(personnel.getDesignation());
 					personnel.setDesignation(designation);
@@ -620,8 +620,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				this.getManagedBean().getPersonnelDirectorManager().add(personnel);	
 				}
 				if(personnel.isEquityOwner()){
-					if(shareAmt != null && !(personnel.getShareAmt() == null)){
-						sum =  sum.add(shareAmt);
+					if(shareAmtSsm != null && !(personnel.getShareAmtSsm() == null)){
+						sum =  sum.add(shareAmtSsm);
 						getManagedBean().setTotalShare(sum);
 						
 					}
