@@ -1145,49 +1145,76 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 									}
 								}
 							} 
-							for (PmCategoryL3 pmCategoryL3 : resDTO.getCategoryL3List()) {
-								item = new SelectItem(pmCategoryL3.getCategoryL3Id(),
-										pmCategoryL3.getCategoryL3Code() + " - " + pmCategoryL3.getCategoryName());
+							//26238: Disciplinary Action - start - 32872 - category stuck on sub category for supplier
+//							for (PmCategoryL3 pmCategoryL3 : resDTO.getCategoryL3List()) {
+//								item = new SelectItem(pmCategoryL3.getCategoryL3Id(),
+//										pmCategoryL3.getCategoryL3Code() + " - " + pmCategoryL3.getCategoryName());
+
+							log.info("getManagedBean() selected l3 = " +getManagedBean().getSelectedCategoryL3().getCategoryL3Code() + "   ----   "+ getManagedBean().getSelectedCategoryL3().getCategoryName()  + "   ----  id : "+ getManagedBean().getSelectedCategoryL3().getCategoryL3Id());
+							log.info("supplier is bumi = " +srcAppl.getSmSupplier().isBumi() );							
 								
 								if(disciplinaryAction.isCancelCategory() || disciplinaryAction.isManufacturerCancel()){								
+//									if(cancelCat != null
+//											&& cancelCat.size() > 0){
+//										for(Object[] arr : cancelCat){
+//											if(arr[7].toString().equalsIgnoreCase(disciplinaryAction.getDisciplinaryActionId().toString())){
+//												if(item.getValue().toString().equalsIgnoreCase(arr[2].toString())){
+//													//getManagedBean().setDisabledDACategories(true);
+//													getManagedBean().setSelectedCategoryL3(null);
+//													log.info("Disciplinary Action 1 - disabled cancel category");
+//												}
+//											}										
+//										}
+//									}
+									
 									if(cancelCat != null
 											&& cancelCat.size() > 0){
 										for(Object[] arr : cancelCat){
 											if(arr[7].toString().equalsIgnoreCase(disciplinaryAction.getDisciplinaryActionId().toString())){
-												if(item.getValue().toString().equalsIgnoreCase(arr[2].toString())){
-													//getManagedBean().setDisabledDACategories(true);
+												if( getManagedBean().getSelectedCategoryL3().getCategoryL3Id().toString().equalsIgnoreCase(arr[2].toString())  && getManagedBean().getSelectedCategoryL3().getCategoryL3Id() != null  ){ 
 													getManagedBean().setSelectedCategoryL3(null);
-													log.info("Disciplinary Action - disabled cancel category");
+													log.info("Disciplinary Action 1 - disabled cancel category"); 
 												}
 											}										
 										}
 									}
-									if(pmCategoryL3.getCategoryL3Code() != null
-											&& pmCategoryL3.getCategoryL3Id()== 347){
+									
+									if(getManagedBean().getSelectedCategoryL3() != null
+											&& getManagedBean().getSelectedCategoryL3().getCategoryL3Id()== 347){
 										log.info("MTO Code exist"); 
 										if( checkBasic != 3 ){
 											getManagedBean().setSelectedCategoryL3(null);
-											log.info("Disciplinary Action - disabled by basic category");
+											log.info("Disciplinary Action 2 - disabled by basic category");
+										}
+									}
+									
+									if(getManagedBean().getSelectedCategoryL3() != null
+											&& getManagedBean().getSelectedCategoryL3().getBumiPercentage() > 50){
+										if(!srcAppl.getSmSupplier().isBumi()){ 
+											getManagedBean().setSelectedCategoryL3(null);
+											log.info("Disciplinary Action 3 - disabled by basic category");
+										}
 										}
 									} 
-								} else if(disciplinaryAction.isBumiputeraCancel()){	 
-									if (pmCategoryL3.getBumiPercentage() > 50 ){ 
+								else if(disciplinaryAction.isBumiputeraCancel()){	 
+									if (getManagedBean().getSelectedCategoryL3().getBumiPercentage() > 50 ){ 
 										getManagedBean().setSelectedCategoryL3(null);
-											log.info("Disciplinary Action - disabled by bumiputera"); 
+											log.info("Disciplinary Action 4 - disabled by bumiputera"); 
 									} 
 								} else { 
-									if(pmCategoryL3.getCategoryL3Code() != null
-											&& pmCategoryL3.getCategoryL3Id() == 347){
+									if(getManagedBean().getSelectedCategoryL3() != null
+											&& getManagedBean().getSelectedCategoryL3().getCategoryL3Id() == 347){
 										log.info("MTO Code exist"); 
 										if( checkBasic != 3 ){
 
 											getManagedBean().setSelectedCategoryL3(null);
-											log.info("Disciplinary Action - disabled by basic category");
+											log.info("Disciplinary Action  5 - disabled by basic category");
 										}
 									} 
 								}
 								selectItems.add(item);
-							}
+//							}
+								//26238: Disciplinary Action - end - 32872
 							checkBasic = 0;
 						} else {  
 							//26238: Disciplinary Action - start - 28344 Cancel Bumiputera Status (Dropdown stuck at Sub Category Division)
