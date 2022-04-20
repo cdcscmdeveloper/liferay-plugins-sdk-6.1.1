@@ -90,16 +90,12 @@
 					action="#{svoSiteVisitBackingBean.editMachine(svMachine)}" process="@this">
 					<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}"/>
 				</p:commandLink>
-				<!-- #24964 -->
-				<p:graphicImage id="icon_alert" style="vertical-align:top"
-					value="/css/images/design/icon_alert.png" 
-					rendered="#{svMachine != null and svoSiteVisitBackingBean.isSVOSmSvMachineDifferent(svMachine)}"/>
 			</p:column>
 		</p:dataTable>
 	</p:panel>
 	
 	
-	<p:dialog id="machineDlg" header="#{lbl['lbl.sm.manufacturing.equipmnt.mchne']}" widgetVar="macDlg" 
+	<p:dialog id="machineDlg" header="#{lbl['lbl.sm.sitevisit.additional.machine']}" widgetVar="macDlg" 
 		modal="true" width="600" dynamic="true">
 		<p:messages id="macDlgMessages" showDetail="true" autoUpdate="#{!empty param['disableMsgAutoUpdateMac']}" closable="true" showSummary="false" />
 		<table>
@@ -116,14 +112,7 @@
 			<tr>	
 				<td><p:outputLabel value="#{lbl['lbl.sm.machine.brand']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:inputText maxlength="50" size="50" label="#{lbl['lbl.sm.machine.brand']}" required="#{!empty param['disableMsgAutoUpdateMac']}" 
-				value="#{svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl.brandName}" />
-					<!-- #24964 -->
-					<ac:smFieldChangeAlertSVO
-						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
-						oriValue="#{svoSiteVisitBackingBean.managedBean.latestSvMachine.smMachineDtl.brandName}" 
-						currValue="#{svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl.brandName}" 
-						alertValue="#{svoSiteVisitBackingBean.managedBean.latestSvMachine.smMachineDtl.brandName}"/>
-				</td>
+				value="#{svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl.brandName}" /></td>
 			</tr>
 			
 			<tr>
@@ -132,12 +121,6 @@
 				required="#{!empty param['disableMsgAutoUpdateMac']}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl.machineFunction}">
 					<f:validateLength maximum="100" />
 				</p:inputTextarea>
-					<!-- #24964 -->
-					<ac:smFieldChangeAlertSVO
-						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
-						oriValue="#{svoSiteVisitBackingBean.managedBean.latestSvMachine.smMachineDtl.machineFunction}" 
-						currValue="#{svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl.machineFunction}" 
-						alertValue="#{svoSiteVisitBackingBean.managedBean.latestSvMachine.smMachineDtl.machineFunction}"/>
 				</td>
 			</tr>
 			
@@ -148,12 +131,6 @@
 					value="#{svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl.qty}">
 						<f:validateLongRange minimum="1" maximum="99999999"></f:validateLongRange>
 					</p:inputText>
-					<!-- #24964 -->
-					<ac:smFieldChangeAlertSVO
-						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
-						oriValue="#{svoSiteVisitBackingBean.managedBean.latestSvMachine.smMachineDtl.qty}" 
-						currValue="#{svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl.qty}" 
-						alertValue="#{svoSiteVisitBackingBean.managedBean.latestSvMachine.smMachineDtl.qty}"/>
 				</td>
 			</tr>
 
@@ -167,12 +144,6 @@
 						<p:ajax process="@this" partialSubmit="true" update="@this" />
 						<f:param name="disableMsgAutoUpdate" value="true" />
 					</p:inputText>
-					<!-- #24964 -->
-					<ac:smFieldChangeAlertSVO
-						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
-						oriValue="#{svoSiteVisitBackingBean.managedBean.latestSvMachine.smMachineDtl.value}" 
-						currValue="#{svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl.value}" 
-						alertValue="#{svoSiteVisitBackingBean.managedBean.latestSvMachine.smMachineDtl.value}"/>
 				</td>
 			</tr>
 			
@@ -181,26 +152,12 @@
 				<td><p:selectOneMenu id="macPurchaseMethodId" label="#{lbl['lbl.sm.machine.purMthd']}"  rendered="#{svoSiteVisitBackingBean.managedBean.selectedSvMachine != null}"
 					value="#{svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl.purchaseMethod}" required="#{!empty param['disableMsgAutoUpdateMac']}">
 						<f:selectItems value="#{svoSiteVisitBackingBean.getDropdownCodeValues(ParameterTypeConst.purchasingMethod)}" />
-					</p:selectOneMenu>
-					<!-- #24964 -->
-					<ac:smFieldChangeAlertSVO
-						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
-						oriValue="#{svoSiteVisitBackingBean.managedBean.latestSvMachine.smMachineDtl.purchaseMethod}" 
-						currValue="#{svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl.purchaseMethod}" 
-						alertValue="#{svoSiteVisitBackingBean.getParameterDesc(ParameterTypeConst.purchasingMethod,svoSiteVisitBackingBean.managedBean.latestSvMachine.smMachineDtl.purchaseMethod)}"/>
-					</td>
+					</p:selectOneMenu></td>
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.machine.guarnName']}" /></td>
-				<td><p:inputText maxlength="50" size="50" label="#{lbl['lbl.sm.machine.guarnName']}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl.guarantorName}" />
-					<!-- #24964 -->
-					<ac:smFieldChangeAlertSVO
-						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl.guarantorName and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
-						oriValue="#{svoSiteVisitBackingBean.managedBean.latestSvMachine.smMachineDtl.guarantorName}" 
-						currValue="#{svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl.guarantorName}" 
-						alertValue="#{svoSiteVisitBackingBean.managedBean.latestSvMachine.smMachineDtl.guarantorName}"/>
-				</td>
+				<td><p:inputText maxlength="50" size="50" label="#{lbl['lbl.sm.machine.guarnName']}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl.guarantorName}" /></td>
 			</tr>
 			
 			<tr>
@@ -208,14 +165,7 @@
 				<td><p:selectOneMenu label="#{lbl['lbl.sm.machine.purchase.year']}"  rendered="#{svoSiteVisitBackingBean.managedBean.selectedSvMachine != null}"
 					value="#{svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl.purchaseYear}" required="#{!empty param['disableMsgAutoUpdateMac']}">
 					<f:selectItems value="#{svoSiteVisitBackingBean.getYearDropDown()}" />
-				</p:selectOneMenu>
-					<!-- #24964 -->
-					<ac:smFieldChangeAlertSVO
-						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
-						oriValue="#{svoSiteVisitBackingBean.managedBean.latestSvMachine.smMachineDtl.purchaseYear}" 
-						currValue="#{svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl.purchaseYear}" 
-						alertValue="#{svoSiteVisitBackingBean.managedBean.latestSvMachine.smMachineDtl.purchaseYear}"/>
-				</td>
+				</p:selectOneMenu></td>
 			</tr>
 		</table>
 		

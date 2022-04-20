@@ -3,7 +3,6 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
 	<p:panel header="#{lbl['lbl.sm.financial']}" toggleable="true">
@@ -34,11 +33,6 @@
 	</p:panel>
 
 	<p:panel header="#{lbl['lbl.sm.bankDtls.bankDiaHdr']}" toggleable="true">
-		<!-- #24964 - START -->
-		<c:if test="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO ne null}">
-			#{svoSiteVisitBackingBean.mapSmSvBankSVOWithPO(svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvBankInfos)}
-		</c:if>
-		<!-- #24964 - END -->
 		<p:dataTable var="bankInfo"  rowIndexVar="index" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvBankInfos}" 
 		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 		
@@ -89,13 +83,6 @@
 				<f:facet name="header">#{lbl['lbl.sm.verifyLbl']}</f:facet>
 				<div align="center">
 				<p:selectBooleanCheckbox value="#{bankInfo.valid}" disabled="#{viewFlag}"></p:selectBooleanCheckbox>
-				<!-- #24964 - START -->
-				<ac:smFieldChangeAlertSVO 
-					isShow="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO ne null}"
-					oriValue="#{bankInfo.svoSmSvBankInfo.valid}" 
-					currValue="#{bankInfo.valid}"
-					alertValue="#{bankInfo.svoSmSvBankInfo.valid}" />
-				<!-- #24964 - END -->
 				</div>
 			</p:column>
 			
@@ -103,13 +90,6 @@
 				<p:inputTextarea rows="5" cols="35" autoResize="false"  maxlength="500" value="#{bankInfo.remark}" disabled="#{viewFlag}" label="#{lbl['lbl.sm.remark']}">
 					<f:validateLength maximum="500" />
 				</p:inputTextarea>
-				<!-- #24964 - START -->
-				<ac:smFieldChangeAlertSVO 
-					isShow="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO ne null}"
-					oriValue="#{bankInfo.svoSmSvBankInfo.remark}" 
-					currValue="#{bankInfo.remark}" 
-					alertValue="#{bankInfo.svoSmSvBankInfo.remark}"  />
-				<!-- #24964 - END -->
 			</p:column>
 		</p:dataTable>
 	</p:panel>
@@ -120,11 +100,6 @@
 
 
 	<p:panel header="#{lbl['lbl.sm.check.list.header']}" toggleable="true">
-		<!-- #24964 - START -->
-		<c:if test="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO ne null}">
-			#{svoSiteVisitBackingBean.mapfinLsItemSVOWithPO(svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvFinChecklists)}
-		</c:if>
-		<!-- #24964 - END -->
 		<p:dataTable var="finLsItem" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvFinChecklists}"
 			rowIndexVar="rowIndex">
@@ -137,13 +112,6 @@
 				<div align="center">
 				<p:selectBooleanCheckbox value="#{finLsItem.valid}" disabled="#{viewFlag}">
 				</p:selectBooleanCheckbox>
-				<!-- #24964 - START -->
-				<ac:smFieldChangeAlertSVO 
-					isShow="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO ne null}"
-					oriValue="#{finLsItem.svoSmSvFinChecklist.valid}" 
-					currValue="#{finLsItem.valid}" 
-					alertValue="#{finLsItem.svoSmSvFinChecklist.valid}"  />
-				<!-- #24964 - END -->
 				</div>
 			</p:column>
 
@@ -152,13 +120,6 @@
 					value="#{finLsItem.remark}" label="#{lbl['lbl.sm.remark']}">
 					<f:validateLength maximum="500" />
 				</p:inputTextarea>
-				<!-- #24964 - START -->
-				<ac:smFieldChangeAlertSVO 
-					isShow="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO ne null}"
-					oriValue="#{finLsItem.svoSmSvFinChecklist.remark}" 
-					currValue="#{finLsItem.remark}" 
-					alertValue="#{finLsItem.svoSmSvFinChecklist.remark}"  />
-				<!-- #24964 - END -->
 			</p:column>
 		</p:dataTable>
 	</p:panel>

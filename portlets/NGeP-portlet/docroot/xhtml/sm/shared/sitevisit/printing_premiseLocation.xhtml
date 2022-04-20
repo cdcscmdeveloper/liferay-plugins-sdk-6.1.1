@@ -4,8 +4,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc">
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
 	<p:panel id="pnlPremiseLocation" header="#{lbl['lbl.sm.sitevisit.premiselocation']}" toggleable="true">
 
@@ -47,23 +46,11 @@
 			<td class="tdTitle" valign="top"><p:outputLabel value="#{lbl['lbl.sm.sitevisit.printing.premiseloc.docs']}" /></td>
 			<td class="tdContent">
 			<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.document}" />
-			<!-- #24964 -->
-			<ac:smFieldChangeAlertSVO
-				isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
-				oriValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvTemplate.smSvFacility.document}" 
-				currValue="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.document}" 
-				alertValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvTemplate.smSvFacility.document}"/>
 			</td>
 			
 			<td class="tdTitle" valign="top"><p:outputLabel value="#{lbl['lbl.sm.sitevisit.printing.premiseloc.aggrmnt.lttr']}" /></td>
 			<td class="tdContent">
 			<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.agreementLetter}" />
-			<!-- #24964 -->
-			<ac:smFieldChangeAlertSVO
-				isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
-				oriValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvTemplate.smSvFacility.agreementLetter}" 
-				currValue="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.agreementLetter}" 
-				alertValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvTemplate.smSvFacility.agreementLetter}"/>
 			</td>
 		</tr>
 	</table>
