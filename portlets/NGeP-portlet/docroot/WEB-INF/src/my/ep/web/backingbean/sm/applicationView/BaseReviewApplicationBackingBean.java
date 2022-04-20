@@ -598,7 +598,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		this.getManagedBean().getPersonnelMembers().clear();
 		BigDecimal sum = new BigDecimal(0);
 		for(SmPersonnel personnel:this.getManagedBean().getSmAppl().getSmPersonnels()){
-			BigDecimal shareAmt = personnel.getShareAmt();
+			BigDecimal shareAmtSsm = personnel.getShareAmtSsm();
 				if(personnel.getDesignation() != null){
 					String designation = populateDesignationSSM(personnel.getDesignation());
 					personnel.setDesignation(designation);
@@ -607,8 +607,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				this.getManagedBean().getPersonnelDirectorManager().add(personnel);	
 				}
 				if(personnel.isEquityOwner()){
-					if(shareAmt != null && !(personnel.getShareAmt() == null)){
-						sum =  sum.add(shareAmt);
+					if(shareAmtSsm != null && !(personnel.getShareAmtSsm() == null)){
+						sum =  sum.add(shareAmtSsm);
 						getManagedBean().setTotalShare(sum);
 						
 					}
@@ -1009,7 +1009,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						&& my.ep.constant.pm.ParameterConst.CATEGORY_TYPE_MANUFACTURING
 							.equals(cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode())) {
 					for (SmManufacturingDtl manuFacDtl : getManagedBean().getSmAppl().getSmManufacturingDtls()) { // filter manufacture not imposed DA
-				if (manuFacDtl.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
+						if (manuFacDtl.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
 							if(activeManufacturingDtls.size() > 0){
 								for (SmManufacturingDtl manuFacDtlAct : activeManufacturingDtls) {
 									if (!manuFacDtl.equals(manuFacDtlAct)) {
@@ -1017,9 +1017,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 									} 
 								}
 							} else {
-					activeManufacturingDtls.add(manuFacDtl);
-				}
-			}
+								activeManufacturingDtls.add(manuFacDtl);
+							}
+						}
 					}
 					// #32809 - end
 				}
@@ -4267,7 +4267,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 								catCode = arr[3].toString() + arr[4].toString() + arr[5].toString() ;
 								catVo.setCategoryCode(catCode);	
 								catVoList.add(catVo);
-							}						
+							}	
+							
 							this.getManagedBean().setCategoryCodeList(catVoList);
 						}
 					}

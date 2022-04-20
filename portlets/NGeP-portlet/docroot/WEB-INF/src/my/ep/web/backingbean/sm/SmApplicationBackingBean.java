@@ -2520,7 +2520,7 @@ public class SmApplicationBackingBean extends
 		this.getManagedBean().getPersonnelDirectorManager().clear();
 		this.getManagedBean().getPersonnelMembers().clear();
 		for(SmPersonnel personnel:this.getManagedBean().getSmAppl().getSmPersonnels()){
-			BigDecimal shareAmtSsm = personnel.getShareAmt();
+			BigDecimal shareAmtSsm = personnel.getShareAmtSsm();
 				if(personnel.getDesignation() != null){
 					String designation = populateDesignationSSM(personnel.getDesignation());
 					personnel.setDesignation(designation);
