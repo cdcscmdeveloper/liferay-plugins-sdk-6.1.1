@@ -6903,15 +6903,19 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 		/**
-		* the method will retrieve the disciplinary action info from supplier module.
-		* If supplier type of punishment is “Suspend Registration” or “Cancel Registration” 
-		* or “Blacklist Owner / Director of Company” or “Cancel of Bumiputera Status” 
-		* or “Cancel of Manufacturer Status”, this Amendment With Supplemental process not able to proceed
+		 * the method will retrieve the disciplinary action info from supplier module.
+		 * If supplier type of punishment is “Suspend Registration” or “Cancel Registration” 
+		 * or “Blacklist Owner / Director of Company” or “Cancel of Bumiputera Status” 
+		 * or “Cancel of Manufacturer Status”, this Amendment With Supplemental process not able to proceed
+		 * @throws ParseException 
 		**/
-		private void retrieveDisciplinaryAction() {
+		private void retrieveDisciplinaryAction() throws ParseException { //#32712
 			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
-			Date today= new Date();
-
+			//#32712 start
+//			Date today= new Date();
+			SimpleDateFormat dateFormat= new SimpleDateFormat("dd/MMM/yyyy");
+			//#32712 end
+			
 			if(currSupp != null){
 				this.getManagedBean().setDisciplinaryAction(false);
 				List<SmDisciplinaryAction> resultList = null;
@@ -6922,7 +6926,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				
 				if (resultList != null && CollectionUtils.isNotEmpty(resultList)){
 					for(SmDisciplinaryAction disciplinaryAction: resultList){
-						if(!disciplinaryAction.getEndDate().before(today)){
+						if(!dateFormat.parse(dateFormat.format(new Date())).after(dateFormat.parse(dateFormat.format(disciplinaryAction.getEndDate())))){ //#32712
 							if(disciplinaryAction.isSuspendRegistration() || disciplinaryAction.isCancelRegistration() ||
 									disciplinaryAction.isBlacklistOwner() || disciplinaryAction.isBumiputeraCancel()){
 								getManagedBean().setDisciplinaryActionNotification(false);
