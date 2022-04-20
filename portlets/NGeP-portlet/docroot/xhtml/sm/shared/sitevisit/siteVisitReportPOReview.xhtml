@@ -5,7 +5,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	<ui:param name="viewFlag" value="false" />
+	<ui:param name="viewFlag" value="true" />
 	
 	<p:tabMenu activeIndex="#{svoSiteVisitBackingBean.managedBean.activeIndex}" id="tabIndex" update="outPnlSiteVisitReport">
 				<p:menuitem value="#{lbl['lbl.sm.svo.sitevisit.info']}" update="outPnlSiteVisitReport,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(0,null)}" />
@@ -19,13 +19,11 @@
 		<p:menuitem value="#{lbl['lbl.sm.sitevisit.section.d']}" update="outPnlSiteVisitReport,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(3,null)}" />
 		<p:menuitem value="#{lbl['lbl.sm.officeloc']}"  update="outPnlSiteVisitReport,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(4,null)}" />
 		<p:menuitem value="#{lbl['lbl.sm.sitevist.report.submission']}" 
-		update="outPnlSiteVisitReport,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(svoSiteVisitBackingBean.managedBean.lastIndex,svoSiteVisitBackingBean.managedBean.selectedSvTemplate)}" />
+		update="outPnlSiteVisitReport,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(svoSiteVisitBackingBean.managedBean.lastIndex,null)}" />
 	</p:tabMenu>
 	
 	<p:outputPanel id="outPnlSiteVisitReport">
-		<p:messages id="messages1" showDetail="true" escape="false"
-				autoUpdate="#{backingBean.managedBean.showParentMsg}"
-				closable="true" showSummary="false" />
+		
 		<ui:param name="template"
 			value="#{svoSiteVisitBackingBean.managedBean.smSvTask.pmCategoryL3.categoryTypeCode.parameterCode}" />
 		<c:if test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 0}">
@@ -95,10 +93,6 @@
 			test="#{svoSiteVisitBackingBean.managedBean.activeIndex == svoSiteVisitBackingBean.managedBean.lastIndex}">
 				<ui:include src="/xhtml/sm/shared/sitevisit/view_uploadedSiteVisitReport.xhtml" />
 				<ui:include src="/xhtml/sm/shared/sitevisit/recommendation.xhtml" />
-		</c:if>	
-		
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.close']}" action="#{svoSiteVisitBackingBean.saveSiteVisitReportByPO}" />
-		</div>	
+		</c:if>
 	</p:outputPanel>
 </ui:composition>
