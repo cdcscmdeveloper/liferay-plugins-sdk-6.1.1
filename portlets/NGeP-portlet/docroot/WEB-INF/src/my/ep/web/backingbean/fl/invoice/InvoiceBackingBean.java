@@ -1366,7 +1366,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				}			
 			
 				if(this.getManagedBean().getInvoice().getAccountNo().equalsIgnoreCase(getManagedBean().getAccountNo())){
-					this.getManagedBean().getInvoice().setAccountNo(this.getManagedBean().getInvoice().getPaymentBank().getFinancialOrgId()+" "+this.getManagedBean().getInvoice().getAccountNo());
+					this.getManagedBean().getInvoice().setAccountNo(this.getManagedBean().getInvoice().getPaymentBank().getFinancialOrgId()+"|"+this.getManagedBean().getInvoice().getAccountNo());
 				}
 			}
 			//32967-End
@@ -1380,9 +1380,9 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						if (obj.getPmFinancialOrg() != null)
 							account = account + "  " + obj.getPmFinancialOrg().getFinOrgName();
 						//32967-Start
-						populateBankAccountList.add(new SelectItem(obj.getPmFinancialOrg().getFinancialOrgId()+" "+ obj.getAccountNo(), account));
-						if(!getManagedBean().getSupplierBankAccountMap().containsKey(obj.getPmFinancialOrg().getFinancialOrgId()+" "+ obj.getAccountNo())) {
-							getManagedBean().getSupplierBankAccountMap().put(obj.getPmFinancialOrg().getFinancialOrgId()+" "+ obj.getAccountNo(), obj);
+						populateBankAccountList.add(new SelectItem(obj.getPmFinancialOrg().getFinancialOrgId()+"|"+ obj.getAccountNo(), account));
+						if(!getManagedBean().getSupplierBankAccountMap().containsKey(obj.getPmFinancialOrg().getFinancialOrgId()+"|"+ obj.getAccountNo())) {
+							getManagedBean().getSupplierBankAccountMap().put(obj.getPmFinancialOrg().getFinancialOrgId()+"|"+ obj.getAccountNo(), obj);
 						//32967-End
 						}
 					}
@@ -1398,9 +1398,9 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						if (obj.getPmFinancialOrg() != null)
 							account = account + "  " + obj.getPmFinancialOrg().getFinOrgName();
 						//32967-Start
-						populateBankAccountList.add(new SelectItem(obj.getPmFinancialOrg().getFinancialOrgId()+" "+ obj.getAccountNo(), account));
-						if(!getManagedBean().getSupplierBankAccountMap().containsKey(obj.getPmFinancialOrg().getFinancialOrgId()+" "+ obj.getAccountNo())) {
-							getManagedBean().getSupplierBankAccountMap().put(obj.getPmFinancialOrg().getFinancialOrgId()+" "+ obj.getAccountNo(), obj);
+						populateBankAccountList.add(new SelectItem(obj.getPmFinancialOrg().getFinancialOrgId()+"|"+ obj.getAccountNo(), account));
+						if(!getManagedBean().getSupplierBankAccountMap().containsKey(obj.getPmFinancialOrg().getFinancialOrgId()+"|"+ obj.getAccountNo())) {
+							getManagedBean().getSupplierBankAccountMap().put(obj.getPmFinancialOrg().getFinancialOrgId()+"|"+ obj.getAccountNo(), obj);
 						//32967-End
 						}
 					}
