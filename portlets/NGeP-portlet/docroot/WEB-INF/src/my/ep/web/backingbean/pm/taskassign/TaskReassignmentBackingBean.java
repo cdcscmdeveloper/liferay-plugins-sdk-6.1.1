@@ -246,6 +246,8 @@ public class TaskReassignmentBackingBean extends
 		//29822 - start
 		this.getManagedBean().setEnableRemoveAllGroupTasksButton(false);
 		this.getManagedBean().setEnableRemoveAllOthersTasksButton(false);
+		this.getManagedBean().setShowRemoveProcessMessageGroup(false);
+		this.getManagedBean().setShowRemoveProcessMessageOther(false);
 		//29822 - end
 	}
 	
@@ -3447,6 +3449,7 @@ public class TaskReassignmentBackingBean extends
 			FacesMessage.SEVERITY_INFO, MessageConst.INFO_780071, null);
 			
 			this.getManagedBean().setEnableRemoveAllGroupTasksButton(false);
+			this.getManagedBean().setShowRemoveProcessMessageGroup(true);
 			
 			log.info("==============dialog is completed closed==============");
 
@@ -3527,6 +3530,7 @@ public class TaskReassignmentBackingBean extends
 					MessageConst.INFO_780071, null);
 			
 			this.getManagedBean().setEnableRemoveAllOthersTasksButton(false);
+			this.getManagedBean().setShowRemoveProcessMessageOther(true);
 
 			log.info("==============dialog is completed closed==============");
 
@@ -4053,12 +4057,17 @@ public class TaskReassignmentBackingBean extends
 		if (hasActivePending != null) {
 			if (hasActivePending.getParamTask().equalsIgnoreCase("GROUP")) {
 				this.getManagedBean().setEnableRemoveAllGroupTasksButton(false);
+				this.getManagedBean().setShowRemoveProcessMessageGroup(true);
 			} else {
 				this.getManagedBean().setEnableRemoveAllOthersTasksButton(false);
+				this.getManagedBean().setShowRemoveProcessMessageOther(true);
 			}
 		} else {
+			//no pending
 			this.getManagedBean().setEnableRemoveAllGroupTasksButton(true);
 			this.getManagedBean().setEnableRemoveAllOthersTasksButton(true);
+			this.getManagedBean().setShowRemoveProcessMessageGroup(false);
+			this.getManagedBean().setShowRemoveProcessMessageOther(false);
 		}
 	}
 	
