@@ -15017,13 +15017,24 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				}
 	}
 	
+	// #32134, #25729 - start
+	private ITemplateSpecSO templateSpecSO() {
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, ITemplateSpecSO.class);
+	}
+	// #32134, #25729 - end
+	
 	private void checkFinancialSpecEstimations(List<ScQtCheckList> financialChecklist,ScQtCheckList qtChecklist,ScQt qt,
 			boolean isSave){
 		log.info("checkFinancialSpecEstimations");
 		int count=0;
-		if(CollectionUtils.isNotEmpty(financialChecklist)){
-			for(ScQtCheckList checklist:financialChecklist){
-				if(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION.equalsIgnoreCase(checklist.getDefinationType().getParameterCode()) && QTStatusConst.TS_COMPLETED.equals(checklist.getPmStatus().getStatusId()) && checklist.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
+
+		if (CollectionUtils.isNotEmpty(financialChecklist)) {
+			for (ScQtCheckList checklist : financialChecklist) {
+				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION.equalsIgnoreCase(checklist
+						.getDefinationType().getParameterCode())
+						&& QTStatusConst.TS_COMPLETED.equals(checklist.getPmStatus().getStatusId())
+						&& checklist.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
 					count++;
 					break;
 				}
@@ -15104,6 +15115,44 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 							new String[] { SourcingConstants.DF_AMOUNT
 								.format(indPriceThreshold) });
 				}
+
+				// #32134, #32275, #25729 - start
+				if (count == 1) {
+					TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
+					reqDTO.setQtId(qt.getQtId());
+
+					TplSpecMaster tplSpecMaster = qtChecklist.getScQtDoc().getTplSpecMaster();
+
+					if (tplSpecMaster != null) {
+						reqDTO.setExcludeSpecMasterId(tplSpecMaster.getSpecMasterId());
+					}
+
+					BigDecimal newTotalSpecEstimatedAmount = templateSpecSO()
+							.retrieveTotalSpecEstimationsByQtIdAndZone(reqDTO).getEstimatedPrices();
+
+					if (newTotalSpecEstimatedAmount == null) {
+						newTotalSpecEstimatedAmount = BigDecimal.valueOf(0);
+					}
+
+					if (tplSpecMaster != null && tplSpecMaster.getTplSpecQuestions() != null) {
+						for (TplSpecQuestion tplSpecQuestion : tplSpecMaster.getTplSpecQuestions()) {
+							for (TplSpecEstimation tplSpecEstimation : tplSpecQuestion.getTplSpecEstimations()) {
+								if (tplSpecEstimation.getEstimatedCost() != null) {
+									newTotalSpecEstimatedAmount = newTotalSpecEstimatedAmount.add(tplSpecEstimation.getEstimatedCost());
+								}
+							}
+						}
+					}
+
+					newTotalSpecEstimatedAmount.setScale(2, BigDecimal.ROUND_UP);
+
+					if (newTotalSpecEstimatedAmount.compareTo(indPriceThreshold) > 0) {
+						throw new EpException(MessageConst.ERROR_760504,
+								new String[] { SourcingConstants.DF_AMOUNT.format(indPriceThreshold) });
+					}
+				}
+				// #32134, #32275, #25729 - end
+
 			}
 		}
 		//#25729 #142 end
