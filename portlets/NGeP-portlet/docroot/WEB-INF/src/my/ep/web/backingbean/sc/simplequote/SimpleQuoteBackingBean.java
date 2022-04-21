@@ -4095,6 +4095,20 @@ public class SimpleQuoteBackingBean extends
 			Date endDate = quote.getEndDate();
 			String message ="";
 
+			 //#32855 - start
+			if (!isQuaterHourFormat(startDate)) {
+				throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+						"lbl.ss.item.detail.start.date", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()) });
+			}
+			
+			if (!isQuaterHourFormat(endDate)) {
+				throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+						"lbl.ss.item.detail.end.date", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()) });
+			}
+			//#32855 - end
+
 			if(getManagedBean().getPidExpiryDate() != null){
 				/*Rule : during preparation of SQ upon select start and end date, error : 
 				the end date not allowed to enter equal or more than PID approval validity period date & time. */
@@ -4163,6 +4177,22 @@ public class SimpleQuoteBackingBean extends
 								.toHours(timeDiff))));
 		return mins;
 	}
+	
+	 //#32855 - start
+	private Boolean isQuaterHourFormat(Date chosenDate){
+		long timeDiff = Math.abs(chosenDate.getTime());
+		String mins = String
+				.format("%d", (TimeUnit.MILLISECONDS
+						.toMinutes(timeDiff) - TimeUnit.HOURS
+						.toMinutes(TimeUnit.MILLISECONDS
+								.toHours(timeDiff))));
+		if (mins.equalsIgnoreCase("0") || mins.equalsIgnoreCase("15") || mins.equalsIgnoreCase("30")
+				|| mins.equalsIgnoreCase("45"))
+			return true;
+		
+		return false;
+	}
+	//#32855 - end
 
 	/*
 	 * public void calcDuration(Integer duration) throws Exception { ScQuote
