@@ -892,7 +892,7 @@ u.underline {
 								<td class="text_family" style="margin-bottom:1px;">.......................................................</td>
 							 </tr
 						      <tr> 
-						      	<td align="center"><span class="text_family_small">(Diisi Oleh Syarikat)</span></td>
+						      	<td align="center"><span class="text_family_medium">(Diisi Oleh Syarikat)</span></td>
 						      </tr>
 						</table>
 					</td>
@@ -908,7 +908,7 @@ u.underline {
 								 <td class="text_family" style="margin-bottom:1px;">.......................................................</td>
 							 </tr
 						      <tr> 
-						      	<td align="center"><span class="text_family_small">(Diisi Oleh Syarikat)</span></td>
+						      	<td align="center"><span class="text_family_medium">(Diisi Oleh Syarikat)</span></td>
 						      </tr>
 						</table>
 					</td>
@@ -954,9 +954,9 @@ u.underline {
 					    <table border="0" cellpadding="0" cellspacing="0" width="100%">
 					      <tr style="margin-bottom:1px;" align="bottom"> 
 						       #if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")
-						       		<td align="bottom" class="dottedBorderRed"><span class="text_family_small" style="text-align:justify;">Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara <i>upfront</i> kepada syarikat dalam dokumen </span></td>
+						       		<td align="bottom" class="dottedBorderRed"><span class="text_family_medium" style="text-align:justify;">Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara <i>upfront</i> kepada syarikat dalam dokumen </span></td>
 						       #else
-						         	<td align="bottom" class="dottedBorderRed"><span class="text_family_small">Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara <i>upfront</i> kepada syarikat dalam dokumen </span></td>
+						         	<td align="bottom" class="dottedBorderRed"><span class="text_family_medium">Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara <i>upfront</i> kepada syarikat dalam dokumen </span></td>
 						       #end 	
 					      </tr>
 					    </table>
@@ -1811,7 +1811,7 @@ u.underline {
 				<td align="right"> <span class="text_family"> <b><i>Lampiran A3</i></b></span></td>
 		  </tr>
 			<tr>
-				<td><span class="text_header_submenu"><u style="text-decoration:underline;">*Skop
+				<td><span class="text_header_submenu"><u style="text-decoration:underline;">*Spesifikasi/Skop
 						Perkhidmatan/Service Level Agreement (SLA) (sekiranya berkaitan)</u></span> <br />
 					<br /></td>
 			</tr>
