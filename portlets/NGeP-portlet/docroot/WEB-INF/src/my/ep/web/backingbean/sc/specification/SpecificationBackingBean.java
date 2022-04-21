@@ -927,6 +927,10 @@ public class SpecificationBackingBean extends
 						.getScQtCheckSt2financeProposalList()) {
 				
 					if (checkList.isScoringReq()) {
+						// #33068 Farid Start
+						ScQtScoreWeightage scoreWeightage = checkList
+								.getQtScoreWeightage();
+						// #33068 Farid End
 						String checklistScoring =  ResourceBundleUtils.getMessage(
 								"lbl.sc.checklist.scoring.completed", 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -936,6 +940,26 @@ public class SpecificationBackingBean extends
 							throw new EpException(MessageConst.ERROR_760267,
 							new String[] { checkList.getTitle(),checklistScoring });
 						}
+						// #33068 Farid Start
+						//Redirect to tab financial scoring based on error msg after failed to submit
+						if (null == scoreWeightage
+								|| null == scoreWeightage.getScore()
+								|| scoreWeightage.getScore().intValue() <= 0) {
+							if (SourcingConstants.FINANCIAL_DOCTYPE
+									.equalsIgnoreCase(checkList.getDocCategory())) { 
+										this.getManagedBean().setActiveIndex(5);
+										if (!this.getManagedBean().isReadOnly()) {
+											checktemplateSpecStatus(this.getManagedBean().getQt());
+											checkFinancialSpecStatus(this.getManagedBean().getQt());
+										}
+										retriveFinancialScoring();
+										
+								throw new EpException(MessageConst.ERROR_760267,
+										new String[] { checkList.getTitle(),
+												checklistScoring });
+							}
+						}
+						// End #33068
 					}
 				}
 		//20210914@haziq - 31658 - End
