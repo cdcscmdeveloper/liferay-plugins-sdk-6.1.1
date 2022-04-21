@@ -299,6 +299,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * 
 	 * @return navigate to acknowledge page.
 	 */
+
 	public String submitAction(String action) throws Exception {
 		IFulfilmentRequestSO iFulfilmentRequestSO = null;
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
@@ -496,7 +497,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				break;
 			}
 		}
-		String gfmasEnable = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.GFMAS_ENABLED);
+		String gfmasEnable="true";
 		if(!gfmasEnable.equalsIgnoreCase("true")){
 			getManagedBean().setEspkb(true);
 		}
@@ -567,6 +568,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}
 		if(deletedItemId.size()>0) {
 			getManagedBean().setItemDeleteButtonShow(true);
+			//11076 start
+			getManagedBean().setDeleteOverallItem(deletedItemId.size());
+			log.info("=====deletedItemId====="+getManagedBean().getDeleteOverallItem());
+			getManagedBean().setDeleteItem(getManagedBean().getOverallTotalItem()-getManagedBean().getDeleteOverallItem());
+			log.info("====GET DELETE ITEM====="+getManagedBean().getDeleteItem());
+			//11076 end
 			List<FlFulfilmentItemAddr> deleteFlItemAddrs = new ArrayList<FlFulfilmentItemAddr>();
 			for (FlFulfilmentItemAddr flItemAddr : getManagedBean().getItemAddrList()) {
 				if(deletedItemId.contains(flItemAddr.getScRequestItem().getRequestNoteItemId())) {
@@ -596,6 +603,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}
 		if(getManagedBean().getSelectedDelAddr()!=null) {
 			populateItemsForSelectedAddress();
+			getManagedBean().setTotalNewItemsAdded(0);//11076
+			getManagedBean().setTotalExistingItem(getManagedBean().getOverallTotalItem());//11076
 		}
 	}
 	
@@ -915,8 +924,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		setSchInfo(schInfo);
 		return schInfo;
 
-	}
-
+	}	
 	
 	/**
 	 * Navigate to CR UI
@@ -943,8 +951,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}
 		
 		List<ScheduleInfo> schInfoo = getSchInfo();
-		log.info("schInfoo is : "+schInfoo);
-		log.info("schInfo is : "+schInfo);
+		//log.info("schInfoo is : "+schInfoo);
+		//log.info("schInfo is : "+schInfo);
 	
 		String nav = "crlist";
 		setNavi(nav);
@@ -991,6 +999,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		FlFulfilmentItemAddr flItemAddr = null;
 		List<FlFulfilmentItemAddr> itemAddrList = new ArrayList<FlFulfilmentItemAddr>();
 		boolean itemExisted=false;
+		boolean itemExceed = false;// 11076
 		String messageId = null;
 		
 		ContractItemReqDTO reqDTO = new ContractItemReqDTO();
@@ -1019,8 +1028,18 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 							MessageUtils.getMessage(messageId, new String[]{itemAddr.getScRequestItem().getItemName()}, 
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				}
+				
 			}
-			if(!itemExisted){
+			// 11076 - start
+			getManagedBean().setUpdateItem(getManagedBean().getOverallTotalItem()+getManagedBean().getSelectedContractedItemList().size());
+			if (getManagedBean().getSelectedContractedItemList().size() > FulfilmentConst.GFMAS_CHARGELINE_LIMIT || getManagedBean().getUpdateItem() > FulfilmentConst.GFMAS_CHARGELINE_LIMIT) {
+				messageId = MessageConst.ERROR_740070;
+				itemExceed = true;
+				throw new EpException(MessageConst.ERROR_740070);
+			}
+				
+			// 11076 - end
+			if(!itemExisted && !itemExceed){
 				flItemAddr = new FlFulfilmentItemAddr();
 				flItemAddr.setPriceType(contractedItem.getPriceType());
 				flItemAddr.setItemType(contractedItem.getItemType());
@@ -1072,6 +1091,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}
 		getManagedBean().getItemAddrList().addAll(itemAddrList);
 		getManagedBean().getShowItemAddrList().addAll(itemAddrList);
+		getManagedBean().setTotalNewItemsAdded(itemAddrList.size());// 11076
 		if(getManagedBean().getShowItemAddrList().size()>0){
 			getManagedBean().setItemDeleteButtonShow(true);
 		}
@@ -1082,8 +1102,168 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().setSelectedContractedItemList(new ArrayList<CtContractItem>());
 		getManagedBean().setItemAutoUpdate(false);
 		getManagedBean().setAutoUpdate(true);
+		getManagedBean().setCalculateTotalExist(getManagedBean().getOverallTotalItem()-getManagedBean().getTotalNewItemsAdded());//11076
+		log.info("=========NEW CALCULATE EXISTING=========" + getManagedBean().getCalculateTotalExist());//11076
+		getManagedBean().setTotalExistingItem(getManagedBean().getCalculateTotalExist());//11076
 	}
+	
+	// 11076 start
+		public void checkAllItem() {
 
+			List<FlFulfilmentItemAddr> itemAddrList = null;
+			FlFulfilmentItemAddr flItemAddr = null;
+			IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
+			List<CtContractItem> contractedItemList = null;
+			boolean itemExisted = false;
+			boolean itemExceed = false;// 11076
+			String messageId = null;
+
+			ContractItemReqDTO reqDTO = new ContractItemReqDTO();
+			ContractItemResDTO resDTO = new ContractItemResDTO();
+			reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
+			//start 11076
+			getManagedBean().setAddAllItem(getManagedBean().getValidateItem()+getManagedBean().getOverallTotalItem());
+			if(getManagedBean().getValidateItem() > FulfilmentConst.GFMAS_CHARGELINE_LIMIT || getManagedBean().getAddAllItem() > FulfilmentConst.GFMAS_CHARGELINE_LIMIT){	
+				messageId = MessageConst.ERROR_740070;					
+				itemExceed = true;									
+				throw new EpException(MessageConst.ERROR_740070);	
+			} //end 11076
+			
+			try {
+				ISearchBean<CtContractItem> searchBean = new SearchBean<CtContractItem>();
+				itemAddrList = new ArrayList<FlFulfilmentItemAddr>();
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("ctContractVer.contractVerId", SearchOperator.OPERATOR_EQUALS.value(),
+								getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId()));
+				if (getManagedBean().getSearchItemCode() != null && getManagedBean().getSearchItemCode() != "") {
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("scRequestItem.cmItem.extensionCode",
+									SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getSearchItemCode(), true));
+					log.info("ItemCode");
+				}
+				if (getManagedBean().getSearchItemName() != null && getManagedBean().getSearchItemName() != "") {
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("scRequestItem.itemName", SearchOperator.OPERATOR_LIKE.value(),
+									getManagedBean().getSearchItemName(), true));
+					log.info("ItemName");
+				}
+				if (getManagedBean().getSearchItemType() != null) {
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("itemType.parameterCode", SearchOperator.OPERATOR_EQUALS.value(),
+									getManagedBean().getSearchItemType()));
+					log.info("ItemType");
+				}
+				// reqDTO.setContractItemSearchBean(searchBean);
+				reqDTO.setContractItemSearchBean(searchBean);
+				contractedItemList = contractItemSO.searchContractItem(reqDTO).getContractItemResultBean().getResultList();
+				log.info("=========contractedItemList=========" + contractedItemList.size());
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			}
+			
+
+			for (CtContractItem contractedItem : contractedItemList) {
+				itemExisted = false;
+				for (FlFulfilmentItemAddr itemAddr : getManagedBean().getItemAddrList()) {
+					if (itemAddr.getScRequestItem().getRequestNoteItemId()
+							.equals(contractedItem.getScRequestItem().getRequestNoteItemId())) {
+						itemExisted = true;
+						flItemAddr = itemAddr;
+						if (getManagedBean().getSelectedDelAddr() != null) {
+							messageId = MessageConst.INFO_745005;
+						} else {
+							messageId = MessageConst.INFO_745006;
+						}
+						FacesContext.getCurrentInstance().addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(messageId,
+										new String[] { itemAddr.getScRequestItem().getItemName() },
+										MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					}
+				}
+
+				if (!itemExisted && !itemExceed) {
+					flItemAddr = new FlFulfilmentItemAddr();
+					flItemAddr.setPriceType(contractedItem.getPriceType());
+					flItemAddr.setItemType(contractedItem.getItemType());
+					flItemAddr.setScRequestItem(contractedItem.getScRequestItem());
+					flItemAddr.setCmItem(contractedItem.getScRequestItem().getCmItem());
+					flItemAddr.setSkuNumber(contractedItem.getSku()); // # redmine
+																		// 16344
+																		// FARID
+					if (contractedItem.getScRequestItem().getCmItem() != null) {
+						flItemAddr.setItemCode(contractedItem.getScRequestItem().getCmItem().getExtensionCode());
+					} else {
+						flItemAddr.setItemCode(contractedItem.getScRequestItem().getTempUnspscCode());
+					}
+					if (flItemAddr.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_STANDARD)) {
+						if (getManagedBean().getFlRequest().getStartDate() != null
+								&& getManagedBean().getFlRequest().getEndDate() != null) {
+							long day = (getManagedBean().getFlRequest().getEndDate().getTime() - getManagedBean()
+									.getFlRequest().getStartDate().getTime())
+									/ MILLIS_PER_DAY;
+							reqDTO.setDeliveryTerm(Long.valueOf(day).intValue());
+						}
+						reqDTO.setItemId(contractedItem.getScRequestItem().getRequestNoteItemId());
+						reqDTO.setOrderedQty(BigDecimal.ZERO);
+						resDTO = contractItemSO.getItemPrice(reqDTO);
+						if (resDTO.getItemPrice().doubleValue() <= 0) {
+							flItemAddr.setUnitPrice(BigDecimal.ZERO);
+							flItemAddr.setGstAmount(BigDecimal.ZERO);
+							flItemAddr.setGstUnitPrice(BigDecimal.ZERO);
+							flItemAddr.setGst(true);// Redmine #20011
+						} else {
+							flItemAddr.setUnitPrice(resDTO.getItemPrice());
+							setGstPrice(flItemAddr, resDTO.getItemPrice().doubleValue());
+							flItemAddr.setGst(true);// Redmine #20011
+						}
+
+					} else {
+						flItemAddr.setUnitPrice(BigDecimal.ZERO);
+						flItemAddr.setGstAmount(BigDecimal.ZERO);
+						flItemAddr.setGstUnitPrice(BigDecimal.ZERO);
+						flItemAddr.setGst(true);// Redmine #20011
+					}
+					flItemAddr.setOrderedQty(BigDecimal.ZERO);
+					flItemAddr.setOrderedAmt(BigDecimal.ZERO);
+					itemAddrList.add(flItemAddr);
+				} else {
+					if (contractedItem.getScRequestItem().getCmItem() != null) {
+						flItemAddr.setItemCode(contractedItem.getScRequestItem().getCmItem().getExtensionCode());
+					} else {
+						flItemAddr.setItemCode(contractedItem.getScRequestItem().getTempUnspscCode());
+					}
+				}
+				flItemAddr.setGst(true);// Redmine #20011
+			}
+			getManagedBean().getItemAddrList().addAll(itemAddrList);
+			getManagedBean().getShowItemAddrList().addAll(itemAddrList);
+			getManagedBean().setTotalNewItemsAdded(itemAddrList.size());
+
+			if (getManagedBean().getShowItemAddrList().size() > 0) {
+				getManagedBean().setItemDeleteButtonShow(true);
+			}
+			sortItems(getManagedBean().getShowItemAddrList());
+			if (getManagedBean().getSelectedDelAddr() != null) {
+				populateItemsForSelectedAddress();
+			}
+			getManagedBean().setSelectedContractedItemList(new ArrayList<CtContractItem>());
+			getManagedBean().setItemAutoUpdate(false);
+			getManagedBean().setAutoUpdate(true);
+		}
+		//11076 end
+		
+		//11076 start
+		public void recalculateItem() {
+				getManagedBean().setTotalExistingItem(getManagedBean().getOverallTotalItem());
+				getManagedBean().setTotalNewItemsAdded(0);
+			}
+		// 11076 end
+		
 	/**
 	 * renew session. Retrieve fulfilment request object and set it into managedBean.
 	 * 
@@ -1524,7 +1704,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().setMinistryProfileId(retrieveMinistryOrgProfile(
 				getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId()).getOrgProfileId());
 		
-		String gfmasEnable = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.GFMAS_ENABLED);
+		//String gfmasEnable = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.GFMAS_ENABLED);
+		String gfmasEnable="true";
 		if(!gfmasEnable.equalsIgnoreCase("true")){
 			getManagedBean().setEspkb(true);
 		}
@@ -1689,6 +1870,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		if(isAddAddress){
 			getManagedBean().getSelectedDelAddr().setAddAddress(false);
 		}
+		//11076
+		log.info("=======Populate Item======= : " + itemsList.size());// 11076
+		getManagedBean().setOverallTotalItem(itemsList.size());// 11076
+		
 	}
 	
 	/**
@@ -2848,6 +3033,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			initializeApproverGroup();
 		}
 		if(selectedTabIndex==1){
+			recalculateItem();//11076
 			if(!getManagedBean().isFlRequestLink()){
 				validatePreparedOrgAndAgencies();
 				checkContractValidity(getManagedBean().getFlRequest());
@@ -4344,6 +4530,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("itemType.parameterCode",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchItemType()));
 			}
 			reqDTO.setContractItemSearchBean(searchBean);
+			
+			//11076 start
+			int contractedItemList = 0;
+			contractedItemList = contractItemSO.searchContractItem(reqDTO).getContractItemResultBean().getTotalRecord();
+			log.info("========PAGE LISTENER ITEM==========="+contractedItemList);
+			getManagedBean().setValidateItem(contractedItemList);
+			//11076 end
+			
 			resDTO = contractItemSO.searchContractItem(reqDTO);
 
 			return resDTO.getContractItemResultBean();
@@ -4479,8 +4673,11 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				if(getManagedBean().getSelectedDelAddr()!=null) {
 					populateItemsForSelectedAddress();
 				}
-			}
-		}
+			} 
+			getManagedBean().setTotalExistingItem(itemAddrList.size());// 11076
+			log.info("==========logInfo======== ITEM ADDR LIST" + itemAddrList.size());//11076
+			
+		} 
 	}
 
 	/**
