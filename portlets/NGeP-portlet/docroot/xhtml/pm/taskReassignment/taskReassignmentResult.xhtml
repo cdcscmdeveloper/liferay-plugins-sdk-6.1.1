@@ -349,17 +349,19 @@
 			width="400" height="100"
 			title="#{lbl['lbl.msg.confirm.delete.header']}"
 			content="#{lbl['lbl.msg.confirm.deleteallgrouptask']}" 
-			update=":form:dtGroupTaskAssignResult,:form:deleteGroupTasks,:form:dtOthersTaskAssignResult,@([id$=deleteGroupTasks])" />
+			update=":form:dtGroupTaskAssignResult,:form:deleteGroupTasks,
+			:form:dtOthersTaskAssignResult,:form:pGroupTaskAssignResult,@([id$=deleteGroupTasks])" />
 	<!-- 7465 -->
 			
-	<!-- 7465 -->
+	<!-- 7465, 29822 -->
 	<ac:confirmationPopupMultiple id="allOtherTasksDeleteId"
 			widget="allOtherTasksDeletePopUp"
 			okAction="taskReassignmentBackingBean.removeReassignAllOthersTasks()"
 			width="400" height="100"
 			title="#{lbl['lbl.msg.confirm.delete.header']}"
 			content="#{lbl['lbl.msg.confirm.deleteallothertask']}" 
-			update=":form:dtGroupTaskAssignResult,:form:deleteOthersTasks,:form:dtOthersTaskAssignResult,@([id$=deleteOthersTasks])" />
+			update=":form:dtGroupTaskAssignResult,:form:deleteOthersTasks,:form:dtOthersTaskAssignResult,
+			:form:pOthersTaskAssignResult,@([id$=deleteOthersTasks])" />
 	<!-- 7465, 29822  -->
 	<!-- 7465 end -->	
 	
