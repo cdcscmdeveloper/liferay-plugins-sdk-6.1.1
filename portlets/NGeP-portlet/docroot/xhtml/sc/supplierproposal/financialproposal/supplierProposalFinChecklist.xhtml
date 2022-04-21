@@ -39,9 +39,9 @@
 				<!-- 11042022@syazani - Bug #32756 - Checklist supporting document ticked although there is no value inserted in the checklist - Start -->
 				<p:selectBooleanCheckbox id="allChk"
 					value="#{financeList.submitted and financeList.scQtProposalChecklistAttachment eq null and 
-					financeList.scQtCheckList.definationType.parameterCode eq 'NA' and 
-					(fn:contains(financeList.scQtCheckList.title,'Kunci Kira-Kira Tahunan (Nota - Untuk syarikat ROC, ini mestilah salinan yang telah diaudit)') or 
-					fn:contains(financeList.scQtCheckList.title,'Pengesahan dari Institusi Kewangan ke atas jumlah yang telah dibayar'))  
+					financeList.scQtCheckList.definationType.parameterCode eq 'NA' and financeList.scQtCheckList.pmDocument ne null and
+					(fn:contains(financeList.scQtCheckList.pmDocument.documentId,'316') or 
+					fn:contains(financeList.scQtCheckList.pmDocument.documentId,'310'))  
 					? false : financeList.submitted}"
 					disabled="true"
 					rendered="#{financeList.scQtCheckList.definationType.parameterCode eq 'TS' 
