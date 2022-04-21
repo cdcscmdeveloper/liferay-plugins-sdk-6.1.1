@@ -90,6 +90,12 @@
 		<!-- #29822 - START -->
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.txt.grouptasklist.instruction']}"/>
 		<!-- #29822 - END -->
+		<!-- #29822 - START -->
+		<br/>
+		<h:outputText style="color: red;font-weight: bold;" 
+		rendered="#{taskReassignmentBackingBean.managedBean.showRemoveProcessMessageGroup}" 
+		value="#{lbl['lbl.sm.ta.remove.reassignment']}"/>
+		<!-- #29822 - END -->
 		<h:panelGroup id="groupTaskListID">
 			<p:dataTable value="#{supplierTaskReassignmentBackingBean.groupTaskListDataModel}"
 				lazy="true" rowIndexVar="groupRowIndex" rowKey="#{groupTasks.taskId}" rows="10" id="dtGroupTaskAssignResult"
@@ -177,6 +183,12 @@
 		<div class="clear"></div>
 		<!-- #29822 - START -->
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.txt.otherstasklist.instruction']}"/>
+		<!-- #29822 - END -->
+		<!-- #29822 - START -->
+		<br/>
+		<h:outputText style="color: red;font-weight: bold;" 
+		rendered="#{taskReassignmentBackingBean.managedBean.showRemoveProcessMessageOther}" 
+		value="#{lbl['lbl.sm.ta.remove.reassignment']}"/>
 		<!-- #29822 - END -->
 		<h:panelGroup id="othersTaskListID">
 			<p:dataTable value="#{supplierTaskReassignmentBackingBean.othersTaskListDataModel}"
