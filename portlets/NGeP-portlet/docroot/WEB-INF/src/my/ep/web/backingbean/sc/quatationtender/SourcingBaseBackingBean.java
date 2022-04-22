@@ -5541,6 +5541,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		//25037 - start - note 510
 		public void assertSpecCommitteeMaintenanceInProgress(ScQt qt){
+			assertSpecCommitteeMaintenanceInProgress(qt, true);
+		}
+		public void assertSpecCommitteeMaintenanceInProgress(ScQt qt, boolean validateCommitteeApproval){
 			//specification maintenance cannot be concurrent to spec committee maintenance
 			CommitteReqDTO reqDTO = new CommitteReqDTO();
 			ICommitteSO committeSO = BusinessDelegate.getInstance().getServiceObject(
@@ -5550,7 +5553,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			ScQtCommittee qtCommittee = committeSO.retrieveCommitteByQtIdNCommType(reqDTO).getScQtCommittee();
 			if(qtCommittee!=null){
 				ScCommittee scCommittee = qtCommittee.getScCommittee();
-				if(scCommittee!=null){
+				if(scCommittee!=null && validateCommitteeApproval){
 					Long statusId = scCommittee.getCommitteStatus().getStatusId();
 					statusId = statusId==null ? 0L: statusId;
 					if (!Arrays
