@@ -433,7 +433,7 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable){
 public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean popup){
 	editSpecificationMaintenance(scQt, isEditable, true,false, null);
 	if(popup){
-		this.assertSpecCommitteeMaintenanceInProgress(scQt);
+		this.assertSpecCommitteeMaintenanceInProgress(scQt, false);
 		if(this.getManagedBean().getInactiveSCMemberStr().length()>0){
 			SpecificationBackingBean specBB = new SpecificationBackingBean();
 			specBB.qtChecklistTabChange(10);
