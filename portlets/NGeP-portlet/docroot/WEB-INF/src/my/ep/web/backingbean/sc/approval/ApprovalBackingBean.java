@@ -14,6 +14,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -487,6 +489,7 @@ public class ApprovalBackingBean extends
 				.equalsIgnoreCase(taskName)) {
 
 			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT;
+			paramTypes = Arrays.asList(ParameterConst.QT_COMMITTEES_ORDERED_LIST);//25037 #372 #32615
 			approvalRequests = getApprovalRequests(qtId, approvalCategoryCode,
 					ParameterConst.DOCTYPE_COMMITTE_APROVAL, paramTypes, null);
 
@@ -1500,6 +1503,16 @@ public class ApprovalBackingBean extends
 				committeTabs.add(bean);
 			}
 		}
+		//#25037-start #372 #32615 start
+		Collections.sort(committeTabs, new Comparator<TabBean>() {
+			List<String> sortOrder = Arrays.asList(ParameterConst.QT_COMMITTEES_ORDERED_LIST);
+			public int compare(TabBean o1, TabBean o2) {
+						return Integer.valueOf(
+								sortOrder.indexOf(o1.getTabType())).compareTo(
+								Integer.valueOf(sortOrder.indexOf(o2.getTabType())));
+			}
+		});
+		//#25037-end #372 #32615 end
 		return committeTabs;
 	}
 
