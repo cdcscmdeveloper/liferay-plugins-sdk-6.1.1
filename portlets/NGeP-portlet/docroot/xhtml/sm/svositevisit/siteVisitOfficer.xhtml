@@ -45,17 +45,10 @@
 						</p:column>
 						<p:column>
 							<ui:repeat var="svAOfficer" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvAssistantOfficers}">
-								<p:inputText id="svAOfficerName" value="#{svAOfficer.name}" readonly="#{viewFlag}" size="40" maxlength="50" disabled="#{svoSiteVisitBackingBean.checkUserRole()}" required="true" requiredMessage="#{lbl['lbl.sm.sv.visiting.officer.required']}">
+								<p:inputText id="svAOfficerName" value="#{svAOfficer.name}" readonly="#{viewFlag}" size="40" maxlength="50" disabled="#{viewFlag}" required="true" requiredMessage="#{lbl['lbl.sm.sv.visiting.officer.required']}">
 									<p:ajax event="keyup" update="deleteSvAObtnId" />
 								</p:inputText>
-								<p:commandButton rendered="#{svoSiteVisitBackingBean.checkUserRole() eq false}" value="#{lbl['lbl.btn.delete']}" update="@this" id="deleteSvAObtnId" action="#{svoSiteVisitBackingBean.selectSvAssistantOfficer(svAOfficer)}" disabled="#{svAOfficer.name eq null}"/>
-								<!-- #24964 - start -->
-								<ac:smFieldChangeAlert 
-									isShow="#{svoSiteVisitBackingBean.showEditAssistant(svAOfficer)}"
-									oriValue="#{svAOfficer.nameEnterBySvo}" 
-									currValue="#{svAOfficer.name}" 
-									alertValue="#{svAOfficer.nameEnterBySvo}"/>
-								<!-- #24964 - end -->
+								<p:commandButton rendered="#{!viewFlag}" value="#{lbl['lbl.btn.delete']}" update="@this" id="deleteSvAObtnId" action="#{svoSiteVisitBackingBean.selectSvAssistantOfficer(svAOfficer)}" disabled="#{svAOfficer.name eq null}"/>
 								<br/>
 							</ui:repeat>
 						</p:column>
@@ -66,7 +59,7 @@
 		
 		<p:outputPanel>
 			<div align="right">
-				<p:commandButton rendered="#{svoSiteVisitBackingBean.checkUserRole() eq false}" id="addSvAObtnId" value="#{lbl['lbl.btn.add']}" partialSubmit="true" process="@this,assistingOfficerId"
+				<p:commandButton rendered="#{!viewFlag}" id="addSvAObtnId" value="#{lbl['lbl.btn.add']}" partialSubmit="true" process="@this,assistingOfficerId"
 					action="#{svoSiteVisitBackingBean.addSvAsistantOfficer}" update="assistingOfficerId,@this" />
 			</div>
 		</p:outputPanel> 
