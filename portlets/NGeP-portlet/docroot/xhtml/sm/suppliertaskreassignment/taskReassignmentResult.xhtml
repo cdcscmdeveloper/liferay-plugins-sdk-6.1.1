@@ -90,6 +90,12 @@
 		<!-- #29822 - START -->
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.txt.grouptasklist.instruction']}"/>
 		<!-- #29822 - END -->
+		<!-- #29822 - START -->
+		<br/>
+		<h:outputText style="color: red;font-weight: bold;" 
+		rendered="#{taskReassignmentBackingBean.managedBean.showRemoveProcessMessageGroup}" 
+		value="#{lbl['lbl.sm.ta.remove.reassignment']}"/>
+		<!-- #29822 - END -->
 		<h:panelGroup id="groupTaskListID">
 			<p:dataTable value="#{supplierTaskReassignmentBackingBean.groupTaskListDataModel}"
 				lazy="true" rowIndexVar="groupRowIndex" rowKey="#{groupTasks.taskId}" rows="10" id="dtGroupTaskAssignResult"
@@ -177,6 +183,12 @@
 		<div class="clear"></div>
 		<!-- #29822 - START -->
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.txt.otherstasklist.instruction']}"/>
+		<!-- #29822 - END -->
+		<!-- #29822 - START -->
+		<br/>
+		<h:outputText style="color: red;font-weight: bold;" 
+		rendered="#{taskReassignmentBackingBean.managedBean.showRemoveProcessMessageOther}" 
+		value="#{lbl['lbl.sm.ta.remove.reassignment']}"/>
 		<!-- #29822 - END -->
 		<h:panelGroup id="othersTaskListID">
 			<p:dataTable value="#{supplierTaskReassignmentBackingBean.othersTaskListDataModel}"
@@ -272,7 +284,7 @@
 		width="400" height="100"
 		title="#{lbl['lbl.msg.confirm.delete.header']}"
 		content="#{lbl['lbl.msg.confirm.deleteallgrouptask']}"
-		update=":form:dtGroupTaskAssignResult,:form:deleteGroupTasks,:form:dtOthersTaskAssignResult,@([id$=deleteGroupTasks])" />
+		update=":form:dtGroupTaskAssignResult,:form:deleteGroupTasks,:form:dtOthersTaskAssignResult,:form:pGroupTaskAssignResult,@([id$=deleteGroupTasks])" />
 	
 	<ac:confirmationPopupMultiple id="multipleGroupTasksDeleteId"
 		widget="mutipleGroupTasksDeletePopup"
@@ -288,7 +300,7 @@
 		width="400" height="100"
 		title="#{lbl['lbl.msg.confirm.delete.header']}"
 		content="#{lbl['lbl.msg.confirm.deleteallothertask']}" 
-		update=":form:dtGroupTaskAssignResult,:form:deleteOthersTasks,:form:dtOthersTaskAssignResult,@([id$=deleteOthersTasks])" />
+		update=":form:dtGroupTaskAssignResult,:form:deleteOthersTasks,:form:dtOthersTaskAssignResult,:form:pOthersTaskAssignResult,@([id$=deleteOthersTasks])" />
 			
 	<ac:confirmationPopupMultiple id="multipleOthersTasksDeleteId"
 		widget="multipleOthersTasksDeletePopUp"
