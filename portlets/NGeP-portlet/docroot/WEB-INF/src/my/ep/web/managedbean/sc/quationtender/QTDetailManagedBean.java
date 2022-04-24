@@ -1688,6 +1688,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean isBdSfFlow;
 	// #30451-End.
 	
+	//29464-start
+	private boolean committeeAppointmentMenuTab = true;
+	//29464-end	
+	
 	/**
 	 * Instantiates a new QT detail managed bean.
 	 */
@@ -10668,4 +10672,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.mainTaskNames = mainTaskNames;
 	}
 	//#25037-end
+
+	//29464-start
+	public boolean isCommitteeAppointmentMenuTab() {
+		return committeeAppointmentMenuTab;
+	}
+
+	public void setCommitteeAppointmentMenuTab(boolean committeeAppointmentMenuTab) {
+		this.committeeAppointmentMenuTab = committeeAppointmentMenuTab;
+	}
+	//29464-end
 }
