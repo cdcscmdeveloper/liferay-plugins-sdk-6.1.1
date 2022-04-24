@@ -3927,7 +3927,7 @@ public class SmApplicationBackingBean extends
 					displayBumiRecommendNote();
 					getHqFacility();
 					//#32236 start
-//					setBusinessAndHadApprovedSpecialCatcode();
+					SmApplicationUtil.setBusinessAndHadApprovedSpecialCatcode(getManagedBean());
 					SmApplicationUtil.validateSpecialAndNormalCategoryCapital(getManagedBean());
 					//#32236 end
 					break;
