@@ -1644,7 +1644,6 @@ public class SmApplicationUtil {
 							&& cat.getPmCategoryL3().getHomeOperated() != DbValueConst.RECORD_STATUS_ACTIVE) {
 						// Bug #27188-end
 						managedBean.setAlreadyBusinessSpecialCatcode(true);
-						// #32236 - Start
 						if (index == 1) {
 							bf.append("<br> " + index + "." + " " + cat.getPmCategoryL1().getCategoryL1Code()
 									+ cat.getPmCategoryL2().getCategoryL2Code()
