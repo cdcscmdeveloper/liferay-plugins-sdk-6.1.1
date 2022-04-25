@@ -14,7 +14,14 @@
 	<ui:param name="isCommitteeCloneable" value="#{qTCommitteBackingBean.isCommitteeCloneable()}" />
 	<ui:param name="isCommitteeInfoEditable"
 			value="#{qTCommitteBackingBean.isCommitteeInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode)}" />
-	<ui:param name="isEnablChkBoxes" value="#{qTCommitteBackingBean.isEnableCheckboxes(committe.committeStatus.statusId,committe.committeeType.parameterCode)}" />	
+
+	<!-- 29464 -start- -->
+	<ui:param name="isCommitteeAppointmentMenuTab"
+		value="#{qTDetailBB.managedBean.committeeAppointmentMenuTab}" />
+	<ui:param name="isEnablChkBoxes"
+		value="#{qTCommitteBackingBean.isEnableCheckboxes(committe.committeStatus.statusId,committe.committeeType.parameterCode) and isCommitteeAppointmentMenuTab}" />
+	<!-- 29464 -end- -->
+
 	<p:panel header="#{lbl['lbl.sc.qt.committee.appointment']}" toggleable="true">
 	
 		<c:if test="#{isQTStatusChecklistAndAfter}">
@@ -66,7 +73,10 @@
 		</ui:fragment>
 		
 	</p:panel>
-	<c:if test="#{qTDetailBB.managedBean.committeeAppointmentRemark}">
+
+	<!-- 29464 -start- -->
+	<c:if test="#{qTDetailBB.managedBean.committeeAppointmentRemark and isCommitteeAppointmentMenuTab}">
+	<!-- 29464 -end- -->
 		<ac:scRemarkAndAttachment
 			remarkList="#{qTDetailBB.managedBean.scQtApproval.scQtApprovalRemarks}"
 			attachmentList="#{qTDetailBB.managedBean.scQtApproval.scQtApprovalAttachments}"

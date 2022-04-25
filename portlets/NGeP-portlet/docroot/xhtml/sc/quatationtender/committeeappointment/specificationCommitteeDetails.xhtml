@@ -85,8 +85,12 @@
 					<h:outputText value="#{lbl['lbl.sc.role']}" />
 				</f:facet>
 				<ui:param name="filteredRoles" value="#{approvalBackingBean.managedBean.roleFilterList}"/>
-				<ui:fragment rendered="#{(isCommitteeInfoEditable and qTCommitteBackingBean.isCommitteeRoleEditable(specificationcommittee.memberRole))}">
-					<p:selectOneMenu id="roleid" label="#{lbl['lbl.sc.role']}"
+
+					<!-- 29464 -start- -->
+					<ui:fragment
+						rendered="#{(isCommitteeInfoEditable and qTCommitteBackingBean.isCommitteeRoleEditable(specificationcommittee.memberRole)) and isCommitteeAppointmentMenuTab}">
+						<!-- 29464 -end- -->
+						<p:selectOneMenu id="roleid" label="#{lbl['lbl.sc.role']}"
 							value="#{specificationcommittee.memberRoleId}"
 							style="width: 130px;margin-bottom: 5px;">
 							<p:ajax event="change" partialSubmit="true" process="@this" update="@this, @(.amendButton)"
@@ -99,11 +103,16 @@
 								itemValue="#{role.pmParameter.parameterId}" />
 						</p:selectOneMenu>
 						<p:message id="roleidMsg" for="roleid" display="icon" />
-				</ui:fragment>
-				<ui:fragment rendered="#{!(isCommitteeInfoEditable and qTCommitteBackingBean.isCommitteeRoleEditable(specificationcommittee.memberRole))}">
-					<h:outputText value="#{qTCommitteBackingBean.getParameterDesc(specificationcommittee.memberRole)}" />
-				</ui:fragment>
-			</p:column>
+					</ui:fragment>
+
+					<!-- 29464 -start- -->
+					<ui:fragment
+						rendered="#{!(isCommitteeInfoEditable and qTCommitteBackingBean.isCommitteeRoleEditable(specificationcommittee.memberRole)) or !isCommitteeAppointmentMenuTab}">
+						<!-- 29464 -end- -->
+						<h:outputText
+							value="#{qTCommitteBackingBean.getParameterDesc(specificationcommittee.memberRole)}" />
+					</ui:fragment>
+				</p:column>
 		</p:dataTable>
 		</ui:fragment>
 		<ui:fragment rendered="#{showHistory}">
