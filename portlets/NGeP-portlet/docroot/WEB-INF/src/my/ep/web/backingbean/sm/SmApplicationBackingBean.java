@@ -3687,6 +3687,10 @@ public class SmApplicationBackingBean extends
 					SmApplicationUtil.checkAllowedToApprove(getManagedBean());
 					displayBumiRecommendNote();
 					getHqFacility();
+					//#32236 start
+					SmApplicationUtil.setBusinessAndHadApprovedSpecialCatcode(getManagedBean());
+					SmApplicationUtil.validateSpecialAndNormalCategoryCapital(getManagedBean());
+					//#32236 end
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC:
 					//#30444 --START--  --31072021					
@@ -3736,6 +3740,10 @@ public class SmApplicationBackingBean extends
 					}//#31461-End
 					SmApplicationUtil.checkAllowedToApprove(getManagedBean());
 					displayBumiRecommendNote();
+					//#32236 - start
+					SmApplicationUtil.setBusinessAndHadApprovedSpecialCatcode(getManagedBean());
+					SmApplicationUtil.validateSpecialAndNormalCategoryCapital(getManagedBean());
+					//#32236 - end
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV:
 					log.info("******* This is site visit review page ********");
