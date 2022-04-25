@@ -1595,8 +1595,7 @@ public class SmApplicationUtil {
 			if (index > 1) {
 				throw new EpException(MessageConst.ERROR_722693, new String[] { bf.toString() });
 			}
-		} else if (managedBean.isApproverUser() || managedBean.isPoUser()
-				&& managedBean.getCurrentPageType().equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)) {
+		} else if (managedBean.isApproverUser() || managedBean.isPoUser()) {
 			for (SmSupplierCategory category : managedBean.getSmAppl().getSmSupplierCategories()) {
 				// paid up capital must less than paid-up capital of category
 				// code
@@ -1633,8 +1632,7 @@ public class SmApplicationUtil {
 		int index = 1;
 
 		SmFacility hq = getHq(managedBean);
-		if (managedBean.isApproverUser() || managedBean.isPoUser()
-				&& managedBean.getCurrentPageType().equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)) {
+		if (managedBean.isApproverUser() || managedBean.isPoUser()) {
 			if (hq != null && hq.getFacilityType().equals("H")) {
 				for (SmSupplierCategory cat : managedBean.getSmAppl().getSmSupplierCategories()) {
 					if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
@@ -1663,10 +1661,10 @@ public class SmApplicationUtil {
 				}
 			}
 		}
-		
-		if(index>1){
-			throw new EpException(MessageConst.ERROR_722696, new String[] { bf.toString()});
-		}	
+
+		if (index > 1) {
+			throw new EpException(MessageConst.ERROR_722696, new String[] { bf.toString() });
+		}
 	}
 	
 	/**
