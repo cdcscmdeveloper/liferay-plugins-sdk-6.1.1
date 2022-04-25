@@ -401,14 +401,19 @@ public void switchToOrigManagedBean(){
 	
 }
 
-public String backToQtScreen(){
-	switchToOrigManagedBean();
-	FacesContext fc = FacesContext.getCurrentInstance();
-	fc.getApplication().getNavigationHandler()
-	.handleNavigation(fc, null,
-			QTConstants.MAINTANANCE_PAGE_FULL);
-	return "";
-}
+	public String backToQtScreen() {
+		// 29464 -start-
+		String destPage = this.getManagedBean().getPreviousPage() == null ? QTConstants.MAINTANANCE_PAGE_FULL : this
+				.getManagedBean().getPreviousPage();
+		// 29464 -end-
+
+		switchToOrigManagedBean();
+		
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, destPage); // 29464
+		
+		return "";
+	}
 
 
 public void editSpecificationMaintenanceNewManagedBean(ScQt scQt, boolean isEditable, String previouPageId){
@@ -436,11 +441,18 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable){
  * @param Boolean useTempManagedBean 
  * @param previousPageId - nullable
  */
-public void editSpecificationMaintenance(ScQt scQt,
-		boolean isEditable, 
+	// 29464-start
+	public void editSpecificationMaintenance(ScQt scQt, boolean isEditable, boolean renewSessionObject,
+			boolean useTempManagedBean, String previousPageId) {
+		editSpecificationMaintenance(scQt, isEditable, renewSessionObject, useTempManagedBean, previousPageId, false);
+	}
+	// 29464-end
+	
+	public void editSpecificationMaintenance(ScQt scQt, boolean isEditable,
 		boolean renewSessionObject /*** 25692#95 ***/,
 		boolean useTempManagedBean /*** 25692#95 ***/,
-		String previousPageId /*** 25692#95 ***/){
+		String previousPageId,/*** 25692#95 ***/
+		boolean redirect/* 29464-overload arg */) {
 	
 	QtnTenderSearchBean qtTnderBean=this.getManagedBean().getQtnTenderSearchBean();
 	IPagingDataModel<ScQt> qtdataModel=this.getManagedBean().getSearchQTDataModel();
@@ -574,126 +586,95 @@ public void editSpecificationMaintenance(ScQt scQt,
 		}
 		//#15391 - end
 		
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null,
-						QTConstants.SPECIFICICATON_COMM_PREPARATION);
+		// 29464-start
+		String renderPage = QTConstants.SPECIFICICATON_COMM_PREPARATION;
 		
-	log.debug("end editSpecificationMaintenance");
-}
-
-/**
- * Get status select items by module and doc type for dropdown.
- * 
- *@param parameterType
- *            the parameter type
- * @param searchBean
- *            the search bean instance
- * @return List<PmParameterDesc>
- * 
- */
-/*public SelectItem[] getStatusDropdownValuesSpecCommittee(String moduleCode,
-		String docType) {
-	SelectItem[] items = null;
-	FacesScopes face = new FacesScopes();
-	List<PmStatusDesc> localstatusDescs=new ArrayList<PmStatusDesc>();
-	try {
-		List<PmStatusDesc> statusDescs = StatusHelper.getInstance()
-				.getStatusDescList(moduleCode, docType);
-		for (PmStatusDesc statusDesc : statusDescs) {
-			if(statusDesc.getPmStatus().getStatusId()>=QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT){
-				localstatusDescs.add(statusDesc);
-			}
+		if (redirect) {
+			renderPage = renderPage.concat("?faces-redirect=true");
 		}
-		items = new SelectItem[localstatusDescs.size() + 1];
-		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
-				"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-				face.getUserLocale()));
-		int i = 1;
-		for (PmStatusDesc statusDesc : localstatusDescs) {
-			items[i++] = new SelectItem(statusDesc.getPmStatus()
-					.getStatusId(), statusDesc.getStatusName());
-			}
+		// 29464-end
 		
-	} catch (Exception e) {
-		e.printStackTrace();
-		FacesContext.getCurrentInstance().addMessage(
-				null,
-				new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-						e.getMessage()));
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, renderPage); // 29464
+
+		log.debug("end editSpecificationMaintenance");
 	}
 
-	return items;
-}*/
-
-/**
- * Goto specMaintenance search page.
- * 
- * @return the string
- */
-public String gotoSpecMaintenanceSearchPage(){
-//renewSesionObject();
-return QTConstants.SPEC_MAINTENANCE_SEARCH_PAGE;
-}
-
-private boolean isSpecCommitteeSecretary() {
-	FacesScopes facesScopes = new FacesScopes();
-	return facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value());
-}
-
-/**
- * @return the specMaintenanceDataModel
- */
-public IPagingDataModel<ScQt> getSpecMaintenanceDataModel() {
-	IPagingDataModel<ScQt> searchQTDataModel = getManagedBean()
-			.getSearchQTDataModel();
-	if (searchQTDataModel == null) {
-		searchQTDataModel = new SpecMaintenanceSearchQtDataModel();
-		getManagedBean().setSearchQTDataModel(searchQTDataModel);
+	/**
+	 * Goto specMaintenance search page.
+	 * 
+	 * @return the string
+	 */
+	public String gotoSpecMaintenanceSearchPage() {
+		// renewSesionObject();
+		return QTConstants.SPEC_MAINTENANCE_SEARCH_PAGE;
 	}
-	return searchQTDataModel;
-}
 
-private ScWorkFlowStatus retrieveStatusByTypeAndId(String docType, Long docId) {
-	log.debug("Start retrieveStatusByTypeAndId");
-	IScWorkFlowStatusSO workFlowStatusSO;
-	try {
-		workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
-		ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
-		reqDTO.setDocType(docType);
-		reqDTO.setDocId(docId);
-		
-		return workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
-	} finally {
-		workFlowStatusSO = null;
+	private boolean isSpecCommitteeSecretary() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value());
 	}
-}
 
-public boolean renderIcon(Long currentStatusId) {
-
-	boolean isRenderIcon = false;
-	if (currentStatusId != null) {
-		isRenderIcon = checkStatus(currentStatusId);
+	/**
+	 * @return the specMaintenanceDataModel
+	 */
+	public IPagingDataModel<ScQt> getSpecMaintenanceDataModel() {
+		IPagingDataModel<ScQt> searchQTDataModel = getManagedBean().getSearchQTDataModel();
+		if (searchQTDataModel == null) {
+			searchQTDataModel = new SpecMaintenanceSearchQtDataModel();
+			getManagedBean().setSearchQTDataModel(searchQTDataModel);
+		}
+		return searchQTDataModel;
 	}
-	return isRenderIcon;
-}
 
-private boolean checkStatus(Long statusId){
-	//25037-start
-	if(QTStatusConst.QT_PENDING_PUBLICATION.equals(statusId)){
-		return false;
+	private ScWorkFlowStatus retrieveStatusByTypeAndId(String docType, Long docId) {
+		log.debug("Start retrieveStatusByTypeAndId");
+		IScWorkFlowStatusSO workFlowStatusSO;
+		try {
+			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IScWorkFlowStatusSO.class);
+			ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+			reqDTO.setDocType(docType);
+			reqDTO.setDocId(docId);
+
+			return workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+		} finally {
+			workFlowStatusSO = null;
+		}
 	}
-	//#25037-end
-	return isQTStatusInBetween(statusId,
-			QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT,
-			QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION);
-	
-}
+
+	public boolean renderIcon(Long currentStatusId) {
+
+		boolean isRenderIcon = false;
+		if (currentStatusId != null) {
+			isRenderIcon = checkStatus(currentStatusId);
+		}
+		return isRenderIcon;
+	}
+
+	private boolean checkStatus(Long statusId) {
+		// 25037-start
+		if (QTStatusConst.QT_PENDING_PUBLICATION.equals(statusId)) {
+			return false;
+		}
+		// #25037-end
+		return isQTStatusInBetween(statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT,
+				QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION);
+
+	}
 
 	//#15391 - start
 	public boolean isSpecCommittee() {
 		return QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}	
 	//#15391 - end
+
+	// 29464-start
+	public void redirectToSpecificationMaintenance(ScQt scQt, boolean isEditable, String previouPageId, boolean redirect) {
+		this.switchToTempManagedBean();
+		this.getManagedBean().setQt(scQt);
+		
+		editSpecificationMaintenance(scQt, isEditable, true, true, previouPageId, redirect);
+	}
+	// 29464-end
 
 }
