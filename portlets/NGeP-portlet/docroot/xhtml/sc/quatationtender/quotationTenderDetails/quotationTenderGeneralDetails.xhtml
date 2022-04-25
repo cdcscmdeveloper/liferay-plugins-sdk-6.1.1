@@ -601,16 +601,17 @@
 							<p:message id="fulfilType" for="fulfilId" display="icon" />
 						</c:when>
 						<c:otherwise>
-							<!-- 15391 -start- -->
-							<p:inputText id="fulfilTypeTxt" rendered="#{!specificationBackingBean.managedBean.isGenInfo()}"
+							<!-- 15391 -start- --><!-- 29464 -start- -->
+							<p:inputText id="fulfilTypeTxt" rendered="#{!specificationBackingBean.managedBean.isGenInfo() or isReadOnly}"
 								value="#{createQtBB.getParameterDesc(scQt.fulfilmentType)}"
 								style="width:195px;" disabled="true" />
 							<p:selectOneMenu required="#{empty param['skipvalidation']}"
-								id="fulfilId" rendered="#{specificationBackingBean.managedBean.isGenInfo()}"
+								id="fulfilId" rendered="#{specificationBackingBean.managedBean.isGenInfo() and !isReadOnly}}"
 								disabled="#{scQt.contractType ne null and scQt.contractType.parameterCode eq 'CC'}"
 								label="#{lbl['lbl.sc.fullfillent.type']}"
 								value="#{scQt.fulfilmentType.parameterId}"
 								style="width: 205px;margin-bottom: 5px;">
+							<!-- 29464 -end- -->
 								<f:selectItems
 									value="#{createQtBB.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
 								<p:ajax event="change" process="@this" partialSubmit="true"
@@ -642,18 +643,19 @@
 							<p:message id="completionBo" for="contractBo" display="icon"></p:message>
 						</c:when>
 						<c:otherwise>
-							<!-- 15391 -start- -->
+							<!-- 15391 -start- --><!-- 29464 -start- -->
 							<p:inputText label="#{lbl['lbl.sc.spec.complete.period']}"
-								value="#{scQt.contractDuration}" rendered="#{!specificationBackingBean.managedBean.isGenInfo()}"
+								value="#{scQt.contractDuration}" rendered="#{!specificationBackingBean.managedBean.isGenInfo() or isReadOnly}"
 								style="text-align:right;margin-bottom:5px; width:200px;"
 								required="#{qtStatusChecklistScoring or qtStatusAfterChecklistScoring}"
 								disabled="true">
 							</p:inputText>
 							<p:inputText id="contractBo" maxlength="3"
 								label="#{lbl['lbl.sc.spec.complete.period']}"
-								value="#{scQt.contractDuration}" rendered="#{specificationBackingBean.managedBean.isGenInfo()}"
+								value="#{scQt.contractDuration}" rendered="#{specificationBackingBean.managedBean.isGenInfo() and !isReadOnly}"
 								style="text-align:right;margin-bottom:5px; width:200px;"
 								required="#{qtStatusChecklistScoring or qtStatusAfterChecklistScoring}">
+							<!-- 29464 -end- -->	
 								<p:ajax event="change" process="@this" partialSubmit="true"
 									update="@this" listener="#{createQtBB.ContractPeriodChange()}" />
 							</p:inputText>
