@@ -20712,4 +20712,10 @@ if(null!=allTechnicalChecklist){
 		return !isSpec;
 	}
 	// #29474 - end
+	
+	//bug #28784 - start
+	public boolean enablePresentationDemoType() {
+		return userHasRole(new RoleCode[] { RoleCode.SC_SECRETARY});
+	}
+	//bug #28784 - end
 }
