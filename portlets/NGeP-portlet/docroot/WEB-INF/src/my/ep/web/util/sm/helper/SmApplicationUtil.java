@@ -1665,7 +1665,7 @@ public class SmApplicationUtil {
 		}
 		
 		if(index>1){
-			throw new EpException(MessageConst.ERROR_722695, new String[] { bf.toString()});
+			throw new EpException(MessageConst.ERROR_722696, new String[] { bf.toString()});
 		}	
 	}
 	
