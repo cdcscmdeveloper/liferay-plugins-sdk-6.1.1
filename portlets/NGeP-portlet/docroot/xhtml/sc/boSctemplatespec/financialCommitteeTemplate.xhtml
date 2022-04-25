@@ -94,9 +94,8 @@
 					</tr>
 				</table>
 			</p:panel>
-
-			<ac:templateSpec
-				editable="#{((specificationBackingBean.isQTStatusChecklistScoring() ) or (specificationBackingBean.isQTStatusChecklistScoringRevision()) or isReadOnlyOrSpecMain)}"
+			<ui:remove><!-- 1873 note 74 update editable condition--></ui:remove>
+			<ac:templateSpec editable="#{!specificationBackingBean.managedBean.readOnly or (specificationBackingBean.isMemberChairpersonSpecPreparationTask() and specificationBackingBean.managedBean.readOnly)}"
 				templateSpecBean="#{specificationBackingBean.managedBean.templateSpecBean}"
 				title="#{lbl['lbl.sc.spec.financial.title']}" />
 

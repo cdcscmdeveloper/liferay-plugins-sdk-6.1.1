@@ -20718,4 +20718,14 @@ if(null!=allTechnicalChecklist){
 		return userHasRole(new RoleCode[] { RoleCode.SC_SECRETARY});
 	}
 	//bug #28784 - end
+	
+	//1873 - start - note 74
+	public boolean isMemberChairpersonSpecPreparationTask(){
+		String taskName = this.getManagedBean().getTaskName();
+		if(StringUtils.isEmpty(taskName)) return false;
+		return Arrays.asList(
+				new String[] { SCProcessNameConst.UPDATE_SCORING,
+						SCProcessNameConst.VIEW_SCORING }).contains(taskName);
+	}
+	//1873 - end - note 74
 }
