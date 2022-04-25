@@ -17,7 +17,7 @@
 							value="#{lbl['lbl.sc.qtn.no']}" /></td>
 					<td class="header-info-text">
 						<p:commandLink process="@this" partialSubmit="true" 
-						action="#{qTDetailBB.editQuationTenderDetails(supplierProposalDetailBackingBean.managedBean.qt, false, true, view.viewId)}">
+						action="#{ViewQtDetailsGeneralInfoBB.navigatetoViewQtDetailsGeneralInfo(view.viewId,supplierProposalDetailBackingBean.managedBean.qt,false)}"><ui:remove>bug #33090</ui:remove>
 				<h:outputText value="#{supplierProposalDetailBackingBean.managedBean.qt.qtNo}" escape="false" />
 					</p:commandLink>
 						
