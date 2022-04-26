@@ -24,7 +24,7 @@
 	<ui:param name="amountsShowHide"
 		value="#{qTDetailBB.managedBean.showAndHideAmounts}" />
 	<ui:param name="qtExtensionResponseDueDate"
-		value="#{qTDetailBB.getExtensionResponseDueDate(scQt.qtId, scQt.responsePeriod)}" />
+		value="#{qTDetailBB.getExtensionResponseDueDate(scQt.qtId)}" />
 	<ui:param name="expectTotalIndPriceBelowThreshold"
 		value="#{createQtBB.expectTotalIndPriceBelowThreshold(scQt,'createQt')}" />
 	<ui:param name="isStatusInQTReviseGroupStatus" 
@@ -848,27 +848,17 @@
 				<c:if test="#{qtStatusIsProposalValidPeriodExtApproval}">
 					<tr>
 						<td>
-							<p:outputLabel value="#{lbl['lbl.sc.qt.supplier.accept.response.period']}" /> 
+							<p:outputLabel value="#{lbl['lbl.sc.qt.response.period']}" /> 
 							<p:outputLabel value="*" styleClass="mandatory" />
 						</td>
 						<td>
 							<table>
 								<tr>
 									<td>
-									<p:inputMask id="responsePeriod" mask="9?9999"
-										maxlength="3" placeHolder=""
-										label="#{lbl['lbl.sc.qt.response.period']}" required="#{empty param['skipvalidation']}"
-										value="#{scQt.responsePeriod}"
-										disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FIELD_QT_VALIDITY_PERIOD) or (scQt.procurementMode.parameterCode == ParameterConst.procurementModeQuotation and qTDetailBB.isQTStatusPublished(scQt.qtStatus.statusId)) or (!empty qTDetailBB.managedBean.amendMentBean and !qTDetailBB.managedBean.amendMentBean.brandNew) or isReadOnly or qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION}"
-										style="text-align:right; width:200px;">
-<!-- 										<p:ajax event="blur" process="@this" partialSubmit="true" -->
-<!-- 											update="@this, @(.amendButton)" -->
-<!-- 											listener="#{createQtBB.handleProposalValidityDate}" /> -->
-									</p:inputMask></td>
-									<td><p:message id="responsePeriodMsg"
-										for="responsePeriod" display="icon" /></td>
+										<p:inputText id="responsePeriod" value="#{CommonConstants.DEFAULT_RESPONSE_PERIOD}" style="width:200px;" disabled="true" />
+									</td>
 									<td colspan="2">
-										<ac:iconTooltip value="#{lbl['lbl.sc.qt.response.period.tooltip1']}#{lbl['lbl.sc.qt.response.period.tooltip2']} #{qTDetailBB.retrieveResponsePeriod(ParameterConst.fromValue)} #{lbl['lbl.sc.qt.response.period.tooltip3']} #{qTDetailBB.retrieveResponsePeriod(ParameterConst.toValue)} #{lbl['lbl.sc.qt.response.period.tooltip4']}"/>
+										<ac:iconTooltip value="#{lbl['lbl.sc.qt.response.period.tooltip']}" />
 									</td>
 								</tr>
 							</table>
@@ -877,15 +867,9 @@
 							<p:outputLabel value="#{lbl['lbl.sc.qt.proposal.validity.extension.response.due.date']}" />
 						</td>
 						<td>
-						<c:if test="#{qtExtensionResponseDueDate != null}">
 							<p:inputText value="#{qtExtensionResponseDueDate}" style="width:200px;" disabled="true" >
 								<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 							</p:inputText>
-						</c:if>
-						<c:if test="#{qtExtensionResponseDueDate == null}">
-							<p:inputText value="#{lbl['lbl.sc.no.available']}" style="width:200px;" disabled="true" >
-							</p:inputText>
-						</c:if>
 						</td>
 					</tr>
 					<tr>
