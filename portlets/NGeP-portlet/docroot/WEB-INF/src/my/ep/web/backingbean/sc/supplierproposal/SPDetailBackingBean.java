@@ -130,7 +130,6 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
 //#21695 farid end 2/4/2021														
 import my.ep.type.pm.AddressType;
-import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
@@ -5875,13 +5874,6 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		
 		return false;
 	}
-	
-	
-	/* 27368 - start */
-	public boolean enableQtNoHyperlink(){
-		return userHasRole(new RoleCode[]{RoleCode.DESK_OFFICER, RoleCode.BPK_AUDITOR}); 
-	}
-	/* 27368 - end */
 	
 	//#25089@hatta - start
 		public void onTabChange(TabChangeEvent event){

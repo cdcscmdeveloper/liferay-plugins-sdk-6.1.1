@@ -42,13 +42,14 @@ public class ViewQtDetailsGeneralInfoBackingBean{
 		//qtBackingBean.editQuationTenderDetails(qtBackingBean.getManagedBean().getQt(), true);
 		qtBackingBean.getManagedBean().setViewOriginalUrl(backUrl);
 		qtBackingBean.getManagedBean().setShowAndHideAmounts(amounts);
+		qtBackingBean.getManagedBean().setDemoType(true);
 		}
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication()
 				.getNavigationHandler()
 				.handleNavigation(fc, null,
-						QTConstants.VIEW_QTDETAILS_GENERAL_INFO);
+						QTConstants.SUPPLIER_VIEW_QTDETAILS_GENERAL_INFO);
 	
 	
 	} finally{
