@@ -103,9 +103,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	private static Logger logger = Logger.getLogger(BPMTaskListManagedBean.class);
 	
 	// Refactor: To make sqTimeValidity to read only once - Start.
-	private static final Integer SQ_TIME_VALIDITY = new Integer(0); // ---> ubah kat sini utk upkan server
-	//private static final Integer SQ_TIME_VALIDITY = Integer.valueOf(EpPropertiesUtils.getInstance()
-	//		.getProperty("sqTimeValidity"));
+	private static final Integer SQ_TIME_VALIDITY = Integer.valueOf(EpPropertiesUtils.getInstance()
+			.getProperty("sqTimeValidity"));
 	// Refactor: To make sqTimeValidity to read only once - End.
 	
 	private List<WorklistItemVO> taskList;
@@ -656,7 +655,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 									}
 								}
 								// #9133 - end
-							if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
+								// s1 module
+								if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
 								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 							}
 							if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE)) {
