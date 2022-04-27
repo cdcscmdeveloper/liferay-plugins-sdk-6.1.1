@@ -2120,7 +2120,8 @@ public class QTSupplierQulCriteriaBackingBean extends
 		
 	}
 	// #29732 Start
-	public void onClickHistoryIcon(String catCode, int catCodeLevel,
+	// #30814 Code Impact Fix
+	public void onClickHistoryIcon(String catCode, String catCodeLevel,
 			Long catCodeID) {
 		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate
 				.getInstance().getServiceObject(
@@ -2128,13 +2129,16 @@ public class QTSupplierQulCriteriaBackingBean extends
 						ICategoryCodeSO.class);
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		CategoryCodeResDTO resDTO = new CategoryCodeResDTO();
-		if (catCodeLevel == 1) {
+		// #30814 Code Impact Fix
+		if (catCodeLevel.equals(QTConstants.CATEGORY_L1_CODE)) {
 			reqDTO.setCategoryL1Id(catCodeID);
 			resDTO = categoryCodeSO.retrieveCategoryL1DtlById(reqDTO);
-		} else if (catCodeLevel == 2) {
+		}// #30814 Code Impact Fix
+		else if (catCodeLevel.equals(QTConstants.CATEGORY_L2_CODE)) {
 			reqDTO.setCategoryL2Id(catCodeID);
 			resDTO = categoryCodeSO.retrieveCategoryL2DtlById(reqDTO);
-		} else if (catCodeLevel == 3) {
+		}// #30814 Code Impact Fix
+		else if (catCodeLevel.equals(QTConstants.CATEGORY_L3_CODE)) {
 			reqDTO.setCategoryL3Id(catCodeID);
 			resDTO = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO);
 		}
