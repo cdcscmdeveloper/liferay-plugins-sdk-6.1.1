@@ -51,6 +51,7 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.constant.pm.ProfileManagementStatusConst;
+import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.BpmConstants;
 import my.ep.constants.FLProcessNameConst;
@@ -2746,6 +2747,12 @@ public class TaskReassignmentBackingBean extends
 				isSearched = true;
 			}
 
+			//Redmine Bug #32682 - START
+			if(QTStatusConst.SF_PENDING_LOI_PREPARATION.equals(task.getDocStatus().longValue())) {
+				getManagedBean().setCommitteeUpdate(true);
+			}
+			//Redmine Bug #32682 - END
+			
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_USER_MIN_KPTJ_PTJ:
 			//4 - Include User under Ministry, Kumpulan PTJ & PTJ
