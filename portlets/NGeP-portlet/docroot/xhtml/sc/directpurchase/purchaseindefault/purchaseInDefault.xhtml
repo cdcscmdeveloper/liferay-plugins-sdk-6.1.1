@@ -18,7 +18,7 @@
 				<td colspan="3"><p:inputText size="106" id="ctitle"
 						required="true" maxlength="100"
 						label="#{lbl['lbl.sc.direct.purchase.title']}"
-						disabled="#{!isPendingSubmissionStatus}"
+						disabled="#{!isPendingSubmissionStatus and !isPidPendingRevision}"
 						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.title}"
 						style="margin-bottom: 5px;width: 905px;">
 						 <p:ajax event="keyup" />
@@ -210,7 +210,7 @@
 				<td colspan="3"><p:inputText size="106" id="ptitle"
 						required="true" maxlength="100"
 						label="#{lbl['lbl.sc.direct.purchase.title']}"
-						disabled="#{!isPendingSubmissionStatus}"
+						disabled="#{!isPendingSubmissionStatus and !isPidPendingRevision}"
 						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.title}"
 						style="margin-bottom: 5px; width: 860px;">
 						<p:ajax event="keyup" />
@@ -374,7 +374,7 @@
 				value="#{lbl['lbl.sc.purchase.in.default.req.details']}" />
 		</f:facet>
 
-		<h:outputText styleClass="instruction" rendered="#{isPendingSubmissionStatus}"
+		<h:outputText styleClass="instruction" rendered="#{isPendingSubmissionStatus or isPidPendingRevision}"
 			value="#{lbl['lbl.sc.pid.reason.instruction']}">
 		</h:outputText>
 		<h:panelGroup>
@@ -401,7 +401,7 @@
 					<TABLE><TR> <TD> <h:panelGroup rendered="#{purchaseInDefaultBackingBean.managedBean.isContractTypeAsMinistry()}">
 							<ac:lov id="ctJustLovId" lovId="CT_PID_REASON"
 								label="#{lbl['lbl.sc.purchase.in.default.just']}"
-								disabled="#{!isPendingSubmissionStatus}"
+								disabled="#{!isPendingSubmissionStatus and !isPidPendingRevision}"
 								postUpdateListener="purchaseInDefaultBackingBean.justificationTypeEvent(purchaseInDefaultBackingBean.managedBean.ctReason.pmReason, purchaseInDefaultBackingBean.managedBean.ctReason.reasonDesc)"
 								headerText="#{lbl['lbl.sc.purchase.in.default.just']}"
 								selectionMode="single"
@@ -415,7 +415,7 @@
 						<h:panelGroup rendered="#{!purchaseInDefaultBackingBean.managedBean.isContractTypeAsMinistry()}">
 							<ac:lov id="panelJustLovId" lovId="CT_CIRCULAR_PID_REASON"
 								label="#{lbl['lbl.sc.purchase.in.default.just']}"
-								disabled="#{!isPendingSubmissionStatus}"
+								disabled="#{!isPendingSubmissionStatus and !isPidPendingRevision}"
 								postUpdateListener="purchaseInDefaultBackingBean.justificationTypeEvent(purchaseInDefaultBackingBean.managedBean.panelReason.pmReason, purchaseInDefaultBackingBean.managedBean.panelReason.reasonDesc)"
 								headerText="#{lbl['lbl.sc.purchase.in.default.just']}"
 								selectionMode="single"
@@ -457,7 +457,7 @@
 							<tr>
 								<td><p:selectOneMenu id="methodId"
 										label="#{lbl['lbl.sc.request.note.header.method']}"
-										disabled="#{!isPendingSubmissionStatus}" required="true"
+										disabled="#{!isPendingSubmissionStatus and !isPidPendingRevision}" required="true"
 										value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.sourceMethod}"
 										style="margin-bottom: 5px;width:340px;">
 										<f:selectItems
@@ -486,7 +486,7 @@
 							label="#{lbl['lbl.sc.purchase.in.default.order.qty']}"
 							value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.quantity}"
 							style="text-align:right;" size="51"
-							disabled="#{!isPendingSubmissionStatus}">
+							disabled="#{!isPendingSubmissionStatus and !isPidPendingRevision}">
 							<p:ajax partialSubmit="true" process="@this" update="@this" />
 						</p:inputText> <p:message id="ordqtyMsg" for="ordqty" display="icon" /></td>
 				</tr>
@@ -519,13 +519,13 @@
 				<td class="TableFieldRight"><ac:scSingleFileUploadButton
 						id="pidUploadBtn" popupWidgetVar="pidUploadDlg"
 						attachment="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.scPurchaseInDefaultAttachment}"
-						readonly="#{!isPendingSubmissionStatus}" 
+						readonly="#{!isPendingSubmissionStatus and !isPidPendingRevision}" 
 						deleteFileUploadListener="purchaseInDefaultBackingBean.deleteUploadFile"/> 
 					 <ac:scSingleFileUploadPopup
 						widgetVar="pidUploadDlg"
 						fileUploadListener="purchaseInDefaultBackingBean.handleFileUpload"
 						update="@([id$=pidUploadBtn])"
-						readonly="#{!isPendingSubmissionStatus}" 
+						readonly="#{!isPendingSubmissionStatus and !isPidPendingRevision}" 
 						autoUpdateValue="#{purchaseInDefaultBackingBean.managedBean.autoUpdate}"/></td>
 			</tr>
 		</table>
@@ -544,7 +544,7 @@
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="appGroupId"
 						style="width:340px; margin-bottom:5px;"
-						disabled="#{!isPendingSubmissionStatus}" required="true"
+						disabled="#{!isPendingSubmissionStatus and !isPidPendingRevision}" required="true"
 						label="#{lbl['lbl.sc.ptj.approver.group']}"
 						value="#{purchaseInDefaultBackingBean.managedBean.userGroupId}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -559,7 +559,7 @@
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="approverDropdown" required="true"
 						label="#{lbl['lbl.sc.approverName']}"
-						disabled="#{!isPendingSubmissionStatus}"
+						disabled="#{!isPendingSubmissionStatus and !isPidPendingRevision}"
 						value="#{purchaseInDefaultBackingBean.managedBean.selectedApproverId}"
 						style="width:340px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
