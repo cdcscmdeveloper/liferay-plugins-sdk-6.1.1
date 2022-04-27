@@ -4122,6 +4122,20 @@ public class SimpleQuoteBackingBean extends
 			Date endDate = quote.getEndDate();
 			String message ="";
 
+			 //#32855 - start
+			if (!isQuaterHourFormat(startDate)) {
+				throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+						"lbl.ss.item.detail.start.date", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()) });
+			}
+			
+			if (!isQuaterHourFormat(endDate)) {
+				throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+						"lbl.ss.item.detail.end.date", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()) });
+			}
+			//#32855 - end
+
 			if(getManagedBean().getPidExpiryDate() != null){
 				/*Rule : during preparation of SQ upon select start and end date, error : 
 				the end date not allowed to enter equal or more than PID approval validity period date & time. */
@@ -4190,6 +4204,22 @@ public class SimpleQuoteBackingBean extends
 								.toHours(timeDiff))));
 		return mins;
 	}
+	
+	 //#32855 - start
+	private Boolean isQuaterHourFormat(Date chosenDate){
+		long timeDiff = Math.abs(chosenDate.getTime());
+		String mins = String
+				.format("%d", (TimeUnit.MILLISECONDS
+						.toMinutes(timeDiff) - TimeUnit.HOURS
+						.toMinutes(TimeUnit.MILLISECONDS
+								.toHours(timeDiff))));
+		if (mins.equalsIgnoreCase("0") || mins.equalsIgnoreCase("15") || mins.equalsIgnoreCase("30")
+				|| mins.equalsIgnoreCase("45"))
+			return true;
+		
+		return false;
+	}
+	//#32855 - end
 
 	/*
 	 * public void calcDuration(Integer duration) throws Exception { ScQuote
@@ -5872,16 +5902,13 @@ public class SimpleQuoteBackingBean extends
 				RequestContext.getCurrentInstance().execute("gpki_dlg.hide();");
 
 			} else {
-				log.info("Bug 30840 - spki SqNo (" + quote.getQuoteNo() + ")");
 				// spki
 				String originalText = prepareOriginalText(Boolean.FALSE); 
 				if (null != pmDigiSign) {
-					log.info("Bug 30840 - start updateSpkiDigiSignData SqNo (" + quote.getQuoteNo() + ")");
 					updateSpkiDigiSignData(pmDigiSign,
 							ParameterConst.DOCTYPE_SIMPLE_QUOTE,
 							quote.getQuoteId(), quote.getQuoteNo(),
 							originalText);
-					log.info("Bug 30840 - end updateSpkiDigiSignData SqNo (" + quote.getQuoteNo() + ")");
 				}
 				
 				byte[] signedData = getManagedBean().getSpkiBackingBean()
@@ -5922,46 +5949,10 @@ public class SimpleQuoteBackingBean extends
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
 			reqDTO.setQuoteSupplier(getManagedBean().getScQuoteSupplier());
 			reqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
-			log.info("Bug 30840 - start saveSupplierResponse SqNo (" + quote.getQuoteNo() + ")");
 			QuoteResDTO quoteResDTO = getQuoteSO().saveSupplierResponse(reqDTO);
-			log.info("Bug 30840 - end saveSupplierResponse SqNo (" + quote.getQuoteNo() + ")");
-			
-			//#30840 - Start
-			if(quote != null){
-				log.info("--- Bug 30840 (" + quote.getQuoteNo() + ") Method: updateSupplierResponse Start ---");
-				
-				if(reqDTO.getOutcome() != null){
-					log.info("Outcome: " + reqDTO.getOutcome() + " SqNo(" + quote.getQuoteNo() + ")");
-				}
-				
-				if(reqDTO.getQuoteSupplier() != null){
-					if(reqDTO.getQuoteSupplier().getSmSupplier() != null){
-						log.info("Supplier ID (" + reqDTO.getQuoteSupplier().getSmSupplier().getSupplierId() + ")" 
-								+ "Supplier Name (" + reqDTO.getQuoteSupplier().getSupplierName() + ") "
-								+ "SqNo (" + quote.getQuoteNo() + ")");
-					}
-					
-					if(reqDTO.getSpecAnswers() != null){
-						int totalItemCount = 0;
-						int itemRespondCount = 0;
-						for(TplSpecAnswer specAnswer : reqDTO.getSpecAnswers()){
-							if(specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom() != BigDecimal.ZERO){
-								itemRespondCount++;
-							}
-							totalItemCount++;
-						}
-						log.info("totalItemCount (" + totalItemCount + ") "
-								+ "itemRespondCount (" + itemRespondCount + ") "
-								+ "SqNo (" + quote.getQuoteNo() + ")");					
-					}
-				}	
-				log.info("--- Bug 30840 (" + quote.getQuoteNo() + ") Method: updateSupplierResponse End ---");
-			}
-			//#30840 - End
 			
 			if (quoteResDTO.isSuccessful()) {				
 				ScQuote scQuote = getManagedBean().getScQuote();
-				log.info("Bug 30840 - isSuccessful SqNo (" + scQuote.getQuoteNo() + ")");
 
 				FacesContext
 						.getCurrentInstance()
@@ -5984,12 +5975,10 @@ public class SimpleQuoteBackingBean extends
 
 				FacesContext fc = FacesContext.getCurrentInstance();
 				if (scQuote.getMultipleQuote().equals(Boolean.TRUE)) {
-					log.info("Bug 30840 - getMultipleQuote SqNo (" + scQuote.getQuoteNo() + ")");
 					retrieveSupplierView(scQuote);
 					fc.getApplication().getNavigationHandler()
 							.handleNavigation(fc, null, "supplerView");
 				} else {
-					log.info("Bug 30840 - ACKNOWLEDGE_PAGE SqNo (" + scQuote.getQuoteNo() + ")");
 					fc.getApplication()
 							.getNavigationHandler()
 							.handleNavigation(fc, null,
