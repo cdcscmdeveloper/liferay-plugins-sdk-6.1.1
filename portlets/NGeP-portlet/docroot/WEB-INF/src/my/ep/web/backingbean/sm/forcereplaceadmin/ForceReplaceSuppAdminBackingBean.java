@@ -1463,9 +1463,11 @@ public class ForceReplaceSuppAdminBackingBean extends
 					checkPendingSoftCertRequest(getManagedBean().getSmSupplier().getSupplierId())
 				)) {
 			getManagedBean().setBypassFlag1(1);
-		} else if (	admin!=null && getManagedBean().getSmSupplier().getSmAppl().getSmCompanyBasic().isWithFederal() &&
+		}
+		//33072 START
+		else if (	admin!=null && getManagedBean().getSmSupplier().getSmAppl().getSmCompanyBasic().isWithFederal() &&
 				getManagedBean().getAccType().equals(SupplierManagementConst.ACC_MOF) && getManagedBean().getOldAdmin().getPmUser().getUserId()!=null && 
-				activeAppl==null && appl==null && (
+				activeAppl==null && getManagedBean().getSmSupplier().getSmAppl().getPmStatus().getStatusId().equals(Long.parseLong(SupplierManagementConst.PM_STATUS_REGISTERED)) &&(
 						checkCatalogueUpload(getManagedBean().getSmSupplier().getSupplierId())==null 
 						|| 
 						checkPendingSoftCertRequest(getManagedBean().getSmSupplier().getSupplierId())	
@@ -1475,10 +1477,15 @@ public class ForceReplaceSuppAdminBackingBean extends
 					&& getManagedBean().getNewAdmin().getIdentificationNo().equalsIgnoreCase(getManagedBean().getReactivateBasic().getNewIdentificationNo())){
 				log.info("MOF ACCOUNT DOES NOT HAVE ACTIVEAPPL VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV");
 				getManagedBean().setBypassFlag1(1);
-			}else{
-				getManagedBean().setBypassFlag1(2);
 			}
-		} else if (	admin!=null && !getManagedBean().getSmSupplier().getSmAppl().getSmCompanyBasic().isWithFederal() &&
+		}else if (	admin!=null && getManagedBean().getSmSupplier().getSmAppl().getSmCompanyBasic().isWithFederal() &&
+				getManagedBean().getAccType().equals(SupplierManagementConst.ACC_MOF) && getManagedBean().getOldAdmin().getPmUser().getUserId()!=null && 
+				activeAppl==null && appl == null
+			) {
+			getManagedBean().setBypassFlag1(1);
+		}  
+		//33072 END
+		else if (	admin!=null && !getManagedBean().getSmSupplier().getSmAppl().getSmCompanyBasic().isWithFederal() &&
 				getManagedBean().getAccType().equals(SupplierManagementConst.ACC_MOF) && getManagedBean().getOldAdmin().getPmUser().getUserId()!=null && 
 				activeAppl==null && appl==null) {
 			if(getManagedBean().getNewAdmin() != null && getManagedBean().isExistingUser()
