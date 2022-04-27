@@ -28,6 +28,7 @@ import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sc.directpurchase.IPrInquirySO;
+import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO; //#9133
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -80,6 +81,7 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
+import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault; //#9133
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -101,8 +103,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	private static Logger logger = Logger.getLogger(BPMTaskListManagedBean.class);
 	
 	// Refactor: To make sqTimeValidity to read only once - Start.
-	private static final Integer SQ_TIME_VALIDITY = Integer.valueOf(EpPropertiesUtils.getInstance()
-			.getProperty("sqTimeValidity"));
+	private static final Integer SQ_TIME_VALIDITY = new Integer(0); // ---> ubah kat sini utk upkan server
+	//private static final Integer SQ_TIME_VALIDITY = Integer.valueOf(EpPropertiesUtils.getInstance()
+	//		.getProperty("sqTimeValidity"));
 	// Refactor: To make sqTimeValidity to read only once - End.
 	
 	private List<WorklistItemVO> taskList;
@@ -425,7 +428,16 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	private IPrInquirySO getPrInquirySO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPrInquirySO.class);
 	}
-
+	
+	//#9133 - start
+	private ScPurchaseInDefault retrivePurchaseInDefaultByPdNo(String pdNo) {
+		return getPurchaseInDefaultSO().retrivePurchaseInDefaultByPdNo(pdNo);
+	}
+	
+	private IPurchaseInDefaultSO getPurchaseInDefaultSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
+	}
+	//#9133 - end
 	private int calculateFinalOffSet(int currentPage) {
 		//CR 28766: Static Code Analysis Start
 		//int offSet = (currentPage - 1) * PagingConst.ROWS_PER_PAGE;
@@ -635,7 +647,15 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 										worklistItemVO.setTitle(scPrInquiry.getTitle());
 									}
 								}
-							// s1 module
+								// #9133 - start
+								if (worklistItemVO.getDocType().equals(ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT)) {
+									ScPurchaseInDefault scPurchaseInDefault = retrivePurchaseInDefaultByPdNo(worklistItemVO
+											.getDocNumber());
+									if (scPurchaseInDefault != null) {
+										worklistItemVO.setTitle(scPurchaseInDefault.getTitle());
+									}
+								}
+								// #9133 - end
 							if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
 								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 							}
@@ -1654,6 +1674,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 			   }
 	       }
 	       // 12177 - End
+	       //#9133 - start
+	       else if (worklistItemVO.getDocType().equals(ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT)) {
+				ScPurchaseInDefault scPurchaseInDefault = retrivePurchaseInDefaultByPdNo(worklistItemVO.getDocNumber());
+				if (scPurchaseInDefault != null) {
+					worklistItemVO.setTitle(scPurchaseInDefault.getTitle());
+				}
+	       }
+	       //#9133 - end
 	   	} else {
 	   		logger.info("DOCTYPE AND DOCSTATUSID NULL not meet condition = " + worklistItemVO.getTaskId() 
 	   				+ "| worklistItemVO.getDocType() = " + worklistItemVO.getDocType()
