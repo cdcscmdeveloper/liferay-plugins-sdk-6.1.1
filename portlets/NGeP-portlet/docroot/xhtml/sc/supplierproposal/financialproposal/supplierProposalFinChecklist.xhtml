@@ -34,12 +34,17 @@
 			</p:columnGroup>
 
 			<p:column style="width:2%">
+				<!-- 11042022@syazani - 32756 - Start -->
 				<p:selectBooleanCheckbox id="allChk"
-					value="#{financeList.submitted}" disabled="true"
+					value="#{financeList.submitted and financeList.scQtProposalChecklistAttachment eq null and 
+					financeList.scQtCheckList.definationType.parameterCode eq 'NA' 
+					? false : financeList.submitted}"
+					disabled="true"
 					rendered="#{financeList.scQtCheckList.definationType.parameterCode eq 'TS' 
 						or financeList.scQtCheckList.definationType.parameterCode eq 'WF'
 						or (financeList.scQtCheckList.definationType.parameterCode eq 'UP' and financeList.scQtCheckList.action.parameterCode eq 'O')
 						or financeList.scQtCheckList.definationType.parameterCode eq 'NA'}" />
+				<!-- 11042022@syazani - 32756 - End -->
 			</p:column>
 
 			<p:column style="white-space : normal">
