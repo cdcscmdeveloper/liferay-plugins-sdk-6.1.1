@@ -1931,6 +1931,33 @@ public class LOIDetailBackingBean extends
 		boolean isTermPriceFound = Boolean.FALSE;
 		boolean isBiddingAward = Boolean.FALSE;
 		ScLoi scLoi = resDTO.getScLoi();
+		// #26247 - #33073 - Start.
+		if (CollectionUtils.isNotEmpty(getManagedBean().getRecSupplierList())) {
+			for (ScLoiLoa redScLoiLoa: getManagedBean().getRecSupplierList()) {
+				if (null != scLoi && null != scLoi.getScLoiLoa() && null != scLoi.getScLoiLoa().getSmSupplier() 
+						&& null != redScLoiLoa && null != redScLoiLoa.getSmSupplier()
+						&& scLoi.getScLoiLoa().getSmSupplier().getSupplierId().longValue() == redScLoiLoa.getSmSupplier().getSupplierId().longValue()) {
+					scLoi.getScLoiLoa().getSmSupplier().setDisciplinaryActions(redScLoiLoa.getSmSupplier().isDisciplinaryActions());
+					break;
+				}
+			}
+		} else if (null != scLoi && null != scLoi.getScLoiLoa() && null != scLoi.getScLoiLoa().getSmSupplier()){
+			IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+			
+			try {
+				qtSuppFinalizationSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IQTSuppFinalizationSO.class);
+				
+				if (null != qtSuppFinalizationSO) {
+					SmSupplier smSupplier = qtSuppFinalizationSO.retrieveActiveDisciplinaryActionBySupplier(scLoi.getScLoiLoa().getSmSupplier());
+					scLoi.getScLoiLoa().setSmSupplier(smSupplier);
+				}
+			} finally {
+				qtSuppFinalizationSO = null;
+			}
+		}
+		// #26247 - #33073 - End.
 		getManagedBean().setScLoi(scLoi);
 		ScWorkFlowStatus currentStatus = scLoi.getScWorkFlowStatus();
 		Long statusId = currentStatus.getPmStatus().getStatusId()
