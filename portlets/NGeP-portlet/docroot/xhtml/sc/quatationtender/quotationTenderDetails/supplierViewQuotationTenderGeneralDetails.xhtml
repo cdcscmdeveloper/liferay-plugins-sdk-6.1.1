@@ -84,7 +84,7 @@
 				</tr>
 			</c:if>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.panel']}" /> <p:outputLabel
+				<td><p:outputLabel value="#{lbl['lbl.sc.spec.supplier.proposal.panel.item']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 
 				<td colspan="3">
@@ -94,7 +94,7 @@
 									<c:when
 										test="#{qtStatusChecklistScoringAndBefore and !isReadOnly}">
 										<p:selectOneRadio id="panelTitle" required="#{empty param['skipvalidation']}"
-											label="#{lbl['lbl.sc.spec.panel']}" value="#{createQtBB.managedBean.panel}">
+											label="#{lbl['lbl.sc.spec.supplier.proposal.panel.item']}" value="#{createQtBB.managedBean.panel}">
 											<f:selectItems
 												value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 											<p:ajax event="change"
