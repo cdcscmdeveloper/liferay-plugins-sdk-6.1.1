@@ -29,7 +29,6 @@
 					<h:outputText value="#{scQtCategory.pmCategoryL1Name}" />
 					<!-- #29732 Start -->
 					<p:spacer width="5" /> 
-					<!--#30814 Code Impact Fix -->
 					<p:commandLink actionListener="#{noticeBoardBackingBean.onClickHistoryIcon(scQtCategory.pmCategoryL1.categoryL1Code,ParameterConst.categoryL1Code,scQtCategory.pmCategoryL1.categoryL1Id)}"
 						update="@form">
 						<p:graphicImage id="mainHisIcon"
@@ -39,7 +38,6 @@
 								value="#{lbl['lbl.sc.main.category.icon.tooltip']}" />
 						</p:tooltip>
 					</p:commandLink>
-					<!-- #30814 Code Impact Fix -->
 					<p:outputPanel rendered="#{(noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges) and
 										(scQtCategory.pmCategoryL1.changedDate ne scQtCategory.pmCategoryL1.createdDate)}"
 						style="color: red;font-weight:bold">
@@ -58,7 +56,6 @@
 					<h:outputText value="#{scQtCategory.pmCategoryL2Name}" />
 					<!-- #29732 Start -->
 					<p:spacer width="5" /> 
-					<!-- #30814 Code Impact Fix -->
 					<p:commandLink actionListener="#{noticeBoardBackingBean.onClickHistoryIcon(scQtCategory.pmCategoryL2.categoryL2Code,ParameterConst.categoryL2Code,scQtCategory.pmCategoryL2.categoryL2Id)}"
 						update="@form">
 						<p:graphicImage id="subHisIcon"
@@ -68,7 +65,6 @@
 								value="#{lbl['lbl.sc.sub.category.icon.tooltip']}" />
 						</p:tooltip>
 					</p:commandLink>
-					<!-- #30814 Code Impact Fix -->
 					<p:outputPanel rendered="#{(noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges) and
 										(scQtCategory.pmCategoryL2.changedDate ne scQtCategory.pmCategoryL2.createdDate)}"
 						style="color: red;font-weight:bold">
@@ -87,7 +83,6 @@
 					<h:outputText value="#{scQtCategory.pmCategoryL3Name}" />
 					<!-- #29732 Start -->
 					<p:spacer width="5" />
-					<!-- #30814 Code Impact Fix -->
 					<p:commandLink actionListener="#{noticeBoardBackingBean.onClickHistoryIcon(scQtCategory.pmCategoryL3.categoryL3Code,ParameterConst.categoryL3Code,scQtCategory.pmCategoryL3.categoryL3Id)}"
 						update="@form">
 						<p:graphicImage id="subDivHisIcon"
@@ -97,7 +92,6 @@
 								value="#{lbl['lbl.sc.sub.category.division.icon.tooltip']}" />
 						</p:tooltip>
 					</p:commandLink>
-					<!-- #30814 Code Impact Fix -->
 					<p:outputPanel rendered="#{(noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges) and
 										(scQtCategory.pmCategoryL3.changedDate ne scQtCategory.pmCategoryL3.createdDate)}"
 						style="color: red;font-weight:bold">
