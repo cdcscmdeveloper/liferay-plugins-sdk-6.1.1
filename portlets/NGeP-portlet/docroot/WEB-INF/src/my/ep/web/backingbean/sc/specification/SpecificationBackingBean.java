@@ -20713,12 +20713,6 @@ if(null!=allTechnicalChecklist){
 	}
 	// #29474 - end
 	
-	//bug #28784 - start
-	public boolean enablePresentationDemoType() {
-		return userHasRole(new RoleCode[] { RoleCode.SC_SECRETARY});
-	}
-	//bug #28784 - end
-	
 	//1873 - start - note 74
 	public boolean isMemberChairpersonSpecPreparationTask(){
 		String taskName = this.getManagedBean().getTaskName();
