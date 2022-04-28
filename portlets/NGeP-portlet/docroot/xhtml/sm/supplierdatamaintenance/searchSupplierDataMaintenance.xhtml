@@ -113,12 +113,12 @@
 							<!-- bug #29156, #32818 -START -->
 							<p:graphicImage value="/css/images/design/ico-view.png"
 								title="#{lbl['lbl.sm.view']}"
-								rendered="#{(smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED and smSupplier.pendingCancel eq false)
+								rendered="#{(smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED and smSupplier.pendingCancel eq false and smSupplier.pendingBlacklist eq false and smSupplier.pendingSuspend eq false and smSupplier.pendingBumiputera eq false and smSupplier.pendingManufacture eq false)
 									or smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_CANCELLED or smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_EXPIRED_SYSTEM}" />
 							<p:graphicImage value="/css/images/design/edit.png"
 								title="#{lbl['lbl.sm.edit']}"
 								rendered="#{(smSupplier.mofStatus ne SupplierManagementConst.MOF_STATUS_DELETED and smSupplier.mofStatus ne SupplierManagementConst.MOF_STATUS_CANCELLED and smSupplier.mofStatus ne SupplierManagementConst.MOF_STATUS_EXPIRED_SYSTEM)
-									or smSupplier.pendingCancel eq true}" />
+									or (smSupplier.pendingCancel eq true or smSupplier.pendingBlacklist eq true or smSupplier.pendingSuspend eq true or smSupplier.pendingBumiputera eq true or smSupplier.pendingManufacture eq true)}" />
 						   	<!-- bug #29156, #32818 -END -->
 						</p:commandLink>
 					</p:column>
