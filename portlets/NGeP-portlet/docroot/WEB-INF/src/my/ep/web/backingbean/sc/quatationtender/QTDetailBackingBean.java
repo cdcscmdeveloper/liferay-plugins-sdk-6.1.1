@@ -1186,12 +1186,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			this.getManagedBean().setGenInfo(true);
 			//#29474 - end
 			
-			//#25726 - START
-			if (null != status && status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)){
-				this.getManagedBean().setReadOnly(true);
-			}
-			//#25726 - END
-			
 			boolean isValidFor25037 = this.validateSupportedTask(scQt.getQtNo(), QTConstants.ALLOW_COMMITTEE_REASSIGNMENT);
 			this.getManagedBean().setValidFor25037(isValidFor25037);
 			debugLogger("end of editQuationTenderDetails");
