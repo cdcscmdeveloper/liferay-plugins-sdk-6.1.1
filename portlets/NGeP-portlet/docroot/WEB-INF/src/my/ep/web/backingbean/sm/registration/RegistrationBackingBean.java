@@ -4600,6 +4600,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					this.getManagedBean().setDisableStaff(false);
 					this.getManagedBean().setDisableProf(false);
 				} else {
+					this.getManagedBean().setDisableManagement(false);
 					this.getManagedBean().setDisableStaff(true);
 					this.getManagedBean().setDisableProf(false);
 				}
