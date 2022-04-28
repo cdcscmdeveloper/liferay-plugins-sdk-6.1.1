@@ -750,7 +750,7 @@
 								style="width:195px;" disabled="true" />
 							<ui:remove><!-- 29464 note 42 add readonly to renderred --></ui:remove>
 							<p:selectOneMenu required="#{empty param['skipvalidation']}" 
-								id="fulfilId" rendered="#{specificationBackingBean.managedBean.isGenInfo() and !isReadOnly}}"
+								id="fulfilId" rendered="#{specificationBackingBean.managedBean.isGenInfo() and !isReadOnly}"
 								disabled="#{scQt.contractType ne null and scQt.contractType.parameterCode eq 'CC'}"
 								label="#{lbl['lbl.sc.fullfillent.type']}"
 								value="#{scQt.fulfilmentType.parameterId}"
