@@ -434,7 +434,7 @@
 						<table>
 							<tr>
 								<td><c:choose>
-										<c:when	test="#{((!scQt.panel and !isReadOnly) and (!isDemoDisabled and !isMaintenanceFlow and !isDemoSpecialCase)) and specificationBackingBean.enablePresentationDemoType()}"><ui:remove>#28784 disable during supplier proposal</ui:remove>
+										<c:when	test="#{(!scQt.panel and !isReadOnly) and (!isDemoDisabled and !isMaintenanceFlow and !isDemoSpecialCase)}">
 											<p:outputPanel id="demoPop">
 												<ui:remove>#11299 Vinod added disableFieldsforCommitteeRevision</ui:remove>
 												<p:selectOneRadio value="#{scQt.demoRequired}" disabled="#{scQt.partial or  qTDetailBB.disableFieldsforCommitteeRevision()}">
