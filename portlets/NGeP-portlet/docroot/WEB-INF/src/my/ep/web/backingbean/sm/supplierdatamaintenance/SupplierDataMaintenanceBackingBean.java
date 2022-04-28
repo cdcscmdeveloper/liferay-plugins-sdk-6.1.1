@@ -338,7 +338,9 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setFlagBlacklistCancel(false);
 		
 		//#28278 - Disciplonary action - #28278, #26238, #32818 - Start
-		if((mofStatus.equals(SupplierManagementConst.MOF_STATUS_DELETED) && !selectedSmAppl.getSmSupplier().isPendingCancel())
+		if((mofStatus.equals(SupplierManagementConst.MOF_STATUS_DELETED) && !selectedSmAppl.getSmSupplier().isPendingCancel() 
+				&& !selectedSmAppl.getSmSupplier().isPendingBlacklist() && !selectedSmAppl.getSmSupplier().isPendingSuspend()
+				&& !selectedSmAppl.getSmSupplier().isPendingBumiputera() && !selectedSmAppl.getSmSupplier().isPendingManufacture())
 			|| StringUtils.equals(mofStatus, SupplierManagementConst.MOF_STATUS_EXPIRED_SYSTEM) || getManagedBean().isCancelMofAccount()){ // START //29336: Disciplinary Action 26238 - add condition
 			getManagedBean().setFlagShowButtonSubmit(false);
 		}
