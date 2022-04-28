@@ -16,8 +16,6 @@
 		value="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION or qtStatusChecklistScoring}" />
 	<ui:param name="qtStatusScheduleDocAndAfter"
 		value="#{createQtBB.isQTStatusGreaterThanOrEquals(scQt.qtStatus.statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
-	<ui:param name="qtStatusIsProposalValidPeriodExtApproval" 
-		value="#{createQtBB.isQTStatusInProposalValidPeriodExtApproval(scQt.qtStatus.statusId)}" />
 	<ui:param name="zoneCoverageReadonly"
 		value="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_ZONE_COVERAGE)}" />
 	<ui:param name="isReadOnly" value="#{createQtBB.managedBean.readOnly}" />
@@ -409,56 +407,6 @@
 					</c:choose></td>		
 			</tr>
 
-			<!-- START #28784 -->
-			<ui:fragment rendered="#{qTDetailBB.managedBean.demoType}">
-				<tr>
-					<td colspan="2"></td>
-					<td><p:outputLabel value="#{lbl['lbl.sc.demo']}" /></td>
-					<td>
-						<table>
-							<tr>							
-								<td><c:choose>
-										<c:when	test="#{((!scQt.panel and !isReadOnly) and (!isDemoDisabled and !isMaintenanceFlow and !isDemoSpecialCase)) and specificationBackingBean.enablePresentationDemoType()}"><ui:remove>#28784 disable during supplier proposal</ui:remove>
-											<p:outputPanel id="demoPop">
-												<ui:remove>#11299 Vinod added disableFieldsforCommitteeRevision</ui:remove>
-												<p:selectOneRadio value="#{scQt.demoRequired}" disabled="#{scQt.partial or  qTDetailBB.disableFieldsforCommitteeRevision()}">
-													<f:selectItems
-														value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-													<p:ajax event="change" update="@form" partialSubmit="true" process="@this"
-														listener="#{createQtBB.validateDemoTechList}">
-													</p:ajax>
-													<p:ajax render="confirmDialog" ></p:ajax>
-												</p:selectOneRadio>
-											</p:outputPanel>
-										</c:when>
-										<c:when	test="#{isDemoDisabled}">
-											<p:outputPanel id="demoPop">
-												<ui:remove>11299 Vinod added disableFieldsforCommitteeRevision</ui:remove>
-												<p:selectOneRadio value="#{scQt.demoRequired}" disabled="#{scQt.partial or  qTDetailBB.disableFieldsforCommitteeRevision()}">
-													<f:selectItems
-														value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-													<p:ajax event="change" update="@form" partialSubmit="true" process="@this"
-														listener="#{createQtBB.validateDemoTechList}">
-													</p:ajax>
-													<p:ajax render="confirmDialog" ></p:ajax>
-												</p:selectOneRadio>
-											</p:outputPanel>
-										</c:when>
-										<c:otherwise>
-											<p:inputText id="demoTxt"
-												value="#{createQtBB.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(scQt.demoRequired))}"
-												style="width:195px;" disabled="true" />
-										</c:otherwise>
-									</c:choose></td>
-								<td><ac:iconTooltip
-										value="#{lbl['lbl.sc.qt.demo.tooltip']}" /></td>							
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</ui:fragment>
-			<!-- END #28784 -->
-
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.qt.zone.location']}" /></td>
 				<td> <!-- START #21695 farid remove colspan="3"-->
@@ -487,64 +435,6 @@
 								</tr>
 					</table>
 				</td>
-					<td><h:outputLabel value="#{lbl['lbl.sc.qt.partiallyoffer']}" /></td>
-				<td>
-					<table>
-						<tr>
-							<td>
-							<c:choose>
-							<!-- #21695 farid -->
-				<!-- #21695 farid 7/04/2020 -->
-				
-								<c:when test="#{!isMaintenanceFlow and !qtStatusChecklistScoring and !qtStatusScheduleDocAndAfter and !qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_EVALUATION_TYPE) or scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION or scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION and !isReadOnly}">
-										<p:outputPanel id="partialPop">
-													<p:selectOneRadio  value="#{scQt.partial}" disabled="#{scQt.sampleReq}">
-														<f:selectItems
-															value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-														<p:ajax event="change" partialSubmit="true" 
-															update="@form,generalLocationList" process="@this" 
-															listener="#{createQtBB.partialChange}">
-														</p:ajax>
-														<p:ajax render="confirmDialog" ></p:ajax>
-													</p:selectOneRadio>
-										</p:outputPanel>
-				<!-- #21695 Add Closable & resizable 30/7/2020 -->									
-												<p:confirmDialog message="#{lbl['lbl.sc.spec.partial.confirm']}" header="#{lbl['lbl.cm.dialog.cofirm.header']}" 
-													widgetVar="confirmDialogWidgetVar" closable="false" severity="alert">
-													<div class="ppRightBtn">
-														<p:commandButton id="conf" value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
-														action="#{createQtBB.partialChangePopUpYes}" oncomplete="confirmDialogWidgetVar.hide()"  update="@form,partialPop" process="@this" />
-														<p:commandButton id="decline" value="#{lbl['lbl.cm.dialog.cofirm.no']}"
-														action="#{createQtBB.partialChangePopUpNo}" oncomplete="confirmDialogWidgetVar.hide()"  update="partialPop" process="@this" />
-															<h:inputHidden id="rowIndex"></h:inputHidden>
-													</div>
-												</p:confirmDialog>
-												
-									</c:when>
-									<c:otherwise>
-				<!-- #21695 Add inputext 30/7/2020 -->						
-										<p:inputText id="partialTxt"
-											value="#{createQtBB.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(scQt.partial))}"
-											style="width:195px;" disabled="true" />
-									</c:otherwise>
-								</c:choose>
-							</td>
-							<td ><ac:iconTooltip value="#{lbl['lbl.sc.qt.partiallyoffer.tooltip']}" /></td>
-						</tr>				
-					</table>
-				</td>
-				<tr>
-					<td colspan="3"></td>
-					<td>
-						<table>				
-							<tr>
-								<td style="width: 255px; float: left;">
-									<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.spec.partial.info']}" escape="false" /> 
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
 			</tr>
 <!-- END #21695 farid End-->
 			<tr>
@@ -845,43 +735,6 @@
 						</table>
 					</td>
 				</tr>
-				<c:if test="#{qtStatusIsProposalValidPeriodExtApproval}">
-					<tr>
-						<td>
-							<p:outputLabel value="#{lbl['lbl.sc.qt.response.period']}" /> 
-							<p:outputLabel value="*" styleClass="mandatory" />
-						</td>
-						<td>
-							<table>
-								<tr>
-									<td>
-										<p:inputText id="responsePeriod" value="#{CommonConstants.DEFAULT_RESPONSE_PERIOD}" style="width:200px;" disabled="true" />
-									</td>
-									<td colspan="2">
-										<ac:iconTooltip value="#{lbl['lbl.sc.qt.response.period.tooltip']}" />
-									</td>
-								</tr>
-							</table>
-						</td>
-						<td>
-							<p:outputLabel value="#{lbl['lbl.sc.qt.proposal.validity.extension.response.due.date']}" />
-						</td>
-						<td>
-							<p:inputText value="#{qtExtensionResponseDueDate}" style="width:200px;" disabled="true" >
-								<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
-							</p:inputText>
-						</td>
-					</tr>
-					<tr>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td>
-							<h:outputText value="#{lbl['lbl.sc.qt.proposal.validity.extension.response.due.date.desc']}" 
-								style="float:left; color: #0054a6; font-size: 12px; font-family: Arial, helvetica, sans-serif; font-weight: normal; font-style: italic; margin-left: 10px;"/>
-							</td>
-					</tr>
-				</c:if>
 			</c:if>
 			<tr>
 				<td style="width: 100%;"><p:outputLabel
@@ -946,56 +799,6 @@
 						</c:otherwise>
 					</c:choose></td>
 			</tr>
-			
-				<tr>
-					<td>
-						<p:outputLabel value="#{lbl['lbl.sc.spec.justification.procurement.value']}" /> 
-						<p:outputLabel value="*" styleClass="mandatory" />
-					</td>
-					<!--#25729 #142 START -->
-					<c:if test="#{expectTotalIndPriceBelowThreshold}">
-
-						<td>
-							<c:choose>
-								<c:when test="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION}">
-									<p:inputTextarea id="justificationProcValueId_1"
-										style="margin-bottom:5px; width: 250px;" maxlength="100" value="#{scQt.justificationProcValue}" required="true" 
-										label="#{lbl['lbl.sc.spec.justification.procurement.value']}" disabled="#{isReadOnly}" 
-										cols="110" rows="3"
-										onkeyup="limitTextArea(this,100);"
-										onkeydown="limitTextArea(this,100);"
-										onmouseout="limitTextArea(this,100);">
-										<f:ajax></f:ajax>
-									</p:inputTextarea>
-									<p:message id="title2Msg_1" for="justificationProcValueId_1" display="icon" />
-								</c:when>
-								<c:otherwise>
-									<p:inputTextarea id="justificationProcValueId_2"
-										style="margin-bottom:5px; width: 250px;" maxlength="100" value="#{scQt.justificationProcValue}" 
-										label="#{lbl['lbl.sc.spec.justification.procurement.value']}" readonly="true" 
-										cols="110" rows="3"
-										disabled="true">
-									</p:inputTextarea>
-									<p:message id="title2Msg_2" for="justificationProcValueId_2" display="icon" />
-								</c:otherwise>
-							</c:choose>
-						</td>
-					</c:if>
-					<c:if test="#{!expectTotalIndPriceBelowThreshold}">
-						<td>
-							<p:inputTextarea id="justificationProcValueId_2"
-										style="margin-bottom:5px; width: 250px;" maxlength="100" value="#{scQt.justificationProcValue}" 
-										label="#{lbl['lbl.sc.spec.justification.procurement.value']}" readonly="true" 
-										cols="110" rows="3"
-										disabled="true" >
-							</p:inputTextarea>
-						</td>
-				</c:if>
-				<!--#25729 #142 END -->
-					<td style="margin-top: -3px">
-						<ac:iconTooltip value="#{lbl['lbl.sc.spec.justification.procurement.value.tooltip']}" />
-					</td>
-				</tr>
 				<tr>
 				<h:panelGroup id="QuotationtenderGeneralSample">
 				<ui:fragment rendered="#{createQtBB.isSpecScreen() or createQtBB.isSpecEndorsmentScreen()}">

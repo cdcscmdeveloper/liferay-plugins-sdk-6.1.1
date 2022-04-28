@@ -42,7 +42,6 @@ public class ViewQtDetailsGeneralInfoBackingBean{
 		//qtBackingBean.editQuationTenderDetails(qtBackingBean.getManagedBean().getQt(), true);
 		qtBackingBean.getManagedBean().setViewOriginalUrl(backUrl);
 		qtBackingBean.getManagedBean().setShowAndHideAmounts(amounts);
-		qtBackingBean.getManagedBean().setDemoType(true);
 		}
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
