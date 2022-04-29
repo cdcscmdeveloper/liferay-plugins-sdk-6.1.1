@@ -1199,6 +1199,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	
 	public void onCallFirstUserTncDialog(){
 		getManagedBean().setAggreeDeclareAdmin(false);
+		// #30829 - start
+		checkRoleInCompany();
+		// #30829 - end
 		setAdminSameAsOwner();
 		SmPersonnel smPersonnel = this.getManagedBean().getSmPersonnel();
 		//SSM INTEGRATION
@@ -4573,7 +4576,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	//16052019 - SSM INTEGRATION CR => START
 	public void listenerChangeRole(){
 		if(this.getManagedBean().getSmPersonnel()!=null){
-			if(this.getManagedBean().getSmPersonnel().isEquityOwner()){
+			if (this.getManagedBean().getSmPersonnel().isEquityOwner()) {
 				// #30829 - start
 				this.getManagedBean().setDisableSemiProf(true);
 				if (SupplierManagementConst.LIST_OF_BUSINESS_TYPE_FOR_ROLE_IN_COMPANY.contains(this.getManagedBean()
@@ -4581,6 +4584,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					this.getManagedBean().setDisableStaff(false);
 					this.getManagedBean().setDisableProf(false);
 				} else {
+					this.getManagedBean().setDisableManagement(false);
 					this.getManagedBean().setDisableStaff(true);
 					this.getManagedBean().setDisableProf(false);
 				}
@@ -4802,6 +4806,18 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		return smPersonnel;
 	}
 	//  #30829 - End 1/11/2021
-	
-	
+		
+	// #30829 - start
+	private void checkRoleInCompany() {
+		if (!getManagedBean().isSameAsOwner()) {
+			if (!getManagedBean().getSmPersonnel().isEquityOwner() && !getManagedBean().getSmPersonnel().isDirector()
+					&& !getManagedBean().getSmPersonnel().isHigherManagement()
+					&& !getManagedBean().getSmPersonnel().isManagement() && !getManagedBean().getSmPersonnel().isProf()
+					&& !getManagedBean().getSmPersonnel().isSemiProf()
+					&& !getManagedBean().getSmPersonnel().isClerical()) {
+				throw new EpException(MessageConst.ERROR_722535);
+			}
+		}
+	}
+	// #30829 - end
 }
