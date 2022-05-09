@@ -524,7 +524,12 @@
 						</p:outputPanel>
 					</td>
 					
-				<td class="tdTitle" ><p:outputLabel style="float: right" value="#{lbl['lbl.sm.person.composition.role']}    " /> </td>
+				<!-- #30829 - start -->
+				<td class="tdTitle">
+					<p:outputLabel style="float: right" value="#{lbl['lbl.sm.person.composition.role']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<!-- #30829 - end -->
 				<td class="tdContent">
 					<p:outputPanel>
 						<table>
@@ -680,11 +685,12 @@
 						<f:validateRegex disabled="#{empty param['disableValidation']}"
 							pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
 						<p:ajax event="blur" partialSubmit="true"></p:ajax>
+						<p:ajax event="change" process="@this" listener="#{registrationBackingBean.onChangeEmail()}" update="usrEmail"/> 
 					</p:inputText> &#160;
-					<p:graphicImage id="emailti" value="/css/images/design/tooltips.png" />
-					<p:tooltip id="emailtt" for="emailti">
-						<p:outputLabel escape="false" value="#{lbl['tt.sm.user.email']}"  />
-					</p:tooltip>
+					<p:graphicImage id="toolTipIcon" value="/css/images/design/tooltips.png" /> 
+				  	<p:tooltip id="sourceTooltip" for="toolTipIcon">
+						<h:outputText id="sourceLabel" escape="false" value="#{lbl['lbl.sm.email.change.tooltip']}" />
+					</p:tooltip> 
 					<p:message id="usrEmailMsg" for="usrEmail" display="icon" />
 				</td>
 			</tr>
@@ -697,13 +703,27 @@
 				<td class="tdContent">
 				<p:inputText size="40" id="conEmail" value="#{registrationBackingBean.managedBean.confirmEmail}" 
 				required="#{!empty param['disableValidation']}"  label="#{lbl['lbl.sm.confirmemail']}" maxlength="80">
-				<p:ajax event="blur" partialSubmit="true"></p:ajax></p:inputText>
+				<p:ajax event="blur" partialSubmit="true"></p:ajax>
+				<p:ajax event="change" process="@this" listener="#{registrationBackingBean.onChangeConfirmEmail()}" update="conEmail"/> 
+				</p:inputText>
 				<p:message id="conEmailMsg" for="conEmail" display="icon" /></td>
 			</tr>
 
 			</table>
 			
 			<ui:include src="/xhtml/sm/shared/onlinereg/contactInfo.xhtml" />
+			<p:confirmDialog id="alertEmailDlg" widgetVar="alertEmailDlg" closable="true"
+				header="#{lbl['lbl.sm.contactinfo.email.change.alertheader']}" severity="alert"
+				resizable="true" style="width : 250px">
+				
+				<div align="right">
+					<p:commandButton value="#{lbl['lbl.btn.ok']}" onclick="alertEmailDlg.hide();" />
+				</div>
+				
+				<f:facet name="message">
+			    	<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.contactinfo.email.change.message']}" escape="false"/>
+			    </f:facet>
+			</p:confirmDialog>
 		</p:panel>
 		
 <!-- 		<ui:include src="/xhtml/sm/shared/onlinereg/identityUpload.xhtml" /> -->
@@ -712,6 +732,7 @@
 			<p:commandButton value="#{lbl['lbl.sm.prev']}" action="#{registrationBackingBean.returnToCompanyInfo}" />
 			
 		</div>
+		<ac:smEmailAlertPopup bBean="#{backingBean}" title="#{lbl['lbl.sm.email.change.header']}" dialogId="emailPopUp" 
+		btnOkLabel="#{lbl['lbl.btn.ok']}" />
 	</ui:define>
-
 </ui:composition>
