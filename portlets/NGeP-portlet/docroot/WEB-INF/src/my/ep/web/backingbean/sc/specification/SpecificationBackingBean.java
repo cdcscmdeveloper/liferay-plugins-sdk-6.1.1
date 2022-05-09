@@ -12920,6 +12920,15 @@ public class SpecificationBackingBean extends
 								finanicalCheckList.remove(localCheckList);
 								toBeRemoveList.add(localCheckList);
 							}else{
+								//1873 -start- note 86
+								ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
+								TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
+								specReqDTO.setSpecMaster(localCheckList.getScQtDoc().getTplSpecMaster());
+								specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
+								TemplateSpecResDTO templateresDTO = templateSpecSO.getTemplateMaster(specReqDTO);
+								localCheckList.getScQtDoc().setTplSpecMaster(templateresDTO.getSpecMaster());
+								//1873 - end - note 86
+								
 								TplSpecMaster finSpecMaster = localCheckList.getScQtDoc().getTplSpecMaster();
 								TplSpecMaster tecSpecMaster = scQtCheckList.getScQtDoc().getTplSpecMaster();
 								localCheckList.setTitle(tecSpecMaster.getSpecName());
@@ -19566,7 +19575,7 @@ if(null!=allTechnicalChecklist){
 				resScoreDto = templateSpecSo.retrieveMaxScoreByQuestionIdNZoneId(reqScoreDto);
 				
 				System.out.println("maxscore===>"+resScoreDto.getMaxScore());	
-				totalMaxScore = totalMaxScore.add(resScoreDto.getMaxScore());
+				totalMaxScore = totalMaxScore.add(resScoreDto.getMaxScore() == null ? new BigDecimal(0): resScoreDto.getMaxScore());//1873 - note 86							
 				
 			}
 			System.out.println("totalmaxscore===>"+totalMaxScore);
