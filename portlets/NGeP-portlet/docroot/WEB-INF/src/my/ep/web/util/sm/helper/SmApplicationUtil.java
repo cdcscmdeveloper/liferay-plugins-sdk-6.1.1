@@ -12766,10 +12766,12 @@ public class SmApplicationUtil {
 	/**
 	 * Manage personnel roles for the selected SmPersonnel in the application.
 	 */
+	//#30444 START--09052022--replace the whole method in pds with this method
 	public static void managePersonnelRoles(SmApplicationManagedBean bean,
 			String updateAddressDetails) {
 		if (bean.getSmAppl().getSupplierType()
-				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
+				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)
+				&& !bean.isDisAllowOwnerEdit()) {
 			//#30444 START--25082021--	
 			if(bean.getBusinessTypeVal()
 					.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)
@@ -12798,7 +12800,8 @@ public class SmApplicationUtil {
 			}
 			//#30444 END--25082021--
 	    } else if (bean.getSmAppl().getSupplierType()
-				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
+				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)
+				&& !bean.isDisAllowOwnerEdit()) {
 	    	//#30444 START--25082021--
 	    	if (bean.getBusinessTypeVal()     
 					.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)
@@ -12896,7 +12899,7 @@ public class SmApplicationUtil {
 			}
 		}
 	}
-
+	//#30444 END--09052022--
 	private static boolean alreadyHadEquityOwnerAsStaff(SmAppl appl, Long personelId) { //#29666 - add variable Long 
 		boolean retVal = false;
 		for (SmPersonnel per : appl.getSmPersonnels()) {
