@@ -131,11 +131,11 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 		}
 	}
-
-	//test #30425
+	
+	//#30425 - Start
 	public void getChallengeQuestions(String identificationNo) {
 		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
-			if (getCertIssuer(identificationNo).equals(SupplierManagementConst.CERT_TRUSTGATE)) {
+			if (getTypeOfCert(identificationNo).equals(SupplierManagementConst.CERT_TRUSTGATE)) {
 				logger.info("getChallengeQuestions(icNo) || getCertIssuer-TG : " + getCertIssuer());
 				log.info(">>>>>>>>>>>>>>> masuk dalam trust gate <<<<<<<<<<<<<");
 				challs = TrustGateHelper.getInstance().getChallengeQuestion(
@@ -153,6 +153,7 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 		}
 	}
+	//#30425 - End
 
 	public byte[] spkiEnabledSignTransaction(String originalText,
 			String identificationNo) {
@@ -441,20 +442,12 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 		return PmCommonUtil.getCertIssuerByIdentificationNoAndEpNo(
 				identificationNo, getSupplier().getEpNo());
 	}
-	public void getChallengeQuestions2(String identificationNo) {
-		//if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
-			if (getCertIssuer(identificationNo).equals(SupplierManagementConst.CERT_TRUSTGATE)) {
-				logger.info("getChallengeQuestions(icNo) || getCertIssuer-TG : " + getCertIssuer());
-				challs = TrustGateHelper.getInstance().getChallengeQuestion(
-						identificationNo, getSupplier().getEpNo(),
-						challengeQues1);
-			} else {
-				logger.info("getChallengeQuestions(icNo) || getCertIssuer-TG : " + getCertIssuer());
-				challs = DigiCertHelper.getInstance().getChallengeQuestion(
-						identificationNo);
-			}
-			setChallengeQues1(challs.get(0));
-			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
-		//}
+	
+	//#30425 - Start
+	private String getTypeOfCert(String identificationNo){
+		return PmCommonUtil.getTypeOfCertIssuer(
+				identificationNo, getSupplier().getEpNo());
 	}
+	//#30425 - End
+
 }
