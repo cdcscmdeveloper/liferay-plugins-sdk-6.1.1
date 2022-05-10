@@ -10801,7 +10801,8 @@ public class SmApplicationBackingBean extends
 						if(!EntityHelper.isCollectionEmpty(allAppl)){
 							for(SmAppl pendingSite: allAppl){
 								log.info("Appl No: "+pendingSite.getApplNo());
-								reqSO.removeKBAppl(pendingSite);
+//								reqSO.removeKBAppl(pendingSite);
+								reqDTO.setPendingKBAppl(pendingSite);
 							}
 						}
 						//#31386 - END
