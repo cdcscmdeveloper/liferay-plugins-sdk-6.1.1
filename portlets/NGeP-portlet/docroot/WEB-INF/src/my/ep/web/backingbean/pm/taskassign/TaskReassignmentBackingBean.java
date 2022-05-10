@@ -87,6 +87,7 @@ import my.ep.persistence.entity.pm.common.PmPendingRemoveTask;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmStatusRole;
+import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -3388,6 +3389,9 @@ public class TaskReassignmentBackingBean extends
 		
 		ISupplierDataMaintenanceSO taskAssignmentSO = null;
 		try {
+			
+			log.info("==============start insert pm_pending_remove task to DB ==============");
+			
 			taskAssignmentSO = (ISupplierDataMaintenanceSO) BusinessDelegate
 					.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
 			
@@ -3440,14 +3444,14 @@ public class TaskReassignmentBackingBean extends
 							.getTaskAssignmentSearchBean().getDocType()
 							.getPmParameter().getParameterCode());
 				}
-				getFacesScopes().getUserScreenName();
 				resDTO = taskAssignmentSO.savePmPendingRemoveTask(reqDTO);
 				
 			}
 		} catch (Exception e) {
+			log.info("==============error pm_pending_remove task to DB ==============");
 			e.printStackTrace();
 		} finally {
-
+			log.info("==============finsh pm_pending_remove task to DB ==============");
 		}
 		
 		
@@ -3473,6 +3477,9 @@ public class TaskReassignmentBackingBean extends
 
 		ISupplierDataMaintenanceSO taskAssignmentSO = null;
 		try {
+			
+			log.info("==============start insert pm_pending_remove task to DB ==============");
+			
 			taskAssignmentSO = (ISupplierDataMaintenanceSO) BusinessDelegate
 					.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
 
@@ -3527,9 +3534,10 @@ public class TaskReassignmentBackingBean extends
 
 			}
 		} catch (Exception e) {
+			log.info("==============error pm_pending_remove task to DB ==============");
 			e.printStackTrace();
 		} finally {
-
+			log.info("==============finsh pm_pending_remove task to DB ==============");
 		}
 
 		if (resDTO != null && resDTO.isSuccessful()) {
@@ -4093,6 +4101,8 @@ public class TaskReassignmentBackingBean extends
 		else{
 			loginSessionUserId = pmUser.getUserId();
 		}
+		
+		new LogKey(loginSessionUserId);
 		
 		return loginSessionUserId;
 	}
