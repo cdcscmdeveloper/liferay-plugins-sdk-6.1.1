@@ -40,6 +40,7 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -432,7 +433,15 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 		PMReportResDTO resDTO = reportSO.retriveReportByrptId(reqDTO);
 		PMReport pmReport = resDTO.getPmReportDtls();
 		
+		//#32926 - START
+		logger.info("retriveSubModuleNameByReportCode - #32926 start");
+		long startTime = System.currentTimeMillis();
+		
 		String submodule = reportSO.retriveSubModuleNameByReportCode(strLanguage, reportCode);
+		
+		SLAUtils.getInstance().logSQLPerformanceInfo("PM","QueueGenerateReports","PMReportSO.retriveSubModuleNameByReportCode", startTime,"32926");
+		logger.info("retriveSubModuleNameByReportCode - #32926 end");
+		//#32926 - END
 		
 		String reportTitleInEnglish = pmReport.getReportTitle();
 		String reportTitleInMalay = pmReport.getReportTitleMalay();
