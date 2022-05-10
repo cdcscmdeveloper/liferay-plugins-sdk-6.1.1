@@ -181,8 +181,10 @@
 			</p:column>
 			<p:column>
 			<!-- #28220 - disciplinary action- START -->
-				<h:outputText value="#{lbl['lbl.sm.status.pending.approval']}"
+			<!-- #30766 - START -->
+				<h:outputText value="#{lbl['lbl.sm.appl.hist.status.pending.approval']}"
 					rendered="#{aprvdCatBean.recordStatusFlg eq 8 or aprvdCatBean.recordStatusFlg eq 6}" />
+			<!-- #30766 - END -->
 				<h:outputText value="#{lbl['lbl.sm.status.active']}"
 					rendered="#{aprvdCatBean.recordStatusFlg eq 1}" />
 				<!-- #28764 START -->	
